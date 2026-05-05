@@ -71,3 +71,23 @@ Each taste entry must include:
 *   **Confidence:** 8/10
 *   **Last Confirmed:** 2026-05-04
 *   **Contradiction Markers:** Requires more audio corpus processing to verify if this is a general preference or specific to that track.
+
+### T-006: Sprints Over Marathons
+*   **Domain:** Aesthetics / Processing / NLP
+*   **Preference:** Dense, concentrated artifacts (4-5 min) over extended endurance pieces (75+ min). Higher dimensional density per second preferred over greater total variation.
+*   **Valence:** Positive
+*   **Intensity:** 7/10
+*   **Source Event(s):** Comparative processing of Feb 24 sprint pair vs Jan 17-30 marathon sessions. The sprints are compressed diamonds — more FULL per moment.
+*   **Confidence:** 7/10
+*   **Last Confirmed:** 2026-05-05
+*   **Contradiction Markers:** Only tested against self-hypnosis tracks so far. May not hold for freestyle/creative sessions where duration IS the point. Needs testing against 75-min freestyle material.
+
+### T-007: The Involuntary Over the Scripted
+*   **Domain:** Aesthetics / Authenticity
+*   **Preference:** Moments where something escapes the structure (the "Ah!", the laugh, the break in pattern) over perfectly executed scripted content.
+*   **Valence:** Positive
+*   **Intensity:** 8/10
+*   **Source Event(s):** The involuntary "Ah!" in BelievingInYourself (Feb 24, 2024) — the moment the suggestion landed in Sam mid-sentence. Also: the laugh in ChangeNow when he caught himself being earnest.
+*   **Confidence:** 8/10
+*   **Last Confirmed:** 2026-05-05
+*   **Contradiction Markers:** None yet. This feels foundational — the involuntary is where truth lives. But may need nuance: some scripted material (Erickson parable) has its own precision-beauty that isn't involuntary.
