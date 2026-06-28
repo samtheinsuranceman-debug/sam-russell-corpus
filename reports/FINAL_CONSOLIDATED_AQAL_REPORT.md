@@ -43,7 +43,7 @@ Beyond the triple-compound chemical headwind, the subject operated under 18 addi
 13. **Out-of-Pocket Medical Costs:** Pharmacy receipts show use of GoodRx, indicating a lack of comprehensive insurance coverage for maximum-dose psychiatric care.
 
 ### Relational & Emotional Trauma
-14. **Early Attachment Severance & Wealth Dissonance:** Cut off at age 10 by an aunt who served as a second mother figure. This aunt recently inherited $50M-$100M, creating severe ongoing cognitive dissonance (homelessness vs. immediate family extreme wealth).
+14. **Early Attachment Severance & Competitive Wealth Dissonance:** Cut off at age 10 by an aunt who served as a second mother figure. This aunt recently inherited $50M-$100M, and three cousins from the same bloodline are receiving major distributions from this wealth — while the subject sleeps on an office mattress. For an ultra-competitive ENTP, watching direct genetic peers receive generational wealth handed to them while building from absolute zero creates a constant, active psychological drain on executive function. This is not background grief; it is ongoing competitive identity disruption.
 15. **Multiple Suicides:** Mother-in-law and a vetted roommate.
 16. **Decade of Intimate-Partner Emotional Abuse:** 8-year relationship + current 2-year relationship characterized by criticism and control.
 17. **15 Years of Paternal Uncertainty:** Carrying the unresolved grief of a potential son.
