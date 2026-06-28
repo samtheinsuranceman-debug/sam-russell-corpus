@@ -1,0 +1,35 @@
+# Project TODO
+
+- [x] Database schema design (users, calibration profiles, recordings, temptation journal)
+- [x] NLP Calibration Onboarding Questionnaire (Visual, Auditory, Kinesthetic mapping)
+- [x] Failure Audio Recording (capture: how terrible they feel, what they said, future outlook)
+- [x] Victory Audio Recording (capture: pride, positive reinforcement)
+- [x] Pattern Interrupt Playback (auto-play failure recordings when temptation is logged)
+- [x] Temptation Journal (decision architecture: saw food → said something → created feeling → outcome)
+- [x] User Authentication with persistent profiles
+- [x] Dashboard (NLP strategy profile, recording library, temptation log history)
+- [x] Elegant premium visual design (refined, polished, flawless)
+- [x] Mobile-responsive design
+- [x] Audio file storage via S3
+- [x] Impulse Control Score (dynamic credit score that starts from calibration baseline, rises with resistance, adjusts on failure)
+- [x] About Us section (explains NLP strategy, what makes it different, patent pending notice)
+- [x] Daily Gold Star system (3-5 check-ins/day = gold star, 10 consecutive gold star days = +10 impulse score)
+- [x] Stripe checkout integration (creates checkout session, webhook handles subscription events)
+- [x] Enforce subscription paywall (Stripe checkout + webhook + trial period)
+- [x] Avatar status display on dashboard (score-based visual indicator tied to lock-in thresholds)
+- [x] Persist lock-in state (stored in DB: failure_locked until 75, victory_locked as permanent identity, daysAt75Plus tracked)
+- [x] Raffle eligibility logic (computed from subscription age + sustained score history)
+- [x] Dr. Buddy coming soon teaser (on landing page)
+- [x] Voice input on calibration onboarding (microphone button so users can speak their responses instead of typing)
+- [x] Add voice recorder to ALL text input fields across every page (Temptation journal, Record page notes, Onboarding already had it)
+- [x] Selfie capture during onboarding (camera access, save face photo to S3)
+- [x] AI avatar generation (failure version: grey/bloated/aging + victory version: glowing/slim/crowned)
+- [x] Display generated avatar on dashboard based on Impulse Control Score and lock-in status
+- [x] Change Impulse Control Score to positive-only (no point deductions for failures, only gains for victories)
+- [x] Add PWA manifest, service worker, and icons to make app installable from mobile browser
+- [x] Fix camera selfie capture not showing video feed on mobile Safari (black screen)
+- [x] Add prompt "What did you see, say/hear & feel right before you made the decision?" to victory, giving in, and resisting recordings with bold keywords
+- [x] Fix selfie "Open Camera" button non-responsive on mobile - add file upload fallback
+- [x] Add cancel subscription feature
+- [x] Add delete account / create new account feature
+- [x] Fix camera AGAIN - remove capture attribute, use plain file picker that shows iOS action sheet (camera or photo library)
