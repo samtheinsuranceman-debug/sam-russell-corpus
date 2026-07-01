@@ -1,0 +1,21 @@
+{
+  "total_files": 822,
+  "total_chunks": 28444,
+  "embedding_dim": 256,
+  "vocab_size": 50000,
+  "svd_explained_variance": 0.4870947994161723,
+  "categories": {
+    "general": 20434,
+    "aqal_framework": 106,
+    "brotherhood": 538,
+    "buddy_identity": 3102,
+    "dive_session": 236,
+    "calibration": 2609,
+    "coaching": 222,
+    "transcript": 214,
+    "journal": 884,
+    "research": 97,
+    "business": 2
+  },
+  "built_at": "2026-07-01T13:31:57Z"
+}
