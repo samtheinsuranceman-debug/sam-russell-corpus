@@ -1,0 +1,646 @@
+import { motion } from "framer-motion";
+import { useState, useEffect, useMemo } from "react";
+import { Link } from "wouter";
+import { playClick } from "@/lib/audio";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+
+// ============================================================
+// AQAL HOME — Merged: Viral hook + Claude's Atelier dial UI
+// "Out of a million people" hook → interactive 32-line dial →
+// thesis → process → evidence → samples → CTA
+// Long, compelling scroll for trained professionals.
+// ============================================================
+
+// Atelier color constants (matching Claude's design)
+const INK = "#141009";
+const INK2 = "#1B1610";
+const INK3 = "#231C14";
+const CREAM = "#F1EADB";
+const CREAM2 = "#C4B89F";
+const MUTED = "#867A66";
+const LINE_C = "rgba(241,234,219,0.10)";
+const CHAMPAGNE = "#E0C68C";
+const CHAMPAGNE_D = "#C9A24B";
+const JADE = "#9BC0B2";
+const BRONZE = "#D19A72";
+
+const MODE: Record<string, { c: string; label: string; verb: string }> = {
+  measured:      { c: CHAMPAGNE, label: "Measured",      verb: "measured percentile" },
+  developmental: { c: JADE,      label: "Developmental", verb: "developmental altitude" },
+  demonstrated:  { c: BRONZE,    label: "Demonstrated",  verb: "verified from evidence" },
+};
+
+const LINES = [
+  { name: "Logical",             short: "Logical",       mode: "measured",      v: 82, note: "Formal inference and contradiction-spotting under load." },
+  { name: "Mathematical",        short: "Math",          mode: "measured",      v: 68, note: "Quantitative fluency across symbolic systems." },
+  { name: "Spatial",             short: "Spatial",       mode: "measured",      v: 74, note: "Mental rotation; holding a whole system in view." },
+  { name: "Linguistic",          short: "Linguistic",    mode: "measured",      v: 88, note: "Range, precision, and generativity in language." },
+  { name: "Musical",             short: "Musical",       mode: "measured",      v: 55, note: "Pitch, rhythm, phrasing; structure in sound." },
+  { name: "Bodily-Kinesthetic",  short: "Kinesthetic",   mode: "demonstrated",  v: 60, note: "Trained control of the body toward a skilled end." },
+  { name: "Naturalist",          short: "Naturalist",    mode: "demonstrated",  v: 48, note: "Reading living systems; fine distinctions within them." },
+  { name: "Interpersonal",       short: "Interpersonal", mode: "measured",      v: 80, note: "Modelling other minds; moving a room." },
+  { name: "Intrapersonal",       short: "Intrapersonal", mode: "developmental", v: 72, note: "Accuracy of the self-model; knowing your own states." },
+  { name: "Existential",         short: "Existential",   mode: "developmental", v: 78, note: "Working seriously with meaning and mortality." },
+  { name: "Moral",               short: "Moral",         mode: "developmental", v: 76, note: "Altitude of the ethical frame actually lived." },
+  { name: "Aesthetic",           short: "Aesthetic",     mode: "developmental", v: 70, note: "Discernment of form; what makes a thing land." },
+  { name: "Emotional",           short: "Emotional",     mode: "measured",      v: 66, note: "Granularity and regulation of affect in real time." },
+  { name: "Meta-Cognitive",      short: "Meta-Cog",      mode: "measured",      v: 90, indep: true, note: "Catching your own moves mid-flight." },
+  { name: "Volitional",          short: "Volitional",    mode: "demonstrated",  v: 93, indep: true, note: "Sustained will — starting, continuing, finishing under friction." },
+  { name: "Adversarial",         short: "Adversarial",   mode: "demonstrated",  v: 84, indep: true, note: "Performance against an opponent trying to beat you." },
+  { name: "Interoceptive",       short: "Interoceptive", mode: "measured",      v: 58, indep: true, note: "Fidelity of the inward signal; reading the body." },
+  { name: "Strategic",           short: "Strategic",     mode: "demonstrated",  v: 89, note: "Multi-move sequencing toward an unseen end." },
+  { name: "Systemic",            short: "Systemic",      mode: "measured",      v: 83, note: "Seeing wholes, loops, and second-order effects." },
+  { name: "Entrepreneurial",     short: "Entrepren.",    mode: "demonstrated",  v: 91, note: "Turning a vision into a shipped, funded thing." },
+  { name: "Creative",            short: "Creative",      mode: "demonstrated",  v: 86, note: "Producing the genuinely new, not the recombined." },
+  { name: "Rhetorical",          short: "Rhetorical",    mode: "demonstrated",  v: 88, note: "Moving a listener from one position to another." },
+  { name: "Leadership",          short: "Leadership",    mode: "demonstrated",  v: 79, note: "Real commitment and coordinated action from others." },
+  { name: "Mechanical",          short: "Mechanical",    mode: "demonstrated",  v: 64, note: "Practical mastery of how physical things work." },
+  { name: "Pattern-Recognition", short: "Pattern",       mode: "measured",      v: 87, note: "Seeing the shape early, from sparse signal." },
+  { name: "Social-Perceptual",   short: "Social",        mode: "measured",      v: 81, note: "Reading status, intent, and the unspoken." },
+  { name: "Financial",           short: "Financial",     mode: "measured",      v: 77, indep: true, note: "Conative money sense, largely independent of IQ." },
+  { name: "Humor",               short: "Humor",         mode: "developmental", v: 82, note: "State-change capacity; shifting a room at will." },
+  { name: "Parenting",           short: "Parenting",     mode: "developmental", v: 69, note: "Developmental altitude expressed in raising a person." },
+  { name: "Seduction",           short: "Seduction",     mode: "developmental", v: 74, note: "Relational draw, severed from appearance." },
+  { name: "Community-Founding",  short: "Community",     mode: "developmental", v: 85, note: "Bringing a durable group into being around a frame." },
+  { name: "Street Smarts",       short: "Street",        mode: "demonstrated",  v: 80, note: "Real-world reads under real stakes." },
+];
+
+const CX = 310, CY = 310;
+const R_MAX = 190, R_MIN = 40;
+const N = LINES.length;
+const rFor = (v: number) => R_MIN + (R_MAX - R_MIN) * (v / 100);
+const angFor = (i: number) => (-90 + (i * 360) / N) * (Math.PI / 180);
+
+const STEPS = [
+  { n: "01", t: "Speak", d: "A conversational voice interview — 30 to 60 minutes. You speak naturally about how you think, decide, create, and make sense of the world. No checkboxes. No multiple choice." },
+  { n: "02", t: "Prove", d: "Upload evidence: transcripts, certifications, awards, portfolios, tax returns. Your aggregate hardens from estimate to verified — every line backed by documentation." },
+  { n: "03", t: "Match", d: "Meet complementary minds across the country — people whose strengths cover your edges, and whose edges you cover. The network that makes rare minds useful." },
+];
+
+const EVIDENCE = [
+  { t: "Rare because capable — not odd", d: "Your number climbs with genuine capability across independent lines, not with being a statistical weirdo. A mind that's low everywhere isn't rare to us — it's just low." },
+  { t: "Only independent axes count", d: "Thirty-two lines, but ~6.5 genuinely independent dimensions. Your aggregate is built from those — so it can't be inflated by stacking scores that all move together." },
+  { t: "Mahalanobis, not multiplication", d: "Rarity is computed from the geometry of your whole profile — never by multiplying correlated scores into a fantasy figure with too many zeros." },
+  { t: "No inflation. Ever.", d: "Most tests flatter you. This one won't. An honest aggregate is the only one worth sharing — and the only one that matches you to the right people." },
+];
+
+const SAMPLES = [
+  { rarity: "1 in 5,000",   shape: "Strong generalist", desc: "Genuinely high across several independent lines at once — and no weak spots dragging the whole down." },
+  { rarity: "1 in 60,000",  shape: "Rare elevation",    desc: "Near the ceiling across most of the independent axes. The kind of mind a room reorganizes around." },
+  { rarity: "1 in 250,000", shape: "Exceptional",       desc: "The full independent set, lifted together. Vanishingly few minds carry this much, this broadly." },
+];
+
+// ============================================================
+// HERO — "Out of a million people... how rare and valuable is your mind?"
+// ============================================================
+function HeroSection() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setMounted(true), 60); return () => clearTimeout(t); }, []);
+
+  const pts = useMemo(() => LINES.map((l, i) => {
+    const a = angFor(i);
+    const r = rFor(l.v);
+    const ca = Math.cos(a), sa = Math.sin(a);
+    return { i, l, x: CX + r * ca, y: CY + r * sa, ca, sa };
+  }), []);
+  const poly = useMemo(() => pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" "), [pts]);
+  const aggregate = useMemo(() => Math.round(LINES.reduce((s, l) => s + l.v, 0) / N), []);
+
+  return (
+    <section className="relative" style={{ padding: 'clamp(56px,9vw,120px) 0 clamp(40px,6vw,72px)', background: INK }}>
+      {/* Subtle radial glow */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: 'radial-gradient(760px 460px at 82% 8%, rgba(224,198,140,0.10), transparent 60%), radial-gradient(620px 420px at 6% 96%, rgba(209,154,114,0.06), transparent 58%)'
+      }} />
+
+      <div className="relative max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div className="grid gap-[clamp(28px,4vw,56px)] items-center" style={{ gridTemplateColumns: 'minmax(0,1.02fr) minmax(0,0.98fr)' }}>
+          {/* Left: Copy */}
+          <div>
+            <motion.div
+              className="mb-4"
+              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.30em', textTransform: 'uppercase', color: CHAMPAGNE }}
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.05, ease: [0.2, 0.7, 0.3, 1] }}
+            >
+              32 lines · one aggregate read · evidence-weighted
+            </motion.div>
+
+            <motion.h1
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 0.98, fontSize: 'clamp(44px,7vw,80px)', letterSpacing: '-0.01em', color: CREAM, marginTop: '20px' }}
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.2, 0.7, 0.3, 1] }}
+            >
+              Out of a million people... <em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>how rare and valuable is your mind?</em>
+            </motion.h1>
+
+            <motion.p
+              style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.6, maxWidth: '33em', margin: '22px 0 30px' }}
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
+            >
+              Forget the single IQ digit. Your mind runs on <b style={{ color: CREAM, fontWeight: 600 }}>thirty-two lines</b> of intelligence — and most of your real worth lives in the ones no test ever sees. We measure the <b style={{ color: CREAM, fontWeight: 600 }}>total</b>, then compute how rare a mind that capable actually is.
+            </motion.p>
+
+            <motion.div
+              className="flex gap-[14px] flex-wrap items-center"
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
+            >
+              <Link href="/assessment" className="inline-flex items-center gap-2 cursor-pointer border-0 no-underline rounded-[3px] transition-all duration-150 hover:-translate-y-[1px]" onClick={playClick}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: `linear-gradient(180deg,${CHAMPAGNE},${CHAMPAGNE_D})`, color: INK, fontWeight: 500, boxShadow: '0 6px 26px -10px rgba(224,198,140,0.6)', borderRadius: '3px', display: 'inline-block' }}>Measure yourself — free</span>
+              </Link>
+              <Link href="/weakness-finder" className="inline-flex items-center gap-2 cursor-pointer border rounded-[3px] no-underline transition-all duration-150 hover:border-[#C85C44] hover:text-[#C85C44]"
+                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: 'transparent', color: CREAM, borderColor: LINE_C }}
+              >
+                See what your strengths can’t protect you from
+              </Link>
+              <a href="#dial" className="inline-flex items-center gap-2 cursor-pointer border rounded-[3px] no-underline transition-all duration-150 hover:border-[#E0C68C] hover:text-[#E0C68C]"
+                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: 'transparent', color: CREAM, borderColor: LINE_C }}
+              >
+                See how it works ↓
+              </a>
+            </motion.div>
+
+            <motion.div
+              className="flex gap-[18px] flex-wrap mt-[26px]"
+              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.10em', color: MUTED }}
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
+            >
+              <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> Methodology disclosed</span>
+              <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> 140 peer-reviewed sources</span>
+              <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> No score inflation, ever</span>
+            </motion.div>
+          </div>
+
+          {/* Right: The Dial (hero medallion) */}
+          <div className="relative">
+            <div className="absolute inset-[-6%] z-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 46%, rgba(224,198,140,0.14), transparent 62%)' }} />
+            <svg className="relative z-[1] w-full h-auto block overflow-visible" viewBox="0 0 620 620" role="img" aria-label="Sample AQAL profile: aggregate capability across 32 lines">
+              <g style={{ opacity: mounted ? 1 : 0, transition: 'opacity 1000ms ease 80ms' }}>
+                <circle cx={CX} cy={CY} r={272} fill="none" stroke={CHAMPAGNE} strokeOpacity="0.30" strokeWidth="1" />
+                <circle cx={CX} cy={CY} r={250} fill="none" stroke={CHAMPAGNE} strokeOpacity="0.16" strokeWidth="1" />
+                {Array.from({ length: 72 }).map((_, k) => {
+                  const a = (k * 5 - 90) * (Math.PI / 180);
+                  const long = k % 6 === 0;
+                  const r1 = 252, r2 = 272 - (long ? 3 : 11);
+                  return (<line key={"tk" + k} x1={CX + r1 * Math.cos(a)} y1={CY + r1 * Math.sin(a)} x2={CX + r2 * Math.cos(a)} y2={CY + r2 * Math.sin(a)} stroke={CHAMPAGNE} strokeOpacity={long ? 0.5 : 0.22} strokeWidth={long ? 1.1 : 0.8} />);
+                })}
+              </g>
+              {[25, 50, 75, 100].map((g) => (
+                <circle key={"g" + g} cx={CX} cy={CY} r={rFor(g)} fill="none" stroke={CREAM} strokeOpacity={g === 100 ? 0.12 : 0.055} strokeWidth="1" />
+              ))}
+              {pts.map((p) => (
+                <line key={"sp" + p.i} x1={CX} y1={CY} x2={CX + R_MAX * p.ca} y2={CY + R_MAX * p.sa} stroke={CREAM} strokeOpacity="0.04" strokeWidth="0.8" />
+              ))}
+              <polygon
+                points={poly}
+                fill="rgba(224,198,140,0.06)" stroke={CHAMPAGNE} strokeWidth="1.6" strokeLinejoin="round"
+                style={{ strokeDasharray: 1700, strokeDashoffset: mounted ? 0 : 1700, transition: 'stroke-dashoffset 1500ms cubic-bezier(.22,.61,.36,1) 200ms' }}
+              />
+              {pts.map((p) => {
+                const c = MODE[p.l.mode].c;
+                return (
+                  <g key={"pt" + p.i}>
+                    {p.l.indep && <circle cx={p.x} cy={p.y} r={8} fill="none" stroke={c} strokeOpacity="0.5" strokeDasharray="2 2" />}
+                    <circle cx={p.x} cy={p.y} r={4.2} fill={c} />
+                    <circle cx={p.x} cy={p.y} r={1.8} fill={INK} />
+                  </g>
+                );
+              })}
+              {/* Center text */}
+              <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.24em' }} fill={CREAM2} x={CX} y={CY - 34} textAnchor="middle">AGGREGATE · SAMPLE</text>
+              <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY + 4} textAnchor="middle" fontSize="40">1 in 5,000</text>
+              <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 24} textAnchor="middle">CAPABILITY {aggregate} · 32 LINES · ~6.5 EFF. DIM</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Responsive override for mobile */}
+      <style>{`
+        @media (max-width: 900px) {
+          .aq-hero-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ============================================================
+// THESIS — "One number undersells you."
+// ============================================================
+function ThesisSection() {
+  return (
+    <section style={{ background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,108px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+          Why one number undervalues you
+        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500, fontSize: 'clamp(34px,6vw,64px)', lineHeight: 1.02, color: CREAM, margin: '0 0 20px' }}>
+          "One number undersells you."
+        </p>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
+          The frugal grandmother who out-saved the whole family had a financial mind sharper than anyone at the table —
+          and an IQ test would have called her average. <b style={{ color: CREAM, fontWeight: 600 }}>That's the flaw in a single score:</b> it doesn't just
+          mislabel you, it <em>undercounts</em> you. Measure all thirty-two lines and your real worth — the aggregate a
+          lone number hides — finally shows.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// INTERACTIVE DIAL — Full 32-line exploration
+// ============================================================
+function DialSection() {
+  const [selected, setSelected] = useState(14);
+
+  const pts = useMemo(() => LINES.map((l, i) => {
+    const a = angFor(i);
+    const r = rFor(l.v);
+    const ca = Math.cos(a), sa = Math.sin(a);
+    const rl = R_MAX + (i % 2 === 0 ? 20 : 40);
+    return {
+      i, l, ca, sa,
+      x: CX + r * ca, y: CY + r * sa,
+      lx: CX + rl * ca, ly: CY + rl * sa,
+      anchor: (ca > 0.06 ? "start" : ca < -0.06 ? "end" : "middle") as "start" | "end" | "middle",
+    };
+  }), []);
+  const poly = useMemo(() => pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" "), [pts]);
+  const aggregate = useMemo(() => Math.round(LINES.reduce((s, l) => s + l.v, 0) / N), []);
+  const counts = useMemo(() => { const c = { measured: 0, developmental: 0, demonstrated: 0 }; LINES.forEach((l) => c[l.mode as keyof typeof c]++); return c; }, []);
+  const grouped = useMemo(() => {
+    const g: Record<string, Array<typeof LINES[0] & { i: number }>> = { measured: [], developmental: [], demonstrated: [] };
+    LINES.forEach((l, i) => g[l.mode].push({ ...l, i }));
+    return g;
+  }, []);
+  const sel = LINES[selected];
+  const guides = [25, 50, 75, 100];
+
+  return (
+    <section id="dial" style={{ padding: 'clamp(56px,8vw,108px) 0', background: INK }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+          Your mind, in full
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
+          Thirty-two lines on <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>one dial</em>.
+        </h2>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
+          Every intelligence, plotted in its honest mode — and read as one aggregate. The <b style={{ color: CREAM, fontWeight: 600 }}>independent axes</b> are ringed; they carry most of what makes a capable mind genuinely rare. Hover any point to read it.
+        </p>
+
+        {/* Dial + Detail panel */}
+        <div className="grid gap-[clamp(24px,4vw,52px)] items-center mt-[clamp(20px,3vw,40px)]" style={{ gridTemplateColumns: 'minmax(0,1.1fr) minmax(0,0.9fr)' }}>
+          {/* SVG Dial */}
+          <div className="relative">
+            <div className="absolute inset-[-6%] z-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 46%, rgba(224,198,140,0.14), transparent 62%)' }} />
+            <svg className="relative z-[1] w-full h-auto block overflow-visible" viewBox="0 0 620 620" role="img" aria-label="Interactive dial of 32 intelligence lines">
+              <g style={{ opacity: 1 }}>
+                <circle cx={CX} cy={CY} r={272} fill="none" stroke={CHAMPAGNE} strokeOpacity="0.30" strokeWidth="1" />
+                <circle cx={CX} cy={CY} r={250} fill="none" stroke={CHAMPAGNE} strokeOpacity="0.16" strokeWidth="1" />
+                {Array.from({ length: 72 }).map((_, k) => {
+                  const a = (k * 5 - 90) * (Math.PI / 180);
+                  const long = k % 6 === 0;
+                  const r1 = 252, r2 = 272 - (long ? 3 : 11);
+                  return (<line key={"tk2" + k} x1={CX + r1 * Math.cos(a)} y1={CY + r1 * Math.sin(a)} x2={CX + r2 * Math.cos(a)} y2={CY + r2 * Math.sin(a)} stroke={CHAMPAGNE} strokeOpacity={long ? 0.5 : 0.22} strokeWidth={long ? 1.1 : 0.8} />);
+                })}
+              </g>
+              {guides.map((g) => (
+                <circle key={"g2" + g} cx={CX} cy={CY} r={rFor(g)} fill="none" stroke={CREAM} strokeOpacity={g === 100 ? 0.12 : 0.055} strokeWidth="1" />
+              ))}
+              {pts.map((p) => (
+                <line key={"sp2" + p.i} x1={CX} y1={CY} x2={CX + R_MAX * p.ca} y2={CY + R_MAX * p.sa} stroke={CREAM} strokeOpacity="0.04" strokeWidth="0.8" />
+              ))}
+              <polygon points={poly} fill="rgba(224,198,140,0.06)" stroke={CHAMPAGNE} strokeWidth="1.6" strokeLinejoin="round" />
+              {pts.map((p) => {
+                const on = selected === p.i; const c = MODE[p.l.mode].c;
+                return (
+                  <g key={"pt2" + p.i} className="cursor-pointer" onMouseEnter={() => setSelected(p.i)} onClick={() => setSelected(p.i)}>
+                    {p.l.indep && <circle cx={p.x} cy={p.y} r={on ? 11 : 8} fill="none" stroke={c} strokeOpacity="0.5" strokeDasharray="2 2" />}
+                    <circle cx={p.x} cy={p.y} r={on ? 7 : 4.2} fill={c} />
+                    <circle cx={p.x} cy={p.y} r={on ? 2.8 : 1.8} fill={INK} />
+                  </g>
+                );
+              })}
+              {pts.map((p) => {
+                const on = selected === p.i;
+                return (
+                  <text key={"lb2" + p.i} x={p.lx} y={p.ly} textAnchor={p.anchor} dominantBaseline="middle"
+                    className="cursor-pointer select-none"
+                    style={{ fontFamily: "'Inter', sans-serif", fontWeight: on ? 700 : 600, fontSize: on ? '12.5px' : '11px', letterSpacing: '0.005em', paintOrder: 'stroke', stroke: INK, strokeWidth: '3px', strokeLinejoin: 'round', transition: 'font-size .16s ease, fill .16s ease' }}
+                    fill={on ? MODE[p.l.mode].c : CREAM}
+                    onMouseEnter={() => setSelected(p.i)} onClick={() => setSelected(p.i)}>
+                    {p.l.short}
+                  </text>
+                );
+              })}
+              <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.24em' }} fill={CREAM2} x={CX} y={CY - 20} textAnchor="middle">AGGREGATE CAPABILITY</text>
+              <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY + 14} textAnchor="middle" fontSize="46">{aggregate}</text>
+              <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 32} textAnchor="middle">32 LINES · ~6.5 EFF. DIM</text>
+            </svg>
+          </div>
+
+          {/* Detail Panel */}
+          <div style={{ background: `linear-gradient(180deg,${INK2},${INK})`, border: `1px solid ${LINE_C}`, borderRadius: '6px', padding: '26px 28px' }} aria-live="polite">
+            <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.16em', textTransform: 'uppercase', color: MODE[sel.mode].c }}>
+              <span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: MODE[sel.mode].c }} /> {MODE[sel.mode].label}
+            </span>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(30px,4.4vw,44px)', lineHeight: 1.0, margin: '12px 0 3px', color: CREAM }}>{sel.name}</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.08em', color: CREAM2, marginBottom: '18px' }}>{MODE[sel.mode].verb}</div>
+            <div className="flex items-baseline justify-between mb-[9px]">
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '26px', color: MODE[sel.mode].c }}>{sel.v}</span>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.14em', color: MUTED }}>/ 100</span>
+            </div>
+            <div className="h-[4px] rounded-[4px] relative overflow-hidden" style={{ background: 'rgba(241,234,219,0.10)' }}>
+              <span className="absolute inset-y-0 left-0 rounded-[4px]" style={{ width: `${sel.v}%`, background: MODE[sel.mode].c, transition: 'width .7s cubic-bezier(.22,.61,.36,1)' }} />
+            </div>
+            <div style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.62, marginTop: '18px' }}>{sel.note}</div>
+            {sel.indep && <div className="mt-[15px] inline-flex items-center gap-[7px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.10em', color: CHAMPAGNE }}>◇ Independent axis — carries the effective-dimension count</div>}
+            <div className="flex gap-5 flex-wrap mt-6 pt-[18px]" style={{ borderTop: `1px solid ${LINE_C}` }}>
+              <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.08em', color: CREAM2 }}><span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: CHAMPAGNE }} /> Measured · {counts.measured}</span>
+              <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.08em', color: CREAM2 }}><span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: JADE }} /> Developmental · {counts.developmental}</span>
+              <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.08em', color: CREAM2 }}><span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: BRONZE }} /> Demonstrated · {counts.demonstrated}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 3-column list */}
+        <div className="grid gap-[clamp(16px,3vw,32px)] mt-[38px]" style={{ gridTemplateColumns: 'repeat(3,minmax(0,1fr))' }}>
+          {(["measured", "developmental", "demonstrated"] as const).map((m) => (
+            <div key={m}>
+              <div className="flex items-center gap-2 pb-[9px] mb-[5px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.14em', textTransform: 'uppercase', color: MODE[m].c, borderBottom: `1px solid ${LINE_C}` }}>
+                <span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: MODE[m].c }} /> {MODE[m].label}
+              </div>
+              {grouped[m].map((l) => (
+                <div key={l.i} tabIndex={0} className="flex items-center justify-between gap-3 rounded-[5px] cursor-pointer border border-transparent transition-all duration-150 hover:border-[rgba(241,234,219,0.10)]"
+                  style={{ padding: '8px', background: selected === l.i ? INK3 : 'transparent', borderColor: selected === l.i ? LINE_C : 'transparent' }}
+                  onMouseEnter={() => setSelected(l.i)} onFocus={() => setSelected(l.i)} onClick={() => setSelected(l.i)}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelected(l.i); } }}>
+                  <span className="flex items-center gap-[7px]" style={{ fontSize: '14px', color: CREAM }}>
+                    {l.indep && <span style={{ color: CHAMPAGNE, fontSize: '10px' }}>◇</span>}{l.name}
+                  </span>
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '19px', color: MODE[m].c }}>{l.v}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Responsive */}
+      <style>{`
+        @media (max-width: 900px) {
+          #dial .grid[style*="1.1fr"] { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 760px) {
+          #dial .grid[style*="repeat(3"] { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ============================================================
+// PROCESS — "Speak. Prove. Match."
+// ============================================================
+function ProcessSection() {
+  return (
+    <section id="how" style={{ padding: 'clamp(56px,8vw,108px) 0', background: INK }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div className="h-[1px] mb-[clamp(56px,8vw,108px)]" style={{ background: LINE_C }} />
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+          The process
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
+          Speak. Prove. <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>Match.</em>
+        </h2>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
+          Two phases and a network. It starts loose and fast, then hardens into a verified aggregate — and a use for it.
+        </p>
+        <div className="grid gap-[clamp(20px,3vw,40px)] mt-[clamp(24px,3vw,44px)]" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
+          {STEPS.map((s) => (
+            <div key={s.n} className="pt-[26px]" style={{ borderTop: `2px solid ${CHAMPAGNE}` }}>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.16em', color: CHAMPAGNE, marginBottom: '10px' }}>{s.n}</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '26px', color: CREAM, marginBottom: '8px' }}>{s.t}</div>
+              <div style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.6 }}>{s.d}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 760px) {
+          #how .grid[style*="repeat(3"] { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ============================================================
+// EVIDENCE — "Why you can trust the number"
+// ============================================================
+function EvidenceSection() {
+  return (
+    <section id="evidence" style={{ padding: 'clamp(56px,8vw,108px) 0', background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}` }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+          Why you can trust the number
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
+          Evidence-based, or it's <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>worthless</em>.
+        </h2>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
+          An aggregate score is only worth having if it's honest. Here's what keeps ours from becoming the hype it's surrounded by.
+        </p>
+        <div className="grid gap-[clamp(16px,2.5vw,26px)] mt-[clamp(24px,3vw,44px)]" style={{ gridTemplateColumns: 'repeat(2,1fr)' }}>
+          {EVIDENCE.map((e) => (
+            <div key={e.t} className="rounded-[6px] transition-all duration-200 hover:-translate-y-[2px]" style={{ background: `linear-gradient(180deg,${INK2},${INK})`, border: `1px solid ${LINE_C}`, padding: '24px 26px' }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', marginBottom: '8px', color: CREAM }}>
+                <span style={{ color: CHAMPAGNE, fontSize: '13px', marginRight: '9px', verticalAlign: 'middle' }}>◇</span>{e.t}
+              </div>
+              <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>{e.d}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 720px) {
+          #evidence .grid[style*="repeat(2"] { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ============================================================
+// SAMPLES — "What a rare mind looks like"
+// ============================================================
+function SamplesSection() {
+  return (
+    <section style={{ padding: 'clamp(56px,8vw,108px) 0', background: INK }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+          What a rare mind looks like
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
+          More capable. <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>Rarer.</em>
+        </h2>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
+          The rarest valuable minds aren't spiked in one thing and hollow everywhere else. They're elevated across many independent lines at once — a combination that's both hard to find and genuinely powerful.
+        </p>
+        <div className="grid gap-[clamp(16px,2.5vw,26px)] mt-[clamp(24px,3vw,40px)]" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
+          {SAMPLES.map((s) => (
+            <div key={s.rarity} className="rounded-[6px] text-center" style={{ border: `1px solid ${LINE_C}`, padding: '26px', background: `radial-gradient(420px 200px at 50% 0%, rgba(224,198,140,0.06), transparent 70%), ${INK2}` }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(30px,4.5vw,44px)', lineHeight: 1, background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.rarity}</div>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: CREAM, margin: '14px 0 8px' }}>{s.shape}</div>
+              <div style={{ color: CREAM2, fontSize: '13px', lineHeight: 1.55 }}>{s.desc}</div>
+            </div>
+          ))}
+        </div>
+        <div className="text-center mt-[18px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.12em', color: MUTED }}>
+          Sample results · your figure is computed from your own aggregate, then refined by evidence in Phase 2
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 760px) {
+          section:has(.aq-samples-grid) .grid[style*="repeat(3"] { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ============================================================
+// SERVICE PILLARS — Strength Maximization, Weakness Shielding, Matching
+// ============================================================
+function ServicePillars() {
+  return (
+    <section style={{ padding: 'clamp(56px,8vw,108px) 0', background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}` }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+          What we do with your architecture
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
+          Maximize. Shield. <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>Connect.</em>
+        </h2>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em', marginBottom: 'clamp(32px,4vw,56px)' }}>
+          Knowing your 32-line architecture is the beginning. What matters is what you do with it — and what it does for you when properly deployed.
+        </p>
+
+        {/* Three pillars */}
+        <div className="grid gap-[clamp(20px,3vw,32px)]" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
+          {/* Pillar 1: Strength Maximization */}
+          <div className="rounded-[6px]" style={{ border: `1px solid ${LINE_C}`, padding: '28px 24px', background: `radial-gradient(300px 180px at 50% 0%, rgba(224,198,140,0.05), transparent 70%), ${INK}` }}>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '12px' }}>01 · Maximize</div>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Strength Cluster Optimization</div>
+            <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>
+              <p style={{ marginBottom: '12px' }}>Your highest lines form <b style={{ color: CREAM, fontWeight: 600 }}>strength clusters</b> — groups that amplify each other when used together. We identify these clusters and show you how to deploy them toward your stated goals.</p>
+              <p style={{ marginBottom: '12px' }}>The <b style={{ color: CREAM, fontWeight: 600 }}>second-order effects</b> of combining your top lines optimally are often more powerful than any individual strength. Strategic × Interpersonal doesn't just mean "good at planning and people" — it means you can architect social outcomes most people can't even see.</p>
+              <p>Five AI systems analyze your specific cluster patterns and generate prescriptions for career decisions, relationship dynamics, creative output, and long-term planning.</p>
+            </div>
+          </div>
+
+          {/* Pillar 2: Weakness Protection */}
+          <div className="rounded-[6px]" style={{ border: `1px solid rgba(200,92,68,0.25)`, padding: '28px 24px', background: `radial-gradient(300px 180px at 50% 0%, rgba(200,92,68,0.04), transparent 70%), ${INK}` }}>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: '#C85C44', marginBottom: '12px' }}>02 · Shield</div>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Weakness Cluster Protection</div>
+            <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>
+              <p style={{ marginBottom: '12px' }}>Your lowest lines aren't just "areas for improvement" — they're <b style={{ color: CREAM, fontWeight: 600 }}>structural vulnerabilities</b> that can destroy everything your strengths have built. One weak line can collapse the entire system geometrically, not additively.</p>
+              <p style={{ marginBottom: '12px' }}>We assess the <b style={{ color: CREAM, fontWeight: 600 }}>likelihood</b> of your weakness clusters threatening the system, then prescribe: identify, shield with structural protections, bolster through targeted training (permanent gains, per the research), and insure against worst-case scenarios.</p>
+              <p>The evidence shows intelligence lines can be trained. The gains persist across decades. Your weaknesses are not destiny — but unattended, they control the outcome.</p>
+            </div>
+          </div>
+
+          {/* Pillar 3: Complementary Matching */}
+          <div className="rounded-[6px]" style={{ border: `1px solid ${LINE_C}`, padding: '28px 24px', background: `radial-gradient(300px 180px at 50% 0%, rgba(155,192,178,0.05), transparent 70%), ${INK}` }}>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: JADE, marginBottom: '12px' }}>03 · Connect</div>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Complementary Relationship Matching</div>
+            <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>
+              <p style={{ marginBottom: '12px' }}>We match you with members whose <b style={{ color: CREAM, fontWeight: 600 }}>strength clusters align with your weakness clusters</b> — and vice versa. By forming friendships and professional relationships with these people, their natural strengths begin to elevate your weak areas through proximity and collaboration.</p>
+              <p style={{ marginBottom: '12px' }}>The relationship itself is the intervention. Sustained connection with someone strong in your weak area produces measurable, permanent improvement in that line — not through formal training, but through friendship and shared problem-solving.</p>
+              <p>We offer members the opportunity to reach out, connect, and build genuine relationships as friends, colleagues, and accountability partners.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 900px) {
+          section:has([style*="repeat(3"]) .grid[style*="repeat(3"] { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ============================================================
+// FINAL CTA
+// ============================================================
+function FinalCTA() {
+  return (
+    <section id="start" className="text-center" style={{ padding: 'clamp(64px,9vw,120px) 0', background: `radial-gradient(700px 380px at 50% 10%, rgba(224,198,140,0.10), transparent 65%)` }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div className="flex justify-center mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE }}>
+          Know your mind. Protect it. Maximize it.
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 14px' }}>
+          Discover your architecture. <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>Deploy it.</em>
+        </h2>
+        <p style={{ color: CREAM2, fontSize: 'clamp(14px,1.5vw,16px)', lineHeight: 1.6, maxWidth: '36em', margin: '0 auto 26px' }}>
+          Start with your voice. Verify with evidence. Maximize your strength clusters. Shield your vulnerabilities. Connect with minds that complete yours.
+        </p>
+        <div className="flex gap-[14px] flex-wrap justify-center">
+          <Link href="/assessment" className="inline-flex items-center gap-2 cursor-pointer border-0 no-underline rounded-[3px] transition-all duration-150 hover:-translate-y-[1px]" onClick={playClick}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '15px 30px', background: `linear-gradient(180deg,${CHAMPAGNE},${CHAMPAGNE_D})`, color: INK, fontWeight: 500, boxShadow: '0 6px 26px -10px rgba(224,198,140,0.6)', borderRadius: '3px', display: 'inline-block' }}>Begin the assessment — free</span>
+          </Link>
+          <Link href="/about" className="inline-flex items-center gap-2 cursor-pointer border rounded-[3px] no-underline transition-all duration-150 hover:border-[#E0C68C] hover:text-[#E0C68C]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '15px 30px', background: 'transparent', color: CREAM, borderColor: LINE_C }}>
+            Learn how it works
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// HONEST FOOTER NOTE
+// ============================================================
+function HonestFooter() {
+  return (
+    <div style={{ borderTop: `1px solid ${LINE_C}`, padding: '34px 0 48px', background: INK }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)] flex justify-between gap-5 flex-wrap items-start">
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '23px', letterSpacing: '0.02em', color: CREAM }}>AQAL<b style={{ color: CHAMPAGNE, fontWeight: 600 }}>.</b></div>
+        <div style={{ color: MUTED, fontSize: '12px', lineHeight: 1.6, maxWidth: '560px' }}>
+          <b style={{ color: CREAM2, fontWeight: 500 }}>Honest note:</b> profile values shown here are illustrative. Real percentiles and the true covariance
+          require Phase-2 population data before any aggregate or rarity read is final. The center number is a computed
+          estimate built from your independent axes — not a fixed fact, and never a multiplied one.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// MAIN EXPORT
+// ============================================================
+export default function Home() {
+  useScrollReveal();
+
+  return (
+    <div className="min-h-screen relative" style={{ background: INK }}>
+      <PublicHeader />
+      <div className="relative z-10">
+        <HeroSection />
+        <div data-reveal><ThesisSection /></div>
+        <div data-reveal><DialSection /></div>
+        <div data-reveal><ProcessSection /></div>
+        <div data-reveal><EvidenceSection /></div>
+        <div data-reveal><SamplesSection /></div>
+        <div data-reveal><ServicePillars /></div>
+        <div data-reveal><FinalCTA /></div>
+        <HonestFooter />
+        <PublicFooter />
+      </div>
+    </div>
+  );
+}

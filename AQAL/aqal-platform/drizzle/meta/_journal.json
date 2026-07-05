@@ -1,0 +1,69 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1782684895204,
+      "tag": "0000_lonely_alex_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1782685378650,
+      "tag": "0001_stale_mystique",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1782696878445,
+      "tag": "0002_low_living_tribunal",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1782699837788,
+      "tag": "0003_fancy_kylun",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1782734381138,
+      "tag": "0004_breezy_raider",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1782735294123,
+      "tag": "0005_high_slyde",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1782775371572,
+      "tag": "0006_clammy_omega_flight",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1782833167755,
+      "tag": "0007_young_nightmare",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1782916157480,
+      "tag": "0008_nifty_sebastian_shaw",
+      "breakpoints": true
+    }
+  ]
+}
