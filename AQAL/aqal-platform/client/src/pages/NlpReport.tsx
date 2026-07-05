@@ -165,6 +165,11 @@ export default function NlpReport() {
           <p className="text-white/60 max-w-lg mx-auto">
             How your mind encodes reality. Extracted from your voice patterns, word choices, and linguistic structure.
           </p>
+          <p className="text-white/35 text-xs max-w-lg mx-auto mt-4 leading-relaxed">
+            Exploratory, for self-reflection — not a validated clinical measure. NLP concepts like
+            representational systems and sensory predicates are a lens for noticing patterns in your
+            language, not a proven science of how the mind works.
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">

@@ -103,7 +103,7 @@ export default function Login() {
           transition={{ delay: 0.4, duration: 0.6 }}
           className="mt-8 grid grid-cols-3 gap-4"
         >
-          <TrustBadge icon={<Shield className="w-4 h-4" />} label="HIPAA Compliant" />
+          <TrustBadge icon={<Shield className="w-4 h-4" />} label="Private & Encrypted" />
           <TrustBadge icon={<Sparkles className="w-4 h-4" />} label="7 Patents Pending" />
           <TrustBadge icon={<Brain className="w-4 h-4" />} label="5 AI Systems" />
         </motion.div>

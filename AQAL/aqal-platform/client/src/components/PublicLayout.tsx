@@ -275,7 +275,7 @@ export function PublicFooter() {
               style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem' }}>
               Trust & Security
             </span>
-            <span className="text-sm text-muted-foreground/60">HIPAA Compliant</span>
+            <span className="text-sm text-muted-foreground/60">Private & Encrypted</span>
             <span className="text-sm text-muted-foreground/60">Bank-Grade Encryption</span>
             <span className="text-sm text-muted-foreground/60">7 Patents Pending</span>
             <Link href="/terms">

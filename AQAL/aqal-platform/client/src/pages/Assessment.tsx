@@ -980,7 +980,7 @@ export default function Assessment() {
             <div className="flex flex-wrap justify-center gap-4 text-[10px] text-muted-foreground/30 uppercase tracking-wider mt-6">
               <span>Bank-Grade Encryption</span>
               <span className="text-muted-foreground/15">&bull;</span>
-              <span>HIPAA Compliant</span>
+              <span>Private & Encrypted</span>
               <span className="text-muted-foreground/15">&bull;</span>
               <span>7 Patents Pending</span>
             </div>

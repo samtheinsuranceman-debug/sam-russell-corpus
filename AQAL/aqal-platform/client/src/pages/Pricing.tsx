@@ -190,7 +190,7 @@ export default function Pricing() {
           >
             <span>Bank-Grade Encryption</span>
             <span className="text-muted-foreground/20">•</span>
-            <span>HIPAA Compliant</span>
+            <span>Encrypted &amp; Confidential</span>
             <span className="text-muted-foreground/20">•</span>
             <span>7 Patents Pending</span>
             <span className="text-muted-foreground/20">•</span>
@@ -267,7 +267,7 @@ export default function Pricing() {
         </div>
       </div>
 
-      {/* HIPAA Consent Modal */}
+      {/* Data Privacy & Consent Modal */}
       <Dialog open={showHipaaModal} onOpenChange={setShowHipaaModal}>
         <DialogContent className="bg-card border-border max-w-lg">
           <DialogHeader>
@@ -276,16 +276,18 @@ export default function Pricing() {
             </DialogTitle>
             <DialogDescription className="text-muted-foreground mt-2 space-y-3">
               <p>
-                Your voice recordings and assessment data are processed securely using
-                HIPAA-compliant infrastructure. We take your privacy seriously.
+                Here's exactly what we collect and why: your voice recordings and the
+                transcripts we derive from them, used only to generate your intelligence
+                profile. Nothing else.
               </p>
               <p>
-                By proceeding, you acknowledge that your voice data will be analyzed by
-                AI systems to generate your intelligence profile. Your recordings are
-                encrypted at rest and in transit, and are never shared with third parties.
+                Your recordings are encrypted at rest and in transit, analyzed by AI
+                systems to score your profile, and never sold or shared with third parties.
               </p>
               <p className="text-xs text-muted-foreground/60">
-                You may request deletion of your data at any time by contacting our support team.
+                You can request deletion of your data — recordings, transcripts, and scores —
+                at any time, and we remove it. We are not a healthcare provider, and this
+                assessment is not a medical or clinical service.
               </p>
             </DialogDescription>
           </DialogHeader>

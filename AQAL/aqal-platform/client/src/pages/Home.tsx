@@ -499,7 +499,7 @@ function SamplesSection() {
           ))}
         </div>
         <div className="text-center mt-[18px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.12em', color: MUTED }}>
-          Sample results · your figure is computed from your own aggregate, then refined by evidence in Phase 2
+          Sample results · every figure is an estimate within the AQAL population, computed from your own aggregate, then refined by evidence in Phase 2
         </div>
       </div>
       <style>{`

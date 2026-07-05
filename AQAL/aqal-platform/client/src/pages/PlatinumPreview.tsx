@@ -8,13 +8,13 @@ const PLATINUM_FEATURES = [
   {
     icon: "🎥",
     title: "Video Assessment",
-    description: "Full body language analysis from video conversation. Micro-expressions, posture shifts, and gestural patterns mapped to your 32 dimensions.",
+    description: "Body-language reflection from a video conversation — micro-expressions, posture shifts, and gestural patterns, offered as an exploratory lens (not a validated clinical measure) alongside your 32 lines.",
     status: "Live — Platinum",
   },
   {
     icon: "👁️",
     title: "Eye-Accessing Cue Mapping",
-    description: "NLP eye pattern analysis reveals your internal processing strategies — visual construct vs. recall, auditory dialogue, kinesthetic access.",
+    description: "An exploratory NLP eye-pattern lens on internal processing strategies — visual construct vs. recall, auditory dialogue, kinesthetic access. For self-reflection, not proven science.",
     status: "Live — Platinum",
   },
   {

@@ -301,6 +301,11 @@ export default function VideoAssessment() {
                       <span className="text-foreground font-medium">Behavioral Fusion</span>
                       <p className="mt-0.5">200+ markers combining visual, auditory, and kinesthetic signals</p>
                     </div>
+                    <p className="text-muted-foreground/50 text-[11px] leading-relaxed pt-2 border-t border-border/50">
+                      Exploratory — for self-reflection, not a validated clinical or diagnostic
+                      measure. Eye-accessing cues and micro-expression reads are interpretive lenses,
+                      not proven science; treat them as prompts for reflection, not verdicts.
+                    </p>
                   </div>
                 </Card>
               </div>

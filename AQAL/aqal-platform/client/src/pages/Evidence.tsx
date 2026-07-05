@@ -550,7 +550,7 @@ export default function Evidence() {
             <span className="text-muted-foreground/10">•</span>
             <span>Never Shared</span>
             <span className="text-muted-foreground/10">•</span>
-            <span>HIPAA Compliant</span>
+            <span>Private & Encrypted</span>
           </div>
           <p className="text-muted-foreground/25 text-xs">
             Accepted evidence increases your axis scores and verification tier. Rejected evidence is explained with feedback.

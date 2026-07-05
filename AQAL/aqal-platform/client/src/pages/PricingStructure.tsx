@@ -13,7 +13,7 @@ const TIERS = [
     period: "/month",
     icon: Star,
     color: "oklch(0.7 0.03 250)",
-    rarityReq: "None — any assessed member qualifies",
+    rarityReq: "Open to every assessed member",
     rarityMin: 0,
     description: "Essential intelligence tracking for all assessed members.",
     features: {
@@ -39,8 +39,8 @@ const TIERS = [
     period: "/month",
     icon: Sparkles,
     color: "oklch(0.78 0.12 85)",
-    rarityReq: "1 in 1,000+ (Yellow stage / top 0.1%)",
-    rarityMin: 1000,
+    rarityReq: "Open to every member — for deep analysis & weekly tracking",
+    rarityMin: 0,
     description: "Deep analysis & growth tracking for high-performers.",
     features: {
       "32-axis radar chart": true,
@@ -65,9 +65,9 @@ const TIERS = [
     period: "/month",
     icon: Crown,
     color: "oklch(0.85 0.15 320)",
-    rarityReq: "1 in 5,000+ (Turquoise stage / top 0.02%)",
-    rarityMin: 5000,
-    description: "The world's most exclusive intelligence network.",
+    rarityReq: "Open to every member — the full concierge experience",
+    rarityMin: 0,
+    description: "The full-service intelligence membership.",
     features: {
       "32-axis radar chart": true,
       "Re-assessment frequency": "Unlimited",
@@ -223,7 +223,7 @@ export default function PricingStructure() {
                   </div>
                   <p className="text-muted-foreground/60 text-sm mb-4">{tier.description}</p>
                   <div className="flex items-center gap-2 mt-auto pt-4 border-t border-white/[0.04]">
-                    <Lock className="w-3.5 h-3.5 text-muted-foreground/50" />
+                    <Check className="w-3.5 h-3.5 text-green-400/70" />
                     <span className="text-xs text-muted-foreground/60">{tier.rarityReq}</span>
                   </div>
                 </motion.div>
@@ -305,24 +305,24 @@ export default function PricingStructure() {
       <section className="pb-16 px-4">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: "'Fraunces', serif" }}>
-            Access Rules
+            How Membership Works
           </h2>
           <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 space-y-4">
             <div className="flex gap-3">
               <span className="text-primary font-mono text-sm mt-0.5">01</span>
-              <p className="text-foreground/70 text-sm">All assessed members may subscribe to <strong className="text-foreground">Silver</strong> regardless of rarity score.</p>
+              <p className="text-foreground/70 text-sm">Every tier is open to <strong className="text-foreground">every assessed member</strong>. You choose your plan by the depth of analysis and support you want — never by your score.</p>
             </div>
             <div className="flex gap-3">
               <span className="text-primary font-mono text-sm mt-0.5">02</span>
-              <p className="text-foreground/70 text-sm"><strong className="text-foreground">Gold</strong> requires a composite rarity of 1 in 1,000+ (Yellow stage or above). Members below this threshold see Gold as locked.</p>
+              <p className="text-foreground/70 text-sm"><strong className="text-foreground">Gold</strong> adds weekly re-assessment, power-combination analysis, unlimited evidence and matching, and NLP coaching letters — for members who want to track growth closely.</p>
             </div>
             <div className="flex gap-3">
               <span className="text-primary font-mono text-sm mt-0.5">03</span>
-              <p className="text-foreground/70 text-sm"><strong className="text-foreground">Platinum Diamond</strong> requires a composite rarity of 1 in 5,000+ (Turquoise stage or above). Reserved for minds in the top 0.02%.</p>
+              <p className="text-foreground/70 text-sm"><strong className="text-foreground">Platinum Diamond</strong> adds white-glove curation, concierge matching, unlimited coaching, and 1-on-1 strategy sessions — the full-service experience.</p>
             </div>
             <div className="flex gap-3">
               <span className="text-primary font-mono text-sm mt-0.5">04</span>
-              <p className="text-foreground/70 text-sm">Rarity scores are re-evaluated on each assessment. If a member's score drops below threshold, they retain access for <strong className="text-foreground">90 days</strong> (grace period) before downgrade.</p>
+              <p className="text-foreground/70 text-sm">Upgrade, downgrade, or cancel anytime. Your plan changes take effect at the next billing cycle — <strong className="text-foreground">no score threshold</strong> ever locks you out.</p>
             </div>
             <div className="flex gap-3">
               <span className="text-primary font-mono text-sm mt-0.5">05</span>
