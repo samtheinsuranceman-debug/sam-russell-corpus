@@ -2,7 +2,12 @@ import Stripe from "stripe";
 import { Router, raw } from "express";
 import { PRODUCTS, type ProductKey } from "./products";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+// Construct Stripe only when a key is configured, so the app boots in
+// local/dev/CI without payment credentials (Stripe throws on an empty key).
+// Payment routes return a clear error when Stripe is not configured.
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
 
 export const stripeRouter = Router();
 
@@ -10,6 +15,10 @@ export const stripeRouter = Router();
 stripeRouter.post("/webhook", raw({ type: "application/json" }), async (req, res) => {
   const sig = req.headers["stripe-signature"] as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
+
+  if (!stripe) {
+    return res.status(503).send("Stripe is not configured on this server.");
+  }
 
   let event: Stripe.Event;
 
@@ -133,6 +142,7 @@ export async function createCheckoutSession(params: {
   promoCode?: string;
   origin: string;
 }) {
+  if (!stripe) throw new Error("Payments are not configured on this server.");
   const product = PRODUCTS[params.productKey];
   if (!product) throw new Error(`Invalid product: ${params.productKey}`);
 
