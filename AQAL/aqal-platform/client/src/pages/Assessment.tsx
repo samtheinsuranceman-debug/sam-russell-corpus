@@ -172,8 +172,6 @@ const QUESTIONS_SOURCE: {
     text: "Tell us about a time a coach, a boss, or someone in authority told you to do something that crossed a line — win at someone else's expense, bend the rules, throw someone under the bus. Something that felt wrong in your gut. What did they ask you to do? Did you do it? If you pushed back, what happened? If you went along with it, how did that sit with you after?",
     dimension: "Meta-Cognitive Intelligence",
     axes: [17, 18, 21],
-    skippable: true,
-    skipLabel: "Skip — never on a competitive sports team",
   },
   {
     id: 22,
@@ -191,12 +189,68 @@ const QUESTIONS_SOURCE: {
   },
   {
     id: 24,
-    title: "The First Moment",
-    text: "Take us to the moment you first held your child. What did the room look like? What were you feeling in your body? Was there a moment where reality just shifted — where the person you were five minutes ago stopped existing and someone new was standing there? What changed permanently in how you see the world, time, risk, death, purpose — everything? What did you understand in that moment that you literally could not have understood before it happened?",
+    title: "The Threshold",
+    text: "Take us to the moment you first held your child — or, if that's not your path, the first time you were completely responsible for another life, when you knew there was no handing it back. What did the room look like? What did your body feel? Was there a moment where reality just shifted — where the person you were five minutes earlier stopped existing and someone new was standing there? What changed permanently in how you see the world, time, risk, purpose — everything? What did you understand in that moment that you couldn't have understood before it?",
     dimension: "Existential Intelligence",
     axes: [19, 20, 21],
-    skippable: true,
-    skipLabel: "Skip — not a parent",
+  },
+
+  // ── New high-rapport questions (25–32). Sequenced via QUESTION_ORDER below. ──
+  {
+    id: 25,
+    title: "The Rabbit Hole",
+    text: "What's a rabbit hole you fell down recently — a Wikipedia binge, a 2am YouTube spiral, some random topic you got weirdly deep on for absolutely no practical reason? What pulled you in? How far did you go? And what did you come out the other side knowing that nobody ever asked you to learn?",
+    dimension: "Curiosity & Cognition",
+    axes: [5, 16, 9],
+  },
+  {
+    id: 26,
+    title: "The Obsession",
+    text: "What were you completely, embarrassingly obsessed with as a kid — the thing you'd talk everyone's ear off about until their eyes glazed over? Dinosaurs, a band, horses, memorizing stats about something nobody else cared about. How deep did it go? And be honest — do you still see that kid in who you are today?",
+    dimension: "Passion & Identity",
+    axes: [6, 13, 8],
+  },
+  {
+    id: 27,
+    title: "The Useless Superpower",
+    text: "What's a completely useless talent you have — something you're genuinely, weirdly great at that has never once mattered? Doing accents, parallel parking on the first try, remembering every lyric, knowing exactly what time it is without looking. When did you first realize you could do it — and who's the one person who's ever actually been impressed?",
+    dimension: "Hidden Aptitude",
+    axes: [15, 2, 27],
+  },
+  {
+    id: 28,
+    title: "The 3am Masterclass",
+    text: "If I shook you awake at 3am and said 'you're teaching a 20-minute masterclass right now, no notes, go' — what's the subject? Not necessarily your job. The thing you know so deep in your bones it just pours out of you. Why that, out of everything? And how did you get that good without anyone ever assigning it to you?",
+    dimension: "Mastery",
+    axes: [10, 4, 3],
+  },
+  {
+    id: 29,
+    title: "The Burning House",
+    text: "Everyone you love is out safe, the dog's on the lawn, and you've got ten seconds to run back in for one thing that isn't alive. What do you grab? And here's the real question — what's the story that makes a single object worth running into a fire for?",
+    dimension: "Values & Attachment",
+    axes: [25, 12, 8],
+  },
+  {
+    id: 30,
+    title: "The Time Machine",
+    text: "Is there a specific smell — or a particular meal — that instantly yanks you back to another time in your life? What is it? Exactly where does it drop you? What does the light look like, what can you hear, who's standing there when you arrive? Take your time and actually go back there.",
+    dimension: "Sensory Memory",
+    axes: [24, 25, 12],
+  },
+  {
+    id: 31,
+    title: "The Song",
+    text: "What's the song that — no matter where you are or what mood you're in — does something to you? Turns you all the way up, cracks you open, drops you somewhere else entirely. What is it? And take me to the exact moment in your life it's welded to.",
+    dimension: "Aesthetic Resonance",
+    axes: [14, 25, 6],
+  },
+  {
+    id: 32,
+    title: "The Two Sentences",
+    text: "Two things. First: a compliment someone gave you — maybe offhand, maybe decades ago — that you still quietly replay. Second: a criticism that lodged somewhere and never fully left. What were they? Who said them? And why do you think those two, out of everything anyone's ever said to you, are the ones that stuck?",
+    dimension: "Self-Concept",
+    axes: [6, 5, 12],
   },
 ];
 
@@ -207,7 +261,17 @@ const QUESTIONS_SOURCE: {
 // so momentum (and the signal) build before the deep questions arrive.
 // Values are QUESTIONS_SOURCE ids, in display order.
 // ============================================================
-const QUESTION_ORDER = [23, 7, 19, 1, 8, 3, 4, 5, 9, 6, 10, 15, 14, 16, 17, 11, 12, 18, 20, 13, 21, 22, 2, 24];
+// Final 24, curated for maximum rapport + momentum + strength/growth signal.
+// FREE (1–12): disarm → delight/pride → story/agency → the "purpose" hook.
+// PAID (13–24): depth & sensory → heart → shadow/growth → sacred crescendo.
+// Retired for this build (still authored in QUESTIONS_SOURCE, just unsequenced):
+//   2 The Natural, 3 The Flex, 4 The Negotiation, 6 The Read, 11 The Robbery,
+//   12 The Tense Table, 13 The Wedding Chaos, 16 The Stranger — the weakest
+//   overlaps / partner-or-married assumptions. Swapped in: 25–32.
+const QUESTION_ORDER = [
+  23, 25, 26, 7, 27, 28, 8, 29, 1, 9, 5, 15,   // FREE
+  14, 30, 19, 10, 18, 32, 31, 20, 17, 21, 22, 24, // PAID
+];
 const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
 
 const TOTAL_QUESTIONS = QUESTIONS.length;
@@ -1270,6 +1334,23 @@ export default function Assessment() {
       <main className="relative z-10 flex-1 flex flex-col lg:flex-row items-center justify-center gap-10 px-4 pb-8">
         {/* Left: Question + Recording */}
         <div className="flex-1 max-w-xl w-full flex flex-col items-center text-center">
+          {/* First-question primer — sets the "great conversation, not a test" frame */}
+          {currentQuestion === 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-6 max-w-md mx-auto rounded-xl border border-primary/15 bg-primary/[0.04] px-5 py-4"
+            >
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-primary/70 mb-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Before we start
+              </p>
+              <p className="text-sm text-foreground/80 leading-relaxed">
+                This isn't a test — it's the best kind of bar conversation, with a listener who's genuinely into your stories. There are no right answers. Ramble, chase the tangents, say more than the question asked. The longer and more openly you talk, the more accurate your read. Ready? Tap the mic.
+              </p>
+            </motion.div>
+          )}
+
           {/* Question title */}
           <motion.p
             key={`title-${currentQuestion}`}
@@ -1312,9 +1393,9 @@ export default function Assessment() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Score disclosure */}
+          {/* Talk-longer nudge (honest framing) */}
           <p className="text-xs text-primary/80 tracking-wide text-center max-w-md mx-auto font-bold mb-8" style={{ fontFamily: "'Inter', sans-serif" }}>
-            This is an initial assessment — not yet evidence-based at scale. But early data shows that people scoring above 1-in-10,000 rarity typically recorded well over 60 minutes of material across the full assessment. Answers above 3 minutes generally score 2–10x higher in intelligence ratings. The more you share, the more our AI can see. Go deep. Show off.
+            There's no such thing as talking too long here. The more you actually tell the story — who was there, what you felt, the tangents you'd normally cut — the more of you we can see, and the sharper your profile. Don't summarize. Go deep. Show off.
           </p>
 
           {/* Skip button for skippable questions */}
