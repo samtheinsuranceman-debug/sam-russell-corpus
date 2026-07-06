@@ -277,6 +277,36 @@ const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id =
 const TOTAL_QUESTIONS = QUESTIONS.length;
 const FREE_QUESTIONS = 12; // First 12 free (arc ends on the "purpose" hook), rest behind paywall
 
+// ============================================================
+// PER-ANSWER RICHNESS FEEDBACK — the momentum flywheel
+// Rewards over-disclosure and teaches the behavior we want (talk more, go
+// personal). It rates HOW MUCH you shared, never who you are, and the low tier
+// is a warm invitation to say more — never a grade, never "weak".
+// Signal available client-side: speaking duration (voice) / word count (text).
+// ============================================================
+type FeedbackTier = "seed" | "good" | "rich" | "gold";
+const FEEDBACK_COPY: Record<FeedbackTier, { message: string }> = {
+  gold: { message: "That was gold — we got a ton from that one. This is exactly it." },
+  rich: { message: "Excellent — really rich. Keep telling it to us just like that." },
+  good: { message: "Nice — and the details are where you really show up. Give us even more on the next one." },
+  seed: { message: "There's clearly more to this one. Want to keep going or add a detail before we move on? Tap the mic to add to it." },
+};
+const FEEDBACK_STYLE: Record<FeedbackTier, string> = {
+  gold: "border-primary/40 bg-primary/[0.06] text-primary",
+  rich: "border-emerald-500/30 bg-emerald-500/[0.05] text-emerald-300",
+  good: "border-primary/15 bg-primary/[0.03] text-foreground/80",
+  seed: "border-muted-foreground/20 bg-white/[0.02] text-muted-foreground",
+};
+function tierForDepth(depth: number): FeedbackTier {
+  if (depth >= 0.85) return "gold";
+  if (depth >= 0.5) return "rich";
+  if (depth >= 0.25) return "good";
+  return "seed";
+}
+// Momentum-generous but monotonic: ~2 min / ~150 words reads as "gold".
+const voiceDepth = (durationSec: number) => Math.max(0, Math.min(1, durationSec / 120));
+const textDepth = (words: number) => Math.max(0, Math.min(1, words / 175));
+
 const AXIS_LABELS = ALL_AXES;
 
 // ============================================================
@@ -486,6 +516,9 @@ export default function Assessment() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [analysisSucceeded, setAnalysisSucceeded] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
+  // Per-answer richness reaction (shown in the pause before "Next").
+  const [feedback, setFeedback] = useState<{ tier: FeedbackTier; newLines: number; totalLines: number } | null>(null);
+  const scoresRef = useRef<number[]>([]);
 
   // tRPC mutations for backend submission
   const startMutation = trpc.assessment.start.useMutation();
@@ -573,6 +606,24 @@ export default function Assessment() {
     }
   }, [isComplete]);
 
+  // Mirror scores for pre-update diffing, and clear the reaction on question change.
+  useEffect(() => { scoresRef.current = scores; }, [scores]);
+  useEffect(() => { setFeedback(null); }, [currentQuestion]);
+
+  // Text mode: a live reaction that grows as they write more (voice uses onstop).
+  useEffect(() => {
+    if (!(useTextMode || !recordingSupported)) return;
+    const t = textResponses[currentQuestion] ?? "";
+    const words = t.trim() ? t.trim().split(/\s+/).length : 0;
+    if (words < 8) { setFeedback(null); return; }
+    const qAxes = QUESTIONS[currentQuestion].axes;
+    let newLines = 0;
+    qAxes.forEach((a) => { if ((scoresRef.current[a] ?? 0) === 0) newLines++; });
+    const totalLines = scoresRef.current.filter((s) => s > 0).length + newLines;
+    setFeedback({ tier: tierForDepth(textDepth(words)), newLines, totalLines });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [textResponses, currentQuestion, useTextMode, recordingSupported]);
+
   // Start recording
   const startRecording = useCallback(async () => {
     try {
@@ -633,6 +684,13 @@ export default function Assessment() {
           });
           return next;
         });
+
+        // Warm richness reaction + how many new lines this answer lit up.
+        const prevScores = scoresRef.current;
+        let newLines = 0;
+        questionAxes.forEach((a) => { if ((prevScores[a] ?? 0) === 0) newLines++; });
+        const totalLines = prevScores.filter((s) => s > 0).length + newLines;
+        setFeedback({ tier: tierForDepth(voiceDepth(durationSec)), newLines, totalLines });
       };
 
       mediaRecorder.start(250);
@@ -1563,6 +1621,27 @@ export default function Assessment() {
             </>
           )}
 
+          {/* Per-answer richness reaction — the momentum flywheel */}
+          <AnimatePresence>
+            {!isRecording && feedback && (
+              <motion.div
+                key={`fb-${currentQuestion}`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                className={`mt-6 max-w-md w-full mx-auto rounded-xl border px-5 py-3 text-center ${FEEDBACK_STYLE[feedback.tier]}`}
+              >
+                <p className="text-sm font-semibold leading-snug">{FEEDBACK_COPY[feedback.tier].message}</p>
+                {feedback.newLines > 0 && (
+                  <p className="text-[0.62rem] uppercase tracking-[0.14em] mt-1.5 text-accent/80" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                    Lit up {feedback.newLines} new line{feedback.newLines !== 1 ? "s" : ""} · {feedback.totalLines} of 32
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Navigation */}
           <div className="mt-10 flex items-center gap-4">
             <Button
@@ -1600,6 +1679,17 @@ export default function Assessment() {
           >
             32-Dimension Intelligence Map
           </motion.p>
+          {activeScores.length > 0 && (
+            <motion.p
+              key={activeScores.length}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-[0.62rem] tracking-[0.12em] text-accent/70 mt-1"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            >
+              {activeScores.length} OF 32 LINES LIT
+            </motion.p>
+          )}
           <AssessmentRadar scores={scores} />
 
           {/* Preliminary rarity */}
