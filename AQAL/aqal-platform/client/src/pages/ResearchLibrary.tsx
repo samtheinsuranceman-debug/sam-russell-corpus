@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import {
   Search, ChevronDown, ExternalLink, FileText, ShieldCheck,
-  Sparkles, LayoutGrid, ArrowLeft, Brain, TrendingUp, Shield,
+  Sparkles, LayoutGrid, ArrowLeft, Brain, TrendingUp, Shield, X,
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -483,6 +483,21 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "9": "9 · Physiological & Micro-Practices",
   "10": "10 · Risk Factors & Suppressors",
   "11": "11 · Compounding & Convergence",
+};
+
+// Short labels for the section jump-nav chips.
+const PRACTICE_SECTION_SHORT: Record<string, string> = {
+  "1": "Physical",
+  "2": "Cognitive Transfer",
+  "3": "Social",
+  "4": "Nature",
+  "5": "Travel",
+  "6": "Therapy",
+  "7": "Lifestyle",
+  "8": "Integral Practice",
+  "9": "Micro-Practices",
+  "10": "Risk Factors",
+  "11": "Compounding",
 };
 
 const TAG_COLOR: Record<PracticeCluster["evidenceTag"], string> = {
@@ -1111,6 +1126,10 @@ export default function ResearchLibrary() {
   const [openIds, setOpenIds] = useState<Set<string>>(() => new Set(["financial"]));
   const [openTrainIds, setOpenTrainIds] = useState<Set<string>>(() => new Set(["active-trial"]));
   const [openPracticeIds, setOpenPracticeIds] = useState<Set<string>>(() => new Set(["p-1a"]));
+  // Practices tab: independent search, evidence-tag filter, and section jump.
+  const [practiceQuery, setPracticeQuery] = useState("");
+  const [practiceTag, setPracticeTag] = useState<"all" | PracticeCluster["evidenceTag"]>("all");
+  const [practiceSectionFilter, setPracticeSectionFilter] = useState<string>("all");
 
   const toggle = (id: string) => {
     setOpenIds((prev) => {
@@ -1153,6 +1172,32 @@ export default function ResearchLibrary() {
   }, [filtered]);
 
   const visibleFamilyCount = FAMILIES.filter((f) => grouped[f.key].length > 0).length;
+
+  // Sections present, in display order, for the practices jump-nav.
+  const practiceSectionKeys = useMemo(
+    () => Array.from(new Set(PRACTICE_EVIDENCE.map((c) => c.section))),
+    [],
+  );
+
+  const filteredPractices = useMemo(() => {
+    const q = practiceQuery.trim().toLowerCase();
+    return PRACTICE_EVIDENCE.filter((c) => {
+      if (practiceSectionFilter !== "all" && c.section !== practiceSectionFilter) return false;
+      if (practiceTag !== "all" && c.evidenceTag !== practiceTag) return false;
+      if (q) {
+        const hay = (
+          c.title + " " + c.subtitle + " " + c.description + " " +
+          (PRACTICE_SECTIONS[c.section] || "") + " " +
+          c.sources.map((s) => s.cite + " " + s.note).join(" ")
+        ).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [practiceQuery, practiceTag, practiceSectionFilter]);
+
+  // When a keyword search is active, reveal matching sources automatically.
+  const practiceSearching = practiceQuery.trim().length > 0;
 
   return (
     <div className="rl-page">
@@ -1310,6 +1355,19 @@ export default function ResearchLibrary() {
         .rl-practice-guardrail b{color:${CHAMPAGNE};}
         .rl-practice-tags{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
         .rl-practice-tags .rl-tag{margin-left:0;}
+        /* practices search + filters */
+        .rl-search-clear{display:flex; align-items:center; justify-content:center; color:${MUTED}; padding:2px; border-radius:4px;}
+        .rl-search-clear:hover{color:${CREAM};}
+        .rl-practice-sections{margin-bottom:12px;}
+        .rl-practice-sections .rl-chip-num{color:${CHAMPAGNE}; font-weight:600; margin-right:2px;}
+        .rl-practice-sections .rl-chip.active .rl-chip-num{color:${INK};}
+        .rl-practice-tagfilter{margin-bottom:18px;}
+        .rl-practice-count{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.06em; color:${MUTED};
+          margin-bottom:22px; display:flex; align-items:center; gap:14px;}
+        .rl-practice-count b{color:${CREAM};}
+        .rl-clear-all{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
+          color:${CHAMPAGNE}; border-bottom:1px solid rgba(224,198,140,0.3); padding-bottom:1px;}
+        .rl-clear-all:hover{border-color:${CHAMPAGNE};}
         .rl-practice-section-head{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.18em;
           text-transform:uppercase; color:${CHAMPAGNE}; margin:30px 0 14px; padding-bottom:9px; border-bottom:1px solid ${LINE};}
         .rl-tag{display:inline-block; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:0.12em;
@@ -1608,9 +1666,90 @@ export default function ResearchLibrary() {
               </div>
             </div>
 
-            {PRACTICE_EVIDENCE.map((cluster, idx) => {
-              const isOpen = openPracticeIds.has(cluster.id);
-              const prev = PRACTICE_EVIDENCE[idx - 1];
+            {/* SEARCH + SECTION JUMP + TAG FILTER */}
+            <div className="rl-controls">
+              <div className="rl-search">
+                <Search size={15} />
+                <input
+                  type="text"
+                  value={practiceQuery}
+                  onChange={(e) => setPracticeQuery(e.target.value)}
+                  placeholder="Search practices &amp; studies — try &quot;sleep&quot;, &quot;grit&quot;, or &quot;meta-analysis&quot;"
+                />
+                {practiceQuery && (
+                  <button type="button" className="rl-search-clear" onClick={() => setPracticeQuery("")} aria-label="Clear search">
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Section jump-nav */}
+            <div className="rl-chips rl-practice-sections">
+              <button
+                type="button"
+                className={`rl-chip${practiceSectionFilter === "all" ? " active" : ""}`}
+                onClick={() => setPracticeSectionFilter("all")}
+              >
+                All {PRACTICE_SECTION_COUNT} sections
+              </button>
+              {practiceSectionKeys.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  className={`rl-chip${practiceSectionFilter === s ? " active" : ""}`}
+                  onClick={() => setPracticeSectionFilter(practiceSectionFilter === s ? "all" : s)}
+                >
+                  <span className="rl-chip-num">{s}</span> {PRACTICE_SECTION_SHORT[s] || PRACTICE_SECTIONS[s]}
+                </button>
+              ))}
+            </div>
+
+            {/* Evidence-tag filter */}
+            <div className="rl-chips rl-practice-tagfilter">
+              <button
+                type="button"
+                className={`rl-chip${practiceTag === "all" ? " active" : ""}`}
+                onClick={() => setPracticeTag("all")}
+              >
+                All evidence
+              </button>
+              {(["Strong", "Moderate", "Emerging", "Mixed"] as PracticeCluster["evidenceTag"][]).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  className={`rl-chip${practiceTag === t ? " active" : ""}`}
+                  style={practiceTag === t ? { borderColor: TAG_COLOR[t], color: TAG_COLOR[t] } : undefined}
+                  onClick={() => setPracticeTag(practiceTag === t ? "all" : t)}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+
+            {/* Result count */}
+            <div className="rl-practice-count">
+              Showing <b>{filteredPractices.length}</b> of {PRACTICE_EVIDENCE.length} topics
+              {(practiceSectionFilter !== "all" || practiceTag !== "all" || practiceSearching) && (
+                <button
+                  type="button"
+                  className="rl-clear-all"
+                  onClick={() => { setPracticeQuery(""); setPracticeTag("all"); setPracticeSectionFilter("all"); }}
+                >
+                  Clear all
+                </button>
+              )}
+            </div>
+
+            {filteredPractices.length === 0 && (
+              <div className="rl-empty">
+                No practice or study matches your filters. Try a different keyword, section, or evidence level — or clear all.
+              </div>
+            )}
+
+            {filteredPractices.map((cluster, idx) => {
+              const isOpen = openPracticeIds.has(cluster.id) || practiceSearching;
+              const prev = filteredPractices[idx - 1];
               const showHead = !prev || prev.section !== cluster.section;
               return (
                 <React.Fragment key={cluster.id}>
