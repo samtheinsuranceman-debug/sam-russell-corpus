@@ -15,7 +15,7 @@ import { ALL_AXES } from "@shared/axisModes";
 // ASSESSMENT QUESTIONS — 24 open-ended voice prompts
 // Optimized sequence: maximum momentum, trust-building, elicitation
 // ============================================================
-const QUESTIONS: {
+const QUESTIONS_SOURCE: {
   id: number;
   title: string;
   text: string;
@@ -200,8 +200,18 @@ const QUESTIONS: {
   },
 ];
 
+// ============================================================
+// ELICITATION SEQUENCE — rapport → depth arc
+// Disarm & warm up (novel, low-threat, universal) → pride & story → identity
+// → intimacy → sacred crescendo. Fun openers make people over-disclose early,
+// so momentum (and the signal) build before the deep questions arrive.
+// Values are QUESTIONS_SOURCE ids, in display order.
+// ============================================================
+const QUESTION_ORDER = [23, 7, 19, 1, 8, 3, 4, 5, 9, 6, 10, 15, 14, 16, 17, 11, 12, 18, 20, 13, 21, 22, 2, 24];
+const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
+
 const TOTAL_QUESTIONS = QUESTIONS.length;
-const FREE_QUESTIONS = 12; // Q1-12 free, Q13-24 behind paywall
+const FREE_QUESTIONS = 12; // First 12 free (arc ends on the "purpose" hook), rest behind paywall
 
 const AXIS_LABELS = ALL_AXES;
 
