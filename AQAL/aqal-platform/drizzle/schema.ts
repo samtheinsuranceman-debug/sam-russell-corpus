@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, float, bigint } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, float, bigint, boolean } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -319,3 +319,33 @@ export const videoAssessments = mysqlTable("video_assessments", {
 
 export type VideoAssessment = typeof videoAssessments.$inferSelect;
 export type InsertVideoAssessment = typeof videoAssessments.$inferInsert;
+
+// ============================================================
+// ANALYTICS EVENTS — funnel + scoring-pipeline instrumentation (Stage 6)
+// ============================================================
+export const analyticsEvents = mysqlTable("analytics_events", {
+  id: int("id").autoincrement().primaryKey(),
+  type: varchar("type", { length: 48 }).notNull(), // funnel stage or pipeline event
+  userId: int("userId"),                            // nullable (anonymous landing)
+  sessionId: varchar("sessionId", { length: 64 }),  // anonymous funnel correlation
+  numericValue: float("numericValue"),              // e.g. latency ms for pipeline events
+  ok: boolean("ok"),                                // success flag for pipeline events
+  meta: json("meta"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AnalyticsEvent = typeof analyticsEvents.$inferSelect;
+export type InsertAnalyticsEvent = typeof analyticsEvents.$inferInsert;
+
+// MARKETING SPEND — manual entry so CAC = spend / new subscribers is computable.
+export const marketingSpend = mysqlTable("marketing_spend", {
+  id: int("id").autoincrement().primaryKey(),
+  periodStart: timestamp("periodStart").notNull(),
+  amountCents: int("amountCents").notNull(),
+  channel: varchar("channel", { length: 64 }),
+  note: varchar("note", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MarketingSpend = typeof marketingSpend.$inferSelect;
+export type InsertMarketingSpend = typeof marketingSpend.$inferInsert;

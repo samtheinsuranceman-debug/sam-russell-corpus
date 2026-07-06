@@ -100,7 +100,12 @@ stripeRouter.post("/webhook", raw({ type: "application/json" }), async (req, res
           stripeSubscriptionId: session.subscription as string,
           membershipTier: tier,
         }).where(eq(users.openId, userId));
-        
+
+        // Funnel instrumentation: record the conversion (numeric user id).
+        const { recordEvent, getUserByOpenId } = await import("../db");
+        const u = await getUserByOpenId(userId);
+        if (u) await recordEvent({ type: "subscription_created", userId: u.id, meta: { tier } });
+
         console.log(`[Stripe] User ${userId} subscribed to ${tier}`);
       }
       break;
@@ -108,17 +113,23 @@ stripeRouter.post("/webhook", raw({ type: "application/json" }), async (req, res
 
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
-      const { getDb } = await import("../db");
+      const { getDb, recordEvent } = await import("../db");
       const { users } = await import("../../drizzle/schema");
       const { eq } = await import("drizzle-orm");
       const db = await getDb();
-      
-      // Find user by subscription ID and downgrade
-      if (db) await db.update(users).set({
-        stripeSubscriptionId: null,
-        membershipTier: "free",
-      }).where(eq(users.stripeSubscriptionId, subscription.id));
-      
+
+      // Resolve the user before downgrading so we can record the churn event.
+      let canceledUserId: number | null = null;
+      if (db) {
+        const found = await db.select().from(users).where(eq(users.stripeSubscriptionId, subscription.id)).limit(1);
+        canceledUserId = found[0]?.id ?? null;
+        await db.update(users).set({
+          stripeSubscriptionId: null,
+          membershipTier: "free",
+        }).where(eq(users.stripeSubscriptionId, subscription.id));
+      }
+      if (canceledUserId) await recordEvent({ type: "subscription_canceled", userId: canceledUserId });
+
       console.log(`[Stripe] Subscription ${subscription.id} cancelled`);
       break;
     }

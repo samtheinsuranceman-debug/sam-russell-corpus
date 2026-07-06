@@ -38,6 +38,13 @@ import { createVideoAssessment, getVideoAssessment, getUserVideoAssessments, upd
 import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisMode, MODE_META } from "@shared/axisModes";
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
 import { platformStatus } from "./platform/config";
+import {
+  recordEvent, getAnalyticsEventsSince, getSubscriptionEvents,
+  addMarketingSpend, getMarketingSpendSince,
+} from "./db";
+import {
+  funnelMetrics, pipelineHealth, cac, retention, goNoGo, FUNNEL_STAGES,
+} from "./analytics/metrics";
 
 // The 32-line model is defined once, in shared/axisModes.ts. Never hard-code a count here.
 const AXIS_LABELS = ALL_AXES;
@@ -152,6 +159,7 @@ export const appRouter = router({
         if (!result) return { success: false, error: "Failed to create assessment" };
         // Increment promo code usage
         if (input.promoCode) await incrementPromoCodeUsage(input.promoCode);
+        await recordEvent({ type: "assessment_start", userId: ctx.user.id });
         return { success: true, assessmentId: result.id };
       }),
 
@@ -241,12 +249,15 @@ export const appRouter = router({
           // Transcribe any responses that don't have transcripts yet
           for (const resp of responsesList) {
             if (!resp.transcript && resp.audioUrl) {
+              const sttStart = Date.now();
               try {
                 const transcription = await transcribeAudio({ audioUrl: resp.audioUrl }) as any;
+                await recordEvent({ type: "score_stt", userId: assessment.userId, numericValue: Date.now() - sttStart, ok: !!transcription?.text });
                 if (transcription?.text) {
                   resp.transcript = transcription.text;
                 }
               } catch (e) {
+                await recordEvent({ type: "score_stt", userId: assessment.userId, numericValue: Date.now() - sttStart, ok: false });
                 console.error(`Failed to transcribe response ${resp.id}:`, e);
               }
             }
@@ -332,6 +343,7 @@ Also identify 1-3 "Power Combinations" — intersections of axes where the perso
 
 Respond in JSON format.`;
 
+          const llmStart = Date.now();
           const result = await invokeLLM({
             messages: [
               { role: "system", content: "You are a rigorous developmental psychologist. You score conservatively and honestly. You never inflate scores. Most people score in the 0.3-0.5 range. Only extraordinary responses get above 0.7. Always respond with valid JSON." },
@@ -383,6 +395,7 @@ Respond in JSON format.`;
           });
 
           const content = result.choices?.[0]?.message?.content as string | undefined;
+          await recordEvent({ type: "score_llm", userId: assessment.userId, numericValue: Date.now() - llmStart, ok: !!content });
           if (!content) throw new Error("No analysis result from LLM");
 
           const analysis = JSON.parse(content);
@@ -536,6 +549,7 @@ Return ONLY valid JSON.` },
 
           // Update assessment status with calculated rarity
           await updateAssessmentStatus(input.assessmentId, "complete", compositeRarity, ACTIVE_NORMING_VERSION);
+          await recordEvent({ type: "assessment_complete", userId: assessment.userId, numericValue: compositeRarity });
 
           return { success: true, compositeRarity };
         } catch (error) {
@@ -692,6 +706,44 @@ Return ONLY valid JSON.` },
         const result = await runTestRetest(makeLlmScorer(input.transcript), input.runs);
         return { normingVersion: ACTIVE_NORMING_VERSION, ...result };
       }),
+    // Stage 6: the three numbers that decide the business + pipeline health.
+    funnel: adminProcedure
+      .input(z.object({ days: z.number().int().min(1).max(365).default(30) }).optional())
+      .query(async ({ input }) => {
+        const days = input?.days ?? 30;
+        const now = Date.now();
+        const sinceMs = now - days * 24 * 60 * 60 * 1000;
+        const events = await getAnalyticsEventsSince(sinceMs);
+        const funnel = funnelMetrics(events);
+        const subs = await getSubscriptionEvents();
+        const ret = retention({ created: subs.created, canceled: subs.canceled, now });
+        const spendCents = await getMarketingSpendSince(sinceMs);
+        const cacCents = cac(spendCents, funnel.counts.subscription_created);
+        return {
+          days,
+          funnel,
+          pipeline: {
+            llm: pipelineHealth(events, "score_llm"),
+            stt: pipelineHealth(events, "score_stt"),
+          },
+          retention: ret,
+          spendCents,
+          cacCents,
+          goNoGo: goNoGo({ completeToPaid: funnel.conversion.completeToPaid, cacCents, month2ChurnRate: ret.churnRate }),
+          stages: FUNNEL_STAGES,
+        };
+      }),
+    addMarketingSpend: adminProcedure
+      .input(z.object({
+        periodStart: z.number(),
+        amountCents: z.number().int().min(0),
+        channel: z.string().max(64).optional(),
+        note: z.string().max(255).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        await addMarketingSpend(input);
+        return { ok: true };
+      }),
     users: adminProcedure.query(async () => {
       return getAllUsers();
     }),
@@ -746,6 +798,7 @@ Return ONLY valid JSON.` },
         origin: z.string(),
       }))
       .mutation(async ({ ctx, input }) => {
+        await recordEvent({ type: "checkout_start", userId: ctx.user.id, meta: { productKey: input.productKey } });
         const { createCheckoutSession } = await import("./stripe/index");
         const result = await createCheckoutSession({
           userId: ctx.user.openId,
@@ -756,6 +809,22 @@ Return ONLY valid JSON.` },
           origin: input.origin,
         });
         return result;
+      }),
+  }),
+
+  // ============================================================
+  // ANALYTICS (Stage 6) — funnel instrumentation
+  // ============================================================
+  analytics: router({
+    // Public client-side funnel pings (landing views, etc.). Best-effort.
+    track: publicProcedure
+      .input(z.object({
+        type: z.enum(["landing_view", "assessment_start", "checkout_start"]),
+        sessionId: z.string().max(64).optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await recordEvent({ type: input.type, userId: ctx.user?.id ?? null, sessionId: input.sessionId ?? null });
+        return { ok: true };
       }),
   }),
 

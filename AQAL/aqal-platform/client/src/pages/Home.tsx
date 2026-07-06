@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { playClick } from "@/lib/audio";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import { trpc } from "@/lib/trpc";
 
 // ============================================================
 // AQAL HOME — Merged: Viral hook + Claude's Atelier dial UI
@@ -625,6 +626,13 @@ function HonestFooter() {
 // ============================================================
 export default function Home() {
   useScrollReveal();
+
+  // Top-of-funnel instrumentation (best-effort; ignored if the API is down).
+  const track = trpc.analytics.track.useMutation();
+  useEffect(() => {
+    track.mutate({ type: "landing_view" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen relative" style={{ background: INK }}>

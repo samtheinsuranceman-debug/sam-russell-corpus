@@ -1,6 +1,6 @@
-import { eq, sql, and, desc } from "drizzle-orm";
+import { eq, sql, and, desc, gte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments } from "../drizzle/schema";
+import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -1005,4 +1005,88 @@ export async function saveVideoAnalysisResults(id: number, results: {
     status: "complete",
     completedAt: Date.now(),
   }).where(eq(videoAssessments.id, id));
+}
+
+// ============================================================
+// ANALYTICS (Stage 6) — event recording + aggregate reads
+// ============================================================
+
+// Fire-and-forget: never let instrumentation break a request.
+export async function recordEvent(input: {
+  type: string;
+  userId?: number | null;
+  sessionId?: string | null;
+  numericValue?: number | null;
+  ok?: boolean | null;
+  meta?: unknown;
+}): Promise<void> {
+  try {
+    const db = await getDb();
+    if (!db) return;
+    await db.insert(analyticsEvents).values({
+      type: input.type,
+      userId: input.userId ?? null,
+      sessionId: input.sessionId ?? null,
+      numericValue: input.numericValue ?? null,
+      ok: input.ok ?? null,
+      meta: (input.meta ?? null) as any,
+    });
+  } catch (err) {
+    console.warn("[analytics] recordEvent failed:", err);
+  }
+}
+
+// Raw events since a cutoff, normalized to the pure-metrics shape (epoch ms).
+export async function getAnalyticsEventsSince(sinceMs: number): Promise<Array<{
+  type: string; userId: number | null; numericValue: number | null; ok: boolean | null; createdAt: number;
+}>> {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db.select().from(analyticsEvents).where(gte(analyticsEvents.createdAt, new Date(sinceMs)));
+  return rows.map((r) => ({
+    type: r.type,
+    userId: r.userId ?? null,
+    numericValue: r.numericValue ?? null,
+    ok: r.ok ?? null,
+    createdAt: new Date(r.createdAt as unknown as string).getTime(),
+  }));
+}
+
+// Subscription created/canceled events (all time) for retention math.
+export async function getSubscriptionEvents(): Promise<{
+  created: Array<{ userId: number; at: number }>;
+  canceled: Array<{ userId: number; at: number }>;
+}> {
+  const db = await getDb();
+  if (!db) return { created: [], canceled: [] };
+  const rows = await db.select().from(analyticsEvents);
+  const created: Array<{ userId: number; at: number }> = [];
+  const canceled: Array<{ userId: number; at: number }> = [];
+  for (const r of rows) {
+    if (r.userId == null) continue;
+    const at = new Date(r.createdAt as unknown as string).getTime();
+    if (r.type === "subscription_created") created.push({ userId: r.userId, at });
+    else if (r.type === "subscription_canceled") canceled.push({ userId: r.userId, at });
+  }
+  return { created, canceled };
+}
+
+export async function addMarketingSpend(input: {
+  periodStart: number; amountCents: number; channel?: string; note?: string;
+}): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(marketingSpend).values({
+    periodStart: new Date(input.periodStart),
+    amountCents: input.amountCents,
+    channel: input.channel ?? null,
+    note: input.note ?? null,
+  });
+}
+
+export async function getMarketingSpendSince(sinceMs: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const rows = await db.select().from(marketingSpend).where(gte(marketingSpend.periodStart, new Date(sinceMs)));
+  return rows.reduce((sum, r) => sum + (r.amountCents ?? 0), 0);
 }

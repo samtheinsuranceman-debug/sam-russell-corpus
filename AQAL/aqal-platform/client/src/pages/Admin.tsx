@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { AdminSkeleton } from "@/components/ui/loading-skeleton";
 import { EmptyState } from "@/components/EmptyState";
 import { Users, FileText, Tag, Shield, Search } from "lucide-react";
+import BusinessHealth from "@/components/BusinessHealth";
 
 export default function Admin() {
   const { user } = useAuth();
@@ -110,14 +111,22 @@ export default function Admin() {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="users" className="space-y-4">
+        <Tabs defaultValue="health" className="space-y-4">
           <TabsList className="bg-secondary border border-border">
+            <TabsTrigger value="health" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Business Health</TabsTrigger>
             <TabsTrigger value="users" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Users</TabsTrigger>
             <TabsTrigger value="assessments" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Assessments</TabsTrigger>
             <TabsTrigger value="promos" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Promo Codes</TabsTrigger>
             <TabsTrigger value="evidence" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Evidence Review</TabsTrigger>
             <TabsTrigger value="corpus" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Corpus Search</TabsTrigger>
           </TabsList>
+
+          {/* Business Health Tab (Stage 6) */}
+          <TabsContent value="health">
+            <div className="glass-card p-6">
+              <BusinessHealth />
+            </div>
+          </TabsContent>
 
           {/* Users Tab */}
           <TabsContent value="users">
