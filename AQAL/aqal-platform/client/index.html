@@ -34,10 +34,9 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
+    <!-- Analytics: add your own provider script here. The previous build hard-coded
+         an unconfigured %VITE_ANALYTICS_ENDPOINT% tag that requested an invalid URL
+         on every load; removed so the app runs clean without platform analytics. -->
   </body>
 
 </html>
