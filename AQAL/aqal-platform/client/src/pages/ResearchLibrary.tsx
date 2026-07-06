@@ -213,7 +213,8 @@ const LINES = [
 ];
 
 const TOTAL_LINES = LINES.length;
-const TOTAL_SOURCES = 140;
+// Sources in the three downloadable PDF volumes (Line Evidence + Trainability).
+const VOLUME_SOURCES = 140;
 
 function TierDot({ tier }: { tier: string }) {
   const t = TIER[tier];
@@ -1091,6 +1092,11 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
   },
 ];
 
+// Live counts so the header can never drift from the data again.
+const PRACTICE_SOURCE_COUNT = PRACTICE_EVIDENCE.reduce((n, c) => n + c.sources.length, 0);
+const PRACTICE_SECTION_COUNT = new Set(PRACTICE_EVIDENCE.map((c) => c.section)).size;
+const TOTAL_SOURCES = VOLUME_SOURCES + PRACTICE_SOURCE_COUNT;
+
 export default function ResearchLibrary() {
   // Support deep-linking via ?section=trainability or ?section=practices
   const [section, setSection] = useState<"lines" | "trainability" | "practices">(() => {
@@ -1378,7 +1384,7 @@ export default function ResearchLibrary() {
           >
             <Sparkles size={15} />
             <span>Practices &amp; Evidence</span>
-            <span className="rl-tab-meta">11 sections · 140+ studies</span>
+            <span className="rl-tab-meta">{PRACTICE_SECTION_COUNT} sections · {PRACTICE_SOURCE_COUNT} sources</span>
           </button>
         </div>
 
@@ -1505,7 +1511,7 @@ export default function ResearchLibrary() {
 
             <div className="rl-foot">
               <b>Honest note:</b> one representative source is shown per line above. The full annotated bibliography —
-              all {TOTAL_SOURCES} sources, each with its own note and link — lives in the three volumes. Sources marked
+              all {VOLUME_SOURCES} sources, each with its own note and link — lives in the three volumes. Sources marked
               with <ShieldCheck size={11} style={{ display: "inline", verticalAlign: -2, margin: "0 2px" }} /> link
               directly to the publisher via DOI; the rest link to Google Scholar for the canonical instrument. Nothing
               here is inflated, and nothing is invented.
