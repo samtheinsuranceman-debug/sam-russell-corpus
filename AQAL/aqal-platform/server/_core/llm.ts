@@ -1,4 +1,24 @@
-import { ENV } from "./env";
+import {
+  OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL,
+  FORGE_API_URL, FORGE_API_KEY,
+} from "../platform/config";
+
+// Resolve the active OpenAI-compatible provider (OpenAI first, then the legacy
+// Forge gateway). Returns null when neither is configured — the platform layer
+// falls back to a local mock in that case.
+function resolveProvider(): { base: string; key: string; model?: string } | null {
+  if (OPENAI_API_KEY) {
+    return { base: OPENAI_BASE_URL.replace(/\/$/, ""), key: OPENAI_API_KEY, model: OPENAI_MODEL };
+  }
+  if (FORGE_API_URL && FORGE_API_KEY) {
+    return { base: FORGE_API_URL.replace(/\/$/, ""), key: FORGE_API_KEY };
+  }
+  return null;
+}
+
+export function llmConfigured(): boolean {
+  return resolveProvider() !== null;
+}
 
 export type Role = "system" | "user" | "assistant" | "tool" | "function";
 
@@ -212,15 +232,12 @@ const normalizeToolChoice = (
   return toolChoice;
 };
 
-const resolveApiUrl = () =>
-  ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0
-    ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/chat/completions`
-    : "https://forge.manus.im/v1/chat/completions";
-
-const assertApiKey = () => {
-  if (!ENV.forgeApiKey) {
-    throw new Error("OPENAI_API_KEY is not configured");
+const requireProvider = () => {
+  const provider = resolveProvider();
+  if (!provider) {
+    throw new Error("No LLM provider configured: set OPENAI_API_KEY (or BUILT_IN_FORGE_API_URL/KEY)");
   }
+  return provider;
 };
 
 const normalizeResponseFormat = ({
@@ -340,7 +357,7 @@ const fetchWithBackoff = async (
 };
 
 export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
-  assertApiKey();
+  const provider = requireProvider();
 
   const {
     messages,
@@ -362,8 +379,12 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     messages: messages.map(normalizeMessage),
   };
 
+  // Explicit model wins; otherwise fall back to the provider's default (OpenAI
+  // requires a model, so this keeps the call valid without changing callers).
   if (model) {
     payload.model = model;
+  } else if (provider.model) {
+    payload.model = provider.model;
   }
 
   if (tools && tools.length > 0) {
@@ -401,11 +422,11 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     payload.response_format = normalizedResponseFormat;
   }
 
-  const response = await fetchWithBackoff(resolveApiUrl(), {
+  const response = await fetchWithBackoff(`${provider.base}/v1/chat/completions`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      authorization: `Bearer ${ENV.forgeApiKey}`,
+      authorization: `Bearer ${provider.key}`,
     },
     body: JSON.stringify(payload),
   });
@@ -433,14 +454,10 @@ export type ModelsResponse = {
 };
 
 export async function listLLMModels(): Promise<ModelsResponse> {
-  assertApiKey();
+  const provider = requireProvider();
 
-  const url = ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0
-    ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/models`
-    : "https://forge.manus.im/v1/models";
-
-  const response = await fetchWithBackoff(url, {
-    headers: { authorization: `Bearer ${ENV.forgeApiKey}` },
+  const response = await fetchWithBackoff(`${provider.base}/v1/models`, {
+    headers: { authorization: `Bearer ${provider.key}` },
   });
 
   if (!response.ok) {

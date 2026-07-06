@@ -39,6 +39,24 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
+
+  // Platform storage routes (S3/R2 signed-redirect + local filesystem).
+  const { storageGetSignedUrl, LOCAL_STORAGE_DIR } = await import("../platform/storage");
+  app.get("/s3-storage/*", async (req, res) => {
+    try {
+      const key = (req.params as Record<string, string>)[0];
+      res.set("Cache-Control", "no-store");
+      res.redirect(307, await storageGetSignedUrl(key));
+    } catch {
+      res.status(502).send("Storage error");
+    }
+  });
+  app.use("/local-storage", express.static(LOCAL_STORAGE_DIR));
+
+  // Health + platform provider status (which backends are live vs. mock).
+  const { platformStatus } = await import("../platform/config");
+  app.get("/health", (_req, res) => res.json({ ok: true, platform: platformStatus() }));
+
   // Scheduled handlers (before tRPC and Vite fallthrough)
   const { driftAlertHandler } = await import("../scheduledDriftAlert");
   app.post("/api/scheduled/drift-alert", driftAlertHandler);

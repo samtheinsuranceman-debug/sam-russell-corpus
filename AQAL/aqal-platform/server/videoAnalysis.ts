@@ -13,6 +13,8 @@
  * - Results are stored in video_assessments table
  */
 
+// Vision (Platinum) needs a real multimodal model; imports the provider
+// directly rather than the mock-fallback seam. Feature-flag off if unconfigured.
 import { invokeLLM } from "./_core/llm";
 import { saveVideoAnalysisResults, updateVideoAssessmentStatus } from "./db";
 

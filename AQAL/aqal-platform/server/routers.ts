@@ -21,10 +21,10 @@ import {
   saveCoachingLetter, getCoachingLetters, markLetterRead,
   getNetworkCandidates,
 } from "./db";
-import { storagePut, storageGetSignedUrl } from "./storage";
-import { invokeLLM } from "./_core/llm";
+import { storagePut, storageGetSignedUrl } from "./platform/storage";
+import { invokeLLM } from "./platform/llm";
 import { generateSocialCardSVG } from "./socialCard";
-import { transcribeAudio } from "./_core/voiceTranscription";
+import { transcribeAudio } from "./platform/transcribe";
 import {
   buildIndex, searchCorpus, getCorpusStats, isCorpusReady,
   logEvaluation, getEvaluationReport,

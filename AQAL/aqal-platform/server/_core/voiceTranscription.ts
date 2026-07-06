@@ -25,7 +25,22 @@
  * });
  * ```
  */
-import { ENV } from "./env";
+import {
+  OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_TRANSCRIBE_MODEL,
+  FORGE_API_URL, FORGE_API_KEY,
+} from "../platform/config";
+
+// Active speech-to-text provider (OpenAI Whisper first, then the legacy Forge
+// gateway). Both speak the same `/v1/audio/transcriptions` (Whisper) shape.
+function resolveSttProvider(): { base: string; key: string; model: string } | null {
+  if (OPENAI_API_KEY) {
+    return { base: OPENAI_BASE_URL.replace(/\/$/, ""), key: OPENAI_API_KEY, model: OPENAI_TRANSCRIBE_MODEL };
+  }
+  if (FORGE_API_URL && FORGE_API_KEY) {
+    return { base: FORGE_API_URL.replace(/\/$/, ""), key: FORGE_API_KEY, model: "whisper-1" };
+  }
+  return null;
+}
 
 export type TranscribeOptions = {
   audioUrl: string; // URL to the audio file (e.g., S3 URL)
@@ -74,19 +89,13 @@ export async function transcribeAudio(
   options: TranscribeOptions
 ): Promise<TranscriptionResponse | TranscriptionError> {
   try {
-    // Step 1: Validate environment configuration
-    if (!ENV.forgeApiUrl) {
+    // Step 1: Resolve the active provider (OpenAI Whisper or Forge)
+    const stt = resolveSttProvider();
+    if (!stt) {
       return {
         error: "Voice transcription service is not configured",
         code: "SERVICE_ERROR",
-        details: "BUILT_IN_FORGE_API_URL is not set"
-      };
-    }
-    if (!ENV.forgeApiKey) {
-      return {
-        error: "Voice transcription service authentication is missing",
-        code: "SERVICE_ERROR",
-        details: "BUILT_IN_FORGE_API_KEY is not set"
+        details: "Set OPENAI_API_KEY (or BUILT_IN_FORGE_API_URL/KEY) to enable transcription"
       };
     }
 
@@ -131,7 +140,7 @@ export async function transcribeAudio(
     const audioBlob = new Blob([new Uint8Array(audioBuffer)], { type: mimeType });
     formData.append("file", audioBlob, filename);
     
-    formData.append("model", "whisper-1");
+    formData.append("model", stt.model);
     formData.append("response_format", "verbose_json");
     
     // Add prompt - use custom prompt if provided, otherwise generate based on language
@@ -143,19 +152,12 @@ export async function transcribeAudio(
     formData.append("prompt", prompt);
 
     // Step 4: Call the transcription service
-    const baseUrl = ENV.forgeApiUrl.endsWith("/")
-      ? ENV.forgeApiUrl
-      : `${ENV.forgeApiUrl}/`;
-    
-    const fullUrl = new URL(
-      "v1/audio/transcriptions",
-      baseUrl
-    ).toString();
+    const fullUrl = `${stt.base}/v1/audio/transcriptions`;
 
     const response = await fetch(fullUrl, {
       method: "POST",
       headers: {
-        authorization: `Bearer ${ENV.forgeApiKey}`,
+        authorization: `Bearer ${stt.key}`,
         "Accept-Encoding": "identity",
       },
       body: formData,
