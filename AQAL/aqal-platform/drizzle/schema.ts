@@ -42,6 +42,8 @@ export const assessments = mysqlTable("assessments", {
   totalQuestions: int("totalQuestions").default(24).notNull(),
   completedQuestions: int("completedQuestions").default(0).notNull(),
   compositeRarity: int("compositeRarity"), // e.g. 47000 means "1 in 47,000"
+  // Norming snapshot the composite was computed under — makes the score reproducible.
+  normingVersion: varchar("normingVersion", { length: 48 }),
   promoCode: varchar("promoCode", { length: 64 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

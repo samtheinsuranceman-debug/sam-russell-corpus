@@ -36,6 +36,8 @@ import { rankMatches, type MatchMode, type Profile } from "@shared/matchEngine";
 import { runVideoAnalysis } from "./videoAnalysis";
 import { createVideoAssessment, getVideoAssessment, getUserVideoAssessments, updateVideoAssessmentStatus } from "./db";
 import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisMode, MODE_META } from "@shared/axisModes";
+import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
+import { platformStatus } from "./platform/config";
 
 // The 32-line model is defined once, in shared/axisModes.ts. Never hard-code a count here.
 const AXIS_LABELS = ALL_AXES;
@@ -46,62 +48,16 @@ const AXIS_LABELS = ALL_AXES;
 // ============================================================
 
 /**
- * Maps a 0.0-1.0 axis score to a rarity value (1 in X people)
- * using Spiral Dynamics population distribution:
+ * Maps a 0.0-1.0 axis score to a rarity value (1 in X people).
  *
- * Score 0.0-0.3  → Blue (40% of pop)        → rarity 1-2
- * Score 0.3-0.5  → Orange (30% of pop)       → rarity 2-5
- * Score 0.5-0.7  → Green (10% of pop)        → rarity 5-20
- * Score 0.7-0.85 → Yellow (1% of pop)        → rarity 20-200
- * Score 0.85-0.95→ Turquoise (0.1% of pop)   → rarity 200-2,000
- * Score 0.95-1.0 → Coral (emerging, <0.01%)  → rarity 2,000-10,000
- *
- * Uses a piecewise exponential curve that maps developmental
- * altitude to population rarity.
+ * Delegates to the ACTIVE versioned norming snapshot (server/scoring/norming.ts)
+ * so the curve is defined once and every historical assessment stays
+ * reproducible. v1 is the theoretical Spiral-Dynamics population curve:
+ *   Blue ~40% → 1-3 · Orange ~30% → 3-10 · Green ~10% → 10-100 ·
+ *   Yellow ~1% → 100-1,000 · Turquoise ~0.1% → 1,000-10,000 · Coral → 10,000-100,000.
  */
-export function scoreToRarity(score: number): number {
-  // Clamp to valid range
-  const s = Math.max(0, Math.min(1, score));
-
-  // Curve anchored to Spiral Dynamics population distributions:
-  // Blue (~40% of pop) → rarity 1-3
-  // Orange (~30% of pop) → rarity 3-10
-  // Green (~10% of pop) → rarity 10-100
-  // Yellow (~1% of pop) → rarity 100-1,000
-  // Turquoise (~0.1% of pop) → rarity 1,000-10,000
-  // Coral (~0.01% of pop) → rarity 10,000-100,000
-
-  if (s <= 0.3) {
-    // Blue range: 0.0-0.3 → rarity 1.0 to 3.0
-    // ~40% of global population lives here (conventional thinking)
-    return 1.0 + (s / 0.3) * 2.0;
-  } else if (s <= 0.5) {
-    // Orange range: 0.3-0.5 → rarity 3.0 to 10.0
-    // ~30% of population (rational-achievement, most professionals)
-    const t = (s - 0.3) / 0.2;
-    return 3.0 + t * 7.0;
-  } else if (s <= 0.7) {
-    // Green range: 0.5-0.7 → rarity 10.0 to 100.0
-    // ~10% of population (pluralistic, academics, therapists)
-    // Exponential: 10 → 100 (one order of magnitude)
-    const t = (s - 0.5) / 0.2;
-    return 10.0 * Math.pow(10, t); // 10 → 100
-  } else if (s <= 0.85) {
-    // Yellow range: 0.7-0.85 → rarity 100.0 to 1,000.0
-    // ~1% of population (integrative, systems thinkers)
-    const t = (s - 0.7) / 0.15;
-    return 100.0 * Math.pow(10, t); // 100 → 1,000
-  } else if (s <= 0.95) {
-    // Turquoise range: 0.85-0.95 → rarity 1,000 to 10,000
-    // ~0.1% of population (holistic, rare)
-    const t = (s - 0.85) / 0.10;
-    return 1000.0 * Math.pow(10, t); // 1,000 → 10,000
-  } else {
-    // Coral range: 0.95-1.0 → rarity 10,000 to 100,000
-    // ~0.01% of population (emerging 3rd tier)
-    const t = (s - 0.95) / 0.05;
-    return 10000.0 * Math.pow(10, t); // 10,000 → 100,000
-  }
+export function scoreToRarity(score: number, normingVersion: string = ACTIVE_NORMING_VERSION): number {
+  return normingScoreToRarity(score, normingVersion);
 }
 
 /**
@@ -579,7 +535,7 @@ Return ONLY valid JSON.` },
           await nlpPromise;
 
           // Update assessment status with calculated rarity
-          await updateAssessmentStatus(input.assessmentId, "complete", compositeRarity);
+          await updateAssessmentStatus(input.assessmentId, "complete", compositeRarity, ACTIVE_NORMING_VERSION);
 
           return { success: true, compositeRarity };
         } catch (error) {
@@ -716,6 +672,26 @@ Return ONLY valid JSON.` },
     stats: adminProcedure.query(async () => {
       return getAdminStats();
     }),
+    // Scoring trust: which norming snapshot is active + the platform provider status.
+    scoringHealth: adminProcedure.query(async () => {
+      return {
+        normingVersion: ACTIVE_NORMING_VERSION,
+        providers: platformStatus(),
+      };
+    }),
+    // Test-retest reliability: score the same transcript N times, report per-axis
+    // variance. Real variance requires a live LLM provider; on the mock it returns
+    // an empty/stable result. Runs are capped to keep the call bounded.
+    scoringReliability: adminProcedure
+      .input(z.object({
+        transcript: z.string().min(1),
+        runs: z.number().int().min(2).max(10).default(5),
+      }))
+      .mutation(async ({ input }) => {
+        const { runTestRetest, makeLlmScorer } = await import("./scoring/reliability");
+        const result = await runTestRetest(makeLlmScorer(input.transcript), input.runs);
+        return { normingVersion: ACTIVE_NORMING_VERSION, ...result };
+      }),
     users: adminProcedure.query(async () => {
       return getAllUsers();
     }),

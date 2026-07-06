@@ -1,0 +1,1 @@
+ALTER TABLE `assessments` ADD `normingVersion` varchar(48);

@@ -139,11 +139,12 @@ export async function getLatestAssessment(userId: number) {
   return result[0] || null;
 }
 
-export async function updateAssessmentStatus(id: number, status: "in_progress" | "processing" | "complete" | "failed", compositeRarity?: number) {
+export async function updateAssessmentStatus(id: number, status: "in_progress" | "processing" | "complete" | "failed", compositeRarity?: number, normingVersion?: string) {
   const db = await getDb();
   if (!db) return;
   const updateData: Record<string, unknown> = { status };
   if (compositeRarity !== undefined) updateData.compositeRarity = compositeRarity;
+  if (normingVersion !== undefined) updateData.normingVersion = normingVersion;
   await db.update(assessments).set(updateData).where(eq(assessments.id, id));
 }
 
