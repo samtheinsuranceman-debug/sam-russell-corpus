@@ -1,0 +1,358 @@
+# Transcript: 30min_badass_self_suggestions.mp3
+
+Starting Speech-to-Text conversion...
+Audio file size (26.9MB) exceeds limit (5MB), downsampling audio file...
+Source audio bitrate: 128 kbps
+Audio file size: 26.93 MB, duration: 1765.2 seconds
+Splitting into 6 chunks (each ~294.2 seconds, max 5 MB)...
+Successfully split into 6 chunks
+Audio file split into 6 chunks for batch processing
+Transcribing audio file: /home/ubuntu/audio_corpus/30min_badass_self_suggestions.mp3, file size: 26.93 MB
+Transcription may take some time depending on file size and audio length...
+Starting batch transcription of 6 chunks...
+
+Transcribing chunk 1/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_000.mp3
+Chunk 1 completed (duration: 294.2s)
+
+Transcribing chunk 2/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_001.mp3
+Chunk 2 completed (duration: 294.2s)
+
+Transcribing chunk 3/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_002.mp3
+Chunk 3 completed (duration: 294.2s)
+
+Transcribing chunk 4/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_003.mp3
+Chunk 4 completed (duration: 294.2s)
+
+Transcribing chunk 5/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_004.mp3
+Chunk 5 completed (duration: 294.2s)
+
+Transcribing chunk 6/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_005.mp3
+Chunk 6 completed (duration: 294.2s)
+
+All chunks transcribed successfully!
+
+MERGED TRANSCRIPTION RESULT:
+Total Duration: 1765.0 seconds
+Language: eng
+Total Chunks: 6
+Timestamped segments:
+[00:06.1 - 00:16.8] Imagine that you have before you the book of time, in the pages of which you will find photographs
+[00:16.8 - 00:19.6] spanning your entire lifetime.
+[00:19.6 - 00:28.3] As you open the book, it reveals a picture of yourself at your current age.
+[00:28.3 - 00:38.7] Turn back the pages one year and see the photograph of yourself
+[00:38.7 - 00:43.1] as you were then, then.
+[00:43.1 - 00:53.3] And you can be there again, feeling the things you felt then,
+[00:53.3 - 00:59.6] having the knowledge you had then.
+[00:59.6 - 01:09.9] Continue turning the pages if you wish, going back further and further
+[01:09.9 - 01:20.3] into the past, knowing you are able to stop at any point in order to explore more fully the experiences
+[01:20.3 - 01:22.8] you had at that time.
+[01:22.8 - 01:33.0] Whenever you so desire, you can return to your present age by going forward
+[01:33.0 - 01:36.5] through the pages of the book of time.
+[01:36.5 - 01:47.5] Picture
+[01:47.5 - 01:54.9] yourself getting into an elevator at the top of a tall building and pushing the down button.
+[01:54.9 - 01:57.1] That's right.
+[01:57.1 - 02:01.0] Go ahead and push that down button until it lights up yellow.
+[02:01.0 - 02:01.8] That's good.
+[02:01.8 - 02:12.0] Now, as the elevator descends floor by floor, and as you go deeper and deeper into trance
+[02:12.0 - 02:22.0] and relaxation, I do not know with any conscious mind or my unconscious mind,
+[02:22.0 - 02:32.2] and you do not know with your conscious mind, but your unconscious mind does know
+[02:32.2 - 02:35.7] just how deep you used to be in a trance.
+[02:35.7 - 02:46.2] For work effectively today, just continue to go down deeper with each floor, with each exhalation,
+[02:46.2 - 02:48.2] with each passing second.
+[02:48.2 - 02:58.3] When your unconscious mind knows you have reached the right depth of a trance, the elevator will stop descending, then
+[02:58.3 - 03:00.2] move the yes finger.
+[03:00.2 - 03:07.2] Some elevators are old, and you can feel them going down.
+[03:07.2 - 03:11.7] You can feel them going down deeper and deeper.
+[03:11.7 - 03:21.8] More modern ones are so smooth, you cannot feel them descend, but you have to watch the number
+[03:21.8 - 03:26.4] of those you know that you are going down, down.
+[03:26.4 - 03:31.4] Some of the very old ones, the very new ones.
+[03:31.4 - 03:39.2] One you can see out, and one you can see you are going down deeper and deeper into a trance.
+[03:39.2 - 03:49.4] Sometimes the elevators get stuck, at which point one deals with resistance, usually some kind
+[03:49.4 - 03:52.6] of fear from the past.
+[03:52.6 - 04:02.9] The elevator door opens, and we get off
+[04:02.9 - 04:07.6] and go across the hall into a nice, comfortable lounge room.
+[04:07.6 - 04:13.1] Inside there is a large, comfortable easy chair.
+[04:13.1 - 04:18.6] "Can you see that?" "Good.
+[04:18.6 - 04:22.9] Have a seat and make yourself very comfortable.
+[04:22.9 - 04:33.3] In front of you is a very large screen, TV and a VCR."
+[04:33.3 - 04:38.5] "Can you let me see that?" she said.
+[04:38.5 - 04:48.1] "Take some deep breaths to take you deeper into trance, and the picture will become clearer.
+[04:48.1 - 04:54.1] On one wall or on the other to your-
+[04:54.3 - 04:58.0] Right or to the left is a chalkboard.
+[04:58.0 - 05:04.2] At the bottom of the board is a tray with a piece of chalk in it.
+[05:04.2 - 05:09.4] This chalk is very special.
+[05:09.4 - 05:16.5] It can help us by writing answers to questions we may have and to provide us with directions.
+[05:16.5 - 05:23.2] Pick up a video cassette from a stack on the ta- side of the chair.
+[05:23.2 - 05:28.4] Our mind is very much like a giant video library.
+[05:28.4 - 05:33.3] Take the tape that we need to review today.
+[05:33.3 - 05:42.3] I like to ask her to talk to the chalk and write on the board which tape to pick.
+[05:42.3 - 05:49.9] Anytime there is difficulty in retrieving the memories this way, we ask the chalk to tell us why.
+[05:49.9 - 05:55.3] It usually does, and then we may present from there, proceed from there.
+[05:55.3 - 06:05.5] Put the cassette into the VCR, and when your picture starts to appear on the screen, move your finger yes.
+[06:05.5 - 06:16.9] You review the episode silently and then tell me what you have seen, or you, you can tell me as
+[06:16.9 - 06:17.8] you are seeing it.
+[06:17.8 - 06:28.0] As we walk down the corridor, look at the doors and see if there are any names
+[06:28.0 - 06:28.5] on them.
+[06:28.5 - 06:34.5] I begin to ask if we can talk to the people behind the door.
+[06:34.5 - 06:44.6] Sometimes a window of a speakeasy hole needs to be placed into the speakeasy hole that needs to be placed into the
+[06:44.6 - 06:45.1] door.
+[06:45.1 - 06:52.4] The corridor image is often a way to begin to get a map, a map of the altars.
+[06:52.4 - 06:58.7] Find out how many doors there are, how many resistant to the occupants they are talking.
+[06:58.7 - 07:08.8] Put the cassette tape into the VCR, and when the picture starts
+[07:08.8 - 07:13.1] to appear on your screen, move your finger yes.
+[07:13.1 - 07:23.1] You can review the episode silently and then tell me what you have seen, or you
+[07:23.1 - 07:26.0] can tell me as you are seeing it.
+[07:26.0 - 07:35.9] As the person gets into the memory, I usually start talking to the present tense to help him be there now.
+[07:35.9 - 07:43.2] Sometimes the picture will stop and it isn't obvious that there is more, but they will not need to proceed.
+[07:43.2 - 08:02.2] As
+[08:02.2 - 08:12.7] a result of what I'm about to tell you now, you may find many helpful improvements taking place in your study and improvement habits, and
+[08:12.7 - 08:22.5] in the effectiveness with which you utilize your if-- your abilities is amazing, and then your abilities in studying is amazing.
+[08:22.5 - 08:32.5] Whenever you have any studying and improving to do, you will find that you will always be in just the right mood to go for
+[08:32.5 - 08:32.8] it.
+[08:32.8 - 08:37.0] You love improving and problem-solving.
+[08:37.0 - 08:41.2] You really feel like studying.
+[08:41.2 - 08:51.3] And as a result, you will be able to dig into this fucking material with a lot more energy and a lot more enthusiasm than you usually
+[08:51.3 - 08:51.9] have.
+[08:51.9 - 09:02.2] You'll be able to use your study time much more effectively, for you'll be able to concentrate much more easily and to remember,
+[09:02.2 - 09:12.5] remember, remember, remember, remember with much less effort what you have learned, what you have learned, and what you are learning and continue to learn more now.
+[09:12.5 - 09:17.2] Learning each time you complete a period of study.
+[09:17.2 - 09:27.7] Learning each time, and you will find the experience of strong feelings of pride, learning strong feelings of achievement, and learning strong feelings of accomplishment because
+[09:27.7 - 09:32.1] you have been able to perform effectively and so well.
+[09:32.1 - 09:42.4] Feeling these learnings and feeling these feelings, the rewards you will have for your time you will spend in study, study,
+[09:42.4 - 09:43.8] study, improve.
+[09:43.8 - 09:48.2] You will come back and look forward to your study periods in the same-
+[09:48.4 - 09:52.9] Way that a fr- friend, that a trained athlete looks forward to a good workout.
+[09:52.9 - 09:57.6] Improve, improve, improve.
+[09:57.6 - 10:07.7] It will be a source of deep personal satisfaction to you that you were able to use your abilities to so fully and so well that you
+[10:07.7 - 10:08.6] were able to...
+[10:08.6 - 10:11.6] That you are going to be thrilled and delighted at the results.
+[10:11.6 - 10:22.1] I don't know how quickly
+[10:22.1 - 10:27.1] you can learn, but we all have different learning speeds.
+[10:27.1 - 10:31.7] Some of us learn to type very rap- rap very...
+[10:31.7 - 10:38.3] Some of us learn to type very rapidly, but you take shorthand very, very slowly.
+[10:38.3 - 10:47.3] To drive a car very quickly, but to drive a golf cart very slowly.
+[10:47.3 - 10:57.7] We all have different learning speeds, and we differ in our learning speeds, different learning speeds,
+[10:57.7 - 11:01.5] learning speeds for different kinds of learnings.
+[11:01.5 - 11:06.4] What are you going to do with these statements?
+[11:06.4 - 11:09.4] Are you raising the question of the rate of learning?
+[11:09.4 - 11:12.4] But you used the word speed.
+[11:12.4 - 11:16.3] You haven't said degrees.
+[11:16.3 - 11:38.9] You
+[11:38.9 - 11:48.6] are now so deeply relaxed that all the suggestions that I'm going to give you now will be firmly fixed in the unconscious part of your mind.
+[11:48.6 - 11:55.6] So firmly, firmly fixed, so deeply, deeply embedded that nothing, nothing will remove them.
+[11:55.6 - 12:03.6] Everything that I tell you that is going to happen to you will happen exactly as I tell you.
+[12:03.6 - 12:15.1] Every feeling and every sensation that I tell you that you are going to experience, you will experience just as I tell you that these things will happen, just
+[12:15.1 - 12:24.1] as I tell you that these things will happen, particularly when you r- particularly when you...
+[12:24.1 - 12:30.2] Particularly when you improve yourself.
+[12:30.2 - 12:33.4] Particularly when you...
+[12:33.4 - 12:40.8] Particularly when you go after your goals.
+[12:40.8 - 12:50.9] You are now so deeply relaxed that all the suggestions
+[12:50.9 - 12:57.1] I'm going to give you will be firmly fixed to your unconscious part of your mind.
+[12:57.1 - 13:03.0] So firmly fixed, so deeply embedded that nothing will remove them.
+[13:03.0 - 13:09.6] Everything that I tell you that is going to happen to you will happen exactly as I tell you.
+[13:09.6 - 13:19.8] Every feeling and sensation that I tell you that you're going to experience, you will experience just as I tell you, that these
+[13:19.8 - 13:28.9] things will happen, particularly when you are working on improving yourself and you are going after your goals.
+[13:28.9 - 13:35.4] This entire project is really an experiment with human potentialities.
+[13:35.4 - 13:44.3] Exercise experts have discovered that most people tend to underestimate their own capabilities and abilities.
+[13:44.3 - 13:54.4] There are really two major factors that allow you to be the very best when you are going after your goals and going
+[13:54.4 - 13:56.9] after your goals hard, fast and heavy.
+[13:56.9 - 14:01.5] The first, of course, is really wanting to do well.
+[14:01.5 - 14:08.8] To do well with the exercise tasks which, which you are performing.
+[14:08.8 - 14:11.6] This is something with which you are already familiar.
+[14:11.6 - 14:18.1] But the second one, which is even more important, is something which may not...
+[14:18.1 - 14:20.1] You may, may not even know about.
+[14:20.1 - 14:30.2] This is the fact that if you were to realize in advance what things ordinarily make you think that you have reached your limit,
+[14:30.2 - 14:38.8] you will be able to keep on going beyond that point where you are beginning to experience them.
+[14:38.8 - 14:42.4] Most people use discomfort, dis-
+[14:42.6 - 14:47.4] comfort and fatigue as signs that they should stop doing what they are doing.
+[14:47.4 - 14:49.1] Fools.
+[14:49.1 - 14:59.4] They fail to recognize that discomfort and fatigue are the first signs that they are just getting started, just
+[14:59.4 - 15:03.5] getting busy, just getting fired up.
+[15:03.5 - 15:13.5] They're the first signs that they are approaching their maximum performance levels, and that they
+[15:13.5 - 15:18.6] can, in fact, keep on going.
+[15:18.6 - 15:24.9] Keep on going far beyond that point.
+[15:24.9 - 15:33.0] Most people generally assume that when they start feeling uncomfortable, this feeling will get worse.
+[15:33.0 - 15:43.5] But as a matter of fact, if you allow yourself to keep on going after what you're going after and start to feel that discomfort,
+[15:43.5 - 15:52.4] that feeling will actually dissipate and get smaller and diminish in size, diminish in sound, and simply vanish.
+[15:52.4 - 16:02.4] I am taking, I'm taking it for granted that you are here because you really want to be here, and that you really, really
+[16:02.4 - 16:08.1] are eager to explore your potentiality and to do your utmost on these tasks.
+[16:08.1 - 16:18.7] In that case, the thing that you must really keep in mind is the importance of noticing each sign of discomfort or fatigue,
+[16:18.7 - 16:22.0] and then using it as a stimulus to keep on going.
+[16:22.0 - 16:28.9] Keep on going, keep on going, keep on going, keep on going, keep on going, keep on going.
+[16:28.9 - 16:37.8] Then put it aside in your mind and concentrate on going after go- the goals now.
+[16:37.8 - 16:39.6] Going after the goal now.
+[16:39.6 - 16:40.9] Get it done.
+[16:40.9 - 16:50.2] It is terribly important to us on this experiment to find out exactly how much you can do with these tasks.
+[16:50.2 - 16:59.0] The outcome of this experiment cannot be successful unless you cooperate by giving your absolute maximum performance.
+[16:59.0 - 17:07.8] This is not going to be easy, for it is going to take every ounce of concentration, effort, and willpower that you can muster.
+[17:07.8 - 17:10.0] I want to give you it...
+[17:10.0 - 17:20.0] I want to give it everything that you've got, to feel the strain all through your body, all through your minds, to feel the strain all through your memory,
+[17:20.0 - 17:30.2] all through your mind, and all through your physical so that you can u- that you can strain that good, good advantage using every
+[17:30.2 - 17:31.5] resource within you.
+[17:31.5 - 17:36.5] Make this a total effort, a total and complete effort.
+[17:36.5 - 17:46.5] As you get after your goals and after you train yourself and after you sell longer and longer and longer periods of time, you
+[17:46.5 - 17:49.2] may experience certain symptoms.
+[17:49.2 - 17:54.0] You may experience a feeling of heaviness in the arms.
+[17:54.0 - 18:04.0] You may experience breathlessness, a feeling of tightness in your legs, a sensation of discomfort in your chest or
+[18:04.0 - 18:05.8] throat or mouth.
+[18:05.8 - 18:11.6] Or you would probably develop a sense of fatigue after you've been running for a long time.
+[18:11.6 - 18:21.7] As you start to experience any of these sensations, this is your stimulus for you to run even harder, to run even harder, to
+[18:21.7 - 18:23.9] run even harder.
+[18:23.9 - 18:34.0] As a result of this, you will find that you are able to go on and on and on and on and on and on and on.
+[18:34.0 - 18:44.7] And you actually run through this experience so that you can become less aware of whatever discomfort you were experiencing
+[18:44.7 - 18:46.0] in any ice plunge.
+[18:46.0 - 18:56.1] You diminish that experience, you diminish that pain, and you will feel as though you could go on ice plunging for longer and longer
+[18:56.1 - 19:01.9] and longer and longer and longer and longer periods of time.
+[19:01.9 - 19:12.3] You will feel the great desire to give a total effort, to use every bit of willpower that's used within
+[19:12.3 - 19:12.6] you.
+[19:12.6 - 19:22.7] You will actually get after these goals through your most difficult period, no matter how tired
+[19:22.7 - 19:24.8] you start to become.
+[19:24.8 - 19:35.1] This will act as a stimulus so that you can continue running, continue chasing, continue
+[19:35.1 - 19:36.4] pulling and pushing
+[19:36.8 - 19:46.9] And pressing without becoming unduly distressed as you concentrate on my voice so all these things that I'm telling you will act
+[19:46.9 - 19:51.4] on you when the time comes for you to perform the exercise task.
+[19:51.4 - 20:16.2] Imagine
+[20:16.2 - 20:23.1] now that you are in a very large room, a private, very comfortable room.
+[20:23.1 - 20:27.6] It may be a room in your own house.
+[20:27.6 - 20:33.5] It is a room of safety and of comfort.
+[20:33.5 - 20:38.5] You feel good when you are here in this place.
+[20:38.5 - 20:44.3] Now imagine yourself seated in a large, comfortable chair.
+[20:44.3 - 20:51.1] Feel your body sink, sink, sink into the chair.
+[20:51.1 - 20:58.2] In front of you is a television set with a very large screen.
+[20:58.2 - 21:08.7] And on your chair are buttons and dials that will allow you to control every aspect of this television
+[21:08.7 - 21:09.3] set.
+[21:09.3 - 21:16.6] Now, in your minds, formulate a goal that you would like to work on.
+[21:16.6 - 21:23.5] It can be any goal, short-term or long-term.
+[21:23.5 - 21:31.0] It can be a goal related to your personal life or to your personal job.
+[21:31.0 - 21:37.4] Now turn the television set on and allow a picture to appear.
+[21:37.4 - 21:40.2] See yourself.
+[21:40.2 - 21:44.6] You are experiencing the goal already achieved.
+[21:44.6 - 21:46.7] You have done it.
+[21:46.7 - 21:52.9] Imagine a scene that could only make take place if you had accomplished your goal.
+[21:52.9 - 22:04.3] Experience
+[22:04.3 - 22:05.5] the scene fully.
+[22:05.5 - 22:12.1] Use the fine controls on the television set to slow some down.
+[22:12.1 - 22:19.0] Slow some downnn.
+[22:19.0 - 22:21.6] You study the details.
+[22:21.6 - 22:23.7] Make it move some quick...
+[22:23.7 - 22:25.1] Make it move more quickly.
+[22:25.1 - 22:30.6] Add people or change a whole set or mu-- or whatever, music.
+[22:30.6 - 22:32.3] It's your program.
+[22:32.3 - 22:33.8] It's your goal.
+[22:33.8 - 22:43.8] Now free yourself of being drawn into the picture so that you can become the person on the screen, so that you can become the person on
+[22:43.8 - 22:48.8] the screen, so that you can become the person on the screen.
+[22:48.8 - 22:54.8] Instead of looking into the television set, you are merging with the person.
+[22:54.8 - 23:02.2] Instead of looking at the television set, you are merging with the person who accomplished the goal.
+[23:02.2 - 23:10.1] Again and again and again, this could only take place if your goal was achieved.
+[23:10.1 - 23:18.7] Spend the next few moments completely experiencing the imagery of your fully realized goal.
+[23:18.7 - 23:53.9] She
+[23:53.9 - 24:02.3] was then told while she was still in trance that there remained a couple more phenomenon which she could enjoy.
+[24:02.3 - 24:12.5] One of these phenomenon was related to time and what really set her around a stopwatch
+[24:12.5 - 24:18.7] which, which was exhibited to her.
+[24:18.7 - 24:29.8] With every effort to be instructive, she was reminded of the rapidly with which the time passed, which she was pleased and
+[24:29.8 - 24:30.7] how s-
+[24:31.0 - 24:35.6] Slowly when she was bored.
+[24:35.6 - 24:45.7] The endlessness of the few seconds of all, for an intensity regarded outcome of the matter of doubt,
+[24:45.7 - 24:55.7] the rapidly with which a mere word could cause to flash through the mind the contents of a well-liked book for the
+[24:55.7 - 25:03.8] events of a long, happy trip, and the tremendous rapidity and momentum of thoughts and feelings.
+[25:03.8 - 25:14.2] Against to this background and a detailed elaboration was presented of the concept of distortion, personal, special,
+[25:14.2 - 25:18.1] or experimental time as contrasted to clock time.
+[25:18.1 - 25:26.6] Extensive discussion was also offered of the normal tempo or distortion of experiential time.
+[25:26.6 - 25:54.2] You
+[25:54.2 - 25:58.9] have many times taken a trip in a car and enjoyed it immensely.
+[25:58.9 - 26:02.7] The car was moving very rapidly.
+[26:02.7 - 26:06.7] You saw the sight and you saw that scene.
+[26:06.7 - 26:11.9] You said this and you said that, all in an ordinary way.
+[26:11.9 - 26:19.4] The car moved fast, but you were sitting quietly, just going along.
+[26:19.4 - 26:25.2] You could not stop the car, nor did you want to.
+[26:25.2 - 26:34.7] The telephone poles were so many feet apart, and they came along one by one, and you saw them pass.
+[26:34.7 - 26:39.5] You saw the fields and they passed by.
+[26:39.5 - 26:49.6] Large fields, small fields, and you could only wait quietly to see what would be in the
+[26:49.6 - 26:56.1] next field, and to see whether the next house would be brick or frame.
+[26:56.1 - 27:06.1] And all the time the car went along and you sat quietly, just saw and thought, all on your own way, at your own
+[27:06.1 - 27:10.7] speed, just as it happened, and the car just kept going.
+[27:10.7 - 27:17.2] You did not need to pay attention to the car, just to what next would happen.
+[27:17.2 - 27:23.9] A field, a house, or a horse, or whatever was next.
+[27:23.9 - 27:27.7] However, this experiment will not be a car ride.
+[27:27.7 - 27:32.0] I have just used it to explain more fully to you.
+[27:32.0 - 27:42.3] I could have described going through the cooking of a dinner, peeling potatoes, washing carrots, putting on pork chops,
+[27:42.3 - 27:46.0] anything that you could have done.
+[27:46.0 - 27:51.6] Now I'm going to give you much more time than you need to do this experiment.
+[27:51.6 - 28:02.1] I will give you 20 seconds of world time, but in your special, special time,
+[28:02.1 - 28:06.9] that 20 seconds will just be as long as you need to complete your work.
+[28:06.9 - 28:16.7] It can be a minute, a day, a week, a month, or even years, and you will take all the time you need.
+[28:16.7 - 28:24.6] I will not tell you yet what your experiment or task is.
+[28:24.6 - 28:34.7] As soon as you nod your head to show that you are ready, I will start the stopwatch and give you the signal now,
+[28:34.7 - 28:45.4] and very rapidly I will name the task as it has been done in the previous experiment, and you will start at the beginning of it,
+[28:45.4 - 28:51.6] the very beginning, and go right through the end, no matter how far away it is in time.
+[28:51.6 - 28:53.0] Ready?
+[28:53.0 - 28:54.4] All right.
+[28:54.4 - 29:01.9] Listen carefully for the last click and watch for my signal and the name of the task.
+[29:01.9 - 29:05.2] Now, remember
+Complete transcription result saved to: /home/ubuntu/audio_corpus/30min_badass_self_suggestions_transcription_20260710_174031.json
+Plain text transcription saved to: /home/ubuntu/audio_corpus/30min_badass_self_suggestions_transcription_20260710_174031.txt
+[2J[H[3Jmanus-speech-to-text --terminal-max-len-single=5000 /home/ubuntu/audio_corpus/30min_badass_self_suggestions.mp3
+Starting Speech-to-Text conversion...
+Audio file size (26.9MB) exceeds limit (5MB), downsampling audio file...
+Source audio bitrate: 128 kbps
+Audio file size: 26.93 MB, duration: 1765.2 seconds
+Splitting into 6 chunks (each ~294.2 seconds, max 5 MB)...
+Successfully split into 6 chunks
+Audio file split into 6 chunks for batch processing
+Transcribing audio file: /home/ubuntu/audio_corpus/30min_badass_self_suggestions.mp3, file size: 26.93 MB
+Transcription may take some time depending on file size and audio length...
+
+Chunk transcription progress:
+Starting batch transcription of 6 chunks...
+Transcribing chunk 1/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_000.mp3
+Chunk 1 completed (duration: 294.2s)
+Transcribing chunk 2/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_001.mp3
+Chunk 2 completed (duration: 294.2s)
+Transcribing chunk 3/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_002.mp3
+Chunk 3 completed (duration: 294.2s)
+Transcribing chunk 4/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_003.mp3
+Chunk 4 completed (duration: 294.2s)
+Transcribing chunk 5/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_004.mp3
+Chunk 5 completed (duration: 294.2s)
+Transcribing chunk 6/6: /home/ubuntu/audio_corpus/.30min_badass_self_suggestions_chunks_20260710_173838/chunk_005.mp3
+Chunk 6 completed (duration: 294.2s)
+
+Snippet of transcribed content:
+[25:03.8 - 25:14.2] Against to this background and a detailed elaboration was presented of the concept of distortion, personal, special,
+[25:14.2 - 25:18.1] or experimental time as contrasted to clock time.
+[25:18.1 - 25:26.6] Extensive discussion was also offered of the normal tempo or distortion of experiential time.
+[25:26.6 - 25:54.2] You
+[25:54.2 - 25:58.9] have many times taken a trip in a car and enjoyed it immensely.
+[25:58.9 - 26:02.7] The car was moving very rapidly.
+[26:02.7 - 26:06.7] You saw the sight and you saw that scene.
+[26:06.7 - 26:11.9] You said this and you said that, all in an ordinary way.
+[26:11.9 - 26:19.4] The car moved fast, but you were sitting quietly, just going along.
+[26:19.4 - 26:25.2] You could not stop the car, nor did you want to.
+[26:25.2 - 26:34.7] The telephone poles were so many feet apart, and they came along one by one, and you saw them pass.
+[26:34.7 - 26:39.5] You saw the fields and they passed by.
+[26:39.5 - 26:49.6] Large fields, small fields, and you could only wait quietly to see what would be in the
+[26:49.6 - 26:56.1] next field, and to see whether the next house would be brick or frame.
+[26:56.1 - 27:06.1] And all the time the car went along and you sat quietly, just saw and thought, all on your own way, at your own
+[27:06.1 - 27:10.7] speed, just as it happened, and the car just kept going.
+[27:10.7 - 27:17.2] You did not need to pay attention to the car, just to what next would happen.
+[27:17.2 - 27:23.9] A field, a house, or a horse, or whatever was next.
+[27:23.9 - 27:27.7] However, this experiment will not be a car ride.
+[27:27.7 - 27:32.0] I have just used it to explain more fully to you.
+[27:32.0 - 27:42.3] I could have described going through the cooking of a dinner, peeling potatoes, washing carrots, putting on pork chops,
+[27:42.3 - 27:46.0] anything that you could have done.
+[27:46.0 - 27:51.6] Now I'm going to give you much more time than you need to do this experiment.
+[27:51.6 - 28:02.1] I will give you 20 seconds of world time, but in your special, special time,
+[28:02.1 - 28:06.9] that 20 seconds will just be as long as you need to complete your work.
+[28:06.9 - 28:16.7] It can be a minute, a day, a week, a month, or even years, and you will take all the time you need.
+[28:16.7 - 28:24.6] I will not tell you yet what your experiment or task is.
+[28:24.6 - 28:34.7] As soon as you nod your head to show that you are ready, I will start the stopwatch and give you the signal now,
+[28:34.7 - 28:45.4] and very rapidly I will name the task as it has been done in the previous experiment, and you will start at the beginning of it,
+[28:45.4 - 28:51.6] the very beginning, and go right through the end, no matter how far away it is in time.
+[28:51.6 - 28:53.0] Ready?
+[28:53.0 - 28:54.4] All right.
+[28:54.4 - 29:01.9] Listen carefully for the last click and watch for my signal and the name of the task.
+[29:01.9 - 29:05.2] Now, remember
+Timestamped segments truncated to fit terminal limit (5000 chars).
+
+Completed transcription, JSON saved to /home/ubuntu/audio_corpus/30min_badass_self_suggestions_transcription_20260710_174031.json
+Plain text transcription saved to /home/ubuntu/audio_corpus/30min_badass_self_suggestions_transcription_20260710_174031.txt
