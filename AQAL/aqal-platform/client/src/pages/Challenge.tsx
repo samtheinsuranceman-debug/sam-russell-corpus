@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Swords, Trophy, Zap, ArrowRight } from "lucide-react";
 import { Link, useParams } from "wouter";
-import { getLoginUrl } from "@/const";
+import { beginAuth } from "@/lib/agreement";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 
 export default function Challenge() {
@@ -53,7 +53,7 @@ export default function Challenge() {
 
   const handleAccept = () => {
     if (!user) {
-      window.location.href = getLoginUrl();
+      beginAuth();
       return;
     }
     acceptMutation.mutate({ token: token || "" });

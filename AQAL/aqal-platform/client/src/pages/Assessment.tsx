@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { Mic, MicOff, ArrowRight, ArrowLeft, Check, SkipForward, Lock, Star, Users, Zap, Shield, Crown, Sparkles } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
+import { beginAuth } from "@/lib/agreement";
 import { playComplete, playClick } from "@/lib/audio";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -786,7 +786,7 @@ export default function Assessment() {
         skipped: skippedQuestions,
       }));
       toast.info("Please log in to save your assessment results.");
-      window.location.href = getLoginUrl();
+      beginAuth();
       return;
     }
     try {
@@ -978,7 +978,7 @@ export default function Assessment() {
           skipped: skippedQuestions,
         }));
         toast.info("Please log in first to unlock evidence-based verification.");
-        window.location.href = getLoginUrl();
+        beginAuth();
         return;
       }
       checkoutMutation.mutate({
@@ -994,7 +994,7 @@ export default function Assessment() {
           question: currentQuestion, scores, textResponses, textMode: useTextMode, skipped: skippedQuestions,
         }));
         toast.info("Please log in first, then enter your beta code.");
-        window.location.href = getLoginUrl();
+        beginAuth();
         return;
       }
       const code = betaCode.trim();

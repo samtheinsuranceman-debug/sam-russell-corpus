@@ -1,5 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
+import { beginAuth } from "@/lib/agreement";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -106,7 +106,7 @@ export function PublicHeader() {
               </Link>
             ) : (
               <Button
-                onClick={() => (window.location.href = getLoginUrl())}
+                onClick={() => (beginAuth())}
                 size="sm"
                 className="bg-primary text-primary-foreground rounded-sm hover:bg-primary/90"
               >
@@ -157,7 +157,7 @@ export function PublicHeader() {
                   </Link>
                 ) : (
                   <Button
-                    onClick={() => (window.location.href = getLoginUrl())}
+                    onClick={() => (beginAuth())}
                     className="w-full bg-primary text-primary-foreground rounded-sm"
                   >
                     Sign In

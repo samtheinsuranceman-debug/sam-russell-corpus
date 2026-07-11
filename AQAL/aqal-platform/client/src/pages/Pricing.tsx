@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Check, Shield, Loader2, Zap, Users, Brain, FileText, RefreshCw } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
+import { beginAuth } from "@/lib/agreement";
 import { useState } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -55,7 +55,7 @@ export default function Pricing() {
   const handleCheckout = () => {
     playClick();
     if (!user) {
-      window.location.href = getLoginUrl();
+      beginAuth();
       return;
     }
     setHipaaConsent(false);

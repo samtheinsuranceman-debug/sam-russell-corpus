@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Trophy, Crown, Medal, Star, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
-import { getLoginUrl } from "@/const";
+import { beginAuth } from "@/lib/agreement";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 
 export default function Leaderboard() {
@@ -238,7 +238,7 @@ export default function Leaderboard() {
           >
             <p className="text-muted-foreground mb-3">Want to join the leaderboard?</p>
             <Button asChild>
-              <a href={getLoginUrl()}>Sign In & Take Assessment</a>
+              <a href="/login" onClick={(e) => { e.preventDefault(); beginAuth(); }}>Sign In & Take Assessment</a>
             </Button>
           </motion.div>
         )}

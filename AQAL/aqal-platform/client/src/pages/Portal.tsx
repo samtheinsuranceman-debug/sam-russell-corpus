@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
-import { getLoginUrl } from "@/const";
+import { beginAuth } from "@/lib/agreement";
 import { Link } from "wouter";
 import {
   Search, ChevronDown, ExternalLink, FileText, ShieldCheck,
@@ -710,9 +710,7 @@ export default function Portal() {
           <p className="text-sm text-muted-foreground mb-6">
             Access your intelligence profile, tools, and the research library.
           </p>
-          <a href={getLoginUrl()}>
-            <Button className="w-full bg-primary text-primary-foreground">Sign In</Button>
-          </a>
+          <Button onClick={beginAuth} className="w-full bg-primary text-primary-foreground">Sign In</Button>
         </Card>
       </div>
     );

@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { DollarSign, Users, TrendingUp, Copy, ExternalLink, BarChart3, Rocket, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
-import { getLoginUrl } from "@/const";
+import { beginAuth } from "@/lib/agreement";
 
 export default function InfluencerDashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -43,7 +43,7 @@ export default function InfluencerDashboard() {
             <h2 className="text-xl font-semibold">Influencer Dashboard</h2>
             <p className="text-muted-foreground">Sign in to view your referral stats and earnings.</p>
             <Button asChild>
-              <a href={getLoginUrl()}>Sign In</a>
+              <a href="/login" onClick={(e) => { e.preventDefault(); beginAuth(); }}>Sign In</a>
             </Button>
           </CardContent>
         </Card>

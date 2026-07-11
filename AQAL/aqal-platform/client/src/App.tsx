@@ -5,6 +5,7 @@ import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import PageErrorBoundary from "./components/PageErrorBoundary";
 import DemoModeBanner from "./components/DemoModeBanner";
+import UserAgreementModal from "./components/UserAgreementModal";
 import { ThemeProvider } from "./contexts/ThemeContext";
 // Atelier direction: cosmic effects removed
 // import { CursorGlow } from "./components/CursorGlow";
@@ -390,6 +391,7 @@ function App() {
           {/* Atelier: no cosmic atmosphere or cursor glow */}
           <RouteLoadingBar />
           <DemoModeBanner />
+          <UserAgreementModal />
           <Toaster />
           <main id="main-content" className="relative z-10">
             <Router />

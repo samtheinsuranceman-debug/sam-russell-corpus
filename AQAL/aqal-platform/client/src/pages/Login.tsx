@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
+import { beginAuth } from "@/lib/agreement";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
 import { Shield, Fingerprint, Brain, Sparkles } from "lucide-react";
@@ -25,7 +25,7 @@ export default function Login() {
   }, [user, loading, navigate]);
 
   const handleSignIn = () => {
-    window.location.href = getLoginUrl();
+    beginAuth();
   };
 
   if (loading) {
