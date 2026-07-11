@@ -26,12 +26,15 @@
 // Scores expected as 0..1 "standing" per line. In production derive standing WITHIN each
 // line's mode (percentile / stage position / achievement level) so comparisons are like-for-like.
 
+import { generationForBirthYear, generationGap, type Generation } from "./cohort";
+
 export type MatchMode = "complementary" | "resonance";
 
 export interface Profile {
   name?: string;
   id?: string;
   scores: Record<string, number>;
+  birthYear?: number | null;
 }
 
 export interface ComplementaryResult {
@@ -78,6 +81,47 @@ export const THRESHOLDS = {
   strengthAbs: 0.82,       // absolute bar to "cover an edge" or count as a shared peak
   breadthNorm: 5,          // 5+ shared peaks = full breadth
 };
+
+// Generational affinity — a GENTLE, mode-aware nudge (never dominates the
+// cluster logic). Complementary matching rewards a generational GAP (different
+// life stage rounds you out — a young prodigy and a seasoned elder cover
+// different blind spots); resonance rewards the SAME generation (shared context,
+// peers who click). Applied only when both people supplied a birth year.
+export const GENERATION_MATCH = {
+  complementaryMaxBonus: 8, // points added at max generational gap (0..100 scale)
+  resonanceMaxBonus: 8,     // points added at zero generational gap
+  gapSpan: 3,               // 3+ generations apart = full effect
+};
+
+// Signed score adjustment + a human-readable note for a (me, candidate) pair.
+export function generationalAdjustment(
+  me: Profile,
+  candidate: Profile,
+  mode: MatchMode,
+): { delta: number; note: string | null; gap: number | null; sameGeneration: boolean } {
+  if (me.birthYear == null || candidate.birthYear == null) {
+    return { delta: 0, note: null, gap: null, sameGeneration: false };
+  }
+  const gap = generationGap(me.birthYear, candidate.birthYear);
+  const nearness = Math.min(1, gap / GENERATION_MATCH.gapSpan); // 0 (same) → 1 (far)
+  const genA: Generation = generationForBirthYear(me.birthYear);
+  const genB: Generation = generationForBirthYear(candidate.birthYear);
+  const sameGeneration = gap === 0;
+
+  if (mode === "complementary") {
+    const delta = Math.round(GENERATION_MATCH.complementaryMaxBonus * nearness);
+    const note = sameGeneration
+      ? `Same generation (${genB})`
+      : `Cross-generational (${genA} × ${genB}) — different life-stage coverage`;
+    return { delta, note, gap, sameGeneration };
+  }
+  // resonance
+  const delta = Math.round(GENERATION_MATCH.resonanceMaxBonus * (1 - nearness));
+  const note = sameGeneration
+    ? `Same generation (${genB}) — shared context`
+    : `${genA} × ${genB}`;
+  return { delta, note, gap, sameGeneration };
+}
 
 function rankedLines(s: Record<string, number>): string[] {
   return Object.entries(s).sort((a, b) => a[1] - b[1]).map(([k]) => k);
@@ -181,7 +225,20 @@ export function rankMatches(
   { mode = "complementary" as MatchMode, minScore = 0, limit = Infinity } = {}
 ): Array<{ candidate: Profile } & MatchResult> {
   return candidates
-    .map((c) => ({ candidate: c, ...matchScore(me, c, mode) }))
+    .map((c) => {
+      const base = matchScore(me, c, mode);
+      const gen = generationalAdjustment(me, c, mode);
+      const score = Math.max(0, Math.min(100, base.score + gen.delta));
+      return {
+        candidate: c,
+        ...base,
+        score,
+        clusterScore: base.score,
+        generationGap: gen.gap,
+        sameGeneration: gen.sameGeneration,
+        generationalNote: gen.note,
+      };
+    })
     .filter((r) => r.score >= minScore)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit);

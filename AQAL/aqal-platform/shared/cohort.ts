@@ -43,6 +43,28 @@ export function ageFromBirthYear(birthYear: number, currentYear: number): number
   return Math.max(0, currentYear - birthYear);
 }
 
+// Oldest → youngest. Used to measure generational distance between two people.
+export const GENERATION_ORDER: Generation[] = [
+  "Silent",
+  "Boomer",
+  "Gen X",
+  "Millennial",
+  "Gen Z",
+  "Gen Alpha",
+];
+
+export function generationIndex(g: Generation): number {
+  return GENERATION_ORDER.indexOf(g);
+}
+
+// Number of generations between two birth years (0 = same generation).
+export function generationGap(birthYearA: number, birthYearB: number): number {
+  return Math.abs(
+    generationIndex(generationForBirthYear(birthYearA)) -
+      generationIndex(generationForBirthYear(birthYearB)),
+  );
+}
+
 // How strongly each measurement MODE compounds with age/experience — the
 // per-axis "developmental weight" for cohort norming.
 //   altitude     — meaning-making / developmental stage: compounds the most.

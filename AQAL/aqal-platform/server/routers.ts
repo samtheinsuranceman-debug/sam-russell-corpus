@@ -1326,19 +1326,19 @@ CRITICAL RULES:
         limit: z.number().min(1).max(50).default(10),
       }))
       .query(async ({ ctx, input }) => {
-        // Get current user's latest scores
-        const myScores = await getScoresByAssessment(
-          (await getLatestAssessment(ctx.user.id))?.id ?? 0
-        );
+        // Get current user's latest assessment + scores
+        const myAssessment = await getLatestAssessment(ctx.user.id);
+        const myScores = await getScoresByAssessment(myAssessment?.id ?? 0);
         if (!myScores.length) {
           return { matches: [], total: 0, mode: input.mode };
         }
 
-        // Build "me" profile
+        // Build "me" profile (birth year enables generational affinity)
         const meProfile: Profile = {
           id: String(ctx.user.id),
           name: ctx.user.name || "You",
           scores: Object.fromEntries(myScores.map(s => [s.axisName, s.score])),
+          birthYear: (myAssessment as any)?.birthYear ?? null,
         };
 
         // Get all other users' profiles
@@ -1369,6 +1369,10 @@ CRITICAL RULES:
               candidateName: r.candidate.name,
               generation: cohort?.generation ?? null,
               cohortRarity: cohort?.cohortRarity ?? null,
+              generationalNote: (r as any).generationalNote ?? null,
+              sameGeneration: (r as any).sameGeneration ?? false,
+              generationGap: (r as any).generationGap ?? null,
+              clusterScore: (r as any).clusterScore ?? r.score,
               score: r.score,
               basis: r.basis,
               mode: r.mode,

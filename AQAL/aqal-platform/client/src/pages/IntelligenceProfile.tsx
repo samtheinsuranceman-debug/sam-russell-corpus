@@ -315,8 +315,10 @@ function NetworkPage() {
         comp: m.score,
         tier: "Network",
         strengths: (m as any).coversYourEdges ?? (m as any).sharedPeaks ?? [],
+        genNote: (m as any).generationalNote ?? null,
+        sameGen: (m as any).sameGeneration ?? false,
       }))
-    : MATCHES;
+    : MATCHES.map((m) => ({ ...m, genNote: null, sameGen: false }));
 
   const [region, setRegion] = useState("All");
   const shown = displayMatches.filter((m) => region === "All" || m.region === region);
@@ -368,6 +370,11 @@ function NetworkPage() {
               </div>
             </div>
             <div className="text-[12.5px] text-muted-foreground mt-4 mb-3">{m.covers}</div>
+            {(m as any).genNote && (
+              <div className={`inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.04em] rounded px-2.5 py-1 mb-3 border ${(m as any).sameGen ? "text-[#7FB0CE] border-[#7FB0CE]/30 bg-[#7FB0CE]/[0.06]" : "text-accent border-accent/30 bg-accent/[0.06]"}`}>
+                {(m as any).genNote}
+              </div>
+            )}
             <div className="flex flex-wrap gap-1.5 mb-4">
               {m.strengths.map((s: string) => <span key={s} className="font-mono text-[10px] text-muted-foreground bg-background border border-border rounded px-2.5 py-1">{s}</span>)}
             </div>
