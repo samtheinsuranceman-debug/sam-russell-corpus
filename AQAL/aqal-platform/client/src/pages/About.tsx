@@ -709,9 +709,18 @@ export default function About() {
                   >
                     Drass Wealth Management
                   </a>
-                  , Sam built his career on reading people well — and on a conviction that most of what makes
-                  someone exceptional never shows up on a standard test. He has spent years studying how people
-                  actually think, decide, and change.
+                  , and an advisor with{" "}
+                  <a
+                    href="https://www.elitetaxstrategists.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground underline decoration-primary/40 underline-offset-4 hover:decoration-primary transition-colors"
+                  >
+                    Elite Tax Strategists
+                  </a>{" "}
+                  for advanced, proactive tax planning across all 50 states, Sam built his career on reading
+                  people well — and on a conviction that most of what makes someone exceptional never shows up
+                  on a standard test.
                 </p>
                 <p>
                   AQAL Intelligence is where those two threads meet: the discipline of an advisor who has spent
