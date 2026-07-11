@@ -1,8 +1,39 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { PrefetchLink } from "@/components/PrefetchLink";
 import { Button } from "@/components/ui/button";
 import { Shield, Brain, Users, Zap, TrendingUp, AlertTriangle, Mic, FileCheck, ArrowRight } from "lucide-react";
+
+// Founder portrait. Drop a photo at client/public/founder-sam-russell.jpg and it
+// appears automatically; until then, a tasteful monogram stands in.
+function FounderPhoto() {
+  const [failed, setFailed] = useState(false);
+  return (
+    <div className="relative w-full aspect-[4/5] max-w-[340px] mx-auto rounded-2xl overflow-hidden border border-primary/15 bg-gradient-to-b from-primary/[0.06] to-transparent">
+      {!failed ? (
+        <img
+          src="/founder-sam-russell.jpg"
+          alt="Samuel A. Russell V"
+          className="w-full h-full object-cover"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+          <div
+            className="w-24 h-24 rounded-full border border-primary/40 flex items-center justify-center text-3xl text-primary"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
+          >
+            SR
+          </div>
+          <span className="text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/40" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            Samuel A. Russell V
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function About() {
   return (
@@ -619,6 +650,75 @@ export default function About() {
             but only along a single axis of talent. AQAL measures 32 independent, uncorrelated lines of intelligence —
             producing a multiplicative rarity score that reflects the full architecture of your mind.
           </motion.p>
+        </div>
+      </section>
+
+      {/* Meet the Founder */}
+      <section className="py-20 px-4 border-t border-white/[0.04]">
+        <div className="container max-w-5xl mx-auto">
+          <motion.p
+            className="text-xs uppercase tracking-[0.25em] text-accent/60 mb-10 text-center"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            Meet the Founder
+          </motion.p>
+
+          <div className="grid md:grid-cols-[340px_1fr] gap-10 md:gap-14 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <FounderPhoto />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <h2
+                className="text-3xl sm:text-4xl text-foreground mb-1"
+                style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
+              >
+                Samuel A. Russell V
+              </h2>
+              <p className="text-sm uppercase tracking-[0.15em] text-accent/70 mb-6" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Founder · Financial Advisor · Platform Builder
+              </p>
+
+              <div className="space-y-4 text-muted-foreground leading-relaxed">
+                <p>
+                  For two decades, Sam Russell has sat across the table from people making the decisions that
+                  shape a life — how to protect a family, fund a retirement, weather a downturn. Twenty years as a
+                  financial advisor taught him that the numbers are the easy part. What actually determines the
+                  outcome is the shape of the mind making the call.
+                </p>
+                <p>
+                  A licensed advisor across insurance, Medicare, and retirement planning, and the founder of
+                  <span className="text-foreground"> Russell Capital Solutions</span>, Sam built his career on
+                  reading people well — and on a conviction that most of what makes someone exceptional never
+                  shows up on a standard test. A trained <span className="text-foreground">NLP Master
+                  Practitioner</span>, he spent years studying how people actually think, decide, and change.
+                </p>
+                <p>
+                  AQAL Intelligence is where those two threads meet: the discipline of an advisor who has spent
+                  twenty years underwriting real-world risk, and a genuine fascination with the full architecture
+                  of human capability. He built it to measure the whole person — honestly, across all 32 lines —
+                  the way he wishes every high-stakes decision could be understood.
+                </p>
+              </div>
+
+              <blockquote className="mt-6 pl-4 border-l-2 border-primary/40 text-foreground/80 italic" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.15rem" }}>
+                &ldquo;A single number never told the whole story about a person. I built AQAL to measure the rest of it.&rdquo;
+              </blockquote>
+            </motion.div>
+          </div>
         </div>
       </section>
 
