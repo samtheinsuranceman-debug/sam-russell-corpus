@@ -59,7 +59,6 @@ export default function UserAgreementModal() {
             <ul className="space-y-2.5 text-sm text-muted-foreground/85 leading-relaxed mb-5">
               <li>• <span className="text-foreground/90">We never sell your personal information.</span></li>
               <li>• Your voice is transcribed, then discarded — we keep only your scores and text responses.</li>
-              <li>• <span className="text-foreground/90">Evidence you upload is reviewed once, validated, then permanently deleted</span> — we record what your result is, never the file itself.</li>
               <li>• You grant AQAL a license to store and process your data, and to use de-identified, aggregated data to operate and improve the service. AQAL owns the assessment data and models.</li>
               <li>• Results are informational estimates — not medical, psychological, or professional advice.</li>
               <li>• You confirm you are 18 or older.</li>

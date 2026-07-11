@@ -57,9 +57,6 @@ export default function Terms() {
               <p>
                 When you complete an assessment, your voice recordings are processed by our AI systems to generate scores. Voice recordings are processed in real-time and are not permanently stored after analysis is complete. Only the resulting numerical scores and text transcriptions are retained in association with your account.
               </p>
-              <p className="mt-3">
-                <strong className="text-foreground">Evidence uploads.</strong> Any evidence you upload to verify your scores is reviewed one time, validated, and used solely to record your result and what it means. The moment that measurement is recorded, the uploaded file is permanently and irreversibly deleted from our servers and all backups. We retain the conclusion, never the uploaded evidence itself.
-              </p>
             </section>
 
             <section>
