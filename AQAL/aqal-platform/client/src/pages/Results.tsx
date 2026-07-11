@@ -1026,10 +1026,13 @@ export default function Results() {
 
             {/* Match Previews */}
             <div className="max-w-2xl mx-auto">
-              <h3 className="text-sm font-semibold text-foreground/70 mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-foreground/70 mb-1 flex items-center gap-2">
                 <Shield className="w-4 h-4 text-accent/60" />
                 Your Complementary Match Profile
               </h3>
+              <p className="text-[0.7rem] text-muted-foreground/45 mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.06em" }}>
+                Illustrative examples of the shape of match you attract — real members appear once the network is live.
+              </p>
               <div className="space-y-3 mb-6">
                 {matchPreviews.map((match, i) => (
                   <MatchPreview key={i} match={match} index={i} />

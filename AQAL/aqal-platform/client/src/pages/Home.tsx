@@ -377,6 +377,9 @@ function DialSection() {
               <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY + 14} textAnchor="middle" fontSize="46">{aggregate}</text>
               <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 32} textAnchor="middle">32 LINES · ~6.5 EFF. DIM</text>
             </svg>
+            <div className="text-center mt-3" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: MUTED }}>
+              Illustrative example — not your data
+            </div>
           </div>
 
           {/* Detail Panel */}

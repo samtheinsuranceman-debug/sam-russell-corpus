@@ -56,7 +56,7 @@ export default function Leaderboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <PublicHeader />
       {/* Gradient mesh */}
       <div className="fixed inset-0 pointer-events-none opacity-30">
