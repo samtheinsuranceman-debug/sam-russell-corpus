@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import AssessmentResumeDialog from "@/components/AssessmentResumeDialog";
 import { ALL_AXES } from "@shared/axisModes";
+import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 
 // ============================================================
 // ASSESSMENT QUESTIONS — 24 open-ended voice prompts
@@ -519,6 +520,12 @@ export default function Assessment() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [analysisSucceeded, setAnalysisSucceeded] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
+  const [birthYear, setBirthYear] = useState<number | null>(() => {
+    if (typeof window === "undefined") return null;
+    const saved = localStorage.getItem("aqal_birth_year");
+    const n = saved ? parseInt(saved, 10) : NaN;
+    return Number.isFinite(n) ? n : null;
+  });
   // Per-answer richness reaction (shown in the pause before "Next").
   const [feedback, setFeedback] = useState<{ tier: FeedbackTier; newLines: number; totalLines: number } | null>(null);
   const scoresRef = useRef<number[]>([]);
@@ -888,6 +895,21 @@ export default function Assessment() {
     const logSum = activeScores.reduce((sum, s) => sum + Math.log(Math.max(1, scoreToRarity(s))), 0);
     const geoMean = Math.exp(logSum / activeScores.length);
     preliminaryRarity = Math.max(1, Math.min(1_000_000, Math.round(geoMean)));
+  }
+
+  // Cohort rarity — the same shape scored against the user's OWN generation.
+  // Developmental lines are age-adjusted so a young high-scorer reads as rarer
+  // among peers (and an elder less rare) than the whole-population number.
+  const currentYear = new Date().getFullYear();
+  const cohortAge = birthYear ? Math.max(10, currentYear - birthYear) : null;
+  const generation: Generation | null = birthYear ? generationForBirthYear(birthYear) : null;
+  let cohortRarity = 0;
+  if (cohortAge != null && activeScores.length > 0) {
+    const cohortScores = scores
+      .map((s, i) => (s > 0 ? cohortAdjustedScore(s, ALL_AXES[i], cohortAge) : null))
+      .filter((x): x is number => x != null);
+    const logSum = cohortScores.reduce((sum, s) => sum + Math.log(Math.max(1, scoreToRarity(s))), 0);
+    cohortRarity = Math.max(1, Math.min(1_000_000, Math.round(Math.exp(logSum / cohortScores.length))));
   }
 
   // Confidence of the FREE, voice-only result. It is capped at "Moderate" by
@@ -1318,21 +1340,48 @@ export default function Assessment() {
             transition={{ delay: 0.5, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
             className="glass-card rounded-2xl p-8 mb-8 border border-primary/10"
           >
-            <p
-              className="text-xs uppercase tracking-[0.2em] text-primary/60 mb-3"
-              style={{ fontFamily: "'JetBrains Mono', monospace" }}
-            >
-              Your Composite Rarity
-            </p>
-            <p
-              className="text-4xl sm:text-5xl font-bold text-glow-gold"
-              style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}
-            >
-              1 in {preliminaryRarity.toLocaleString()}
-            </p>
-            <p className="text-muted-foreground/40 text-xs mt-3">
-              Based on statistical placement across {activeScores.length} scored dimensions
-            </p>
+            {generation && cohortRarity > 0 ? (
+              <>
+                <p
+                  className="text-xs uppercase tracking-[0.2em] text-primary/60 mb-3"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                >
+                  Your Rarity — Among {generation}
+                </p>
+                <p
+                  className="text-4xl sm:text-5xl font-bold text-glow-gold"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}
+                >
+                  1 in {cohortRarity.toLocaleString()}
+                </p>
+                <p className="text-muted-foreground/50 text-sm mt-3">
+                  1 in {preliminaryRarity.toLocaleString()} <span className="text-muted-foreground/35">across the whole population</span>
+                </p>
+                <p className="text-muted-foreground/40 text-xs mt-2">
+                  Scored against your own generation, then the population — across {activeScores.length} dimensions.
+                  Developmental lines are age-adjusted so time-to-compound doesn&rsquo;t decide your rank.
+                </p>
+              </>
+            ) : (
+              <>
+                <p
+                  className="text-xs uppercase tracking-[0.2em] text-primary/60 mb-3"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                >
+                  Your Composite Rarity
+                </p>
+                <p
+                  className="text-4xl sm:text-5xl font-bold text-glow-gold"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}
+                >
+                  1 in {preliminaryRarity.toLocaleString()}
+                </p>
+                <p className="text-muted-foreground/40 text-xs mt-3">
+                  Based on statistical placement across {activeScores.length} scored dimensions.
+                  Add your birth year next time to also see your rarity within your generation.
+                </p>
+              </>
+            )}
 
             {/* Confidence meter — capped in the low range for the voice-only pass */}
             <div className="mt-5 pt-5 border-t border-white/[0.06] text-left">
@@ -1517,6 +1566,35 @@ export default function Assessment() {
               <p className="text-sm text-foreground/80 leading-relaxed">
                 This isn't a test — it's the best kind of bar conversation, with a listener who's genuinely into your stories. There are no right answers. Ramble, chase the tangents, say more than the question asked. The longer and more openly you talk, the more accurate your read. Ready? Tap the mic.
               </p>
+
+              {/* Birth year — used only to score you against your own generation */}
+              <div className="mt-4 pt-4 border-t border-white/[0.06]">
+                <label className="flex items-center justify-between gap-3">
+                  <span className="text-xs text-muted-foreground/70 leading-snug">
+                    What year were you born?
+                    <span className="block text-[0.65rem] text-muted-foreground/40">Optional — lets us also rank you within your generation, not just the whole population.</span>
+                  </span>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="1998"
+                    min={1920}
+                    max={currentYear}
+                    defaultValue={birthYear ?? ""}
+                    onChange={(e) => {
+                      const n = parseInt(e.target.value, 10);
+                      if (Number.isFinite(n) && n >= 1920 && n <= currentYear) {
+                        setBirthYear(n);
+                        localStorage.setItem("aqal_birth_year", String(n));
+                      } else {
+                        setBirthYear(null);
+                        localStorage.removeItem("aqal_birth_year");
+                      }
+                    }}
+                    className="w-20 shrink-0 bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-center text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  />
+                </label>
+              </div>
             </motion.div>
           )}
 
