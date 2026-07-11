@@ -472,6 +472,7 @@ type PracticeCluster = {
 };
 
 const PRACTICE_SECTIONS: Record<string, string> = {
+  "0": "Cluster Interaction & Systems Science",
   "1": "1 · Physical Training",
   "2": "2 · Strength Training — Cognitive & Psychological Transfer",
   "3": "3 · Social Connection",
@@ -487,6 +488,7 @@ const PRACTICE_SECTIONS: Record<string, string> = {
 
 // Short labels for the section jump-nav chips.
 const PRACTICE_SECTION_SHORT: Record<string, string> = {
+  "0": "Systems Science",
   "1": "Physical",
   "2": "Cognitive Transfer",
   "3": "Social",
@@ -508,6 +510,77 @@ const TAG_COLOR: Record<PracticeCluster["evidenceTag"], string> = {
 };
 
 const PRACTICE_EVIDENCE: PracticeCluster[] = [
+  // ═══════════════ SECTION 0 — CLUSTER INTERACTION & SYSTEMS SCIENCE ═══════════════
+  // The science behind the platform's core claims: strengths and weaknesses are a
+  // network, not a list. Method = established (Tier 1); the specific ranking within
+  // the AQAL 32-line model is our hypothesis pending cohort data (Tier 2).
+  {
+    id: "sys-centrality",
+    section: "0",
+    title: "Which Weakness Controls the Others — Network Centrality",
+    subtitle: "Network psychometrics · expected influence",
+    evidenceTag: "Emerging",
+    description:
+      "Traits behave as a web of mutually reinforcing nodes, not symptoms of one hidden cause. The most central node — highest expected influence — is the one whose change ripples furthest through the rest. This is the rigorous form of “which weakness has the most controlling influence over the others.” Honest boundary: what centrality means in psychological networks is actively debated, so we treat “your most central weakness” as a model-based hypothesis to confirm on our own cohort, not a settled fact.",
+    sources: [
+      { cite: "Borsboom, D., & Cramer, A. O. J. (2013). Network analysis: An integrative approach to the structure of psychopathology. Annual Review of Clinical Psychology, 9, 91–121.", note: "The foundational network-psychometrics paper: disorders as networks of interacting nodes, where the most-connected node carries the most influence.", link: "https://doi.org/10.1146/annurev-clinpsy-050212-185608", kind: "doi" },
+      { cite: "Robinaugh, D. J., Millner, A. J., & McNally, R. J. (2016). Identifying highly influential nodes in the complicated grief network. Journal of Abnormal Psychology, 125(6), 747–757.", note: "Showed expected influence (direction-aware centrality) predicts which nodes actually drive change — the measure we would use to rank a person's weaknesses.", link: scholar("Robinaugh Millner McNally 2016 highly influential nodes complicated grief network"), kind: "scholar" },
+      { cite: "Bringmann, L. F., Elmer, T., Epskamp, S., et al. (2019). What do centrality measures measure in psychological networks? Journal of Abnormal Psychology, 128(8), 892–903.", note: "The essential skeptic, cited on purpose: borrowed centrality measures don't always mean what we assume. Any claim about “the controlling node” must survive this.", link: "https://doi.org/10.1037/abn0000446", kind: "doi" },
+    ],
+  },
+  {
+    id: "sys-weakest-link",
+    section: "0",
+    title: "The Weakest Link Caps the Whole — Bottleneck & O-Ring",
+    subtitle: "Why one weakness can sink strong strengths",
+    evidenceTag: "Strong",
+    description:
+      "A profile is not the average of its lines — a single deficiency can cap the whole outcome no matter how strong the rest. Liebig's Law of the Minimum (growth limited by the scarcest input) and Kremer's O-Ring theory (one faulty component ruins the finished product) are the rigorous forms of “your weakest cluster sinks your best strengths.” This is why weakness-shielding, not just strength-maximizing, is core to the platform.",
+    sources: [
+      { cite: "Kremer, M. (1993). The O-Ring theory of economic development. The Quarterly Journal of Economics, 108(3), 551–575.", note: "The formal economics of weakest-link production: output depends on the lowest-quality component, so one weakness can dominate many strengths.", link: "https://doi.org/10.2307/2118400", kind: "doi" },
+      { cite: "Liebig's Law of the Minimum — limiting-factor theory applied to human performance and organizations.", note: "The 19th-century origin, now applied across management and performance: the scarcest factor sets the ceiling, regardless of surplus elsewhere.", link: scholar("Liebig law of the minimum limiting factor human performance organizations"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "sys-mutualism-keystone",
+    section: "0",
+    title: "One Strength Lifts the Rest — Mutualism & Keystone Effects",
+    subtitle: "Why sharpening the right line raises the whole shape",
+    evidenceTag: "Moderate",
+    description:
+      "Strengths don't just co-occur — they pull each other up. The mutualism model shows cognitive abilities reciprocally reinforce each other in development (why strong minds tend to be broadly strong), and “keystone” research shows a single sustained habit spilling over into unrelated domains. Together: sharpening the right strength can raise the entire profile.",
+    sources: [
+      { cite: "van der Maas, H. L. J., Dolan, C. V., Grasman, R. P. P. P., et al. (2006). A dynamical model of general intelligence: The positive manifold of intelligence by mutualism. Psychological Review, 113(4), 842–861.", note: "The mutualism model: abilities positively interact during development, generating the “positive manifold” without a single g. The basis for strengths lifting strengths.", link: "https://doi.org/10.1037/0033-295X.113.4.842", kind: "doi" },
+      { cite: "Oaten, M., & Cheng, K. (2006). Longitudinal gains in self-regulation from regular physical exercise. British Journal of Health Psychology, 11(4), 717–733.", note: "Empirical keystone effect: a single sustained habit (exercise) spilled over into better diet, spending, and study self-regulation — one node cascading across life.", link: scholar("Oaten Cheng 2006 longitudinal gains self-regulation regular physical exercise"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "sys-leverage",
+    section: "0",
+    title: "Where to Intervene, and How to Hold It — Leverage Points & Tracking",
+    subtitle: "Re-engineering the probabilities",
+    evidenceTag: "Moderate",
+    description:
+      "Not all interventions are equal — a few nodes are high-leverage (a small change moves everything), most are not. Meadows' leverage-points hierarchy is the map for choosing which node to enhance or deplete. And implementation-intention research (if-then plans) is the evidence base for the tracking that keeps a targeted weakness from unconsciously derailing goals.",
+    sources: [
+      { cite: "Meadows, D. H. (1999). Leverage Points: Places to Intervene in a System. The Sustainability Institute.", note: "The ranked theory of where a small shift produces the largest system change — the conceptual engine for re-engineering outcomes by moving the most influential node.", link: scholar("Meadows 1999 Leverage Points Places to Intervene in a System"), kind: "scholar" },
+      { cite: "Gollwitzer, P. M., & Sheeran, P. (2006). Implementation intentions and goal achievement: A meta-analysis of effects and processes. Advances in Experimental Social Psychology, 38, 69–119.", note: "94 studies, d = 0.65: if-then plans reliably shield goal pursuit from derailment. The evidence for personalized tracking that stops a weakness from sabotaging strengths.", link: "https://doi.org/10.1016/S0065-2601(06)38002-1", kind: "doi" },
+    ],
+  },
+  {
+    id: "sys-matching",
+    section: "0",
+    title: "Complementary Matching — Collective Intelligence",
+    subtitle: "When a partner's strength covers your blind spot",
+    evidenceTag: "Moderate",
+    description:
+      "The network reaches past one person: a partner whose strengths cover your blind spots measurably raises joint performance. The collective-intelligence “c factor” shows group ability depends on composition and social sensitivity, not just individual IQ. Honest boundary: diversity helps on an inverted-U — too much hurts coordination — so matching is tuned, not maximized.",
+    sources: [
+      { cite: "Woolley, A. W., Chabris, C. F., Pentland, A., Hashmi, N., & Malone, T. W. (2010). Evidence for a collective intelligence factor in the performance of human groups. Science, 330(6004), 686–688.", note: "The landmark c-factor study: a measurable collective-intelligence factor driven by group composition and social sensitivity, not average member IQ. The basis for strength-to-weakness matching.", link: "https://doi.org/10.1126/science.1193147", kind: "doi" },
+      { cite: "Aggarwal, I., Woolley, A. W., Chabris, C. F., & Malone, T. W. (2019). The impact of cognitive style diversity on implicit learning in teams. Frontiers in Psychology, 10, 112.", note: "The necessary caveat: cognitive-style diversity helps collective learning up to a point, then hurts coordination. Matching is tuned, not maximized.", link: "https://doi.org/10.3389/fpsyg.2019.00112", kind: "doi" },
+    ],
+  },
+
   // ═══════════════ SECTION 1 — PHYSICAL TRAINING ═══════════════
   {
     id: "p-1a",

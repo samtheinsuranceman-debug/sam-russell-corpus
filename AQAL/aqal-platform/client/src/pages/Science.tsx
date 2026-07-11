@@ -45,8 +45,8 @@ const METHODOLOGY = [
   },
   {
     step: "02",
-    title: "Multi-Model Cross-Check",
-    desc: "Five AI systems from different developers analyze each response and their results are combined. Cross-checking reduces the influence of any single model's quirks \u2014 where the models agree, confidence is higher; where they diverge, the result is flagged for review.",
+    title: "Multi-Model Consensus",
+    desc: "Your high-confidence result is scored by a panel of five AI systems from different developers \u2014 Claude (Anthropic), GPT (OpenAI), Gemini (Google), Grok (xAI), and Llama (Meta). Each scores independently; we take a consensus (trimmed mean, dropping the outlier) so no single model's quirks decide your result. The free preliminary pass uses one model; the five-model consensus is what raises a verified result to high confidence.",
   },
   {
     step: "03",
@@ -61,7 +61,7 @@ const METHODOLOGY = [
   {
     step: "05",
     title: "Evidence Verification",
-    desc: "Optional document upload allows AI and human reviewers to verify and boost scores based on real-world accomplishments.",
+    desc: "Optional document upload lets a live research engine (Perplexity) and independent AI reviewers verify your claims against the public record — confirming real-world accomplishments before they boost your scores. Verification runs only in the high-confidence tier.",
   },
 ];
 
@@ -210,6 +210,47 @@ export default function Science() {
               </motion.div>
             ))}
           </div>
+        </motion.section>
+
+        <div className="section-divider-gold" />
+
+        {/* Cluster & Network Science */}
+        <motion.section
+          className="mb-24"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <Layers className="w-5 h-5 text-primary" />
+            <h2 className="display-2 text-foreground">Your Lines Are a Network, Not a List</h2>
+          </div>
+          <p className="text-muted-foreground/70 leading-relaxed mb-8 max-w-2xl">
+            Your 32 lines don't act alone — they reinforce, cap, and lift one another. The platform
+            reads the whole shape using established systems science, then applies it to your profile.
+            Where the <span className="text-foreground/90">method</span> is established research, we
+            treat the <span className="text-foreground/90">specific ranking within your profile</span> as
+            a model-based estimate, confirmed as our own data grows.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {[
+              { h: "The controlling weakness", d: "Network-centrality science identifies which weakness has the most influence over the others — the one to shield first." },
+              { h: "The weakest link", d: "Bottleneck and O-Ring theory: a single deficiency can cap your outcome no matter how strong the rest of your profile is." },
+              { h: "The keystone strength", d: "Mutualism and keystone effects: sharpening the right strength can lift the entire shape, not just one line." },
+              { h: "The highest-leverage move", d: "Leverage-point theory maps where a small, tracked change re-engineers the odds most — and if-then tracking keeps it from slipping." },
+            ].map((c) => (
+              <div key={c.h} className="glass-card rounded-2xl p-6">
+                <h3 className="text-foreground font-semibold mb-2">{c.h}</h3>
+                <p className="text-muted-foreground/60 text-sm leading-relaxed">{c.d}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-muted-foreground/50 text-sm mt-6">
+            Every claim here is backed in the{" "}
+            <Link href="/research-library"><span className="text-primary/80 hover:text-primary underline cursor-pointer">Research Library</span></Link>{" "}
+            — with the skeptical papers included, so the science can be checked, not just cited.
+          </p>
         </motion.section>
 
         <div className="section-divider-gold" />
