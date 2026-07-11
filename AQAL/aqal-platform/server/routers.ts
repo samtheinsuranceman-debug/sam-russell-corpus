@@ -1,5 +1,7 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
+import { sdk } from "./_core/sdk";
+import { sendEmail, resultEmailHtml } from "./platform/email";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
@@ -38,11 +40,11 @@ import { createVideoAssessment, getVideoAssessment, getUserVideoAssessments, upd
 import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisMode, MODE_META } from "@shared/axisModes";
 import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
-import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS } from "./platform/config";
+import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE } from "./platform/config";
 import {
   recordEvent, getAnalyticsEventsSince, getSubscriptionEvents,
   addMarketingSpend, getMarketingSpendSince,
-  countBetaRedemptions, grantBetaAccess, getUserById,
+  countBetaRedemptions, grantBetaAccess, getUserById, upsertUser,
 } from "./db";
 import {
   funnelMetrics, pipelineHealth, cac, retention, goNoGo, FUNNEL_STAGES,
@@ -589,6 +591,30 @@ Return ONLY valid JSON.` },
           await updateAssessmentStatus(input.assessmentId, "complete", compositeRarity, ACTIVE_NORMING_VERSION);
           await recordEvent({ type: "assessment_complete", userId: assessment.userId, numericValue: compositeRarity });
 
+          // Email the low-confidence (voice-only) result to the user (best-effort).
+          try {
+            const u = await getUserById(assessment.userId);
+            if (u?.email) {
+              const cohort = computeCohortRarity(cappedScores as any, (assessment as any).birthYear);
+              const avgConf = cappedScores.length
+                ? cappedScores.reduce((a: number, s: any) => a + (s.confidence ?? 0.5), 0) / cappedScores.length
+                : 0;
+              const tier = avgConf >= 0.62 ? "Moderate" : avgConf >= 0.38 ? "Low–Moderate" : "Low";
+              await sendEmail(
+                u.email,
+                "Your AQAL voice-based result",
+                resultEmailHtml({
+                  rarity: compositeRarity,
+                  cohortRarity: cohort?.cohortRarity ?? null,
+                  generation: cohort?.generation ?? null,
+                  confidenceTier: tier,
+                }),
+              );
+            }
+          } catch (e) {
+            console.warn("[email] result send skipped:", e);
+          }
+
           return { success: true, compositeRarity };
         } catch (error) {
           console.error("Assessment analysis failed:", error);
@@ -860,6 +886,42 @@ Return ONLY valid JSON.` },
       const s = platformStatus();
       return { liveLLM: s.live.llm, liveSTT: s.live.stt, liveStorage: s.live.storage };
     }),
+  }),
+
+  // ============================================================
+  // FREE ACCESS — universal passcode, unlimited, email-based signup
+  // ============================================================
+  // Anyone can sign up free with their email + the shared passcode (no card, no
+  // cap). We create a free account keyed to that email and log them in. Their
+  // low-confidence result is emailed to that address when the assessment completes.
+  freeAccess: router({
+    // Public: whether the free-access passcode gate is enabled (for the UI).
+    info: publicProcedure.query(() => ({ enabled: FREE_ACCESS_CODE.length > 0 })),
+
+    claim: publicProcedure
+      .input(z.object({
+        email: z.string().email().max(320),
+        passcode: z.string().min(1).max(120),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (!FREE_ACCESS_CODE || input.passcode !== FREE_ACCESS_CODE) {
+          return { success: false, error: "That access code isn't valid." };
+        }
+        const email = input.email.trim().toLowerCase();
+        const openId = `free:${email}`;
+        const name = email.split("@")[0];
+        try {
+          await upsertUser({ openId, email, name, loginMethod: "free-passcode", lastSignedIn: new Date() });
+        } catch (e) {
+          // DB unavailable (e.g. local/dev) — still issue the session so the
+          // core loop works; persistence resumes when the DB is connected.
+          console.warn("[freeAccess] upsert skipped:", e);
+        }
+        const token = await sdk.createSessionToken(openId, { name });
+        ctx.res.cookie(COOKIE_NAME, token, { ...getSessionCookieOptions(ctx.req), maxAge: ONE_YEAR_MS });
+        await recordEvent({ type: "free_access_claimed" });
+        return { success: true };
+      }),
   }),
 
   // ============================================================

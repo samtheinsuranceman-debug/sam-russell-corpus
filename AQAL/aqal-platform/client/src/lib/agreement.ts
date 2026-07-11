@@ -24,13 +24,30 @@ export function setAgreementAccepted() {
   }
 }
 
-// Proceed to the login/OAuth flow (where credentials are entered) — but only
-// after the user has accepted the agreement. If they haven't, open the global
-// agreement modal instead; it proceeds here again once they click Accept.
-export function beginAuth() {
+// One pending action, run by the modal once the user clicks Accept.
+let pendingAction: (() => void) | null = null;
+export function consumePendingAction(): (() => void) | null {
+  const a = pendingAction;
+  pendingAction = null;
+  return a;
+}
+
+// Run `action`, but require the user agreement first. If already accepted, run
+// it now; otherwise stash it and open the global agreement modal, which runs it
+// after Accept. Used for every credential-entry path (free or paid).
+export function requireAgreement(action: () => void) {
   if (hasAcceptedAgreement()) {
-    window.location.href = getLoginUrl();
+    action();
     return;
   }
+  pendingAction = action;
   window.dispatchEvent(new CustomEvent(REQUIRE_AGREEMENT_EVENT));
+}
+
+// Proceed to the login/OAuth flow (where credentials are entered), gated by the
+// agreement.
+export function beginAuth() {
+  requireAgreement(() => {
+    window.location.href = getLoginUrl();
+  });
 }

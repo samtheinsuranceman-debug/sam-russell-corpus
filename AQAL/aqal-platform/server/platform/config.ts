@@ -62,6 +62,21 @@ export function storageProvider(): StorageProvider {
 export const BETA_ACCESS_CODE = env("BETA_ACCESS_CODE");
 export const BETA_MAX_REDEMPTIONS = parseInt(env("BETA_MAX_REDEMPTIONS") || "50", 10) || 50;
 
+// ---- Free access (universal passcode) -----------------------
+// A single shared passcode that lets ANYONE sign up free with just their email —
+// no card, no cap, unlimited redemptions. They take the assessment and get their
+// low-confidence (voice-only) result, which is emailed to that address.
+export const FREE_ACCESS_CODE = env("FREE_ACCESS_CODE") || "Welcome1";
+
+// ---- Email (optional) ---------------------------------------
+// Resend (https://resend.com) by default — set RESEND_API_KEY to send for real.
+// Empty = mock (logs to server console), so the app runs without an email vendor.
+export const RESEND_API_KEY = env("RESEND_API_KEY");
+export const EMAIL_FROM = env("EMAIL_FROM") || "AQAL Intelligence <onboarding@resend.dev>";
+export function emailProvider(): "resend" | "mock" {
+  return RESEND_API_KEY ? "resend" : "mock";
+}
+
 // ---- Auth ---------------------------------------------------
 // Kept behind the existing OAuth implementation; Clerk/Auth.js is the documented
 // swap (see platform/auth.ts). ctx.user shape must not change when swapped.

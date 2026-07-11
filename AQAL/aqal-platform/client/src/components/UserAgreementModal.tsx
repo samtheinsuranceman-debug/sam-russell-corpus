@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
-import { getLoginUrl } from "@/const";
-import { REQUIRE_AGREEMENT_EVENT, setAgreementAccepted } from "@/lib/agreement";
+import { REQUIRE_AGREEMENT_EVENT, setAgreementAccepted, consumePendingAction } from "@/lib/agreement";
 
 // Global, one-time user-agreement gate. Mounted once in App. When any sign-in
 // entry point calls beginAuth() without a prior acceptance, it dispatches
@@ -20,7 +19,8 @@ export default function UserAgreementModal() {
   const accept = () => {
     setAgreementAccepted();
     setOpen(false);
-    window.location.href = getLoginUrl();
+    const action = consumePendingAction();
+    if (action) action();
   };
 
   return (

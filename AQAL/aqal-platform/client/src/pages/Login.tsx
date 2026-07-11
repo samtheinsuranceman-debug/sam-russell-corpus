@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { beginAuth } from "@/lib/agreement";
+import { beginAuth, requireAgreement } from "@/lib/agreement";
+import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
-import { useEffect } from "react";
-import { Shield, Fingerprint, Brain, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Shield, Fingerprint, Brain, Sparkles, Mail } from "lucide-react";
 
 // ============================================================
 // DEDICATED LOGIN PAGE
@@ -26,6 +28,38 @@ export default function Login() {
 
   const handleSignIn = () => {
     beginAuth();
+  };
+
+  // Free access — email (username) + universal passcode, no card, no cap.
+  const [email, setEmail] = useState("");
+  const [passcode, setPasscode] = useState("");
+  const freeInfo = trpc.freeAccess.info.useQuery(undefined, { retry: false });
+  const utils = trpc.useUtils();
+  const claim = trpc.freeAccess.claim.useMutation({
+    onSuccess: async (res) => {
+      if (!res.success) {
+        toast.error(res.error || "That access code isn't valid.");
+        return;
+      }
+      toast.success("You're in — welcome. Let's begin.");
+      await utils.auth.me.invalidate();
+      navigate("/assessment");
+    },
+    onError: () => toast.error("Something went wrong. Please try again."),
+  });
+
+  const submitFreeAccess = () => {
+    const e = email.trim();
+    if (!e || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    if (!passcode.trim()) {
+      toast.error("Enter your access passcode.");
+      return;
+    }
+    // Gate on the user agreement first, then claim.
+    requireAgreement(() => claim.mutate({ email: e, passcode: passcode.trim() }));
   };
 
   if (loading) {
@@ -80,17 +114,64 @@ export default function Login() {
           transition={{ delay: 0.2, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           className="glass-card rounded-2xl border border-white/[0.06] p-8"
         >
+          {/* Free access — email + universal passcode */}
+          {freeInfo.data?.enabled !== false && (
+            <div className="mb-6">
+              <p className="text-xs uppercase tracking-[0.15em] text-accent/70 mb-3 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Free access — no card
+              </p>
+              <div className="space-y-2.5">
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-muted-foreground/40 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(ev) => setEmail(ev.target.value)}
+                    placeholder="you@email.com"
+                    autoComplete="email"
+                    className="w-full bg-background/60 border border-border/60 rounded-xl pl-9 pr-3 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  />
+                </div>
+                <input
+                  type="password"
+                  value={passcode}
+                  onChange={(ev) => setPasscode(ev.target.value)}
+                  onKeyDown={(ev) => { if (ev.key === "Enter") submitFreeAccess(); }}
+                  placeholder="Access passcode"
+                  className="w-full bg-background/60 border border-border/60 rounded-xl px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+                <Button
+                  onClick={submitFreeAccess}
+                  disabled={claim.isPending}
+                  className="w-full h-11 text-sm font-semibold bg-gradient-to-r from-primary to-primary/80 text-white border-0 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.97] transition-all duration-150"
+                >
+                  {claim.isPending ? "Unlocking…" : "Get Free Access"}
+                </Button>
+                <p className="text-[0.65rem] text-muted-foreground/45 text-center leading-relaxed">
+                  Your email is your username. We&rsquo;ll email your results there.
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="relative flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-white/[0.06]" />
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground/30">or</span>
+            <div className="flex-1 h-px bg-white/[0.06]" />
+          </div>
+
           <Button
             onClick={handleSignIn}
-            className="w-full h-12 text-base font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/80/90 text-white border-0 rounded-xl shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-xl hover:shadow-primary/30 active:scale-[0.97]"
+            variant="outline"
+            className="w-full h-11 text-sm font-medium border-white/[0.12] text-muted-foreground hover:text-foreground rounded-xl active:scale-[0.97] transition-all duration-150"
           >
-            <Fingerprint className="w-5 h-5 mr-2" />
+            <Fingerprint className="w-4 h-4 mr-2" />
             Sign In with Manus
           </Button>
 
           <div className="mt-6 pt-6 border-t border-white/[0.06]">
             <p className="text-xs text-muted-foreground/60 text-center leading-relaxed">
-              By signing in, you agree to our terms of service and privacy policy.
+              You must accept the User Agreement before signing in.
               Your data is encrypted end-to-end.
             </p>
           </div>
