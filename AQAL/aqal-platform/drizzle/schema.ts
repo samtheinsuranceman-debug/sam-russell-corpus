@@ -16,6 +16,8 @@ export const users = mysqlTable("users", {
   stripeCustomerId: varchar("stripe_customer_id", { length: 255 }),
   stripeSubscriptionId: varchar("stripe_subscription_id", { length: 255 }),
   membershipTier: mysqlEnum("membership_tier", ["free", "silver", "gold", "platinum"]).default("free").notNull(),
+  // Granted free access via a beta passcode (also used to count the first-N cap).
+  betaAccess: boolean("beta_access").default(false).notNull(),
 });
 
 export type User = typeof users.$inferSelect;

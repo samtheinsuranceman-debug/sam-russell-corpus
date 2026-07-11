@@ -1090,3 +1090,31 @@ export async function getMarketingSpendSince(sinceMs: number): Promise<number> {
   const rows = await db.select().from(marketingSpend).where(gte(marketingSpend.periodStart, new Date(sinceMs)));
   return rows.reduce((sum, r) => sum + (r.amountCents ?? 0), 0);
 }
+
+// ============================================================
+// BETA ACCESS — free-for-first-N passcode
+// ============================================================
+export async function getUserById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const r = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  return r[0] || null;
+}
+
+export async function countBetaRedemptions(): Promise<number> {
+  try {
+    const db = await getDb();
+    if (!db) return 0;
+    const r = await db.select({ count: sql`COUNT(*)` }).from(users).where(eq(users.betaAccess, true));
+    return Number(r[0]?.count || 0);
+  } catch (err) {
+    console.warn("[beta] countBetaRedemptions failed:", err);
+    return 0;
+  }
+}
+
+export async function grantBetaAccess(userId: number, tier: "silver" | "gold" | "platinum" = "silver") {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(users).set({ betaAccess: true, membershipTier: tier }).where(eq(users.id, userId));
+}

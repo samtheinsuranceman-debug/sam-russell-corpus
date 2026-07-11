@@ -37,10 +37,11 @@ import { runVideoAnalysis } from "./videoAnalysis";
 import { createVideoAssessment, getVideoAssessment, getUserVideoAssessments, updateVideoAssessmentStatus } from "./db";
 import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisMode, MODE_META } from "@shared/axisModes";
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
-import { platformStatus } from "./platform/config";
+import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS } from "./platform/config";
 import {
   recordEvent, getAnalyticsEventsSince, getSubscriptionEvents,
   addMarketingSpend, getMarketingSpendSince,
+  countBetaRedemptions, grantBetaAccess, getUserById,
 } from "./db";
 import {
   funnelMetrics, pipelineHealth, cac, retention, goNoGo, FUNNEL_STAGES,
@@ -815,6 +816,38 @@ Return ONLY valid JSON.` },
   // ============================================================
   // ANALYTICS (Stage 6) — funnel instrumentation
   // ============================================================
+  // ============================================================
+  // BETA ACCESS — free for the first N users via a passcode
+  // ============================================================
+  beta: router({
+    status: publicProcedure.query(async () => {
+      const enabled = BETA_ACCESS_CODE.length > 0;
+      const redeemed = enabled ? await countBetaRedemptions() : 0;
+      return {
+        enabled,
+        cap: BETA_MAX_REDEMPTIONS,
+        redeemed,
+        remaining: Math.max(0, BETA_MAX_REDEMPTIONS - redeemed),
+      };
+    }),
+    redeem: protectedProcedure
+      .input(z.object({ code: z.string().min(1).max(120) }))
+      .mutation(async ({ ctx, input }) => {
+        if (!BETA_ACCESS_CODE) return { success: false, error: "Beta access isn't enabled right now." };
+        if (input.code.trim() !== BETA_ACCESS_CODE) return { success: false, error: "That access code isn't valid." };
+        const already = (await getUserById(ctx.user.id))?.betaAccess;
+        if (!already) {
+          const redeemed = await countBetaRedemptions();
+          if (redeemed >= BETA_MAX_REDEMPTIONS) {
+            return { success: false, error: `Beta is full — all ${BETA_MAX_REDEMPTIONS} free spots are taken.` };
+          }
+        }
+        await grantBetaAccess(ctx.user.id, "silver");
+        await recordEvent({ type: "beta_redeemed", userId: ctx.user.id });
+        return { success: true, tier: "silver" as const };
+      }),
+  }),
+
   analytics: router({
     // Public client-side funnel pings (landing views, etc.). Best-effort.
     track: publicProcedure

@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `beta_access` boolean DEFAULT false NOT NULL;

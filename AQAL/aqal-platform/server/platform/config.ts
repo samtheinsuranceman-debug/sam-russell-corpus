@@ -56,6 +56,12 @@ export function storageProvider(): StorageProvider {
   return "local";
 }
 
+// ---- Beta access (free-for-first-N passcode) ----------------
+// When BETA_ACCESS_CODE is set, users who enter it skip payment and are granted
+// membership — capped at BETA_MAX_REDEMPTIONS (default 50). Empty = disabled.
+export const BETA_ACCESS_CODE = env("BETA_ACCESS_CODE");
+export const BETA_MAX_REDEMPTIONS = parseInt(env("BETA_MAX_REDEMPTIONS") || "50", 10) || 50;
+
 // ---- Auth ---------------------------------------------------
 // Kept behind the existing OAuth implementation; Clerk/Auth.js is the documented
 // swap (see platform/auth.ts). ctx.user shape must not change when swapped.

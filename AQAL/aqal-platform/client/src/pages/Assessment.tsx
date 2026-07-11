@@ -912,6 +912,25 @@ export default function Assessment() {
     },
   });
 
+  // Beta access — free for the first N testers via a passcode.
+  const utils = trpc.useUtils();
+  const betaStatus = trpc.beta.status.useQuery();
+  const [betaCode, setBetaCode] = useState("");
+  const betaRedeem = trpc.beta.redeem.useMutation({
+    onSuccess: (r) => {
+      if (r.success) {
+        toast.success("Beta access unlocked — the full assessment is on us. Enjoy.");
+        utils.auth.me.invalidate();
+        setBetaCode("");
+        setShowPaywall(false);
+        setCurrentQuestion((q) => Math.min(q + 1, TOTAL_QUESTIONS - 1));
+      } else {
+        toast.error(r.error || "Couldn't redeem that code.");
+      }
+    },
+    onError: () => toast.error("Something went wrong redeeming your code."),
+  });
+
   if (showPaywall) {
     const handleUnlock = () => {
       playClick();
@@ -931,6 +950,21 @@ export default function Assessment() {
         productKey: "assessment",
         origin: window.location.origin,
       });
+    };
+
+    const handleBeta = () => {
+      playClick();
+      if (!user) {
+        localStorage.setItem('aqal_assessment_progress', JSON.stringify({
+          question: currentQuestion, scores, textResponses, textMode: useTextMode, skipped: skippedQuestions,
+        }));
+        toast.info("Please log in first, then enter your beta code.");
+        window.location.href = getLoginUrl();
+        return;
+      }
+      const code = betaCode.trim();
+      if (!code) { toast.error("Enter your beta access code first."); return; }
+      betaRedeem.mutate({ code });
     };
 
     return (
@@ -1107,6 +1141,32 @@ export default function Assessment() {
             <p className="text-muted-foreground/40 text-xs mt-4">
               One-time payment. Lifetime access. 30-day retake guarantee.
             </p>
+
+            {/* Beta access — free for the first N testers */}
+            {betaStatus.data?.enabled && betaStatus.data.remaining > 0 && (
+              <div className="mt-8 max-w-md mx-auto">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex-1 h-px bg-white/10" />
+                  <span className="text-[10px] uppercase tracking-widest text-muted-foreground/40">or, if you have a code</span>
+                  <div className="flex-1 h-px bg-white/10" />
+                </div>
+                <p className="text-xs text-muted-foreground/60 mb-2 text-center">
+                  Free for our first {betaStatus.data.cap} beta testers — <span className="text-accent/80">{betaStatus.data.remaining} spot{betaStatus.data.remaining !== 1 ? "s" : ""} left</span>. No card, no charge.
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    value={betaCode}
+                    onChange={(e) => setBetaCode(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleBeta(); }}
+                    placeholder="Enter beta access code"
+                    className="flex-1 bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  />
+                  <Button onClick={handleBeta} disabled={betaRedeem.isPending || !betaCode.trim()} variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">
+                    {betaRedeem.isPending ? "…" : "Unlock free"}
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {/* Trust bar */}
             <div className="flex flex-wrap justify-center gap-4 text-[10px] text-muted-foreground/30 uppercase tracking-wider mt-6">
