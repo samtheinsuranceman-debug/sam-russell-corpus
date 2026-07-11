@@ -23,7 +23,7 @@ import {
   saveCoachingLetter, getCoachingLetters, markLetterRead,
   getNetworkCandidates,
 } from "./db";
-import { storagePut, storageGetSignedUrl } from "./platform/storage";
+import { storagePut, storageGetSignedUrl, storageDelete } from "./platform/storage";
 import { invokeLLM } from "./platform/llm";
 import { generateSocialCardSVG } from "./socialCard";
 import { transcribeAudio } from "./platform/transcribe";
@@ -714,15 +714,22 @@ Return ONLY valid JSON.` },
         significance: z.string().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
+        // EVIDENCE GUARANTEE: the uploaded file is reviewed one time and its
+        // measurement recorded — then the file is permanently deleted. We keep
+        // only the metadata/result, never a retrievable copy of the file.
         const fileBuffer = Buffer.from(input.fileBase64, "base64");
         const fileKey = `evidence/${ctx.user.id}/${input.assessmentId}/${input.fileName}`;
-        const { key, url } = await storagePut(fileKey, fileBuffer, input.fileType);
 
+        // Hold the file transiently only for the one-time validation pass.
+        const { key } = await storagePut(fileKey, fileBuffer, input.fileType);
+
+        // Record the evidence metadata and result — with NO retrievable file
+        // reference (fileUrl/fileKey are intentionally left empty).
         const result = await saveEvidence({
           assessmentId: input.assessmentId,
           userId: ctx.user.id,
-          fileUrl: url,
-          fileKey: key,
+          fileUrl: "",
+          fileKey: "",
           fileName: input.fileName,
           fileType: input.fileType,
           description: input.description,
@@ -732,6 +739,9 @@ Return ONLY valid JSON.` },
           evidenceDate: input.evidenceDate,
           significance: input.significance,
         });
+
+        // Permanently delete the uploaded file — nothing is retained.
+        await storageDelete(key);
 
         return { success: true, evidenceId: result?.id };
       }),

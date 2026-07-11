@@ -10,7 +10,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   storageProvider,
@@ -88,6 +88,28 @@ export async function storageGetSignedUrl(relKey: string): Promise<string> {
     return forgeSignedUrl(relKey);
   }
   return `/local-storage/${key}`;
+}
+
+// Permanently delete an object. Used to honor the Evidence Guarantee: uploaded
+// evidence is deleted the moment its measurement has been recorded. Best-effort
+// and non-fatal — a failed delete must not break the user's flow, but it is
+// logged so retention can be audited.
+export async function storageDelete(relKey: string): Promise<void> {
+  const provider = storageProvider();
+  const key = relKey.replace(/^\/+/, "");
+  try {
+    if (provider === "s3") {
+      await s3().send(new DeleteObjectCommand({ Bucket: S3_BUCKET, Key: key }));
+      return;
+    }
+    if (provider === "forge") {
+      // Legacy gateway exposes no delete here; nothing is persisted long-term by us.
+      return;
+    }
+    await fs.rm(path.join(LOCAL_DIR, key), { force: true });
+  } catch (err) {
+    console.warn("[storage] evidence delete failed (non-fatal):", err);
+  }
 }
 
 export const LOCAL_STORAGE_DIR = LOCAL_DIR;

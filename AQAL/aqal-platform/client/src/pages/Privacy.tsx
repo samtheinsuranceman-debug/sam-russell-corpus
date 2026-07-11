@@ -62,6 +62,21 @@ export default function Privacy() {
             </section>
 
             <section>
+              <div className="rounded-xl border border-primary/25 bg-primary/[0.05] p-5">
+                <h2 className="text-xl font-semibold text-foreground mb-3">Our Evidence Guarantee</h2>
+                <p>
+                  Any evidence you privately and securely upload to verify your scores — documents,
+                  credentials, work samples, records — is <strong className="text-foreground">never saved</strong>.
+                  It is looked at <strong className="text-foreground">one time</strong>, validated, and used only
+                  to record what your result is and what it means. The instant that measurement is recorded, the
+                  uploaded file is <strong className="text-foreground">permanently and irreversibly deleted</strong> from
+                  our servers and from all memory and backups. We keep the conclusion — never the evidence itself.
+                  This is a personal guarantee from the founder.
+                </p>
+              </div>
+            </section>
+
+            <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">4. Data Sharing</h2>
               <p>
                 We do not sell your personal data. We share information only in these limited circumstances:
