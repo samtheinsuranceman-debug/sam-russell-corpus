@@ -111,13 +111,14 @@ export async function getWaitlistCount() {
 // ASSESSMENT HELPERS
 // ============================================================
 
-export async function createAssessment(userId: number, promoCode?: string) {
+export async function createAssessment(userId: number, promoCode?: string, birthYear?: number | null) {
   const db = await getDb();
   if (!db) return null;
   const result = await db.insert(assessments).values({
     userId,
     totalQuestions: 24,
     promoCode: promoCode || null,
+    birthYear: birthYear ?? null,
   });
   return { id: Number(result[0].insertId) };
 }
@@ -889,15 +890,18 @@ export async function getNetworkCandidates(excludeUserId: number) {
   const allAssessments = await db.select({
     id: assessments.id,
     userId: assessments.userId,
+    birthYear: assessments.birthYear,
   }).from(assessments)
     .where(eq(assessments.status, "complete"))
     .orderBy(sql`createdAt DESC`);
 
   // Deduplicate: keep only the latest assessment per user
   const latestByUser = new Map<number, number>();
+  const birthYearByUser = new Map<number, number | null>();
   for (const a of allAssessments) {
     if (a.userId !== excludeUserId && !latestByUser.has(a.userId)) {
       latestByUser.set(a.userId, a.id);
+      birthYearByUser.set(a.userId, a.birthYear ?? null);
     }
   }
 
@@ -917,7 +921,7 @@ export async function getNetworkCandidates(excludeUserId: number) {
   const nameMap = new Map(userRows.map(u => [u.id, u.name]));
 
   // Build Profile objects
-  const profiles: Array<{ id: string; name: string; scores: Record<string, number> }> = [];
+  const profiles: Array<{ id: string; name: string; scores: Record<string, number>; birthYear: number | null }> = [];
   for (const [userId, assessmentId] of Array.from(latestByUser.entries())) {
     const userScores = allScores.filter(s => s.assessmentId === assessmentId);
     if (userScores.length === 0) continue;
@@ -929,6 +933,7 @@ export async function getNetworkCandidates(excludeUserId: number) {
       id: String(userId),
       name: nameMap.get(userId) || "Anonymous",
       scores: scoreMap,
+      birthYear: birthYearByUser.get(userId) ?? null,
     });
   }
 

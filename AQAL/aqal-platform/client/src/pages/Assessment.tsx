@@ -792,7 +792,7 @@ export default function Assessment() {
     try {
       let aId = assessmentId;
       if (!aId) {
-        const startResult = await startMutation.mutateAsync({});
+        const startResult = await startMutation.mutateAsync(birthYear ? { birthYear } : {});
         if (!startResult.success || !startResult.assessmentId) {
           toast.error("Failed to start assessment. Please try again.");
           setIsSubmitting(false);

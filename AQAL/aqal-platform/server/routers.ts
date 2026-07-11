@@ -36,6 +36,7 @@ import { rankMatches, type MatchMode, type Profile } from "@shared/matchEngine";
 import { runVideoAnalysis } from "./videoAnalysis";
 import { createVideoAssessment, getVideoAssessment, getUserVideoAssessments, updateVideoAssessmentStatus } from "./db";
 import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisMode, MODE_META } from "@shared/axisModes";
+import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
 import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS } from "./platform/config";
 import {
@@ -119,6 +120,32 @@ export function calculateCompositeRarity(
   return finalRarity;
 }
 
+/**
+ * Cohort rarity — the same composite, scored against the user's OWN generation.
+ * Developmental lines are age-adjusted (see @shared/cohort) so time-to-compound
+ * doesn't decide rank; age-normed CHC lines are left untouched. Returns null
+ * when no birth year is on file.
+ */
+export function computeCohortRarity(
+  scoresList: Array<{ axisName: string; score: number; confidence?: number | null }>,
+  birthYear: number | null | undefined,
+): { cohortRarity: number; generation: Generation } | null {
+  if (!birthYear) return null;
+  const age = Math.max(10, new Date().getFullYear() - birthYear);
+  const adjusted = scoresList
+    .filter((s) => axisFeedsRarity(s.axisName))
+    .map((s) => ({
+      score: cohortAdjustedScore(s.score, s.axisName, age),
+      confidence: s.confidence ?? 0.5,
+      axisName: s.axisName,
+    }));
+  if (adjusted.length === 0) return null;
+  return {
+    cohortRarity: calculateCompositeRarity(adjusted),
+    generation: generationForBirthYear(birthYear),
+  };
+}
+
 export const appRouter = router({
   system: systemRouter,
   auth: router({
@@ -149,14 +176,17 @@ export const appRouter = router({
   assessment: router({
     // Start a new assessment
     start: protectedProcedure
-      .input(z.object({ promoCode: z.string().optional() }))
+      .input(z.object({
+        promoCode: z.string().optional(),
+        birthYear: z.number().int().min(1920).max(2100).optional(),
+      }))
       .mutation(async ({ ctx, input }) => {
         // Validate promo code if provided
         if (input.promoCode) {
           const promo = await validatePromoCode(input.promoCode);
           if (!promo) return { success: false, error: "Invalid or expired promo code" };
         }
-        const result = await createAssessment(ctx.user.id, input.promoCode);
+        const result = await createAssessment(ctx.user.id, input.promoCode, input.birthYear ?? null);
         if (!result) return { success: false, error: "Failed to create assessment" };
         // Increment promo code usage
         if (input.promoCode) await incrementPromoCodeUsage(input.promoCode);
@@ -170,7 +200,14 @@ export const appRouter = router({
       if (!assessment) return null;
       const scoresList = await getScoresByAssessment(assessment.id);
       const combos = await getPowerCombinationsByAssessment(assessment.id);
-      return { ...assessment, scores: scoresList, powerCombinations: combos };
+      const cohort = computeCohortRarity(scoresList as any, (assessment as any).birthYear);
+      return {
+        ...assessment,
+        scores: scoresList,
+        powerCombinations: combos,
+        cohortRarity: cohort?.cohortRarity ?? null,
+        generation: cohort?.generation ?? null,
+      };
     }),
 
     // Get assessment by ID
@@ -870,10 +907,13 @@ Return ONLY valid JSON.` },
       if (!assessment || assessment.status !== "complete") return null;
       const scoresList = await getScoresByAssessment(assessment.id);
       const combos = await getPowerCombinationsByAssessment(assessment.id);
+      const cohort = computeCohortRarity(scoresList as any, (assessment as any).birthYear);
       return {
         assessment,
         scores: scoresList,
         powerCombinations: combos,
+        cohortRarity: cohort?.cohortRarity ?? null,
+        generation: cohort?.generation ?? null,
         user: { name: ctx.user.name, email: ctx.user.email },
       };
     }),
@@ -1315,19 +1355,31 @@ CRITICAL RULES:
         });
 
         return {
-          matches: ranked.map(r => ({
-            candidateId: r.candidate.id,
-            candidateName: r.candidate.name,
-            score: r.score,
-            basis: r.basis,
-            mode: r.mode,
-            ...(r.mode === "complementary" ? {
-              coversYourEdges: (r as any).coversYourEdges,
-              theyNeedFromYou: (r as any).theyNeedFromYou,
-            } : {
-              sharedPeaks: (r as any).sharedPeaks,
-            }),
-          })),
+          matches: ranked.map(r => {
+            const by = (r.candidate as any).birthYear as number | null | undefined;
+            const cohort = by
+              ? computeCohortRarity(
+                  Object.entries((r.candidate as any).scores as Record<string, number>)
+                    .map(([axisName, score]) => ({ axisName, score, confidence: 0.5 })),
+                  by,
+                )
+              : null;
+            return {
+              candidateId: r.candidate.id,
+              candidateName: r.candidate.name,
+              generation: cohort?.generation ?? null,
+              cohortRarity: cohort?.cohortRarity ?? null,
+              score: r.score,
+              basis: r.basis,
+              mode: r.mode,
+              ...(r.mode === "complementary" ? {
+                coversYourEdges: (r as any).coversYourEdges,
+                theyNeedFromYou: (r as any).theyNeedFromYou,
+              } : {
+                sharedPeaks: (r as any).sharedPeaks,
+              }),
+            };
+          }),
           total: candidates.length,
           mode: input.mode,
         };

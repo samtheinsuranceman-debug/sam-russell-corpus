@@ -249,7 +249,7 @@ function PowerCombinationVenn({ strengths }: { strengths: { axis: string; score:
 // ============================================================
 // ANIMATED RARITY REVEAL with count-up
 // ============================================================
-function RarityCountUp({ rarity }: { rarity: number }) {
+function RarityCountUp({ rarity, populationRarity = null, generation = null }: { rarity: number; populationRarity?: number | null; generation?: string | null }) {
   const [displayValue, setDisplayValue] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -284,7 +284,7 @@ function RarityCountUp({ rarity }: { rarity: number }) {
         className="text-center"
       >
         <p className="text-xs text-muted-foreground/50 uppercase tracking-[0.2em] mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-          Preliminary Rarity
+          {generation ? `Rarity — Among ${generation}` : "Preliminary Rarity"}
         </p>
         <div
           className="text-5xl sm:text-7xl font-bold text-glow-gold inline-block"
@@ -296,8 +296,15 @@ function RarityCountUp({ rarity }: { rarity: number }) {
             </motion.span>
           )}
         </div>
+        {revealed && populationRarity ? (
+          <p className="text-sm text-muted-foreground/50 mt-3">
+            1 in {populationRarity.toLocaleString()} <span className="text-muted-foreground/35">across the whole population</span>
+          </p>
+        ) : null}
         <p className="text-xs text-muted-foreground/40 mt-3">
-          Research-based estimate — refined once you submit evidence. Not an exact measurement.
+          {generation
+            ? "Ranked within your generation, then the population. Developmental lines are age-adjusted; IQ-style lines are already age-normed."
+            : "Research-based estimate — refined once you submit evidence. Not an exact measurement."}
         </p>
       </motion.div>
     </div>
@@ -645,9 +652,9 @@ export default function Results() {
   const assessmentQuery = trpc.assessment.current.useQuery(undefined, { enabled: !!user });
 
   // Derive strength/weakness clusters from scores
-  const { strengths, growthEdges, allScores, compositeRarity } = useMemo(() => {
+  const { strengths, growthEdges, allScores, compositeRarity, cohortRarity, generation } = useMemo(() => {
     if (!assessmentQuery.data?.scores?.length) {
-      return { strengths: [], growthEdges: [], allScores: Array(AXIS_LABELS.length).fill(0), compositeRarity: 1 };
+      return { strengths: [], growthEdges: [], allScores: Array(AXIS_LABELS.length).fill(0), compositeRarity: 1, cohortRarity: null as number | null, generation: null as string | null };
     }
 
     const scoreData = assessmentQuery.data.scores;
@@ -672,6 +679,8 @@ export default function Results() {
       growthEdges,
       allScores,
       compositeRarity: assessmentQuery.data.compositeRarity || 1,
+      cohortRarity: (assessmentQuery.data as any).cohortRarity ?? null,
+      generation: (assessmentQuery.data as any).generation ?? null,
     };
   }, [assessmentQuery.data]);
 
@@ -804,7 +813,11 @@ export default function Results() {
 
             {/* Animated Rarity Score */}
             <div className="mb-16">
-              <RarityCountUp rarity={compositeRarity} />
+              <RarityCountUp
+                rarity={cohortRarity ?? compositeRarity}
+                populationRarity={cohortRarity ? compositeRarity : null}
+                generation={generation}
+              />
             </div>
 
             {/* Power Combinations — Venn intersections */}

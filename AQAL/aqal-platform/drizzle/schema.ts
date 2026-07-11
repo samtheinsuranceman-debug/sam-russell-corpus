@@ -46,6 +46,8 @@ export const assessments = mysqlTable("assessments", {
   compositeRarity: int("compositeRarity"), // e.g. 47000 means "1 in 47,000"
   // Norming snapshot the composite was computed under — makes the score reproducible.
   normingVersion: varchar("normingVersion", { length: 48 }),
+  // Birth year (optional) — enables cohort rarity: ranking within the user's own generation.
+  birthYear: int("birthYear"),
   promoCode: varchar("promoCode", { length: 64 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
