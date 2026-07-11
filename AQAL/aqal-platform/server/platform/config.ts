@@ -26,6 +26,51 @@ export const OPENAI_TRANSCRIBE_MODEL = env("OPENAI_TRANSCRIBE_MODEL") || "whispe
 export const FORGE_API_URL = env("BUILT_IN_FORGE_API_URL");
 export const FORGE_API_KEY = env("BUILT_IN_FORGE_API_KEY");
 
+// ---- Multi-AI consensus panel (high-confidence tier) --------
+// Each panel member is one AI from a DIFFERENT developer, called via an
+// OpenAI-compatible chat endpoint. A member joins the panel only when its key is
+// set. The free tier uses a single model (OPENAI above); the paid/high-confidence
+// tier fans out to every configured member and takes the consensus.
+export type PanelMember = {
+  id: string;
+  name: string;      // display name, e.g. "Claude"
+  developer: string; // e.g. "Anthropic"
+  base: string;      // OpenAI-compatible base URL
+  key: string;       // API key (empty = member disabled)
+  model: string;
+};
+
+export const PANEL_MEMBERS: PanelMember[] = [
+  { id: "openai", name: "GPT", developer: "OpenAI",
+    base: OPENAI_BASE_URL, key: OPENAI_API_KEY, model: OPENAI_MODEL },
+  { id: "anthropic", name: "Claude", developer: "Anthropic",
+    base: env("ANTHROPIC_BASE_URL") || "https://api.anthropic.com/v1",
+    key: env("ANTHROPIC_API_KEY"), model: env("ANTHROPIC_MODEL") || "claude-3-5-sonnet-latest" },
+  { id: "google", name: "Gemini", developer: "Google",
+    base: env("GOOGLE_BASE_URL") || "https://generativelanguage.googleapis.com/v1beta/openai",
+    key: env("GOOGLE_API_KEY"), model: env("GOOGLE_MODEL") || "gemini-1.5-pro" },
+  { id: "xai", name: "Grok", developer: "xAI",
+    base: env("XAI_BASE_URL") || "https://api.x.ai/v1",
+    key: env("XAI_API_KEY"), model: env("XAI_MODEL") || "grok-2-latest" },
+  { id: "llama", name: "Llama", developer: "Meta",
+    base: env("GROQ_BASE_URL") || "https://api.groq.com/openai/v1",
+    key: env("GROQ_API_KEY"), model: env("GROQ_MODEL") || "llama-3.3-70b-versatile" },
+];
+
+export function enabledPanel(): PanelMember[] {
+  return PANEL_MEMBERS.filter((m) => m.key.length > 0);
+}
+
+// ---- Perplexity (evidence verification, high-confidence tier) ----
+// Live web search + citations, used ONLY to verify uploaded evidence claims.
+// Empty = mock (no real verification).
+export const PERPLEXITY_API_KEY = env("PERPLEXITY_API_KEY");
+export const PERPLEXITY_BASE_URL = env("PERPLEXITY_BASE_URL") || "https://api.perplexity.ai";
+export const PERPLEXITY_MODEL = env("PERPLEXITY_MODEL") || "sonar-pro";
+export function verificationProvider(): "perplexity" | "mock" {
+  return PERPLEXITY_API_KEY ? "perplexity" : "mock";
+}
+
 export type LlmProvider = "openai" | "forge" | "mock";
 export function llmProvider(): LlmProvider {
   if (OPENAI_API_KEY) return "openai";

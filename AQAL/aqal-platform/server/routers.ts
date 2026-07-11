@@ -24,7 +24,11 @@ import {
   getNetworkCandidates,
 } from "./db";
 import { storagePut, storageGetSignedUrl } from "./platform/storage";
+import { runPanel, panelSize, panelDevelopers } from "./platform/panel";
+import { consensusScores } from "./scoring/consensus";
+import { verifyClaim } from "./platform/verify";
 import { invokeLLM } from "./platform/llm";
+import type { InvokeParams } from "./platform/llm";
 import { generateSocialCardSVG } from "./socialCard";
 import { transcribeAudio } from "./platform/transcribe";
 import {
@@ -384,10 +388,10 @@ Also identify 1-3 "Power Combinations" — intersections of axes where the perso
 Respond in JSON format.`;
 
           const llmStart = Date.now();
-          const result = await invokeLLM({
+          const invokeParams: InvokeParams = {
             messages: [
-              { role: "system", content: "You are a rigorous developmental psychologist. You score conservatively and honestly. You never inflate scores. Most people score in the 0.3-0.5 range. Only extraordinary responses get above 0.7. Always respond with valid JSON." },
-              { role: "user", content: analysisPrompt },
+              { role: "system" as const, content: "You are a rigorous developmental psychologist. You score conservatively and honestly. You never inflate scores. Most people score in the 0.3-0.5 range. Only extraordinary responses get above 0.7. Always respond with valid JSON." },
+              { role: "user" as const, content: analysisPrompt },
             ],
             response_format: {
               type: "json_schema",
@@ -432,13 +436,38 @@ Respond in JSON format.`;
                 },
               },
             },
-          });
+          };
 
-          const content = result.choices?.[0]?.message?.content as string | undefined;
-          await recordEvent({ type: "score_llm", userId: assessment.userId, numericValue: Date.now() - llmStart, ok: !!content });
-          if (!content) throw new Error("No analysis result from LLM");
+          // High-confidence tier (paid/beta) scores with the full multi-AI
+          // consensus panel when 2+ models are configured; everyone else (and any
+          // fallback) uses the single default model.
+          let analysis: any = null;
+          const useConsensus =
+            ctx.user.membershipTier !== "free" && panelSize() >= 2;
+          if (useConsensus) {
+            const panelResults = await runPanel(invokeParams);
+            const parsed = panelResults
+              .map((r) => {
+                try { return JSON.parse((r.result.choices?.[0]?.message?.content as string) ?? ""); }
+                catch { return null; }
+              })
+              .filter((p) => p && Array.isArray(p.scores));
+            if (parsed.length >= 2) {
+              analysis = {
+                scores: consensusScores(parsed.map((p: any) => p.scores)),
+                powerCombinations: parsed[0].powerCombinations ?? [],
+              };
+              await recordEvent({ type: "score_consensus", userId: assessment.userId, numericValue: parsed.length, ok: true });
+            }
+          }
 
-          const analysis = JSON.parse(content);
+          if (!analysis) {
+            const result = await invokeLLM(invokeParams);
+            const content = result.choices?.[0]?.message?.content as string | undefined;
+            await recordEvent({ type: "score_llm", userId: assessment.userId, numericValue: Date.now() - llmStart, ok: !!content });
+            if (!content) throw new Error("No analysis result from LLM");
+            analysis = JSON.parse(content);
+          }
 
           // ============================================================
           // APPLY SCORE CEILING — Enforce bullshit detection caps
@@ -733,7 +762,18 @@ Return ONLY valid JSON.` },
           significance: input.significance,
         });
 
-        return { success: true, evidenceId: result?.id };
+        // High-confidence tier: verify the claim against the public record via
+        // Perplexity (best-effort; mock returns "unverified", never a false confirm).
+        const claim = [input.institution, input.description, input.significance]
+          .filter(Boolean).join(" — ");
+        const verification = claim
+          ? await verifyClaim(claim).catch(() => null)
+          : null;
+        if (verification) {
+          await recordEvent({ type: "evidence_verified", userId: ctx.user.id, ok: verification.verified });
+        }
+
+        return { success: true, evidenceId: result?.id, verification };
       }),
 
     list: protectedProcedure
@@ -884,7 +924,13 @@ Return ONLY valid JSON.` },
   platform: router({
     status: publicProcedure.query(() => {
       const s = platformStatus();
-      return { liveLLM: s.live.llm, liveSTT: s.live.stt, liveStorage: s.live.storage };
+      return {
+        liveLLM: s.live.llm,
+        liveSTT: s.live.stt,
+        liveStorage: s.live.storage,
+        panelSize: panelSize(),
+        panel: panelDevelopers(),
+      };
     }),
   }),
 
