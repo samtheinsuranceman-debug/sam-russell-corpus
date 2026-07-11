@@ -644,6 +644,37 @@ function MatchPreview({ match, index }: { match: { initial: string; city: string
 }
 
 // ============================================================
+// UNDERWRITTEN BY — the live AI panel that scored the result (honest)
+// ============================================================
+function UnderwrittenBy({ fullAccess }: { fullAccess: boolean }) {
+  const status = trpc.platform.status.useQuery(undefined, { staleTime: 5 * 60_000, retry: false });
+  const panel: string[] = status.data?.panel ?? [];
+  // Only surface a "consensus" panel when 2+ models are actually live. Single
+  // model or mock → no panel claim (the preview banner covers the mock state).
+  if (panel.length < 2) return null;
+
+  return (
+    <div className="max-w-2xl mx-auto mb-16 text-center">
+      <p className="text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground/50 mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        {fullAccess ? `Underwritten by ${panel.length} AI systems` : `Verified results are underwritten by ${panel.length} AI systems`}
+      </p>
+      <div className="flex flex-wrap justify-center gap-2">
+        {panel.map((m) => (
+          <span key={m} className="text-xs px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] text-foreground/75">
+            {m}
+          </span>
+        ))}
+      </div>
+      <p className="text-[0.7rem] text-muted-foreground/40 mt-3 leading-relaxed">
+        {fullAccess
+          ? "Each scored your responses independently; your result is their consensus (trimmed mean), so no single model decides it."
+          : "Your preliminary result used a single model. The evidence-based tier runs the full panel above and takes their consensus."}
+      </p>
+    </div>
+  );
+}
+
+// ============================================================
 // MAIN RESULTS PAGE
 // ============================================================
 export default function Results() {
@@ -819,6 +850,9 @@ export default function Results() {
                 generation={generation}
               />
             </div>
+
+            {/* Underwritten by — the live AI panel */}
+            <UnderwrittenBy fullAccess={!!(user?.membershipTier && user.membershipTier !== "free")} />
 
             {/* Power Combinations — Venn intersections */}
             <div className="mb-16">
