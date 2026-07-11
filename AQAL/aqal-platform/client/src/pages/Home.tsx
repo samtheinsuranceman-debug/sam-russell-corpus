@@ -250,6 +250,43 @@ function ThesisSection() {
 }
 
 // ============================================================
+// GENERATIONAL MEASUREMENT & MATCHING — the differentiator, in few words
+// ============================================================
+function GenerationSection() {
+  return (
+    <section style={{ background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,108px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+          Measured by generation · matched by generation
+        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500, fontSize: 'clamp(34px,6vw,64px)', lineHeight: 1.02, color: CREAM, margin: '0 0 20px' }}>
+          "Rare for your age is the only rare that counts."
+        </p>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '42em', margin: '0 0 36px' }}>
+          A twenty-five-year-old at the frontier of human development is not a sixty-five-year-old who had forty
+          extra years to get there. We score you <b style={{ color: CREAM, fontWeight: 600 }}>against your own generation</b>,
+          so the young prodigy reads as rare — not average — and sheer time-to-compound never inflates the number.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 'clamp(20px,3vw,40px)' }}>
+          <div style={{ borderLeft: `2px solid ${CHAMPAGNE}`, paddingLeft: '18px' }}>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', color: CREAM, marginBottom: '8px' }}>Cohort rarity</div>
+            <p style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>
+              Two numbers, both true: how rare you are in the whole population, and how rare you are among people your age. The second is the one that moves you.
+            </p>
+          </div>
+          <div style={{ borderLeft: `2px solid ${CHAMPAGNE}`, paddingLeft: '18px' }}>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', color: CREAM, marginBottom: '8px' }}>Generational matching</div>
+            <p style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>
+              A generation apart to cover your blind spots — mentor to protégé, protégé to mentor. Same generation to find the peers who move at your pace.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
 // INTERACTIVE DIAL — Full 32-line exploration
 // ============================================================
 function DialSection() {
@@ -642,6 +679,7 @@ export default function Home() {
         <div data-reveal><ThesisSection /></div>
         <div data-reveal><DialSection /></div>
         <div data-reveal><ProcessSection /></div>
+        <div data-reveal><GenerationSection /></div>
         <div data-reveal><EvidenceSection /></div>
         <div data-reveal><SamplesSection /></div>
         <div data-reveal><ServicePillars /></div>
