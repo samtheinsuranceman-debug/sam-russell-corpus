@@ -240,12 +240,12 @@ export default function Pricing() {
             </p>
             <div className="space-y-4">
               {[
-                { q: "How long does the assessment take?", a: "The first 12 questions are free and take 30–60 minutes. After payment, you unlock 12 more questions that complete your full cognitive profile. You can pause and resume anytime — your progress is saved." },
+                { q: "How long does the assessment take?", a: "All 24 questions are free and take 30–60 minutes. When you finish, you get your voice-based rarity estimate at low-to-moderate confidence at no cost. Payment (or a beta code) unlocks the evidence-based scoring method that verifies your full profile and raises it to high confidence. You can pause and resume anytime — your progress is saved." },
                 { q: "What if I disagree with my results?", a: "You get one free retake within 30 days. No questions asked. If you still disagree, we'll refund you." },
                 { q: "Is my voice data stored?", a: "No. Your voice is processed in real-time by our AI systems and immediately discarded. Only the numerical scores and text transcriptions are retained." },
                 { q: "How is this different from an IQ test?", a: "IQ measures one dimension. AQAL maps 32 independent intelligence axes — from spatial reasoning to empathic intelligence to meta-cognition. Your rarity is the statistical uniqueness of your entire 32-dimensional shape." },
                 { q: "What's included in network access?", a: "Your Silver membership includes 5 complementary match introductions per month — people whose cognitive shape complements yours for collaboration, partnership, or mentorship. Upgrade to Gold or Platinum Diamond for unlimited matching." },
-                { q: "Can I see a sample report before paying?", a: "Yes — take the free 12-question assessment first. You'll see your preliminary rarity score. The full 24-question profile, complete report, rarity underwriting, and Silver network access unlock after payment." },
+                { q: "Can I see a sample report before paying?", a: "Yes — take the full free 24-question assessment first. You'll see your voice-based rarity estimate at low-to-moderate confidence. The evidence-based verified report, rarity underwriting, and Silver network access unlock after payment (or with a beta code)." },
               ].map((faq) => (
                 <details
                   key={faq.q}

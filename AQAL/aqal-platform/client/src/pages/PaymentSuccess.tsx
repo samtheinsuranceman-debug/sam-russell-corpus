@@ -66,11 +66,11 @@ export default function PaymentSuccess() {
           >
             <div className="flex items-center gap-3 text-left p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
               <Sparkles className="w-4 h-4 shrink-0" style={{ color: "oklch(0.78 0.12 85)" }} />
-              <span className="text-sm text-foreground/80">Phase 2 is unlocked — pick up where you left off</span>
+              <span className="text-sm text-foreground/80">Evidence-based verification is unlocked</span>
             </div>
             <div className="flex items-center gap-3 text-left p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
               <Sparkles className="w-4 h-4 shrink-0" style={{ color: "oklch(0.78 0.12 85)" }} />
-              <span className="text-sm text-foreground/80">12 more questions unlocked — complete your full profile</span>
+              <span className="text-sm text-foreground/80">Your full 32-line profile is verified to high confidence</span>
             </div>
             <div className="flex items-center gap-3 text-left p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
               <Sparkles className="w-4 h-4 shrink-0" style={{ color: "oklch(0.78 0.12 85)" }} />
@@ -84,11 +84,11 @@ export default function PaymentSuccess() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.5 }}
           >
-            <Link href="/assessment">
+            <Link href="/evidence">
               <Button
                 className="w-full bg-gradient-to-r from-primary to-primary/80 text-white font-semibold py-6 text-base hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150"
               >
-                Continue Your Assessment
+                Upload Evidence to Verify Your Scores
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>

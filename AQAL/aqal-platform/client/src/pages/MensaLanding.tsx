@@ -214,8 +214,8 @@ export default function MensaLanding() {
             Begin Your Assessment
           </h2>
           <p className="text-[14px] text-muted-foreground mb-8 max-w-[44ch] mx-auto">
-            Free 12-question preliminary assessment available. No payment required to start. 
-            Validate the methodology before committing.
+            The full 24-question assessment is free — no payment required. You'll get your
+            voice-based rarity estimate before deciding to verify it with evidence.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
             <Link href="/assessment">

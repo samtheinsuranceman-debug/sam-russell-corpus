@@ -262,20 +262,23 @@ const QUESTIONS_SOURCE: {
 // Values are QUESTIONS_SOURCE ids, in display order.
 // ============================================================
 // Final 24, curated for maximum rapport + momentum + strength/growth signal.
-// FREE (1–12): disarm → delight/pride → story/agency → the "purpose" hook.
-// PAID (13–24): depth & sensory → heart → shadow/growth → sacred crescendo.
+// Arc 1 (1–12): disarm → delight/pride → story/agency → the "purpose" hook.
+// Arc 2 (13–24): depth & sensory → heart → shadow/growth → sacred crescendo.
+// All 24 are free; the evidence-based scoring method is what's gated.
 // Retired for this build (still authored in QUESTIONS_SOURCE, just unsequenced):
 //   2 The Natural, 3 The Flex, 4 The Negotiation, 6 The Read, 11 The Robbery,
 //   12 The Tense Table, 13 The Wedding Chaos, 16 The Stranger — the weakest
 //   overlaps / partner-or-married assumptions. Swapped in: 25–32.
 const QUESTION_ORDER = [
-  23, 25, 26, 7, 27, 28, 8, 29, 1, 9, 5, 15,   // FREE
-  14, 30, 19, 10, 18, 32, 31, 20, 17, 21, 22, 24, // PAID
+  23, 25, 26, 7, 27, 28, 8, 29, 1, 9, 5, 15,   // sequenced for rapport → momentum
+  14, 30, 19, 10, 18, 32, 31, 20, 17, 21, 22, 24, // → depth → over-disclosure
 ];
 const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
 
+// All 24 questions are free. The gate is on the evidence-based SCORING method
+// (the verified, high-confidence report) — unlocked by payment or a beta code —
+// not on the questions.
 const TOTAL_QUESTIONS = QUESTIONS.length;
-const FREE_QUESTIONS = 12; // First 12 free (arc ends on the "purpose" hook), rest behind paywall
 
 // ============================================================
 // PER-ANSWER RICHNESS FEEDBACK — the momentum flywheel
@@ -753,16 +756,8 @@ export default function Assessment() {
       });
     }
     
-    // Gate: if finishing Q12 (index 11) and user hasn't paid, show paywall
-    if (currentQuestion === FREE_QUESTIONS - 1 && user?.membershipTier === "free") {
-      setShowPaywall(true);
-      return;
-    }
-    if (currentQuestion === FREE_QUESTIONS - 1 && !user) {
-      setShowPaywall(true);
-      return;
-    }
-
+    // All 24 questions are free. The paywall now gates the evidence-based
+    // scoring method after completion — not the questions themselves.
     if (currentQuestion < TOTAL_QUESTIONS - 1) {
       setCurrentQuestion((q) => q + 1);
     } else {
@@ -895,14 +890,32 @@ export default function Assessment() {
     preliminaryRarity = Math.max(1, Math.min(1_000_000, Math.round(geoMean)));
   }
 
+  // Confidence of the FREE, voice-only result. It is capped at "Moderate" by
+  // design — reaching high confidence requires the evidence-based scoring
+  // method, which is unlocked by payment or a beta code.
+  const coverage = Math.min(1, activeScores.length / 32);
+  const avgStrength = activeScores.length
+    ? activeScores.reduce((a, b) => a + b, 0) / activeScores.length
+    : 0;
+  const confSignal = coverage * 0.55 + avgStrength * 0.45;
+  const confidenceTier: "Low" | "Low–Moderate" | "Moderate" =
+    confSignal >= 0.62 ? "Moderate" : confSignal >= 0.38 ? "Low–Moderate" : "Low";
+  // A visible band that never reaches "high" (caps ~55%), reinforcing that
+  // verification is what sharpens the estimate.
+  const confidencePct = Math.round((0.15 + confSignal * 0.4) * 100);
+
+  // Full evidence-based access: paid tiers OR a redeemed beta code (grants
+  // "silver"). Free users see the low-confidence estimate and a locked upgrade.
+  const hasFullAccess = !!(user?.membershipTier && user.membershipTier !== "free");
+
   // ============================================================
-  // PAYWALL VALUE-STACK INTERSTITIAL — After Q12
+  // PAYWALL / EVIDENCE-BASED UNLOCK GATE
   // ============================================================
   const checkoutMutation = trpc.payment.createCheckout.useMutation({
     onSuccess: (data) => {
       if (data.url) {
         window.open(data.url, "_blank");
-        toast.info("Checkout opened in a new tab. Complete payment to unlock Phase 2.");
+        toast.info("Checkout opened in a new tab. Complete payment to unlock evidence-based verification.");
       } else {
         toast.error("Could not create checkout session. Please try again.");
       }
@@ -942,7 +955,7 @@ export default function Assessment() {
           textMode: useTextMode,
           skipped: skippedQuestions,
         }));
-        toast.info("Please log in first to unlock Phase 2.");
+        toast.info("Please log in first to unlock evidence-based verification.");
         window.location.href = getLoginUrl();
         return;
       }
@@ -1006,7 +1019,7 @@ export default function Assessment() {
           transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           className="relative z-10 max-w-2xl w-full"
         >
-          {/* Phase 1 Complete badge */}
+          {/* Assessment complete badge */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1015,17 +1028,17 @@ export default function Assessment() {
           >
             <div className="inline-flex items-center gap-2 bg-accent/[0.08] border border-accent/20 rounded-full px-5 py-2 mb-6">
               <Check className="w-4 h-4 text-accent" />
-              <span className="text-sm text-accent font-medium">Phase 1 Complete — 12 of 24 Questions</span>
+              <span className="text-sm text-accent font-medium">All 24 Questions Complete</span>
             </div>
 
             <h1
               className="text-3xl sm:text-4xl md:text-5xl text-foreground mb-4"
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
             >
-              You&rsquo;re Halfway There
+              Unlock Evidence-Based Verification
             </h1>
             <p className="text-muted-foreground/70 text-base max-w-lg mx-auto leading-relaxed">
-              Your first 12 responses are locked in. Now unlock the full experience — the second half goes deeper, and everything you&rsquo;ve said so far becomes exponentially more powerful with the complete picture.
+              Your voice assessment gives a low-to-moderate confidence estimate. The evidence-based scoring method verifies your full 32-line profile — five AI systems, cross-checked against the evidence you submit — and raises your result to high confidence.
             </p>
           </motion.div>
 
@@ -1038,13 +1051,13 @@ export default function Assessment() {
               className="glass-card rounded-2xl p-6 mb-8 border border-primary/10 text-center"
             >
               <p className="text-xs uppercase tracking-[0.2em] text-primary/60 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                Your Preliminary Rarity
+                Your Voice-Based Estimate
               </p>
               <p className="text-3xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}>
                 1 in {preliminaryRarity.toLocaleString()}
               </p>
               <p className="text-muted-foreground/40 text-xs mt-2">
-                Based on 12 responses. The full 24-question profile typically shifts rarity by 3–10x.
+                A {confidenceTier.toLowerCase()}-confidence estimate from your voice responses. Evidence-based verification sharpens it and raises confidence to high.
               </p>
             </motion.div>
           )}
@@ -1133,7 +1146,7 @@ export default function Assessment() {
               ) : (
                 <span className="flex items-center gap-2">
                   <Lock className="w-4 h-4" />
-                  Unlock Phase 2 — $299
+                  Unlock Evidence-Based Scoring — $299
                 </span>
               )}
             </Button>
@@ -1189,7 +1202,7 @@ export default function Assessment() {
               onClick={() => setShowPaywall(false)}
               className="text-sm text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
             >
-              &larr; Go back and review my answers
+              &larr; Back to my results
             </button>
           </motion.div>
         </motion.div>
@@ -1320,6 +1333,22 @@ export default function Assessment() {
             <p className="text-muted-foreground/40 text-xs mt-3">
               Based on statistical placement across {activeScores.length} scored dimensions
             </p>
+
+            {/* Confidence meter — capped in the low range for the voice-only pass */}
+            <div className="mt-5 pt-5 border-t border-white/[0.06] text-left">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground/50" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  Confidence
+                </span>
+                <span className="text-xs font-semibold text-accent">{confidenceTier}</span>
+              </div>
+              <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                <div className="h-full rounded-full bg-accent/70" style={{ width: `${confidencePct}%` }} />
+              </div>
+              <p className="text-muted-foreground/40 text-[0.7rem] mt-2 leading-relaxed">
+                This is a voice-only estimate. The evidence-based scoring method raises it to high confidence.
+              </p>
+            </div>
           </motion.div>
 
           {/* CTAs */}
@@ -1330,18 +1359,40 @@ export default function Assessment() {
             className="flex flex-col gap-3"
           >
             {analysisSucceeded ? (
-              <>
-                <Link href="/results">
-                  <Button className="w-full bg-primary text-primary-foreground border-0 text-base py-5 shadow-lg shadow-primary/20 hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150">
-                    See Your Full Report
+              hasFullAccess ? (
+                <>
+                  <Link href="/results">
+                    <Button className="w-full bg-primary text-primary-foreground border-0 text-base py-5 shadow-lg shadow-primary/20 hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150">
+                      See Your Full Report
+                    </Button>
+                  </Link>
+                  <Link href="/evidence">
+                    <Button variant="outline" className="w-full border-primary/20 text-primary hover:bg-primary/[0.06] py-5 hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150">
+                      Upload Evidence to Verify Scores
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className="glass-card rounded-xl p-4 border border-primary/15 text-left">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Lock className="w-3.5 h-3.5 text-primary" />
+                      <span className="text-sm font-semibold text-foreground">Evidence-Based Verification — Locked</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground/60 leading-relaxed">
+                      Your voice result is a {confidenceTier.toLowerCase()}-confidence estimate. Unlock the evidence-based scoring method to verify your full 32-line profile and raise it to high confidence — free with a beta code, or by card.
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => { playClick(); setShowPaywall(true); }}
+                    className="w-full bg-primary text-primary-foreground border-0 text-base py-5 shadow-lg shadow-primary/20 hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Lock className="w-4 h-4" /> Unlock Evidence-Based Scoring
+                    </span>
                   </Button>
-                </Link>
-                <Link href="/evidence">
-                  <Button variant="outline" className="w-full border-primary/20 text-primary hover:bg-primary/[0.06] py-5 hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150">
-                    Upload Evidence to Verify Scores
-                  </Button>
-                </Link>
-              </>
+                </>
+              )
             ) : (
               <>
                 <p className="text-amber-400/80 text-sm mb-2 bg-amber-500/[0.05] border border-amber-500/20 rounded-lg px-4 py-3">
@@ -1420,7 +1471,7 @@ export default function Assessment() {
 
           {/* Step dots — show only relevant phase */}
           <div className="flex items-center gap-1">
-            {Array.from({ length: (user?.membershipTier && user.membershipTier !== "free") ? TOTAL_QUESTIONS : FREE_QUESTIONS }).map((_, i) => (
+            {Array.from({ length: TOTAL_QUESTIONS }).map((_, i) => (
               <motion.div
                 key={i}
                 className={`rounded-full transition-all duration-300 ${
@@ -1443,7 +1494,7 @@ export default function Assessment() {
             className="text-muted-foreground/50 text-xs"
             style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.1em" }}
           >
-            {currentQuestion + 1} / {(user?.membershipTier && user.membershipTier !== "free") ? TOTAL_QUESTIONS : FREE_QUESTIONS}
+            {currentQuestion + 1} / {TOTAL_QUESTIONS}
           </span>
         </div>
       </header>
