@@ -718,9 +718,10 @@ export default function About() {
                   >
                     Elite Tax Strategists
                   </a>{" "}
-                  for advanced, proactive tax planning across all 50 states, Sam built his career on reading
-                  people well — and on a conviction that most of what makes someone exceptional never shows up
-                  on a standard test.
+                  for advanced, proactive tax planning across all 50 states — serving high-income,
+                  high-net-worth individuals such as physicians, business owners, and tech professionals. Sam
+                  built his career on reading people well, and on a conviction that most of what makes someone
+                  exceptional never shows up on a standard test.
                 </p>
                 <p>
                   AQAL Intelligence is where those two threads meet: the discipline of an advisor who has spent
