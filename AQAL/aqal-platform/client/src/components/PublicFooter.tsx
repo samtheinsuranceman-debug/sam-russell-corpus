@@ -61,7 +61,7 @@ export default function PublicFooter() {
 
         {/* Copyright */}
         <p className="text-[0.6rem] text-muted-foreground/20 tracking-wide">
-          &copy; 2026 AQAL Intelligence &middot; 7 Patents Pending
+          &copy; 2026 AQAL Intelligence &middot; 7 Patents Pending &middot; Proprietary methodology
         </p>
       </div>
     </footer>

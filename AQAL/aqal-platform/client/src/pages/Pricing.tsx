@@ -192,7 +192,10 @@ export default function Pricing() {
             <span className="text-muted-foreground/20">•</span>
             <span>Encrypted &amp; Confidential</span>
             <span className="text-muted-foreground/20">•</span>
-            <span>7 Patents Pending</span>
+            <span className="flex flex-col items-center leading-tight">
+              <span>7 Patents Pending</span>
+              <span className="text-[0.7em] text-muted-foreground/40 normal-case tracking-normal">Proprietary methodology</span>
+            </span>
             <span className="text-muted-foreground/20">•</span>
             <span>30-Day Retake Guarantee</span>
           </motion.div>

@@ -104,7 +104,7 @@ export default function Login() {
           className="mt-8 grid grid-cols-3 gap-4"
         >
           <TrustBadge icon={<Shield className="w-4 h-4" />} label="Private & Encrypted" />
-          <TrustBadge icon={<Sparkles className="w-4 h-4" />} label="7 Patents Pending" />
+          <TrustBadge icon={<Sparkles className="w-4 h-4" />} label="7 Patents Pending · Proprietary methodology" />
           <TrustBadge icon={<Brain className="w-4 h-4" />} label="5 AI Systems" />
         </motion.div>
 

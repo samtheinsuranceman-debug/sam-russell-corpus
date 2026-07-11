@@ -277,7 +277,10 @@ export function PublicFooter() {
             </span>
             <span className="text-sm text-muted-foreground/60">Private & Encrypted</span>
             <span className="text-sm text-muted-foreground/60">Bank-Grade Encryption</span>
-            <span className="text-sm text-muted-foreground/60">7 Patents Pending</span>
+            <span className="text-sm text-muted-foreground/60 flex flex-col leading-tight">
+              7 Patents Pending
+              <span className="text-xs text-muted-foreground/35">Proprietary methodology</span>
+            </span>
             <Link href="/terms">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Terms of Service</span>
             </Link>
@@ -289,7 +292,7 @@ export function PublicFooter() {
 
         <div className="mt-8 pt-6 border-t border-border/20 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground/40">
-            &copy; {new Date().getFullYear()} AQAL Intelligence. 7 Patents Pending.
+            &copy; {new Date().getFullYear()} AQAL Intelligence. 7 Patents Pending &middot; Proprietary methodology.
           </p>
           <div className="flex items-center gap-4">
             <Link href="/terms">

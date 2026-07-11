@@ -1209,7 +1209,10 @@ export default function Assessment() {
               <span className="text-muted-foreground/15">&bull;</span>
               <span>Private & Encrypted</span>
               <span className="text-muted-foreground/15">&bull;</span>
-              <span>7 Patents Pending</span>
+              <span className="flex flex-col items-center leading-tight">
+                <span>7 Patents Pending</span>
+                <span className="text-[0.55rem] text-muted-foreground/20 normal-case tracking-normal">Proprietary methodology</span>
+              </span>
             </div>
           </motion.div>
 
@@ -1358,8 +1361,9 @@ export default function Assessment() {
                   1 in {preliminaryRarity.toLocaleString()} <span className="text-muted-foreground/35">across the whole population</span>
                 </p>
                 <p className="text-muted-foreground/40 text-xs mt-2">
-                  Scored against your own generation, then the population — across {activeScores.length} dimensions.
-                  Developmental lines are age-adjusted so time-to-compound doesn&rsquo;t decide your rank.
+                  A model-based estimate — not a measured percentile — across {activeScores.length} dimensions,
+                  scored within your generation and then the population. Developmental lines are age-adjusted so
+                  time-to-compound doesn&rsquo;t decide your rank.
                 </p>
               </>
             ) : (
@@ -1377,7 +1381,7 @@ export default function Assessment() {
                   1 in {preliminaryRarity.toLocaleString()}
                 </p>
                 <p className="text-muted-foreground/40 text-xs mt-3">
-                  Based on statistical placement across {activeScores.length} scored dimensions.
+                  A model-based estimate — not a measured percentile — across {activeScores.length} scored dimensions.
                   Add your birth year next time to also see your rarity within your generation.
                 </p>
               </>

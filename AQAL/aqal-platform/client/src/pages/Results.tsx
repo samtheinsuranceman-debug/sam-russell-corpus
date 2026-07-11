@@ -303,8 +303,8 @@ function RarityCountUp({ rarity, populationRarity = null, generation = null }: {
         ) : null}
         <p className="text-xs text-muted-foreground/40 mt-3">
           {generation
-            ? "Ranked within your generation, then the population. Developmental lines are age-adjusted; IQ-style lines are already age-normed."
-            : "Research-based estimate — refined once you submit evidence. Not an exact measurement."}
+            ? "A model-based estimate, not a measured percentile. Ranked within your generation, then the population — developmental lines are age-adjusted; IQ-style lines are already age-normed."
+            : "A model-based estimate, not a measured percentile — refined once you submit evidence."}
         </p>
       </motion.div>
     </div>

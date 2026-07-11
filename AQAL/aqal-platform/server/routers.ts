@@ -851,6 +851,18 @@ Return ONLY valid JSON.` },
   }),
 
   // ============================================================
+  // PLATFORM — public provider liveness (is a real AI connected?)
+  // ============================================================
+  // Lets the client be HONEST: when the LLM/STT run on the built-in mock, the
+  // analysis is a simulated sample, not a live AI read. Exposes only booleans.
+  platform: router({
+    status: publicProcedure.query(() => {
+      const s = platformStatus();
+      return { liveLLM: s.live.llm, liveSTT: s.live.stt, liveStorage: s.live.storage };
+    }),
+  }),
+
+  // ============================================================
   // ANALYTICS (Stage 6) — funnel instrumentation
   // ============================================================
   // ============================================================
