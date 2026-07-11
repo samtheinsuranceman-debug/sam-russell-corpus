@@ -700,11 +700,18 @@ export default function About() {
                   outcome is the shape of the mind making the call.
                 </p>
                 <p>
-                  A licensed advisor across insurance, Medicare, and retirement planning, and the founder of
-                  <span className="text-foreground"> Russell Capital Solutions</span>, Sam built his career on
-                  reading people well — and on a conviction that most of what makes someone exceptional never
-                  shows up on a standard test. A trained <span className="text-foreground">NLP Master
-                  Practitioner</span>, he spent years studying how people actually think, decide, and change.
+                  A licensed advisor across insurance, Medicare, and retirement planning with{" "}
+                  <a
+                    href="https://www.drasswealthmanagement.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground underline decoration-primary/40 underline-offset-4 hover:decoration-primary transition-colors"
+                  >
+                    Drass Wealth Management
+                  </a>
+                  , Sam built his career on reading people well — and on a conviction that most of what makes
+                  someone exceptional never shows up on a standard test. He has spent years studying how people
+                  actually think, decide, and change.
                 </p>
                 <p>
                   AQAL Intelligence is where those two threads meet: the discipline of an advisor who has spent
