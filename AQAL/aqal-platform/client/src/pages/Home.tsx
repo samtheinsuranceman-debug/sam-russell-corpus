@@ -350,17 +350,17 @@ function EngineeringSection() {
     <section style={{ background: INK, padding: 'clamp(56px,8vw,108px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
-          Engineered, not just measured
+          Diagnosis, then intervention
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500, fontSize: 'clamp(32px,5.5vw,58px)', lineHeight: 1.03, color: CREAM, margin: '0 0 20px', maxWidth: '16em' }}>
           "Most platforms stop at the score. We operate on the system."
         </p>
         <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '44em', margin: '0 0 40px' }}>
-          Once your 32 lines are measured, the real work begins: reading how they interact — then
-          <b style={{ color: CREAM, fontWeight: 600 }}> scaffolding the strengths</b> that carry you and
-          <b style={{ color: CREAM, fontWeight: 600 }}> patching the weaknesses</b> that quietly sabotage your outcomes.
-          This is intelligence about your intelligence — working the very systems that either serve you or get in
-          your way. No other assessment on the internet operates at this level.
+          Once your 32 lines are measured, the real work begins — <b style={{ color: CREAM, fontWeight: 600 }}>precise surgery on the system.</b>{" "}
+          We read how the lines interact, then intervene with intent: <b style={{ color: CREAM, fontWeight: 600 }}>fortify and sharpen the strengths</b> that
+          carry you, and <b style={{ color: CREAM, fontWeight: 600 }}>patch, route around, or dismantle the weaknesses</b> quietly sabotaging your outcomes.
+          Every move is drawn from peer-reviewed research and aimed at the one node that changes the odds — engineering the
+          outcomes of your life by operating on the mind that produces them. No other assessment on the internet works at this level.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 'clamp(16px,2vw,24px)' }}>
           {principles.map((p) => (
