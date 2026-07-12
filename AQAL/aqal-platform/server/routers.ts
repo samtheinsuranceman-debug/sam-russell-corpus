@@ -45,7 +45,7 @@ import { createVideoAssessment, getVideoAssessment, getUserVideoAssessments, upd
 import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisMode, MODE_META } from "@shared/axisModes";
 import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
-import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE } from "./platform/config";
+import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, voiceConsensus } from "./platform/config";
 import {
   recordEvent, getAnalyticsEventsSince, getSubscriptionEvents,
   addMarketingSpend, getMarketingSpendSince,
@@ -440,12 +440,15 @@ Respond in JSON format.`;
             },
           };
 
-          // High-confidence tier (paid/beta) scores with the full multi-AI
-          // consensus panel when 2+ models are configured; everyone else (and any
-          // fallback) uses the single default model.
+          // Multi-AI consensus scoring. The panel (up to 5 models from different
+          // developers) scores the transcript and we average them. Paid/beta tiers
+          // always use it when 2+ models are configured; the free VOICE assessment
+          // also uses it unless VOICE_CONSENSUS=false (see platform/config). Falling
+          // back to the single default model only when the panel can't run.
           let analysis: any = null;
           const useConsensus =
-            ctx.user.membershipTier !== "free" && panelSize() >= 2;
+            panelSize() >= 2 &&
+            (ctx.user.membershipTier !== "free" || voiceConsensus());
           if (useConsensus) {
             const panelResults = await runPanel(invokeParams);
             const parsed = panelResults

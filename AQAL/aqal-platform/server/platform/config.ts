@@ -61,6 +61,16 @@ export function enabledPanel(): PanelMember[] {
   return PANEL_MEMBERS.filter((m) => m.key.length > 0);
 }
 
+// Should the multi-AI consensus panel also score the FREE, voice-only assessment
+// (not just the paid tier)? Default ON: if 2+ panel models are configured, every
+// assessment — free voice included — is scored by the whole panel and averaged.
+// The result stays honestly labeled "voice-only" (confidence is driven by
+// evidence, not model count); more models just makes the SCORE steadier.
+// Set VOICE_CONSENSUS=false to save cost and reserve the panel for paid tiers.
+export function voiceConsensus(): boolean {
+  return (env("VOICE_CONSENSUS") || "true").toLowerCase() !== "false";
+}
+
 // ---- Perplexity (evidence verification, high-confidence tier) ----
 // Live web search + citations, used ONLY to verify uploaded evidence claims.
 // Empty = mock (no real verification).
