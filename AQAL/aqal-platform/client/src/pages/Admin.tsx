@@ -123,6 +123,9 @@ export default function Admin() {
 
           {/* Business Health Tab (Stage 6) */}
           <TabsContent value="health">
+            <div className="glass-card p-6 mb-6">
+              <PanelHealth />
+            </div>
             <div className="glass-card p-6">
               <BusinessHealth />
             </div>
@@ -449,6 +452,57 @@ export default function Admin() {
 // ============================================================
 // CORPUS SEARCH WIDGET — Admin-only semantic search over Sam's corpus
 // ============================================================
+// Live AI panel check — confirm every configured provider actually responds,
+// so you know you have a real N-model consensus (not a silently-degraded one).
+function PanelHealth() {
+  const check = trpc.admin.panelHealth.useMutation();
+  const data = check.data;
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
+        <h2 className="text-xl font-bold text-foreground">AI Panel Health</h2>
+        <Button onClick={() => check.mutate()} disabled={check.isPending}>
+          {check.isPending ? "Pinging providers…" : "Run live check"}
+        </Button>
+      </div>
+      <p className="text-sm text-muted-foreground/70 mb-4">
+        Pings every configured AI provider with a tiny request and reports which ones actually
+        answer. A key with a wrong base URL or model silently drops from the consensus — this is
+        how you catch that before launch.
+      </p>
+      {check.isError && <p className="text-sm text-red-400">{check.error.message}</p>}
+      {data && (
+        <>
+          <div className="text-sm mb-3">
+            <span className="font-semibold text-foreground">{data.live}</span>
+            <span className="text-muted-foreground"> of {data.configured} providers live</span>
+            {data.live < 2 && (
+              <span className="text-amber-400"> — need 2+ for a real consensus</span>
+            )}
+          </div>
+          <div className="space-y-2">
+            {data.members.map((m) => (
+              <div key={m.id} className="flex items-start gap-3 rounded-lg border border-white/[0.06] px-4 py-3">
+                <span className={`mt-0.5 text-lg leading-none ${m.ok ? "text-emerald-400" : "text-red-400"}`}>
+                  {m.ok ? "●" : "○"}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold text-foreground">
+                    {m.name} <span className="text-muted-foreground/50 font-normal">· {m.developer} · {m.model}</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground/70">
+                    {m.note} {m.ok && <span className="text-muted-foreground/40">· {m.latencyMs}ms</span>}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function CorpusSearchWidget() {
   const [query, setQuery] = useState("");
   const [searchTerm, setSearchTerm] = useState("");

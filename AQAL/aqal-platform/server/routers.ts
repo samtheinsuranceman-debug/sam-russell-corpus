@@ -812,6 +812,18 @@ Return ONLY valid JSON.` },
         providers: platformStatus(),
       };
     }),
+    // Live panel health: ping every configured AI provider and report which ones
+    // actually respond. Use this before launch to confirm a real N-model consensus
+    // (a key with a wrong base_url/model silently drops from the panel otherwise).
+    panelHealth: adminProcedure.mutation(async () => {
+      const { panelHealth } = await import("./platform/panel");
+      const members = await panelHealth();
+      return {
+        configured: members.length,
+        live: members.filter((m) => m.ok).length,
+        members,
+      };
+    }),
     // Test-retest reliability: score the same transcript N times, report per-axis
     // variance. Real variance requires a live LLM provider; on the mock it returns
     // an empty/stable result. Runs are capped to keep the call bounded.
