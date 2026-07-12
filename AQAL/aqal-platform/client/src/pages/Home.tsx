@@ -135,10 +135,17 @@ function HeroSection() {
             </motion.h1>
 
             <motion.p
-              style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.6, maxWidth: '33em', margin: '22px 0 30px' }}
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(21px,2.7vw,32px)', lineHeight: 1.15, color: CREAM, margin: '20px 0 0' }}
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.2, 0.7, 0.3, 1] }}
+            >
+              Measure the mind. <span style={{ color: CHAMPAGNE }}>Map the system.</span> Engineer the outcome.
+            </motion.p>
+
+            <motion.p
+              style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.6, maxWidth: '34em', margin: '18px 0 30px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Forget the single IQ digit. Your mind runs on <b style={{ color: CREAM, fontWeight: 600 }}>thirty-two lines</b> of intelligence — and most of your real worth lives in the ones no test ever sees. We measure the <b style={{ color: CREAM, fontWeight: 600 }}>total</b>, then work the system itself: <b style={{ color: CREAM, fontWeight: 600 }}>scaffolding the strengths that carry you</b> and <b style={{ color: CREAM, fontWeight: 600 }}>dismantling the weaknesses that sabotage them</b> — at a level most people never reach.
+              Every other test hands you a number and walks away. We map your mind as a <b style={{ color: CREAM, fontWeight: 600 }}>system of 32 lines</b>, find the one weakness quietly sabotaging what you want, and <b style={{ color: CREAM, fontWeight: 600 }}>engineer the move that changes the odds</b> — backed by the research, scored by five AIs. A new kind of self-knowledge.
             </motion.p>
 
             <motion.div
@@ -166,7 +173,7 @@ function HeroSection() {
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
             >
               <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> Methodology disclosed</span>
-              <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> 140 peer-reviewed sources</span>
+              <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> 300+ peer-reviewed sources</span>
               <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> No score inflation, ever</span>
             </motion.div>
           </div>

@@ -295,7 +295,7 @@ const QUESTION_ORDER = [
 ];
 const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
 
-// All 24 questions are free. The gate is on the evidence-based SCORING method
+// All questions are free. The gate is on the evidence-based SCORING method
 // (the verified, high-confidence report) — unlocked by payment or a beta code —
 // not on the questions.
 const TOTAL_QUESTIONS = QUESTIONS.length;
@@ -782,7 +782,7 @@ export default function Assessment() {
       });
     }
     
-    // All 24 questions are free. The paywall now gates the evidence-based
+    // All questions are free. The paywall now gates the evidence-based
     // scoring method after completion — not the questions themselves.
     if (currentQuestion < TOTAL_QUESTIONS - 1) {
       setCurrentQuestion((q) => q + 1);
