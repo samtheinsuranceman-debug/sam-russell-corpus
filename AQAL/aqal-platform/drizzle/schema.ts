@@ -37,6 +37,23 @@ export type InsertWaitlistEntry = typeof waitlist.$inferInsert;
 // ============================================================
 // ASSESSMENTS — One per user attempt
 // ============================================================
+// Testimonials — captured IN-APP at the peak moment (after the report/plan),
+// with explicit consent to display. Nothing is shown publicly until approved.
+export const testimonials = mysqlTable("testimonials", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  rating: int("rating").notNull(), // 1-5
+  quote: text("quote"),
+  displayName: varchar("displayName", { length: 120 }),
+  consentToDisplay: boolean("consentToDisplay").default(false).notNull(),
+  moment: varchar("moment", { length: 40 }), // where it was captured, e.g. "results" | "outcome_plan"
+  status: mysqlEnum("status", ["pending", "approved", "hidden"]).default("pending").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Testimonial = typeof testimonials.$inferSelect;
+export type InsertTestimonial = typeof testimonials.$inferInsert;
+
 export const assessments = mysqlTable("assessments", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),

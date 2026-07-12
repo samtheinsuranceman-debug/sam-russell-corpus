@@ -1,6 +1,6 @@
 import { eq, sql, and, desc, gte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend } from "../drizzle/schema";
+import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend, testimonials, InsertTestimonial } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -1122,4 +1122,25 @@ export async function grantBetaAccess(userId: number, tier: "silver" | "gold" | 
   const db = await getDb();
   if (!db) return;
   await db.update(users).set({ betaAccess: true, membershipTier: tier }).where(eq(users.id, userId));
+}
+
+export async function saveTestimonial(input: InsertTestimonial) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.insert(testimonials).values(input);
+  return { id: Number(result[0].insertId) };
+}
+
+export async function getApprovedTestimonials(limit = 12) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({
+    rating: testimonials.rating,
+    quote: testimonials.quote,
+    displayName: testimonials.displayName,
+    createdAt: testimonials.createdAt,
+  }).from(testimonials)
+    .where(and(eq(testimonials.status, "approved"), eq(testimonials.consentToDisplay, true)))
+    .orderBy(desc(testimonials.createdAt))
+    .limit(limit);
 }

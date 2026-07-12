@@ -50,6 +50,7 @@ import {
   recordEvent, getAnalyticsEventsSince, getSubscriptionEvents,
   addMarketingSpend, getMarketingSpendSince,
   countBetaRedemptions, grantBetaAccess, getUserById, upsertUser,
+  saveTestimonial, getApprovedTestimonials,
 } from "./db";
 import {
   funnelMetrics, pipelineHealth, cac, retention, goNoGo, FUNNEL_STAGES,
@@ -922,6 +923,36 @@ Return ONLY valid JSON.` },
   // ============================================================
   // Lets the client be HONEST: when the LLM/STT run on the built-in mock, the
   // analysis is a simulated sample, not a live AI read. Exposes only booleans.
+  // ============================================================
+  // TESTIMONIALS — captured in-app at the peak moment, with consent
+  // ============================================================
+  testimonials: router({
+    submit: protectedProcedure
+      .input(z.object({
+        rating: z.number().int().min(1).max(5),
+        quote: z.string().max(1000).optional(),
+        displayName: z.string().max(120).optional(),
+        consentToDisplay: z.boolean().default(false),
+        moment: z.string().max(40).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await saveTestimonial({
+          userId: ctx.user.id,
+          rating: input.rating,
+          quote: input.quote ?? null,
+          displayName: input.displayName ?? null,
+          consentToDisplay: input.consentToDisplay,
+          moment: input.moment ?? null,
+        });
+        await recordEvent({ type: "testimonial", userId: ctx.user.id, numericValue: input.rating });
+        return { success: true };
+      }),
+    // Public: only approved + consented testimonials, for display on the site.
+    approved: publicProcedure.query(async () => {
+      return getApprovedTestimonials(12);
+    }),
+  }),
+
   platform: router({
     status: publicProcedure.query(() => {
       const s = platformStatus();

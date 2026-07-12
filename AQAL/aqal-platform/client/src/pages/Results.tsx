@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
 import { motion, useInView } from "framer-motion";
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
-import { Shield, Users, Brain, ArrowRight, Lock, Eye, Zap, RefreshCw, Sparkles } from "lucide-react";
+import { Shield, Users, Brain, ArrowRight, Lock, Eye, Zap, RefreshCw, Sparkles, Star } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { playClick } from "@/lib/audio";
@@ -768,6 +769,75 @@ function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
 }
 
 // ============================================================
+// TESTIMONIAL CAPTURE — at the peak moment, in-app, with consent
+// ============================================================
+function TestimonialCapture() {
+  const [dismissed, setDismissed] = useState(
+    () => typeof window !== "undefined" && localStorage.getItem("aqal_testimonial_done") === "1",
+  );
+  const [rating, setRating] = useState(0);
+  const [quote, setQuote] = useState("");
+  const [name, setName] = useState("");
+  const [consent, setConsent] = useState(false);
+  const submit = trpc.testimonials.submit.useMutation({
+    onSuccess: () => {
+      localStorage.setItem("aqal_testimonial_done", "1");
+      setDismissed(true);
+      toast.success("Thank you — that genuinely helps.");
+    },
+    onError: () => toast.error("Couldn't send that — try again in a moment."),
+  });
+  const close = () => { localStorage.setItem("aqal_testimonial_done", "1"); setDismissed(true); };
+  if (dismissed) return null;
+
+  return (
+    <div className="max-w-xl mx-auto mb-16 glass-card rounded-2xl p-6 border border-primary/15 text-center">
+      <p className="text-sm text-foreground/85 mb-4 leading-relaxed">
+        Was this worth your time? A word from you helps the next person trust it.
+      </p>
+      <div className="flex justify-center gap-1.5 mb-2">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button key={n} onClick={() => setRating(n)} aria-label={`${n} stars`} className="p-1">
+            <Star className={`w-6 h-6 transition-colors ${n <= rating ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30 hover:text-muted-foreground/50"}`} />
+          </button>
+        ))}
+      </div>
+      {rating > 0 && (
+        <div className="space-y-3 text-left mt-4">
+          <textarea
+            value={quote} onChange={(e) => setQuote(e.target.value)} rows={2}
+            placeholder="One sentence on what surprised you or what it got right… (optional)"
+            className="w-full bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+          <input
+            value={name} onChange={(e) => setName(e.target.value)}
+            placeholder="Name or initials to show (optional)"
+            className="w-full bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+          <label className="flex items-center gap-2 text-xs text-muted-foreground/70">
+            <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
+            You may show this on the site. We never show it without your permission.
+          </label>
+          <div className="flex items-center gap-3 pt-1">
+            <button
+              onClick={() => submit.mutate({ rating, quote: quote || undefined, displayName: name || undefined, consentToDisplay: consent, moment: "results" })}
+              disabled={submit.isPending}
+              className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold active:scale-[0.97] transition-all"
+            >
+              {submit.isPending ? "Sending…" : "Send"}
+            </button>
+            <button onClick={close} className="text-xs text-muted-foreground/40 hover:text-muted-foreground/60">No thanks</button>
+          </div>
+        </div>
+      )}
+      {rating === 0 && (
+        <button onClick={close} className="text-[0.7rem] text-muted-foreground/30 hover:text-muted-foreground/50 mt-2">Maybe later</button>
+      )}
+    </div>
+  );
+}
+
+// ============================================================
 // MAIN RESULTS PAGE
 // ============================================================
 export default function Results() {
@@ -949,6 +1019,9 @@ export default function Results() {
 
             {/* Outcome Engineering — goal-aligned diagnosis + prescriptions */}
             <OutcomeEngineering fullAccess={!!(user?.membershipTier && user.membershipTier !== "free")} />
+
+            {/* Testimonial capture — peak moment, in-app, consented */}
+            <TestimonialCapture />
 
             {/* Power Combinations — Venn intersections */}
             <div className="mb-16">
