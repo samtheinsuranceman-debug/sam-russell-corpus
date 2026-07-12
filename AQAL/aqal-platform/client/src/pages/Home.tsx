@@ -93,7 +93,7 @@ const SAMPLES = [
 ];
 
 // ============================================================
-// HERO — "Out of a million people... how engineered is your mind?"
+// HERO — "Out of a million people... how engineered is your mind for everything you want?"
 // ============================================================
 function HeroSection() {
   const [mounted, setMounted] = useState(false);
@@ -131,14 +131,14 @@ function HeroSection() {
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 0.98, fontSize: 'clamp(44px,7vw,80px)', letterSpacing: '-0.01em', color: CREAM, marginTop: '20px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Out of a million people — <em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>how engineered is your mind?</em>
+              Out of a million people — <em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>how engineered is your mind for everything you want?</em>
             </motion.h1>
 
             <motion.p
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontSize: 'clamp(17px,2.1vw,24px)', lineHeight: 1.25, color: CREAM2, margin: '14px 0 0' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Not just how <span style={{ color: CREAM }}>rare</span>. How <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>precise, protected, and predictable</b> — and how well <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>engineered</b> for the outcome you're chasing.
+              Not just how <span style={{ color: CREAM }}>rare</span>. How <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>systemized, protected, and predictable</b> your whole mind is — the full architecture, measured against your <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>goals, dreams, and outcomes.</b>
             </motion.p>
 
             <motion.p
