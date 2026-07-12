@@ -49,6 +49,7 @@ const UIPreview = lazy(() => import("./pages/UIPreview"));
 const VideoAssessment = lazy(() => import("./pages/VideoAssessment"));
 const Portal = lazy(() => import("./pages/Portal"));
 const ResearchLibrary = lazy(() => import("./pages/ResearchLibrary"));
+const VerificationLedger = lazy(() => import("./pages/VerificationLedger"));
 const PricingStructure = lazy(() => import("./pages/PricingStructure"));
 const BlindSideAnalyzer = lazy(() => import("./pages/BlindSideAnalyzer"));
 const WeaknessFinder = lazy(() => import("./pages/WeaknessFinder"));
@@ -337,6 +338,11 @@ function Router() {
         <Route path={"/research-library"}>
           <PageErrorBoundary pageName="Research Library">
             <Suspense fallback={<PageSkeleton />}><ResearchLibrary /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/verification"}>
+          <PageErrorBoundary pageName="Verification Ledger">
+            <Suspense fallback={<PageSkeleton />}><VerificationLedger /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/pricing-structure"}>

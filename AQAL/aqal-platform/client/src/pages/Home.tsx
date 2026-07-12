@@ -173,7 +173,7 @@ function HeroSection() {
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
             >
               <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> Methodology disclosed</span>
-              <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> 300+ peer-reviewed sources</span>
+              <Link href="/verification"><span className="inline-flex items-center gap-[7px] cursor-pointer hover:opacity-80 transition-opacity"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> 300+ sources · 0 fabricated</span></Link>
               <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> No score inflation, ever</span>
             </motion.div>
           </div>

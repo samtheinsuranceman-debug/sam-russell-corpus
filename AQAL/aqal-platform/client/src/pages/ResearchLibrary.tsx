@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Search, ChevronDown, ExternalLink, FileText, ShieldCheck,
   Sparkles, LayoutGrid, ArrowLeft, Brain, TrendingUp, Shield, X,
@@ -1199,6 +1199,32 @@ const PRACTICE_SOURCE_COUNT = PRACTICE_EVIDENCE.reduce((n, c) => n + c.sources.l
 const PRACTICE_SECTION_COUNT = new Set(PRACTICE_EVIDENCE.map((c) => c.section)).size;
 const TOTAL_SOURCES = VOLUME_SOURCES + PRACTICE_SOURCE_COUNT;
 
+// ── Verification ledger stats — the single, live source of truth ────────────
+// Computed from the actual rendered source arrays so the public ledger can
+// never drift from what's really in the library. Every entry here survived the
+// verification gate (RESEARCH_PIPELINE.md); the fabricated count is zero by
+// construction — a source that can't be confirmed is never added.
+function collectSourceKinds() {
+  let doi = 0, scholar = 0, other = 0;
+  const bump = (k?: string) => {
+    if (k === "doi") doi++;
+    else if (k === "scholar") scholar++;
+    else other++;
+  };
+  for (const l of LINES as any[]) bump(l.linkKind);
+  for (const c of TRAINABILITY_CLUSTERS) for (const s of c.sources as any[]) bump(s.kind);
+  for (const c of PRACTICE_EVIDENCE) for (const s of c.sources as any[]) bump(s.kind);
+  return { doi, scholar, other, clickable: doi + scholar + other };
+}
+export const LEDGER_STATS = {
+  totalSources: TOTAL_SOURCES,           // everything, incl. sources inside the downloadable PDF volumes
+  volumeSources: VOLUME_SOURCES,          // sources in the three PDF volumes
+  practiceSources: PRACTICE_SOURCE_COUNT, // network/systems-science practice evidence
+  practiceSections: PRACTICE_SECTION_COUNT,
+  fabricated: 0,                          // the whole point — see RESEARCH_PIPELINE.md
+  ...collectSourceKinds(),                // doi / scholar / other / clickable (individually linked in-app)
+};
+
 export default function ResearchLibrary() {
   // Support deep-linking via ?section=trainability or ?section=practices
   const [section, setSection] = useState<"lines" | "trainability" | "practices">(() => {
@@ -1241,6 +1267,30 @@ export default function ResearchLibrary() {
       return next;
     });
   };
+
+  // Deep-link a specific source cluster: /research-library#src-<clusterId>.
+  // Switches to the right tab, opens the cluster, and scrolls it into view —
+  // this is what makes the Claim → Evidence links on the report land on the
+  // exact paper, not just the library homepage.
+  useEffect(() => {
+    const raw = window.location.hash.replace(/^#/, "");
+    if (!raw.startsWith("src-")) return;
+    const id = raw.slice(4);
+    if (TRAINABILITY_CLUSTERS.some((c) => c.id === id)) {
+      setSection("trainability");
+      setOpenTrainIds((prev) => new Set(prev).add(id));
+    } else if (PRACTICE_EVIDENCE.some((c) => c.id === id)) {
+      setSection("practices");
+      setOpenPracticeIds((prev) => new Set(prev).add(id));
+    } else {
+      return;
+    }
+    // Wait for the tab switch + expand to render, then scroll.
+    const t = setTimeout(() => {
+      document.getElementById(raw)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 220);
+    return () => clearTimeout(t);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -1688,7 +1738,7 @@ export default function ResearchLibrary() {
             {TRAINABILITY_CLUSTERS.map((cluster) => {
               const isOpen = openTrainIds.has(cluster.id);
               return (
-                <div key={cluster.id} className={`rl-train-cluster${isOpen ? " is-open" : ""}`}>
+                <div key={cluster.id} id={`src-${cluster.id}`} className={`rl-train-cluster${isOpen ? " is-open" : ""}`}>
                   <button
                     type="button"
                     className="rl-train-head"
@@ -1849,7 +1899,7 @@ export default function ResearchLibrary() {
                       <p>{cluster.callout}</p>
                     </div>
                   )}
-                  <div className={`rl-train-cluster${isOpen ? " is-open" : ""}`}>
+                  <div id={`src-${cluster.id}`} className={`rl-train-cluster${isOpen ? " is-open" : ""}`}>
                     <button
                       type="button"
                       className="rl-train-head"

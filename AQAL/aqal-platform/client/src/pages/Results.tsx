@@ -13,6 +13,8 @@ import { CLUSTER_IMAGE_MAP } from "@shared/clusterImages";
 import { axisMode, modeColor, MODE_META, ALL_AXES } from "@shared/axisModes";
 import { effectivePotential } from "@shared/effectivePotential";
 import { bottleneckRole } from "@shared/bottleneckRoles";
+import { Cite } from "@/components/Cite";
+import { citationHref } from "@shared/citations";
 
 // The full 32-line profile, in the order defined by the single source of truth.
 const AXIS_LABELS = ALL_AXES;
@@ -452,6 +454,7 @@ function EffectivePotentialCard({ scores }: { scores: number[] }) {
               >
                 {constraint.role.label}
               </span>
+              <Cite k={constraint.role.mechanism} />
             </div>
             <p className="text-xs text-muted-foreground/70 leading-relaxed">
               {constraint.role.failureMode}
@@ -461,7 +464,7 @@ function EffectivePotentialCard({ scores }: { scores: number[] }) {
 
         <p className="text-xs text-muted-foreground/40 mt-6 text-center leading-relaxed">
           Systems run at the speed of their weakest link (Liebig's Law of the Minimum, Kremer's
-          O-Ring, Theory of Constraints). This weights your bottleneck far above the mean —{" "}
+          O-Ring, Theory of Constraints)<Cite k="weakest-link" />. This weights your bottleneck far above the mean —{" "}
           {dragPct > 0
             ? "closing that gap is the fastest path to your goals."
             : "your lines are balanced, so your capability shows up whole."}
@@ -886,7 +889,7 @@ function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
             <p className="text-foreground/90 leading-relaxed">{report.summary}</p>
             <div className="mt-4 pt-4 border-t border-white/[0.06] flex items-start gap-2">
               <span className="text-[0.6rem] uppercase tracking-[0.18em] text-accent/70 mt-1 shrink-0" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Keystone move</span>
-              <p className="text-foreground/80 text-sm leading-relaxed">{report.keystoneMove}</p>
+              <p className="text-foreground/80 text-sm leading-relaxed">{report.keystoneMove}<Cite k="keystone" /></p>
             </div>
           </div>
 
@@ -896,7 +899,7 @@ function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
                 <h3 className="text-foreground font-semibold">{t.weakness} <span className="text-muted-foreground/40 font-normal text-sm">vs {t.goalArea}</span></h3>
                 <span className="text-[0.65rem] uppercase tracking-wider px-2.5 py-1 rounded-full" style={{ color: RISK_COLOR[t.risk] ?? "#E0C68C", border: `1px solid ${(RISK_COLOR[t.risk] ?? "#E0C68C")}44` }}>{t.risk} risk</span>
               </div>
-              <p className="text-muted-foreground/70 text-sm leading-relaxed mb-4">{t.reasoning}</p>
+              <p className="text-muted-foreground/70 text-sm leading-relaxed mb-4">{t.reasoning}<Cite k={bottleneckRole(t.weakness).mechanism} /></p>
               <div className="flex items-center gap-4 mb-4 text-xs">
                 <div className="flex-1">
                   <div className="flex justify-between text-muted-foreground/50 mb-1"><span>Derailment risk</span><span>{t.derailmentLikelihood}%</span></div>
@@ -905,7 +908,7 @@ function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
                 <div className="text-emerald-300/80 whitespace-nowrap text-sm font-semibold">+{t.upliftIfAddressed}% if addressed</div>
               </div>
               <p className="text-sm text-foreground/85 leading-relaxed"><span className="text-accent/70">Prescribed:</span> {t.move}</p>
-              <p className="text-[0.7rem] text-muted-foreground/45 mt-2">Read: <Link href="/research-library"><span className="text-primary/70 hover:text-primary underline cursor-pointer">{t.libraryTopic}</span></Link></p>
+              <p className="text-[0.7rem] text-muted-foreground/45 mt-2">Read: <Link href={citationHref(bottleneckRole(t.weakness).mechanism)}><span className="text-primary/70 hover:text-primary underline cursor-pointer">{t.libraryTopic}</span></Link></p>
             </div>
           ))}
 
