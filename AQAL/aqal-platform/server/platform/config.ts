@@ -55,6 +55,11 @@ export const PANEL_MEMBERS: PanelMember[] = [
   { id: "llama", name: "Llama", developer: "Meta",
     base: env("GROQ_BASE_URL") || "https://api.groq.com/openai/v1",
     key: env("GROQ_API_KEY"), model: env("GROQ_MODEL") || "llama-3.3-70b-versatile" },
+  // Mistral (Le Chat) — an independent European lab. A different training lineage
+  // = genuinely uncorrelated error, which strengthens the consensus. OpenAI-compatible.
+  { id: "mistral", name: "Mistral", developer: "Mistral AI (France)",
+    base: env("MISTRAL_BASE_URL") || "https://api.mistral.ai/v1",
+    key: env("MISTRAL_API_KEY"), model: env("MISTRAL_MODEL") || "mistral-large-latest" },
 ];
 
 export function enabledPanel(): PanelMember[] {
