@@ -56,7 +56,7 @@ export default function Privacy() {
                 <li>Voice recordings are processed in real-time and discarded after analysis</li>
                 <li>We do not use your voice data to train AI models</li>
                 <li>Only numerical scores and text transcriptions are retained</li>
-                <li>Five AI systems from different developers analyze your responses — no single system has access to your complete profile</li>
+                <li>Multiple AI systems from different developers analyze your responses — no single system has access to your complete profile</li>
                 <li>All voice processing occurs on encrypted channels</li>
               </ul>
             </section>

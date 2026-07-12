@@ -46,7 +46,7 @@ const METHODOLOGY = [
   {
     step: "02",
     title: "Multi-Model Consensus",
-    desc: "Your high-confidence result is scored by a panel of five AI systems from different developers \u2014 Claude (Anthropic), GPT (OpenAI), Gemini (Google), Grok (xAI), and Llama (Meta). Each scores independently; we take a consensus (trimmed mean, dropping the outlier) so no single model's quirks decide your result. The free preliminary pass uses one model; the five-model consensus is what raises a verified result to high confidence.",
+    desc: "Your high-confidence result is scored by a panel of AI systems from different developers and countries \u2014 including Claude (Anthropic), GPT (OpenAI), Gemini (Google), Grok (xAI), Llama (Meta), and independent labs like Mistral (France), Cohere (Canada), and AI21 (Israel). Each scores independently; we take a consensus (trimmed mean, dropping the outlier) so no single model's quirks decide your result. The free preliminary pass uses one model; the multi-model consensus is what raises a verified result to high confidence.",
   },
   {
     step: "03",

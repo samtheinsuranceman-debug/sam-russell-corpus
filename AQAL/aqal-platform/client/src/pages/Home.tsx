@@ -93,7 +93,7 @@ const SAMPLES = [
 ];
 
 // ============================================================
-// HERO — "Out of a million people... how rare and valuable is your mind?"
+// HERO — "Out of a million people... how engineered is your mind?"
 // ============================================================
 function HeroSection() {
   const [mounted, setMounted] = useState(false);
@@ -131,8 +131,15 @@ function HeroSection() {
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 0.98, fontSize: 'clamp(44px,7vw,80px)', letterSpacing: '-0.01em', color: CREAM, marginTop: '20px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Out of a million people... <em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>how rare and valuable is your mind?</em>
+              Out of a million people — <em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>how engineered is your mind?</em>
             </motion.h1>
+
+            <motion.p
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontSize: 'clamp(17px,2.1vw,24px)', lineHeight: 1.25, color: CREAM2, margin: '14px 0 0' }}
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: [0.2, 0.7, 0.3, 1] }}
+            >
+              Not just how <span style={{ color: CREAM }}>rare</span>. How <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>precise, protected, and predictable</b> — and how well <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>engineered</b> for the outcome you're chasing.
+            </motion.p>
 
             <motion.p
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(21px,2.7vw,32px)', lineHeight: 1.15, color: CREAM, margin: '20px 0 0' }}
@@ -145,7 +152,7 @@ function HeroSection() {
               style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.6, maxWidth: '34em', margin: '18px 0 30px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Every other test hands you a number and walks away. We map your mind as a <b style={{ color: CREAM, fontWeight: 600 }}>system of 32 lines</b>, find the one weakness quietly sabotaging what you want, and <b style={{ color: CREAM, fontWeight: 600 }}>engineer the move that changes the odds</b> — backed by the research, scored by five AIs. A new kind of self-knowledge.
+              Every other test hands you a number and walks away. We map your mind as a <b style={{ color: CREAM, fontWeight: 600 }}>system of 32 lines</b>, find the one weakness quietly sabotaging what you want, and <b style={{ color: CREAM, fontWeight: 600 }}>engineer the move that changes the odds</b> — backed by the research, cross-checked by a panel of independent AIs. A new kind of self-knowledge.
             </motion.p>
 
             <motion.div
@@ -664,7 +671,7 @@ function ServicePillars() {
             <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>
               <p style={{ marginBottom: '12px' }}>Your highest lines form <b style={{ color: CREAM, fontWeight: 600 }}>strength clusters</b> — groups that amplify each other when used together. We identify these clusters and show you how to deploy them toward your stated goals.</p>
               <p style={{ marginBottom: '12px' }}>The <b style={{ color: CREAM, fontWeight: 600 }}>second-order effects</b> of combining your top lines optimally are often more powerful than any individual strength. Strategic × Interpersonal doesn't just mean "good at planning and people" — it means you can architect social outcomes most people can't even see.</p>
-              <p>Five AI systems analyze your specific cluster patterns and generate prescriptions for career decisions, relationship dynamics, creative output, and long-term planning.</p>
+              <p>A panel of independent AIs analyzes your specific cluster patterns and generates prescriptions for career decisions, relationship dynamics, creative output, and long-term planning.</p>
             </div>
           </div>
 

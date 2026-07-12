@@ -56,7 +56,7 @@ export default function PublicFooter() {
 
         {/* Tagline */}
         <p className="text-center text-[0.65rem] text-muted-foreground/30 tracking-widest uppercase max-w-sm leading-relaxed">
-          Voice-first. Evidence-verified. Five AI systems. Zero bias.
+          Voice-first. Evidence-verified. Multi-AI consensus. Zero bias.
         </p>
 
         {/* Copyright */}

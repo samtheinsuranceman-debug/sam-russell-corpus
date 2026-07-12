@@ -247,7 +247,7 @@ export function PublicFooter() {
               AQAL
             </span>
             <p className="mt-2 text-sm text-muted-foreground/60 leading-relaxed max-w-xs">
-              Voice-first intelligence assessment. Five AI systems. Evidence-verified.
+              Voice-first intelligence assessment. A panel of independent AIs. Evidence-verified.
             </p>
           </div>
 

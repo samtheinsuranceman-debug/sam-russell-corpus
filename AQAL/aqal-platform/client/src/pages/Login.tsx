@@ -103,7 +103,7 @@ export default function Login() {
           <p className="text-muted-foreground text-sm leading-relaxed">
             The world's first voice-based intelligence assessment.
             <br />
-            32 dimensions. 5 AI minds. Your rarity score.
+            32 lines. A panel of AIs. Engineered, not just measured.
           </p>
         </div>
 
@@ -186,7 +186,7 @@ export default function Login() {
         >
           <TrustBadge icon={<Shield className="w-4 h-4" />} label="Private & Encrypted" />
           <TrustBadge icon={<Sparkles className="w-4 h-4" />} label="7 Patents Pending · Proprietary methodology" />
-          <TrustBadge icon={<Brain className="w-4 h-4" />} label="5 AI Systems" />
+          <TrustBadge icon={<Brain className="w-4 h-4" />} label="Multi-AI Panel" />
         </motion.div>
 
         {/* Back to home */}

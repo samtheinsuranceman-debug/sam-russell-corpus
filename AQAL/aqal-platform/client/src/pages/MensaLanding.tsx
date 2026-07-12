@@ -162,7 +162,7 @@ export default function MensaLanding() {
               <h3 className="font-display text-[18px] font-medium mb-3">Directional Confidence</h3>
               <ul className="space-y-2 text-[13px] text-muted-foreground">
                 <li className="flex gap-2"><span className="text-primary/60">→</span> 30–60 minute structured voice interview</li>
-                <li className="flex gap-2"><span className="text-primary/60">→</span> Five AI systems analyze verbal markers</li>
+                <li className="flex gap-2"><span className="text-primary/60">→</span> A panel of AIs analyzes verbal markers</li>
                 <li className="flex gap-2"><span className="text-primary/60">→</span> All 32 lines scored at low-confidence level</li>
                 <li className="flex gap-2"><span className="text-primary/60">→</span> Immediate preliminary profile generated</li>
               </ul>
@@ -176,7 +176,7 @@ export default function MensaLanding() {
               <ul className="space-y-2 text-[13px] text-muted-foreground">
                 <li className="flex gap-2"><span className="text-accent/80">→</span> Upload credentials, publications, portfolios</li>
                 <li className="flex gap-2"><span className="text-accent/80">→</span> Every claim cross-referenced against evidence</li>
-                <li className="flex gap-2"><span className="text-accent/80">→</span> Scores locked only when all five AIs agree</li>
+                <li className="flex gap-2"><span className="text-accent/80">→</span> Scores locked only when the AI panel reaches consensus</li>
                 <li className="flex gap-2"><span className="text-accent/80">→</span> High-confidence rarity composite calculated</li>
               </ul>
               <div className="mt-4 font-mono text-[10px] text-accent/60 tracking-[0.06em]">

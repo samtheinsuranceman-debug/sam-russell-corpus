@@ -1604,7 +1604,7 @@ export default function Results() {
                 </h3>
                 <p className="text-muted-foreground leading-relaxed mb-6">
                   Your preliminary score is based on a single-pass analysis. The full underwriting process runs your responses
-                  through five AI systems from different developers — each analyzing different aspects of developmental psychology — and
+                  through a panel of AI systems from different developers — each analyzing different aspects of developmental psychology — and
                   cross-checks their assessments. Where they agree, confidence is higher. Where they diverge, the result is flagged for review.
                 </p>
 
@@ -1614,7 +1614,7 @@ export default function Results() {
                   <ArrowRight className="w-3 h-3" />
                   <span className="px-2 py-1 rounded bg-primary/10 text-primary">Transcription</span>
                   <ArrowRight className="w-3 h-3" />
-                  <span className="px-2 py-1 rounded bg-accent/10 text-accent">5 AI Systems</span>
+                  <span className="px-2 py-1 rounded bg-accent/10 text-accent">Multi-AI Panel</span>
                   <ArrowRight className="w-3 h-3" />
                   <span className="px-2 py-1 rounded bg-accent/10 text-accent">Cross-Validation</span>
                   <ArrowRight className="w-3 h-3" />
@@ -1639,7 +1639,7 @@ export default function Results() {
                     <h3 className="text-lg font-semibold text-foreground mb-3">There's one more thing.</h3>
                     <p className="text-muted-foreground leading-relaxed mb-4">
                       You just took an assessment without truly knowing its depth. You didn't know every word, every inflection,
-                      would be analyzed by five AIs for hours. Now you know. Now you understand the stakes.
+                      would be analyzed by a panel of AIs for hours. Now you know. Now you understand the stakes.
                     </p>
                     <p className="text-muted-foreground leading-relaxed mb-4">
                       When you become a member, you gain the opportunity to retake the full assessment with new, randomized questions.

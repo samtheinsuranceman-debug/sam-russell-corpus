@@ -1132,7 +1132,7 @@ export default function Assessment() {
               Unlock Evidence-Based Verification
             </h1>
             <p className="text-muted-foreground/70 text-base max-w-lg mx-auto leading-relaxed">
-              Your voice assessment gives a low-to-moderate confidence estimate. The evidence-based scoring method verifies your full 32-line profile — five AI systems, cross-checked against the evidence you submit — and raises your result to high confidence.
+              Your voice assessment gives a low-to-moderate confidence estimate. The evidence-based scoring method verifies your full 32-line profile — a panel of independent AIs, cross-checked against the evidence you submit — and raises your result to high confidence.
             </p>
           </motion.div>
 
@@ -1194,7 +1194,7 @@ export default function Assessment() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-foreground mb-1">Full 32-Dimension Intelligence Map + Rarity Underwriting</p>
-                  <p className="text-xs text-muted-foreground/60 leading-relaxed">Five AI systems from different developers score your complete cognitive shape across 32 dimensions. Your composite rarity estimate shows approximately where you stand — refined further once you submit evidence.</p>
+                  <p className="text-xs text-muted-foreground/60 leading-relaxed">A panel of AIs from different developers scores your complete cognitive shape across 32 dimensions. Your composite rarity estimate shows approximately where you stand — refined further once you submit evidence.</p>
                 </div>
               </div>
 
@@ -1405,7 +1405,7 @@ export default function Assessment() {
             Assessment Complete
           </h1>
           <p className="text-muted-foreground/60 text-sm mb-8 leading-relaxed max-w-md mx-auto">
-            Five AI systems from different developers have analyzed your responses across 32 cognitive dimensions.
+            A panel of AIs from different developers has analyzed your responses across 32 cognitive dimensions.
           </p>
 
           {/* Rarity reveal */}

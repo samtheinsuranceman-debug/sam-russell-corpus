@@ -218,7 +218,7 @@ function OverviewTab({ user, scores, assessment }: { user: any; scores: any; ass
           <Card className="p-5 bg-secondary border-border hover:border-primary/40 transition-all cursor-pointer group">
             <Target className="w-5 h-5 text-primary mb-3" />
             <h4 className="text-sm font-medium text-foreground mb-1">{hasResults ? "Retake Assessment" : "Take Assessment"}</h4>
-            <p className="text-[11px] text-muted-foreground">32 dimensions, 5 AI systems, 30–60 min interview</p>
+            <p className="text-[11px] text-muted-foreground">32 dimensions, multi-AI panel, 30–60 min interview</p>
             <ArrowRight className="w-4 h-4 text-primary mt-3 group-hover:translate-x-1 transition-transform" />
           </Card>
         </Link>

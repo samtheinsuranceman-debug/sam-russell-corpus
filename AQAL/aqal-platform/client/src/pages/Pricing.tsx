@@ -315,7 +315,7 @@ export default function Pricing() {
               ))}
             </div>
             <p className="text-center text-muted-foreground/40 text-xs mt-6">
-              32 intelligence lines derived from 4 foundational frameworks, scored by 5 AI systems from different developers.
+              32 intelligence lines derived from 4 foundational frameworks, scored by a panel of AI systems from different developers.
             </p>
           </motion.div>
 

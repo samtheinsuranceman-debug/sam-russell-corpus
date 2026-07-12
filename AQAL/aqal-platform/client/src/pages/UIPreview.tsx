@@ -360,7 +360,7 @@ export default function UIPreview() {
             <div className="wi-hero-label">Intelligence Assessment</div>
             <h1>A rigorous map of how you actually think.</h1>
             <p>
-              27 dimensions. Five AI systems cross-checking each other. Evidence you upload, not claims you make.
+              32 dimensions. A panel of AIs cross-checking each other. Evidence you upload, not claims you make.
               Built for people who want precision, not flattery.
             </p>
             <button className="wi-hero-cta">
@@ -454,7 +454,7 @@ export default function UIPreview() {
           <h2>How the assessment works</h2>
           <div className="wi-steps">
             {[
-              { n: "01", title: "Voice capture", desc: "A 12-minute structured interview. Five AI systems from different developers analyze the same audio independently." },
+              { n: "01", title: "Voice capture", desc: "A 12-minute structured interview. A panel of AIs from different developers analyzes the same audio independently." },
               { n: "02", title: "Cross-validation", desc: "Each system scores blind. Agreement raises confidence; disagreement triggers deeper probes or flags uncertainty." },
               { n: "03", title: "Evidence upload", desc: "Standardized test scores, certifications, and documented achievements anchor measured lines to real population norms." },
               { n: "04", title: "Honest rendering", desc: "Each line is reported in its correct verb — percentile, stage, or verified floor — never inflated beyond what the data supports." },
