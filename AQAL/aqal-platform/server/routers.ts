@@ -27,6 +27,7 @@ import { storagePut, storageGetSignedUrl } from "./platform/storage";
 import { runPanel, panelSize, panelDevelopers } from "./platform/panel";
 import { consensusScores } from "./scoring/consensus";
 import { verifyClaim } from "./platform/verify";
+import { generateOutcomeReport } from "./coaching";
 import { invokeLLM } from "./platform/llm";
 import type { InvokeParams } from "./platform/llm";
 import { generateSocialCardSVG } from "./socialCard";
@@ -1198,6 +1199,37 @@ Return ONLY valid JSON.` },
     letters: protectedProcedure.query(async ({ ctx }) => {
       return getCoachingLetters(ctx.user.id);
     }),
+
+    // Outcome Engineering — goal-aligned diagnosis + research-backed prescriptions.
+    // High-confidence (paid/beta) feature. `goals` is the user's stated-goals text
+    // (from the goals questions) so the report is aligned to THEIR outcomes.
+    outcomeReport: protectedProcedure
+      .input(z.object({ goals: z.string().max(6000).optional() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.membershipTier === "free") {
+          return { locked: true as const };
+        }
+        const assessment = await getLatestAssessment(ctx.user.id);
+        if (!assessment || assessment.status !== "complete") {
+          return { error: "Complete an assessment first to generate your outcome plan." };
+        }
+        const scores = await getScoresByAssessment(assessment.id);
+        // Pull the person's stated goals from their answers to the goals questions
+        // (order positions 12 & 13 — see QUESTION_ORDER) so the report aligns to
+        // THEIR outcomes. Client may override via input.goals.
+        let goals = input.goals ?? "";
+        if (!goals) {
+          const responsesList = await getResponsesByAssessment(assessment.id);
+          goals = responsesList
+            .filter((r: any) => r.questionIndex === 12 || r.questionIndex === 13)
+            .map((r: any) => r.transcript)
+            .filter(Boolean)
+            .join("\n\n");
+        }
+        const report = await generateOutcomeReport(scores as any, goals);
+        await recordEvent({ type: "outcome_report", userId: ctx.user.id });
+        return { report };
+      }),
 
     generate: protectedProcedure
       .input(z.object({ topic: z.string().optional() }))

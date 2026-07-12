@@ -259,17 +259,17 @@ const QUESTIONS_SOURCE: {
   // patching to. Sequenced at the arc-1 → arc-2 hinge via QUESTION_ORDER.
   {
     id: 33,
-    title: "The No-Fail Life",
-    text: "Let's go big for a second. Picture it's forty years from now and you're looking back on a life that went exactly right — and here's the catch: in this version, you could not fail. Every bet paid off. So what did you build? What did you become? The money, a family, a body of work, something spiritual, something people remember you by? Don't be modest and don't be realistic. Paint me the whole thing — the life that would make you say, 'yeah, that was the one I was supposed to live.'",
-    dimension: "Vision & Legacy",
-    axes: [8, 9, 4],
+    title: "Your Top Five",
+    text: "Let's put real numbers on it. Tell me your top five goals — ranked, number one through five — and roughly when you want each: five years out, ten, twenty, thirty. Spread them across what actually matters to you — the money and work, the family and relationships, health and body, the spiritual or legacy side. And here's the frame: if you knew you could not fail, what are the five that would make the whole life worth it? Give me number one first, then count down.",
+    dimension: "Goals — Prioritized",
+    axes: [17, 31, 4],
   },
   {
     id: 34,
-    title: "The Map Forward",
-    text: "Now get specific with me. Fast-forward five years, then ten, then twenty — what do you actually want to be true by then? Walk me through the parts that matter: the money and the work, the family and the people around you, your health and your body, and whatever you'd call the spiritual or meaning side of it. Which of these do you think about the most? Which one quietly keeps you up at night? And what's the one outcome that, if you truly nailed it, would make everything else feel like it fell into place?",
-    dimension: "Goals & Outcomes",
-    axes: [17, 31, 4],
+    title: "How You'll Know",
+    text: "Now take your top one or two of those and drop me into the day you've actually achieved them — not the idea of it, the real moment. How do you know you've arrived? What do you see around you? What do you hear — what are people saying, what are you saying to yourself? What does it feel like in your body? Who are you standing next to? And walk me through an ordinary Tuesday inside that life — what are you doing, morning to night?",
+    dimension: "Outcome — Evidence & Sensory",
+    axes: [6, 24, 8],
   },
 ];
 

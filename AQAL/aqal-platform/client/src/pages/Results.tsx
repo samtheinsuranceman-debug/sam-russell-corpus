@@ -675,6 +675,99 @@ function UnderwrittenBy({ fullAccess }: { fullAccess: boolean }) {
 }
 
 // ============================================================
+// OUTCOME ENGINEERING — goal-aligned diagnosis + prescriptions
+// ============================================================
+const RISK_COLOR: Record<string, string> = {
+  Low: "#9BC0B2", Moderate: "#E0C68C", High: "#D19A72", Severe: "#C85C44",
+};
+
+function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
+  const gen = trpc.coaching.outcomeReport.useMutation();
+  const report = gen.data && "report" in gen.data ? gen.data.report : null;
+
+  return (
+    <div className="max-w-3xl mx-auto mb-20">
+      <div className="text-center mb-8">
+        <p className="text-xs uppercase tracking-[0.2em] text-accent/60 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          Outcome Engineering
+        </p>
+        <h2 className="text-2xl sm:text-3xl text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+          Which lines threaten what you want — and the move that fixes it
+        </h2>
+      </div>
+
+      {!fullAccess ? (
+        <div className="glass-card rounded-2xl p-8 text-center border border-primary/15">
+          <Shield className="w-6 h-6 text-primary/60 mx-auto mb-3" />
+          <p className="text-muted-foreground/80 text-sm leading-relaxed mb-5 max-w-md mx-auto">
+            The evidence-based tier diagnoses which of your weakness clusters most threaten your stated
+            goals, explains why, and prescribes the highest-leverage move — with the research to back it.
+          </p>
+          <Link href="/pricing">
+            <button className="px-6 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold shadow-lg shadow-primary/20 active:scale-[0.97] transition-all">
+              Unlock your outcome plan
+            </button>
+          </Link>
+        </div>
+      ) : !report ? (
+        <div className="text-center">
+          <button
+            onClick={() => gen.mutate({})}
+            disabled={gen.isPending}
+            className="px-7 py-4 rounded-xl bg-primary text-primary-foreground text-base font-semibold shadow-lg shadow-primary/20 active:scale-[0.97] transition-all"
+          >
+            {gen.isPending ? "Engineering your plan…" : "Generate my outcome plan"}
+          </button>
+          <p className="text-[0.7rem] text-muted-foreground/40 mt-3">Reads your profile and the goals you named in the assessment.</p>
+        </div>
+      ) : (
+        <div className="space-y-5">
+          <div className="glass-card rounded-2xl p-6 border border-primary/15">
+            <p className="text-foreground/90 leading-relaxed">{report.summary}</p>
+            <div className="mt-4 pt-4 border-t border-white/[0.06] flex items-start gap-2">
+              <span className="text-[0.6rem] uppercase tracking-[0.18em] text-accent/70 mt-1 shrink-0" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Keystone move</span>
+              <p className="text-foreground/80 text-sm leading-relaxed">{report.keystoneMove}</p>
+            </div>
+          </div>
+
+          {report.threats.map((t: any, i: number) => (
+            <div key={i} className="glass-card rounded-2xl p-6">
+              <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
+                <h3 className="text-foreground font-semibold">{t.weakness} <span className="text-muted-foreground/40 font-normal text-sm">vs {t.goalArea}</span></h3>
+                <span className="text-[0.65rem] uppercase tracking-wider px-2.5 py-1 rounded-full" style={{ color: RISK_COLOR[t.risk] ?? "#E0C68C", border: `1px solid ${(RISK_COLOR[t.risk] ?? "#E0C68C")}44` }}>{t.risk} risk</span>
+              </div>
+              <p className="text-muted-foreground/70 text-sm leading-relaxed mb-4">{t.reasoning}</p>
+              <div className="flex items-center gap-4 mb-4 text-xs">
+                <div className="flex-1">
+                  <div className="flex justify-between text-muted-foreground/50 mb-1"><span>Derailment risk</span><span>{t.derailmentLikelihood}%</span></div>
+                  <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden"><div className="h-full rounded-full" style={{ width: `${t.derailmentLikelihood}%`, background: RISK_COLOR[t.risk] ?? "#E0C68C" }} /></div>
+                </div>
+                <div className="text-emerald-300/80 whitespace-nowrap text-sm font-semibold">+{t.upliftIfAddressed}% if addressed</div>
+              </div>
+              <p className="text-sm text-foreground/85 leading-relaxed"><span className="text-accent/70">Prescribed:</span> {t.move}</p>
+              <p className="text-[0.7rem] text-muted-foreground/45 mt-2">Read: <Link href="/research-library"><span className="text-primary/70 hover:text-primary underline cursor-pointer">{t.libraryTopic}</span></Link></p>
+            </div>
+          ))}
+
+          {report.enablers?.length > 0 && (
+            <div className="glass-card rounded-2xl p-6">
+              <p className="text-[0.65rem] uppercase tracking-[0.18em] text-accent/70 mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Strengths to aim</p>
+              <div className="space-y-2.5">
+                {report.enablers.map((e: any, i: number) => (
+                  <p key={i} className="text-sm text-muted-foreground/75 leading-relaxed"><span className="text-foreground/90 font-medium">{e.strength}</span> → {e.how}</p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <p className="text-[0.7rem] text-muted-foreground/40 text-center leading-relaxed px-4">{report.disclaimer}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================
 // MAIN RESULTS PAGE
 // ============================================================
 export default function Results() {
@@ -853,6 +946,9 @@ export default function Results() {
 
             {/* Underwritten by — the live AI panel */}
             <UnderwrittenBy fullAccess={!!(user?.membershipTier && user.membershipTier !== "free")} />
+
+            {/* Outcome Engineering — goal-aligned diagnosis + prescriptions */}
+            <OutcomeEngineering fullAccess={!!(user?.membershipTier && user.membershipTier !== "free")} />
 
             {/* Power Combinations — Venn intersections */}
             <div className="mb-16">
