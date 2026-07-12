@@ -565,6 +565,13 @@ export default function Assessment() {
   const chunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
 
+  // Browser speech-to-text (free, no API key — Chrome/Edge/Safari). Runs during
+  // recording and captures a transcript so a spoken answer can be scored WITHOUT
+  // a server transcription provider (Whisper). This is what lets the beta run on
+  // a chat-only model like Grok, which cannot transcribe audio itself.
+  const recognitionRef = useRef<any>(null);
+  const liveTranscriptRef = useRef<string>("");
+
   const question = QUESTIONS[currentQuestion];
   const progress = ((currentQuestion + 1) / TOTAL_QUESTIONS) * 100;
   const hasRecording = recordings[currentQuestion] !== null;
@@ -723,6 +730,31 @@ export default function Assessment() {
       };
 
       mediaRecorder.start(250);
+
+      // Fire up free browser transcription in parallel, if the browser supports it.
+      const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      liveTranscriptRef.current = "";
+      if (SR) {
+        try {
+          const recognition = new SR();
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.lang = "en-US";
+          recognition.onresult = (event: any) => {
+            let finalChunk = "";
+            for (let r = event.resultIndex; r < event.results.length; r++) {
+              if (event.results[r].isFinal) finalChunk += event.results[r][0].transcript + " ";
+            }
+            if (finalChunk) liveTranscriptRef.current += finalChunk;
+          };
+          recognition.onerror = () => { /* stay silent; audio upload remains the fallback */ };
+          recognition.start();
+          recognitionRef.current = recognition;
+        } catch {
+          recognitionRef.current = null;
+        }
+      }
+
       setIsRecording(true);
       setRecordingStartTime(Date.now());
     } catch (err: any) {
@@ -750,9 +782,26 @@ export default function Assessment() {
     if (audioContextRef.current) {
       audioContextRef.current.close();
     }
+    // Stop browser transcription and, if it heard anything, store it as this
+    // question's text answer. The submit step prefers text over audio, so a
+    // browser-transcribed answer is scored directly — no server Whisper needed.
+    if (recognitionRef.current) {
+      try { recognitionRef.current.stop(); } catch { /* noop */ }
+      recognitionRef.current = null;
+    }
+    const heard = liveTranscriptRef.current.trim();
+    if (heard.length > 0) {
+      const q = currentQuestion;
+      setTextResponses((prev) => {
+        const next = [...prev];
+        // Only fill from speech if the user didn't already type something here.
+        if (!next[q] || next[q].trim().length === 0) next[q] = heard;
+        return next;
+      });
+    }
     setIsRecording(false);
     setRecordingStartTime(null);
-  }, []);
+  }, [currentQuestion]);
 
   // Skip current question
   const skipQuestion = useCallback(() => {
@@ -828,7 +877,17 @@ export default function Assessment() {
         const recording = recordings[i];
         const textResp = textResponses[i];
 
-        if (recording) {
+        // Prefer TEXT when we have it — a typed answer or a browser-transcribed
+        // spoken answer. This routes scoring straight to the LLM (e.g. Grok) with
+        // no server transcription needed. Raw audio upload (server Whisper) is the
+        // fallback only when there's no text for this question.
+        if (textResp?.trim().length > 0) {
+          await submitTextMutation.mutateAsync({
+            assessmentId: aId,
+            questionIndex: i,
+            text: textResp.trim(),
+          });
+        } else if (recording) {
           const arrayBuffer = await recording.arrayBuffer();
           const base64 = btoa(
             new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
@@ -838,12 +897,6 @@ export default function Assessment() {
             questionIndex: i,
             audioBase64: base64,
             durationMs: 30000,
-          });
-        } else if (textResp?.trim().length > 0) {
-          await submitTextMutation.mutateAsync({
-            assessmentId: aId,
-            questionIndex: i,
-            text: textResp.trim(),
           });
         }
       }
