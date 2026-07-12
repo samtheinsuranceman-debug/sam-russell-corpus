@@ -551,6 +551,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Kremer, M. (1993). The O-Ring theory of economic development. The Quarterly Journal of Economics, 108(3), 551–575.", note: "The formal economics of weakest-link production: output depends on the lowest-quality component, so one weakness can dominate many strengths.", link: "https://doi.org/10.2307/2118400", kind: "doi" },
       { cite: "Liebig's Law of the Minimum — limiting-factor theory applied to human performance and organizations.", note: "The 19th-century origin, now applied across management and performance: the scarcest factor sets the ceiling, regardless of surplus elsewhere.", link: scholar("Liebig law of the minimum limiting factor human performance organizations"), kind: "scholar" },
+      { cite: "Goldratt, E. M. (1990). What Is This Thing Called Theory of Constraints and How Should It Be Implemented? North River Press.", note: "The founding text of the Theory of Constraints: a system's output is set by its single binding constraint — improving anything else changes nothing. The operational form of “fix the weakest link first.”", link: scholar("Goldratt Theory of Constraints what is this thing called how should it be implemented"), kind: "scholar" },
+      { cite: "Blackstone, J. H. (2001). Theory of constraints — a status report. International Journal of Production Research, 39(6), 1053–1080.", note: "Reviews the empirical evidence that concentrating improvement on the constraint — not the non-constraints — is what actually raises total throughput. Support for constraint-first intervention.", link: scholar("Blackstone 2001 Theory of constraints a status report International Journal of Production Research"), kind: "scholar" },
     ],
   },
   {
