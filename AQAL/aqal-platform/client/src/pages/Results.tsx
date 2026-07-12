@@ -873,13 +873,16 @@ function LiveResearch({ strengths, weaknesses }: { strengths: string[]; weakness
 
         {data && (
           <>
-            {/* Honesty banner — these are UNVETTED live results, kept separate from the library. */}
+            {/* Honesty banner — these were cross-examined by the panel, but are still
+                a middle tier below the hand-verified library. */}
             <div className="flex items-start gap-2 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] px-4 py-3 mb-4">
               <Eye className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
               <p className="text-xs text-muted-foreground/80 leading-relaxed">
-                <span className="font-semibold text-amber-300/90">Live web results — not yet verified.</span>{" "}
-                These are pulled fresh and are <span className="italic">not</span> part of our curated,
-                fact-checked library. Confirm each source before relying on it.
+                <span className="font-semibold text-amber-300/90">Cross-checked, not library-grade.</span>{" "}
+                Each source was second-guessed by our AI panel and its DOI resolution-checked before
+                posting{typeof data.rejected === "number" && data.rejected > 0 ? ` (${data.rejected} rejected)` : ""}.
+                That's stronger than a raw web search but still lighter than our hand-verified library —
+                confirm before you cite it.
               </p>
             </div>
 
@@ -887,7 +890,7 @@ function LiveResearch({ strengths, weaknesses }: { strengths: string[]; weakness
               <p className="text-sm text-muted-foreground/50">
                 {data.mocked
                   ? "Live research isn't switched on yet (no research provider configured)."
-                  : "No sources came back clean this time — nothing fabricated to fill the gap."}
+                  : "Nothing survived cross-examination this time — nothing fabricated was let through to fill the gap."}
               </p>
             ) : (
               <div className="space-y-3">
@@ -902,9 +905,15 @@ function LiveResearch({ strengths, weaknesses }: { strengths: string[]; weakness
                       >
                         {c.title}
                       </a>
-                      <span className="text-[0.6rem] uppercase tracking-wider text-amber-400/70 border border-amber-400/25 rounded-full px-2 py-0.5 shrink-0">
-                        unverified
-                      </span>
+                      {c.status === "doi-verified" ? (
+                        <span className="text-[0.6rem] uppercase tracking-wider text-emerald-400/80 border border-emerald-400/30 rounded-full px-2 py-0.5 shrink-0" title={c.vetNote}>
+                          DOI verified
+                        </span>
+                      ) : (
+                        <span className="text-[0.6rem] uppercase tracking-wider text-amber-400/70 border border-amber-400/25 rounded-full px-2 py-0.5 shrink-0" title={c.vetNote}>
+                          AI-reviewed
+                        </span>
+                      )}
                     </div>
                     {c.source && <div className="text-xs text-muted-foreground/50 mt-0.5">{c.source}</div>}
                     {c.relevance && <p className="text-xs text-muted-foreground/70 mt-1.5">{c.relevance}</p>}
