@@ -60,6 +60,18 @@ export const PANEL_MEMBERS: PanelMember[] = [
   { id: "mistral", name: "Mistral", developer: "Mistral AI (France)",
     base: env("MISTRAL_BASE_URL") || "https://api.mistral.ai/v1",
     key: env("MISTRAL_API_KEY"), model: env("MISTRAL_MODEL") || "mistral-large-latest" },
+  // Cohere Command (Canada) — non-American, Western, no foreign-jurisdiction data
+  // concern. Routed through OpenRouter by default so it speaks the OpenAI dialect.
+  { id: "cohere", name: "Command", developer: "Cohere (Canada)",
+    base: env("COHERE_BASE_URL") || "https://openrouter.ai/api/v1",
+    key: env("COHERE_API_KEY") || env("OPENROUTER_API_KEY"),
+    model: env("COHERE_MODEL") || "cohere/command-r-plus" },
+  // AI21 Jamba (Israel) — a hybrid SSM-transformer, i.e. a genuinely DIFFERENT
+  // architecture from every other panel member, so it errs in different ways.
+  { id: "ai21", name: "Jamba", developer: "AI21 Labs (Israel)",
+    base: env("AI21_BASE_URL") || "https://openrouter.ai/api/v1",
+    key: env("AI21_API_KEY") || env("OPENROUTER_API_KEY"),
+    model: env("AI21_MODEL") || "ai21/jamba-1.5-large" },
 ];
 
 export function enabledPanel(): PanelMember[] {
