@@ -13,6 +13,7 @@
 
 import { invokeLLM, llmConfigured } from "./platform/llm";
 import { ALL_AXES, axisFeedsRarity } from "@shared/axisModes";
+import { bottleneckRole, MECHANISM_META } from "@shared/bottleneckRoles";
 
 export type ScoreRow = { axisName: string; score: number; confidence?: number | null };
 
@@ -116,8 +117,13 @@ export async function generateOutcomeReport(scores: ScoreRow[], goals: string): 
 weakest-link/bottleneck theory, keystone/mutualism effects, and leverage-point theory.
 
 The person's strongest lines: ${strengths.join(", ")}.
-Their weakest lines: ${weaknesses.join(", ")}.
+Their weakest lines, each with its established bottleneck mechanism:
+${weaknesses.map((w) => { const r = bottleneckRole(w); return `- ${w} — ${MECHANISM_META[r.mechanism].label} (${r.mechanism}): ${r.failureMode}`; }).join("\n")}
 Their stated goals (verbatim): ${goals || "(not provided — reason from the profile alone)"}.
+
+Use each line's mechanism above when you explain WHY it threatens the goals: a Liebig stave caps sustained
+output (raise it), an O-Ring multiplies failure across outputs (its quality gates everything downstream), a
+throughput constraint strands capacity behind the slowest step (widen it). Stay consistent with these mechanisms.
 
 Produce an outcome-engineering report:
 - Identify the weakness clusters most likely to create friction, loss, or derailment against THESE goals,

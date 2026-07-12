@@ -12,6 +12,7 @@ import { STRENGTH_CLUSTERS, GROWTH_CLUSTERS, type ClusterDefinition } from "@sha
 import { CLUSTER_IMAGE_MAP } from "@shared/clusterImages";
 import { axisMode, modeColor, MODE_META, ALL_AXES } from "@shared/axisModes";
 import { effectivePotential } from "@shared/effectivePotential";
+import { bottleneckRole } from "@shared/bottleneckRoles";
 
 // The full 32-line profile, in the order defined by the single source of truth.
 const AXIS_LABELS = ALL_AXES;
@@ -322,6 +323,17 @@ function RarityCountUp({ rarity, populationRarity = null, generation = null }: {
 // impose — exactly what the outcome-engineering plan is built to remove.
 function EffectivePotentialCard({ scores }: { scores: number[] }) {
   const ep = useMemo(() => effectivePotential(scores), [scores]);
+  // The single tightest constraint — the weakest scored line — and WHY it drags.
+  const constraint = useMemo(() => {
+    let minIdx = -1;
+    let minVal = Infinity;
+    scores.forEach((s, i) => {
+      if (s > 0 && s < minVal) { minVal = s; minIdx = i; }
+    });
+    if (minIdx < 0) return null;
+    const axis = AXIS_LABELS[minIdx];
+    return { axis, role: bottleneckRole(axis) };
+  }, [scores]);
   const [revealed, setRevealed] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
@@ -415,6 +427,37 @@ function EffectivePotentialCard({ scores }: { scores: number[] }) {
             )}
           </div>
         </div>
+
+        {/* The named constraint — WHY the drag exists */}
+        {constraint && dragPct > 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: revealed ? 1 : 0 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="mt-7 rounded-xl border border-border/30 bg-background/30 px-5 py-4"
+          >
+            <div className="flex items-center gap-2 flex-wrap mb-2">
+              <span className="text-[0.65rem] text-muted-foreground/50 uppercase tracking-wider">
+                Your tightest constraint
+              </span>
+              <span
+                className="text-sm font-semibold"
+                style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}
+              >
+                {constraint.axis}
+              </span>
+              <span
+                className="text-[0.6rem] uppercase tracking-wider px-2 py-0.5 rounded-full border border-border/40 text-muted-foreground/60"
+                style={{ fontFamily: "'JetBrains Mono', monospace" }}
+              >
+                {constraint.role.label}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground/70 leading-relaxed">
+              {constraint.role.failureMode}
+            </p>
+          </motion.div>
+        ) : null}
 
         <p className="text-xs text-muted-foreground/40 mt-6 text-center leading-relaxed">
           Systems run at the speed of their weakest link (Liebig's Law of the Minimum, Kremer's
