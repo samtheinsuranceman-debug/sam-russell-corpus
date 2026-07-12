@@ -27,6 +27,16 @@ const includedFeatures = [
   { icon: Shield, text: "Complementary match previews + connection requests" },
 ];
 
+// Monthly memberships — the ongoing coach (keys map to Stripe PRODUCTS).
+const MEMBERSHIPS: Array<{ key: "silver" | "gold" | "platinum"; name: string; price: string; tagline: string; features: string[]; highlight?: boolean }> = [
+  { key: "silver", name: "Coaching", price: "$39", tagline: "The ongoing outcome coach", highlight: true,
+    features: ["Monthly re-assessment", "Live tracking of the weakness most threatening your goals", "Your outcome-engineering plan, updated", "Research-backed prescriptions", "5 complementary matches / month"] },
+  { key: "gold", name: "Growth & Network", price: "$149", tagline: "Deeper, faster, unlimited matching",
+    features: ["Everything in Coaching", "Weekly re-assessment", "Deeper outcome-engineering sessions", "Priority evidence verification", "Unlimited network matching"] },
+  { key: "platinum", name: "Private Network", price: "$499", tagline: "The top tier",
+    features: ["Everything in Growth", "Private intelligence network", "1-on-1 AI strategy sessions", "Custom research reports", "White-glove evidence curation"] },
+];
+
 
 
 export default function Pricing() {
@@ -70,6 +80,13 @@ export default function Pricing() {
       productKey: "assessment",
       origin: window.location.origin,
     });
+  };
+
+  const subscribeTo = (productKey: "silver" | "gold" | "platinum") => {
+    playClick();
+    if (!user) { beginAuth(); return; }
+    setIsLoading(true);
+    checkoutMutation.mutate({ productKey, origin: window.location.origin });
   };
 
   return (
@@ -179,7 +196,55 @@ export default function Pricing() {
             </div>
           </motion.div>
 
-
+          {/* Coaching memberships — the ongoing coach */}
+          <motion.div
+            className="mt-4 mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <div className="text-center mb-8">
+              <p className="section-label mb-3">Then keep the coach — monthly</p>
+              <h2 className="text-2xl sm:text-3xl text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+                The report tells you where you stand. The coach gets you there.
+              </h2>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+              {MEMBERSHIPS.map((m) => (
+                <div key={m.key} className={`glass-card rounded-2xl p-6 flex flex-col border ${m.highlight ? "border-primary/40" : "border-white/[0.06]"}`}>
+                  {m.highlight && (
+                    <span className="text-[0.6rem] uppercase tracking-widest text-primary mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Most popular</span>
+                  )}
+                  <h3 className="text-lg font-semibold text-foreground">{m.name}</h3>
+                  <p className="text-xs text-muted-foreground/50 mb-3">{m.tagline}</p>
+                  <div className="mb-4">
+                    <span className="text-3xl font-bold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{m.price}</span>
+                    <span className="text-muted-foreground/50 text-sm">/mo</span>
+                  </div>
+                  <ul className="space-y-2 mb-6 flex-1">
+                    {m.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground/70">
+                        <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-accent/70" /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    onClick={() => subscribeTo(m.key)}
+                    disabled={isLoading}
+                    variant={m.highlight ? "default" : "outline"}
+                    className={m.highlight
+                      ? "w-full bg-primary text-primary-foreground"
+                      : "w-full border-primary/20 text-primary hover:bg-primary/[0.06]"}
+                  >
+                    Start {m.name}
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-[0.7rem] text-muted-foreground/40 mt-5">
+              Cancel anytime. Memberships unlock the evidence-based tier and your ongoing outcome plan.
+            </p>
+          </motion.div>
 
           {/* Trust bar */}
           <motion.div

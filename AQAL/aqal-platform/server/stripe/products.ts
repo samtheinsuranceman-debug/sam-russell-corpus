@@ -1,6 +1,6 @@
 // AQAL Intelligence Platform — Stripe Product Configuration
 // Assessment: $299 founding (first 100), $1,500 regular
-// Memberships: Silver $99/mo, Gold $499/mo, Platinum Diamond $2,999/mo
+// Memberships: Coaching $39/mo, Growth & Network $149/mo, Private Network $499/mo
 
 export const PRODUCTS = {
   assessment: {
@@ -16,23 +16,23 @@ export const PRODUCTS = {
     mode: "payment" as const,
   },
   silver: {
-    name: "AQAL Silver Membership",
-    description: "Essential intelligence tracking: full 32-axis radar chart, monthly re-assessment, power combination analysis, PDF export, basic evidence submission, and 5 network matches per month.",
-    price: 9900, // $99.00/month in cents
+    name: "AQAL Coaching Membership",
+    description: "Your ongoing outcome coach: monthly re-assessment, live tracking of the weakness cluster most threatening your goals, updated outcome-engineering plan, research-backed prescriptions, PDF export, and 5 complementary network matches per month.",
+    price: 3900, // $39.00/month in cents — the accessible coaching unlock
     mode: "subscription" as const,
     interval: "month" as const,
   },
   gold: {
-    name: "AQAL Gold Membership",
-    description: "Deep analysis & growth tracking: everything in Silver plus weekly re-assessment, AI coaching sessions, growth trajectory analysis, priority evidence review, unlimited network matching, and comparative analytics.",
-    price: 49900, // $499.00/month in cents
+    name: "AQAL Growth & Network",
+    description: "Everything in Coaching, plus weekly re-assessment, deeper outcome-engineering sessions, growth-trajectory analytics, priority evidence verification, and unlimited network matching.",
+    price: 14900, // $149.00/month in cents
     mode: "subscription" as const,
     interval: "month" as const,
   },
   platinum: {
-    name: "AQAL Platinum Diamond Membership",
-    description: "The world's most exclusive intelligence network: everything in Gold plus unlimited assessments, 1-on-1 AI strategy sessions, private intelligence network, custom research reports, white-glove evidence curation, exclusive events access, and founding member benefits.",
-    price: 299900, // $2,999.00/month in cents
+    name: "AQAL Private Network",
+    description: "The top tier: everything in Growth, plus a private intelligence network, 1-on-1 AI strategy sessions, custom research reports, white-glove evidence curation, and founding-member benefits.",
+    price: 49900, // $499.00/month in cents
     mode: "subscription" as const,
     interval: "month" as const,
   },

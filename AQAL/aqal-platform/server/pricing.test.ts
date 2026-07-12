@@ -16,20 +16,20 @@ describe("Stripe Products Configuration", () => {
     expect(PRODUCTS.assessmentRegular.mode).toBe("payment");
   });
 
-  it("silver membership is a monthly subscription at $99", () => {
-    expect(PRODUCTS.silver.price).toBe(9900);
+  it("coaching membership (silver) is a monthly subscription at $39", () => {
+    expect(PRODUCTS.silver.price).toBe(3900);
     expect(PRODUCTS.silver.mode).toBe("subscription");
     expect(PRODUCTS.silver.interval).toBe("month");
   });
 
-  it("gold membership is a monthly subscription at $499", () => {
-    expect(PRODUCTS.gold.price).toBe(49900);
+  it("growth & network (gold) is a monthly subscription at $149", () => {
+    expect(PRODUCTS.gold.price).toBe(14900);
     expect(PRODUCTS.gold.mode).toBe("subscription");
     expect(PRODUCTS.gold.interval).toBe("month");
   });
 
-  it("platinum diamond membership is a monthly subscription at $2,999", () => {
-    expect(PRODUCTS.platinum.price).toBe(299900);
+  it("private network (platinum) is a monthly subscription at $499", () => {
+    expect(PRODUCTS.platinum.price).toBe(49900);
     expect(PRODUCTS.platinum.mode).toBe("subscription");
     expect(PRODUCTS.platinum.interval).toBe("month");
   });
