@@ -440,16 +440,20 @@ Respond in JSON format.`;
             },
           };
 
-          // Multi-AI consensus scoring. The panel (up to 5 models from different
-          // developers) scores the transcript and we average them. Paid/beta tiers
-          // always use it when 2+ models are configured; the free VOICE assessment
-          // also uses it unless VOICE_CONSENSUS=false (see platform/config). Falling
-          // back to the single default model only when the panel can't run.
+          // Multi-AI scoring, degrading gracefully by how many providers are funded:
+          //   • 2+ configured  → the whole panel scores and we take the CONSENSUS
+          //     (they "compare notes and agree"; the outlier is trimmed).
+          //   • exactly 1      → that one AI scores solo (e.g. GPT alone, or Grok alone).
+          //   • 0 configured   → deterministic mock (simulated, honestly labeled).
+          // Paid tiers always fan out; the free VOICE assessment does too unless
+          // VOICE_CONSENSUS=false. Adding more API keys later widens the panel with
+          // no code change — the assessment just gets more voices at the table.
           let analysis: any = null;
-          const useConsensus =
-            panelSize() >= 2 &&
+          const configuredModels = panelSize(); // enabledPanel(): GPT + any funded members
+          const usePanel =
+            configuredModels >= 1 &&
             (ctx.user.membershipTier !== "free" || voiceConsensus());
-          if (useConsensus) {
+          if (usePanel) {
             const panelResults = await runPanel(invokeParams);
             const parsed = panelResults
               .map((r) => {
@@ -457,12 +461,18 @@ Respond in JSON format.`;
                 catch { return null; }
               })
               .filter((p) => p && Array.isArray(p.scores));
-            if (parsed.length >= 2) {
+            // 1 model → solo scores; 2+ → trimmed-mean consensus (both via consensusScores).
+            if (parsed.length >= 1) {
               analysis = {
                 scores: consensusScores(parsed.map((p: any) => p.scores)),
                 powerCombinations: parsed[0].powerCombinations ?? [],
               };
-              await recordEvent({ type: "score_consensus", userId: assessment.userId, numericValue: parsed.length, ok: true });
+              await recordEvent({
+                type: parsed.length >= 2 ? "score_consensus" : "score_llm",
+                userId: assessment.userId,
+                numericValue: parsed.length,
+                ok: true,
+              });
             }
           }
 
