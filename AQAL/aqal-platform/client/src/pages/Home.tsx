@@ -124,7 +124,7 @@ function HeroSection() {
               style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.30em', textTransform: 'uppercase', color: CHAMPAGNE }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.05, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              32 lines · one aggregate read · evidence-weighted
+              32 lines · measured, mapped, engineered
             </motion.div>
 
             <motion.h1
@@ -138,7 +138,7 @@ function HeroSection() {
               style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.6, maxWidth: '33em', margin: '22px 0 30px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Forget the single IQ digit. Your mind runs on <b style={{ color: CREAM, fontWeight: 600 }}>thirty-two lines</b> of intelligence — and most of your real worth lives in the ones no test ever sees. We measure the <b style={{ color: CREAM, fontWeight: 600 }}>total</b>, then compute how rare a mind that capable actually is.
+              Forget the single IQ digit. Your mind runs on <b style={{ color: CREAM, fontWeight: 600 }}>thirty-two lines</b> of intelligence — and most of your real worth lives in the ones no test ever sees. We measure the <b style={{ color: CREAM, fontWeight: 600 }}>total</b>, then work the system itself: <b style={{ color: CREAM, fontWeight: 600 }}>scaffolding the strengths that carry you</b> and <b style={{ color: CREAM, fontWeight: 600 }}>dismantling the weaknesses that sabotage them</b> — at a level most people never reach.
             </motion.p>
 
             <motion.div
@@ -281,6 +281,49 @@ function GenerationSection() {
             </p>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// SYSTEMS ENGINEERING — the meta-level differentiator
+// ============================================================
+function EngineeringSection() {
+  const principles = [
+    { h: "The controlling weakness", d: "Network science finds the one weakness with the most influence over the rest — the domino to shield first, not the loudest complaint." },
+    { h: "The weakest link", d: "A single deficiency can cap your outcome no matter how strong you are elsewhere. We find it before it finds you." },
+    { h: "The keystone strength", d: "Sharpen the right strength and it lifts the entire shape — a few high-leverage lines quietly carry the others." },
+    { h: "The highest-leverage move", d: "One tracked change, aimed at the most influential node, re-engineers the odds more than ten scattered efforts." },
+  ];
+  return (
+    <section style={{ background: INK, padding: 'clamp(56px,8vw,108px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+          Engineered, not just measured
+        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500, fontSize: 'clamp(32px,5.5vw,58px)', lineHeight: 1.03, color: CREAM, margin: '0 0 20px', maxWidth: '16em' }}>
+          "Most platforms stop at the score. We operate on the system."
+        </p>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '44em', margin: '0 0 40px' }}>
+          Once your 32 lines are measured, the real work begins: reading how they interact — then
+          <b style={{ color: CREAM, fontWeight: 600 }}> scaffolding the strengths</b> that carry you and
+          <b style={{ color: CREAM, fontWeight: 600 }}> patching the weaknesses</b> that quietly sabotage your outcomes.
+          This is intelligence about your intelligence — working the very systems that either serve you or get in
+          your way. No other assessment on the internet operates at this level.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 'clamp(16px,2vw,24px)' }}>
+          {principles.map((p) => (
+            <div key={p.h} style={{ border: `1px solid ${LINE_C}`, borderRadius: '8px', padding: '22px', background: `linear-gradient(180deg,${INK2},${INK})` }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '21px', color: CREAM, marginBottom: '8px' }}>{p.h}</div>
+              <p style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.6 }}>{p.d}</p>
+            </div>
+          ))}
+        </div>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10.5px', letterSpacing: '0.06em', color: MUTED, marginTop: '20px' }}>
+          Grounded in established systems science — with the skeptical papers included. See the{" "}
+          <Link href="/science" style={{ color: CHAMPAGNE, textDecoration: 'underline' }}>method</Link>.
+        </p>
       </div>
     </section>
   );
@@ -681,6 +724,7 @@ export default function Home() {
         <HeroSection />
         <div data-reveal><ThesisSection /></div>
         <div data-reveal><DialSection /></div>
+        <div data-reveal><EngineeringSection /></div>
         <div data-reveal><ProcessSection /></div>
         <div data-reveal><GenerationSection /></div>
         <div data-reveal><EvidenceSection /></div>

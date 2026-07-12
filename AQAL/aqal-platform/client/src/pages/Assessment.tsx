@@ -253,6 +253,24 @@ const QUESTIONS_SOURCE: {
     dimension: "Self-Concept",
     axes: [6, 5, 12],
   },
+
+  // ── Goals & outcomes (33–34). We can only engineer toward an outcome once it's
+  // named — these elicit the goals we align strength-scaffolding and weakness-
+  // patching to. Sequenced at the arc-1 → arc-2 hinge via QUESTION_ORDER.
+  {
+    id: 33,
+    title: "The No-Fail Life",
+    text: "Let's go big for a second. Picture it's forty years from now and you're looking back on a life that went exactly right — and here's the catch: in this version, you could not fail. Every bet paid off. So what did you build? What did you become? The money, a family, a body of work, something spiritual, something people remember you by? Don't be modest and don't be realistic. Paint me the whole thing — the life that would make you say, 'yeah, that was the one I was supposed to live.'",
+    dimension: "Vision & Legacy",
+    axes: [8, 9, 4],
+  },
+  {
+    id: 34,
+    title: "The Map Forward",
+    text: "Now get specific with me. Fast-forward five years, then ten, then twenty — what do you actually want to be true by then? Walk me through the parts that matter: the money and the work, the family and the people around you, your health and your body, and whatever you'd call the spiritual or meaning side of it. Which of these do you think about the most? Which one quietly keeps you up at night? And what's the one outcome that, if you truly nailed it, would make everything else feel like it fell into place?",
+    dimension: "Goals & Outcomes",
+    axes: [17, 31, 4],
+  },
 ];
 
 // ============================================================
@@ -271,7 +289,8 @@ const QUESTIONS_SOURCE: {
 //   12 The Tense Table, 13 The Wedding Chaos, 16 The Stranger — the weakest
 //   overlaps / partner-or-married assumptions. Swapped in: 25–32.
 const QUESTION_ORDER = [
-  23, 25, 26, 7, 27, 28, 8, 29, 1, 9, 5, 15,   // sequenced for rapport → momentum
+  23, 25, 26, 7, 27, 28, 8, 29, 1, 9, 5, 15,   // rapport → momentum → purpose hook
+  33, 34,                                        // goals & outcomes — the target we engineer toward
   14, 30, 19, 10, 18, 32, 31, 20, 17, 21, 22, 24, // → depth → over-disclosure
 ];
 const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
@@ -1050,7 +1069,7 @@ export default function Assessment() {
           >
             <div className="inline-flex items-center gap-2 bg-accent/[0.08] border border-accent/20 rounded-full px-5 py-2 mb-6">
               <Check className="w-4 h-4 text-accent" />
-              <span className="text-sm text-accent font-medium">All 24 Questions Complete</span>
+              <span className="text-sm text-accent font-medium">All {TOTAL_QUESTIONS} Questions Complete</span>
             </div>
 
             <h1

@@ -84,7 +84,7 @@ export default function AssessmentResumeDialog({
             <span className="text-accent font-medium">
               question {progress.question + 1}
             </span>{" "}
-            of 24. Would you like to continue where you left off, or start a new
+            of 26. Would you like to continue where you left off, or start a new
             assessment?
           </AlertDialogDescription>
         </AlertDialogHeader>
