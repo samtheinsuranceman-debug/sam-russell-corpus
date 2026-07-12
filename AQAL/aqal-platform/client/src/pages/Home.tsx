@@ -294,6 +294,42 @@ function GenerationSection() {
 }
 
 // ============================================================
+// TESTIMONIALS — real, consented, approved. Hidden until they exist.
+// ============================================================
+function TestimonialsStrip() {
+  const q = trpc.testimonials.approved.useQuery(undefined, { staleTime: 5 * 60_000, retry: false });
+  const items = q.data ?? [];
+  if (items.length === 0) return null; // honest: no fabricated social proof
+
+  return (
+    <section style={{ background: INK2, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,100px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '28px' }}>
+          In their words
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 'clamp(16px,2vw,28px)' }}>
+          {items.map((t, i) => (
+            <div key={i} style={{ border: `1px solid ${LINE_C}`, borderRadius: '10px', padding: '24px', background: INK }}>
+              <div style={{ color: CHAMPAGNE, letterSpacing: '2px', fontSize: '13px', marginBottom: '12px' }}>
+                {'★'.repeat(Math.max(1, Math.min(5, t.rating || 5)))}<span style={{ color: MUTED }}>{'★'.repeat(5 - Math.max(1, Math.min(5, t.rating || 5)))}</span>
+              </div>
+              {t.quote && (
+                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: '18px', lineHeight: 1.4, color: CREAM, margin: '0 0 14px' }}>
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+              )}
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.08em', color: CREAM2 }}>
+                {t.displayName || 'Verified member'}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
 // SYSTEMS ENGINEERING — the meta-level differentiator
 // ============================================================
 function EngineeringSection() {
@@ -737,6 +773,7 @@ export default function Home() {
         <div data-reveal><EvidenceSection /></div>
         <div data-reveal><SamplesSection /></div>
         <div data-reveal><ServicePillars /></div>
+        <div data-reveal><TestimonialsStrip /></div>
         <div data-reveal><FinalCTA /></div>
         <HonestFooter />
         <PublicFooter />

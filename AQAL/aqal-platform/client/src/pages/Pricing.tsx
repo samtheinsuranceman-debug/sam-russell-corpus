@@ -39,6 +39,26 @@ const MEMBERSHIPS: Array<{ key: "silver" | "gold" | "platinum"; name: string; pr
 
 
 
+function PricingTestimonials() {
+  const q = trpc.testimonials.approved.useQuery(undefined, { staleTime: 5 * 60_000, retry: false });
+  const items = q.data ?? [];
+  if (items.length === 0) return null;
+  return (
+    <div className="mt-14 max-w-4xl mx-auto">
+      <p className="text-center text-xs uppercase tracking-[0.2em] text-accent/50 mb-6" style={{ fontFamily: "'JetBrains Mono', monospace" }}>In their words</p>
+      <div className="grid sm:grid-cols-2 gap-4">
+        {items.slice(0, 4).map((t, i) => (
+          <div key={i} className="glass-card rounded-xl p-5 border border-white/[0.06]">
+            <div className="text-accent tracking-[3px] text-sm mb-2">{'★'.repeat(Math.max(1, Math.min(5, t.rating || 5)))}</div>
+            {t.quote && <p className="text-foreground/85 text-sm italic leading-relaxed mb-2">&ldquo;{t.quote}&rdquo;</p>}
+            <div className="text-[0.7rem] text-muted-foreground/50 uppercase tracking-wider">{t.displayName || 'Verified member'}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Pricing() {
   useScrollReveal();
   const { user } = useAuth();
@@ -264,6 +284,9 @@ export default function Pricing() {
             <span className="text-muted-foreground/20">•</span>
             <span>30-Day Retake Guarantee</span>
           </motion.div>
+
+          {/* Testimonials — real, consented; hidden until they exist */}
+          <PricingTestimonials />
 
           {/* Authority section — Influence: social proof + authority */}
           <motion.div
