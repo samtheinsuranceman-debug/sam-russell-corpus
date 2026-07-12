@@ -27,6 +27,7 @@ import { storagePut, storageGetSignedUrl } from "./platform/storage";
 import { runPanel, panelSize, panelDevelopers } from "./platform/panel";
 import { consensusScores } from "./scoring/consensus";
 import { verifyClaim } from "./platform/verify";
+import { fetchLiveCitations } from "./platform/liveResearch";
 import { generateOutcomeReport } from "./coaching";
 import { invokeLLM } from "./platform/llm";
 import type { InvokeParams } from "./platform/llm";
@@ -1251,6 +1252,25 @@ Return ONLY valid JSON.` },
   // ============================================================
   // COACHING LETTERS — Peter's NLP-mirrored letters (Gold+)
   // ============================================================
+  // Live research — Perplexity fetches fresh citations for the user's profile.
+  // Distinct from the curated library: results come back flagged unverified and
+  // are shown in a clearly-separated panel. No key = no results (never fabricated).
+  research: router({
+    liveCitations: protectedProcedure
+      .input(z.object({
+        strengths: z.array(z.string()).max(8).default([]),
+        weaknesses: z.array(z.string()).max(8).default([]),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const result = await fetchLiveCitations({
+          strengths: input.strengths,
+          weaknesses: input.weaknesses,
+        });
+        await recordEvent({ type: "live_research", userId: ctx.user.id, numericValue: result.citations.length, ok: !result.mocked });
+        return result;
+      }),
+  }),
+
   coaching: router({
     letters: protectedProcedure.query(async ({ ctx }) => {
       return getCoachingLetters(ctx.user.id);

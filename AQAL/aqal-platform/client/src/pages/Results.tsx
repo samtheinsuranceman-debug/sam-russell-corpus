@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
 import { motion, useInView } from "framer-motion";
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
-import { Shield, Users, Brain, ArrowRight, Lock, Eye, Zap, RefreshCw, Sparkles, Star } from "lucide-react";
+import { Shield, Users, Brain, ArrowRight, Lock, Eye, Zap, RefreshCw, Sparkles, Star, Search } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
@@ -844,6 +844,83 @@ const RISK_COLOR: Record<string, string> = {
   Low: "#9BC0B2", Moderate: "#E0C68C", High: "#D19A72", Severe: "#C85C44",
 };
 
+// Live research — Perplexity pulls fresh, profile-specific citations on demand.
+// Shown in a clearly-separated "unverified" panel so it never dilutes the curated,
+// verified library (that "0 fabricated" promise). No provider → honest empty state.
+function LiveResearch({ strengths, weaknesses }: { strengths: string[]; weaknesses: string[] }) {
+  const pull = trpc.research.liveCitations.useMutation();
+  const data = pull.data;
+  return (
+    <div className="mb-16 max-w-3xl mx-auto">
+      <div className="rounded-2xl border border-border/40 bg-card/30 backdrop-blur p-6 sm:p-8">
+        <div className="flex items-center justify-between gap-4 flex-wrap mb-2">
+          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <Search className="w-4 h-4 text-primary" />
+            Live Research for Your Profile
+          </h3>
+          <Button
+            size="sm"
+            onClick={() => pull.mutate({ strengths, weaknesses })}
+            disabled={pull.isPending}
+          >
+            {pull.isPending ? "Searching the web…" : "Pull live citations"}
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground/60 mb-4">
+          Fresh, peer-reviewed sources fetched in real time for your specific strengths and
+          bottlenecks — how to interpret them, fortify them, and remediate them.
+        </p>
+
+        {data && (
+          <>
+            {/* Honesty banner — these are UNVETTED live results, kept separate from the library. */}
+            <div className="flex items-start gap-2 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] px-4 py-3 mb-4">
+              <Eye className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <p className="text-xs text-muted-foreground/80 leading-relaxed">
+                <span className="font-semibold text-amber-300/90">Live web results — not yet verified.</span>{" "}
+                These are pulled fresh and are <span className="italic">not</span> part of our curated,
+                fact-checked library. Confirm each source before relying on it.
+              </p>
+            </div>
+
+            {data.citations.length === 0 ? (
+              <p className="text-sm text-muted-foreground/50">
+                {data.mocked
+                  ? "Live research isn't switched on yet (no research provider configured)."
+                  : "No sources came back clean this time — nothing fabricated to fill the gap."}
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {data.citations.map((c, i) => (
+                  <div key={i} className="rounded-xl border border-white/[0.06] bg-background/30 px-4 py-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <a
+                        href={c.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+                      >
+                        {c.title}
+                      </a>
+                      <span className="text-[0.6rem] uppercase tracking-wider text-amber-400/70 border border-amber-400/25 rounded-full px-2 py-0.5 shrink-0">
+                        unverified
+                      </span>
+                    </div>
+                    {c.source && <div className="text-xs text-muted-foreground/50 mt-0.5">{c.source}</div>}
+                    {c.relevance && <p className="text-xs text-muted-foreground/70 mt-1.5">{c.relevance}</p>}
+                    {c.topic && <div className="text-[0.65rem] text-primary/50 mt-1">for {c.topic}</div>}
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+        {pull.isError && <p className="text-sm text-red-400">{pull.error.message}</p>}
+      </div>
+    </div>
+  );
+}
+
 function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
   const gen = trpc.coaching.outcomeReport.useMutation();
   const report = gen.data && "report" in gen.data ? gen.data.report : null;
@@ -1186,6 +1263,12 @@ export default function Results() {
 
             {/* Outcome Engineering — goal-aligned diagnosis + prescriptions */}
             <OutcomeEngineering fullAccess={!!(user?.membershipTier && user.membershipTier !== "free")} />
+
+            {/* Live research — fresh, profile-specific citations (unverified) */}
+            <LiveResearch
+              strengths={strengths.map((s) => s.axis)}
+              weaknesses={growthEdges.map((s) => s.axis)}
+            />
 
             {/* Testimonial capture — peak moment, in-app, consented */}
             <TestimonialCapture />
