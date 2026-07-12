@@ -11,6 +11,7 @@ import { PageSkeleton } from "@/components/ui/loading-skeleton";
 import { STRENGTH_CLUSTERS, GROWTH_CLUSTERS, type ClusterDefinition } from "@shared/clusters";
 import { CLUSTER_IMAGE_MAP } from "@shared/clusterImages";
 import { axisMode, modeColor, MODE_META, ALL_AXES } from "@shared/axisModes";
+import { effectivePotential } from "@shared/effectivePotential";
 
 // The full 32-line profile, in the order defined by the single source of truth.
 const AXIS_LABELS = ALL_AXES;
@@ -306,6 +307,121 @@ function RarityCountUp({ rarity, populationRarity = null, generation = null }: {
           {generation
             ? "A model-based estimate, not a measured percentile. Ranked within your generation, then the population — developmental lines are age-adjusted; IQ-style lines are already age-normed."
             : "A model-based estimate, not a measured percentile — refined once you submit evidence."}
+        </p>
+      </motion.div>
+    </div>
+  );
+}
+
+// ============================================================
+// EFFECTIVE PERFORMANCE POTENTIAL — the Liebig-weighted number
+// ============================================================
+// A plain average flatters you; this weights your weakest lines far more
+// heavily, because real systems run at the speed of their bottleneck. The gap
+// between your average and your effective number is the drag your weakest lines
+// impose — exactly what the outcome-engineering plan is built to remove.
+function EffectivePotentialCard({ scores }: { scores: number[] }) {
+  const ep = useMemo(() => effectivePotential(scores), [scores]);
+  const [revealed, setRevealed] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  useEffect(() => {
+    if (!isInView) return;
+    const t = setTimeout(() => setRevealed(true), 500);
+    return () => clearTimeout(t);
+  }, [isInView]);
+
+  if (ep.mean <= 0) return null;
+
+  const effPct = Math.round(ep.effective * 100);
+  const meanPct = Math.round(ep.mean * 100);
+  const dragPct = Math.max(0, meanPct - effPct);
+
+  return (
+    <div ref={ref} className="max-w-2xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 16 }}
+        transition={{ duration: 0.9, ease: [0.23, 1, 0.32, 1] }}
+        className="rounded-2xl border border-border/40 bg-card/40 backdrop-blur px-6 py-8 sm:px-10 sm:py-10"
+      >
+        <p
+          className="text-xs text-muted-foreground/50 uppercase tracking-[0.2em] mb-6 text-center"
+          style={{ fontFamily: "'JetBrains Mono', monospace" }}
+        >
+          Effective Performance Potential
+        </p>
+
+        <div className="flex items-end justify-center gap-8 sm:gap-12">
+          {/* The flattering average */}
+          <div className="text-center opacity-60">
+            <div
+              className="text-3xl sm:text-4xl font-bold text-muted-foreground"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
+              {meanPct}
+            </div>
+            <p className="text-[0.65rem] text-muted-foreground/50 uppercase tracking-wider mt-1">
+              Your average
+            </p>
+          </div>
+
+          <div className="text-2xl text-muted-foreground/30 pb-3">→</div>
+
+          {/* What actually shows up in outcomes */}
+          <div className="text-center">
+            <div
+              className="text-5xl sm:text-6xl font-bold text-glow-gold"
+              style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}
+            >
+              {effPct}
+            </div>
+            <p className="text-[0.65rem] text-muted-foreground/60 uppercase tracking-wider mt-1">
+              Effective potential
+            </p>
+          </div>
+        </div>
+
+        {/* The drag bar */}
+        <div className="mt-8">
+          <div className="h-2 w-full rounded-full bg-muted/30 overflow-hidden flex">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: revealed ? `${effPct}%` : 0 }}
+              transition={{ duration: 1.1, ease: [0.23, 1, 0.32, 1], delay: 0.3 }}
+              className="h-full rounded-l-full"
+              style={{ background: "oklch(0.78 0.12 85)" }}
+            />
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: revealed ? `${dragPct}%` : 0 }}
+              transition={{ duration: 1.1, ease: [0.23, 1, 0.32, 1], delay: 0.5 }}
+              className="h-full"
+              style={{ background: "oklch(0.55 0.14 25 / 0.55)" }}
+            />
+          </div>
+          <div className="flex items-center justify-between mt-3 text-xs">
+            <span className="text-muted-foreground/60">Realized capability</span>
+            {dragPct > 0 ? (
+              <span className="text-muted-foreground/60">
+                <span className="font-semibold" style={{ color: "oklch(0.62 0.14 25)" }}>
+                  −{dragPct} pts
+                </span>{" "}
+                lost to your weakest lines
+              </span>
+            ) : (
+              <span className="text-muted-foreground/50">No bottleneck drag — rare</span>
+            )}
+          </div>
+        </div>
+
+        <p className="text-xs text-muted-foreground/40 mt-6 text-center leading-relaxed">
+          Systems run at the speed of their weakest link (Liebig's Law of the Minimum, Kremer's
+          O-Ring, Theory of Constraints). This weights your bottleneck far above the mean —{" "}
+          {dragPct > 0
+            ? "closing that gap is the fastest path to your goals."
+            : "your lines are balanced, so your capability shows up whole."}
         </p>
       </motion.div>
     </div>
@@ -1012,6 +1128,11 @@ export default function Results() {
                 populationRarity={cohortRarity ? compositeRarity : null}
                 generation={generation}
               />
+            </div>
+
+            {/* Effective Performance Potential — the weakest-link number */}
+            <div className="mb-16">
+              <EffectivePotentialCard scores={allScores} />
             </div>
 
             {/* Underwritten by — the live AI panel */}
