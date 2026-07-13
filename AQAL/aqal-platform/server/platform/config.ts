@@ -136,9 +136,14 @@ export const BETA_MAX_REDEMPTIONS = parseInt(env("BETA_MAX_REDEMPTIONS") || "50"
 
 // ---- Free access (universal passcode) -----------------------
 // A single shared passcode that lets ANYONE sign up free with just their email —
-// no card, no cap, unlimited redemptions. They take the assessment and get their
-// low-confidence (voice-only) result, which is emailed to that address.
+// no card. They take the assessment and get their low-confidence (voice-only)
+// result, which is emailed to that address.
 export const FREE_ACCESS_CODE = env("FREE_ACCESS_CODE") || "Welcome1";
+
+// Giveaway cap: how many free spots exist before the free door closes and pricing
+// shows instead. Powers the "N of 1,000 free spots left" scarcity counter. Set to
+// 0 for UNLIMITED (no cap). Existing free users can always sign back in.
+export const FREE_ASSESSMENT_CAP = parseInt(env("FREE_ASSESSMENT_CAP") || "1000", 10) || 0;
 
 // ---- Email (optional) ---------------------------------------
 // Resend (https://resend.com) by default — set RESEND_API_KEY to send for real.

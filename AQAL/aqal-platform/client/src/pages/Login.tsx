@@ -117,9 +117,18 @@ export default function Login() {
           {/* Free access — email + universal passcode */}
           {freeInfo.data?.enabled !== false && (
             <div className="mb-6">
-              <p className="text-xs uppercase tracking-[0.15em] text-accent/70 mb-3 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              <p className="text-xs uppercase tracking-[0.15em] text-accent/70 mb-2 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                 Free access — no card
               </p>
+              {typeof freeInfo.data?.remaining === "number" && (freeInfo.data.cap ?? 0) > 0 && (
+                <p className="text-center mb-3">
+                  <span className="inline-flex items-center gap-1.5 text-[0.7rem] px-2.5 py-1 rounded-full border border-primary/25 bg-primary/[0.06]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                    <span className="text-primary font-semibold">{freeInfo.data.remaining.toLocaleString()}</span>
+                    <span className="text-muted-foreground/60">of {freeInfo.data.cap.toLocaleString()} free spots left</span>
+                  </span>
+                </p>
+              )}
               <div className="space-y-2.5">
                 <div className="relative">
                   <Mail className="w-4 h-4 text-muted-foreground/40 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -140,13 +149,27 @@ export default function Login() {
                   placeholder="Access passcode"
                   className="w-full bg-background/60 border border-border/60 rounded-xl px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
-                <Button
-                  onClick={submitFreeAccess}
-                  disabled={claim.isPending}
-                  className="w-full h-11 text-sm font-semibold bg-gradient-to-r from-primary to-primary/80 text-white border-0 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.97] transition-all duration-150"
-                >
-                  {claim.isPending ? "Unlocking…" : "Get Free Access"}
-                </Button>
+                {freeInfo.data?.full ? (
+                  <>
+                    <div className="w-full h-11 flex items-center justify-center text-sm rounded-xl border border-border/60 text-muted-foreground/70">
+                      All free spots claimed
+                    </div>
+                    <Button
+                      onClick={() => navigate("/pricing")}
+                      className="w-full h-11 text-sm font-semibold bg-gradient-to-r from-primary to-primary/80 text-white border-0 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.97] transition-all duration-150"
+                    >
+                      See pricing
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    onClick={submitFreeAccess}
+                    disabled={claim.isPending}
+                    className="w-full h-11 text-sm font-semibold bg-gradient-to-r from-primary to-primary/80 text-white border-0 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.97] transition-all duration-150"
+                  >
+                    {claim.isPending ? "Unlocking…" : "Get Free Access"}
+                  </Button>
+                )}
                 <p className="text-[0.65rem] text-muted-foreground/45 text-center leading-relaxed">
                   Your email is your username. We&rsquo;ll email your results there.
                 </p>

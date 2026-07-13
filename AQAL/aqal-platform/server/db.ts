@@ -87,6 +87,24 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+// How many free-passcode users have claimed a spot — powers the giveaway cap
+// and the "N of 1000 free spots left" counter. DB down → null (treated as "can't
+// count", so the cap never wrongly blocks anyone).
+export async function countFreeUsers(): Promise<number | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const result = await db
+      .select({ count: sql`COUNT(*)` })
+      .from(users)
+      .where(eq(users.loginMethod, "free-passcode"));
+    return Number(result[0]?.count || 0);
+  } catch (e) {
+    console.warn("[Database] countFreeUsers failed:", e);
+    return null;
+  }
+}
+
 // Waitlist
 export async function addToWaitlist(email: string, tier?: string) {
   const db = await getDb();

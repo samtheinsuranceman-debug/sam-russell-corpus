@@ -46,12 +46,13 @@ import { createVideoAssessment, getVideoAssessment, getUserVideoAssessments, upd
 import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisMode, MODE_META } from "@shared/axisModes";
 import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
-import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, voiceConsensus } from "./platform/config";
+import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, FREE_ASSESSMENT_CAP, voiceConsensus } from "./platform/config";
 import {
   recordEvent, getAnalyticsEventsSince, getSubscriptionEvents,
   addMarketingSpend, getMarketingSpendSince,
   countBetaRedemptions, grantBetaAccess, getUserById, upsertUser,
   saveTestimonial, getApprovedTestimonials,
+  countFreeUsers, getUserByOpenId,
 } from "./db";
 import {
   funnelMetrics, pipelineHealth, cac, retention, goNoGo, FUNNEL_STAGES,
@@ -999,8 +1000,24 @@ Return ONLY valid JSON.` },
   // cap). We create a free account keyed to that email and log them in. Their
   // low-confidence result is emailed to that address when the assessment completes.
   freeAccess: router({
-    // Public: whether the free-access passcode gate is enabled (for the UI).
-    info: publicProcedure.query(() => ({ enabled: FREE_ACCESS_CODE.length > 0 })),
+    // Public: whether the free gate is enabled + how many giveaway spots remain,
+    // so the UI can show "N of 1,000 free spots left" and close the door at 0.
+    info: publicProcedure.query(async () => {
+      const cap = FREE_ASSESSMENT_CAP;
+      let remaining: number | null = null;
+      let used = 0;
+      if (cap > 0) {
+        const count = await countFreeUsers();
+        if (count !== null) { used = count; remaining = Math.max(0, cap - count); }
+      }
+      return {
+        enabled: FREE_ACCESS_CODE.length > 0,
+        cap,                      // 0 = unlimited
+        used,
+        remaining,                // null = uncapped or DB down
+        full: cap > 0 && remaining === 0,
+      };
+    }),
 
     claim: publicProcedure
       .input(z.object({
@@ -1014,6 +1031,19 @@ Return ONLY valid JSON.` },
         const email = input.email.trim().toLowerCase();
         const openId = `free:${email}`;
         const name = email.split("@")[0];
+
+        // Giveaway cap: block only NEW signups once the spots run out. Anyone who
+        // already claimed can always sign back in (they don't consume a new spot).
+        if (FREE_ASSESSMENT_CAP > 0) {
+          const existing = await getUserByOpenId(openId);
+          if (!existing) {
+            const count = await countFreeUsers();
+            if (count !== null && count >= FREE_ASSESSMENT_CAP) {
+              return { success: false, full: true, error: "All free spots have been claimed. Paid access is available." };
+            }
+          }
+        }
+
         try {
           await upsertUser({ openId, email, name, loginMethod: "free-passcode", lastSignedIn: new Date() });
         } catch (e) {
