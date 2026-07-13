@@ -71,6 +71,9 @@ export default function Terms() {
               <p>
                 Certain features require a paid membership. Pricing, features, and terms for each tier are described on our Pricing page. All payments are processed through Stripe. Refunds are available within 30 days of purchase if you have not completed a full assessment ("30-Day Retake Guarantee").
               </p>
+              <p className="mt-3">
+                <strong>Free and Founding access.</strong> The core assessment, your intelligence profile, and network membership are provided at no cost and will not be charged to free or founding members. Ongoing services — including monthly re-measurement, AI coaching, progress tracking, goals-engineering navigation, active matching, and group sessions — constitute a separate paid membership. AQAL may introduce or modify paid tiers, pricing, and features from time to time; material changes are announced in advance and do not revoke the complimentary core access described here. Founding-member benefits (including any locked-in founding rate) apply as described at the time of enrollment.
+              </p>
             </section>
 
             <section>

@@ -61,6 +61,8 @@ export default function UserAgreementModal() {
               <li>• Your voice is transcribed, then discarded — we keep only your scores and text responses.</li>
               <li>• You grant AQAL a license to store and process your data, and to use de-identified, aggregated data to operate and improve the service. AQAL owns the assessment data and models.</li>
               <li>• Results are informational estimates — not medical, psychological, or professional advice.</li>
+              <li>• <span className="text-foreground/90">Founding &amp; free members:</span> your core assessment, profile, and network access are complimentary and won't be charged. Ongoing coaching, monthly re-measurement, progress tracking, and other premium features are a separate paid membership.</li>
+              <li>• We may add or change paid tiers, pricing, and features over time; changes are announced in advance and never revoke the free core access described above.</li>
               <li>• You confirm you are 18 or older.</li>
             </ul>
 
