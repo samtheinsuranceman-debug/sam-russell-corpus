@@ -88,6 +88,16 @@ export function voiceConsensus(): boolean {
   return (env("VOICE_CONSENSUS") || "true").toLowerCase() !== "false";
 }
 
+// The FREE tier's quality dial: how many AIs cross-check a free assessment.
+// The free report still delivers all the deterministic insight (rarity, effective
+// potential, bottleneck diagnosis, clusters) regardless — this only sets how many
+// models score the lines. Default 3 (a real multi-AI consensus, ~10-15¢) so the
+// free result is genuinely strong, not a single weak pass. Paid always uses the
+// FULL panel. Set to 1 for the cheapest possible free tier.
+export function freePanelMax(): number {
+  return Math.max(1, parseInt(env("FREE_PANEL_MAX") || "3", 10) || 3);
+}
+
 // ---- Perplexity (evidence verification, high-confidence tier) ----
 // Live web search + citations, used ONLY to verify uploaded evidence claims.
 // Empty = mock (no real verification).

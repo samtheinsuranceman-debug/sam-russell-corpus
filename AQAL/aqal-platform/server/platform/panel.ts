@@ -36,8 +36,12 @@ async function invokeMember(m: PanelMember, params: InvokeParams): Promise<Invok
 // member's raw result; failures are omitted.
 export async function runPanel(
   params: InvokeParams,
+  limit = 0,
 ): Promise<Array<{ member: PanelMember; result: InvokeResult }>> {
-  const members = enabledPanel();
+  // limit > 0 → run only the first N configured members (free tier's capped
+  // consensus). 0 → the full panel (paid tier). Order = config order, so the
+  // strongest general models (GPT, Claude, Gemini) are chosen first.
+  const members = limit > 0 ? enabledPanel().slice(0, limit) : enabledPanel();
   const settled = await Promise.all(
     members.map(async (m) => {
       const result = await invokeMember(m, params);

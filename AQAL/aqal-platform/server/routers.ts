@@ -46,7 +46,7 @@ import { createVideoAssessment, getVideoAssessment, getUserVideoAssessments, upd
 import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisMode, MODE_META } from "@shared/axisModes";
 import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
-import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, FREE_ASSESSMENT_CAP, voiceConsensus } from "./platform/config";
+import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, FREE_ASSESSMENT_CAP, voiceConsensus, freePanelMax } from "./platform/config";
 import {
   recordEvent, getAnalyticsEventsSince, getSubscriptionEvents,
   addMarketingSpend, getMarketingSpendSince,
@@ -442,21 +442,24 @@ Respond in JSON format.`;
             },
           };
 
-          // Multi-AI scoring, degrading gracefully by how many providers are funded:
-          //   • 2+ configured  → the whole panel scores and we take the CONSENSUS
-          //     (they "compare notes and agree"; the outlier is trimmed).
-          //   • exactly 1      → that one AI scores solo (e.g. GPT alone, or Grok alone).
-          //   • 0 configured   → deterministic mock (simulated, honestly labeled).
-          // Paid tiers always fan out; the free VOICE assessment does too unless
-          // VOICE_CONSENSUS=false. Adding more API keys later widens the panel with
-          // no code change — the assessment just gets more voices at the table.
+          // Multi-AI scoring. How many models score depends on the tier:
+          //   • PAID  → the FULL panel (every configured model), consensus.
+          //   • FREE  → a capped consensus of FREE_PANEL_MAX strong models (default
+          //             3) so the free result is genuinely good, not a weak single
+          //             pass — unless VOICE_CONSENSUS=false, which forces 1 model.
+          //   • 0 configured → deterministic mock (simulated, honestly labeled).
+          // Either way the free report keeps ALL the deterministic insight (rarity,
+          // effective potential, bottleneck diagnosis, clusters) — this only sets
+          // how many AIs cross-check the 32 line scores.
           let analysis: any = null;
           const configuredModels = panelSize(); // enabledPanel(): GPT + any funded members
-          const usePanel =
-            configuredModels >= 1 &&
-            (ctx.user.membershipTier !== "free" || voiceConsensus());
+          const isFree = ctx.user.membershipTier === "free";
+          const modelsToUse = isFree
+            ? (voiceConsensus() ? Math.min(freePanelMax(), configuredModels) : 1)
+            : configuredModels;
+          const usePanel = configuredModels >= 1 && modelsToUse >= 1;
           if (usePanel) {
-            const panelResults = await runPanel(invokeParams);
+            const panelResults = await runPanel(invokeParams, isFree ? modelsToUse : 0);
             const parsed = panelResults
               .map((r) => {
                 try { return JSON.parse((r.result.choices?.[0]?.message?.content as string) ?? ""); }
