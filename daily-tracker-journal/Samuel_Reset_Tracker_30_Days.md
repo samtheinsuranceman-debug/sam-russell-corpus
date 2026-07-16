@@ -412,42 +412,48 @@
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Bedtime (previous night):** ~9-10 PM (July 15)
+- **Wake time (natural? vs 11 AM):** 3:46 AM — NATURAL. Alert. Tried to go back to sleep for ~1.5 hrs. Could not. Got up at 5:15-5:30 AM.
+- **Hours slept:** ~5.5-6 hours (fragmented: slept ~10 PM to 3:46 AM, then lay awake until 5:30 AM)
+- **Dreams (nightmare/neutral/positive/sex/vivid):** TBD
+- **Sleep feel (Restful 1-10) / Notes:** Body woke early due to residual sympathetic arousal from 880-cal day + possible Vitamin C accelerating Adderall clearance. Alert despite short sleep. Nervous system still adapting to high training volume.
+
+### Spirituality
+- **Magnificat prayer:** YES — Day 4 of streak. FAMILY PRAYER. Mom was already awake when Sam got up. Dad came out. All three prayed together for 30 minutes starting ~5:30 AM.
+- **Significance:** This is a BREAKTHROUGH. Previous 3 days were solo Magnificat. Today it spontaneously became communal. Sam's consistency drew his parents in. The habit is now contagious — spreading from individual to family system.
+- **Personal prayer (1-on-1 with God):** Included within the 30-minute family session
+- **Notes:** The 3:46 AM wake that seemed like a problem became the catalyst for the first family prayer session. If Sam had gone back to sleep, this wouldn't have happened. The "failed" sleep became the gift.
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
-- **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
-- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
-- **Other (Klonopin, etc.):** _______________________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** TBD (day in progress)
+- **Vitamin C (Time/Dose/Stomach/Effect):** TBD
+- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** TBD
+- **Other (Klonopin, etc.):** Coconut water at 3:46 AM for hydration/electrolytes post-880 cal day
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
-- **Other notes (neck, appetite, etc.):** ___________________________________
+- **Exercise (pool/gym/walk duration + 10% extra):** TBD (day in progress)
+- **Other notes (neck, appetite, etc.):** TBD
 
 ### Business / Productivity
-- **Leads / appointments worked:** __________________________________________
-- **Commissions update (Ralph wire/12k annuity/solar):** ____________________
-- **AI analysis done (calls/videos uploaded):** _____________________________
-- **Key win / lesson / money action:** ______________________________________
+- **Leads / appointments worked:** TBD
+- **Commissions update (Ralph wire/12k annuity/solar):** TBD
+- **AI analysis done (calls/videos uploaded):** TBD
+- **Key win / lesson / money action:** Family prayer at 5:30 AM. The compound interest is now multiplying across people, not just within self.
 
 ### Social / Dating / Family
-- **Church-girl action today (contact/script/progress):** ___________________
-- **Dad / Mom interaction note:** ___________________________________________
-- **Dating confidence / layup feel 1-10:** __________________________________
-- **Notes:** ________________________________________________________________
+- **Church-girl action today (contact/script/progress):** TBD
+- **Dad / Mom interaction note:** MAJOR — Both parents joined in 30-minute Magnificat prayer at 5:30 AM. Sam's 4-day prayer streak drew them in without him asking. His consistency became an invitation.
+- **Dating confidence / layup feel 1-10:** TBD
+- **Notes:** The loneliness Sam expressed yesterday is already beginning to transform. He woke alone at 3:46 AM, and by 5:30 AM he was praying with his family. The isolation is breaking.
 
 ### Compounding & Mindset
-- **10% extra habit done (what?):** _________________________________________
-- **Self-script used or insight:** __________________________________________
-- **Gratitude / biggest pattern noticed:** __________________________________
+- **10% extra habit done (what?):** The 10% extra today was vulnerability — getting up and being present with family instead of staying in bed alone.
+- **Self-script used or insight:** "The failed sleep became the gift. What looked like a problem was actually an invitation."
+- **Gratitude / biggest pattern noticed:** Gratitude for parents being awake and willing. Pattern: consistency in private practice eventually draws others in without force.
 
 ### Evening Review
-- **What worked that I double tomorrow?** ___________________________________
-- **One adjustment for tomorrow?** __________________________________________
+- **What worked that I double tomorrow?** TBD (day in progress)
+- **One adjustment for tomorrow?** TBD
 
 ---
 
