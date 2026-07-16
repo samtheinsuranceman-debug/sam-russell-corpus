@@ -413,10 +413,10 @@
 
 ### Sleep & Wake
 - **Bedtime (previous night):** ~9-10 PM (July 15)
-- **Wake time (natural? vs 11 AM):** 3:46 AM — NATURAL. Alert. Tried to go back to sleep for ~1.5 hrs. Could not. Got up at 5:15-5:30 AM.
-- **Hours slept:** ~5.5-6 hours (fragmented: slept ~10 PM to 3:46 AM, then lay awake until 5:30 AM)
-- **Dreams (nightmare/neutral/positive/sex/vivid):** TBD
-- **Sleep feel (Restful 1-10) / Notes:** Body woke early due to residual sympathetic arousal from 880-cal day + possible Vitamin C accelerating Adderall clearance. Alert despite short sleep. Nervous system still adapting to high training volume.
+- **Wake time (natural? vs 11 AM):** 3:46 AM initial wake (natural, alert). Got up ~5:15-5:30 AM for family prayer. Fell back asleep after prayer. Final wake: 8:25 AM natural.
+- **Hours slept:** ~8.5-9 hours total (fragmented: ~10 PM to 3:46 AM = 5.75 hrs + ~6:00 AM to 8:25 AM = 2.5 hrs). Split sleep pattern.
+- **Dreams (nightmare/neutral/positive/sex/vivid):** Unknown / not recalled
+- **Sleep feel (Restful 1-10) / Notes:** Body needed the second sleep block after 880-cal day. The split pattern worked: first block for physical recovery, prayer in the gap, second block for neural consolidation. Final wake at 8:25 AM feeling ready to start the day. Still earlier than old 11 AM baseline by 2.5 hours.
 
 ### Spirituality
 - **Magnificat prayer:** YES — Day 4 of streak. FAMILY PRAYER. Mom was already awake when Sam got up. Dad came out. All three prayed together for 30 minutes starting ~5:30 AM.
