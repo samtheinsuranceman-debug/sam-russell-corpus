@@ -484,6 +484,7 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "9": "9 · Physiological & Micro-Practices",
   "10": "10 · Risk Factors & Suppressors",
   "11": "11 · Compounding & Convergence",
+  "12": "12 · Interoception — The Cross-Line Keystone",
 };
 
 // Short labels for the section jump-nav chips.
@@ -500,6 +501,7 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "9": "Micro-Practices",
   "10": "Risk Factors",
   "11": "Compounding",
+  "12": "Interoception",
 };
 
 const TAG_COLOR: Record<PracticeCluster["evidenceTag"], string> = {
@@ -1190,6 +1192,109 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
       { cite: "Allostatic load & mortality, systematic review + meta-analysis (2022).", note: "Higher load linked to higher mortality. [Strong]", link: scholar("allostatic load mortality systematic review meta-analysis 2022"), kind: "scholar" },
       { cite: "Seeman et al. MacArthur Studies of Successful Aging.", note: "Allostatic load associated with functional decline. [Strong]", link: scholar("Seeman MacArthur Studies Successful Aging allostatic load"), kind: "scholar" },
       { cite: "Allostatic load & dual chronic conditions, NHANES.", note: "Linked to multimorbidity risk. [Moderate]", link: scholar("allostatic load dual chronic conditions NHANES"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 12 — INTEROCEPTION: THE CROSS-LINE KEYSTONE ═══════════════
+  // The strongest candidate the corpus has for a single practice that plausibly lifts
+  // MANY lines at once, because interoception, empathy, emotion, and decision-making
+  // share one neural hub (the anterior insula). HONESTY DISCIPLINE: the mechanism and
+  // the individual effects are well-evidenced; the sweeping magnitudes ("100x faster
+  // than meditation", "strengthens all 31 lines effortlessly") are NOT established and
+  // are deliberately kept out of the claims. Real leverage, calibrated claims.
+  {
+    id: "intero-insula-hub",
+    section: "12",
+    title: "The Insula Hub — Why One Practice Can Touch Many Lines",
+    subtitle: "Anterior insular cortex as the shared substrate of feeling, empathy, and choice",
+    evidenceTag: "Strong",
+    description:
+      "Interoception (sensing the body's internal state), emotional awareness, empathy, and value-based decision-making converge on the same neural structure — the anterior insula. This shared anatomy is the honest, physical basis for the 'keystone' idea: training the interoceptive line plausibly transfers to several other lines because they run on overlapping hardware. Boundary we hold: shared neuroanatomy makes cross-line transfer PLAUSIBLE and mechanistically motivated — it is not, by itself, proof that improving one line lifts all the others by a fixed amount.",
+    callout: "Shared circuitry motivates cross-line transfer; it does not prove uniform, effortless gains across every line. We claim the mechanism, not a multiplier.",
+    sources: [
+      { cite: "Craig, A. D. (2002). How do you feel? Interoception: the sense of the physiological condition of the body. Nature Reviews Neuroscience, 3(8), 655–666.", note: "The founding modern account of interoception and the insula as its cortical home. [Strong foundational]", link: "https://doi.org/10.1038/nrn894", kind: "doi" },
+      { cite: "Craig, A. D. (2009). How do you feel — now? The anterior insula and human awareness. Nature Reviews Neuroscience, 10(1), 59–70.", note: "Positions the anterior insula as the hub where bodily feeling becomes subjective awareness — the anatomical basis of the keystone claim. [Strong]", link: "https://doi.org/10.1038/nrn2555", kind: "doi" },
+      { cite: "Critchley, H. D., Wiens, S., Rotshtein, P., Öhman, A., & Dolan, R. J. (2004). Neural systems supporting interoceptive awareness. Nature Neuroscience, 7(2), 189–195.", note: "fMRI: interoceptive accuracy tracks anterior-insula activity and gray matter — the measured link between the practice and the hub. [Strong]", link: "https://doi.org/10.1038/nn1176", kind: "doi" },
+      { cite: "Barrett, L. F., & Simmons, W. K. (2015). Interoceptive predictions in the brain. Nature Reviews Neuroscience, 16(7), 419–429.", note: "Frames interoception as active prediction, explaining how better internal modeling can propagate to emotion and cognition. [Strong]", link: "https://doi.org/10.1038/nrn3950", kind: "doi" },
+      { cite: "(Gu, Hof, Friston & Fan, 2013). Anterior insular cortex and emotional awareness. Journal of Comparative Neurology, 521(15), 3371–3388.", note: "Reviews the insula as the integration site for interoception, empathy, and emotion — the multi-line convergence, mapped. [Strong]", link: scholar("Gu Hof Friston Fan 2013 anterior insular cortex emotional awareness"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "intero-measurement",
+    section: "12",
+    title: "Measuring It — So Gains Are Real, Not Vibes",
+    subtitle: "Distinguishing interoceptive accuracy, sensibility, and awareness",
+    evidenceTag: "Strong",
+    description:
+      "For interoception to be a scored line and a trackable practice, it must be measured rigorously. The field separates interoceptive accuracy (objective performance), sensibility (self-reported tendency), and awareness (metacognitive correspondence) — and validated instruments exist. This is what lets the platform re-measure the line honestly over time instead of trusting a feeling of progress.",
+    callout: "These dimensions can dissociate — someone can feel very body-aware yet score low on accuracy. Any re-measurement must specify WHICH interoception it moved.",
+    sources: [
+      { cite: "Garfinkel, S. N., Seth, A. K., Barrett, A. B., Suzuki, K., & Critchley, H. D. (2015). Knowing your own heart: Distinguishing interoceptive accuracy from interoceptive awareness. Biological Psychology, 104, 65–74.", note: "The paper that separated the dimensions of interoception — essential for measuring the line without conflating confidence with accuracy. [Strong]", link: "https://doi.org/10.1016/j.biopsycho.2014.11.004", kind: "doi" },
+      { cite: "Mehling, W. E., Price, C., Daubenmier, J. J., et al. (2012). The Multidimensional Assessment of Interoceptive Awareness (MAIA). PLoS ONE, 7(11), e48230.", note: "A validated self-report instrument for interoceptive awareness — a usable measurement basis for the line. [Strong]", link: "https://doi.org/10.1371/journal.pone.0048230", kind: "doi" },
+      { cite: "Khalsa, S. S., Adolphs, R., Cameron, O. G., et al. (2018). Interoception and mental health: A roadmap. Biological Psychiatry: Cognitive Neuroscience and Neuroimaging, 3(6), 501–513.", note: "The major consensus review defining constructs, methods, and open questions — the field's own honest map, kept on purpose. [Strong]", link: "https://doi.org/10.1016/j.bpsc.2017.12.004", kind: "doi" },
+    ],
+  },
+  {
+    id: "intero-decision",
+    section: "12",
+    title: "Interoception → Decision-Making & Intuition",
+    subtitle: "Bolsters (as controlling weakness): the cognitive & financial lines",
+    evidenceTag: "Moderate",
+    description:
+      "Bodily signals guide decisions under uncertainty — the 'gut feeling' successful operators rely on is, in part, measured interoceptive accuracy. The foundational somatic-marker work and a striking field study on traders link internal-signal sensitivity to better real-world decisions. Boundary: these are correlational and task-specific; interoception supports good judgment, it does not replace analysis or guarantee financial success.",
+    callout: "Correlational and domain-specific. Interoceptive accuracy is associated with better decisions in specific tasks — not a universal upgrade to every choice.",
+    sources: [
+      { cite: "Damasio, A. R. (1996). The somatic marker hypothesis and the possible functions of the prefrontal cortex. Philosophical Transactions of the Royal Society B, 351(1346), 1413–1420.", note: "The theory that bodily 'markers' steer complex decisions — the mechanistic root of interoception-guided judgment. [Strong foundational]", link: "https://doi.org/10.1098/rstb.1996.0125", kind: "doi" },
+      { cite: "Bechara, A., Damasio, H., Tranel, D., & Damasio, A. R. (1997). Deciding advantageously before knowing the advantageous strategy. Science, 275(5304), 1293–1295.", note: "The Iowa Gambling Task: the body signaled the right choice before conscious reasoning did. [Strong]", link: "https://doi.org/10.1126/science.275.5304.1293", kind: "doi" },
+      { cite: "Kandasamy, N., Garfinkel, S. N., Page, L., et al. (2016). Interoceptive ability predicts survival on a London trading floor. Scientific Reports, 6, 32986.", note: "Real-world and striking: traders with higher heartbeat-detection accuracy were more profitable and survived longer in the job. [Moderate — single field study]", link: "https://doi.org/10.1038/srep32986", kind: "doi" },
+      { cite: "Sokol-Hessner, P., Hartley, C. A., Hamilton, J. R., & Phelps, E. A. (2015). Interoceptive ability predicts aversion to losses. Cognition &amp; Emotion, 29(4), 695–701.", note: "Links interoceptive sensitivity to loss aversion — how internal signals shape financial risk-taking. [Moderate]", link: scholar("Sokol-Hessner 2015 interoceptive ability predicts aversion to losses"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "intero-emotion",
+    section: "12",
+    title: "Interoception → Emotion Regulation & Empathy",
+    subtitle: "Bolsters clusters: the intrapersonal, empathic, and interpersonal lines",
+    evidenceTag: "Moderate",
+    description:
+      "Reading your own internal state is upstream of regulating emotion and of accurately reading others. Studies link interoceptive awareness to more effective reappraisal and to sensitivity to others' emotions — a plausible route by which one practice touches several social-emotional lines. Boundary: effects are modest and context-dependent, not a wholesale empathy upgrade.",
+    callout: "The interoception–empathy link is real but modest and moderated by anxiety; more internal awareness is not always more empathy.",
+    sources: [
+      { cite: "Füstös, J., Gramann, K., Herbert, B. M., & Pollatos, O. (2013). On the embodiment of emotion regulation: Interoceptive awareness facilitates reappraisal. Social Cognitive and Affective Neuroscience, 8(8), 911–917.", note: "Higher interoceptive awareness improved the neural efficiency of emotion reappraisal — a direct line from the body practice to self-regulation. [Moderate]", link: "https://doi.org/10.1093/scan/nss089", kind: "doi" },
+      { cite: "Terasawa, Y., Moriguchi, Y., Tochizawa, S., & Umeda, S. (2014). Interoceptive sensitivity predicts sensitivity to the emotions of others. Cognition &amp; Emotion, 28(8), 1435–1448.", note: "People better at sensing their own bodies were better at reading others' emotions — interoception feeding empathy. [Moderate]", link: scholar("Terasawa 2014 interoceptive sensitivity predicts sensitivity to emotions of others"), kind: "scholar" },
+      { cite: "Herbert, B. M., Herbert, C., & Pollatos, O. (2011). On the relationship between interoceptive awareness and alexithymia. Journal of Personality, 79(5), 1149–1175.", note: "Poor interoceptive awareness tracks alexithymia (difficulty identifying feelings) — the deficit side of the same mechanism. [Moderate]", link: scholar("Herbert Herbert Pollatos 2011 interoceptive awareness alexithymia"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "intero-floatation",
+    section: "12",
+    title: "Floatation-REST & Sensory Deprivation — The Specific Practice",
+    subtitle: "An efficient interoception trainer — with honest limits on the magnitude",
+    evidenceTag: "Emerging",
+    description:
+      "Removing external sensory input redirects processing inward and appears to sharpen interoceptive awareness while lowering anxiety — a promising, low-effort way to train the keystone line. This is the direct evidence behind the pool/float practice. Boundary we hold firmly: the floatation literature is small, mostly short-term, and often single-session; it supports anxiety reduction and acute interoceptive gains, but does NOT establish lasting, whole-profile intelligence gains, and provides NO support for '100x faster than meditation' or 'strengthens all 31 lines effortlessly.' The mechanism is real; the sweeping magnitudes are not evidenced.",
+    callout: "Honest guardrail: small, short-term studies. Real for anxiety + acute interoception; unproven for durable multi-line gains. We advertise the mechanism, never a multiplier.",
+    sources: [
+      { cite: "Feinstein, J. S., Khalsa, S. S., Yeh, H.-W., et al. (2018). Examining the short-term anxiolytic and antidepressant effect of Floatation-REST. PLoS ONE, 13(2), e0190292.", note: "The key modern trial: a single float session produced significant acute reductions in anxiety and improvements in mood across 50 participants. [Emerging — acute, uncontrolled for long-term]", link: "https://doi.org/10.1371/journal.pone.0190292", kind: "doi" },
+      { cite: "Feinstein, J. S., Khalsa, S. S., Yeh, H.-W., et al. (2018). The elicitation of relaxation and interoceptive awareness using floatation therapy in individuals with high anxiety sensitivity. Biological Psychiatry: Cognitive Neuroscience and Neuroimaging, 3(6), 555–562.", note: "Floatation reliably heightened interoceptive awareness while reducing anxiety in high-anxiety-sensitive individuals. [Emerging]", link: scholar("Feinstein 2018 floatation therapy interoceptive awareness high anxiety sensitivity Biological Psychiatry"), kind: "scholar" },
+      { cite: "Al Zoubi, O., Misaki, M., Bodurka, J., et al. (2021). Taking the body off the mind: Decreased functional connectivity between somatomotor and default-mode networks following Floatation-REST. Human Brain Mapping, 42(10), 3216–3227.", note: "Neuroimaging evidence that floatation shifts large-scale network connectivity — a measured brain change, though acute. [Emerging]", link: scholar("Al Zoubi 2021 taking the body off the mind floatation-REST somatomotor default mode"), kind: "scholar" },
+      { cite: "Kjellgren, A., & Westman, J. (2014). Beneficial effects of treatment with sensory isolation in flotation-tank as a preventive health-care intervention. BMC Complementary and Alternative Medicine, 14, 417.", note: "A larger applied study reporting well-being and stress benefits from a course of float sessions. [Emerging — self-report]", link: scholar("Kjellgren Westman 2014 flotation-tank sensory isolation preventive health BMC"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "intero-neuroplasticity",
+    section: "12",
+    title: "Contemplative Practice Changes the Brain — The Neuroplastic Basis",
+    subtitle: "Why a passive practice can produce structural change (incl. the insula)",
+    evidenceTag: "Moderate",
+    description:
+      "The claim that a quiet, passive practice reorganizes the brain is not mystical — contemplative training measurably changes brain structure and function, including insula thickness (the interoception hub itself). This is the plausible neuroplastic route from repeated practice to durable line-level change. Boundary: meditation neuroimaging has known methodological limits (small samples, self-selection); effects are real but not as large or as fast as popular claims suggest.",
+    callout: "Structural change is real but gradual and variable across people. 'Neuroplasticity' justifies the direction of the practice, not an accelerated timeline for any one person.",
+    sources: [
+      { cite: "Tang, Y.-Y., Hölzel, B. K., & Posner, M. I. (2015). The neuroscience of mindfulness meditation. Nature Reviews Neuroscience, 16(4), 213–225.", note: "The authoritative review of how contemplative practice changes attention networks and brain structure — with the field's caveats intact. [Strong review]", link: "https://doi.org/10.1038/nrn3916", kind: "doi" },
+      { cite: "Lazar, S. W., Kerr, C. E., Wasserman, R. H., et al. (2005). Meditation experience is associated with increased cortical thickness. NeuroReport, 16(17), 1893–1897.", note: "Found thicker cortex in experienced meditators — notably in the anterior insula, the interoception hub. [Moderate — cross-sectional]", link: "https://doi.org/10.1097/01.wnr.0000186598.66243.19", kind: "doi" },
+      { cite: "Hölzel, B. K., Carmody, J., Vangel, M., et al. (2011). Mindfulness practice leads to increases in regional brain gray matter density. Psychiatry Research: Neuroimaging, 191(1), 36–43.", note: "A longitudinal 8-week study showing gray-matter change after practice — evidence the change is caused, not just correlated. [Moderate]", link: "https://doi.org/10.1016/j.pscychresns.2010.08.006", kind: "doi" },
+      { cite: "Farb, N. A. S., Segal, Z. V., Mayberg, H., et al. (2007). Attending to the present: Mindfulness meditation reveals distinct neural modes of self-reference. Social Cognitive and Affective Neuroscience, 2(4), 313–322.", note: "Showed body-focused present-moment attention recruits the insula and shifts self-referential processing — the interoceptive mechanism in action. [Moderate]", link: "https://doi.org/10.1093/scan/nsm030", kind: "doi" },
     ],
   },
 ];

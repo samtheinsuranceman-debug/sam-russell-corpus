@@ -15,7 +15,7 @@ import { LEDGER_STATS } from "./ResearchLibrary";
 
 // Last time the full library was audited against the verification gate.
 // Update this date whenever a research pass is run and re-verified.
-const AUDIT_DATE = "July 12, 2026";
+const AUDIT_DATE = "July 13, 2026";
 
 // Real rejections from the verification passes (see RESEARCH_PIPELINE.md).
 // These are not hypotheticals — each one was proposed by a research pass and
