@@ -422,7 +422,8 @@
 - **Magnificat prayer:** YES — Day 4 of streak. FAMILY PRAYER. Mom was already awake when Sam got up. Dad came out. All three prayed together for 30 minutes starting ~5:30 AM.
 - **Significance:** This is a BREAKTHROUGH. Previous 3 days were solo Magnificat. Today it spontaneously became communal. Sam's consistency drew his parents in. The habit is now contagious — spreading from individual to family system.
 - **Personal prayer (1-on-1 with God):** Included within the 30-minute family session
-- **Notes:** The 3:46 AM wake that seemed like a problem became the catalyst for the first family prayer session. If Sam had gone back to sleep, this wouldn't have happened. The "failed" sleep became the gift.
+- **Catholic Mass:** 12:00 PM noon — attending with BOTH parents. Different church than the one where he met the church girl. This is the second spiritual event of the day with family. The spiritual compounding is now multi-layered: solo prayer streak → family prayer → family Mass attendance.
+- **Notes:** The 3:46 AM wake that seemed like a problem became the catalyst for the first family prayer session. If Sam had gone back to sleep, this wouldn't have happened. The "failed" sleep became the gift. Day's spiritual stack: 5:30 AM family Magnificat (30 min) + 12 PM Catholic Mass with parents. Two communal spiritual events in one day after 3 days of solo practice.
 
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** 8:30 AM | 60mg (2x 30mg XR) | 1.5 hrs earlier than yesterday's 10 AM dose. Woke earlier, dosed earlier. Cycle shifting forward.
@@ -442,7 +443,7 @@
 
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** TBD
-- **Dad / Mom interaction note:** MAJOR — Both parents joined in 30-minute Magnificat prayer at 5:30 AM. Sam's 4-day prayer streak drew them in without him asking. His consistency became an invitation.
+- **Dad / Mom interaction note:** MAJOR — Both parents joined in 30-minute Magnificat prayer at 5:30 AM. Sam's 4-day prayer streak drew them in without him asking. His consistency became an invitation. ALSO: attending Catholic Mass together at noon. Two family spiritual events in one day. Family system is activating around Sam's consistency.
 - **Dating confidence / layup feel 1-10:** TBD
 - **Notes:** The loneliness Sam expressed yesterday is already beginning to transform. He woke alone at 3:46 AM, and by 5:30 AM he was praying with his family. The isolation is breaking.
 
