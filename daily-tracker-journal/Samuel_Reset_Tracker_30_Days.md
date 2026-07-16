@@ -425,7 +425,7 @@
 - **Notes:** The 3:46 AM wake that seemed like a problem became the catalyst for the first family prayer session. If Sam had gone back to sleep, this wouldn't have happened. The "failed" sleep became the gift.
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** TBD (day in progress)
+- **Adderall XR (Time/Dose/Extra/Skipped):** 8:30 AM | 60mg (2x 30mg XR) | 1.5 hrs earlier than yesterday's 10 AM dose. Woke earlier, dosed earlier. Cycle shifting forward.
 - **Vitamin C (Time/Dose/Stomach/Effect):** TBD
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** TBD
 - **Other (Klonopin, etc.):** Coconut water at 3:46 AM for hydration/electrolytes post-880 cal day
