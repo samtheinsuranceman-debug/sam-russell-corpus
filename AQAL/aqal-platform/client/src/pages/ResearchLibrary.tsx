@@ -485,6 +485,12 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "10": "10 · Risk Factors & Suppressors",
   "11": "11 · Compounding & Convergence",
   "12": "12 · Interoception — The Cross-Line Keystone",
+  "13": "13 · Aerobic Exercise — The Proven Keystone",
+  "14": "14 · Sleep — The Foundational System",
+  "15": "15 · Breathwork & HRV — Autonomic Self-Regulation",
+  "16": "16 · Nature Exposure — Attention Restoration",
+  "17": "17 · Thermal Stress — Sauna & Cold",
+  "18": "18 · Psychedelic-Assisted Therapy — Deep but Gated",
 };
 
 // Short labels for the section jump-nav chips.
@@ -502,6 +508,12 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "10": "Risk Factors",
   "11": "Compounding",
   "12": "Interoception",
+  "13": "Exercise",
+  "14": "Sleep",
+  "15": "Breathwork",
+  "16": "Nature",
+  "17": "Thermal",
+  "18": "Psychedelics",
 };
 
 const TAG_COLOR: Record<PracticeCluster["evidenceTag"], string> = {
@@ -1295,6 +1307,126 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
       { cite: "Lazar, S. W., Kerr, C. E., Wasserman, R. H., et al. (2005). Meditation experience is associated with increased cortical thickness. NeuroReport, 16(17), 1893–1897.", note: "Found thicker cortex in experienced meditators — notably in the anterior insula, the interoception hub. [Moderate — cross-sectional]", link: "https://doi.org/10.1097/01.wnr.0000186598.66243.19", kind: "doi" },
       { cite: "Hölzel, B. K., Carmody, J., Vangel, M., et al. (2011). Mindfulness practice leads to increases in regional brain gray matter density. Psychiatry Research: Neuroimaging, 191(1), 36–43.", note: "A longitudinal 8-week study showing gray-matter change after practice — evidence the change is caused, not just correlated. [Moderate]", link: "https://doi.org/10.1016/j.pscychresns.2010.08.006", kind: "doi" },
       { cite: "Farb, N. A. S., Segal, Z. V., Mayberg, H., et al. (2007). Attending to the present: Mindfulness meditation reveals distinct neural modes of self-reference. Social Cognitive and Affective Neuroscience, 2(4), 313–322.", note: "Showed body-focused present-moment attention recruits the insula and shifts self-referential processing — the interoceptive mechanism in action. [Moderate]", link: "https://doi.org/10.1093/scan/nsm030", kind: "doi" },
+    ],
+  },
+
+  // ═══════════════ SECTION 13 — AEROBIC EXERCISE: THE PROVEN KEYSTONE ═══════════════
+  // The single most-evidenced brain intervention there is — stronger evidence than
+  // floatation. Cross-line by mechanism (BDNF, neurogenesis, vascular), with RCTs and
+  // meta-analyses, not just cohorts. Honest boundary: real effects are meaningful and
+  // durable but MODEST per unit — not a personality transplant.
+  {
+    id: "keystone-exercise",
+    section: "13",
+    title: "Aerobic Exercise — The Best-Evidenced Meta-System",
+    subtitle: "Bolsters clusters: cognitive, memory, mood, resilience, self-regulation",
+    evidenceTag: "Strong",
+    description:
+      "If interoception is promising, aerobic exercise is proven. It raises BDNF, drives hippocampal neurogenesis, and improves vascular supply to the brain — lifting memory, executive function, processing speed, mood, and stress resilience at once. The evidence runs all the way from mechanism to randomized trials to meta-analyses. Honest boundary: effects are real, replicated, and dose-responsive, but modest per unit of training — a keystone you compound over months, not a switch.",
+    callout: "The strongest keystone in this library by evidence weight. Effects are meaningful and durable, not dramatic overnight. Prescribe it as a compounding practice.",
+    sources: [
+      { cite: "Erickson, K. I., Voss, M. W., Prakash, R. S., et al. (2011). Exercise training increases size of hippocampus and improves memory. PNAS, 108(7), 3017–3022.", note: "The landmark RCT: a year of aerobic training reversed age-related hippocampal shrinkage and improved memory. Mechanism → structure → outcome. [Strong]", link: "https://doi.org/10.1073/pnas.1015950108", kind: "doi" },
+      { cite: "Hillman, C. H., Erickson, K. I., & Kramer, A. F. (2008). Be smart, exercise your heart: Exercise effects on brain and cognition. Nature Reviews Neuroscience, 9(1), 58–65.", note: "The authoritative review linking cardiovascular fitness to brain structure and cognition across the lifespan. [Strong review]", link: "https://doi.org/10.1038/nrn2298", kind: "doi" },
+      { cite: "Northey, J. M., Cherbuin, N., Pumpa, K. L., Smee, D. J., & Rattray, B. (2018). Exercise interventions for cognitive function in adults older than 50: A systematic review with meta-analysis. British Journal of Sports Medicine, 52(3), 154–160.", note: "Meta-analysis of RCTs: exercise significantly improved cognition, with aerobic and resistance both contributing. [Strong]", link: "https://doi.org/10.1136/bjsports-2016-096587", kind: "doi" },
+      { cite: "Smith, P. J., Blumenthal, J. A., Hoffman, B. M., et al. (2010). Aerobic exercise and neurocognitive performance: A meta-analytic review of randomized controlled trials. Psychosomatic Medicine, 72(3), 239–252.", note: "Pooled RCTs showing modest but reliable gains in attention, processing speed, and executive function. [Strong]", link: "https://doi.org/10.1097/PSY.0b013e3181d14633", kind: "doi" },
+      { cite: "Schuch, F. B., Vancampfort, D., Richards, J., et al. (2016). Exercise as a treatment for depression: A meta-analysis adjusting for publication bias. Journal of Psychiatric Research, 77, 42–51.", note: "Even after correcting for publication bias, exercise had a large antidepressant effect — the mood line, causally moved. [Strong]", link: "https://doi.org/10.1016/j.jpsychires.2016.02.023", kind: "doi" },
+      { cite: "Cotman, C. W., Berchtold, N. C., & Christie, L.-A. (2007). Exercise builds brain health: Key roles of growth factor cascades and inflammation. Trends in Neurosciences, 30(9), 464–472.", note: "The mechanistic backbone: exercise upregulates BDNF and other growth factors and lowers neuroinflammation. [Strong]", link: "https://doi.org/10.1016/j.tins.2007.06.011", kind: "doi" },
+      { cite: "Voss, M. W., Vivar, C., Kramer, A. F., & van Praag, H. (2013). Bridging animal and human models of exercise-induced brain plasticity. Trends in Cognitive Sciences, 17(10), 525–544.", note: "Connects the rodent neurogenesis evidence to human brain plasticity — why the mechanism generalizes. [Strong]", link: "https://doi.org/10.1016/j.tics.2013.08.001", kind: "doi" },
+      { cite: "Liu-Ambrose, T., Nagamatsu, L. S., Graf, P., et al. (2010). Resistance training and executive functions: A 12-month randomized controlled trial. Archives of Internal Medicine, 170(2), 170–178.", note: "Shows the transfer isn't only aerobic: resistance training improved executive function over a year. [Strong]", link: scholar("Liu-Ambrose 2010 resistance training executive functions 12-month randomized controlled trial"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 14 — SLEEP: THE FOUNDATIONAL SYSTEM ═══════════════
+  {
+    id: "keystone-sleep",
+    section: "14",
+    title: "Sleep — The System That Gates Every Other Line",
+    subtitle: "Bolsters clusters: memory, emotion, decision-making, immunity, everything",
+    evidenceTag: "Strong",
+    description:
+      "Sleep is the foundational meta-system: it consolidates memory, regulates emotion, clears metabolic waste from the brain, and restores decision-making. Degrade it and nearly every line drops together; protect it and the others have room to rise. This is the highest-leverage, most-evidenced practice in the entire library — and the cheapest. Honest boundary: 'optimize sleep' means protecting quantity, timing, and regularity; there is no shortcut that substitutes for the hours.",
+    callout: "The single highest-leverage line-lifter here — because it gates the others. Fixing sleep is often the first move, not the last.",
+    sources: [
+      { cite: "Xie, L., Kang, H., Xu, Q., et al. (2013). Sleep drives metabolite clearance from the adult brain. Science, 342(6156), 373–377.", note: "The glymphatic discovery: during sleep the brain flushes metabolic waste (including amyloid-beta) far faster than when awake. [Strong]", link: "https://doi.org/10.1126/science.1241224", kind: "doi" },
+      { cite: "Diekelmann, S., & Born, J. (2010). The memory function of sleep. Nature Reviews Neuroscience, 11(2), 114–126.", note: "The authoritative account of how slow-wave and REM sleep consolidate memory — why learning needs sleep to stick. [Strong review]", link: "https://doi.org/10.1038/nrn2762", kind: "doi" },
+      { cite: "Rasch, B., & Born, J. (2013). About sleep's role in memory. Physiological Reviews, 93(2), 681–766.", note: "The comprehensive review of sleep-dependent memory consolidation across systems. [Strong]", link: "https://doi.org/10.1152/physrev.00032.2012", kind: "doi" },
+      { cite: "Yoo, S.-S., Gujar, N., Hu, P., Jolesz, F. A., & Walker, M. P. (2007). The human emotional brain without sleep — a prefrontal amygdala disconnect. Current Biology, 17(20), R877–R878.", note: "One night of deprivation amplified amygdala reactivity by ~60% and severed prefrontal control — the emotional-regulation line, degraded by lost sleep. [Strong]", link: "https://doi.org/10.1016/j.cub.2007.08.007", kind: "doi" },
+      { cite: "Van Dongen, H. P. A., Maislin, G., Mullington, J. M., & Dinges, D. F. (2003). The cumulative cost of additional wakefulness: Dose-response effects on neurobehavioral functions and sleep physiology from chronic sleep restriction. Sleep, 26(2), 117–126.", note: "The dose-response landmark: chronic mild sleep restriction accumulates cognitive deficits people don't notice — the invisible tax. [Strong]", link: "https://doi.org/10.1093/sleep/26.2.117", kind: "doi" },
+      { cite: "Prather, A. A., Janicki-Deverts, D., Hall, M. H., & Cohen, S. (2015). Behaviorally assessed sleep and susceptibility to the common cold. Sleep, 38(9), 1353–1359.", note: "Objectively measured short sleep predicted who caught a cold after viral exposure — sleep as an immune keystone. [Strong]", link: scholar("Prather 2015 behaviorally assessed sleep susceptibility common cold"), kind: "scholar" },
+      { cite: "Walker, M. P., & Stickgold, R. (2006). Sleep, memory, and plasticity. Annual Review of Psychology, 57, 139–166.", note: "Foundational review connecting sleep to synaptic plasticity and skill consolidation. [Strong]", link: scholar("Walker Stickgold 2006 sleep memory and plasticity annual review psychology"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 15 — BREATHWORK & HRV: AUTONOMIC SELF-REGULATION ═══════════════
+  {
+    id: "keystone-breath",
+    section: "15",
+    title: "Breathwork & HRV Biofeedback — Floatation's Free Cousin",
+    subtitle: "Bolsters clusters: self-regulation, attention, emotional control",
+    evidenceTag: "Moderate",
+    description:
+      "Slow, deliberate breathing and heart-rate-variability biofeedback work the same interoceptive/autonomic machinery as floatation — raising vagal tone, calming physiological arousal, and improving attention and emotional control — but active, free, and portable. A recent randomized trial found brief daily breathing practices improved mood and lowered arousal more than mindfulness meditation. Honest boundary: effects are reliable but moderate, and the flashier 'breathwork rewires your nervous system' claims outrun the data.",
+    callout: "Efficient and portable, mechanistically adjacent to floatation. Reliable moderate effects — not a nervous-system overhaul.",
+    sources: [
+      { cite: "Zaccaro, A., Piarulli, A., Laurino, M., et al. (2018). How breath-control can change your life: A systematic review on psycho-physiological correlates of slow breathing. Frontiers in Human Neuroscience, 12, 353.", note: "The systematic review: slow breathing shifts autonomic balance toward parasympathetic tone and improves affect and attention. [Moderate]", link: "https://doi.org/10.3389/fnhum.2018.00353", kind: "doi" },
+      { cite: "Lehrer, P. M., & Gevirtz, R. (2014). Heart rate variability biofeedback: How and why does it work? Frontiers in Psychology, 5, 756.", note: "Explains the resonance-frequency mechanism behind HRV biofeedback — training the baroreflex to strengthen self-regulation. [Moderate]", link: "https://doi.org/10.3389/fpsyg.2014.00756", kind: "doi" },
+      { cite: "Ma, X., Yue, Z.-Q., Gong, Z.-Q., et al. (2017). The effect of diaphragmatic breathing on attention, negative affect and stress in healthy adults. Frontiers in Psychology, 8, 874.", note: "RCT: diaphragmatic breathing training improved sustained attention and lowered cortisol and negative affect. [Moderate]", link: "https://doi.org/10.3389/fpsyg.2017.00874", kind: "doi" },
+      { cite: "Balban, M. Y., Neri, E., Kogon, M. M., et al. (2023). Brief structured respiration practices enhance mood and reduce physiological arousal. Cell Reports Medicine, 4(1), 100895.", note: "Head-to-head RCT: five minutes of daily cyclic-sighing breathwork beat mindfulness meditation for mood and arousal over a month. [Moderate]", link: "https://doi.org/10.1016/j.xcrm.2022.100895", kind: "doi" },
+    ],
+  },
+
+  // ═══════════════ SECTION 16 — NATURE EXPOSURE: ATTENTION RESTORATION ═══════════════
+  {
+    id: "keystone-nature",
+    section: "16",
+    title: "Nature Exposure — The Passive, Cross-Line Restorer",
+    subtitle: "Bolsters clusters: attention, mood, creativity, stress-resilience",
+    evidenceTag: "Moderate",
+    description:
+      "Time in natural settings restores directed attention, lowers stress, lifts mood, and reduces rumination — the most floatation-like profile in this list: passive, restorative, and touching several lines at once. The evidence includes a striking fMRI study in which a nature walk reduced activity in a brain region tied to rumination. Honest boundary: effects are real and repeatable but modest, and 'nature heals everything' overstates a genuine but bounded effect.",
+    callout: "Low-effort, repeatable, cross-line — one of the easiest keystones to prescribe. Real but bounded effects.",
+    sources: [
+      { cite: "Bratman, G. N., Hamilton, J. P., Hahn, K. S., Daily, G. C., & Gross, J. J. (2015). Nature experience reduces rumination and subgenual prefrontal cortex activation. PNAS, 112(28), 8567–8572.", note: "A 90-minute nature walk lowered self-reported rumination AND activity in the subgenual PFC — a measured brain change, not just a mood report. [Moderate]", link: "https://doi.org/10.1073/pnas.1510459112", kind: "doi" },
+      { cite: "Berman, M. G., Jonides, J., & Kaplan, S. (2008). The cognitive benefits of interacting with nature. Psychological Science, 19(12), 1207–1212.", note: "The attention-restoration demonstration: a walk in nature improved working memory and attention more than an urban walk. [Moderate]", link: "https://doi.org/10.1111/j.1467-9280.2008.02225.x", kind: "doi" },
+      { cite: "White, M. P., Alcock, I., Grellier, J., et al. (2019). Spending at least 120 minutes a week in nature is associated with good health and wellbeing. Scientific Reports, 9, 7730.", note: "A large dose-response study identifying a ~2-hour weekly threshold associated with better health and wellbeing. [Moderate]", link: "https://doi.org/10.1038/s41598-019-44097-3", kind: "doi" },
+      { cite: "Ulrich, R. S. (1984). View through a window may influence recovery from surgery. Science, 224(4647), 420–421.", note: "The classic: surgical patients with a view of trees recovered faster and needed less pain medication than those facing a wall. [Moderate — foundational]", link: "https://doi.org/10.1126/science.6143402", kind: "doi" },
+      { cite: "Hartig, T., Mitchell, R., de Vries, S., & Frumkin, H. (2014). Nature and health. Annual Review of Public Health, 35, 207–228.", note: "The comprehensive review of pathways linking nature to health — with the field's caveats on effect size and confounds. [Moderate review]", link: "https://doi.org/10.1146/annurev-publhealth-032013-182443", kind: "doi" },
+    ],
+  },
+
+  // ═══════════════ SECTION 17 — THERMAL STRESS: SAUNA & COLD ═══════════════
+  {
+    id: "keystone-thermal",
+    section: "17",
+    title: "Thermal Stress — Sauna (Strong) & Cold (Emerging)",
+    subtitle: "Bolsters clusters: resilience, mood, cardiovascular & brain healthspan",
+    evidenceTag: "Moderate",
+    description:
+      "Deliberate heat and cold are hormetic stressors — small, controlled challenges that build resilience. Sauna in particular has genuinely strong LONGITUDINAL evidence (large Finnish cohorts linking frequent use to lower dementia and cardiovascular mortality). Cold exposure has real acute mood/arousal effects but thinner long-term data. Honest boundary we hold firmly: sauna's cohort data is strong but observational; cold plunging is promising and heavily hyped — we tag the acute effects real and the durable claims emerging.",
+    callout: "Sauna: strong cohort evidence (observational). Cold: real acute effects, over-hyped for durable benefit. Don't let cold-plunge marketing outrun its data.",
+    sources: [
+      { cite: "Laukkanen, T., Khan, H., Zaccardi, F., & Laukkanen, J. A. (2015). Association between sauna bathing and fatal cardiovascular and all-cause mortality events. JAMA Internal Medicine, 175(4), 542–548.", note: "The Finnish KIHD cohort: frequent sauna use tracked strongly with lower cardiovascular and all-cause mortality over 20 years. [Moderate — large cohort]", link: "https://doi.org/10.1001/jamainternmed.2014.8187", kind: "doi" },
+      { cite: "Laukkanen, T., Kunutsor, S., Kauhanen, J., & Laukkanen, J. A. (2017). Sauna bathing is inversely associated with dementia and Alzheimer's disease in middle-aged to elderly Finnish men. Age and Ageing, 46(2), 245–249.", note: "Same cohort: 4–7 sauna sessions/week associated with substantially lower dementia and Alzheimer's incidence. [Moderate — cohort]", link: "https://doi.org/10.1093/ageing/afw212", kind: "doi" },
+      { cite: "Buijze, G. A., Sierevelt, I. N., van der Heijden, B. C. J. M., Dijkgraaf, M. G., & Frings-Dresen, M. H. W. (2016). The effect of cold showering on health and work: A randomized controlled trial. PLoS ONE, 11(9), e0161749.", note: "A rare RCT on cold exposure: routine cold showers reduced self-reported sick-leave days (though not sickness episodes). Real, modest, honest. [Emerging]", link: "https://doi.org/10.1371/journal.pone.0161749", kind: "doi" },
+      { cite: "Shevchuk, N. A. (2008). Adapted cold shower as a potential treatment for depression. Medical Hypotheses, 70(5), 995–1001.", note: "A HYPOTHESIS paper (not a trial), included honestly as the origin of the cold-and-mood idea and to mark how thin the causal evidence still is. [Emerging — hypothesis only]", link: scholar("Shevchuk 2008 adapted cold shower potential treatment for depression medical hypotheses"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 18 — PSYCHEDELIC-ASSISTED THERAPY: DEEP BUT GATED ═══════════════
+  {
+    id: "keystone-psychedelic",
+    section: "18",
+    title: "Psychedelic-Assisted Therapy — The Deepest, Most Constrained",
+    subtitle: "Bolsters clusters: openness, meaning, mood — under strict conditions",
+    evidenceTag: "Emerging",
+    description:
+      "Psilocybin-assisted therapy is one of the very few interventions shown to DURABLY shift a personality trait (openness) and to produce large, sustained reductions in depression and anxiety — the deepest scope in this list. But it is legally restricted, requires medical supervision and screening, carries real psychological risk, and is not a self-administered practice. We include it for completeness and honesty; we do NOT prescribe it. This is documentation of the frontier, with the biggest guardrail in the library.",
+    callout: "Deepest effects here — and the most gated. Legal restrictions, medical supervision, and real risk mean this is documented, never recommended as a self-practice.",
+    sources: [
+      { cite: "Griffiths, R. R., Richards, W. A., McCann, U., & Jesse, R. (2006). Psilocybin can occasion mystical-type experiences having substantial and sustained personal meaning and spiritual significance. Psychopharmacology, 187(3), 268–283.", note: "The study that restarted modern psychedelic science: a single supervised session produced experiences rated as personally meaningful months later. [Emerging — controlled, small]", link: "https://doi.org/10.1007/s00213-006-0457-5", kind: "doi" },
+      { cite: "MacLean, K. A., Johnson, M. W., & Griffiths, R. R. (2011). Mystical experiences occasioned by psilocybin lead to increases in the personality domain of openness. Journal of Psychopharmacology, 25(11), 1453–1461.", note: "Rare evidence of durable trait change: openness — normally stable in adulthood — rose and stayed elevated. Directly relevant to 'engineering' a line, with heavy caveats. [Emerging]", link: "https://doi.org/10.1177/0269881111420188", kind: "doi" },
+      { cite: "Griffiths, R. R., Johnson, M. W., Carducci, M. A., et al. (2016). Psilocybin produces substantial and sustained decreases in depression and anxiety in patients with life-threatening cancer: A randomized double-blind trial. Journal of Psychopharmacology, 30(12), 1181–1197.", note: "A rigorous double-blind RCT showing large, lasting reductions in depression and anxiety after a single supervised dose. [Emerging — clinical, supervised]", link: "https://doi.org/10.1177/0269881116675513", kind: "doi" },
+      { cite: "Carhart-Harris, R. L., Erritzoe, D., Williams, T., et al. (2012). Neural correlates of the psychedelic state as determined by fMRI studies with psilocybin. PNAS, 109(6), 2138–2143.", note: "The neuroimaging basis: psilocybin decreases activity in hub regions (default-mode network), increasing brain-network flexibility. [Emerging — mechanism]", link: "https://doi.org/10.1073/pnas.1119598109", kind: "doi" },
     ],
   },
 ];
