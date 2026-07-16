@@ -422,14 +422,18 @@
 - **Magnificat prayer:** YES — Day 4 of streak. FAMILY PRAYER. Mom was already awake when Sam got up. Dad came out. All three prayed together for 30 minutes starting ~5:30 AM.
 - **Significance:** This is a BREAKTHROUGH. Previous 3 days were solo Magnificat. Today it spontaneously became communal. Sam's consistency drew his parents in. The habit is now contagious — spreading from individual to family system.
 - **Personal prayer (1-on-1 with God):** Included within the 30-minute family session
-- **Catholic Mass:** 12:00 PM noon — attending with BOTH parents. Different church than the one where he met the church girl. This is the second spiritual event of the day with family. The spiritual compounding is now multi-layered: solo prayer streak → family prayer → family Mass attendance.
-- **Notes:** The 3:46 AM wake that seemed like a problem became the catalyst for the first family prayer session. If Sam had gone back to sleep, this wouldn't have happened. The "failed" sleep became the gift. Day's spiritual stack: 5:30 AM family Magnificat (30 min) + 12 PM Catholic Mass with parents. Two communal spiritual events in one day after 3 days of solo practice.
+- **Catholic Mass:** 11:45 AM - 12:45 PM — attended with BOTH parents. Different church than the one where he met the church girl. This is the second spiritual event of the day with family. The spiritual compounding is now multi-layered: solo prayer streak → family prayer → family Mass attendance.
+- **Personal prayer (1-on-1 with God, post-Mass):** 20 minutes of personal prayer thanking God for all his many blessings. Gratitude-focused. Intentional.
+- **Notes:** The 3:46 AM wake that seemed like a problem became the catalyst for the first family prayer session. If Sam had gone back to sleep, this wouldn't have happened. The "failed" sleep became the gift. Day's spiritual stack: 5:30 AM family Magnificat (30 min) + 11:45 AM Catholic Mass with parents (1 hr) + 20 min personal gratitude prayer. Three spiritual events in one day. Total spiritual time: ~110 minutes.
 
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** 8:30 AM | 60mg (2x 30mg XR) | 1.5 hrs earlier than yesterday's 10 AM dose. Woke earlier, dosed earlier. Cycle shifting forward.
 - **Vitamin C (Time/Dose/Stomach/Effect):** TBD
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** TBD
 - **Other (Klonopin, etc.):** Coconut water at 3:46 AM for hydration/electrolytes post-880 cal day
+- **Clonazepam:** 2mg at bedtime (nightly, existing Rx — 8-10 year history, previously withdrew completely for 2+ years, restarted 6-9 months ago, bedtime only, never daytime, never escalated)
+- **NEW PRESCRIPTIONS FILLED TODAY:** Propranolol 10mg (180 ct), Bupropion XL 150mg (90 ct), Guanfacine ER 2mg (30 ct), Adderall IR 30mg (30 ct — not requested, from old file, will use PRN only for professional emergencies max 2x/week)
+- **PSYCHIATRIC APPOINTMENT:** Saw Dr. [name] — former psychiatrist from 3 years ago, reclassified as follow-up patient. She is now PRIMARY CARE PHYSICIAN. Adderall XR secured locally (saves 20 hrs/month driving to Wilmington DE). Follow-up in 30 days. She's open to additional medications at next visit.
 
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** TBD (day in progress)
@@ -439,7 +443,7 @@
 - **Leads / appointments worked:** TBD
 - **Commissions update (Ralph wire/12k annuity/solar):** TBD
 - **AI analysis done (calls/videos uploaded):** TBD
-- **Key win / lesson / money action:** Family prayer at 5:30 AM. The compound interest is now multiplying across people, not just within self.
+- **Key win / lesson / money action:** Family prayer at 5:30 AM. Psychiatric appointment WIN: secured local Adderall prescribing (saves 20 hrs/month), got 3 new medications (Wellbutrin, Guanfacine, Propranolol), gained a primary care physician, and opened the door for more at 30-day follow-up. Canceled Wilmington DE psychiatrist. The compound interest is now multiplying across people AND across systems.
 
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** TBD
