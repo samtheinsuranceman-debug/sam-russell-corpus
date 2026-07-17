@@ -625,15 +625,17 @@
 ### Spirituality
 - **Magnificat prayer:** YES — Day 5 of streak. With DAD. 6:30 AM, 10-15 minutes.
 - **Significance:** Fifth consecutive day. Dad present again. Mom not present today (was present yesterday). The streak is Sam's — others orbit his consistency.
-- **Personal prayer (1-on-1 with God):** TBD
-- **Notes:** Prayer happened immediately upon getting out of bed (6:25 AM wake → 6:30 AM Magnificat). 5-minute gap. No delay. No negotiation. Automatic.
+- **Mass:** YES — Friday Mass at St. Stanislaus Catholic Church (Castle Hayne, NC) with MOM. ~8:00-9:00 AM.
+- **Personal prayer (1-on-1 with God):** YES — 20+ minutes personal prayer to the Lord after Mass (returned home 9:20 AM).
+- **Notes:** Prayer happened immediately upon getting out of bed (6:25 AM wake → 6:30 AM Magnificat). 5-minute gap. No delay. No negotiation. Automatic. Total spiritual time before 9:30 AM: ~90 minutes (Magnificat + Mass + personal prayer). Day 5 of prayer streak holding strong.
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** TBD
+- **Adderall XR (Time/Dose/Extra/Skipped):** 60mg XR (2x 30mg) at 9:20 AM with breakfast.
+- **Breakfast:** 4 eggs + avocado (protein + healthy fat — perfect for sustained absorption).
 - **Vitamin C (Time/Dose/Stomach/Effect):** TBD
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** TBD
 - **Clonazepam (previous night):** 2mg at 9:00 PM (logged above in bedtime)
-- **New meds (Wellbutrin/Guanfacine):** TBD — Day 1 of Bupropion XL 150mg and/or Guanfacine ER 2mg if started today
+- **New meds — BUPROPION XL 150mg: DAY 1 STARTED.** Taken at 9:20 AM with Adderall and breakfast. First day of Wellbutrin. Monitoring for: dry mouth, extra alertness, headache, tinnitus, appetite changes, insomnia.
 
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** TBD (day in progress)
@@ -643,13 +645,13 @@
 - **Leads / appointments worked:** TBD
 - **Commissions update (Ralph wire/12k annuity/solar):** TBD
 - **AI analysis done (calls/videos uploaded):** TBD
-- **Key win / lesson / money action:** TBD
+- **Key win / lesson / money action:** MASSIVE FINANCIAL WIN. Research session with Mom identified: (1) SIGMA 100 is FBI-investigated scam — switching to legitimate plan saves $370/month. (2) Parents' Medicare HD Plan G saves ~$300/month. (3) T-Mobile 3 lines + 3 free iPhones = $300/month savings from Verizon + $4,000 in free phones. (4) Car insurance (Erie with accident forgiveness) saves additional TBD. Total annual savings identified: $10,000-$15,000+. All from one 2-hour research session.
 
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** TBD
-- **Dad / Mom interaction note:** Dad joined for Magnificat at 6:30 AM. Day 5 streak.
+- **Dad / Mom interaction note:** Dad joined for Magnificat at 6:30 AM (Day 5 streak). Mom joined for Friday Mass at St. Stanislaus. **MAJOR: 10:00 AM - 12:00 PM — 2 HOURS of one-on-one quality time with Mom.** Read aloud together: (1) Buddy's dream interpretations (Jung + Freud), (2) 15 impulse control strategies, (3) began emotional management strategies. Mom (2 master's degrees in clinical nursing, owned her own practice 15 years) was EXTREMELY IMPRESSED by the depth, speed, and insight of the dream interpretations and self-management strategies. She validated the clinical quality of the work. After 2 hours she said "we've spent enough time with the AI, time to move on with the day." Then 5 minutes later SHE recommended Manus shop the marketplace for Sam's health insurance → discovered SIGMA 100 FBI investigation/scam → found plan saving $370/month. Mom then excited about shopping parents' Medicare supplements (saving ~$300/month), car insurance (additional savings), and iPhones (T-Mobile 3 lines $90/month + 3 FREE iPhones = ~$4,000+ savings + Sam saves $300/month switching from Verizon for $10/month add to parents' plan). **Mom germinated the financial research idea. Total family savings identified today: $600-$900+/month ($7,200-$10,800+/year) plus $4,000+ in free iPhones.**
 - **Dating confidence / layup feel 1-10:** TBD
-- **Notes:** Dreams indicate subconscious actively rehearsing approach behavior. Progression from frustration (Dream 1) to playful success (Dream 2) suggests internal readiness building.
+- **Notes:** Dreams indicate subconscious actively rehearsing approach behavior. Progression from frustration (Dream 1) to playful success (Dream 2) suggests internal readiness building. Mom's clinical validation of the AI work is significant — a 2-masters clinician with 15 years of practice ownership doesn't give easy compliments.
 
 ### Compounding & Mindset
 - **10% extra habit done (what?):** TBD
