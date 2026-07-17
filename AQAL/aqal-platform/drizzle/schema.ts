@@ -347,10 +347,14 @@ export type InsertVideoAssessment = typeof videoAssessments.$inferInsert;
 // One per user. `answers` holds their spoken (mic-narrated, never typed) responses
 // to the commitment questions, verbatim. Signing is a personal act, not a legal
 // one. Reminder prefs opt them into a daily Y/N check-in for the first 30 days.
+// Append-only: a signed letter is NEVER edited or deleted. A person can write a
+// NEW letter that supersedes the prior one (supersededAt is stamped on the old),
+// but every signed letter stays in their archive, immutable. `version` counts up.
 export const commitments = mysqlTable("commitments", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
   assessmentId: int("assessmentId"), // the assessment this commitment is anchored to
+  version: int("version").default(1).notNull(), // 1, 2, 3… per user
   // Their declared outcomes at the time of signing (snapshot, so the letter is stable).
   goals: text("goals"),
   // [{ key, transcript }] — spoken answers, verbatim.
@@ -358,6 +362,8 @@ export const commitments = mysqlTable("commitments", {
   // E-signature: their typed name is acceptable as a signature; the reasons are spoken.
   signedName: varchar("signedName", { length: 160 }),
   signedAt: timestamp("signedAt"),
+  // Stamped when a newer signed letter replaces this one. null = current/active.
+  supersededAt: timestamp("supersededAt"),
   status: mysqlEnum("commitmentStatus", ["draft", "signed"]).default("draft").notNull(),
   // Daily accountability opt-in for the first 30 days.
   reminderChannel: mysqlEnum("reminderChannel", ["none", "email", "text"]).default("none").notNull(),

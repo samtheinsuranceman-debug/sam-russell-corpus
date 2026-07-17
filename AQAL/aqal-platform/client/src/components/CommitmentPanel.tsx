@@ -279,28 +279,39 @@ function ReminderOptIn({ initialChannel, initialPhone }: { initialChannel: Commi
 export default function CommitmentPanel() {
   const profile = trpc.profile.get.useQuery(undefined);
   const commitmentQ = trpc.commitment.get.useQuery(undefined);
+  const historyQ = trpc.commitment.history.useQuery(undefined);
   const utils = trpc.useUtils();
   const save = trpc.commitment.save.useMutation();
+  const startNew = trpc.commitment.startNew.useMutation();
 
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [signedName, setSignedName] = useState("");
   const [agreed, setAgreed] = useState(false);
-  const [seeded, setSeeded] = useState(false);
+  const [seededId, setSeededId] = useState<number | null>(null);
 
-  // Seed local state from the server once.
+  // Seed local state from whichever row the server considers current. Re-seed when
+  // the row changes (e.g. after starting a new letter → a fresh draft appears).
   useEffect(() => {
-    if (seeded || commitmentQ.isLoading) return;
+    if (commitmentQ.isLoading) return;
     const c = commitmentQ.data as any;
-    if (c) {
+    const id = c?.id ?? 0;
+    if (seededId === id) return;
+    if (c && c.status === "draft") {
       setAnswers(answersByKey((c.answers as CommitmentAnswer[]) ?? []));
-      if (c.signedName) setSignedName(c.signedName);
+    } else {
+      setAnswers({}); // signed or none → drafting starts blank
     }
-    setSeeded(true);
-  }, [commitmentQ.data, commitmentQ.isLoading, seeded]);
+    setSignedName("");
+    setAgreed(false);
+    setSeededId(id);
+  }, [commitmentQ.data, commitmentQ.isLoading, seededId]);
 
   const goals = (profile.data as any)?.goals || (commitmentQ.data as any)?.goals || "";
   const scores: any[] = (profile.data as any)?.scores || [];
   const isSigned = (commitmentQ.data as any)?.status === "signed";
+  const historyRows: any[] = (historyQ.data as any[]) || [];
+  const priorSigned = historyRows.filter((h) => h.supersededAt); // the read-only archive
+  const hasPriorForDraft = !isSigned && historyRows.some((h) => !h.supersededAt);
 
   // Doing vs not-doing snapshot: strengths you already lean on vs the lines you
   // aren't yet expressing (your growth edges).
@@ -321,13 +332,15 @@ export default function CommitmentPanel() {
   const done = answeredCount(answersList);
   const ready = done >= COMMITMENT_QUESTIONS.length;
 
+  const refresh = () => { utils.commitment.get.invalidate(); utils.commitment.history.invalidate(); };
+
   const persist = (sign: boolean) => {
     save.mutate(
       { goals: goals || undefined, answers: answersList, sign, signedName: sign ? signedName : undefined },
       {
         onSuccess: (r: any) => {
           if (r?.error) { toast.error(r.error); return; }
-          utils.commitment.get.invalidate();
+          refresh();
           toast.success(sign ? "Signed. This is yours to return to." : "Progress saved.");
         },
         onError: () => toast.error("Couldn't save. Please try again."),
@@ -335,21 +348,50 @@ export default function CommitmentPanel() {
     );
   };
 
-  // Renew — the ONLY move on a signed agreement: re-commit for another 30 days.
-  // It re-stamps the signature date; it never edits or erases the words — that's
-  // the whole point of locking. (Daily reminders are managed in their own card.)
+  // Renew — re-commit the CURRENT letter for another 30 days. Re-stamps the date;
+  // never edits the words. (Daily reminders are managed in their own card.)
   const renew = () => {
     save.mutate(
       { goals: goals || undefined, answers: storedAnswers, sign: true, signedName: (commitmentQ.data as any)?.signedName },
       {
         onSuccess: (r: any) => {
           if (r?.error) { toast.error(r.error); return; }
-          utils.commitment.get.invalidate();
+          refresh();
           toast.success("Renewed. Another 30 days — same commitment, same words.");
         },
         onError: () => toast.error("Couldn't renew. Please try again."),
       },
     );
+  };
+
+  // Write a NEW letter that supersedes the current one. The old letter is never
+  // edited — it moves, untouched, into the archive below.
+  const beginNewLetter = () => {
+    startNew.mutate(undefined, {
+      onSuccess: (r: any) => {
+        if (r?.error) { toast.error(r.error); return; }
+        refresh();
+        toast.success("New letter started. Your previous one stays in your archive, untouched.");
+      },
+      onError: () => toast.error("Couldn't start a new letter. Please try again."),
+    });
+  };
+
+  // Download any signed letter from the archive (read-only history).
+  const downloadArchive = (h: any) => {
+    const md = buildCommitmentMarkdown({
+      name: (profile.data as any)?.user?.name,
+      goals: h.goals || "",
+      answers: (h.answers as CommitmentAnswer[]) ?? [],
+      signedName: h.signedName,
+      signedAtISO: h.signedAt ? new Date(h.signedAt).toISOString() : undefined,
+    });
+    const blob = new Blob([md], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `My_Commitment_Agreement_v${h.version}.md`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
   };
 
   const download = () => {
@@ -448,6 +490,17 @@ export default function CommitmentPanel() {
         </div>
       )}
 
+      {/* Superseding note while drafting a replacement */}
+      {hasPriorForDraft && (
+        <div className="flex items-start gap-2 rounded-lg border border-[#D19A72]/30 bg-[#D19A72]/[0.06] px-4 py-3">
+          <PenLine className="w-4 h-4 text-[#D19A72] mt-0.5 flex-shrink-0" />
+          <span className="text-[12px] text-foreground/90">
+            You're writing a <b>new</b> letter. When you sign it, it becomes your current commitment and your previous one
+            moves into your archive — <b>untouched and never deleted</b>. Speak this one fresh.
+          </span>
+        </div>
+      )}
+
       {/* Questions */}
       <div className="space-y-5">
         {COMMITMENT_QUESTIONS.map((q, i) => (
@@ -518,9 +571,13 @@ export default function CommitmentPanel() {
               <Button onClick={renew} disabled={save.isPending} variant="outline" className="gap-2">
                 {save.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />} Renew for another 30 days
               </Button>
+              <Button onClick={beginNewLetter} disabled={startNew.isPending} variant="outline" className="gap-2">
+                {startNew.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <PenLine className="w-4 h-4" />} Write a new letter
+              </Button>
             </div>
             <p className="text-[11px] text-muted-foreground">
-              Renewing re-commits you for 30 more days — it never changes your words. To start over completely, you'd re-record every answer from scratch.
+              <b>Renew</b> re-commits you for 30 more days without changing a word. <b>Write a new letter</b> starts a fresh one that
+              supersedes this — and this one moves, untouched, into your archive below. Your first letter is never replaceable.
             </p>
           </div>
         ) : (
@@ -560,6 +617,59 @@ export default function CommitmentPanel() {
           initialPhone={(commitmentQ.data as any)?.reminderPhone || ""}
         />
       )}
+
+      {/* Archive — superseded letters, read-only and never deleted */}
+      {priorSigned.length > 0 && (
+        <div>
+          <div className="flex items-center gap-2 mb-3">
+            <Lock className="w-4 h-4 text-muted-foreground" />
+            <h3 className="font-mono text-[10px] tracking-[0.15em] uppercase text-muted-foreground">Your archive — past letters (never deleted)</h3>
+          </div>
+          <div className="space-y-3">
+            {priorSigned.map((h) => (
+              <ArchivedLetter key={h.id} letter={h} onDownload={() => downloadArchive(h)} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+// A superseded letter — collapsed by default, expandable, read-only forever.
+function ArchivedLetter({ letter, onDownload }: { letter: any; onDownload: () => void }) {
+  const [open, setOpen] = useState(false);
+  const map = answersByKey((letter.answers as CommitmentAnswer[]) ?? []);
+  return (
+    <Card className="bg-secondary border-border">
+      <button type="button" onClick={() => setOpen((o) => !o)} className="w-full text-left p-4 flex items-center justify-between">
+        <div>
+          <span className="text-[13px] font-medium text-foreground">Letter #{letter.version}</span>
+          <span className="font-mono text-[10px] text-muted-foreground ml-3">
+            signed {letter.signedAt ? new Date(letter.signedAt).toLocaleDateString() : "—"}
+            {letter.supersededAt ? ` · superseded ${new Date(letter.supersededAt).toLocaleDateString()}` : ""}
+          </span>
+        </div>
+        <span className="font-mono text-[10px] text-primary">{open ? "Hide" : "View"}</span>
+      </button>
+      {open && (
+        <div className="px-4 pb-4 border-t border-border pt-3 space-y-3">
+          {letter.goals ? <p className="text-[12px] text-muted-foreground italic whitespace-pre-line">{letter.goals}</p> : null}
+          {COMMITMENT_QUESTIONS.filter((q) => (map[q.key] ?? "").length > 0).map((q) => (
+            <div key={q.key}>
+              <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-muted-foreground mb-1">{q.label}</p>
+              <ul className="space-y-1">
+                {toBullets(map[q.key]).map((b, j) => (
+                  <li key={j} className="text-[12.5px] text-foreground/85 flex gap-2"><span className="text-primary/40">—</span><span>{b}</span></li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          <Button onClick={onDownload} size="sm" variant="ghost" className="gap-1.5 text-muted-foreground px-0">
+            <Download className="w-3.5 h-3.5" /> Download this letter
+          </Button>
+        </div>
+      )}
+    </Card>
   );
 }

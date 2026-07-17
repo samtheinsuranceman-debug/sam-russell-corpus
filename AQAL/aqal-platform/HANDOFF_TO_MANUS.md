@@ -30,6 +30,11 @@ Last updated by Claude: this build.
   - Spoken answers listed back **bullet by bullet** as a revisitable reference.
   - E-sign (typed name = signature; reasons must be spoken) → downloadable
     `My_Commitment_Agreement.md`.
+  - **Append-only / supersede model:** a signed letter is NEVER edited or deleted.
+    A person can *Renew* it (re-stamp the date) or *Write a new letter* that
+    supersedes it — the old one moves, untouched, into a read-only **archive**
+    (`commitment.history`). `supersededAt` marks non-current letters; reminders +
+    declared-outcomes always follow the newest signed letter. `version` counts up.
   - Daily accountability opt-in (off by default, explicit consent for texts):
     one **Y/N** message at **~8 PM the person's local time** (browser IANA timezone
     captured on opt-in; falls back to Eastern). Email + SMS seams, both mock-safe.
@@ -113,6 +118,10 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
       timezone, and confirm the hourly cron only fires that user at their local 8 PM.
 - [ ] **E-sign legal review** — the agreement is explicitly "not a legal document," but have
       counsel confirm the SMS consent language (A2P 10DLC / TCPA) before mass texting.
+- [ ] **Supersede + archive (needs a DB)** — sign a letter, then "Write a new letter" and sign
+      it; confirm the first becomes read-only in the archive (never edited), the newest is the
+      current one, and reminders follow the newest. `signCommitment` supersedes prior signed
+      rows and carries reminder prefs forward — verify against the live MySQL (couldn't here).
 
 ---
 
@@ -124,8 +133,9 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
 - Respect each practice's evidence tier (Strong/Moderate/Emerging); never present Emerging as proven.
 - Never action-prescribe the psychedelic entry.
 - Keep "0 fabricated sources" literally true.
-- **A signed commitment is immutable.** Once `status="signed"`, never let the words be
-  edited or erased — only *renewed* (re-stamp the date) or fully re-recorded from scratch.
-  The UI enforces this; keep the server honest too (don't add a silent edit path).
+- **A signed commitment is immutable and non-replaceable.** Once `status="signed"`, never
+  let the words be edited or erased. The only moves are *Renew* (re-stamp date) or *Write a
+  new letter* that supersedes it — the old letter is kept forever in the archive, untouched.
+  The UI + `signCommitment`/`saveCommitmentDraft` enforce this; never add a silent edit path.
 - The daily text is ONLY a Y/N check-in at ~8 PM local. Never repurpose that channel for
   marketing. Honor STOP. Keep the consent copy.

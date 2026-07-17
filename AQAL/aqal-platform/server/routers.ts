@@ -53,7 +53,9 @@ import {
   countBetaRedemptions, grantBetaAccess, getUserById, upsertUser,
   saveTestimonial, getApprovedTestimonials,
   countFreeUsers, getUserByOpenId,
-  getCommitmentByUser, saveCommitment, updateCommitmentReminder, getActiveReminderCommitments,
+  getCommitmentByUser, getCurrentSignedCommitment, getCommitmentHistory,
+  saveCommitmentDraft, signCommitment, startNewCommitment,
+  updateCommitmentReminder, getActiveReminderCommitments,
 } from "./db";
 import { sendSms, dailyCheckinSms } from "./platform/sms";
 import { CRON_SECRET } from "./platform/config";
@@ -1450,7 +1452,7 @@ CRITICAL RULES:
     // The question set, so the client renders prompts from one source of truth.
     questions: publicProcedure.query(() => COMMITMENT_QUESTIONS),
 
-    // The user's living commitment (draft or signed), or null.
+    // The user's current working commitment (latest draft or current signed), or null.
     get: protectedProcedure.query(async ({ ctx }) => {
       const c = await getCommitmentByUser(ctx.user.id);
       if (!c) return null;
@@ -1460,8 +1462,37 @@ CRITICAL RULES:
       };
     }),
 
+    // The immutable archive — every signed letter, newest first. Superseded ones
+    // are read-only history; the newest signed is the current, active letter.
+    history: protectedProcedure.query(async ({ ctx }) => {
+      const rows = await getCommitmentHistory(ctx.user.id);
+      return rows.map((c: any) => ({
+        id: c.id,
+        version: c.version,
+        goals: c.goals,
+        answers: (c.answers as CommitmentAnswer[] | null) ?? [],
+        signedName: c.signedName,
+        signedAt: c.signedAt,
+        supersededAt: c.supersededAt,
+      }));
+    }),
+
+    // Begin a NEW letter that will supersede the current one. Only allowed when the
+    // latest is already signed — a signed letter is never edited, only replaced.
+    startNew: protectedProcedure.mutation(async ({ ctx }) => {
+      const latest = await getCommitmentByUser(ctx.user.id);
+      if (latest && latest.status === "draft") {
+        // A draft is already open — nothing to start.
+        return { success: true as const, draftId: latest.id, already: true };
+      }
+      const assessment = await getLatestAssessment(ctx.user.id);
+      const draftId = await startNewCommitment(ctx.user.id, assessment?.id ?? null);
+      return { success: true as const, draftId };
+    }),
+
     // Save spoken answers (and optionally sign). Answers are the person's
-    // transcribed speech — we store verbatim, never rewrite them.
+    // transcribed speech — we store verbatim, never rewrite them. A signed letter
+    // is immutable: draft saves never touch it; signing supersedes the prior one.
     save: protectedProcedure
       .input(z.object({
         goals: z.string().max(6000).optional(),
@@ -1476,9 +1507,8 @@ CRITICAL RULES:
         // Only allow known question keys through.
         const validKeys = new Set(COMMITMENT_QUESTIONS.map((q) => q.key));
         const answers = input.answers.filter((a) => validKeys.has(a.key));
+        const assessment = await getLatestAssessment(ctx.user.id);
 
-        // Signing requires every question answered aloud + a signature name.
-        let sign = false;
         if (input.sign) {
           if (!commitmentReady(answers)) {
             return { error: "Answer every question out loud before signing." as const };
@@ -1486,21 +1516,24 @@ CRITICAL RULES:
           if (!input.signedName || input.signedName.trim().length < 2) {
             return { error: "Add your name to sign." as const };
           }
-          sign = true;
+          await signCommitment({
+            userId: ctx.user.id,
+            assessmentId: assessment?.id ?? null,
+            goals: input.goals ?? null,
+            answers,
+            signedName: input.signedName.trim(),
+          });
+          await recordEvent({ type: "commitment_signed", userId: ctx.user.id });
+          return { success: true as const, signed: true };
         }
 
-        const assessment = await getLatestAssessment(ctx.user.id);
-        await saveCommitment({
+        await saveCommitmentDraft({
           userId: ctx.user.id,
           assessmentId: assessment?.id ?? null,
           goals: input.goals ?? null,
           answers,
-          signedName: sign ? input.signedName!.trim() : undefined,
-          signedAt: sign ? new Date() : undefined,
-          status: sign ? "signed" : "draft",
         });
-        if (sign) await recordEvent({ type: "commitment_signed", userId: ctx.user.id });
-        return { success: true as const, signed: sign };
+        return { success: true as const, signed: false };
       }),
 
     // Server-side transcription fallback for browsers without the Web Speech API.
@@ -1543,15 +1576,15 @@ CRITICAL RULES:
             return { error: "Please confirm you agree to receive the daily Y/N text." as const };
           }
         }
-        const existing = await getCommitmentByUser(ctx.user.id);
-        if (!existing) return { error: "Sign your commitment first." as const };
+        const current = await getCurrentSignedCommitment(ctx.user.id);
+        if (!current) return { error: "Sign your commitment first." as const };
         const enabling = input.channel !== "none";
         await updateCommitmentReminder(ctx.user.id, {
           reminderChannel: input.channel,
           reminderPhone: input.channel === "text" ? (input.phone ?? null) : null,
-          reminderTimezone: enabling ? (input.timezone ?? existing.reminderTimezone ?? null) : existing.reminderTimezone,
-          reminderConsentAt: enabling ? (existing.reminderConsentAt ?? new Date()) : null,
-          reminderStartAt: enabling ? (existing.reminderStartAt ?? new Date()) : null,
+          reminderTimezone: enabling ? (input.timezone ?? current.reminderTimezone ?? null) : current.reminderTimezone,
+          reminderConsentAt: enabling ? (current.reminderConsentAt ?? new Date()) : null,
+          reminderStartAt: enabling ? (current.reminderStartAt ?? new Date()) : null,
         });
         return { success: true as const, channel: input.channel };
       }),
