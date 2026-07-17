@@ -447,7 +447,7 @@
 
 <div style='page-break-after: always;'></div>
 
-## Day 10 - 2026-07-15 (Tuesday)
+## Day 10 - 2026-07-15 (Wednesday)
 
 **Energy (1-10):** 8 | **Mood (1-10):** 8 | **Overall Day (1-10):** 9
 
@@ -515,7 +515,7 @@
 
 <div style='page-break-after: always;'></div>
 
-## Day 11 - 2026-07-16 (Wednesday)
+## Day 11 - 2026-07-16 (Thursday)
 
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
 
@@ -599,42 +599,70 @@
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Bedtime (previous night):** Clonazepam 2mg at 9:00 PM. In bed at 9:15 PM (July 16).
+- **Wake time (natural? vs 11 AM):** ~4:10 AM first wake (natural, alert). Flopped in bed 20 min. Fell back asleep ~4:45 AM. Final wake: 6:25 AM. Out of bed 6:25 AM.
+- **Hours slept:** ~8.5 hours total (fragmented: 9:15 PM - 4:10 AM = ~7 hrs first block + ~4:45 AM - 6:25 AM = ~1.5 hrs second block). Third consecutive night of split-sleep pattern.
+- **Dreams (nightmare/neutral/positive/sex/vivid):** VIVID. Three-act sequential dream. Social/sexual/identity themes. Significant REM integration. See dream log below.
+- **Sleep feel (Restful 1-10) / Notes:** Split sleep pattern now consistent 3 nights in a row. Body establishing a rhythm: long first block → brief wake → short second block with vivid REM dreams. The second block appears to be where deep integration/processing occurs.
+
+### Dream Log (Day 12 — Detailed)
+**Dream 1 (during first wake ~4:10 AM):**
+- Setting: Mall (social marketplace). With old best friend not seen in 15-20 years.
+- Content: Flirting with girls, root beer floats (sober fun), girls sitting down and kissing cheeks. Girls disappeared. Friend driving bicycle with motorcar attached, Sam in passenger seat. Group of 5 girls talking about "how hot Sam is." Sam screamed "I'm Sam!" — they didn't hear him. Another man named Sam (Black guy) walked by and got the attention instead. Sam claimed identity with rage. The other Sam asked for Sam's phone number ("normal phone call messaging may apply"). Transactional exchange instead of authentic connection.
+- Themes: Invisibility, identity frustration, desire for recognition, someone else getting what's yours.
+
+**Dream 2 (during second sleep block ~4:45-6:25 AM):**
+- Setting: Mall again. Met new friends — group of 3 guys. Let them drive his car to the mall.
+- Content: Met group of girls. Met Yngwie Malmsteen (guitar virtuoso = mastery archetype). Went to live concert — hologram of Yngwie performed guitar instrumentals for thousands. Dark atmosphere, full moon, ambient lights. Girls swooning. Sam stood next to the REAL Yngwie while crowd watched the hologram. Asked Yngwie to play for him personally — Yngwie said $40K. Left mall with boys in elevator, left girls behind as a joke/tease. Went BACK DOWN to get girls. Told them he was just flirting. Asked prettiest one for her number — she agreed. Had to dig through her backpack (many compartments, got lost). She guided him: "look in the largest compartment." Found phone, got number. All got on bus together. Sam making girls smile and laugh.
+- Themes: PROGRESSION from Dream 1. Ownership (his car), generosity (sharing), proximity to mastery, playful confidence, going back with intention, getting the number, leaving together.
+
+**Dream 3 (continuation):**
+- Content: Bus driver said wrong stop. Sam got off, started walking. Realized the 3 boys still had his car keys. They were no longer on the bus. Got off and realized he was stranded in wrong place. Tried to get back on bus — driver resisted, wouldn't stop. Sam hanging by hands on stairs. Driver started engine and drove. Sam let go. Realized car had been stolen. Stranded in middle of nowhere. Preparing to call parents for help. Plan: "We'll find those boys and get my car back."
+- Themes: Trust/betrayal (gave keys to strangers), systems that won't stop for you, letting go, being stranded, calling parents = current life reality, strategic recovery plan.
+
+**DREAM SYNTHESIS:** Three-act structure processing Sam's full life arc: (1) invisibility/frustration, (2) confidence/success/connection, (3) consequence of misplaced trust + recovery through family support. Subconscious rehearsing both the church girl approach AND processing the Grok betrayal/current "stranded" life phase simultaneously. Dream 2 solved Dream 1's problem (stopped screaming, started being playful). Dream 3 showed the cost of giving keys to strangers and the solution (parents, strategic recovery). Highly significant integration dreams.
+
+### Spirituality
+- **Magnificat prayer:** YES — Day 5 of streak. With DAD. 6:30 AM, 10-15 minutes.
+- **Significance:** Fifth consecutive day. Dad present again. Mom not present today (was present yesterday). The streak is Sam's — others orbit his consistency.
+- **Personal prayer (1-on-1 with God):** TBD
+- **Notes:** Prayer happened immediately upon getting out of bed (6:25 AM wake → 6:30 AM Magnificat). 5-minute gap. No delay. No negotiation. Automatic.
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
-- **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
-- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
-- **Other (Klonopin, etc.):** _______________________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** TBD
+- **Vitamin C (Time/Dose/Stomach/Effect):** TBD
+- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** TBD
+- **Clonazepam (previous night):** 2mg at 9:00 PM (logged above in bedtime)
+- **New meds (Wellbutrin/Guanfacine):** TBD — Day 1 of Bupropion XL 150mg and/or Guanfacine ER 2mg if started today
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
-- **Other notes (neck, appetite, etc.):** ___________________________________
+- **Exercise (pool/gym/walk duration + 10% extra):** TBD (day in progress)
+- **Other notes (neck, appetite, etc.):** TBD
 
 ### Business / Productivity
-- **Leads / appointments worked:** __________________________________________
-- **Commissions update (Ralph wire/12k annuity/solar):** ____________________
-- **AI analysis done (calls/videos uploaded):** _____________________________
-- **Key win / lesson / money action:** ______________________________________
+- **Leads / appointments worked:** TBD
+- **Commissions update (Ralph wire/12k annuity/solar):** TBD
+- **AI analysis done (calls/videos uploaded):** TBD
+- **Key win / lesson / money action:** TBD
 
 ### Social / Dating / Family
-- **Church-girl action today (contact/script/progress):** ___________________
-- **Dad / Mom interaction note:** ___________________________________________
-- **Dating confidence / layup feel 1-10:** __________________________________
-- **Notes:** ________________________________________________________________
+- **Church-girl action today (contact/script/progress):** TBD
+- **Dad / Mom interaction note:** Dad joined for Magnificat at 6:30 AM. Day 5 streak.
+- **Dating confidence / layup feel 1-10:** TBD
+- **Notes:** Dreams indicate subconscious actively rehearsing approach behavior. Progression from frustration (Dream 1) to playful success (Dream 2) suggests internal readiness building.
 
 ### Compounding & Mindset
-- **10% extra habit done (what?):** _________________________________________
-- **Self-script used or insight:** __________________________________________
-- **Gratitude / biggest pattern noticed:** __________________________________
+- **10% extra habit done (what?):** TBD
+- **Self-script used or insight:** TBD
+- **Gratitude / biggest pattern noticed:** TBD
 
 ### Evening Review
-- **What worked that I double tomorrow?** ___________________________________
-- **One adjustment for tomorrow?** __________________________________________
+- **What worked that I double tomorrow?** TBD
+- **One adjustment for tomorrow?** TBD
+
+### CORRECTION LOG (Permanent Record)
+- **Weekday label error (caught July 17):** Original rebuild script produced wrong weekday labels for Days 10-12. Day 10 was labeled "Tuesday" (correct: Wednesday). Day 11 was labeled "Wednesday" (correct: Thursday). Day 12 was labeled "Friday" initially but showed as "Thursday" briefly during fix. Root cause: hardcoded day names from old tracker version instead of computing from calendar. All 30 day headers now verified against Python calendar module. Protocol established: always verify date/time against system clock and convert to Eastern Time before reporting to Sam.
+- **Timezone (permanent):** Sam is in North Carolina = Eastern Time (EDT in summer, EST in winter). UTC-4 during daylight saving. All times in this tracker are Eastern. System clock runs UTC — must ALWAYS convert before logging or reporting. No exceptions.
 
 ---
 
