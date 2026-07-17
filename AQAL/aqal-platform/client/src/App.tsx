@@ -48,6 +48,7 @@ const IntelligenceProfile = lazy(() => import("./pages/IntelligenceProfile"));
 const UIPreview = lazy(() => import("./pages/UIPreview"));
 const VideoAssessment = lazy(() => import("./pages/VideoAssessment"));
 const Portal = lazy(() => import("./pages/Portal"));
+const Commitment = lazy(() => import("./pages/Commitment"));
 const ResearchLibrary = lazy(() => import("./pages/ResearchLibrary"));
 const VerificationLedger = lazy(() => import("./pages/VerificationLedger"));
 const PricingStructure = lazy(() => import("./pages/PricingStructure"));
@@ -69,6 +70,7 @@ const prefetchMap: Record<string, () => Promise<any>> = {
   "/nlp-report": () => import("./pages/NlpReport"),
   "/admin": () => import("./pages/Admin"),
   "/portal": () => import("./pages/Portal"),
+  "/commitment": () => import("./pages/Commitment"),
   "/calibration": () => import("./pages/CalibrationTest"),
   "/video-assessment": () => import("./pages/VideoAssessment"),
   "/intelligence-profile": () => import("./pages/IntelligenceProfile"),
@@ -229,6 +231,11 @@ function Router() {
         <Route path={"/portal"}>
           <PageErrorBoundary pageName="Portal">
             <Suspense fallback={<PageSkeleton />}><Portal /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/commitment"}>
+          <PageErrorBoundary pageName="Commitment">
+            <Suspense fallback={<PageSkeleton />}><Commitment /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/science"}>

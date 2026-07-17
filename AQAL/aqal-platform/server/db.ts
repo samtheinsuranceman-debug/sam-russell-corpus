@@ -1,6 +1,6 @@
 import { eq, sql, and, desc, gte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend, testimonials, InsertTestimonial } from "../drizzle/schema";
+import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend, testimonials, InsertTestimonial, commitments } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -1161,4 +1161,88 @@ export async function getApprovedTestimonials(limit = 12) {
     .where(and(eq(testimonials.status, "approved"), eq(testimonials.consentToDisplay, true)))
     .orderBy(desc(testimonials.createdAt))
     .limit(limit);
+}
+
+// ============================================================
+// COMMITMENTS — Personal Commitment Agreement
+// ============================================================
+
+export async function getCommitmentByUser(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(commitments)
+    .where(eq(commitments.userId, userId))
+    .orderBy(desc(commitments.updatedAt))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+// Upsert-by-user: one living commitment per person. Updates in place if present.
+export async function saveCommitment(data: {
+  userId: number;
+  assessmentId?: number | null;
+  goals?: string | null;
+  answers?: any;
+  signedName?: string | null;
+  signedAt?: Date | null;
+  status?: "draft" | "signed";
+}): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const existing = await getCommitmentByUser(data.userId);
+  const values = {
+    assessmentId: data.assessmentId ?? undefined,
+    goals: data.goals ?? undefined,
+    answers: data.answers ?? undefined,
+    signedName: data.signedName ?? undefined,
+    signedAt: data.signedAt ?? undefined,
+    status: data.status ?? undefined,
+  };
+  if (existing) {
+    await db.update(commitments).set(values).where(eq(commitments.id, existing.id));
+    return existing.id;
+  }
+  const result = await db.insert(commitments).values({ userId: data.userId, ...values });
+  return Number(result[0].insertId);
+}
+
+export async function updateCommitmentReminder(userId: number, data: {
+  reminderChannel: "none" | "email" | "text";
+  reminderPhone?: string | null;
+  reminderTimezone?: string | null;
+  reminderConsentAt?: Date | null;
+  reminderStartAt?: Date | null;
+}): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  const existing = await getCommitmentByUser(userId);
+  if (!existing) return;
+  await db.update(commitments).set({
+    reminderChannel: data.reminderChannel,
+    reminderPhone: data.reminderPhone ?? undefined,
+    reminderTimezone: data.reminderTimezone ?? undefined,
+    reminderConsentAt: data.reminderConsentAt ?? undefined,
+    reminderStartAt: data.reminderStartAt ?? undefined,
+  }).where(eq(commitments.id, existing.id));
+}
+
+// Signed commitments with an active daily reminder channel — the daily-send job
+// iterates these. Joins the user's email for the email channel.
+export async function getActiveReminderCommitments() {
+  const db = await getDb();
+  if (!db) return [] as Array<{
+    userId: number; email: string | null; reminderChannel: "email" | "text";
+    reminderPhone: string | null; reminderTimezone: string | null; reminderStartAt: Date | null;
+  }>;
+  const rows = await db.select({
+    userId: commitments.userId,
+    email: users.email,
+    reminderChannel: commitments.reminderChannel,
+    reminderPhone: commitments.reminderPhone,
+    reminderTimezone: commitments.reminderTimezone,
+    reminderStartAt: commitments.reminderStartAt,
+  }).from(commitments)
+    .innerJoin(users, eq(users.id, commitments.userId))
+    .where(and(eq(commitments.status, "signed")));
+  return rows.filter((r) => r.reminderChannel === "email" || r.reminderChannel === "text") as any;
 }

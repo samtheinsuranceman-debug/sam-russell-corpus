@@ -1,7 +1,7 @@
 import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
-import { sendEmail, resultEmailHtml } from "./platform/email";
+import { sendEmail, resultEmailHtml, dailyCheckinEmailHtml } from "./platform/email";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
@@ -46,14 +46,18 @@ import { createVideoAssessment, getVideoAssessment, getUserVideoAssessments, upd
 import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisMode, MODE_META } from "@shared/axisModes";
 import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
-import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, FREE_ASSESSMENT_CAP, voiceConsensus, freePanelMax } from "./platform/config";
+import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, FREE_ASSESSMENT_CAP, voiceConsensus, freePanelMax, sttProvider } from "./platform/config";
 import {
   recordEvent, getAnalyticsEventsSince, getSubscriptionEvents,
   addMarketingSpend, getMarketingSpendSince,
   countBetaRedemptions, grantBetaAccess, getUserById, upsertUser,
   saveTestimonial, getApprovedTestimonials,
   countFreeUsers, getUserByOpenId,
+  getCommitmentByUser, saveCommitment, updateCommitmentReminder, getActiveReminderCommitments,
 } from "./db";
+import { sendSms, dailyCheckinSms } from "./platform/sms";
+import { CRON_SECRET } from "./platform/config";
+import { COMMITMENT_QUESTIONS, commitmentReady, answersByKey, shouldSendCheckinNow, DAILY_CHECKIN_HOUR, type CommitmentAnswer } from "@shared/commitment";
 import {
   funnelMetrics, pipelineHealth, cac, retention, goNoGo, FUNNEL_STAGES,
 } from "./analytics/metrics";
@@ -1124,12 +1128,22 @@ Return ONLY valid JSON.` },
       const scoresList = await getScoresByAssessment(assessment.id);
       const combos = await getPowerCombinationsByAssessment(assessment.id);
       const cohort = computeCohortRarity(scoresList as any, (assessment as any).birthYear);
+      // The person's declared outcomes — their spoken answers to the goals
+      // questions (order positions 12 & 13). Surfaced so the portal and the
+      // commitment agreement can show "the outcomes you declared."
+      const responsesList = await getResponsesByAssessment(assessment.id);
+      const goals = responsesList
+        .filter((r: any) => r.questionIndex === 12 || r.questionIndex === 13)
+        .map((r: any) => r.transcript)
+        .filter(Boolean)
+        .join("\n\n");
       return {
         assessment,
         scores: scoresList,
         powerCombinations: combos,
         cohortRarity: cohort?.cohortRarity ?? null,
         generation: cohort?.generation ?? null,
+        goals,
         user: { name: ctx.user.name, email: ctx.user.email },
       };
     }),
@@ -1429,6 +1443,170 @@ CRITICAL RULES:
         return { success: true };
       }),
   }),
+  // ============================================================
+  // COMMITMENT — the Personal Commitment Agreement (spoken, self-authored)
+  // ============================================================
+  commitment: router({
+    // The question set, so the client renders prompts from one source of truth.
+    questions: publicProcedure.query(() => COMMITMENT_QUESTIONS),
+
+    // The user's living commitment (draft or signed), or null.
+    get: protectedProcedure.query(async ({ ctx }) => {
+      const c = await getCommitmentByUser(ctx.user.id);
+      if (!c) return null;
+      return {
+        ...c,
+        answers: (c.answers as CommitmentAnswer[] | null) ?? [],
+      };
+    }),
+
+    // Save spoken answers (and optionally sign). Answers are the person's
+    // transcribed speech — we store verbatim, never rewrite them.
+    save: protectedProcedure
+      .input(z.object({
+        goals: z.string().max(6000).optional(),
+        answers: z.array(z.object({
+          key: z.string().max(40),
+          transcript: z.string().max(8000),
+        })).max(50),
+        sign: z.boolean().optional(),
+        signedName: z.string().max(160).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        // Only allow known question keys through.
+        const validKeys = new Set(COMMITMENT_QUESTIONS.map((q) => q.key));
+        const answers = input.answers.filter((a) => validKeys.has(a.key));
+
+        // Signing requires every question answered aloud + a signature name.
+        let sign = false;
+        if (input.sign) {
+          if (!commitmentReady(answers)) {
+            return { error: "Answer every question out loud before signing." as const };
+          }
+          if (!input.signedName || input.signedName.trim().length < 2) {
+            return { error: "Add your name to sign." as const };
+          }
+          sign = true;
+        }
+
+        const assessment = await getLatestAssessment(ctx.user.id);
+        await saveCommitment({
+          userId: ctx.user.id,
+          assessmentId: assessment?.id ?? null,
+          goals: input.goals ?? null,
+          answers,
+          signedName: sign ? input.signedName!.trim() : undefined,
+          signedAt: sign ? new Date() : undefined,
+          status: sign ? "signed" : "draft",
+        });
+        if (sign) await recordEvent({ type: "commitment_signed", userId: ctx.user.id });
+        return { success: true as const, signed: sign };
+      }),
+
+    // Server-side transcription fallback for browsers without the Web Speech API.
+    // Primary path is the browser's live SpeechRecognition (free, instant); this
+    // stores the recorded audio and runs the STT seam. Returns mocked=true when no
+    // STT vendor is configured, so the client can tell the user honestly.
+    transcribe: protectedProcedure
+      .input(z.object({
+        audioBase64: z.string().max(20_000_000),
+        mimeType: z.string().max(64).default("audio/webm"),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const buf = Buffer.from(input.audioBase64, "base64");
+        const ext = input.mimeType.includes("mp4") ? "mp4" : input.mimeType.includes("aac") ? "aac" : "webm";
+        const { url } = await storagePut(`commitments/${ctx.user.id}/${Date.now()}.${ext}`, buf, input.mimeType);
+        const result = await transcribeAudio({ audioUrl: url, language: "en" }) as any;
+        if (result?.error) return { text: "", mocked: false, error: String(result.error) };
+        // The mock seam returns a canned transcript — flag it so the UI never
+        // passes fake words off as the user's own.
+        const mocked = sttProvider() === "mock";
+        return { text: (result?.text as string) || "", mocked };
+      }),
+
+    // Opt in/out of daily accountability check-ins (first 30 days).
+    // Explicit, revocable consent. The daily message is ONLY a Y/N at ~8 PM the
+    // person's local time — we capture their browser timezone to hit that hour.
+    setReminders: protectedProcedure
+      .input(z.object({
+        channel: z.enum(["none", "email", "text"]),
+        phone: z.string().max(32).optional(),
+        timezone: z.string().max(64).optional(), // IANA zone from the browser
+        consent: z.boolean().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (input.channel === "text") {
+          if (!(input.phone && input.phone.trim().length >= 7)) {
+            return { error: "Add a mobile number to receive texts." as const };
+          }
+          if (!input.consent) {
+            return { error: "Please confirm you agree to receive the daily Y/N text." as const };
+          }
+        }
+        const existing = await getCommitmentByUser(ctx.user.id);
+        if (!existing) return { error: "Sign your commitment first." as const };
+        const enabling = input.channel !== "none";
+        await updateCommitmentReminder(ctx.user.id, {
+          reminderChannel: input.channel,
+          reminderPhone: input.channel === "text" ? (input.phone ?? null) : null,
+          reminderTimezone: enabling ? (input.timezone ?? existing.reminderTimezone ?? null) : existing.reminderTimezone,
+          reminderConsentAt: enabling ? (existing.reminderConsentAt ?? new Date()) : null,
+          reminderStartAt: enabling ? (existing.reminderStartAt ?? new Date()) : null,
+        });
+        return { success: true as const, channel: input.channel };
+      }),
+  }),
+
+  // ============================================================
+  // REMINDERS — daily accountability send (host cron calls sendDaily)
+  // ============================================================
+  reminders: router({
+    // Send today's Y/N check-in to everyone with an active channel who is still
+    // inside their 30-day window. Auth: CRON_SECRET (host scheduler) or an admin.
+    // Idempotency (once-per-day) and the inbound Y/N reply webhook are the host's
+    // job — see HANDOFF_TO_MANUS.md.
+    sendDaily: publicProcedure
+      .input(z.object({
+        secret: z.string().optional(),
+        // Override the 8 PM target (mainly for testing); ignoreTime sends to all
+        // in-window targets regardless of local hour (manual admin blast).
+        targetHour: z.number().int().min(0).max(23).optional(),
+        ignoreTime: z.boolean().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const isAdmin = ctx.user?.role === "admin";
+        const secretOk = CRON_SECRET.length > 0 && input.secret === CRON_SECRET;
+        if (!isAdmin && !secretOk) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Cron secret or admin required." });
+        }
+        const targets = await getActiveReminderCommitments();
+        const now = new Date();
+        const nowMs = now.getTime();
+        const WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+        const targetHour = input.targetHour ?? DAILY_CHECKIN_HOUR;
+        let sent = 0, skipped = 0, failed = 0;
+        for (const t of targets) {
+          // Respect the 30-day window when a start date is set.
+          const start = t.reminderStartAt ? new Date(t.reminderStartAt).getTime() : nowMs;
+          const day = Math.floor((nowMs - start) / (24 * 60 * 60 * 1000)) + 1;
+          if (nowMs - start > WINDOW_MS) { skipped++; continue; }
+          // Only fire when it's ~8 PM in the person's own timezone.
+          if (!input.ignoreTime && !shouldSendCheckinNow(t.reminderTimezone, now, targetHour)) { skipped++; continue; }
+          if (t.reminderChannel === "text" && t.reminderPhone) {
+            const r = await sendSms(t.reminderPhone, dailyCheckinSms());
+            r.ok ? sent++ : failed++;
+          } else if (t.reminderChannel === "email" && t.email) {
+            const r = await sendEmail(t.email, "Your AQAL daily check-in — reply Y or N", dailyCheckinEmailHtml({ dayNumber: day }));
+            r.ok ? sent++ : failed++;
+          } else {
+            skipped++;
+          }
+        }
+        await recordEvent({ type: "reminders_daily", numericValue: sent });
+        return { sent, skipped, failed, total: targets.length };
+      }),
+  }),
+
   // ============================================================
   // CORPUS SEARCH & EVALUATION (Buddy Composability)
   // ============================================================

@@ -66,3 +66,25 @@ export function resultEmailHtml(opts: {
     <p style="color:#6f6a60;font-size:12px;margin-top:26px;">You received this because you requested AQAL free access. We never sell your personal information.</p>
   </div></body></html>`;
 }
+
+// Daily accountability check-in email — one question, Y/N reply, for the first
+// 30 days after a person signs their Personal Commitment Agreement. Deliberately
+// short so it reads on a lock screen.
+export function dailyCheckinEmailHtml(opts: { dayNumber?: number; recoveryLine?: string } = {}): string {
+  const { dayNumber, recoveryLine } = opts;
+  const dayLine = dayNumber
+    ? `<div style="font-family:monospace;font-size:10px;letter-spacing:.2em;color:#c9a24b;text-transform:uppercase;margin-bottom:14px;">Day ${dayNumber} of 30</div>`
+    : "";
+  const anchor = recoveryLine
+    ? `<p style="color:#b9b2a6;font-size:14px;line-height:1.6;font-style:italic;margin:18px 0 0;">"${recoveryLine.replace(/"/g, "&quot;")}"<br><span style="font-style:normal;color:#6f6a60;font-size:12px;">— your own words, the day you committed</span></p>`
+    : "";
+  return `<!doctype html><html><body style="margin:0;background:#161310;font-family:Georgia,serif;color:#efe9dc;">
+  <div style="max-width:520px;margin:0 auto;padding:40px 28px;">
+    <div style="font-family:monospace;font-size:11px;letter-spacing:.24em;color:#c9a24b;text-transform:uppercase;margin-bottom:18px;">AQAL · Daily Check-in</div>
+    ${dayLine}
+    <h1 style="font-size:22px;font-weight:600;margin:0 0 12px;">Did you complete today's tracking?</h1>
+    <p style="color:#b9b2a6;font-size:15px;line-height:1.6;margin:0;">Just reply <b style="color:#e0c68c;">Y</b> or <b style="color:#e0c68c;">N</b>. That's the whole thing. Showing up beats getting it perfect.</p>
+    ${anchor}
+    <p style="color:#6f6a60;font-size:12px;margin-top:26px;">You asked for these for your first 30 days. Reply STOP to turn them off any time.</p>
+  </div></body></html>`;
+}

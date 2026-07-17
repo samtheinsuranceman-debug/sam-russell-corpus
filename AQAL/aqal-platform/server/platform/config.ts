@@ -164,6 +164,19 @@ export function emailProvider(): "resend" | "mock" {
   return RESEND_API_KEY ? "resend" : "mock";
 }
 
+// ---- SMS (daily accountability texts) -----------------------
+// Twilio by default — set the three vars to send for real. Empty = mock (logs),
+// so the daily-reminder feature runs end-to-end with no vendor. Mirrors email.ts.
+export const TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID");
+export const TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN");
+export const TWILIO_FROM_NUMBER = env("TWILIO_FROM_NUMBER");
+export function smsProvider(): "twilio" | "mock" {
+  return TWILIO_ACCOUNT_SID && TWILIO_AUTH_TOKEN && TWILIO_FROM_NUMBER ? "twilio" : "mock";
+}
+// Cron/job auth: the host scheduler calls reminders.sendDaily with this secret.
+// Empty = only admins can trigger it (safe default).
+export const CRON_SECRET = env("CRON_SECRET");
+
 // ---- Auth ---------------------------------------------------
 // Kept behind the existing OAuth implementation; Clerk/Auth.js is the documented
 // swap (see platform/auth.ts). ctx.user shape must not change when swapped.

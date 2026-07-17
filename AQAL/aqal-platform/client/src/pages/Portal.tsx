@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { axisMode, modeColor, MODE_META, ALL_AXES } from "@shared/axisModes";
+import CommitmentPanel from "@/components/CommitmentPanel";
 
 // ============================================================
 // AQAL Consumer Portal — The user's home after login
@@ -25,6 +26,7 @@ import { axisMode, modeColor, MODE_META, ALL_AXES } from "@shared/axisModes";
 const TABS = [
   { id: "overview", label: "Overview", icon: Compass },
   { id: "profile", label: "Your Profile", icon: User },
+  { id: "commitment", label: "Commitment", icon: PenTool },
   { id: "network", label: "Network", icon: Users },
   { id: "library", label: "Research Library", icon: BookOpen },
   { id: "tools", label: "Tools", icon: Wrench },
@@ -239,6 +241,26 @@ function OverviewTab({ user, scores, assessment }: { user: any; scores: any; ass
           </Card>
         </Link>
       </div>
+
+      {/* Commitment prompt */}
+      {hasResults && (
+        <Link href="/commitment">
+          <Card className="p-6 bg-gradient-to-br from-primary/[0.07] to-background border-primary/25 hover:border-primary/50 transition-all cursor-pointer group">
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-4">
+                <PenTool className="w-6 h-6 text-primary mt-0.5" />
+                <div>
+                  <h4 className="font-display text-lg text-foreground mb-1">Make your Personal Commitment Agreement</h4>
+                  <p className="text-[12px] text-muted-foreground max-w-md leading-relaxed">
+                    Speak your reasons out loud, sign it, and keep it. The private document you return to whenever you falter — so you never need nagging to follow through.
+                  </p>
+                </div>
+              </div>
+              <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform flex-shrink-0" />
+            </div>
+          </Card>
+        </Link>
+      )}
 
       {/* No results state */}
       {!hasResults && (
@@ -725,6 +747,7 @@ export default function Portal() {
       <div className="max-w-[1180px] mx-auto px-5 py-8">
         {activeTab === "overview" && <OverviewTab user={user} scores={profileData.data?.scores} assessment={profileData.data?.assessment} />}
         {activeTab === "profile" && <ProfileTab scores={profileData.data?.scores} />}
+        {activeTab === "commitment" && <CommitmentPanel />}
         {activeTab === "network" && <NetworkTab />}
         {activeTab === "library" && <ResearchLibraryTab />}
         {activeTab === "tools" && <ToolsTab user={user} />}

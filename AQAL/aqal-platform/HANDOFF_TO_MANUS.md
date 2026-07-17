@@ -21,6 +21,21 @@ Last updated by Claude: this build.
   projections + **The Gap** (knowing-doing), keystone-practice prescriptions.
 - Downloadable **30-day behavioral tracker** (from the report's "The Gap" block).
 - Verification Ledger, testimonials capture (at report peak), Stripe pricing tiers.
+- **Private consumer portal** (`/portal`): Overview, Your Profile, Commitment, Network,
+  Research Library, Tools, Settings. Now surfaces the person's **declared outcomes**
+  (goals) and a **doing vs not-doing** snapshot (strengths vs growth edges).
+- **Personal Commitment Agreement** (`/commitment` + Portal "Commitment" tab):
+  - 8 hard questions answered **by voice only** (mic → browser SpeechRecognition;
+    server-STT fallback for non-Chrome via `commitment.transcribe`). Never typed.
+  - Spoken answers listed back **bullet by bullet** as a revisitable reference.
+  - E-sign (typed name = signature; reasons must be spoken) → downloadable
+    `My_Commitment_Agreement.md`.
+  - Daily accountability opt-in (off by default, explicit consent for texts):
+    one **Y/N** message at **~8 PM the person's local time** (browser IANA timezone
+    captured on opt-in; falls back to Eastern). Email + SMS seams, both mock-safe.
+  - Data model: `commitments` table (schema.ts). Server: `commitment.*` and
+    `reminders.sendDaily` routers. SMS seam: `server/platform/sms.ts` (Twilio).
+  - Unit-tested: `server/scoring/commitment.test.ts` (12 tests, incl. timezone targeting).
 
 ---
 
@@ -52,6 +67,24 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
    - Fire the testimonial capture again AFTER a positive re-measurement ("your scores moved
      — tell your story"). This is the gold, evidence-based testimonial. Keep consent-gated.
 
+6. **Daily reminder cron (host) — wire `reminders.sendDaily`.**
+   - The endpoint is built and time-aware: it only messages a person when it's ~8 PM in
+     THEIR timezone. So the host scheduler must call it **hourly** (e.g. `0 * * * *`),
+     not once a day. Auth it with the `CRON_SECRET` env var: `POST reminders.sendDaily
+     { "secret": "<CRON_SECRET>" }`. (Admins can also trigger it from a session.)
+   - Add **once-per-day idempotency** per user (the endpoint does not yet dedupe if the
+     cron double-fires within the 8 PM hour). Simplest: record a `last_sent_date` per
+     commitment and skip if already sent today.
+
+7. **Inbound Y/N reply handling (Twilio webhook).**
+   - Outbound daily texts/emails are built. The inbound **Y/N reply** capture is NOT —
+     it needs a public webhook (Twilio → your server) that logs the completion against
+     the user's tracker for that day, and honors **STOP** to set `reminderChannel="none"`.
+   - Store each Y/N as a daily completion so the 30-day tracker + re-assessment can use it.
+
+8. **DB migration.** Run `pnpm db:push` (or generate+migrate) so the new `commitments`
+   table and the `goals` passthrough exist in the live DB before this ships.
+
 ---
 
 ## 🔍 VERIFY LIVE (needs real keys / a browser — Claude could not run these)
@@ -70,6 +103,16 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
       email/passcode claim card for wrapping/spacing.
 - [ ] **30-day tracker download** — click it on the report; confirm the .md downloads and
       lists the user's prescribed practices.
+- [ ] **Commitment voice flow in Chrome** — open `/commitment`, sign in, speak an answer to
+      each question; confirm the browser transcript fills the bullets, signing unlocks only
+      when all 8 are answered, and `My_Commitment_Agreement.md` downloads with the words.
+- [ ] **Commitment on non-Chrome (Safari/Firefox)** — confirm the server-STT fallback
+      (`commitment.transcribe`) works when `OPENAI_API_KEY` is set (else it honestly tells
+      the user to use Chrome — never fabricates words).
+- [ ] **Daily text at 8 PM local** — set `TWILIO_*`, opt a test user into texts with a real
+      timezone, and confirm the hourly cron only fires that user at their local 8 PM.
+- [ ] **E-sign legal review** — the agreement is explicitly "not a legal document," but have
+      counsel confirm the SMS consent language (A2P 10DLC / TCPA) before mass texting.
 
 ---
 

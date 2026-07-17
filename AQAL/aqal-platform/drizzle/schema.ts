@@ -342,6 +342,40 @@ export type VideoAssessment = typeof videoAssessments.$inferSelect;
 export type InsertVideoAssessment = typeof videoAssessments.$inferInsert;
 
 // ============================================================
+// COMMITMENTS — the Personal Commitment Agreement (self-engineered dedication)
+// ============================================================
+// One per user. `answers` holds their spoken (mic-narrated, never typed) responses
+// to the commitment questions, verbatim. Signing is a personal act, not a legal
+// one. Reminder prefs opt them into a daily Y/N check-in for the first 30 days.
+export const commitments = mysqlTable("commitments", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  assessmentId: int("assessmentId"), // the assessment this commitment is anchored to
+  // Their declared outcomes at the time of signing (snapshot, so the letter is stable).
+  goals: text("goals"),
+  // [{ key, transcript }] — spoken answers, verbatim.
+  answers: json("answers"),
+  // E-signature: their typed name is acceptable as a signature; the reasons are spoken.
+  signedName: varchar("signedName", { length: 160 }),
+  signedAt: timestamp("signedAt"),
+  status: mysqlEnum("commitmentStatus", ["draft", "signed"]).default("draft").notNull(),
+  // Daily accountability opt-in for the first 30 days.
+  reminderChannel: mysqlEnum("reminderChannel", ["none", "email", "text"]).default("none").notNull(),
+  reminderPhone: varchar("reminderPhone", { length: 32 }),
+  // IANA timezone captured from the browser (e.g. "America/New_York") so the daily
+  // check-in lands at ~8 PM THEIR local time, not a fixed hour for everyone.
+  reminderTimezone: varchar("reminderTimezone", { length: 64 }),
+  // Explicit consent to receive the daily text/email (opt-in, revocable).
+  reminderConsentAt: timestamp("reminderConsentAt"),
+  reminderStartAt: timestamp("reminderStartAt"), // when the 30-day window began
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Commitment = typeof commitments.$inferSelect;
+export type InsertCommitment = typeof commitments.$inferInsert;
+
+// ============================================================
 // ANALYTICS EVENTS — funnel + scoring-pipeline instrumentation (Stage 6)
 // ============================================================
 export const analyticsEvents = mysqlTable("analytics_events", {
