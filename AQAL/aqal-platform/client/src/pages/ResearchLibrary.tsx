@@ -492,6 +492,7 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "17": "17 · Thermal Stress — Sauna & Cold",
   "18": "18 · Psychedelic-Assisted Therapy — Deep but Gated",
   "19": "19 · Reading People — Nonverbal Decoding",
+  "20": "20 · Learning From Other Couples — Relationship Media",
 };
 
 // Short labels for the section jump-nav chips.
@@ -516,12 +517,13 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "17": "Thermal",
   "18": "Psychedelics",
   "19": "Reading People",
+  "20": "Couples & Relationships",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
 // keystone practices (what to actually DO), then domain practices, then risks.
 // This controls display order without renumbering the underlying data.
-const PRACTICE_SECTION_ORDER = ["0", "14", "13", "12", "15", "16", "17", "18", "1", "2", "3", "4", "5", "6", "7", "8", "9", "19", "10", "11"];
+const PRACTICE_SECTION_ORDER = ["0", "14", "13", "12", "15", "16", "17", "18", "1", "2", "3", "4", "5", "6", "7", "8", "9", "19", "20", "10", "11"];
 const sectionRank = (s: string) => {
   const i = PRACTICE_SECTION_ORDER.indexOf(s);
   return i === -1 ? 999 : i;
@@ -537,7 +539,7 @@ const PRACTICE_GROUP: Record<string, string> = {
   "1": "Practices by domain", "2": "Practices by domain", "3": "Practices by domain",
   "4": "Practices by domain", "5": "Practices by domain", "6": "Practices by domain",
   "7": "Practices by domain", "8": "Practices by domain", "9": "Practices by domain",
-  "19": "Practices by domain",
+  "19": "Practices by domain", "20": "Practices by domain",
   "10": "Risks & compounding", "11": "Risks & compounding",
 };
 
@@ -1479,6 +1481,31 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
       { cite: "Kidd, D. C., & Castano, E. (2013). Reading literary fiction improves theory of mind. Science, 342(6156), 377–380.", note: "The famous demonstration that literary fiction can boost theory of mind — included with its contested status. [Moderate — contested]", link: "https://doi.org/10.1126/science.1239918", kind: "doi" },
       { cite: "Panero, M. E., Weisberg, D. S., Black, J., et al. (2016). Does reading a single passage of literary fiction really improve theory of mind? An attempt at replication. Journal of Personality and Social Psychology, 111(5), e46–e54.", note: "The skeptic, kept on purpose: a large pre-registered replication that FAILED to reproduce the fiction-improves-theory-of-mind effect. Both sides belong in the record. [Moderate — counter-evidence]", link: scholar("Panero Weisberg Black 2016 does reading literary fiction really improve theory of mind replication"), kind: "scholar" },
       { cite: "Mar, R. A., & Oatley, K. (2008). The function of fiction is the abstraction and simulation of social experience. Perspectives on Psychological Science, 3(3), 173–192.", note: "The theoretical frame: narrative fiction as a 'simulation' of social experience that can exercise social cognition — the plausible mechanism behind any drama-watching benefit. [Moderate — theory]", link: scholar("Mar Oatley 2008 function of fiction abstraction simulation of social experience"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 20 — LEARNING FROM OTHER COUPLES ═══════════════
+  // Added in response to specific questions: do couples grow by watching OTHER
+  // couples fight, divorce, or marry? HONEST FINDING: one version is strongly
+  // validated (watching + DISCUSSING relationship media halves the divorce rate —
+  // Rogge et al.). Passively watching real fights or divorce proceedings, and
+  // watching weddings, are NOT validated as intelligence interventions — the ritual
+  // research on weddings is about bonding/awe, not intelligence. We say so plainly.
+  {
+    id: "couples-relationship-media",
+    section: "20",
+    title: "Watching + Discussing Other Couples — The Validated Version",
+    subtitle: "Bolsters clusters: interpersonal, empathic, intrapersonal (marital/parental)",
+    evidenceTag: "Moderate",
+    description:
+      "There is genuinely strong evidence for one specific version of 'learning from other couples': a randomized trial found that newlyweds who WATCHED five relationship movies (depicting other couples, including their conflicts) and then DISCUSSED them cut their 3-year divorce/separation rate roughly in half (24%→11%) — as effective as intensive therapist-led programs. The active ingredient is watch-AND-discuss, not passive viewing. Observation is a real learning channel (social learning theory), and couples' conflict behavior is readable enough to predict divorce (Gottman's observational work). IMPORTANT limits: passively watching real couples fight, or watching divorce proceedings, has NOT been tested as an intelligence intervention; and while weddings/rituals reliably build social bonding and awe, no study shows watching weddings raises any line of intelligence. We validate the discuss-relationship-media version; the rest is plausible but untested.",
+    callout: "Honest guardrail: what's validated is watching AND discussing relationship media (Rogge et al.). Passively watching couples fight, watching divorce court, or watching weddings are NOT validated as intelligence interventions — treat them as untested hypotheses, not proven practices.",
+    sources: [
+      { cite: "Rogge, R. D., Cobb, R. J., Lawrence, E., Johnson, M. D., & Bradbury, T. N. (2013). Is skills training necessary for the primary prevention of marital distress and dissolution? A 3-year experimental study of three interventions for newlyweds. Journal of Consulting and Clinical Psychology, 81(6), 949–961.", note: "The landmark RCT: watching + discussing five relationship movies halved the divorce/separation rate, matching intensive skills programs. The one strongly-validated 'learn from other couples' intervention. [Strong — RCT]", link: scholar("Rogge Cobb Lawrence Johnson Bradbury 2013 is skills training necessary primary prevention marital distress three interventions newlyweds"), kind: "scholar" },
+      { cite: "Hawkins, A. J., Blanchard, V. L., Baldwin, S. A., & Fawcett, E. B. (2008). Does marriage and relationship education work? A meta-analytic study. Journal of Consulting and Clinical Psychology, 76(5), 723–734.", note: "Meta-analysis: relationship education produces real gains in couples' communication quality and satisfaction — the broader evidence base the movie study sits within. [Moderate — meta-analysis]", link: scholar("Hawkins Blanchard Baldwin Fawcett 2008 does marriage and relationship education work meta-analytic study"), kind: "scholar" },
+      { cite: "Gottman, J. M., & Levenson, R. W. (1992). Marital processes predictive of later dissolution: Behavior, physiology, and health. Journal of Personality and Social Psychology, 63(2), 221–233.", note: "The 'Love Lab' evidence that couples' conflict behavior is readable and predictive — the reason observing conflict is an information-rich (if untested-as-training) channel. [Moderate]", link: scholar("Gottman Levenson 1992 marital processes predictive of later dissolution behavior physiology health"), kind: "scholar" },
+      { cite: "Bandura, A. (1977). Social Learning Theory. Prentice-Hall.", note: "The theoretical mechanism: people learn behaviors and their consequences by observing others (vicarious learning) — why watching other couples COULD teach, even where the specific practice is untested. [Moderate — foundational theory]", link: scholar("Bandura 1977 Social Learning Theory vicarious learning observation"), kind: "scholar" },
+      { cite: "Páez, D., Rimé, B., Basabe, N., Wlodarczyk, A., & Zumeta, L. (2015). Psychosocial effects of perceived emotional synchrony in collective gatherings. Journal of Personality and Social Psychology, 108(5), 711–729.", note: "On the weddings/rituals question: collective ceremonies reliably build social bonding, shared identity, and self-transcendent emotion (awe) — real effects, but on BONDING and wellbeing, NOT on any measured line of intelligence. [Moderate — relevant boundary]", link: scholar("Paez Rime Basabe 2015 psychosocial effects perceived emotional synchrony collective gatherings"), kind: "scholar" },
     ],
   },
 ];
