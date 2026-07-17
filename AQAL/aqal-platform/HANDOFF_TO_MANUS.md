@@ -124,3 +124,8 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
 - Respect each practice's evidence tier (Strong/Moderate/Emerging); never present Emerging as proven.
 - Never action-prescribe the psychedelic entry.
 - Keep "0 fabricated sources" literally true.
+- **A signed commitment is immutable.** Once `status="signed"`, never let the words be
+  edited or erased — only *renewed* (re-stamp the date) or fully re-recorded from scratch.
+  The UI enforces this; keep the server honest too (don't add a silent edit path).
+- The daily text is ONLY a Y/N check-in at ~8 PM local. Never repurpose that channel for
+  marketing. Honor STOP. Keep the consent copy.

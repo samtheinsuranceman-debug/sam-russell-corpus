@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
   Mic, Square, Check, Download, ShieldCheck, Target, AlertTriangle,
-  RotateCcw, Loader2, Bell, Mail, MessageSquare, PenLine,
+  RotateCcw, Loader2, Bell, Mail, MessageSquare, PenLine, Lock, RefreshCw,
 } from "lucide-react";
 import {
   COMMITMENT_QUESTIONS, buildCommitmentMarkdown, answersByKey, answeredCount,
@@ -310,6 +310,11 @@ export default function CommitmentPanel() {
     return { strengths: sorted.slice(0, 5), edges: sorted.slice(-5).reverse() };
   }, [scores]);
 
+  // The signed, frozen answers straight from the server — the source of truth once
+  // locked. We never let the editable draft state override these.
+  const storedAnswers: CommitmentAnswer[] = ((commitmentQ.data as any)?.answers as CommitmentAnswer[]) ?? [];
+  const storedMap = answersByKey(storedAnswers);
+
   const answersList: CommitmentAnswer[] = COMMITMENT_QUESTIONS
     .map((q) => ({ key: q.key, transcript: answers[q.key] || "" }))
     .filter((a) => a.transcript.trim().length > 0);
@@ -330,12 +335,30 @@ export default function CommitmentPanel() {
     );
   };
 
+  // Renew — the ONLY move on a signed agreement: re-commit for another 30 days.
+  // It re-stamps the signature date; it never edits or erases the words — that's
+  // the whole point of locking. (Daily reminders are managed in their own card.)
+  const renew = () => {
+    save.mutate(
+      { goals: goals || undefined, answers: storedAnswers, sign: true, signedName: (commitmentQ.data as any)?.signedName },
+      {
+        onSuccess: (r: any) => {
+          if (r?.error) { toast.error(r.error); return; }
+          utils.commitment.get.invalidate();
+          toast.success("Renewed. Another 30 days — same commitment, same words.");
+        },
+        onError: () => toast.error("Couldn't renew. Please try again."),
+      },
+    );
+  };
+
   const download = () => {
     const c = commitmentQ.data as any;
     const md = buildCommitmentMarkdown({
       name: (profile.data as any)?.user?.name,
       goals,
-      answers: answersList,
+      // Once signed, always render the frozen server answers — never the draft.
+      answers: isSigned ? storedAnswers : answersList,
       signedName: c?.signedName || signedName,
       signedAtISO: c?.signedAt ? new Date(c.signedAt).toISOString() : new Date().toISOString(),
       reminderChannel: c?.reminderChannel,
@@ -408,13 +431,22 @@ export default function CommitmentPanel() {
         </div>
       )}
 
-      {/* Progress */}
-      <div className="flex items-center gap-3">
-        <div className="flex-1 h-1.5 bg-background rounded-full overflow-hidden">
-          <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${(done / COMMITMENT_QUESTIONS.length) * 100}%` }} />
+      {/* Progress (drafting) or Locked banner (signed) */}
+      {isSigned ? (
+        <div className="flex items-center gap-2 rounded-lg border border-primary/25 bg-primary/[0.05] px-4 py-2.5">
+          <Lock className="w-3.5 h-3.5 text-primary" />
+          <span className="text-[12px] text-foreground/90">
+            Locked. These are the words you committed to — they don't change. That's what makes them worth returning to.
+          </span>
         </div>
-        <span className="font-mono text-[11px] text-muted-foreground whitespace-nowrap">{done} / {COMMITMENT_QUESTIONS.length} answered aloud</span>
-      </div>
+      ) : (
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-1.5 bg-background rounded-full overflow-hidden">
+            <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${(done / COMMITMENT_QUESTIONS.length) * 100}%` }} />
+          </div>
+          <span className="font-mono text-[11px] text-muted-foreground whitespace-nowrap">{done} / {COMMITMENT_QUESTIONS.length} answered aloud</span>
+        </div>
+      )}
 
       {/* Questions */}
       <div className="space-y-5">
@@ -424,13 +456,32 @@ export default function CommitmentPanel() {
               <span className="font-display text-2xl text-primary/40 leading-none">{i + 1}</span>
               <div className="flex-1">
                 <p className="text-[15px] text-foreground leading-relaxed">{q.prompt}</p>
-                <p className="text-[11px] text-muted-foreground mt-1.5">
-                  {q.wantReasons > 0 ? <span className="text-primary font-medium">Speak {q.wantReasons} reasons. </span> : null}
-                  {q.helper}
-                </p>
+                {!isSigned && (
+                  <p className="text-[11px] text-muted-foreground mt-1.5">
+                    {q.wantReasons > 0 ? <span className="text-primary font-medium">Speak {q.wantReasons} reasons. </span> : null}
+                    {q.helper}
+                  </p>
+                )}
               </div>
             </div>
-            <MicAnswer value={answers[q.key] || ""} onChange={(t) => setAns(q.key, t)} disabled={save.isPending} />
+            {isSigned ? (
+              // Locked: the words are frozen. Show them back, read-only.
+              (storedMap[q.key] ?? "").length > 0 ? (
+                <div className="rounded-lg border border-primary/20 bg-primary/[0.04] p-3">
+                  <ul className="space-y-1.5">
+                    {toBullets(storedMap[q.key]).map((b, j) => (
+                      <li key={j} className="text-[13px] text-foreground/90 leading-relaxed flex gap-2">
+                        <span className="text-primary/50 select-none">—</span><span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p className="text-[12px] text-muted-foreground italic">No answer recorded.</p>
+              )
+            ) : (
+              <MicAnswer value={answers[q.key] || ""} onChange={(t) => setAns(q.key, t)} disabled={save.isPending} />
+            )}
           </Card>
         ))}
       </div>
@@ -460,9 +511,17 @@ export default function CommitmentPanel() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground">This is yours. Download it, keep it close, and read it back the day you waver.</p>
-            <Button onClick={download} className="gap-2 bg-primary text-primary-foreground">
-              <Download className="w-4 h-4" /> Download my agreement
-            </Button>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button onClick={download} className="gap-2 bg-primary text-primary-foreground">
+                <Download className="w-4 h-4" /> Download my agreement
+              </Button>
+              <Button onClick={renew} disabled={save.isPending} variant="outline" className="gap-2">
+                {save.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />} Renew for another 30 days
+              </Button>
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              Renewing re-commits you for 30 more days — it never changes your words. To start over completely, you'd re-record every answer from scratch.
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
