@@ -217,14 +217,14 @@ function HeroSection() {
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 0.98, fontSize: 'clamp(44px,7vw,80px)', letterSpacing: '-0.01em', color: CREAM, marginTop: '20px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Reach what you're after — <em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>with less friction, less effort, and less failure.</em>
+              How predictable, protected, and consistent is your mind <em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>at getting you what you want?</em>
             </motion.h1>
 
             <motion.p
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontSize: 'clamp(17px,2.1vw,24px)', lineHeight: 1.25, color: CREAM2, margin: '14px 0 0' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Your mind is a system built to get you there. We find the <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>strengths that drive your goals</b> — and the <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>weaknesses that create friction, drain your effort, or quietly collapse the whole thing</b> — then engineer the move that changes the odds.
+              You've probably never measured it — almost no one has. <b style={{ color: CREAM, fontWeight: 600 }}>We do.</b> Then we re-engineer the mind to close the gap between where you stand today and the outcomes you're chasing.
             </motion.p>
 
             <motion.p
@@ -238,7 +238,7 @@ function HeroSection() {
               style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.6, maxWidth: '34em', margin: '18px 0 30px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Every other test hands you a number and walks away. We map your mind as a <b style={{ color: CREAM, fontWeight: 600 }}>system of 32 lines</b>, find the one weakness quietly sabotaging what you want, and <b style={{ color: CREAM, fontWeight: 600 }}>engineer the move that changes the odds</b> — backed by the research, cross-checked by a panel of independent AIs. So you get where you're going with less wasted time, effort, and frustration.
+              Every other test hands you a number and walks away. We map your mind as a <b style={{ color: CREAM, fontWeight: 600 }}>system of 32 lines</b> and run precise, surgical interventions on the ones that matter — <b style={{ color: CREAM, fontWeight: 600 }}>fortifying the strengths that drive your goals</b> and <b style={{ color: CREAM, fontWeight: 600 }}>dismantling the weaknesses that sabotage them</b> — so you reach your outcomes with the greatest result and the least time, effort, and failure. The tools, the training, and the research, individualized to your assessment and your goals.
             </motion.p>
 
             <motion.div
