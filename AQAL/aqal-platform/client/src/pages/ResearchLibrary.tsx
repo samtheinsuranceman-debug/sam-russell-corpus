@@ -491,6 +491,7 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "16": "16 · Nature Exposure — Attention Restoration",
   "17": "17 · Thermal Stress — Sauna & Cold",
   "18": "18 · Psychedelic-Assisted Therapy — Deep but Gated",
+  "19": "19 · Reading People — Nonverbal Decoding",
 };
 
 // Short labels for the section jump-nav chips.
@@ -514,12 +515,13 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "16": "Nature",
   "17": "Thermal",
   "18": "Psychedelics",
+  "19": "Reading People",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
 // keystone practices (what to actually DO), then domain practices, then risks.
 // This controls display order without renumbering the underlying data.
-const PRACTICE_SECTION_ORDER = ["0", "14", "13", "12", "15", "16", "17", "18", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+const PRACTICE_SECTION_ORDER = ["0", "14", "13", "12", "15", "16", "17", "18", "1", "2", "3", "4", "5", "6", "7", "8", "9", "19", "10", "11"];
 const sectionRank = (s: string) => {
   const i = PRACTICE_SECTION_ORDER.indexOf(s);
   return i === -1 ? 999 : i;
@@ -535,6 +537,7 @@ const PRACTICE_GROUP: Record<string, string> = {
   "1": "Practices by domain", "2": "Practices by domain", "3": "Practices by domain",
   "4": "Practices by domain", "5": "Practices by domain", "6": "Practices by domain",
   "7": "Practices by domain", "8": "Practices by domain", "9": "Practices by domain",
+  "19": "Practices by domain",
   "10": "Risks & compounding", "11": "Risks & compounding",
 };
 
@@ -1449,6 +1452,33 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
       { cite: "MacLean, K. A., Johnson, M. W., & Griffiths, R. R. (2011). Mystical experiences occasioned by psilocybin lead to increases in the personality domain of openness. Journal of Psychopharmacology, 25(11), 1453–1461.", note: "Rare evidence of durable trait change: openness — normally stable in adulthood — rose and stayed elevated. Directly relevant to 'engineering' a line, with heavy caveats. [Emerging]", link: "https://doi.org/10.1177/0269881111420188", kind: "doi" },
       { cite: "Griffiths, R. R., Johnson, M. W., Carducci, M. A., et al. (2016). Psilocybin produces substantial and sustained decreases in depression and anxiety in patients with life-threatening cancer: A randomized double-blind trial. Journal of Psychopharmacology, 30(12), 1181–1197.", note: "A rigorous double-blind RCT showing large, lasting reductions in depression and anxiety after a single supervised dose. [Emerging — clinical, supervised]", link: "https://doi.org/10.1177/0269881116675513", kind: "doi" },
       { cite: "Carhart-Harris, R. L., Erritzoe, D., Williams, T., et al. (2012). Neural correlates of the psychedelic state as determined by fMRI studies with psilocybin. PNAS, 109(6), 2138–2143.", note: "The neuroimaging basis: psilocybin decreases activity in hub regions (default-mode network), increasing brain-network flexibility. [Emerging — mechanism]", link: "https://doi.org/10.1073/pnas.1119598109", kind: "doi" },
+    ],
+  },
+
+  // ═══════════════ SECTION 19 — READING PEOPLE: NONVERBAL DECODING ═══════════════
+  // Added in response to a specific question: does watching drama with the sound OFF
+  // build intelligence? HONEST FINDING: no study has tested muted TV-watching, and we
+  // do not claim it. What IS validated: nonverbal decoding is a real, trainable skill;
+  // its benchmark test (the PONS) uses SILENT clips; and watching character drama
+  // transiently boosts theory of mind (a contested effect, both sides cited).
+  {
+    id: "read-people",
+    section: "19",
+    title: "Reading People — Nonverbal Decoding Is a Trainable Skill",
+    subtitle: "Bolsters clusters: interpersonal, empathic, intuitive",
+    evidenceTag: "Moderate",
+    description:
+      "Reading others' emotions from faces, posture, and gesture — nonverbal decoding — is a measured, trainable skill, and training reliably improves it. Notably, the gold-standard test of this ability (the PONS) uses SILENT video clips, so the science already measures exactly the capacity that watching a screen without sound would force you to use. Watching character-driven drama also transiently improves theory of mind, though the broader 'fiction improves social cognition' claim is contested. IMPORTANT: no study has tested watching TV with the sound muted as an intervention — that specific practice is a plausible but UNVALIDATED extrapolation, and we present it as such.",
+    callout: "Honest guardrail: 'watch TV with the volume off' is NOT validated by any study. What IS validated is that nonverbal decoding is real and trainable, and its benchmark test uses silent clips. Treat muted viewing as a plausible exercise, never a proven intervention.",
+    sources: [
+      { cite: "Blanch-Hartigan, D., Andrzejewski, S. A., & Hill, K. M. (2012). The effectiveness of training to improve person perception accuracy: A meta-analysis. Basic and Applied Social Psychology, 34(6), 483–498.", note: "The key evidence that the skill is trainable: a meta-analysis finding person-perception/nonverbal-decoding training reliably improves accuracy. [Moderate — meta-analysis]", link: scholar("Blanch-Hartigan Andrzejewski Hill 2012 effectiveness of training to improve person perception accuracy meta-analysis"), kind: "scholar" },
+      { cite: "Döllinger, L., Laukka, P., Högman, L. B., et al. (2021). Training emotion recognition accuracy: Results for multimodal expressions and facial micro expressions. Frontiers in Psychology, 12, 708867.", note: "A controlled training study showing brief training improved emotion-recognition accuracy across faces and micro-expressions. [Moderate]", link: "https://doi.org/10.3389/fpsyg.2021.708867", kind: "doi" },
+      { cite: "Rosenthal, R., Hall, J. A., DiMatteo, M. R., Rogers, P. L., & Archer, D. (1979). Sensitivity to Nonverbal Communication: The PONS Test. Johns Hopkins University Press.", note: "The foundational instrument — and the key link to the muted-screen idea: the PONS measures nonverbal sensitivity using SILENT face-only and body-only video clips. [Moderate — foundational]", link: scholar("Rosenthal Hall DiMatteo Rogers Archer 1979 Sensitivity to Nonverbal Communication PONS Test"), kind: "scholar" },
+      { cite: "Nowicki, S., & Duke, M. P. (1994). Individual differences in the nonverbal communication of affect: The Diagnostic Analysis of Nonverbal Accuracy Scale (DANVA). Journal of Nonverbal Behavior, 18(1), 9–35.", note: "A second well-validated measure of nonverbal decoding accuracy — establishing that this is a real, measurable individual difference. [Moderate]", link: scholar("Nowicki Duke 1994 Diagnostic Analysis of Nonverbal Accuracy DANVA Journal of Nonverbal Behavior"), kind: "scholar" },
+      { cite: "Black, J. E., & Barnes, J. L. (2015). Fiction and social cognition: The effect of viewing award-winning television dramas on theory of mind. Psychology of Aesthetics, Creativity, and the Arts, 9(4), 423–429.", note: "The closest study to the question: viewers of award-winning TV dramas scored higher on theory-of-mind tests than documentary viewers — but WITH sound. [Moderate]", link: scholar("Black Barnes 2015 fiction social cognition award-winning television dramas theory of mind"), kind: "scholar" },
+      { cite: "Kidd, D. C., & Castano, E. (2013). Reading literary fiction improves theory of mind. Science, 342(6156), 377–380.", note: "The famous demonstration that literary fiction can boost theory of mind — included with its contested status. [Moderate — contested]", link: "https://doi.org/10.1126/science.1239918", kind: "doi" },
+      { cite: "Panero, M. E., Weisberg, D. S., Black, J., et al. (2016). Does reading a single passage of literary fiction really improve theory of mind? An attempt at replication. Journal of Personality and Social Psychology, 111(5), e46–e54.", note: "The skeptic, kept on purpose: a large pre-registered replication that FAILED to reproduce the fiction-improves-theory-of-mind effect. Both sides belong in the record. [Moderate — counter-evidence]", link: scholar("Panero Weisberg Black 2016 does reading literary fiction really improve theory of mind replication"), kind: "scholar" },
+      { cite: "Mar, R. A., & Oatley, K. (2008). The function of fiction is the abstraction and simulation of social experience. Perspectives on Psychological Science, 3(3), 173–192.", note: "The theoretical frame: narrative fiction as a 'simulation' of social experience that can exercise social cognition — the plausible mechanism behind any drama-watching benefit. [Moderate — theory]", link: scholar("Mar Oatley 2008 function of fiction abstraction simulation of social experience"), kind: "scholar" },
     ],
   },
 ];
