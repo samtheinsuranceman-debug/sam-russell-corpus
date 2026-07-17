@@ -15,6 +15,7 @@ import { effectivePotential } from "@shared/effectivePotential";
 import { bottleneckRole } from "@shared/bottleneckRoles";
 import { Cite } from "@/components/Cite";
 import { citationHref } from "@shared/citations";
+import { buildTrackerMarkdown } from "@shared/behavioralTracker";
 
 // The full 32-line profile, in the order defined by the single source of truth.
 const AXIS_LABELS = ALL_AXES;
@@ -1056,6 +1057,24 @@ function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
               <p className="text-[0.7rem] text-muted-foreground/50 mt-3">
                 The prescriptions above are worth more than 30 casual minutes. This is your marriage, your health, your trajectory — read them like it. <Link href="/research-library?section=practices"><span className="text-primary/70 hover:text-primary underline cursor-pointer">Open the playbook →</span></Link>
               </p>
+              <div className="mt-4 pt-4 border-t border-white/[0.06]">
+                <p className="text-sm text-foreground/80 mb-2">Turn intention into a daily habit — dictate 5–7 min/day, upload every 30 days, and watch your profile update.</p>
+                <button
+                  onClick={() => {
+                    const md = buildTrackerMarkdown({ projections: report.projections ?? [], days: 30 });
+                    const blob = new Blob([md], { type: "text/markdown" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url; a.download = "AQAL_30-Day_Tracker.md";
+                    document.body.appendChild(a); a.click(); a.remove();
+                    URL.revokeObjectURL(url);
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold rounded-lg px-4 py-2.5 active:scale-[0.97] transition-all"
+                  style={{ background: "linear-gradient(180deg, oklch(0.78 0.12 85), oklch(0.68 0.11 78))", color: "#1a1712" }}
+                >
+                  ⬇ Download your 30-day tracker
+                </button>
+              </div>
             </div>
           )}
 
