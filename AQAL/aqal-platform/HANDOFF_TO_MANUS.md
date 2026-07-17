@@ -125,6 +125,39 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
 
 ---
 
+## 📚 LIBRARY EXPANSION (done this build) + VAULT/DRIP GATING (proposed)
+- **Done:** Research Library grew from 22 to **42 sections** — 20 net-new clusters
+  (~98 verified sources): fasting/TRE, light & circadian, VO₂max, gut–brain,
+  brain nutrition, music training, bilingualism, expressive writing, gratitude,
+  awe, purpose & meaning, volunteering, reading, deliberate practice, cognitive
+  reserve, the honest experimental frontier (float/HRV stacked protocols),
+  micro-saving, order/environment, grooming, digital minimalism. Every source is a
+  real, named study with a Google-Scholar link; every cluster carries an honest
+  evidence tier + a caveat callout (failed replications, null RCTs, and
+  observational limits are stated, not hidden). Keep expanding toward ~1,000.
+- **Proposed feature — the "vault + monthly drip" membership engine** (Claude's
+  recommendation below; NOT built yet — needs a product decision + entitlements):
+  1. Members do NOT get unrestricted library access. Instead: a one-time **timed
+     preview** (e.g. 30–60 min, on-screen countdown) to prove the depth is real,
+     then the full vault locks.
+  2. Each month, drip **5–10 personalized** research clusters/practices matched to
+     the member's goals + weakest lines (reuse `keystonePractices` goal-matching).
+  3. This is the recurring reason-to-pay: novelty + personalization + scarcity.
+  - Build notes: gate `PRACTICE_EVIDENCE` behind an entitlement check; add a
+    `library_entitlements` table (userId, previewUsedAt, monthlyUnlockedClusterIds,
+    cycleStart); a monthly job (same cron as reminders) that selects the next N
+    clusters per member; keep Claim→Evidence citations on the report ALWAYS visible
+    (never gate the specific source behind a report claim — that would break the
+    verification moat; only gate open-ended browsing).
+  - **Honesty caution (important):** do not hide the *public* Verification Ledger or
+    the per-claim citations — those are the trust engine. Gate only free-form
+    browsing of the full vault, never the evidence behind a claim the site makes.
+
+## 🖱️ MECHANICS REVIEW
+- See `MECHANICS_REVIEW.md` (in this folder) for the full front-to-back route +
+  button audit: what Claude verified (routes, build, tests) and the live
+  click-through checklist for Manus (auth/DB/keys required).
+
 ## 🔒 HONESTY CONSTRAINTS (never violate — this is the moat)
 - Never present a projection/vision as a guarantee — always "hypothetical, confidence-tiered,
   conditional on follow-through."

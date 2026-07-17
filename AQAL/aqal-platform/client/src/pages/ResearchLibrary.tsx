@@ -494,6 +494,26 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "19": "19 · Reading People — Nonverbal Decoding",
   "20": "20 · Couples, Relationships & Parenting",
   "21": "21 · Knowing vs. Doing — Making It Stick",
+  "22": "22 · Intermittent Fasting & Time-Restricted Eating",
+  "23": "23 · Light & Circadian Rhythm",
+  "24": "24 · Cardiorespiratory Fitness — VO₂max",
+  "25": "25 · The Gut–Brain Axis",
+  "26": "26 · Nutrition for the Brain",
+  "27": "27 · Music Training",
+  "28": "28 · Bilingualism & Language Learning",
+  "29": "29 · Expressive Writing & Journaling",
+  "30": "30 · Gratitude",
+  "31": "31 · Awe",
+  "32": "32 · Purpose & Meaning in Life",
+  "33": "33 · Volunteering & Generativity",
+  "34": "34 · Reading",
+  "35": "35 · Deliberate Practice & Skill Acquisition",
+  "36": "36 · Cognitive Reserve & Lifelong Learning",
+  "37": "37 · The Honest Frontier — Stacked Daily Protocols",
+  "38": "38 · Micro-Saving & Behavioral Momentum",
+  "39": "39 · Order & Environment",
+  "40": "40 · Grooming & Self-Care",
+  "41": "41 · Digital Minimalism & Attention",
 };
 
 // Short labels for the section jump-nav chips.
@@ -520,12 +540,32 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "19": "Reading People",
   "20": "Couples & Relationships",
   "21": "Making It Stick",
+  "22": "Fasting",
+  "23": "Light",
+  "24": "VO₂max",
+  "25": "Gut–Brain",
+  "26": "Brain Nutrition",
+  "27": "Music",
+  "28": "Bilingualism",
+  "29": "Journaling",
+  "30": "Gratitude",
+  "31": "Awe",
+  "32": "Purpose",
+  "33": "Volunteering",
+  "34": "Reading",
+  "35": "Deliberate Practice",
+  "36": "Cognitive Reserve",
+  "37": "The Frontier",
+  "38": "Micro-Saving",
+  "39": "Order",
+  "40": "Grooming",
+  "41": "Digital Minimalism",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
 // keystone practices (what to actually DO), then domain practices, then risks.
 // This controls display order without renumbering the underlying data.
-const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "12", "15", "16", "17", "18", "1", "2", "3", "4", "5", "6", "7", "8", "9", "19", "20", "10", "11"];
+const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "17", "18", "1", "2", "3", "4", "5", "6", "7", "8", "9", "22", "23", "25", "26", "27", "28", "29", "36", "35", "34", "30", "31", "32", "33", "38", "39", "40", "41", "19", "20", "37", "10", "11"];
 const sectionRank = (s: string) => {
   const i = PRACTICE_SECTION_ORDER.indexOf(s);
   return i === -1 ? 999 : i;
@@ -542,7 +582,15 @@ const PRACTICE_GROUP: Record<string, string> = {
   "1": "Practices by domain", "2": "Practices by domain", "3": "Practices by domain",
   "4": "Practices by domain", "5": "Practices by domain", "6": "Practices by domain",
   "7": "Practices by domain", "8": "Practices by domain", "9": "Practices by domain",
+  "22": "Practices by domain", "23": "Practices by domain", "25": "Practices by domain",
+  "26": "Practices by domain", "27": "Practices by domain", "28": "Practices by domain",
+  "29": "Practices by domain", "36": "Practices by domain", "35": "Practices by domain",
+  "34": "Practices by domain", "30": "Practices by domain", "31": "Practices by domain",
+  "32": "Practices by domain", "33": "Practices by domain", "38": "Practices by domain",
+  "39": "Practices by domain", "40": "Practices by domain", "41": "Practices by domain",
+  "24": "Keystone practices — start here",
   "19": "Practices by domain", "20": "Practices by domain",
+  "37": "The honest frontier — unproven",
   "10": "Risks & compounding", "11": "Risks & compounding",
 };
 
@@ -1625,6 +1673,384 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
       { cite: "Lally, P., van Jaarsveld, C. H. M., Potts, H. W. W., & Wardle, J. (2010). How are habits formed: Modelling habit formation in the real world. European Journal of Social Psychology, 40(6), 998–1009.", note: "The real-world habit-formation study: automaticity took a MEDIAN of ~66 days (range 18–254) — realistic expectations for how long to hold a new behavior. [Strong]", link: "https://doi.org/10.1002/ejsp.674", kind: "doi" },
       { cite: "Wood, W., & Neal, D. T. (2007). A new look at habits and the habit–goal interface. Psychological Review, 114(4), 843–863.", note: "The theory of how habits become automatic and context-cued — why stacking a new behavior onto an existing cue makes it stick. [Strong]", link: scholar("Wood Neal 2007 a new look at habits and the habit-goal interface psychological review"), kind: "scholar" },
       { cite: "Rogers, T., Milkman, K. L., John, L. K., & Norton, M. I. (2015). Beyond good intentions: Prompting people to make plans improves follow-through. Behavioral Science & Policy, 1(2), 33–41.", note: "Field evidence that simply prompting people to make a concrete plan measurably improves follow-through on their intentions. [Moderate — applied field]", link: scholar("Rogers Milkman John Norton 2015 beyond good intentions prompting people to make plans improves follow-through"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 22 — INTERMITTENT FASTING & TIME-RESTRICTED EATING ═══════════════
+  {
+    id: "fasting-tre",
+    section: "22",
+    title: "Intermittent Fasting & Time-Restricted Eating",
+    subtitle: "Bolsters clusters: interoceptive, volitional, systemic (metabolic)",
+    evidenceTag: "Moderate",
+    description:
+      "Confining eating to a compressed daily window (or fasting on some days) drives 'metabolic switching' (glucose→ketones) and circadian alignment. Real metabolic and blood-pressure effects exist — but in humans most weight benefit tracks the calorie deficit it creates, and the marquee autophagy/longevity/BDNF claims rest largely on animal data.",
+    callout: "Honest limit: the largest weight-loss RCT of 16:8 (TREAT) was null vs. regular meals, and human autophagy/longevity claims are extrapolated from animals. Treat fasting as one workable eating pattern, not a magic switch.",
+    sources: [
+      { cite: "de Cabo, R., & Mattson, M. P. (2019). Effects of intermittent fasting on health, aging, and disease. New England Journal of Medicine, 381(26), 2541–2551.", note: "Landmark review framing metabolic switching, stress resistance, and (largely animal-derived) autophagy/neuroprotection. [Moderate — review]", link: scholar("de Cabo Mattson effects of intermittent fasting on health aging and disease NEJM 2019"), kind: "scholar" },
+      { cite: "Sutton, E. F., et al. (2018). Early time-restricted feeding improves insulin sensitivity, blood pressure, and oxidative stress even without weight loss in men with prediabetes. Cell Metabolism, 27(6), 1212–1221.", note: "Crossover RCT: a 6-hour early eating window improved insulin sensitivity and blood pressure independent of weight loss. [Strong]", link: scholar("Sutton Peterson early time-restricted feeding insulin sensitivity prediabetes Cell Metabolism 2018"), kind: "scholar" },
+      { cite: "Wilkinson, M. J., et al. (2020). Ten-hour time-restricted eating reduces weight, blood pressure, and atherogenic lipids in patients with metabolic syndrome. Cell Metabolism, 31(1), 92–104.", note: "A 10-hour window over 12 weeks lowered weight, waist, BP and atherogenic lipids in metabolic-syndrome patients (single-arm). [Moderate]", link: scholar("Wilkinson Panda ten-hour time-restricted eating metabolic syndrome Cell Metabolism 2020"), kind: "scholar" },
+      { cite: "Lowe, D. A., et al. (2020). Effects of time-restricted eating on weight loss and other metabolic parameters (TREAT randomized clinical trial). JAMA Internal Medicine, 180(11), 1491–1499.", note: "The honest counterweight: 16:8 produced NO significant weight or cardiometabolic advantage over consistent meals. [Strong — null RCT]", link: scholar("Lowe TREAT randomized clinical trial time-restricted eating JAMA Internal Medicine 2020"), kind: "scholar" },
+      { cite: "Moon, S., et al. (2020). Beneficial effects of time-restricted eating on metabolic diseases: a systematic review and meta-analysis. Nutrients, 12(5), 1267.", note: "Meta-analysis of RCTs: TRE modestly reduced body weight and improved some metabolic markers. [Moderate — meta-analysis]", link: scholar("Moon beneficial effects time-restricted eating metabolic diseases systematic review meta-analysis Nutrients 2020"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 23 — LIGHT & CIRCADIAN RHYTHM ═══════════════
+  {
+    id: "light-circadian",
+    section: "23",
+    title: "Light & Circadian Rhythm",
+    subtitle: "Bolsters clusters: interoceptive, emotional, intrapersonal",
+    evidenceTag: "Moderate",
+    description:
+      "Getting bright light (ideally morning sunlight) and minimizing light at night entrains the circadian clock. Best-established for mood — bright-light therapy rivals antidepressants for seasonal and non-seasonal depression — with solid effects on sleep and alertness, and weaker, mostly observational links to metabolism.",
+    callout: "Light therapy for depression and circadian entrainment are RCT-backed; the metabolic/weight claims are correlational, and much popular advice about exact lux and timing outruns the controlled evidence.",
+    sources: [
+      { cite: "Golden, R. N., et al. (2005). The efficacy of light therapy in the treatment of mood disorders: a review and meta-analysis of the evidence. American Journal of Psychiatry, 162(4), 656–662.", note: "Meta-analysis: bright-light and dawn-simulation produced effect sizes comparable to antidepressant drugs for SAD and non-seasonal depression. [Strong — meta-analysis]", link: scholar("Golden efficacy of light therapy treatment of mood disorders review meta-analysis American Journal of Psychiatry 2005"), kind: "scholar" },
+      { cite: "Lam, R. W., et al. (2016). Efficacy of bright light treatment, fluoxetine, and the combination in patients with nonseasonal major depressive disorder: a randomized clinical trial. JAMA Psychiatry, 73(1), 56–63.", note: "RCT: morning 10,000-lux light (especially with fluoxetine) beat placebo for non-seasonal major depression. [Strong]", link: scholar("Lam bright light fluoxetine nonseasonal major depressive disorder randomized clinical trial JAMA Psychiatry 2016"), kind: "scholar" },
+      { cite: "Blume, C., Garbazza, C., & Spitschan, M. (2019). Effects of light on human circadian rhythms, sleep and mood. Somnologie, 23(3), 147–156.", note: "Review of how light timing, intensity and spectrum entrain the clock and shape sleep, alertness and mood via ipRGCs. [Moderate — review]", link: scholar("Blume Garbazza Spitschan effects of light on human circadian rhythms sleep and mood Somnologie 2019"), kind: "scholar" },
+      { cite: "Burns, A. C., et al. (2023). Day and night light exposure are associated with psychiatric disorders: an objective light study in >85,000 people. Nature Mental Health, 1, 853–862.", note: "UK Biobank: more daytime light → lower risk; more night light → higher risk across depression, anxiety, PTSD, psychosis. [Moderate — cross-sectional]", link: scholar("Burns day and night light exposure psychiatric disorders UK Biobank Nature Mental Health 2023"), kind: "scholar" },
+      { cite: "Reid, K. J., et al. (2014). Timing and intensity of light correlate with body weight in adults. PLOS ONE, 9(4), e92251.", note: "Actigraphy cohort: earlier daily bright-light exposure independently associated with lower BMI. [Emerging — observational]", link: scholar("Reid Zee timing and intensity of light correlate with body weight in adults PLOS ONE 2014"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 24 — CARDIORESPIRATORY FITNESS (VO₂max) ═══════════════
+  {
+    id: "vo2max-fitness",
+    section: "24",
+    title: "Cardiorespiratory Fitness — VO₂max",
+    subtitle: "Bolsters clusters: interoceptive, volitional, systemic, most cognitive lines",
+    evidenceTag: "Strong",
+    description:
+      "VO₂max / cardiorespiratory fitness is among the strongest modifiable predictors of all-cause mortality and cognition anywhere in this library. The mortality gradient is steep, dose-dependent, and shows no upper limit — improving your fitness is one of the best-evidenced longevity 'levers' known.",
+    callout: "The mortality data are observational (fit people differ in many ways), so they prove a robust association, not a clean causal death-rate reduction. But RCTs confirm exercise raises both fitness and cognition — the practice is as close to a sure thing as this library contains.",
+    sources: [
+      { cite: "Mandsager, K., et al. (2018). Association of cardiorespiratory fitness with long-term mortality among adults undergoing exercise treadmill testing. JAMA Network Open, 1(6), e183605.", note: "122,007-patient cohort: fitness inversely related to mortality with no upper limit — 'elite' fitness ~80% lower risk vs. the least fit. [Strong]", link: scholar("Mandsager association of cardiorespiratory fitness with long-term mortality exercise treadmill testing JAMA Network Open 2018"), kind: "scholar" },
+      { cite: "Kodama, S., et al. (2009). Cardiorespiratory fitness as a quantitative predictor of all-cause mortality and cardiovascular events in healthy men and women: a meta-analysis. JAMA, 301(19), 2024–2035.", note: "Each 1-MET higher fitness ≈ 13% lower all-cause mortality and 15% lower cardiovascular events. [Strong — meta-analysis]", link: scholar("Kodama cardiorespiratory fitness quantitative predictor all-cause mortality cardiovascular events meta-analysis JAMA 2009"), kind: "scholar" },
+      { cite: "Blair, S. N., et al. (1989). Physical fitness and all-cause mortality: a prospective study of healthy men and women. JAMA, 262(17), 2395–2401.", note: "Foundational cohort (13,344 adults): a steep mortality gradient across treadmill-fitness quintiles in both sexes. [Strong — foundational]", link: scholar("Blair physical fitness and all-cause mortality prospective study healthy men and women JAMA 1989"), kind: "scholar" },
+      { cite: "Ross, R., et al. (2016). Importance of assessing cardiorespiratory fitness in clinical practice: a case for fitness as a clinical vital sign — AHA scientific statement. Circulation, 134(24), e653–e699.", note: "American Heart Association argues fitness is an independent risk marker that should be measured like a vital sign. [Strong — consensus statement]", link: scholar("Ross importance of assessing cardiorespiratory fitness clinical vital sign scientific statement American Heart Association Circulation 2016"), kind: "scholar" },
+      { cite: "Northey, J. M., et al. (2018). Exercise interventions for cognitive function in adults older than 50: a systematic review with meta-analysis. British Journal of Sports Medicine, 52(3), 154–160.", note: "Meta-analysis of RCTs: aerobic + resistance exercise significantly improved cognition (SMD 0.29) in adults over 50. [Strong — meta-analysis]", link: scholar("Northey exercise interventions for cognitive function in adults older than 50 systematic review meta-analysis British Journal of Sports Medicine 2018"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 25 — THE GUT–BRAIN AXIS ═══════════════
+  {
+    id: "gut-brain-axis",
+    section: "25",
+    title: "The Gut–Brain Axis",
+    subtitle: "Bolsters clusters: emotional, interoceptive, intrapersonal",
+    evidenceTag: "Emerging",
+    description:
+      "Diet (fermented foods, fiber), probiotics, and microbiome composition influence mood, anxiety and cognition via immune, vagal and metabolite (short-chain-fatty-acid, neurotransmitter) pathways. A genuine, fast-moving field — with a landmark RCT showing fermented foods raise microbiome diversity and lower inflammation — but clinically still early.",
+    callout: "Human causal evidence is thin: most depression/microbiome links are cross-sectional (reverse causation unresolved), probiotic effects are small and strain-specific, and no 'psychobiotic' is an established treatment. Promising, not proven.",
+    sources: [
+      { cite: "Cryan, J. F., et al. (2019). The microbiota-gut-brain axis. Physiological Reviews, 99(4), 1877–2013.", note: "Definitive review of the bidirectional pathways (vagus, immune, tryptophan, SCFAs) linking microbiota to brain and behavior. [Moderate — review]", link: scholar("Cryan Dinan the microbiota-gut-brain axis Physiological Reviews 2019"), kind: "scholar" },
+      { cite: "Wastyk, H. C., et al. (2021). Gut-microbiota-targeted diets modulate human immune status. Cell, 184(16), 4137–4153.", note: "Stanford RCT: a fermented-food diet raised microbiome diversity and lowered 19 inflammatory markers; a high-fiber diet did not. [Moderate — RCT]", link: scholar("Wastyk Sonnenburg Gardner gut-microbiota-targeted diets modulate human immune status fermented foods Cell 2021"), kind: "scholar" },
+      { cite: "Tillisch, K., et al. (2013). Consumption of fermented milk product with probiotic modulates brain activity. Gastroenterology, 144(7), 1394–1401.", note: "Small RCT: four weeks of probiotic fermented milk altered fMRI brain responses to an emotional task in healthy women. [Emerging]", link: scholar("Tillisch Mayer consumption of fermented milk product with probiotic modulates brain activity Gastroenterology 2013"), kind: "scholar" },
+      { cite: "Valles-Colomer, M., et al. (2019). The neuroactive potential of the human gut microbiota in quality of life and depression. Nature Microbiology, 4(4), 623–632.", note: "Two large cohorts (~2,100): specific microbes depleted in depression; microbial dopamine/GABA pathways linked to mental quality of life (correlational). [Moderate]", link: scholar("Valles-Colomer neuroactive potential of the human gut microbiota in quality of life and depression Nature Microbiology 2019"), kind: "scholar" },
+      { cite: "Liu, R. T., Walsh, R. F. L., & Sheehan, A. E. (2019). Prebiotics and probiotics for depression and anxiety: a systematic review and meta-analysis of controlled clinical trials. Neuroscience & Biobehavioral Reviews, 102, 13–23.", note: "Meta-analysis of 34 trials: probiotics gave small but significant benefits for depression/anxiety; prebiotics did not beat placebo. [Moderate — meta-analysis]", link: scholar("Liu Walsh Sheehan prebiotics and probiotics for depression and anxiety systematic review meta-analysis Neuroscience Biobehavioral Reviews 2019"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 26 — NUTRITION FOR THE BRAIN ═══════════════
+  {
+    id: "brain-nutrition",
+    section: "26",
+    title: "Nutrition for the Brain",
+    subtitle: "Bolsters clusters: most cognitive lines, meta-cognitive, interoceptive",
+    evidenceTag: "Moderate",
+    description:
+      "Dietary patterns (MIND / Mediterranean), omega-3 DHA, and even hydration status are linked to cognition and dementia risk. Strong observational signal plus one positive Mediterranean-diet RCT (PREDIMED); the diet slows and associates with decline rather than curing it.",
+    callout: "Most robust data are observational; randomized DHA-supplement trials in established Alzheimer's have generally FAILED to slow decline, and no diet has been proven to prevent dementia. Eat for the trend, not a guarantee.",
+    sources: [
+      { cite: "Morris, M. C., et al. (2015). MIND diet slows cognitive decline with aging. Alzheimer's & Dementia, 11(9), 1015–1022.", note: "Higher MIND-diet adherence tracked with slower cognitive decline over ~4.7 years — equivalent to being 7.5 years younger. [Moderate — cohort]", link: scholar("Morris 2015 MIND diet slows cognitive decline with aging Alzheimer's Dementia"), kind: "scholar" },
+      { cite: "Morris, M. C., et al. (2015). MIND diet associated with reduced incidence of Alzheimer's disease. Alzheimer's & Dementia, 11(9), 1007–1014.", note: "High MIND adherence associated with 53% lower Alzheimer's incidence; even moderate adherence ~35% lower. [Moderate — cohort]", link: scholar("Morris 2015 MIND diet associated with reduced incidence Alzheimer's disease"), kind: "scholar" },
+      { cite: "Valls-Pedret, C., et al. (2015). Mediterranean diet and age-related cognitive decline: a randomized clinical trial. JAMA Internal Medicine, 175(7), 1094–1103.", note: "In the PREDIMED RCT, a Mediterranean diet with olive oil or nuts improved cognition vs. a low-fat control over ~4 years. [Strong — RCT]", link: scholar("Valls-Pedret 2015 Mediterranean diet age-related cognitive decline randomized clinical trial JAMA Internal Medicine"), kind: "scholar" },
+      { cite: "Yurko-Mauro, K., et al. (2010). Beneficial effects of docosahexaenoic acid on cognition in age-related cognitive decline (MIDAS). Alzheimer's & Dementia, 6(6), 456–464.", note: "900 mg/day DHA for 24 weeks improved learning and episodic memory in healthy older adults with mild memory complaints. [Moderate — RCT, healthy elderly]", link: scholar("Yurko-Mauro 2010 docosahexaenoic acid cognition age-related cognitive decline MIDAS"), kind: "scholar" },
+      { cite: "Adan, A. (2012). Cognitive performance and dehydration. Journal of the American College of Nutrition, 31(2), 71–78.", note: "Review: mild dehydration (~2% body mass) impairs attention, psychomotor speed, and short-term memory. [Moderate — review]", link: scholar("Adan 2012 Cognitive Performance and Dehydration Journal American College Nutrition"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 27 — MUSIC TRAINING ═══════════════
+  {
+    id: "music-training",
+    section: "27",
+    title: "Learning an Instrument",
+    subtitle: "Bolsters clusters: musical, bodily-kinesthetic, meta-cognitive, auditory",
+    evidenceTag: "Moderate",
+    description:
+      "Learning an instrument reliably produces structural and functional brain change and near-transfer to auditory-motor skills, with a small IQ effect in the one clean childhood RCT. Broad 'music makes you smarter' claims are weaker and shrink under rigorous controls.",
+    callout: "Far transfer is the honest weak point: a rigorous meta-analysis (Sala & Gobet) finds little-to-no reliable transfer from music training to general IQ or academics once active control groups are used. Learn music for music — the brain changes are a bonus, not a cognitive shortcut.",
+    sources: [
+      { cite: "Schellenberg, E. G. (2004). Music lessons enhance IQ. Psychological Science, 15(8), 511–514.", note: "RCT: 6-year-olds randomized to keyboard/voice lessons gained ~2.7 more full-scale IQ points than drama/no-lesson controls. [Strong — small RCT]", link: scholar("Schellenberg 2004 Music Lessons Enhance IQ Psychological Science"), kind: "scholar" },
+      { cite: "Hyde, K. L., et al. (2009). Musical training shapes structural brain development. Journal of Neuroscience, 29(10), 3019–3025.", note: "Longitudinal: 15 months of keyboard lessons in children produced measurable structural brain change correlated with skill gains. [Strong — longitudinal, controlled]", link: scholar("Hyde 2009 Musical Training Shapes Structural Brain Development Journal of Neuroscience"), kind: "scholar" },
+      { cite: "Gaser, C., & Schlaug, G. (2003). Brain structures differ between musicians and non-musicians. Journal of Neuroscience, 23(27), 9240–9245.", note: "Gray-matter volume in motor, auditory and visuospatial regions was greater in professional than amateur than non-musicians. [Moderate — cross-sectional]", link: scholar("Gaser Schlaug 2003 Brain Structures Differ between Musicians and Non-Musicians"), kind: "scholar" },
+      { cite: "Bugos, J. A., et al. (2007). Individualized piano instruction enhances executive functioning and working memory in older adults. Aging & Mental Health, 11(4), 464–471.", note: "RCT: six months of piano lessons improved Trail-Making and Digit-Symbol performance in adults 60–85 vs. controls. [Moderate — small RCT]", link: scholar("Bugos 2007 Individualized Piano Instruction executive functioning working memory older adults"), kind: "scholar" },
+      { cite: "Sala, G., & Gobet, F. (2017). When the music's over. Does music skill transfer to children's and young adolescents' cognitive and academic skills? A meta-analysis. Educational Research Review, 20, 55–67.", note: "The honest counterweight: overall far-transfer effect was tiny (d≈0.16) and shrank toward zero with active control groups. [Strong — skeptical meta-analysis]", link: scholar("Sala Gobet 2017 When the music's over music skill transfer meta-analysis Educational Research Review"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 28 — BILINGUALISM & LANGUAGE LEARNING ═══════════════
+  {
+    id: "bilingualism",
+    section: "28",
+    title: "Bilingualism & Language Learning",
+    subtitle: "Bolsters clusters: linguistic, meta-cognitive (cognitive reserve)",
+    evidenceTag: "Emerging",
+    description:
+      "Lifelong bilingualism is associated with a later age of dementia onset (the cognitive-reserve hypothesis), with large clinic cohorts showing a ~4–4.5 year delay even controlling for education. The once-popular 'bilingual executive-function advantage' in healthy adults, however, is now seriously contested.",
+    callout: "This is the field's honest scandal: the healthy-adult bilingual advantage has largely FAILED to replicate, shows strong publication bias, and near-null meta-analytic effects. The dementia-delay findings are retrospective and could be confounded — learn a language for its own sake, not a guaranteed brain boost.",
+    sources: [
+      { cite: "Bialystok, E., Craik, F. I. M., & Freedman, M. (2007). Bilingualism as a protection against the onset of symptoms of dementia. Neuropsychologia, 45(2), 459–464.", note: "Retrospective clinic sample: bilinguals showed dementia symptoms ~4 years later than monolinguals. [Moderate — retrospective, confound-prone]", link: scholar("Bialystok Craik Freedman 2007 Bilingualism protection onset symptoms dementia Neuropsychologia"), kind: "scholar" },
+      { cite: "Alladi, S., et al. (2013). Bilingualism delays age at onset of dementia, independent of education and immigration status. Neurology, 81(22), 1938–1944.", note: "Large Indian cohort (n=648): bilinguals developed dementia ~4.5 years later, even in illiterate patients. [Moderate — strong confound controls]", link: scholar("Alladi 2013 Bilingualism delays age at onset of dementia independent of education immigration Neurology"), kind: "scholar" },
+      { cite: "Paap, K. R., & Greenberg, Z. I. (2013). There is no coherent evidence for a bilingual advantage in executive processing. Cognitive Psychology, 66(2), 232–258.", note: "Across three studies and many measures, bilinguals showed no consistent executive-function advantage. [Strong — skeptical/null]", link: scholar("Paap Greenberg 2013 no coherent evidence bilingual advantage executive processing Cognitive Psychology"), kind: "scholar" },
+      { cite: "de Bruin, A., Treccani, B., & Della Sala, S. (2015). Cognitive advantage in bilingualism: an example of publication bias? Psychological Science, 26(1), 99–107.", note: "Studies supporting a bilingual advantage were far more likely to be published than null/negative ones. [Strong — publication-bias evidence]", link: scholar("de Bruin Treccani Della Sala 2015 Cognitive Advantage in Bilingualism publication bias Psychological Science"), kind: "scholar" },
+      { cite: "Lehtonen, M., et al. (2018). Is bilingualism associated with enhanced executive functioning in adults? A meta-analytic review. Psychological Bulletin, 144(4), 394–425.", note: "Meta-analysis of 152 studies: tiny advantages vanished after correcting for publication bias — no reliable adult benefit. [Strong — meta-analysis, null]", link: scholar("Lehtonen 2018 Is Bilingualism Associated With Enhanced Executive Functioning Adults Meta-Analytic Review Psychological Bulletin"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 29 — EXPRESSIVE WRITING & JOURNALING ═══════════════
+  {
+    id: "expressive-writing",
+    section: "29",
+    title: "Expressive Writing & Journaling",
+    subtitle: "Bolsters clusters: intrapersonal, emotional, linguistic",
+    evidenceTag: "Moderate",
+    description:
+      "The Pennebaker paradigm — writing 15–20 minutes about emotional or traumatic events over several days — yields small but replicated benefits to physical health, immune markers, and even working-memory capacity. It is one of the cheapest interventions with real controlled evidence behind it.",
+    callout: "Effects are real but SMALL and heterogeneous (the largest meta-analysis puts r≈.075), inconsistent in clinical populations, and the writing reliably causes short-term distress spikes. It is a tool, not a substitute for therapy.",
+    sources: [
+      { cite: "Pennebaker, J. W., & Beall, S. K. (1986). Confronting a traumatic event: toward an understanding of inhibition and disease. Journal of Abnormal Psychology, 95(3), 274–281.", note: "Founding study: writing about trauma raised short-term distress but cut health-center visits over the next six months. [Moderate — foundational]", link: scholar("Pennebaker Beall 1986 Confronting a traumatic event inhibition and disease Journal of Abnormal Psychology"), kind: "scholar" },
+      { cite: "Pennebaker, J. W., Kiecolt-Glaser, J. K., & Glaser, R. (1988). Disclosure of traumas and immune function: health implications for psychotherapy. Journal of Consulting and Clinical Psychology, 56(2), 239–245.", note: "Emotional-disclosure writing improved cellular immune-function measures and lowered health-center visits vs. controls. [Moderate — RCT, immune outcomes]", link: scholar("Pennebaker Kiecolt-Glaser Glaser 1988 Disclosure of Traumas and Immune Function"), kind: "scholar" },
+      { cite: "Klein, K., & Boals, A. (2001). Expressive writing can increase working memory capacity. Journal of Experimental Psychology: General, 130(3), 520–533.", note: "Two studies: writing about emotional experiences raised working-memory capacity and reduced intrusive thoughts weeks later. [Moderate]", link: scholar("Klein Boals 2001 Expressive Writing Can Increase Working Memory Capacity Journal of Experimental Psychology General"), kind: "scholar" },
+      { cite: "Smyth, J. M. (1998). Written emotional expression: effect sizes, outcome types, and moderating variables. Journal of Consulting and Clinical Psychology, 66(1), 174–184.", note: "Meta-analysis (13 studies): overall d≈.47 improvement across physical health, well-being, and functioning in healthy participants. [Strong — meta-analysis]", link: scholar("Smyth 1998 Written emotional expression effect sizes outcome types moderating variables"), kind: "scholar" },
+      { cite: "Frattaroli, J. (2006). Experimental disclosure and its moderators: a meta-analysis. Psychological Bulletin, 132(6), 823–865.", note: "The larger meta-analysis (146 RCTs): disclosure works, but the average effect is small (r≈.075). [Strong — tempers the effect size]", link: scholar("Frattaroli 2006 Experimental disclosure and its moderators a meta-analysis Psychological Bulletin"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 30 — GRATITUDE ═══════════════
+  {
+    id: "gratitude",
+    section: "30",
+    title: "Gratitude Practice",
+    subtitle: "Bolsters clusters: emotional, intrapersonal, interpersonal",
+    evidenceTag: "Moderate",
+    description:
+      "Deliberately noticing and recording what you are thankful for has robust links to positive affect and better sleep, from the landmark Emmons & McCullough experiments onward. The clinical effects on depression and anxiety are real but small once active control conditions are used.",
+    callout: "The honest caveat: benefits shrink sharply when gratitude is compared to an active alternative activity rather than a no-treatment or 'list your hassles' control, and small-trial publication bias likely inflates the reported effects.",
+    sources: [
+      { cite: "Emmons, R. A., & McCullough, M. E. (2003). Counting blessings versus burdens: an experimental investigation of gratitude and subjective well-being in daily life. Journal of Personality and Social Psychology, 84(2), 377–389.", note: "Landmark RCT: weekly/daily gratitude lists raised positive affect and some well-being/health measures vs. hassles and neutral controls. [Strong — landmark]", link: scholar("Emmons McCullough 2003 counting blessings versus burdens gratitude subjective well-being"), kind: "scholar" },
+      { cite: "Wood, A. M., Joseph, S., Lloyd, J., & Atkins, S. (2009). Gratitude influences sleep through the mechanism of pre-sleep cognitions. Journal of Psychosomatic Research, 66(1), 43–48.", note: "Trait gratitude predicted better sleep, mediated by more positive and fewer negative pre-sleep thoughts. [Moderate — mediation]", link: scholar("Wood Joseph Lloyd Atkins 2009 gratitude influences sleep pre-sleep cognitions"), kind: "scholar" },
+      { cite: "Wood, A. M., Froh, J. J., & Geraghty, A. W. A. (2010). Gratitude and well-being: a review and theoretical integration. Clinical Psychology Review, 30(7), 890–905.", note: "Review concluding gratitude is strongly, possibly causally, related to well-being across relationships, health, and meaning. [Moderate — review]", link: scholar("Wood Froh Geraghty 2010 gratitude well-being review theoretical integration"), kind: "scholar" },
+      { cite: "Davis, D. E., et al. (2016). Thankful for the little things: a meta-analysis of gratitude interventions. Journal of Counseling Psychology, 63(1), 20–31.", note: "Gratitude interventions beat measurement-only controls but showed little advantage over alternative-activity conditions. [Strong — meta-analysis]", link: scholar("Davis Choe Meyers 2016 thankful for the little things meta-analysis gratitude interventions"), kind: "scholar" },
+      { cite: "Cregg, D. R., & Cheavens, J. S. (2021). Gratitude interventions: effective self-help? A meta-analysis of the impact on symptoms of depression and anxiety. Journal of Happiness Studies, 22(1), 413–445.", note: "Across 27 studies (N=3,675): a small significant effect on combined depression/anxiety, and no significant effect on anxiety alone. [Strong — meta-analysis]", link: scholar("Cregg Cheavens 2021 gratitude interventions effective self-help meta-analysis depression anxiety"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 31 — AWE ═══════════════
+  {
+    id: "awe",
+    section: "31",
+    title: "Awe",
+    subtitle: "Bolsters clusters: existential, moral, interpersonal, aesthetic",
+    evidenceTag: "Moderate",
+    description:
+      "The emotion evoked by vast, perspective-shifting stimuli — a mountain range, a cathedral, a night sky. Experimental and dispositional evidence links awe to a diminished 'small self,' greater generosity and humility, and (more preliminarily) lower inflammation.",
+    callout: "The inflammation finding is a single cross-sectional study, and many prosociality effects come from brief lab inductions whose real-world durability is unproven. Awe is a promising, cheap lever — not yet a validated protocol.",
+    sources: [
+      { cite: "Keltner, D., & Haidt, J. (2003). Approaching awe, a moral, spiritual, and aesthetic emotion. Cognition and Emotion, 17(2), 297–314.", note: "Foundational account defining awe by perceived vastness plus a need for accommodation. [Moderate — theoretical]", link: scholar("Keltner Haidt 2003 approaching awe moral spiritual aesthetic emotion"), kind: "scholar" },
+      { cite: "Rudd, M., Vohs, K. D., & Aaker, J. (2012). Awe expands people's perception of time, alters decision making, and enhances well-being. Psychological Science, 23(10), 1130–1136.", note: "Across three experiments, awe made time feel more available, boosted willingness to help, and raised life satisfaction. [Moderate — experimental]", link: scholar("Rudd Vohs Aaker 2012 awe expands perception of time well-being"), kind: "scholar" },
+      { cite: "Piff, P. K., et al. (2015). Awe, the small self, and prosocial behavior. Journal of Personality and Social Psychology, 108(6), 883–899.", note: "Five studies (N=2,078): induced awe (even standing among tall trees) increased generosity and ethical choice via a diminished self. [Strong — multi-study]", link: scholar("Piff Dietze Feinberg 2015 awe small self prosocial behavior"), kind: "scholar" },
+      { cite: "Stellar, J. E., et al. (2015). Positive affect and markers of inflammation: discrete positive emotions predict lower levels of inflammatory cytokines. Emotion, 15(2), 129–133.", note: "Dispositional awe was the strongest positive-emotion predictor of lower IL-6. [Emerging — single cross-sectional]", link: scholar("Stellar John-Henderson 2015 positive affect markers inflammation discrete positive emotions cytokines"), kind: "scholar" },
+      { cite: "Bai, Y., et al. (2017). Awe, the diminished self, and collective engagement: universals and cultural variations in the small self. Journal of Personality and Social Psychology, 113(2), 185–209.", note: "Six studies (N=2,137) in the US and China: awe produces a diminished self and greater collective engagement across cultures. [Strong — cross-cultural]", link: scholar("Bai Maruskin Keltner 2017 awe diminished self collective engagement small self"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 32 — PURPOSE & MEANING IN LIFE ═══════════════
+  {
+    id: "purpose-meaning",
+    section: "32",
+    title: "Purpose & Meaning in Life",
+    subtitle: "Bolsters clusters: existential, volitional, intrapersonal",
+    evidenceTag: "Strong",
+    description:
+      "A sense of direction and life purpose shows remarkably consistent prospective associations with lower all-cause mortality and reduced Alzheimer's/cognitive-decline risk, pooled across cohorts in a meta-analysis. Of the 'meaning' variables, this is the best-evidenced.",
+    callout: "The honest caveat is reverse causation and confounding: these are observational cohorts, so early illness, cognitive decline, or depression can lower purpose scores — and no randomized trial has shown that raising purpose extends life.",
+    sources: [
+      { cite: "Boyle, P. A., et al. (2009). Purpose in life is associated with mortality among community-dwelling older persons. Psychosomatic Medicine, 71(5), 574–579.", note: "In ~1,238 older adults, higher purpose predicted roughly half the mortality risk over follow-up. [Strong — prospective cohort]", link: scholar("Boyle Barnes Buchman Bennett 2009 purpose in life mortality community-dwelling older persons"), kind: "scholar" },
+      { cite: "Boyle, P. A., et al. (2010). Effect of a purpose in life on risk of incident Alzheimer disease and mild cognitive impairment in community-dwelling older persons. Archives of General Psychiatry, 67(3), 304–310.", note: "In >900 initially non-demented elders, greater purpose was associated with substantially lower risk of Alzheimer's and MCI. [Strong — prospective cohort]", link: scholar("Boyle Buchman 2010 purpose in life incident Alzheimer disease mild cognitive impairment"), kind: "scholar" },
+      { cite: "Hill, P. L., & Turiano, N. A. (2014). Purpose in life as a predictor of mortality across adulthood. Psychological Science, 25(7), 1482–1486.", note: "In the MIDUS sample, higher purpose predicted lower mortality over 14 years across all adult ages. [Strong — prospective cohort]", link: scholar("Hill Turiano 2014 purpose in life predictor mortality across adulthood"), kind: "scholar" },
+      { cite: "Cohen, R., Bavishi, C., & Rozanski, A. (2016). Purpose in life and its relationship to all-cause mortality and cardiovascular events: a meta-analysis. Psychosomatic Medicine, 78(2), 122–133.", note: "Pooled cohorts: high purpose associated with reduced all-cause mortality and cardiovascular events. [Strong — meta-analysis]", link: scholar("Cohen Bavishi Rozanski 2016 purpose in life all-cause mortality cardiovascular events meta-analysis"), kind: "scholar" },
+      { cite: "Alimujiang, A., et al. (2019). Association between life purpose and mortality among US adults older than 50 years. JAMA Network Open, 2(5), e194270.", note: "In 6,985 adults over 50, the lowest life-purpose group had markedly higher all-cause mortality than the highest. [Strong — prospective cohort]", link: scholar("Alimujiang 2019 association life purpose mortality US adults older than 50 JAMA Network Open"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 33 — VOLUNTEERING & GENERATIVITY ═══════════════
+  {
+    id: "volunteering",
+    section: "33",
+    title: "Volunteering & Generativity",
+    subtitle: "Bolsters clusters: community-founding, moral, interpersonal, existential",
+    evidenceTag: "Moderate",
+    description:
+      "Formal helping and contribution to others is linked, across cohorts and meta-analyses, to lower mortality and depression and higher well-being — especially in older adults and when the motive is genuinely other-oriented.",
+    callout: "The mortality/health benefits come almost entirely from observational studies (healthy-volunteer selection bias), and the few randomized tests have not confirmed them. Benefits also concentrate in older adults and in those volunteering for other-oriented reasons.",
+    sources: [
+      { cite: "Musick, M. A., & Wilson, J. (2003). Volunteering and depression: the role of psychological and social resources in different age groups. Social Science & Medicine, 56(2), 259–269.", note: "Volunteering lowered depression for adults over 65 (not younger adults), partly via social integration. [Moderate — cohort, age-moderated]", link: scholar("Musick Wilson 2003 volunteering depression psychological social resources age groups"), kind: "scholar" },
+      { cite: "Konrath, S., et al. (2012). Motives for volunteering are associated with mortality risk in older adults. Health Psychology, 31(1), 87–96.", note: "Volunteering predicted lower 4-year mortality — but only for those with other-oriented (not self-oriented) motives. [Moderate — prospective cohort]", link: scholar("Konrath Fuhrel-Forbis 2012 motives for volunteering mortality risk older adults"), kind: "scholar" },
+      { cite: "Okun, M. A., Yeung, E. W., & Brown, S. (2013). Volunteering by older adults and risk of mortality: a meta-analysis. Psychology and Aging, 28(2), 564–577.", note: "Meta-analysis: volunteering associated with ~24% lower mortality risk in adjusted models among adults 55+. [Strong — meta-analysis]", link: scholar("Okun Yeung Brown 2013 volunteering older adults risk of mortality meta-analysis"), kind: "scholar" },
+      { cite: "Jenkinson, C. E., et al. (2013). Is volunteering a public health intervention? A systematic review and meta-analysis of the health and survival of volunteers. BMC Public Health, 13, 773.", note: "Cohort meta-analysis: lower mortality (RR ~0.78) and better depression/well-being — but experimental studies did not confirm it. [Strong — systematic review]", link: scholar("Jenkinson 2013 is volunteering a public health intervention systematic review meta-analysis health survival volunteers"), kind: "scholar" },
+      { cite: "Yeung, J. W. K., Zhang, Z., & Kim, T. Y. (2018). Volunteering and health benefits in general adults: cumulative effects and forms. BMC Public Health, 18(1), 8.", note: "Population analysis: volunteering associated with better physical/mental health and lower depression, with cumulative dose effects. [Moderate — large cohort]", link: scholar("Yeung Zhang Kim 2018 volunteering health benefits general adults cumulative effects forms"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 34 — READING ═══════════════
+  {
+    id: "reading",
+    section: "34",
+    title: "Reading",
+    subtitle: "Bolsters clusters: linguistic, interpersonal (theory of mind), longevity",
+    evidenceTag: "Mixed",
+    description:
+      "Two claims live here: that reading (especially literary fiction) builds social cognition, and that reading adds healthy years. The empathy/theory-of-mind claim is contested; the reading-longevity association is more robust but observational.",
+    callout: "The headline 'literary fiction instantly boosts theory of mind' repeatedly failed to replicate at its original strength — treat the acute-empathy claim as unproven. The reading-longevity link is real but correlational (it can't prove causation).",
+    sources: [
+      { cite: "Kidd, D. C., & Castano, E. (2013). Reading literary fiction improves theory of mind. Science, 342(6156), 377–380.", note: "Five experiments: brief literary-fiction reading raised theory-of-mind scores vs. popular fiction/nonfiction/control. [Emerging — original, later weakened]", link: scholar("Kidd Castano 2013 Reading literary fiction improves theory of mind Science"), kind: "scholar" },
+      { cite: "Panero, M. E., et al. (2016). Does reading a single passage of literary fiction really improve theory of mind? An attempt at replication. Journal of Personality and Social Psychology, 111(5), e46–e54.", note: "A large replication found NO significant literary-fiction advantage on the Reading-the-Mind-in-the-Eyes test. [Moderate — failed replication]", link: scholar("Panero 2016 Does reading a single passage of literary fiction really improve theory of mind attempt at replication"), kind: "scholar" },
+      { cite: "Kidd, D., & Castano, E. (2019). Reading literary fiction and theory of mind: three preregistered replications and extensions of Kidd and Castano (2013). Social Psychological and Personality Science, 10(4), 522–531.", note: "Preregistered: mixed — two uninformative failures and one success; a small, inconsistent effect. [Mixed]", link: scholar("Kidd Castano 2019 Three preregistered replications extensions theory of mind"), kind: "scholar" },
+      { cite: "Bavishi, A., Slade, M. D., & Levy, B. R. (2016). A chapter a day: association of book reading with longevity. Social Science & Medicine, 164, 44–48.", note: "Book readers (HRS, n=3,635) had ~20% lower mortality / a ~2-year survival advantage over 12 years. [Moderate — observational]", link: scholar("Bavishi Slade Levy 2016 chapter a day book reading longevity Social Science Medicine"), kind: "scholar" },
+      { cite: "Mol, S. E., et al. (2008). Added value of dialogic parent–child book readings: a meta-analysis. Early Education and Development, 19(1), 7–26.", note: "Interactive shared reading yielded moderate expressive-vocabulary gains (d≈0.59) in young children. [Moderate — meta-analysis]", link: scholar("Mol Bus 2008 Added value of dialogic parent-child book readings meta-analysis"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 35 — DELIBERATE PRACTICE & SKILL ACQUISITION ═══════════════
+  {
+    id: "deliberate-practice",
+    section: "35",
+    title: "Deliberate Practice & Skill Acquisition",
+    subtitle: "Bolsters clusters: adversarial, strategic, meta-cognitive, most skill lines",
+    evidenceTag: "Strong",
+    description:
+      "How structured, effortful practice and the right study mechanics (testing, spacing, retrieval) drive skill and retention. The retrieval/spacing effects are among the most robust findings in learning science; deliberate practice matters, but explains far less of expert-performance variance than the '10,000-hour' story claims.",
+    callout: "The honest correction: Macnamara's meta-analysis shows deliberate practice accounts for only a minority of performance variance (26% in games, 21% in music, <1% in professions). Practice is necessary and trainable — but it is not nearly everything.",
+    sources: [
+      { cite: "Ericsson, K. A., Krampe, R. Th., & Tesch-Römer, C. (1993). The role of deliberate practice in the acquisition of expert performance. Psychological Review, 100(3), 363–406.", note: "Foundational: accumulated deliberate practice strongly tracked skill among musicians; framed expertise as trainable. [Strong — foundational, magnitude contested]", link: scholar("Ericsson Krampe Tesch-Romer 1993 role of deliberate practice acquisition of expert performance"), kind: "scholar" },
+      { cite: "Macnamara, B. N., Hambrick, D. Z., & Oswald, F. L. (2014). Deliberate practice and performance in music, games, sports, education, and professions: a meta-analysis. Psychological Science, 25(8), 1608–1618.", note: "Deliberate practice explained 26% (games), 21% (music), 18% (sports), 4% (education), <1% (professions) of variance. [Strong — meta-analysis]", link: scholar("Macnamara Hambrick Oswald 2014 deliberate practice performance meta-analysis Psychological Science"), kind: "scholar" },
+      { cite: "Roediger, H. L., & Karpicke, J. D. (2006). Test-enhanced learning: taking memory tests improves long-term retention. Psychological Science, 17(3), 249–255.", note: "Repeated retrieval (testing) beat repeated restudy for delayed retention — the testing effect. [Strong]", link: scholar("Roediger Karpicke 2006 Test-enhanced learning taking memory tests improves long-term retention"), kind: "scholar" },
+      { cite: "Karpicke, J. D., & Blunt, J. R. (2011). Retrieval practice produces more learning than elaborative studying with concept mapping. Science, 331(6018), 772–775.", note: "Practicing retrieval outperformed concept mapping on later recall and inference. [Strong]", link: scholar("Karpicke Blunt 2011 Retrieval practice produces more learning than elaborative studying concept mapping Science"), kind: "scholar" },
+      { cite: "Cepeda, N. J., et al. (2006). Distributed practice in verbal recall tasks: a review and quantitative synthesis. Psychological Bulletin, 132(3), 354–380.", note: "Meta-analysis: spaced (distributed) practice reliably beats massed practice for long-term recall. [Strong — meta-analysis]", link: scholar("Cepeda Pashler Vul Wixted Rohrer 2006 Distributed practice verbal recall review quantitative synthesis Psychological Bulletin"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 36 — COGNITIVE RESERVE & LIFELONG LEARNING ═══════════════
+  {
+    id: "cognitive-reserve",
+    section: "36",
+    title: "Cognitive Reserve & Lifelong Learning",
+    subtitle: "Bolsters clusters: meta-cognitive, most cognitive lines, existential",
+    evidenceTag: "Moderate",
+    description:
+      "Education, novel skill-learning, and stimulating environments build 'reserve' that buffers cognitive aging — strong in animal models and epidemiology, with one clean RCT (the Synapse Project) showing that learning demanding NEW skills improves memory in older adults. Novelty and challenge, not any single hobby, is the safe takeaway.",
+    callout: "Much reserve evidence is observational (education and occupation confound with health and wealth), and the bilingual-reserve piece specifically is inconsistent. Pursue genuinely NEW, effortful learning — passive 'brain games' are the weakest version.",
+    sources: [
+      { cite: "Stern, Y. (2012). Cognitive reserve in ageing and Alzheimer's disease. Lancet Neurology, 11(11), 1006–1012.", note: "Defines cognitive reserve: lifelong education, occupation, and leisure let some brains tolerate more pathology before decline. [Strong — framework/review]", link: scholar("Stern 2012 Cognitive reserve in ageing and Alzheimer's disease Lancet Neurology"), kind: "scholar" },
+      { cite: "Park, D. C., et al. (2014). The impact of sustained engagement on cognitive function in older adults: the Synapse Project. Psychological Science, 25(1), 103–112.", note: "RCT: older adults learning demanding NEW skills (quilting, digital photography) improved episodic memory vs. low-demand controls. [Moderate — RCT]", link: scholar("Park 2014 Synapse Project sustained engagement cognitive function older adults Psychological Science"), kind: "scholar" },
+      { cite: "van Praag, H., Kempermann, G., & Gage, F. H. (2000). Neural consequences of environmental enrichment. Nature Reviews Neuroscience, 1(3), 191–198.", note: "Enriched environments (especially exercise + learning) increase neurogenesis and plasticity in rodents. [Strong — animal model]", link: scholar("van Praag Kempermann Gage 2000 Neural consequences of environmental enrichment Nature Reviews Neuroscience"), kind: "scholar" },
+      { cite: "Valenzuela, M. J., & Sachdev, P. (2006). Brain reserve and dementia: a systematic review. Psychological Medicine, 36(4), 441–454.", note: "Systematic review: high mental-activity/reserve associated with ~46% reduced dementia risk. [Moderate — observational synthesis]", link: scholar("Valenzuela Sachdev 2006 Brain reserve and dementia a systematic review Psychological Medicine"), kind: "scholar" },
+      { cite: "Bialystok, E., Craik, F. I. M., & Freedman, M. (2007). Bilingualism as a protection against the onset of symptoms of dementia. Neuropsychologia, 45(2), 459–464.", note: "One well-known reserve pathway — bilingualism — with a ~4-year delay in symptom onset (later replications inconsistent; see Section 28). [Mixed]", link: scholar("Bialystok Craik Freedman 2007 Bilingualism protection onset symptoms dementia Neuropsychologia"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 37 — THE HONEST FRONTIER: STACKED DAILY PROTOCOLS ═══════════════
+  {
+    id: "frontier-stacked-protocols",
+    section: "37",
+    title: "The Honest Frontier — Stacked Daily Protocols",
+    subtitle: "Bolsters clusters: interoceptive, emotional, volitional (experimental)",
+    evidenceTag: "Emerging",
+    description:
+      "The components — floatation-REST / sensory reduction, heart-rate-variability (vagal) biofeedback, and aerobic exercise — each have supportive evidence for stress and anxiety. But the specific stacked, daily, high-dose regimen (for example, hours of daily aerobic work immediately followed by a daily float, repeated for weeks) is essentially unstudied. This section exists to be honest about that edge.",
+    callout: "The gap, stated plainly: there is essentially NO published research on ~300 minutes of DAILY aerobic exercise immediately followed by DAILY floatation/sensory-deprivation, stacked every day for 30–60 days. Every real float study below uses roughly ONE session per week for 6–12 weeks. Adopt the components on their own evidence; treat the daily stack as an n-of-1 experiment, not an evidence-based practice.",
+    sources: [
+      { cite: "Feinstein, J. S., et al. (2018). Examining the short-term anxiolytic and antidepressant effect of floatation-REST. PLoS ONE, 13(2), e0190292.", note: "A SINGLE float session produced large acute reductions in state anxiety across the anxiety/depression spectrum (open-label; no daily stacking). [Emerging]", link: scholar("Feinstein 2018 Examining short-term anxiolytic antidepressant effect of Floatation-REST PLoS One"), kind: "scholar" },
+      { cite: "Feinstein, J. S., et al. (2023). A randomized controlled safety and feasibility trial of floatation-REST in anxious and depressed individuals. PLoS ONE, 18(6), e0286899.", note: "RCT: float-REST safe and feasible with acute anxiolytic effects — tested limited sessions, NOT a daily 30–60-day regimen. [Emerging — small RCT]", link: scholar("Feinstein 2023 randomized controlled safety feasibility trial floatation-REST anxious depressed PLoS One"), kind: "scholar" },
+      { cite: "van Dierendonck, D., & Te Nijenhuis, J. (2005). Flotation restricted environmental stimulation therapy (REST) as a stress-management tool: a meta-analysis. Psychology & Health, 20(3), 405–412.", note: "27 studies (n=449): float-REST lowered cortisol/BP and raised well-being (d≈1.0) — typically at WEEKLY dosing over weeks/months. [Moderate — meta-analysis]", link: scholar("van Dierendonck Te Nijenhuis 2005 Flotation REST stress-management meta-analysis Psychology Health"), kind: "scholar" },
+      { cite: "Jonsson, K., & Kjellgren, A. (2016). Promising effects of treatment with flotation-REST as an intervention for generalized anxiety disorder (GAD): a randomized controlled pilot trial. BMC Complementary and Alternative Medicine, 16, 108.", note: "12 WEEKLY float sessions reduced anxiety, depression, and sleep problems in GAD — explicitly weekly, not daily. [Emerging — pilot RCT]", link: scholar("Jonsson Kjellgren 2016 flotation-REST intervention generalized anxiety disorder randomized controlled pilot trial BMC"), kind: "scholar" },
+      { cite: "Goessl, V. C., Curtiss, J. E., & Hofmann, S. G. (2017). The effect of heart rate variability biofeedback training on stress and anxiety: a meta-analysis. Psychological Medicine, 47(15), 2578–2586.", note: "24 studies (n=484): HRV/vagal biofeedback produced large reductions in self-reported stress and anxiety (g≈0.81). [Moderate — meta-analysis]", link: scholar("Goessl Curtiss Hofmann 2017 heart rate variability biofeedback training stress anxiety meta-analysis Psychological Medicine"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 38 — MICRO-SAVING & BEHAVIORAL MOMENTUM ═══════════════
+  {
+    id: "micro-saving",
+    section: "38",
+    title: "Micro-Saving & Behavioral Momentum",
+    subtitle: "Bolsters clusters: financial, volitional, intrapersonal",
+    evidenceTag: "Mixed",
+    description:
+      "Whether small, automated, or commitment-based saving builds financial self-efficacy and a felt sense of momentum. The mechanics are strongly evidenced — auto-escalation, pre-commitment, and reminders reliably raise savings. The psychological chain from small wins to broader life confidence is real but more inferential.",
+    callout: "The saving-behavior RCTs are robust; the popular claim that small financial wins 'cascade' into confidence in other domains is mostly correlational (self-efficacy predicts financial behavior cross-sectionally, but the momentum-into-other-domains story is not demonstrated).",
+    sources: [
+      { cite: "Thaler, R. H., & Benartzi, S. (2004). Save More Tomorrow: using behavioral economics to increase employee saving. Journal of Political Economy, 112(S1), S164–S187.", note: "Auto-escalating contributions raised savings rates from 3.5% to 13.6% over ~40 months — inertia working FOR you. [Strong]", link: scholar("Thaler Benartzi Save More Tomorrow Journal of Political Economy 2004"), kind: "scholar" },
+      { cite: "Ashraf, N., Karlan, D., & Yin, W. (2006). Tying Odysseus to the mast: evidence from a commitment savings product in the Philippines. Quarterly Journal of Economics, 121(2), 635–672.", note: "A voluntary commitment savings account raised average balances 81% after one year vs. control — pre-commitment beats willpower. [Strong]", link: scholar("Ashraf Karlan Yin Tying Odysseus to the Mast commitment savings Philippines"), kind: "scholar" },
+      { cite: "Karlan, D., et al. (2016). Getting to the top of mind: how reminders increase saving. Management Science, 62(12), 3393–3411.", note: "Simple savings reminders increased amounts saved by ~6% — attention and salience alone shift behavior. [Strong]", link: scholar("Karlan McConnell Mullainathan Zinman reminders increase saving Management Science 2016"), kind: "scholar" },
+      { cite: "Farrell, L., Fry, T. R. L., & Risse, L. (2016). The significance of financial self-efficacy in explaining women's personal finance behaviour. Journal of Economic Psychology, 54, 85–99.", note: "Financial self-efficacy was among the strongest predictors of holding savings/investments, independent of literacy (correlational). [Moderate]", link: scholar("Farrell Fry Risse financial self-efficacy women's personal finance behaviour Journal of Economic Psychology 2016"), kind: "scholar" },
+      { cite: "Netemeyer, R. G., et al. (2018). How am I doing? Perceived financial well-being, its potential antecedents, and its relation to overall well-being. Journal of Consumer Research, 45(1), 68–89.", note: "Perceived financial well-being (especially expected future security) predicts overall well-being beyond income. [Moderate]", link: scholar("Netemeyer Warmath Fernandes Lynch perceived financial well-being overall well-being Journal of Consumer Research 2018"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 39 — ORDER & ENVIRONMENT ═══════════════
+  {
+    id: "order-environment",
+    section: "39",
+    title: "Order & Environment",
+    subtitle: "Bolsters clusters: volitional, intrapersonal, systemic",
+    evidenceTag: "Mixed",
+    description:
+      "Whether a tidy, orderly physical space affects self-regulation, mood, and even cortisol. There is real experimental and physiological evidence that environmental order and disorder shift behavior and stress — and honest evidence that disorder isn't uniformly bad (it can boost creativity).",
+    callout: "The popular 'make your bed → discipline cascade' claim is UNTESTED directly — no study manipulates bed-making, and the flagship order-vs-disorder result has faced replication scrutiny. What holds up better: chronic household clutter correlates with worse mood and flatter cortisol.",
+    sources: [
+      { cite: "Vohs, K. D., Redden, J. P., & Rahinel, R. (2013). Physical order produces healthy choices, generosity, and conventionality, whereas disorder produces creativity. Psychological Science, 24(9), 1860–1867.", note: "Orderly rooms nudged healthier choices and generosity; disorderly rooms boosted creativity — order shifts behavior, not uniformly 'good.' [Moderate]", link: scholar("Vohs Redden Rahinel Physical Order Produces Healthy Choices Psychological Science 2013"), kind: "scholar" },
+      { cite: "Chae, B., & Zhu, R. (2014). Environmental disorder leads to self-regulatory failure. Journal of Consumer Research, 40(6), 1203–1218.", note: "Disordered environments threatened sense of control and depleted self-regulation on later tasks. [Moderate]", link: scholar("Chae Zhu Environmental Disorder Leads to Self-Regulatory Failure Journal of Consumer Research 2014"), kind: "scholar" },
+      { cite: "Saxbe, D. E., & Repetti, R. L. (2010). No place like home: home tours correlate with daily patterns of mood and cortisol. Personality and Social Psychology Bulletin, 36(1), 71–81.", note: "Women describing homes as cluttered/unfinished showed flatter (less healthy) cortisol and more depressed mood (observational). [Moderate]", link: scholar("Saxbe Repetti No Place Like Home mood cortisol Personality and Social Psychology Bulletin 2010"), kind: "scholar" },
+      { cite: "Roster, C. A., Ferrari, J. R., & Jurkat, M. P. (2016). The dark side of home: assessing possession 'clutter' on subjective well-being. Journal of Environmental Psychology, 46, 32–41.", note: "Clutter negatively predicted 'psychological home' and subjective well-being (correlational SEM). [Emerging]", link: scholar("Roster Ferrari Jurkat dark side of home clutter subjective well-being Journal of Environmental Psychology 2016"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 40 — GROOMING & SELF-CARE ═══════════════
+  {
+    id: "grooming-selfcare",
+    section: "40",
+    title: "Grooming & Self-Care",
+    subtitle: "Bolsters clusters: intrapersonal, seductive, interpersonal",
+    evidenceTag: "Emerging",
+    description:
+      "Whether daily grooming, dressing well, and self-care routines improve self-efficacy and mood. This is included honestly BECAUSE the evidence is thin and contested — a useful example of where popular self-help outruns the science.",
+    callout: "The signature 'enclothed cognition' lab-coat effect did NOT replicate in a high-powered preregistered study, and no rigorous experiment shows that ordinary daily grooming raises self-efficacy in healthy adults. The strongest real outcome data come from beauty-care interventions in cancer patients, which don't generalize to everyday grooming. Do it because it's decent maintenance — not because the science promises a transformation.",
+    sources: [
+      { cite: "Adam, H., & Galinsky, A. D. (2012). Enclothed cognition. Journal of Experimental Social Psychology, 48(4), 918–925.", note: "Wearing a 'doctor's' lab coat improved selective-attention (Stroop) performance — the original, much-cited but fragile effect. [Emerging]", link: scholar("Adam Galinsky Enclothed cognition Journal of Experimental Social Psychology 2012"), kind: "scholar" },
+      { cite: "Burns, D. M., et al. (2019). An old task in new clothes: a preregistered direct replication attempt of enclothed cognition effects on Stroop performance. Journal of Experimental Social Psychology, 83, 25–30.", note: "With 3× the participants and trials, the lab coat had NO effect on Stroop — a direct replication failure. [Moderate — counter-evidence]", link: scholar("Burns preregistered replication enclothed cognition Stroop Journal of Experimental Social Psychology 2019"), kind: "scholar" },
+      { cite: "Richard, A., et al. (2019). Recover your smile: effects of a beauty-care intervention on depressive symptoms, quality of life, and self-esteem in patients with early breast cancer. Psycho-Oncology, 28(2), 401–407.", note: "A structured beauty-care intervention improved depressive symptoms, QoL, and self-esteem — in cancer patients, not healthy daily grooming. [Moderate — clinical population]", link: scholar("Recover your smile beauty care intervention self-esteem breast cancer Psycho-Oncology 2019"), kind: "scholar" },
+      { cite: "Quintard, B., & Lakdja, F. (2008). Assessing the effect of beauty treatments on psychological distress, body image, and coping: a longitudinal study of patients undergoing surgical procedures for breast cancer. Psycho-Oncology, 17(10), 1032–1038.", note: "Beauty treatments were associated with reduced distress and improved body image over time — clinical, longitudinal. [Moderate — clinical population]", link: scholar("Quintard Lakdja beauty treatments psychological distress body image breast cancer Psycho-Oncology 2008"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 41 — DIGITAL MINIMALISM & ATTENTION ═══════════════
+  {
+    id: "digital-minimalism",
+    section: "41",
+    title: "Digital Minimalism & Attention",
+    subtitle: "Bolsters clusters: meta-cognitive, volitional, emotional, interpersonal",
+    evidenceTag: "Moderate",
+    description:
+      "Whether cutting smartphone and social-media use improves attention, mood, and well-being. This is the best-evidenced of the 'mundane' levers — multiple RCTs and meta-analyses exist, including that the mere presence of your phone measurably drains working memory. Effects are real but generally small.",
+    callout: "Effect sizes are small and inconsistent — at least one meta-analysis finds average well-being effects near zero — so 'delete social media and transform your life' overstates it. The defensible claim is modest improvements in depression, sleep, and available attention.",
+    sources: [
+      { cite: "Hunt, M. G., et al. (2018). No more FOMO: limiting social media decreases loneliness and depression. Journal of Social and Clinical Psychology, 37(10), 751–768.", note: "RCT: capping social media to ~10 min/platform/day for 3 weeks reduced loneliness and depression vs. controls. [Moderate]", link: scholar("Hunt Marx Lipson Young No More FOMO limiting social media loneliness depression 2018"), kind: "scholar" },
+      { cite: "Ward, A. F., et al. (2017). Brain drain: the mere presence of one's own smartphone reduces available cognitive capacity. Journal of the Association for Consumer Research, 2(2), 140–154.", note: "Merely having your silenced phone visible reduced working-memory and fluid-intelligence performance. [Moderate]", link: scholar("Ward Duke Gneezy Bos Brain Drain mere presence smartphone cognitive capacity 2017"), kind: "scholar" },
+      { cite: "Kushlev, K., Proulx, J., & Dunn, E. W. (2016). 'Silence your phones': smartphone notifications increase inattention and hyperactivity symptoms. Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems, 1011–1020.", note: "A week of maximized notifications raised self-reported inattention and hyperactivity vs. a minimized week. [Moderate]", link: scholar("Kushlev Proulx Dunn Silence Your Phones notifications inattention hyperactivity CHI 2016"), kind: "scholar" },
+      { cite: "Pieh, C., et al. (2025). Smartphone screen-time reduction improves mental health: a randomized controlled trial. BMC Medicine, 23, 107.", note: "RCT: reducing screen time to ≤2 h/day for 3 weeks yielded small-to-medium improvements in well-being, depression, sleep, and stress. [Moderate]", link: scholar("Pieh Humer smartphone screen time reduction improves mental health randomized controlled trial BMC Medicine 2025"), kind: "scholar" },
+      { cite: "May, W., Malouff, J. M., & Meynadier, J. (2025). Reducing social media use decreases depression symptoms: a meta-analysis of randomised controlled trials. European Journal of Investigation in Health, Psychology and Education, 15(11), 222.", note: "Meta-analysis of 10 RCTs (N=1,491): reducing social-media use modestly decreased depressive symptoms (g≈0.25). [Moderate — meta-analysis]", link: scholar("May Malouff Meynadier Reducing Social Media Use Decreases Depression Symptoms meta-analysis 2025"), kind: "scholar" },
     ],
   },
 ];
