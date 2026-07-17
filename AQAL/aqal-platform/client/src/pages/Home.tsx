@@ -93,7 +93,7 @@ const SAMPLES = [
 ];
 
 // ============================================================
-// HERO — "Out of a million people... how engineered is your mind for everything you want?"
+// HERO — outcome-led: reach your goals with less friction, effort, and failure.
 // ============================================================
 function HeroSection() {
   const [mounted, setMounted] = useState(false);
@@ -131,14 +131,14 @@ function HeroSection() {
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 0.98, fontSize: 'clamp(44px,7vw,80px)', letterSpacing: '-0.01em', color: CREAM, marginTop: '20px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Out of a million people — <em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>how engineered is your mind for everything you want?</em>
+              Reach what you're after — <em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>with less friction, less effort, and less failure.</em>
             </motion.h1>
 
             <motion.p
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontSize: 'clamp(17px,2.1vw,24px)', lineHeight: 1.25, color: CREAM2, margin: '14px 0 0' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Not just how <span style={{ color: CREAM }}>rare</span>. How <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>systemized, protected, and predictable</b> your whole mind is — the full architecture, measured against your <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>goals, dreams, and outcomes.</b>
+              Your mind is a system built to get you there. We find the <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>strengths that drive your goals</b> — and the <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>weaknesses that create friction, drain your effort, or quietly collapse the whole thing</b> — then engineer the move that changes the odds.
             </motion.p>
 
             <motion.p
@@ -152,7 +152,7 @@ function HeroSection() {
               style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.6, maxWidth: '34em', margin: '18px 0 30px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Every other test hands you a number and walks away. We map your mind as a <b style={{ color: CREAM, fontWeight: 600 }}>system of 32 lines</b>, find the one weakness quietly sabotaging what you want, and <b style={{ color: CREAM, fontWeight: 600 }}>engineer the move that changes the odds</b> — backed by the research, cross-checked by a panel of independent AIs. A new kind of self-knowledge.
+              Every other test hands you a number and walks away. We map your mind as a <b style={{ color: CREAM, fontWeight: 600 }}>system of 32 lines</b>, find the one weakness quietly sabotaging what you want, and <b style={{ color: CREAM, fontWeight: 600 }}>engineer the move that changes the odds</b> — backed by the research, cross-checked by a panel of independent AIs. So you get where you're going with less wasted time, effort, and frustration.
             </motion.p>
 
             <motion.div

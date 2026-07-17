@@ -516,6 +516,28 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "18": "Psychedelics",
 };
 
+// Consumer-intuitive display order: how-it-works first, then the high-leverage
+// keystone practices (what to actually DO), then domain practices, then risks.
+// This controls display order without renumbering the underlying data.
+const PRACTICE_SECTION_ORDER = ["0", "14", "13", "12", "15", "16", "17", "18", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+const sectionRank = (s: string) => {
+  const i = PRACTICE_SECTION_ORDER.indexOf(s);
+  return i === -1 ? 999 : i;
+};
+
+// Group super-headers so a consumer can scan straight to what they want.
+const PRACTICE_GROUP: Record<string, string> = {
+  "0": "How it works",
+  "14": "Keystone practices — start here", "13": "Keystone practices — start here",
+  "12": "Keystone practices — start here", "15": "Keystone practices — start here",
+  "16": "Keystone practices — start here", "17": "Keystone practices — start here",
+  "18": "Keystone practices — start here",
+  "1": "Practices by domain", "2": "Practices by domain", "3": "Practices by domain",
+  "4": "Practices by domain", "5": "Practices by domain", "6": "Practices by domain",
+  "7": "Practices by domain", "8": "Practices by domain", "9": "Practices by domain",
+  "10": "Risks & compounding", "11": "Risks & compounding",
+};
+
 const TAG_COLOR: Record<PracticeCluster["evidenceTag"], string> = {
   Strong: CHAMPAGNE,
   Moderate: JADE,
@@ -1547,9 +1569,9 @@ export default function ResearchLibrary() {
 
   const visibleFamilyCount = FAMILIES.filter((f) => grouped[f.key].length > 0).length;
 
-  // Sections present, in display order, for the practices jump-nav.
+  // Sections present, in consumer-intuitive display order, for the jump-nav.
   const practiceSectionKeys = useMemo(
-    () => Array.from(new Set(PRACTICE_EVIDENCE.map((c) => c.section))),
+    () => Array.from(new Set(PRACTICE_EVIDENCE.map((c) => c.section))).sort((a, b) => sectionRank(a) - sectionRank(b)),
     [],
   );
 
@@ -1567,7 +1589,7 @@ export default function ResearchLibrary() {
         if (!hay.includes(q)) return false;
       }
       return true;
-    });
+    }).sort((a, b) => sectionRank(a.section) - sectionRank(b.section));
   }, [practiceQuery, practiceTag, practiceSectionFilter]);
 
   // When a keyword search is active, reveal matching sources automatically.
@@ -1742,8 +1764,11 @@ export default function ResearchLibrary() {
         .rl-clear-all{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
           color:${CHAMPAGNE}; border-bottom:1px solid rgba(224,198,140,0.3); padding-bottom:1px;}
         .rl-clear-all:hover{border-color:${CHAMPAGNE};}
+        .rl-practice-group-head{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(22px,3vw,32px);
+          color:${CREAM}; margin:48px 0 8px; letter-spacing:-0.01em; line-height:1.1;}
+        .rl-practice-group-head:first-child{margin-top:8px;}
         .rl-practice-section-head{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.18em;
-          text-transform:uppercase; color:${CHAMPAGNE}; margin:30px 0 14px; padding-bottom:9px; border-bottom:1px solid ${LINE};}
+          text-transform:uppercase; color:${CHAMPAGNE}; margin:22px 0 14px; padding-bottom:9px; border-bottom:1px solid ${LINE};}
         .rl-tag{display:inline-block; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:0.12em;
           text-transform:uppercase; padding:3px 9px; border-radius:999px; border:1px solid currentColor; margin-left:10px;
           vertical-align:middle; white-space:nowrap;}
@@ -2125,8 +2150,12 @@ export default function ResearchLibrary() {
               const isOpen = openPracticeIds.has(cluster.id) || practiceSearching;
               const prev = filteredPractices[idx - 1];
               const showHead = !prev || prev.section !== cluster.section;
+              const showGroup = !prev || PRACTICE_GROUP[prev.section] !== PRACTICE_GROUP[cluster.section];
               return (
                 <React.Fragment key={cluster.id}>
+                  {showGroup && PRACTICE_GROUP[cluster.section] && (
+                    <div className="rl-practice-group-head">{PRACTICE_GROUP[cluster.section]}</div>
+                  )}
                   {showHead && (
                     <div className="rl-practice-section-head">{PRACTICE_SECTIONS[cluster.section]}</div>
                   )}
