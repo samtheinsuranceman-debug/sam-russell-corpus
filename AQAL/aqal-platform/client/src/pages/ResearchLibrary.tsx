@@ -492,7 +492,7 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "17": "17 · Thermal Stress — Sauna & Cold",
   "18": "18 · Psychedelic-Assisted Therapy — Deep but Gated",
   "19": "19 · Reading People — Nonverbal Decoding",
-  "20": "20 · Learning From Other Couples — Relationship Media",
+  "20": "20 · Couples, Relationships & Parenting",
 };
 
 // Short labels for the section jump-nav chips.
@@ -1506,6 +1506,98 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
       { cite: "Gottman, J. M., & Levenson, R. W. (1992). Marital processes predictive of later dissolution: Behavior, physiology, and health. Journal of Personality and Social Psychology, 63(2), 221–233.", note: "The 'Love Lab' evidence that couples' conflict behavior is readable and predictive — the reason observing conflict is an information-rich (if untested-as-training) channel. [Moderate]", link: scholar("Gottman Levenson 1992 marital processes predictive of later dissolution behavior physiology health"), kind: "scholar" },
       { cite: "Bandura, A. (1977). Social Learning Theory. Prentice-Hall.", note: "The theoretical mechanism: people learn behaviors and their consequences by observing others (vicarious learning) — why watching other couples COULD teach, even where the specific practice is untested. [Moderate — foundational theory]", link: scholar("Bandura 1977 Social Learning Theory vicarious learning observation"), kind: "scholar" },
       { cite: "Páez, D., Rimé, B., Basabe, N., Wlodarczyk, A., & Zumeta, L. (2015). Psychosocial effects of perceived emotional synchrony in collective gatherings. Journal of Personality and Social Psychology, 108(5), 711–729.", note: "On the weddings/rituals question: collective ceremonies reliably build social bonding, shared identity, and self-transcendent emotion (awe) — real effects, but on BONDING and wellbeing, NOT on any measured line of intelligence. [Moderate — relevant boundary]", link: scholar("Paez Rime Basabe 2015 psychosocial effects perceived emotional synchrony collective gatherings"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "couples-observational-science",
+    section: "20",
+    title: "The Observational Science of Couples — What Predicts Success",
+    subtitle: "Bolsters clusters: interpersonal, empathic (marital)",
+    evidenceTag: "Moderate",
+    description:
+      "Couples' behavior during conflict is readable enough to predict divorce years in advance — the science behind why watching how couples interact is information-rich. Gottman's lab predicted marital dissolution from short conflict discussions with striking accuracy, identifying specific patterns (contempt, criticism, defensiveness, stonewalling) that forecast failure and repair attempts that forecast success. This is what a trained observer learns to see.",
+    callout: "This shows couple behavior is predictive and observable — the basis for learning by watching. It does not by itself prove that watching trains you; pair it with a discuss-and-practice method (see the media cluster).",
+    sources: [
+      { cite: "Gottman, J. M., Coan, J., Carrere, S., & Swanson, C. (1998). Predicting marital happiness and stability from newlywed interactions. Journal of Marriage and the Family, 60(1), 5–22.", note: "Predicted which newlyweds would thrive or divorce from patterns in their interaction — the readable signatures of a relationship. [Moderate]", link: scholar("Gottman Coan Carrere Swanson 1998 predicting marital happiness and stability from newlywed interactions"), kind: "scholar" },
+      { cite: "Carrère, S., & Gottman, J. M. (1999). Predicting divorce among newlyweds from the first three minutes of a marital conflict discussion. Family Process, 38(3), 293–301.", note: "Divorce predicted from the FIRST THREE MINUTES of a conflict conversation — how quickly the pattern reveals itself. [Moderate]", link: scholar("Carrere Gottman 1999 predicting divorce among newlyweds first three minutes marital conflict discussion"), kind: "scholar" },
+      { cite: "Gottman, J. M., & Levenson, R. W. (2000). The timing of divorce: Predicting when a couple will divorce over a 14-year period. Journal of Marriage and Family, 62(3), 737–745.", note: "Two distinct paths to divorce identified from interaction patterns tracked over 14 years — the long-run predictive validity. [Moderate]", link: scholar("Gottman Levenson 2000 timing of divorce predicting when a couple will divorce 14-year period"), kind: "scholar" },
+      { cite: "Gottman, J. M., & Silver, N. (1999). The Seven Principles for Making Marriage Work. Crown.", note: "The applied translation of the lab findings into observable, learnable principles couples can watch for and practice. [Moderate — applied]", link: scholar("Gottman Silver 1999 seven principles for making marriage work"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "couples-emotional-intelligence",
+    section: "20",
+    title: "Emotional Intelligence in Relationships",
+    subtitle: "Bolsters clusters: empathic, interpersonal, intrapersonal",
+    evidenceTag: "Moderate",
+    description:
+      "Emotional intelligence — perceiving, understanding, and regulating emotion — reliably tracks with relationship satisfaction and constructive conflict handling, and it can be developed. This is the individual-capacity side of the couples equation: partners higher in EI navigate conflict better and report more satisfying relationships.",
+    callout: "The EI–satisfaction link is robust but correlational; EI supports better relationships, it doesn't single-handedly guarantee them.",
+    sources: [
+      { cite: "Mayer, J. D., Salovey, P., & Caruso, D. R. (2008). Emotional intelligence: New ability or eclectic traits? American Psychologist, 63(6), 503–517.", note: "The authoritative definition of emotional intelligence as a measurable ability — the construct behind the relationship findings. [Moderate — foundational]", link: "https://doi.org/10.1037/0003-066X.63.6.503", kind: "doi" },
+      { cite: "Brackett, M. A., Rivers, S. E., & Salovey, P. (2011). Emotional intelligence: Implications for personal, social, academic, and workplace success. Social and Personality Psychology Compass, 5(1), 88–103.", note: "Reviews evidence that higher EI predicts better social relationships and outcomes across domains. [Moderate]", link: "https://doi.org/10.1111/j.1751-9004.2011.00334.x", kind: "doi" },
+      { cite: "Malouff, J. M., Schutte, N. S., & Thorsteinsson, E. B. (2014). Trait emotional intelligence and romantic relationship satisfaction: A meta-analysis. American Journal of Family Therapy, 42(1), 53–66.", note: "Meta-analysis: higher trait EI is reliably associated with greater romantic relationship satisfaction. [Moderate — meta-analysis]", link: scholar("Malouff Schutte Thorsteinsson 2014 trait emotional intelligence romantic relationship satisfaction meta-analysis"), kind: "scholar" },
+      { cite: "Schutte, N. S., Malouff, J. M., Bobik, C., et al. (2001). Emotional intelligence and interpersonal relations. Journal of Social Psychology, 141(4), 523–536.", note: "Links higher EI to warmer, more cooperative interpersonal relations — the relational payoff of the capacity. [Moderate]", link: scholar("Schutte Malouff Bobik 2001 emotional intelligence and interpersonal relations"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "couples-empathy-training",
+    section: "20",
+    title: "Empathy & Perspective-Taking Are Trainable",
+    subtitle: "Bolsters clusters: empathic, interpersonal",
+    evidenceTag: "Moderate",
+    description:
+      "Empathy is not a fixed trait — a meta-analysis of randomized trials found that empathy training reliably increases empathy. Perspective-taking (deliberately imagining another's viewpoint) is the active mechanism, and it improves both understanding and prosocial behavior. This is the trainable capacity that couples-observation and relationship media are ultimately exercising.",
+    callout: "Empathy training works on average, but effects vary by method and can fade without practice; treat it as a skill to maintain, not a one-time fix.",
+    sources: [
+      { cite: "Teding van Berkhout, E., & Malouff, J. M. (2016). The efficacy of empathy training: A meta-analysis of randomized controlled trials. Journal of Counseling Psychology, 63(1), 32–41.", note: "The key evidence: across RCTs, empathy training produced a moderate, reliable increase in empathy. [Moderate — meta-analysis of RCTs]", link: "https://doi.org/10.1037/cou0000093", kind: "doi" },
+      { cite: "Galinsky, A. D., & Moskowitz, G. B. (2000). Perspective-taking: Decreasing stereotype expression, stereotype accessibility, and in-group favoritism. Journal of Personality and Social Psychology, 78(4), 708–724.", note: "Shows the active ingredient — deliberately taking another's perspective — measurably changes social cognition and reduces bias. [Moderate]", link: scholar("Galinsky Moskowitz 2000 perspective-taking decreasing stereotype expression accessibility in-group favoritism"), kind: "scholar" },
+      { cite: "Batson, C. D., Early, S., & Salvarani, G. (1997). Perspective taking: Imagining how another feels versus imagining how you would feel. Personality and Social Psychology Bulletin, 23(7), 751–758.", note: "Distinguishes imagining another's feelings from imagining your own — refining how perspective-taking builds empathic accuracy. [Moderate]", link: scholar("Batson Early Salvarani 1997 perspective taking imagining how another feels versus how you would feel"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "couples-relationship-education",
+    section: "20",
+    title: "Relationship Education — The Skills That Prevent Distress",
+    subtitle: "Bolsters clusters: interpersonal, intrapersonal (marital)",
+    evidenceTag: "Moderate",
+    description:
+      "Beyond the movie study, a broader evidence base shows structured relationship education improves couples' communication and lowers the risk of distress — especially communication and conflict-management skills practiced over time. This is the 'training' half of the platform's model applied to the marital line.",
+    callout: "Effects are real but modest and strongest for higher-risk couples; skills fade without practice, and education is prevention, not a cure for a failing relationship.",
+    sources: [
+      { cite: "Markman, H. J., Renick, M. J., Floyd, F. J., Stanley, S. M., & Clements, M. (1993). Preventing marital distress through communication and conflict management training: A 4- and 5-year follow-up. Journal of Consulting and Clinical Psychology, 61(1), 70–77.", note: "The PREP program's long-run evidence: communication/conflict training reduced later marital distress and dissolution. [Moderate]", link: scholar("Markman Renick Floyd Stanley Clements 1993 preventing marital distress communication conflict management training follow-up"), kind: "scholar" },
+      { cite: "Blanchard, V. L., Hawkins, A. J., Baldwin, S. A., & Fawcett, E. B. (2009). Investigating the effects of marriage and relationship education on couples' communication skills: A meta-analytic study. Journal of Family Psychology, 23(2), 203–214.", note: "Meta-analysis isolating the communication-skill gains from relationship education — the measurable mechanism. [Moderate — meta-analysis]", link: scholar("Blanchard Hawkins Baldwin Fawcett 2009 effects of marriage and relationship education couples communication skills meta-analytic"), kind: "scholar" },
+      { cite: "Halford, W. K., Markman, H. J., Kline, G. H., & Stanley, S. M. (2003). Best practice in couple relationship education. Journal of Marital and Family Therapy, 29(3), 385–406.", note: "Synthesizes what makes relationship education actually work — dosage, timing, and targeting higher-risk couples. [Moderate]", link: scholar("Halford Markman Kline Stanley 2003 best practice in couple relationship education"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "parenting-intelligence",
+    section: "20",
+    title: "Parenting Intelligence — What Actually Works",
+    subtitle: "Bolsters clusters: intrapersonal, empathic, interpersonal (parental)",
+    evidenceTag: "Moderate",
+    description:
+      "Parenting skill is trainable, and the effective ingredients are known. Meta-analyses of parent-training programs identify the components that reliably improve child outcomes — notably teaching parents emotional communication, positive interaction, and consistent practice with their own child. Authoritative parenting (warm and structured) is the style most consistently linked to healthy development.",
+    callout: "The components are well-evidenced, but programs work best when parents PRACTICE with their own child, not just learn concepts; watching or reading alone is weaker than doing.",
+    sources: [
+      { cite: "Kaminski, J. W., Valle, L. A., Filene, J. H., & Boyle, C. L. (2008). A meta-analytic review of components associated with parent training program effectiveness. Journal of Abnormal Child Psychology, 36(4), 567–589.", note: "Isolates the active ingredients of parent training — emotional communication, positive interaction, and practicing new skills with one's own child. [Moderate — meta-analysis]", link: "https://doi.org/10.1007/s10802-007-9201-9", kind: "doi" },
+      { cite: "Sanders, M. R., Kirby, J. N., Tellegen, C. L., & Day, J. J. (2014). The Triple P-Positive Parenting Program: A systematic review and meta-analysis of a multi-level system of parenting support. Clinical Psychology Review, 34(4), 337–357.", note: "Large systematic review/meta-analysis of a leading parenting program showing reliable improvements in child and parent outcomes. [Moderate — meta-analysis]", link: scholar("Sanders Kirby Tellegen Day 2014 Triple P Positive Parenting Program systematic review meta-analysis"), kind: "scholar" },
+      { cite: "Baumrind, D. (1991). The influence of parenting style on adolescent competence and substance use. Journal of Early Adolescence, 11(1), 56–95.", note: "The foundational parenting-styles work: authoritative (warm + structured) parenting linked to the best adolescent outcomes. [Moderate — foundational]", link: scholar("Baumrind 1991 influence of parenting style on adolescent competence and substance use"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "couples-social-learning",
+    section: "20",
+    title: "How We Learn by Watching — Social Learning",
+    subtitle: "Bolsters clusters: the mechanism under all of the above",
+    evidenceTag: "Moderate",
+    description:
+      "The reason watching others can teach at all: humans learn behaviors, and their consequences, by observing models — vicarious learning. Classic experiments show observed behavior is imitated, and emotions transfer between people (emotional contagion). This is the mechanism that makes 'learning from other couples' plausible — while reminding us that observation without practice is a weaker teacher than doing.",
+    callout: "Observation genuinely teaches — but modeling is strongest when paired with attention, retention, and REHEARSAL. Passive watching alone is the weak form of this mechanism.",
+    sources: [
+      { cite: "Bandura, A., Ross, D., & Ross, S. A. (1961). Transmission of aggression through imitation of aggressive models. Journal of Abnormal and Social Psychology, 63(3), 575–582.", note: "The famous 'Bobo doll' experiment: children imitated behavior they merely observed — the empirical root of observational learning. [Moderate — foundational]", link: "https://doi.org/10.1037/h0045925", kind: "doi" },
+      { cite: "Hatfield, E., Cacioppo, J. T., & Rapson, R. L. (1993). Emotional contagion. Current Directions in Psychological Science, 2(3), 96–100.", note: "Establishes that people automatically 'catch' others' emotions — why watching emotional interactions moves us and can shape our own patterns. [Moderate]", link: scholar("Hatfield Cacioppo Rapson 1993 emotional contagion current directions psychological science"), kind: "scholar" },
+      { cite: "Bandura, A. (1986). Social Foundations of Thought and Action: A Social Cognitive Theory. Prentice-Hall.", note: "The mature statement of social cognitive theory: the four sub-processes (attention, retention, reproduction, motivation) that make observation into real learning. [Moderate — foundational]", link: scholar("Bandura 1986 social foundations of thought and action social cognitive theory"), kind: "scholar" },
     ],
   },
 ];
