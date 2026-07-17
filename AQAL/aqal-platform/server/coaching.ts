@@ -14,7 +14,7 @@
 import { invokeLLM, llmConfigured } from "./platform/llm";
 import { ALL_AXES, axisFeedsRarity } from "@shared/axisModes";
 import { bottleneckRole, MECHANISM_META } from "@shared/bottleneckRoles";
-import { practicesForGoals, corePractices, type KeystonePractice } from "@shared/keystonePractices";
+import { practicesForGoals, corePractices, buildProjections, type KeystonePractice, type OutcomeProjection } from "@shared/keystonePractices";
 
 export type ScoreRow = { axisName: string; score: number; confidence?: number | null };
 
@@ -36,6 +36,11 @@ export type OutcomeReport = {
   keystoneMove: string;
   threats: OutcomeThreat[];
   enablers: OutcomeEnabler[];
+  // The Vision: honest, confidence-tiered projections of what implementing the
+  // prescribed behaviors could produce — explicitly hypothetical, never a promise.
+  vision: string;                    // the future-paced narrative (LLM or templated)
+  projections: OutcomeProjection[];  // deterministic, research-grounded, confidence-tiered
+  theGap: string;                    // the knowing-doing gap + the commitment move
   disclaimer: string;
 };
 
@@ -53,6 +58,24 @@ function rank(scores: ScoreRow[]) {
 function dedupePractices(list: KeystonePractice[]): KeystonePractice[] {
   const seen = new Set<string>();
   return list.filter((p) => (seen.has(p.id) ? false : (seen.add(p.id), true)));
+}
+
+// The knowing–doing gap + the commitment move. This is the urgency that's HONEST:
+// the cost isn't ignorance, it's inaction — and the fix is a plan, not more reading.
+function gapText(): string {
+  return "Here is the pattern the research keeps proving: most people already know the answer — save more, sleep more, listen to their partner — and still don't do it. The gap is not knowing. It is DOING. Every month on the old trajectory is a month you don't get back. So turn each move into an if-then plan ('If it's Sunday at 8pm, then we watch our film'), stack it onto a habit you already have, and track it. Planning the exact when-and-where is what the evidence shows converts intention into action — it is the difference between reading this and living it.";
+}
+
+// The Vision: an explicitly hypothetical, confidence-tiered future-pace. Honest by
+// construction — it states the research basis and the confidence, and conditions
+// everything on the person's own follow-through.
+function visionText(goals: string, projections: OutcomeProjection[]): string {
+  const area = goals.trim() ? "the goals you named" : "your outcomes";
+  if (projections.length === 0) {
+    return `Commit to the prescribed moves consistently and the evidence points toward real, compounding progress on ${area}. This is a hypothetical projection, not a promise — your follow-through decides the magnitude.`;
+  }
+  const t = projections[0];
+  return `Picture yourself ${t.horizon} from now — if you actually did this, immediately and consistently. ${t.researchBasis} That is the trajectory the research points toward for ${area}, at ${t.confidence.toLowerCase()} confidence. It is not a guarantee. It is a glimpse of what becomes possible the moment you commit and follow through — and of what stays out of reach if you don't.`;
 }
 
 // Deterministic, representative report — used when no LLM is configured, so the
@@ -80,6 +103,9 @@ function mockReport(scores: ScoreRow[], goals: string): OutcomeReport {
       { strength: s(0), goalArea: area, how: `${s(0)} is your keystone strength — deliberately point it at your #1 goal and it lifts the whole shape (mutualism effect).` },
       { strength: s(1), goalArea: area, how: `${s(1)} accelerates execution once ${w(0)} is shored up.` },
     ],
+    vision: visionText(goals, buildProjections(goals)),
+    projections: buildProjections(goals),
+    theGap: gapText(),
     disclaimer: DISCLAIMER,
   };
 }
@@ -89,6 +115,8 @@ const REPORT_SCHEMA = {
   properties: {
     summary: { type: "string" },
     keystoneMove: { type: "string" },
+    vision: { type: "string" },
+    theGap: { type: "string" },
     threats: {
       type: "array",
       items: {
@@ -117,7 +145,7 @@ const REPORT_SCHEMA = {
       },
     },
   },
-  required: ["summary", "keystoneMove", "threats", "enablers"],
+  required: ["summary", "keystoneMove", "vision", "theGap", "threats", "enablers"],
   additionalProperties: false,
 } as const;
 
@@ -158,8 +186,16 @@ Produce an outcome-engineering report:
   specific practice), the matching Research Library topic to read, and a DIRECTIONAL uplift estimate if addressed.
 - Identify the keystone strengths that most accelerate these goals and how to aim them.
 - Name the single highest-leverage "keystone move".
+- Write "vision": a vivid, second-person, future-paced glimpse (3–5 sentences) of what THIS person's life could
+  look like if they implement the prescribed practices consistently for the recommended time. Ground it in the
+  practice menu's research. It MUST be explicitly hypothetical — say plainly it is a possibility conditioned on
+  their follow-through, not a promise — while still being genuinely moving. Name the confidence honestly.
+- Write "theGap": 2–4 sentences on the knowing-doing gap — that most people know the answer and fail to implement,
+  that the cost is inaction not ignorance, and that turning each move into an if-then plan + habit + tracking is
+  what closes it. Make it urgent and honest, not manipulative.
 Honesty rules: never promise outcomes; keep every number directional; respect each practice's evidence tier
-(do not present an Emerging practice as proven); never prescribe the psychedelic entry as an action.`;
+(do not present an Emerging practice as proven); never prescribe the psychedelic entry as an action; the vision
+is a hypothetical projection, never a guarantee.`;
 
   try {
     const result = await invokeLLM({
@@ -172,7 +208,16 @@ Honesty rules: never promise outcomes; keep every number directional; respect ea
     const content = result.choices?.[0]?.message?.content as string | undefined;
     if (!content) return mockReport(scores, goals);
     const parsed = JSON.parse(content) as OutcomeReport;
-    return { ...parsed, disclaimer: DISCLAIMER };
+    // Projections are computed deterministically from real practice data (never
+    // LLM-invented), so their confidence bands and research basis stay honest.
+    const projections = buildProjections(goals);
+    return {
+      ...parsed,
+      projections,
+      vision: parsed.vision?.trim() || visionText(goals, projections),
+      theGap: parsed.theGap?.trim() || gapText(),
+      disclaimer: DISCLAIMER,
+    };
   } catch {
     return mockReport(scores, goals);
   }

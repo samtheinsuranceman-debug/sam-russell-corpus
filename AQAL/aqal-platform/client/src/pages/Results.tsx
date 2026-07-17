@@ -979,6 +979,42 @@ function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
             </div>
           </div>
 
+          {/* THE VISION — honest, confidence-tiered projection of what's possible */}
+          {report.vision && (
+            <div className="rounded-2xl p-6 sm:p-7 border" style={{ borderColor: "oklch(0.78 0.12 85 / 0.3)", background: "linear-gradient(180deg, oklch(0.78 0.12 85 / 0.07), transparent)" }}>
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-4 h-4" style={{ color: "oklch(0.82 0.13 85)" }} />
+                <span className="text-xs uppercase tracking-[0.2em]" style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.82 0.13 85)" }}>The Vision — if you commit</span>
+              </div>
+              <p className="text-foreground/90 leading-relaxed text-[15px] sm:text-base" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(16px,2vw,20px)" }}>{report.vision}</p>
+
+              {report.projections?.length > 0 && (
+                <div className="mt-5 grid sm:grid-cols-2 gap-3">
+                  {report.projections.map((p: any, i: number) => {
+                    const cc = p.confidence === "High" ? "#6ee7b7" : p.confidence === "Moderate" ? "#E0C68C" : "#C4B89F";
+                    return (
+                      <div key={i} className="rounded-xl border border-white/[0.07] bg-background/30 px-4 py-3.5">
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <span className="text-sm font-semibold text-foreground">{p.practice}</span>
+                          <span className="text-[0.6rem] uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0" style={{ color: cc, border: `1px solid ${cc}55` }}>{p.confidence} conf.</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground/70 leading-relaxed">{p.researchBasis}</p>
+                        <div className="flex items-center justify-between gap-2 mt-2 text-[0.7rem]">
+                          <span className="text-muted-foreground/50">Horizon: {p.horizon}</span>
+                          <Link href={`/research-library`}><span className="text-primary/70 hover:text-primary underline cursor-pointer">{p.librarySection}</span></Link>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <p className="text-[0.7rem] text-muted-foreground/45 mt-4 leading-relaxed">
+                A <span className="italic">hypothetical, research-informed projection</span> — not a promise. The evidence points to the direction and the confidence; <span className="text-foreground/70">your follow-through decides the magnitude.</span>
+              </p>
+            </div>
+          )}
+
           {report.threats.map((t: any, i: number) => (
             <div key={i} className="glass-card rounded-2xl p-6">
               <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
@@ -1006,6 +1042,20 @@ function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
                   <p key={i} className="text-sm text-muted-foreground/75 leading-relaxed"><span className="text-foreground/90 font-medium">{e.strength}</span> → {e.how}</p>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* THE GAP — the honest urgency: knowing isn't doing. */}
+          {report.theGap && (
+            <div className="rounded-2xl p-6 sm:p-7 border" style={{ borderColor: "rgba(200,92,68,0.28)", background: "rgba(200,92,68,0.05)" }}>
+              <div className="flex items-center gap-2 mb-3">
+                <Zap className="w-4 h-4" style={{ color: "#D19A72" }} />
+                <span className="text-xs uppercase tracking-[0.2em]" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#D19A72" }}>Why most people never get there</span>
+              </div>
+              <p className="text-foreground/85 leading-relaxed text-sm sm:text-[15px]">{report.theGap}<Cite k="leverage" /></p>
+              <p className="text-[0.7rem] text-muted-foreground/50 mt-3">
+                The prescriptions above are worth more than 30 casual minutes. This is your marriage, your health, your trajectory — read them like it. <Link href="/research-library?section=practices"><span className="text-primary/70 hover:text-primary underline cursor-pointer">Open the playbook →</span></Link>
+              </p>
             </div>
           )}
 

@@ -493,6 +493,7 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "18": "18 · Psychedelic-Assisted Therapy — Deep but Gated",
   "19": "19 · Reading People — Nonverbal Decoding",
   "20": "20 · Couples, Relationships & Parenting",
+  "21": "21 · Knowing vs. Doing — Making It Stick",
 };
 
 // Short labels for the section jump-nav chips.
@@ -518,12 +519,13 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "18": "Psychedelics",
   "19": "Reading People",
   "20": "Couples & Relationships",
+  "21": "Making It Stick",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
 // keystone practices (what to actually DO), then domain practices, then risks.
 // This controls display order without renumbering the underlying data.
-const PRACTICE_SECTION_ORDER = ["0", "14", "13", "12", "15", "16", "17", "18", "1", "2", "3", "4", "5", "6", "7", "8", "9", "19", "20", "10", "11"];
+const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "12", "15", "16", "17", "18", "1", "2", "3", "4", "5", "6", "7", "8", "9", "19", "20", "10", "11"];
 const sectionRank = (s: string) => {
   const i = PRACTICE_SECTION_ORDER.indexOf(s);
   return i === -1 ? 999 : i;
@@ -532,6 +534,7 @@ const sectionRank = (s: string) => {
 // Group super-headers so a consumer can scan straight to what they want.
 const PRACTICE_GROUP: Record<string, string> = {
   "0": "How it works",
+  "21": "Keystone practices — start here",
   "14": "Keystone practices — start here", "13": "Keystone practices — start here",
   "12": "Keystone practices — start here", "15": "Keystone practices — start here",
   "16": "Keystone practices — start here", "17": "Keystone practices — start here",
@@ -1598,6 +1601,30 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
       { cite: "Bandura, A., Ross, D., & Ross, S. A. (1961). Transmission of aggression through imitation of aggressive models. Journal of Abnormal and Social Psychology, 63(3), 575–582.", note: "The famous 'Bobo doll' experiment: children imitated behavior they merely observed — the empirical root of observational learning. [Moderate — foundational]", link: "https://doi.org/10.1037/h0045925", kind: "doi" },
       { cite: "Hatfield, E., Cacioppo, J. T., & Rapson, R. L. (1993). Emotional contagion. Current Directions in Psychological Science, 2(3), 96–100.", note: "Establishes that people automatically 'catch' others' emotions — why watching emotional interactions moves us and can shape our own patterns. [Moderate]", link: scholar("Hatfield Cacioppo Rapson 1993 emotional contagion current directions psychological science"), kind: "scholar" },
       { cite: "Bandura, A. (1986). Social Foundations of Thought and Action: A Social Cognitive Theory. Prentice-Hall.", note: "The mature statement of social cognitive theory: the four sub-processes (attention, retention, reproduction, motivation) that make observation into real learning. [Moderate — foundational]", link: scholar("Bandura 1986 social foundations of thought and action social cognitive theory"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 21 — KNOWING vs. DOING: MAKING IT STICK ═══════════════
+  // The universal bottleneck. Most people already KNOW the answer (save money, quit
+  // smoking, listen to your spouse) — they fail to IMPLEMENT it. This is the science
+  // of closing that gap, and it's why the platform prescribes if-then plans, habit
+  // stacking, and tracking on top of every recommendation. Strong evidence.
+  {
+    id: "knowing-doing-gap",
+    section: "21",
+    title: "The Knowing–Doing Gap Is the Real Enemy",
+    subtitle: "Bolsters clusters: volitional, self-regulation, follow-through",
+    evidenceTag: "Strong",
+    description:
+      "Knowing what to do rarely changes behavior — the gap between intention and action is where most self-improvement dies. The good news: that gap has a well-studied fix. Implementation intentions ('if situation X, then I'll do Y') reliably convert goals into action across dozens of studies, and habits form with repetition in a predictable window. This is why every prescription on this platform is paired with an if-then plan, a habit to stack it onto, and a way to track it — we intervene on the DOING, not just the knowing.",
+    callout: "This is the section that makes the others work. A brilliant prescription you don't implement changes nothing; an if-then plan is the difference between reading and doing.",
+    sources: [
+      { cite: "Gollwitzer, P. M. (1999). Implementation intentions: Strong effects of simple plans. American Psychologist, 54(7), 493–503.", note: "The foundational finding: forming a specific 'if-then' plan dramatically increases the odds you actually enact a goal. [Strong — foundational]", link: "https://doi.org/10.1037/0003-066X.54.7.493", kind: "doi" },
+      { cite: "Gollwitzer, P. M., & Sheeran, P. (2006). Implementation intentions and goal achievement: A meta-analysis of effects and processes. Advances in Experimental Social Psychology, 38, 69–119.", note: "The meta-analysis across 90+ studies: implementation intentions have a medium-to-large effect on goal attainment. The core evidence that planning-the-when-and-where works. [Strong — meta-analysis]", link: scholar("Gollwitzer Sheeran 2006 implementation intentions and goal achievement meta-analysis of effects and processes"), kind: "scholar" },
+      { cite: "Sheeran, P., & Webb, T. L. (2016). The intention–behavior gap. Social and Personality Psychology Compass, 10(9), 503–518.", note: "The definitive review of WHY intentions so often fail to become action — and what closes the gap. Names the exact problem the platform is built to solve. [Strong — review]", link: "https://doi.org/10.1111/spc3.12265", kind: "doi" },
+      { cite: "Lally, P., van Jaarsveld, C. H. M., Potts, H. W. W., & Wardle, J. (2010). How are habits formed: Modelling habit formation in the real world. European Journal of Social Psychology, 40(6), 998–1009.", note: "The real-world habit-formation study: automaticity took a MEDIAN of ~66 days (range 18–254) — realistic expectations for how long to hold a new behavior. [Strong]", link: "https://doi.org/10.1002/ejsp.674", kind: "doi" },
+      { cite: "Wood, W., & Neal, D. T. (2007). A new look at habits and the habit–goal interface. Psychological Review, 114(4), 843–863.", note: "The theory of how habits become automatic and context-cued — why stacking a new behavior onto an existing cue makes it stick. [Strong]", link: scholar("Wood Neal 2007 a new look at habits and the habit-goal interface psychological review"), kind: "scholar" },
+      { cite: "Rogers, T., Milkman, K. L., John, L. K., & Norton, M. I. (2015). Beyond good intentions: Prompting people to make plans improves follow-through. Behavioral Science & Policy, 1(2), 33–41.", note: "Field evidence that simply prompting people to make a concrete plan measurably improves follow-through on their intentions. [Moderate — applied field]", link: scholar("Rogers Milkman John Norton 2015 beyond good intentions prompting people to make plans improves follow-through"), kind: "scholar" },
     ],
   },
 ];
