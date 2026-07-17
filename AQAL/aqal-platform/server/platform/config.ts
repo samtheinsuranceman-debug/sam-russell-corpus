@@ -153,7 +153,7 @@ export const FREE_ACCESS_CODE = env("FREE_ACCESS_CODE") || "Welcome1";
 // Giveaway cap: how many free spots exist before the free door closes and pricing
 // shows instead. Powers the "N of 1,000 free spots left" scarcity counter. Set to
 // 0 for UNLIMITED (no cap). Existing free users can always sign back in.
-export const FREE_ASSESSMENT_CAP = parseInt(env("FREE_ASSESSMENT_CAP") || "1000", 10) || 0;
+export const FREE_ASSESSMENT_CAP = parseInt(env("FREE_ASSESSMENT_CAP") || "10000", 10) || 0;
 
 // ---- Email (optional) ---------------------------------------
 // Resend (https://resend.com) by default — set RESEND_API_KEY to send for real.

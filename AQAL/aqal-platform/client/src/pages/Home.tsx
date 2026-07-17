@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { toast } from "sonner";
 import { playClick } from "@/lib/audio";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { trpc } from "@/lib/trpc";
+import { requireAgreement } from "@/lib/agreement";
 
 // ============================================================
 // AQAL HOME — Merged: Viral hook + Claude's Atelier dial UI
@@ -93,6 +95,90 @@ const SAMPLES = [
 ];
 
 // ============================================================
+// FREE FOUNDING ACCESS — email + passcode, right on the home page.
+// First N (FREE_ASSESSMENT_CAP) get the full assessment free with passcode "Welcome1".
+// ============================================================
+function FreeFoundingAccess() {
+  const [, navigate] = useLocation();
+  const [email, setEmail] = useState("");
+  const [passcode, setPasscode] = useState("");
+  const info = trpc.freeAccess.info.useQuery(undefined, { retry: false });
+  const utils = trpc.useUtils();
+  const claim = trpc.freeAccess.claim.useMutation({
+    onSuccess: async (res) => {
+      if (!res.success) { toast.error(res.error || "That access code isn't valid."); return; }
+      toast.success("You're in — welcome, Founding Member. Let's begin.");
+      await utils.auth.me.invalidate();
+      navigate("/assessment");
+    },
+    onError: () => toast.error("Something went wrong. Please try again."),
+  });
+  const submit = () => {
+    const e = email.trim();
+    if (!e || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) { toast.error("Please enter a valid email address."); return; }
+    if (!passcode.trim()) { toast.error("Enter your access passcode."); return; }
+    requireAgreement(() => claim.mutate({ email: e, passcode: passcode.trim() }));
+  };
+  if (info.data?.enabled === false) return null;
+  const remaining = typeof info.data?.remaining === "number" ? info.data.remaining : null;
+  const cap = info.data?.cap ?? 0;
+  const full = info.data?.full;
+
+  return (
+    <section id="claim" style={{ background: `linear-gradient(180deg,${INK},${INK2})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(48px,7vw,88px) 0' }}>
+      <div className="max-w-[640px] mx-auto px-[clamp(20px,5vw,56px)] text-center">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
+          Free founding access — no card
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.04, color: CREAM, margin: '0 0 12px' }}>
+          Claim your free assessment
+        </h2>
+        <p style={{ color: CREAM2, fontSize: 'clamp(14px,1.6vw,17px)', lineHeight: 1.6, maxWidth: '34em', margin: '0 auto 8px' }}>
+          The first {cap ? cap.toLocaleString() : '10,000'} founding members get the full experience free — the voice
+          assessment <b style={{ color: CREAM }}>and</b> the fully-underwritten, multi-AI result. Enter your email and the passcode.
+        </p>
+        {remaining !== null && cap > 0 && (
+          <div style={{ margin: '4px 0 20px' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: CREAM, border: `1px solid ${CHAMPAGNE}55`, borderRadius: '999px', padding: '5px 12px', background: 'rgba(224,198,140,0.06)' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '999px', background: CHAMPAGNE, boxShadow: `0 0 7px ${CHAMPAGNE}` }} />
+              <b style={{ color: CHAMPAGNE }}>{remaining.toLocaleString()}</b> of {cap.toLocaleString()} free spots left
+            </span>
+          </div>
+        )}
+        {full ? (
+          <div style={{ marginTop: '18px' }}>
+            <div style={{ color: CREAM2, marginBottom: '12px' }}>All free founding spots have been claimed.</div>
+            <Link href="/pricing"><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: `linear-gradient(180deg,${CHAMPAGNE},${CHAMPAGNE_D})`, color: INK, fontWeight: 500, borderRadius: '3px', display: 'inline-block', cursor: 'pointer' }}>See pricing</span></Link>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '380px', margin: '20px auto 0' }}>
+            <input
+              type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@email.com" autoComplete="email"
+              style={{ width: '100%', background: 'rgba(241,234,219,0.04)', border: `1px solid ${LINE_C}`, borderRadius: '8px', padding: '13px 14px', fontSize: '15px', color: CREAM, outline: 'none' }}
+            />
+            <input
+              type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
+              placeholder="Access passcode"
+              style={{ width: '100%', background: 'rgba(241,234,219,0.04)', border: `1px solid ${LINE_C}`, borderRadius: '8px', padding: '13px 14px', fontSize: '15px', color: CREAM, outline: 'none' }}
+            />
+            <button
+              onClick={submit} disabled={claim.isPending}
+              style={{ width: '100%', fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '14px', background: `linear-gradient(180deg,${CHAMPAGNE},${CHAMPAGNE_D})`, color: INK, fontWeight: 600, border: 0, borderRadius: '6px', cursor: 'pointer', boxShadow: '0 6px 26px -10px rgba(224,198,140,0.6)' }}
+            >
+              {claim.isPending ? 'Unlocking…' : 'Get free founding access'}
+            </button>
+            <p style={{ fontSize: '11px', color: MUTED, lineHeight: 1.5, margin: '4px 0 0' }}>
+              Your email is your username. We'll email your results there. No card, ever.
+            </p>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 // HERO — outcome-led: reach your goals with less friction, effort, and failure.
 // ============================================================
 function HeroSection() {
@@ -159,9 +245,9 @@ function HeroSection() {
               className="flex gap-[14px] flex-wrap items-center"
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              <Link href="/assessment" className="inline-flex items-center gap-2 cursor-pointer border-0 no-underline rounded-[3px] transition-all duration-150 hover:-translate-y-[1px]" onClick={playClick}>
+              <a href="#claim" className="inline-flex items-center gap-2 cursor-pointer border-0 no-underline rounded-[3px] transition-all duration-150 hover:-translate-y-[1px]" onClick={playClick}>
                 <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: `linear-gradient(180deg,${CHAMPAGNE},${CHAMPAGNE_D})`, color: INK, fontWeight: 500, boxShadow: '0 6px 26px -10px rgba(224,198,140,0.6)', borderRadius: '3px', display: 'inline-block' }}>Measure yourself — free</span>
-              </Link>
+              </a>
               <Link href="/weakness-finder" className="inline-flex items-center gap-2 cursor-pointer border rounded-[3px] no-underline transition-all duration-150 hover:border-[#C85C44] hover:text-[#C85C44]"
                 style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: 'transparent', color: CREAM, borderColor: LINE_C }}
               >
@@ -772,6 +858,7 @@ export default function Home() {
       <PublicHeader />
       <div className="relative z-10">
         <HeroSection />
+        <div data-reveal><FreeFoundingAccess /></div>
         <div data-reveal><ThesisSection /></div>
         <div data-reveal><DialSection /></div>
         <div data-reveal><EngineeringSection /></div>

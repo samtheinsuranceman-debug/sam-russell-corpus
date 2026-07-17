@@ -1049,6 +1049,11 @@ Return ONLY valid JSON.` },
 
         try {
           await upsertUser({ openId, email, name, loginMethod: "free-passcode", lastSignedIn: new Date() });
+          // Founding members (first FREE_ASSESSMENT_CAP) get the FULL experience free —
+          // both the voice assessment AND the fully-underwritten (multi-AI panel +
+          // coaching) result. Grant the unlock so the analyze/coaching gates open.
+          const u = await getUserByOpenId(openId);
+          if (u) await grantBetaAccess(u.id, "silver");
         } catch (e) {
           // DB unavailable (e.g. local/dev) — still issue the session so the
           // core loop works; persistence resumes when the DB is connected.
