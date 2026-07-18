@@ -738,6 +738,12 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "243": "243 · Learning to Juggle & Brain Plasticity", "244": "244 · Memory Palace / Method of Loci",
   "245": "245 · Doodling & Attention/Memory", "246": "246 · Adult / Mandala Coloring & Anxiety",
   "247": "247 · Speed Reading — Honest Debunk", "248": "248 · Barefoot / 'Grounding' / Earthing",
+  // Wave 4 — social & behavioral (connection, ritual & positive practice)
+  "249": "249 · Family Dinners / Eating Together", "250": "250 · Hosting / Commensality / Shared Meals",
+  "251": "251 · Silent Meditation Retreats / Vipassana", "252": "252 · Pilgrimage / Long-Distance Walking",
+  "253": "253 · Expressing Gratitude Directly (Gratitude Visit)", "254": "254 · Acts of Connection — Complimenting Strangers",
+  "255": "255 · Community / Instrumental Ensemble Belonging", "256": "256 · Digital Sabbath / Screen-Free Day",
+  "257": "257 · 'Three Good Things' / 'Best Possible Self' Journaling",
 };
 
 // Short labels for the section jump-nav chips.
@@ -846,6 +852,10 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "239": "Cold Showers", "240": "Wim Hof", "241": "Humming/Om", "242": "Chewing Gum",
   "243": "Juggling", "244": "Memory Palace", "245": "Doodling", "246": "Adult Coloring",
   "247": "Speed Reading", "248": "Grounding",
+  // Wave 4 — social & behavioral (connection, ritual & positive practice)
+  "249": "Family Dinners", "250": "Commensality", "251": "Silent Retreats", "252": "Pilgrimage",
+  "253": "Gratitude Visit", "254": "Complimenting", "255": "Ensemble Belonging", "256": "Digital Sabbath",
+  "257": "Three Good Things",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -858,7 +868,7 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "50", "51", "52", "53",
   // Movement & mind-body
   "3", "4", "58", "59", "62", "54", "55", "5", "200", "217", "218", "210", "211",
-  "219", "222", "220", "225", "224", "226", "228", "227", "236", "238", "234", "235", "237", "241", "246",
+  "219", "222", "220", "225", "224", "226", "228", "227", "236", "238", "234", "235", "237", "241", "246", "251", "257",
   // Cognitive & skill
   "27", "28", "29", "36", "35", "34", "64", "81", "76", "191", "207", "229", "230", "244", "243",
   // Emotional & contemplative
@@ -874,12 +884,13 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   // Social & community
   "114", "115", "112", "134", "135", "113", "117", "118", "121", "119", "120", "116", "198",
   "204", "202", "203", "205", "206", "208",
+  "249", "250", "253", "254", "255",
   // Environment & everyday habits
   "130", "125", "123", "127", "122", "124", "126", "129", "131", "128", "212", "216", "231",
   // AI as coach, companion & mirror
   "194", "192", "195", "196", "193",
   "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "221", "223", "232", "233",
-  "239", "240", "242", "245", "247", "248", "10", "11",
+  "239", "240", "242", "245", "247", "248", "252", "256", "10", "11",
   // The cost of failure — the sobering coda: what breaks when it goes wrong
   "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
   "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
@@ -985,6 +996,11 @@ const PRACTICE_GROUP: Record<string, string> = {
   "239": "The honest frontier — unproven", "240": "The honest frontier — unproven",
   "242": "The honest frontier — unproven", "245": "The honest frontier — unproven",
   "247": "The honest frontier — unproven", "248": "The honest frontier — unproven",
+  // Wave 4 — social & behavioral (connection, ritual & positive practice)
+  "249": "Social & community", "250": "Social & community", "253": "Social & community",
+  "254": "Social & community", "255": "Social & community",
+  "251": "Practices by domain", "257": "Practices by domain",
+  "252": "The honest frontier — unproven", "256": "The honest frontier — unproven",
   "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
   "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
   "196": "AI as coach, companion & mirror",
@@ -5373,6 +5389,116 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Chevalier, G., Sinatra, S. T., Oschman, J. L., Sokal, K., & Sokal, P. (2012). Earthing: Health Implications of Reconnecting the Human Body to the Earth's Surface Electrons. Journal of Environmental and Public Health, 2012, 291541.", note: "Proponent review; authors disclose financial interest in earthing products; small, unblinded, mechanistically speculative studies. [Weak — conflicted]", link: scholar("earthing health implications reconnecting human body Chevalier"), kind: "scholar" },
       { cite: "Oschman, J. L., Chevalier, G., & Brown, R. (2015). The effects of grounding (earthing) on inflammation, the immune response, wound healing, and prevention of cardiovascular disease. Journal of Inflammation Research, 8, 83–96.", note: "Broad claims; authors are contractors/shareholders of an earthing company; no independent replication, unblindable design. [Weak — conflicted]", link: scholar("effects of grounding earthing inflammation immune response Oschman Chevalier"), kind: "scholar" },
+    ],
+  },
+
+  // ── S: social & behavioral — connection, ritual & positive practice (249–257)
+  {
+    id: "family-dinners", section: "249", title: "Family Dinners / Eating Meals Together", subtitle: "Bolsters clusters: connection, family cohesion, adolescent resilience, routine",
+    evidenceTag: "Moderate",
+    feeds: ["connection", "family cohesion", "adolescent resilience", "routine/structure", "commensality"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    description: "Regularly sharing meals as a household — associated in youth with lower substance use, disordered eating, and depressive symptoms, and higher self-esteem and connectedness. Adult versions link shared meals to better diet quality and wellbeing.",
+    callout: "The literature is overwhelmingly observational. Family meals co-travel with family functioning, income, and time affluence; several reviews note the effect may partly proxy for a warm, organized home rather than the meal itself. Effects shrink but often survive adjustment.",
+    sources: [
+      { cite: "Harrison, M. E., et al. (2015). Systematic review of the effects of family meal frequency on psychosocial outcomes in youth. Canadian Family Physician, 61(2), e96–e106.", note: "More frequent family meals associated with better psychosocial outcomes across studies. [Moderate — systematic review, observational]", link: scholar("Harrison family meals psychosocial youth systematic review"), kind: "scholar" },
+      { cite: "Fulkerson, J. A., et al. (2006). Family Dinner Meal Frequency and Adolescent Development. Journal of Adolescent Health, 39(3), 337–345.", note: "In 99,462 US students, dinner frequency positively associated with all developmental assets and inversely with all high-risk behaviors. [Moderate — large cross-sectional]", link: scholar("Fulkerson family dinner developmental assets adolescent"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "commensality", section: "250", title: "Hosting / Commensality / Shared Meals", subtitle: "Bolsters clusters: connection, trust, cooperation, community",
+    evidenceTag: "Moderate",
+    feeds: ["connection", "hosting/hospitality", "trust", "cooperation", "community engagement"],
+    impact: { magnitude: 2, latency: "days", durability: "sustained", effort: "moderate" },
+    description: "The bonding function of eating together specifically: shared and similar eating raises trust, cooperation, closeness, and felt community. A large national survey plus controlled lab experiments on the causal mechanism.",
+    callout: "Dunbar's survey is cross-sectional (path analysis suggests, but cannot prove, eating→bonding). The Woolley & Fishbach experiments are causal but on narrow outcomes (trust games, negotiations); whether lab effects scale to durable relationships is untested.",
+    sources: [
+      { cite: "Dunbar, R. I. M. (2017). Breaking Bread: the Functions of Social Eating. Adaptive Human Behavior and Physiology, 3, 198–211.", note: "UK national survey: more frequent social eating predicts more happiness, life satisfaction, trust, community engagement, and support networks. [Moderate]", link: scholar("Dunbar breaking bread social eating 2017"), kind: "scholar" },
+      { cite: "Woolley, K., & Fishbach, A. (2019). Shared Plates, Shared Minds: Consuming From a Shared Plate Promotes Cooperation. Psychological Science, 30(4), 541–552.", note: "Eating from a shared (vs separate) plate increased cooperation in dilemmas and negotiations. [Moderate — causal but narrow]", link: scholar("Woolley Fishbach shared plates shared minds"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "meditation-retreat", section: "251", title: "Silent Meditation Retreats / Vipassana", subtitle: "Bolsters clusters: contemplative practice, stress reduction, emotion regulation",
+    evidenceTag: "Moderate",
+    feeds: ["contemplative practice", "stress reduction", "emotion regulation", "meaning", "solitude"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "high" },
+    description: "Intensive multi-day residential silent meditation (Vipassana, Zen, insight). A dedicated meta-analysis finds moderate effects on anxiety, depression, and stress, maintained at follow-up.",
+    callout: "Retreat-goers are heavily self-selected and motivated; many primary studies are pre-post with no control group. The controlled meta-analytic effect (~g=0.49) is moderate but the evidence quality is modest. Rare adverse effects (destabilization, 'dark night' experiences) are underreported.",
+    sources: [
+      { cite: "Khoury, B., Knäuper, B., Schlosser, M., Carrière, K., & Chiesa, A. (2017). Effectiveness of traditional meditation retreats: A systematic review and meta-analysis. Journal of Psychosomatic Research, 92, 16–25.", note: "21 studies, 2,912 participants; moderate controlled effects (g=0.49), large effects on anxiety/depression/stress, maintained at follow-up. [Moderate — meta-analysis]", link: scholar("Khoury effectiveness traditional meditation retreats meta-analysis"), kind: "scholar" },
+      { cite: "Goyal, M., et al. (2014). Meditation Programs for Psychological Stress and Well-being: A Systematic Review and Meta-analysis. JAMA Internal Medicine, 174(3), 357–368.", note: "Moderate evidence for anxiety/depression; notes weak comparators across the field. [Moderate]", link: scholar("Goyal meditation programs JAMA Internal Medicine meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "pilgrimage", section: "252", title: "Pilgrimage / Long-Distance Walking (Camino)", subtitle: "Bolsters clusters: meaning, awe, nature, community — bundles well-evidenced mechanisms",
+    evidenceTag: "Emerging",
+    feeds: ["meaning/purpose", "awe", "nature exposure", "physical activity", "solitude + community"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "high" },
+    description: "A multi-day/multi-week walking pilgrimage combining sustained walking, nature, spiritual/reflective intent, and transient community. Self-reported effects on meaning and wellbeing are strong; the rigorous evidence is thin.",
+    callout: "The weakest-evidenced item here — Camino-specific research is largely qualitative, retrospective, and self-selected. Honest framing: it is plausibly beneficial mainly by bundling mechanisms that ARE well-evidenced (physical activity, nature, social contact, meaning-making), not because 'pilgrimage' per se is proven.",
+    sources: [
+      { cite: "Schnell, T., & Pali, S. (2013). Pilgrimage today: The meaning-making potential of ritual. Mental Health, Religion & Culture, 16(9), 887–902.", note: "Empirical study: pilgrimage associated with increases in meaningfulness and wellbeing pre/post. [Emerging]", link: scholar("Schnell Pali pilgrimage today meaning-making ritual"), kind: "scholar" },
+      { cite: "Roszak, P., et al. (2023). The Pilgrimage on the Camino de Santiago and Its Impacts on Marital and Familial Relationships: An Exploratory Study.", note: "Exploratory study; pilgrims report relational and personal-growth effects. [Emerging — qualitative/self-selected]", link: scholar("Camino Santiago marital familial relationships exploratory study"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "gratitude-visit", section: "253", title: "Expressing Gratitude Directly (Gratitude Visit)", subtitle: "Bolsters clusters: gratitude, connection, relationship repair, positive affect",
+    evidenceTag: "Strong",
+    feeds: ["gratitude", "connection", "relationship repair/strengthening", "positive affect"],
+    impact: { magnitude: 4, latency: "days", durability: "transient", effort: "moderate" },
+    description: "Writing and (ideally) delivering a letter of thanks to a specific person — distinct from private gratitude journaling. The delivered 'gratitude visit' produces the largest acute happiness spikes in positive psychology, backed by RCTs and a meta-analysis.",
+    callout: "The visit gives a large but short-lived spike — benefits largely faded by ~1 month in Seligman's study, unlike some other exercises. Meta-analytic effects are significant but small-to-moderate and shrink against active comparisons. It is a high-intensity, hard-to-repeat act.",
+    sources: [
+      { cite: "Seligman, M. E. P., Steen, T. A., Park, N., & Peterson, C. (2005). Positive Psychology Progress: Empirical Validation of Interventions. American Psychologist, 60(5), 410–421.", note: "The gratitude visit produced the largest immediate happiness boost of all exercises tested; effect faded by one month. [Strong — RCT]", link: scholar("Seligman 2005 positive psychology progress gratitude visit"), kind: "scholar" },
+      { cite: "Komase, Y., et al. (2023). The Effect of Expressed Gratitude Interventions on Psychological Wellbeing: A Meta-Analysis of Randomised Controlled Studies. International Journal of Applied Positive Psychology.", note: "25 RCTs, 6,745 participants; expressed gratitude significantly improved wellbeing vs neutral controls. [Strong — meta-analysis]", link: scholar("expressed gratitude interventions meta-analysis randomised controlled"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "complimenting", section: "254", title: "Acts of Connection — Complimenting Strangers", subtitle: "Bolsters clusters: connection, prosociality, overcoming social hesitancy",
+    evidenceTag: "Strong",
+    feeds: ["connection", "prosociality", "kindness", "overcoming social hesitancy", "belonging"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Small prosocial-connection acts — giving compliments, initiating warmth — where the barrier is a systematic misprediction of how they will land (the 'liking gap'). The robust, causal finding is that we underestimate the positive impact and overestimate the awkwardness.",
+    callout: "The strong finding is the MISCALIBRATION (givers underestimate impact / overestimate awkwardness), not a large durable happiness gain for the giver — that is less established than the perception gap itself. Most samples are Western.",
+    sources: [
+      { cite: "Boothby, E. J., & Bohns, V. K. (2021). Why a Simple Act of Kindness Is Not as Simple as It Seems: Underestimating the Positive Impact of Our Compliments on Others. Personality and Social Psychology Bulletin, 47(5), 826–840.", note: "Compliment-givers underestimated how good recipients felt and overestimated discomfort, making them less likely to give compliments. [Strong]", link: scholar("Boothby Bohns compliments underestimate positive impact"), kind: "scholar" },
+      { cite: "Boothby, E. J., Cooney, G., Sandstrom, G. M., & Clark, M. S. (2018). The Liking Gap in Conversations: Do People Like Us More Than We Think? Psychological Science, 29(11), 1742–1756.", note: "After conversations, people systematically underestimated how much partners liked them. [Strong]", link: scholar("liking gap in conversations Boothby Cooney Sandstrom"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "ensemble-belonging", section: "255", title: "Community / Instrumental Ensemble Belonging", subtitle: "Bolsters clusters: belonging, community, identity, coordination",
+    evidenceTag: "Moderate",
+    feeds: ["belonging", "community", "identity", "coordination/synchrony", "cross-generational contact"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "high" },
+    description: "Ongoing participation in a community instrumental group — orchestra, brass/concert band, ensemble — for the belonging, coordination, and identity it provides. Sits under the well-evidenced arts-and-health umbrella.",
+    callout: "Most rigorous group-music evidence is on SINGING/choirs; instrumental-ensemble-specific studies are largely qualitative or cross-sectional (self-selected members). Claim the belonging/wellbeing association honestly; do not import choir RCT strength wholesale.",
+    sources: [
+      { cite: "Williamson, V. J., & Bonshor, M. (2019). Wellbeing in Brass Bands: The Benefits and Challenges of Group Music Making. Frontiers in Psychology, 10, 1176.", note: "Survey of 346 brass-band players reporting physical, psychological, social, and emotional wellbeing benefits. [Moderate — survey]", link: scholar("Williamson Bonshor wellbeing brass bands Frontiers"), kind: "scholar" },
+      { cite: "Fancourt, D., & Finn, S. (2019). What is the evidence on the role of the arts in improving health and well-being? WHO Health Evidence Network Synthesis Report 67.", note: "3,000+ studies; active music/arts participation associated with wellbeing, reduced loneliness and depression. [Strong — umbrella review]", link: scholar("Fancourt Finn WHO evidence arts health wellbeing scoping review"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "digital-sabbath", section: "256", title: "Digital Sabbath / Screen-Free Day", subtitle: "Bolsters clusters: attention restoration, presence — thin as a named practice",
+    evidenceTag: "Mixed",
+    feeds: ["attention restoration", "digital minimalism", "rest/recovery", "presence", "boundaries"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "moderate" },
+    description: "A recurring bounded period deliberately free of phones/social media/screens, aimed at attention restoration, presence, sleep, and reconnection. The nearest rigorous evidence is on social-media/smartphone reduction, which is mixed.",
+    callout: "There is essentially no strong RCT literature on 'a weekly screen-free day' specifically. Adjacent detox trials show small, inconsistent effects — and notably, moderated REDUCTION often beats total abstinence, and abstinence can trigger withdrawal/craving. Recommend as a plausible, low-risk experiment, not an evidence-backed protocol.",
+    sources: [
+      { cite: "Ferguson, M. A., et al. (2025). Planning a digital detox: Findings from a randomized controlled trial to reduce smartphone usage time. Computers in Human Behavior.", note: "Both abstinence and reduction improved subjective wellbeing up to 4 months; reduction effects more stable than full abstinence. [Moderate]", link: scholar("planning a digital detox randomized controlled trial smartphone reduction"), kind: "scholar" },
+      { cite: "Radtke, T., et al. (2025). Am I Happier Without You? Social Media Detox and Well-Being: A Meta-Analysis of Randomized Controlled Trials. Behavioral Sciences, 15(3), 290.", note: "20 RCTs; small positive effect of social-media detox on wellbeing; heterogeneous results. [Moderate]", link: scholar("social media detox well-being meta-analysis randomized controlled trials"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "three-good-things", section: "257", title: "'Three Good Things' / 'Best Possible Self' Journaling", subtitle: "Bolsters clusters: gratitude/savoring, optimism, positive affect",
+    evidenceTag: "Strong",
+    feeds: ["gratitude/savoring", "optimism", "meaning/goal-clarity", "positive affect", "reflective journaling"],
+    impact: { magnitude: 2, latency: "days", durability: "sustained", effort: "low" },
+    description: "Two brief writing practices: Three Good Things (each night, record three things that went well and why) and Best Possible Self (write about a future where everything has gone well). Each has original RCT support plus replications and meta-analyses.",
+    callout: "Effects are real but modest, and meta-analyses using ACTIVE controls and correcting for publication bias shrink positive-psychology-intervention effects substantially. Best Possible Self reliably lifts optimism short-term; long-term effects are smaller and adherence-dependent. Solid, but not a magic bullet.",
+    sources: [
+      { cite: "Seligman, M. E. P., Steen, T. A., Park, N., & Peterson, C. (2005). Positive Psychology Progress: Empirical Validation of Interventions. American Psychologist, 60(5), 410–421.", note: "Three Good Things increased happiness and reduced depressive symptoms, with effects persisting to 6 months in those who kept it up. [Strong — RCT]", link: scholar("Seligman 2005 three good things six month happiness"), kind: "scholar" },
+      { cite: "Carrillo, A., et al. (2019). Effects of the Best Possible Self intervention: A systematic review and meta-analysis. PLOS ONE, 14(9), e0222386.", note: "Best Possible Self reliably increases optimism and positive affect; effects generally small and short-term. [Strong — meta-analysis]", link: scholar("Carrillo best possible self systematic review meta-analysis PLOS ONE"), kind: "scholar" },
     ],
   },
 ];
