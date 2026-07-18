@@ -7455,6 +7455,8 @@ export default function ResearchLibrary() {
   const [practiceQuery, setPracticeQuery] = useState("");
   const [practiceTag, setPracticeTag] = useState<"all" | PracticeCluster["evidenceTag"]>("all");
   const [practiceSectionFilter, setPracticeSectionFilter] = useState<string>("all");
+  // Leaderboard overlay: rank every scored cluster by leverage / threat / cost.
+  const [board, setBoard] = useState<"off" | "leverage" | "threat" | "cost">("off");
 
   const toggle = (id: string) => {
     setOpenIds((prev) => {
@@ -7547,6 +7549,39 @@ export default function ResearchLibrary() {
 
   // When a keyword search is active, reveal matching sources automatically.
   const practiceSearching = practiceQuery.trim().length > 0;
+
+  // ---- Leaderboards -----------------------------------------------------------
+  // Ranked ladders computed straight from the same gauges each card carries.
+  // Leverage = top 50 activities by result-per-effort; threat = weak lines most
+  // dangerous to leave weak; cost = life-events with the highest price of failure.
+  const leverageBoard = useMemo(() =>
+    PRACTICE_EVIDENCE
+      .filter((c) => c.impact)
+      .map((c) => ({ c, score: leverageScore(c.impact!, c.evidenceTag) }))
+      .sort((a, b) => b.score - a.score || a.c.title.localeCompare(b.c.title))
+      .slice(0, 50), []);
+  const threatBoard = useMemo(() =>
+    PRACTICE_EVIDENCE
+      .filter((c) => c.weakness)
+      .map((c) => ({ c, score: c.weakness!.threat }))
+      .sort((a, b) => b.score - a.score || a.c.title.localeCompare(b.c.title)), []);
+  const costBoard = useMemo(() =>
+    PRACTICE_EVIDENCE
+      .filter((c) => c.harm)
+      .map((c) => ({ c, score: costScore(c.harm!, c.evidenceTag) }))
+      .sort((a, b) => b.score - a.score || a.c.title.localeCompare(b.c.title)), []);
+
+  // Click a board row → drop the overlay, clear filters, open + scroll to the card.
+  const openFromBoard = (id: string) => {
+    setBoard("off");
+    setPracticeQuery("");
+    setPracticeTag("all");
+    setPracticeSectionFilter("all");
+    setOpenPracticeIds((prev) => new Set(prev).add(id));
+    setTimeout(() => {
+      document.getElementById(`src-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 80);
+  };
 
   return (
     <div className="rl-page">
@@ -7717,6 +7752,32 @@ export default function ResearchLibrary() {
         .rl-clear-all{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
           color:${CHAMPAGNE}; border-bottom:1px solid rgba(224,198,140,0.3); padding-bottom:1px;}
         .rl-clear-all:hover{border-color:${CHAMPAGNE};}
+        /* ---- Leaderboards ---- */
+        .rl-board-toggle{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:2px 0 16px;}
+        .rl-board-toggle-label{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.14em;
+          text-transform:uppercase; color:${MUTED}; margin-right:2px;}
+        .rl-board{border:1px solid ${LINE}; border-radius:14px; background:rgba(255,255,255,0.015); overflow:hidden; margin-bottom:26px;}
+        .rl-board-head{padding:16px 18px; border-bottom:1px solid ${LINE}; border-left:3px solid ${CHAMPAGNE};}
+        .rl-board-heading{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(18px,2.4vw,24px); line-height:1.15;}
+        .rl-board-sub{font-size:12px; line-height:1.5; color:${MUTED}; margin-top:5px; max-width:60ch;}
+        .rl-board-list{list-style:none; margin:0; padding:6px; counter-reset:none;}
+        .rl-board-list li{margin:0;}
+        .rl-board-row{display:flex; align-items:center; gap:14px; width:100%; text-align:left;
+          padding:10px 12px; border-radius:9px; background:transparent; border:1px solid transparent; cursor:pointer; transition:background .12s,border-color .12s;}
+        .rl-board-row:hover{background:rgba(224,198,140,0.05); border-color:${LINE};}
+        .rl-board-rank{font-family:'JetBrains Mono',monospace; font-size:12px; color:${MUTED}; min-width:26px; text-align:right; flex-shrink:0;}
+        .rl-board-score{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:15px; min-width:44px; text-align:center;
+          border:1px solid; border-radius:7px; padding:4px 0; flex-shrink:0;}
+        .rl-board-score small{font-size:9px; opacity:0.7; font-weight:400;}
+        .rl-board-name{flex:1; min-width:0; display:flex; flex-direction:column; gap:2px;}
+        .rl-board-name b{color:${CREAM}; font-size:14px; line-height:1.25;}
+        .rl-board-meta{font-size:11px; color:${MUTED}; line-height:1.3;}
+        .rl-board-meta em{font-style:italic; opacity:0.85;}
+        .rl-board-evtag{flex-shrink:0; font-size:10px;}
+        @media (max-width:640px){
+          .rl-board-evtag{display:none;}
+          .rl-board-name b{font-size:13px;}
+        }
         .rl-practice-group-head{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(22px,3vw,32px);
           color:${CREAM}; margin:48px 0 8px; letter-spacing:-0.01em; line-height:1.1;}
         .rl-practice-group-head:first-child{margin-top:8px;}
@@ -8079,6 +8140,94 @@ export default function ResearchLibrary() {
               ))}
             </div>
 
+            {/* Leaderboard toggle — rank the whole library by each gauge */}
+            <div className="rl-board-toggle">
+              <span className="rl-board-toggle-label">Leaderboards</span>
+              <button
+                type="button"
+                className={`rl-chip${board === "leverage" ? " active" : ""}`}
+                style={board === "leverage" ? { borderColor: CHAMPAGNE, color: CHAMPAGNE } : undefined}
+                onClick={() => setBoard(board === "leverage" ? "off" : "leverage")}
+              >
+                ★ Top 50 by leverage
+              </button>
+              <button
+                type="button"
+                className={`rl-chip${board === "threat" ? " active" : ""}`}
+                style={board === "threat" ? { borderColor: "#c8788f", color: "#c8788f" } : undefined}
+                onClick={() => setBoard(board === "threat" ? "off" : "threat")}
+              >
+                ⚠ Most dangerous weak lines
+              </button>
+              <button
+                type="button"
+                className={`rl-chip${board === "cost" ? " active" : ""}`}
+                style={board === "cost" ? { borderColor: "#d9695a", color: "#d9695a" } : undefined}
+                onClick={() => setBoard(board === "cost" ? "off" : "cost")}
+              >
+                ✖ Highest cost of failure
+              </button>
+              {board !== "off" && (
+                <button type="button" className="rl-clear-all" onClick={() => setBoard("off")}>
+                  Back to full library
+                </button>
+              )}
+            </div>
+
+            {/* Leaderboard overlay */}
+            {board !== "off" && (() => {
+              const rows = board === "leverage" ? leverageBoard : board === "threat" ? threatBoard : costBoard;
+              const accent = board === "leverage" ? CHAMPAGNE : board === "threat" ? "#c8788f" : "#d9695a";
+              const heading = board === "leverage"
+                ? "Top 50 activities by Leverage Score — most result per unit of effort and time"
+                : board === "threat"
+                ? `Weak lines ranked by Threat (1–10) — most dangerous to leave weak · ${rows.length} clusters`
+                : `Cost of failure ranked by Cost Score — the highest price of the wheels coming off · ${rows.length} clusters`;
+              const sub = board === "leverage"
+                ? "70·benefit + 30·ease, from each card's cited research. A directional guide, not a promise."
+                : board === "threat"
+                ? "A research-grounded 1–10 severity call: how broadly and severely a deficit in that line derails a life."
+                : "70·damage + 30·imminence. Not things to do — the documented price when things go wrong.";
+              return (
+                <div className="rl-board">
+                  <div className="rl-board-head" style={{ borderColor: accent }}>
+                    <div className="rl-board-heading" style={{ color: accent }}>{heading}</div>
+                    <div className="rl-board-sub">{sub}</div>
+                  </div>
+                  <ol className="rl-board-list">
+                    {rows.map((r, i) => {
+                      const scoreColor = board === "threat" ? threatColor(r.score) : accent;
+                      const scoreText = board === "threat" ? `${r.score}` : `${r.score}`;
+                      const scoreUnit = board === "threat" ? "/10" : "";
+                      return (
+                        <li key={r.c.id}>
+                          <button type="button" className="rl-board-row" onClick={() => openFromBoard(r.c.id)}>
+                            <span className="rl-board-rank">{i + 1}</span>
+                            <span className="rl-board-score" style={{ color: scoreColor, borderColor: scoreColor }}>
+                              {scoreText}<small>{scoreUnit}</small>
+                            </span>
+                            <span className="rl-board-name">
+                              <b>{r.c.title}</b>
+                              <span className="rl-board-meta">
+                                {PRACTICE_SECTIONS[r.c.section]?.replace(/^\d+\s·\s/, "")}
+                                {board === "threat" && r.c.weakness && (
+                                  <em> · weak: {r.c.weakness.weakLines.join(", ")} · {r.c.weakness.degree}</em>
+                                )}
+                              </span>
+                            </span>
+                            <span className="rl-tag rl-board-evtag" style={{ color: TAG_COLOR[r.c.evidenceTag] }}>
+                              {r.c.evidenceTag}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              );
+            })()}
+
+            {board === "off" && (<>
             {/* Leverage Score explainer */}
             <div style={{ border: "1px solid rgba(224,198,140,0.25)", background: "rgba(224,198,140,0.05)", borderRadius: 10, padding: "12px 14px", margin: "6px 0 14px", fontSize: 12.5, lineHeight: 1.55, color: "var(--rl-muted, #b9b2a6)" }}>
               <b style={{ color: CHAMPAGNE }}>Reading the Leverage Score.</b> Many practices now carry a 0–100 gauge of
@@ -8258,6 +8407,7 @@ export default function ResearchLibrary() {
                 </React.Fragment>
               );
             })}
+            </>)}
 
             <div className="rl-foot">
               <b>The honest bottom line:</b> every study here documents what an activity does — a nearest-construct
