@@ -204,8 +204,20 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
   assertiveness, social-anxiety avoidance, co-parenting), and emotional/volitional (anger,
   sensation-seeking, frustration tolerance, experiential avoidance, external locus, fear of
   failure, boredom proneness, low openness, perfectionism, intolerance of uncertainty).
-- **CURRENT LIBRARY SIZE (deterministic count from the data):** **437 clusters across 396
-  section slots (0–395), 1,172 verified sources.** Three lenses: **216 practice clusters**
+- **Brainwave-entrainment group (done):** +6 clusters (396–401) — a "Sound, light & rhythm"
+  group covering **binaural beats** (incl. Hemi-Sync and the CIA "Gateway Process" tapes),
+  **isochronic tones & monaural beats** (the no-headphones/speaker route), **audio-visual
+  entrainment** (light-and-sound machines), **40 Hz gamma sensory stimulation (GENUS)**,
+  **rhythmic auditory stimulation** (gait), and **vibroacoustic therapy**. 32 verified DOIs.
+  HONESTY: each is rated at its TRUE level — binaural beats **Mixed** (leverage 40; small
+  transient effect, contested mechanism); the CIA Gateway memo is characterized as a 1983
+  speculative essay with zero data (declassified ≠ validated), NOT as proof; AVE carries a
+  photosensitive-epilepsy contraindication; GENUS is Emerging/Alzheimer's-specific (pivotal
+  HOPE trial unread — do NOT claim a result); only **rhythmic auditory stimulation** earns
+  **Strong** (leverage 70) and only for Parkinson's/stroke **gait**, explicitly not for
+  mood/cognition/"consciousness."
+- **CURRENT LIBRARY SIZE (deterministic count from the data):** **443 clusters across 402
+  section slots (0–401), 1,203 verified sources.** Three lenses: **222 practice clusters**
   (Leverage Score), **80 cost-of-failure clusters** (Cost Score), **80 weakness-line clusters**
   (Threat 1–10). Keep expanding toward ~1,000.
 - **NEW — Live leaderboards (done):** the practices tab has a leaderboard overlay that ranks
