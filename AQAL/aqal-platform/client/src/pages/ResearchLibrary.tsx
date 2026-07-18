@@ -744,6 +744,11 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "253": "253 · Expressing Gratitude Directly (Gratitude Visit)", "254": "254 · Acts of Connection — Complimenting Strangers",
   "255": "255 · Community / Instrumental Ensemble Belonging", "256": "256 · Digital Sabbath / Screen-Free Day",
   "257": "257 · 'Three Good Things' / 'Best Possible Self' Journaling",
+  // Wave 4 — order, digital environment & manifestation
+  "258": "258 · Clean / Tidy Whole Home", "259": "259 · Workspace / Office Organization",
+  "260": "260 · Digital Decluttering / Email Overload", "261": "261 · Photo Organization / Digital Hoarding",
+  "262": "262 · Vision Boards / Positive Visualization", "263": "263 · Dream Journaling & Working With Dreams",
+  "264": "264 · Letters From Your Future Self", "265": "265 · Cursive vs. Print Handwriting",
 };
 
 // Short labels for the section jump-nav chips.
@@ -856,6 +861,9 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "249": "Family Dinners", "250": "Commensality", "251": "Silent Retreats", "252": "Pilgrimage",
   "253": "Gratitude Visit", "254": "Complimenting", "255": "Ensemble Belonging", "256": "Digital Sabbath",
   "257": "Three Good Things",
+  // Wave 4 — order, digital environment & manifestation
+  "258": "Tidy Home", "259": "Workspace Org", "260": "Email Declutter", "261": "Photo Hoarding",
+  "262": "Vision Boards", "263": "Dream Journaling", "264": "Future-Self Letters", "265": "Cursive Myth",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -868,7 +876,7 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "50", "51", "52", "53",
   // Movement & mind-body
   "3", "4", "58", "59", "62", "54", "55", "5", "200", "217", "218", "210", "211",
-  "219", "222", "220", "225", "224", "226", "228", "227", "236", "238", "234", "235", "237", "241", "246", "251", "257",
+  "219", "222", "220", "225", "224", "226", "228", "227", "236", "238", "234", "235", "237", "241", "246", "251", "257", "264",
   // Cognitive & skill
   "27", "28", "29", "36", "35", "34", "64", "81", "76", "191", "207", "229", "230", "244", "243",
   // Emotional & contemplative
@@ -886,11 +894,11 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "204", "202", "203", "205", "206", "208",
   "249", "250", "253", "254", "255",
   // Environment & everyday habits
-  "130", "125", "123", "127", "122", "124", "126", "129", "131", "128", "212", "216", "231",
+  "130", "125", "123", "127", "122", "124", "126", "129", "131", "128", "212", "216", "231", "258", "259", "260",
   // AI as coach, companion & mirror
   "194", "192", "195", "196", "193",
   "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "221", "223", "232", "233",
-  "239", "240", "242", "245", "247", "248", "252", "256", "10", "11",
+  "239", "240", "242", "245", "247", "248", "252", "256", "261", "262", "263", "265", "10", "11",
   // The cost of failure — the sobering coda: what breaks when it goes wrong
   "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
   "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
@@ -1001,6 +1009,11 @@ const PRACTICE_GROUP: Record<string, string> = {
   "254": "Social & community", "255": "Social & community",
   "251": "Practices by domain", "257": "Practices by domain",
   "252": "The honest frontier — unproven", "256": "The honest frontier — unproven",
+  // Wave 4 — order, digital environment & manifestation
+  "258": "Environment & everyday habits", "259": "Environment & everyday habits", "260": "Environment & everyday habits",
+  "264": "Practices by domain",
+  "261": "The honest frontier — unproven", "262": "The honest frontier — unproven",
+  "263": "The honest frontier — unproven", "265": "The honest frontier — unproven",
   "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
   "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
   "196": "AI as coach, companion & mirror",
@@ -5499,6 +5512,104 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Seligman, M. E. P., Steen, T. A., Park, N., & Peterson, C. (2005). Positive Psychology Progress: Empirical Validation of Interventions. American Psychologist, 60(5), 410–421.", note: "Three Good Things increased happiness and reduced depressive symptoms, with effects persisting to 6 months in those who kept it up. [Strong — RCT]", link: scholar("Seligman 2005 three good things six month happiness"), kind: "scholar" },
       { cite: "Carrillo, A., et al. (2019). Effects of the Best Possible Self intervention: A systematic review and meta-analysis. PLOS ONE, 14(9), e0222386.", note: "Best Possible Self reliably increases optimism and positive affect; effects generally small and short-term. [Strong — meta-analysis]", link: scholar("Carrillo best possible self systematic review meta-analysis PLOS ONE"), kind: "scholar" },
+    ],
+  },
+
+  // ── N: order, digital environment & manifestation (258–265) ───────────────
+  {
+    id: "tidy-home", section: "258", title: "Clean / Tidy Whole Home", subtitle: "Bolsters clusters: stress/wellbeing, home environment, restfulness",
+    evidenceTag: "Moderate",
+    feeds: ["whole-house cleaning routine", "stress/wellbeing", "home environment"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "high" },
+    description: "A recurring whole-house cleaning/tidying routine, framed around the felt experience of the home. The lever is the ambient stress-physiology of living in a cluttered vs restful dwelling.",
+    callout: "Saxbe & Repetti is correlational and the cortisol effect was found in women, not men — don't overstate it as proven or gender-neutral. The honest claim is 'a cluttered home is reliably associated with worse mood/stress markers,' not 'cleaning your house lowers cortisol' (untested as an intervention).",
+    sources: [
+      { cite: "Saxbe, D. E., & Repetti, R. (2010). No Place Like Home: Home Tours Correlate With Daily Patterns of Mood and Cortisol. Personality and Social Psychology Bulletin, 36(1), 71–81.", note: "Women describing homes as cluttered/unfinished had flatter (less healthy) diurnal cortisol slopes and more depressed mood; those describing restful homes had steeper, healthier slopes. [Moderate — correlational]", link: scholar("No Place Like Home home tours mood cortisol Saxbe Repetti"), kind: "scholar" },
+      { cite: "Roster, C. A., Ferrari, J. R., & Jurkat, M. P. (2016). The dark side of home: Assessing possession 'clutter' on subjective well-being. Journal of Environmental Psychology, 46, 32–41.", note: "Possession clutter had a strong negative effect on 'psychological home' and subjective well-being. [Moderate — survey]", link: scholar("dark side of home clutter subjective well-being Roster"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "workspace-org", section: "259", title: "Workspace / Office Organization", subtitle: "Bolsters clusters: focus, cognitive load — office-productivity gains are an extrapolation",
+    evidenceTag: "Moderate",
+    feeds: ["workspace/office organization", "focus", "cognitive load"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Reducing visual clutter in the immediate work environment to protect attention. The neural attention mechanism (competing stimuli suppress each other's representation) is well established; office-specific productivity gains are thin.",
+    callout: "There is NO strong direct study showing 'a tidy desk makes you more productive.' McMains & Kastner is a lab neuroimaging study of visual crowding, not an office field trial — cite it for the mechanism, not as proof of workplace output gains.",
+    sources: [
+      { cite: "McMains, S., & Kastner, S. (2011). Interactions of Top-Down and Bottom-Up Mechanisms in Human Visual Cortex. Journal of Neuroscience, 31(2), 587–597.", note: "Multiple simultaneous stimuli mutually suppress each other's neural representation; clutter increases the competition attention must overcome. [Moderate — mechanism]", link: scholar("McMains Kastner top-down bottom-up visual cortex clutter"), kind: "scholar" },
+      { cite: "Roster, C. A., Ferrari, J. R., & Jurkat, M. P. (2016). The dark side of home: Assessing possession 'clutter' on subjective well-being. Journal of Environmental Psychology, 46, 32–41.", note: "Clutter degrades sense of place and well-being (home context, used here as adjacent support). [Moderate — context mismatch]", link: scholar("Roster clutter well-being environmental psychology"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "digital-declutter", section: "260", title: "Digital Decluttering / Email Overload", subtitle: "Bolsters clusters: focus, stress reduction — batch and limit, don't abolish",
+    evidenceTag: "Strong",
+    feeds: ["digital decluttering", "email overload management", "notification control", "stress reduction"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "low" },
+    description: "Reducing email/notification load — batching checks, notification-off periods, inbox limits — to lower physiological stress and reclaim focus. The best-evidenced topic in this set, including an experiment with a physiological marker plus field RCTs.",
+    callout: "'Zero notifications' is not strictly better — turning alerts OFF entirely raised anxiety/FoMO; batching ~3x/day was the sweet spot. Mark's email-cutoff study was small (n=13). Frame as 'batch and limit,' not 'abolish.'",
+    sources: [
+      { cite: "Kushlev, K., & Dunn, E. W. (2015). Checking email less frequently reduces stress. Computers in Human Behavior, 43, 220–228.", note: "Limiting email to 3x/day for a week significantly lowered daily stress vs unlimited checking (within-subjects, n=124). [Strong]", link: scholar("Checking email less frequently reduces stress Kushlev Dunn"), kind: "scholar" },
+      { cite: "Fitz, N., Kushlev, K., et al. (2019). Batching smartphone notifications can improve well-being. Computers in Human Behavior, 101, 84–94.", note: "Notifications batched 3x/day reduced stress and improved well-being; receiving them never increased anxiety/FoMO. [Strong — field RCT, n≈237]", link: scholar("Batching smartphone notifications well-being Fitz Kushlev"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "photo-hoarding", section: "261", title: "Photo Organization / Digital Hoarding", subtitle: "Behavior is measured; wellbeing benefit of organizing is untested",
+    evidenceTag: "Emerging",
+    feeds: ["photo organization", "digital hoarding awareness", "digital clutter & stress"],
+    impact: { magnitude: 1, latency: "days", durability: "transient", effort: "moderate" },
+    description: "Managing accumulation of digital files/photos and difficulty deleting them. There is emerging construct/measurement work on 'digital hoarding,' but essentially no controlled evidence that organizing your photos improves mental health.",
+    callout: "The digital-hoarding papers describe and measure the behavior (accumulation + difficulty deleting, with associated anxiety); they do NOT show that a photo-organizing intervention helps anyone. Any 'declutter your camera roll to feel better' claim is currently unsupported by outcome data.",
+    sources: [
+      { cite: "Sweeten, G., Sillence, E., & Neave, N. (2018). Digital hoarding behaviours: Underlying motivations and potential negative consequences. Computers in Human Behavior, 85, 54–60.", note: "Qualitative study (n=45) identifying over-accumulation, difficulty deleting, and associated anxiety. [Emerging — descriptive/qualitative]", link: scholar("Digital hoarding behaviours motivations consequences Sweeten Sillence Neave"), kind: "scholar" },
+      { cite: "Neave, N., Briggs, P., McKellar, K., & Sillence, E. (2019). Digital hoarding behaviours: Measurement and evaluation. Computers in Human Behavior, 96, 72–77.", note: "Developed/validated a 10-item Digital Hoarding Scale. [Emerging — measurement, not intervention]", link: scholar("Digital Hoarding Scale Neave Briggs measurement"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "vision-boards", section: "262", title: "Vision Boards / Positive Visualization", subtitle: "The backfire finding: naive positive fantasy REDUCES effort and success",
+    evidenceTag: "Mixed",
+    feeds: ["goal-setting (as a cautionary/redirect item)", "visualization — only via mental contrasting (WOOP)"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Creating visual collages of desired outcomes and dwelling on positively imagined futures. The evidence here is solid — but it cuts AGAINST the practice as usually done.",
+    callout: "THE BACKFIRE FINDING: positive fantasizing about achieving a goal has repeatedly been shown to REDUCE effort and success — it even lowers physiological energy (systolic BP), because mentally 'consummating' the future triggers premature relaxation. It only helps when paired with mental contrasting + an if-then plan (WOOP/MCII). A vision board of pure outcomes, with no obstacle or plan, is the exact condition shown to backfire.",
+    sources: [
+      { cite: "Oettingen, G., & Mayer, D. (2002). The motivating function of thinking about the future: Expectations versus fantasies. Journal of Personality and Social Psychology, 83(5), 1198–1212.", note: "Positive expectations predicted higher effort/success; positive fantasies predicted LOWER effort and success across four populations. [Strong]", link: scholar("motivating function thinking about future expectations fantasies Oettingen Mayer"), kind: "scholar" },
+      { cite: "Kappes, H. B., & Oettingen, G. (2011). Positive fantasies about idealized futures sap energy. Journal of Experimental Social Psychology, 47(4), 719–729.", note: "Generating positive fantasies lowered systolic blood pressure (an energization proxy) and self-reported energy. [Strong]", link: scholar("Positive fantasies idealized futures sap energy Kappes Oettingen"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "dream-journaling", section: "263", title: "Dream Journaling & Working With Dreams", subtitle: "Therapist-led dream work is evidenced; solo journaling is thin",
+    evidenceTag: "Emerging",
+    feeds: ["dream journaling", "dream interpretation (therapy adjunct)", "self-insight"],
+    impact: { magnitude: 2, latency: "months", durability: "transient", effort: "low" },
+    description: "Recording dreams and/or structured dream exploration (e.g., Hill's cognitive-experiential model) for self-insight or therapeutic gain. Therapist-guided dream work has replicated evidence for session depth and insight; solo journaling does not.",
+    callout: "Be honest about two different things: therapist-guided dream work (Hill model) has real evidence for insight and action — that is the studied practice. Solo dream journaling on its own has little controlled outcome evidence; benefits are largely inferred.",
+    sources: [
+      { cite: "Pesant, N., & Zadra, A. (2004). Working with dreams in therapy: What do we know and what should we do? Clinical Psychology Review, 24(5), 489–512.", note: "Review: dream work can aid the therapeutic process and self-knowledge, but the empirical base is limited and methodologically mixed. [Emerging — review]", link: scholar("Working with dreams in therapy Pesant Zadra"), kind: "scholar" },
+      { cite: "Hill, C. E., & Knox, S. (2010). Research on the Hill Cognitive-Experiential Dream Model. (International Review of Neurobiology / related reviews.)", note: "Across ~19 studies, clients rated cognitive-experiential dream sessions as deeper than nondream sessions, with insight/action gains. [Moderate — for the structured model]", link: scholar("Hill cognitive-experiential dream model research Knox"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "future-self-letters", section: "264", title: "Letters From Your Future Self / Future-Self Continuity", subtitle: "Bolsters clusters: saving, reduced procrastination, forward-looking behavior",
+    evidenceTag: "Moderate",
+    feeds: ["future-self continuity", "saving behavior", "reduced procrastination", "intertemporal choice"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "low" },
+    description: "Practices that strengthen connection to one's future self — age-progressed imagery, guided future-self imagery — to improve forward-looking behavior. Feeling continuous with your future self reliably improves saving and reduces procrastination.",
+    callout: "The mechanism is well supported, but the concrete product — a daily 'letter from your future self' — has NO direct evidence, and the studied interventions were vivid imagery / age-progressed avatars, not text letters. Even the modality is an extrapolation.",
+    sources: [
+      { cite: "Hershfield, H. E., Goldstein, D. G., Sharpe, W. F., et al. (2011). Increasing Saving Behavior Through Age-Progressed Renderings of the Future Self. Journal of Marketing Research, 48(SPL), S23–S37.", note: "Seeing age-progressed images of oneself roughly doubled hypothetical retirement allocations. [Strong]", link: scholar("Increasing saving behavior age-progressed future self Hershfield"), kind: "scholar" },
+      { cite: "Blouin-Hudon, E.-M. C., & Pychyl, T. A. (2017). A Mental Imagery Intervention to Increase Future Self-Continuity and Reduce Procrastination. Applied Psychology: An International Review, 66(2), 326–352.", note: "4-week guided future-self imagery raised future-self continuity and reduced procrastination vs meditation control (n=193). [Strong — RCT-style]", link: scholar("mental imagery future self continuity procrastination Blouin-Hudon Pychyl"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "cursive-handwriting", section: "265", title: "Cursive vs. Print Handwriting & Cognition", subtitle: "Handwriting > typing has support; cursive > print does not",
+    evidenceTag: "Mixed",
+    feeds: ["handwriting vs typing (brain connectivity)", "learning/memory encoding"],
+    impact: { magnitude: 1, latency: "days", durability: "transient", effort: "moderate" },
+    description: "Whether handwriting (and specifically cursive) benefits learning relative to typing. There is real evidence that handwriting engages more brain connectivity than typing; there is essentially no solid evidence that CURSIVE specifically beats print.",
+    callout: "'Cursive makes you smarter' is not supported. Ose Askvik et al. compared handwriting vs typing (participants happened to write in cursive), demonstrating a handwriting > typing effect on connectivity, NOT cursive > print — and it is a small-sample EEG study, not a learning-outcome trial.",
+    sources: [
+      { cite: "Ose Askvik, E., van der Weel, F. R., & van der Meer, A. L. H. (2020). The Importance of Cursive Handwriting Over Typewriting for Learning in the Classroom: A High-Density EEG Study. Frontiers in Psychology, 11, 1810.", note: "Writing by hand (vs typing) produced more widespread theta/alpha brain connectivity associated with learning; small samples; does not isolate cursive vs print. [Moderate — mechanistic, small n]", link: scholar("Importance of cursive handwriting over typewriting EEG Ose Askvik"), kind: "scholar" },
+      { cite: "Van der Weel, F. R., & van der Meer, A. L. H. (2024). Handwriting but not typewriting leads to widespread brain connectivity: a high-density EEG study. Frontiers in Psychology, 14, 1219945.", note: "Handwriting (not typing) elicited widespread connectivity supportive of memory encoding — again handwriting-vs-typing, not cursive-vs-print. [Moderate]", link: scholar("Handwriting but not typewriting widespread brain connectivity van der Meer"), kind: "scholar" },
     ],
   },
 ];
