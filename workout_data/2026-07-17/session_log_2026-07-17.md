@@ -105,4 +105,66 @@ This maps to advanced contemplative states (Tibetan rigpa / Teresa of Avila's Si
 
 ---
 
-*Day 12 of daily protocol. Session rated 8/10 by calibration standards (upgraded from 7.5 — involuntary breath observation confirms deeper state than initially assessed). Meta-cognitive layering achievement is exceptional for timeline.*
+## Final Calibration Answers
+
+### Transition (Treadmill to Pool)
+- Highly stimulated, energized, physically exhausted
+- Greatly looking forward to the float
+- Grateful no one else was in the pool initially
+- Ate apple + rice + beans 20 minutes before entering pool
+- May have relaxed faster than yesterday due to flat position allowing exhaustion to do its work
+
+### Noodle Position
+- Between legs, under lower half of back
+- Required slight repositioning once due to weight leaning slightly to one side
+- Attempted to align directly against spine
+- Eliminated neck strain completely vs. previous sessions
+
+### Visual Field (Eyes Submerged Behind Sunglasses)
+- Just nothing. Complete absence. No phosphenes, no patterns, no light.
+
+### Observer State Transition
+- Effortless and sudden click — not gradual
+- Could hold Position 2 and Position 3 easily for extended periods
+- Deliberately pushed to Position 3 and briefly Position 4 out of curiosity
+- No effort required to maintain once achieved
+
+### Post-Session State
+- Stillness. No desire for stimulation.
+- Considering skipping usual Chinese news podcast (Lei's Real Talk) before sleep
+- Body wants quiet
+
+---
+
+## Prayer/Mantra Data
+
+- Full mantra: "Jesus Christ, send me your Holy Spirit as I float on your healing waters"
+- Deployed near end of session, approximately 50-100 repetitions
+- Became automatic and rhythmic (70-90% unconscious)
+- Migrated from linguistic to musical processing
+- Self-edited: "healing waters" spontaneously changed to "holy waters" without conscious intent
+- Less fully automated than yesterday's session (yesterday = 100% unconscious, pure sound)
+- Likely environmental factors (turbulence, interruption) prevented full migration
+
+---
+
+## Sleep Protocol (10:35 PM)
+
+- Trazodone x2 (increases slow-wave sleep)
+- Klonopin 2mg (suppresses early REM, creates REM rebound hours 5-7)
+- Vitamin C 4mg at 10:30 PM
+- Massive physical exhaustion (1,501 cal burned, 6.5 hrs training)
+- Prediction: REM rebound window 4-5 AM = highest probability for lucid dreaming
+- Meta-cognitive layering training (observer positions) primes lucidity recognition during REM
+
+---
+
+## Equipment Wishlist for Next Session
+
+1. Noise-blocking over-ear headset (worn over earbuds) — increase auditory deprivation
+2. Blindfold — eliminate ambient light variability and headlight intrusions
+3. Timing optimization — enter pool when empty to avoid wave turbulence
+
+---
+
+*Day 12 of daily protocol. Session rated 8/10 by calibration standards (upgraded from 7.5 — involuntary breath observation + effortless meta-cognitive layering confirms deeper state than initially assessed). Four-layer recursive meta-awareness achieved. Prayer entered infused/automatic territory. Practice is now appetitive (wants to continue, not endure).*
