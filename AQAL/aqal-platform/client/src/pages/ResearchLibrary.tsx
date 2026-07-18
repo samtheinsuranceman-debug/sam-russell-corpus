@@ -732,6 +732,12 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "233": "233 · Learning to Touch-Type / Skill Automation", "234": "234 · Sleep-Tracking / Self-Monitoring",
   "235": "235 · Time-Blocking / Calendar Scheduling", "236": "236 · Qigong for Immune / Inflammation",
   "237": "237 · Laughter Yoga", "238": "238 · Awe Walks",
+  // Wave 4 — body & sensory (hacks, mnemonics & honest debunks)
+  "239": "239 · Cold Showers", "240": "240 · Wim Hof Method (Breathing + Cold)",
+  "241": "241 · Humming / Chanting / 'Om'", "242": "242 · Chewing Gum & Alertness",
+  "243": "243 · Learning to Juggle & Brain Plasticity", "244": "244 · Memory Palace / Method of Loci",
+  "245": "245 · Doodling & Attention/Memory", "246": "246 · Adult / Mandala Coloring & Anxiety",
+  "247": "247 · Speed Reading — Honest Debunk", "248": "248 · Barefoot / 'Grounding' / Earthing",
 };
 
 // Short labels for the section jump-nav chips.
@@ -836,6 +842,10 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "229": "Interleaving", "230": "Adult 2nd Language", "231": "Crosswords", "232": "Morning Pages",
   "233": "Touch-Typing", "234": "Sleep-Tracking", "235": "Time-Blocking", "236": "Qigong",
   "237": "Laughter Yoga", "238": "Awe Walks",
+  // Wave 4 — body & sensory (hacks, mnemonics & honest debunks)
+  "239": "Cold Showers", "240": "Wim Hof", "241": "Humming/Om", "242": "Chewing Gum",
+  "243": "Juggling", "244": "Memory Palace", "245": "Doodling", "246": "Adult Coloring",
+  "247": "Speed Reading", "248": "Grounding",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -848,9 +858,9 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "50", "51", "52", "53",
   // Movement & mind-body
   "3", "4", "58", "59", "62", "54", "55", "5", "200", "217", "218", "210", "211",
-  "219", "222", "220", "225", "224", "226", "228", "227", "236", "238", "234", "235", "237",
+  "219", "222", "220", "225", "224", "226", "228", "227", "236", "238", "234", "235", "237", "241", "246",
   // Cognitive & skill
-  "27", "28", "29", "36", "35", "34", "64", "81", "76", "191", "207", "229", "230",
+  "27", "28", "29", "36", "35", "34", "64", "81", "76", "191", "207", "229", "230", "244", "243",
   // Emotional & contemplative
   "6", "7", "8", "66", "67", "68", "69", "70", "71", "72", "73", "30", "31", "32", "33", "63", "65",
   // Behavioral & life-design
@@ -868,7 +878,8 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "130", "125", "123", "127", "122", "124", "126", "129", "131", "128", "212", "216", "231",
   // AI as coach, companion & mirror
   "194", "192", "195", "196", "193",
-  "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "221", "223", "232", "233", "10", "11",
+  "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "221", "223", "232", "233",
+  "239", "240", "242", "245", "247", "248", "10", "11",
   // The cost of failure — the sobering coda: what breaks when it goes wrong
   "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
   "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
@@ -969,6 +980,11 @@ const PRACTICE_GROUP: Record<string, string> = {
   "235": "Practices by domain", "236": "Practices by domain", "237": "Practices by domain", "238": "Practices by domain",
   "231": "Environment & everyday habits",
   "232": "The honest frontier — unproven", "233": "The honest frontier — unproven",
+  // Wave 4 — body & sensory (hacks, mnemonics & honest debunks)
+  "243": "Practices by domain", "244": "Practices by domain", "241": "Practices by domain", "246": "Practices by domain",
+  "239": "The honest frontier — unproven", "240": "The honest frontier — unproven",
+  "242": "The honest frontier — unproven", "245": "The honest frontier — unproven",
+  "247": "The honest frontier — unproven", "248": "The honest frontier — unproven",
   "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
   "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
   "196": "AI as coach, companion & mirror",
@@ -5237,6 +5253,126 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Sturm, V. E., Datta, S., Roy, A. R. K., et al. (2022). Big smile, small self: Awe walks promote prosocial positive emotions in older adults. Emotion, 22(5), 1044–1058.", note: "RCT, n=60 older adults, 8 weekly 15-min walks; awe-orientation group showed increased prosocial positive emotion, less distress, and a 'small self' evident in selfies. [Moderate — RCT]", link: scholar("Sturm 2020 big smile small self awe walks prosocial positive emotions older adults Emotion"), kind: "scholar" },
       { cite: "Bai, Y., et al. (2017). Awe, the diminished self, and collective engagement. Journal of Personality and Social Psychology, 113(2), 185–209.", note: "Multi-study evidence that awe produces the 'small self' and prosociality — the mechanism awe walks exploit. [Moderate]", link: scholar("Bai 2017 awe diminished self collective engagement small self"), kind: "scholar" },
+    ],
+  },
+
+  // ── Q: body & sensory — hacks, mnemonics & honest debunks (239–248) ────────
+  {
+    id: "cold-showers", section: "239", title: "Cold Showers", subtitle: "Bolsters clusters: alertness, mood, cold tolerance — mental-health claims untested",
+    evidenceTag: "Mixed",
+    feeds: ["alertness", "mood", "cold tolerance", "morning routines"],
+    impact: { magnitude: 2, latency: "days", durability: "sustained", effort: "low" },
+    description: "Ending a shower in cold water (30–90 s) as a daily routine, promoted for immune resilience, mood, and alertness. One pragmatic RCT found reduced self-reported sickness absence; the mental-health claims remain hypothesis-level.",
+    callout: "The headline '29% fewer sick days' comes from a single unblinded trial and is self-reported absence — the same trial found NO reduction in actual illness days. Treat the depression angle as an untested hypothesis, not a finding.",
+    sources: [
+      { cite: "Buijze, G. A., Sierevelt, I. N., van der Heijden, B. C. J. M., Dijkgraaf, M. G., & Frings-Dresen, M. H. W. (2016). The Effect of Cold Showering on Health and Work: A Randomized Controlled Trial. PLoS ONE, 11(9), e0161749.", note: "N=3018; hot-to-cold showers cut self-reported sickness absence 29% (IRR 0.71) but did NOT reduce illness days; unblinded. [Emerging — one RCT, self-reported outcome]", link: scholar("cold showering health work randomized controlled trial Buijze"), kind: "scholar" },
+      { cite: "Shevchuk, N. A. (2008). Adapted cold shower as a potential treatment for depression. Medical Hypotheses, 70(5), 995–1001.", note: "Hypothesis paper only; informal testing on a statistically insignificant non-depressed sample; author explicitly calls for rigorous trials. [Weak — speculative]", link: scholar("adapted cold shower potential treatment depression Shevchuk"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "wim-hof", section: "240", title: "Wim Hof Method (Breathing + Cold)", subtitle: "Bolsters clusters: stress physiology, acute inflammation, breathwork",
+    evidenceTag: "Emerging",
+    feeds: ["stress physiology", "acute inflammation response", "breathwork", "cold tolerance"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "moderate" },
+    description: "A protocol combining cyclic hyperventilation-style breathing, cold exposure, and meditation, claimed to give voluntary control over the autonomic and immune systems. The mechanistic effect on an acute inflammatory challenge is real and replicated.",
+    callout: "The famous PNAS result rests on 12 trained participants in an endotoxin model — short-term dampening of an artificial inflammatory challenge, NOT a disease cure or reliable 'immunity boost.' Later work suggests the breathing (not cold) drives most of the effect. Breath-hold syncope risk — never do near water.",
+    sources: [
+      { cite: "Kox, M., van Eijk, L. T., Zwaag, J., et al. (2014). Voluntary activation of the sympathetic nervous system and attenuation of the innate immune response in humans. PNAS, 111(20), 7379–7384.", note: "Trained group (n=12) showed higher epinephrine, suppressed IL-6/IL-8/TNF-α, and fewer flu-like symptoms after endotoxin. Small, single-cohort. [Emerging]", link: scholar("voluntary activation sympathetic nervous system innate immune Kox PNAS"), kind: "scholar" },
+      { cite: "Zwaag, J., Naaktgeboren, R., van Herwaarden, A. E., Pickkers, P., & Kox, M. (2022). The Effects of Cold Exposure Training and a Breathing Exercise on the Inflammatory Response in Humans: A Pilot Study. Psychosomatic Medicine, 84(4), 457–467.", note: "Pilot dissection suggesting the breathing exercise, not cold training, most potently attenuates the inflammatory response. [Emerging — pilot]", link: scholar("cold exposure training breathing exercise inflammatory response Zwaag"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "humming-chanting", section: "241", title: "Humming / Chanting / 'Om'", subtitle: "Bolsters clusters: breathwork, relaxation, sinus/nasal health",
+    evidenceTag: "Emerging",
+    feeds: ["breathwork", "relaxation", "sinus/nasal health", "meditation"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Sustained vocalization (humming, 'Om' chanting) proposed to stimulate the vagus nerve, calm limbic activity, and dramatically increase nasal nitric oxide from the paranasal sinuses. The nasal-NO effect is robust physiology.",
+    callout: "The ~15-fold nasal NO increase during humming is a well-replicated physiological fact — but it measures sinus ventilation, NOT a proven health outcome. The 'Om' fMRI evidence is a 12-person pilot showing limbic deactivation; don't overstate it as established therapy.",
+    sources: [
+      { cite: "Weitzberg, E., & Lundberg, J. O. N. (2002). Humming Greatly Increases Nasal Nitric Oxide. American Journal of Respiratory and Critical Care Medicine, 166(2), 144–145.", note: "Nasal NO rose ~15-fold during humming vs quiet exhalation (n=10) via enhanced sinus ventilation. [Established — for the NO effect]", link: scholar("humming greatly increases nasal nitric oxide Weitzberg Lundberg"), kind: "scholar" },
+      { cite: "Kalyani, B. G., Venkatasubramanian, G., Arasappa, R., et al. (2011). Neurohemodynamic correlates of 'OM' chanting: A pilot functional MRI study. International Journal of Yoga, 4(1), 3–6.", note: "Pilot fMRI (n=12): 'Om' chanting produced limbic deactivation (amygdala, hippocampi, orbitofrontal) vs rest. [Emerging — small pilot]", link: scholar("neurohemodynamic correlates OM chanting fMRI Kalyani"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "chewing-gum", section: "242", title: "Chewing Gum & Alertness", subtitle: "Bolsters clusters: alertness, attention — small, fragile, timing-dependent",
+    evidenceTag: "Mixed",
+    feeds: ["alertness", "sustained attention", "stress/mood"],
+    impact: { magnitude: 1, latency: "days", durability: "transient", effort: "low" },
+    description: "Chewing gum to boost alertness, mood, and short-term memory/attention. A genuinely inconsistent literature — effects are small, fragile, and highly dependent on timing and task.",
+    callout: "A textbook 'now you see it, now you don't' literature. Benefits appear mainly for alertness and when gum is chewed BEFORE a task, often vanishing when chewing during it. Do not sell it as a reliable cognitive enhancer.",
+    sources: [
+      { cite: "Onyper, S. V., Carr, T. L., Farrar, J. S., & Floyd, B. R. (2011). Cognitive advantages of chewing gum. Now you see them, now you don't. Appetite, 57(2), 321–328.", note: "Benefits only when gum chewed ~5 min BEFORE (not during) testing, and only for the first 15–20 min. Attributed to transient arousal. [Mixed]", link: scholar("cognitive advantages chewing gum now you see them Onyper"), kind: "scholar" },
+      { cite: "Allen, A. P., & Smith, A. P. (2015). Chewing Gum: Cognitive Performance, Mood, Well-Being, and Associated Physiology. BioMed Research International, 2015, 654806.", note: "Chewing most reliably raises alertness; cognitive effects mixed and context-dependent. [Mixed]", link: scholar("chewing gum cognitive performance mood well-being Allen Smith"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "juggling", section: "243", title: "Learning to Juggle & Brain Plasticity", subtitle: "Bolsters clusters: neuroplasticity, motor learning, skill acquisition",
+    evidenceTag: "Strong",
+    feeds: ["neuroplasticity", "motor learning", "skill acquisition", "'use it or lose it'"],
+    impact: { magnitude: 3, latency: "weeks", durability: "transient", effort: "moderate" },
+    description: "Practicing a novel complex motor skill (three-ball juggling) is a landmark demonstration that adult learning physically remodels brain gray and white matter — foundational neuroscience of structural plasticity.",
+    callout: "These papers show structure changes with practice; they do NOT show juggling transfers to general intelligence or memory. The gray-matter gains were also transient — they partly reversed when practice stopped.",
+    sources: [
+      { cite: "Draganski, B., Gaser, C., Busch, V., Schuierer, G., Bogdahn, U., & May, A. (2004). Neuroplasticity: Changes in grey matter induced by training. Nature, 427, 311–312.", note: "3 months of juggling produced transient, selective gray-matter expansion in visual-motion areas; partly regressed after stopping. [Strong — landmark]", link: scholar("neuroplasticity changes grey matter induced by training juggling Draganski"), kind: "scholar" },
+      { cite: "Scholz, J., Klein, M. C., Behrens, T. E. J., & Johansen-Berg, H. (2009). Training induces changes in white-matter architecture. Nature Neuroscience, 12(11), 1370–1371.", note: "24 trained/24 controls; juggling raised white-matter fractional anisotropy — the first white-matter training effect in healthy adults. [Strong]", link: scholar("training induces changes white-matter architecture Scholz juggling"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "memory-palace", section: "244", title: "Memory Palace / Method of Loci", subtitle: "Bolsters clusters: memory, learning, study technique, spatial cognition",
+    evidenceTag: "Strong",
+    feeds: ["memory", "learning", "study technique", "spatial cognition"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "A spatial mnemonic in which items are mentally placed along a familiar route and recalled by 'walking' it. One of the best-supported cognitive techniques here — memory athletes have normal baseline memory and IQ; the gains come from the strategy, and training reshapes brain connectivity.",
+    callout: "It boosts trained list/ordered recall, not global intelligence. The point is that the technique is learnable and durable, not that it makes you generally smarter.",
+    sources: [
+      { cite: "Maguire, E. A., Valentine, E. R., Wilding, J. M., & Kapur, N. (2003). Routes to remembering: the brains behind superior memory. Nature Neuroscience, 6(1), 90–95.", note: "World-Memory-Championship competitors had normal IQ/brain structure; superiority came from method-of-loci spatial strategy engaging the hippocampus. [Strong]", link: scholar("routes to remembering brains behind superior memory Maguire"), kind: "scholar" },
+      { cite: "Dresler, M., Shirer, W. R., Konrad, B. N., et al. (2017). Mnemonic Training Reshapes Brain Networks to Support Superior Memory. Neuron, 93(5), 1227–1235.", note: "6 weeks of loci training in naive adults shifted brain connectivity toward athlete-like patterns; memory gains predicted up to 4 months later. [Strong]", link: scholar("mnemonic training reshapes brain networks superior memory Dresler"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "doodling", section: "245", title: "Doodling & Attention/Memory", subtitle: "Bolsters clusters: attention, incidental memory — rests on one study",
+    evidenceTag: "Emerging",
+    feeds: ["attention", "mind-wandering reduction", "incidental memory"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Idle drawing/shading during a boring task, proposed to sustain attention and improve incidental recall — the '29% more recalled' finding from a monotonous monitoring task.",
+    callout: "Rests largely on a single 40-person study with a specific, boring task. The recall boost is real in that setting but shouldn't be generalized to doodling improving learning of engaging or complex material.",
+    sources: [
+      { cite: "Andrade, J. (2010). What does doodling do? Applied Cognitive Psychology, 24(1), 100–106.", note: "Doodlers (n=40 total) recalled 29% more from a monotonous phone message; doodling proposed to curb mind-wandering while using minimal cognitive resources. [Emerging — single study]", link: scholar("what does doodling do Andrade applied cognitive psychology"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "adult-coloring", section: "246", title: "Adult / Mandala Coloring & Anxiety", subtitle: "Bolsters clusters: acute anxiety relief, relaxation, flow",
+    evidenceTag: "Mixed",
+    feeds: ["anxiety reduction", "relaxation", "mindfulness", "flow"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Coloring structured patterns (especially mandalas) to reduce state anxiety and induce a calm, meditative focus. Structured coloring reliably lowers acute anxiety.",
+    callout: "A plaid pattern worked as well as a mandala (structure matters, not mystical geometry), and at least one study found unguided coloring produced NO change in mindfulness or anxiety versus free drawing. It is a mild relaxation aid, not therapy.",
+    sources: [
+      { cite: "Curry, N. A., & Kasser, T. (2005). Can Coloring Mandalas Reduce Anxiety? Art Therapy, 22(2), 81–85.", note: "After anxiety induction (n=84), mandala AND plaid coloring reduced anxiety more than unstructured coloring — structure, not the mandala, drove the effect. [Emerging]", link: scholar("can coloring mandalas reduce anxiety Curry Kasser"), kind: "scholar" },
+      { cite: "Mantzios, M., & Giannou, K. (2018). When Did Coloring Books Become Mindful? Frontiers in Psychology, 9, 56.", note: "Unguided mandala coloring showed NO increase in mindfulness or decrease in anxiety vs free-drawing control; benefits needed added guidance. [Mixed — skeptical]", link: scholar("when did coloring books become mindful Mantzios Giannou Frontiers"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "speed-reading", section: "247", title: "Speed Reading — Honest Debunk", subtitle: "The 'read very fast with full comprehension' claim is contradicted by reading science",
+    evidenceTag: "Mixed",
+    feeds: ["reading (modest practice gains only)", "study skills"],
+    impact: { magnitude: 1, latency: "days", durability: "transient", effort: "high" },
+    description: "Commercial programs claiming to multiply reading speed while preserving comprehension. Reading science shows a hard speed–comprehension trade-off: what 'speed readers' actually do is skim and fill gaps from prior knowledge.",
+    callout: "Extreme-speed claims (thousands of wpm) are not achievable without gutting comprehension. RSVP apps remove the ability to reread (regress), which HURTS comprehension. Only modest gains come from ordinary vocabulary and practice — the marketed claim is effectively unsupported.",
+    sources: [
+      { cite: "Rayner, K., Schotter, E. R., Masson, M. E. J., Potter, M. C., & Treiman, R. (2016). So Much to Read, So Little Time: How Do We Read, and Can Speed Reading Help? Psychological Science in the Public Interest, 17(1), 4–34.", note: "Comprehensive review: the speed–comprehension trade-off is fundamental; extreme-speed-with-comprehension claims are not supported. [Debunked]", link: scholar("so much to read so little time speed reading Rayner"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "grounding-earthing", section: "248", title: "Barefoot / 'Grounding' / Earthing — Honest Skeptic", subtitle: "Biologically speculative; evidence dominated by conflicted authors",
+    evidenceTag: "Mixed",
+    feeds: ["(claimed) inflammation reduction", "(claimed) sleep", "(claimed) pain relief"],
+    impact: { magnitude: 1, latency: "days", durability: "transient", effort: "low" },
+    description: "Direct skin contact with the Earth (bare feet, grounding mats/sheets) claimed to transfer electrons that reduce inflammation, pain, and improve sleep. The mechanism is biologically speculative and the evidence very weak.",
+    callout: "Nearly every positive earthing study shares the same handful of authors with direct financial ties to grounding-product companies. Blinding is essentially impossible (subjects sense the connection), placebo is a strong candidate, and there is no independent replication. Treat 'grounding heals inflammation' as an unproven marketing claim.",
+    sources: [
+      { cite: "Chevalier, G., Sinatra, S. T., Oschman, J. L., Sokal, K., & Sokal, P. (2012). Earthing: Health Implications of Reconnecting the Human Body to the Earth's Surface Electrons. Journal of Environmental and Public Health, 2012, 291541.", note: "Proponent review; authors disclose financial interest in earthing products; small, unblinded, mechanistically speculative studies. [Weak — conflicted]", link: scholar("earthing health implications reconnecting human body Chevalier"), kind: "scholar" },
+      { cite: "Oschman, J. L., Chevalier, G., & Brown, R. (2015). The effects of grounding (earthing) on inflammation, the immune response, wound healing, and prevention of cardiovascular disease. Journal of Inflammation Research, 8, 83–96.", note: "Broad claims; authors are contractors/shareholders of an earthing company; no independent replication, unblindable design. [Weak — conflicted]", link: scholar("effects of grounding earthing inflammation immune response Oschman Chevalier"), kind: "scholar" },
     ],
   },
 ];
