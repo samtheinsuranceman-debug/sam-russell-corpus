@@ -714,6 +714,12 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "203": "203 · Online Dating Outcomes & Wellbeing", "204": "204 · Approaching Strangers",
   "205": "205 · Matchmaking & Network Approval", "206": "206 · Family Courtship / Arranged Marriage",
   "207": "207 · Learning an Instrument as an Adult", "208": "208 · Writing Love Letters / Affectionate Writing",
+  // Wave 4 — hunting, pets & recreation
+  "209": "209 · Recreational Hunting & Nature Connection", "210": "210 · Dog Ownership & Adoption",
+  "211": "211 · Pet Caregiving & Bereavement", "212": "212 · Aquariums / Fishkeeping",
+  "213": "213 · League / Social Bowling", "214": "214 · Batting Cage / Recreational Hitting",
+  "215": "215 · Target / Sport Shooting", "216": "216 · Board / Tabletop Games With Friends",
+  "217": "217 · Adult Social Dance Classes", "218": "218 · Golf Driving Range / Precision Practice",
 };
 
 // Short labels for the section jump-nav chips.
@@ -806,6 +812,10 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "199": "Freediving", "200": "Backwards Walking", "201": "Spinning", "202": "Speed Dating",
   "203": "Online Dating", "204": "Approaching Strangers", "205": "Matchmaking", "206": "Arranged Marriage",
   "207": "Adult Instrument", "208": "Love Letters",
+  // Wave 4 — hunting, pets & recreation
+  "209": "Hunting", "210": "Dog Ownership", "211": "Pet Bereavement", "212": "Aquariums",
+  "213": "Bowling", "214": "Batting Cage", "215": "Sport Shooting", "216": "Board Games",
+  "217": "Social Dance", "218": "Golf Range",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -817,7 +827,7 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   // Protect the hardware — senses & body
   "50", "51", "52", "53",
   // Movement & mind-body
-  "3", "4", "58", "59", "62", "54", "55", "5", "200",
+  "3", "4", "58", "59", "62", "54", "55", "5", "200", "217", "218", "210", "211",
   // Cognitive & skill
   "27", "28", "29", "36", "35", "34", "64", "81", "76", "191", "207",
   // Emotional & contemplative
@@ -834,10 +844,10 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "114", "115", "112", "134", "135", "113", "117", "118", "121", "119", "120", "116", "198",
   "204", "202", "203", "205", "206", "208",
   // Environment & everyday habits
-  "130", "125", "123", "127", "122", "124", "126", "129", "131", "128",
+  "130", "125", "123", "127", "122", "124", "126", "129", "131", "128", "212", "216",
   // AI as coach, companion & mirror
   "194", "192", "195", "196", "193",
-  "19", "20", "37", "197", "199", "201", "10", "11",
+  "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "10", "11",
   // The cost of failure — the sobering coda: what breaks when it goes wrong
   "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
   "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
@@ -923,6 +933,11 @@ const PRACTICE_GROUP: Record<string, string> = {
   "199": "The honest frontier — unproven", "201": "The honest frontier — unproven",
   "202": "Social & community", "203": "Social & community", "204": "Social & community",
   "205": "Social & community", "206": "Social & community", "208": "Social & community",
+  // Wave 4 — hunting, pets & recreation
+  "210": "Practices by domain", "211": "Practices by domain", "217": "Practices by domain", "218": "Practices by domain",
+  "212": "Environment & everyday habits", "216": "Environment & everyday habits",
+  "209": "The honest frontier — unproven", "213": "The honest frontier — unproven",
+  "214": "The honest frontier — unproven", "215": "The honest frontier — unproven",
   "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
   "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
   "196": "AI as coach, companion & mirror",
@@ -4825,6 +4840,128 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Floyd, K., Mikkelson, A. C., Hesse, C., & Pauley, P. M. (2007). Affectionate Writing Reduces Total Cholesterol: Two Randomized, Controlled Trials. Human Communication Research, 33(2), 119–142.", note: "Experimental affectionate-writing groups showed significant total-cholesterol reductions vs controls. [Moderate — 2 RCTs]", link: scholar("Floyd affectionate writing reduces total cholesterol randomized controlled trials"), kind: "scholar" },
       { cite: "Floyd, K., et al. (2009). Kissing in marital and cohabiting relationships: Effects on blood lipids, stress, and relationship satisfaction. Western Journal of Communication, 73(2), 113–133.", note: "Affectionate behavior (kissing) improved lipid profile, lowered perceived stress, and raised satisfaction — parallels the affectionate-writing effect. [Moderate]", link: scholar("Floyd kissing marital cohabiting blood lipids stress relationship satisfaction"), kind: "scholar" },
+    ],
+  },
+
+  // ── M: hunting, pets & recreation (209–218) ───────────────────────────────
+  {
+    id: "hunting", section: "209", title: "Recreational Hunting & Nature Connection", subtitle: "Bolsters clusters: nature connectedness, agency/self-provisioning, social bonding",
+    evidenceTag: "Emerging",
+    feeds: ["nature connectedness", "stress down-regulation", "sense of agency/self-provisioning", "physical activity", "social bonding"],
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "high" },
+    description: "Recreational hunting as a nature-immersion and food-provisioning activity. The defensible science is the strong general nature-exposure benefit plus descriptive research showing hunters derive nature-contact, food-agency, and social meaning.",
+    callout: "Direct 'hunting improves mental health' causal evidence is essentially absent — no RCTs, and the closest population signal (adolescent wildlife activity) is correlational and mixed. Nearly all claims are inferred from adjacent nature/outdoor-recreation literature, and self-selection is severe.",
+    sources: [
+      { cite: "Coventry, P. A., Brown, J., Pervin, J., et al. (2021). Nature-based outdoor activities for mental and physical health: Systematic review and meta-analysis. SSM-Population Health, 16, 100934.", note: "Nature-based outdoor activity produced short-to-medium-term improvements in depression, anxiety, mood, and stress markers — general, not hunting-specific. [Strong — but borrowed mechanism]", link: scholar("nature-based outdoor activities mental physical health systematic review meta-analysis Coventry 2021"), kind: "scholar" },
+      { cite: "Hinrichs, M. P., Vrtiska, M. P., et al. (2021). Motivations to participate in hunting and angling. Human Dimensions of Wildlife, 26(6).", note: "Four motivation factors — nature, social, food, challenge; nature and social rated most important. [Moderate — descriptive/survey]", link: scholar("Hinrichs Vrtiska motivations hunting angling Human Dimensions of Wildlife 2021"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "dog-ownership", section: "210", title: "Dog Ownership & Adoption", subtitle: "Bolsters clusters: physical activity, cardiovascular regulation, companionship",
+    evidenceTag: "Moderate",
+    feeds: ["physical activity", "cardiovascular regulation", "attachment/companionship", "routine & responsibility", "reduced loneliness"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "high" },
+    description: "Dog ownership shows strong survival/cardiovascular benefit; the mental-health evidence is genuinely mixed and tracks attachment quality more than acquisition. Ownership is a years-long commitment of cost and care.",
+    callout: "Simply owning a dog is not reliably tied to better mental health — benefit tracks attachment quality and responsibility engagement, not acquisition source. The 'adopt vs. buy' distinction has almost no controlled owner-wellbeing evidence.",
+    sources: [
+      { cite: "Kramer, C. K., Mehmood, S., & Suen, R. S. (2019). Dog ownership and survival: a systematic review and meta-analysis. Circulation: Cardiovascular Quality and Outcomes, 12(10), e005554.", note: "Dog ownership associated with 24% lower all-cause mortality; larger among prior-CVD patients. [Strong — meta-analysis]", link: scholar("Kramer dog ownership survival systematic review meta-analysis Circulation 2019"), kind: "scholar" },
+      { cite: "Hawkins, R. D., et al. (2025). The relationship between attachment to pets and mental health and wellbeing: a systematic review. Animals (MDPI).", note: "116 studies; attachment–mental-health associations are mixed (positive, null, and negative) — ownership alone insufficient. [Mixed — systematic review]", link: scholar("attachment to pets mental health wellbeing systematic review Animals MDPI 2025"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "pet-bereavement", section: "211", title: "Pet Caregiving & Bereavement (the owner)", subtitle: "Bolsters clusters: grief processing, meaning-making, continuing bonds",
+    evidenceTag: "Moderate",
+    feeds: ["grief processing", "meaning-making", "continuing bonds", "anticipatory grief"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "high" },
+    description: "Caring for a dying pet and grieving its loss carries real caregiver burden and grief that can rival human loss, alongside a documented meaning / continuing-bonds 'growth' side. Most designs are cross-sectional.",
+    callout: "Pet grief is real and sometimes intense, but it is 'disenfranchised' (socially under-validated), which biases who reports and seeks help — and cross-sectional designs make causal/temporal claims about growth weak. The distress side (burden, depression, anxiety) is substantial.",
+    sources: [
+      { cite: "Spitznagel, M. B., Jacobson, D. M., Cox, M. D., & Carlson, M. D. (2017). Caregiver burden in owners of a sick companion animal: a cross-sectional observational study. Veterinary Record, 181(12), 321.", note: "Owners of chronically/terminally ill pets showed greater burden, stress, depression/anxiety, and poorer quality of life vs. matched controls. [Moderate]", link: scholar("Spitznagel caregiver burden sick companion animal Veterinary Record 2017"), kind: "scholar" },
+      { cite: "Packman, W., Field, N. P., Carmack, B. J., & Ronen, R. (2011). Continuing bonds and psychosocial adjustment in pet loss. Journal of Loss and Trauma, 16(4), 341–357.", note: "Continuing bonds with the deceased pet related to both comfort and, when combined with distress, ongoing grief — the meaning-vs-suffering duality. [Moderate]", link: scholar("Packman Field Carmack continuing bonds psychosocial adjustment pet loss 2011"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "aquariums", section: "212", title: "Aquariums / Fishkeeping", subtitle: "Bolsters clusters: acute relaxation, attention restoration, anxiety down-regulation",
+    evidenceTag: "Moderate",
+    feeds: ["acute relaxation", "attention restoration", "anxiety/arousal down-regulation", "mild caregiving routine"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Viewing/keeping fish for relaxation — one of the better-evidenced 'small' hobbies, with a controlled dose-response aquarium study and a systematic review. Effects are modest and mostly acute (mood, heart rate, blood pressure).",
+    callout: "Robust for short-term viewing (mood/heart-rate); evidence that home fishkeeping produces lasting trait wellbeing change is thin and largely small-n survey/qualitative.",
+    sources: [
+      { cite: "Cracknell, D., White, M. P., Pahl, S., Nichols, W. J., & Depledge, M. H. (2016). Marine biota and psychological well-being: a preliminary examination of dose-response effects in an aquarium setting. Environment and Behavior, 48(10), 1242–1269.", note: "As fish stocking increased, viewers watched longer, showed greater heart-rate reductions, and reported better mood. [Moderate — dose-response]", link: scholar("Cracknell marine biota psychological well-being aquarium dose-response Environment and Behavior 2016"), kind: "scholar" },
+      { cite: "Clements, H., et al. (2019). The effects of interacting with fish in aquariums on human health and well-being: a systematic review. PLOS ONE, 14(7), e0220524.", note: "Viewing aquarium fish shows potential for relaxation and stress reduction, but the evidence base is limited and heterogeneous. [Moderate]", link: scholar("Clements interacting with fish aquariums human health well-being systematic review PLOS ONE 2019"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "bowling", section: "213", title: "League / Social Bowling", subtitle: "Bolsters clusters: social capital, belonging, light activity — bowling-specific evidence thin",
+    evidenceTag: "Emerging",
+    feeds: ["social capital/belonging", "loneliness reduction", "light physical activity", "routine"],
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "League/social bowling as light physical activity plus social connection. The honest scaffolding is Putnam's social-capital framing and the strong general link between social connection and health/mortality — not bowling-specific outcomes.",
+    callout: "There is no good direct evidence that bowling improves health; the case rests on social-capital theory plus general 'social connection is protective' findings. Physical intensity is low.",
+    sources: [
+      { cite: "Putnam, R. D. (2000). Bowling Alone: The Collapse and Revival of American Community. Simon & Schuster.", note: "Declining league bowling as emblem of eroding social capital; theorizes social ties as tied to civic and personal health. [Framing/theory — not an empirical health study]", link: scholar("Putnam Bowling Alone collapse revival American community social capital"), kind: "scholar" },
+      { cite: "Holt-Lunstad, J., Smith, T. B., & Layton, J. B. (2010). Social relationships and mortality risk: a meta-analytic review. PLoS Medicine, 7(7), e1000316.", note: "Stronger social relationships associated with ~50% greater odds of survival — the empirical backbone for 'social hobbies matter.' [Strong — mechanism, not bowling]", link: scholar("Holt-Lunstad social relationships mortality risk meta-analytic review PLoS Medicine 2010"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "batting-cage", section: "214", title: "Batting Cage / Recreational Hitting", subtitle: "Bolsters clusters: acute mood, stress discharge, motor-skill, flow — adjacent evidence only",
+    evidenceTag: "Emerging",
+    feeds: ["acute mood elevation", "arousal/stress discharge", "motor-skill consolidation", "focused attention/flow"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Repetitive recreational hitting for skill practice and stress release. There are no peer-reviewed studies on batting-cage use and wellbeing — everything here is adjacent inference from acute-exercise mood research and motor-learning science.",
+    callout: "No real study on batting cages specifically exists. Claims must be framed as 'consistent with acute-exercise mood benefits and motor-skill practice,' not as established for this activity.",
+    sources: [
+      { cite: "Reed, J., & Ones, D. S. (2006). The effect of acute aerobic exercise on positive activated affect: a meta-analysis. Psychology of Sport and Exercise, 7(5), 477–514.", note: "Single bouts of physical activity reliably raise positive activated affect, especially at lower/moderate intensity. [Strong — general acute-exercise mood]", link: scholar("Reed Ones acute aerobic exercise positive activated affect meta-analysis 2006"), kind: "scholar" },
+      { cite: "Ericsson, K. A., Krampe, R. T., & Tesch-Römer, C. (1993). The role of deliberate practice in the acquisition of expert performance. Psychological Review, 100(3), 363–406.", note: "Structured, repetitive, feedback-rich practice drives skill acquisition — the mechanism repetitive hitting would engage. [Strong — motor-skill mechanism]", link: scholar("Ericsson Krampe deliberate practice acquisition expert performance Psychological Review 1993"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "sport-shooting", section: "215", title: "Target / Sport Shooting", subtitle: "Bolsters clusters: selective attention, arousal regulation (HRV), stress control",
+    evidenceTag: "Emerging",
+    feeds: ["sustained/selective attention", "arousal regulation (HRV, cardiac timing)", "stress control under pressure"],
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Precision shooting as an attention/arousal-regulation task. The real literature is performance psychophysiology — how attention, heart-rate variability, and arousal relate to shot quality — supporting that shooting trains fine arousal/attention control.",
+    callout: "Evidence is about performance/physiology in shooters, not about shooting as a therapy. Any calm/focus benefit is inferred, and shooting carries obvious context-specific risks the wellbeing literature never weighs.",
+    sources: [
+      { cite: "Tremayne, P., & Barry, R. J. (2001). Elite pistol shooters: physiological patterning of best vs. worst shots. International Journal of Psychophysiology, 41(1), 19–29.", note: "Best shots preceded by distinct cardiac/attentional patterning — precision shooting reflects fine arousal-attention control. [Moderate]", link: scholar("Tremayne Barry elite pistol shooters physiological patterning best worst shots 2001"), kind: "scholar" },
+      { cite: "Li, Y., et al. (2024). Relationship between state anxiety, heart rate variability, and shooting performance in adolescent shooters. BMC Psychology.", note: "Higher HRV / better emotion regulation linked to better shooting performance and lower anxiety. [Emerging]", link: scholar("state anxiety heart rate variability shooting performance adolescent shooters BMC Psychology 2024"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "board-games", section: "216", title: "Board / Tabletop Games With Friends", subtitle: "Bolsters clusters: executive function, memory, cognitive reserve, social connectedness",
+    evidenceTag: "Moderate",
+    feeds: ["executive function/attention", "memory", "cognitive reserve", "social connectedness", "mood"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    description: "Family/friend tabletop gaming for cognitive stimulation and connection. Moderate and improving evidence for cognition (reviews plus small RCTs in older adults); social-bonding benefit is plausible but under-measured directly.",
+    callout: "Cognitive evidence skews toward older-adult / cognitive-impairment samples and small trials; extrapolation to healthy-adult game night is reasonable but not directly demonstrated. Social-bonding outcomes are rarely the measured endpoint.",
+    sources: [
+      { cite: "Nakao, M. (2019). Board games as a promising tool for health promotion: a review of recent literature. BioPsychoSocial Medicine, 13, 5.", note: "Traditional board games associated with improved cognitive function and reduced depression; newer games aid behavior change. [Moderate — review]", link: scholar("Nakao board games promising tool health promotion review BioPsychoSocial Medicine 2019"), kind: "scholar" },
+      { cite: "Chao, S.-Y., et al. (2019). Effect of board game activities on cognitive function improvement among older adults in adult day care centers. Geriatric Nursing.", note: "RCT (n=82) — board-game group showed cognitive-function gains vs. usual-activity controls. [Moderate — RCT]", link: scholar("board game activities cognitive function improvement older adults adult day care centers 2019"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "social-dance", section: "217", title: "Adult Social Dance Classes", subtitle: "Bolsters clusters: balance, sensorimotor & reaction time, executive function, mood",
+    evidenceTag: "Moderate",
+    feeds: ["balance/postural control", "sensorimotor & reaction time", "executive function/memory", "mood", "social connection"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "moderate" },
+    description: "Adult learners in partnered/social dance (swing, salsa, ballroom). One of the stronger topics here: a controlled 6-month dance study and a cognition RCT in older adults show balance and cognitive benefits, and the multi-domain load (motor + social + cognitive) is real.",
+    callout: "The strongest cognition/balance findings are in older adults; younger-adult mood findings rest on single recent trials not yet broadly replicated. Multi-domain benefit makes clean mechanism attribution hard.",
+    sources: [
+      { cite: "Kattenstroth, J.-C., Kalisch, T., Holt, S., Tegenthoff, M., & Dinse, H. R. (2013). Six months of dance intervention enhances postural, sensorimotor, and cognitive performance in elderly. Frontiers in Aging Neuroscience, 5, 5.", note: "6 months of weekly dance (adult learners) improved posture, reaction time, cognition, and wellbeing vs. controls. [Moderate–Strong]", link: scholar("Kattenstroth six months dance intervention postural sensorimotor cognitive elderly Frontiers Aging Neuroscience 2013"), kind: "scholar" },
+      { cite: "Merom, D., et al. (2016). Cognitive benefits of social dancing and walking in old age: the Dancing Mind randomized controlled trial. Frontiers in Aging Neuroscience, 8, 26.", note: "RCT: social dance produced cognitive/spatial-memory benefits in older adults. [Moderate — RCT]", link: scholar("Merom Dancing Mind randomized controlled trial social dancing cognition older adults 2016"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "golf-range", section: "218", title: "Golf Driving Range / Precision Practice", subtitle: "Bolsters clusters: motor learning, focused attention/flow, light activity",
+    evidenceTag: "Emerging",
+    feeds: ["motor learning/skill acquisition", "focused attention/flow", "light physical activity", "deliberate-practice engagement"],
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Range/putting practice as motor learning plus light activity. Golf-as-a-whole has solid health evidence, but the driving-range slice specifically is thin — the relevant science is motor-learning and deliberate-practice theory, not range-specific health trials.",
+    callout: "The strong evidence is for PLAYING golf (walking, moderate activity, longevity signal) — a driving range removes most of the walking/aerobic component, so those health claims do NOT transfer cleanly. Range practice is better justified as motor-skill/flow than cardiovascular health.",
+    sources: [
+      { cite: "Murray, A. D., et al. (2017). The relationships between golf and health: a scoping review. British Journal of Sports Medicine, 51(1), 12–19.", note: "Golf provides moderate-intensity activity and is associated with cardiovascular, metabolic, and mental-wellness benefits — for playing, not range practice. [Moderate — scoping review]", link: scholar("Murray relationships between golf and health scoping review British Journal of Sports Medicine 2017"), kind: "scholar" },
+      { cite: "Ericsson, K. A., Krampe, R. T., & Tesch-Römer, C. (1993). The role of deliberate practice in the acquisition of expert performance. Psychological Review, 100(3), 363–406.", note: "Structured, feedback-rich repetition (as at a range) is the engine of precision-skill improvement. [Strong — mechanism, not range-specific]", link: scholar("Ericsson Krampe deliberate practice acquisition expert performance Psychological Review 1993"), kind: "scholar" },
     ],
   },
 ];
