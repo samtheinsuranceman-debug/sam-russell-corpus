@@ -177,7 +177,21 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
   NEW render path: a `PracticeHarm` type (severity/onset/reversibility) and a deterministic
   **Cost Score** (`costScore()` = 70·damage + 30·imminence) that mirrors the Leverage Score,
   with a red "AT STAKE" badge and a `degrades[]` line. No leverage score on harms — they are
-  not practices to run. **Library now spans 275 sections.** Keep expanding toward ~1,000.
+  not practices to run.
+- **Recovery, amends & self-facing practice (done):** +10 clusters (276–285) — 12-step/AA,
+  making amends & seeking forgiveness, mirror meditation, mirror self-talk, self-forgiveness,
+  structured forgiveness intervention (REACH/Enright), sponsorship/peer recovery, confession/
+  disclosure, ritual apology, amends letters. Mirror self-talk and mirror meditation are the
+  thinnest (no direct RCT) and are tagged Emerging with explicit caveats.
+- **Weakness lines — what collapses a goal (done):** +50 threat-rated clusters (286–335) — the
+  inverse of the strengths map. Each names which of the 32 lines, when weak, research shows
+  drives a failure mode, with a **1–10 THREAT rating**, degree (primary/major/moderate), and
+  onset/trainability. NEW render path: a `WeaknessProfile` type (threat/weakLines/degree/onset/
+  reversibility), a **THREAT n/10** badge (`threatColor()`), and a "Weak line(s) →" row. This is
+  the third gauge alongside Leverage (practices) and Cost (harms). The overhyped constructs
+  (grit, growth-mindset, Dunning-Kruger, Gottman's "94%", ego-depletion) are reported at their
+  real deflated size — that honesty IS the group's value. **Library now spans 335 sections.**
+  Keep expanding toward ~1,000.
 - **NEW — Leverage Score gauge** (`leverageScore()` in ResearchLibrary.tsx): a
   deterministic 0–100 rating = 70·benefit + 30·ease, where benefit =
   (magnitude/5)·evidenceWeight·durabilityWeight and ease = effortWeight·latencyWeight.
