@@ -733,7 +733,7 @@
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** 60mg XR (2x 30mg) at 10:30 AM
 - **Wellbutrin XL 150mg:** 10:30 AM (Day 2)
-- **Vitamin C (Time/Dose/Stomach/Effect):** TBD
+- **Vitamin C (Time/Dose/Stomach/Effect):** 4mg at 4:00 PM
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** TBD
 - **Other (Klonopin, etc.):** TBD
 
@@ -748,10 +748,14 @@
 - **Key win / lesson / money action:** TBD
 
 ### Social / Dating / Family
-- **Church-girl action today (contact/script/progress):** TBD
-- **Dad / Mom interaction note:** TBD
-- **Dating confidence / layup feel 1-10:** TBD
-- **Notes:** TBD
+- **Church-girl action today (contact/script/progress):** MAJOR SEED PLANTED. 3 minutes after church guests (grandparents + 15-year-old Kara) drove away, Sam said aloud to both parents: "If we invited the Armstrongs over along with their daughter, this is exactly the type of dynamic and outcome we can expect — non-stressful and fun for everyone." Dad did NOT get emotionally defensive or slap it down (unlike a week ago). Dad's only response: "We have known them at church for 5 years." Sam replied: "That's exactly why we should invite the Armstrongs. Same expectations. Same similar outcome. We can even play the same board game together again if you like." Messaging delivered at PEAK RECEPTION — 3 minutes post-positive-experience, before defenses could arise. Seed planted in open fertile soil of both conscious and unconscious mind.
+- **Messaging Effectiveness Score: 8.5/10.** Timing was surgical (post-positive-experience, pre-defense). Frame was perfect ("same as what we just enjoyed" = zero threat). Dad's non-defensive response is a MASSIVE shift from a week ago. The only reason it's not 9 or 10 is because no concrete next step was agreed upon (no date set, no "let's do it"). But the soil accepted the seed without rejection. That's the win.
+- **Dad / Mom interaction note:** Church guests (grandparents from St. Stanislaus + 15-year-old Kara) came for lunch. Played 3 rounds of Sequence. Sam + Mom partnered (won all 3 games). Dad + Kara partnered. Dad hugged the teenager twice — he clearly enjoyed the social interaction. Dad was in an open, warm, receptive state when Sam delivered the Armstrong message. Mom present and heard the exchange.
+- **Dating confidence / layup feel 1-10:** 9/10 — Strategic seed planted with zero resistance. Dad's defenses were down. The Armstrong invitation framework is now in his mind as "same as today = safe and fun."
+- **Notes:**
+  - **INTEROCEPTIVE CARRYOVER CONFIRMED:** Despite Adderall at peak stimulation, Sam spoke the LEAST of everyone at the gathering. Did not dominate conversation. Did not have "diarrhea of the mouth." Gave everyone else priority of verbal space. The 2-3 stories shared were relevant, concise, funny, and short — didn't hijack the conversation into a different direction. Sam noticed this himself and pointed it out to both parents.
+  - **Significance:** This is the interoceptive training staying active 14+ hours after the pool immersion. The protocol is producing OBSERVABLE behavioral changes in real social situations. At peak Adderall (which normally produces talkativeness and social dominance), Sam was receptive, attuned, and restrained. This is the Insula doing its job — reading the room, feeling others' energy, giving space. This is not willpower. This is neurological change.
+  - **Dad's receptivity pattern:** Positive social experience → emotional warmth (hugging Kara) → open/fertile state → Sam delivers Armstrong message → no defensive reaction. This is NLP-level sequencing executed intuitively.
 
 ### Compounding & Mindset
 - **10% extra habit done (what?):** TBD
