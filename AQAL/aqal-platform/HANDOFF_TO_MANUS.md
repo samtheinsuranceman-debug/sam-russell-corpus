@@ -216,10 +216,24 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
   HOPE trial unread — do NOT claim a result); only **rhythmic auditory stimulation** earns
   **Strong** (leverage 70) and only for Parkinson's/stroke **gait**, explicitly not for
   mood/cognition/"consciousness."
-- **CURRENT LIBRARY SIZE (deterministic count from the data):** **443 clusters across 402
-  section slots (0–401), 1,203 verified sources.** Three lenses: **222 practice clusters**
-  (Leverage Score), **80 cost-of-failure clusters** (Cost Score), **80 weakness-line clusters**
-  (Threat 1–10). Keep expanding toward ~1,000.
+- **Wave 6 — the big fill (done):** +386 verified clusters (sections 402–787), the largest
+  expansion yet, from 35 parallel research agents targeting the thinnest categories and
+  net-new domains. +712 verified sources. NEW PRACTICE GROUPS: learning & study techniques,
+  behavior-change & habit design, focus & attention, decision-making & metacognition,
+  emotion-regulation, stress recovery, sleep improvement, nutrition patterns, physical-activity
+  modalities, supplements (honest/deflated), preventive medicine & screening (framed as
+  education, not advice), relationship-strengthening, communication skills, parenting,
+  personal-finance behaviors, skill & career, meaning/values, arts & creative expression. NEW
+  WEAKNESS LINES: decision biases, team/org, health-behavior, self-regulation, leadership,
+  relational, financial, cognitive-learning, motivational/existential. NEW COST-OF-FAILURE:
+  metabolic/cardiovascular, mental-illness, social/relational, financial/legal, career,
+  childhood-developmental, aging-decline, lifestyle/environmental. Honesty held: nulls/debunks
+  at true size (VITAL vitamin-D null, ego-depletion replication failure, learning-styles myth,
+  nudge deflation, contested social-media effects), industry funding & reverse-causation flagged.
+- **CURRENT LIBRARY SIZE (deterministic count from the data):** **829 clusters across 788
+  section slots (0–787), 1,915 verified sources.** Three lenses: **421 practice clusters**
+  (Leverage Score), **171 cost-of-failure clusters** (Cost Score), **176 weakness-line clusters**
+  (Threat 1–10). ~83% of the way to the 1,000 target.
 - **NEW — Keyword search + browse-by-topic (done):** the practices tab search now matches
   each cluster's title, subtitle, description, callout, feeds/degrades, section name, AND
   every source citation, with **synonym expansion** (typing "anxiety" also finds
