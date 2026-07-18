@@ -167,9 +167,18 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    // The research-data chunk is one large, intentional dataset (the corpus),
+    // split out from the UI chunk and lazy-loaded with its route. Raise the
+    // threshold so the build log isn't noisy about a chunk that is data by design.
+    chunkSizeWarningLimit: 900,
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Split the large, stable Research Library dataset out of the page's
+          // UI chunk so the two load in parallel and cache independently.
+          if (id.includes('researchLibraryData')) {
+            return 'research-data';
+          }
           if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/')) {
             return 'vendor-react';
           }
