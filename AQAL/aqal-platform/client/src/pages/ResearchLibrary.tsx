@@ -855,6 +855,13 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "393": "393 · Low Openness / Cognitive Rigidity → Maladaptation to Change",
   "394": "394 · Trait Self-Critical Perfectionism → Burnout & Suicide Risk",
   "395": "395 · Intolerance of Uncertainty → Worry & Anxiety-Driven Paralysis",
+  // Sound, light & rhythm — brainwave entrainment
+  "396": "396 · Binaural Beats (Hemi-Sync / 'Gateway')",
+  "397": "397 · Isochronic Tones & Monaural Beats",
+  "398": "398 · Audio-Visual Entrainment (light & sound)",
+  "399": "399 · 40 Hz Gamma Sensory Stimulation (GENUS)",
+  "400": "400 · Rhythmic Auditory Stimulation (gait)",
+  "401": "401 · Vibroacoustic Therapy",
 };
 
 // Short labels for the section jump-nav chips.
@@ -1014,6 +1021,9 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "386": "Anger / Hostility", "387": "Sensation-Seeking", "388": "Low Frustration Tolerance", "389": "Experiential Avoidance",
   "390": "External Locus", "391": "Fear of Failure", "392": "Boredom Proneness", "393": "Low Openness",
   "394": "Perfectionism", "395": "Intolerance of Uncertainty",
+  // Sound, light & rhythm — brainwave entrainment
+  "396": "Binaural Beats", "397": "Isochronic / Monaural", "398": "Audio-Visual Entrainment",
+  "399": "40 Hz Gamma (GENUS)", "400": "Rhythmic Auditory Stim", "401": "Vibroacoustic Therapy",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -1075,6 +1085,8 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "370", "371", "374", "376", "379", "380", "381", "392",
   "383", "393",
   "378",
+  // Sound, light & rhythm — brainwave entrainment (by leverage, highest first)
+  "400", "396", "397", "398", "401", "399",
   "313", "319"];
 const sectionRank = (s: string) => {
   const i = PRACTICE_SECTION_ORDER.indexOf(s);
@@ -1237,6 +1249,9 @@ const PRACTICE_GROUP: Record<string, string> = {
   "390": "Weakness lines — what collapses a goal", "391": "Weakness lines — what collapses a goal",
   "392": "Weakness lines — what collapses a goal", "393": "Weakness lines — what collapses a goal",
   "394": "Weakness lines — what collapses a goal", "395": "Weakness lines — what collapses a goal",
+  "396": "Sound, light & rhythm — brainwave entrainment", "397": "Sound, light & rhythm — brainwave entrainment",
+  "398": "Sound, light & rhythm — brainwave entrainment", "399": "Sound, light & rhythm — brainwave entrainment",
+  "400": "Sound, light & rhythm — brainwave entrainment", "401": "Sound, light & rhythm — brainwave entrainment",
   "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
   "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
   "196": "AI as coach, companion & mirror",
