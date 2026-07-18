@@ -1338,6 +1338,89 @@ export const LEDGER_STATS = {
   ...collectSourceKinds(),                // doi / scholar / other / clickable (individually linked in-app)
 };
 
+// ---- Keyword search: synonym expansion + topic cloud ------------------------
+// The library search matches the title, subtitle, description, feeds/degrades,
+// and every source citation of each cluster. But a person types "anxiety" and a
+// paper may say "anxious" or "worry"; they type "weight" and it says "obesity."
+// KEYWORD_SYNONYMS widens a typed word (or a topic chip) into the family of
+// substrings that should surface the same research, so one keyword pulls up
+// everything relevant instead of forcing a hunt through a thousand files.
+const KEYWORD_SYNONYMS: Record<string, string[]> = {
+  depression: ["depress", "depressive", "mood", "dysthym", "behavioral activation", "hopeless"],
+  anxiety: ["anxi", "anxious", "worry", "worries", "panic", "phobia", "nervous", "gad", "intolerance of uncertainty"],
+  stress: ["stress", "cortisol", "burnout", "overwhelm", "tension", "relaxation", "calm"],
+  trauma: ["trauma", "ptsd", "post-traumatic", "abuse", "ace", "adverse childhood", "emdr"],
+  sleep: ["sleep", "insomnia", "circadian", "rest", "nap", "melatonin", "bedtime"],
+  focus: ["focus", "attention", "concentrat", "distract", "adhd", "sustained attention", "vigilance"],
+  adhd: ["adhd", "attention", "hyperactiv", "impulsiv", "executive function"],
+  memory: ["memory", "recall", "retention", "forget", "working memory", "prospective memory", "learning"],
+  addiction: ["addict", "substance", "dependence", "craving", "relapse", "compulsive", "use disorder"],
+  alcohol: ["alcohol", "drinking", "aud", "sobriety", "twelve-step", "aa "],
+  smoking: ["smoking", "nicotine", "vaping", "tobacco", "cigarette"],
+  weight: ["weight", "obesity", "obese", "bmi", "fat loss", "overeating", "binge"],
+  diet: ["diet", "nutrition", "fiber", "protein", "food", "eating", "ultra-processed"],
+  exercise: ["exercise", "fitness", "cardio", "vo2", "strength", "walking", "steps", "hiit", "physical activity", "aerobic"],
+  pain: ["pain", "chronic pain", "fibromyalgia", "ache", "analges"],
+  gut: ["gut", "microbiome", "digest", "gastro", "fiber"],
+  heart: ["heart", "cardiac", "cardiovascular", "cvd", "blood pressure", "hypertension"],
+  longevity: ["longevity", "mortality", "lifespan", "aging", "ageing", "life expectancy"],
+  money: ["money", "financial", "wealth", "income", "saving", "invest", "retirement", "budget", "debt"],
+  debt: ["debt", "borrowing", "loan", "bankruptcy", "foreclosure", "credit"],
+  career: ["career", "job", "employment", "work", "workplace", "unemploy", "vocational", "apprentic"],
+  entrepreneurship: ["entrepreneur", "startup", "founder", "venture", "business", "product-market"],
+  negotiation: ["negotiat", "bargain", "deal", "persuasion", "influence"],
+  leadership: ["leader", "manage", "supervis", "executive", "team"],
+  relationships: ["relationship", "marriage", "marital", "couple", "partner", "divorce", "attachment", "intimacy"],
+  dating: ["dating", "courtship", "flirt", "mating", "romance", "single"],
+  parenting: ["parent", "child", "co-parent", "family", "caregiv", "maltreat"],
+  communication: ["communicat", "listen", "conversation", "conflict", "assertive", "demand-withdraw"],
+  forgiveness: ["forgive", "amends", "apolog", "reconcil", "grudge", "resentment"],
+  loneliness: ["lonel", "isolation", "social connection", "belonging", "community", "friendship"],
+  anger: ["anger", "angry", "hostil", "rage", "aggress", "irritab"],
+  habits: ["habit", "routine", "behavior change", "self-control", "discipline", "willpower", "goal-setting"],
+  procrastination: ["procrastinat", "delay", "avoidance", "self-handicap", "present bias"],
+  motivation: ["motivat", "drive", "grit", "perseverance", "goal", "purpose", "meaning"],
+  confidence: ["confidence", "self-efficacy", "self-esteem", "self-concept", "assertive"],
+  mindfulness: ["mindful", "meditat", "breath", "present-moment", "acceptance"],
+  gratitude: ["gratitude", "grateful", "thankful", "appreciation"],
+  resilience: ["resilien", "coping", "bounce back", "hardiness", "post-traumatic growth"],
+  emotion: ["emotion", "regulation", "reappraisal", "feelings", "affect", "distress tolerance"],
+  creativity: ["creativ", "divergent", "innovation", "imagination"],
+  cognition: ["cognit", "intelligence", "reasoning", "iq", "processing speed", "thinking"],
+  music: ["music", "rhythm", "auditory", "song", "beat"],
+  "binaural beats": ["binaural", "isochronic", "monaural", "entrainment", "hemi-sync", "gateway", "brainwave"],
+  meditation: ["meditat", "mindful", "breath", "contemplat"],
+  suicide: ["suicid", "self-harm", "self-injury"],
+  grief: ["grief", "griev", "bereave", "loss", "widow", "mourning"],
+};
+
+// Curated topic clusters for the "Browse by topic" cloud. Each chip runs the
+// synonym-expanded search. Deliberately broad so people can find their thing by
+// clicking, not typing.
+const KEYWORD_TOPICS: { group: string; terms: string[] }[] = [
+  { group: "Mental health", terms: ["depression", "anxiety", "stress", "trauma", "burnout", "loneliness", "grief", "anger", "suicide"] },
+  { group: "Mind & focus", terms: ["focus", "adhd", "memory", "procrastination", "motivation", "creativity", "cognition", "confidence"] },
+  { group: "Body & health", terms: ["sleep", "exercise", "weight", "diet", "pain", "gut", "heart", "longevity"] },
+  { group: "Money & work", terms: ["money", "debt", "career", "entrepreneurship", "negotiation", "leadership"] },
+  { group: "Relationships", terms: ["relationships", "dating", "parenting", "communication", "forgiveness"] },
+  { group: "Habits & change", terms: ["habits", "addiction", "alcohol", "smoking"] },
+  { group: "Emotion & practice", terms: ["mindfulness", "meditation", "gratitude", "resilience", "emotion", "binaural beats"] },
+];
+
+// Expand a raw query into the set of substrings that should count as a match.
+// An unknown query stays literal (unchanged behavior); a known topic word (typed
+// or from a chip) fans out to its whole synonym family (OR match).
+function expandQuery(q: string): string[] {
+  const acc = new Set<string>([q]);
+  for (const [key, syns] of Object.entries(KEYWORD_SYNONYMS)) {
+    if (q === key || q.includes(key) || key.includes(q) || syns.some((s) => q === s || q.includes(s))) {
+      syns.forEach((s) => acc.add(s));
+      acc.add(key);
+    }
+  }
+  return Array.from(acc);
+}
+
 export default function ResearchLibrary() {
   // Support deep-linking via ?section=trainability or ?section=practices
   const [section, setSection] = useState<"lines" | "trainability" | "practices">(() => {
@@ -1438,11 +1521,13 @@ export default function ResearchLibrary() {
       if (practiceTag !== "all" && c.evidenceTag !== practiceTag) return false;
       if (q) {
         const hay = (
-          c.title + " " + c.subtitle + " " + c.description + " " +
+          c.title + " " + c.subtitle + " " + c.description + " " + (c.callout || "") + " " +
+          (c.feeds || []).join(" ") + " " + (c.degrades || []).join(" ") + " " +
           (PRACTICE_SECTIONS[c.section] || "") + " " +
           c.sources.map((s) => s.cite + " " + s.note).join(" ")
         ).toLowerCase();
-        if (!hay.includes(q)) return false;
+        // Match if the literal query OR any of its synonyms appears (synonym OR).
+        if (!expandQuery(q).some((term) => hay.includes(term))) return false;
       }
       return true;
     }).sort((a, b) => sectionRank(a.section) - sectionRank(b.section));
@@ -1647,6 +1732,18 @@ export default function ResearchLibrary() {
         .rl-practice-sections .rl-chip-num{color:${CHAMPAGNE}; font-weight:600; margin-right:2px;}
         .rl-practice-sections .rl-chip.active .rl-chip-num{color:${INK};}
         .rl-practice-tagfilter{margin-bottom:18px;}
+        /* Browse-by-topic keyword cloud */
+        .rl-topics{border:1px solid ${LINE}; border-radius:12px; background:rgba(255,255,255,0.015); padding:14px 16px; margin:-14px 0 20px;}
+        .rl-topics-label{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:${MUTED}; margin-bottom:12px;}
+        .rl-topics-row{display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; padding:7px 0; border-top:1px solid rgba(255,255,255,0.04);}
+        .rl-topics-row:first-of-type{border-top:none; padding-top:0;}
+        .rl-topics-group{font-size:11px; color:${CHAMPAGNE}; min-width:118px; flex-shrink:0; font-weight:600; letter-spacing:0.02em;}
+        .rl-topics-chips{display:flex; flex-wrap:wrap; gap:6px; flex:1;}
+        .rl-topic-chip{font-size:12px; color:${CREAM}; background:rgba(255,255,255,0.03); border:1px solid ${LINE};
+          border-radius:999px; padding:3px 11px; cursor:pointer; text-transform:capitalize; transition:background .12s,border-color .12s,color .12s;}
+        .rl-topic-chip:hover{background:rgba(224,198,140,0.08); border-color:rgba(224,198,140,0.4);}
+        .rl-topic-chip.active{background:${CHAMPAGNE}; color:${INK}; border-color:${CHAMPAGNE}; font-weight:600;}
+        @media (max-width:640px){ .rl-topics-group{min-width:100%; margin-bottom:2px;} }
         .rl-practice-count{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.06em; color:${MUTED};
           margin-bottom:22px; display:flex; align-items:center; gap:14px;}
         .rl-practice-count b{color:${CREAM};}
@@ -1988,7 +2085,7 @@ export default function ResearchLibrary() {
                   type="text"
                   value={practiceQuery}
                   onChange={(e) => setPracticeQuery(e.target.value)}
-                  placeholder="Search practices &amp; studies — try &quot;sleep&quot;, &quot;grit&quot;, or &quot;meta-analysis&quot;"
+                  placeholder="Search thousands of studies — try &quot;depression&quot;, &quot;anxiety&quot;, &quot;sleep&quot;, &quot;money&quot;, or &quot;addiction&quot;"
                 />
                 {practiceQuery && (
                   <button type="button" className="rl-search-clear" onClick={() => setPracticeQuery("")} aria-label="Clear search">
@@ -1996,6 +2093,28 @@ export default function ResearchLibrary() {
                   </button>
                 )}
               </div>
+            </div>
+
+            {/* Browse-by-topic keyword cloud — click a keyword to search */}
+            <div className="rl-topics">
+              <div className="rl-topics-label">Browse by topic — tap a keyword</div>
+              {KEYWORD_TOPICS.map((t) => (
+                <div key={t.group} className="rl-topics-row">
+                  <span className="rl-topics-group">{t.group}</span>
+                  <div className="rl-topics-chips">
+                    {t.terms.map((term) => (
+                      <button
+                        key={term}
+                        type="button"
+                        className={`rl-topic-chip${practiceQuery.trim().toLowerCase() === term ? " active" : ""}`}
+                        onClick={() => setPracticeQuery(practiceQuery.trim().toLowerCase() === term ? "" : term)}
+                      >
+                        {term}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Section jump-nav */}
