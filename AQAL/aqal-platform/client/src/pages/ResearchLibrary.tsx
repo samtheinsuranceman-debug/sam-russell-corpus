@@ -708,6 +708,12 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "193": "193 · AI Companionship / Chatbot Relationship", "194": "194 · AI as Coach / Co-Creator",
   "195": "195 · Self-Disclosure to an AI / Journaling", "196": "196 · Feeding an AI Your Personal History",
   "197": "197 · Car Cleaning / Detailing / Ordered Environment", "198": "198 · Getting Engaged / Commitment Transition",
+  // Wave 4 — physiology & dating
+  "199": "199 · Voluntary Breath-Hold / Freediving", "200": "200 · Backwards / Retro Walking",
+  "201": "201 · Spinning / Vestibular Stimulation", "202": "202 · Speed Dating & Mate Choice",
+  "203": "203 · Online Dating Outcomes & Wellbeing", "204": "204 · Approaching Strangers",
+  "205": "205 · Matchmaking & Network Approval", "206": "206 · Family Courtship / Arranged Marriage",
+  "207": "207 · Learning an Instrument as an Adult", "208": "208 · Writing Love Letters / Affectionate Writing",
 };
 
 // Short labels for the section jump-nav chips.
@@ -796,6 +802,10 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   // AI as coach, companion & mirror + interventions
   "191": "Sign Language", "192": "AI Therapist", "193": "AI Companion", "194": "AI Coach",
   "195": "Disclose to AI", "196": "AI + Your History", "197": "Car Detailing", "198": "Getting Engaged",
+  // Wave 4 — physiology & dating
+  "199": "Freediving", "200": "Backwards Walking", "201": "Spinning", "202": "Speed Dating",
+  "203": "Online Dating", "204": "Approaching Strangers", "205": "Matchmaking", "206": "Arranged Marriage",
+  "207": "Adult Instrument", "208": "Love Letters",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -807,9 +817,9 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   // Protect the hardware — senses & body
   "50", "51", "52", "53",
   // Movement & mind-body
-  "3", "4", "58", "59", "62", "54", "55", "5",
+  "3", "4", "58", "59", "62", "54", "55", "5", "200",
   // Cognitive & skill
-  "27", "28", "29", "36", "35", "34", "64", "81", "76", "191",
+  "27", "28", "29", "36", "35", "34", "64", "81", "76", "191", "207",
   // Emotional & contemplative
   "6", "7", "8", "66", "67", "68", "69", "70", "71", "72", "73", "30", "31", "32", "33", "63", "65",
   // Behavioral & life-design
@@ -822,11 +832,12 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "136", "111", "109", "108", "106", "102", "103", "110", "104", "105", "137", "138", "139", "140",
   // Social & community
   "114", "115", "112", "134", "135", "113", "117", "118", "121", "119", "120", "116", "198",
+  "204", "202", "203", "205", "206", "208",
   // Environment & everyday habits
   "130", "125", "123", "127", "122", "124", "126", "129", "131", "128",
   // AI as coach, companion & mirror
   "194", "192", "195", "196", "193",
-  "19", "20", "37", "197", "10", "11",
+  "19", "20", "37", "197", "199", "201", "10", "11",
   // The cost of failure — the sobering coda: what breaks when it goes wrong
   "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
   "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
@@ -907,6 +918,11 @@ const PRACTICE_GROUP: Record<string, string> = {
   "10": "Risks & compounding", "11": "Risks & compounding",
   // AI as coach, companion & mirror (192–196); sign language & engagement join existing groups
   "191": "Practices by domain", "198": "Social & community",
+  // Wave 4 — physiology & dating
+  "200": "Practices by domain", "207": "Practices by domain",
+  "199": "The honest frontier — unproven", "201": "The honest frontier — unproven",
+  "202": "Social & community", "203": "Social & community", "204": "Social & community",
+  "205": "Social & community", "206": "Social & community", "208": "Social & community",
   "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
   "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
   "196": "AI as coach, companion & mirror",
@@ -4685,6 +4701,130 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Lucas, R. E., Clark, A. E., Georgellis, Y., & Diener, E. (2003). Reexamining adaptation and the set point model of happiness: Reactions to changes in marital status. Journal of Personality and Social Psychology, 84(3), 527–539.", note: "15-yr panel (~24,000): on average a marriage wellbeing boost that adapts back toward baseline, with substantial individual variation. [Strong — long panel]", link: scholar("Lucas Clark reexamining adaptation set point marital status"), kind: "scholar" },
       { cite: "Le, B., & Agnew, C. R. (2003). Commitment and its theorized determinants: A meta-analysis of the Investment Model. Personal Relationships, 10(1), 37–57.", note: "52 studies / 11,582 people: satisfaction, alternatives, and investment explain ~2/3 of commitment variance; commitment predicts breakup. [Strong — meta-analysis]", link: scholar("Le Agnew commitment theorized determinants meta-analysis Investment Model"), kind: "scholar" },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // WAVE 4 — dating, physiology, movement, recreation, social & sensory (199+).
+  // ── P: physiology & dating (199–208) ──────────────────────────────────────
+  {
+    id: "freediving", section: "199", title: "Voluntary Breath-Hold / Freediving Training", subtitle: "Bolsters clusters: cardiovascular tolerance, autonomic regulation, CO2 tolerance",
+    evidenceTag: "Emerging",
+    feeds: ["cardiovascular tolerance", "autonomic/vagal regulation", "CO2 tolerance", "stress inoculation"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "high" },
+    description: "Repeated voluntary apnea triggers the mammalian dive response — bradycardia, vasoconstriction, and spleen contraction — and trained apneists develop blunted CO2 sensitivity and greater hypoxia tolerance. Genuine but training-dependent adaptations.",
+    callout: "The popular claim that breath-hold training causes 'permanent carotid expansion that prevents strokes' is an overreach the literature does not support — the acute risk runs the OTHER way (end-apnea is hypoxic + hypercapnic + hypertensive, with a possible transient blood-brain-barrier disruption). Never train apnea in water alone (shallow-water blackout).",
+    sources: [
+      { cite: "Bakovic, D., Palada, I., et al. (2003). Spleen volume and blood flow response to repeated breath-hold apneas. Journal of Applied Physiology, 95(4), 1460–1466.", note: "~20% rapid spleen-volume reduction in the first apnea; splenectomized subjects lack the successive-apnea prolongation. [Moderate — small controlled]", link: scholar("spleen volume blood flow response repeated breath-hold apneas"), kind: "scholar" },
+      { cite: "Patrician, A., Dujic, Z., et al. (2021). Going to Extremes of Lung Physiology — Deep Breath-Hold Diving. Frontiers in Physiology, 12, 710429.", note: "Review: dive response, blunted chemosensitivity, and hypoxia/hypercapnia tolerance in elite divers. [Emerging — review]", link: scholar("Going to Extremes Lung Physiology Deep Breath-Hold Diving"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "backwards-walking", section: "200", title: "Backwards / Retro Walking", subtitle: "Bolsters clusters: cardiovascular fitness, knee rehab, balance/proprioception",
+    evidenceTag: "Moderate",
+    feeds: ["cardiovascular fitness", "knee-joint rehab/quadriceps strength", "balance/proprioception", "attentional load"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Walking backward carries a higher energy cost and coordination demand than forward walking, improves cardiorespiratory fitness, and is a useful knee-osteoarthritis rehab tool — building quadriceps strength with reduced patellofemoral load.",
+    callout: "Real but modest and context-specific. In knee-OA trials retro walking is typically 'non-inferior' or an adjunct, not a miracle, and the cognition claims are the weakest link — the 'engages the brain more' idea rests on higher dual-task demand, not robust cognitive-outcome trials. Needs safe clear space (fall risk).",
+    sources: [
+      { cite: "Terblanche, E., et al. (2005). The effect of backward locomotion training on the body composition and cardiorespiratory fitness of young women. International Journal of Sports Medicine, 26(3), 214–219.", note: "6-week backward walk/run program lowered submaximal VO2, improved predicted VO2max, and reduced body fat ~2.4%. [Moderate — controlled training study]", link: scholar("Terblanche backward locomotion training body composition cardiorespiratory fitness"), kind: "scholar" },
+      { cite: "Balasukumaran, T., et al. (2019). The effectiveness of backward walking in people with knee osteoarthritis: a systematic review and meta-analysis. Clinical Rehabilitation, 33(11).", note: "Combining backward walking with conventional rehab significantly reduced pain and disability across 13 RCTs. [Moderate — SR/MA]", link: scholar("backward walking knee osteoarthritis systematic review meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "vestibular-spin", section: "201", title: "Spinning / Vestibular Stimulation", subtitle: "Bolsters clusters: vestibular/balance — the viral 'denser brain' claim is unverified",
+    evidenceTag: "Mixed",
+    feeds: ["vestibular/balance function", "spatial cognition (population-specific)", "potential neuro-rehab"],
+    impact: { magnitude: 1, latency: "days", durability: "transient", effort: "low" },
+    description: "The vestibular system projects broadly to cortex and hippocampus. Controlled vestibular stimulation (galvanic, caloric, rotational) is an established research and emerging clinical tool — chiefly for vestibular-loss and neurological populations, not healthy-brain enhancement.",
+    callout: "CRITICAL HONESTY: the viral claim that 'spinning increases neural density in a week' is UNVERIFIED — no peer-reviewed human study supports it. The real literature often shows the opposite acutely: non-veridical vestibular input can DISRUPT mental rotation and spatial imagery. Therapeutic promise is population-specific, not a healthy-brain enhancer.",
+    sources: [
+      { cite: "Dilda, V., MacDougall, H. G., Curthoys, I. S., & Moore, S. T. (2012). Effects of galvanic vestibular stimulation on cognitive function. Experimental Brain Research, 216(2), 275–285.", note: "Suprathreshold GVS INCREASED error rate on match-to-sample and perspective-taking — a disruptive effect. [Moderate]", link: scholar("Dilda galvanic vestibular stimulation cognitive function"), kind: "scholar" },
+      { cite: "Mast, F. W., Merfeld, D. M., & Kosslyn, S. M. (2006). Visual mental imagery during caloric vestibular stimulation. Neuropsychologia, 44(1), 101–109.", note: "Caloric vestibular stimulation disrupts high-resolution mental imagery and mental rotation (shared parietal substrates). [Moderate]", link: scholar("visual mental imagery caloric vestibular stimulation Kosslyn"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "speed-dating", section: "202", title: "Speed Dating & Mate Choice", subtitle: "Bolsters clusters: social exposure, mate-selection insight",
+    evidenceTag: "Moderate",
+    feeds: ["social/conversational exposure", "mate-selection insight", "calibration of stated vs revealed preference"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Speed dating is both a social activity and a research paradigm for romantic initiation. Its humbling headline: people's stated ideal-partner preferences poorly predict who they actually desire in person — initial romantic desire is largely unpredictable.",
+    callout: "This literature is about attraction and the predictability of desire — NOT evidence that speed dating boosts intelligence or general cognition. Treat it as a social-skill/exposure practice and a window into attraction dynamics, not a cognitive intervention.",
+    sources: [
+      { cite: "Finkel, E. J., & Eastwick, P. W. (2008). Speed-Dating. Current Directions in Psychological Science, 17(3), 193–197.", note: "Speed dating as a powerful, externally valid paradigm for studying relationship initiation. [Strong — program review]", link: scholar("Finkel Eastwick Speed-Dating Current Directions"), kind: "scholar" },
+      { cite: "Eastwick, P. W., & Finkel, E. J. (2008). Sex differences in mate preferences revisited: do people know what they initially desire in a romantic partner? Journal of Personality and Social Psychology, 94(2), 245–264.", note: "Stated ideal preferences did not predict actual in-vivo desire at the event. [Strong]", link: scholar("Eastwick Finkel sex differences mate preferences revisited"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "online-dating", section: "203", title: "Online Dating Outcomes & Wellbeing", subtitle: "Bolsters clusters: partner access — but 'matching algorithms' are unsupported",
+    evidenceTag: "Moderate",
+    feeds: ["partner access", "relationship formation", "expectation-setting about dating tech"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "The main real advantage of online dating is ACCESS to potential partners. Effects on relationship formation and wellbeing are genuinely mixed — not uniformly positive.",
+    callout: "The flagship PSPI review is skeptical: online dating's 'scientific matching algorithm' marketing is unsubstantiated, and heavy pre-meeting communication or profile-browsing can undermine outcomes. Useful for meeting people, not a validated compatibility engine.",
+    sources: [
+      { cite: "Finkel, E. J., Eastwick, P. W., Karney, B. R., Reis, H. T., & Sprecher, S. (2012). Online Dating: A Critical Analysis From the Perspective of Psychological Science. Psychological Science in the Public Interest, 13(1), 3–66.", note: "Access = real benefit; matching algorithms unsupported; heavy pre-meeting communication can backfire. [Strong — authoritative review]", link: scholar("Finkel Online Dating Critical Analysis Psychological Science Public Interest 2012"), kind: "scholar" },
+      { cite: "Cacioppo, J. T., et al. (2013). Marital satisfaction and break-ups differ across on-line and off-line meeting venues. PNAS, 110(25), 10135–10140.", note: "Marriages that began online showed marginally higher satisfaction / lower breakup — mixed, correlational. [Moderate — observational]", link: scholar("Cacioppo marital satisfaction break-ups online offline meeting venues PNAS"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "approaching-strangers", section: "204", title: "Approaching Strangers / Initiating Conversation", subtitle: "Bolsters clusters: social confidence, wellbeing, belonging",
+    evidenceTag: "Strong",
+    feeds: ["social confidence/exposure", "wellbeing/positive affect", "belonging", "calibration of social forecasts"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "Initiating conversation with strangers reliably raises wellbeing for both parties — yet people systematically expect the opposite and undervalue strangers' interest in connecting. Weak-tie and minimal interactions (a barista chat) also boost belonging.",
+    callout: "Effects are real and causal but modest and momentary — a mood/belonging and expectation-correction effect, not a personality overhaul. Benefits accrue reliably in aggregate; any single interaction can still fall flat.",
+    sources: [
+      { cite: "Epley, N., & Schroeder, J. (2014). Mistakenly Seeking Solitude. Journal of Experimental Psychology: General, 143(5), 1980–1999.", note: "Commuters instructed to connect reported a more positive experience; others predicted the opposite. The barrier is underestimating others' interest. [Strong — field experiments]", link: scholar("Epley Schroeder Mistakenly Seeking Solitude"), kind: "scholar" },
+      { cite: "Sandstrom, G. M., & Dunn, E. W. (2014). Social Interactions and Well-Being: The Surprising Power of Weak Ties. Personality and Social Psychology Bulletin, 40(7), 910–922.", note: "More weak-tie interactions on a given day → greater happiness and belonging. [Moderate]", link: scholar("Sandstrom Dunn social interactions well-being weak ties"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "matchmaking", section: "205", title: "Matchmaking & Social-Network Approval", subtitle: "Bolsters clusters: relationship stability, social support, network embedding",
+    evidenceTag: "Moderate",
+    feeds: ["relationship stability/commitment", "social support", "network embedding"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    description: "Direct evidence on friend/family matchmaking per se is thin. The robust adjacent finding: perceived approval and support from one's social network predicts stronger commitment, more love/satisfaction, and lower breakup likelihood.",
+    callout: "Be explicit — 'friends/family setting people up leads to better relationships' is NOT directly established by high-quality trials. What IS supported is that network APPROVAL predicts stability (correlational/longitudinal), and approval can be reciprocal (happy couples elicit more approval).",
+    sources: [
+      { cite: "Sprecher, S., & Felmlee, D. (1992). The influence of parents and friends on the quality and stability of romantic relationships: A three-wave longitudinal investigation. Journal of Marriage and the Family, 54(4), 888–900.", note: "Network approval predicted lower later breakup and higher relationship quality. [Moderate — longitudinal]", link: scholar("Sprecher Felmlee parents friends quality stability romantic relationships longitudinal"), kind: "scholar" },
+      { cite: "Felmlee, D. H. (2001). No couple is an island: A social network perspective on dyadic stability. Social Forces, 79(4), 1259–1287.", note: "Network support predicts dyadic stability; network 'interference' predicts instability. [Moderate]", link: scholar("Felmlee no couple is an island social network dyadic stability"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "arranged-courtship", section: "206", title: "Family Involvement in Courtship / Arranged Marriage", subtitle: "Mixed & culture-bound — no consistent global winner",
+    evidenceTag: "Mixed",
+    feeds: ["relationship satisfaction/commitment", "family/network involvement", "cultural fit"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "moderate" },
+    description: "Comparisons of arranged (and modern 'hybrid'/semi-arranged, with veto power) vs love/choice marriages on satisfaction, commitment, and love. Results are genuinely mixed and culturally moderated.",
+    callout: "Findings are MIXED, not a clean endorsement of arranged marriage. Regan (2012) found no significant differences; Madathil & Benshoff (2008) found U.S. arranged marriages highest in satisfaction. Most 'arranged' samples are modern hybrids with consent, and selection effects and divorce-stigma differences confound cross-cultural comparisons.",
+    sources: [
+      { cite: "Regan, P. C., Lakhanpal, S., & Anguiano, C. (2012). Relationship outcomes in Indian-American love-based and arranged marriages. Psychological Reports, 110(3), 915–924.", note: "No significant differences in satisfaction, commitment, or love between arranged and love marriages. [Moderate — cross-sectional]", link: scholar("Regan relationship outcomes Indian-American love-based arranged marriages"), kind: "scholar" },
+      { cite: "Madathil, J., & Benshoff, J. M. (2008). Importance of marital characteristics and marital satisfaction: A comparison of Asian Indians in arranged marriages and Americans in marriages of choice. The Family Journal, 16(3), 222–230.", note: "U.S. arranged-marriage group highest satisfaction; India-arranged ≈ U.S.-choice; different valued characteristics. [Moderate]", link: scholar("Madathil Benshoff marital characteristics satisfaction arranged marriages Americans choice"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "adult-instrument", section: "207", title: "Learning an Instrument as an Adult", subtitle: "Bolsters clusters: executive function, working memory, mood, social connection",
+    evidenceTag: "Moderate",
+    feeds: ["executive function/working memory", "processing speed", "mood/wellbeing", "social connection", "motor coordination"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "high" },
+    description: "Adult/older-adult music learning (esp. piano) as a cognitive intervention, plus community music-making for wellbeing. Piano-training RCTs show gains in executive function, working memory, and processing speed; group music-making improves mood and social connection.",
+    callout: "Real but bounded. Bugos's piano gains were significant post-training but not all maintained at 3-month follow-up — durability requires continued practice. Cognitive transfer is domain-limited, not a broad IQ boost, and community-band wellbeing evidence is observational (joiners are already social).",
+    sources: [
+      { cite: "Bugos, J. A., Perlstein, W. M., McCrae, C. S., Brophy, T. S., & Bedenbaugh, P. H. (2007). Individualized piano instruction enhances executive functioning and working memory in older adults. Aging & Mental Health, 11(4), 464–471.", note: "6-month piano RCT improved Trail Making & Digit Symbol vs controls; some gains not maintained at 3-month follow-up. [Moderate — RCT]", link: scholar("Bugos individualized piano instruction executive functioning working memory older adults"), kind: "scholar" },
+      { cite: "Seinfeld, S., Figueroa, H., Ortiz-Gil, J., & Sanchez-Vives, M. V. (2013). Effects of music learning and piano practice on cognitive function, mood and quality of life in older adults. Frontiers in Psychology, 4, 810.", note: "Piano training improved executive/cognitive measures, mood, and QoL vs controls. [Moderate]", link: scholar("Seinfeld music learning piano practice cognitive function mood quality of life older adults"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "love-letters", section: "208", title: "Writing Love Letters / Affectionate Writing", subtitle: "Bolsters clusters: stress physiology, relationship closeness, positive affect",
+    evidenceTag: "Moderate",
+    feeds: ["stress physiology (cortisol/lipids)", "relationship maintenance/closeness", "positive affect"],
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Deliberately writing about affection for loved ones (an adaptation of Pennebaker expressive-writing) produced measurable physiological benefits: in two RCTs, affectionate writing significantly reduced total cholesterol vs controls. It sits within Affection Exchange Theory (Floyd).",
+    callout: "The result is real but the samples were small healthy college students with capillary/salivary biomarkers, and replication at scale is limited — treat the magnitude cautiously and don't overstate it as a cardiac treatment.",
+    sources: [
+      { cite: "Floyd, K., Mikkelson, A. C., Hesse, C., & Pauley, P. M. (2007). Affectionate Writing Reduces Total Cholesterol: Two Randomized, Controlled Trials. Human Communication Research, 33(2), 119–142.", note: "Experimental affectionate-writing groups showed significant total-cholesterol reductions vs controls. [Moderate — 2 RCTs]", link: scholar("Floyd affectionate writing reduces total cholesterol randomized controlled trials"), kind: "scholar" },
+      { cite: "Floyd, K., et al. (2009). Kissing in marital and cohabiting relationships: Effects on blood lipids, stress, and relationship satisfaction. Western Journal of Communication, 73(2), 113–133.", note: "Affectionate behavior (kissing) improved lipid profile, lowered perceived stress, and raised satisfaction — parallels the affectionate-writing effect. [Moderate]", link: scholar("Floyd kissing marital cohabiting blood lipids stress relationship satisfaction"), kind: "scholar" },
     ],
   },
 ];
