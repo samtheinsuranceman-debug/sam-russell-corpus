@@ -703,6 +703,11 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "185": "185 · Empty Nest / Role Transition", "186": "186 · Food Insecurity",
   "187": "187 · Housing Instability / Eviction", "188": "188 · Neighborhood Violence / Threat",
   "189": "189 · Excessive Early-Childhood Screen Use", "190": "190 · Chronic Caregiver Burden (Non-Dementia)",
+  // AI as coach, companion & mirror + skill/relationship interventions
+  "191": "191 · Learning Sign Language (ASL)", "192": "192 · AI Chatbots as Therapist",
+  "193": "193 · AI Companionship / Chatbot Relationship", "194": "194 · AI as Coach / Co-Creator",
+  "195": "195 · Self-Disclosure to an AI / Journaling", "196": "196 · Feeding an AI Your Personal History",
+  "197": "197 · Car Cleaning / Detailing / Ordered Environment", "198": "198 · Getting Engaged / Commitment Transition",
 };
 
 // Short labels for the section jump-nav chips.
@@ -788,6 +793,9 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "181": "ACEs", "182": "Discrimination", "183": "Child Poverty", "184": "Incarceration",
   "185": "Empty Nest", "186": "Food Insecurity", "187": "Eviction", "188": "Neighborhood Violence",
   "189": "Early Screen Time", "190": "Caregiver Burden",
+  // AI as coach, companion & mirror + interventions
+  "191": "Sign Language", "192": "AI Therapist", "193": "AI Companion", "194": "AI Coach",
+  "195": "Disclose to AI", "196": "AI + Your History", "197": "Car Detailing", "198": "Getting Engaged",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -801,7 +809,7 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   // Movement & mind-body
   "3", "4", "58", "59", "62", "54", "55", "5",
   // Cognitive & skill
-  "27", "28", "29", "36", "35", "34", "64", "81", "76",
+  "27", "28", "29", "36", "35", "34", "64", "81", "76", "191",
   // Emotional & contemplative
   "6", "7", "8", "66", "67", "68", "69", "70", "71", "72", "73", "30", "31", "32", "33", "63", "65",
   // Behavioral & life-design
@@ -813,10 +821,12 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   // Youth, family & development
   "136", "111", "109", "108", "106", "102", "103", "110", "104", "105", "137", "138", "139", "140",
   // Social & community
-  "114", "115", "112", "134", "135", "113", "117", "118", "121", "119", "120", "116",
+  "114", "115", "112", "134", "135", "113", "117", "118", "121", "119", "120", "116", "198",
   // Environment & everyday habits
   "130", "125", "123", "127", "122", "124", "126", "129", "131", "128",
-  "19", "20", "37", "10", "11",
+  // AI as coach, companion & mirror
+  "194", "192", "195", "196", "193",
+  "19", "20", "37", "197", "10", "11",
   // The cost of failure — the sobering coda: what breaks when it goes wrong
   "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
   "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
@@ -893,7 +903,13 @@ const PRACTICE_GROUP: Record<string, string> = {
   "52": "Protect the hardware — senses & body", "53": "Protect the hardware — senses & body",
   "19": "Practices by domain", "20": "Practices by domain",
   "37": "The honest frontier — unproven",
+  "197": "The honest frontier — unproven",
   "10": "Risks & compounding", "11": "Risks & compounding",
+  // AI as coach, companion & mirror (192–196); sign language & engagement join existing groups
+  "191": "Practices by domain", "198": "Social & community",
+  "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
+  "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
+  "196": "AI as coach, companion & mirror",
   // The cost of failure — what breaks when things go wrong (sections 141–190)
   "141": "The cost of failure — what's at stake", "142": "The cost of failure — what's at stake",
   "143": "The cost of failure — what's at stake", "144": "The cost of failure — what's at stake",
@@ -4567,6 +4583,108 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Schulz, R., & Beach, S. R. (1999). Caregiving as a risk factor for mortality: the Caregiver Health Effects Study. JAMA, 282(23), 2215–2219.", note: "Strained spousal caregivers showed elevated 4-year mortality — foundational, now qualified. [Moderate — contested]", link: scholar("Schulz Beach 1999 caregiving risk factor mortality"), kind: "scholar" },
       { cite: "Roth, D. L., Fredman, L., & Haley, W. E. (2015). Informal caregiving and its impact on health: a reappraisal. The Gerontologist, 55(2), 309–319.", note: "HONEST COUNTER-EVIDENCE: matched caregivers had ~lower mortality; overturns the uniform-harm claim. [Moderate — propensity-matched reappraisal]", link: scholar("Roth 2013 family caregiving all-cause mortality propensity matched"), kind: "scholar" },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // AI AS COACH, COMPANION & MIRROR + skill/relationship interventions (191–198).
+  // The honest read on using AI as therapist/coach/companion and on newer
+  // interventions the corpus subject asked about directly. Several are thin or
+  // double-edged — tagged and caveated accordingly, never inflated.
+  {
+    id: "sign-language", section: "191", title: "Learning Sign Language (ASL)", subtitle: "Bolsters clusters: visuospatial, mental rotation, second-language",
+    evidenceTag: "Moderate",
+    feeds: ["visuospatial working memory", "mental rotation", "mental imagery", "perspective-taking", "a second language"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "high" },
+    description: "Acquiring a visual-spatial language recruits parietal spatial systems for linguistic work; fluent signers show measurable advantages on mental rotation, image generation, and specific face-processing tasks. Benefits are domain-specific, not a global IQ boost.",
+    callout: "The enhancement is tied to sign-language FLUENCY and sustained use, demonstrated mostly in native/early signers. Little rigorous evidence that a hearing adult casually learning ASL gains broad, transferable spatial ability — \"learn ASL and get smarter\" overstates the case.",
+    sources: [
+      { cite: "Emmorey, K., Kosslyn, S. M., & Bellugi, U. (1993). Visual imagery and visual-spatial language: Enhanced imagery abilities in deaf and hearing ASL signers. Cognition, 46(2), 139–181.", note: "Both deaf AND hearing signers outperformed non-signers on image generation and mirror-reversal detection — implicating language experience, not deafness. [Moderate — group comparison]", link: scholar("Emmorey Kosslyn Bellugi enhanced imagery ASL signers"), kind: "scholar" },
+      { cite: "Emmorey, K., Klima, E., & Bellugi, U. (1998). Mental rotation within linguistic and non-linguistic domains in users of American Sign Language. Cognition, 68(3), 221–246.", note: "ASL signers were faster and more accurate on Shepard-Metzler mental rotation. [Moderate — group comparison]", link: scholar("Emmorey Klima mental rotation American Sign Language"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "ai-therapist", section: "192", title: "AI Chatbots as Therapist / Mental-Health Support", subtitle: "Bolsters clusters: mood management, CBT skill practice, accessibility",
+    evidenceTag: "Moderate",
+    feeds: ["mood/depressive-symptom management", "psychoeducation", "CBT skill practice", "low-barrier access"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Rule-based and CBT-scripted conversational agents (Woebot, Wysa, Tess) deliver structured self-help; short-term symptom reductions for depression/anxiety are real but modest, heterogeneous, and mostly short-horizon.",
+    callout: "The strongest positive trials are small, short (2 weeks), unblinded, and industry-authored. These are scripted CBT agents — NOT a validated substitute for a clinician — and the evidence does not cover crisis care or generative-LLM \"therapists.\"",
+    sources: [
+      { cite: "Fitzpatrick, K. K., Darcy, A., & Vierhile, M. (2017). Delivering CBT to young adults with symptoms of depression and anxiety using a fully automated conversational agent (Woebot): A randomized controlled trial. JMIR Mental Health, 4(2), e19.", note: "2-week RCT (n=70); Woebot group showed significant PHQ-9 depression reduction vs information-only control. [Moderate — small short RCT]", link: scholar("Fitzpatrick Woebot randomized controlled trial JMIR Mental Health"), kind: "scholar" },
+      { cite: "He, Y., Yang, L., Qian, C., et al. (2023). Conversational agent interventions for mental health problems: Systematic review and meta-analysis of RCTs. Journal of Medical Internet Research, 25, e43862.", note: "32 RCTs, 6089 participants; small-to-moderate reductions in depression/distress that attenuate at follow-up; quality limitations. [Moderate — meta-analysis]", link: scholar("He conversational agent interventions mental health meta-analysis JMIR 2023"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "ai-companion", section: "193", title: "AI Companionship / Relationship With a Chatbot", subtitle: "Bolsters clusters: loneliness relief — but double-edged (dependency risk)",
+    evidenceTag: "Mixed",
+    feeds: ["loneliness relief (short-term)", "non-judgmental emotional support", "social-connection surrogate"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Ongoing relational use of companion chatbots (Replika, character AIs) for friendship and loneliness relief. Genuinely double-edged: a short-term lifeline for some in acute isolation, a dependency trap for heavy users.",
+    callout: "HONEST TENSION. Self-report studies (self-selected, unusually lonely users) report companionship; the best controlled evidence (Fang/MIT-OpenAI RCT) finds higher daily use associated with MORE loneliness, dependence, and less real-world socialization. Not a validated intervention; commercial incentives favor engagement over wellbeing.",
+    sources: [
+      { cite: "Maples, B., Cerit, M., Vishwanath, A., & Pea, R. (2024). Loneliness and suicide mitigation for students using GPT-3-enabled chatbots. npj Mental Health Research, 3, 4.", note: "Survey of 1006 student Replika users; users markedly lonelier than peers; 3% spontaneously reported Replika halted suicidal ideation. [Emerging — cross-sectional, self-selected]", link: scholar("Maples loneliness suicide mitigation GPT-3 chatbots npj"), kind: "scholar" },
+      { cite: "Fang, C. M., et al. (2025). How AI and human behaviors shape psychosocial effects of extended chatbot use: A longitudinal controlled study. MIT Media Lab / OpenAI; arXiv:2503.17473.", note: "4-week RCT (~1000); higher daily chatbot use correlated with higher loneliness, dependence, problematic use, and lower socialization. [Emerging — preprint, correlational within trial]", link: scholar("Fang MIT Media Lab OpenAI chatbot loneliness longitudinal controlled study"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "ai-coach", section: "194", title: "AI as Coach / Co-Creator / Cognitive Augmentation", subtitle: "Bolsters clusters: skill acquisition, problem-solving, scaffolded reasoning",
+    evidenceTag: "Moderate",
+    feeds: ["skill acquisition/learning", "problem-solving throughput", "drafting/ideation", "scaffolded reasoning"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Using an AI partner to tutor, coach, and co-solve. Structured intelligent tutoring systems (ITS) rival human tutors on learning gains; open-ended LLM 'co-creation' lifts workplace productivity but its effect on durable learning is still thin.",
+    callout: "Strong evidence is for ENGINEERED tutoring systems, not general LLM chat. The best LLM field study (Dell'Acqua) reveals a 'jagged frontier': AI lifts performance inside its competence but degrades quality when users over-trust it beyond that frontier — carrying real overreliance/deskilling risk.",
+    sources: [
+      { cite: "VanLehn, K. (2011). The relative effectiveness of human tutoring, intelligent tutoring systems, and other tutoring systems. Educational Psychologist, 46(4), 197–221.", note: "Step-based ITS effect size ~0.76, approaching human tutoring (~0.79). [Strong — meta-analytic]", link: scholar("VanLehn relative effectiveness human tutoring intelligent tutoring systems"), kind: "scholar" },
+      { cite: "Dell'Acqua, F., McFowland, E. III, Mollick, E., et al. (2023). Navigating the jagged technological frontier: Field experimental evidence of the effects of AI on knowledge worker productivity and quality. Harvard Business School Working Paper 24-013.", note: "758 BCG consultants; AI raised quality/speed within its frontier but LOWERED quality on beyond-frontier tasks. [Moderate — field experiment, productivity not learning]", link: scholar("Dell'Acqua jagged technological frontier AI knowledge worker productivity"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "self-disclosure-ai", section: "195", title: "Self-Disclosure to an AI / Journaling via Chatbot", subtitle: "Bolsters clusters: emotional processing, stress reduction, insight",
+    evidenceTag: "Moderate",
+    feeds: ["emotional processing/regulation", "stress reduction", "meaning-making", "reflective insight"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Disclosing emotional content to a non-judgmental agent, or in writing, for emotional processing. Expressive-writing benefits are meta-analytically established (small but reliable), and at least one controlled study shows they transfer to a believed-chatbot partner.",
+    callout: "The robust effect is for expressive writing / disclosure generally, and it is small (r≈.075), strongest for high-stress people. Evidence that disclosure specifically TO a chatbot yields the same benefit rests largely on one experiment (Ho 2018) — 'journaling to an AI heals you' outruns the evidence.",
+    sources: [
+      { cite: "Ho, A., Hancock, J., & Miner, A. S. (2018). Psychological, relational, and emotional effects of self-disclosure after conversations with a chatbot. Journal of Communication, 68(4), 712–733.", note: "Emotional (vs factual) disclosure produced equivalent benefits whether the partner was believed to be a chatbot or a human. [Moderate — controlled experiment]", link: scholar("Ho Hancock Miner self-disclosure chatbot Journal of Communication"), kind: "scholar" },
+      { cite: "Frattaroli, J. (2006). Experimental disclosure and its moderators: A meta-analysis. Psychological Bulletin, 132(6), 823–865.", note: "146 randomized studies; disclosure has a small but significant benefit (r≈.075), larger for high-stress/low-optimism samples. [Strong — meta-analysis]", link: scholar("Frattaroli experimental disclosure moderators meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "ai-personalization", section: "196", title: "Feeding an AI Your Personal History for Personalization", subtitle: "Bolsters clusters: tailored guidance, self-monitoring, behavior change",
+    evidenceTag: "Emerging",
+    feeds: ["personalized guidance relevance", "self-monitoring/self-regulation", "behavior-change support", "predictive prompting"],
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Providing personal history/data to an AI so it tailors guidance. No rigorous outcome studies exist on this directly; the closest evidence — computer-tailored health communication and self-monitoring — shows using your own data to customize feedback beats generic content by a small but reliable margin.",
+    callout: "EMERGING/THIN — no outcome studies on feeding personal history to a general AI. The adjacent tailoring literature shows a modest advantage (r≈.07) for STRUCTURED health-behavior systems, not open-ended AI. Weigh unmeasured privacy/dependency costs the efficacy literature ignores.",
+    sources: [
+      { cite: "Noar, S. M., Benac, C. N., & Harris, M. S. (2007). Does tailoring matter? Meta-analytic review of tailored print health behavior change interventions. Psychological Bulletin, 133(4), 673–693.", note: "57 studies; personally tailored (data-driven) materials modestly outperform generic (mean r≈.074). [Strong — meta-analysis, adjacent construct]", link: scholar("Noar Benac Harris does tailoring matter meta-analysis"), kind: "scholar" },
+      { cite: "Krebs, P., Prochaska, J. O., & Rossi, J. S. (2010). A meta-analysis of computer-tailored interventions for health behavior change. Preventive Medicine, 51(3–4), 214–221.", note: "Computer-tailored interventions using individual data produce significant behavior-change effects across diet, smoking, screening. [Strong — meta-analysis, adjacent]", link: scholar("Krebs Prochaska Rossi meta-analysis computer-tailored interventions"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "car-detailing", section: "197", title: "Car Cleaning / Detailing / Ordered Environment", subtitle: "Bolsters clusters: environmental mastery, stress recovery — inferred only",
+    evidenceTag: "Emerging",
+    feeds: ["environmental mastery/sense of control", "stress recovery", "conscientiousness/routine"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Maintaining a clean, ordered vehicle as a self-regulation / environmental-mastery practice. There is a genuine evidence GAP — no study isolates cars — so this rests entirely on adjacent home-order research, extrapolated.",
+    callout: "NO direct peer-reviewed research on car detailing and wellbeing/cognition. Home-based findings are correlational or lab-only, showed mainly in women (Saxbe), and order is double-edged: it promotes healthy choices but disorder can boost creativity (Vohs). Treat 'clean car → better mind' as plausible extension, not established fact.",
+    sources: [
+      { cite: "Saxbe, D. E., & Repetti, R. (2010). No place like home: Home tours correlate with daily patterns of mood and cortisol. Personality and Social Psychology Bulletin, 36(1), 71–81.", note: "Describing home as cluttered/'unfinished' predicted flatter (less healthy) diurnal cortisol slopes, esp. in women. [Emerging — correlational, adjacent to cars]", link: scholar("Saxbe Repetti no place like home cortisol clutter"), kind: "scholar" },
+      { cite: "Vohs, K. D., Redden, J. P., & Rahinel, R. (2013). Physical order produces healthy choices, generosity, and conventionality, whereas disorder produces creativity. Psychological Science, 24(9), 1860–1867.", note: "Orderly rooms → healthier snacks, generosity, convention; disorderly rooms → more creativity. [Moderate — lab experiments, adjacent to cars]", link: scholar("Vohs physical order healthy choices disorder creativity"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "engagement", section: "198", title: "Getting Engaged / Commitment Transition", subtitle: "Bolsters clusters: relationship commitment, stability, security",
+    evidenceTag: "Moderate",
+    feeds: ["relationship commitment/stability", "life satisfaction (transient boost)", "social/emotional security", "shared-goal identity"],
+    impact: { magnitude: 2, latency: "days", durability: "sustained", effort: "high" },
+    description: "The engagement/commitment transition. Commitment is a robust predictor of relationship stability; the transition itself brings a modest, often temporary wellbeing bump followed by adaptation toward baseline, with large individual differences.",
+    callout: "HONEST CORRECTION — there is NO evidence of an 'intelligence spike' or cognitive boost from getting engaged; do not claim one. The benefits are relational and modest, not cognitive, and the wellbeing peak adapts back over time.",
+    sources: [
+      { cite: "Lucas, R. E., Clark, A. E., Georgellis, Y., & Diener, E. (2003). Reexamining adaptation and the set point model of happiness: Reactions to changes in marital status. Journal of Personality and Social Psychology, 84(3), 527–539.", note: "15-yr panel (~24,000): on average a marriage wellbeing boost that adapts back toward baseline, with substantial individual variation. [Strong — long panel]", link: scholar("Lucas Clark reexamining adaptation set point marital status"), kind: "scholar" },
+      { cite: "Le, B., & Agnew, C. R. (2003). Commitment and its theorized determinants: A meta-analysis of the Investment Model. Personal Relationships, 10(1), 37–57.", note: "52 studies / 11,582 people: satisfaction, alternatives, and investment explain ~2/3 of commitment variance; commitment predicts breakup. [Strong — meta-analysis]", link: scholar("Le Agnew commitment theorized determinants meta-analysis Investment Model"), kind: "scholar" },
     ],
   },
 ];
