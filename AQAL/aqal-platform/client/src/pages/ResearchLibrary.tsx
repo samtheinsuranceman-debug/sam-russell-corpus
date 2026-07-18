@@ -513,6 +513,26 @@ function costScore(harm: PracticeHarm, evidence: PracticeCluster["evidenceTag"])
   return Math.round(100 * (0.7 * damage + 0.3 * imminence));
 }
 
+// ---- Weakness-line → failure model ------------------------------------------
+// A third lens: not a practice to run, not a life-event that befalls you, but a
+// WEAK developmental line that research shows collapses goals and drives failure
+// modes. Each entry names which of the profile's 32 lines is the culprit, how
+// strongly it drives the failure, and a 1–10 THREAT rating — how broadly and
+// severely a deficit in this line derails a life, grounded in the cited studies.
+// Same honesty discipline: reverse-causation and confounding caveats on every one.
+type WeaknessProfile = {
+  threat: number;                                     // 1–10 danger rating (agent-assigned, grounded in the research)
+  weakLines: string[];                                // which profile line(s), when weak, drive the failure
+  degree: "primary driver" | "major contributor" | "moderate contributor";
+  onset: "immediate" | "months" | "years";            // how soon the deficit bites
+  reversibility: "recovers" | "partial" | "lasting";  // is the line trainable back up?
+};
+// Threat colour bands (higher = more dangerous). Deliberately not a derived
+// formula — the 1–10 is a research-grounded severity call, shown as given.
+function threatColor(threat: number): string {
+  return threat >= 8 ? "#d9534f" : threat >= 6 ? "#d9695a" : threat >= 4 ? "#cf8a5a" : "#b8926a";
+}
+
 const chipStyle: React.CSSProperties = {
   display: "inline-flex", alignItems: "center", gap: 4,
   border: "1px solid rgba(255,255,255,0.12)", borderRadius: 999,
@@ -531,7 +551,8 @@ type PracticeCluster = {
   feeds?: string[];          // plain-language capacities/systems this practice strengthens
   impact?: PracticeImpact;   // the leverage gauge (benefit clusters)
   harm?: PracticeHarm;       // the cost gauge (cost-of-failure clusters)
-  degrades?: string[];       // plain-language capacities/systems a harm cluster erodes
+  weakness?: WeaknessProfile;// the threat gauge (weakness-line → failure clusters)
+  degrades?: string[];       // plain-language capacities/systems a harm/weakness cluster erodes
   sources: PracticeSource[];
 };
 
@@ -6444,6 +6465,16 @@ export default function ResearchLibrary() {
               each with its honest confounding and reverse-causation caveat.
             </div>
 
+            {/* Threat explainer — the weakness-line group */}
+            <div style={{ border: "1px solid rgba(200,120,143,0.28)", background: "rgba(200,120,143,0.06)", borderRadius: 10, padding: "12px 14px", margin: "0 0 14px", fontSize: 12.5, lineHeight: 1.55, color: "var(--rl-muted, #b9b2a6)" }}>
+              <b style={{ color: "#c8788f" }}>Reading the Threat rating.</b> The <b>weakness-line</b> cards ask a different
+              question: when one of your 32 lines is <i>weak</i>, which failures does the research say it drives? Each names
+              the culprit <b>line(s)</b>, how strongly it drives the collapse (<b>primary / major / moderate</b>), and a
+              <b> Threat 1–10</b> — how broadly and severely a deficit in that line derails a life, grounded in the cited
+              studies. It is the inverse of your strengths map: the lines most dangerous to leave weak. Every card keeps the
+              honest reverse-causation caveat (a weak line and the failure often share an upstream cause).
+            </div>
+
             {/* Result count */}
             <div className="rl-practice-count">
               Showing <b>{filteredPractices.length}</b> of {PRACTICE_EVIDENCE.length} topics
@@ -6536,6 +6567,29 @@ export default function ResearchLibrary() {
                           <span style={chipStyle}>Severity {"■".repeat(cluster.harm.severity)}<span style={{ opacity: 0.3 }}>{"■".repeat(5 - cluster.harm.severity)}</span></span>
                           <span style={chipStyle}>Hits: {cluster.harm.onset}</span>
                           <span style={chipStyle}>Reversibility: {cluster.harm.reversibility}</span>
+                        </div>
+                      )}
+                      {cluster.weakness && (
+                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, margin: "6px 0 2px" }}>
+                          {(() => {
+                            const col = threatColor(cluster.weakness!.threat);
+                            return (
+                              <span title="Threat: how broadly and severely a deficit in this line derails goals, 1–10, grounded in the cited research. Higher = more dangerous."
+                                style={{ display: "inline-flex", alignItems: "center", gap: 6, border: `1px solid ${col}`, borderRadius: 999, padding: "2px 9px", fontSize: 11, fontWeight: 700, color: col }}>
+                                <span style={{ fontFamily: "monospace" }}>{cluster.weakness.threat}/10</span>
+                                <span style={{ fontWeight: 500, opacity: 0.8, letterSpacing: "0.06em", textTransform: "uppercase", fontSize: 9 }}>threat</span>
+                              </span>
+                            );
+                          })()}
+                          <span style={chipStyle}>{cluster.weakness.degree}</span>
+                          <span style={chipStyle}>Bites: {cluster.weakness.onset}</span>
+                          <span style={chipStyle}>Trainable: {cluster.weakness.reversibility}</span>
+                        </div>
+                      )}
+                      {cluster.weakness && cluster.weakness.weakLines.length > 0 && (
+                        <div style={{ fontSize: 11, color: "var(--rl-muted, #8c857a)", marginTop: 2 }}>
+                          <span style={{ fontFamily: "monospace", letterSpacing: "0.1em", textTransform: "uppercase", fontSize: 9, opacity: 0.7, color: "#c8788f" }}>Weak line(s) → </span>
+                          {cluster.weakness.weakLines.join(" · ")}
                         </div>
                       )}
                       {cluster.feeds && cluster.feeds.length > 0 && (
