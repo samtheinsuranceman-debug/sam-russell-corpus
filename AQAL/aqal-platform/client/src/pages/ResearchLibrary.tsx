@@ -720,6 +720,12 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "213": "213 · League / Social Bowling", "214": "214 · Batting Cage / Recreational Hitting",
   "215": "215 · Target / Sport Shooting", "216": "216 · Board / Tabletop Games With Friends",
   "217": "217 · Adult Social Dance Classes", "218": "218 · Golf Driving Range / Precision Practice",
+  // Wave 4 — movement & adventure
+  "219": "219 · Bouldering / Rock Climbing for Depression", "220": "220 · Surf Therapy / Ocean Therapy",
+  "221": "221 · Horseback Riding / Equine-Assisted Therapy", "222": "222 · Trail / Distance Running & Depression",
+  "223": "223 · Rucking / Weighted Walking", "224": "224 · Jump Rope / Skipping",
+  "225": "225 · Stair Climbing & Fitness", "226": "226 · Pilates & Core / Back Pain",
+  "227": "227 · Stretching / Flexibility / Mobility", "228": "228 · Slacklining / Balance Training",
 };
 
 // Short labels for the section jump-nav chips.
@@ -816,6 +822,10 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "209": "Hunting", "210": "Dog Ownership", "211": "Pet Bereavement", "212": "Aquariums",
   "213": "Bowling", "214": "Batting Cage", "215": "Sport Shooting", "216": "Board Games",
   "217": "Social Dance", "218": "Golf Range",
+  // Wave 4 — movement & adventure
+  "219": "Bouldering", "220": "Surf Therapy", "221": "Equine Therapy", "222": "Running Therapy",
+  "223": "Rucking", "224": "Jump Rope", "225": "Stair Climbing", "226": "Pilates",
+  "227": "Stretching", "228": "Slacklining",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -828,6 +838,7 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "50", "51", "52", "53",
   // Movement & mind-body
   "3", "4", "58", "59", "62", "54", "55", "5", "200", "217", "218", "210", "211",
+  "219", "222", "220", "225", "224", "226", "228", "227",
   // Cognitive & skill
   "27", "28", "29", "36", "35", "34", "64", "81", "76", "191", "207",
   // Emotional & contemplative
@@ -847,7 +858,7 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "130", "125", "123", "127", "122", "124", "126", "129", "131", "128", "212", "216",
   // AI as coach, companion & mirror
   "194", "192", "195", "196", "193",
-  "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "10", "11",
+  "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "221", "223", "10", "11",
   // The cost of failure — the sobering coda: what breaks when it goes wrong
   "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
   "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
@@ -938,6 +949,11 @@ const PRACTICE_GROUP: Record<string, string> = {
   "212": "Environment & everyday habits", "216": "Environment & everyday habits",
   "209": "The honest frontier — unproven", "213": "The honest frontier — unproven",
   "214": "The honest frontier — unproven", "215": "The honest frontier — unproven",
+  // Wave 4 — movement & adventure
+  "219": "Practices by domain", "220": "Practices by domain", "222": "Practices by domain",
+  "224": "Practices by domain", "225": "Practices by domain", "226": "Practices by domain",
+  "227": "Practices by domain", "228": "Practices by domain",
+  "221": "The honest frontier — unproven", "223": "The honest frontier — unproven",
   "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
   "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
   "196": "AI as coach, companion & mirror",
@@ -4962,6 +4978,128 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Murray, A. D., et al. (2017). The relationships between golf and health: a scoping review. British Journal of Sports Medicine, 51(1), 12–19.", note: "Golf provides moderate-intensity activity and is associated with cardiovascular, metabolic, and mental-wellness benefits — for playing, not range practice. [Moderate — scoping review]", link: scholar("Murray relationships between golf and health scoping review British Journal of Sports Medicine 2017"), kind: "scholar" },
       { cite: "Ericsson, K. A., Krampe, R. T., & Tesch-Römer, C. (1993). The role of deliberate practice in the acquisition of expert performance. Psychological Review, 100(3), 363–406.", note: "Structured, feedback-rich repetition (as at a range) is the engine of precision-skill improvement. [Strong — mechanism, not range-specific]", link: scholar("Ericsson Krampe deliberate practice acquisition expert performance Psychological Review 1993"), kind: "scholar" },
+    ],
+  },
+
+  // ── T: movement & adventure (219–228) ─────────────────────────────────────
+  {
+    id: "bouldering", section: "219", title: "Bouldering / Rock Climbing for Depression", subtitle: "Bolsters clusters: self-efficacy, anxiety reduction, behavioral activation",
+    evidenceTag: "Moderate",
+    feeds: ["self-efficacy", "anxiety reduction", "body image", "social connection", "behavioral activation"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Manualized therapeutic bouldering (8–10 weekly group sessions) combines physical challenge with psychotherapeutic elements. RCTs show real, repeated reductions in depression, with benefits maintained at 12-month follow-up in one study.",
+    callout: "The strongest data come from a single German lab with a proprietary manual — 'bouldering psychotherapy' is the psychotherapy-plus-climbing package, not climbing alone. Generalizability beyond the originating group and motivated volunteers is not yet established.",
+    sources: [
+      { cite: "Karg, N., Dorscht, L., Kornhuber, J., & Luttenberger, K. (2020). Bouldering psychotherapy is more effective in the treatment of depression than physical exercise alone: a multicentre randomised controlled study. BMC Psychiatry, 20, 116.", note: "BPT reduced depression (MADRS) more than home-based exercise alone; n=133 outpatients. [Moderate — RCT]", link: scholar("bouldering psychotherapy depression randomised controlled BMC Psychiatry 2020"), kind: "scholar" },
+      { cite: "Stelzer, E. M., Book, S., Graessel, E., Hofner, B., Kornhuber, J., & Luttenberger, K. (2018). Long-term effects of bouldering psychotherapy on depression: benefits maintained across a 12-month follow-up. Heliyon, 5(12), e02929.", note: "Depression improvements sustained at 12 months. [Moderate]", link: scholar("bouldering psychotherapy depression 12-month follow-up Heliyon"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "surf-therapy", section: "220", title: "Surf Therapy / Ocean Therapy", subtitle: "Bolsters clusters: positive affect, PTSD/depression relief, resilience",
+    evidenceTag: "Emerging",
+    feeds: ["positive affect", "PTSD/depression/anxiety symptom relief", "social connection", "resilience"],
+    impact: { magnitude: 3, latency: "weeks", durability: "transient", effort: "high" },
+    description: "Structured surf instruction plus psychosocial support, studied heavily in veterans with PTSD and in youth wellbeing programs. The 2023 military RCT is a genuine methodological step up; the largest, cleanest effects are on positive affect and within-session mood.",
+    callout: "The scoping-review base is dominated by uncontrolled pre-post designs; quantitative measures were 'mixed, with some showing weak or no improvement.' Durable diagnostic remission is not established, and coastal access/equipment makes it high-effort.",
+    sources: [
+      { cite: "Walter, K. H., Otis, N. P., Glassman, L. H., et al. (2023). Psychological and functional outcomes following a randomized controlled trial of surf and hike therapy for U.S. service members. Frontiers in Psychology, 14, 1185774.", note: "Both surf and hike therapy improved anxiety, negative affect, resilience, and social functioning; gains maintained at 3 months. [Moderate — RCT]", link: scholar("surf and hike therapy randomized controlled trial service members Frontiers 2023"), kind: "scholar" },
+      { cite: "Benninger, E., Curtis, C., Sarkisian, G. V., Rogers, C. M., Bender, K., & Comer, M. (2020). Surf Therapy: A Scoping Review of the Qualitative and Quantitative Research Evidence. Global Journal of Community Psychology Practice, 11(2).", note: "29 studies; physical/psychosocial benefits reported but quantitative results mixed and evidence base limited. [Emerging — scoping review]", link: scholar("Benninger 2020 surf therapy scoping review GJCPP"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "equine-therapy", section: "221", title: "Horseback Riding / Equine-Assisted Therapy", subtitle: "Claimed benefits not robustly established — the weakest entry",
+    evidenceTag: "Mixed",
+    feeds: ["(claimed) anxiety/depression reduction", "(claimed) PTSD symptom relief", "(claimed) social/emotional regulation"],
+    impact: { magnitude: 2, latency: "months", durability: "transient", effort: "high" },
+    description: "Therapeutic interaction with horses (groundwork and/or riding) for anxiety, depression, and PTSD. This is the weakest entry in the movement set — the literature is compromised by substantial validity threats.",
+    callout: "Systematic reviews find small samples, non-standardized interventions, unreliable measures, and researcher conflicts of interest; one concluded studies 'failed to provide consistent evidence that equine-related therapy is superior to the mere passage of time.' Do not present as established.",
+    sources: [
+      { cite: "Anestis, M. D., Anestis, J. C., Zawilinski, L. L., Hopkins, T. A., & Lilienfeld, S. O. (2014). Equine-related treatments for mental disorders lack empirical support: a systematic review of empirical investigations. Journal of Clinical Psychology, 70(12), 1115–1132.", note: "All reviewed studies compromised by validity threats; no evidence of superiority to passage of time. [Weak — critical systematic review]", link: scholar("Anestis 2014 equine-related treatments lack empirical support systematic review"), kind: "scholar" },
+      { cite: "Kendall, E., Maujean, A., Pepping, C. A., et al. (2015). A systematic review of the efficacy of equine-assisted interventions on psychological outcomes. European Journal of Psychotherapy & Counselling, 17(1), 57–79.", note: "Promising but methodologically weak; strong conclusions not warranted. [Weak]", link: scholar("Kendall 2015 equine-assisted interventions psychological outcomes systematic review"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "running-therapy", section: "222", title: "Trail / Distance Running & Depression", subtitle: "Bolsters clusters: depression/anxiety remission, cardiometabolic health, community",
+    evidenceTag: "Moderate",
+    feeds: ["depression/anxiety remission", "cardiovascular/metabolic health", "weight/waist", "social connection (community running)"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Supervised running therapy (and community running such as parkrun) studied as its own modality. Running therapy matches SSRIs on symptom remission and beats them on cardiometabolic outcomes — with the well-known catch of adherence.",
+    callout: "In the Verhoeven trial most participants refused randomization and self-selected, so the SSRI comparison is partly-randomized, not clean. parkrun/community evidence is observational — good for wellbeing associations, not causal proof.",
+    sources: [
+      { cite: "Verhoeven, J. E., Han, L. K. M., Lever-van Milligen, B. A., et al. (2023). Antidepressants or running therapy: Comparing effects on mental and physical health in patients with depression and anxiety disorders. Journal of Affective Disorders, 329, 19–29.", note: "Running therapy comparable to SSRIs on symptom remission; superior on cardiometabolic outcomes; partial-randomization design. [Moderate]", link: scholar("Verhoeven 2023 antidepressants or running therapy Journal of Affective Disorders"), kind: "scholar" },
+      { cite: "Grunseit, A. C., Richards, J., & Merom, D. (2018). Running on a high: parkrun and personal wellbeing. BMC Public Health, 18, 59.", note: "Community 5k running associated with improved wellbeing. [Emerging — observational]", link: scholar("parkrun personal wellbeing BMC Public Health Grunseit"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "rucking", section: "223", title: "Rucking / Weighted Walking", subtitle: "Bolsters clusters: aerobic fitness, lower-limb strength — bone-density claim NOT supported",
+    evidenceTag: "Emerging",
+    feeds: ["aerobic fitness", "lower-limb strength", "calorie expenditure"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Walking while carrying external load (weighted vest, pack). Direct rucking research is thin; evidence is adjacent — weighted-vest interventions, load-carriage biomechanics, and the well-established base for walking itself. Walking is well-supported; the added load is the under-evidenced part.",
+    callout: "The best-quality relevant RCT (INVEST) found that adding a weighted vest during weight loss did NOT preserve hip bone density better than weight loss alone — a popular claim the data do not support. Load carriage is otherwise studied mainly as an occupational/military stressor with injury risk.",
+    sources: [
+      { cite: "Beavers, K. M., et al. (2025). Weighted Vest Use or Resistance Exercise to Offset Weight Loss-Associated Bone Loss in Older Adults: A Randomized Clinical Trial (INVEST). JAMA Network Open.", note: "Weighted vest did NOT preserve hip BMD better than weight loss alone. [Moderate — but null for the bone claim]", link: scholar("INVEST weighted vest bone loss weight loss older adults randomized JAMA Network Open"), kind: "scholar" },
+      { cite: "Knapik, J. J., Reynolds, K. L., & Harman, E. (2004). Soldier load carriage: historical, physiological, biomechanical, and medical aspects. Military Medicine, 169(1), 45–56.", note: "Load carriage improves work capacity but raises injury/musculoskeletal risk; dose matters. [Emerging — occupational biomechanics]", link: scholar("Knapik soldier load carriage physiological biomechanical Military Medicine"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "jump-rope", section: "224", title: "Jump Rope / Skipping", subtitle: "Bolsters clusters: cardiorespiratory fitness, motor coordination, bone loading",
+    evidenceTag: "Moderate",
+    feeds: ["cardiorespiratory fitness", "motor coordination", "muscular strength/endurance", "bone loading", "selective attention (children)"],
+    impact: { magnitude: 3, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Rhythmic rope skipping for cardiovascular fitness and motor coordination. The pooled fitness evidence is decent — but concentrated in children and school settings.",
+    callout: "The fitness evidence is almost entirely in children/preadolescents, and several coordination studies are quasi-experimental rather than randomized. Extrapolation to adults rests on general aerobic principles, not jump-rope-specific adult trials.",
+    sources: [
+      { cite: "Sun, L., et al. (2023). Jumping Rope Improves the Physical Fitness of Preadolescents Aged 10–12 Years: A Meta-Analysis. Frontiers in Public Health.", note: "15 RCTs, n=1048; significant gains in cardiopulmonary fitness across pooled trials. [Moderate — pooled RCTs, youth]", link: scholar("jumping rope physical fitness preadolescents meta-analysis 1048"), kind: "scholar" },
+      { cite: "Ha, A. S., & Ng, J. Y. Y. (2022). Fitness Promotion in a Jump Rope-Based Homework Intervention for Middle School Students: A Randomized Controlled Trial. International Journal of Environmental Research and Public Health, 19(12).", note: "RCT; jump-rope homework improved physical fitness in adolescents. [Moderate — youth]", link: scholar("jump rope homework intervention middle school randomized controlled trial IJERPH"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "stair-climbing", section: "225", title: "Stair Climbing & Fitness", subtitle: "Bolsters clusters: cardiorespiratory fitness, blood pressure, lipids",
+    evidenceTag: "Moderate",
+    feeds: ["cardiorespiratory fitness (VO2peak)", "body composition", "blood pressure", "lipids", "cardiovascular risk reduction"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Using stairs — sustained workplace stair use and short 'exercise snack' stair bouts — to raise cardiorespiratory fitness and improve cardiovascular risk profile. A high-accessibility, low-cost lever.",
+    callout: "Effects are real but modest in absolute terms (small VO2peak gains), and the strongest mortality links come from broader cardiorespiratory-fitness epidemiology rather than stair-climbing trials specifically.",
+    sources: [
+      { cite: "Meyer, P., Kayser, B., Kossovsky, M. P., et al. (2010). Stairs instead of elevators at workplace: cardioprotective effects of a pragmatic intervention. European Journal of Cardiovascular Prevention & Rehabilitation, 17(5), 569–575.", note: "Encouraging stair use improved fitness, body composition, blood pressure, and lipids in inactive adults. [Moderate]", link: scholar("Meyer 2010 stairs instead of elevators workplace cardioprotective"), kind: "scholar" },
+      { cite: "Jenkins, E. M., Nairn, L. N., Skelly, L. E., Little, J. P., & Gibala, M. J. (2019). Do stair climbing exercise 'snacks' improve cardiorespiratory fitness? Applied Physiology, Nutrition, and Metabolism, 44(6), 681–684.", note: "Short accumulated vigorous stair bouts improve fitness in sedentary adults; absolute increase modest. [Moderate]", link: scholar("Jenkins stair climbing exercise snacks cardiorespiratory fitness 2019"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "pilates", section: "226", title: "Pilates & Core / Back Pain", subtitle: "Bolsters clusters: low-back-pain relief, core strength, balance",
+    evidenceTag: "Moderate",
+    feeds: ["chronic low-back-pain relief", "disability reduction", "core/trunk strength", "flexibility", "balance (older adults)"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Pilates (mat/equipment) emphasizing core stability, controlled movement, and breathing — most studied for chronic low back pain. A Cochrane review supports it, though it is not uniquely effective.",
+    callout: "The Cochrane review found Pilates better than minimal intervention for pain/disability but NO clear superiority over other active exercise, on low-to-moderate quality evidence. Translation: choose it on preference and cost, not because it's uniquely effective.",
+    sources: [
+      { cite: "Yamato, T. P., Maher, C. G., Saragiotto, B. T., et al. (2015). Pilates for low back pain. Cochrane Database of Systematic Reviews, Issue 7, CD010265.", note: "10 trials, n=510; low-moderate-quality evidence of pain/disability improvement vs minimal intervention; no clear superiority over other exercise. [Moderate — Cochrane review]", link: scholar("Yamato 2015 Pilates low back pain Cochrane CD010265"), kind: "scholar" },
+      { cite: "Byrnes, K., Wu, P. P., & Whillier, S. (2018). Is Pilates an effective rehabilitation tool? A systematic review. Journal of Bodywork and Movement Therapies, 22(1), 192–202.", note: "Pilates improves pain and function but not consistently superior to other active interventions. [Emerging]", link: scholar("Byrnes 2018 is Pilates effective rehabilitation tool systematic review"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "stretching", section: "227", title: "Stretching / Flexibility / Mobility", subtitle: "Solid for range of motion — over-claimed for injury prevention & recovery",
+    evidenceTag: "Mixed",
+    feeds: ["range of motion / flexibility (well-supported)", "function/injury-prevention/recovery (NOT well-supported)"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Static/dynamic stretching to improve range of motion. Chronic stretching reliably improves flexibility — that part is solid. The broader health claims are the over-claimed part.",
+    callout: "The most over-claimed entry: reviews show trivial-to-small effects on strength/power, no reliable benefit for injury prevention or muscle-soreness/recovery, and little functional payoff beyond what balance/aerobic/strength training already provide. Recommend as an adjunct for ROM goals, not a primary health intervention.",
+    sources: [
+      { cite: "Konrad, A., Alizadeh, S., Anvar, S. H., et al. (2024). Optimising the Dose of Static Stretching to Improve Flexibility: A Systematic Review, Meta-analysis and Multivariate Meta-regression. Sports Medicine, 55(1).", note: "Chronic static stretching yields moderate-to-large flexibility gains; dose-dependent — for flexibility only. [Moderate — flexibility outcome]", link: scholar("optimising dose static stretching flexibility meta-analysis Sports Medicine 2024"), kind: "scholar" },
+      { cite: "Stathokostas, L., Little, R. M. D., Vandervoort, A. A., & Paterson, D. H. (2012). Flexibility Training and Functional Ability in Older Adults: A Systematic Review. Journal of Aging Research, 2012, 306818.", note: "Little evidence stretching improves functional ability beyond other exercise modes. [Emerging — critical]", link: scholar("flexibility training functional ability older adults systematic review Journal of Aging Research"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "slacklining", section: "228", title: "Slacklining / Balance Training", subtitle: "Bolsters clusters: postural control, proprioception, fall-risk reduction",
+    evidenceTag: "Emerging",
+    feeds: ["postural control", "proprioception", "fall-risk reduction (older adults)", "memory/spatial cognition (demanding protocols only)"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Balancing on a tensioned webbing line, studied as balance/proprioception training with secondary interest in cognitive transfer. Task-specific gains are solid; transfer to general balance is small-to-moderate.",
+    callout: "The leap to cognition/executive function comes from the adjacent balance-training literature, where results are mixed — balance training improved memory/spatial cognition in one RCT but NOT executive function, and only demanding, coordination-rich work shows executive transfer. Don't oversell proprioception-to-brain claims.",
+    sources: [
+      { cite: "Donath, L., Roth, R., Zahner, L., & Faude, O. (2016). Slackline training and neuromuscular performance in seniors: a randomized controlled trial. Scandinavian Journal of Medicine & Science in Sports, 26(3), 275–283.", note: "Improved postural control and reduced fall-relevant balance measures in older adults. [Moderate — small RCT]", link: scholar("slackline balance training postural control older adults randomized controlled trial"), kind: "scholar" },
+      { cite: "Rogge, A.-K., Röder, B., Zech, A., et al. (2017). Balance training improves memory and spatial cognition in healthy adults. Scientific Reports, 7, 5661.", note: "Balance training improved memory/spatial cognition but NOT executive function. [Moderate]", link: scholar("balance training improves memory spatial cognition healthy adults Scientific Reports"), kind: "scholar" },
     ],
   },
 ];
