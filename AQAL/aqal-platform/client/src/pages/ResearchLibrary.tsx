@@ -726,6 +726,12 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "223": "223 · Rucking / Weighted Walking", "224": "224 · Jump Rope / Skipping",
   "225": "225 · Stair Climbing & Fitness", "226": "226 · Pilates & Core / Back Pain",
   "227": "227 · Stretching / Flexibility / Mobility", "228": "228 · Slacklining / Balance Training",
+  // Wave 4 — cognitive & skill (novel techniques)
+  "229": "229 · Interleaved Practice", "230": "230 · Learning a Second Language as an Adult",
+  "231": "231 · Crossword & Number Puzzles", "232": "232 · Journaling — Morning Pages / Free-Writing",
+  "233": "233 · Learning to Touch-Type / Skill Automation", "234": "234 · Sleep-Tracking / Self-Monitoring",
+  "235": "235 · Time-Blocking / Calendar Scheduling", "236": "236 · Qigong for Immune / Inflammation",
+  "237": "237 · Laughter Yoga", "238": "238 · Awe Walks",
 };
 
 // Short labels for the section jump-nav chips.
@@ -826,6 +832,10 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "219": "Bouldering", "220": "Surf Therapy", "221": "Equine Therapy", "222": "Running Therapy",
   "223": "Rucking", "224": "Jump Rope", "225": "Stair Climbing", "226": "Pilates",
   "227": "Stretching", "228": "Slacklining",
+  // Wave 4 — cognitive & skill (novel techniques)
+  "229": "Interleaving", "230": "Adult 2nd Language", "231": "Crosswords", "232": "Morning Pages",
+  "233": "Touch-Typing", "234": "Sleep-Tracking", "235": "Time-Blocking", "236": "Qigong",
+  "237": "Laughter Yoga", "238": "Awe Walks",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -838,9 +848,9 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "50", "51", "52", "53",
   // Movement & mind-body
   "3", "4", "58", "59", "62", "54", "55", "5", "200", "217", "218", "210", "211",
-  "219", "222", "220", "225", "224", "226", "228", "227",
+  "219", "222", "220", "225", "224", "226", "228", "227", "236", "238", "234", "235", "237",
   // Cognitive & skill
-  "27", "28", "29", "36", "35", "34", "64", "81", "76", "191", "207",
+  "27", "28", "29", "36", "35", "34", "64", "81", "76", "191", "207", "229", "230",
   // Emotional & contemplative
   "6", "7", "8", "66", "67", "68", "69", "70", "71", "72", "73", "30", "31", "32", "33", "63", "65",
   // Behavioral & life-design
@@ -855,10 +865,10 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "114", "115", "112", "134", "135", "113", "117", "118", "121", "119", "120", "116", "198",
   "204", "202", "203", "205", "206", "208",
   // Environment & everyday habits
-  "130", "125", "123", "127", "122", "124", "126", "129", "131", "128", "212", "216",
+  "130", "125", "123", "127", "122", "124", "126", "129", "131", "128", "212", "216", "231",
   // AI as coach, companion & mirror
   "194", "192", "195", "196", "193",
-  "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "221", "223", "10", "11",
+  "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "221", "223", "232", "233", "10", "11",
   // The cost of failure — the sobering coda: what breaks when it goes wrong
   "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
   "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
@@ -954,6 +964,11 @@ const PRACTICE_GROUP: Record<string, string> = {
   "224": "Practices by domain", "225": "Practices by domain", "226": "Practices by domain",
   "227": "Practices by domain", "228": "Practices by domain",
   "221": "The honest frontier — unproven", "223": "The honest frontier — unproven",
+  // Wave 4 — cognitive & skill (novel techniques)
+  "229": "Practices by domain", "230": "Practices by domain", "234": "Practices by domain",
+  "235": "Practices by domain", "236": "Practices by domain", "237": "Practices by domain", "238": "Practices by domain",
+  "231": "Environment & everyday habits",
+  "232": "The honest frontier — unproven", "233": "The honest frontier — unproven",
   "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
   "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
   "196": "AI as coach, companion & mirror",
@@ -5100,6 +5115,128 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Donath, L., Roth, R., Zahner, L., & Faude, O. (2016). Slackline training and neuromuscular performance in seniors: a randomized controlled trial. Scandinavian Journal of Medicine & Science in Sports, 26(3), 275–283.", note: "Improved postural control and reduced fall-relevant balance measures in older adults. [Moderate — small RCT]", link: scholar("slackline balance training postural control older adults randomized controlled trial"), kind: "scholar" },
       { cite: "Rogge, A.-K., Röder, B., Zech, A., et al. (2017). Balance training improves memory and spatial cognition in healthy adults. Scientific Reports, 7, 5661.", note: "Balance training improved memory/spatial cognition but NOT executive function. [Moderate]", link: scholar("balance training improves memory spatial cognition healthy adults Scientific Reports"), kind: "scholar" },
+    ],
+  },
+
+  // ── U: cognitive & skill — novel techniques (229–238) ─────────────────────
+  {
+    id: "interleaved-practice", section: "229", title: "Interleaved Practice (vs Blocked)", subtitle: "Bolsters clusters: category learning, procedural fluency, durable retention",
+    evidenceTag: "Strong",
+    feeds: ["discrimination/category learning", "math procedural fluency", "durable retention", "transfer to novel problems"],
+    impact: { magnitude: 4, latency: "days", durability: "sustained", effort: "low" },
+    description: "Mixing different problem types within a session (abcbca) instead of massing one kind (aaabbbccc) forces retrieval of which strategy to use. It depresses performance during practice but improves delayed test scores — one of the better-evidenced learning techniques.",
+    callout: "The effect is material-dependent — strongest for visual/perceptual category learning and solid for math, ambiguous for expository text. It is a study-technique effect that improves learning of the practiced content, not a global 'brain training' boost.",
+    sources: [
+      { cite: "Rohrer, D., & Taylor, K. (2007). The shuffling of mathematics problems improves learning. Instructional Science, 35(6), 481–498.", note: "Interleaving doubled next-day test scores vs blocking despite worse practice-session performance. [Strong]", link: scholar("Rohrer Taylor 2007 shuffling mathematics problems learning"), kind: "scholar" },
+      { cite: "Brunmair, M., & Richter, T. (2019). Similarity matters: A meta-analysis of interleaved learning and its moderators. Psychological Bulletin, 145(11), 1029–1052.", note: "59 studies; moderate overall effect (Hedges' g=0.42), strongly moderated by material type. [Strong — meta-analysis]", link: scholar("Brunmair Richter 2019 similarity matters interleaved meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "second-language-adult", section: "230", title: "Learning a Second Language as an Adult", subtitle: "Bolsters clusters: attentional switching, executive control, cognitive reserve",
+    evidenceTag: "Moderate",
+    feeds: ["attentional switching/executive control", "cognitive reserve (hypothesized)", "social engagement", "novel skill acquisition"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "high" },
+    description: "Actively studying a new language in adulthood (distinct from lifelong bilingualism). The strongest direct result is a short-course study showing an attention-switching gain — which required ≥5 hrs/week to persist.",
+    callout: "Keep this SEPARATE from the 'bilingualism delays dementia' literature, which is observational, confounded, and contested. The dementia-prevention framing is an explicitly stated hypothesis for future research, not a demonstrated outcome. Do not oversell.",
+    sources: [
+      { cite: "Bak, T. H., Long, M. R., Vega-Mendoza, M., & Sorace, A. (2016). Novelty, challenge, and practice: The impact of intensive language learning on attentional functions. PLOS ONE, 11(4), e0153485.", note: "One-week Gaelic course improved attention switching vs controls (ages 18–78); gain persisted at 9 months only with ≥5 hrs/wk practice. [Moderate — controlled study]", link: scholar("Bak 2016 intensive language learning attentional functions PLOS ONE"), kind: "scholar" },
+      { cite: "Antoniou, M., Gunasekera, G. M., & Wong, P. C. M. (2013). Foreign language training as cognitive therapy for age-related cognitive decline: A hypothesis for future research. Neuroscience & Biobehavioral Reviews, 37(10), 2689–2698.", note: "Proposes L2 learning as cognitive training — explicitly a hypothesis, engaging a broader network than math/crosswords. [Emerging — hypothesis]", link: scholar("Antoniou 2013 foreign language training cognitive therapy age-related decline"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "crossword-puzzles", section: "231", title: "Crossword & Number Puzzles", subtitle: "Bolsters clusters: verbal/working memory, cognitive reserve — the far-transfer trap",
+    evidenceTag: "Moderate",
+    feeds: ["verbal/working memory", "cognitive reserve", "delay of symptomatic decline (not prevention of pathology)"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    description: "Regular word/number puzzles examined observationally (does it delay decline?) and in one RCT (does crossword training help people who already have MCI?). Only the RCT shows a causal within-domain benefit.",
+    callout: "The classic far-transfer trap. Observationally, crosswords delayed onset of accelerated decline by ~2.5 years but declined FASTER once decline began — a reserve-masking effect, not disease modification. The RCT benefit was only in people who already had MCI, vs another computer game, not vs doing nothing.",
+    sources: [
+      { cite: "Devanand, D. P., Goldberg, T. E., Qian, M., et al. (2022). Computerized games versus crosswords training in mild cognitive impairment. NEJM Evidence, 1(12).", note: "78-week two-site single-blind RCT; web crosswords beat cognitive video games on ADAS-Cog in MCI. [Moderate — RCT]", link: scholar("Devanand 2022 computerized games versus crosswords mild cognitive impairment NEJM Evidence"), kind: "scholar" },
+      { cite: "Pillai, J. A., Hall, C. B., Dickson, D. W., Buschke, H., Lipton, R. B., & Verghese, J. (2011). Association of crossword puzzle participation with memory decline in persons who develop dementia. Journal of the International Neuropsychological Society, 17(6), 1006–1013.", note: "Bronx Aging Study; crosswords delayed onset of accelerated memory decline by 2.54 yrs but steeper decline once it began. [Emerging — observational]", link: scholar("Pillai 2011 crossword puzzle participation memory decline dementia"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "morning-pages", section: "232", title: "Journaling — 'Morning Pages' / Free-Writing", subtitle: "Named protocol has no direct evidence — adjacent expressive-writing is modest",
+    evidenceTag: "Emerging",
+    feeds: ["emotional processing", "self-reflection", "mood/affect", "stress reduction (modest, adjacent)"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Daily longhand stream-of-consciousness writing ('morning pages'), or general free-writing for clarity and wellbeing. What has evidence is a different, adjacent practice — Pennebaker-style expressive writing and gratitude journaling — and even there effects are modest.",
+    callout: "'Morning pages' as a named protocol has essentially NO direct peer-reviewed evidence. Adjacent expressive-writing meta-analytic effects on health are small (d≈0.16), and emotional-health effects are weaker than physical. Present it as a low-risk practice with modest, indirect support — not an evidence-based intervention.",
+    sources: [
+      { cite: "Frattaroli, J. (2006). Experimental disclosure and its moderators: A meta-analysis. Psychological Bulletin, 132(6), 823–865.", note: "146 studies; small but significant overall effect of expressive writing (r≈.075, ~d 0.15) on health outcomes. [Moderate — adjacent construct]", link: scholar("Frattaroli 2006 experimental disclosure meta-analysis Psychological Bulletin"), kind: "scholar" },
+      { cite: "Emmons, R. A., & McCullough, M. E. (2003). Counting blessings versus burdens: An experimental investigation of gratitude and subjective well-being in daily life. Journal of Personality and Social Psychology, 84(2), 377–389.", note: "Adjacent structured-journaling RCT; gratitude listing raised positive affect vs hassles/neutral. [Moderate — adjacent]", link: scholar("Emmons McCullough 2003 counting blessings versus burdens gratitude"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "touch-typing", section: "233", title: "Learning to Touch-Type / Skill Automation", subtitle: "Real payoff is practical automation — no cognitive far-transfer",
+    evidenceTag: "Emerging",
+    feeds: ["motor automaticity", "freed attentional capacity during writing/coding", "throughput/productivity (practical)"],
+    impact: { magnitude: 2, latency: "weeks", durability: "lasting", effort: "moderate" },
+    description: "Acquiring touch typing to automaticity, freeing attention from execution for higher-order work. Robust classical evidence shows practice produces automaticity — but that is about the skill itself becoming faster, not about broader cognition.",
+    callout: "No credible evidence supports touch-typing as a cognitive-enhancement or wellbeing intervention. Its real payoff is practical: automating typing frees working-memory/attention for the task you're actually doing — a plausible but largely untested downstream benefit.",
+    sources: [
+      { cite: "Newell, A., & Rosenbloom, P. S. (1981). Mechanisms of skill acquisition and the law of practice. In J. R. Anderson (Ed.), Cognitive Skills and Their Acquisition.", note: "Established the power law of practice; practice → chunking → automaticity. [Strong — for the automation claim only]", link: scholar("Newell Rosenbloom 1981 mechanisms skill acquisition law of practice"), kind: "scholar" },
+      { cite: "Fitts, P. M., & Posner, M. I. (1967). Human Performance. Brooks/Cole.", note: "Classic three-stage model (cognitive → associative → autonomous) of motor-skill automation. [Moderate — foundational]", link: scholar("Fitts Posner 1967 human performance stages motor skill learning"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "sleep-tracking", section: "234", title: "Sleep-Tracking / Self-Monitoring", subtitle: "Behavior-monitoring helps; passive sleep-score fixation can backfire",
+    evidenceTag: "Mixed",
+    feeds: ["goal attainment & behavior change (actionable behavior)", "RISK: sleep quality & anxiety (sleep-score fixation)"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Using wearables/apps to quantify sleep or activity. Genuinely two-sided: monitoring an actionable behavior reliably aids goal attainment, but passive sleep-tracking specifically carries a documented harm.",
+    callout: "Baron et al. coined 'orthosomnia' — a case series where pursuit of 'perfect' tracker-reported sleep worsened insomnia and anxiety; the data itself became the stressor. The positive evidence is for monitoring an actionable behavior (steps, food, bedtime), NOT passive sleep-score watching, which can backfire in anxious/perfectionistic users.",
+    sources: [
+      { cite: "Baron, K. G., Abbott, S., Jao, N., Manalo, N., & Mullen, R. (2017). Orthosomnia: Are some patients taking the quantified self too far? Journal of Clinical Sleep Medicine, 13(2), 351–354.", note: "Case series; perfectionistic focus on sleep-tracker data exacerbated insomnia/anxiety and complicated CBT-I. [Emerging — case series]", link: scholar("Baron 2017 orthosomnia quantified self Journal Clinical Sleep Medicine"), kind: "scholar" },
+      { cite: "Harkin, B., Webb, T. L., Chang, B. P. I., et al. (2016). Does monitoring goal progress promote goal attainment? A meta-analysis of the experimental evidence. Psychological Bulletin, 142(2), 198–229.", note: "138 studies, ~19,951 participants; monitoring progress promoted goal attainment (d+=0.40), stronger when recorded/public. [Strong — meta-analysis]", link: scholar("Harkin 2016 does monitoring goal progress promote goal attainment meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "time-blocking", section: "235", title: "Time-Blocking / Calendar Scheduling", subtitle: "Mechanism-supported (implementation intentions), method itself unstudied",
+    evidenceTag: "Moderate",
+    feeds: ["goal initiation & follow-through", "procrastination reduction", "focus protection"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "moderate" },
+    description: "Pre-assigning tasks to specific calendar slots to structure the day and protect focus. There is no direct trial of 'time-blocking' per se — but the underlying mechanism, forming specific if-then plans (implementation intentions), reliably improves follow-through.",
+    callout: "Essentially no peer-reviewed trial of 'time-blocking/timeboxing' as a named method exists — its popularity comes from productivity writers. It is best defended as one concrete way to instantiate implementation intentions (d≈0.65), not as an independently validated technique.",
+    sources: [
+      { cite: "Gollwitzer, P. M., & Sheeran, P. (2006). Implementation intentions and goal achievement: A meta-analysis of effects and processes. Advances in Experimental Social Psychology, 38, 69–119.", note: "94 tests; if-then plans specifying when/where/how had a medium-large effect on goal attainment (d=0.65). [Strong — meta-analysis, the mechanism]", link: scholar("Gollwitzer Sheeran 2006 implementation intentions goal achievement meta-analysis"), kind: "scholar" },
+      { cite: "Harkin, B., et al. (2016). Does monitoring goal progress promote goal attainment? Psychological Bulletin, 142(2), 198–229.", note: "Progress monitoring, which calendars/schedules operationalize, promotes attainment (d+=0.40). [Strong]", link: scholar("Harkin 2016 monitoring goal progress goal attainment"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "qigong", section: "236", title: "Qigong for Immune / Inflammation", subtitle: "Bolsters clusters: inflammation (CRP), cancer fatigue, mood, quality of life",
+    evidenceTag: "Moderate",
+    feeds: ["systemic inflammation (CRP)", "cancer-related fatigue", "mood", "quality of life"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Medical Qigong — gentle coordinated movement plus meditation/breath — studied for inflammatory and quality-of-life outcomes in cancer patients. RCTs show improved QoL, fatigue, mood, and reduced C-reactive protein (a real inflammation biomarker).",
+    callout: "Keep the claim narrow. Samples are modest (~80 patients), active-control blinding is hard in movement trials, and 'immune function/survival' benefits are far less established than the QoL/inflammation signals. Present as promising adjunctive supportive care, not a proven immune therapy.",
+    sources: [
+      { cite: "Oh, B., Butow, P., Mullan, B., et al. (2010). Impact of medical Qigong on quality of life, fatigue, mood and inflammation in cancer patients: A randomized controlled trial. Annals of Oncology, 21(3), 608–614.", note: "RCT; Qigong improved QoL, fatigue, mood, and reduced inflammation (CRP) vs usual care. [Moderate — RCT]", link: scholar("Oh 2010 medical Qigong quality of life fatigue mood inflammation cancer RCT"), kind: "scholar" },
+      { cite: "Oh, B., Butow, P., Mullan, B., et al. (2012). Effect of medical Qigong on cognitive function, quality of life, and a biomarker of inflammation in cancer patients: A randomized controlled trial. Supportive Care in Cancer, 20(6), 1235–1242.", note: "RCT (n=81); Qigong improved self-reported cognitive function, QoL, and reduced CRP. [Moderate — RCT]", link: scholar("Oh 2012 medical Qigong cognitive function inflammation cancer randomized controlled trial"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "laughter-yoga", section: "237", title: "Laughter Yoga", subtitle: "Bolsters clusters: mood, anxiety, stress — promising but low-quality evidence",
+    evidenceTag: "Emerging",
+    feeds: ["mood/depressive symptoms", "anxiety", "stress", "group social connection"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Structured group practice of voluntary/simulated laughter plus yogic breathing (Kataria method) — distinct from spontaneous humor. Several small RCTs and a systematic review show promise for depression and anxiety.",
+    callout: "Be candid about quality: most trials are small, at high risk of bias, hard to blind, and short-term. Treat as a low-cost, low-risk adjunct with encouraging-but-preliminary evidence, not an established treatment. The simulated laughter means effects don't require genuine humor.",
+    sources: [
+      { cite: "van der Wal, C. N., & Kok, R. N. (2019). Laughter-inducing therapies: Systematic review and meta-analysis. Social Science & Medicine, 232, 473–488.", note: "Reviews laughter interventions incl. laughter yoga; promising effects on depression, but heterogeneous and many high-bias studies. [Emerging — SR/MA]", link: scholar("van der Wal Kok 2019 laughter-inducing therapies systematic review meta-analysis"), kind: "scholar" },
+      { cite: "Shahidi, M., et al. (2011). Laughter yoga versus group exercise program in elderly depressed women: a randomized controlled trial. International Journal of Geriatric Psychiatry, 26(3), 322–327.", note: "Small RCT; laughter yoga and exercise both reduced depression vs control. [Emerging — small RCT]", link: scholar("Shahidi 2011 laughter yoga versus group exercise elderly depressed women RCT"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "awe-walks", section: "238", title: "Awe Walks", subtitle: "Bolsters clusters: prosocial positive emotion, reduced distress, 'small self'",
+    evidenceTag: "Moderate",
+    feeds: ["prosocial positive emotions (awe, compassion, gratitude)", "reduced daily distress", "'small self'/decentering"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Ordinary outdoor walks taken with a deliberate orientation to seek awe — vastness/novelty that shifts attention outward and shrinks the self. A clever RCT isolates awe from walking: both groups walked 15 min weekly, only the awe group got the awe-orientation instruction, and only they showed rising prosocial emotion and (via weekly selfies) a smaller self-focus.",
+    callout: "Genuinely distinct and cleanly demonstrated, but rests on ONE trial (n=60), so don't overstate generality. It's a wellbeing/emotion effect (prosocial positive emotion, less distress), not a cognitive or clinical outcome.",
+    sources: [
+      { cite: "Sturm, V. E., Datta, S., Roy, A. R. K., et al. (2022). Big smile, small self: Awe walks promote prosocial positive emotions in older adults. Emotion, 22(5), 1044–1058.", note: "RCT, n=60 older adults, 8 weekly 15-min walks; awe-orientation group showed increased prosocial positive emotion, less distress, and a 'small self' evident in selfies. [Moderate — RCT]", link: scholar("Sturm 2020 big smile small self awe walks prosocial positive emotions older adults Emotion"), kind: "scholar" },
+      { cite: "Bai, Y., et al. (2017). Awe, the diminished self, and collective engagement. Journal of Personality and Social Psychology, 113(2), 185–209.", note: "Multi-study evidence that awe produces the 'small self' and prosociality — the mechanism awe walks exploit. [Moderate]", link: scholar("Bai 2017 awe diminished self collective engagement small self"), kind: "scholar" },
     ],
   },
 ];
