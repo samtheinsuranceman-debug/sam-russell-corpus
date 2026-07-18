@@ -705,42 +705,62 @@
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Bedtime (previous night):** ~11:30 PM (July 17). Trazodone x2 + Klonopin 2mg at 10:35 PM.
+- **Wake time (natural? vs 11 AM):** 6:15 AM first wake (natural). Fell back asleep. Second wake ~9:30 AM. Up at 9:45 AM after attempting third sleep block (no sleep achieved in 15 min).
+- **Hours slept:** ~7 hours total (11:30 PM – 6:15 AM = ~6.75 hrs first block + brief second block 6:15–~9:30 AM with dreams)
+- **Dreams (nightmare/neutral/positive/sex/vivid):** VIVID. Three dreams in sequence. Political/professional/ancestral themes. Major integration dream (#3). See dream log below.
+- **Sleep feel (Restful 1-10) / Notes:** Klonopin suppressed early REM but REM broke through in second sleep block (6:15 AM+). Three full narrative dreams recovered. No dream recall from first block (deep slow-wave recovery from 1,501 cal day).
+
+### Dream Log (Day 13 — Detailed)
+**Dream 1 (fragment — first block):**
+- Content: Donald Trump saying protesters would stop protesting if he put capital punishment on them.
+- Themes: Authority, force, suppression of dissent. Shadow of the Terrible Father archetype.
+- Jungian read: Psyche presenting the wound (disownment = capital punishment of relationship) in its most extreme archetypal form before resolving it in Dream 3.
+
+**Dream 2 (second sleep block ~6:15+ AM):**
+- Setting: Diner counter, then stairwell.
+- Content: Bumped into Bill Fuller (former insurance colleague/subordinate) at diner. Sam was flirting with a girl. Bill sat next to her. Sam wrote Bill a $70 check — almost nothing, but Bill was deeply moved. Held Sam's handshake, wouldn't let go, smiling. Sam's handwriting was very large — said "that's body language, I can't help it." Then Dave Willing was skipping down stairs saying he's working less hours and making more money, smiling.
+- Themes: Generosity from abundance. Small gestures landing huge because of presence. The Self overflowing the ego's container. Dave = Puer Aeternus archetype (lightness, leverage, joy). His name = "WILLING" = the message itself.
+- Jungian read: Integration of Persona. Learning that presence IS the gift. Previewing the future Self (less effort, more reward).
+
+**Dream 3 (most significant — second sleep block):**
+- Setting: Aunt Missy and Uncle's house — the same kitchen from childhood.
+- Content: Sam and family went to aunt/uncle's house for first time in 20 years. Parents and brother disappeared into other rooms (uncomfortable, hiding). Sam alone with aunt and uncle in kitchen. Casual, comfortable conversation. Aunt joked about killing/not killing her husband. Sam joked "Well, you're not 20 years older yet either" — she laughed. She asked about long-term care insurance, seemed ready to buy from Sam. Sam noticed a NEW doorway in the kitchen that was never there before — walked through into a new room. They followed. Walked through another new doorway — another room that never existed. They followed again. Walked through childhood sleeping room (floor beds) — Sam named the memory. Uncle led Sam to basement with ping pong table. Said Sam should play with a little boy there. Objects on the table needed to be removed first. Then woke up.
+- Overarching feeling: Comfort, belongingness, acceptance, gratitude.
+- Themes: Reconciliation with 20-year estrangement. Individuation (separating from parents' wound). New rooms = transcendent function (new possibilities that didn't exist before). Little boy = Divine Child archetype (Sam at age 10 when disowned). Objects on table = grievances to clear before play/relationship can resume.
+- Jungian read: COMPLETION dream. The wound is resolved in the psyche. Sam walks through new doors first — they follow. Power dynamic inverted from the original wound. The uncle as Wise Old Man guiding Sam toward the abandoned inner child. Full individuation sequence achieved in one night: Shadow confrontation (Dream 1) → Persona integration (Dream 2) → Union with Self (Dream 3).
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
-- **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
-- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
-- **Other (Klonopin, etc.):** _______________________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** 60mg XR (2x 30mg) at 10:30 AM
+- **Wellbutrin XL 150mg:** 10:30 AM (Day 2)
+- **Vitamin C (Time/Dose/Stomach/Effect):** TBD
+- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** TBD
+- **Other (Klonopin, etc.):** TBD
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
-- **Other notes (neck, appetite, etc.):** ___________________________________
+- **Exercise (pool/gym/walk duration + 10% extra):** Plan: 3x99 treadmill + pool (in progress)
+- **Other notes (neck, appetite, etc.):** TBD
 
 ### Business / Productivity
-- **Leads / appointments worked:** __________________________________________
-- **Commissions update (Ralph wire/12k annuity/solar):** ____________________
-- **AI analysis done (calls/videos uploaded):** _____________________________
-- **Key win / lesson / money action:** ______________________________________
+- **Leads / appointments worked:** TBD
+- **Commissions update (Ralph wire/12k annuity/solar):** $35,000 check from Ralph Reinberg (My Taxes Made Easy) expected to arrive TODAY.
+- **AI analysis done (calls/videos uploaded):** Jungian dream analysis (3 dreams), Chronicles of the Quiet Engine saga delivered
+- **Key win / lesson / money action:** TBD
 
 ### Social / Dating / Family
-- **Church-girl action today (contact/script/progress):** ___________________
-- **Dad / Mom interaction note:** ___________________________________________
-- **Dating confidence / layup feel 1-10:** __________________________________
-- **Notes:** ________________________________________________________________
+- **Church-girl action today (contact/script/progress):** TBD
+- **Dad / Mom interaction note:** TBD
+- **Dating confidence / layup feel 1-10:** TBD
+- **Notes:** TBD
 
 ### Compounding & Mindset
-- **10% extra habit done (what?):** _________________________________________
-- **Self-script used or insight:** __________________________________________
-- **Gratitude / biggest pattern noticed:** __________________________________
+- **10% extra habit done (what?):** TBD
+- **Self-script used or insight:** TBD
+- **Gratitude / biggest pattern noticed:** TBD
 
 ### Evening Review
-- **What worked that I double tomorrow?** ___________________________________
-- **One adjustment for tomorrow?** __________________________________________
+- **What worked that I double tomorrow?** TBD
+- **One adjustment for tomorrow?** TBD
 
 ---
 
