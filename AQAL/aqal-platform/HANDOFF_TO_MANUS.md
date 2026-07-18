@@ -126,15 +126,28 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
 ---
 
 ## 📚 LIBRARY EXPANSION (done this build) + VAULT/DRIP GATING (proposed)
-- **Done:** Research Library grew from 22 to **42 sections** — 20 net-new clusters
-  (~98 verified sources): fasting/TRE, light & circadian, VO₂max, gut–brain,
-  brain nutrition, music training, bilingualism, expressive writing, gratitude,
-  awe, purpose & meaning, volunteering, reading, deliberate practice, cognitive
-  reserve, the honest experimental frontier (float/HRV stacked protocols),
-  micro-saving, order/environment, grooming, digital minimalism. Every source is a
-  real, named study with a Google-Scholar link; every cluster carries an honest
-  evidence tier + a caveat callout (failed replications, null RCTs, and
-  observational limits are stated, not hidden). Keep expanding toward ~1,000.
+- **Done:** Research Library now spans **82 sections in the practices index**
+  (~550 verified sources in `PRACTICE_EVIDENCE`, plus the 32-line Volumes I/II).
+  Two expansion waves: first 20 (fasting, light/circadian, VO₂max, gut–brain,
+  nutrition, music, bilingualism, expressive writing, gratitude, awe, purpose,
+  volunteering, reading, deliberate practice, cognitive reserve, the honest
+  frontier, micro-saving, order, grooming, digital minimalism); then 40 more
+  (grip strength, protein, creatine, HIIT, glucose/post-meal walks, fiber,
+  ultra-processed, vitamin D, hearing, oral health, air quality, vision, blue
+  space, pets, caffeine, alcohol, dance, tai chi, walking/steps, sit-less,
+  singing, sexual health, flow, massage, mindfulness, loving-kindness,
+  self-compassion, reappraisal, forgiveness, optimism, savoring, nature dose,
+  goal-setting, habits, index investing, autonomy, time affluence, sleep
+  regularity, laughter, learning-by-teaching). Every source is a real, named
+  study with a Scholar link + honest evidence tier + caveat callout (null RCTs,
+  failed replications, observational limits stated). Keep expanding toward ~1,000.
+- **NEW — Leverage Score gauge** (`leverageScore()` in ResearchLibrary.tsx): a
+  deterministic 0–100 rating = 70·benefit + 30·ease, where benefit =
+  (magnitude/5)·evidenceWeight·durabilityWeight and ease = effortWeight·latencyWeight.
+  Each rated cluster shows the score + chips (Impact 1–5, First-results
+  days/weeks/months, Holds transient/sustained/lasting, Effort low/mod/high) and a
+  `feeds[]` interconnection line. ~43 clusters rated so far; Manus can extend the
+  `impact`/`feeds` fields to the rest (fields are optional, so partial coverage is safe).
 - **Proposed feature — the "vault + monthly drip" membership engine** (Claude's
   recommendation below; NOT built yet — needs a product decision + entitlements):
   1. Members do NOT get unrestricted library access. Instead: a one-time **timed

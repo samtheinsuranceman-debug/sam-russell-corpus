@@ -460,6 +460,40 @@ const TRAINABILITY_CLUSTERS = [
 const scholar = (q: string) => `https://scholar.google.com/scholar?q=${encodeURIComponent(q)}`;
 
 type PracticeSource = { cite: string; note: string; link: string; kind: "doi" | "scholar" };
+
+// ---- Impact / leverage model -------------------------------------------------
+// An honest, deterministic gauge of "how much result per unit of effort and time"
+// for a practice. NOT a promise — it's a directional rating built from the same
+// research the cluster cites: how big the effect is, how proven, how lasting, how
+// fast it shows up, and how much energy it costs to run.
+type PracticeImpact = {
+  magnitude: 1 | 2 | 3 | 4 | 5;               // size of the effect on the person's life
+  latency: "days" | "weeks" | "months";        // time to first noticeable results
+  durability: "transient" | "sustained" | "lasting"; // how long results hold
+  effort: "low" | "moderate" | "high";         // energy-in to run the practice
+};
+
+// Weights are fixed and documented so the score can never be hand-waved.
+const EVIDENCE_W: Record<PracticeCluster["evidenceTag"], number> = { Strong: 1, Moderate: 0.8, Emerging: 0.6, Mixed: 0.6 };
+const DURABILITY_W: Record<PracticeImpact["durability"], number> = { lasting: 1, sustained: 0.85, transient: 0.6 };
+const EFFORT_W: Record<PracticeImpact["effort"], number> = { low: 1, moderate: 0.75, high: 0.55 };   // higher = less effort = better
+const LATENCY_W: Record<PracticeImpact["latency"], number> = { days: 1, weeks: 0.85, months: 0.7 };
+
+// Leverage Score (0–100) = 70·benefit + 30·ease.
+//   benefit = (magnitude/5) · evidenceWeight · durabilityWeight   → big, proven, lasting
+//   ease    = effortWeight · latencyWeight                        → cheap energy-in, fast results-out
+function leverageScore(impact: PracticeImpact, evidence: PracticeCluster["evidenceTag"]): number {
+  const benefit = (impact.magnitude / 5) * EVIDENCE_W[evidence] * DURABILITY_W[impact.durability];
+  const ease = EFFORT_W[impact.effort] * LATENCY_W[impact.latency];
+  return Math.round(100 * (0.7 * benefit + 0.3 * ease));
+}
+
+const chipStyle: React.CSSProperties = {
+  display: "inline-flex", alignItems: "center", gap: 4,
+  border: "1px solid rgba(255,255,255,0.12)", borderRadius: 999,
+  padding: "2px 8px", fontSize: 10.5, color: "var(--rl-muted, #b9b2a6)", whiteSpace: "nowrap",
+};
+
 type PracticeCluster = {
   id: string;
   section: string;
@@ -468,6 +502,9 @@ type PracticeCluster = {
   description: string;
   evidenceTag: "Strong" | "Moderate" | "Emerging" | "Mixed";
   callout?: string;
+  // Optional interconnection + impact metadata (present on newer clusters).
+  feeds?: string[];          // plain-language capacities/systems this practice strengthens
+  impact?: PracticeImpact;   // the leverage gauge
   sources: PracticeSource[];
 };
 
@@ -514,6 +551,46 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "39": "39 · Order & Environment",
   "40": "40 · Grooming & Self-Care",
   "41": "41 · Digital Minimalism & Attention",
+  "42": "42 · Grip & Muscular Strength",
+  "43": "43 · Protein & Muscle Preservation",
+  "44": "44 · Creatine",
+  "45": "45 · HIIT & Interval Training",
+  "46": "46 · Glucose Regulation & Post-Meal Walking",
+  "47": "47 · Dietary Fiber",
+  "48": "48 · Reducing Ultra-Processed Food",
+  "49": "49 · Vitamin D & Sunlight",
+  "50": "50 · Hearing & Cognition",
+  "51": "51 · Oral & Periodontal Health",
+  "52": "52 · Air Quality",
+  "53": "53 · Vision Correction",
+  "54": "54 · Blue Space — Water & Wellbeing",
+  "55": "55 · Pets & Companion Animals",
+  "56": "56 · Caffeine",
+  "57": "57 · Alcohol Reduction",
+  "58": "58 · Dance",
+  "59": "59 · Tai Chi & Qigong",
+  "60": "60 · Walking & Daily Steps",
+  "61": "61 · Breaking Up Sitting",
+  "62": "62 · Singing & Choir",
+  "63": "63 · Sexual Health & Longevity",
+  "64": "64 · Flow States",
+  "65": "65 · Massage & Bodywork",
+  "66": "66 · Mindfulness & MBSR",
+  "67": "67 · Loving-Kindness Meditation",
+  "68": "68 · Self-Compassion",
+  "69": "69 · Reappraisal vs. Suppression",
+  "70": "70 · Forgiveness",
+  "71": "71 · Optimism & Explanatory Style",
+  "72": "72 · Savoring",
+  "73": "73 · Nature Dose — 120 min/week",
+  "74": "74 · Goal-Setting",
+  "75": "75 · Habit Formation",
+  "76": "76 · Automated & Index Investing",
+  "77": "77 · Autonomy & Job Control",
+  "78": "78 · Time Affluence",
+  "79": "79 · Sleep Regularity",
+  "80": "80 · Laughter & Humor",
+  "81": "81 · Learning by Teaching",
 };
 
 // Short labels for the section jump-nav chips.
@@ -560,12 +637,35 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "39": "Order",
   "40": "Grooming",
   "41": "Digital Minimalism",
+  "42": "Grip Strength", "43": "Protein", "44": "Creatine", "45": "HIIT",
+  "46": "Glucose", "47": "Fiber", "48": "Ultra-Processed", "49": "Vitamin D",
+  "50": "Hearing", "51": "Oral Health", "52": "Air Quality", "53": "Vision",
+  "54": "Blue Space", "55": "Pets", "56": "Caffeine", "57": "Alcohol",
+  "58": "Dance", "59": "Tai Chi", "60": "Walking", "61": "Sit Less",
+  "62": "Singing", "63": "Sexual Health", "64": "Flow", "65": "Massage",
+  "66": "Mindfulness", "67": "Loving-Kindness", "68": "Self-Compassion", "69": "Reappraisal",
+  "70": "Forgiveness", "71": "Optimism", "72": "Savoring", "73": "Nature Dose",
+  "74": "Goal-Setting", "75": "Habits", "76": "Investing", "77": "Autonomy",
+  "78": "Time Affluence", "79": "Sleep Regularity", "80": "Laughter", "81": "Teaching",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
 // keystone practices (what to actually DO), then domain practices, then risks.
 // This controls display order without renumbering the underlying data.
-const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "17", "18", "1", "2", "3", "4", "5", "6", "7", "8", "9", "22", "23", "25", "26", "27", "28", "29", "36", "35", "34", "30", "31", "32", "33", "38", "39", "40", "41", "19", "20", "37", "10", "11"];
+const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "17", "18",
+  // Practices by domain — physical & metabolic
+  "1", "2", "42", "43", "44", "45", "60", "61", "46", "47", "48", "49", "22", "23", "25", "26", "56", "57",
+  // Protect the hardware — senses & body
+  "50", "51", "52", "53",
+  // Movement & mind-body
+  "3", "4", "58", "59", "62", "54", "55", "5",
+  // Cognitive & skill
+  "27", "28", "29", "36", "35", "34", "64", "81", "76",
+  // Emotional & contemplative
+  "6", "7", "8", "66", "67", "68", "69", "70", "71", "72", "73", "30", "31", "32", "33", "63", "65",
+  // Behavioral & life-design
+  "9", "74", "75", "77", "78", "79", "80", "38", "39", "40", "41",
+  "19", "20", "37", "10", "11"];
 const sectionRank = (s: string) => {
   const i = PRACTICE_SECTION_ORDER.indexOf(s);
   return i === -1 ? 999 : i;
@@ -589,6 +689,22 @@ const PRACTICE_GROUP: Record<string, string> = {
   "32": "Practices by domain", "33": "Practices by domain", "38": "Practices by domain",
   "39": "Practices by domain", "40": "Practices by domain", "41": "Practices by domain",
   "24": "Keystone practices — start here",
+  // physical/metabolic + movement + cognitive + emotional + behavioral → domain
+  "42": "Practices by domain", "43": "Practices by domain", "44": "Practices by domain",
+  "45": "Practices by domain", "46": "Practices by domain", "47": "Practices by domain",
+  "48": "Practices by domain", "49": "Practices by domain", "54": "Practices by domain",
+  "55": "Practices by domain", "56": "Practices by domain", "57": "Practices by domain",
+  "58": "Practices by domain", "59": "Practices by domain", "60": "Practices by domain",
+  "61": "Practices by domain", "62": "Practices by domain", "63": "Practices by domain",
+  "64": "Practices by domain", "65": "Practices by domain", "66": "Practices by domain",
+  "67": "Practices by domain", "68": "Practices by domain", "69": "Practices by domain",
+  "70": "Practices by domain", "71": "Practices by domain", "72": "Practices by domain",
+  "73": "Practices by domain", "74": "Practices by domain", "75": "Practices by domain",
+  "76": "Practices by domain", "77": "Practices by domain", "78": "Practices by domain",
+  "79": "Practices by domain", "80": "Practices by domain", "81": "Practices by domain",
+  // sensory & medical protection get their own header
+  "50": "Protect the hardware — senses & body", "51": "Protect the hardware — senses & body",
+  "52": "Protect the hardware — senses & body", "53": "Protect the hardware — senses & body",
   "19": "Practices by domain", "20": "Practices by domain",
   "37": "The honest frontier — unproven",
   "10": "Risks & compounding", "11": "Risks & compounding",
@@ -1421,6 +1537,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Sleep — The System That Gates Every Other Line",
     subtitle: "Bolsters clusters: memory, emotion, decision-making, immunity, everything",
     evidenceTag: "Strong",
+    feeds: ["memory consolidation", "emotional regulation", "executive function", "immune function", "nearly every other line"],
+    impact: { magnitude: 5, latency: "days", durability: "sustained", effort: "low" },
     description:
       "Sleep is the foundational meta-system: it consolidates memory, regulates emotion, clears metabolic waste from the brain, and restores decision-making. Degrade it and nearly every line drops together; protect it and the others have room to rise. This is the highest-leverage, most-evidenced practice in the entire library — and the cheapest. Honest boundary: 'optimize sleep' means protecting quantity, timing, and regularity; there is no shortcut that substitutes for the hours.",
     callout: "The single highest-leverage line-lifter here — because it gates the others. Fixing sleep is often the first move, not the last.",
@@ -1663,6 +1781,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "The Knowing–Doing Gap Is the Real Enemy",
     subtitle: "Bolsters clusters: volitional, self-regulation, follow-through",
     evidenceTag: "Strong",
+    feeds: ["volitional / willpower", "self-regulation", "follow-through on every other practice"],
+    impact: { magnitude: 4, latency: "weeks", durability: "lasting", effort: "moderate" },
     description:
       "Knowing what to do rarely changes behavior — the gap between intention and action is where most self-improvement dies. The good news: that gap has a well-studied fix. Implementation intentions ('if situation X, then I'll do Y') reliably convert goals into action across dozens of studies, and habits form with repetition in a predictable window. This is why every prescription on this platform is paired with an if-then plan, a habit to stack it onto, and a way to track it — we intervene on the DOING, not just the knowing.",
     callout: "This is the section that makes the others work. A brilliant prescription you don't implement changes nothing; an if-then plan is the difference between reading and doing.",
@@ -1721,6 +1841,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Cardiorespiratory Fitness — VO₂max",
     subtitle: "Bolsters clusters: interoceptive, volitional, systemic, most cognitive lines",
     evidenceTag: "Strong",
+    feeds: ["longevity", "executive function", "memory", "mood", "cardiovascular health"],
+    impact: { magnitude: 5, latency: "months", durability: "lasting", effort: "high" },
     description:
       "VO₂max / cardiorespiratory fitness is among the strongest modifiable predictors of all-cause mortality and cognition anywhere in this library. The mortality gradient is steep, dose-dependent, and shows no upper limit — improving your fitness is one of the best-evidenced longevity 'levers' known.",
     callout: "The mortality data are observational (fit people differ in many ways), so they prove a robust association, not a clean causal death-rate reduction. But RCTs confirm exercise raises both fitness and cognition — the practice is as close to a sure thing as this library contains.",
@@ -2051,6 +2173,684 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
       { cite: "Kushlev, K., Proulx, J., & Dunn, E. W. (2016). 'Silence your phones': smartphone notifications increase inattention and hyperactivity symptoms. Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems, 1011–1020.", note: "A week of maximized notifications raised self-reported inattention and hyperactivity vs. a minimized week. [Moderate]", link: scholar("Kushlev Proulx Dunn Silence Your Phones notifications inattention hyperactivity CHI 2016"), kind: "scholar" },
       { cite: "Pieh, C., et al. (2025). Smartphone screen-time reduction improves mental health: a randomized controlled trial. BMC Medicine, 23, 107.", note: "RCT: reducing screen time to ≤2 h/day for 3 weeks yielded small-to-medium improvements in well-being, depression, sleep, and stress. [Moderate]", link: scholar("Pieh Humer smartphone screen time reduction improves mental health randomized controlled trial BMC Medicine 2025"), kind: "scholar" },
       { cite: "May, W., Malouff, J. M., & Meynadier, J. (2025). Reducing social media use decreases depression symptoms: a meta-analysis of randomised controlled trials. European Journal of Investigation in Health, Psychology and Education, 15(11), 222.", note: "Meta-analysis of 10 RCTs (N=1,491): reducing social-media use modestly decreased depressive symptoms (g≈0.25). [Moderate — meta-analysis]", link: scholar("May Malouff Meynadier Reducing Social Media Use Decreases Depression Symptoms meta-analysis 2025"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 42 — GRIP & MUSCULAR STRENGTH ═══════════════
+  {
+    id: "grip-strength", section: "42", title: "Grip & Muscular Strength",
+    subtitle: "Bolsters clusters: bodily-kinesthetic, systemic (a whole-body vitality index)",
+    evidenceTag: "Strong",
+    feeds: ["whole-body strength", "cardiovascular resilience", "functional independence", "frailty resistance", "longevity"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Handgrip and muscular strength is one of the cheapest, most robust predictors of all-cause and cardiovascular mortality across populations — a dynamometer forecasts early death better than many blood tests. It is best read as an index of whole-body robustness.",
+    callout: "Grip strength predicts death, but no trial shows that squeezing harder — or isolated grip work — lowers mortality. The causal lever is overall resistance training; strength is the marker.",
+    sources: [
+      { cite: "Leong, D. P., et al. (2015). Prognostic value of grip strength: findings from the PURE study. The Lancet, 386(9990), 266–273.", note: "Each 5-kg drop in grip strength = 16% higher all-cause mortality across 17 countries. [Strong]", link: scholar("Leong Teo Rangarajan grip strength prognostic PURE Lancet 2015"), kind: "scholar" },
+      { cite: "Celis-Morales, C. A., et al. (2018). Associations of grip strength with cardiovascular, respiratory, and cancer outcomes and all-cause mortality. BMJ, 361, k1651.", note: "In ~500,000 UK Biobank adults, low grip inversely associated with CVD, cancer, and death. [Strong]", link: scholar("Celis-Morales grip strength UK Biobank all cause mortality BMJ 2018 k1651"), kind: "scholar" },
+      { cite: "García-Hermoso, A., et al. (2018). Muscular strength as a predictor of all-cause mortality: a systematic review and meta-analysis. Archives of Physical Medicine and Rehabilitation, 99(10), 2100–2113.", note: "Higher muscular strength ≈ 31% lower all-cause mortality in healthy adults. [Strong — meta-analysis]", link: scholar("Garcia-Hermoso muscular strength predictor all-cause mortality meta-analysis 2018"), kind: "scholar" },
+      { cite: "Volaklis, K. A., Halle, M., & Meisinger, C. (2015). Muscular strength as a strong predictor of mortality: a systematic review. European Journal of Internal Medicine, 26(5), 303–310.", note: "Low muscular strength independently predicts higher mortality across cohorts. [Moderate]", link: scholar("Volaklis Halle Meisinger muscular strength strong predictor mortality European Journal Internal Medicine 2015"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 43 — PROTEIN & MUSCLE PRESERVATION ═══════════════
+  {
+    id: "protein-muscle", section: "43", title: "Protein & Muscle Preservation",
+    subtitle: "Bolsters clusters: bodily-kinesthetic, systemic (aging independence)",
+    evidenceTag: "Strong",
+    feeds: ["skeletal muscle mass", "muscular strength", "recovery from illness/injury", "functional independence", "satiety"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Protein intake above the RDA (~1.0–1.6 g/kg/day), paired with resistance exercise and enough per-meal leucine, augments muscle mass and strength and defends against age-related sarcopenia.",
+    callout: "Protein amplifies training — it does not build muscle without the stimulus. Benefit plateaus around 1.6 g/kg/day; 'more is better' is false above that, and protein alone in sedentary elders yields only modest change.",
+    sources: [
+      { cite: "Bauer, J., et al. (2013). Evidence-based recommendations for optimal dietary protein intake in older people: PROT-AGE position paper. JAMDA, 14(8), 542–559.", note: "Recommends 1.0–1.2 g/kg/day (more in illness) to counter sarcopenia. [Strong — consensus]", link: scholar("Bauer PROT-AGE optimal dietary protein intake older people position paper JAMDA 2013"), kind: "scholar" },
+      { cite: "Morton, R. W., et al. (2018). Effect of protein supplementation on resistance-training-induced gains in muscle mass and strength: a systematic review, meta-analysis and meta-regression. British Journal of Sports Medicine, 52(6), 376–384.", note: "Protein boosts training gains; benefit plateaus ~1.62 g/kg/day. [Strong — meta-analysis]", link: scholar("Morton protein supplementation resistance training muscle mass strength meta-analysis British Journal Sports Medicine 2018"), kind: "scholar" },
+      { cite: "Cermak, N. M., et al. (2012). Protein supplementation augments the adaptive response of skeletal muscle to resistance-type exercise training: a meta-analysis. American Journal of Clinical Nutrition, 96(6), 1454–1464.", note: "Protein co-ingestion increases fat-free mass and strength during prolonged training. [Strong — meta-analysis]", link: scholar("Cermak protein supplementation augments skeletal muscle resistance exercise meta-analysis AJCN 2012"), kind: "scholar" },
+      { cite: "Moore, D. R., et al. (2015). Protein ingestion to stimulate myofibrillar protein synthesis requires greater relative protein intakes in healthy older versus younger men. Journals of Gerontology A, 70(1), 57–62.", note: "Older muscle is 'anabolically resistant' — needs more per-meal protein to maximize synthesis. [Moderate]", link: scholar("Moore Churchward-Venne myofibrillar protein synthesis older younger men relative protein Journal Gerontology 2015"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 44 — CREATINE ═══════════════
+  {
+    id: "creatine", section: "44", title: "Creatine",
+    subtitle: "Bolsters clusters: bodily-kinesthetic, working memory (under stress)",
+    evidenceTag: "Strong",
+    feeds: ["muscular strength & power", "lean mass", "high-intensity capacity", "working memory (under fatigue)", "cellular energy buffering"],
+    impact: { magnitude: 4, latency: "days", durability: "sustained", effort: "low" },
+    description: "Creatine monohydrate is among the best-evidenced ergogenic aids for strength, power, and lean mass. Cognitive benefits are real but smaller — most reliable under sleep loss or stress, and in vegetarians with low baseline creatine.",
+    callout: "The muscle case is settled; the brain case is not. Cognitive effects are inconsistent in well-rested omnivores and largest under stress or sleep deprivation. Don't oversell it as a general nootropic.",
+    sources: [
+      { cite: "Kreider, R. B., et al. (2017). International Society of Sports Nutrition position stand: safety and efficacy of creatine supplementation. Journal of the International Society of Sports Nutrition, 14, 18.", note: "Creatine is safe (up to 30 g/day for 5 years) and the most effective ergogenic supplement for high-intensity work. [Strong — position stand]", link: scholar("Kreider ISSN position stand safety efficacy creatine supplementation exercise sport medicine 2017"), kind: "scholar" },
+      { cite: "Rae, C., et al. (2003). Oral creatine monohydrate supplementation improves brain performance: a double-blind, placebo-controlled, cross-over trial. Proceedings of the Royal Society B, 270(1529), 2147–2150.", note: "5 g/day for 6 weeks improved working memory and processing speed in vegetarians. [Moderate — RCT]", link: scholar("Rae Digney oral creatine monohydrate brain performance double-blind Proceedings Royal Society B 2003"), kind: "scholar" },
+      { cite: "Avgerinos, K. I., et al. (2018). Effects of creatine supplementation on cognitive function of healthy individuals: a systematic review of randomized controlled trials. Experimental Gerontology, 108, 166–173.", note: "Creatine may improve short-term memory and reasoning; other domains unclear. [Moderate — review]", link: scholar("Avgerinos Spyrou creatine cognitive function healthy individuals systematic review Experimental Gerontology 2018"), kind: "scholar" },
+      { cite: "Branch, J. D. (2003). Effect of creatine supplementation on body composition and performance: a meta-analysis. International Journal of Sport Nutrition and Exercise Metabolism, 13(2), 198–226.", note: "Creatine increases lean mass and performance in short, high-intensity tasks. [Strong — meta-analysis]", link: scholar("Branch creatine supplementation body composition performance meta-analysis International Journal Sport Nutrition 2003"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 45 — HIIT & INTERVAL TRAINING ═══════════════
+  {
+    id: "hiit", section: "45", title: "HIIT & Interval Training",
+    subtitle: "Bolsters clusters: interoceptive, systemic, most cognitive lines (via fitness)",
+    evidenceTag: "Strong",
+    feeds: ["VO₂max / cardiorespiratory fitness", "mitochondrial capacity", "insulin sensitivity", "blood pressure", "time-efficiency"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "high" },
+    description: "High-intensity interval and sprint training raise VO₂max and improve cardiometabolic markers — often more time-efficiently than moderate continuous training.",
+    callout: "'Time-efficient' isn't effortless — the edge depends on genuinely high intensity, which lowers adherence, and fitness detrains if you stop. Long-term hard-outcome RCTs for HIIT specifically are limited.",
+    sources: [
+      { cite: "Weston, K. S., Wisløff, U., & Coombes, J. S. (2014). High-intensity interval training in patients with lifestyle-induced cardiometabolic disease: a systematic review and meta-analysis. British Journal of Sports Medicine, 48(16), 1227–1234.", note: "HIIT improved VO₂max nearly double vs. moderate continuous training in cardiometabolic patients. [Strong — meta-analysis]", link: scholar("Weston Wisloff Coombes high-intensity interval training lifestyle-induced cardiometabolic disease meta-analysis British Journal Sports Medicine 2014"), kind: "scholar" },
+      { cite: "Gist, N. H., et al. (2014). Sprint interval training effects on aerobic capacity: a systematic review and meta-analysis. Sports Medicine, 44(2), 269–279.", note: "Brief all-out sprint intervals raised VO₂max ~8%. [Strong — meta-analysis]", link: scholar("Gist Fedewa Dishman sprint interval training aerobic capacity systematic review meta-analysis Sports Medicine 2014"), kind: "scholar" },
+      { cite: "Milanović, Z., Sporiš, G., & Weston, M. (2015). Effectiveness of HIT and continuous endurance training for VO₂max improvements: a systematic review and meta-analysis. Sports Medicine, 45(10), 1469–1481.", note: "Interval training produced slightly greater VO₂max gains than continuous endurance training. [Strong — meta-analysis]", link: scholar("Milanovic Sporis Weston HIT continuous endurance training VO2max meta-analysis Sports Medicine 2015"), kind: "scholar" },
+      { cite: "Batacan, R. B., et al. (2017). Effects of high-intensity interval training on cardiometabolic health: a systematic review and meta-analysis. British Journal of Sports Medicine, 51(6), 494–503.", note: "HIIT improved several cardiometabolic risk factors, varying by population. [Moderate — meta-analysis]", link: scholar("Batacan Duncan high-intensity interval training cardiometabolic health meta-analysis British Journal Sports Medicine 2017"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 46 — GLUCOSE REGULATION & POST-MEAL WALKING ═══════════════
+  {
+    id: "glucose-walking", section: "46", title: "Glucose Regulation & Post-Meal Walking",
+    subtitle: "Bolsters clusters: interoceptive, systemic (metabolic)",
+    evidenceTag: "Moderate",
+    feeds: ["postprandial glucose control", "insulin sensitivity", "vascular health", "post-meal alertness", "counters sedentary harm"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "Short bouts of light activity after eating — a 10-minute walk, or breaking up prolonged sitting — meaningfully blunt post-meal glucose and insulin spikes. The acute effect is real, repeatable, and especially valuable in insulin resistance.",
+    callout: "Most trials measure same-day glucose curves, not months of HbA1c or hard outcomes. The acute effect is solid; durable disease modification from post-meal walking alone is still under-tested.",
+    sources: [
+      { cite: "Reynolds, A. N., et al. (2016). Advice to walk after meals is more effective for lowering postprandial glycaemia in type 2 diabetes than advice that does not specify timing: a randomised crossover study. Diabetologia, 59(12), 2572–2578.", note: "Walking 10 min after each meal cut postprandial glucose vs. unspecified-timing walking. [Moderate — RCT]", link: scholar("Reynolds Mann Williams walk after meals postprandial glycaemia type 2 diabetes Diabetologia 2016"), kind: "scholar" },
+      { cite: "DiPietro, L., et al. (2013). Three 15-min bouts of moderate postmeal walking significantly improves 24-h glycemic control in older people at risk for impaired glucose tolerance. Diabetes Care, 36(10), 3262–3268.", note: "Post-meal walking improved 24-h glycemic control, post-dinner bout most effective. [Moderate — RCT]", link: scholar("DiPietro three 15-min bouts postmeal walking 24-h glycemic control older Diabetes Care 2013"), kind: "scholar" },
+      { cite: "Dunstan, D. W., et al. (2012). Breaking up prolonged sitting reduces postprandial glucose and insulin responses. Diabetes Care, 35(5), 976–983.", note: "Brief walking breaks every 20 min lowered postprandial glucose and insulin vs. uninterrupted sitting. [Moderate — RCT]", link: scholar("Dunstan Kingwell breaking up prolonged sitting postprandial glucose insulin Diabetes Care 2012"), kind: "scholar" },
+      { cite: "Buffey, A. J., et al. (2022). The acute effects of interrupting prolonged sitting with standing and light-intensity walking on biomarkers of cardiometabolic health: a systematic review and meta-analysis. Sports Medicine, 52(8), 1765–1787.", note: "Light-intensity walking breaks reduced postprandial glucose/insulin more than standing. [Moderate — meta-analysis]", link: scholar("Buffey Herring interrupting prolonged sitting standing light-intensity walking cardiometabolic meta-analysis Sports Medicine 2022"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 47 — DIETARY FIBER ═══════════════
+  {
+    id: "fiber", section: "47", title: "Dietary Fiber",
+    subtitle: "Bolsters clusters: systemic, interoceptive (gut–brain)",
+    evidenceTag: "Strong",
+    feeds: ["gut microbiome diversity", "short-chain fatty acids", "cardiovascular health", "glycemic control", "satiety & weight regulation"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Higher whole-food fiber intake is consistently associated with lower all-cause and cardiovascular mortality, and less heart disease, stroke, type-2 diabetes, and colorectal cancer — plausibly via microbiome and short-chain-fatty-acid pathways.",
+    callout: "Mortality data are largely observational (fiber-eaters live healthier overall), and whole-food fiber is not the same as isolated fiber supplements. The microbiome mechanism is promising but the causal chain isn't nailed down.",
+    sources: [
+      { cite: "Reynolds, A., et al. (2019). Carbohydrate quality and human health: a series of systematic reviews and meta-analyses. The Lancet, 393(10170), 434–445.", note: "Highest vs. lowest fiber linked to 15–30% lower all-cause/CV mortality; optimal 25–29 g/day. [Strong — meta-analysis]", link: scholar("Reynolds Mann Cummings carbohydrate quality human health systematic reviews meta-analyses Lancet 2019"), kind: "scholar" },
+      { cite: "Kim, Y., & Je, Y. (2014). Dietary fiber intake and total mortality: a meta-analysis of prospective cohort studies. American Journal of Epidemiology, 180(6), 565–573.", note: "Each 10 g/day fiber associated with ~10% lower total mortality. [Strong — meta-analysis]", link: scholar("Kim Je dietary fiber intake total mortality meta-analysis prospective cohort American Journal Epidemiology 2014"), kind: "scholar" },
+      { cite: "Threapleton, D. E., et al. (2013). Dietary fibre intake and risk of cardiovascular disease: systematic review and meta-analysis. BMJ, 347, f6879.", note: "Higher total and cereal fiber associated with lower CVD and coronary heart disease risk. [Strong — meta-analysis]", link: scholar("Threapleton Greenwood dietary fibre cardiovascular disease systematic review meta-analysis BMJ 2013 f6879"), kind: "scholar" },
+      { cite: "Veronese, N., et al. (2018). Dietary fiber and health outcomes: an umbrella review of systematic reviews and meta-analyses. American Journal of Clinical Nutrition, 107(3), 436–444.", note: "Umbrella review confirms fiber's benefits across mortality, CVD, and diabetes. [Strong — umbrella review]", link: scholar("Veronese Solmi dietary fiber health outcomes umbrella review systematic reviews AJCN 2018"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 48 — REDUCING ULTRA-PROCESSED FOOD ═══════════════
+  {
+    id: "ultra-processed", section: "48", title: "Reducing Ultra-Processed Food",
+    subtitle: "Bolsters clusters: systemic, volitional (appetite control)",
+    evidenceTag: "Moderate",
+    feeds: ["energy-intake regulation", "body-weight control", "cardiometabolic health", "diet quality", "satiety signaling"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Higher ultra-processed food intake is associated with obesity, cardiometabolic disease, and mortality — and a landmark inpatient RCT showed ultra-processed diets cause spontaneous overeating of ~500 kcal/day at matched nutrients.",
+    callout: "Only one tightly controlled RCT (Hall, n=20) shows causation, and only for energy intake over two weeks. Disease/mortality links are observational, and 'ultra-processed' is a heterogeneous category — the exact harmful mechanism is unresolved.",
+    sources: [
+      { cite: "Hall, K. D., et al. (2019). Ultra-processed diets cause excess calorie intake and weight gain: an inpatient randomized controlled trial of ad libitum food intake. Cell Metabolism, 30(1), 67–77.", note: "Matched-nutrient ultra-processed diet caused ~500 kcal/day more intake and weight gain vs. unprocessed. [Strong — RCT]", link: scholar("Hall Ayuketah ultra-processed diets excess calorie intake weight gain inpatient randomized controlled trial Cell Metabolism 2019"), kind: "scholar" },
+      { cite: "Pagliai, G., et al. (2021). Consumption of ultra-processed foods and health status: a systematic review and meta-analysis. British Journal of Nutrition, 125(3), 308–318.", note: "Highest ultra-processed consumption associated with higher overweight, CVD, and all-cause mortality. [Moderate — meta-analysis]", link: scholar("Pagliai Dinu ultra-processed foods health status systematic review meta-analysis British Journal Nutrition 2021"), kind: "scholar" },
+      { cite: "Rico-Campà, A., et al. (2019). Association between consumption of ultra-processed foods and all-cause mortality: SUN prospective cohort study. BMJ, 365, l1949.", note: "Each additional daily ultra-processed serving associated with ~18% higher all-cause mortality. [Moderate — cohort]", link: scholar("Rico-Campa Martinez-Gonzalez ultra-processed foods all cause mortality SUN prospective cohort BMJ 2019"), kind: "scholar" },
+      { cite: "Srour, B., et al. (2019). Ultra-processed food intake and risk of cardiovascular disease: prospective cohort study (NutriNet-Santé). BMJ, 365, l1451.", note: "Higher intake associated with increased cardiovascular, coronary, and cerebrovascular risk. [Moderate — cohort]", link: scholar("Srour Fezeu Kesse-Guyot ultra-processed food cardiovascular disease NutriNet-Sante BMJ 2019"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 49 — VITAMIN D & SUNLIGHT ═══════════════
+  {
+    id: "vitamin-d", section: "49", title: "Vitamin D & Sunlight",
+    subtitle: "Bolsters clusters: systemic (mostly a deficiency-correction, not a booster)",
+    evidenceTag: "Mixed",
+    feeds: ["bone/calcium metabolism (in deficiency)", "immune modulation (respiratory infection)", "mood support in deficiency"],
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Low vitamin D status robustly predicts worse health — but the large VITAL supplementation RCTs were largely NULL for cancer, cardiovascular disease, fractures, and depression. Low D looks more like a marker of ill health than a fixable cause for most endpoints.",
+    callout: "This is an honesty flagship. Observational 'low D = bad outcomes' did NOT translate into supplementation benefits in rigorous RCTs. Correcting true deficiency matters; routinely dosing already-replete adults does not deliver the promised endpoints. Possible exception: a modest cut in respiratory infections.",
+    sources: [
+      { cite: "Manson, J. E., et al. (2019). Vitamin D supplements and prevention of cancer and cardiovascular disease (VITAL). New England Journal of Medicine, 380(1), 33–44.", note: "2000 IU/day for ~5 years did NOT reduce cancer incidence or major cardiovascular events. [Strong — null RCT]", link: scholar("Manson Cook Lee vitamin D supplements prevention cancer cardiovascular disease VITAL New England Journal Medicine 2019"), kind: "scholar" },
+      { cite: "Okereke, O. I., et al. (2020). Effect of long-term vitamin D3 supplementation vs placebo on risk of depression or clinically relevant depressive symptoms (VITAL-DEP). JAMA, 324(5), 471–480.", note: "Vitamin D3 did NOT prevent depression or improve mood scores in older adults. [Strong — null RCT]", link: scholar("Okereke Reynolds Mischoulon vitamin D3 depression mood VITAL-DEP randomized clinical trial JAMA 2020"), kind: "scholar" },
+      { cite: "LeBoff, M. S., et al. (2022). Supplemental vitamin D and incident fractures in midlife and older adults (VITAL). New England Journal of Medicine, 387(4), 299–309.", note: "Vitamin D3 did NOT reduce incident fractures in generally healthy (non-deficient) adults. [Strong — null RCT]", link: scholar("LeBoff Chou supplemental vitamin D incident fractures midlife older adults VITAL New England Journal Medicine 2022"), kind: "scholar" },
+      { cite: "Martineau, A. R., et al. (2017). Vitamin D supplementation to prevent acute respiratory tract infections: systematic review and meta-analysis of individual participant data. BMJ, 356, i6583.", note: "Supplementation modestly reduced acute respiratory infections, mainly in deficient people — the strongest positive signal. [Moderate — IPD meta-analysis]", link: scholar("Martineau Jolliffe vitamin D supplementation prevent acute respiratory tract infections individual participant data meta-analysis BMJ 2017"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 50 — HEARING & COGNITION ═══════════════
+  {
+    id: "hearing", section: "50", title: "Hearing & Cognition",
+    subtitle: "Bolsters clusters: auditory, interpersonal, meta-cognitive",
+    evidenceTag: "Strong",
+    feeds: ["auditory processing", "working memory & attention", "social connection", "reduced isolation & depression risk"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Untreated hearing loss is the single largest modifiable dementia risk factor in the Lancet Commission model, and treating it (hearing aids) slows cognitive decline in higher-risk older adults. Straining to hear steals cognitive resources.",
+    callout: "The ACHIEVE RCT found NO benefit in the full sample — the 48% slowing of decline was in a higher-risk subgroup, so 'hearing aids prevent dementia for everyone' overstates the data.",
+    sources: [
+      { cite: "Lin, F. R., et al. (2011). Hearing loss and incident dementia. Archives of Neurology, 68(2), 214–220.", note: "Dementia risk rose log-linearly with baseline hearing-loss severity. [Strong — cohort]", link: scholar("Lin hearing loss and incident dementia Archives Neurology 2011"), kind: "scholar" },
+      { cite: "Loughrey, D. G., et al. (2018). Association of age-related hearing loss with cognitive function, cognitive impairment, and dementia: a systematic review and meta-analysis. JAMA Otolaryngology–Head & Neck Surgery, 144(2), 115–126.", note: "Pooled 36 studies: hearing loss significantly associated with cognitive decline and incident dementia. [Strong — meta-analysis]", link: scholar("Loughrey age-related hearing loss cognitive function meta-analysis JAMA Otolaryngology 2018"), kind: "scholar" },
+      { cite: "Livingston, G., et al. (2020). Dementia prevention, intervention, and care: 2020 report of the Lancet Commission. The Lancet, 396(10248), 413–446.", note: "Midlife hearing loss ranked the single largest modifiable dementia risk factor (~8% of preventable cases). [Strong — commission]", link: scholar("Livingston dementia prevention 2020 Lancet Commission"), kind: "scholar" },
+      { cite: "Lin, F. R., et al. (ACHIEVE) (2023). Hearing intervention versus health education control to reduce cognitive decline: a multicentre, randomised controlled trial. The Lancet, 402(10404), 786–797.", note: "No overall effect; 48% slowing of 3-year cognitive decline in the higher-risk ARIC subgroup. [Moderate — RCT]", link: scholar("ACHIEVE hearing intervention randomised controlled trial Lancet 2023 Lin"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 51 — ORAL & PERIODONTAL HEALTH ═══════════════
+  {
+    id: "oral-health", section: "51", title: "Oral & Periodontal Health",
+    subtitle: "Bolsters clusters: systemic (vascular & inflammatory load)",
+    evidenceTag: "Moderate",
+    feeds: ["vascular endothelial health", "systemic inflammation (CRP/IL-6)", "possibly neuroinflammation", "tooth retention & nutrition"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Gum disease and its keystone pathogen P. gingivalis are associated with higher cardiovascular and dementia/Alzheimer risk — biologically plausible via systemic inflammation, and the practice (brush, floss, cleanings) is nearly free.",
+    callout: "The P. gingivalis–Alzheimer causal case rests heavily on one industry-linked lab, and a gingipain-inhibitor trial did not show clear cognitive benefit. Association is consistent; causation is not proven.",
+    sources: [
+      { cite: "Dominy, S. S., et al. (2019). Porphyromonas gingivalis in Alzheimer's disease brains: evidence for disease causation and treatment with small-molecule inhibitors. Science Advances, 5(1), eaau3333.", note: "Found P. gingivalis/gingipains in Alzheimer's brains; oral infection raised amyloid-beta in mice. [Emerging]", link: scholar("Dominy Porphyromonas gingivalis Alzheimer's disease brains Science Advances 2019"), kind: "scholar" },
+      { cite: "Sanz, M., et al. (2020). Periodontitis and cardiovascular diseases: consensus report (EFP/WHF). Journal of Clinical Periodontology, 47(3), 268–288.", note: "Strong epidemiological evidence that periodontitis raises future atherosclerotic CVD risk. [Moderate — consensus]", link: scholar("Sanz periodontitis and cardiovascular diseases consensus report Journal Clinical Periodontology 2020"), kind: "scholar" },
+      { cite: "Chen, C. K., Wu, Y. T., & Chang, Y. C. (2017). Association between chronic periodontitis and the risk of Alzheimer's disease: a retrospective, population-based, matched-cohort study. Alzheimer's Research & Therapy, 9, 56.", note: "10-year chronic periodontitis exposure associated with elevated later Alzheimer risk. [Moderate — cohort]", link: scholar("Chen chronic periodontitis Alzheimer's disease matched cohort Alzheimer's Research Therapy 2017"), kind: "scholar" },
+      { cite: "Ide, M., et al. (2016). Periodontitis and cognitive decline in Alzheimer's disease. PLOS ONE, 11(3), e0151081.", note: "In mild-moderate Alzheimer's, baseline periodontitis linked to ~6× faster 6-month cognitive decline. [Emerging]", link: scholar("Ide periodontitis and cognitive decline in Alzheimer's disease PLOS ONE 2016"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 52 — AIR QUALITY ═══════════════
+  {
+    id: "air-quality", section: "52", title: "Air Quality",
+    subtitle: "Bolsters clusters: systemic (cerebrovascular protection)",
+    evidenceTag: "Moderate",
+    feeds: ["cerebrovascular integrity", "reduced neuro-inflammation/oxidative stress", "respiratory & cardiovascular health"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "low" },
+    description: "Long-term fine-particulate (PM2.5) and traffic-related pollution is associated with faster cognitive decline and higher dementia incidence. Filtration and location choices are the individual levers; the big one is policy.",
+    callout: "Nearly all human evidence is observational — exposure tracks with traffic, income, and urbanicity, which confound. No trial randomizes people to clean air.",
+    sources: [
+      { cite: "Weuve, J., et al. (2012). Exposure to particulate air pollution and cognitive decline in older women. Archives of Internal Medicine, 172(3), 219–227.", note: "Higher long-term PM exposure predicted significantly faster cognitive decline (Nurses' Health Study). [Moderate — cohort]", link: scholar("Weuve exposure to particulate air pollution and cognitive decline in older women Archives Internal Medicine 2012"), kind: "scholar" },
+      { cite: "Chen, H., et al. (2017). Living near major roads and the incidence of dementia, Parkinson's disease, and multiple sclerosis: a population-based cohort study. The Lancet, 389(10070), 718–726.", note: "~2.2M Ontario adults: dementia incidence rose with proximity to heavy traffic. [Moderate — cohort]", link: scholar("Chen living near major roads incidence of dementia Lancet 2017 Ontario"), kind: "scholar" },
+      { cite: "Peters, R., et al. (2019). Air pollution and dementia: a systematic review. Journal of Alzheimer's Disease, 70(s1), S145–S163.", note: "Greater pollutant exposure consistently associated with increased dementia risk. [Moderate — review]", link: scholar("Peters air pollution and dementia a systematic review Journal Alzheimer's Disease 2019"), kind: "scholar" },
+      { cite: "Livingston, G., et al. (2020). Dementia prevention, intervention, and care: 2020 report of the Lancet Commission. The Lancet, 396(10248), 413–446.", note: "Added air pollution as a newly recognized modifiable dementia risk factor. [Moderate — commission]", link: scholar("Livingston 2020 Lancet Commission air pollution dementia risk factor"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 53 — VISION CORRECTION ═══════════════
+  {
+    id: "vision", section: "53", title: "Vision Correction",
+    subtitle: "Bolsters clusters: systemic, meta-cognitive (sensory input → engagement)",
+    evidenceTag: "Moderate",
+    feeds: ["visual input & engagement", "cognitive stimulation", "mobility & fall reduction", "mood & social participation"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "moderate" },
+    description: "Correcting visual impairment — notably cataract surgery — is associated with lower dementia risk and slower cognitive decline. A one-time intervention with a durable payoff, and a negative-control finding (glaucoma surgery showed no effect) argues against pure confounding.",
+    callout: "Observational only; reverse causation is possible (healthier people get elective surgery), though the negative-control design partly addresses it. No dedicated RCT exists.",
+    sources: [
+      { cite: "Lee, C. S., et al. (2022). Association between cataract extraction and development of dementia. JAMA Internal Medicine, 182(2), 134–141.", note: "Cataract surgery associated with ~29% lower dementia risk; glaucoma surgery showed no effect. [Moderate — cohort w/ negative control]", link: scholar("Lee association between cataract extraction and development of dementia JAMA Internal Medicine 2022"), kind: "scholar" },
+      { cite: "Maharani, A., et al. (2018). Cataract surgery and age-related cognitive decline: a 13-year follow-up of the English Longitudinal Study of Ageing. PLOS ONE, 13(10), e0204833.", note: "Rate of cognitive decline roughly halved after cataract surgery vs. no cataract. [Moderate — cohort]", link: scholar("Maharani cataract surgery age-related cognitive decline English Longitudinal Study of Ageing PLOS ONE 2018"), kind: "scholar" },
+      { cite: "Ehrlich, J. R., et al. (2022). Addition of vision impairment to a life-course model of potentially modifiable dementia risk factors in the US. JAMA Neurology, 79(6), 623–626.", note: "Vision impairment estimated to account for ~100,000 prevalent US dementia cases. [Moderate — modeling]", link: scholar("Ehrlich vision impairment life-course model modifiable dementia risk factors JAMA Neurology 2022"), kind: "scholar" },
+      { cite: "Livingston, G., et al. (2024). Dementia prevention, intervention, and care: 2024 report of the Lancet standing Commission. The Lancet, 404(10452), 572–628.", note: "Added untreated vision loss as a modifiable dementia risk factor. [Moderate — commission]", link: scholar("Livingston 2024 Lancet standing Commission dementia vision loss risk factor"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 54 — BLUE SPACE ═══════════════
+  {
+    id: "blue-space", section: "54", title: "Blue Space — Water & Wellbeing",
+    subtitle: "Bolsters clusters: emotional, interoceptive (restoration)",
+    evidenceTag: "Emerging",
+    feeds: ["affect regulation & stress restoration", "reduced psychological distress", "physical activity", "social interaction", "nature-connectedness"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Exposure and proximity to blue spaces — sea, lakes, rivers — is associated with better mental wellbeing, more physical activity, and psychological restoration.",
+    callout: "Mostly cross-sectional and self-report; effect sizes are modest and confounded by who lives near or visits water (income, coastal wealth). Reviews explicitly call for longitudinal designs.",
+    sources: [
+      { cite: "Gascon, M., et al. (2017). Outdoor blue spaces, human health and well-being: a systematic review of quantitative studies. International Journal of Hygiene and Environmental Health, 220(8), 1207–1221.", note: "35 studies: consistent positive associations between blue-space exposure and mental health/activity. [Emerging — review]", link: scholar("Gascon outdoor blue spaces human health well-being systematic review International Journal Hygiene Environmental Health 2017"), kind: "scholar" },
+      { cite: "White, M. P., et al. (2021). Associations between green/blue spaces and mental health across 18 countries. Scientific Reports, 11, 8903.", note: "Recreational visits to blue/green spaces positively associated with wellbeing, negatively with distress (n=16,307). [Moderate — cross-sectional]", link: scholar("White associations between green blue spaces and mental health across 18 countries Scientific Reports 2021"), kind: "scholar" },
+      { cite: "Georgiou, M., et al. (2021). Mechanisms of impact of blue spaces on human health: a systematic literature review and meta-analysis. International Journal of Environmental Research and Public Health, 18(5), 2486.", note: "Meta-analysis (50 studies): blue space increases physical activity, restoration, and environmental quality. [Emerging — meta-analysis]", link: scholar("Georgiou mechanisms of impact of blue spaces on human health systematic review meta-analysis IJERPH 2021"), kind: "scholar" },
+      { cite: "White, M. P., et al. (2020). Blue space, health and well-being: a narrative overview and synthesis of potential benefits. Environmental Research, 191, 110169.", note: "Synthesizes evidence that aquatic settings support wellbeing via restoration, activity, and social pathways. [Emerging — review]", link: scholar("White blue space health and well-being narrative overview Environmental Research 2020"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 55 — PETS & COMPANION ANIMALS ═══════════════
+  {
+    id: "pets", section: "55", title: "Pets & Companion Animals",
+    subtitle: "Bolsters clusters: interpersonal, emotional, systemic",
+    evidenceTag: "Mixed",
+    feeds: ["daily physical activity (walking)", "social connection & reduced loneliness", "blood pressure/autonomic tone", "post-cardiac-event survival"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "high" },
+    description: "Dog ownership is associated with lower all-cause and cardiovascular mortality, more physical activity, and less loneliness — a large observational literature plus an AHA statement.",
+    callout: "A formal reappraisal warned the survival meta-analysis is vulnerable to confounding and selection bias — healthier, more active people can more easily own dogs. No RCT exists, and pet care is a real long-term commitment.",
+    sources: [
+      { cite: "Kramer, C. K., Mehmood, S., & Suen, R. S. (2019). Dog ownership and survival: a systematic review and meta-analysis. Circulation: Cardiovascular Quality and Outcomes, 12(10), e005554.", note: "10 studies, ~3.8M people: dog ownership associated with 24% lower all-cause mortality. [Moderate — meta-analysis]", link: scholar("Kramer dog ownership and survival systematic review meta-analysis Circulation Cardiovascular Quality Outcomes 2019"), kind: "scholar" },
+      { cite: "Mubanga, M., et al. (2017). Dog ownership and the risk of cardiovascular disease and death – a nationwide cohort study. Scientific Reports, 7, 15821.", note: "Swedish register (3.4M): dog ownership linked to lower death and CVD risk, strongest in single-person households. [Moderate — cohort]", link: scholar("Mubanga dog ownership risk of cardiovascular disease and death nationwide cohort Scientific Reports 2017"), kind: "scholar" },
+      { cite: "Levine, G. N., et al. (2013). Pet ownership and cardiovascular risk: a scientific statement from the American Heart Association. Circulation, 127(23), 2353–2363.", note: "AHA: dog ownership 'probably associated' with reduced CVD risk; causality not established. [Moderate — statement]", link: scholar("Levine pet ownership and cardiovascular risk scientific statement American Heart Association Circulation 2013"), kind: "scholar" },
+      { cite: "Chowdhury, E. K., Nelson, M. R., & Reid, C. M. (2020). Does dog ownership really prolong survival? A revised meta-analysis and reappraisal of the evidence. Circulation: Cardiovascular Quality and Outcomes, 13(4), e006907.", note: "Reappraisal: the survival benefit shrinks and may reflect bias/confounding. [Mixed]", link: scholar("does dog ownership really prolong survival revised meta-analysis reappraisal Circulation Cardiovascular Quality Outcomes 2020"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 56 — CAFFEINE ═══════════════
+  {
+    id: "caffeine", section: "56", title: "Caffeine",
+    subtitle: "Bolsters clusters: alertness, adversarial/strategic (under fatigue) — traded vs sleep",
+    evidenceTag: "Moderate",
+    feeds: ["alertness & sustained attention", "reaction time", "vigilance under fatigue", "endurance & muscular performance"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "Caffeine reliably improves alertness, vigilance, reaction time, and endurance performance. Effects on memory and higher-order cognition are weaker, and late-day dosing degrades sleep.",
+    callout: "Much of the 'boost' is reversal of withdrawal and fatigue rather than net enhancement, tolerance develops, and benefit comes at a real sleep cost if taken within ~6 hours of bed.",
+    sources: [
+      { cite: "McLellan, T. M., Caldwell, J. A., & Lieberman, H. R. (2016). A review of caffeine's effects on cognitive, physical and occupational performance. Neuroscience & Biobehavioral Reviews, 71, 294–312.", note: "40–300 mg improves alertness, vigilance, attention, reaction time; memory/executive effects less consistent. [Strong — review]", link: scholar("McLellan review of caffeine's effects on cognitive physical and occupational performance Neuroscience Biobehavioral Reviews 2016"), kind: "scholar" },
+      { cite: "Nehlig, A. (2010). Is caffeine a cognitive enhancer? Journal of Alzheimer's Disease, 20(s1), S85–S94.", note: "Little consistent memory benefit; caffeine mainly improves reaction time and alertness under suboptimal states. [Mixed]", link: scholar("Nehlig is caffeine a cognitive enhancer Journal Alzheimer's Disease 2010"), kind: "scholar" },
+      { cite: "Drake, C., et al. (2013). Caffeine effects on sleep taken 0, 3, or 6 hours before going to bed. Journal of Clinical Sleep Medicine, 9(11), 1195–1200.", note: "400 mg even 6 hours before bed cut objective sleep by >1 hour, often unnoticed by subjects. [Strong — RCT]", link: scholar("Drake caffeine effects on sleep taken 0 3 or 6 hours before going to bed Journal Clinical Sleep Medicine 2013"), kind: "scholar" },
+      { cite: "Grgic, J., et al. (2020). Wake up and smell the coffee: caffeine supplementation and exercise performance — an umbrella review of 21 published meta-analyses. British Journal of Sports Medicine, 54(11), 681–688.", note: "Umbrella review confirms caffeine's ergogenic effect across many exercise modalities. [Strong — umbrella review]", link: scholar("Grgic wake up and smell the coffee caffeine supplementation exercise performance umbrella review British Journal Sports Medicine 2020"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 57 — ALCOHOL REDUCTION ═══════════════
+  {
+    id: "alcohol", section: "57", title: "Alcohol Reduction",
+    subtitle: "Bolsters clusters: most cognitive lines, systemic, emotional",
+    evidenceTag: "Strong",
+    feeds: ["hippocampal/gray-matter integrity", "white-matter microstructure", "executive function & memory", "cerebrovascular & liver health", "sleep quality"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "moderate" },
+    description: "Reducing alcohol protects brain structure and lowers dementia risk. Heavy use is a major preventable dementia cause, and even 'moderate' intake shows adverse brain effects with no proven protective floor.",
+    callout: "Whether light drinking is net-harmful is genuinely contested — some cohorts show a U-shape where abstainers also carry elevated risk (confounded by sick-quitters). The heavy-use harm, however, is not in doubt.",
+    sources: [
+      { cite: "Topiwala, A., et al. (2017). Moderate alcohol consumption as a risk factor for adverse brain outcomes and cognitive decline: longitudinal cohort study. BMJ, 357, j2353.", note: "Even 14–21 units/week tripled odds of hippocampal atrophy; no protective effect of light drinking on brain structure. [Moderate — cohort]", link: scholar("Topiwala moderate alcohol consumption adverse brain outcomes cognitive decline BMJ 2017"), kind: "scholar" },
+      { cite: "GBD 2016 Alcohol Collaborators (2018). Alcohol use and burden for 195 countries and territories, 1990–2016. The Lancet, 392(10152), 1015–1035.", note: "Concluded the consumption level minimizing health loss is zero. [Strong — global burden]", link: scholar("GBD 2016 Alcohol Collaborators alcohol use burden 195 countries Lancet 2018 no safe level"), kind: "scholar" },
+      { cite: "Sabia, S., et al. (2018). Alcohol consumption and risk of dementia: 23-year follow-up of the Whitehall II cohort study. BMJ, 362, k2927.", note: "Both midlife abstinence and >14 units/week associated with higher dementia risk (U-shaped). [Moderate — cohort]", link: scholar("Sabia alcohol consumption and risk of dementia 23 year follow-up Whitehall II BMJ 2018"), kind: "scholar" },
+      { cite: "Schwarzinger, M., et al. (2018). Contribution of alcohol use disorders to the burden of dementia in France 2008–13: a nationwide retrospective cohort study. The Lancet Public Health, 3(3), e124–e132.", note: "Alcohol use disorders were the strongest modifiable risk factor for dementia (HR >3), especially early-onset. [Strong — cohort]", link: scholar("Schwarzinger contribution of alcohol use disorders to burden of dementia France Lancet Public Health 2018"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 58 — DANCE ═══════════════
+  {
+    id: "dance", section: "58", title: "Dance",
+    subtitle: "Bolsters clusters: bodily-kinesthetic, spatial, memory, interpersonal",
+    evidenceTag: "Moderate",
+    feeds: ["balance & gait stability", "memory & executive function", "spatial navigation", "social connection", "cardiovascular fitness"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Learning-intensive partnered or choreographed dance is associated with lower dementia incidence and improves balance and hippocampal volume — it stacks aerobic, cognitive, and social demands in one activity.",
+    callout: "The landmark Verghese finding is observational (reverse causation — early decline reduces dancing — is a real confounder), and the RCTs showing brain/balance change are small and short.",
+    sources: [
+      { cite: "Verghese, J., et al. (2003). Leisure activities and the risk of dementia in the elderly. New England Journal of Medicine, 348(25), 2508–2516.", note: "Dancing was the only physical leisure activity associated with reduced dementia risk over ~5 years. [Strong design, single study]", link: scholar("Verghese Lipton leisure activities risk of dementia elderly New England Journal Medicine 2003"), kind: "scholar" },
+      { cite: "Rehfeld, K., et al. (2017). Dancing or fitness sport? The effects of two training programs on hippocampal plasticity and balance abilities in healthy seniors. Frontiers in Human Neuroscience, 11, 305.", note: "Both dance and endurance grew hippocampal volume, but only dance improved balance. [Moderate — small RCT]", link: scholar("Rehfeld dancing or fitness sport hippocampal plasticity balance healthy seniors Frontiers Human Neuroscience 2017"), kind: "scholar" },
+      { cite: "Hewston, P., et al. (2021). Effects of dance on cognitive function in older adults: a systematic review and meta-analysis. Age and Ageing, 50(4), 1084–1092.", note: "Dance yielded small-to-moderate benefits for global cognition vs. controls. [Moderate — meta-analysis]", link: scholar("Hewston effects of dance on cognitive function older adults systematic review meta-analysis Age and Ageing 2021"), kind: "scholar" },
+      { cite: "Meng, X., et al. (2020). Effects of dance intervention on global cognition, executive function and memory of older adults: a meta-analysis and systematic review. Aging Clinical and Experimental Research, 32, 7–19.", note: "Dance improved global cognition and memory in older adults across trials. [Moderate — meta-analysis]", link: scholar("Meng effects of dance intervention global cognition executive function memory older adults meta-analysis Aging Clinical Experimental Research 2020"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 59 — TAI CHI & QIGONG ═══════════════
+  {
+    id: "tai-chi", section: "59", title: "Tai Chi & Qigong",
+    subtitle: "Bolsters clusters: bodily-kinesthetic, interoceptive, executive function",
+    evidenceTag: "Strong",
+    feeds: ["postural stability & fall avoidance", "lower-body strength", "executive function/attention", "proprioception", "parasympathetic calm"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "A gentle, low-injury mind-body practice with the most robust evidence for falls and balance (including in Parkinson's) and moderate evidence for executive-function gains in older adults.",
+    callout: "Blinding is impossible and many trials use inactive controls, which inflates effects; the cognitive benefits are clearest in people without existing impairment.",
+    sources: [
+      { cite: "Li, F., et al. (2012). Tai chi and postural stability in patients with Parkinson's disease. New England Journal of Medicine, 366(6), 511–519.", note: "Tai chi improved postural stability and reduced falls more than resistance or stretching in Parkinson's. [Strong — RCT]", link: scholar("Li Harmer tai chi postural stability patients Parkinson disease New England Journal Medicine 2012"), kind: "scholar" },
+      { cite: "Sherrington, C., et al. (2019). Exercise for preventing falls in older people living in the community. Cochrane Database of Systematic Reviews, (1), CD012424.", note: "Balance/functional exercise cut fall rate ~24%; tai chi reduced falls ~19%. [Strong — Cochrane]", link: scholar("Sherrington exercise for preventing falls older people living community Cochrane 2019"), kind: "scholar" },
+      { cite: "Wayne, P. M., et al. (2014). Effect of tai chi on cognitive performance in older adults: systematic review and meta-analysis. Journal of the American Geriatrics Society, 62(1), 25–39.", note: "Tai chi showed potential to enhance cognition, especially executive function, in older adults. [Moderate — meta-analysis]", link: scholar("Wayne effect of tai chi cognitive performance older adults systematic review meta-analysis Journal American Geriatrics Society 2014"), kind: "scholar" },
+      { cite: "Wang, F., et al. (2014). The effects of tai chi on depression, anxiety, and psychological well-being: a systematic review and meta-analysis. International Journal of Behavioral Medicine, 21, 605–617.", note: "Tai chi associated with reduced depression, anxiety, and stress and improved wellbeing. [Moderate — meta-analysis]", link: scholar("Wang effects of tai chi depression anxiety psychological well-being systematic review meta-analysis International Journal Behavioral Medicine 2014"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 60 — WALKING & DAILY STEPS ═══════════════
+  {
+    id: "walking-steps", section: "60", title: "Walking & Daily Steps",
+    subtitle: "Bolsters clusters: interoceptive, systemic, emotional",
+    evidenceTag: "Strong",
+    feeds: ["cardiovascular & metabolic health", "longevity", "mood", "weight regulation", "musculoskeletal maintenance"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "low" },
+    description: "Higher daily step counts are strongly and consistently associated with lower all-cause mortality, with benefits accruing well below 10,000 and plateauing around 6,000–8,000 steps in older adults. Cheap, joint-friendly, and habit-forming.",
+    callout: "The '10,000 steps' target came from 1960s Japanese pedometer marketing (manpo-kei), not research. Evidence is observational, so residual confounding by baseline health remains.",
+    sources: [
+      { cite: "Paluch, A. E., et al. (2022). Daily steps and all-cause mortality: a meta-analysis of 15 international cohorts. The Lancet Public Health, 7(3), e219–e228.", note: "Mortality risk leveled off at ~6,000–8,000 steps/day for adults ≥60, ~8,000–10,000 for younger. [Strong — meta-analysis]", link: scholar("Paluch daily steps all-cause mortality meta-analysis 15 international cohorts Lancet Public Health 2022"), kind: "scholar" },
+      { cite: "Lee, I. M., et al. (2019). Association of step volume and intensity with all-cause mortality in older women. JAMA Internal Medicine, 179(8), 1105–1112.", note: "~4,400 steps/day cut mortality vs. 2,700; benefit plateaued near 7,500. [Strong — cohort]", link: scholar("Lee Shiroma association step volume intensity all-cause mortality older women JAMA Internal Medicine 2019"), kind: "scholar" },
+      { cite: "Saint-Maurice, P. F., et al. (2020). Association of daily step count and step intensity with mortality among US adults. JAMA, 323(12), 1151–1160.", note: "Higher steps linked to lower mortality; intensity not associated after adjusting for total steps. [Strong — cohort]", link: scholar("Saint-Maurice association daily step count step intensity mortality US adults JAMA 2020"), kind: "scholar" },
+      { cite: "Del Pozo Cruz, B., et al. (2022). Prospective associations of daily step counts and intensity with cancer and cardiovascular disease incidence and mortality. JAMA Internal Medicine, 182(11), 1139–1148.", note: "~10,000 steps/day associated with lowest dementia, cancer, and CVD risk in UK Biobank. [Moderate — cohort]", link: scholar("Del Pozo Cruz prospective associations daily step counts intensity cancer cardiovascular disease mortality JAMA Internal Medicine 2022"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 61 — BREAKING UP SITTING ═══════════════
+  {
+    id: "sit-less", section: "61", title: "Breaking Up Sitting",
+    subtitle: "Bolsters clusters: systemic, interoceptive (metabolic)",
+    evidenceTag: "Moderate",
+    feeds: ["glucose/insulin regulation", "vascular function", "metabolic health", "muscle activation", "cardiovascular risk reduction"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "Prolonged uninterrupted sitting is associated with higher mortality independent of exercise, and interrupting it with brief walking bouts acutely lowers post-meal glucose and insulin.",
+    callout: "The glycemic RCTs are short-term crossover lab studies; long-term hard-outcome trials of 'sit less' are scarce, and the mortality data are observational. Enough moderate activity can offset much of the sitting risk.",
+    sources: [
+      { cite: "Dunstan, D. W., et al. (2012). Breaking up prolonged sitting reduces postprandial glucose and insulin responses. Diabetes Care, 35(5), 976–983.", note: "2-min walking every 20 min cut post-meal glucose and insulin vs. sitting. [Strong — crossover RCT]", link: scholar("Dunstan breaking up prolonged sitting reduces postprandial glucose insulin responses Diabetes Care 2012"), kind: "scholar" },
+      { cite: "Diaz, K. M., et al. (2017). Patterns of sedentary behavior and mortality in U.S. middle-aged and older adults: a national cohort study. Annals of Internal Medicine, 167(7), 465–475.", note: "Greater total and more prolonged uninterrupted sedentary time predicted higher mortality. [Moderate — cohort]", link: scholar("Diaz patterns of sedentary behavior mortality US middle-aged older adults national cohort Annals Internal Medicine 2017"), kind: "scholar" },
+      { cite: "Ekelund, U., et al. (2016). Does physical activity attenuate, or even eliminate, the detrimental association of sitting time with mortality? The Lancet, 388(10051), 1302–1310.", note: "~60–75 min/day of moderate activity offset the mortality risk of prolonged sitting. [Strong — harmonized meta-analysis]", link: scholar("Ekelund does physical activity attenuate eliminate detrimental association sitting time mortality Lancet 2016"), kind: "scholar" },
+      { cite: "Healy, G. N., et al. (2008). Breaks in sedentary time: beneficial associations with metabolic risk. Diabetes Care, 31(4), 661–666.", note: "More breaks in sitting associated with smaller waist, lower triglycerides and glucose. [Moderate — cross-sectional]", link: scholar("Healy Dunstan breaks in sedentary time beneficial associations metabolic risk Diabetes Care 2008"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 62 — SINGING & CHOIR ═══════════════
+  {
+    id: "singing", section: "62", title: "Singing & Choir",
+    subtitle: "Bolsters clusters: musical, interpersonal, interoceptive (vagal)",
+    evidenceTag: "Moderate",
+    feeds: ["mood & positive affect", "social connection/belonging", "parasympathetic (vagal) tone", "endorphin/pain-threshold response", "respiratory control"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "Group singing is reliably linked to improved mood and social bonding, with suggestive evidence for endocrine/immune (cortisol, secretory IgA) and vagal/HRV effects via slow, coordinated breathing.",
+    callout: "Biomarker studies are small, often uncontrolled pre-post designs with inconsistent results, and confounded by the general benefits of any shared group activity.",
+    sources: [
+      { cite: "Weinstein, D., et al. (2016). Singing and social bonding: changes in connectivity and pain threshold as a function of group size. Evolution and Human Behavior, 37(2), 152–158.", note: "Singing raised social closeness and pain thresholds; large 'megachoirs' bonded as effectively as small ones. [Moderate — field study]", link: scholar("Weinstein Launay singing and social bonding connectivity pain threshold group size Evolution and Human Behavior 2016"), kind: "scholar" },
+      { cite: "Vickhoff, B., et al. (2013). Music structure determines heart rate variability of singers. Frontiers in Psychology, 4, 334.", note: "Unison singing synchronized singers' HRV and slowed respiration, engaging vagal tone. [Emerging — mechanistic]", link: scholar("Vickhoff music structure determines heart rate variability of singers Frontiers Psychology 2013"), kind: "scholar" },
+      { cite: "Kreutz, G., et al. (2004). Effects of choir singing or listening on secretory immunoglobulin A, cortisol, and emotional state. Journal of Behavioral Medicine, 27(6), 623–635.", note: "Singing (vs. listening) raised positive affect and secretory IgA and reduced negative affect. [Emerging — within-subject]", link: scholar("Kreutz Bongard effects of choir singing listening secretory immunoglobulin A cortisol emotional state Journal Behavioral Medicine 2004"), kind: "scholar" },
+      { cite: "Fancourt, D., et al. (2016). Singing modulates mood, stress, cortisol, cytokine and neuropeptide activity in cancer patients and carers. ecancermedicalscience, 10, 631.", note: "One hour of choir singing lowered cortisol and shifted cytokine/mood profiles. [Emerging — pre-post, no control]", link: scholar("Fancourt singing modulates mood stress cortisol cytokine neuropeptide cancer patients carers ecancermedicalscience 2016"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 63 — SEXUAL HEALTH & LONGEVITY ═══════════════
+  {
+    id: "sexual-health", section: "63", title: "Sexual Health & Longevity",
+    subtitle: "Bolsters clusters: seductive, interpersonal, systemic",
+    evidenceTag: "Mixed",
+    feeds: ["cardiovascular health", "relationship intimacy/wellbeing", "stress/cortisol regulation", "sleep", "life satisfaction"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Observational cohorts associate higher sexual and orgasmic frequency with lower mortality and better wellbeing — but the evidence is correlational and prone to reverse causation.",
+    callout: "Healthier people simply have more sex — reverse causation is the dominant explanation. The famous Caerphilly mortality finding is a single male cohort, never replicated in a trial (which is largely impossible). Wellbeing gains plateau around once weekly for couples.",
+    sources: [
+      { cite: "Davey Smith, G., Frankel, S., & Yarnell, J. (1997). Sex and death: are they related? Findings from the Caerphilly cohort study. BMJ, 315(7123), 1641–1644.", note: "Men with high orgasmic frequency had ~50% lower 10-year mortality, with a dose-response gradient. [Moderate — cohort, single-sex]", link: scholar("Davey Smith Frankel Yarnell sex and death are they related Caerphilly cohort study BMJ 1997"), kind: "scholar" },
+      { cite: "Muise, A., Schimmack, U., & Impett, E. A. (2016). Sexual frequency predicts greater well-being, but more is not always better. Social Psychological and Personality Science, 7(4), 295–302.", note: "Wellbeing rose with sexual frequency but plateaued around once weekly for couples. [Moderate — diary/cohort]", link: scholar("Muise Schimmack Impett sexual frequency predicts greater well-being more is not always better Social Psychological Personality Science 2016"), kind: "scholar" },
+      { cite: "Ebrahim, S., et al. (2002). Sexual intercourse and risk of ischaemic stroke and coronary heart disease: the Caerphilly study. Journal of Epidemiology and Community Health, 56(2), 99–102.", note: "Frequency of intercourse not associated with increased stroke risk and inversely related to coronary heart disease. [Moderate — cohort]", link: scholar("Ebrahim sexual intercourse risk ischaemic stroke coronary heart disease Caerphilly Journal Epidemiology Community Health 2002"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 64 — FLOW STATES ═══════════════
+  {
+    id: "flow", section: "64", title: "Flow States",
+    subtitle: "Bolsters clusters: volitional, meta-cognitive, most skill lines",
+    evidenceTag: "Moderate",
+    feeds: ["sustained attention/engagement", "intrinsic motivation", "subjective wellbeing", "skill development", "reduced self-consciousness"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "moderate" },
+    description: "Flow — deep absorption when challenge matches skill — is a well-characterized state associated with wellbeing and, more modestly, with performance. Cultivating its conditions (clear goals, immediate feedback, matched difficulty) is trainable.",
+    callout: "The flow-performance link is real but small and its direction is ambiguous — good performance may cause flow as much as flow causes performance. Most data are self-report and cross-sectional.",
+    sources: [
+      { cite: "Nakamura, J., & Csikszentmihalyi, M. (2002). The concept of flow. In Handbook of Positive Psychology (pp. 89–105). Oxford University Press.", note: "Defines flow via the challenge-skill balance and its role in engagement and growth. [Moderate — theoretical review]", link: scholar("Nakamura Csikszentmihalyi the concept of flow Handbook of Positive Psychology 2002"), kind: "scholar" },
+      { cite: "Harris, D. J., et al. (2023). A systematic review and meta-analysis of the relationship between flow states and performance. International Review of Sport and Exercise Psychology, 16(1), 693–721.", note: "Found a small-to-moderate positive flow-performance correlation with unclear causal direction. [Moderate — meta-analysis]", link: scholar("Harris Allen Vine Wilson systematic review meta-analysis relationship between flow states and performance International Review Sport Exercise Psychology"), kind: "scholar" },
+      { cite: "Csikszentmihalyi, M. (1990). Flow: The Psychology of Optimal Experience. Harper & Row.", note: "Foundational synthesis of flow as autotelic, absorbed optimal experience across domains. [Moderate — foundational]", link: scholar("Csikszentmihalyi Flow the psychology of optimal experience 1990"), kind: "scholar" },
+      { cite: "Engeser, S., & Rheinberg, F. (2008). Flow, performance and moderators of the flow-performance relationship. Motivation and Emotion, 32, 158–172.", note: "Flow predicted performance, moderated by perceived importance and skill. [Emerging — field/experimental]", link: scholar("Engeser Rheinberg flow performance and moderators of the flow-performance relationship Motivation and Emotion 2008"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 65 — MASSAGE & BODYWORK ═══════════════
+  {
+    id: "massage", section: "65", title: "Massage & Bodywork",
+    subtitle: "Bolsters clusters: interoceptive, emotional (state anxiety)",
+    evidenceTag: "Mixed",
+    feeds: ["state/trait anxiety reduction", "pain relief", "blood pressure & heart rate (acute)", "mood", "sleep & relaxation"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "Massage produces reliable short-term reductions in state anxiety, blood pressure and heart rate, and moderate benefits for trait anxiety, depression, and some pain — a genuinely restful, passive intervention.",
+    callout: "The widely repeated 'massage cuts cortisol ~30%' claim fails in rigorous meta-analysis — single sessions did NOT reliably reduce cortisol. Much positive research comes from a single group with small samples and weak controls.",
+    sources: [
+      { cite: "Moyer, C. A., Rounds, J., & Hannum, J. W. (2004). A meta-analysis of massage therapy research. Psychological Bulletin, 130(1), 3–18.", note: "Massage reliably cut state anxiety, BP, and HR but NOT cortisol; largest effects were trait anxiety and depression. [Strong — meta-analysis]", link: scholar("Moyer Rounds Hannum a meta-analysis of massage therapy research Psychological Bulletin 2004"), kind: "scholar" },
+      { cite: "Moyer, C. A., et al. (2011). Does massage therapy reduce cortisol? A comprehensive quantitative review. Journal of Bodywork and Movement Therapies, 15(1), 3–14.", note: "Concluded massage's cortisol reductions are much smaller and less reliable than commonly claimed. [Strong — quantitative review]", link: scholar("Moyer does massage therapy reduce cortisol comprehensive quantitative review Journal Bodywork Movement Therapies 2011"), kind: "scholar" },
+      { cite: "Crawford, C., et al. (2016). The impact of massage therapy on function in pain populations — a systematic review and meta-analysis. Pain Medicine, 17(7), 1353–1375.", note: "Massage showed favorable, though variable, effects on pain and function; evidence quality low-to-moderate. [Moderate — meta-analysis]", link: scholar("Crawford Boyd impact of massage therapy on function in pain populations systematic review meta-analysis Pain Medicine 2016"), kind: "scholar" },
+      { cite: "Moraska, A., et al. (2010). Physiological adjustments to stress measures following massage therapy: a review of the literature. Evidence-Based Complementary and Alternative Medicine, 7(4), 409–418.", note: "Found inconsistent, methodologically weak evidence for massage effects on cortisol and stress physiology. [Moderate — critical review]", link: scholar("Moraska physiological adjustments to stress measures following massage therapy review of the literature eCAM 2010"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 66 — MINDFULNESS & MBSR ═══════════════
+  {
+    id: "mindfulness", section: "66", title: "Mindfulness & MBSR",
+    subtitle: "Bolsters clusters: meta-cognitive, emotional, interoceptive",
+    evidenceTag: "Moderate",
+    feeds: ["emotional regulation", "attention/focus", "stress physiology", "metacognitive awareness", "rumination reduction"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Structured attention and awareness training (breath, body scan, open monitoring) for stress, anxiety, and attention. The evidence is real but the effects are moderate and shrink against active controls.",
+    callout: "In the strongest RCT-only synthesis (Goyal 2014), benefits held for anxiety, depression, and pain but were small-to-moderate — with no good evidence mindfulness beats active comparators like exercise. Much popular writing overstates it via weak, passive controls.",
+    sources: [
+      { cite: "Goyal, M., et al. (2014). Meditation programs for psychological stress and well-being: a systematic review and meta-analysis. JAMA Internal Medicine, 174(3), 357–368.", note: "Moderate evidence of improved anxiety, depression, and pain — but no evidence of superiority over active treatments. [Strong — meta-analysis]", link: scholar("Goyal 2014 meditation programs psychological stress well-being systematic review JAMA Internal Medicine"), kind: "scholar" },
+      { cite: "Khoury, B., et al. (2013). Mindfulness-based therapy: a comprehensive meta-analysis. Clinical Psychology Review, 33(6), 763–771.", note: "Across 209 studies, moderately effective for anxiety/depression/stress, but not different from other active treatments. [Moderate — meta-analysis]", link: scholar("Khoury 2013 mindfulness-based therapy comprehensive meta-analysis Clinical Psychology Review"), kind: "scholar" },
+      { cite: "Hofmann, S. G., et al. (2010). The effect of mindfulness-based therapy on anxiety and depression: a meta-analytic review. Journal of Consulting and Clinical Psychology, 78(2), 169–183.", note: "In clinical samples, mindfulness-based therapy produced robust improvements in anxiety and mood. [Moderate — meta-analysis]", link: scholar("Hofmann Sawyer Witt Oh 2010 mindfulness-based therapy anxiety depression meta-analytic review"), kind: "scholar" },
+      { cite: "Kabat-Zinn, J. (1982). An outpatient program in behavioral medicine for chronic pain patients based on the practice of mindfulness meditation. General Hospital Psychiatry, 4(1), 33–47.", note: "Foundational MBSR study reporting reductions in chronic pain and mood disturbance. [Emerging — foundational, uncontrolled]", link: scholar("Kabat-Zinn 1982 outpatient program behavioral medicine chronic pain mindfulness meditation General Hospital Psychiatry"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 67 — LOVING-KINDNESS MEDITATION ═══════════════
+  {
+    id: "loving-kindness", section: "67", title: "Loving-Kindness Meditation",
+    subtitle: "Bolsters clusters: emotional, interpersonal, existential",
+    evidenceTag: "Moderate",
+    feeds: ["positive emotion", "social connection/warmth", "self-compassion", "in-group/out-group bias reduction"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "A directed well-wishing practice (toward self, loved ones, strangers, all beings) that builds positive emotion and felt social connection. Short-term affect effects are real; longer-term and prosocial-behavior effects are weaker.",
+    callout: "In Galante's meta-analysis, benefits decreased or became non-significant against active (not passive) controls, and effects on real-world prosocial behavior are limited.",
+    sources: [
+      { cite: "Galante, J., et al. (2014). Effect of kindness-based meditation on health and well-being: a systematic review and meta-analysis. Journal of Consulting and Clinical Psychology, 82(6), 1101–1114.", note: "Improved depression, compassion, self-compassion, and positive affect, but weakened against active controls. [Moderate — meta-analysis]", link: scholar("Galante 2014 kindness-based meditation health well-being systematic review meta-analysis Journal of Consulting Clinical Psychology"), kind: "scholar" },
+      { cite: "Fredrickson, B. L., et al. (2008). Open hearts build lives: positive emotions, induced through loving-kindness meditation, build consequential personal resources. Journal of Personality and Social Psychology, 95(5), 1045–1062.", note: "A 7-week program increased daily positive emotions, which built personal resources and life satisfaction. [Moderate]", link: scholar("Fredrickson Cohn Coffey Pek Finkel 2008 open hearts build lives loving-kindness meditation Journal of Personality Social Psychology"), kind: "scholar" },
+      { cite: "Hutcherson, C. A., Seppala, E. M., & Gross, J. J. (2008). Loving-kindness meditation increases social connectedness. Emotion, 8(5), 720–724.", note: "A few minutes of practice increased positivity and feelings of social connection toward strangers. [Emerging — single-session]", link: scholar("Hutcherson Seppala Gross 2008 loving-kindness meditation increases social connectedness Emotion"), kind: "scholar" },
+      { cite: "Zeng, X., et al. (2015). The effect of loving-kindness meditation on positive emotions: a meta-analytic review. Frontiers in Psychology, 6, 1693.", note: "Across studies, a medium effect on daily positive emotions, larger for longer-term practice. [Moderate — meta-analysis]", link: scholar("Zeng 2015 effect of loving-kindness meditation on positive emotions meta-analytic review Frontiers in Psychology"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 68 — SELF-COMPASSION ═══════════════
+  {
+    id: "self-compassion", section: "68", title: "Self-Compassion",
+    subtitle: "Bolsters clusters: intrapersonal, emotional, volitional (resilience)",
+    evidenceTag: "Moderate",
+    feeds: ["emotional regulation", "resilience/recovery from setbacks", "reduced self-criticism & rumination", "anxiety/depression buffering"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Treating yourself with kindness, common humanity, and mindful balance under difficulty — trainable via the Mindful Self-Compassion program. The correlational link to mental health is strong; intervention evidence is moderate and growing.",
+    callout: "The large correlation between self-compassion and lower psychopathology is cross-sectional — it shows association, not proof that raising self-compassion causes resilience. The MSC RCT is promising but modest in scale.",
+    sources: [
+      { cite: "MacBeth, A., & Gumley, A. (2012). Exploring compassion: a meta-analysis of the association between self-compassion and psychopathology. Clinical Psychology Review, 32(6), 545–552.", note: "Large effect linking higher self-compassion to lower depression, anxiety, and stress across 14 studies. [Strong — for association]", link: scholar("MacBeth Gumley 2012 exploring compassion meta-analysis self-compassion psychopathology Clinical Psychology Review"), kind: "scholar" },
+      { cite: "Neff, K. D., & Germer, C. K. (2013). A pilot study and randomized controlled trial of the Mindful Self-Compassion program. Journal of Clinical Psychology, 69(1), 28–44.", note: "MSC increased self-compassion, mindfulness, and well-being and reduced depression/anxiety/stress, gains held at follow-up. [Moderate — RCT]", link: scholar("Neff Germer 2013 pilot study randomized controlled trial Mindful Self-Compassion program Journal of Clinical Psychology"), kind: "scholar" },
+      { cite: "Ferrari, M., et al. (2019). Self-compassion interventions and psychosocial outcomes: a meta-analysis of RCTs. Mindfulness, 10, 1455–1473.", note: "Across 27 RCTs, self-compassion interventions produced significant improvements across most psychosocial outcomes. [Moderate — meta-analysis]", link: scholar("Ferrari 2019 self-compassion interventions psychosocial outcomes meta-analysis RCTs Mindfulness"), kind: "scholar" },
+      { cite: "Neff, K. D. (2003). The development and validation of a scale to measure self-compassion. Self and Identity, 2(3), 223–250.", note: "Introduces and validates the Self-Compassion Scale, the field's core measure. [Strong — measurement foundation]", link: scholar("Neff 2003 development validation scale to measure self-compassion Self and Identity"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 69 — REAPPRAISAL VS. SUPPRESSION ═══════════════
+  {
+    id: "reappraisal", section: "69", title: "Reappraisal vs. Suppression",
+    subtitle: "Bolsters clusters: emotional, interpersonal, intrapersonal",
+    evidenceTag: "Strong",
+    feeds: ["emotional regulation", "social connection (suppression harms it)", "intrapersonal well-being", "memory/cognition", "stress physiology"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Two emotion-regulation strategies with divergent consequences: reframing a situation's meaning (reappraisal) generally shows healthier affective, social, and cognitive profiles; inhibiting outward expression (suppression) is costlier. Learning to reappraise is one of the most portable skills in this library.",
+    callout: "The habitual reappraisal/suppression contrast is largely correlational and Western-sampled; suppression's costs are smaller or absent in some cultures, and reappraisal is not universally optimal (it can be maladaptive when a situation genuinely needs changing).",
+    sources: [
+      { cite: "Gross, J. J. (1998). Antecedent- and response-focused emotion regulation: divergent consequences for experience, expression, and physiology. Journal of Personality and Social Psychology, 74(1), 224–237.", note: "Reappraisal reduced emotion experience without physiological cost; suppression cut expression but raised sympathetic activation. [Strong]", link: scholar("Gross 1998 antecedent- and response-focused emotion regulation divergent consequences Journal of Personality Social Psychology"), kind: "scholar" },
+      { cite: "Gross, J. J., & John, O. P. (2003). Individual differences in two emotion regulation processes: implications for affect, relationships, and well-being. Journal of Personality and Social Psychology, 85(2), 348–362.", note: "Habitual reappraisers showed more positive emotion, better relationships, and higher well-being; suppressors the reverse. [Strong]", link: scholar("Gross John 2003 individual differences two emotion regulation processes affect relationships well-being"), kind: "scholar" },
+      { cite: "Webb, T. L., Miles, E., & Sheeran, P. (2012). Dealing with feeling: a meta-analysis of the effectiveness of strategies derived from the process model of emotion regulation. Psychological Bulletin, 138(4), 775–808.", note: "Reappraisal had a small-to-moderate beneficial effect; suppression's effects were weak/mixed. [Strong — meta-analysis]", link: scholar("Webb Miles Sheeran 2012 dealing with feeling meta-analysis process model emotion regulation Psychological Bulletin"), kind: "scholar" },
+      { cite: "John, O. P., & Gross, J. J. (2004). Healthy and unhealthy emotion regulation: personality processes, individual differences, and life-span development. Journal of Personality, 72(6), 1301–1333.", note: "Reviews evidence framing reappraisal as generally adaptive and suppression as generally costly. [Moderate — review]", link: scholar("John Gross 2004 healthy and unhealthy emotion regulation personality processes life span Journal of Personality"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 70 — FORGIVENESS ═══════════════
+  {
+    id: "forgiveness", section: "70", title: "Forgiveness",
+    subtitle: "Bolsters clusters: emotional, interpersonal, moral, intrapersonal",
+    evidenceTag: "Moderate",
+    feeds: ["emotional regulation", "relationship repair", "reduced hostility & rumination", "intrapersonal peace", "stress reduction"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Deliberately reducing resentment and revenge motivation toward a transgressor — trainable through structured models like Worthington's REACH — and linked to mental-health benefits that scale with how much you practice.",
+    callout: "Forgiveness interventions reliably increase forgiveness and reduce depression/anxiety, but claims of hard physical-health outcomes (cardiovascular, longevity) rest mostly on correlational data, not trial endpoints.",
+    sources: [
+      { cite: "Wade, N. G., et al. (2014). Efficacy of psychotherapeutic interventions to promote forgiveness: a meta-analysis. Journal of Consulting and Clinical Psychology, 82(1), 154–170.", note: "People in explicit forgiveness treatments became more forgiving and less depressed/anxious; effects scaled with dose. [Strong — meta-analysis]", link: scholar("Wade Hoyt Kidwell Worthington 2014 efficacy psychotherapeutic interventions promote forgiveness meta-analysis"), kind: "scholar" },
+      { cite: "Lundahl, B. W., et al. (2008). Process-based forgiveness interventions: a meta-analytic review. Research on Social Work Practice, 18(5), 465–478.", note: "Forgiveness interventions produced significant gains in forgiveness and reductions in depression and anxiety. [Moderate — meta-analysis]", link: scholar("Lundahl Taylor Stevenson Roberts 2008 process-based forgiveness interventions meta-analytic review"), kind: "scholar" },
+      { cite: "Worthington, E. L., et al. (2007). Forgiveness, health, and well-being: a review of evidence for emotional versus decisional forgiveness, dispositional forgivingness, and reduced unforgiveness. Journal of Behavioral Medicine, 30(4), 291–302.", note: "Reviews the pathways by which unforgiveness may harm and forgiveness may benefit health. [Moderate — review]", link: scholar("Worthington Witvliet Pietrini Miller 2007 forgiveness health well-being emotional decisional Journal of Behavioral Medicine"), kind: "scholar" },
+      { cite: "Toussaint, L., et al. (2016). Effects of lifetime stress exposure on mental and physical health in young adulthood: how stress degrades and forgiveness protects health. Journal of Health Psychology, 21(6), 1004–1014.", note: "Higher forgiveness buffered the association between lifetime stress and worse health. [Emerging — cross-sectional]", link: scholar("Toussaint Shields Dorn Slavich 2016 lifetime stress forgiveness protects health Journal of Health Psychology"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 71 — OPTIMISM & EXPLANATORY STYLE ═══════════════
+  {
+    id: "optimism", section: "71", title: "Optimism & Explanatory Style",
+    subtitle: "Bolsters clusters: intrapersonal, volitional, existential",
+    evidenceTag: "Moderate",
+    feeds: ["coping/resilience", "stress physiology", "health behaviors & adherence", "positive emotion", "cardiovascular/immune markers (associational)"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "moderate" },
+    description: "Dispositional optimism and an optimistic explanatory style are linked to better health and coping, and are partly trainable through cognitive retraining. The association evidence is strong; the effect per outcome is small but broad.",
+    callout: "The mean optimism-health effect is real but small (r≈.17) and larger for subjective than objective health. Optimism is substantially dispositional, so it is only partly changeable.",
+    sources: [
+      { cite: "Rasmussen, H. N., Scheier, M. F., & Greenhouse, J. B. (2009). Optimism and physical health: a meta-analytic review. Annals of Behavioral Medicine, 37(3), 239–256.", note: "Across 83 studies, optimism was a significant (mean r≈.17) predictor of physical health, larger for subjective measures. [Strong — meta-analysis]", link: scholar("Rasmussen Scheier Greenhouse 2009 optimism and physical health meta-analytic review Annals of Behavioral Medicine"), kind: "scholar" },
+      { cite: "Scheier, M. F., & Carver, C. S. (1985). Optimism, coping, and health: assessment and implications of generalized outcome expectancies. Health Psychology, 4(3), 219–247.", note: "Introduces dispositional optimism (the LOT) and links it to better psychological and physical adjustment. [Strong — foundational]", link: scholar("Scheier Carver 1985 optimism coping and health generalized outcome expectancies Health Psychology"), kind: "scholar" },
+      { cite: "Carver, C. S., Scheier, M. F., & Segerstrom, S. C. (2010). Optimism. Clinical Psychology Review, 30(7), 879–889.", note: "Reviews evidence that optimism predicts better subjective well-being, coping, and some physical health. [Moderate — review]", link: scholar("Carver Scheier Segerstrom 2010 optimism Clinical Psychology Review"), kind: "scholar" },
+      { cite: "Peterson, C., Seligman, M. E. P., & Vaillant, G. E. (1988). Pessimistic explanatory style is a risk factor for physical illness: a thirty-five-year longitudinal study. Journal of Personality and Social Psychology, 55(1), 23–27.", note: "Pessimistic explanatory style in early adulthood predicted poorer physical health decades later. [Emerging — single longitudinal cohort]", link: scholar("Peterson Seligman Vaillant 1988 pessimistic explanatory style risk factor physical illness thirty-five-year longitudinal"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 72 — SAVORING ═══════════════
+  {
+    id: "savoring", section: "72", title: "Savoring",
+    subtitle: "Bolsters clusters: emotional, intrapersonal, aesthetic",
+    evidenceTag: "Emerging",
+    feeds: ["positive emotion amplification", "life satisfaction", "social connection (sharing)", "buffering against anhedonia"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "Deliberately attending to, prolonging, and intensifying positive experiences — through presence, sharing, and memory-building — rather than dampening them. Mechanistically clear and pleasant to practice, with a promising but smaller trial base.",
+    callout: "Much of the savoring literature is cross-sectional or short-term, and 'dampening' positive emotion (not just low savoring) drives some negative associations. Large rigorous RCTs are still relatively few.",
+    sources: [
+      { cite: "Quoidbach, J., et al. (2010). Positive emotion regulation and well-being: comparing the impact of eight savoring and dampening strategies. Personality and Individual Differences, 49(5), 368–373.", note: "Present-focus and positive rumination predicted higher positive affect; dampening predicted lower well-being. [Moderate — cross-sectional]", link: scholar("Quoidbach Berry Hansenne Mikolajczak 2010 positive emotion regulation well-being savoring dampening strategies"), kind: "scholar" },
+      { cite: "Jose, P. E., Lim, B. T., & Bryant, F. B. (2012). Does savoring increase happiness? A daily diary study. The Journal of Positive Psychology, 7(3), 176–187.", note: "In a daily-diary design, more frequent savoring was associated with greater same-day happiness. [Emerging]", link: scholar("Jose Lim Bryant 2012 does savoring increase happiness daily diary study Journal of Positive Psychology"), kind: "scholar" },
+      { cite: "Bryant, F. B. (2003). Savoring Beliefs Inventory (SBI): a scale for measuring beliefs about savouring. Journal of Mental Health, 12(2), 175–196.", note: "Develops and validates a measure of perceived capacity to savor, correlated with well-being. [Moderate — measurement]", link: scholar("Bryant 2003 Savoring Beliefs Inventory scale measuring beliefs about savouring Journal of Mental Health"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 73 — NATURE DOSE (120 MIN/WEEK) ═══════════════
+  {
+    id: "nature-dose", section: "73", title: "Nature Dose — 120 min/week",
+    subtitle: "Bolsters clusters: emotional, meta-cognitive (attention restoration)",
+    evidenceTag: "Moderate",
+    feeds: ["stress reduction", "attention restoration", "general well-being", "physical-activity facilitation", "social connection"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Weekly time in natural environments is associated with better self-reported health and well-being, with a threshold around 120 minutes per week — reachable in one long visit or several short ones — plus small experimental signals that nature cuts rumination.",
+    callout: "The 120-minute 'threshold' is a strong association in ~20,000 people, but the flagship study is cross-sectional and can't establish that nature causes better health (self-selection and reverse causation remain plausible).",
+    sources: [
+      { cite: "White, M. P., et al. (2019). Spending at least 120 minutes a week in nature is associated with good health and wellbeing. Scientific Reports, 9, 7730.", note: "≥120 min/week in nature had consistently higher odds of good health and high well-being; 1–119 min showed no benefit. [Moderate — large cross-sectional]", link: scholar("White 2019 spending at least 120 minutes a week in nature associated with good health and wellbeing Scientific Reports"), kind: "scholar" },
+      { cite: "Bratman, G. N., et al. (2015). Nature experience reduces rumination and subgenual prefrontal cortex activation. PNAS, 112(28), 8567–8572.", note: "A 90-min nature walk (vs. urban) reduced self-reported rumination and the linked neural activity. [Emerging — small RCT]", link: scholar("Bratman Hamilton Hahn Daily Gross 2015 nature experience reduces rumination subgenual prefrontal cortex PNAS"), kind: "scholar" },
+      { cite: "Berman, M. G., Jonides, J., & Kaplan, S. (2008). The cognitive benefits of interacting with nature. Psychological Science, 19(12), 1207–1212.", note: "Walking in nature improved attention/working-memory vs. an urban walk, supporting Attention Restoration Theory. [Emerging — experiments]", link: scholar("Berman Jonides Kaplan 2008 cognitive benefits of interacting with nature Psychological Science"), kind: "scholar" },
+      { cite: "Twohig-Bennett, C., & Jones, A. (2018). The health benefits of the great outdoors: a systematic review and meta-analysis of greenspace exposure and health outcomes. Environmental Research, 166, 628–637.", note: "Greenspace exposure associated with reduced stress, lower cortisol, and better health outcomes. [Moderate — meta-analysis]", link: scholar("Twohig-Bennett Jones 2018 health benefits great outdoors systematic review meta-analysis greenspace exposure Environmental Research"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 74 — GOAL-SETTING ═══════════════
+  {
+    id: "goal-setting", section: "74", title: "Goal-Setting",
+    subtitle: "Bolsters clusters: volitional, strategic, meta-cognitive",
+    evidenceTag: "Strong",
+    feeds: ["volitional capacity", "planning & prioritization", "motivation", "self-regulation"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "low" },
+    description: "Specific, difficult goals reliably outperform 'do your best' — one of the most replicated findings in behavioral science. Pairing a goal with feedback and commitment is what converts it into performance.",
+    callout: "The huge effects come from performance labs; isolated in real-world behavior-change RCTs, the unique goal-setting effect shrinks to 'small' (d≈0.34) — real, not magic. Difficult goals can backfire without commitment and feedback.",
+    sources: [
+      { cite: "Locke, E. A., & Latham, G. P. (2002). Building a practically useful theory of goal setting and task motivation: a 35-year odyssey. American Psychologist, 57(9), 705–717.", note: "Specific + difficult goals reliably raise performance vs. vague goals. [Strong — foundational]", link: scholar("Locke Latham 2002 building a practically useful theory of goal setting American Psychologist"), kind: "scholar" },
+      { cite: "Epton, T., Currie, S., & Armitage, C. J. (2017). Unique effects of setting goals on behavior change: systematic review and meta-analysis. Journal of Consulting and Clinical Psychology, 85(12), 1182–1198.", note: "384 effects (N=16,523): unique goal-setting effect d=0.34; bigger for difficult, public, group goals. [Strong — meta-analysis]", link: scholar("Epton Currie Armitage 2017 unique effects of setting goals on behavior change meta-analysis"), kind: "scholar" },
+      { cite: "Latham, G. P., & Locke, E. A. (2006). Enhancing the benefits and overcoming the pitfalls of goal setting. Organizational Dynamics, 35(4), 332–340.", note: "Catalogs when goals help vs. harm (tunnel vision, unethical shortcuts). [Moderate]", link: scholar("Latham Locke 2006 enhancing benefits overcoming pitfalls goal setting Organizational Dynamics"), kind: "scholar" },
+      { cite: "Kleingeld, A., van Mierlo, H., & Arends, L. (2011). The effect of goal setting on group performance: a meta-analysis. Journal of Applied Psychology, 96(6), 1289–1304.", note: "Specific difficult group goals raise group performance; effect varies with goal type. [Moderate — meta-analysis]", link: scholar("Kleingeld van Mierlo Arends 2011 effect of goal setting on group performance meta-analysis"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 75 — HABIT FORMATION ═══════════════
+  {
+    id: "habit-formation", section: "75", title: "Habit Formation",
+    subtitle: "Bolsters clusters: volitional, self-regulation (offloads willpower)",
+    evidenceTag: "Strong",
+    feeds: ["volitional capacity", "executive function (offloads willpower)", "self-regulation", "consistency"],
+    impact: { magnitude: 4, latency: "weeks", durability: "lasting", effort: "moderate" },
+    description: "Habits form by repeating a response in a stable context until it runs automatically, cue-driven — which is why anchoring a new behavior to an existing routine ('habit stacking' / implementation intentions) is the best-supported mechanic for making change stick.",
+    callout: "The famous '66 days' is a median with an enormous range (18–254) from one small self-report study — automaticity, not a day-count, is the target, and about half of participants never reached habit strength within it.",
+    sources: [
+      { cite: "Lally, P., et al. (2010). How are habits formed: modelling habit formation in the real world. European Journal of Social Psychology, 40(6), 998–1009.", note: "Automaticity rises asymptotically; median ~66 days, wide individual variation. [Moderate]", link: scholar("Lally van Jaarsveld Potts Wardle 2010 how are habits formed modelling habit formation real world"), kind: "scholar" },
+      { cite: "Wood, W., & Rünger, D. (2016). Psychology of habit. Annual Review of Psychology, 67, 289–314.", note: "Authoritative review: habits are context-cued, efficient defaults distinct from goals. [Strong — review]", link: scholar("Wood Runger 2016 psychology of habit Annual Review of Psychology"), kind: "scholar" },
+      { cite: "Gollwitzer, P. M., & Sheeran, P. (2006). Implementation intentions and goal achievement: a meta-analysis of effects and processes. Advances in Experimental Social Psychology, 38, 69–119.", note: "94 tests: if-then 'when X, I'll do Y' plans had a medium-large effect (d=0.65). [Strong — meta-analysis]", link: scholar("Gollwitzer Sheeran 2006 implementation intentions and goal achievement meta-analysis"), kind: "scholar" },
+      { cite: "Wood, W., Quinn, J. M., & Kashy, D. A. (2002). Habits in everyday life: thought, emotion, and action. Journal of Personality and Social Psychology, 83(6), 1281–1297.", note: "~43% of daily actions are habitual, repeated in stable contexts. [Moderate]", link: scholar("Wood Quinn Kashy 2002 habits in everyday life thought emotion and action"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 76 — AUTOMATED & INDEX INVESTING ═══════════════
+  {
+    id: "index-investing", section: "76", title: "Automated & Index Investing",
+    subtitle: "Bolsters clusters: financial, volitional, strategic",
+    evidenceTag: "Strong",
+    feeds: ["financial capacity", "automate-and-forget execution", "self-regulation (curbs overtrading)"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "low" },
+    description: "Low-cost, low-turnover, automated (default-enrolled) investing beats active trading for typical investors because costs and behavioral errors — not stock-picking skill — dominate net long-run returns. Set it once and let compounding work.",
+    callout: "These are large real-world datasets, but observational/quasi-experimental (not randomized allocation trials). 'Index beats active' is about average net-of-cost outcomes, not a guarantee for any individual or period.",
+    sources: [
+      { cite: "Barber, B. M., & Odean, T. (2000). Trading is hazardous to your wealth: the common stock investment performance of individual investors. The Journal of Finance, 55(2), 773–806.", note: "Most-active traders earned 11.4% vs. 17.9% market — overtrading destroys returns. [Strong]", link: scholar("Barber Odean 2000 trading is hazardous to your wealth common stock investment performance"), kind: "scholar" },
+      { cite: "French, K. R. (2008). Presidential address: the cost of active investing. The Journal of Finance, 63(4), 1537–1573.", note: "Society pays ~0.67%/yr chasing returns; passive would add ~67 bps annually. [Strong]", link: scholar("French 2008 presidential address the cost of active investing Journal of Finance"), kind: "scholar" },
+      { cite: "Madrian, B. C., & Shea, D. F. (2001). The power of suggestion: inertia in 401(k) participation and savings behavior. Quarterly Journal of Economics, 116(4), 1149–1187.", note: "Auto-enrollment defaults dramatically raised participation; people stick to defaults. [Strong]", link: scholar("Madrian Shea 2001 power of suggestion inertia 401k participation savings behavior"), kind: "scholar" },
+      { cite: "Benartzi, S., & Thaler, R. H. (2004). Save More Tomorrow: using behavioral economics to increase employee saving. Journal of Political Economy, 112(S1), S164–S187.", note: "Pre-committing future raises tripled saving rates over several cycles. [Strong]", link: scholar("Benartzi Thaler 2004 Save More Tomorrow behavioral economics increase employee saving"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 77 — AUTONOMY & JOB CONTROL ═══════════════
+  {
+    id: "autonomy-control", section: "77", title: "Autonomy & Job Control",
+    subtitle: "Bolsters clusters: volitional, systemic, emotional",
+    evidenceTag: "Strong",
+    feeds: ["wellbeing", "cardiovascular health", "stress regulation", "autonomy/agency"],
+    impact: { magnitude: 4, latency: "months", durability: "sustained", effort: "high" },
+    description: "Low control and decision latitude at work predict worse cardiovascular and mental-health outcomes; higher autonomy predicts better wellbeing and satisfaction — a cornerstone of occupational-health epidemiology (the Whitehall studies).",
+    callout: "The landmark Whitehall findings are observational; low control tracks tightly with low socioeconomic position, so residual confounding means 'give people more control and hearts improve' is supported by mechanism but not by large redesign RCTs. Changing it is often structural, not individual.",
+    sources: [
+      { cite: "Karasek, R. A. (1979). Job demands, job decision latitude, and mental strain: implications for job redesign. Administrative Science Quarterly, 24(2), 285–308.", note: "Foundational demand-control model: high demand + low control = strain. [Strong — theory]", link: scholar("Karasek 1979 job demands job decision latitude and mental strain implications for job redesign"), kind: "scholar" },
+      { cite: "Bosma, H., et al. (1997). Low job control and risk of coronary heart disease in Whitehall II (prospective cohort) study. BMJ, 314(7080), 558–565.", note: "Low job control → ~1.5–1.8× higher coronary heart disease risk over follow-up. [Strong — cohort]", link: scholar("Bosma Marmot 1997 low job control and risk of coronary heart disease Whitehall II BMJ"), kind: "scholar" },
+      { cite: "Kuper, H., & Marmot, M. (2003). Job strain, job demands, decision latitude, and risk of coronary heart disease within the Whitehall II study. Journal of Epidemiology & Community Health, 57(2), 147–153.", note: "Job strain and low decision latitude independently raised coronary heart disease risk. [Strong — cohort]", link: scholar("Kuper Marmot 2003 job strain job demands decision latitude coronary heart disease Whitehall II"), kind: "scholar" },
+      { cite: "Humphrey, S. E., Nahrgang, J. D., & Morgeson, F. P. (2007). Integrating motivational, social, and contextual work design features: a meta-analytic summary. Journal of Applied Psychology, 92(5), 1332–1356.", note: "Meta-analysis (259 studies): autonomy predicts satisfaction, motivation, and lower strain. [Strong — meta-analysis]", link: scholar("Humphrey Nahrgang Morgeson 2007 integrating motivational social contextual work design meta-analytic"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 78 — TIME AFFLUENCE ═══════════════
+  {
+    id: "time-affluence", section: "78", title: "Time Affluence",
+    subtitle: "Bolsters clusters: intrapersonal, emotional, strategic",
+    evidenceTag: "Moderate",
+    feeds: ["wellbeing", "life satisfaction", "stress reduction", "social connection"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "moderate" },
+    description: "Feeling time-rich — and spending money to buy time or on experiences rather than things — is associated with, and in experiments causes, greater happiness. A rare case where money reliably converts to wellbeing if spent the right way.",
+    callout: "The experiential-vs-material and buying-time effects are robust but modest, samples skew Western/affluent, and the money-to-happiness link is strongest for people not already financially strained.",
+    sources: [
+      { cite: "Whillans, A. V., et al. (2017). Buying time promotes happiness. PNAS, 114(32), 8523–8527.", note: "Field experiment: time-saving purchases raised happiness more than material ones. [Moderate — experiment]", link: scholar("Whillans Dunn Smeets Bekkers Norton 2017 buying time promotes happiness PNAS"), kind: "scholar" },
+      { cite: "Van Boven, L., & Gilovich, T. (2003). To do or to have? That is the question. Journal of Personality and Social Psychology, 85(6), 1193–1202.", note: "Experiential purchases make people happier than material purchases. [Moderate]", link: scholar("Van Boven Gilovich 2003 to do or to have that is the question experiential material"), kind: "scholar" },
+      { cite: "Whillans, A. V., Weidman, A. C., & Dunn, E. W. (2016). Valuing time over money is associated with greater happiness. Social Psychological and Personality Science, 7(3), 213–222.", note: "Prioritizing time over money correlates with higher subjective wellbeing. [Moderate]", link: scholar("Whillans Weidman Dunn 2016 valuing time over money associated with greater happiness"), kind: "scholar" },
+      { cite: "Kumar, A., Killingsworth, M. A., & Gilovich, T. (2014). Waiting for merlot: anticipatory consumption of experiential and material purchases. Psychological Science, 25(10), 1924–1931.", note: "People derive more pleasurable anticipation from awaiting experiences than goods. [Emerging]", link: scholar("Kumar Killingsworth Gilovich 2014 waiting for merlot anticipatory consumption experiential material"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 79 — SLEEP REGULARITY ═══════════════
+  {
+    id: "sleep-regularity", section: "79", title: "Sleep Regularity",
+    subtitle: "Bolsters clusters: systemic, interoceptive (complements Section 14)",
+    evidenceTag: "Strong",
+    feeds: ["physical health", "executive function", "wellbeing", "circadian regulation"],
+    impact: { magnitude: 4, latency: "days", durability: "lasting", effort: "moderate" },
+    description: "Regular sleep-wake timing — not just total hours — predicts health and mortality, and behavioral programs (CBT-I) durably improve chronic insomnia. Consistency of timing may matter as much as duration.",
+    callout: "The regularity-mortality data are large but observational, and generic single-component 'sleep hygiene' tips are weak as a standalone treatment — CBT-I is the evidence-based intervention, not sleep-hygiene handouts.",
+    sources: [
+      { cite: "Windred, D. P., et al. (2024). Sleep regularity is a stronger predictor of mortality risk than sleep duration: a prospective cohort study. Sleep, 47(1), zsad253.", note: "Higher sleep-regularity index → 20–48% lower all-cause mortality; beat duration. [Strong — observational]", link: scholar("Windred 2024 sleep regularity stronger predictor of mortality risk than sleep duration UK Biobank"), kind: "scholar" },
+      { cite: "Trauer, J. M., et al. (2015). Cognitive behavioral therapy for chronic insomnia: a systematic review and meta-analysis. Annals of Internal Medicine, 163(3), 191–204.", note: "Meta-analysis (20 RCTs): CBT-I produces clinically meaningful, durable insomnia improvement. [Strong — meta-analysis]", link: scholar("Trauer Qian Doyle 2015 cognitive behavioral therapy for chronic insomnia systematic review meta-analysis"), kind: "scholar" },
+      { cite: "Full, K. M., et al. (2023). Sleep irregularity and subclinical markers of cardiovascular disease: the Multi-Ethnic Study of Atherosclerosis. Journal of the American Heart Association, 12(4), e027361.", note: "Irregular sleep timing associated with greater subclinical cardiovascular disease. [Moderate — cohort]", link: scholar("Full Huang 2023 sleep irregularity subclinical cardiovascular disease MESA Journal American Heart Association"), kind: "scholar" },
+      { cite: "Irish, L. A., et al. (2015). The role of sleep hygiene in promoting public health: a review of empirical evidence. Sleep Medicine Reviews, 22, 23–36.", note: "Individual sleep-hygiene components have mixed/limited standalone empirical support. [Mixed — review]", link: scholar("Irish Kline Gunn Buysse Hall 2015 role of sleep hygiene in promoting public health review"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 80 — LAUGHTER & HUMOR ═══════════════
+  {
+    id: "laughter", section: "80", title: "Laughter & Humor",
+    subtitle: "Bolsters clusters: humor, emotional, interpersonal",
+    evidenceTag: "Emerging",
+    feeds: ["wellbeing", "stress reduction", "social connection/bonding", "mood regulation"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Genuine, spontaneous laughter lowers cortisol, raises pain threshold via endorphins, and shifts autonomic and mood state — mostly short-lived, social-bonding effects with promising but methodologically limited cardiovascular data.",
+    callout: "Most studies are small and short-term with heterogeneous 'laughter interventions' (laughter yoga, comedy clips); the stress-hormone effects are real but acute and transient, and hard cardiovascular endpoints are not established.",
+    sources: [
+      { cite: "Dunbar, R. I. M., et al. (2012). Social laughter is correlated with an elevated pain threshold. Proceedings of the Royal Society B, 279(1731), 1161–1167.", note: "Six studies: shared laughter raises pain threshold, implicating endorphin release. [Moderate]", link: scholar("Dunbar 2012 social laughter is correlated with an elevated pain threshold Proceedings Royal Society B"), kind: "scholar" },
+      { cite: "Kramer, C. K., & Leitao, C. B. (2023). Laughter as medicine: a systematic review and meta-analysis of interventional studies evaluating the impact of spontaneous laughter on cortisol levels. PLOS ONE, 18(5), e0286260.", note: "Meta-analysis: spontaneous laughter reduced cortisol ~32% (single session ~37%). [Moderate — meta-analysis]", link: scholar("Kramer Leitao 2023 laughter as medicine systematic review meta-analysis spontaneous laughter cortisol"), kind: "scholar" },
+      { cite: "Sakuragi, S., Sugiyama, Y., & Takeuchi, K. (2002). Effects of laughing and weeping on mood and heart rate variability. Journal of Physiological Anthropology and Applied Human Science, 21(3), 159–165.", note: "Laughter produced strong but transient favorable autonomic/mood shifts. [Emerging]", link: scholar("Sakuragi Sugiyama Takeuchi 2002 effects of laughing and weeping on mood and heart rate variability"), kind: "scholar" },
+      { cite: "Berk, L. S., et al. (1989). Neuroendocrine and stress hormone changes during mirthful laughter. American Journal of the Medical Sciences, 298(6), 390–396.", note: "Mirthful laughter lowered cortisol and other stress hormones (very small sample). [Emerging]", link: scholar("Berk Tan Fry 1989 neuroendocrine and stress hormone changes during mirthful laughter"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 81 — LEARNING BY TEACHING ═══════════════
+  {
+    id: "learning-by-teaching", section: "81", title: "Learning by Teaching",
+    subtitle: "Bolsters clusters: linguistic, meta-cognitive, most skill lines",
+    evidenceTag: "Strong",
+    feeds: ["learning capacity", "executive function", "long-term memory/consolidation", "metacognition"],
+    impact: { magnitude: 3, latency: "days", durability: "lasting", effort: "moderate" },
+    description: "Expecting to teach — and actually teaching by retrieving from memory — improves learning. The durable engine is well-established retrieval-practice and spacing (the science behind flashcard/spaced-repetition apps); teaching helps mainly when it forces retrieval.",
+    callout: "The 'protégé effect' is real but smaller and more variable; controlled studies show teaching helps mainly when it forces retrieval (teaching from notes adds little). The reliable levers are retrieval + spacing, not teaching per se.",
+    sources: [
+      { cite: "Nestojko, J. F., et al. (2014). Expecting to teach enhances learning and organization of knowledge in free recall of text passages. Memory & Cognition, 42(7), 1038–1048.", note: "Merely expecting to teach improved recall and knowledge organization. [Moderate]", link: scholar("Nestojko Bui Kornell Bjork 2014 expecting to teach enhances learning and organization free recall"), kind: "scholar" },
+      { cite: "Koh, A. W. L., Lee, S. C., & Lim, S. W. H. (2018). The learning benefits of teaching: a retrieval practice hypothesis. Applied Cognitive Psychology, 32(3), 401–410.", note: "Teaching's benefit came from retrieval; teaching-with-notes added little. [Moderate]", link: scholar("Koh Lee Lim 2018 the learning benefits of teaching a retrieval practice hypothesis"), kind: "scholar" },
+      { cite: "Roediger, H. L., & Karpicke, J. D. (2006). Test-enhanced learning: taking memory tests improves long-term retention. Psychological Science, 17(3), 249–255.", note: "Retrieval practice beats restudy for long-term retention. [Strong]", link: scholar("Roediger Karpicke 2006 test-enhanced learning taking memory tests improves long-term retention"), kind: "scholar" },
+      { cite: "Cepeda, N. J., et al. (2006). Distributed practice in verbal recall tasks: a review and quantitative synthesis. Psychological Bulletin, 132(3), 354–380.", note: "Meta-analysis: spaced practice reliably outperforms massed practice. [Strong — meta-analysis]", link: scholar("Cepeda Pashler Vul Wixted Rohrer 2006 distributed practice in verbal recall tasks review quantitative synthesis"), kind: "scholar" },
     ],
   },
 ];
@@ -2728,6 +3528,16 @@ export default function ResearchLibrary() {
               ))}
             </div>
 
+            {/* Leverage Score explainer */}
+            <div style={{ border: "1px solid rgba(224,198,140,0.25)", background: "rgba(224,198,140,0.05)", borderRadius: 10, padding: "12px 14px", margin: "6px 0 14px", fontSize: 12.5, lineHeight: 1.55, color: "var(--rl-muted, #b9b2a6)" }}>
+              <b style={{ color: CHAMPAGNE }}>Reading the Leverage Score.</b> Many practices now carry a 0–100 gauge of
+              how much result you get per unit of effort and time — <b>70·benefit + 30·ease</b>, where benefit is the
+              effect's size × how proven it is × how lasting, and ease is how cheap the energy-in is × how fast results
+              show up. The chips break it down: <b>Impact</b> (1–5 stars), <b>First results</b> (days/weeks/months),
+              <b> Holds</b> (transient/sustained/lasting), <b>Effort</b> (low/mod/high). It is a directional guide from
+              the same research each card cites — <i>not a promise</i> about your individual outcome.
+            </div>
+
             {/* Result count */}
             <div className="rl-practice-count">
               Showing <b>{filteredPractices.length}</b> of {PRACTICE_EVIDENCE.length} topics
@@ -2785,6 +3595,31 @@ export default function ResearchLibrary() {
                       </div>
                       <div className="rl-train-subtitle">{cluster.subtitle}</div>
                       <p className="rl-train-desc">{cluster.description}</p>
+                      {cluster.impact && (
+                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, margin: "6px 0 2px" }}>
+                          {(() => {
+                            const s = leverageScore(cluster.impact!, cluster.evidenceTag);
+                            const col = s >= 70 ? CHAMPAGNE : s >= 50 ? JADE : s >= 35 ? BRONZE : MUTED;
+                            return (
+                              <span title="Leverage Score: result per unit of effort & time, weighted by evidence (0–100)"
+                                style={{ display: "inline-flex", alignItems: "center", gap: 6, border: `1px solid ${col}`, borderRadius: 999, padding: "2px 9px", fontSize: 11, fontWeight: 700, color: col }}>
+                                <span style={{ fontFamily: "monospace" }}>{s}</span>
+                                <span style={{ fontWeight: 500, opacity: 0.8, letterSpacing: "0.06em", textTransform: "uppercase", fontSize: 9 }}>leverage</span>
+                              </span>
+                            );
+                          })()}
+                          <span style={chipStyle}>Impact {"★".repeat(cluster.impact.magnitude)}<span style={{ opacity: 0.3 }}>{"★".repeat(5 - cluster.impact.magnitude)}</span></span>
+                          <span style={chipStyle}>First results: {cluster.impact.latency}</span>
+                          <span style={chipStyle}>Holds: {cluster.impact.durability}</span>
+                          <span style={chipStyle}>Effort: {cluster.impact.effort}</span>
+                        </div>
+                      )}
+                      {cluster.feeds && cluster.feeds.length > 0 && (
+                        <div style={{ fontSize: 11, color: "var(--rl-muted, #8c857a)", marginTop: 2 }}>
+                          <span style={{ fontFamily: "monospace", letterSpacing: "0.1em", textTransform: "uppercase", fontSize: 9, opacity: 0.7 }}>Feeds → </span>
+                          {cluster.feeds.join(" · ")}
+                        </div>
+                      )}
                       <div className="rl-card-meta">{cluster.sources.length} source{cluster.sources.length !== 1 ? "s" : ""}</div>
                     </button>
                     {isOpen && (
