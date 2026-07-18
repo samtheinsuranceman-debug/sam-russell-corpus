@@ -155,14 +155,37 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
   intergenerational, social prescribing); environment & everyday (houseplants, gardening,
   **the pet rock reframed honestly as "talking it out" / self-distanced self-talk**,
   cooking, handwriting, action video games, **brain-training's honest debunk**, chess,
-  napping, weighted blankets). Grouped under new super-headers. Toward ~1,000 — ~300 to go.
+  napping, weighted blankets). Grouped under new super-headers.
+- **Wave 4 (done):** +78 practice clusters (sections 199–275), assembled from 8 verified
+  research agents: physiology & dating (freediving, backwards walking, vestibular spinning,
+  speed/online dating, approaching strangers, matchmaking, arranged marriage, adult instrument,
+  affectionate writing); hunting/pets/recreation; movement & adventure (bouldering, surf/equine
+  therapy, running therapy, rucking, jump rope, stair climbing, Pilates, stretching, slacklining);
+  cognitive & skill (interleaving, adult 2nd language, crosswords, morning pages, touch-typing,
+  sleep-tracking, time-blocking, qigong, laughter yoga, awe walks); body & sensory hacks + **two
+  honest debunks (speed reading, grounding/earthing)**; social & behavioral (family dinners,
+  commensality, silent retreats, pilgrimage, gratitude visit, complimenting/liking-gap, ensemble
+  belonging, digital sabbath, Three Good Things); order/digital/manifestation (**vision-board
+  backfire finding**, digital decluttering, future-self continuity, cursive myth); creative &
+  expressive arts (art-making, poetry therapy, improv, Toastmasters, pottery, knitting, Men's
+  Sheds, solo singing, birdwatching). Plus an **"AI as coach, companion & mirror"** group
+  (191–198: AI therapist/companion/coach, self-disclosure to AI, AI personalization, sign
+  language, car detailing, engagement).
+- **Wave 5 — "The cost of failure" group (done):** +50 harm clusters (sections 141–190) — the
+  mirror of the practice library, documenting what breaks when things go wrong (divorce,
+  bereavement, chronic illness, PTSD, addiction, ACEs, poverty, discrimination, and more).
+  NEW render path: a `PracticeHarm` type (severity/onset/reversibility) and a deterministic
+  **Cost Score** (`costScore()` = 70·damage + 30·imminence) that mirrors the Leverage Score,
+  with a red "AT STAKE" badge and a `degrades[]` line. No leverage score on harms — they are
+  not practices to run. **Library now spans 275 sections.** Keep expanding toward ~1,000.
 - **NEW — Leverage Score gauge** (`leverageScore()` in ResearchLibrary.tsx): a
   deterministic 0–100 rating = 70·benefit + 30·ease, where benefit =
   (magnitude/5)·evidenceWeight·durabilityWeight and ease = effortWeight·latencyWeight.
   Each rated cluster shows the score + chips (Impact 1–5, First-results
   days/weeks/months, Holds transient/sustained/lasting, Effort low/mod/high) and a
-  `feeds[]` interconnection line. ~43 clusters rated so far; Manus can extend the
-  `impact`/`feeds` fields to the rest (fields are optional, so partial coverage is safe).
+  `feeds[]` interconnection line. Most wave 2–5 clusters are now rated (leverage on
+  practices, Cost Score on harms); Manus can extend the `impact`/`feeds`/`harm`/`degrades`
+  fields to any remaining older clusters (fields are optional, so partial coverage is safe).
 - **Proposed feature — the "vault + monthly drip" membership engine** (Claude's
   recommendation below; NOT built yet — needs a product decision + entitlements):
   1. Members do NOT get unrestricted library access. Instead: a one-time **timed
