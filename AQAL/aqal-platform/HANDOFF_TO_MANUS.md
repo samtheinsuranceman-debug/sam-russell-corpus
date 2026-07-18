@@ -141,6 +141,21 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
   regularity, laughter, learning-by-teaching). Every source is a real, named
   study with a Scholar link + honest evidence tier + caveat callout (null RCTs,
   failed replications, observational limits stated). Keep expanding toward ~1,000.
+- **Wave 3 (done):** +59 more sections (now **141 sections, ~702 sources**): evidence-based
+  therapies (EMDR, hypnosis, CBT, behavioral activation, ACT, exposure, DBT, MI,
+  psychodynamic/IPT, group therapy, Gestalt/empty-chair, EFT); mind & self-regulation
+  techniques (**NLP flagged NOT empirically supported** — 3 honest clusters — plus
+  self-affirmation, self-talk, visualization, WOOP, placebo, biofeedback, relaxation);
+  youth/family/development (teen work + the >20 hr harm threshold, chores incl. the
+  Harvard-grant misattribution, paper-routes honest gap, early earnings, continuing ed,
+  apprenticeship, youth mentoring, extracurriculars, dialogic reading, parenting-for-
+  development, child independent mobility, free/risky play, youth team sports, golf);
+  social & community (marriage, religious attendance, rec sports, couples' self-expansion
+  activities, double dates, clubs/bingo, kindness, mentoring, befriending, book clubs,
+  intergenerational, social prescribing); environment & everyday (houseplants, gardening,
+  **the pet rock reframed honestly as "talking it out" / self-distanced self-talk**,
+  cooking, handwriting, action video games, **brain-training's honest debunk**, chess,
+  napping, weighted blankets). Grouped under new super-headers. Toward ~1,000 — ~300 to go.
 - **NEW — Leverage Score gauge** (`leverageScore()` in ResearchLibrary.tsx): a
   deterministic 0–100 rating = 70·benefit + 30·ease, where benefit =
   (magnitude/5)·evidenceWeight·durabilityWeight and ease = effortWeight·latencyWeight.

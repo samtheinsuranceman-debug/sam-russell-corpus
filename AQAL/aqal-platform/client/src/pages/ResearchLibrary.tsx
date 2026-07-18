@@ -633,7 +633,7 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "121": "121 · Intergenerational Programs",
   "122": "122 · Houseplants",
   "123": "123 · Gardening & Horticultural Therapy",
-  "124": "124 · The Pet Rock — Object Attachment",
+  "124": "124 · The Pet Rock — Talking It Out",
   "125": "125 · Cooking at Home",
   "126": "126 · Handwriting & Longhand Notes",
   "127": "127 · Action Video Games",
@@ -641,6 +641,15 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "129": "129 · Chess & Strategy Games",
   "130": "130 · Napping",
   "131": "131 · Weighted Blankets",
+  "132": "132 · Gestalt & Empty-Chair Work",
+  "133": "133 · Emotion-Focused Therapy (EFT)",
+  "134": "134 · Couples' Novel & Arousing Activities",
+  "135": "135 · Couple Friendships & Double Dates",
+  "136": "136 · Parenting for Child Development",
+  "137": "137 · Child Independent Mobility",
+  "138": "138 · Free & Risky Play",
+  "139": "139 · Youth Team Sports",
+  "140": "140 · Golf",
 };
 
 // Short labels for the section jump-nav chips.
@@ -710,6 +719,8 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "122": "Houseplants", "123": "Gardening", "124": "Pet Rock", "125": "Home Cooking",
   "126": "Handwriting", "127": "Video Games", "128": "Brain-Training", "129": "Chess",
   "130": "Napping", "131": "Weighted Blankets",
+  "132": "Gestalt", "133": "EFT", "134": "Self-Expansion", "135": "Double Dates",
+  "136": "Parenting", "137": "Child Mobility", "138": "Free Play", "139": "Youth Sports", "140": "Golf",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -728,6 +739,16 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "6", "7", "8", "66", "67", "68", "69", "70", "71", "72", "73", "30", "31", "32", "33", "63", "65",
   // Behavioral & life-design
   "9", "74", "75", "77", "78", "79", "80", "38", "39", "40", "41",
+  // Evidence-based therapies
+  "84", "85", "87", "86", "88", "82", "83", "89", "90", "91", "132", "133",
+  // Mind & self-regulation techniques
+  "99", "95", "96", "97", "98", "101", "100", "94", "92", "93",
+  // Youth, family & development
+  "136", "111", "109", "108", "106", "102", "103", "110", "104", "105", "137", "138", "139", "140",
+  // Social & community
+  "114", "115", "112", "134", "135", "113", "117", "118", "121", "119", "120", "116",
+  // Environment & everyday habits
+  "130", "125", "123", "127", "122", "124", "126", "129", "131", "128",
   "19", "20", "37", "10", "11"];
 const sectionRank = (s: string) => {
   const i = PRACTICE_SECTION_ORDER.indexOf(s);
@@ -752,6 +773,35 @@ const PRACTICE_GROUP: Record<string, string> = {
   "32": "Practices by domain", "33": "Practices by domain", "38": "Practices by domain",
   "39": "Practices by domain", "40": "Practices by domain", "41": "Practices by domain",
   "24": "Keystone practices — start here",
+  // Evidence-based therapies
+  "82": "Evidence-based therapies", "83": "Evidence-based therapies", "84": "Evidence-based therapies",
+  "85": "Evidence-based therapies", "86": "Evidence-based therapies", "87": "Evidence-based therapies",
+  "88": "Evidence-based therapies", "89": "Evidence-based therapies", "90": "Evidence-based therapies",
+  "91": "Evidence-based therapies", "132": "Evidence-based therapies", "133": "Evidence-based therapies",
+  // Mind & self-regulation techniques
+  "92": "Mind & self-regulation techniques", "93": "Mind & self-regulation techniques",
+  "94": "Mind & self-regulation techniques", "95": "Mind & self-regulation techniques",
+  "96": "Mind & self-regulation techniques", "97": "Mind & self-regulation techniques",
+  "98": "Mind & self-regulation techniques", "99": "Mind & self-regulation techniques",
+  "100": "Mind & self-regulation techniques", "101": "Mind & self-regulation techniques",
+  // Youth, family & development
+  "102": "Youth, family & development", "103": "Youth, family & development", "104": "Youth, family & development",
+  "105": "Youth, family & development", "106": "Youth, family & development", "108": "Youth, family & development",
+  "109": "Youth, family & development", "110": "Youth, family & development", "111": "Youth, family & development",
+  "136": "Youth, family & development", "137": "Youth, family & development", "138": "Youth, family & development",
+  "139": "Youth, family & development", "140": "Youth, family & development",
+  // Adult continuing ed sits with lifelong learning in domain, but group it here too
+  "107": "Youth, family & development",
+  // Social & community
+  "112": "Social & community", "113": "Social & community", "114": "Social & community",
+  "115": "Social & community", "116": "Social & community", "117": "Social & community",
+  "118": "Social & community", "119": "Social & community", "120": "Social & community",
+  "121": "Social & community", "134": "Social & community", "135": "Social & community",
+  // Environment & everyday habits
+  "122": "Environment & everyday habits", "123": "Environment & everyday habits", "124": "Environment & everyday habits",
+  "125": "Environment & everyday habits", "126": "Environment & everyday habits", "127": "Environment & everyday habits",
+  "128": "Environment & everyday habits", "129": "Environment & everyday habits", "130": "Environment & everyday habits",
+  "131": "Environment & everyday habits",
   // physical/metabolic + movement + cognitive + emotional + behavioral → domain
   "42": "Practices by domain", "43": "Practices by domain", "44": "Practices by domain",
   "45": "Practices by domain", "46": "Practices by domain", "47": "Practices by domain",
@@ -2952,6 +3002,866 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
       { cite: "Koh, A. W. L., Lee, S. C., & Lim, S. W. H. (2018). The learning benefits of teaching: a retrieval practice hypothesis. Applied Cognitive Psychology, 32(3), 401–410.", note: "Teaching's benefit came from retrieval; teaching-with-notes added little. [Moderate]", link: scholar("Koh Lee Lim 2018 the learning benefits of teaching a retrieval practice hypothesis"), kind: "scholar" },
       { cite: "Roediger, H. L., & Karpicke, J. D. (2006). Test-enhanced learning: taking memory tests improves long-term retention. Psychological Science, 17(3), 249–255.", note: "Retrieval practice beats restudy for long-term retention. [Strong]", link: scholar("Roediger Karpicke 2006 test-enhanced learning taking memory tests improves long-term retention"), kind: "scholar" },
       { cite: "Cepeda, N. J., et al. (2006). Distributed practice in verbal recall tasks: a review and quantitative synthesis. Psychological Bulletin, 132(3), 354–380.", note: "Meta-analysis: spaced practice reliably outperforms massed practice. [Strong — meta-analysis]", link: scholar("Cepeda Pashler Vul Wixted Rohrer 2006 distributed practice in verbal recall tasks review quantitative synthesis"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 82 — EMDR ═══════════════
+  {
+    id: "emdr", section: "82", title: "EMDR", subtitle: "Bolsters clusters: emotional regulation, trauma recovery",
+    evidenceTag: "Strong",
+    feeds: ["PTSD/trauma relief", "intrusive-memory & hyperarousal reduction", "emotional regulation", "fear extinction"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Structured trauma-focused therapy pairing recall of traumatic memories with bilateral eye movements. Strongly effective for PTSD — though the eye-movement component itself may add little beyond the exposure it contains.",
+    callout: "The eponymous eye movements are the weakest-supported ingredient: dismantling studies repeatedly find no incremental benefit over the same procedure without them. EMDR likely works via its exposure and cognitive-processing elements.",
+    sources: [
+      { cite: "Bisson, J. I., et al. (2013). Psychological therapies for chronic post-traumatic stress disorder (PTSD) in adults. Cochrane Database of Systematic Reviews, (12), CD003388.", note: "Trauma-focused CBT and EMDR both effective and superior to non-trauma-focused therapies. [Strong — Cochrane]", link: scholar("Bisson 2013 psychological therapies chronic PTSD adults Cochrane CD003388"), kind: "scholar" },
+      { cite: "Davidson, P. R., & Parker, K. C. H. (2001). Eye movement desensitization and reprocessing (EMDR): a meta-analysis. Journal of Consulting and Clinical Psychology, 69(2), 305–316.", note: "EMDR beat no-treatment and non-exposure therapies — but showed no advantage over other exposure techniques, and no incremental effect from the eye movements. [Strong]", link: scholar("Davidson Parker 2001 EMDR meta-analysis Journal Consulting Clinical Psychology 305"), kind: "scholar" },
+      { cite: "Seidler, G. H., & Wagner, F. E. (2006). Comparing the efficacy of EMDR and trauma-focused cognitive-behavioral therapy in the treatment of PTSD: a meta-analytic study. Psychological Medicine, 36(11), 1515–1522.", note: "EMDR and trauma-focused CBT produced statistically equivalent PTSD outcomes. [Moderate — meta-analysis]", link: scholar("Seidler Wagner 2006 EMDR trauma-focused CBT PTSD meta-analysis Psychological Medicine"), kind: "scholar" },
+      { cite: "Bradley, R., et al. (2005). A multidimensional meta-analysis of psychotherapy for PTSD. American Journal of Psychiatry, 162(2), 214–227.", note: "Both EMDR and exposure/CBT yielded large PTSD effect sizes. [Moderate — meta-analysis]", link: scholar("Bradley 2005 multidimensional meta-analysis psychotherapy PTSD American Journal Psychiatry"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 83 — CLINICAL & ERICKSONIAN HYPNOSIS ═══════════════
+  {
+    id: "hypnosis", section: "83", title: "Clinical & Ericksonian Hypnosis", subtitle: "Bolsters clusters: pain modulation, interoceptive, emotional",
+    evidenceTag: "Moderate",
+    feeds: ["acute & chronic pain relief", "IBS/gut-brain symptom relief", "procedural anxiety reduction", "adjunct to CBT"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "low" },
+    description: "Guided attentional-absorption and suggestion used adjunctively for pain, IBS, and procedural distress. Solid evidence for analgesia and gut-directed IBS work; weaker and more variable elsewhere.",
+    callout: "Response depends heavily on individual hypnotic suggestibility, which is largely trait-like — high-suggestible people benefit substantially while low-suggestible people may gain little, so average effects hide large between-person variance.",
+    sources: [
+      { cite: "Montgomery, G. H., DuHamel, K. N., & Redd, W. H. (2000). A meta-analysis of hypnotically induced analgesia: how effective is hypnosis? International Journal of Clinical and Experimental Hypnosis, 48(2), 138–153.", note: "Across 18 studies, a moderate-to-large analgesic effect; greater for high-suggestible individuals. [Moderate — meta-analysis]", link: scholar("Montgomery DuHamel Redd 2000 meta-analysis hypnotically induced analgesia"), kind: "scholar" },
+      { cite: "Schaefert, R., et al. (2014). Efficacy, tolerability, and safety of hypnosis in adult irritable bowel syndrome: systematic review and meta-analysis. Psychosomatic Medicine, 76(5), 389–398.", note: "Gut-directed hypnosis superior to controls for IBS at end of therapy and at long-term follow-up. [Moderate — meta-analysis]", link: scholar("Schaefert 2014 hypnosis irritable bowel syndrome meta-analysis Psychosomatic Medicine"), kind: "scholar" },
+      { cite: "Montgomery, G. H., et al. (2007). A randomized clinical trial of a brief hypnosis intervention to control side effects in breast surgery patients. Journal of the National Cancer Institute, 99(17), 1304–1312.", note: "Presurgical hypnosis reduced pain, nausea, fatigue vs. attention control. [Moderate — RCT]", link: scholar("Montgomery 2007 hypnosis breast surgery randomized trial Journal National Cancer Institute"), kind: "scholar" },
+      { cite: "Adachi, T., et al. (2014). A meta-analysis of hypnosis for chronic pain problems. International Journal of Clinical and Experimental Hypnosis, 62(1), 1–28.", note: "Hypnosis outperformed standard care for chronic pain but was roughly equivalent to other psychological interventions. [Moderate — meta-analysis]", link: scholar("Adachi 2014 meta-analysis hypnosis chronic pain International Journal Clinical Experimental Hypnosis"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 84 — CBT ═══════════════
+  {
+    id: "cbt", section: "84", title: "Cognitive Behavioral Therapy (CBT)", subtitle: "Bolsters clusters: emotional, meta-cognitive, most mental-health lines",
+    evidenceTag: "Strong",
+    feeds: ["depression relief", "anxiety/panic/PTSD relief", "cognitive reappraisal", "relapse prevention"],
+    impact: { magnitude: 5, latency: "weeks", durability: "lasting", effort: "moderate" },
+    description: "Structured, present-focused therapy targeting maladaptive cognitions and behaviors — the most extensively validated psychotherapy across anxiety, depression, and many disorders, with durable relapse protection.",
+    callout: "Breadth is real but uneven: effects are largest for anxiety and weakest/mixed for conditions like chronic psychosis, and some depression meta-analyses show effect sizes shrinking once publication bias and low-quality trials are removed.",
+    sources: [
+      { cite: "Hofmann, S. G., et al. (2012). The efficacy of cognitive behavioral therapy: a review of meta-analyses. Cognitive Therapy and Research, 36(5), 427–440.", note: "Reviewing 106 meta-analyses, strongest support for CBT in anxiety, somatoform disorders, bulimia, anger, and stress. [Strong]", link: scholar("Hofmann Asnaani 2012 efficacy cognitive behavioral therapy review meta-analyses Cognitive Therapy Research"), kind: "scholar" },
+      { cite: "Butler, A. C., et al. (2006). The empirical status of cognitive-behavioral therapy: a review of meta-analyses. Clinical Psychology Review, 26(1), 17–31.", note: "Large effect sizes for CBT in depression, GAD, panic, social phobia, PTSD. [Strong]", link: scholar("Butler Chapman Forman Beck 2006 empirical status cognitive-behavioral therapy meta-analyses"), kind: "scholar" },
+      { cite: "Cuijpers, P., et al. (2016). How effective are cognitive behavior therapies for major depression and anxiety disorders? A meta-analytic update. World Psychiatry, 15(3), 245–258.", note: "Confirms CBT efficacy but shows depression effect sizes are inflated by low-quality trials and publication bias. [Strong — honest corrective]", link: scholar("Cuijpers 2016 how effective cognitive behavior therapies depression anxiety World Psychiatry"), kind: "scholar" },
+      { cite: "Cuijpers, P., et al. (2008). Psychotherapy for depression in adults: a meta-analysis of comparative outcome studies. Journal of Consulting and Clinical Psychology, 76(6), 909–922.", note: "CBT and other bona fide psychotherapies for depression broadly comparable; no single approach clearly superior. [Strong]", link: scholar("Cuijpers 2008 psychotherapy depression adults meta-analysis comparative outcome Journal Consulting Clinical Psychology"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 85 — BEHAVIORAL ACTIVATION ═══════════════
+  {
+    id: "behavioral-activation", section: "85", title: "Behavioral Activation", subtitle: "Bolsters clusters: volitional, emotional (depression)",
+    evidenceTag: "Strong",
+    feeds: ["depression relief", "behavioral-avoidance reduction", "activity/reward engagement", "low-barrier delivery"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "A behavioral treatment that increases contact with rewarding activities and reduces avoidance — as effective as full CBT for depression, and simpler to deliver.",
+    callout: "Trials are often small and of modest quality, and long-term follow-up data are thinner than the strong short-term effect sizes suggest.",
+    sources: [
+      { cite: "Cuijpers, P., van Straten, A., & Warmerdam, L. (2007). Behavioral activation treatments of depression: a meta-analysis. Clinical Psychology Review, 27(3), 318–326.", note: "Across 16 studies, a large effect (d≈0.87), at least as effective as cognitive therapy. [Strong — meta-analysis]", link: scholar("Cuijpers van Straten Warmerdam 2007 behavioral activation treatments depression meta-analysis"), kind: "scholar" },
+      { cite: "Ekers, D., et al. (2014). Behavioural activation for depression: an update of meta-analysis of effectiveness and sub-group analysis. PLoS ONE, 9(6), e100100.", note: "26 RCTs: BA superior to controls (SMD −0.74) and to medication (SMD −0.42). [Strong — meta-analysis]", link: scholar("Ekers Webster 2014 behavioural activation depression update meta-analysis PLoS ONE 100100"), kind: "scholar" },
+      { cite: "Dimidjian, S., et al. (2006). Randomized trial of behavioral activation, cognitive therapy, and antidepressant medication in the acute treatment of adults with major depression. Journal of Consulting and Clinical Psychology, 74(4), 658–670.", note: "In more severely depressed patients, BA performed comparably to antidepressant medication. [Strong — RCT]", link: scholar("Dimidjian 2006 randomized trial behavioral activation cognitive therapy antidepressant major depression"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 86 — ACT ═══════════════
+  {
+    id: "act", section: "86", title: "Acceptance & Commitment Therapy (ACT)", subtitle: "Bolsters clusters: emotional, intrapersonal, existential",
+    evidenceTag: "Moderate",
+    feeds: ["depression/anxiety relief", "chronic-pain coping", "psychological flexibility", "values clarification"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "A third-wave therapy building psychological flexibility through acceptance, mindfulness, and values-based action — efficacious across mental and physical health problems, roughly on par with established treatments.",
+    callout: "ACT reliably beats waitlist/no-treatment but rarely shows superiority over established CBT, and early trials suffered from weak controls and researcher-allegiance effects. Its distinct advantage over standard CBT remains unproven.",
+    sources: [
+      { cite: "A-Tjak, J. G. L., et al. (2015). A meta-analysis of the efficacy of acceptance and commitment therapy for clinically relevant mental and physical health problems. Psychotherapy and Psychosomatics, 84(1), 30–36.", note: "39 RCTs (n=1,821): ACT efficacious across anxiety, depression, addiction, somatic problems; comparable to established interventions. [Moderate — meta-analysis]", link: scholar("A-Tjak Davis 2015 meta-analysis efficacy acceptance commitment therapy Psychotherapy Psychosomatics"), kind: "scholar" },
+      { cite: "Öst, L-G. (2014). The efficacy of acceptance and commitment therapy: an updated systematic review and meta-analysis. Behaviour Research and Therapy, 61, 105–121.", note: "Critical review: ACT trials methodologically weaker than CBT trials and not yet 'well-established.' [Moderate — skeptical corrective]", link: scholar("Ost 2014 efficacy acceptance commitment therapy updated systematic review meta-analysis Behaviour Research Therapy"), kind: "scholar" },
+      { cite: "Hughes, L. S., et al. (2017). Acceptance and commitment therapy (ACT) for chronic pain: a systematic review and meta-analyses. Clinical Journal of Pain, 33(6), 552–568.", note: "Small-to-moderate improvements in chronic-pain functioning and distress. [Moderate — meta-analysis]", link: scholar("Hughes 2017 acceptance commitment therapy chronic pain systematic review meta-analyses Clinical Journal Pain"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 87 — EXPOSURE THERAPY ═══════════════
+  {
+    id: "exposure", section: "87", title: "Exposure Therapy", subtitle: "Bolsters clusters: emotional, volitional (anxiety/fear)",
+    evidenceTag: "Strong",
+    feeds: ["phobia/panic/social-anxiety/OCD relief", "fear extinction & inhibitory learning", "avoidance reduction", "self-efficacy"],
+    impact: { magnitude: 5, latency: "weeks", durability: "lasting", effort: "high" },
+    description: "Systematic, repeated confrontation with feared stimuli to extinguish avoidance — the most potent evidence-based treatment for phobias, panic, social anxiety, and OCD.",
+    callout: "Return of fear after treatment is common, which shifted the field from a fear-habituation rationale to an inhibitory-learning model — exposure design (expectancy violation, variability, retrieval cues) matters more than simply staying until anxiety drops.",
+    sources: [
+      { cite: "Wolitzky-Taylor, K. B., et al. (2008). Psychological approaches in the treatment of specific phobias: a meta-analysis. Clinical Psychology Review, 28(6), 1021–1037.", note: "33 studies: exposure-based treatment yielded large effects, outperforming placebo and non-exposure therapies. [Strong — meta-analysis]", link: scholar("Wolitzky-Taylor Horowitz Powers Telch 2008 psychological approaches specific phobias meta-analysis"), kind: "scholar" },
+      { cite: "Craske, M. G., et al. (2014). Maximizing exposure therapy: an inhibitory learning approach. Behaviour Research and Therapy, 58, 10–23.", note: "Reframes exposure around inhibitory learning rather than within-session habituation. [Strong — influential model]", link: scholar("Craske Treanor 2014 maximizing exposure therapy inhibitory learning approach Behaviour Research Therapy"), kind: "scholar" },
+      { cite: "Powers, M. B., et al. (2010). A meta-analytic review of prolonged exposure for posttraumatic stress disorder. Clinical Psychology Review, 30(6), 635–641.", note: "Prolonged exposure produced large effects for PTSD; treated patients better off than ~86% of controls. [Strong — meta-analysis]", link: scholar("Powers Halpern Foa 2010 meta-analytic review prolonged exposure posttraumatic stress disorder"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 88 — DBT SKILLS ═══════════════
+  {
+    id: "dbt", section: "88", title: "Dialectical Behavior Therapy (DBT) Skills", subtitle: "Bolsters clusters: emotional regulation, volitional, interpersonal",
+    evidenceTag: "Strong",
+    feeds: ["emotion regulation", "distress tolerance", "self-harm/suicidality reduction", "interpersonal effectiveness"],
+    impact: { magnitude: 4, latency: "months", durability: "sustained", effort: "high" },
+    description: "Combines CBT with mindfulness and dialectics to teach emotion regulation, distress tolerance, and interpersonal effectiveness — the frontline treatment for borderline personality disorder and self-harm.",
+    callout: "Strongest evidence is for reducing self-harm and suicidal behavior in BPD; effects on depression and other populations are more modest, and much foundational evidence comes from Linehan's own group — independent replication matters.",
+    sources: [
+      { cite: "Linehan, M. M., et al. (1991). Cognitive-behavioral treatment of chronically parasuicidal borderline patients. Archives of General Psychiatry, 48(12), 1060–1064.", note: "Foundational RCT: DBT reduced parasuicidal acts, dropout, and inpatient days vs. treatment as usual. [Strong — landmark RCT]", link: scholar("Linehan Armstrong 1991 cognitive-behavioral treatment chronically parasuicidal borderline Archives General Psychiatry"), kind: "scholar" },
+      { cite: "Kliem, S., Kröger, C., & Kosfelder, J. (2010). Dialectical behavior therapy for borderline personality disorder: a meta-analysis using mixed-effects modeling. Journal of Consulting and Clinical Psychology, 78(6), 936–951.", note: "16 studies: moderate global effect and reduced suicidal/self-injurious behavior. [Strong — meta-analysis]", link: scholar("Kliem Kroger Kosfelder 2010 dialectical behavior therapy borderline meta-analysis mixed-effects"), kind: "scholar" },
+      { cite: "Linehan, M. M., et al. (2015). Dialectical behavior therapy for high suicide risk in individuals with borderline personality disorder: a randomized clinical trial and component analysis. JAMA Psychiatry, 72(5), 475–482.", note: "Component analysis showed the skills-training element contributed substantially to reductions in self-harm. [Strong — RCT]", link: scholar("Linehan Korslund Harned 2015 dialectical behavior therapy high suicide risk borderline JAMA Psychiatry component analysis"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 89 — MOTIVATIONAL INTERVIEWING ═══════════════
+  {
+    id: "motivational-interviewing", section: "89", title: "Motivational Interviewing", subtitle: "Bolsters clusters: volitional, interpersonal, emotional",
+    evidenceTag: "Moderate",
+    feeds: ["substance-use reduction", "health-behavior change", "treatment engagement/retention", "ambivalence resolution"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "low" },
+    description: "A collaborative, client-centered method for strengthening intrinsic motivation and resolving ambivalence — small-but-reliable effects, especially as a brief add-on for substance use and health behaviors.",
+    callout: "Effects are genuine but generally small and inconsistent — MI beats weak/no-treatment controls but shows little advantage over other active treatments, and outcomes vary by target behavior, fidelity, and dose.",
+    sources: [
+      { cite: "Lundahl, B., et al. (2010). A meta-analysis of motivational interviewing: twenty-five years of empirical studies. Research on Social Work Practice, 20(2), 137–160.", note: "119 studies: small but durable effects vs. weak controls (g≈0.28); non-significant vs. specific active treatments. [Moderate — meta-analysis]", link: scholar("Lundahl Burke 2010 meta-analysis motivational interviewing twenty-five years empirical studies"), kind: "scholar" },
+      { cite: "Rubak, S., et al. (2005). Motivational interviewing: a systematic review and meta-analysis. British Journal of General Practice, 55(513), 305–312.", note: "Across 72 RCTs, MI outperformed traditional advice on ~80% of outcomes incl. BMI, cholesterol, BP. [Moderate — meta-analysis]", link: scholar("Rubak Sandbaek 2005 motivational interviewing systematic review meta-analysis British Journal General Practice"), kind: "scholar" },
+      { cite: "Magill, M., et al. (2014). The technical hypothesis of motivational interviewing: a meta-analysis of MI's key causal model. Journal of Consulting and Clinical Psychology, 82(6), 973–983.", note: "Supports the mechanism — client 'change talk' predicts better outcomes, 'sustain talk' worse. [Moderate — meta-analysis]", link: scholar("Magill Gaume Apodaca 2014 technical hypothesis motivational interviewing meta-analysis causal model"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 90 — PSYCHODYNAMIC & INTERPERSONAL THERAPY ═══════════════
+  {
+    id: "psychodynamic-ipt", section: "90", title: "Psychodynamic & Interpersonal Therapy", subtitle: "Bolsters clusters: intrapersonal, interpersonal, emotional",
+    evidenceTag: "Moderate",
+    feeds: ["depression relief", "interpersonal-functioning improvement", "insight & self-understanding", "relapse prevention"],
+    impact: { magnitude: 4, latency: "weeks", durability: "lasting", effort: "moderate" },
+    description: "Psychodynamic therapy targets unconscious conflict and relational patterns; interpersonal therapy (IPT) targets current interpersonal roles. Both have real efficacy evidence, especially for depression, with gains often growing after treatment ends.",
+    callout: "Short-term psychodynamic evidence is reasonably solid, but claims for long-term psychodynamic therapy rest on a small, heterogeneous set of studies — one prominent JAMA meta-analysis was later challenged for a statistical error.",
+    sources: [
+      { cite: "Cuijpers, P., et al. (2011). Interpersonal psychotherapy for depression: a meta-analysis. American Journal of Psychiatry, 168(6), 581–592.", note: "38 studies: IPT more effective than controls (NNT<3), comparable to other psychotherapies, useful in maintenance. [Strong — meta-analysis]", link: scholar("Cuijpers Geraedts 2011 interpersonal psychotherapy depression meta-analysis American Journal Psychiatry"), kind: "scholar" },
+      { cite: "Shedler, J. (2010). The efficacy of psychodynamic psychotherapy. American Psychologist, 65(2), 98–109.", note: "Effect sizes as large as those for 'empirically supported' treatments, with gains often continuing after treatment. [Moderate — review]", link: scholar("Shedler 2010 efficacy psychodynamic psychotherapy American Psychologist"), kind: "scholar" },
+      { cite: "Driessen, E., et al. (2015). The efficacy of short-term psychodynamic psychotherapy for depression: a meta-analysis update. Clinical Psychology Review, 42, 1–15.", note: "Short-term psychodynamic therapy efficacious for depression, broadly comparable to other therapies at follow-up. [Moderate — meta-analysis]", link: scholar("Driessen Abbass 2015 efficacy short-term psychodynamic psychotherapy depression meta-analysis update Clinical Psychology Review"), kind: "scholar" },
+      { cite: "Leichsenring, F., & Rabung, S. (2008). Effectiveness of long-term psychodynamic psychotherapy: a meta-analysis. JAMA, 300(13), 1551–1565.", note: "Reported large effects for complex disorders — but later criticized for an effect-size calculation error; cite with caution. [Mixed]", link: scholar("Leichsenring Rabung 2008 effectiveness long-term psychodynamic psychotherapy meta-analysis JAMA"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 91 — SUPPORT GROUPS & GROUP THERAPY ═══════════════
+  {
+    id: "group-therapy", section: "91", title: "Support Groups & Group Therapy", subtitle: "Bolsters clusters: interpersonal, emotional, existential",
+    evidenceTag: "Moderate",
+    feeds: ["depression/anxiety relief", "social connection & reduced isolation", "universality/normalization", "cost-efficient reach"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Structured group treatment and peer support harnessing shared experience, universality, and mutual feedback — group psychotherapy is broadly as effective as individual therapy, and peer support adds modest benefits for severe mental illness.",
+    callout: "Group and individual therapy show roughly equivalent outcomes, but peer-support evidence is weaker and inconsistent — effects on clinical symptoms (vs. hope/empowerment) are small and uncertain.",
+    sources: [
+      { cite: "Burlingame, G. M., et al. (2016). Outcome differences between individual and group formats when identical and nonidentical treatments, patients, and doses are compared: a 25-year meta-analytic perspective. Psychotherapy, 53(4), 446–461.", note: "Group and individual therapy produced statistically equivalent outcomes across disorders. [Strong — meta-analysis]", link: scholar("Burlingame Seebeck Strauss 2016 outcome differences individual group formats 25-year meta-analytic Psychotherapy"), kind: "scholar" },
+      { cite: "McRoberts, C., Burlingame, G. M., & Hoag, M. J. (1998). Comparative efficacy of individual and group psychotherapy: a meta-analytic perspective. Group Dynamics, 2(2), 101–117.", note: "No significant overall difference in efficacy between individual and group formats. [Moderate — meta-analysis]", link: scholar("McRoberts Burlingame Hoag 1998 comparative efficacy individual group psychotherapy meta-analytic Group Dynamics"), kind: "scholar" },
+      { cite: "Lloyd-Evans, B., et al. (2014). A systematic review and meta-analysis of randomised controlled trials of peer support for people with severe mental illness. BMC Psychiatry, 14, 39.", note: "Some benefit for hope, empowerment, recovery, but little consistent effect on clinical symptoms; evidence quality low. [Emerging]", link: scholar("Lloyd-Evans Mayo-Wilson 2014 systematic review meta-analysis peer support severe mental illness BMC Psychiatry"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 92 — NLP: THE HONEST VERDICT ═══════════════
+  {
+    id: "nlp-verdict", section: "92", title: "NLP — The Honest Verdict", subtitle: "The branded model is not empirically supported",
+    evidenceTag: "Mixed",
+    feeds: ["little validated NLP-specific effect — real benefit belongs to alliance, reappraisal & goal-setting"],
+    impact: { magnitude: 1, latency: "months", durability: "transient", effort: "high" },
+    description: "Neuro-Linguistic Programming as a branded Bandler/Grinder model. We include it because honesty demands it: systematic reviews find it lacks empirical support and is widely classed as pseudoscience. Any apparent benefit is attributable to generic, already-validated ingredients — therapeutic alliance, expectancy, goal-setting — not to NLP-specific theory.",
+    callout: "The NLP brand fails independent replication; reviews explicitly call it 'pseudoscientific decoration' and advise against spending clinical resources on it. Where its techniques help, credit the validated cousin (reframing → cognitive reappraisal, Section 69; rapport → therapeutic alliance; well-formed outcomes → goal-setting, Section 74) — not 'NLP.'",
+    sources: [
+      { cite: "Witkowski, T. (2010). Thirty-five years of research on neuro-linguistic programming. NLP research data base. State of the art or pseudoscientific decoration? Polish Psychological Bulletin, 41(2), 58–66.", note: "Of 63 ISI-listed studies, supportive results were a small minority; the corpus was judged pseudoscientific. [Strong — critical review]", link: scholar("Witkowski Thirty-Five Years Research Neuro-Linguistic Programming Polish Psychological Bulletin 2010"), kind: "scholar" },
+      { cite: "Sturt, J., et al. (2012). Neurolinguistic programming: a systematic review of the effects on health outcomes. British Journal of General Practice, 62(604), e757–e764.", note: "10 studies (5 RCTs): little evidence NLP improves health outcomes; insufficient to justify NHS resourcing. [Strong — systematic review]", link: scholar("Sturt neurolinguistic programming systematic review health outcomes British Journal General Practice 2012"), kind: "scholar" },
+      { cite: "Passmore, J., & Rowson, T. S. (2019). Neuro-linguistic programming: a critical review of NLP research and the application of NLP in coaching. International Coaching Psychology Review, 14(1), 57–69.", note: "Unique NLP practices poorly supported; advises ignoring the NLP brand in favor of evidence-based models. [Moderate — critical review]", link: scholar("Passmore Rowson 2019 neuro-linguistic programming critical review coaching International Coaching Psychology Review"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 93 — NLP META-PROGRAMS & MODALITY MATCHING ═══════════════
+  {
+    id: "nlp-metaprograms", section: "93", title: "NLP Meta-Programs & Modality Matching", subtitle: "The 'match their VAK style' hypothesis fails controlled tests",
+    evidenceTag: "Mixed",
+    feeds: ["modality-matching not supported — multimodal presentation helps everyone, which is different"],
+    impact: { magnitude: 1, latency: "months", durability: "transient", effort: "high" },
+    description: "The NLP claim that people have a 'preferred representational system' (visual/auditory/kinesthetic) and that matching it improves communication or learning. This is the same idea as educational 'learning styles' — and the meshing hypothesis has essentially no rigorous support despite decades of testing.",
+    callout: "Diagnosing a modality and tailoring input to it does not reliably improve outcomes. The learning-styles meshing hypothesis is specifically refuted; don't spend assessment overhead on it.",
+    sources: [
+      { cite: "Pashler, H., McDaniel, M., Rohrer, D., & Bjork, R. (2008). Learning styles: concepts and evidence. Psychological Science in the Public Interest, 9(3), 105–119.", note: "Almost no studies use the design needed to test meshing; those that do contradict it. [Strong — evidence review]", link: scholar("Pashler McDaniel Rohrer Bjork 2008 Learning Styles Concepts and Evidence"), kind: "scholar" },
+      { cite: "Rogowsky, B. A., Calhoun, B. M., & Tallal, P. (2015). Matching learning style to instructional method: effects on comprehension. Journal of Educational Psychology, 107(1), 64–78.", note: "No statistically significant interaction between learning-style preference and instructional modality. [Strong — controlled test]", link: scholar("Rogowsky Calhoun Tallal 2015 matching learning style instructional method Journal Educational Psychology"), kind: "scholar" },
+      { cite: "Witkowski, T. (2010). Thirty-five years of research on neuro-linguistic programming. Polish Psychological Bulletin, 41(2), 58–66.", note: "Direct tests of the representational-system / eye-accessing-cue matching hypothesis were largely non-confirming. [Moderate — as applied to PRS]", link: scholar("Witkowski NLP research database representational systems eye accessing cues"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 94 — RAPPORT, MIRRORING & LANGUAGE PATTERNS ═══════════════
+  {
+    id: "rapport-mirroring", section: "94", title: "Rapport, Mirroring & Language Patterns", subtitle: "NLP scripts weak — but real mimicry & alliance are validated",
+    evidenceTag: "Moderate",
+    feeds: ["rapport/liking", "working-relationship quality", "interaction smoothness"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "low" },
+    description: "NLP's Milton/Meta language models and deliberate 'mirroring' for rapport. The NLP framing is unsupported — but nonconscious behavioral mimicry (the 'chameleon effect') and the therapeutic alliance are real, independently validated phenomena that NLP's rapport claims resemble.",
+    callout: "The Milton/Meta models have no credible controlled support. Don't cite mimicry or alliance research AS evidence for NLP — they are independent findings that predate and stand apart from NLP marketing. Genuine warmth and attunement carry the benefit; scripted 'pacing and leading' does not.",
+    sources: [
+      { cite: "Chartrand, T. L., & Bargh, J. A. (1999). The chameleon effect: the perception–behavior link and social interaction. Journal of Personality and Social Psychology, 76(6), 893–910.", note: "Nonconscious mimicry occurs spontaneously and increases liking and interaction smoothness. [Strong — seminal experiments]", link: scholar("Chartrand Bargh 1999 chameleon effect perception-behavior link Journal Personality Social Psychology"), kind: "scholar" },
+      { cite: "Flückiger, C., Del Re, A. C., Wampold, B. E., & Horvath, A. O. (2018). The alliance in adult psychotherapy: a meta-analytic synthesis. Psychotherapy, 55(4), 316–340.", note: "Across 295 studies / 30,000+ patients, alliance is a consistent moderate predictor of outcome (r≈.28). [Strong — meta-analysis]", link: scholar("Fluckiger Del Re Wampold Horvath 2018 alliance adult psychotherapy meta-analytic synthesis Psychotherapy"), kind: "scholar" },
+      { cite: "Passmore, J., & Rowson, T. S. (2019). Neuro-linguistic programming: a critical review. International Coaching Psychology Review, 14(1), 57–69.", note: "NLP-specific language/rapport techniques lack a clear evidence base; generic relational skills carry the benefit. [Moderate — critical review]", link: scholar("Passmore Rowson 2019 NLP critical review language rapport coaching"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 95 — SELF-AFFIRMATION ═══════════════
+  {
+    id: "self-affirmation", section: "95", title: "Self-Affirmation", subtitle: "Bolsters clusters: intrapersonal, volitional, emotional",
+    evidenceTag: "Strong",
+    feeds: ["stress resilience", "reduced defensiveness", "sustained performance under identity threat"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "low" },
+    description: "Briefly writing about core personal values buffers identity threat — well-replicated in education, health, and stress paradigms, sometimes with durable downstream effects, though context-dependent.",
+    callout: "This is values-affirmation (Steele's theory), NOT 'positive self-talk / mantras.' Effects depend on timing and a real threat; poorly targeted affirmations can be null or backfire.",
+    sources: [
+      { cite: "Cohen, G. L., & Sherman, D. K. (2014). The psychology of change: self-affirmation and social psychological intervention. Annual Review of Psychology, 65, 333–371.", note: "Timely values affirmations improve education/health/relationship outcomes, sometimes durably. [Strong — integrative review]", link: scholar("Cohen Sherman 2014 psychology of change self-affirmation Annual Review of Psychology"), kind: "scholar" },
+      { cite: "Creswell, J. D., et al. (2005). Affirmation of personal values buffers neuroendocrine and psychological stress responses. Psychological Science, 16(11), 846–851.", note: "Values affirmation significantly lowered cortisol response to a lab stressor. [Strong — RCT]", link: scholar("Creswell 2005 affirmation personal values buffers neuroendocrine stress Psychological Science"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 96 — SELF-TALK ═══════════════
+  {
+    id: "self-talk", section: "96", title: "Self-Talk", subtitle: "Bolsters clusters: volitional, meta-cognitive, skill lines",
+    evidenceTag: "Moderate",
+    feeds: ["attention regulation", "task focus", "effort mobilization", "skill acquisition"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "low" },
+    description: "Strategic cue words — instructional or motivational — to direct attention and effort. Meta-analytic support for performance benefits, strongest for fine-motor and novel tasks.",
+    callout: "Evidence is concentrated in motor/sport performance; instructional self-talk helps fine/novel tasks more than gross/well-learned ones. Not a treatment for clinical conditions.",
+    sources: [
+      { cite: "Hatzigeorgiadis, A., et al. (2011). Self-talk and sports performance: a meta-analysis. Perspectives on Psychological Science, 6(4), 348–356.", note: "32 studies: moderate positive effect (ES≈.48); larger for fine/novel tasks. [Strong — meta-analysis]", link: scholar("Hatzigeorgiadis 2011 self-talk sports performance meta-analysis Perspectives on Psychological Science"), kind: "scholar" },
+      { cite: "Tod, D., Hardy, J., & Oliver, E. (2011). Effects of self-talk: a systematic review. Journal of Sport and Exercise Psychology, 33(5), 666–687.", note: "47 studies: beneficial effects of positive/instructional/motivational self-talk on performance. [Strong — systematic review]", link: scholar("Tod Hardy Oliver 2011 effects of self-talk systematic review Journal of Sport and Exercise Psychology"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 97 — MENTAL IMAGERY & VISUALIZATION ═══════════════
+  {
+    id: "visualization", section: "97", title: "Mental Imagery & Visualization", subtitle: "Bolsters clusters: bodily-kinesthetic, skill acquisition",
+    evidenceTag: "Moderate",
+    feeds: ["motor skill acquisition", "movement preparation", "rehabilitation", "performance readiness"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Cognitive rehearsal of a motor skill without physical movement. Meta-analysis shows a positive, significant effect — best combined with physical practice and for cognitively-loaded tasks.",
+    callout: "The effect is real but smaller than physical practice and decays with retention interval; strongest for cognitive/symbolic task elements, weaker for pure strength/endurance. 'Visualizing' non-motor life outcomes is not what this evidence supports.",
+    sources: [
+      { cite: "Driskell, J. E., Copper, C., & Moran, A. (1994). Does mental practice enhance performance? Journal of Applied Psychology, 79(4), 481–492.", note: "Mental practice has a positive significant effect, moderated by task type and retention interval. [Strong — meta-analysis]", link: scholar("Driskell Copper Moran 1994 does mental practice enhance performance Journal of Applied Psychology"), kind: "scholar" },
+      { cite: "Schuster, C., et al. (2011). Best practice for motor imagery: a systematic literature review. BMC Medicine, 9, 75.", note: "Synthesizes effective motor-imagery parameters; supports imagery combined with physical practice. [Moderate — systematic review]", link: scholar("Schuster 2011 best practice motor imagery systematic review BMC Medicine"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 98 — MENTAL CONTRASTING (WOOP) ═══════════════
+  {
+    id: "woop", section: "98", title: "Mental Contrasting (WOOP)", subtitle: "Bolsters clusters: volitional, strategic, meta-cognitive",
+    evidenceTag: "Moderate",
+    feeds: ["goal commitment", "obstacle planning", "health-behavior change", "follow-through"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Imagine the desired future (Wish, Outcome), contrast it with the present Obstacle, then form an if-then Plan. Small-to-moderate, reasonably durable effects on health and behavior change — a self-regulation technique that pairs naturally with implementation intentions.",
+    callout: "Effects are small-to-moderate (d≈.28–.32) and studied mostly in health-behavior and academic contexts. Mental contrasting without the implementation-intention step is weaker.",
+    sources: [
+      { cite: "Cross, A., & Sheffield, D. (2019). Mental contrasting for health behaviour change: a systematic review and meta-analysis of effects and moderator variables. Health Psychology Review, 13(2), 209–225.", note: "11 studies / 1,384 participants: effects d≈.28 (≤4 wk) and .32 (>3 mo). [Strong — meta-analysis]", link: scholar("Cross Sheffield 2019 mental contrasting health behaviour change systematic review meta-analysis Health Psychology Review"), kind: "scholar" },
+      { cite: "Oettingen, G. (2012). Future thought and behaviour change. European Review of Social Psychology, 23(1), 1–63.", note: "Fantasy-realization theory; mental contrasting drives selective goal pursuit and disengagement. [Moderate — theoretical review]", link: scholar("Oettingen 2012 future thought and behaviour change European Review of Social Psychology"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 99 — PLACEBO & EXPECTANCY ═══════════════
+  {
+    id: "placebo", section: "99", title: "Placebo & Expectancy Effects", subtitle: "Bolsters clusters: interoceptive, emotional (symptom modulation)",
+    evidenceTag: "Strong",
+    feeds: ["symptom relief", "pain modulation", "treatment engagement"],
+    impact: { magnitude: 4, latency: "days", durability: "transient", effort: "low" },
+    description: "Psychosocial context and expectancy produce measurable neurobiological and clinical changes — and even open-label (non-deceptive) placebos show benefit for some symptom-based conditions like IBS.",
+    callout: "Placebo effects are largest for subjective/symptom outcomes (pain, IBS, mood), not for disease pathology or hard endpoints. Open-label placebo trials are promising but small and heterogeneous.",
+    sources: [
+      { cite: "Benedetti, F. (2008). Mechanisms of placebo and placebo-related effects across diseases and treatments. Annual Review of Pharmacology and Toxicology, 48, 33–60.", note: "Documents specific biochemical/neural mechanisms of placebo across conditions. [Strong — mechanistic review]", link: scholar("Benedetti 2008 mechanisms of placebo placebo-related effects Annual Review Pharmacology Toxicology"), kind: "scholar" },
+      { cite: "Kaptchuk, T. J., et al. (2010). Placebos without deception: a randomized controlled trial in irritable bowel syndrome. PLoS ONE, 5(12), e15591.", note: "Open-label placebo beat no-treatment control on IBS symptom improvement. [Moderate — RCT]", link: scholar("Kaptchuk 2010 placebos without deception randomized controlled trial irritable bowel syndrome PLoS ONE"), kind: "scholar" },
+      { cite: "Charlesworth, J. E. G., et al. (2017). Effects of placebos without deception compared with no treatment: a systematic review and meta-analysis. Journal of Evidence-Based Medicine, 10(2), 97–107.", note: "Pooled open-label placebo trials show a positive effect vs. no treatment; evidence base still small. [Moderate — meta-analysis]", link: scholar("Charlesworth 2017 placebos without deception no treatment systematic review meta-analysis Journal Evidence-Based Medicine"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 100 — BIOFEEDBACK & NEUROFEEDBACK ═══════════════
+  {
+    id: "biofeedback", section: "100", title: "Biofeedback & Neurofeedback", subtitle: "Bolsters clusters: interoceptive, self-regulation",
+    evidenceTag: "Mixed",
+    feeds: ["self-regulation (partly expectancy)", "arousal control", "symptom relief"],
+    impact: { magnitude: 2, latency: "months", durability: "transient", effort: "high" },
+    description: "Real-time feedback of physiological or EEG signals to train self-regulation. Genuinely mixed: some symptom benefit, but sham-controlled trials repeatedly show much of the effect is non-specific / placebo.",
+    callout: "When outcomes are rated by blinded assessors and compared to sham, EEG-neurofeedback's specific effect is often not demonstrated — improvement is largely expectancy. Be skeptical of unblinded, sham-free claims.",
+    sources: [
+      { cite: "Micoulaud-Franchi, J.-A., et al. (2014). EEG neurofeedback treatments in children with ADHD: an updated meta-analysis of randomized controlled trials. Frontiers in Human Neuroscience, 8, 906.", note: "Improvement on some ADHD measures across 5 RCTs; effects attenuate on the most rigorous blinded outcomes. [Moderate — meta-analysis]", link: scholar("Micoulaud-Franchi 2014 EEG neurofeedback ADHD meta-analysis randomized controlled trials Frontiers Human Neuroscience"), kind: "scholar" },
+      { cite: "Thibault, R. T., & Raz, A. (2017). The psychology of neurofeedback: clinical intervention even if applied placebo. American Psychologist, 72(7), 679–688.", note: "Argues psychosocial/expectancy factors, not the specific brain signal, drive most neurofeedback benefit. [Strong — critical analysis]", link: scholar("Thibault Raz 2017 psychology of neurofeedback clinical intervention applied placebo American Psychologist"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 101 — PROGRESSIVE RELAXATION & AUTOGENIC TRAINING ═══════════════
+  {
+    id: "relaxation", section: "101", title: "Progressive Relaxation & Autogenic Training", subtitle: "Bolsters clusters: interoceptive, emotional (anxiety)",
+    evidenceTag: "Moderate",
+    feeds: ["anxiety reduction", "arousal down-regulation", "sleep/tension relief", "stress management"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Structured relaxation — PMR (tense-release cycles) or autogenic (self-suggestion of warmth/heaviness). Meta-analyses show consistent, moderate reductions in anxiety and related symptoms.",
+    callout: "Solid as an adjunct/self-management tool for anxiety and tension — not a standalone cure for severe disorders, and effect sizes shrink against active controls.",
+    sources: [
+      { cite: "Manzoni, G. M., et al. (2008). Relaxation training for anxiety: a ten-years systematic review with meta-analysis. BMC Psychiatry, 8, 41.", note: "Consistent, significant anxiety reduction across relaxation methods (PMR, autogenic, applied). [Strong — meta-analysis]", link: scholar("Manzoni Pagnini 2008 relaxation training for anxiety ten-years systematic review meta-analysis BMC Psychiatry"), kind: "scholar" },
+      { cite: "Stetter, F., & Kupper, S. (2002). Autogenic training: a meta-analysis of clinical outcome studies. Applied Psychophysiology and Biofeedback, 27(1), 45–98.", note: "60 studies: medium-to-large pre-post effects across multiple disorders. [Strong — meta-analysis]", link: scholar("Stetter Kupper 2002 autogenic training meta-analysis clinical outcome studies Applied Psychophysiology and Biofeedback"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 102 — ADOLESCENT WORK, MODERATE HOURS ═══════════════
+  {
+    id: "teen-work-moderate", section: "102", title: "Adolescent Work — Moderate Hours", subtitle: "Bolsters clusters: volitional, street-smarts, financial (youth)",
+    evidenceTag: "Moderate",
+    feeds: ["responsibility", "time-management", "vocational self-concept", "socialization"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    description: "Light-to-moderate term-time work (~≤20 hrs/week) is associated with responsibility, time-management, vocational exploration, and modestly better later attainment — the honest sweet spot for teen employment.",
+    callout: "Largely observational: teens who choose moderate work differ from non-workers and heavy workers, so part of the 'benefit' is who opts in, not the work itself.",
+    sources: [
+      { cite: "Mortimer, J. T. (2003). Working and Growing Up in America. Harvard University Press.", note: "Moderate work (≤20 hrs) linked to more confidence, time-management, and higher college completion than non-workers or heavy workers. [Moderate — longitudinal, Youth Development Study]", link: scholar("Mortimer Working and Growing Up in America 2003 Youth Development Study"), kind: "scholar" },
+      { cite: "Staff, J., & Mortimer, J. T. (2007). Educational and work strategies from adolescence to early adulthood. Social Forces, 85(3), 1169–1194.", note: "Moderate work combined with school especially aided BA attainment for 'low-promise' youth. [Moderate — longitudinal]", link: scholar("Staff Mortimer 2007 educational work strategies adolescence early adulthood Social Forces"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 103 — WORK INTENSITY THRESHOLD ═══════════════
+  {
+    id: "work-intensity", section: "103", title: "Work Intensity Threshold (>20 hrs)", subtitle: "A limit, not a practice — keep teen work under the line",
+    evidenceTag: "Strong",
+    feeds: ["protects academic engagement", "protects sleep/adjustment", "protects college-going"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "low" },
+    description: "High-intensity term-time work (>20 hrs/week) is associated with lower grades, disengagement, more problem behavior, and reduced college attendance. This entry is a guardrail: keep adolescent work under the threshold.",
+    callout: "Reverse causation — already-disengaged students may self-select into long hours — so raw threshold effects overstate causal harm; but propensity-score and fixed-effects work shrinks the effect without erasing it.",
+    sources: [
+      { cite: "Steinberg, L., & Dornbusch, S. M. (1991). Negative correlates of part-time employment during adolescence: replication and elaboration. Developmental Psychology, 27(2), 304–313.", note: "More hours worked linked to lower grades, more drug use, and less school engagement. [Strong — large replication]", link: scholar("Steinberg Dornbusch 1991 negative correlates part-time employment adolescence Developmental Psychology"), kind: "scholar" },
+      { cite: "Marsh, H. W., & Kleitman, S. (2005). Consequences of employment during high school: character building, subversion of academic goals, or a threshold? American Educational Research Journal, 42(2), 331–369.", note: "Hours worked had mainly linear-negative effects on 15 of 23 outcomes (NELS:88), controlling for background. [Strong — nationally representative]", link: scholar("Marsh Kleitman 2005 consequences employment during high school threshold AERJ"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 104 — HOUSEHOLD CHORES & RESPONSIBILITY ═══════════════
+  {
+    id: "chores", section: "104", title: "Household Chores & Responsibility", subtitle: "Bolsters clusters: volitional, intrapersonal (youth)",
+    evidenceTag: "Emerging",
+    feeds: ["responsibility", "self-efficacy", "contribution/prosociality", "self-sufficiency"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    description: "Childhood participation in chores is correlated with later self-sufficiency, relationships, and academic/career outcomes — a plausible, cheap habit, but the evidence is thinner than the parenting-book confidence implies.",
+    callout: "The famous 'Harvard Grant Study proves chores cause success' claim is a genuine misattribution — the Grant Study did not run that analysis. The primary chores study (Rossmann) is small and not peer-reviewed. Treat as suggestive, not established.",
+    sources: [
+      { cite: "White, E. M., DeBoer, M. D., & Scharf, R. J. (2019). Associations between household chores and childhood self-competency. Journal of Developmental & Behavioral Pediatrics, 40(3), 176–182.", note: "Kindergarten chore participation associated with modestly higher self-competence and prosocial peer relations in 3rd grade. [Moderate — larger sample, correlational]", link: scholar("White DeBoer Scharf 2019 household chores childhood self-competency JDBP"), kind: "scholar" },
+      { cite: "Rossmann, M. (2002). Involving children in household tasks: is it worth the effort? University of Minnesota (research report).", note: "Chore participation from ages 3–4 was the best childhood predictor of mid-20s success in a small sample. [Emerging — small n, not peer-reviewed]", link: scholar("Rossmann 2002 involving children household tasks University of Minnesota"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 105 — YOUTH ENTREPRENEURSHIP & PAPER ROUTES ═══════════════
+  {
+    id: "youth-entrepreneurship", section: "105", title: "Youth Entrepreneurship & Paper Routes", subtitle: "Honest gap — the childhood micro-venture is unstudied",
+    evidenceTag: "Emerging",
+    feeds: ["self-efficacy", "initiative", "financial literacy", "customer/social skills"],
+    impact: { magnitude: 2, latency: "months", durability: "transient", effort: "moderate" },
+    description: "Does running a childhood micro-venture (paper route, lemonade stand) build lasting capacities? Honestly: there is essentially NO direct research on informal childhood ventures. The nearest rigorous evidence is on structured youth-entrepreneurship education, which shows proximal self-efficacy gains.",
+    callout: "No peer-reviewed study isolates paper routes or lemonade stands. Entrepreneurship-education effects are real but small and concentrated on proximal outcomes (self-efficacy, attitudes) — not proven downstream income. Don't conflate the two.",
+    sources: [
+      { cite: "Rosendahl Huber, L., Sloof, R., & Van Praag, M. (2014). The effect of early entrepreneurship education: evidence from a field experiment. European Economic Review, 72, 76–97.", note: "Randomized program improved non-cognitive entrepreneurial skills in children; no effect on cognitive scores. [Moderate — field experiment]", link: scholar("Rosendahl Huber Sloof Van Praag 2014 early entrepreneurship education field experiment European Economic Review"), kind: "scholar" },
+      { cite: "Kim, G., Kim, D., Lee, W. J., & Joung, S. (2020). The effect of youth entrepreneurship education programs: two large-scale experimental studies. SAGE Open, 10(3).", note: "Gains mainly in entrepreneurial attitudes/self-efficacy, with uneven effects on knowledge. [Moderate — two experiments]", link: scholar("Kim Kim Lee Joung 2020 youth entrepreneurship education two large-scale experimental studies SAGE Open"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 106 — EARLY EMPLOYMENT & LATER EARNINGS ═══════════════
+  {
+    id: "early-employment", section: "106", title: "Early Employment & Later Earnings", subtitle: "Bolsters clusters: financial, volitional, street-smarts",
+    evidenceTag: "Moderate",
+    feeds: ["earnings", "employability", "occupational status", "human capital"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "moderate" },
+    description: "Working modestly during high school (especially senior year) predicts higher later wages, employment, and human-capital investment — fairly robust in economics, though the premium is shrinking over time.",
+    callout: "Correlational-with-controls, not randomized; the earnings premium has declined across cohorts, so older estimates overstate today's benefit. Gains are largest for non-college-bound youth.",
+    sources: [
+      { cite: "Ruhm, C. J. (1997). Is high school employment consumption or investment? Journal of Labor Economics, 15(4), 735–776.", note: "Senior-year work hours positively predicted future earnings, benefits, and occupational status (NLSY). [Moderate–Strong — panel]", link: scholar("Ruhm 1997 is high school employment consumption or investment Journal of Labor Economics"), kind: "scholar" },
+      { cite: "Baum, C. L., & Ruhm, C. J. (2016). The changing benefits of early work experience. Southern Economic Journal, 83(2), 343–363.", note: "The future-earnings premium from senior-year work fell from ~17% to ~12% across NLSY79 vs. NLSY97 cohorts. [Moderate–Strong — two-cohort]", link: scholar("Baum Ruhm 2016 changing benefits of early work experience Southern Economic Journal"), kind: "scholar" },
+      { cite: "Painter, M. A. (2010). Get a job and keep it! High school employment and adult wealth accumulation. Research in Social Stratification and Mobility, 28(2), 233–249.", note: "Adolescent employment associated with higher adult wealth (homeownership, stock ownership). [Moderate — longitudinal]", link: scholar("Painter 2010 high school employment adult wealth accumulation Research in Social Stratification and Mobility"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 107 — ADULT CONTINUING EDUCATION ═══════════════
+  {
+    id: "continuing-ed", section: "107", title: "Adult Continuing Education (Non-Degree)", subtitle: "Bolsters clusters: meta-cognitive, existential, interpersonal",
+    evidenceTag: "Moderate",
+    feeds: ["wellbeing", "purpose", "cognitive engagement", "social connection", "self-efficacy"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "low" },
+    description: "Informal, non-credit, interest-driven learning — exactly the 'take a class for the love of it' idea — is associated with higher psychological wellbeing, especially in older adults, and informal learning outperforms formal courses for wellbeing.",
+    callout: "Selection/healthy-participant bias: healthier, more socially connected adults enroll and persist, inflating observed benefits. Few randomized designs exist.",
+    sources: [
+      { cite: "Jenkins, A., & Mostafa, T. (2015). The effects of learning on wellbeing for older adults in England. Ageing & Society, 35(10), 2053–2070.", note: "Informal learning linked to higher wellbeing (ELSA); no wellbeing benefit from formal courses. [Moderate — longitudinal]", link: scholar("Jenkins Mostafa 2015 effects of learning on wellbeing older adults England Ageing Society"), kind: "scholar" },
+      { cite: "Narushima, M., Liu, J., & Diestelkamp, N. (2018). Lifelong learning in active ageing discourse: its conserving effect on wellbeing, health and vulnerability. Ageing & Society, 38(4), 651–675.", note: "Continuous non-credit general-interest learning associated with sustained wellbeing in older adults (n=699). [Moderate — large sample]", link: scholar("Narushima Liu Diestelkamp 2018 lifelong learning active ageing wellbeing Ageing Society"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 108 — APPRENTICESHIP & VOCATIONAL TRAINING ═══════════════
+  {
+    id: "apprenticeship", section: "108", title: "Apprenticeship & Vocational Training", subtitle: "Bolsters clusters: financial, mechanical, street-smarts",
+    evidenceTag: "Strong",
+    feeds: ["earnings", "employability", "occupational skills", "school-to-work transition"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "high" },
+    description: "Registered apprenticeships and career-focused pathways produce substantial earnings gains and strong benefit-cost ratios; the cleanest causal estimate (Career Academies) is a randomized trial.",
+    callout: "The large apprenticeship earnings figures come from a non-randomized comparison with likely positive selection; the cleanest causal evidence (Career Academies RCT) shows earnings gains concentrated in young men and no gain in educational attainment.",
+    sources: [
+      { cite: "Kemple, J. J., & Willner, C. J. (2008). Career Academies: Long-Term Impacts on Labor Market Outcomes, Educational Attainment, and Transitions to Adulthood. MDRC.", note: "RCT: ~11% ($2,088/yr) sustained earnings gain over 8 years, concentrated among young men. [Strong — RCT]", link: scholar("Kemple Willner 2008 Career Academies long-term impacts MDRC randomized"), kind: "scholar" },
+      { cite: "Reed, D., et al. (2012). An Effectiveness Assessment and Cost-Benefit Analysis of Registered Apprenticeship in 10 States. Mathematica Policy Research.", note: "Apprenticeship participants earned ~$47,586 more over 9 years; benefits far exceeded costs. [Moderate — quasi-experimental]", link: scholar("Reed 2012 effectiveness assessment cost-benefit analysis registered apprenticeship 10 states Mathematica"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 109 — YOUTH MENTORING PROGRAMS ═══════════════
+  {
+    id: "youth-mentoring", section: "109", title: "Youth Mentoring Programs", subtitle: "Bolsters clusters: interpersonal, volitional, moral (youth)",
+    evidenceTag: "Strong",
+    feeds: ["prosocial behavior", "school engagement", "self-worth", "risk-behavior reduction"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "high" },
+    description: "Structured youth mentoring (e.g., Big Brothers Big Sisters) produces small-but-real average benefits across behavioral, social, emotional, and academic outcomes — strongest for at-risk youth with high-quality, durable matches.",
+    callout: "Average effects are modest (~d=0.21), and poorly implemented or short/early-terminated matches can produce zero or harmful effects. Quality and match duration drive results, not mentoring per se.",
+    sources: [
+      { cite: "Tierney, J. P., Grossman, J. B., & Resch, N. L. (1995). Making a Difference: An Impact Study of Big Brothers/Big Sisters. Public/Private Ventures.", note: "RCT (n≈1,000): mentored youth had ~46% less first-time drug initiation, better grades, less truancy at 18 months. [Strong — RCT]", link: scholar("Tierney Grossman Resch 1995 Making a Difference Big Brothers Big Sisters impact study"), kind: "scholar" },
+      { cite: "DuBois, D. L., et al. (2011). How effective are mentoring programs for youth? A systematic assessment of the evidence. Psychological Science in the Public Interest, 12(2), 57–91.", note: "Meta-analysis (73 programs): overall small positive effect (~d=0.21) across domains. [Strong — meta-analysis]", link: scholar("DuBois 2011 how effective are mentoring programs for youth Psychological Science in the Public Interest"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 110 — EXTRACURRICULAR PARTICIPATION ═══════════════
+  {
+    id: "extracurriculars", section: "110", title: "Extracurricular Participation", subtitle: "Bolsters clusters: interpersonal, volitional (youth)",
+    evidenceTag: "Moderate",
+    feeds: ["socialization", "interpersonal competence", "school belonging", "educational aspirations"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "moderate" },
+    description: "Participation in structured extracurricular activities is associated with better academic outcomes, lower dropout, and higher young-adult educational attainment.",
+    callout: "Self-selection is the central confound — motivated, better-adjusted teens join, so the association weakens or becomes mixed after accounting for prior competence, activity type, and intensity ('over-scheduling' can reverse benefits).",
+    sources: [
+      { cite: "Feldman, A. F., & Matjasko, J. L. (2005). The role of school-based extracurricular activities in adolescent development: a comprehensive review and future directions. Review of Educational Research, 75(2), 159–210.", note: "Associations mostly positive but become mixed once moderators (type, intensity, selection) are modeled. [Moderate — review]", link: scholar("Feldman Matjasko 2005 school-based extracurricular activities adolescent development Review of Educational Research"), kind: "scholar" },
+      { cite: "Mahoney, J. L., Cairns, B. D., & Farmer, T. W. (2003). Promoting interpersonal competence and educational success through extracurricular activity participation. Journal of Educational Psychology, 95(2), 409–418.", note: "Consistent participation predicted higher educational status and college attendance at age 20. [Moderate — longitudinal]", link: scholar("Mahoney Cairns Farmer 2003 promoting interpersonal competence extracurricular activity Journal of Educational Psychology"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 111 — SHARED READING & EARLY LITERACY ═══════════════
+  {
+    id: "dialogic-reading", section: "111", title: "Shared Reading & Early Literacy", subtitle: "Bolsters clusters: linguistic, interpersonal (parent-child)",
+    evidenceTag: "Strong",
+    feeds: ["expressive vocabulary", "early literacy", "oral language", "parent-child interaction"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Interactive ('dialogic') shared book reading — where the adult asks open-ended questions and expands on the child's answers — causally boosts young children's expressive vocabulary. One of the strongest, cheapest levers in child development.",
+    callout: "Effects are largest for younger (2–3 yr) and not-at-risk children and shrink for older or language-delayed children; benefits concentrate on expressive vocabulary. Fidelity of the technique matters.",
+    sources: [
+      { cite: "Whitehurst, G. J., et al. (1988). Accelerating language development through picture book reading. Developmental Psychology, 24(4), 552–559.", note: "RCT of 1-month home dialogic-reading training raised toddlers' expressive language vs. controls. [Strong — RCT]", link: scholar("Whitehurst 1988 accelerating language development through picture book reading Developmental Psychology"), kind: "scholar" },
+      { cite: "Mol, S. E., et al. (2008). Added value of dialogic parent–child book readings: a meta-analysis. Early Education and Development, 19(1), 7–26.", note: "Meta-analysis (16 studies): dialogic reading improved expressive vocabulary (d≈0.59). [Strong — meta-analysis]", link: scholar("Mol Bus de Jong Smeets 2008 added value dialogic parent-child book readings meta-analysis"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 112 — COMMUNITY & REC SPORTS TEAMS ═══════════════
+  {
+    id: "rec-sports", section: "112", title: "Community & Rec Sports Teams", subtitle: "Bolsters clusters: interpersonal, bodily-kinesthetic, emotional",
+    evidenceTag: "Moderate",
+    feeds: ["social connection", "mood", "physical health", "belonging", "loneliness reduction"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Playing on a recreational or team sport (adult coed softball, the classic example) improves mood and social connection, and the team format adds a social layer over solo exercise.",
+    callout: "Selection effects dominate — healthier, more social people join teams. Almost no RCTs on adult recreational leagues; the strongest mental-health data are cross-sectional or in adolescents.",
+    sources: [
+      { cite: "Eime, R. M., et al. (2013). A systematic review of the psychological and social benefits of participation in sport for adults. International Journal of Behavioral Nutrition and Physical Activity, 10, 135.", note: "Club/team sport linked to better wellbeing and social connectedness beyond solo activity. [Moderate — systematic review]", link: scholar("Eime Young Harvey systematic review psychological social benefits participation sport adults 2013"), kind: "scholar" },
+      { cite: "Pluhar, E., et al. (2019). Team sport athletes may be less likely to suffer anxiety or depression than individual sport athletes. Journal of Sports Science & Medicine, 18(3), 490–496.", note: "Team-sport athletes reported less anxiety/depression than individual-sport athletes, plausibly via social support. [Moderate]", link: scholar("Pluhar team sport athletes less likely anxiety depression individual sport 2019"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 113 — SOCIAL CLUBS & GROUP GAMES (BINGO) ═══════════════
+  {
+    id: "social-clubs", section: "113", title: "Social Clubs & Group Games (incl. Bingo)", subtitle: "Bolsters clusters: interpersonal, meta-cognitive, emotional",
+    evidenceTag: "Moderate",
+    feeds: ["cognition", "social connection", "mood", "loneliness reduction", "meaning"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Regular group leisure — clubs, cards, and yes, bar bingo — tracks with better cognition and wellbeing in older adults. The social participation is the active ingredient; the 'bingo helps cognition' claim specifically is thin.",
+    callout: "Reverse causation is severe — people already declining cognitively withdraw from clubs, making participation look protective. Bingo-specific cognitive evidence is a handful of small studies, several in Alzheimer's samples, not healthy-aging RCTs.",
+    sources: [
+      { cite: "Kelly, M. E., et al. (2017). The impact of social activities, social networks, social support and social relationships on the cognitive functioning of healthy older adults: a systematic review. Systematic Reviews, 6, 259.", note: "Frequent social activity associated with better memory, executive function, and processing speed in healthy elders. [Moderate — systematic review]", link: scholar("Kelly Duff impact social activities networks support cognitive functioning healthy older adults systematic review 2017"), kind: "scholar" },
+      { cite: "Sobel, B. P. (2001). Bingo vs. physical intervention in stimulating short-term cognition in Alzheimer's disease patients. American Journal of Alzheimer's Disease & Other Dementias, 16(2), 115–120.", note: "Small study: bingo outperformed a physical activity on short-term memory/concentration in Alzheimer's patients. [Emerging — small, clinical]", link: scholar("Sobel bingo versus physical intervention stimulating short-term cognition Alzheimer's disease patients 2001"), kind: "scholar" },
+      { cite: "Cattan, M., et al. (2005). Preventing social isolation and loneliness among older people: a systematic review of health promotion interventions. Ageing & Society, 25(1), 41–67.", note: "Group educational/social-activity interventions reduced isolation; one-to-one support mostly did not. [Moderate — review]", link: scholar("Cattan White Bond Learmouth preventing social isolation loneliness older people systematic review health promotion interventions 2005"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 114 — MARRIAGE & LONG-TERM PARTNERSHIP ═══════════════
+  {
+    id: "marriage", section: "114", title: "Marriage & Long-Term Partnership", subtitle: "Bolsters clusters: interpersonal, systemic, existential",
+    evidenceTag: "Strong",
+    feeds: ["longevity", "social connection", "mood", "physical health", "meaning"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "high" },
+    description: "Being married or partnered is associated with meaningfully lower mortality — among the best-replicated findings in social epidemiology, comparable in size to quitting smoking.",
+    callout: "Healthy-partner selection and reverse causation inflate the causal size. And marriage quality matters: high-conflict marriages erase or reverse the benefit.",
+    sources: [
+      { cite: "Holt-Lunstad, J., Smith, T. B., & Layton, J. B. (2010). Social relationships and mortality risk: a meta-analytic review. PLoS Medicine, 7(7), e1000316.", note: "148 studies (~308k people): stronger social relationships → ~50% greater survival odds. [Strong — meta-analysis]", link: scholar("Holt-Lunstad Smith Layton social relationships mortality risk meta-analytic review PLoS Medicine 2010"), kind: "scholar" },
+      { cite: "Manzoli, L., et al. (2007). Marital status and mortality in the elderly: a systematic review and meta-analysis. Social Science & Medicine, 64(1), 77–94.", note: "Pooled ~250k elders: married vs. non-married RR ≈ 0.88 for mortality. [Strong — meta-analysis]", link: scholar("Manzoli Villari Pirone Boccia marital status mortality elderly systematic review meta-analysis 2007"), kind: "scholar" },
+      { cite: "Shor, E., et al. (2012). Meta-analysis of marital dissolution and mortality: reevaluating the intersection of gender and age. Social Science & Medicine, 75(1), 46–59.", note: "Divorced/separated show elevated mortality risk, stronger in men and younger ages. [Moderate — meta-analysis]", link: scholar("Shor Roelfs meta-analysis marital dissolution mortality gender age Social Science Medicine 2012"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 115 — RELIGIOUS SERVICE ATTENDANCE ═══════════════
+  {
+    id: "religious-attendance", section: "115", title: "Religious Service Attendance", subtitle: "Bolsters clusters: existential, interpersonal, moral",
+    evidenceTag: "Strong",
+    feeds: ["longevity", "social connection", "meaning", "mood", "belonging"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "moderate" },
+    description: "Frequent attendance at religious services is prospectively associated with lower mortality, with the social/communal component doing much of the work — a large Nurses' Health Study cohort found 33% lower mortality for weekly-plus attenders.",
+    callout: "Reverse causation (sick people stop attending) biases weaker studies; the best cohorts control for baseline health but can't fully rule out healthy-adherent selection. The benefit tracks attendance (social participation), not private belief.",
+    sources: [
+      { cite: "Li, S., et al. (2016). Association of religious service attendance with mortality among women. JAMA Internal Medicine, 176(6), 777–785.", note: "~74k Nurses' Health Study women: attending >1×/week → 33% lower all-cause mortality; partly mediated by social support. [Strong — cohort]", link: scholar("Li Stampfer Williams VanderWeele religious service attendance mortality women JAMA Internal Medicine 2016"), kind: "scholar" },
+      { cite: "Chida, Y., Steptoe, A., & Powell, L. H. (2009). Religiosity/spirituality and mortality: a systematic quantitative review. Psychotherapy and Psychosomatics, 78(2), 81–90.", note: "Meta-analysis: religious/spiritual involvement associated with reduced mortality in healthy populations. [Moderate — meta-analysis]", link: scholar("Chida Steptoe Powell religiosity spirituality mortality systematic quantitative review Psychotherapy Psychosomatics 2009"), kind: "scholar" },
+      { cite: "VanderWeele, T. J. (2017). Religious communities and human flourishing. Current Directions in Psychological Science, 26(5), 476–481.", note: "Argues communal attendance (not just belief) drives the health/flourishing effects. [Moderate — synthesis]", link: scholar("VanderWeele religious communities human flourishing Current Directions Psychological Science 2017"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 116 — SOCIAL PRESCRIBING ═══════════════
+  {
+    id: "social-prescribing", section: "116", title: "Social Prescribing", subtitle: "Intuitive, widely adopted — but the evidence is thin",
+    evidenceTag: "Emerging",
+    feeds: ["social connection", "mood", "loneliness reduction", "meaning"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "moderate" },
+    description: "A GP refers a patient to a 'link worker' who connects them to community activities. Intuitively appealing and widely rolled out in the NHS — but the evidence base is genuinely weak.",
+    callout: "The flagship systematic review is explicit that studies are small, uncontrolled, short-follow-up, and at high risk of bias — enthusiasm outstrips demonstrated effect. Don't overstate.",
+    sources: [
+      { cite: "Bickerdike, L., et al. (2017). Social prescribing: less rhetoric and more reality. A systematic review of the evidence. BMJ Open, 7(4), e013384.", note: "15 studies, only 1 RCT; poor design, weak evidence — commonly reported as positive but not rigorously demonstrated. [Emerging — honest]", link: scholar("Bickerdike Booth Wilson social prescribing less rhetoric more reality systematic review BMJ Open 2017"), kind: "scholar" },
+      { cite: "Masi, C. M., et al. (2011). A meta-analysis of interventions to reduce loneliness. Personality and Social Psychology Review, 15(3), 219–266.", note: "Opportunity-for-contact interventions (the social-prescribing logic) show smaller effects than cognitive-focused ones. [Moderate — meta-analysis]", link: scholar("Masi Chen Hawkley Cacioppo meta-analysis interventions reduce loneliness Personality Social Psychology Review 2011"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 117 — PROSOCIAL SPENDING & KINDNESS ═══════════════
+  {
+    id: "kindness", section: "117", title: "Prosocial Spending & Kindness", subtitle: "Bolsters clusters: moral, emotional, interpersonal",
+    evidenceTag: "Moderate",
+    feeds: ["mood", "meaning", "social connection", "prosociality"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "Spending on others and performing acts of kindness modestly boost the giver's wellbeing — real experimental evidence exists, but effect sizes are small and the headline result did not fully replicate.",
+    callout: "The specific $5 'spend on others' manipulation failed a large 2020 registered replication; the meta-analytic effect of kindness on wellbeing is only small-to-medium (~0.28). Real but oversold — set expectations low.",
+    sources: [
+      { cite: "Curry, O. S., et al. (2018). Happy to help? A systematic review and meta-analysis of the effects of performing acts of kindness on the well-being of the actor. Journal of Experimental Social Psychology, 76, 320–329.", note: "27 studies (~4,000 people): kindness → small-to-medium wellbeing gain (δ ≈ 0.28). [Moderate — meta-analysis]", link: scholar("Curry Rowland Van Lissa happy to help meta-analysis acts of kindness well-being actor 2018"), kind: "scholar" },
+      { cite: "Dunn, E. W., Aknin, L. B., & Norton, M. I. (2008). Spending money on others promotes happiness. Science, 319(5870), 1687–1688.", note: "Assigned prosocial spending increased happiness vs. personal spending (note: 2020 registered replication was null for the core manipulation). [Moderate]", link: scholar("Dunn Aknin Norton spending money on others promotes happiness Science 2008"), kind: "scholar" },
+      { cite: "Aknin, L. B., et al. (2013). Prosocial spending and well-being: cross-cultural evidence for a psychological universal. Journal of Personality and Social Psychology, 104(4), 635–652.", note: "The prosocial-spending/happiness link appears across diverse countries. [Moderate]", link: scholar("Aknin Barrington-Leigh Dunn prosocial spending well-being cross-cultural psychological universal 2013"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 118 — ADULT MENTORING ═══════════════
+  {
+    id: "adult-mentoring", section: "118", title: "Adult Mentoring", subtitle: "Bolsters clusters: interpersonal, strategic, volitional",
+    evidenceTag: "Moderate",
+    feeds: ["career development", "meaning", "social connection", "self-efficacy"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "moderate" },
+    description: "Being mentored is associated with better career and some wellbeing outcomes — well-summarized by meta-analyses, though the objective effects (pay, promotion) are small and confounded.",
+    callout: "Nearly all data are correlational — high-potential people attract mentors, so mentoring looks more powerful than it causally is. Objective career effects are small; subjective satisfaction effects are larger.",
+    sources: [
+      { cite: "Allen, T. D., et al. (2004). Career benefits associated with mentoring for protégés: a meta-analysis. Journal of Applied Psychology, 89(1), 127–136.", note: "Mentored individuals show better career outcomes; objective effects small, subjective (satisfaction) larger. [Moderate — meta-analysis]", link: scholar("Allen Eby Poteet Lentz Lima career benefits mentoring protégés meta-analysis Journal Applied Psychology 2004"), kind: "scholar" },
+      { cite: "Eby, L. T., et al. (2008). Does mentoring matter? A multidisciplinary meta-analysis comparing mentored and non-mentored individuals. Journal of Vocational Behavior, 72(2), 254–267.", note: "Across youth/academic/workplace: mentoring linked to favorable behavioral, health, and career outcomes; effect sizes generally small. [Moderate — meta-analysis]", link: scholar("Eby Allen Evans does mentoring matter multidisciplinary meta-analysis mentored non-mentored 2008"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 119 — BEFRIENDING & LONELINESS INTERVENTIONS ═══════════════
+  {
+    id: "befriending", section: "119", title: "Befriending & Loneliness Interventions", subtitle: "Bolsters clusters: interpersonal, emotional",
+    evidenceTag: "Moderate",
+    feeds: ["loneliness reduction", "mood", "social connection", "belonging"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "moderate" },
+    description: "Structured befriending and loneliness programs help modestly — the honest headline is that effects are small, and the strongest gains come from addressing maladaptive social thinking, not just adding contact.",
+    callout: "The best RCT-based meta-analysis finds smaller effects than uncontrolled studies suggest, and befriending's own meta-analysis shows a modest depression effect with likely publication bias.",
+    sources: [
+      { cite: "Masi, C. M., et al. (2011). A meta-analysis of interventions to reduce loneliness. Personality and Social Psychology Review, 15(3), 219–266.", note: "RCTs show smaller effects than pre-post designs; interventions correcting maladaptive social cognition worked best. [Moderate — meta-analysis]", link: scholar("Masi Chen Hawkley Cacioppo meta-analysis interventions reduce loneliness 2011"), kind: "scholar" },
+      { cite: "Mead, N., et al. (2010). Effects of befriending on depressive symptoms and distress: systematic review and meta-analysis. British Journal of Psychiatry, 196(2), 96–101.", note: "Modest positive effect on depressive symptoms; funnel-plot asymmetry hints at publication bias. [Moderate — with caveat]", link: scholar("Mead Lester Chew-Graham Gask Bower effects befriending depressive symptoms distress systematic review meta-analysis 2010"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 120 — BOOK CLUBS & INTEREST GROUPS ═══════════════
+  {
+    id: "book-clubs", section: "120", title: "Book Clubs & Interest Groups", subtitle: "Bolsters clusters: linguistic, interpersonal, meta-cognitive",
+    evidenceTag: "Emerging",
+    feeds: ["cognition", "social connection", "mood", "meaning"],
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Book clubs and shared-reading groups plausibly support mood, connection, and cognition — but direct high-quality evidence is thin, resting largely on small pilots and the adjacent social-participation literature.",
+    callout: "Very few controlled trials; most support is small pilots or qualitative work from a single program, plus indirect inference from social-participation research. Don't present as established.",
+    sources: [
+      { cite: "Billington, J., et al. (2013). A literature-based intervention for older people living with dementia. Perspectives in Public Health, 133(3), 165–173.", note: "Shared reading groups associated with improved concentration, mood, and social interaction (small study). [Emerging]", link: scholar("Billington Carroll Davis Healey Kinderman literature-based intervention older people living with dementia 2013"), kind: "scholar" },
+      { cite: "Plummer, J., et al. (2023). How an intergenerational book club can prevent cognitive decline in older adults: a pilot study. Gerontology & Geriatric Medicine, 9.", note: "Book-club participants showed greater cognitive improvement than controls (small n, pilot). [Emerging]", link: scholar("Plummer Nguyen intergenerational book club prevent cognitive decline older adults pilot study 2023"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 121 — INTERGENERATIONAL PROGRAMS ═══════════════
+  {
+    id: "intergenerational", section: "121", title: "Intergenerational Programs", subtitle: "Bolsters clusters: existential, interpersonal, meta-cognitive",
+    evidenceTag: "Moderate",
+    feeds: ["cognition", "meaning/generativity", "physical health", "social connection", "mood"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "high" },
+    description: "Programs pairing older adults with children/youth (e.g., Experience Corps) show benefits for older participants' health, cognition, and generativity — anchored by a randomized pilot and supported by reviews.",
+    callout: "The landmark Experience Corps evidence is a small pilot RCT in one city; broader reviews mix study designs and find inconsistent quantitative effects. Volunteer selection (already-active elders) inflates apparent benefit.",
+    sources: [
+      { cite: "Fried, L. P., et al. (2004). A social model for health promotion for an aging population: initial evidence on the Experience Corps model. Journal of Urban Health, 81(1), 64–78.", note: "Pilot RCT (128 elders): volunteers gained in physical activity, strength, cognitive activity, and social ties vs. controls. [Moderate — small pilot]", link: scholar("Fried Carlson Freedman Frick Glass social model health promotion aging population Experience Corps 2004"), kind: "scholar" },
+      { cite: "Gualano, M. R., et al. (2018). The impact of intergenerational programs on children and older adults: a review. International Psychogeriatrics, 30(4), 451–468.", note: "Intergenerational programs generally improve older adults' wellbeing and reduce isolation; study quality varies. [Moderate — review]", link: scholar("Gualano Voglino Bert impact intergenerational programs children older adults review International Psychogeriatrics 2018"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 122 — HOUSEPLANTS ═══════════════
+  {
+    id: "houseplants", section: "122", title: "Houseplants", subtitle: "Bolsters clusters: emotional, aesthetic, interoceptive",
+    evidenceTag: "Emerging",
+    feeds: ["mood", "stress reduction", "attention/restoration"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Living with and tending indoor plants modestly lowers stress and improves mood and comfort — a small, pleasant, low-cost nudge. Buy them for how they make you feel, not to clean your air.",
+    callout: "The famous NASA 'plants purify your air' story is overstated to the point of being wrong for normal rooms — you'd need 10–1,000 plants per m² to match ordinary ventilation. The wellbeing effect is real but small.",
+    sources: [
+      { cite: "Lee, M. S., Lee, J., Park, B. J., & Miyazaki, Y. (2015). Interaction with indoor plants may reduce psychological and physiological stress. Journal of Physiological Anthropology, 34, 21.", note: "A transplanting task lowered diastolic BP and sympathetic activity vs. computer work. [Strong — small crossover RCT]", link: scholar("Lee Miyazaki 2015 interaction indoor plants psychological physiological stress autonomic"), kind: "scholar" },
+      { cite: "Bringslimark, T., Hartig, T., & Patil, G. G. (2009). The psychological benefits of indoor plants: a critical review of the experimental literature. Journal of Environmental Psychology, 29(4), 422–433.", note: "Recurring benefits (esp. pain tolerance) but findings overall mixed and methodologically weak. [Moderate — critical review]", link: scholar("Bringslimark Hartig Patil 2009 psychological benefits indoor plants critical review"), kind: "scholar" },
+      { cite: "Cummings, B. E., & Waring, M. S. (2020). Potted plants do not improve indoor air quality: a review and analysis of reported VOC removal efficiencies. Journal of Exposure Science & Environmental Epidemiology, 30, 253–261.", note: "Real-room ventilation dwarfs any plant VOC removal; the air-purification claim doesn't hold. [Strong — review]", link: scholar("Cummings Waring 2020 potted plants do not improve indoor air quality VOC"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 123 — GARDENING & HORTICULTURAL THERAPY ═══════════════
+  {
+    id: "gardening", section: "123", title: "Gardening & Horticultural Therapy", subtitle: "Bolsters clusters: emotional, bodily-kinesthetic, interoceptive",
+    evidenceTag: "Moderate",
+    feeds: ["mood", "anxiety reduction", "responsibility/routine", "physical activity"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Regular gardening is associated with reduced depression and anxiety and better wellbeing and life satisfaction, with therapeutic horticulture showing the largest effects — it stacks nature, movement, and purpose.",
+    callout: "Most primary studies lack active control groups, so effect sizes are likely inflated by expectation; the meta-analytic signal is real but the causal claim is softer than it looks.",
+    sources: [
+      { cite: "Soga, M., Gaston, K. J., & Yamaura, Y. (2017). Gardening is beneficial for health: a meta-analysis. Preventive Medicine Reports, 5, 92–99.", note: "22 studies: significant reductions in depression/anxiety and gains in life satisfaction, QoL, sense of community. [Strong — meta-analysis]", link: scholar("Soga Gaston Yamaura 2017 gardening beneficial health meta-analysis Preventive Medicine Reports"), kind: "scholar" },
+      { cite: "Clatworthy, J., Hinds, J., & Camic, P. M. (2013). Gardening as a mental health intervention: a review. Mental Health Review Journal, 18(4), 214–225.", note: "Consistent reductions in depression/anxiety symptoms, but lack of control groups limits causal inference. [Moderate — review]", link: scholar("Clatworthy Hinds Camic 2013 gardening mental health intervention review"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 124 — THE PET ROCK: TALKING IT OUT ═══════════════
+  {
+    id: "talking-it-out", section: "124", title: "The Pet Rock — Talking It Out", subtitle: "Bolsters clusters: intrapersonal, emotional, self-regulation",
+    evidenceTag: "Moderate",
+    feeds: ["emotional regulation", "self-regulation", "intrapersonal insight", "loneliness reduction"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "The honest science behind talking to a 'pet rock' like a confidant. Two validated mechanisms carry it: self-distanced self-talk (addressing yourself by name / 'you') down-regulates emotion, and explaining a problem aloud (to anyone or anything — the 'rubber-duck' effect) improves understanding. The rock just supplies an audience; anthropomorphizing it can also ease loneliness.",
+    callout: "Be honest about the leap: no study shows a pet rock heals you. What's validated is that (1) referring to yourself in the second/third person calms you, and (2) articulating reasoning aloud helps you think. The classic emotional-disclosure benefits were shown with writing; spoken-vs-written parity isn't established.",
+    sources: [
+      { cite: "Kross, E., et al. (2014). Self-talk as a regulatory mechanism: how you do it matters. Journal of Personality and Social Psychology, 106(2), 304–324.", note: "7 studies (N=585): using your own name / non-first-person pronouns during introspection created self-distance and improved emotion regulation under stress. [Strong]", link: scholar("Kross 2014 self-talk regulatory mechanism how you do it matters JPSP 106"), kind: "scholar" },
+      { cite: "Moser, J. S., et al. (2017). Third-person self-talk facilitates emotion regulation without engaging cognitive control: converging evidence from ERP and fMRI. Scientific Reports, 7, 4519.", note: "Third-person self-talk reduced neural markers of emotional reactivity without extra cognitive-control cost — a low-effort regulation route. [Strong]", link: scholar("Moser 2017 third-person self-talk emotion regulation ERP fMRI Scientific Reports"), kind: "scholar" },
+      { cite: "Chi, M. T. H., et al. (1994). Eliciting self-explanations improves understanding. Cognitive Science, 18(3), 439–477.", note: "Prompting students to explain material aloud to themselves produced markedly better comprehension than re-reading — the 'rubber-duck' effect. [Strong]", link: scholar("Chi de Leeuw Chiu LaVancher 1994 eliciting self-explanations improves understanding Cognitive Science"), kind: "scholar" },
+      { cite: "Epley, N., Akalis, S., Waytz, A., & Cacioppo, J. T. (2008). Creating social connection through inferential reproduction: loneliness and perceived agency in gadgets, gods, and greyhounds. Psychological Science, 19(2), 114–120.", note: "Lonely people anthropomorphize gadgets, pets, and deities more — treating nonhuman agents as social others to restore connection. [Moderate]", link: scholar("Epley Akalis Waytz Cacioppo 2008 creating social connection inferential reproduction gadgets gods greyhounds"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 125 — COOKING AT HOME ═══════════════
+  {
+    id: "cooking", section: "125", title: "Cooking at Home", subtitle: "Bolsters clusters: systemic, volitional, bodily-kinesthetic",
+    evidenceTag: "Moderate",
+    feeds: ["diet quality", "self-efficacy", "responsibility/routine"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "More frequent home cooking is consistently associated with higher diet quality — more fruit and vegetables, less sugar and fast food — a robust, cheap lever on health.",
+    callout: "Nearly all evidence is cross-sectional; people who cook more may differ (income, health motivation), so the causal effect on health outcomes is inferred, not demonstrated by RCT.",
+    sources: [
+      { cite: "Wolfson, J. A., & Bleich, S. N. (2015). Is cooking at home associated with better diet quality or weight-loss intention? Public Health Nutrition, 18(8), 1397–1406.", note: "NHANES: frequent home dinner cooking linked to healthier diet regardless of weight-loss intent. [Strong — large national survey]", link: scholar("Wolfson Bleich 2015 cooking at home better diet quality weight-loss Public Health Nutrition"), kind: "scholar" },
+      { cite: "Mills, S., et al. (2017). Frequency of eating home-cooked meals and potential benefits for diet and health. International Journal of Behavioral Nutrition and Physical Activity, 14, 109.", note: "Eating home-cooked meals >5×/week linked to better diet quality and lower body-fat markers. [Strong — cohort]", link: scholar("Mills Adams 2017 frequency home cooked meals diet health cross-sectional cohort IJBNPA"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 126 — HANDWRITING & LONGHAND NOTES ═══════════════
+  {
+    id: "handwriting", section: "126", title: "Handwriting & Longhand Notes", subtitle: "Bolsters clusters: meta-cognitive, linguistic, memory",
+    evidenceTag: "Mixed",
+    feeds: ["memory", "conceptual comprehension", "attention"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Taking notes by hand can beat laptop typing on conceptual understanding, attributed to deeper processing — you summarize instead of transcribing verbatim. The headline effect is real but the replication picture is mixed.",
+    callout: "The influential original finding did not cleanly replicate — a preregistered replication found longhand trends but no consistent group differences. Treat 'pen beats keyboard' as plausible and modest, not settled.",
+    sources: [
+      { cite: "Mueller, P. A., & Oppenheimer, D. M. (2014). The pen is mightier than the keyboard: advantages of longhand over laptop note-taking. Psychological Science, 25(6), 1159–1168.", note: "Across 3 studies, longhand note-takers outperformed laptop typists on conceptual questions. [Moderate — original, replication-contested]", link: scholar("Mueller Oppenheimer 2014 pen mightier keyboard longhand laptop note taking"), kind: "scholar" },
+      { cite: "Morehead, K., Dunlosky, J., & Rawson, K. A. (2019). How much mightier is the pen than the keyboard for note-taking? A replication and extension of Mueller and Oppenheimer (2014). Educational Psychology Review, 31, 753–780.", note: "Direct replication: some longhand trends but performance did not consistently differ between groups. [Strong — preregistered replication]", link: scholar("Morehead Dunlosky Rawson 2019 replication extension Mueller Oppenheimer note-taking"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 127 — ACTION VIDEO GAMES ═══════════════
+  {
+    id: "video-games", section: "127", title: "Action Video Games", subtitle: "Bolsters clusters: spatial, adversarial, attention",
+    evidenceTag: "Moderate",
+    feeds: ["attention", "spatial cognition", "processing speed"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Action games (fast, target-rich) are linked to better top-down attention and spatial cognition; habitual players outperform non-players and short training shows gains. A real, genre-specific effect.",
+    callout: "Much evidence is cross-sectional (self-selection risk), training studies are smaller, and the flagship meta-analysis issued a published correction over participant-overlap/clustering — so temper the training effect size. This is genre-specific, not 'all screen time.'",
+    sources: [
+      { cite: "Green, C. S., & Bavelier, D. (2003). Action video game modifies visual selective attention. Nature, 423, 534–537.", note: "Action gamers showed enhanced visual attention; a training study argued the effect wasn't pure self-selection. [Moderate — landmark]", link: scholar("Green Bavelier 2003 action video game modifies visual selective attention Nature"), kind: "scholar" },
+      { cite: "Bediou, B., et al. (2018). Meta-analysis of action video game impact on perceptual, attentional, and cognitive skills. Psychological Bulletin, 144(1), 77–110.", note: "Cross-sectional g≈0.55; play robustly enhances top-down attention and spatial cognition (correction later issued on clustering). [Strong — meta-analysis w/ correction]", link: scholar("Bediou Bavelier 2018 meta-analysis action video game perceptual attentional cognitive skills"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 128 — BRAIN-TRAINING GAMES: THE HONEST VERDICT ═══════════════
+  {
+    id: "brain-training", section: "128", title: "Brain-Training Games — The Honest Verdict", subtitle: "You get better at the games — and nothing else",
+    evidenceTag: "Strong",
+    feeds: ["trained-task performance only — no demonstrated real-world capacity gain"],
+    impact: { magnitude: 1, latency: "months", durability: "transient", effort: "moderate" },
+    description: "Commercial 'brain-training' makes you better at the trained games but does NOT reliably improve real-world cognition or stave off decline. We include it to say so plainly — a rare case where the honest verdict is negative and well-established.",
+    callout: "You improve on the exercises, but benefits don't transfer to untrained tasks or daily life. Marketing claims outrun the evidence. Spend the time on genuinely new skills (Section 36) instead.",
+    sources: [
+      { cite: "Simons, D. J., et al. (2016). Do 'brain-training' programs work? Psychological Science in the Public Interest, 17(3), 103–186.", note: "Exhaustive review: little credible evidence that brain-training yields broad real-world cognitive benefits. [Strong — comprehensive review]", link: scholar("Simons Boot Charness 2016 do brain-training programs work Psychological Science Public Interest"), kind: "scholar" },
+      { cite: "Owen, A. M., et al. (2010). Putting brain training to the test. Nature, 465, 775–778.", note: "~11,000 participants, 6 weeks: gains on trained tasks did not transfer to untrained cognitive tasks. [Strong — large RCT]", link: scholar("Owen Hampshire 2010 putting brain training to the test Nature"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 129 — CHESS & STRATEGY GAMES ═══════════════
+  {
+    id: "chess", section: "129", title: "Chess & Strategy Games", subtitle: "Bolsters clusters: strategic, adversarial, pattern-recognition",
+    evidenceTag: "Mixed",
+    feeds: ["math achievement (modest)", "general cognitive ability (modest)"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "high" },
+    description: "Chess instruction shows small-to-moderate associations with math and general cognitive gains in schoolchildren — but far transfer is weak and likely inflated by placebo.",
+    callout: "Almost none of the studies used active control groups, so the modest math/cognition effects can't be separated from placebo/expectancy. The honest read: far transfer from chess is small and unproven.",
+    sources: [
+      { cite: "Sala, G., & Gobet, F. (2016). Do the benefits of chess instruction transfer to academic and cognitive skills? A meta-analysis. Educational Research Review, 18, 46–57.", note: "24 studies: math d≈0.38, cognition d≈0.34 — but a near-total lack of active controls is a serious limit. [Strong — meta-analysis]", link: scholar("Sala Gobet 2016 benefits chess instruction transfer academic cognitive skills meta-analysis"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 130 — NAPPING ═══════════════
+  {
+    id: "napping", section: "130", title: "Napping", subtitle: "Bolsters clusters: interoceptive, memory, most cognitive lines",
+    evidenceTag: "Strong",
+    feeds: ["alertness", "memory consolidation", "mood", "reaction time"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "Short daytime naps reliably restore alertness and can consolidate memory and perceptual learning — a well-timed nap can rival a night's sleep for certain tasks.",
+    callout: "Long naps (>30 min) and late-day naps cause sleep inertia (grogginess) and can disrupt nighttime sleep. Benefits depend heavily on length, timing, and the individual — more isn't better.",
+    sources: [
+      { cite: "Mednick, S., Nakayama, K., & Stickgold, R. (2003). Sleep-dependent learning: a nap is as good as a night. Nature Neuroscience, 6, 697–698.", note: "A 60–90 min nap with SWS+REM produced perceptual learning matching a full night's sleep. [Strong — controlled experiment]", link: scholar("Mednick Nakayama Stickgold 2003 sleep-dependent learning nap as good as a night"), kind: "scholar" },
+      { cite: "Milner, C. E., & Cote, K. A. (2009). Benefits of napping in healthy adults: impact of nap length, time of day, age, and experience with napping. Journal of Sleep Research, 18(2), 272–281.", note: "Even well-rested people gain in reaction time, reasoning, and alertness; benefits modulated by length/timing/age. [Strong — review]", link: scholar("Milner Cote 2009 benefits napping healthy adults nap length time of day"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 131 — WEIGHTED BLANKETS ═══════════════
+  {
+    id: "weighted-blankets", section: "131", title: "Weighted Blankets", subtitle: "Bolsters clusters: interoceptive, emotional (anxiety/sleep)",
+    evidenceTag: "Emerging",
+    feeds: ["anxiety reduction", "sleep quality"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Weighted blankets show promising reductions in insomnia severity and situational anxiety — but the evidence base is early: small samples, short durations, specific clinical populations.",
+    callout: "Evidence is early and thin: the strongest RCT is in psychiatric-disorder patients (not the general population), samples are small, and blinding is hard (you can feel the weight). Don't overstate it as established.",
+    sources: [
+      { cite: "Ekholm, B., Spulber, S., & Adler, M. (2020). A randomized controlled study of weighted chain blankets for insomnia in psychiatric disorders. Journal of Clinical Sleep Medicine, 16(9), 1567–1577.", note: "120 patients, 4 weeks: weighted-blanket group far more likely to reduce insomnia severity and reach remission vs. light-blanket control. [Strong — RCT, specific population]", link: scholar("Ekholm Spulber Adler 2020 randomized controlled weighted chain blankets insomnia psychiatric"), kind: "scholar" },
+      { cite: "Vinson, J., Powers, J., & Mosesso, K. (2020). Weighted blankets: anxiety reduction in adult patients receiving chemotherapy. Clinical Journal of Oncology Nursing, 24(4), 360–368.", note: "Randomized crossover in an infusion center: anxiety reduced when the weighted blanket was used. [Moderate — small crossover RCT]", link: scholar("Vinson Powers Mosesso 2020 weighted blankets anxiety reduction chemotherapy Clinical Journal Oncology Nursing"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 132 — GESTALT THERAPY & EMPTY-CHAIR ═══════════════
+  {
+    id: "gestalt", section: "132", title: "Gestalt Therapy & Empty-Chair Work", subtitle: "Bolsters clusters: emotional regulation, intrapersonal insight",
+    evidenceTag: "Moderate",
+    feeds: ["emotional regulation", "intrapersonal insight", "resolving resentment", "quieting the inner critic"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Enacted internal dialogue — addressing an imagined other or a conflicting part of the self in an empty chair — to resolve 'unfinished business' and self-criticism. The specific chair-work protocol has solid RCT support.",
+    callout: "Don't overstate: the controlled evidence is for manualized empty-/two-chair tasks inside experiential/emotion-focused therapy — not for classical 'Gestalt therapy as a whole,' which has few modern RCTs and small samples.",
+    sources: [
+      { cite: "Paivio, S. C., & Greenberg, L. S. (1995). Resolving 'unfinished business': efficacy of experiential therapy using empty-chair dialogue. Journal of Consulting and Clinical Psychology, 63(3), 419–425.", note: "34 clients randomized to empty-chair therapy vs. psychoeducation; the experiential group improved more on all outcomes, gains held to 1 year. [Strong — RCT]", link: scholar("Paivio Greenberg 1995 Resolving unfinished business empty-chair dialogue efficacy"), kind: "scholar" },
+      { cite: "Greenberg, L. S., & Malcolm, W. (2002). Resolving unfinished business: relating process to outcome. Journal of Consulting and Clinical Psychology, 70(2), 406–416.", note: "Clients who voiced unmet needs and shifted their view of the other in empty-chair work had better outcomes. [Moderate]", link: scholar("Greenberg Malcolm 2002 Resolving unfinished business relating process to outcome"), kind: "scholar" },
+      { cite: "Paivio, S. C., et al. (2001). Imaginal confrontation for resolving child abuse issues. Psychotherapy Research, 11(4), 433–453.", note: "Quality of engagement in empty-chair 'imaginal confrontation' predicted reduction in trauma symptoms among adult survivors. [Moderate]", link: scholar("Paivio Hall Holowaty Jellis Tran 2001 imaginal confrontation child abuse Psychotherapy Research"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 133 — EMOTION-FOCUSED THERAPY (EFT) ═══════════════
+  {
+    id: "eft", section: "133", title: "Emotion-Focused Therapy (EFT)", subtitle: "Bolsters clusters: emotional, interpersonal, intrapersonal",
+    evidenceTag: "Strong",
+    feeds: ["relationship quality", "emotional regulation", "intrapersonal insight", "secure connection"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "high" },
+    description: "Attachment- and emotion-based therapy that helps people access and transform emotion; the couples variant (EFT-C) restructures negative interaction cycles and is among the more strongly supported couple therapies.",
+    callout: "The headline d≈1.3 comes from a 1999 meta-analysis of only four early, developer-involved studies; more recent independent work reports solid but somewhat smaller effects. Treat 1.3 as an early upper bound, not the settled number.",
+    sources: [
+      { cite: "Johnson, S. M., Hunsley, J., Greenberg, L. S., & Schindler, D. (1999). Emotionally focused couples therapy: status and challenges. Clinical Psychology: Science and Practice, 6(1), 67–79.", note: "Meta-analysis of four rigorous studies; mean effect ≈ 1.3, larger than other couple interventions of the era. [Moderate — small k, developer-involved]", link: scholar("Johnson Hunsley Greenberg Schindler 1999 emotionally focused couples therapy status challenges meta-analysis"), kind: "scholar" },
+      { cite: "Wiebe, S. A., & Johnson, S. M. (2016). A review of the research in emotionally focused therapy for couples. Family Process, 55(3), 390–407.", note: "Updates EFT-C evidence: efficacy, attachment-security mechanisms, and durability of gains. [Moderate — review]", link: scholar("Wiebe Johnson 2016 review research emotionally focused therapy couples Family Process"), kind: "scholar" },
+      { cite: "Paivio, S. C., & Greenberg, L. S. (1995). Resolving 'unfinished business': efficacy of experiential therapy using empty-chair dialogue. Journal of Consulting and Clinical Psychology, 63(3), 419–425.", note: "RCT of individual experiential/EFT vs. psychoeducation: large, durable advantage. [Strong — RCT]", link: scholar("Paivio Greenberg 1995 experiential therapy empty-chair RCT efficacy"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 134 — COUPLES' SELF-EXPANSION ACTIVITIES ═══════════════
+  {
+    id: "self-expansion", section: "134", title: "Couples' Novel & Arousing Activities", subtitle: "Bolsters clusters: interpersonal, seductive, emotional",
+    evidenceTag: "Strong",
+    feeds: ["relationship quality", "shared positive affect", "desire & satisfaction", "self-expansion/growth"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Aron's self-expansion model: doing new, exciting, physiologically arousing activities together — roller-skating is almost the literal example — boosts relationship quality, desire, and satisfaction by re-associating novelty and arousal with the partner.",
+    callout: "The active ingredient is novelty/excitement, not just 'time together' — a control study found ordinary pleasant activities did not beat a no-activity control; only the exciting condition helped. Lab effects come from brief tasks; long-run dose-response is less mapped.",
+    sources: [
+      { cite: "Aron, A., et al. (2000). Couples' shared participation in novel and arousing activities and experienced relationship quality. Journal of Personality and Social Psychology, 78(2), 273–284.", note: "Survey + 3 experiments: 7-minute novel/arousing joint tasks raised relationship quality vs. mundane tasks; boredom mediated. [Strong]", link: scholar("Aron Norman Aron McKenna Heyman 2000 couples novel arousing activities relationship quality JPSP 78"), kind: "scholar" },
+      { cite: "Reissman, C., Aron, A., & Bergen, M. R. (1993). Shared activities and marital satisfaction: causal direction and self-expansion versus boredom. Journal of Social and Personal Relationships, 10(2), 243–254.", note: "10-week RCT: 'exciting' activities beat 'pleasant' activities for marital satisfaction; mere activity did not beat control. [Moderate — RCT]", link: scholar("Reissman Aron Bergen 1993 shared activities marital satisfaction self-expansion versus boredom"), kind: "scholar" },
+      { cite: "Muise, A., et al. (2019). Broadening your horizons: self-expanding activities promote desire and satisfaction in established romantic relationships. Journal of Personality and Social Psychology, 116(2), 237–258.", note: "Dyadic, daily, longitudinal + experimental evidence that self-expanding activities raise desire and, through it, satisfaction — not reducible to positive affect alone. [Strong]", link: scholar("Muise 2019 broadening your horizons self-expanding activities desire satisfaction JPSP"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 135 — COUPLE FRIENDSHIPS & DOUBLE DATES ═══════════════
+  {
+    id: "double-dates", section: "135", title: "Couple Friendships & Double Dates", subtitle: "Bolsters clusters: interpersonal, emotional",
+    evidenceTag: "Moderate",
+    feeds: ["relationship quality", "loneliness reduction", "shared positive affect", "closeness"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "low" },
+    description: "Friendships with other couples (via mutual self-disclosure on double dates) and protected dyadic 'date-night' time both function as relationship maintenance, raising closeness and satisfaction.",
+    callout: "Split the evidence honestly: the double-date closeness effect and the closeness-induction procedure are experimental, but the popular 'date night' statistics come from a self-report advocacy report — associational, not causal.",
+    sources: [
+      { cite: "Slatcher, R. B. (2010). When Harry and Sally met Dick and Jane: creating closeness between couples. Personal Relationships, 17(2), 279–297.", note: "60 couples: a 45-min high-disclosure interaction with another couple raised couple-to-couple AND within-couple closeness; some pairs met again. [Moderate — experimental]", link: scholar("Slatcher 2010 when Harry and Sally met Dick and Jane creating closeness between couples"), kind: "scholar" },
+      { cite: "Girme, Y. U., Overall, N. C., & Faingataa, S. (2014). 'Date nights' take two: the maintenance function of shared relationship activities. Personal Relationships, 21(1), 125–149.", note: "196 individuals / 83 couples: satisfying, closeness-building shared activities predicted higher relationship quality — but only when both partners engaged. [Moderate]", link: scholar("Girme Overall Faingataa 2014 date nights take two maintenance function shared relationship activities"), kind: "scholar" },
+      { cite: "Aron, A., et al. (1997). The experimental generation of interpersonal closeness: a procedure and some preliminary findings. Personality and Social Psychology Bulletin, 23(4), 363–377.", note: "The 'Fast Friends' escalating-self-disclosure procedure experimentally generates closeness — the mechanism double dates apply. [Strong — for the procedure]", link: scholar("Aron Melinat Aron Vallone Bator 1997 experimental generation interpersonal closeness Fast Friends"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 136 — PARENTING FOR CHILD DEVELOPMENT ═══════════════
+  {
+    id: "parenting-development", section: "136", title: "Parenting Activities for Child Development", subtitle: "Bolsters clusters: linguistic, meta-cognitive, interpersonal (child)",
+    evidenceTag: "Strong",
+    feeds: ["cognitive development", "language", "executive function (modestly)", "social competence", "self-regulation"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Which parent behaviors move a child's development the most? The strongest evidence points to responsive/sensitive interaction ('serve-and-return'), dialogic shared reading, and autonomy support — the honest headline is that consistent warmth plus verbal/cognitive stimulation drives gains, not any branded 'brain-boosting' product.",
+    callout: "Much observational parenting research confounds genetics, income, and home environment with 'parenting' — the causal claims here survive only because responsive-parenting and dialogic-reading effects were reproduced in randomized trials. Beware commercial 'enrichment' products borrowing that credibility.",
+    sources: [
+      { cite: "Prime, H., et al. (2023). Positive parenting and early childhood cognition: a systematic review and meta-analysis of randomized controlled trials. Clinical Child and Family Psychology Review, 26, 362–399.", note: "Across 33 RCTs, positive-parenting interventions improved mental abilities (g=0.46) and language (g=0.25); executive-function effects small. [Strong — meta-analysis of RCTs]", link: scholar("Prime Andrews 2023 Positive Parenting Early Childhood Cognition meta-analysis randomized controlled trials"), kind: "scholar" },
+      { cite: "Landry, S. H., Smith, K. E., & Swank, P. R. (2006). Responsive parenting: establishing early foundations for social, communication, and independent problem-solving skills. Developmental Psychology, 42(4), 627–642.", note: "Randomized responsive-parenting coaching causally increased infants' social, communication, and cognitive competence. [Strong — RCT]", link: scholar("Landry Smith Swank 2006 Responsive Parenting Establishing Early Foundations Developmental Psychology"), kind: "scholar" },
+      { cite: "Grolnick, W. S., & Ryan, R. M. (1989). Parent styles associated with children's self-regulation and competence in school. Journal of Educational Psychology, 81(2), 143–154.", note: "Parental autonomy support predicted children's self-regulation, teacher-rated competence, and school achievement. [Moderate — observational]", link: scholar("Grolnick Ryan 1989 Parent Styles Children's Self-Regulation Competence School"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 137 — CHILD INDEPENDENT MOBILITY ═══════════════
+  {
+    id: "child-mobility", section: "137", title: "Child Independent Mobility", subtitle: "Bolsters clusters: spatial, bodily-kinesthetic, autonomy (child)",
+    evidenceTag: "Moderate",
+    feeds: ["physical health", "autonomy/self-efficacy", "spatial/environmental cognition", "social competence"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "low" },
+    description: "Letting children travel and roam without constant supervision — walking or cycling to school, a bike at the right age, playing out — is associated with more physical activity, richer spatial cognition, and greater autonomy. This freedom has collapsed historically.",
+    callout: "Almost entirely cross-sectional: children permitted to roam differ (safer neighborhoods, more confident/higher-SES families, more capable kids), so mobility may mark advantage as much as cause it. The cognition link appeared in girls but not boys in one key study.",
+    sources: [
+      { cite: "Schoeppe, S., et al. (2013). Associations of children's independent mobility and active travel with physical activity, sedentary behaviour and weight status: a systematic review. Journal of Science and Medicine in Sport, 16(4), 312–319.", note: "Active travel consistently positively associated with physical activity across studies. [Moderate — systematic review]", link: scholar("Schoeppe Duncan Badland 2013 children's independent mobility active travel physical activity systematic review"), kind: "scholar" },
+      { cite: "Rissotto, A., & Tonucci, F. (2002). Freedom of movement and environmental knowledge in elementary school children. Journal of Environmental Psychology, 22(1–2), 65–77.", note: "Children who traveled to school independently showed richer environmental/spatial knowledge than those escorted. [Emerging — correlational]", link: scholar("Rissotto Tonucci 2002 Freedom of movement environmental knowledge elementary school children"), kind: "scholar" },
+      { cite: "Martínez-Gómez, D., et al. (2011). Active commuting to school and cognitive performance in adolescents: the AVENA study. Archives of Pediatrics & Adolescent Medicine, 165(4), 300–305.", note: "Active commuting associated with better cognitive performance in adolescent girls (not boys). [Emerging — cross-sectional, sex-specific]", link: scholar("Martinez-Gomez 2011 Active Commuting to School Cognitive Performance Adolescents AVENA"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 138 — FREE & RISKY PLAY ═══════════════
+  {
+    id: "free-play", section: "138", title: "Free & Risky Play", subtitle: "Bolsters clusters: bodily-kinesthetic, emotional resilience, autonomy (child)",
+    evidenceTag: "Moderate",
+    feeds: ["physical health", "social competence", "autonomy/self-efficacy", "self-directed problem-solving", "resilience"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    description: "Unstructured, child-led, and 'risky' outdoor play (heights, speed, rough-and-tumble, exploring out of sight — and, yes, novel experiences like sleepovers) is linked to better physical activity, social health, and resilience, and may reduce anxiety via graded self-exposure.",
+    callout: "Correlation-vs-causation is acute: the decline-of-play thesis is a compelling historical argument, not an experiment, and reviews grade much of the evidence low-quality. There is no meaningful peer-reviewed literature isolating 'sleepovers' — treat that as a slice of general autonomy/novel experience, not its own evidence base.",
+    sources: [
+      { cite: "Brussoni, M., et al. (2015). What is the relationship between risky outdoor play and health in children? A systematic review. International Journal of Environmental Research and Public Health, 12(6), 6423–6454.", note: "21 studies: risky outdoor play generally positively related to physical activity, social behavior, and reduced problem behavior; evidence graded low-to-moderate. [Moderate — systematic review]", link: scholar("Brussoni Gibbons Gray 2015 risky outdoor play health children systematic review"), kind: "scholar" },
+      { cite: "Gray, P. (2011). The decline of play and the rise of psychopathology in children and adolescents. American Journal of Play, 3(4), 443–463.", note: "Argues the multi-decade decline in free play parallels — and plausibly contributes to — rising anxiety and depression. [Emerging — historical/theoretical]", link: scholar("Gray 2011 Decline of Play Rise of Psychopathology Children Adolescents American Journal of Play"), kind: "scholar" },
+      { cite: "Sandseter, E. B. H., & Kennair, L. E. O. (2011). Children's risky play from an evolutionary perspective: the anti-phobic effects of thrilling experiences. Evolutionary Psychology, 9(2), 257–284.", note: "Theorizes risky play works like graded exposure, helping children master fears and reducing later anxiety. [Emerging — mechanism]", link: scholar("Sandseter Kennair 2011 Children's Risky Play Evolutionary Perspective Anti-Phobic Effects Thrilling Experiences"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 139 — YOUTH TEAM SPORTS ═══════════════
+  {
+    id: "youth-team-sports", section: "139", title: "Youth Team Sports", subtitle: "Bolsters clusters: bodily-kinesthetic, interpersonal, executive function (child)",
+    evidenceTag: "Moderate",
+    feeds: ["social competence", "executive function (in cognitively engaging sports)", "mental health", "autonomy/self-efficacy", "motor skill"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Organized team sport (basketball, soccer) is associated with better psychological and social health, and — when the sport is cognitively demanding (reading play, adapting tactics) — with executive-function gains. Team sport appears more protective for mental health than individual sport.",
+    callout: "Heavy self-selection — happier, healthier, more coordinated, better-resourced kids join and stay — inflates the benefit. And 'exercise' alone does little for executive function unless it's cognitively engaging, so generic 'sports = smarter' claims overreach.",
+    sources: [
+      { cite: "Eime, R. M., et al. (2013). A systematic review of the psychological and social benefits of participation in sport for children and adolescents. International Journal of Behavioral Nutrition and Physical Activity, 10, 98.", note: "Sport — especially club/team sport — associated with better self-esteem, social skills, and fewer depressive symptoms. [Moderate — systematic review]", link: scholar("Eime Young Harvey 2013 psychological social benefits sport participation children adolescents Health through Sport"), kind: "scholar" },
+      { cite: "Hoffmann, M. D., et al. (2022). Associations between organized sport participation and mental health difficulties: data from over 11,000 US children and adolescents. PLoS ONE, 17(6), e0268583.", note: "Team-sport participation linked to fewer mental-health difficulties; exclusively individual-sport youth fared worse than non-participants. [Moderate — large cross-sectional]", link: scholar("Hoffmann Barnes Tremblay Guerrero 2022 organized sport participation mental health difficulties PLoS ONE"), kind: "scholar" },
+      { cite: "Diamond, A. (2015). Effects of physical exercise on executive functions: going beyond simply moving to moving with thought. Annals of Sports Medicine and Research, 2(1), 1011.", note: "Argues activities that are both physically and cognitively demanding (e.g., strategic team sports) benefit executive function more than plain aerobic exercise. [Emerging — synthesis]", link: scholar("Diamond 2015 Effects Physical Exercise Executive Functions Going Beyond Simply Moving to Moving with Thought"), kind: "scholar" },
+    ],
+  },
+
+  // ═══════════════ SECTION 140 — GOLF ═══════════════
+  {
+    id: "golf", section: "140", title: "Golf", subtitle: "Bolsters clusters: bodily-kinesthetic, strategic, systemic, interpersonal",
+    evidenceTag: "Moderate",
+    feeds: ["physical health", "longevity", "motor & strategic skill", "social connection"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "moderate" },
+    description: "Golf provides meaningful moderate-intensity activity, is associated with longer life and lower cardiovascular/mental-health risk, and makes real motor and strategic demands — a lifelong, low-injury sport. Golf-specific cognitive benefits, though, are only weakly evidenced.",
+    callout: "Strong healthy-participant/selection bias — golfers skew older-but-affluent, mobile, and health-conscious, and the flagship longevity finding is observational (lower-handicap, more-active golfers lived longest). Golf is not vigorous exercise, and the one cognition RCT was small.",
+    sources: [
+      { cite: "Murray, A. D., et al. (2017). The relationships between golf and health: a scoping review. British Journal of Sports Medicine, 51(1), 12–19.", note: "Golf associated with improved cardiovascular, metabolic, and mental-health outcomes and moderate physical activity. [Moderate — scoping review]", link: scholar("Murray Daines Archibald 2017 relationships between golf and health scoping review British Journal of Sports Medicine"), kind: "scholar" },
+      { cite: "Farahmand, B., et al. (2009). Golf: a game of life and death — reduced mortality in Swedish golf players. Scandinavian Journal of Medicine & Science in Sports, 19(3), 419–424.", note: "In ~300,000 golfers, mortality was ~40% lower than the matched general population, lowest-handicap players best protected. [Moderate — large registry cohort]", link: scholar("Farahmand Broman de Faire 2009 Golf game of life and death reduced mortality Swedish golf players"), kind: "scholar" },
+      { cite: "Shimada, H., et al. (2018). Effects of golf training on cognition in older adults: a randomised controlled trial. Journal of Epidemiology and Community Health, 72(10), 944–950.", note: "A 24-week golf program improved logical (episodic) memory in healthy older adults vs. controls. [Emerging — single RCT]", link: scholar("Shimada Lee Doi 2018 Effects of golf training on cognition in older adults randomised controlled trial"), kind: "scholar" },
     ],
   },
 ];
