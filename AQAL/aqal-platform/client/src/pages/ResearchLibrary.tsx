@@ -488,6 +488,31 @@ function leverageScore(impact: PracticeImpact, evidence: PracticeCluster["eviden
   return Math.round(100 * (0.7 * benefit + 0.3 * ease));
 }
 
+// ---- Cost-of-failure model ---------------------------------------------------
+// The mirror of the leverage gauge. These clusters document what an activity or
+// life-event COSTS — what breaks when things go wrong. There is deliberately no
+// leverage score here: a harm is not a "practice to run." Instead we rate how
+// damaging it is, how reversible, and how fast it lands, weighted by the same
+// evidence tier. Higher = more costly and more urgent to prevent. Same honest
+// discipline: severity/onset/reversibility come straight from the cited studies,
+// and every entry carries a caveat about confounding and reverse-causation.
+type PracticeHarm = {
+  severity: 1 | 2 | 3 | 4 | 5;                          // how damaging the cost is
+  onset: "immediate" | "months" | "years";              // time to the damage landing
+  reversibility: "recovers" | "partial" | "lasting";    // how much can be undone
+};
+const REVERSIBILITY_W: Record<PracticeHarm["reversibility"], number> = { recovers: 0.6, partial: 0.8, lasting: 1 };
+const ONSET_W: Record<PracticeHarm["onset"], number> = { immediate: 1, months: 0.85, years: 0.7 };
+
+// Cost Score (0–100) = 70·damage + 30·imminence.
+//   damage    = (severity/5) · evidenceWeight · reversibilityWeight  → big, proven, irreversible
+//   imminence = onsetWeight                                          → how soon it hits
+function costScore(harm: PracticeHarm, evidence: PracticeCluster["evidenceTag"]): number {
+  const damage = (harm.severity / 5) * EVIDENCE_W[evidence] * REVERSIBILITY_W[harm.reversibility];
+  const imminence = ONSET_W[harm.onset];
+  return Math.round(100 * (0.7 * damage + 0.3 * imminence));
+}
+
 const chipStyle: React.CSSProperties = {
   display: "inline-flex", alignItems: "center", gap: 4,
   border: "1px solid rgba(255,255,255,0.12)", borderRadius: 999,
@@ -504,7 +529,9 @@ type PracticeCluster = {
   callout?: string;
   // Optional interconnection + impact metadata (present on newer clusters).
   feeds?: string[];          // plain-language capacities/systems this practice strengthens
-  impact?: PracticeImpact;   // the leverage gauge
+  impact?: PracticeImpact;   // the leverage gauge (benefit clusters)
+  harm?: PracticeHarm;       // the cost gauge (cost-of-failure clusters)
+  degrades?: string[];       // plain-language capacities/systems a harm cluster erodes
   sources: PracticeSource[];
 };
 
@@ -650,6 +677,32 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "138": "138 · Free & Risky Play",
   "139": "139 · Youth Team Sports",
   "140": "140 · Golf",
+  // The cost of failure — what breaks when things go wrong
+  "141": "141 · Divorce — Adult Health & Mortality", "142": "142 · High-Conflict Custody Battles",
+  "143": "143 · Parental Divorce — Effect on Children", "144": "144 · Infidelity / Betrayal Trauma",
+  "145": "145 · Spousal Bereavement / Widowhood", "146": "146 · Death of a Child",
+  "147": "147 · Death of a Parent in Adulthood", "148": "148 · Dementia Caregiving Strain",
+  "149": "149 · Chronic Loneliness", "150": "150 · Social Isolation",
+  "151": "151 · Cancer & \"Chemo Brain\" (CRCI)", "152": "152 · Chronic Illness + Comorbid Depression",
+  "153": "153 · Chronic Pain — Cognition & Gray Matter", "154": "154 · Chronic Stress / Allostatic Load",
+  "155": "155 · Sleep Deprivation", "156": "156 · Obesity — Cognition & Brain Structure",
+  "157": "157 · Smoking — Cognitive Decline & Dementia", "158": "158 · Alcohol — Brain Damage & Cognition",
+  "159": "159 · Physical Inactivity / Sedentary Behavior", "160": "160 · Sarcopenia — Muscle & Strength Loss",
+  "161": "161 · Depression — Hippocampal Volume Loss", "162": "162 · Chronic Anxiety — Cognition & Cardiac Risk",
+  "163": "163 · Rumination", "164": "164 · Chronic Hostility / Anger — CVD",
+  "165": "165 · Trauma / PTSD — Brain & Function", "166": "166 · Perfectionism — Burnout & Suicide Risk",
+  "167": "167 · Chronic Self-Criticism / Shame", "168": "168 · Unforgiveness / Grudge-Holding",
+  "169": "169 · Learned Helplessness / Pessimistic Style", "170": "170 · Chronic Worry / GAD",
+  "171": "171 · Problematic Social Media / Doomscrolling", "172": "172 · Late-Night Smartphone / Sleep Loss",
+  "173": "173 · Procrastination", "174": "174 · Financial Scarcity / Debt Stress",
+  "175": "175 · Unemployment / Job Loss", "176": "176 · Retirement Without Purpose",
+  "177": "177 · Job Burnout / Workaholism", "178": "178 · Gambling Disorder",
+  "179": "179 · Chronic Media Multitasking", "180": "180 · Sleep Debt / Social Jetlag / Shift Work",
+  "181": "181 · Adverse Childhood Experiences (ACEs)", "182": "182 · Chronic Discrimination / Racism",
+  "183": "183 · Childhood Poverty / Low SES", "184": "184 · Incarceration",
+  "185": "185 · Empty Nest / Role Transition", "186": "186 · Food Insecurity",
+  "187": "187 · Housing Instability / Eviction", "188": "188 · Neighborhood Violence / Threat",
+  "189": "189 · Excessive Early-Childhood Screen Use", "190": "190 · Chronic Caregiver Burden (Non-Dementia)",
 };
 
 // Short labels for the section jump-nav chips.
@@ -721,6 +774,20 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "130": "Napping", "131": "Weighted Blankets",
   "132": "Gestalt", "133": "EFT", "134": "Self-Expansion", "135": "Double Dates",
   "136": "Parenting", "137": "Child Mobility", "138": "Free Play", "139": "Youth Sports", "140": "Golf",
+  // The cost of failure
+  "141": "Divorce", "142": "Custody Battles", "143": "Kids of Divorce", "144": "Infidelity",
+  "145": "Widowhood", "146": "Losing a Child", "147": "Losing a Parent", "148": "Caregiver Strain",
+  "149": "Loneliness", "150": "Isolation", "151": "Chemo Brain", "152": "Illness + Depression",
+  "153": "Chronic Pain", "154": "Chronic Stress", "155": "Sleep Loss", "156": "Obesity",
+  "157": "Smoking", "158": "Alcohol", "159": "Inactivity", "160": "Sarcopenia",
+  "161": "Depression", "162": "Anxiety", "163": "Rumination", "164": "Hostility",
+  "165": "PTSD", "166": "Perfectionism", "167": "Shame", "168": "Unforgiveness",
+  "169": "Pessimism", "170": "Chronic Worry", "171": "Doomscrolling", "172": "Night Phone",
+  "173": "Procrastination", "174": "Money Stress", "175": "Job Loss", "176": "Aimless Retirement",
+  "177": "Burnout", "178": "Gambling", "179": "Media Multitasking", "180": "Sleep Debt",
+  "181": "ACEs", "182": "Discrimination", "183": "Child Poverty", "184": "Incarceration",
+  "185": "Empty Nest", "186": "Food Insecurity", "187": "Eviction", "188": "Neighborhood Violence",
+  "189": "Early Screen Time", "190": "Caregiver Burden",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -749,7 +816,13 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "114", "115", "112", "134", "135", "113", "117", "118", "121", "119", "120", "116",
   // Environment & everyday habits
   "130", "125", "123", "127", "122", "124", "126", "129", "131", "128",
-  "19", "20", "37", "10", "11"];
+  "19", "20", "37", "10", "11",
+  // The cost of failure — the sobering coda: what breaks when it goes wrong
+  "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
+  "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
+  "152", "153", "154", "155", "156", "162", "164", "166", "167", "169",
+  "163", "170", "168", "174", "177", "188", "182", "183", "187", "184",
+  "186", "189", "190", "173", "180", "171", "172", "176", "179", "185"];
 const sectionRank = (s: string) => {
   const i = PRACTICE_SECTION_ORDER.indexOf(s);
   return i === -1 ? 999 : i;
@@ -821,6 +894,32 @@ const PRACTICE_GROUP: Record<string, string> = {
   "19": "Practices by domain", "20": "Practices by domain",
   "37": "The honest frontier — unproven",
   "10": "Risks & compounding", "11": "Risks & compounding",
+  // The cost of failure — what breaks when things go wrong (sections 141–190)
+  "141": "The cost of failure — what's at stake", "142": "The cost of failure — what's at stake",
+  "143": "The cost of failure — what's at stake", "144": "The cost of failure — what's at stake",
+  "145": "The cost of failure — what's at stake", "146": "The cost of failure — what's at stake",
+  "147": "The cost of failure — what's at stake", "148": "The cost of failure — what's at stake",
+  "149": "The cost of failure — what's at stake", "150": "The cost of failure — what's at stake",
+  "151": "The cost of failure — what's at stake", "152": "The cost of failure — what's at stake",
+  "153": "The cost of failure — what's at stake", "154": "The cost of failure — what's at stake",
+  "155": "The cost of failure — what's at stake", "156": "The cost of failure — what's at stake",
+  "157": "The cost of failure — what's at stake", "158": "The cost of failure — what's at stake",
+  "159": "The cost of failure — what's at stake", "160": "The cost of failure — what's at stake",
+  "161": "The cost of failure — what's at stake", "162": "The cost of failure — what's at stake",
+  "163": "The cost of failure — what's at stake", "164": "The cost of failure — what's at stake",
+  "165": "The cost of failure — what's at stake", "166": "The cost of failure — what's at stake",
+  "167": "The cost of failure — what's at stake", "168": "The cost of failure — what's at stake",
+  "169": "The cost of failure — what's at stake", "170": "The cost of failure — what's at stake",
+  "171": "The cost of failure — what's at stake", "172": "The cost of failure — what's at stake",
+  "173": "The cost of failure — what's at stake", "174": "The cost of failure — what's at stake",
+  "175": "The cost of failure — what's at stake", "176": "The cost of failure — what's at stake",
+  "177": "The cost of failure — what's at stake", "178": "The cost of failure — what's at stake",
+  "179": "The cost of failure — what's at stake", "180": "The cost of failure — what's at stake",
+  "181": "The cost of failure — what's at stake", "182": "The cost of failure — what's at stake",
+  "183": "The cost of failure — what's at stake", "184": "The cost of failure — what's at stake",
+  "185": "The cost of failure — what's at stake", "186": "The cost of failure — what's at stake",
+  "187": "The cost of failure — what's at stake", "188": "The cost of failure — what's at stake",
+  "189": "The cost of failure — what's at stake", "190": "The cost of failure — what's at stake",
 };
 
 const TAG_COLOR: Record<PracticeCluster["evidenceTag"], string> = {
@@ -3864,6 +3963,612 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
       { cite: "Shimada, H., et al. (2018). Effects of golf training on cognition in older adults: a randomised controlled trial. Journal of Epidemiology and Community Health, 72(10), 944–950.", note: "A 24-week golf program improved logical (episodic) memory in healthy older adults vs. controls. [Emerging — single RCT]", link: scholar("Shimada Lee Doi 2018 Effects of golf training on cognition in older adults randomised controlled trial"), kind: "scholar" },
     ],
   },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // THE COST OF FAILURE — what breaks when things go wrong (sections 141–190).
+  // The mirror of the practice library. No leverage score: these are not things
+  // to "do," they are what it costs when the wheels come off. Rated by severity,
+  // reversibility, and how soon the damage lands — same evidence discipline,
+  // and every entry carries the honest confound/reverse-causation caveat.
+  // ── W: relationship & family (141–150) ────────────────────────────────────
+  {
+    id: "divorce", section: "141", title: "Divorce — Adult Health & Mortality", subtitle: "Degrades: survival, mood, health behaviors, support network",
+    evidenceTag: "Strong",
+    degrades: ["all-cause survival", "mood stability", "cardiovascular/immune regulation", "sleep & self-care", "economic & social support"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "Marital dissolution raises adults' risk of early death, depression, and psychological distress — the toll is sharpest for men and younger adults. Much distress recovers within ~2 years; the mortality signal lingers longest.",
+    callout: "Social selection / reverse causation: less healthy, more distressed people are both likelier to divorce and to die early, and effects attenuate with statistical control. The harm is real but partly a marker of pre-existing vulnerability.",
+    sources: [
+      { cite: "Sbarra, D. A., Law, R. W., & Portley, R. M. (2011). Divorce and Death: A Meta-Analysis and Research Agenda. Perspectives on Psychological Science, 6(5), 454–474.", note: "32 prospective studies, >6.5M people; separated/divorced adults show significantly elevated early-death risk, greatest in men and younger adults. [Strong — meta-analysis]", link: scholar("Sbarra Divorce and Death meta-analysis 2011"), kind: "scholar" },
+      { cite: "Amato, P. R. (2000). The Consequences of Divorce for Adults and Children. Journal of Marriage and Family, 62(4), 1269–1287.", note: "Divorce-stress-adjustment review: divorced adults score lower on happiness/health and higher on distress, mediated by economic decline, lost support, and ongoing conflict. [Strong — review]", link: scholar("Amato 2000 consequences of divorce adults children"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "custody-conflict", section: "142", title: "High-Conflict Custody Battles", subtitle: "Degrades: child adjustment, parent wellbeing, finances, co-parenting",
+    evidenceTag: "Moderate",
+    degrades: ["children's emotional/behavioral regulation", "academic performance", "child security", "parental wellbeing & finances", "co-parenting capacity"],
+    harm: { severity: 3, onset: "months", reversibility: "partial" },
+    description: "Protracted, litigated custody disputes damage children's adjustment and inflict sustained emotional and financial strain on parents. Harm eases when the conflict de-escalates — it is the unresolved conflict, not the divorce itself, that drives most of it.",
+    callout: "Confounding: high litigation is a marker of pre-existing parental hostility and psychopathology, so court involvement is a proxy for conflict, not a clean cause of it.",
+    sources: [
+      { cite: "Grych, J. H., & Fincham, F. D. (1990). Marital Conflict and Children's Adjustment: A Cognitive-Contextual Framework. Psychological Bulletin, 108(2), 267–290.", note: "Interparental conflict harms children via appraisals of threat and self-blame; frequency, intensity, and non-resolution intensify maladjustment. [Strong — foundational]", link: scholar("Grych Fincham cognitive-contextual framework marital conflict"), kind: "scholar" },
+      { cite: "Kelly, J. B. (2000). Children's Adjustment in Conflicted Marriage and Divorce: A Decade Review. Journal of the American Academy of Child & Adolescent Psychiatry, 39(8), 963–973.", note: "High, unresolved conflict — not divorce per se — drives child maladjustment; litigation prolongs the exposure. [Moderate — review]", link: scholar("Kelly children's adjustment conflicted marriage divorce decade review"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "children-of-divorce", section: "143", title: "Parental Divorce — Effect on Children", subtitle: "Degrades: academics, conduct, self-concept, later relationship stability",
+    evidenceTag: "Strong",
+    degrades: ["academic achievement", "conduct/behavior regulation", "self-esteem", "peer/social functioning", "later relationship stability"],
+    harm: { severity: 3, onset: "months", reversibility: "partial" },
+    description: "Children of divorced parents score measurably lower on academic achievement, conduct, adjustment, self-concept, and social relations. Differences are real but on average modest, and most children of divorce fall within the normal range.",
+    callout: "Selection and effect size: much of the gap traces to pre-divorce conflict and family factors rather than the divorce event alone. Some outcomes narrow over time; own-divorce risk persists.",
+    sources: [
+      { cite: "Amato, P. R. (2001). Children of Divorce in the 1990s: An Update of the Amato and Keith Meta-Analysis. Journal of Family Psychology, 15(3), 355–370.", note: "67 studies: children of divorce score significantly lower across achievement, conduct, adjustment, self-concept, and social relations. [Strong — meta-analysis]", link: scholar("Amato 2001 children of divorce 1990s meta-analysis"), kind: "scholar" },
+      { cite: "Amato, P. R., & Keith, B. (1991). Parental Divorce and the Well-Being of Children: A Meta-Analysis. Psychological Bulletin, 110(1), 26–46.", note: "Original meta-analysis establishing consistent small-to-moderate deficits across well-being domains. [Strong — meta-analysis]", link: scholar("Amato Keith 1991 parental divorce well-being children meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "infidelity", section: "144", title: "Infidelity / Betrayal Trauma", subtitle: "Degrades: mood, trust & attachment, self-worth, sleep",
+    evidenceTag: "Moderate",
+    degrades: ["mood (major depression)", "anxiety/hyperarousal", "trust & attachment security", "self-worth", "sleep & intrusive-thought control"],
+    harm: { severity: 3, onset: "immediate", reversibility: "partial" },
+    description: "Discovered infidelity precipitates major depressive episodes and PTSD-like intrusive and hyperarousal symptoms in the betrayed partner. The acute episode often remits; the trust injury can be lasting.",
+    callout: "Small samples and cross-sectional designs; infidelity co-occurs with marital discord and separation, so isolating betrayal's unique effect is hard. Cano's landmark study had n≈25 per group.",
+    sources: [
+      { cite: "Cano, A., & O'Leary, K. D. (2000). Infidelity and Separations Precipitate Major Depressive Episodes. Journal of Consulting and Clinical Psychology, 68(5), 774–781.", note: "Women who experienced a humiliating marital event were ~6x more likely to be diagnosed with a major depressive episode, controlling for discord and depression history. [Moderate]", link: scholar("Cano O'Leary 2000 infidelity major depressive episodes"), kind: "scholar" },
+      { cite: "Gordon, K. C., Baucom, D. H., & Snyder, D. K. (2004). An Integrative Intervention for Promoting Recovery from Extramarital Affairs. Journal of Marital and Family Therapy, 30(2), 213–231.", note: "Frames affair discovery as an interpersonal trauma producing PTSD-like intrusion, avoidance, and hyperarousal. [Moderate]", link: scholar("Gordon Baucom Snyder affair recovery trauma model"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "widowhood", section: "145", title: "Spousal Bereavement / Widowhood", subtitle: "Degrades: survival, cardiovascular & immune function, mood, self-care",
+    evidenceTag: "Strong",
+    degrades: ["survival (esp. men, first 6 months)", "cardiovascular function", "immune function", "mood & appetite", "medication adherence"],
+    harm: { severity: 4, onset: "immediate", reversibility: "partial" },
+    description: "Losing a spouse raises the survivor's own risk of death and physical/mental illness, concentrated in the first months after loss. Elevated risk declines after the acute period.",
+    callout: "Shared-environment and homogamy confounds (couples share habits and exposures). The effect is strong early but attenuates, and in pooled data is near-null for women.",
+    sources: [
+      { cite: "Moon, J. R., Kondo, N., Glymour, M. M., & Subramanian, S. V. (2011). Widowhood and Mortality: A Meta-Analysis. PLoS ONE, 6(8), e23465.", note: "15 cohorts, ~2.26M subjects: mortality RR 1.41 within 6 months of bereavement, 1.14 after; significant for men, near-null for women. [Strong — meta-analysis]", link: scholar("Moon 2011 widowhood mortality meta-analysis PLoS ONE"), kind: "scholar" },
+      { cite: "Stroebe, M., Schut, H., & Stroebe, W. (2007). Health Outcomes of Bereavement. The Lancet, 370(9603), 1960–1973.", note: "Bereavement carries excess mortality risk (esp. early weeks) plus decrements in physical and mental health and more medical-service use. [Strong — review]", link: scholar("Stroebe Schut Stroebe 2007 health outcomes bereavement Lancet"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "death-of-child", section: "146", title: "Death of a Child", subtitle: "Degrades: mood, physical health, marital stability, survival",
+    evidenceTag: "Strong",
+    degrades: ["mood (chronic depression, prolonged grief)", "overall physical health", "marital stability", "life purpose", "survival (esp. mothers)"],
+    harm: { severity: 5, onset: "immediate", reversibility: "lasting" },
+    description: "Bereaved parents suffer among the most severe and enduring grief, with lasting depression, poorer health, marital disruption, and elevated mortality — still detectable 15–18+ years later.",
+    callout: "Cause-of-death confounds: some parental mortality/health effects reflect shared genetics or circumstances rather than grief alone, and effects differ by parent gender. Partial recovery is aided by life purpose and surviving children.",
+    sources: [
+      { cite: "Rogers, C. H., Floyd, F. J., Seltzer, M. M., Greenberg, J., & Hong, J. (2008). Long-Term Effects of the Death of a Child on Parents' Adjustment in Midlife. Journal of Family Psychology, 22(2), 203–211.", note: "~18 years post-loss, bereaved parents had more depressive symptoms, poorer wellbeing, more health problems, and more marital disruption than matched parents. [Strong]", link: scholar("Rogers 2008 long-term death of a child parents midlife"), kind: "scholar" },
+      { cite: "Li, J., Precht, D. H., Mortensen, P. B., & Olsen, J. (2003). Mortality in Parents After Death of a Child in Denmark. The Lancet, 361(9355), 363–367.", note: "Register study of 21,062 bereaved parents: increased overall mortality in mothers (HR 1.43) and increased early unnatural-cause death in fathers. [Strong — register cohort]", link: scholar("Li 2003 mortality parents after death of a child Denmark Lancet"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "death-of-parent", section: "147", title: "Death of a Parent in Adulthood", subtitle: "Degrades: mood, life satisfaction, grief functioning",
+    evidenceTag: "Moderate",
+    degrades: ["mood (depressive symptoms)", "life satisfaction", "grief-related functioning", "somatic symptoms"],
+    harm: { severity: 2, onset: "immediate", reversibility: "recovers" },
+    description: "Losing a parent as an adult raises depressive symptoms and grief burden, with a meaningful minority (~15–20%) developing prolonged grief disorder. For most it eases over ~1–2 years.",
+    callout: "A normative, often-anticipated event; effects are on average smaller and shorter-lived than spousal or child loss and depend heavily on relationship quality, timing, and expectedness. Caregiving strain can precede the death (reverse causation).",
+    sources: [
+      { cite: "Kamis, C., Stolte, A., & Copeland, M. (2022). Parental Death and Mid-adulthood Depressive Symptoms. Journal of Health and Social Behavior, 63(1), 105–121.", note: "Parental death in adulthood predicts heightened depressive symptoms, varying by life-course stage and parent gender. [Moderate]", link: scholar("Kamis 2022 parental death mid-adulthood depressive symptoms"), kind: "scholar" },
+      { cite: "Marks, N. F., Jun, H., & Song, J. (2007). Death of Parents and Adult Psychological and Physical Well-Being. Journal of Family Issues, 28(12), 1611–1638.", note: "Prospective national data: parental death is associated with declines in adult psychological and physical well-being. [Moderate]", link: scholar("Marks Jun Song death of parents adult well-being national study"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "caregiver-dementia", section: "148", title: "Dementia Caregiving Strain", subtitle: "Degrades: mood, immune & cardiovascular health, sleep, survival",
+    evidenceTag: "Strong",
+    degrades: ["mood (depression/anxiety)", "stress-hormone & immune regulation", "cardiovascular health", "self-care & sleep", "survival"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "Chronic strained caregiving raises the caregiver's own risk of depression, physiological dysregulation, illness, and death. It improves after caregiving ends — though bereavement may follow.",
+    callout: "The hazard is specific to STRAINED caregiving: non-strained caregivers and some population samples show no excess mortality (occasionally lower). Healthy-selection into the role complicates estimates.",
+    sources: [
+      { cite: "Schulz, R., & Beach, S. R. (1999). Caregiving as a Risk Factor for Mortality: The Caregiver Health Effects Study. JAMA, 282(23), 2215–2219.", note: "Elderly spousal caregivers reporting strain had 63% higher mortality (RR 1.63) than noncaregivers over 4 years. [Strong — prospective; note later work qualifies the mortality claim]", link: scholar("Schulz Beach 1999 caregiving risk factor mortality JAMA"), kind: "scholar" },
+      { cite: "Vitaliano, P. P., Zhang, J., & Scanlan, J. M. (2003). Is Caregiving Hazardous to One's Physical Health? A Meta-Analysis. Psychological Bulletin, 129(6), 946–972.", note: "23 studies: caregivers show worse health than matched noncaregivers, strongest for stress hormones, antibodies, and global health. [Strong — meta-analysis]", link: scholar("Vitaliano 2003 is caregiving hazardous physical health meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "loneliness", section: "149", title: "Chronic Loneliness", subtitle: "Degrades: survival, mood, executive function, memory, cardiovascular",
+    evidenceTag: "Strong",
+    degrades: ["survival", "mood (depression/anxiety)", "executive function & memory", "sleep", "immune/cardiovascular regulation"],
+    harm: { severity: 4, onset: "years", reversibility: "partial" },
+    description: "Persistent loneliness independently raises risk of early death, depression, and cognitive/dementia decline. Mood and risk improve when the loneliness is relieved.",
+    callout: "Reverse causation is central — early cognitive decline, depression, and poor health cause withdrawal, not only the reverse. Loneliness (subjective) and isolation (objective) are distinct and only modestly correlated.",
+    sources: [
+      { cite: "Holt-Lunstad, J., Smith, T. B., Baker, M., Harris, T., & Stephenson, D. (2015). Loneliness and Social Isolation as Risk Factors for Mortality. Perspectives on Psychological Science, 10(2), 227–237.", note: "Loneliness raised mortality odds 26% (isolation 29%, living alone 32%) across studies controlling for confounds. [Strong — meta-analysis]", link: scholar("Holt-Lunstad 2015 loneliness social isolation mortality meta-analysis"), kind: "scholar" },
+      { cite: "Cacioppo, J. T., Hughes, M. E., Waite, L. J., Hawkley, L. C., & Thisted, R. A. (2006). Loneliness as a Specific Risk Factor for Depressive Symptoms. Psychology and Aging, 21(1), 140–151.", note: "Loneliness prospectively predicts increases in depressive symptoms independent of related risk factors. [Strong — longitudinal]", link: scholar("Cacioppo 2006 loneliness specific risk factor depressive symptoms"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "social-isolation", section: "150", title: "Social Isolation", subtitle: "Degrades: survival, global cognition, cardiovascular health, care access",
+    evidenceTag: "Strong",
+    degrades: ["survival", "global cognition (attention, memory, language)", "cardiovascular/inflammatory health", "physical activity", "access to care & support"],
+    harm: { severity: 4, onset: "years", reversibility: "partial" },
+    description: "Objective lack of social contact raises risk of death and accelerates cognitive decline and dementia in older adults. Reconnection lowers risk; established cognitive decline is harder to reverse.",
+    callout: "Selection and reverse causation — declining health and incipient dementia reduce participation, inflating apparent isolation effects; isolation bundles with poverty, disability, and widowhood.",
+    sources: [
+      { cite: "Holt-Lunstad, J., Smith, T. B., Baker, M., Harris, T., & Stephenson, D. (2015). Loneliness and Social Isolation as Risk Factors for Mortality. Perspectives on Psychological Science, 10(2), 227–237.", note: "Objective isolation raised mortality odds ~29%, comparable to established risk factors, consistent across gender and region. [Strong — meta-analysis]", link: scholar("Holt-Lunstad 2015 social isolation mortality meta-analysis"), kind: "scholar" },
+      { cite: "Kuiper, J. S., Zuidersma, M., Oude Voshaar, R. C., et al. (2015). Social Relationships and Risk of Dementia: A Systematic Review and Meta-Analysis. Ageing Research Reviews, 22, 39–57.", note: "Poor social participation, less contact, and loneliness are each associated with increased incident dementia risk across cohorts. [Strong — meta-analysis]", link: scholar("Kuiper 2015 social relationships risk of dementia meta-analysis"), kind: "scholar" },
+    ],
+  },
+  // ── X: health & physiological (151–160) ───────────────────────────────────
+  {
+    id: "chemo-brain", section: "151", title: "Cancer & \"Chemo Brain\" (CRCI)", subtitle: "Degrades: working memory, processing speed, attention, executive function",
+    evidenceTag: "Strong",
+    degrades: ["working memory", "processing speed", "attention", "executive function", "verbal memory"],
+    harm: { severity: 3, onset: "months", reversibility: "partial" },
+    description: "Cancer and cytotoxic treatment degrade memory, processing speed, attention, and executive function in a substantial minority — well documented in breast cancer. Many recover within a year; a subset persists.",
+    callout: "Multi-causal: disentangling drug effects from the cancer itself, anesthesia, fatigue, depression, hormonal therapy, and aging is hard, and a subset shows deficits BEFORE any chemotherapy — so \"chemo brain\" is partly a misnomer.",
+    sources: [
+      { cite: "Janelsins, M. C., Kesler, S. R., Ahles, T. A., & Morrow, G. R. (2014). Prevalence, mechanisms, and management of cancer-related cognitive impairment. International Review of Psychiatry, 26(1), 102–113.", note: "Reviews CRCI prevalence/mechanisms; deficits documented in a large share of chemotherapy-treated patients, some persisting. [Strong — review]", link: scholar("Janelsins 2014 prevalence mechanisms cancer-related cognitive impairment"), kind: "scholar" },
+      { cite: "Wefel, J. S., Kesler, S. R., Noll, K. R., & Schagen, S. B. (2015). Clinical characteristics, pathophysiology, and management of noncentral nervous system cancer-related cognitive impairment. CA: A Cancer Journal for Clinicians, 65(2), 123–138.", note: "Synthesizes memory/attention/processing-speed/executive impairment post-treatment and candidate mechanisms. [Strong — review]", link: scholar("Wefel 2015 noncentral nervous system cancer-related cognitive impairment CA Cancer J Clin"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "illness-depression", section: "152", title: "Chronic Illness + Comorbid Depression", subtitle: "Degrades: mood, motivation, energy, self-care adherence",
+    evidenceTag: "Strong",
+    degrades: ["mood", "motivation & energy", "self-care adherence", "overall health-state", "concentration"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "Chronic physical disease frequently carries comorbid depression, which worsens overall health MORE than the physical disease alone — dragging down mood, motivation, and function on top of the underlying condition. Depression is treatable even where the disease is not.",
+    callout: "Cross-sectional and bidirectional: depression worsens chronic-disease outcomes, but chronic disease and disability also cause depression. The World Health Surveys measure association and health decrement, not a clean causal arrow.",
+    sources: [
+      { cite: "Moussavi, S., Chatterji, S., Verdes, E., Tandon, A., Patel, V., & Ustun, B. (2007). Depression, chronic diseases, and decrements in health: results from the World Health Surveys. The Lancet, 370(9590), 851–858.", note: "240,000+ people, 60 countries: depression produces the largest health decrement of the conditions studied; comorbid depression worsens health beyond any chronic disease alone. [Strong — very large survey]", link: scholar("Moussavi 2007 depression chronic diseases decrements World Health Surveys"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "chronic-pain", section: "153", title: "Chronic Pain — Cognition & Gray Matter", subtitle: "Degrades: attention, executive function, working memory, gray matter",
+    evidenceTag: "Moderate",
+    degrades: ["attention", "executive function", "working memory", "prefrontal & thalamic gray matter"],
+    harm: { severity: 3, onset: "months", reversibility: "partial" },
+    description: "Persistent pain competes for attentional and executive resources and is associated with measurable loss of neocortical gray matter — chronic back-pain patients showed 5–11% less. Some atrophy appears reversible after successful pain treatment.",
+    callout: "The gray-matter link is largely cross-sectional; reverse or shared causation (pre-existing brain differences, medication, inactivity) is not excluded. The landmark imaging cohort was small (n=26).",
+    sources: [
+      { cite: "Moriarty, O., McGuire, B. E., & Finn, D. P. (2011). The effect of pain on cognitive function: a review of clinical and preclinical research. Progress in Neurobiology, 93(3), 385–404.", note: "Reviews pain-related impairment of attention, executive and general cognition across clinical and animal studies. [Moderate — review]", link: scholar("Moriarty 2011 effect of pain on cognitive function review"), kind: "scholar" },
+      { cite: "Apkarian, A. V., et al. (2004). Chronic back pain is associated with decreased prefrontal and thalamic gray matter density. Journal of Neuroscience, 24(46), 10410–10415.", note: "CBP patients had 5–11% less neocortical gray matter (≈10–20 yrs of aging), loss scaling with pain duration. [Moderate — small n]", link: scholar("Apkarian 2004 chronic back pain decreased prefrontal thalamic gray matter"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "allostatic-load", section: "154", title: "Chronic Stress / Allostatic Load", subtitle: "Degrades: hippocampal structure, memory, emotional regulation, telomeres",
+    evidenceTag: "Moderate",
+    degrades: ["hippocampal/prefrontal structure", "declarative memory", "emotional regulation", "executive control", "cellular longevity (telomeres)"],
+    harm: { severity: 3, onset: "years", reversibility: "partial" },
+    description: "Prolonged stress-mediator exposure (\"allostatic load\") produces wear-and-tear: hippocampal and prefrontal remodeling, impaired memory and emotional regulation, and accelerated cellular aging. Some stress-induced remodeling can reverse.",
+    callout: "The human telomere finding (Epel 2004) is small (n≈58) and cross-sectional, and later studies show smaller/heterogeneous effects. The brain-remodeling detail rests heavily on animal models — do not overstate \"stress shrinks your DNA.\"",
+    sources: [
+      { cite: "McEwen, B. S. (1998). Protective and damaging effects of stress mediators. New England Journal of Medicine, 338(3), 171–179.", note: "Defines allostatic load; chronic stress-mediator overexposure damages neural, endocrine, and immune systems. [Strong framework]", link: scholar("McEwen 1998 protective and damaging effects of stress mediators"), kind: "scholar" },
+      { cite: "Epel, E. S., Blackburn, E. H., Lin, J., et al. (2004). Accelerated telomere shortening in response to life stress. PNAS, 101(49), 17312–17315.", note: "Higher perceived/chronic stress associated with shorter telomeres and lower telomerase — markers of cell aging. [Moderate — small cross-sectional]", link: scholar("Epel 2004 accelerated telomere shortening life stress"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "sleep-deprivation", section: "155", title: "Sleep Deprivation — Cognition & Emotion", subtitle: "Degrades: attention, working memory, learning, executive & emotional control",
+    evidenceTag: "Strong",
+    degrades: ["sustained attention/vigilance", "working memory", "learning & consolidation", "executive function", "emotional regulation & risk judgment"],
+    harm: { severity: 3, onset: "immediate", reversibility: "recovers" },
+    description: "Sleep loss degrades alertness, vigilance, working memory, learning, and executive/emotional regulation. Because experiments impose the deprivation, causation here is unusually clean. Largely restored with recovery sleep; chronic loss carries lasting metabolic risk.",
+    callout: "Wide individual variability in vulnerability; much lab work uses acute total deprivation, which may not map linearly onto real-world chronic partial sleep restriction.",
+    sources: [
+      { cite: "Killgore, W. D. S. (2010). Effects of sleep deprivation on cognition. Progress in Brain Research, 185, 105–129.", note: "Reviews 50+ studies; sleep loss impairs alertness, attention, memory, and executive functioning, not uniformly across domains. [Strong — review of experiments]", link: scholar("Killgore 2010 effects of sleep deprivation on cognition"), kind: "scholar" },
+      { cite: "Van Dongen, H. P. A., Maislin, G., Mullington, J. M., & Dinges, D. F. (2003). The cumulative cost of additional wakefulness. Sleep, 26(2), 117–126.", note: "Dose-response: chronic 4–6h/night accumulates to deficits ~= 2–3 nights of total deprivation. [Strong — controlled]", link: scholar("Van Dongen 2003 cumulative cost wakefulness sleep restriction"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "obesity-cognition", section: "156", title: "Obesity — Cognition & Brain Structure", subtitle: "Degrades: executive function, memory, attention, gray matter",
+    evidenceTag: "Moderate",
+    degrades: ["executive function", "memory", "attention", "processing speed", "frontal/temporal/hippocampal gray matter"],
+    harm: { severity: 3, onset: "years", reversibility: "partial" },
+    description: "Higher BMI is associated with impairments across nearly all cognitive domains and with brain atrophy in frontal lobes, hippocampus, thalamus, and anterior cingulate. Some cognitive gains after weight loss are reported.",
+    callout: "The independent effect over and above hypertension, diabetes, sleep apnea, and vascular disease remains ambiguous. Reverse causation is plausible: executive deficits can drive obesity, not only follow it.",
+    sources: [
+      { cite: "Prickett, C., Brennan, L., & Stolwyk, R. (2015). Examining the relationship between obesity and cognitive function: a systematic literature review. Obesity Research & Clinical Practice, 9(2), 93–113.", note: "Impairments across almost all cognitive domains in obese adults; independent effect remains ambiguous. [Moderate — systematic review]", link: scholar("Prickett 2015 obesity cognitive function systematic review"), kind: "scholar" },
+      { cite: "Raji, C. A., Ho, A. J., Parikshak, N. N., et al. (2010). Brain structure and obesity. Human Brain Mapping, 31(3), 353–364.", note: "Higher BMI negatively correlated with brain volume; obese subjects showed atrophy in frontal lobes, anterior cingulate, hippocampus, and thalamus. [Moderate]", link: scholar("Raji 2010 brain structure and obesity Human Brain Mapping"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "smoking", section: "157", title: "Smoking — Cognitive Decline & Dementia", subtitle: "Degrades: global cognition, memory, processing speed, gray matter",
+    evidenceTag: "Strong",
+    degrades: ["global cognition", "memory", "processing speed", "cerebral gray matter", "elevated Alzheimer's neuropathology"],
+    harm: { severity: 4, onset: "years", reversibility: "partial" },
+    description: "Active and former smoking is associated with significantly increased Alzheimer's risk, greater neuritic-plaque burden, and cerebral oxidative stress. Cessation lowers future risk; accumulated neuropathology is lasting.",
+    callout: "Historically confounded — several older, tobacco-industry-linked studies suggested a protective effect via competing mortality (smokers dying before dementia onset). The modern consensus is increased risk, but survivor bias haunts the older record.",
+    sources: [
+      { cite: "Durazzo, T. C., Mattsson, N., Weiner, M. W., & ADNI (2014). Smoking and increased Alzheimer's disease risk: a review of potential mechanisms. Alzheimer's & Dementia, 10(3 Suppl), S122–S145.", note: "Active/former smoking significantly raises AD risk; higher plaque burden; oxidative stress as mechanism; ~14% of AD cases worldwide attributed to smoking. [Strong — review + autopsy/epi]", link: scholar("Durazzo 2014 smoking increased Alzheimer's disease risk mechanisms"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "alcohol-brain", section: "158", title: "Alcohol — Brain Damage & Cognition", subtitle: "Degrades: hippocampal volume, executive function, fluid intelligence",
+    evidenceTag: "Strong",
+    degrades: ["hippocampal volume", "executive function", "fluid intelligence", "verbal fluency", "white-matter integrity"],
+    harm: { severity: 4, onset: "years", reversibility: "partial" },
+    description: "Alcohol is associated with brain atrophy (notably hippocampus), iron accumulation, and cognitive decline — detectable even at \"moderate\" intake and steeper in heavy use. Some recovery with abstinence; severe Wernicke-Korsakoff damage is lasting.",
+    callout: "The flagship cohorts study MODERATE drinkers, not diagnosed alcohol use disorder, so extrapolation to AUD is directional. Observational alcohol research suffers the \"sick-quitter\" problem; Topiwala 2022's Mendelian-randomization arm helps point toward causation.",
+    sources: [
+      { cite: "Topiwala, A., Allan, C. L., Valkanova, V., et al. (2017). Moderate alcohol consumption as a risk factor for adverse brain outcomes and cognitive decline. BMJ, 357, j2353.", note: "30-yr Whitehall II cohort: higher alcohol linked to hippocampal atrophy and faster cognitive decline; no protective effect of light drinking on brain. [Strong — long cohort]", link: scholar("Topiwala 2017 moderate alcohol adverse brain outcomes cognitive decline BMJ"), kind: "scholar" },
+      { cite: "Topiwala, A., Wang, C., Ebmeier, K. P., et al. (2022). Associations between moderate alcohol consumption, brain iron, and cognition in UK Biobank. PLOS Medicine, 19(7), e1004039.", note: "≥7 units/week associated with higher brain iron; higher iron linked to poorer executive function and fluid intelligence; MR supports a causal pathway. [Strong — cohort + MR]", link: scholar("Topiwala 2022 alcohol brain iron cognition UK Biobank"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "inactivity", section: "159", title: "Physical Inactivity / Sedentary Behavior", subtitle: "Degrades: cardiovascular & metabolic health, life expectancy, cognition",
+    evidenceTag: "Strong",
+    degrades: ["cardiovascular/metabolic health", "life expectancy", "memory & executive function", "dementia-free survival"],
+    harm: { severity: 4, onset: "years", reversibility: "partial" },
+    description: "Inactivity raises risk of coronary heart disease, type 2 diabetes, cancers, and premature death — ~5.3 million deaths/year — and high sedentary time is linked to cognitive decline. Becoming active substantially reduces risk.",
+    callout: "On the cognition/dementia side reverse causation bites hardest: early, undiagnosed neurodegeneration reduces activity, so low activity may be an early symptom. High activity can largely offset sitting-related mortality risk.",
+    sources: [
+      { cite: "Lee, I. M., Shiroma, E. J., Lobelo, F., Puska, P., Blair, S. N., & Katzmarzyk, P. T. (2012). Effect of physical inactivity on major non-communicable diseases worldwide. The Lancet, 380(9838), 219–229.", note: "Inactivity causally implicated in CHD, T2D, breast/colon cancer; ~5.3 million deaths/yr attributable; shortens life expectancy. [Strong]", link: scholar("Lee 2012 physical inactivity major non-communicable diseases Lancet"), kind: "scholar" },
+      { cite: "Ekelund, U., Steene-Johannessen, J., Brown, W. J., et al. (2016). Does physical activity attenuate the detrimental association of sitting time with mortality? A harmonised meta-analysis of >1 million people. The Lancet, 388(10051), 1302–1310.", note: "High sitting time raises mortality risk; ~60–75 min/day of moderate activity offsets it. [Strong — meta-analysis]", link: scholar("Ekelund 2016 sitting time physical activity mortality harmonised meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "sarcopenia", section: "160", title: "Sarcopenia — Age-Related Muscle Loss", subtitle: "Degrades: strength, gait speed, physical function, independence",
+    evidenceTag: "Strong",
+    degrades: ["muscle strength", "gait speed", "physical function", "independence", "raises falls/fractures/mortality"],
+    harm: { severity: 4, onset: "years", reversibility: "partial" },
+    description: "Progressive loss of skeletal-muscle mass and strength with age — a recognized muscle disease driving falls, fractures, disability, loss of independence, and increased mortality. Resistance training + protein can rebuild strength.",
+    callout: "Prevalence and outcome estimates vary with diagnostic cutoffs (EWGSOP2 revised the 2010 criteria). Low activity, poor nutrition, and comorbidity co-drive it, so it is partly a downstream marker of overall frailty.",
+    sources: [
+      { cite: "Cruz-Jentoft, A. J., Bahat, G., Bauer, J., et al. (2019). Sarcopenia: revised European consensus on definition and diagnosis (EWGSOP2). Age and Ageing, 48(1), 16–31.", note: "Defines sarcopenia as a progressive skeletal-muscle disorder associated with falls, fractures, disability, and mortality. [Strong — consensus on extensive prospective evidence]", link: scholar("Cruz-Jentoft 2019 sarcopenia revised European consensus EWGSOP2"), kind: "scholar" },
+    ],
+  },
+  // ── Y: psychological (161–170) ────────────────────────────────────────────
+  {
+    id: "depression-hippocampus", section: "161", title: "Depression — Hippocampal Volume Loss", subtitle: "Degrades: recollection memory, learning, stress regulation",
+    evidenceTag: "Strong",
+    degrades: ["declarative/recollection memory", "learning", "stress regulation (HPA axis)", "treatment responsiveness"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "Repeated or prolonged untreated depression is associated with shrinkage of the hippocampus and impairment of the memory that depends on it — and the loss scales with how long depression goes untreated. Early treatment appears protective.",
+    callout: "Causal direction is partly contested — smaller hippocampi may be both a consequence AND a pre-existing vulnerability. Volume effects are modest group-level averages, not diagnostic of any individual.",
+    sources: [
+      { cite: "Sheline, Y. I., Gado, M. H., & Kraemer, H. C. (2003). Untreated Depression and Hippocampal Volume Loss. American Journal of Psychiatry, 160(8), 1516–1518.", note: "Longer duration of depression untreated by antidepressants predicted hippocampal volume reduction; time treated did not. [Strong]", link: scholar("Sheline 2003 untreated depression hippocampal volume loss"), kind: "scholar" },
+      { cite: "MacQueen, G. M., et al. (2003). Course of illness, hippocampal function, and hippocampal volume in major depression. PNAS, 100(3), 1387–1392.", note: "Recollection-memory impairment present even in first-episode patients; bilateral hippocampal volume reductions with multiple episodes. [Strong]", link: scholar("MacQueen 2003 course of illness hippocampal function volume major depression"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "chronic-anxiety", section: "162", title: "Chronic Anxiety — Cognition & Cardiac Risk", subtitle: "Degrades: executive function, attention, cardiovascular health",
+    evidenceTag: "Strong",
+    degrades: ["central-executive function (inhibition, shifting)", "sustained attention", "cardiovascular health", "behavioral approach (avoidance narrows life)"],
+    harm: { severity: 4, onset: "immediate", reversibility: "partial" },
+    description: "Sustained anxiety consumes attentional/working-memory resources (you may hold performance up only by burning far more mental effort) and independently raises coronary-heart-disease risk over years. Cognitive load lifts as anxiety remits; vascular risk is harder to undo.",
+    callout: "Attentional Control Theory predicts anxiety harms processing EFFICIENCY more than final performance. The CHD meta-analysis is observational; residual confounding can't be fully excluded despite adjustment.",
+    sources: [
+      { cite: "Eysenck, M. W., Derakshan, N., Santos, R., & Calvo, M. G. (2007). Anxiety and Cognitive Performance: Attentional Control Theory. Emotion, 7(2), 336–353.", note: "Anxiety impairs the central executive and attentional control, degrading processing efficiency more than performance effectiveness. [Strong]", link: scholar("Eysenck 2007 attentional control theory anxiety cognitive performance"), kind: "scholar" },
+      { cite: "Roest, A. M., Martens, E. J., de Jonge, P., & Denollet, J. (2010). Anxiety and Risk of Incident Coronary Heart Disease: A Meta-Analysis. Journal of the American College of Cardiology, 56(1), 38–46.", note: "Across ~249,846 persons, anxiety predicted incident CHD (HR 1.26) and cardiac death (HR 1.48), independent of biological and behavioral risk factors. [Strong — meta-analysis]", link: scholar("Roest 2010 anxiety incident coronary heart disease meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "rumination", section: "163", title: "Rumination — Deepens Depression", subtitle: "Degrades: problem-solving, motivated action, social support, stress recovery",
+    evidenceTag: "Strong",
+    degrades: ["problem-solving", "instrumental/goal-directed behavior", "social support", "emotion regulation", "physiological stress recovery"],
+    harm: { severity: 4, onset: "immediate", reversibility: "recovers" },
+    description: "Repetitively dwelling on distress doesn't discharge it — it deepens and prolongs it, amplifying negative thinking, impairing problem-solving, and eroding social support. It is a modifiable process (targetable via rumination-focused CBT).",
+    callout: "Rumination predicts the ONSET of depression more consistently than its duration. The cortisol/physiological pathway is genuinely inconsistent: state-rumination associates with higher cortisol, but depression-focused rumination scales sometimes don't.",
+    sources: [
+      { cite: "Nolen-Hoeksema, S., Wisco, B. E., & Lyubomirsky, S. (2008). Rethinking Rumination. Perspectives on Psychological Science, 3(5), 400–424.", note: "Rumination exacerbates depression, enhances negative thinking, impairs problem solving, interferes with instrumental behavior, and erodes social support. [Strong]", link: scholar("Nolen-Hoeksema 2008 Rethinking Rumination"), kind: "scholar" },
+      { cite: "Nolen-Hoeksema, S. (1991). Responses to depression and their effects on the duration of depressive episodes. Journal of Abnormal Psychology, 100(4), 569–582.", note: "Foundational: a ruminative response style prolongs depressive episodes. [Moderate–Strong — seminal]", link: scholar("Nolen-Hoeksema 1991 responses to depression duration depressive episodes"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "hostility", section: "164", title: "Chronic Hostility / Anger — CVD", subtitle: "Degrades: cardiovascular health, disease prognosis, longevity",
+    evidenceTag: "Strong",
+    degrades: ["cardiovascular health", "disease prognosis", "longevity", "relationship/social buffering"],
+    harm: { severity: 4, onset: "years", reversibility: "partial" },
+    description: "A persistently angry, cynical, hostile disposition is a documented risk factor for coronary heart disease and for worse prognosis in those who already have it. Accrued atherosclerotic risk is not readily undone.",
+    callout: "Effect sizes are real but modest (combined HR ≈ 1.19 in healthy populations), and part of the risk operates through health behaviors (smoking, activity). Observational — not proof that reducing hostility reverses risk.",
+    sources: [
+      { cite: "Chida, Y., & Steptoe, A. (2009). The Association of Anger and Hostility With Future Coronary Heart Disease: A Meta-Analytic Review. Journal of the American College of Cardiology, 53(11), 936–946.", note: "Anger/hostility raised CHD events in healthy populations (HR 1.19) and worsened prognosis in existing-CHD populations. [Strong — meta-analysis]", link: scholar("Chida Steptoe 2009 anger hostility coronary heart disease meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "ptsd", section: "165", title: "Trauma / PTSD — Brain & Function", subtitle: "Degrades: fear inhibition, contextual memory, prefrontal control",
+    evidenceTag: "Strong",
+    degrades: ["fear extinction / emotion regulation", "contextual & declarative memory", "medial-prefrontal executive control", "autonomic stress regulation"],
+    harm: { severity: 5, onset: "immediate", reversibility: "partial" },
+    description: "PTSD is associated with smaller hippocampal and anterior-cingulate volume, heightened amygdala reactivity, and reduced prefrontal regulatory control — a configuration that impairs distinguishing safe from dangerous and down-regulating fear. Evidence-based trauma therapies help.",
+    callout: "The landmark twin study is decisive on one point: smaller hippocampal volume is at least partly a PRE-EXISTING vulnerability, not solely trauma-caused damage. Popular \"trauma shrinks your brain\" claims overstate the causal direction.",
+    sources: [
+      { cite: "Pitman, R. K., et al. (2012). Biological studies of post-traumatic stress disorder. Nature Reviews Neuroscience, 13(11), 769–787.", note: "Comprehensive review: PTSD associated with smaller hippocampal/ACC volumes, increased amygdala and decreased medial-prefrontal function, and altered psychophysiology. [Strong — review]", link: scholar("Pitman 2012 biological studies post-traumatic stress disorder"), kind: "scholar" },
+      { cite: "Gilbertson, M. W., et al. (2002). Smaller hippocampal volume predicts pathologic vulnerability to psychological trauma. Nature Neuroscience, 5(11), 1242–1247.", note: "Monozygotic-twin design: PTSD severity correlated with hippocampal volume of BOTH the exposed twin AND the unexposed co-twin — small hippocampus is a pre-existing risk factor. [Strong — twin causal design]", link: scholar("Gilbertson 2002 smaller hippocampal volume vulnerability trauma twins"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "perfectionism", section: "166", title: "Perfectionism — Burnout, Depression, Suicide Risk", subtitle: "Degrades: resilience, self-worth, stress tolerance, help-seeking",
+    evidenceTag: "Strong",
+    degrades: ["mood stability", "self-worth", "stress tolerance", "help-seeking", "sense of mattering/belonging"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "The maladaptive face of perfectionism — \"perfectionistic concerns\" (fear of mistakes, socially prescribed standards, self-critical discrepancy) — is linked to depression, general psychopathology, and suicidal ideation and attempts. The standard becomes a mechanism of self-harm.",
+    callout: "Perfectionism is not monolithic: \"perfectionistic strivings\" carry weaker, more ambiguous risk than \"concerns.\" Socially prescribed perfectionism longitudinally predicted increases in suicidal ideation, but most component correlations remain modest.",
+    sources: [
+      { cite: "Smith, M. M., et al. (2018). The perniciousness of perfectionism: A meta-analytic review of the perfectionism–suicide relationship. Journal of Personality, 86(3), 522–542.", note: "45 studies, 11,747 participants: perfectionistic concerns and strivings show small-to-moderate links to suicide ideation; socially prescribed perfectionism predicted longitudinal increases. [Strong — meta-analysis]", link: scholar("Smith 2018 perniciousness of perfectionism suicide meta-analysis"), kind: "scholar" },
+      { cite: "Limburg, K., Watson, H. J., Hagger, M. S., & Egan, S. J. (2017). The Relationship Between Perfectionism and Psychopathology: A Meta-Analysis. Journal of Clinical Psychology, 73(10), 1301–1326.", note: "Both perfectionism dimensions associate with depression, anxiety, OCD, eating-disorder symptoms, and self-harm/ideation — a transdiagnostic risk factor. [Strong — meta-analysis]", link: scholar("Limburg 2017 perfectionism psychopathology meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "self-criticism-shame", section: "167", title: "Chronic Self-Criticism / Shame", subtitle: "Degrades: self-compassion, mood, self-worth, connection",
+    evidenceTag: "Strong",
+    degrades: ["self-compassion", "mood", "self-worth", "social connection/belonging", "treatment engagement"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "A hostile, persecutory relationship with oneself and proneness to shame are robust correlates of depression and multiple disorders. The self becomes a source of threat; compassion-focused and cognitive therapies target it directly.",
+    callout: "Most evidence is cross-sectional — self-criticism and shame co-occur with depression, and disentangling cause from symptom is hard. Shame's link to depression is hard to separate from maladaptive guilt; ordinary adaptive guilt is not the culprit.",
+    sources: [
+      { cite: "Kim, S., Thibodeau, R., & Jorgensen, R. S. (2011). Shame, guilt, and depressive symptoms: A meta-analytic review. Psychological Bulletin, 137(1), 68–96.", note: "108 studies, 22,411 participants: shame more strongly tied to depressive symptoms (r ≈ .43) than guilt (r ≈ .28). [Strong — meta-analysis]", link: scholar("Kim Thibodeau Jorgensen 2011 shame guilt depressive symptoms meta-analysis"), kind: "scholar" },
+      { cite: "Werner, A. M., Tibubos, A. N., Rohrmann, S., & Reiss, N. (2019). The clinical trait self-criticism and its relation to psychopathology: A systematic review. Journal of Affective Disorders, 246, 530–547.", note: "Self-criticism positively related to depressive, psychotic, social-anxiety, eating-disorder, and personality-disorder symptoms — a transdiagnostic vulnerability. [Moderate–Strong — systematic review]", link: scholar("Werner 2019 self-criticism psychopathology systematic review"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "unforgiveness", section: "168", title: "Unforgiveness / Grudge-Holding", subtitle: "Degrades: blood-pressure regulation, autonomic recovery, relationships",
+    evidenceTag: "Moderate",
+    degrades: ["blood-pressure/cardiovascular regulation", "autonomic stress recovery", "emotional well-being", "relationship quality/support"],
+    harm: { severity: 3, onset: "immediate", reversibility: "recovers" },
+    description: "Holding onto resentment is conceptualized as a sustained stress reaction that keeps the body in physiological arousal (elevated blood pressure, cardiovascular reactivity). Forgiveness interventions reduce the arousal; state effects reverse.",
+    callout: "The weakest tier here: much is small-sample, cross-sectional, or lab-reactivity work on students. Long-term hard health endpoints attributable specifically to unforgiveness are not established — the framing is theoretically strong but the causal health claim remains a hypothesis.",
+    sources: [
+      { cite: "Worthington, E. L., & Scherer, M. (2004). Forgiveness is an emotion-focused coping strategy that can reduce health risks and promote health resilience. Psychology & Health, 19(3), 385–405.", note: "Frames unforgiveness as a chronic stress reaction with physiological toll; forgiveness as emotion-focused coping. [Moderate — theory/review]", link: scholar("Worthington Scherer 2004 forgiveness emotion-focused coping health"), kind: "scholar" },
+      { cite: "Lawler, K. A., et al. (2003). A Change of Heart: Cardiovascular Correlates of Forgiveness in Response to Interpersonal Conflict. Journal of Behavioral Medicine, 26(5), 373–393.", note: "Trait and state forgiveness associated with lower blood pressure, heart rate, and cardiovascular reactivity — implying unforgiveness sustains arousal. [Moderate]", link: scholar("Lawler 2003 change of heart cardiovascular forgiveness"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "learned-helplessness", section: "169", title: "Learned Helplessness / Pessimistic Style", subtitle: "Degrades: agency, motivation, mood, long-run physical health",
+    evidenceTag: "Strong",
+    degrades: ["perceived control/agency", "motivation & active coping", "mood", "physical health (long-run)"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "Explaining bad events as internal, stable, and global predicts later depression AND poorer long-term physical health. Explanatory style is modifiable — cognitive therapy and learned-optimism training target it.",
+    callout: "Modern neuroscience (Maier & Seligman 2016) inverted the original theory: passivity under uncontrollable stress is the DEFAULT unlearned response; what is actually learned is control. \"Learned helplessness\" is partly a misnomer. The 35-year health study rests on one privileged male cohort.",
+    sources: [
+      { cite: "Peterson, C., Seligman, M. E. P., & Vaillant, G. E. (1988). Pessimistic explanatory style is a risk factor for physical illness: A thirty-five-year longitudinal study. Journal of Personality and Social Psychology, 55(1), 23–27.", note: "Pessimistic explanatory style at age 25 predicted poorer physician-assessed health at 45–60, controlling for baseline health. [Moderate–Strong — single-cohort longitudinal]", link: scholar("Peterson Seligman Vaillant 1988 pessimistic explanatory style physical illness"), kind: "scholar" },
+      { cite: "Maier, S. F., & Seligman, M. E. P. (2016). Learned helplessness at fifty: Insights from neuroscience. Psychological Review, 123(4), 349–367.", note: "Revises the theory: passivity is the default response to uncontrollable aversive events; detecting control is what is learned. [Strong — authoritative review]", link: scholar("Maier Seligman 2016 learned helplessness at fifty neuroscience"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "chronic-worry", section: "170", title: "Chronic Worry / Generalized Anxiety", subtitle: "Degrades: quality of life, work & social function, sleep",
+    evidenceTag: "Moderate",
+    degrades: ["work capacity & social functioning", "life satisfaction/quality of life", "sleep", "cellular-aging reserve (tentative)"],
+    harm: { severity: 4, onset: "months", reversibility: "recovers" },
+    description: "Habitual worry sustains physiological stress activation and, clinically as GAD, produces broad impairment in work, relationships, and life satisfaction comparable to major depression. GAD is treatable; quality of life improves with remission.",
+    callout: "The telomere sub-claim is the honest weak point: associations exist but are inconsistent, sometimes only in women or older patients. Do not overstate \"worry shortens your DNA\" — the functional-impairment evidence is far more solid.",
+    sources: [
+      { cite: "Hoffman, D. L., Dukes, E. M., & Wittchen, H.-U. (2008). Human and economic burden of generalized anxiety disorder. Depression and Anxiety, 25(1), 72–90.", note: "GAD produces substantial impairment in work, social functioning, and quality of life, with burden comparable to major depression. [Strong]", link: scholar("Hoffman Dukes Wittchen 2008 human economic burden generalized anxiety disorder"), kind: "scholar" },
+      { cite: "Brosschot, J. F., Gerin, W., & Thayer, J. F. (2006). The perseverative cognition hypothesis: worry, prolonged stress-related physiological activation, and health. Journal of Psychosomatic Research, 60(2), 113–124.", note: "Worry prolongs stress-related physiological activation before and after stressors, extending stress's somatic toll. [Moderate–Strong — review]", link: scholar("Brosschot Gerin Thayer 2006 perseverative cognition worry health"), kind: "scholar" },
+    ],
+  },
+  // ── Z: behavioral & lifestyle (171–180) ───────────────────────────────────
+  {
+    id: "doomscrolling", section: "171", title: "Problematic Social Media / Doomscrolling", subtitle: "Degrades: mood, attention, sleep, self-esteem — effect size contested",
+    evidenceTag: "Mixed",
+    degrades: ["mood regulation", "attention", "sleep", "self-esteem", "life satisfaction"],
+    harm: { severity: 2, onset: "months", reversibility: "recovers" },
+    description: "Heavy social/screen use tracks with elevated depression and anxiety symptoms and lower wellbeing — but the effect size is small and hotly contested, which is itself the honest finding. Largely reversible on reduced use.",
+    callout: "This is the corpus's biggest effect-size fight. Orben & Przybylski show digital-tech use explains at most ~0.4% of wellbeing variance — smaller than wearing glasses. Cross-sectional designs can't rule out reverse causation (depressed teens may scroll more).",
+    sources: [
+      { cite: "Boers, E., Afzali, M. H., Newton, N., & Conrod, P. (2019). Association of screen time and depression in adolescence. JAMA Pediatrics, 173(9), 853–859.", note: "Within-person social-media/TV/computer use predicts rising depression symptoms; gaming did not. [Moderate — longitudinal within-person]", link: scholar("Boers 2019 screen time depression adolescence"), kind: "scholar" },
+      { cite: "Orben, A., & Przybylski, A. K. (2019). The association between adolescent well-being and digital technology use. Nature Human Behaviour, 3, 173–182.", note: "20,776 specifications; digital use explains ≤0.4% of wellbeing variance. [Strong — the honest small-effect finding]", link: scholar("Orben Przybylski 2019 adolescent well-being digital technology"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "night-phone", section: "172", title: "Late-Night Smartphone / Sleep Displacement", subtitle: "Degrades: sleep, next-day self-regulation, work engagement",
+    evidenceTag: "Moderate",
+    degrades: ["sleep quantity/quality", "next-day self-regulatory resources", "work engagement", "attention"],
+    harm: { severity: 2, onset: "immediate", reversibility: "recovers" },
+    description: "Late-night phone use delays sleep onset (blue-light melatonin suppression + failure to psychologically detach), producing morning depletion that carries into the workday. The direct harm is the sleep loss.",
+    callout: "The effect is an indirect chain (phone → worse sleep → depletion → lower engagement); individual differences (job control) buffer the downstream cost.",
+    sources: [
+      { cite: "Lanaj, K., Johnson, R. E., & Barnes, C. M. (2014). Beginning the workday yet already depleted? Consequences of late-night smartphone use and sleep. Organizational Behavior and Human Decision Processes, 124(1), 11–23.", note: "Nighttime phone use → poorer sleep → morning depletion → lower daily work engagement. [Moderate — experience-sampling]", link: scholar("Lanaj Johnson Barnes 2014 late-night smartphone use sleep"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "procrastination", section: "173", title: "Procrastination", subtitle: "Degrades: performance, physical health, stress regulation",
+    evidenceTag: "Moderate",
+    degrades: ["task performance", "immune/physical health", "stress regulation", "cardiovascular resilience"],
+    harm: { severity: 3, onset: "months", reversibility: "partial" },
+    description: "Chronic delay produces a short-term-benefit / long-term-cost curve: less stress early, then more stress, more illness, and worse outcomes overall. It compounds over a term or cycle.",
+    callout: "The cardiovascular link (Sirois 2015) is cross-sectional and self-reported — procrastination as a \"vulnerability factor,\" not a proven cause of heart disease. Reverse causation (ill health → disengagement coping) is plausible.",
+    sources: [
+      { cite: "Tice, D. M., & Baumeister, R. F. (1997). Longitudinal study of procrastination, performance, stress, and health. Psychological Science, 8(6), 454–458.", note: "Procrastinators: lower early stress but higher late-term stress, more illness overall, lower grades. [Moderate — longitudinal]", link: scholar("Tice Baumeister 1997 procrastination performance stress health"), kind: "scholar" },
+      { cite: "Sirois, F. M. (2015). Is procrastination a vulnerability factor for hypertension and cardiovascular disease? Journal of Behavioral Medicine, 38(3), 578–589.", note: "Higher trait procrastination predicts hypertension/CVD status via maladaptive coping. [Emerging — cross-sectional]", link: scholar("Sirois 2015 procrastination hypertension cardiovascular disease"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "financial-scarcity", section: "174", title: "Financial Scarcity / Debt Stress", subtitle: "Degrades: working memory, decision quality, mood, cardiovascular",
+    evidenceTag: "Strong",
+    degrades: ["working memory", "fluid intelligence", "executive function/decision quality", "mood", "cardiovascular health"],
+    harm: { severity: 4, onset: "immediate", reversibility: "recovers" },
+    description: "Scarcity itself taxes attention and working memory (roughly a night's-sleep or ~13-IQ-point equivalent), independent of the person; debt separately raises stress, depressive symptoms, and blood pressure. Cognitive load lifts when scarcity lifts.",
+    callout: "Mani's mall experiment is genuinely causal (randomized financial-worry prime), though the field result has faced replication debate. Sweet's debt→blood-pressure link is cross-sectional and can't fully separate poverty's other pathways.",
+    sources: [
+      { cite: "Mani, A., Mullainathan, S., Shafir, E., & Zhao, J. (2013). Poverty impedes cognitive function. Science, 341(6149), 976–980.", note: "Financial-worry prime + harvest-cycle field study reduce cognitive performance in the poor. [Strong — randomized experimental prime]", link: scholar("Mani Mullainathan Shafir Zhao 2013 poverty impedes cognitive function"), kind: "scholar" },
+      { cite: "Sweet, E., Nandi, A., Adam, E. K., & McDade, T. W. (2013). The high price of debt: Household financial debt and its impact on mental and physical health. Social Science & Medicine, 91, 94–100.", note: "High debt → higher perceived stress (+11.7%), depressive symptoms (+13.2%), and diastolic BP in young adults. [Emerging — cross-sectional]", link: scholar("Sweet 2013 high price of debt mental physical health"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "unemployment", section: "175", title: "Unemployment / Job Loss", subtitle: "Degrades: mental health, self-esteem, physical health, life expectancy",
+    evidenceTag: "Strong",
+    degrades: ["mental health", "self-esteem", "subjective wellbeing", "physical health", "life expectancy"],
+    harm: { severity: 5, onset: "months", reversibility: "partial" },
+    description: "Unemployment roughly doubles the rate of psychological problems (34% vs 16%); high-seniority displaced workers face 50–100% elevated mortality the year after job loss, still 10–15% elevated two decades later. Distress recovers on reemployment; mortality risk lingers.",
+    callout: "Paul & Moser's longitudinal subset addresses selection (mental illness → unemployment), showing unemployment causes distress. The mortality effect concentrates in mass-layoff / high-seniority men, so it doesn't generalize to all job exits.",
+    sources: [
+      { cite: "Paul, K. I., & Moser, K. (2009). Unemployment impairs mental health: Meta-analyses. Journal of Vocational Behavior, 74(3), 264–282.", note: "324 studies; unemployed show more distress (d=0.51); 34% vs 16% with psychological problems; longitudinal data support causation. [Strong — meta-analysis]", link: scholar("Paul Moser 2009 unemployment impairs mental health meta-analyses"), kind: "scholar" },
+      { cite: "Sullivan, D., & von Wachter, T. (2009). Job displacement and mortality: An analysis using administrative data. Quarterly Journal of Economics, 124(3), 1265–1306.", note: "High-seniority displaced men: mortality +50–100% the year after, +10–15% 20 years later. [Strong — administrative-data cohort]", link: scholar("Sullivan von Wachter 2009 job displacement mortality"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "aimless-retirement", section: "176", title: "Retirement Without Purpose / Role Loss", subtitle: "Degrades: cognition, sense of purpose, longevity — evidence mixed",
+    evidenceTag: "Mixed",
+    degrades: ["episodic memory", "fluid cognition", "sense of purpose", "longevity"],
+    harm: { severity: 3, onset: "years", reversibility: "partial" },
+    description: "Early retirement is associated with faster cognitive decline (\"mental retirement\"), and low purpose in life predicts higher all-cause mortality. Re-engagement, volunteering, and purpose can restore it — the harm is role/purpose loss, not retirement per se.",
+    callout: "The most contested cost here: retirement effects on cognition are genuinely mixed — some studies find benefits (stress relief, more sleep), and the cognition finding depends on the instrument's assumptions.",
+    sources: [
+      { cite: "Rohwedder, S., & Willis, R. J. (2010). Mental retirement. Journal of Economic Perspectives, 24(1), 119–138.", note: "Cross-national: earlier retirement predicts lower cognitive performance in the early 60s. [Moderate — instrumental-variables]", link: scholar("Rohwedder Willis 2010 mental retirement"), kind: "scholar" },
+      { cite: "Hill, P. L., & Turiano, N. A. (2014). Purpose in life as a predictor of mortality across adulthood. Psychological Science, 25(7), 1482–1486.", note: "Higher purpose → lower mortality over 14 yrs, independent of age/retirement status. [Moderate — prospective cohort]", link: scholar("Hill Turiano 2014 purpose in life mortality"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "burnout", section: "177", title: "Job Burnout / Workaholism", subtitle: "Degrades: cardiometabolic health, sleep, mood, work function",
+    evidenceTag: "Moderate",
+    degrades: ["cardiovascular/metabolic health", "sleep", "mood", "occupational performance"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "Prospective evidence links burnout to hypercholesterolemia, type 2 diabetes, coronary heart disease, cardiovascular hospitalization, musculoskeletal pain, prolonged fatigue, insomnia, depression, and job dissatisfaction/absenteeism.",
+    callout: "The review synthesizes prospective designs (burnout measured before outcome), strengthening causal reading, but individual outcomes rest on varying study counts and residual confounding by baseline health/job conditions remains.",
+    sources: [
+      { cite: "Salvagioni, D. A. J., Melanda, F. N., Mesas, A. E., et al. (2017). Physical, psychological and occupational consequences of job burnout: A systematic review of prospective studies. PLOS ONE, 12(10), e0185781.", note: "Burnout prospectively predicts CHD, type 2 diabetes, hypercholesterolemia, CVD hospitalization, depression, insomnia, and job dissatisfaction. [Moderate — prospective systematic review]", link: scholar("Salvagioni 2017 consequences job burnout systematic review prospective"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "gambling-disorder", section: "178", title: "Gambling Disorder", subtitle: "Degrades: finances, mental health, family stability, survival",
+    evidenceTag: "Strong",
+    degrades: ["financial stability", "mental health", "family/relationships", "impulse control", "survival"],
+    harm: { severity: 5, onset: "months", reversibility: "partial" },
+    description: "Gambling disorder carries high psychiatric comorbidity, elevated debt and bankruptcy, domestic harm, and markedly elevated suicidality. Treatment-responsive, but debt and family harm can be lasting.",
+    callout: "Much comorbidity data is cross-sectional and bidirectional (depression and gambling reinforce each other); financial harm and psychiatric comorbidity are entangled as both cause and consequence.",
+    sources: [
+      { cite: "Karlsson, A., & Håkansson, A. (2018). Gambling disorder, increased mortality, suicidality, and associated comorbidity: A longitudinal nationwide register study. Journal of Behavioral Addictions, 7(4), 1091–1099.", note: "Register cohort: elevated all-cause mortality and ~15x suicide-mortality risk in gambling disorder. [Moderate — register cohort]", link: scholar("Karlsson Hakansson gambling disorder mortality suicidality register study"), kind: "scholar" },
+      { cite: "Wong, P. W. C., et al. (2023). Suicidal behaviors among individuals with gambling disorders: A meta-analysis. Journal of Gambling Studies, 39.", note: "Pooled lifetime prevalence ~31.6% suicidal ideation, ~13.2% attempts. [Moderate — meta-analysis]", link: scholar("suicidal behaviors gambling disorders meta-analysis Journal of Gambling Studies"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "media-multitasking", section: "179", title: "Chronic Media Multitasking", subtitle: "Degrades: attentional filtering, working memory, task-switching",
+    evidenceTag: "Mixed",
+    degrades: ["attentional filtering", "working memory", "task-switching efficiency", "long-term memory encoding"],
+    harm: { severity: 2, onset: "years", reversibility: "partial" },
+    description: "Heavy media multitaskers are more distractible — worse at filtering irrelevant stimuli and memory representations — and show lower working-memory performance. The direction of causation is unresolved.",
+    callout: "Correlational: heavy multitaskers may already have weaker cognitive control (self-selection), not be damaged by multitasking. A decade of replication attempts is mixed, and effect sizes are modest — treat as an association, not established causation.",
+    sources: [
+      { cite: "Ophir, E., Nass, C., & Wagner, A. D. (2009). Cognitive control in media multitaskers. PNAS, 106(37), 15583–15587.", note: "Heavy media multitaskers more susceptible to distraction, worse at task-switching, more N-back false alarms. [Emerging — cross-sectional, replication mixed]", link: scholar("Ophir Nass Wagner 2009 cognitive control media multitaskers"), kind: "scholar" },
+      { cite: "Uncapher, M. R., Thieu, M. K., & Wagner, A. D. (2016). Media multitasking and memory: Differences in working memory and long-term memory. Psychonomic Bulletin & Review, 23(2), 483–490.", note: "Heavy media multitaskers show lower working-memory performance, linked to poorer long-term memory. [Emerging — cross-sectional]", link: scholar("Uncapher Thieu Wagner 2016 media multitasking memory"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "sleep-debt-shift", section: "180", title: "Sleep Debt / Social Jetlag / Shift Work", subtitle: "Degrades: attention, metabolic regulation, circadian health",
+    evidenceTag: "Moderate",
+    degrades: ["attention/vigilance", "metabolic regulation (BMI, glucose)", "circadian health", "long-term cancer risk (contested)"],
+    harm: { severity: 4, onset: "immediate", reversibility: "partial" },
+    description: "Cumulative sleep restriction produces dose-dependent neurobehavioral deficits; social jetlag associates with higher BMI; night-shift work is classed a probable human carcinogen (IARC 2A) via circadian disruption. Acute cognition recovers; chronic metabolic/cancer risk is lasting.",
+    callout: "The cancer link is genuinely mixed — IARC rates night work only \"probable\" (2A) on limited human evidence, and breast-cancer meta-analyses conflict. Social jetlag → obesity is correlational.",
+    sources: [
+      { cite: "Van Dongen, H. P. A., Maislin, G., Mullington, J. M., & Dinges, D. F. (2003). The cumulative cost of additional wakefulness. Sleep, 26(2), 117–126.", note: "Dose-response: 4–6h/night accumulates to deficits ~= 2–3 nights of total deprivation. [Strong — controlled]", link: scholar("Van Dongen 2003 cumulative cost additional wakefulness"), kind: "scholar" },
+      { cite: "Roenneberg, T., Allebrandt, K. V., Merrow, M., & Vetter, C. (2012). Social jetlag and obesity. Current Biology, 22(10), 939–943.", note: "In overweight individuals, greater social jetlag associates with higher BMI. [Emerging — cross-sectional]", link: scholar("Roenneberg 2012 social jetlag and obesity"), kind: "scholar" },
+    ],
+  },
+  // ── AA: social, environmental & developmental (181–190) ───────────────────
+  {
+    id: "aces", section: "181", title: "Adverse Childhood Experiences (ACEs)", subtitle: "Degrades: lifelong physical & mental health, emotion regulation, longevity",
+    evidenceTag: "Strong",
+    degrades: ["physical health (cardiovascular, metabolic)", "mental health", "emotional regulation", "longevity", "health behaviors"],
+    harm: { severity: 5, onset: "years", reversibility: "partial" },
+    description: "Cumulative childhood abuse, neglect, and household dysfunction raise lifelong risk of disease, mental illness, addiction, and early death in a graded, dose-response (\"ACE score\") pattern. Buffered by later protective relationships.",
+    callout: "ACEs cluster with poverty and are self-reported retrospectively (recall bias). The score treats unlike adversities as equal units; poverty is a major upstream driver and confounder.",
+    sources: [
+      { cite: "Felitti, V. J., Anda, R. F., Nordenberg, D., et al. (1998). Relationship of Childhood Abuse and Household Dysfunction to Many of the Leading Causes of Death in Adults (The ACE Study). American Journal of Preventive Medicine, 14(4), 245–258.", note: "Dose-response: more ACEs → higher adult disease, disability, and death. [Strong — foundational ~17K cohort]", link: scholar("Felitti 1998 adverse childhood experiences leading causes of death"), kind: "scholar" },
+      { cite: "Hughes, K., Bellis, M. A., Hardcastle, K. A., et al. (2017). The effect of multiple adverse childhood experiences on health: a systematic review and meta-analysis. The Lancet Public Health, 2(8), e356–e366.", note: "≥4 ACEs strongly raise odds of poor mental health, substance use, and violence. [Strong — meta-analysis]", link: scholar("Hughes 2017 multiple adverse childhood experiences meta-analysis"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "discrimination", section: "182", title: "Chronic Discrimination / Racism", subtitle: "Degrades: mental health, physical health, immune & cardiovascular regulation",
+    evidenceTag: "Strong",
+    degrades: ["mental health (depression, anxiety, distress)", "general/physical health", "immune & cardiovascular-metabolic regulation"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "Repeated interpersonal and structural discrimination acts as a chronic stressor, wearing down physiological systems (allostatic load) and degrading mental and physical health.",
+    callout: "Most evidence is cross-sectional and self-reported; discrimination is entangled with socioeconomic disadvantage and segregation, so isolating it from poverty/SES is hard. Physical-health effects are smaller and more heterogeneous than mental-health ones.",
+    sources: [
+      { cite: "Paradies, Y., Ben, J., Denson, N., et al. (2015). Racism as a Determinant of Health: A Systematic Review and Meta-Analysis. PLoS ONE, 10(9), e0138511.", note: "293 studies: racism associated with poorer mental (r≈-.23) and physical health. [Strong — meta-analysis]", link: scholar("Paradies 2015 racism determinant of health meta-analysis"), kind: "scholar" },
+      { cite: "Williams, D. R., & Mohammed, S. A. (2009). Discrimination and racial disparities in health: evidence and needed research. Journal of Behavioral Medicine, 32(1), 20–47.", note: "Review documents a consistent inverse discrimination–health association. [Strong — review]", link: scholar("Williams Mohammed 2009 discrimination racial disparities health"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "child-poverty", section: "183", title: "Childhood Poverty / Low SES — Brain Development", subtitle: "Degrades: executive function, attention, language, memory, achievement",
+    evidenceTag: "Strong",
+    degrades: ["executive function", "attention", "language", "memory", "academic achievement"],
+    harm: { severity: 4, onset: "years", reversibility: "partial" },
+    description: "Growing up in poverty is associated with reduced brain structure (gray matter, cortical surface area, hippocampal volume) in regions supporting attention, language, memory, and executive function, mediating lower academic achievement. Mediators are modifiable, not deterministic.",
+    callout: "Observational — cannot prove poverty itself shrinks brains rather than co-occurring factors. Luby 2013 shows the hippocampal effect is largely mediated by caregiving quality and stress, i.e. poverty is upstream and intervenable.",
+    sources: [
+      { cite: "Hair, N. L., Hanson, J. L., Wolfe, B. L., & Pollak, S. D. (2015). Association of Child Poverty, Brain Development, and Academic Achievement. JAMA Pediatrics, 169(9), 822–829.", note: "Near-poor children ~3–4% below gray-matter norm; explains ~20% of the achievement gap. [Strong]", link: scholar("Hair 2015 child poverty brain development academic achievement"), kind: "scholar" },
+      { cite: "Noble, K. G., Houston, S. M., Brito, N. H., et al. (2015). Family income, parental education and brain structure in children and adolescents. Nature Neuroscience, 18(5), 773–778.", note: "Income logarithmically associated with cortical surface area; steepest at low income. [Strong]", link: scholar("Noble 2015 family income brain structure children"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "incarceration", section: "184", title: "Incarceration", subtitle: "Degrades: mental & physical health, family stability, child wellbeing",
+    evidenceTag: "Moderate",
+    degrades: ["mental health", "physical health/longevity", "family stability", "child wellbeing/development", "economic capacity"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "Incarceration harms the physical and mental health of those imprisoned (especially post-release) and damages the health, economic security, and development of their children and families, widening racial inequality.",
+    callout: "Incarcerated populations differ on pre-existing health, poverty, and neighborhood risk — hard to fully separate the effect from selection. Some short-term physical measures paradoxically improve during confinement; harm concentrates after release and across families.",
+    sources: [
+      { cite: "Wildeman, C., & Wang, E. A. (2017). Mass incarceration, public health, and widening inequality in the USA. The Lancet, 389(10077), 1464–1474.", note: "Incarceration harms post-release physical/mental health and drives racial health inequality. [Moderate — review]", link: scholar("Wildeman Wang 2017 mass incarceration public health inequality"), kind: "scholar" },
+      { cite: "Wildeman, C., Goldman, A. W., & Turney, K. (2018). Parental incarceration and child health in the United States. Epidemiologic Reviews, 40(1), 146–156.", note: "Paternal incarceration negatively (possibly causally) associated with child health/wellbeing. [Moderate]", link: scholar("Wildeman 2018 parental incarceration child health United States"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "empty-nest", section: "185", title: "Empty Nest / Major Role Transition", subtitle: "Often neutral-to-positive — harm concentrated in vulnerable subgroups",
+    evidenceTag: "Mixed",
+    degrades: ["subjective wellbeing (subgroups)", "role identity", "sense of purpose", "mood"],
+    harm: { severity: 2, onset: "immediate", reversibility: "recovers" },
+    description: "The departure of grown children removes a long-held parental role. Contrary to the stereotype, the best longitudinal evidence finds the transition is on average neutral-to-positive for wellbeing and marital satisfaction; harm is real but concentrated in subgroups (identity built on caregiving, poor marital/social resources).",
+    callout: "The honest weak entry: \"empty nest syndrome\" as a general pathology is not well supported. Cross-sectional studies sometimes show distress, but the strongest longitudinal study finds marital satisfaction RISES. Do not overstate as a uniform cost.",
+    sources: [
+      { cite: "Gorchoff, S. M., John, O. P., & Helson, R. (2008). Contextualizing change in marital satisfaction during middle age: an 18-year longitudinal study. Psychological Science, 19(11), 1194–1200.", note: "The empty-nest transition INCREASED marital satisfaction via better quality of shared time. [Mixed — counter-evidence to harm]", link: scholar("Gorchoff John Helson 2008 marital satisfaction empty nest"), kind: "scholar" },
+      { cite: "Bouchard, G. (2014). Marital quality at the empty-nest phase: an integrative review. Journal of Adult Development / Journal of Aging Health.", note: "Review: findings mixed — cross-sectional often positive, some longitudinal decline; no uniform syndrome. [Mixed — review]", link: scholar("Bouchard empty nest marital quality review"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "food-insecurity", section: "186", title: "Food Insecurity", subtitle: "Degrades: child mental & physical health, maternal mental health",
+    evidenceTag: "Moderate",
+    degrades: ["child mental/behavioral health", "child physical health/nutrition", "maternal mental health", "family functioning"],
+    harm: { severity: 3, onset: "months", reversibility: "partial" },
+    description: "Inconsistent access to adequate food is associated with worse child physical and mental health, behavioral/emotional problems, and elevated maternal depression and anxiety — partly mediated through maternal mental health. Potentially responsive to policy/food access.",
+    callout: "Deeply confounded with poverty, parental mental illness, and material hardship — often a marker of broader deprivation rather than a proven independent cause.",
+    sources: [
+      { cite: "Gundersen, C., & Ziliak, J. P. (2015). Food Insecurity and Health Outcomes. Health Affairs, 34(11), 1830–1839.", note: "Review: food insecurity consistently negatively associated with health across the lifespan. [Moderate — review]", link: scholar("Gundersen Ziliak 2015 food insecurity health outcomes"), kind: "scholar" },
+      { cite: "Whitaker, R. C., Phillips, S. M., & Orzol, S. M. (2006). Food insecurity and the risks of depression and anxiety in mothers and behavior problems in their preschool-aged children. Pediatrics, 118(3), e859–e868.", note: "Maternal depression/anxiety and child behavior problems rise with food-insecurity level. [Moderate]", link: scholar("Whitaker 2006 food insecurity maternal depression behavior problems"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "eviction", section: "187", title: "Housing Instability / Eviction", subtitle: "Degrades: mental health, physical health, child development, security",
+    evidenceTag: "Moderate",
+    degrades: ["mental health (depression)", "physical/self-rated health", "child development", "material security", "parenting capacity"],
+    harm: { severity: 4, onset: "months", reversibility: "partial" },
+    description: "Forced moves, eviction, and unstable housing are associated with increased maternal depression, worse self-rated health for parents and children, more material hardship, and elevated child developmental risk — appearing to be a cause, not merely a marker, of hardship (effects persist ≥2 years).",
+    callout: "Households that experience eviction differ on unmeasured factors; propensity matching reduces but doesn't eliminate confounding. Housing instability is both a consequence and a driver of poverty (partly bidirectional).",
+    sources: [
+      { cite: "Desmond, M., & Kimbro, R. T. (2015). Eviction's Fallout: Housing, Hardship, and Health. Social Forces, 94(1), 295–324.", note: "Evicted mothers had more depression, worse health, and more hardship — persisting ~2 years. [Moderate — propensity-matched]", link: scholar("Desmond Kimbro 2015 eviction's fallout housing hardship health"), kind: "scholar" },
+      { cite: "Sandel, M., Sheward, R., Ettinger de Cuba, S., et al. (2018). Unstable Housing and Caregiver and Child Health in Renter Families. Pediatrics, 141(2), e20172199.", note: "Housing instability linked to worse caregiver/child health, maternal depression, and developmental risk. [Moderate — large multi-site]", link: scholar("Sandel 2018 unstable housing caregiver child health renter families"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "neighborhood-violence", section: "188", title: "Neighborhood Violence / Chronic Threat", subtitle: "Degrades: attention, impulse control, verbal/reading, stress physiology",
+    evidenceTag: "Strong",
+    degrades: ["attention", "impulse control", "verbal/reading performance", "stress physiology (HPA axis)", "cellular aging"],
+    harm: { severity: 4, onset: "immediate", reversibility: "partial" },
+    description: "Exposure to community violence acutely and chronically impairs children's cognition (vocabulary, reading, attention, impulse control) and leaves biological signatures of chronic stress. Acute effects fade; chronic exposure may embed.",
+    callout: "Sharkey's timing-of-homicide design is unusually strong for causal inference on the acute cognitive hit. The biological (telomere/cortisol) studies are small, cross-sectional, and heavily confounded with neighborhood poverty — mechanism suggestive, not settled.",
+    sources: [
+      { cite: "Sharkey, P. (2010). The acute effect of local homicides on children's cognitive performance. PNAS, 107(26), 11733–11738.", note: "A homicide within ~a week near home cut vocabulary/reading ~0.5–0.66 SD. [Strong — quasi-experimental timing]", link: scholar("Sharkey 2010 acute effect local homicides children cognitive"), kind: "scholar" },
+      { cite: "Sharkey, P. T., Tirado-Strayer, N., Papachristos, A. V., & Raver, C. C. (2012). The Effect of Local Violence on Children's Attention and Impulse Control. American Journal of Public Health, 102(12), 2287–2293.", note: "Recent local violence lowered preschoolers' attention/impulse control, via parental distress. [Strong — quasi-experimental]", link: scholar("Sharkey 2012 local violence children attention impulse control"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "early-screen-time", section: "189", title: "Excessive Early-Childhood Screen Use", subtitle: "Degrades: language, attention, motor/problem-solving, sleep",
+    evidenceTag: "Moderate",
+    degrades: ["language/communication", "attention", "motor & problem-solving development", "sleep"],
+    harm: { severity: 3, onset: "months", reversibility: "partial" },
+    description: "Higher screen time in early childhood is associated with poorer performance on developmental screening (communication, motor, problem-solving, personal-social). Effect sizes are modest and the behavior is modifiable.",
+    callout: "Associations are small and confounded by family environment, parenting, and SES; the authors note the alternative that children with delays receive more screen time. \"Screen time\" is a crude aggregate — content, context, and co-viewing all matter.",
+    sources: [
+      { cite: "Madigan, S., Browne, D., Racine, N., Mori, C., & Tough, S. (2019). Association Between Screen Time and Children's Performance on a Developmental Screening Test. JAMA Pediatrics, 173(3), 244–250.", note: "Screen time at 24/36 months predicted poorer later developmental scores; directional (cross-lagged), not reverse. [Moderate — longitudinal]", link: scholar("Madigan 2019 screen time children developmental screening"), kind: "scholar" },
+      { cite: "Lissak, G. (2018). Adverse physiological and psychological effects of screen time on children and adolescents: literature review and case study. Environmental Research, 164, 149–157.", note: "Review: excess screen time linked to poor sleep, stress dysregulation, and cardiometabolic and psychological harm. [Emerging — narrative review]", link: scholar("Lissak 2018 adverse effects screen time children adolescents"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "caregiver-burden", section: "190", title: "Chronic Caregiver Burden (Non-Dementia)", subtitle: "Morbidity real; the classic mortality claim is overturned",
+    evidenceTag: "Moderate",
+    degrades: ["mental health (depression/anxiety)", "physical health (cardiovascular, immune)", "sleep", "time/economic capacity"],
+    harm: { severity: 3, onset: "months", reversibility: "partial" },
+    description: "Sustained caregiving for a disabled child or spouse imposes chronic stress associated with elevated distress, anxiety, depression, and physical-health problems. Harm concentrates in high-strain, low-resource caregivers and is respite/support-responsive.",
+    callout: "Key honest caveat: the widely cited \"caregiving raises mortality\" finding has NOT held up — Roth et al. (2013), a large propensity-matched study, found caregivers had LOWER all-cause mortality than matched non-caregivers. Caregiving per se is not uniformly lethal.",
+    sources: [
+      { cite: "Schulz, R., & Beach, S. R. (1999). Caregiving as a risk factor for mortality: the Caregiver Health Effects Study. JAMA, 282(23), 2215–2219.", note: "Strained spousal caregivers showed elevated 4-year mortality — foundational, now qualified. [Moderate — contested]", link: scholar("Schulz Beach 1999 caregiving risk factor mortality"), kind: "scholar" },
+      { cite: "Roth, D. L., Fredman, L., & Haley, W. E. (2015). Informal caregiving and its impact on health: a reappraisal. The Gerontologist, 55(2), 309–319.", note: "HONEST COUNTER-EVIDENCE: matched caregivers had ~lower mortality; overturns the uniform-harm claim. [Moderate — propensity-matched reappraisal]", link: scholar("Roth 2013 family caregiving all-cause mortality propensity matched"), kind: "scholar" },
+    ],
+  },
 ];
 
 // Live counts so the header can never drift from the data again.
@@ -4549,6 +5254,16 @@ export default function ResearchLibrary() {
               the same research each card cites — <i>not a promise</i> about your individual outcome.
             </div>
 
+            {/* Cost Score explainer — the cost-of-failure group */}
+            <div style={{ border: "1px solid rgba(217,105,90,0.28)", background: "rgba(217,105,90,0.06)", borderRadius: 10, padding: "12px 14px", margin: "0 0 14px", fontSize: 12.5, lineHeight: 1.55, color: "var(--rl-muted, #b9b2a6)" }}>
+              <b style={{ color: "#d9695a" }}>Reading the Cost Score.</b> The <b>cost-of-failure</b> cards carry the mirror
+              gauge: a 0–100 measure of what's at stake when things go wrong — <b>70·damage + 30·imminence</b>, where damage
+              is severity × how proven × how irreversible, and imminence is how soon it lands. The chips read <b>Severity</b>
+              (1–5), <b>Hits</b> (immediate/months/years), <b>Reversibility</b> (recovers/partial/lasting). These are not
+              things to <i>do</i> — they document the price of the wheels coming off, held to the same evidence discipline,
+              each with its honest confounding and reverse-causation caveat.
+            </div>
+
             {/* Result count */}
             <div className="rl-practice-count">
               Showing <b>{filteredPractices.length}</b> of {PRACTICE_EVIDENCE.length} topics
@@ -4625,10 +5340,34 @@ export default function ResearchLibrary() {
                           <span style={chipStyle}>Effort: {cluster.impact.effort}</span>
                         </div>
                       )}
+                      {cluster.harm && (
+                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, margin: "6px 0 2px" }}>
+                          {(() => {
+                            const s = costScore(cluster.harm!, cluster.evidenceTag);
+                            const col = s >= 70 ? "#d9695a" : s >= 50 ? "#cf8a5a" : "#b8926a";
+                            return (
+                              <span title="Cost Score: how damaging, irreversible, and imminent this cost is, weighted by evidence (0–100). Higher = more to lose."
+                                style={{ display: "inline-flex", alignItems: "center", gap: 6, border: `1px solid ${col}`, borderRadius: 999, padding: "2px 9px", fontSize: 11, fontWeight: 700, color: col }}>
+                                <span style={{ fontFamily: "monospace" }}>{s}</span>
+                                <span style={{ fontWeight: 500, opacity: 0.8, letterSpacing: "0.06em", textTransform: "uppercase", fontSize: 9 }}>at stake</span>
+                              </span>
+                            );
+                          })()}
+                          <span style={chipStyle}>Severity {"■".repeat(cluster.harm.severity)}<span style={{ opacity: 0.3 }}>{"■".repeat(5 - cluster.harm.severity)}</span></span>
+                          <span style={chipStyle}>Hits: {cluster.harm.onset}</span>
+                          <span style={chipStyle}>Reversibility: {cluster.harm.reversibility}</span>
+                        </div>
+                      )}
                       {cluster.feeds && cluster.feeds.length > 0 && (
                         <div style={{ fontSize: 11, color: "var(--rl-muted, #8c857a)", marginTop: 2 }}>
                           <span style={{ fontFamily: "monospace", letterSpacing: "0.1em", textTransform: "uppercase", fontSize: 9, opacity: 0.7 }}>Feeds → </span>
                           {cluster.feeds.join(" · ")}
+                        </div>
+                      )}
+                      {cluster.degrades && cluster.degrades.length > 0 && (
+                        <div style={{ fontSize: 11, color: "var(--rl-muted, #8c857a)", marginTop: 2 }}>
+                          <span style={{ fontFamily: "monospace", letterSpacing: "0.1em", textTransform: "uppercase", fontSize: 9, opacity: 0.7, color: "#c07a68" }}>Degrades → </span>
+                          {cluster.degrades.join(" · ")}
                         </div>
                       )}
                       <div className="rl-card-meta">{cluster.sources.length} source{cluster.sources.length !== 1 ? "s" : ""}</div>
