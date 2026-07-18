@@ -749,6 +749,12 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "260": "260 · Digital Decluttering / Email Overload", "261": "261 · Photo Organization / Digital Hoarding",
   "262": "262 · Vision Boards / Positive Visualization", "263": "263 · Dream Journaling & Working With Dreams",
   "264": "264 · Letters From Your Future Self", "265": "265 · Cursive vs. Print Handwriting",
+  // Wave 4 — creative & expressive arts
+  "266": "266 · Art-Making / Drawing / Painting", "267": "267 · Photography as a Hobby / Savoring",
+  "268": "268 · Creative Writing & Poetry Therapy", "269": "269 · Improv Comedy / Theater Classes",
+  "270": "270 · Public Speaking / Toastmasters", "271": "271 · Pottery / Ceramics / Clay Work",
+  "272": "272 · Knitting / Crochet", "273": "273 · Woodworking / 'Men's Sheds'",
+  "274": "274 · Singing Lessons / Solo Voice", "275": "275 · Birdwatching / Nature Observation",
 };
 
 // Short labels for the section jump-nav chips.
@@ -864,6 +870,10 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   // Wave 4 — order, digital environment & manifestation
   "258": "Tidy Home", "259": "Workspace Org", "260": "Email Declutter", "261": "Photo Hoarding",
   "262": "Vision Boards", "263": "Dream Journaling", "264": "Future-Self Letters", "265": "Cursive Myth",
+  // Wave 4 — creative & expressive arts
+  "266": "Art-Making", "267": "Photography", "268": "Poetry Therapy", "269": "Improv",
+  "270": "Public Speaking", "271": "Pottery", "272": "Knitting", "273": "Men's Sheds",
+  "274": "Singing Lessons", "275": "Birdwatching",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -876,7 +886,7 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "50", "51", "52", "53",
   // Movement & mind-body
   "3", "4", "58", "59", "62", "54", "55", "5", "200", "217", "218", "210", "211",
-  "219", "222", "220", "225", "224", "226", "228", "227", "236", "238", "234", "235", "237", "241", "246", "251", "257", "264",
+  "219", "222", "220", "225", "224", "226", "228", "227", "236", "238", "234", "235", "237", "241", "246", "251", "257", "264", "266", "268", "271", "274", "275",
   // Cognitive & skill
   "27", "28", "29", "36", "35", "34", "64", "81", "76", "191", "207", "229", "230", "244", "243",
   // Emotional & contemplative
@@ -892,13 +902,13 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   // Social & community
   "114", "115", "112", "134", "135", "113", "117", "118", "121", "119", "120", "116", "198",
   "204", "202", "203", "205", "206", "208",
-  "249", "250", "253", "254", "255",
+  "249", "250", "253", "254", "255", "269", "270", "273",
   // Environment & everyday habits
-  "130", "125", "123", "127", "122", "124", "126", "129", "131", "128", "212", "216", "231", "258", "259", "260",
+  "130", "125", "123", "127", "122", "124", "126", "129", "131", "128", "212", "216", "231", "258", "259", "260", "272",
   // AI as coach, companion & mirror
   "194", "192", "195", "196", "193",
   "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "221", "223", "232", "233",
-  "239", "240", "242", "245", "247", "248", "252", "256", "261", "262", "263", "265", "10", "11",
+  "239", "240", "242", "245", "247", "248", "252", "256", "261", "262", "263", "265", "267", "10", "11",
   // The cost of failure — the sobering coda: what breaks when it goes wrong
   "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
   "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
@@ -1014,6 +1024,11 @@ const PRACTICE_GROUP: Record<string, string> = {
   "264": "Practices by domain",
   "261": "The honest frontier — unproven", "262": "The honest frontier — unproven",
   "263": "The honest frontier — unproven", "265": "The honest frontier — unproven",
+  // Wave 4 — creative & expressive arts
+  "266": "Practices by domain", "268": "Practices by domain", "271": "Practices by domain",
+  "274": "Practices by domain", "275": "Practices by domain",
+  "269": "Social & community", "270": "Social & community", "273": "Social & community",
+  "272": "Environment & everyday habits", "267": "The honest frontier — unproven",
   "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
   "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
   "196": "AI as coach, companion & mirror",
@@ -5610,6 +5625,128 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Ose Askvik, E., van der Weel, F. R., & van der Meer, A. L. H. (2020). The Importance of Cursive Handwriting Over Typewriting for Learning in the Classroom: A High-Density EEG Study. Frontiers in Psychology, 11, 1810.", note: "Writing by hand (vs typing) produced more widespread theta/alpha brain connectivity associated with learning; small samples; does not isolate cursive vs print. [Moderate — mechanistic, small n]", link: scholar("Importance of cursive handwriting over typewriting EEG Ose Askvik"), kind: "scholar" },
       { cite: "Van der Weel, F. R., & van der Meer, A. L. H. (2024). Handwriting but not typewriting leads to widespread brain connectivity: a high-density EEG study. Frontiers in Psychology, 14, 1219945.", note: "Handwriting (not typing) elicited widespread connectivity supportive of memory encoding — again handwriting-vs-typing, not cursive-vs-print. [Moderate]", link: scholar("Handwriting but not typewriting widespread brain connectivity van der Meer"), kind: "scholar" },
+    ],
+  },
+
+  // ── R: creative & expressive arts (266–275) ───────────────────────────────
+  {
+    id: "art-making", section: "266", title: "Art-Making / Drawing / Painting", subtitle: "Bolsters clusters: acute stress reduction, mood regulation, flow",
+    evidenceTag: "Moderate",
+    feeds: ["acute stress reduction", "mood regulation", "self-efficacy", "flow"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    description: "Open, self-directed visual art-making (drawing, painting, collage) as a brief expressive activity, distinct from formal clinical art therapy — used for acute stress down-regulation and mood lift. Prior art experience does not predict the benefit.",
+    callout: "The Kaimal cortisol finding is a within-subjects 45-minute study of 39 healthy adults with no true control group — 75% dropped but ~25% actually rose. Don't oversell 'art lowers stress hormones' as a universal law; effects are acute/state-level and durability is unstudied.",
+    sources: [
+      { cite: "Kaimal, G., Ray, K., & Muniz, J. (2016). Reduction of Cortisol Levels and Participants' Responses Following Art Making. Art Therapy, 33(2), 74–80.", note: "75% of 39 adults showed lowered salivary cortisol after 45 min of open art-making; unrelated to prior art experience. [Moderate — quasi-experimental, no control]", link: scholar("Kaimal 2016 reduction cortisol art making"), kind: "scholar" },
+      { cite: "Stuckey, H. L., & Nobel, J. (2010). The Connection Between Art, Healing, and Public Health: A Review of Current Literature. American Journal of Public Health, 100(2), 254–263.", note: "Review: evidence art reduces adverse psychological/physiological outcomes, but the magnitude of health-status gains is 'largely unknown.' [Moderate — narrative review]", link: scholar("Stuckey Nobel 2010 art healing public health"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "photography-hobby", section: "267", title: "Photography as a Hobby / Savoring", subtitle: "Bolsters clusters: savoring, positive affect — hobby-specific evidence is thin",
+    evidenceTag: "Emerging",
+    feeds: ["savoring", "positive affect", "attention/meaning", "life satisfaction"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Everyday/smartphone photography as a positive-psychology practice — taking daily photos of pleasant things to direct attention toward positive experiences and enhance savoring. The studied mechanism is 'mindful photo-taking,' not photography as a serious hobby.",
+    callout: "Honest gap — there is no rigorous evidence that photography as a serious leisure hobby improves wellbeing. The real evidence is brief positive-affect photo tasks, which is adjacent, not the same. Some lab work shows photo-taking can even reduce memory/enjoyment in certain conditions, so the effect is context-dependent.",
+    sources: [
+      { cite: "Chen, Y., Mark, G., & Ali, S. (2016). Promoting Positive Affect through Smartphone Photography. Psychology of Well-Being, 6, 8.", note: "4-week, 41-participant study; daily smiling-selfie, self-happy, and other-happy photo conditions all increased positive affect. [Moderate — controlled, small]", link: scholar("Chen Mark Ali 2016 smartphone photography positive affect"), kind: "scholar" },
+      { cite: "Kurtz, J. L., et al. (2020). What do daily reports add to the picture? A photography intervention designed to increase positive emotion. The Journal of Positive Psychology, 15(5).", note: "Greater positive emotion while photographing partially explained higher savoring beliefs and life satisfaction post-intervention. [Moderate]", link: scholar("photography intervention increase positive emotion Journal Positive Psychology 2020"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "poetry-therapy", section: "268", title: "Creative/Expressive Writing & Poetry Therapy", subtitle: "Bolsters clusters: emotional processing, meaning-making, symptom relief",
+    evidenceTag: "Emerging",
+    feeds: ["emotional processing", "meaning-making", "depression/anxiety/PTSD symptom relief", "self-expression"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Poetry therapy and creative/poetic writing (reading, composing, responding to poems in a therapeutic frame) — distinct from Pennebaker-style trauma writing. A 2025 systematic review + meta-analysis now exists, reporting symptom reductions.",
+    callout: "The field's foundation is methodologically weak — most poetry-therapy literature is unsystematic case reports. The 2025 meta-analysis reports significant reductions but explicitly cautions on small samples, variable quality, and publication bias. Do not equate it with the much stronger Pennebaker expressive-writing base.",
+    sources: [
+      { cite: "The therapeutic functions of poetry in mental health: A systematic review and meta-analysis. (2025). Psychiatry Research.", note: "Meta-analysis: significant reductions in PTSD, depressive, anxiety, and perceived-stress symptoms; evidence limited by small/variable-quality samples and possible publication bias. [Moderate — meta-analysis of heterogeneous trials]", link: scholar("therapeutic functions of poetry mental health systematic review meta-analysis 2025"), kind: "scholar" },
+      { cite: "Heimes, S. (2011). State of poetry therapy research (review). The Arts in Psychotherapy, 38(1), 1–8.", note: "The field is well-documented but dominated by unsystematic case reports of limited methodological quality. [Emerging — narrative review]", link: scholar("Heimes 2011 state of poetry therapy research"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "improv-theater", section: "269", title: "Improv Comedy / Theater Classes", subtitle: "Bolsters clusters: social anxiety relief, uncertainty tolerance, spontaneity",
+    evidenceTag: "Moderate",
+    feeds: ["social anxiety reduction", "uncertainty/ambiguity tolerance", "spontaneity", "divergent thinking", "social self-efficacy"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Improvisational theater training (ensemble games, 'yes-and,' spontaneous scene work) as an experiential intervention for social anxiety, uncertainty tolerance, and divergent thinking — the strongest of the creative interventions here, with controlled experiments plus multi-site field data.",
+    callout: "Studies are mostly pre-post, adolescent/school samples, or brief (20-min) lab manipulations; field programs lack randomized controls, so self-selection and expectancy can't be ruled out. Uncertainty-tolerance effects are the best-supported (shown above matched social-interaction controls).",
+    sources: [
+      { cite: "Felsman, P., Gunawardena, S., & Seifert, C. M. (2020). Improv experience promotes divergent thinking, uncertainty tolerance, and affective well-being. Thinking Skills and Creativity, 35, 100632.", note: "Two experiments (n=74; n=131): 20 min of improv raised uncertainty tolerance above a matched non-improv social control; also improved divergent thinking and affect. [Moderate — controlled]", link: scholar("Felsman 2020 improv divergent thinking uncertainty tolerance"), kind: "scholar" },
+      { cite: "Felsman, P., Seifert, C. M., & Himle, J. A. (2019). The use of improvisational theater training to reduce social anxiety in adolescents. The Arts in Psychotherapy, 63, 111–117.", note: "Across 14 urban schools, participation associated with significant reductions in social anxiety and intolerance of uncertainty. [Moderate — pre-post field]", link: scholar("Felsman Seifert Himle 2019 improvisational theater social anxiety adolescents"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "public-speaking", section: "270", title: "Public Speaking / Toastmasters", subtitle: "Bolsters clusters: communication self-efficacy, speech-anxiety reduction",
+    evidenceTag: "Moderate",
+    feeds: ["communication self-efficacy", "public-speaking-anxiety reduction", "perceived control", "confidence"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Structured speaking practice (Toastmasters-style clubs, graded audience exposure) to build communication self-efficacy and reduce speech anxiety. The robust evidence is for the underlying mechanism: repeated graded exposure to audiences.",
+    callout: "Direct Toastmasters peer-reviewed evidence is weak — most is small, non-indexed, or descriptive. The robust evidence is for the mechanism (graded exposure reliably reduces public-speaking anxiety in VR-exposure RCTs). Attribute the effect to exposure practice, not to the branding.",
+    sources: [
+      { cite: "Kahlon, S., et al. (2024). Augmenting self-guided virtual-reality exposure therapy for social anxiety with biofeedback: a randomised controlled trial.", note: "RCT (n=72 high-social-anxiety): three self-guided VR public-speaking exposure sessions improved anxiety outcomes. [Moderate — RCT]", link: scholar("self-guided virtual reality exposure social anxiety biofeedback randomised controlled trial"), kind: "scholar" },
+      { cite: "Enhancing Public Speaking Confidence, Skills, and Performance: An Experiment of Service-Learning. Business & Professional Communication Quarterly.", note: "Structured speaking practice raised public-speaking self-efficacy, most strongly for those initially lowest in self-efficacy. [Moderate]", link: scholar("enhancing public speaking confidence skills service-learning experiment"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "pottery", section: "271", title: "Pottery / Ceramics / Clay Work", subtitle: "Bolsters clusters: emotional regulation, tactile grounding, flow",
+    evidenceTag: "Moderate",
+    feeds: ["emotional regulation", "tactile/sensory grounding", "flow", "depression symptom relief"],
+    impact: { magnitude: 3, latency: "weeks", durability: "transient", effort: "moderate" },
+    description: "Working with clay/ceramics for tactile emotional regulation, flow, and mood. In clinical form ('clay art therapy'), one RCT shows benefits for diagnosed major depression.",
+    callout: "The strong evidence is a clinical group intervention for diagnosed MDD (Nan & Ho 2017 RCT), not recreational pottery classes. There's little rigorous evidence that hobby ceramics per se produces mental-health gains, and 'flow in pottery' is largely theorized. Don't generalize the depression RCT to casual hobbyists.",
+    sources: [
+      { cite: "Nan, J. K. M., & Ho, R. T. H. (2017). Effects of clay art therapy on adults outpatients with major depressive disorder: A randomized controlled trial. Journal of Affective Disorders, 217, 237–245.", note: "First RCT of clay art therapy for adult MDD (n=106); six weekly sessions showed effects on emotion regulation and depression. [Moderate–High — RCT, clinical]", link: scholar("Nan Ho 2017 clay art therapy major depressive disorder randomized"), kind: "scholar" },
+      { cite: "Stuckey, H. L., & Nobel, J. (2010). The Connection Between Art, Healing, and Public Health. American Journal of Public Health, 100(2), 254–263.", note: "Review context for visual/tactile art therapies reducing adverse psychological outcomes. [Moderate — narrative review]", link: scholar("Stuckey Nobel 2010 art healing public health clay"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "knitting", section: "272", title: "Knitting / Crochet", subtitle: "Bolsters clusters: relaxation, positive mood, social connection — correlational",
+    evidenceTag: "Emerging",
+    feeds: ["relaxation/stress relief", "positive mood", "social connection (group settings)", "flow", "competence"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    description: "Knitting and crochet as repetitive, creative fiber crafts used for relaxation, stress relief, and (in groups) social connection. Effects are plausible and consistently reported but not causally established.",
+    callout: "The headline study is a self-selected online survey of 3,545 knitters — cross-sectional, no control, with recall/selection bias. It shows association (frequent knitters report more calm/happiness), not causation. Promising, well-liked, low-risk, but the evidence is correlational.",
+    sources: [
+      { cite: "Riley, J., Corkhill, B., & Morris, C. (2013). The Benefits of Knitting for Personal and Social Wellbeing in Adulthood: Findings from an International Survey. British Journal of Occupational Therapy, 76(2), 50–57.", note: "3,545 knitters worldwide; higher knitting frequency associated with greater reported calm and happiness; group knitting adds social benefit. [Emerging — cross-sectional survey]", link: scholar("Riley Corkhill Morris 2013 benefits of knitting wellbeing"), kind: "scholar" },
+      { cite: "Corkhill, B., Hemmings, J., Maddock, A., & Riley, J. (2014). Knitting and Well-being. TEXTILE: The Journal of Cloth and Culture, 12(1), 34–57.", note: "Conceptual/qualitative account mapping knitting to WHO wellbeing dimensions. [Emerging — conceptual/qualitative]", link: scholar("Corkhill Hemmings 2014 knitting and well-being TEXTILE"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "mens-sheds", section: "273", title: "Woodworking / 'Men's Sheds'", subtitle: "Bolsters clusters: social connection, meaningful occupation, purpose",
+    evidenceTag: "Emerging",
+    feeds: ["social connection / loneliness reduction", "meaningful occupation", "masculine-identity-congruent help-seeking", "purpose"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "moderate" },
+    description: "Community 'Men's Sheds' and shared woodworking/craft workshops giving older, isolated men a space for meaningful hands-on occupation and companionship — targeting loneliness and men's health.",
+    callout: "Reviews are candid that hard evidence on mental-health, social-emotional, and physical-function outcomes is limited or absent — the model is endorsed largely on qualitative and theoretical grounds. Sheds are promising for engaging hard-to-reach men, but 'proven to reduce loneliness' overstates the trial evidence.",
+    sources: [
+      { cite: "Wilson, N. J., & Cordier, R. (2013). A narrative review of Men's Sheds literature: reducing social isolation and promoting men's health and well-being. Health & Social Care in the Community, 21(5), 451–463.", note: "Reviewed 5 reports + 19 articles; Sheds seen as an exemplar for men's health, but little/no rigorous outcome data. [Emerging — narrative review, gap flagged]", link: scholar("Wilson Cordier 2013 narrative review Men's Sheds"), kind: "scholar" },
+      { cite: "Kelly, D., et al. (2019). Men's Sheds: A conceptual exploration of the causal pathways for health and well-being.", note: "Maps hypothesized causal pathways (occupation, social connection, masculinity norms) to wellbeing outcomes. [Emerging — conceptual]", link: scholar("Men's Sheds conceptual exploration causal pathways health well-being"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "singing-lessons", section: "274", title: "Singing Lessons / Solo Voice", subtitle: "Bolsters clusters: self-efficacy, positive mood — solo-specific evidence is thin",
+    evidenceTag: "Emerging",
+    feeds: ["self-efficacy/confidence", "positive mood", "personal growth/mastery", "emotional expression"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "high" },
+    description: "Individual voice training / solo singing lessons (as opposed to choir) for emotional wellbeing, confidence, and personal growth in adults. Individual benefits are plausible but under-evidenced.",
+    callout: "Nearly all strong singing-wellbeing evidence is about GROUP/choir singing (social bonding, endorphin/oxytocin effects) — which does not isolate individual-voice-training benefit. The best solo-focused study is a small retrospective survey (n=48) with no control. Don't borrow choir findings to claim solo-lesson effects.",
+    sources: [
+      { cite: "Smith, A. M., Kleinerman, K., & Cohen, A. J. (2022). Singing lessons as a path to well-being in later life. Psychology of Music, 50(4).", note: "Survey of adults who began voice lessons after 40 (n=48, mean age ~61); >90% reported physical-health benefits and positive emotional change. [Emerging — retrospective self-report survey]", link: scholar("Smith Kleinerman Cohen 2022 singing lessons well-being later life"), kind: "scholar" },
+      { cite: "Fancourt, D., & Perkins, R. (2019). Psychosocial singing interventions for the mental health and well-being of family carers of patients with cancer: a longitudinal controlled study.", note: "GROUP singing increased perceived social support and positive emotion and reduced stress markers — note: group, not solo. [Moderate — controlled, but group-based]", link: scholar("psychosocial singing intervention family carers cancer well-being controlled study"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "birdwatching", section: "275", title: "Birdwatching / Nature Observation", subtitle: "Bolsters clusters: stress/anxiety/depression reduction, nature connectedness",
+    evidenceTag: "Moderate",
+    feeds: ["stress/anxiety/depression reduction", "nature connectedness", "attention restoration", "awe/savoring"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "low" },
+    description: "Watching birds and observing neighborhood nature (garden feeding, casual birding) as low-effort nature contact linked to lower depression, anxiety, and stress, with dose-response thresholds identified — one of the better-evidenced nature-contact effects.",
+    callout: "Cox (2017) is cross-sectional — bird abundance and vegetation are associated with lower depression/anxiety/stress, but reverse causation and confounding (wealthier, greener neighborhoods) can't be excluded. It does not prove 'birdwatching cures anxiety.'",
+    sources: [
+      { cite: "Cox, D. T. C., Shanahan, D. F., Hudson, H. L., et al. (2017). Doses of Neighborhood Nature: The Benefits for Mental Health of Living with Nature. BioScience, 67(2), 147–155.", note: "Vegetation cover and afternoon bird abundance associated with lower prevalence of depression, anxiety, and stress; dose-response thresholds identified. [Moderate — cross-sectional, dose-response]", link: scholar("Cox 2017 doses of neighborhood nature BioScience"), kind: "scholar" },
+      { cite: "Cox, D. T. C., Shanahan, D. F., Hudson, H. L., Fuller, R. A., & Gaston, K. J. (2018). The impact of urbanisation on nature dose and the implications for human health. Landscape and Urban Planning, 179, 72–80.", note: "~3,000 UK respondents; frequency and duration of nature dose positively associated with four health domains. [Moderate — cross-sectional]", link: scholar("Cox 2018 urbanisation nature dose human health Landscape Urban Planning"), kind: "scholar" },
     ],
   },
 ];
