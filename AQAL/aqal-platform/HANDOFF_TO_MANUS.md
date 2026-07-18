@@ -190,8 +190,35 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
   reversibility), a **THREAT n/10** badge (`threatColor()`), and a "Weak line(s) →" row. This is
   the third gauge alongside Leverage (practices) and Cost (harms). The overhyped constructs
   (grit, growth-mindset, Dunning-Kruger, Gottman's "94%", ego-depletion) are reported at their
-  real deflated size — that honesty IS the group's value. **Library now spans 335 sections.**
-  Keep expanding toward ~1,000.
+  real deflated size — that honesty IS the group's value.
+- **Cost-of-failure wave 2 (done):** +30 harm clusters (336–365) — medical (TBI/CTE, stroke,
+  diabetes, COPD, CKD, sleep apnea, hip fracture, hearing/vision loss, periodontal), addiction
+  (opioid/alcohol/nicotine/cannabis/stimulant/benzo/Rx-opioid + contested food/gaming/porn
+  constructs flagged at deflated size), and financial/legal (bankruptcy, foreclosure,
+  unemployment scarring, workplace injury, litigation, criminal record, medical debt, wage
+  garnishment, founder failure, old-age poverty).
+- **Weakness-lines wave 2 (done):** +30 threat-rated clusters (366–395) — cognitive/skill
+  (dyscalculia, spatial-attention, low literacy, working memory, processing speed, dyslexia,
+  ADHD, prospective memory, visuospatial, navigation), mating/family/social (courtship, harsh
+  parenting, humor, community, insecure attachment, agreeableness, demand-withdraw,
+  assertiveness, social-anxiety avoidance, co-parenting), and emotional/volitional (anger,
+  sensation-seeking, frustration tolerance, experiential avoidance, external locus, fear of
+  failure, boredom proneness, low openness, perfectionism, intolerance of uncertainty).
+- **CURRENT LIBRARY SIZE (deterministic count from the data):** **437 clusters across 396
+  section slots (0–395), 1,172 verified sources.** Three lenses: **216 practice clusters**
+  (Leverage Score), **80 cost-of-failure clusters** (Cost Score), **80 weakness-line clusters**
+  (Threat 1–10). Keep expanding toward ~1,000.
+- **NEW — Live leaderboards (done):** the practices tab has a leaderboard overlay that ranks
+  the whole library by each gauge — **Top 50 by Leverage**, **weak lines by Threat**, and
+  **cost-of-failure by Cost Score**. Toggle chips above the card list; clicking any row drops
+  the overlay, clears filters, and scrolls to the full card. Computed deterministically from
+  the same cited research each card carries (`leverageBoard`/`threatBoard`/`costBoard` memos).
+- **NEW — Code-split (done):** the ~6,100-line `PRACTICE_EVIDENCE` corpus moved out of
+  `ResearchLibrary.tsx` into `researchLibraryData.ts` (type imported back type-only, no runtime
+  cycle) with a vite `manualChunks` rule → a `research-data` chunk. The page's UI chunk dropped
+  from **~1,040 KB to 191 KB** (43 KB gzip); the stable 859 KB data chunk caches independently
+  and loads in parallel with its lazy route. `chunkSizeWarningLimit` raised to 900 so the
+  intentional data chunk doesn't noise the build log.
 - **NEW — Leverage Score gauge** (`leverageScore()` in ResearchLibrary.tsx): a
   deterministic 0–100 rating = 70·benefit + 30·ease, where benefit =
   (magnitude/5)·evidenceWeight·durabilityWeight and ease = effortWeight·latencyWeight.
