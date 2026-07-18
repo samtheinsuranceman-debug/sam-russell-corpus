@@ -776,6 +776,12 @@ const PRACTICE_SECTIONS: Record<string, string> = {
   "270": "270 · Public Speaking / Toastmasters", "271": "271 · Pottery / Ceramics / Clay Work",
   "272": "272 · Knitting / Crochet", "273": "273 · Woodworking / 'Men's Sheds'",
   "274": "274 · Singing Lessons / Solo Voice", "275": "275 · Birdwatching / Nature Observation",
+  // Recovery, amends & self-facing practice
+  "276": "276 · Twelve-Step Programs / AA", "277": "277 · Making Amends / Seeking Forgiveness",
+  "278": "278 · Mirror Meditation", "279": "279 · Mirror Self-Talk",
+  "280": "280 · Self-Forgiveness", "281": "281 · Granting / Receiving Forgiveness",
+  "282": "282 · Sponsorship / Peer Recovery Support", "283": "283 · Confession / Disclosure of Wrongdoing",
+  "284": "284 · Ritual / Symbolic Apology & Reconciliation", "285": "285 · Amends Letters / Accountability Writing",
 };
 
 // Short labels for the section jump-nav chips.
@@ -895,6 +901,10 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
   "266": "Art-Making", "267": "Photography", "268": "Poetry Therapy", "269": "Improv",
   "270": "Public Speaking", "271": "Pottery", "272": "Knitting", "273": "Men's Sheds",
   "274": "Singing Lessons", "275": "Birdwatching",
+  // Recovery, amends & self-facing practice
+  "276": "Twelve-Step / AA", "277": "Making Amends", "278": "Mirror Meditation", "279": "Mirror Self-Talk",
+  "280": "Self-Forgiveness", "281": "Forgiveness (Structured)", "282": "Sponsorship", "283": "Confession",
+  "284": "Ritual Apology", "285": "Amends Letters",
 };
 
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
@@ -930,6 +940,8 @@ const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "
   "194", "192", "195", "196", "193",
   "19", "20", "37", "197", "199", "201", "209", "213", "214", "215", "221", "223", "232", "233",
   "239", "240", "242", "245", "247", "248", "252", "256", "261", "262", "263", "265", "267", "10", "11",
+  // Recovery, amends & self-facing practice
+  "276", "281", "277", "280", "285", "283", "284", "282", "278", "279",
   // The cost of failure — the sobering coda: what breaks when it goes wrong
   "175", "181", "146", "165", "178", "145", "148", "149", "150", "161",
   "141", "143", "144", "142", "147", "158", "157", "159", "160", "151",
@@ -1050,6 +1062,12 @@ const PRACTICE_GROUP: Record<string, string> = {
   "274": "Practices by domain", "275": "Practices by domain",
   "269": "Social & community", "270": "Social & community", "273": "Social & community",
   "272": "Environment & everyday habits", "267": "The honest frontier — unproven",
+  // Recovery, amends & self-facing practice
+  "276": "Recovery, amends & self-facing practice", "277": "Recovery, amends & self-facing practice",
+  "278": "Recovery, amends & self-facing practice", "279": "Recovery, amends & self-facing practice",
+  "280": "Recovery, amends & self-facing practice", "281": "Recovery, amends & self-facing practice",
+  "282": "Recovery, amends & self-facing practice", "283": "Recovery, amends & self-facing practice",
+  "284": "Recovery, amends & self-facing practice", "285": "Recovery, amends & self-facing practice",
   "192": "AI as coach, companion & mirror", "193": "AI as coach, companion & mirror",
   "194": "AI as coach, companion & mirror", "195": "AI as coach, companion & mirror",
   "196": "AI as coach, companion & mirror",
@@ -5768,6 +5786,128 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Cox, D. T. C., Shanahan, D. F., Hudson, H. L., et al. (2017). Doses of Neighborhood Nature: The Benefits for Mental Health of Living with Nature. BioScience, 67(2), 147–155.", note: "Vegetation cover and afternoon bird abundance associated with lower prevalence of depression, anxiety, and stress; dose-response thresholds identified. [Moderate — cross-sectional, dose-response]", link: scholar("Cox 2017 doses of neighborhood nature BioScience"), kind: "scholar" },
       { cite: "Cox, D. T. C., Shanahan, D. F., Hudson, H. L., Fuller, R. A., & Gaston, K. J. (2018). The impact of urbanisation on nature dose and the implications for human health. Landscape and Urban Planning, 179, 72–80.", note: "~3,000 UK respondents; frequency and duration of nature dose positively associated with four health domains. [Moderate — cross-sectional]", link: scholar("Cox 2018 urbanisation nature dose human health Landscape Urban Planning"), kind: "scholar" },
+    ],
+  },
+
+  // ── Recovery, amends & self-facing practice (276–285) ─────────────────────
+  {
+    id: "twelve-step", section: "276", title: "Twelve-Step Programs / AA", subtitle: "Bolsters clusters: abstinence self-efficacy, recovery network, craving regulation",
+    evidenceTag: "Strong",
+    feeds: ["abstinence self-efficacy", "adaptive recovery social network", "craving & negative-affect regulation", "help-giving identity", "relapse-prevention coping"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "moderate" },
+    description: "The AA mutual-help fellowship plus clinician-delivered Twelve-Step Facilitation (TSF) that links patients into meetings, sponsorship, and the steps. The 2020 Cochrane review found manualized TSF produced higher rates of continuous abstinence than comparison treatments, with high-certainty evidence.",
+    callout: "The high-certainty result is specifically for manualized TSF driving continuous abstinence; on other outcomes it is roughly equivalent to CBT/MET, not superior. Naturalistic attendance is self-selected, and the benefit runs through social/cognitive/affective pathways — the 'spiritual' mechanism is largely unsupported.",
+    sources: [
+      { cite: "Kelly, J. F., Humphreys, K., & Ferri, M. (2020). Alcoholics Anonymous and other 12-step programs for alcohol use disorder. Cochrane Database of Systematic Reviews, Issue 3, CD012880.", note: "27 studies, ~10,565 participants; manualized TSF produced higher continuous abstinence than comparison treatments with high-certainty evidence. [Strong — Cochrane review]", link: scholar("Kelly Humphreys Ferri 2020 Alcoholics Anonymous Cochrane 12-step"), kind: "scholar" },
+      { cite: "Kelly, J. F. (2017). Is Alcoholics Anonymous religious, spiritual, neither? Findings from 25 years of mechanisms of behavior change research. Addiction, 112(6), 929–936.", note: "AA's benefits are carried predominantly by social, cognitive, and affective mechanisms — not primarily spiritual ones. [Strong — mechanistic review]", link: scholar("Kelly 2017 Alcoholics Anonymous religious spiritual mechanisms behavior change Addiction"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "making-amends", section: "277", title: "Making Amends / Seeking Forgiveness", subtitle: "Bolsters clusters: relational repair, guilt discharge, accountability",
+    evidenceTag: "Moderate",
+    feeds: ["relational repair", "guilt/shame discharge", "accountability", "empathy-taking", "social reintegration"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "high" },
+    description: "Actively approaching someone you wronged — even years later — to acknowledge the offense, take responsibility, and ask forgiveness or offer repair (AA Step 9). Apology components and the apology→forgiveness link are well-studied; the delayed-amends act itself is inferred from that adjacent research.",
+    callout: "Honest reframing: a request for forgiveness is the WEAKEST of the apology components — acknowledgment of responsibility and offer of repair matter far more, and a poorly-timed amends can re-injure the recipient. The right frame is 'repair + responsibility,' not 'ask to be forgiven.'",
+    sources: [
+      { cite: "Lewicki, R. J., Polin, B., & Lount, R. B. (2016). An Exploration of the Structure of Effective Apologies. Negotiation and Conflict Management Research, 9(2), 177–196.", note: "Apologies with more of six components rate as more effective; acknowledgment of responsibility and offer of repair matter most — 'request for forgiveness' matters least. [Moderate]", link: scholar("Lewicki Polin Lount 2016 structure effective apologies six components"), kind: "scholar" },
+      { cite: "McCullough, M. E., Worthington, E. L., & Rachal, K. C. (1997). Interpersonal Forgiving in Close Relationships. Journal of Personality and Social Psychology, 73(2), 321–336.", note: "Receiving an apology raises the victim's empathy for the offender, which in turn drives forgiveness and conciliatory behavior. [Moderate]", link: scholar("McCullough Worthington Rachal 1997 interpersonal forgiving close relationships empathy"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "mirror-meditation", section: "278", title: "Mirror Meditation", subtitle: "Bolsters clusters: self-compassion, stress down-regulation — preliminary evidence",
+    evidenceTag: "Emerging",
+    feeds: ["self-compassion", "stress/anxiety down-regulation", "interoceptive/present-moment awareness", "reduced self-criticism"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Sitting ~10–20 min gazing at your own reflected face in silence, observing reactions non-judgmentally, to reduce self-criticism and build self-compassion. Anchored in the better-established self-compassion literature.",
+    callout: "The thin one: the signature mirror-meditation findings (Tara Well) are, as far as can be verified, an APA 2016 convention presentation and a 2022 trade book — not a peer-reviewed RCT with an active control. Small samples, self-report outcomes. Treat as a plausible extension of self-compassion research, labeled 'preliminary.'",
+    sources: [
+      { cite: "Well, T. (2022). Mirror Meditation: The Power of Neuroscience and Self-Reflection to Overcome Self-Criticism, Gain Confidence, and See Yourself with Compassion. New Harbinger.", note: "Book-length synthesis of the mirror-meditation method and its preliminary lab findings. [Emerging — trade book, not primary peer-reviewed evidence]", link: scholar("Tara Well Mirror Meditation New Harbinger 2022"), kind: "scholar" },
+      { cite: "Neff, K. D., & Germer, C. K. (2013). A pilot study and randomized controlled trial of the Mindful Self-Compassion program. Journal of Clinical Psychology, 69(1), 28–44.", note: "Self-compassion training — the mechanism mirror meditation targets — produces replicable gains in wellbeing and reductions in anxiety/depression. [Moderate — adjacent]", link: scholar("Neff Germer 2013 Mindful Self-Compassion randomized controlled trial pilot"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "mirror-self-talk", section: "279", title: "Mirror Self-Talk", subtitle: "Adjacent mechanisms support it — the mirror component itself is untested",
+    evidenceTag: "Emerging",
+    feeds: ["self-efficacy", "emotion regulation under threat", "self-distancing / reduced rumination", "values-based motivation"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    description: "Looking at your own face in the mirror and speaking to yourself (affirmations, encouragement, coaching) ~5–10 min/day — active, verbal self-address, distinct from silent mirror meditation. The credible science is one step removed: self-affirmation and self-distanced self-talk.",
+    callout: "There is NO direct peer-reviewed study of 'talking to yourself in a mirror'; it is built entirely from adjacent literatures. Importantly, generic positive self-statements can BACKFIRE for people with low self-esteem (Wood et al. 2009) — the mirror component is an untested amplifier, so don't claim it is validated.",
+    sources: [
+      { cite: "Kross, E., Bruehlman-Senecal, E., Park, J., et al. (2014). Self-Talk as a Regulatory Mechanism: How You Do It Matters. Journal of Personality and Social Psychology, 106(2), 304–324.", note: "Referring to yourself by name / non-first-person pronouns during self-talk improves emotion regulation and performance under stress. [Moderate — self-talk, not mirror]", link: scholar("Kross 2014 self-talk regulatory mechanism how you do it matters name"), kind: "scholar" },
+      { cite: "Wood, J. V., Perunovic, W. Q. E., & Lee, J. W. (2009). Positive Self-Statements: Power for Some, Peril for Others. Psychological Science, 20(7), 860–866.", note: "Repeating positive self-statements made people with low self-esteem feel WORSE, not better. [Moderate — cautionary]", link: scholar("Wood Perunovic Lee 2009 positive self-statements power for some peril for others"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "self-forgiveness", section: "280", title: "Self-Forgiveness", subtitle: "Bolsters clusters: guilt/shame regulation, depressive-affect reduction, re-engagement",
+    evidenceTag: "Moderate",
+    feeds: ["guilt/shame regulation", "depressive-affect reduction", "approach (vs avoidance) motivation", "behavioral re-engagement"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Releasing self-directed resentment and guilt over one's own transgression while retaining responsibility — a coping process, not self-excusing. Genuine self-forgiveness in the literature requires acknowledging the wrong, which is why it pairs with amends rather than replacing it.",
+    callout: "The danger to name: 'pseudo self-forgiveness' that dissolves accountability can reduce reparative motivation and even increase reoffending if it precedes responsibility-taking. Most health correlations are cross-sectional, with reverse causation likely (healthier people forgive themselves more).",
+    sources: [
+      { cite: "Davis, D. E., Ho, M. Y., Griffin, B. J., et al. (2015). Forgiving the Self and Physical and Mental Health Correlates: A Meta-Analytic Review. Journal of Counseling Psychology, 62(2), 329–335.", note: "Self-forgiveness correlated with psychological wellbeing (r≈.45, 65 samples) and physical health (r≈.32). [Moderate — meta-analysis of mostly correlational data]", link: scholar("Davis 2015 forgiving the self physical mental health meta-analytic review Counseling Psychology"), kind: "scholar" },
+      { cite: "Wohl, M. J. A., Pychyl, T. A., & Bennett, S. H. (2010). I forgive myself, now I can study: How self-forgiveness for procrastinating can reduce future procrastination. Personality and Individual Differences, 48(7), 803–808.", note: "Students who forgave themselves for procrastinating procrastinated less before the next exam, via reduced negative affect. [Moderate — longitudinal]", link: scholar("Wohl Pychyl Bennett 2010 I forgive myself now I can study procrastination"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "forgiveness-intervention", section: "281", title: "Granting / Receiving Forgiveness (Structured)", subtitle: "Bolsters clusters: unforgiveness reduction, autonomic calming, anxiety/depression relief",
+    evidenceTag: "Strong",
+    feeds: ["rumination/unforgiveness reduction", "cardiovascular/autonomic calming", "anxiety and depression reduction", "empathy", "relational hope"],
+    impact: { magnitude: 4, latency: "months", durability: "sustained", effort: "moderate" },
+    description: "Structured forgiveness of an offender (Worthington's REACH model; Enright's process model), and the experience of being forgiven, to reduce unforgiveness-related distress and physiological arousal. A meta-analysis of RCTs shows explicit forgiveness treatments reliably increase forgiveness and reduce depression and anxiety.",
+    callout: "Effects are largest on forgiveness itself and on anxiety/depression; physical-health endpoints are smaller and shorter-studied. Many trials use waitlist (not active) controls and self-select willing participants. Forgiveness ≠ reconciliation and should not be pushed where there is ongoing abuse or safety risk.",
+    sources: [
+      { cite: "Wade, N. G., Hoyt, W. T., Kidwell, J. E. M., & Worthington, E. L. (2014). Efficacy of Psychotherapeutic Interventions to Promote Forgiveness: A Meta-Analysis. Journal of Consulting and Clinical Psychology, 82(1), 154–170.", note: "54 reports; explicit forgiveness treatments produced significantly more forgiveness than no-treatment (Δ≈0.56) and alternative treatments (Δ≈0.45), with collateral drops in depression and anxiety. [Strong — meta-analysis of RCTs]", link: scholar("Wade Hoyt Kidwell Worthington 2014 efficacy psychotherapeutic interventions promote forgiveness meta-analysis"), kind: "scholar" },
+      { cite: "Witvliet, C. V. O., Ludwig, T. E., & Vander Laan, K. L. (2001). Granting Forgiveness or Harboring Grudges: Implications for Emotion, Physiology, and Health. Psychological Science, 12(2), 117–123.", note: "Imagining forgiving responses produced lower heart rate, blood pressure, skin conductance, and negative emotion than rehearsing grudges. [Strong — controlled psychophysiology]", link: scholar("Witvliet Ludwig Vander Laan 2001 granting forgiveness harboring grudges physiology"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "sponsorship", section: "282", title: "Sponsorship / Peer Recovery Support", subtitle: "Bolsters clusters: early-recovery abstinence, engagement, help-giving identity",
+    evidenceTag: "Moderate",
+    feeds: ["early-recovery abstinence", "treatment engagement/retention", "recovery social network", "help-giving (helper-therapy) identity", "accountability"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Having (and later being) an AA/NA sponsor, or working with a peer recovery specialist — someone with lived experience who guides, models, and holds you accountable. Both receiving and providing support are implicated.",
+    callout: "The big confound is self-selection: people who get a sponsor are already more motivated. Some effects are time-limited (strongest in the first ~3–6 months, fading by 12 in some analyses), and peer-support reviews flag inconsistent definitions, small samples, and weak comparison groups.",
+    sources: [
+      { cite: "Tonigan, J. S., & Rice, S. L. (2010). Is It Beneficial to Have an Alcoholics Anonymous Sponsor? Psychology of Addictive Behaviors, 24(3), 397–403.", note: "Having a sponsor early predicted greater abstinence at months 4–6 (~3.6× more likely abstinent at 6 months); effects strongest early, attenuating by 12 months. [Moderate]", link: scholar("Tonigan Rice 2010 is it beneficial to have an Alcoholics Anonymous sponsor"), kind: "scholar" },
+      { cite: "Eddie, D., Hoffman, L., Vilsaint, C., et al. (2019). Lived Experience in New Models of Care for Substance Use Disorder: A Systematic Review of Peer Recovery Support Services and Recovery Coaching. Frontiers in Psychology, 10, 1052.", note: "Peer recovery/coaching services show promising but heterogeneous benefits; rigor varies and causal claims remain premature. [Moderate — systematic review]", link: scholar("Eddie 2019 lived experience peer recovery support services recovery coaching Frontiers"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "confession-disclosure", section: "283", title: "Confession / Disclosure of Wrongdoing", subtitle: "Bolsters clusters: reduced rumination, shame relief, cognitive offloading",
+    evidenceTag: "Moderate",
+    feeds: ["reduced rumination/preoccupation", "shame/guilt relief", "cognitive offloading", "authenticity/connection", "stress reduction"],
+    impact: { magnitude: 2, latency: "days", durability: "sustained", effort: "low" },
+    description: "Unburdening a secret or wrongdoing — to a person, group, or on paper — to reduce the load of concealment (AA Step 5). It reduces the preoccupation that harms wellbeing.",
+    callout: "Slepian's key nuance: it is not concealing a secret in conversation that harms you, it is mind-wandering to it — so the mechanism is rumination, and disclosure helps mainly by ending the preoccupation. Inappropriate disclosure (wrong audience, retaliation risk) can create new harm, and written-disclosure health effects are statistically small (d≈.08).",
+    sources: [
+      { cite: "Slepian, M. L., Chun, J. S., & Mason, M. F. (2017). The Experience of Secrecy. Journal of Personality and Social Psychology, 113(1), 1–33.", note: "People hold ~13 secrets on average; it is mind-wandering to a secret, not concealing it in interaction, that predicts lower wellbeing. [Moderate — large multi-study]", link: scholar("Slepian Chun Mason 2017 the experience of secrecy JPSP"), kind: "scholar" },
+      { cite: "Frattaroli, J. (2006). Experimental Disclosure and Its Moderators: A Meta-Analysis. Psychological Bulletin, 132(6), 823–865.", note: "Across 146 randomized studies, emotional disclosure produced a small but significant benefit (r≈.075), stronger with longer sessions. [Moderate — meta-analysis, small effect]", link: scholar("Frattaroli 2006 experimental disclosure moderators meta-analysis Psychological Bulletin"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "ritual-apology", section: "284", title: "Ritual / Symbolic Apology & Reconciliation", subtitle: "Bolsters clusters: trust repair, sincerity signaling, restitution",
+    evidenceTag: "Moderate",
+    feeds: ["trust repair", "credibility/sincerity signaling", "restitution of equity", "relational reintegration"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "high" },
+    description: "Costly, symbolic acts of penance or restitution that go beyond words to signal genuine intent — voluntary sacrifice, reparative gesture, or ritual that rebuilds trust after a breach. Costly penance signals sincerity better than words alone.",
+    callout: "Most evidence is economic-game / organizational lab work, not intimate-relationship repair. The load-bearing finding is that a substantive offer of repair — not the ritual form itself — does the work; rituals can also be performative or manipulative, and victims discount cheap or coerced apologies.",
+    sources: [
+      { cite: "Bottom, W. P., Gibson, K., Daniels, S. E., & Murnighan, J. K. (2002). When Talk Is Not Cheap: Substantive Penance and Expressions of Intent in Rebuilding Cooperation. Organization Science, 13(5), 497–513.", note: "After a betrayal, costly/substantive penance plus an expression of good intent restored cooperation far more than words alone. [Moderate — controlled experiments]", link: scholar("Bottom Gibson Daniels Murnighan 2002 when talk is not cheap substantive penance"), kind: "scholar" },
+      { cite: "Lewicki, R. J., Polin, B., & Lount, R. B. (2016). An Exploration of the Structure of Effective Apologies. Negotiation and Conflict Management Research, 9(2), 177–196.", note: "'Offer of repair' (restitution) is the second most important apology component after acknowledgment of responsibility. [Moderate]", link: scholar("Lewicki Polin Lount 2016 effective apologies offer of repair restitution"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "amends-letters", section: "285", title: "Amends Letters / Accountability Writing", subtitle: "Bolsters clusters: guilt processing, rumination reduction, perspective-taking",
+    evidenceTag: "Moderate",
+    feeds: ["guilt/shame processing", "rumination reduction", "perspective-taking/empathy", "accountability articulation", "emotional closure"],
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "moderate" },
+    description: "Writing to (or about) someone you harmed — an apology/amends letter, whether sent or unsent — as a structured accountability and processing exercise, bridging expressive-writing and amends practices.",
+    callout: "The peer-reviewed base is expressive/structured writing generally, not the amends letter specifically. Benefits to the WRITER (processing, reduced rumination) are better supported than benefits to the recipient of a sent letter — and a sent letter carries re-injury risk, so unsent letters are the safer default when contact could harm the other person.",
+    sources: [
+      { cite: "Pennebaker, J. W., & Beall, S. K. (1986). Confronting a Traumatic Event: Toward an Understanding of Inhibition and Disease. Journal of Abnormal Psychology, 95(3), 274–281.", note: "The seminal expressive-writing study: writing about the thoughts and feelings around a difficult event improved subsequent health indicators. [Moderate — foundational]", link: scholar("Pennebaker Beall 1986 confronting a traumatic event inhibition disease"), kind: "scholar" },
+      { cite: "McCullough, M. E., Root, L. M., & Cohen, A. D. (2006). Writing About the Benefits of an Interpersonal Transgression Facilitates Forgiveness. Journal of Consulting and Clinical Psychology, 74(5), 887–897.", note: "A brief structured writing task increased forgiveness relative to controls — supporting writing-based accountability/forgiveness exercises. [Moderate — RCT]", link: scholar("McCullough Root Cohen 2006 writing about benefits transgression facilitates forgiveness"), kind: "scholar" },
     ],
   },
 ];
