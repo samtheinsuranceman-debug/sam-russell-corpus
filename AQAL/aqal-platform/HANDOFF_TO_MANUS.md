@@ -220,6 +220,15 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
   section slots (0–401), 1,203 verified sources.** Three lenses: **222 practice clusters**
   (Leverage Score), **80 cost-of-failure clusters** (Cost Score), **80 weakness-line clusters**
   (Threat 1–10). Keep expanding toward ~1,000.
+- **NEW — Keyword search + browse-by-topic (done):** the practices tab search now matches
+  each cluster's title, subtitle, description, callout, feeds/degrades, section name, AND
+  every source citation, with **synonym expansion** (typing "anxiety" also finds
+  anxious/worry/panic/phobia; "weight" finds obesity/BMI; "money" finds
+  financial/saving/invest, etc.) so one keyword surfaces the whole related literature.
+  Below the search is a **"Browse by topic" cloud** — 7 themed rows, ~45 tap-to-search
+  keyword chips (depression, anxiety, sleep, money, addiction, relationships, …) so users
+  can find papers by clicking, not typing. All client-side (`KEYWORD_SYNONYMS`,
+  `KEYWORD_TOPICS`, `expandQuery` in ResearchLibrary.tsx) — no backend needed.
 - **NEW — Live leaderboards (done):** the practices tab has a leaderboard overlay that ranks
   the whole library by each gauge — **Top 50 by Leverage**, **weak lines by Threat**, and
   **cost-of-failure by Cost Score**. Toggle chips above the card list; clicking any row drops
