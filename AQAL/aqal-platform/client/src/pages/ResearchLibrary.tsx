@@ -1803,6 +1803,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Intermittent Fasting & Time-Restricted Eating",
     subtitle: "Bolsters clusters: interoceptive, volitional, systemic (metabolic)",
     evidenceTag: "Moderate",
+    feeds: ["metabolic health", "glucose control", "weight regulation"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
     description:
       "Confining eating to a compressed daily window (or fasting on some days) drives 'metabolic switching' (glucose→ketones) and circadian alignment. Real metabolic and blood-pressure effects exist — but in humans most weight benefit tracks the calorie deficit it creates, and the marquee autophagy/longevity/BDNF claims rest largely on animal data.",
     callout: "Honest limit: the largest weight-loss RCT of 16:8 (TREAT) was null vs. regular meals, and human autophagy/longevity claims are extrapolated from animals. Treat fasting as one workable eating pattern, not a magic switch.",
@@ -1822,6 +1824,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Light & Circadian Rhythm",
     subtitle: "Bolsters clusters: interoceptive, emotional, intrapersonal",
     evidenceTag: "Moderate",
+    feeds: ["mood", "sleep", "alertness", "circadian regulation"],
+    impact: { magnitude: 3, latency: "days", durability: "sustained", effort: "low" },
     description:
       "Getting bright light (ideally morning sunlight) and minimizing light at night entrains the circadian clock. Best-established for mood — bright-light therapy rivals antidepressants for seasonal and non-seasonal depression — with solid effects on sleep and alertness, and weaker, mostly observational links to metabolism.",
     callout: "Light therapy for depression and circadian entrainment are RCT-backed; the metabolic/weight claims are correlational, and much popular advice about exact lux and timing outruns the controlled evidence.",
@@ -1862,6 +1866,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "The Gut–Brain Axis",
     subtitle: "Bolsters clusters: emotional, interoceptive, intrapersonal",
     evidenceTag: "Emerging",
+    feeds: ["mood", "cognition", "immune modulation"],
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "low" },
     description:
       "Diet (fermented foods, fiber), probiotics, and microbiome composition influence mood, anxiety and cognition via immune, vagal and metabolite (short-chain-fatty-acid, neurotransmitter) pathways. A genuine, fast-moving field — with a landmark RCT showing fermented foods raise microbiome diversity and lower inflammation — but clinically still early.",
     callout: "Human causal evidence is thin: most depression/microbiome links are cross-sectional (reverse causation unresolved), probiotic effects are small and strain-specific, and no 'psychobiotic' is an established treatment. Promising, not proven.",
@@ -1881,6 +1887,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Nutrition for the Brain",
     subtitle: "Bolsters clusters: most cognitive lines, meta-cognitive, interoceptive",
     evidenceTag: "Moderate",
+    feeds: ["cognition", "dementia-risk reduction", "mood"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "moderate" },
     description:
       "Dietary patterns (MIND / Mediterranean), omega-3 DHA, and even hydration status are linked to cognition and dementia risk. Strong observational signal plus one positive Mediterranean-diet RCT (PREDIMED); the diet slows and associates with decline rather than curing it.",
     callout: "Most robust data are observational; randomized DHA-supplement trials in established Alzheimer's have generally FAILED to slow decline, and no diet has been proven to prevent dementia. Eat for the trend, not a guarantee.",
@@ -1900,6 +1908,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Learning an Instrument",
     subtitle: "Bolsters clusters: musical, bodily-kinesthetic, meta-cognitive, auditory",
     evidenceTag: "Moderate",
+    feeds: ["auditory/motor skill", "executive function", "structural brain change"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "moderate" },
     description:
       "Learning an instrument reliably produces structural and functional brain change and near-transfer to auditory-motor skills, with a small IQ effect in the one clean childhood RCT. Broad 'music makes you smarter' claims are weaker and shrink under rigorous controls.",
     callout: "Far transfer is the honest weak point: a rigorous meta-analysis (Sala & Gobet) finds little-to-no reliable transfer from music training to general IQ or academics once active control groups are used. Learn music for music — the brain changes are a bonus, not a cognitive shortcut.",
@@ -1919,6 +1929,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Bilingualism & Language Learning",
     subtitle: "Bolsters clusters: linguistic, meta-cognitive (cognitive reserve)",
     evidenceTag: "Emerging",
+    feeds: ["cognitive reserve", "linguistic capacity"],
+    impact: { magnitude: 2, latency: "months", durability: "lasting", effort: "high" },
     description:
       "Lifelong bilingualism is associated with a later age of dementia onset (the cognitive-reserve hypothesis), with large clinic cohorts showing a ~4–4.5 year delay even controlling for education. The once-popular 'bilingual executive-function advantage' in healthy adults, however, is now seriously contested.",
     callout: "This is the field's honest scandal: the healthy-adult bilingual advantage has largely FAILED to replicate, shows strong publication bias, and near-null meta-analytic effects. The dementia-delay findings are retrospective and could be confounded — learn a language for its own sake, not a guaranteed brain boost.",
@@ -1938,6 +1950,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Expressive Writing & Journaling",
     subtitle: "Bolsters clusters: intrapersonal, emotional, linguistic",
     evidenceTag: "Moderate",
+    feeds: ["emotional processing", "working memory", "immune/health"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
     description:
       "The Pennebaker paradigm — writing 15–20 minutes about emotional or traumatic events over several days — yields small but replicated benefits to physical health, immune markers, and even working-memory capacity. It is one of the cheapest interventions with real controlled evidence behind it.",
     callout: "Effects are real but SMALL and heterogeneous (the largest meta-analysis puts r≈.075), inconsistent in clinical populations, and the writing reliably causes short-term distress spikes. It is a tool, not a substitute for therapy.",
@@ -1957,6 +1971,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Gratitude Practice",
     subtitle: "Bolsters clusters: emotional, intrapersonal, interpersonal",
     evidenceTag: "Moderate",
+    feeds: ["positive affect", "sleep", "relationships"],
+    impact: { magnitude: 2, latency: "days", durability: "sustained", effort: "low" },
     description:
       "Deliberately noticing and recording what you are thankful for has robust links to positive affect and better sleep, from the landmark Emmons & McCullough experiments onward. The clinical effects on depression and anxiety are real but small once active control conditions are used.",
     callout: "The honest caveat: benefits shrink sharply when gratitude is compared to an active alternative activity rather than a no-treatment or 'list your hassles' control, and small-trial publication bias likely inflates the reported effects.",
@@ -1976,6 +1992,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Awe",
     subtitle: "Bolsters clusters: existential, moral, interpersonal, aesthetic",
     evidenceTag: "Moderate",
+    feeds: ["prosociality", "humility", "wellbeing"],
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
     description:
       "The emotion evoked by vast, perspective-shifting stimuli — a mountain range, a cathedral, a night sky. Experimental and dispositional evidence links awe to a diminished 'small self,' greater generosity and humility, and (more preliminarily) lower inflammation.",
     callout: "The inflammation finding is a single cross-sectional study, and many prosociality effects come from brief lab inductions whose real-world durability is unproven. Awe is a promising, cheap lever — not yet a validated protocol.",
@@ -1995,6 +2013,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Purpose & Meaning in Life",
     subtitle: "Bolsters clusters: existential, volitional, intrapersonal",
     evidenceTag: "Strong",
+    feeds: ["longevity", "cognitive resilience", "volitional drive"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "moderate" },
     description:
       "A sense of direction and life purpose shows remarkably consistent prospective associations with lower all-cause mortality and reduced Alzheimer's/cognitive-decline risk, pooled across cohorts in a meta-analysis. Of the 'meaning' variables, this is the best-evidenced.",
     callout: "The honest caveat is reverse causation and confounding: these are observational cohorts, so early illness, cognitive decline, or depression can lower purpose scores — and no randomized trial has shown that raising purpose extends life.",
@@ -2014,6 +2034,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Volunteering & Generativity",
     subtitle: "Bolsters clusters: community-founding, moral, interpersonal, existential",
     evidenceTag: "Moderate",
+    feeds: ["longevity", "mood", "social connection", "meaning"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
     description:
       "Formal helping and contribution to others is linked, across cohorts and meta-analyses, to lower mortality and depression and higher well-being — especially in older adults and when the motive is genuinely other-oriented.",
     callout: "The mortality/health benefits come almost entirely from observational studies (healthy-volunteer selection bias), and the few randomized tests have not confirmed them. Benefits also concentrate in older adults and in those volunteering for other-oriented reasons.",
@@ -2033,6 +2055,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Reading",
     subtitle: "Bolsters clusters: linguistic, interpersonal (theory of mind), longevity",
     evidenceTag: "Mixed",
+    feeds: ["theory of mind", "linguistic range", "longevity"],
+    impact: { magnitude: 2, latency: "months", durability: "lasting", effort: "low" },
     description:
       "Two claims live here: that reading (especially literary fiction) builds social cognition, and that reading adds healthy years. The empathy/theory-of-mind claim is contested; the reading-longevity association is more robust but observational.",
     callout: "The headline 'literary fiction instantly boosts theory of mind' repeatedly failed to replicate at its original strength — treat the acute-empathy claim as unproven. The reading-longevity link is real but correlational (it can't prove causation).",
@@ -2052,6 +2076,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Deliberate Practice & Skill Acquisition",
     subtitle: "Bolsters clusters: adversarial, strategic, meta-cognitive, most skill lines",
     evidenceTag: "Strong",
+    feeds: ["skill acquisition", "expertise", "memory retention"],
+    impact: { magnitude: 4, latency: "weeks", durability: "lasting", effort: "high" },
     description:
       "How structured, effortful practice and the right study mechanics (testing, spacing, retrieval) drive skill and retention. The retrieval/spacing effects are among the most robust findings in learning science; deliberate practice matters, but explains far less of expert-performance variance than the '10,000-hour' story claims.",
     callout: "The honest correction: Macnamara's meta-analysis shows deliberate practice accounts for only a minority of performance variance (26% in games, 21% in music, <1% in professions). Practice is necessary and trainable — but it is not nearly everything.",
@@ -2071,6 +2097,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Cognitive Reserve & Lifelong Learning",
     subtitle: "Bolsters clusters: meta-cognitive, most cognitive lines, existential",
     evidenceTag: "Moderate",
+    feeds: ["cognitive-aging buffer", "memory", "neuroplasticity"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "moderate" },
     description:
       "Education, novel skill-learning, and stimulating environments build 'reserve' that buffers cognitive aging — strong in animal models and epidemiology, with one clean RCT (the Synapse Project) showing that learning demanding NEW skills improves memory in older adults. Novelty and challenge, not any single hobby, is the safe takeaway.",
     callout: "Much reserve evidence is observational (education and occupation confound with health and wealth), and the bilingual-reserve piece specifically is inconsistent. Pursue genuinely NEW, effortful learning — passive 'brain games' are the weakest version.",
@@ -2090,6 +2118,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "The Honest Frontier — Stacked Daily Protocols",
     subtitle: "Bolsters clusters: interoceptive, emotional, volitional (experimental)",
     evidenceTag: "Emerging",
+    feeds: ["stress physiology", "interoception", "vagal tone (experimental)"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "high" },
     description:
       "The components — floatation-REST / sensory reduction, heart-rate-variability (vagal) biofeedback, and aerobic exercise — each have supportive evidence for stress and anxiety. But the specific stacked, daily, high-dose regimen (for example, hours of daily aerobic work immediately followed by a daily float, repeated for weeks) is essentially unstudied. This section exists to be honest about that edge.",
     callout: "The gap, stated plainly: there is essentially NO published research on ~300 minutes of DAILY aerobic exercise immediately followed by DAILY floatation/sensory-deprivation, stacked every day for 30–60 days. Every real float study below uses roughly ONE session per week for 6–12 weeks. Adopt the components on their own evidence; treat the daily stack as an n-of-1 experiment, not an evidence-based practice.",
@@ -2109,6 +2139,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Micro-Saving & Behavioral Momentum",
     subtitle: "Bolsters clusters: financial, volitional, intrapersonal",
     evidenceTag: "Mixed",
+    feeds: ["financial self-efficacy", "volitional momentum"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "low" },
     description:
       "Whether small, automated, or commitment-based saving builds financial self-efficacy and a felt sense of momentum. The mechanics are strongly evidenced — auto-escalation, pre-commitment, and reminders reliably raise savings. The psychological chain from small wins to broader life confidence is real but more inferential.",
     callout: "The saving-behavior RCTs are robust; the popular claim that small financial wins 'cascade' into confidence in other domains is mostly correlational (self-efficacy predicts financial behavior cross-sectionally, but the momentum-into-other-domains story is not demonstrated).",
@@ -2128,6 +2160,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Order & Environment",
     subtitle: "Bolsters clusters: volitional, intrapersonal, systemic",
     evidenceTag: "Mixed",
+    feeds: ["self-regulation", "mood", "sense of control"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
     description:
       "Whether a tidy, orderly physical space affects self-regulation, mood, and even cortisol. There is real experimental and physiological evidence that environmental order and disorder shift behavior and stress — and honest evidence that disorder isn't uniformly bad (it can boost creativity).",
     callout: "The popular 'make your bed → discipline cascade' claim is UNTESTED directly — no study manipulates bed-making, and the flagship order-vs-disorder result has faced replication scrutiny. What holds up better: chronic household clutter correlates with worse mood and flatter cortisol.",
@@ -2146,6 +2180,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Grooming & Self-Care",
     subtitle: "Bolsters clusters: intrapersonal, seductive, interpersonal",
     evidenceTag: "Emerging",
+    feeds: ["self-efficacy (thin evidence)", "mood"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
     description:
       "Whether daily grooming, dressing well, and self-care routines improve self-efficacy and mood. This is included honestly BECAUSE the evidence is thin and contested — a useful example of where popular self-help outruns the science.",
     callout: "The signature 'enclothed cognition' lab-coat effect did NOT replicate in a high-powered preregistered study, and no rigorous experiment shows that ordinary daily grooming raises self-efficacy in healthy adults. The strongest real outcome data come from beauty-care interventions in cancer patients, which don't generalize to everyday grooming. Do it because it's decent maintenance — not because the science promises a transformation.",
@@ -2164,6 +2200,8 @@ const PRACTICE_EVIDENCE: PracticeCluster[] = [
     title: "Digital Minimalism & Attention",
     subtitle: "Bolsters clusters: meta-cognitive, volitional, emotional, interpersonal",
     evidenceTag: "Moderate",
+    feeds: ["attention", "mood", "sleep", "social connection"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
     description:
       "Whether cutting smartphone and social-media use improves attention, mood, and well-being. This is the best-evidenced of the 'mundane' levers — multiple RCTs and meta-analyses exist, including that the mere presence of your phone measurably drains working memory. Effects are real but generally small.",
     callout: "Effect sizes are small and inconsistent — at least one meta-analysis finds average well-being effects near zero — so 'delete social media and transform your life' overstates it. The defensible claim is modest improvements in depression, sleep, and available attention.",
