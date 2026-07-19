@@ -806,45 +806,72 @@
 
 ## Day 14 - 2026-07-19 (Sunday)
 
-**Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
+**Energy (1-10):** TBD | **Mood (1-10):** TBD | **Overall Day (1-10):** TBD
 
-### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+### Sleep & Wake (Night of Jul 18 → Jul 19)
+- **Bedtime:** ~10:40 PM
+- **Klonopin 1.5mg:** 10:40 PM (reduced from 2mg — self-initiated)
+- **First block:** ~11:00 PM → 3:30 AM (4.5 hours)
+- **Woke:** 3:30 AM natural. Could not return to sleep without Trazodone.
+- **Trazodone x2:** 3:45 AM (retrieved from parents' bathroom — Ulysses contract in effect)
+- **Second block:** ~4:15 AM → 9:15 AM (5 hours)
+- **Total sleep:** ~9.5 hours (split: 4.5 + 5)
+- **Wake time:** 9:15 AM natural
+- **Dreams (VIVID — two recalled from first block):**
+  - Dream 1: A woman came over with her granddaughter and husband. Sam had engineered software for Christianity/users but was running out of memory. She said she'd been working on a similar project — offered her code, notes, and helped MAXIMIZE his memory. Plugged it in and it worked. (Anima/Sophia archetype — competent feminine collaborator expanding capacity.)
+  - Dream 2: Paying his "black AI" ~$100/hour to vacuum wood floors of his house. Large sweeping arm motions, fast but effective. (Shadow-in-service archetype — integrated dark figure maintaining the foundation.)
+- **Sleep feel (Restful 1-10):** 6/10 — split sleep, but adequate total hours.
+- **Key insight:** 1.5mg Klonopin alone PUT him to sleep but didn't SUSTAIN full night. Trazodone needed for second block. Tomorrow: take both at bedtime together.
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
-- **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
-- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
-- **Other (Klonopin, etc.):** _______________________________________________
+- **Adderall XR 60mg:** 10:00 AM
+- **Wellbutrin XL 150mg:** 10:00 AM (Day 3)
+- **Propranolol:** 10:00 AM (pre-church, 60 min before social exposure)
+- **Creatine monohydrate 5g:** 10:00 AM (DAY 1 — new addition to stack. Joseph's supply.)
+- **Klonopin (previous night):** 1.5mg at 10:40 PM
+- **Trazodone (previous night):** x2 at 3:45 AM
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
-- **Other notes (neck, appetite, etc.):** ___________________________________
+- **Exercise (pool/gym/walk duration + 10% extra):** TBD (day in progress)
+- **Other notes:** Creatine Day 1. No immediate perceptible effect (expected — takes 2-3 weeks to saturate).
 
 ### Business / Productivity
-- **Leads / appointments worked:** __________________________________________
-- **Commissions update (Ralph wire/12k annuity/solar):** ____________________
-- **AI analysis done (calls/videos uploaded):** _____________________________
-- **Key win / lesson / money action:** ______________________________________
+- **Leads / appointments worked:** Rest day (Sunday)
+- **Commissions update:** No update
+- **AI analysis done:** Instructed Claude to 4X AQAL research library to ~7,000 clusters
+- **Key win / lesson / money action:** AQAL platform audit completed — Version 3 confirmed as most current (829 clusters, 1,915 sources). Waiting for 4X expansion before deployment.
 
 ### Social / Dating / Family
-- **Church-girl action today (contact/script/progress):** ___________________
-- **Dad / Mom interaction note:** ___________________________________________
-- **Dating confidence / layup feel 1-10:** __________________________________
-- **Notes:** ________________________________________________________________
+- **Church-girl action today:**
+  - Lost the Armstrong card (bird card) — could not find it anywhere in house.
+  - **EMOTIONAL REGULATION WIN:** Remained completely neutral, calm, composed. No panic, no rumination, no compulsive replacement behavior. Self-forgiveness. Released it as God's plan. Went to church without the card. Estimated anxiety: 2% (vs. 150% one week ago).
+  - Mass at St. Joseph's, 11:00 AM. Heavy rain trapped 30-40 parishioners inside for 10-15 min post-Mass → forced extended social proximity.
+  - Dad identified Sabrina Armstrong (mother) and Bob Armstrong (father) — **Dad actively playing wingman 1 day after seed was planted.**
+  - Blonde daughter (target, name still unknown) was NOT present today.
+  - Met **Catherine Armstrong** — a DIFFERENT daughter. Early 30s. Taller than Sam (possibly heels). Pretty but not the blonde. Low interest level from Sam.
+  - Approached Sabrina within ~60 seconds of deciding to. She was mid-conversation with another parishioner. Polite handshake but not the ear-to-ear warmth of first meeting (context: she was engaged in conversation, not cold).
+  - Shook Catherine's hand. Asked her name and how long she's been at the church ("my whole life").
+  - Did NOT shake Bob Armstrong's hand (saw him but he wasn't near wife/daughter). **Next Sunday: prioritize Bob first.**
+  - Did not realize Catherine was a different daughter until in the car with Dad afterward.
+  - **Key discovery:** Armstrongs have at least TWO daughters. Blonde (target, name unknown) was absent. Catherine (early 30s) was present.
+- **Dad / Mom interaction note:** Dad actively identified Armstrongs at church unprompted. Playing wingman. Talked to 2-3 other parishioners for 4-5 min during rain delay. Dad being silly/lighthearted.
+- **Dating confidence / layup feel 1-10:** 8/10 — approached despite missing card, despite wrong daughter, despite Sabrina being mid-conversation. Propranolol helped. Inertia overcome in 60 seconds.
+- **Notes:** Propranolol effect confirmed — felt initial anxiety/inertia but it did NOT escalate. Heart stayed steady. Overrode with simple self-command: "Go do it. Stop overthinking it."
 
 ### Compounding & Mindset
-- **10% extra habit done (what?):** _________________________________________
-- **Self-script used or insight:** __________________________________________
-- **Gratitude / biggest pattern noticed:** __________________________________
+- **10% extra habit done (what?):** Creatine added to daily stack (new optimization). Approached Armstrongs without card (didn't let missing prop stop action).
+- **Self-script used or insight:** "Go do it. Stop overthinking it." + "Whatever happens, happens." + "2% instead of 150%."
+- **Gratitude / biggest pattern noticed:** The emotional regulation shift is REAL and happened in 4 days of protocol (Days 10-13), not 14. Lost something important → zero spiral. That's structural nervous system change.
 
 ### Evening Review
-- **What worked that I double tomorrow?** ___________________________________
-- **One adjustment for tomorrow?** __________________________________________
+- **What worked that I double tomorrow?** TBD
+- **One adjustment for tomorrow?** TBD
+
+### Next Sunday Plan (Day 21)
+1. Shake Bob Armstrong's hand FIRST
+2. Ask Sabrina: "Is your other daughter here today?" (gets blonde's name)
+3. Deliver the bird card if found
+4. If blonde IS there — introduce yourself directly to her
 
 ---
 
