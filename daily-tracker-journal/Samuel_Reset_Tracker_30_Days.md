@@ -738,8 +738,12 @@
 - **Other (Klonopin, etc.):** TBD
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** Plan: 3x99 treadmill + pool (in progress)
-- **Other notes (neck, appetite, etc.):** TBD
+- **Exercise (pool/gym/walk duration + 10% extra):**
+  - **Treadmill Session (time TBD – 9:15 PM):** 75 min | 313 cal | 3.88 mi | 0.0% incline | 3.0 mph avg | Avg HR 119 bpm | METs 3.38 | 0 ft vertical
+  - **Pool Float (9:15–10:00 PM):** 45 min | Sensory deprivation protocol: noodle + earbuds + eye cloth | Dark/night session | Extremely still water (no filters, no waves)
+  - **TOTALS:** 75 min treadmill + 45 min pool = **120 min (2 hrs)** | 313 cal burned | 3.88 miles
+- **Session character:** RECOVERY DAY. Flat walk (0% incline) at Zone 2 (119 bpm). Deliberate de-load after yesterday's 407-min / 1,501-cal monster session. Periodization confirmed — load days build capacity, recovery days reveal it.
+- **Other notes:** No pain or injury reported. Appetite not reported.
 
 ### Business / Productivity
 - **Leads / appointments worked:** TBD
@@ -758,14 +762,43 @@
   - **Significance:** This is the interoceptive training staying active 14+ hours after the pool immersion. The protocol is producing OBSERVABLE behavioral changes in real social situations. At peak Adderall (which normally produces talkativeness and social dominance), Sam was receptive, attuned, and restrained. This is the Insula doing its job — reading the room, feeling others' energy, giving space. This is not willpower. This is neurological change.
   - **Dad's receptivity pattern:** Positive social experience → emotional warmth (hugging Kara) → open/fertile state → Sam delivers Armstrong message → no defensive reaction. This is NLP-level sequencing executed intuitively.
 
+### Pool Session Calibration (Day 13)
+- **Duration:** 45 min (shorter recovery session; wanted to stay longer)
+- **Time distortion:** HIGH — estimated 60-70 min when 45 had passed (33-55% overestimation). Brain's default float duration = ~60 min regardless of actual time.
+- **Body dissolution:** 3-5 minutes to onset. SAME SPEED as Day 12 despite minimal metabolic pre-load (75 min flat walk vs. 297 min treadmill). **KEY FINDING: Dissolution is now a LEARNED SKILL, not fatigue-dependent.** The neural pathway is conditioned. Environmental cues (water + noodle + earbuds + darkness) trigger dissolution automatically.
+- **Heartbeat access:** YES — **NEW BREAKTHROUGH.** Cardiac pulse detected for 20-30% of session (intermittent, not continuous). Could locate pulse in body AND hear it in ears. Came and went — interrupted by breathing loudness through earbuds. Yesterday listed "no heartbeat access" as limiting factor. Tonight it appeared spontaneously on a recovery day. **Correlation confirmed: external stillness (no waves/filters) = internal signal access.**
+- **Breathing:** 50/50 split. Started with Huberman physiological sigh (double nasal inhale + long mouth exhale) as ignition sequence — worked immediately. Transitioned to automatic/involuntary breathing for second half. Huberman sigh = reliable on-ramp to parasympathetic state.
+- **Whole-body simultaneous awareness:** **NEW PRACTICE DISCOVERED.** Attempted to feel entire body at once (feet, legs, torso, neck, head, arms, heart, breathing) — global somatic attention rather than sequential body scanning. Held for periods. Identified this as the next edge of the protocol. Related to Vipassana "sweeping" technique. Arrived at it naturally without instruction.
+- **Meta-cognitive layering:** Position 2 (observer watching body) accessed effortlessly for several minutes. Did NOT push for Position 3 or 4. Chose breadth (whole-body awareness) over depth (recursive layering). Self-regulated training load: Day 12 = vertical, Day 13 = horizontal.
+- **Mantra/Prayer:** Used for a portion of the session but did NOT reach automated/musical/rhythmic threshold. Did not start within first 5 minutes as planned. Session was breath-led (Huberman) rather than mantra-led.
+- **Emotional processing:** Letter deflation from AI analysis surfaced during float. Made peace with it. Decided letter is incomplete — will add 3-5 more pages addressing blind spots (PT acknowledgment, parents, food, present-self affirmation, permission to respond briefly). Released the emotion. Plan made in the water.
+- **Water conditions:** EXTREMELY STILL. No waves, no filter turbulence, no other swimmers. Best conditions yet. Stillness correlated with heartbeat access (signal could surface without environmental noise).
+- **Sensory deprivation toolkit (confirmed):** Float noodle + earbuds + eye cloth + closed eyes + natural darkness. Right ear water seal occurred again (anatomical — ear canal shape traps water against earbud, creating 2-3x sound blocking). Sunglasses not needed (dark out).
+- **Exit trigger:** Social conscience — believed it was 10:30 PM (actually 10:00 PM), pool arguably closes at 9:00 PM per Mom's guidance. Did not want to cause problems with neighborhood. Wanted to stay longer. Desire to continue = STRONG.
+- **Post-session state:** Calm, aware, interoceptive, accomplished. Still wearing earbuds walking home (didn't want to remove them). Sensitive to objects carried and wetness on skin. Peaceful dark walk through neighborhood.
+- **Session rating:** 7.5/10 (shorter duration, but NEW breakthroughs: heartbeat + whole-body awareness)
+- **Key insight:** "Not every float has to be 90 minutes. Forgiveness and making it a viable practice I can go back to over and over."
+
+### Two Float Protocol Modes Emerging
+| On-Ramp | Leads To | Day Observed |
+|---------|----------|--------------|
+| Mantra (automated/musical) | Meta-cognitive layering, 4 positions, prayer territory | Day 12 |
+| Huberman sigh + whole-body attention | Heartbeat access, somatic presence, horizontal awareness | Day 13 |
+
 ### Compounding & Mindset
-- **10% extra habit done (what?):** TBD
-- **Self-script used or insight:** TBD
-- **Gratitude / biggest pattern noticed:** TBD
+- **10% extra habit done (what?):** Wrote 12-page letter to nephew Joseph (1.5 hours of focused, other-directed output). Decided to add 3-5 more pages tomorrow addressing blind spots identified by AI analysis.
+- **Self-script used or insight:** "Not every float has to be 90 minutes." Self-forgiveness for shorter session. Also: chose breadth over depth in the pool without forcing performance. Lived the Day 12 insight ("I am not trying to go anywhere") rather than just stating it.
+- **Gratitude / biggest pattern noticed:** Grateful for the stillness of the water tonight. Biggest pattern: dissolution speed is INDEPENDENT of metabolic pre-load. The skill is learned. The protocol is now sustainable for life, not just during a 30-day reset with unlimited time.
 
 ### Evening Review
-- **What worked that I double tomorrow?** TBD
-- **One adjustment for tomorrow?** TBD
+- **What worked that I double tomorrow?** (1) Late-night pool timing (after 9 PM = still water, no swimmers, natural darkness). (2) Huberman sigh as ignition sequence. (3) Whole-body simultaneous awareness as primary practice.
+- **One adjustment for tomorrow?** (1) Start mantra within first 5 minutes for A/B comparison (mantra-led vs. tonight's breath-led). (2) Set internal minimum: "Don't get out until it feels like 90 minutes" (which = ~60 actual minutes given 33% distortion). (3) Consider vibration timer on wrist to prevent premature exit.
+
+### Sleep Protocol (Night of July 18)
+- **Bedtime:** ~10:40 PM
+- **Meds:** Klonopin at 10:40 PM
+- **Post-float state entering sleep:** Calm, interoceptive, accomplished. Parasympathetic dominant from float. Optimal conditions for deep slow-wave sleep.
+- **Prediction:** Dissolution skill consolidation during sleep. Possible somatic dreams (body-awareness themes) given tonight's whole-body practice. REM rebound window 4-5 AM.
 
 ---
 
