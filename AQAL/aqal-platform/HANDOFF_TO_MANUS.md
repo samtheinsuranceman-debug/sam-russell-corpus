@@ -230,10 +230,20 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
   childhood-developmental, aging-decline, lifestyle/environmental. Honesty held: nulls/debunks
   at true size (VITAL vitamin-D null, ego-depletion replication failure, learning-styles myth,
   nudge deflation, contested social-media effects), industry funding & reverse-causation flagged.
-- **CURRENT LIBRARY SIZE (deterministic count from the data):** **829 clusters across 788
-  section slots (0–787), 1,915 verified sources.** Three lenses: **421 practice clusters**
-  (Leverage Score), **171 cost-of-failure clusters** (Cost Score), **176 weakness-line clusters**
-  (Threat 1–10). ~83% of the way to the 1,000 target.
+- **Wave 7 — past 1,000 (done):** +431 verified clusters (sections 788–1218), 40 research
+  agents (resumed in batches of 5 after a session-limit cutoff). Failure-weighted per the
+  brief: +168 weakness-lines, +136 cost-of-failure, +127 practices. +872 verified sources.
+  New weakness families (biases, attribution errors, personality vulnerabilities, somatic
+  coping, moral/ethical, systemic/strategic, attention/digital, self-perception, etc.);
+  new cost families (cancers, autoimmune, neurological, infectious, musculoskeletal, injury,
+  reproductive, environmental, financial-macro); new practices (therapy modalities,
+  contemplative, honest cognitive-training, productivity, financial instruments, longevity).
+  Honesty held (grounding/earthing, brain-training transfer, blue-zones critique, contested
+  addiction constructs all rated down).
+- **CURRENT LIBRARY SIZE (deterministic count from the data):** **1,260 clusters across 1,219
+  section slots (0–1218), 2,787 verified sources.** Three lenses: **548 practice clusters**
+  (Leverage Score), **307 cost-of-failure clusters** (Cost Score), **344 weakness-line clusters**
+  (Threat 1–10). Past the 1,000 target — the corpus is now the core moat (see MOAT section).
 - **NEW — Keyword search + browse-by-topic (done):** the practices tab search now matches
   each cluster's title, subtitle, description, callout, feeds/degrades, section name, AND
   every source citation, with **synonym expansion** (typing "anxiety" also finds
