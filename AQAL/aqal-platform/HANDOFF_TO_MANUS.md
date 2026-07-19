@@ -280,6 +280,41 @@ Highest priority. This turns the one-time assessment into a monthly, sticky prod
     the per-claim citations — those are the trust engine. Gate only free-form
     browsing of the full vault, never the evidence behind a claim the site makes.
 
+## 🛡️ MOAT & ANTI-COPY — the library is currently trivially copyable (READ THIS)
+Three instructions Claude flagged from its environment but could not build server-side.
+The Research Library is the platform's most valuable asset; right now it is **not protected.**
+
+1. **THE PROBLEM — the entire corpus ships to the browser.** The whole
+   `PRACTICE_EVIDENCE` array (all ~1,900+ verified citations) lives in the client
+   bundle as the `research-data-*.js` chunk (that's exactly what the code-split
+   produced). Anyone who loads `/research-library` can open dev-tools, grab that one
+   file, and reconstruct the full corpus in minutes — no login, no friction. As built,
+   it is copy-paste-able. This must be closed before/at monetized launch.
+
+2. **THE FIX — move the corpus off the client, behind an authenticated, rate-limited
+   API.** Do NOT ship `PRACTICE_EVIDENCE` in the client bundle for gated users. Instead:
+   - Serve clusters from the server via a **paginated, authenticated** endpoint
+     (e.g. `library.search`, `library.page`) that returns only the current page of
+     results — **never the whole array** in one response.
+   - **Rate-limit** per user/session (e.g. N cluster-fetches/min) so scraping the full
+     set becomes thousands of throttled, logged, logged-in requests instead of one file grab.
+   - Optionally **watermark**/perturb responses per-account so a leaked dump is traceable.
+   - Compose this with the vault/timed-preview/monthly-drip model above: the preview can
+     stream from the same gated API; the drip decides which clusters a member may fetch.
+   - **Keep the public report's Claim→Evidence citations always visible** — serve those
+     specific sources ungated (same rule as the vault section: gate open-ended browsing,
+     never the evidence behind a claim the site makes).
+
+3. **DON'T OVER-INVEST IN DRM — know what the real moat is.** No client-delivered content
+   is uncopyable; a determined scraper can still slowly rebuild it, and the raw citation
+   list was never the ownable asset (they're public papers). What is genuinely hard to
+   replicate — and where the durable moat lives — is: (a) the **honest curation/selection**
+   (rating debunked things *down*), (b) the **proprietary scoring system** (leverage/cost/
+   threat gauges + calibration), (c) the **interconnection graph** (`feeds`/`degrades`),
+   (d) **continual freshness** (a copy is stale the day it's taken; keep shipping), and
+   (e) **profile personalization**. Ship the server-gating in #2 to stop casual copying,
+   then compete by out-curating copycats — not by chasing perfect lockdown.
+
 ## 🖱️ MECHANICS REVIEW
 - See `MECHANICS_REVIEW.md` (in this folder) for the full front-to-back route +
   button audit: what Claude verified (routes, build, tests) and the live
