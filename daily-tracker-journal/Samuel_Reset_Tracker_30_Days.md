@@ -830,6 +830,7 @@
 - **Creatine monohydrate 5g:** 10:00 AM (DAY 1 — new addition to stack. Joseph's supply.)
 - **Vitamin C 4mg:** 4:30 PM
 - **Dad — Creatine monohydrate 5g:** FIRST TIME EVER (Day 1 for Dad)
+- **Guanfacine:** 6:15 PM
 - **Klonopin (previous night):** 1.5mg at 10:40 PM
 - **Trazodone (previous night):** x2 at 3:45 AM
 
