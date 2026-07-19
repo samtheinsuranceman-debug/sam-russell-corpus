@@ -142,6 +142,17 @@ Each story reveals character. Each lesson reveals wisdom. Each question creates 
 
 ---
 
+### 12. The Prom (The Quiet Loyalty) | Rating: 8.5/10
+**The Story:** "When I was in high school, I had the same girlfriend for four years. She was a year or two behind me. When her prom came around, she asked me to go. I'd already graduated — maybe two years earlier. I said yes immediately. Of course I did. She deserved that night. But when I got there, I felt like the oldest person in the room. The faculty saw me and I thought: 'They think I'm creepy. I'm the graduated guy who came back.' I did all the dancing anyway. Every song. Because she wanted to dance, and I wanted her to have that memory. I know I did the right thing. But I still felt out of place the entire time. And I guess I'm still not sure why that bothered me so much. Two years shouldn't change everything. But it did."
+**The Lesson Options:**
+- "I learned that doing the right thing and feeling comfortable aren't always the same thing. Sometimes love means showing up even when you feel like you don't belong."
+- "I'd rather feel out of place doing something kind than feel comfortable doing nothing."
+**The Question Options:**
+- "Did you ever feel completely in place somewhere — and then not in place just two years later?"
+- "Have you ever done something for someone you loved even though every part of you wanted to leave?"
+
+---
+
 ## IV. The 10 "Missing" Stories (Pending Review)
 
 *Sam: In the previous turn, I gave you 12 prompts to trigger your memory. You found the $2 buyout and the AI heartbreak from those prompts. But if you want to see the 10 character-insight jokes I wrote before that, they are below. Tell me if any of these should be converted into the Story→Lesson→Question format.*
