@@ -828,24 +828,28 @@
 - **Wellbutrin XL 150mg:** 10:00 AM (Day 3)
 - **Propranolol:** 10:00 AM (pre-church, 60 min before social exposure)
 - **Creatine monohydrate 5g:** 10:00 AM (DAY 1 — new addition to stack. Joseph's supply.)
+- **Vitamin C 4mg:** 4:30 PM
+- **Dad — Creatine monohydrate 5g:** FIRST TIME EVER (Day 1 for Dad)
 - **Klonopin (previous night):** 1.5mg at 10:40 PM
 - **Trazodone (previous night):** x2 at 3:45 AM
 
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** TBD (day in progress)
 - **Other notes:** Creatine Day 1. No immediate perceptible effect (expected — takes 2-3 weeks to saturate).
+- **Vitamin C 4mg:** 4:30 PM
 
 ### Business / Productivity
 - **Leads / appointments worked:** Rest day (Sunday)
 - **Commissions update:** No update
 - **AI analysis done:** Instructed Claude to 4X AQAL research library to ~7,000 clusters
 - **Key win / lesson / money action:** AQAL platform audit completed — Version 3 confirmed as most current (829 clusters, 1,915 sources). Waiting for 4X expansion before deployment.
+- **Letter to Joseph (Part 2):** 4 HOURS writing 14 handwritten pages. Total combined letter now 25 pages (11 Part 1 + 14 Part 2). Mailing tomorrow Monday.
 
 ### Social / Dating / Family
 - **Church-girl action today:**
   - Lost the Armstrong card (bird card) — could not find it anywhere in house.
   - **EMOTIONAL REGULATION WIN:** Remained completely neutral, calm, composed. No panic, no rumination, no compulsive replacement behavior. Self-forgiveness. Released it as God's plan. Went to church without the card. Estimated anxiety: 2% (vs. 150% one week ago).
-  - Mass at St. Joseph's, 11:00 AM. Heavy rain trapped 30-40 parishioners inside for 10-15 min post-Mass → forced extended social proximity.
+  - Mass at St. Joseph's, 11:00 AM (1 hour). Heavy rain trapped 30-40 parishioners inside for 10-15 min post-Mass → forced extended social proximity.
   - Dad identified Sabrina Armstrong (mother) and Bob Armstrong (father) — **Dad actively playing wingman 1 day after seed was planted.**
   - Blonde daughter (target, name still unknown) was NOT present today.
   - Met **Catherine Armstrong** — a DIFFERENT daughter. Early 30s. Taller than Sam (possibly heels). Pretty but not the blonde. Low interest level from Sam.
