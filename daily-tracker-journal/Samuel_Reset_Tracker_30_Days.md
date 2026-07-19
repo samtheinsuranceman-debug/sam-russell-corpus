@@ -796,7 +796,7 @@
 
 ### Sleep Protocol (Night of July 18)
 - **Bedtime:** ~10:40 PM
-- **Meds:** Klonopin at 10:40 PM
+- **Meds:** Klonopin 1.5mg at 10:40 PM
 - **Post-float state entering sleep:** Calm, interoceptive, accomplished. Parasympathetic dominant from float. Optimal conditions for deep slow-wave sleep.
 - **Prediction:** Dissolution skill consolidation during sleep. Possible somatic dreams (body-awareness themes) given tonight's whole-body practice. REM rebound window 4-5 AM.
 
