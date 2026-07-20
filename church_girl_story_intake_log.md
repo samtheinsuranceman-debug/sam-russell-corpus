@@ -202,3 +202,85 @@
 5. DARPA Drones — 8.8
 
 **Next action:** Wait for Sam to finish sending stories, then build V14 with full resequencing.
+
+---
+
+## Brief Mention: First Grade Valentine's Day
+
+**Attached to:** Santa Discovery or near Joanna/Microscope mention
+
+**Extension text:** "In first grade, I got 10-15 valentines with candy attached. My dad sat in the car eating all of them one by one, asking if each girl was my girlfriend. I said no to all of them. He confirmed I had no girlfriends but ate all the candy."
+
+**What it adds:** Dad's personality (funny, casual, involved). Girls liked him young. He didn't chase attention. Same dad energy as Santa Discovery.
+
+---
+
+## Story #31: The Witch's Airbnb — "In the Name of Jesus Christ"
+
+**The Story:** Sam went to an Airbnb in the Adirondack/Catskill Mountains of New York with his girlfriend Amy to hike. When they arrived at dark, a woman was sitting outside her Victorian house with a black cauldron and a red candle burning. Sam complimented it. She said, "I'm the high priestess of [something]." He was immediately creeped out, wanted to leave, but knew Amy wouldn't change plans. Inside: gargoyle faces in the bedroom pointed at them (he put them on the floor). She said creepy things and wouldn't leave their bedroom. Next morning: white powder all over his windshield. He told Amy they're not staying another night. After hiking and dinner, they agreed to leave. Walking in, he noticed a black kettle with a chain tied to the front door handle. He told Amy: "Go upstairs, grab our things. I'll stand by the doorway. If she comes out, I'll take care of her." He told the witch respectfully: "Thank you for having us, but there's a family emergency and we have to leave." Instead of concern, she said: "No, you can't leave." He said: "In the name of Jesus Christ, I block all the witchcraft and spells you've been trying to put on us this whole time." It was literally like a wind hit her — she became crumpled up in the corner like she'd taken a physical blow. Amy came downstairs with their stuff. They walked out, drove away, and wrote a complaint to Airbnb.
+
+**Punchline:** "I can't believe we stayed at a witch's house. It was crazy." (Or: "In the name of Jesus Christ" IS the punchline — it's not funny, it's POWERFUL.)
+
+**Emotions Elicited:** Protected, Safe, Awe (spiritual authority), Thrilled (adventure/danger), Faith confirmation (deepest in vault), Slight fear → relief, Admiration
+
+**Why It's Elite (For a Catholic Audience):**
+
+1. **Spiritual warfare in action.** He didn't argue, negotiate, or run. He invoked Christ's name with authority. For a Catholic woman, this is a man who KNOWS his faith isn't passive.
+
+2. **He was the SHIELD.** "I'll stand by the doorway. If she comes out, I'll take care of her." He positioned himself between his girlfriend and the threat. Ultimate protector signal.
+
+3. **His instincts were right from the start.** Wanted to leave immediately. Saw the signs. Discernment confirmed.
+
+4. **"No, you can't leave" → spiritual authority response.** The escalation from creepy to dangerous to SPIRITUAL CONFRONTATION is cinematic.
+
+5. **It WORKED.** She crumpled. Wind hit her. Whether literal or perceived, the STORY is that his faith had physical power. For a believer, that's not crazy — that's real.
+
+6. **Connects to Gargoyle Symphony.** "Where's Jesus?" (passive faith) → "In the name of Jesus Christ" (active faith). Same man, escalated. Shows faith has TEETH.
+
+**Preliminary Ratings:**
+
+| Metric | Score | Reasoning |
+|--------|-------|-----------|
+| Emotional Intensity (EI) | 9 | Danger, protection, spiritual authority. Heart racing. |
+| Story Engagement (SE) | 9 | Multiple acts: arrival → creepy signs → decision to leave → confrontation → spiritual authority → escape. Cinematic. |
+| Curiosity & Wonder (CW) | 9 | "A witch's Airbnb? White powder? A chain on the door? She CRUMPLED?" Every detail escalates. |
+| Trust & Safety (TS) | **10** | He is the protector. He stands between evil and the people he loves. Maximum safety signal. |
+| Question Engagement (QE) | 8 | "Have you ever felt something was spiritually wrong?" / "When did your faith become active, not passive?" |
+| **Average** | **9.0** | |
+
+**Rank: #3 overall (tied with Cheesecake Factory Dream Girl and DARPA)**
+
+**Placement Notes:**
+- This MUST come after the Gargoyle Symphony brief mention (position 13 in V13) to create the faith escalation: passive ("Where's Jesus?") → ACTIVE ("In the name of Jesus Christ")
+- Best placement: Position 14-16 range, as the PEAK of the faith arc
+- After this story, faith is no longer just "he goes to church" — it's "he has spiritual authority and will use it to protect"
+- This is the story that makes Bob think: "This man will protect my daughter's SOUL, not just her body."
+
+**Trait Signals:**
+- Spiritual/Prayerful: +1 (invoked Christ's name with authority — strongest faith signal)
+- Caretaking/Protects others: +1 (positioned himself as shield)
+- Brave/Acts first: +1 (confronted spiritual evil directly)
+- Has standards/Boundaries: +1 (refused to stay, refused to be passive)
+- Discernment/Notices the invisible: +1 (saw the signs immediately)
+- Doesn't explode under pressure: +1 (respectful first, authoritative when needed)
+
+**Length concern:** This is the longest story in the vault. May need trimming for handwritten version. Key beats to keep: cauldron arrival, gargoyles on floor, white powder, "I'll stand by the doorway," "No you can't leave," "In the name of Jesus Christ," she crumpled, they left.
+
+---
+
+## Running Vault Status (Updated)
+
+**Total stories in vault:** 31
+**In starting lineup (V13):** 23
+**On bench:** 5
+**Awaiting integration:** 4 new stories (#28, #29, #30, #31) + 1 brief mention extension (Hoarder House) + 1 optional brief mention (Mystical Book) + 1 brief mention (Valentine's Day)
+**Brief mentions:** 3 existing + 3 new = 6
+
+**Top 5 Stories by Average Score:**
+1. Cat & Barefoot Vet — 9.6
+2. Hula Hoop Lollipop (#30) — 9.2
+3. Silver Coins — 9.2
+4. Cheesecake Factory Dream Girl (#29) — 9.0
+5. Witch's Airbnb (#31) — 9.0
+
+**Next action:** Wait for Sam to finish sending stories, then build V14 with full resequencing.
