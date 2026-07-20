@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { playClick } from "@/lib/audio";
+import { SHOW_GENERATIONAL_RARITY } from "@/config/features";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { trpc } from "@/lib/trpc";
@@ -863,7 +864,7 @@ export default function Home() {
         <div data-reveal><DialSection /></div>
         <div data-reveal><EngineeringSection /></div>
         <div data-reveal><ProcessSection /></div>
-        <div data-reveal><GenerationSection /></div>
+        {SHOW_GENERATIONAL_RARITY && <div data-reveal><GenerationSection /></div>}
         <div data-reveal><EvidenceSection /></div>
         <div data-reveal><SamplesSection /></div>
         <div data-reveal><ServicePillars /></div>

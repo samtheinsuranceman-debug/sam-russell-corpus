@@ -52,13 +52,17 @@ Leadership, Mechanical, Street-Smarts.
    Copy: _"A model-based estimate, not a measured percentile. Ranked within your generation, then the
    population — developmental lines are age-adjusted; IQ-style lines are already age-normed."_
 
-### ⚠️ OPEN DECISION #1 — Generational rarity: keep, toggle, or remove?
-You flagged uncertainty ("I don't know if we should include that anymore"). Current state: **fully built
-and load-bearing** — the entire `GenerationSection` on the homepage, the two-number reveal in Results,
-and the `generationalNote` in IntelligenceProfile all depend on it. **Recommendation: KEEP it** (it is
-the stated differentiator and is deeply woven in), but I've documented it as the top open decision so
-you can rule definitively. Removal is a copy + scoring change across Home.tsx, Results.tsx,
-IntelligenceProfile.tsx — not a data change. See the question posed alongside this delivery.
+### ✅ RESOLVED — Generational rarity is now a one-line toggle (default ON)
+You chose "keep but make it a toggle." Implemented: a single feature flag
+**`client/src/config/features.ts → SHOW_GENERATIONAL_RARITY`** (currently `true`) gates it everywhere:
+- `Home.tsx` — renders/hides the `GenerationSection`.
+- `Results.tsx` — shows the two-number reveal (cohort + population) vs. population-only.
+- `IntelligenceProfile.tsx` — shows/suppresses the cohort `generationalNote` on matches.
+
+To turn generational rarity OFF site-wide, set the flag to `false` — no other change, no data change.
+Typecheck + `vite build` verified clean with the flag in place. (If you later want the middle path,
+you can also keep cohort scoring but relabel it away from the word "rarity" toward the
+predictability/engineering framing — that's a copy edit inside `GenerationSection` + `RarityCountUp`.)
 
 ## 3. WHAT IS BUILT (in the codebase, in this zip)
 

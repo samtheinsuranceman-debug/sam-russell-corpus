@@ -69,7 +69,7 @@ curation + scoring + freshness, not DRM. (Details in `HANDOFF_TO_MANUS.md`.)
 - [ ] **AI results coaching**: name the controlling weakness, give % friction vs their stated outcomes,
       prescribe research-backed moves + expected outcome-probability lift.
 - [ ] **30/60/90-day audio tracker** + monthly re-estimation (recurring-revenue hook).
-- [ ] Decide **generational rarity** (keep / toggle / remove) and wire the data source if kept.
+- [x] **Generational rarity** — now a toggle: `client/src/config/features.ts → SHOW_GENERATIONAL_RARITY` (default ON). If kept ON for production, still wire a real age/generation normative table (see §4.6).
 - [ ] Reframed **meta-level explainer pages** (engineer strengths / dismantle weaknesses).
 
 ## 7. How to regenerate the readable catalog after adding clusters

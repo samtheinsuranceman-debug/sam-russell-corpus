@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { playClick } from "@/lib/audio";
+import { SHOW_GENERATIONAL_RARITY } from "@/config/features";
 import { PageSkeleton } from "@/components/ui/loading-skeleton";
 import { STRENGTH_CLUSTERS, GROWTH_CLUSTERS, type ClusterDefinition } from "@shared/clusters";
 import { CLUSTER_IMAGE_MAP } from "@shared/clusterImages";
@@ -1325,9 +1326,9 @@ export default function Results() {
             {/* Animated Rarity Score */}
             <div className="mb-16">
               <RarityCountUp
-                rarity={cohortRarity ?? compositeRarity}
-                populationRarity={cohortRarity ? compositeRarity : null}
-                generation={generation}
+                rarity={SHOW_GENERATIONAL_RARITY ? (cohortRarity ?? compositeRarity) : compositeRarity}
+                populationRarity={SHOW_GENERATIONAL_RARITY && cohortRarity ? compositeRarity : null}
+                generation={SHOW_GENERATIONAL_RARITY ? generation : null}
               />
             </div>
 

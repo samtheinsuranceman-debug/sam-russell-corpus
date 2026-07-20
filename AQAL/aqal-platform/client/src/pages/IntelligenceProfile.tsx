@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { SHOW_GENERATIONAL_RARITY } from "@/config/features";
 import {
   AXIS_MODE, MODE_META, STAGE_LABELS, STANCE_AXES, RARITY_AXES,
   INDEPENDENT_COUNT, ALL_AXES, TOTAL_LINES,
@@ -315,8 +316,8 @@ function NetworkPage() {
         comp: m.score,
         tier: "Network",
         strengths: (m as any).coversYourEdges ?? (m as any).sharedPeaks ?? [],
-        genNote: (m as any).generationalNote ?? null,
-        sameGen: (m as any).sameGeneration ?? false,
+        genNote: SHOW_GENERATIONAL_RARITY ? ((m as any).generationalNote ?? null) : null,
+        sameGen: SHOW_GENERATIONAL_RARITY ? ((m as any).sameGeneration ?? false) : false,
       }))
     : MATCHES.map((m) => ({ ...m, genNote: null, sameGen: false }));
 
