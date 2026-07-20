@@ -1,0 +1,142 @@
+# AQAL INTELLIGENCE PLATFORM — MASTER CONTINUITY DOCUMENT
+_Single source of truth. Read this first. Last updated at 3,307 clusters / 6,874 sources._
+
+This document exists because the research and the design decisions were previously buried in source
+code with no human-readable map. It captures **100% of what the platform is, what has been decided,
+what is built, what is not, and what a human/other-AI must still assemble.** If you read only one
+file, read this one, then `INSTRUCTIONS_TO_ASSEMBLE.md`, then `RESEARCH_LIBRARY_CATALOG.md`.
+
+---
+
+## 1. WHAT THIS IS (the reframe — current positioning)
+
+This is **not** "how rare and valuable is your brain." That framing is dead. The platform's promise is
+**directionality, predictability of outcome, protection, efficiency, and engineering.**
+
+The homepage headline (live in `client/src/pages/Home.tsx`) now reads:
+
+> **"How predictable, protected, and consistent is your mind at getting you what you want?"**
+> _You've probably never measured it — almost no one has. We do. Then we re-engineer the mind to close
+> the gap between where you stand today and the outcomes you're chasing._
+> **Measure the mind. Map the system. Engineer the outcome.**
+
+Supporting language decided over the week (use this vocabulary everywhere):
+- "How **systemized, productive, predictable, valuable, protected, and engineered** is the aggregate of
+  your mind toward all of your outcomes, goals, dreams, and desires?"
+- "**Engineering outcomes. Re-engineering the mind.**" — surgical procedures on the aggregate mind
+  structure that produce the greatest magnitude of desired outcomes with the **least energy, time,
+  effort, and failure rate.**
+- The differentiator is operating at a **meta-cognitive level** on the very systems that serve you or
+  get in your way: **engineer the strengths, dismantle the weaknesses — after they've been identified.**
+  No other platform does this.
+
+## 2. THE MEASUREMENT MODEL
+
+**32 intelligence lines** (the axes): Financial, Humor, Seductive, Parental, Community, Logical,
+Mathematical, Spatial, Pattern-Recognition, Linguistic, Musical, Bodily, Naturalist, Aesthetic,
+Interpersonal, Intrapersonal, Emotional, Social-Perceptual, Moral, Existential, Meta-Cognitive,
+Volitional, Adversarial, Interoceptive, Strategic, Systemic, Entrepreneurial, Creative, Rhetorical,
+Leadership, Mechanical, Street-Smarts.
+
+**Three research lenses** (each cluster in the library carries exactly one):
+| Lens | Field in data | Gauge | Meaning |
+|---|---|---|---|
+| **Practice** | `impact` | magnitude 1–5, latency, durability, effort | what *strengthens* a line (scaffolding) |
+| **Weakness** | `weakness` | threat 1–10, weakLines[], degree, onset, reversibility | what *collapses* a goal (the patch targets) |
+| **Cost** | `harm` | severity 1–5, onset, reversibility | what's *at stake* if a weakness goes unaddressed |
+
+**Rarity — two numbers, both shown** (`client/src/pages/Results.tsx`):
+1. **Cohort / generational rarity** — "1 in X **among {generation}**" — ranked within the person's own
+   generation/age cohort. This is the headline number ("Rare for your age is the only rare that counts").
+2. **Population rarity** — "1 in Y across the whole population."
+   Copy: _"A model-based estimate, not a measured percentile. Ranked within your generation, then the
+   population — developmental lines are age-adjusted; IQ-style lines are already age-normed."_
+
+### ⚠️ OPEN DECISION #1 — Generational rarity: keep, toggle, or remove?
+You flagged uncertainty ("I don't know if we should include that anymore"). Current state: **fully built
+and load-bearing** — the entire `GenerationSection` on the homepage, the two-number reveal in Results,
+and the `generationalNote` in IntelligenceProfile all depend on it. **Recommendation: KEEP it** (it is
+the stated differentiator and is deeply woven in), but I've documented it as the top open decision so
+you can rule definitively. Removal is a copy + scoring change across Home.tsx, Results.tsx,
+IntelligenceProfile.tsx — not a data change. See the question posed alongside this delivery.
+
+## 3. WHAT IS BUILT (in the codebase, in this zip)
+
+- **Voice-first 24-question assessment** (`Assessment.tsx`) — resequenced for rapport → momentum →
+  over-disclosure; per-question richness feedback; live radar reveal flywheel.
+- **Results & Intelligence Profile** — 32-line radar, strengths, growth edges, two-number rarity.
+- **Private consumer portal** (`Portal.tsx`) — original assessment + declared outcomes + doing-vs-not.
+- **E-signed commitment letter** (`CommitmentPanel`, `shared/commitment.ts`, DB table + routers) —
+  5 audio-only (never typed) self-generated reasons; accountability framing.
+- **Research Library** (`ResearchLibrary.tsx` + `researchLibraryData.ts`) — 3,307 clusters, 6,874
+  sources, three lenses, keyword search (KEYWORD_SYNONYMS/TOPICS/expandQuery), live leaderboards
+  (Top-50 by leverage, weakness by threat, cost by cost-score), code-split data bundle.
+- **Homepage** with the reframed copy + Generational Measurement & Matching section.
+- **Supporting pages**: Pricing/PricingStructure, Science, Evidence, About, Privacy, Terms, Leaderboard,
+  Challenge, SynergyReport (pair collision + prescriptions), MensaLanding, Login/Portal/Admin.
+
+## 4. WHAT IS DISCUSSED BUT NOT YET FULLY BUILT (continuity backlog)
+
+1. **Goals / outcomes questions** — insert 2–3 questions capturing the user's **top 5 goals across
+   5/10/20/30/40-year horizons**, plus the NLP follow-up: _"How will you know you've achieved them —
+   what will you see, hear, feel, be doing, who will you be talking to, what does an average day look
+   like?"_ Purpose: tie strength-scaffolding and weakness-patching to *their declared outcomes* and
+   quantify the predictability/friction each weakness adds to those specific outcomes.
+2. **AI coaching on results** — for each person, name the **controlling weakness** (highest-threat), give
+   a % predictability that it creates friction/chaos/loss against *their* stated outcomes, explain the
+   reasoning, and prescribe research-backed moves (disengage the strongest weakness, bolster/patch the
+   controlling one, or strengthen a keystone line) with the expected lift in outcome-probability.
+3. **30 / 60 / 90-day audio behavioral tracker** — user narrates behaviors by microphone (never typing),
+   uploads a day-by-day journal to their portal every 30 days; we re-estimate their assessment from
+   self-reported records (taken at their word). This is the recurring-revenue hook (monthly, not one-time).
+4. **Generational-band data source** — the cohort percentiles are currently model-based estimates; a real
+   age/generation normative table would replace the estimate. (See INSTRUCTIONS doc.)
+5. **Meta-level "engineering strengths / dismantling weaknesses" explainer pages** — the research
+   principles (strengths scaffolding, weakness patching, weakest-link/O-Ring, keystone effects) exist as
+   clusters (sections "0" framework) but deserve dedicated marketing pages in the reframed voice.
+
+## 5. THE RESEARCH LIBRARY — SCALE, HONESTY, MOAT
+
+- **3,307 clusters / 6,874 sources.** Lens split: Practice 1,227 · Weakness 1,145 · Cost 874 · framework 61.
+  Evidence tags: Strong 930 · Moderate 1,545 · Mixed 456 · Emerging 376.
+- **Weakness lines are equalized with the practice/strength lines** — the deliberate "same measure, same
+  weight" goal. Weakness-shielding is treated as co-equal with strength-maximizing (weakest-link logic).
+- **Honesty is the moat.** Every source WebSearch-verified; **zero fabricated citations.** Pseudoscience
+  and failed replications are *included at their true (magnitude-1) rating with a blunt callout* — e.g.
+  Wansink plate/bowl retractions, ego-depletion/willpower nulls, echo-chamber & filter-bubble
+  overstatement, dot-probe reliability problems, stereotype-threat fragility, Reiki/craniosacral/
+  kinesiotape/EFT near-placebo, "medical error = 3rd cause of death" dispute, 10,000-steps myth,
+  ME/CFS PACE controversy. This is a feature, not a gap — it is what makes the library trustworthy.
+- **Moat / anti-copy**: the corpus currently ships in the client bundle. Before launch, move it behind an
+  **authenticated, rate-limited, paginated API** so members can search but not bulk-export. Real moat =
+  curation + scoring + freshness, not DRM. (Full note in `HANDOFF_TO_MANUS.md`.)
+- **Catalog**: `docs/RESEARCH_LIBRARY_CATALOG.md` (readable) and `docs/research_library_catalog.csv`
+  (one row per cluster: id, section, lens, title, evidence, score, source-count, subtitle).
+
+## 6. FILE MAP (where everything lives)
+
+```
+aqal-platform/
+├─ docs/                              ← NEW documentation layer (read these)
+│   ├─ AQAL_MASTER_CONTINUITY.md      ← this file
+│   ├─ INSTRUCTIONS_TO_ASSEMBLE.md    ← build/deploy + manual-assembly checklist
+│   ├─ RESEARCH_LIBRARY_CATALOG.md    ← readable catalog of all 3,307 clusters
+│   └─ research_library_catalog.csv   ← same, spreadsheet form
+├─ HANDOFF_TO_MANUS.md                ← deploy handoff (incl. moat/anti-copy)
+├─ LAUNCH_KIT.md, RESEARCH_PIPELINE.md, MECHANICS_REVIEW.md, todo.md
+├─ client/src/pages/
+│   ├─ Home.tsx                       ← reframed hero + GenerationSection
+│   ├─ Assessment.tsx                 ← 24-question voice assessment
+│   ├─ Results.tsx / IntelligenceProfile.tsx / Profile.tsx  ← rarity (two-number) + radar
+│   ├─ Portal.tsx                     ← private portal + commitment
+│   ├─ ResearchLibrary.tsx            ← library UI, search, leaderboards, section maps
+│   └─ researchLibraryData.ts         ← 3,307 clusters (source of truth for the library)
+├─ shared/commitment.ts               ← commitment-letter questions + markdown builder
+└─ server/…                           ← tRPC routers, DB, reminders (see INSTRUCTIONS)
+```
+
+## 7. GIT / WHERE THE WORK LIVES
+- Branch: **`claude/claude-md-docs-0qgcvw`** (all work committed + pushed here).
+- The library grew this run from 2,491 → 3,307 clusters across ~24 verified rounds, each typechecked,
+  `vite build`-clean, committed, and pushed.
+- `AQAL/aqal-platform.zip` is the source snapshot (rebuilt to include this `docs/` layer).
