@@ -284,3 +284,36 @@
 5. Witch's Airbnb (#31) — 9.0
 
 **Next action:** Wait for Sam to finish sending stories, then build V14 with full resequencing.
+
+---
+
+## Story #32: Bouncer at Virginia Tech
+
+**Status:** Brief mention (pair with Restaurant Chase)
+
+**VERIFIED FACTS:** Sam was a part-time waiter at an elegant restaurant at Virginia Tech. Club on the second floor hosted parties of 200-300 people — fraternities, sororities. One night they were short a bouncer and asked Sam. He had no training. He wasn't big. Totally inexperienced. They gave him one or two sentences of instructions. The party was crazy — everyone super drunk, dancing sexually and violently, standing on furniture, laser lights spinning everywhere, spiral on the ceiling. Sensory overwhelming environment. Sam happened to be standing 5-10 feet from his manager when a big guy (much bigger than Sam) threw 3-4 punches at the manager's face trying to knock him out. The manager was a nice guy — probably just told the drunk person he needed to leave. An enormous surge of energy/instinct hit Sam — he didn't think it through. He tackled the guy, dragged him down 25 stairs, and threw him out. The guy was much bigger than him. Afterward, the manager invited Sam to his house (it was already 3-4 AM). Sam was suspicious and went home instead. Sam's takeaway: "I'm just glad he didn't get hurt."
+
+**LETTER VERSION (brief mention, ~5 sentences):**
+> "I was a bouncer once at Virginia Tech with zero training. Three hundred drunk people, laser lights spinning, everyone dancing on furniture. In all that chaos, I happened to be standing ten feet from my manager when a guy twice my size started throwing punches at his face. Something surged through me — I tackled him and dragged him down 25 stairs and threw him out. I don't know what happened. I'm just glad my manager didn't get hurt."
+
+**Scores (PTF / IR / ED / RP / ST):** 7 / 7 / 6 / 8 / 9 = **7.4 avg**
+
+**Placement:** Brief mention embedded in or adjacent to Restaurant Chase. Strengthens protection arc: Bouncer (instinct in chaos) + Restaurant Chase (sprint for stranger) + Witch Airbnb (spiritual authority). Three dimensions of protection.
+
+**Key trait signals:**
+- Protection instinct: +1 (tackled a bigger man without thinking)
+- Awareness in chaos: +1 (same wiring as Hula Hoop — finds the person who needs help in a crowd of 300)
+- Humble about strength: +1 ("I'm just glad he didn't get hurt" — redirects to the other person)
+- Doesn't seek violence: +1 ("I'm glad I didn't have to do it again")
+
+---
+
+## Running Vault Status (Updated)
+
+**Total stories in vault:** 32
+**In starting lineup (V15):** 25
+**On bench:** 5 (Grandma's Headlock, Santa Discovery, Chasing a Ghost, Happy Medium, Nine AIs)
+**Awaiting next resequence:** Story #32 (brief mention)
+**Brief mentions total:** 7 (Joanna/Microscope, Gargoyle Symphony, Valentine's Day, Hoarder House extension, Mystical Book optional, Seven Layers of Roof echo, Bouncer at VT)
+
+**Next action:** Wait for Sam to finish sending stories, then build next full resequencing with all verified facts.
