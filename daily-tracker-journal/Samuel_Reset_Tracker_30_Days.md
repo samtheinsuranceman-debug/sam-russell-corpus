@@ -882,6 +882,9 @@
   - Living document Version 5 saved: [church_girl_letter_project.md](../church_girl_letter_project.md)
   - **Day 1 of ~10-15 day development window.** Writing begins after learning her name (Day 21 target).
 
+### Evening Meds
+- **Klonopin 1.5mg:** 11:15 PM (in bed)
+
 ### Evening Review
 - **What worked that I double tomorrow?** TBD
 - **One adjustment for tomorrow?** TBD
