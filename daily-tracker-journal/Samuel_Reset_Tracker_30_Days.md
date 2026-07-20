@@ -927,45 +927,48 @@
 
 ## Day 15 - 2026-07-20 (Monday)
 
-**Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
+**Energy (1-10):** TBD | **Mood (1-10):** TBD | **Overall Day (1-10):** TBD
 
-### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+### Sleep & Wake (Night of Jul 19 → Jul 20)
+- **Bedtime:** ~11:15 PM (Klonopin 1.5mg at 11:15 PM)
+- **Wake time:** 8:15 AM (natural)
+- **Hours slept:** ~9 hours
+- **Dreams:** Vivid — series of dreams, poor recall except one:
+  - **Mackenzie Dream:** Visited with Mackenzie (25, Wilmington DE) — Sam's former personal trainer/stretcher at Stretch Flex. In the dream she disclosed she chews tobacco. Sam wasn't turned off (he quit dip ~26 years ago). They bonded over brands — she said she liked all of them. Sam felt no concern about her health and didn't tell her to stop. It was purely a bonding/connection experience — something in common. No romantic content but warm familiarity.
+  - **Context (waking reflection):** Mackenzie trained Sam 3x/week for ~1 year ($600-700/week). 2-hour sessions: weightlifting + 1 hour stretch table. During stretching she'd ask "what's going on" and Sam would give full life updates. She knew about Jessica (27-year-old), Nicole (living situation), marijuana use, Lou/Giraffe Insurance business, vulnerabilities. She thought Sam was funny and curious. She pushed him physically but gently. She had a boyfriend (reason Sam never asked her out). Sam notes: "Maybe I should give her a call if I get lonely. She'd like catching up with me."
+  - **Dream analysis:** Anima figure — safe feminine presence who already KNOWS him. The tobacco bonding = shared imperfection without judgment. No correction impulse = acceptance. Possible loneliness signal or desire for a woman who already has context on his life without needing to explain everything from scratch.
+- **Sleep feel (Restful 1-10):** TBD
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
-- **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
-- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
-- **Other (Klonopin, etc.):** _______________________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** TBD
+- **Vitamin C (Time/Dose/Stomach/Effect):** TBD
+- **Creatine monohydrate 5g:** TBD (Day 2)
+- **Other (Klonopin, etc.):** Klonopin 1.5mg previous night at 11:15 PM
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
-- **Other notes (neck, appetite, etc.):** ___________________________________
+- **Exercise (pool/gym/walk duration + 10% extra):** TBD
+- **Other notes:** Joseph letter mailed today (25 pages, stapled)
 
 ### Business / Productivity
-- **Leads / appointments worked:** __________________________________________
-- **Commissions update (Ralph wire/12k annuity/solar):** ____________________
-- **AI analysis done (calls/videos uploaded):** _____________________________
-- **Key win / lesson / money action:** ______________________________________
+- **Leads / appointments worked:** TBD
+- **Commissions update:** TBD
+- **AI analysis done:** TBD
+- **Key win / lesson / money action:** TBD
 
 ### Social / Dating / Family
-- **Church-girl action today (contact/script/progress):** ___________________
-- **Dad / Mom interaction note:** ___________________________________________
-- **Dating confidence / layup feel 1-10:** __________________________________
-- **Notes:** ________________________________________________________________
+- **Church-girl action today:** Day 2 of letter development window (no action needed today — brainstorming/story collection phase)
+- **Dad / Mom interaction note:** TBD
+- **Dating confidence / layup feel 1-10:** TBD
+- **Notes:** TBD
 
 ### Compounding & Mindset
-- **10% extra habit done (what?):** _________________________________________
-- **Self-script used or insight:** __________________________________________
-- **Gratitude / biggest pattern noticed:** __________________________________
+- **10% extra habit done (what?):** TBD
+- **Self-script used or insight:** TBD
+- **Gratitude / biggest pattern noticed:** TBD
 
 ### Evening Review
-- **What worked that I double tomorrow?** ___________________________________
-- **One adjustment for tomorrow?** __________________________________________
+- **What worked that I double tomorrow?** TBD
+- **One adjustment for tomorrow?** TBD
 
 ---
 
