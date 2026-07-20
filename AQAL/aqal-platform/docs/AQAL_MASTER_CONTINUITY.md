@@ -100,9 +100,17 @@ predictability/engineering framing — that's a copy edit inside `GenerationSect
    configured. Rendered on `Results.tsx` (keystone move, per-threat derailment bars, the Gap). Honesty:
    every number is directional, never a guarantee. **Sharpened this session:** the controlling weakness
    is now explicitly named in both the mock and the LLM prompt.
-3. **30 / 60 / 90-day audio behavioral tracker** — user narrates behaviors by microphone (never typing),
-   uploads a day-by-day journal to their portal every 30 days; we re-estimate their assessment from
-   self-reported records (taken at their word). This is the recurring-revenue hook (monthly, not one-time).
+3. ✅ **30 / 60 / 90-day audio behavioral tracker — BUILT (core loop).** In the Portal → Tools tab
+   (`BehavioralTrackerCard`): pick a 30/60/90-day cycle, **download the journal template** (generated
+   from the person's own prescribed practices + stated goals via `tracker.doc`), dictate daily into any
+   AI, then **paste the finished journal and upload** it (`tracker.submitJournal`). The server
+   (`server/trackerAnalysis.ts` → `analyzeJournal`) returns a **self-reported, directional** re-estimate:
+   a summary, per-line adjustments (↑/→/↓), an adherence read, and a **refreshed hypothetical Vision** —
+   stored per cycle in the new `trackerCycles` table (migration `drizzle/0014_shallow_nextwave.sql`),
+   with cycle history shown in the portal. LLM path + deterministic mock; every number tagged
+   self-reported/unverified. _Still pending:_ (a) the recurring **re-engagement email cadence** (~2×/mo)
+   to pull people back each cycle — wire into `server/reminders`/cron; (b) **voice STT** so the journal
+   can be spoken end-to-end in-app rather than pasted (see INSTRUCTIONS §4.3).
 4. **Generational-band data source** — the cohort percentiles are currently model-based estimates; a real
    age/generation normative table would replace the estimate. (See INSTRUCTIONS doc.)
 5. **Meta-level "engineering strengths / dismantling weaknesses" explainer pages** — the research

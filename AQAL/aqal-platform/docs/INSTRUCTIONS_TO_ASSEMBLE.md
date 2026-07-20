@@ -69,7 +69,9 @@ curation + scoring + freshness, not DRM. (Details in `HANDOFF_TO_MANUS.md`.)
 - [x] **AI results coaching** — built (server/coaching.ts generateOutcomeReport): names the controlling
       weakness, per-threat derailment % vs stated goals, uplift %, prescribed move + library topic;
       LLM + deterministic mock; rendered on Results.tsx. Needs live LLM keys for the non-mock path.
-- [ ] **30/60/90-day audio tracker** + monthly re-estimation (recurring-revenue hook).
+- [x] **30/60/90-day tracker** — core loop built (Portal Tools → BehavioralTrackerCard; tracker router;
+      server/trackerAnalysis.ts; trackerCycles table + migration 0014). Remaining: recurring
+      re-engagement email cadence (server/reminders/cron) + in-app voice STT for the journal.
 - [x] **Generational rarity** — now a toggle: `client/src/config/features.ts → SHOW_GENERATIONAL_RARITY` (default ON). If kept ON for production, still wire a real age/generation normative table (see §4.6).
 - [ ] Reframed **meta-level explainer pages** (engineer strengths / dismantle weaknesses).
 

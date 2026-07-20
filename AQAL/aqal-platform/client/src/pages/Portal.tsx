@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { axisMode, modeColor, MODE_META, ALL_AXES } from "@shared/axisModes";
 import CommitmentPanel from "@/components/CommitmentPanel";
@@ -489,6 +490,127 @@ function ResearchLibraryTab() {
 // ============================================================
 // TOOLS TAB
 // ============================================================
+// ============================================================
+// 30 / 60 / 90-day behavioral tracker — the recurring loop
+// ============================================================
+function BehavioralTrackerCard({ user }: { user: any }) {
+  const [days, setDays] = useState(30);
+  const [journal, setJournal] = useState("");
+  const [analysis, setAnalysis] = useState<any>(null);
+  const isFree = !user?.membershipTier || user?.membershipTier === "free";
+  const docQuery = trpc.tracker.doc.useQuery({ days }, { enabled: !isFree });
+  const cyclesQuery = trpc.tracker.cycles.useQuery(undefined, { enabled: !isFree });
+  const submit = trpc.tracker.submitJournal.useMutation({
+    onSuccess: (res: any) => {
+      if (res?.error) return toast.error(res.error);
+      if (res?.locked) return toast.error("Tracker cycles are part of membership.");
+      setAnalysis(res.analysis);
+      setJournal("");
+      cyclesQuery.refetch();
+      toast.success("Cycle logged — profile updated (self-reported).");
+    },
+    onError: () => toast.error("Could not process the journal. Try again."),
+  });
+
+  function downloadDoc() {
+    const md = (docQuery.data as any)?.markdown;
+    if (!md) return toast.info("Preparing your tracker template…");
+    const blob = new Blob([md], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `behavioral-tracker-${days}day.md`; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  const DIR: Record<string, string> = { up: "↑", steady: "→", down: "↓" };
+  const DIRC: Record<string, string> = { up: "text-emerald-400", steady: "text-muted-foreground", down: "text-amber-400" };
+
+  return (
+    <Card className="p-6 bg-secondary border-border">
+      <div className="flex items-center gap-2 mb-1">
+        <Calendar className="w-5 h-5 text-primary" />
+        <h3 className="font-display text-xl font-semibold">30 / 60 / 90-Day Behavioral Tracker</h3>
+      </div>
+      <p className="text-sm text-muted-foreground max-w-2xl mb-4">
+        Speak your daily entry into any AI (5–7 min), paste it into the template, and upload the finished journal
+        each cycle. We update your profile from what you report and refresh your Vision.{" "}
+        <span className="text-foreground/70">Self-reported — taken at your word, not a re-measurement.</span>
+      </p>
+      {isFree ? (
+        <p className="text-[13px] text-muted-foreground">
+          The tracker loop is part of membership.{" "}
+          <Link href="/pricing"><span className="text-primary cursor-pointer underline">See plans</span></Link>.
+        </p>
+      ) : (
+        <>
+          <div className="flex flex-wrap items-center gap-3 mb-5">
+            <div className="flex gap-1">
+              {[30, 60, 90].map((d) => (
+                <button key={d} onClick={() => setDays(d)}
+                  className={`px-3 py-1.5 rounded text-[12px] font-mono border transition-colors ${days === d ? "border-primary text-primary bg-primary/10" : "border-border text-muted-foreground hover:text-foreground"}`}>
+                  {d}-day
+                </button>
+              ))}
+            </div>
+            <Button variant="ghost" size="sm" className="h-8 gap-1 text-[12px] text-primary px-2" onClick={downloadDoc}>
+              <Download className="w-3.5 h-3.5" /> Download template
+            </Button>
+          </div>
+
+          <label className="block text-[12px] text-muted-foreground mb-1.5">Paste your completed {days}-day journal</label>
+          <Textarea value={journal} onChange={(e) => setJournal(e.target.value)} rows={6}
+            placeholder="Paste the dictated journal you built from the template…" className="mb-3 bg-background/40" />
+          <Button disabled={submit.isPending || journal.trim().length < 20}
+            onClick={() => submit.mutate({ journalText: journal, days })} className="gap-1">
+            {submit.isPending ? "Analyzing…" : "Upload & update my profile"}
+          </Button>
+
+          {analysis && (
+            <div className="mt-6 border-t border-border pt-5 space-y-4">
+              <div>
+                <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-primary mb-1">This cycle</p>
+                <p className="text-[14px] text-foreground/90 leading-relaxed">{analysis.summary}</p>
+              </div>
+              {analysis.adherenceNote && <p className="text-[13px] text-muted-foreground">{analysis.adherenceNote}</p>}
+              {analysis.adjustments?.length > 0 && (
+                <div className="space-y-1.5">
+                  {analysis.adjustments.map((a: any, i: number) => (
+                    <div key={i} className="flex gap-2 text-[13px]">
+                      <span className={`font-mono ${DIRC[a.direction] ?? ""}`}>{DIR[a.direction] ?? "→"}</span>
+                      <span className="text-foreground/80"><b className="text-foreground">{a.line}</b> — {a.note}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {analysis.freshVision && (
+                <div className="rounded-md bg-primary/[0.06] border border-primary/20 p-4">
+                  <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-primary mb-1">Your refreshed vision</p>
+                  <p className="text-[14px] text-foreground/90 italic leading-relaxed">{analysis.freshVision}</p>
+                </div>
+              )}
+              {analysis.disclaimer && <p className="text-[11px] text-muted-foreground/70">{analysis.disclaimer}</p>}
+            </div>
+          )}
+
+          {Array.isArray(cyclesQuery.data) && cyclesQuery.data.length > 0 && (
+            <div className="mt-6 border-t border-border pt-4">
+              <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground mb-2">Cycle history</p>
+              <div className="space-y-1.5">
+                {cyclesQuery.data.map((c: any) => (
+                  <div key={c.id} className="flex justify-between gap-4 text-[12px] text-muted-foreground">
+                    <span className="whitespace-nowrap">Cycle {c.cycleNumber} · {c.days}-day</span>
+                    <span className="text-foreground/60 truncate">{c.summary?.slice(0, 90)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </Card>
+  );
+}
+
 function ToolsTab({ user }: { user: any }) {
   const tools = [
     {
@@ -572,6 +694,9 @@ function ToolsTab({ user }: { user: any }) {
           Resources and instruments designed for your unique cognitive architecture. Some require higher membership tiers.
         </p>
       </div>
+
+      {/* The recurring loop — surfaced first because it's the reason to come back */}
+      <BehavioralTrackerCard user={user} />
 
       {/* Resources Section */}
       <div className="mt-2">

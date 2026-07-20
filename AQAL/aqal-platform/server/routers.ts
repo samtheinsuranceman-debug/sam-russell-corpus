@@ -61,6 +61,10 @@ import { sendSms, dailyCheckinSms } from "./platform/sms";
 import { CRON_SECRET } from "./platform/config";
 import { COMMITMENT_QUESTIONS, commitmentReady, answersByKey, shouldSendCheckinNow, DAILY_CHECKIN_HOUR, type CommitmentAnswer } from "@shared/commitment";
 import { extractGoalsText } from "@shared/goalsQuestions";
+import { createTrackerCycle, getTrackerCyclesByUser } from "./db";
+import { analyzeJournal } from "./trackerAnalysis";
+import { buildTrackerMarkdown } from "@shared/behavioralTracker";
+import { buildProjections } from "@shared/keystonePractices";
 import {
   funnelMetrics, pipelineHealth, cac, retention, goNoGo, FUNNEL_STAGES,
 } from "./analytics/metrics";
@@ -1437,6 +1441,58 @@ CRITICAL RULES:
         await markLetterRead(input.letterId);
         return { success: true };
       }),
+  }),
+  // ============================================================
+  // TRACKER — the 30/60/90-day behavioral-journal loop (recurring touchpoint)
+  // ============================================================
+  tracker: router({
+    // The downloadable journal template for this cycle, generated from the
+    // person's own prescribed practices + stated goals.
+    doc: protectedProcedure
+      .input(z.object({ days: z.number().int().min(1).max(90).optional() }).optional())
+      .query(async ({ ctx, input }) => {
+        const assessment = await getLatestAssessment(ctx.user.id);
+        let goals = "";
+        let projections: any[] = [];
+        if (assessment) {
+          const responsesList = await getResponsesByAssessment(assessment.id);
+          goals = extractGoalsText(responsesList as any);
+          projections = buildProjections(goals);
+        }
+        return { markdown: buildTrackerMarkdown({ projections, days: input?.days ?? 30, goals }) };
+      }),
+
+    // Upload a completed cycle journal → SELF-REPORTED re-estimate + fresh Vision.
+    submitJournal: protectedProcedure
+      .input(z.object({ journalText: z.string().min(1).max(60000), days: z.number().int().min(1).max(90).default(30) }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.membershipTier === "free") return { locked: true as const };
+        const assessment = await getLatestAssessment(ctx.user.id);
+        if (!assessment || assessment.status !== "complete") {
+          return { error: "Complete an assessment first, then run a tracker cycle." };
+        }
+        const scores = await getScoresByAssessment(assessment.id);
+        const responsesList = await getResponsesByAssessment(assessment.id);
+        const goals = extractGoalsText(responsesList as any);
+        const analysis = await analyzeJournal({ journalText: input.journalText, goals, scores: scores as any, days: input.days });
+        const cycle = await createTrackerCycle({
+          userId: ctx.user.id,
+          assessmentId: assessment.id,
+          days: input.days,
+          journalText: input.journalText,
+          summary: analysis.summary,
+          adjustments: analysis.adjustments as any,
+          freshVision: analysis.freshVision,
+          adherenceNote: analysis.adherenceNote,
+        });
+        await recordEvent({ type: "tracker_cycle", userId: ctx.user.id });
+        return { cycle, analysis };
+      }),
+
+    // Cycle history for the portal.
+    cycles: protectedProcedure.query(async ({ ctx }) => {
+      return getTrackerCyclesByUser(ctx.user.id);
+    }),
   }),
   // ============================================================
   // COMMITMENT — the Personal Commitment Agreement (spoken, self-authored)

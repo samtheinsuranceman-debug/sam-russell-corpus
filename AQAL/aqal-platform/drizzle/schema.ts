@@ -382,6 +382,32 @@ export type Commitment = typeof commitments.$inferSelect;
 export type InsertCommitment = typeof commitments.$inferInsert;
 
 // ============================================================
+// TRACKER CYCLES — the 30/60/90-day behavioral-journal loop
+// ============================================================
+// Each row is one completed cycle: the person dictated a daily journal, uploaded
+// it, and we produced a SELF-REPORTED (not independently verified) re-estimate of
+// their profile plus a fresh, honestly-hypothetical Vision. This is the recurring
+// touchpoint that justifies a subscription — they come back every ~30 days.
+export const trackerCycles = mysqlTable("trackerCycles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  assessmentId: int("assessmentId"), // the assessment this cycle updates
+  cycleNumber: int("cycleNumber").default(1).notNull(), // 1, 2, 3… per user
+  days: int("days").default(30).notNull(),               // cycle length (30/60/90)
+  // The uploaded, self-reported journal text (dictated then pasted). Verbatim.
+  journalText: text("journalText").notNull(),
+  // Model output for this cycle (all SELF-REPORTED / directional):
+  summary: text("summary"),               // what changed, in plain language
+  adjustments: json("adjustments"),       // [{ line, direction, note }] directional profile deltas
+  freshVision: text("freshVision"),       // updated, hypothetical future-pace off this cycle
+  adherenceNote: text("adherenceNote"),   // honest read on consistency from the journal
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TrackerCycle = typeof trackerCycles.$inferSelect;
+export type InsertTrackerCycle = typeof trackerCycles.$inferInsert;
+
+// ============================================================
 // ANALYTICS EVENTS — funnel + scoring-pipeline instrumentation (Stage 6)
 // ============================================================
 export const analyticsEvents = mysqlTable("analytics_events", {

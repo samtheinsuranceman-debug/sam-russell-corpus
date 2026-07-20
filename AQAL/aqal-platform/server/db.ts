@@ -1,6 +1,6 @@
 import { eq, sql, and, desc, gte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend, testimonials, InsertTestimonial, commitments } from "../drizzle/schema";
+import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend, testimonials, InsertTestimonial, commitments, trackerCycles, InsertTrackerCycle } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -1336,4 +1336,33 @@ export async function getActiveReminderCommitments() {
     .innerJoin(users, eq(users.id, commitments.userId))
     .where(and(eq(commitments.status, "signed"), sql`${commitments.supersededAt} IS NULL`));
   return rows.filter((r) => r.reminderChannel === "email" || r.reminderChannel === "text") as any;
+}
+
+// ============================================================
+// TRACKER CYCLES — 30/60/90-day behavioral-journal loop
+// ============================================================
+export async function getTrackerCyclesByUser(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(trackerCycles)
+    .where(eq(trackerCycles.userId, userId))
+    .orderBy(desc(trackerCycles.createdAt));
+}
+
+export async function getLatestTrackerCycle(userId: number) {
+  const rows = await getTrackerCyclesByUser(userId);
+  return rows[0] ?? null;
+}
+
+export async function createTrackerCycle(row: InsertTrackerCycle) {
+  const db = await getDb();
+  if (!db) return null;
+  // cycleNumber = one past the user's current max, unless caller set it.
+  const existing = await getTrackerCyclesByUser(row.userId);
+  const cycleNumber = row.cycleNumber ?? (existing.length + 1);
+  await db.insert(trackerCycles).values({ ...row, cycleNumber });
+  const rows = await db.select().from(trackerCycles)
+    .where(eq(trackerCycles.userId, row.userId))
+    .orderBy(desc(trackerCycles.createdAt));
+  return rows[0] ?? null;
 }
