@@ -93,11 +93,11 @@
 - **What happened:** First week: rain through roof. Roofers found 7-8 layers of roofing. People patched for 100 years. Roofers pissed ("never seen anything like this in 20 years"). Put a real roof on. Sam got seller to reimburse him.
 - **Status:** Brief mention / bench
 
-## STORY #21: Ambien / Busch Gardens
+## STORY #21: Ambien / Busch Gardens — "The Worst Date I Ever Had"
 - **Age:** ~25
-- **Location:** Doctor's office → Busch Gardens, Williamsburg, Virginia
-- **What happened:** Asked out the nurse (Allie) while she took his blood pressure. She said yes, gave her number. Went on 2-3 dates. Doctor prescribed Ambien. Sam texted her while sleeping — gibberish. She said "Don't ever text me again." A month later, went to Busch Gardens with new girl (Nikki). Standing in line with 500 people — Allie was standing RIGHT IN FRONT of him. Felt God was laughing at him. Didn't want to be there anymore. Silent the whole drive home with Nikki.
-- **Key detail:** Busch Gardens (NOT an unnamed park). Nurse's name was Allie (A-L-L-I-E). New girl's name was Nikki.
+- **Location:** Doctor's office → Busch Gardens, Williamsburg, Virginia (5-6 hour drive)
+- **What happened:** Asked out the nurse (Allie) while she took his blood pressure. She said yes, gave her number. Went on 2-3 dates. Doctor prescribed Ambien — Sam didn't know that if you don't fall asleep right away you can sleepwalk/sleep drive/do crazy things. Texted Allie while sleeping — complete gibberish, looked drunk or crazy. She said "Don't ever text me again." A month or two later, met new girl named Nikki. First date: Nikki drove them to Busch Gardens in Williamsburg, Virginia (5-6 hour drive). Nikki was smoking cigarettes in the car — Sam didn't smoke. Michael Jackson had just died. Sam was thinking about the hypocrisy — the world made fun of MJ for 30 years on every magazine, then acted like he was a hero the second he died. Hated him alive, loved him dead. Nikki kept talking about things Sam wasn't interested in. Allie was still on his mind from a month or two ago. Finally get to Busch Gardens — millions of people, lines 500 people long. Standing in line with Nikki — and who is standing RIGHT IN FRONT of him? Allie. The nurse. The girl he messed up with. Felt God was laughing at him. Completely upset. Didn't want to be there anymore. Didn't want to be with Nikki anymore. Embarrassed. On the way home, didn't say one word to Nikki. Completely silent. In his head. Terrible. Never should have taken Ambien.
+- **Key detail:** Busch Gardens (NOT an unnamed park). Nurse's name was Allie (A-L-L-I-E). New girl's name was Nikki. Nikki was driving and smoking. Michael Jackson had just died. Reframed as "the worst date I ever had."
 
 ## STORY #22: Pizza Tow
 - **Age:** ~30-32
