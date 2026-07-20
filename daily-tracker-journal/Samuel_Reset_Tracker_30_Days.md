@@ -835,7 +835,9 @@
 - **Trazodone (previous night):** x2 at 3:45 AM
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** TBD (day in progress)
+- **Exercise (pool/gym/walk duration + 10% extra):**
+  - Treadmill: 99 min / 4.14 miles / 358 cal / Avg HR 95 bpm / Avg speed 2.5 mph (~7:25-8:25 PM)
+  - Pool float/meditation: ~8:30 PM (post-treadmill recovery)
 - **Other notes:** Creatine Day 1. No immediate perceptible effect (expected — takes 2-3 weeks to saturate).
 - **Vitamin C 4mg:** 4:30 PM
 
