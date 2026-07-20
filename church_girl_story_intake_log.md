@@ -59,3 +59,64 @@
 **Brief mentions:** 3 existing + 1 new extension = 4
 
 **Next action:** Wait for Sam to finish sending stories, then build V14 with full resequencing.
+
+---
+
+## Story #29: Cheesecake Factory Dream Girl
+
+**The Story:** Sam was waiting tables at the Cheesecake Factory, maybe 20-30 waiters, most in their 20s-early 30s. On a Friday night at peak busy, a pretty waitress said, "Sam, do you have a moment where I can talk to you?" She said: "I never used to look at you this way, but I had a dream about you last night where we fell in love, and we got married, and we had three children, and we watched them grow up together through all the phases of life. Then they grew out of the house, and we were alone, getting older together until we were very old. It felt like a whole lifetime. I never used to look at you that way, but I look at you like that now." It was like a movie — like he was supposed to kiss her. But he said, "Well, I got to bring these plates into the kitchen," and walked past her. No one has ever said anything like that to him again.
+
+**Punchline:** "I was serving the tables instead of serving her. I was more worried about the iced tea than a woman who might have had a prophetic vision and a lifelong dream."
+
+**Emotions Elicited:** Heartbreak, Empathy, Recognition ("THIS is why the letter exists"), Romantic yearning, Self-awareness, Slight humor (the absurdity of choosing plates over prophecy)
+
+**Why It's Elite:**
+
+1. **It's George Mason x10.** George Mason was a regret about not speaking. This is a regret about someone SPEAKING TO HIM — prophetically — and him walking past with plates.
+
+2. **"No one has ever said anything like that to me ever again."** One sentence. Gut-punch. She gave him something no one else ever has.
+
+3. **It explains the LETTER.** The last time someone appeared with something extraordinary, he chose iced tea. He's not making that mistake again. The letter IS the correction.
+
+4. **Three-story loss/learning spine:** George Mason (didn't speak) → Ambien/Busch Gardens (God showed him what he lost) → Cheesecake Factory (someone SPOKE and he still missed it). The letter is his answer to all three.
+
+5. **The self-deprecation is perfect.** "I was more worried about the iced tea." Painful AND funny. She'll laugh and ache simultaneously.
+
+**Preliminary Ratings:**
+
+| Metric | Score | Reasoning |
+|--------|-------|-----------|
+| Emotional Intensity (EI) | **10** | This is the most emotionally intense missed-opportunity story. A woman told him she dreamed their whole life. He walked past. |
+| Story Engagement (SE) | 9 | Perfect structure: setup (busy Friday) → confession (dream) → failure (plates) → reflection (iced tea). |
+| Curiosity & Wonder (CW) | 9 | "A woman dreamed their entire life together and told him to his face." That's extraordinary. |
+| Trust & Safety (TS) | 8 | He's vulnerable about his biggest failure. He doesn't hide it. He doesn't blame her. |
+| Question Engagement (QE) | 9 | "Has anyone ever told you something that changed how they saw you?" / "What's the moment you wish you could redo?" |
+| **Average** | **9.0** | |
+
+**Rank: #2 overall (between Silver Coins and Cat & Barefoot Vet)**
+
+**Placement Notes:**
+- Could REPLACE George Mason at position 1 (stronger opener — higher stakes, more emotional)
+- OR could be the SECOND missed-opportunity story, paired with George Mason to create a two-beat pattern
+- The letter's thesis becomes: "Three times, life put someone in front of me. Three times, I missed. This letter is my fourth chance. I'm not missing again."
+- If placed at position 1, the opener becomes: "I once had a woman tell me she dreamed our entire life together — marriage, three children, growing old. I said 'I have to bring these plates to the kitchen.' I'm not making that mistake again. This letter is what happens when you finally learn."
+
+**Trait Signals:**
+- Romantic/Intentional: +1 (the letter corrects this mistake)
+- Learns from loss: +1 (he recognizes what he missed)
+- Admits mistakes/Vulnerable: +1 (admits his biggest romantic failure)
+- Self-aware/Growth: +1 (knows he chose wrong)
+- Funny/Self-deprecating: +1 ("more worried about iced tea")
+- Willing to embarrass himself: +1 (tells this story knowing it makes him look foolish)
+
+---
+
+## Running Vault Status (Updated)
+
+**Total stories in vault:** 29
+**In starting lineup (V13):** 23
+**On bench:** 5
+**Awaiting integration:** 2 new stories (#28, #29) + 1 brief mention extension (Hoarder House)
+**Brief mentions:** 3 existing + 1 new extension = 4
+
+**Next action:** Wait for Sam to finish sending stories, then build V14 with full resequencing.
