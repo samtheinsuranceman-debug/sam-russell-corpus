@@ -11,6 +11,7 @@ import { trpc } from "@/lib/trpc";
 import AssessmentResumeDialog from "@/components/AssessmentResumeDialog";
 import { ALL_AXES } from "@shared/axisModes";
 import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
+import { GOALS_QUESTION_IDS, GOALS_QUESTION_INDICES } from "@shared/goalsQuestions";
 
 // ============================================================
 // ASSESSMENT QUESTIONS — 24 open-ended voice prompts
@@ -260,7 +261,7 @@ const QUESTIONS_SOURCE: {
   {
     id: 33,
     title: "Your Top Five",
-    text: "Let's put real numbers on it. Tell me your top five goals — ranked, number one through five — and roughly when you want each: five years out, ten, twenty, thirty. Spread them across what actually matters to you — the money and work, the family and relationships, health and body, the spiritual or legacy side. And here's the frame: if you knew you could not fail, what are the five that would make the whole life worth it? Give me number one first, then count down.",
+    text: "Let's put real numbers on it. Tell me your top five goals — ranked, number one through five — and roughly when you want each: five years out, ten, twenty, thirty, even forty. Spread them across what actually matters to you — the money and work, the family and relationships, health and body, the spiritual or legacy side. Underneath each one, name the value driving it — why does that goal matter to you? And here's the frame: if you knew you could not fail, what are the five that would make the whole life worth it? Give me number one first, then count down.",
     dimension: "Goals — Prioritized",
     axes: [17, 31, 4],
   },
@@ -294,6 +295,23 @@ const QUESTION_ORDER = [
   14, 30, 19, 10, 18, 32, 31, 20, 17, 21, 22, 24, // → depth → over-disclosure
 ];
 const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
+
+// Guard: the server identifies goals answers by their display-order position
+// (shared/goalsQuestions.ts GOALS_QUESTION_INDICES). Assert those positions still
+// point at the goals question ids, so reordering QUESTION_ORDER can't silently
+// misroute the goals→coaching wiring.
+if (import.meta.env.DEV) {
+  GOALS_QUESTION_IDS.forEach((id, i) => {
+    const pos = GOALS_QUESTION_INDICES[i];
+    if (QUESTION_ORDER[pos] !== id) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `[assessment] goals-question drift: QUESTION_ORDER[${pos}] = ${QUESTION_ORDER[pos]}, expected ${id}. ` +
+        `Update GOALS_QUESTION_INDICES in shared/goalsQuestions.ts.`,
+      );
+    }
+  });
+}
 
 // All questions are free. The gate is on the evidence-based SCORING method
 // (the verified, high-confidence report) — unlocked by payment or a beta code —

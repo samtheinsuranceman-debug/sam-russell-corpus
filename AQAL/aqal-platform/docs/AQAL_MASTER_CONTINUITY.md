@@ -79,17 +79,27 @@ predictability/engineering framing — that's a copy edit inside `GenerationSect
 - **Supporting pages**: Pricing/PricingStructure, Science, Evidence, About, Privacy, Terms, Leaderboard,
   Challenge, SynergyReport (pair collision + prescriptions), MensaLanding, Login/Portal/Admin.
 
-## 4. WHAT IS DISCUSSED BUT NOT YET FULLY BUILT (continuity backlog)
+## 4. FEATURE STATUS (built vs. remaining)
 
-1. **Goals / outcomes questions** — insert 2–3 questions capturing the user's **top 5 goals across
-   5/10/20/30/40-year horizons**, plus the NLP follow-up: _"How will you know you've achieved them —
-   what will you see, hear, feel, be doing, who will you be talking to, what does an average day look
-   like?"_ Purpose: tie strength-scaffolding and weakness-patching to *their declared outcomes* and
-   quantify the predictability/friction each weakness adds to those specific outcomes.
-2. **AI coaching on results** — for each person, name the **controlling weakness** (highest-threat), give
-   a % predictability that it creates friction/chaos/loss against *their* stated outcomes, explain the
-   reasoning, and prescribe research-backed moves (disengage the strongest weakness, bolster/patch the
-   controlling one, or strengthen a keystone line) with the expected lift in outcome-probability.
+1. ✅ **Goals / outcomes questions — BUILT & wired.** Two voice questions are live in the assessment
+   (`Assessment.tsx` QUESTIONS_SOURCE ids 33 "Your Top Five" + 34 "How You'll Know", sequenced at
+   display positions 12–13). Q33 now asks for the **top 5 goals across 5/10/20/30/40-year horizons plus
+   the value behind each**; Q34 is the NLP evidence procedure (_"how do you know you've arrived — what do
+   you see, hear, feel, who are you next to, walk me through an ordinary Tuesday"_). The spoken answers
+   are transcribed and flow to the coach. **Hardened this session:** the server previously matched these
+   answers by a bare positional literal (`questionIndex === 12 || 13`); that is now centralized in
+   `shared/goalsQuestions.ts` (`extractGoalsText` / `GOALS_QUESTION_INDICES`), with a dev-time guard in
+   `Assessment.tsx` that errors if the display order ever drifts out of sync.
+2. ✅ **AI coaching on results — BUILT.** `server/coaching.ts` → `generateOutcomeReport(scores, goals)`
+   produces an Outcome-Engineering report: it names the **controlling weakness** (the single line whose
+   failure most predictably derails the stated goals), gives each threat a **directional derailment %**
+   (framed as how predictably it creates friction against *the goals the person named*), an **uplift %**
+   if addressed, a research-grounded prescribed **move**, and the matching **Research Library topic**;
+   plus keystone strengths, a keystone move, an honest confidence-tiered Vision, and the knowing–doing
+   Gap. LLM-driven with a strict JSON schema and a deterministic mock fallback when no model is
+   configured. Rendered on `Results.tsx` (keystone move, per-threat derailment bars, the Gap). Honesty:
+   every number is directional, never a guarantee. **Sharpened this session:** the controlling weakness
+   is now explicitly named in both the mock and the LLM prompt.
 3. **30 / 60 / 90-day audio behavioral tracker** — user narrates behaviors by microphone (never typing),
    uploads a day-by-day journal to their portal every 30 days; we re-estimate their assessment from
    self-reported records (taken at their word). This is the recurring-revenue hook (monthly, not one-time).

@@ -93,10 +93,10 @@ function mockReport(scores: ScoreRow[], goals: string): OutcomeReport {
     : `Targeted, tracked practice on ${w(0)} with if-then plans (implementation intentions) to keep it from derailing goal pursuit.`;
   const topic0 = p0 ? p0.librarySection : "Leverage Points & Tracking";
   return {
-    summary: `Your profile is carried by ${s(0)} and ${s(1)}, but ${w(0)} is the line most likely to create friction against ${area}. Engineering it first changes the odds more than adding to any strength.`,
-    keystoneMove: `Bolster ${w(0)} — it is the most central of your weakness lines, so lifting it lifts the others with it.`,
+    summary: `Your profile is carried by ${s(0)} and ${s(1)}, but ${w(0)} is your controlling weakness — the single line most likely to create friction against ${area}. Engineering it first changes the odds more than adding to any strength.`,
+    keystoneMove: `Bolster ${w(0)} — it is the controlling weakness (the most central of your weak lines), so lifting it lifts the others with it.`,
     threats: [
-      { weakness: w(0), goalArea: area, reasoning: `${w(0)} sits upstream of several of your goals; left unaddressed it quietly caps outcomes no matter how strong ${s(0)} is (weakest-link effect).`, risk: "High", derailmentLikelihood: 62, move: move0, libraryTopic: topic0, upliftIfAddressed: 28 },
+      { weakness: w(0), goalArea: area, reasoning: `Controlling weakness. ${w(0)} sits upstream of several of your goals; left unaddressed it quietly caps outcomes no matter how strong ${s(0)} is (weakest-link effect). The percentage is how predictably it creates friction against the goals you named — directional, not a measured probability.`, risk: "High", derailmentLikelihood: 62, move: move0, libraryTopic: topic0, upliftIfAddressed: 28 },
       { weakness: w(1), goalArea: area, reasoning: `${w(1)} amplifies ${w(0)} under pressure — a bridge node that spreads friction across domains.`, risk: "Moderate", derailmentLikelihood: 41, move: `Compensate and route around ${w(1)} using ${s(0)} as scaffolding while you build it.`, libraryTopic: "The Weakest Link — Bottleneck & O-Ring", upliftIfAddressed: 17 },
     ],
     enablers: [
@@ -181,7 +181,10 @@ throughput constraint strands capacity behind the slowest step (widen it). Stay 
 Produce an outcome-engineering report:
 - Identify the weakness clusters most likely to create friction, loss, or derailment against THESE goals,
   and explain WHY using the mechanisms above (which is most central/controlling, which is the weakest link).
-- For each threat: a risk band, a DIRECTIONAL derailment likelihood (0-100, relative priority — not a measured
+- In the summary, explicitly NAME the single "controlling weakness" — the one line whose failure most
+  predictably derails the stated goals — and make the first threat that line.
+- For each threat: a risk band, a DIRECTIONAL derailment likelihood (0-100) framed as HOW PREDICTABLY that
+  weakness creates friction against the goals the person named (relative priority — not a measured
   probability), a prescribed research-grounded move that draws on the practice menu where it fits (name the
   specific practice), the matching Research Library topic to read, and a DIRECTIONAL uplift estimate if addressed.
 - Identify the keystone strengths that most accelerate these goals and how to aim them.

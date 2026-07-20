@@ -60,6 +60,7 @@ import {
 import { sendSms, dailyCheckinSms } from "./platform/sms";
 import { CRON_SECRET } from "./platform/config";
 import { COMMITMENT_QUESTIONS, commitmentReady, answersByKey, shouldSendCheckinNow, DAILY_CHECKIN_HOUR, type CommitmentAnswer } from "@shared/commitment";
+import { extractGoalsText } from "@shared/goalsQuestions";
 import {
   funnelMetrics, pipelineHealth, cac, retention, goNoGo, FUNNEL_STAGES,
 } from "./analytics/metrics";
@@ -1134,11 +1135,7 @@ Return ONLY valid JSON.` },
       // questions (order positions 12 & 13). Surfaced so the portal and the
       // commitment agreement can show "the outcomes you declared."
       const responsesList = await getResponsesByAssessment(assessment.id);
-      const goals = responsesList
-        .filter((r: any) => r.questionIndex === 12 || r.questionIndex === 13)
-        .map((r: any) => r.transcript)
-        .filter(Boolean)
-        .join("\n\n");
+      const goals = extractGoalsText(responsesList as any);
       return {
         assessment,
         scores: scoresList,
@@ -1350,11 +1347,7 @@ Return ONLY valid JSON.` },
         let goals = input.goals ?? "";
         if (!goals) {
           const responsesList = await getResponsesByAssessment(assessment.id);
-          goals = responsesList
-            .filter((r: any) => r.questionIndex === 12 || r.questionIndex === 13)
-            .map((r: any) => r.transcript)
-            .filter(Boolean)
-            .join("\n\n");
+          goals = extractGoalsText(responsesList as any);
         }
         const report = await generateOutcomeReport(scores as any, goals);
         await recordEvent({ type: "outcome_report", userId: ctx.user.id });

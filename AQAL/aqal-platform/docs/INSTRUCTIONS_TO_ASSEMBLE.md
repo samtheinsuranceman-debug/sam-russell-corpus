@@ -65,9 +65,10 @@ return only the page the user is viewing; never ship the whole array to the brow
 curation + scoring + freshness, not DRM. (Details in `HANDOFF_TO_MANUS.md`.)
 
 ## 6. Continuity backlog to finish (from AQAL_MASTER_CONTINUITY.md §4)
-- [ ] Add 2–3 **goals/outcomes questions** (top-5 goals × 5/10/20/30/40 yr + NLP "how will you know").
-- [ ] **AI results coaching**: name the controlling weakness, give % friction vs their stated outcomes,
-      prescribe research-backed moves + expected outcome-probability lift.
+- [x] **Goals/outcomes questions** — built & wired (Assessment ids 33/34; Q33 covers 5/10/20/30/40-yr + values; goals identity centralized in shared/goalsQuestions.ts).
+- [x] **AI results coaching** — built (server/coaching.ts generateOutcomeReport): names the controlling
+      weakness, per-threat derailment % vs stated goals, uplift %, prescribed move + library topic;
+      LLM + deterministic mock; rendered on Results.tsx. Needs live LLM keys for the non-mock path.
 - [ ] **30/60/90-day audio tracker** + monthly re-estimation (recurring-revenue hook).
 - [x] **Generational rarity** — now a toggle: `client/src/config/features.ts → SHOW_GENERATIONAL_RARITY` (default ON). If kept ON for production, still wire a real age/generation normative table (see §4.6).
 - [ ] Reframed **meta-level explainer pages** (engineer strengths / dismantle weaknesses).
