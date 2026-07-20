@@ -931,8 +931,10 @@
 
 ### Sleep & Wake (Night of Jul 19 → Jul 20)
 - **Bedtime:** ~11:15 PM (Klonopin 1.5mg at 11:15 PM)
-- **Wake time:** 8:15 AM (natural)
-- **Hours slept:** ~9 hours
+- **First wake:** 8:15 AM (natural) — got up, ate green beans, went back to bed
+- **Second wake (actual up time):** ~1:15 PM
+- **Hours slept:** ~14 hours total (9 hrs first block + 5 hrs second block)
+- **Note:** Body demanding physical recovery from accumulated treadmill/walking load (99 min treadmill Day 14, heavy walking Days 12-13). No guilt — recovery IS the protocol.
 - **Dreams:** Vivid — series of dreams, poor recall except one:
   - **Mackenzie Dream:** Visited with Mackenzie (25, Wilmington DE) — Sam's former personal trainer/stretcher at Stretch Flex. In the dream she disclosed she chews tobacco. Sam wasn't turned off (he quit dip ~26 years ago). They bonded over brands — she said she liked all of them. Sam felt no concern about her health and didn't tell her to stop. It was purely a bonding/connection experience — something in common. No romantic content but warm familiarity.
   - **Context (waking reflection):** Mackenzie trained Sam 3x/week for ~1 year ($600-700/week). 2-hour sessions: weightlifting + 1 hour stretch table. During stretching she'd ask "what's going on" and Sam would give full life updates. She knew about Jessica (27-year-old), Nicole (living situation), marijuana use, Lou/Giraffe Insurance business, vulnerabilities. She thought Sam was funny and curious. She pushed him physically but gently. She had a boyfriend (reason Sam never asked her out). Sam notes: "Maybe I should give her a call if I get lonely. She'd like catching up with me."
