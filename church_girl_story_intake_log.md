@@ -317,3 +317,40 @@
 **Brief mentions total:** 7 (Joanna/Microscope, Gargoyle Symphony, Valentine's Day, Hoarder House extension, Mystical Book optional, Seven Layers of Roof echo, Bouncer at VT)
 
 **Next action:** Wait for Sam to finish sending stories, then build next full resequencing with all verified facts.
+
+---
+
+## Story #33: Mosh Pit Dance / Moses Parting the Sea
+
+**Status:** Full standalone
+
+**VERIFIED FACTS:** Sam was 17 or 18 years old. Went to the HFS Festival in Washington, DC — 50,000+ people, all the hot music groups at the time. Went into the mosh pit. He used to wear glasses. His glasses fell on the ground — ground was two-inch-thick mud. Couldn't see well. Started pushing people out of the way, looking frantically. The more he looked, the more space he had — the crowd kept getting less and less crowded. After 2-3 minutes, he was in the center of a giant ring with all the mosh pit people in a circle around him watching. He found his glasses. Found out later from a friend that everyone thought he was doing a new dance that had never been done before — took attention away from smashing each other. God let him find his glasses by spreading everyone out.
+
+**SENSORY DETAILS TO ADD IN FINAL WRITE:** Hot burning sun. Slippery two-inch-thick mud on the ground. Hot sweaty bodies pushing him around like overwhelming sea currents. Loss of physical autonomy — couldn't go in any direction he chose. Then suddenly, like Moses parting the Red Sea, everything parted and gave him complete space. Godly. Like a miracle. Couldn't have planned it.
+
+**Punchline/Closer:** "I couldn't have planned it. God parted a mosh pit so I could find my glasses in the mud. I don't think He's done laughing at me."
+
+**Emotions Elicited:** Pure laughter, Endearment ("he's so unaware"), Admiration (accidentally commands attention), Biblical resonance (Moses/Red Sea), Joy, Wonder
+
+**Scores (PTF / IR / ED / RP / ST):** 8 / 7 / 6 / 9 / 7 = **7.4 avg**
+
+**Why it works despite lower ED:** This is a PALATE CLEANSER story. Pure comedy + God's humor. It goes between heavy emotional stories to give her a break and make her laugh. High RP (9) means this is one she retells to friends: "He accidentally stopped a mosh pit because they thought he invented a new dance. He was looking for his glasses."
+
+**Placement notes:** Best as a comedy beat between two heavy stories. Pairs with the "God laughing at me" theme (Ambien/Busch Gardens, Bitcoin Dogs & Pigs). Reinforces the pattern: he doesn't try to get attention, attention finds him (valentines, Cheesecake Factory girl, mosh pit crowd).
+
+**Key trait signals:**
+- God relationship (humor): +1 (God parted the crowd like Moses — over glasses)
+- Funny/Self-deprecating: +1 (blind kid in mud, not a dancer)
+- Accidentally magnetic: +1 (same as valentines, Cheesecake Factory — attention finds him without trying)
+- Resilient/Doesn't quit: +1 (kept looking for 5-10 minutes in chaos)
+
+---
+
+## Running Vault Status (Updated)
+
+**Total stories in vault:** 33
+**Full standalones awaiting resequence:** #28 (Homeless Guitarist), #29 (Cheesecake Factory), #30 (Hula Hoop), #31 (Witch Airbnb), #33 (Mosh Pit Dance)
+**Brief mentions awaiting:** #32 (Bouncer), Hoarder House extension, Valentine's Day, Mystical Book (optional)
+**On bench:** Grandma's Headlock, Santa Discovery, Happy Medium, Nine AIs, St. Patrick's Day
+
+**Next action:** Wait for Sam to finish sending stories, then build next full resequencing with all verified facts.
