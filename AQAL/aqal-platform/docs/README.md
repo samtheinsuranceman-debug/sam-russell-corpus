@@ -8,7 +8,9 @@ Start here, in order:
    human must wire up (DB, Stripe, voice STT, LLM keys, PDF, generational data).
 3. **RESEARCH_LIBRARY_CATALOG.md** — human-readable catalog of all 3,307 research clusters
    (grouped by lens + section, with scores, evidence tags, and source counts).
-4. **research_library_catalog.csv** — the same catalog as a spreadsheet (one row per cluster).
+4. **SITE_COPY.md** — the agreed marketing copy (homepage hero, body, three pillars, generational
+   section) in readable form, verified against the code.
+5. **research_library_catalog.csv** — the same catalog as a spreadsheet (one row per cluster).
 
 Also at project root: HANDOFF_TO_MANUS.md, LAUNCH_KIT.md, RESEARCH_PIPELINE.md, MECHANICS_REVIEW.md.
 
