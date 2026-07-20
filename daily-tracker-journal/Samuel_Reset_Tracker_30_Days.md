@@ -946,7 +946,8 @@
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** TBD
 - **Vitamin C (Time/Dose/Stomach/Effect):** TBD
-- **Creatine monohydrate 5g:** TBD (Day 2)
+- **Creatine monohydrate 5g:** 1:30 PM (Day 2)
+- **Bupropion (Wellbutrin) 150mg:** 1:30 PM
 - **Other (Klonopin, etc.):** Klonopin 1.5mg previous night at 11:15 PM
 
 ### Physical / Body
