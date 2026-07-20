@@ -60,6 +60,8 @@
 
 ## STORY #12: Prom
 - **What happened:** Same girlfriend 4 years in high school. She was 1-2 years behind. Her prom came — he'd graduated 2 years prior. Felt like the old man. Faculty staring. Felt creepy. Did all the dancing anyway. Every song. Because she deserved that memory.
+- **Extension:** He knew 100% that she wanted to marry him at 18. But he thought they were both way too immature. He loved her, but thought he should continue to explore the world and meet other people before locking in that early. "Maybe I should have. I don't know." She's married with children now — a Christian family. He would never disturb that.
+- **Key detail:** Shows he respects marriage (won't interfere with her family). Shows he chose growth over comfort. Shows he loved someone and let them go because it was the right thing. Possible regret — but also maturity and respect for her current life.
 
 ## STORY #13: Aerosmith Kid
 - **Age:** Seventh grade
