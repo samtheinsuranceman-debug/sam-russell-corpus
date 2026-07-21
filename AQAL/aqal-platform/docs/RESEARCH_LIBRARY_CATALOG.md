@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,339 clusters · 6,936 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,371 clusters · 7,000 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,237 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,155 |
-| COST OF FAILURE — what's at stake (harm lens) | 886 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,245 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,165 |
+| COST OF FAILURE — what's at stake (harm lens) | 900 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,339** |
+| **Total** | **3,371** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,564 |
-| Strong | 939 |
-| Mixed | 458 |
-| Emerging | 378 |
+| Moderate | 1,574 |
+| Strong | 956 |
+| Mixed | 462 |
+| Emerging | 379 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,237)
+## PRACTICES — what strengthens the mind (impact lens)  (1,245)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1264,8 +1264,16 @@
 | 3273 | Time-Management Skill Training (Overall) | 3 | Mixed | 1 | practice: 'Bolsters clusters: Planning, Prioritization, Wellbeing' |
 | 3274 | Body Doubling / Focus Coworking | 2 | Emerging | 2 | practice: 'Bolsters clusters: Task Initiation, Accountability, Single-Tasking' |
 | 3275 | Temptation Bundling (Pair a Want with a Should) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Habit Formation, Procrastination Reduction, Commit |
+| 3298 | Deactivating Facebook / A Multi-Week Social-Media Break | 3 | Strong | 1 | practice: 'Bolsters clusters: subjective well-being, offline time with family, r |
+| 3299 | Phone-Free Bedroom / No Phone in the Hour Before Bed | 3 | Moderate | 2 | practice: 'Bolsters clusters: sleep quality, pre-sleep arousal down-regulation,  |
+| 3300 | Capping Social Media at ~30 Minutes a Day | 3 | Moderate | 3 | practice: 'Bolsters clusters: reduced loneliness/depression, life satisfaction,  |
+| 3301 | Curating the Feed / Unfollowing Idealized Accounts | 2 | Emerging | 2 | practice: 'Bolsters clusters: body image, reduced appearance comparison, self-co |
+| 3302 | Disabling Notifications / Do-Not-Disturb (Honest — Mixed) | 2 | Mixed | 2 | practice: 'Bolsters clusters: sustained attention, reduced ADHD-like symptoms, i |
+| 3303 | Limiting / Batch-Checking Negative News | 2 | Mixed | 2 | practice: 'Bolsters clusters: mood regulation, reduced catastrophizing, felt cal |
+| 3304 | Screen-Time Dashboards / Self-Monitoring (Honest — Weak Alone) | 1 | Mixed | 2 | practice: 'Bolsters clusters: usage awareness (only weakly self-control or reduc |
+| 3305 | Structured Digital Detox, Multi-Day (Honest — Mixed) | 2 | Mixed | 2 | practice: 'Bolsters clusters: self-control, well-being, work/academic performanc |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,155)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,165)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2424,8 +2432,18 @@
 | 3295 | Destiny Beliefs → Quitting at the First Conflict | 4 | Moderate | 2 | Degrades: relationship maintenance, coping with conflict, longevity |
 | 3296 | Mate-Choice Copying → Wanting Whoever Others Wanted | 3 | Moderate | 2 | Degrades: independent mate evaluation, red-flag detection, partner fit |
 | 3297 | Positive-Illusion Idealization → Blind to the Wrong Partner | 2 | Moderate | 2 | Degrades: red-flag detection, deal-breaker enforcement (only at the extreme) |
+| 3320 | Over-Leverage & Personal-Guarantee Exposure | 8 | Strong | 2 | Degrades: solvency, downside survival, downturn resilience, default avoidance |
+| 3321 | Loss-Chasing (Continuing to Bet to Recoup Losses) | 7 | Strong | 2 | Degrades: stop-loss discipline, impulse control, recoup-not-reason judgment, cap |
+| 3322 | Martingale / Doubling-Down After Losses | 7 | Strong | 2 | Degrades: bankroll survival, negative-EV discipline, tail-risk awareness, exit d |
+| 3323 | Overbetting & Risk of Ruin (Bet-Sizing Failure) | 7 | Strong | 2 | Degrades: capital preservation, position sizing, compounding, edge realization |
+| 3324 | Sunk-Cost Escalation in a Failing Business | 7 | Strong | 2 | Degrades: exit discipline, capital reallocation, honest appraisal, stop-loss on  |
+| 3325 | Boiler-Room / High-Pressure Sales Susceptibility | 6 | Moderate | 2 | Degrades: skepticism under pressure, scarcity resistance, verification disciplin |
+| 3326 | Concentration Risk — Under-Diversified Portfolio | 6 | Strong | 2 | Degrades: idiosyncratic-risk control, diversification, risk-adjusted return, emp |
+| 3327 | Crypto / Meme-Stock Herding — Buying the Top | 6 | Moderate | 2 | Degrades: independent valuation, buy-low discipline, drawdown survival, hype res |
+| 3328 | Customer / Revenue Concentration (Single-Client Dependency) | 6 | Moderate | 2 | Degrades: cash-flow stability, negotiating leverage, business resilience, financ |
+| 3329 | Illiquidity Traps (Locked-Up Alternatives & Non-Traded Products) | 5 | Moderate | 2 | Degrades: capital access, exit optionality, fee awareness, valuation transparenc |
 
-## COST OF FAILURE — what's at stake (harm lens)  (886)
+## COST OF FAILURE — what's at stake (harm lens)  (900)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3315,6 +3333,20 @@
 | 3285 | Splenic Rupture — Traumatic and the Deceptive 'Atraumatic' Kind | 4 | Moderate | 2 | Degrades: Bodily, Interoceptive, Financial |
 | 3286 | Perforated Appendicitis — When a Common Emergency Turns Septic | 4 | Strong | 3 | Degrades: Bodily, Interoceptive, Financial |
 | 3287 | Ovarian (Adnexal) Torsion — The Time-Sensitive Fertility Emergency | 3 | Moderate | 2 | Degrades: Bodily, Parental, Interoceptive |
+| 3306 | Methanol Poisoning | 5 | Strong | 2 | Degrades: vision, acid-base homeostasis, CNS integrity, survival |
+| 3307 | Caustic (Corrosive) Ingestion | 4 | Strong | 2 | Degrades: esophageal/gastric integrity, swallowing, nutrition, survival |
+| 3308 | Cyanide Poisoning | 5 | Strong | 2 | Degrades: cellular respiration, CNS/cardiac oxygen use, survival |
+| 3309 | Ethylene Glycol (Antifreeze) Poisoning | 5 | Strong | 2 | Degrades: kidney function, acid-base homeostasis, CNS integrity, survival |
+| 3310 | Tricyclic Antidepressant Overdose (Cardiotoxic) | 5 | Strong | 2 | Degrades: cardiac conduction, hemodynamic stability, consciousness, survival |
+| 3311 | Acetaminophen (Paracetamol) Overdose — Hepatotoxicity | 4 | Strong | 2 | Degrades: liver function, metabolic homeostasis, survival, interoceptive reserve |
+| 3312 | Lithium Toxicity (Acute & Chronic) | 4 | Strong | 2 | Degrades: cerebellar function, cognition, kidney function, neuromuscular control |
+| 3313 | Salicylate (Aspirin) Poisoning | 4 | Strong | 2 | Degrades: acid-base homeostasis, cerebral oxygenation, survival, interoceptive s |
+| 3314 | Iron Overdose (Acute Ingestion) | 4 | Moderate | 2 | Degrades: GI mucosal integrity, hemodynamic stability, liver function, survival |
+| 3315 | Digoxin Toxicity | 4 | Strong | 2 | Degrades: cardiac rhythm, potassium homeostasis, survival, interoceptive stabili |
+| 3316 | Serotonin Syndrome | 3 | Strong | 2 | Degrades: thermoregulation, neuromuscular control, autonomic stability, consciou |
+| 3317 | Acute Ethanol (Alcohol) Poisoning | 3 | Moderate | 2 | Degrades: respiratory drive, airway protection, consciousness, thermoregulation |
+| 3318 | Anticholinergic Toxidrome (Acute) | 3 | Moderate | 2 | Degrades: cognition/orientation, thermoregulation, cardiac rhythm, urinary/GI fu |
+| 3319 | Benzodiazepine Overdose (Acute) | 2 | Moderate | 2 | Degrades: respiratory drive, protective airway reflexes, arousal |
 
 ## Framework / uncategorized  (61)
 
