@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,406 clusters · 7,062 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,441 clusters · 7,132 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,258 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,175 |
-| COST OF FAILURE — what's at stake (harm lens) | 912 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,268 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,186 |
+| COST OF FAILURE — what's at stake (harm lens) | 926 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,406** |
+| **Total** | **3,441** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,587 |
+| Moderate | 1,606 |
 | Strong | 968 |
-| Mixed | 468 |
-| Emerging | 383 |
+| Mixed | 478 |
+| Emerging | 389 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,258)
+## PRACTICES — what strengthens the mind (impact lens)  (1,268)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1285,8 +1285,18 @@
 | 3340 | Breast Self-Examination (BSE) | 1 | Strong | 2 | practice: 'Bolsters clusters: Interoceptive, Bodily, Volitional' |
 | 3341 | Ovarian Cancer Screening (CA-125 + Transvaginal Ultrasound) | 1 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Volitional, Strategic' |
 | 3342 | Commercial Whole-Body MRI Screening (Asymptomatic Adults) | 1 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Strategic' |
+| 3365 | Hearing Protection Use in Noise | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 3366 | Workplace Strength Training for Neck/Shoulder Pain | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Mechanical, Interoceptive' |
+| 3367 | Anti-Fatigue Matting for Prolonged Standing | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Mechanical' |
+| 3368 | 20-20-20 Eye Rule for Digital Strain | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 3369 | Rest Breaks / Microbreaks During Computer Work | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Mechanical' |
+| 3370 | Vocal Hygiene for Heavy Voice Users | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 3371 | Ergonomic Keyboard & Wrist Posture for Upper-Limb RSI | 1 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Mechanical' |
+| 3372 | Lumbar Supports / Back Belts for Injury Prevention | 1 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Mechanical' |
+| 3373 | Proper Lifting Mechanics / Manual-Handling Training | 1 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Mechanical' |
+| 3374 | Participatory Ergonomics Interventions | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Mechanical' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,175)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,186)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2465,8 +2475,19 @@
 | 3362 | Kitchen-Sinking / Issue-Stacking | 5 | Emerging | 2 | Degrades: focused resolution, de-escalation, working memory in conflict |
 | 3363 | Score-Keeping / Quid-Pro-Quo Accounting | 5 | Moderate | 2 | Degrades: goodwill, generosity, trust in a partner's intent |
 | 3364 | Conflict Avoidance / Chronic Issue-Burying (Emotional Suppression) | 4 | Mixed | 2 | Degrades: intimacy, problem-resolution, authentic disclosure |
+| 3389 | Loss of Self-Identity After Bereavement | 7 | Moderate | 3 | Degrades: Intrapersonal, Existential, Emotional |
+| 3390 | Disenfranchised Grief | 6 | Moderate | 2 | Degrades: Emotional, Social-Perceptual, Existential |
+| 3391 | Experiential Avoidance of Grief Cues | 6 | Moderate | 2 | Degrades: Emotional, Volitional, Intrapersonal |
+| 3392 | Failure to Oscillate (Dual-Process Breakdown) | 6 | Moderate | 2 | Degrades: Volitional, Emotional, Existential |
+| 3393 | Grief Rumination | 6 | Moderate | 2 | Degrades: Emotional, Intrapersonal, Meta-Cognitive |
+| 3394 | Post-Caregiving Role Loss & Caregiver Bereavement | 6 | Moderate | 2 | Degrades: Existential, Intrapersonal, Emotional, Parental |
+| 3395 | Secondary-Loss Cascade | 6 | Emerging | 2 | Degrades: Existential, Financial, Community, Emotional |
+| 3396 | Change Overload / Transition Fatigue | 5 | Mixed | 2 | Degrades: Volitional, Emotional, Interoceptive, Strategic |
+| 3397 | Externalized / Disrupted Continuing Bonds | 5 | Moderate | 2 | Degrades: Emotional, Existential, Intrapersonal |
+| 3398 | Kübler-Ross 'Stages' Over-Application (Myth) | 4 | Mixed | 2 | Degrades: Emotional, Meta-Cognitive, Existential |
+| 3399 | Anniversary Reactions | 3 | Mixed | 2 | Degrades: Emotional, Intrapersonal |
 
-## COST OF FAILURE — what's at stake (harm lens)  (912)
+## COST OF FAILURE — what's at stake (harm lens)  (926)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3382,6 +3403,20 @@
 | 3352 | Hamstring Strain — The Recurring Sprinter's Tax | 2 | Strong | 2 | cost: 'Degrades: Bodily, Volitional, Financial' |
 | 3353 | Spondylolysis / Pars Fracture — Adolescent Back Pain That Isn't a Muscle Strain | 3 | Moderate | 2 | cost: 'Degrades: Bodily, Volitional' |
 | 3354 | Adductor / Groin Strain — Football's Quietly Costly Muscle Injury | 2 | Moderate | 2 | cost: 'Degrades: Bodily, Volitional' |
+| 3375 | Fatal Familial Insomnia — The Prion Disease That Abolishes Sleep | 5 | Moderate | 2 | Degrades: Interoceptive sleep architecture, Autonomic regulation, Bodily surviva |
+| 3376 | NREM Parasomnias (Disorders of Arousal) — Sleepwalking, Sleep Terrors & Sleep-Related Injury | 3 | Moderate | 3 | Degrades: Bodily safety, Interoceptive sleep continuity, Interpersonal trust, Em |
+| 3377 | Sleep-Related Hypermotor Epilepsy — Seizures Mistaken for Nightmares | 4 | Moderate | 2 | Degrades: Neurological integrity, Bodily safety, Interoceptive sleep continuity, |
+| 3378 | Kleine-Levin Syndrome — Recurrent Hypersomnia That Steals Adolescence | 3 | Moderate | 3 | Degrades: Meta-Cognitive function, Interpersonal relationships, Existential cont |
+| 3379 | Non-24-Hour Sleep-Wake Disorder — A Clock That Never Entrains | 3 | Moderate | 2 | Degrades: Interoceptive circadian entrainment, Emotional stability, Financial/oc |
+| 3380 | Delayed Sleep-Wake Phase Disorder — When the Body Clock Runs Late | 3 | Moderate | 2 | Degrades: Interoceptive circadian alignment, Emotional stability, Meta-Cognitive |
+| 3381 | Idiopathic Hypersomnia — Unrefreshing Sleep and the 9-Year Diagnostic Delay | 3 | Emerging | 3 | Degrades: Interoceptive alertness, Meta-Cognitive function, Intrapersonal wellbe |
+| 3382 | Nightmare Disorder — Recurrent Dream-Fear and Independent Suicide Risk | 3 | Moderate | 2 | Degrades: Emotional regulation, Interoceptive sleep quality, Intrapersonal wellb |
+| 3383 | Periodic Limb Movement Disorder (PLMD) — The Cost of Repetitive Nocturnal Arousals | 3 | Mixed | 3 | Degrades: Bodily cardiovascular health, Interoceptive sleep continuity, Emotiona |
+| 3384 | Sleep-Related Eating Disorder (SRED) — Eating Asleep and the Zolpidem Trigger | 2 | Moderate | 2 | Degrades: Bodily metabolic health, Interoceptive control, Emotional wellbeing, F |
+| 3385 | Recurrent Isolated Sleep Paralysis — Awake, Aware and Unable to Move | 1 | Moderate | 2 | Degrades: Emotional stability, Interoceptive sleep quality, Intrapersonal wellbe |
+| 3386 | Catathrenia (Nocturnal Groaning) — The Bed-Partner's Burden | 1 | Emerging | 2 | Degrades: Interpersonal harmony, Interoceptive sleep quality, Intrapersonal well |
+| 3387 | Exploding Head Syndrome — A Loud Sensory Jolt at Sleep Onset | 1 | Emerging | 2 | Degrades: Emotional stability, Interoceptive sleep onset, Intrapersonal wellbein |
+| 3388 | Advanced Sleep-Wake Phase Disorder — The Clock That Runs Too Early | 2 | Emerging | 2 | Degrades: Interoceptive circadian alignment, Interpersonal/social participation, |
 
 ## Framework / uncategorized  (61)
 
