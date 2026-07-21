@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,371 clusters · 7,000 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,406 clusters · 7,062 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,245 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,165 |
-| COST OF FAILURE — what's at stake (harm lens) | 900 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,258 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,175 |
+| COST OF FAILURE — what's at stake (harm lens) | 912 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,371** |
+| **Total** | **3,406** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,574 |
-| Strong | 956 |
-| Mixed | 462 |
-| Emerging | 379 |
+| Moderate | 1,587 |
+| Strong | 968 |
+| Mixed | 468 |
+| Emerging | 383 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,245)
+## PRACTICES — what strengthens the mind (impact lens)  (1,258)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1272,8 +1272,21 @@
 | 3303 | Limiting / Batch-Checking Negative News | 2 | Mixed | 2 | practice: 'Bolsters clusters: mood regulation, reduced catastrophizing, felt cal |
 | 3304 | Screen-Time Dashboards / Self-Monitoring (Honest — Weak Alone) | 1 | Mixed | 2 | practice: 'Bolsters clusters: usage awareness (only weakly self-control or reduc |
 | 3305 | Structured Digital Detox, Multi-Day (Honest — Mixed) | 2 | Mixed | 2 | practice: 'Bolsters clusters: self-control, well-being, work/academic performanc |
+| 3330 | Statin Adherence in Secondary Prevention | 4 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Bodily, Strategic' |
+| 3331 | Coronary Artery Calcium (CAC) Scoring | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Strategic, Meta-Cognitive' |
+| 3332 | Ambulatory Blood-Pressure Monitoring (24-hour ABPM) | 3 | Strong | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Meta-Cognitive' |
+| 3333 | HPV Self-Sampling for Cervical Screening | 3 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Volitional, Interoceptive' |
+| 3334 | Multitarget Stool DNA Testing (Cologuard) for Colorectal Cancer | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Volitional, Strategic' |
+| 3335 | CPAP Adherence for Obstructive Sleep Apnea | 3 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Volitional' |
+| 3336 | Carotid Artery Stenosis Screening (Asymptomatic Adults) | 1 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Strategic' |
+| 3337 | Dental Flossing / Interdental Cleaning | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Volitional' |
+| 3338 | Skin Cancer Screening — Whole-Body Skin Exam & Self-Checks | 2 | Mixed | 1 | practice: 'Bolsters clusters: Interoceptive, Bodily, Volitional' |
+| 3339 | Testicular Self-Examination | 2 | Mixed | 1 | practice: 'Bolsters clusters: Interoceptive, Bodily, Volitional' |
+| 3340 | Breast Self-Examination (BSE) | 1 | Strong | 2 | practice: 'Bolsters clusters: Interoceptive, Bodily, Volitional' |
+| 3341 | Ovarian Cancer Screening (CA-125 + Transvaginal Ultrasound) | 1 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Volitional, Strategic' |
+| 3342 | Commercial Whole-Body MRI Screening (Asymptomatic Adults) | 1 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Strategic' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,165)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,175)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2442,8 +2455,18 @@
 | 3327 | Crypto / Meme-Stock Herding — Buying the Top | 6 | Moderate | 2 | Degrades: independent valuation, buy-low discipline, drawdown survival, hype res |
 | 3328 | Customer / Revenue Concentration (Single-Client Dependency) | 6 | Moderate | 2 | Degrades: cash-flow stability, negotiating leverage, business resilience, financ |
 | 3329 | Illiquidity Traps (Locked-Up Alternatives & Non-Traded Products) | 5 | Moderate | 2 | Degrades: capital access, exit optionality, fee awareness, valuation transparenc |
+| 3355 | Negative Affect Reciprocity / Escalation Spirals | 8 | Strong | 3 | Degrades: de-escalation, repair, felt goodwill |
+| 3356 | The Four Horsemen (Gottman) — and the Prediction Overclaim | 7 | Mixed | 3 | Degrades: conflict de-escalation, relationship stability, felt safety |
+| 3357 | Criticism as Global Character Attack (vs Specific Complaint) | 6 | Moderate | 2 | Degrades: safe startup, receptivity, problem-focus |
+| 3358 | Diffuse Physiological Arousal (Flooding) in Conflict | 6 | Moderate | 2 | Degrades: listening, empathy, problem-solving, self-soothing |
+| 3359 | Gridlock on Perpetual Problems | 6 | Emerging | 2 | Degrades: dialogue, acceptance, long-term engagement |
+| 3360 | Turning Away From Bids for Connection | 6 | Emerging | 2 | Degrades: everyday intimacy, emotional bank account, conflict resilience |
+| 3361 | Defensiveness (Counterattack, Denial, Victim-Stance) | 5 | Moderate | 2 | Degrades: accountability, repair, complaint-resolution |
+| 3362 | Kitchen-Sinking / Issue-Stacking | 5 | Emerging | 2 | Degrades: focused resolution, de-escalation, working memory in conflict |
+| 3363 | Score-Keeping / Quid-Pro-Quo Accounting | 5 | Moderate | 2 | Degrades: goodwill, generosity, trust in a partner's intent |
+| 3364 | Conflict Avoidance / Chronic Issue-Burying (Emotional Suppression) | 4 | Mixed | 2 | Degrades: intimacy, problem-resolution, authentic disclosure |
 
-## COST OF FAILURE — what's at stake (harm lens)  (900)
+## COST OF FAILURE — what's at stake (harm lens)  (912)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3347,6 +3370,18 @@
 | 3317 | Acute Ethanol (Alcohol) Poisoning | 3 | Moderate | 2 | Degrades: respiratory drive, airway protection, consciousness, thermoregulation |
 | 3318 | Anticholinergic Toxidrome (Acute) | 3 | Moderate | 2 | Degrades: cognition/orientation, thermoregulation, cardiac rhythm, urinary/GI fu |
 | 3319 | Benzodiazepine Overdose (Acute) | 2 | Moderate | 2 | Degrades: respiratory drive, protective airway reflexes, arousal |
+| 3343 | ACL Rupture — Acute Blowout, Re-Injury & the OA Clock | 4 | Strong | 3 | cost: 'Degrades: Bodily, Financial, Volitional, Emotional' |
+| 3344 | UCL Elbow Injury ('Tommy John') — The Pitcher's Reconstruction Gamble | 4 | Strong | 2 | cost: 'Degrades: Bodily, Financial, Strategic' |
+| 3345 | Acute Rotator-Cuff Full-Thickness Tear — When the Tendon Snaps, Not Frays | 4 | Moderate | 2 | cost: 'Degrades: Bodily, Financial, Volitional' |
+| 3346 | Patellar Tendon Rupture — The Extensor Mechanism Gives Way | 4 | Moderate | 2 | cost: 'Degrades: Bodily, Financial, Volitional' |
+| 3347 | Anterior Shoulder Dislocation — First One Predicts the Next | 3 | Strong | 2 | cost: 'Degrades: Bodily, Adversarial, Volitional' |
+| 3348 | Meniscus Tear — The Cartilage You Can't Fully Replace | 3 | Strong | 2 | cost: 'Degrades: Bodily, Interoceptive, Financial' |
+| 3349 | Acute Lateral Ankle Sprain — The 'Minor' Injury That Isn't | 2 | Strong | 2 | cost: 'Degrades: Bodily, Interoceptive' |
+| 3350 | SLAP Tear — The Overhead Athlete's Career Wildcard | 3 | Moderate | 2 | cost: 'Degrades: Bodily, Financial, Volitional' |
+| 3351 | High Ankle (Syndesmotic) Sprain — Twice the Recovery of a Regular Sprain | 3 | Moderate | 2 | cost: 'Degrades: Bodily, Volitional' |
+| 3352 | Hamstring Strain — The Recurring Sprinter's Tax | 2 | Strong | 2 | cost: 'Degrades: Bodily, Volitional, Financial' |
+| 3353 | Spondylolysis / Pars Fracture — Adolescent Back Pain That Isn't a Muscle Strain | 3 | Moderate | 2 | cost: 'Degrades: Bodily, Volitional' |
+| 3354 | Adductor / Groin Strain — Football's Quietly Costly Muscle Injury | 2 | Moderate | 2 | cost: 'Degrades: Bodily, Volitional' |
 
 ## Framework / uncategorized  (61)
 
