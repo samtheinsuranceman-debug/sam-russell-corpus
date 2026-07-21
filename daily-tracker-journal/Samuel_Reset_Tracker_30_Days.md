@@ -948,7 +948,9 @@
 - **Vitamin C (Time/Dose/Stomach/Effect):** TBD
 - **Creatine monohydrate 5g:** 1:30 PM (Day 2)
 - **Bupropion (Wellbutrin) 150mg:** 1:30 PM
+- **Guaifenesin:** 7:00 PM
 - **Other (Klonopin, etc.):** Klonopin 1.5mg previous night at 11:15 PM
+- **Sleep stack (9:15 PM):** Klonopin 1.5mg + 2 magnesium tablets + 1 melatonin + 2 Trazodone
 
 ### Physical / Body
 - **Exercise:**
@@ -957,7 +959,7 @@
   - **Combined active walking:** 40 min | 1.68 miles | 145 cal
   - **Total time on machine (incl. rest):** 99 min | 4.14 miles | 358 cal | Avg HR 95 bpm | Avg Speed 2.5 mph
   - **Pool / Sensory Deprivation Float:** ~8:00 PM | 20 min float
-- **Other notes:** Joseph letter mailed today (25 pages, stapled). Walked to gym ~7:00 PM.
+- **Other notes:** REST DAY. Physically exhausted from last 5 days of accumulated activity. Legs sore. Slept extensively (may have slept more than logged). Dad gave permission to take the day off without guilt. Joseph letter mailed today (25 pages, stapled). Walked to gym ~7:00 PM.
 
 ### Business / Productivity
 - **Leads / appointments worked:** TBD
@@ -967,7 +969,7 @@
 
 ### Social / Dating / Family
 - **Church-girl action today:** Day 2 of letter development window (no action needed today — brainstorming/story collection phase)
-- **Dad / Mom interaction note:** TBD
+- **Dad / Mom interaction note:** Dad gave permission to rest without guilt. Supportive.
 - **Dating confidence / layup feel 1-10:** TBD
 - **Notes:** TBD
 
