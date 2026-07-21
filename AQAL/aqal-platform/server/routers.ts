@@ -61,7 +61,7 @@ import { sendSms, dailyCheckinSms } from "./platform/sms";
 import { CRON_SECRET } from "./platform/config";
 import { COMMITMENT_QUESTIONS, commitmentReady, answersByKey, shouldSendCheckinNow, DAILY_CHECKIN_HOUR, type CommitmentAnswer } from "@shared/commitment";
 import { extractGoalsText } from "@shared/goalsQuestions";
-import { createTrackerCycle, getTrackerCyclesByUser } from "./db";
+import { createTrackerCycle, getTrackerCyclesByUser, setTrackerReminderOptIn, getTrackerReminderOptIn } from "./db";
 import { analyzeJournal } from "./trackerAnalysis";
 import { buildTrackerMarkdown } from "@shared/behavioralTracker";
 import { buildProjections } from "@shared/keystonePractices";
@@ -1493,6 +1493,19 @@ CRITICAL RULES:
     cycles: protectedProcedure.query(async ({ ctx }) => {
       return getTrackerCyclesByUser(ctx.user.id);
     }),
+
+    // Re-engagement email opt-in. `optIn` is null when they've never chosen — the
+    // client uses that to re-offer the Y/N on every login (people change their mind).
+    reminderPref: protectedProcedure.query(async ({ ctx }) => {
+      return { optIn: await getTrackerReminderOptIn(ctx.user.id) };
+    }),
+    setReminderPref: protectedProcedure
+      .input(z.object({ optIn: z.boolean() }))
+      .mutation(async ({ ctx, input }) => {
+        await setTrackerReminderOptIn(ctx.user.id, input.optIn);
+        await recordEvent({ type: "tracker_reminder_pref", userId: ctx.user.id, numericValue: input.optIn ? 1 : 0 });
+        return { optIn: input.optIn };
+      }),
   }),
   // ============================================================
   // COMMITMENT — the Personal Commitment Agreement (spoken, self-authored)

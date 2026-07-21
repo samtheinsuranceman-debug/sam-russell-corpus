@@ -500,6 +500,8 @@ function BehavioralTrackerCard({ user }: { user: any }) {
   const isFree = !user?.membershipTier || user?.membershipTier === "free";
   const docQuery = trpc.tracker.doc.useQuery({ days }, { enabled: !isFree });
   const cyclesQuery = trpc.tracker.cycles.useQuery(undefined, { enabled: !isFree });
+  const pref = trpc.tracker.reminderPref.useQuery(undefined, { enabled: !isFree });
+  const setPref = trpc.tracker.setReminderPref.useMutation({ onSuccess: () => pref.refetch() });
   const submit = trpc.tracker.submitJournal.useMutation({
     onSuccess: (res: any) => {
       if (res?.error) return toast.error(res.error);
@@ -543,6 +545,16 @@ function BehavioralTrackerCard({ user }: { user: any }) {
         </p>
       ) : (
         <>
+          {/* Reminder opt-in — always changeable; also re-offered on every login */}
+          <div className="flex items-center gap-2 mb-5 text-[12px]">
+            <span className="text-muted-foreground">Cycle reminder emails:</span>
+            <button onClick={() => setPref.mutate({ optIn: true })}
+              className={`px-2.5 py-0.5 rounded border transition-colors ${pref.data?.optIn === true ? "border-primary text-primary bg-primary/10" : "border-border text-muted-foreground hover:text-foreground"}`}>On</button>
+            <button onClick={() => setPref.mutate({ optIn: false })}
+              className={`px-2.5 py-0.5 rounded border transition-colors ${pref.data?.optIn === false ? "border-primary text-primary bg-primary/10" : "border-border text-muted-foreground hover:text-foreground"}`}>Off</button>
+            {pref.data?.optIn == null && <span className="text-muted-foreground/60">(not set)</span>}
+          </div>
+
           <div className="flex flex-wrap items-center gap-3 mb-5">
             <div className="flex gap-1">
               {[30, 60, 90].map((d) => (
@@ -830,6 +842,42 @@ function SettingsTab({ user }: { user: any }) {
 // ============================================================
 // MAIN PORTAL COMPONENT
 // ============================================================
+// Login-time reminder prompt — shown once per session so the Y/N is re-offered
+// on every login (people change their mind), independent of the persistent toggle.
+function TrackerReminderPrompt({ user }: { user: any }) {
+  const SKEY = "aqal_tracker_prompt_seen";
+  const pref = trpc.tracker.reminderPref.useQuery(undefined, { enabled: !!user });
+  const setPref = trpc.tracker.setReminderPref.useMutation();
+  const [seen, setSeen] = useState<boolean>(() => {
+    try { return sessionStorage.getItem(SKEY) === "1"; } catch { return false; }
+  });
+  function close() { try { sessionStorage.setItem(SKEY, "1"); } catch { /* ignore */ } setSeen(true); }
+  function choose(optIn: boolean) {
+    setPref.mutate({ optIn }, {
+      onSuccess: () => { pref.refetch(); toast.success(optIn ? "We'll nudge you each cycle." : "No reminders — you can turn them on any time."); },
+    });
+    close();
+  }
+  if (seen || pref.isLoading) return null;
+  const current = pref.data?.optIn;
+  const line = current === true
+    ? "Cycle reminders are ON. Keep getting a nudge to start each new tracker cycle?"
+    : current === false
+    ? "Cycle reminders are OFF. Want us to nudge you to start each new tracker cycle after all?"
+    : "Want a gentle nudge to start each new 30/60/90-day tracker cycle? You can change this any time.";
+  return (
+    <div className="mb-6 rounded-lg border border-primary/25 bg-primary/[0.06] px-4 py-3 flex items-center gap-3 flex-wrap">
+      <Calendar className="w-4 h-4 text-primary shrink-0" />
+      <p className="text-[13px] text-foreground/85 flex-1 min-w-[220px]">{line}</p>
+      <div className="flex gap-2 items-center">
+        <Button size="sm" className="h-8 text-[12px]" onClick={() => choose(true)}>Yes, remind me</Button>
+        <Button size="sm" variant="ghost" className="h-8 text-[12px] text-muted-foreground" onClick={() => choose(false)}>No thanks</Button>
+        <button aria-label="Dismiss" onClick={close} className="text-muted-foreground/60 hover:text-foreground px-1 text-lg leading-none">×</button>
+      </div>
+    </div>
+  );
+}
+
 export default function Portal() {
   const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>("overview");
@@ -870,6 +918,7 @@ export default function Portal() {
       <PortalNav activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
 
       <div className="max-w-[1180px] mx-auto px-5 py-8">
+        <TrackerReminderPrompt user={user} />
         {activeTab === "overview" && <OverviewTab user={user} scores={profileData.data?.scores} assessment={profileData.data?.assessment} />}
         {activeTab === "profile" && <ProfileTab scores={profileData.data?.scores} />}
         {activeTab === "commitment" && <CommitmentPanel />}

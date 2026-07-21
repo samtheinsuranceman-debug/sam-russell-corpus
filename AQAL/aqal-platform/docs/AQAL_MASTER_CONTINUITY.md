@@ -108,9 +108,15 @@ predictability/engineering framing — that's a copy edit inside `GenerationSect
    a summary, per-line adjustments (↑/→/↓), an adherence read, and a **refreshed hypothetical Vision** —
    stored per cycle in the new `trackerCycles` table (migration `drizzle/0014_shallow_nextwave.sql`),
    with cycle history shown in the portal. LLM path + deterministic mock; every number tagged
-   self-reported/unverified. _Still pending:_ (a) the recurring **re-engagement email cadence** (~2×/mo)
-   to pull people back each cycle — wire into `server/reminders`/cron; (b) **voice STT** so the journal
-   can be spoken end-to-end in-app rather than pasted (see INSTRUCTIONS §4.3).
+   self-reported/unverified.
+   ✅ **Re-engagement email cadence — BUILT, opt-in.** `server/scheduledTrackerReengagement.ts`
+   (endpoint `/api/scheduled/tracker-reengagement`, register a ~twice-monthly heartbeat cron) emails
+   **only opted-in** users, throttled to ~14 days, via the existing `sendEmail` seam (mock-safe). Opt-in
+   is a revocable Y/N stored on the user (`users.trackerReminderOptIn`, null = never chosen) and is
+   surfaced two ways: a **persistent On/Off toggle** in the tracker card, and a **login-time prompt**
+   (`TrackerReminderPrompt`) re-offered **once every login** so people can change their mind — exactly
+   as requested. _Still pending:_ **voice STT** so the journal can be spoken end-to-end in-app rather
+   than pasted (see INSTRUCTIONS §4.3), and registering the cron schedule at deploy (INSTRUCTIONS).
 4. **Generational-band data source** — the cohort percentiles are currently model-based estimates; a real
    age/generation normative table would replace the estimate. (See INSTRUCTIONS doc.)
 5. **Meta-level "engineering strengths / dismantling weaknesses" explainer pages** — the research

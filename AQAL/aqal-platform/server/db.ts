@@ -1366,3 +1366,36 @@ export async function createTrackerCycle(row: InsertTrackerCycle) {
     .orderBy(desc(trackerCycles.createdAt));
   return rows[0] ?? null;
 }
+
+// ---- Tracker re-engagement email opt-in ----
+export async function setTrackerReminderOptIn(userId: number, optIn: boolean) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(users).set({ trackerReminderOptIn: optIn }).where(eq(users.id, userId));
+}
+
+export async function getTrackerReminderOptIn(userId: number): Promise<boolean | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select({ v: users.trackerReminderOptIn }).from(users).where(eq(users.id, userId)).limit(1);
+  return (rows[0]?.v ?? null) as boolean | null;
+}
+
+// Opted-in users with an email who haven't been nudged within `throttleDays`.
+export async function getTrackerReengagementRecipients(throttleDays = 14): Promise<Array<{ userId: number; email: string }>> {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db.select({ userId: users.id, email: users.email, last: users.trackerReminderLastSentAt })
+    .from(users)
+    .where(and(eq(users.trackerReminderOptIn, true), sql`${users.email} IS NOT NULL`));
+  const cutoff = Date.now() - throttleDays * 86_400_000;
+  return rows
+    .filter((r) => !!r.email && (!r.last || new Date(r.last as any).getTime() < cutoff))
+    .map((r) => ({ userId: r.userId, email: r.email as string }));
+}
+
+export async function markTrackerReminderSent(userId: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(users).set({ trackerReminderLastSentAt: new Date() }).where(eq(users.id, userId));
+}

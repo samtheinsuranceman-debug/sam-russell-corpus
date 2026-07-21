@@ -60,6 +60,8 @@ async function startServer() {
   // Scheduled handlers (before tRPC and Vite fallthrough)
   const { driftAlertHandler } = await import("../scheduledDriftAlert");
   app.post("/api/scheduled/drift-alert", driftAlertHandler);
+  const { trackerReengagementHandler } = await import("../scheduledTrackerReengagement");
+  app.post("/api/scheduled/tracker-reengagement", trackerReengagementHandler);
 
   // tRPC API
   app.use(

@@ -51,6 +51,10 @@ Create `.env` (server) and Vite env as needed:
 5. **PDF generation** — for downloadable reports/tracker templates (earlier requests asked for PDFs of
    the assessment + research). Wire a server-side PDF step or reuse the repo's `ai-consciousness-100k/
    build_pdf.py` pattern if generating from Markdown.
+7. **Scheduled jobs (heartbeat cron)** — register two POST callbacks: `/api/scheduled/drift-alert`
+   (daily) and `/api/scheduled/tracker-reengagement` (~twice monthly, e.g. `0 0 14 1,15 * *`). The
+   latter emails only users who opted in to cycle reminders (throttled ~14 days). Both are cron-only
+   (reject non-cron callers). Uses the `sendEmail` seam — mock-safe without a Resend key.
 6. **Generational normative data** *(see OPEN DECISION #1 in the continuity doc)* — cohort rarity is
    currently a **model-based estimate**, not measured percentiles. To make it real, supply an
    age/generation normative table per line and replace the estimate in `Results.tsx` /
@@ -71,7 +75,8 @@ curation + scoring + freshness, not DRM. (Details in `HANDOFF_TO_MANUS.md`.)
       LLM + deterministic mock; rendered on Results.tsx. Needs live LLM keys for the non-mock path.
 - [x] **30/60/90-day tracker** — core loop built (Portal Tools → BehavioralTrackerCard; tracker router;
       server/trackerAnalysis.ts; trackerCycles table + migration 0014). Remaining: recurring
-      re-engagement email cadence (server/reminders/cron) + in-app voice STT for the journal.
+      re-engagement email cadence = BUILT (opt-in Y/N; persistent toggle + login-time re-prompt;
+      server/scheduledTrackerReengagement.ts). Remaining: register the cron (§4.7) + in-app voice STT.
 - [x] **Generational rarity** — now a toggle: `client/src/config/features.ts → SHOW_GENERATIONAL_RARITY` (default ON). If kept ON for production, still wire a real age/generation normative table (see §4.6).
 - [ ] Reframed **meta-level explainer pages** (engineer strengths / dismantle weaknesses).
 

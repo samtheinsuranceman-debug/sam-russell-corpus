@@ -18,6 +18,12 @@ export const users = mysqlTable("users", {
   membershipTier: mysqlEnum("membership_tier", ["free", "silver", "gold", "platinum"]).default("free").notNull(),
   // Granted free access via a beta passcode (also used to count the first-N cap).
   betaAccess: boolean("beta_access").default(false).notNull(),
+  // Tracker re-engagement email opt-in. null = never chosen (so we re-offer it on
+  // login); true/false = their explicit, revocable choice. Only opted-in users get
+  // the ~twice-a-month "start your next cycle" nudge.
+  trackerReminderOptIn: boolean("tracker_reminder_opt_in"),
+  // When we last sent that nudge — throttles the cadence.
+  trackerReminderLastSentAt: timestamp("tracker_reminder_last_sent_at"),
 });
 
 export type User = typeof users.$inferSelect;
