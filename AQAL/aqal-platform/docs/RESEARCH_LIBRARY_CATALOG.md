@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,473 clusters · 7,197 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,507 clusters · 7,258 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,278 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,195 |
-| COST OF FAILURE — what's at stake (harm lens) | 939 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,287 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,206 |
+| COST OF FAILURE — what's at stake (harm lens) | 953 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,473** |
+| **Total** | **3,507** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,619 |
-| Strong | 979 |
-| Mixed | 482 |
-| Emerging | 393 |
+| Moderate | 1,640 |
+| Strong | 984 |
+| Mixed | 485 |
+| Emerging | 398 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,278)
+## PRACTICES — what strengthens the mind (impact lens)  (1,287)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1305,8 +1305,17 @@
 | 3407 | Shared Reading Groups (Adult Wellbeing) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Linguistic, Emotional, Existential' |
 | 3408 | Retraining Maladaptive Social Cognition (Loneliness CBT) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Interpersonal, Meta-Cognitive, Social-P |
 | 3409 | In-Person Peer-Support Groups | 2 | Mixed | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Emotional, Existential' |
+| 3432 | Emotion-Regulation Choice (Distraction vs. Reappraisal by Intensity) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Emotional, Strategic' |
+| 3433 | Visuospatial Interference (Tetris) for Intrusive Trauma Memories | 3 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive, Interoceptive' |
+| 3434 | Arousal Reappraisal Under Stress (Stress-Is-Functional) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Meta-Cognitive' |
+| 3435 | Regulatory / Coping Flexibility | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive, Strategic, Volitional' |
+| 3436 | Downward Counterfactual Thinking ('It Could Have Been Worse') | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive, Intrapersonal' |
+| 3437 | Venting / Catharsis (Anger Release) | 1 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive' |
+| 3438 | Positive Mental Imagery Training (Imagery CBM) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Meta-Cognitive' |
+| 3439 | Facial Feedback / Smiling to Shift Affect | 1 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive' |
+| 3440 | Instrumental Emotion Regulation (Regulating Toward Useful, Not Just Pleasant, States) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Emotional, Volitional, Adversarial |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,195)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,206)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2505,8 +2514,19 @@
 | 3429 | Reduced Personal Accomplishment / Professional Efficacy | 5 | Mixed | 2 | Degrades: self-efficacy, felt competence, motivation to persist |
 | 3430 | Subjective Career Plateau → Disengagement | 5 | Moderate | 1 | Degrades: ambition, commitment, leadership drive |
 | 3431 | Vocational Identity Foreclosure | 4 | Emerging | 2 | Degrades: authentic goal-fit, self-knowledge, adaptive commitment |
+| 3455 | Comparison-Driven Goal Contamination | 5 | Moderate | 1 | Degrades: goal authenticity, strategic focus, intrinsic motivation, life directi |
+| 3456 | Positional Income Preference | 5 | Moderate | 1 | Degrades: absolute wealth-building, rational trade-offs, satisfaction with real  |
+| 3457 | Positional-Goods Arms Race | 5 | Moderate | 1 | Degrades: financial reserves, durable satisfaction, meaning beyond rank |
+| 3458 | Status Anxiety | 5 | Moderate | 2 | Degrades: well-being, social trust, mental & physical health, felt worth |
+| 3459 | The Aspiration Treadmill After Success | 5 | Moderate | 1 | Degrades: durable satisfaction, contentment with real gains, calm ambition |
+| 3460 | The Expenditure Cascade | 5 | Moderate | 1 | Degrades: saving, financial slack, spending discipline, true-need budgeting |
+| 3461 | Zero-Sum Belief About Others' Success | 5 | Moderate | 2 | Degrades: collaboration, opportunity perception, entrepreneurial initiative, gen |
+| 3462 | Last-Place Aversion | 4 | Moderate | 1 | Degrades: rational risk-taking, self-interested policy support, generosity to th |
+| 3463 | Relative Deprivation | 4 | Mixed | 1 | Degrades: contentment, achievement striving, intergroup trust, health |
+| 3464 | Schadenfreude Entanglement | 4 | Moderate | 2 | Degrades: cooperation, empathy, reputation, coalition-building |
+| 3465 | The Benign–Malicious Envy Fork | 4 | Moderate | 2 | Degrades: goal-directed effort, self-concept, cooperation — but one branch can m |
 
-## COST OF FAILURE — what's at stake (harm lens)  (939)
+## COST OF FAILURE — what's at stake (harm lens)  (953)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3449,6 +3469,20 @@
 | 3420 | Radiotherapy Late Effects (Fibrosis & Second Cancers) | 3 | Moderate | 2 | Degrades: Bodily, Interoceptive, Aesthetic, Financial |
 | 3421 | Superior Vena Cava Syndrome | 3 | Moderate | 2 | Degrades: Bodily, Interoceptive, Aesthetic, Financial |
 | 3422 | Trastuzumab (HER2) Cardiotoxicity | 3 | Moderate | 2 | Degrades: Bodily, Interoceptive, Volitional, Financial |
+| 3441 | Sudden Cardiac Death in Young Athletes | 5 | Strong | 2 | Degrades: survival, athletic capacity, community/team resilience |
+| 3442 | Acute & Fulminant Myocarditis | 4 | Moderate | 2 | Degrades: myocardial contractility, rhythm stability, survival |
+| 3443 | Catecholaminergic Polymorphic VT (CPVT) | 5 | Moderate | 2 | Degrades: exertional rhythm control, consciousness, survival |
+| 3444 | Congenital Long-QT Syndrome | 4 | Strong | 2 | Degrades: cardiac repolarization, rhythm stability, consciousness, survival |
+| 3445 | Loeys-Dietz Syndrome | 5 | Moderate | 2 | Degrades: aortic/arterial wall integrity, survival |
+| 3446 | Arrhythmogenic Right Ventricular Cardiomyopathy | 4 | Moderate | 2 | Degrades: ventricular rhythm, myocardial structure, survival |
+| 3447 | Brugada Syndrome | 4 | Moderate | 2 | Degrades: ventricular rhythm, hemodynamic stability, survival |
+| 3448 | Cardiac Sarcoidosis | 4 | Moderate | 2 | Degrades: cardiac conduction, ventricular rhythm, myocardial function, survival |
+| 3449 | Complete (Third-Degree) Heart Block | 4 | Moderate | 2 | Degrades: cardiac conduction, cerebral perfusion, consciousness, survival |
+| 3450 | Bicuspid Aortic Valve & Aortopathy | 3 | Strong | 2 | Degrades: aortic wall integrity, valve function, survival |
+| 3451 | Takotsubo (Stress) Cardiomyopathy | 3 | Strong | 2 | Degrades: ventricular contractility, hemodynamic stability, survival |
+| 3452 | Left-Ventricular Non-Compaction Cardiomyopathy | 4 | Emerging | 2 | Degrades: myocardial function, rhythm stability, thromboembolic safety, survival |
+| 3453 | Short-QT Syndrome | 4 | Emerging | 2 | Degrades: cardiac repolarization, rhythm stability, survival |
+| 3454 | Wolff-Parkinson-White Syndrome | 3 | Moderate | 2 | Degrades: cardiac conduction, rhythm stability, survival |
 
 ## Framework / uncategorized  (61)
 
