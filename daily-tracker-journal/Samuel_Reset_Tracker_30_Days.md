@@ -956,7 +956,7 @@
   - **Treadmill Session 2 (without HR monitor):** 20 min | 0.82 miles | 71 cal | Avg Speed 2.4 mph | Incline 0.0%
   - **Combined active walking:** 40 min | 1.68 miles | 145 cal
   - **Total time on machine (incl. rest):** 99 min | 4.14 miles | 358 cal | Avg HR 95 bpm | Avg Speed 2.5 mph
-  - **Pool:** ~8:00 PM (after treadmill)
+  - **Pool / Sensory Deprivation Float:** ~8:00 PM | 20 min float
 - **Other notes:** Joseph letter mailed today (25 pages, stapled). Walked to gym ~7:00 PM.
 
 ### Business / Productivity
