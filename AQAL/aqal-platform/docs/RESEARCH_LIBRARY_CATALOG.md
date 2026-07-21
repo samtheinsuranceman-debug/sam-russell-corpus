@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,307 clusters · 6,874 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,339 clusters · 6,936 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,227 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,145 |
-| COST OF FAILURE — what's at stake (harm lens) | 874 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,237 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,155 |
+| COST OF FAILURE — what's at stake (harm lens) | 886 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,307** |
+| **Total** | **3,339** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,545 |
-| Strong | 930 |
-| Mixed | 456 |
-| Emerging | 376 |
+| Moderate | 1,564 |
+| Strong | 939 |
+| Mixed | 458 |
+| Emerging | 378 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,227)
+## PRACTICES — what strengthens the mind (impact lens)  (1,237)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1254,8 +1254,18 @@
 | 3240 | Video Feedback for Social Anxiety | 2 | Emerging | 1 | practice: 'Bolsters clusters: Social-Perceptual, Intrapersonal, Emotional' |
 | 3241 | Decatastrophizing / Downward-Arrow | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Emotional' |
 | 3242 | Attention Bias Modification (ABM) | 1 | Mixed | 1 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive' |
+| 3266 | Shutdown Ritual & Psychological Detachment from Work | 3 | Strong | 3 | practice: 'Bolsters clusters: Work-Home Boundary, Recovery & Rest, Sustained Foc |
+| 3267 | Goal-Progress Monitoring & Self-Tracking | 3 | Strong | 1 | practice: 'Bolsters clusters: Goal Follow-Through, Self-Regulation, Habit Format |
+| 3268 | Ready-to-Resume Planning to Clear Attention Residue | 3 | Moderate | 2 | practice: 'Bolsters clusters: Clean Task Transitions, Interruption Recovery, Sin |
+| 3269 | Self-Imposed Deadlines (Precommitment against Parkinson's Law) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Procrastination Reduction, Self-Imposed Deadlines, |
+| 3270 | Task Unpacking to Beat the Planning Fallacy | 3 | Moderate | 2 | practice: 'Bolsters clusters: Realistic Planning, Estimation, Prioritization' |
+| 3271 | Commitment Devices with Real Stakes | 3 | Moderate | 2 | practice: 'Bolsters clusters: Goal Follow-Through, Habit Formation, Precommitmen |
+| 3272 | The Progress Principle (Engineering Small Wins) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Motivation Maintenance, Meaningful Work, Momentum' |
+| 3273 | Time-Management Skill Training (Overall) | 3 | Mixed | 1 | practice: 'Bolsters clusters: Planning, Prioritization, Wellbeing' |
+| 3274 | Body Doubling / Focus Coworking | 2 | Emerging | 2 | practice: 'Bolsters clusters: Task Initiation, Accountability, Single-Tasking' |
+| 3275 | Temptation Bundling (Pair a Want with a Should) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Habit Formation, Procrastination Reduction, Commit |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,145)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,155)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2404,8 +2414,18 @@
 | 3263 | Sunk-Cost Persistence in the Wrong Degree/Major | 5 | Moderate | 2 | weakness: 'Degrades: field alignment, time-to-completion, debt, long-run earning |
 | 3264 | The 'Follow Your Passion' Career Trap (Passion Over Fit) | 5 | Mixed | 2 | weakness: 'Degrades: field choice, career resilience, skill investment, persiste |
 | 3265 | Overpaying for College Selectivity/Prestige | 4 | Mixed | 2 | weakness: 'Degrades: net financial return, debt burden, ROI, long-run earnings e |
+| 3288 | On-Again/Off-Again Relationship Cycling | 6 | Moderate | 2 | Degrades: relational stability, mental health, decision closure |
+| 3289 | Attachment-Anxiety Protest Behavior → Pursuit That Repels | 5 | Moderate | 2 | Degrades: partner responsiveness, emotional regulation, secure bonding |
+| 3290 | Attention to Attractive Alternatives → Breakup | 5 | Moderate | 2 | Degrades: commitment maintenance, relationship survival |
+| 3291 | Dysfunctional Relationship Beliefs → Preprogrammed Distress | 5 | Moderate | 1 | Degrades: conflict tolerance, partner communication, satisfaction |
+| 3292 | Fear of Being Single → Settling for Less | 5 | Moderate | 1 | Degrades: mate selectivity, standards, exit from bad relationships |
+| 3293 | Sunk-Cost Persistence in a Failing Relationship | 5 | Moderate | 2 | Degrades: exit decisions, honest partner appraisal, opportunity capture |
+| 3294 | Commitment-Skepticism Bias → Underreading a Willing Partner | 4 | Moderate | 2 | Degrades: accurate partner appraisal, mate selection, trust-building |
+| 3295 | Destiny Beliefs → Quitting at the First Conflict | 4 | Moderate | 2 | Degrades: relationship maintenance, coping with conflict, longevity |
+| 3296 | Mate-Choice Copying → Wanting Whoever Others Wanted | 3 | Moderate | 2 | Degrades: independent mate evaluation, red-flag detection, partner fit |
+| 3297 | Positive-Illusion Idealization → Blind to the Wrong Partner | 2 | Moderate | 2 | Degrades: red-flag detection, deal-breaker enforcement (only at the extreme) |
 
-## COST OF FAILURE — what's at stake (harm lens)  (874)
+## COST OF FAILURE — what's at stake (harm lens)  (886)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3283,6 +3303,18 @@
 | 3253 | Hemicrania Continua | 3 | Moderate | 2 | Degrades: Bodily, Intrapersonal, Volitional, Financial |
 | 3254 | Pudendal Neuralgia | 3 | Emerging | 2 | Degrades: Bodily, Seductive, Intrapersonal, Emotional |
 | 3255 | Burning Mouth Syndrome | 2 | Moderate | 1 | Degrades: Bodily, Interoceptive, Emotional, Intrapersonal |
+| 3276 | Acute Limb Ischemia — The Golden Six Hours to Save the Leg | 5 | Strong | 2 | Degrades: Bodily, Mechanical, Financial |
+| 3277 | Malignant Large Bowel Obstruction — Emergency Presentation of Colorectal Cancer | 5 | Strong | 2 | Degrades: Bodily, Existential, Financial |
+| 3278 | Perforated Diverticulitis — Purulent vs Feculent Peritonitis | 5 | Strong | 2 | Degrades: Bodily, Existential, Financial |
+| 3279 | Boerhaave / Esophageal Perforation — The Diagnostic Masquerader | 5 | Moderate | 3 | Degrades: Bodily, Interoceptive, Financial |
+| 3280 | Incarcerated / Strangulated Groin Hernia — When 'Watchful Waiting' Fails | 4 | Strong | 2 | Degrades: Bodily, Interoceptive, Financial |
+| 3281 | Perforated Peptic Ulcer — Free Air, Peritonitis, and the 24-Hour Line | 4 | Strong | 3 | Degrades: Bodily, Interoceptive, Financial |
+| 3282 | Small Bowel Obstruction — The Strangulation Clock | 4 | Strong | 2 | Degrades: Bodily, Interoceptive, Financial |
+| 3283 | Colonic Volvulus — The Twisted Loop That Strangles Itself | 4 | Moderate | 2 | Degrades: Bodily, Interoceptive, Financial |
+| 3284 | Gallstone Ileus — A Mechanical Obstruction the Elderly Present Late | 4 | Moderate | 2 | Degrades: Bodily, Interoceptive, Financial |
+| 3285 | Splenic Rupture — Traumatic and the Deceptive 'Atraumatic' Kind | 4 | Moderate | 2 | Degrades: Bodily, Interoceptive, Financial |
+| 3286 | Perforated Appendicitis — When a Common Emergency Turns Septic | 4 | Strong | 3 | Degrades: Bodily, Interoceptive, Financial |
+| 3287 | Ovarian (Adnexal) Torsion — The Time-Sensitive Fertility Emergency | 3 | Moderate | 2 | Degrades: Bodily, Parental, Interoceptive |
 
 ## Framework / uncategorized  (61)
 
