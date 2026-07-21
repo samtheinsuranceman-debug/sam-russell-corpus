@@ -1070,7 +1070,9 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 - **Exercise:**
   - **Treadmill Session 1 (~11:30 AM – 1:30 PM):** 99 min | 4.30 miles | 367 cal | Avg HR 111 bpm | Avg Speed 2.5 mph | Incline 0.0% | METs 3.00
   - **Treadmill Session 2 (~1:30 PM – 3:10 PM):** 99 min | 4.09 miles | 480 cal | Avg HR 122 bpm | Avg Speed 2.4 mph | Avg Incline 2.9% | Vertical 645 ft | METs 3.93
-  - **COMBINED DAY TOTAL:** 198 min | 8.39 miles | 847 cal | Vertical 645 ft
+  - **Treadmill Session 3 (70 min):** 70 min | 2.90 miles | 340 cal | Avg HR 121 bpm | Incline 2.9% | Vertical 457 ft
+  - **Strength Training (NEW):** Calf raises (one foot at a time) 15 reps x 5-6 sets | Leg presses 10-12 reps x 5-6 sets @ 175 lbs
+  - **COMBINED DAY TOTAL:** 268 min treadmill | 11.19 miles | 1,187 cal | Vertical 1,102 ft | Plus strength work
 - **Other notes:** Walked to gym ~11:00 AM. Legs felt recovered after rest day. Glycogen stores full. Stronger than yesterday.
 
 ### Business / Productivity
