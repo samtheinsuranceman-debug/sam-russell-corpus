@@ -7,8 +7,8 @@
 ## STORY #1: George Mason Woman
 - **Age:** 24
 - **Location:** George Mason University
-- **What happened:** Sat next to a woman. Talked 15 min. She asked his name — "Sam Russell." She went pale. Her ex of 7 years had the same name. Before he could get her number, he was late for class. Ran off. Never saw her again.
-- **Key detail:** 20 years of regret.
+- **What happened:** Sat next to a woman. Talked 15 min. She asked his name — "Sam Russell." She had been in love with a man named Sam Russell for 5-7 years. She was so disoriented she asked him to PROVE his name was Sam Russell — asked to see his driver's license. He showed it. Her face went completely pale. She looked at him like no woman has ever looked at him before — he can't even explain it. Before he could get her number, he was late for class. Ran off. Never saw her again.
+- **Key detail:** She loved a "Sam Russell" for 5-7 years. Asked for his ID to prove it. Face went pale. The look she gave him was unlike anything he's experienced. 20 years of regret.
 - **Lesson:** "I'm not making that mistake again."
 
 ## STORY #2: Virginia Tech Blood Donation
