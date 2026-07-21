@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,578 clusters · 7,396 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,607 clusters · 7,454 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,311 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,226 |
-| COST OF FAILURE — what's at stake (harm lens) | 980 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,322 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,232 |
+| COST OF FAILURE — what's at stake (harm lens) | 992 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,578** |
+| **Total** | **3,607** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,663 |
-| Strong | 1,016 |
+| Moderate | 1,679 |
+| Strong | 1,029 |
 | Mixed | 495 |
 | Emerging | 404 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,311)
+## PRACTICES — what strengthens the mind (impact lens)  (1,322)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1338,8 +1338,19 @@
 | 3510 | Cold Exposure for Brown-Fat & Metabolic Activation | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily metabolism, Interoceptive thermogenesis, gl |
 | 3511 | Resting Intermittent Hypoxia Therapy (IHT/IHHT) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily cardiometabolic function, Interoceptive tol |
 | 3512 | Hyperbaric Oxygen Therapy for 'Longevity' (Off-Label) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily tissue oxygenation, Interoceptive, cellular |
+| 3537 | Timely Cataract Surgery | 4 | Strong | 3 | practice: 'Bolsters clusters: vision restoration, fall safety, independence, cog |
+| 3538 | Glaucoma Eye-Drop Adherence | 4 | Strong | 2 | practice: 'Bolsters clusters: vision preservation, optic-nerve protection, indep |
+| 3539 | Safe-Listening / Sound-Dose Management for Personal Audio | 4 | Moderate | 2 | practice: 'Bolsters clusters: hearing preservation, auditory acuity, long-term c |
+| 3540 | Cochlear Implants for Severe-to-Profound Hearing Loss | 4 | Strong | 2 | practice: 'Bolsters clusters: speech understanding, communication, quality of li |
+| 3541 | Regular Comprehensive Eye Exams | 3 | Moderate | 2 | practice: 'Bolsters clusters: early detection, vision preservation, independence |
+| 3542 | AREDS2 Supplements for Intermediate AMD | 3 | Strong | 2 | practice: 'Bolsters clusters: central-vision preservation, reading, independence |
+| 3543 | Childhood Myopia Prevention — Increased Outdoor Time | 3 | Moderate | 2 | practice: 'Bolsters clusters: vision preservation, myopia prevention, healthy de |
+| 3544 | Hearing-Aid Adoption for Age-Related Hearing Loss | 3 | Moderate | 2 | practice: 'Bolsters clusters: communication, cognition, social connection' |
+| 3545 | UV Eye Protection (Sunglasses & Hats) | 2 | Moderate | 2 | practice: 'Bolsters clusters: long-term ocular-surface & lens health, comfort' |
+| 3546 | Childhood Myopia Control — Low-Dose Atropine Drops | 3 | Moderate | 2 | practice: 'Bolsters clusters: vision preservation, axial-length control, reduced |
+| 3547 | Ototoxic-Drug Awareness & Monitoring | 2 | Moderate | 2 | practice: 'Bolsters clusters: hearing preservation, informed decisions, communic |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,226)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,232)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2569,8 +2580,14 @@
 | 3534 | Cashing Out the Pension — Lump-Sum-Over-Annuity Election Errors | 5 | Moderate | 2 | Degrades: Retirement Income Security, longevity protection, sequencing of guaran |
 | 3535 | The Annuity Puzzle — Avoiding Guaranteed Lifetime Income | 5 | Strong | 2 | Degrades: Longevity-risk protection, Retirement Income Security, decumulation co |
 | 3536 | Decumulation Paralysis — Underspending & 'Dying With Too Much' | 4 | Strong | 2 | Degrades: retirement quality of life, spend-down efficiency, realized value of a |
+| 3560 | Fat-Tailed Project Risk → 'Regression to the Tail,' Not to the Mean | 7 | Strong | 3 | Degrades: catastrophic-overrun anticipation, contingency sizing, portfolio risk  |
+| 3561 | Benefit & Demand Overforecasting → Ridership That Never Arrives | 6 | Strong | 1 | Degrades: business-case realism, revenue/adoption forecasts, cost-benefit integr |
+| 3562 | Conjunctive-Events Bias → Overrating the Odds That Every Step Lands | 6 | Strong | 2 | Degrades: multi-stage schedule realism, dependency-chain risk, strategic sequenc |
+| 3563 | The Flaw of Averages → Planning on a Single 'Expected' Number | 6 | Moderate | 2 | Degrades: uncertainty modeling, contingency planning, scenario/Monte-Carlo think |
+| 3564 | Non-Regressive Forecasting → Betting the Extreme Will Persist | 5 | Strong | 1 | Degrades: prediction from noisy signals, pilot-to-rollout extrapolation, milesto |
+| 3565 | Segmentation Neglect → Estimating the Packed Whole, Not Its Parts | 5 | Strong | 2 | Degrades: bottom-up estimating, task decomposition, schedule realism, effort for |
 
-## COST OF FAILURE — what's at stake (harm lens)  (980)
+## COST OF FAILURE — what's at stake (harm lens)  (992)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3554,6 +3571,18 @@
 | 3524 | Hepatic Osteodystrophy (Bone Disease of Cirrhosis) | 3 | Moderate | 2 | Degrades: bone mineral density, mobility, fracture-free survival |
 | 3525 | Idiosyncratic Drug-Induced Liver Injury (DILI) | 3 | Moderate | 2 | Degrades: liver function, drug tolerance, survival |
 | 3526 | Portal Hypertensive Gastropathy | 2 | Moderate | 2 | Degrades: hemoglobin, GI mucosal integrity, functional energy |
+| 3548 | Anti-GBM Disease (Goodpasture) | 5 | Moderate | 2 | Degrades: kidney function, pulmonary function, survival |
+| 3549 | Alport Syndrome | 4 | Strong | 2 | Degrades: kidney function, hearing, vision |
+| 3550 | C3 Glomerulopathy / MPGN | 4 | Moderate | 2 | Degrades: kidney function, transplant durability, ESRD-free survival |
+| 3551 | Focal Segmental Glomerulosclerosis (FSGS) | 4 | Strong | 2 | Degrades: kidney function, ESRD-free survival, cardiovascular reserve |
+| 3552 | Lupus Nephritis | 4 | Strong | 2 | Degrades: kidney function, survival, cardiovascular health |
+| 3553 | Obstructive Uropathy / Hydronephrosis | 3 | Moderate | 2 | Degrades: kidney function, urinary continence/comfort, ESRD-free survival |
+| 3554 | Membranous Nephropathy | 3 | Strong | 2 | Degrades: kidney function, thrombosis-free survival, longevity |
+| 3555 | Reflux Nephropathy / Chronic Pyelonephritis | 3 | Moderate | 2 | Degrades: kidney function, blood-pressure control, ESRD-free survival |
+| 3556 | Acute Interstitial Nephritis | 3 | Moderate | 2 | Degrades: kidney function, medication tolerance, CKD-free survival |
+| 3557 | Post-Infectious Glomerulonephritis (Adult) | 3 | Moderate | 2 | Degrades: kidney function, blood-pressure control, longevity |
+| 3558 | Distal (Type 1) Renal Tubular Acidosis | 2 | Moderate | 2 | Degrades: bone health, growth, kidney function |
+| 3559 | Minimal Change Disease (Adult-Onset) | 2 | Moderate | 2 | Degrades: serum albumin, infection/thrombosis-free time, quality of life |
 
 ## Framework / uncategorized  (61)
 
