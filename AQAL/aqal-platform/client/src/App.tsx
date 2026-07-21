@@ -28,6 +28,7 @@ const Pricing = lazy(() => import("./pages/Pricing"));
 const Evidence = lazy(() => import("./pages/Evidence"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Science = lazy(() => import("./pages/Science"));
+const Method = lazy(() => import("./pages/Method"));
 const Membership = lazy(() => import("./pages/Membership"));
 const Admin = lazy(() => import("./pages/Admin"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
@@ -241,6 +242,11 @@ function Router() {
         <Route path={"/science"}>
           <PageErrorBoundary pageName="Science">
             <Suspense fallback={<ScienceSkeleton />}><Science /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/method"}>
+          <PageErrorBoundary pageName="Method">
+            <Suspense fallback={<PageSkeleton />}><Method /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/membership"}>

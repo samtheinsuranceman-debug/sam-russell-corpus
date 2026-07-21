@@ -78,7 +78,7 @@ curation + scoring + freshness, not DRM. (Details in `HANDOFF_TO_MANUS.md`.)
       re-engagement email cadence = BUILT (opt-in Y/N; persistent toggle + login-time re-prompt;
       server/scheduledTrackerReengagement.ts). Remaining: register the cron (§4.7) + in-app voice STT.
 - [x] **Generational rarity** — now a toggle: `client/src/config/features.ts → SHOW_GENERATIONAL_RARITY` (default ON). If kept ON for production, still wire a real age/generation normative table (see §4.6).
-- [ ] Reframed **meta-level explainer pages** (engineer strengths / dismantle weaknesses).
+- [x] **Meta-level explainer page** — built: client/src/pages/Method.tsx at /method, linked in header nav.
 
 ## 7. How to regenerate the readable catalog after adding clusters
 ```bash

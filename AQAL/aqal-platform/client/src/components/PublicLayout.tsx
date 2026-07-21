@@ -16,6 +16,7 @@ type NavItem = { href: string; label: string } | { label: string; children: { hr
 
 const navLinks: NavItem[] = [
   { href: "/about", label: "About" },
+  { href: "/method", label: "The Method" },
   { href: "/science", label: "Science" },
   { href: "/pricing", label: "Pricing" },
   { href: "/assessment", label: "Assessment" },

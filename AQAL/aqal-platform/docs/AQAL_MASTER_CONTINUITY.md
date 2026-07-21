@@ -119,9 +119,10 @@ predictability/engineering framing — that's a copy edit inside `GenerationSect
    than pasted (see INSTRUCTIONS §4.3), and registering the cron schedule at deploy (INSTRUCTIONS).
 4. **Generational-band data source** — the cohort percentiles are currently model-based estimates; a real
    age/generation normative table would replace the estimate. (See INSTRUCTIONS doc.)
-5. **Meta-level "engineering strengths / dismantling weaknesses" explainer pages** — the research
-   principles (strengths scaffolding, weakness patching, weakest-link/O-Ring, keystone effects) exist as
-   clusters (sections "0" framework) but deserve dedicated marketing pages in the reframed voice.
+5. ✅ **Meta-level explainer page — BUILT.** `client/src/pages/Method.tsx` at route **`/method`** (“Engineer the strengths. Dismantle the weaknesses.”), linked in the header nav. Lays out the
+   meta-level thesis, the four research principles (weakest-link/O-Ring, keystone/mutualism,
+   leverage/centrality, knowing–doing gap), the engineer/dismantle moves, an honest-limits section,
+   and CTAs into the assessment + research library — all in the reframed voice.
 
 ## 5. THE RESEARCH LIBRARY — SCALE, HONESTY, MOAT
 
