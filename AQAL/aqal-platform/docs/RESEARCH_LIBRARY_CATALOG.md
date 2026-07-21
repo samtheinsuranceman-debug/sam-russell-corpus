@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,607 clusters · 7,454 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,643 clusters · 7,541 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,322 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,232 |
-| COST OF FAILURE — what's at stake (harm lens) | 992 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,332 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,244 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,006 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,607** |
+| **Total** | **3,643** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,679 |
-| Strong | 1,029 |
-| Mixed | 495 |
-| Emerging | 404 |
+| Moderate | 1,689 |
+| Strong | 1,046 |
+| Mixed | 500 |
+| Emerging | 408 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,322)
+## PRACTICES — what strengthens the mind (impact lens)  (1,332)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1349,8 +1349,18 @@
 | 3545 | UV Eye Protection (Sunglasses & Hats) | 2 | Moderate | 2 | practice: 'Bolsters clusters: long-term ocular-surface & lens health, comfort' |
 | 3546 | Childhood Myopia Control — Low-Dose Atropine Drops | 3 | Moderate | 2 | practice: 'Bolsters clusters: vision preservation, axial-length control, reduced |
 | 3547 | Ototoxic-Drug Awareness & Monitoring | 2 | Moderate | 2 | practice: 'Bolsters clusters: hearing preservation, informed decisions, communic |
+| 3580 | Cognitive Therapy for PTSD (Ehlers-Clark) | 4 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Meta-Cognitive, Volition |
+| 3581 | Trauma-Focused CBT for Youth (TF-CBT) | 4 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Volitional, Existential' |
+| 3582 | Narrative Exposure Therapy (NET) | 3 | Moderate | 3 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Existential, Volitional' |
+| 3583 | Present-Centered Therapy (PCT) for PTSD | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Interpersonal, Volitiona |
+| 3584 | Psychological First Aid (PFA) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Volitional' |
+| 3585 | STAIR Narrative Therapy (Cloitre) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interpersonal, Intrapersonal, Volitiona |
+| 3586 | Skills for Psychological Recovery (SPR) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Volitional, Interpersona |
+| 3587 | Trauma-Sensitive Yoga (TCTSY) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Bodily, Intrapersonal' |
+| 3588 | Critical Incident Stress Debriefing (CISD) | 1 | Strong | 2 | practice: 'Bolsters clusters: (none reliably — see callout)' |
+| 3589 | Seeking Safety (PTSD + Substance Use) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Intrapersonal, Interpersona |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,232)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,244)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2586,8 +2596,20 @@
 | 3563 | The Flaw of Averages → Planning on a Single 'Expected' Number | 6 | Moderate | 2 | Degrades: uncertainty modeling, contingency planning, scenario/Monte-Carlo think |
 | 3564 | Non-Regressive Forecasting → Betting the Extreme Will Persist | 5 | Strong | 1 | Degrades: prediction from noisy signals, pilot-to-rollout extrapolation, milesto |
 | 3565 | Segmentation Neglect → Estimating the Packed Whole, Not Its Parts | 5 | Strong | 2 | Degrades: bottom-up estimating, task decomposition, schedule realism, effort for |
+| 3590 | Interpretation Loss in High-Stakes Settings (Medical/Legal) | 7 | Strong | 2 | Degrades: Linguistic fidelity, Interpersonal trust, Social-Perceptual understand |
+| 3591 | Accent-Based Competence Downgrading in Hiring | 6 | Strong | 2 | Degrades: Social-Perceptual fairness, Rhetorical credibility, Linguistic standin |
+| 3592 | Face-Threat Miscalibration Across Cultures | 5 | Mixed | 2 | Degrades: Interpersonal rapport, Rhetorical framing, Social-Perceptual read |
+| 3593 | High-Context vs Low-Context Clash — Indirect Meets Direct | 5 | Mixed | 2 | Degrades: Social-Perceptual reading, Interpersonal rapport, Rhetorical persuasio |
+| 3594 | Honorific & Register Errors — Wrong Level of Respect | 5 | Moderate | 2 | Degrades: Linguistic accuracy, Social-Perceptual calibration, Interpersonal stan |
+| 3595 | Monochronic vs Polychronic Time Clash | 5 | Mixed | 2 | Degrades: Interpersonal coordination, Social-Perceptual read, Community norms |
+| 3596 | Back-Channel & Turn-Taking Norm Mismatch | 4 | Strong | 2 | Degrades: Social-Perceptual read, Interpersonal flow, Linguistic turn-cueing |
+| 3597 | Emotion Display-Rule Clash — Same Face, Different Rules | 4 | Moderate | 2 | Degrades: Social-Perceptual decoding, Emotional read, Interpersonal trust |
+| 3598 | Idiom & Metaphor Opacity for Non-Native Speakers | 4 | Moderate | 2 | Degrades: Linguistic comprehension, Social-Perceptual inference |
+| 3599 | Power-Distance Miscommunication — Speaking Up vs Deferring | 4 | Mixed | 2 | Degrades: Interpersonal candor, Leadership signal-reading, Social-Perceptual cal |
+| 3600 | Silence Interpreted Differently — Pause as Respect vs Rejection | 4 | Emerging | 2 | Degrades: Social-Perceptual read, Interpersonal rapport, Linguistic turn-cueing |
+| 3601 | False Friends — Familiar-Looking Words That Mean Something Else | 3 | Moderate | 2 | Degrades: Linguistic accuracy, Rhetorical precision |
 
-## COST OF FAILURE — what's at stake (harm lens)  (992)
+## COST OF FAILURE — what's at stake (harm lens)  (1,006)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3583,6 +3605,20 @@
 | 3557 | Post-Infectious Glomerulonephritis (Adult) | 3 | Moderate | 2 | Degrades: kidney function, blood-pressure control, longevity |
 | 3558 | Distal (Type 1) Renal Tubular Acidosis | 2 | Moderate | 2 | Degrades: bone health, growth, kidney function |
 | 3559 | Minimal Change Disease (Adult-Onset) | 2 | Moderate | 2 | Degrades: serum albumin, infection/thrombosis-free time, quality of life |
+| 3566 | Congenital Rubella Syndrome | 5 | Strong | 3 | Degrades: Aesthetic, Musical, Bodily, Meta-Cognitive |
+| 3567 | Mucormycosis | 5 | Strong | 3 | Degrades: Bodily, Aesthetic, Interoceptive, Volitional |
+| 3568 | Creutzfeldt-Jakob Disease (Prion) | 5 | Strong | 3 | Degrades: Meta-Cognitive, Bodily, Linguistic, Volitional |
+| 3569 | Progressive Multifocal Leukoencephalopathy (JC Virus) | 5 | Strong | 3 | Degrades: Bodily, Linguistic, Meta-Cognitive, Spatial |
+| 3570 | Subacute Sclerosing Panencephalitis (Measles, Late) | 5 | Strong | 3 | Degrades: Meta-Cognitive, Bodily, Linguistic, Volitional |
+| 3571 | Invasive Aspergillosis | 5 | Strong | 3 | Degrades: Bodily, Interoceptive, Volitional, Existential |
+| 3572 | Cerebral Toxoplasmosis (Reactivation) | 4 | Strong | 3 | Degrades: Meta-Cognitive, Bodily, Volitional, Intrapersonal |
+| 3573 | Invasive Candidiasis / Candidemia | 4 | Strong | 3 | Degrades: Interoceptive, Bodily, Volitional, Intrapersonal |
+| 3574 | Pneumocystis (PCP) Pneumonia | 4 | Strong | 3 | Degrades: Interoceptive, Bodily, Volitional, Intrapersonal |
+| 3575 | Cytomegalovirus Disease (Immunocompromised) | 4 | Strong | 3 | Degrades: Aesthetic, Bodily, Interoceptive, Spatial |
+| 3576 | Disseminated Mycobacterium avium Complex | 4 | Strong | 3 | Degrades: Bodily, Interoceptive, Volitional, Intrapersonal |
+| 3577 | Blastomycosis | 4 | Moderate | 3 | Degrades: Bodily, Interoceptive, Aesthetic, Volitional |
+| 3578 | Coccidioidomycosis (Valley Fever) | 4 | Moderate | 3 | Degrades: Bodily, Interoceptive, Naturalist, Volitional |
+| 3579 | Disseminated Histoplasmosis | 4 | Moderate | 3 | Degrades: Bodily, Interoceptive, Volitional, Naturalist |
 
 ## Framework / uncategorized  (61)
 
