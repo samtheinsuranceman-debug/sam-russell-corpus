@@ -951,8 +951,13 @@
 - **Other (Klonopin, etc.):** Klonopin 1.5mg previous night at 11:15 PM
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** TBD
-- **Other notes:** Joseph letter mailed today (25 pages, stapled)
+- **Exercise:**
+  - **Treadmill Session 1 (with HR monitor):** 20 min | 0.86 miles | 74 cal | Avg HR 102 bpm | Avg Speed 2.5 mph | Incline 0.0%
+  - **Treadmill Session 2 (without HR monitor):** 20 min | 0.82 miles | 71 cal | Avg Speed 2.4 mph | Incline 0.0%
+  - **Combined active walking:** 40 min | 1.68 miles | 145 cal
+  - **Total time on machine (incl. rest):** 99 min | 4.14 miles | 358 cal | Avg HR 95 bpm | Avg Speed 2.5 mph
+  - **Pool:** ~8:00 PM (after treadmill)
+- **Other notes:** Joseph letter mailed today (25 pages, stapled). Walked to gym ~7:00 PM.
 
 ### Business / Productivity
 - **Leads / appointments worked:** TBD
