@@ -1008,7 +1008,8 @@
 ### Physical / Body
 - **Exercise:**
   - **Treadmill Session 1 (~11:30 AM – 1:30 PM):** 99 min | 4.30 miles | 367 cal | Avg HR 111 bpm | Avg Speed 2.5 mph | Incline 0.0% | METs 3.00
-  - *(Targeting 200 min total — Session 2 in progress)*
+  - **Treadmill Session 2 (~1:30 PM – 3:10 PM):** 99 min | 4.09 miles | 480 cal | Avg HR 122 bpm | Avg Speed 2.4 mph | Avg Incline 2.9% | Vertical 645 ft | METs 3.93
+  - **COMBINED DAY TOTAL:** 198 min | 8.39 miles | 847 cal | Vertical 645 ft
 - **Other notes:** Walked to gym ~11:00 AM. Legs felt recovered after rest day. Glycogen stores full. Stronger than yesterday.
 
 ### Business / Productivity
