@@ -999,11 +999,10 @@
 - **Sleep feel (Restful 1-10) / Notes:** Body still recovering from accumulated load. Second consecutive long sleep. Recovery complete — got up and took action.
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR 60mg (2x30mg):** 10:45 AM
-- **Wellbutrin XL 150mg:** 10:45 AM (Day 5)
-- **Creatine monohydrate 5g:** TBD
+- **Adderall XR 60mg (2x30mg):** 9:30 AM
+- **Wellbutrin XL 150mg:** 9:30 AM (Day 7)
 - **Vitamin C (Time/Dose/Stomach/Effect):** TBD
-- **Other:** Breakfast at 10:40 AM (solid meal before meds)
+- **Other:** Breakfast before meds
 
 ### Physical / Body
 - **Exercise:**
