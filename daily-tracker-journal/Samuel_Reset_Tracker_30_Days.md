@@ -951,6 +951,7 @@
 - **Guaifenesin:** 7:00 PM
 - **Other (Klonopin, etc.):** Klonopin 1.5mg previous night at 11:15 PM
 - **Sleep stack (9:15 PM):** Klonopin 1.5mg + 2 magnesium tablets + 1 melatonin + 2 Trazodone
+- **Bedtime target:** 9:15 PM
 
 ### Physical / Body
 - **Exercise:**
@@ -968,7 +969,7 @@
 - **Key win / lesson / money action:** TBD
 
 ### Social / Dating / Family
-- **Church-girl action today:** Day 2 of letter development window. ~2 hours unconscious story generation (stories surfacing during treadmill, lying in bed, float, and walking). Multiple new stories logged to vault. Armstrong family research completed — GREEN LIGHT assessment delivered.
+- **Church-girl action today:** Day 2 of letter development window. ~1.5–2 hours letter development (brainstorming/story collection during movement and rest).
 - **Dad / Mom interaction note:** Dad gave permission to rest without guilt. Supportive.
 - **Dating confidence / layup feel 1-10:** TBD
 - **Notes:** TBD
