@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,507 clusters · 7,258 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,543 clusters · 7,325 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,287 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,206 |
-| COST OF FAILURE — what's at stake (harm lens) | 953 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,300 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,216 |
+| COST OF FAILURE — what's at stake (harm lens) | 966 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,507** |
+| **Total** | **3,543** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,640 |
-| Strong | 984 |
-| Mixed | 485 |
-| Emerging | 398 |
+| Moderate | 1,651 |
+| Strong | 1,001 |
+| Mixed | 491 |
+| Emerging | 400 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,287)
+## PRACTICES — what strengthens the mind (impact lens)  (1,300)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1314,8 +1314,21 @@
 | 3438 | Positive Mental Imagery Training (Imagery CBM) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Meta-Cognitive' |
 | 3439 | Facial Feedback / Smiling to Shift Affect | 1 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive' |
 | 3440 | Instrumental Emotion Regulation (Regulating Toward Useful, Not Just Pleasant, States) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Emotional, Volitional, Adversarial |
+| 3466 | Combination Nicotine Replacement Therapy (Patch + Fast-Acting) | 3 | Strong | 2 | practice: 'Bolsters clusters: Volitional control, Interoceptive craving regulati |
+| 3467 | Cytisine (Tabex) for Smoking Cessation | 3 | Strong | 2 | practice: 'Bolsters clusters: Volitional control, Interoceptive craving regulati |
+| 3468 | Nicotine E-cigarettes as a Smoking-Cessation Aid | 3 | Strong | 1 | practice: 'Bolsters clusters: Volitional control, Bodily/behavioral substitution |
+| 3469 | Telephone Quitlines & Proactive Phone Counselling | 3 | Strong | 1 | practice: 'Bolsters clusters: Volitional control, Interpersonal support, Intrape |
+| 3470 | Nortriptyline as a Second-Line Smoking-Cessation Drug | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional control, Emotional regulation, Interoce |
+| 3471 | Contingency Management for Stimulant & Opioid Use Disorder | 4 | Strong | 3 | practice: 'Bolsters clusters: Volitional control, Financial reward-learning, Int |
+| 3472 | Brief Interventions (SBIRT) for Hazardous Drinking | 2 | Moderate | 1 | practice: 'Bolsters clusters: Volitional control, Intrapersonal insight, Interpe |
+| 3473 | Community Reinforcement Approach (CRA) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional control, Interpersonal support restruct |
+| 3474 | Drink/Drug Refusal Skills Training | 2 | Moderate | 2 | practice: 'Bolsters clusters: Volitional control, Interpersonal assertiveness, I |
+| 3475 | Nalmefene (As-Needed) for Reduced Drinking | 2 | Mixed | 2 | practice: 'Bolsters clusters: Volitional control, Interoceptive craving regulati |
+| 3476 | Cue-Exposure / Extinction Therapy for Craving | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive craving regulation, Volitional contr |
+| 3477 | Acupuncture & Related Techniques for Smoking Cessation | 1 | Mixed | 1 | practice: 'Bolsters clusters: Interoceptive (claimed), Volitional (claimed)' |
+| 3478 | Hypnotherapy for Smoking Cessation | 1 | Mixed | 1 | practice: 'Bolsters clusters: Volitional control (claimed), Intrapersonal, Inter |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,206)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,216)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2525,8 +2538,18 @@
 | 3463 | Relative Deprivation | 4 | Mixed | 1 | Degrades: contentment, achievement striving, intergroup trust, health |
 | 3464 | Schadenfreude Entanglement | 4 | Moderate | 2 | Degrades: cooperation, empathy, reputation, coalition-building |
 | 3465 | The Benign–Malicious Envy Fork | 4 | Moderate | 2 | Degrades: goal-directed effort, self-concept, cooperation — but one branch can m |
+| 3492 | Early Substance Experimentation → Escalation to Disorder | 7 | Strong | 2 | Degrades: Bodily, Volitional, Interoceptive |
+| 3493 | Alcohol Myopia → In-the-Moment Disinhibition | 6 | Strong | 2 | Degrades: Volitional, Interoceptive, Adversarial |
+| 3494 | Lack of Premeditation (UPPS-P) → Acting Before Thinking | 6 | Moderate | 2 | Degrades: Volitional, Strategic, Meta-Cognitive |
+| 3495 | Near-Miss Reinforcement → Chasing the Almost-Win | 6 | Strong | 2 | Degrades: Financial, Volitional, Pattern-Recognition |
+| 3496 | Risk-as-Feelings → Emotion Overriding the Analysis | 6 | Moderate | 1 | Degrades: Strategic, Meta-Cognitive, Volitional |
+| 3497 | Affect-Regulation-Driven High-Risk Sport → Escalating Danger | 5 | Emerging | 2 | Degrades: Bodily, Interoceptive, Emotional, Volitional |
+| 3498 | Lack of Perseverance (UPPS-P) → Abandoning Effortful Goals | 5 | Moderate | 2 | Degrades: Volitional, Systemic, Strategic |
+| 3499 | Novelty-Seeking Temperament → Disorganized Overcommitment | 5 | Moderate | 2 | Degrades: Volitional, Systemic, Bodily |
+| 3500 | Peer-Presence Risk Amplification → Riskier When Watched | 5 | Strong | 2 | Degrades: Adversarial, Social-Perceptual, Volitional |
+| 3501 | Personal Fable → Illusory Invulnerability | 4 | Mixed | 2 | Degrades: Meta-Cognitive, Volitional, Intrapersonal |
 
-## COST OF FAILURE — what's at stake (harm lens)  (953)
+## COST OF FAILURE — what's at stake (harm lens)  (966)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3483,6 +3506,19 @@
 | 3452 | Left-Ventricular Non-Compaction Cardiomyopathy | 4 | Emerging | 2 | Degrades: myocardial function, rhythm stability, thromboembolic safety, survival |
 | 3453 | Short-QT Syndrome | 4 | Emerging | 2 | Degrades: cardiac repolarization, rhythm stability, survival |
 | 3454 | Wolff-Parkinson-White Syndrome | 3 | Moderate | 2 | Degrades: cardiac conduction, rhythm stability, survival |
+| 3479 | Cerebral (Berry) Aneurysm & Subarachnoid Hemorrhage | 5 | Strong | 3 | Degrades: brain integrity, independence, survival |
+| 3480 | Thoracic Aortic Aneurysm | 5 | Strong | 3 | Degrades: aortic wall integrity, dissection-free survival, longevity |
+| 3481 | Chronic Mesenteric Ischemia | 4 | Strong | 2 | Degrades: nutrition, bowel integrity, survival |
+| 3482 | Intracranial Atherosclerotic Stenosis | 4 | Strong | 2 | Degrades: cerebral perfusion, stroke-free survival, cognition |
+| 3483 | Brain Arteriovenous Malformation | 4 | Strong | 2 | Degrades: cerebral integrity, independence, survival |
+| 3484 | Buerger's Disease (Thromboangiitis Obliterans) | 4 | Strong | 2 | Degrades: limb preservation, tissue perfusion, function |
+| 3485 | Paget-Schroetter Syndrome (Venous Thoracic Outlet / Effort Thrombosis) | 3 | Moderate | 2 | Degrades: upper-limb venous outflow, arm function |
+| 3486 | Popliteal Artery Aneurysm | 4 | Moderate | 2 | Degrades: limb preservation, distal perfusion, mobility |
+| 3487 | Atherosclerotic Renal Artery Stenosis | 3 | Strong | 2 | Degrades: blood-pressure control, kidney function, cardiovascular reserve |
+| 3488 | Fibromuscular Dysplasia | 3 | Moderate | 2 | Degrades: arterial wall integrity, blood-pressure control, stroke-free survival |
+| 3489 | Superficial Vein Thrombosis (Thrombophlebitis) | 2 | Strong | 2 | Degrades: venous integrity, VTE-free status |
+| 3490 | May-Thurner Syndrome (Iliac Vein Compression) | 3 | Emerging | 2 | Degrades: venous outflow, left-leg circulation |
+| 3491 | Subclavian Steal Syndrome | 2 | Mixed | 2 | Degrades: vertebrobasilar perfusion, arm blood supply |
 
 ## Framework / uncategorized  (61)
 
