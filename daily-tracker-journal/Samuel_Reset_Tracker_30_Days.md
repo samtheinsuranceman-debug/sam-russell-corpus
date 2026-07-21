@@ -989,24 +989,27 @@
 
 ## Day 16 - 2026-07-21 (Tuesday)
 
-**Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
+**Energy (1-10):** TBD | **Mood (1-10):** TBD | **Overall Day (1-10):** TBD
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Bedtime (previous night):** 9:15 PM (Klonopin 1.5mg + 2 magnesium + 1 melatonin + 2 Trazodone)
+- **Wake time:** 10:30 AM (natural)
+- **Hours slept:** ~13 hours (9:15 PM → 10:30 AM)
+- **Dreams (nightmare/neutral/positive/sex/vivid):** TBD
+- **Sleep feel (Restful 1-10) / Notes:** Body still recovering from accumulated load. Second consecutive long sleep. Recovery complete — got up and took action.
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
-- **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
-- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
-- **Other (Klonopin, etc.):** _______________________________________________
+- **Adderall XR 60mg (2x30mg):** 10:45 AM
+- **Wellbutrin XL 150mg:** 10:45 AM (Day 5)
+- **Creatine monohydrate 5g:** TBD
+- **Vitamin C (Time/Dose/Stomach/Effect):** TBD
+- **Other:** Breakfast at 10:40 AM (solid meal before meds)
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
-- **Other notes (neck, appetite, etc.):** ___________________________________
+- **Exercise:**
+  - **Treadmill Session 1 (~11:30 AM – 1:30 PM):** 99 min | 4.30 miles | 367 cal | Avg HR 111 bpm | Avg Speed 2.5 mph | Incline 0.0% | METs 3.00
+  - *(Targeting 200 min total — Session 2 in progress)*
+- **Other notes:** Walked to gym ~11:00 AM. Legs felt recovered after rest day. Glycogen stores full. Stronger than yesterday.
 
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
