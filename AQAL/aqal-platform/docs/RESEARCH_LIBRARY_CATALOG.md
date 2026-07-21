@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,441 clusters · 7,132 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,473 clusters · 7,197 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,268 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,186 |
-| COST OF FAILURE — what's at stake (harm lens) | 926 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,278 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,195 |
+| COST OF FAILURE — what's at stake (harm lens) | 939 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,441** |
+| **Total** | **3,473** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,606 |
-| Strong | 968 |
-| Mixed | 478 |
-| Emerging | 389 |
+| Moderate | 1,619 |
+| Strong | 979 |
+| Mixed | 482 |
+| Emerging | 393 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,268)
+## PRACTICES — what strengthens the mind (impact lens)  (1,278)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1295,8 +1295,18 @@
 | 3372 | Lumbar Supports / Back Belts for Injury Prevention | 1 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Mechanical' |
 | 3373 | Proper Lifting Mechanics / Manual-Handling Training | 1 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Mechanical' |
 | 3374 | Participatory Ergonomics Interventions | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Mechanical' |
+| 3400 | Friendship Bench (Lay-Worker Peer Counselling) | 4 | Strong | 1 | practice: 'Bolsters clusters: Community, Emotional, Interpersonal, Existential' |
+| 3401 | Psychosocial Group Rehabilitation for Lonely Elders | 4 | Moderate | 2 | practice: 'Bolsters clusters: Community, Emotional, Existential, Interpersonal' |
+| 3402 | Group Walking Schemes | 3 | Moderate | 2 | practice: 'Bolsters clusters: Community, Bodily, Emotional, Interpersonal' |
+| 3403 | Groups 4 Health — Social-Identity Intervention | 3 | Moderate | 3 | practice: 'Bolsters clusters: Community, Interpersonal, Existential, Emotional' |
+| 3404 | Performing Acts of Kindness | 2 | Moderate | 2 | practice: 'Bolsters clusters: Community, Moral, Emotional, Interpersonal' |
+| 3405 | Reconnecting Dormant Ties | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Strategic, Entrepreneuri |
+| 3406 | Group Laughter / Humor Therapy | 2 | Mixed | 2 | practice: 'Bolsters clusters: Community, Emotional, Bodily, Interpersonal' |
+| 3407 | Shared Reading Groups (Adult Wellbeing) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Linguistic, Emotional, Existential' |
+| 3408 | Retraining Maladaptive Social Cognition (Loneliness CBT) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Interpersonal, Meta-Cognitive, Social-P |
+| 3409 | In-Person Peer-Support Groups | 2 | Mixed | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Emotional, Existential' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,186)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,195)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2486,8 +2496,17 @@
 | 3397 | Externalized / Disrupted Continuing Bonds | 5 | Moderate | 2 | Degrades: Emotional, Existential, Intrapersonal |
 | 3398 | Kübler-Ross 'Stages' Over-Application (Myth) | 4 | Mixed | 2 | Degrades: Emotional, Meta-Cognitive, Existential |
 | 3399 | Anniversary Reactions | 3 | Mixed | 2 | Degrades: Emotional, Intrapersonal |
+| 3423 | Emotional Exhaustion (MBI Core Dimension) | 8 | Strong | 3 | Degrades: drive, follow-through, felt sense of meaning |
+| 3424 | Cynicism / Depersonalization (MBI Dimension) | 7 | Strong | 2 | Degrades: engagement, relational warmth, care about the work |
+| 3425 | Effort-Reward Imbalance (Siegrist Model) | 6 | Moderate | 2 | Degrades: motivation, health reserves, sustained persistence |
+| 3426 | Emotional Labor / Surface Acting → Exhaustion | 6 | Strong | 1 | Degrades: emotional reserves, authenticity, relational stamina |
+| 3427 | Vital Exhaustion (Appels) | 6 | Moderate | 2 | Degrades: energy reserves, drive, cardiovascular resilience |
+| 3428 | Boreout — Chronic Underchallenge & Job Boredom | 5 | Emerging | 1 | Degrades: engagement, felt meaning, growth drive |
+| 3429 | Reduced Personal Accomplishment / Professional Efficacy | 5 | Mixed | 2 | Degrades: self-efficacy, felt competence, motivation to persist |
+| 3430 | Subjective Career Plateau → Disengagement | 5 | Moderate | 1 | Degrades: ambition, commitment, leadership drive |
+| 3431 | Vocational Identity Foreclosure | 4 | Emerging | 2 | Degrades: authentic goal-fit, self-knowledge, adaptive commitment |
 
-## COST OF FAILURE — what's at stake (harm lens)  (926)
+## COST OF FAILURE — what's at stake (harm lens)  (939)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3417,6 +3436,19 @@
 | 3386 | Catathrenia (Nocturnal Groaning) — The Bed-Partner's Burden | 1 | Emerging | 2 | Degrades: Interpersonal harmony, Interoceptive sleep quality, Intrapersonal well |
 | 3387 | Exploding Head Syndrome — A Loud Sensory Jolt at Sleep Onset | 1 | Emerging | 2 | Degrades: Emotional stability, Interoceptive sleep onset, Intrapersonal wellbein |
 | 3388 | Advanced Sleep-Wake Phase Disorder — The Clock That Runs Too Early | 2 | Emerging | 2 | Degrades: Interoceptive circadian alignment, Interpersonal/social participation, |
+| 3410 | Leukostasis / Hyperleukocytosis | 4 | Strong | 2 | Degrades: Bodily, Interoceptive, Meta-Cognitive, Financial |
+| 3411 | Malignant Spinal Cord Compression | 4 | Strong | 2 | Degrades: Bodily, Volitional, Interoceptive, Financial |
+| 3412 | Tumor Lysis Syndrome | 4 | Strong | 3 | Degrades: Bodily, Interoceptive, Meta-Cognitive, Financial |
+| 3413 | Graft-versus-Host Disease | 4 | Strong | 3 | Degrades: Bodily, Aesthetic, Interoceptive, Financial |
+| 3414 | Hypercalcemia of Malignancy | 4 | Strong | 2 | Degrades: Meta-Cognitive, Interoceptive, Bodily, Financial |
+| 3415 | Malignant Bowel Obstruction (Advanced/Peritoneal) | 4 | Moderate | 2 | Degrades: Bodily, Interoceptive, Emotional, Financial |
+| 3416 | Paraneoplastic Neurological Syndromes | 4 | Moderate | 2 | Degrades: Bodily, Meta-Cognitive, Interoceptive, Volitional |
+| 3417 | Malignant Pericardial Effusion & Tamponade | 4 | Moderate | 2 | Degrades: Bodily, Interoceptive, Emotional, Financial |
+| 3418 | Cytokine Release Syndrome (CAR-T) | 4 | Strong | 3 | Degrades: Bodily, Interoceptive, Meta-Cognitive, Financial |
+| 3419 | Immune-Related Adverse Events (Checkpoint Inhibitors) | 3 | Strong | 2 | Degrades: Bodily, Interoceptive, Volitional, Financial |
+| 3420 | Radiotherapy Late Effects (Fibrosis & Second Cancers) | 3 | Moderate | 2 | Degrades: Bodily, Interoceptive, Aesthetic, Financial |
+| 3421 | Superior Vena Cava Syndrome | 3 | Moderate | 2 | Degrades: Bodily, Interoceptive, Aesthetic, Financial |
+| 3422 | Trastuzumab (HER2) Cardiotoxicity | 3 | Moderate | 2 | Degrades: Bodily, Interoceptive, Volitional, Financial |
 
 ## Framework / uncategorized  (61)
 
