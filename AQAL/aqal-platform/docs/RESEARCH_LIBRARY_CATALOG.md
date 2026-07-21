@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,543 clusters · 7,325 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,578 clusters · 7,396 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,300 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,216 |
-| COST OF FAILURE — what's at stake (harm lens) | 966 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,311 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,226 |
+| COST OF FAILURE — what's at stake (harm lens) | 980 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,543** |
+| **Total** | **3,578** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,651 |
-| Strong | 1,001 |
-| Mixed | 491 |
-| Emerging | 400 |
+| Moderate | 1,663 |
+| Strong | 1,016 |
+| Mixed | 495 |
+| Emerging | 404 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,300)
+## PRACTICES — what strengthens the mind (impact lens)  (1,311)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1327,8 +1327,19 @@
 | 3476 | Cue-Exposure / Extinction Therapy for Craving | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive craving regulation, Volitional contr |
 | 3477 | Acupuncture & Related Techniques for Smoking Cessation | 1 | Mixed | 1 | practice: 'Bolsters clusters: Interoceptive (claimed), Volitional (claimed)' |
 | 3478 | Hypnotherapy for Smoking Cessation | 1 | Mixed | 1 | practice: 'Bolsters clusters: Volitional control (claimed), Intrapersonal, Inter |
+| 3502 | Mitohormesis: Training ROS Signalling (and Why Megadose Antioxidants Blunt It) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily mitochondrial adaptation, Interoceptive rec |
+| 3503 | Heat Acclimation Training (Endurance) | 3 | Strong | 3 | practice: 'Bolsters clusters: Bodily thermoregulation, Interoceptive heat tolera |
+| 3504 | Red-Light Therapy for Skin (Photobiomodulation) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily dermal remodeling, Aesthetic skin appearanc |
+| 3505 | Sulforaphane / Nrf2 Phytochemical Hormesis | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily antioxidant defense, Interoceptive stress-r |
+| 3506 | Sunlight/UVA Nitric-Oxide Pathway (Blood Pressure) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily vascular function, Interoceptive, cardiovas |
+| 3507 | Xenohormesis / Dietary-Polyphenol Hormesis | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily stress-resistance, Interoceptive metabolic  |
+| 3508 | Live-High Train-Low Altitude Training | 3 | Moderate | 3 | practice: 'Bolsters clusters: Bodily aerobic capacity, Interoceptive effort tole |
+| 3509 | Whole-Body Cryotherapy (WBC) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily recovery, Interoceptive cold tolerance, inf |
+| 3510 | Cold Exposure for Brown-Fat & Metabolic Activation | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily metabolism, Interoceptive thermogenesis, gl |
+| 3511 | Resting Intermittent Hypoxia Therapy (IHT/IHHT) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily cardiometabolic function, Interoceptive tol |
+| 3512 | Hyperbaric Oxygen Therapy for 'Longevity' (Off-Label) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily tissue oxygenation, Interoceptive, cellular |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,216)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,226)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2548,8 +2559,18 @@
 | 3499 | Novelty-Seeking Temperament → Disorganized Overcommitment | 5 | Moderate | 2 | Degrades: Volitional, Systemic, Bodily |
 | 3500 | Peer-Presence Risk Amplification → Riskier When Watched | 5 | Strong | 2 | Degrades: Adversarial, Social-Perceptual, Volitional |
 | 3501 | Personal Fable → Illusory Invulnerability | 4 | Mixed | 2 | Degrades: Meta-Cognitive, Volitional, Intrapersonal |
+| 3527 | Enrollment Procrastination & Contribution Inertia | 7 | Strong | 2 | Degrades: Retirement wealth accumulation, Tax-Advantaged Retirement Saving, comp |
+| 3528 | Failing to Plan for a Surviving Spouse (the Widow's Penalty) | 6 | Strong | 2 | Degrades: surviving-spouse income security, household continuity planning, pover |
+| 3529 | Late-Life Decline in Financial Capability (the 'Age of Reason' Problem) | 6 | Moderate | 2 | Degrades: portfolio management, fraud resistance, timely delegation of finances |
+| 3530 | Long-Term-Care Risk Denial & Non-Purchase of LTC Coverage | 6 | Strong | 2 | Degrades: Retirement Asset Preservation, spousal protection, care autonomy |
+| 3531 | Overestimating How Long You'll Keep Working (Retirement-Age Gap) | 6 | Strong | 2 | Degrades: retirement funding runway, contingency planning, adequacy of accumulat |
+| 3532 | Underestimating Retirement Healthcare & Medicare Out-of-Pocket Costs | 6 | Strong | 2 | Degrades: Retirement Asset Preservation, Health-Cost Resilience, spending-plan r |
+| 3533 | Underestimating Your Own Lifespan (Survival-Probability Miscalibration) | 6 | Moderate | 2 | Degrades: Longevity-risk protection, retirement horizon planning, Outliving Reti |
+| 3534 | Cashing Out the Pension — Lump-Sum-Over-Annuity Election Errors | 5 | Moderate | 2 | Degrades: Retirement Income Security, longevity protection, sequencing of guaran |
+| 3535 | The Annuity Puzzle — Avoiding Guaranteed Lifetime Income | 5 | Strong | 2 | Degrades: Longevity-risk protection, Retirement Income Security, decumulation co |
+| 3536 | Decumulation Paralysis — Underspending & 'Dying With Too Much' | 4 | Strong | 2 | Degrades: retirement quality of life, spend-down efficiency, realized value of a |
 
-## COST OF FAILURE — what's at stake (harm lens)  (966)
+## COST OF FAILURE — what's at stake (harm lens)  (980)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3519,6 +3540,20 @@
 | 3489 | Superficial Vein Thrombosis (Thrombophlebitis) | 2 | Strong | 2 | Degrades: venous integrity, VTE-free status |
 | 3490 | May-Thurner Syndrome (Iliac Vein Compression) | 3 | Emerging | 2 | Degrades: venous outflow, left-leg circulation |
 | 3491 | Subclavian Steal Syndrome | 2 | Mixed | 2 | Degrades: vertebrobasilar perfusion, arm blood supply |
+| 3513 | Acute-on-Chronic Liver Failure (ACLF) | 5 | Strong | 2 | Degrades: multi-organ function, short-term survival, transplant window |
+| 3514 | Portopulmonary Hypertension (PoPH) | 5 | Strong | 2 | Degrades: right-heart function, transplant eligibility, survival |
+| 3515 | Gastric Variceal Hemorrhage | 5 | Moderate | 2 | Degrades: survival, hemodynamic stability, liver reserve |
+| 3516 | Bacterial Infections & Cirrhosis-Associated Immune Dysfunction | 5 | Strong | 2 | Degrades: survival, hemodynamic stability, organ function |
+| 3517 | Hepatopulmonary Syndrome (HPS) | 4 | Strong | 2 | Degrades: oxygenation, exercise capacity, survival, quality of life |
+| 3518 | Refractory Ascites | 4 | Strong | 2 | Degrades: renal function, survival, hemodynamic stability, quality of life |
+| 3519 | Sarcopenia in Cirrhosis | 4 | Strong | 2 | Degrades: survival, transplant outcomes, functional independence |
+| 3520 | Hepatic Hydrothorax | 4 | Moderate | 2 | Degrades: respiratory function, survival, quality of life |
+| 3521 | Cirrhotic Coagulopathy (Rebalanced Hemostasis) | 3 | Moderate | 2 | Degrades: hemostatic stability, bleeding/thrombosis balance, procedure safety |
+| 3522 | Non-Tumoral Portal Vein Thrombosis in Cirrhosis | 3 | Strong | 2 | Degrades: portal perfusion, transplant candidacy, survival |
+| 3523 | Cirrhotic Cardiomyopathy | 3 | Moderate | 2 | Degrades: cardiac reserve, stress tolerance, perioperative survival |
+| 3524 | Hepatic Osteodystrophy (Bone Disease of Cirrhosis) | 3 | Moderate | 2 | Degrades: bone mineral density, mobility, fracture-free survival |
+| 3525 | Idiosyncratic Drug-Induced Liver Injury (DILI) | 3 | Moderate | 2 | Degrades: liver function, drug tolerance, survival |
+| 3526 | Portal Hypertensive Gastropathy | 2 | Moderate | 2 | Degrades: hemoglobin, GI mucosal integrity, functional energy |
 
 ## Framework / uncategorized  (61)
 
