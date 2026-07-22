@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,632 clusters · 9,266 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,669 clusters · 9,329 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,146 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,342 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,180 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,345 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,083 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,632** |
+| **Total** | **4,669** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,131 |
-| Strong | 1,243 |
-| Mixed | 689 |
-| Emerging | 569 |
+| Moderate | 2,151 |
+| Strong | 1,251 |
+| Mixed | 695 |
+| Emerging | 572 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,146)
+## PRACTICES — what strengthens the mind (impact lens)  (2,180)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2173,8 +2173,42 @@
 | 4588 | Acute Exercise & Female Genital Arousal | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Seductive, genital arousal' |
 | 4589 | Flibanserin/Bremelanotide for Low Desire (HSDD) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Seductive, sexual desire, Emotional — but marginal |
 | 4590 | Sexual Mindfulness (Present-Moment Attention in Sex) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interoceptive, Seductive, Emotional, sexual satisf |
+| 4591 | Green Energy Defaults (Opt-Out Renewable Tariffs) | 4 | Strong | 2 | practice: 'Bolsters clusters: Strategic, Systemic, Naturalist, Community' |
+| 4592 | Social-Norm Home Energy Reports (Neighbor Comparison) | 2 | Strong | 2 | practice: 'Bolsters clusters: Community, Systemic, Naturalist, Volitional' |
+| 4593 | Commitment & Public Pledges for Conservation | 2 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Moral, Community, Naturalist' |
+| 4594 | Framing Climate Messages (Health, Local, Hopeful) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Rhetorical, Linguistic, Moral, Community' |
+| 4595 | Recycling — High-Visibility, Low-Impact (Honest) | 1 | Moderate | 1 | practice: 'Bolsters clusters: Community, Naturalist, Moral' |
+| 4596 | Financial Incentives for Conservation (Work While Present) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Financial, Naturalist' |
+| 4597 | Real-Time Energy Feedback & In-Home Displays | 2 | Mixed | 1 | practice: 'Bolsters clusters: Systemic, Interoceptive, Naturalist' |
+| 4598 | Meat-Reduction via Menu Design & Veg Defaults (Not Appeals) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Naturalist, Moral, Volitional, Systemic' |
+| 4599 | Pro-Environmental Self-Identity ('Green Identity') | 2 | Emerging | 1 | practice: 'Bolsters clusters: Intrapersonal, Moral, Naturalist, Volitional' |
+| 4600 | Flight Shame (Flygskam) & Air-Travel Demand | 2 | Mixed | 1 | practice: 'Bolsters clusters: Moral, Naturalist, Community, Social-Perceptual' |
+| 4601 | Behavioral Spillover (One Green Act Seeding Another) | 1 | Mixed | 1 | practice: 'Bolsters clusters: Moral, Systemic, Intrapersonal' |
+| 4604 | Generative Note-Taking — Your Words, Not a Transcript | 3 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive, Logical' |
+| 4605 | Outline Before You Draft | 3 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Creative, Logical, Meta-Cognitive' |
+| 4606 | Sketch & Diagram to Think (External Representations) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Spatial, Logical, Creative, Meta-Cognitive' |
+| 4607 | The Feynman Technique (Explain It Simply to Find the Gaps) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Linguistic, Logical' |
+| 4608 | Generate Your Own Questions While Reading | 3 | Moderate | 1 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive, Logical' |
+| 4609 | Write About What You Read (to Comprehend It) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive, Logical' |
+| 4610 | "The Pen Is Mightier" — Honest Status After Replication | 2 | Mixed | 3 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive' |
+| 4611 | Writing to Think — Externalizing Cognition on Paper | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Linguistic, Logical, Creative' |
+| 4612 | Writing to Learn (Write to Understand a Subject) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive, Logical' |
+| 4613 | Zettelkasten / Networked Note-Taking | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Creative, Linguistic' |
+| 4614 | Governing the Commons (Ostrom's Rebuttal of Inevitable Tragedy) | 4 | Strong | 2 | practice: 'Bolsters clusters: Systemic, Community, Strategic, Moral' |
+| 4615 | Altruistic Punishment & Conditional Cooperation (Public-Goods Games) | 4 | Strong | 2 | practice: 'Bolsters clusters: Community, Moral, Systemic, Leadership' |
+| 4616 | Backward Induction & the Centipede Game (Where Rationality Fails to Predict) | 3 | Strong | 2 | practice: 'Bolsters clusters: Logical, Strategic, Mathematical, Meta-Cognitive' |
+| 4617 | Nash Equilibrium: Powerful Concept, Bounded Predictor | 3 | Strong | 2 | practice: 'Bolsters clusters: Strategic, Logical, Mathematical, Systemic' |
+| 4618 | Focal Points / Schelling Points (Coordination Without Communication) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Interpersonal, Systemic, Leadership' |
+| 4619 | The Dollar Auction & All-Pay / War-of-Attrition Traps | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Adversarial, Financial, Logical' |
+| 4620 | Tit-for-Tat & the Evolution of Cooperation | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Adversarial, Interpersonal, Moral' |
+| 4621 | Mixed Strategies & Strategic Unpredictability (Minimax) | 3 | Strong | 2 | practice: 'Bolsters clusters: Strategic, Adversarial, Mathematical, Pattern-Reco |
+| 4622 | Brinkmanship: The Threat That Leaves Something to Chance (Schelling) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Adversarial, Volitional, Leadership' |
+| 4623 | Cheap Talk & When Communication Is Believable (Crawford–Sobel) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Rhetorical, Interpersonal, Adversarial' |
+| 4624 | Credible Commitment & Burning Bridges (Schelling) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Adversarial, Financial, Leadership' |
+| 4625 | The Shadow of the Future (Why Repetition Enables Cooperation) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Systemic, Community, Leadership' |
+| 4626 | Costly Signals (Why Credibility Requires Cost) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Entrepreneurial, Rhetorical, Financial' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,342)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,345)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3520,6 +3554,9 @@
 | 4576 | Betting on 'I'll Adapt' — the Treadmill Is Asymmetric for Income & Job Loss | 5 | Moderate | 1 | weakness: 'Degrades: Financial, Emotional, Existential, Strategic' |
 | 4577 | Materialistic Values → Lower Wellbeing | 5 | Strong | 1 | weakness: 'Degrades: Existential, Emotional, Intrapersonal, Interpersonal' |
 | 4578 | Status & Positional Spending → The Comparison Treadmill | 5 | Moderate | 2 | weakness: 'Degrades: Financial, Existential, Emotional, Strategic' |
+| 4602 | Misjudging Which Green Actions Actually Matter | 6 | Strong | 1 | weakness: 'Degrades: Naturalist, Systemic, Strategic, Logical' |
+| 4603 | The 'Personal Carbon Footprint' as Fossil-Fuel PR Framing | 5 | Moderate | 2 | weakness: 'Degrades: Systemic, Adversarial, Strategic, Moral' |
+| 4627 | Zero-Sum Bias (Seeing Win-Win Situations as Win-Lose) | 5 | Moderate | 2 | weakness: 'Degrades: Strategic, Financial, Community, Moral, Interpersonal' |
 
 ## COST OF FAILURE — what's at stake (harm lens)  (1,083)
 
