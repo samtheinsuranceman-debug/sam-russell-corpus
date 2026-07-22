@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,757 clusters · 7,749 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,797 clusters · 7,824 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,442 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,482 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,246 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,008 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,757** |
+| **Total** | **3,797** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,736 |
-| Strong | 1,055 |
-| Mixed | 526 |
-| Emerging | 440 |
+| Moderate | 1,751 |
+| Strong | 1,065 |
+| Mixed | 531 |
+| Emerging | 450 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,442)
+## PRACTICES — what strengthens the mind (impact lens)  (1,482)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1469,6 +1469,46 @@
 | 3713 | Pre-Sleep Gratitude (Positive Bedtime Cognitions) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Pre-Sleep Cognitive Arousal, Sleep Quality, Gratit |
 | 3714 | Yoga Nidra / NSDR for Sleep | 2 | Emerging | 2 | practice: 'Bolsters clusters: Body Scan, Guided Imagery (Relaxation), Sleep Qual |
 | 3715 | Chronotype-Aligned Scheduling (Synchrony Effect) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Chronotype–Task Mismatch, Sleep Regularity, Social |
+| 3716 | Measure Lp(a) Once in Your Life | 4 | Strong | 2 | practice: 'Bolsters clusters: ApoB (or Non-HDL-C) Over LDL-C Alone, Coronary Art |
+| 3717 | ApoB (or Non-HDL-C) Over LDL-C Alone | 4 | Strong | 3 | practice: 'Bolsters clusters: Coronary Artery Calcium (CAC) Scoring, Nutrition / |
+| 3718 | HbA1c — The No-Fasting Diabetes Screen | 4 | Strong | 2 | practice: 'Bolsters clusters: Fasting Insulin & HOMA-IR, Metabolic Syndrome, Nut |
+| 3719 | eGFR + Urine Albumin (UACR) — The Silent Kidney Number | 4 | Strong | 2 | practice: 'Bolsters clusters: Chronic Kidney Disease, Home Blood-Pressure Self-M |
+| 3720 | Resting Heart Rate — A Free Mortality Gauge | 3 | Strong | 2 | practice: 'Bolsters clusters: Cardiorespiratory Fitness — VO2max, Home Blood-Pre |
+| 3721 | Waist-to-Height Ratio — Beat BMI With a Tape Measure | 3 | Strong | 2 | practice: 'Bolsters clusters: Metabolic Syndrome, Nutrition / Diet Quality, Fast |
+| 3722 | hsCRP — The Inflammatory Half of Heart Risk | 3 | Strong | 2 | practice: 'Bolsters clusters: ApoB (or Non-HDL-C) Over LDL-C Alone, Coronary Art |
+| 3723 | Triglyceride-to-HDL Ratio — Insulin Resistance for Free | 3 | Moderate | 2 | practice: 'Bolsters clusters: Fasting Insulin & HOMA-IR, Metabolic Syndrome, Nut |
+| 3724 | Fasting Insulin & HOMA-IR — See Insulin Resistance Early | 3 | Moderate | 2 | practice: 'Bolsters clusters: Metabolic Syndrome, Nutrition / Diet Quality, Trig |
+| 3725 | Remnant Cholesterol — Free From Your Lipid Panel | 3 | Emerging | 2 | practice: 'Bolsters clusters: ApoB (or Non-HDL-C) Over LDL-C Alone, hsCRP — The  |
+| 3726 | Consumer Sleep-Stage Trackers — Motivating but Imprecise (Honest) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Wearable Activity Trackers & Pedometers, Digital C |
+| 3727 | Omega-3 Index — Membrane EPA+DHA | 2 | Emerging | 2 | practice: 'Bolsters clusters: Nutrition / Diet Quality, Nutrition for the Brain, |
+| 3728 | Homocysteine — Lowering It Doesn't Help (Honest) | 1 | Mixed | 2 | practice: 'Bolsters clusters: hsCRP — The Inflammatory Half of Heart Risk, ApoB  |
+| 3729 | Dispositional Hardiness (Commitment/Control/Challenge) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Existential, stress-resilience' |
+| 3730 | Ikigai — A Reason to Get Up (vs. Generic Purpose) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Existential, Community, life-worth-living' |
+| 3731 | Coping Flexibility (Fit Strategy to Situation) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Emotional, Meta-Cognitive' |
+| 3732 | Dispositional (Trait) Mindfulness | 3 | Moderate | 1 | practice: 'Bolsters clusters: Intrapersonal, Emotional, Interoceptive' |
+| 3733 | Emotional Granularity (Negative-Emotion Differentiation) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Interoceptive' |
+| 3734 | Trait Hope (Snyder: Agency + Pathways) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Existential, goal-directed hope' |
+| 3735 | Personal Mastery (Sense of Control Over Life) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Existential, Intrapersonal' |
+| 3736 | Self-Distancing / Distanced Self-Talk | 2 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal, Emotional, Meta-Cognitive' |
+| 3737 | Nostalgia as an Existential Resource | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Emotional, Community' |
+| 3738 | Psychological Flexibility (Values-Based, Honest on Measurement) | 3 | Mixed | 2 | practice: 'Bolsters clusters: Volitional, Emotional, Intrapersonal' |
+| 3739 | Tragic Optimism (Meaning Amid Suffering) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Emotional, meaning-under-adversity' |
+| 3740 | Subjective Vitality / Trait Zest | 2 | Emerging | 1 | practice: 'Bolsters clusters: Intrapersonal, Emotional, Volitional' |
+| 3741 | Grit (Honest: Mostly Relabeled Conscientiousness) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Volitional, perseverance-of-effort' |
+| 3742 | Ginger for Nausea | 3 | Strong | 2 | practice: 'Bolsters clusters: Interoceptive comfort, Bodily stability, functiona |
+| 3743 | Peppermint Oil for IBS | 3 | Strong | 2 | practice: 'Bolsters clusters: Interoceptive comfort, Bodily stability, functiona |
+| 3744 | Oat / Barley Beta-Glucan & LDL Cholesterol | 2 | Strong | 2 | practice: 'Bolsters clusters: Bodily vitality, lipid control, cardiovascular res |
+| 3745 | Cranberry for UTI Prevention | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily resilience, infection defense, functional a |
+| 3746 | Kiwifruit for Constipation (and Sleep) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive comfort, Bodily regularity, sleep qu |
+| 3747 | Coffee & Mortality / Liver / Type 2 Diabetes | 2 | Moderate | 3 | practice: 'Bolsters clusters: Bodily vitality, metabolic resilience, hepatic pro |
+| 3748 | Flaxseed & Blood Pressure | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily vitality, vascular resilience, cardiometabo |
+| 3749 | Prunes (Dried Plum) & Bone Density | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily durability, skeletal preservation, aging re |
+| 3750 | Walnuts & Cardiometabolic Risk / Mortality | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily vitality, cardiovascular resilience, lipid  |
+| 3751 | Berries / Anthocyanins & Cognition | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive endurance, memory, processing speed |
+| 3752 | Cruciferous Vegetables & Cardiovascular Mortality | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily vitality, cardiovascular resilience, longev |
+| 3753 | Leafy Greens (1 serving/day) & Cognitive Aging | 2 | Emerging | 1 | practice: 'Bolsters clusters: Meta-Cognitive endurance, memory retention, execut |
+| 3754 | Oily Fish & Depression Risk | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional regulation, mood stability, Interoceptiv |
+| 3755 | Tomato / Lycopene & Prostate / Vascular Risk | 1 | Mixed | 2 | practice: 'Bolsters clusters: Bodily vitality, cardiovascular resilience' |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,246)
 
