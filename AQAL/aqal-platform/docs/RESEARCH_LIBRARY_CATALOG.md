@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,516 clusters · 9,069 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,555 clusters · 9,136 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,057 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,321 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,077 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,084 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,329 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,081 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,516** |
+| **Total** | **4,555** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,068 |
-| Strong | 1,222 |
-| Mixed | 672 |
-| Emerging | 554 |
+| Moderate | 2,089 |
+| Strong | 1,225 |
+| Mixed | 682 |
+| Emerging | 559 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,057)
+## PRACTICES — what strengthens the mind (impact lens)  (2,084)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2084,8 +2084,35 @@
 | 4470 | Single-Session 'Rewind' / Human Givens Trauma Technique | 2 | Emerging | 2 | practice: 'Bolsters clusters (weak/unproven evidence): PTSD symptom relief' |
 | 4471 | Propranolol / Reconsolidation Blockade for PTSD — Promising Theory, Unreliable Results | 2 | Mixed | 2 | practice: 'Bolsters clusters (inconsistently): Emotional, PTSD symptom reduction |
 | 4472 | Sleep After Trauma — Protecting Extinction Memory and Lowering PTSD Risk | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, memory processing, PTSD  |
+| 4475 | Emotional Experience Improves With Age | 3 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Existential' |
+| 4476 | Social Engagement & Lower Dementia Risk | 3 | Moderate | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Meta-Cognitive' |
+| 4477 | Wisdom & Aging (Berlin Wisdom Paradigm) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential, Moral, Meta-Cognitive, Intrapersonal' |
+| 4478 | Gerotranscendence (Positive Late-Life Shift) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Intrapersonal, Emotional' |
+| 4479 | The Positivity Effect in Aging | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Meta-Cognitive' |
+| 4480 | Selection, Optimization, Compensation (SOC) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Strategic, Intrapersonal' |
+| 4481 | The U-Shaped Happiness Curve (Contested) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Existential, Emotional, Meta-Cognitive' |
+| 4482 | Engaged / Bridge Retirement & Cognition | 2 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Volitional, Community' |
+| 4483 | Successful Aging Model (Rowe & Kahn) — Contested | 2 | Mixed | 2 | practice: 'Bolsters clusters: Existential, Systemic, Meta-Cognitive' |
+| 4484 | Occupational Complexity & Cognitive Reserve | 2 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Logical, Interpersonal' |
+| 4485 | SuperAgers — Youthful Memory in Old Brains | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Intrapersonal' |
+| 4486 | Grandparenting & Wellbeing (Curvilinear) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Community, Parental, Emotional' |
+| 4488 | Audit & Feedback (Performance Feedback to Change Practice) | 3 | Strong | 1 | practice: 'Bolsters clusters: Systemic, Meta-Cognitive, Volitional' |
+| 4489 | Diffusion of Innovations in Service Organizations | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Entrepreneurial, Leadership' |
+| 4490 | Habit-Formation Timeline (~66 days, high variance) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Intrapersonal, Meta-Cognitive' |
+| 4491 | Behavior Change Technique (BCT) Taxonomy v1 | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Meta-Cognitive' |
+| 4492 | COM-B Model & Behaviour Change Wheel | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Volitional, Meta-Cognitive' |
+| 4493 | Theoretical Domains Framework (TDF) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Meta-Cognitive, Interpersonal |
+| 4494 | CFIR — Consolidated Framework for Implementation Research | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Leadership' |
+| 4495 | ERIC — Expert Recommendations for Implementing Change (73 strategies) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Entrepreneurial' |
+| 4496 | RE-AIM Framework (Reach, Effectiveness, Adoption, Implementation, Maintenance) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Meta-Cognitive' |
+| 4497 | Normalization Process Theory (NPT) | 3 | Emerging | 2 | practice: 'Bolsters clusters: Systemic, Strategic, Interpersonal' |
+| 4498 | MRC Framework for Developing & Evaluating Complex Interventions | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Meta-Cognitive' |
+| 4504 | Harder-Textured, Slower-to-Eat Foods (Oral Processing) | 2 | Moderate | 3 | Bolsters clusters: Interoceptive appetite regulation, Volitional intake control, |
+| 4505 | Food-Intake Self-Monitoring (Food Records) | 3 | Moderate | 2 | Bolsters clusters: Volitional intake control, Interoceptive awareness, Meta-Cogn |
+| 4508 | Savory/Umami Flavor & Satiety | 2 | Emerging | 1 | Bolsters clusters: Interoceptive satiety, Bodily protein signaling, Volitional i |
+| 4509 | Chewing Gum to Curb Snacking (Weak/Mixed) | 1 | Mixed | 2 | Bolsters clusters: Volitional restraint, Interoceptive appetite awareness (weakl |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,321)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,329)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3410,8 +3437,16 @@
 | 4461 | Warm-Up Decrement — The Cost of a Break in the Action | 3 | Moderate | 2 | weakness: 'Degrades: Bodily, Mechanical, Musical performance right after a rest/ |
 | 4473 | Negative Social Reactions to Disclosure → Worse Recovery | 6 | Moderate | 2 | weakness: 'Degrades: Emotional, Interpersonal, perceived control, PTSD recovery' |
 | 4474 | Peritraumatic Dissociation Proneness → Worse PTSD Course | 6 | Moderate | 2 | weakness: 'Degrades: Emotional, Intrapersonal, Interoceptive, trauma recovery' |
+| 4487 | Terminal Decline in Well-Being | 6 | Strong | 2 | weakness: 'Degrades: Existential, Emotional, Intrapersonal' |
+| 4499 | The Intention–Behavior Gap (Why Changing Minds ≠ Changing Behavior) | 6 | Strong | 2 | weakness: 'Degrades: Volitional, Strategic, Meta-Cognitive' |
+| 4500 | Health Belief Model — Popular but Weak Predictor | 5 | Mixed | 1 | weakness: 'Degrades: Strategic, Systemic, Meta-Cognitive' |
+| 4501 | Nudge Effect Sizes Inflated by Publication Bias | 5 | Mixed | 2 | weakness: 'Degrades: Strategic, Systemic, Entrepreneurial' |
+| 4510 | Modeling Others' Intake (Eating-Norm Susceptibility) | 4 | Moderate | 2 | Degrades: Social-Perceptual, Volitional, Interoceptive |
+| 4511 | Slow Habituation to Food Cues | 4 | Emerging | 2 | Degrades: Interoceptive, Volitional, Intrapersonal |
+| 4512 | Trusting the 'Mindless Eating' Canon (Wansink Retractions) | 4 | Mixed | 3 | Degrades: Meta-Cognitive, Interoceptive, Volitional |
+| 4513 | The Health Halo ('It's Organic/Low-Fat, So More Is Fine') | 3 | Mixed | 2 | Degrades: Meta-Cognitive, Volitional, Interoceptive |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,077)
+## COST OF FAILURE — what's at stake (harm lens)  (1,081)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4492,6 +4527,10 @@
 | 4424 | Hostile Relationship Conflict Slows Healing & Raises Cytokines | 3 | Moderate | 1 | cost: 'Degrades: Community, Interpersonal, Bodily' |
 | 4425 | Chronic Caregiving Stress & Accelerated Cellular Aging | 3 | Moderate | 1 | cost: 'Degrades: Bodily, Existential, Interoceptive' |
 | 4464 | Institutional Betrayal Magnifies Trauma | 3 | Moderate | 2 | cost: 'Degrades: Emotional, Intrapersonal, trust, recovery from assault' |
+| 4502 | Short Sleep Drives Extra Eating (~+385 kcal/day) | 3 | Moderate | 2 | Degrades: Interoceptive appetite regulation, Volitional, Bodily |
+| 4503 | The Aperitif Effect (Alcohol Before/With Meals) | 3 | Moderate | 2 | Degrades: Interoceptive appetite regulation, Volitional, Bodily |
+| 4506 | Drinking Your Calories (Weak Satiety from Liquids) | 3 | Moderate | 3 | Degrades: Interoceptive appetite regulation, Bodily metabolic health, Volitional |
+| 4507 | Eating with Friends (Social Facilitation of Intake) | 2 | Moderate | 2 | Degrades: Interoceptive appetite regulation, Volitional portion control |
 
 ## Framework / uncategorized  (61)
 
