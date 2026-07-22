@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,076 clusters · 8,288 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,118 clusters · 8,351 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,724 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,268 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,023 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,755 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,269 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,033 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,076** |
+| **Total** | **4,118** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,879 |
-| Strong | 1,129 |
-| Mixed | 574 |
-| Emerging | 494 |
+| Moderate | 1,897 |
+| Strong | 1,130 |
+| Mixed | 584 |
+| Emerging | 507 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,724)
+## PRACTICES — what strengthens the mind (impact lens)  (1,755)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1751,8 +1751,39 @@
 | 4029 | The Fresh Start Effect — Timing Goals to Temporal Landmarks | 2 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Goal Initiation, Fresh Start Effect' |
 | 4030 | 40-Second Green Micro-Breaks to Restore Attention | 2 | Emerging | 1 | practice: 'Bolsters clusters: sustained attention, Attention Restoration, Natura |
 | 4031 | Batching Email to a Few Fixed Checks a Day | 2 | Moderate | 1 | practice: 'Bolsters clusters: Guarding Uninterrupted Focus Blocks, Attention Res |
+| 4035 | Music Listening for Blood Pressure | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interoceptive, Bodily, Emotional' |
+| 4036 | Music for Cancer Patients (Supportive Care) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal' |
+| 4037 | Patient-Directed Music in the ICU | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Volitional' |
+| 4038 | Active Music Therapy for Depression | 3 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Interpersonal' |
+| 4039 | Chasing Musical Chills (Frisson) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Aesthetic, Emotional, Musical, Interoceptive' |
+| 4040 | Using Tempo (and Silence) to Steer Arousal | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interoceptive, Bodily, Emotional' |
+| 4041 | ASMR for Relaxation | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interoceptive, Emotional, Aesthetic' |
+| 4043 | Groove — The Pleasurable Urge to Move | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Musical, Emotional, Aesthetic' |
+| 4044 | Music During Labour & Childbirth | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Bodily' |
+| 4045 | Why Sad Music Feels Good (Catharsis) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Aesthetic, Intrapersonal, Interpersonal |
+| 4046 | Melodic Intonation Therapy for Aphasia | 3 | Mixed | 2 | practice: 'Bolsters clusters: Linguistic, Musical, Bodily' |
+| 4047 | Music for Premature Infants (NICU) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive, Bodily, Parental' |
+| 4048 | Music Therapy for Autism Core Symptoms (Honest Null) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Social-Perceptual, Interpersonal (but honestly wea |
+| 4051 | Psilocybin Mystical Experience & Durable Wellbeing | 3 | Mixed | 2 | Bolsters clusters: Existential, Meta-Cognitive, Aesthetic, Intrapersonal |
+| 4052 | IV Ketamine for Acute Suicidal Ideation (Rapid, Transient) | 3 | Moderate | 1 | Bolsters clusters: Emotional, Existential, Interoceptive |
+| 4053 | Ketamine Infusions for Chronic PTSD (Distinct from Depression) | 3 | Mixed | 2 | Bolsters clusters: Emotional, Intrapersonal, Interoceptive |
+| 4054 | Psilocybin-Assisted Therapy for Alcohol Use Disorder (Research Only) | 3 | Emerging | 1 | Bolsters clusters: Volitional, Interoceptive, Existential, Emotional |
+| 4056 | Ayahuasca for Treatment-Resistant Depression (Small RCT) | 2 | Emerging | 1 | Bolsters clusters: Emotional, Existential, Intrapersonal |
+| 4057 | Psilocybin & Brain-Network Integration (Mechanism) | 2 | Emerging | 2 | Bolsters clusters: Meta-Cognitive, Creative, Pattern-Recognition |
+| 4058 | LSD-Assisted Therapy for End-of-Life Anxiety (Pilot RCT) | 2 | Emerging | 1 | Bolsters clusters: Existential, Emotional, Intrapersonal |
+| 4059 | MDMA-Assisted Therapy for Social Anxiety in Autistic Adults (Pilot) | 2 | Emerging | 1 | Bolsters clusters: Social-Perceptual, Interpersonal, Emotional |
+| 4060 | Psilocybin for Tobacco/Smoking Cessation (Open-Label Pilot) | 2 | Emerging | 1 | Bolsters clusters: Volitional, Meta-Cognitive, Existential |
+| 4061 | Microdosing Psychedelics — Largely Placebo/Expectancy | 1 | Mixed | 3 | Bolsters clusters: Emotional (claimed) — but effect is mostly placebo |
+| 4063 | Nap-Dependent Perceptual Learning ('A Nap Is As Good As a Night') | 3 | Moderate | 1 | practice: 'Bolsters clusters: Pattern-Recognition, Aesthetic, Meta-Cognitive' |
+| 4064 | Sleep Spindles & Nap-Based Motor-Memory Consolidation | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Musical, Mechanical, Meta-Cognitive' |
+| 4065 | Deep (Slow-Wave) Sleep & Glymphatic Metabolite Clearance | 3 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Meta-Cognitive, Existential' |
+| 4069 | Sleep Extension for Athletic Performance | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Volitional, Meta-Cognitive' |
+| 4070 | REM Sleep as 'Overnight Therapy' — Emotional Depotentiation | 3 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal, Social-Pe |
+| 4074 | Timed Exercise for Circadian Phase-Shifting | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interoceptive, Bodily, Volitional' |
+| 4075 | Weekend Catch-Up / Recovery Sleep (Honest — Mixed) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Bodily' |
+| 4076 | Sound-Cued Targeted Memory Reactivation (Auditory TMR) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Linguistic, Pattern-Recognition' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,268)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,269)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3024,8 +3055,9 @@
 | 4032 | The Mere Urgency Effect — Chasing Urgent Over Important | 5 | Moderate | 1 | weakness: 'Degrades: Strategic, Meta-Cognitive, prioritization' |
 | 4033 | Parkinson's Law — Work Expands to Fill the Time Given | 4 | Emerging | 1 | weakness: 'Degrades: Strategic, Volitional, efficiency' |
 | 4034 | Precrastination — Rushing Subgoals at Extra Cost | 4 | Emerging | 1 | weakness: 'Degrades: Strategic, Meta-Cognitive, efficient sequencing' |
+| 4062 | Functional Unblinding — Methodological Threat Across Psychedelic Trials | 7 | Strong | 1 | Degrades: Existential, Emotional, Meta-Cognitive |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,023)
+## COST OF FAILURE — what's at stake (harm lens)  (1,033)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4052,6 +4084,16 @@
 | 4023 | Chronic Time Pressure / Time Famine | 3 | Moderate | 2 | cost: 'Degrades: wellbeing, recovery, decision quality' |
 | 4027 | Mind-Wandering — Attention Off-Task, Happiness Down | 2 | Moderate | 1 | cost: 'Degrades: present-moment attention, mood, engagement' |
 | 4028 | Open-Plan Offices — Fewer Real Conversations, More Interruption | 2 | Moderate | 1 | cost: 'Degrades: sustained focus, face-to-face collaboration, deep work' |
+| 4042 | Earworms (Involuntary Musical Imagery) | 2 | Mixed | 2 | cost: 'Degrades: Meta-Cognitive, Volitional, Linguistic' |
+| 4049 | Ibogaine for Opioid Dependence — Real Cardiac Death Risk | 4 | Mixed | 2 | Degrades: Bodily, Interoceptive, Volitional |
+| 4050 | Challenging Experiences ('Bad Trips') & HPPD | 3 | Moderate | 1 | Degrades: Emotional, Interoceptive, Meta-Cognitive |
+| 4055 | Chronic 5-HT2B Agonism & Cardiac Valve Risk | 2 | Emerging | 1 | Degrades: Bodily, Interoceptive |
+| 4066 | Short Sleep → Susceptibility to Infection | 3 | Moderate | 2 | cost: 'Degrades: Bodily immune function, Interoceptive' |
+| 4067 | Sleep Deprivation Amplifies Pain Sensitivity | 3 | Moderate | 1 | cost: 'Degrades: Bodily pain regulation, Interoceptive, Emotional' |
+| 4068 | Sleep Deprivation Cripples Hippocampal Encoding of New Memories | 3 | Moderate | 1 | cost: 'Degrades: Meta-Cognitive learning, Linguistic, Pattern-Recognition' |
+| 4071 | One Night of Short Sleep → Acute Insulin Resistance | 2 | Moderate | 1 | cost: 'Degrades: Bodily metabolic health, Interoceptive glucose regulation' |
+| 4072 | Sleep Deprivation During Encoding → False Memories | 2 | Moderate | 1 | cost: 'Degrades: Meta-Cognitive memory accuracy, Adversarial, Pattern-Recognitio |
+| 4073 | Sleep Deprivation Heightens Desire for High-Calorie Food | 2 | Moderate | 1 | cost: 'Degrades: Volitional self-control, Bodily metabolic health, Interoceptive |
 
 ## Framework / uncategorized  (61)
 
