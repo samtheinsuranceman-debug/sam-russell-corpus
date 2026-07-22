@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,235 clusters · 8,577 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,278 clusters · 8,651 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,845 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,280 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,049 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,884 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,281 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,052 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,235** |
+| **Total** | **4,278** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,953 |
-| Strong | 1,147 |
-| Mixed | 608 |
+| Moderate | 1,964 |
+| Strong | 1,168 |
+| Mixed | 619 |
 | Emerging | 527 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,845)
+## PRACTICES — what strengthens the mind (impact lens)  (1,884)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1872,8 +1872,47 @@
 | 4186 | Disrupt-then-Reframe (DTR) | 3 | Moderate | 2 | Bolsters clusters: Rhetorical, Entrepreneurial, Adversarial, Interpersonal |
 | 4187 | Pique Technique (Odd, Curiosity-Piquing Requests) | 2 | Moderate | 2 | Bolsters clusters: Rhetorical, Entrepreneurial, Adversarial, Street-Smarts |
 | 4188 | That's-Not-All Technique | 2 | Moderate | 2 | Bolsters clusters: Entrepreneurial, Rhetorical, Interpersonal, Financial |
+| 4194 | Back to Sleep (Supine Infant Sleep Position) | 5 | Strong | 2 | practice: 'Bolsters clusters: Parental, Bodily' |
+| 4195 | Kangaroo Mother Care (Skin-to-Skin) | 5 | Strong | 2 | practice: 'Bolsters clusters: Parental, Bodily, Interoceptive' |
+| 4196 | Early Allergen Introduction (LEAP) | 4 | Strong | 2 | practice: 'Bolsters clusters: Parental, Bodily' |
+| 4197 | Pacifier at Sleep Onset (SIDS Reduction) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Parental, Bodily' |
+| 4199 | Video-Feedback Parenting (VIPP-SD) | 3 | Strong | 2 | practice: 'Bolsters clusters: Parental, Emotional, Social-Perceptual, Interperso |
+| 4200 | Nurse Home Visiting (Nurse-Family Partnership) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Parental, Community, Emotional' |
+| 4201 | Awake Tummy Time | 2 | Moderate | 1 | practice: 'Bolsters clusters: Parental, Bodily, Spatial' |
+| 4202 | Increased Carrying / Babywearing | 2 | Moderate | 1 | practice: 'Bolsters clusters: Parental, Emotional, Interoceptive' |
+| 4203 | Frequent Family Dinners | 2 | Mixed | 1 | practice: 'Bolsters clusters: Parental, Community, Emotional' |
+| 4204 | 'Educational' Baby Videos (Baby Einstein) | 1 | Mixed | 2 | practice: 'Bolsters clusters: (none — no benefit shown)' |
+| 4205 | Baby-Led Weaning (BLISS) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Parental, Bodily, Interoceptive' |
+| 4206 | Raising Kids Bilingual for 'Brain Boost' | 2 | Mixed | 2 | practice: 'Bolsters clusters: Linguistic, Community, Interpersonal' |
+| 4207 | Music Lessons for 'Smarter Kids' (Cognitive Transfer) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Musical, Bodily, Volitional' |
+| 4208 | State Pre-K / Early Education (Honest Verdict) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Parental, Community, Linguistic' |
+| 4209 | HPV Vaccination Prevents Invasive Cervical Cancer | 5 | Strong | 1 | practice: 'Bolsters clusters: Cervical Cancer Prevention, Cancer Screening, Stra |
+| 4210 | Periconceptional Folic Acid Prevents Neural-Tube Defects | 5 | Strong | 2 | practice: 'Bolsters clusters: Prenatal Prevention, Birth-Defect Prevention, Stra |
+| 4211 | Anticoagulation in Atrial Fibrillation — Stroke Prevention | 5 | Strong | 1 | practice: 'Bolsters clusters: Stroke Prevention, Cardiovascular Event Prevention |
+| 4212 | Recombinant Shingles Vaccine (Shingrix) — and a Dementia Signal | 4 | Strong | 3 | practice: 'Bolsters clusters: Herpes Zoster Prevention, Postherpetic Neuralgia P |
+| 4213 | Fluoride Toothpaste — The Boring Caries Winner | 4 | Strong | 2 | practice: 'Bolsters clusters: Dental Caries Prevention, Oral Health, Strategic-a |
+| 4214 | The Cardiovascular Polypill | 4 | Strong | 1 | practice: 'Bolsters clusters: Cardiovascular Event Prevention, Medication Adhere |
+| 4215 | Pneumococcal Conjugate Vaccine in Older Adults | 3 | Strong | 1 | practice: 'Bolsters clusters: Pneumonia Prevention, Immune Resilience, Strategic |
+| 4216 | Bicycle Helmets — The Base-Rate Head-Injury Win | 4 | Strong | 1 | practice: 'Bolsters clusters: Injury Prevention, Bodily Safety, Strategic-about- |
+| 4217 | Low-Dose CT Lung Screening for Heavy Smokers | 4 | Strong | 2 | practice: 'Bolsters clusters: Lung Cancer Prevention, Cancer Screening, Strategi |
+| 4218 | One-Time Ultrasound for Abdominal Aortic Aneurysm | 3 | Strong | 1 | practice: 'Bolsters clusters: Vascular Rupture Prevention, Cancer/Vascular Scree |
+| 4219 | Preventing Type 2 Diabetes — Lifestyle Beats Metformin | 4 | Strong | 1 | practice: 'Bolsters clusters: Metabolic Health, Diabetes Prevention, Strategic-a |
+| 4220 | Flu Shot to Prevent Heart Attacks (Not Just Flu) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Cardiovascular Event Prevention, Secondary Prevent |
+| 4221 | Hand Hygiene to Cut Respiratory Infection Spread | 2 | Moderate | 1 | practice: 'Bolsters clusters: Infection Prevention, Immune Resilience, Strategic |
+| 4222 | Mammography Screening — Real Benefit, Real Overdiagnosis | 3 | Mixed | 1 | practice: 'Bolsters clusters: Breast Cancer Prevention, Cancer Screening, Shared |
+| 4224 | Job Characteristics Model — Designing Motivating Work | 4 | Strong | 2 | practice: 'Bolsters clusters: Systemic, Leadership, Volitional, job satisfaction |
+| 4225 | Organizational Justice — Fair Process Pays | 3 | Strong | 2 | practice: 'Bolsters clusters: Leadership, Interpersonal, Moral, trust, citizensh |
+| 4226 | Job Crafting — Reshaping Your Own Role | 3 | Moderate | 2 | practice: 'Bolsters clusters: Entrepreneurial, Volitional, Creative, Intraperson |
+| 4227 | Organizational Commitment → Retention & Contribution | 3 | Strong | 2 | practice: 'Bolsters clusters: Volitional, Community, retention, citizenship, per |
+| 4228 | Perceived Organizational Support (POS) | 3 | Strong | 2 | practice: 'Bolsters clusters: Community, Interpersonal, commitment, retention, p |
+| 4229 | Empowering Leadership — Sharing Power & Autonomy | 3 | Moderate | 2 | practice: 'Bolsters clusters: Leadership, Creative, Entrepreneurial, Volitional, |
+| 4230 | Newcomer Onboarding & Socialization | 3 | Moderate | 2 | practice: 'Bolsters clusters: Leadership, Systemic, retention, role clarity, Int |
+| 4231 | Team Cohesion → Performance | 3 | Moderate | 2 | practice: 'Bolsters clusters: Systemic, Interpersonal, Leadership, team performa |
+| 4232 | Work-From-Home & Productivity (Bloom RCT) | 3 | Mixed | 2 | practice: 'Bolsters clusters: Systemic, Volitional, productivity, retention, aut |
+| 4233 | Ethical Leadership — Integrity That Transmits | 3 | Moderate | 2 | practice: 'Bolsters clusters: Leadership, Moral, Interpersonal, trust' |
+| 4235 | Team Diversity & Performance — Contingent, Not Automatic | 2 | Mixed | 2 | practice: 'Bolsters clusters: Systemic, Creative, Strategic, Interpersonal, inno |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,280)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,281)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3157,8 +3196,9 @@
 | 4191 | Placebic 'Because' (Mindless Reason-Following) | 4 | Mixed | 2 | Degrades: Adversarial, Meta-Cognitive, Logical, Street-Smarts |
 | 4192 | Rhyme-as-Reason & Processing Fluency | 3 | Mixed | 2 | Degrades: Logical, Meta-Cognitive, Adversarial |
 | 4193 | Sleeper Effect (Discounted Messages Rebound) | 3 | Mixed | 1 | Degrades: Meta-Cognitive, Adversarial, Logical |
+| 4236 | Pay-First Motivation Blind Spot | 4 | Strong | 2 | weakness: 'Degrades: Leadership, Strategic, Interpersonal, Systemic' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,049)
+## COST OF FAILURE — what's at stake (harm lens)  (1,052)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4211,6 +4251,9 @@
 | 4132 | Venting / Catharsis for Anger (Debunked) | 3 | Strong | 2 | cost: 'Degrades: Anger down-regulation, Impulse control, Conflict de-escalation' |
 | 4161 | Post-Lifting Cold-Water Immersion Blunts Muscle Gains | 2 | Strong | 2 | cost: 'Degrades: Bodily hypertrophy, strength adaptation, training ROI for muscl |
 | 4171 | Strategic Anger — Short-Term Concessions, Long-Term Damage | 3 | Moderate | 3 | cost: 'Degrades: relationship, future deals, trust, reputation' |
+| 4198 | Bed-Sharing With Infants (SIDS Risk) | 3 | Mixed | 2 | cost: 'Degrades: Parental, Bodily' |
+| 4223 | Abusive Supervision → Strain & Deviance | 4 | Strong | 2 | cost: 'Degrades: Interpersonal, Emotional, Leadership climate, engagement' |
+| 4234 | Goals Gone Wild — Aggressive Stretch Goals Backfire | 3 | Mixed | 2 | cost: 'Degrades: Moral, Strategic, Systemic, intrinsic motivation' |
 
 ## Framework / uncategorized  (61)
 
