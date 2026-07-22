@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,956 clusters · 9,811 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,991 clusters · 9,873 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,409 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,390 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,096 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,437 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,396 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,097 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,956** |
+| **Total** | **4,991** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,274 |
-| Strong | 1,294 |
-| Mixed | 762 |
-| Emerging | 626 |
+| Moderate | 2,284 |
+| Strong | 1,296 |
+| Mixed | 772 |
+| Emerging | 639 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,409)
+## PRACTICES — what strengthens the mind (impact lens)  (2,437)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2436,8 +2436,36 @@
 | 4911 | Therapeutic Touch (Energy-Field Healing) | 1 | Mixed | 1 | practice: 'Bolsters clusters: Emotional' — but effectively placebo only |
 | 4912 | Manual Lymphatic Drainage for Lymphedema | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
 | 4913 | Spinal Manipulation / Chiropractic for Low-Back Pain | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 4915 | Helping Children With Frequent Nightmares | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Parental, Interpersonal' |
+| 4916 | Improving Dream Recall (Attention, Waking Habits, Journaling) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Intrapersonal, Creative' |
+| 4917 | Continuity Hypothesis — Dreams Mirror Waking Concerns | 2 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal, Meta-Cognitive, Emotional' |
+| 4919 | Dream Incubation for Problem-Solving ('Sleep on It', deliberately) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Creative, Strategic, Pattern-Recognition' |
+| 4920 | Precognitive / Prophetic Dreams — The Coincidence Illusion | 1 | Mixed | 2 | practice: 'Bolsters clusters: (claimed) Existential, Pattern-Recognition — no cr |
+| 4921 | Targeted Dream Incubation (MIT Dormio) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Creative, Meta-Cognitive' |
+| 4922 | Dream Interpretation — Symbol-Decoding vs. Reflective Insight | 2 | Mixed | 2 | practice: 'Bolsters clusters: Intrapersonal, Meta-Cognitive' |
+| 4923 | Lucid Dreaming Treatment for Chronic Nightmares | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Interoceptive' |
+| 4924 | Social-Simulation Theory of Dreaming (Avatars in the Machine) | 1 | Emerging | 2 | practice: 'Bolsters clusters: Social-Perceptual, Interpersonal, Emotional' |
+| 4925 | Threat-Simulation Theory of Dreaming (Revonsuo) | 1 | Emerging | 2 | practice: 'Bolsters clusters: Adversarial, Strategic, Existential' |
+| 4926 | Lucid Dreaming Induction (MILD + WBTB + Reality Testing) | 2 | Mixed | 3 | practice: 'Bolsters clusters: Meta-Cognitive, Creative, Intrapersonal' |
+| 4927 | Lifelong Cognitive Activity & Slower Cognitive Decline | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Pattern-Recognition, Linguistic' |
+| 4928 | Audiobooks vs Print — Comprehension Parity | 2 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive' |
+| 4929 | Early Childhood Reading for Pleasure & Adolescent Outcomes | 3 | Moderate | 1 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive, Emotional' |
+| 4930 | Reading a Book in Bed & Sleep | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interoceptive, Emotional, Intrapersonal' |
+| 4931 | Comfort Rereading of Beloved Books | 2 | Emerging | 1 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Existential' |
+| 4932 | Fiction as Social Surrogate — Buffering Loneliness | 2 | Emerging | 1 | practice: 'Bolsters clusters: Emotional, Community, Existential' |
+| 4933 | Poetry Reading & Aesthetic Chills | 2 | Emerging | 1 | practice: 'Bolsters clusters: Aesthetic, Emotional, Existential' |
+| 4934 | Reading for Pleasure & Adult Wellbeing | 2 | Mixed | 2 | practice: 'Bolsters clusters: Existential, Emotional, Intrapersonal' |
+| 4935 | Reading to Unwind — and the '68% in 6 Minutes' Myth | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal' |
+| 4936 | Lifetime Fiction Reading & Theory of Mind — with an Honest Correction | 2 | Mixed | 4 | practice: 'Bolsters clusters: Interpersonal, Emotional, Social-Perceptual' |
+| 4937 | Reading a Novel & Brain Connectivity | 2 | Emerging | 1 | practice: 'Bolsters clusters: Linguistic, Pattern-Recognition, Interpersonal' |
+| 4938 | Fiction as a 'Moral Laboratory' | 2 | Emerging | 1 | practice: 'Bolsters clusters: Moral, Existential, Interpersonal' |
+| 4939 | "Focus Music" Apps (Brain.fm, Endel & Similar) | 2 | Mixed | 1 | practice: 'Bolsters clusters: sustained attention, task engagement, focus routin |
+| 4940 | Deliberate Silence & Quiet for Mental Restoration | 2 | Emerging | 2 | practice: 'Bolsters clusters: attention restoration, self-reflection, autonomic  |
+| 4941 | Sound Baths & Singing-Bowl Meditation | 2 | Emerging | 1 | practice: 'Bolsters clusters: relaxation, tension release, aesthetic/contemplati |
+| 4942 | White-Noise Machines as a Sleep Aid | 2 | Mixed | 2 | practice: 'Bolsters clusters: sleep onset in noisy settings, masking of disrupti |
+| 4943 | Tinnitus Retraining Therapy & Sound Masking | 2 | Mixed | 2 | practice: 'Bolsters clusters: tinnitus habituation, distress tolerance, sleep on |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,390)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,396)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3831,8 +3859,14 @@
 | 4889 | Cluttered / Unfinished Home & Stress Physiology | 3 | Emerging | 1 | weakness: 'Degrades: Emotional, Intrapersonal, Interoceptive' |
 | 4902 | Smell Loss as an Early Sign of Neurodegeneration | 6 | Strong | 2 | weakness: 'Degrades: Interoceptive, Aesthetic, Meta-Cognitive' |
 | 4914 | Touch Deprivation ('Skin Hunger') | 4 | Emerging | 2 | weakness: 'Degrades: Emotional, Interoceptive, Interpersonal, Bodily' |
+| 4944 | Hyperacusis — Everyday Sounds Feel Painfully Loud | 5 | Moderate | 2 | weakness: 'Degrades: tolerance of ordinary environments, social participation, c |
+| 4945 | Misophonia — Rage/Disgust at Specific Sounds | 5 | Moderate | 2 | weakness: 'Degrades: emotional regulation, shared meals & social ease, sustained |
+| 4946 | Cochlear Synaptopathy — "Hidden Hearing Loss" | 4 | Emerging | 2 | weakness: 'Degrades: understanding speech in noise, musical clarity, effortless  |
+| 4947 | Noise Sensitivity as a Trait | 4 | Moderate | 2 | weakness: 'Degrades: habituation to environments, calm mood, sleep in shared/urb |
+| 4948 | The Irrelevant Sound Effect (Changing-State Background) | 4 | Strong | 2 | weakness: 'Degrades: verbal working memory, reading comprehension, ordered recal |
+| 4949 | Earwax (Cerumen) Impaction — A Reversible Muffle | 3 | Strong | 1 | weakness: 'Degrades: hearing acuity, speech understanding, sound clarity (revers |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,096)
+## COST OF FAILURE — what's at stake (harm lens)  (1,097)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4932,6 +4966,7 @@
 | 4767 | Heat & Cognitive/Academic Performance | 3 | Strong | 1 | cost: 'Degrades: Meta-Cognitive focus, Mathematical, Linguistic, Logical, Financ |
 | 4768 | Daylight Saving Time Spring Transition — Health & Safety Cost | 3 | Moderate | 2 | cost: 'Degrades: Interoceptive circadian alignment, Bodily cardiovascular, Meta- |
 | 4826 | High-Altitude Mountaineering — Objective Hazard & Mortality | 5 | Strong | 2 | cost: 'Degrades: Bodily, Interoceptive' |
+| 4918 | REM/Dream Rebound After REM-Suppressing Substances | 2 | Moderate | 2 | cost: 'Degrades: Emotional, Interoceptive, Bodily (temporarily)' |
 
 ## Framework / uncategorized  (61)
 
