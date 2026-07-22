@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,477 clusters · 8,991 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,516 clusters · 9,069 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,028 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,312 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,076 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,057 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,321 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,077 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,477** |
+| **Total** | **4,516** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,050 |
-| Strong | 1,213 |
-| Mixed | 662 |
-| Emerging | 552 |
+| Moderate | 2,068 |
+| Strong | 1,222 |
+| Mixed | 672 |
+| Emerging | 554 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,028)
+## PRACTICES — what strengthens the mind (impact lens)  (2,057)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2055,8 +2055,37 @@
 | 4427 | Positive Affect & Slightly Lower Inflammation | 2 | Mixed | 1 | practice: 'Bolsters clusters: Emotional, Interoceptive, Existential' |
 | 4428 | Social Support & Immune/Inflammatory Buffering | 2 | Mixed | 1 | practice: 'Bolsters clusters: Community, Interpersonal, Bodily' |
 | 4429 | Mindfulness Meditation & Inflammatory Markers | 2 | Mixed | 1 | practice: 'Bolsters clusters: Interoceptive, Emotional, Intrapersonal' |
+| 4436 | Judgments of Learning & the Delayed-JOL Fix | 3 | Strong | 2 | practice: 'Bolsters clusters: study calibration, Meta-Cognitive accuracy, self-r |
+| 4437 | Initial Confidence in Memory IS Diagnostic (Under Clean Conditions) | 3 | Strong | 1 | practice: 'Bolsters clusters: calibrated confidence in memory, Adversarial/legal |
+| 4438 | Reflective Override — Catching the Intuitive Wrong Answer | 3 | Strong | 2 | practice: 'Bolsters clusters: Logical reasoning, bias resistance, Meta-Cognitive |
+| 4439 | Feeling-of-Knowing & Tip-of-the-Tongue as Metacognitive Signals | 2 | Strong | 3 | practice: 'Bolsters clusters: memory monitoring, retrieval strategy, Meta-Cognit |
+| 4440 | Need for Cognition — Enjoying Effortful Thinking | 3 | Moderate | 1 | practice: 'Bolsters clusters: Logical reasoning, sustained analysis, Meta-Cognit |
+| 4441 | Intellectual Humility — Owning the Limits of What You Know | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive judgment, open-minded reasoning, co |
+| 4442 | Wise Reasoning — Humility, Change, and Multiple Perspectives | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential judgment, conflict resolution, Strateg |
+| 4443 | Hard-to-Read Fonts to Think Harder — A Finding That Didn't Hold | 1 | Mixed | 3 | practice: 'Bolsters clusters: analytic override, Logical reasoning (claimed — la |
+| 4444 | Explain the Mechanism — Puncturing the Illusion of Understanding | 2 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive humility, depolarization, Moral/pol |
+| 4449 | External Focus of Attention — Aim at the Effect, Not the Body Part | 3 | Strong | 2 | practice: 'Bolsters clusters: Motor Skill Acquisition, Movement Efficiency, Chok |
+| 4450 | Quiet Eye — The Long Final Fixation Before You Act | 3 | Strong | 2 | practice: 'Bolsters clusters: Aiming/targeting skill, Choking Resistance, Visual |
+| 4451 | Anticipation Training — Reading Cues Before the Ball Arrives | 3 | Moderate | 2 | practice: 'Bolsters clusters: Reaction Speed, Decision-Making, Opponent Reading, |
+| 4452 | Practicing Under Pressure — Anxiety Acclimatization | 3 | Moderate | 2 | practice: 'Bolsters clusters: Choking Resistance, Competition Performance, Compo |
+| 4453 | Fade the Feedback — Reduced Knowledge of Results Aids Retention | 2 | Moderate | 2 | practice: 'Bolsters clusters: Motor Skill Retention, Self-Correction, Skill Acqu |
+| 4454 | Associative vs Dissociative Attention in Endurance | 2 | Moderate | 2 | practice: 'Bolsters clusters: Endurance Pacing, Perceived-Effort Management, Int |
+| 4455 | Enter a Challenge State, Not a Threat State | 2 | Moderate | 2 | practice: 'Bolsters clusters: Pressure Performance, Composure, Cardiovascular Ef |
+| 4456 | Left-Hand Ball-Squeeze Before Performing — Popular but Unproven | 1 | Mixed | 2 | practice: 'Bolsters clusters: Choking Resistance (contested)' |
+| 4457 | Self-Controlled Practice & Enhanced Expectancies (OPTIMAL) — Mostly Reporting Bias | 1 | Mixed | 2 | practice: 'Bolsters clusters: Motor Learning, Motivation (weak/contested)' |
+| 4458 | Mental Toughness — Real Signal, Fuzzy Construct | 2 | Mixed | 2 | practice: 'Bolsters clusters: Persistence Under Adversity, Competition Performan |
+| 4462 | Resilience Is the Ordinary Norm, Not the Exception | 3 | Strong | 2 | practice: 'Bolsters clusters: Existential, Intrapersonal, Emotional, realistic s |
+| 4463 | Post-Trauma Social Support — The Strongest Modifiable Protective Factor | 4 | Strong | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Emotional, PTSD preventi |
+| 4465 | Early Trauma-Focused CBT for Acute Stress Disorder Prevents Chronic PTSD | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Strategic, PTSD prevention' |
+| 4466 | Narrative Exposure Therapy (NET) for Multiple / Refugee Trauma | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Existential, Linguistic, PTSD recovery' |
+| 4467 | STAIR Phase-Based Skills Training for Complex PTSD | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interpersonal, Interoceptive, complex-t |
+| 4468 | Therapist-Guided Internet-Delivered Trauma-Focused CBT | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, access to care, PTSD recovery' |
+| 4469 | EMDR's Eye Movements — The Inert Ingredient (Exposure Does the Work) | 3 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, PTSD recovery (via exposure, not the ey |
+| 4470 | Single-Session 'Rewind' / Human Givens Trauma Technique | 2 | Emerging | 2 | practice: 'Bolsters clusters (weak/unproven evidence): PTSD symptom relief' |
+| 4471 | Propranolol / Reconsolidation Blockade for PTSD — Promising Theory, Unreliable Results | 2 | Mixed | 2 | practice: 'Bolsters clusters (inconsistently): Emotional, PTSD symptom reduction |
+| 4472 | Sleep After Trauma — Protecting Extinction Memory and Lowering PTSD Risk | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, memory processing, PTSD  |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,312)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,321)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3372,8 +3401,17 @@
 | 4433 | Loneliness & the Conserved Transcriptional Response to Adversity (CTRA) | 6 | Moderate | 2 | weakness: 'Degrades: Community, Interpersonal, Emotional, Bodily' |
 | 4434 | Psychological Stress & Susceptibility to the Common Cold | 5 | Strong | 1 | weakness: 'Degrades: Bodily, Interoceptive' |
 | 4435 | Dysregulated Cortisol Awakening Response & HPA Wear-and-Tear | 4 | Mixed | 1 | weakness: 'Degrades: Interoceptive, Volitional, Bodily, Emotional' |
+| 4445 | Better-Than-Average Effect — Nearly Everyone Rates Themselves Above the Pack | 5 | Strong | 1 | weakness: 'Degrades: calibrated self-view, Social-Perceptual accuracy, honest se |
+| 4446 | The Knowledge Illusion — Outsourcing Understanding to the Crowd | 5 | Moderate | 2 | weakness: 'Degrades: honest self-assessment of understanding, calibrated confide |
+| 4447 | Dunning-Kruger — Mostly a Statistical Artifact | 4 | Mixed | 4 | weakness: 'Degrades: honest self-assessment, calibrated confidence, knowing what |
+| 4448 | Overclaiming — Self-Styled Experts 'Know' the Unknowable | 4 | Moderate | 1 | weakness: 'Degrades: calibrated confidence, epistemic honesty, adversarial vetti |
+| 4459 | Playing Away — A Real but Mechanism-Contested Disadvantage | 4 | Mixed | 2 | weakness: 'Degrades: Adversarial, Strategic, Bodily competition output on the ro |
+| 4460 | Psychological Momentum — Feeling It More Than It Exists | 3 | Mixed | 2 | weakness: 'Degrades: Strategic, Adversarial judgment when momentum is over-read' |
+| 4461 | Warm-Up Decrement — The Cost of a Break in the Action | 3 | Moderate | 2 | weakness: 'Degrades: Bodily, Mechanical, Musical performance right after a rest/ |
+| 4473 | Negative Social Reactions to Disclosure → Worse Recovery | 6 | Moderate | 2 | weakness: 'Degrades: Emotional, Interpersonal, perceived control, PTSD recovery' |
+| 4474 | Peritraumatic Dissociation Proneness → Worse PTSD Course | 6 | Moderate | 2 | weakness: 'Degrades: Emotional, Intrapersonal, Interoceptive, trauma recovery' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,076)
+## COST OF FAILURE — what's at stake (harm lens)  (1,077)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4453,6 +4491,7 @@
 | 4423 | Psychological Stress Slows Wound Healing | 3 | Strong | 1 | cost: 'Degrades: Bodily, Interoceptive, Systemic' |
 | 4424 | Hostile Relationship Conflict Slows Healing & Raises Cytokines | 3 | Moderate | 1 | cost: 'Degrades: Community, Interpersonal, Bodily' |
 | 4425 | Chronic Caregiving Stress & Accelerated Cellular Aging | 3 | Moderate | 1 | cost: 'Degrades: Bodily, Existential, Interoceptive' |
+| 4464 | Institutional Betrayal Magnifies Trauma | 3 | Moderate | 2 | cost: 'Degrades: Emotional, Intrapersonal, trust, recovery from assault' |
 
 ## Framework / uncategorized  (61)
 
