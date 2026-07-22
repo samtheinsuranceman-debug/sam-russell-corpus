@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,834 clusters · 7,880 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,877 clusters · 7,957 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,516 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,559 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,246 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,011 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,834** |
+| **Total** | **3,877** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,771 |
-| Strong | 1,074 |
-| Mixed | 534 |
-| Emerging | 455 |
+| Moderate | 1,786 |
+| Strong | 1,091 |
+| Mixed | 540 |
+| Emerging | 460 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,516)
+## PRACTICES — what strengthens the mind (impact lens)  (1,559)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1543,6 +1543,49 @@
 | 3790 | Perceived Meaningful Work (WAMI) | 3 | Moderate | 2 | practice: 'Bolsters clusters: engagement, commitment, life satisfaction, health' |
 | 3791 | Sabbaticals / Extended Leave | 3 | Moderate | 1 | practice: 'Bolsters clusters: burnout recovery, resource gain, wellbeing' |
 | 3792 | Active Commuting (Walk / Cycle to Work) | 2 | Mixed | 1 | practice: 'Bolsters clusters: mood, physical activity, commute satisfaction' |
+| 3793 | Medication for Opioid Use Disorder (Methadone / Buprenorphine) | 5 | Strong | 1 | practice: 'Bolsters clusters: all-cause survival, overdose survival, treatment r |
+| 3794 | Take-Home Naloxone Distribution | 5 | Strong | 2 | practice: 'Bolsters clusters: overdose survival, community overdose response' |
+| 3795 | Needle & Syringe Services Programs | 4 | Strong | 2 | practice: 'Bolsters clusters: HIV prevention, injection safety, treatment linkag |
+| 3796 | Twelve-Step Facilitation (Manualized Clinical Linkage) | 4 | Strong | 2 | practice: 'Bolsters clusters: continuous abstinence, treatment retention, mutual |
+| 3797 | Building Recovery Capital | 3 | Moderate | 2 | practice: 'Bolsters clusters: sustained recovery, quality of life, relapse resis |
+| 3798 | Recovery Housing (Oxford House Model) | 3 | Moderate | 1 | practice: 'Bolsters clusters: sustained abstinence, employment, reduced incarcer |
+| 3799 | Physical Exercise as a Recovery Adjunct | 3 | Moderate | 2 | practice: 'Bolsters clusters: abstinence, withdrawal/craving relief, mood in rec |
+| 3800 | Community Reinforcement & Family Training (CRAFT) | 3 | Moderate | 2 | practice: 'Bolsters clusters: getting a resistant loved one into treatment, fami |
+| 3801 | Fentanyl Test Strips / Drug Checking | 2 | Emerging | 2 | practice: 'Bolsters clusters: overdose risk awareness, protective use behaviors' |
+| 3802 | Supervised Consumption / Overdose Prevention Sites | 3 | Moderate | 2 | practice: 'Bolsters clusters: overdose survival, safer injection, treatment acce |
+| 3803 | Digital Recovery Support Apps (A-CHESS-style) | 2 | Moderate | 1 | practice: 'Bolsters clusters: abstinence maintenance, continuing-care engagement |
+| 3804 | Moderation Management (Controlled Drinking) | 2 | Emerging | 1 | practice: 'Bolsters clusters: reduced-risk drinking, self-monitoring, early help |
+| 3805 | SMART Recovery (Secular, CBT-Based Mutual Aid) | 2 | Emerging | 1 | practice: 'Bolsters clusters: self-efficacy, urge coping, non-abstinence-based r |
+| 3806 | Managed Alcohol Programs | 2 | Emerging | 1 | practice: 'Bolsters clusters: alcohol-harm reduction, housing retention, dignity |
+| 3807 | Home Hazard Modification / Fall-Proofing | 4 | Strong | 2 | practice: 'Bolsters clusters: Fall Prevention, Independent living, Bodily safety |
+| 3808 | Structured Physical Activity to Prevent Mobility Disability (LIFE) | 4 | Strong | 1 | practice: 'Bolsters clusters: Walking capacity, Independent living, Functional r |
+| 3809 | Comprehensive Geriatric Assessment (CGA) | 4 | Strong | 2 | practice: 'Bolsters clusters: Independent living, Frailty resistance, Care coord |
+| 3810 | Otago Exercise Programme | 4 | Strong | 1 | practice: 'Bolsters clusters: Fall Prevention, Leg strength, Balance capacity' |
+| 3811 | Advance Care Planning | 3 | Moderate | 2 | practice: 'Bolsters clusters: Goal-concordant care, Family wellbeing, Autonomy' |
+| 3812 | Creatine + Resistance Training for Sarcopenia | 3 | Moderate | 2 | practice: 'Bolsters clusters: Lean mass, Muscle strength, Sarcopenia resistance' |
+| 3813 | Oral Nutritional Supplements in Undernourished Elders | 3 | Mixed | 2 | practice: 'Bolsters clusters: Frailty resistance, Body weight, Complication avoi |
+| 3814 | Single-Lens Distance Glasses Outdoors (Multifocal Nuance) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Fall Prevention, Visual-motor safety' |
+| 3815 | HMB (β-Hydroxy-β-Methylbutyrate) for Muscle Preservation | 2 | Emerging | 2 | practice: 'Bolsters clusters: Lean mass retention, Bed-rest resilience, Sarcopen |
+| 3816 | Hip Protectors in Residential Care | 2 | Mixed | 1 | practice: 'Bolsters clusters: Hip-fracture prevention (institutional), Bodily sa |
+| 3817 | Vitamin D + Calcium — The Fracture-Prevention Nuance | 2 | Mixed | 3 | practice: 'Bolsters clusters: Fracture prevention (deficient/institutionalized o |
+| 3818 | Surgical Prehabilitation in Older Adults | 3 | Moderate | 2 | practice: 'Bolsters clusters: Surgical resilience, Functional reserve, Recovery  |
+| 3819 | Podiatry & Footwear Intervention for Falls | 2 | Mixed | 2 | practice: 'Bolsters clusters: Fall Prevention, Foot function, Balance capacity' |
+| 3820 | Newborn Blood-Spot (Heel-Prick) Metabolic Screening | 5 | Strong | 2 | practice: 'Bolsters clusters: cognitive integrity, thyroid/metabolic function, p |
+| 3821 | Pulse-Oximetry Screening for Critical Congenital Heart Disease | 4 | Strong | 2 | practice: 'Bolsters clusters: newborn survival, timely cardiac diagnosis, develo |
+| 3822 | Vitamin K at Birth (Prevents Hemorrhagic Disease) | 4 | Strong | 2 | practice: 'Bolsters clusters: bleeding-disorder prevention, neurologic integrity |
+| 3823 | Maternal Tdap in Pregnancy (Whooping-Cough Shield) | 4 | Strong | 2 | practice: 'Bolsters clusters: newborn pertussis immunity, maternal antibody tran |
+| 3824 | RSV Protection for Infants (Maternal Vaccine or Nirsevimab) | 4 | Strong | 2 | practice: 'Bolsters clusters: newborn RSV immunity, prevented hospitalization, r |
+| 3825 | Avoiding Alcohol in Pregnancy (FASD Prevention) | 4 | Strong | 2 | practice: 'Bolsters clusters: fetal neurodevelopment, cognitive integrity, behav |
+| 3826 | Quitting Smoking in Pregnancy | 4 | Strong | 2 | practice: 'Bolsters clusters: fetal growth, term gestation, SIDS-risk reduction' |
+| 3827 | Iodine Sufficiency in Pregnancy | 4 | Moderate | 2 | practice: 'Bolsters clusters: fetal brain development, verbal IQ, cognitive achi |
+| 3828 | Universal Newborn Hearing Screening (Early Detection) | 4 | Moderate | 2 | practice: 'Bolsters clusters: spoken language, reading comprehension, parent-inf |
+| 3829 | Delayed Umbilical-Cord Clamping (Iron Stores) | 3 | Strong | 2 | practice: 'Bolsters clusters: infant iron status, anemia prevention, early neuro |
+| 3830 | Vitamin D 400 IU for Breastfed Infants | 3 | Strong | 2 | practice: 'Bolsters clusters: bone mineralization, rickets prevention, calcium h |
+| 3831 | Talking and Narrating to Infants (Closing the 'Word Gap') | 3 | Moderate | 2 | practice: 'Bolsters clusters: vocabulary growth, expressive language, parent-chi |
+| 3832 | Postpartum Depression Screening (EPDS) — Mothers and Fathers | 3 | Moderate | 2 | practice: 'Bolsters clusters: parental mental health, secure bonding, infant emo |
+| 3833 | Tummy Time (Awake, Supervised Prone Play) | 3 | Moderate | 2 | practice: 'Bolsters clusters: gross motor development, head control, positional- |
+| 3834 | Maternal Influenza Vaccination in Pregnancy | 3 | Moderate | 2 | practice: 'Bolsters clusters: newborn flu immunity, prevented infant hospitaliza |
+| 3835 | Period of PURPLE Crying — Abusive-Head-Trauma Education | 2 | Mixed | 2 | practice: 'Bolsters clusters: caregiver impulse control, normalized-crying knowl |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,246)
 
