@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,957 clusters · 8,096 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,994 clusters · 8,169 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,639 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,246 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,011 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,668 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,252 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,013 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,957** |
+| **Total** | **3,994** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,828 |
-| Strong | 1,101 |
-| Mixed | 555 |
-| Emerging | 473 |
+| Moderate | 1,840 |
+| Strong | 1,107 |
+| Mixed | 565 |
+| Emerging | 482 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,639)
+## PRACTICES — what strengthens the mind (impact lens)  (1,668)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1666,8 +1666,37 @@
 | 3913 | Self-Compassion After a Lapse (Kindness Beats Self-Flagellation) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal, Emotional, Volitional' |
 | 3914 | Never Miss Twice (Lapse-Recovery Rule) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Volitional, Meta-Cognitive, Intrapersonal' |
 | 3915 | Tiny Habits — Shrink It, Then Celebrate (Fogg) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Volitional, Bodily, Emotional' |
+| 3916 | Greening Vacant Urban Lots → Depression & Violence Reduction | 3 | Strong | 2 | Bolsters clusters: Community, Emotional, Aesthetic, neighbourhood safety |
+| 3917 | Bird Diversity & Everyday Birdlife → Wellbeing | 2 | Moderate | 3 | Bolsters clusters: Emotional, Naturalist, Aesthetic, life satisfaction |
+| 3919 | Residential Greenness in Pregnancy → Healthier Birth Weight | 2 | Moderate | 2 | Bolsters clusters: fetal growth, maternal wellbeing, health equity |
+| 3920 | Green Outdoor Time for Children's Attention (ADHD) | 2 | Emerging | 3 | Bolsters clusters: Meta-Cognitive, attention restoration, Emotional |
+| 3921 | Plants & Flowers in Hospital Rooms → Surgical Recovery | 2 | Emerging | 2 | Bolsters clusters: Emotional, pain modulation, Aesthetic, recovery |
+| 3922 | Bright Ambient Light for Dementia Agitation & Sundowning | 2 | Mixed | 3 | Bolsters clusters: circadian entrainment, sleep, mood in dementia care |
+| 3923 | Street Trees Near the Home & Antidepressant Prescribing | 2 | Emerging | 2 | Bolsters clusters: Emotional, Aesthetic, residential greenness |
+| 3929 | Lower-Extremity Physical Function (SPPB) | 3 | Strong | 2 | practice: 'Bolsters clusters: Independence, Falls & Hip Fracture in Older Adults |
+| 3930 | Inspiratory Muscle Strength Training (IMST) | 3 | Emerging | 2 | practice: 'Bolsters clusters: Blood-Pressure Control, Cardiovascular longevity,  |
+| 3931 | Dietary Flavonoid Intake | 2 | Moderate | 1 | practice: 'Bolsters clusters: Cardiovascular longevity, Nutrition / Diet Quality |
+| 3932 | 6-Minute Walk Capacity | 3 | Moderate | 2 | practice: 'Bolsters clusters: Functional aerobic capacity, Cardiorespiratory Fit |
+| 3933 | Heart-Rate Recovery After Exercise | 3 | Moderate | 2 | practice: 'Bolsters clusters: Cardiovascular longevity, Autonomic health, Cardio |
+| 3934 | Dairy (incl. Whole-Fat) & Mortality | 2 | Mixed | 1 | practice: 'Bolsters clusters: Cardiovascular longevity, Nutrition / Diet Quality |
+| 3935 | Push-Up Capacity | 2 | Emerging | 1 | practice: 'Bolsters clusters: Cardiovascular longevity, Strength & Resistance Tr |
+| 3936 | Vigorous Share of Your Activity | 2 | Moderate | 2 | practice: 'Bolsters clusters: Cardiovascular longevity, Cardiorespiratory Fitnes |
+| 3939 | Sodium Bicarbonate for High-Intensity Exercise | 3 | Strong | 2 | practice: 'Bolsters clusters: anaerobic capacity, muscular endurance, physical o |
+| 3940 | Riboflavin (B2) for Migraine Prophylaxis | 3 | Moderate | 3 | practice: 'Bolsters clusters: freedom from pain, sustained attention, volitional |
+| 3941 | Beta-Alanine for Muscular Endurance | 2 | Strong | 1 | practice: 'Bolsters clusters: muscular endurance, high-intensity work capacity' |
+| 3942 | CoQ10 for Migraine Prophylaxis | 3 | Emerging | 2 | practice: 'Bolsters clusters: freedom from pain, energy availability, functional |
+| 3943 | Blueberry Anthocyanins for Cognition | 2 | Mixed | 2 | practice: 'Bolsters clusters: executive function, episodic memory, cerebral bloo |
+| 3944 | L-Methylfolate Augmentation for SSRI-Resistant Depression | 2 | Mixed | 1 | practice: 'Bolsters clusters: mood regulation, response to antidepressant treatm |
+| 3945 | Omega-3 (EPA) for Childhood ADHD Symptoms | 2 | Moderate | 1 | practice: 'Bolsters clusters: attentional control, impulse regulation' |
+| 3946 | Zinc Augmentation for Depression | 2 | Emerging | 2 | practice: 'Bolsters clusters: mood regulation, antidepressant response' |
+| 3947 | Huperzine A for Memory (Thin, Low-Quality Evidence) | 2 | Mixed | 2 | practice: 'Marketed to bolster: memory, cognition — weak/biased evidence' |
+| 3948 | Tart Cherry Juice for Sleep | 2 | Emerging | 2 | practice: 'Bolsters clusters: sleep duration, sleep efficiency, next-day energy' |
+| 3949 | B-Vitamins for Brain Atrophy in MCI (High-Homocysteine Subgroup) | 2 | Mixed | 2 | practice: 'Bolsters clusters: episodic memory retention, brain structural preser |
+| 3950 | Magnesium for Migraine Prophylaxis | 2 | Mixed | 2 | practice: 'Bolsters clusters: freedom from pain, attentional stability, everyday |
+| 3951 | Resveratrol for Cognition (Mostly Null) | 1 | Mixed | 2 | practice: 'Marketed to bolster: memory, cognition — largely unsupported' |
+| 3952 | DHEA for 'Anti-Aging' Vitality & Cognition (Overhyped) | 1 | Mixed | 3 | practice: 'Marketed to bolster: vitality, cognition — largely unsupported' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,246)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,252)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2917,8 +2946,14 @@
 | 3601 | False Friends — Familiar-Looking Words That Mean Something Else | 3 | Moderate | 2 | Degrades: Linguistic accuracy, Rhetorical precision |
 | 3678 | Hopelessness → Heart Disease & Early Death | 5 | Emerging | 2 | weakness: 'Degrades: Existential, Emotional, cardiovascular survival' |
 | 3679 | The 'Stress Is Harming Me' Mindset | 4 | Emerging | 1 | weakness: 'Degrades: Emotional, Existential, stress-appraisal' |
+| 3924 | Chronic Aircraft & Road-Traffic Noise at School → Children's Reading & Memory | 5 | Strong | 3 | Degrades: Linguistic, Meta-Cognitive, Pattern-Recognition |
+| 3925 | Long-Term PM2.5 Air Pollution → Dementia & Cognitive Decline | 5 | Moderate | 3 | Degrades: Meta-Cognitive, Logical, Pattern-Recognition |
+| 3926 | Traffic Air Pollution at Schools → Slower Cognitive Development in Children | 4 | Moderate | 1 | Degrades: Meta-Cognitive, working memory, sustained attention |
+| 3927 | Long-Term PM2.5 Exposure → Depression Risk | 3 | Moderate | 1 | Degrades: Emotional stability, Intrapersonal, Meta-Cognitive |
+| 3928 | Windowless Workspaces / Daylight Deprivation → Sleep & Vitality Loss | 3 | Emerging | 1 | Degrades: Interoceptive circadian alignment, Bodily rest, Emotional vitality |
+| 3938 | Impaired Lung Function (Low FEV1) | 7 | Strong | 2 | weakness: 'Degrades: Survival, Cardiovascular reserve, Exercise capacity' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,011)
+## COST OF FAILURE — what's at stake (harm lens)  (1,013)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3933,6 +3968,8 @@
 | 3771 | Consumer Debt Taxes the Mind and the Body | 3 | Moderate | 1 | cost: 'Degrades: Emotional, Interoceptive, Bodily, Financial' |
 | 3773 | Money Worry Literally Hurts — Insecurity Raises Physical Pain | 2 | Moderate | 1 | cost: 'Degrades: Interoceptive, Bodily, Emotional, Volitional' |
 | 3776 | Wealth Quietly Steals Your Ability to Savor | 2 | Emerging | 1 | cost: 'Degrades: Aesthetic, Emotional, Interoceptive' |
+| 3918 | Daylight-Saving Clock Change → Spike in Heart Attacks | 2 | Moderate | 3 | Degrades: Interoceptive circadian alignment, Bodily cardiovascular function |
+| 3937 | Heavy Egg Consumption | 1 | Mixed | 2 | cost: 'Degrades: Cardiovascular longevity (weakly/uncertain), Nutrition / Diet Q |
 
 ## Framework / uncategorized  (61)
 
