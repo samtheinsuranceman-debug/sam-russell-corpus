@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,034 clusters · 8,227 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,076 clusters · 8,288 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,693 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,261 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,019 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,724 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,268 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,023 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,034** |
+| **Total** | **4,076** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,855 |
-| Strong | 1,124 |
-| Mixed | 569 |
-| Emerging | 486 |
+| Moderate | 1,879 |
+| Strong | 1,129 |
+| Mixed | 574 |
+| Emerging | 494 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,693)
+## PRACTICES — what strengthens the mind (impact lens)  (1,724)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1720,8 +1720,39 @@
 | 3983 | Depth of Processing (Semantic Encoding) | 3 | Strong | 1 | practice: 'Bolsters clusters: Linguistic, Logical, Pattern-Recognition, Meta-Cog |
 | 3986 | Segmenting Principle (Chunk the Lesson) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Logical, Pattern-Recognition, Syst |
 | 3990 | Modality Principle (Narrate the Graphic) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Spatial, Logical, Linguistic, Pattern-Recognition' |
+| 3993 | Placebo Analgesia Is Neurobiologically Real | 3 | Strong | 2 | practice: 'Bolsters clusters: Interoceptive, Bodily' |
+| 3994 | Expectation Releases Real Dopamine (Parkinson's Placebo) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 3996 | Caffeine Expectancy — Belief Rivals the Drug | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Interoceptive' |
+| 3997 | Expensive & Branded Placebos Work Better | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interoceptive, Aesthetic' |
+| 3998 | Open-Label Placebo for IBS (Honest Placebos) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Interoceptive, Intrapersonal, Volitional' |
+| 3999 | 'Placebo Sleep' — Being Told You Slept Well | 2 | Emerging | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Interoceptive' |
+| 4000 | Food Mindset Shifts Ghrelin ('Mind Over Milkshakes') | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interoceptive, Intrapersonal' |
+| 4001 | Hotel-Maids 'Exercise Mindset' — Famous but Thin | 1 | Mixed | 1 | practice: 'Bolsters clusters: Interoceptive, Intrapersonal (weak/unreplicated)' |
+| 4002 | Growth Mindset — Overhyped, Tiny Average Effect | 1 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Volitional (marginally, in at-risk |
+| 4003 | Pygmalion / Self-Fulfilling Prophecy — Real but Smaller Than Legend | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interpersonal, Leadership, Parental' |
+| 4007 | Touch Interventions (Meta-Analysis) | 3 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional, Interpersonal' |
+| 4008 | Hugs as Stress-Buffering Support (Cold Study) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Emotional, Interoceptive, Community |
+| 4009 | Perceived Social Support as a Stress Buffer | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Community, Emotional, Existential' |
+| 4010 | Mistakenly Seeking Solitude (Talk on the Commute) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Community, Social-Perceptual, Emoti |
+| 4011 | The Surprise of Reaching Out | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Community, Social-Perceptual' |
+| 4012 | Undervaluing Gratitude Expression | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Moral, Emotional, Community' |
+| 4013 | Undervaluing Kindness (Givers Miscalibrate) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Community, Moral, Social-Perceptual |
+| 4014 | Giving Makes Even Toddlers Happier | 2 | Emerging | 2 | practice: 'Bolsters clusters: Parental, Moral, Emotional, Interpersonal' |
+| 4015 | Kind Acts Ease Social Anxiety | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interpersonal, Emotional, Intrapersonal, Community |
+| 4016 | Volunteering & Longevity (Signal + Confound) | 3 | Mixed | 2 | practice: 'Bolsters clusters: Community, Existential, Moral, Interpersonal' |
+| 4017 | Deep Talk Over Small Talk | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interpersonal, Linguistic, Emotional, Community' |
+| 4018 | Invisible Support (Help That Goes Unnoticed) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Emotional, Parental, Social-Percept |
+| 4019 | Mattering (Feeling You Are Significant to Others) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Existential, Interpersonal, Community, Intraperson |
+| 4021 | Self-Imposed Deadlines as a Precommitment Device | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Procrastination Control, Strategic fol |
+| 4022 | Protecting the Right Amount of Discretionary Time | 3 | Moderate | 1 | practice: 'Bolsters clusters: Time Affluence, Wellbeing, Intrapersonal' |
+| 4024 | Balanced Time Perspective — Flexing Across Past, Present, Future | 3 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal, Wellbeing, Existential orientation' |
+| 4025 | Batching Phone Notifications Into Scheduled Bursts | 2 | Moderate | 1 | practice: 'Bolsters clusters: Attentional Control, Time Affluence, Mood Regulati |
+| 4026 | Micro-Breaks for Vigor and Fatigue | 2 | Moderate | 1 | practice: 'Bolsters clusters: Recovery, sustained attention, vigor' |
+| 4029 | The Fresh Start Effect — Timing Goals to Temporal Landmarks | 2 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Goal Initiation, Fresh Start Effect' |
+| 4030 | 40-Second Green Micro-Breaks to Restore Attention | 2 | Emerging | 1 | practice: 'Bolsters clusters: sustained attention, Attention Restoration, Natura |
+| 4031 | Batching Email to a Few Fixed Checks a Day | 2 | Moderate | 1 | practice: 'Bolsters clusters: Guarding Uninterrupted Focus Blocks, Attention Res |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,261)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,268)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2986,8 +3017,15 @@
 | 3979 | Left-Digit / 9-Ending Price Susceptibility | 3 | Moderate | 1 | weakness: 'Degrades: Fake Reference-Price Anchoring, Budgeting & Expense Trackin |
 | 3991 | The 10,000-Hour Rule Is Overstated | 5 | Strong | 2 | weakness: 'Degrades: Strategic, Meta-Cognitive, Volitional, Financial' |
 | 3992 | Expertise-Reversal Effect | 4 | Strong | 2 | weakness: 'Degrades: Meta-Cognitive, Strategic, Logical' |
+| 4004 | Overrating Surgery That Sham-Surgery Matches | 4 | Strong | 2 | weakness: 'Degrades: Logical, Systemic, Meta-Cognitive' |
+| 4005 | Overrating the Placebo Effect (Is the Placebo Powerless?) | 4 | Strong | 2 | weakness: 'Degrades: Logical, Meta-Cognitive, Interoceptive' |
+| 4006 | Antidepressant Benefit Is Mostly Placebo Except in Severe Depression | 3 | Mixed | 2 | weakness: 'Degrades: Emotional, Meta-Cognitive' |
+| 4020 | Loneliness Accelerates Cognitive Decline & Dementia Risk | 6 | Moderate | 2 | weakness: 'Degrades: Interpersonal, Community, Existential, Meta-Cognitive' |
+| 4032 | The Mere Urgency Effect — Chasing Urgent Over Important | 5 | Moderate | 1 | weakness: 'Degrades: Strategic, Meta-Cognitive, prioritization' |
+| 4033 | Parkinson's Law — Work Expands to Fill the Time Given | 4 | Emerging | 1 | weakness: 'Degrades: Strategic, Volitional, efficiency' |
+| 4034 | Precrastination — Rushing Subgoals at Extra Cost | 4 | Emerging | 1 | weakness: 'Degrades: Strategic, Meta-Cognitive, efficient sequencing' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,019)
+## COST OF FAILURE — what's at stake (harm lens)  (1,023)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4010,6 +4048,10 @@
 | 3987 | Seductive Details Effect | 2 | Strong | 1 | cost: 'Degrades: Meta-Cognitive, Logical, Pattern-Recognition, Linguistic' |
 | 3988 | Retrieval-Induced Forgetting | 2 | Moderate | 1 | cost: 'Degrades: Pattern-Recognition, Linguistic, Logical, Meta-Cognitive' |
 | 3989 | Redundancy Effect (Duplicated On-Screen Text) | 2 | Mixed | 1 | cost: 'Degrades: Logical, Pattern-Recognition, Spatial' |
+| 3995 | Nocebo — Most Vaccine Side-Effects Were in the Placebo Arm | 2 | Strong | 1 | cost: 'Degrades: treatment adherence, perceived wellbeing, symptom burden' |
+| 4023 | Chronic Time Pressure / Time Famine | 3 | Moderate | 2 | cost: 'Degrades: wellbeing, recovery, decision quality' |
+| 4027 | Mind-Wandering — Attention Off-Task, Happiness Down | 2 | Moderate | 1 | cost: 'Degrades: present-moment attention, mood, engagement' |
+| 4028 | Open-Plan Offices — Fewer Real Conversations, More Interruption | 2 | Moderate | 1 | cost: 'Degrades: sustained focus, face-to-face collaboration, deep work' |
 
 ## Framework / uncategorized  (61)
 
