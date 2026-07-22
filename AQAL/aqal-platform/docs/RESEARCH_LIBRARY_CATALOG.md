@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,917 clusters · 8,021 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,957 clusters · 8,096 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,599 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,639 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,246 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,011 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,917** |
+| **Total** | **3,957** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,808 |
-| Strong | 1,096 |
-| Mixed | 549 |
-| Emerging | 464 |
+| Moderate | 1,828 |
+| Strong | 1,101 |
+| Mixed | 555 |
+| Emerging | 473 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,599)
+## PRACTICES — what strengthens the mind (impact lens)  (1,639)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1626,6 +1626,46 @@
 | 3873 | Open-Label Placebo for Chronic Low Back Pain | 2 | Moderate | 3 | practice: 'Bolsters clusters: Interoceptive, Emotional, Meta-Cognitive' |
 | 3874 | Kinesiology Taping — Honest Near-Placebo | 1 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive (expectancy only)' |
 | 3875 | Acupuncture for Chronic Pain — Real, but Mostly Context | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Meta-Cognitive' |
+| 3876 | Use a Formula, Not Your Gut, for Repeated Predictions | 4 | Strong | 2 | practice: 'Bolsters clusters: Reference-Class Forecasting, Structured Selection, |
+| 3877 | Equal-Weight Checklists Beat Expert Weighting | 3 | Strong | 2 | practice: 'Bolsters clusters: Mechanical Prediction, Structured Selection, Decis |
+| 3878 | Reframe Probabilities as Natural Frequencies | 3 | Strong | 2 | practice: 'Bolsters clusters: Base-Rate Reasoning, Calibration Training, Medical |
+| 3879 | Structured Interviews & Mechanical Scoring for Selection | 3 | Strong | 2 | practice: 'Bolsters clusters: Mechanical Prediction, Equal-Weight Checklists, Hi |
+| 3880 | Generate a Second Option (Kill 'Whether-or-Not' Framing) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Consider the Opposite, Premortem, Reference-Class  |
+| 3881 | Fermi Decomposition for Quantitative Estimates | 3 | Moderate | 2 | practice: 'Bolsters clusters: Reference-Class Forecasting, Calibration Training, |
+| 3882 | Advise Yourself in the Third Person (Solomon's Paradox) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Attain Distance, Cooling-Off Periods, Perspective- |
+| 3883 | Delphi & Nominal-Group Aggregation Over Free Discussion | 3 | Moderate | 2 | practice: 'Bolsters clusters: Wisdom of Crowds, Red-Teaming, Reference-Class For |
+| 3884 | Ask Someone Who's Been There, Don't Just Imagine | 2 | Moderate | 2 | practice: 'Bolsters clusters: Reference-Class Forecasting, Outside View, Affecti |
+| 3885 | Estimate Twice, Then Average (The Crowd Within) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Reference-Class Forecasting, Consider the Opposite |
+| 3886 | Expect to Justify It to a Skeptic (Pre-emptive Accountability) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Consider the Opposite, Devil's Advocacy, Decision  |
+| 3887 | Evaluate Options Side-by-Side (Joint Evaluation) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Decision Matrices, Consider the Opposite, Widen Op |
+| 3888 | Temporal Distancing / 10-10-10 for Hot Decisions | 2 | Emerging | 2 | practice: 'Bolsters clusters: Cooling-Off Periods, Self-Distanced Reflection, Af |
+| 3889 | Keep a Decision Journal (Contemporaneous Prediction Record) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Calibration Training, Premortem, Pre-emptive Accou |
+| 3890 | Adopt an Eccentric Persona ('Think Like a Wild Poet') | 2 | Moderate | 1 | practice: 'Bolsters clusters: Creative, Meta-Cognitive' |
+| 3891 | Frame the Problem as Distant (High-Level Construal) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Creative, Meta-Cognitive, Pattern-Recognition' |
+| 3892 | Open-Monitoring Meditation Before Divergent Work | 2 | Moderate | 1 | practice: 'Bolsters clusters: Creative, Meta-Cognitive' |
+| 3893 | Dim the Lights to Generate (Brighten to Refine) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Creative, Meta-Cognitive' |
+| 3894 | Generate the Worst Possible Ideas, Then Invert Them | 2 | Emerging | 2 | practice: 'Bolsters clusters: Creative, Adversarial' |
+| 3895 | Let Yourself Get Bored First | 2 | Emerging | 2 | practice: 'Bolsters clusters: Creative, Meta-Cognitive' |
+| 3896 | Literally Enact the Creativity Metaphor (Sit Outside the Box) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Creative, Bodily' |
+| 3897 | Mild Intoxication for Insight (Not Analytic) Problems | 2 | Mixed | 2 | practice: 'Bolsters clusters: Creative, Pattern-Recognition' |
+| 3898 | Play Happy, High-Arousal Music While Ideating | 2 | Mixed | 2 | practice: 'Bolsters clusters: Creative, Aesthetic' |
+| 3899 | Work Amid Moderate (~70 dB) Ambient Noise | 2 | Mixed | 2 | practice: 'Bolsters clusters: Creative, Pattern-Recognition' |
+| 3900 | Multi-Day Nature Immersion (Unplugged) for Remote Associations | 3 | Emerging | 1 | practice: 'Bolsters clusters: Creative, Pattern-Recognition' |
+| 3901 | Seek Schema-Violating, 'Impossible' Experiences | 2 | Moderate | 1 | practice: 'Bolsters clusters: Creative, Pattern-Recognition, Meta-Cognitive' |
+| 3902 | Surround Creative Work with Blue (Save Red for Detail) | 1 | Mixed | 1 | practice: 'Bolsters clusters: Creative, Aesthetic' |
+| 3903 | Push Past the First Associates (Reach for Semantic Distance) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Pattern-Recognition, Creative' |
+| 3904 | Save More Tomorrow (Precommitted Auto-Escalation) | 4 | Strong | 2 | practice: 'Bolsters clusters: Financial, Volitional, Strategic' |
+| 3905 | Identity-Based Habits ('I am the kind of person who…') | 3 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal, Volitional, Existential' |
+| 3906 | WOOP / Mental Contrasting (Wish–Outcome–Obstacle–Plan) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Strategic, Meta-Cognitive' |
+| 3907 | Let Habits Do the Work (Good Self-Controllers Rarely Resist) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Meta-Cognitive, Bodily' |
+| 3908 | Cooling the Cue (Attentional Deployment for Delay) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Meta-Cognitive, Emotional' |
+| 3909 | Episodic Future Thinking (Vividly Pre-Live the Payoff) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Existential, Strategic' |
+| 3910 | The 20-Second Rule (Friction as the Lever) | 3 | Moderate | 3 | practice: 'Bolsters clusters: Volitional, Bodily, Strategic' |
+| 3911 | Bright-Line Rules (Categorical 'Never') | 3 | Mixed | 3 | practice: 'Bolsters clusters: Volitional, Meta-Cognitive, Strategic' |
+| 3912 | Distanced Self-Talk (Third-Person 'Illeism') | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Meta-Cognitive' |
+| 3913 | Self-Compassion After a Lapse (Kindness Beats Self-Flagellation) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal, Emotional, Volitional' |
+| 3914 | Never Miss Twice (Lapse-Recovery Rule) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Volitional, Meta-Cognitive, Intrapersonal' |
+| 3915 | Tiny Habits — Shrink It, Then Celebrate (Fogg) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Volitional, Bodily, Emotional' |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,246)
 
