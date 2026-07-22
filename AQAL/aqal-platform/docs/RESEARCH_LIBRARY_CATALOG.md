@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,197 clusters · 8,508 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,235 clusters · 8,577 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,814 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,275 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,047 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,845 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,280 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,049 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,197** |
+| **Total** | **4,235** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,932 |
-| Strong | 1,138 |
-| Mixed | 602 |
-| Emerging | 525 |
+| Moderate | 1,953 |
+| Strong | 1,147 |
+| Mixed | 608 |
+| Emerging | 527 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,814)
+## PRACTICES — what strengthens the mind (impact lens)  (1,845)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1841,8 +1841,39 @@
 | 4150 | Penn Resiliency Program (School-Based Depression Prevention) | 2 | Mixed | 2 | practice: 'Bolsters clusters: explanatory style, resilience, adolescent mood' |
 | 4151 | Quality of Life Therapy (Frisch, CASIO Model) | 2 | Emerging | 2 | practice: 'Bolsters clusters: life satisfaction, Existential, domain-specific we |
 | 4152 | Fordyce's 14 Fundamentals Happiness Program | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Interpersonal, activity engagement' |
+| 4156 | Tai Chi for Parkinson's Disease | 4 | Strong | 2 | practice: 'Bolsters clusters: Bodily balance & gait, Fall Prevention, Interocept |
+| 4157 | Dynamic Warm-Up & Neuromuscular Priming | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily power output, Fall/injury avoidance, Intero |
+| 4158 | Walking Boosts Creative Ideation | 3 | Moderate | 1 | practice: 'Bolsters clusters: Creative divergent thinking, Bodily movement, Patt |
+| 4159 | Zumba / Dance-Fitness | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily aerobic fitness, Musical timing, Emotional/ |
+| 4160 | Tai Chi for Depressive Symptoms | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional regulation, Intrapersonal mood, Interoce |
+| 4162 | Mini-Trampoline (Rebounding) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily balance & fitness, Interoceptive postural c |
+| 4163 | Qigong for Depression | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional regulation, Interoceptive breath-body aw |
+| 4164 | Yoga for Depression | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional regulation, Intrapersonal mood, Interoce |
+| 4165 | Pre-Exercise Static Stretching (Honest: No Injury Prevention) | 1 | Strong | 2 | practice: 'Bolsters clusters: Bodily range of motion — but NOT injury prevention |
+| 4166 | Yoga for PTSD | 3 | Emerging | 2 | practice: 'Bolsters clusters: Emotional regulation, Interoceptive affect toleran |
+| 4167 | Tai Chi for COPD | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily exercise capacity, Interoceptive breathing  |
+| 4168 | Yoga for Hypertension | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily cardiovascular regulation, Interoceptive ca |
+| 4169 | Logroll: Trade Off Issues You Value Differently | 4 | Strong | 2 | practice: 'Bolsters clusters: expanding the pie, joint gains, multi-issue deals' |
+| 4170 | Build Your BATNA — Alternatives Are Bargaining Power | 4 | Strong | 2 | practice: 'Bolsters clusters: walk-away discipline, leverage, salary negotiation |
+| 4172 | Make the First Offer to Anchor the Deal | 3 | Strong | 2 | practice: 'Bolsters clusters: distributive bargaining, price-setting, claiming v |
+| 4173 | Negotiate Issues as a Package, Not One at a Time | 3 | Moderate | 2 | practice: 'Bolsters clusters: integrative value, information exchange, agreement |
+| 4174 | Set an Ambitious Target Price and Focus On It | 3 | Moderate | 1 | practice: 'Bolsters clusters: aspiration-setting, claiming value, anchoring your |
+| 4175 | Work the Deadline — Deals Cluster at the Buzzer | 3 | Moderate | 1 | practice: 'Bolsters clusters: timing, pacing, closing, concession management' |
+| 4176 | Consider the Opposite to Resist Their Anchor | 3 | Moderate | 2 | practice: 'Bolsters clusters: anchoring defense, debiasing, counter-offer strate |
+| 4177 | Open With a Precise Number, Not a Round One | 2 | Moderate | 2 | practice: 'Bolsters clusters: anchoring strength, price-setting, first offers' |
+| 4178 | Present Multiple Equivalent Simultaneous Offers (MESO) | 3 | Moderate | 1 | practice: 'Bolsters clusters: anchoring, information gathering, relationship pre |
+| 4179 | Schmooze First — Build Rapport Before Bargaining | 2 | Moderate | 1 | practice: 'Bolsters clusters: rapport, trust, cooperative climate, remote deals' |
+| 4180 | Take Their Perspective (Not Their Feelings) to Claim Value | 3 | Moderate | 1 | practice: 'Bolsters clusters: discovering hidden deals, creating and claiming va |
+| 4181 | Use Contingent Contracts to Bet on Disagreements | 3 | Emerging | 1 | practice: 'Bolsters clusters: bridging expectation gaps, risk-sharing, closing d |
+| 4182 | Descriptive & Injunctive Social Norms (Behavior Change) | 3 | Strong | 2 | Bolsters clusters: Rhetorical, Leadership, Social-Perceptual, Systemic |
+| 4183 | Prebunking at Scale (Short-Form Inoculation Videos) | 3 | Strong | 2 | Bolsters clusters: Meta-Cognitive, Adversarial, Rhetorical, Social-Perceptual |
+| 4184 | Elaboration Likelihood Model (Match the Route) | 3 | Moderate | 2 | Bolsters clusters: Rhetorical, Leadership, Strategic, Logical |
+| 4185 | Unity / Shared-Identity Messenger | 3 | Moderate | 2 | Bolsters clusters: Leadership, Community, Interpersonal, Rhetorical |
+| 4186 | Disrupt-then-Reframe (DTR) | 3 | Moderate | 2 | Bolsters clusters: Rhetorical, Entrepreneurial, Adversarial, Interpersonal |
+| 4187 | Pique Technique (Odd, Curiosity-Piquing Requests) | 2 | Moderate | 2 | Bolsters clusters: Rhetorical, Entrepreneurial, Adversarial, Street-Smarts |
+| 4188 | That's-Not-All Technique | 2 | Moderate | 2 | Bolsters clusters: Entrepreneurial, Rhetorical, Interpersonal, Financial |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,275)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,280)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3121,8 +3152,13 @@
 | 4153 | Character-Strengths Overuse & Underuse (Missing the Golden Mean) | 3 | Moderate | 2 | weakness: 'Degrades: Intrapersonal, Emotional, Interpersonal wellbeing' |
 | 4154 | Toxic Positivity / Forced Positive Framing | 3 | Emerging | 2 | weakness: 'Degrades: Emotional, Interpersonal, Interoceptive honesty' |
 | 4155 | Valuing Happiness Too Much (the Happiness Paradox) | 3 | Moderate | 2 | weakness: 'Degrades: Emotional, Intrapersonal, Existential wellbeing' |
+| 4189 | Illusory Truth Effect (Repetition Feels Like Truth) | 6 | Strong | 2 | Degrades: Meta-Cognitive, Logical, Adversarial, Social-Perceptual |
+| 4190 | Psychological Reactance (Controlling Messages Backfire) | 5 | Moderate | 2 | Degrades: Rhetorical, Leadership, Interpersonal, Volitional |
+| 4191 | Placebic 'Because' (Mindless Reason-Following) | 4 | Mixed | 2 | Degrades: Adversarial, Meta-Cognitive, Logical, Street-Smarts |
+| 4192 | Rhyme-as-Reason & Processing Fluency | 3 | Mixed | 2 | Degrades: Logical, Meta-Cognitive, Adversarial |
+| 4193 | Sleeper Effect (Discounted Messages Rebound) | 3 | Mixed | 1 | Degrades: Meta-Cognitive, Adversarial, Logical |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,047)
+## COST OF FAILURE — what's at stake (harm lens)  (1,049)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4173,6 +4209,8 @@
 | 4116 | Saturated Fat & Heart Disease (The Honest, Contested Case) | 2 | Mixed | 2 | Degrades: Bodily cardiovascular health (magnitude depends on the replacement) |
 | 4117 | Artificial / Non-Sugar Sweeteners (Aspartame, Sucralose, Ace-K) | 2 | Mixed | 2 | Degrades: Bodily metabolic health, glucose regulation, appetite calibration |
 | 4132 | Venting / Catharsis for Anger (Debunked) | 3 | Strong | 2 | cost: 'Degrades: Anger down-regulation, Impulse control, Conflict de-escalation' |
+| 4161 | Post-Lifting Cold-Water Immersion Blunts Muscle Gains | 2 | Strong | 2 | cost: 'Degrades: Bodily hypertrophy, strength adaptation, training ROI for muscl |
+| 4171 | Strategic Anger — Short-Term Concessions, Long-Term Damage | 3 | Moderate | 3 | cost: 'Degrades: relationship, future deals, trust, reputation' |
 
 ## Framework / uncategorized  (61)
 
