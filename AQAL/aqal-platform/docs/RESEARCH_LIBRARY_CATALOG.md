@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,749 clusters · 9,461 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,783 clusters · 9,514 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,241 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,361 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,086 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,265 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,366 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,091 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,749** |
+| **Total** | **4,783** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,188 |
+| Moderate | 2,207 |
 | Strong | 1,272 |
-| Mixed | 711 |
-| Emerging | 578 |
+| Mixed | 718 |
+| Emerging | 586 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,241)
+## PRACTICES — what strengthens the mind (impact lens)  (2,265)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2268,8 +2268,32 @@
 | 4702 | The Testosterone-Cortisol 'Dual-Hormone' Idea | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive, Strategic' |
 | 4703 | Hierarchy Helps Teams — Only Sometimes | 2 | Mixed | 1 | practice: 'Bolsters clusters: Leadership, Strategic, Systemic' |
 | 4704 | Income Inequality & Population Health (Contested) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Systemic, Strategic, Community' |
+| 4709 | Solitude as Affective Self-Regulation (Chosen, Not Lonely) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Intrapersonal, Emotional, Existential' |
+| 4710 | Silence and Stress Physiology (The Pause Beats the Music) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interoceptive, Emotional, Existential' |
+| 4711 | Compassion Training vs. Empathy Alone — Distinct Systems | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Interpersonal, Moral, Social-Perceptual |
+| 4712 | Meditation Programs — Real but Modest, Many Claims Unsupported | 2 | Mixed | 1 | practice: 'Bolsters clusters: Emotional, Interoceptive, Meta-Cognitive' |
+| 4713 | Long-Term Meditator Brain Differences — Real but Self-Selected | 2 | Mixed | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Interoceptive, Intrapersonal' |
+| 4714 | Non-Dual Awareness Practices (Thin but Intriguing) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Existential, Meta-Cognitive, Intrapersonal' |
+| 4715 | Three Families of Meditation: Attentional, Constructive, Deconstructive | 2 | Emerging | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Intrapersonal, Existential' |
+| 4718 | Dogs as Social Catalysts & Neighborhood Social Capital | 3 | Moderate | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Social-Perceptual' |
+| 4719 | Dog Ownership & Physical Activity | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily activity, Volitional routine, Naturalist, I |
+| 4721 | Early-Life Pet Exposure & Allergy Risk | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily immune regulation, Naturalist, Interoceptiv |
+| 4722 | Human-Dog Oxytocin Gaze Loop | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional bonding, Interpersonal, Interoceptive' |
+| 4725 | Dog Ownership & All-Cause Mortality | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily longevity, Community, Emotional' |
+| 4727 | Robotic Pets (PARO) for Dementia | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Social-Perceptual, Community engagement |
+| 4728 | Service Dogs for PTSD | 3 | Emerging | 2 | practice: 'Bolsters clusters: Emotional regulation, Interoceptive, Community re- |
+| 4730 | Quiet Wakeful Rest Consolidates Memory | 3 | Moderate | 1 | practice: 'Bolsters clusters: memory consolidation, Pattern-Recognition, Meta-Co |
+| 4731 | Off-Hours Recovery Fuels Next-Day Engagement | 3 | Moderate | 2 | practice: 'Bolsters clusters: work engagement, Entrepreneurial, Volitional, Syst |
+| 4732 | Vacationing & Cardiovascular Mortality | 3 | Moderate | 1 | practice: 'Bolsters clusters: cardiovascular health, Chronic Stress / Allostatic |
+| 4733 | Brief Breaks Preempt the Vigilance Decrement | 2 | Moderate | 1 | practice: 'Bolsters clusters: Attentional Control, sustained focus, Volitional' |
+| 4734 | The Weekend Well-Being Effect | 2 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, vitality, Intrapersonal, autonomy' |
+| 4735 | Anticipation Beats the Trip Itself | 2 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, positive affect, Intrapersonal' |
+| 4736 | Engaged Leisure Beats Passive Relaxation | 2 | Moderate | 1 | practice: 'Bolsters clusters: Creative, flow, Emotional, Intrapersonal' |
+| 4737 | Frequent Short Breaks Over Rare Long Ones | 2 | Moderate | 2 | practice: 'Bolsters clusters: Systemic, Volitional, Job Burnout / Workaholism, E |
+| 4738 | The Vacation 'Fade-Out' | 2 | Moderate | 2 | practice: 'Bolsters clusters: Job Burnout / Workaholism, Emotional, Interoceptiv |
+| 4739 | Niksen (Deliberate Doing-Nothing) | 1 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal — but unproven' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,361)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,366)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3634,8 +3658,13 @@
 | 4705 | Humiliation & Status Threat Spike Cortisol | 6 | Strong | 1 | weakness: 'Degrades: Emotional, Intrapersonal, Interoceptive, Social-Perceptual' |
 | 4706 | Big-Fish-Little-Pond: Rank Deflates Self-Concept | 4 | Strong | 1 | weakness: 'Degrades: Intrapersonal, Volitional, Meta-Cognitive' |
 | 4707 | Power Can Dull Perspective-Taking (Contested) | 4 | Mixed | 2 | weakness: 'Degrades: Interpersonal, Social-Perceptual, Moral, Emotional' |
+| 4716 | Can't Sit Alone With One's Thoughts (Would Rather Self-Shock) | 4 | Moderate | 1 | weakness: 'Degrades: Intrapersonal, Meta-Cognitive, Existential' |
+| 4717 | Mindfulness May Increase False Memories (Contested) | 3 | Mixed | 2 | weakness: 'Degrades: Meta-Cognitive, Logical' |
+| 4729 | Pets Are Not a Reliable Cure for Loneliness | 4 | Mixed | 2 | weakness: 'Degrades: Community, Interpersonal, Emotional' |
+| 4740 | The Recovery Paradox — Detaching Least When You Need It Most | 6 | Moderate | 1 | weakness: 'Degrades: Volitional, Interoceptive, Emotional, Systemic' |
+| 4741 | Work-Related Rumination Blocks Recovery | 6 | Moderate | 1 | weakness: 'Degrades: Emotional, Interoceptive, Meta-Cognitive, Intrapersonal' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,086)
+## COST OF FAILURE — what's at stake (harm lens)  (1,091)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4725,6 +4754,11 @@
 | 4634 | Optimism Can Suppress Immunity Under Chronic Goal-Conflict | 2 | Emerging | 1 | cost: 'Degrades: Interoceptive, Strategic' |
 | 4682 | Acute Grief Can Trigger a Heart Attack | 4 | Moderate | 1 | cost/weakness: 'Degrades: cardiovascular safety, physical health' |
 | 4689 | Routine Grief Counseling for Normal Grief | 2 | Strong | 2 | cost/weakness: 'Degrades: emotional recovery, self-efficacy, resources' |
+| 4708 | Meditation-Related Adverse Effects (Under-Reported) | 3 | Moderate | 2 | cost: 'Degrades: Intrapersonal, Emotional, Interoceptive, Existential' |
+| 4720 | Pet Ownership: Financial Cost & Lifestyle Restriction | 2 | Moderate | 2 | cost: 'Degrades: Financial, Volitional autonomy' |
+| 4723 | Zoonotic Infection Risk from Pets | 2 | Emerging | 2 | cost: 'Degrades: Bodily health, Interoceptive' |
+| 4724 | The 'Pet Effect' Overbelief | 2 | Mixed | 2 | cost: 'Degrades: Meta-Cognitive calibration, Emotional expectations, Existential |
+| 4726 | Cat Ownership, Toxoplasma gondii & Mental Health | 2 | Mixed | 2 | cost: 'Degrades: Emotional stability, Intrapersonal, Bodily' |
 
 ## Framework / uncategorized  (61)
 
