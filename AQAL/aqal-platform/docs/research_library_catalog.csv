@@ -5024,3 +5024,45 @@ impaired-positive-prospection-depression-suicidality,4980,weakness,A Blank Futur
 hot-cold-empathy-gap-future-visceral-self,4981,weakness,The Hot-Cold Empathy Gap — Mispredicting Your Future Visceral Self,Moderate,6,threat /10,2,"weakness: 'Degrades: Strategic self-prediction, Interoceptive accuracy, Volitional precommitment, Financial restraint'"
 low-future-continuity-unethical-behavior,4982,weakness,Feeling Disconnected From Future You → Cutting Ethical Corners,Moderate,5,threat /10,2,"weakness: 'Degrades: Moral prudence, Financial integrity, Strategic reputation-management'"
 time-slack-fallacy-more-time-later,4983,weakness,The Time-Slack Fallacy — 'I'll Have More Time Later',Moderate,5,threat /10,1,"weakness: 'Degrades: Strategic scheduling, Volitional follow-through, Financial planning, Meta-Cognitive calibration'"
+green-tea-japanese-cohorts-mortality,4984,practice,Green Tea & Mortality (Japanese Cohorts),Moderate,2,impact magnitude /5,2,practice: 'Bolsters clusters: Bodily'
+hara-hachi-bu-caloric-moderation,4985,practice,Hara Hachi Bu (Eat to 80% Full),Emerging,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Interoceptive, Volitional, Bodily'"
+jjimjilbang-korean-bathhouse,4986,practice,Jjimjilbang (Korean Bathhouse),Emerging,2,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Community, Interoceptive'"
+natto-vitamin-k2-bone,4987,practice,Natto & Vitamin K2 for Bone,Emerging,2,impact magnitude /5,1,practice: 'Bolsters clusters: Bodily'
+nunchi-korean-reading-the-room,4988,practice,Nunchi (Korean Reading-the-Room),Emerging,2,impact magnitude /5,1,"practice: 'Bolsters clusters: Social-Perceptual, Interpersonal, Emotional'"
+soy-isoflavones-breast-cancer-asian-vs-western,4989,practice,Soy & Breast Cancer — Asian vs Western,Mixed,2,impact magnitude /5,2,practice: 'Bolsters clusters: Bodily'
+tuina-chinese-therapeutic-massage,4990,practice,Tui Na (Chinese Therapeutic Massage),Mixed,2,impact magnitude /5,1,practice: 'Bolsters clusters: Bodily'
+qigong-balance-falls-elderly,4991,practice,Qigong for Balance & Falls in Older Adults,Moderate,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Interoceptive'"
+chinese-square-dancing-guangchang-wu,4992,practice,Chinese Square Dancing (Guangchang Wu),Emerging,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Community, Bodily, Emotional, Social-Perceptual'"
+morita-therapy-anxiety-ocd,4993,practice,Morita Therapy (Japan),Mixed,2,impact magnitude /5,3,"practice: 'Bolsters clusters: Emotional, Intrapersonal, Existential, Volitional'"
+chinese-herbal-medicine-artemisinin-contrast,4994,practice,Chinese Herbal Medicine — Hype vs Artemisinin,Mixed,2,impact magnitude /5,2,practice: 'Bolsters clusters: Bodily'
+moxibustion-breech-presentation,4995,practice,Moxibustion for Breech Presentation (BL67),Mixed,2,impact magnitude /5,2,practice: 'Bolsters clusters: Bodily'
+kimchi-korean-cohorts-metabolic,4996,practice,Kimchi & Metabolic Health (Korean Cohorts),Mixed,1,impact magnitude /5,2,practice: 'Bolsters clusters: Bodily'
+region-of-origin-positive-result-bias,4997,weakness,Positive-Result Bias in Country-of-Origin Trials,Strong,6,threat /10,2,"weakness: 'Degrades: Logical, Pattern-Recognition, Meta-Cognitive, Adversarial'"
+la-passeggiata-postmeal-social-walk,4998,practice,La Passeggiata (Post-Meal Social Stroll),Moderate,3,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Community, Interoceptive, Interpersonal'"
+terrainkur-graded-terrain-walking,4999,practice,Terrainkur / Terrain Cure (Graded Prescribed Uphill Walking),Emerging,3,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Naturalist, Interoceptive'"
+friluftsliv-open-air-living,5000,practice,Friluftsliv (Nordic 'Open-Air Living'),Emerging,2,impact magnitude /5,1,"practice: 'Bolsters clusters: Naturalist, Emotional, Community, Intrapersonal'"
+kneipp-hydrotherapy,5001,practice,Kneipp Hydrotherapy (Cold-Water Treading & Contrast Affusions),Mixed,2,impact magnitude /5,1,"practice: 'Bolsters clusters: Interoceptive, Bodily, Emotional'"
+alpine-high-altitude-climate-therapy-davos,5002,practice,Alpine High-Altitude Climate Therapy (Davos) for Eczema & Asthma,Mixed,3,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Naturalist, Interoceptive'"
+fika-swedish-coffee-break,5003,practice,Fika (Swedish Social Coffee Break),Emerging,1,impact magnitude /5,1,"practice: 'Bolsters clusters: Community, Emotional, Interpersonal'"
+hygge-danish-coziness,5004,practice,Hygge (Danish Cozy Togetherness),Emerging,1,impact magnitude /5,1,"practice: 'Bolsters clusters: Emotional, Community, Aesthetic'"
+peloid-fango-mudpack-therapy,5005,practice,Peloid / Fango Mud-Pack Therapy for Knee Osteoarthritis,Mixed,2,impact magnitude /5,1,practice: 'Bolsters clusters: Bodily'
+grape-cure-traubenkur,5006,practice,The Grape Cure / Traubenkur (Autumn Grape Mono-Diet),Emerging,1,impact magnitude /5,2,"practice: 'Bolsters clusters: Community, Naturalist'"
+radon-spa-gastein-heilstollen,5007,practice,Radon Spa Therapy (Bad Gastein Heilstollen) for Rheumatic Pain,Mixed,2,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Interoceptive'"
+thalassotherapy-seawater-cure,5008,practice,Thalassotherapy (Seawater & Marine-Climate Cure),Mixed,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Emotional, Interoceptive'"
+speleotherapy-salt-mine-cave,5009,practice,Speleotherapy (Underground Salt-Mine / Cave Therapy) for Asthma,Emerging,1,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Naturalist'"
+nasal-irrigation-tap-water-naegleria,5010,cost,Neti-Pot Tap-Water Risk — Naegleria fowleri (Rare but Fatal),Strong,5,harm severity /5,2,"cost: 'Degrades: Bodily, Existential, Interoceptive'"
+ayurvedic-heavy-metal-contamination,5011,cost,"Heavy-Metal Contamination in Ayurvedic Products (Lead, Mercury, Arsenic)",Strong,4,harm severity /5,2,"cost: 'Degrades: Interoceptive, Bodily, Meta-Cognitive'"
+nigella-sativa-black-seed-cardiometabolic,5012,practice,Nigella sativa (Black Seed / Kalonji) for Cardiometabolic Markers,Moderate,3,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic'"
+millets-glycemic-south-asian-diet,5013,practice,Millets & Traditional Whole-Grain South Asian Diet for Diabetes Risk,Moderate,3,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Interoceptive, Naturalist'"
+fenugreek-glycemic-control,5014,practice,Fenugreek (Methi) for Glycemic Control,Moderate,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic'"
+mucuna-pruriens-parkinsons-levodopa,5015,practice,Mucuna pruriens (Kapikacchu) — Natural L-Dopa for Parkinson's,Moderate,3,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Volitional, Interoceptive'"
+amla-emblica-lipids-antioxidant,5016,practice,Amla / Indian Gooseberry (Emblica officinalis) for Lipids,Emerging,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Systemic, Interoceptive'"
+curanderismo-cultural-meaning-healing,5017,practice,Curanderismo — Cultural Meaning & the Placebo Dimension,Emerging,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Existential, Community, Emotional'"
+triphala-ayurvedic-formulation,5018,practice,Triphala — Ayurvedic Three-Fruit Formulation,Emerging,2,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic'"
+gymnema-sylvestre-blood-sugar,5019,practice,Gymnema sylvestre (Gurmar) for Blood Sugar,Emerging,2,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Interoceptive, Volitional'"
+oil-pulling-oral-health,5020,practice,Oil Pulling (Kavala/Gandusha) for Gum Health,Mixed,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Interoceptive'"
+tulsi-holy-basil-stress-metabolic,5021,practice,Tulsi / Holy Basil (Ocimum sanctum) for Stress & Metabolic Markers,Emerging,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Interoceptive, Emotional, Intrapersonal'"
+capoeira-movement-community,5022,practice,Capoeira — Afro-Brazilian Movement Art for Fitness & Belonging,Emerging,3,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Community, Social-Perceptual'"
+shilajit-fulvic-acid,5023,practice,Shilajit (Purified Mineral Pitch) for Testosterone/Vitality,Emerging,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Interoceptive'"
+ubuntu-communal-wellbeing,5024,practice,Ubuntu — Southern African Communal Ethic & Belonging,Emerging,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Community, Existential, Moral'"
+rooibos-tea-antioxidant,5025,practice,Rooibos Tea (Aspalathus linearis) & Oxidative Stress,Emerging,1,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Interoceptive'"

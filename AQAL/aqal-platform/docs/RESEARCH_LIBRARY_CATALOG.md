@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,025 clusters · 9,929 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,067 clusters · 9,999 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,464 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,402 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,098 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,503 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,403 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,100 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,025** |
+| **Total** | **5,067** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,297 |
-| Strong | 1,298 |
-| Mixed | 782 |
-| Emerging | 648 |
+| Moderate | 2,304 |
+| Strong | 1,301 |
+| Mixed | 794 |
+| Emerging | 668 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,464)
+## PRACTICES — what strengthens the mind (impact lens)  (2,503)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2491,8 +2491,47 @@
 | 4977 | Mental Time Travel — Pre-Experiencing a Specific Future | 2 | Emerging | 2 | practice: 'Bolsters clusters: Strategic planning, Meta-Cognitive foresight, Exis |
 | 4978 | Future Time Horizon — How 'Time Left' Reshapes What You Chase | 2 | Mixed | 2 | practice: 'Bolsters clusters: Existential prioritization, Emotional meaning, Int |
 | 4979 | Homo Prospectus — Treating Prospection as the Mind's Core Job | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive foresight, Strategic planning, Exis |
+| 4984 | Green Tea & Mortality (Japanese Cohorts) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily' |
+| 4985 | Hara Hachi Bu (Eat to 80% Full) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Volitional, Bodily' |
+| 4986 | Jjimjilbang (Korean Bathhouse) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Community, Interoceptive' |
+| 4987 | Natto & Vitamin K2 for Bone | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily' |
+| 4988 | Nunchi (Korean Reading-the-Room) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Social-Perceptual, Interpersonal, Emotional' |
+| 4989 | Soy & Breast Cancer — Asian vs Western | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily' |
+| 4990 | Tui Na (Chinese Therapeutic Massage) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily' |
+| 4991 | Qigong for Balance & Falls in Older Adults | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 4992 | Chinese Square Dancing (Guangchang Wu) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Bodily, Emotional, Social-Perceptual' |
+| 4993 | Morita Therapy (Japan) | 2 | Mixed | 3 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Existential, Volitional' |
+| 4994 | Chinese Herbal Medicine — Hype vs Artemisinin | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily' |
+| 4995 | Moxibustion for Breech Presentation (BL67) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily' |
+| 4996 | Kimchi & Metabolic Health (Korean Cohorts) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Bodily' |
+| 4998 | La Passeggiata (Post-Meal Social Stroll) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Community, Interoceptive, Interpersonal' |
+| 4999 | Terrainkur / Terrain Cure (Graded Prescribed Uphill Walking) | 3 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Naturalist, Interoceptive' |
+| 5000 | Friluftsliv (Nordic 'Open-Air Living') | 2 | Emerging | 1 | practice: 'Bolsters clusters: Naturalist, Emotional, Community, Intrapersonal' |
+| 5001 | Kneipp Hydrotherapy (Cold-Water Treading & Contrast Affusions) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Interoceptive, Bodily, Emotional' |
+| 5002 | Alpine High-Altitude Climate Therapy (Davos) for Eczema & Asthma | 3 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Naturalist, Interoceptive' |
+| 5003 | Fika (Swedish Social Coffee Break) | 1 | Emerging | 1 | practice: 'Bolsters clusters: Community, Emotional, Interpersonal' |
+| 5004 | Hygge (Danish Cozy Togetherness) | 1 | Emerging | 1 | practice: 'Bolsters clusters: Emotional, Community, Aesthetic' |
+| 5005 | Peloid / Fango Mud-Pack Therapy for Knee Osteoarthritis | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily' |
+| 5006 | The Grape Cure / Traubenkur (Autumn Grape Mono-Diet) | 1 | Emerging | 2 | practice: 'Bolsters clusters: Community, Naturalist' |
+| 5007 | Radon Spa Therapy (Bad Gastein Heilstollen) for Rheumatic Pain | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5008 | Thalassotherapy (Seawater & Marine-Climate Cure) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Emotional, Interoceptive' |
+| 5009 | Speleotherapy (Underground Salt-Mine / Cave Therapy) for Asthma | 1 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Naturalist' |
+| 5012 | Nigella sativa (Black Seed / Kalonji) for Cardiometabolic Markers | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic' |
+| 5013 | Millets & Traditional Whole-Grain South Asian Diet for Diabetes Risk | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Naturalist' |
+| 5014 | Fenugreek (Methi) for Glycemic Control | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic' |
+| 5015 | Mucuna pruriens (Kapikacchu) — Natural L-Dopa for Parkinson's | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Volitional, Interoceptive' |
+| 5016 | Amla / Indian Gooseberry (Emblica officinalis) for Lipids | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Systemic, Interoceptive' |
+| 5017 | Curanderismo — Cultural Meaning & the Placebo Dimension | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Community, Emotional' |
+| 5018 | Triphala — Ayurvedic Three-Fruit Formulation | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic' |
+| 5019 | Gymnema sylvestre (Gurmar) for Blood Sugar | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Volitional' |
+| 5020 | Oil Pulling (Kavala/Gandusha) for Gum Health | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5021 | Tulsi / Holy Basil (Ocimum sanctum) for Stress & Metabolic Markers | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Intrapersonal' |
+| 5022 | Capoeira — Afro-Brazilian Movement Art for Fitness & Belonging | 3 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Community, Social-Perceptual' |
+| 5023 | Shilajit (Purified Mineral Pitch) for Testosterone/Vitality | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5024 | Ubuntu — Southern African Communal Ethic & Belonging | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Existential, Moral' |
+| 5025 | Rooibos Tea (Aspalathus linearis) & Oxidative Stress | 1 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,402)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,403)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3898,8 +3937,9 @@
 | 4981 | The Hot-Cold Empathy Gap — Mispredicting Your Future Visceral Self | 6 | Moderate | 2 | weakness: 'Degrades: Strategic self-prediction, Interoceptive accuracy, Volition |
 | 4982 | Feeling Disconnected From Future You → Cutting Ethical Corners | 5 | Moderate | 2 | weakness: 'Degrades: Moral prudence, Financial integrity, Strategic reputation-m |
 | 4983 | The Time-Slack Fallacy — 'I'll Have More Time Later' | 5 | Moderate | 1 | weakness: 'Degrades: Strategic scheduling, Volitional follow-through, Financial  |
+| 4997 | Positive-Result Bias in Country-of-Origin Trials | 6 | Strong | 2 | weakness: 'Degrades: Logical, Pattern-Recognition, Meta-Cognitive, Adversarial' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,098)
+## COST OF FAILURE — what's at stake (harm lens)  (1,100)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5001,6 +5041,8 @@
 | 4826 | High-Altitude Mountaineering — Objective Hazard & Mortality | 5 | Strong | 2 | cost: 'Degrades: Bodily, Interoceptive' |
 | 4918 | REM/Dream Rebound After REM-Suppressing Substances | 2 | Moderate | 2 | cost: 'Degrades: Emotional, Interoceptive, Bodily (temporarily)' |
 | 4952 | Fidget Spinners — the Debunked Fad | 2 | Strong | 2 | cost: 'Degrades: Meta-Cognitive, attention, on-task behavior' |
+| 5010 | Neti-Pot Tap-Water Risk — Naegleria fowleri (Rare but Fatal) | 5 | Strong | 2 | cost: 'Degrades: Bodily, Existential, Interoceptive' |
+| 5011 | Heavy-Metal Contamination in Ayurvedic Products (Lead, Mercury, Arsenic) | 4 | Strong | 2 | cost: 'Degrades: Interoceptive, Bodily, Meta-Cognitive' |
 
 ## Framework / uncategorized  (61)
 
