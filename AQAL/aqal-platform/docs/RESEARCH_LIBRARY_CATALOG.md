@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,643 clusters · 7,541 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,682 clusters · 7,617 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,332 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,371 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,244 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,006 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,643** |
+| **Total** | **3,682** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,689 |
-| Strong | 1,046 |
-| Mixed | 500 |
-| Emerging | 408 |
+| Moderate | 1,705 |
+| Strong | 1,048 |
+| Mixed | 509 |
+| Emerging | 420 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,332)
+## PRACTICES — what strengthens the mind (impact lens)  (1,371)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1359,6 +1359,45 @@
 | 3587 | Trauma-Sensitive Yoga (TCTSY) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Bodily, Intrapersonal' |
 | 3588 | Critical Incident Stress Debriefing (CISD) | 1 | Strong | 2 | practice: 'Bolsters clusters: (none reliably — see callout)' |
 | 3589 | Seeking Safety (PTSD + Substance Use) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Intrapersonal, Interpersona |
+| 3602 | Electroconvulsive Therapy — The Stigmatized Gold Standard | 5 | Strong | 2 | Bolsters clusters: Emotional, Existential, Intrapersonal |
+| 3603 | Psilocybin for Cancer-Related Existential Distress (Research Only) | 4 | Emerging | 2 | Bolsters clusters: Existential, Emotional, Intrapersonal |
+| 3604 | Midday Bright-Light Therapy for Bipolar Depression | 3 | Moderate | 2 | Bolsters clusters: Emotional, Interoceptive, Intrapersonal |
+| 3605 | Repetitive TMS for Depression | 3 | Strong | 2 | Bolsters clusters: Emotional, Meta-Cognitive, Intrapersonal |
+| 3606 | Whole-Body Hyperthermia for Depression | 3 | Emerging | 1 | Bolsters clusters: Emotional, Interoceptive, Intrapersonal |
+| 3607 | Accelerated Theta-Burst TMS (SAINT/SNT) | 4 | Emerging | 2 | Bolsters clusters: Emotional, Meta-Cognitive, Existential |
+| 3608 | Psilocybin-Assisted Therapy for Depression (Research Only) | 3 | Emerging | 2 | Bolsters clusters: Emotional, Existential, Intrapersonal |
+| 3609 | Neurosteroids (Brexanolone / Zuranolone) for Postpartum Depression | 3 | Moderate | 2 | Bolsters clusters: Emotional, Interpersonal, Intrapersonal |
+| 3610 | Wake Therapy (Sleep-Deprivation Chronotherapeutics) | 3 | Moderate | 3 | Bolsters clusters: Emotional, Interoceptive, Meta-Cognitive |
+| 3611 | Cranial Electrotherapy Stimulation (Weak Evidence) | 2 | Mixed | 2 | Bolsters clusters: Emotional, Interoceptive |
+| 3612 | MDMA-Assisted Therapy for PTSD (Research; FDA-Rejected 2024) | 3 | Mixed | 2 | Bolsters clusters: Emotional, Interpersonal, Intrapersonal |
+| 3613 | tDCS for Depression (Contested) | 2 | Mixed | 2 | Bolsters clusters: Emotional, Meta-Cognitive |
+| 3614 | Implanted Vagus Nerve Stimulation for Depression | 2 | Mixed | 2 | Bolsters clusters: Emotional, Interoceptive, Intrapersonal |
+| 3615 | Buying Time — Outsourcing Disliked Chores | 3 | Moderate | 2 | practice: 'Bolsters clusters: Time Affluence, positive affect, life satisfaction |
+| 3616 | Frequency Over Intensity of Good Moments | 2 | Moderate | 2 | practice: 'Bolsters clusters: positive affect, Savoring, life satisfaction' |
+| 3617 | Valuing Time Over Money | 2 | Moderate | 2 | practice: 'Bolsters clusters: Time Affluence, positive affect, life satisfaction |
+| 3618 | Spending on Experiences, Not Things | 2 | Mixed | 2 | practice: 'Bolsters clusters: positive affect, social connection, meaning' |
+| 3619 | Nostalgia as a Wellbeing Resource | 2 | Moderate | 2 | practice: 'Bolsters clusters: positive affect, social connectedness, meaning in  |
+| 3620 | Interrupting Pleasure to Renew It | 2 | Emerging | 1 | practice: 'Bolsters clusters: Savoring, positive affect, hedonic renewal' |
+| 3621 | Self-Soothing Touch (Hand on Heart) | 2 | Emerging | 1 | practice: 'Bolsters clusters: acute stress down-regulation, self-compassion, emo |
+| 3622 | Temporal Scarcity — Savoring What's Ending | 2 | Emerging | 2 | practice: 'Bolsters clusters: Savoring, gratitude, positive affect' |
+| 3623 | Anticipatory Savoring — The Boost Is in the Waiting | 2 | Moderate | 2 | practice: 'Bolsters clusters: Savoring, positive affect, optimism' |
+| 3624 | Variety — Keeping Joys From Going Stale | 2 | Moderate | 2 | practice: 'Bolsters clusters: Savoring, positive affect, gratitude' |
+| 3625 | Ashwagandha for Stress & Cortisol | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, stress regulation' |
+| 3626 | Myo-Inositol for PCOS & Anxiety | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Emotional, insulin signaling, ovulatory fu |
+| 3627 | Urolithin A for Mitophagy & Muscle Endurance | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, mitochondrial quality, muscle strength, en |
+| 3628 | CoQ10 / Ubiquinol for Statin Myopathy & Heart Failure | 3 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, mitochondrial energy, muscl |
+| 3629 | GlyNAC (Glycine + N-Acetylcysteine) for Cellular Aging | 3 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, mitochondrial function, glu |
+| 3630 | Citicoline (CDP-Choline) for Attention & Memory | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, sustained attention, episodic memo |
+| 3631 | L-Theanine (with Caffeine) for Calm Focus | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Emotional, attention, calm alertne |
+| 3632 | L-Tyrosine for Cognition Under Acute Stress | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, working memory under load, stress  |
+| 3633 | Alpha-GPC for Power Output & Acute Focus | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Meta-Cognitive, peak power, motivation' |
+| 3634 | Bacopa Monnieri for Memory Consolidation | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, memory, attention speed' |
+| 3635 | Betaine (TMG) for Methylation & Power | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, methylation, strength-power' |
+| 3636 | Magnesium L-Threonate (Brain-Penetrant Magnesium) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, working memory, sleep quality' |
+| 3637 | Ergothioneine — The 'Longevity Vitamin' | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, cellular protection, cognit |
+| 3638 | Saffron for Retinal Function in Macular Degeneration | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, retinal/visual function' |
+| 3639 | Spermidine for Autophagy & Memory | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, memory, cellular renewal' |
+| 3640 | Low-Dose (Microdose) Lithium for Brain Aging | 1 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive (contested)' |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,244)
 
