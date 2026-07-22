@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,278 clusters · 8,651 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,320 clusters · 8,735 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,884 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,281 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,915 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,292 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,052 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,278** |
+| **Total** | **4,320** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,964 |
-| Strong | 1,168 |
-| Mixed | 619 |
-| Emerging | 527 |
+| Moderate | 1,980 |
+| Strong | 1,183 |
+| Mixed | 629 |
+| Emerging | 528 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,884)
+## PRACTICES — what strengthens the mind (impact lens)  (1,915)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1911,8 +1911,39 @@
 | 4232 | Work-From-Home & Productivity (Bloom RCT) | 3 | Mixed | 2 | practice: 'Bolsters clusters: Systemic, Volitional, productivity, retention, aut |
 | 4233 | Ethical Leadership — Integrity That Transmits | 3 | Moderate | 2 | practice: 'Bolsters clusters: Leadership, Moral, Interpersonal, trust' |
 | 4235 | Team Diversity & Performance — Contingent, Not Automatic | 2 | Mixed | 2 | practice: 'Bolsters clusters: Systemic, Creative, Strategic, Interpersonal, inno |
+| 4237 | Similarity-Attraction — 'Opposites Attract' Is a Myth | 4 | Strong | 2 | practice: 'Bolsters clusters: Interpersonal, Seductive, Social-Perceptual' |
+| 4238 | Propinquity — Proximity Builds Bonds | 4 | Strong | 2 | practice: 'Bolsters clusters: Seductive, Interpersonal, Community' |
+| 4239 | Reciprocity of Liking — Knowing Someone Likes You | 4 | Moderate | 2 | practice: 'Bolsters clusters: Seductive, Interpersonal, Emotional' |
+| 4240 | Mere Exposure — Familiarity Breeds Liking | 3 | Strong | 2 | practice: 'Bolsters clusters: Seductive, Interpersonal, Social-Perceptual' |
+| 4241 | Capitalization — Celebrating a Partner's Good News | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Emotional, Seductive' |
+| 4242 | Sexual Frequency — 'Once a Week' Plateau | 3 | Moderate | 2 | practice: 'Bolsters clusters: Seductive, Emotional, Interpersonal' |
+| 4243 | The Matching Hypothesis — Partners of Similar Attractiveness | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Seductive, Social-Perceptual' |
+| 4244 | Adult Attachment Styles in Romantic Bonds | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interpersonal, Intrapersonal' |
+| 4245 | Self-Expansion — Novel, Exciting Shared Activities | 3 | Moderate | 2 | practice: 'Bolsters clusters: Seductive, Emotional, Interpersonal' |
+| 4246 | Dating-App 'Compatibility' Algorithms — No Validated Edge | 2 | Mixed | 2 | practice: 'Bolsters clusters: Strategic, Seductive' |
+| 4247 | MHC 'Sweaty T-Shirt' Scent Matching — Weak/Unreplicated | 1 | Mixed | 2 | practice: 'Bolsters clusters: Seductive' |
+| 4248 | The 'Red Dress' Attraction Effect — Failed to Replicate | 1 | Mixed | 2 | practice: 'Bolsters clusters: Seductive, Aesthetic' |
+| 4249 | Misattribution of Arousal — The 'Shaky Bridge' Effect | 2 | Mixed | 2 | practice: 'Bolsters clusters: Seductive, Emotional' |
+| 4250 | Uncertainty & 'Playing Hard to Get' | 2 | Emerging | 2 | practice: 'Bolsters clusters: Seductive, Emotional' |
+| 4251 | Calibrating to Real Human Honesty (Lost-Wallet Field Study) | 3 | Strong | 2 | practice: 'Bolsters clusters: Moral, Social-Perceptual, Existential' |
+| 4252 | Reputation & Competitive Altruism (Generosity Under Observation) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Community, Moral, Strategic, Leadership' |
+| 4253 | Cooperation Is Contagious (Prosocial Cascades) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Community, Moral, Interpersonal, Leadership' |
+| 4254 | 'Watching Eyes' Images to Nudge Honesty & Generosity | 2 | Mixed | 2 | practice: 'Bolsters clusters: Moral, Community' |
+| 4255 | Dual-Process Morality & the Trolley Problem | 2 | Moderate | 2 | practice: 'Bolsters clusters: Moral, Meta-Cognitive, Logical' |
+| 4256 | Moral Reminders (Ten Commandments) to Curb Cheating — Failed to Replicate | 1 | Strong | 2 | practice: 'Bolsters clusters: Moral, Financial' — but a large replication found  |
+| 4257 | Signing an Honesty Pledge at the Top (RETRACTED — Does Nothing) | 1 | Strong | 3 | practice: 'Bolsters clusters: Moral, Financial, Systemic' — but the evidence for |
+| 4258 | Asch Conformity — Honestly, Most People Stay Independent | 2 | Mixed | 2 | practice: 'Bolsters clusters: Volitional, Moral, Adversarial, Social-Perceptual' |
+| 4259 | Moral Foundations Theory (Reading Others' Moral Grammar) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Moral, Interpersonal, Rhetorical' |
+| 4260 | Paying It Forward — But Greed Travels Farther Than Generosity | 2 | Mixed | 2 | practice: 'Bolsters clusters: Community, Moral, Interpersonal' |
+| 4266 | Reading Absolute vs Relative Risk | 3 | Strong | 2 | practice: 'Bolsters clusters: Financial, Logical, Meta-Cognitive, Mathematical,  |
+| 4267 | Icon Arrays & Visual Risk Formats | 3 | Strong | 2 | practice: 'Bolsters clusters: Spatial, Mathematical, Pattern-Recognition, Rhetor |
+| 4268 | Grasping Regression to the Mean | 3 | Strong | 2 | practice: 'Bolsters clusters: Logical, Pattern-Recognition, Meta-Cognitive, Math |
+| 4269 | Expected-Value Thinking | 3 | Moderate | 2 | practice: 'Bolsters clusters: Financial, Logical, Mathematical, Strategic, Meta- |
+| 4270 | Visualize Before You Summarize (Anscombe) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Spatial, Pattern-Recognition, Mathematical, Aesthe |
+| 4271 | Calibrating Surprise: Coincidence Base Rates | 2 | Moderate | 1 | practice: 'Bolsters clusters: Mathematical, Pattern-Recognition, Meta-Cognitive, |
+| 4272 | The Hot Hand, Honestly Reconsidered | 2 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Mathematical, Pattern-Recognition, |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,281)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,292)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3197,6 +3228,17 @@
 | 4192 | Rhyme-as-Reason & Processing Fluency | 3 | Mixed | 2 | Degrades: Logical, Meta-Cognitive, Adversarial |
 | 4193 | Sleeper Effect (Discounted Messages Rebound) | 3 | Mixed | 1 | Degrades: Meta-Cognitive, Adversarial, Logical |
 | 4236 | Pay-First Motivation Blind Spot | 4 | Strong | 2 | weakness: 'Degrades: Leadership, Strategic, Interpersonal, Systemic' |
+| 4261 | Trusting the 'Dishonesty' Literature (Ariely & Gino Fraud Cloud) | 7 | Strong | 2 | weakness: 'Degrades: Adversarial, Moral, Meta-Cognitive' |
+| 4262 | Milgram Obedience — Real, But Not 'Blind' (Engaged Followership) | 5 | Mixed | 2 | weakness: 'Degrades: Moral, Volitional, Adversarial' |
+| 4263 | Moral Hypocrisy — Wanting to LOOK Moral, Not BE Moral | 5 | Moderate | 2 | weakness: 'Degrades: Moral, Intrapersonal, Existential' |
+| 4264 | The Illusion of Moral Superiority ('Holier Than Thou') | 5 | Moderate | 2 | weakness: 'Degrades: Moral, Intrapersonal, Meta-Cognitive' |
+| 4265 | Believing 'Situations Turn Good People Cruel' (Stanford Prison Experiment) | 2 | Strong | 2 | weakness: 'Degrades: Moral, Volitional, Adversarial' |
+| 4273 | Exponential-Growth Bias | 6 | Strong | 2 | weakness: 'Degrades: Financial, Mathematical, Strategic, Systemic' |
+| 4274 | Assuming Normal Distributions (Ignoring Fat Tails) | 5 | Strong | 2 | weakness: 'Degrades: Financial, Strategic, Systemic, Mathematical' |
+| 4275 | Attribute Framing Susceptibility | 5 | Moderate | 2 | weakness: 'Degrades: Logical, Meta-Cognitive, Financial, Emotional' |
+| 4276 | Monty Hall: Failing to Update Conditionally | 4 | Strong | 2 | weakness: 'Degrades: Logical, Mathematical, Strategic, Adversarial' |
+| 4277 | Probability Matching Over Maximizing | 4 | Strong | 2 | weakness: 'Degrades: Logical, Strategic, Mathematical, Meta-Cognitive' |
+| 4278 | The '1-in-X' Frequency-Format Trap | 4 | Moderate | 2 | weakness: 'Degrades: Mathematical, Logical, Emotional, Meta-Cognitive' |
 
 ## COST OF FAILURE — what's at stake (harm lens)  (1,052)
 
