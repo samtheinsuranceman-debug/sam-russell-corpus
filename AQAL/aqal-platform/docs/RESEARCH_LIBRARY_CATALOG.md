@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,397 clusters · 8,866 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,437 clusters · 8,935 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,983 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,300 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,053 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,013 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,304 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,059 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,397** |
+| **Total** | **4,437** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,012 |
-| Strong | 1,194 |
-| Mixed | 647 |
-| Emerging | 544 |
+| Moderate | 2,036 |
+| Strong | 1,201 |
+| Mixed | 651 |
+| Emerging | 549 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,983)
+## PRACTICES — what strengthens the mind (impact lens)  (2,013)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2010,8 +2010,38 @@
 | 4350 | Asset Location — Which Account Holds Which Asset | 2 | Moderate | 2 | practice: 'Bolsters clusters: tax-efficient investing, Tax-Advantaged Retirement |
 | 4351 | Rent-vs-Buy — A House Isn't Always an Investment | 3 | Mixed | 2 | practice: 'Bolsters clusters: true-cost accounting, opportunity-cost reasoning,  |
 | 4352 | Rebalancing — Risk Control, Not Free Return | 2 | Mixed | 3 | practice: 'Bolsters clusters: risk management, Buy-and-Hold Discipline, position |
+| 4356 | Use Voice, Not Text, in Disagreement (Speech Humanizes) | 3 | Moderate | 2 | practice: 'Bolsters clusters: perceived thoughtfulness, dehumanization reduction |
+| 4357 | Conversational Receptiveness (Signaling Willingness to Engage) | 3 | Moderate | 1 | practice: 'Bolsters clusters: durable persuasion, disagreement de-escalation, be |
+| 4358 | Ask for 'Advice,' Not 'Feedback' | 3 | Moderate | 1 | practice: 'Bolsters clusters: developmental input, feedback quality, learning fr |
+| 4359 | Schmooze Before You Negotiate (Rapport Beats Cold Openers) | 3 | Moderate | 1 | practice: 'Bolsters clusters: cooperative dealmaking, trust, joint gains' |
+| 4362 | High-Quality Listening Lowers the Speaker's Defensiveness | 3 | Moderate | 2 | practice: 'Bolsters clusters: de-escalation, openness to opposing views, felt un |
+| 4364 | Reaching Out (Check-Ins Land Better Than You Expect) | 2 | Moderate | 1 | practice: 'Bolsters clusters: friendship maintenance, felt appreciation, social  |
+| 4365 | 'I'-Statements vs 'You'-Statements in Conflict | 2 | Mixed | 2 | practice: 'Bolsters clusters: conflict de-escalation, message clarity, felt safe |
+| 4370 | Specific, Difficult Goals (Locke & Latham) | 4 | Strong | 2 | practice: 'Bolsters clusters: Volitional, Strategic, Entrepreneurial' |
+| 4371 | Autonomous Motivation Beats Pressured Motivation | 4 | Strong | 2 | practice: 'Bolsters clusters: Volitional, Intrapersonal, Entrepreneurial, Strate |
+| 4372 | Building Self-Efficacy (Bandura's Four Sources) | 4 | Strong | 2 | practice: 'Bolsters clusters: Volitional, Strategic, Entrepreneurial, Intraperso |
+| 4374 | Satisfying the Three Basic Needs (SDT Core) | 3 | Strong | 2 | practice: 'Bolsters clusters: Volitional, Intrapersonal, Emotional, Interpersona |
+| 4375 | A Purpose Beyond the Self Sustains Boring Effort | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Existential, Moral, Intrapersonal' |
+| 4376 | Expectancy × Value — Making a Task Feel Useful | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Intrapersonal, Strategic' |
+| 4377 | Process Praise, Not Person Praise | 3 | Moderate | 2 | practice: 'Bolsters clusters: Parental, Leadership, Volitional, Interpersonal' |
+| 4378 | Goal Commitment — The Moderator That Makes Goals Work | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Strategic' |
+| 4379 | Knowing When to Quit — Goal Disengagement & Reengagement | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Strategic, Emotional, Intrapersonal' |
+| 4380 | The Progress Principle — Small Wins on Meaningful Work | 3 | Emerging | 2 | practice: 'Bolsters clusters: Volitional, Leadership, Creative, Entrepreneurial' |
+| 4381 | When Rewards Help vs Harm (The Contested Scope) | 3 | Mixed | 2 | practice: 'Bolsters clusters: Leadership, Entrepreneurial, Strategic' |
+| 4383 | Spatial Skills Are Trainable & Transfer | 4 | Strong | 3 | practice: 'Bolsters clusters: Spatial, Mathematical, Mechanical, Pattern-Recogni |
+| 4384 | Gesturing While Thinking Offloads Working Memory | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Spatial, Mathematical, Linguistic' |
+| 4385 | Spatial-Visualization Curriculum for Engineering Students | 4 | Moderate | 2 | practice: 'Bolsters clusters: Spatial, Mechanical, Mathematical, Pattern-Recogni |
+| 4386 | Map-Reading: Survey vs Route Knowledge | 3 | Moderate | 1 | practice: 'Bolsters clusters: Spatial, Naturalist, Strategic' |
+| 4387 | Construction Play (Blocks/LEGO) & Spatial Development | 3 | Moderate | 2 | practice: 'Bolsters clusters: Spatial, Mathematical, Mechanical, Bodily' |
+| 4388 | Navigation Expertise & Hippocampal Plasticity | 3 | Moderate | 2 | practice: 'Bolsters clusters: Spatial, Naturalist, Meta-Cognitive' |
+| 4389 | Sketching & External Representation for Problem-Solving | 3 | Emerging | 2 | practice: 'Bolsters clusters: Spatial, Creative, Mechanical, Pattern-Recognition |
+| 4390 | Embodied Cognition: Grounding Real, Priming Mostly Not | 2 | Mixed | 3 | practice: 'Bolsters clusters: Bodily, Spatial, Meta-Cognitive' |
+| 4391 | Action Video-Game Training for Mental Rotation | 3 | Moderate | 2 | practice: 'Bolsters clusters: Spatial, Pattern-Recognition, Bodily, Mathematical |
+| 4392 | Origami / Paper-Folding for Spatial Visualization | 2 | Emerging | 2 | practice: 'Bolsters clusters: Spatial, Mathematical, Mechanical, Bodily' |
+| 4393 | Spatial Perspective-Taking & Mental Simulation | 2 | Emerging | 2 | practice: 'Bolsters clusters: Spatial, Interpersonal, Social-Perceptual, Meta-Co |
+| 4394 | Orienteering: Navigation Sport for Spatial Memory | 2 | Emerging | 1 | practice: 'Bolsters clusters: Spatial, Naturalist, Bodily, Pattern-Recognition' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,300)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,304)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3315,8 +3345,12 @@
 | 4353 | Market-Timing & the 'Missing the Best Days' Trap | 6 | Strong | 2 | weakness: 'Degrades: Financial, Strategic, realized returns' |
 | 4354 | The Credit-Card Minimum-Payment Trap | 6 | Strong | 2 | weakness: 'Degrades: Financial, Mathematical, net worth' |
 | 4355 | Home-Country Bias — Under-Diversifying Geographically | 4 | Moderate | 2 | weakness: 'Degrades: Financial, Strategic, diversification' |
+| 4368 | Illusion of Transparency (You Are Less Clear Than You Feel) | 5 | Strong | 2 | weakness: 'Degrades: being understood, message clarity, empathic accuracy' |
+| 4369 | Miscalibrated Conversation Endings (They Rarely End When Wanted) | 3 | Moderate | 1 | weakness: 'Degrades: reading others, conversational calibration, rapport' |
+| 4382 | Running on Guilt & Ego (Introjected Motivation) | 5 | Moderate | 2 | weakness: 'Degrades: Volitional, Intrapersonal, Emotional' |
+| 4395 | Spatial Anxiety → Avoidance & Underperformance | 5 | Moderate | 2 | weakness: 'Degrades: Spatial, Mathematical, Naturalist, Meta-Cognitive' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,053)
+## COST OF FAILURE — what's at stake (harm lens)  (1,059)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4373,6 +4407,12 @@
 | 4223 | Abusive Supervision → Strain & Deviance | 4 | Strong | 2 | cost: 'Degrades: Interpersonal, Emotional, Leadership climate, engagement' |
 | 4234 | Goals Gone Wild — Aggressive Stretch Goals Backfire | 3 | Mixed | 2 | cost: 'Degrades: Moral, Strategic, Systemic, intrinsic motivation' |
 | 4284 | Disparagement Humor Releases Prejudice | 2 | Moderate | 2 | cost: 'Degrades: Moral, Social-Perceptual, Interpersonal, Community' |
+| 4360 | Expressing Anger to Get Concessions (Short-Term Gain, Relational Cost) | 2 | Moderate | 1 | cost: 'Degrades: trust, long-term cooperation, relationship durability' |
+| 4361 | Venting / 'Getting It Off Your Chest' (Catharsis Myth) | 2 | Strong | 1 | cost: 'Degrades: anger regulation, de-escalation, conflict repair' |
+| 4363 | Humblebragging (Bragging Disguised as a Complaint) | 2 | Moderate | 1 | cost: 'Degrades: likability, perceived competence, sincerity, compliance' |
+| 4366 | The 'Feedback Sandwich' (Praise-Criticism-Praise) | 2 | Mixed | 2 | cost: 'Degrades: feedback clarity, behavior change, perceived sincerity' |
+| 4367 | Phubbing (Phone-Snubbing a Present Partner) | 2 | Moderate | 1 | cost: 'Degrades: relationship satisfaction, felt responsiveness, trust, intimacy |
+| 4373 | Motivation Crowding-Out — Incentives That Backfire | 3 | Moderate | 2 | cost: 'Degrades: Systemic, Leadership, Strategic, Moral' |
 
 ## Framework / uncategorized  (61)
 
