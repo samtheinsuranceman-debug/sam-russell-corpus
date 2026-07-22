@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,783 clusters · 9,514 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,819 clusters · 9,581 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,265 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,297 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,366 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,091 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,095 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,783** |
+| **Total** | **4,819** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,207 |
-| Strong | 1,272 |
-| Mixed | 718 |
-| Emerging | 586 |
+| Moderate | 2,219 |
+| Strong | 1,277 |
+| Mixed | 732 |
+| Emerging | 591 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,265)
+## PRACTICES — what strengthens the mind (impact lens)  (2,297)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2292,6 +2292,38 @@
 | 4737 | Frequent Short Breaks Over Rare Long Ones | 2 | Moderate | 2 | practice: 'Bolsters clusters: Systemic, Volitional, Job Burnout / Workaholism, E |
 | 4738 | The Vacation 'Fade-Out' | 2 | Moderate | 2 | practice: 'Bolsters clusters: Job Burnout / Workaholism, Emotional, Interoceptiv |
 | 4739 | Niksen (Deliberate Doing-Nothing) | 1 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal — but unproven' |
+| 4742 | Investment Model of Commitment (Rusbult) | 4 | Strong | 2 | practice: 'Bolsters clusters: Interpersonal, Volitional, Community' |
+| 4743 | Idealizing Your Partner (Positive Illusions) | 4 | Strong | 2 | practice: 'Bolsters clusters: Interpersonal, Emotional, Seductive' |
+| 4744 | Expressing Gratitude to a Partner (Find-Remind-Bind) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interpersonal, Community' |
+| 4745 | Everyday Maintenance Behaviors (Positivity, Assurances, Sharing Tasks) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Community, Emotional' |
+| 4746 | Novel, Exciting Shared Activities (Self-Expansion) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Seductive, Interpersonal, Creative' |
+| 4747 | Relationship-Enhancing Attributions (Benefit of the Doubt) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Emotional, Social-Perceptual' |
+| 4748 | Willingness to Sacrifice for the Relationship | 3 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Moral, Volitional' |
+| 4749 | Accommodation (Answering Bad Behavior Constructively) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Emotional, Volitional' |
+| 4750 | A Good Marriage & Physical Health (Quality, Not Just Status) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Community' |
+| 4751 | Gottman's 5:1 Positivity Ratio | 3 | Mixed | 2 | practice: 'Bolsters clusters: Interpersonal, Emotional, Humor' |
+| 4752 | Forgiveness in Couples — Powerful but Conditional | 3 | Mixed | 3 | practice: 'Bolsters clusters: Emotional, Moral, Interpersonal' |
+| 4754 | Singing to Your Baby — Soothing, Bonding & Maternal Mood | 3 | Moderate | 2 | practice: 'Bolsters clusters: Parental, Emotional, Musical, Community' |
+| 4755 | The 'Ice-Breaker Effect' — Singing Bonds Strangers Fast | 3 | Moderate | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Social-Perceptual, Emoti |
+| 4756 | Singing & the Body — Cortisol, sIgA & Oxytocin | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Musical, Bodily' |
+| 4757 | Singing Together Synchronizes Singers' Hearts | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Community, Musical, Interpersonal' |
+| 4758 | Amateur Music-Making & Everyday Wellbeing | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Musical, Community, Intrapersonal' |
+| 4759 | Group Drumming & the Anti-Inflammatory Immune Shift | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Community, Bodily, Interoceptive' |
+| 4760 | Musical Improvisation & the Flow State (Jazz-Improv fMRI) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Creative, Musical, Intrapersonal, Volitional' |
+| 4761 | The OPERA Hypothesis — Why Making Music May Sharpen Speech Processing | 2 | Moderate | 2 | practice: 'Bolsters clusters: Musical, Linguistic, Social-Perceptual, Meta-Cogni |
+| 4762 | Learning an Instrument & Structural Brain Change | 2 | Mixed | 2 | practice: 'Bolsters clusters: Musical, Bodily, Mechanical, Meta-Cognitive' |
+| 4763 | Training Your Ear as an Adult — Relative Pitch Yes, Absolute Pitch Mostly No | 2 | Mixed | 2 | practice: 'Bolsters clusters: Musical, Aesthetic, Meta-Cognitive' |
+| 4764 | Music Training & Hearing Speech in Noise | 2 | Mixed | 2 | practice: 'Bolsters clusters: Musical, Linguistic, Social-Perceptual, Interocept |
+| 4765 | Taking Up an Instrument in Later Life | 2 | Mixed | 2 | practice: 'Bolsters clusters: Musical, Bodily, Meta-Cognitive, Emotional' |
+| 4769 | Sunlight, Season & Brain Serotonin Turnover | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interoceptive, Emotional, Naturalist, Bodily' |
+| 4770 | Sunshine & Stock-Market Returns ('Good Day Sunshine') | 2 | Mixed | 1 | practice: 'Bolsters clusters: Financial, Strategic, Naturalist, Meta-Cognitive' |
+| 4771 | Weather & Daily Mood (Much Smaller Than You Think) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Naturalist weather-literacy, Emotional self-attrib |
+| 4772 | Weather, Mood-Congruent Spending & Projection Bias | 2 | Emerging | 2 | practice: 'Bolsters clusters: Financial, Interoceptive, Meta-Cognitive, Strategi |
+| 4773 | The Lunar Effect ('Full-Moon Madness') — Debunked | 1 | Strong | 1 | practice: 'Bolsters clusters: Meta-Cognitive skepticism, Naturalist, Adversarial |
+| 4774 | Barometric Pressure & Pain / Headache — Weak Evidence | 1 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive accuracy, Naturalist, Meta-Cognitive |
+| 4775 | Seasonal Depression Pattern — Contested by Large Surveys | 2 | Mixed | 2 | practice: 'Bolsters clusters: Naturalist, Emotional, Meta-Cognitive skepticism' |
+| 4776 | Sunshine & Prosocial Behavior / Tipping | 1 | Mixed | 2 | practice: 'Bolsters clusters: Interpersonal, Social-Perceptual, Emotional' |
+| 4777 | Season/Month of Birth & Personality — Tiny, Inconsistent | 1 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Naturalist, Adversarial' |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,366)
 
@@ -3664,7 +3696,7 @@
 | 4740 | The Recovery Paradox — Detaching Least When You Need It Most | 6 | Moderate | 1 | weakness: 'Degrades: Volitional, Interoceptive, Emotional, Systemic' |
 | 4741 | Work-Related Rumination Blocks Recovery | 6 | Moderate | 1 | weakness: 'Degrades: Emotional, Interoceptive, Meta-Cognitive, Intrapersonal' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,091)
+## COST OF FAILURE — what's at stake (harm lens)  (1,095)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4759,6 +4791,10 @@
 | 4723 | Zoonotic Infection Risk from Pets | 2 | Emerging | 2 | cost: 'Degrades: Bodily health, Interoceptive' |
 | 4724 | The 'Pet Effect' Overbelief | 2 | Mixed | 2 | cost: 'Degrades: Meta-Cognitive calibration, Emotional expectations, Existential |
 | 4726 | Cat Ownership, Toxoplasma gondii & Mental Health | 2 | Mixed | 2 | cost: 'Degrades: Emotional stability, Intrapersonal, Bodily' |
+| 4753 | Premarital Cohabitation & Divorce Risk (the Contested 'Effect') | 2 | Mixed | 2 | cost/weakness: 'Degrades: marriage stability (contested/updated)' |
+| 4766 | Heat & Aggression / Violent Crime | 4 | Strong | 2 | cost: 'Degrades: Emotional regulation, Moral, Interpersonal, Volitional' |
+| 4767 | Heat & Cognitive/Academic Performance | 3 | Strong | 1 | cost: 'Degrades: Meta-Cognitive focus, Mathematical, Linguistic, Logical, Financ |
+| 4768 | Daylight Saving Time Spring Transition — Health & Safety Cost | 3 | Moderate | 2 | cost: 'Degrades: Interoceptive circadian alignment, Bodily cardiovascular, Meta- |
 
 ## Framework / uncategorized  (61)
 
