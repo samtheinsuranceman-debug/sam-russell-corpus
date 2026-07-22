@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,721 clusters · 7,682 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,757 clusters · 7,749 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,406 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,442 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,246 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,008 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,721** |
+| **Total** | **3,757** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,722 |
-| Strong | 1,049 |
-| Mixed | 519 |
-| Emerging | 431 |
+| Moderate | 1,736 |
+| Strong | 1,055 |
+| Mixed | 526 |
+| Emerging | 440 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,406)
+## PRACTICES — what strengthens the mind (impact lens)  (1,442)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1433,6 +1433,42 @@
 | 3675 | Emotional Vitality / Vigor | 2 | Emerging | 1 | practice: 'Bolsters clusters: Emotional, Interoceptive, energy' |
 | 3676 | Sense of Coherence (Antonovsky's Salutogenesis) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Intrapersonal, meaning' |
 | 3677 | Sense of Personal Control / Mastery | 2 | Emerging | 2 | practice: 'Bolsters clusters: Volitional, Intrapersonal, control-beliefs' |
+| 3680 | Microscopic Colitis — Chronic Watery Diarrhea With a Normal Colonoscopy | 4 | Strong | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional' |
+| 3681 | Bile Acid Diarrhea Behind 'IBS-D' — A Missed, Treatable Cause | 3 | Strong | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional' |
+| 3682 | Statin 'Muscle Pain' Is Mostly Nocebo — Rechallenge Before You Quit | 3 | Strong | 3 | practice: 'Bolsters clusters: Bodily, Meta-Cognitive, Systemic' |
+| 3683 | Behaviorally-Induced Insufficient Sleep — Chronic Short Sleep Mislabeled Depression/ADHD | 4 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Emotional, Volitional' |
+| 3684 | Copper Deficiency Myeloneuropathy — The B12 Mimic Nobody Checks | 3 | Moderate | 3 | practice: 'Bolsters clusters: Bodily, Interoceptive, Meta-Cognitive' |
+| 3685 | Vitamin B6 Toxicity — When the Supplement Causes the Neuropathy It's Meant to Treat | 3 | Moderate | 3 | practice: 'Bolsters clusters: Bodily, Interoceptive, Meta-Cognitive' |
+| 3686 | Antidepressant Emotional Blunting — The 'Residual Depression' That Is Really the Drug | 3 | Moderate | 3 | practice: 'Bolsters clusters: Emotional, Interpersonal, Volitional' |
+| 3687 | Depressive Pseudodementia — Treatable 'Dementia' in Late-Life Depression | 4 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Emotional, Existential' |
+| 3688 | Drug-Induced Depression — Review the Medication List First | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive, Systemic' |
+| 3689 | Exocrine Pancreatic Insufficiency — Malabsorption Hiding Behind 'IBS' | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Meta-Cognitive' |
+| 3690 | Iron Deficiency Without Anemia — Check Ferritin, Not Just Hemoglobin | 3 | Mixed | 3 | practice: 'Bolsters clusters: Bodily, Interoceptive, Meta-Cognitive' |
+| 3691 | Chronic Mild Dehydration — A Modest but Real Drag on Mood and Focus | 2 | Moderate | 2 | practice: 'Bolsters clusters: Interoceptive, Meta-Cognitive, Emotional' |
+| 3692 | 10-Second One-Leg Stance — Balance as a Survival Marker | 3 | Strong | 2 | practice: 'Bolsters clusters: Balance capacity, Fall Prevention, Proprioception' |
+| 3693 | Gait Speed — The 'Sixth Vital Sign' | 3 | Strong | 1 | practice: 'Bolsters clusters: Mobility, Cardiorespiratory fitness, Independence' |
+| 3694 | Heart-Rate Recovery — How Fast Your Pulse Drops | 3 | Strong | 2 | practice: 'Bolsters clusters: Cardiorespiratory fitness, Autonomic health' |
+| 3695 | Sit-to-Rise Test — Getting Off the Floor Without Hands | 3 | Moderate | 2 | practice: 'Bolsters clusters: Lower-body strength, Flexibility, Balance' |
+| 3696 | Slow Eating & Thorough Chewing for Satiety | 2 | Moderate | 1 | practice: 'Bolsters clusters: Appetite regulation, Weight management, Interocept |
+| 3697 | 30-Second Chair-Stand — Lower-Limb Power & Longevity | 3 | Moderate | 2 | practice: 'Bolsters clusters: Leg strength, Muscle power, Frailty resistance' |
+| 3698 | Soleus Push-Up — Seated Calf Raises for Blood Sugar | 3 | Emerging | 2 | practice: 'Bolsters clusters: Glucose regulation, Metabolic health' |
+| 3699 | Active Cool-Down — Mostly Ritual, Little Recovery Benefit | 2 | Mixed | 1 | practice: 'Bolsters clusters: Cardiovascular recovery (modest)' |
+| 3700 | Deep Resting Squat — Sitting Like an Ancestor | 2 | Emerging | 1 | practice: 'Bolsters clusters: Hip & ankle mobility, Posture' |
+| 3701 | Timed Up-and-Go (TUG) — A Weaker Fall Screen Than Hyped | 2 | Mixed | 1 | practice: 'Bolsters clusters: Mobility, Fall awareness' |
+| 3702 | Sit-and-Reach Flexibility & Arterial Stiffness | 2 | Emerging | 2 | practice: 'Bolsters clusters: Vascular health, Flexibility' |
+| 3703 | Power Posing — Failed to Replicate | 1 | Mixed | 2 | practice: 'Bolsters clusters: none physiological (feelings only)' |
+| 3704 | Mewing (Tongue Posture) — No Evidence for Jaw Reshaping | 1 | Mixed | 2 | practice: 'Bolsters clusters: none demonstrated' |
+| 3705 | Caffeine Nap (Coffee Nap) for Alertness | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic / Planned Napping (NASA Nap), Sleep Depr |
+| 3706 | Acceptance & Commitment Therapy for Insomnia (ACT-I) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Sleep Effort — Trying Too Hard to Sleep, Dysfuncti |
+| 3707 | Mindfulness-Based Therapy for Insomnia (MBTI) | 3 | Moderate | 1 | practice: 'Bolsters clusters: CBT-I, Sleep Effort, Pre-Sleep Cognitive Arousal,  |
+| 3708 | Articulatory Suppression (Sub-Vocal Word Repetition) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Pre-Sleep Cognitive Arousal (Racing Mind), Meta-Wo |
+| 3709 | Closed-Loop Acoustic Stimulation (Pink-Noise Slow-Wave Boosting) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Sleep Quality, Overnight Memory Consolidation, Sle |
+| 3710 | Cognitive Refocusing Treatment (CRT-I) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Pre-Sleep Cognitive Arousal (Racing Mind), Sleep E |
+| 3711 | Cognitive Shuffle (Serial Diverse Imagining) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Pre-Sleep Cognitive Arousal (Racing Mind), Sleep E |
+| 3712 | Imagery Distraction for Sleep Onset (Harvey & Payne) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Pre-Sleep Cognitive Arousal (Racing Mind), Sleep Q |
+| 3713 | Pre-Sleep Gratitude (Positive Bedtime Cognitions) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Pre-Sleep Cognitive Arousal, Sleep Quality, Gratit |
+| 3714 | Yoga Nidra / NSDR for Sleep | 2 | Emerging | 2 | practice: 'Bolsters clusters: Body Scan, Guided Imagery (Relaxation), Sleep Qual |
+| 3715 | Chronotype-Aligned Scheduling (Synchrony Effect) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Chronotype–Task Mismatch, Sleep Regularity, Social |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,246)
 
