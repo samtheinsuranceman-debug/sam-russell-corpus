@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,118 clusters · 8,351 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,159 clusters · 8,436 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,755 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,783 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,269 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,033 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,046 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,118** |
+| **Total** | **4,159** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,897 |
-| Strong | 1,130 |
-| Mixed | 584 |
-| Emerging | 507 |
+| Moderate | 1,911 |
+| Strong | 1,134 |
+| Mixed | 595 |
+| Emerging | 519 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,755)
+## PRACTICES — what strengthens the mind (impact lens)  (1,783)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1782,6 +1782,34 @@
 | 4074 | Timed Exercise for Circadian Phase-Shifting | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interoceptive, Bodily, Volitional' |
 | 4075 | Weekend Catch-Up / Recovery Sleep (Honest — Mixed) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Bodily' |
 | 4076 | Sound-Cued Targeted Memory Reactivation (Auditory TMR) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Linguistic, Pattern-Recognition' |
+| 4077 | Method of Loci / Mnemonic Training (Memory-Palace) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Episodic/List Memory, Spatial imagery, Meta-Cognit |
+| 4078 | Speed-of-Processing Training (UFOV / ACTIVE) — The Rare Transfer Signal | 3 | Mixed | 3 | practice: 'Bolsters clusters: Processing Speed, Visual Attention, Driving Safety |
+| 4079 | Tai Chi for Cognition & Executive Function | 3 | Moderate | 2 | practice: 'Bolsters clusters: Executive Function, Global Cognition, Balance, Bod |
+| 4080 | FINGER Multidomain Lifestyle Intervention | 3 | Moderate | 2 | practice: 'Bolsters clusters: Executive Function, Processing Speed, Global Cogni |
+| 4081 | Resistance (Strength) Training for Cognition | 3 | Moderate | 3 | practice: 'Bolsters clusters: Executive Function, Global Cognition, Bodily stren |
+| 4082 | Video-Game Practice → Laparoscopic Surgical Skill (Real Narrow Transfer) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Fine Motor Control, Spatial, Hand-Eye Coordination |
+| 4083 | Yoga for Attention & Cognitive Function | 2 | Moderate | 2 | practice: 'Bolsters clusters: Attention, Processing Speed, Executive Function, I |
+| 4084 | Dance for Cognition in Older Adults | 2 | Moderate | 2 | practice: 'Bolsters clusters: Global Cognition, Memory, Executive Function, Bodi |
+| 4085 | Exergaming (Combined Physical-Cognitive Games) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Executive Function, Attention, Bodily' |
+| 4086 | The Mozart Effect — Listening Your Way to Smarter (Debunked) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Spatial reasoning (transient, near-null)' |
+| 4087 | tACS (Transcranial Alternating-Current Stimulation) for Working Memory | 2 | Emerging | 3 | practice: 'Bolsters clusters: Working Memory, Long-Term Memory (lab-demonstrated |
+| 4088 | Learning to Juggle — Structural Neuroplasticity (Limited Cognitive Transfer) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily coordination, Visual-motion perception, Spa |
+| 4089 | Dual-N-Back for IQ — The Jaeggi Claim vs Failed Replication | 1 | Mixed | 3 | practice: 'Bolsters clusters: Working-Memory Capacity, Spatial, Pattern-Recognit |
+| 4090 | Cogmed Working-Memory Training for ADHD | 1 | Mixed | 3 | practice: 'Bolsters clusters: Working-Memory Span, trained-task performance (nea |
+| 4091 | Ketogenic Diet for Drug-Resistant Epilepsy | 4 | Strong | 2 | practice: 'Bolsters clusters: Seizure Control, Pediatric Neurology, Drug-Refract |
+| 4092 | Total Diet Replacement for Type 2 Diabetes Remission (DiRECT) | 4 | Strong | 2 | practice: 'Bolsters clusters: Type 2 Diabetes Remission, Metabolic Syndrome, Wei |
+| 4093 | Early Time-Restricted Eating (eTRE) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Fasting Insulin & HOMA-IR, Metabolic Syndrome, Blo |
+| 4094 | Acarbose as an Investigational Geroprotector | 2 | Emerging | 2 | practice: 'Bolsters clusters: Postprandial Glucose, Geroscience Interventions, M |
+| 4095 | Alpha-Ketoglutarate (Ca-AKG) for Aging | 2 | Emerging | 2 | practice: 'Bolsters clusters: Inflammaging, Frailty, Geroscience Interventions' |
+| 4096 | GlyNAC (Glycine + N-Acetylcysteine) for Aging Hallmarks | 2 | Emerging | 1 | practice: 'Bolsters clusters: Glutathione/Redox, Mitochondrial Health, Physical  |
+| 4097 | Taurine & Aging | 2 | Emerging | 2 | practice: 'Bolsters clusters: Inflammaging, Cellular Senescence, Healthy Lifespa |
+| 4098 | Urolithin A for Mitophagy & Muscle Function | 2 | Emerging | 2 | practice: 'Bolsters clusters: Mitochondrial Health, Muscle Endurance, Healthy Ag |
+| 4099 | mTOR Inhibition for Immune Rejuvenation in the Elderly | 3 | Emerging | 2 | practice: 'Bolsters clusters: Immunosenescence, Vaccine Response, Geroscience In |
+| 4100 | Protein & Methionine Restriction for Longevity | 2 | Mixed | 2 | practice: 'Bolsters clusters: IGF-1/mTOR Regulation, Metabolic Health, Healthy L |
+| 4101 | Fasting for Autophagy — Mechanism vs. Human Hype | 2 | Mixed | 2 | practice: 'Bolsters clusters: Cellular Housekeeping, Intermittent Fasting, Metab |
+| 4102 | Ramadan Diurnal Intermittent Fasting | 2 | Mixed | 2 | practice: 'Bolsters clusters: Body Composition, Lipid Profile, Metabolic Syndrom |
+| 4103 | Senolytics — Clearing Senescent 'Zombie' Cells | 2 | Emerging | 2 | practice: 'Bolsters clusters: Cellular Senescence, Inflammaging, Geroscience Int |
+| 4104 | Short-Term / Fasting-Mimicking Diet During Chemotherapy | 2 | Emerging | 2 | practice: 'Bolsters clusters: Chemotherapy Tolerance, Oncology Supportive Care,  |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,269)
 
@@ -3057,7 +3085,7 @@
 | 4034 | Precrastination — Rushing Subgoals at Extra Cost | 4 | Emerging | 1 | weakness: 'Degrades: Strategic, Meta-Cognitive, efficient sequencing' |
 | 4062 | Functional Unblinding — Methodological Threat Across Psychedelic Trials | 7 | Strong | 1 | Degrades: Existential, Emotional, Meta-Cognitive |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,033)
+## COST OF FAILURE — what's at stake (harm lens)  (1,046)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4094,6 +4122,19 @@
 | 4071 | One Night of Short Sleep → Acute Insulin Resistance | 2 | Moderate | 1 | cost: 'Degrades: Bodily metabolic health, Interoceptive glucose regulation' |
 | 4072 | Sleep Deprivation During Encoding → False Memories | 2 | Moderate | 1 | cost: 'Degrades: Meta-Cognitive memory accuracy, Adversarial, Pattern-Recognitio |
 | 4073 | Sleep Deprivation Heightens Desire for High-Calorie Food | 2 | Moderate | 1 | cost: 'Degrades: Volitional self-control, Bodily metabolic health, Interoceptive |
+| 4105 | Extreme Heat Exposure (Heatwaves & Warming Climate) | 4 | Strong | 2 | Degrades: Bodily cardiovascular & renal function, thermoregulation, cognition |
+| 4106 | Unsafe Listening — Personal Audio & Loud Venues | 3 | Strong | 2 | Degrades: Bodily auditory function, Musical & Linguistic input, Social-Perceptua |
+| 4107 | High-Glycemic-Load / Refined-Carbohydrate Diet | 3 | Moderate | 2 | Degrades: Bodily cardiometabolic health, glucose regulation |
+| 4108 | Added Sugars / Fructose & Fatty Liver (MASLD) | 3 | Moderate | 2 | Degrades: Bodily hepatic & metabolic health, insulin sensitivity |
+| 4109 | Artificial Food Dyes & Child Hyperactivity | 2 | Mixed | 2 | Degrades: child attention / behavioral regulation (small, contested) |
+| 4110 | Energy Drinks (High Caffeine + Stimulant Load) | 2 | Emerging | 2 | Degrades: Bodily cardiovascular health, autonomic regulation, sleep |
+| 4111 | Charred / Well-Done Meat (Heterocyclic Amines & PAHs) | 2 | Moderate | 2 | Degrades: Bodily colorectal health, DNA integrity, cancer risk |
+| 4112 | Frequent Fried-Food Consumption | 2 | Moderate | 1 | Degrades: Bodily cardiovascular health, metabolic regulation |
+| 4113 | Dietary Advanced Glycation End-Products (High-Heat, Browned Foods) | 2 | Emerging | 2 | Degrades: Bodily metabolic health, insulin sensitivity, vascular function |
+| 4114 | Dietary Emulsifiers (CMC, Polysorbate-80, Celluloses) | 2 | Emerging | 2 | Degrades: Bodily gut health, microbiome, cardiometabolic regulation |
+| 4115 | Endocrine-Disrupting Plasticizers (Phthalates & BPA) | 2 | Mixed | 2 | Degrades: Bodily cardiometabolic health, hormonal regulation, Interoceptive home |
+| 4116 | Saturated Fat & Heart Disease (The Honest, Contested Case) | 2 | Mixed | 2 | Degrades: Bodily cardiovascular health (magnitude depends on the replacement) |
+| 4117 | Artificial / Non-Sugar Sweeteners (Aspartame, Sucralose, Ace-K) | 2 | Mixed | 2 | Degrades: Bodily metabolic health, glucose regulation, appetite calibration |
 
 ## Framework / uncategorized  (61)
 
