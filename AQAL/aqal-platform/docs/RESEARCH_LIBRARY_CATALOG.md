@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,437 clusters · 8,935 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,477 clusters · 8,991 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,013 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,304 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,059 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,028 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,312 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,076 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,437** |
+| **Total** | **4,477** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,036 |
-| Strong | 1,201 |
-| Mixed | 651 |
-| Emerging | 549 |
+| Moderate | 2,050 |
+| Strong | 1,213 |
+| Mixed | 662 |
+| Emerging | 552 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,013)
+## PRACTICES — what strengthens the mind (impact lens)  (2,028)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2040,8 +2040,23 @@
 | 4392 | Origami / Paper-Folding for Spatial Visualization | 2 | Emerging | 2 | practice: 'Bolsters clusters: Spatial, Mathematical, Mechanical, Bodily' |
 | 4393 | Spatial Perspective-Taking & Mental Simulation | 2 | Emerging | 2 | practice: 'Bolsters clusters: Spatial, Interpersonal, Social-Perceptual, Meta-Co |
 | 4394 | Orienteering: Navigation Sport for Spatial Memory | 2 | Emerging | 1 | practice: 'Bolsters clusters: Spatial, Naturalist, Bodily, Pattern-Recognition' |
+| 4399 | Land-Based Exercise for Knee Osteoarthritis | 3 | Strong | 1 | practice: 'Bolsters clusters: joint function, pain relief, mobility' |
+| 4400 | Placebo Analgesia Is Real Neurobiology (Endogenous Opioids) | 3 | Strong | 2 | practice: 'Bolsters clusters: pain modulation, expectation effects, Interoceptiv |
+| 4401 | Hypnosis for Pain Relief | 3 | Moderate | 1 | practice: 'Bolsters clusters: pain modulation, Interoceptive control, Emotional  |
+| 4402 | Multidisciplinary Biopsychosocial Rehabilitation for Chronic Back Pain | 3 | Strong | 1 | practice: 'Bolsters clusters: pain coping, return-to-work, function' |
+| 4404 | Yoga for Chronic Low Back Pain | 2 | Moderate | 1 | practice: 'Bolsters clusters: back function, pain relief, Bodily awareness' |
+| 4405 | Paracetamol for Back Pain & OA — Essentially Ineffective | 1 | Mixed | 1 | practice: 'Bolsters clusters: pain relief (claimed) — but effect is negligible' |
+| 4406 | Mindfulness Meditation for Chronic Pain — Small, Better for Mood | 2 | Mixed | 1 | practice: 'Bolsters clusters: pain acceptance, Emotional regulation, Interocepti |
+| 4407 | Spinal Manipulation for Chronic Low Back Pain — Modest, Not Special | 2 | Mixed | 1 | practice: 'Bolsters clusters: back function, short-term pain relief' |
+| 4410 | 'Dopamine Detox / Dopamine Fasting' (Mostly Pop-Neuroscience) | 2 | Mixed | 2 | Bolsters clusters: Volitional, Meta-Cognitive |
+| 4411 | Hiding Self-View to Cut Video-Call ('Zoom') Fatigue | 2 | Emerging | 2 | Bolsters clusters: Emotional, Interoceptive, Volitional |
+| 4421 | Exercise-Derived IL-6 (The Myokine Anti-Inflammatory Paradox) | 4 | Strong | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic' |
+| 4426 | The Inflammatory Reflex (Vagal Cholinergic Anti-Inflammatory Pathway) | 3 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Bodily, Emotional' |
+| 4427 | Positive Affect & Slightly Lower Inflammation | 2 | Mixed | 1 | practice: 'Bolsters clusters: Emotional, Interoceptive, Existential' |
+| 4428 | Social Support & Immune/Inflammatory Buffering | 2 | Mixed | 1 | practice: 'Bolsters clusters: Community, Interpersonal, Bodily' |
+| 4429 | Mindfulness Meditation & Inflammatory Markers | 2 | Mixed | 1 | practice: 'Bolsters clusters: Interoceptive, Emotional, Intrapersonal' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,304)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,312)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3349,8 +3364,16 @@
 | 4369 | Miscalibrated Conversation Endings (They Rarely End When Wanted) | 3 | Moderate | 1 | weakness: 'Degrades: reading others, conversational calibration, rapport' |
 | 4382 | Running on Guilt & Ego (Introjected Motivation) | 5 | Moderate | 2 | weakness: 'Degrades: Volitional, Intrapersonal, Emotional' |
 | 4395 | Spatial Anxiety → Avoidance & Underperformance | 5 | Moderate | 2 | weakness: 'Degrades: Spatial, Mathematical, Naturalist, Meta-Cognitive' |
+| 4419 | Workplace 'Telepressure' (Urge to Reply ASAP) | 4 | Moderate | 1 | Degrades: Volitional, Emotional, Interpersonal |
+| 4420 | Passive Scrolling (vs Active Posting/Interacting) | 3 | Moderate | 2 | Degrades: Emotional, Intrapersonal, Interpersonal |
+| 4430 | Chronic Stress & Global Immune Suppression | 6 | Strong | 1 | weakness: 'Degrades: Interoceptive, Bodily, Existential' |
+| 4431 | Depression & Inflammation (A Bidirectional Loop) | 6 | Moderate | 2 | weakness: 'Degrades: Emotional, Intrapersonal, Existential, Bodily' |
+| 4432 | Early-Life Adversity & a Lifelong Proinflammatory Set-Point | 6 | Moderate | 2 | weakness: 'Degrades: Bodily, Emotional, Existential' |
+| 4433 | Loneliness & the Conserved Transcriptional Response to Adversity (CTRA) | 6 | Moderate | 2 | weakness: 'Degrades: Community, Interpersonal, Emotional, Bodily' |
+| 4434 | Psychological Stress & Susceptibility to the Common Cold | 5 | Strong | 1 | weakness: 'Degrades: Bodily, Interoceptive' |
+| 4435 | Dysregulated Cortisol Awakening Response & HPA Wear-and-Tear | 4 | Mixed | 1 | weakness: 'Degrades: Interoceptive, Volitional, Bodily, Emotional' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,059)
+## COST OF FAILURE — what's at stake (harm lens)  (1,076)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4413,6 +4436,23 @@
 | 4366 | The 'Feedback Sandwich' (Praise-Criticism-Praise) | 2 | Mixed | 2 | cost: 'Degrades: feedback clarity, behavior change, perceived sincerity' |
 | 4367 | Phubbing (Phone-Snubbing a Present Partner) | 2 | Moderate | 1 | cost: 'Degrades: relationship satisfaction, felt responsiveness, trust, intimacy |
 | 4373 | Motivation Crowding-Out — Incentives That Backfire | 3 | Moderate | 2 | cost: 'Degrades: Systemic, Leadership, Strategic, Moral' |
+| 4396 | Opioids for Chronic Back / OA Pain — Not Superior, More Harm | 4 | Strong | 1 | cost: 'Degrades: Bodily function, Volitional control, Interoceptive accuracy' |
+| 4397 | Spinal Fusion for Chronic Low Back Pain — No Better Than Rehab | 3 | Strong | 2 | cost: 'Degrades: Financial reserves, Bodily recovery, informed decision-making' |
+| 4398 | Arthroscopic Knee Surgery for Osteoarthritis — No Better Than Sham | 3 | Strong | 2 | cost: 'Degrades: Financial reserves, Bodily recovery, informed decision-making' |
+| 4403 | Bed Rest for Acute Back Pain — Staying Active Is Better | 2 | Strong | 1 | cost: 'Degrades: Bodily conditioning, Volitional activation, recovery speed' |
+| 4408 | Distracted Parenting (Parental 'Technoference') | 2 | Moderate | 2 | Degrades: Parental, Interpersonal |
+| 4409 | The Notification You Don't Even Check | 2 | Moderate | 1 | Degrades: Meta-Cognitive, Volitional |
+| 4412 | Phone on the Table During Face-to-Face Time ('iPhone Effect') | 2 | Mixed | 3 | Degrades: Interpersonal, Social-Perceptual, Emotional |
+| 4413 | 'Technoference' in Couple Relationships | 2 | Moderate | 1 | Degrades: Interpersonal, Emotional |
+| 4414 | Appearance-Focused Social Media & Body Comparison | 2 | Moderate | 2 | Degrades: Aesthetic, Emotional, Intrapersonal |
+| 4415 | Filtered Selfies & 'Snapchat Dysmorphia' | 2 | Emerging | 1 | Degrades: Aesthetic, Intrapersonal, Emotional |
+| 4416 | Emotional Contagion Through Social Feeds | 1 | Mixed | 1 | Degrades: Emotional |
+| 4417 | Phantom Vibration / Phantom Ring Syndrome | 1 | Moderate | 2 | Degrades: Interoceptive, Meta-Cognitive |
+| 4418 | Social-Media / Screen-Wellbeing Link Is Real But Tiny | 1 | Mixed | 1 | Degrades: Emotional, Intrapersonal |
+| 4422 | Chronic Stress Blunts Vaccine Response | 3 | Strong | 1 | cost: 'Degrades: Bodily, Systemic' |
+| 4423 | Psychological Stress Slows Wound Healing | 3 | Strong | 1 | cost: 'Degrades: Bodily, Interoceptive, Systemic' |
+| 4424 | Hostile Relationship Conflict Slows Healing & Raises Cytokines | 3 | Moderate | 1 | cost: 'Degrades: Community, Interpersonal, Bodily' |
+| 4425 | Chronic Caregiving Stress & Accelerated Cellular Aging | 3 | Moderate | 1 | cost: 'Degrades: Bodily, Existential, Interoceptive' |
 
 ## Framework / uncategorized  (61)
 
