@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,320 clusters · 8,735 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,360 clusters · 8,804 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,915 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,292 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,052 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,950 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,296 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,053 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,320** |
+| **Total** | **4,360** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,980 |
-| Strong | 1,183 |
-| Mixed | 629 |
-| Emerging | 528 |
+| Moderate | 2,000 |
+| Strong | 1,185 |
+| Mixed | 641 |
+| Emerging | 534 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,915)
+## PRACTICES — what strengthens the mind (impact lens)  (1,950)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1942,8 +1942,43 @@
 | 4270 | Visualize Before You Summarize (Anscombe) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Spatial, Pattern-Recognition, Mathematical, Aesthe |
 | 4271 | Calibrating Surprise: Coincidence Base Rates | 2 | Moderate | 1 | practice: 'Bolsters clusters: Mathematical, Pattern-Recognition, Meta-Cognitive, |
 | 4272 | The Hot Hand, Honestly Reconsidered | 2 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Mathematical, Pattern-Recognition, |
+| 4279 | Benign-Violation Theory (Building Funny) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Humor, Creative, Rhetorical, Social-Perceptual' |
+| 4280 | Social Laughter, Endorphins & Pain Threshold | 3 | Moderate | 2 | practice: 'Bolsters clusters: Humor, Community, Bodily, Interpersonal' |
+| 4281 | Duchenne (Genuine) Laughter as an Honest Signal | 2 | Moderate | 2 | practice: 'Bolsters clusters: Social-Perceptual, Humor, Interpersonal, Community |
+| 4282 | Affiliative & Self-Enhancing Humor Styles | 3 | Moderate | 2 | practice: 'Bolsters clusters: Humor, Emotional, Intrapersonal, Interpersonal' |
+| 4283 | Coping Humor as a Stress Buffer | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Humor, Interoceptive' |
+| 4285 | Humor as a Status Signal (Risky Business) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Humor, Leadership, Seductive, Social-Perceptual' |
+| 4286 | Sense of Humor as a Mate Signal | 3 | Moderate | 2 | practice: 'Bolsters clusters: Seductive, Humor, Interpersonal' |
+| 4287 | Prosocial Teasing (Playful Provocation) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Humor, Interpersonal, Seductive, Social-Perceptual |
+| 4288 | Adult Playfulness & Wellbeing (OLIW) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Humor, Creative, Emotional, Intrapersonal' |
+| 4289 | Improv & Play Boost Divergent Thinking | 2 | Emerging | 2 | practice: 'Bolsters clusters: Creative, Humor, Pattern-Recognition, Meta-Cogniti |
+| 4290 | Humor in Persuasion & Advertising (Tradeoffs) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Rhetorical, Humor, Seductive' |
+| 4291 | Self-Deprecating Humor & Leadership Trust | 2 | Emerging | 2 | practice: 'Bolsters clusters: Humor, Leadership, Interpersonal, Seductive' |
+| 4292 | Sense of Humor & Longevity (Overstated Claim) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Humor, Existential, Emotional' |
+| 4293 | Grief Rituals & Regained Control | 3 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, Existential, Interpersonal' |
+| 4294 | Purpose in Life & Reduced Alzheimer's Risk | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential, Meta-Cognitive, Intrapersonal' |
+| 4295 | Spiritual Well-Being in Serious Illness (FACIT-Sp) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential, Emotional, Interoceptive' |
+| 4296 | Socioemotional Selectivity — Endings Sharpen Meaning | 3 | Mixed | 2 | practice: 'Bolsters clusters: Existential, Emotional, Interpersonal' |
+| 4297 | Communal Service Attendance vs Private Spirituality & Mortality | 3 | Mixed | 2 | practice: 'Bolsters clusters: Community, Existential, Interpersonal' |
+| 4298 | Mattering — Feeling You Matter to Others | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential, Interpersonal, Emotional' |
+| 4299 | Presence of Meaning in Life & Physical Health | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential, Interoceptive, Emotional' |
+| 4300 | Self-Transcendent Experiences (STEs) | 3 | Emerging | 1 | practice: 'Bolsters clusters: Existential, Intrapersonal, Emotional' |
+| 4301 | Sanctification — Seeing Daily Life Through a Sacred Lens | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Moral, Emotional' |
+| 4306 | Ignore Body-Language Myths, Check the Facts | 2 | Strong | 3 | practice: 'Bolsters clusters: Adversarial, Social-Perceptual, Street-Smarts, Met |
+| 4307 | Strategic Use of Evidence (Interviewing) | 3 | Strong | 1 | practice: 'Bolsters clusters: Adversarial, Strategic, Social-Perceptual, Interpe |
+| 4308 | Thin-Slicing First Impressions | 2 | Moderate | 1 | practice: 'Bolsters clusters: Social-Perceptual, Interpersonal, Street-Smarts' |
+| 4309 | Situational Awareness (Perceive–Comprehend–Project) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Street-Smarts, Strategic, Adversarial, Pattern-Rec |
+| 4310 | Active Open-Minded Thinking / Verify Before Believing | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Adversarial, Logical, Street-Smart |
+| 4311 | Knowing the Con: Seven Scam Principles | 2 | Emerging | 1 | practice: 'Bolsters clusters: Adversarial, Street-Smarts, Social-Perceptual, Fin |
+| 4312 | Warning Banners & Environmental Friction | 2 | Moderate | 1 | practice: 'Bolsters clusters: Street-Smarts, Adversarial, Systemic, Mechanical' |
+| 4313 | Trusted Contacts & Anti-Isolation as a Fraud Shield | 2 | Moderate | 1 | practice: 'Bolsters clusters: Community, Financial, Street-Smarts, Interpersonal |
+| 4314 | Financial Literacy as Fraud Defense | 2 | Moderate | 2 | practice: 'Bolsters clusters: Financial, Street-Smarts, Logical' |
+| 4315 | Cognitive / Active Interviewing for Lies | 2 | Mixed | 2 | practice: 'Bolsters clusters: Adversarial, Social-Perceptual, Strategic' |
+| 4316 | Tacit Knowledge / Practical Intelligence | 3 | Mixed | 2 | practice: 'Bolsters clusters: Street-Smarts, Strategic, Entrepreneurial, Leaders |
+| 4317 | Nonverbal Emotion-Decoding Accuracy | 2 | Mixed | 1 | practice: 'Bolsters clusters: Social-Perceptual, Interpersonal, Emotional' |
+| 4318 | Anti-Phishing Training (Honestly, It's Weak) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Street-Smarts, Adversarial' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,292)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,296)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3239,8 +3274,12 @@
 | 4276 | Monty Hall: Failing to Update Conditionally | 4 | Strong | 2 | weakness: 'Degrades: Logical, Mathematical, Strategic, Adversarial' |
 | 4277 | Probability Matching Over Maximizing | 4 | Strong | 2 | weakness: 'Degrades: Logical, Strategic, Mathematical, Meta-Cognitive' |
 | 4278 | The '1-in-X' Frequency-Format Trap | 4 | Moderate | 2 | weakness: 'Degrades: Mathematical, Logical, Emotional, Meta-Cognitive' |
+| 4302 | Death Anxiety as a Transdiagnostic Driver | 5 | Moderate | 1 | weakness: 'Degrades: Existential, Emotional, Interoceptive' |
+| 4303 | Toxic Positivity / Compulsive Positivity | 4 | Mixed | 2 | weakness: 'Degrades: Emotional, Interpersonal, Existential' |
+| 4304 | Illusory Post-Traumatic Growth — The Measurement Problem | 3 | Mixed | 1 | weakness: 'Degrades: Meta-Cognitive, Intrapersonal, Existential' |
+| 4305 | Mortality-Salience Defensiveness (TMT) — Shakier Than Advertised | 3 | Mixed | 3 | weakness: 'Degrades: Moral, Social-Perceptual' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,052)
+## COST OF FAILURE — what's at stake (harm lens)  (1,053)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4296,6 +4335,7 @@
 | 4198 | Bed-Sharing With Infants (SIDS Risk) | 3 | Mixed | 2 | cost: 'Degrades: Parental, Bodily' |
 | 4223 | Abusive Supervision → Strain & Deviance | 4 | Strong | 2 | cost: 'Degrades: Interpersonal, Emotional, Leadership climate, engagement' |
 | 4234 | Goals Gone Wild — Aggressive Stretch Goals Backfire | 3 | Mixed | 2 | cost: 'Degrades: Moral, Strategic, Systemic, intrinsic motivation' |
+| 4284 | Disparagement Humor Releases Prejudice | 2 | Moderate | 2 | cost: 'Degrades: Moral, Social-Perceptual, Interpersonal, Community' |
 
 ## Framework / uncategorized  (61)
 
