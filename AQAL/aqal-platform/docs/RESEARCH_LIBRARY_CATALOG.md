@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,360 clusters · 8,804 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,397 clusters · 8,866 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,950 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,296 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,983 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,300 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,053 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,360** |
+| **Total** | **4,397** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,000 |
-| Strong | 1,185 |
-| Mixed | 641 |
-| Emerging | 534 |
+| Moderate | 2,012 |
+| Strong | 1,194 |
+| Mixed | 647 |
+| Emerging | 544 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,950)
+## PRACTICES — what strengthens the mind (impact lens)  (1,983)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1977,8 +1977,41 @@
 | 4316 | Tacit Knowledge / Practical Intelligence | 3 | Mixed | 2 | practice: 'Bolsters clusters: Street-Smarts, Strategic, Entrepreneurial, Leaders |
 | 4317 | Nonverbal Emotion-Decoding Accuracy | 2 | Mixed | 1 | practice: 'Bolsters clusters: Social-Perceptual, Interpersonal, Emotional' |
 | 4318 | Anti-Phishing Training (Honestly, It's Weak) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Street-Smarts, Adversarial' |
+| 4319 | Everyday Creative Activity & Next-Day Flourishing | 3 | Moderate | 1 | practice: 'Bolsters clusters: Creative, Emotional, Aesthetic, Intrapersonal, Exi |
+| 4320 | Arts & Health — The WHO Evidence Synthesis | 3 | Moderate | 2 | practice: 'Bolsters clusters: Aesthetic, Creative, Emotional, Community, Existen |
+| 4321 | Participatory Community Arts & Mental-Health Recovery | 3 | Emerging | 2 | practice: 'Bolsters clusters: Community, Creative, Emotional, Interpersonal, Exi |
+| 4322 | A Gallery Visit & Acute Stress Relief | 2 | Emerging | 1 | practice: 'Bolsters clusters: Aesthetic, Emotional, Interoceptive, Existential' |
+| 4323 | A Single Art-Making Session & Acute Cortisol | 2 | Emerging | 1 | practice: 'Bolsters clusters: Creative, Aesthetic, Emotional, Interoceptive' |
+| 4324 | Being Moved (Kama Muta) — The Aesthetic Emotion | 2 | Emerging | 2 | practice: 'Bolsters clusters: Aesthetic, Emotional, Existential, Interpersonal,  |
+| 4325 | Trait Appreciation of & Engagement With Beauty | 2 | Mixed | 2 | practice: 'Bolsters clusters: Aesthetic, Existential, Emotional, Naturalist, Mor |
+| 4326 | Art Therapy for Clinical Populations | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Aesthetic, Creative, Intrapersonal' |
+| 4327 | Arts on Prescription (Referral to Creative Courses) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Community, Emotional, Creative, Aesthetic, Existen |
+| 4328 | Museums on Prescription for Isolated Older Adults | 2 | Emerging | 1 | practice: 'Bolsters clusters: Community, Emotional, Aesthetic, Interpersonal, Ex |
+| 4329 | Participatory Theatre & Drama (Non-Clinical) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Creative, Emotional, Linguistic, Interp |
+| 4330 | Museum & Art Programs in Dementia Care | 2 | Emerging | 2 | practice: 'Bolsters clusters: Aesthetic, Emotional, Community, Interpersonal, Ex |
+| 4331 | Founder Age & Domain Experience (Young-Founder Myth Busted) | 4 | Strong | 1 | practice: 'Bolsters clusters: Entrepreneurial venturing, Strategic judgment, Fin |
+| 4332 | Reference-Class Forecasting for Ventures | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic judgment, Financial forecasting, Entrepr |
+| 4333 | Scientific / Hypothesis-Testing Approach to Venture Decisions | 4 | Moderate | 2 | practice: 'Bolsters clusters: Entrepreneurial venturing, Strategic judgment, Log |
+| 4334 | Fast-Follower / Early-Leader Strategy | 3 | Moderate | 1 | practice: 'Bolsters clusters: Strategic positioning, Entrepreneurial timing, Adv |
+| 4335 | Serial-Founder Success Persistence | 3 | Moderate | 1 | practice: 'Bolsters clusters: Entrepreneurial venturing, Strategic timing, Patte |
+| 4336 | Disciplined Pivoting (Not Every Failure Is a Pivot) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Entrepreneurial venturing, Strategic redirection,  |
+| 4337 | Effectuation vs Causation Reasoning | 3 | Moderate | 2 | practice: 'Bolsters clusters: Entrepreneurial venturing, Strategic judgment, Cre |
+| 4338 | Affordable-Loss Principle (Cap the Downside) | 3 | Emerging | 1 | practice: 'Bolsters clusters: Entrepreneurial venturing, Financial risk-sizing,  |
+| 4339 | Prior-Knowledge Opportunity Recognition | 3 | Emerging | 1 | practice: 'Bolsters clusters: Entrepreneurial venturing, Pattern-Recognition, Cr |
+| 4340 | Opportunity vs Necessity Entrepreneurship | 2 | Emerging | 1 | practice: 'Bolsters clusters: Entrepreneurial venturing, Strategic positioning' |
+| 4341 | Lean Startup / Validated Learning (Honestly Rated) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Entrepreneurial venturing, Creative iteration, Str |
+| 4343 | Active Managers Rarely Beat the Index (SPIVA) | 4 | Strong | 2 | practice: 'Bolsters clusters: Automated & Index Investing, Fee-Aware Investing,  |
+| 4344 | Positive Skewness — A Few Stocks Drive the Market | 4 | Strong | 1 | practice: 'Bolsters clusters: broad-market diversification, Automated & Index In |
+| 4345 | Reinvested Dividends & Total Return | 4 | Strong | 2 | practice: 'Bolsters clusters: compounding intuition, long-horizon capital alloca |
+| 4346 | The Long-Run Equity Premium | 4 | Strong | 2 | practice: 'Bolsters clusters: Automated & Index Investing, long-horizon capital  |
+| 4347 | The HSA's Triple Tax Advantage | 3 | Strong | 2 | practice: 'Bolsters clusters: Tax-Advantaged Retirement Saving, tax-efficient sa |
+| 4348 | Credit-Score Mechanics & the Cost of Debt | 3 | Strong | 2 | practice: 'Bolsters clusters: Lower Borrowing Costs, Debt-to-Income Management,  |
+| 4349 | Lifetime-Income Annuities & Mortality Credits | 3 | Moderate | 2 | practice: 'Bolsters clusters: longevity-risk hedging, Retirement Income Security |
+| 4350 | Asset Location — Which Account Holds Which Asset | 2 | Moderate | 2 | practice: 'Bolsters clusters: tax-efficient investing, Tax-Advantaged Retirement |
+| 4351 | Rent-vs-Buy — A House Isn't Always an Investment | 3 | Mixed | 2 | practice: 'Bolsters clusters: true-cost accounting, opportunity-cost reasoning,  |
+| 4352 | Rebalancing — Risk Control, Not Free Return | 2 | Mixed | 3 | practice: 'Bolsters clusters: risk management, Buy-and-Hold Discipline, position |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,296)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,300)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3278,6 +3311,10 @@
 | 4303 | Toxic Positivity / Compulsive Positivity | 4 | Mixed | 2 | weakness: 'Degrades: Emotional, Interpersonal, Existential' |
 | 4304 | Illusory Post-Traumatic Growth — The Measurement Problem | 3 | Mixed | 1 | weakness: 'Degrades: Meta-Cognitive, Intrapersonal, Existential' |
 | 4305 | Mortality-Salience Defensiveness (TMT) — Shakier Than Advertised | 3 | Mixed | 3 | weakness: 'Degrades: Moral, Social-Perceptual' |
+| 4342 | First-Mover-Advantage Myth → Pioneer Overinvestment | 5 | Moderate | 1 | weakness: 'Degrades: Strategic judgment, Entrepreneurial capital allocation, Fin |
+| 4353 | Market-Timing & the 'Missing the Best Days' Trap | 6 | Strong | 2 | weakness: 'Degrades: Financial, Strategic, realized returns' |
+| 4354 | The Credit-Card Minimum-Payment Trap | 6 | Strong | 2 | weakness: 'Degrades: Financial, Mathematical, net worth' |
+| 4355 | Home-Country Bias — Under-Diversifying Geographically | 4 | Moderate | 2 | weakness: 'Degrades: Financial, Strategic, diversification' |
 
 ## COST OF FAILURE — what's at stake (harm lens)  (1,053)
 
