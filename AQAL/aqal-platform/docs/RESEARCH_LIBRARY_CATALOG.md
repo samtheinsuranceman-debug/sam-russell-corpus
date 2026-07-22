@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,555 clusters · 9,136 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,596 clusters · 9,202 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,084 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,329 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,081 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,115 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,337 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,083 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,555** |
+| **Total** | **4,596** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,089 |
-| Strong | 1,225 |
-| Mixed | 682 |
-| Emerging | 559 |
+| Moderate | 2,111 |
+| Strong | 1,240 |
+| Mixed | 683 |
+| Emerging | 562 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,084)
+## PRACTICES — what strengthens the mind (impact lens)  (2,115)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2111,8 +2111,39 @@
 | 4505 | Food-Intake Self-Monitoring (Food Records) | 3 | Moderate | 2 | Bolsters clusters: Volitional intake control, Interoceptive awareness, Meta-Cogn |
 | 4508 | Savory/Umami Flavor & Satiety | 2 | Emerging | 1 | Bolsters clusters: Interoceptive satiety, Bodily protein signaling, Volitional i |
 | 4509 | Chewing Gum to Curb Snacking (Weak/Mixed) | 1 | Mixed | 2 | Bolsters clusters: Volitional restraint, Interoceptive appetite awareness (weakl |
+| 4514 | Information-Gap Curiosity | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Creative, Pattern-Recognition' |
+| 4515 | Explore–Exploit: Directed & Random Exploration | 3 | Strong | 2 | practice: 'Bolsters clusters: Strategic, Systemic, Entrepreneurial' |
+| 4516 | Trait Curiosity, Meaning & Wellbeing | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential, Intrapersonal, Emotional' |
+| 4517 | Novelty, Dopamine & Memory | 3 | Moderate | 2 | practice: 'Bolsters clusters: Pattern-Recognition, Creative, Meta-Cognitive' |
+| 4518 | Interest Development — The Four-Phase Model | 3 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal, Meta-Cognitive, Creative' |
+| 4519 | Question-Asking Drives Children's Learning | 3 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive, Logical' |
+| 4520 | Diversive vs. Specific (Epistemic) Curiosity | 2 | Moderate | 2 | practice: 'Bolsters clusters: Creative, Pattern-Recognition, Meta-Cognitive' |
+| 4521 | The Five Dimensions of Curiosity | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Interpersonal, Creative' |
+| 4522 | Morbid & Dark Curiosity | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Emotional, Creative' |
+| 4525 | Boredom as an Adaptive Signal | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Volitional, Creative' |
+| 4526 | Curiosity & Survival in Aging | 2 | Emerging | 1 | practice: 'Bolsters clusters: Existential, Volitional, Meta-Cognitive' |
+| 4528 | Corrections Usually Work (the 'Backfire Effect' Is Mostly a Myth) | 3 | Strong | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Logical, Intrapersonal, Adversaria |
+| 4529 | Analytic / Reflective Thinking Resists Fake News | 3 | Strong | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Logical, Adversarial, Pattern-Reco |
+| 4530 | Lateral Reading (Leave the Page to Check It) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Adversarial, Social-Perceptual, Lo |
+| 4531 | Detailed Debunking (Fact, Warn, Explain, Fact) | 3 | Strong | 2 | practice: 'Bolsters clusters: Rhetorical, Logical, Social-Perceptual, Meta-Cogni |
+| 4532 | Accuracy Nudges (Pause and Ask 'Is This True?') | 3 | Strong | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Social-Perceptual, Adversarial, Mo |
+| 4533 | Consider the Opposite (Argue the Other Side) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Logical, Adversarial, Intrapersona |
+| 4534 | Digital Media-Literacy Tips (Real but Modest) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Social-Perceptual, Adversarial' |
+| 4541 | Seat-Belt Laws & Mandatory Use — ~45% Fewer Front-Seat Deaths | 5 | Strong | 2 | practice: 'Bolsters clusters: Systemic, Strategic, Community, Moral' |
+| 4542 | Motorcycle Helmets & Helmet Laws — ~42% Fewer Deaths | 4 | Strong | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Community, Bodily' |
+| 4543 | Clean Water & Sanitation — The Biggest Life-Saver in History | 5 | Strong | 3 | practice: 'Bolsters clusters: Systemic, Community, Strategic, Moral' |
+| 4544 | Mass Vaccination & Herd Immunity — Eradication as System Design | 5 | Strong | 2 | practice: 'Bolsters clusters: Systemic, Strategic, Community, Moral' |
+| 4545 | Insecticide-Treated Bed Nets — ~5.5 Child Lives Saved per 1,000 | 5 | Strong | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Community, Moral' |
+| 4546 | Removing Lead from Gasoline & Paint — Strong on IQ, Contested on Crime | 4 | Strong | 2 | practice: 'Bolsters clusters: Systemic, Strategic, Moral, Community' |
+| 4547 | Vitamin A Supplementation for Children — ~24% Lower Child Mortality | 4 | Strong | 1 | practice: 'Bolsters clusters: Systemic, Community, Moral, Strategic' |
+| 4548 | Tobacco Taxation — Price as the Strongest Lever | 4 | Strong | 2 | practice: 'Bolsters clusters: Systemic, Strategic, Financial, Community' |
+| 4549 | Smoke-Free Laws & Acute Heart-Attack Hospitalizations | 3 | Strong | 1 | practice: 'Bolsters clusters: Systemic, Community, Strategic, Moral' |
+| 4550 | Water Fluoridation & Cavities — Real, but Smaller in the Toothpaste Era | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Community, Bodily' |
+| 4551 | Graduated Driver Licensing — Phasing in Teen Drivers | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Community, Parental' |
+| 4552 | Speed Cameras — Consistent Casualty Reductions | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Community, Mechanical' |
+| 4553 | Sugar-Sweetened Beverage Taxes — Purchases Fall, Especially in Poorer Households | 3 | Moderate | 2 | practice: 'Bolsters clusters: Systemic, Strategic, Financial, Community' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,329)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,337)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3445,8 +3476,16 @@
 | 4511 | Slow Habituation to Food Cues | 4 | Emerging | 2 | Degrades: Interoceptive, Volitional, Intrapersonal |
 | 4512 | Trusting the 'Mindless Eating' Canon (Wansink Retractions) | 4 | Mixed | 3 | Degrades: Meta-Cognitive, Interoceptive, Volitional |
 | 4513 | The Health Halo ('It's Organic/Low-Fat, So More Is Fine') | 3 | Mixed | 2 | Degrades: Meta-Cognitive, Volitional, Interoceptive |
+| 4527 | Boredom Eating → Overconsumption | 4 | Moderate | 2 | weakness: 'Degrades: Interoceptive, Volitional, Bodily' |
+| 4535 | False News Spreads Faster Than the Truth | 6 | Strong | 1 | weakness: 'Degrades: Social-Perceptual, Meta-Cognitive, Adversarial' |
+| 4536 | Overconfidence in Spotting Fake News | 6 | Moderate | 1 | weakness: 'Degrades: Meta-Cognitive, Intrapersonal, Adversarial' |
+| 4537 | Bullshit Receptivity (Mistaking Vagueness for Depth) | 5 | Moderate | 1 | weakness: 'Degrades: Meta-Cognitive, Logical, Adversarial, Existential' |
+| 4538 | Moral-Emotional Language Hijacks Sharing | 5 | Moderate | 1 | weakness: 'Degrades: Moral, Emotional, Social-Perceptual, Adversarial' |
+| 4539 | Truth-Default Bias (We Assume People Are Honest) | 5 | Moderate | 1 | weakness: 'Degrades: Adversarial, Social-Perceptual, Meta-Cognitive, Street-Smar |
+| 4540 | Implied Truth Effect (Untagged = Assumed True) | 4 | Moderate | 1 | weakness: 'Degrades: Social-Perceptual, Meta-Cognitive, Logical' |
+| 4554 | The Peltzman Effect — Risk Compensation Is Real but Overstated | 3 | Mixed | 2 | weakness: 'Degrades: Systemic, Strategic, Moral' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,081)
+## COST OF FAILURE — what's at stake (harm lens)  (1,083)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4531,6 +4570,8 @@
 | 4503 | The Aperitif Effect (Alcohol Before/With Meals) | 3 | Moderate | 2 | Degrades: Interoceptive appetite regulation, Volitional, Bodily |
 | 4506 | Drinking Your Calories (Weak Satiety from Liquids) | 3 | Moderate | 3 | Degrades: Interoceptive appetite regulation, Bodily metabolic health, Volitional |
 | 4507 | Eating with Friends (Social Facilitation of Intake) | 2 | Moderate | 2 | Degrades: Interoceptive appetite regulation, Volitional portion control |
+| 4523 | Clickbait & the Weaponized Curiosity Gap | 2 | Moderate | 2 | cost: 'Degrades: Meta-Cognitive, Volitional, attention' |
+| 4524 | The Pandora Effect — Curiosity's Peril | 2 | Moderate | 1 | cost: 'Degrades: Volitional, Strategic, self-protective judgment' |
 
 ## Framework / uncategorized  (61)
 
