@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,882 clusters · 9,686 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,918 clusters · 9,746 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,344 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,381 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,375 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,386 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,096 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,882** |
+| **Total** | **4,918** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,246 |
-| Strong | 1,290 |
-| Mixed | 743 |
-| Emerging | 603 |
+| Moderate | 2,259 |
+| Strong | 1,292 |
+| Mixed | 748 |
+| Emerging | 619 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,344)
+## PRACTICES — what strengthens the mind (impact lens)  (2,375)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2371,8 +2371,39 @@
 | 4838 | The Holiday Paradox — Novelty Expands Remembered Time | 2 | Emerging | 1 | practice: 'Bolsters clusters: savoring, felt richness of life, meaning, remember |
 | 4839 | Video Games & Wellbeing — The Honest Small Effect | 1 | Mixed | 2 | practice: 'Bolsters clusters: positive affect, social connection, competence-nee |
 | 4840 | Adventure & Extreme Sports — Fear as Fuel | 2 | Emerging | 1 | practice: 'Bolsters clusters: positive emotion, self-transcendence, courage, nat |
+| 4841 | Frugality as a Trait (Restrained, Resourceful Use) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Financial, Volitional, Intrapersonal' |
+| 4842 | Voluntary Simplicity / Simple Living | 3 | Moderate | 3 | practice: 'Bolsters clusters: Financial, Existential, Intrapersonal' |
+| 4843 | 'Buy It For Life' — Durability & Repair | 2 | Emerging | 1 | practice: 'Bolsters clusters: Financial, Aesthetic, Naturalist' |
+| 4844 | Wardrobe / Outfit Simplification | 1 | Mixed | 1 | practice: 'Bolsters clusters: Volitional, Intrapersonal' |
+| 4845 | Anti-Consumption & Managing Desire | 2 | Emerging | 1 | practice: 'Bolsters clusters: Financial, Volitional, Existential' |
+| 4846 | Decluttering / A Restorative Home | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Aesthetic, Intrapersonal' |
+| 4847 | Minimalism & Psychological Benefits | 2 | Emerging | 1 | practice: 'Bolsters clusters: Intrapersonal, Existential, Aesthetic' |
+| 4852 | Mastery & Achievement Activities (Behavioral Activation) | 4 | Strong | 2 | practice: 'Bolsters clusters: Volitional, Emotional, Intrapersonal, Mechanical' |
+| 4853 | Small Wins from Finishing Tangible Things (Progress Principle) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Emotional, Intrapersonal, Entrepreneur |
+| 4854 | Hands-On Craft Hobbies & Reduced Mild Cognitive Impairment | 3 | Moderate | 2 | practice: 'Bolsters clusters: Mechanical, Pattern-Recognition, Systemic, Intrape |
+| 4855 | Everyday Hands-On Creating → Next-Day Flourishing | 2 | Moderate | 1 | practice: 'Bolsters clusters: Creative, Emotional, Intrapersonal, Aesthetic' |
+| 4856 | Cooking as Craft — Culinary Interventions for Wellbeing | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Creative, Intrapersonal, Emotional' |
+| 4857 | Crafts-Based Interventions for Mental Health | 2 | Mixed | 2 | practice: 'Bolsters clusters: Aesthetic, Emotional, Intrapersonal, Creative, Com |
+| 4858 | Repairing Rather Than Replacing — Agency & Control | 2 | Emerging | 2 | practice: 'Bolsters clusters: Mechanical, Intrapersonal, Volitional, Systemic' |
+| 4859 | The Effort Paradox — Effort Adds Value to What You Make | 2 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Intrapersonal, Mechanical, Aesthetic' |
+| 4860 | Do-It-Yourself Projects — Accomplishment, Control & Ownership | 2 | Emerging | 1 | practice: 'Bolsters clusters: Mechanical, Financial, Intrapersonal, Creative' |
+| 4861 | Making & Tinkering → STEM Engagement and a Growth Mindset | 2 | Emerging | 2 | practice: 'Bolsters clusters: Mechanical, Spatial, Creative, Logical' |
+| 4862 | Manual Competence as Agency (Shop Class as Soulcraft) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Mechanical, Intrapersonal, Existential, Volitional |
+| 4864 | Self-Efficacy Predicts Performance & Persistence (Stajkovic & Luthans) | 3 | Strong | 2 | practice: 'Bolsters clusters: Volitional grit, work performance, goal persistenc |
+| 4865 | The Effort Paradox — Effort Is Both Costly and Valued (Inzlicht) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential meaning, Volitional drive, Intraperson |
+| 4866 | Benign Masochism — Enjoying Chosen Discomfort (Rozin) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interoceptive mastery, Emotional range, Intraperso |
+| 4867 | Learned Industriousness — Rewarded Effort Generalizes (Eisenberger) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional discipline, Adversarial toughness, work |
+| 4868 | Some Adversity Beats None — The U-Shaped Resilience Curve (Seery) | 3 | Mixed | 2 | practice: 'Bolsters clusters: Adversarial resilience, Existential coping, stress |
+| 4869 | Authentic (Earned) Pride vs Hubristic Pride (Tracy & Robins) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal esteem, Volitional achievement, Emot |
+| 4870 | Need for Cognition — Choosing Hard Thinking (Cacioppo) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Logical reasoning, Meta-Cognitive depth, academic  |
+| 4871 | Stoic Voluntary Discomfort (Askēsis / 'Practicing Poverty') | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential equanimity, Intrapersonal control, Emo |
+| 4872 | Psychological Antifragility — Gaining From Stressors (Concept) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Adversarial growth, Volitional risk-taking, Strate |
+| 4873 | Obstacle-Course Racing (Tough Mudder/Spartan) — Challenge & Community | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community belonging, Bodily challenge, Intraperson |
+| 4874 | Sisu — Finnish Fortitude Under Extreme Adversity (Lahti) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Adversarial grit, Volitional action, Existential e |
+| 4875 | Ultra-Endurance Events & Meaning / Identity | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential meaning, Intrapersonal identity, Commu |
+| 4876 | Misogi / One Hard Thing a Year (Popular, Anecdotal) | 1 | Emerging | 2 | practice: 'Bolsters clusters: Adversarial confidence, Existential perspective, V |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,381)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,386)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3757,6 +3788,11 @@
 | 4813 | Self-Enhancement / Positive Illusions — Social & Adjustment Costs | 3 | Mixed | 2 | Degrades: Interpersonal, Social-Perceptual, Meta-Cognitive |
 | 4814 | The 'Narcissism Epidemic' Claim — Contested, Not Settled | 2 | Mixed | 2 | Degrades: Interpersonal, Moral, Social-Perceptual |
 | 4825 | Household Chaos (Noise, Disorder, No Routine) | 5 | Moderate | 2 | weakness: 'Degrades: Volitional, Meta-Cognitive, Emotional self-regulation in ch |
+| 4848 | Materialism–Loneliness Reinforcing Loop | 5 | Moderate | 2 | weakness: 'Degrades: Community, Interpersonal, Existential, Financial' |
+| 4849 | The Diderot Effect (Consumption Cascade) | 4 | Emerging | 1 | weakness: 'Degrades: Financial, Volitional' |
+| 4850 | Advertising-Driven Material Desire (Youth) | 3 | Emerging | 1 | weakness: 'Degrades: Financial, Existential, Intrapersonal' |
+| 4851 | Gift-Giving Price Miscalibration | 3 | Moderate | 1 | weakness: 'Degrades: Financial, Interpersonal, Social-Perceptual' |
+| 4863 | Fading Hands — Declining Manual Strength & Craft De-Skilling | 3 | Mixed | 2 | weakness: 'Degrades: Mechanical, Bodily' |
 
 ## COST OF FAILURE — what's at stake (harm lens)  (1,096)
 
