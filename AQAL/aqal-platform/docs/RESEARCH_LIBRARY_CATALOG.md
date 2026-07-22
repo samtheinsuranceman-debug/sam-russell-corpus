@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,994 clusters · 8,169 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,034 clusters · 8,227 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,668 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,252 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,013 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,693 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,261 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,019 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,994** |
+| **Total** | **4,034** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,840 |
-| Strong | 1,107 |
-| Mixed | 565 |
-| Emerging | 482 |
+| Moderate | 1,855 |
+| Strong | 1,124 |
+| Mixed | 569 |
+| Emerging | 486 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,668)
+## PRACTICES — what strengthens the mind (impact lens)  (1,693)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1695,8 +1695,33 @@
 | 3950 | Magnesium for Migraine Prophylaxis | 2 | Mixed | 2 | practice: 'Bolsters clusters: freedom from pain, attentional stability, everyday |
 | 3951 | Resveratrol for Cognition (Mostly Null) | 1 | Mixed | 2 | practice: 'Marketed to bolster: memory, cognition — largely unsupported' |
 | 3952 | DHEA for 'Anti-Aging' Vitality & Cognition (Overhyped) | 1 | Mixed | 3 | practice: 'Marketed to bolster: vitality, cognition — largely unsupported' |
+| 3953 | Interoceptive Exposure for Panic Disorder | 4 | Strong | 2 | Bolsters clusters: Interoceptive, Emotional, Meta-Cognitive |
+| 3954 | Modified Valsalva Maneuver for Acute SVT | 4 | Strong | 1 | Bolsters clusters: Interoceptive, Bodily, Volitional |
+| 3956 | Pursed-Lip Breathing for Dyspnea | 3 | Moderate | 2 | Bolsters clusters: Interoceptive, Bodily, Emotional |
+| 3957 | Capnometry-Guided Respiratory Training (CART / Freespira) | 3 | Moderate | 2 | Bolsters clusters: Interoceptive, Emotional, Volitional |
+| 3958 | Device-Guided Slow Breathing for Blood Pressure (RESPeRATE) | 2 | Moderate | 2 | Bolsters clusters: Interoceptive, Systemic, Emotional |
+| 3959 | Box / Tactical Breathing (4-4-4-4) | 2 | Mixed | 2 | Bolsters clusters: Interoceptive, Emotional, Volitional |
+| 3960 | Nasal / Functional Breathing (Nose over Mouth) | 2 | Emerging | 2 | Bolsters clusters: Interoceptive, Bodily, Systemic |
+| 3961 | Slow Breathing for Pain Modulation | 2 | Emerging | 2 | Bolsters clusters: Interoceptive, Bodily, Emotional |
+| 3962 | High-Frequency Yogic Breathing (Kapalabhati / Bhastrika) | 2 | Emerging | 2 | Bolsters clusters: Interoceptive, Bodily, Volitional |
+| 3965 | Sludge Reduction & Application Assistance (Benefit Take-Up) | 3 | Strong | 1 | practice: 'Bolsters clusters: Choice Architecture & Nudges, Automatic Enrollment |
+| 3966 | Rule-of-Thumb ('Just-in-Time') Financial Training | 3 | Moderate | 1 | practice: 'Bolsters clusters: Financial Education Programs, Budgeting & Expense  |
+| 3967 | Tax-Time Savings Prompts (Refund to Savings) | 2 | Strong | 1 | practice: 'Bolsters clusters: Building a Liquid Emergency Fund, Savings Reminder |
+| 3968 | Debt Snowball / Small-Victory Account Closure | 3 | Moderate | 2 | practice: 'Bolsters clusters: Payday-Loan Debt Trap, Present Bias to Debt, Self- |
+| 3969 | Deposit / Forfeiture Contracts (Stakes on Yourself) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Commitment Savings Devices, Present Bias to Debt,  |
+| 3970 | Consumption-Framing of Retirement Income (Annuities) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Tax-Advantaged Retirement Saving, Capital Preserva |
+| 3971 | Holding Money in Large Denominations (Self-Control Device) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Paying with Cash to Restore Pain of Paying, Avoidi |
+| 3972 | SMS Repayment Reminders (Debt Nudges) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Minimum-Payment Anchoring, Payday-Loan Debt Trap,  |
+| 3973 | One-on-One Financial Coaching | 3 | Moderate | 1 | practice: 'Bolsters clusters: Financial Education Programs, Budgeting & Expense  |
+| 3974 | Prize-Linked Savings (Save-to-Win Accounts) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Building a Liquid Emergency Fund, Commitment Savin |
+| 3980 | Interleaved Math Practice (Classroom RCT) | 4 | Strong | 2 | practice: 'Bolsters clusters: Mathematical reasoning, Logical, Pattern-Recogniti |
+| 3981 | Signaling / Cueing Principle | 3 | Strong | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Pattern-Recognition, Linguistic, L |
+| 3982 | The Hypercorrection Effect | 3 | Strong | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Logical, Pattern-Recognition, Ling |
+| 3983 | Depth of Processing (Semantic Encoding) | 3 | Strong | 1 | practice: 'Bolsters clusters: Linguistic, Logical, Pattern-Recognition, Meta-Cog |
+| 3986 | Segmenting Principle (Chunk the Lesson) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Logical, Pattern-Recognition, Syst |
+| 3990 | Modality Principle (Narrate the Graphic) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Spatial, Logical, Linguistic, Pattern-Recognition' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,252)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,261)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2952,8 +2977,17 @@
 | 3927 | Long-Term PM2.5 Exposure → Depression Risk | 3 | Moderate | 1 | Degrades: Emotional stability, Intrapersonal, Meta-Cognitive |
 | 3928 | Windowless Workspaces / Daylight Deprivation → Sleep & Vitality Loss | 3 | Emerging | 1 | Degrades: Interoceptive circadian alignment, Bodily rest, Emotional vitality |
 | 3938 | Impaired Lung Function (Low FEV1) | 7 | Strong | 2 | weakness: 'Degrades: Survival, Cardiovascular reserve, Exercise capacity' |
+| 3963 | Chronic Dysfunctional Breathing / Hyperventilation Pattern | 5 | Moderate | 2 | Degrades: Interoceptive, Emotional, Bodily |
+| 3964 | Heightened CO2 Chemoreflex Sensitivity (Panic Vulnerability) | 5 | Mixed | 2 | Degrades: Interoceptive, Emotional, Meta-Cognitive |
+| 3975 | Exponential-Growth Bias (Compound-Interest Neglect) | 6 | Strong | 1 | weakness: 'Degrades: Automatic Savings-Rate Escalation, Payday-Loan Debt Trap, F |
+| 3976 | Overtrading & Overconfidence (Return Drag) | 6 | Strong | 2 | weakness: 'Degrades: Automated & Index Investing, Return-Chasing & the Behavior  |
+| 3977 | Disposition Effect (Selling Winners, Holding Losers) | 5 | Strong | 1 | weakness: 'Degrades: Return-Chasing & the Behavior Gap, Fee-Aware Investing, Aut |
+| 3978 | Choice Overload in Retirement Menus | 4 | Moderate | 1 | weakness: 'Degrades: Automatic Enrollment & Smart Defaults, Tax-Advantaged Retir |
+| 3979 | Left-Digit / 9-Ending Price Susceptibility | 3 | Moderate | 1 | weakness: 'Degrades: Fake Reference-Price Anchoring, Budgeting & Expense Trackin |
+| 3991 | The 10,000-Hour Rule Is Overstated | 5 | Strong | 2 | weakness: 'Degrades: Strategic, Meta-Cognitive, Volitional, Financial' |
+| 3992 | Expertise-Reversal Effect | 4 | Strong | 2 | weakness: 'Degrades: Meta-Cognitive, Strategic, Logical' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,013)
+## COST OF FAILURE — what's at stake (harm lens)  (1,019)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3970,6 +4004,12 @@
 | 3776 | Wealth Quietly Steals Your Ability to Savor | 2 | Emerging | 1 | cost: 'Degrades: Aesthetic, Emotional, Interoceptive' |
 | 3918 | Daylight-Saving Clock Change → Spike in Heart Attacks | 2 | Moderate | 3 | Degrades: Interoceptive circadian alignment, Bodily cardiovascular function |
 | 3937 | Heavy Egg Consumption | 1 | Mixed | 2 | cost: 'Degrades: Cardiovascular longevity (weakly/uncertain), Nutrition / Diet Q |
+| 3955 | Paper-Bag Rebreathing for Hyperventilation (Discredited) | 3 | Strong | 1 | Degrades: Bodily, Interoceptive, Emotional |
+| 3984 | Feedback Can Harm (Feedback Intervention Theory) | 3 | Strong | 1 | cost: 'Degrades: Meta-Cognitive, Emotional, Volitional, Interpersonal' |
+| 3985 | Split-Attention Effect (Separated Text & Diagram) | 3 | Strong | 1 | cost: 'Degrades: Spatial, Logical, Mechanical, Pattern-Recognition' |
+| 3987 | Seductive Details Effect | 2 | Strong | 1 | cost: 'Degrades: Meta-Cognitive, Logical, Pattern-Recognition, Linguistic' |
+| 3988 | Retrieval-Induced Forgetting | 2 | Moderate | 1 | cost: 'Degrades: Pattern-Recognition, Linguistic, Logical, Meta-Cognitive' |
+| 3989 | Redundancy Effect (Duplicated On-Screen Text) | 2 | Mixed | 1 | cost: 'Degrades: Logical, Pattern-Recognition, Spatial' |
 
 ## Framework / uncategorized  (61)
 
