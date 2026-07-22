@@ -59190,6 +59190,316 @@ const PE_w4778: PracticeCluster[] = [
   },
 ];
 
+
+// ===== auto-assembled @4815 =====
+const PE_w4815: PracticeCluster[] = [
+  {
+    id: "number-board-games-children", section: "4815", title: "Number Board Games With Kids", subtitle: "practice: 'Bolsters clusters: Mathematical, Parental, Logical'",
+    evidenceTag: "Strong",
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
+    feeds: ["Mathematical", "Parental", "Logical", "Spatial"],
+    description: "In randomized experiments, playing a simple LINEAR number board game (\"Chutes and Ladders\"-style, 1-10 in a row) for four 15-minute sessions raised low-income preschoolers' number-line estimation, magnitude comparison, counting, and numeral identification — closing the gap with middle-income peers, with gains holding 9 weeks later. Circular boards or color-substituted versions did NOT work: the linear left-to-right spatial layout is the active ingredient, mapping number to space.",
+    callout: "One of the few genuinely causal (randomized) family-activity findings here — but it targets a narrow early-numeracy window in preschoolers; it is not a general 'games make kids smart' claim, and the specific board design matters.",
+    sources: [
+      { cite: "Ramani, G. B., & Siegler, R. S. (2008). Promoting broad and stable improvements in low-income children's numerical knowledge through playing number board games. Child Development, 79(2), 375-394.", note: "RCT: ~1 hour of linear board play improved 4 numerical tasks, gains held 9 weeks. Limitation: narrow age/skill window, small samples. [Strong — RCT]", link: "https://doi.org/10.1111/j.1467-8624.2007.01131.x", kind: "doi" },
+      { cite: "Siegler, R. S., & Ramani, G. B. (2009). Playing linear number board games—but not circular ones—improves low-income preschoolers' numerical understanding. Journal of Educational Psychology, 101(3), 545-560.", note: "Board geometry test: linear boards worked, circular did not, isolating the number-to-space mapping. Limitation: lab-based, preschool only. [Strong — RCT]", link: scholar("Siegler Ramani 2009 linear number board games not circular improves preschoolers numerical understanding Journal Educational Psychology"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "family-rituals-routines-fiese", section: "4816", title: "Family Routines & Rituals", subtitle: "practice: 'Bolsters clusters: Parental, Community, Emotional, Existential'",
+    evidenceTag: "Moderate",
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "low" },
+    feeds: ["Parental", "Community", "Emotional", "Existential", "Intrapersonal"],
+    description: "Fiese's review of 50 years of research (32 studies since Bossard & Boll 1950) found predictable family routines (instrumental repetitions like bedtime and dinner) and rituals (symbol-laden, meaning-carrying events like holidays) are consistently linked to parenting competence, child adjustment, marital satisfaction, and adolescent identity. Routines/rituals appear to buffer stress during transitions and give a family a felt sense of belonging and continuity. The literature distinguishes the doing (routine) from the meaning (ritual), with ritual meaning more strongly tied to wellbeing.",
+    callout: "Almost entirely correlational: rituals may be a MARKER of an already well-functioning, resourced family rather than the cause. The review is qualitative, not a pooled effect size — treat as a robust, consistent association, not proof that adding a ritual fixes a struggling family.",
+    sources: [
+      { cite: "Fiese, B. H., Tomcho, T. J., Douglas, M., Josephs, K., Poltrock, S., & Baker, T. (2002). A review of 50 years of research on naturally occurring family routines and rituals: Cause for celebration? Journal of Family Psychology, 16(4), 381-390.", note: "Qualitative review of 32 studies; routines/rituals tied to child adjustment, parenting competence, marital satisfaction. Limitation: correlational, no pooled effect size. [Strong — 50-year review]", link: scholar("Fiese 2002 review 50 years naturally occurring family routines rituals cause for celebration Journal Family Psychology"), kind: "scholar" },
+      { cite: "Spagnola, M., & Fiese, B. H. (2007). Family routines and rituals: A context for development in the lives of young children. Infants & Young Children, 20(4), 284-299.", note: "Reviews how routines organize daily life and rituals confer identity/belonging in early childhood. Limitation: observational. [Moderate]", link: scholar("Spagnola Fiese 2007 family routines rituals context development young children Infants Young Children"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "shared-book-reading-routine", section: "4817", title: "The Bedtime Story Routine (Frequency of Reading Together)", subtitle: "practice: 'Bolsters clusters: Linguistic, Parental, Aesthetic'",
+    evidenceTag: "Moderate",
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "low" },
+    feeds: ["Linguistic", "Parental", "Aesthetic", "Emotional"],
+    description: "Bus, van IJzendoorn & Pellegrini's classic meta-analysis found the FREQUENCY of parent-preschooler book reading relates to language growth, emergent literacy and later reading achievement at d≈0.59 (about 8% of variance). Reading together as a regular family ritual pairs literacy input with warmth and shared attention. (Distinct from the taken 'dialogic reading' technique, which is a specific interactive method layered on top of frequency.)",
+    callout: "Correlational — reading frequency is not randomly assigned. Later, larger meta-analyses (Mol & Bus 2011) put the association nearer moderate and note it shrinks with age and controls; families who read more differ in education, home literacy and child interest. HOW you read (interactive prompts) adds value beyond raw frequency.",
+    sources: [
+      { cite: "Bus, A. G., van IJzendoorn, M. H., & Pellegrini, A. D. (1995). Joint book reading makes for success in learning to read: A meta-analysis on intergenerational transmission of literacy. Review of Educational Research, 65(1), 1-21.", note: "Meta-analysis: reading frequency related to literacy/reading achievement, d=.59 (~8% variance). Limitation: correlational, older studies. [Strong — meta-analysis]", link: "https://doi.org/10.3102/00346543065001001", kind: "doi" },
+      { cite: "Mol, S. E., & Bus, A. G. (2011). To read or not to read: A meta-analysis of print exposure from infancy to early adulthood. Psychological Bulletin, 137(2), 267-296.", note: "Larger update: real but moderate associations that attenuate with age/controls. Limitation: correlational, reverse causation plausible. [Strong — meta-analysis]", link: scholar("Mol Bus 2011 to read or not to read meta-analysis print exposure infancy early adulthood Psychological Bulletin"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "do-you-know-family-history", section: "4818", title: "\"Do You Know?\" — Knowing Your Family's Stories", subtitle: "practice: 'Bolsters clusters: Existential, Emotional, Intrapersonal, Parental'",
+    evidenceTag: "Emerging",
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    feeds: ["Existential", "Emotional", "Intrapersonal", "Parental", "Community"],
+    description: "The Emory Family Narratives Lab's 20-item \"Do You Know?\" scale asks children facts they could not have witnessed (how parents met, where grandparents grew up, family hardships overcome). Higher scores correlated with internal locus of control, higher self-esteem, better family functioning and cohesion, lower anxiety, and fewer behavior problems — an \"intergenerational self\" that seems to anchor resilience. The construct is genuinely interesting and widely cited.",
+    callout: "The evidence is one small, cross-sectional, correlational study — not causal. Duke himself warns that rote-teaching the answers won't help: the score is a proxy for a family that talks and spends time together, so the stories are a MARKER of connection, not a shortcut to it.",
+    sources: [
+      { cite: "Duke, M. P., Lazarus, A., & Fivush, R. (2008). Knowledge of family history as a clinically useful index of psychological well-being and prognosis: A brief report. Psychotherapy: Theory, Research, Practice, Training, 45(2), 268-272.", note: "\"Do You Know?\" scores correlated with self-esteem, locus of control, lower anxiety, family cohesion. Limitation: small cross-sectional sample, correlational, author cautions against rote teaching. [Emerging]", link: "https://doi.org/10.1037/0033-3204.45.2.268", kind: "doi" },
+      { cite: "Fivush, R., Bohanek, J. G., & Duke, M. (2008). The intergenerational self: Subjective perspective and family history. In F. Sani (Ed.), Self-continuity: Individual and collective perspectives.", note: "Theoretical account of how family-history knowledge builds a self extended across generations. Limitation: interpretive, leans on the same correlational data. [Emerging]", link: scholar("Fivush Bohanek Duke 2008 intergenerational self subjective perspective family history self-continuity"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "parent-child-play", section: "4819", title: "Playing WITH Your Child (Physical & Rough-and-Tumble)", subtitle: "practice: 'Bolsters clusters: Parental, Bodily, Emotional, Social-Perceptual'",
+    evidenceTag: "Mixed",
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    feeds: ["Parental", "Bodily", "Emotional", "Social-Perceptual", "Interpersonal"],
+    description: "A systematic review of father-child play found fathers commonly engage children in physical, rough-and-tumble play, which is associated with children's social competence, emotion encoding/decoding, and self-regulation. A pooled analysis of 16 studies (~1,521 dyads) reported weak-to-moderate effects on aggression control, social competence, and emotional skills. The theorized mechanism: safe, arousing play lets kids practice reading signals and regulating excitement within a trusted relationship.",
+    callout: "Almost all correlational and heavily confounded — sensitive, involved parents both play more AND have better-adjusted kids. Effects are weak-to-moderate at best, and much of the literature is on fathers/boys, limiting generalization. Not evidence that adding wrestling fixes behavior problems.",
+    sources: [
+      { cite: "Amodia-Bidakowska, A., Laverty, C., & Ramchandani, P. G. (2020). Father-child play: A systematic review of its frequency, characteristics and potential impact on children's development. Developmental Review, 57, 100924.", note: "Reviews frequency/characteristics of father-child play and links to social-emotional outcomes. Limitation: correlational, confounded, father-focused. [Moderate — systematic review]", link: scholar("Amodia-Bidakowska Laverty Ramchandani 2020 father-child play systematic review frequency impact children's development Developmental Review"), kind: "scholar" },
+      { cite: "StGeorge, J., & Freeman, E. (2017). Measurement of father-child rough-and-tumble play and its relations to child behavior. Infant Mental Health Journal, 38(6), 709-725.", note: "Meta-analytic synthesis (~16 studies, 1,521 dyads): weak-to-moderate links to aggression, social competence, emotion skills. Limitation: small heterogeneous studies, cross-sectional. [Moderate]", link: scholar("StGeorge Freeman 2017 measurement father-child rough-and-tumble play relations child behavior Infant Mental Health Journal"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "intergenerational-family-storytelling", section: "4820", title: "Telling Family Stories Across Generations", subtitle: "practice: 'Bolsters clusters: Existential, Linguistic, Emotional, Intrapersonal'",
+    evidenceTag: "Emerging",
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    feeds: ["Existential", "Linguistic", "Emotional", "Intrapersonal", "Parental"],
+    description: "Beyond knowing facts, the ACT of parents narrating their own and grandparents' pasts gives children models for making meaning from experience. Adolescents who can tell more coherent, elaborated intergenerational stories show higher identity exploration, higher self-esteem, lower depression and anxiety, and a greater sense of purpose. Stories range from funny bonding tales to moral-lesson narratives that transmit family values.",
+    callout: "Correlational and confounded with the taken 'elaborative reminiscing' literature: verbally skilled, warm, high-functioning families both tell more coherent stories AND raise better-adjusted kids. Narrative coherence is partly a child trait, not just a parenting input — causal direction is unresolved.",
+    sources: [
+      { cite: "Merrill, N., & Fivush, R. (2016). Intergenerational narratives and identity across development. Developmental Review, 40, 72-92.", note: "Reviews how parents' told-about pasts scaffold adolescent narrative identity and wellbeing. Limitation: correlational, self-report narrative measures. [Moderate — review]", link: scholar("Merrill Fivush 2016 intergenerational narratives identity across development Developmental Review"), kind: "scholar" },
+      { cite: "Bohanek, J. G., Marin, K. A., Fivush, R., & Duke, M. P. (2006). Family narrative interaction and children's sense of self. Family Process, 45(1), 39-54.", note: "Coherent, coordinated family storytelling linked to stronger child self-concept. Limitation: small, cross-sectional, shared-method. [Emerging]", link: scholar("Bohanek Marin Fivush Duke 2006 family narrative interaction children's sense of self Family Process"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "cooking-baking-with-children", section: "4821", title: "Cooking & Baking Together", subtitle: "practice: 'Bolsters clusters: Parental, Bodily, Naturalist, Interpersonal'",
+    evidenceTag: "Mixed",
+    impact: { magnitude: 2, latency: "weeks", durability: "sustained", effort: "moderate" },
+    feeds: ["Parental", "Bodily", "Naturalist", "Interpersonal", "Volitional"],
+    description: "A 2024 systematic review of RCTs of children's cooking involvement found the most reliable gains were in cooking knowledge, cooking skills, and self-efficacy, plus food-related attitudes and willingness to try foods. Kids who cook take more ownership of food. It's a shared, hands-on activity that builds competence and connection alongside a concrete skill.",
+    callout: "Honestly, the health payoff is oversold: improvements in actual dietary intake (more vegetables, better diet quality) were rarely achieved in trials, and several rigorous RCTs (e.g. PhunkyFoods) found no effect on vegetable intake or measured cooking skill. Value it for skill, agency and bonding, not as a proven nutrition intervention.",
+    sources: [
+      { cite: "Systematic review (2024). Outcomes of children's cooking programs: A systematic review of intervention studies. Journal of Nutrition Education and Behavior.", note: "RCT review 1998-2022: knowledge, skills, self-efficacy improved; dietary intake rarely changed. Limitation: heterogeneous measures. [Moderate — systematic review]", link: scholar("Outcomes children's cooking programs systematic review intervention studies Journal Nutrition Education Behavior 2024 PMID 39320296"), kind: "scholar" },
+      { cite: "Hersch, D., Perdue, L., Ambroz, T., & Boucher, J. L. (2014). The impact of cooking classes on food-related preferences, attitudes, and behaviors of school-aged children: A systematic review of the evidence, 2003-2014. Preventing Chronic Disease, 11, E193.", note: "Cooking programs positively influenced preferences/attitudes/behaviors, but weak standardization limits conclusions. [Moderate]", link: scholar("Hersch Perdue Ambroz Boucher 2014 impact cooking classes food-related preferences attitudes behaviors school-aged children systematic review Preventing Chronic Disease"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "family-vacations-functioning", section: "4822", title: "Family Vacations & Trips Together", subtitle: "practice: 'Bolsters clusters: Community, Emotional, Interpersonal, Existential'",
+    evidenceTag: "Emerging",
+    impact: { magnitude: 2, latency: "days", durability: "sustained", effort: "high" },
+    feeds: ["Community", "Emotional", "Interpersonal", "Existential", "Parental"],
+    description: "Lehto and colleagues found families experience vacations as protected 'quality time' that improves communication and cohesion — a novel, shared setting that pulls members out of routine roles and generates joint memories. It fits the experiential-over-material finding (shared novel experiences bond and are savored before, during and after) applied to families.",
+    callout: "Largely qualitative/cross-sectional and confounded by resources: taking vacations is a marker of income, time and an already-functioning family. Benefits can be fragile — travel stress and screen use erode them, and any mood lift tends to fade fast after returning (the 'vacation fade-out'). The memories may outlast the mood.",
+    sources: [
+      { cite: "Lehto, X. Y., Choi, S., Lin, Y.-C., & MacDermid, S. M. (2009). Vacation and family functioning. Annals of Tourism Research, 36(3), 459-479.", note: "Families reported vacations as quality time improving communication and cohesion. Limitation: cross-sectional, self-report, resource-confounded. [Emerging]", link: scholar("Lehto Choi Lin MacDermid 2009 vacation and family functioning Annals of Tourism Research"), kind: "scholar" },
+      { cite: "Durko, A. M., & Petrick, J. F. (2013). Family and relationship benefits of travel experiences: A literature review. Journal of Travel Research, 52(6), 720-730.", note: "Reviews evidence that travel supports family bonding/relationships. Limitation: correlational, publication bias toward positive findings. [Emerging — review]", link: scholar("Durko Petrick 2013 family relationship benefits travel experiences literature review Journal Travel Research"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "family-volunteering-together", section: "4823", title: "Serving & Volunteering as a Family", subtitle: "practice: 'Bolsters clusters: Moral, Community, Parental, Existential'",
+    evidenceTag: "Emerging",
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "moderate" },
+    feeds: ["Moral", "Community", "Parental", "Existential", "Interpersonal"],
+    description: "Parental role-modeling and family conversations about giving predict adolescents' own charitable giving and volunteering, and doing service together socializes prosocial and civic values. Youth volunteering is in turn linked to better psychological adjustment, community connection, academic engagement and less problem behavior. Frequency of shared activities with parents predicts civic engagement into young adulthood.",
+    callout: "Correlational and strongly confounded by family values, religiosity and SES: families who serve together already share prosocial commitments, so causal weight is uncertain. Modeling ('do as I do') outperforms lecturing, but the outcome estimates come from observational, self-selected samples.",
+    sources: [
+      { cite: "Ottoni-Wilhelm, M., Estell, D. B., & Perdue, N. H. (2014). Role-modeling and conversations about giving in the socialization of adolescent charitable giving and volunteering. Journal of Adolescence, 37(1), 53-66.", note: "Parental role-modeling and giving conversations predicted adolescent giving/volunteering. Limitation: observational, self-report. [Moderate]", link: scholar("Ottoni-Wilhelm Estell Perdue 2014 role-modeling conversations about giving socialization adolescent charitable giving volunteering Journal Adolescence"), kind: "scholar" },
+      { cite: "Law, B. M. F., & Shek, D. T. L., and related work; see also Parent values, civic participation, and children's volunteering (2021). Children and Youth Services Review, 128, 106152.", note: "Parent civic participation and values predicted children's volunteering. Limitation: cross-sectional, value/SES confounds. [Emerging]", link: scholar("Parent values civic participation children's volunteering 2021 Children and Youth Services Review"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "shared-family-leisure-cohesion", section: "4824", title: "Shared Family Leisure (Core & Balance)", subtitle: "practice: 'Bolsters clusters: Community, Interpersonal, Emotional, Parental'",
+    evidenceTag: "Mixed",
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "moderate" },
+    feeds: ["Community", "Interpersonal", "Emotional", "Parental", "Existential"],
+    description: "Zabriskie & McCormick's Core-and-Balance model distinguishes everyday, home-based 'core' leisure (games, meals, backyard play — builds cohesion/stability) from novel 'balance' leisure (trips, new activities — builds adaptability/flexibility). Across many studies both patterns predict perceptions of family functioning, and a 2017 systematic review confirmed the model as the field's dominant framework, with core leisure showing the more consistent link to cohesion.",
+    callout: "Predominantly cross-sectional, single-reporter, self-report data — high shared-method variance and reverse causation: cohesive families likely do more leisure together AND rate their functioning higher. The correlations are real but modest; this is a framework, not proof that scheduling family fun raises cohesion.",
+    sources: [
+      { cite: "Zabriskie, R. B., & McCormick, B. P. (2001). The influences of family leisure patterns on perceptions of family functioning. Family Relations, 50(3), 281-289.", note: "Introduced Core-and-Balance model; both patterns predicted family functioning. Limitation: cross-sectional, self-report. [Moderate]", link: "https://doi.org/10.1111/j.1741-3729.2001.00281.x", kind: "doi" },
+      { cite: "Townsend, J. A., Van Puymbroeck, M., & Zabriskie, R. B. (2017). The core and balance model of family leisure functioning: A systematic review. Leisure Sciences, 39(5), 436-456.", note: "Systematic review affirming the model but flagging cross-sectional, single-reporter limits. [Moderate — review]", link: scholar("Townsend Van Puymbroeck Zabriskie 2017 core and balance model family leisure functioning systematic review Leisure Sciences"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "household-chaos-child-ef", section: "4825", title: "Household Chaos (Noise, Disorder, No Routine)", subtitle: "weakness: 'Degrades: Volitional, Meta-Cognitive, Emotional self-regulation in children'",
+    evidenceTag: "Moderate",
+    weakness: { threat: 5, weakLines: ["Volitional", "Meta-Cognitive", "Emotional"], degree: "moderate contributor", onset: "months", reversibility: "recovers" },
+    degrades: ["Volitional", "Meta-Cognitive", "Emotional", "Intrapersonal"],
+    description: "The opposite of ritual: chaotic homes — measured by the Confusion, Hubbub, and Order Scale (CHAOS) — are noisy, crowded, disorganized and unpredictable, with no stable routines. A meta-analysis of 35 studies (16,480 children, ages 2-17) found household chaos is inversely associated with children's executive functions and effortful control, r = .16 overall, with the instability dimension (r≈.17) mattering more than clutter/disorganization (r≈.06). Longitudinal work shows reciprocal effects on behavioral self-regulation from ages 3-9.",
+    callout: "The effect is real and replicated but small (r=.16), and chaos travels with poverty, crowding and parent stress — so it is a contributor, not a sole cause. It's largely correlational and modifiable: adding routine and reducing background chaos plausibly helps, but the meta-analysis can't prove it by itself.",
+    sources: [
+      { cite: "Andrews, K., Atkinson, L., Harris, M., & Gonzalez, A. (2021). Examining the effects of household chaos on child executive functions: A meta-analysis. Psychological Bulletin, 147(1), 16-32.", note: "35 studies, 16,480 children: chaos inversely related to EF, r=.16; instability > disorganization. Limitation: correlational, small effect, SES-confounded. [Strong — meta-analysis]", link: scholar("Andrews Atkinson Harris Gonzalez 2021 household chaos child executive functions meta-analysis Psychological Bulletin"), kind: "scholar" },
+      { cite: "Marsh, S., Dobson, R., & Maddison, R. (2020). The relationship between household chaos and child, parent, and family outcomes: A systematic scoping review. BMC Public Health, 20, 513.", note: "Scoping review linking chaos to worse child/parent/family outcomes across domains. Limitation: cross-sectional, heterogeneous. [Moderate — review]", link: scholar("Marsh Dobson Maddison 2020 household chaos child parent family outcomes systematic scoping review BMC Public Health"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "high-altitude-mountaineering-hazard", section: "4826", title: "High-Altitude Mountaineering — Objective Hazard & Mortality", subtitle: "cost: 'Degrades: Bodily, Interoceptive'",
+    evidenceTag: "Strong",
+    harm: { severity: 5, onset: "immediate", reversibility: "lasting" },
+    degrades: ["Bodily", "Interoceptive"],
+    description: "The most extreme end of outdoor adventure carries a real, quantified death toll. Above base camp on Everest, mortality has fallen from ~1.4% (1921–2006) to ~0.7% (2007–2024), but across the fourteen 8,000 m peaks descent-from-summit fatality ranges from ~4 to ~134 per 1,000 summiteers, and Annapurna I historically kills roughly a quarter to a third of those who attempt it. Most deaths occur during descent above 8,000 m from hypoxia and exhaustion, not falls alone.",
+    callout: "This is not an argument against hiking or backpacking — the danger is specific to extreme altitude, technical terrain, and avalanche/serac exposure, where hypoxic judgment impairment compounds objective hazard. The wellbeing benefits elsewhere in this group come from far lower-risk immersion.",
+    sources: [
+      { cite: "Firth, P. G., Zheng, H., Windsor, J. S., et al. (2008). Mortality on Mount Everest, 1921-2006: descriptive study. BMJ, 337, a2654.", note: "Documents Everest death rates and that most deaths cluster on descent above 8,000 m from non-traumatic hypoxic collapse. [Strong — registry study]", link: "https://doi.org/10.1136/bmj.a2654", kind: "doi" },
+      { cite: "Weinbruch, S., & Nordby, K.-C. (2013). Fatalities in high altitude mountaineering: a review of quantitative risk estimates. High Altitude Medicine & Biology, 14(4), 346-359.", note: "Reviews mortality across 8,000 m peaks; descent fatality 4-134 per 1,000 summiteers, Annapurna the deadliest. Limitation: incomplete historical records. [Strong — review]", link: scholar("Weinbruch Nordby 2013 fatalities high altitude mountaineering quantitative risk estimates"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "camping-circadian-reset", section: "4827", title: "Camping Resets the Circadian Clock", subtitle: "practice: 'Bolsters clusters: Interoceptive, Bodily, Emotional'",
+    evidenceTag: "Strong",
+    impact: { magnitude: 4, latency: "days", durability: "transient", effort: "moderate" },
+    feeds: ["Interoceptive", "Bodily", "Emotional"],
+    description: "A week of summer camping with only natural light (sun + campfire, no electronics) advanced dim-light melatonin onset by ~2 hours and synchronized the internal clock so biological night began near sunset — abolishing the ~2 h delay of the modern electrical environment (Wright 2013). A follow-up showed a single winter week shifted timing ~2.5 h earlier, and even one weekend of camping advanced melatonin onset ~1.4 h and shrank between-person differences in clock timing (Stothard 2017). The largest shifts occur in late chronotypes ('night owls'), the group most misaligned by indoor light.",
+    callout: "Small samples (n≈8–14) and the effect is driven by the light environment, not camping per se — you can get much of it at home with bright morning daylight and dark, screen-free evenings. Effects fade once you return to indoor light. Educational, not medical advice.",
+    sources: [
+      { cite: "Wright, K. P., McHill, A. W., Birks, B. R., Griffin, B. R., Rusterholz, T., & Chinoy, E. D. (2013). Entrainment of the human circadian clock to the natural light-dark cycle. Current Biology, 23(16), 1554-1558.", note: "One week camping advanced melatonin onset ~2 h and aligned the clock to sunset/sunrise; largest shift in night owls. Limitation: tiny sample (n=8), no long-term follow-up. [Strong — controlled field experiment]", link: "https://doi.org/10.1016/j.cub.2013.06.039", kind: "doi" },
+      { cite: "Stothard, E. R., McHill, A. W., Depner, C. M., Birks, B. R., Moehlman, T. M., Ritchie, H. K., et al. (2017). Circadian entrainment to the natural light-dark cycle across seasons and the weekend. Current Biology, 27(4), 508-513.", note: "Winter week shifted timing ~2.5 h earlier; a single weekend of camping advanced onset ~1.4 h and reduced individual variability. Limitation: small n, self-selected participants. [Strong]", link: "https://doi.org/10.1016/j.cub.2016.12.041", kind: "doi" },
+    ],
+  },
+  {
+    id: "nature-walk-rumination-sgpfc", section: "4828", title: "A Nature Walk Quiets Rumination (Subgenual PFC)", subtitle: "practice: 'Bolsters clusters: Emotional, Meta-Cognitive, Intrapersonal'",
+    evidenceTag: "Moderate",
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    feeds: ["Emotional", "Meta-Cognitive", "Intrapersonal"],
+    description: "In a controlled experiment, a 90-minute walk in a natural setting reduced self-reported rumination (repetitive negative self-focused thought, a transdiagnostic risk factor) and lowered neural activity in the subgenual prefrontal cortex, whereas a matched 90-minute urban walk did neither (Bratman 2015, PNAS). This isolates something beyond exercise: same duration and intensity, different environment, different effect on self-referential brooding.",
+    callout: "Single lab study (n=38), healthy young adults, one session — durability and clinical relevance are untested, and the sgPFC finding has not been widely replicated. It measures acute state change, not a treatment for depression.",
+    sources: [
+      { cite: "Bratman, G. N., Hamilton, J. P., Hahn, K. S., Daily, G. C., & Gross, J. J. (2015). Nature experience reduces rumination and subgenual prefrontal cortex activation. PNAS, 112(28), 8567-8572.", note: "90-min nature walk cut rumination and sgPFC activation vs. an urban walk. Limitation: single session, small sample, no clinical population. [Moderate — controlled experiment]", link: "https://doi.org/10.1073/pnas.1510459112", kind: "doi" },
+    ],
+  },
+  {
+    id: "nature-grandeur-awe-small-self", section: "4829", title: "Nature-Grandeur Awe → Small Self & Prosociality", subtitle: "practice: 'Bolsters clusters: Moral, Community, Existential'",
+    evidenceTag: "Moderate",
+    impact: { magnitude: 3, latency: "days", durability: "transient", effort: "low" },
+    feeds: ["Moral", "Community", "Existential"],
+    description: "Across five studies (N≈2,078), awe — including a naturalistic induction where participants stood in a grove of towering eucalyptus — increased generosity, ethical decision-making and helping behavior, and decreased entitlement, relative to control conditions (Piff 2015). Mediation analyses suggest grand natural landscapes shrink the felt size of the self ('small self'), situating the person within a larger whole and enlarging concern for others.",
+    callout: "Effects are modest, mostly acute lab/field manipulations, and the awe-and-prosociality literature has faced replication and publication-bias scrutiny; the 'small self' mechanism is plausible but not settled. Awe from grand landscapes is one route among many.",
+    sources: [
+      { cite: "Piff, P. K., Dietze, P., Feinberg, M., Stancato, D. M., & Keltner, D. (2015). Awe, the small self, and prosocial behavior. Journal of Personality and Social Psychology, 108(6), 883-899.", note: "5 studies; a grove-of-trees awe induction raised helping and cut entitlement, mediated by 'small self'. Limitation: acute effects, modest sizes, replication concerns in awe literature. [Moderate]", link: "https://doi.org/10.1037/pspi0000018", kind: "doi" },
+    ],
+  },
+  {
+    id: "risky-outdoor-play-children", section: "4830", title: "Risky / Adventurous Outdoor Play & Child Development", subtitle: "practice: 'Bolsters clusters: Bodily, Volitional, Social-Perceptual'",
+    evidenceTag: "Moderate",
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "low" },
+    feeds: ["Bodily", "Volitional", "Social-Perceptual"],
+    description: "A systematic review of 21 studies (GRADE-appraised) found risky, adventurous outdoor play — climbing, exploring, roaming out of sight, rough-and-tumble — is associated with higher physical activity, better social health, and, counterintuitively, lower rates of aggression and no increase in serious injury (Brussoni 2015). The overprotection that removes such play appears to trade a tiny reduction in minor scrapes for costs to fitness, risk-competence and self-regulation.",
+    callout: "Observational evidence of low-to-moderate GRADE quality; 'risky play' spans a wide range and the review authors call for better studies. Association, not proof of causation — and it concerns children specifically, not adults.",
+    sources: [
+      { cite: "Brussoni, M., Gibbons, R., Gray, C., Ishikawa, T., Sandseter, E. B. H., Bienenstock, A., et al. (2015). What is the relationship between risky outdoor play and health in children? A systematic review. International Journal of Environmental Research and Public Health, 12(6), 6423-6454.", note: "21 studies; positive associations with physical activity and social health, no rise in serious injury. Limitation: mostly low/moderate quality observational designs. [Moderate — systematic review]", link: "https://doi.org/10.3390/ijerph120606423", kind: "doi" },
+    ],
+  },
+  {
+    id: "outdoor-recreation-veteran-ptsd", section: "4831", title: "Group Outdoor Recreation for Veteran PTSD", subtitle: "practice: 'Bolsters clusters: Emotional, Community, Existential'",
+    evidenceTag: "Moderate",
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    feeds: ["Emotional", "Community", "Existential"],
+    description: "Multi-day group nature-recreation trips (fly-fishing, backpacking, paddling) for veterans show consistent short-term gains: Duvall & Kaplan (2014) found >10% improvement in psychological well-being and ~9% in social functioning one week post-trip across 98 veterans; Vella (2013) reported acute improvements in mood, attention, anxiety and depression after a 2-day fly-fishing trip. A UK waitlist-controlled RCT (Wheeler 2020) found a brief group angling experience significantly reduced PTSD symptoms vs. controls at 2 weeks with a large effect size.",
+    callout: "Mostly small pilots with short follow-up; the one RCT is tiny (n=18 in the trial arm). Benefits confound nature, exercise, novelty, and peer camaraderie — the social/peer element may matter as much as the wilderness. Educational, not medical advice.",
+    sources: [
+      { cite: "Duvall, J., & Kaplan, R. (2014). Enhancing the well-being of veterans using extended group-based nature recreation experiences. Journal of Rehabilitation Research and Development, 51(5), 685-696.", note: "98 veterans; >10% gain in well-being, ~9% in social functioning one week post-trip, partly retained at 1 month. Limitation: uncontrolled pre-post. [Moderate]", link: "https://doi.org/10.1682/JRRD.2013.08.0190", kind: "doi" },
+      { cite: "Wheeler, M., Cooper, N. R., Andrews, L., et al. (2020). Outdoor recreational activity experiences improve psychological wellbeing of military veterans with PTSD: Positive findings from a pilot study and a randomised controlled trial. PLoS ONE, 15(11), e0241763.", note: "Waitlist-controlled RCT: brief group angling significantly reduced PTSD symptoms at 2 weeks, large effect. Limitation: very small trial (n=18), short follow-up. [Moderate — RCT]", link: "https://doi.org/10.1371/journal.pone.0241763", kind: "doi" },
+      { cite: "Vella, E. J., Milligan, B., & Bennett, J. L. (2013). Participation in outdoor recreation program predicts improved psychosocial well-being among veterans with post-traumatic stress disorder: A pilot study. Military Medicine, 178(3), 254-260.", note: "2-day fly-fishing trip produced acute improvements in mood, attention, anxiety, depression. Limitation: pilot, no control group. [Emerging]", link: scholar("Vella Milligan Bennett 2013 outdoor recreation veterans PTSD Military Medicine"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "adventure-education-outward-bound", section: "4832", title: "Adventure Education / Outward Bound & Self-Concept", subtitle: "practice: 'Bolsters clusters: Volitional, Intrapersonal, Leadership'",
+    evidenceTag: "Moderate",
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "high" },
+    feeds: ["Volitional", "Intrapersonal", "Leadership"],
+    description: "A large meta-analysis of adventure/wilderness expedition programs (1,728 effect sizes, 96 studies) found an average end-of-program effect of d≈0.34 on outcomes like self-concept, locus of control, and leadership — and, unusually, gains kept growing after the program ended (a further d≈0.17 to follow-up), rather than washing out (Hattie 1997). Longer programs and older participants produced larger effects.",
+    callout: "Older meta with wide heterogeneity, many uncontrolled pre-post designs, and likely publication bias; d≈0.34 is a modest average that hides programs with little or no effect. 'Adventure education' is a broad label — quality of facilitation, not the wilderness alone, drives results.",
+    sources: [
+      { cite: "Hattie, J., Marsh, H. W., Neill, J. T., & Richards, G. E. (1997). Adventure education and Outward Bound: Out-of-class experiences that make a lasting difference. Review of Educational Research, 67(1), 43-87.", note: "Mean ES 0.34 end-of-program, with continued gains (0.17) to follow-up — rare for educational interventions. Limitation: heterogeneous, many weak designs, dated. [Moderate — meta-analysis]", link: "https://doi.org/10.3102/00346543067001043", kind: "doi" },
+    ],
+  },
+  {
+    id: "long-distance-walking-pilgrimage", section: "4833", title: "Long-Distance Walking / Pilgrimage (the Camino)", subtitle: "practice: 'Bolsters clusters: Existential, Emotional, Community'",
+    evidenceTag: "Emerging",
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "high" },
+    feeds: ["Existential", "Emotional", "Community"],
+    description: "A systematic scoping review (26 studies) found long-distance walking most consistently reduces emotional distress, with less consistent effects on positive well-being (Timmermann 2021). The longitudinal Ultreya study of Camino de Santiago pilgrims found reduced psychological distress and higher subjective well-being after the walk, exceeding a non-pilgrimage vacation comparison group, with shifts in 'valued living' mediating gains (Feliu-Soler et al.). The proposed active ingredients are rhythmic walking, sustained nature exposure, and spontaneous community on the trail.",
+    callout: "Much of the base is qualitative or uncontrolled pre-post; the multi-week journey confounds exercise, nature, social bonding, novelty and spiritual meaning, so no single factor is isolated. Self-selected pilgrims are highly motivated. Educational, not medical advice.",
+    sources: [
+      { cite: "Timmermann, C., Uhrenfeldt, L., Høybye, M. T., & Birkelund, R. (2021). Are long-distance walks therapeutic? A systematic scoping review of the conceptualization of long-distance walking and its relation to mental health. International Journal of Environmental Research and Public Health, 18(15), 7741.", note: "26 studies; most consistent benefit for emotional distress, mixed for well-being. Limitation: heterogeneous, many qualitative/uncontrolled. [Emerging — scoping review]", link: "https://doi.org/10.3390/ijerph18157741", kind: "doi" },
+      { cite: "Feliu-Soler, A., Royuela-Colomer, E., Navarrete, J., et al. Assessing the impact of the Way of Saint James on psychological distress and subjective well-being: The Ultreya study.", note: "Longitudinal pilgrim cohort; distress fell and well-being rose vs. a vacation control, mediated by valued living. Limitation: self-selected, non-randomized comparison. [Emerging]", link: scholar("Feliu-Soler Ultreya study Way of Saint James psychological distress subjective well-being pilgrimage"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "backpacking-creativity-three-day", section: "4834", title: "Backpacking & the 'Three-Day Effect' on Creativity", subtitle: "practice: 'Bolsters clusters: Creative, Pattern-Recognition, Meta-Cognitive'",
+    evidenceTag: "Emerging",
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "high" },
+    feeds: ["Creative", "Pattern-Recognition", "Meta-Cognitive"],
+    description: "Participants tested on the morning of day four of a 4–6 day Outward Bound backpacking trip (no electronics) scored ~50% higher on the Remote Associates Test of creative problem-solving than a group tested before their trip (Atchley 2012, PLoS ONE). The proposed mechanism is restoration of directed-attention resources after several days immersed in nature and unplugged from technology.",
+    callout: "Between-subjects design (24 pre-trip vs. 32 on day 4), not a within-person before/after with a control group, so selection and the confound of digital-device deprivation can't be separated from 'nature' itself. Genuinely striking but methodologically thin — treat the '+50%' as suggestive, not established.",
+    sources: [
+      { cite: "Atchley, R. A., Strayer, D. L., & Atchley, P. (2012). Creativity in the wild: Improving creative reasoning through immersion in natural settings. PLoS ONE, 7(12), e51474.", note: "~50% higher RAT scores after 4 days backpacking. Limitation: between-subjects (no true control), nature confounded with device abstinence. [Emerging]", link: "https://doi.org/10.1371/journal.pone.0051474", kind: "doi" },
+    ],
+  },
+  {
+    id: "peak-end-designing-experiences", section: "4835", title: "Peak-End Rule — Engineer the Highs and the Ending", subtitle: "practice: 'Bolsters clusters: remembered wellbeing, savoring, experience design, choice quality'",
+    evidenceTag: "Strong",
+    impact: { magnitude: 3, latency: "days", durability: "lasting", effort: "low" },
+    feeds: ["Meta-Cognitive", "Emotional", "Aesthetic", "Strategic", "Interpersonal"],
+    description: "How we remember an experience is dominated by its most intense moment (peak) and how it ends, with the total duration largely ignored ('duration neglect'). In Redelmeier & Kahneman's randomized colonoscopy trial, simply adding a few extra minutes of milder discomfort at the end improved patients' memory of the whole procedure and their willingness to return — worse total pain, better remembered pain. The lever for leisure: front-load a genuine peak and end on a high note, and the trip/party/concert is remembered as better than its minute-by-minute average.",
+    callout: "Double-edged: because remembered utility ≠ experienced utility, the same bias makes us re-choose experiences that were objectively worse. Boundary conditions exist (the rule is weaker for some multi-episode or long pleasant events), so it's a reliable heuristic, not a law.",
+    sources: [
+      { cite: "Redelmeier, D. A., & Kahneman, D. (1996). Patients' memories of painful medical treatments: Real-time and retrospective evaluations of two minimally invasive procedures. Pain, 66(1), 3–8.", note: "Randomized trial: a gentler, extended ending improved remembered pain despite more total pain — peak-end + duration neglect. [Strong — RCT of the effect]", link: scholar("Redelmeier Kahneman 1996 patients memories painful medical treatments colonoscopy Pain"), kind: "scholar" },
+      { cite: "Fredrickson, B. L., & Kahneman, D. (1993). Duration neglect in retrospective evaluations of affective episodes. Journal of Personality and Social Psychology, 65(1), 45–55.", note: "Retrospective evaluations track peak and end affect, not duration, for both pleasant and unpleasant film clips. [Strong — foundational experiments]", link: scholar("Fredrickson Kahneman 1993 duration neglect retrospective evaluations affective episodes"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "creative-hobby-recovery-performance", section: "4836", title: "Off-Hours Creative Hobbies Aid Recovery & Next-Day Work", subtitle: "practice: 'Bolsters clusters: Creative, work recovery, mastery, positive affect'",
+    evidenceTag: "Moderate",
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    feeds: ["Creative", "Emotional", "Volitional", "Intrapersonal"],
+    description: "In two field studies, employees who engaged in non-work creative activity (music, art, writing, crafts) reported better recovery experiences — mastery and control especially — which in turn predicted more organizational citizenship behavior and creative problem-solving at work (Eschleman et al., 2014). The proposed mechanism is that creative leisure supplies experiences of mastery and discovery that restore depleted resources rather than just relaxing.",
+    callout: "Largely correlational and self-report with plausible reverse causation (energized, recovered people take up creative hobbies more) and common-method bias; the causal 'do-a-hobby-to-perform-better' claim is not established. Distinct from next-day-flourishing diary findings — this is the work-recovery/performance angle.",
+    sources: [
+      { cite: "Eschleman, K. J., Madsen, J., Alarcon, G., & Barelka, A. (2014). Benefiting from creative activity: The positive relationships between creative activity, recovery experiences, and performance-related outcomes. Journal of Occupational and Organizational Psychology, 87(3), 579–598.", note: "Creative leisure linked to recovery (esp. mastery/control) and to citizenship + creative performance across two samples. Cross-sectional/self-report; reverse causation plausible. [Moderate]", link: "https://doi.org/10.1111/joop.12064", kind: "doi" },
+    ],
+  },
+  {
+    id: "dramma-why-leisure-works", section: "4837", title: "Why Leisure Helps — The DRAMMA Needs", subtitle: "practice: 'Bolsters clusters: detachment-recovery, autonomy, mastery, meaning, affiliation'",
+    evidenceTag: "Moderate",
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    feeds: ["Emotional", "Intrapersonal", "Volitional", "Community", "Existential", "Meta-Cognitive"],
+    description: "Synthesizing 363 studies, Newman, Tay & Diener (2014) argue leisure raises wellbeing through six psychological mechanisms — Detachment-recovery, Relaxation, Autonomy, Mastery, Meaning, and Affiliation (DRAMMA) — not through 'free time' per se. The model reframes hobbies/travel/play as delivery vehicles for needs; activities that satisfy more of these needs (a challenging group hobby vs passive scrolling) do more work. Later longitudinal studies support the needs as mediators.",
+    callout: "A mediating-mechanisms synthesis built largely on cross-sectional and self-report studies; it explains WHY leisure tends to help but is not a dosing prescription, and effect sizes for any single mechanism are moderate at best.",
+    sources: [
+      { cite: "Newman, D. B., Tay, L., & Diener, E. (2014). Leisure and subjective well-being: A model of psychological mechanisms as mediating factors. Journal of Happiness Studies, 15(3), 555–578.", note: "Introduces the DRAMMA model from a synthesis of 363 articles. Theoretical synthesis of mostly cross-sectional evidence. [Moderate]", link: "https://doi.org/10.1007/s10902-013-9435-x", kind: "doi" },
+      { cite: "Kujanpää, M., et al. (2021). Need satisfaction and optimal functioning at leisure and work: A longitudinal validation of the DRAMMA model. Journal of Happiness Studies, 22, 681–707.", note: "Longitudinal test supporting DRAMMA needs as mediators between leisure and wellbeing. [Moderate — longitudinal, self-report]", link: scholar("Kujanpaa 2021 longitudinal validation DRAMMA model need satisfaction leisure"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "holiday-paradox-novelty-time", section: "4838", title: "The Holiday Paradox — Novelty Expands Remembered Time", subtitle: "practice: 'Bolsters clusters: savoring, felt richness of life, meaning, remembered time'",
+    evidenceTag: "Emerging",
+    impact: { magnitude: 2, latency: "days", durability: "lasting", effort: "moderate" },
+    feeds: ["Aesthetic", "Existential", "Emotional", "Meta-Cognitive"],
+    description: "Novel, varied experiences feel to fly by in the moment yet are remembered as having lasted longer and richer, while routine time is remembered as compressed — the everyday explanation for why a week of travel outweighs months of sameness in memory. Avni-Babad & Ritov (2003) showed experimentally that a period spent in routine is retrospectively judged shorter than an equivalent period filled with novel activity. Packing calendars with first-time, distinct experiences is a lever on how long and full life feels in hindsight.",
+    callout: "Mostly lab retrospective-duration studies plus popular ('holiday paradox') extrapolation; the real-world memory-expansion claim is thin and confounded with mood and encoding. Novelty also makes in-the-moment time pass faster, so it's a trade between felt and remembered duration.",
+    sources: [
+      { cite: "Avni-Babad, D., & Ritov, I. (2003). Routine and the perception of time. Journal of Experimental Psychology: General, 132(4), 543–550.", note: "Routine periods are retrospectively judged as shorter than novel ones — the mechanism behind 'novelty expands remembered time.' Lab duration judgments; not real-world vacations. [Emerging]", link: scholar("Avni-Babad Ritov 2003 routine and the perception of time JEP General"), kind: "scholar" },
+    ],
+  },
+  {
+    id: "video-games-wellbeing-honest", section: "4839", title: "Video Games & Wellbeing — The Honest Small Effect", subtitle: "practice: 'Bolsters clusters: positive affect, social connection, competence-need'",
+    evidenceTag: "Mixed",
+    impact: { magnitude: 1, latency: "days", durability: "transient", effort: "low" },
+    feeds: ["Emotional", "Community", "Pattern-Recognition"],
+    description: "Using objective play-time telemetry from publishers rather than self-report, Oxford researchers found play time is, at most, trivially related to wellbeing: a tiny positive cross-sectional correlation in one title-set (Johannes, Vuorre & Przybylski, 2021), and no meaningful within-person causal effect of time played over six weeks in a larger follow-up (Vuorre et al., 2022). The motivational quality of play (autonomy and competence satisfaction vs frustration/escapism) matters far more than the number of hours.",
+    callout: "The headline is a null-to-tiny effect either way — games are neither the wellbeing tonic nor the menace both camps claim. The genuine risk sits in the pathological-use tail (Internet Gaming Disorder), and need-frustrated escapist play is distinct from autonomous play.",
+    sources: [
+      { cite: "Johannes, N., Vuorre, M., & Przybylski, A. K. (2021). Video game play is positively correlated with well-being. Royal Society Open Science, 8(2), 202049.", note: "Objective telemetry from two games: small positive association of play time with wellbeing; motivation dominates time. Cross-sectional, two titles. [Mixed]", link: "https://doi.org/10.1098/rsos.202049", kind: "doi" },
+      { cite: "Vuorre, M., Johannes, N., Magnusson, K., & Przybylski, A. K. (2022). Time spent playing video games is unlikely to impact well-being. Royal Society Open Science, 9(7), 220411.", note: "Six-week within-person telemetry across seven games: no evidence that changes in play time meaningfully affect wellbeing in either direction. [Mixed — strong design, null]", link: "https://doi.org/10.1098/rsos.220411", kind: "doi" },
+    ],
+  },
+  {
+    id: "adventure-extreme-sport-transformation", section: "4840", title: "Adventure & Extreme Sports — Fear as Fuel", subtitle: "practice: 'Bolsters clusters: positive emotion, self-transcendence, courage, nature connection'",
+    evidenceTag: "Emerging",
+    impact: { magnitude: 2, latency: "days", durability: "sustained", effort: "high" },
+    feeds: ["Emotional", "Existential", "Bodily", "Interoceptive", "Naturalist", "Volitional"],
+    description: "Contrary to the 'death-wish adrenaline junkie' stereotype, phenomenological studies of experienced extreme-sport athletes (BASE jumping, big-wave surfing, solo climbing) find fear is deliberately engaged and reframed as a source of focus, humility, courage, and self-transformation, alongside a profound sense of freedom and oneness with nature (Brymer & Schweitzer, 2013). Participants describe lasting positive carryover into everyday wellbeing.",
+    callout: "Qualitative, small self-selected samples of elite practitioners — no control group and no causal claim; survivorship bias is literal here, and these pursuits carry real risk of serious injury and death. Not a recommendation to take physical risks; educational only.",
+    sources: [
+      { cite: "Brymer, E., & Schweitzer, R. (2013). Extreme sports are good for your health: A phenomenological understanding of fear and anxiety in extreme sport. Journal of Health Psychology, 18(4), 477–487.", note: "Interpretive phenomenology (n=15): fear integrated as meaningful and transformative rather than pathological. Qualitative, self-selected, no controls. [Emerging]", link: "https://doi.org/10.1177/1359105312446770", kind: "doi" },
+    ],
+  },
+];
+
 export const PRACTICE_EVIDENCE: PracticeCluster[] = [
   ...PE_0,
   ...PE_1,
@@ -59276,5 +59586,6 @@ export const PRACTICE_EVIDENCE: PracticeCluster[] = [
   ...PE_w4708,
   ...PE_w4742,
   ...PE_w4778,
+  ...PE_w4815,
 ];;
 

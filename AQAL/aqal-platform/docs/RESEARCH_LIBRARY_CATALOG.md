@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,856 clusters · 9,641 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,882 clusters · 9,686 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,320 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,380 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,095 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,344 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,381 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,096 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,856** |
+| **Total** | **4,882** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,236 |
-| Strong | 1,286 |
-| Mixed | 739 |
-| Emerging | 595 |
+| Moderate | 2,246 |
+| Strong | 1,290 |
+| Mixed | 743 |
+| Emerging | 603 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,320)
+## PRACTICES — what strengthens the mind (impact lens)  (2,344)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2347,8 +2347,32 @@
 | 4806 | Unconditional Self-Acceptance (REBT/Ellis) vs Rating Your Worth | 3 | Emerging | 2 | Bolsters clusters: Intrapersonal, Meta-Cognitive, Emotional |
 | 4807 | Values-Affirmation for Achievement Gaps — Real in Lab, Inconsistent in the Field | 2 | Mixed | 2 | Bolsters clusters: Intrapersonal, Emotional, Meta-Cognitive |
 | 4808 | Self-Compassion & Lower Stress-Induced Inflammation (IL-6) | 2 | Emerging | 1 | Bolsters clusters: Interoceptive, Emotional, Intrapersonal |
+| 4815 | Number Board Games With Kids | 3 | Strong | 2 | practice: 'Bolsters clusters: Mathematical, Parental, Logical' |
+| 4816 | Family Routines & Rituals | 3 | Moderate | 2 | practice: 'Bolsters clusters: Parental, Community, Emotional, Existential' |
+| 4817 | The Bedtime Story Routine (Frequency of Reading Together) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Parental, Aesthetic' |
+| 4818 | "Do You Know?" — Knowing Your Family's Stories | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Emotional, Intrapersonal, Parental' |
+| 4819 | Playing WITH Your Child (Physical & Rough-and-Tumble) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Parental, Bodily, Emotional, Social-Perceptual' |
+| 4820 | Telling Family Stories Across Generations | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Linguistic, Emotional, Intrapersonal' |
+| 4821 | Cooking & Baking Together | 2 | Mixed | 2 | practice: 'Bolsters clusters: Parental, Bodily, Naturalist, Interpersonal' |
+| 4822 | Family Vacations & Trips Together | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Emotional, Interpersonal, Existential' |
+| 4823 | Serving & Volunteering as a Family | 2 | Emerging | 2 | practice: 'Bolsters clusters: Moral, Community, Parental, Existential' |
+| 4824 | Shared Family Leisure (Core & Balance) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Emotional, Parental' |
+| 4827 | Camping Resets the Circadian Clock | 4 | Strong | 2 | practice: 'Bolsters clusters: Interoceptive, Bodily, Emotional' |
+| 4828 | A Nature Walk Quiets Rumination (Subgenual PFC) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive, Intrapersonal' |
+| 4829 | Nature-Grandeur Awe → Small Self & Prosociality | 3 | Moderate | 1 | practice: 'Bolsters clusters: Moral, Community, Existential' |
+| 4830 | Risky / Adventurous Outdoor Play & Child Development | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Volitional, Social-Perceptual' |
+| 4831 | Group Outdoor Recreation for Veteran PTSD | 3 | Moderate | 3 | practice: 'Bolsters clusters: Emotional, Community, Existential' |
+| 4832 | Adventure Education / Outward Bound & Self-Concept | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Intrapersonal, Leadership' |
+| 4833 | Long-Distance Walking / Pilgrimage (the Camino) | 3 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Emotional, Community' |
+| 4834 | Backpacking & the 'Three-Day Effect' on Creativity | 2 | Emerging | 1 | practice: 'Bolsters clusters: Creative, Pattern-Recognition, Meta-Cognitive' |
+| 4835 | Peak-End Rule — Engineer the Highs and the Ending | 3 | Strong | 2 | practice: 'Bolsters clusters: remembered wellbeing, savoring, experience design, |
+| 4836 | Off-Hours Creative Hobbies Aid Recovery & Next-Day Work | 3 | Moderate | 1 | practice: 'Bolsters clusters: Creative, work recovery, mastery, positive affect' |
+| 4837 | Why Leisure Helps — The DRAMMA Needs | 3 | Moderate | 2 | practice: 'Bolsters clusters: detachment-recovery, autonomy, mastery, meaning, a |
+| 4838 | The Holiday Paradox — Novelty Expands Remembered Time | 2 | Emerging | 1 | practice: 'Bolsters clusters: savoring, felt richness of life, meaning, remember |
+| 4839 | Video Games & Wellbeing — The Honest Small Effect | 1 | Mixed | 2 | practice: 'Bolsters clusters: positive affect, social connection, competence-nee |
+| 4840 | Adventure & Extreme Sports — Fear as Fuel | 2 | Emerging | 1 | practice: 'Bolsters clusters: positive emotion, self-transcendence, courage, nat |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,380)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,381)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3732,8 +3756,9 @@
 | 4812 | Global Self-Esteem Boosting as a Goal — Doesn't Deliver | 3 | Strong | 2 | Degrades: Meta-Cognitive, Intrapersonal, Volitional |
 | 4813 | Self-Enhancement / Positive Illusions — Social & Adjustment Costs | 3 | Mixed | 2 | Degrades: Interpersonal, Social-Perceptual, Meta-Cognitive |
 | 4814 | The 'Narcissism Epidemic' Claim — Contested, Not Settled | 2 | Mixed | 2 | Degrades: Interpersonal, Moral, Social-Perceptual |
+| 4825 | Household Chaos (Noise, Disorder, No Routine) | 5 | Moderate | 2 | weakness: 'Degrades: Volitional, Meta-Cognitive, Emotional self-regulation in ch |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,095)
+## COST OF FAILURE — what's at stake (harm lens)  (1,096)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4832,6 +4857,7 @@
 | 4766 | Heat & Aggression / Violent Crime | 4 | Strong | 2 | cost: 'Degrades: Emotional regulation, Moral, Interpersonal, Volitional' |
 | 4767 | Heat & Cognitive/Academic Performance | 3 | Strong | 1 | cost: 'Degrades: Meta-Cognitive focus, Mathematical, Linguistic, Logical, Financ |
 | 4768 | Daylight Saving Time Spring Transition — Health & Safety Cost | 3 | Moderate | 2 | cost: 'Degrades: Interoceptive circadian alignment, Bodily cardiovascular, Meta- |
+| 4826 | High-Altitude Mountaineering — Objective Hazard & Mortality | 5 | Strong | 2 | cost: 'Degrades: Bodily, Interoceptive' |
 
 ## Framework / uncategorized  (61)
 
