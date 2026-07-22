@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,918 clusters · 9,746 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,956 clusters · 9,811 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,375 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,386 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,409 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,390 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,096 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,918** |
+| **Total** | **4,956** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,259 |
-| Strong | 1,292 |
-| Mixed | 748 |
-| Emerging | 619 |
+| Moderate | 2,274 |
+| Strong | 1,294 |
+| Mixed | 762 |
+| Emerging | 626 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,375)
+## PRACTICES — what strengthens the mind (impact lens)  (2,409)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2402,8 +2402,42 @@
 | 4874 | Sisu — Finnish Fortitude Under Extreme Adversity (Lahti) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Adversarial grit, Volitional action, Existential e |
 | 4875 | Ultra-Endurance Events & Meaning / Identity | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential meaning, Intrapersonal identity, Commu |
 | 4876 | Misogi / One Hard Thing a Year (Popular, Anecdotal) | 1 | Emerging | 2 | practice: 'Bolsters clusters: Adversarial confidence, Existential perspective, V |
+| 4877 | Personal Control Over Your Workspace | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Intrapersonal, Systemic' |
+| 4878 | Personal Space & Proxemics | 2 | Moderate | 2 | practice: 'Bolsters clusters: Social-Perceptual, Interpersonal, Spatial' |
+| 4879 | Curved vs. Angular Interiors | 2 | Moderate | 2 | practice: 'Bolsters clusters: Aesthetic, Emotional, Creative' |
+| 4880 | Prospect-Refuge (Outlook + Shelter) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Aesthetic, Spatial, Emotional' |
+| 4881 | Baker-Miller 'Drunk-Tank' Pink | 1 | Mixed | 1 | practice: 'Bolsters clusters: Emotional (claimed calming — NOT supported)' |
+| 4882 | Place Attachment & Belonging | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Intrapersonal, Existential' |
+| 4883 | The 'Red Effect' on Attraction & Performance | 1 | Mixed | 3 | practice: 'Bolsters clusters: Seductive, Aesthetic (largely OVERSTATED)' |
+| 4884 | Awe-Inspiring / Sacred Architecture & Self-Transcendence | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Aesthetic, Emotional' |
+| 4885 | CPTED / Defensible Space & Crime | 3 | Mixed | 2 | practice: 'Bolsters clusters: Systemic, Adversarial, Community, Spatial' |
+| 4886 | Single Patient Rooms & Evidence-Based Hospital Design | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Systemic' |
+| 4887 | Feng Shui (Qi-Based Arrangement) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Aesthetic, Spatial (specific claims NOT supported) |
+| 4890 | Retronasal Smell — Where Flavor Actually Comes From | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interoceptive, Aesthetic taste, appetite awareness |
+| 4891 | Silexan (Oral Lavender Oil) for Anxiety | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Interoceptive' |
+| 4892 | Odor Likes/Dislikes Are Mostly Learned | 2 | Moderate | 2 | practice: 'Bolsters clusters: Aesthetic, Emotional, Meta-Cognitive insight' |
+| 4893 | Olfactory Training for Smell Loss | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interoceptive, Aesthetic, Bodily recovery' |
+| 4894 | Odor-Evoked Autobiographical Memory (Proust Effect) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Existential meaning' |
+| 4895 | A Partner's Natural Scent Lowers Stress | 2 | Emerging | 1 | practice: 'Bolsters clusters: Emotional regulation, Interpersonal bonding' |
+| 4896 | Ambient Odor as a Context Cue for Recall | 2 | Mixed | 2 | practice: 'Bolsters clusters: Linguistic recall, Meta-Cognitive study strategy' |
+| 4897 | Emotional Chemosignals in Sweat (Smelling Fear) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Social-Perceptual, Emotional attunement' |
+| 4898 | Lavender Scent for Sleep | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive calm, Emotional, sleep quality' |
+| 4899 | Human Pheromones & Menstrual 'Synchrony' (Debunked) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive skepticism (as a debunk)' |
+| 4900 | Inhaled Aromatherapy for Anxiety (Honest Rating) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Emotional (weakly), Interoceptive' |
+| 4901 | Building a Scent as a Conditioned Calm Cue | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional regulation, Interoceptive, Volitional' |
+| 4903 | Affective Touch & the CT-Afferent System | 3 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional, Social-Perceptua |
+| 4904 | Affectionate Touch & Relationship Well-Being | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Emotional, Parental, Bodily' |
+| 4905 | P6 (Nei-Guan) Acupressure Wristbands for Nausea | 3 | Moderate | 1 | practice: 'Bolsters clusters: Interoceptive, Bodily' |
+| 4906 | Infant Carrying / Babywearing to Reduce Crying | 3 | Moderate | 2 | practice: 'Bolsters clusters: Parental, Bodily, Emotional' |
+| 4907 | Preterm Infant Massage (Moderate-Pressure) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Parental, Interoceptive' |
+| 4908 | Percussive Massage Devices (Massage Guns) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 4909 | Cupping Therapy for Pain | 1 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Emotional' — weakly, low-quality evidence |
+| 4910 | Reflexology (Foot/Hand Organ-Mapping) | 1 | Mixed | 1 | practice: 'Bolsters clusters: Emotional' — via relaxation only |
+| 4911 | Therapeutic Touch (Energy-Field Healing) | 1 | Mixed | 1 | practice: 'Bolsters clusters: Emotional' — but effectively placebo only |
+| 4912 | Manual Lymphatic Drainage for Lymphedema | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 4913 | Spinal Manipulation / Chiropractic for Low-Back Pain | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,386)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,390)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3793,6 +3827,10 @@
 | 4850 | Advertising-Driven Material Desire (Youth) | 3 | Emerging | 1 | weakness: 'Degrades: Financial, Existential, Intrapersonal' |
 | 4851 | Gift-Giving Price Miscalibration | 3 | Moderate | 1 | weakness: 'Degrades: Financial, Interpersonal, Social-Perceptual' |
 | 4863 | Fading Hands — Declining Manual Strength & Craft De-Skilling | 3 | Mixed | 2 | weakness: 'Degrades: Mechanical, Bodily' |
+| 4888 | Residential Crowding (People-Per-Room) | 5 | Moderate | 3 | weakness: 'Degrades: Emotional, Interpersonal, Intrapersonal, Parental' |
+| 4889 | Cluttered / Unfinished Home & Stress Physiology | 3 | Emerging | 1 | weakness: 'Degrades: Emotional, Intrapersonal, Interoceptive' |
+| 4902 | Smell Loss as an Early Sign of Neurodegeneration | 6 | Strong | 2 | weakness: 'Degrades: Interoceptive, Aesthetic, Meta-Cognitive' |
+| 4914 | Touch Deprivation ('Skin Hunger') | 4 | Emerging | 2 | weakness: 'Degrades: Emotional, Interoceptive, Interpersonal, Bodily' |
 
 ## COST OF FAILURE — what's at stake (harm lens)  (1,096)
 
