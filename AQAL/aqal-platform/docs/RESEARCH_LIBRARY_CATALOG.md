@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,159 clusters · 8,436 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,197 clusters · 8,508 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,783 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,269 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,046 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,814 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,275 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,047 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,159** |
+| **Total** | **4,197** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,911 |
-| Strong | 1,134 |
-| Mixed | 595 |
-| Emerging | 519 |
+| Moderate | 1,932 |
+| Strong | 1,138 |
+| Mixed | 602 |
+| Emerging | 525 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,783)
+## PRACTICES — what strengthens the mind (impact lens)  (1,814)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1810,8 +1810,39 @@
 | 4102 | Ramadan Diurnal Intermittent Fasting | 2 | Mixed | 2 | practice: 'Bolsters clusters: Body Composition, Lipid Profile, Metabolic Syndrom |
 | 4103 | Senolytics — Clearing Senescent 'Zombie' Cells | 2 | Emerging | 2 | practice: 'Bolsters clusters: Cellular Senescence, Inflammaging, Geroscience Int |
 | 4104 | Short-Term / Fasting-Mimicking Diet During Chemotherapy | 2 | Emerging | 2 | practice: 'Bolsters clusters: Chemotherapy Tolerance, Oncology Supportive Care,  |
+| 4118 | Low-FODMAP Diet for IBS | 3 | Strong | 1 | practice: 'Bolsters clusters: Interoceptive, Bodily, gut comfort' |
+| 4119 | Whole-Diet Improvement for Depression (SMILES) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Meta-Cognitive' |
+| 4120 | Black Tea & All-Cause Mortality | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, longevity, cardiovascular health' |
+| 4121 | Fruit & Vegetable Intake for Wellbeing | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Naturalist' |
+| 4122 | Mediterranean Diet, Endothelial & Erectile Function | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, vascular health' |
+| 4123 | Low-Fat Vegan Diet for Type 2 Diabetes Control | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, glycemic control, Volitional' |
+| 4124 | Mushroom Consumption & Cognitive Aging | 2 | Emerging | 1 | practice: 'Bolsters clusters: Naturalist, Meta-Cognitive, cognitive resilience' |
+| 4125 | Total & Whole-Fat Dairy — The Honest Picture | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, cardiovascular health, diet quality' |
+| 4126 | DASH Dietary Pattern & Gout Risk | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, metabolic health' |
+| 4127 | Mediterranean Diet & Rheumatoid Arthritis | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, inflammation control' |
+| 4128 | Mediterranean Diet in Pregnancy (Gestational Diabetes) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Parental, metabolic health' |
+| 4129 | Gluten-Free Diet in Non-Celiac Adults (Honest: No Benefit) | 1 | Mixed | 1 | practice: 'Bolsters clusters: (none demonstrated) — honest null' |
+| 4131 | Applied Relaxation (Ost) | 3 | Strong | 2 | practice: 'Bolsters clusters: Breathwork / Slow-Paced Breathing, Progressive Mus |
+| 4133 | Emotion Coaching (Parental Meta-Emotion Philosophy) | 3 | Moderate | 3 | practice: 'Bolsters clusters: child self-regulation, emotional competence, secur |
+| 4134 | Match Reappraisal to Controllability (Change What You Can) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Reappraisal vs. Suppression, Regulatory Flexibilit |
+| 4135 | Regulatory Flexibility (Context-Sensitive Emotion Regulation) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Reappraisal vs. Suppression, Emotion-Regulation Ch |
+| 4136 | Emotion Malleability Beliefs (Growth Mindset of Emotion) | 2 | Moderate | 3 | practice: 'Bolsters clusters: Reappraisal vs. Suppression, effortful emotion reg |
+| 4137 | Best Possible Self (Positive Future Imagery) | 2 | Moderate | 3 | practice: 'Bolsters clusters: Optimism & Explanatory Style, positive affect, Sav |
+| 4138 | Emotional Freedom Technique (Tapping) - Honest Skeptic | 2 | Mixed | 3 | practice: 'Bolsters clusters (weakly/nonspecifically): anxiety reduction, PTSD s |
+| 4139 | Autogenic Training (Self-Suggested Relaxation) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Applied Relaxation, Breathwork / Slow-Paced Breath |
+| 4140 | Emotional Approach Coping (Processing and Expressing, Not Avoiding) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Acceptance as an Emotion-Regulation Strategy, Expr |
+| 4143 | Compassion Cultivation Training (CCT, Stanford) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Moral, Interpersonal warmth' |
+| 4144 | Positive Affect Skills Program (Moskowitz IRISS/LARKSPUR) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, coping in chronic illnes |
+| 4145 | Strengths Use at Work & Work Engagement | 2 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Entrepreneurial, engagement, positive  |
+| 4146 | Positive Psychology Interventions — Overall Efficacy & the Shrinkage Problem | 3 | Mixed | 4 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Existential wellbeing' |
+| 4147 | Psychological Capital (PsyCap / PCI) Intervention | 2 | Moderate | 2 | practice: 'Bolsters clusters: hope, optimism, resilience, self-efficacy at work' |
+| 4148 | Gratitude Journaling in Cardiac / Heart-Failure Patients | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive calm, Emotional, cardiac markers' |
+| 4149 | Smartphone- & Web-Delivered Positive Psychology Interventions | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional wellbeing at scale, low-cost access' |
+| 4150 | Penn Resiliency Program (School-Based Depression Prevention) | 2 | Mixed | 2 | practice: 'Bolsters clusters: explanatory style, resilience, adolescent mood' |
+| 4151 | Quality of Life Therapy (Frisch, CASIO Model) | 2 | Emerging | 2 | practice: 'Bolsters clusters: life satisfaction, Existential, domain-specific we |
+| 4152 | Fordyce's 14 Fundamentals Happiness Program | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Interpersonal, activity engagement' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,269)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,275)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3084,8 +3115,14 @@
 | 4033 | Parkinson's Law — Work Expands to Fill the Time Given | 4 | Emerging | 1 | weakness: 'Degrades: Strategic, Volitional, efficiency' |
 | 4034 | Precrastination — Rushing Subgoals at Extra Cost | 4 | Emerging | 1 | weakness: 'Degrades: Strategic, Meta-Cognitive, efficient sequencing' |
 | 4062 | Functional Unblinding — Methodological Threat Across Psychedelic Trials | 7 | Strong | 1 | Degrades: Existential, Emotional, Meta-Cognitive |
+| 4130 | Pro-Inflammatory Diet (High Dietary Inflammatory Index) | 4 | Mixed | 1 | weakness: 'Degrades: Emotional, Interoceptive' |
+| 4141 | Surface Acting (Faking Emotions at Work) | 6 | Strong | 2 | weakness: 'Degrades: Emotional, Interpersonal, Intrapersonal' |
+| 4142 | Dampening of Positive Affect | 5 | Moderate | 3 | weakness: 'Degrades: Emotional, Intrapersonal, Existential' |
+| 4153 | Character-Strengths Overuse & Underuse (Missing the Golden Mean) | 3 | Moderate | 2 | weakness: 'Degrades: Intrapersonal, Emotional, Interpersonal wellbeing' |
+| 4154 | Toxic Positivity / Forced Positive Framing | 3 | Emerging | 2 | weakness: 'Degrades: Emotional, Interpersonal, Interoceptive honesty' |
+| 4155 | Valuing Happiness Too Much (the Happiness Paradox) | 3 | Moderate | 2 | weakness: 'Degrades: Emotional, Intrapersonal, Existential wellbeing' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,046)
+## COST OF FAILURE — what's at stake (harm lens)  (1,047)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4135,6 +4172,7 @@
 | 4115 | Endocrine-Disrupting Plasticizers (Phthalates & BPA) | 2 | Mixed | 2 | Degrades: Bodily cardiometabolic health, hormonal regulation, Interoceptive home |
 | 4116 | Saturated Fat & Heart Disease (The Honest, Contested Case) | 2 | Mixed | 2 | Degrades: Bodily cardiovascular health (magnitude depends on the replacement) |
 | 4117 | Artificial / Non-Sugar Sweeteners (Aspartame, Sucralose, Ace-K) | 2 | Mixed | 2 | Degrades: Bodily metabolic health, glucose regulation, appetite calibration |
+| 4132 | Venting / Catharsis for Anger (Debunked) | 3 | Strong | 2 | cost: 'Degrades: Anger down-regulation, Impulse control, Conflict de-escalation' |
 
 ## Framework / uncategorized  (61)
 
