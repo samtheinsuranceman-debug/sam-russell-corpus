@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,682 clusters · 7,617 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,721 clusters · 7,682 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,371 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,244 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,006 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,406 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,246 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,008 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,682** |
+| **Total** | **3,721** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,705 |
-| Strong | 1,048 |
-| Mixed | 509 |
-| Emerging | 420 |
+| Moderate | 1,722 |
+| Strong | 1,049 |
+| Mixed | 519 |
+| Emerging | 431 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,371)
+## PRACTICES — what strengthens the mind (impact lens)  (1,406)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1398,8 +1398,43 @@
 | 3638 | Saffron for Retinal Function in Macular Degeneration | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, retinal/visual function' |
 | 3639 | Spermidine for Autophagy & Memory | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, memory, cellular renewal' |
 | 3640 | Low-Dose (Microdose) Lithium for Brain Aging | 1 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive (contested)' |
+| 3641 | Curiosity State Primes the Hippocampus | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Pattern-Recognition, Linguistic' |
+| 3642 | Gesturing While Learning Locks It In | 3 | Moderate | 2 | practice: 'Bolsters clusters: Logical, Meta-Cognitive, Linguistic' |
+| 3643 | Exercise AFTER Studying, Not During | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Pattern-Recognition, Linguistic' |
+| 3644 | Brain-Dump Worries Right Before a High-Stakes Test | 3 | Moderate | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Logical, Linguistic' |
+| 3645 | Walking Boosts Divergent (Not Convergent) Thinking | 3 | Moderate | 1 | practice: 'Bolsters clusters: Creative, Pattern-Recognition, Meta-Cognitive' |
+| 3646 | Reframe Nerves as Fuel (Arousal Reappraisal) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Logical' |
+| 3647 | Binaural Beats for Focus | 2 | Mixed | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Pattern-Recognition, Musical' |
+| 3648 | Looking at Cute Images Narrows Attention | 2 | Emerging | 1 | practice: 'Bolsters clusters: Pattern-Recognition, Meta-Cognitive' |
+| 3649 | Red for Detail, Blue for Creativity (Screen Color) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Pattern-Recognition, Creative' |
+| 3650 | Rosemary/Peppermint Aroma for Alertness & Memory | 2 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Pattern-Recognition' |
+| 3651 | The 'Mozart Effect' Is Mostly Arousal | 1 | Mixed | 2 | practice: 'Bolsters clusters: Musical, Creative (but honestly weak)' |
+| 3652 | The Lab-Coat Effect (Enclothed Cognition) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive' |
+| 3653 | Deciding in a Foreign Language Cuts Bias | 2 | Mixed | 2 | practice: 'Bolsters clusters: Logical, Meta-Cognitive' |
+| 3654 | Warm, Dim Evening Lighting (Low CCT) | 3 | Moderate | 2 | Bolsters clusters: melatonin onset, circadian alignment, sleep |
+| 3655 | Flicker-Free Lighting (Anti-Migraine) | 3 | Moderate | 1 | Bolsters clusters: freedom from headache/eyestrain, visual comfort, sustained wo |
+| 3656 | Quiet Classrooms & Reading Attainment | 3 | Moderate | 2 | Bolsters clusters: reading development, sustained attention, phonological learni |
+| 3657 | Single-Patient Hospital Rooms | 3 | Moderate | 2 | Bolsters clusters: infection control, sleep, recovery, privacy |
+| 3658 | Workplace Window & Daylight Access | 2 | Moderate | 1 | Bolsters clusters: sleep quality, daytime vitality, circadian entrainment |
+| 3659 | 40-Second Green Micro-Breaks | 2 | Moderate | 1 | Bolsters clusters: sustained attention, error reduction, self-regulation |
+| 3660 | High Ceilings & the Cathedral Effect | 2 | Emerging | 1 | Bolsters clusters: abstract/relational processing, creative ideation, spatial co |
+| 3661 | Mid-Range Fractal Patterns (Fractal Fluency) | 2 | Emerging | 2 | Bolsters clusters: physiological stress recovery, aesthetic ease, attention |
+| 3662 | Blue-Enriched Daytime Office Light | 2 | Moderate | 1 | Bolsters clusters: daytime alertness, concentration, mood |
+| 3663 | Legible Spaces & Wayfinding | 2 | Emerging | 2 | Bolsters clusters: stress reduction, cognitive-map formation, autonomy |
+| 3664 | Wall-Color 'Color Psychology' (Mostly Weak) | 1 | Mixed | 2 | Bolsters clusters: (mostly overstated) mood, calm, appetite |
+| 3665 | Blue Space (Waterside Environments) | 2 | Mixed | 2 | Bolsters clusters: mood, stress recovery, restorative attention |
+| 3666 | Visible Wood & Natural-Material Interiors | 2 | Mixed | 2 | Bolsters clusters: parasympathetic tone, calm, perceived comfort |
+| 3667 | Classroom Daylighting & Learning | 2 | Mixed | 2 | Bolsters clusters: math/reading progress, alertness, mood |
+| 3669 | Optimism → Exceptional Longevity (Living Past 85) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Existential' |
+| 3670 | Conscientiousness as a Longevity Trait | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Intrapersonal, self-regulation' |
+| 3671 | Your One-Question Self-Rating of Health | 2 | Strong | 2 | practice: 'Bolsters clusters: Interoceptive, Intrapersonal, self-monitoring' |
+| 3672 | Positive Affect & Life Satisfaction | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, positive-affect' |
+| 3673 | Positive Self-Perceptions of Aging | 2 | Emerging | 2 | practice: 'Bolsters clusters: Intrapersonal, Existential, will-to-live' |
+| 3675 | Emotional Vitality / Vigor | 2 | Emerging | 1 | practice: 'Bolsters clusters: Emotional, Interoceptive, energy' |
+| 3676 | Sense of Coherence (Antonovsky's Salutogenesis) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Existential, Intrapersonal, meaning' |
+| 3677 | Sense of Personal Control / Mastery | 2 | Emerging | 2 | practice: 'Bolsters clusters: Volitional, Intrapersonal, control-beliefs' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,244)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,246)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2647,8 +2682,10 @@
 | 3599 | Power-Distance Miscommunication — Speaking Up vs Deferring | 4 | Mixed | 2 | Degrades: Interpersonal candor, Leadership signal-reading, Social-Perceptual cal |
 | 3600 | Silence Interpreted Differently — Pause as Respect vs Rejection | 4 | Emerging | 2 | Degrades: Social-Perceptual read, Interpersonal rapport, Linguistic turn-cueing |
 | 3601 | False Friends — Familiar-Looking Words That Mean Something Else | 3 | Moderate | 2 | Degrades: Linguistic accuracy, Rhetorical precision |
+| 3678 | Hopelessness → Heart Disease & Early Death | 5 | Emerging | 2 | weakness: 'Degrades: Existential, Emotional, cardiovascular survival' |
+| 3679 | The 'Stress Is Harming Me' Mindset | 4 | Emerging | 1 | weakness: 'Degrades: Emotional, Existential, stress-appraisal' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,006)
+## COST OF FAILURE — what's at stake (harm lens)  (1,008)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3658,6 +3695,8 @@
 | 3577 | Blastomycosis | 4 | Moderate | 3 | Degrades: Bodily, Interoceptive, Aesthetic, Volitional |
 | 3578 | Coccidioidomycosis (Valley Fever) | 4 | Moderate | 3 | Degrades: Bodily, Interoceptive, Naturalist, Volitional |
 | 3579 | Disseminated Histoplasmosis | 4 | Moderate | 3 | Degrades: Bodily, Interoceptive, Volitional, Naturalist |
+| 3668 | The Widowhood Effect (Bereavement Mortality Spike) | 3 | Moderate | 2 | cost: 'Degrades: Emotional, Existential, near-term survival' |
+| 3674 | Habitual Emotion Suppression | 2 | Emerging | 1 | cost: 'Degrades: Emotional, Interoceptive, cardiovascular & cancer survival' |
 
 ## Framework / uncategorized  (61)
 
