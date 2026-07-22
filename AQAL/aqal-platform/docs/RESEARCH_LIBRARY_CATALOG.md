@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,819 clusters · 9,581 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,856 clusters · 9,641 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,297 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,366 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,320 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,380 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,095 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,819** |
+| **Total** | **4,856** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,219 |
-| Strong | 1,277 |
-| Mixed | 732 |
-| Emerging | 591 |
+| Moderate | 2,236 |
+| Strong | 1,286 |
+| Mixed | 739 |
+| Emerging | 595 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,297)
+## PRACTICES — what strengthens the mind (impact lens)  (2,320)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2324,8 +2324,31 @@
 | 4775 | Seasonal Depression Pattern — Contested by Large Surveys | 2 | Mixed | 2 | practice: 'Bolsters clusters: Naturalist, Emotional, Meta-Cognitive skepticism' |
 | 4776 | Sunshine & Prosocial Behavior / Tipping | 1 | Mixed | 2 | practice: 'Bolsters clusters: Interpersonal, Social-Perceptual, Emotional' |
 | 4777 | Season/Month of Birth & Personality — Tiny, Inconsistent | 1 | Mixed | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Naturalist, Adversarial' |
+| 4778 | One-Session Treatment for Specific Phobias (Öst) | 5 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Adversarial, Interoceptive' |
+| 4779 | Guided Mastery & Participant Modeling (Bandura) | 4 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Bodily, Intrapersonal' |
+| 4780 | Inhibitory-Learning Model of Extinction (Craske) | 4 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Interoceptive, Meta-Cogniti |
+| 4781 | Video Feedback for Social Anxiety (Correcting the Self-Image) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Social-Perceptual, Intrapersonal, Emotional' |
+| 4782 | Behavioral Experiments (Testing Catastrophic Predictions) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Emotional, Volitional' |
+| 4783 | Expectancy Violation — Exposure's Active Ingredient (Craske) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive, Interoceptive' |
+| 4784 | Flooding vs Graded Exposure (Intensity) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, Volitional, Adversarial' |
+| 4785 | Variability & Deepened Extinction in Exposure | 3 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Interoceptive' |
+| 4786 | Reconsolidation-Update of Fear (Retrieval-Extinction, Schiller) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Meta-Cognitive' |
+| 4787 | Worry as Cognitive Avoidance — Imaginal Processing (Borkovec) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Meta-Cognitive' |
+| 4788 | D-Cycloserine Augmentation of Exposure | 2 | Mixed | 1 | practice: 'Bolsters clusters: Emotional, Interoceptive' |
+| 4791 | Break It Into Near Sub-Goals, Not One Distant Goal | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Intrapersonal, Meta-Cognitive' |
+| 4792 | Pull the Reward Forward — Immediate Payoffs Beat Deferred Ones for Starting | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Emotional, Intrapersonal' |
+| 4793 | The Procrastination Equation (Temporal Motivation Theory) | 3 | Strong | 2 | practice: 'Bolsters clusters: Volitional, Meta-Cognitive, Strategic' |
+| 4794 | Spread Deadlines Evenly — And Let Someone Else Impose Them | 3 | Moderate | 1 | practice: 'Bolsters clusters: Volitional, Meta-Cognitive, Strategic' |
+| 4795 | Do the Hard Task at Your Circadian Peak (Synchrony Effect) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Volitional, Strategic' |
+| 4802 | Self-Compassion Tracks Lower Anxiety, Depression & Stress | 3 | Strong | 1 | Bolsters clusters: Emotional, Intrapersonal |
+| 4803 | Self-Compassion Sustains Motivation (It Doesn't Make You Lazy) | 3 | Moderate | 1 | Bolsters clusters: Volitional, Meta-Cognitive, Intrapersonal |
+| 4804 | Self-Compassion vs Self-Esteem: Stable Self-Worth Without the Contingency | 3 | Moderate | 1 | Bolsters clusters: Intrapersonal, Emotional, Meta-Cognitive |
+| 4805 | Self-Concept Clarity & Wellbeing | 3 | Moderate | 1 | Bolsters clusters: Intrapersonal, Meta-Cognitive, Emotional |
+| 4806 | Unconditional Self-Acceptance (REBT/Ellis) vs Rating Your Worth | 3 | Emerging | 2 | Bolsters clusters: Intrapersonal, Meta-Cognitive, Emotional |
+| 4807 | Values-Affirmation for Achievement Gaps — Real in Lab, Inconsistent in the Field | 2 | Mixed | 2 | Bolsters clusters: Intrapersonal, Emotional, Meta-Cognitive |
+| 4808 | Self-Compassion & Lower Stress-Induced Inflammation (IL-6) | 2 | Emerging | 1 | Bolsters clusters: Interoceptive, Emotional, Intrapersonal |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,366)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,380)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3695,6 +3718,20 @@
 | 4729 | Pets Are Not a Reliable Cure for Loneliness | 4 | Mixed | 2 | weakness: 'Degrades: Community, Interpersonal, Emotional' |
 | 4740 | The Recovery Paradox — Detaching Least When You Need It Most | 6 | Moderate | 1 | weakness: 'Degrades: Volitional, Interoceptive, Emotional, Systemic' |
 | 4741 | Work-Related Rumination Blocks Recovery | 6 | Moderate | 1 | weakness: 'Degrades: Emotional, Interoceptive, Meta-Cognitive, Intrapersonal' |
+| 4789 | Avoidance as the Engine of Anxiety (Mowrer's Two-Factor Theory) | 7 | Strong | 2 | weakness: 'Degrades: Volitional, Emotional, Interoceptive' |
+| 4790 | Return of Fear — Renewal, Reinstatement, Spontaneous Recovery (Bouton) | 6 | Strong | 2 | weakness: 'Degrades: Emotional, Volitional, Interoceptive' |
+| 4796 | 'I Work Better Under Pressure' — The Arousal-Procrastinator Myth | 5 | Mixed | 3 | weakness: 'Degrades: Volitional, Meta-Cognitive, Strategic' |
+| 4797 | Maladaptive Perfectionism Feeds Procrastination (High Standards Don't) | 4 | Moderate | 1 | weakness: 'Degrades: Volitional, Emotional, Intrapersonal' |
+| 4798 | Procrastination and Impulsivity Share Genes (and a Goal-Management Deficit) | 4 | Mixed | 2 | weakness: 'Degrades: Volitional, Strategic, Meta-Cognitive' |
+| 4799 | The Mere-Urgency Trap — Busywork Crowds Out What Matters | 4 | Moderate | 1 | weakness: 'Degrades: Strategic, Meta-Cognitive, Volitional' |
+| 4800 | Night-Owl Chronotype Tracks More Procrastination | 3 | Moderate | 2 | weakness: 'Degrades: Volitional, Meta-Cognitive, Interoceptive' |
+| 4801 | Procrastination Really Does Lower Grades — But Less Than You'd Think | 3 | Moderate | 1 | weakness: 'Degrades: Strategic, Meta-Cognitive, Volitional' |
+| 4809 | Threatened Egotism, Not Low Self-Esteem, Drives Aggression | 5 | Strong | 2 | Degrades: Interpersonal, Social-Perceptual, Moral |
+| 4810 | Low Self-Esteem Prospectively Predicts Depression (Vulnerability Model) | 4 | Strong | 1 | Degrades: Emotional, Intrapersonal |
+| 4811 | Discrepant (Fragile) High Self-Esteem → Defensiveness | 3 | Moderate | 1 | Degrades: Interpersonal, Emotional, Meta-Cognitive |
+| 4812 | Global Self-Esteem Boosting as a Goal — Doesn't Deliver | 3 | Strong | 2 | Degrades: Meta-Cognitive, Intrapersonal, Volitional |
+| 4813 | Self-Enhancement / Positive Illusions — Social & Adjustment Costs | 3 | Mixed | 2 | Degrades: Interpersonal, Social-Perceptual, Meta-Cognitive |
+| 4814 | The 'Narcissism Epidemic' Claim — Contested, Not Settled | 2 | Mixed | 2 | Degrades: Interpersonal, Moral, Social-Perceptual |
 
 ## COST OF FAILURE — what's at stake (harm lens)  (1,095)
 
