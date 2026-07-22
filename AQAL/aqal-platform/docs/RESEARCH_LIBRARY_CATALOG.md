@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,991 clusters · 9,873 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,025 clusters · 9,929 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,437 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,396 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,097 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,464 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,402 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,098 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,991** |
+| **Total** | **5,025** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,284 |
-| Strong | 1,296 |
-| Mixed | 772 |
-| Emerging | 639 |
+| Moderate | 2,297 |
+| Strong | 1,298 |
+| Mixed | 782 |
+| Emerging | 648 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,437)
+## PRACTICES — what strengthens the mind (impact lens)  (2,464)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2464,8 +2464,35 @@
 | 4941 | Sound Baths & Singing-Bowl Meditation | 2 | Emerging | 1 | practice: 'Bolsters clusters: relaxation, tension release, aesthetic/contemplati |
 | 4942 | White-Noise Machines as a Sleep Aid | 2 | Mixed | 2 | practice: 'Bolsters clusters: sleep onset in noisy settings, masking of disrupti |
 | 4943 | Tinnitus Retraining Therapy & Sound Masking | 2 | Mixed | 2 | practice: 'Bolsters clusters: tinnitus habituation, distress tolerance, sleep on |
+| 4950 | Stimming as Genuine Self-Regulation | 3 | Emerging | 1 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal, Bodily' |
+| 4951 | Movement That Powers Working Memory in ADHD | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Bodily, Volitional, Interoceptive' |
+| 4953 | Weighted Vests (Deep Pressure) for ADHD Attention | 2 | Moderate | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Interoceptive, Bodily, Volitional' |
+| 4954 | Fidgeting May Blunt the Harm of Sitting | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 4955 | Fidgeting as an Attention Signal (not a fix) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Interoceptive, Meta-Cognitive, Bodily' |
+| 4956 | Prayer Beads & Rhythmic Recitation | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interoceptive, Emotional, Existential, Intraperson |
+| 4957 | Stand-Biased Desks for Kids' Attention | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Meta-Cognitive' |
+| 4958 | Stress Balls & Squeezing for Focus | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interoceptive, Emotional, Meta-Cognitive' |
+| 4959 | Stability / Exercise-Ball Chairs | 1 | Mixed | 2 | practice: 'Bolsters clusters: Bodily (weakly)' |
+| 4960 | Consumption Rituals Make Food Taste Better | 2 | Moderate | 1 | practice: 'Bolsters clusters: Aesthetic, Interoceptive, Emotional' |
+| 4961 | Serving Temperature & Carbonation Reshape Flavor | 2 | Moderate | 2 | practice: 'Bolsters clusters: Aesthetic, Interoceptive' |
+| 4962 | Habitual Spicy Food & Lower All-Cause Mortality | 2 | Moderate | 2 | practice: 'Bolsters clusters: Interoceptive, Bodily, Aesthetic' |
+| 4963 | Bitter Taste → Harsher Moral Judgment (Failed Multilab Replication) | 1 | Mixed | 2 | practice: 'Claimed to bolster: Moral — but multilab replication found nothing' |
+| 4964 | Comfort Food for Mood Repair (Largely a Myth) | 1 | Mixed | 1 | practice: 'Claimed to bolster: Emotional — evidence says no better than nothing' |
+| 4965 | Mint / Menthol Flavor & Alertness | 1 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Bodily' |
+| 4966 | Sour Taste & Risk-Taking / Exploration | 1 | Emerging | 1 | practice: 'Bolsters clusters: Adversarial, Strategic, Creative' |
+| 4967 | Sweet Taste → Agreeableness (Shaky Priming Claim) | 1 | Mixed | 2 | practice: 'Claimed to bolster: Interpersonal, Emotional, Moral — weak/contested' |
+| 4968 | Warm Drink → 'Warmer' Judgments (Failed Replication) | 1 | Mixed | 2 | practice: 'Claimed to bolster: Interpersonal, Social-Perceptual — but does not' |
+| 4969 | Flavor-Flavor & Flavor-Nutrient Learning (Acquiring Likes) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Aesthetic, Interoceptive, Naturalist' |
+| 4972 | Prospective Memory — Actually Remembering to Do the Future Thing | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive reliability, Volitional follow-thro |
+| 4973 | Anticipated Regret — Letting Future You's 'I Wish I Had' Guide the Choice | 3 | Strong | 2 | practice: 'Bolsters clusters: Strategic risk-weighing, Volitional follow-through |
+| 4974 | High-Level Construal — Zooming Out to 'Why' Strengthens Self-Control | 2 | Moderate | 1 | practice: 'Bolsters clusters: Volitional self-control, Strategic prioritization, |
+| 4975 | Talking to an AI-Generated Future Self | 2 | Emerging | 1 | practice: 'Bolsters clusters: Intrapersonal continuity, Existential orientation, |
+| 4976 | Consideration of Future Consequences — The Trait of Weighing Distant Outcomes | 2 | Moderate | 2 | practice: 'Bolsters clusters: Financial prudence, Strategic foresight, Volitiona |
+| 4977 | Mental Time Travel — Pre-Experiencing a Specific Future | 2 | Emerging | 2 | practice: 'Bolsters clusters: Strategic planning, Meta-Cognitive foresight, Exis |
+| 4978 | Future Time Horizon — How 'Time Left' Reshapes What You Chase | 2 | Mixed | 2 | practice: 'Bolsters clusters: Existential prioritization, Emotional meaning, Int |
+| 4979 | Homo Prospectus — Treating Prospection as the Mind's Core Job | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive foresight, Strategic planning, Exis |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,396)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,402)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3865,8 +3892,14 @@
 | 4947 | Noise Sensitivity as a Trait | 4 | Moderate | 2 | weakness: 'Degrades: habituation to environments, calm mood, sleep in shared/urb |
 | 4948 | The Irrelevant Sound Effect (Changing-State Background) | 4 | Strong | 2 | weakness: 'Degrades: verbal working memory, reading comprehension, ordered recal |
 | 4949 | Earwax (Cerumen) Impaction — A Reversible Muffle | 3 | Strong | 1 | weakness: 'Degrades: hearing acuity, speech understanding, sound clarity (revers |
+| 4970 | Age-Related Taste Decline (Presbygeusia) | 3 | Mixed | 2 | weakness: 'Degrades: Aesthetic, Interoceptive, Bodily' |
+| 4971 | Bitter Supertasting (PROP/TAS2R38) & Vegetable Avoidance | 3 | Moderate | 2 | weakness: 'Degrades: Naturalist, Bodily, Aesthetic, Interoceptive' |
+| 4980 | A Blank Future — Losing the Ability to Anticipate Good Things | 7 | Moderate | 2 | weakness: 'Degrades: Emotional resilience, Existential hope, Volitional motivati |
+| 4981 | The Hot-Cold Empathy Gap — Mispredicting Your Future Visceral Self | 6 | Moderate | 2 | weakness: 'Degrades: Strategic self-prediction, Interoceptive accuracy, Volition |
+| 4982 | Feeling Disconnected From Future You → Cutting Ethical Corners | 5 | Moderate | 2 | weakness: 'Degrades: Moral prudence, Financial integrity, Strategic reputation-m |
+| 4983 | The Time-Slack Fallacy — 'I'll Have More Time Later' | 5 | Moderate | 1 | weakness: 'Degrades: Strategic scheduling, Volitional follow-through, Financial  |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,097)
+## COST OF FAILURE — what's at stake (harm lens)  (1,098)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4967,6 +5000,7 @@
 | 4768 | Daylight Saving Time Spring Transition — Health & Safety Cost | 3 | Moderate | 2 | cost: 'Degrades: Interoceptive circadian alignment, Bodily cardiovascular, Meta- |
 | 4826 | High-Altitude Mountaineering — Objective Hazard & Mortality | 5 | Strong | 2 | cost: 'Degrades: Bodily, Interoceptive' |
 | 4918 | REM/Dream Rebound After REM-Suppressing Substances | 2 | Moderate | 2 | cost: 'Degrades: Emotional, Interoceptive, Bodily (temporarily)' |
+| 4952 | Fidget Spinners — the Debunked Fad | 2 | Strong | 2 | cost: 'Degrades: Meta-Cognitive, attention, on-task behavior' |
 
 ## Framework / uncategorized  (61)
 
