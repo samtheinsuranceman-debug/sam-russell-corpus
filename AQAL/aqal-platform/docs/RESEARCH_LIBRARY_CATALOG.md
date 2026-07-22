@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,596 clusters · 9,202 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,632 clusters · 9,266 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,115 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,337 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,146 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,342 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,083 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,596** |
+| **Total** | **4,632** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,111 |
-| Strong | 1,240 |
-| Mixed | 683 |
-| Emerging | 562 |
+| Moderate | 2,131 |
+| Strong | 1,243 |
+| Mixed | 689 |
+| Emerging | 569 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,115)
+## PRACTICES — what strengthens the mind (impact lens)  (2,146)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2142,8 +2142,39 @@
 | 4551 | Graduated Driver Licensing — Phasing in Teen Drivers | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Community, Parental' |
 | 4552 | Speed Cameras — Consistent Casualty Reductions | 3 | Moderate | 1 | practice: 'Bolsters clusters: Systemic, Strategic, Community, Mechanical' |
 | 4553 | Sugar-Sweetened Beverage Taxes — Purchases Fall, Especially in Poorer Households | 3 | Moderate | 2 | practice: 'Bolsters clusters: Systemic, Strategic, Financial, Community' |
+| 4555 | Just Telling People to 'Be Creative' | 3 | Moderate | 2 | practice: 'Bolsters clusters: Creative, Rhetorical, Volitional' |
+| 4556 | Creativity Training Programs | 3 | Moderate | 2 | practice: 'Bolsters clusters: Creative, Pattern-Recognition, Rhetorical, Strateg |
+| 4557 | Osborn-Parnes Creative Problem Solving (CPS) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Creative, Entrepreneurial, Strategic, Pattern-Reco |
+| 4558 | A Trained Facilitator Rescues Group Brainstorming | 3 | Moderate | 2 | practice: 'Bolsters clusters: Creative, Leadership, Interpersonal, Entrepreneuri |
+| 4559 | Cognitive Stimulation — Build on Others' Ideas | 3 | Moderate | 2 | practice: 'Bolsters clusters: Creative, Pattern-Recognition, Interpersonal, Entr |
+| 4560 | Electronic Brainstorming for Large Groups | 3 | Moderate | 3 | practice: 'Bolsters clusters: Creative, Pattern-Recognition, Entrepreneurial, St |
+| 4561 | de Bono Lateral Thinking / Random Word | 2 | Emerging | 2 | practice: 'Bolsters clusters: Creative, Rhetorical' |
+| 4562 | How Far Is Too Far? Analogical Distance | 2 | Mixed | 2 | practice: 'Bolsters clusters: Creative, Pattern-Recognition, Entrepreneurial' |
+| 4563 | Inventive Templates / 'Inside the Box' (SIT) | 2 | Emerging | 2 | practice: 'Bolsters clusters: Creative, Mechanical, Entrepreneurial, Pattern-Rec |
+| 4564 | Synectics — Make the Familiar Strange | 2 | Emerging | 2 | practice: 'Bolsters clusters: Creative, Rhetorical, Pattern-Recognition' |
+| 4567 | Buy Experiences, Not Things | 3 | Moderate | 2 | practice: 'Bolsters clusters: Financial, Emotional, Existential, Aesthetic, Inte |
+| 4568 | Spend in Line With Your Personality (Psychological Fit) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Financial, Intrapersonal, Emotional, Strategic' |
+| 4569 | Spend on Shared Experiences (the Social Ingredient) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Emotional, Community, Financial, Ex |
+| 4570 | Buy Many Small Pleasures Rather Than Rare Big Ones | 2 | Moderate | 1 | practice: 'Bolsters clusters: Financial, Emotional, Strategic, Intrapersonal' |
+| 4571 | Diminishing Returns & the 'Enough' Point — Honestly Contested | 3 | Mixed | 3 | practice: 'Bolsters clusters: Financial, Existential, Strategic, Meta-Cognitive' |
+| 4572 | Know Which Wellbeing You're Buying — Daily Mood vs. Life Evaluation | 3 | Mixed | 2 | practice: 'Bolsters clusters: Financial, Meta-Cognitive, Intrapersonal, Strategi |
+| 4573 | The Easterlin Paradox Is Contested — Absolute Income Does Track Wellbeing | 3 | Mixed | 2 | practice: 'Bolsters clusters: Financial, Existential, Strategic, Systemic' |
+| 4574 | Anticipating an Experience Beats Anticipating a Thing | 2 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, Financial, Aesthetic, Existential' |
+| 4575 | Windfall Wealth Does Durably Raise Life Satisfaction (Modestly) — Correcting the Old 'Lottery Winners Aren't Happier' Myth | 2 | Moderate | 2 | practice: 'Bolsters clusters: Financial, Emotional, Existential, Intrapersonal' |
+| 4579 | PDE5 Inhibitors (Sildenafil/Tadalafil) for ED | 4 | Strong | 2 | practice: 'Bolsters clusters: Seductive, Bodily, erectile function, sexual confi |
+| 4580 | Comprehensive Sex Education (vs Abstinence-Only) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Moral, sexual-health literacy, risk |
+| 4581 | On-Demand Dapoxetine (SSRI) for Premature Ejaculation | 3 | Moderate | 2 | practice: 'Bolsters clusters: Seductive, Bodily, ejaculatory control, sexual con |
+| 4582 | Pelvic-Floor Muscle Training for Premature Ejaculation | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Seductive, ejaculatory cont |
+| 4583 | Vibrator Use & Sexual Function | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Seductive, Interoceptive, orgasmic functio |
+| 4584 | Aerobic Exercise for Erectile Function | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Seductive, cardiovascular reserve, erectil |
+| 4585 | Korean Red Ginseng for Erectile Dysfunction | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Seductive, erectile function — weakly' |
+| 4586 | L-Citrulline Supplementation for Mild ED | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Seductive, erectile function — thin eviden |
+| 4587 | Attachment Security & Sexual Satisfaction | 2 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Emotional, Seductive, sexual satisf |
+| 4588 | Acute Exercise & Female Genital Arousal | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Seductive, genital arousal' |
+| 4589 | Flibanserin/Bremelanotide for Low Desire (HSDD) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Seductive, sexual desire, Emotional — but marginal |
+| 4590 | Sexual Mindfulness (Present-Moment Attention in Sex) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interoceptive, Seductive, Emotional, sexual satisf |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,337)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,342)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3484,6 +3515,11 @@
 | 4539 | Truth-Default Bias (We Assume People Are Honest) | 5 | Moderate | 1 | weakness: 'Degrades: Adversarial, Social-Perceptual, Meta-Cognitive, Street-Smar |
 | 4540 | Implied Truth Effect (Untagged = Assumed True) | 4 | Moderate | 1 | weakness: 'Degrades: Social-Perceptual, Meta-Cognitive, Logical' |
 | 4554 | The Peltzman Effect — Risk Compensation Is Real but Overstated | 3 | Mixed | 2 | weakness: 'Degrades: Systemic, Strategic, Moral' |
+| 4565 | Bad at Picking the Winner (Creativity Forecasting) | 6 | Moderate | 2 | weakness: 'Degrades: Creative, Strategic, Entrepreneurial, Pattern-Recognition' |
+| 4566 | Analogies You Have But Don't Notice | 5 | Strong | 2 | weakness: 'Degrades: Creative, Pattern-Recognition, Logical, Strategic' |
+| 4576 | Betting on 'I'll Adapt' — the Treadmill Is Asymmetric for Income & Job Loss | 5 | Moderate | 1 | weakness: 'Degrades: Financial, Emotional, Existential, Strategic' |
+| 4577 | Materialistic Values → Lower Wellbeing | 5 | Strong | 1 | weakness: 'Degrades: Existential, Emotional, Intrapersonal, Interpersonal' |
+| 4578 | Status & Positional Spending → The Comparison Treadmill | 5 | Moderate | 2 | weakness: 'Degrades: Financial, Existential, Emotional, Strategic' |
 
 ## COST OF FAILURE — what's at stake (harm lens)  (1,083)
 
