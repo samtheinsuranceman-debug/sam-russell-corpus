@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,709 clusters · 9,392 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,749 clusters · 9,461 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,211 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,353 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,084 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,241 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,361 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,086 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,709** |
+| **Total** | **4,749** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,169 |
-| Strong | 1,262 |
-| Mixed | 702 |
-| Emerging | 576 |
+| Moderate | 2,188 |
+| Strong | 1,272 |
+| Mixed | 711 |
+| Emerging | 578 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,211)
+## PRACTICES — what strengthens the mind (impact lens)  (2,241)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2238,8 +2238,38 @@
 | 4665 | Shadowing for Pronunciation & Listening | 3 | Emerging | 2 | practice: 'Bolsters clusters: Linguistic, Bodily, Musical' |
 | 4666 | Output / Speaking Practice (Swain) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Interpersonal, Meta-Cognitive' |
 | 4667 | Comprehensible Input (Krashen's i+1) | 3 | Mixed | 2 | practice: 'Bolsters clusters: Linguistic, Interpersonal, Pattern-Recognition' |
+| 4668 | The 100-Millisecond Verdict — Faces Read in a Blink | 4 | Strong | 2 | practice: 'Bolsters clusters: Social-Perceptual, Seductive, Rhetorical, Leadersh |
+| 4669 | Lower Voices Win Votes — Pitch and Perceived Leadership | 3 | Strong | 2 | practice: 'Bolsters clusters: Leadership, Rhetorical, Seductive' |
+| 4670 | The Name-Pronunciation Effect — Easy Names Are Liked More | 2 | Moderate | 1 | practice: 'Bolsters clusters: Social-Perceptual, Entrepreneurial, Rhetorical' |
+| 4671 | The Firm Handshake — Small, Real, Overrated | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Leadership, Seductive' |
+| 4672 | The Smile Trade-Off — Warm but Less 'In Charge' | 2 | Moderate | 1 | practice: 'Bolsters clusters: Social-Perceptual, Seductive, Interpersonal, Leade |
+| 4673 | Eye Contact — Moderate Gaze Builds Trust, Too Much Repels | 2 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Seductive, Leadership, Social-Perce |
+| 4674 | Talking Faster to Sound More Credible | 2 | Moderate | 2 | practice: 'Bolsters clusters: Rhetorical, Leadership, Linguistic' |
+| 4675 | Wearing Red for Attraction — Effect Shrank to Near Zero | 1 | Mixed | 2 | practice: 'Bolsters clusters: Seductive, Aesthetic' |
+| 4676 | The Chameleon Effect — Mirroring for Rapport (Shrunk Under Replication) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interpersonal, Seductive, Social-Perceptual, Rheto |
+| 4681 | Early Integrated Palliative Care | 4 | Strong | 2 | practice: 'Bolsters clusters: quality of life, mood, symptom control near end of |
+| 4683 | Trusting Natural Grief Resilience (Don't Pathologize) | 3 | Strong | 2 | practice: 'Bolsters clusters: emotional stability, self-trust, meaning after los |
+| 4684 | Preparedness for Death (Not 'Anticipatory Grief Work') | 3 | Moderate | 2 | practice: 'Bolsters clusters: caregiver resilience, smoother bereavement, reduce |
+| 4685 | Sense-Making After Loss (Meaning Reconstruction) | 3 | Moderate | 2 | practice: 'Bolsters clusters: existential coherence, adjustment, reduced complic |
+| 4686 | Dual-Process Model of Coping (Oscillation) | 3 | Moderate | 2 | practice: 'Bolsters clusters: emotional processing, self-regulation, life-rebuil |
+| 4687 | Internet-Delivered Grief Interventions | 3 | Moderate | 2 | practice: 'Bolsters clusters: prolonged-grief relief, access, emotional processi |
+| 4688 | Continuing Bonds With the Deceased | 2 | Moderate | 2 | practice: 'Bolsters clusters: meaning, emotional continuity, identity after loss |
+| 4690 | Bereavement Support Groups | 2 | Mixed | 2 | practice: 'Bolsters clusters: social connection, normalization, short-term relie |
+| 4691 | Hospice Use & the Surviving Spouse | 2 | Moderate | 1 | practice: 'Bolsters clusters: caregiver wellbeing, bereavement adjustment, healt |
+| 4692 | Death Cafés & Death Literacy | 1 | Emerging | 2 | practice: 'Bolsters clusters: openness to mortality, community, planning readine |
+| 4693 | End-of-Life (Death) Doulas | 1 | Emerging | 2 | practice: 'Bolsters clusters: companionship, dignity, family support at end of l |
+| 4695 | The Social Gradient in Health (Whitehall) | 4 | Strong | 2 | practice: 'Bolsters clusters: Systemic, Strategic, Community, Leadership' |
+| 4696 | Two Routes to Rank: Dominance vs Prestige | 4 | Strong | 2 | practice: 'Bolsters clusters: Leadership, Social-Perceptual, Strategic, Interper |
+| 4697 | Respect in Your Circle Beats Net Worth | 4 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Community, Intrapersonal, Emotional |
+| 4698 | Assertiveness Reads as Competence | 3 | Moderate | 1 | practice: 'Bolsters clusters: Social-Perceptual, Leadership, Rhetorical' |
+| 4699 | Prestige-Biased Learning: Who We Copy | 3 | Moderate | 2 | practice: 'Bolsters clusters: Social-Perceptual, Strategic, Meta-Cognitive, Lead |
+| 4700 | Overconfidence Buys Status (Double-Edged) | 3 | Mixed | 2 | practice: 'Bolsters clusters: Social-Perceptual, Strategic, Rhetorical' |
+| 4701 | Benign vs Malicious Envy: Two Reactions to Rank | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Strategic, Emotional, Intrapersonal' |
+| 4702 | The Testosterone-Cortisol 'Dual-Hormone' Idea | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive, Strategic' |
+| 4703 | Hierarchy Helps Teams — Only Sometimes | 2 | Mixed | 1 | practice: 'Bolsters clusters: Leadership, Strategic, Systemic' |
+| 4704 | Income Inequality & Population Health (Contested) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Systemic, Strategic, Community' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,353)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,361)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3596,8 +3626,16 @@
 | 4652 | The Dark Triad — Narcissism, Machiavellianism, Psychopathy | 6 | Moderate | 1 | weakness: 'Degrades: trust, moral conduct, community reciprocity, long-run relat |
 | 4653 | We Don't Know Ourselves As Well As We Think (SOKA) | 5 | Moderate | 1 | weakness: 'Degrades: accurate self-model, calibrated self-assessment, meta-cogni |
 | 4654 | MBTI — Popular, But Psychometrically Weak (Honest Verdict) | 3 | Mixed | 1 | weakness: 'Degrades: calibrated self-knowledge, sound hiring/team decisions, met |
+| 4677 | 'Competent-Looking' Wins Elections — A Bias, Not Accuracy | 6 | Strong | 2 | weakness: 'Degrades: Social-Perceptual, Leadership, Moral' |
+| 4678 | Believing the Accent, Not the Content — The Fluency Trap | 5 | Moderate | 1 | weakness: 'Degrades: Social-Perceptual, Moral, Interpersonal' |
+| 4679 | Judging Character by Face Shape (fWHR) — Weak Signal, Strong Bias | 5 | Mixed | 2 | weakness: 'Degrades: Social-Perceptual, Adversarial, Moral' |
+| 4680 | The Babyface Trap — Warm, Honest… and Assumed Incompetent | 4 | Moderate | 2 | weakness: 'Degrades: Social-Perceptual, Leadership, Adversarial' |
+| 4694 | Bereavement's Toll on Immunity & Inflammation | 4 | Moderate | 2 | weakness: 'Degrades: physical health, immune defense, recovery capacity' |
+| 4705 | Humiliation & Status Threat Spike Cortisol | 6 | Strong | 1 | weakness: 'Degrades: Emotional, Intrapersonal, Interoceptive, Social-Perceptual' |
+| 4706 | Big-Fish-Little-Pond: Rank Deflates Self-Concept | 4 | Strong | 1 | weakness: 'Degrades: Intrapersonal, Volitional, Meta-Cognitive' |
+| 4707 | Power Can Dull Perspective-Taking (Contested) | 4 | Mixed | 2 | weakness: 'Degrades: Interpersonal, Social-Perceptual, Moral, Emotional' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,084)
+## COST OF FAILURE — what's at stake (harm lens)  (1,086)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4685,6 +4723,8 @@
 | 4523 | Clickbait & the Weaponized Curiosity Gap | 2 | Moderate | 2 | cost: 'Degrades: Meta-Cognitive, Volitional, attention' |
 | 4524 | The Pandora Effect — Curiosity's Peril | 2 | Moderate | 1 | cost: 'Degrades: Volitional, Strategic, self-protective judgment' |
 | 4634 | Optimism Can Suppress Immunity Under Chronic Goal-Conflict | 2 | Emerging | 1 | cost: 'Degrades: Interoceptive, Strategic' |
+| 4682 | Acute Grief Can Trigger a Heart Attack | 4 | Moderate | 1 | cost/weakness: 'Degrades: cardiovascular safety, physical health' |
+| 4689 | Routine Grief Counseling for Normal Grief | 2 | Strong | 2 | cost/weakness: 'Degrades: emotional recovery, self-efficacy, resources' |
 
 ## Framework / uncategorized  (61)
 
