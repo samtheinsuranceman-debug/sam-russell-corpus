@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,797 clusters · 7,824 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,834 clusters · 7,880 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,482 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,516 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,246 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,008 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,011 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,797** |
+| **Total** | **3,834** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,751 |
-| Strong | 1,065 |
-| Mixed | 531 |
-| Emerging | 450 |
+| Moderate | 1,771 |
+| Strong | 1,074 |
+| Mixed | 534 |
+| Emerging | 455 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,482)
+## PRACTICES — what strengthens the mind (impact lens)  (1,516)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1509,6 +1509,40 @@
 | 3753 | Leafy Greens (1 serving/day) & Cognitive Aging | 2 | Emerging | 1 | practice: 'Bolsters clusters: Meta-Cognitive endurance, memory retention, execut |
 | 3754 | Oily Fish & Depression Risk | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional regulation, mood stability, Interoceptiv |
 | 3755 | Tomato / Lycopene & Prostate / Vascular Risk | 1 | Mixed | 2 | practice: 'Bolsters clusters: Bodily vitality, cardiovascular resilience' |
+| 3756 | Internet-Delivered CBT for Severe Health Anxiety (Hypochondriasis) | 4 | Strong | 2 | practice: 'Bolsters clusters: health anxiety, reassurance-seeking, body-checking |
+| 3757 | Virtual-Reality Exposure Therapy for Anxiety & Phobias | 4 | Strong | 2 | practice: 'Bolsters clusters: specific/social phobia, fear extinction, avoidance |
+| 3758 | Internet-Delivered CBT / Exposure for Irritable Bowel Syndrome | 3 | Strong | 2 | practice: 'Bolsters clusters: GI symptom burden, symptom-related anxiety, qualit |
+| 3759 | Human Guidance in Digital Interventions (the guided-vs-unguided gap) | 3 | Strong | 2 | practice: 'Bolsters clusters: iCBT adherence, symptom reduction, program complet |
+| 3760 | Virtual-Reality Distraction for Acute & Procedural Pain | 3 | Moderate | 2 | practice: 'Bolsters clusters: procedural pain, procedural anxiety, needle fear' |
+| 3761 | AVATAR Therapy for Distressing Auditory Hallucinations | 3 | Moderate | 1 | practice: 'Bolsters clusters: auditory-hallucination distress, felt power over v |
+| 3762 | Internet-Delivered CBT for Chronic Tinnitus Distress | 3 | Moderate | 2 | practice: 'Bolsters clusters: tinnitus distress, tinnitus-related anxiety/insomn |
+| 3763 | Prescription Digital Therapeutic for Substance Use (reSET / reSET-O) | 3 | Moderate | 1 | practice: 'Bolsters clusters: abstinence, treatment retention, opioid-use disord |
+| 3764 | Generative-AI Therapy Chatbot (Therabot RCT) | 3 | Emerging | 2 | practice: 'Bolsters clusters: depression, anxiety, disordered-eating symptoms' |
+| 3765 | The 'Digital Placebo' — Expectancy Effects in Mental-Health Apps | 2 | Mixed | 2 | practice: 'Bolsters clusters: perceived wellbeing, mood, engagement expectancy' |
+| 3766 | EndeavorRx (AKL-T01) — FDA-Cleared Video Game for Pediatric ADHD | 2 | Moderate | 1 | practice: 'Bolsters clusters: sustained attention, attentional control' |
+| 3767 | Computerized 'Brain Training' (Lumosity-style) | 1 | Mixed | 2 | practice: 'Bolsters clusters: (narrow) trained-task performance only' |
+| 3768 | The Income–Happiness Curve: No Plateau, but a Split | 2 | Strong | 2 | practice: 'Bolsters clusters: Financial, Existential, Intrapersonal, Emotional' |
+| 3769 | For the Poor, Cash Itself Improves Mental Health | 3 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Existential, Financial' |
+| 3770 | For Couples: Merging Accounts Protects the Relationship | 3 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Financial, Emotional, Existential' |
+| 3772 | Perceived Financial Security Beats the Balance Sheet | 3 | Moderate | 1 | practice: 'Bolsters clusters: Financial, Emotional, Existential, Volitional' |
+| 3774 | 'Retail Therapy' Works — but It's the Choosing, Not the Buying | 2 | Emerging | 1 | practice: 'Bolsters clusters: Emotional, Volitional, Intrapersonal' |
+| 3775 | Feel Grateful Before You Decide to Spend or Save | 2 | Emerging | 1 | practice: 'Bolsters clusters: Volitional, Financial, Emotional' |
+| 3777 | It's Your Rank, Not Your Dollars — Curb the Comparison | 2 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, Social-Perceptual, Intrapersonal, Finan |
+| 3778 | Spend to Fit Who You Are, Not Just What's 'Sensible' | 2 | Moderate | 1 | practice: 'Bolsters clusters: Financial, Emotional, Intrapersonal, Aesthetic' |
+| 3779 | Cash-on-Hand Buys Calm — Independent of Income or Net Worth | 2 | Emerging | 1 | practice: 'Bolsters clusters: Financial, Emotional, Existential, Intrapersonal' |
+| 3780 | Seeing Who Your Work Helps (Beneficiary Contact) | 4 | Strong | 2 | practice: 'Bolsters clusters: task significance, prosocial motivation, performan |
+| 3781 | Motivational Work Design (Enriched Jobs) | 4 | Strong | 2 | practice: 'Bolsters clusters: job satisfaction, engagement, performance, commitm |
+| 3782 | Off-Hours Mastery & Relaxation Recovery | 3 | Moderate | 2 | practice: 'Bolsters clusters: vigor, wellbeing, next-day engagement' |
+| 3783 | Proactive Onboarding & Role Clarity (New Hires) | 3 | Moderate | 1 | practice: 'Bolsters clusters: job satisfaction, commitment, retention, performan |
+| 3784 | Four-Day Workweek (No Pay Cut) | 4 | Moderate | 2 | practice: 'Bolsters clusters: burnout reduction, wellbeing, sleep, work-life bal |
+| 3785 | Person-Job / Person-Organization Fit | 3 | Strong | 1 | practice: 'Bolsters clusters: job satisfaction, commitment, retention' |
+| 3786 | Expressed Gratitude at Work | 3 | Moderate | 1 | practice: 'Bolsters clusters: prosocial effort, social worth, motivation' |
+| 3787 | Idiosyncratic Deals (i-deals) | 3 | Moderate | 2 | practice: 'Bolsters clusters: work engagement, job satisfaction, autonomy, reten |
+| 3788 | Schedule & Location Flexibility (Flextime / Flexplace) | 3 | Moderate | 2 | practice: 'Bolsters clusters: work-family balance, job satisfaction, retention' |
+| 3789 | Calling Orientation to Work | 3 | Moderate | 2 | practice: 'Bolsters clusters: meaning at work, job satisfaction, life satisfacti |
+| 3790 | Perceived Meaningful Work (WAMI) | 3 | Moderate | 2 | practice: 'Bolsters clusters: engagement, commitment, life satisfaction, health' |
+| 3791 | Sabbaticals / Extended Leave | 3 | Moderate | 1 | practice: 'Bolsters clusters: burnout recovery, resource gain, wellbeing' |
+| 3792 | Active Commuting (Walk / Cycle to Work) | 2 | Mixed | 1 | practice: 'Bolsters clusters: mood, physical activity, commute satisfaction' |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,246)
 
@@ -2761,7 +2795,7 @@
 | 3678 | Hopelessness → Heart Disease & Early Death | 5 | Emerging | 2 | weakness: 'Degrades: Existential, Emotional, cardiovascular survival' |
 | 3679 | The 'Stress Is Harming Me' Mindset | 4 | Emerging | 1 | weakness: 'Degrades: Emotional, Existential, stress-appraisal' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,008)
+## COST OF FAILURE — what's at stake (harm lens)  (1,011)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3773,6 +3807,9 @@
 | 3579 | Disseminated Histoplasmosis | 4 | Moderate | 3 | Degrades: Bodily, Interoceptive, Volitional, Naturalist |
 | 3668 | The Widowhood Effect (Bereavement Mortality Spike) | 3 | Moderate | 2 | cost: 'Degrades: Emotional, Existential, near-term survival' |
 | 3674 | Habitual Emotion Suppression | 2 | Emerging | 1 | cost: 'Degrades: Emotional, Interoceptive, cardiovascular & cancer survival' |
+| 3771 | Consumer Debt Taxes the Mind and the Body | 3 | Moderate | 1 | cost: 'Degrades: Emotional, Interoceptive, Bodily, Financial' |
+| 3773 | Money Worry Literally Hurts — Insecurity Raises Physical Pain | 2 | Moderate | 1 | cost: 'Degrades: Interoceptive, Bodily, Emotional, Volitional' |
+| 3776 | Wealth Quietly Steals Your Ability to Savor | 2 | Emerging | 1 | cost: 'Degrades: Aesthetic, Emotional, Interoceptive' |
 
 ## Framework / uncategorized  (61)
 
