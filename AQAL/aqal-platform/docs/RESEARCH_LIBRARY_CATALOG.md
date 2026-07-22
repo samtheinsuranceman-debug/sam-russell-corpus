@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**3,877 clusters · 7,957 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**3,917 clusters · 8,021 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 1,559 |
+| PRACTICES — what strengthens the mind (impact lens) | 1,599 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,246 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,011 |
 | Framework / uncategorized | 61 |
-| **Total** | **3,877** |
+| **Total** | **3,917** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 1,786 |
-| Strong | 1,091 |
-| Mixed | 540 |
-| Emerging | 460 |
+| Moderate | 1,808 |
+| Strong | 1,096 |
+| Mixed | 549 |
+| Emerging | 464 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (1,559)
+## PRACTICES — what strengthens the mind (impact lens)  (1,599)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -1586,6 +1586,46 @@
 | 3833 | Tummy Time (Awake, Supervised Prone Play) | 3 | Moderate | 2 | practice: 'Bolsters clusters: gross motor development, head control, positional- |
 | 3834 | Maternal Influenza Vaccination in Pregnancy | 3 | Moderate | 2 | practice: 'Bolsters clusters: newborn flu immunity, prevented infant hospitaliza |
 | 3835 | Period of PURPLE Crying — Abusive-Head-Trauma Education | 2 | Mixed | 2 | practice: 'Bolsters clusters: caregiver impulse control, normalized-crying knowl |
+| 3836 | Toothbrushing to Prevent Hospital Pneumonia | 4 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Community, Interoceptive' |
+| 3837 | Hand Hygiene (Handwashing) for Infection Control | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Community, Interoceptive' |
+| 3838 | Reducing Chronic Stress to Protect Immunity (PNI) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal, Bodily, Interoceptive' |
+| 3839 | Social Network Diversity & Resistance to Colds | 3 | Moderate | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Bodily' |
+| 3840 | Nasal Saline Irrigation for Colds & Sinusitis | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Community' |
+| 3841 | Cranberry Products for Recurrent UTI | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 3842 | Fermented Foods, Microbiome Diversity & Inflammation | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Naturalist, Interoceptive' |
+| 3843 | Probiotics for Respiratory & Antibiotic-Related Infection | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Naturalist' |
+| 3844 | Water Gargling for URTI Prevention | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Community' |
+| 3845 | Echinacea for Colds (Weak/Unproven) | 1 | Mixed | 1 | practice: 'Bolsters clusters: Bodily' |
+| 3846 | Elderberry for Cold/Flu (Thin Evidence) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Bodily' |
+| 3847 | Vitamin D Supplementation for Respiratory Infection | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 3848 | Community Masking (Honestly Contested) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Community, Bodily, Adversarial' |
+| 3849 | Moderate Exercise & Immune Surveillance (the J-Curve) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Community' |
+| 3850 | Making People Feel Understood (Perceived Responsiveness) | 4 | Strong | 2 | practice: 'Bolsters clusters: intimacy, trust, felt validation, closeness' |
+| 3851 | The Liking Gap (Assume They Like You) | 3 | Strong | 2 | practice: 'Bolsters clusters: Intrapersonal confidence, warm approach, rapport,  |
+| 3852 | Lead With Warmth, Then Competence | 3 | Moderate | 2 | practice: 'Bolsters clusters: trust, likeability, leadership, first impressions' |
+| 3853 | Graduated Self-Disclosure Reciprocity | 3 | Strong | 1 | practice: 'Bolsters clusters: intimacy, trust, rapport, relationship-building' |
+| 3854 | Going Deeper Than Small Talk | 3 | Moderate | 1 | practice: 'Bolsters clusters: connection, rapport, meaningful conversation, clos |
+| 3855 | Language-Style Matching (Function-Word Sync) | 3 | Moderate | 1 | practice: 'Bolsters clusters: rapport, attraction, verbal attunement, relationsh |
+| 3856 | Shared (Simultaneous) Laughter | 3 | Moderate | 1 | practice: 'Bolsters clusters: bonding, perceived similarity, relationship qualit |
+| 3857 | The Beautiful-Mess Effect (Showing Vulnerability) | 3 | Moderate | 1 | practice: 'Bolsters clusters: rapport, trust, self-disclosure, authentic connect |
+| 3858 | Asking for Advice (Not Just a Favor) | 3 | Moderate | 1 | practice: 'Bolsters clusters: rapport, perceived competence, influence, relation |
+| 3859 | Talking to Strangers & Weak Ties | 3 | Moderate | 2 | practice: 'Bolsters clusters: mood, belonging, everyday sociability, opportunity |
+| 3860 | The Genuine (Duchenne) Smile | 3 | Moderate | 1 | practice: 'Bolsters clusters: trust, warmth, approachability, first impressions' |
+| 3861 | Nodding Raises Likeability & Approachability | 2 | Emerging | 1 | practice: 'Bolsters clusters: nonverbal warmth, approachability, rapport signall |
+| 3862 | Using Someone's Name — Overhyped, Details Matter More | 2 | Mixed | 2 | practice: 'Bolsters clusters: attentiveness, rapport (modest), personalization' |
+| 3863 | Weight Loss for Knee Osteoarthritis — Dose-Response | 4 | Strong | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional' |
+| 3864 | Pain Reprocessing Therapy for Primary Chronic Back Pain | 4 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Emotional, Interoceptive' |
+| 3865 | Emotional Awareness & Expression Therapy for Chronic Pain | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Meta-Cognitive' |
+| 3866 | High-Concentration Capsaicin 8% Patch for Neuropathic Pain | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 3867 | Tai Chi for Fibromyalgia | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional' |
+| 3868 | Continuous Low-Level Heat Wrap for Acute Low Back Pain | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 3869 | Exercise-Induced Hypoalgesia — The Analgesia of a Single Bout | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Meta-Cognitive' |
+| 3870 | Graded Motor Imagery for CRPS & Phantom Limb Pain | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Meta-Cognitive, Interoceptive' |
+| 3871 | Word Choice & Expectation Optimization (Avoiding Nocebo) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive, Interoceptive' |
+| 3872 | Partner Presence & Handholding Analgesia | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Bodily' |
+| 3873 | Open-Label Placebo for Chronic Low Back Pain | 2 | Moderate | 3 | practice: 'Bolsters clusters: Interoceptive, Emotional, Meta-Cognitive' |
+| 3874 | Kinesiology Taping — Honest Near-Placebo | 1 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive (expectancy only)' |
+| 3875 | Acupuncture for Chronic Pain — Real, but Mostly Context | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Meta-Cognitive' |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,246)
 
