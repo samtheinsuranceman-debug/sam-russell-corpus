@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**4,669 clusters · 9,329 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**4,709 clusters · 9,392 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,180 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,345 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,083 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,211 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,353 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,084 |
 | Framework / uncategorized | 61 |
-| **Total** | **4,669** |
+| **Total** | **4,709** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,151 |
-| Strong | 1,251 |
-| Mixed | 695 |
-| Emerging | 572 |
+| Moderate | 2,169 |
+| Strong | 1,262 |
+| Mixed | 702 |
+| Emerging | 576 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,180)
+## PRACTICES — what strengthens the mind (impact lens)  (2,211)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2207,8 +2207,39 @@
 | 4624 | Credible Commitment & Burning Bridges (Schelling) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Adversarial, Financial, Leadership' |
 | 4625 | The Shadow of the Future (Why Repetition Enables Cooperation) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Systemic, Community, Leadership' |
 | 4626 | Costly Signals (Why Credibility Requires Cost) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Strategic, Entrepreneurial, Rhetorical, Financial' |
+| 4628 | Defensive Pessimism (Adaptive for Anxious People) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Strategic' |
+| 4629 | Dispositional Optimism & Cardiovascular Health | 3 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal, Emotional, Existential' |
+| 4630 | Flourishing & the Two-Continua Model | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential, Emotional, Intrapersonal' |
+| 4631 | Optimism Drives Approach (Not Avoidant) Coping | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Emotional, Strategic' |
+| 4632 | Positive Illusions & Well-Being (Contested) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Volitional' |
+| 4633 | Optimism Is Modestly Trainable | 2 | Mixed | 1 | practice: 'Bolsters clusters: Intrapersonal, Emotional, Volitional' |
+| 4635 | Optimism & Faster Surgical Recovery | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interoceptive, Volitional, Emotional' |
+| 4636 | The Stockdale Paradox | 2 | Emerging | 1 | practice: 'Bolsters clusters: Existential, Strategic, Volitional' |
+| 4637 | Penn Resiliency Program (Learned-Optimism Training) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Meta-Cognitive' |
+| 4642 | The Big Five (OCEAN) Predicts Real Life Outcomes | 4 | Strong | 1 | practice: 'Bolsters clusters: intrapersonal accuracy, strategic self-placement,  |
+| 4643 | Person × Situation — How the Great Debate Actually Resolved | 3 | Strong | 2 | practice: 'Bolsters clusters: behavioral prediction, social-perceptual nuance, s |
+| 4644 | Strangers Read You Fast — Thin Slices and Your Bedroom Talk | 3 | Strong | 2 | practice: 'Bolsters clusters: interpersonal reading, social-perceptual accuracy, |
+| 4645 | Conscientiousness Is the Best Trait Predictor of Job Performance | 3 | Strong | 1 | practice: 'Bolsters clusters: volitional follow-through, entrepreneurial reliabi |
+| 4646 | Traits Get More Stable With Age (Cumulative Continuity) | 3 | Strong | 1 | practice: 'Bolsters clusters: intrapersonal self-model, meta-cognitive predictio |
+| 4647 | Personality Can Change in Adulthood — Including via Therapy | 3 | Strong | 1 | practice: 'Bolsters clusters: volitional self-shaping, emotional stability, intr |
+| 4648 | Strong Situations Mute Personality (Situational Strength) | 3 | Moderate | 1 | practice: 'Bolsters clusters: strategic design of contexts, social-perceptual re |
+| 4649 | Openness to Experience — The Trait Behind Creativity | 3 | Moderate | 1 | practice: 'Bolsters clusters: creative production, aesthetic engagement, existen |
+| 4650 | You Can Deliberately Change Your Own Traits (with the Right Tools) | 3 | Moderate | 1 | practice: 'Bolsters clusters: volitional agency, intrapersonal alignment, self-r |
+| 4655 | Spaced Repetition for L2 Vocabulary | 4 | Strong | 2 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive' |
+| 4656 | Explicit Grammar Instruction | 4 | Strong | 2 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive, Logical' |
+| 4657 | Cognates & L1 Transfer | 3 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Pattern-Recognition, Strategic' |
+| 4658 | Corrective Feedback & Recasts | 3 | Strong | 2 | practice: 'Bolsters clusters: Linguistic, Interpersonal, Meta-Cognitive' |
+| 4659 | Critical Period — Start Early, but Adults Aren't Doomed | 3 | Strong | 2 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive' |
+| 4660 | Task-Based & Communicative Teaching | 4 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Interpersonal, Strategic' |
+| 4661 | Extensive Reading & Incidental Vocabulary | 3 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Meta-Cognitive, Pattern-Recognition' |
+| 4662 | Age & Accent — Pronunciation Is the Hardest Part | 3 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Bodily, Musical' |
+| 4663 | Motivation & L2 Achievement | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Linguistic, Intrapersonal' |
+| 4664 | Study Abroad / Immersion | 3 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Interpersonal, Street-Smarts' |
+| 4665 | Shadowing for Pronunciation & Listening | 3 | Emerging | 2 | practice: 'Bolsters clusters: Linguistic, Bodily, Musical' |
+| 4666 | Output / Speaking Practice (Swain) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Linguistic, Interpersonal, Meta-Cognitive' |
+| 4667 | Comprehensible Input (Krashen's i+1) | 3 | Mixed | 2 | practice: 'Bolsters clusters: Linguistic, Interpersonal, Pattern-Recognition' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,345)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,353)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3557,8 +3588,16 @@
 | 4602 | Misjudging Which Green Actions Actually Matter | 6 | Strong | 1 | weakness: 'Degrades: Naturalist, Systemic, Strategic, Logical' |
 | 4603 | The 'Personal Carbon Footprint' as Fossil-Fuel PR Framing | 5 | Moderate | 2 | weakness: 'Degrades: Systemic, Adversarial, Strategic, Moral' |
 | 4627 | Zero-Sum Bias (Seeing Win-Win Situations as Win-Lose) | 5 | Moderate | 2 | weakness: 'Degrades: Strategic, Financial, Community, Moral, Interpersonal' |
+| 4638 | Hopelessness → Heart Attack & Death | 6 | Moderate | 1 | weakness: 'Degrades: Existential, Emotional, Interoceptive' |
+| 4639 | Pessimistic Explanatory Style → Poorer Midlife Health | 5 | Moderate | 1 | weakness: 'Degrades: Existential, Emotional, Interoceptive' |
+| 4640 | Optimism Bias & Asymmetric Belief Updating | 4 | Mixed | 3 | weakness: 'Degrades: Meta-Cognitive, Strategic, Logical' |
+| 4641 | Optimism's Accuracy Cost ('Sadder-but-Wiser' Overstated) | 2 | Mixed | 2 | weakness: 'Degrades: Meta-Cognitive, Logical' |
+| 4651 | Neuroticism — A Trait of Genuine Public-Health Significance | 7 | Strong | 1 | weakness: 'Degrades: emotional regulation, interoceptive calm, physical health,  |
+| 4652 | The Dark Triad — Narcissism, Machiavellianism, Psychopathy | 6 | Moderate | 1 | weakness: 'Degrades: trust, moral conduct, community reciprocity, long-run relat |
+| 4653 | We Don't Know Ourselves As Well As We Think (SOKA) | 5 | Moderate | 1 | weakness: 'Degrades: accurate self-model, calibrated self-assessment, meta-cogni |
+| 4654 | MBTI — Popular, But Psychometrically Weak (Honest Verdict) | 3 | Mixed | 1 | weakness: 'Degrades: calibrated self-knowledge, sound hiring/team decisions, met |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,083)
+## COST OF FAILURE — what's at stake (harm lens)  (1,084)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4645,6 +4684,7 @@
 | 4507 | Eating with Friends (Social Facilitation of Intake) | 2 | Moderate | 2 | Degrades: Interoceptive appetite regulation, Volitional portion control |
 | 4523 | Clickbait & the Weaponized Curiosity Gap | 2 | Moderate | 2 | cost: 'Degrades: Meta-Cognitive, Volitional, attention' |
 | 4524 | The Pandora Effect — Curiosity's Peril | 2 | Moderate | 1 | cost: 'Degrades: Volitional, Strategic, self-protective judgment' |
+| 4634 | Optimism Can Suppress Immunity Under Chronic Goal-Conflict | 2 | Emerging | 1 | cost: 'Degrades: Interoceptive, Strategic' |
 
 ## Framework / uncategorized  (61)
 
