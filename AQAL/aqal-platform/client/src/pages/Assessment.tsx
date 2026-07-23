@@ -25,6 +25,9 @@ const QUESTIONS_SOURCE: {
   axes: number[];
   skippable?: boolean;
   skipLabel?: string;
+  // Companion mode: private questions where a partner in the room would suppress
+  // honesty (impression management). These stay solo even in companion mode.
+  soloOnly?: boolean;
 }[] = [
   {
     id: 1,
@@ -74,6 +77,7 @@ const QUESTIONS_SOURCE: {
     text: "What's the worst date you've ever been on? What happened? What did you do about it? And looking back — what's hilarious about it now that definitely wasn't funny at the time?",
     dimension: "Empathic Intelligence",
     axes: [15, 16],
+    soloOnly: true,
   },
   {
     id: 8,
@@ -167,6 +171,7 @@ const QUESTIONS_SOURCE: {
     text: "Take us back to your first kiss. All the overthinking beforehand, the sweaty palms, the \"do I go for it or not\" internal debate. What were you terrified of? What actually happened? Was it amazing or was it a disaster? And what happened in the days after — how did it change how you saw yourself? How did it change what you thought was possible for you?",
     dimension: "Intrapersonal Intelligence",
     axes: [5, 15, 16],
+    soloOnly: true,
   },
   {
     id: 21,
@@ -174,6 +179,7 @@ const QUESTIONS_SOURCE: {
     text: "Tell us about a time a coach, a boss, or someone in authority told you to do something that crossed a line — win at someone else's expense, bend the rules, throw someone under the bus. Something that felt wrong in your gut. What did they ask you to do? Did you do it? If you pushed back, what happened? If you went along with it, how did that sit with you after?",
     dimension: "Meta-Cognitive Intelligence",
     axes: [17, 18, 21],
+    soloOnly: true,
   },
   {
     id: 22,
@@ -181,6 +187,7 @@ const QUESTIONS_SOURCE: {
     text: "Tell us about a devastating time someone you trusted completely fucked you over. What did they do? How long did it take you to figure out what was happening? And here's the real question — what did you DO about it? Did you confront them, cut them off, get even, or let it go?",
     dimension: "Resilient Intelligence",
     axes: [11, 12, 17],
+    soloOnly: true,
   },
   {
     id: 23,
@@ -551,6 +558,15 @@ export default function Assessment() {
   const [textResponses, setTextResponses] = useState<string[]>(Array(TOTAL_QUESTIONS).fill(""));
   const [skippedQuestions, setSkippedQuestions] = useState<number[]>([]);
   const [useTextMode, setUseTextMode] = useState(false);
+  // ── Companion mode ─────────────────────────────────────────────────────────
+  // Optional, strongly recommended: a partner / best friend / anyone who knows the
+  // member well plays along. Their read is captured on a SEPARATE channel (never
+  // merged into the member's own scored answer) so the self-signal stays pure and
+  // the self–other gap can be scored later. Not spouse-only.
+  const [companionMode, setCompanionMode] = useState(false);
+  const [companionName, setCompanionName] = useState("");
+  const [companionRelation, setCompanionRelation] = useState("");
+  const [companionResponses, setCompanionResponses] = useState<string[]>(Array(TOTAL_QUESTIONS).fill(""));
   const [scores, setScores] = useState<number[]>(Array(AXIS_LABELS.length).fill(0));
   const [isComplete, setIsComplete] = useState(false);
   const [assessmentId, setAssessmentId] = useState<number | null>(null);
@@ -595,6 +611,8 @@ export default function Assessment() {
   const hasRecording = recordings[currentQuestion] !== null;
   const hasTextResponse = textResponses[currentQuestion]?.trim().length > 20;
   const isSkipped = skippedQuestions.includes(currentQuestion);
+  // Companion panel shows only when companion mode is on AND this isn't a private question.
+  const companionActive = companionMode && !question.soloOnly;
 
   // ============================================================
   // PROGRESS PERSISTENCE — Save/resume from localStorage
@@ -619,12 +637,18 @@ export default function Assessment() {
     const saved = localStorage.getItem('aqal_assessment_progress');
     if (saved) {
       try {
-        const { question: q, scores: s, textResponses: tr, textMode, skipped } = JSON.parse(saved);
+        const { question: q, scores: s, textResponses: tr, textMode, skipped, companion } = JSON.parse(saved);
         if (typeof q === 'number' && q > 0) setCurrentQuestion(q);
         if (Array.isArray(s) && s.length === 22) setScores(s);
         if (Array.isArray(tr) && tr.length === TOTAL_QUESTIONS) setTextResponses(tr);
         if (typeof textMode === 'boolean') setUseTextMode(textMode);
         if (Array.isArray(skipped)) setSkippedQuestions(skipped);
+        if (companion && typeof companion === 'object') {
+          if (typeof companion.mode === 'boolean') setCompanionMode(companion.mode);
+          if (typeof companion.name === 'string') setCompanionName(companion.name);
+          if (typeof companion.relation === 'string') setCompanionRelation(companion.relation);
+          if (Array.isArray(companion.responses) && companion.responses.length === TOTAL_QUESTIONS) setCompanionResponses(companion.responses);
+        }
       } catch {}
     }
     setShowResumeDialog(false);
@@ -637,21 +661,23 @@ export default function Assessment() {
     setTextResponses(Array(TOTAL_QUESTIONS).fill(""));
     setSkippedQuestions([]);
     setUseTextMode(false);
+    setCompanionResponses(Array(TOTAL_QUESTIONS).fill(""));
     setShowResumeDialog(false);
   }, []);
 
   useEffect(() => {
     // Save progress on every question change
-    if (currentQuestion > 0 || scores.some(s => s > 0)) {
+    if (currentQuestion > 0 || scores.some(s => s > 0) || companionMode) {
       localStorage.setItem('aqal_assessment_progress', JSON.stringify({
         question: currentQuestion,
         scores,
         textResponses,
         textMode: useTextMode,
         skipped: skippedQuestions,
+        companion: { mode: companionMode, name: companionName, relation: companionRelation, responses: companionResponses },
       }));
     }
-  }, [currentQuestion, scores, textResponses, useTextMode, skippedQuestions]);
+  }, [currentQuestion, scores, textResponses, useTextMode, skippedQuestions, companionMode, companionName, companionRelation, companionResponses]);
 
   // Clear progress on completion
   useEffect(() => {
@@ -1689,6 +1715,56 @@ export default function Assessment() {
                   />
                 </label>
               </div>
+
+              {/* Companion mode opt-in — optional, strongly recommended, NOT spouse-only */}
+              <div className="mt-4 pt-4 border-t border-white/[0.06]">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs text-foreground/85 font-medium leading-snug">
+                      Bring your person? <span className="text-primary/70">Optional — recommended</span>
+                    </p>
+                    <p className="text-[0.65rem] text-muted-foreground/50 leading-snug mt-1">
+                      A partner, best friend, sibling — anyone who knows you well. They read your outward side (humor, charm, presence) more clearly than you do — so the read gets sharper, and it's way more fun. Private questions stay just you.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={companionMode}
+                    aria-label="Companion mode"
+                    onClick={() => setCompanionMode((v) => !v)}
+                    className={`shrink-0 mt-0.5 relative w-11 h-6 rounded-full transition-colors ${companionMode ? "bg-primary" : "bg-muted/40"}`}
+                  >
+                    <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${companionMode ? "translate-x-5" : ""}`} />
+                  </button>
+                </div>
+                {companionMode && (
+                  <div className="mt-3 space-y-2">
+                    <div className="flex flex-wrap gap-1.5">
+                      {["Partner", "Best friend", "Family", "Colleague", "Someone who knows me"].map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setCompanionRelation(r)}
+                          className={`px-2.5 py-1 rounded-full text-[0.65rem] border transition-colors ${companionRelation === r ? "border-primary text-primary bg-primary/10" : "border-border/50 text-muted-foreground/70 hover:text-foreground"}`}
+                        >
+                          {r}
+                        </button>
+                      ))}
+                    </div>
+                    <input
+                      type="text"
+                      value={companionName}
+                      onChange={(e) => setCompanionName(e.target.value)}
+                      placeholder="Their first name (optional)"
+                      className="w-full bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    />
+                    <p className="text-[0.6rem] text-muted-foreground/40 leading-snug">
+                      You answer first — in your own words. Then they add their take on a separate line. We keep the two apart and score the <em>gap</em> — that's the fun part.
+                    </p>
+                  </div>
+                )}
+              </div>
             </motion.div>
           )}
 
@@ -1924,6 +2000,46 @@ export default function Assessment() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Companion channel — a SEPARATE take, never merged into the member's scored answer */}
+          {companionActive && (
+            <motion.div
+              key={`comp-${currentQuestion}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+              className="mt-6 max-w-md w-full mx-auto rounded-xl border border-accent/25 bg-accent/[0.05] px-5 py-4 text-left"
+            >
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-accent/80 mb-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                {companionName ? `${companionName}'s take` : "Your person's take"} · doesn't change their answer
+              </p>
+              <p className="text-xs text-foreground/70 leading-snug mb-2">
+                Did they nail it, undersell it, or leave out the best part? Add the version they're too modest — or too generous — to tell.
+              </p>
+              <textarea
+                value={companionResponses[currentQuestion]}
+                onChange={(e) =>
+                  setCompanionResponses((prev) => {
+                    const n = [...prev];
+                    n[currentQuestion] = e.target.value;
+                    return n;
+                  })
+                }
+                placeholder="e.g. 'He's underselling this — he had the whole room laughing in 30 seconds.'"
+                rows={3}
+                className="w-full bg-background/60 border border-border/50 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-accent/30 resize-none"
+              />
+            </motion.div>
+          )}
+
+          {/* Private question, companion present — protect honesty */}
+          {companionMode && question.soloOnly && (
+            <div className="mt-6 max-w-md w-full mx-auto rounded-xl border border-border/40 bg-muted/[0.04] px-5 py-3 text-center">
+              <p className="text-xs text-muted-foreground/60 leading-snug">
+                🙈 Just you for this one{companionName ? ` — ${companionName}, look away` : ""}. Some questions are more honest when it's only you.
+              </p>
+            </div>
+          )}
 
           {/* Navigation */}
           <div className="mt-10 flex items-center gap-4">

@@ -204,3 +204,44 @@ When these are wired into `Assessment.tsx`, **re-tag each question's `axes[]` to
 targets** (the current tags are misaligned — see Part A). That single fix also makes the
 downstream scoring in `server/coaching.ts` and the radar in `Results.tsx` honest about which
 lines a given answer actually informed.
+
+---
+
+## Part D — Companion Mode (built)
+
+Optional, strongly recommended, **not spouse-only** — a partner / best friend / sibling /
+colleague / anyone who knows the member well plays along.
+
+**Why it improves precision (not just fun).** Self–Other Knowledge Asymmetry (Vazire): a close
+informant reads a person's *outward, evaluative* lines — **Humor, Seduction, Influence,
+Interpersonal, Leadership, Community-Founding, Adversarial, Social-Perceptual** — more accurately
+than the person reads themselves, while the **self** stays the better judge of the *inward* lines —
+**Interoceptive, Intrapersonal, Existential, Reflective, Moral, Meta-Cognitive**. So the partner is
+differentially more valid on exactly the lines self-report is weakest at. Plus corroboration of the
+shared-memory questions, and de-biasing of self-enhancement/self-diminishment.
+
+**The honest trap it avoids.** On private questions a partner in the room suppresses honesty
+(impression management). So those stay solo.
+
+### What's built (client, `Assessment.tsx`)
+- **Opt-in toggle** in the first-question primer — off by default (solo is the full experience);
+  relation chips (Partner · Best friend · Family · Colleague · Someone who knows me) + optional
+  first name. Never gates on having a partner.
+- **Separate channel:** the companion's take is captured in `companionResponses[]`, **never merged**
+  into the member's own scored `textResponses[]` — the self-signal stays pure so the gap can be
+  scored.
+- **Solo-guards:** questions tagged `soloOnly` (Q7 worst date, Q20 first kiss, Q21 ethical line,
+  Q22 betrayal) show a "just you for this one" note instead of the companion panel, even in
+  companion mode.
+- **Persistence:** companion mode/name/relation/responses ride the existing localStorage
+  autosave + resume, so a paired session survives a refresh.
+
+### Follow-up (backend + Results — next increment)
+1. Persist `companionResponses` + relation to the assessment (new nullable column / JSON field),
+   sent alongside the existing per-answer submit — kept in its own field, not blended.
+2. **Gap scoring:** score the companion channel into a parallel 32-line vector; compute the
+   **self–other discrepancy per line**, weighting the informant more on outward lines and the self
+   more on inward lines (SOKA routing).
+3. **The reveal** on `Results.tsx`: show the biggest self–other gaps as the headline moment
+   ("your person rates your Humor two bands higher than you do"), plus a lightly gamified
+   "how well do they know you" score. This is both the precision payoff and the shareable hook.
