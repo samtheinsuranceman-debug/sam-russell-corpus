@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,067 clusters · 9,999 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,109 clusters · 10,084 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,503 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,403 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,100 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,543 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,404 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,101 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,067** |
+| **Total** | **5,109** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,304 |
-| Strong | 1,301 |
-| Mixed | 794 |
-| Emerging | 668 |
+| Moderate | 2,317 |
+| Strong | 1,305 |
+| Mixed | 802 |
+| Emerging | 685 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,503)
+## PRACTICES — what strengthens the mind (impact lens)  (2,543)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2530,8 +2530,48 @@
 | 5023 | Shilajit (Purified Mineral Pitch) for Testosterone/Vitality | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
 | 5024 | Ubuntu — Southern African Communal Ethic & Belonging | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Existential, Moral' |
 | 5025 | Rooibos Tea (Aspalathus linearis) & Oxidative Stress | 1 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5026 | Traditional High-Fibre African Diet & Colonic Health (O'Keefe Diet-Swap) | 3 | Strong | 2 | practice: 'Bolsters clusters: gut microbiome, colonic health, metabolic regulati |
+| 5027 | Communal Eating / Shared-Plate Meals & Social Bonding | 3 | Moderate | 2 | practice: 'Bolsters clusters: social bonding, life satisfaction, community trust |
+| 5028 | Communal Child-Rearing / Alloparenting (Cooperative Breeding) | 3 | Moderate | 2 | practice: 'Bolsters clusters: child survival, maternal support, secure attachmen |
+| 5029 | East-African Distance-Running: Altitude + Lifestyle, Not a Gene | 3 | Moderate | 2 | practice: 'Bolsters clusters: cardiorespiratory capacity, running economy, habit |
+| 5030 | Salah (Islamic Prayer) as Light Physical Activity & Routine | 2 | Emerging | 2 | practice: 'Bolsters clusters: habitual movement, joint mobility, structured rout |
+| 5031 | Date Fruit (Phoenix dactylifera) — Traditional Break-Fast & Labour Food | 2 | Mixed | 2 | practice: 'Bolsters clusters: energy/micronutrients, obstetric outcomes' |
+| 5032 | Hammam (Middle-Eastern Steam Bath) — Passive Heat, Inferred Benefit | 2 | Emerging | 2 | practice: 'Bolsters clusters: vascular function, relaxation, communal ritual' |
+| 5033 | Teff (Eragrostis tef) & Injera — Low-GI, Iron-Rich Grain | 2 | Emerging | 2 | practice: 'Bolsters clusters: glycemic control, iron/mineral intake, gluten-free |
+| 5034 | Sumac (Rhus coriaria) — Middle-Eastern Spice for Metabolic Markers | 2 | Moderate | 2 | practice: 'Bolsters clusters: glycemic control, lipids, antioxidant status' |
+| 5035 | Griot Oral Tradition & Community Memory | 2 | Emerging | 2 | practice: 'Bolsters clusters: collective memory, cultural identity, intergenerat |
+| 5036 | Hoodia gordonii for Appetite — Failed in Trials | 1 | Mixed | 2 | practice: 'Bolsters clusters: appetite regulation, weight control' — claimed onl |
+| 5037 | Moringa oleifera ('Miracle Tree') — Nutrient-Dense, Thin Clinical Data | 2 | Emerging | 2 | practice: 'Bolsters clusters: micronutrient intake, glycemic control, lipid prof |
+| 5038 | Sufi Whirling (Sema) & Dhikr — Rhythmic Devotional Practice | 2 | Emerging | 2 | practice: 'Bolsters clusters: contemplative states, emotional regulation, meanin |
+| 5039 | Sutherlandia frutescens ('Cancer Bush') — Popular, Unproven | 1 | Emerging | 2 | practice: 'Bolsters clusters: immune/vitality, wellbeing' — claimed only |
+| 5040 | Tsimane Lifelong Low-CVD Pattern (Amazon Forager-Horticulturalists) | 4 | Strong | 2 | practice: 'Bolsters clusters: cardiovascular health, metabolic health, all-day p |
+| 5041 | All-Day Low-Intensity Movement (Active Grandparent Hypothesis) | 3 | Moderate | 2 | practice: 'Bolsters clusters: healthspan, cardiovascular health, cognitive aging |
+| 5042 | Grandmother Hypothesis — Elder Provisioning & Intergenerational Care | 3 | Moderate | 2 | practice: 'Bolsters clusters: intergenerational care, elder purpose, family resi |
+| 5043 | Hadza Gut Microbiome Diversity & Seasonal Cycling | 3 | Moderate | 2 | practice: 'Bolsters clusters: gut microbial diversity, fiber-fermenting capacity |
+| 5044 | Nature Connectedness & Time in Nature (Traditional Ecological Relation) | 2 | Moderate | 2 | practice: 'Bolsters clusters: wellbeing, meaning, psychological resilience' |
+| 5045 | Tsimane Slow Brain Aging & Very Low Dementia | 3 | Moderate | 2 | practice: 'Bolsters clusters: brain-volume preservation, cognitive aging, dement |
+| 5046 | Constrained Energy Expenditure — Move for Health, Not a Calorie Deficit | 3 | Moderate | 2 | practice: 'Bolsters clusters: realistic weight expectations, sustained activity, |
+| 5047 | Yarning — Indigenous-Led Relational Dialogue for Wellbeing | 2 | Emerging | 2 | practice: 'Bolsters clusters: cultural safety, disclosure, community mental heal |
+| 5048 | The Inuit 'Fish-Oil Protects the Heart' Story — A Debunked Myth | 1 | Mixed | 3 | practice: 'Bolsters clusters (claimed): cardiovascular protection via omega-3 —  |
+| 5049 | Active Rest — Squatting & Kneeling Instead of Chair-Sitting | 2 | Emerging | 1 | practice: 'Bolsters clusters: muscle activation during rest, lower-limb function |
+| 5050 | Sweat Lodge Ceremony as Culturally-Grounded Healing | 2 | Emerging | 2 | practice: 'Bolsters clusters: spiritual wellbeing, community connection, substan |
+| 5051 | Barefoot / Minimal Footwear & Foot Strength | 2 | Mixed | 2 | practice: 'Bolsters clusters: intrinsic foot strength, gait mechanics (injury cl |
+| 5052 | Connection to Country & Caring-for-Country (Aboriginal SEWB) | 2 | Emerging | 2 | practice: 'Bolsters clusters: social & emotional wellbeing, cultural identity, n |
+| 5053 | Talking Circles for Native American Health (Diabetes Self-Management) | 2 | Emerging | 2 | practice: 'Bolsters clusters: culturally-safe health education, self-management, |
+| 5054 | Te Whare Tapa Whā — Māori Four-Dimensional Health Model | 2 | Emerging | 2 | practice: 'Bolsters clusters: holistic wellbeing, family connection, spiritual a |
+| 5056 | Nixtamalization of Maize (Alkaline Lime Treatment) | 4 | Strong | 2 | practice: 'Bolsters clusters: Naturalist, Bodily nutrition, food-science literac |
+| 5058 | Amazonian Plant Knowledge as Drug-Discovery Source | 3 | Moderate | 2 | practice: 'Bolsters clusters: Naturalist, Pattern-Recognition, Systemic knowledg |
+| 5059 | Latin Dance (Salsa/Bachata) as Culturally-Tailored Exercise | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily fitness, Community, Emotional mood' |
+| 5060 | Milpa / 'Three Sisters' Diet (Maize-Beans-Squash) | 3 | Emerging | 2 | practice: 'Bolsters clusters: Bodily cardiometabolic health, Naturalist, Communi |
+| 5061 | Chia Seeds (Salvia hispanica) — Aztec/Maya Staple | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily cardiometabolic, fiber intake, plant omega- |
+| 5062 | Guava (Psidium guajava) — Tropical Vitamin-C & Fiber Fruit | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily cardiometabolic, fiber & vitamin-C intake' |
+| 5063 | Yerba Mate (Ilex paraguariensis) for Cardiometabolic Signals | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily metabolic health, Community ritual, antioxi |
+| 5064 | Cacao / Cocoa Flavanols — Mesoamerican Origin | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily vascular health, blood-pressure regulation' |
+| 5065 | Temazcal — Mesoamerican Sweat Bath | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community ritual, Existential, Bodily heat exposur |
+| 5066 | Acai (Euterpe oleracea) — Marketed 'Superfood' | 1 | Emerging | 2 | practice: 'Bolsters clusters: Bodily antioxidant status, Naturalist' |
+| 5067 | Familismo & the Hispanic Health Paradox | 2 | Mixed | 3 | practice: 'Bolsters clusters: Community, Emotional support, Interpersonal' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,403)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,404)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3938,8 +3978,9 @@
 | 4982 | Feeling Disconnected From Future You → Cutting Ethical Corners | 5 | Moderate | 2 | weakness: 'Degrades: Moral prudence, Financial integrity, Strategic reputation-m |
 | 4983 | The Time-Slack Fallacy — 'I'll Have More Time Later' | 5 | Moderate | 1 | weakness: 'Degrades: Strategic scheduling, Volitional follow-through, Financial  |
 | 4997 | Positive-Result Bias in Country-of-Origin Trials | 6 | Strong | 2 | weakness: 'Degrades: Logical, Pattern-Recognition, Meta-Cognitive, Adversarial' |
+| 5055 | Don't Romanticize: Indigenous Health Gaps Are Colonization, Not Tradition | 8 | Strong | 2 | weakness: 'Degrades: Community continuity, Existential identity, Bodily health,  |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,100)
+## COST OF FAILURE — what's at stake (harm lens)  (1,101)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5043,6 +5084,7 @@
 | 4952 | Fidget Spinners — the Debunked Fad | 2 | Strong | 2 | cost: 'Degrades: Meta-Cognitive, attention, on-task behavior' |
 | 5010 | Neti-Pot Tap-Water Risk — Naegleria fowleri (Rare but Fatal) | 5 | Strong | 2 | cost: 'Degrades: Bodily, Existential, Interoceptive' |
 | 5011 | Heavy-Metal Contamination in Ayurvedic Products (Lead, Mercury, Arsenic) | 4 | Strong | 2 | cost: 'Degrades: Interoceptive, Bodily, Meta-Cognitive' |
+| 5057 | Drinking Mate (and Any Beverage) Very Hot | 3 | Moderate | 2 | cost: 'Degrades: esophageal integrity, swallowing, long-term survival' |
 
 ## Framework / uncategorized  (61)
 
