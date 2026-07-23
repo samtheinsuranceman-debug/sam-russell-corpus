@@ -267,7 +267,7 @@ function HeroSection() {
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
             >
               <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> Methodology disclosed</span>
-              <Link href="/verification"><span className="inline-flex items-center gap-[7px] cursor-pointer hover:opacity-80 transition-opacity"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> 300+ sources · 0 fabricated</span></Link>
+              <Link href="/verification"><span className="inline-flex items-center gap-[7px] cursor-pointer hover:opacity-80 transition-opacity"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> 10,000+ sources · 0 fabricated</span></Link>
               <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> No score inflation, ever</span>
             </motion.div>
           </div>
@@ -842,6 +842,108 @@ function HonestFooter() {
 }
 
 // ============================================================
+// RESEARCH LIBRARY — what makes it different (in kind, not size)
+// ============================================================
+const LIB_STATS = [
+  { n: "5,000+", l: "research clusters" },
+  { n: "10,000+", l: "verified sources" },
+  { n: "0", l: "fabricated" },
+  { n: "32", l: "lines mapped" },
+];
+const LIB_POINTS = [
+  { t: "Honest by design", d: "The debunked myths are kept in and labeled — power posing, homeopathy, detox cleanses, the fish-oil legend — rated at the floor with the debunking source, never buried. About 3% of the library is flagged this way, and you can filter it in or out." },
+  { t: "Global, not just Western", d: "Deliberately sourced beyond the usual WEIRD samples: East & Southeast Asia, the Nordics, Africa & the Middle East, Latin America, the Pacific, the Himalaya, and Indigenous cohorts — with every cross-cultural caveat stated." },
+  { t: "Verdict-rated & searchable", d: "Every entry carries an honest gauge — how big the effect, how proven, how lasting — plus a validated-vs-debunked verdict you can toggle. Real safety costs (kava's liver risk, Ayurvedic heavy metals) are flagged too." },
+  { t: "Individualized to you", d: "It isn't a reference dump. Once your 32 lines are measured, the library is filtered to the interventions that move your specific strengths and weaknesses toward the goals you name." },
+];
+function ResearchLibrarySection() {
+  return (
+    <section id="library" style={{ padding: 'clamp(56px,8vw,108px) 0', background: INK }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+          The research library
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
+          First of its kind — in <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>kind</em>, not size.
+        </h2>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '46em' }}>
+          Raw databases like PubMed hold millions of records — that isn't this, and we won't pretend it is. As a single, curated, plain-language library that rates every regimen <b style={{ color: CREAM, fontWeight: 600 }}>honestly</b> — the myths kept in and labeled, not hidden — sourced from around the world and tied to your 32 lines, we can't point to another one like it. Arguably first-of-its-kind in <b style={{ color: CREAM, fontWeight: 600 }}>kind</b>, not in raw count. That candor is the whole moat: it can't be faked, and the companies selling the debunked therapies can't copy it.
+        </p>
+
+        {/* Stat row */}
+        <div className="grid gap-[clamp(12px,2vw,20px)] mt-[clamp(24px,3vw,40px)]" style={{ gridTemplateColumns: 'repeat(4,1fr)' }}>
+          {LIB_STATS.map((s) => (
+            <div key={s.l} className="rounded-[6px] text-center" style={{ border: `1px solid ${LINE_C}`, padding: '22px 14px', background: `radial-gradient(360px 160px at 50% 0%, rgba(224,198,140,0.06), transparent 70%), ${INK2}` }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(26px,4vw,40px)', lineHeight: 1, background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.n}</div>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.14em', textTransform: 'uppercase', color: CREAM2, marginTop: '10px' }}>{s.l}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Differentiators */}
+        <div className="grid gap-[clamp(16px,2.5vw,26px)] mt-[clamp(20px,2.5vw,26px)]" style={{ gridTemplateColumns: 'repeat(2,1fr)' }}>
+          {LIB_POINTS.map((p) => (
+            <div key={p.t} className="rounded-[6px]" style={{ background: `linear-gradient(180deg,${INK2},${INK})`, border: `1px solid ${LINE_C}`, padding: '24px 26px' }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', marginBottom: '8px', color: CREAM }}>
+                <span style={{ color: CHAMPAGNE, fontSize: '13px', marginRight: '9px', verticalAlign: 'middle' }}>◇</span>{p.t}
+              </div>
+              <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>{p.d}</div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-[clamp(20px,2.5vw,28px)]">
+          <Link href="/research-library"><span className="inline-flex items-center gap-[8px] cursor-pointer hover:opacity-80 transition-opacity" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: CHAMPAGNE }}><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> Browse the library →</span></Link>
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 720px) {
+          #library .grid[style*="repeat(2"] { grid-template-columns: 1fr !important; }
+          #library .grid[style*="repeat(4"] { grid-template-columns: repeat(2,1fr) !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ============================================================
+// COMPANION MODE — bring your person (optional, higher precision + fun)
+// ============================================================
+function CompanionSection() {
+  return (
+    <section id="companion" style={{ padding: 'clamp(56px,8vw,108px) 0', background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}` }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+          Companion mode · optional, recommended
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
+          Bring your <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>person.</em>
+        </h2>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '46em' }}>
+          Take it solo for a private read — or bring your partner or closest friend and play it together. It isn't just more fun: the science says a person who knows you well reads your <b style={{ color: CREAM, fontWeight: 600 }}>outward</b> lines — humor, charm, influence, how you command a room — more accurately than you read yourself, while <b style={{ color: CREAM, fontWeight: 600 }}>you</b> stay the better judge of the inward ones. We keep both answers separate, score the gap, and the reveal — <i>"you rate your humor how high?"</i> — is the best part.
+        </p>
+        <div className="grid gap-[clamp(16px,2.5vw,26px)] mt-[clamp(24px,3vw,40px)]" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
+          {[
+            { t: "Sharper, not softer", d: "Your partner corrects the lines you're worst at rating for yourself — charm, humor, presence, leadership. Two honest signals beat one biased one." },
+            { t: "The gap is the gold", d: "We don't blend the answers — we score the difference. A big gap between how you and they see a line is itself an insight (and the funniest moment of the night)." },
+            { t: "Solo loses nothing", d: "Companion mode is a bonus, never a requirement. The solo assessment is the full experience — private questions stay private, and single members get everything." },
+          ].map((c) => (
+            <div key={c.t} className="rounded-[6px]" style={{ border: `1px solid ${LINE_C}`, padding: '26px 24px', background: `radial-gradient(300px 180px at 50% 0%, rgba(224,198,140,0.05), transparent 70%), ${INK}` }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', color: CREAM, marginBottom: '10px' }}>{c.t}</div>
+              <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>{c.d}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 760px) {
+          #companion .grid[style*="repeat(3"] { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ============================================================
 // MAIN EXPORT
 // ============================================================
 export default function Home() {
@@ -864,8 +966,10 @@ export default function Home() {
         <div data-reveal><DialSection /></div>
         <div data-reveal><EngineeringSection /></div>
         <div data-reveal><ProcessSection /></div>
+        <div data-reveal><CompanionSection /></div>
         {SHOW_GENERATIONAL_RARITY && <div data-reveal><GenerationSection /></div>}
         <div data-reveal><EvidenceSection /></div>
+        <div data-reveal><ResearchLibrarySection /></div>
         <div data-reveal><SamplesSection /></div>
         <div data-reveal><ServicePillars /></div>
         <div data-reveal><TestimonialsStrip /></div>
