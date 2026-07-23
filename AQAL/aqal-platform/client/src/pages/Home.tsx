@@ -918,8 +918,11 @@ function CompanionSection() {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
           Bring your <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>person.</em>
         </h2>
+        <p style={{ color: CREAM, fontSize: 'clamp(16px,1.9vw,20px)', lineHeight: 1.6, maxWidth: '46em', fontStyle: 'italic', marginBottom: '14px' }}>
+          Do it solo for a private read, or bring your partner or best friend for a sharper, funnier one.
+        </p>
         <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '46em' }}>
-          Take it solo for a private read — or bring your partner or closest friend and play it together. It isn't just more fun: the science says a person who knows you well reads your <b style={{ color: CREAM, fontWeight: 600 }}>outward</b> lines — humor, charm, influence, how you command a room — more accurately than you read yourself, while <b style={{ color: CREAM, fontWeight: 600 }}>you</b> stay the better judge of the inward ones. We keep both answers separate, score the gap, and the reveal — <i>"you rate your humor how high?"</i> — is the best part.
+          It isn't just more fun: the science says a person who knows you well reads your <b style={{ color: CREAM, fontWeight: 600 }}>outward</b> lines — humor, charm, influence, how you command a room — more accurately than you read yourself, while <b style={{ color: CREAM, fontWeight: 600 }}>you</b> stay the better judge of the inward ones. Any high-acquaintance person works — partner, best friend, sibling, business partner — never spouse-only, and solo is always the full experience. We keep both answers separate, score the gap, and the reveal — <i>"you rate your humor how high?"</i> — is the best part.
         </p>
         <div className="grid gap-[clamp(16px,2.5vw,26px)] mt-[clamp(24px,3vw,40px)]" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
           {[

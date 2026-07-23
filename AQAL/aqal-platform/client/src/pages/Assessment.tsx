@@ -614,6 +614,34 @@ export default function Assessment() {
   // Companion panel shows only when companion mode is on AND this isn't a private question.
   const companionActive = companionMode && !question.soloOnly;
 
+  // ── Companion reveal (the "gap") ───────────────────────────────────────────
+  // Run the companion channel through the SAME depth engine as the member, then
+  // surface the honest, fun signal the coarse scorer supports: lines your person
+  // lit up brighter than you did — "what they see in you that you undersold" — plus
+  // a light "how well do they know you" agreement score. (The precise SOKA per-line
+  // gap lands with the evidence-based server analysis; see the audit doc, Part D.)
+  const companionReveal = useMemo(() => {
+    if (!companionMode) return null;
+    const answered = companionResponses.filter((r) => (r?.trim().split(/\s+/).length ?? 0) >= 5).length;
+    if (answered === 0) return null;
+    const comp = Array(AXIS_LABELS.length).fill(0);
+    QUESTIONS.forEach((q, i) => {
+      const words = companionResponses[i]?.trim() ? companionResponses[i].trim().split(/\s+/).length : 0;
+      if (words < 5) return;
+      const depth = Math.min(0.5, 0.2 + (words / 120) * 0.3);
+      q.axes.forEach((a) => { comp[a] = Math.max(comp[a], depth); });
+    });
+    const topSees = comp
+      .map((c, i) => ({ i, name: AXIS_LABELS[i], gap: c - (scores[i] ?? 0), comp: c }))
+      .filter((g) => g.comp > 0 && g.gap > 0.03)
+      .sort((a, b) => b.gap - a.gap)
+      .slice(0, 4);
+    const memberLit = scores.map((s, i) => (s > 0 ? i : -1)).filter((i) => i >= 0);
+    const bothLit = memberLit.filter((i) => comp[i] > 0).length;
+    const knows = memberLit.length ? Math.round((100 * bothLit) / memberLit.length) : 0;
+    return { answered, topSees, knows };
+  }, [companionMode, companionResponses, scores]);
+
   // ============================================================
   // PROGRESS PERSISTENCE — Save/resume from localStorage
   // ============================================================
@@ -1520,6 +1548,43 @@ export default function Assessment() {
             </div>
           </motion.div>
 
+          {/* Companion reveal — "how well do they know you" + what they saw you undersell */}
+          {companionReveal && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+              className="glass-card rounded-2xl p-7 mb-8 border border-accent/20 text-left"
+            >
+              <p className="text-xs uppercase tracking-[0.2em] text-accent/70 mb-3 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                {companionName ? `How well ${companionName} knows you` : "How well your person knows you"}
+              </p>
+              <p className="text-4xl sm:text-5xl font-bold text-center" style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}>
+                {companionReveal.knows}%
+              </p>
+              <p className="text-muted-foreground/50 text-xs mt-2 text-center">
+                Your stories lined up on {companionReveal.knows}% of the lines you lit — across {companionReveal.answered} they weighed in on.
+              </p>
+              {companionReveal.topSees.length > 0 && (
+                <div className="mt-5 pt-5 border-t border-white/[0.06]">
+                  <p className="text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground/50 mb-2.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                    What {companionName || "they"} saw that you undersold
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {companionReveal.topSees.map((s) => (
+                      <span key={s.i} className="px-3 py-1 rounded-full text-xs border border-accent/30 text-accent bg-accent/[0.06]">
+                        {s.name}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground/40 text-[0.7rem] mt-3 leading-relaxed">
+                    A person who knows you well reads your outward side — humor, charm, presence — more clearly than you read yourself. The precise line-by-line gap sharpens with the full evidence-based analysis.
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          )}
+
           {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -1723,8 +1788,11 @@ export default function Assessment() {
                     <p className="text-xs text-foreground/85 font-medium leading-snug">
                       Bring your person? <span className="text-primary/70">Optional — recommended</span>
                     </p>
+                    <p className="text-[0.7rem] text-foreground/70 leading-snug mt-1 italic">
+                      Do it solo for a private read, or bring your partner or best friend for a sharper, funnier one.
+                    </p>
                     <p className="text-[0.65rem] text-muted-foreground/50 leading-snug mt-1">
-                      A partner, best friend, sibling — anyone who knows you well. They read your outward side (humor, charm, presence) more clearly than you do — so the read gets sharper, and it's way more fun. Private questions stay just you.
+                      A partner, best friend, sibling, close colleague — anyone who knows you well. They read your outward side (humor, charm, presence) more clearly than you do, so the read gets sharper. Private questions stay just you.
                     </p>
                   </div>
                   <button
