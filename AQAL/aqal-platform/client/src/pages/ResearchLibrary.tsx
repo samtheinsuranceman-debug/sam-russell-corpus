@@ -15629,6 +15629,17 @@ const PRACTICE_SOURCE_COUNT = PRACTICE_EVIDENCE.reduce((n, c) => n + c.sources.l
 const PRACTICE_SECTION_COUNT = new Set(PRACTICE_EVIDENCE.map((c) => c.section)).size;
 const TOTAL_SOURCES = VOLUME_SOURCES + PRACTICE_SOURCE_COUNT;
 
+// ── Validated vs. debunked split ────────────────────────────────────────────
+// A "debunked / no-credible-evidence" entry is a *practice* deliberately rated at
+// the floor (Impact magnitude 1): a myth, a failed replication, a pseudoscience.
+// We keep these in the library ON PURPOSE — so a member sees the verdict and never
+// mistakes them for an endorsement — but they must be countable and hideable, so the
+// headline number is never confused with padding. Everything else is an evidence-
+// backed finding (a practice that works, or a documented risk/cost/weakness).
+export const isDebunkedCluster = (c: PracticeCluster): boolean => !!c.impact && c.impact.magnitude === 1;
+const PRACTICE_DEBUNKED_COUNT = PRACTICE_EVIDENCE.filter(isDebunkedCluster).length;
+const PRACTICE_VALIDATED_COUNT = PRACTICE_EVIDENCE.length - PRACTICE_DEBUNKED_COUNT;
+
 // ── Verification ledger stats — the single, live source of truth ────────────
 // Computed from the actual rendered source arrays so the public ledger can
 // never drift from what's really in the library. Every entry here survived the
@@ -15756,6 +15767,9 @@ export default function ResearchLibrary() {
   const [practiceQuery, setPracticeQuery] = useState("");
   const [practiceTag, setPracticeTag] = useState<"all" | PracticeCluster["evidenceTag"]>("all");
   const [practiceSectionFilter, setPracticeSectionFilter] = useState<string>("all");
+  // Verdict filter: show everything, only the evidence-backed entries (hide the
+  // debunked myths), or only the debunked ones (to audit what the library flags).
+  const [practiceVerdict, setPracticeVerdict] = useState<"all" | "validated" | "debunked">("all");
   // Leaderboard overlay: rank every scored cluster by leverage / threat / cost.
   const [board, setBoard] = useState<"off" | "leverage" | "threat" | "cost">("off");
 
@@ -15836,6 +15850,8 @@ export default function ResearchLibrary() {
     return PRACTICE_EVIDENCE.filter((c) => {
       if (practiceSectionFilter !== "all" && c.section !== practiceSectionFilter) return false;
       if (practiceTag !== "all" && c.evidenceTag !== practiceTag) return false;
+      if (practiceVerdict === "validated" && isDebunkedCluster(c)) return false;
+      if (practiceVerdict === "debunked" && !isDebunkedCluster(c)) return false;
       if (q) {
         const hay = (
           c.title + " " + c.subtitle + " " + c.description + " " + (c.callout || "") + " " +
@@ -15848,7 +15864,7 @@ export default function ResearchLibrary() {
       }
       return true;
     }).sort((a, b) => sectionRank(a.section) - sectionRank(b.section));
-  }, [practiceQuery, practiceTag, practiceSectionFilter]);
+  }, [practiceQuery, practiceTag, practiceSectionFilter, practiceVerdict]);
 
   // When a keyword search is active, reveal matching sources automatically.
   const practiceSearching = practiceQuery.trim().length > 0;
@@ -15880,6 +15896,7 @@ export default function ResearchLibrary() {
     setPracticeQuery("");
     setPracticeTag("all");
     setPracticeSectionFilter("all");
+    setPracticeVerdict("all");
     setOpenPracticeIds((prev) => new Set(prev).add(id));
     setTimeout(() => {
       document.getElementById(`src-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -16477,6 +16494,36 @@ export default function ResearchLibrary() {
               ))}
             </div>
 
+            {/* Verdict filter — validated vs. the myths the library deliberately flags */}
+            <div className="rl-chips rl-practice-tagfilter">
+              <button
+                type="button"
+                className={`rl-chip${practiceVerdict === "all" ? " active" : ""}`}
+                onClick={() => setPracticeVerdict("all")}
+                title="Show everything — evidence-backed findings and the debunked myths side by side"
+              >
+                All verdicts
+              </button>
+              <button
+                type="button"
+                className={`rl-chip${practiceVerdict === "validated" ? " active" : ""}`}
+                style={practiceVerdict === "validated" ? { borderColor: "#7fae7f", color: "#9fca9f" } : undefined}
+                onClick={() => setPracticeVerdict(practiceVerdict === "validated" ? "all" : "validated")}
+                title="Hide the debunked / no-credible-evidence entries — show only evidence-backed findings"
+              >
+                Validated only · {PRACTICE_VALIDATED_COUNT.toLocaleString()}
+              </button>
+              <button
+                type="button"
+                className={`rl-chip${practiceVerdict === "debunked" ? " active" : ""}`}
+                style={practiceVerdict === "debunked" ? { borderColor: "#c98a5a", color: "#d9a066" } : undefined}
+                onClick={() => setPracticeVerdict(practiceVerdict === "debunked" ? "all" : "debunked")}
+                title="Show only the entries the library flags as debunked, myth, or no credible evidence — rated at the floor with the debunking source"
+              >
+                Debunked / flagged · {PRACTICE_DEBUNKED_COUNT.toLocaleString()}
+              </button>
+            </div>
+
             {/* Leaderboard toggle — rank the whole library by each gauge */}
             <div className="rl-board-toggle">
               <span className="rl-board-toggle-label">Leaderboards</span>
@@ -16595,14 +16642,18 @@ export default function ResearchLibrary() {
               honest reverse-causation caveat (a weak line and the failure often share an upstream cause).
             </div>
 
-            {/* Result count */}
+            {/* Result count — with the validated-vs-debunked split spelled out */}
             <div className="rl-practice-count">
-              Showing <b>{filteredPractices.length}</b> of {PRACTICE_EVIDENCE.length} topics
-              {(practiceSectionFilter !== "all" || practiceTag !== "all" || practiceSearching) && (
+              Showing <b>{filteredPractices.length.toLocaleString()}</b> of {PRACTICE_EVIDENCE.length.toLocaleString()} topics
+              <span style={{ color: MUTED, opacity: 0.85 }}>
+                {" · "}<b style={{ color: "#9fca9f" }}>{PRACTICE_VALIDATED_COUNT.toLocaleString()}</b> evidence-backed
+                {" · "}<b style={{ color: "#d9a066" }}>{PRACTICE_DEBUNKED_COUNT.toLocaleString()}</b> debunked/flagged
+              </span>
+              {(practiceSectionFilter !== "all" || practiceTag !== "all" || practiceVerdict !== "all" || practiceSearching) && (
                 <button
                   type="button"
                   className="rl-clear-all"
-                  onClick={() => { setPracticeQuery(""); setPracticeTag("all"); setPracticeSectionFilter("all"); }}
+                  onClick={() => { setPracticeQuery(""); setPracticeTag("all"); setPracticeSectionFilter("all"); setPracticeVerdict("all"); }}
                 >
                   Clear all
                 </button>
