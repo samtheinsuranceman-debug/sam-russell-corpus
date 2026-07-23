@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,109 clusters · 10,084 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,150 clusters · 10,166 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,543 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,404 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,101 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,579 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,405 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,105 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,109** |
+| **Total** | **5,150** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,317 |
-| Strong | 1,305 |
-| Mixed | 802 |
-| Emerging | 685 |
+| Moderate | 2,329 |
+| Strong | 1,311 |
+| Mixed | 812 |
+| Emerging | 698 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,543)
+## PRACTICES — what strengthens the mind (impact lens)  (2,579)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2570,8 +2570,44 @@
 | 5065 | Temazcal — Mesoamerican Sweat Bath | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community ritual, Existential, Bodily heat exposur |
 | 5066 | Acai (Euterpe oleracea) — Marketed 'Superfood' | 1 | Emerging | 2 | practice: 'Bolsters clusters: Bodily antioxidant status, Naturalist' |
 | 5067 | Familismo & the Hispanic Health Paradox | 2 | Mixed | 3 | practice: 'Bolsters clusters: Community, Emotional support, Interpersonal' |
+| 5068 | Buryat / Mongolian Shamanic Healing & the Meaning-Response | 2 | Moderate | 2 | practice: 'Bolsters clusters: communal belonging, existential meaning, emotional |
+| 5070 | Nomadic Pastoralist All-Day Activity & Metabolic Health | 3 | Moderate | 2 | practice: 'Bolsters clusters: cardiometabolic fitness, interoceptive vitality, e |
+| 5071 | Yak-Butter Tea (Po Cha) — Caloric & Altitude Adaptation | 2 | Mixed | 2 | practice: 'Bolsters clusters: energy availability, cold/altitude resilience, int |
+| 5072 | Russian / Siberian Banya (Steam Bath + Venik Whisking) | 3 | Emerging | 1 | practice: 'Bolsters clusters: cardiovascular conditioning, interoceptive toleran |
+| 5073 | Koumiss / Airag — Fermented Mare's Milk (Central Asia & Mongolia) | 2 | Emerging | 3 | practice: 'Bolsters clusters: gut/microbiome, interoceptive digestion, nutrition |
+| 5074 | Panax Ginseng for Cognition (Working Memory) | 2 | Mixed | 2 | practice: 'Bolsters clusters: working memory, mental arithmetic, secondary-memor |
+| 5075 | Rhodiola rosea (Siberian Golden Root) for Mild Depression | 2 | Mixed | 1 | practice: 'Bolsters clusters: mood regulation, stress tolerance, intrapersonal s |
+| 5076 | Tibetan Yoga (Tsa Lung / Trul Khor) for Sleep in Cancer Patients | 2 | Emerging | 2 | practice: 'Bolsters clusters: sleep quality, interoceptive breath-body regulatio |
+| 5077 | Tummo (g-Tummo) 'Inner Fire' Meditation & Voluntary Thermogenesis | 3 | Moderate | 2 | practice: 'Bolsters clusters: interoceptive control, volitional regulation, body |
+| 5078 | Extreme-Cold Living & Brown-Fat Adaptation (Yakutia / Sakha) | 2 | Emerging | 2 | practice: 'Bolsters clusters: thermogenic metabolism, interoceptive cold-toleran |
+| 5079 | High-Altitude Acclimatization & Tibetan Genetic Adaptation | 2 | Moderate | 2 | practice: 'Bolsters clusters: cardiorespiratory capacity, bodily resilience, nat |
+| 5080 | Tibetan Adept Meditation & High-Amplitude Gamma Synchrony | 2 | Emerging | 1 | practice: 'Bolsters clusters: meta-awareness, attentional stability, affective r |
+| 5082 | Paracelsus: 'The Dose Makes the Poison' | 3 | Strong | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Existential, Logical, Naturalist' |
+| 5083 | Willow Bark (Salicin) for Low Back Pain | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5084 | Galenic Humoral Theory — Obsolete but Foundational | 1 | Strong | 2 | practice: 'Bolsters clusters: (none — obsolete model)' |
+| 5085 | Foxglove / Digitalis (Digoxin) — Folk Cure to Cardiac Drug | 3 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5086 | Lemon Balm (Melissa officinalis) for Anxiety & Mood | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Meta-Cognitive' |
+| 5087 | Passionflower (Passiflora incarnata) for Anxiety | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive' |
+| 5088 | Chamomile (Matricaria) for Generalized Anxiety | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal' |
+| 5089 | Horse Chestnut Seed Extract for Venous Insufficiency | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5090 | Bach Flower Remedies — Placebo Only | 1 | Strong | 2 | practice: 'Bolsters clusters: (none — pseudoscience)' |
+| 5091 | Homeopathy — No Effect Beyond Placebo | 1 | Strong | 2 | practice: 'Bolsters clusters: (none — pseudoscience)' |
+| 5092 | Hawthorn (Crataegus) for Chronic Heart Failure | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5093 | Maggot Debridement Therapy (Lucilia sericata) | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Naturalist' |
+| 5094 | Medicinal Leech Therapy (Hirudo) — Real Modern Niche | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Naturalist' |
+| 5095 | Feverfew (Tanacetum) for Migraine Prevention | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5098 | 'Aiga / 'Ohana — Extended-Family Collectivism | 3 | Moderate | 2 | practice: 'Bolsters clusters: Community, Parental, Emotional' |
+| 5099 | Polynesian Wayfinding — Spatial Cognition & Cultural Revival | 3 | Moderate | 3 | practice: 'Bolsters clusters: Spatial, Naturalist, Existential' |
+| 5100 | Faikava / Kava Ceremony — Communal Social Ritual | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Moral' |
+| 5101 | Lomilomi — Traditional Hawaiian Massage | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Emotional, Interoceptive' |
+| 5102 | Talanoa — Pacific Dialogue & Storytelling | 2 | Emerging | 2 | practice: 'Bolsters clusters: Community, Linguistic, Emotional' |
+| 5103 | Kava (Piper methysticum) for Anxiety | 2 | Mixed | 3 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal' |
+| 5104 | Ho'oponopono — Hawaiian Reconciliation & Forgiveness | 2 | Emerging | 2 | practice: 'Bolsters clusters: Moral, Emotional, Interpersonal' |
+| 5105 | Vā / Teu le Vā — Tending Relational Space | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interpersonal, Moral, Community' |
+| 5106 | Fire-Walking Ritual — Arousal Synchrony & Bonding | 2 | Moderate | 2 | practice: 'Bolsters clusters: Community, Interoceptive, Emotional' |
+| 5107 | Traditional Pacific Staples — Taro, Breadfruit, Coconut, Fish | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Naturalist, Community' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,404)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,405)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3979,8 +4015,9 @@
 | 4983 | The Time-Slack Fallacy — 'I'll Have More Time Later' | 5 | Moderate | 1 | weakness: 'Degrades: Strategic scheduling, Volitional follow-through, Financial  |
 | 4997 | Positive-Result Bias in Country-of-Origin Trials | 6 | Strong | 2 | weakness: 'Degrades: Logical, Pattern-Recognition, Meta-Cognitive, Adversarial' |
 | 5055 | Don't Romanticize: Indigenous Health Gaps Are Colonization, Not Tradition | 8 | Strong | 2 | weakness: 'Degrades: Community continuity, Existential identity, Bodily health,  |
+| 5108 | Noni Juice (Morinda citrifolia) — 'Cure-All' Claims Unsupported | 4 | Mixed | 2 | weakness: 'Degrades: Financial, Logical, Interoceptive' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,101)
+## COST OF FAILURE — what's at stake (harm lens)  (1,105)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5085,6 +5122,10 @@
 | 5010 | Neti-Pot Tap-Water Risk — Naegleria fowleri (Rare but Fatal) | 5 | Strong | 2 | cost: 'Degrades: Bodily, Existential, Interoceptive' |
 | 5011 | Heavy-Metal Contamination in Ayurvedic Products (Lead, Mercury, Arsenic) | 4 | Strong | 2 | cost: 'Degrades: Interoceptive, Bodily, Meta-Cognitive' |
 | 5057 | Drinking Mate (and Any Beverage) Very Hot | 3 | Moderate | 2 | cost: 'Degrades: esophageal integrity, swallowing, long-term survival' |
+| 5069 | Sowa Rigpa 'Precious Pills' — Heavy-Metal Content | 3 | Mixed | 2 | cost: 'Degrades: interoceptive integrity, cognition, kidney/neural health' |
+| 5081 | Historical Bloodletting — Mostly Harm, Narrow Real Use | 4 | Strong | 2 | cost: 'Degrades: Bodily, Interoceptive, Existential' |
+| 5096 | Pacific Nutrition Transition → World's Highest Obesity/Diabetes | 5 | Strong | 3 | cost: 'Degrades: Bodily, Interoceptive, Naturalist' |
+| 5097 | Kava-Induced Liver Injury (Hepatotoxicity) | 4 | Mixed | 3 | cost: 'Degrades: Bodily, Interoceptive' |
 
 ## Framework / uncategorized  (61)
 
