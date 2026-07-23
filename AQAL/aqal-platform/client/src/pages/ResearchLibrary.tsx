@@ -16829,6 +16829,15 @@ export default function ResearchLibrary() {
                           <span className="rl-tag" style={{ color: TAG_COLOR[cluster.evidenceTag] }}>
                             {cluster.evidenceTag}
                           </span>
+                          {isDebunkedCluster(cluster) && (
+                            <span
+                              className="rl-tag"
+                              style={{ color: "#d9a066", borderColor: "rgba(217,160,102,0.5)", background: "rgba(217,160,102,0.08)" }}
+                              title="Kept in the library on purpose, rated at the floor: this is a myth, a failed replication, or a practice with no credible evidence. See the callout and the debunking source below."
+                            >
+                              ⚠ Debunked / no evidence
+                            </span>
+                          )}
                         </div>
                         <ChevronDown className="rl-chev" size={15} />
                       </div>
