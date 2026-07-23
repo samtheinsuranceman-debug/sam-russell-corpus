@@ -5149,3 +5149,44 @@ va-relational-space,5105,practice,Vā / Teu le Vā — Tending Relational Space,
 firewalking-synchrony-xygalatas,5106,practice,Fire-Walking Ritual — Arousal Synchrony & Bonding,Moderate,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Community, Interoceptive, Emotional'"
 traditional-pacific-staples-nutrition,5107,practice,"Traditional Pacific Staples — Taro, Breadfruit, Coconut, Fish",Emerging,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Naturalist, Community'"
 noni-morinda-cure-all,5108,weakness,Noni Juice (Morinda citrifolia) — 'Cure-All' Claims Unsupported,Mixed,4,threat /10,2,"weakness: 'Degrades: Financial, Logical, Interoceptive'"
+unproven-stem-cell-clinics,5109,cost,Unproven 'Stem-Cell' / Regenerative Injection Clinics,Strong,5,harm severity /5,2,"cost: 'Degrades: Bodily, Financial, Street-Smarts'"
+bpc-157-injectable-peptides,5110,cost,"'Healing' Peptides (BPC-157, TB-500)",Emerging,3,harm severity /5,2,"cost: 'Degrades: Bodily, Financial, Logical'"
+iv-nad-therapy,5111,cost,IV NAD+ Therapy (Anti-Aging Infusions),Strong,2,harm severity /5,2,"cost: 'Degrades: Financial, Logical, Interoceptive'"
+iv-vitamin-drips-myers-cocktail,5112,cost,IV Vitamin Drips ('Myers Cocktail' / Hangover IVs),Strong,2,harm severity /5,2,"cost: 'Degrades: Financial, Interoceptive, Logical'"
+whole-body-mri-screening,5113,cost,Whole-Body MRI Screening for the Healthy (Prenuvo-style),Strong,2,harm severity /5,2,"cost: 'Degrades: Financial, Emotional, Logical'"
+hrv-wearable-readiness-scores,5114,practice,HRV Wearables & 'Readiness' Scores (Oura/Whoop),Mixed,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Interoceptive, Meta-Cognitive, Bodily'"
+methylene-blue-cognition,5115,practice,Methylene Blue for Cognition/Energy,Emerging,2,impact magnitude /5,1,"practice: 'Bolsters clusters: Meta-Cognitive, Interoceptive (thin)'"
+pneumatic-compression-boots-recovery,5116,practice,Pneumatic Compression Boots for Recovery (NormaTec-style),Mixed,2,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Interoceptive'"
+blue-light-blocking-glasses-sleep,5117,practice,Blue-Light-Blocking Glasses for Sleep & Eye Strain,Mixed,1,impact magnitude /5,1,practice: 'Bolsters clusters: none proven (Cochrane null)'
+infrared-sauna-detox-claims,5118,practice,Infrared Sauna & the 'Detox' Claim,Mixed,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional'"
+exogenous-ketones-non-athletes,5119,practice,Exogenous Ketones & Ketone Monitoring for Non-Athletes,Mixed,1,impact magnitude /5,2,practice: 'Bolsters clusters: Bodily (marginal at best)'
+hbot-genuine-vs-wellness,5120,practice,Hyperbaric Oxygen — Real Indications vs. Wellness Hype,Mixed,2,impact magnitude /5,2,"practice: 'Bolsters clusters: Bodily, Interoceptive (only for genuine indications)'"
+red-light-fat-loss-testosterone,5121,practice,Red/Near-Infrared Light for Fat Loss & Testosterone,Mixed,1,impact magnitude /5,2,practice: 'Bolsters clusters: none proven (hype half of red light)'
+orthosomnia-sleep-tracker-anxiety,5122,weakness,Orthosomnia (Sleep-Tracker-Induced Insomnia),Emerging,4,threat /10,1,"weakness: 'Degrades: Interoceptive, Emotional, Meta-Cognitive'"
+bariatric-metabolic-surgery,5123,practice,Metabolic / Bariatric Surgery — Long-Term Outcomes,Strong,5,impact magnitude /5,2,practice: 'Bolsters clusters: Bodily'
+tirzepatide-surmount1-obesity,5124,practice,"Tirzepatide (SURMOUNT-1) — Dual GIP/GLP-1, the Strongest Yet",Strong,5,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Interoceptive, Volitional'"
+semaglutide-select-cardiovascular,5125,practice,Semaglutide & Cardiovascular Events in Non-Diabetics (SELECT),Strong,4,impact magnitude /5,1,practice: 'Bolsters clusters: Bodily'
+semaglutide-flow-kidney,5126,practice,Semaglutide & Kidney Outcomes (FLOW),Strong,4,impact magnitude /5,1,practice: 'Bolsters clusters: Bodily'
+semaglutide-step1-obesity,5127,practice,Semaglutide 2.4 mg (STEP-1) for Obesity,Strong,4,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Interoceptive, Volitional'"
+tirzepatide-surmount-osa,5128,practice,Tirzepatide for Obstructive Sleep Apnea (SURMOUNT-OSA),Strong,4,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Interoceptive'"
+tirzepatide-vs-semaglutide-surmount5,5129,practice,"Tirzepatide vs Semaglutide, Head-to-Head (SURMOUNT-5)",Strong,4,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Interoceptive'"
+glp1-weight-regain-cost,5130,cost,GLP-1 Weight Regain After Stopping (& GI Effects),Strong,3,harm severity /5,1,"cost: 'Degrades: Bodily, Interoceptive, Volitional'"
+ssri-efficacy-honest,5131,practice,"SSRIs for Depression — Real but Modest, and the Serotonin Myth",Mixed,3,impact magnitude /5,3,"practice: 'Bolsters clusters: Emotional, Volitional'"
+glp1-lean-mass-loss-cost,5132,cost,Lean / Muscle-Mass Loss on GLP-1 Agonists,Moderate,2,harm severity /5,2,cost: 'Degrades: Bodily'
+rtms-itbs-depression,5133,practice,rTMS / Theta-Burst Stimulation for Resistant Depression,Moderate,3,impact magnitude /5,2,"practice: 'Bolsters clusters: Emotional, Volitional, Meta-Cognitive'"
+semaglutide-alcohol-use-disorder,5134,practice,Semaglutide for Alcohol Use Disorder (Emerging),Emerging,2,impact magnitude /5,1,"practice: 'Bolsters clusters: Volitional, Interoceptive, Emotional'"
+saint-snt-accelerated-tms,5135,practice,SAINT / SNT — Accelerated 5-Day TMS (Emerging),Emerging,3,impact magnitude /5,1,"practice: 'Bolsters clusters: Emotional, Volitional'"
+betel-quid-areca-nut,5136,cost,Betel Quid / Areca Nut Chewing — Group 1 Carcinogen,Strong,5,harm severity /5,3,"Degrades: Bodily, Community"
+kratom-mitragyna-speciosa,5137,cost,Kratom (Mitragyna speciosa) — Dependence & Toxicity Risk,Mixed,4,harm severity /5,3,"Degrades: Interoceptive, Volitional, Bodily"
+thai-massage-nuad-boran,5138,practice,Traditional Thai Massage (Nuad Boran),Moderate,3,impact magnitude /5,2,"Bolsters clusters: Bodily, Interoceptive, Emotional"
+seasian-collectivist-family,5139,practice,Collectivist Extended-Family & Social Support,Moderate,3,impact magnitude /5,2,"Bolsters clusters: Community, Social-Perceptual, Emotional"
+muay-thai-fitness-discipline,5140,practice,Muay Thai Training for Fitness & Discipline,Moderate,3,impact magnitude /5,2,"Bolsters clusters: Bodily, Volitional, Community"
+thai-herbal-compress-luk-pra-kob,5141,practice,Thai Herbal Compress (Luk Pra Kob),Moderate,2,impact magnitude /5,2,"Bolsters clusters: Bodily, Interoceptive"
+gotu-kola-centella-asiatica,5142,practice,Gotu Kola (Centella asiatica) for Wounds & Cognition,Emerging,2,impact magnitude /5,2,"Bolsters clusters: Bodily, Meta-Cognitive"
+tongkat-ali-eurycoma,5143,practice,Tongkat Ali (Eurycoma longifolia) for Stress & Vitality,Mixed,2,impact magnitude /5,2,"Bolsters clusters: Interoceptive, Emotional"
+cao-gio-coining,5144,practice,Cao Gio / Coining (Vietnamese Skin-Scraping),Mixed,1,impact magnitude /5,2,Bolsters clusters: Community
+hilot-filipino-healing,5145,practice,Hilot (Filipino Traditional Massage/Healing),Emerging,1,impact magnitude /5,2,"Bolsters clusters: Bodily, Community"
+lemongrass-aromatherapy,5146,practice,Lemongrass (Cymbopogon) Aromatherapy for Anxiety,Emerging,1,impact magnitude /5,2,"Bolsters clusters: Emotional, Interoceptive"
+jamu-indonesian-tonics,5147,practice,Jamu (Indonesian Herbal Tonics),Mixed,1,impact magnitude /5,2,"Bolsters clusters: Community, Naturalist"
+theravada-merit-making,5148,practice,Theravada Merit-Making & the Five Precepts,Emerging,2,impact magnitude /5,2,"Bolsters clusters: Existential, Community, Moral"
+seasian-traditional-diet,5149,practice,"Traditional SE-Asian Diet (Herbs, Fish, Vegetables — and Salt)",Mixed,2,impact magnitude /5,2,"Bolsters clusters: Bodily, Naturalist"

@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,150 clusters · 10,166 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,191 clusters · 10,238 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,579 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,405 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,105 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,610 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,406 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,114 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,150** |
+| **Total** | **5,191** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,329 |
-| Strong | 1,311 |
-| Mixed | 812 |
-| Emerging | 698 |
+| Moderate | 2,335 |
+| Strong | 1,324 |
+| Mixed | 825 |
+| Emerging | 707 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,579)
+## PRACTICES — what strengthens the mind (impact lens)  (2,610)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2606,8 +2606,39 @@
 | 5105 | Vā / Teu le Vā — Tending Relational Space | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interpersonal, Moral, Community' |
 | 5106 | Fire-Walking Ritual — Arousal Synchrony & Bonding | 2 | Moderate | 2 | practice: 'Bolsters clusters: Community, Interoceptive, Emotional' |
 | 5107 | Traditional Pacific Staples — Taro, Breadfruit, Coconut, Fish | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Naturalist, Community' |
+| 5114 | HRV Wearables & 'Readiness' Scores (Oura/Whoop) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Interoceptive, Meta-Cognitive, Bodily' |
+| 5115 | Methylene Blue for Cognition/Energy | 2 | Emerging | 1 | practice: 'Bolsters clusters: Meta-Cognitive, Interoceptive (thin)' |
+| 5116 | Pneumatic Compression Boots for Recovery (NormaTec-style) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5117 | Blue-Light-Blocking Glasses for Sleep & Eye Strain | 1 | Mixed | 1 | practice: 'Bolsters clusters: none proven (Cochrane null)' |
+| 5118 | Infrared Sauna & the 'Detox' Claim | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional' |
+| 5119 | Exogenous Ketones & Ketone Monitoring for Non-Athletes | 1 | Mixed | 2 | practice: 'Bolsters clusters: Bodily (marginal at best)' |
+| 5120 | Hyperbaric Oxygen — Real Indications vs. Wellness Hype | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive (only for genuine indication |
+| 5121 | Red/Near-Infrared Light for Fat Loss & Testosterone | 1 | Mixed | 2 | practice: 'Bolsters clusters: none proven (hype half of red light)' |
+| 5123 | Metabolic / Bariatric Surgery — Long-Term Outcomes | 5 | Strong | 2 | practice: 'Bolsters clusters: Bodily' |
+| 5124 | Tirzepatide (SURMOUNT-1) — Dual GIP/GLP-1, the Strongest Yet | 5 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Volitional' |
+| 5125 | Semaglutide & Cardiovascular Events in Non-Diabetics (SELECT) | 4 | Strong | 1 | practice: 'Bolsters clusters: Bodily' |
+| 5126 | Semaglutide & Kidney Outcomes (FLOW) | 4 | Strong | 1 | practice: 'Bolsters clusters: Bodily' |
+| 5127 | Semaglutide 2.4 mg (STEP-1) for Obesity | 4 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Volitional' |
+| 5128 | Tirzepatide for Obstructive Sleep Apnea (SURMOUNT-OSA) | 4 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5129 | Tirzepatide vs Semaglutide, Head-to-Head (SURMOUNT-5) | 4 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5131 | SSRIs for Depression — Real but Modest, and the Serotonin Myth | 3 | Mixed | 3 | practice: 'Bolsters clusters: Emotional, Volitional' |
+| 5133 | rTMS / Theta-Burst Stimulation for Resistant Depression | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Meta-Cognitive' |
+| 5134 | Semaglutide for Alcohol Use Disorder (Emerging) | 2 | Emerging | 1 | practice: 'Bolsters clusters: Volitional, Interoceptive, Emotional' |
+| 5135 | SAINT / SNT — Accelerated 5-Day TMS (Emerging) | 3 | Emerging | 1 | practice: 'Bolsters clusters: Emotional, Volitional' |
+| 5138 | Traditional Thai Massage (Nuad Boran) | 3 | Moderate | 2 | Bolsters clusters: Bodily, Interoceptive, Emotional |
+| 5139 | Collectivist Extended-Family & Social Support | 3 | Moderate | 2 | Bolsters clusters: Community, Social-Perceptual, Emotional |
+| 5140 | Muay Thai Training for Fitness & Discipline | 3 | Moderate | 2 | Bolsters clusters: Bodily, Volitional, Community |
+| 5141 | Thai Herbal Compress (Luk Pra Kob) | 2 | Moderate | 2 | Bolsters clusters: Bodily, Interoceptive |
+| 5142 | Gotu Kola (Centella asiatica) for Wounds & Cognition | 2 | Emerging | 2 | Bolsters clusters: Bodily, Meta-Cognitive |
+| 5143 | Tongkat Ali (Eurycoma longifolia) for Stress & Vitality | 2 | Mixed | 2 | Bolsters clusters: Interoceptive, Emotional |
+| 5144 | Cao Gio / Coining (Vietnamese Skin-Scraping) | 1 | Mixed | 2 | Bolsters clusters: Community |
+| 5145 | Hilot (Filipino Traditional Massage/Healing) | 1 | Emerging | 2 | Bolsters clusters: Bodily, Community |
+| 5146 | Lemongrass (Cymbopogon) Aromatherapy for Anxiety | 1 | Emerging | 2 | Bolsters clusters: Emotional, Interoceptive |
+| 5147 | Jamu (Indonesian Herbal Tonics) | 1 | Mixed | 2 | Bolsters clusters: Community, Naturalist |
+| 5148 | Theravada Merit-Making & the Five Precepts | 2 | Emerging | 2 | Bolsters clusters: Existential, Community, Moral |
+| 5149 | Traditional SE-Asian Diet (Herbs, Fish, Vegetables — and Salt) | 2 | Mixed | 2 | Bolsters clusters: Bodily, Naturalist |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,405)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,406)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4016,8 +4047,9 @@
 | 4997 | Positive-Result Bias in Country-of-Origin Trials | 6 | Strong | 2 | weakness: 'Degrades: Logical, Pattern-Recognition, Meta-Cognitive, Adversarial' |
 | 5055 | Don't Romanticize: Indigenous Health Gaps Are Colonization, Not Tradition | 8 | Strong | 2 | weakness: 'Degrades: Community continuity, Existential identity, Bodily health,  |
 | 5108 | Noni Juice (Morinda citrifolia) — 'Cure-All' Claims Unsupported | 4 | Mixed | 2 | weakness: 'Degrades: Financial, Logical, Interoceptive' |
+| 5122 | Orthosomnia (Sleep-Tracker-Induced Insomnia) | 4 | Emerging | 1 | weakness: 'Degrades: Interoceptive, Emotional, Meta-Cognitive' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,105)
+## COST OF FAILURE — what's at stake (harm lens)  (1,114)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5126,6 +5158,15 @@
 | 5081 | Historical Bloodletting — Mostly Harm, Narrow Real Use | 4 | Strong | 2 | cost: 'Degrades: Bodily, Interoceptive, Existential' |
 | 5096 | Pacific Nutrition Transition → World's Highest Obesity/Diabetes | 5 | Strong | 3 | cost: 'Degrades: Bodily, Interoceptive, Naturalist' |
 | 5097 | Kava-Induced Liver Injury (Hepatotoxicity) | 4 | Mixed | 3 | cost: 'Degrades: Bodily, Interoceptive' |
+| 5109 | Unproven 'Stem-Cell' / Regenerative Injection Clinics | 5 | Strong | 2 | cost: 'Degrades: Bodily, Financial, Street-Smarts' |
+| 5110 | 'Healing' Peptides (BPC-157, TB-500) | 3 | Emerging | 2 | cost: 'Degrades: Bodily, Financial, Logical' |
+| 5111 | IV NAD+ Therapy (Anti-Aging Infusions) | 2 | Strong | 2 | cost: 'Degrades: Financial, Logical, Interoceptive' |
+| 5112 | IV Vitamin Drips ('Myers Cocktail' / Hangover IVs) | 2 | Strong | 2 | cost: 'Degrades: Financial, Interoceptive, Logical' |
+| 5113 | Whole-Body MRI Screening for the Healthy (Prenuvo-style) | 2 | Strong | 2 | cost: 'Degrades: Financial, Emotional, Logical' |
+| 5130 | GLP-1 Weight Regain After Stopping (& GI Effects) | 3 | Strong | 1 | cost: 'Degrades: Bodily, Interoceptive, Volitional' |
+| 5132 | Lean / Muscle-Mass Loss on GLP-1 Agonists | 2 | Moderate | 2 | cost: 'Degrades: Bodily' |
+| 5136 | Betel Quid / Areca Nut Chewing — Group 1 Carcinogen | 5 | Strong | 3 | Degrades: Bodily, Community |
+| 5137 | Kratom (Mitragyna speciosa) — Dependence & Toxicity Risk | 4 | Mixed | 3 | Degrades: Interoceptive, Volitional, Bodily |
 
 ## Framework / uncategorized  (61)
 
