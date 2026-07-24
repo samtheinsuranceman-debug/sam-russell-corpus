@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,245 clusters · 10,338 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,292 clusters · 10,428 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,654 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,693 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,406 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,124 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,132 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,245** |
+| **Total** | **5,292** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,355 |
-| Strong | 1,327 |
-| Mixed | 839 |
-| Emerging | 724 |
+| Moderate | 2,376 |
+| Strong | 1,330 |
+| Mixed | 855 |
+| Emerging | 731 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,654)
+## PRACTICES — what strengthens the mind (impact lens)  (2,693)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2681,6 +2681,45 @@
 | 5201 | Peloid (Mud-Pack) Therapy for Knee Osteoarthritis | 2 | Mixed | 1 | practice: 'Bolsters clusters: joint comfort, physical function' |
 | 5202 | Chaga Mushroom (Inonotus obliquus) | 1 | Emerging | 2 | practice: 'Bolsters clusters: (claimed) immune/anti-cancer support — largely unp |
 | 5203 | Winter (Ice) Swimming & Cold Adaptation | 2 | Emerging | 1 | practice: 'Bolsters clusters: metabolic flexibility, cold thermogenesis, insulin |
+| 5204 | Electroacupuncture for Stress Incontinence | 3 | Moderate | 1 | practice: 'Bolsters clusters: Pelvic-Floor Function, Continence, Bodily' |
+| 5207 | Tai Chi for Hypertension | 3 | Moderate | 2 | practice: 'Bolsters clusters: Blood-Pressure Control, Cardiovascular Health, Bod |
+| 5208 | Acupuncture / Acupressure for Chemo Nausea | 2 | Moderate | 2 | practice: 'Bolsters clusters: Nausea Control, Cancer Supportive Care, Interocept |
+| 5209 | Daikenchuto (TU-100) for Post-Op Ileus | 2 | Mixed | 2 | practice: 'Bolsters clusters: Gastrointestinal Recovery, Post-Surgical Rehab, In |
+| 5210 | Shakuyakukanzoto for Muscle Cramps | 2 | Emerging | 2 | practice: 'Bolsters clusters: Cramp Relief, Neuromuscular Comfort, Interoceptive |
+| 5212 | Rikkunshito for Functional Dyspepsia | 2 | Moderate | 2 | practice: 'Bolsters clusters: Upper-GI Symptom Relief, Appetite, Interoceptive' |
+| 5213 | Cupping Therapy for Pain (Weak Evidence) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Pain Management, Musculoskeletal Comfort' |
+| 5214 | Nattokinase for Blood Pressure | 2 | Emerging | 2 | practice: 'Bolsters clusters: Blood-Pressure Control, Cardiovascular Health, Int |
+| 5215 | Yokukansan for Dementia Agitation (BPSD) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Behavioral Symptom Control, Caregiver Load, Emotio |
+| 5216 | Kakkonto for Early Cold / Viral Symptoms | 1 | Mixed | 2 | practice: 'Bolsters clusters: Acute Viral Symptom Relief, Fever Recovery, Intero |
+| 5217 | Acupuncture for Migraine Prophylaxis | 2 | Moderate | 1 | practice: 'Bolsters clusters: Headache Prevention, Pain Management, Interoceptiv |
+| 5218 | Korean Red Ginseng for Glycemic Control | 2 | Mixed | 2 | practice: 'Bolsters clusters: Blood-Sugar Regulation, Metabolic Health, Interoce |
+| 5219 | Moxibustion (BL67) for Breech Presentation | 2 | Mixed | 2 | practice: 'Bolsters clusters: Obstetric Outcomes, Cephalic Version, Bodily' |
+| 5220 | Goshajinkigan for Chemo Neuropathy (Failed) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Neuropathy Prevention, Cancer Supportive Care' |
+| 5221 | Acupuncture for IVF (No Live-Birth Benefit) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Fertility Support, Reproductive Outcomes' |
+| 5222 | Mediterranean Adherence Score & All-Cause Mortality | 3 | Moderate | 2 | practice: 'Bolsters clusters: Mediterranean Diet (PREDIMED), Longevity, Nutritio |
+| 5223 | Mediterranean-Style Diet for Major Depression (SMILES) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Nutrition / Diet Quality, Depression Treatment, Oi |
+| 5225 | Oleuropein / Olive Leaf Extract for Blood Pressure | 2 | Moderate | 2 | practice: 'Bolsters clusters: Blood Pressure Management, EVOO (as Primary Fat),  |
+| 5226 | Mediterranean Diet & Type 2 Diabetes Prevention (PREDIMED) | 3 | Moderate | 3 | practice: 'Bolsters clusters: Mediterranean Diet (PREDIMED), Glycemic Control, E |
+| 5228 | Blue-Zone Longevity Records — Do They Hold Up? | 1 | Mixed | 2 | practice: 'Bolsters clusters (claimed): Longevity, Blue Zones Lifestyle — largel |
+| 5229 | Artichoke Leaf Extract (Cynarin) for Lipids | 2 | Mixed | 3 | practice: 'Bolsters clusters: Cholesterol Management, Nutrition / Diet Quality,  |
+| 5230 | Oleocanthal in Extra-Virgin Olive Oil | 2 | Emerging | 2 | practice: 'Bolsters clusters: EVOO (as Primary Fat), Inflammation Control, Medit |
+| 5231 | Purslane (Portulaca oleracea) for Cardiometabolic Markers | 2 | Emerging | 2 | practice: 'Bolsters clusters: Plant Omega-3 (ALA), Glycemic Control, Cholesterol |
+| 5232 | Sideritis (Greek Mountain Tea) for Cognition & Anxiety | 2 | Emerging | 2 | practice: 'Bolsters clusters: Nutrition for the Brain, Cerebral Blood Flow, Anxi |
+| 5233 | Mediterranean Diet & Cognitive Decline | 2 | Mixed | 2 | practice: 'Bolsters clusters: Nutrition for the Brain, Dementia Risk Reduction,  |
+| 5234 | Oregano/Thyme Oil (Carvacrol) as a Systemic Remedy | 1 | Mixed | 2 | practice: 'Bolsters clusters: Immune Support (claimed), Gut Health (claimed), An |
+| 5237 | Fenugreek Seed for Menstrual Pain (Dysmenorrhea) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional' |
+| 5239 | Ashwagandha (Withania) for Muscle Strength & Recovery | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Volitional, Interoceptive' |
+| 5240 | Ashwagandha for Sleep & Insomnia | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interoceptive, Emotional, Meta-Cognitive' |
+| 5241 | Curcumin / Turmeric Extract for Knee Osteoarthritis | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5242 | Neem (Azadirachta indica) Mouthwash for Plaque & Gingivitis | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5243 | Amla / Emblica officinalis for Blood Glucose | 2 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5244 | Andrographis paniculata (Kalmegh) for Acute Respiratory Infection | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5245 | Ashwagandha for Subclinical Hypothyroidism | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional' |
+| 5246 | Fenugreek (Methi) for Testosterone & Male Vitality | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Seductive, Volitional' |
+| 5247 | Terminalia Arjuna for Chronic Stable Angina | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5248 | Guggul / Guggulsterone for Cholesterol (Honest Null) | 1 | Strong | 2 | practice: 'Bolsters clusters: Bodily' |
+| 5249 | Garcinia cambogia (Malabar Tamarind) for Weight Loss (Honest Weak + Harm) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Bodily' |
+| 5250 | Boswellia serrata for Crohn's/IBD Remission (Honest Null) | 1 | Strong | 1 | practice: 'Bolsters clusters: Bodily' |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,406)
 
@@ -4093,7 +4132,7 @@
 | 5108 | Noni Juice (Morinda citrifolia) — 'Cure-All' Claims Unsupported | 4 | Mixed | 2 | weakness: 'Degrades: Financial, Logical, Interoceptive' |
 | 5122 | Orthosomnia (Sleep-Tracker-Induced Insomnia) | 4 | Emerging | 1 | weakness: 'Degrades: Interoceptive, Emotional, Meta-Cognitive' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,124)
+## COST OF FAILURE — what's at stake (harm lens)  (1,132)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5221,6 +5260,14 @@
 | 5188 | Sauna + Alcohol: Sudden-Death Risk | 4 | Moderate | 2 | cost: 'Degrades: thermoregulation, cardiovascular safety' |
 | 5189 | Wim Hof Breathing Before Water Immersion (Blackout Risk) | 4 | Moderate | 2 | cost: 'Degrades: safety in/near water, oxygen safety margin' |
 | 5190 | Baltic Amber Teething Necklaces | 3 | Mixed | 2 | cost: 'Degrades: infant safety; no benefit' |
+| 5205 | High-Dose Green Tea Extract: Liver Injury | 3 | Moderate | 2 | cost/weakness: 'Degrades: Liver Function, Interoceptive' |
+| 5206 | Red Yeast Rice: Hidden Statin & Contaminant Risk | 3 | Moderate | 2 | cost/weakness: 'Degrades: Liver Function, Kidney Function, Dose Predictability' |
+| 5211 | Kombu / Kelp Iodine Excess & Thyroid | 2 | Moderate | 2 | cost/weakness: 'Degrades: Thyroid Function, Metabolic Health, Interoceptive' |
+| 5224 | Wine as the 'Mediterranean' Drink — The J-Curve is Confounded | 3 | Moderate | 2 | cost: 'Degrades: cancer risk, longevity, honest risk perception' |
+| 5227 | Over-Pouring Olive Oil (Added, Not Substituted) | 2 | Moderate | 2 | cost: 'Degrades: weight management, energy balance, cardiometabolic gains' |
+| 5235 | Lead-Chromate Adulteration of Turmeric | 4 | Strong | 2 | cost: 'Degrades: Logical, Mathematical, Meta-Cognitive, Interoceptive' |
+| 5236 | Tinospora cordifolia (Giloy / Guduchi) Liver Injury | 4 | Moderate | 2 | cost: 'Degrades: Bodily, Interoceptive, Volitional' |
+| 5238 | Ashwagandha-Induced Liver Injury | 3 | Moderate | 3 | cost: 'Degrades: Bodily, Interoceptive, Volitional' |
 
 ## Framework / uncategorized  (61)
 
