@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,340 clusters · 10,525 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,392 clusters · 10,610 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,728 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,410 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,141 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,769 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,415 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,147 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,340** |
+| **Total** | **5,392** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,394 |
-| Strong | 1,338 |
-| Mixed | 868 |
-| Emerging | 740 |
+| Moderate | 2,417 |
+| Strong | 1,343 |
+| Mixed | 879 |
+| Emerging | 753 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,728)
+## PRACTICES — what strengthens the mind (impact lens)  (2,769)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2755,8 +2755,49 @@
 | 5296 | Fennel (Foeniculum vulgare) for Menopausal Symptoms | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal' |
 | 5297 | Jujube Seed (Ziziphus) for Insomnia | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Intrapersonal' |
 | 5298 | Saffron vs Methylphenidate for Childhood ADHD | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Volitional, Emotional' |
+| 5302 | Butterbur (Petasites) for Migraine Prophylaxis | 3 | Moderate | 2 | practice: 'Bolsters clusters: migraine prevention, headache-day reduction, drug- |
+| 5303 | Comfrey (Symphytum) Topical for Back Pain & Sprains | 3 | Moderate | 2 | practice: 'Bolsters clusters: musculoskeletal pain relief, sprain recovery, topi |
+| 5304 | Peppermint-Caraway Oil (Menthacarin) for Functional Dyspepsia | 3 | Moderate | 2 | practice: 'Bolsters clusters: epigastric pain relief, postprandial fullness, dys |
+| 5305 | Ivy Leaf Extract (EA 575) for Acute Cough | 2 | Moderate | 2 | practice: 'Bolsters clusters: cough relief, bronchitis symptom score, expectorat |
+| 5306 | Sage Throat Spray for Acute Pharyngitis | 2 | Moderate | 2 | practice: 'Bolsters clusters: sore-throat pain relief, local anti-inflammation,  |
+| 5307 | Thyme-Ivy Combination (Bronchipret) for Acute Bronchitis | 2 | Moderate | 1 | practice: 'Bolsters clusters: productive-cough relief, bronchitis recovery, expe |
+| 5308 | Nettle Root (Urtica dioica) for BPH Urinary Symptoms | 2 | Mixed | 2 | practice: 'Bolsters clusters: urinary-symptom relief, nocturia reduction, BPH ad |
+| 5309 | Sage (Salvia officinalis) for Menopausal Hot Flashes | 2 | Emerging | 2 | practice: 'Bolsters clusters: vasomotor symptom relief, night-sweat reduction, c |
+| 5310 | Chamomile (Matricaria) for Sleep Quality | 2 | Mixed | 2 | practice: 'Bolsters clusters: subjective sleep quality, sleep latency, relaxatio |
+| 5311 | Topical Arnica Gel for Hand/Knee Osteoarthritis | 2 | Emerging | 2 | practice: 'Bolsters clusters: joint pain relief, OA symptom management, topical  |
+| 5312 | Valerian-Hops Combination for Insomnia | 2 | Mixed | 2 | practice: 'Bolsters clusters: sleep latency, sleep duration, mild insomnia relie |
+| 5313 | Oral Homeopathic Arnica (Honest Debunk) | 1 | Mixed | 2 | practice: 'Bolsters clusters: (claimed) bruise/pain reduction - not supported' |
+| 5314 | Milk Thistle (Silymarin) for Chronic Liver Disease | 2 | Mixed | 2 | practice: 'Bolsters clusters: aminotransferase lowering, hepatoprotection (conte |
+| 5315 | Stinging Nettle (Urtica dioica) for Allergic Rhinitis | 1 | Emerging | 1 | practice: 'Bolsters clusters: nasal symptom relief, allergy self-care (thin evid |
+| 5316 | Probiotics for Antibiotic-Associated Diarrhea (Children) | 3 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5317 | Saccharomyces boulardii for Antibiotic Diarrhea | 3 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5318 | Kefir Improves Lactose Digestion & Tolerance | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5319 | L. reuteri DSM 17938 for Infant Colic (Breastfed) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Parental, Interoceptive' |
+| 5320 | Fermented Soy (Miso/Natto) & Lower Mortality | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Naturalist' |
+| 5321 | Natto Intake & Cardiovascular Mortality (Takayama) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Naturalist' |
+| 5322 | Yogurt Intake & Lower Type 2 Diabetes Risk | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Naturalist' |
+| 5324 | Sourdough Fermentation Blunts Glycemic Response | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5325 | Fermented Dairy & Cardiovascular Risk | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Naturalist' |
+| 5326 | Kefir for Glycemic Control in Type 2 Diabetes | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Naturalist' |
+| 5327 | Probiotics for IBS — Real but Strain-Dependent | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5328 | Fermented (vs Fresh) Kimchi in Prediabetes | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, Naturalist' |
+| 5329 | Lacto-Fermented Sauerkraut for IBS Symptoms | 2 | Emerging | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5330 | Kombucha — Popular but Thin Human Evidence | 1 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Naturalist' |
+| 5337 | Centella asiatica (TTFCA) for Chronic Venous Insufficiency | 2 | Moderate | 2 | practice: 'Bolsters clusters: microcirculation, venous-symptom relief' |
+| 5338 | Lagundi (Vitex negundo) Syrup for Acute Cough | 2 | Moderate | 2 | practice: 'Bolsters clusters: respiratory comfort, symptom self-care' |
+| 5339 | Bayabas / Guava Leaf (Psidium guajava) for Diarrhea & Postprandial Glucose | 2 | Emerging | 2 | practice: 'Bolsters clusters: gut self-care, glycemic response' |
+| 5340 | Galangal (Alpinia galanga) Extract for Mental Alertness | 2 | Emerging | 2 | practice: 'Bolsters clusters: alertness, sustained attention, anti-fatigue' |
+| 5341 | Akapulko (Senna alata) Topical for Superficial Fungal Infection | 2 | Moderate | 2 | practice: 'Bolsters clusters: skin self-care, low-cost antifungal access' |
+| 5342 | Thai Black Ginger (Kaempferia parviflora) for Performance & ED | 2 | Emerging | 2 | practice: 'Bolsters clusters: physical performance, sexual function, vitality' |
+| 5343 | Butterfly Pea (Clitoria ternatea) for Glycemia & Antioxidant Load | 1 | Emerging | 1 | practice: 'Bolsters clusters: postprandial glucose control, antioxidant status' |
+| 5344 | Pandan (Pandanus amaryllifolius) for Postprandial Glucose | 1 | Emerging | 2 | practice: 'Bolsters clusters: glycemic response, culinary self-care' |
+| 5345 | Tempeh (Rhizopus-Fermented Soybean) for Lipids & Gut Flora | 2 | Emerging | 2 | practice: 'Bolsters clusters: lipid profile, microbiome diversity' |
+| 5346 | Mangosteen (Garcinia mangostana) Juice — Hype vs Evidence | 1 | Mixed | 2 | practice: 'Bolsters clusters: (marginal) antioxidant biomarkers only' |
+| 5347 | Ampalaya / Bitter Melon (Momordica charantia) for Glycemia | 2 | Mixed | 2 | practice: 'Bolsters clusters: glycemic self-management, metabolic health' |
+| 5348 | Sambong (Blumea balsamifera) for Kidney Stones & Diuresis | 2 | Emerging | 2 | practice: 'Bolsters clusters: urolithiasis self-management, fluid balance' |
+| 5349 | Phyllanthus niruri (Meniran / Dukong Anak) for Hepatitis B | 2 | Mixed | 2 | practice: 'Bolsters clusters: liver-support beliefs, chronic-illness self-care' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,410)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,415)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4170,8 +4211,13 @@
 | 5279 | Coconut Oil as a 'Health Food' (LDL Reality) | 4 | Strong | 2 | weakness: 'Degrades: cardiovascular risk profile, lipid control, dietary creduli |
 | 5280 | Mānuka Honey for Radiation Oral Mucositis (Honest Null) | 3 | Mixed | 2 | weakness: 'Degrades: evidence-based expectations, cancer supportive-care choices |
 | 5281 | Emu Oil for Pain & Inflammation (Weak Evidence) | 2 | Mixed | 2 | weakness: 'Degrades: evidence-based expectations, discretionary spending' |
+| 5331 | Probiotics Can DELAY Microbiome Recovery After Antibiotics | 4 | Moderate | 1 | weakness: 'Degrades: Bodily, Interoceptive, Meta-Cognitive' |
+| 5332 | Fiber Alone Didn't Raise Microbiome Diversity (FeFiFo) | 3 | Moderate | 1 | weakness: 'Degrades: Meta-Cognitive, Pattern-Recognition, Logical' |
+| 5333 | Probiotics Often Don't Colonize (Person-Specific Resistance) | 3 | Moderate | 1 | weakness: 'Degrades: Bodily, Financial, Meta-Cognitive' |
+| 5334 | 'Boosts Immunity' Probiotic Claims — No Approved Evidence | 2 | Mixed | 1 | weakness: 'Degrades: Financial, Adversarial, Meta-Cognitive' |
+| 5350 | Kratom (Mitragyna speciosa) Self-Medication Trap | 5 | Mixed | 2 | weakness: 'Degrades: Volitional, Interoceptive, Adversarial' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,141)
+## COST OF FAILURE — what's at stake (harm lens)  (1,147)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5316,6 +5362,12 @@
 | 5267 | Noni Juice (Morinda citrifolia) Liver Injury | 3 | Emerging | 3 | cost: 'Degrades: liver function, medication safety, wallet' |
 | 5274 | Tea Tree & Lavender Oils — Endocrine Disruption Concern | 2 | Mixed | 2 | cost: 'Degrades: pediatric hormonal balance, endocrine safety margin' |
 | 5283 | High-Dose Saffron Toxicity & Abortifacient Risk | 3 | Moderate | 2 | cost: 'Degrades: Bodily, Interoceptive, Volitional' |
+| 5299 | Pyrrolizidine-Alkaloid Folk Herbs & Hepatic Veno-Occlusive Disease | 4 | Strong | 2 | cost: 'Degrades: hepatic function, safety of internal herbalism' |
+| 5300 | St John's Wort CYP450 / P-gp Drug Interactions | 4 | Strong | 2 | cost: 'Degrades: co-medication efficacy, transplant/contraceptive/anticoagulant  |
+| 5301 | Unpurified Butterbur & Pyrrolizidine-Alkaloid Liver Injury | 3 | Moderate | 2 | cost: 'Degrades: hepatic function, safety margin, regulatory trust in herbals' |
+| 5323 | Biogenic Amines & Sodium in Fermented Foods | 2 | Moderate | 2 | cost: 'Degrades: Bodily, Interoceptive' |
+| 5335 | Jamu Adulteration with Undeclared Drugs (BKO) | 4 | Strong | 2 | cost/weakness: 'Degrades: liver/kidney safety, informed consent, health outcomes |
+| 5336 | Tongkat Ali Supplement Contamination & Adulteration | 3 | Moderate | 2 | cost/weakness: 'Degrades: heavy-metal safety, cardiovascular safety, trust' |
 
 ## Framework / uncategorized  (61)
 
