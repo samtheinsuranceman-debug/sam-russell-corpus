@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,585 clusters · 10,911 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,643 clusters · 10,998 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,884 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,469 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,171 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,925 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,483 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,174 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,585** |
+| **Total** | **5,643** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,486 |
-| Strong | 1,393 |
-| Mixed | 928 |
-| Emerging | 778 |
+| Moderate | 2,502 |
+| Strong | 1,423 |
+| Mixed | 938 |
+| Emerging | 780 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,884)
+## PRACTICES — what strengthens the mind (impact lens)  (2,925)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2911,8 +2911,49 @@
 | 5541 | Vagus Nerve Stimulation (VNS) for Markedly Treatment-Resistant Depression | 2 | Mixed | 2 | practice: 'Bolsters clusters: chronic treatment-resistant depression, functional |
 | 5542 | Brainspotting for Trauma | 1 | Emerging | 2 | practice: 'Bolsters clusters (unproven): trauma processing, emotional regulation |
 | 5543 | D-Cycloserine Augmentation of Exposure Therapy | 1 | Mixed | 2 | practice: 'Bolsters clusters (weakly): fear extinction, exposure-therapy respons |
+| 5544 | Lipoprotein(a) — Measuring an Inherited Risk You Can't Diet Away | 3 | Strong | 2 | practice: 'Bolsters clusters: risk stratification, family screening, Strategic' |
+| 5546 | ApoB for Risk Stratification (Beyond LDL-C) | 3 | Strong | 2 | practice: 'Bolsters clusters: risk stratification, Strategic, cardiovascular lon |
+| 5547 | Coronary Artery Calcium (CAC) Scoring for Intermediate-Risk Refinement | 3 | Strong | 2 | practice: 'Bolsters clusters: risk stratification, statin decisions, Strategic' |
+| 5548 | Bempedoic Acid for the Statin-Intolerant (CLEAR Outcomes) | 3 | Strong | 1 | practice: 'Bolsters clusters: LDL lowering, cardiovascular longevity, adherence' |
+| 5549 | Potassium-Enriched Salt Substitute (SSaSS) | 3 | Strong | 1 | practice: 'Bolsters clusters: blood pressure, stroke prevention, Bodily' |
+| 5550 | Daily Steps and CV/All-Cause Mortality (Dose-Response) | 3 | Strong | 2 | practice: 'Bolsters clusters: cardiovascular longevity, Bodily, healthy lifespan |
+| 5551 | Finerenone for Cardio-Renal Protection in Diabetic Kidney Disease (FIDELIO-DKD) | 3 | Strong | 1 | practice: 'Bolsters clusters: renal protection, cardiovascular longevity, metabo |
+| 5552 | Semaglutide 2.4 mg for CV Events in Obesity (SELECT) | 3 | Strong | 1 | practice: 'Bolsters clusters: cardiovascular longevity, weight, Bodily' |
+| 5553 | Low-Dose Colchicine for Chronic Coronary Disease (LoDoCo2) | 3 | Moderate | 1 | practice: 'Bolsters clusters: anti-inflammatory prevention, cardiovascular longe |
+| 5554 | Icosapent Ethyl (Prescription EPA) — REDUCE-IT and Its Placebo Asterisk | 2 | Mixed | 2 | practice: 'Bolsters clusters: residual risk reduction, cardiovascular longevity' |
+| 5555 | Canakinumab (IL-1β Inhibition) — Proof of the Inflammation Hypothesis (CANTOS) | 2 | Mixed | 1 | practice: 'Bolsters clusters: anti-inflammatory prevention, mechanistic proof' |
+| 5563 | Oral Isotretinoin for Severe Nodular Acne | 5 | Strong | 1 | practice: 'Bolsters clusters: durable acne remission, scar prevention, self-imag |
+| 5564 | Topical Corticosteroids for Atopic Dermatitis | 4 | Strong | 2 | practice: 'Bolsters clusters: eczema flare control, itch reduction, quality of l |
+| 5565 | Topical Tretinoin for Photoaging | 4 | Strong | 2 | practice: 'Bolsters clusters: fine-wrinkle reduction, skin texture, aesthetic se |
+| 5566 | Daily Sunscreen Slows Visible Photoaging (Nambour RCT) | 3 | Strong | 1 | practice: 'Bolsters clusters: photoaging prevention, skin-texture preservation' |
+| 5567 | Azelaic Acid for Rosacea & Acne | 3 | Moderate | 1 | practice: 'Bolsters clusters: rosacea erythema control, inflammatory acne, post- |
+| 5568 | Benzoyl Peroxide for Acne | 3 | Moderate | 1 | practice: 'Bolsters clusters: inflammatory acne clearance, antibiotic-resistance |
+| 5569 | Ceramide Barrier Moisturizers for Eczema | 3 | Moderate | 2 | practice: 'Bolsters clusters: skin-barrier repair, flare delay, itch relief' |
+| 5570 | Spironolactone for Adult Female Acne | 3 | Moderate | 1 | practice: 'Bolsters clusters: hormonal acne control, antibiotic-sparing therapy' |
+| 5572 | Oral Niacinamide for Skin-Cancer Chemoprevention | 3 | Strong | 1 | practice: 'Bolsters clusters: keratinocyte-cancer prevention, actinic-keratosis  |
+| 5573 | Topical Hyaluronic Acid (Honest Humectant) | 2 | Moderate | 1 | practice: 'Bolsters clusters: surface hydration, temporary smoothing' |
+| 5574 | Low-Dose Oral Minoxidil for Hair Loss | 3 | Emerging | 2 | practice: 'Bolsters clusters: hair density, adherence over messy topicals' |
+| 5575 | Topical Minoxidil for Androgenetic Alopecia | 3 | Moderate | 1 | practice: 'Bolsters clusters: hair-count preservation, pattern-hair-loss slowing |
+| 5576 | Microneedling for Atrophic Acne Scars | 2 | Moderate | 1 | practice: 'Bolsters clusters: scar texture, skin remodeling, self-image' |
+| 5577 | Topical Vitamin C for Photoaging | 2 | Moderate | 2 | practice: 'Bolsters clusters: wrinkle/texture improvement, antioxidant photoprot |
+| 5578 | Bakuchiol as a Retinol Alternative | 2 | Emerging | 1 | practice: 'Bolsters clusters: wrinkle/pigment improvement, tolerability for sens |
+| 5579 | Platelet-Rich Plasma for Hair Loss | 2 | Mixed | 2 | practice: 'Bolsters clusters: hair-density gains, adjunct to minoxidil' |
+| 5583 | Combined Oral Contraceptives — Durable Ovarian-Cancer Risk Reduction | 4 | Strong | 1 | practice: 'Bolsters clusters: ovarian-cancer prevention, non-contraceptive benef |
+| 5584 | Levonorgestrel IUS for Heavy Menstrual Bleeding (ECLIPSE Trial) | 4 | Strong | 1 | practice: 'Bolsters clusters: menstrual blood-loss reduction, quality of life, s |
+| 5585 | Low-Dose Vaginal Estrogen for GSM — Local, Effective, Low Systemic Risk | 4 | Strong | 2 | practice: 'Bolsters clusters: vaginal dryness relief, dyspareunia reduction, rec |
+| 5586 | Letrozole Beats Clomiphene for PCOS Ovulation Induction (PPCOS II) | 4 | Strong | 1 | practice: 'Bolsters clusters: ovulation, live birth, first-line fertility treatm |
+| 5587 | Menopausal Hormone Therapy for Fracture Prevention | 4 | Strong | 2 | practice: 'Bolsters clusters: bone mineral density, hip-fracture reduction, oste |
+| 5588 | Transdermal vs Oral Estrogen — Route Changes the VTE Risk | 3 | Strong | 2 | practice: 'Bolsters clusters: safer MHT delivery, VTE-risk avoidance, informed r |
+| 5589 | Testosterone Therapy & Cardiovascular Safety (TRAVERSE Trial) | 3 | Strong | 1 | practice: 'Bolsters clusters: hypogonadism symptom relief, cardiovascular reassu |
+| 5590 | Fezolinetant — NK3-Antagonist Non-Hormonal Hot-Flash Drug (SKYLIGHT) | 3 | Moderate | 1 | practice: 'Bolsters clusters: vasomotor symptom relief, non-hormonal options, sl |
+| 5592 | Micronized Progesterone vs Synthetic Progestin — Breast-Cancer Signal (E3N) | 3 | Moderate | 1 | practice: 'Bolsters clusters: safer MHT progestogen choice, breast-risk mitigati |
+| 5593 | CBT for Menopausal Hot Flashes & Night Sweats (MENOS Trials) | 3 | Moderate | 2 | practice: 'Bolsters clusters: vasomotor problem-rating relief, menopausal mood,  |
+| 5594 | Gabapentin for Hot Flashes — Useful Especially at Night | 2 | Moderate | 1 | practice: 'Bolsters clusters: vasomotor symptom relief, night-sweat reduction, n |
+| 5595 | Metformin for PCOS — Ovulation & Metabolic Help, Not a Fertility Cure | 2 | Moderate | 1 | practice: 'Bolsters clusters: ovulation, menstrual regularity, insulin sensitivi |
+| 5596 | SSRIs/SNRIs for Hot Flashes — Real but Modest Non-Hormonal Option | 2 | Moderate | 2 | practice: 'Bolsters clusters: vasomotor symptom relief, non-hormonal options, ho |
+| 5597 | Testosterone for Women with Low Sexual Desire (HSDD) | 2 | Moderate | 1 | practice: 'Bolsters clusters: sexual desire, satisfying sexual events, postmenop |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,469)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,483)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4385,8 +4426,22 @@
 | 5525 | Green Coffee Bean Extract — Hype, a Retraction, Tiny Real Effect | 1 | Emerging | 2 | weakness: 'Degrades: Financial resources, evidence-based choices, trust in suppl |
 | 5526 | Green Tea / EGCG for Weight Loss — Statistically Negligible | 1 | Emerging | 1 | weakness: 'Degrades: Financial resources, realistic expectations, evidence-based |
 | 5527 | Raspberry Ketones — No Human Weight-Loss Evidence | 1 | Emerging | 1 | weakness: 'Degrades: Financial resources, evidence-based choices, realistic expe |
+| 5556 | Statin Denialism / 'Cholesterol Is a Myth' (Honest Correction) | 5 | Strong | 2 | weakness: 'Degrades: evidence-based prevention decisions, Logical, Strategic' |
+| 5557 | 'Moderate Drinking Protects the Heart' — Confounded and Likely False | 4 | Mixed | 2 | weakness: 'Degrades: honest risk perception, cardiovascular health, Interoceptiv |
+| 5558 | Aspirin for PRIMARY Prevention — Net Harm in the Low-Risk | 4 | Strong | 2 | weakness: 'Degrades: bleeding safety, benefit-risk balance, Strategic' |
+| 5559 | EDTA Chelation Therapy for Coronary Disease (Not Recommended) | 3 | Mixed | 1 | weakness: 'Degrades: financial resources, evidence-based care, Strategic' |
+| 5560 | B-Vitamin / Folate Homocysteine-Lowering — A Failed Hypothesis | 2 | Strong | 2 | weakness: 'Degrades: wasted resources, false reassurance, Strategic' |
+| 5561 | Vitamin D Supplements for Cardiovascular Prevention — Null (VITAL) | 2 | Strong | 1 | weakness: 'Degrades: wasted resources, evidence-based prevention, Financial' |
+| 5562 | Vitamin E / Antioxidant Supplements for CVD — Null (and Possibly Harmful) | 2 | Strong | 2 | weakness: 'Degrades: wasted resources, evidence-based prevention, Financial' |
+| 5580 | DIY Lemon Juice & Baking Soda Skincare | 3 | Mixed | 2 | weakness: 'Degrades: skin barrier, pigmentation, photosafety' |
+| 5581 | Toothpaste on Pimples (Harmful Hack) | 3 | Mixed | 2 | weakness: 'Degrades: skin barrier and comfort via irritant/contact dermatitis' |
+| 5582 | Jade Rollers & Gua Sha for 'Lymphatic Detox' | 2 | Mixed | 1 | weakness: 'Degrades: money and evidence-literacy via anti-aging/detox overclaims |
+| 5598 | Compounded 'Bioidentical' Hormones — Unproven, Unregulated Dosing | 4 | Strong | 2 | weakness: 'Degrades: dosing safety, endometrial protection, informed consent, fi |
+| 5599 | 'Adrenal Fatigue' — A Diagnosis That Doesn't Exist | 3 | Strong | 2 | weakness: 'Degrades: getting the real diagnosis, evidence-based self-care, finan |
+| 5600 | Seed Cycling for Hormone 'Balancing' — No Controlled Evidence | 2 | Mixed | 2 | weakness: 'Degrades: evidence-based expectations, financial prudence, timely rea |
+| 5601 | Tribulus terrestris for Testosterone — Fails to Deliver | 2 | Strong | 2 | weakness: 'Degrades: financial prudence, evidence-based supplementation, realist |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,171)
+## COST OF FAILURE — what's at stake (harm lens)  (1,174)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5561,6 +5616,9 @@
 | 5528 | Rebirthing / Coercive-Restraint 'Attachment Therapy' | 5 | Strong | 2 | cost/weakness: 'Degrades: child safety, trust, therapeutic alliance, physical he |
 | 5529 | Recovered-Memory Therapy (Iatrogenic False Memories) | 4 | Strong | 2 | cost/weakness: 'Degrades: memory accuracy, family relationships, legal reliabili |
 | 5532 | Ketamine's Hidden Costs: Transience, Abuse Liability & Bladder Damage | 3 | Moderate | 2 | cost/weakness: 'Degrades: durability of benefit, bladder/renal health, dependenc |
+| 5545 | Intensive Glucose Lowering for CV Benefit — Backfired (ACCORD) | 3 | Strong | 1 | cost: 'Degrades: survival, cardiovascular safety, treatment balance' |
+| 5571 | Finasteride's Sexual Side-Effect Cost | 3 | Mixed | 2 | cost: 'Degrades: libido, sexual function, mood in a minority of users' |
+| 5591 | Testosterone Therapy's Hidden Costs — Erythrocytosis & Suppressed Fertility | 3 | Strong | 2 | cost: 'Degrades: sperm production, blood viscosity safety, endogenous testostero |
 
 ## Framework / uncategorized  (61)
 
