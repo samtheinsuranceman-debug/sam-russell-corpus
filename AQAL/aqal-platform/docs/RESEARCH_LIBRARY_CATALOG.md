@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,856 clusters · 11,326 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,903 clusters · 11,393 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,044 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,537 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,214 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,073 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,552 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,217 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,856** |
+| **Total** | **5,903** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,561 |
-| Strong | 1,507 |
-| Mixed | 986 |
-| Emerging | 802 |
+| Moderate | 2,579 |
+| Strong | 1,519 |
+| Mixed | 996 |
+| Emerging | 809 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,044)
+## PRACTICES — what strengthens the mind (impact lens)  (3,073)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3071,8 +3071,37 @@
 | 5808 | 360-Degree / Multisource Feedback — Real but Small Gains | 2 | Mixed | 1 | practice: 'Bolsters clusters: Feedback-Seeking, Acting on Feedback, After-Action |
 | 5809 | Pay-for-Performance — Raises Quantity, Not Quality (and Can Backfire) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Financial Incentives for Behavior Change, Goal-Set |
 | 5810 | Corporate Wellness Programs — Popular, but Little Effect on Health or Costs | 1 | Mixed | 2 | practice: 'Bolsters clusters: Financial Incentives for Behavior Change, Breaking |
+| 5815 | Matched Contributions to Boost Saving | 3 | Strong | 1 | practice: 'Bolsters clusters: Financial, Strategic, Volitional' |
+| 5816 | Peer & Information Nudges for Retirement Enrollment | 3 | Strong | 1 | practice: 'Bolsters clusters: Financial, Community, Strategic' |
+| 5818 | Access to a Basic Savings Account (Field RCTs) | 3 | Strong | 1 | practice: 'Bolsters clusters: Financial, Volitional, Community' |
+| 5819 | Spending on Experiences over Things | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Aesthetic, Existential' |
+| 5821 | Buying Time (Outsourcing Disliked Tasks) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Volitional' |
+| 5822 | Prosocial Spending (Buying for Others) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Community, Interpersonal' |
+| 5824 | Robo-Advisors for Diversification & Bias Reduction | 2 | Emerging | 1 | practice: 'Bolsters clusters: Financial, Strategic, Meta-Cognitive' |
+| 5825 | Financial Education — The Updated Meta-Analysis | 2 | Moderate | 2 | practice: 'Bolsters clusters: Financial, Logical, Meta-Cognitive' |
+| 5826 | Higher Income & Happiness (Honest Verdict) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Financial, Existential, Emotional' |
+| 5833 | Grief-Targeted Therapy Beats Antidepressants for Prolonged Grief | 4 | Strong | 1 | practice: 'Bolsters clusters: complicated/prolonged grief recovery, functional r |
+| 5834 | Meaning-Centered Psychotherapy for Advanced Cancer | 3 | Strong | 2 | practice: 'Bolsters clusters: existential wellbeing, spiritual meaning, buffered |
+| 5835 | Ikigai (Life Worth Living) & Survival | 3 | Moderate | 1 | practice: 'Bolsters clusters: longevity, cardiovascular protection, existential  |
+| 5836 | Sense of Purpose & Lower All-Cause Mortality | 3 | Moderate | 2 | practice: 'Bolsters clusters: longevity, cardiovascular health, existential resi |
+| 5837 | Dignity Therapy at End of Life | 2 | Mixed | 1 | practice: 'Bolsters clusters: sense of dignity, meaning, spiritual wellbeing — b |
+| 5838 | CALM Therapy (Managing Cancer & Living Meaningfully) | 2 | Moderate | 1 | practice: 'Bolsters clusters: depression relief in advanced cancer, death-prepar |
+| 5847 | Rhythmic Auditory Cueing for Post-Stroke Gait | 3 | Strong | 2 | practice: 'Bolsters clusters: stroke gait rehab, walking speed, symmetry' |
+| 5848 | Argentine Tango for Parkinson's Balance & Gait | 3 | Moderate | 2 | practice: 'Bolsters clusters: Parkinson's mobility, balance, dance-for-PD' |
+| 5849 | Music Therapy Add-On for Schizophrenia | 3 | Moderate | 1 | practice: 'Bolsters clusters: negative symptoms, global/social functioning, qual |
+| 5850 | Music-Supported Therapy for Stroke Arm Recovery | 3 | Moderate | 2 | practice: 'Bolsters clusters: upper-limb motor recovery, hand dexterity, motor l |
+| 5851 | Daily Music Listening in Early Stroke Recovery | 2 | Moderate | 1 | practice: 'Bolsters clusters: stroke cognitive recovery, mood, attention' |
+| 5852 | Mandala Coloring for State Anxiety | 2 | Mixed | 2 | practice: 'Bolsters clusters: acute anxiety relief, arts-based downregulation' |
+| 5853 | Mozart K448 for Epileptiform Activity | 2 | Mixed | 2 | practice: 'Bolsters clusters: epilepsy discharge reduction (contested), seizure  |
+| 5854 | Music Therapy in Palliative & End-of-Life Care | 2 | Emerging | 1 | practice: 'Bolsters clusters: pain relief, anxiety, spiritual well-being at end  |
+| 5855 | Vibroacoustic / Rhythmic Sensory Stimulation for Fibromyalgia | 2 | Emerging | 1 | practice: 'Bolsters clusters: fibromyalgia pain, sleep, low-frequency stimulatio |
+| 5856 | Art Therapy for PTSD & Trauma | 2 | Emerging | 2 | practice: 'Bolsters clusters: trauma processing, PTSD adjunct, non-verbal expres |
+| 5857 | Dance Movement Therapy for Depression | 2 | Emerging | 2 | practice: 'Bolsters clusters: depression symptoms, embodied emotion regulation' |
+| 5858 | Group Singing for Parkinson's Voice & Speech | 2 | Emerging | 2 | practice: 'Bolsters clusters: hypokinetic dysarthria, vocal loudness, PD quality |
+| 5859 | Rhythmic Auditory Stimulation for Cerebral Palsy Gait | 2 | Emerging | 1 | practice: 'Bolsters clusters: pediatric CP gait, stride length, walking symmetry |
+| 5860 | Tailor-Made Notched Music for Tinnitus | 2 | Mixed | 2 | practice: 'Bolsters clusters: tinnitus loudness reduction, auditory-cortex plast |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,537)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,552)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4613,8 +4642,23 @@
 | 5812 | Team Conflict — Both Relationship AND Task Conflict Usually Hurt Performance | 5 | Mixed | 2 | weakness: 'Degrades: team performance, member satisfaction, decision quality' |
 | 5813 | Time Pressure Kills Creative Thinking (Not Speeds It Up) | 5 | Moderate | 1 | weakness: 'Degrades: creative ideation, integrative problem-solving, next-day in |
 | 5814 | Grit — Overhyped and Largely a Rebranding of Conscientiousness | 4 | Strong | 1 | weakness: 'Degrades: calibrated self-assessment, selection decisions, interventi |
+| 5827 | Chasing Attention-Grabbing Stocks | 5 | Strong | 1 | weakness: 'Degrades: Financial, Strategic, Meta-Cognitive' |
+| 5828 | Financial Scarcity Taxes Cognitive Bandwidth | 5 | Mixed | 2 | weakness: 'Degrades: Financial, Meta-Cognitive, Logical' |
+| 5829 | Keeping Up with the Joneses (Relative Income) | 4 | Moderate | 1 | weakness: 'Degrades: Financial, Intrapersonal, Emotional' |
+| 5830 | Shrouded Fees & Add-On Pricing | 4 | Moderate | 1 | weakness: 'Degrades: Financial, Systemic, Strategic' |
+| 5831 | The Credit-Card Spending Premium | 4 | Moderate | 1 | weakness: 'Degrades: Financial, Volitional, Intrapersonal' |
+| 5832 | Money Illusion (Nominal vs Real Thinking) | 3 | Moderate | 1 | weakness: 'Degrades: Financial, Mathematical, Logical' |
+| 5839 | The Widowhood Effect — Excess Mortality After Spousal Loss | 4 | Strong | 1 | weakness: 'Degrades: survival, physical health, immune/cardiovascular regulation |
+| 5840 | Illusory Post-Traumatic Growth | 3 | Mixed | 2 | weakness: 'Degrades: meta-cognitive accuracy, self-insight into actual change' |
+| 5841 | Positive Self-Affirmations Backfire for Low Self-Esteem | 3 | Moderate | 1 | weakness: 'Degrades: mood, self-worth for the very people they target' |
+| 5842 | The 'Critical Positivity Ratio' 2.9013 — Retracted Pseudo-Math | 3 | Strong | 2 | weakness: 'Degrades: meta-cognitive accuracy, emotional self-assessment, trust i |
+| 5843 | Expressive Writing Fails as a Bereavement Intervention | 2 | Moderate | 1 | weakness: 'Degrades: false confidence in venting/disclosure as grief cure' |
+| 5844 | Gratitude Journaling Is Not a Depression Treatment | 2 | Moderate | 1 | weakness: 'Degrades: appropriate help-seeking if used as a depression/anxiety cu |
+| 5845 | Positive-Psychology Interventions: Smaller Than Advertised | 2 | Mixed | 1 | weakness: 'Degrades: calibrated expectations, resource allocation to weak self-h |
+| 5846 | Routine Grief Counseling for Normal Bereavement — Minimal Benefit | 2 | Strong | 1 | weakness: 'Degrades: resource allocation, risk of pathologizing normal grief' |
+| 5861 | 432 Hz Tuning as 'Healthier' Music | 1 | Mixed | 1 | weakness: 'Degrades: Meta-Cognitive, Financial' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,214)
+## COST OF FAILURE — what's at stake (harm lens)  (1,217)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5832,6 +5876,9 @@
 | 5785 | Placentophagy / Placenta Encapsulation | 3 | Strong | 2 | cost: 'Degrades: neonatal safety, evidence-based decision-making' |
 | 5792 | Castor Oil for Labor Induction | 2 | Mixed | 1 | cost: 'Degrades: maternal comfort, hydration, GI wellbeing' |
 | 5801 | Extended Shifts & Sleep-Deprived Clinicians → Serious Medical Errors | 4 | Strong | 2 | cost: 'Degrades: sustained attention, diagnostic accuracy, occupational safety' |
+| 5817 | Legalized Online Sports Betting | 3 | Strong | 2 | cost: 'Degrades: Financial, Volitional, Strategic' |
+| 5820 | State Lotteries as a Regressive 'Tax' | 2 | Strong | 2 | cost: 'Degrades: Financial, Logical, Mathematical' |
+| 5823 | Buy-Now-Pay-Later (BNPL) Overspending | 2 | Moderate | 1 | cost: 'Degrades: Financial, Volitional, Strategic' |
 
 ## Framework / uncategorized  (61)
 
