@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,392 clusters · 10,610 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,440 clusters · 10,680 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,769 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,415 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,147 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,804 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,424 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,151 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,392** |
+| **Total** | **5,440** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,417 |
-| Strong | 1,343 |
-| Mixed | 879 |
-| Emerging | 753 |
+| Moderate | 2,438 |
+| Strong | 1,357 |
+| Mixed | 887 |
+| Emerging | 758 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,769)
+## PRACTICES — what strengthens the mind (impact lens)  (2,804)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2796,8 +2796,43 @@
 | 5347 | Ampalaya / Bitter Melon (Momordica charantia) for Glycemia | 2 | Mixed | 2 | practice: 'Bolsters clusters: glycemic self-management, metabolic health' |
 | 5348 | Sambong (Blumea balsamifera) for Kidney Stones & Diuresis | 2 | Emerging | 2 | practice: 'Bolsters clusters: urolithiasis self-management, fluid balance' |
 | 5349 | Phyllanthus niruri (Meniran / Dukong Anak) for Hepatitis B | 2 | Mixed | 2 | practice: 'Bolsters clusters: liver-support beliefs, chronic-illness self-care' |
+| 5351 | Specific & Difficult Goals (Goal-Setting Theory) | 4 | Strong | 2 | practice: 'Bolsters clusters: performance, motivation, persistence' |
+| 5352 | Instructional & Motivational Self-Talk (Sport) | 3 | Moderate | 1 | practice: 'Bolsters clusters: skill acquisition, attentional control, performanc |
+| 5353 | Guided Self-Help / Bibliotherapy for Depression | 3 | Moderate | 2 | practice: 'Bolsters clusters: depression, access to care, mild-moderate mood pro |
+| 5354 | Approach-Bias Modification for Alcohol Use | 2 | Mixed | 2 | practice: 'Bolsters clusters: relapse prevention, craving regulation, addiction  |
+| 5355 | SMS / Text-Message Health Nudges | 2 | Moderate | 2 | practice: 'Bolsters clusters: physical activity, smoking cessation, medication a |
+| 5356 | Functional Imagery Training (FIT) | 3 | Emerging | 2 | practice: 'Bolsters clusters: motivation, goal follow-through, weight management |
+| 5357 | Cue-Exposure Therapy for Addiction | 2 | Mixed | 2 | practice: 'Bolsters clusters: craving regulation, relapse prevention, alcohol us |
+| 5364 | Resistance Training for Depressive Symptoms | 3 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Strength & Resistance Train |
+| 5365 | High-Impact & Heavy Resistance Loading for Bone Density | 3 | Moderate | 2 | practice: 'Bolsters clusters: Falls & Hip Fracture in Older Adults, Bodily, Powe |
+| 5366 | Resistance Training Dose & Mortality — the ~30–60 min/week Sweet Spot | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Muscle-Strengthening 2×/Week, healthy life |
+| 5368 | VILPA — Vigorous Intermittent Lifestyle Physical Activity | 3 | Emerging | 1 | practice: 'Bolsters clusters: Cardiorespiratory Fitness — VO2max, Exercise Snack |
+| 5369 | Daily Protein Dose for Muscle — the ~1.6 g/kg Plateau | 2 | Strong | 1 | practice: 'Bolsters clusters: Strength & Resistance Training, Protein & Muscle P |
+| 5370 | Resistance Training for Glycemic Control (Type 2 Diabetes) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Glucose Regulation & Post-Meal Walking, Bodily, ca |
+| 5371 | Weekly Set Volume & Hypertrophy Dose-Response | 3 | Moderate | 1 | practice: 'Bolsters clusters: Strength & Resistance Training, Bodily, Mechanical |
+| 5372 | HIIT vs Moderate-Continuous Training — Head-to-Head | 3 | Moderate | 2 | practice: 'Bolsters clusters: Cardiorespiratory Fitness — VO2max, HIIT & Interva |
+| 5374 | Pre-Exercise Static Stretching — Injury-Prevention Myth (and Power Cost) | 1 | Strong | 1 | practice: 'Bolsters clusters: (honest warm-up design); Mechanical' |
+| 5375 | Stretching to Prevent Muscle Soreness (DOMS) — Debunked | 1 | Strong | 1 | practice: 'Bolsters clusters: (honest recovery expectations)' |
+| 5376 | The 'Afterburn' (EPOC) — Overstated for Fat Loss | 1 | Strong | 1 | practice: 'Bolsters clusters: (honest calorie accounting); realistic energy bala |
+| 5377 | Spot Reduction (Targeted Fat Loss) — Debunked | 1 | Strong | 2 | practice: 'Bolsters clusters: (little); realistic fat-loss expectations' |
+| 5378 | 'Toning' vs Hypertrophy — the Myth of a Separate Adaptation | 1 | Strong | 1 | practice: 'Bolsters clusters: (clarity); accurate training mental models' |
+| 5379 | The 'Anabolic Window' / Post-Workout Protein Timing — Overstated | 1 | Strong | 2 | practice: 'Bolsters clusters: (honest nutrition priorities); total daily protein |
+| 5381 | Melatonin for Jet Lag (Not as a Generic Sleeping Pill) | 3 | Strong | 1 | practice: 'Bolsters clusters: circadian re-entrainment, transmeridian travel, ph |
+| 5382 | Dual Orexin Receptor Antagonists (Suvorexant, Lemborexant, Daridorexant) | 3 | Moderate | 2 | practice: 'Bolsters clusters: sleep maintenance, wake-after-sleep-onset, insomni |
+| 5383 | Consistent Sleep-Wake Timing & Lower Mortality | 3 | Moderate | 2 | practice: 'Bolsters clusters: circadian stability, cardiometabolic health, all-c |
+| 5385 | Regular Exercise for Chronic Insomnia | 3 | Moderate | 2 | practice: 'Bolsters clusters: sleep quality, insomnia severity, daytime function |
+| 5387 | Low-Dose Doxepin (3-6 mg) for Sleep Maintenance | 2 | Moderate | 1 | practice: 'Bolsters clusters: sleep maintenance, early-morning awakening, total  |
+| 5388 | Ramelteon — Melatonin-Receptor Agonist for Sleep Onset | 2 | Moderate | 2 | practice: 'Bolsters clusters: sleep-onset latency, circadian timing, non-benzodi |
+| 5389 | Lavender Aromatherapy for Sleep Quality | 2 | Mixed | 1 | practice: 'Bolsters clusters: subjective sleep quality, relaxation, hospital/per |
+| 5390 | Trazodone Off-Label for Insomnia | 2 | Mixed | 2 | practice: 'Bolsters clusters: sleep maintenance, total sleep time, depression-co |
+| 5391 | Tai Chi for Sleep in Older Adults | 2 | Moderate | 2 | practice: 'Bolsters clusters: sleep quality, insomnia in aging, sleep-onset late |
+| 5392 | Ashwagandha (Withania somnifera) for Sleep | 2 | Emerging | 1 | practice: 'Bolsters clusters: sleep quality, sleep-onset, anxiety-related insomn |
+| 5393 | Chamomile for Sleep | 2 | Mixed | 2 | practice: 'Bolsters clusters: subjective sleep quality, relaxation, mild anxiety |
+| 5394 | L-Theanine for Sleep | 2 | Emerging | 2 | practice: 'Bolsters clusters: sleep quality, pre-sleep relaxation, sleep satisfa |
+| 5395 | Sleep & Glymphatic Waste Clearance | 2 | Emerging | 1 | practice: 'Bolsters clusters: brain metabolite clearance, neuroprotection, cogni |
+| 5396 | Acupuncture for Insomnia | 2 | Mixed | 1 | practice: 'Bolsters clusters: sleep quality, insomnia severity, sleep efficiency |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,415)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,424)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4216,8 +4251,17 @@
 | 5333 | Probiotics Often Don't Colonize (Person-Specific Resistance) | 3 | Moderate | 1 | weakness: 'Degrades: Bodily, Financial, Meta-Cognitive' |
 | 5334 | 'Boosts Immunity' Probiotic Claims — No Approved Evidence | 2 | Mixed | 1 | weakness: 'Degrades: Financial, Adversarial, Meta-Cognitive' |
 | 5350 | Kratom (Mitragyna speciosa) Self-Medication Trap | 5 | Mixed | 2 | weakness: 'Degrades: Volitional, Interoceptive, Adversarial' |
+| 5358 | Manifestation / Law of Attraction | 5 | Strong | 2 | weakness: 'Degrades: Financial, Strategic, Meta-Cognitive' |
+| 5359 | Venting Anger ('Getting It Out') | 5 | Strong | 1 | weakness: 'Degrades: Emotional, Interpersonal, Adversarial' |
+| 5360 | Thought Suppression ('Don't Think About It') | 4 | Moderate | 2 | weakness: 'Degrades: Emotional, Intrapersonal, Interoceptive' |
+| 5361 | Enneagram as a Predictive Tool | 3 | Mixed | 1 | weakness: 'Degrades: Interpersonal, Strategic, Meta-Cognitive' |
+| 5362 | Repeating Positive Self-Statements ('I am lovable') | 3 | Moderate | 1 | weakness: 'Degrades: Intrapersonal, Emotional' |
+| 5363 | Subliminal Self-Help Audio | 2 | Strong | 1 | weakness: 'Degrades: Meta-Cognitive, Financial' |
+| 5380 | Low VO2max Trainability — the Genetic Response Ceiling | 3 | Moderate | 1 | weakness: 'Degrades: aerobic fitness returns, Bodily, Interoceptive' |
+| 5397 | Long Daytime Napping — Cardiometabolic Warning Signal | 4 | Mixed | 1 | weakness: 'Degrades: cardiovascular health, metabolic regulation, longevity' |
+| 5398 | Common Sleep Myths (Debunk) | 3 | Moderate | 1 | weakness: 'Degrades: sleep-health behavior, daytime function, decision-making' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,147)
+## COST OF FAILURE — what's at stake (harm lens)  (1,151)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5368,6 +5412,10 @@
 | 5323 | Biogenic Amines & Sodium in Fermented Foods | 2 | Moderate | 2 | cost: 'Degrades: Bodily, Interoceptive' |
 | 5335 | Jamu Adulteration with Undeclared Drugs (BKO) | 4 | Strong | 2 | cost/weakness: 'Degrades: liver/kidney safety, informed consent, health outcomes |
 | 5336 | Tongkat Ali Supplement Contamination & Adulteration | 3 | Moderate | 2 | cost/weakness: 'Degrades: heavy-metal safety, cardiovascular safety, trust' |
+| 5367 | Extreme Endurance Volume → Atrial Fibrillation Risk | 3 | Moderate | 1 | cost: 'Degrades: cardiac rhythm stability, Interoceptive, healthy lifespan' |
+| 5373 | Post-Workout Cold-Water Immersion Blunts Muscle Gains | 2 | Moderate | 1 | cost: 'Degrades: Strength & Resistance Training, hypertrophy, anabolic signaling |
+| 5384 | OTC Antihistamine Sleep Aids (Diphenhydramine, Doxylamine) | 3 | Moderate | 1 | cost/weakness: 'Degrades: sleep quality, next-day cognition, long-term brain hea |
+| 5386 | OTC Melatonin Mislabeling & Dose Chaos | 2 | Strong | 1 | cost/weakness: 'Degrades: dosing accuracy, product trust, pediatric safety' |
 
 ## Framework / uncategorized  (61)
 
