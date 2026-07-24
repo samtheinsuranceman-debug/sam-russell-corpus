@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**6,137 clusters · 11,779 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**6,194 clusters · 11,876 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,247 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,590 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,239 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,288 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,596 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,249 |
 | Framework / uncategorized | 61 |
-| **Total** | **6,137** |
+| **Total** | **6,194** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,637 |
-| Strong | 1,642 |
-| Mixed | 1,043 |
-| Emerging | 815 |
+| Moderate | 2,655 |
+| Strong | 1,671 |
+| Mixed | 1,048 |
+| Emerging | 820 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,247)
+## PRACTICES — what strengthens the mind (impact lens)  (3,288)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3274,8 +3274,49 @@
 | 6089 | Rabies Post-Exposure Prophylaxis (Fatal Disease, Preventable) | 5 | Strong | 2 | practice: 'Bolsters clusters: rabies prevention, survival after animal bite, tra |
 | 6090 | Malaria Vaccines (R21/Matrix-M & RTS,S) | 4 | Moderate | 2 | practice: 'Bolsters clusters: malaria prevention, child survival, febrile-illnes |
 | 6091 | Dengue Vaccines (Real Benefit, Serostatus Caveat) | 3 | Mixed | 2 | practice: 'Bolsters clusters: dengue prevention, hospitalization reduction, evid |
+| 6096 | HIV Treatment-as-Prevention & Undetectable = Untransmittable (U=U) | 5 | Strong | 3 | practice: 'Bolsters clusters: onward-transmission prevention, serodiscordant-cou |
+| 6097 | Kangaroo Mother Care for Preterm/Low-Birthweight Infants | 4 | Strong | 2 | practice: 'Bolsters clusters: neonatal survival, preterm/LBW care, newborn therm |
+| 6098 | Long-Acting Injectable Cabotegravir PrEP (HPTN 083/084) | 4 | Strong | 2 | practice: 'Bolsters clusters: HIV prevention with poor pill-adherence, women's H |
+| 6099 | Twice-Yearly Lenacapavir PrEP (PURPOSE 1 & 2) | 4 | Strong | 2 | practice: 'Bolsters clusters: HIV prevention, women's HIV prevention, ultra-long |
+| 6100 | Voluntary Medical Male Circumcision & HIV Risk | 4 | Strong | 3 | practice: 'Bolsters clusters: heterosexual HIV prevention, combination preventio |
+| 6102 | Oral Killed Whole-Cell Cholera Vaccine (Shanchol/Euvichol) | 4 | Strong | 2 | practice: 'Bolsters clusters: cholera outbreak control, epidemic-diarrhea preven |
+| 6103 | Rotavirus Vaccine (RV1/RV5/Rotavac) | 4 | Strong | 2 | practice: 'Bolsters clusters: severe childhood diarrhea prevention, diarrheal-de |
+| 6104 | Daily Oral PrEP (Tenofovir/Emtricitabine) for HIV Prevention | 4 | Strong | 3 | practice: 'Bolsters clusters: HIV acquisition prevention, serodiscordant-couple  |
+| 6105 | Chlorhexidine Umbilical Cord Care for Newborn Survival | 3 | Moderate | 2 | practice: 'Bolsters clusters: neonatal-sepsis prevention, home-birth newborn sur |
+| 6106 | Weekly Rifapentine-Isoniazid (3HP) TB Preventive Treatment | 3 | Strong | 2 | practice: 'Bolsters clusters: latent-TB reactivation prevention, treatment-compl |
+| 6107 | Household Water Chlorination / Point-of-Use Treatment | 3 | Moderate | 2 | practice: 'Bolsters clusters: diarrheal-disease reduction, safe drinking water,  |
+| 6108 | Four-Month Rifapentine-Moxifloxacin TB Regimen (Study 31/A5349) | 3 | Strong | 1 | practice: 'Bolsters clusters: TB cure, treatment-completion, shortened drug-susc |
+| 6109 | Seasonal Malaria Chemoprevention (SMC) in Children | 4 | Strong | 2 | practice: 'Bolsters clusters: childhood malaria prevention, Sahel child survival |
+| 6110 | Intermittent Preventive Treatment of Malaria in Pregnancy (IPTp-SP) | 3 | Moderate | 2 | practice: 'Bolsters clusters: maternal malaria prevention, low-birthweight reduc |
+| 6114 | Active Monitoring for Low/Intermediate-Risk Prostate Cancer (ProtecT) | 4 | Strong | 2 | practice: 'Bolsters clusters: Strategic, Intrapersonal, Existential, treatment-a |
+| 6115 | Combination Alpha-Blocker + 5-Alpha-Reductase Inhibitor for BPH (MTOPS) | 4 | Strong | 2 | practice: 'Bolsters clusters: Bodily, Strategic, disease-progression prevention' |
+| 6116 | Vasectomy: Effective Contraception, Not a Prostate-Cancer Cause | 3 | Strong | 2 | practice: 'Bolsters clusters: Strategic, Intrapersonal, reproductive autonomy' |
+| 6118 | Alpha-Blockers (Tamsulosin) for BPH Symptoms | 3 | Strong | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, urinary-symptom relief' |
+| 6119 | Oral Finasteride for Male Pattern Baldness | 3 | Strong | 2 | practice: 'Bolsters clusters: Aesthetic, Intrapersonal, hair retention' |
+| 6120 | Clomiphene/SERMs for Hypogonadism (Fertility-Sparing) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, endogenous testosterone, fertility' |
+| 6123 | Beta-Sitosterol (Phytosterols) for BPH Symptoms | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, urinary-symptom relief' |
+| 6124 | Penile Traction Therapy for Peyronie's Disease | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Seductive, curvature correction' |
+| 6126 | Weight Loss to Raise Testosterone in Obese Men | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Volitional, hormonal health' |
+| 6128 | Antioxidants/CoQ10 for Male Subfertility (Weak, Uncertain) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, semen parameters — thin evidence' |
+| 6132 | SSRIs for PMDD (Continuous or Luteal Dosing) | 4 | Strong | 2 | practice: 'Bolsters clusters: cyclical mood stabilization, functioning, suicide- |
+| 6133 | Levonorgestrel IUS (LNG-IUS) for Heavy Menstrual Bleeding | 4 | Strong | 2 | practice: 'Bolsters clusters: menstrual blood-loss control, iron repletion, qual |
+| 6134 | IV Iron (Ferric Carboxymaltose) for Iron-Deficiency Anemia | 4 | Strong | 1 | practice: 'Bolsters clusters: rapid hemoglobin recovery, iron repletion when ora |
+| 6135 | Maintenance Fluconazole / Oteseconazole for Recurrent Yeast Infections | 4 | Strong | 2 | practice: 'Bolsters clusters: recurrent candidiasis suppression, symptom-free in |
+| 6136 | NSAIDs for Primary Dysmenorrhea (First-Line) | 4 | Strong | 1 | practice: 'Bolsters clusters: menstrual pain control, functioning/absenteeism re |
+| 6137 | Combined Oral Contraceptives for Primary Dysmenorrhea | 3 | Strong | 1 | practice: 'Bolsters clusters: menstrual pain control, cycle regulation, contrace |
+| 6138 | Tranexamic Acid for Heavy Menstrual Bleeding | 3 | Strong | 2 | practice: 'Bolsters clusters: menstrual blood-loss control, hemoglobin/ferritin  |
+| 6139 | Uterine Artery Embolization for Symptomatic Fibroids | 3 | Strong | 1 | practice: 'Bolsters clusters: fibroid symptom relief, uterus preservation, faste |
+| 6140 | Alternate-Day, Single-Morning Oral Iron Dosing | 3 | Moderate | 2 | practice: 'Bolsters clusters: iron absorption efficiency, tolerability, adherenc |
+| 6141 | Metronidazole/Clindamycin for Bacterial Vaginosis (Honest on Recurrence) | 3 | Moderate | 2 | practice: 'Bolsters clusters: BV symptom clearance, flora normalization (short-t |
+| 6144 | Topical Heat (Heat Wraps/Patches) for Dysmenorrhea | 2 | Moderate | 2 | practice: 'Bolsters clusters: menstrual pain control, drug-sparing self-manageme |
+| 6145 | Male-Partner Treatment to Prevent BV Recurrence | 3 | Emerging | 1 | practice: 'Bolsters clusters: BV recurrence reduction, treating BV as a couples  |
+| 6146 | Calcium Supplementation for PMS | 2 | Moderate | 1 | practice: 'Bolsters clusters: premenstrual symptom reduction, low-cost self-mana |
+| 6148 | Laparoscopic Excision/Ablation for Endometriosis Pain (Honest) | 3 | Moderate | 2 | practice: 'Bolsters clusters: endometriosis pain relief, quality of life, fertil |
+| 6150 | GnRH Agonists with Add-Back Therapy (Endometriosis, Fibroids) | 3 | Moderate | 2 | practice: 'Bolsters clusters: estrogen-dependent pain suppression, fibroid/lesio |
+| 6151 | Chasteberry (Vitex agnus-castus) for PMS — Signal but Biased Evidence | 2 | Mixed | 1 | practice: 'Bolsters clusters: premenstrual symptom relief (uncertain), herbal op |
+| 6152 | Seed Cycling for 'Hormone Balance' — No Credible Evidence | 1 | Emerging | 1 | practice: 'Bolsters clusters: none demonstrated (dietary fiber aside)' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,590)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,596)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4869,8 +4910,14 @@
 | 6093 | 'Too Many Vaccines Too Soon' Claim (Unfounded) | 2 | Strong | 2 | weakness: 'Degrades: evidence reasoning, vaccine uptake, immunology literacy' |
 | 6094 | Aluminum Adjuvant 'Toxicity' Claim (No Link) | 2 | Strong | 2 | weakness: 'Degrades: evidence reasoning, vaccine uptake, dose-context literacy' |
 | 6095 | Thimerosal 'Causes Autism' Claim (No Link) | 2 | Strong | 2 | weakness: 'Degrades: evidence reasoning, vaccine uptake, mercury-toxicity litera |
+| 6111 | Homeopathy Marketed for Malaria Prevention | 8 | Strong | 2 | cost/weakness: 'Degrades: malaria prevention, evidence-based decision-making, ad |
+| 6112 | Herbal 'Natural Antimalarials' (Artemisia Tea) Replacing ACTs | 6 | Mixed | 2 | cost/weakness: 'Degrades: effective malaria cure, artemisinin susceptibility, sy |
+| 6113 | Urine Therapy ('Urotherapy') for Infections | 3 | Strong | 2 | cost/weakness: 'Degrades: evidence-based self-care, infection prevention, intero |
+| 6129 | D-Aspartic Acid for Testosterone (Fails to Deliver) | 2 | Moderate | 2 | weakness: 'Degrades: Bodily, Financial' |
+| 6130 | Folic Acid + Zinc for Male Fertility (Null) | 2 | Strong | 1 | weakness: 'Degrades: Bodily, Financial' |
+| 6131 | Semen Retention / 'NoFap' Superpower Claims | 2 | Mixed | 2 | weakness: 'Degrades: Intrapersonal, Bodily' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,239)
+## COST OF FAILURE — what's at stake (harm lens)  (1,249)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -6113,6 +6160,16 @@
 | 6053 | Testosterone Therapy for 'Low T' in Aging Men | 2 | Mixed | 2 | cost: 'Degrades: arrhythmia safety, financial reserve, realistic expectations' |
 | 6076 | Antidepressant Discontinuation Syndrome | 2 | Moderate | 2 | cost: 'Degrades: Emotional, Interoceptive, Volitional' |
 | 6085 | Vaccine 'Detox' & Chelation Protocols (A Real Cost) | 4 | Strong | 2 | cost/weakness: 'Degrades: finances, child safety, evidence trust' |
+| 6101 | 'Miracle Mineral Solution' / Chlorine Dioxide as a Disease 'Cure' | 4 | Strong | 2 | cost/weakness: 'Degrades: safe treatment-seeking, gut and organ integrity, trust |
+| 6117 | Anabolic-Androgenic Steroid Abuse | 4 | Strong | 1 | cost: 'Degrades: cardiovascular health, fertility, endogenous testosterone' |
+| 6121 | Obesity Impairs Male Fertility | 3 | Moderate | 1 | cost: 'Degrades: sperm production, testosterone, fertility' |
+| 6122 | Cigarette Smoking Degrades Semen Quality | 3 | Moderate | 1 | cost: 'Degrades: fertility, sperm count/motility, DNA integrity' |
+| 6125 | Perineum Sunning / Testicle Tanning for Testosterone | 2 | Mixed | 2 | cost: 'Degrades: genital skin, wallet, faith in wellness fads' |
+| 6127 | Scrotal Heat (Saunas, Hot Tubs, Laptops) Lowers Sperm Output | 2 | Moderate | 2 | cost: 'Degrades: sperm count/motility, short-term fertility' |
+| 6142 | Vaginal Douching — Disrupts Flora, Raises BV/PID Risk | 3 | Moderate | 2 | cost/weakness: 'Degrades: vaginal flora, upper-tract protection, fertility' |
+| 6143 | Vaginal 'Detox' Pearls / Herbal Balls — Dangerous, No Benefit | 3 | Emerging | 1 | cost/weakness: 'Degrades: vaginal flora, mucosal integrity, infection defense' |
+| 6147 | Jade / Yoni Eggs — Debunked Claims, Infection Risk | 2 | Emerging | 1 | cost/weakness: 'Degrades: vaginal flora, evidence-based judgment, wallet' |
+| 6149 | Vaginal ('Yoni') Steaming — No Benefit, Burn Risk | 2 | Emerging | 1 | cost/weakness: 'Degrades: vaginal tissue integrity, flora balance, trust in evid |
 
 ## Framework / uncategorized  (61)
 
