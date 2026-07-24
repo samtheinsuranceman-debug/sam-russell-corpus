@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,750 clusters · 11,157 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,804 clusters · 11,249 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,978 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,515 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,196 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,010 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,526 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,207 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,750** |
+| **Total** | **5,804** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,533 |
-| Strong | 1,466 |
-| Mixed | 960 |
-| Emerging | 791 |
+| Moderate | 2,545 |
+| Strong | 1,484 |
+| Mixed | 974 |
+| Emerging | 801 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,978)
+## PRACTICES — what strengthens the mind (impact lens)  (3,010)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3005,8 +3005,40 @@
 | 5701 | UV-Blocking Sunglasses to Reduce Cataract & Pterygium Risk | 2 | Moderate | 2 | practice: 'Bolsters clusters: lens clarity, ocular-surface protection, long-term |
 | 5702 | Pilocarpine Eye Drops (Vuity) for Presbyopia | 2 | Emerging | 1 | practice: 'Bolsters clusters: near vision, glasses-free reading window' |
 | 5703 | Warm Compresses & Lid Hygiene for Meibomian Gland Dysfunction / Blepharitis | 2 | Moderate | 2 | practice: 'Bolsters clusters: ocular-surface comfort, tear-film stability, bleph |
+| 5710 | Methadone/Buprenorphine: the Mortality Drop & the Discontinuation Cliff | 5 | Strong | 1 | practice: 'Bolsters clusters: overdose-mortality reduction, treatment retention, |
+| 5711 | Alcoholics Anonymous & 12-Step Facilitation (Manualized) | 4 | Strong | 2 | practice: 'Bolsters clusters: continuous abstinence, remission, healthcare-cost  |
+| 5712 | Bupropion for Smoking Cessation | 3 | Strong | 1 | practice: 'Bolsters clusters: sustained quit rates, non-nicotine cessation aid,  |
+| 5713 | Take-Home Naloxone for Overdose Reversal | 4 | Moderate | 1 | practice: 'Bolsters clusters: overdose survival, bystander rescue, harm reductio |
+| 5714 | Needle & Syringe Programmes (HIV Prevention) | 4 | Strong | 1 | practice: 'Bolsters clusters: HIV prevention, injection-risk reduction, treatmen |
+| 5715 | Brief Alcohol Interventions in Primary Care (SBIRT-style) | 3 | Moderate | 1 | practice: 'Bolsters clusters: hazardous-drinking reduction, early detection, low |
+| 5716 | CBT for Substance Use Disorders | 3 | Moderate | 1 | practice: 'Bolsters clusters: coping skills, consumption reduction, relapse prev |
+| 5717 | Topiramate for Alcohol Use Disorder (Off-Label) | 3 | Moderate | 2 | practice: 'Bolsters clusters: heavy-drinking reduction, abstinence, craving cont |
+| 5718 | Supervised Disulfiram (Antabuse) for Alcohol Dependence | 3 | Moderate | 1 | practice: 'Bolsters clusters: abstinence maintenance, deterrence adherence, rela |
+| 5719 | Supervised Consumption / Injection Facilities | 3 | Mixed | 2 | practice: 'Bolsters clusters: on-site overdose survival, safer injection, treatm |
+| 5720 | Extended-Release Naltrexone (Vivitrol) for Opioid Use Disorder | 3 | Moderate | 1 | practice: 'Bolsters clusters: opioid relapse prevention, abstinence maintenance, |
+| 5721 | Gabapentin for AUD (Strongest in the Withdrawal Subgroup) | 3 | Emerging | 1 | practice: 'Bolsters clusters: abstinence, heavy-drinking reduction, withdrawal-s |
+| 5722 | The Sinclair Method (Targeted 'Before-Drinking' Naltrexone) | 3 | Mixed | 2 | practice: 'Bolsters clusters: drinking reduction, pharmacological extinction, co |
+| 5723 | Baclofen for Alcohol Use Disorder (Genuinely Mixed) | 2 | Mixed | 1 | practice: 'Bolsters clusters: relapse prevention, abstinence in liver disease, p |
+| 5732 | Fisetin as a Senolytic (Strong in Mice, Human Trials Pending) | 2 | Emerging | 2 | practice: 'Bolsters clusters: senescent-cell clearance, inflammaging reduction,  |
+| 5733 | Omega-3 (± Vitamin D & Exercise) Slows Epigenetic-Clock Aging | 2 | Emerging | 1 | practice: 'Bolsters clusters: biological-age slowing, cardiovascular, Bodily' |
+| 5734 | Urolithin A (Mitopure) for Mitochondria & Muscle | 2 | Emerging | 2 | practice: 'Bolsters clusters: mitochondrial health, muscle endurance, Bodily' |
+| 5735 | Rapamycin / mTOR Inhibition (Honest — Strong in Mice, Unproven in Humans) | 2 | Emerging | 2 | practice: 'Bolsters clusters: cellular autophagy, immune resilience, Bodily, hea |
+| 5736 | mTOR Inhibitors for Immune Aging (Mixed — Phase 2 Promise, Phase 3 Failure) | 2 | Mixed | 2 | practice: 'Bolsters clusters: vaccine response, immune resilience, Bodily' |
+| 5737 | Fasting-Mimicking Diet (5-Day Cycles) & Biological-Age Markers | 2 | Emerging | 1 | practice: 'Bolsters clusters: metabolic health, biological-age markers, Bodily,  |
+| 5744 | Daily SSRIs (Paroxetine/Sertraline) for Premature Ejaculation | 4 | Strong | 2 | practice: 'Bolsters clusters: ejaculatory control, Seductive, sexual confidence' |
+| 5745 | Pelvic-Floor Muscle Training for Female Stress Urinary Incontinence | 4 | Strong | 2 | practice: 'Bolsters clusters: continence, Bodily, Interoceptive, pelvic-floor co |
+| 5746 | Vaginal Pessary for Pelvic Organ Prolapse | 3 | Moderate | 2 | practice: 'Bolsters clusters: pelvic support, Bodily, continence, quality of lif |
+| 5747 | Intracavernosal Alprostadil Injection for ED | 4 | Strong | 2 | practice: 'Bolsters clusters: erectile function, Seductive, Bodily' |
+| 5749 | Topical Lidocaine/Prilocaine Spray for Premature Ejaculation | 3 | Strong | 2 | practice: 'Bolsters clusters: ejaculatory control, Seductive, Bodily, sexual con |
+| 5750 | Intravaginal DHEA (Prasterone) for Dyspareunia of GSM | 3 | Moderate | 2 | practice: 'Bolsters clusters: vaginal comfort, Seductive, dyspareunia relief' |
+| 5751 | Ospemifene (Oral SERM) for Dyspareunia of Vulvovaginal Atrophy | 3 | Moderate | 2 | practice: 'Bolsters clusters: vaginal comfort, Seductive, dyspareunia relief' |
+| 5753 | Vacuum Erection Devices for Erectile Dysfunction | 3 | Moderate | 2 | practice: 'Bolsters clusters: erectile function, Seductive, Bodily, penile rehab |
+| 5755 | Duloxetine for Female Stress Urinary Incontinence | 2 | Mixed | 2 | practice: 'Bolsters clusters: continence, urethral sphincter tone' |
+| 5759 | Oral L-Citrulline for Mild Erectile Dysfunction | 1 | Emerging | 2 | practice: 'Bolsters clusters: erectile function, Bodily, nitric-oxide pathway' |
+| 5760 | Pelvic-Floor Muscle Training After Radical Prostatectomy | 2 | Mixed | 2 | practice: 'Bolsters clusters: continence recovery, Bodily, pelvic-floor control' |
+| 5761 | Low-Intensity Shockwave Therapy for Erectile Dysfunction | 2 | Emerging | 2 | practice: 'Bolsters clusters: erectile function, Bodily, penile vascular health' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,515)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,526)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4525,8 +4557,19 @@
 | 5706 | Oral Omega-3 (Fish Oil) for Dry Eye Disease — The DREAM Null | 2 | Strong | 1 | weakness: 'Degrades: wallet, accurate treatment expectations' |
 | 5707 | Vision-Training Apps to 'Ditch Your Glasses' (GlassesOff and kin) | 2 | Mixed | 1 | weakness: 'Degrades: wallet, accurate expectations about presbyopia' |
 | 5708 | 'Carrots Improve Normal Vision' — A WWII Propaganda Myth | 1 | Strong | 2 | weakness: 'Degrades: accurate nutritional beliefs, realistic health expectations |
+| 5724 | Nalmefene 'As-Needed' for Alcohol — Weaker Than Marketed | 4 | Mixed | 1 | weakness: 'Degrades: evidence-literacy, treatment-resource allocation, realistic |
+| 5725 | Auricular (NADA) Acupuncture for Substance Use — No Reliable Benefit | 3 | Mixed | 2 | weakness: 'Degrades: treatment-resource allocation, evidence-literacy, realistic |
+| 5726 | Kudzu (Pueraria) Extract for Alcohol — Thin & Preliminary | 3 | Emerging | 2 | weakness: 'Degrades: realistic expectations, evidence-literacy, treatment priori |
+| 5727 | Nicotine Vaccines (NicVAX) — Failed in Phase III | 3 | Strong | 2 | weakness: 'Degrades: realistic expectations, research-resource allocation, evide |
+| 5738 | Betting on Imminent Age Reversal ('Longevity Escape Velocity') | 3 | Emerging | 2 | weakness: 'Degrades: Financial, Logical, realistic planning' |
+| 5739 | Epigenetic 'Biological Age' Clocks as Personal Guidance (Research Tool, Not a Dashboard) | 3 | Mixed | 2 | weakness: 'Degrades: evidence literacy, Logical, Financial' |
+| 5740 | High-Dose Antioxidant Supplements (Vitamin E, Beta-Carotene) for 'Anti-Aging' | 3 | Strong | 2 | weakness: 'Degrades: longevity, Bodily, evidence literacy' |
+| 5741 | Metformin as a Geroprotector Blunts Exercise Gains | 3 | Moderate | 2 | weakness: 'Degrades: cardiorespiratory fitness gains, muscle hypertrophy, mitoch |
+| 5742 | Commercial Telomere-Length Testing as an Aging Gauge | 2 | Mixed | 1 | weakness: 'Degrades: evidence literacy, Logical, Financial' |
+| 5743 | TA-65 & Telomerase-Activator Supplements | 2 | Mixed | 2 | weakness: 'Degrades: financial security, evidence literacy, Financial, Logical' |
+| 5762 | Chasing Penis-Enlargement Pills for 'Size' | 2 | Strong | 2 | weakness: 'Degrades: Financial, Intrapersonal, informed decision-making' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,196)
+## COST OF FAILURE — what's at stake (harm lens)  (1,207)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5726,6 +5769,17 @@
 | 5694 | Smoking → Age-Related Macular Degeneration & Cataract | 4 | Strong | 2 | cost: 'Degrades: central vision, lens clarity, long-term sight' |
 | 5695 | Recreational Noise & Personal Listening Devices → Hearing Loss | 3 | Moderate | 2 | cost: 'Degrades: hearing acuity, speech-in-noise understanding, tinnitus-free he |
 | 5700 | Cotton-Swab (Q-tip) Ear Cleaning → Impaction & Injury | 2 | Moderate | 1 | cost: 'Degrades: hearing clarity, ear-canal integrity, eardrum' |
+| 5709 | Anesthesia-Assisted 'Ultra-Rapid' Opioid Detox | 4 | Strong | 2 | cost: 'Degrades: patient safety, treatment retention, financial wellbeing' |
+| 5728 | Unproven Stem-Cell Clinics & 'Regenerative' Anti-Aging Tourism | 5 | Strong | 2 | cost: 'Degrades: vision/health (serious harm), financial security, Bodily' |
+| 5729 | Unapproved Exosome 'Anti-Aging' Products | 4 | Moderate | 1 | cost: 'Degrades: Bodily (infection), financial security' |
+| 5730 | Young-Blood / Plasma Transfusions for Aging | 3 | Strong | 1 | cost: 'Degrades: financial security, Bodily (transfusion risk), evidence literac |
+| 5731 | Growth Hormone for 'Anti-Aging' in Healthy Older Adults | 3 | Strong | 2 | cost: 'Degrades: metabolic health, joint comfort, Bodily' |
+| 5748 | OTC 'Male Enhancement' Pills Spiked with Hidden Sildenafil/Tadalafil | 3 | Strong | 2 | cost: 'Degrades: cardiovascular safety, medication safety, informed consent' |
+| 5752 | Vaginal (Yoni) Steaming for Reproductive/Sexual Health | 2 | Strong | 2 | cost: 'Degrades: vaginal health, evidence literacy' |
+| 5754 | Jade Eggs (Goop) for 'Pelvic/Sexual Energy' | 2 | Strong | 2 | cost: 'Degrades: vaginal health, evidence literacy, Financial' |
+| 5756 | Fractional CO2 'Vaginal Rejuvenation' Laser for GSM | 2 | Mixed | 2 | cost: 'Degrades: Financial, evidence literacy, vaginal tissue safety' |
+| 5757 | OTC Yohimbine/Yohimbe for ED (Thin Benefit, Cardiovascular Risk) | 2 | Mixed | 2 | cost: 'Degrades: cardiovascular stability, anxiety regulation, medication safety |
+| 5758 | PRP 'P-Shot'/'O-Shot' for Sexual Dysfunction | 1 | Mixed | 2 | cost: 'Degrades: Financial, evidence literacy' |
 
 ## Framework / uncategorized  (61)
 
