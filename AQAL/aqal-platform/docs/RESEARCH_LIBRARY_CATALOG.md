@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,643 clusters · 10,998 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,700 clusters · 11,083 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,925 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,483 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,174 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,956 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,503 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,180 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,643** |
+| **Total** | **5,700** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,502 |
-| Strong | 1,423 |
-| Mixed | 938 |
-| Emerging | 780 |
+| Moderate | 2,517 |
+| Strong | 1,442 |
+| Mixed | 955 |
+| Emerging | 786 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,925)
+## PRACTICES — what strengthens the mind (impact lens)  (2,956)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2952,8 +2952,39 @@
 | 5595 | Metformin for PCOS — Ovulation & Metabolic Help, Not a Fertility Cure | 2 | Moderate | 1 | practice: 'Bolsters clusters: ovulation, menstrual regularity, insulin sensitivi |
 | 5596 | SSRIs/SNRIs for Hot Flashes — Real but Modest Non-Hormonal Option | 2 | Moderate | 2 | practice: 'Bolsters clusters: vasomotor symptom relief, non-hormonal options, ho |
 | 5597 | Testosterone for Women with Low Sexual Desire (HSDD) | 2 | Moderate | 1 | practice: 'Bolsters clusters: sexual desire, satisfying sexual events, postmenop |
+| 5602 | Denosumab for Osteoporosis (with Rebound Caveat) | 4 | Strong | 2 | practice: 'Bolsters clusters: fracture resistance, bone mineral density, hip-fra |
+| 5603 | Teriparatide (Anabolic PTH) for Severe Osteoporosis (VERO) | 4 | Strong | 1 | practice: 'Bolsters clusters: vertebral-fracture resistance, bone formation, hig |
+| 5605 | Weight Loss + Exercise for Knee Osteoarthritis (IDEA) | 4 | Strong | 1 | practice: 'Bolsters clusters: knee OA pain relief, mobility, joint loading, infl |
+| 5607 | High-Intensity Resistance + Impact Training (LIFTMOR) | 4 | Moderate | 1 | practice: 'Bolsters clusters: bone mineral density, functional strength, fall &  |
+| 5608 | Tai Chi for Knee Osteoarthritis Pain | 3 | Moderate | 1 | practice: 'Bolsters clusters: knee OA pain relief, physical function, mood, bala |
+| 5609 | Creatine + Resistance Training in Older Adults | 3 | Moderate | 1 | practice: 'Bolsters clusters: muscle mass, strength, sarcopenia resistance, func |
+| 5610 | Curcumin/Turmeric Extracts for Knee OA Pain | 3 | Mixed | 1 | practice: 'Bolsters clusters: knee OA pain relief, function, NSAID-sparing' |
+| 5611 | HMB for Muscle Mass in Aging & Bed Rest | 2 | Mixed | 1 | practice: 'Bolsters clusters: muscle mass retention, sarcopenia resistance, disu |
+| 5612 | Dried Plums (Prunes) for Bone Mineral Density | 2 | Emerging | 1 | practice: 'Bolsters clusters: bone mineral density preservation, dietary bone su |
+| 5622 | Fecal Microbiota Transplant for Recurrent C. difficile | 5 | Strong | 2 | practice: 'Bolsters clusters: recurrent C. difficile cure, microbiome restoratio |
+| 5623 | PEG 3350 (Osmotic Laxative) for Chronic Constipation | 4 | Strong | 2 | practice: 'Bolsters clusters: chronic constipation relief, stool frequency, gent |
+| 5624 | Bismuth Quadruple Therapy to Eradicate H. pylori | 4 | Strong | 2 | practice: 'Bolsters clusters: peptic ulcer cure, H. pylori eradication, gastric  |
+| 5626 | Low-Dose Amitriptyline (Gut-Brain Neuromodulator) for IBS | 3 | Strong | 2 | practice: 'Bolsters clusters: IBS symptom severity, abdominal pain, second-line  |
+| 5628 | Ginger for Nausea (Pregnancy and Beyond) | 3 | Moderate | 2 | practice: 'Bolsters clusters: nausea relief, pregnancy nausea/vomiting, motion/a |
+| 5629 | Lactase Enzyme Supplements for Lactose Intolerance | 3 | Moderate | 2 | practice: 'Bolsters clusters: lactose digestion, dairy tolerance, gas/bloating r |
+| 5630 | GERD Lifestyle: Weight Loss and Bed-Head Elevation | 3 | Moderate | 2 | practice: 'Bolsters clusters: reflux symptom relief, nocturnal acid exposure, PP |
+| 5631 | Partially Hydrolyzed Guar Gum (PHGG) for IBS & Constipation | 2 | Moderate | 2 | practice: 'Bolsters clusters: IBS symptom relief, constipation, low-fermentation |
+| 5632 | Loperamide for IBS-D — Fixes Stool, Not Pain | 2 | Mixed | 2 | practice: 'Bolsters clusters: diarrhea control, stool consistency, urgency reduc |
+| 5633 | Rifaximin (Non-Absorbed Antibiotic) for IBS-D | 2 | Moderate | 2 | practice: 'Bolsters clusters: IBS-D global relief, bloating reduction, non-const |
+| 5634 | Defecation Posture (Squatting / Footstool) | 1 | Emerging | 2 | practice: 'Bolsters clusters: easier defecation, reduced straining, bowel-emptyi |
+| 5635 | Bismuth Subsalicylate to Prevent Travelers' Diarrhea | 2 | Mixed | 2 | practice: 'Bolsters clusters: travelers diarrhea prevention, enteric protection, |
+| 5643 | COVID-19 mRNA Vaccine vs Severe Disease | 4 | Strong | 1 | practice: 'Bolsters clusters: hospitalization-prevention, severe-outcome-reducti |
+| 5645 | High-Dose Influenza Vaccine in Older Adults | 3 | Strong | 1 | practice: 'Bolsters clusters: elderly-flu-prevention, hospitalization-reduction, |
+| 5646 | Influenza Vaccine in Healthy Adults | 2 | Moderate | 1 | practice: 'Bolsters clusters: flu-case-reduction, work-absence-reduction, commun |
+| 5647 | Honey for Pediatric Acute Cough | 2 | Moderate | 1 | practice: 'Bolsters clusters: nighttime-cough-relief, child-sleep-quality, paren |
+| 5648 | Pelargonium sidoides (Umckaloabo) for Acute Bronchitis | 2 | Moderate | 2 | practice: 'Bolsters clusters: bronchitis-symptom-resolution, return-to-work, cou |
+| 5649 | Andrographis paniculata for Cold Symptom Relief | 2 | Emerging | 2 | practice: 'Bolsters clusters: cold-symptom-severity, sore-throat-relief, illness |
+| 5650 | Oseltamivir (Tamiflu) for Influenza | 2 | Mixed | 1 | practice: 'Bolsters clusters: flu-symptom-duration, early-antiviral-use' |
+| 5651 | Probiotics for Preventing Respiratory Infections | 2 | Moderate | 1 | practice: 'Bolsters clusters: cold-episode-reduction, sick-days-avoided, antibio |
+| 5652 | Community Masks vs Respiratory Viruses (Inconclusive RCTs) | 1 | Mixed | 1 | practice: 'Bolsters clusters: transmission-reduction (uncertain), source-control |
+| 5653 | Vitamin C for Pneumonia (Weak Signal) | 1 | Mixed | 1 | practice: 'Bolsters clusters: pneumonia-adjunct (uncertain), deficiency-correcti |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,483)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,503)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4440,8 +4471,28 @@
 | 5599 | 'Adrenal Fatigue' — A Diagnosis That Doesn't Exist | 3 | Strong | 2 | weakness: 'Degrades: getting the real diagnosis, evidence-based self-care, finan |
 | 5600 | Seed Cycling for Hormone 'Balancing' — No Controlled Evidence | 2 | Mixed | 2 | weakness: 'Degrades: evidence-based expectations, financial prudence, timely rea |
 | 5601 | Tribulus terrestris for Testosterone — Fails to Deliver | 2 | Strong | 2 | weakness: 'Degrades: financial prudence, evidence-based supplementation, realist |
+| 5613 | Arthroscopic Meniscectomy for Degenerative Tears | 6 | Strong | 1 | weakness: 'Degrades: knee function, evidence-based decisions, healthcare resourc |
+| 5614 | Arthroscopic Subacromial Decompression for Shoulder Pain | 5 | Strong | 1 | weakness: 'Degrades: shoulder recovery expectations, evidence-based decisions, h |
+| 5615 | Vertebroplasty for Osteoporotic Vertebral Fracture | 5 | Mixed | 2 | weakness: 'Degrades: back-pain relief expectations, evidence-based decisions, he |
+| 5616 | Hyaluronic Acid Injections (Viscosupplementation) for Knee OA | 4 | Mixed | 1 | weakness: 'Degrades: knee OA pain relief expectations, evidence-based decisions, |
+| 5617 | Platelet-Rich Plasma (PRP) for Knee OA | 4 | Mixed | 1 | weakness: 'Degrades: knee OA outcomes, evidence-based decisions, out-of-pocket f |
+| 5618 | Prolotherapy (Dextrose Injections) - Overclaimed Reach | 3 | Mixed | 1 | weakness: 'Degrades: evidence-based decisions, out-of-pocket finances, realistic |
+| 5619 | Routine Calcium+Vitamin D for Fracture Prevention (Community-Dwelling) | 3 | Mixed | 1 | weakness: 'Degrades: evidence-based supplement decisions, realistic expectations |
+| 5620 | Bone Broth for Joint/Collagen Repair | 2 | Emerging | 2 | weakness: 'Degrades: nutrition decisions, information hygiene, realistic expecta |
+| 5621 | Magnetic & Copper Bracelets for Joint Pain | 2 | Strong | 1 | weakness: 'Degrades: pain-management decisions, information hygiene, finances' |
+| 5636 | 'Leaky Gut Syndrome' as a Marketed Diagnosis | 4 | Mixed | 2 | weakness: 'Degrades: accurate diagnosis, money, evidence-based care-seeking' |
+| 5637 | IgG 'Food Sensitivity' Blood Testing | 4 | Strong | 2 | weakness: 'Degrades: money spent, diet breadth, accurate self-diagnosis' |
+| 5638 | 'Candida Cleanse' Diets for Systemic Yeast | 3 | Strong | 2 | weakness: 'Degrades: accurate diagnosis, diet breadth, money' |
+| 5639 | Activated Charcoal for Gas & 'Detox' | 3 | Mixed | 2 | weakness: 'Degrades: money, drug absorption, evidence-based self-care' |
+| 5640 | Herbal 'Parasite Cleanses' | 3 | Emerging | 2 | weakness: 'Degrades: accurate diagnosis, money, proper treatment' |
+| 5641 | Apple Cider Vinegar for Reflux & Digestion | 2 | Mixed | 2 | weakness: 'Degrades: tooth enamel, esophageal comfort, money' |
+| 5654 | Short Sleep Raises Infection Risk | 6 | Moderate | 1 | weakness: 'Degrades: infection resistance, immune surveillance, recovery capacit |
+| 5655 | 'Airborne'-Style Cold-Prevention Products | 3 | Strong | 2 | weakness: 'Degrades: evidence-calibrated health beliefs, consumer discernment, h |
+| 5656 | Echinacea for Colds (Unreliable) | 2 | Mixed | 1 | weakness: 'Degrades: evidence-calibrated self-care, opportunity cost, health-dec |
+| 5657 | Garlic for Colds (One Trial) | 2 | Mixed | 1 | weakness: 'Degrades: evidence-calibrated self-care, health-decision accuracy' |
+| 5658 | Oregano Oil / Olive Leaf as 'Antivirals' | 2 | Emerging | 1 | weakness: 'Degrades: evidence-calibrated self-care, opportunity cost, health-dec |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,174)
+## COST OF FAILURE — what's at stake (harm lens)  (1,180)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5619,6 +5670,12 @@
 | 5545 | Intensive Glucose Lowering for CV Benefit — Backfired (ACCORD) | 3 | Strong | 1 | cost: 'Degrades: survival, cardiovascular safety, treatment balance' |
 | 5571 | Finasteride's Sexual Side-Effect Cost | 3 | Mixed | 2 | cost: 'Degrades: libido, sexual function, mood in a minority of users' |
 | 5591 | Testosterone Therapy's Hidden Costs — Erythrocytosis & Suppressed Fertility | 3 | Strong | 2 | cost: 'Degrades: sperm production, blood viscosity safety, endogenous testostero |
+| 5604 | Repeated Corticosteroid Injections for Knee OA | 3 | Moderate | 1 | cost: 'Degrades: knee cartilage, long-term joint health, disease progression' |
+| 5606 | High-Dose Annual Bolus Vitamin D | 3 | Moderate | 1 | cost: 'Degrades: fall safety, fracture resistance, mobility confidence' |
+| 5625 | Coffee Enemas for 'Detox' | 4 | Strong | 2 | cost: 'Degrades: colonic mucosa, electrolyte balance, safety' |
+| 5627 | Colon Cleansing / Colonic Hydrotherapy | 3 | Strong | 2 | cost: 'Degrades: electrolyte balance, gut flora, money' |
+| 5642 | Intranasal Zinc Gel and Loss of Smell | 4 | Strong | 2 | cost: 'Degrades: sense of smell, taste/food enjoyment, quality of life' |
+| 5644 | Colloidal Silver for 'Immunity' | 3 | Strong | 2 | cost: 'Degrades: skin appearance, medication absorption, health finances' |
 
 ## Framework / uncategorized  (61)
 
