@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,191 clusters · 10,238 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,245 clusters · 10,338 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,610 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,654 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,406 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,114 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,124 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,191** |
+| **Total** | **5,245** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,335 |
-| Strong | 1,324 |
-| Mixed | 825 |
-| Emerging | 707 |
+| Moderate | 2,355 |
+| Strong | 1,327 |
+| Mixed | 839 |
+| Emerging | 724 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,610)
+## PRACTICES — what strengthens the mind (impact lens)  (2,654)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2637,6 +2637,50 @@
 | 5147 | Jamu (Indonesian Herbal Tonics) | 1 | Mixed | 2 | Bolsters clusters: Community, Naturalist |
 | 5148 | Theravada Merit-Making & the Five Precepts | 2 | Emerging | 2 | Bolsters clusters: Existential, Community, Moral |
 | 5149 | Traditional SE-Asian Diet (Herbs, Fish, Vegetables — and Salt) | 2 | Mixed | 2 | Bolsters clusters: Bodily, Naturalist |
+| 5152 | Saffron (Crocus sativus) for Mild-to-Moderate Depression | 3 | Moderate | 2 | practice: 'Bolsters clusters: mood, depressive-symptom relief' |
+| 5153 | Miswak (Salvadora persica) Chewing Stick for Oral Health | 2 | Moderate | 2 | practice: 'Bolsters clusters: plaque control, gingival health' |
+| 5154 | Pelargonium sidoides (Umckaloabo, EPs 7630) for Acute Bronchitis | 2 | Moderate | 2 | practice: 'Bolsters clusters: respiratory-infection recovery, symptom duration' |
+| 5155 | Baobab Fruit (Adansonia digitata) for Postprandial Glucose | 2 | Emerging | 2 | practice: 'Bolsters clusters: glycemic response, antioxidant intake' |
+| 5156 | Fenugreek (Helba/Methi) as a Galactagogue | 2 | Emerging | 2 | practice: 'Bolsters clusters: milk supply, lactation support' |
+| 5157 | Argan Oil (Moroccan) for Blood Lipids | 2 | Moderate | 2 | practice: 'Bolsters clusters: lipid profile, cardiometabolic risk' |
+| 5158 | Devil's Claw (Harpagophytum) for Low Back Pain | 2 | Moderate | 2 | practice: 'Bolsters clusters: pain relief, mobility' |
+| 5159 | Hibiscus / Karkade Tea for Blood Pressure | 2 | Moderate | 3 | practice: 'Bolsters clusters: blood pressure, vascular health, hydration' |
+| 5160 | Sesame Seed / Sesamin for Blood Pressure & Lipids | 2 | Moderate | 2 | practice: 'Bolsters clusters: lipid profile, blood pressure, cardiometabolic ris |
+| 5161 | Black Seed (Nigella sativa) for Asthma Control | 2 | Mixed | 2 | practice: 'Bolsters clusters: asthma control, airway inflammation' |
+| 5162 | Gum Arabic (Acacia senegal) for Renal & Metabolic Markers | 2 | Mixed | 2 | practice: 'Bolsters clusters: gut fermentation, inflammatory markers' |
+| 5163 | Kanna / Sceletium tortuosum (Zembrin) for Mood & Cognition | 2 | Emerging | 2 | practice: 'Bolsters clusters: anxiety regulation, cognitive flexibility' |
+| 5164 | Hoodia gordonii for Weight Loss (Honest Debunk) | 1 | Mixed | 2 | practice: 'Bolsters clusters: (marketed for appetite/weight - unsupported)' |
+| 5165 | Ramadan Diurnal Fasting for Weight & Lipids | 2 | Mixed | 2 | practice: 'Bolsters clusters: weight, lipid profile, glycemic control' |
+| 5166 | Sutherlandia (Cancer Bush) for HIV/Immunity (Honest Debunk) | 1 | Mixed | 2 | practice: 'Bolsters clusters: (marketed as immune booster - unsupported)' |
+| 5167 | Camel Milk for Autism (Honest Debunk) | 1 | Mixed | 2 | practice: 'Bolsters clusters: (marketed for autism symptoms - unsupported)' |
+| 5169 | Nixtamalization (Maize + Lime) to Prevent Pellagra | 4 | Strong | 2 | practice: 'Bolsters clusters: niacin bioavailability, calcium intake, food safet |
+| 5170 | Crofelemer / Sangre de Grado (Croton lechleri) for Diarrhea | 3 | Strong | 2 | practice: 'Bolsters clusters: secretory diarrhea control, GI quality of life' |
+| 5172 | Cat's Claw (Uncaria tomentosa) for Osteoarthritis & RA | 2 | Moderate | 2 | practice: 'Bolsters clusters: joint pain relief, inflammatory joint symptoms' |
+| 5173 | Quinoa (Chenopodium quinoa) for Glucolipid Metabolism | 3 | Moderate | 2 | practice: 'Bolsters clusters: glucose tolerance, blood lipids, diabetes preventi |
+| 5176 | Guayusa (Ilex guayusa) for Acute Alertness & Cognition | 2 | Emerging | 2 | practice: 'Bolsters clusters: acute attention, alertness, mood' |
+| 5177 | Nopal / Prickly Pear (Opuntia) for Postprandial Glucose | 2 | Mixed | 2 | practice: 'Bolsters clusters: postprandial glucose control, satiety' |
+| 5178 | Chanca Piedra (Phyllanthus niruri) for Kidney Stones | 2 | Emerging | 2 | practice: 'Bolsters clusters: stone-crystal inhibition, urinary risk factors' |
+| 5179 | Maca (Lepidium meyenii) for Libido & Sexual Function | 2 | Mixed | 2 | practice: 'Bolsters clusters: sexual desire, erectile function, subjective wellb |
+| 5180 | Maca for Menopausal Mood & Vasomotor Symptoms | 2 | Emerging | 2 | practice: 'Bolsters clusters: menopausal anxiety/depression relief, quality of l |
+| 5181 | Sacha Inchi Oil (Plukenetia volubilis) for Blood Lipids | 2 | Emerging | 2 | practice: 'Bolsters clusters: LDL/HDL profile, omega-3 (ALA) intake' |
+| 5182 | Stevia / Steviol Glycosides for BP & Glucose | 2 | Mixed | 2 | practice: 'Bolsters clusters: sugar substitution, modest glucose/BP effects' |
+| 5183 | Yacon Syrup (Smallanthus sonchifolius) FOS for Glucose & Weight | 2 | Emerging | 2 | practice: 'Bolsters clusters: postprandial glycemia, prebiotic gut flora, weight |
+| 5184 | Camu Camu (Myrciaria dubia) for Oxidative Stress | 1 | Emerging | 1 | practice: 'Bolsters clusters: antioxidant status, inflammatory markers' |
+| 5185 | Coca Leaf / Tea for Altitude Sickness (Overstated) | 1 | Mixed | 2 | practice: 'Bolsters clusters: (claimed) altitude tolerance — not supported' |
+| 5186 | Amaranth (Amaranthus) Grain & Oil for Cholesterol | 1 | Mixed | 2 | practice: 'Bolsters clusters: (claimed) lipid lowering — inconsistent' |
+| 5191 | Finnish Sauna & Cardiovascular Mortality (KIHD Cohort) | 3 | Moderate | 2 | practice: 'Bolsters clusters: cardiovascular resilience, longevity, heat toleran |
+| 5192 | Finnish Sauna & Incident Hypertension | 2 | Moderate | 1 | practice: 'Bolsters clusters: blood-pressure control, vascular function' |
+| 5193 | Whole-Grain Rye & Satiety / Glycemic Response | 2 | Moderate | 1 | practice: 'Bolsters clusters: appetite regulation, glycemic control' |
+| 5194 | Bilberry Anthocyanins for Cardiometabolic Markers | 2 | Mixed | 2 | practice: 'Bolsters clusters: lipid profile, glycemic control' |
+| 5195 | Lingonberry for Metabolic Health | 2 | Emerging | 2 | practice: 'Bolsters clusters: glycemic control, low-grade inflammation' |
+| 5196 | Finnish Sauna & Dementia / Alzheimer's Risk | 2 | Emerging | 1 | practice: 'Bolsters clusters: cognitive longevity, cerebrovascular health' |
+| 5197 | Finnish Sauna & Respiratory Disease Risk | 2 | Emerging | 1 | practice: 'Bolsters clusters: respiratory health, immune resilience' |
+| 5198 | Finnish Sauna & Stroke Risk | 2 | Emerging | 1 | practice: 'Bolsters clusters: cerebrovascular health, longevity' |
+| 5199 | Sauna-Based Heat Acclimation for Endurance | 2 | Moderate | 2 | practice: 'Bolsters clusters: aerobic performance, plasma volume, thermoregulati |
+| 5200 | Sea-Buckthorn Oil for Dry Eye | 2 | Emerging | 1 | practice: 'Bolsters clusters: ocular comfort, mucosal integrity' |
+| 5201 | Peloid (Mud-Pack) Therapy for Knee Osteoarthritis | 2 | Mixed | 1 | practice: 'Bolsters clusters: joint comfort, physical function' |
+| 5202 | Chaga Mushroom (Inonotus obliquus) | 1 | Emerging | 2 | practice: 'Bolsters clusters: (claimed) immune/anti-cancer support — largely unp |
+| 5203 | Winter (Ice) Swimming & Cold Adaptation | 2 | Emerging | 1 | practice: 'Bolsters clusters: metabolic flexibility, cold thermogenesis, insulin |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,406)
 
@@ -4049,7 +4093,7 @@
 | 5108 | Noni Juice (Morinda citrifolia) — 'Cure-All' Claims Unsupported | 4 | Mixed | 2 | weakness: 'Degrades: Financial, Logical, Interoceptive' |
 | 5122 | Orthosomnia (Sleep-Tracker-Induced Insomnia) | 4 | Emerging | 1 | weakness: 'Degrades: Interoceptive, Emotional, Meta-Cognitive' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,114)
+## COST OF FAILURE — what's at stake (harm lens)  (1,124)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5167,6 +5211,16 @@
 | 5132 | Lean / Muscle-Mass Loss on GLP-1 Agonists | 2 | Moderate | 2 | cost: 'Degrades: Bodily' |
 | 5136 | Betel Quid / Areca Nut Chewing — Group 1 Carcinogen | 5 | Strong | 3 | Degrades: Bodily, Community |
 | 5137 | Kratom (Mitragyna speciosa) — Dependence & Toxicity Risk | 4 | Mixed | 3 | Degrades: Interoceptive, Volitional, Bodily |
+| 5150 | 'Black Henna' (PPD) Tattoos — Contact-Dermatitis Harm | 2 | Moderate | 2 | cost/weakness: 'Degrades: skin integrity, future hair-dye tolerance' |
+| 5151 | Khat (Catha edulis) Chewing — Real Harms | 3 | Moderate | 2 | cost/weakness: 'Degrades: cardiovascular health, oral health, sleep, financial s |
+| 5168 | Under-Processed Cassava / Manioc — Cyanogenic Toxicity & Konzo | 4 | Strong | 2 | cost: 'Degrades: upper motor neurons, gait, cognition' |
+| 5171 | Graviola / Soursop (Annona muricata) Anticancer Claims & Annonacin Neurotoxicity | 3 | Moderate | 2 | cost: 'Degrades: dopaminergic neurons, motor function, evidence literacy' |
+| 5174 | Ayahuasca — Adverse Physical & Psychiatric Effects | 2 | Moderate | 2 | cost: 'Degrades: acute physical comfort, psychiatric stability in vulnerable use |
+| 5175 | Boldo (Peumus boldus) Tea — Hepatotoxicity Risk | 3 | Emerging | 2 | cost: 'Degrades: liver function, drug-interaction safety' |
+| 5187 | Cold-Water Immersion: Autonomic Conflict & Arrhythmia | 4 | Moderate | 2 | cost: 'Degrades: cardiac rhythm stability, water safety' |
+| 5188 | Sauna + Alcohol: Sudden-Death Risk | 4 | Moderate | 2 | cost: 'Degrades: thermoregulation, cardiovascular safety' |
+| 5189 | Wim Hof Breathing Before Water Immersion (Blackout Risk) | 4 | Moderate | 2 | cost: 'Degrades: safety in/near water, oxygen safety margin' |
+| 5190 | Baltic Amber Teething Necklaces | 3 | Mixed | 2 | cost: 'Degrades: infant safety; no benefit' |
 
 ## Framework / uncategorized  (61)
 
