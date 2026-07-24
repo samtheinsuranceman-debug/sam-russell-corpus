@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,955 clusters · 11,481 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**6,021 clusters · 11,592 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,111 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,563 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,220 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,160 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,573 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,227 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,955** |
+| **Total** | **6,021** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,594 |
-| Strong | 1,540 |
-| Mixed | 1,010 |
-| Emerging | 811 |
+| Moderate | 2,611 |
+| Strong | 1,575 |
+| Mixed | 1,022 |
+| Emerging | 813 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,111)
+## PRACTICES — what strengthens the mind (impact lens)  (3,160)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3138,8 +3138,57 @@
 | 5907 | Cross-Education: Train the Uninjured Limb | 3 | Moderate | 2 | practice: 'Bolsters clusters: immobilization strength loss, post-cast rehab, con |
 | 5909 | Foot Orthoses for Overuse-Injury Prevention | 2 | Mixed | 2 | practice: 'Bolsters clusters: stress-fracture prevention, military/running overu |
 | 5910 | Neck Strengthening for Head-Impact Risk | 2 | Emerging | 2 | practice: 'Bolsters clusters: concussion-risk reduction, head/neck stability, co |
+| 5916 | Aspirin for Colorectal-Cancer Prevention in Lynch Syndrome (CAPP2) | 4 | Strong | 1 | practice: 'Bolsters clusters: colorectal cancer prevention, hereditary cancer ri |
+| 5917 | NELSON Trial — Volume CT Lung Screening for High-Risk (Ex-)Smokers | 4 | Strong | 1 | practice: 'Bolsters clusters: lung cancer prevention, low-dose CT screening, tob |
+| 5918 | SERMs (Tamoxifen/Raloxifene) for Breast-Cancer Prevention | 4 | Strong | 2 | practice: 'Bolsters clusters: breast cancer prevention, high-risk risk reduction |
+| 5922 | H. pylori Screen-and-Treat to Prevent Gastric Cancer | 3 | Moderate | 1 | practice: 'Bolsters clusters: gastric cancer prevention, peptic ulcer cure, popu |
+| 5923 | NordICC — Colonoscopy Screening at Its Honest Effect Size | 3 | Moderate | 1 | practice: 'Bolsters clusters: colorectal cancer screening, FIT/stool testing, sh |
+| 5924 | Dietary Fiber & Whole Grains vs Colorectal Cancer | 2 | Moderate | 2 | practice: 'Bolsters clusters: colorectal cancer prevention, gut health, cardiome |
+| 5925 | Leisure-Time Physical Activity & Lower Cancer Risk | 3 | Moderate | 1 | practice: 'Bolsters clusters: cancer risk reduction, obesity, cardiometabolic he |
+| 5926 | Breastfeeding & Modest Breast-Cancer Risk Reduction | 2 | Moderate | 1 | practice: 'Bolsters clusters: breast cancer prevention, maternal-infant health,  |
+| 5927 | Finasteride for Prostate-Cancer Prevention (Honest Split) | 2 | Mixed | 1 | practice: 'Bolsters clusters: prostate cancer prevention, shared decision-making |
+| 5928 | Vitamin D Supplements for Cancer Prevention (VITAL — Mostly Null) | 1 | Mixed | 1 | practice: 'Bolsters clusters: cancer prevention (weak), supplement skepticism, e |
+| 5933 | IL-23 Inhibitors (Risankizumab/Guselkumab) for Psoriasis | 4 | Strong | 2 | practice: 'Bolsters clusters: durable psoriasis remission, infrequent dosing, PA |
+| 5934 | Oral JAK Inhibitors (Upadacitinib/Abrocitinib) for Moderate-Severe Eczema | 4 | Strong | 2 | practice: 'Bolsters clusters: rapid itch relief, EASI-75 clearance, refractory a |
+| 5935 | IL-17 Inhibitors (Secukinumab/Ixekizumab) for Severe Psoriasis | 4 | Strong | 2 | practice: 'Bolsters clusters: near-total psoriasis clearance, rapid PASI respons |
+| 5936 | Omalizumab for Antihistamine-Refractory Chronic Urticaria | 4 | Strong | 2 | practice: 'Bolsters clusters: chronic hives control, itch reduction, antihistami |
+| 5937 | Compression Therapy for Venous Leg Ulcers | 4 | Strong | 2 | practice: 'Bolsters clusters: venous ulcer healing, recurrence prevention, moist |
+| 5938 | Adalimumab for Moderate-Severe Hidradenitis Suppurativa | 3 | Strong | 1 | practice: 'Bolsters clusters: HS abscess/nodule reduction, disease-modifying bio |
+| 5939 | Adapalene + Benzoyl Peroxide Fixed Combination for Acne | 3 | Strong | 2 | practice: 'Bolsters clusters: acne lesion clearance, antibiotic-sparing therapy, |
+| 5940 | Calcipotriol + Betamethasone Fixed Combination for Plaque Psoriasis | 3 | Strong | 2 | practice: 'Bolsters clusters: topical psoriasis clearance, first-line plaque the |
+| 5941 | Proactive Twice-Weekly Tacrolimus for Atopic Dermatitis | 3 | Strong | 2 | practice: 'Bolsters clusters: eczema flare prevention, steroid-sparing maintenan |
+| 5942 | Sub-Antimicrobial Doxycycline 40 mg for Rosacea | 3 | Strong | 2 | practice: 'Bolsters clusters: rosacea inflammatory control, resistance-sparing o |
+| 5943 | Topical Ivermectin 1% for Papulopustular Rosacea | 3 | Strong | 2 | practice: 'Bolsters clusters: rosacea inflammatory-lesion clearance, Demodex red |
+| 5944 | Oral Terbinafine for Fungal Nail Infection (Onychomycosis) | 3 | Strong | 2 | practice: 'Bolsters clusters: dermatophyte nail cure, superiority over topicals, |
+| 5945 | Combined Oral Contraceptives for Acne in Women | 3 | Strong | 1 | practice: 'Bolsters clusters: hormonal acne control, antibiotic-sparing therapy, |
+| 5946 | Ruxolitinib Cream for Nonsegmental Vitiligo | 3 | Strong | 1 | practice: 'Bolsters clusters: facial repigmentation, vitiligo topical therapy, s |
+| 5947 | Topical Antifungals (Ketoconazole/Ciclopirox) for Seborrheic Dermatitis | 3 | Strong | 1 | practice: 'Bolsters clusters: seborrheic dermatitis clearance, scalp flake contr |
+| 5949 | Methotrexate for Moderate-Severe Psoriasis (Subcutaneous Edge) | 3 | Moderate | 2 | practice: 'Bolsters clusters: low-cost systemic psoriasis therapy, psoriatic-art |
+| 5950 | Up-Dosing Second-Generation Antihistamines for Chronic Urticaria | 2 | Moderate | 2 | practice: 'Bolsters clusters: chronic hives control, first-line urticaria therap |
+| 5951 | Brimonidine Gel for Rosacea Redness (Honest: Rebound Risk) | 2 | Mixed | 2 | practice: 'Bolsters clusters: transient rosacea erythema reduction, event-day fl |
+| 5952 | Narrowband UVB Phototherapy for Plaque Psoriasis | 3 | Strong | 1 | practice: 'Bolsters clusters: moderate psoriasis clearance, systemic-sparing the |
+| 5953 | Wet-Wrap Therapy for Severe Flaring Eczema | 3 | Emerging | 1 | practice: 'Bolsters clusters: severe eczema rescue, flare cooling, sleep restora |
+| 5954 | Dilute Bleach Baths for Atopic Dermatitis (Honest: Water May Match It) | 2 | Mixed | 2 | practice: 'Bolsters clusters: eczema severity reduction, infection-prone skin, i |
+| 5957 | Indomethacin for Hemicrania Continua & Paroxysmal Hemicrania | 4 | Strong | 2 | practice: 'Bolsters clusters: indomethacin-responsive headache control, diagnost |
+| 5959 | High-Flow Oxygen for Acute Cluster Headache | 4 | Strong | 1 | practice: 'Bolsters clusters: cluster-attack abortion, rapid pain relief, drug-f |
+| 5960 | Atogepant (Oral Gepant) for Episodic Migraine Prevention | 3 | Strong | 2 | practice: 'Bolsters clusters: migraine-day reduction, oral daily prophylaxis, dr |
+| 5961 | Propranolol for Migraine Prophylaxis | 3 | Strong | 2 | practice: 'Bolsters clusters: migraine prevention, low-cost prophylaxis, headach |
+| 5962 | Lasmiditan (5-HT1F Ditan) for Acute Migraine | 3 | Strong | 2 | practice: 'Bolsters clusters: acute attack abortion, non-vasoconstrictor abortiv |
+| 5963 | OnabotulinumtoxinA for Chronic Migraine (PREEMPT) | 3 | Strong | 2 | practice: 'Bolsters clusters: chronic-migraine headache-day reduction, quarterly |
+| 5964 | Topiramate for Episodic Migraine Prophylaxis | 3 | Strong | 2 | practice: 'Bolsters clusters: migraine-frequency reduction, oral prophylaxis, 50 |
+| 5965 | Ubrogepant & Rimegepant for Acute Migraine | 3 | Strong | 2 | practice: 'Bolsters clusters: acute attack abortion, triptan alternative, pain f |
+| 5966 | Candesartan for Migraine Prophylaxis | 3 | Moderate | 2 | practice: 'Bolsters clusters: migraine prevention, well-tolerated prophylaxis, h |
+| 5967 | Galcanezumab for Episodic Cluster Headache | 3 | Moderate | 2 | practice: 'Bolsters clusters: episodic-cluster prevention, CGRP-antibody prophyl |
+| 5968 | Amitriptyline for Migraine & Tension-Type Headache Prophylaxis | 3 | Moderate | 2 | practice: 'Bolsters clusters: headache prevention, tension-headache reduction, l |
+| 5969 | Verapamil for Cluster Headache Prophylaxis | 3 | Moderate | 2 | practice: 'Bolsters clusters: cluster-attack prevention, calcium-channel prophyl |
+| 5970 | Greater Occipital Nerve Block for Chronic Migraine | 3 | Moderate | 2 | practice: 'Bolsters clusters: headache-day reduction, interventional prophylaxis |
+| 5971 | Non-Invasive Neuromodulation Devices for Migraine (REN, e-TNS) | 2 | Moderate | 2 | practice: 'Bolsters clusters: drug-free acute/preventive treatment, medication-s |
+| 5972 | Topical Peppermint Oil for Tension-Type Headache | 2 | Moderate | 2 | practice: 'Bolsters clusters: tension-headache relief, low-cost acute treatment, |
+| 5973 | Melatonin for Migraine Prevention | 2 | Mixed | 2 | practice: 'Bolsters clusters: migraine prevention, low-cost prophylaxis, sleep-l |
+| 5974 | Aerobic Exercise for Migraine Prevention | 2 | Moderate | 2 | practice: 'Bolsters clusters: migraine-frequency reduction, non-drug prophylaxis |
+| 5975 | Yoga as Add-On Therapy for Migraine | 2 | Moderate | 2 | practice: 'Bolsters clusters: headache-frequency reduction, non-drug adjunct, di |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,563)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,573)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4706,8 +4755,18 @@
 | 5911 | Acute:Chronic Workload Ratio (Debated Metric) | 3 | Mixed | 2 | weakness: 'Degrades: injury-risk prediction, training-load decisions, evidence l |
 | 5912 | 'Muscle Knots' / Trigger-Point Structural Model | 2 | Mixed | 2 | weakness: 'Degrades: pain understanding, treatment targeting, clinical evidence  |
 | 5913 | Pneumatic Recovery Boots (NormaTec-Style) | 2 | Mixed | 2 | weakness: 'Degrades: recovery budgets, evidence literacy, performance expectatio |
+| 5929 | 'Sugar Feeds Cancer, So Cut All Carbs to Cure It' | 4 | Mixed | 2 | weakness: 'Degrades: evidence-based diet decisions, risk appraisal, treatment ad |
+| 5930 | Cannabis / CBD Oil 'Cures Cancer' Claims | 4 | Emerging | 1 | weakness: 'Degrades: evidence-based treatment decisions, adherence, realistic ex |
+| 5931 | Antioxidant Megadose Supplements to 'Prevent Cancer' | 3 | Strong | 1 | weakness: 'Degrades: evidence-based prevention choices, supplement skepticism, l |
+| 5932 | High-Dose Vitamin C as a Cancer Treatment | 3 | Mixed | 2 | weakness: 'Degrades: evidence-based treatment choices, realistic expectations, a |
+| 5955 | Prolonged Oral Antibiotics as Acne Monotherapy | 4 | Moderate | 2 | weakness: 'Degrades: antimicrobial stewardship, durable acne control, microbiome |
+| 5956 | 'Detox' and Broad Elimination Diets for Psoriasis | 3 | Mixed | 2 | weakness: 'Degrades: evidence-based psoriasis care, nutritional adequacy, treatm |
+| 5976 | Chiropractic Spinal Manipulation for Migraine Prevention | 3 | Mixed | 3 | weakness: 'Degrades: evidence-based care, health spending, procedural safety mar |
+| 5977 | IgG Food-Sensitivity Elimination Diets for Migraine | 3 | Mixed | 2 | weakness: 'Degrades: dietary freedom, evidence-based care, disposable income' |
+| 5978 | 'Natural Detox / Cleanse Cures for Migraine' | 2 | Mixed | 1 | weakness: 'Degrades: evidence-based decisions, disposable income, nutritional he |
+| 5979 | Essential-Oil / Aromatherapy 'Cures' for Migraine | 2 | Mixed | 1 | weakness: 'Degrades: evidence-based expectations, treatment adherence, disposabl |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,220)
+## COST OF FAILURE — what's at stake (harm lens)  (1,227)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5931,6 +5990,13 @@
 | 5868 | Montelukast — Neuropsychiatric Boxed Warning | 3 | Moderate | 2 | cost: 'Degrades: mood stability, sleep, mental-health safety' |
 | 5881 | Medication Nonadherence in Chronic Disease | 4 | Strong | 2 | cost: 'Degrades: disease control, survival, hospital-free days, healthcare cost' |
 | 5908 | Post-Workout Ice Baths Blunt Muscle Gains | 2 | Moderate | 2 | cost: 'Degrades: muscle hypertrophy, strength adaptation, satellite-cell/anaboli |
+| 5914 | Laetrile / Amygdalin / Apricot Kernels ('Vitamin B17') | 4 | Strong | 2 | cost: 'Degrades: cancer-free survival, timely treatment, safety (cyanide)' |
+| 5915 | Sodium Bicarbonate / 'Cancer Is a Fungus' (Simoncini) | 4 | Strong | 1 | cost: 'Degrades: cancer-free survival, timely treatment, patient safety' |
+| 5919 | Excess Body Fatness — A Cause of 13+ Cancers | 4 | Strong | 1 | cost: 'Degrades: cancer-free survival, endometrial/colorectal/breast risk, metab |
+| 5920 | Beta-Carotene Supplements Increase Lung Cancer in Smokers | 3 | Strong | 2 | cost: 'Degrades: lung-cancer-free survival, longevity, trust in antioxidant hype |
+| 5921 | Gerson Therapy & Coffee Enemas for Cancer | 3 | Strong | 1 | cost: 'Degrades: cancer-free survival, electrolyte/fluid safety, timely treatmen |
+| 5948 | Apple Cider Vinegar Soaks for Eczema (Harmful, No Benefit) | 2 | Strong | 2 | cost: 'Degrades: skin barrier integrity, eczema control, skin safety' |
+| 5958 | Opioids & Butalbital as First-Line Migraine Treatment | 4 | Strong | 2 | cost: 'Degrades: episodic-migraine stability, treatment response, quality of lif |
 
 ## Framework / uncategorized  (61)
 
