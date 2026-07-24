@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**6,085 clusters · 11,684 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**6,137 clusters · 11,779 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,209 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,580 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,235 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,247 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,590 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,239 |
 | Framework / uncategorized | 61 |
-| **Total** | **6,085** |
+| **Total** | **6,137** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,627 |
-| Strong | 1,607 |
-| Mixed | 1,038 |
-| Emerging | 813 |
+| Moderate | 2,637 |
+| Strong | 1,642 |
+| Mixed | 1,043 |
+| Emerging | 815 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,209)
+## PRACTICES — what strengthens the mind (impact lens)  (3,247)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3236,8 +3236,46 @@
 | 6039 | High-Dose N-Acetylcysteine for COPD Exacerbations | 2 | Mixed | 1 | practice: 'Bolsters clusters: COPD exacerbation prevention, mucolysis, chronic b |
 | 6040 | Roflumilast for Severe COPD with Chronic Bronchitis | 2 | Moderate | 1 | practice: 'Bolsters clusters: COPD exacerbation prevention, chronic bronchitis,  |
 | 6041 | Vitamin D Supplementation for Asthma Exacerbations | 1 | Mixed | 2 | practice: 'Bolsters clusters: asthma exacerbation reduction, respiratory immune  |
+| 6044 | Hospital Elder Life Program (HELP) | 4 | Strong | 2 | practice: 'Bolsters clusters: delirium prevention, cognitive preservation, funct |
+| 6045 | Progressive Resistance Training for Frailty | 4 | Strong | 1 | practice: 'Bolsters clusters: muscle strength, gait, frailty resistance' |
+| 6046 | Home Fall-Hazard Reduction (Occupational Therapy) | 3 | Strong | 1 | practice: 'Bolsters clusters: Fall Prevention, independent living, bodily safety |
+| 6048 | Oral Protein-Energy Supplements in Malnourished Elders | 3 | Moderate | 1 | practice: 'Bolsters clusters: nutritional status, mortality reduction, weight ma |
+| 6049 | Intensive Blood-Pressure Control for Cognition (SPRINT MIND) | 3 | Moderate | 1 | practice: 'Bolsters clusters: cognitive preservation, vascular health, MCI preve |
+| 6050 | Multifactorial Falls-Risk Assessment & Tailored Intervention | 3 | Moderate | 1 | practice: 'Bolsters clusters: Fall Prevention, medication review, balance' |
+| 6051 | STOPP/START Criteria for Prescribing | 2 | Moderate | 2 | practice: 'Bolsters clusters: medication safety, deprescribing, adverse-event re |
+| 6052 | Seasonal Influenza Vaccination in Older Adults | 2 | Mixed | 1 | practice: 'Bolsters clusters: infection prevention, functional stability, mortal |
+| 6054 | Daily Multivitamin for Cognitive Aging (COSMOS) | 2 | Emerging | 2 | practice: 'Bolsters clusters: memory, global cognition, healthy aging' |
+| 6055 | Hearing Intervention for Cognitive Decline (ACHIEVE) | 2 | Mixed | 1 | practice: 'Bolsters clusters: hearing, cognitive preservation, social engagement |
+| 6060 | CBT (Panic Control) for Panic Disorder | 4 | Strong | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Volitional' |
+| 6061 | Cognitive Therapy (Clark-Wells) for Social Anxiety Disorder | 4 | Strong | 2 | practice: 'Bolsters clusters: Interpersonal, Social-Perceptual, Emotional, Intra |
+| 6062 | Family-Based Treatment (FBT/Maudsley) for Adolescent Anorexia | 4 | Strong | 2 | practice: 'Bolsters clusters: Parental, Interpersonal, Bodily, Volitional' |
+| 6063 | Fluoxetine + CBT for Adolescent Depression (TADS) | 4 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Volitional, Interpersonal, Intrapersona |
+| 6064 | Methylphenidate vs Amphetamines — Age-Specific First-Line ADHD Meds | 4 | Strong | 1 | practice: 'Bolsters clusters: Volitional, Meta-Cognitive, Strategic' |
+| 6065 | CBT for Generalized Anxiety Disorder | 4 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Meta-Cognitive, Volitional' |
+| 6066 | Enhanced CBT (CBT-E) for Bulimia & Binge-Eating Disorder | 4 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Volitional, Interoceptiv |
+| 6067 | Aripiprazole Augmentation for Treatment-Resistant Depression | 3 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Volitional' |
+| 6068 | Higher-Dose SSRIs for OCD | 3 | Strong | 2 | practice: 'Bolsters clusters: Volitional, Emotional, Meta-Cognitive' |
+| 6069 | Lisdexamfetamine for Binge-Eating Disorder | 3 | Strong | 2 | practice: 'Bolsters clusters: Volitional, Interoceptive, Emotional' |
+| 6070 | Combined Medication + Behavioral Therapy for ADHD (MTA) | 4 | Strong | 2 | practice: 'Bolsters clusters: Volitional, Interpersonal, Parental, Emotional' |
+| 6071 | Guanfacine ER — Non-Stimulant Option for ADHD | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Emotional, Meta-Cognitive' |
+| 6072 | Collaborative Care for Depression & Anxiety in Primary Care | 3 | Strong | 2 | practice: 'Bolsters clusters: Systemic, Emotional, Volitional, Community' |
+| 6073 | Clomipramine for OCD | 3 | Moderate | 2 | practice: 'Bolsters clusters: Volitional, Emotional, Meta-Cognitive' |
+| 6074 | Exercise as Treatment for Adult Depression | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Emotional, Volitional' |
+| 6075 | Vortioxetine — Pro-Cognitive Antidepressant | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Emotional, Volitional' |
+| 6077 | Deep Brain Stimulation for Refractory OCD | 3 | Emerging | 2 | practice: 'Bolsters clusters: Volitional, Emotional, Meta-Cognitive' |
+| 6080 | Hib Conjugate Vaccine (Near-Elimination of a Killer) | 5 | Strong | 2 | practice: 'Bolsters clusters: bacterial meningitis prevention, invasive-disease  |
+| 6081 | Measles Vaccine (Two Doses ~97% Effective) | 5 | Strong | 2 | practice: 'Bolsters clusters: measles prevention, immune-memory protection, herd |
+| 6082 | Meningococcal A Conjugate Vaccine (MenAfriVac) | 5 | Strong | 2 | practice: 'Bolsters clusters: epidemic meningitis prevention, carriage/herd prot |
+| 6083 | Yellow Fever Vaccine (One Dose, Lifelong) | 5 | Strong | 2 | practice: 'Bolsters clusters: yellow fever prevention, travel safety, outbreak c |
+| 6084 | Hepatitis B Vaccine (Prevents Liver Cancer) | 5 | Strong | 2 | practice: 'Bolsters clusters: hepatocellular carcinoma prevention, chronic HBV p |
+| 6086 | Hepatitis A Vaccine (Travel & Outbreak Control) | 4 | Strong | 2 | practice: 'Bolsters clusters: hepatitis A prevention, travel-illness prevention, |
+| 6087 | Varicella (Chickenpox) Vaccine | 4 | Strong | 2 | practice: 'Bolsters clusters: chickenpox prevention, hospitalization reduction,  |
+| 6088 | Typhoid Conjugate Vaccine (Single Dose, ~80% Efficacy) | 4 | Strong | 2 | practice: 'Bolsters clusters: enteric fever prevention, antimicrobial-resistance |
+| 6089 | Rabies Post-Exposure Prophylaxis (Fatal Disease, Preventable) | 5 | Strong | 2 | practice: 'Bolsters clusters: rabies prevention, survival after animal bite, tra |
+| 6090 | Malaria Vaccines (R21/Matrix-M & RTS,S) | 4 | Moderate | 2 | practice: 'Bolsters clusters: malaria prevention, child survival, febrile-illnes |
+| 6091 | Dengue Vaccines (Real Benefit, Serostatus Caveat) | 3 | Mixed | 2 | practice: 'Bolsters clusters: dengue prevention, hospitalization reduction, evid |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,580)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,590)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4821,8 +4859,18 @@
 | 6021 | Over-Reliance on Thiazides for Stone Prevention (NOSTONE) | 3 | Mixed | 1 | weakness: 'Degrades: evidence-based stone prevention, realistic expectation-sett |
 | 6042 | House-Dust-Mite Avoidance Measures for Asthma (Honest Null) | 2 | Strong | 1 | weakness: 'Degrades: disposable income, evidence-based decisions, effort/time' |
 | 6043 | Lung 'Detox' Teas & Supplements for Smokers | 1 | Strong | 2 | weakness: 'Degrades: disposable income, evidence-based decisions, timely cessati |
+| 6056 | Vitamin D to Prevent Falls (Non-Deficient Elders) | 3 | Strong | 2 | weakness: 'Degrades: money, evidence-literacy via ineffective supplementation' |
+| 6057 | Coconut Oil / MCT for Alzheimer's | 2 | Mixed | 2 | weakness: 'Degrades: money, evidence-literacy via ketone-brain overclaims' |
+| 6058 | Prevagen (Apoaequorin) for Memory | 2 | Strong | 1 | weakness: 'Degrades: money, evidence-literacy via unproven memory claims' |
+| 6059 | Vitamin D + Omega-3 for Disease Prevention (VITAL) | 2 | Strong | 2 | weakness: 'Degrades: money, evidence-literacy via broad prevention claims' |
+| 6078 | The 'Chemical Imbalance' Myth of Depression | 4 | Strong | 2 | weakness: 'Degrades: Meta-Cognitive, Intrapersonal, Volitional, Emotional' |
+| 6079 | Cognitive-Training Apps Don't Treat ADHD Core Symptoms | 3 | Strong | 2 | weakness: 'Degrades: Volitional, Financial, Meta-Cognitive' |
+| 6092 | 'Natural Infection Is Better Than Vaccination' (Ignores Real Harm) | 3 | Strong | 2 | weakness: 'Degrades: risk calibration, vaccine uptake, immune-memory' |
+| 6093 | 'Too Many Vaccines Too Soon' Claim (Unfounded) | 2 | Strong | 2 | weakness: 'Degrades: evidence reasoning, vaccine uptake, immunology literacy' |
+| 6094 | Aluminum Adjuvant 'Toxicity' Claim (No Link) | 2 | Strong | 2 | weakness: 'Degrades: evidence reasoning, vaccine uptake, dose-context literacy' |
+| 6095 | Thimerosal 'Causes Autism' Claim (No Link) | 2 | Strong | 2 | weakness: 'Degrades: evidence reasoning, vaccine uptake, mercury-toxicity litera |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,235)
+## COST OF FAILURE — what's at stake (harm lens)  (1,239)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -6061,6 +6109,10 @@
 | 6020 | Milk Thistle (Silymarin) as a Broad Liver Cure | 1 | Mixed | 1 | cost: 'Degrades: finances, realistic treatment expectations' |
 | 6026 | 'Ozone Therapy' for Respiratory Disease | 3 | Strong | 2 | cost: 'Degrades: respiratory function, airway health, disposable income' |
 | 6035 | Essential-Oil Diffusing to 'Treat' Asthma | 2 | Mixed | 2 | cost: 'Degrades: asthma control, airway reactivity, indoor air quality' |
+| 6047 | Prophylactic Aspirin in Healthy Elders (ASPREE) | 3 | Strong | 2 | cost: 'Degrades: bleeding safety, longevity, false prevention benefit' |
+| 6053 | Testosterone Therapy for 'Low T' in Aging Men | 2 | Mixed | 2 | cost: 'Degrades: arrhythmia safety, financial reserve, realistic expectations' |
+| 6076 | Antidepressant Discontinuation Syndrome | 2 | Moderate | 2 | cost: 'Degrades: Emotional, Interoceptive, Volitional' |
+| 6085 | Vaccine 'Detox' & Chelation Protocols (A Real Cost) | 4 | Strong | 2 | cost/weakness: 'Degrades: finances, child safety, evidence trust' |
 
 ## Framework / uncategorized  (61)
 
