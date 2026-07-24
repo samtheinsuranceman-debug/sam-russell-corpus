@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,700 clusters · 11,083 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,750 clusters · 11,157 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,956 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,503 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,180 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,978 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,515 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,196 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,700** |
+| **Total** | **5,750** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,517 |
-| Strong | 1,442 |
-| Mixed | 955 |
-| Emerging | 786 |
+| Moderate | 2,533 |
+| Strong | 1,466 |
+| Mixed | 960 |
+| Emerging | 791 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,956)
+## PRACTICES — what strengthens the mind (impact lens)  (2,978)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2983,8 +2983,30 @@
 | 5651 | Probiotics for Preventing Respiratory Infections | 2 | Moderate | 1 | practice: 'Bolsters clusters: cold-episode-reduction, sick-days-avoided, antibio |
 | 5652 | Community Masks vs Respiratory Viruses (Inconclusive RCTs) | 1 | Mixed | 1 | practice: 'Bolsters clusters: transmission-reduction (uncertain), source-control |
 | 5653 | Vitamin C for Pneumonia (Weak Signal) | 1 | Mixed | 1 | practice: 'Bolsters clusters: pneumonia-adjunct (uncertain), deficiency-correcti |
+| 5670 | Clean (LPG) Cookstove Intervention — Honest Null on Birth Weight | 2 | Mixed | 1 | practice: 'Bolsters clusters: household air quality, respiratory exposure reduct |
+| 5674 | Fluoride Concentration in Toothpaste Matters | 4 | Strong | 1 | practice: 'Bolsters clusters: caries prevention, oral health, evidence-based pro |
+| 5675 | Pit-and-Fissure Sealants (Children) | 4 | Strong | 1 | practice: 'Bolsters clusters: caries prevention, oral health, molar protection' |
+| 5676 | Restricting Free (Added) Sugars | 4 | Strong | 1 | practice: 'Bolsters clusters: caries prevention, metabolic health, dietary disci |
+| 5677 | Professional Fluoride Varnish | 4 | Strong | 1 | practice: 'Bolsters clusters: caries prevention, oral health, preventive-care ha |
+| 5678 | Silver Diamine Fluoride to Arrest Caries | 4 | Moderate | 2 | practice: 'Bolsters clusters: caries arrest, oral health, non-invasive dentistry |
+| 5679 | Peroxide Tooth Whitening (Professional/At-Home) | 3 | Strong | 2 | practice: 'Bolsters clusters: cosmetic appearance, self-image, Aesthetic' |
+| 5680 | Stannous Fluoride Toothpaste (Gingivitis) | 3 | Moderate | 2 | practice: 'Bolsters clusters: gingival health, plaque control, oral health' |
+| 5681 | Chlorhexidine Mouthrinse (Short-Term) | 3 | Moderate | 1 | practice: 'Bolsters clusters: plaque control, gingival health, post-surgical hea |
+| 5682 | Powered (Oscillating-Rotating) Toothbrush | 2 | Moderate | 1 | practice: 'Bolsters clusters: plaque control, gingival health, oral hygiene' |
+| 5683 | Nano-Hydroxyapatite Toothpaste (Fluoride-Free) | 3 | Emerging | 2 | practice: 'Bolsters clusters: caries prevention, enamel remineralization, fluori |
+| 5685 | CPP-ACP (Casein Phosphopeptide) Paste | 2 | Mixed | 1 | practice: 'Bolsters clusters: enamel remineralization, white-spot repair, oral h |
+| 5686 | Periodontal Treatment for Glycemic Control (Diabetes) | 2 | Moderate | 1 | practice: 'Bolsters clusters: glycemic control, periodontal health, diabetes man |
+| 5687 | Xylitol Gum for Caries | 2 | Mixed | 1 | practice: 'Bolsters clusters: caries prevention, oral health, dietary habit' |
+| 5693 | Anti-VEGF Injections for Neovascular ('Wet') AMD | 5 | Strong | 2 | practice: 'Bolsters clusters: central-vision preservation, reading, driving, ind |
+| 5696 | Dual-Focus Soft Contact Lenses (MiSight) for Childhood Myopia | 3 | Strong | 1 | practice: 'Bolsters clusters: myopia-progression slowing, axial-length control,  |
+| 5697 | Office-Based Vision Therapy for Convergence Insufficiency (CITT) | 3 | Strong | 2 | practice: 'Bolsters clusters: binocular fusion, near-work comfort, eyestrain rel |
+| 5698 | Cognitive Behavioural Therapy for Tinnitus | 3 | Moderate | 1 | practice: 'Bolsters clusters: tinnitus coping, quality of life, mood, sleep' |
+| 5699 | Orthokeratology (Overnight Corneal Reshaping) for Myopia Control | 3 | Moderate | 2 | practice: 'Bolsters clusters: axial-length control, myopia-progression slowing,  |
+| 5701 | UV-Blocking Sunglasses to Reduce Cataract & Pterygium Risk | 2 | Moderate | 2 | practice: 'Bolsters clusters: lens clarity, ocular-surface protection, long-term |
+| 5702 | Pilocarpine Eye Drops (Vuity) for Presbyopia | 2 | Emerging | 1 | practice: 'Bolsters clusters: near vision, glasses-free reading window' |
+| 5703 | Warm Compresses & Lid Hygiene for Meibomian Gland Dysfunction / Blepharitis | 2 | Moderate | 2 | practice: 'Bolsters clusters: ocular-surface comfort, tear-film stability, bleph |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,503)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,515)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4491,8 +4513,20 @@
 | 5656 | Echinacea for Colds (Unreliable) | 2 | Mixed | 1 | weakness: 'Degrades: evidence-calibrated self-care, opportunity cost, health-dec |
 | 5657 | Garlic for Colds (One Trial) | 2 | Mixed | 1 | weakness: 'Degrades: evidence-calibrated self-care, health-decision accuracy' |
 | 5658 | Oregano Oil / Olive Leaf as 'Antivirals' | 2 | Emerging | 1 | weakness: 'Degrades: evidence-calibrated self-care, opportunity cost, health-dec |
+| 5671 | Ozone Generators & Air Ionizers 'for Health' — A Net Cost | 3 | Strong | 2 | weakness: 'Degrades: respiratory health, spending, epistemic accuracy' |
+| 5672 | Consumer EMF/5G 'Protection' Products (Shungite, Orgone, Shields) — Solving a Non-Problem | 2 | Strong | 2 | weakness: 'Degrades: epistemic accuracy, spending, health anxiety' |
+| 5673 | Himalayan Salt Lamps 'Purify Air / Emit Negative Ions' — No Credible Benefit | 1 | Strong | 2 | weakness: 'Degrades: epistemic accuracy, spending' |
+| 5688 | Smoking Drives Periodontitis | 6 | Strong | 2 | weakness: 'Degrades: periodontal support, tooth retention, healing, finances' |
+| 5689 | 'Reversing Cavities' With Diet Alone | 3 | Emerging | 2 | weakness: 'Degrades: timely treatment, tooth structure, health decision-making' |
+| 5690 | DIY Lemon / Baking-Soda Whitening | 3 | Emerging | 2 | weakness: 'Degrades: enamel, dentin, long-term tooth strength' |
+| 5691 | Activated-Charcoal Toothpaste | 2 | Emerging | 2 | weakness: 'Degrades: enamel integrity, true whitening, money' |
+| 5704 | Bates Method / 'Eye Exercises' to Cure Refractive Error | 2 | Strong | 2 | weakness: 'Degrades: wallet, accurate expectations, timely proper correction' |
+| 5705 | Bilberry/Anthocyanin Supplements for Night Vision & 'Eye Health' | 2 | Mixed | 1 | weakness: 'Degrades: wallet, accurate supplement expectations' |
+| 5706 | Oral Omega-3 (Fish Oil) for Dry Eye Disease — The DREAM Null | 2 | Strong | 1 | weakness: 'Degrades: wallet, accurate treatment expectations' |
+| 5707 | Vision-Training Apps to 'Ditch Your Glasses' (GlassesOff and kin) | 2 | Mixed | 1 | weakness: 'Degrades: wallet, accurate expectations about presbyopia' |
+| 5708 | 'Carrots Improve Normal Vision' — A WWII Propaganda Myth | 1 | Strong | 2 | weakness: 'Degrades: accurate nutritional beliefs, realistic health expectations |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,180)
+## COST OF FAILURE — what's at stake (harm lens)  (1,196)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5676,6 +5710,22 @@
 | 5627 | Colon Cleansing / Colonic Hydrotherapy | 3 | Strong | 2 | cost: 'Degrades: electrolyte balance, gut flora, money' |
 | 5642 | Intranasal Zinc Gel and Loss of Smell | 4 | Strong | 2 | cost: 'Degrades: sense of smell, taste/food enjoyment, quality of life' |
 | 5644 | Colloidal Silver for 'Immunity' | 3 | Strong | 2 | cost: 'Degrades: skin appearance, medication absorption, health finances' |
+| 5659 | Cold Ambient Temperature — Cardiovascular Mortality | 4 | Strong | 1 | cost: 'Degrades: cardiovascular stability, survival, thermoregulatory reserve' |
+| 5660 | Firefighting — Occupational Carcinogen (IARC Group 1) | 4 | Strong | 1 | cost: 'Degrades: cellular integrity, longevity, occupational safety' |
+| 5661 | Occupational Benzene — Leukemia (Dose-Response) | 4 | Strong | 2 | cost: 'Degrades: bone-marrow integrity, blood health, longevity' |
+| 5662 | Short-Term PM2.5 Spikes — Acute Myocardial Infarction Trigger | 3 | Strong | 1 | cost: 'Degrades: cardiovascular stability, coronary safety, physical survival' |
+| 5663 | Ground-Level Ozone (O3) — Respiratory & Cardiovascular Mortality | 4 | Strong | 2 | cost: 'Degrades: respiratory capacity, cardiovascular longevity, physical vitali |
+| 5664 | Long-Term PM2.5 — Stroke Incidence | 4 | Strong | 2 | cost: 'Degrades: cerebrovascular health, cognitive longevity, independence' |
+| 5665 | Air Pollution & Lung Cancer in Never-Smokers (EGFR Pathway) | 3 | Moderate | 1 | cost: 'Degrades: respiratory health, cellular integrity, longevity' |
+| 5666 | Ambient PM2.5 Air Pollution — Type 2 Diabetes Risk | 3 | Strong | 2 | cost: 'Degrades: metabolic health, insulin sensitivity, cardiovascular longevity |
+| 5667 | Occupational Noise (>=80 dB) — Hypertension | 3 | Moderate | 1 | cost: 'Degrades: blood-pressure regulation, cardiovascular health, autonomic bal |
+| 5668 | Traffic-Related NO2 — New-Onset Childhood Asthma | 3 | Moderate | 1 | cost: 'Degrades: respiratory health, childhood development, physical vitality' |
+| 5669 | Welding Fumes (Manganese) — Progressive Parkinsonism | 3 | Moderate | 1 | cost: 'Degrades: motor control, bodily coordination, occupational function' |
+| 5684 | Over-Frequent Routine Scale & Polish | 1 | Moderate | 1 | cost: 'Degrades: money, chair time, low-value care' |
+| 5692 | Ototoxic Medications (Aminoglycosides, Cisplatin, Loop Diuretics) | 4 | Strong | 1 | cost: 'Degrades: high-frequency hearing, balance, speech understanding' |
+| 5694 | Smoking → Age-Related Macular Degeneration & Cataract | 4 | Strong | 2 | cost: 'Degrades: central vision, lens clarity, long-term sight' |
+| 5695 | Recreational Noise & Personal Listening Devices → Hearing Loss | 3 | Moderate | 2 | cost: 'Degrades: hearing acuity, speech-in-noise understanding, tinnitus-free he |
+| 5700 | Cotton-Swab (Q-tip) Ear Cleaning → Impaction & Injury | 2 | Moderate | 1 | cost: 'Degrades: hearing clarity, ear-canal integrity, eardrum' |
 
 ## Framework / uncategorized  (61)
 
