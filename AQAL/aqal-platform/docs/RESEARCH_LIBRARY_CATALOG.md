@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,292 clusters · 10,428 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,340 clusters · 10,525 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,693 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,406 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,132 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,728 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,410 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,141 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,292** |
+| **Total** | **5,340** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,376 |
-| Strong | 1,330 |
-| Mixed | 855 |
-| Emerging | 731 |
+| Moderate | 2,394 |
+| Strong | 1,338 |
+| Mixed | 868 |
+| Emerging | 740 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,693)
+## PRACTICES — what strengthens the mind (impact lens)  (2,728)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2720,8 +2720,43 @@
 | 5248 | Guggul / Guggulsterone for Cholesterol (Honest Null) | 1 | Strong | 2 | practice: 'Bolsters clusters: Bodily' |
 | 5249 | Garcinia cambogia (Malabar Tamarind) for Weight Loss (Honest Weak + Harm) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Bodily' |
 | 5250 | Boswellia serrata for Crohn's/IBD Remission (Honest Null) | 1 | Strong | 1 | practice: 'Bolsters clusters: Bodily' |
+| 5255 | American Ginseng for Postprandial Glucose | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Naturalist' |
+| 5256 | Wild Blueberry Polyphenols for Vascular Function | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Pattern-Recognition' |
+| 5257 | Willow Bark (Salicin) for Osteoarthritis | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Naturalist' |
+| 5258 | Black Cohosh for Menopausal Hot Flashes | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Emotional' |
+| 5259 | Passionflower for Anxiety | 2 | Emerging | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Interoceptive' |
+| 5262 | North American Ginseng (CVT-E002) for Colds | 2 | Mixed | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5263 | Slippery Elm as Mucosal Demulcent | 1 | Emerging | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Naturalist' |
+| 5264 | Evening Primrose Oil for Eczema (Debunk) | 1 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5265 | Saw Palmetto for BPH (Clean Debunk) | 1 | Strong | 3 | practice: 'Bolsters clusters: Bodily, Interoceptive, Naturalist' |
+| 5266 | Wild Yam Cream for Menopause (Debunk) | 1 | Strong | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive' |
+| 5268 | Eucalyptus 1,8-Cineole for Airway Symptoms | 2 | Moderate | 2 | practice: 'Bolsters clusters: respiratory symptom relief, cough, sinusitis' |
+| 5269 | Kawakawa (Piper excelsum) — Māori Rongoā | 2 | Emerging | 2 | practice: 'Bolsters clusters: anti-inflammatory support, cultural practice, glyc |
+| 5270 | Lemon Myrtle Oil for Molluscum Contagiosum | 2 | Emerging | 2 | practice: 'Bolsters clusters: pediatric skin lesions, topical antiviral care' |
+| 5271 | Tea Tree Oil (5%) Gel for Mild-Moderate Acne | 2 | Moderate | 2 | practice: 'Bolsters clusters: acne control, skin barrier tolerability' |
+| 5272 | Kakadu Plum (Gubinge) — Richest Natural Vitamin C | 2 | Emerging | 2 | practice: 'Bolsters clusters: vitamin C intake, antioxidant status, food preserv |
+| 5273 | Mānuka Honey Dressings for Wounds | 2 | Mixed | 3 | practice: 'Bolsters clusters: wound healing, burn care, antimicrobial coverage' |
+| 5275 | Tea Tree Oil for Athlete's Foot & Nail Fungus | 2 | Mixed | 3 | practice: 'Bolsters clusters: antifungal skin care, tinea pedis relief' |
+| 5276 | Virgin Coconut Oil (Topical) for Atopic Dermatitis | 2 | Emerging | 1 | practice: 'Bolsters clusters: skin barrier, eczema care, moisturization' |
+| 5277 | Tea Tree Oil for MRSA Skin Decolonization | 2 | Mixed | 2 | practice: 'Bolsters clusters: skin decolonization, infection control adjunct' |
+| 5282 | Saffron (Crocus sativus) for PMS & Dysmenorrhea | 3 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal' |
+| 5284 | Saffron for Anxiety & Adjunctive Mood Support | 3 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Interoceptive' |
+| 5285 | Saffron for SSRI-Induced Sexual Dysfunction | 3 | Moderate | 2 | practice: 'Bolsters clusters: Seductive, Interoceptive, Intrapersonal' |
+| 5286 | Barberry (Berberis vulgaris / Zereshk) for Blood Lipids | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic' |
+| 5287 | Black Seed (Nigella sativa) for Blood Pressure | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic' |
+| 5288 | Black Seed (Nigella sativa) for Glycemic Control | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic' |
+| 5289 | Cumin (Cuminum cyminum) for Weight & Lipids | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic' |
+| 5290 | Purslane (Portulaca oleracea) for Type 2 Diabetes | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic' |
+| 5291 | Sea-Buckthorn (Hippophae rhamnoides) for Blood Lipids | 2 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic' |
+| 5292 | Lemon Balm (Melissa officinalis) for Anxiety | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal' |
+| 5293 | Rosewater / Rosa damascena Aromatherapy for Anxiety | 2 | Moderate | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Aesthetic' |
+| 5294 | Saffron for Mild-to-Moderate Alzheimer's | 2 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Linguistic, Logical' |
+| 5295 | Chasteberry (Vitex agnus-castus) for PMS | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal' |
+| 5296 | Fennel (Foeniculum vulgare) for Menopausal Symptoms | 2 | Mixed | 2 | practice: 'Bolsters clusters: Emotional, Interoceptive, Intrapersonal' |
+| 5297 | Jujube Seed (Ziziphus) for Insomnia | 2 | Emerging | 2 | practice: 'Bolsters clusters: Interoceptive, Emotional, Intrapersonal' |
+| 5298 | Saffron vs Methylphenidate for Childhood ADHD | 2 | Emerging | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Volitional, Emotional' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,406)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,410)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4131,8 +4166,12 @@
 | 5055 | Don't Romanticize: Indigenous Health Gaps Are Colonization, Not Tradition | 8 | Strong | 2 | weakness: 'Degrades: Community continuity, Existential identity, Bodily health,  |
 | 5108 | Noni Juice (Morinda citrifolia) — 'Cure-All' Claims Unsupported | 4 | Mixed | 2 | weakness: 'Degrades: Financial, Logical, Interoceptive' |
 | 5122 | Orthosomnia (Sleep-Tracker-Induced Insomnia) | 4 | Emerging | 1 | weakness: 'Degrades: Interoceptive, Emotional, Meta-Cognitive' |
+| 5278 | Pacific Nutrition Transition — Traditional to Imported Diet | 7 | Strong | 2 | weakness: 'Degrades: metabolic health, obesity risk, diabetes prevalence' |
+| 5279 | Coconut Oil as a 'Health Food' (LDL Reality) | 4 | Strong | 2 | weakness: 'Degrades: cardiovascular risk profile, lipid control, dietary creduli |
+| 5280 | Mānuka Honey for Radiation Oral Mucositis (Honest Null) | 3 | Mixed | 2 | weakness: 'Degrades: evidence-based expectations, cancer supportive-care choices |
+| 5281 | Emu Oil for Pain & Inflammation (Weak Evidence) | 2 | Mixed | 2 | weakness: 'Degrades: evidence-based expectations, discretionary spending' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,132)
+## COST OF FAILURE — what's at stake (harm lens)  (1,141)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5268,6 +5307,15 @@
 | 5235 | Lead-Chromate Adulteration of Turmeric | 4 | Strong | 2 | cost: 'Degrades: Logical, Mathematical, Meta-Cognitive, Interoceptive' |
 | 5236 | Tinospora cordifolia (Giloy / Guduchi) Liver Injury | 4 | Moderate | 2 | cost: 'Degrades: Bodily, Interoceptive, Volitional' |
 | 5238 | Ashwagandha-Induced Liver Injury | 3 | Moderate | 3 | cost: 'Degrades: Bodily, Interoceptive, Volitional' |
+| 5251 | Bloodroot 'Black Salve' Escharotic | 4 | Strong | 2 | cost: 'Degrades: Bodily, Interoceptive, Aesthetic' |
+| 5252 | Blue Cohosh: Neonatal Cardiotoxicity | 4 | Mixed | 2 | cost: 'Degrades: Bodily, Interoceptive' |
+| 5253 | Goldenseal Herb-Drug Interactions | 3 | Strong | 2 | cost: 'Degrades: Bodily, Strategic' |
+| 5254 | Sassafras (Safrole) Hepatocarcinogen | 3 | Moderate | 2 | cost: 'Degrades: Bodily, Naturalist' |
+| 5260 | Smudging & Ceremonial Smoke: Air-Quality Cost | 2 | Mixed | 2 | cost: 'Degrades: Bodily, Interoceptive' |
+| 5261 | Black Cohosh Hepatotoxicity Signal | 2 | Mixed | 2 | cost: 'Degrades: Bodily, Interoceptive' |
+| 5267 | Noni Juice (Morinda citrifolia) Liver Injury | 3 | Emerging | 3 | cost: 'Degrades: liver function, medication safety, wallet' |
+| 5274 | Tea Tree & Lavender Oils — Endocrine Disruption Concern | 2 | Mixed | 2 | cost: 'Degrades: pediatric hormonal balance, endocrine safety margin' |
+| 5283 | High-Dose Saffron Toxicity & Abortifacient Risk | 3 | Moderate | 2 | cost: 'Degrades: Bodily, Interoceptive, Volitional' |
 
 ## Framework / uncategorized  (61)
 
