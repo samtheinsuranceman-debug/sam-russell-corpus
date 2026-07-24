@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,804 clusters · 11,249 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,856 clusters · 11,326 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,010 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,526 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,207 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,044 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,537 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,214 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,804** |
+| **Total** | **5,856** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,545 |
-| Strong | 1,484 |
-| Mixed | 974 |
-| Emerging | 801 |
+| Moderate | 2,561 |
+| Strong | 1,507 |
+| Mixed | 986 |
+| Emerging | 802 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,010)
+## PRACTICES — what strengthens the mind (impact lens)  (3,044)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3037,8 +3037,42 @@
 | 5759 | Oral L-Citrulline for Mild Erectile Dysfunction | 1 | Emerging | 2 | practice: 'Bolsters clusters: erectile function, Bodily, nitric-oxide pathway' |
 | 5760 | Pelvic-Floor Muscle Training After Radical Prostatectomy | 2 | Mixed | 2 | practice: 'Bolsters clusters: continence recovery, Bodily, pelvic-floor control' |
 | 5761 | Low-Intensity Shockwave Therapy for Erectile Dysfunction | 2 | Emerging | 2 | practice: 'Bolsters clusters: erectile function, Bodily, penile vascular health' |
+| 5763 | Kangaroo Mother Care (Skin-to-Skin for Preterm/LBW Infants) | 5 | Strong | 2 | practice: 'Bolsters clusters: infant survival, thermoregulation, breastfeeding,  |
+| 5764 | Vitamin K Prophylaxis at Birth (VKDB Prevention) | 5 | Strong | 2 | practice: 'Bolsters clusters: infant survival, hemorrhage prevention' |
+| 5765 | Early Peanut Introduction (LEAP Trial) | 4 | Strong | 2 | practice: 'Bolsters clusters: allergy prevention, immune tolerance, infant feedi |
+| 5767 | Rotavirus Vaccine (Severe Gastroenteritis Prevention) | 4 | Strong | 1 | practice: 'Bolsters clusters: infant survival, infection defense, ORS therapy' |
+| 5768 | Oral Rehydration Solution (ORS) for Childhood Diarrhea | 5 | Strong | 2 | practice: 'Bolsters clusters: infant survival, dehydration rescue, gut recovery' |
+| 5769 | Delayed Umbilical Cord Clamping | 3 | Moderate | 2 | practice: 'Bolsters clusters: infant survival, iron stores, preterm outcomes' |
+| 5770 | Vitamin D Supplementation for Breastfed Infants | 3 | Strong | 1 | practice: 'Bolsters clusters: bone development, rickets prevention' |
+| 5771 | Adjunctive Zinc for Childhood Diarrhea | 3 | Strong | 1 | practice: 'Bolsters clusters: gut recovery, infant survival, ORS therapy' |
+| 5774 | Supervised Fluoride Toothbrushing Programs | 3 | Strong | 2 | practice: 'Bolsters clusters: caries prevention, oral health equity' |
+| 5775 | Abecedarian Project (Early Education & Adult Health) | 3 | Moderate | 1 | practice: 'Bolsters clusters: cognitive development, educational attainment, adu |
+| 5776 | Perry Preschool Program (Long-Term Outcomes) | 3 | Moderate | 1 | practice: 'Bolsters clusters: educational attainment, adult earnings, reduced cr |
+| 5777 | Honey for Pediatric Nocturnal Cough (Age >1 Year) | 2 | Moderate | 1 | practice: 'Bolsters clusters: symptom relief, child sleep, avoiding useless OTC  |
+| 5778 | Nurse-Family Partnership (Home Visiting) | 3 | Mixed | 2 | practice: 'Bolsters clusters: child maltreatment prevention, maternal life cours |
+| 5783 | Low-Dose Aspirin for Pre-Eclampsia Prevention (High-Risk) | 4 | Strong | 2 | practice: 'Bolsters clusters: pre-eclampsia prevention, preterm-birth prevention |
+| 5786 | Prenatal Exercise for Gestational-Diabetes & Pre-Eclampsia Risk | 4 | Strong | 1 | practice: 'Bolsters clusters: gestational-diabetes prevention, hypertensive-diso |
+| 5787 | Listeria Food Safety in Pregnancy | 3 | Moderate | 2 | practice: 'Bolsters clusters: fetal-loss prevention, food safety, infection avoi |
+| 5788 | Calcium Supplementation for Pre-Eclampsia (Low-Intake Populations) | 3 | Moderate | 1 | practice: 'Bolsters clusters: pre-eclampsia prevention, hypertensive-disorder pr |
+| 5789 | Daily Antenatal Iron Supplementation | 3 | Moderate | 1 | practice: 'Bolsters clusters: maternal anemia prevention, birthweight, iron stat |
+| 5790 | Doxylamine-Pyridoxine for Nausea & Vomiting of Pregnancy | 3 | Moderate | 2 | practice: 'Bolsters clusters: morning-sickness relief, hydration/nutrition, qual |
+| 5791 | Prenatal Exercise for Antenatal Depression | 3 | Moderate | 1 | practice: 'Bolsters clusters: antenatal mood, depression prevention, wellbeing' |
+| 5793 | Moderating Caffeine in Pregnancy | 2 | Moderate | 1 | practice: 'Bolsters clusters: birthweight, miscarriage-risk reduction, prudent i |
+| 5794 | Antenatal Perineal Massage | 2 | Moderate | 1 | practice: 'Bolsters clusters: perineal-trauma reduction, birth recovery, episiot |
+| 5795 | Choline in Pregnancy for Infant Cognition (Emerging) | 2 | Emerging | 1 | practice: 'Bolsters clusters: fetal neurodevelopment, infant cognition, nutrient |
+| 5796 | Omega-3 / DHA in Pregnancy for Preterm Birth (Honest: Mixed) | 2 | Mixed | 2 | practice: 'Bolsters clusters: preterm-birth prevention (contested), fetal develo |
+| 5797 | Group Prenatal Care (CenteringPregnancy) | 2 | Mixed | 2 | practice: 'Bolsters clusters: prenatal engagement, breastfeeding initiation, soc |
+| 5802 | General Cognitive Ability — Strongest Single Predictor of Job Performance (Honestly Re-Estimated) | 3 | Strong | 2 | practice: 'Bolsters clusters: Structured Hiring: Structured Interviews & Work Sa |
+| 5803 | Team Psychological Safety — Speaking Up Without Fear | 3 | Strong | 2 | practice: 'Bolsters clusters: Employee Voice, After-Action Reviews & Team Debrie |
+| 5804 | Hybrid Work (2-3 Days Home) — Retention Without a Performance Hit | 3 | Moderate | 1 | practice: 'Bolsters clusters: Autonomy & Job Control, Work-From-Home & Productiv |
+| 5805 | Safety Climate → Fewer Accidents and Injuries | 3 | Moderate | 1 | practice: 'Bolsters clusters: Team Psychological Safety, Managing Job Demands &  |
+| 5806 | Realistic Job Previews — Honest Hiring, but a Small Turnover Effect | 2 | Mixed | 1 | practice: 'Bolsters clusters: Newcomer Onboarding & Socialization, Proactive Onb |
+| 5807 | The 'Happy Productive Worker' — Real but Only a Moderate Link | 2 | Moderate | 1 | practice: 'Bolsters clusters: Autonomy & Job Control, Job Crafting, Purpose & Me |
+| 5808 | 360-Degree / Multisource Feedback — Real but Small Gains | 2 | Mixed | 1 | practice: 'Bolsters clusters: Feedback-Seeking, Acting on Feedback, After-Action |
+| 5809 | Pay-for-Performance — Raises Quantity, Not Quality (and Can Backfire) | 2 | Mixed | 2 | practice: 'Bolsters clusters: Financial Incentives for Behavior Change, Goal-Set |
+| 5810 | Corporate Wellness Programs — Popular, but Little Effect on Health or Costs | 1 | Mixed | 2 | practice: 'Bolsters clusters: Financial Incentives for Behavior Change, Breaking |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,526)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,537)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4568,8 +4602,19 @@
 | 5742 | Commercial Telomere-Length Testing as an Aging Gauge | 2 | Mixed | 1 | weakness: 'Degrades: evidence literacy, Logical, Financial' |
 | 5743 | TA-65 & Telomerase-Activator Supplements | 2 | Mixed | 2 | weakness: 'Degrades: financial security, evidence literacy, Financial, Logical' |
 | 5762 | Chasing Penis-Enlargement Pills for 'Size' | 2 | Strong | 2 | weakness: 'Degrades: Financial, Intrapersonal, informed decision-making' |
+| 5779 | Chiropractic / Manipulative Therapy for Infant Colic | 2 | Mixed | 1 | weakness: 'Degrades: evidence-based caregiving, family resources' |
+| 5780 | Teething 'Causes High Fever' (Myth) | 2 | Strong | 1 | weakness: 'Degrades: symptom interpretation, timely illness detection' |
+| 5781 | The MMR Vaccine 'Causes Autism' Claim (Thoroughly Debunked) | 2 | Strong | 3 | weakness: 'Degrades: evidence reasoning, vaccine uptake, herd immunity' |
+| 5782 | Sugar 'Causes Hyperactivity' in Children (Myth) | 1 | Strong | 1 | weakness: 'Degrades: causal reasoning, behavior attribution' |
+| 5798 | The 'Eating for Two' Myth | 4 | Strong | 1 | weakness: 'Degrades: healthy gestational weight gain, glycemic control, appetite |
+| 5799 | 'Natural' Labor-Induction Methods (Evening Primrose Oil, Spicy Food) | 2 | Mixed | 2 | weakness: 'Degrades: evidence-based decision-making, expectation calibration' |
+| 5800 | Raspberry-Leaf Tea for Labor | 2 | Mixed | 1 | weakness: 'Degrades: evidence-based decision-making, expectation calibration' |
+| 5811 | Long Hours → Output-per-Hour Collapses (The Productivity Ceiling) | 5 | Moderate | 1 | weakness: 'Degrades: total output, time allocation judgment, sustainable pace' |
+| 5812 | Team Conflict — Both Relationship AND Task Conflict Usually Hurt Performance | 5 | Mixed | 2 | weakness: 'Degrades: team performance, member satisfaction, decision quality' |
+| 5813 | Time Pressure Kills Creative Thinking (Not Speeds It Up) | 5 | Moderate | 1 | weakness: 'Degrades: creative ideation, integrative problem-solving, next-day in |
+| 5814 | Grit — Overhyped and Largely a Rebranding of Conscientiousness | 4 | Strong | 1 | weakness: 'Degrades: calibrated self-assessment, selection decisions, interventi |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,207)
+## COST OF FAILURE — what's at stake (harm lens)  (1,214)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5780,6 +5825,13 @@
 | 5756 | Fractional CO2 'Vaginal Rejuvenation' Laser for GSM | 2 | Mixed | 2 | cost: 'Degrades: Financial, evidence literacy, vaginal tissue safety' |
 | 5757 | OTC Yohimbine/Yohimbe for ED (Thin Benefit, Cardiovascular Risk) | 2 | Mixed | 2 | cost: 'Degrades: cardiovascular stability, anxiety regulation, medication safety |
 | 5758 | PRP 'P-Shot'/'O-Shot' for Sexual Dysfunction | 1 | Mixed | 2 | cost: 'Degrades: Financial, evidence literacy' |
+| 5766 | Homeopathic Belladonna Teething Tablets | 4 | Strong | 1 | cost: 'Degrades: infant safety, evidence-based caregiving' |
+| 5772 | Infant Walkers (Injury Risk, No Developmental Benefit) | 3 | Strong | 2 | cost: 'Degrades: infant safety, motor development' |
+| 5773 | OTC Cough & Cold Medicines for Young Children | 3 | Strong | 2 | cost: 'Degrades: child safety, evidence-based caregiving' |
+| 5784 | Detoxes & Cleanses in Pregnancy | 3 | Strong | 2 | cost: 'Degrades: fetal safety, nutrition, evidence-based decision-making' |
+| 5785 | Placentophagy / Placenta Encapsulation | 3 | Strong | 2 | cost: 'Degrades: neonatal safety, evidence-based decision-making' |
+| 5792 | Castor Oil for Labor Induction | 2 | Mixed | 1 | cost: 'Degrades: maternal comfort, hydration, GI wellbeing' |
+| 5801 | Extended Shifts & Sleep-Deprived Clinicians → Serious Medical Errors | 4 | Strong | 2 | cost: 'Degrades: sustained attention, diagnostic accuracy, occupational safety' |
 
 ## Framework / uncategorized  (61)
 
