@@ -543,6 +543,143 @@ function RecordingTimer({ isRecording, startTime }: { isRecording: boolean; star
   );
 }
 
+// Turn a spoken self-introduction into just the name to show on screen:
+// "um, my name is Marcus" → "Marcus". Keeps up to the first two words so
+// "Mary Jane" survives, strips common lead-ins and stray punctuation.
+function cleanSpokenName(raw: string): string {
+  let s = raw.trim().replace(/[.,!?]+$/g, "");
+  s = s.replace(/^(um+|uh+|well|so|okay|ok|hi|hey|hello)[,\s]+/i, "");
+  s = s.replace(/^(my name('s| is)|i'?m|it'?s|this is|they call me|i am|call me)\s+/i, "");
+  const words = s.split(/\s+/).filter(Boolean).slice(0, 2);
+  return words
+    .map((w) => (w.length ? w[0].toUpperCase() + w.slice(1) : w))
+    .join(" ");
+}
+
+// ============================================================
+// VOICE CAPTURE — mic-only short-utterance input (no typing anywhere).
+// Used for the companion's spoken name and their per-question take. Runs the
+// browser's SpeechRecognition, shows the words as they land, and commits the
+// final transcript on stop. This is why the whole assessment stays voice-first.
+// ============================================================
+function VoiceCapture({
+  value,
+  onCommit,
+  promptLabel,
+  transform,
+  tone = "accent",
+}: {
+  value: string;
+  onCommit: (text: string) => void;
+  promptLabel: string;
+  transform?: (raw: string) => string;
+  tone?: "accent" | "primary";
+}) {
+  const [listening, setListening] = useState(false);
+  const [interim, setInterim] = useState("");
+  const recRef = useRef<any>(null);
+  const finalRef = useRef("");
+
+  const supported =
+    typeof window !== "undefined" &&
+    !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+
+  const stop = useCallback(() => {
+    if (recRef.current) {
+      try { recRef.current.stop(); } catch { /* noop */ }
+    }
+  }, []);
+
+  const start = useCallback(() => {
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      toast.error("Voice input isn't supported in this browser. Try Chrome or Safari.");
+      return;
+    }
+    try {
+      const rec = new SR();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.lang = "en-US";
+      finalRef.current = "";
+      rec.onresult = (e: any) => {
+        let fin = "";
+        let intr = "";
+        for (let r = e.resultIndex; r < e.results.length; r++) {
+          const t = e.results[r][0].transcript;
+          if (e.results[r].isFinal) fin += t + " ";
+          else intr += t;
+        }
+        if (fin) finalRef.current += fin;
+        setInterim(intr);
+      };
+      rec.onerror = () => { /* stay quiet; user can just tap again */ };
+      rec.onend = () => {
+        const heard = finalRef.current.trim();
+        if (heard) onCommit(transform ? transform(heard) : heard);
+        setInterim("");
+        setListening(false);
+        recRef.current = null;
+      };
+      rec.start();
+      recRef.current = rec;
+      setListening(true);
+    } catch {
+      toast.error("Couldn't start the mic. Check your browser's microphone permission.");
+    }
+  }, [onCommit, transform]);
+
+  useEffect(() => () => { if (recRef.current) { try { recRef.current.stop(); } catch { /* noop */ } } }, []);
+
+  const ring = tone === "primary" ? "ring-primary/40 text-primary" : "ring-accent/40 text-accent";
+  const glow = tone === "primary" ? "border-primary/30 bg-primary/[0.06]" : "border-accent/30 bg-accent/[0.06]";
+
+  return (
+    <div className="w-full">
+      <button
+        type="button"
+        onClick={listening ? stop : start}
+        disabled={!supported}
+        aria-pressed={listening}
+        className={`w-full flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all ${glow} ${
+          listening ? "ring-2 " + ring : "hover:brightness-110"
+        } ${!supported ? "opacity-40 cursor-not-allowed" : ""}`}
+      >
+        <span
+          className={`shrink-0 grid place-items-center w-9 h-9 rounded-full ${
+            listening ? "bg-red-500/20" : tone === "primary" ? "bg-primary/15" : "bg-accent/15"
+          }`}
+        >
+          {listening ? (
+            <span className="w-3 h-3 rounded-sm bg-red-500 signal-dot-amber" aria-hidden="true" />
+          ) : (
+            <Mic className={`w-4 h-4 ${tone === "primary" ? "text-primary" : "text-accent"}`} />
+          )}
+        </span>
+        <span className="flex-1 min-w-0">
+          {value ? (
+            <span className="text-sm text-foreground font-medium break-words">{value}</span>
+          ) : listening ? (
+            <span className="text-sm text-foreground/70 italic break-words">
+              {interim || "Listening…"}
+            </span>
+          ) : (
+            <span className="text-sm text-muted-foreground/60">{promptLabel}</span>
+          )}
+        </span>
+        <span className="shrink-0 text-[0.6rem] uppercase tracking-[0.12em] text-muted-foreground/50" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          {listening ? "Tap to stop" : value ? "Re-record" : "Tap to talk"}
+        </span>
+      </button>
+      {!supported && (
+        <p className="text-[0.6rem] text-muted-foreground/40 mt-1">
+          Voice input needs Chrome, Edge, or Safari.
+        </p>
+      )}
+    </div>
+  );
+}
+
 // ============================================================
 // MAIN ASSESSMENT PAGE
 // ============================================================
@@ -1837,15 +1974,18 @@ export default function Assessment() {
                         </button>
                       ))}
                     </div>
-                    <input
-                      type="text"
+                    <p className="text-[0.62rem] uppercase tracking-[0.12em] text-primary/70 mb-1.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                      {companionName ? `Hey, ${companionName} 👋` : "Companion — say your name"}
+                    </p>
+                    <VoiceCapture
                       value={companionName}
-                      onChange={(e) => setCompanionName(e.target.value)}
-                      placeholder="Their first name (optional)"
-                      className="w-full bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      onCommit={setCompanionName}
+                      promptLabel="Tap the mic and say your first name"
+                      tone="primary"
+                      transform={cleanSpokenName}
                     />
                     <p className="text-[0.6rem] text-muted-foreground/40 leading-snug">
-                      You answer first — in your own words. Then they add their take on a separate line. We keep the two apart and score the <em>gap</em> — that's the fun part.
+                      They answer out loud — no typing anywhere. You speak first in your own words; then, when the light turns green, your person speaks their take. We keep the two apart and score the <em>gap</em> — that's the fun part.
                     </p>
                   </div>
                 )}
@@ -2137,20 +2277,19 @@ export default function Assessment() {
                 {companionName ? `${companionName}'s take` : "Your person's take"} · doesn't change their answer
               </p>
               <p className="text-xs text-foreground/70 leading-snug mb-2">
-                Did they nail it, undersell it, or leave out the best part? Add the version they're too modest — or too generous — to tell.
+                {companionName ? `${companionName}, speak up` : "Speak up"} — did they nail it, undersell it, or leave out the best part? Say the version they're too modest, or too generous, to tell.
               </p>
-              <textarea
+              <VoiceCapture
                 value={companionResponses[currentQuestion]}
-                onChange={(e) =>
+                onCommit={(text) =>
                   setCompanionResponses((prev) => {
                     const n = [...prev];
-                    n[currentQuestion] = e.target.value;
+                    n[currentQuestion] = text;
                     return n;
                   })
                 }
-                placeholder="e.g. 'He's underselling this — he had the whole room laughing in 30 seconds.'"
-                rows={3}
-                className="w-full bg-background/60 border border-border/50 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-accent/30 resize-none"
+                promptLabel="Tap the mic and give your take out loud"
+                tone="accent"
               />
             </motion.div>
           )}
