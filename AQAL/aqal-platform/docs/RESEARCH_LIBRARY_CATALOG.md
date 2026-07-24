@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**6,194 clusters · 11,876 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**6,246 clusters · 11,958 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,288 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,596 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,249 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,320 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,607 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,258 |
 | Framework / uncategorized | 61 |
-| **Total** | **6,194** |
+| **Total** | **6,246** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,655 |
-| Strong | 1,671 |
-| Mixed | 1,048 |
-| Emerging | 820 |
+| Moderate | 2,669 |
+| Strong | 1,693 |
+| Mixed | 1,063 |
+| Emerging | 821 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,288)
+## PRACTICES — what strengthens the mind (impact lens)  (3,320)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3315,8 +3315,40 @@
 | 6150 | GnRH Agonists with Add-Back Therapy (Endometriosis, Fibroids) | 3 | Moderate | 2 | practice: 'Bolsters clusters: estrogen-dependent pain suppression, fibroid/lesio |
 | 6151 | Chasteberry (Vitex agnus-castus) for PMS — Signal but Biased Evidence | 2 | Mixed | 1 | practice: 'Bolsters clusters: premenstrual symptom relief (uncertain), herbal op |
 | 6152 | Seed Cycling for 'Hormone Balance' — No Credible Evidence | 1 | Emerging | 1 | practice: 'Bolsters clusters: none demonstrated (dietary fiber aside)' |
+| 6155 | Alexander Technique for Chronic Back Pain | 3 | Moderate | 1 | practice: 'Bolsters clusters: chronic low-back pain, posture/movement re-educati |
+| 6157 | Acupuncture for Tension-Type Headache Prevention | 2 | Moderate | 1 | practice: 'Bolsters clusters: chronic tension-type headache, headache-day reduct |
+| 6158 | Massage Therapy for Low-Back Pain (Short-Term Only) | 2 | Moderate | 1 | practice: 'Bolsters clusters: low-back pain, short-term pain relief, Bodily' |
+| 6159 | Spinal Manipulation for Acute Low-Back Pain (Modest, Not Special) | 2 | Moderate | 1 | practice: 'Bolsters clusters: acute low-back pain, short-term function, Bodily' |
+| 6160 | Acupuncture for Chronic Low-Back Pain (Honest — Real vs Sham) | 2 | Mixed | 2 | practice: 'Bolsters clusters: chronic low-back pain, non-specific pain coping, B |
+| 6161 | Acupuncture for Fibromyalgia (Honest — Not Above Sham) | 2 | Mixed | 1 | practice: 'Bolsters clusters: fibromyalgia pain, stiffness, Bodily' |
+| 6162 | Acupuncture for Seasonal Allergic Rhinitis (Small, Maybe Not Meaningful) | 2 | Emerging | 1 | practice: 'Bolsters clusters: allergic rhinitis symptoms, antihistamine reductio |
+| 6163 | Acupuncture for Depression (Honest — Uncertain, Low-Quality Evidence) | 1 | Mixed | 1 | practice: 'Bolsters clusters: depressive symptoms, adjunct care, Emotional' |
+| 6164 | Acupuncture for Knee Osteoarthritis (Honest — No Edge Over Sham) | 1 | Mixed | 2 | practice: 'Bolsters clusters: knee osteoarthritis pain, joint-pain coping, Bodil |
+| 6170 | Partial Nail Avulsion + Phenolization for Ingrown Toenail | 4 | Strong | 2 | practice: 'Bolsters clusters: Ingrown Toenail, Bodily / infection control, minor |
+| 6171 | Total-Contact Casting / Non-Removable Offloading for Diabetic Foot Ulcers | 4 | Strong | 2 | practice: 'Bolsters clusters: Diabetic Foot Ulcer, Amputation Prevention, Bodily |
+| 6172 | Functional External Support for Acute Ankle Sprain | 3 | Strong | 2 | practice: 'Bolsters clusters: Acute Lateral Ankle Sprain, Bodily recovery, retur |
+| 6173 | Oral Terbinafine for Toenail Fungus (Onychomycosis) | 3 | Strong | 2 | practice: 'Bolsters clusters: Onychomycosis, Bodily / nail health, Athlete''s Fo |
+| 6174 | Hip + Knee Strengthening for Patellofemoral Pain | 3 | Strong | 2 | practice: 'Bolsters clusters: Patellofemoral Pain, Bodily strength, gait mechani |
+| 6175 | Plantar-Fascia-Specific Stretching (DiGiovanni Protocol) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Plantar Fasciitis / Plantar Heel Pain, Bodily cont |
+| 6177 | Achilles Loading: Midportion vs Insertional Need Different Protocols | 3 | Moderate | 2 | practice: 'Bolsters clusters: Achilles Tendinopathy, load tolerance, Bodily reha |
+| 6178 | Hallux Valgus (Bunion): Orthoses Relieve, Surgery Corrects | 3 | Moderate | 1 | practice: 'Bolsters clusters: Hallux Valgus / Bunion, Bodily function, forefoot  |
+| 6179 | High-Load Strength Training for Plantar Fasciitis (Rathleff) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Plantar Fasciitis / Plantar Heel Pain, Bodily stre |
+| 6180 | Corticosteroid Injection for Morton's Neuroma | 2 | Mixed | 2 | practice: 'Bolsters clusters: Morton's Neuroma, forefoot pain, Bodily function ( |
+| 6181 | Night Splints for Plantar Fasciitis | 2 | Mixed | 2 | practice: 'Bolsters clusters: Plantar Fasciitis / Plantar Heel Pain, first-step  |
+| 6187 | Metabolic Surgery for Type 2 Diabetes Remission (STAMPEDE) | 4 | Strong | 2 | practice: 'Bolsters clusters: Bodily, metabolic control, Financial, Existential' |
+| 6188 | Total Knee Replacement for End-Stage Osteoarthritis | 4 | Strong | 1 | practice: 'Bolsters clusters: Bodily, mobility, pain relief, Emotional' |
+| 6189 | Tranexamic Acid for Surgical & Trauma Bleeding | 3 | Strong | 2 | practice: 'Bolsters clusters: Bodily, survival, hemostasis, Systemic' |
+| 6190 | Preoperative Smoking Cessation (Surgical Outcomes) | 3 | Strong | 2 | practice: 'Bolsters clusters: Bodily, Volitional, wound healing, respiratory fun |
+| 6191 | Enhanced Recovery After Surgery (ERAS) Protocols | 3 | Strong | 2 | practice: 'Bolsters clusters: Bodily, Interoceptive, Systemic, post-op recovery' |
+| 6192 | Antibiotic Prophylaxis Timing Before Incision | 3 | Strong | 2 | practice: 'Bolsters clusters: Bodily, infection prevention, Systemic' |
+| 6194 | Laparoscopic vs Open Cholecystectomy | 3 | Moderate | 2 | practice: 'Bolsters clusters: Bodily, faster recovery, Financial, return-to-work |
+| 6196 | Antibiotics-First for Uncomplicated Appendicitis | 2 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, avoided surgery, patient choice, Strategic |
+| 6197 | Chlorhexidine-Alcohol Skin Prep for Surgery | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, infection prevention, Systemic' |
+| 6198 | Perioperative Normothermia (Active Warming) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, wound healing, infection prevention' |
+| 6201 | Preoperative Alcohol Cessation (Hazardous Drinkers) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Volitional, immune function, recovery' |
+| 6203 | Preoperative Carbohydrate Loading Drinks | 1 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, comfort, mild recovery' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,596)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,607)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4916,8 +4948,19 @@
 | 6129 | D-Aspartic Acid for Testosterone (Fails to Deliver) | 2 | Moderate | 2 | weakness: 'Degrades: Bodily, Financial' |
 | 6130 | Folic Acid + Zinc for Male Fertility (Null) | 2 | Strong | 1 | weakness: 'Degrades: Bodily, Financial' |
 | 6131 | Semen Retention / 'NoFap' Superpower Claims | 2 | Mixed | 2 | weakness: 'Degrades: Intrapersonal, Bodily' |
+| 6165 | Chiropractic 'Subluxation' Care for Asthma & Non-Musculoskeletal Disease | 3 | Strong | 1 | weakness: 'Degrades: Logical, Systemic, disease self-management' |
+| 6166 | Iridology — Diagnosing Disease From the Iris (No Validity) | 3 | Strong | 2 | weakness: 'Degrades: Logical, Meta-Cognitive, timely diagnosis' |
+| 6167 | Acupuncture for Menopausal Hot Flashes (Honest — No Better Than Sham) | 2 | Mixed | 1 | weakness: 'Degrades: Financial (spent on inert care), evidence literacy, Logical |
+| 6168 | Bach Flower Remedies / 'Rescue Remedy' for Anxiety | 2 | Strong | 2 | weakness: 'Degrades: Financial, Emotional (mis-attributed relief), Logical' |
+| 6169 | Static (Wearable) Magnets for Pain | 2 | Strong | 1 | weakness: 'Degrades: Financial, Logical, evidence literacy' |
+| 6182 | 'Posture-Correcting' Braces Don't Fix Posture Long-Term | 3 | Mixed | 2 | weakness: 'Degrades: Bodily self-efficacy, Financial footing, evidence-calibrate |
+| 6183 | Custom Foot Orthoses Oversold Over Prefab | 3 | Mixed | 2 | weakness: 'Degrades: Financial footing, evidence-calibrated decisions, Bodily-ca |
+| 6184 | Prescribing Running Shoes by 'Pronation Type' | 3 | Mixed | 2 | weakness: 'Degrades: injury prevention, Financial footing, evidence-calibrated c |
+| 6185 | Detox Foot Pads Draw Out No Toxins | 2 | Strong | 2 | weakness: 'Degrades: Financial footing, evidence-calibrated thinking, Interocept |
+| 6186 | Magnetic / Copper Insoles for Foot Pain | 2 | Strong | 2 | weakness: 'Degrades: Financial footing, evidence-calibrated thinking, Bodily-car |
+| 6204 | The Surgical Placebo Effect | 5 | Strong | 1 | cost/weakness: 'Degrades: Meta-Cognitive, Logical, Adversarial judgment' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,249)
+## COST OF FAILURE — what's at stake (harm lens)  (1,258)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -6170,6 +6213,15 @@
 | 6143 | Vaginal 'Detox' Pearls / Herbal Balls — Dangerous, No Benefit | 3 | Emerging | 1 | cost/weakness: 'Degrades: vaginal flora, mucosal integrity, infection defense' |
 | 6147 | Jade / Yoni Eggs — Debunked Claims, Infection Risk | 2 | Emerging | 1 | cost/weakness: 'Degrades: vaginal flora, evidence-based judgment, wallet' |
 | 6149 | Vaginal ('Yoni') Steaming — No Benefit, Burn Risk | 2 | Emerging | 1 | cost/weakness: 'Degrades: vaginal tissue integrity, flora balance, trust in evid |
+| 6153 | Cervical (Neck) Manipulation & Vertebral-Artery-Dissection Stroke | 4 | Mixed | 2 | cost: 'Degrades: cerebrovascular integrity, Bodily, life/function' |
+| 6154 | Ear Candling for Wax Removal (No Benefit, Real Harm) | 2 | Strong | 1 | cost: 'Degrades: ear/tympanic integrity, Bodily' |
+| 6156 | EDTA Chelation Therapy for Coronary Disease (Contested, Not Recommended) | 3 | Mixed | 1 | cost: 'Degrades: Financial, metabolic safety, guideline-concordant care' |
+| 6176 | Repeated Corticosteroid Injections for Plantar Fasciitis | 3 | Moderate | 2 | cost: 'Degrades: plantar-fascia integrity, heel fat-pad cushioning, Bodily funct |
+| 6193 | IVC Filters Added to Anticoagulation | 3 | Moderate | 1 | cost/weakness: 'Degrades: Bodily, Financial, device-related harm' |
+| 6195 | Stents (PCI) for Stable Coronary Disease | 2 | Strong | 2 | cost/weakness: 'Degrades: Bodily, Financial, decision-making trust' |
+| 6199 | Routine Early MRI for Acute Low Back Pain | 2 | Strong | 2 | cost/weakness: 'Degrades: Bodily, Financial, Emotional, recovery' |
+| 6200 | Balloon Kyphoplasty for Osteoporotic Vertebral Fracture | 2 | Mixed | 2 | cost/weakness: 'Degrades: Bodily, Financial, cement-related harm' |
+| 6202 | Routine Preoperative Testing Before Low-Risk Surgery | 1 | Strong | 2 | cost/weakness: 'Degrades: Financial, Bodily, Systemic efficiency' |
 
 ## Framework / uncategorized  (61)
 
