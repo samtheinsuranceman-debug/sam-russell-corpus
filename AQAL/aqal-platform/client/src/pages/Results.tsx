@@ -1196,6 +1196,25 @@ export default function Results() {
     };
   }, [assessmentQuery.data]);
 
+  // Companion mode: the self–other gap. The informant's vector was captured on a
+  // separate channel; here we compare it to the member's real (server-scored) lines.
+  const companionGap = useMemo(() => {
+    const c = (assessmentQuery.data as any)?.companion as { relation?: string; vector?: number[]; answered?: number } | null | undefined;
+    if (!c || !Array.isArray(c.vector) || !(c.answered ?? 0)) return null;
+    const vec = c.vector;
+    const rows = AXIS_LABELS.map((name, i) => ({
+      i, name,
+      self: allScores[i] ?? 0,
+      other: vec[i] ?? 0,
+      gap: (vec[i] ?? 0) - (allScores[i] ?? 0),
+    })).filter((r) => r.other > 0);
+    const seesHigher = rows.filter((r) => r.gap > 0.03).sort((a, b) => b.gap - a.gap).slice(0, 5);
+    const lit = allScores.filter((s) => s > 0).length;
+    const both = rows.filter((r) => (allScores[r.i] ?? 0) > 0).length;
+    const knows = lit ? Math.round((100 * both) / lit) : 0;
+    return { relation: c.relation || "your person", answered: c.answered ?? 0, seesHigher, knows, otherVec: vec };
+  }, [assessmentQuery.data, allScores]);
+
   // Derive cluster archetypes from axis scores
   const strengthClusters = useMemo(() => {
     if (strengths.length === 0) return [];
@@ -1322,6 +1341,45 @@ export default function Results() {
             <div className="mb-16">
               <FullRadarChart scores={allScores} />
             </div>
+
+            {/* Companion reveal — the self–other gap, if a companion played along */}
+            {companionGap && (
+              <div className="mb-16">
+                <div className="glass-card rounded-2xl p-7 sm:p-9 border border-accent/20">
+                  <p className="text-xs uppercase tracking-[0.2em] text-accent/70 mb-2 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                    How {companionGap.relation === "companion" ? "your person" : `your ${companionGap.relation.toLowerCase()}`} sees you
+                  </p>
+                  <p className="text-center text-4xl sm:text-5xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}>
+                    {companionGap.knows}%
+                  </p>
+                  <p className="text-center text-muted-foreground/50 text-sm mt-2 max-w-md mx-auto">
+                    Your stories lined up on {companionGap.knows}% of the lines you lit — across the {companionGap.answered} they weighed in on. A person who knows you well reads your outward side more clearly than you read yourself.
+                  </p>
+                  {companionGap.seesHigher.length > 0 && (
+                    <div className="mt-6 pt-6 border-t border-white/[0.06]">
+                      <p className="text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground/50 mb-3 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                        What they see in you that you undersold
+                      </p>
+                      <div className="space-y-2.5 max-w-md mx-auto">
+                        {companionGap.seesHigher.map((r) => (
+                          <div key={r.i} className="flex items-center gap-3">
+                            <span className="w-32 shrink-0 text-sm text-foreground/80">{r.name}</span>
+                            <div className="flex-1 h-2 rounded-full bg-white/[0.06] relative overflow-hidden">
+                              <div className="absolute inset-y-0 left-0 rounded-full bg-white/25" style={{ width: `${Math.min(100, r.self * 200)}%` }} />
+                              <div className="absolute inset-y-0 left-0 rounded-full bg-accent/70" style={{ width: `${Math.min(100, r.other * 200)}%`, mixBlendMode: "screen" }} />
+                            </div>
+                            <span className="text-[0.7rem] text-accent/80 shrink-0 w-16 text-right">+{Math.round(r.gap * 200)}%</span>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-center text-muted-foreground/40 text-[0.7rem] mt-4 leading-relaxed max-w-md mx-auto">
+                        The pale bar is how brightly <em>you</em> lit each line; the gold is how brightly <em>they</em> did. This is a directional read from their story input — not a re-measurement of you.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Animated Rarity Score */}
             <div className="mb-16">

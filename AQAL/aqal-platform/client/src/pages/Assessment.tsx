@@ -588,6 +588,8 @@ export default function Assessment() {
   const uploadResponseMutation = trpc.assessment.uploadResponse.useMutation();
   const submitTextMutation = trpc.assessment.submitTextResponse.useMutation();
   const analyzeMutation = trpc.assessment.analyze.useMutation();
+  const saveCompanionMutation = trpc.assessment.saveCompanion.useMutation();
+  const companionSavedRef = useRef(false);
 
   // Detect if voice recording is supported
   const recordingSupported = typeof window !== "undefined" && typeof window.MediaRecorder !== "undefined" && !!navigator.mediaDevices?.getUserMedia;
@@ -639,8 +641,23 @@ export default function Assessment() {
     const memberLit = scores.map((s, i) => (s > 0 ? i : -1)).filter((i) => i >= 0);
     const bothLit = memberLit.filter((i) => comp[i] > 0).length;
     const knows = memberLit.length ? Math.round((100 * bothLit) / memberLit.length) : 0;
-    return { answered, topSees, knows };
+    return { answered, topSees, knows, vector: comp };
   }, [companionMode, companionResponses, scores]);
+
+  // Persist the companion channel to the assessment once, on completion — separate
+  // from the member's scored answers, so Results can render the self–other gap.
+  useEffect(() => {
+    if (!isComplete || !companionMode || companionSavedRef.current) return;
+    if (!assessmentId || !companionReveal || companionReveal.answered === 0) return;
+    companionSavedRef.current = true;
+    saveCompanionMutation.mutate({
+      assessmentId,
+      relation: companionRelation || "companion",
+      vector: companionReveal.vector,
+      answered: companionReveal.answered,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isComplete, companionMode, assessmentId, companionReveal]);
 
   // ============================================================
   // PROGRESS PERSISTENCE — Save/resume from localStorage

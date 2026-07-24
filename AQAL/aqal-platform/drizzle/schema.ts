@@ -71,6 +71,9 @@ export const assessments = mysqlTable("assessments", {
   normingVersion: varchar("normingVersion", { length: 48 }),
   // Birth year (optional) — enables cohort rarity: ranking within the user's own generation.
   birthYear: int("birthYear"),
+  // Companion mode (optional): a high-acquaintance informant's read, kept SEPARATE from the
+  // member's own scored answers so the self–other gap can be shown. { relation, vector, answered }.
+  companion: json("companion"),
   promoCode: varchar("promoCode", { length: 64 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

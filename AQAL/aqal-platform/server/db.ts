@@ -175,6 +175,16 @@ export async function incrementCompletedQuestions(assessmentId: number) {
     .where(eq(assessments.id, assessmentId));
 }
 
+// Companion mode: persist the informant's read (kept separate from the member's scores).
+export async function saveCompanion(
+  assessmentId: number,
+  data: { relation: string; vector: number[]; answered: number },
+) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(assessments).set({ companion: data }).where(eq(assessments.id, assessmentId));
+}
+
 // ============================================================
 // RESPONSE HELPERS
 // ============================================================

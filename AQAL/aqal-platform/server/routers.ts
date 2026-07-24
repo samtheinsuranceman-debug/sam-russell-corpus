@@ -10,6 +10,7 @@ import {
   createAssessment, getAssessmentById, getLatestAssessment, updateAssessmentStatus,
   incrementCompletedQuestions, saveResponse, getResponsesByAssessment,
   saveScores, getScoresByAssessment, savePowerCombinations, getPowerCombinationsByAssessment,
+  saveCompanion,
   validatePromoCode, incrementPromoCodeUsage, createPromoCode, getAllPromoCodes,
   saveEvidence, getEvidenceByAssessment,
   getAllUsers, getAllAssessments, getAdminStats,
@@ -289,6 +290,27 @@ export const appRouter = router({
         });
         await incrementCompletedQuestions(input.assessmentId);
         return { success: true, responseId: response?.id };
+      }),
+
+    // Companion mode: persist the informant's read (separate channel, never scored as the member).
+    saveCompanion: protectedProcedure
+      .input(z.object({
+        assessmentId: z.number(),
+        relation: z.string().max(48),
+        vector: z.array(z.number()).min(1).max(64),
+        answered: z.number().min(0).max(64),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const assessment = await getAssessmentById(input.assessmentId);
+        if (!assessment || assessment.userId !== ctx.user.id) {
+          return { success: false };
+        }
+        await saveCompanion(input.assessmentId, {
+          relation: input.relation,
+          vector: input.vector.map((v) => (Number.isFinite(v) ? v : 0)),
+          answered: input.answered,
+        });
+        return { success: true };
       }),
 
     // Trigger AI analysis for the full assessment
