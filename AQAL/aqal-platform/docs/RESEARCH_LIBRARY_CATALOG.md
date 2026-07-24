@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,534 clusters · 10,836 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,585 clusters · 10,911 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,856 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,454 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,163 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,884 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,469 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,171 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,534** |
+| **Total** | **5,585** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,470 |
-| Strong | 1,382 |
-| Mixed | 917 |
-| Emerging | 765 |
+| Moderate | 2,486 |
+| Strong | 1,393 |
+| Mixed | 928 |
+| Emerging | 778 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,856)
+## PRACTICES — what strengthens the mind (impact lens)  (2,884)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2883,8 +2883,36 @@
 | 5488 | Marital Quality & Physical Health | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Emotional, cardiovascular health' |
 | 5489 | Non-Custodial Grandparenting & Longevity | 2 | Emerging | 1 | practice: 'Bolsters clusters: Parental, Community, Existential, longevity' |
 | 5490 | Volunteering — But Motives Matter | 2 | Mixed | 2 | practice: 'Bolsters clusters: Community, Moral, Existential, longevity' |
+| 5493 | Duloxetine for Painful Diabetic Neuropathy | 3 | Strong | 2 | practice: 'Bolsters clusters: Neuropathic Pain, Fibromyalgia, Depression comorbi |
+| 5494 | Topical NSAIDs (Diclofenac Gel) for Hand/Knee OA | 3 | Strong | 2 | practice: 'Bolsters clusters: Knee Osteoarthritis, Hand Osteoarthritis, NSAIDs f |
+| 5495 | Amitriptyline (Tricyclic) for Neuropathic Pain | 3 | Moderate | 1 | practice: 'Bolsters clusters: Neuropathic Pain, Fibromyalgia, SNRIs (Duloxetine) |
+| 5496 | Exercise Therapy for Chronic Low-Back Pain (First-Line) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Chronic Low Back Pain, Graded Activity & Activity  |
+| 5497 | MBSR for Chronic Low-Back Pain (Cherkin RCT) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Mindfulness & MBSR, Chronic Low Back Pain, Pain Ca |
+| 5500 | Aerobic Exercise for Fibromyalgia | 2 | Moderate | 1 | practice: 'Bolsters clusters: Fibromyalgia, Tai Chi for Fibromyalgia, Aerobic Ex |
+| 5501 | CBT & Psychological Therapies for Chronic Pain | 2 | Moderate | 1 | practice: 'Bolsters clusters: Pain Catastrophizing, Fear-Avoidance of Movement,  |
+| 5503 | Epidural Steroid Injection for Sciatica (Short-Term Only) | 2 | Mixed | 1 | practice: 'Bolsters clusters: Sciatica / Lumbar Radicular Pain, Chronic Low Back |
+| 5510 | Total Diet Replacement & Type 2 Diabetes Remission (DiRECT) | 5 | Strong | 1 | practice: 'Bolsters clusters: diabetes remission, large weight loss, metabolic h |
+| 5511 | Resistance Training Protects Muscle While You Lose Fat | 4 | Strong | 2 | practice: 'Bolsters clusters: lean-mass retention, Strength & Resistance Trainin |
+| 5513 | Extending Sleep Cuts Calorie Intake (Tasali 2022) | 3 | Moderate | 1 | practice: 'Bolsters clusters: appetite regulation, energy balance, Interoceptive |
+| 5515 | Higher-Protein, Lower-GI Diet for Keeping Weight Off (DiOGenes) | 3 | Moderate | 1 | practice: 'Bolsters clusters: weight-loss maintenance, satiety, Protein & Muscle |
+| 5516 | Water Before Meals — A Small, Real Nudge | 2 | Emerging | 1 | practice: 'Bolsters clusters: portion regulation, calorie adherence, Interocepti |
+| 5517 | Low-Carb vs Low-Fat — DIETFITS (It's a Draw) | 3 | Mixed | 1 | practice: 'Bolsters clusters: diet adherence, sustainable weight loss, Volitiona |
+| 5518 | Time-Restricted Eating Adds Nothing Beyond Calorie Cutting (Liu 2022) | 2 | Mixed | 1 | practice: 'Bolsters clusters: appetite structure, calorie adherence, Volitional  |
+| 5530 | Electroconvulsive Therapy (ECT) for Severe / Treatment-Resistant Depression | 4 | Strong | 2 | practice: 'Bolsters clusters: acute depression remission, treatment-resistant de |
+| 5531 | Guided Internet-Delivered CBT (iCBT) for Depression | 3 | Strong | 2 | practice: 'Bolsters clusters: depression relief, access to care, scalable treatm |
+| 5533 | Narrative Exposure Therapy (NET) for Multiple-Trauma PTSD | 3 | Moderate | 2 | practice: 'Bolsters clusters: PTSD recovery, refugee/complex trauma, autobiograp |
+| 5534 | Massed / Intensive Prolonged Exposure for PTSD | 3 | Moderate | 2 | practice: 'Bolsters clusters: PTSD recovery, treatment completion, rapid symptom |
+| 5535 | Tetris / Visuospatial Task to Reduce Intrusive Trauma Memories | 2 | Emerging | 1 | practice: 'Bolsters clusters: intrusive-memory prevention, early post-trauma car |
+| 5536 | Emotional Freedom Techniques (EFT / 'Tapping') for PTSD | 2 | Mixed | 2 | practice: 'Bolsters clusters (non-specifically): PTSD symptom relief, distress r |
+| 5537 | Inhaled Nitrous Oxide for Treatment-Resistant Depression | 2 | Emerging | 1 | practice: 'Bolsters clusters: rapid antidepressant response, treatment-resistant |
+| 5538 | Stellate Ganglion Block (SGB) for PTSD | 2 | Mixed | 2 | practice: 'Bolsters clusters: PTSD hyperarousal reduction, adjunct trauma care' |
+| 5539 | Wake Therapy (Therapeutic Sleep Deprivation) for Depression | 2 | Mixed | 2 | practice: 'Bolsters clusters: rapid mood lift, bridge to slower antidepressants' |
+| 5540 | Accelerated iTBS / Stanford Neuromodulation Therapy (SAINT/SNT) for Depression | 3 | Emerging | 2 | practice: 'Bolsters clusters: rapid depression remission, treatment-resistant de |
+| 5541 | Vagus Nerve Stimulation (VNS) for Markedly Treatment-Resistant Depression | 2 | Mixed | 2 | practice: 'Bolsters clusters: chronic treatment-resistant depression, functional |
+| 5542 | Brainspotting for Trauma | 1 | Emerging | 2 | practice: 'Bolsters clusters (unproven): trauma processing, emotional regulation |
+| 5543 | D-Cycloserine Augmentation of Exposure Therapy | 1 | Mixed | 2 | practice: 'Bolsters clusters (weakly): fear extinction, exposure-therapy respons |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,454)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,469)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4342,8 +4370,23 @@
 | 5475 | Device-Guided Slow Breathing for BP (Overhyped) | 2 | Mixed | 2 | weakness: 'Degrades: blood-pressure expectations, financial resources' |
 | 5491 | Loneliness → Dementia Risk | 5 | Moderate | 2 | weakness: 'Degrades: cognitive reserve, memory, Meta-Cognitive clarity' |
 | 5492 | Loneliness Rewrites Immune Gene Expression | 4 | Emerging | 2 | weakness: 'Degrades: immune regulation, systemic health, Interoceptive balance' |
+| 5504 | 'Structural' Blame: Posture & Leg-Length Asymmetry as Pain Cause | 3 | Mixed | 2 | weakness: 'Degrades: Meta-Cognitive, Bodily, Intrapersonal' |
+| 5505 | Lumbar Supports / Back Belts for LBP Prevention | 2 | Moderate | 1 | weakness: 'Degrades: Financial, Strategic, Bodily' |
+| 5506 | Prolotherapy Injections for Chronic Low-Back Pain | 2 | Moderate | 1 | weakness: 'Degrades: Financial, Strategic' |
+| 5507 | Static Magnets & Copper Bracelets for Pain | 2 | Strong | 3 | weakness: 'Degrades: Financial, Logical, Meta-Cognitive' |
+| 5508 | Whole-Body Cryotherapy for Fibromyalgia | 2 | Emerging | 2 | weakness: 'Degrades: Financial, Meta-Cognitive' |
+| 5509 | Reflexology for Chronic Pain | 1 | Moderate | 2 | weakness: 'Degrades: Financial, Logical, Meta-Cognitive' |
+| 5519 | 'Breakfast Boosts Weight Loss' — Not Supported | 2 | Moderate | 1 | weakness: 'Degrades: evidence-based eating, calorie budgeting, Volitional autono |
+| 5520 | 'Eating Late Makes You Fat' — Real but Small (Vujovic 2022) | 2 | Emerging | 1 | weakness: 'Degrades: energy expenditure, appetite regulation, Interoceptive full |
+| 5521 | Detox / 'Slimming' Teas (Senna) — Laxative, Not Fat Loss | 2 | Emerging | 1 | weakness: 'Degrades: Bodily health, Interoceptive signaling, evidence-based choi |
+| 5522 | 'Grazing Stokes Metabolism' — Meal Frequency Myth | 1 | Moderate | 1 | weakness: 'Degrades: calorie awareness, evidence-based eating, Logical reasoning |
+| 5523 | 'Negative-Calorie Foods' (Celery) — Arithmetically False | 1 | Emerging | 1 | weakness: 'Degrades: calorie numeracy, Logical reasoning, evidence-based eating' |
+| 5524 | Apple Cider Vinegar for Weight Loss — Headline Study Retracted | 1 | Emerging | 1 | weakness: 'Degrades: evidence-based choices, Logical scrutiny, realistic expecta |
+| 5525 | Green Coffee Bean Extract — Hype, a Retraction, Tiny Real Effect | 1 | Emerging | 2 | weakness: 'Degrades: Financial resources, evidence-based choices, trust in suppl |
+| 5526 | Green Tea / EGCG for Weight Loss — Statistically Negligible | 1 | Emerging | 1 | weakness: 'Degrades: Financial resources, realistic expectations, evidence-based |
+| 5527 | Raspberry Ketones — No Human Weight-Loss Evidence | 1 | Emerging | 1 | weakness: 'Degrades: Financial resources, evidence-based choices, realistic expe |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,163)
+## COST OF FAILURE — what's at stake (harm lens)  (1,171)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5510,6 +5553,14 @@
 | 5477 | Being Unmarried → Worse Cancer Outcomes | 3 | Moderate | 1 | cost: 'Degrades: cancer survival, treatment access, longevity' |
 | 5478 | Low Social Support → Worse Heart-Disease Prognosis | 3 | Moderate | 1 | cost: 'Degrades: cardiac survival, recovery, longevity' |
 | 5482 | Loneliness & Isolation → Heart Disease and Stroke | 3 | Moderate | 2 | cost: 'Degrades: cardiovascular health, Bodily vitality, longevity' |
+| 5498 | Radiofrequency Denervation for Chronic LBP (MINT — No Benefit) | 2 | Strong | 1 | cost: 'Degrades: Financial, Strategic, Bodily' |
+| 5499 | Cannabinoids for Chronic Pain (Small Benefit, Real Harms) | 2 | Mixed | 1 | cost: 'Degrades: Meta-Cognitive, Interoceptive, Financial' |
+| 5502 | Platelet-Rich Plasma for Knee OA (RESTORE — No Benefit) | 1 | Mixed | 1 | cost: 'Degrades: Financial, Strategic' |
+| 5512 | Ultra-Processed Diets Drive Passive Overeating (Hall 2019) | 4 | Strong | 1 | cost: 'Degrades: appetite regulation, energy balance, Interoceptive satiety' |
+| 5514 | Metabolic Adaptation — Why Regain Is Physiological | 3 | Moderate | 1 | cost: 'Degrades: resting metabolic rate, weight-loss maintenance, energy balance |
+| 5528 | Rebirthing / Coercive-Restraint 'Attachment Therapy' | 5 | Strong | 2 | cost/weakness: 'Degrades: child safety, trust, therapeutic alliance, physical he |
+| 5529 | Recovered-Memory Therapy (Iatrogenic False Memories) | 4 | Strong | 2 | cost/weakness: 'Degrades: memory accuracy, family relationships, legal reliabili |
+| 5532 | Ketamine's Hidden Costs: Transience, Abuse Liability & Bladder Damage | 3 | Moderate | 2 | cost/weakness: 'Degrades: durability of benefit, bladder/renal health, dependenc |
 
 ## Framework / uncategorized  (61)
 
