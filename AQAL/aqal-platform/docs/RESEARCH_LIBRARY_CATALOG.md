@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,903 clusters · 11,393 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,955 clusters · 11,481 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,073 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,552 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,217 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,111 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,563 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,220 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,903** |
+| **Total** | **5,955** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,579 |
-| Strong | 1,519 |
-| Mixed | 996 |
-| Emerging | 809 |
+| Moderate | 2,594 |
+| Strong | 1,540 |
+| Mixed | 1,010 |
+| Emerging | 811 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,073)
+## PRACTICES — what strengthens the mind (impact lens)  (3,111)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3100,8 +3100,46 @@
 | 5858 | Group Singing for Parkinson's Voice & Speech | 2 | Emerging | 2 | practice: 'Bolsters clusters: hypokinetic dysarthria, vocal loudness, PD quality |
 | 5859 | Rhythmic Auditory Stimulation for Cerebral Palsy Gait | 2 | Emerging | 1 | practice: 'Bolsters clusters: pediatric CP gait, stride length, walking symmetry |
 | 5860 | Tailor-Made Notched Music for Tinnitus | 2 | Mixed | 2 | practice: 'Bolsters clusters: tinnitus loudness reduction, auditory-cortex plast |
+| 5862 | Epinephrine Auto-Injector for Anaphylaxis | 5 | Strong | 1 | practice: 'Bolsters clusters: anaphylaxis survival, emergency preparedness, food |
+| 5863 | Grass-Pollen Sublingual Immunotherapy Tablets (SLIT) | 4 | Strong | 2 | practice: 'Bolsters clusters: hay-fever control, disease modification, at-home i |
+| 5864 | Subcutaneous Allergen Immunotherapy (SCIT) for Allergic Rhinitis | 4 | Strong | 2 | practice: 'Bolsters clusters: allergic rhinitis control, disease modification, m |
+| 5865 | Dupilumab (Anti-IL-4Rα) for Moderate-Severe Atopic Dermatitis | 4 | Strong | 1 | practice: 'Bolsters clusters: eczema clearance, itch reduction, atopic quality o |
+| 5866 | Omalizumab (Anti-IgE) for Severe Allergic Asthma | 4 | Strong | 1 | practice: 'Bolsters clusters: asthma exacerbation reduction, severe-asthma contr |
+| 5867 | Intranasal Corticosteroids vs Oral Antihistamines for Rhinitis | 3 | Strong | 1 | practice: 'Bolsters clusters: nasal congestion relief, allergic rhinitis control |
+| 5869 | House-Dust-Mite SLIT Tablets for Allergic Asthma | 3 | Moderate | 1 | practice: 'Bolsters clusters: asthma exacerbation reduction, HDM allergy control |
+| 5870 | Saline Nasal Irrigation for Allergic Rhinitis | 2 | Moderate | 2 | practice: 'Bolsters clusters: nasal symptom relief, medication-sparing, low-cost |
+| 5871 | Early Introduction of Multiple Allergenic Foods (EAT Trial) | 3 | Mixed | 1 | practice: 'Bolsters clusters: food-allergy prevention, infant tolerance inductio |
+| 5872 | Oral Immunotherapy (OIT) for Peanut Allergy — The Desensitization Paradox | 3 | Mixed | 2 | practice: 'Bolsters clusters: peanut desensitization, accidental-exposure protec |
+| 5873 | Allergen-Impermeable Bed Encasings as a Sole Measure | 1 | Mixed | 2 | practice: 'Bolsters clusters: dust-mite exposure reduction (weak in isolation)' |
+| 5874 | Prophylactic Infant Emollients to Prevent Eczema — Honest Null | 1 | Mixed | 2 | practice: 'Bolsters clusters: eczema prevention (not supported)' |
+| 5880 | Asthma Written Action Plans & Self-Management | 4 | Strong | 2 | practice: 'Bolsters clusters: Asthma Control, Self-Monitoring, Inhaled Corticost |
+| 5882 | Continuous Glucose Monitoring in Type 1 Diabetes | 4 | Strong | 2 | practice: 'Bolsters clusters: Type-1 Diabetes, Glycemic Control, Hypoglycemia Av |
+| 5883 | Diabetes Self-Management Education & Support (DSMES) | 4 | Strong | 1 | practice: 'Bolsters clusters: Glycemic Control, Type 2 Diabetes, Medication Adhe |
+| 5884 | Home-Based Cardiac Rehabilitation | 4 | Strong | 2 | practice: 'Bolsters clusters: Exercise-Based Cardiac Rehabilitation, Cardiovascu |
+| 5885 | Pulmonary Rehab After a COPD Exacerbation | 4 | Moderate | 1 | practice: 'Bolsters clusters: Pulmonary Rehabilitation for COPD, COPD Self-Manag |
+| 5886 | Self-Titration of Blood-Pressure Medication (TASMINH4) | 3 | Strong | 2 | practice: 'Bolsters clusters: Hypertension Control, Home BP Monitoring, Medicati |
+| 5887 | Inhaler-Technique Training | 3 | Moderate | 1 | practice: 'Bolsters clusters: Asthma Control, COPD Self-Management, Medication A |
+| 5888 | COPD Self-Management With Exacerbation Action Plans | 3 | Moderate | 1 | practice: 'Bolsters clusters: COPD Self-Management, Hospital Readmission Prevent |
+| 5889 | Therapeutic Footwear & Foot Self-Care (Diabetic Foot) | 3 | Moderate | 2 | practice: 'Bolsters clusters: Diabetic Peripheral Neuropathy, Foot Ulcer Prevent |
+| 5890 | DAFNE / Flexible-Insulin Structured Education (Type 1) | 3 | Moderate | 1 | practice: 'Bolsters clusters: Type-1 Diabetes, Carbohydrate Counting, Glycemic C |
+| 5891 | Blister/Reminder Packaging for Adherence | 2 | Mixed | 2 | practice: 'Bolsters clusters: Medication Adherence, Polypharmacy Management, Chr |
+| 5892 | Dietary Protein Restriction in Chronic Kidney Disease | 3 | Moderate | 1 | practice: 'Bolsters clusters: Chronic Kidney Disease, Slowing CKD Progression, R |
+| 5893 | Heart-Failure Remote Telemonitoring | 3 | Mixed | 2 | practice: 'Bolsters clusters: Heart Failure Self-Care, Hospital Readmission Prev |
+| 5894 | Peer Support & Community Health Workers (Diabetes) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Glycemic Control, Diabetes Self-Management, Health |
+| 5898 | Balance Training vs Recurrent Ankle Sprain | 4 | Strong | 2 | practice: 'Bolsters clusters: ankle-sprain recurrence prevention, postural contr |
+| 5899 | FIFA 11+ Neuromuscular Warm-Up | 4 | Strong | 2 | practice: 'Bolsters clusters: knee-injury prevention, landing/cutting control, h |
+| 5900 | Exercise vs Arthroscopy for Degenerative Meniscus | 4 | Strong | 2 | practice: 'Bolsters clusters: degenerative meniscal tear, avoiding low-value sur |
+| 5901 | Exercise vs Surgery for Degenerative Cuff Tears | 4 | Strong | 2 | practice: 'Bolsters clusters: nontraumatic rotator cuff tear, avoiding low-value |
+| 5902 | Early Movement vs Casting an Ankle Sprain | 3 | Strong | 2 | practice: 'Bolsters clusters: acute ankle-sprain recovery, faster return to spor |
+| 5903 | Return-to-Sport Criteria After ACL Reconstruction | 4 | Moderate | 2 | practice: 'Bolsters clusters: second-ACL-injury prevention, quad strength symmet |
+| 5904 | Increasing Running Cadence to Offload Joints | 3 | Moderate | 2 | practice: 'Bolsters clusters: patellofemoral pain, tibial stress reduction, gait |
+| 5905 | Adductor Strengthening (Copenhagen) for Groin | 3 | Moderate | 2 | practice: 'Bolsters clusters: groin/adductor injury prevention, eccentric hip st |
+| 5906 | Isometric Loading for Tendon Pain | 2 | Mixed | 2 | practice: 'Bolsters clusters: patellar/Achilles tendinopathy pain relief, load t |
+| 5907 | Cross-Education: Train the Uninjured Limb | 3 | Moderate | 2 | practice: 'Bolsters clusters: immobilization strength loss, post-cast rehab, con |
+| 5909 | Foot Orthoses for Overuse-Injury Prevention | 2 | Mixed | 2 | practice: 'Bolsters clusters: stress-fracture prevention, military/running overu |
+| 5910 | Neck Strengthening for Head-Impact Risk | 2 | Emerging | 2 | practice: 'Bolsters clusters: concussion-risk reduction, head/neck stability, co |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,552)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,563)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4657,8 +4695,19 @@
 | 5845 | Positive-Psychology Interventions: Smaller Than Advertised | 2 | Mixed | 1 | weakness: 'Degrades: calibrated expectations, resource allocation to weak self-h |
 | 5846 | Routine Grief Counseling for Normal Bereavement — Minimal Benefit | 2 | Strong | 1 | weakness: 'Degrades: resource allocation, risk of pathologizing normal grief' |
 | 5861 | 432 Hz Tuning as 'Healthier' Music | 1 | Mixed | 1 | weakness: 'Degrades: Meta-Cognitive, Financial' |
+| 5875 | Applied Kinesiology (Muscle-Testing) for Allergy Diagnosis | 3 | Strong | 2 | weakness: 'Degrades: diagnostic accuracy, evidence-based decision-making, food-f |
+| 5876 | Autoimmune Protocol (AIP) Diet as an Autoimmune 'Cure' | 3 | Emerging | 1 | weakness: 'Degrades: nutritional adequacy, evidence-based expectations, dietary  |
+| 5877 | Bioresonance & Electrodermal Allergy Testing | 3 | Strong | 2 | weakness: 'Degrades: diagnostic accuracy, evidence-based decision-making, health |
+| 5878 | Hair-Analysis Allergy & Food-Intolerance Tests | 2 | Strong | 1 | weakness: 'Degrades: diagnostic accuracy, dietary freedom, health-spending' |
+| 5879 | Local Honey for Pollen Allergy | 1 | Mixed | 2 | weakness: 'Degrades: symptom relief expectations, evidence-based self-care' |
+| 5895 | 'Reverse Your Diabetes' Supplement Marketing (Myth) | 4 | Strong | 2 | weakness: 'Degrades: glycemic control, evidence-based self-management, financial |
+| 5896 | Apple Cider Vinegar for Blood Sugar (Overhyped) | 2 | Mixed | 1 | weakness: 'Degrades: glycemic control expectations, evidence-based self-manageme |
+| 5897 | Chromium Supplements for Blood Sugar (Weak/Inconsistent) | 2 | Mixed | 2 | weakness: 'Degrades: glycemic control, evidence-based self-management, financial |
+| 5911 | Acute:Chronic Workload Ratio (Debated Metric) | 3 | Mixed | 2 | weakness: 'Degrades: injury-risk prediction, training-load decisions, evidence l |
+| 5912 | 'Muscle Knots' / Trigger-Point Structural Model | 2 | Mixed | 2 | weakness: 'Degrades: pain understanding, treatment targeting, clinical evidence  |
+| 5913 | Pneumatic Recovery Boots (NormaTec-Style) | 2 | Mixed | 2 | weakness: 'Degrades: recovery budgets, evidence literacy, performance expectatio |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,217)
+## COST OF FAILURE — what's at stake (harm lens)  (1,220)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5879,6 +5928,9 @@
 | 5817 | Legalized Online Sports Betting | 3 | Strong | 2 | cost: 'Degrades: Financial, Volitional, Strategic' |
 | 5820 | State Lotteries as a Regressive 'Tax' | 2 | Strong | 2 | cost: 'Degrades: Financial, Logical, Mathematical' |
 | 5823 | Buy-Now-Pay-Later (BNPL) Overspending | 2 | Moderate | 1 | cost: 'Degrades: Financial, Volitional, Strategic' |
+| 5868 | Montelukast — Neuropsychiatric Boxed Warning | 3 | Moderate | 2 | cost: 'Degrades: mood stability, sleep, mental-health safety' |
+| 5881 | Medication Nonadherence in Chronic Disease | 4 | Strong | 2 | cost: 'Degrades: disease control, survival, hospital-free days, healthcare cost' |
+| 5908 | Post-Workout Ice Baths Blunt Muscle Gains | 2 | Moderate | 2 | cost: 'Degrades: muscle hypertrophy, strength adaptation, satellite-cell/anaboli |
 
 ## Framework / uncategorized  (61)
 
