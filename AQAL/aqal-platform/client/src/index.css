@@ -350,6 +350,55 @@
     animation: mic-pulse 2.5s ease-in-out infinite;
   }
 
+  /* ── Companion signal lights ─────────────────────────────────────────────
+     A blinking beacon that tells the room whose turn it is on this question.
+     GREEN  = companion should jump in and add their honest read.
+     AMBER  = private question — the member answers alone, companion sits out. */
+  @keyframes signal-blink-green {
+    0%, 100% {
+      box-shadow: 0 0 0 0 oklch(0.72 0.14 165 / 0.55), 0 0 10px 2px oklch(0.72 0.14 165 / 0.35);
+      opacity: 1;
+    }
+    50% {
+      box-shadow: 0 0 0 8px oklch(0.72 0.14 165 / 0), 0 0 22px 6px oklch(0.72 0.14 165 / 0.65);
+      opacity: 0.45;
+    }
+  }
+  @keyframes signal-blink-amber {
+    0%, 100% {
+      box-shadow: 0 0 0 0 oklch(0.72 0.16 55 / 0.55), 0 0 10px 2px oklch(0.72 0.16 55 / 0.35);
+      opacity: 1;
+    }
+    50% {
+      box-shadow: 0 0 0 8px oklch(0.72 0.16 55 / 0), 0 0 22px 6px oklch(0.72 0.16 55 / 0.65);
+      opacity: 0.45;
+    }
+  }
+  .signal-dot-green {
+    background: oklch(0.74 0.15 165);
+    animation: signal-blink-green 1.05s ease-in-out infinite;
+  }
+  .signal-dot-amber {
+    background: oklch(0.76 0.16 55);
+    animation: signal-blink-amber 1.05s ease-in-out infinite;
+  }
+  /* A soft blink on the whole banner so it's noticeable in peripheral vision */
+  @keyframes signal-banner-green {
+    0%, 100% { border-color: oklch(0.72 0.14 165 / 0.35); background-color: oklch(0.72 0.14 165 / 0.06); }
+    50%      { border-color: oklch(0.72 0.14 165 / 0.7);  background-color: oklch(0.72 0.14 165 / 0.12); }
+  }
+  @keyframes signal-banner-amber {
+    0%, 100% { border-color: oklch(0.72 0.16 55 / 0.35); background-color: oklch(0.72 0.16 55 / 0.06); }
+    50%      { border-color: oklch(0.72 0.16 55 / 0.7);  background-color: oklch(0.72 0.16 55 / 0.12); }
+  }
+  .signal-banner-green { animation: signal-banner-green 1.6s ease-in-out infinite; }
+  .signal-banner-amber { animation: signal-banner-amber 1.6s ease-in-out infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .signal-dot-green, .signal-dot-amber,
+    .signal-banner-green, .signal-banner-amber { animation: none; }
+  }
+
   /* Gradient mesh — warm radial glow, very subtle */
   .gradient-mesh {
     position: fixed;

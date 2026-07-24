@@ -1876,6 +1876,44 @@ export default function Assessment() {
             {question.dimension}
           </motion.p>
 
+          {/* ── Companion signal light ──────────────────────────────────────────
+              A blinking beacon so the room instantly knows whose turn it is.
+              GREEN = companion, jump in.  AMBER = private, member answers alone.
+              Only shows when companion mode is on. */}
+          {companionMode && (
+            <motion.div
+              key={`signal-${currentQuestion}`}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              role="status"
+              aria-live="polite"
+              className={`mb-6 max-w-md w-full mx-auto flex items-center gap-3 rounded-xl border px-4 py-2.5 text-left ${
+                companionActive ? "signal-banner-green" : "signal-banner-amber"
+              }`}
+            >
+              <span
+                className={`shrink-0 w-3.5 h-3.5 rounded-full ${
+                  companionActive ? "signal-dot-green" : "signal-dot-amber"
+                }`}
+                aria-hidden="true"
+              />
+              {companionActive ? (
+                <span className="text-xs sm:text-sm leading-snug" style={{ color: "oklch(0.82 0.09 165)" }}>
+                  <strong className="font-semibold">
+                    {companionName ? `${companionName}, jump in` : "Companion, jump in"}
+                  </strong>{" "}
+                  — follow up, push back, or add the part they're too modest to say.
+                </span>
+              ) : (
+                <span className="text-xs sm:text-sm leading-snug" style={{ color: "oklch(0.84 0.10 55)" }}>
+                  <strong className="font-semibold">Just you on this one.</strong>{" "}
+                  {companionName ? `${companionName}, sit this one out` : "Companion, sit this one out"} — it's more honest when it's only you.
+                </span>
+              )}
+            </motion.div>
+          )}
+
           {/* Question text */}
           <AnimatePresence mode="wait">
             <motion.div
