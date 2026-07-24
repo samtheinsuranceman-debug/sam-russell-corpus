@@ -1197,21 +1197,21 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
+- **Bedtime:** ~2:45 AM (after interoceptive session + Scripture reading)
+- **Wake time (natural? vs 11 AM):** 9:30 AM (natural)
+- **Hours slept:** ~6.75 hours
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Sleep feel (Restful 1-10) / Notes:** Restorative after deep spiritual work
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
-- **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
-- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
-- **Other (Klonopin, etc.):** _______________________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** Taken (confirmed kick-in)
+- **Vitamin C (Time/Dose/Stomach/Effect):** 4 grams at 4:00 PM (yesterday)
+- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ________________
+- **Other (Klonopin, etc.):** 0.5 mg at ~2:30 AM
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
-- **Other notes (neck, appetite, etc.):** ___________________________________
+- **Exercise (pool/gym/walk duration + 10% extra):** TREADMILL: 99 minutes | 4.30 miles | 499 calories | Pace 23:04 min/mi | HR 130 avg | 2.5 mph avg speed | 2.9% avg incline | 303 cal/hr | 4.07 METs
+- **Other notes (neck, appetite, etc.):** Pulsatile tinnitus experienced during 80-min interoceptive session (normal for sensory deprivation work)
 
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
