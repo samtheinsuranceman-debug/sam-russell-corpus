@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,485 clusters · 10,759 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,534 clusters · 10,836 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,827 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,438 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,159 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,856 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,454 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,163 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,485** |
+| **Total** | **5,534** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,447 |
-| Strong | 1,374 |
-| Mixed | 903 |
-| Emerging | 761 |
+| Moderate | 2,470 |
+| Strong | 1,382 |
+| Mixed | 917 |
+| Emerging | 765 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,827)
+## PRACTICES — what strengthens the mind (impact lens)  (2,856)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2854,8 +2854,37 @@
 | 5438 | Prescription EPA: REDUCE-IT vs STRENGTH | 3 | Mixed | 2 | practice: 'Bolsters clusters: cardiovascular event reduction in high-risk hypert |
 | 5439 | Iron for Fatigue in Non-Anemic Iron Deficiency | 2 | Mixed | 2 | practice: 'Bolsters clusters: energy, fatigue reduction in low-ferritin women (s |
 | 5440 | Zinc Lozenges for Cold Duration | 2 | Mixed | 2 | practice: 'Bolsters clusters: cold-symptom duration (form/dose-dependent), immun |
+| 5445 | Outdoor Time Protects Kids' Eyes (Not Blue-Light Fears) | 3 | Moderate | 2 | practice: 'Bolsters clusters: eye health, myopia prevention in children' |
+| 5446 | The 120-Minutes-a-Week Nature Dose | 2 | Moderate | 1 | practice: 'Bolsters clusters: subjective wellbeing, self-reported health, stress |
+| 5447 | A 90-Minute Nature Walk Quiets Rumination | 2 | Emerging | 1 | practice: 'Bolsters clusters: rumination reduction, mood, attention restoration' |
+| 5448 | Cutting Phone Use by One Hour a Day (RCT) | 2 | Moderate | 1 | practice: 'Bolsters clusters: life-satisfaction, physical activity, mood — reduc |
+| 5449 | Video Gaming & Wellbeing (Objective Playtime Data) | 1 | Mixed | 2 | practice: 'Bolsters clusters: affective wellbeing (tiny), leisure, social connec |
+| 5450 | Deactivating Facebook for a Month (Field Experiment) | 2 | Moderate | 1 | practice: 'Bolsters clusters: subjective wellbeing, offline time, political de-p |
+| 5460 | Biofeedback for Dyssynergic Constipation | 4 | Strong | 2 | practice: 'Bolsters clusters: pelvic-floor coordination, chronic constipation re |
+| 5461 | Gut-Directed Hypnotherapy for IBS | 3 | Strong | 2 | practice: 'Bolsters clusters: abdominal pain relief, gut-brain regulation, IBS q |
+| 5462 | Biofeedback for Migraine & Tension Headache | 3 | Moderate | 2 | practice: 'Bolsters clusters: headache frequency reduction, muscle-tension contr |
+| 5463 | MBSR vs Escitalopram for Anxiety | 3 | Strong | 1 | practice: 'Bolsters clusters: anxiety-disorder treatment, non-pharmacological op |
+| 5464 | Clinical Hypnosis for Hot Flashes | 3 | Moderate | 2 | practice: 'Bolsters clusters: vasomotor symptom relief, menopausal quality of li |
+| 5465 | Mindfulness for Cancer-Related Distress | 3 | Moderate | 2 | practice: 'Bolsters clusters: anxiety/depression in cancer, cancer-related fatig |
+| 5466 | Tai Chi for COPD Rehabilitation | 3 | Moderate | 1 | practice: 'Bolsters clusters: exercise capacity, breathlessness/anxiety, pulmona |
+| 5467 | Hypnosis for Children's Needle Procedures | 3 | Moderate | 1 | practice: 'Bolsters clusters: procedural pain relief, distress reduction, coping |
+| 5468 | Kundalini Yoga for Generalized Anxiety | 2 | Moderate | 1 | practice: 'Bolsters clusters: anxiety reduction, arousal regulation, embodied st |
+| 5469 | Hypnosis for Labour Pain | 2 | Mixed | 1 | practice: 'Bolsters clusters: labour coping, reduced analgesic use, birth self-e |
+| 5470 | Yoga for Asthma | 2 | Mixed | 1 | practice: 'Bolsters clusters: asthma quality of life, breath control, symptom co |
+| 5476 | Social Integration & Survival | 4 | Strong | 2 | practice: 'Bolsters clusters: Community, Interpersonal, Social-Perceptual, longe |
+| 5479 | Ikigai — A Reason to Get Up | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential, Intrapersonal, longevity' |
+| 5480 | Purpose in Life as Cognitive Reserve | 3 | Moderate | 2 | practice: 'Bolsters clusters: Meta-Cognitive, Existential, cognitive reserve' |
+| 5481 | Relationship Quality Predicts Late-Life Health | 3 | Moderate | 2 | practice: 'Bolsters clusters: Interpersonal, Emotional, Intrapersonal, longevity |
+| 5483 | Marriage/Partnership & Lower Dementia Risk | 3 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, cognitive reserve, Meta-Cognitive' |
+| 5484 | Social Integration & Biological Risk Across Life | 3 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, systemic health' |
+| 5485 | Residential Green Space & Mortality | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Naturalist, Emotional, longevity' |
+| 5486 | The 20-Minute 'Nature Pill' | 2 | Emerging | 1 | practice: 'Bolsters clusters: Interoceptive, Emotional, stress recovery' |
+| 5487 | Distant Intercessory Prayer for Health | 1 | Mixed | 2 | practice: 'Claimed to bolster: recovery, survival — evidence null' |
+| 5488 | Marital Quality & Physical Health | 2 | Moderate | 1 | practice: 'Bolsters clusters: Interpersonal, Emotional, cardiovascular health' |
+| 5489 | Non-Custodial Grandparenting & Longevity | 2 | Emerging | 1 | practice: 'Bolsters clusters: Parental, Community, Existential, longevity' |
+| 5490 | Volunteering — But Motives Matter | 2 | Mixed | 2 | practice: 'Bolsters clusters: Community, Moral, Existential, longevity' |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,438)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,454)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4297,8 +4326,24 @@
 | 5427 | 'We Only Use 10% of Our Brain' — Debunk | 2 | Strong | 2 | weakness: 'Degrades: scientific literacy, susceptibility to brain-hype products' |
 | 5442 | Alkaline Diet / Alkaline Water for pH & Cancer | 2 | Strong | 1 | weakness: 'Degrades: evidence-based health decisions, money, timely cancer care' |
 | 5443 | Oral Collagen for Skin Aging (Overhyped) | 2 | Mixed | 2 | weakness: 'Degrades: money, evidence-based skincare expectations' |
+| 5451 | Haidt's 'Great Rewiring' Claim vs. the Small-Effect Critique | 4 | Mixed | 3 | weakness: 'Degrades: adolescent mental health — magnitude fiercely contested' |
+| 5452 | Fear of Missing Out (FOMO) | 3 | Moderate | 1 | weakness: 'Degrades: mood, presence, self-regulation of phone use' |
+| 5453 | Passive Scrolling vs. Active Posting | 3 | Mixed | 2 | weakness: 'Degrades: mood via social comparison — but the passive-use hypothesis |
+| 5454 | The 'Digital Native' & 'Great Multitasker' Myths | 3 | Moderate | 1 | weakness: 'Degrades: learning, evidence literacy — assumed tech-fluency is ficti |
+| 5455 | Is 'Smartphone Addiction' Really an Addiction? | 2 | Mixed | 2 | weakness: 'Degrades: diagnostic clarity — the addiction label is likely over-app |
+| 5456 | Screen Time & Teen Wellbeing: The Specification-Curve Verdict | 2 | Strong | 2 | weakness: 'Degrades: mood/wellbeing, life-satisfaction — but the effect is trivi |
+| 5457 | Smartphone 'Brain Drain': The Replication Reality Check | 2 | Mixed | 3 | weakness: 'Degrades: working memory, attention — but the effect largely failed t |
+| 5458 | 'Screens Rewire/Damage the Brain' & 'Digital Heroin' | 1 | Strong | 2 | weakness: 'Degrades: evidence literacy — the brain-damage framing outruns the sc |
+| 5459 | Blue-Light-Blocking Glasses (Honest Verdict: No Benefit) | 1 | Strong | 1 | weakness: 'Degrades: wallet — marketed benefits for eye strain and sleep are uns |
+| 5471 | EEG Neurofeedback for ADHD (Blinded Null) | 3 | Mixed | 2 | weakness: 'Degrades: evidence-based treatment choice, family finances, time' |
+| 5472 | EFT 'Tapping' — Contested Mechanism | 3 | Mixed | 2 | weakness: 'Degrades: mechanistic accuracy, treatment-choice clarity' |
+| 5473 | Ear Candling (Ineffective and Unsafe) | 3 | Mixed | 1 | weakness: 'Degrades: ear health, safety, evidence-based self-care' |
+| 5474 | Crystal Healing (No Credible Evidence) | 2 | Mixed | 2 | weakness: 'Degrades: evidence-based decision-making, financial resources, timely |
+| 5475 | Device-Guided Slow Breathing for BP (Overhyped) | 2 | Mixed | 2 | weakness: 'Degrades: blood-pressure expectations, financial resources' |
+| 5491 | Loneliness → Dementia Risk | 5 | Moderate | 2 | weakness: 'Degrades: cognitive reserve, memory, Meta-Cognitive clarity' |
+| 5492 | Loneliness Rewrites Immune Gene Expression | 4 | Emerging | 2 | weakness: 'Degrades: immune regulation, systemic health, Interoceptive balance' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,159)
+## COST OF FAILURE — what's at stake (harm lens)  (1,163)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5461,6 +5506,10 @@
 | 5430 | High-Dose Vitamin E & Prostate Cancer (SELECT) | 3 | Strong | 2 | cost: 'Degrades: prostate health, cancer-free survival, faith in antioxidant sup |
 | 5436 | Glutathione IV/Oral for Skin Whitening | 3 | Mixed | 2 | cost: 'Degrades: liver/kidney safety (IV), money spent on thin evidence' |
 | 5441 | Calcium Supplements & Cardiovascular Risk | 2 | Mixed | 2 | cost: 'Degrades: cardiovascular safety margin, favorable risk-benefit of bone su |
+| 5444 | Cyberbullying Victimization & Suicidal Ideation | 4 | Strong | 1 | cost: 'Degrades: mood, safety, self-worth — a distinct online harm' |
+| 5477 | Being Unmarried → Worse Cancer Outcomes | 3 | Moderate | 1 | cost: 'Degrades: cancer survival, treatment access, longevity' |
+| 5478 | Low Social Support → Worse Heart-Disease Prognosis | 3 | Moderate | 1 | cost: 'Degrades: cardiac survival, recovery, longevity' |
+| 5482 | Loneliness & Isolation → Heart Disease and Stroke | 3 | Moderate | 2 | cost: 'Degrades: cardiovascular health, Bodily vitality, longevity' |
 
 ## Framework / uncategorized  (61)
 
