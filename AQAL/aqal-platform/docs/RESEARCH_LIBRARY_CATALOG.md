@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**5,440 clusters · 10,680 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**5,485 clusters · 10,759 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 2,804 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,424 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,151 |
+| PRACTICES — what strengthens the mind (impact lens) | 2,827 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,438 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,159 |
 | Framework / uncategorized | 61 |
-| **Total** | **5,440** |
+| **Total** | **5,485** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,438 |
-| Strong | 1,357 |
-| Mixed | 887 |
-| Emerging | 758 |
+| Moderate | 2,447 |
+| Strong | 1,374 |
+| Mixed | 903 |
+| Emerging | 761 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (2,804)
+## PRACTICES — what strengthens the mind (impact lens)  (2,827)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -2831,8 +2831,31 @@
 | 5394 | L-Theanine for Sleep | 2 | Emerging | 2 | practice: 'Bolsters clusters: sleep quality, pre-sleep relaxation, sleep satisfa |
 | 5395 | Sleep & Glymphatic Waste Clearance | 2 | Emerging | 1 | practice: 'Bolsters clusters: brain metabolite clearance, neuroprotection, cogni |
 | 5396 | Acupuncture for Insomnia | 2 | Mixed | 1 | practice: 'Bolsters clusters: sleep quality, insomnia severity, sleep efficiency |
+| 5400 | High-Resistance Inspiratory Muscle Strength Training (IMST) | 3 | Moderate | 2 | practice: 'Bolsters clusters: cardiovascular health, respiratory strength, inter |
+| 5401 | Passive Heat Therapy (Hot-Water Immersion) for Vascular Health | 3 | Moderate | 1 | practice: 'Bolsters clusters: endothelial function, blood pressure, arterial sti |
+| 5402 | Whole-Body Hyperthermia (Single Session) for Depression | 3 | Emerging | 1 | practice: 'Bolsters clusters: mood, emotional regulation, depressive-symptom rel |
+| 5403 | Ice-Slurry Ingestion (Internal Pre-Cooling) for Heat Endurance | 2 | Moderate | 2 | practice: 'Bolsters clusters: heat tolerance, endurance performance, core-temper |
+| 5404 | Menthol Mouth-Rinse Cooling for Endurance in the Heat | 2 | Moderate | 2 | practice: 'Bolsters clusters: thermal comfort, endurance performance in heat, in |
+| 5405 | Local Heat Treatment to Blunt Muscle Loss During Immobilization | 3 | Emerging | 1 | practice: 'Bolsters clusters: muscle preservation, mitochondrial function during |
+| 5414 | The Enactment Effect (Learn by Doing) | 3 | Strong | 1 | practice: 'Bolsters clusters: Gesture Learning, Depth of Processing, Motor Encod |
+| 5415 | The Production Effect (Reading Aloud) | 2 | Strong | 2 | practice: 'Bolsters clusters: Retrieval Practice, Depth of Processing, Self-Expl |
+| 5416 | The Survival Processing Effect | 2 | Strong | 2 | practice: 'Bolsters clusters: Depth of Processing, Elaboration, Self-Reference' |
+| 5417 | Gesturing While Learning Math | 2 | Moderate | 2 | practice: 'Bolsters clusters: Enactment Effect, Dual Coding, Worked Examples' |
+| 5421 | Delayed Acute Exercise & Memory Consolidation | 2 | Emerging | 2 | practice: 'Bolsters clusters: Overnight Memory Consolidation, Aerobic Exercise,  |
+| 5422 | Context-Dependent Memory (Match the Setting) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Encoding Specificity, Retrieval Cues, State-Depend |
+| 5423 | Growth-Mindset Interventions — The Honest Size | 2 | Mixed | 2 | practice: 'Bolsters clusters: Motivation, Effort Beliefs (for at-risk students)' |
+| 5429 | Periconceptional Folic Acid for Neural Tube Defects | 5 | Strong | 2 | practice: 'Bolsters clusters: fetal neurodevelopment, birth-defect prevention, p |
+| 5431 | Plant Sterols / Stanols for LDL Cholesterol | 3 | Strong | 2 | practice: 'Bolsters clusters: lipid control, cardiovascular risk reduction, diet |
+| 5432 | Dietary Fiber & All-Cause Mortality (Dose-Response) | 3 | Strong | 2 | practice: 'Bolsters clusters: longevity, cardiometabolic protection, whole-food  |
+| 5433 | Caffeine as an Ergogenic Aid (Dose Matters) | 3 | Strong | 2 | practice: 'Bolsters clusters: endurance, muscular strength/power, sprint perform |
+| 5434 | Dietary Sodium Reduction for Blood Pressure | 3 | Strong | 2 | practice: 'Bolsters clusters: blood-pressure control, cardiovascular risk reduct |
+| 5435 | Whey Protein & the Leucine Threshold for Muscle | 3 | Strong | 2 | practice: 'Bolsters clusters: hypertrophy, strength gains, lean-mass accretion w |
+| 5437 | Pre-Sleep Casein for Overnight Recovery | 2 | Moderate | 2 | practice: 'Bolsters clusters: overnight muscle protein synthesis, training adapt |
+| 5438 | Prescription EPA: REDUCE-IT vs STRENGTH | 3 | Mixed | 2 | practice: 'Bolsters clusters: cardiovascular event reduction in high-risk hypert |
+| 5439 | Iron for Fatigue in Non-Anemic Iron Deficiency | 2 | Mixed | 2 | practice: 'Bolsters clusters: energy, fatigue reduction in low-ferritin women (s |
+| 5440 | Zinc Lozenges for Cold Duration | 2 | Mixed | 2 | practice: 'Bolsters clusters: cold-symptom duration (form/dose-dependent), immun |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,424)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,438)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4260,8 +4283,22 @@
 | 5380 | Low VO2max Trainability — the Genetic Response Ceiling | 3 | Moderate | 1 | weakness: 'Degrades: aerobic fitness returns, Bodily, Interoceptive' |
 | 5397 | Long Daytime Napping — Cardiometabolic Warning Signal | 4 | Mixed | 1 | weakness: 'Degrades: cardiovascular health, metabolic regulation, longevity' |
 | 5398 | Common Sleep Myths (Debunk) | 3 | Moderate | 1 | weakness: 'Degrades: sleep-health behavior, daytime function, decision-making' |
+| 5406 | Icing Acute Soft-Tissue Injuries (RICE Reconsidered) | 3 | Mixed | 1 | weakness: 'Degrades: evidence-based injury care, healing expectations' |
+| 5407 | Whole-Body Cryotherapy Chambers for Recovery | 3 | Mixed | 1 | weakness: 'Degrades: recovery expectations, spending discipline' |
+| 5408 | 'Alkaline / More-Oxygen' Hyperventilation Breathing — Backwards | 2 | Strong | 1 | weakness: 'Degrades: physiological literacy, breath-body regulation' |
+| 5409 | Cold Plunges 'Melt Fat' — Modest and Overhyped | 2 | Mixed | 1 | weakness: 'Degrades: realistic weight-loss expectations, spending on cold gear' |
+| 5410 | Cold-Water Immersion & Endurance Adaptation (Equivocal) | 2 | Mixed | 2 | weakness: 'Degrades: aerobic training adaptation (uncertain), consistency of rec |
+| 5411 | The 'Control Your Immune System' Overclaim (Wim Hof) | 2 | Mixed | 1 | weakness: 'Degrades: calibrated health beliefs, immune-hype resistance' |
+| 5412 | Oxygenated & Hydrogen 'Functional' Waters | 1 | Mixed | 2 | weakness: 'Degrades: money, evidence-based expectations' |
+| 5413 | Paced Respiration for Menopausal Hot Flashes (Failed RCT) | 1 | Mixed | 1 | weakness: 'Degrades: confidence in breathing as a vasomotor fix' |
+| 5424 | Rereading & the Fluency Illusion | 5 | Strong | 2 | weakness: 'Degrades: study efficiency, self-assessment, retention' |
+| 5425 | Music Training 'Makes Kids Smarter' — Honest Null | 3 | Mixed | 2 | weakness: 'Degrades: realistic expectations, resource allocation' |
+| 5426 | 'Left-Brained vs Right-Brained' Learners — Debunk | 2 | Strong | 2 | weakness: 'Degrades: instructional targeting, scientific literacy' |
+| 5427 | 'We Only Use 10% of Our Brain' — Debunk | 2 | Strong | 2 | weakness: 'Degrades: scientific literacy, susceptibility to brain-hype products' |
+| 5442 | Alkaline Diet / Alkaline Water for pH & Cancer | 2 | Strong | 1 | weakness: 'Degrades: evidence-based health decisions, money, timely cancer care' |
+| 5443 | Oral Collagen for Skin Aging (Overhyped) | 2 | Mixed | 2 | weakness: 'Degrades: money, evidence-based skincare expectations' |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,151)
+## COST OF FAILURE — what's at stake (harm lens)  (1,159)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5416,6 +5453,14 @@
 | 5373 | Post-Workout Cold-Water Immersion Blunts Muscle Gains | 2 | Moderate | 1 | cost: 'Degrades: Strength & Resistance Training, hypertrophy, anabolic signaling |
 | 5384 | OTC Antihistamine Sleep Aids (Diphenhydramine, Doxylamine) | 3 | Moderate | 1 | cost/weakness: 'Degrades: sleep quality, next-day cognition, long-term brain hea |
 | 5386 | OTC Melatonin Mislabeling & Dose Chaos | 2 | Strong | 1 | cost/weakness: 'Degrades: dosing accuracy, product trust, pediatric safety' |
+| 5399 | Hyperventilation Before Breath-Hold → Shallow-Water Blackout | 5 | Strong | 2 | cost: 'Degrades: survival, airway safety, judgment of air hunger' |
+| 5418 | Media Multitasking While Studying | 2 | Moderate | 2 | cost: 'Degrades: comprehension, note quality, GPA, working memory' |
+| 5419 | Screen Inferiority for Study Reading | 2 | Moderate | 2 | cost: 'Degrades: comprehension of expository text, calibration' |
+| 5420 | Test Anxiety & Exam Performance | 2 | Moderate | 2 | cost: 'Degrades: exam performance, working memory, retrieval' |
+| 5428 | Beta-Carotene Supplements in Smokers (Harm) | 5 | Strong | 2 | cost: 'Degrades: lung health, cancer-free survival, trust in antioxidant hype' |
+| 5430 | High-Dose Vitamin E & Prostate Cancer (SELECT) | 3 | Strong | 2 | cost: 'Degrades: prostate health, cancer-free survival, faith in antioxidant sup |
+| 5436 | Glutathione IV/Oral for Skin Whitening | 3 | Mixed | 2 | cost: 'Degrades: liver/kidney safety (IV), money spent on thin evidence' |
+| 5441 | Calcium Supplements & Cardiovascular Risk | 2 | Mixed | 2 | cost: 'Degrades: cardiovascular safety margin, favorable risk-benefit of bone su |
 
 ## Framework / uncategorized  (61)
 
