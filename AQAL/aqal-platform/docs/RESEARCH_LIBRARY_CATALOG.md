@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**6,021 clusters · 11,592 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**6,085 clusters · 11,684 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,160 |
-| WEAKNESS LINES — what collapses a goal (threat lens) | 1,573 |
-| COST OF FAILURE — what's at stake (harm lens) | 1,227 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,209 |
+| WEAKNESS LINES — what collapses a goal (threat lens) | 1,580 |
+| COST OF FAILURE — what's at stake (harm lens) | 1,235 |
 | Framework / uncategorized | 61 |
-| **Total** | **6,021** |
+| **Total** | **6,085** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,611 |
-| Strong | 1,575 |
-| Mixed | 1,022 |
+| Moderate | 2,627 |
+| Strong | 1,607 |
+| Mixed | 1,038 |
 | Emerging | 813 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,160)
+## PRACTICES — what strengthens the mind (impact lens)  (3,209)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3187,8 +3187,57 @@
 | 5973 | Melatonin for Migraine Prevention | 2 | Mixed | 2 | practice: 'Bolsters clusters: migraine prevention, low-cost prophylaxis, sleep-l |
 | 5974 | Aerobic Exercise for Migraine Prevention | 2 | Moderate | 2 | practice: 'Bolsters clusters: migraine-frequency reduction, non-drug prophylaxis |
 | 5975 | Yoga as Add-On Therapy for Migraine | 2 | Moderate | 2 | practice: 'Bolsters clusters: headache-frequency reduction, non-drug adjunct, di |
+| 5980 | Hydroxychloroquine — The SLE Anchor Drug | 4 | Strong | 2 | practice: 'Bolsters clusters: lupus flare prevention, organ protection, foundati |
+| 5981 | Treat-to-Target / Tight Control in RA (TICORA) | 4 | Strong | 1 | practice: 'Bolsters clusters: RA remission, joint-damage prevention, DMARD escal |
+| 5982 | Secukinumab — IL-17A Blockade in Ankylosing Spondylitis | 4 | Strong | 1 | practice: 'Bolsters clusters: axial SpA symptom control, non-TNF option, ASAS re |
+| 5983 | Tocilizumab — IL-6 Receptor Blockade in RA | 4 | Strong | 2 | practice: 'Bolsters clusters: RA disease control, biologic monotherapy option, A |
+| 5984 | Ustekinumab — IL-12/23 Blockade in Crohn's Disease | 4 | Strong | 1 | practice: 'Bolsters clusters: Crohn's remission, anti-TNF-refractory rescue, dur |
+| 5985 | Ocrelizumab — B-Cell Depletion in Relapsing MS | 4 | Strong | 1 | practice: 'Bolsters clusters: MS relapse reduction, disability slowing, high-eff |
+| 5986 | Rituximab for ANCA-Associated Vasculitis (RAVE) | 4 | Strong | 1 | practice: 'Bolsters clusters: vasculitis remission, cyclophosphamide-sparing, re |
+| 5987 | Vedolizumab — Gut-Selective Biologic for Ulcerative Colitis | 4 | Strong | 1 | practice: 'Bolsters clusters: UC remission, mucosal healing, gut-selective safet |
+| 5989 | Low-Dose Colchicine for Gout Flares & Prophylaxis | 3 | Strong | 1 | practice: 'Bolsters clusters: gout flare relief, urate-lowering start cover, fla |
+| 5990 | JAK Inhibitors for RA — Effective, but the ORAL Surveillance Signal | 4 | Mixed | 1 | practice: 'Bolsters clusters: oral RA control, TNF-refractory options, rapid sym |
+| 5991 | Belimumab — BLyS Inhibition Add-On for Lupus | 3 | Strong | 2 | practice: 'Bolsters clusters: SLE responder rate, flare reduction, steroid-spari |
+| 5992 | Natalizumab for Relapsing MS — Large Effect, PML Tradeoff | 5 | Mixed | 1 | practice: 'Bolsters clusters: MS relapse reduction, disability slowing, highly-a |
+| 5993 | Exclusive Enteral Nutrition for Pediatric Crohn's | 4 | Strong | 1 | practice: 'Bolsters clusters: Crohn's remission induction, mucosal healing, grow |
+| 5994 | Crohn's Disease Exclusion Diet + Partial Enteral Nutrition | 3 | Moderate | 1 | practice: 'Bolsters clusters: Crohn's remission, tolerable diet therapy, EEN alt |
+| 5995 | Aerobic & Strength Exercise as RA Adjunct | 2 | Moderate | 1 | practice: 'Bolsters clusters: RA function, aerobic capacity, muscle strength' |
+| 5996 | Omega-3 Fish Oil in RA — Modest, NSAID-Sparing | 2 | Moderate | 2 | practice: 'Bolsters clusters: RA symptom relief (small), NSAID reduction, inflam |
+| 5997 | Selenium for Hashimoto's — Antibody Drop, Unclear Clinical Payoff | 2 | Mixed | 1 | practice: 'Bolsters clusters: TPO-antibody reduction (surrogate), Hashimoto adju |
+| 6002 | Direct-Acting Antivirals Curing Hepatitis C | 5 | Strong | 2 | practice: 'Bolsters clusters: HCV cure, liver-mortality reduction, HCC risk redu |
+| 6003 | ACE Inhibitors / ARBs for Proteinuric CKD | 4 | Strong | 2 | practice: 'Bolsters clusters: proteinuria reduction, CKD-progression slowing, ES |
+| 6004 | Antiviral Suppression of Hepatitis B to Prevent HCC | 4 | Strong | 1 | practice: 'Bolsters clusters: HBV suppression, cirrhosis prevention, liver-cance |
+| 6005 | SGLT2 Inhibitors to Slow CKD Progression | 4 | Strong | 2 | practice: 'Bolsters clusters: kidney-function preservation, ESRD prevention, ren |
+| 6006 | 7-10% Weight Loss to Reverse Fatty Liver (MASLD/NASH) | 4 | Strong | 2 | practice: 'Bolsters clusters: liver steatosis reversal, NASH resolution, fibrosi |
+| 6008 | Vaginal Estrogen for Recurrent UTI (Postmenopausal) | 3 | Moderate | 1 | practice: 'Bolsters clusters: recurrent-UTI prevention, urogenital-atrophy rever |
+| 6009 | High Fluid Intake (>2.5L Urine) to Prevent Kidney Stones | 3 | Strong | 1 | practice: 'Bolsters clusters: kidney-stone recurrence prevention, urinary diluti |
+| 6010 | Normal-Calcium, Low-Sodium, Low-Protein Diet for Stones | 3 | Strong | 1 | practice: 'Bolsters clusters: calcium-oxalate stone prevention, urinary oxalate  |
+| 6011 | Potassium Citrate for Recurrent Calcium Stones | 3 | Strong | 2 | practice: 'Bolsters clusters: calcium-stone prevention, urinary citrate, renal h |
+| 6012 | Alcohol Abstinence & Liver Recompensation | 4 | Moderate | 2 | practice: 'Bolsters clusters: liver recompensation, steatosis resolution, surviv |
+| 6013 | Resmetirom (Rezdiffra) for MASH with Fibrosis | 3 | Moderate | 1 | practice: 'Bolsters clusters: NASH resolution, fibrosis improvement, liver-direc |
+| 6015 | Methenamine Hippurate for Recurrent UTI (ALTAR) | 2 | Moderate | 1 | practice: 'Bolsters clusters: recurrent-UTI prevention, antibiotic stewardship' |
+| 6016 | Coffee Consumption & Lower Liver Fibrosis Risk | 2 | Moderate | 2 | practice: 'Bolsters clusters: hepatic fibrosis protection, cirrhosis risk reduct |
+| 6017 | Cranberry Products for UTI Prevention (Honest Update) | 2 | Moderate | 1 | practice: 'Bolsters clusters: urinary-tract-infection prevention, antibiotic-spa |
+| 6022 | Smoking Cessation Slows COPD Lung-Function Decline | 5 | Strong | 1 | practice: 'Bolsters clusters: COPD progression, lung function, survival, respira |
+| 6023 | Long-Term Oxygen Therapy for Severe Hypoxemic COPD | 4 | Strong | 2 | practice: 'Bolsters clusters: survival, COPD management, exercise tolerance' |
+| 6024 | Anti-IL5 Biologics for Severe Eosinophilic Asthma | 4 | Strong | 2 | practice: 'Bolsters clusters: asthma exacerbation reduction, steroid-sparing, se |
+| 6025 | Dupilumab (Anti-IL4/IL13) for Type 2 Severe Asthma | 4 | Strong | 1 | practice: 'Bolsters clusters: asthma exacerbation reduction, lung function, ster |
+| 6027 | Mandibular Advancement Devices for Mild-Moderate OSA | 3 | Strong | 2 | practice: 'Bolsters clusters: sleep-disordered breathing, snoring, daytime sleep |
+| 6028 | Triple Inhaled Therapy (LABA/LAMA/ICS) for COPD | 3 | Strong | 2 | practice: 'Bolsters clusters: COPD exacerbation prevention, lung function, survi |
+| 6029 | Azithromycin Add-On for Persistent Uncontrolled Asthma | 3 | Moderate | 1 | practice: 'Bolsters clusters: asthma exacerbation reduction, quality of life, ad |
+| 6030 | Antifibrotics (Pirfenidone / Nintedanib) for IPF | 3 | Strong | 2 | practice: 'Bolsters clusters: IPF progression, lung-function preservation, disea |
+| 6031 | Positional Therapy for Supine-Predominant OSA | 2 | Moderate | 1 | practice: 'Bolsters clusters: sleep-disordered breathing, positional OSA, snorin |
+| 6032 | Weight Loss for Obstructive Sleep Apnea | 3 | Strong | 1 | practice: 'Bolsters clusters: sleep-disordered breathing, cardiometabolic health |
+| 6033 | Physiotherapy Breathing Retraining for Asthma Symptoms | 2 | Moderate | 1 | practice: 'Bolsters clusters: asthma quality of life, breathing pattern, symptom |
+| 6034 | E-Cigarettes for Smoking Cessation (Effective, Not Harmless) | 3 | Mixed | 1 | practice: 'Bolsters clusters: smoking cessation, tobacco harm reduction' |
+| 6036 | Hypoglossal Nerve Stimulation (Inspire) for Select OSA | 3 | Moderate | 1 | practice: 'Bolsters clusters: sleep-disordered breathing, daytime sleepiness, CP |
+| 6037 | Airway Clearance Techniques for Bronchiectasis | 2 | Moderate | 2 | practice: 'Bolsters clusters: sputum clearance, exacerbation reduction, respirat |
+| 6038 | CPAP for OSA: Robust Symptom Relief, Unproven CV-Event Reduction | 3 | Mixed | 2 | practice: 'Bolsters clusters: daytime sleepiness, sleep quality, quality of life |
+| 6039 | High-Dose N-Acetylcysteine for COPD Exacerbations | 2 | Mixed | 1 | practice: 'Bolsters clusters: COPD exacerbation prevention, mucolysis, chronic b |
+| 6040 | Roflumilast for Severe COPD with Chronic Bronchitis | 2 | Moderate | 1 | practice: 'Bolsters clusters: COPD exacerbation prevention, chronic bronchitis,  |
+| 6041 | Vitamin D Supplementation for Asthma Exacerbations | 1 | Mixed | 2 | practice: 'Bolsters clusters: asthma exacerbation reduction, respiratory immune  |
 
-## WEAKNESS LINES — what collapses a goal (threat lens)  (1,573)
+## WEAKNESS LINES — what collapses a goal (threat lens)  (1,580)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4765,8 +4814,15 @@
 | 5977 | IgG Food-Sensitivity Elimination Diets for Migraine | 3 | Mixed | 2 | weakness: 'Degrades: dietary freedom, evidence-based care, disposable income' |
 | 5978 | 'Natural Detox / Cleanse Cures for Migraine' | 2 | Mixed | 1 | weakness: 'Degrades: evidence-based decisions, disposable income, nutritional he |
 | 5979 | Essential-Oil / Aromatherapy 'Cures' for Migraine | 2 | Mixed | 1 | weakness: 'Degrades: evidence-based expectations, treatment adherence, disposabl |
+| 5998 | 'Thyroid Support' Glandular Supplements — Hidden Hormone | 5 | Moderate | 1 | cost/weakness: 'Degrades: thyroid stability, symptom interpretation, safe self-d |
+| 5999 | Worm (Trichuris suis ova) Therapy Overclaims | 3 | Mixed | 2 | cost/weakness: 'Degrades: accurate expectations, timely proven therapy, finances |
+| 6000 | Gluten-Free Diet for Non-Celiac Hashimoto's | 2 | Mixed | 1 | cost/weakness: 'Degrades: diet breadth, finances, accurate expectations' |
+| 6001 | Tart Cherry Juice for Gout — Overhyped, Urate-Neutral | 2 | Mixed | 2 | cost/weakness: 'Degrades: accurate flare expectations, finances, reliance on ura |
+| 6021 | Over-Reliance on Thiazides for Stone Prevention (NOSTONE) | 3 | Mixed | 1 | weakness: 'Degrades: evidence-based stone prevention, realistic expectation-sett |
+| 6042 | House-Dust-Mite Avoidance Measures for Asthma (Honest Null) | 2 | Strong | 1 | weakness: 'Degrades: disposable income, evidence-based decisions, effort/time' |
+| 6043 | Lung 'Detox' Teas & Supplements for Smokers | 1 | Strong | 2 | weakness: 'Degrades: disposable income, evidence-based decisions, timely cessati |
 
-## COST OF FAILURE — what's at stake (harm lens)  (1,227)
+## COST OF FAILURE — what's at stake (harm lens)  (1,235)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -5997,6 +6053,14 @@
 | 5921 | Gerson Therapy & Coffee Enemas for Cancer | 3 | Strong | 1 | cost: 'Degrades: cancer-free survival, electrolyte/fluid safety, timely treatmen |
 | 5948 | Apple Cider Vinegar Soaks for Eczema (Harmful, No Benefit) | 2 | Strong | 2 | cost: 'Degrades: skin barrier integrity, eczema control, skin safety' |
 | 5958 | Opioids & Butalbital as First-Line Migraine Treatment | 4 | Strong | 2 | cost: 'Degrades: episodic-migraine stability, treatment response, quality of lif |
+| 5988 | Stem-Cell 'Immune Reset' Tourism for Autoimmune Disease | 4 | Mixed | 2 | cost/weakness: 'Degrades: finances, safety, evidence-based care-seeking' |
+| 6007 | Herbal & Weight-Loss Supplement Hepatotoxicity | 3 | Strong | 2 | cost: 'Degrades: liver health, survival in severe cases, medication safety' |
+| 6014 | Gallbladder/Liver 'Flush' (Olive Oil + Epsom Salt) | 2 | Strong | 1 | cost: 'Degrades: accurate self-treatment, timely gallstone care, finances' |
+| 6018 | 'Kidney Cleanse' / Detox Flushes (Parsley, Dandelion) | 2 | Mixed | 2 | cost: 'Degrades: finances, evidence-based kidney care, renal safety' |
+| 6019 | 'Liver Detox' & Juice Cleanses | 2 | Mixed | 2 | cost: 'Degrades: finances, evidence-based health decisions, liver safety' |
+| 6020 | Milk Thistle (Silymarin) as a Broad Liver Cure | 1 | Mixed | 1 | cost: 'Degrades: finances, realistic treatment expectations' |
+| 6026 | 'Ozone Therapy' for Respiratory Disease | 3 | Strong | 2 | cost: 'Degrades: respiratory function, airway health, disposable income' |
+| 6035 | Essential-Oil Diffusing to 'Treat' Asthma | 2 | Mixed | 2 | cost: 'Degrades: asthma control, airway reactivity, indoor air quality' |
 
 ## Framework / uncategorized  (61)
 
