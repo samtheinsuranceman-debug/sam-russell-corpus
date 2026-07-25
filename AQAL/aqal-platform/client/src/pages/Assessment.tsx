@@ -122,69 +122,83 @@ const QUESTIONS_SOURCE: {
   },
   {
     id: 14,
+    title: "The Seven Perfect Things",
+    text: "Picture your life a few years out and seven things are just completely dialed in — your version of perfect, not fantasy-perfect. Say the first seven that come to mind, fast, out loud — the work, the money, the people, the body, the home, the everyday, whatever's yours. Don't overthink the order. Which one, if you're honest, matters more than all the rest? And which one surprised you by making the list?",
+    dimension: "Life Vision",
+    axes: [6, 8, 4, 17, 25, 31, 7],
+  },
+  {
+    id: 15,
     title: "The Dream Concert",
     text: "You throw one impossible concert — any artists, any era, alive or dead, your stage, your crowd, your city. Who opens? Who headlines? Where's it held, and what's the moment the whole crowd loses its mind?",
     dimension: "Sound & Spectacle",
     axes: [14, 25, 30, 11, 17, 2, 4],
   },
   {
-    id: 15,
+    id: 16,
     title: "The Mentor Windfall",
     text: "You're given $20 million and one year, one mission: take a young person with raw talent and zero resources and change the whole trajectory of their life. Who do you pick? What do you pour in first — and what do you deliberately make them earn? What's the one lesson you make sure they carry for forty years? How do you know when to push and when to let them fall?",
     dimension: "Nurture & Legacy",
     axes: [28, 12, 17, 31, 26, 4, 10],
   },
   {
-    id: 16,
+    id: 17,
     title: "Two People You Love",
     text: "Two people you love are in conflict, and each wants you on their side. First, get inside both: describe each one's real grievance so well they'd say 'yes — that's exactly it.' What's the thing neither is saying out loud? Now you get one private conversation with each. Here's the real game: can you open both their eyes enough that they actually understand each other — a resolution where both win? Walk me through how. And if it can't be saved cleanly — how do you tell?",
     dimension: "Peacemaking",
     axes: [12, 11, 5, 17, 3, 26, 9],
   },
   {
-    id: 17,
+    id: 18,
     title: "The Negotiation",
     text: "You want something badly and the only person who can give it is a tough, sharp negotiator across the table. What's the thing you want? What's your opening move? What do you offer that they didn't expect? Where do you refuse to budge?",
     dimension: "Clean Competition",
     axes: [23, 17, 18, 26, 11, 13, 5],
   },
   {
-    id: 18,
+    id: 19,
     title: "The Charm Offensive",
     text: "There's an inner circle — a family, a crew — that's wary of outsiders, and you've got one dinner to win them over. How do you walk in? What do you bring? What's the first thing you do to make them relax? What's the moment you know you're in?",
     dimension: "Presence & Warmth",
     axes: [29, 26, 12, 11, 13, 19, 25],
   },
   {
-    id: 19,
+    id: 20,
+    title: "The Goal Pre-Mortem",
+    text: "Give me your top five or so real goals right now — the ones you'd actually chase if you got dead serious. Say them as they come. Now be honest: for each one, how hard is it really — a layup, an uphill climb, or a long shot? And here's the useful part — take your biggest one and name the three or four things most likely to sabotage it: the ways you've watched yourself trip before, or the stuff outside your control. Say them out loud now, so we can catch them coming.",
+    dimension: "Goals & Pre-Mortem",
+    axes: [17, 5, 4, 23, 20, 6, 31],
+  },
+  {
+    id: 21,
     title: "The Peak-You Year",
     text: "One year from today you're going to be at your absolute peak — strongest, sharpest, most alive you've ever been — and it's entirely down to how you spend this year. What's the first thing you build or change this month? Who do you bring into your corner? What do you cut out completely? Walk me through an ordinary Tuesday at month three, month nine, and the anniversary.",
     dimension: "Building Yourself",
     axes: [4, 17, 20, 21, 19, 11, 5],
   },
   {
-    id: 20,
+    id: 22,
     title: "The Underdog Bet",
     text: "Everyone says the thing you want to do is impossible — too late, too risky, not for someone like you. You decide to prove them dead wrong. What's the thing? Who's the loudest voice saying no? What's your very first move to start proving them wrong? What does it feel like the day it starts working?",
     dimension: "Grit & Proving Them Wrong",
     axes: [20, 4, 23, 17, 24, 19, 26],
   },
   {
-    id: 21,
+    id: 23,
     title: "The Signature Move",
     text: "Everybody's got a thing they do better than the people around them — the way you tell a story, cook one dish, close a deal, fix a problem, calm a room. What's yours? Show me — walk me through you doing it at your absolute best. How'd you get that good without really trying?",
     dimension: "Mastery",
     axes: [15, 6, 25, 11, 5, 4, 7],
   },
   {
-    id: 22,
+    id: 24,
     title: "The Founder's Grip",
     text: "You built something real from nothing — a little world that works. What is it, and where were you taking it? Now someone inside — loyal, shares the original vision — wants to pull it somewhere that doesn't sit right with you. What's driving them, really — ego, or a frustration with you that might be fair? Can you feel the difference in your body? At what point does the person who started something need to loosen their grip — and does that feel like wisdom or like loss?",
     dimension: "Vision & Letting Go",
     axes: [30, 17, 11, 5, 24, 4, 9],
   },
   {
-    id: 23,
+    id: 25,
     title: "The Unsaid Thing",
     text: "There's something you've been carrying — for weeks, maybe years — that you need to say to someone. Not cruel, just true. What is it? Where do you feel the weight of it in your body? If you were going to say it, what are the exact words? Walk me through their face, their first response. And why haven't you said it yet — is it protecting them, or protecting you?",
     dimension: "Honest Voice",
@@ -192,14 +206,14 @@ const QUESTIONS_SOURCE: {
     soloOnly: true,
   },
   {
-    id: 24,
+    id: 26,
     title: "The Standing Ovation",
     text: "Fast-forward to a night, years from now, where a whole room is on its feet applauding you for something you actually did. What are they clapping for? Who's in the front row? What did it cost you to get there? What are you feeling as you stand there?",
     dimension: "Achievement & Cost",
     axes: [4, 8, 7, 20, 11, 25, 10],
   },
   {
-    id: 25,
+    id: 27,
     title: "The Torch You Pass",
     text: "At the very end of a long, full life, you get to hand one thing to the people who come after you — a lesson, a value, a way of being, a single sentence. You're smiling. What do you pass them? Who's standing there to receive it? And what do you hope they do with it?",
     dimension: "Legacy",
@@ -223,7 +237,7 @@ const QUESTIONS_SOURCE: {
 //   12 The Tense Table, 13 The Wedding Chaos, 16 The Stranger — the weakest
 //   overlaps / partner-or-married assumptions. Swapped in: 25–32.
 const QUESTION_ORDER = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
 ];
 const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
 
