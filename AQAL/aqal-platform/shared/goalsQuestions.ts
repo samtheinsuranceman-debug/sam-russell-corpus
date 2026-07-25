@@ -13,10 +13,10 @@
 // This module centralizes the mapping so there is ONE place to update, and
 // Assessment.tsx asserts (in dev) that the order still matches these values.
 
-export const GOALS_QUESTION_IDS = [33, 34] as const;
+export const GOALS_QUESTION_IDS = [13] as const;
 
 /** 0-based positions of the goals questions within QUESTION_ORDER (display order). */
-export const GOALS_QUESTION_INDICES = [12, 13] as const;
+export const GOALS_QUESTION_INDICES = [12] as const;
 
 /** True if a stored response (by its display-order index) is a goals/outcomes answer. */
 export function isGoalsResponse(questionIndex: number | null | undefined): boolean {
