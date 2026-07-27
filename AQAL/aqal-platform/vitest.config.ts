@@ -14,6 +14,11 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["server/**/*.test.ts", "server/**/*.spec.ts"],
+    include: [
+      "server/**/*.test.ts",
+      "server/**/*.spec.ts",
+      // Pure-data integrity tests (no DOM) can live under client/ too.
+      "client/src/pages/archetypesData.test.ts",
+    ],
   },
 });
