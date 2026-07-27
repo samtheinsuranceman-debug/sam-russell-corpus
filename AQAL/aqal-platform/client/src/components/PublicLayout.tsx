@@ -25,6 +25,7 @@ const navLinks: NavItem[] = [
     { href: "/blind-side", label: "Blind-Side Analyzer" },
     { href: "/synergy-report", label: "Synergy Report" },
     { href: "/research-library", label: "Research Library" },
+    { href: "/archetypes", label: "Intelligence Archetypes" },
     { href: "/verification", label: "Verification Ledger" },
   ]},
   { href: "/leaderboard", label: "Leaderboard" },
