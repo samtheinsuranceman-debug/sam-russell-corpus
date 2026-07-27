@@ -20,7 +20,7 @@ export type ArchetypeSource = {
 
 export type Archetype = {
   id: string;
-  kind: "archetype" | "isolation" | "connection" | "starvation";
+  kind: "archetype" | "isolation" | "connection" | "starvation" | "integrated";
   name: string;
   highLines: string[];          // our-model line names
   lowLines: string[];           // the starved lines (archetype entries)
@@ -1120,6 +1120,7 @@ export const ARCHETYPES: Archetype[] = [
 export const archetypeProfiles = () => ARCHETYPES.filter((a) => a.kind === "archetype");
 export const isolationFindings = () => ARCHETYPES.filter((a) => a.kind === "isolation" || a.kind === "connection");
 export const starvationCards = () => ARCHETYPES.filter((a) => a.kind === "starvation");
+export const integratedProfiles = () => ARCHETYPES.filter((a) => a.kind === "integrated");
 /** The one line a starvation card is about (its lowLines[0]), for lookup by lowest axis. */
 export const starvationForLine = (line: string) =>
   ARCHETYPES.find((a) => a.kind === "starvation" && a.lowLines?.[0] === line);

@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { useMemo, useState } from "react";
-import { ARCHETYPES, archetypeProfiles, isolationFindings, starvationCards, type Archetype, type ArchetypeSource } from "./archetypesData";
+import { ARCHETYPES, archetypeProfiles, isolationFindings, starvationCards, integratedProfiles, type Archetype, type ArchetypeSource } from "./archetypesData";
 
 // ============================================================
 // Intelligence Archetype Profiles — the evidence "before/after"
@@ -130,10 +130,31 @@ function StarvationCard({ a }: { a: Archetype }) {
   );
 }
 
+function IntegratedCard({ a }: { a: Archetype }) {
+  return (
+    <div className="rounded-2xl border border-accent/30 bg-accent/[0.05] p-6 sm:p-7">
+      <h3 className="text-2xl sm:text-3xl text-foreground mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>{a.name}</h3>
+      <div className="mb-4"><LineChips label="Developed together" lines={a.highLines} tone="high" /></div>
+      <p className="text-sm text-foreground/80 leading-relaxed mb-4">{a.pattern}</p>
+      <p className="text-sm text-foreground/75 leading-relaxed mb-2">
+        <span className="text-accent/80">What it produces: </span>{a.connectionCase}
+        {a.growthMeasures ? <span className="text-accent/70"> — {a.growthMeasures}</span> : null}
+      </p>
+      {a.untreatedTrajectory && (
+        <p className="text-xs text-muted-foreground/60 leading-relaxed">
+          <span className="uppercase tracking-wide text-[0.58rem] text-muted-foreground/50">Without the integration:</span> {a.untreatedTrajectory}
+        </p>
+      )}
+      <Sources sources={a.sources} />
+    </div>
+  );
+}
+
 export default function Archetypes() {
   const profiles = useMemo(archetypeProfiles, []);
   const findings = useMemo(isolationFindings, []);
   const starved = useMemo(starvationCards, []);
+  const integrated = useMemo(integratedProfiles, []);
   const sourceCount = useMemo(() => ARCHETYPES.reduce((n, a) => n + (a.sources?.length || 0), 0), []);
 
   return (
@@ -213,6 +234,22 @@ export default function Archetypes() {
           <p className="mt-16 text-sm text-muted-foreground/60 italic">
             The evidence dossier is being assembled.
           </p>
+        )}
+
+        {/* The integrated profiles — the "after" the platform engineers toward */}
+        {integrated.length > 0 && (
+          <section className="mt-20">
+            <h2 className="text-2xl sm:text-3xl text-foreground mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
+              When the lines work together
+            </h2>
+            <p className="text-sm text-muted-foreground/70 mb-8 max-w-2xl">
+              The other side of the evidence: what the research shows is possible when the lines
+              are developed <em>together</em> — the profile the whole platform is built to help you become.
+            </p>
+            <div className="space-y-6">
+              {integrated.map((a) => <IntegratedCard key={a.id} a={a} />)}
+            </div>
+          </section>
         )}
 
         {/* Close */}
