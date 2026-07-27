@@ -619,6 +619,154 @@ function VoiceCapture({
 }
 
 // ============================================================
+// MANIFESTO GATE — "why this test is different", shown once before Q1.
+// Primes the member to go deep: every prior test measured ONE line; this one
+// measures all 32, including the atrophied ones — and depth of answer is the
+// whole measurement. Voice-first framing.
+// ============================================================
+function AssessmentManifesto({ companion, onBegin }: { companion: boolean; onBegin: () => void }) {
+  return (
+    <div className="min-h-screen bg-background relative overflow-y-auto flex flex-col">
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse at 50% 30%, oklch(0.15 0.02 55) 0%, oklch(0.13 0.02 55) 45%, oklch(0.12 0.02 55) 100%)`,
+        }}
+      />
+      <div className="gradient-mesh" />
+
+      <div className="relative z-10 flex-1 flex flex-col items-center px-5 py-14 sm:py-20">
+        <div className="max-w-2xl w-full">
+          <motion.p
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-[0.62rem] uppercase tracking-[0.22em] text-primary/70 mb-4"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+          >
+            Before you begin — read this once
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="text-3xl sm:text-4xl leading-tight text-foreground mb-8"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}
+          >
+            Every test you&rsquo;ve ever taken measured <em>one</em> thing.<br />
+            This one measures all thirty-two.
+          </motion.h1>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="space-y-5 text-[0.95rem] sm:text-base text-foreground/80 leading-relaxed"
+          >
+            <p>
+              A math exam had one right answer — you knew it or you didn&rsquo;t. It was testing your{" "}
+              <span className="text-foreground">mathematical</span> intelligence, and nothing else. The SAT handed you
+              words; knowing what they meant tested your <span className="text-foreground">linguistic</span> intelligence,
+              and nothing else. When an English or debate class asked you to write a paper, that was richer — it might
+              have measured five or six at once: linguistic, logical, strategic, moral, maybe adversarial. Still a
+              handful.
+            </p>
+
+            <div className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-5">
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-primary/70 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                What we&rsquo;re actually doing
+              </p>
+              <p>
+                We are measuring <span className="text-foreground font-medium">all thirty-two known lines of intelligence</span> —
+                and quite frankly, some of these are muscles you&rsquo;ve never used, or that have atrophied over the years.
+                So when a question positions you to reach into one of them, lifting five pounds is going to feel very, very
+                heavy. We respect that, and we know it. We&rsquo;re just going to ask you to lift that five pounds as best
+                you can — once, twice, three times. Pull it off the ground and press it all the way overhead. We&rsquo;re
+                measuring the strength not only of your strongest intelligences, but of the weakest ones you almost never
+                tap in any of your decisions.
+              </p>
+            </div>
+
+            <p>
+              That&rsquo;s why some of these questions will be more demanding — emotionally, cognitively, mentally — than
+              any test you&rsquo;ve taken. Those were always singular and narrow. This one is broad <em>and</em> deep. But
+              it&rsquo;s also far more rewarding: it hands you the map, the blueprint, the architecture of your own mind —
+              and then draws protocols and procedures from a curated database of <span className="text-foreground">7,000
+              therapeutic prescriptions</span>, each with cited resources from verified researchers, to help you reach your
+              goals, outcomes, and visions in less time, with less failure, fewer tangents, and less wasted energy.
+            </p>
+
+            <p>
+              To do that, we need to <span className="text-foreground">MRI your mind</span> — something no test has done
+              before. And the way we run that MRI is by handing you whole worlds to build, expand, explain, imagine,
+              explore, and tell stories about. Play with them. Build them as large and as detailed as you can. Make each
+              one as much an expression of <em>you</em> as possible. The more you give — the longer you talk, the more
+              involved you get, the more you color and construct the world you&rsquo;re handed — the more there is for our
+              panel of independent, non-AI-and-AI underwriters to observe and argue over: which intelligences poke their
+              head above the water, and what developmental stage each one is operating at.
+            </p>
+
+            <div className="rounded-2xl border border-accent/20 bg-accent/[0.05] p-5">
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-accent/80 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                The one rule that decides everything
+              </p>
+              <p>
+                If you give short answers, we can&rsquo;t measure anything — you&rsquo;ll simply score a zero. One-minute
+                answers make for a boring assessment and a level-one reading on everything. But{" "}
+                <span className="text-foreground font-medium">the more you give to the assessment, the more it gives back
+                to you — for the rest of your life</span>. It will surface the weaknesses that can quietly undermine every
+                one of your strengths. That&rsquo;s worth it.
+              </p>
+            </div>
+
+            <p>
+              Aim for <span className="text-foreground">five to ten minutes on each question</span>, and really get
+              involved. If you have to come back five days in a row and answer four at a time, do it. If it takes you two
+              weeks, it takes you two weeks — your progress is saved. This is not a normal exam. There are no right or
+              wrong answers. It&rsquo;s all about how you <em>play</em> — how you&rsquo;d color, construct, and build the
+              world around you, given the one you&rsquo;re handed.
+            </p>
+
+            <p className="text-foreground/90">Have fun. Then begin.</p>
+          </motion.div>
+
+          {companion && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+              className="mt-6 text-sm text-muted-foreground/70 border-l-2 border-primary/25 pl-4"
+            >
+              You&rsquo;re doing this with a companion. When a question&rsquo;s signal light is green, invite them in —
+              their view of you from the outside is part of the measurement.
+            </motion.p>
+          )}
+
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-10 flex flex-col items-center gap-3"
+          >
+            <Button
+              onClick={onBegin}
+              size="lg"
+              className="bg-primary text-primary-foreground rounded-full px-10 py-6 text-base hover:translate-y-[-1px] transition-transform"
+            >
+              I understand — let&rsquo;s begin
+            </Button>
+            <p className="text-muted-foreground/40 text-xs">
+              Voice-first. No typing required. Your data is encrypted end-to-end.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
 // MAIN ASSESSMENT PAGE
 // ============================================================
 export default function Assessment() {
@@ -738,6 +886,8 @@ export default function Assessment() {
   // PROGRESS PERSISTENCE — Save/resume from localStorage
   // ============================================================
   const [showResumeDialog, setShowResumeDialog] = useState(false);
+  // The "why this test is different" manifesto gate, shown once before Q1.
+  const [showManifesto, setShowManifesto] = useState(true);
 
   useEffect(() => {
     const saved = localStorage.getItem('aqal_assessment_progress');
@@ -772,6 +922,7 @@ export default function Assessment() {
       } catch {}
     }
     setShowResumeDialog(false);
+    setShowManifesto(false); // resuming mid-assessment: skip the intro
   }, []);
 
   const handleStartFresh = useCallback(() => {
@@ -1754,6 +1905,13 @@ export default function Assessment() {
         </motion.div>
       </div>
     );
+  }
+
+  // ============================================================
+  // MANIFESTO GATE — shown once before the first question (not on resume).
+  // ============================================================
+  if (showManifesto && !showResumeDialog) {
+    return <AssessmentManifesto companion={companionMode} onBegin={() => setShowManifesto(false)} />;
   }
 
   // ============================================================
