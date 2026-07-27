@@ -176,13 +176,33 @@ export default function Archetypes() {
         </p>
         {sourceCount > 0 && (
           <p className="text-xs text-muted-foreground/50 mt-4" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-            {profiles.length} archetype profiles · {starved.length} per-line studies · {findings.length} on isolation &amp; connection · {sourceCount} cited sources
+            {profiles.length} archetype profiles · {starved.length} per-line studies · {findings.length} on isolation &amp; connection · {integrated.length} integrated · {sourceCount} cited sources
           </p>
+        )}
+
+        {/* Sticky section jump-nav — the dossier is long; let people skip to the part they need */}
+        {sourceCount > 0 && (
+          <nav className="sticky top-14 z-30 -mx-5 sm:-mx-8 px-5 sm:px-8 py-2.5 mt-8 bg-background/85 backdrop-blur-md border-y border-border/30 flex flex-wrap gap-x-5 gap-y-1.5 text-xs"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            {[
+              profiles.length > 0 && { href: "#profiles", label: `Profiles (${profiles.length})` },
+              starved.length > 0 && { href: "#per-line", label: `Per-line (${starved.length})` },
+              findings.length > 0 && { href: "#connection", label: `Connection (${findings.length})` },
+              integrated.length > 0 && { href: "#integrated", label: `Integrated (${integrated.length})` },
+            ].filter(Boolean).map((item) => {
+              const it = item as { href: string; label: string };
+              return (
+                <a key={it.href} href={it.href} className="text-muted-foreground/60 hover:text-accent transition-colors uppercase tracking-[0.1em]">
+                  {it.label}
+                </a>
+              );
+            })}
+          </nav>
         )}
 
         {/* Archetype profiles */}
         {profiles.length > 0 && (
-          <section className="mt-16">
+          <section id="profiles" className="mt-16 scroll-mt-28">
             <h2 className="text-2xl sm:text-3xl text-foreground mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
               The Profiles
             </h2>
@@ -198,7 +218,7 @@ export default function Archetypes() {
 
         {/* Per-line starvation — what your LOWEST axis costs you */}
         {starved.length > 0 && (
-          <section className="mt-20">
+          <section id="per-line" className="mt-20 scroll-mt-28">
             <h2 className="text-2xl sm:text-3xl text-foreground mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
               When a line runs empty
             </h2>
@@ -215,7 +235,7 @@ export default function Archetypes() {
 
         {/* The isolation / connection science — the matching case */}
         {findings.length > 0 && (
-          <section className="mt-20">
+          <section id="connection" className="mt-20 scroll-mt-28">
             <h2 className="text-2xl sm:text-3xl text-foreground mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
               Why connection isn't optional
             </h2>
@@ -238,7 +258,7 @@ export default function Archetypes() {
 
         {/* The integrated profiles — the "after" the platform engineers toward */}
         {integrated.length > 0 && (
-          <section className="mt-20">
+          <section id="integrated" className="mt-20 scroll-mt-28">
             <h2 className="text-2xl sm:text-3xl text-foreground mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
               When the lines work together
             </h2>
