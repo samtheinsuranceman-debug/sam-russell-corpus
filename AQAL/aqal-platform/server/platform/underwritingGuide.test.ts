@@ -40,4 +40,11 @@ describe("underwriting guide", () => {
     expect(merged.indexOf("UNDERWRITING GUIDE")).toBeLessThan(merged.indexOf(base));
     expect(merged).toContain(base);
   });
+
+  it("injects the AQAL stage-development ladder alongside the line cues", () => {
+    const merged = withUnderwritingGuide("BASE");
+    expect(merged).toContain("STAGE-DEVELOPMENT FRAMEWORK");
+    expect(merged).toContain("Achiever");
+    expect(merged).toContain("Strategist");
+  });
 });

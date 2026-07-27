@@ -16,6 +16,8 @@
 // injected only into the system prompt of the scoring/coaching AI calls. Do not
 // import it from anything under client/ or expose it through a tRPC procedure.
 
+import { stageFrameworkText } from "./stageFramework";
+
 export const UNDERWRITING_GUIDE_VERSION = "1.0.0";
 
 // ------------------------------------------------------------
@@ -97,8 +99,9 @@ Only flag a cross-line combination when the SAME answer shows two lines working 
 Apply this manual, then produce your stage band and per-line scores with honest, evidence-anchored reasoning.`;
 }
 
-// Convenience: fold the guide into an existing system instruction so every AI in
-// the panel (and the reliability + coaching scorers) reads from the same manual.
+// Convenience: fold BOTH manuals (the 32-line verbal cues and the AQAL stage-
+// development ladder) into an existing system instruction, so every AI in the
+// panel and the reliability scorer reads from the same underwriting manual.
 export function withUnderwritingGuide(baseSystem: string): string {
-  return `${underwritingGuideText()}\n\n---\n\n${baseSystem}`;
+  return `${underwritingGuideText()}\n\n---\n\n${stageFrameworkText()}\n\n---\n\n${baseSystem}`;
 }
