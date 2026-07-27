@@ -10,6 +10,7 @@
 // live provider; `makeLlmScorer()` wires it to the real scoring call.
 
 import { invokeLLM } from "../platform/llm";
+import { withUnderwritingGuide } from "../platform/underwritingGuide";
 import { ALL_AXES } from "@shared/axisModes";
 
 export type AxisScore = { axisName: string; score: number; confidence: number };
@@ -105,7 +106,7 @@ export function makeLlmScorer(transcript: string, model?: string): Scorer {
     const result = await invokeLLM({
       model,
       messages: [
-        { role: "system", content: "You are a rigorous developmental psychologist. Score conservatively. Always return valid JSON." },
+        { role: "system", content: withUnderwritingGuide("You are a rigorous developmental psychologist. Score conservatively. Always return valid JSON.") },
         {
           role: "user",
           content:

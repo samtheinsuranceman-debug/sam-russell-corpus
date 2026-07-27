@@ -32,6 +32,7 @@ import { fetchLiveCitations } from "./platform/liveResearch";
 import { generateOutcomeReport } from "./coaching";
 import { invokeLLM } from "./platform/llm";
 import type { InvokeParams } from "./platform/llm";
+import { withUnderwritingGuide } from "./platform/underwritingGuide";
 import { generateSocialCardSVG } from "./socialCard";
 import { transcribeAudio } from "./platform/transcribe";
 import {
@@ -427,7 +428,7 @@ Respond in JSON format.`;
           const llmStart = Date.now();
           const invokeParams: InvokeParams = {
             messages: [
-              { role: "system" as const, content: "You are a rigorous developmental psychologist. You score conservatively and honestly. You never inflate scores. Most people score in the 0.3-0.5 range. Only extraordinary responses get above 0.7. Always respond with valid JSON." },
+              { role: "system" as const, content: withUnderwritingGuide("You are a rigorous developmental psychologist. You score conservatively and honestly. You never inflate scores. Most people score in the 0.3-0.5 range. Only extraordinary responses get above 0.7. Always respond with valid JSON.") },
               { role: "user" as const, content: analysisPrompt },
             ],
             response_format: {
