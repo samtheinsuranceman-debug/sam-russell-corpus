@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { useMemo, useState } from "react";
-import { ARCHETYPES, archetypeProfiles, isolationFindings, type Archetype, type ArchetypeSource } from "./archetypesData";
+import { ARCHETYPES, archetypeProfiles, isolationFindings, starvationCards, type Archetype, type ArchetypeSource } from "./archetypesData";
 
 // ============================================================
 // Intelligence Archetype Profiles — the evidence "before/after"
@@ -108,9 +108,32 @@ function FindingCard({ a }: { a: Archetype }) {
   );
 }
 
+function StarvationCard({ a }: { a: Archetype }) {
+  const line = a.lowLines?.[0] || "";
+  return (
+    <div className="rounded-xl border border-border/50 bg-card/30 p-5">
+      <div className="flex items-baseline justify-between gap-3 mb-2">
+        <h4 className="text-lg text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>{a.name}</h4>
+        <span className="shrink-0 px-2 py-0.5 rounded-full text-[0.6rem] border border-red-500/25 text-red-300/80 bg-red-500/[0.05]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          low {line}
+        </span>
+      </div>
+      <p className="text-sm text-foreground/75 leading-relaxed mb-2">
+        <span className="text-red-300/70">The cost: </span>{a.untreatedTrajectory}
+      </p>
+      <p className="text-sm text-foreground/75 leading-relaxed">
+        <span className="text-accent/80">The lift: </span>{a.connectionCase}
+        {a.growthMeasures ? <span className="text-accent/70"> — {a.growthMeasures}</span> : null}
+      </p>
+      <Sources sources={a.sources} />
+    </div>
+  );
+}
+
 export default function Archetypes() {
   const profiles = useMemo(archetypeProfiles, []);
   const findings = useMemo(isolationFindings, []);
+  const starved = useMemo(starvationCards, []);
   const sourceCount = useMemo(() => ARCHETYPES.reduce((n, a) => n + (a.sources?.length || 0), 0), []);
 
   return (
@@ -132,7 +155,7 @@ export default function Archetypes() {
         </p>
         {sourceCount > 0 && (
           <p className="text-xs text-muted-foreground/50 mt-4" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-            {profiles.length} documented profiles · {findings.length} findings on isolation &amp; connection · {sourceCount} cited sources
+            {profiles.length} archetype profiles · {starved.length} per-line studies · {findings.length} on isolation &amp; connection · {sourceCount} cited sources
           </p>
         )}
 
@@ -148,6 +171,23 @@ export default function Archetypes() {
             </p>
             <div className="space-y-6">
               {profiles.map((a) => <ArchetypeCard key={a.id} a={a} />)}
+            </div>
+          </section>
+        )}
+
+        {/* Per-line starvation — what your LOWEST axis costs you */}
+        {starved.length > 0 && (
+          <section className="mt-20">
+            <h2 className="text-2xl sm:text-3xl text-foreground mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
+              When a line runs empty
+            </h2>
+            <p className="text-sm text-muted-foreground/70 mb-8 max-w-2xl">
+              You don't have to be low on many lines for it to bite — one starved line, especially
+              your <em>lowest</em>, has documented costs of its own. Here's what the research says
+              each one does when it's the weakest link, and what lifts it.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-5">
+              {starved.map((a) => <StarvationCard key={a.id} a={a} />)}
             </div>
           </section>
         )}
