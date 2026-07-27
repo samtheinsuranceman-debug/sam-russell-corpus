@@ -43,6 +43,80 @@ function Sources({ sources }: { sources: ArchetypeSource[] }) {
   );
 }
 
+// Honest, graded summary of what the whole dossier actually supports. Grounded
+// in the collected literature; the tiers are deliberately conservative.
+type EvidenceTier = "Strong" | "Moderate" | "Mixed" | "Contested";
+const TIER_STYLE: Record<EvidenceTier, string> = {
+  Strong: "border-emerald-500/30 text-emerald-300/90 bg-emerald-500/[0.07]",
+  Moderate: "border-accent/30 text-accent/90 bg-accent/[0.06]",
+  Mixed: "border-amber-500/30 text-amber-300/90 bg-amber-500/[0.06]",
+  Contested: "border-red-500/30 text-red-300/85 bg-red-500/[0.06]",
+};
+const EVIDENCE_CLAIMS: { tier: EvidenceTier; claim: string; detail: string }[] = [
+  {
+    tier: "Strong",
+    claim: "Social connection predicts health and longevity.",
+    detail: "Multiple large meta-analyses (Holt-Lunstad 2010, 2015) find isolation raises mortality risk on the order of smoking. Mostly observational and vulnerable to reverse causation — but the direction and size are highly consistent.",
+  },
+  {
+    tier: "Strong",
+    claim: "Human ability is uneven, so one-number testing misses most of the person.",
+    detail: "Tilt and twice-exceptional research (SMPY; 2e literature) show a person can be extraordinary on one line and starved on another. A single g/IQ score cannot represent that.",
+  },
+  {
+    tier: "Moderate",
+    claim: "Connecting people to fitting peers, mentors, and environments helps — modestly.",
+    detail: "Mentoring (DuBois g≈0.21), belonging interventions, ability grouping (g≈0.37 for gifted), and person-environment fit are real but usually small-to-moderate, heterogeneous, and sometimes fade. We do not oversell this.",
+  },
+  {
+    tier: "Moderate",
+    claim: "Being identified — finally named — changes the trajectory.",
+    detail: "Late ADHD/autism diagnosis and affect-labeling research show naming a pattern brings relief and direction. Labeling also carries documented downsides (stigma, self-limiting beliefs); both are real.",
+  },
+  {
+    tier: "Mixed",
+    claim: "Similarity/same-line matching is a benefit AND a cost.",
+    detail: "Homophily builds trust and support but narrows information and can cap the top tier (McPherson 2001; Gompers 2017). Matching works best when strengths are complementary, not merely alike.",
+  },
+  {
+    tier: "Contested",
+    claim: "The neural and hormonal 'why' is not settled.",
+    detail: "The social-pain/physical-pain overlap (Eisenberger 2003) has been challenged (Woo 2014); much oxytocin research does not replicate (Nave 2015). We cite these as suggestive mechanism, not proof.",
+  },
+  {
+    tier: "Contested",
+    claim: "Most of this evidence is WEIRD-sampled.",
+    detail: "Findings lean on Western, educated samples (Henrich 2010). The isolation→mortality link replicates in direction but attenuates in Asia and is barely tested in Africa or South America. Generalization is a genuine open question.",
+  },
+];
+
+function EvidenceSynthesis() {
+  return (
+    <section id="evidence" className="mt-14 scroll-mt-28 rounded-2xl border border-border/50 bg-card/30 p-6 sm:p-8">
+      <h2 className="text-2xl sm:text-3xl text-foreground mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
+        State of the evidence — read this first
+      </h2>
+      <p className="text-sm text-muted-foreground/70 mb-6 max-w-2xl">
+        Below are hundreds of real citations. They do not all carry the same weight, and we refuse to pretend
+        they do. Here is the honest grade on what this body of work actually supports — strongest to shakiest.
+      </p>
+      <div className="space-y-3">
+        {EVIDENCE_CLAIMS.map((c, i) => (
+          <div key={i} className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4 border-l border-border/40 pl-4">
+            <span className={`shrink-0 mt-0.5 px-2.5 py-0.5 rounded-full text-[0.6rem] uppercase tracking-[0.12em] border ${TIER_STYLE[c.tier]}`} style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              {c.tier}
+            </span>
+            <div>
+              <p className="text-sm text-foreground/90 font-medium leading-snug">{c.claim}</p>
+              <p className="text-xs text-muted-foreground/65 leading-relaxed mt-0.5">{c.detail}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function LineChips({ label, lines, tone }: { label: string; lines: string[]; tone: "high" | "low" }) {
   if (!lines?.length) return null;
   const cls = tone === "high"
@@ -185,6 +259,7 @@ export default function Archetypes() {
           <nav className="sticky top-14 z-30 -mx-5 sm:-mx-8 px-5 sm:px-8 py-2.5 mt-8 bg-background/85 backdrop-blur-md border-y border-border/30 flex flex-wrap gap-x-5 gap-y-1.5 text-xs"
             style={{ fontFamily: "'JetBrains Mono', monospace" }}>
             {[
+              { href: "#evidence", label: "Evidence grade" },
               profiles.length > 0 && { href: "#profiles", label: `Profiles (${profiles.length})` },
               starved.length > 0 && { href: "#per-line", label: `Per-line (${starved.length})` },
               findings.length > 0 && { href: "#connection", label: `Connection (${findings.length})` },
@@ -199,6 +274,9 @@ export default function Archetypes() {
             })}
           </nav>
         )}
+
+        {/* State-of-evidence synthesis — the honest thesis before the card dump */}
+        {sourceCount > 0 && <EvidenceSynthesis />}
 
         {/* Archetype profiles */}
         {profiles.length > 0 && (
