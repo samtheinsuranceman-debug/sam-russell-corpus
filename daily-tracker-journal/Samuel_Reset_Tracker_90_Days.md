@@ -1210,7 +1210,10 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 - **Other (Klonopin, etc.):** 0.5 mg at ~2:30 AM
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** TREADMILL: 99 minutes | 4.30 miles | 499 calories | Pace 23:04 min/mi | HR 130 avg | 2.5 mph avg speed | 2.9% avg incline | 303 cal/hr | 4.07 METs
+- **Exercise (pool/gym/walk duration + 10% extra):** TREADMILL — 2 sessions
+  - Session 1: 99 min | 4.30 mi | 499 cal | 128 bpm avg | 2.5 mph | 2.9% incline | 674 ft vertical | METs 4.07
+  - Session 2 (short): 15 min | 0.66 mi | 56 cal | 125 bpm avg | 2.6 mph | 0.0% incline
+  - **DAILY TOTAL: 114 min | 4.96 mi | 555 cal | 674 ft vertical**
 - **Other notes (neck, appetite, etc.):** Pulsatile tinnitus experienced during 80-min interoceptive session (normal for sensory deprivation work)
 
 ### Business / Productivity
@@ -1239,7 +1242,6 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 <div style='page-break-after: always;'></div>
 
 ## Day 20 - 2026-07-25 (Saturday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
 
 ### Sleep & Wake
@@ -1256,7 +1258,9 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 - **Other (Klonopin, etc.):** _______________________________________________
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
+- **Exercise (pool/gym/walk duration + 10% extra):** TREADMILL — 1 session
+  - Session 1: 99 min | 4.09 mi | 482 cal | 115 bpm avg | 2.4 mph | 2.9% incline | 651 ft vertical | METs 3.93
+  - **DAILY TOTAL: 99 min | 4.09 mi | 482 cal | 651 ft vertical**
 - **Other notes (neck, appetite, etc.):** ___________________________________
 
 ### Business / Productivity
@@ -1302,7 +1306,10 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 - **Other (Klonopin, etc.):** _______________________________________________
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
+- **Exercise (pool/gym/walk duration + 10% extra):** TREADMILL — 2 sessions
+  - Session 1: 99 min | 3.73 mi | 449 cal | 142 bpm avg | 2.2 mph | 2.9% incline | 592 ft vertical
+  - Session 2: 99 min | 4.13 mi | 448 cal | 112 bpm avg | 2.5 mph | 2.0% incline | 461 ft vertical
+  - **DAILY TOTAL: 198 min (3h18m) | 7.86 mi | 897 cal | 1,053 ft vertical**
 - **Other notes (neck, appetite, etc.):** ___________________________________
 
 ### Business / Productivity
@@ -1374,10 +1381,13 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 - **Other (Klonopin, etc.):** _______________________________________________
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** TREADMILL — 2 sessions
-  - Session 1: 99 min | 3.73 mi | 449 cal | 142 bpm avg | 2.2 mph | 2.9% incline | 592 ft vertical
-  - Session 2: 99 min | 4.13 mi | 448 cal | 112 bpm avg | 2.5 mph | 2.0% incline | 461 ft vertical
-  - **DAILY TOTAL: 198 min (3h18m) | 7.86 mi | 897 cal | 1,053 ft vertical**
+- **Exercise (pool/gym/walk duration + 10% extra):** TREADMILL — 4 sessions (1 duplicate removed)
+  - Session 1: 99 min | 4.29 mi | 437 cal | 88 bpm avg | 2.5 mph | 1.5% incline | 357 ft vertical
+  - Session 2: 99 min | 4.09 mi | 441 cal | 116 bpm avg | 2.4 mph | 2.0% incline | 443 ft vertical
+  - Session 3: 99 min | 4.08 mi | 355 cal | 125 bpm avg | 2.4 mph | 0.0% incline
+  - Session 4: 63 min | 2.73 mi | 233 cal | 94 bpm avg | 2.5 mph | 0.0% incline
+  - **DAILY TOTAL: 360 min (6h00m) | 15.19 mi | 1,466 cal | 800 ft vertical**
+  - **NOTE: Original data had 5 sessions but Sessions 3 & 4 were identical (4.08 mi, 355 cal, 125 bpm, 2.4 mph, 0.0%) — duplicate removed.**
 - **Other notes (neck, appetite, etc.):** ___________________________________
 
 ### Business / Productivity
@@ -1417,19 +1427,17 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** 30mg short-release taken at 2:00 PM
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** TREADMILL — 4 sessions (1 duplicate removed)
-  - Session 1: 99 min | 4.29 mi | 437 cal | 88 bpm avg | 2.5 mph | 1.5% incline | 357 ft vertical
-  - Session 2: 99 min | 4.09 mi | 441 cal | 116 bpm avg | 2.4 mph | 2.0% incline | 443 ft vertical
-  - Session 3: 99 min | 4.08 mi | 355 cal | 125 bpm avg | 2.4 mph | 0.0% incline
-  - Session 4: 63 min | 2.73 mi | 233 cal | 94 bpm avg | 2.5 mph | 0.0% incline
-  - **DAILY TOTAL: 360 min (6h00m) | 15.19 mi | 1,466 cal | 800 ft vertical**
-  - **NOTE: Original data had 5 sessions but Sessions 3 & 4 were identical (4.08 mi, 355 cal, 125 bpm, 2.4 mph, 0.0%) — duplicate removed.**
+- **Exercise (pool/gym/walk duration + 10% extra):** TREADMILL — 3 sessions
+  - Session 1: 99 min | 4.08 mi | 355 cal | 122 bpm avg | 2.4 mph | 0.0% incline
+  - Session 2: 20 min | 0.82 mi | 71 cal | 2.4 mph | 0.0% incline
+  - Session 3: 99 min | 4.09 mi | 471 cal | 112 bpm avg | 2.4 mph | 2.7% avg incline
+  - **DAILY TOTAL: 218 min (3h38m) | 8.99 mi | 897 cal**
 - **Other notes (neck, appetite, etc.):** ___________________________________
 
 ### Business / Productivity
@@ -1469,17 +1477,13 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** 30mg short-release taken at 2:00 PM
+- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** TREADMILL — 3 sessions
-  - Session 1: 99 min | 4.08 mi | 355 cal | 122 bpm avg | 2.4 mph | 0.0% incline
-  - Session 2: 20 min | 0.82 mi | 71 cal | 2.4 mph | 0.0% incline
-  - Session 3: 99 min | 4.09 mi | 471 cal | 112 bpm avg | 2.4 mph | 2.7% avg incline
-  - **DAILY TOTAL: 218 min (3h38m) | 8.99 mi | 897 cal**
+- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
 
 ### Business / Productivity
