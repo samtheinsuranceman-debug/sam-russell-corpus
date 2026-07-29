@@ -1843,235 +1843,180 @@ _____________________________________________________________________________
 _____________________________________________________________________________
 _____________________________________________________________________________
 ## Day 31 - 2026-08-05 (Wednesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 32 - 2026-08-06 (Thursday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 33 - 2026-08-07 (Friday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 34 - 2026-08-08 (Saturday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 35 - 2026-08-09 (Sunday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 
 ## WEEK 5 REVIEW (Days 29-35: 2026-08-03 - 2026-08-09)
 ### Weekly Metrics
@@ -2095,327 +2040,250 @@ _____________________________________________________________________________
 ---
 <div style="page-break-after: always;"></div>
 ## Day 36 - 2026-08-10 (Monday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 37 - 2026-08-11 (Tuesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 38 - 2026-08-12 (Wednesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 39 - 2026-08-13 (Thursday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 40 - 2026-08-14 (Friday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 41 - 2026-08-15 (Saturday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 42 - 2026-08-16 (Sunday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 
 ## WEEK 6 REVIEW (Days 36-42: 2026-08-10 - 2026-08-16)
 ### Weekly Metrics
@@ -2439,327 +2307,250 @@ _____________________________________________________________________________
 ---
 <div style="page-break-after: always;"></div>
 ## Day 43 - 2026-08-17 (Monday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 44 - 2026-08-18 (Tuesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 45 - 2026-08-19 (Wednesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 46 - 2026-08-20 (Thursday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 47 - 2026-08-21 (Friday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 48 - 2026-08-22 (Saturday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 49 - 2026-08-23 (Sunday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 
 ## WEEK 7 REVIEW (Days 43-49: 2026-08-17 - 2026-08-23)
 ### Weekly Metrics
@@ -2783,327 +2574,250 @@ _____________________________________________________________________________
 ---
 <div style="page-break-after: always;"></div>
 ## Day 50 - 2026-08-24 (Monday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 51 - 2026-08-25 (Tuesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 52 - 2026-08-26 (Wednesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 53 - 2026-08-27 (Thursday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 54 - 2026-08-28 (Friday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 55 - 2026-08-29 (Saturday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 56 - 2026-08-30 (Sunday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 
 ## WEEK 8 REVIEW (Days 50-56: 2026-08-24 - 2026-08-30)
 ### Weekly Metrics
@@ -3127,327 +2841,250 @@ _____________________________________________________________________________
 ---
 <div style="page-break-after: always;"></div>
 ## Day 57 - 2026-08-31 (Monday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 58 - 2026-09-01 (Tuesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 59 - 2026-09-02 (Wednesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 60 - 2026-09-03 (Thursday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 61 - 2026-09-04 (Friday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 62 - 2026-09-05 (Saturday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 63 - 2026-09-06 (Sunday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 
 ## WEEK 9 REVIEW (Days 57-63: 2026-08-31 - 2026-09-06)
 ### Weekly Metrics
@@ -3471,327 +3108,250 @@ _____________________________________________________________________________
 ---
 <div style="page-break-after: always;"></div>
 ## Day 64 - 2026-09-07 (Monday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 65 - 2026-09-08 (Tuesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 66 - 2026-09-09 (Wednesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 67 - 2026-09-10 (Thursday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 68 - 2026-09-11 (Friday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 69 - 2026-09-12 (Saturday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 70 - 2026-09-13 (Sunday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 
 ## WEEK 10 REVIEW (Days 64-70: 2026-09-07 - 2026-09-13)
 ### Weekly Metrics
@@ -3815,327 +3375,250 @@ _____________________________________________________________________________
 ---
 <div style="page-break-after: always;"></div>
 ## Day 71 - 2026-09-14 (Monday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 72 - 2026-09-15 (Tuesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 73 - 2026-09-16 (Wednesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 74 - 2026-09-17 (Thursday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 75 - 2026-09-18 (Friday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 76 - 2026-09-19 (Saturday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 77 - 2026-09-20 (Sunday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 
 ## WEEK 11 REVIEW (Days 71-77: 2026-09-14 - 2026-09-20)
 ### Weekly Metrics
@@ -4159,327 +3642,250 @@ _____________________________________________________________________________
 ---
 <div style="page-break-after: always;"></div>
 ## Day 78 - 2026-09-21 (Monday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 79 - 2026-09-22 (Tuesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 80 - 2026-09-23 (Wednesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 81 - 2026-09-24 (Thursday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 82 - 2026-09-25 (Friday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 83 - 2026-09-26 (Saturday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 84 - 2026-09-27 (Sunday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 
 ## WEEK 12 REVIEW (Days 78-84: 2026-09-21 - 2026-09-27)
 ### Weekly Metrics
@@ -4503,278 +3909,212 @@ _____________________________________________________________________________
 ---
 <div style="page-break-after: always;"></div>
 ## Day 85 - 2026-09-28 (Monday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 86 - 2026-09-29 (Tuesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 87 - 2026-09-30 (Wednesday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 88 - 2026-10-01 (Thursday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 89 - 2026-10-02 (Friday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
 ## Day 90 - 2026-10-03 (Saturday)
-
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
-
 ### Sleep & Wake
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
 - **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
-
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
-
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** ________________________
 - **Other notes (neck, appetite, etc.):** ___________________________________
-
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
 - **Commissions update (Ralph wire/12k annuity/solar):** ____________________
 - **AI analysis done (calls/videos uploaded):** _____________________________
 - **Key win / lesson / money action:** ______________________________________
-
 ### Social / Dating / Family
 - **Church-girl action today (contact/script/progress):** ___________________
 - **Dad / Mom interaction note:** ___________________________________________
 - **Dating confidence / layup feel 1-10:** __________________________________
 - **Notes:** ________________________________________________________________
-
 ### Compounding & Mindset
 - **10% extra habit done (what?):** _________________________________________
 - **Self-script used or insight:** __________________________________________
 - **Gratitude / biggest pattern noticed:** __________________________________
-
 ### Evening Review
 - **What worked that I double tomorrow?** ___________________________________
 - **One adjustment for tomorrow?** __________________________________________
-
 ---
-
 <div style="page-break-after: always;"></div>
-
