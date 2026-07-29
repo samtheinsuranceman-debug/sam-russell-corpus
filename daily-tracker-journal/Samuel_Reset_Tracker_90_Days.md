@@ -1293,14 +1293,14 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Bedtime:** Possibly no sleep (short-acting Adderall binge began)
+- **Wake time (natural? vs 11 AM):** N/A — may not have slept
+- **Hours slept:** 0 (possible) — uncertain, Sam doesn’t remember clearly
+- **Dreams (nightmare/neutral/positive/sex/vivid):** N/A
+- **Sleep feel (Restful 1-10) / Notes:** Possible start of 36-48hr no-sleep stretch. Doctor prescribed extra bottle of short-acting Adderall 30mg and Sam overused it.
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** XR 60mg (2x30mg) + short-acting 30mg (extra bottle from doctor)
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
@@ -1368,14 +1368,14 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Bedtime:** DID NOT SLEEP — confirmed all-nighter (Mon night into Tue)
+- **Wake time (natural? vs 11 AM):** N/A — never went to bed
+- **Hours slept:** 0
+- **Dreams (nightmare/neutral/positive/sex/vivid):** N/A
+- **Sleep feel (Restful 1-10) / Notes:** Confirmed no-sleep night. Short-acting Adderall 30mg driving the binge. 6-hour treadmill day (15+ miles) on zero sleep — stimulant-fueled.
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** XR 60mg (2x30mg) + short-acting 30mg (multiple doses likely)
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
 - **Other (Klonopin, etc.):** _______________________________________________
@@ -1420,11 +1420,11 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Bedtime:** Recovery crash (Tue night into Wed morning)
+- **Wake time (natural? vs 11 AM):** _______ (Wed Jul 29)
+- **Hours slept:** Extended recovery sleep after 24-48hr deprivation
+- **Dreams (nightmare/neutral/positive/sex/vivid):** VIVID — “tons of dreams” reported. Classic REM rebound after stimulant-driven sleep deprivation. Details not captured (too late by morning).
+- **Sleep feel (Restful 1-10) / Notes:** Recovery sleep. Brain catching up on 2-3 nights of missed REM cycles. This is the night the vivid dreams occurred.
 
 ### Meds / Supps Timing (Key Experiment)
 - **Adderall XR (Time/Dose/Extra/Skipped):** 30mg short-release taken at 2:00 PM
