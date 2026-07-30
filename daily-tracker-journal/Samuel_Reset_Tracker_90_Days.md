@@ -1516,21 +1516,23 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 **Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Bedtime:** ~8:30 PM Wed (Klonopin 2mg taken, phone put away)
+- **Wake time (natural? vs 11 AM):** 10 AM → back to sleep → 12 PM (natural, recovery pattern)
+- **Hours slept:** ~15 hours total (8:30 PM to 12 PM with one waking at 10 AM)
+- **Dreams (nightmare/neutral/positive/sex/vivid):** VIVID — 2 dreams recalled at 3:30 AM:
+  1. A computer had access to Sam's dreams, interpreting/compiling them weeks at a time, tracking 30 days and placing them in sequence (Self-integration archetype)
+  2. With Nicole at indoor venue (bowling alley). Left, came back with people. Nicole gone. Building transformed into different activity rooms. Mood unclear.
+- **Sleep feel (Restful 1-10) / Notes:** Recovery sleep night 2 of 2. REM rebound continuing. Brain processing the Adderall binge + 6-week abstinence break.
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** SKIPPED — intentional. Awareness of binge pattern. Choosing not to take any today.
 - **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
 - **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
-- **Other (Klonopin, etc.):** _______________________________________________
+- **Other (Klonopin, etc.):** 2mg Klonopin at 8:30 PM (Wed night, for sleep)
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
-- **Other notes (neck, appetite, etc.):** ___________________________________
+- **Exercise (pool/gym/walk duration + 10% extra):** REST DAY — right shin inflammation (anterior shin splints from yesterday's 4-hour walk). Ice protocol.
+- **Other notes (neck, appetite, etc.):** Right shin — inflammation over anterior surface, feels like a hard kick. Likely medial tibial stress syndrome from cumulative volume without stretching. WEIGHT: -10 lbs from Day 1 baseline. Need to implement pre/mid/post-walk stretching protocol going forward.
 
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
@@ -1539,19 +1541,19 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 - **Key win / lesson / money action:** ______________________________________
 
 ### Social / Dating / Family
-- **Church-girl action today (contact/script/progress):** ___________________
-- **Dad / Mom interaction note:** ___________________________________________
+- **Church-girl action today (contact/script/progress):** 11 outbound waves sent over past 2 days (7 today, 4 yesterday). Top prospects: Crystal (36), Ashley (33), Sammy Rose, Morgan.
+- **Dad / Mom interaction note:** Breakfast with Dad — 1 hour of family history stories about grandpa, grandma (adolescence/lifestyles), and great-grandpa's lifestyle. Meaningful connection.
 - **Dating confidence / layup feel 1-10:** __________________________________
-- **Notes:** ________________________________________________________________
+- **Notes:** Rule established: dating app usage ONLY during treadmill time. No bedtime scrolling.
 
 ### Compounding & Mindset
-- **10% extra habit done (what?):** _________________________________________
-- **Self-script used or insight:** __________________________________________
-- **Gratitude / biggest pattern noticed:** __________________________________
+- **10% extra habit done (what?):** Rest day — recovery IS the 10% extra today
+- **Self-script used or insight:** "One binge doesn't erase 28 days clean. Relapse with awareness ≠ failure. I'm at mile 27 with a cramp, not back at mile 0."
+- **Gratitude / biggest pattern noticed:** Grateful for 10 lbs lost. Pattern: short-acting Adderall is the trigger — not the XR. The extra bottle from the doctor was the variable that broke the streak.
 
 ### Evening Review
-- **What worked that I double tomorrow?** ___________________________________
-- **One adjustment for tomorrow?** __________________________________________
+- **What worked that I double tomorrow?** Rest + family time. Not taking Adderall.
+- **One adjustment for tomorrow?** Start stretching protocol before any treadmill work. Ice shin again in morning.
 
 ---
 
