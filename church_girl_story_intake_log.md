@@ -397,3 +397,55 @@
 **On bench:** Grandma's Headlock, Santa Discovery, Happy Medium, Nine AIs, St. Patrick's Day
 
 **Next action:** Wait for Sam to finish sending stories, then build next full resequencing with all verified facts.
+
+---
+
+## Story #35: The Bathtub Bite
+
+**The Story:** When Sam was five years old, he was in the bathtub and his dad (Samuel Russell IV) was rinsing him off. For no reason whatsoever, Sam leaped at his dad's hand and bit it as hard as he could. To Sam's profound surprise, his dad immediately bit Sam's hand back with his bigger teeth. Sam started crying immediately. He was shocked — he couldn't believe his dad would bite him. He said, "Why did you do that?" His dad said, "Because you bit me first, and it hurt." Sam never bit his dad ever again.
+
+**Punchline:** "Because you bit me first, and it hurt." — Six words. One lesson. Permanent behavior change.
+
+**Emotions Elicited:** Surprise, Humor, Respect (for the father), Recognition (of effective parenting), Warmth, Trust
+
+**Why It's Strong:**
+
+1. **Immediate, proportional mirroring** — no yelling, no spanking, no lecture. Just a perfect mirror. The dad gave him the exact experience he gave, scaled up just enough to register.
+2. **Empathy through experience** — "it hurt" is the entire curriculum. Sam couldn't understand what biting felt like to receive until he received it. Abstract → concrete in two seconds.
+3. **No anger in the response** — this wasn't punishment. It was communication. That's why Sam remembers the *surprise* more than the pain.
+4. **One trial learning** — it worked permanently. One event, one lesson, never repeated. That's the mark of a master parent.
+5. **Shows the Russell parenting lineage** — Samuel IV didn't read a parenting book. He responded with instinct, clarity, and love. This is where Sam V's directness comes from.
+
+**Preliminary Ratings:**
+
+| Metric | Score | Reasoning |
+|--------|-------|-----------|
+| Emotional Intensity (EI) | 7 | Warm, surprising, slightly funny. Not gut-punch level but deeply human. |
+| Story Engagement (SE) | 8 | Perfect micro-story: setup (bath) → action (bite) → consequence (bite back) → lesson (six words). Under 60 seconds to tell. |
+| Curiosity & Wonder (CW) | 6 | Not unusual per se, but the dad's response is unexpected and memorable. |
+| Trust & Safety (TS) | 9 | Shows Sam comes from a family with clear boundaries AND love. No abuse. Just clarity. |
+| Question Engagement (QE) | 7 | "What's the fastest lesson you ever learned?" / "Did your parents ever surprise you with how they handled something?" |
+| **Average** | **7.4** | |
+
+**Placement Notes:**
+- Best as a BRIEF MENTION or early-sequence story — it's short, punchy, and establishes the Russell family character
+- Could pair with other family stories (Valentine's Day, Santa Discovery) to build the "where Sam comes from" section
+- Shows that Sam's directness and "mirror back what you give me" communication style is INHERITED, not learned from self-help books
+- Works as a trust-builder early in the letter: "This is the family I come from. This is how we communicate."
+- Connects to the dad's family history stories Sam heard today (Day 25) — the Russell lineage is alive and being passed down
+
+**Trait Signals:**
+- Comes from strong family: +1 (father present, engaged, teaching)
+- Honest/Direct communication: +1 (the Russell style — no games, just truth)
+- Self-aware/Growth: +1 (remembers and reflects on childhood with clarity)
+- Funny/Self-deprecating: +1 ("for no reason whatsoever" — he knows he was being a little shit)
+
+---
+
+## Running Vault Status (Updated)
+
+**Total stories in vault:** 35
+**Full standalones awaiting resequence:** #28 (Homeless Guitarist), #29 (Cheesecake Factory), #30 (Hula Hoop), #31 (Witch Airbnb), #33 (Mosh Pit Dance), #34 (Apology Tree)
+**Brief mentions awaiting:** #32 (Bouncer), #35 (Bathtub Bite), Hoarder House extension, Valentine's Day, Mystical Book (optional)
+**On bench:** Grandma's Headlock, Santa Discovery, Happy Medium, Nine AIs, St. Patrick's Day
+**Next action:** Wait for Sam to finish sending stories, then build next full resequencing with all verified facts.
