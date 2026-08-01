@@ -1533,6 +1533,7 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 ### Physical / Body
 - **Exercise (pool/gym/walk duration + 10% extra):** REST DAY — right shin inflammation (anterior shin splints from yesterday's 4-hour walk). Ice protocol.
 - **Other notes (neck, appetite, etc.):** Right shin — inflammation over anterior surface, feels like a hard kick. Likely medial tibial stress syndrome from cumulative volume without stretching. WEIGHT: -10 lbs from Day 1 baseline. Need to implement pre/mid/post-walk stretching protocol going forward.
+- **Bowel movement:** Large, well-formed. Color: medium-dark brown/amber (normal). Consistency: soft, dense mass. Volume: substantial (accumulated during extended recovery sleep + Klonopin slowing GI motility). No blood, no black, no mucus. Healthy.
 
 ### Business / Productivity
 - **Leads / appointments worked:** __________________________________________
