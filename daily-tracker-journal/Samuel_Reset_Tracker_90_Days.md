@@ -1608,45 +1608,45 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 
 ## Day 27 - 2026-08-01 (Saturday)
 
-**Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
+**Energy (1-10):** 7 | **Mood (1-10):** 7 | **Overall Day (1-10):** 7
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Bedtime:** ~3:30 AM (late — Adderall binge recovery)
+- **Wake time (natural? vs 11 AM):** 10 AM, went back to sleep, woke 12 PM
+- **Hours slept:** ~8.5 hrs (fragmented)
+- **Dreams (nightmare/neutral/positive/sex/vivid):** Vivid/sex — 3 dreams logged in dream journal (bedroom/dad, office/gummy girl, motorcycle through mall)
+- **Sleep feel (Restful 1-10) / Notes:** 6 — recovery sleep after binge day
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
-- **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
-- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
-- **Other (Klonopin, etc.):** _______________________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** SKIPPED — recovery day, 0 Adderall
+- **Vitamin C (Time/Dose/Stomach/Effect):** N/A
+- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** N/A
+- **Other (Klonopin, etc.):** Wellbutrin XL 150mg; Klonopin 2mg at bedtime
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
-- **Other notes (neck, appetite, etc.):** ___________________________________
+- **Exercise (pool/gym/walk duration + 10% extra):** No gym — recovery day. Right shin inflammation noted (redness above ankle from prior walking sessions)
+- **Other notes (neck, appetite, etc.):** Ate breakfast with dad, listened to family history stories for 1 hour. Iced shin 45 min. Weighed in: officially 10 lbs lighter than Day 1 of tracker.
 
 ### Business / Productivity
-- **Leads / appointments worked:** __________________________________________
-- **Commissions update (Ralph wire/12k annuity/solar):** ____________________
-- **AI analysis done (calls/videos uploaded):** _____________________________
-- **Key win / lesson / money action:** ______________________________________
+- **Leads / appointments worked:** None — recovery day
+- **Commissions update (Ralph wire/12k annuity/solar):** Pending
+- **AI analysis done (calls/videos uploaded):** N/A
+- **Key win / lesson / money action:** Paid for Catholic Match subscription
 
 ### Social / Dating / Family
-- **Church-girl action today (contact/script/progress):** ___________________
-- **Dad / Mom interaction note:** ___________________________________________
-- **Dating confidence / layup feel 1-10:** __________________________________
-- **Notes:** ________________________________________________________________
+- **Church-girl action today (contact/script/progress):** Miss Armstrong not at church in 6+ weeks. No action.
+- **Dad / Mom interaction note:** Breakfast with dad, listened to family history stories about grandpa/grandma for 1 hour. Quality time.
+- **Dating confidence / layup feel 1-10:** 6
+- **Notes:** Sent wave to Amber (32, NC, 6 mi, Sonographer) on Holy app. Paid Catholic Match subscription. 22 waves sent on Holy Tuesday batch — no responses yet (Day 4, normal window is Day 5-7).
 
 ### Compounding & Mindset
-- **10% extra habit done (what?):** _________________________________________
-- **Self-script used or insight:** __________________________________________
-- **Gratitude / biggest pattern noticed:** __________________________________
+- **10% extra habit done (what?):** Acknowledged relapse (extra Adderall + masturbation) — committed to reset
+- **Self-script used or insight:** "You're not starting over. You're re-continuing."
+- **Gratitude / biggest pattern noticed:** 10 lbs lost. Dad walking 2 miles unprompted (creatine week 2).
 
 ### Evening Review
-- **What worked that I double tomorrow?** ___________________________________
-- **One adjustment for tomorrow?** __________________________________________
+- **What worked that I double tomorrow?** Family connection, honest self-assessment
+- **One adjustment for tomorrow?** Get to church, take only prescribed Adderall dose, walk
 
 ---
 
@@ -1654,45 +1654,48 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 
 ## Day 28 - 2026-08-02 (Sunday)
 
-**Energy (1-10):** _____ | **Mood (1-10):** _____ | **Overall Day (1-10):** _____
+**Energy (1-10):** 8 | **Mood (1-10):** 8 | **Overall Day (1-10):** 9
 
 ### Sleep & Wake
-- **Bedtime:** ______________________________________________________________
-- **Wake time (natural? vs 11 AM):** _______________________________________
-- **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
-- **Sleep feel (Restful 1-10) / Notes:** ____________________________________
+- **Bedtime:** ~11 PM (Sat night)
+- **Wake time (natural? vs 11 AM):** Woke for church/choir
+- **Hours slept:** ~7-8 hrs
+- **Dreams (nightmare/neutral/positive/sex/vivid):** Vivid/sex — 3 dreams logged at 2 AM (see dream journal Day 27/28)
+- **Sleep feel (Restful 1-10) / Notes:** 7 — recovery sleep, good quality
 
 ### Meds / Supps Timing (Key Experiment)
-- **Adderall XR (Time/Dose/Extra/Skipped):** ________________________________
-- **Vitamin C (Time/Dose/Stomach/Effect):** _________________________________
-- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** ______________
-- **Other (Klonopin, etc.):** _______________________________________________
+- **Adderall XR (Time/Dose/Extra/Skipped):** 30mg IR at ~2:30 PM (one pill, correct protocol)
+- **Vitamin C (Time/Dose/Stomach/Effect):** 4g at ~7:30 PM
+- **Steroid/Medrol (Status/Dose/Shoulder Pain 1-10/Mobility):** N/A
+- **Other (Klonopin, etc.):** Wellbutrin XL 150mg; L-Theanine 200mg at ~7:30 PM; Klonopin 2mg at 9:30 PM
 
 ### Physical / Body
-- **Exercise (pool/gym/walk duration + 10% extra):** ________________________
-- **Other notes (neck, appetite, etc.):** ___________________________________
+- **Exercise (pool/gym/walk duration + 10% extra):**
+  - Session 1: 99 min, 3.59 mi, 326 cal, 2.1 mph avg, 0.0% incline, HR 96 bpm (red heart icon)
+  - Session 2: 99 min, 3.43 mi, 315 cal, 2.2 mph, 0.0% incline, HR N/A (no sensor reading)
+  - **DAY TOTAL: 198 min (3h 18m), 7.02 mi, 641 cal, flat**
+- **Other notes (neck, appetite, etc.):** Right shin inflammation (above ankle, visible redness) — holding up well during walking. Low impact protocol working.
 
 ### Business / Productivity
-- **Leads / appointments worked:** __________________________________________
-- **Commissions update (Ralph wire/12k annuity/solar):** ____________________
-- **AI analysis done (calls/videos uploaded):** _____________________________
-- **Key win / lesson / money action:** ______________________________________
+- **Leads / appointments worked:** None — Sunday
+- **Commissions update (Ralph wire/12k annuity/solar):** Pending
+- **AI analysis done (calls/videos uploaded):** N/A
+- **Key win / lesson / money action:** Completed entire Catholic Match profile during treadmill session
 
 ### Social / Dating / Family
-- **Church-girl action today (contact/script/progress):** ___________________
-- **Dad / Mom interaction note:** ___________________________________________
-- **Dating confidence / layup feel 1-10:** __________________________________
-- **Notes:** ________________________________________________________________
+- **Church-girl action today (contact/script/progress):** Saw Bob Armstrong (Miss Armstrong's father) in choir. Did NOT shake his hand — correct decision per coaching. Build genuine relationship with Cindy (choir director) organically.
+- **Dad / Mom interaction note:** Church together. Carried items into hall.
+- **Dating confidence / layup feel 1-10:** 7
+- **Notes:** Catholic Match profile COMPLETED (all text sections). 28 views on CM today. 6 likes, 1 message (all too old/far — passed). Holy app: Amber wave still pending (within normal response window). Catholic Match pool: only ~8 women within 800 km age 24-42; 200+ nationwide. CM confirmed as secondary platform. Holy remains primary.
 
 ### Compounding & Mindset
-- **10% extra habit done (what?):** _________________________________________
-- **Self-script used or insight:** __________________________________________
-- **Gratitude / biggest pattern noticed:** __________________________________
+- **10% extra habit done (what?):** Completed full dating profile during treadmill — multi-tasking at elite level
+- **Self-script used or insight:** "The profile content is platform-agnostic gold. Copy-paste to any future app."
+- **Gratitude / biggest pattern noticed:** 198 min walking on an inflamed shin with zero complaints. Discipline is compounding.
 
 ### Evening Review
-- **What worked that I double tomorrow?** ___________________________________
-- **One adjustment for tomorrow?** __________________________________________
+- **What worked that I double tomorrow?** Low-impact high-volume walking (2.2 mph, 0 incline). Multi-tasking profile work during treadmill.
+- **One adjustment for tomorrow?** Call rehab center 9 AM for completion certificate. Call DMV. Get car back this week.
 
 ---
 
