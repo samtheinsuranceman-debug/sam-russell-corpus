@@ -1568,7 +1568,7 @@ The protocol is working EXACTLY as designed. Three-act progression: (1) Foundati
 - **Bedtime:** ______________________________________________________________
 - **Wake time (natural? vs 11 AM):** _______________________________________
 - **Hours slept:** __________________________________________________________
-- **Dreams (nightmare/neutral/positive/sex/vivid):** ________________________
+- **Dreams (nightmare/neutral/positive/sex/vivid):** VIVID — 2 dreams: (1) Baseball game (outfield, inferior function, home run with partner), (2) Aunt's inheritance (millions distributed by lawyer, psychic energy redistribution). Plus Island/King/Astral Flight dream (see dream journal). All analyzed in dream journal.
 - **Sleep feel (Restful 1-10) / Notes:** ____________________________________
 
 ### Meds / Supps Timing (Key Experiment)

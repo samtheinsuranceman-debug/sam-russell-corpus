@@ -1,4 +1,97 @@
-# Dream Journal — Days 25-26 (July 30-31, 2026)
+# Complete Dream Journal — Days 1-28
+## Samuel Russell V — 90-Day Reset
+### July 6 – August 2, 2026
+
+---
+
+## Days 1-10: No Dreams Recalled
+*Tracker notes: Dreams not recalled or not reported during initial habit-building phase (Days 1-9). Day 10 (July 15): Dreams field marked TBD. Day 11 (July 16): "Unknown / not recalled."*
+
+---
+
+## Day 12 Dreams — Friday July 17, 2026 (recalled during split sleep ~4:10 AM and 4:45-6:25 AM)
+
+### Dream 1: The Mall, the Other Sam, and Invisibility
+
+**Raw Account:** Sam was at a mall (social marketplace) with an old best friend not seen in 15-20 years. Flirting with girls, root beer floats (sober fun), girls sitting down and kissing cheeks. Girls disappeared. Friend driving bicycle with motorcar attached, Sam in passenger seat. Group of 5 girls talking about "how hot Sam is." Sam screamed "I'm Sam!" — they didn't hear him. Another man named Sam (Black guy) walked by and got the attention instead. Sam claimed identity with rage. The other Sam asked for Sam's phone number ("normal phone call messaging may apply"). Transactional exchange instead of authentic connection.
+
+**Jungian Analysis:** Invisibility, identity frustration, desire for recognition, someone else getting what's yours. The Shadow-Sam (Black = unconscious, Other) receives the recognition the ego cannot claim. The ego screams its name but cannot be heard — the persona is not yet strong enough to command attention in the social marketplace. The transactional exchange ("normal messaging may apply") = the old way of connecting (superficial, fee-based) vs. authentic presence.
+
+### Dream 2: Yngwie Malmsteen, the Hologram, and Getting the Number
+
+**Raw Account:** Mall again. Met new friends — group of 3 guys. Let them drive his car to the mall. Met group of girls. Met Yngwie Malmsteen (guitar virtuoso = mastery archetype). Went to live concert — hologram of Yngwie performed guitar instrumentals for thousands. Dark atmosphere, full moon, ambient lights. Girls swooning. Sam stood next to the REAL Yngwie while crowd watched the hologram. Asked Yngwie to play for him personally — Yngwie said $40K. Left mall with boys in elevator, left girls behind as a joke/tease. Went BACK DOWN to get girls. Told them he was just flirting. Asked prettiest one for her number — she agreed. Had to dig through her backpack (many compartments, got lost). She guided him: "look in the largest compartment." Found phone, got number. All got on bus together. Sam making girls smile and laugh.
+
+**Jungian Analysis:** PROGRESSION from Dream 1. The ego has moved from invisible screaming to playful mastery. Standing next to the REAL Yngwie while others watch the hologram = proximity to authentic mastery vs. the crowd's relationship with the image/projection. The girls swoon for the hologram (persona) but Sam is next to the real thing (Self). Leaving and coming BACK = the tease, the push-pull, the confidence to walk away and return. Getting the number = the feeling function successfully connecting. The backpack with many compartments = the feminine psyche is complex, but she GUIDES him ("look in the largest compartment") — the Anima cooperates when approached with playful confidence.
+
+### Dream 3: The Car Stolen — Stranded
+
+**Raw Account:** Bus driver said wrong stop. Sam got off, started walking. Realized the 3 boys still had his car keys. They were no longer on the bus. Got off and realized he was stranded in wrong place. Tried to get back on bus — driver resisted, wouldn't stop. Sam hanging by hands on stairs. Driver started engine and drove. Sam let go. Realized car had been stolen. Stranded in middle of nowhere. Preparing to call parents for help. Plan: "We'll find those boys and get my car back."
+
+**Jungian Analysis:** The shadow-brothers (the 3 guys he trusted with his car) have taken his vehicle — his autonomy. He is stranded. The bus (collective transport) won't take him back. He must call his parents for help. This DIRECTLY prefigures the waking situation that would emerge weeks later: car at brother's house, license suspended, dependent on parents for transportation. The psyche was showing this pattern BEFORE it fully manifested. The resolution: "We'll find those boys and get my car back" = the fight that must happen (DMV, rehab certificate, reinstatement).
+
+**Day 12 Dreams Combined:** A three-act progression: (1) Invisible, screaming, unheard. (2) Playful, masterful, successful, gets the number. (3) Stranded, car stolen, dependent on parents. The psyche is showing the FULL arc: where you were → where you're going → what you must overcome to get there.
+
+---
+
+## Day 13 Dreams — Saturday July 18, 2026 (recalled during split sleep, second block ~6:15 AM+)
+
+### Dream 4: Trump and Capital Punishment (Fragment)
+
+**Raw Account:** Donald Trump saying protesters would stop protesting if he put capital punishment on them.
+
+**Jungian Analysis:** Authority, force, suppression of dissent. Shadow of the Terrible Father archetype. The psyche presenting the wound (disownment = capital punishment of relationship) in its most extreme archetypal form before resolving it in Dream 6.
+
+### Dream 5: Bill Fuller's Check and Dave Willing
+
+**Raw Account:** Bumped into Bill Fuller (former insurance colleague/subordinate) at diner. Sam was flirting with a girl. Bill sat next to her. Sam wrote Bill a $70 check — almost nothing, but Bill was deeply moved. Held Sam's handshake, wouldn't let go, smiling. Sam's handwriting was very large — said "that's body language, I can't help it." Then Dave Willing was skipping down stairs saying he's working less hours and making more money, smiling.
+
+**Jungian Analysis:** Generosity from abundance. Small gestures landing huge because of presence. The Self overflowing the ego's container. Dave = Puer Aeternus archetype (lightness, leverage, joy). His name = "WILLING" = the message itself. Integration of Persona. Learning that presence IS the gift. Previewing the future Self (less effort, more reward).
+
+### Dream 6: Aunt Missy's House — The New Rooms
+
+**Raw Account:** Sam and family went to aunt/uncle's house for first time in 20 years. Parents and brother disappeared into other rooms (uncomfortable, hiding). Sam alone with aunt and uncle in kitchen. Casual, comfortable conversation. Aunt joked about killing/not killing her husband. Sam joked "Well, you're not 20 years older yet either" — she laughed. She asked about long-term care insurance, seemed ready to buy from Sam. Sam noticed a NEW doorway in the kitchen that was never there before — walked through into a new room. They followed. Walked through another new doorway — another room that never existed. They followed again. Walked through childhood sleeping room (floor beds) — Sam named the memory. Uncle led Sam to basement with ping pong table. Said Sam should play with a little boy there. Objects on the table needed to be removed first. Then woke up.
+
+**Jungian Analysis:** Reconciliation with 20-year estrangement. Individuation (separating from parents' wound — they HIDE while Sam engages). New rooms = the **transcendent function** (new possibilities that didn't exist before). The little boy = **Divine Child archetype** (Sam at age 10 when disowned). Objects on table = grievances to clear before play/relationship can resume. The aunt asking about insurance = the unconscious offering Sam his professional identity as the bridge back to family. He doesn't have to be a different person to reconnect — he can be EXACTLY who he is (an insurance professional) and that is enough.
+
+---
+
+## Day 14 Dreams — Sunday July 19, 2026
+*No dreams recalled (TBD in tracker)*
+
+---
+
+## Day 15 Dreams — Monday July 20, 2026 (recalled after 14 hours of recovery sleep)
+
+### Dream 7: Mackenzie the Trainer — Tobacco Bonding
+
+**Raw Account:** Visited with Mackenzie (25, Wilmington DE) — Sam's former personal trainer/stretcher at Stretch Flex. In the dream she disclosed she chews tobacco. Sam wasn't turned off (he quit dip ~26 years ago). They bonded over brands — she said she liked all of them. Sam felt no concern about her health and didn't tell her to stop. It was purely a bonding/connection experience — something in common. No romantic content but warm familiarity.
+
+**Context:** Mackenzie trained Sam 3x/week for ~1 year ($600-700/week). 2-hour sessions: weightlifting + 1 hour stretch table. During stretching she'd ask "what's going on" and Sam would give full life updates. She knew about Jessica (27-year-old), Nicole (living situation), marijuana use, Lou/Giraffe Insurance business, vulnerabilities. She thought Sam was funny and curious. She pushed him physically but gently. She had a boyfriend (reason Sam never asked her out).
+
+**Jungian Analysis:** Mackenzie = the Anima in her "trainer" aspect — the feminine that KNOWS him, that has seen his body and his vulnerability, that pushes him without judgment. The tobacco bonding = finding common ground in shadow material (dip = old vice, her vice). The dream says: connection doesn't require perfection. Shared shadow is a valid bond. She represents the woman who already knows him (past).
+
+### Dream 8: The Chemistry Job Woman
+
+**Raw Account:** A beautiful woman in her 30s came into Sam's office looking for a job in chemistry. Sam tried to help her but the first 3 companies she didn't qualify for. She was sad. Sam said "There's no problem, there's hundreds more" and pulled up hundreds of options. She disclosed she had a son involved in chemistry, and another son trying to "get the red color out of blue paint." She didn't mention what the second son did otherwise.
+
+**Jungian Analysis:** Another feminine figure who NEEDS him (vs. Mackenzie who already KNOWS him). Sam is calm, resourceful, abundant ("hundreds more"). Chemistry theme connected to Bob Armstrong's chemistry degree and the Virginia Tech story — unconscious processing the "chemistry = connection to Bob = pathway to daughter" link. The son removing "red from blue paint" = purification/separation task — possibly the 30-day reset itself (removing old patterns from the new identity).
+
+**Day 15 Dreams Combined:** Both dreams feature safe feminine presence + bonding/helping. Mackenzie = woman who already knows him (past). Chemistry woman = woman who needs him (future). Both = Sam in the role of connector, helper, calm presence. The unconscious is rehearsing the identity: resourceful, patient, abundant, safe.
+
+---
+
+## Days 16-22: No Dreams Recalled
+*Tracker notes: Days 16-20 marked TBD or blank. Days 21-22 marked N/A.*
+
+---
+
+## Day 23 Dreams — Tuesday July 28, 2026
+*"Tons of dreams" reported — VIVID. Classic REM rebound after stimulant-driven sleep deprivation (Adderall binge). Details not captured (too late by morning). Brain catching up on 2-3 nights of missed REM cycles.*
+
+---
+
+## Day 24: No Dreams Recalled
+*Tracker field blank.*
 
 ---
 
