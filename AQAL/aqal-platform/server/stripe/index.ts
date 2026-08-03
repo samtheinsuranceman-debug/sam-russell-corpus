@@ -73,16 +73,16 @@ stripeRouter.post("/webhook", raw({ type: "application/json" }), async (req, res
         }).where(eq(users.openId, userId));
       }
       
-      // Grant Silver membership access on assessment purchase (one-time payment)
-      if (session.mode === "payment" && userId && productKey === "assessment") {
+      // Grant membership access on any one-time assessment purchase (audio or underwritten)
+      if (session.mode === "payment" && userId && (productKey === "audio" || productKey === "underwritten")) {
         const { getDb } = await import("../db");
         const { users } = await import("../../drizzle/schema");
         const { eq } = await import("drizzle-orm");
         const db = await getDb();
         if (db) await db.update(users).set({
-          membershipTier: "silver", // Silver membership granted on assessment purchase
+          membershipTier: "silver", // "silver" = active paid membership marker
         }).where(eq(users.openId, userId));
-        console.log(`[Stripe] User ${userId} granted Silver membership access (assessment purchase)`);
+        console.log(`[Stripe] User ${userId} granted membership access (${productKey} purchase)`);
       }
 
       // Handle subscription creation
@@ -92,10 +92,9 @@ stripeRouter.post("/webhook", raw({ type: "application/json" }), async (req, res
         const { eq } = await import("drizzle-orm");
         const db = await getDb();
         
-        const tier = productKey === "platinum" ? "platinum" 
-          : productKey === "gold" ? "gold" 
-          : "silver";
-        
+        // Single membership product maps to the "silver" active-membership marker.
+        const tier = "silver";
+
         if (db) await db.update(users).set({
           stripeSubscriptionId: session.subscription as string,
           membershipTier: tier,
@@ -185,6 +184,10 @@ export async function createCheckoutSession(params: {
       },
     ],
     mode: product.mode,
+    // Free trial on subscriptions (e.g. the $79/mo membership's 15 days).
+    ...(product.mode === "subscription" && "trialDays" in product && product.trialDays
+      ? { subscription_data: { trial_period_days: product.trialDays } }
+      : {}),
   };
 
   const session = await stripe.checkout.sessions.create(sessionParams);

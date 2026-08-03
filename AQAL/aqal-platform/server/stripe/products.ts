@@ -1,40 +1,33 @@
 // AQAL Intelligence Platform — Stripe Product Configuration
-// Assessment: $299 founding (first 100), $1,500 regular
-// Memberships: Coaching $39/mo, Growth & Network $149/mo, Private Network $499/mo
+// Audio assessment $500 (one-time) · Fully underwritten $1,500 (one-time; the
+// 7-day free trial is enforced in-app, then this charge unlocks & keeps the
+// certified report) · Membership $79/mo (15-day Stripe free trial).
+//
+// Founding members (first 10,000) pay nothing — that path never hits Stripe.
 
 export const PRODUCTS = {
-  assessment: {
-    name: "AQAL Intelligence Assessment — Founding Member",
-    description: "Complete 32-axis voice intelligence assessment with Five-AI consensus scoring, rarity underwriting report, and network access. Founding member rate (first 100).",
-    price: 29900, // $299.00 in cents (founding member rate, regular price $1,500)
+  audio: {
+    name: "AQAL Audio Assessment",
+    description:
+      "Complete 32-line voice intelligence assessment with independent multi-AI consensus scoring, your rarity + developmental-stage report, and a free retake within 30 days.",
+    price: 50000, // $500.00 one-time
     mode: "payment" as const,
   },
-  assessmentRegular: {
-    name: "AQAL Intelligence Assessment",
-    description: "Complete 32-axis voice intelligence assessment with Five-AI consensus scoring, rarity underwriting report, and network access.",
-    price: 150000, // $1,500.00 in cents (regular price after first 100 founding members)
+  underwritten: {
+    name: "AQAL Fully Underwritten Assessment",
+    description:
+      "Unlock & keep your certified underwritten report: the full independent-AI panel underwrites every one of your 32 lines against your uploaded evidence (tax returns, essays, employer reviews), with evidence verification and the deepest confidence tier.",
+    price: 150000, // $1,500.00 one-time (after the 7-day free trial)
     mode: "payment" as const,
   },
-  silver: {
-    name: "AQAL Coaching Membership",
-    description: "Your ongoing outcome coach: monthly re-assessment, live tracking of the weakness cluster most threatening your goals, updated outcome-engineering plan, research-backed prescriptions, PDF export, and 5 complementary network matches per month.",
-    price: 3900, // $39.00/month in cents — the accessible coaching unlock
+  membership: {
+    name: "AQAL Membership",
+    description:
+      "Your ongoing coach and the network: monthly re-assessment across all 32 lines, live tracking of the weakness most threatening your goals, an updated outcome-engineering plan, research-backed prescriptions from the cited library, and matching to peers who share your strongest lines.",
+    price: 7900, // $79.00/month
     mode: "subscription" as const,
     interval: "month" as const,
-  },
-  gold: {
-    name: "AQAL Growth & Network",
-    description: "Everything in Coaching, plus weekly re-assessment, deeper outcome-engineering sessions, growth-trajectory analytics, priority evidence verification, and unlimited network matching.",
-    price: 14900, // $149.00/month in cents
-    mode: "subscription" as const,
-    interval: "month" as const,
-  },
-  platinum: {
-    name: "AQAL Private Network",
-    description: "The top tier: everything in Growth, plus a private intelligence network, 1-on-1 AI strategy sessions, custom research reports, white-glove evidence curation, and founding-member benefits.",
-    price: 49900, // $499.00/month in cents
-    mode: "subscription" as const,
-    interval: "month" as const,
+    trialDays: 15, // 15-day free trial
   },
 } as const;
 

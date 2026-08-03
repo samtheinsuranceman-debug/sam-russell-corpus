@@ -43,9 +43,10 @@ const MEMBERSHIP = {
   ],
 };
 
-// The two ways to get assessed (standard, post-promo pricing).
+// The two ways to get assessed (standard, non-founding pricing).
 const ASSESSMENTS = [
   {
+    key: "audio",
     name: "Audio Assessment",
     price: "$500",
     tagline: "Your voice, all 32 lines",
@@ -57,6 +58,7 @@ const ASSESSMENTS = [
     ],
   },
   {
+    key: "underwritten",
     name: "Fully Underwritten Assessment",
     price: "$1,500",
     tagline: "The complete, evidence-underwritten read",
@@ -69,7 +71,7 @@ const ASSESSMENTS = [
       "Deepest confidence tier on your 32-line map",
     ],
   },
-] as Array<{ name: string; price: string; tagline: string; highlight?: boolean; trialDays?: number; features: string[] }>;
+] as Array<{ key: "audio" | "underwritten"; name: string; price: string; tagline: string; highlight?: boolean; trialDays?: number; features: string[] }>;
 
 
 
@@ -126,17 +128,16 @@ export default function Pricing() {
     setShowHipaaModal(true);
   };
 
+  // Founding members (first 10,000) pay nothing — after consent, go straight to
+  // the free assessment; no Stripe.
   const confirmCheckout = () => {
     if (!hipaaConsent) return;
     setShowHipaaModal(false);
-    setIsLoading(true);
-    checkoutMutation.mutate({
-      productKey: "assessment",
-      origin: window.location.origin,
-    });
+    window.location.href = "/assessment";
   };
 
-  const subscribeTo = (productKey: "silver" | "gold" | "platinum") => {
+  // Paid products (audio / underwritten / membership) → Stripe checkout.
+  const buyProduct = (productKey: "audio" | "underwritten" | "membership") => {
     playClick();
     if (!user) { beginAuth(); return; }
     setIsLoading(true);
@@ -318,15 +319,53 @@ export default function Pricing() {
                       </>
                     )}
                   </div>
-                  <ul className="space-y-2 flex-1">
+                  <ul className="space-y-2 flex-1 mb-5">
                     {a.features.map((f) => (
                       <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground/70">
                         <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-accent/70" /> {f}
                       </li>
                     ))}
                   </ul>
+                  {a.trialDays ? (
+                    <div className="mt-auto">
+                      <Button
+                        onClick={() => { playClick(); if (!user) { beginAuth(); return; } window.location.href = "/assessment"; }}
+                        className="w-full bg-primary text-primary-foreground"
+                      >
+                        Start your {a.trialDays}-day free trial
+                      </Button>
+                      <button
+                        onClick={() => buyProduct("underwritten")}
+                        className="w-full text-center text-[0.7rem] text-muted-foreground/50 hover:text-muted-foreground mt-2"
+                      >
+                        or unlock &amp; keep now — {a.price}
+                      </button>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={() => buyProduct("audio")}
+                      variant="outline"
+                      className="mt-auto w-full border-primary/20 text-primary hover:bg-primary/[0.06]"
+                    >
+                      Get the audio assessment — {a.price}
+                    </Button>
+                  )}
                 </div>
               ))}
+            </div>
+
+            {/* The science behind the underwriting */}
+            <div className="mt-5 rounded-xl border border-accent/15 bg-accent/[0.03] p-5 text-center">
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-accent/70 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                The science behind the underwriting
+              </p>
+              <p className="text-sm text-foreground/75 leading-relaxed max-w-2xl mx-auto">
+                This isn&rsquo;t a personality quiz. The underwriting applies a <span className="text-foreground">validated,
+                peer-reviewed developmental-measurement method</span> — the constructivist ego-development framework used in
+                academic psychology — and scores every line against it with an independent multi-AI panel. The research
+                foundation is already built and documented, not a promise: {" "}
+                <Link href="/archetypes"><a className="text-accent hover:underline">see the evidence</a></Link>.
+              </p>
             </div>
 
             {/* Membership — single tier, monthly, with free trial */}
@@ -342,13 +381,19 @@ export default function Pricing() {
                   <p className="text-[0.7rem] text-accent/80 mt-0.5">{MEMBERSHIP.trialDays}-day free trial</p>
                 </div>
               </div>
-              <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2 mt-4">
+              <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2 mt-4 mb-5">
                 {MEMBERSHIP.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground/70">
                     <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-accent/70" /> {f}
                   </li>
                 ))}
               </ul>
+              <Button
+                onClick={() => buyProduct("membership")}
+                className="w-full bg-primary text-primary-foreground"
+              >
+                Start your {MEMBERSHIP.trialDays}-day free trial
+              </Button>
             </div>
 
             {/* Coaching-fee disclosure — separate, never discounted */}

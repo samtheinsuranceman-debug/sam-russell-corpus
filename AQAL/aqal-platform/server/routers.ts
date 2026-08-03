@@ -963,7 +963,7 @@ Return ONLY valid JSON.` },
   payment: router({
     createCheckout: protectedProcedure
       .input(z.object({
-        productKey: z.enum(["assessment", "assessmentRegular", "silver", "gold", "platinum"]),
+        productKey: z.enum(["audio", "underwritten", "membership"]),
         promoCode: z.string().optional(),
         origin: z.string(),
       }))

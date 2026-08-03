@@ -36,8 +36,7 @@ export const PRICE_MEMBERSHIP_MONTHLY_CENTS = 7_900; // $79/mo — recurring coa
 
 // Free-trial windows.
 export const MEMBERSHIP_TRIAL_DAYS = 15; // membership monthly
-export const UNDERWRITTEN_TRIAL_DAYS = 14; // the fully-underwritten assessment — longer,
-// because assembling the evidence (tax returns, essays, employer reviews) is real work.
+export const UNDERWRITTEN_TRIAL_DAYS = 7; // the fully-underwritten assessment.
 
 export const GIVEAWAY_TIERS: GiveawayTier[] = [
   { index: 0, label: "Founding — Free", discount: 1.0, from: 1, to: COHORT_SIZE },

@@ -1369,7 +1369,7 @@ export default function Assessment() {
         return;
       }
       checkoutMutation.mutate({
-        productKey: "assessment",
+        productKey: "underwritten",
         origin: window.location.origin,
       });
     };
