@@ -115,10 +115,26 @@ export function llmProvider(): LlmProvider {
   return "mock";
 }
 
-export type SttProvider = "openai" | "forge" | "mock";
+// ---- Speech-to-text (Whisper) ------------------------------
+// Transcription is the biggest per-assessment cost driver (a long voice answer
+// is many minutes of audio). Groq serves an OpenAI-compatible Whisper endpoint
+// at a fraction of OpenAI's price, so we PREFER it for STT whenever GROQ_API_KEY
+// is set — this is what keeps a lifetime-free member costing pennies. Scoring
+// still uses whatever LLM you configure; only transcription moves to Groq.
+//   STT_PROVIDER=openai forces OpenAI Whisper; =groq forces Groq; default "auto".
+export const GROQ_API_KEY_STT = env("GROQ_API_KEY");
+export const GROQ_STT_BASE = env("GROQ_STT_BASE") || "https://api.groq.com/openai";
+export const GROQ_STT_MODEL = env("GROQ_STT_MODEL") || "whisper-large-v3";
+export const STT_PROVIDER_PREF = (env("STT_PROVIDER") || "auto").toLowerCase();
+
+export type SttProvider = "groq" | "openai" | "forge" | "mock";
 export function sttProvider(): SttProvider {
+  const pref = STT_PROVIDER_PREF;
+  if (pref !== "openai" && pref !== "forge" && GROQ_API_KEY_STT) return "groq"; // auto/groq
+  if (pref === "groq" && GROQ_API_KEY_STT) return "groq";
   if (OPENAI_API_KEY) return "openai";
   if (FORGE_API_URL && FORGE_API_KEY) return "forge";
+  if (GROQ_API_KEY_STT) return "groq"; // last-resort if only Groq is set
   return "mock";
 }
 

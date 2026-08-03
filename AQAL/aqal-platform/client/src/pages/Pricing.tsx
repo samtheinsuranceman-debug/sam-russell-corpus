@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { playClick } from "@/lib/audio";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
-import { COHORT_SIZE, GIVEAWAY_DURATION_MONTHS, MEMBERSHIP_TRIAL_DAYS } from "@shared/giveawayLadder";
+import { COHORT_SIZE, MEMBERSHIP_TRIAL_DAYS, UNDERWRITTEN_TRIAL_DAYS } from "@shared/giveawayLadder";
 
 // ============================================================
 // SIMPLIFIED PRICING — Single $299 founding-member offer (regular $1,500 after first 100)
@@ -61,14 +61,15 @@ const ASSESSMENTS = [
     price: "$1,500",
     tagline: "The complete, evidence-underwritten read",
     highlight: true,
+    trialDays: UNDERWRITTEN_TRIAL_DAYS,
     features: [
       "Everything in the Audio Assessment",
-      "Full independent-AI panel underwriting every line",
+      "Upload your evidence — tax returns, essays, employer reviews — and the panel underwrites every line against it",
       "Evidence verification + complete rarity underwriting report",
       "Deepest confidence tier on your 32-line map",
     ],
   },
-];
+] as Array<{ name: string; price: string; tagline: string; highlight?: boolean; trialDays?: number; features: string[] }>;
 
 
 
@@ -211,14 +212,14 @@ export default function Pricing() {
                   Free
                 </motion.span>
                 <p className="text-foreground/80 text-base mt-2 font-medium">
-                  for the first {COHORT_SIZE.toLocaleString()} members — {GIVEAWAY_DURATION_MONTHS} months
+                  for the first {COHORT_SIZE.toLocaleString()} members — <span className="text-accent">for life</span>
                 </p>
               </div>
 
-              {/* What's being waived — itemized */}
+              {/* What's being waived — itemized, lifetime */}
               <div className="rounded-xl border border-accent/20 bg-accent/[0.04] p-5 mb-6">
                 <p className="text-[0.6rem] uppercase tracking-[0.15em] text-accent/80 mb-3 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                  What we&rsquo;re waiving for you
+                  What we&rsquo;re waiving for you — permanently
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center justify-between gap-3">
@@ -226,22 +227,25 @@ export default function Pricing() {
                     <span className="text-muted-foreground/40 line-through">$500</span>
                   </li>
                   <li className="flex items-center justify-between gap-3">
-                    <span className="text-foreground/80">{GIVEAWAY_DURATION_MONTHS} months of membership ($79/mo)</span>
-                    <span className="text-muted-foreground/40 line-through">${(79 * GIVEAWAY_DURATION_MONTHS).toLocaleString()}</span>
+                    <span className="text-foreground/80">Membership — $79/mo, waived for life</span>
+                    <span className="text-muted-foreground/40 line-through">$948/yr</span>
                   </li>
                   <li className="flex items-center justify-between gap-3 pt-2 border-t border-white/[0.06]">
-                    <span className="text-accent/90 font-medium">Total waived</span>
-                    <span className="text-accent font-semibold">${(500 + 79 * GIVEAWAY_DURATION_MONTHS).toLocaleString()}</span>
+                    <span className="text-accent/90 font-medium">Your cost, forever</span>
+                    <span className="text-accent font-semibold">$0</span>
                   </li>
                 </ul>
+                <p className="text-[0.7rem] text-muted-foreground/50 mt-3 leading-relaxed">
+                  That&rsquo;s $79/month you effectively keep — for the rest of your life — as long as your membership stays active.
+                </p>
               </div>
 
               {/* Why */}
               <p className="text-sm text-muted-foreground/70 leading-relaxed mb-6 text-center">
-                Why free? Because the value of this platform is the <span className="text-foreground/85">network</span> —
+                Why free for life? Because the value of this platform is the <span className="text-foreground/85">network</span> —
                 and a network is only as strong as the people in it. We are building it aggressively, and the first
-                {" "}{COHORT_SIZE.toLocaleString()} members are the foundation. You get the full assessment and {GIVEAWAY_DURATION_MONTHS} months
-                of membership at no cost; in return, you make the network worth joining.
+                {" "}{COHORT_SIZE.toLocaleString()} members are its foundation. You get the audio assessment and your membership
+                free for life; in return, you make the network worth joining.
               </p>
 
               {/* What you get */}
@@ -299,8 +303,20 @@ export default function Pricing() {
                   <h3 className="text-lg font-semibold text-foreground">{a.name}</h3>
                   <p className="text-xs text-muted-foreground/50 mb-3">{a.tagline}</p>
                   <div className="mb-4">
-                    <span className="text-3xl font-bold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{a.price}</span>
-                    <span className="text-muted-foreground/50 text-sm"> one-time</span>
+                    {a.trialDays ? (
+                      <>
+                        <span className="text-3xl font-bold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Free</span>
+                        <span className="text-muted-foreground/50 text-sm"> — {a.trialDays}-day trial</span>
+                        <p className="text-[0.72rem] text-muted-foreground/50 mt-1">
+                          Then {a.price} to unlock &amp; keep your certified report. Start free — no card to begin.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-3xl font-bold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{a.price}</span>
+                        <span className="text-muted-foreground/50 text-sm"> one-time</span>
+                      </>
+                    )}
                   </div>
                   <ul className="space-y-2 flex-1">
                     {a.features.map((f) => (

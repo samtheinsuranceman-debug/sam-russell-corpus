@@ -87,39 +87,48 @@ day with margin.
 
 ## 3. Pricing structure — FINALIZED (your numbers)
 
-**Products (standard / post-promo):**
+**Products (standard / non-founding):**
 - **Audio assessment: $500** (one-time, voice-only).
-- **Fully underwritten assessment: $1,500** (one-time, full-panel evidence tier).
+- **Fully underwritten assessment: $1,500** — but led with a **14-day FREE TRIAL**, not the
+  price. You upload evidence (tax returns, essays, employer reviews), the panel underwrites
+  it, and you pay $1,500 only to unlock & keep the certified report. (14 days, not 7, because
+  gathering that paperwork is real work.)
 - **Membership: $79/month, 15-day free trial** (single tier — the ongoing coach + network).
-- **Personal coaching calls / 1-on-1 strategy: a SEPARATE fee, NEVER discounted** (stated on the page).
+- **Personal coaching calls / 1-on-1 strategy: a SEPARATE fee, NEVER discounted** (on the page).
 
-**Founding giveaway ladder — 24 months (not lifetime).** Implemented + tested
-(`shared/giveawayLadder.ts`, `GIVEAWAY_DURATION_MONTHS = 24`):
+**Founding giveaway ladder — LIFETIME.** Implemented + tested
+(`shared/giveawayLadder.ts`, `GIVEAWAY_IS_LIFETIME = true`):
 
-| Cohort | Signups | Promo (24 months) |
+| Cohort | Signups | Founding rate (for life*) |
 |---|---|---|
-| 1 | 1 – 10,000 | **Free** |
+| 1 | 1 – 10,000 | **Free — audio assessment + membership waived for life** |
 | 2 | 10,001 – 20,000 | 75% off |
 | 3 | 20,001 – 30,000 | 50% off |
 | 4 | 30,001 – 40,000 | 25% off |
 | 5 | 40,001+ | standard |
 
+\* Lifetime = lifetime of the service, contingent on continuous good standing (cancel /
+chargeback / ToS violation → standard pricing). Get an attorney to paper it as
+lifetime-of-service + good-standing + a fair-use re-assessment cap — **not** a
+revenue-recapture escape clause (that would break the trust the offer is built on).
+
 ### ⚠️ Advertising rule (implemented)
-**Only the first-10,000-FREE tranche is advertised publicly.** The 75% / 50% / 25%
-tranches exist in the backend ladder for enforcement but are **NOT shown on the pricing
-page** — per your instruction. The page instead itemizes what the founding 10,000 are
-having **waived** ($500 assessment + 24×$79 = $1,896 membership → **$2,396 total waived**)
-and states **why**: we are building the network aggressively, and the founding members are
-its foundation.
+**Only the first-10,000-FREE tranche is advertised publicly.** The 75/50/25 tranches live in
+the backend ladder for enforcement but are **NOT shown** on the pricing page. The page
+itemizes what founding members are having **waived for life** ($500 assessment + $79/mo
+membership) and states **why** (building the network aggressively; founding members are its
+foundation; "you effectively keep $79/month for the rest of your life").
 
 The free-cap infra (`FREE_ASSESSMENT_CAP=10000`) drives the "N of 10,000 free spots left"
 scarcity counter.
 
-### Economics
-At ~$1–2/member/year in compute (once STT is on Groq, §2), 24 months free costs you a few
-dollars per founding member — trivial against the network density it buys. The $79/mo
-recurring (after promo, and for non-founding members now) is the revenue engine; coaching
-calls are the separate, full-margin, never-discounted upsell.
+### Economics — lifetime is solvent because of the STT fix (now DONE)
+STT now **prefers Groq Whisper** whenever `GROQ_API_KEY` is set (`STT_PROVIDER=auto`,
+implemented in `config.ts` + `voiceTranscription.ts`). That drops transcription from
+~$0.80–1.60/assessment to a few cents, so a lifetime-free member doing monthly
+re-assessments costs **pennies/year** — which is what makes "free for life" affordable.
+Add a fair-use re-assessment cap (e.g. 1–2/month) in the ToS as belt-and-suspenders.
+The $79/mo (non-founding) is the revenue engine; coaching is the separate, never-discounted upsell.
 
 ---
 

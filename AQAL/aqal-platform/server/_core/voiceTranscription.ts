@@ -28,13 +28,30 @@
 import {
   OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_TRANSCRIBE_MODEL,
   FORGE_API_URL, FORGE_API_KEY,
+  GROQ_API_KEY_STT, GROQ_STT_BASE, GROQ_STT_MODEL,
+  sttProvider,
 } from "../platform/config";
 
-// Active speech-to-text provider (OpenAI Whisper first, then the legacy Forge
-// gateway). Both speak the same `/v1/audio/transcriptions` (Whisper) shape.
+// Active speech-to-text provider. Groq is PREFERRED when configured (same
+// `/v1/audio/transcriptions` Whisper shape, a fraction of the cost); otherwise
+// OpenAI Whisper, then the legacy Forge gateway. sttProvider() decides which.
 function resolveSttProvider(): { base: string; key: string; model: string } | null {
+  const choice = sttProvider();
+  if (choice === "groq" && GROQ_API_KEY_STT) {
+    return { base: GROQ_STT_BASE.replace(/\/$/, ""), key: GROQ_API_KEY_STT, model: GROQ_STT_MODEL };
+  }
+  if (choice === "openai" && OPENAI_API_KEY) {
+    return { base: OPENAI_BASE_URL.replace(/\/$/, ""), key: OPENAI_API_KEY, model: OPENAI_TRANSCRIBE_MODEL };
+  }
+  if (choice === "forge" && FORGE_API_URL && FORGE_API_KEY) {
+    return { base: FORGE_API_URL.replace(/\/$/, ""), key: FORGE_API_KEY, model: "whisper-1" };
+  }
+  // Fallbacks in case the preferred provider's key is missing.
   if (OPENAI_API_KEY) {
     return { base: OPENAI_BASE_URL.replace(/\/$/, ""), key: OPENAI_API_KEY, model: OPENAI_TRANSCRIBE_MODEL };
+  }
+  if (GROQ_API_KEY_STT) {
+    return { base: GROQ_STT_BASE.replace(/\/$/, ""), key: GROQ_API_KEY_STT, model: GROQ_STT_MODEL };
   }
   if (FORGE_API_URL && FORGE_API_KEY) {
     return { base: FORGE_API_URL.replace(/\/$/, ""), key: FORGE_API_KEY, model: "whisper-1" };

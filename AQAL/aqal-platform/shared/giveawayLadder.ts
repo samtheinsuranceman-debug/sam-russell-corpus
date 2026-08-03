@@ -23,15 +23,21 @@ export type GiveawayTier = {
 // Each cohort is COHORT_SIZE members. Tune here if the cohorts change size.
 export const COHORT_SIZE = 10_000;
 
-// The founding discount applies for this many months, then the member converts
-// to standard pricing. (Not lifetime — the promo is time-boxed.)
-export const GIVEAWAY_DURATION_MONTHS = 24;
+// The founding rate is LOCKED FOR LIFE (as long as the member stays in
+// continuous good standing — cancel/chargeback/ToS-violation drops them to
+// standard pricing). Cohort 1 is free for life; cohorts 2-4 keep their
+// 75/50/25 rate for life. "Lifetime" = lifetime of the service.
+export const GIVEAWAY_IS_LIFETIME = true;
 
-// Standard (post-promo) prices, in cents. Single source of truth for UI + Stripe.
+// Standard (non-founding) prices, in cents. Single source of truth for UI + Stripe.
 export const PRICE_AUDIO_ASSESSMENT_CENTS = 50_000; // $500 — voice-only assessment
 export const PRICE_UNDERWRITTEN_ASSESSMENT_CENTS = 150_000; // $1,500 — fully underwritten
 export const PRICE_MEMBERSHIP_MONTHLY_CENTS = 7_900; // $79/mo — recurring coach + network
-export const MEMBERSHIP_TRIAL_DAYS = 15;
+
+// Free-trial windows.
+export const MEMBERSHIP_TRIAL_DAYS = 15; // membership monthly
+export const UNDERWRITTEN_TRIAL_DAYS = 14; // the fully-underwritten assessment — longer,
+// because assembling the evidence (tax returns, essays, employer reviews) is real work.
 
 export const GIVEAWAY_TIERS: GiveawayTier[] = [
   { index: 0, label: "Founding — Free", discount: 1.0, from: 1, to: COHORT_SIZE },
