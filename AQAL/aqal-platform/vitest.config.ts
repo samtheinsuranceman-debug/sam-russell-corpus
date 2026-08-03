@@ -17,6 +17,7 @@ export default defineConfig({
     include: [
       "server/**/*.test.ts",
       "server/**/*.spec.ts",
+      "shared/**/*.test.ts",
       // Pure-data integrity tests (no DOM) can live under client/ too.
       "client/src/pages/archetypesData.test.ts",
     ],
