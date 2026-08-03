@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { playClick } from "@/lib/audio";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import { GIVEAWAY_TIERS, COHORT_SIZE } from "@shared/giveawayLadder";
 
 // ============================================================
 // SIMPLIFIED PRICING — Single $299 founding-member offer (regular $1,500 after first 100)
@@ -214,6 +215,52 @@ export default function Pricing() {
                 30-day retake guarantee. If you disagree with your results, retake free.
               </p>
             </div>
+          </motion.div>
+
+          {/* Founding-member giveaway ladder — the launch offer, by signup order */}
+          <motion.div
+            className="mt-6 mb-14 max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <div className="text-center mb-6">
+              <p className="section-label mb-3">Founding access — first {(COHORT_SIZE * 4).toLocaleString()} members</p>
+              <h2 className="text-2xl sm:text-3xl text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+                The earlier you join, the more it&rsquo;s yours for life.
+              </h2>
+              <p className="text-sm text-muted-foreground/60 mt-2">
+                Founding membership is priced by when you arrive. The first {COHORT_SIZE.toLocaleString()} are free — for life.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
+              {GIVEAWAY_TIERS.map((t, i) => {
+                const pct = Math.round(t.discount * 100);
+                const active = i === 0; // cohort 1 is live at launch
+                return (
+                  <div
+                    key={t.index}
+                    className={`rounded-xl border p-4 text-center ${active ? "border-primary/50 bg-primary/[0.06]" : "border-white/[0.06] bg-white/[0.02]"}`}
+                  >
+                    <p className="text-[0.55rem] uppercase tracking-[0.12em] text-muted-foreground/50" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                      {t.to === null ? `${t.from.toLocaleString()}+` : `${t.from.toLocaleString()}–${t.to.toLocaleString()}`}
+                    </p>
+                    <p className={`mt-2 text-xl font-bold ${active ? "text-primary" : "text-foreground/80"}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                      {t.discount === 1 ? "Free" : t.discount === 0 ? "Full" : `${pct}% off`}
+                    </p>
+                    <p className="text-[0.65rem] text-muted-foreground/50 mt-1">for life</p>
+                    {active && (
+                      <span className="inline-block mt-2 text-[0.55rem] uppercase tracking-[0.1em] text-primary" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                        Open now
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-center text-xs text-muted-foreground/40 mt-4">
+              Lifetime founding rate locks in at signup and never rises. Premium network tiers below stay monthly.
+            </p>
           </motion.div>
 
           {/* Coaching memberships — the ongoing coach */}
