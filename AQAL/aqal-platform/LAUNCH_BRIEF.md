@@ -85,39 +85,41 @@ day with margin.
 
 ---
 
-## 3. Pricing structure (the giveaway ladder)
+## 3. Pricing structure — FINALIZED (your numbers)
 
-The descending-discount ladder you described is now **implemented and tested**
-(`shared/giveawayLadder.ts`) — one source of truth for both the pricing page and the
-server. Cohorts of 10,000, by signup order:
+**Products (standard / post-promo):**
+- **Audio assessment: $500** (one-time, voice-only).
+- **Fully underwritten assessment: $1,500** (one-time, full-panel evidence tier).
+- **Membership: $79/month, 15-day free trial** (single tier — the ongoing coach + network).
+- **Personal coaching calls / 1-on-1 strategy: a SEPARATE fee, NEVER discounted** (stated on the page).
 
-| Cohort | Signups | Discount | On a $299 lifetime founding membership |
-|---|---|---|---|
-| 1 | 1 – 10,000 | **Free** | $0 |
-| 2 | 10,001 – 20,000 | **75% off** | ~$75 |
-| 3 | 20,001 – 30,000 | **50% off** | ~$150 |
-| 4 | 30,001 – 40,000 | **25% off** | ~$224 |
-| 5 | 40,001+ | full price | $299 (or revert to monthly) |
+**Founding giveaway ladder — 24 months (not lifetime).** Implemented + tested
+(`shared/giveawayLadder.ts`, `GIVEAWAY_DURATION_MONTHS = 24`):
 
-The free-cap infra already exists (`FREE_ASSESSMENT_CAP=10000`) and drives the
-"N of 10,000 free spots left" scarcity counter.
+| Cohort | Signups | Promo (24 months) |
+|---|---|---|
+| 1 | 1 – 10,000 | **Free** |
+| 2 | 10,001 – 20,000 | 75% off |
+| 3 | 20,001 – 30,000 | 50% off |
+| 4 | 30,001 – 40,000 | 25% off |
+| 5 | 40,001+ | standard |
 
-### Lifetime vs. 1 year — recommendation: **LIFETIME, on the entry tier only**
-Your marginal cost per member is tiny **if you fix transcription** (§2): a founding member
-doing monthly re-assessments costs roughly **$1–2/year** in compute. That is nothing
-against the upside:
+### ⚠️ Advertising rule (implemented)
+**Only the first-10,000-FREE tranche is advertised publicly.** The 75% / 50% / 25%
+tranches exist in the backend ladder for enforcement but are **NOT shown on the pricing
+page** — per your instruction. The page instead itemizes what the founding 10,000 are
+having **waived** ($500 assessment + 24×$79 = $1,896 membership → **$2,396 total waived**)
+and states **why**: we are building the network aggressively, and the founding members are
+its foundation.
 
-- **Lifetime-free the ENTRY tier** (assessment + base coaching). Cheap customer acquisition,
-  maximal word-of-mouth, and — critically — it **seeds the matching network with density.**
-  The whole archetypes evidence case says same-line peers only create value at scale, so
-  giving away the entry tier is not charity, it's the flywheel.
-- **Keep the NETWORK tiers paid & recurring** (Gold "Growth & Network" $149/mo, Platinum
-  "Private Network" $499/mo). Unlimited matching and curation are where real cost and real
-  value concentrate — that's your revenue engine. Lifetime-free entry, monetize depth.
+The free-cap infra (`FREE_ASSESSMENT_CAP=10000`) drives the "N of 10,000 free spots left"
+scarcity counter.
 
-So: **lifetime** for the founding giveaway, because you can afford it once STT is cheap, and
-because network density is the actual product. Do **not** make the premium matching tiers
-lifetime — those stay monthly.
+### Economics
+At ~$1–2/member/year in compute (once STT is on Groq, §2), 24 months free costs you a few
+dollars per founding member — trivial against the network density it buys. The $79/mo
+recurring (after promo, and for non-founding members now) is the revenue engine; coaching
+calls are the separate, full-margin, never-discounted upsell.
 
 ---
 

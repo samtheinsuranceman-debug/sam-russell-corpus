@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { playClick } from "@/lib/audio";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
-import { GIVEAWAY_TIERS, COHORT_SIZE } from "@shared/giveawayLadder";
+import { COHORT_SIZE, GIVEAWAY_DURATION_MONTHS, MEMBERSHIP_TRIAL_DAYS } from "@shared/giveawayLadder";
 
 // ============================================================
 // SIMPLIFIED PRICING — Single $299 founding-member offer (regular $1,500 after first 100)
@@ -20,22 +20,54 @@ import { GIVEAWAY_TIERS, COHORT_SIZE } from "@shared/giveawayLadder";
 // ============================================================
 
 const includedFeatures = [
-  { icon: Brain, text: "Full 32-axis voice intelligence assessment" },
-  { icon: Zap, text: "Five-AI consensus scoring system" },
-  { icon: FileText, text: "Complete rarity underwriting report" },
-  { icon: Users, text: "Silver membership network access (5 introductions/month)" },
+  { icon: Brain, text: "Full 32-line voice intelligence assessment" },
+  { icon: Zap, text: "Independent multi-AI consensus scoring" },
+  { icon: FileText, text: "Your rarity + developmental-stage report" },
+  { icon: Users, text: "Network access — matched to peers who share your strongest lines" },
   { icon: RefreshCw, text: "Free retake within 30 days if you disagree" },
-  { icon: Shield, text: "Complementary match previews + connection requests" },
+  { icon: Shield, text: "Research-backed prescriptions from the cited library" },
 ];
 
-// Monthly memberships — the ongoing coach (keys map to Stripe PRODUCTS).
-const MEMBERSHIPS: Array<{ key: "silver" | "gold" | "platinum"; name: string; price: string; tagline: string; features: string[]; highlight?: boolean }> = [
-  { key: "silver", name: "Coaching", price: "$39", tagline: "The ongoing outcome coach", highlight: true,
-    features: ["Monthly re-assessment", "Live tracking of the weakness most threatening your goals", "Your outcome-engineering plan, updated", "Research-backed prescriptions", "5 complementary matches / month"] },
-  { key: "gold", name: "Growth & Network", price: "$149", tagline: "Deeper, faster, unlimited matching",
-    features: ["Everything in Coaching", "Weekly re-assessment", "Deeper outcome-engineering sessions", "Priority evidence verification", "Unlimited network matching"] },
-  { key: "platinum", name: "Private Network", price: "$499", tagline: "The top tier",
-    features: ["Everything in Growth", "Private intelligence network", "1-on-1 AI strategy sessions", "Custom research reports", "White-glove evidence curation"] },
+// Standard prices (what the founding cohort is having waived). Single membership.
+const MEMBERSHIP = {
+  name: "Membership",
+  price: "$79",
+  tagline: "The ongoing coach + the network",
+  trialDays: MEMBERSHIP_TRIAL_DAYS,
+  features: [
+    "Monthly re-assessment across all 32 lines",
+    "Live tracking of the weakness most threatening your goals",
+    "Your outcome-engineering plan, updated",
+    "Research-backed prescriptions from the cited library",
+    "Network matching to peers who share your strongest lines",
+  ],
+};
+
+// The two ways to get assessed (standard, post-promo pricing).
+const ASSESSMENTS = [
+  {
+    name: "Audio Assessment",
+    price: "$500",
+    tagline: "Your voice, all 32 lines",
+    features: [
+      "Full 32-line voice intelligence assessment",
+      "Multi-AI consensus scoring",
+      "Your rarity + developmental-stage report",
+      "Free retake within 30 days if you disagree",
+    ],
+  },
+  {
+    name: "Fully Underwritten Assessment",
+    price: "$1,500",
+    tagline: "The complete, evidence-underwritten read",
+    highlight: true,
+    features: [
+      "Everything in the Audio Assessment",
+      "Full independent-AI panel underwriting every line",
+      "Evidence verification + complete rarity underwriting report",
+      "Deepest confidence tier on your 32-line map",
+    ],
+  },
 ];
 
 
@@ -165,27 +197,55 @@ export default function Pricing() {
             <div className="relative glass-card rounded-2xl p-10 sm:p-12 border border-primary/20" style={{ boxShadow: "0 0 40px oklch(0.68 0.08 165 / 0.08), inset 0 1px 0 oklch(0.78 0.12 85 / 0.1)" }}>
               {/* Badge */}
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[0.65rem] font-bold px-5 py-1.5 rounded-full tracking-wider uppercase">
-                Founding Member
+                Founding 10,000 — Free
               </div>
 
               {/* Price */}
-              <div className="text-center mb-10 mt-4">
-                <div className="flex items-baseline justify-center gap-2">
-                  <span className="text-muted-foreground/40 text-xl line-through">$1,500</span>
-                  <motion.span
-                    className="text-6xl sm:text-7xl font-bold"
-                    style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}
-                    animate={{ textShadow: ["0 0 20px oklch(0.78 0.12 85 / 0.3)", "0 0 40px oklch(0.78 0.12 85 / 0.5)", "0 0 20px oklch(0.78 0.12 85 / 0.3)"] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    $299
-                  </motion.span>
-                </div>
-                <p className="text-muted-foreground/60 text-sm mt-2">Founding member rate (first 100). Regular price $1,500.</p>
+              <div className="text-center mb-8 mt-4">
+                <motion.span
+                  className="text-6xl sm:text-7xl font-bold block"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}
+                  animate={{ textShadow: ["0 0 20px oklch(0.78 0.12 85 / 0.3)", "0 0 40px oklch(0.78 0.12 85 / 0.5)", "0 0 20px oklch(0.78 0.12 85 / 0.3)"] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  Free
+                </motion.span>
+                <p className="text-foreground/80 text-base mt-2 font-medium">
+                  for the first {COHORT_SIZE.toLocaleString()} members — {GIVEAWAY_DURATION_MONTHS} months
+                </p>
               </div>
 
-              {/* Features grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+              {/* What's being waived — itemized */}
+              <div className="rounded-xl border border-accent/20 bg-accent/[0.04] p-5 mb-6">
+                <p className="text-[0.6rem] uppercase tracking-[0.15em] text-accent/80 mb-3 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  What we&rsquo;re waiving for you
+                </p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center justify-between gap-3">
+                    <span className="text-foreground/80">The $500 audio assessment</span>
+                    <span className="text-muted-foreground/40 line-through">$500</span>
+                  </li>
+                  <li className="flex items-center justify-between gap-3">
+                    <span className="text-foreground/80">{GIVEAWAY_DURATION_MONTHS} months of membership ($79/mo)</span>
+                    <span className="text-muted-foreground/40 line-through">${(79 * GIVEAWAY_DURATION_MONTHS).toLocaleString()}</span>
+                  </li>
+                  <li className="flex items-center justify-between gap-3 pt-2 border-t border-white/[0.06]">
+                    <span className="text-accent/90 font-medium">Total waived</span>
+                    <span className="text-accent font-semibold">${(500 + 79 * GIVEAWAY_DURATION_MONTHS).toLocaleString()}</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Why */}
+              <p className="text-sm text-muted-foreground/70 leading-relaxed mb-6 text-center">
+                Why free? Because the value of this platform is the <span className="text-foreground/85">network</span> —
+                and a network is only as strong as the people in it. We are building it aggressively, and the first
+                {" "}{COHORT_SIZE.toLocaleString()} members are the foundation. You get the full assessment and {GIVEAWAY_DURATION_MONTHS} months
+                of membership at no cost; in return, you make the network worth joining.
+              </p>
+
+              {/* What you get */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                 {includedFeatures.map((f) => (
                   <div key={f.text} className="flex items-start gap-3">
                     <f.icon className="w-4 h-4 mt-0.5 shrink-0 text-accent/80" />
@@ -206,7 +266,7 @@ export default function Pricing() {
                     Processing...
                   </span>
                 ) : (
-                  "Begin Your Assessment — $299"
+                  "Claim your free founding membership"
                 )}
               </Button>
 
@@ -217,99 +277,69 @@ export default function Pricing() {
             </div>
           </motion.div>
 
-          {/* Founding-member giveaway ladder — the launch offer, by signup order */}
+          {/* Standard pricing — what the founding cohort is having waived */}
           <motion.div
-            className="mt-6 mb-14 max-w-3xl mx-auto"
+            className="mt-6 mb-14 max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
           >
-            <div className="text-center mb-6">
-              <p className="section-label mb-3">Founding access — first {(COHORT_SIZE * 4).toLocaleString()} members</p>
-              <h2 className="text-2xl sm:text-3xl text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
-                The earlier you join, the more it&rsquo;s yours for life.
-              </h2>
-              <p className="text-sm text-muted-foreground/60 mt-2">
-                Founding membership is priced by when you arrive. The first {COHORT_SIZE.toLocaleString()} are free — for life.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-              {GIVEAWAY_TIERS.map((t, i) => {
-                const pct = Math.round(t.discount * 100);
-                const active = i === 0; // cohort 1 is live at launch
-                return (
-                  <div
-                    key={t.index}
-                    className={`rounded-xl border p-4 text-center ${active ? "border-primary/50 bg-primary/[0.06]" : "border-white/[0.06] bg-white/[0.02]"}`}
-                  >
-                    <p className="text-[0.55rem] uppercase tracking-[0.12em] text-muted-foreground/50" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                      {t.to === null ? `${t.from.toLocaleString()}+` : `${t.from.toLocaleString()}–${t.to.toLocaleString()}`}
-                    </p>
-                    <p className={`mt-2 text-xl font-bold ${active ? "text-primary" : "text-foreground/80"}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                      {t.discount === 1 ? "Free" : t.discount === 0 ? "Full" : `${pct}% off`}
-                    </p>
-                    <p className="text-[0.65rem] text-muted-foreground/50 mt-1">for life</p>
-                    {active && (
-                      <span className="inline-block mt-2 text-[0.55rem] uppercase tracking-[0.1em] text-primary" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                        Open now
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            <p className="text-center text-xs text-muted-foreground/40 mt-4">
-              Lifetime founding rate locks in at signup and never rises. Premium network tiers below stay monthly.
-            </p>
-          </motion.div>
-
-          {/* Coaching memberships — the ongoing coach */}
-          <motion.div
-            className="mt-4 mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
-          >
             <div className="text-center mb-8">
-              <p className="section-label mb-3">Then keep the coach — monthly</p>
+              <p className="section-label mb-3">After the founding {COHORT_SIZE.toLocaleString()}</p>
               <h2 className="text-2xl sm:text-3xl text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
-                The report tells you where you stand. The coach gets you there.
+                What it&rsquo;s worth — and what you&rsquo;re getting free.
               </h2>
             </div>
-            <div className="grid sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
-              {MEMBERSHIPS.map((m) => (
-                <div key={m.key} className={`glass-card rounded-2xl p-6 flex flex-col border ${m.highlight ? "border-primary/40" : "border-white/[0.06]"}`}>
-                  {m.highlight && (
-                    <span className="text-[0.6rem] uppercase tracking-widest text-primary mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Most popular</span>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {ASSESSMENTS.map((a) => (
+                <div key={a.name} className={`glass-card rounded-2xl p-6 flex flex-col border ${a.highlight ? "border-primary/40" : "border-white/[0.06]"}`}>
+                  {a.highlight && (
+                    <span className="text-[0.6rem] uppercase tracking-widest text-primary mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Deepest read</span>
                   )}
-                  <h3 className="text-lg font-semibold text-foreground">{m.name}</h3>
-                  <p className="text-xs text-muted-foreground/50 mb-3">{m.tagline}</p>
+                  <h3 className="text-lg font-semibold text-foreground">{a.name}</h3>
+                  <p className="text-xs text-muted-foreground/50 mb-3">{a.tagline}</p>
                   <div className="mb-4">
-                    <span className="text-3xl font-bold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{m.price}</span>
-                    <span className="text-muted-foreground/50 text-sm">/mo</span>
+                    <span className="text-3xl font-bold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{a.price}</span>
+                    <span className="text-muted-foreground/50 text-sm"> one-time</span>
                   </div>
-                  <ul className="space-y-2 mb-6 flex-1">
-                    {m.features.map((f) => (
+                  <ul className="space-y-2 flex-1">
+                    {a.features.map((f) => (
                       <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground/70">
                         <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-accent/70" /> {f}
                       </li>
                     ))}
                   </ul>
-                  <Button
-                    onClick={() => subscribeTo(m.key)}
-                    disabled={isLoading}
-                    variant={m.highlight ? "default" : "outline"}
-                    className={m.highlight
-                      ? "w-full bg-primary text-primary-foreground"
-                      : "w-full border-primary/20 text-primary hover:bg-primary/[0.06]"}
-                  >
-                    Start {m.name}
-                  </Button>
                 </div>
               ))}
             </div>
-            <p className="text-center text-[0.7rem] text-muted-foreground/40 mt-5">
-              Cancel anytime. Memberships unlock the evidence-based tier and your ongoing outcome plan.
+
+            {/* Membership — single tier, monthly, with free trial */}
+            <div className="glass-card rounded-2xl p-6 border border-primary/30 mt-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground">{MEMBERSHIP.name}</h3>
+                  <p className="text-xs text-muted-foreground/50">{MEMBERSHIP.tagline}</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-3xl font-bold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{MEMBERSHIP.price}</span>
+                  <span className="text-muted-foreground/50 text-sm">/mo</span>
+                  <p className="text-[0.7rem] text-accent/80 mt-0.5">{MEMBERSHIP.trialDays}-day free trial</p>
+                </div>
+              </div>
+              <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2 mt-4">
+                {MEMBERSHIP.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground/70">
+                    <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-accent/70" /> {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Coaching-fee disclosure — separate, never discounted */}
+            <p className="text-center text-[0.72rem] text-muted-foreground/45 mt-5 max-w-2xl mx-auto leading-relaxed">
+              Personal coaching calls and one-on-one strategy sessions are offered separately from the assessment and
+              membership fees, and are <span className="text-muted-foreground/70">never discounted</span>. Cancel your
+              membership anytime.
             </p>
           </motion.div>
 

@@ -23,6 +23,16 @@ export type GiveawayTier = {
 // Each cohort is COHORT_SIZE members. Tune here if the cohorts change size.
 export const COHORT_SIZE = 10_000;
 
+// The founding discount applies for this many months, then the member converts
+// to standard pricing. (Not lifetime — the promo is time-boxed.)
+export const GIVEAWAY_DURATION_MONTHS = 24;
+
+// Standard (post-promo) prices, in cents. Single source of truth for UI + Stripe.
+export const PRICE_AUDIO_ASSESSMENT_CENTS = 50_000; // $500 — voice-only assessment
+export const PRICE_UNDERWRITTEN_ASSESSMENT_CENTS = 150_000; // $1,500 — fully underwritten
+export const PRICE_MEMBERSHIP_MONTHLY_CENTS = 7_900; // $79/mo — recurring coach + network
+export const MEMBERSHIP_TRIAL_DAYS = 15;
+
 export const GIVEAWAY_TIERS: GiveawayTier[] = [
   { index: 0, label: "Founding — Free", discount: 1.0, from: 1, to: COHORT_SIZE },
   { index: 1, label: "Founding — 75% off", discount: 0.75, from: COHORT_SIZE + 1, to: COHORT_SIZE * 2 },
