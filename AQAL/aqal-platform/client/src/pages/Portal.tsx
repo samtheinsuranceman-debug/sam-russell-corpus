@@ -884,6 +884,8 @@ export default function Portal() {
 
   // Fetch user's latest assessment and scores
   const profileData = trpc.profile.get.useQuery(undefined, { enabled: !!user });
+  // The raw current assessment (returns even when in-progress) — powers the resume banner.
+  const currentAssessment = trpc.assessment.current.useQuery(undefined, { enabled: !!user });
 
   // Login gate
   if (loading) {
@@ -918,6 +920,32 @@ export default function Portal() {
       <PortalNav activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
 
       <div className="max-w-[1180px] mx-auto px-5 py-8">
+        {(() => {
+          const a = currentAssessment.data;
+          if (!a || a.status === "complete") return null;
+          const total = a.totalQuestions || 27;
+          const done = a.completedQuestions || 0;
+          const pct = Math.max(0, Math.min(100, Math.round((done / total) * 100)));
+          return (
+            <Card className="p-5 mb-6 bg-primary/[0.06] border-primary/30">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="flex-1">
+                  <p className="font-mono text-[10px] tracking-[0.24em] text-primary mb-1 uppercase">Pick up where you left off</p>
+                  <h3 className="font-display text-lg font-semibold text-foreground">Your assessment is {pct}% done</h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    {done} of {total} answered. Your progress is saved — finish whenever, even a few questions at a time.
+                  </p>
+                  <div className="h-1.5 bg-background rounded-full overflow-hidden mt-3 max-w-md">
+                    <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${pct}%` }} />
+                  </div>
+                </div>
+                <Link href="/assessment">
+                  <Button className="shrink-0 bg-primary text-primary-foreground">Continue assessment</Button>
+                </Link>
+              </div>
+            </Card>
+          );
+        })()}
         <TrackerReminderPrompt user={user} />
         {activeTab === "overview" && <OverviewTab user={user} scores={profileData.data?.scores} assessment={profileData.data?.assessment} />}
         {activeTab === "profile" && <ProfileTab scores={profileData.data?.scores} />}
