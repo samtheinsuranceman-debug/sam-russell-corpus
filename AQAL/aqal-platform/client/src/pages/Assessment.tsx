@@ -32,14 +32,14 @@ const QUESTIONS_SOURCE: {
   {
     id: 1,
     title: "The Theme Park",
-    text: "You're handed a theme park and a blank check to add three rides that don't exist anywhere. Build the first one — walk me through what it feels like to ride it. What's the one that's a little dangerous? What's the one nobody expects?",
+    text: "You're handed a theme park and a blank check to add three rides that don't exist anywhere. Build the first one — walk me through what it feels like to ride it. What's the one that's a little dangerous? What's the one nobody expects? And here's what I'm really curious about: what do you want a person to feel by the time they walk out the gate — and what does building the whole place around that feeling say about you?",
     dimension: "Imaginative Design",
     axes: [22, 25, 2, 15, 17, 10, 27],
   },
   {
     id: 2,
     title: "The Superpower Trial",
-    text: "You test-drive a different superpower every day this week — flight, invisibility, super-strength, telepathy, teleportation, healing touch, and one you invent for Sunday. Which day are you most excited for, and what's the first thing you do that morning? Which one do you keep forever?",
+    text: "You test-drive a different superpower every day this week — flight, invisibility, super-strength, telepathy, teleportation, healing touch, and one you invent for Sunday. Which day are you most excited for, and what's the first thing you do that morning? Which one do you keep forever? And be honest about the one you invented for Sunday — what problem in your own real life were you secretly building it to solve?",
     dimension: "Playful Agency",
     axes: [4, 17, 6, 19, 5, 15, 27],
   },
@@ -95,7 +95,7 @@ const QUESTIONS_SOURCE: {
   {
     id: 10,
     title: "The Zoo of Impossible Animals",
-    text: "You run a zoo that only holds animals that don't exist. Fill the first enclosure — what goes in, and what does the crowd do when they see it? What's the one that's a little scary? What do you feed them, and how does the whole place stay alive?",
+    text: "You run a zoo that only holds animals that don't exist. Fill the first enclosure — what goes in, and what does the crowd do when they see it? What's the one that's a little scary? What do you feed them, and how does the whole place stay alive? And tell me — which of your impossible animals is secretly you? The one you'd go sit with alone after the gates close, and why that one?",
     dimension: "Creative Systems",
     axes: [16, 22, 25, 2, 21, 10, 27],
   },
@@ -241,15 +241,16 @@ const QUESTIONS_SOURCE: {
 // then depth/identity, then the vulnerable legacy close. (Goals-question
 // positions are tracked in shared/goalsQuestions.ts — keep them in sync.)
 const QUESTION_ORDER = [
-  // Phase 1 — pure play warm-up (easiest, widest)
-  1, 2, 3, 4, 10, 15,
-  // Phase 2 — bigger fun builds (more structure, still light)
-  5, 7, 11, 9, 8,
-  // Phase 3 — scale + goals (buy-in established)
-  12, 13, 14,
+  // Phase 1 — pure play warm-up (get them talking, low threat)
+  1, 2, 3, 4,
+  // Phase 2 — goals early, while it's still a DREAM (reminds them what this is
+  // for: engineering THEIR outcomes) — aspirational, so it keeps the energy up
+  13, 14,
+  // Phase 3 — bigger fun builds + scale
+  10, 15, 5, 7, 11, 9, 8, 12,
   // Phase 4 — people / persuasion (relational warmth)
   16, 19, 18, 17, 6,
-  // Phase 5 — depth / resilience / identity
+  // Phase 5 — depth / resilience / identity (incl. the Pre-Mortem, the hard one)
   21, 22, 20, 23, 24,
   // Phase 6 — vulnerable / legacy close
   25, 26, 27,
