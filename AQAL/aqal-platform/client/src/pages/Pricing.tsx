@@ -360,10 +360,10 @@ export default function Pricing() {
                 The science behind the underwriting
               </p>
               <p className="text-sm text-foreground/75 leading-relaxed max-w-2xl mx-auto">
-                This isn&rsquo;t a personality quiz. The underwriting applies a <span className="text-foreground">validated,
-                peer-reviewed developmental-measurement method</span> — the constructivist ego-development framework used in
-                academic psychology — and scores every line against it with an independent multi-AI panel. The research
-                foundation is already built and documented, not a promise: {" "}
+                This isn&rsquo;t a personality quiz. The underwriting applies a <span className="text-foreground">scientifically
+                proven developmental-measurement method</span> — the constructivist ego-development framework, validated across
+                decades of peer-reviewed research in academic psychology — and scores every one of your 32 lines against it with
+                an independent multi-AI panel. The research foundation is already built and documented, not a promise: {" "}
                 <Link href="/archetypes"><a className="text-accent hover:underline">see the evidence</a></Link>.
               </p>
             </div>

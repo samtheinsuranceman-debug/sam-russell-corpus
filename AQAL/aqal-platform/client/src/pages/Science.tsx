@@ -229,7 +229,7 @@ export default function Science() {
           <p className="text-muted-foreground/70 leading-relaxed mb-8 max-w-2xl">
             Your 32 lines don't act alone — they reinforce, cap, and lift one another. The platform
             reads the whole shape using established systems science, then applies it to your profile.
-            Where the <span className="text-foreground/90">method</span> is established research, we
+            Where the <span className="text-foreground/90">method is scientifically proven research</span>, we
             treat the <span className="text-foreground/90">specific ranking within your profile</span> as
             a model-based estimate, confirmed as our own data grows.
           </p>
