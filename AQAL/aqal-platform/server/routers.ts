@@ -1175,15 +1175,17 @@ Return ONLY valid JSON.` },
     // Public client-side funnel pings (landing views, etc.). Best-effort.
     track: publicProcedure
       .input(z.object({
-        type: z.enum(["landing_view", "assessment_start", "checkout_start"]),
+        type: z.enum(["landing_view", "assessment_start", "checkout_start", "question_answered"]),
         sessionId: z.string().max(64).optional(),
-        variant: z.string().max(40).optional(), // hero A/B variant id
+        variant: z.string().max(40).optional(), // hero A/B variant id, or question-alt index
+        question: z.number().min(0).max(200).optional(), // per-question funnel position
       }))
       .mutation(async ({ input, ctx }) => {
         await recordEvent({
           type: input.type,
           userId: ctx.user?.id ?? null,
           sessionId: input.sessionId ?? null,
+          numericValue: input.question ?? null,
           meta: input.variant ? { variant: input.variant } : undefined,
         });
         return { ok: true };

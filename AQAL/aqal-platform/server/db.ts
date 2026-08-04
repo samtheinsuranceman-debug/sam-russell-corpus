@@ -199,6 +199,14 @@ export async function saveResponse(data: {
 }) {
   const db = await getDb();
   if (!db) return null;
+  // Upsert by (assessmentId, questionIndex): answers can now be uploaded
+  // incrementally as they're captured and re-uploaded after a re-record or a
+  // question swap, so a later upload must REPLACE the earlier row — scoring
+  // must never see two answers for one slot.
+  await db.delete(responses).where(and(
+    eq(responses.assessmentId, data.assessmentId),
+    eq(responses.questionIndex, data.questionIndex),
+  ));
   const result = await db.insert(responses).values({
     assessmentId: data.assessmentId,
     questionIndex: data.questionIndex,

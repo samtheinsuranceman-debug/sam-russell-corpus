@@ -909,6 +909,12 @@ export default function Assessment() {
   // Lets a person swap a question they're not drawn to for an equally-complex
   // one eliciting the same lines, until they find a puzzle they want to solve.
   const [questionVariants, setQuestionVariants] = useState<Record<number, number>>({});
+  // Which question slots have been safely uploaded to the server. Answers are
+  // uploaded in the BACKGROUND the moment they're captured (crash-proof: a
+  // refresh/tab-close can no longer lose recorded work), and the final submit
+  // only sends whatever didn't make it. Marked false again when an answer is
+  // re-recorded or swapped away.
+  const [uploadedIdx, setUploadedIdx] = useState<Record<number, boolean>>({});
   const [useTextMode, setUseTextMode] = useState(false);
   // ── Companion mode ─────────────────────────────────────────────────────────
   // Optional, strongly recommended: a partner / best friend / anyone who knows the
@@ -941,7 +947,52 @@ export default function Assessment() {
   const submitTextMutation = trpc.assessment.submitTextResponse.useMutation();
   const analyzeMutation = trpc.assessment.analyze.useMutation();
   const saveCompanionMutation = trpc.assessment.saveCompanion.useMutation();
+  const trackMutation = trpc.analytics.track.useMutation();
   const companionSavedRef = useRef(false);
+
+  // ── Incremental background upload ─────────────────────────────
+  // Ensure the server-side assessment exists (once), then push each answer up
+  // the moment it's captured. Failures stay silent — the final submit retries
+  // anything unmarked. Requires a logged-in user; otherwise the legacy
+  // everything-at-the-end path still applies.
+  const ensureAssessmentInFlight = useRef<Promise<number | null> | null>(null);
+  const assessmentIdRef = useRef<number | null>(null);
+  useEffect(() => { assessmentIdRef.current = assessmentId; }, [assessmentId]);
+
+  const ensureAssessment = useCallback(async (): Promise<number | null> => {
+    if (assessmentIdRef.current) return assessmentIdRef.current;
+    if (!user) return null;
+    if (!ensureAssessmentInFlight.current) {
+      ensureAssessmentInFlight.current = startMutation
+        .mutateAsync(birthYear ? { birthYear } : {})
+        .then((r) => {
+          const id = r.success && r.assessmentId ? r.assessmentId : null;
+          if (id) { setAssessmentId(id); assessmentIdRef.current = id; }
+          return id;
+        })
+        .catch(() => { ensureAssessmentInFlight.current = null; return null; });
+    }
+    return ensureAssessmentInFlight.current;
+  }, [user, birthYear, startMutation]);
+
+  const backgroundUploadAnswer = useCallback(async (index: number, blob: Blob | null, transcript: string, durationMs: number) => {
+    try {
+      const aId = await ensureAssessment();
+      if (!aId) return; // not logged in / start failed — final submit will handle it
+      if (transcript.trim().length > 0) {
+        await submitTextMutation.mutateAsync({ assessmentId: aId, questionIndex: index, text: transcript.trim() });
+      } else if (blob) {
+        const arrayBuffer = await blob.arrayBuffer();
+        const base64 = btoa(new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ""));
+        await uploadResponseMutation.mutateAsync({ assessmentId: aId, questionIndex: index, audioBase64: base64, durationMs });
+      } else {
+        return;
+      }
+      setUploadedIdx((u) => ({ ...u, [index]: true }));
+    } catch {
+      // Silent: the answer stays local and the final submit re-sends it.
+    }
+  }, [ensureAssessment, submitTextMutation, uploadResponseMutation]);
 
   // Detect if voice recording is supported
   const recordingSupported = typeof window !== "undefined" && typeof window.MediaRecorder !== "undefined" && !!navigator.mediaDevices?.getUserMedia;
@@ -1052,8 +1103,12 @@ export default function Assessment() {
     const saved = localStorage.getItem('aqal_assessment_progress');
     if (saved) {
       try {
-        const { question: q, scores: s, textResponses: tr, textMode, skipped, companion, variants } = JSON.parse(saved);
+        const { question: q, scores: s, textResponses: tr, textMode, skipped, companion, variants, uploaded, assessmentId: savedAid } = JSON.parse(saved);
         if (variants && typeof variants === "object") setQuestionVariants(variants);
+        // Restore what's already on the server: answers uploaded in a previous
+        // session survive the refresh even though their audio blobs don't.
+        if (uploaded && typeof uploaded === "object") setUploadedIdx(uploaded);
+        if (typeof savedAid === "number" && savedAid > 0) setAssessmentId(savedAid);
         if (typeof q === 'number' && q > 0) setCurrentQuestion(q);
         if (Array.isArray(s) && s.length === 22) setScores(s);
         if (Array.isArray(tr) && tr.length === TOTAL_QUESTIONS) setTextResponses(tr);
@@ -1080,6 +1135,8 @@ export default function Assessment() {
     setUseTextMode(false);
     setCompanionResponses(Array(TOTAL_QUESTIONS).fill(""));
     setQuestionVariants({});
+    setUploadedIdx({});
+    setAssessmentId(null);
     setShowResumeDialog(false);
   }, []);
 
@@ -1094,9 +1151,11 @@ export default function Assessment() {
         skipped: skippedQuestions,
         companion: { mode: companionMode, name: companionName, relation: companionRelation, responses: companionResponses },
         variants: questionVariants,
+        uploaded: uploadedIdx,
+        assessmentId,
       }));
     }
-  }, [currentQuestion, scores, textResponses, useTextMode, skippedQuestions, companionMode, companionName, companionRelation, companionResponses, questionVariants]);
+  }, [currentQuestion, scores, textResponses, useTextMode, skippedQuestions, companionMode, companionName, companionRelation, companionResponses, questionVariants, uploadedIdx, assessmentId]);
 
   // Clear progress on completion
   useEffect(() => {
@@ -1190,6 +1249,22 @@ export default function Assessment() {
         questionAxes.forEach((a) => { if ((prevScores[a] ?? 0) === 0) newLines++; });
         const totalLines = prevScores.filter((s) => s > 0).length + newLines;
         setFeedback({ tier: tierForDepth(voiceDepth(durationSec)), newLines, totalLines });
+
+        // Crash-proof: push this answer to the server NOW, in the background.
+        // (Re-recording marks the slot dirty and re-uploads — server upserts.)
+        const heard = liveTranscriptRef.current.trim();
+        setUploadedIdx((u) => ({ ...u, [currentQuestion]: false }));
+        void backgroundUploadAnswer(currentQuestion, blob, heard, Math.round(durationSec * 1000));
+
+        // Silent-mic guard: they talked for a while but the browser transcriber
+        // (when available) heard nothing — warn NOW, not at scoring time.
+        const srSupported = !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+        if (srSupported && durationSec > 20 && heard.length === 0) {
+          toast.warning("We couldn't make out any words — check your microphone and tap the mic to re-record this one.");
+        } else if (heard.length > 0) {
+          const words = heard.split(/\s+/).length;
+          toast.success(`Captured — ~${words} words heard.`);
+        }
       };
 
       mediaRecorder.start(250);
@@ -1232,7 +1307,7 @@ export default function Assessment() {
         toast.error("Failed to start recording. Please try a different browser.");
       }
     }
-  }, [currentQuestion, recordingStartTime]);
+  }, [currentQuestion, recordingStartTime, backgroundUploadAnswer]);
 
   // Stop recording
   const stopRecording = useCallback(() => {
@@ -1293,7 +1368,18 @@ export default function Assessment() {
         return next;
       });
     }
-    
+
+    // Typed/text-mode answers get the same crash-proof background upload the
+    // voice path gets in onstop (skip if this slot already made it up).
+    const txt = textResponses[currentQuestion]?.trim() ?? "";
+    if (!uploadedIdx[currentQuestion] && txt.length > 0) {
+      void backgroundUploadAnswer(currentQuestion, recordings[currentQuestion], txt, 0);
+    }
+
+    // Per-question funnel signal: WHERE people are in the assessment is the
+    // data that tunes the question order later. Best-effort.
+    trackMutation.mutate({ type: "question_answered", question: currentQuestion, variant: String(questionVariants[QUESTIONS[currentQuestion].id] ?? 0) });
+
     // All questions are free. The paywall now gates the evidence-based
     // scoring method after completion — not the questions themselves.
     if (currentQuestion < TOTAL_QUESTIONS - 1) {
@@ -1304,7 +1390,7 @@ export default function Assessment() {
       toast.success("Assessment complete! Submitting your responses...");
       submitAllResponses();
     }
-  }, [currentQuestion, recordings, textResponses, user]);
+  }, [currentQuestion, recordings, textResponses, user, uploadedIdx, questionVariants, backgroundUploadAnswer]);
 
   // Submit all recordings/text to backend, then trigger analysis
   const submitAllResponses = useCallback(async () => {
@@ -1333,9 +1419,11 @@ export default function Assessment() {
         setAssessmentId(aId);
       }
 
-      // Upload each response (skip skipped questions)
+      // Upload each response (skip skipped questions and anything the
+      // incremental background uploader already delivered).
       for (let i = 0; i < TOTAL_QUESTIONS; i++) {
         if (skippedQuestions.includes(i)) continue;
+        if (uploadedIdx[i]) continue;
         
         const recording = recordings[i];
         const textResp = textResponses[i];
@@ -1384,7 +1472,7 @@ export default function Assessment() {
       setAnalysisSucceeded(false);
       setIsComplete(true);
     }
-  }, [recordings, textResponses, assessmentId, skippedQuestions, startMutation, uploadResponseMutation, submitTextMutation, analyzeMutation]);
+  }, [recordings, textResponses, assessmentId, skippedQuestions, uploadedIdx, startMutation, uploadResponseMutation, submitTextMutation, analyzeMutation]);
 
   const goPrev = useCallback(() => {
     if (currentQuestion > 0) setCurrentQuestion((q) => q - 1);
@@ -2334,6 +2422,7 @@ export default function Assessment() {
                   setRecordings((r) => { const n = [...r]; n[currentQuestion] = null; return n; });
                   setTextResponses((t) => { const n = [...t]; n[currentQuestion] = ""; return n; });
                   setCompanionResponses((c) => { const n = [...c]; n[currentQuestion] = ""; return n; });
+                  setUploadedIdx((u) => ({ ...u, [currentQuestion]: false }));
                 }
                 setQuestionVariants((v) => ({ ...v, [baseQuestion.id]: (v[baseQuestion.id] ?? 0) + 1 }));
               }}
