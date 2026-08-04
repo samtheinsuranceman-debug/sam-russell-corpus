@@ -19,10 +19,10 @@
 export const GOALS_QUESTION_IDS = [13, 14, 20] as const;
 
 /** 0-based positions of the goals questions within QUESTION_ORDER (display order).
- *  Goals are surfaced EARLY (Blueprint 13 → 4, Seven Perfect Things 14 → 5) to
- *  remind the person what this is for; the Goal Pre-Mortem (20) → 21 stays in the
- *  depth phase. Keep in sync with QUESTION_ORDER in Assessment.tsx. */
-export const GOALS_QUESTION_INDICES = [4, 5, 21] as const;
+ *  Five lay-ups open, then goals EARLY (Blueprint 13 → 5, Seven Perfect Things
+ *  14 → 6) to remind the person what this is for; the Goal Pre-Mortem (20) → 21
+ *  stays in the depth phase. Keep in sync with QUESTION_ORDER in Assessment.tsx. */
+export const GOALS_QUESTION_INDICES = [5, 6, 21] as const;
 
 /** True if a stored response (by its display-order index) is a goals/outcomes answer. */
 export function isGoalsResponse(questionIndex: number | null | undefined): boolean {

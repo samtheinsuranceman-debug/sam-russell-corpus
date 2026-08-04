@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { Mic, MicOff, ArrowRight, ArrowLeft, Check, SkipForward, Lock, Star, Users, Zap, Shield, Crown, Sparkles } from "lucide-react";
+import { Mic, MicOff, ArrowRight, ArrowLeft, Check, SkipForward, Lock, Star, Users, Zap, Shield, Crown, Sparkles, RefreshCw } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { beginAuth } from "@/lib/agreement";
 import { playComplete, playClick } from "@/lib/audio";
@@ -241,14 +241,15 @@ const QUESTIONS_SOURCE: {
 // then depth/identity, then the vulnerable legacy close. (Goals-question
 // positions are tracked in shared/goalsQuestions.ts — keep them in sync.)
 const QUESTION_ORDER = [
-  // Phase 1 — pure play warm-up (get them talking, low threat)
-  1, 2, 3, 4,
-  // Phase 2 — goals early, while it's still a DREAM (reminds them what this is
-  // for: engineering THEIR outcomes) — aspirational, so it keeps the energy up
+  // Phase 1 — FIVE lay-ups: the widest, most impulsively-answerable worlds.
+  // Anyone can jump in mid-sentence; the only job here is the talking habit.
+  1, 2, 3, 4, 10,
+  // Phase 2 — values/goals early, while it's still a DREAM (reminds them what
+  // this is FOR: engineering THEIR outcomes) — aspirational, keeps energy up
   13, 14,
-  // Phase 3 — bigger fun builds + scale
-  10, 15, 5, 7, 11, 9, 8, 12,
-  // Phase 4 — people / persuasion (relational warmth)
+  // Phase 3 — bigger imaginative builds, complexity rising a notch each time
+  15, 5, 7, 11, 9, 8, 12,
+  // Phase 4 — people / persuasion (relational warmth, still playable)
   16, 19, 18, 17, 6,
   // Phase 5 — depth / resilience / identity (incl. the Pre-Mortem, the hard one)
   21, 22, 20, 23, 24,
@@ -256,6 +257,114 @@ const QUESTION_ORDER = [
   25, 26, 27,
 ];
 const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
+
+// ============================================================
+// QUESTION ALTERNATES — "not feeling this one? swap it."
+// ============================================================
+// Every non-structural question has two alternates of EQUAL complexity that
+// elicit the SAME intelligence lines (alternates inherit the base question's
+// axes/dimension/flags by construction, so coverage can't drift). A person who
+// isn't drawn to one world can swap up to twice until they find the puzzle they
+// actually want to solve. The three goals questions (13/14/20) are structural —
+// the coach parses their answers — so they have no alternates.
+const QUESTION_ALTS: Record<number, { title: string; text: string }[]> = {
+  1: [
+    { title: "The Restaurant That Breaks the Rules", text: "You're handed a building and a blank check to open a restaurant unlike any on Earth. Walk me through a full night there — the room, the theater of the meal, the dish that's a little dangerous, the moment mid-dinner nobody sees coming. What do you want a person to feel when they step back onto the street — and what does building the whole night around that feeling say about you?" },
+    { title: "The Open World", text: "A game studio hands you the keys to build an open-world game of your own invention. Build the first zone out loud — what it looks like, how moving through it feels, the secret only 1% of players ever find, the rule of normal life that doesn't apply here. What do you want a player to feel at the end — and why that feeling?" },
+  ],
+  2: [
+    { title: "The Time-Loop Day", text: "You're caught in a time loop — the same day, resetting every midnight, and only you remember. By loop ten, what are you doing? By loop fifty, what have you mastered, learned, or fixed? And when the loop finally breaks, what's the one thing from all those practice runs you carry into your real life — what were you secretly training for?" },
+    { title: "The Genie's Weird Rule", text: "A genie grants you three wishes — but the rule is every wish has to upgrade YOU, not the world. New abilities, new traits, new wiring. What three upgrades do you take, and walk me through the first morning you wake up with all three. Which one were you secretly building to fix a real problem in your life right now?" },
+  ],
+  3: [
+    { title: "The Private Train", text: "You're given a restored luxury train and a year of open track across any continent. Plan the maiden journey — the route, who rides in which car, what plays in the lounge car at midnight, the stop that isn't on any schedule. Somewhere on that train is a night that becomes legend among everyone aboard — tell me about it." },
+    { title: "The Yacht Summer", text: "A fully-crewed yacht is yours for one summer. Chart it — the ports, the rotating cast of guests, the music on deck at sunset, the dinner that goes until 3am. How do you decide who gets the final invitation of the season — and what happens the night everything comes together?" },
+  ],
+  4: [
+    { title: "The Van Year", text: "You convert a van and take three months with no bookings and no plan. How do you build the van — what's clever about it? How do you decide each morning where to point it? Who joins for a stretch, and who do you go pick up? Tell me about the detour that wasn't on any map and becomes the story you tell for years." },
+    { title: "The Lost Weekend", text: "You land in a foreign city where you don't speak the language. Phone's dead, you've got 48 hours and a pocket of cash. Walk me through it hour by hour — how you find food, the neighborhood you gravitate to, the stranger you end up spending an evening with, and the thing you do there that you'd never do at home." },
+  ],
+  5: [
+    { title: "The Subscription Nobody Cancels", text: "Invent the $9-a-month product that nobody ever cancels. What is it, why does it hook so deep, and how does it work under the hood? How do you get the first thousand subscribers without an ad budget? What's the pricing trick that makes it feel free — and where does the real money quietly come from?" },
+    { title: "The Marketplace", text: "Build a marketplace that connects two groups who desperately need each other but can't find each other today. Who are they? Solve the chicken-and-egg — which side do you seduce first, and how? What's your cut, how does trust work between strangers, and what does it look like when it's the default place everyone goes?" },
+  ],
+  6: [
+    { title: "The Interview With Younger You", text: "Fifteen-year-old you gets one hour to interview present-day you, and they came with hard questions. What do they ask first? Which answer makes them light up, which one disappoints them, and which question do you have to sit in silence before answering honestly? What do they say as they leave — and what do you wish you'd said back?" },
+    { title: "The Council of Yous", text: "Around one table: eight-year-old you, twenty-year-old you, present you, and seventy-year-old you — convened to decide your next big move. Who talks first, and what's their case? Who disagrees with whom? What does the eight-year-old want that everyone forgot about? And what does the seventy-year-old say that ends the debate?" },
+  ],
+  7: [
+    { title: "The Mountain Town", text: "You're deeded a valley in the mountains and the resources to found a town from nothing. How many people do you start with, and who are they? Lay it out — the center, the economy, what it trades with the outside world, the festival it becomes known for. What are the three laws, and what do you refuse to let it become as it grows?" },
+    { title: "The Orbital Neighborhood", text: "You design a 500-person space-station neighborhood — humanity's first real town off Earth. Who gets a berth, and how do you choose? Arrange it — where people gather, how food and money work, what keeps 500 people sane in a can. What tradition do you install in year one so it still feels human in year fifty?" },
+  ],
+  8: [
+    { title: "The Poker Table", text: "You sit down at a high-stakes table with five strangers and a bankroll you set. Set your rules — how much of it are you willing to lose tonight, and why that number? Read the table for me: who's loose, who's scared, who's trapping. When do you bluff, when do you fold a good hand, and how do you know when to stand up and walk?" },
+    { title: "The Prediction Year", text: "You get $10,000 that can only be used to bet on real-world outcomes for one year — elections, markets, sports, weather, anything with odds. What do you bet on, and at what odds? Where do you honestly believe you have an edge over the crowd — and what result would prove you wrong? How do you size the bets so one bad call can't end you?" },
+  ],
+  9: [
+    { title: "The School Rebuilt", text: "You're given a blank campus and total authority to redesign school from zero for a ten-year-old you love. What does Monday look like? What subjects exist that don't today, what's gone entirely, and how do you know if a kid is thriving? What's the deeper idea about what a human is that your school is quietly built on?" },
+    { title: "The Four-Year Mayor", text: "Your city elects you mayor with a supermajority — you can actually do things. First 90 days: what do you gut, what do you build? Walk me through the one broken system you redesign end-to-end and how the new one works. What does the city feel like in year four — and what did you refuse to touch, on principle?" },
+  ],
+  10: [
+    { title: "The Garden of Invented Plants", text: "You keep a botanical garden of plants that don't exist. Plant the first bed — what grows there, what does it do at night, which one is a little dangerous to stand near? How do the plants feed, and how does the whole garden keep itself alive? And which invented plant is secretly you — the one you'd sit beside alone after closing, and why?" },
+    { title: "The Museum of Things That Never Happened", text: "You curate a museum of alternate history — halls full of things that never happened. Build the first three exhibits — what's in them, how are the rooms staged, what does the crowd do? Which exhibit makes strangers cry, and why does it get to them? What's in the gift shop — and which exhibit is secretly about your own life?" },
+  ],
+  11: [
+    { title: "The Workshop Compound", text: "You get $500,000 to build a workshop compound for your people — the makers, the builders, the ones with projects in their garage. Where is it, and what's in each building? How does the money actually break down? Who gets a key, what are the rules, and what gets built there in year one that couldn't have been built anywhere else?" },
+    { title: "The Venue", text: "You get $500,000 to open the room your town is missing — the place people will say changed everything. What is it? Walk me through the build — the space, where the money goes, who you hire first. Then walk me through a Friday night there at full capacity, and how it pays its own rent by year two." },
+  ],
+  12: [
+    { title: "The Anonymous Fortune", text: "A hundred million dollars lands in your account tonight — but the condition is no one can ever know it's you. Walk me through the first 90 days. What moves quietly, what changes in your life, and what absolutely must not change? Who benefits without ever knowing why — and what does staying invisible cost you emotionally?" },
+    { title: "The Family Bank", text: "You're made steward of a hundred million dollars for the people you love — across the next fifty years, including people not born yet. Design it: the rules, who can draw what and when, what it funds automatically. What do you protect them from — including the money itself? And what do you want the fund to have produced by the time someone else takes your seat?" },
+  ],
+  15: [
+    { title: "The Festival You Found", text: "You found an annual festival, and any artist living or dead plays it. Book the lineup — who opens the first night, who closes the last, and how does the arc between them build? Design the grounds — the stages, the food, the corner nobody expects. What's the moment at midnight the whole festival is secretly built around — and who's standing next to you?" },
+    { title: "The Soundtrack of You", text: "A director is scoring the film of your life and you control the music. What's the opening track, and over what scene? What plays at the lowest point? What's the training-montage song for the comeback, and what plays over the final credits? Now the premiere — who do you most want in that theater hearing it, and which song do you watch them react to?" },
+  ],
+  16: [
+    { title: "The Scholarship", text: "You fund ten kids a year, full ride, for life-changing education — and you design everything but the check. How do you find the ten the system missed? What comes with the money — the mentoring, the doors, the summers? What do you say to them the day they're selected? And twenty years on, what do you hope they do that has nothing to do with money?" },
+    { title: "The Apprentice", text: "A wildly talented 19-year-old version of you shows up and asks to apprentice under you for a year. Design the curriculum — what do you teach in month one, and what can only be taught by watching you work? What's the hard lesson you don't warn them about in advance? And what do you secretly hope they steal from you and do better?" },
+  ],
+  17: [
+    { title: "The Family Table", text: "Two people you love haven't spoken in a year, and you decide it ends this winter — at your table. Plan the dinner: who sits where, what do you cook, how do you open? What's really underneath the feud — and how do you steer the night so both of them keep their dignity? Walk me to the moment it thaws, and what you say if it starts to go wrong instead." },
+    { title: "The Referee", text: "Two close friends want the same thing — same job, same house, same opportunity — and both come to you first. What do you say to each of them privately? Is there a version where neither loses — and how do you build it? If there truly isn't, how do you play it so that a year later all three of you are still close — and what would you sacrifice yourself to keep it that way?" },
+  ],
+  18: [
+    { title: "The Salary Play", text: "Dream company, dream role — and the offer comes in 30% low. You have one call to fix it. Prep me: what do you find out before the call, what's your number, what's your walk-away? Run the call — your opening, the silence, their pushback, the creative asks beyond salary. And how do you win the number without souring the people you're about to work with?" },
+    { title: "The House", text: "You find the house — THE house — and there's one other serious bidder with more money than you. You get one meeting with the seller. What do you learn about them first? Run the meeting — how do you win it without the highest number? What do you offer that money can't, where's your true ceiling, and how do you know when to walk away from your own dream?" },
+  ],
+  19: [
+    { title: "The Wedding Table", text: "You're seated at a wedding next to a stranger you find genuinely fascinating. Take me through the night — your opener, how you get them actually talking, the moment it stops being small talk. How do you read whether they're enjoying you? The band starts — what do you do? And how do you leave it so they're still thinking about the conversation tomorrow?" },
+    { title: "The Regular", text: "There's someone at your regular coffee shop you've noticed for weeks — and lately they've noticed you back. You've got eight weeks of ordinary mornings. Walk me through the campaign — the first word, the small moves week by week, how you make them curious instead of crowded. How do you read the signals honestly? And when do you finally make the real ask, and how?" },
+  ],
+  21: [
+    { title: "The Comeback Season", text: "You're the aging champion everyone's written off, and you've got one season left in you. Design the comeback — the training block, who's in your corner, what you rebuild first: body, mind, or team? What's the game plan against younger, faster rivals? Take me through the slump mid-season, how you climb out — and the final match, point by point." },
+    { title: "The 90-Day Sprint", text: "Pick one domain of your life and give it one all-in 90-day sprint — the most focused you've ever been. What's the domain, and what's the protocol: the daily non-negotiables, the schedule, the people who hold you to it? Week six you slip — what happened, and how does the system catch you? Day 90: what's the evidence, on paper, that it worked?" },
+  ],
+  22: [
+    { title: "The Written-Off Team", text: "You're handed the worst team in the league — the one everyone jokes about — and one season to change the story. Where do you start: talent, belief, or system? Who becomes your locker-room general, and how do you pick them? Take me through the mid-season loss that almost breaks it, what you say that night — and the final game that makes people believe." },
+    { title: "The Doubted Pitch", text: "Everyone passed on your idea — investors, bosses, even friends. You decide to spend a year proving them wrong. What's the idea, and what do the doubters not see? Where does the doubt sit in your body when you replay the rejections — and what do you do with that feeling? Map the year: the scrappy first win, the ally who joins, and the day one of the doubters calls you back." },
+  ],
+  23: [
+    { title: "The Craft Year", text: "You get a year of Sundays to master one physical craft with your hands — woodworking, pottery, boxing, piano, anything. Which one, and why that one? Describe the first ugly attempts honestly — what your hands get wrong. Then the Sunday something clicks and your body knows before your brain does. What do you make or perform at the end, and who do you give it to?" },
+    { title: "The Walk-Up Ritual", text: "The biggest moment of your life is on the other side of a door — and you get to design the ritual that walks you through it. What's your walk-up song? Build the ritual: what your body does, the breath, the phrase, the physical move that means 'I'm ready.' Where did each piece come from in your real life? Then take me through the door — how does your body carry the first sixty seconds?" },
+  ],
+  24: [
+    { title: "The Band Breaks Big", text: "Your band — or crew, or collective — built something raw and real, and now it's breaking big. The label arrives with money and 'notes.' What did you all build, and what made it yours? The meeting: what are they asking you to change? What's sacred and non-negotiable — and how do you feel that answer in your gut before you can even argue it? Who in the band disagrees with you, and how does it resolve?" },
+    { title: "The Recipe", text: "Your family restaurant — built on one recipe that made it beloved — gets an offer to go national. The investor wants to 'optimize' the recipe for scale. What's the dish, and what's the story in it? The meeting: what does your body tell you before your mouth answers? Where's the line between growing the thing and losing it — and what deal do you actually sign, if any?" },
+  ],
+  25: [
+    { title: "The Letter You Never Sent", text: "There's a letter you've written a hundred times in your head and never sent. This is just you and me — say it out loud now, start to finish, to the person it belongs to. Who is it for? Take your time with the middle part — the part you always skip. And when it's all said: do you actually send it? Why or why not — and how does your chest feel right now?" },
+    { title: "The Apology or the Thank-You", text: "Somewhere out there is either an apology you owe or a thank-you you never gave fully — you know instantly which one it is and who it's for. It's just us. Deliver it now, out loud, complete — not the polished version, the true one. What made it so hard to say all this time? And what do you imagine their face doing as they hear it?" },
+  ],
+  26: [
+    { title: "The Documentary", text: "A director follows you for the next decade and cuts it into the documentary of your rise. What's the title? Walk me through the arc — the opening scene of you now, the montage of the work, the setback episode the audience gasps at. What's the scene near the end that makes strangers cry? And when the lights come up, what do you want the audience to do with their own lives?" },
+    { title: "The Eightieth Birthday", text: "Your eightieth birthday. Three people rise to give a toast — pick them (they can be people not yet in your life). What does each one say about you, specifically — which stories do they tell? Which line in which toast means the most, and why that one? And what has to happen between now and then for every word of it to be true?" },
+  ],
+  27: [
+    { title: "The Letter to the Grandchild", text: "You're writing a letter to a grandchild — maybe not born yet — to be opened when they turn eighteen, long after you're gone. Say it out loud now. What do you want them to know about how to live? Which hard-won lesson cost you the most to learn? What family story must not be lost? And how do you close a letter like that — what are the last two sentences?" },
+    { title: "The Last Lecture", text: "One hour, one stage, one final lecture to a room full of people who will outlive you — everything that matters in sixty minutes. What's the title? Walk me through it: the opening story, the three things you know are true, the mistake you'd save them all from. What's the moment mid-lecture where your voice almost breaks? And what's the closing line you leave hanging in the air?" },
+  ],
+};
 
 // Guard: the server identifies goals answers by their display-order position
 // (shared/goalsQuestions.ts GOALS_QUESTION_INDICES). Assert those positions still
@@ -796,6 +905,10 @@ export default function Assessment() {
   const [recordings, setRecordings] = useState<(Blob | null)[]>(Array(TOTAL_QUESTIONS).fill(null));
   const [textResponses, setTextResponses] = useState<string[]>(Array(TOTAL_QUESTIONS).fill(""));
   const [skippedQuestions, setSkippedQuestions] = useState<number[]>([]);
+  // Per-question alternate selection: question id → 0 (original) | 1 | 2 (alts).
+  // Lets a person swap a question they're not drawn to for an equally-complex
+  // one eliciting the same lines, until they find a puzzle they want to solve.
+  const [questionVariants, setQuestionVariants] = useState<Record<number, number>>({});
   const [useTextMode, setUseTextMode] = useState(false);
   // ── Companion mode ─────────────────────────────────────────────────────────
   // Optional, strongly recommended: a partner / best friend / anyone who knows the
@@ -847,7 +960,15 @@ export default function Assessment() {
   const recognitionRef = useRef<any>(null);
   const liveTranscriptRef = useRef<string>("");
 
-  const question = QUESTIONS[currentQuestion];
+  // Resolve the displayed question through any chosen alternate. Alternates
+  // only replace title/text — axes, dimension, and flags stay the base
+  // question's, so live-radar tagging and companion/solo logic are unchanged.
+  const baseQuestion = QUESTIONS[currentQuestion];
+  const variantIdx = questionVariants[baseQuestion.id] ?? 0;
+  const activeAlt = variantIdx > 0 ? QUESTION_ALTS[baseQuestion.id]?.[variantIdx - 1] : undefined;
+  const question = activeAlt ? { ...baseQuestion, title: activeAlt.title, text: activeAlt.text } : baseQuestion;
+  const altsForQuestion = QUESTION_ALTS[baseQuestion.id]?.length ?? 0;
+  const swapsLeft = Math.max(0, altsForQuestion - variantIdx);
   const progress = ((currentQuestion + 1) / TOTAL_QUESTIONS) * 100;
   const hasRecording = recordings[currentQuestion] !== null;
   const hasTextResponse = textResponses[currentQuestion]?.trim().length > 20;
@@ -923,7 +1044,8 @@ export default function Assessment() {
     const saved = localStorage.getItem('aqal_assessment_progress');
     if (saved) {
       try {
-        const { question: q, scores: s, textResponses: tr, textMode, skipped, companion } = JSON.parse(saved);
+        const { question: q, scores: s, textResponses: tr, textMode, skipped, companion, variants } = JSON.parse(saved);
+        if (variants && typeof variants === "object") setQuestionVariants(variants);
         if (typeof q === 'number' && q > 0) setCurrentQuestion(q);
         if (Array.isArray(s) && s.length === 22) setScores(s);
         if (Array.isArray(tr) && tr.length === TOTAL_QUESTIONS) setTextResponses(tr);
@@ -949,6 +1071,7 @@ export default function Assessment() {
     setSkippedQuestions([]);
     setUseTextMode(false);
     setCompanionResponses(Array(TOTAL_QUESTIONS).fill(""));
+    setQuestionVariants({});
     setShowResumeDialog(false);
   }, []);
 
@@ -962,9 +1085,10 @@ export default function Assessment() {
         textMode: useTextMode,
         skipped: skippedQuestions,
         companion: { mode: companionMode, name: companionName, relation: companionRelation, responses: companionResponses },
+        variants: questionVariants,
       }));
     }
-  }, [currentQuestion, scores, textResponses, useTextMode, skippedQuestions, companionMode, companionName, companionRelation, companionResponses]);
+  }, [currentQuestion, scores, textResponses, useTextMode, skippedQuestions, companionMode, companionName, companionRelation, companionResponses, questionVariants]);
 
   // Clear progress on completion
   useEffect(() => {
@@ -2184,6 +2308,22 @@ export default function Assessment() {
               </h2>
             </motion.div>
           </AnimatePresence>
+
+          {/* Swap: trade this world for an equally-deep one that reads the same lines.
+              Only offered before they've answered, and only while alternates remain. */}
+          {swapsLeft > 0 && !hasRecording && !hasTextResponse && (
+            <button
+              onClick={() => {
+                playClick();
+                setQuestionVariants((v) => ({ ...v, [baseQuestion.id]: (v[baseQuestion.id] ?? 0) + 1 }));
+              }}
+              className="flex items-center gap-2 mx-auto text-xs text-muted-foreground/60 hover:text-primary transition-colors mb-4 border border-muted-foreground/20 rounded-full px-4 py-1.5 hover:border-primary/40"
+              style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.06em" }}
+            >
+              <RefreshCw className="w-3 h-3" />
+              Not feeling this one? Swap it — same depth, different world ({swapsLeft} left)
+            </button>
+          )}
 
           {/* Talk-longer nudge (honest framing) */}
           <p className="text-xs text-primary/80 tracking-wide text-center max-w-md mx-auto font-bold mb-8" style={{ fontFamily: "'Inter', sans-serif" }}>
