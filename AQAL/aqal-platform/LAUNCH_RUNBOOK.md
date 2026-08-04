@@ -93,6 +93,14 @@ pnpm build          # vite (client) + esbuild (server) → dist/
 pnpm start          # NODE_ENV=production node dist/index.js
 ```
 **Done when:** the server boots on `PORT` and `/` renders the landing page.
+_(Verified: the bundle boots and serves the landing + tRPC API in mock mode with
+only PORT + JWT_SECRET set — every provider degrades to a safe mock until keyed.)_
+
+### Auth note — free launch needs no OAuth
+The **free founding claim** issues its own session from the email + passcode, so
+it works with **no OAuth configured**. The header **"Sign In"** and the paid
+Stripe flows use OAuth (`OAUTH_SERVER_URL` / `VITE_OAUTH_PORTAL_URL`). For a
+free-first launch you can defer OAuth; wire it before you start charging cohort 2.
 
 ---
 
