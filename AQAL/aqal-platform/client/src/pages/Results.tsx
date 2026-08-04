@@ -1165,14 +1165,22 @@ function TestimonialCapture() {
 // prescriptions and the network. Turns the score into a next step.
 // ============================================================
 // How many of the lowest lines to surface. Deliberately wide (not 1-2): a voice
-// interview can't fully measure some lines (kinesthetic, musical, seduction,
-// hands-on/"mechanical" skill…), so any single lowest line may be an artifact.
-// Showing the lowest 8 gives a meaningful, robust spread instead of noise.
-const LOWEST_N = 8;
+// interview can't fully measure some lines, so any single lowest line may be an
+// artifact. Showing the lowest 10 (≈a third of the 32) gives a robust spread.
+const LOWEST_N = 10;
 const firstSentence = (s: string) => {
   const m = s.match(/^.*?[.!?](\s|$)/);
   return (m ? m[0] : s).trim();
 };
+
+// Lines a spoken interview genuinely can't verify — physical/embodied skill or a
+// real-world track record you can't demonstrate in a story. When one of these
+// reads low it's likely a MEASUREMENT artifact, not a deficit, so we label it
+// "prove it with evidence" (the underwritten path) instead of calling it weak.
+const VOICE_HARD_LINES = new Set([
+  "Kinesthetic", "Musical", "Interoceptive", "Seduction",
+  "Naturalistic", "Financial-Self-Management", "Parenting", "Community-Founding",
+]);
 
 function StarvedLineOnRamp({ scores }: { scores: number[] }) {
   const lowest = useMemo(() => {
@@ -1200,28 +1208,36 @@ function StarvedLineOnRamp({ scores }: { scores: number[] }) {
         </p>
       </div>
       <div className="grid sm:grid-cols-2 gap-3">
-        {lowest.map(({ i, line, score, card }) => (
-          <div key={i} className="glass-card rounded-xl p-4 border border-red-500/12">
-            <div className="flex items-baseline justify-between gap-3 mb-1.5">
-              <h3 className="text-base text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
-                {card ? card.name : line}
-              </h3>
-              <span className="shrink-0 px-2 py-0.5 rounded-full text-[0.58rem] border border-red-500/25 text-red-300/80 bg-red-500/[0.05]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                {line} · {Math.round(score * 100)}
-              </span>
+        {lowest.map(({ i, line, score, card }) => {
+          const hardToHear = VOICE_HARD_LINES.has(line);
+          return (
+            <div key={i} className={`glass-card rounded-xl p-4 border ${hardToHear ? "border-amber-500/20" : "border-red-500/12"}`}>
+              <div className="flex items-baseline justify-between gap-3 mb-1.5">
+                <h3 className="text-base text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+                  {card ? card.name : line}
+                </h3>
+                <span className={`shrink-0 px-2 py-0.5 rounded-full text-[0.58rem] border ${hardToHear ? "border-amber-500/30 text-amber-300/80 bg-amber-500/[0.05]" : "border-red-500/25 text-red-300/80 bg-red-500/[0.05]"}`} style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  {line} · {Math.round(score * 100)}
+                </span>
+              </div>
+              {hardToHear ? (
+                <p className="text-[0.82rem] text-foreground/70 leading-snug">
+                  <span className="text-amber-300/80">Voice can&rsquo;t verify this one</span> — it lives in the body or in
+                  your track record, not in a spoken story. Upload evidence and the panel scores it for real.
+                </p>
+              ) : card ? (
+                <p className="text-[0.82rem] text-foreground/70 leading-snug">
+                  <span className="text-red-300/70">Cost: </span>{firstSentence(card.untreatedTrajectory)}{" "}
+                  <span className="text-accent/80">Lift: </span>{firstSentence(card.connectionCase)}
+                </p>
+              ) : (
+                <p className="text-[0.82rem] text-muted-foreground/55 leading-snug">
+                  Read low in your voice interview — see the full research on this line.
+                </p>
+              )}
             </div>
-            {card ? (
-              <p className="text-[0.82rem] text-foreground/70 leading-snug">
-                <span className="text-red-300/70">Cost: </span>{firstSentence(card.untreatedTrajectory)}{" "}
-                <span className="text-accent/80">Lift: </span>{firstSentence(card.connectionCase)}
-              </p>
-            ) : (
-              <p className="text-[0.82rem] text-muted-foreground/55 leading-snug">
-                Read low in your voice interview — see the full research on this line.
-              </p>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Honest note: some lows are measurement artifacts → the underwritten path */}
