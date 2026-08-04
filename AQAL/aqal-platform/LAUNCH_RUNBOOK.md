@@ -127,6 +127,18 @@ needed. All email requires `RESEND_API_KEY`; unconfigured, they log as mock.)
 **Done when:** hitting `/api/scheduled/finish-nudge` as the cron identity returns
 `{ ok: true, candidates, sent, failed }`.
 
+## 5c. Social share image (do before you post to X)
+The share/OG meta tags point at `/og-cover.png` (1200×630). A branded **source**
+is committed at `client/public/og-cover.svg` — export it to PNG and drop it beside
+the SVG:
+```
+# any one of these:
+rsvg-convert -w 1200 -h 630 client/public/og-cover.svg -o client/public/og-cover.png
+# or open the SVG in any browser/design tool and export a 1200×630 PNG
+```
+Then validate the preview at cards-dev.twitter.com/validator (or just paste your
+URL into a draft X post). Without the PNG, shared links render a bare card.
+
 ## 6. Smoke test (≈10 minutes, do before announcing)
 - [ ] Landing `/` loads; hero renders (A/B variant assigned).
 - [ ] Sign in works (OAuth/JWT).
