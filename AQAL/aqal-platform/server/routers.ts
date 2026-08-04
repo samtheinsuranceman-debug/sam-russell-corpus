@@ -1141,9 +1141,15 @@ Return ONLY valid JSON.` },
       .input(z.object({
         type: z.enum(["landing_view", "assessment_start", "checkout_start"]),
         sessionId: z.string().max(64).optional(),
+        variant: z.string().max(40).optional(), // hero A/B variant id
       }))
       .mutation(async ({ input, ctx }) => {
-        await recordEvent({ type: input.type, userId: ctx.user?.id ?? null, sessionId: input.sessionId ?? null });
+        await recordEvent({
+          type: input.type,
+          userId: ctx.user?.id ?? null,
+          sessionId: input.sessionId ?? null,
+          meta: input.variant ? { variant: input.variant } : undefined,
+        });
         return { ok: true };
       }),
   }),

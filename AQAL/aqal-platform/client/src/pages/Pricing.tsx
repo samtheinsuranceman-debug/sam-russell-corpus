@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { playClick } from "@/lib/audio";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { COHORT_SIZE, MEMBERSHIP_TRIAL_DAYS, UNDERWRITTEN_TRIAL_DAYS } from "@shared/giveawayLadder";
+import { useHeroVariant, currentHeroId } from "@/lib/heroExperiment";
 
 // ============================================================
 // SIMPLIFIED PRICING — Single $299 founding-member offer (regular $1,500 after first 100)
@@ -99,6 +100,8 @@ export default function Pricing() {
   useScrollReveal();
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const hero = useHeroVariant();
+  const track = trpc.analytics.track.useMutation();
 
   const checkoutMutation = trpc.payment.createCheckout.useMutation({
     onSuccess: (data) => {
@@ -132,6 +135,7 @@ export default function Pricing() {
   // the free assessment; no Stripe.
   const confirmCheckout = () => {
     if (!hipaaConsent) return;
+    track.mutate({ type: "checkout_start", variant: currentHeroId() });
     setShowHipaaModal(false);
     window.location.href = "/assessment";
   };
@@ -139,6 +143,7 @@ export default function Pricing() {
   // Paid products (audio / underwritten / membership) → Stripe checkout.
   const buyProduct = (productKey: "audio" | "underwritten" | "membership") => {
     playClick();
+    track.mutate({ type: "checkout_start", variant: currentHeroId() });
     if (!user) { beginAuth(); return; }
     setIsLoading(true);
     checkoutMutation.mutate({ productKey, origin: window.location.origin });
@@ -167,17 +172,19 @@ export default function Pricing() {
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           >
             <p className="section-label mb-4">
-              Founding Member Rate — Limited to First 100
+              Founding Access — First {COHORT_SIZE.toLocaleString()} Free For Life
             </p>
             <h1
               className="text-4xl sm:text-5xl md:text-6xl text-foreground mb-5"
               style={{ fontFamily: "'Cormorant Garamond', serif", letterSpacing: "-0.02em", fontWeight: 600 }}
             >
-              One Assessment. One Price.
+              {hero.lead}<em style={{ fontStyle: "italic", color: "oklch(0.78 0.12 85)" }}>{hero.emph}</em>
             </h1>
-            <p className="text-muted-foreground text-lg max-w-xl mx-auto leading-relaxed">
-              Know your shape. Find your complements. No subscriptions. No upsells during assessment.
-            </p>
+            {hero.sub && (
+              <p className="text-muted-foreground text-lg max-w-xl mx-auto leading-relaxed">
+                {hero.sub}
+              </p>
+            )}
           </motion.div>
 
           {/* Main pricing card */}

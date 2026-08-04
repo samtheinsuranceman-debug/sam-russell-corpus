@@ -8,6 +8,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { trpc } from "@/lib/trpc";
 import { requireAgreement } from "@/lib/agreement";
+import { useHeroVariant, currentHeroId } from "@/lib/heroExperiment";
 
 // ============================================================
 // AQAL HOME — Merged: Viral hook + Claude's Atelier dial UI
@@ -184,6 +185,7 @@ function FreeFoundingAccess() {
 // ============================================================
 function HeroSection() {
   const [mounted, setMounted] = useState(false);
+  const hero = useHeroVariant();
   useEffect(() => { const t = setTimeout(() => setMounted(true), 60); return () => clearTimeout(t); }, []);
 
   const pts = useMemo(() => LINES.map((l, i) => {
@@ -218,7 +220,7 @@ function HeroSection() {
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 0.98, fontSize: 'clamp(44px,7vw,80px)', letterSpacing: '-0.01em', color: CREAM, marginTop: '20px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              How predictable, protected, and consistent is your mind <em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>at getting you what you want?</em>
+              {hero.lead}<em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{hero.emph}</em>
             </motion.h1>
 
             <motion.p
@@ -955,7 +957,7 @@ export default function Home() {
   // Top-of-funnel instrumentation (best-effort; ignored if the API is down).
   const track = trpc.analytics.track.useMutation();
   useEffect(() => {
-    track.mutate({ type: "landing_view" });
+    track.mutate({ type: "landing_view", variant: currentHeroId() });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
