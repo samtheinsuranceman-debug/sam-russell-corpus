@@ -319,6 +319,16 @@ export function practicesForGoals(goals: string): KeystonePractice[] {
   return KEYSTONE_PRACTICES.filter((p) => p.goalKeywords.some((k) => g.includes(k)));
 }
 
+// The keystone practice that most directly bolsters a given 32-line name, if one
+// exists. Matches on the lowercased line token in a practice's `lifts` (the lifts
+// use canonical line tokens like "interoceptive" / "financial-self-management"),
+// so it returns a genuine match or nothing — never a forced/irrelevant practice.
+export function keystoneForLine(line: string): KeystonePractice | undefined {
+  const token = (line || "").toLowerCase().trim();
+  if (!token) return undefined;
+  return KEYSTONE_PRACTICES.find((p) => p.lifts.some((l) => l.toLowerCase() === token));
+}
+
 // A compact, universally-useful core the coach can always draw on.
 export const CORE_PRACTICE_IDS = ["sleep", "exercise", "interoception", "implementation"];
 export function corePractices(): KeystonePractice[] {

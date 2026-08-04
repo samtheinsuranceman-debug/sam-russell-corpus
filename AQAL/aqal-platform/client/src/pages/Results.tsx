@@ -18,6 +18,7 @@ import { Cite } from "@/components/Cite";
 import { citationHref } from "@shared/citations";
 import { buildTrackerMarkdown } from "@shared/behavioralTracker";
 import { starvationForLine } from "./archetypesData";
+import { keystoneForLine } from "@shared/keystonePractices";
 
 // The full 32-line profile, in the order defined by the single source of truth.
 const AXIS_LABELS = ALL_AXES;
@@ -1191,6 +1192,20 @@ function StarvedLineOnRamp({ scores }: { scores: number[] }) {
       .slice(0, LOWEST_N);
   }, [scores]);
 
+  // The highest-leverage move: the lowest REAL deficit (skip voice-artifact lines)
+  // that has a genuinely-matching keystone practice.
+  const rx = useMemo(() => {
+    const ranked = scores
+      .map((score, i) => ({ score, line: AXIS_LABELS[i] }))
+      .filter((x) => x.score > 0 && !VOICE_HARD_LINES.has(x.line))
+      .sort((a, b) => a.score - b.score);
+    for (const x of ranked) {
+      const practice = keystoneForLine(x.line);
+      if (practice) return { line: x.line, practice };
+    }
+    return null;
+  }, [scores]);
+
   if (lowest.length === 0) return null;
 
   return (
@@ -1239,6 +1254,34 @@ function StarvedLineOnRamp({ scores }: { scores: number[] }) {
           );
         })}
       </div>
+
+      {/* Highest-leverage prescription — one concrete, research-backed move */}
+      {rx && (
+        <div className="mt-4 rounded-2xl border border-accent/25 bg-accent/[0.05] p-6">
+          <div className="flex items-baseline justify-between gap-3 mb-2">
+            <p className="text-[0.6rem] uppercase tracking-[0.15em] text-accent/80" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              Your highest-leverage move — for low {rx.line}
+            </p>
+            <span className="shrink-0 text-[0.58rem] px-2 py-0.5 rounded-full border border-accent/30 text-accent/80" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              {rx.practice.evidence} evidence
+            </span>
+          </div>
+          <h3 className="text-xl text-foreground mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+            {rx.practice.name}
+          </h3>
+          <p className="text-sm text-foreground/80 leading-relaxed mb-2">{rx.practice.prescription}</p>
+          <p className="text-xs text-muted-foreground/60 leading-relaxed mb-3">
+            <span className="text-muted-foreground/50">Why it works: </span>{rx.practice.researchBasis}
+            {" "}<span className="text-muted-foreground/40">· Horizon: {rx.practice.horizon}</span>
+          </p>
+          <Link href="/research-library">
+            <a className="inline-flex items-center gap-2 text-xs text-accent hover:underline" onClick={playClick}>
+              Read the research: {rx.practice.librarySection}
+              <ArrowRight className="w-3.5 h-3.5" />
+            </a>
+          </Link>
+        </div>
+      )}
 
       {/* Honest note: some lows are measurement artifacts → the underwritten path */}
       <div className="mt-4 rounded-xl border border-primary/15 bg-primary/[0.04] p-4 text-center">
