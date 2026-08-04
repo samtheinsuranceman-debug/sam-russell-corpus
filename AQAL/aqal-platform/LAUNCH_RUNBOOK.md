@@ -119,9 +119,16 @@ to an active membership; a test `underwritten` payment sets the unlock.
 
 ---
 
-## 5b. Scheduled jobs (email lifecycle — set these up, they don't self-fire)
-Point your scheduler (the heartbeat/cron system) at these cron-authenticated
-endpoints. Without them the retention emails never send.
+## 5b. Scheduled jobs (email lifecycle)
+**In the Manus/Forge environment this is now AUTOMATIC:** on boot the server
+registers all three jobs with the Heartbeat cron service (idempotent — existing
+registrations and dashboard edits are left untouched; see `server/scheduledJobs.ts`).
+Confirm with the `[scheduledJobs] registered …` boot log lines or the Heartbeat
+dashboard.
+
+**On any other host** (no `BUILT_IN_FORGE_API_*` creds), point your own scheduler
+at these cron-authenticated endpoints. Without a scheduler the retention emails
+never send.
 
 | Endpoint (POST) | Cadence | What it does |
 |---|---|---|
