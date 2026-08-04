@@ -315,7 +315,42 @@ function RarityCountUp({ rarity, populationRarity = null, generation = null }: {
             ? "A model-based estimate, not a measured percentile. Ranked within your generation, then the population — developmental lines are age-adjusted; IQ-style lines are already age-normed."
             : "A model-based estimate, not a measured percentile — refined once you submit evidence."}
         </p>
+        {revealed && <ShareRarity rarity={rarity} />}
       </motion.div>
+    </div>
+  );
+}
+
+// Share the "1 in X" result — the viral loop. Posts to X or copies the link.
+function ShareRarity({ rarity }: { rarity: number }) {
+  const [copied, setCopied] = useState(false);
+  const url = typeof window !== "undefined" ? window.location.origin : "";
+  const text = `My mind is 1 in ${rarity.toLocaleString()} rare — measured across all 32 lines of intelligence, not just one. Every other test scored a sliver of me. Find your number:`;
+  const xHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* clipboard blocked — the X button still works */ }
+  };
+  return (
+    <div className="flex items-center justify-center gap-3 mt-6">
+      <a
+        href={xHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={playClick}
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm bg-primary text-primary-foreground hover:translate-y-[-1px] transition-transform"
+      >
+        Share your rarity on X
+      </a>
+      <button
+        onClick={copy}
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm border border-border/50 text-muted-foreground hover:text-foreground transition-colors"
+      >
+        {copied ? "Link copied ✓" : "Copy link"}
+      </button>
     </div>
   );
 }
