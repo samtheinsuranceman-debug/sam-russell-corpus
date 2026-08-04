@@ -410,6 +410,13 @@ export default function Evidence() {
     { enabled: !!user && assessmentId > 0 }
   );
   const evidenceCount = evidenceList?.length ?? 0;
+
+  // Underwritten trial gate — show the countdown / unlock state.
+  const { data: uw } = trpc.underwriting.status.useQuery(undefined, { enabled: !!user });
+  const buyUnderwritten = trpc.payment.createCheckout.useMutation({
+    onSuccess: (d) => { if (d.url) window.open(d.url, "_blank"); },
+  });
+
   const { tier: currentTier, index: tierIndex } = getVerificationTier(evidenceCount);
   const nextTier = VERIFICATION_TIERS[tierIndex + 1];
   const progressToNext = nextTier
@@ -453,6 +460,45 @@ export default function Evidence() {
             and can increase your axis scores and composite rarity placement.
           </p>
         </motion.div>
+
+        {/* Underwritten trial countdown / unlock banner */}
+        {uw && uw.state !== "unlocked" && (
+          <div
+            className={`mb-10 rounded-xl border p-5 flex flex-col sm:flex-row sm:items-center gap-4 ${
+              uw.state === "expired"
+                ? "border-red-500/30 bg-red-500/[0.05]"
+                : "border-primary/25 bg-primary/[0.05]"
+            }`}
+          >
+            <div className="flex-1">
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] mb-1 text-primary/70" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Fully Underwritten Assessment
+              </p>
+              {uw.state === "expired" ? (
+                <p className="text-sm text-foreground/85 leading-relaxed">
+                  Your 7-day underwriting trial has ended. Unlock to keep building your report and export your
+                  certified underwritten results.
+                </p>
+              ) : uw.state === "trial" ? (
+                <p className="text-sm text-foreground/85 leading-relaxed">
+                  You&rsquo;re in your free trial — <span className="text-primary font-semibold">{uw.daysLeft} day{uw.daysLeft === 1 ? "" : "s"} left</span>.
+                  Keep uploading; the panel underwrites every line against your evidence. Unlock any time to keep it for good.
+                </p>
+              ) : (
+                <p className="text-sm text-foreground/85 leading-relaxed">
+                  Upload your first artifact to begin your <span className="text-primary font-semibold">7-day free trial</span> of
+                  the fully underwritten assessment. Unlock to keep and export the certified report.
+                </p>
+              )}
+            </div>
+            <Button
+              onClick={() => { playClick(); if (!user) return; buyUnderwritten.mutate({ productKey: "underwritten", origin: window.location.origin }); }}
+              className="shrink-0 bg-primary text-primary-foreground"
+            >
+              Unlock &amp; keep — $1,500
+            </Button>
+          </div>
+        )}
 
         {/* Category Grid */}
         {!selectedCategory ? (
