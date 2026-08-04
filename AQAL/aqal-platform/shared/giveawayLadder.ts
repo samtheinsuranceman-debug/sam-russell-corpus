@@ -29,6 +29,13 @@ export const COHORT_SIZE = 10_000;
 // 75/50/25 rate for life. "Lifetime" = lifetime of the service.
 export const GIVEAWAY_IS_LIFETIME = true;
 
+// A founding spot is EARNED, not just claimed: signing up RESERVES the spot for
+// this many days, and COMPLETING the assessment is what locks it in for life.
+// Expired reservations quietly release the spot back to the pool (the counter
+// only holds spots for completers + active reservations). Stated up front —
+// a condition, never a confiscation.
+export const RESERVATION_DAYS = 14;
+
 // Standard (non-founding) prices, in cents. Single source of truth for UI + Stripe.
 export const PRICE_AUDIO_ASSESSMENT_CENTS = 50_000; // $500 — voice-only assessment
 export const PRICE_UNDERWRITTEN_ASSESSMENT_CENTS = 150_000; // $1,500 — fully underwritten

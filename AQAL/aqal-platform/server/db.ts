@@ -1,4 +1,5 @@
-import { eq, sql, and, desc, gte, inArray } from "drizzle-orm";
+import { eq, sql, and, or, desc, gte, inArray } from "drizzle-orm";
+import { RESERVATION_DAYS } from "@shared/giveawayLadder";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend, testimonials, InsertTestimonial, commitments, trackerCycles, InsertTrackerCycle } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -94,10 +95,18 @@ export async function countFreeUsers(): Promise<number | null> {
   const db = await getDb();
   if (!db) return null;
   try {
+    // A spot is HELD by: anyone who completed the assessment (founding member,
+    // locked for life) or anyone still inside their reservation window.
+    // Non-completers past the window release their spot back to the pool.
+    const cutoff = new Date(Date.now() - RESERVATION_DAYS * 86_400_000);
     const result = await db
-      .select({ count: sql`COUNT(*)` })
+      .select({ count: sql`COUNT(DISTINCT ${users.id})` })
       .from(users)
-      .where(eq(users.loginMethod, "free-passcode"));
+      .leftJoin(assessments, and(eq(assessments.userId, users.id), eq(assessments.status, "complete")))
+      .where(and(
+        eq(users.loginMethod, "free-passcode"),
+        or(gte(users.createdAt, cutoff), sql`${assessments.id} IS NOT NULL`),
+      ));
     return Number(result[0]?.count || 0);
   } catch (e) {
     console.warn("[Database] countFreeUsers failed:", e);

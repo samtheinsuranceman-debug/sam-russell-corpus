@@ -139,6 +139,10 @@ function FreeFoundingAccess() {
           The first {cap ? cap.toLocaleString() : '10,000'} founding members get the full experience free — the voice
           assessment <b style={{ color: CREAM }}>and</b> the fully-underwritten, multi-AI result. Enter your email and the passcode.
         </p>
+        <p style={{ color: CREAM2, fontSize: 'clamp(12px,1.3vw,14px)', lineHeight: 1.55, maxWidth: '34em', margin: '0 auto 8px', opacity: 0.85 }}>
+          Signing up <b style={{ color: CREAM }}>reserves</b> your spot for 14 days. <b style={{ color: CHAMPAGNE }}>Completing
+          the assessment is what claims it — for life.</b> Membership is earned by finishing.
+        </p>
         {remaining !== null && cap > 0 && (
           <div style={{ margin: '4px 0 20px' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: CREAM, border: `1px solid ${CHAMPAGNE}55`, borderRadius: '999px', padding: '5px 12px', background: 'rgba(224,198,140,0.06)' }}>

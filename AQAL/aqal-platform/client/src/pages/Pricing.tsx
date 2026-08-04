@@ -245,6 +245,8 @@ export default function Pricing() {
                 </ul>
                 <p className="text-[0.7rem] text-muted-foreground/50 mt-3 leading-relaxed">
                   That&rsquo;s $79/month you effectively keep — for the rest of your life — as long as your membership stays active.
+                  {" "}<span className="text-accent/70">Signing up reserves your spot for 14 days; completing the assessment is what
+                  claims it for life. Membership is earned by finishing.</span>
                 </p>
               </div>
 

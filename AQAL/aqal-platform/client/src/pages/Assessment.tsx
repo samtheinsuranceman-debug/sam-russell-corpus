@@ -271,6 +271,9 @@ const PHASES: { start: number; end: number; name: string; entryToast?: string }[
 ];
 const phaseFor = (i: number) => PHASES.find((p) => i >= p.start && i <= p.end) ?? PHASES[0];
 
+// 0-based positions where the ground-floor reminder can appear (questions 7 and 15).
+const MOTIVATION_CHECKPOINTS = [6, 14];
+
 // ============================================================
 // QUESTION ALTERNATES — "not feeling this one? swap it."
 // ============================================================
@@ -928,6 +931,9 @@ export default function Assessment() {
   // only sends whatever didn't make it. Marked false again when an answer is
   // re-recorded or swapped away.
   const [uploadedIdx, setUploadedIdx] = useState<Record<number, boolean>>({});
+  // Ground-floor checkpoint reminders (once each, at questions 7 and 15): the
+  // stakes-framing for people whose momentum is flagging mid-assessment.
+  const [seenCheckpoints, setSeenCheckpoints] = useState<number[]>([]);
   const [useTextMode, setUseTextMode] = useState(false);
   // ── Companion mode ─────────────────────────────────────────────────────────
   // Optional, strongly recommended: a partner / best friend / anyone who knows the
@@ -1123,6 +1129,8 @@ export default function Assessment() {
         // session survive the refresh even though their audio blobs don't.
         if (uploaded && typeof uploaded === "object") setUploadedIdx(uploaded);
         if (typeof savedAid === "number" && savedAid > 0) setAssessmentId(savedAid);
+        const { checkpoints } = JSON.parse(saved);
+        if (Array.isArray(checkpoints)) setSeenCheckpoints(checkpoints);
         if (typeof q === 'number' && q > 0) setCurrentQuestion(q);
         if (Array.isArray(s) && s.length === 22) setScores(s);
         if (Array.isArray(tr) && tr.length === TOTAL_QUESTIONS) setTextResponses(tr);
@@ -1167,9 +1175,10 @@ export default function Assessment() {
         variants: questionVariants,
         uploaded: uploadedIdx,
         assessmentId,
+        checkpoints: seenCheckpoints,
       }));
     }
-  }, [currentQuestion, scores, textResponses, useTextMode, skippedQuestions, companionMode, companionName, companionRelation, companionResponses, questionVariants, uploadedIdx, assessmentId]);
+  }, [currentQuestion, scores, textResponses, useTextMode, skippedQuestions, companionMode, companionName, companionRelation, companionResponses, questionVariants, uploadedIdx, assessmentId, seenCheckpoints]);
 
   // Clear progress on completion
   useEffect(() => {
@@ -2196,6 +2205,45 @@ export default function Assessment() {
       {/* Resume dialog */}
       {showResumeDialog && (
         <AssessmentResumeDialog onResume={handleResume} onStartFresh={handleStartFresh} />
+      )}
+
+      {/* Ground-floor checkpoint reminder — once each at questions 7 and 15 */}
+      {MOTIVATION_CHECKPOINTS.includes(currentQuestion) && !seenCheckpoints.includes(currentQuestion) && !isRecording && !showResumeDialog && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center px-4 bg-black/70 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+            className="glass-card rounded-2xl border border-primary/25 max-w-md w-full p-7"
+          >
+            <p className="text-[0.6rem] uppercase tracking-[0.18em] text-primary/70 mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              A reminder of what you&rsquo;re earning
+            </p>
+            <h3 className="text-2xl text-foreground mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+              You&rsquo;re on the ground floor.
+            </h3>
+            <p className="text-sm text-foreground/80 leading-relaxed mb-3">
+              This is a <span className="text-primary font-medium">lifetime membership</span> — $948 a year in fixed cost
+              waived for life, a network whose future dividends nobody can predict yet, and you&rsquo;re among the first
+              10,000 in the door.
+            </p>
+            <p className="text-sm text-foreground/80 leading-relaxed mb-3">
+              But membership is <span className="text-primary font-medium">earned</span>: only a completed assessment
+              makes you a member. It takes dedication, energy, and stamina to go through the whole exam — that&rsquo;s
+              the point. Just do the best you can on each question.
+            </p>
+            <p className="text-sm text-muted-foreground/70 leading-relaxed mb-6">
+              And you don&rsquo;t have to do it in one sitting. Half an hour a day, five days a week on your lunch break
+              until it&rsquo;s done — your progress saves every step.
+            </p>
+            <Button
+              onClick={() => { playClick(); setSeenCheckpoints((s) => [...s, currentQuestion]); }}
+              className="w-full bg-primary text-primary-foreground py-5"
+            >
+              I&rsquo;m earning this — keep going
+            </Button>
+          </motion.div>
+        </div>
       )}
 
       {/* Progress bar */}
