@@ -1152,6 +1152,38 @@ export async function grantBetaAccess(userId: number, tier: "silver" | "gold" | 
   await db.update(users).set({ betaAccess: true, membershipTier: tier }).where(eq(users.id, userId));
 }
 
+// ---- Fully-underwritten trial gate --------------------------------
+// Start the 7-day trial clock the first time a user begins underwriting (only
+// if it hasn't started and isn't already unlocked). Returns the effective start.
+export async function startUnderwrittenTrialIfNeeded(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  const rows = await db
+    .select({ started: users.underwrittenTrialStartedAt, unlocked: users.underwrittenUnlockedAt })
+    .from(users).where(eq(users.id, userId)).limit(1);
+  const u = rows[0];
+  if (!u || u.unlocked || u.started) return; // already unlocked or ticking
+  await db.update(users).set({ underwrittenTrialStartedAt: new Date() }).where(eq(users.id, userId));
+}
+
+// Permanently unlock the certified underwritten report (on payment).
+export async function unlockUnderwritten(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(users).set({ underwrittenUnlockedAt: new Date() }).where(eq(users.id, userId));
+}
+
+// The two timestamps the gate reads.
+export async function getUnderwrittenTimestamps(userId: number): Promise<{ trialStartedAt: Date | null; unlockedAt: Date | null }> {
+  const db = await getDb();
+  if (!db) return { trialStartedAt: null, unlockedAt: null };
+  const rows = await db
+    .select({ started: users.underwrittenTrialStartedAt, unlocked: users.underwrittenUnlockedAt })
+    .from(users).where(eq(users.id, userId)).limit(1);
+  const u = rows[0];
+  return { trialStartedAt: (u?.started as Date) ?? null, unlockedAt: (u?.unlocked as Date) ?? null };
+}
+
 export async function saveTestimonial(input: InsertTestimonial) {
   const db = await getDb();
   if (!db) return null;

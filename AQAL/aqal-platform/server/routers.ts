@@ -55,6 +55,7 @@ import {
   countBetaRedemptions, grantBetaAccess, getUserById, upsertUser,
   saveTestimonial, getApprovedTestimonials,
   countFreeUsers, getUserByOpenId,
+  startUnderwrittenTrialIfNeeded, unlockUnderwritten, getUnderwrittenTimestamps,
   getCommitmentByUser, getCurrentSignedCommitment, getCommitmentHistory,
   saveCommitmentDraft, signCommitment, startNewCommitment,
   updateCommitmentReminder, getActiveReminderCommitments,
@@ -62,6 +63,7 @@ import {
 import { sendSms, dailyCheckinSms } from "./platform/sms";
 import { CRON_SECRET } from "./platform/config";
 import { COMMITMENT_QUESTIONS, commitmentReady, answersByKey, shouldSendCheckinNow, DAILY_CHECKIN_HOUR, type CommitmentAnswer } from "@shared/commitment";
+import { underwrittenAccess } from "@shared/underwritingGate";
 import { extractGoalsText } from "@shared/goalsQuestions";
 import { createTrackerCycle, getTrackerCyclesByUser, setTrackerReminderOptIn, getTrackerReminderOptIn } from "./db";
 import { analyzeJournal } from "./trackerAnalysis";
@@ -797,6 +799,21 @@ Return ONLY valid JSON.` },
         significance: z.string().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
+        // Underwriting trial gate: uploading evidence is the underwriting work, so
+        // the first upload starts the 7-day clock; once it expires (and isn't
+        // unlocked) further uploads require unlocking the certified report.
+        {
+          const { trialStartedAt, unlockedAt } = await getUnderwrittenTimestamps(ctx.user.id);
+          const access = underwrittenAccess({ trialStartedAt, unlockedAt, now: Date.now() });
+          if (access.state === "expired") {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "Your 7-day underwriting trial has ended. Unlock the Fully Underwritten Assessment ($1,500) to keep building and export your certified report.",
+            });
+          }
+          await startUnderwrittenTrialIfNeeded(ctx.user.id);
+        }
+
         const fileBuffer = Buffer.from(input.fileBase64, "base64");
         const fileKey = `evidence/${ctx.user.id}/${input.assessmentId}/${input.fileName}`;
         const { key, url } = await storagePut(fileKey, fileBuffer, input.fileType);
@@ -1152,6 +1169,22 @@ Return ONLY valid JSON.` },
         });
         return { ok: true };
       }),
+  }),
+
+  // Fully-underwritten assessment trial gate — the client reads this to show
+  // "N days left / unlock to keep" and to know when to lock the certified report.
+  underwriting: router({
+    status: protectedProcedure.query(async ({ ctx }) => {
+      const { trialStartedAt, unlockedAt } = await getUnderwrittenTimestamps(ctx.user.id);
+      return underwrittenAccess({ trialStartedAt, unlockedAt, now: Date.now() });
+    }),
+    // Explicitly begin the trial (e.g. when the user starts the underwritten track
+    // before uploading anything). Idempotent; no-op if already started/unlocked.
+    startTrial: protectedProcedure.mutation(async ({ ctx }) => {
+      await startUnderwrittenTrialIfNeeded(ctx.user.id);
+      const { trialStartedAt, unlockedAt } = await getUnderwrittenTimestamps(ctx.user.id);
+      return underwrittenAccess({ trialStartedAt, unlockedAt, now: Date.now() });
+    }),
   }),
 
   // ============================================================

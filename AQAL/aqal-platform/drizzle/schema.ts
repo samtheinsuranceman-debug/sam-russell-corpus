@@ -24,6 +24,10 @@ export const users = mysqlTable("users", {
   trackerReminderOptIn: boolean("tracker_reminder_opt_in"),
   // When we last sent that nudge — throttles the cadence.
   trackerReminderLastSentAt: timestamp("tracker_reminder_last_sent_at"),
+  // Fully-underwritten assessment gate: when the 7-day free trial began (set on
+  // first evidence upload) and when it was paid-for/unlocked (permanent).
+  underwrittenTrialStartedAt: timestamp("underwritten_trial_started_at"),
+  underwrittenUnlockedAt: timestamp("underwritten_unlocked_at"),
 });
 
 export type User = typeof users.$inferSelect;

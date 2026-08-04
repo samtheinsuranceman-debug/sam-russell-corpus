@@ -418,6 +418,8 @@ export default function Pricing() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
           >
+            <span>Scientifically Proven Method</span>
+            <span className="text-muted-foreground/20">•</span>
             <span>Bank-Grade Encryption</span>
             <span className="text-muted-foreground/20">•</span>
             <span>Encrypted &amp; Confidential</span>

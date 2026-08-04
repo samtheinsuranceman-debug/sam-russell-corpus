@@ -81,6 +81,8 @@ stripeRouter.post("/webhook", raw({ type: "application/json" }), async (req, res
         const db = await getDb();
         if (db) await db.update(users).set({
           membershipTier: "silver", // "silver" = active paid membership marker
+          // Paying for the underwritten tier permanently unlocks the certified report.
+          ...(productKey === "underwritten" ? { underwrittenUnlockedAt: new Date() } : {}),
         }).where(eq(users.openId, userId));
         console.log(`[Stripe] User ${userId} granted membership access (${productKey} purchase)`);
       }
