@@ -353,25 +353,96 @@ function ProfileTab({ scores }: { scores: any }) {
 // NETWORK TAB — Links to intelligence-profile network
 // ============================================================
 function NetworkTab() {
+  const [mode, setMode] = useState<"resonance" | "complementary">("resonance");
+  const q = trpc.network.matches.useQuery({ mode, limit: 12 });
+  const requestIntro = trpc.network.requestIntro.useMutation();
+  const [requested, setRequested] = useState<Record<string, boolean>>({});
+
+  const matches = q.data?.matches ?? [];
+  const modeMeta = mode === "resonance"
+    ? { label: "Same-line peers", sub: "People who share your strongest lines — the ones the research says you thrive alongside." }
+    : { label: "Complementary", sub: "People whose strengths fill your gaps, and whose gaps you fill." };
+
+  const onIntro = (id: string) => {
+    requestIntro.mutate({ candidateId: id }, { onSuccess: () => setRequested((r) => ({ ...r, [id]: true })) });
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div>
-        <p className="font-mono text-[10px] tracking-[0.3em] text-primary mb-1">COMPLEMENTARITY ENGINE</p>
+        <p className="font-mono text-[10px] tracking-[0.3em] text-primary mb-1">THE NETWORK</p>
         <h2 className="font-display text-2xl font-semibold mb-2">Your Network</h2>
-        <p className="text-sm text-muted-foreground max-w-lg">
-          The matching engine finds minds that complement yours — not mirrors, but people whose strengths fill your gaps and vice versa.
-        </p>
+        <p className="text-sm text-muted-foreground max-w-lg">{modeMeta.sub}</p>
       </div>
-      <Link href="/intelligence-profile">
-        <Card className="p-8 bg-secondary border-border hover:border-primary/40 transition-all cursor-pointer group text-center">
-          <Users className="w-10 h-10 text-primary mx-auto mb-4" />
-          <h3 className="font-display text-lg text-foreground mb-2">Open Network Observatory</h3>
-          <p className="text-sm text-muted-foreground mb-4">View your complementary matches, resonance scores, and growth opportunities.</p>
-          <Button className="gap-2">
-            View Matches <ArrowRight className="w-4 h-4" />
-          </Button>
+
+      {/* Mode toggle */}
+      <div className="inline-flex rounded-lg border border-border bg-secondary p-1">
+        {(["resonance", "complementary"] as const).map((m) => (
+          <button
+            key={m}
+            onClick={() => setMode(m)}
+            className={`px-4 py-1.5 rounded-md text-sm transition-colors ${mode === m ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            {m === "resonance" ? "Same-line peers" : "Complementary"}
+          </button>
+        ))}
+      </div>
+
+      {q.isLoading ? (
+        <p className="text-sm text-muted-foreground py-8">Finding your matches…</p>
+      ) : matches.length === 0 ? (
+        <Card className="p-8 bg-secondary border-border text-center">
+          <Users className="w-10 h-10 text-primary/70 mx-auto mb-4" />
+          <h3 className="font-display text-lg text-foreground mb-2">The network is still forming</h3>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+            You&rsquo;re one of the founding members. As more people finish their assessment, the people who share your
+            highest lines will appear here — and we&rsquo;ll connect you. Complete your assessment first if you
+            haven&rsquo;t, so the engine can place you.
+          </p>
         </Card>
-      </Link>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-3">
+          {matches.map((m: any) => {
+            const peaks: string[] = m.sharedPeaks ?? m.coversYourEdges ?? [];
+            return (
+              <Card key={m.candidateId} className="p-5 bg-secondary border-border">
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div>
+                    <h3 className="font-display text-lg text-foreground">{m.candidateName}</h3>
+                    <p className="text-[11px] text-muted-foreground">
+                      {m.generation ? `${m.generation}` : "—"}{m.cohortRarity ? ` · 1 in ${m.cohortRarity.toLocaleString()}` : ""}
+                    </p>
+                  </div>
+                  <span className="shrink-0 font-mono text-[11px] text-primary border border-primary/30 rounded-full px-2 py-0.5">
+                    {Math.round(m.score)}% fit
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed mb-3">{m.basis}</p>
+                {peaks.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {peaks.slice(0, 5).map((p) => (
+                      <span key={p} className="text-[10px] px-2 py-0.5 rounded-full border border-primary/25 text-primary/90 bg-primary/5">{p}</span>
+                    ))}
+                  </div>
+                )}
+                <Button
+                  size="sm"
+                  variant={requested[m.candidateId] ? "outline" : "default"}
+                  disabled={requested[m.candidateId] || requestIntro.isPending}
+                  onClick={() => onIntro(m.candidateId)}
+                  className="w-full"
+                >
+                  {requested[m.candidateId] ? "Introduction requested ✓" : "Request an introduction"}
+                </Button>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+      <p className="text-[11px] text-muted-foreground/50">
+        Requesting an introduction registers your interest — introductions are facilitated, curated early on, then
+        opened up as the network grows. We never share your data without your say-so.
+      </p>
     </div>
   );
 }

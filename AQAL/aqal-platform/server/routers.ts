@@ -2004,6 +2004,16 @@ CRITICAL RULES:
           mode: input.mode,
         };
       }),
+
+    // Register interest in being introduced to a match. Recorded as intent so
+    // introductions can be facilitated (curated early, automated as the network
+    // scales). Honest: this signals interest, it is not an instant DM.
+    requestIntro: protectedProcedure
+      .input(z.object({ candidateId: z.string().max(64) }))
+      .mutation(async ({ ctx, input }) => {
+        await recordEvent({ type: "intro_requested", userId: ctx.user.id, meta: { candidateId: input.candidateId } });
+        return { ok: true };
+      }),
   }),
 });
 export type AppRouter = typeof appRouter;
