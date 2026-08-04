@@ -258,6 +258,19 @@ const QUESTION_ORDER = [
 ];
 const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
 
+// The six-phase arc, surfaced to the member for goal-gradient momentum: a named
+// milestone at each boundary makes progress feel like chapters, not a slog.
+// Ranges are 0-based positions in QUESTION_ORDER — keep in sync with it.
+const PHASES: { start: number; end: number; name: string; entryToast?: string }[] = [
+  { start: 0, end: 4, name: "Warm-up" },
+  { start: 5, end: 6, name: "Your goals", entryToast: "Warm-up complete — now the part it's all for: your goals." },
+  { start: 7, end: 13, name: "Big builds", entryToast: "Goals locked in. Now let's build some worlds." },
+  { start: 14, end: 18, name: "People", entryToast: "Halfway there — you're outpacing most people already." },
+  { start: 19, end: 23, name: "Depth", entryToast: "Now the questions that separate a profile from a portrait." },
+  { start: 24, end: 26, name: "Legacy", entryToast: "Final stretch — 3 left. Most people never get this far." },
+];
+const phaseFor = (i: number) => PHASES.find((p) => i >= p.start && i <= p.end) ?? PHASES[0];
+
 // ============================================================
 // QUESTION ALTERNATES — "not feeling this one? swap it."
 // ============================================================
@@ -949,6 +962,7 @@ export default function Assessment() {
   const saveCompanionMutation = trpc.assessment.saveCompanion.useMutation();
   const trackMutation = trpc.analytics.track.useMutation();
   const companionSavedRef = useRef(false);
+  const micPrimedRef = useRef(false);
 
   // ── Incremental background upload ─────────────────────────────
   // Ensure the server-side assessment exists (once), then push each answer up
@@ -1193,6 +1207,12 @@ export default function Assessment() {
         toast.error("Microphone access is not available. Please check your browser permissions.");
         return;
       }
+      // Permission priming: one line, once, so the browser's mic prompt reads
+      // as expected rather than suspicious — grant rates go up.
+      if (!micPrimedRef.current) {
+        micPrimedRef.current = true;
+        toast.info("Your browser will ask for microphone access — that's us. Allow it so we can hear you.", { duration: 5000 });
+      }
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
@@ -1383,6 +1403,11 @@ export default function Assessment() {
     // All questions are free. The paywall now gates the evidence-based
     // scoring method after completion — not the questions themselves.
     if (currentQuestion < TOTAL_QUESTIONS - 1) {
+      // Phase-milestone moment (goal-gradient): celebrate crossing a chapter.
+      const nextPhase = phaseFor(currentQuestion + 1);
+      if (nextPhase !== phaseFor(currentQuestion) && nextPhase.entryToast) {
+        toast.success(nextPhase.entryToast, { duration: 4500 });
+      }
       setCurrentQuestion((q) => q + 1);
     } else {
       setIsSubmitting(true);
@@ -1890,7 +1915,11 @@ export default function Assessment() {
           <p className="text-muted-foreground/70 mb-3 leading-relaxed">
             Uploading your responses and running analysis across 32 cognitive dimensions...
           </p>
-          <p className="text-sm text-muted-foreground/50">This may take 30–60 seconds.</p>
+          <p className="text-sm text-muted-foreground/50 mb-2">This may take 30–60 seconds.</p>
+          <p className="text-xs text-muted-foreground/40 max-w-sm mx-auto leading-relaxed">
+            Your answers are already saved. If you need to go, it's safe to close this page — your results will be
+            emailed to you the moment they're ready.
+          </p>
         </motion.div>
       </div>
     );
@@ -2217,10 +2246,11 @@ export default function Assessment() {
           </div>
 
           <span
-            className="text-muted-foreground/50 text-xs"
+            className="text-muted-foreground/50 text-xs text-right"
             style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.1em" }}
           >
             {currentQuestion + 1} / {TOTAL_QUESTIONS}
+            <span className="hidden sm:inline text-primary/60"> · {phaseFor(currentQuestion).name}</span>
           </span>
         </div>
       </header>

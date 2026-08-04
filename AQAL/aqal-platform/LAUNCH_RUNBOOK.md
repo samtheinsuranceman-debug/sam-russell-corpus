@@ -148,6 +148,13 @@ Then validate the preview at cards-dev.twitter.com/validator (or just paste your
 URL into a draft X post). Without the PNG, shared links render a bare card.
 
 ## 6. Smoke test (≈10 minutes, do before announcing)
+
+> **📱 Mobile is non-negotiable:** an X launch is mostly phones, and mobile voice
+> APIs (MediaRecorder / SpeechRecognition) behave differently on iOS Safari vs
+> Android Chrome. Before posting, do ONE full question on a real iPhone and ONE
+> on a real Android: record → see the "~N words heard" receipt → confirm the
+> answer shows as captured. This is the one thing that can't be verified from
+> the dev environment.
 - [ ] Landing `/` loads; hero renders (A/B variant assigned).
 - [ ] Sign in works (OAuth/JWT).
 - [ ] `/assessment` → manifesto gate shows → mic captures → a short answer transcribes
