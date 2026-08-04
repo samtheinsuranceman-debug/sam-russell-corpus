@@ -1,4 +1,4 @@
-import { eq, sql, and, desc, gte } from "drizzle-orm";
+import { eq, sql, and, desc, gte, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend, testimonials, InsertTestimonial, commitments, trackerCycles, InsertTrackerCycle } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -1083,6 +1083,34 @@ export async function getAnalyticsEventsSince(sinceMs: number): Promise<Array<{
     ok: r.ok ?? null,
     createdAt: new Date(r.createdAt as unknown as string).getTime(),
   }));
+}
+
+// Hero A/B readout: per-variant impressions (landing_view) and conversions
+// (checkout_start), from the variant id we stamp into each event's meta.
+export async function getHeroExperimentStats(sinceMs: number): Promise<Array<{
+  variant: string; impressions: number; conversions: number;
+}>> {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db
+    .select({ type: analyticsEvents.type, meta: analyticsEvents.meta })
+    .from(analyticsEvents)
+    .where(and(
+      gte(analyticsEvents.createdAt, new Date(sinceMs)),
+      inArray(analyticsEvents.type, ["landing_view", "checkout_start"]),
+    ));
+  const map = new Map<string, { impressions: number; conversions: number }>();
+  for (const r of rows) {
+    const variant = (r.meta as { variant?: string } | null)?.variant;
+    if (!variant) continue;
+    const e = map.get(variant) ?? { impressions: 0, conversions: 0 };
+    if (r.type === "landing_view") e.impressions++;
+    else if (r.type === "checkout_start") e.conversions++;
+    map.set(variant, e);
+  }
+  return Array.from(map.entries())
+    .map(([variant, v]) => ({ variant, ...v }))
+    .sort((a, b) => b.impressions - a.impressions);
 }
 
 // Subscription created/canceled events (all time) for retention math.

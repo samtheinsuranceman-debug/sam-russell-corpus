@@ -24,6 +24,7 @@ export default function Admin() {
   // Queries
   const promoCodes = trpc.promo.list.useQuery(undefined, { enabled: user?.role === "admin" });
   const stats = trpc.admin.stats.useQuery(undefined, { enabled: user?.role === "admin" });
+  const heroAb = trpc.admin.heroExperiment.useQuery({ days: 30 }, { enabled: user?.role === "admin" });
   const users = trpc.admin.users.useQuery(undefined, { enabled: user?.role === "admin" });
   const assessments = trpc.admin.assessments.useQuery(undefined, { enabled: user?.role === "admin" });
   const evidenceList = trpc.admin.evidence.useQuery(undefined, { enabled: user?.role === "admin" });
@@ -108,6 +109,54 @@ export default function Admin() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Hero A/B readout — conversion per headline variant (last 30 days) */}
+        <div className="glass-card p-5 mb-8">
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="text-lg font-semibold text-foreground">Hero headline A/B — last 30 days</h2>
+            <span className="text-xs text-muted-foreground/50">landing views → checkout starts</span>
+          </div>
+          {(() => {
+            const rows = heroAb.data ?? [];
+            if (rows.length === 0) {
+              return <p className="text-sm text-muted-foreground/60">No variant data yet — impressions appear as visitors land on the homepage.</p>;
+            }
+            const best = rows.reduce((a, b) => {
+              const ra = a.impressions ? a.conversions / a.impressions : 0;
+              const rb = b.impressions ? b.conversions / b.impressions : 0;
+              return rb > ra ? b : a;
+            });
+            return (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-muted-foreground/60 text-left text-xs uppercase tracking-wider">
+                      <th className="py-1.5 pr-4">Variant</th>
+                      <th className="py-1.5 pr-4">Impressions</th>
+                      <th className="py-1.5 pr-4">Conversions</th>
+                      <th className="py-1.5 pr-4">Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((r) => {
+                      const rate = r.impressions ? (r.conversions / r.impressions) * 100 : 0;
+                      const isBest = r.variant === best.variant && best.impressions > 0;
+                      return (
+                        <tr key={r.variant} className={`border-t border-border/40 ${isBest ? "text-accent" : "text-foreground/85"}`}>
+                          <td className="py-1.5 pr-4 font-medium">{r.variant}{isBest ? " ★" : ""}</td>
+                          <td className="py-1.5 pr-4">{r.impressions.toLocaleString()}</td>
+                          <td className="py-1.5 pr-4">{r.conversions.toLocaleString()}</td>
+                          <td className="py-1.5 pr-4 font-semibold">{rate.toFixed(1)}%</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                <p className="text-[0.7rem] text-muted-foreground/40 mt-2">★ = highest conversion rate. Needs a few hundred impressions per arm before the winner is trustworthy.</p>
+              </div>
+            );
+          })()}
         </div>
 
         {/* Tabs */}

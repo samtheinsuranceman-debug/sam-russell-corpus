@@ -50,7 +50,7 @@ import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@s
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
 import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, FREE_ASSESSMENT_CAP, voiceConsensus, freePanelMax, sttProvider } from "./platform/config";
 import {
-  recordEvent, getAnalyticsEventsSince, getSubscriptionEvents,
+  recordEvent, getAnalyticsEventsSince, getSubscriptionEvents, getHeroExperimentStats,
   addMarketingSpend, getMarketingSpendSince,
   countBetaRedemptions, grantBetaAccess, getUserById, upsertUser,
   saveTestimonial, getApprovedTestimonials,
@@ -861,6 +861,13 @@ Return ONLY valid JSON.` },
     stats: adminProcedure.query(async () => {
       return getAdminStats();
     }),
+    // Hero headline A/B readout — impressions, conversions, and rate per variant.
+    heroExperiment: adminProcedure
+      .input(z.object({ days: z.number().min(1).max(365).default(30) }).optional())
+      .query(async ({ input }) => {
+        const days = input?.days ?? 30;
+        return getHeroExperimentStats(Date.now() - days * 24 * 60 * 60 * 1000);
+      }),
     // Scoring trust: which norming snapshot is active + the platform provider status.
     scoringHealth: adminProcedure.query(async () => {
       return {
