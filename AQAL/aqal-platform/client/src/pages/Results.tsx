@@ -1164,19 +1164,26 @@ function TestimonialCapture() {
 // matching research (the /archetypes evidence page) and, from there, the
 // prescriptions and the network. Turns the score into a next step.
 // ============================================================
+// How many of the lowest lines to surface. Deliberately wide (not 1-2): a voice
+// interview can't fully measure some lines (kinesthetic, musical, seduction,
+// hands-on/"mechanical" skill…), so any single lowest line may be an artifact.
+// Showing the lowest 8 gives a meaningful, robust spread instead of noise.
+const LOWEST_N = 8;
+const firstSentence = (s: string) => {
+  const m = s.match(/^.*?[.!?](\s|$)/);
+  return (m ? m[0] : s).trim();
+};
+
 function StarvedLineOnRamp({ scores }: { scores: number[] }) {
-  const starved = useMemo(() => {
-    const ranked = scores
-      .map((score, i) => ({ i, score, line: AXIS_LABELS[i] }))
+  const lowest = useMemo(() => {
+    return scores
+      .map((score, i) => ({ i, score, line: AXIS_LABELS[i], card: starvationForLine(AXIS_LABELS[i]) }))
       .filter((x) => x.score > 0) // ignore un-scored lines
       .sort((a, b) => a.score - b.score)
-      .slice(0, 2);
-    return ranked
-      .map((x) => ({ ...x, card: starvationForLine(x.line) }))
-      .filter((x) => x.card);
+      .slice(0, LOWEST_N);
   }, [scores]);
 
-  if (starved.length === 0) return null;
+  if (lowest.length === 0) return null;
 
   return (
     <section className="mb-16">
@@ -1185,31 +1192,48 @@ function StarvedLineOnRamp({ scores }: { scores: number[] }) {
           The research on your weakest lines
         </p>
         <h2 className="text-2xl sm:text-3xl text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
-          What a century of research says about your lowest lines
+          Your {lowest.length} lowest lines — and what a century of research says about each
         </h2>
-        <p className="text-sm text-muted-foreground/60 mt-2 max-w-xl mx-auto">
-          These are the two lines running emptiest for you right now. Here's what the evidence says each one costs
-          when it's the weakest link — and what lifts it.
+        <p className="text-sm text-muted-foreground/60 mt-2 max-w-2xl mx-auto">
+          These lines are running emptiest for you right now. For each, here's what the evidence says it costs
+          when it's a weakest link — and what lifts it.
         </p>
       </div>
-      <div className="grid sm:grid-cols-2 gap-4">
-        {starved.map(({ i, line, card }) => (
-          <div key={i} className="glass-card rounded-2xl p-6 border border-red-500/15">
-            <div className="flex items-baseline justify-between gap-3 mb-3">
-              <h3 className="text-lg text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{card!.name}</h3>
-              <span className="shrink-0 px-2 py-0.5 rounded-full text-[0.6rem] border border-red-500/25 text-red-300/80 bg-red-500/[0.05]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                low {line}
+      <div className="grid sm:grid-cols-2 gap-3">
+        {lowest.map(({ i, line, score, card }) => (
+          <div key={i} className="glass-card rounded-xl p-4 border border-red-500/12">
+            <div className="flex items-baseline justify-between gap-3 mb-1.5">
+              <h3 className="text-base text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+                {card ? card.name : line}
+              </h3>
+              <span className="shrink-0 px-2 py-0.5 rounded-full text-[0.58rem] border border-red-500/25 text-red-300/80 bg-red-500/[0.05]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                {line} · {Math.round(score * 100)}
               </span>
             </div>
-            <p className="text-sm text-foreground/75 leading-relaxed mb-2">
-              <span className="text-red-300/70">The cost: </span>{card!.untreatedTrajectory}
-            </p>
-            <p className="text-sm text-foreground/75 leading-relaxed">
-              <span className="text-accent/80">The lift: </span>{card!.connectionCase}
-            </p>
+            {card ? (
+              <p className="text-[0.82rem] text-foreground/70 leading-snug">
+                <span className="text-red-300/70">Cost: </span>{firstSentence(card.untreatedTrajectory)}{" "}
+                <span className="text-accent/80">Lift: </span>{firstSentence(card.connectionCase)}
+              </p>
+            ) : (
+              <p className="text-[0.82rem] text-muted-foreground/55 leading-snug">
+                Read low in your voice interview — see the full research on this line.
+              </p>
+            )}
           </div>
         ))}
       </div>
+
+      {/* Honest note: some lows are measurement artifacts → the underwritten path */}
+      <div className="mt-4 rounded-xl border border-primary/15 bg-primary/[0.04] p-4 text-center">
+        <p className="text-[0.82rem] text-muted-foreground/70 leading-relaxed max-w-2xl mx-auto">
+          A voice interview can&rsquo;t fully see every line — hands-on, physical, musical, or intimate lines often
+          read low here simply because they&rsquo;re hard to hear in a story, not because they&rsquo;re weak. That&rsquo;s
+          exactly what the <Link href="/pricing"><a className="text-primary hover:underline">fully underwritten assessment</a></Link>{" "}
+          is for: upload the evidence and the panel scores those lines for real.
+        </p>
+      </div>
+
       <div className="text-center mt-6">
         <Link href="/archetypes">
           <a className="inline-flex items-center gap-2 text-sm text-accent hover:underline" onClick={playClick}>
