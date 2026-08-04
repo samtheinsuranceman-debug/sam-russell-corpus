@@ -1064,7 +1064,7 @@ function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
                 <p className="text-sm text-foreground/80 mb-2">Turn intention into a daily habit — dictate 5–7 min/day, upload every 30 days, and watch your profile update.</p>
                 <button
                   onClick={() => {
-                    const md = buildTrackerMarkdown({ projections: report.projections ?? [], days: 30 });
+                    const md = buildTrackerMarkdown({ projections: report.projections ?? [], days: 30, obstacles: report.obstacles ?? [] });
                     const blob = new Blob([md], { type: "text/markdown" });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");

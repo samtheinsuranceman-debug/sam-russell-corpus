@@ -41,6 +41,7 @@ export type OutcomeReport = {
   vision: string;                    // the future-paced narrative (LLM or templated)
   projections: OutcomeProjection[];  // deterministic, research-grounded, confidence-tiered
   theGap: string;                    // the knowing-doing gap + the commitment move
+  obstacles: string[];               // the sabotage risks the person named in their pre-mortem
   disclaimer: string;
 };
 
@@ -106,6 +107,7 @@ function mockReport(scores: ScoreRow[], goals: string): OutcomeReport {
     vision: visionText(goals, buildProjections(goals)),
     projections: buildProjections(goals),
     theGap: gapText(),
+    obstacles: [],
     disclaimer: DISCLAIMER,
   };
 }
@@ -117,6 +119,7 @@ const REPORT_SCHEMA = {
     keystoneMove: { type: "string" },
     vision: { type: "string" },
     theGap: { type: "string" },
+    obstacles: { type: "array", items: { type: "string" } },
     threats: {
       type: "array",
       items: {
@@ -145,7 +148,7 @@ const REPORT_SCHEMA = {
       },
     },
   },
-  required: ["summary", "keystoneMove", "vision", "theGap", "threats", "enablers"],
+  required: ["summary", "keystoneMove", "vision", "theGap", "obstacles", "threats", "enablers"],
   additionalProperties: false,
 } as const;
 
@@ -196,6 +199,10 @@ Produce an outcome-engineering report:
 - Write "theGap": 2–4 sentences on the knowing-doing gap — that most people know the answer and fail to implement,
   that the cost is inaction not ignorance, and that turning each move into an if-then plan + habit + tracking is
   what closes it. Make it urgent and honest, not manipulative.
+- "obstacles": extract the 3–4 specific self-sabotage risks the person named in their pre-mortem (they're in the
+  goals text — the "what could go wrong / what would sabotage this" answer). Return each as a short, concrete
+  phrase in THEIR framing (e.g. "I stop tracking after two weeks", "money fight with my spouse"). Return [] if
+  they named none — do NOT invent risks they didn't say.
 Honesty rules: never promise outcomes; keep every number directional; respect each practice's evidence tier
 (do not present an Emerging practice as proven); never prescribe the psychedelic entry as an action; the vision
 is a hypothetical projection, never a guarantee.`;
@@ -219,6 +226,7 @@ is a hypothetical projection, never a guarantee.`;
       projections,
       vision: parsed.vision?.trim() || visionText(goals, projections),
       theGap: parsed.theGap?.trim() || gapText(),
+      obstacles: Array.isArray(parsed.obstacles) ? parsed.obstacles.filter((o) => typeof o === "string" && o.trim()) : [],
       disclaimer: DISCLAIMER,
     };
   } catch {

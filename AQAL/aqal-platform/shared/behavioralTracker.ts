@@ -13,9 +13,11 @@ export function buildTrackerMarkdown(opts: {
   projections: OutcomeProjection[];
   days?: number;
   goals?: string;
+  obstacles?: string[];
 }): string {
   const days = Math.max(1, Math.min(opts.days ?? 30, 90));
   const goals = (opts.goals || "").trim();
+  const obstacles = (opts.obstacles || []).map((o) => o.trim()).filter(Boolean);
   const practices = opts.projections.length
     ? opts.projections
     : [{ practice: "your prescribed keystone practice", horizon: "the recommended time", confidence: "Moderate", researchBasis: "", goalArea: "your goals", librarySection: "the Research Library" } as OutcomeProjection];
@@ -38,12 +40,19 @@ export function buildTrackerMarkdown(opts: {
     lines.push(`- **${p.practice}** — run it for ${p.horizon}.${p.researchBasis ? ` (${p.researchBasis})` : ""}`);
   }
   lines.push("");
+  if (obstacles.length) {
+    lines.push("## The risks you predicted (your pre-mortem — watch these)");
+    lines.push("You named these as the things most likely to sabotage you. Naming them is step one; catching them early is step two.");
+    for (const o of obstacles) lines.push(`- [ ] ${o}`);
+    lines.push("");
+  }
   lines.push("## Daily dictation prompts (speak these every day)");
   lines.push("1. Which prescribed practice(s) did I actually do today, and for how long?");
   lines.push("2. What procedure did I follow — exactly what did I do?");
   lines.push("3. Any noticeable effects — mood, energy, focus, connection, conflict, sleep?");
   lines.push("4. What got in the way, and what will I adjust tomorrow?");
-  lines.push("5. On a 1–10, how consistent and enthusiastic was I today?");
+  if (obstacles.length) lines.push("5. Did any of the risks I predicted show up today? Which one, and how did I handle it?");
+  lines.push(`${obstacles.length ? "6" : "5"}. On a 1–10, how consistent and enthusiastic was I today?`);
   lines.push("");
   lines.push("---");
   lines.push("");
@@ -53,6 +62,7 @@ export function buildTrackerMarkdown(opts: {
     lines.push("- Procedure followed: ");
     lines.push("- Noticeable effects: ");
     lines.push("- Obstacles / adjustment: ");
+    if (obstacles.length) lines.push("- Predicted risk show up today? (which / how handled): ");
     lines.push("- Consistency (1–10): ");
     lines.push("");
   }
