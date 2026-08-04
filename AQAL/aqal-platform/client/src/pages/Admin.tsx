@@ -25,6 +25,7 @@ export default function Admin() {
   const promoCodes = trpc.promo.list.useQuery(undefined, { enabled: user?.role === "admin" });
   const stats = trpc.admin.stats.useQuery(undefined, { enabled: user?.role === "admin" });
   const heroAb = trpc.admin.heroExperiment.useQuery({ days: 30 }, { enabled: user?.role === "admin" });
+  const introReqs = trpc.admin.introRequests.useQuery(undefined, { enabled: user?.role === "admin" });
   const users = trpc.admin.users.useQuery(undefined, { enabled: user?.role === "admin" });
   const assessments = trpc.admin.assessments.useQuery(undefined, { enabled: user?.role === "admin" });
   const evidenceList = trpc.admin.evidence.useQuery(undefined, { enabled: user?.role === "admin" });
@@ -157,6 +158,38 @@ export default function Admin() {
               </div>
             );
           })()}
+        </div>
+
+        {/* Network intros to facilitate */}
+        <div className="glass-card p-5 mb-8">
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="text-lg font-semibold text-foreground">Introductions to facilitate</h2>
+            <span className="text-xs text-muted-foreground/50">newest first</span>
+          </div>
+          {(introReqs.data ?? []).length === 0 ? (
+            <p className="text-sm text-muted-foreground/60">No introduction requests yet.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-muted-foreground/60 text-left text-xs uppercase tracking-wider">
+                    <th className="py-1.5 pr-4">Requester</th>
+                    <th className="py-1.5 pr-4">Wants to meet</th>
+                    <th className="py-1.5 pr-4">When</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(introReqs.data ?? []).map((r, i) => (
+                    <tr key={i} className="border-t border-border/40 text-foreground/85">
+                      <td className="py-1.5 pr-4 font-medium">{r.requester}</td>
+                      <td className="py-1.5 pr-4">{r.candidate}</td>
+                      <td className="py-1.5 pr-4 text-muted-foreground/60">{new Date(r.at).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* Tabs */}

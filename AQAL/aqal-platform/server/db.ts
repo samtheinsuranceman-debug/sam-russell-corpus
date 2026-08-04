@@ -1504,3 +1504,34 @@ export async function markFinishNudgeSent(userId: number) {
   if (!db) return;
   await db.update(users).set({ finishNudgeSentAt: new Date() }).where(eq(users.id, userId));
 }
+
+// Recent network introduction requests, with both parties' names resolved, so
+// the founder can facilitate introductions while the network is curated.
+export async function getRecentIntroRequests(limit = 50): Promise<Array<{ requester: string; candidate: string; at: number }>> {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db
+    .select({ userId: analyticsEvents.userId, meta: analyticsEvents.meta, createdAt: analyticsEvents.createdAt })
+    .from(analyticsEvents)
+    .where(eq(analyticsEvents.type, "intro_requested"))
+    .orderBy(desc(analyticsEvents.createdAt))
+    .limit(limit);
+  const ids = new Set<number>();
+  for (const r of rows) {
+    if (r.userId) ids.add(r.userId);
+    const cid = Number((r.meta as { candidateId?: string } | null)?.candidateId);
+    if (cid) ids.add(cid);
+  }
+  const nameRows = ids.size
+    ? await db.select({ id: users.id, name: users.name, email: users.email }).from(users).where(inArray(users.id, Array.from(ids)))
+    : [];
+  const nameOf = new Map(nameRows.map((n) => [n.id, n.name || n.email || String(n.id)]));
+  return rows.map((r) => {
+    const cid = Number((r.meta as { candidateId?: string } | null)?.candidateId);
+    return {
+      requester: r.userId ? (nameOf.get(r.userId) || String(r.userId)) : "—",
+      candidate: (cid && nameOf.get(cid)) || String((r.meta as { candidateId?: string } | null)?.candidateId ?? "—"),
+      at: new Date(r.createdAt as unknown as string).getTime(),
+    };
+  });
+}

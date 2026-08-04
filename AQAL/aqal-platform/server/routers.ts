@@ -50,7 +50,7 @@ import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@s
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
 import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, FREE_ASSESSMENT_CAP, voiceConsensus, freePanelMax, sttProvider } from "./platform/config";
 import {
-  recordEvent, getAnalyticsEventsSince, getSubscriptionEvents, getHeroExperimentStats,
+  recordEvent, getAnalyticsEventsSince, getSubscriptionEvents, getHeroExperimentStats, getRecentIntroRequests,
   addMarketingSpend, getMarketingSpendSince,
   countBetaRedemptions, grantBetaAccess, getUserById, upsertUser,
   saveTestimonial, getApprovedTestimonials,
@@ -860,6 +860,10 @@ Return ONLY valid JSON.` },
   admin: router({
     stats: adminProcedure.query(async () => {
       return getAdminStats();
+    }),
+    // Network introduction requests to facilitate (curated early).
+    introRequests: adminProcedure.query(async () => {
+      return getRecentIntroRequests(100);
     }),
     // Hero headline A/B readout — impressions, conversions, and rate per variant.
     heroExperiment: adminProcedure
