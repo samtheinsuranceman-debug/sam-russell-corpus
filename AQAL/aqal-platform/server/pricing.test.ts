@@ -2,40 +2,25 @@ import { describe, it, expect } from "vitest";
 import { PRODUCTS } from "./stripe/products";
 
 describe("Stripe Products Configuration", () => {
-  it("assessment product is priced at $299 (29900 cents) for founding members", () => {
-    expect(PRODUCTS.assessment.price).toBe(29900);
-    expect(PRODUCTS.assessment.mode).toBe("payment");
+  it("audio assessment is a $500 one-time payment", () => {
+    expect(PRODUCTS.audio.price).toBe(50000);
+    expect(PRODUCTS.audio.mode).toBe("payment");
   });
 
-  it("assessment product includes correct founding member naming", () => {
-    expect(PRODUCTS.assessment.name).toContain("Founding Member");
+  it("fully underwritten assessment is a $1,500 one-time payment", () => {
+    expect(PRODUCTS.underwritten.price).toBe(150000);
+    expect(PRODUCTS.underwritten.mode).toBe("payment");
+    expect(PRODUCTS.underwritten.name).toContain("Underwritten");
   });
 
-  it("regular assessment is priced at $1,500 (150000 cents)", () => {
-    expect(PRODUCTS.assessmentRegular.price).toBe(150000);
-    expect(PRODUCTS.assessmentRegular.mode).toBe("payment");
+  it("membership is a $79/month subscription with a 15-day free trial", () => {
+    expect(PRODUCTS.membership.price).toBe(7900);
+    expect(PRODUCTS.membership.mode).toBe("subscription");
+    expect(PRODUCTS.membership.interval).toBe("month");
+    expect(PRODUCTS.membership.trialDays).toBe(15);
   });
 
-  it("coaching membership (silver) is a monthly subscription at $39", () => {
-    expect(PRODUCTS.silver.price).toBe(3900);
-    expect(PRODUCTS.silver.mode).toBe("subscription");
-    expect(PRODUCTS.silver.interval).toBe("month");
-  });
-
-  it("growth & network (gold) is a monthly subscription at $149", () => {
-    expect(PRODUCTS.gold.price).toBe(14900);
-    expect(PRODUCTS.gold.mode).toBe("subscription");
-    expect(PRODUCTS.gold.interval).toBe("month");
-  });
-
-  it("private network (platinum) is a monthly subscription at $499", () => {
-    expect(PRODUCTS.platinum.price).toBe(49900);
-    expect(PRODUCTS.platinum.mode).toBe("subscription");
-    expect(PRODUCTS.platinum.interval).toBe("month");
-  });
-
-  it("has correct product keys", () => {
-    const keys = Object.keys(PRODUCTS);
-    expect(keys).toEqual(["assessment", "assessmentRegular", "silver", "gold", "platinum"]);
+  it("has exactly the three current product keys", () => {
+    expect(Object.keys(PRODUCTS)).toEqual(["audio", "underwritten", "membership"]);
   });
 });
