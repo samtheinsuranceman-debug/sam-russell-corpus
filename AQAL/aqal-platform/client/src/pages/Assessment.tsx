@@ -236,8 +236,23 @@ const QUESTIONS_SOURCE: {
 //   2 The Natural, 3 The Flex, 4 The Negotiation, 6 The Read, 11 The Robbery,
 //   12 The Tense Table, 13 The Wedding Chaos, 16 The Stranger — the weakest
 //   overlaps / partner-or-married assumptions. Swapped in: 25–32.
+// Momentum-first order: widest/easiest play openers build the talking habit,
+// then bigger builds, then scale + goals once bought in, then people/persuasion,
+// then depth/identity, then the vulnerable legacy close. (Goals-question
+// positions are tracked in shared/goalsQuestions.ts — keep them in sync.)
 const QUESTION_ORDER = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
+  // Phase 1 — pure play warm-up (easiest, widest)
+  1, 2, 3, 4, 10, 15,
+  // Phase 2 — bigger fun builds (more structure, still light)
+  5, 7, 11, 9, 8,
+  // Phase 3 — scale + goals (buy-in established)
+  12, 13, 14,
+  // Phase 4 — people / persuasion (relational warmth)
+  16, 19, 18, 17, 6,
+  // Phase 5 — depth / resilience / identity
+  21, 22, 20, 23, 24,
+  // Phase 6 — vulnerable / legacy close
+  25, 26, 27,
 ];
 const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
 

@@ -18,8 +18,10 @@
 // self-rated difficulty + the sabotage risks to engineer around).
 export const GOALS_QUESTION_IDS = [13, 14, 20] as const;
 
-/** 0-based positions of the goals questions within QUESTION_ORDER (display order). */
-export const GOALS_QUESTION_INDICES = [12, 13, 19] as const;
+/** 0-based positions of the goals questions within QUESTION_ORDER (display order).
+ *  Blueprint (13) → 12, Seven Perfect Things (14) → 13, Goal Pre-Mortem (20) → 21
+ *  under the momentum-first order in Assessment.tsx. Keep in sync if that reorders. */
+export const GOALS_QUESTION_INDICES = [12, 13, 21] as const;
 
 /** True if a stored response (by its display-order index) is a goals/outcomes answer. */
 export function isGoalsResponse(questionIndex: number | null | undefined): boolean {
