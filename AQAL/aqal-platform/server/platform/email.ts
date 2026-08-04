@@ -67,6 +67,34 @@ export function resultEmailHtml(opts: {
   </div></body></html>`;
 }
 
+// Founding-member welcome — fires once, when a NEW member claims free access.
+// Seeds retention by setting the expectation that finishing (long, deep answers)
+// is the whole game, and points them straight to the assessment.
+export function foundingWelcomeEmailHtml(opts: { name?: string; appUrl?: string } = {}): string {
+  const first = (opts.name || "").split(" ")[0];
+  const hi = first ? `Welcome, ${first.replace(/[<>&"]/g, "")}.` : "Welcome.";
+  const cta = opts.appUrl ? `${opts.appUrl.replace(/\/$/, "")}/assessment` : "/assessment";
+  return `<!doctype html><html><body style="margin:0;background:#161310;font-family:Georgia,serif;color:#efe9dc;">
+  <div style="max-width:520px;margin:0 auto;padding:40px 28px;">
+    <div style="font-family:monospace;font-size:11px;letter-spacing:.24em;color:#c9a24b;text-transform:uppercase;margin-bottom:18px;">AQAL · Founding Member</div>
+    <h1 style="font-size:24px;font-weight:600;margin:0 0 14px;">${hi} You&rsquo;re one of the first 10,000.</h1>
+    <p style="color:#b9b2a6;font-size:15px;line-height:1.65;margin:0 0 16px;">
+      Your assessment and your membership are <b style="color:#e0c68c;">free, for life</b> — the founding rate, locked
+      in. In return, you help build the network that makes this worth joining.
+    </p>
+    <div style="border:1px solid rgba(201,162,75,.2);border-radius:14px;padding:22px;background:rgba(201,162,75,.05);margin:0 0 18px;">
+      <div style="font-family:monospace;font-size:10px;letter-spacing:.2em;color:#c9a24b;text-transform:uppercase;margin-bottom:8px;">The one thing that matters</div>
+      <p style="color:#efe9dc;font-size:14px;line-height:1.6;margin:0;">
+        Every other test measured one slice of you. This one measures all 32 lines — by voice. The more you give it,
+        the more it gives back. Short answers measure nothing. Aim for five to ten minutes a question, and come back
+        across days if you need to — your progress is saved.
+      </p>
+    </div>
+    <a href="${cta}" style="display:inline-block;background:#e0c68c;color:#161310;font-family:monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:13px 22px;border-radius:4px;font-weight:600;">Begin your assessment</a>
+    <p style="color:#6f6a60;font-size:12px;margin-top:26px;">You received this because you claimed AQAL founding access. We never sell your personal information.</p>
+  </div></body></html>`;
+}
+
 // Daily accountability check-in email — one question, Y/N reply, for the first
 // 30 days after a person signs their Personal Commitment Agreement. Deliberately
 // short so it reads on a lock screen.

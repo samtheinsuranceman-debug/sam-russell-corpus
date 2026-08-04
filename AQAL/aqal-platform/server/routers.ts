@@ -1,7 +1,7 @@
 import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
-import { sendEmail, resultEmailHtml, dailyCheckinEmailHtml } from "./platform/email";
+import { sendEmail, resultEmailHtml, dailyCheckinEmailHtml, foundingWelcomeEmailHtml } from "./platform/email";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
@@ -1105,6 +1105,8 @@ Return ONLY valid JSON.` },
           }
         }
 
+        // Is this a brand-new founding member (vs. someone signing back in)?
+        const alreadyClaimed = !!(await getUserByOpenId(openId).catch(() => null));
         try {
           await upsertUser({ openId, email, name, loginMethod: "free-passcode", lastSignedIn: new Date() });
           // Founding members (first FREE_ASSESSMENT_CAP) get the FULL experience free —
@@ -1120,6 +1122,12 @@ Return ONLY valid JSON.` },
         const token = await sdk.createSessionToken(openId, { name });
         ctx.res.cookie(COOKIE_NAME, token, { ...getSessionCookieOptions(ctx.req), maxAge: ONE_YEAR_MS });
         await recordEvent({ type: "free_access_claimed" });
+        // Fire the founding welcome once, only for a truly new member (best-effort).
+        if (!alreadyClaimed) {
+          const appUrl = ctx.req.headers.origin || undefined;
+          sendEmail(email, "Welcome — you're one of the first 10,000", foundingWelcomeEmailHtml({ name, appUrl }))
+            .catch((e) => console.warn("[freeAccess] welcome email skipped:", e));
+        }
         return { success: true };
       }),
   }),
