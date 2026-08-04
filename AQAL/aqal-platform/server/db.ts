@@ -1469,3 +1469,38 @@ export async function markTrackerReminderSent(userId: number) {
   if (!db) return;
   await db.update(users).set({ trackerReminderLastSentAt: new Date() }).where(eq(users.id, userId));
 }
+
+// Members who signed up between minHours and maxHours ago, have NO completed
+// assessment, and haven't been nudged yet — the "started but didn't finish"
+// re-engagement audience. One-time (finishNudgeSentAt gates re-sends).
+export async function getUnfinishedAssessmentRecipients(minHours = 24, maxHours = 96): Promise<Array<{ userId: number; email: string; name: string | null }>> {
+  const db = await getDb();
+  if (!db) return [];
+  const now = Date.now();
+  const notTooOld = new Date(now - maxHours * 3_600_000);
+  const oldEnough = new Date(now - minHours * 3_600_000);
+  const candidates = await db
+    .select({ userId: users.id, email: users.email, name: users.name })
+    .from(users)
+    .where(and(
+      sql`${users.email} IS NOT NULL`,
+      sql`${users.finishNudgeSentAt} IS NULL`,
+      gte(users.createdAt, notTooOld),
+      sql`${users.createdAt} <= ${oldEnough}`,
+    ));
+  if (candidates.length === 0) return [];
+  const completed = await db
+    .selectDistinct({ userId: assessments.userId })
+    .from(assessments)
+    .where(eq(assessments.status, "complete"));
+  const done = new Set(completed.map((c) => c.userId));
+  return candidates
+    .filter((c) => !!c.email && !done.has(c.userId))
+    .map((c) => ({ userId: c.userId, email: c.email as string, name: c.name ?? null }));
+}
+
+export async function markFinishNudgeSent(userId: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(users).set({ finishNudgeSentAt: new Date() }).where(eq(users.id, userId));
+}

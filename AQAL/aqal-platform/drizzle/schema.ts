@@ -28,6 +28,8 @@ export const users = mysqlTable("users", {
   // first evidence upload) and when it was paid-for/unlocked (permanent).
   underwrittenTrialStartedAt: timestamp("underwritten_trial_started_at"),
   underwrittenUnlockedAt: timestamp("underwritten_unlocked_at"),
+  // When we sent the one-time "you started but didn't finish" nudge (throttle).
+  finishNudgeSentAt: timestamp("finish_nudge_sent_at"),
 });
 
 export type User = typeof users.$inferSelect;

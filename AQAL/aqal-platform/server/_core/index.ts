@@ -62,6 +62,8 @@ async function startServer() {
   app.post("/api/scheduled/drift-alert", driftAlertHandler);
   const { trackerReengagementHandler } = await import("../scheduledTrackerReengagement");
   app.post("/api/scheduled/tracker-reengagement", trackerReengagementHandler);
+  const { finishNudgeHandler } = await import("../scheduledFinishNudge");
+  app.post("/api/scheduled/finish-nudge", finishNudgeHandler);
 
   // tRPC API
   app.use(

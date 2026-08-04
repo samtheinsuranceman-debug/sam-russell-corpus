@@ -95,6 +95,31 @@ export function foundingWelcomeEmailHtml(opts: { name?: string; appUrl?: string 
   </div></body></html>`;
 }
 
+// "You started but didn't finish" — a one-time nudge ~24h after signup for the
+// members who claimed a spot but haven't completed the assessment (the biggest
+// drop-off on a long voice test). Honest and encouraging, not guilt-trippy.
+export function unfinishedAssessmentEmailHtml(opts: { name?: string; appUrl?: string } = {}): string {
+  const first = (opts.name || "").split(" ")[0];
+  const hi = first ? `${first.replace(/[<>&"]/g, "")}, your map is half-drawn.` : "Your map is half-drawn.";
+  const cta = opts.appUrl ? `${opts.appUrl.replace(/\/$/, "")}/assessment` : "/assessment";
+  return `<!doctype html><html><body style="margin:0;background:#161310;font-family:Georgia,serif;color:#efe9dc;">
+  <div style="max-width:520px;margin:0 auto;padding:40px 28px;">
+    <div style="font-family:monospace;font-size:11px;letter-spacing:.24em;color:#c9a24b;text-transform:uppercase;margin-bottom:18px;">AQAL · Pick up where you left off</div>
+    <h1 style="font-size:23px;font-weight:600;margin:0 0 14px;">${hi}</h1>
+    <p style="color:#b9b2a6;font-size:15px;line-height:1.65;margin:0 0 16px;">
+      You claimed your founding spot but haven&rsquo;t finished the assessment yet. That&rsquo;s normal — it&rsquo;s
+      long on purpose, because it&rsquo;s measuring all 32 lines, not one. Most people don&rsquo;t finish. The ones
+      who do get the only real map of their mind.
+    </p>
+    <p style="color:#b9b2a6;font-size:15px;line-height:1.65;margin:0 0 18px;">
+      Your progress is saved. You can answer four questions at a time across a week if you want — it still counts.
+      The only wrong move is a short answer, because short answers measure nothing.
+    </p>
+    <a href="${cta}" style="display:inline-block;background:#e0c68c;color:#161310;font-family:monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:13px 22px;border-radius:4px;font-weight:600;">Finish your assessment</a>
+    <p style="color:#6f6a60;font-size:12px;margin-top:26px;">A one-time reminder because you started AQAL. We never sell your personal information.</p>
+  </div></body></html>`;
+}
+
 // Daily accountability check-in email — one question, Y/N reply, for the first
 // 30 days after a person signs their Personal Commitment Agreement. Deliberately
 // short so it reads on a lock screen.
