@@ -81,7 +81,7 @@ a viral day (5–10k) is ~3–5× that.
 ## 3. Database
 ```
 pnpm install
-pnpm db:push        # applies all migrations incl. 0016 (underwritten-gate columns)
+pnpm db:push        # applies all migrations incl. 0016 (underwritten-gate) + 0017 (finish-nudge)
 ```
 **Done when:** `db:push` completes with no pending migrations.
 
@@ -110,6 +110,22 @@ keys from step 1. Then:
 to an active membership; a test `underwritten` payment sets the unlock.
 
 ---
+
+## 5b. Scheduled jobs (email lifecycle — set these up, they don't self-fire)
+Point your scheduler (the heartbeat/cron system) at these cron-authenticated
+endpoints. Without them the retention emails never send.
+
+| Endpoint (POST) | Cadence | What it does |
+|---|---|---|
+| `/api/scheduled/finish-nudge` | hourly (or a few ×/day) | one-time "you started but didn't finish" email, 24–96h after signup |
+| `/api/scheduled/tracker-reengagement` | ~twice a month | invites opted-in members to start their next tracker cycle |
+| `/api/scheduled/drift-alert` | per its design | existing drift alert |
+
+(The founding **welcome email** and the **results email** fire inline — no cron
+needed. All email requires `RESEND_API_KEY`; unconfigured, they log as mock.)
+
+**Done when:** hitting `/api/scheduled/finish-nudge` as the cron identity returns
+`{ ok: true, candidates, sent, failed }`.
 
 ## 6. Smoke test (≈10 minutes, do before announcing)
 - [ ] Landing `/` loads; hero renders (A/B variant assigned).
