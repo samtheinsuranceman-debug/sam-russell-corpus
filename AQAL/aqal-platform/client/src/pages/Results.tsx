@@ -17,6 +17,7 @@ import { bottleneckRole } from "@shared/bottleneckRoles";
 import { Cite } from "@/components/Cite";
 import { citationHref } from "@shared/citations";
 import { buildTrackerMarkdown } from "@shared/behavioralTracker";
+import { starvationForLine } from "./archetypesData";
 
 // The full 32-line profile, in the order defined by the single source of truth.
 const AXIS_LABELS = ALL_AXES;
@@ -1158,6 +1159,69 @@ function TestimonialCapture() {
 // ============================================================
 // MAIN RESULTS PAGE
 // ============================================================
+// ============================================================
+// STARVED-LINE ON-RAMP — routes the member from their two lowest lines to the
+// matching research (the /archetypes evidence page) and, from there, the
+// prescriptions and the network. Turns the score into a next step.
+// ============================================================
+function StarvedLineOnRamp({ scores }: { scores: number[] }) {
+  const starved = useMemo(() => {
+    const ranked = scores
+      .map((score, i) => ({ i, score, line: AXIS_LABELS[i] }))
+      .filter((x) => x.score > 0) // ignore un-scored lines
+      .sort((a, b) => a.score - b.score)
+      .slice(0, 2);
+    return ranked
+      .map((x) => ({ ...x, card: starvationForLine(x.line) }))
+      .filter((x) => x.card);
+  }, [scores]);
+
+  if (starved.length === 0) return null;
+
+  return (
+    <section className="mb-16">
+      <div className="text-center mb-6">
+        <p className="text-xs uppercase tracking-[0.2em] text-accent/60 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          The research on your weakest lines
+        </p>
+        <h2 className="text-2xl sm:text-3xl text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+          What a century of research says about your lowest lines
+        </h2>
+        <p className="text-sm text-muted-foreground/60 mt-2 max-w-xl mx-auto">
+          These are the two lines running emptiest for you right now. Here's what the evidence says each one costs
+          when it's the weakest link — and what lifts it.
+        </p>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-4">
+        {starved.map(({ i, line, card }) => (
+          <div key={i} className="glass-card rounded-2xl p-6 border border-red-500/15">
+            <div className="flex items-baseline justify-between gap-3 mb-3">
+              <h3 className="text-lg text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{card!.name}</h3>
+              <span className="shrink-0 px-2 py-0.5 rounded-full text-[0.6rem] border border-red-500/25 text-red-300/80 bg-red-500/[0.05]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                low {line}
+              </span>
+            </div>
+            <p className="text-sm text-foreground/75 leading-relaxed mb-2">
+              <span className="text-red-300/70">The cost: </span>{card!.untreatedTrajectory}
+            </p>
+            <p className="text-sm text-foreground/75 leading-relaxed">
+              <span className="text-accent/80">The lift: </span>{card!.connectionCase}
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className="text-center mt-6">
+        <Link href="/archetypes">
+          <a className="inline-flex items-center gap-2 text-sm text-accent hover:underline" onClick={playClick}>
+            See all {AXIS_LABELS.length} lines, the isolation science, and what connection changes
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 export default function Results() {
   const { user, loading: authLoading } = useAuth();
   const [, navigate] = useLocation();
@@ -1341,6 +1405,9 @@ export default function Results() {
             <div className="mb-16">
               <FullRadarChart scores={allScores} />
             </div>
+
+            {/* On-ramp: your two lowest lines → the research, the prescriptions, the network */}
+            <StarvedLineOnRamp scores={allScores} />
 
             {/* Companion reveal — the self–other gap, if a companion played along */}
             {companionGap && (
