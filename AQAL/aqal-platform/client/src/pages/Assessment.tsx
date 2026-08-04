@@ -972,6 +972,14 @@ export default function Assessment() {
   const progress = ((currentQuestion + 1) / TOTAL_QUESTIONS) * 100;
   const hasRecording = recordings[currentQuestion] !== null;
   const hasTextResponse = textResponses[currentQuestion]?.trim().length > 20;
+  // Furthest question they've reached or touched — derived (resume-safe), so the
+  // step dots can jump anywhere already visited without unlocking the future.
+  const furthestReached = Math.max(
+    currentQuestion,
+    ...recordings.map((r, i) => (r !== null ? i : 0)),
+    ...textResponses.map((t, i) => (t && t.trim().length > 0 ? i : 0)),
+    ...(skippedQuestions.length ? skippedQuestions : [0]),
+  );
   const isSkipped = skippedQuestions.includes(currentQuestion);
   // Companion panel shows only when companion mode is on AND this isn't a private question.
   const companionActive = companionMode && !question.soloOnly;
@@ -2093,25 +2101,31 @@ export default function Assessment() {
             </Button>
           </Link>
 
-          {/* Step dots — show only relevant phase */}
+          {/* Step dots — clickable back-navigation to any question already visited */}
           <div className="flex items-center gap-1">
-            {Array.from({ length: TOTAL_QUESTIONS }).map((_, i) => (
-              <motion.div
-                key={i}
-                className={`rounded-full transition-all duration-300 ${
-                  i === currentQuestion
-                    ? "w-4 h-1.5 bg-primary"
-                    : i < currentQuestion
-                    ? skippedQuestions.includes(i)
-                      ? "w-1.5 h-1.5 bg-muted-foreground/30"
-                      : "w-1.5 h-1.5 bg-accent/60"
-                    : "w-1.5 h-1.5 bg-muted-foreground/20"
-                }`}
-                style={i === currentQuestion ? { boxShadow: "0 0 8px oklch(0.68 0.08 165 / 0.4)" } : undefined}
-                layout
-                transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-              />
-            ))}
+            {Array.from({ length: TOTAL_QUESTIONS }).map((_, i) => {
+              const reachable = i <= furthestReached && !isRecording;
+              return (
+                <motion.button
+                  key={i}
+                  onClick={() => { if (reachable && i !== currentQuestion) { playClick(); setCurrentQuestion(i); } }}
+                  disabled={!reachable}
+                  title={i <= furthestReached ? `Go to question ${i + 1}: ${QUESTIONS[i].title}` : undefined}
+                  className={`rounded-full transition-all duration-300 ${reachable && i !== currentQuestion ? "cursor-pointer hover:scale-150" : "cursor-default"} ${
+                    i === currentQuestion
+                      ? "w-4 h-1.5 bg-primary"
+                      : i < currentQuestion
+                      ? skippedQuestions.includes(i)
+                        ? "w-1.5 h-1.5 bg-muted-foreground/30"
+                        : "w-1.5 h-1.5 bg-accent/60"
+                      : "w-1.5 h-1.5 bg-muted-foreground/20"
+                  }`}
+                  style={i === currentQuestion ? { boxShadow: "0 0 8px oklch(0.68 0.08 165 / 0.4)" } : undefined}
+                  layout
+                  transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                />
+              );
+            })}
           </div>
 
           <span
@@ -2310,18 +2324,26 @@ export default function Assessment() {
           </AnimatePresence>
 
           {/* Swap: trade this world for an equally-deep one that reads the same lines.
-              Only offered before they've answered, and only while alternates remain. */}
-          {swapsLeft > 0 && !hasRecording && !hasTextResponse && (
+              Works even after answering (e.g. they came back via the dots): swapping
+              an answered question wipes that answer so it always matches the prompt. */}
+          {swapsLeft > 0 && !isRecording && (
             <button
               onClick={() => {
                 playClick();
+                if (hasRecording || hasTextResponse) {
+                  setRecordings((r) => { const n = [...r]; n[currentQuestion] = null; return n; });
+                  setTextResponses((t) => { const n = [...t]; n[currentQuestion] = ""; return n; });
+                  setCompanionResponses((c) => { const n = [...c]; n[currentQuestion] = ""; return n; });
+                }
                 setQuestionVariants((v) => ({ ...v, [baseQuestion.id]: (v[baseQuestion.id] ?? 0) + 1 }));
               }}
               className="flex items-center gap-2 mx-auto text-xs text-muted-foreground/60 hover:text-primary transition-colors mb-4 border border-muted-foreground/20 rounded-full px-4 py-1.5 hover:border-primary/40"
               style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.06em" }}
             >
               <RefreshCw className="w-3 h-3" />
-              Not feeling this one? Swap it — same depth, different world ({swapsLeft} left)
+              {hasRecording || hasTextResponse
+                ? `Swap & re-answer — clears this answer (${swapsLeft} left)`
+                : `Not feeling this one? Swap it — same depth, different world (${swapsLeft} left)`}
             </button>
           )}
 
