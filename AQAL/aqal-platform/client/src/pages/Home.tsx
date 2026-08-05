@@ -773,7 +773,7 @@ function DialSection() {
           Thirty-two lines on <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>one dial</em>.
         </h2>
         <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
-          Every intelligence, plotted in its honest mode — and read as one aggregate. The <b style={{ color: CREAM, fontWeight: 600 }}>independent axes</b> are ringed; they carry most of what makes a capable mind genuinely rare. Hover any point to read it.
+          Every intelligence, plotted in its honest mode — and read as one aggregate. The <b style={{ color: CREAM, fontWeight: 600 }}>independent axes</b> are ringed; they're the lines a single IQ score never even sees. Hover any point to read it — this is the map you walk away with.
         </p>
 
         {/* Dial + Detail panel */}
@@ -823,7 +823,7 @@ function DialSection() {
               })}
               <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.24em' }} fill={CREAM2} x={CX} y={CY - 20} textAnchor="middle">AGGREGATE CAPABILITY</text>
               <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY + 14} textAnchor="middle" fontSize="46">{aggregate}</text>
-              <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 32} textAnchor="middle">32 LINES · ~6.5 EFF. DIM</text>
+              <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 32} textAnchor="middle">32 LINES · ONE SYSTEM</text>
             </svg>
             <div className="text-center mt-3" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: MUTED }}>
               Illustrative example — not your data
@@ -1231,27 +1231,27 @@ export default function Home() {
     <div className="min-h-screen relative" style={{ background: INK }}>
       <PublicHeader />
       <div className="relative z-10">
-        {/* §1 Hero */}
+        {/* ── THE HOOK ── promise, then an immediate toy to play with */}
         <HeroSection />
-        {/* §2 The Problem — founder story */}
+        {/* Instant payoff: the interactive 32-line dial — touch the product before reading a word */}
+        <div data-reveal><DialSection /></div>
+        {/* ── THE STORY ARC ── tension → aha → "that's me" → fear → plan */}
         <div data-reveal><FounderStorySection /></div>
-        {/* §3 The Mechanism — the Master Weakness */}
         <div data-reveal><MechanismSection /></div>
-        {/* §4 Archetype examples — the threat + the prescription */}
         <div data-reveal><ArchetypeShowcaseSection /></div>
-        {/* §5 The insurance metaphor */}
         <div data-reveal><InsuranceSection /></div>
-        {/* §6 The protocol — the 30-day loop */}
         <div data-reveal><ProtocolSection /></div>
-        {/* Proof layer — how it works and why to trust it */}
+        {/* Action valve at peak motivation — a button the moment they want one */}
+        <div data-reveal><FinalCTA /></div>
+        {/* ── THE OFFER ── how it works, then everything membership does for you */}
         <div data-reveal><ProcessSection /></div>
-        <div data-reveal><EvidenceSection /></div>
-        <div data-reveal><ResearchLibrarySection /></div>
-        <div data-reveal><SamplesSection /></div>
         <div data-reveal><ServicePillars /></div>
         <div data-reveal><CompanionSection /></div>
+        {/* ── THE TRUST LADDER ── evidence, the library, real voices */}
+        <div data-reveal><EvidenceSection /></div>
+        <div data-reveal><ResearchLibrarySection /></div>
         <div data-reveal><TestimonialsStrip /></div>
-        {/* §7 Founding-member CTA — the close */}
+        {/* ── THE CLOSE ── scarcity + the founding claim */}
         <div data-reveal><FreeFoundingAccess /></div>
         <HonestFooter />
         <PublicFooter />
