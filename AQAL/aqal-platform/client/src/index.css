@@ -151,6 +151,12 @@
     background-size: 200px 200px;
   }
 
+  /* Selection — champagne on ink, so even highlighting text feels on-brand */
+  ::selection {
+    background: oklch(0.82 0.1 85 / 0.9);
+    color: oklch(0.15 0.02 55);
+  }
+
   /* Custom scrollbars — thin, warm */
   ::-webkit-scrollbar {
     width: 6px;

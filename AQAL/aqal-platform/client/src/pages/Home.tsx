@@ -412,13 +412,27 @@ function ThirtyDayLoopDiagram() {
   );
 }
 
+// Editorial act break — a hairline with a centered diamond, marking the page's movements.
+function ActDivider() {
+  return (
+    <div aria-hidden="true" style={{ position: 'relative', maxWidth: '1160px', margin: '0 auto', padding: '0 clamp(20px,5vw,56px)' }}>
+      <div className="section-divider" style={{ margin: '0' }} />
+      <span style={{
+        position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)',
+        color: CHAMPAGNE, fontSize: '11px', background: INK, padding: '0 14px', letterSpacing: '0.1em',
+      }}>◇</span>
+    </div>
+  );
+}
+
 // §2 THE PROBLEM — the founder story, the hook.
 function FounderStorySection() {
   return (
-    <section style={{ background: `linear-gradient(180deg,${INK},${INK2})`, borderTop: `2px solid ${EMBER_D}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+    <section style={{ background: `radial-gradient(720px 340px at 18% 0%, rgba(226,96,74,0.07), transparent 62%), linear-gradient(180deg,${INK},${INK2})`, borderTop: `2px solid ${EMBER_D}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.28em', textTransform: 'uppercase', color: EMBER, marginBottom: '18px' }}>
-          ⚠ From the founder — read this before you start
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.28em', textTransform: 'uppercase', color: EMBER, marginBottom: '18px' }}>
+          <span className="aq-pulse" style={{ width: '7px', height: '7px', borderRadius: '999px', background: EMBER, boxShadow: `0 0 9px ${EMBER}`, flex: 'none' }} />
+          From the founder — read this before you start
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(30px,5vw,54px)', lineHeight: 1.06, color: CREAM, margin: '0 0 22px' }}>
           My strengths never failed me.<br />
@@ -466,7 +480,7 @@ function MasterWeaknessDiagram() {
 
 function MechanismSection() {
   return (
-    <section style={{ background: `linear-gradient(180deg,${INK2},${INK})`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+    <section style={{ background: `radial-gradient(720px 360px at 82% 18%, rgba(224,198,140,0.055), transparent 62%), linear-gradient(180deg,${INK2},${INK})`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
           The mechanism · the Master Weakness
@@ -499,7 +513,7 @@ function MechanismSection() {
 // §5 THE INSURANCE METAPHOR — seat belts, airbags, the isn't-it-odd challenge.
 function InsuranceSection() {
   return (
-    <section style={{ background: `linear-gradient(180deg,${INK},${INK2})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+    <section style={{ background: `radial-gradient(720px 340px at 22% 8%, rgba(226,96,74,0.06), transparent 62%), linear-gradient(180deg,${INK},${INK2})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: EMBER, marginBottom: '14px' }}>
           This is insurance for your future
@@ -538,7 +552,7 @@ function InsuranceSection() {
 // §6 THE PROTOCOL — the subscription loop that actually delivers.
 function ProtocolSection() {
   return (
-    <section style={{ background: `linear-gradient(180deg,${INK2},${INK})`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+    <section style={{ background: `radial-gradient(760px 380px at 50% 100%, rgba(224,198,140,0.06), transparent 65%), linear-gradient(180deg,${INK2},${INK})`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
           The protocol · every 30 days
@@ -1355,6 +1369,7 @@ export default function Home() {
         <HeroSection />
         {/* Instant payoff: the interactive 32-line dial — touch the product before reading a word */}
         <div data-reveal><DialSection /></div>
+        <ActDivider />
         {/* ── THE STORY ARC ── tension → aha → "that's me" → fear → plan */}
         <div data-reveal><FounderStorySection /></div>
         <div data-reveal><MechanismSection /></div>
@@ -1363,6 +1378,7 @@ export default function Home() {
         <div data-reveal><ProtocolSection /></div>
         {/* Action valve at peak motivation — a button the moment they want one */}
         <div data-reveal><FinalCTA /></div>
+        <ActDivider />
         {/* ── THE OFFER ── how it works, then everything membership does for you */}
         <div data-reveal><ProcessSection /></div>
         <div data-reveal><ServicePillars /></div>
@@ -1371,6 +1387,7 @@ export default function Home() {
         <div data-reveal><EvidenceSection /></div>
         <div data-reveal><ResearchLibrarySection /></div>
         <div data-reveal><TestimonialsStrip /></div>
+        <ActDivider />
         {/* ── THE CLOSE ── scarcity + the founding claim */}
         <div data-reveal><FreeFoundingAccess /></div>
         <HonestFooter />
