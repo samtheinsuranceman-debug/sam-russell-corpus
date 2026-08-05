@@ -143,11 +143,24 @@ export async function createAssessment(userId: number, promoCode?: string, birth
   if (!db) return null;
   const result = await db.insert(assessments).values({
     userId,
-    totalQuestions: 24,
+    totalQuestions: 27,
     promoCode: promoCode || null,
     birthYear: birthYear ?? null,
   });
   return { id: Number(result[0].insertId) };
+}
+
+// The member's open assessment, if any — answers uploaded across multiple
+// sessions/devices must all land on ONE record, so `start` reuses this
+// instead of minting a new assessment every session.
+export async function getActiveAssessment(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(assessments)
+    .where(and(eq(assessments.userId, userId), eq(assessments.status, "in_progress")))
+    .orderBy(sql`createdAt DESC`)
+    .limit(1);
+  return result[0] || null;
 }
 
 export async function getAssessmentById(id: number) {
@@ -181,6 +194,19 @@ export async function incrementCompletedQuestions(assessmentId: number) {
   if (!db) return;
   await db.update(assessments)
     .set({ completedQuestions: sql`completedQuestions + 1` })
+    .where(eq(assessments.id, assessmentId));
+}
+
+// Recount instead of increment: answers arrive in ANY order, in partial
+// batches, and re-uploads REPLACE earlier rows — so the only honest progress
+// number is the count of distinct answered slots right now.
+export async function syncCompletedQuestions(assessmentId: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(assessments)
+    .set({
+      completedQuestions: sql`(SELECT COUNT(DISTINCT questionIndex) FROM ${responses} WHERE ${responses.assessmentId} = ${assessmentId})`,
+    })
     .where(eq(assessments.id, assessmentId));
 }
 

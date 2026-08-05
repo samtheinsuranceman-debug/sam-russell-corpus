@@ -75,7 +75,7 @@ export const assessments = mysqlTable("assessments", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
   status: mysqlEnum("status", ["in_progress", "processing", "complete", "failed"]).default("in_progress").notNull(),
-  totalQuestions: int("totalQuestions").default(24).notNull(),
+  totalQuestions: int("totalQuestions").default(27).notNull(),
   completedQuestions: int("completedQuestions").default(0).notNull(),
   compositeRarity: int("compositeRarity"), // e.g. 47000 means "1 in 47,000"
   // Norming snapshot the composite was computed under — makes the score reproducible.

@@ -155,6 +155,13 @@
       "when": 1785960979631,
       "tag": "0021_furry_sentinels",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1785964895552,
+      "tag": "0022_hesitant_maximus",
+      "breakpoints": true
     }
   ]
 }

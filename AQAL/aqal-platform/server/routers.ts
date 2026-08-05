@@ -8,7 +8,7 @@ import { TRPCError } from "@trpc/server";
 import {
   addToWaitlist, getWaitlistCount,
   createAssessment, getAssessmentById, getLatestAssessment, updateAssessmentStatus,
-  incrementCompletedQuestions, saveResponse, getResponsesByAssessment,
+  incrementCompletedQuestions, syncCompletedQuestions, getActiveAssessment, saveResponse, getResponsesByAssessment,
   saveScores, getScoresByAssessment, savePowerCombinations, getPowerCombinationsByAssessment,
   saveCompanion,
   validatePromoCode, incrementPromoCodeUsage, createPromoCode, getAllPromoCodes,
@@ -210,6 +210,13 @@ export const appRouter = router({
         birthYear: z.number().int().min(1920).max(2100).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
+        // Resume-first: answers may arrive in partial batches across sessions
+        // and devices (tape uploads, transcript files) — they must all land on
+        // ONE assessment. Reuse the open one; only create when none exists.
+        const active = await getActiveAssessment(ctx.user.id);
+        if (active) {
+          return { success: true, assessmentId: active.id, resumed: true };
+        }
         // Validate promo code if provided
         if (input.promoCode) {
           const promo = await validatePromoCode(input.promoCode);
@@ -288,8 +295,8 @@ export const appRouter = router({
           durationMs: input.durationMs,
         });
 
-        // Increment completed questions
-        await incrementCompletedQuestions(input.assessmentId);
+        // Recount answered slots (upsert-safe, order-independent)
+        await syncCompletedQuestions(input.assessmentId);
 
         return { success: true, responseId: response?.id, audioUrl: url };
       }),
@@ -307,7 +314,7 @@ export const appRouter = router({
           questionIndex: input.questionIndex,
           transcript: input.text,
         });
-        await incrementCompletedQuestions(input.assessmentId);
+        await syncCompletedQuestions(input.assessmentId);
         return { success: true, responseId: response?.id };
       }),
 
