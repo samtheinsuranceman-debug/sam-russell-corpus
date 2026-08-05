@@ -100,8 +100,9 @@ const SAMPLES = [
 ];
 
 // ============================================================
-// FREE FOUNDING ACCESS — email + passcode, right on the home page.
-// First N (FREE_ASSESSMENT_CAP) get the full assessment free with passcode "Welcome1".
+// FREE FOUNDING ACCESS — email + a password of your choosing, no invite code.
+// First N (FREE_ASSESSMENT_CAP) get the full assessment + membership free.
+// First claim sets the password; returning sign-ins must match it.
 // ============================================================
 function FreeFoundingAccess() {
   const [, navigate] = useLocation();
@@ -121,7 +122,7 @@ function FreeFoundingAccess() {
   const submit = () => {
     const e = email.trim();
     if (!e || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) { toast.error("Please enter a valid email address."); return; }
-    if (!passcode.trim()) { toast.error("Enter your access passcode."); return; }
+    if (!passcode.trim()) { toast.error("Create a password — any password you'll remember."); return; }
     requireAgreement(() => claim.mutate({ email: e, passcode: passcode.trim() }));
   };
   if (info.data?.enabled === false) return null;
@@ -140,7 +141,8 @@ function FreeFoundingAccess() {
         </h2>
         <p style={{ color: CREAM2, fontSize: 'clamp(14px,1.6vw,17px)', lineHeight: 1.6, maxWidth: '34em', margin: '0 auto 8px' }}>
           The first {cap ? cap.toLocaleString() : '10,000'} founding members get the full experience free — the voice
-          assessment <b style={{ color: CREAM }}>and</b> the fully-underwritten, multi-AI result. Enter your email and the passcode.
+          assessment, the fully-underwritten multi-AI result, <b style={{ color: CREAM }}>and</b> the membership, no
+          card ever. No invite code: just your email and a password you choose.
         </p>
         <p style={{ color: CREAM2, fontSize: 'clamp(12px,1.3vw,14px)', lineHeight: 1.55, maxWidth: '34em', margin: '0 auto 8px', opacity: 0.85 }}>
           Signing up <b style={{ color: CREAM }}>reserves</b> your spot for 14 days. <b style={{ color: CHAMPAGNE }}>Completing
@@ -174,7 +176,7 @@ function FreeFoundingAccess() {
             <input
               type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
-              placeholder="Access passcode"
+              placeholder="Create a password" autoComplete="new-password"
               style={{ width: '100%', background: 'rgba(241,234,219,0.04)', border: `1px solid ${LINE_C}`, borderRadius: '8px', padding: '13px 14px', fontSize: '15px', color: CREAM, outline: 'none' }}
             />
             <button

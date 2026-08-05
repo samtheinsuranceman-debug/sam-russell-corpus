@@ -141,6 +141,13 @@
       "when": 1785947244956,
       "tag": "0019_funny_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1785948242441,
+      "tag": "0020_mighty_firebird",
+      "breakpoints": true
     }
   ]
 }

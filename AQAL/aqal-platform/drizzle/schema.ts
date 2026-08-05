@@ -30,6 +30,9 @@ export const users = mysqlTable("users", {
   underwrittenUnlockedAt: timestamp("underwritten_unlocked_at"),
   // When we sent the one-time "you started but didn't finish" nudge (throttle).
   finishNudgeSentAt: timestamp("finish_nudge_sent_at"),
+  // Founding-access password (member-chosen at claim): "salt:scryptHex".
+  // Set on first claim; returning sign-ins must match. Null for OAuth users.
+  passwordHash: varchar("password_hash", { length: 200 }),
 });
 
 export type User = typeof users.$inferSelect;

@@ -30,7 +30,7 @@ export default function Login() {
     beginAuth();
   };
 
-  // Free access — email (username) + universal passcode, no card, no cap.
+  // Free access — email (username) + the member's own password (set at first claim).
   const [email, setEmail] = useState("");
   const [passcode, setPasscode] = useState("");
   const freeInfo = trpc.freeAccess.info.useQuery(undefined, { retry: false });
@@ -55,7 +55,7 @@ export default function Login() {
       return;
     }
     if (!passcode.trim()) {
-      toast.error("Enter your access passcode.");
+      toast.error("Enter your password.");
       return;
     }
     // Gate on the user agreement first, then claim.
@@ -114,7 +114,7 @@ export default function Login() {
           transition={{ delay: 0.2, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           className="glass-card rounded-2xl border border-white/[0.06] p-8"
         >
-          {/* Free access — email + universal passcode */}
+          {/* Free access — email + your password */}
           {freeInfo.data?.enabled !== false && (
             <div className="mb-6">
               <p className="text-xs uppercase tracking-[0.15em] text-accent/70 mb-2 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
@@ -146,7 +146,7 @@ export default function Login() {
                   value={passcode}
                   onChange={(ev) => setPasscode(ev.target.value)}
                   onKeyDown={(ev) => { if (ev.key === "Enter") submitFreeAccess(); }}
-                  placeholder="Access passcode"
+                  placeholder="Your password"
                   className="w-full bg-background/60 border border-border/60 rounded-xl px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
                 {freeInfo.data?.full ? (

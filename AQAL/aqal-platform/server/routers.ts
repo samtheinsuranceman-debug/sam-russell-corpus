@@ -28,6 +28,7 @@ import { storagePut, storageGetSignedUrl } from "./platform/storage";
 import { getFreshMatches, requestConnection, respondToConnection, getConnectionState } from "./matching";
 import { matchTier } from "@shared/matching";
 import { sendMessage, getThread, listThreads, ATTACHMENT_TTL_HOURS } from "./messaging";
+import { hashFoundingPassword, verifyFoundingPassword } from "./foundingPassword";
 import { runPanel, panelSize, panelDevelopers } from "./platform/panel";
 import { consensusScores } from "./scoring/consensus";
 import { verifyClaim } from "./platform/verify";
@@ -1079,7 +1080,7 @@ Return ONLY valid JSON.` },
         if (count !== null) { used = count; remaining = Math.max(0, cap - count); }
       }
       return {
-        enabled: FREE_ACCESS_CODE.length > 0,
+        enabled: true, // no invite code — email + a member-chosen password
         cap,                      // 0 = unlimited
         used,
         remaining,                // null = uncapped or DB down
@@ -1093,12 +1094,19 @@ Return ONLY valid JSON.` },
         passcode: z.string().min(1).max(120),
       }))
       .mutation(async ({ ctx, input }) => {
-        if (!FREE_ACCESS_CODE || input.passcode !== FREE_ACCESS_CODE) {
-          return { success: false, error: "That access code isn't valid." };
-        }
+        // No invite code: ANY password is accepted on first claim and becomes
+        // this member's password. Returning sign-ins must match it — otherwise
+        // typing someone else's email would open their account.
         const email = input.email.trim().toLowerCase();
         const openId = `free:${email}`;
         const name = email.split("@")[0];
+
+        const returning = await getUserByOpenId(openId).catch(() => null);
+        if (returning?.passwordHash) {
+          if (!verifyFoundingPassword(input.passcode, returning.passwordHash)) {
+            return { success: false, error: "That password doesn't match this email's account." };
+          }
+        }
 
         // Giveaway cap: block only NEW signups once the spots run out. Anyone who
         // already claimed can always sign back in (they don't consume a new spot).
@@ -1113,9 +1121,13 @@ Return ONLY valid JSON.` },
         }
 
         // Is this a brand-new founding member (vs. someone signing back in)?
-        const alreadyClaimed = !!(await getUserByOpenId(openId).catch(() => null));
+        const alreadyClaimed = !!returning;
         try {
-          await upsertUser({ openId, email, name, loginMethod: "free-passcode", lastSignedIn: new Date() });
+          await upsertUser({
+            openId, email, name, loginMethod: "free-passcode", lastSignedIn: new Date(),
+            // First claim locks in whatever password they typed.
+            ...(returning?.passwordHash ? {} : { passwordHash: hashFoundingPassword(input.passcode) }),
+          });
           // Founding members (first FREE_ASSESSMENT_CAP) get the FULL experience free —
           // both the voice assessment AND the fully-underwritten (multi-AI panel +
           // coaching) result. Grant the unlock so the analyze/coaching gates open.
