@@ -451,3 +451,34 @@ export const marketingSpend = mysqlTable("marketing_spend", {
 
 export type MarketingSpend = typeof marketingSpend.$inferSelect;
 export type InsertMarketingSpend = typeof marketingSpend.$inferInsert;
+
+// ============================================================
+// MATCHES — pre-computed complementarity, top-N per member
+// ============================================================
+// One row per (userId → matchedUserId) direction. Refreshed lazily (24h TTL)
+// when the member opens their matches page; a batch recompute can also run.
+export const matches = mysqlTable("matches", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  matchedUserId: int("matchedUserId").notNull(),
+  score: float("score").notNull(), // 0..1 complementarity
+  // Top complementary axes for the card: [{axis, direction, delta}]
+  topAxes: json("topAxes"),
+  computedAt: timestamp("computedAt").defaultNow().notNull(),
+});
+
+export type Match = typeof matches.$inferSelect;
+export type InsertMatch = typeof matches.$inferInsert;
+
+// CONNECTION REQUESTS — "Request Connection"; mutual accept reveals email.
+export const connectionRequests = mysqlTable("connection_requests", {
+  id: int("id").autoincrement().primaryKey(),
+  fromUserId: int("fromUserId").notNull(),
+  toUserId: int("toUserId").notNull(),
+  status: mysqlEnum("status", ["pending", "accepted", "declined"]).default("pending").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  respondedAt: timestamp("respondedAt"),
+});
+
+export type ConnectionRequest = typeof connectionRequests.$inferSelect;
+export type InsertConnectionRequest = typeof connectionRequests.$inferInsert;

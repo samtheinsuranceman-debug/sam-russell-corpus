@@ -186,7 +186,7 @@ export async function createCheckoutSession(params: {
       },
     ],
     mode: product.mode,
-    // Free trial on subscriptions (e.g. the $79/mo membership's 15 days).
+    // Free trial on subscriptions (e.g. the $449/mo membership's 15 days).
     ...(product.mode === "subscription" && "trialDays" in product && product.trialDays
       ? { subscription_data: { trial_period_days: product.trialDays } }
       : {}),

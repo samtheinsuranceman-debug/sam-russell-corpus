@@ -39,7 +39,8 @@ export const RESERVATION_DAYS = 14;
 // Standard (non-founding) prices, in cents. Single source of truth for UI + Stripe.
 export const PRICE_AUDIO_ASSESSMENT_CENTS = 50_000; // $500 — voice-only assessment
 export const PRICE_UNDERWRITTEN_ASSESSMENT_CENTS = 150_000; // $1,500 — fully underwritten
-export const PRICE_MEMBERSHIP_MONTHLY_CENTS = 7_900; // $79/mo — recurring coach + network
+export const PRICE_MEMBERSHIP_MONTHLY_CENTS = 44_900; // $449/mo — the coach + curated network
+export const PRICE_MEMBERSHIP_ANNUAL_CENTS = 449_900; // $4,499/yr — saves $889 vs monthly
 
 // Free-trial windows.
 export const MEMBERSHIP_TRIAL_DAYS = 15; // membership monthly

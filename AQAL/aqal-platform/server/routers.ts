@@ -25,6 +25,8 @@ import {
   getNetworkCandidates,
 } from "./db";
 import { storagePut, storageGetSignedUrl } from "./platform/storage";
+import { getFreshMatches, requestConnection, respondToConnection, getConnectionState } from "./matching";
+import { matchTier } from "@shared/matching";
 import { runPanel, panelSize, panelDevelopers } from "./platform/panel";
 import { consensusScores } from "./scoring/consensus";
 import { verifyClaim } from "./platform/verify";
@@ -2019,6 +2021,54 @@ CRITICAL RULES:
       .mutation(async ({ ctx, input }) => {
         await recordEvent({ type: "intro_requested", userId: ctx.user.id, meta: { candidateId: input.candidateId } });
         return { ok: true };
+      }),
+  }),
+
+  // ── CONNECTIONS — the schematic's Month-1 persistent layer ────────────────
+  // Pre-computed complementarity matches (stored, 24h TTL) + Request Connection
+  // with mutual accept → email reveal. Members only (completed assessment).
+  connections: router({
+    myMatches: protectedProcedure.query(async ({ ctx }) => {
+      const latest = await getLatestAssessment(ctx.user.id);
+      if (!latest || latest.status !== "complete") {
+        return { eligible: false as const, matches: [], connections: { incoming: [], outgoing: [], accepted: [] } };
+      }
+      const [rows, state] = await Promise.all([
+        getFreshMatches(ctx.user.id),
+        getConnectionState(ctx.user.id),
+      ]);
+      return {
+        eligible: true as const,
+        matches: rows.map((r) => ({
+          userId: r.matchedUserId,
+          name: r.name || "Member",
+          score: r.score,
+          percent: Math.round(r.score * 100),
+          tier: matchTier(r.score),
+          topAxes: (r.topAxes as { axis: string; direction: string; delta: number }[] | null) ?? [],
+        })),
+        connections: state,
+      };
+    }),
+
+    request: protectedProcedure
+      .input(z.object({ toUserId: z.number().int().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        const latest = await getLatestAssessment(ctx.user.id);
+        if (!latest || latest.status !== "complete") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Complete your assessment to connect with members." });
+        }
+        const res = await requestConnection(ctx.user.id, input.toUserId);
+        await recordEvent({ type: "connection_requested", userId: ctx.user.id, meta: { toUserId: input.toUserId, result: res.status } });
+        return res;
+      }),
+
+    respond: protectedProcedure
+      .input(z.object({ requestId: z.number().int().positive(), accept: z.boolean() }))
+      .mutation(async ({ ctx, input }) => {
+        const ok = await respondToConnection(ctx.user.id, input.requestId, input.accept);
+        if (ok) await recordEvent({ type: input.accept ? "connection_accepted" : "connection_declined", userId: ctx.user.id, meta: { requestId: input.requestId } });
+        return { ok };
       }),
   }),
 });

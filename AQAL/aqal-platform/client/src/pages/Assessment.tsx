@@ -2223,7 +2223,7 @@ export default function Assessment() {
               You&rsquo;re on the ground floor.
             </h3>
             <p className="text-sm text-foreground/80 leading-relaxed mb-3">
-              This is a <span className="text-primary font-medium">lifetime membership</span> — $948 a year in fixed cost
+              This is a <span className="text-primary font-medium">lifetime membership</span> — $5,388 a year in fixed cost
               waived for life, a network whose future dividends nobody can predict yet, and you&rsquo;re among the first
               10,000 in the door.
             </p>

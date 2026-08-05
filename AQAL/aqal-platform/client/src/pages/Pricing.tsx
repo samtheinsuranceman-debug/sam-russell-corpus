@@ -32,7 +32,7 @@ const includedFeatures = [
 // Standard prices (what the founding cohort is having waived). Single membership.
 const MEMBERSHIP = {
   name: "Membership",
-  price: "$79",
+  price: "$449",
   tagline: "The ongoing coach + the network",
   trialDays: MEMBERSHIP_TRIAL_DAYS,
   features: [
@@ -235,8 +235,8 @@ export default function Pricing() {
                     <span className="text-muted-foreground/40 line-through">$500</span>
                   </li>
                   <li className="flex items-center justify-between gap-3">
-                    <span className="text-foreground/80">Membership — $79/mo, waived for life</span>
-                    <span className="text-muted-foreground/40 line-through">$948/yr</span>
+                    <span className="text-foreground/80">Membership — $449/mo, waived for life</span>
+                    <span className="text-muted-foreground/40 line-through">$5,388/yr</span>
                   </li>
                   <li className="flex items-center justify-between gap-3 pt-2 border-t border-white/[0.06]">
                     <span className="text-accent/90 font-medium">Your cost, forever</span>
@@ -244,7 +244,7 @@ export default function Pricing() {
                   </li>
                 </ul>
                 <p className="text-[0.7rem] text-muted-foreground/50 mt-3 leading-relaxed">
-                  That&rsquo;s $79/month you effectively keep — for the rest of your life — as long as your membership stays active.
+                  That&rsquo;s $449/month you effectively keep — $5,388 a year, for the rest of your life — as long as your membership stays active.
                   {" "}<span className="text-accent/70">Signing up reserves your spot for 14 days; completing the assessment is what
                   claims it for life. Membership is earned by finishing.</span>
                 </p>
