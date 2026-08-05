@@ -63,6 +63,16 @@ export function resultEmailHtml(opts: {
       This is a model-based estimate, not a measured percentile. To verify your full
       32-line profile and raise it to high confidence, complete evidence-based verification in the app.
     </p>
+    <div style="border:1px solid rgba(226,96,74,.35);border-radius:14px;padding:20px;background:rgba(226,96,74,.06);margin:22px 0 0;">
+      <div style="font-family:monospace;font-size:10px;letter-spacing:.2em;color:#e2604a;text-transform:uppercase;margin-bottom:8px;">Why this map matters</div>
+      <p style="color:#efe9dc;font-size:13.5px;line-height:1.62;margin:0;">
+        Your strengths won't save you when an unmanaged weakness fires at the wrong moment — that's how fortunes and
+        marriages are lost. Your profile names your <b style="color:#e2604a;">Master Weakness</b>, the one line holding
+        the others in place, and prescribes the weekly practice that neutralizes it first. Every 30 days the map
+        re-draws from what you actually did. <b style="color:#efe9dc;">Thirty minutes at lunch, five days a week —
+        that's the whole protocol.</b>
+      </p>
+    </div>
     <p style="color:#6f6a60;font-size:12px;margin-top:26px;">You received this because you requested AQAL free access. We never sell your personal information.</p>
   </div></body></html>`;
 }
