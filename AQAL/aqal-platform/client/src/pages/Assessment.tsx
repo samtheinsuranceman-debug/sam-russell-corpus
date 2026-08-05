@@ -1014,6 +1014,43 @@ export default function Assessment() {
     }
   }, [ensureAssessment, submitTextMutation, uploadResponseMutation]);
 
+  // ── Tape-recorder mode: upload a pre-recorded answer file ─────────────────
+  // For members who print the questions and answer offline (voice-memo app,
+  // tape recorder). One file per question (mp3/m4a/wav/mp4…); server-side
+  // Whisper transcribes it at scoring time, same as live-mic answers.
+  const tapeInputRef = useRef<HTMLInputElement>(null);
+  const [tapeUploading, setTapeUploading] = useState(false);
+  const uploadFileAnswer = useCallback(async (file: File | null) => {
+    if (!file) return;
+    if (file.size > 45 * 1024 * 1024) {
+      toast.error("That file is too large — keep each answer under 45 MB (about an hour of audio).");
+      return;
+    }
+    setTapeUploading(true);
+    try {
+      const aId = await ensureAssessment();
+      if (!aId) { toast.error("Sign in first, then upload your recording."); return; }
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      let binary = "";
+      const CHUNK = 0x8000;
+      for (let i = 0; i < bytes.length; i += CHUNK) binary += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + CHUNK)));
+      await uploadResponseMutation.mutateAsync({
+        assessmentId: aId,
+        questionIndex: currentQuestion,
+        audioBase64: btoa(binary),
+        durationMs: 0,
+        mimeType: file.type || "audio/mpeg",
+      });
+      setRecordings((prev) => { const n = [...prev]; n[currentQuestion] = file; return n; });
+      setUploadedIdx((u) => ({ ...u, [currentQuestion]: true }));
+      toast.success(`Question ${currentQuestion + 1} recording uploaded — it'll be transcribed and scored with the rest.`);
+    } catch {
+      toast.error("Upload failed — check your connection and try again.");
+    } finally {
+      setTapeUploading(false);
+    }
+  }, [ensureAssessment, uploadResponseMutation, currentQuestion]);
+
   // Detect if voice recording is supported
   const recordingSupported = typeof window !== "undefined" && typeof window.MediaRecorder !== "undefined" && !!navigator.mediaDevices?.getUserMedia;
 
@@ -2551,29 +2588,57 @@ export default function Assessment() {
                 placeholder="Just say what comes to mind — there's no wrong answer here..."
                 className="w-full h-40 bg-background/50 border border-border/50 rounded-xl p-4 text-foreground placeholder:text-muted-foreground/40 resize-none focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
               />
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <span className={`text-xs ${hasTextResponse ? 'text-green-400/70' : 'text-muted-foreground/40'}`}>
                   {textResponses[currentQuestion]?.trim().length || 0} / 20 min characters
                 </span>
-                {recordingSupported && (
+                <span className="flex items-center gap-3">
                   <button
-                    onClick={() => setUseTextMode(false)}
-                    className="text-xs text-primary/70 hover:text-primary transition-colors"
+                    onClick={() => tapeInputRef.current?.click()}
+                    disabled={tapeUploading}
+                    className="text-xs text-primary/60 hover:text-primary transition-colors"
                   >
-                    Switch to voice →
+                    {tapeUploading ? "Uploading…" : "Upload a recording"}
                   </button>
-                )}
+                  {recordingSupported && (
+                    <button
+                      onClick={() => setUseTextMode(false)}
+                      className="text-xs text-primary/70 hover:text-primary transition-colors"
+                    >
+                      Switch to voice →
+                    </button>
+                  )}
+                </span>
               </div>
+              <input ref={tapeInputRef} type="file" hidden accept="audio/*,video/*,.mp3,.m4a,.wav,.ogg,.aac,.mp4,.mov"
+                onChange={(e) => { void uploadFileAnswer(e.target.files?.[0] ?? null); e.target.value = ""; }} />
             </div>
           ) : (
             <>
-          {/* Text mode toggle link */}
-          <button
-            onClick={() => setUseTextMode(true)}
-            className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors mb-4"
-          >
-            Prefer to type? Switch to text mode
-          </button>
+          {/* Text mode toggle + tape-recorder upload */}
+          <div className="flex items-center gap-4 mb-4">
+            <button
+              onClick={() => setUseTextMode(true)}
+              className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+            >
+              Prefer to type? Switch to text mode
+            </button>
+            <span className="text-muted-foreground/25 text-xs">·</span>
+            <button
+              onClick={() => tapeInputRef.current?.click()}
+              disabled={tapeUploading}
+              className="text-xs text-primary/60 hover:text-primary transition-colors"
+            >
+              {tapeUploading ? "Uploading…" : "Recorded on tape? Upload this answer"}
+            </button>
+          </div>
+          <input ref={tapeInputRef} type="file" hidden accept="audio/*,video/*,.mp3,.m4a,.wav,.ogg,.aac,.mp4,.mov"
+            onChange={(e) => { void uploadFileAnswer(e.target.files?.[0] ?? null); e.target.value = ""; }} />
+          {/* Optional camera channel — voice stays the scored signal; video adds
+              body-language/congruence analysis on top, never a penalty. */}
+          <Link href="/video-assessment" className="text-[0.65rem] text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors mb-3">
+            Optional: sit in front of a camera too — add a video session for body-language &amp; congruence analysis →
+          </Link>
 
           {/* Mic Button */}
           <motion.button

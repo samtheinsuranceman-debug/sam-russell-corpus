@@ -251,21 +251,33 @@ export const appRouter = router({
         return { ...assessment, scores: scoresList, powerCombinations: combos, responses: responsesList };
       }),
 
-    // Upload audio response
+    // Upload audio response — from the live mic (webm) OR an offline recording
+    // the member made on a tape recorder / voice-memo app and uploaded as a file
+    // (mp3, m4a, wav, mp4…). Transcription happens server-side at analyze time.
     uploadResponse: protectedProcedure
       .input(z.object({
         assessmentId: z.number(),
-        questionIndex: z.number().min(0).max(23),
-        audioBase64: z.string(),
+        questionIndex: z.number().min(0).max(26), // 27 questions, 0-based
+        audioBase64: z.string().max(60_000_000),
         durationMs: z.number().optional(),
+        mimeType: z.string().max(100).optional(), // defaults to the live-mic webm
       }))
       .mutation(async ({ ctx, input }) => {
         // Decode base64 audio
         const audioBuffer = Buffer.from(input.audioBase64, "base64");
 
+        const mime = input.mimeType || "audio/webm";
+        const EXT: Record<string, string> = {
+          "audio/webm": "webm", "audio/mpeg": "mp3", "audio/mp3": "mp3",
+          "audio/mp4": "m4a", "audio/x-m4a": "m4a", "audio/m4a": "m4a",
+          "audio/wav": "wav", "audio/x-wav": "wav", "audio/ogg": "ogg",
+          "audio/aac": "aac", "video/mp4": "mp4", "video/quicktime": "mov", "video/webm": "webm",
+        };
+        const ext = EXT[mime] || "webm";
+
         // Upload to S3
-        const fileKey = `assessments/${ctx.user.id}/${input.assessmentId}/q${input.questionIndex}.webm`;
-        const { key, url } = await storagePut(fileKey, audioBuffer, "audio/webm");
+        const fileKey = `assessments/${ctx.user.id}/${input.assessmentId}/q${input.questionIndex}.${ext}`;
+        const { key, url } = await storagePut(fileKey, audioBuffer, mime);
 
         // Save response record
         const response = await saveResponse({
@@ -282,11 +294,11 @@ export const appRouter = router({
         return { success: true, responseId: response?.id, audioUrl: url };
       }),
 
-    // Submit a text response (for text-mode assessment)
+    // Submit a text response (typed answer, or a pasted transcript of a tape)
     submitTextResponse: protectedProcedure
       .input(z.object({
         assessmentId: z.number(),
-        questionIndex: z.number().min(0).max(23),
+        questionIndex: z.number().min(0).max(26), // 27 questions, 0-based
         text: z.string().min(1),
       }))
       .mutation(async ({ ctx, input }) => {
