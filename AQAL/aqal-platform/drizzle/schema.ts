@@ -33,6 +33,8 @@ export const users = mysqlTable("users", {
   // Founding-access password (member-chosen at claim): "salt:scryptHex".
   // Set on first claim; returning sign-ins must match. Null for OAuth users.
   passwordHash: varchar("password_hash", { length: 200 }),
+  // Unread-messages email digest throttle (at most one per 24h).
+  messageDigestLastSentAt: timestamp("message_digest_last_sent_at"),
 });
 
 export type User = typeof users.$inferSelect;
@@ -510,3 +512,27 @@ export const directMessages = mysqlTable("direct_messages", {
 
 export type DirectMessage = typeof directMessages.$inferSelect;
 export type InsertDirectMessage = typeof directMessages.$inferInsert;
+
+// BLOCKS — one-directional: blocker never sees / is never reachable by blocked.
+export const blocks = mysqlTable("blocks", {
+  id: int("id").autoincrement().primaryKey(),
+  blockerUserId: int("blockerUserId").notNull(),
+  blockedUserId: int("blockedUserId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Block = typeof blocks.$inferSelect;
+
+// REPORTS — member reports of abuse/harassment/spam. Per Terms §8A, a report
+// is the ONE member-initiated path that authorizes staff review of content.
+export const reports = mysqlTable("reports", {
+  id: int("id").autoincrement().primaryKey(),
+  reporterUserId: int("reporterUserId").notNull(),
+  reportedUserId: int("reportedUserId").notNull(),
+  reason: text("reason"),
+  status: mysqlEnum("status", ["open", "reviewed", "actioned"]).default("open").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  reviewedAt: timestamp("reviewedAt"),
+});
+
+export type Report = typeof reports.$inferSelect;

@@ -148,6 +148,13 @@
       "when": 1785948242441,
       "tag": "0020_mighty_firebird",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1785960979631,
+      "tag": "0021_furry_sentinels",
+      "breakpoints": true
     }
   ]
 }

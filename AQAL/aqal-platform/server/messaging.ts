@@ -11,7 +11,7 @@
 
 import { and, desc, eq, isNull, lt, or, sql } from "drizzle-orm";
 import { getDb } from "./db";
-import { connectionRequests, directMessages, users } from "../drizzle/schema";
+import { blocks, connectionRequests, directMessages, reports, users } from "../drizzle/schema";
 import { storagePut, storageGetSignedUrl, storageDelete } from "./platform/storage";
 
 export const ATTACHMENT_TTL_HOURS = 72;
@@ -69,10 +69,28 @@ export function checkUploadQuota(
   return { ok: true };
 }
 
-// Mutually-accepted connection = allowed to message. The whole gate in one query.
+// A block in EITHER direction severs the messaging channel completely.
+export async function isBlockedEitherWay(a: number, b: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  const [row] = await db
+    .select({ id: blocks.id })
+    .from(blocks)
+    .where(
+      or(
+        and(eq(blocks.blockerUserId, a), eq(blocks.blockedUserId, b)),
+        and(eq(blocks.blockerUserId, b), eq(blocks.blockedUserId, a)),
+      ),
+    )
+    .limit(1);
+  return !!row;
+}
+
+// Mutually-accepted connection AND not blocked = allowed to message.
 export async function areConnected(a: number, b: number): Promise<boolean> {
   const db = await getDb();
   if (!db) return false;
+  if (await isBlockedEitherWay(a, b)) return false;
   const [row] = await db
     .select({ id: connectionRequests.id })
     .from(connectionRequests)
@@ -87,6 +105,46 @@ export async function areConnected(a: number, b: number): Promise<boolean> {
     )
     .limit(1);
   return !!row;
+}
+
+// ── Block / unblock / report ───────────────────────────────────────────────
+export async function blockUser(blockerUserId: number, blockedUserId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db || blockerUserId === blockedUserId) return false;
+  const already = await db
+    .select({ id: blocks.id })
+    .from(blocks)
+    .where(and(eq(blocks.blockerUserId, blockerUserId), eq(blocks.blockedUserId, blockedUserId)))
+    .limit(1);
+  if (already.length === 0) await db.insert(blocks).values({ blockerUserId, blockedUserId });
+  return true;
+}
+
+export async function unblockUser(blockerUserId: number, blockedUserId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  await db
+    .delete(blocks)
+    .where(and(eq(blocks.blockerUserId, blockerUserId), eq(blocks.blockedUserId, blockedUserId)));
+  return true;
+}
+
+export async function listBlocked(blockerUserId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db
+    .select({ userId: blocks.blockedUserId, name: users.name, createdAt: blocks.createdAt })
+    .from(blocks)
+    .leftJoin(users, eq(users.id, blocks.blockedUserId))
+    .where(eq(blocks.blockerUserId, blockerUserId));
+  return rows.map((r) => ({ userId: r.userId, name: r.name || "Member", blockedAt: r.createdAt }));
+}
+
+export async function reportUser(reporterUserId: number, reportedUserId: number, reason: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db || reporterUserId === reportedUserId) return false;
+  await db.insert(reports).values({ reporterUserId, reportedUserId, reason: reason.slice(0, 2000) });
+  return true;
 }
 
 export async function sendMessage(
@@ -211,7 +269,14 @@ export async function listThreads(userId: number) {
         or(eq(connectionRequests.fromUserId, userId), eq(connectionRequests.toUserId, userId)),
       ),
     );
-  const otherIds = Array.from(new Set(conns.map((c) => (c.fromUserId === userId ? c.toUserId : c.fromUserId))));
+  // Blocks (either direction) hide the thread entirely.
+  const blockRows = await db
+    .select({ a: blocks.blockerUserId, b: blocks.blockedUserId })
+    .from(blocks)
+    .where(or(eq(blocks.blockerUserId, userId), eq(blocks.blockedUserId, userId)));
+  const blockedSet = new Set(blockRows.map((r) => (r.a === userId ? r.b : r.a)));
+  const otherIds = Array.from(new Set(conns.map((c) => (c.fromUserId === userId ? c.toUserId : c.fromUserId))))
+    .filter((id) => !blockedSet.has(id));
   const out: { userId: number; name: string; lastMessage: string | null; lastAt: Date | null; unread: number }[] = [];
   for (const otherId of otherIds) {
     const [person] = await db.select({ name: users.name }).from(users).where(eq(users.id, otherId));

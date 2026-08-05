@@ -37,6 +37,12 @@ const JOBS: HeartbeatJob[] = [
     path: "/api/scheduled/drift-alert",
     description: "Daily evaluation-cadence drift check.",
   },
+  {
+    name: "aqal-message-digest",
+    cron: "0 0 */2 * * *", // every 2 hours
+    path: "/api/scheduled/message-digest",
+    description: "Unread-messages email digest (count only, never content; max one per member per day).",
+  },
 ];
 
 export async function ensureScheduledJobs(): Promise<void> {

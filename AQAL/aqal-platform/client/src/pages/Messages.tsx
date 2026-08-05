@@ -80,6 +80,23 @@ export default function Messages() {
     },
     onError: (e) => toast.error(e.message || "Couldn't send."),
   });
+  const [reporting, setReporting] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const block = trpc.messaging.block.useMutation({
+    onSuccess: () => {
+      toast.success("Blocked. The thread is gone for both of you.");
+      setActiveUserId(null);
+      utils.messaging.threads.invalidate();
+    },
+  });
+  const report = trpc.messaging.report.useMutation({
+    onSuccess: () => {
+      toast.success("Report received — our team will review it.");
+      setReporting(false);
+      setReportReason("");
+    },
+    onError: (e) => toast.error(e.message || "Couldn't send the report."),
+  });
 
   // Auto-select the first thread; auto-scroll on new messages.
   useEffect(() => {
@@ -168,7 +185,41 @@ export default function Messages() {
 
             {/* Active thread */}
             <div style={{ border: `1px solid ${LINE_C}`, borderRadius: "12px", background: INK2, display: "flex", flexDirection: "column", minHeight: "480px" }}>
-              <div style={{ padding: "12px 18px", borderBottom: `1px solid ${LINE_C}`, ...serif, fontSize: "18px", color: CREAM }}>{activeName}</div>
+              <div className="flex items-center justify-between gap-3" style={{ padding: "12px 18px", borderBottom: `1px solid ${LINE_C}` }}>
+                <span style={{ ...serif, fontSize: "18px", color: CREAM }}>{activeName}</span>
+                <span className="flex items-center gap-3">
+                  <button onClick={() => setReporting((r) => !r)}
+                    style={{ ...mono, fontSize: "10px", letterSpacing: "0.08em", textTransform: "uppercase", background: "none", border: 0, color: MUTED, cursor: "pointer" }}>
+                    Report
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (!activeUserId) return;
+                      if (window.confirm(`Block ${activeName}? They won't be able to message you, and this thread disappears for both of you.`)) {
+                        block.mutate({ userId: activeUserId });
+                      }
+                    }}
+                    style={{ ...mono, fontSize: "10px", letterSpacing: "0.08em", textTransform: "uppercase", background: "none", border: 0, color: "#E2604A", cursor: "pointer", opacity: 0.8 }}>
+                    Block
+                  </button>
+                </span>
+              </div>
+              {reporting && (
+                <div className="flex gap-2 items-center" style={{ padding: "10px 18px", borderBottom: `1px solid ${LINE_C}`, background: "rgba(226,96,74,0.05)" }}>
+                  <input value={reportReason} onChange={(e) => setReportReason(e.target.value)}
+                    placeholder="What happened? Your report authorizes our team to review."
+                    style={{ flex: 1, background: "rgba(241,234,219,0.04)", border: `1px solid ${LINE_C}`, borderRadius: "6px", padding: "8px 10px", fontSize: "13px", color: CREAM, outline: "none" }} />
+                  <button
+                    onClick={() => {
+                      if (!activeUserId || reportReason.trim().length < 3) { toast.error("Tell us briefly what happened."); return; }
+                      report.mutate({ userId: activeUserId, reason: reportReason.trim() });
+                    }}
+                    disabled={report.isPending}
+                    style={{ ...mono, fontSize: "10px", letterSpacing: "0.08em", textTransform: "uppercase", padding: "8px 14px", background: "#E2604A", color: INK, border: 0, borderRadius: "6px", cursor: "pointer", fontWeight: 700 }}>
+                    Send report
+                  </button>
+                </div>
+              )}
 
               <div style={{ flex: 1, overflowY: "auto", padding: "16px 18px", display: "flex", flexDirection: "column", gap: "10px" }}>
                 {thread.data?.map((m) => (

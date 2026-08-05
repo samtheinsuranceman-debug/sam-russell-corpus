@@ -27,7 +27,7 @@ import {
 import { storagePut, storageGetSignedUrl } from "./platform/storage";
 import { getFreshMatches, requestConnection, respondToConnection, getConnectionState } from "./matching";
 import { matchTier } from "@shared/matching";
-import { sendMessage, getThread, listThreads, ATTACHMENT_TTL_HOURS } from "./messaging";
+import { sendMessage, getThread, listThreads, ATTACHMENT_TTL_HOURS, blockUser, unblockUser, listBlocked, reportUser } from "./messaging";
 import { hashFoundingPassword, verifyFoundingPassword } from "./foundingPassword";
 import { runPanel, panelSize, panelDevelopers } from "./platform/panel";
 import { consensusScores } from "./scoring/consensus";
@@ -874,6 +874,26 @@ Return ONLY valid JSON.` },
   // ADMIN PROCEDURES
   // ============================================================
   admin: router({
+    // Abuse reports queue (Terms §8A: member reports authorize staff review).
+    messageReports: adminProcedure.query(async () => {
+      const { getDb } = await import("./db");
+      const { reports } = await import("../drizzle/schema");
+      const { desc } = await import("drizzle-orm");
+      const db = await getDb();
+      if (!db) return [];
+      return db.select().from(reports).orderBy(desc(reports.createdAt)).limit(200);
+    }),
+    resolveReport: adminProcedure
+      .input(z.object({ reportId: z.number().int().positive(), status: z.enum(["reviewed", "actioned"]) }))
+      .mutation(async ({ input }) => {
+        const { getDb } = await import("./db");
+        const { reports } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        const db = await getDb();
+        if (!db) return { ok: false };
+        await db.update(reports).set({ status: input.status, reviewedAt: new Date() }).where(eq(reports.id, input.reportId));
+        return { ok: true };
+      }),
     stats: adminProcedure.query(async () => {
       return getAdminStats();
     }),
@@ -2132,6 +2152,27 @@ CRITICAL RULES:
         if (!res.ok) throw new TRPCError({ code: "BAD_REQUEST", message: res.error });
         await recordEvent({ type: "message_sent", userId: ctx.user.id, meta: { toUserId: input.toUserId, hasAttachment: !!input.attachment } });
         return { ok: true, id: res.id };
+      }),
+
+    // Trust & safety — block severs the channel both ways and hides the thread;
+    // report opens a staff review per Terms §8A (the one authorized-review path).
+    block: protectedProcedure
+      .input(z.object({ userId: z.number().int().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        const ok = await blockUser(ctx.user.id, input.userId);
+        if (ok) await recordEvent({ type: "member_blocked", userId: ctx.user.id, meta: { blockedUserId: input.userId } });
+        return { ok };
+      }),
+    unblock: protectedProcedure
+      .input(z.object({ userId: z.number().int().positive() }))
+      .mutation(async ({ ctx, input }) => ({ ok: await unblockUser(ctx.user.id, input.userId) })),
+    blocked: protectedProcedure.query(({ ctx }) => listBlocked(ctx.user.id)),
+    report: protectedProcedure
+      .input(z.object({ userId: z.number().int().positive(), reason: z.string().min(3).max(2000) }))
+      .mutation(async ({ ctx, input }) => {
+        const ok = await reportUser(ctx.user.id, input.userId, input.reason);
+        if (ok) await recordEvent({ type: "member_reported", userId: ctx.user.id, meta: { reportedUserId: input.userId } });
+        return { ok };
       }),
   }),
 });
