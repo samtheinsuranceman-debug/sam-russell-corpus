@@ -11,6 +11,7 @@ import { requireAgreement } from "@/lib/agreement";
 import { useHeroVariant, currentHeroId } from "@/lib/heroExperiment";
 import { ARCHETYPES } from "./archetypesData";
 import { keystoneForLine } from "@shared/keystonePractices";
+import { ALL_AXES } from "@shared/axisModes";
 
 // ============================================================
 // AQAL HOME — Merged: Viral hook + Claude's Atelier dial UI
@@ -354,7 +355,7 @@ function WeakestLinkDiagram() {
         const weak = i === 4;
         return (
           <g key={i} transform={`translate(${20 + i * 78}, 42)`}>
-            <ellipse rx="34" ry="22" fill="none" stroke={weak ? EMBER : CHAMPAGNE} strokeWidth={weak ? 3 : 2} opacity={weak ? 1 : 0.55}
+            <ellipse className={weak ? "aq-pulse" : undefined} rx="34" ry="22" fill="none" stroke={weak ? EMBER : CHAMPAGNE} strokeWidth={weak ? 3 : 2} opacity={weak ? 1 : 0.55}
               strokeDasharray={weak ? "6 5" : "none"} />
             {weak && <text x="0" y="-32" textAnchor="middle" fill={EMBER} fontSize="11" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.1em">THE ONE THAT SNAPS</text>}
           </g>
@@ -362,6 +363,30 @@ function WeakestLinkDiagram() {
       })}
       <text x="280" y="80" textAnchor="middle" fill={CREAM2} fontSize="11" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.08em" opacity="0.7">
         YOUR OUTCOMES RUN AT THE STRENGTH OF YOUR WEAKEST LINE — NOT YOUR STRONGEST
+      </text>
+    </svg>
+  );
+}
+
+// The treatment arc: an untreated line stays flat; a prescribed practice bends it up.
+function TreatmentArcDiagram() {
+  return (
+    <svg viewBox="0 0 640 140" style={{ width: '100%', maxWidth: '640px', display: 'block', margin: '0 auto' }} aria-label="Untreated, a weak line stays flat — with a prescribed practice it rises">
+      {[30, 60, 90].map((y) => (
+        <line key={y} x1="36" y1={y} x2="616" y2={y} stroke={CREAM} strokeOpacity="0.06" strokeWidth="1" />
+      ))}
+      {/* untreated: flat, ember, dashed */}
+      <path d="M 36 96 C 180 94 420 98 616 96" stroke={EMBER} strokeWidth="2" fill="none" strokeDasharray="6 5" opacity="0.75" />
+      <text x="612" y="112" textAnchor="end" fill={EMBER} fontSize="10.5" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.1em" opacity="0.9">UNTREATED — FLAT FOR DECADES</text>
+      {/* treated: rises after the prescription lands */}
+      <path d="M 36 96 C 140 96 180 92 232 84 C 330 68 480 44 616 26" stroke={CHAMPAGNE} strokeWidth="2.4" fill="none" />
+      <circle className="aq-pulse" cx="232" cy="84" r="10" fill={`${CHAMPAGNE}22`} stroke={CHAMPAGNE} strokeWidth="1.6" />
+      <text x="232" y="88" textAnchor="middle" fill={CHAMPAGNE} fontSize="9" fontFamily="'JetBrains Mono', monospace">Rx</text>
+      <text x="232" y="64" textAnchor="middle" fill={CREAM2} fontSize="10.5" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.08em">PRESCRIBED PRACTICE STARTS</text>
+      <circle cx="616" cy="26" r="4.5" fill={CHAMPAGNE} />
+      <text x="612" y="16" textAnchor="end" fill={CREAM} fontSize="10.5" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.1em">TRAINED — GAINS PERSIST</text>
+      <text x="320" y="134" textAnchor="middle" fill={CREAM2} fontSize="11" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.08em" opacity="0.8">
+        THE RESEARCH IS CLEAR: LINES CAN BE TRAINED — AND THE GAINS HOLD
       </text>
     </svg>
   );
@@ -379,7 +404,7 @@ function ThirtyDayLoopDiagram() {
           {i < steps.length - 1 && <path d={`M 106 0 L 118 0 M 113 -5 L 119 0 L 113 5`} stroke={CHAMPAGNE} strokeWidth="1.5" fill="none" opacity="0.6" />}
         </g>
       ))}
-      <path d="M 580 66 Q 610 100 320 104 Q 30 100 40 70" stroke={EMBER} strokeWidth="1.5" fill="none" opacity="0.7" strokeDasharray="4 4" />
+      <path className="aq-dash" d="M 580 66 Q 610 100 320 104 Q 30 100 40 70" stroke={EMBER} strokeWidth="1.5" fill="none" opacity="0.7" strokeDasharray="4 4" />
       <text x="320" y="118" textAnchor="middle" fill={CREAM2} fontSize="11" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.08em" opacity="0.8">
         EVERY 30 DAYS — YOUR MAP UPDATES FROM WHAT YOU ACTUALLY DID
       </text>
@@ -429,7 +454,7 @@ function MasterWeaknessDiagram() {
             <circle cx={x} cy={y} r="11" fill="none" stroke={CREAM2} strokeWidth="1.2" opacity="0.55" />
           </g>
         ))}
-        <circle r="24" fill={`${EMBER}22`} stroke={EMBER} strokeWidth="2.5" />
+        <circle className="aq-pulse" r="24" fill={`${EMBER}22`} stroke={EMBER} strokeWidth="2.5" />
         <text y="4" textAnchor="middle" fill={EMBER} fontSize="9" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.05em">MASTER</text>
       </g>
       <text x="170" y="144" textAnchor="middle" fill={CREAM2} fontSize="10.5" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.08em" opacity="0.8">
@@ -529,6 +554,7 @@ function ProtocolSection() {
           <b style={{ color: EMBER }}>That is outcome engineering.</b>
         </p>
         <ThirtyDayLoopDiagram />
+        <div style={{ margin: '34px 0 0' }}><TreatmentArcDiagram /></div>
       </div>
     </section>
   );
@@ -537,6 +563,29 @@ function ProtocolSection() {
 // ============================================================
 // ARCHETYPE SHOWCASE — real documented patterns + the prescribed fix
 // ============================================================
+// Mini 32-line "spectrum" — the archetype's whole shape in one glance:
+// tall champagne bars = the gift, short ember bars = the line that sabotages it.
+function ArchetypeSpectrum({ high, low }: { high: string[]; low: string[] }) {
+  const bars = ALL_AXES.map((axis, i) => {
+    const isHigh = high.includes(axis);
+    const isLow = low.includes(axis);
+    const seed = (axis.charCodeAt(0) * 7 + i * 13) % 10; // stable per-axis mid height
+    return {
+      h: isHigh ? 30 : isLow ? 5 : 12 + seed,
+      c: isHigh ? CHAMPAGNE : isLow ? EMBER : "rgba(241,234,219,0.22)",
+      glow: isHigh || isLow,
+    };
+  });
+  return (
+    <svg viewBox="0 0 224 38" style={{ width: "100%", height: "38px", display: "block" }} aria-hidden="true">
+      {bars.map((b, i) => (
+        <rect key={i} className="aq-rise" style={{ animationDelay: `${i * 22}ms` }}
+          x={i * 7} y={36 - b.h} width="5" height={b.h} rx="1.5" fill={b.c} opacity={b.glow ? 0.95 : 0.8} />
+      ))}
+    </svg>
+  );
+}
+
 function ArchetypeShowcaseSection() {
   const picks = [
     ARCHETYPES.find((a) => a.name.includes("Derailed Executive")),
@@ -563,8 +612,9 @@ function ArchetypeShowcaseSection() {
             const lowLine = a.lowLines?.[0];
             const rx = lowLine ? keystoneForLine(lowLine) : undefined;
             return (
-              <div key={a.id} style={{ border: `1px solid ${LINE_C}`, borderRadius: '14px', padding: '20px', background: 'rgba(241,234,219,0.03)' }}>
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '20px', color: CREAM, marginBottom: '10px' }}>{a.name}</div>
+              <div key={a.id} className="transition-all duration-200 hover:-translate-y-[3px]" style={{ border: `1px solid ${LINE_C}`, borderRadius: '14px', padding: '20px', background: 'rgba(241,234,219,0.03)' }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '20px', color: CREAM, marginBottom: '8px' }}>{a.name}</div>
+                <div style={{ marginBottom: '10px' }}><ArchetypeSpectrum high={a.highLines} low={a.lowLines} /></div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '10px' }}>
                   {a.highLines.slice(0, 3).map((l) => (
                     <span key={l} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '999px', border: `1px solid ${CHAMPAGNE}55`, color: CHAMPAGNE }}>{l}</span>
@@ -1003,6 +1053,61 @@ function SamplesSection() {
 // ============================================================
 // SERVICE PILLARS — Strength Maximization, Weakness Shielding, Matching
 // ============================================================
+// Pillar glyphs — each pillar's mechanism drawn, not just described.
+
+// 01 · Maximize: a strength CLUSTER — high lines wired together, amplifying.
+function ClusterGlyph() {
+  const nodes: [number, number, number][] = [[70, 20, 7], [130, 34, 9], [40, 52, 6], [100, 62, 11], [160, 66, 6], [66, 78, 7]];
+  return (
+    <svg viewBox="0 0 200 96" style={{ width: '100%', height: '84px', display: 'block' }} aria-hidden="true">
+      {nodes.map(([x1, y1], i) => nodes.slice(i + 1).map(([x2, y2], j) => (
+        <line key={`${i}-${j}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={CHAMPAGNE} strokeWidth="1" opacity="0.28" />
+      )))}
+      {nodes.map(([x, y, r], i) => (
+        <g key={i}>
+          <circle cx={x} cy={y} r={r + 4} fill={`${CHAMPAGNE}18`} />
+          <circle className={i === 3 ? "aq-pulse" : undefined} cx={x} cy={y} r={r} fill="none" stroke={CHAMPAGNE} strokeWidth="1.6" opacity={0.85} />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+// 02 · Shield: the weak line belted inside a protective arc — it can't move against you.
+function ShieldGlyph() {
+  return (
+    <svg viewBox="0 0 200 96" style={{ width: '100%', height: '84px', display: 'block' }} aria-hidden="true">
+      <path d="M 100 8 C 132 18 152 18 158 24 C 158 60 136 80 100 90 C 64 80 42 60 42 24 C 48 18 68 18 100 8 Z"
+        fill="rgba(224,198,140,0.05)" stroke={CHAMPAGNE} strokeWidth="1.6" opacity="0.85" />
+      <circle className="aq-pulse" cx="100" cy="48" r="13" fill={`${EMBER}22`} stroke={EMBER} strokeWidth="2" strokeDasharray="4 3" />
+      <path d="M 74 48 L 87 48 M 113 48 L 126 48" stroke={CHAMPAGNE} strokeWidth="2.4" strokeLinecap="round" opacity="0.9" />
+      <path d="M 100 22 L 100 35 M 100 61 L 100 74" stroke={CHAMPAGNE} strokeWidth="2.4" strokeLinecap="round" opacity="0.9" />
+    </svg>
+  );
+}
+
+// 03 · Connect: two profiles interlocking — their peak lands exactly on your gap.
+function MatchGlyph() {
+  const yours = [26, 12, 30, 6, 24];  // bar heights; index 3 is the gap
+  const theirs = [10, 22, 8, 30, 12]; // index 3 is their peak
+  return (
+    <svg viewBox="0 0 200 96" style={{ width: '100%', height: '84px', display: 'block' }} aria-hidden="true">
+      {yours.map((h, i) => (
+        <rect key={`y${i}`} x={26 + i * 13} y={64 - h} width="9" height={h} rx="2"
+          fill={i === 3 ? EMBER : CHAMPAGNE} opacity={i === 3 ? 0.95 : 0.75} />
+      ))}
+      {theirs.map((h, i) => (
+        <rect key={`t${i}`} x={112 + i * 13} y={64 - h} width="9" height={h} rx="2"
+          fill={i === 3 ? JADE : "rgba(241,234,219,0.35)"} opacity={i === 3 ? 0.95 : 0.8} />
+      ))}
+      <path className="aq-dash" d="M 169 32 C 150 6 90 6 74 52" stroke={JADE} strokeWidth="1.6" fill="none" strokeDasharray="5 4" opacity="0.9" />
+      <path d="M 78 44 L 74 53 L 83 51" stroke={JADE} strokeWidth="1.6" fill="none" opacity="0.9" />
+      <text x="52" y="80" textAnchor="middle" fill={CREAM2} fontSize="9" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.1em">YOU</text>
+      <text x="144" y="80" textAnchor="middle" fill={CREAM2} fontSize="9" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.1em">YOUR MATCH</text>
+    </svg>
+  );
+}
+
 function ServicePillars() {
   return (
     <section style={{ padding: 'clamp(56px,8vw,108px) 0', background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}` }}>
@@ -1021,7 +1126,8 @@ function ServicePillars() {
         <div className="grid gap-[clamp(20px,3vw,32px)]" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
           {/* Pillar 1: Strength Maximization */}
           <div className="rounded-[6px]" style={{ border: `1px solid ${LINE_C}`, padding: '28px 24px', background: `radial-gradient(300px 180px at 50% 0%, rgba(224,198,140,0.05), transparent 70%), ${INK}` }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '12px' }}>01 · Maximize</div>
+            <ClusterGlyph />
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: CHAMPAGNE, margin: '10px 0 12px' }}>01 · Maximize</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Strength Cluster Optimization</div>
             <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>
               <p style={{ marginBottom: '12px' }}>Your highest lines form <b style={{ color: CREAM, fontWeight: 600 }}>strength clusters</b> — groups that amplify each other when used together. We identify these clusters and show you how to deploy them toward your stated goals.</p>
@@ -1032,7 +1138,8 @@ function ServicePillars() {
 
           {/* Pillar 2: Weakness Protection */}
           <div className="rounded-[6px]" style={{ border: `1px solid rgba(200,92,68,0.25)`, padding: '28px 24px', background: `radial-gradient(300px 180px at 50% 0%, rgba(200,92,68,0.04), transparent 70%), ${INK}` }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: '#C85C44', marginBottom: '12px' }}>02 · Shield</div>
+            <ShieldGlyph />
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: '#C85C44', margin: '10px 0 12px' }}>02 · Shield</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Weakness Cluster Protection</div>
             <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>
               <p style={{ marginBottom: '12px' }}>Your lowest lines aren't just "areas for improvement" — they're <b style={{ color: CREAM, fontWeight: 600 }}>structural vulnerabilities</b> that can destroy everything your strengths have built. One weak line can collapse the entire system geometrically, not additively.</p>
@@ -1043,7 +1150,8 @@ function ServicePillars() {
 
           {/* Pillar 3: Complementary Matching */}
           <div className="rounded-[6px]" style={{ border: `1px solid ${LINE_C}`, padding: '28px 24px', background: `radial-gradient(300px 180px at 50% 0%, rgba(155,192,178,0.05), transparent 70%), ${INK}` }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: JADE, marginBottom: '12px' }}>03 · Connect</div>
+            <MatchGlyph />
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: JADE, margin: '10px 0 12px' }}>03 · Connect</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Complementary Relationship Matching</div>
             <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>
               <p style={{ marginBottom: '12px' }}>We match you with members whose <b style={{ color: CREAM, fontWeight: 600 }}>strength clusters align with your weakness clusters</b> — and vice versa. By forming friendships and professional relationships with these people, their natural strengths begin to elevate your weak areas through proximity and collaboration.</p>
@@ -1229,6 +1337,18 @@ export default function Home() {
 
   return (
     <div className="min-h-screen relative" style={{ background: INK }}>
+      {/* Shared motion — subtle, sensory, and off for reduced-motion users */}
+      <style>{`
+        @keyframes aqPulse { 0%,100% { opacity:.5 } 50% { opacity:1 } }
+        @keyframes aqDash { to { stroke-dashoffset: -36 } }
+        @keyframes aqRise { from { transform: scaleY(0.2) } to { transform: scaleY(1) } }
+        .aq-pulse { animation: aqPulse 2.6s ease-in-out infinite; }
+        .aq-dash { animation: aqDash 2.4s linear infinite; }
+        .aq-rise { transform-origin: bottom; animation: aqRise 0.9s cubic-bezier(.22,.61,.36,1) both; }
+        @media (prefers-reduced-motion: reduce) {
+          .aq-pulse, .aq-dash, .aq-rise { animation: none; }
+        }
+      `}</style>
       <PublicHeader />
       <div className="relative z-10">
         {/* ── THE HOOK ── promise, then an immediate toy to play with */}
