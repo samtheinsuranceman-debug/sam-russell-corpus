@@ -434,6 +434,8 @@ IMPORTANT: Most people — even smart, successful people — demonstrate Orange-
 
 Do NOT inflate scores to be nice. Be rigorous and honest. Short, vague, or cliché answers should score LOW (0.2-0.4). Only genuinely sophisticated, multi-perspectival, self-aware responses deserve high scores.
 
+READ-ALOUD GUARD: Members who record offline often read the question prompt out loud before answering, so a response may open with a verbatim or near-verbatim restatement of the question. That text was authored by the assessment, not the member — completely disregard it when judging vocabulary, structure, or sophistication. Score ONLY the member's own words that follow it.
+
 For each of the ${ALL_AXES.length} lines below, provide:
 - A score from 0.0 to 1.0 (calibrated to the developmental stages above)
 - A confidence level (0.0-1.0) — lower if the response doesn't clearly address this line
