@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import AssessmentResumeDialog from "@/components/AssessmentResumeDialog";
 import { ALL_AXES } from "@shared/axisModes";
+import { splitTranscript, type TranscriptSegment } from "@shared/transcriptSplit";
 import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 import { GOALS_QUESTION_IDS, GOALS_QUESTION_INDICES } from "@shared/goalsQuestions";
 
@@ -1050,6 +1051,52 @@ export default function Assessment() {
       setTapeUploading(false);
     }
   }, [ensureAssessment, uploadResponseMutation, currentQuestion]);
+
+  // ── Multi-answer .txt transcript upload ───────────────────────────────────
+  // One transcript file covering MANY questions (tape-recorded offline, then
+  // transcribed). Split client-side on spoken "Question N" markers, review the
+  // mapping, then bulk-submit each segment as that question's text answer.
+  const txtInputRef = useRef<HTMLInputElement>(null);
+  const [txtReview, setTxtReview] = useState<TranscriptSegment[] | null>(null);
+  const [txtSubmitting, setTxtSubmitting] = useState(false);
+  const handleTxtFile = useCallback(async (file: File | null) => {
+    if (!file) return;
+    const text = await file.text();
+    if (!text.trim()) { toast.error("That file is empty."); return; }
+    const segs = splitTranscript(text, TOTAL_QUESTIONS);
+    if (segs.length === 0) {
+      // No markers — treat the whole file as the CURRENT question's answer.
+      setTxtReview([{ question: currentQuestion + 1, text: text.trim(), words: text.trim().split(/\s+/).filter(Boolean).length }]);
+      toast.info("No 'Question N' markers found — mapping the whole file to the current question. Review before submitting.");
+    } else {
+      setTxtReview(segs);
+    }
+  }, [currentQuestion]);
+  const submitTxtSegments = useCallback(async () => {
+    if (!txtReview || txtSubmitting) return;
+    setTxtSubmitting(true);
+    try {
+      const aId = await ensureAssessment();
+      if (!aId) { toast.error("Sign in first, then upload your transcript."); return; }
+      let ok = 0;
+      for (const seg of txtReview) {
+        try {
+          await submitTextMutation.mutateAsync({ assessmentId: aId, questionIndex: seg.question - 1, text: seg.text });
+          setTextResponses((prev) => { const n = [...prev]; n[seg.question - 1] = seg.text; return n; });
+          setUploadedIdx((u) => ({ ...u, [seg.question - 1]: true }));
+          ok++;
+        } catch {
+          toast.error(`Question ${seg.question} failed to upload — try again.`);
+        }
+      }
+      if (ok > 0) {
+        toast.success(`${ok} answer${ok === 1 ? "" : "s"} uploaded and saved — they'll be scored with the rest.`);
+        setTxtReview(null);
+      }
+    } finally {
+      setTxtSubmitting(false);
+    }
+  }, [txtReview, txtSubmitting, ensureAssessment, submitTextMutation]);
 
   // Detect if voice recording is supported
   const recordingSupported = typeof window !== "undefined" && typeof window.MediaRecorder !== "undefined" && !!navigator.mediaDevices?.getUserMedia;
@@ -2631,7 +2678,16 @@ export default function Assessment() {
             >
               {tapeUploading ? "Uploading…" : "Recorded on tape? Upload this answer"}
             </button>
+            <span className="text-muted-foreground/25 text-xs">·</span>
+            <button
+              onClick={() => txtInputRef.current?.click()}
+              className="text-xs text-accent/70 hover:text-accent transition-colors"
+            >
+              Upload a .txt transcript (covers many questions)
+            </button>
           </div>
+          <input ref={txtInputRef} type="file" hidden accept=".txt,text/plain"
+            onChange={(e) => { void handleTxtFile(e.target.files?.[0] ?? null); e.target.value = ""; }} />
           <input ref={tapeInputRef} type="file" hidden accept="audio/*,video/*,.mp3,.m4a,.wav,.ogg,.aac,.mp4,.mov"
             onChange={(e) => { void uploadFileAnswer(e.target.files?.[0] ?? null); e.target.value = ""; }} />
           {/* Optional camera channel — voice stays the scored signal; video adds
@@ -2837,6 +2893,43 @@ export default function Assessment() {
                 stopping here costs you nothing.
               </p>
             </motion.div>
+          )}
+
+          {/* Transcript review modal — confirm the question mapping before submit */}
+          {txtReview && (
+            <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" style={{ background: "rgba(10,8,5,0.8)" }}>
+              <div className="w-full max-w-lg rounded-2xl border border-accent/30 bg-background p-6 max-h-[80vh] overflow-y-auto">
+                <p className="text-[0.62rem] uppercase tracking-[0.2em] text-accent/80 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  Transcript detected — review the mapping
+                </p>
+                <h3 className="text-xl text-foreground mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+                  {txtReview.length} answer{txtReview.length === 1 ? "" : "s"} found in your file
+                </h3>
+                <div className="space-y-2 mb-4">
+                  {txtReview.map((s) => (
+                    <div key={s.question} className="rounded-lg border border-border/50 bg-background/50 px-3 py-2">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="text-sm text-foreground font-semibold">Question {s.question}</span>
+                        <span className={`text-xs ${s.words < 100 ? "text-amber-400/80" : "text-green-400/70"}`} style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                          {s.words.toLocaleString()} words{s.words < 100 ? " — thin" : ""}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground/70 mt-1 line-clamp-2">{s.text.slice(0, 160)}…</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground/60 mb-4">
+                  Each segment saves as that question&rsquo;s answer (replacing any earlier answer to the same question).
+                  Anything mis-mapped? Cancel, fix the &ldquo;Question N&rdquo; markers in your file, and re-upload.
+                </p>
+                <div className="flex gap-3 justify-end">
+                  <Button variant="ghost" size="sm" onClick={() => setTxtReview(null)} disabled={txtSubmitting}>Cancel</Button>
+                  <Button size="sm" onClick={() => void submitTxtSegments()} disabled={txtSubmitting} className="bg-primary text-white">
+                    {txtSubmitting ? "Uploading…" : `Submit ${txtReview.length} answer${txtReview.length === 1 ? "" : "s"}`}
+                  </Button>
+                </div>
+              </div>
+            </div>
           )}
 
           {/* Navigation */}
