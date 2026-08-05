@@ -23,7 +23,7 @@ export const HERO_VARIANTS: HeroVariant[] = [
   {
     // Control — the founder-worded outcome headline.
     id: "outcome",
-    lead: "How predictable, protected, and effortless is your mind ",
+    lead: "How predictable, protected, and reliable is your mind ",
     emph: "at producing your dreams and outcomes?",
     sub: "Almost no one has ever measured it. We do — then we engineer the mind to close the gap between where you stand and what you're chasing.",
   },

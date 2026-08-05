@@ -387,9 +387,10 @@ function ThirtyDayLoopDiagram() {
   );
 }
 
+// §2 THE PROBLEM — the founder story, the hook.
 function FounderStorySection() {
   return (
-    <section style={{ background: `linear-gradient(180deg,${INK},${INK2})`, borderTop: `2px solid ${EMBER_D}`, borderBottom: `2px solid ${EMBER_D}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+    <section style={{ background: `linear-gradient(180deg,${INK},${INK2})`, borderTop: `2px solid ${EMBER_D}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.28em', textTransform: 'uppercase', color: EMBER, marginBottom: '18px' }}>
           ⚠ From the founder — read this before you start
@@ -401,37 +402,133 @@ function FounderStorySection() {
         <div style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.7, maxWidth: '46em' }}>
           <p style={{ margin: '0 0 16px' }}>
             I test exceptionally high across almost every line of intelligence — and it didn&rsquo;t save me. I followed
-            the best-selling advice of the strengths movement: <em>maximize your strengths, mostly ignore your
+            the best-selling advice of the strengths-finder movement: <em>maximize your strengths, mostly ignore your
             weaknesses.</em> It gave me an unbalanced way of navigating the world. I fell flat on my face a dozen times —
             money, romantic relationships, friendships — and it never mattered how high, strong, or integrated my
             strength clusters were. <b style={{ color: CREAM }}>They were null and void the moment a blind-spotted weak
             cluster activated at the exact wrong time, in the exact wrong place, with the exact wrong people.</b>
           </p>
-          <div style={{ margin: '26px 0' }}><WeakestLinkDiagram /></div>
-          <p style={{ margin: '0 0 16px' }}>
-            This platform is <b style={{ color: CREAM }}>insurance for your future.</b> It doesn&rsquo;t matter how fast
-            you&rsquo;re driving toward your dreams if you run out of gas in the middle of a desert — or one careless,
-            multitasked mistake sets you back five years. So we fit the right traction tires for your specific road. We
-            fasten seat belts around your weaknesses so they can&rsquo;t move against you. We install airbags between you
-            and your goals, so when the worst happens you shake it off and get back to business instead of starting over.
-          </p>
-          <p style={{ margin: '0 0 16px' }}>
-            Consider: nearly <b style={{ color: CREAM }}>half of first marriages end</b> — yet almost no one proactively
-            spends time, attention, or money limiting their risk of that failure. Couples slide into corrosive
-            communication patterns and neither brain registers the red flag, because when we&rsquo;re sliding toward
-            collapse we are neurologically inclined to miss our own downward trajectory. The fix isn&rsquo;t
-            vigilance-by-willpower. It&rsquo;s a <b style={{ color: CREAM }}>system</b>: identify every weakness, tease
-            them apart, find the <span style={{ color: EMBER, fontWeight: 600 }}>Master Weakness</span> — the one that
-            holds the others in place — and neutralize it first, with clinically studied practices, on a monthly cycle.
-          </p>
-          <div style={{ margin: '26px 0' }}><ThirtyDayLoopDiagram /></div>
-          <p style={{ margin: '0 0 0' }}>
-            Every 30 days you get <b style={{ color: CREAM }}>5&ndash;7 peer-reviewed practices</b> matched to your
-            profile — you choose which become habits — and your next tracker report re-maps your profile from the
-            frequency, duration, and intensity of what you actually did. Watch the shape of your own mind change,
-            month over month. <b style={{ color: EMBER }}>That is outcome engineering.</b>
+          <p style={{ margin: 0 }}>
+            That insight — learned the expensive way — is what this entire platform is built on.
           </p>
         </div>
+      </div>
+    </section>
+  );
+}
+
+// §3 THE MECHANISM — Master Weakness: one weakness holds the cluster in place.
+function MasterWeaknessDiagram() {
+  const sats = [[-120, -34], [-72, 44], [0, -52], [76, 42], [124, -28], [30, 58]];
+  return (
+    <svg viewBox="0 0 340 150" style={{ width: '100%', maxWidth: '420px', display: 'block', margin: '0 auto' }} aria-label="One master weakness holds the other weaknesses in place">
+      <g transform="translate(170,72)">
+        {sats.map(([x, y], i) => (
+          <g key={i}>
+            <line x1="0" y1="0" x2={x} y2={y} stroke={EMBER} strokeWidth="1" opacity="0.45" strokeDasharray="3 3" />
+            <circle cx={x} cy={y} r="11" fill="none" stroke={CREAM2} strokeWidth="1.2" opacity="0.55" />
+          </g>
+        ))}
+        <circle r="24" fill={`${EMBER}22`} stroke={EMBER} strokeWidth="2.5" />
+        <text y="4" textAnchor="middle" fill={EMBER} fontSize="9" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.05em">MASTER</text>
+      </g>
+      <text x="170" y="144" textAnchor="middle" fill={CREAM2} fontSize="10.5" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.08em" opacity="0.8">
+        ONE WEAKNESS HOLDS THE OTHERS IN PLACE — NEUTRALIZE IT FIRST
+      </text>
+    </svg>
+  );
+}
+
+function MechanismSection() {
+  return (
+    <section style={{ background: `linear-gradient(180deg,${INK2},${INK})`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
+          The mechanism · the Master Weakness
+        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.06, color: CREAM, margin: '0 0 18px' }}>
+          Your weaknesses aren&rsquo;t a list.<br />They&rsquo;re a system — with a ringleader.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 'clamp(24px,4vw,48px)', alignItems: 'center' }}>
+          <div style={{ color: CREAM2, fontSize: 'clamp(14.5px,1.6vw,17px)', lineHeight: 1.68 }}>
+            <p style={{ margin: '0 0 14px' }}>
+              We map your mind as <b style={{ color: CREAM }}>32 distinct lines of intelligence</b> — not one number.
+              Your weak lines don&rsquo;t just sit there independently: they reinforce each other, and in almost every
+              profile <b style={{ color: EMBER }}>one Master Weakness has controlling influence over the rest</b>,
+              keeping them locked in place like a keystone holds an arch.
+            </p>
+            <p style={{ margin: 0 }}>
+              Attack weaknesses at random and the system snaps back. Identify the Master Weakness, neutralize it first
+              with targeted practice, and the whole cluster loosens — <b style={{ color: CREAM }}>that&rsquo;s why the
+              order of work matters more than the amount of work.</b>
+            </p>
+          </div>
+          <MasterWeaknessDiagram />
+        </div>
+        <div style={{ margin: '30px 0 0' }}><WeakestLinkDiagram /></div>
+      </div>
+    </section>
+  );
+}
+
+// §5 THE INSURANCE METAPHOR — seat belts, airbags, the isn't-it-odd challenge.
+function InsuranceSection() {
+  return (
+    <section style={{ background: `linear-gradient(180deg,${INK},${INK2})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: EMBER, marginBottom: '14px' }}>
+          This is insurance for your future
+        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.06, color: CREAM, margin: '0 0 18px' }}>
+          It doesn&rsquo;t matter how fast you&rsquo;re driving<br />
+          <span style={{ color: EMBER }}>if you run out of gas in the desert.</span>
+        </p>
+        <div style={{ color: CREAM2, fontSize: 'clamp(14.5px,1.6vw,17px)', lineHeight: 1.68, maxWidth: '46em' }}>
+          <p style={{ margin: '0 0 14px' }}>
+            One careless, multitasked mistake can set you back five years. So we work like safety engineers: the right
+            <b style={{ color: CREAM }}> traction tires</b> for your specific road, <b style={{ color: CREAM }}>seat
+            belts fastened around your weaknesses</b> so they can&rsquo;t move against you, and
+            <b style={{ color: CREAM }}> airbags installed between you and your goals</b> — so when the worst happens,
+            you shake it off and get back to business instead of starting over. Without a safety net, your most
+            precious hopes — best parent, best spouse, provider, community leader — sit permanently exposed to sudden,
+            unexpected failure.
+          </p>
+          <p style={{ margin: '0 0 14px' }}>
+            Isn&rsquo;t it odd? <b style={{ color: CREAM }}>Roughly half of first marriages end — well over half of
+            second marriages</b> — and yet people who happily pay every month to insure a car will spend nothing to
+            limit the risk on their most important relationships. Couples slide into corrosive communication patterns
+            and <em>neither brain registers the red flag</em> — because when we&rsquo;re sliding toward collapse, we are
+            neurologically inclined to miss our own downward trajectory.
+          </p>
+          <p style={{ margin: 0 }}>
+            The fix isn&rsquo;t vigilance-by-willpower. It&rsquo;s <b style={{ color: CREAM }}>monitoring the sources of
+            failure every 30 days</b> — deliberately, on a system, before the slide gets steep.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// §6 THE PROTOCOL — the subscription loop that actually delivers.
+function ProtocolSection() {
+  return (
+    <section style={{ background: `linear-gradient(180deg,${INK2},${INK})`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
+          The protocol · every 30 days
+        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.06, color: CREAM, margin: '0 0 18px' }}>
+          5&ndash;7 peer-reviewed practices.<br />You choose which become habits.
+        </p>
+        <p style={{ color: CREAM2, fontSize: 'clamp(14.5px,1.6vw,17px)', lineHeight: 1.68, maxWidth: '44em', margin: '0 0 26px' }}>
+          Every 30 days your profile prescribes a short menu of clinically studied practices matched to your shape and
+          your goals — high-resolution suggestions, never homework. Your tracker catalogs the frequency, duration, and
+          intensity of what you actually did, and next month&rsquo;s re-assessment re-maps your profile from it.
+          <b style={{ color: CREAM }}> Watch the shape of your own mind change, month over month.</b>{" "}
+          <b style={{ color: EMBER }}>That is outcome engineering.</b>
+        </p>
+        <ThirtyDayLoopDiagram />
       </div>
     </section>
   );
@@ -1134,20 +1231,28 @@ export default function Home() {
     <div className="min-h-screen relative" style={{ background: INK }}>
       <PublicHeader />
       <div className="relative z-10">
+        {/* §1 Hero */}
         <HeroSection />
+        {/* §2 The Problem — founder story */}
         <div data-reveal><FounderStorySection /></div>
-        <div data-reveal><FreeFoundingAccess /></div>
-        <div data-reveal><ThesisSection /></div>
+        {/* §3 The Mechanism — the Master Weakness */}
+        <div data-reveal><MechanismSection /></div>
+        {/* §4 Archetype examples — the threat + the prescription */}
         <div data-reveal><ArchetypeShowcaseSection /></div>
-        <div data-reveal><EngineeringSection /></div>
+        {/* §5 The insurance metaphor */}
+        <div data-reveal><InsuranceSection /></div>
+        {/* §6 The protocol — the 30-day loop */}
+        <div data-reveal><ProtocolSection /></div>
+        {/* Proof layer — how it works and why to trust it */}
         <div data-reveal><ProcessSection /></div>
-        <div data-reveal><CompanionSection /></div>
         <div data-reveal><EvidenceSection /></div>
         <div data-reveal><ResearchLibrarySection /></div>
         <div data-reveal><SamplesSection /></div>
         <div data-reveal><ServicePillars /></div>
+        <div data-reveal><CompanionSection /></div>
         <div data-reveal><TestimonialsStrip /></div>
-        <div data-reveal><FinalCTA /></div>
+        {/* §7 Founding-member CTA — the close */}
+        <div data-reveal><FreeFoundingAccess /></div>
         <HonestFooter />
         <PublicFooter />
       </div>

@@ -1290,17 +1290,21 @@ function StarvedLineOnRamp({ scores }: { scores: number[] }) {
         })}
       </div>
 
-      {/* Highest-leverage prescription — one concrete, research-backed move */}
+      {/* YOUR MASTER WEAKNESS — the ringleader line + the prescribed weekly practice */}
       {rx && (
-        <div className="mt-4 rounded-2xl border border-accent/25 bg-accent/[0.05] p-6">
+        <div className="mt-4 rounded-2xl p-6" style={{ border: "1px solid rgba(226,96,74,0.4)", background: "rgba(226,96,74,0.06)" }}>
           <div className="flex items-baseline justify-between gap-3 mb-2">
-            <p className="text-[0.6rem] uppercase tracking-[0.15em] text-accent/80" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-              Your highest-leverage move — for low {rx.line}
+            <p className="text-[0.6rem] uppercase tracking-[0.15em]" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#E2604A" }}>
+              Your Master Weakness — {rx.line}
             </p>
             <span className="shrink-0 text-[0.58rem] px-2 py-0.5 rounded-full border border-accent/30 text-accent/80" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
               {rx.practice.evidence} evidence
             </span>
           </div>
+          <p className="text-[0.82rem] text-foreground/70 leading-snug mb-3">
+            Of your low lines, this one has the most controlling influence over the rest — the keystone holding the
+            cluster in place. Neutralize it first and the others loosen. Here is your prescribed weekly practice:
+          </p>
           <h3 className="text-xl text-foreground mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
             {rx.practice.name}
           </h3>
