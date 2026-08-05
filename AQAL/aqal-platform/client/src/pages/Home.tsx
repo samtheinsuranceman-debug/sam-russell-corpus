@@ -25,8 +25,8 @@ const INK = "#141009";
 const INK2 = "#1B1610";
 const INK3 = "#231C14";
 const CREAM = "#F1EADB";
-const CREAM2 = "#C4B89F";
-const MUTED = "#867A66";
+const CREAM2 = "#CFC5B0";
+const MUTED = "#9C8F79";
 const LINE_C = "rgba(241,234,219,0.10)";
 const CHAMPAGNE = "#E0C68C";
 const CHAMPAGNE_D = "#C9A24B";
@@ -139,7 +139,7 @@ function FreeFoundingAccess() {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.04, color: CREAM, margin: '0 0 12px' }}>
           Claim your free assessment
         </h2>
-        <p style={{ color: CREAM2, fontSize: 'clamp(14px,1.6vw,17px)', lineHeight: 1.6, maxWidth: '34em', margin: '0 auto 8px' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.6vw,17px)', lineHeight: 1.6, maxWidth: '34em', margin: '0 auto 8px' }}>
           The first {cap ? cap.toLocaleString() : '10,000'} founding members get the full experience free — the voice
           assessment, the fully-underwritten multi-AI result, <b style={{ color: CREAM }}>and</b> the membership, no
           card ever. No invite code: just your email and a password you choose.
@@ -252,7 +252,7 @@ function HeroSection() {
             </motion.p>
 
             <motion.p
-              style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.6, maxWidth: '34em', margin: '18px 0 30px' }}
+              style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.6, maxWidth: '34em', margin: '18px 0 30px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
             >
               Every other test hands you a number and walks away. We map your mind as a <b style={{ color: CREAM, fontWeight: 600 }}>system of 32 lines</b> and run precise, surgical interventions on the ones that matter — <b style={{ color: CREAM, fontWeight: 600 }}>fortifying the strengths that drive your goals</b> and <b style={{ color: CREAM, fontWeight: 600 }}>dismantling the weaknesses that sabotage them</b> — so you reach your outcomes with the greatest result and the least time, effort, and failure. The tools, the training, and the research, individualized to your assessment and your goals.
@@ -440,7 +440,7 @@ function FounderStorySection() {
           My strengths never failed me.<br />
           <span style={{ color: EMBER }}>My unmanaged weaknesses cost me fortunes.</span>
         </p>
-        <div style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.7, maxWidth: '46em' }}>
+        <div style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.7, maxWidth: '46em' }}>
           <p style={{ margin: '0 0 16px' }}>
             I test exceptionally high across almost every line of intelligence — and it didn&rsquo;t save me. I followed
             the best-selling advice of the strengths-finder movement: <em>maximize your strengths, mostly ignore your
@@ -491,7 +491,7 @@ function MechanismSection() {
           Your weaknesses aren&rsquo;t a list.<br />They&rsquo;re a system — with a ringleader.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 'clamp(24px,4vw,48px)', alignItems: 'center' }}>
-          <div style={{ color: CREAM2, fontSize: 'clamp(14.5px,1.6vw,17px)', lineHeight: 1.68 }}>
+          <div style={{ color: CREAM2, fontSize: 'clamp(15.5px,1.6vw,17px)', lineHeight: 1.68 }}>
             <p style={{ margin: '0 0 14px' }}>
               We map your mind as <b style={{ color: CREAM }}>32 distinct lines of intelligence</b> — not one number.
               Your weak lines don&rsquo;t just sit there independently: they reinforce each other, and in almost every
@@ -524,7 +524,7 @@ function InsuranceSection() {
           It doesn&rsquo;t matter how fast you&rsquo;re driving<br />
           <span style={{ color: EMBER }}>if you run out of gas in the desert.</span>
         </p>
-        <div style={{ color: CREAM2, fontSize: 'clamp(14.5px,1.6vw,17px)', lineHeight: 1.68, maxWidth: '46em' }}>
+        <div style={{ color: CREAM2, fontSize: 'clamp(15.5px,1.6vw,17px)', lineHeight: 1.68, maxWidth: '46em' }}>
           <p style={{ margin: '0 0 14px' }}>
             One careless, multitasked mistake can set you back five years. So we work like safety engineers: the right
             <b style={{ color: CREAM }}> traction tires</b> for your specific road, <b style={{ color: CREAM }}>seat
@@ -562,7 +562,7 @@ function ProtocolSection() {
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.06, color: CREAM, margin: '0 0 18px' }}>
           5&ndash;7 peer-reviewed practices.<br />You choose which become habits.
         </p>
-        <p style={{ color: CREAM2, fontSize: 'clamp(14.5px,1.6vw,17px)', lineHeight: 1.68, maxWidth: '44em', margin: '0 0 26px' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15.5px,1.6vw,17px)', lineHeight: 1.68, maxWidth: '44em', margin: '0 0 26px' }}>
           Every 30 days your profile prescribes a short menu of clinically studied practices matched to your shape and
           your goals — high-resolution suggestions, never homework. Your tracker catalogs the frequency, duration, and
           intensity of what you actually did, and next month&rsquo;s re-assessment re-maps your profile from it.
@@ -619,7 +619,7 @@ function ArchetypeShowcaseSection() {
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.06, color: CREAM, margin: '0 0 14px' }}>
           We don&rsquo;t just name the pattern. We prescribe the fix.
         </p>
-        <p style={{ color: CREAM2, fontSize: 'clamp(14px,1.6vw,17px)', lineHeight: 1.6, maxWidth: '42em', margin: '0 0 32px' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.6vw,17px)', lineHeight: 1.6, maxWidth: '42em', margin: '0 0 32px' }}>
           Each archetype below is documented in peer-reviewed research — a strength profile with a specific weakness
           that predictably sabotages it, and the evidence-based practice that works on the system itself.
         </p>
@@ -639,10 +639,10 @@ function ArchetypeShowcaseSection() {
                     <span key={l} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '999px', border: `1px solid ${EMBER}66`, color: EMBER }}>low {l}</span>
                   ))}
                 </div>
-                <p style={{ color: CREAM2, fontSize: '13px', lineHeight: 1.55, margin: '0 0 10px' }}>
+                <p style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.55, margin: '0 0 10px' }}>
                   <span style={{ color: EMBER }}>The threat: </span>{firstSentence(a.untreatedTrajectory)}
                 </p>
-                <p style={{ color: CREAM2, fontSize: '13px', lineHeight: 1.55, margin: 0 }}>
+                <p style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.55, margin: 0 }}>
                   <span style={{ color: CHAMPAGNE }}>The prescription: </span>
                   {rx ? `${rx.name} — ${rx.evidence.toLowerCase()} evidence.` : firstSentence(a.connectionCase)}
                 </p>
@@ -673,7 +673,7 @@ function ThesisSection() {
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500, fontSize: 'clamp(34px,6vw,64px)', lineHeight: 1.02, color: CREAM, margin: '0 0 20px' }}>
           "One number undersells you."
         </p>
-        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
           The frugal grandmother who out-saved the whole family had a financial mind sharper than anyone at the table —
           and an IQ test would have called her average. <b style={{ color: CREAM, fontWeight: 600 }}>That's the flaw in a single score:</b> it doesn't just
           mislabel you, it <em>undercounts</em> you. Measure all thirty-two lines and your real worth — the aggregate a
@@ -697,7 +697,7 @@ function GenerationSection() {
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500, fontSize: 'clamp(34px,6vw,64px)', lineHeight: 1.02, color: CREAM, margin: '0 0 20px' }}>
           "Rare for your age is the only rare that counts."
         </p>
-        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '42em', margin: '0 0 36px' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '42em', margin: '0 0 36px' }}>
           A twenty-five-year-old at the frontier of human development is not a sixty-five-year-old who had forty
           extra years to get there. We score you <b style={{ color: CREAM, fontWeight: 600 }}>against your own generation</b>,
           so the young prodigy reads as rare — not average — and sheer time-to-compound never inflates the number.
@@ -738,7 +738,7 @@ function TestimonialsStrip() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 'clamp(16px,2vw,28px)' }}>
           {items.map((t, i) => (
             <div key={i} style={{ border: `1px solid ${LINE_C}`, borderRadius: '10px', padding: '24px', background: INK }}>
-              <div style={{ color: CHAMPAGNE, letterSpacing: '2px', fontSize: '13px', marginBottom: '12px' }}>
+              <div style={{ color: CHAMPAGNE, letterSpacing: '2px', fontSize: '14px', marginBottom: '12px' }}>
                 {'★'.repeat(Math.max(1, Math.min(5, t.rating || 5)))}<span style={{ color: MUTED }}>{'★'.repeat(5 - Math.max(1, Math.min(5, t.rating || 5)))}</span>
               </div>
               {t.quote && (
@@ -776,7 +776,7 @@ function EngineeringSection() {
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500, fontSize: 'clamp(32px,5.5vw,58px)', lineHeight: 1.03, color: CREAM, margin: '0 0 20px', maxWidth: '16em' }}>
           "Most platforms stop at the score. We operate on the system."
         </p>
-        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '44em', margin: '0 0 40px' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '44em', margin: '0 0 40px' }}>
           Once your 32 lines are measured, the real work begins — <b style={{ color: CREAM, fontWeight: 600 }}>precise surgery on the system.</b>{" "}
           We read how the lines interact, then intervene with intent: <b style={{ color: CREAM, fontWeight: 600 }}>fortify and sharpen the strengths</b> that
           carry you, and <b style={{ color: CREAM, fontWeight: 600 }}>patch, route around, or dismantle the weaknesses</b> quietly sabotaging your outcomes.
@@ -838,7 +838,7 @@ function DialSection() {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
           Thirty-two lines on <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>one dial</em>.
         </h2>
-        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
           Every intelligence, plotted in its honest mode — and read as one aggregate. The <b style={{ color: CREAM, fontWeight: 600 }}>independent axes</b> are ringed; they're the lines a single IQ score never even sees. Hover any point to read it — this is the map you walk away with.
         </p>
 
@@ -970,7 +970,7 @@ function ProcessSection() {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
           Speak. Prove. <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>Match.</em>
         </h2>
-        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
           Two phases and a network. It starts loose and fast, then hardens into a verified aggregate — and a use for it.
         </p>
         <div className="grid gap-[clamp(20px,3vw,40px)] mt-[clamp(24px,3vw,44px)]" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
@@ -1005,16 +1005,16 @@ function EvidenceSection() {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
           Evidence-based, or it's <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>worthless</em>.
         </h2>
-        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
           An aggregate score is only worth having if it's honest. Here's what keeps ours from becoming the hype it's surrounded by.
         </p>
         <div className="grid gap-[clamp(16px,2.5vw,26px)] mt-[clamp(24px,3vw,44px)]" style={{ gridTemplateColumns: 'repeat(2,1fr)' }}>
           {EVIDENCE.map((e) => (
             <div key={e.t} className="rounded-[6px] transition-all duration-200 hover:-translate-y-[2px]" style={{ background: `linear-gradient(180deg,${INK2},${INK})`, border: `1px solid ${LINE_C}`, padding: '24px 26px' }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', marginBottom: '8px', color: CREAM }}>
-                <span style={{ color: CHAMPAGNE, fontSize: '13px', marginRight: '9px', verticalAlign: 'middle' }}>◇</span>{e.t}
+                <span style={{ color: CHAMPAGNE, fontSize: '14px', marginRight: '9px', verticalAlign: 'middle' }}>◇</span>{e.t}
               </div>
-              <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>{e.d}</div>
+              <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>{e.d}</div>
             </div>
           ))}
         </div>
@@ -1041,7 +1041,7 @@ function SamplesSection() {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
           More capable. <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>Rarer.</em>
         </h2>
-        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
           The rarest valuable minds aren't spiked in one thing and hollow everywhere else. They're elevated across many independent lines at once — a combination that's both hard to find and genuinely powerful.
         </p>
         <div className="grid gap-[clamp(16px,2.5vw,26px)] mt-[clamp(24px,3vw,40px)]" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
@@ -1049,7 +1049,7 @@ function SamplesSection() {
             <div key={s.rarity} className="rounded-[6px] text-center" style={{ border: `1px solid ${LINE_C}`, padding: '26px', background: `radial-gradient(420px 200px at 50% 0%, rgba(224,198,140,0.06), transparent 70%), ${INK2}` }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(30px,4.5vw,44px)', lineHeight: 1, background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.rarity}</div>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: CREAM, margin: '14px 0 8px' }}>{s.shape}</div>
-              <div style={{ color: CREAM2, fontSize: '13px', lineHeight: 1.55 }}>{s.desc}</div>
+              <div style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.55 }}>{s.desc}</div>
             </div>
           ))}
         </div>
@@ -1134,7 +1134,7 @@ function ServicePillars() {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
           Maximize. Shield. <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>Connect.</em>
         </h2>
-        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em', marginBottom: 'clamp(32px,4vw,56px)' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em', marginBottom: 'clamp(32px,4vw,56px)' }}>
           Knowing your 32-line architecture is the beginning. What matters is what you do with it — and what it does for you when properly deployed.
         </p>
 
@@ -1145,7 +1145,7 @@ function ServicePillars() {
             <ClusterGlyph />
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: CHAMPAGNE, margin: '10px 0 12px' }}>01 · Maximize</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Strength Cluster Optimization</div>
-            <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>
+            <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>
               <p style={{ marginBottom: '12px' }}>Your highest lines form <b style={{ color: CREAM, fontWeight: 600 }}>strength clusters</b> — groups that amplify each other when used together. We identify these clusters and show you how to deploy them toward your stated goals.</p>
               <p style={{ marginBottom: '12px' }}>The <b style={{ color: CREAM, fontWeight: 600 }}>second-order effects</b> of combining your top lines optimally are often more powerful than any individual strength. Strategic × Interpersonal doesn't just mean "good at planning and people" — it means you can architect social outcomes most people can't even see.</p>
               <p>A panel of independent AIs analyzes your specific cluster patterns and generates prescriptions for career decisions, relationship dynamics, creative output, and long-term planning.</p>
@@ -1157,7 +1157,7 @@ function ServicePillars() {
             <ShieldGlyph />
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: '#C85C44', margin: '10px 0 12px' }}>02 · Shield</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Weakness Cluster Protection</div>
-            <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>
+            <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>
               <p style={{ marginBottom: '12px' }}>Your lowest lines aren't just "areas for improvement" — they're <b style={{ color: CREAM, fontWeight: 600 }}>structural vulnerabilities</b> that can destroy everything your strengths have built. One weak line can collapse the entire system geometrically, not additively.</p>
               <p style={{ marginBottom: '12px' }}>We assess the <b style={{ color: CREAM, fontWeight: 600 }}>likelihood</b> of your weakness clusters threatening the system, then prescribe: identify, shield with structural protections, bolster through targeted training (permanent gains, per the research), and insure against worst-case scenarios.</p>
               <p>The evidence shows intelligence lines can be trained. The gains persist across decades. Your weaknesses are not destiny — but unattended, they control the outcome.</p>
@@ -1169,7 +1169,7 @@ function ServicePillars() {
             <MatchGlyph />
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: JADE, margin: '10px 0 12px' }}>03 · Connect</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Complementary Relationship Matching</div>
-            <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>
+            <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>
               <p style={{ marginBottom: '12px' }}>We match you with members whose <b style={{ color: CREAM, fontWeight: 600 }}>strength clusters align with your weakness clusters</b> — and vice versa. By forming friendships and professional relationships with these people, their natural strengths begin to elevate your weak areas through proximity and collaboration.</p>
               <p style={{ marginBottom: '12px' }}>The relationship itself is the intervention. Sustained connection with someone strong in your weak area produces measurable, permanent improvement in that line — not through formal training, but through friendship and shared problem-solving.</p>
               <p>We offer members the opportunity to reach out, connect, and build genuine relationships as friends, colleagues, and accountability partners.</p>
@@ -1199,7 +1199,7 @@ function FinalCTA() {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 14px' }}>
           Discover your architecture. <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>Deploy it.</em>
         </h2>
-        <p style={{ color: CREAM2, fontSize: 'clamp(14px,1.5vw,16px)', lineHeight: 1.6, maxWidth: '36em', margin: '0 auto 26px' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.5vw,16px)', lineHeight: 1.6, maxWidth: '36em', margin: '0 auto 26px' }}>
           Start with your voice. Verify with evidence. Maximize your strength clusters. Shield your vulnerabilities. Connect with minds that complete yours.
         </p>
         <div className="flex gap-[14px] flex-wrap justify-center">
@@ -1258,7 +1258,7 @@ function ResearchLibrarySection() {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
           First of its kind — in <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>kind</em>, not size.
         </h2>
-        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '46em' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '46em' }}>
           Raw databases like PubMed hold millions of records — that isn't this, and we won't pretend it is. As a single, curated, plain-language library that rates every regimen <b style={{ color: CREAM, fontWeight: 600 }}>honestly</b> — the myths kept in and labeled, not hidden — sourced from around the world and tied to your 32 lines, we can't point to another one like it. Arguably first-of-its-kind in <b style={{ color: CREAM, fontWeight: 600 }}>kind</b>, not in raw count. That candor is the whole moat: it can't be faked, and the companies selling the debunked therapies can't copy it.
         </p>
 
@@ -1277,9 +1277,9 @@ function ResearchLibrarySection() {
           {LIB_POINTS.map((p) => (
             <div key={p.t} className="rounded-[6px]" style={{ background: `linear-gradient(180deg,${INK2},${INK})`, border: `1px solid ${LINE_C}`, padding: '24px 26px' }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', marginBottom: '8px', color: CREAM }}>
-                <span style={{ color: CHAMPAGNE, fontSize: '13px', marginRight: '9px', verticalAlign: 'middle' }}>◇</span>{p.t}
+                <span style={{ color: CHAMPAGNE, fontSize: '14px', marginRight: '9px', verticalAlign: 'middle' }}>◇</span>{p.t}
               </div>
-              <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>{p.d}</div>
+              <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>{p.d}</div>
             </div>
           ))}
         </div>
@@ -1313,7 +1313,7 @@ function CompanionSection() {
         <p style={{ color: CREAM, fontSize: 'clamp(16px,1.9vw,20px)', lineHeight: 1.6, maxWidth: '46em', fontStyle: 'italic', marginBottom: '14px' }}>
           Do it solo for a private read, or bring your partner or best friend for a sharper, funnier one.
         </p>
-        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '46em' }}>
+        <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '46em' }}>
           It isn't just more fun: the science says a person who knows you well reads your <b style={{ color: CREAM, fontWeight: 600 }}>outward</b> lines — humor, charm, influence, how you command a room — more accurately than you read yourself, while <b style={{ color: CREAM, fontWeight: 600 }}>you</b> stay the better judge of the inward ones. Any high-acquaintance person works — partner, best friend, sibling, business partner — never spouse-only, and solo is always the full experience. We keep both answers separate, score the gap, and the reveal — <i>"you rate your humor how high?"</i> — is the best part.
         </p>
         <div className="grid gap-[clamp(16px,2.5vw,26px)] mt-[clamp(24px,3vw,40px)]" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
@@ -1324,7 +1324,7 @@ function CompanionSection() {
           ].map((c) => (
             <div key={c.t} className="rounded-[6px]" style={{ border: `1px solid ${LINE_C}`, padding: '26px 24px', background: `radial-gradient(300px 180px at 50% 0%, rgba(224,198,140,0.05), transparent 70%), ${INK}` }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', color: CREAM, marginBottom: '10px' }}>{c.t}</div>
-              <div style={{ color: CREAM2, fontSize: '13.5px', lineHeight: 1.6 }}>{c.d}</div>
+              <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>{c.d}</div>
             </div>
           ))}
         </div>

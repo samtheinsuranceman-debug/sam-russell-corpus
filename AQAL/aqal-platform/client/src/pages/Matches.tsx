@@ -13,8 +13,8 @@ import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 
 const INK = "#141009";
 const CREAM = "#F1EADB";
-const CREAM2 = "#C4B89F";
-const MUTED = "#867A66";
+const CREAM2 = "#CFC5B0";
+const MUTED = "#9C8F79";
 const LINE_C = "rgba(241,234,219,0.10)";
 const CHAMPAGNE = "#E0C68C";
 const JADE = "#9BC0B2";
@@ -59,7 +59,7 @@ export default function Matches() {
         <h1 style={{ ...serif, fontSize: "clamp(30px,5vw,52px)", lineHeight: 1.04, color: CREAM, margin: "0 0 12px" }}>
           Minds that complete yours.
         </h1>
-        <p style={{ color: CREAM2, fontSize: "clamp(14px,1.6vw,17px)", lineHeight: 1.65, maxWidth: "44em", marginBottom: "34px" }}>
+        <p style={{ color: CREAM2, fontSize: "clamp(15px,1.6vw,17px)", lineHeight: 1.65, maxWidth: "44em", marginBottom: "34px" }}>
           Scored across all measured lines: how much of the full spectrum you cover <i>together</i>, how dramatically
           each of you fills the other&rsquo;s gaps, the common ground you can actually relate on, and the mentorship
           headroom in both directions. Only quality matches are shown. A connection request reveals nothing — a{" "}

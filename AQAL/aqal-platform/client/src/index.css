@@ -82,7 +82,9 @@
 
   /* Muted */
   --muted: oklch(0.20 0.02 55);
-  --muted-foreground: oklch(0.55 0.04 65);
+  /* Lightened from 0.55 → readable secondary text on the dark ground; every
+     text-muted-foreground/NN opacity variant inherits the lift. */
+  --muted-foreground: oklch(0.68 0.04 65);
 
   /* Accent: Sage green */
   --accent: oklch(0.68 0.08 165);
@@ -122,6 +124,9 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Global type bump: every rem-based (Tailwind) size scales up ~6% for
+       readability — the audience skews 40+, and the ground is dark. */
+    font-size: 17px;
   }
   [id] {
     scroll-margin-top: 5rem;
