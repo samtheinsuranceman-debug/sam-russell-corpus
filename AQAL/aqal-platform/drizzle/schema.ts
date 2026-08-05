@@ -482,3 +482,28 @@ export const connectionRequests = mysqlTable("connection_requests", {
 
 export type ConnectionRequest = typeof connectionRequests.$inferSelect;
 export type InsertConnectionRequest = typeof connectionRequests.$inferInsert;
+
+// ============================================================
+// DIRECT MESSAGES — member-to-member, connections only
+// ============================================================
+// Phase-2 messaging (schematic §3): 1-to-1 text + ephemeral attachments between
+// mutually-accepted connections. Text persists; attachment FILES are purged from
+// storage 72h after upload (attachmentExpired flips true, name kept for the
+// "[Attachment expired]" placeholder). No staff access; no third-party sharing.
+export const directMessages = mysqlTable("direct_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  fromUserId: int("fromUserId").notNull(),
+  toUserId: int("toUserId").notNull(),
+  content: text("content"), // nullable when attachment-only
+  attachmentKey: varchar("attachmentKey", { length: 512 }),
+  attachmentName: varchar("attachmentName", { length: 255 }),
+  attachmentType: varchar("attachmentType", { length: 100 }), // MIME
+  attachmentSize: int("attachmentSize"), // bytes
+  attachmentExpiresAt: timestamp("attachmentExpiresAt"), // upload + 72h
+  attachmentExpired: boolean("attachmentExpired").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  readAt: timestamp("readAt"),
+});
+
+export type DirectMessage = typeof directMessages.$inferSelect;
+export type InsertDirectMessage = typeof directMessages.$inferInsert;

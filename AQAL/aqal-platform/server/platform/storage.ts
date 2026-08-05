@@ -10,7 +10,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   storageProvider,
@@ -88,6 +88,29 @@ export async function storageGetSignedUrl(relKey: string): Promise<string> {
     return forgeSignedUrl(relKey);
   }
   return `/local-storage/${key}`;
+}
+
+// Permanent deletion — used by the 72-hour attachment purge. Best-effort: a
+// missing object is success (already gone), and forge has no delete API so we
+// log and continue (forge is a legacy path being migrated off).
+export async function storageDelete(relKey: string): Promise<boolean> {
+  const provider = storageProvider();
+  const key = relKey.replace(/^\/+/, "");
+  try {
+    if (provider === "s3") {
+      await s3().send(new DeleteObjectCommand({ Bucket: S3_BUCKET, Key: key }));
+      return true;
+    }
+    if (provider === "forge") {
+      console.warn(`[storage] forge provider has no delete API — cannot purge ${key}`);
+      return false;
+    }
+    await fs.unlink(path.join(LOCAL_DIR, key)).catch(() => {});
+    return true;
+  } catch (err) {
+    console.error(`[storage] delete failed for ${key}:`, err instanceof Error ? err.message : err);
+    return false;
+  }
 }
 
 export const LOCAL_STORAGE_DIR = LOCAL_DIR;

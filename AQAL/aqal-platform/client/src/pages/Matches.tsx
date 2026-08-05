@@ -114,7 +114,10 @@ export default function Matches() {
             {data.connections.accepted.map((c) => (
               <div key={c.userId} className="flex items-center justify-between gap-3 py-2 flex-wrap">
                 <span style={{ color: CREAM, fontSize: "15px" }}>{c.name}</span>
-                {c.email && <a href={`mailto:${c.email}`} style={{ ...mono, fontSize: "12px", color: JADE }}>{c.email}</a>}
+                <span className="flex items-center gap-3">
+                  {c.email && <a href={`mailto:${c.email}`} style={{ ...mono, fontSize: "12px", color: JADE }}>{c.email}</a>}
+                  <Link href="/messages" style={{ ...mono, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase", color: CHAMPAGNE }}>Message →</Link>
+                </span>
               </div>
             ))}
           </div>
@@ -157,10 +160,10 @@ export default function Matches() {
                       )}
                     </div>
                     {accepted ? (
-                      <a href={accepted.email ? `mailto:${accepted.email}` : undefined}
+                      <Link href="/messages"
                         style={{ ...mono, fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", color: JADE }}>
-                        Connected{accepted.email ? ` · ${accepted.email}` : ""}
-                      </a>
+                        Connected · Message →
+                      </Link>
                     ) : incoming ? (
                       <button onClick={() => respond.mutate({ requestId: incoming.requestId, accept: true })}
                         style={{ ...mono, fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", padding: "10px 16px", background: CHAMPAGNE, color: INK, border: 0, borderRadius: "4px", cursor: "pointer", fontWeight: 600 }}>

@@ -27,6 +27,7 @@ import {
 import { storagePut, storageGetSignedUrl } from "./platform/storage";
 import { getFreshMatches, requestConnection, respondToConnection, getConnectionState } from "./matching";
 import { matchTier } from "@shared/matching";
+import { sendMessage, getThread, listThreads, ATTACHMENT_TTL_HOURS } from "./messaging";
 import { runPanel, panelSize, panelDevelopers } from "./platform/panel";
 import { consensusScores } from "./scoring/consensus";
 import { verifyClaim } from "./platform/verify";
@@ -2069,6 +2070,44 @@ CRITICAL RULES:
         const ok = await respondToConnection(ctx.user.id, input.requestId, input.accept);
         if (ok) await recordEvent({ type: input.accept ? "connection_accepted" : "connection_declined", userId: ctx.user.id, meta: { requestId: input.requestId } });
         return { ok };
+      }),
+  }),
+
+  // ── MESSAGING — connections-only text + ephemeral attachments (§3–§4) ─────
+  // Poll-based (Phase 2). Attachment files purge 72h after upload; text stays.
+  messaging: router({
+    ttlHours: publicProcedure.query(() => ATTACHMENT_TTL_HOURS),
+
+    threads: protectedProcedure.query(({ ctx }) => listThreads(ctx.user.id)),
+
+    thread: protectedProcedure
+      .input(z.object({ otherUserId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        const msgs = await getThread(ctx.user.id, input.otherUserId);
+        if (msgs === null) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "You can only message members you're connected with." });
+        }
+        return msgs;
+      }),
+
+    send: protectedProcedure
+      .input(z.object({
+        toUserId: z.number().int().positive(),
+        content: z.string().max(10_000).optional(),
+        attachment: z.object({
+          base64: z.string().max(45_000_000), // ~33MB raw within the 50MB body limit
+          name: z.string().max(255),
+          type: z.string().max(100),
+        }).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const res = await sendMessage(ctx.user.id, input.toUserId, {
+          content: input.content,
+          attachment: input.attachment,
+        });
+        if (!res.ok) throw new TRPCError({ code: "BAD_REQUEST", message: res.error });
+        await recordEvent({ type: "message_sent", userId: ctx.user.id, meta: { toUserId: input.toUserId, hasAttachment: !!input.attachment } });
+        return { ok: true, id: res.id };
       }),
   }),
 });

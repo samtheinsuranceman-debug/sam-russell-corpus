@@ -134,6 +134,13 @@
       "when": 1785946874772,
       "tag": "0018_zippy_frank_castle",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1785947244956,
+      "tag": "0019_funny_tattoo",
+      "breakpoints": true
     }
   ]
 }
