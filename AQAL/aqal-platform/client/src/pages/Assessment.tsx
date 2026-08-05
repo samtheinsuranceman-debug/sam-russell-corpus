@@ -2809,6 +2809,36 @@ export default function Assessment() {
             </div>
           )}
 
+          {/* PACING BANNER — every 3rd question, large, at the bottom of the
+              screen. 27 questions in one sitting is a genuine brain drain:
+              performance degrades as cognitive fatigue builds, which corrupts
+              the very signal being measured. The recommended protocol is 2-3
+              questions a day, 10-20 minutes each, across 2-3 weeks. */}
+          {(currentQuestion + 1) % 3 === 0 && currentQuestion < TOTAL_QUESTIONS - 1 && (
+            <motion.div
+              key={`pace-${currentQuestion}`}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+              className="mt-8 w-full max-w-2xl mx-auto rounded-2xl border border-accent/30 bg-accent/[0.06] px-6 py-5 text-center"
+            >
+              <p className="text-[0.62rem] uppercase tracking-[0.2em] text-accent/80 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Pace yourself — this is by design
+              </p>
+              <p className="text-base sm:text-lg text-foreground/90 leading-relaxed font-medium">
+                You&rsquo;re moving muscles in your brain you may not have used in fifty years. Doing all 27 questions
+                in one sitting is a genuine <span className="text-accent">brain drain</span> — cognitive fatigue sets in
+                and your later answers measure your exhaustion, not your mind.
+              </p>
+              <p className="text-sm sm:text-base text-foreground/75 leading-relaxed mt-2">
+                For your best results: <span className="text-accent font-semibold">answer 2&ndash;3 questions a day,
+                10&ndash;20 minutes each — about 30&ndash;40 minutes daily, for 2&ndash;3 weeks.</span> Come back only
+                when you&rsquo;re alert, awake, and have your full faculties. Your progress saves automatically —
+                stopping here costs you nothing.
+              </p>
+            </motion.div>
+          )}
+
           {/* Navigation */}
           <div className="mt-10 flex items-center gap-4">
             <Button
