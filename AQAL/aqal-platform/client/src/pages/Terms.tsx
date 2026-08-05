@@ -106,9 +106,11 @@ export default function Terms() {
                 whom, when, or how often) to any third party for any purpose.
               </p>
               <p>
-                <strong>Member responsibility.</strong> Messaging is available only between members who have mutually
-                accepted a connection. You are responsible for the content you share; sharing illegal content,
-                harassment, or spam results in immediate account termination.
+                <strong>Member responsibility and fair use.</strong> Messaging is available only between members who
+                have mutually accepted a connection. To keep the deletion cycle reliable for everyone, file sharing is
+                limited to 250 MB and 50 files per member in any rolling 48-hour period. You are responsible for the
+                content you share; sharing illegal content, harassment, or spam results in immediate account
+                termination.
               </p>
             </section>
 

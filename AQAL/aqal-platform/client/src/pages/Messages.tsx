@@ -59,6 +59,7 @@ export default function Messages() {
   const [draft, setDraft] = useState("");
   const [pendingFile, setPendingFile] = useState<{ base64: string; name: string; type: string; size: number } | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
+  const photoInput = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const threads = trpc.messaging.threads.useQuery(undefined, {
@@ -201,7 +202,15 @@ export default function Messages() {
                   </div>
                 )}
                 <div className="flex gap-2 items-end">
-                  <button onClick={() => fileInput.current?.click()} title="Attach a file (image, PDF, voice note, short video)"
+                  {/* Photos — image/* input surfaces the native photo-library
+                      permission prompt on iOS/Android the first time. */}
+                  <button onClick={() => photoInput.current?.click()} title="Share a photo from your library"
+                    style={{ ...mono, fontSize: "16px", background: "transparent", border: `1px solid ${LINE_C}`, borderRadius: "8px", color: CREAM2, padding: "10px 12px", cursor: "pointer", flex: "none" }}>
+                    🖼
+                  </button>
+                  <input ref={photoInput} type="file" hidden accept="image/*"
+                    onChange={(e) => { pickFile(e.target.files?.[0] ?? null); e.target.value = ""; }} />
+                  <button onClick={() => fileInput.current?.click()} title="Attach a file (PDF, document, voice note, short video)"
                     style={{ ...mono, fontSize: "16px", background: "transparent", border: `1px solid ${LINE_C}`, borderRadius: "8px", color: CREAM2, padding: "10px 12px", cursor: "pointer", flex: "none" }}>
                     📎
                   </button>
@@ -218,7 +227,8 @@ export default function Messages() {
                   </button>
                 </div>
                 <div style={{ ...mono, fontSize: "9.5px", color: MUTED, marginTop: "7px" }}>
-                  Images ≤10MB · documents ≤25MB · voice ≤5MB · video ≤30MB · all files wiped after 72 hours · conversations never read by staff
+                  Images ≤10MB · documents ≤25MB · voice ≤5MB · video ≤30MB · up to 250MB &amp; 50 files per 48 hours ·
+                  all files wiped after 72 hours · conversations never read by staff
                 </div>
               </div>
             </div>

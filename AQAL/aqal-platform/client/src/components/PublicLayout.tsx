@@ -1,5 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { beginAuth } from "@/lib/agreement";
+import { trpc } from "@/lib/trpc";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -28,12 +29,34 @@ const navLinks: NavItem[] = [
     { href: "/archetypes", label: "Intelligence Archetypes" },
     { href: "/verification", label: "Verification Ledger" },
   ]},
+  { label: "Network", children: [
+    { href: "/matches", label: "Your Matches" },
+    { href: "/messages", label: "Messages" },
+  ]},
   { href: "/leaderboard", label: "Leaderboard" },
 ];
 
 const flatNavLinks = navLinks.flatMap((item) =>
   'children' in item ? item.children : [item]
 );
+
+// Unread-messages chip — polls lightly; renders nothing when inbox is clear.
+function UnreadMessagesBadge() {
+  const q = trpc.messaging.threads.useQuery(undefined, {
+    refetchInterval: 60_000,
+    retry: false,
+    staleTime: 30_000,
+  });
+  const unread = (q.data ?? []).reduce((s, t) => s + (t.unread || 0), 0);
+  if (!unread) return null;
+  return (
+    <Link href="/messages" title={`${unread} unread message${unread === 1 ? "" : "s"}`}>
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-sm border border-primary/25 text-primary text-xs font-mono hover:bg-primary/5 cursor-pointer">
+        ✉ {unread}
+      </span>
+    </Link>
+  );
+}
 
 export function PublicHeader() {
   const { user, loading } = useAuth();
@@ -98,16 +121,19 @@ export function PublicHeader() {
             {loading ? (
               <div className="w-16 h-8 rounded-sm bg-muted/30 animate-pulse" />
             ) : user ? (
-              <Link href="/portal">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-primary/20 text-primary hover:bg-primary/5 gap-2 rounded-sm"
-                >
-                  <User className="w-3.5 h-3.5" />
-                  {user.name?.split(" ")[0] || "Dashboard"}
-                </Button>
-              </Link>
+              <>
+                <UnreadMessagesBadge />
+                <Link href="/portal">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-primary/20 text-primary hover:bg-primary/5 gap-2 rounded-sm"
+                  >
+                    <User className="w-3.5 h-3.5" />
+                    {user.name?.split(" ")[0] || "Dashboard"}
+                  </Button>
+                </Link>
+              </>
             ) : (
               <Button
                 onClick={() => (beginAuth())}

@@ -44,6 +44,31 @@ export function validateAttachment(mime: string, sizeBytes: number): { ok: true;
   return { ok: true, kind: rule.kind };
 }
 
+// ── Per-member upload quota (rolling 48h) ─────────────────────────────────
+// Bounds worst-case storage so the wipe cycle can always keep up: even if every
+// member maxed the quota, storage tops out at members × 250MB for ≤48h — and
+// real usage is ~1% of that. attachmentSize survives the purge (only the file
+// and key are deleted), so the quota can't be reset by waiting for the wipe...
+// which doesn't matter anyway, because the window is time-based.
+export const UPLOAD_WINDOW_HOURS = 48;
+export const UPLOAD_QUOTA_BYTES = 250 * 1024 * 1024; // 250 MB per member per 48h
+export const UPLOAD_QUOTA_FILES = 50; // and at most 50 files per 48h
+
+export function checkUploadQuota(
+  usedBytes: number,
+  usedFiles: number,
+  newBytes: number,
+): { ok: true } | { ok: false; error: string } {
+  if (usedFiles >= UPLOAD_QUOTA_FILES) {
+    return { ok: false, error: `You've shared ${UPLOAD_QUOTA_FILES} files in the last ${UPLOAD_WINDOW_HOURS} hours — that's the cap. It rolls off as older uploads age out.` };
+  }
+  if (usedBytes + newBytes > UPLOAD_QUOTA_BYTES) {
+    const leftMb = Math.max(0, Math.floor((UPLOAD_QUOTA_BYTES - usedBytes) / (1024 * 1024)));
+    return { ok: false, error: `That file would exceed your ${Math.round(UPLOAD_QUOTA_BYTES / (1024 * 1024))} MB / ${UPLOAD_WINDOW_HOURS}-hour sharing allowance (about ${leftMb} MB left right now). It rolls off as older uploads age out.` };
+  }
+  return { ok: true };
+}
+
 // Mutually-accepted connection = allowed to message. The whole gate in one query.
 export async function areConnected(a: number, b: number): Promise<boolean> {
   const db = await getDb();
@@ -90,6 +115,18 @@ export async function sendMessage(
     const buf = Buffer.from(input.attachment.base64, "base64");
     const check = validateAttachment(input.attachment.type, buf.length);
     if (!check.ok) return { ok: false, error: check.error };
+
+    // Rolling 48h quota — sum of everything this member uploaded in the window.
+    const windowStart = new Date(Date.now() - UPLOAD_WINDOW_HOURS * 3600 * 1000);
+    const [usage] = await db
+      .select({
+        bytes: sql<number>`COALESCE(SUM(${directMessages.attachmentSize}), 0)`,
+        files: sql<number>`COUNT(${directMessages.attachmentSize})`,
+      })
+      .from(directMessages)
+      .where(and(eq(directMessages.fromUserId, fromUserId), sql`${directMessages.attachmentSize} IS NOT NULL`, sql`${directMessages.createdAt} > ${windowStart}`));
+    const quota = checkUploadQuota(Number(usage?.bytes) || 0, Number(usage?.files) || 0, buf.length);
+    if (!quota.ok) return { ok: false, error: quota.error };
     const safeName = input.attachment.name.replace(/[^\w.\-]+/g, "_").slice(0, 120) || "file";
     const pair = [fromUserId, toUserId].sort((x, y) => x - y).join("-");
     const { key } = await storagePut(`messages/${pair}/${safeName}`, buf, input.attachment.type);
