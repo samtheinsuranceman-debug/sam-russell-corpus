@@ -9,6 +9,8 @@ import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { trpc } from "@/lib/trpc";
 import { requireAgreement } from "@/lib/agreement";
 import { useHeroVariant, currentHeroId } from "@/lib/heroExperiment";
+import { ARCHETYPES } from "./archetypesData";
+import { keystoneForLine } from "@shared/keystonePractices";
 
 // ============================================================
 // AQAL HOME — Merged: Viral hook + Claude's Atelier dial UI
@@ -142,6 +144,11 @@ function FreeFoundingAccess() {
         <p style={{ color: CREAM2, fontSize: 'clamp(12px,1.3vw,14px)', lineHeight: 1.55, maxWidth: '34em', margin: '0 auto 8px', opacity: 0.85 }}>
           Signing up <b style={{ color: CREAM }}>reserves</b> your spot for 14 days. <b style={{ color: CHAMPAGNE }}>Completing
           the assessment is what claims it — for life.</b> Membership is earned by finishing.
+        </p>
+        <p style={{ color: CREAM2, fontSize: 'clamp(12px,1.3vw,14px)', lineHeight: 1.55, maxWidth: '36em', margin: '0 auto 8px', opacity: 0.85 }}>
+          This forum is for <b style={{ color: CREAM }}>intentional people</b> — the ones who keep their dreams alive with
+          disciplined daily behavior instead of casual wishing. If that&rsquo;s you: welcome, founding member. And when it
+          delivers for you, share it with the people you love — that&rsquo;s how this network gets built.
         </p>
         {remaining !== null && cap > 0 && (
           <div style={{ margin: '4px 0 20px' }}>
@@ -315,7 +322,7 @@ function HeroSection() {
               })}
               {/* Center text */}
               <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.24em' }} fill={CREAM2} x={CX} y={CY - 34} textAnchor="middle">AGGREGATE · SAMPLE</text>
-              <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY + 4} textAnchor="middle" fontSize="40">1 in 5,000</text>
+              <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY + 4} textAnchor="middle" fontSize="34">32 lines</text>
               <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 24} textAnchor="middle">CAPABILITY {aggregate} · 32 LINES · ~6.5 EFF. DIM</text>
             </svg>
           </div>
@@ -328,6 +335,164 @@ function HeroSection() {
           .aq-hero-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
+    </section>
+  );
+}
+
+// ============================================================
+// FOUNDER STORY + INSURANCE THESIS — the section that screams.
+// Ember accent (deliberately NOT the house gold) so the eye stops here.
+// ============================================================
+const EMBER = "#E2604A";
+const EMBER_D = "#C85C44";
+
+function WeakestLinkDiagram() {
+  // A chain of strong links with one failing link — the whole thesis in one glance.
+  return (
+    <svg viewBox="0 0 560 84" style={{ width: '100%', maxWidth: '560px', display: 'block', margin: '0 auto' }} aria-label="A chain is only as strong as its weakest link">
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => {
+        const weak = i === 4;
+        return (
+          <g key={i} transform={`translate(${20 + i * 78}, 42)`}>
+            <ellipse rx="34" ry="22" fill="none" stroke={weak ? EMBER : CHAMPAGNE} strokeWidth={weak ? 3 : 2} opacity={weak ? 1 : 0.55}
+              strokeDasharray={weak ? "6 5" : "none"} />
+            {weak && <text x="0" y="-32" textAnchor="middle" fill={EMBER} fontSize="11" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.1em">THE ONE THAT SNAPS</text>}
+          </g>
+        );
+      })}
+      <text x="280" y="80" textAnchor="middle" fill={CREAM2} fontSize="11" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.08em" opacity="0.7">
+        YOUR OUTCOMES RUN AT THE STRENGTH OF YOUR WEAKEST LINE — NOT YOUR STRONGEST
+      </text>
+    </svg>
+  );
+}
+
+function ThirtyDayLoopDiagram() {
+  // The monthly engineering cycle: Assess → Prescribe → Practice → Track → Re-map.
+  const steps = ["ASSESS", "PRESCRIBE", "PRACTICE", "TRACK", "RE-MAP"];
+  return (
+    <svg viewBox="0 0 640 120" style={{ width: '100%', maxWidth: '640px', display: 'block', margin: '0 auto' }} aria-label="The 30-day engineering loop">
+      {steps.map((s, i) => (
+        <g key={s} transform={`translate(${28 + i * 124}, 46)`}>
+          <rect x="-2" y="-20" width="104" height="40" rx="20" fill="none" stroke={CHAMPAGNE} strokeWidth="1.5" opacity="0.75" />
+          <text x="50" y="5" textAnchor="middle" fill={CREAM} fontSize="12" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.08em">{s}</text>
+          {i < steps.length - 1 && <path d={`M 106 0 L 118 0 M 113 -5 L 119 0 L 113 5`} stroke={CHAMPAGNE} strokeWidth="1.5" fill="none" opacity="0.6" />}
+        </g>
+      ))}
+      <path d="M 580 66 Q 610 100 320 104 Q 30 100 40 70" stroke={EMBER} strokeWidth="1.5" fill="none" opacity="0.7" strokeDasharray="4 4" />
+      <text x="320" y="118" textAnchor="middle" fill={CREAM2} fontSize="11" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.08em" opacity="0.8">
+        EVERY 30 DAYS — YOUR MAP UPDATES FROM WHAT YOU ACTUALLY DID
+      </text>
+    </svg>
+  );
+}
+
+function FounderStorySection() {
+  return (
+    <section style={{ background: `linear-gradient(180deg,${INK},${INK2})`, borderTop: `2px solid ${EMBER_D}`, borderBottom: `2px solid ${EMBER_D}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.28em', textTransform: 'uppercase', color: EMBER, marginBottom: '18px' }}>
+          ⚠ From the founder — read this before you start
+        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(30px,5vw,54px)', lineHeight: 1.06, color: CREAM, margin: '0 0 22px' }}>
+          My strengths never failed me.<br />
+          <span style={{ color: EMBER }}>My unmanaged weaknesses cost me fortunes.</span>
+        </p>
+        <div style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.7, maxWidth: '46em' }}>
+          <p style={{ margin: '0 0 16px' }}>
+            I test exceptionally high across almost every line of intelligence — and it didn&rsquo;t save me. I followed
+            the best-selling advice of the strengths movement: <em>maximize your strengths, mostly ignore your
+            weaknesses.</em> It gave me an unbalanced way of navigating the world. I fell flat on my face a dozen times —
+            money, romantic relationships, friendships — and it never mattered how high, strong, or integrated my
+            strength clusters were. <b style={{ color: CREAM }}>They were null and void the moment a blind-spotted weak
+            cluster activated at the exact wrong time, in the exact wrong place, with the exact wrong people.</b>
+          </p>
+          <div style={{ margin: '26px 0' }}><WeakestLinkDiagram /></div>
+          <p style={{ margin: '0 0 16px' }}>
+            This platform is <b style={{ color: CREAM }}>insurance for your future.</b> It doesn&rsquo;t matter how fast
+            you&rsquo;re driving toward your dreams if you run out of gas in the middle of a desert — or one careless,
+            multitasked mistake sets you back five years. So we fit the right traction tires for your specific road. We
+            fasten seat belts around your weaknesses so they can&rsquo;t move against you. We install airbags between you
+            and your goals, so when the worst happens you shake it off and get back to business instead of starting over.
+          </p>
+          <p style={{ margin: '0 0 16px' }}>
+            Consider: nearly <b style={{ color: CREAM }}>half of first marriages end</b> — yet almost no one proactively
+            spends time, attention, or money limiting their risk of that failure. Couples slide into corrosive
+            communication patterns and neither brain registers the red flag, because when we&rsquo;re sliding toward
+            collapse we are neurologically inclined to miss our own downward trajectory. The fix isn&rsquo;t
+            vigilance-by-willpower. It&rsquo;s a <b style={{ color: CREAM }}>system</b>: identify every weakness, tease
+            them apart, find the <span style={{ color: EMBER, fontWeight: 600 }}>Master Weakness</span> — the one that
+            holds the others in place — and neutralize it first, with clinically studied practices, on a monthly cycle.
+          </p>
+          <div style={{ margin: '26px 0' }}><ThirtyDayLoopDiagram /></div>
+          <p style={{ margin: '0 0 0' }}>
+            Every 30 days you get <b style={{ color: CREAM }}>5&ndash;7 peer-reviewed practices</b> matched to your
+            profile — you choose which become habits — and your next tracker report re-maps your profile from the
+            frequency, duration, and intensity of what you actually did. Watch the shape of your own mind change,
+            month over month. <b style={{ color: EMBER }}>That is outcome engineering.</b>
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// ARCHETYPE SHOWCASE — real documented patterns + the prescribed fix
+// ============================================================
+function ArchetypeShowcaseSection() {
+  const picks = [
+    ARCHETYPES.find((a) => a.name.includes("Derailed Executive")),
+    ARCHETYPES.find((a) => a.name.includes("Leaky Bucket")),
+    ARCHETYPES.find((a) => a.name.includes("Burned-Out Empath")),
+    ARCHETYPES.find((a) => a.name.includes("Planner Who Never Ships")),
+  ].filter(Boolean) as typeof ARCHETYPES;
+  const firstSentence = (s: string) => { const m = s.match(/^.*?[.!?](\s|$)/); return (m ? m[0] : s).trim(); };
+  return (
+    <section style={{ background: `linear-gradient(180deg,${INK2},${INK})`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
+          240+ documented archetypes · which one is quietly running you?
+        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.06, color: CREAM, margin: '0 0 14px' }}>
+          We don&rsquo;t just name the pattern. We prescribe the fix.
+        </p>
+        <p style={{ color: CREAM2, fontSize: 'clamp(14px,1.6vw,17px)', lineHeight: 1.6, maxWidth: '42em', margin: '0 0 32px' }}>
+          Each archetype below is documented in peer-reviewed research — a strength profile with a specific weakness
+          that predictably sabotages it, and the evidence-based practice that works on the system itself.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: '16px' }}>
+          {picks.map((a) => {
+            const lowLine = a.lowLines?.[0];
+            const rx = lowLine ? keystoneForLine(lowLine) : undefined;
+            return (
+              <div key={a.id} style={{ border: `1px solid ${LINE_C}`, borderRadius: '14px', padding: '20px', background: 'rgba(241,234,219,0.03)' }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '20px', color: CREAM, marginBottom: '10px' }}>{a.name}</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '10px' }}>
+                  {a.highLines.slice(0, 3).map((l) => (
+                    <span key={l} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '999px', border: `1px solid ${CHAMPAGNE}55`, color: CHAMPAGNE }}>{l}</span>
+                  ))}
+                  {a.lowLines.slice(0, 2).map((l) => (
+                    <span key={l} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '999px', border: `1px solid ${EMBER}66`, color: EMBER }}>low {l}</span>
+                  ))}
+                </div>
+                <p style={{ color: CREAM2, fontSize: '13px', lineHeight: 1.55, margin: '0 0 10px' }}>
+                  <span style={{ color: EMBER }}>The threat: </span>{firstSentence(a.untreatedTrajectory)}
+                </p>
+                <p style={{ color: CREAM2, fontSize: '13px', lineHeight: 1.55, margin: 0 }}>
+                  <span style={{ color: CHAMPAGNE }}>The prescription: </span>
+                  {rx ? `${rx.name} — ${rx.evidence.toLowerCase()} evidence.` : firstSentence(a.connectionCase)}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ marginTop: '24px' }}>
+          <Link href="/archetypes" className="no-underline" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: CHAMPAGNE, borderBottom: `1px solid ${CHAMPAGNE}66`, paddingBottom: '2px' }}>
+          See all 240+ archetypes and the research behind them →
+          </Link>
+        </div>
+      </div>
     </section>
   );
 }
@@ -970,13 +1135,13 @@ export default function Home() {
       <PublicHeader />
       <div className="relative z-10">
         <HeroSection />
+        <div data-reveal><FounderStorySection /></div>
         <div data-reveal><FreeFoundingAccess /></div>
         <div data-reveal><ThesisSection /></div>
-        <div data-reveal><DialSection /></div>
+        <div data-reveal><ArchetypeShowcaseSection /></div>
         <div data-reveal><EngineeringSection /></div>
         <div data-reveal><ProcessSection /></div>
         <div data-reveal><CompanionSection /></div>
-        {SHOW_GENERATIONAL_RARITY && <div data-reveal><GenerationSection /></div>}
         <div data-reveal><EvidenceSection /></div>
         <div data-reveal><ResearchLibrarySection /></div>
         <div data-reveal><SamplesSection /></div>

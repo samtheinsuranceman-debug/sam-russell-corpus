@@ -21,11 +21,11 @@ export type HeroVariant = {
 
 export const HERO_VARIANTS: HeroVariant[] = [
   {
-    // Control — the current outcome-framed headline.
+    // Control — the founder-worded outcome headline.
     id: "outcome",
-    lead: "How predictable, protected, and consistent is your mind ",
-    emph: "at getting you what you want?",
-    sub: "Almost no one has ever measured it. We do — then we re-engineer the mind to close the gap.",
+    lead: "How predictable, protected, and effortless is your mind ",
+    emph: "at producing your dreams and outcomes?",
+    sub: "Almost no one has ever measured it. We do — then we engineer the mind to close the gap between where you stand and what you're chasing.",
   },
   {
     // Commitment-elite: finishing is the flex (true — short answers score zero).
@@ -52,7 +52,7 @@ export const HERO_VARIANTS: HeroVariant[] = [
 
 // The one we'd ship if we had to pick without data (used as the static default
 // on any surface that isn't running the experiment).
-export const STRONGEST_HERO_ID = "commitment";
+export const STRONGEST_HERO_ID = "outcome";
 export const strongestHero = () =>
   HERO_VARIANTS.find((v) => v.id === STRONGEST_HERO_ID) ?? HERO_VARIANTS[0];
 

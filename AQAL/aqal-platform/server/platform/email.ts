@@ -115,9 +115,14 @@ export function unfinishedAssessmentEmailHtml(opts: { name?: string; appUrl?: st
       Your progress is saved. You can answer four questions at a time across a week if you want — it still counts.
       The only wrong move is a short answer, because short answers measure nothing.
     </p>
-    <p style="color:#e0c68c;font-size:14px;line-height:1.6;margin:0 0 18px;">
+    <p style="color:#e0c68c;font-size:14px;line-height:1.6;margin:0 0 16px;">
       One thing to know: your signup <b>reserves</b> your founding spot for 14 days — <b>finishing the assessment is
       what locks it in for life</b>. Unclaimed reservations return to the pool.
+    </p>
+    <p style="color:#b9b2a6;font-size:14px;line-height:1.6;margin:0 0 18px;">
+      The math is friendly: <b style="color:#efe9dc;">thirty minutes at lunch, five days a week — about two weeks and
+      it's done.</b> Most people surface more about how their own mind actually works in those ten sittings than in
+      years of guessing at it.
     </p>
     <a href="${cta}" style="display:inline-block;background:#e0c68c;color:#161310;font-family:monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:13px 22px;border-radius:4px;font-weight:600;">Finish your assessment</a>
     <p style="color:#6f6a60;font-size:12px;margin-top:26px;">A one-time reminder because you started AQAL. We never sell your personal information.</p>

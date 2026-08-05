@@ -1524,6 +1524,26 @@ export default function Results() {
               <FullRadarChart scores={allScores} />
             </div>
 
+            {/* Standard on every completed profile: why this map is insurance, and the cycle */}
+            <section className="mb-16 rounded-2xl border-2 border-[#C85C44]/40 bg-[#C85C44]/[0.05] p-7">
+              <p className="text-[0.62rem] uppercase tracking-[0.2em] text-[#E2604A] mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Why this map matters — read once, keep forever
+              </p>
+              <p className="text-sm text-foreground/85 leading-relaxed mb-3">
+                Your strengths were never the risk. <span className="text-[#E2604A] font-medium">Your unmanaged weaknesses
+                are</span> — they activate at the worst time, in the worst place, with the wrong people, and when they do,
+                the height of your strengths won&rsquo;t matter. It doesn&rsquo;t matter how fast you&rsquo;re driving toward
+                your dreams if you run out of gas in the desert. This profile is the insurance work: seat belts around your
+                weak lines, airbags between you and your goals.
+              </p>
+              <p className="text-sm text-foreground/75 leading-relaxed">
+                The cycle from here: every 30 days you&rsquo;ll get <span className="text-foreground">5&ndash;7 peer-reviewed
+                practices</span> matched to this profile — you choose which become habits — and your tracker report re-maps
+                your shape from what you actually did. Neutralize the <span className="text-[#E2604A]">Master Weakness</span>{" "}
+                first (it holds the others in place), and watch the map change month over month.
+              </p>
+            </section>
+
             {/* On-ramp: your two lowest lines → the research, the prescriptions, the network */}
             <StarvedLineOnRamp scores={allScores} />
 
