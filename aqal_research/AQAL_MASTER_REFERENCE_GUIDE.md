@@ -831,3 +831,42 @@ Note: Interventions 26-36 are renumbered duplicates of 15-25 (Perplexity re-sent
 8. Combined cognitive-physical — hits cognition + body
 9. Social cognition training — interpersonal accuracy
 10. Positive psychology — reliable small-to-moderate gains
+
+---
+
+## 13. Perplexity Pass 6: Complete 50-Intervention Master Table with Site Status (August 6, 2026)
+
+### Site Status Key:
+- **Missing** — Not on the site, should be added
+- **Partial/Implied** — Present in spirit but needs explicit naming
+- **Already on site** — Represented, could be strengthened
+
+### Status Breakdown (50 interventions):
+- **Missing:** 33 interventions (66%)
+- **Partial/Implied:** 10 interventions (20%)
+- **Already on site:** 7 interventions (14%)
+
+### Biggest Missing Families:
+1. Social prescribing and community navigation — changes social ecology and access
+2. Attention and digital hygiene — protects cognition, sleep, and deep work
+3. Environment redesign and friction management — makes behavior change durable
+4. Self-compassion, self-affirmation, and meaning — strong emotional/identity effects
+5. Social cognition, conversation, and perspective-taking — improves interpersonal functioning
+6. Community-based outdoor activity — bundles nature, movement, and social contact
+7. Climate-friendly and conservation behavior tools — expands into collective/ecological action
+
+### New Interventions to Add to Ecological Interventions Page (not already there):
+- Peer-support groups (Missing)
+- Diet-pattern interventions (Missing)
+- Morning light + sleep regularization (Partial)
+- Meaning-centered / purpose interventions (Missing)
+- Volunteer service / prosocial action (Missing)
+- Combined movement + sunlight + social contact (Missing)
+- Community-based volunteering with structure (Missing)
+- Acts of kindness / prosocial intervention (Missing)
+- Repetition and substitution (Missing)
+- Concrete instruction / shaping knowledge (Missing)
+- Conservation / ecosystem restoration participation (Missing)
+- Indigenous/local-community-led stewardship (Missing)
+- Long-term physical activity interventions (Missing)
+- Positive behavior change intervention bundles (Missing)
