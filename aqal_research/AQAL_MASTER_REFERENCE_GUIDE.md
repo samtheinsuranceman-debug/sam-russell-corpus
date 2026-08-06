@@ -1513,3 +1513,47 @@ better support use → more clarity about purpose (loop repeats)
 - Loop closure rate: Track what % of AI panel recommendations led to user action
 
 ### Sources: Complex Systems Frameworks, PMC 10865193, PMC 9525569, Tandfonline (Feedback & Longer-Term), DFE-RR156
+
+---
+
+## 27. Perplexity Pass 20: Canonical 7-Layer Feedback Stack (August 6, 2026)
+
+### The Stack (Bottom to Top):
+
+| Layer | Content | Feedback Up | Feedforward Down |
+|---|---|---|---|
+| 1. Environment/Reality | Physical, social, market, regulatory context | Everything that happens "in the wild" | Boundary conditions, constraints |
+| 2. Events & Data | Observations, logs, measurements, user signals | Raw evidence imported to stack | Context for environment coupling |
+| 3. Behaviors & Operations | Concrete actions, interactions, micro-decisions | Operational metrics, incidents | Act on events & data |
+| 4. Mechanisms & Processes | Workflows, algorithms, playbooks | Throughput, bottlenecks, failure modes | Instructions for behavior |
+| 5. Strategies & Policies | High-level plans, rules, resource allocation | Strategic performance, side effects | Constraints on processes |
+| 6. Models & Assumptions | Beliefs, paradigms, theories | Model validity vs identity/purpose | Frames for strategies |
+| 7. Identity & Purpose | Mission, values, long-term "why" | Existential fitness, meaning, coherence | Constraints on models & strategy |
+
+### Canonical Rules:
+- Each layer has at least one reinforcing + one balancing loop with adjacent layers
+- No layer is "silent" — every layer exposes signals upward and imposes constraints downward
+- Identity (top) cannot wire directly to Operations (layer 3) without passing through Models and Strategy — prevents identity drift
+
+### Wiring Patterns:
+- **Upward (sensemaking):** Environment → Data → Operations → Processes → Strategy → Models → Identity
+- **Downward (control/design):** Identity → Models → Strategy → Processes → Operations → Data
+- **Horizontal (local loops):** Within each layer (e.g., incident → postmortem → SOP update)
+- **Delays:** Realtime for operations, quarterly for strategy, multi-year for identity
+
+### AQAL Platform Instantiation:
+
+| Layer | AQAL Implementation |
+|---|---|
+| 7. Identity | "Map every human's cognitive architecture and prescribe growth" |
+| 6. Models | 32-line model, 9-stage framework, complementary matching theory |
+| 5. Strategy | Pricing ladder, giveaway tiers, endorsement system, scaling plan |
+| 4. Processes | Assessment pipeline, AI panel scoring, prescription engine, matching algorithm |
+| 3. Operations | Each assessment taken, each score generated, each match made |
+| 2. Data | User scores, completion rates, re-assessment deltas, engagement metrics |
+| 1. Environment | Market (no competitors), regulation, user demographics, technology landscape |
+
+### Design Rule:
+> Any change at lower layers must have a defined feedback path up to at least Strategy. Any change in Identity must eventually alter Processes and Metrics — or it's ceremonial.
+
+### Sources: LeSS Systems Thinking, Resilience Earth, Stackademic, vFunction Architecture Guide
