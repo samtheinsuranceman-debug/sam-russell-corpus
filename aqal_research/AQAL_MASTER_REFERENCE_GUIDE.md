@@ -1211,3 +1211,33 @@ Lower motivation → Reduced engagement/drop-out
 - PMC 9525569 (Monitor to innovate)
 - Frontiers Psych 2022 (Attunement instrument)
 - PMC 6454445 (Ecology of multilevel intervention)
+
+---
+
+## 21. Perplexity Pass 14: AQAL Parenting Measurement Framework (August 6, 2026)
+
+### Four-Quadrant Scorecard:
+
+| Quadrant | What to Measure | Tools | Progress Signals |
+|---|---|---|---|
+| UL (Parent Interior) | Confidence, stress, attunement beliefs | Me as a Parent Scale (MaaPs), attunement belief measures | Rising self-efficacy, stronger attunement endorsement |
+| UR (Observable Parenting) | What parents actually DO | Keys to Interactive Parenting Scale (KIPS), 20-min video observation | Higher sensitivity, responsiveness, less harshness |
+| LL (Family Culture) | Shared meanings, norms about parenting | Semi-structured interviews, relationship scales, narrative coding | Shift from "keep kids in line" to "stay connected and guide" |
+| LR (Systems/Routines) | Routines, structures, engagement | Routine checklists, engagement logs, school-home data | More regular routines, higher participation rates |
+
+### Key Principle:
+> You're not collapsing this into one number. You're asking: Is UL rising? Is UR measurably more responsive? Is LL shifting toward connection? Is LR supporting the new pattern?
+
+### Validated Instruments:
+- **MaaPs** (Me as a Parent Scale) — self-efficacy, personal agency, self-regulation (parentingtoday.net.au)
+- **KIPS** (Keys to Interactive Parenting Scale) — 12 facets coded from 20-min video (parentinfantfoundation.org.uk)
+- **Attunement Beliefs Scale** — predicts responsive parenting (PMC 9844204)
+- **Measuring What Matters** framework — 4 domains: parent, infant, relationship, context (Blackpool Better Start)
+
+### Sources:
+- Me as a Parent Scale: parentingtoday.net.au
+- Measuring What Matters: Blackpool Better Start report
+- KIPS: Parent-Infant Foundation Implementation Toolkit Ch.4
+- PMC 9844204 (Attunement and structure beliefs)
+- PMC 8109838 (102-study meta-analysis)
+- DFE-RR156 (UK Best Practice in Parental Engagement)
