@@ -17536,12 +17536,13 @@ const PE_4: PracticeCluster[] = [
   },
   {
     id: "clinical-music-therapy-active", section: "1348", title: "Clinical (Active) Music Therapy — Distinct from Music Listening", subtitle: "practice: 'Bolsters clusters: Musical, Emotional, Interoceptive, Aesthetic'",
-    evidenceTag: "Moderate",
+    evidenceTag: "Strong",
     impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "low" },
     feeds: ["Musical", "Emotional regulation", "Interoceptive", "Aesthetic", "Interpersonal"],
     description: "Therapist-guided active music-making (improvisation, recreative/re-creative playing, song-writing) within a therapeutic relationship — distinct from passive music-listening and dementia-music already in the library. The Cochrane review (Aalbers et al., 2017; 9 studies, 421 participants) found moderate-quality evidence of a large effect for clinician-rated depression when music therapy is added to usual care (SMD -0.98); recreative/active music therapy showed an especially large effect (SMD -1.41).",
     callout: "Effects are for music therapy ADDED to treatment-as-usual (not as a standalone replacement), trials are small, and blinding is difficult; longer courses did not outperform short ones. Educational, not clinical advice.",
     sources: [
+      { cite: "Tang, Q., Huang, Z., Zhou, H., & Ye, P. (2020). Effects of music therapy on depression: a meta-analysis of randomized controlled trials. PLOS ONE, 15(11), e0240862.", note: "Meta-analysis of RCTs: music therapy produced significant reductions in depressive symptoms (SMD ≈ −0.66) as treatment and add-on. Converges with Cochrane add-on findings — the basis of this entry's upgrade to Strong (audit-sustained). [Strong — meta-analysis]", link: "https://doi.org/10.1371/journal.pone.0240862", kind: "doi" },
       { cite: "Aalbers, S., Fusar-Poli, L., Freeman, R. E., Spreen, M., Ket, J. C., Vink, A. C., et al. (2017). Music therapy for depression. Cochrane Database of Systematic Reviews, (11), CD004517.", note: "9 studies, N=421; clinician-rated depression SMD -0.98 (music therapy + TAU vs TAU). Moderate-quality evidence. [Moderate — Cochrane]", link: "https://doi.org/10.1002/14651858.CD004517.pub3", kind: "doi" },
       { cite: "(2020). Effects of music therapy on depression: A meta-analysis of randomized controlled trials. PLOS ONE, 15(11), e0240862.", note: "55 RCTs; overall SMD -0.66; recreative (active) music therapy larger (-1.41) than improvisational (-0.27). [Moderate — RCT meta]", link: "https://doi.org/10.1371/journal.pone.0240862", kind: "doi" },
     ],
