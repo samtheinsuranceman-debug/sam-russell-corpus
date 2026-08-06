@@ -1159,3 +1159,55 @@ Lower motivation → Reduced engagement/drop-out
 - Programs focusing on responsive caregiving improve MULTIPLE child domains simultaneously
 - Programs that ONLY teach behavior control have narrower benefit profiles
 - Gains strongest when skills practice (UR) supported by ongoing coaching/home routines (LR)
+
+---
+
+## 20. Perplexity Pass 13: AQAL Parenting Protocol — Attunement → Structure → Ecology (August 6, 2026)
+
+### The Three-Phase Sequence:
+
+**Phase 1: Attunement First** (UL + UR)
+- Pause before correcting
+- Name the child's likely emotion
+- Reflect back what you see
+- Repair after misattunement
+- End with reconnection, not just consequences
+
+**Phase 2: Add Structure** (UR + LR)
+- One bedtime routine
+- One morning routine
+- Three house rules
+- Consistent follow-through
+- Natural consequences over harsh punishment
+
+**Phase 3: Redesign the Home Ecology** (LR)
+- Put routines on the wall
+- Remove avoidable triggers
+- Set up cues for bedtime, meals, transitions
+- Use reminders, checklists, support calls
+- Reduce the number of "hard decisions" made daily
+
+### Why This Sequence Scales:
+- Attunement first prevents structure from feeling cold or punitive
+- Structure second makes the relationship predictable and reduces chaos
+- Ecology redesign third keeps gains alive when parents are tired/busy/stressed
+
+### One-Sentence Operational Rule:
+> "If the child is dysregulated, **attune**; if the behavior is unclear, **structure**; if the household keeps slipping, **redesign the environment**."
+
+### Loop Mapping:
+| Loop | Effect in Parenting | AQAL Emphasis |
+|---|---|---|
+| R1 Growth | Attunement creates early wins → builds confidence → improves feedback | UL → UR → LR cycle |
+| R2 Culture | Warm structured parenting becomes family norm → spreads to caregivers/schools | LL → LR scaling |
+| B1 Constraint | Too much effort/stress causes fatigue and dropout | UL/LR load management |
+
+### The Scalable Formula:
+> Not "attachment vs discipline." It is **attachment first, structure second, ecology third.**
+
+### Sources:
+- PMC 9844204 (Parenting beliefs about attunement and structure)
+- PMC 8109838 (102-study meta-analysis)
+- PMC 9525569 (Monitor to innovate)
+- Frontiers Psych 2022 (Attunement instrument)
+- PMC 6454445 (Ecology of multilevel intervention)
