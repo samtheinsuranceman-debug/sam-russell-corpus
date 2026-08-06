@@ -1241,3 +1241,56 @@ Lower motivation → Reduced engagement/drop-out
 - PMC 9844204 (Attunement and structure beliefs)
 - PMC 8109838 (102-study meta-analysis)
 - DFE-RR156 (UK Best Practice in Parental Engagement)
+
+---
+
+## 22. Perplexity Pass 15: AQAL Parenting Dashboard Template (August 6, 2026)
+
+### Full Dashboard (20 metrics across 4 quadrants):
+
+| Quadrant | Domain | Metric | Tool |
+|---|---|---|---|
+| UL | Parent interior | Parenting self-efficacy | MaaPs |
+| UL | Parent interior | Parenting stress | Brief stress scale |
+| UL | Parent interior | Attunement belief score | Attunement belief measure |
+| UL | Parent interior | Repair confidence | 1-10 self-rating |
+| UR | Parent behavior | Responsive caregiving quality | KIPS observation |
+| UR | Parent behavior | Positive interactions/day | Daily log |
+| UR | Parent behavior | Harsh/reactive responses | Weekly tally |
+| UR | Parent behavior | Shared reading/play frequency | Routine log |
+| UR | Child response | Tantrum intensity/duration | Parent log |
+| UR | Child response | Transition success rate | Observation |
+| LL | Family culture | Felt closeness | Narrative rating |
+| LL | Family culture | Family emotional tone | Weekly reflection |
+| LL | Family culture | Parenting narrative shift | Qualitative coding |
+| LL | Family culture | Co-caregiver alignment | Joint check-in |
+| LR | Home system | Bedtime routine consistency | Checklist |
+| LR | Home system | Morning routine consistency | Checklist |
+| LR | Home system | Mealtime/ritual consistency | Checklist |
+| LR | Home system | Visual cues/supports in place | Environment audit |
+| LR | Support system | Program attendance | Attendance log |
+| LR | Support system | Home-school communication | Contact log |
+
+### Fast Weekly Dashboard (4 questions, 0-4 scale):
+- UL: Do I feel more confident, calmer, and more attuned?
+- UR: Am I showing more responsive, consistent parenting behavior?
+- LL: Does the family relationship feel warmer and more aligned?
+- LR: Are routines and supports making parenting easier to sustain?
+
+### Loop Tracker (Green/Red Flags):
+| Loop | Green Flags | Red Flags |
+|---|---|---|
+| R1 Growth | More wins, more confidence, better tailoring | Same mistakes, low confidence, weak feedback |
+| R2 Culture | Co-caregivers align, language improves, routines feel normal | Mixed messages, inconsistent norms, low buy-in |
+| B1 Constraint | Simpler routines, lower conflict, sustainable effort | Exhaustion, skipped routines, dropout risk |
+
+### Assessment Rhythm:
+- Baseline: Full 4-quadrant dashboard
+- Weekly: Fast dashboard + notes + loop tracker
+- Week 4/8: Full review
+- Week 12: Full review + protocol adjustment
+
+### Interpretation Rule:
+> Do not treat improvement in only one quadrant as full progress. AQAL progress requires all four quadrants moving in the right direction.
+
+### Sources: MaaPs, KIPS, Blackpool Better Start, PMC 9844204, PMC 8109838, DFE-RR156
