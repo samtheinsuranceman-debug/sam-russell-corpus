@@ -1053,3 +1053,38 @@ More load → Higher fatigue → Lower quality → Weaker results → Lower moti
 - Springer 2021 (Multi-tiered facilitation)
 - SISEP/UNC (K-12 feedback)
 - ERIC ED622549 (Transformative interactions)
+
+---
+
+## 17. Perplexity Pass 10: 3-Loop Model Mapped to Wilber's Four Quadrants (August 6, 2026)
+
+### Integrated Scaling Analysis — All 3 Loops in AQAL Quadrants:
+
+| Quadrant | R1 Growth | R2 Culture | B1 Constraint | Scaling Moves |
+|---|---|---|---|---|
+| UL (I) | Builds self-efficacy from early wins | Deepens personal meaning ("this is who I am") | Fatigue, overwhelm, cynicism | Work with narratives, identity; keep load meaningful |
+| UR (It) | Upgrades concrete skills, habits | Makes visible behavior that models norms | Delivery quality falls = overload signal | Simplify protocols, automate, train for fluency |
+| LL (We) | Context where wins are celebrated or ignored | Core: builds cultural norms and stories | "Initiative fatigue" stories undermine adoption | Design rituals, language, shared reflection |
+| LR (Its) | Houses feedback systems, tailoring, environment | Encodes norms into structures and policies | Carries structural load (paperwork, workflows) | Build lightweight feedback loops, remove obsolete demands |
+
+### Strategic Scaling Formula:
+> "R1 grows capability, R2 grows culture, and B1 defines the sustainable envelope. Scaling means designing all four quadrants so R1 and R2 reinforce each other faster than B1 pushes back."
+
+### Three Scaling Imperatives:
+1. **R1 (UL/UR ↔ LR):** Every line training needs clear behavioral wins (UR), perception of progress (UL), and LR feedback/tailoring loops (dashboards, supervision)
+2. **R2 (LL/LR):** Invest in shared stories/language/community (LL) + codify into systems/policies (LR)
+3. **B1 (all quadrants):** Continuously relieve constraints — watch for burnout (UL), monitor fidelity (UR), listen for "initiative fatigue" (LL), prune/automate structures (LR)
+
+### Platform Implementation Status:
+- **R1 implemented:** Assessment → Prescription → Practice → Re-assessment → Adjusted prescription
+- **R2 implemented:** Leaderboard, matching, community, shared vocabulary ("lines," "dial," "master weakness," "rarity score")
+- **B1 relief implemented:** Voice-first (low friction), 27 questions (not 200), automated AI panel, weekly cadence
+
+### Sources:
+- Integral Theory (Wikipedia, IntegralLife)
+- PMC 9525569 (Monitor to innovate)
+- PMC 9661310 (Causal loop diagrams)
+- PMC 6454445 (Ecology of multilevel intervention)
+- SISEP/UNC (K-12 feedback)
+- ERIC ED622549 (Transformative interactions)
+- UNDP Evaluation (Causal loop diagrams)
