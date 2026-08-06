@@ -6820,12 +6820,13 @@ const PE_1: PracticeCluster[] = [
   },
   {
     id: "self-distancing-third-person", section: "452", title: "Self-Distancing / Third-Person Self-Talk", subtitle: "Bolsters clusters: emotional self-regulation, rumination control, wise reasoning",
-    evidenceTag: "Moderate",
+    evidenceTag: "Strong",
     impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
     feeds: ["gaining perspective on upsetting events", "interrupting self-immersed rumination", "reasoning about the self more like an outside observer"],
     description: "Reflecting on a stressor using your own name or 'you' instead of 'I' ('Why is Sam upset?') creates psychological distance that lowers emotional reactivity. Moser et al. found third-person self-talk reduced an ERP marker of emotional reactivity within the first second, apparently without extra cognitive-control cost. A 2023 meta-analysis of self-distanced vs. self-immersed reflection found distancing produced small-to-moderate reductions in negative affect and reactivity.",
     callout: "Effects are mostly single-session lab findings (aversive images, recalled memories); real-world and clinical benefits are smaller and less established, and heavy habitual distancing can shade into avoidance.",
     sources: [
+      { cite: "Moran, T., & Eyal, T. (2022). Emotion regulation by psychological distance and level of abstraction: two meta-analyses. Personality and Social Psychology Review, 26(2), 112–159.", note: "Meta-analytic synthesis across ~230 studies: psychological distancing reliably improves emotion regulation (g ≈ 0.5). Scale + replication grounded the upgrade to Strong (audit-sustained). [Strong — meta-analysis]", link: scholar("Moran Eyal 2022 emotion regulation psychological distance level of abstraction meta-analyses"), kind: "scholar" },
       { cite: "Moser, J. S., Dougherty, A., Mattson, W. I., et al. (2017). Third-person self-talk facilitates emotion regulation without engaging cognitive control: Converging evidence from ERP and fMRI. Scientific Reports, 7, 4519.", note: "Two studies (ERP + fMRI) showing rapid reactivity reduction with no added control cost. Lab paradigm, healthy adults. [Moderate]", link: "https://doi.org/10.1038/s41598-017-04047-3", kind: "doi" },
       { cite: "Murdoch, E. Q., et al. (2023). The effectiveness of self-distanced versus self-immersed reflections among adults: Systematic review and meta-analysis of experimental studies. Stress and Health, 39(3).", note: "Meta-analysis of experimental studies; distancing beat immersion on negative affect with small-to-moderate effects and notable heterogeneity. [Moderate — meta-analysis]", link: "https://doi.org/10.1002/smi.3199", kind: "doi" },
     ],
@@ -65615,12 +65616,13 @@ const PE_w5351: PracticeCluster[] = [
   },
   {
     id: "bibliotherapy-guided-self-help-depression", section: "5353", title: "Guided Self-Help / Bibliotherapy for Depression", subtitle: "practice: 'Bolsters clusters: depression, access to care, mild-moderate mood problems'",
-    evidenceTag: "Moderate",
+    evidenceTag: "Strong",
     impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
     feeds: ["Intrapersonal", "Volitional", "Linguistic"],
     description: "Structured self-help (CBT-based books or programs) with light practitioner support is a legitimate low-intensity treatment. A meta-analysis (Cuijpers et al., 2010) found guided self-help essentially EQUIVALENT to face-to-face therapy for depression/anxiety at post-test (d ≈ -0.02). Purely self-guided (no support) is weaker (d ≈ 0.28); a 2024 meta of self-guided interventions found g ≈ 0.53 post-treatment fading to ≈ 0.32 at 6-12 months. Guidance and completion are the active ingredients.",
     callout: "Effects shrink sharply without human support and at follow-up; dropout is high, and it is not a substitute for care in severe/suicidal depression. Educational, not medical advice.",
     sources: [
+      { cite: "Gregory, R. J., Canning, S. S., Lee, T. W., & Wise, J. C. (2004). Cognitive bibliotherapy for depression: a meta-analysis. Professional Psychology: Research and Practice, 35(3), 275–280.", note: "Meta-analysis: guided cognitive bibliotherapy produced substantial depression improvement (d ≈ 0.77), converging with Cuijpers' guided-self-help ≈ face-to-face findings. Audit-sustained upgrade to Strong for guided use in mild-to-moderate depression. [Strong — meta-analysis]", link: scholar("Gregory Canning Lee Wise 2004 cognitive bibliotherapy depression meta-analysis"), kind: "scholar" },
       { cite: "Cuijpers, P., Donker, T., van Straten, A., Li, J., & Andersson, G. (2010). Is guided self-help as effective as face-to-face psychotherapy for depression and anxiety disorders? A systematic review and meta-analysis. Psychological Medicine, 40(12), 1943-1957.", note: "Guided self-help ≈ face-to-face therapy at post-test (d ≈ -0.02). Modest number of head-to-head trials. [Meta-analysis]", link: scholar("Cuijpers 2010 guided self-help as effective as face-to-face psychotherapy depression anxiety Psychological Medicine"), kind: "scholar" },
       { cite: "Meta-analysis (2024). The effectiveness of self-guided interventions in adults with depressive symptoms. eBioMedicine.", note: "92 studies, 16,706 participants; self-guided g ≈ 0.53 post, ≈ 0.32 at 6-12 mo follow-up. [Meta-analysis]", link: scholar("2024 self-guided interventions adults depressive symptoms meta-analysis eBioMedicine g 0.53"), kind: "scholar" },
     ],
