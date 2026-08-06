@@ -1352,3 +1352,43 @@ better support use → more clarity about purpose (loop repeats)
 > This is denser than a dashboard because it doesn't just show status — it RUNS the family system: defines operating principles, captures signals, turns them into action, and uses feedback loops to improve over time.
 
 ### Sources: PMC 8109838, PMC 9525569, PMC 10865193, SISEP, IntegralLife, ECDAN Systems Thinking
+
+---
+
+## 24. Perplexity Pass 17: 8 Failure Modes of High-Density Parenting Systems (August 6, 2026)
+
+### The 8 Predictable Failure Points:
+
+| # | Failure Mode | Quadrant | What Happens |
+|---|---|---|---|
+| 1 | Overload & fidelity collapse | LR → UR → UL | Too many sessions/tasks/logs; parents skip core components |
+| 2 | Treating capacity as compliance | UR only | Evaluating "did you follow the system" not "does it fit your capacity" |
+| 3 | Cultural misfit | LL + LR | Copy-pasting a system without adapting to local values/norms/stressors |
+| 4 | Ignoring parent mental health | UL + LL | Giving parents more tasks while their depression/trauma/strain goes unaddressed |
+| 5 | Over-engineering monitoring, under-designing repair | LR heavy | Dashboards track everything but don't provide scripts for rupture-repair |
+| 6 | One-size-fits-all intensity | LR | Every family gets same density regardless of risk/need |
+| 7 | Weak R2 / reliance on individual heroics | LL + LR | Success depends on motivated individuals not shared culture |
+| 8 | No pruning mechanism (OS entropy) | LR + UL | New rules added, old ones never removed; complexity grows faster than benefit |
+
+### Key Evidence:
+- Triple P (PMC 10640495): Works best with TIERED intensity (brief → group → intensive)
+- 102-study meta-analysis (PMC 8109838): Programs don't reduce parental depression unless explicitly addressed
+- Process evaluation (PMC 9525569): Monitoring only improves outcomes when feedback loops adapt content in real time
+- Urban Institute: Chronic instability undermines parenting regardless of technique
+
+### The Remedy (Not "Less System" — Better System Design):
+1. Tiered intensity (not everyone gets high density)
+2. Strong feedback loops (monitoring → adaptation, not just tracking)
+3. Explicit pruning (remove what creates friction without benefit)
+4. Cultural alignment (adapt to local values, not copy-paste)
+5. Capacity-first logic (support the parent's UL before demanding UR compliance)
+
+### Design Check Questions:
+- Is UL resourced? (parent mental health, meaning, identity)
+- Is UR compliance-only or capacity-aware?
+- Is LL culture aligned or imported?
+- Does LR add load WITH support, or load WITHOUT adaptation?
+- Is there a pruning mechanism?
+- Is intensity tiered?
+
+### Sources: PMC 10640495 (Triple P), PMC 8109838, PMC 9525569, PMC 10865193, Urban Institute, DFE-RR156, MTSS/Panorama
