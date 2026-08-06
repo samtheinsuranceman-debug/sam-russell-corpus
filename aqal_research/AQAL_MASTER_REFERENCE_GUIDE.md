@@ -870,3 +870,35 @@ Note: Interventions 26-36 are renumbered duplicates of 15-25 (Perplexity re-sent
 - Indigenous/local-community-led stewardship (Missing)
 - Long-term physical activity interventions (Missing)
 - Positive behavior change intervention bundles (Missing)
+
+### Perplexity Pass 6 — Priority Recommendations & Structural Suggestion
+
+**Top 10 Priority Additions (strongest evidence, most ecological impact):**
+1. Social prescribing / community navigation
+2. Exposure with response prevention
+3. Problem-solving therapy
+4. Combined cognitive-physical training
+5. Nature-based interventions
+6. Long-term physical activity interventions
+7. Mind-body regulation practices
+8. Positive psychology interventions
+9. Nature connectedness interventions
+10. Social cognition training
+
+**Supportive Additions (context-sensitive, usually bundled):**
+- Self-compassion training (shame, burnout, self-criticism)
+- Self-affirmation / values affirmation (identity threat, persistence)
+- Public commitment / accountability (short-term behavior change)
+- Structured conversation skills (couples, family, conflict repair)
+- Community gardening (nature + routine + movement + social)
+- Volunteer service / prosocial action (meaning, community role)
+
+**Tier Action Guide:**
+- Moderate → Keep as supporting tools, not headline interventions
+- Moderate-Low → Mention only when clearly fitting user's need
+- Ecological/system → Use as background context, not primary individual prescriptions
+
+**Structural Recommendation:**
+> The site would become much stronger with a new top-level category: **"Ecology-changing interventions"** — including social prescribing, environment redesign, digital hygiene, built-environment changes, and community-based participation tools. Lasting change comes from changing the person's context, not only their traits.
+
+**STATUS: IMPLEMENTED** — The "Ecological Interventions" page is now live at joinaqal.com/ecological-interventions with 25 interventions tiered by ecological impact.
