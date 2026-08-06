@@ -732,3 +732,60 @@ The strongest gains come when the intervention changes MORE than one layer:
 | Community Gardening | Naturalist | Interpersonal, Community-Founding |
 | Digital Connection Training | Interpersonal | Community-Founding, Adaptive |
 | Acute Exercise | Meta-Cognitive | Volitional, Kinesthetic |
+
+### Interventions 15–25 (Perplexity Pass 5 continued)
+
+| # | Intervention | Primary AQAL Line | Secondary Lines | Ecology Impact |
+|---|---|---|---|---|
+| 15 | Self-Affirmation / Values Affirmation | Intrapersonal | Resilient, Moral | Reduces threat response under identity pressure |
+| 16 | Implementation Intentions ("If-Then" Planning) | Volitional | Strategic | Hardwires behavior to environmental cues |
+| 17 | Environment Redesign / Friction Management | Volitional | Financial, Interoceptive | Changes default action path without willpower |
+| 18 | Public Commitment / Accountability | Volitional | Interpersonal | Changes social pressure and identity |
+| 19 | Repeated Perspective-Taking | Empathic | Interpersonal, Social-Perceptual, Moral | Reduces conflict, improves motive-reading |
+| 20 | Structured Conversation Skills | Interpersonal | Empathic, Intrapersonal | Prevents relational problems before escalation |
+| 21 | Mentored Apprenticeship / Coached Practice | Strategic | Volitional, Interpersonal | Changes access to opportunity + network position |
+| 22 | Exposure with Response Prevention | Emotional | Resilient, Volitional | Changes relationship to fear and avoidance |
+| 23 | Problem-Solving Therapy | Logical | Volitional, Strategic | Converts vague distress into manageable tasks |
+| 24 | Behavioral Activation + Activity Scheduling | Volitional | Emotional, Interpersonal | Changes daily reward structure |
+| 25 | Graded Task Assignment | Volitional | Strategic | Lowers failure risk, restores momentum |
+
+### Running Total: 25 new unlabeled interventions identified, all mapped to AQAL lines.
+
+### Interventions 26–40 (Perplexity Pass 5 final batch)
+
+Note: Interventions 26-36 are renumbered duplicates of 15-25 (Perplexity re-sent them). New unique interventions are 37-40:
+
+| # | Intervention | Primary AQAL Line | Secondary Lines | Ecology Impact |
+|---|---|---|---|---|
+| 37 | Skills Coaching for Self-Efficacy | Volitional | Emotional, Strategic | Changes identity from "I can't" to "I know how" |
+| 38 | Digital Hygiene / Attention Management | Meta-Cognitive | Volitional, Emotional | Reduces fragmentation, protects sleep and deep work |
+| 39 | Financial Autopilot / Default Saving | Financial | Volitional, Strategic | Removes repeated choice, protects from impulsive spending |
+| 40 | Community-Based Skill Circles | Interpersonal | Volitional, Community-Founding | Combines social belonging + practice + identity formation |
+
+### FINAL TOTAL: 29 unique unlabeled interventions identified and mapped to AQAL lines.
+
+### Summary of All Ecological Interventions (1-40, deduplicated):
+
+**Tier 1 — Highest ecological impact (change 4+ layers):**
+- Social Prescribing
+- Combined Cognitive-Physical Training
+- Place-Based Community Gardening
+- Community-Based Skill Circles
+- Mentored Apprenticeship
+
+**Tier 2 — High ecological impact (change 2-3 layers):**
+- Nature Connectedness Training
+- Environment Redesign / Friction Management
+- Digital Hygiene / Attention Management
+- Financial Autopilot / Default Saving
+- Structured Conversation Skills
+- Automated Accountability Systems
+
+**Tier 3 — Single-layer but high-evidence:**
+- Implementation Intentions
+- Exposure with Response Prevention
+- Problem-Solving Therapy
+- Behavioral Activation + Activity Scheduling
+- Self-Affirmation / Values Affirmation
+- Graded Task Assignment
+- Skills Coaching for Self-Efficacy
