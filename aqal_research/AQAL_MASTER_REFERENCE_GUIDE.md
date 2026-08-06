@@ -1466,3 +1466,50 @@ better support use → more clarity about purpose (loop repeats)
 > Each "no" or "uncertain" = one mitigation item. Load/UL/culture/pruning items yield the biggest stability gains.
 
 ### Sources: PMC 10640495 (Triple P), Urban Institute, PMC 8109838, Blackpool Better Start, DFE-RR156, PMC 9525569, PMC 10865193, SISEP
+
+---
+
+## 26. Perplexity Pass 19: Scaling Multi-Layer Feedback Loops — Architecture & Governance (August 6, 2026)
+
+### 10 Principles for Scaling Complex Feedback Loops:
+
+| # | Principle | Core Rule |
+|---|---|---|
+| 1 | Purpose-specific loops | Each loop has one function and one timescale — don't blur |
+| 2 | Centralize signals, decentralize actions | One source of truth for data; local actors decide adaptations |
+| 3 | Tier by timescale | Short (hours-days), Medium (weeks-months), Long (months-years) |
+| 4 | Cap, compress, prune | 3-5 key metrics per loop; sunset what doesn't change decisions |
+| 5 | Connect feedback to decisions | Define issue → decision path; measure loop closure rate |
+| 6 | Truth-flow architecture | Multiple channels, redundancy, optimize signal quality over volume |
+| 7 | Protect against runaway | Install balancing loops; monitor early warning indicators |
+| 8 | Embed feedback literacy | Train all participants to interpret, distinguish signal from noise |
+| 9 | Cross-layer coherence | Align metrics, narratives, and incentives across layers |
+| 10 | Test, simulate, rehearse | Pilot in small contexts; run failure drills before full deployment |
+
+### Loop Tiering Framework:
+
+| Tier | Timescale | Example | Governance |
+|---|---|---|---|
+| Short | Hours-days | Parent adjusts today's routine based on yesterday's meltdown | Self-managed |
+| Medium | Weeks-months | Facilitator modifies session pacing after weekly review | Coordinator-managed |
+| Long | Months-years | Leadership revises curricula/staffing based on long-term patterns | System-managed |
+
+### Load Management Rules:
+- **Cap:** Limit to 3-5 key metrics per loop (not 30)
+- **Compress:** Use composite indexes and moving averages (not raw streams)
+- **Prune:** Routinely remove metrics that no longer change decisions
+- **Budget:** Treat measurement as a budgeted resource — every signal justifies its cost
+
+### Key Metric to Track:
+> **Loop Closure Rate** — what percentage of signals led to visible decisions? This IS the health metric for the entire feedback system.
+
+### One-Sentence Synthesis:
+> "Scalable multi-layer feedback loops are built by narrowing purpose, centralizing signals, tiering by timescale, capping load, and tying every loop to real decisions with built-in balancing and literacy."
+
+### AQAL Platform Application:
+- Short loops: Daily practice tracking → immediate prescription adjustment
+- Medium loops: Weekly re-score → protocol modification
+- Long loops: 6-month re-assessment → line trajectory + matching recalibration
+- Loop closure rate: Track what % of AI panel recommendations led to user action
+
+### Sources: Complex Systems Frameworks, PMC 10865193, PMC 9525569, Tandfonline (Feedback & Longer-Term), DFE-RR156
