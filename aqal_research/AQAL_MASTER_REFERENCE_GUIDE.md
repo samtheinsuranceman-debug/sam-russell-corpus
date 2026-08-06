@@ -1131,3 +1131,31 @@ Lower motivation → Reduced engagement/drop-out
 > "For parenting, the AQAL line grows most reliably when skill loops (R1) and culture loops (R2) are designed together, while B1 (fatigue/capacity) is continually relieved so healthy parenting becomes the default ecology of the family rather than an extra task."
 
 ### Source: PMC 8109838 (102-study meta-analysis of early parenting interventions)
+
+---
+
+## 19. Perplexity Pass 12: Attachment vs. Behavior Management — AQAL Scalability (August 6, 2026)
+
+### Core Finding:
+> "Attachment/attunement-first parenting is more AQAL-scalable: it recruits all four quadrants, rides R1 and R2 strongly, and once established, tends to lower B1 over time by making the family ecology less adversarial. Behavior management-first is best treated as a sub-line technique: powerful for specific problems but not a sufficient architecture for lasting multi-line growth."
+
+### AQAL Scalability Comparison:
+
+| Dimension | Attachment-First | Behavior Management-First |
+|---|---|---|
+| Quadrant spread | Strong UL, UR, LL, LR | Strong UR, moderate LR; weak UL/LL |
+| Line coverage | Emotional, interpersonal, parenting, self-regulation, child development simultaneously | Primarily externalizing behavior and compliance |
+| R1 scaling | Multi-domain wins → easier system-wide integration | Strong narrow wins; plateau risk |
+| R2 scaling | Builds supportive cultures and norms in communities | Scales policy/scripts more than deep culture |
+| B1 behavior | Higher initial emotional load; LOWER long-term conflict | Lower initial load; HIGHER long-term enforcement fatigue |
+| Long-horizon fit | Ecology-changing (family system) | Best as component within broader design |
+
+### Key Insight for Platform Design:
+- Attachment-first scales "horizontally" across quadrants naturally
+- Behavior management scales "vertically" within one quadrant and hits limits faster
+- The platform should prescribe attachment/attunement as the PRIMARY parenting intervention, with behavior management as a SECONDARY technique layered on top
+
+### Evidence: PMC 8109838 (102-study meta-analysis)
+- Programs focusing on responsive caregiving improve MULTIPLE child domains simultaneously
+- Programs that ONLY teach behavior control have narrower benefit profiles
+- Gains strongest when skills practice (UR) supported by ongoing coaching/home routines (LR)
