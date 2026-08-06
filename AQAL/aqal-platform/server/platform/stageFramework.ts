@@ -30,7 +30,9 @@ export type DevStage = {
   spiral: string;
   /** [lo, hi] on the platform's 0-1 line scale */
   band: [number, number];
-  /** rough adult-population base rate (mixed samples) */
+  /** rough base rate — NOTE: figures come from Cook-Greuter / Rooke & Torbert
+   *  convenience samples (largely managers/professionals), NOT a representative
+   *  general population; the top stages rest on very small samples. */
   population: string;
   /** perspective-taking capacity */
   perspective: string;
@@ -42,7 +44,7 @@ export type DevStage = {
 export const STAGE_LADDER: DevStage[] = [
   {
     stage: "2", name: "Impulsive", actionLogic: "Impulsive", spiral: "Magenta/Purple",
-    band: [0.05, 0.12], population: "~0.5%", perspective: "1st person",
+    band: [0.05, 0.12], population: "≈0% of sampled adults (childhood stage; audit-corrected)", perspective: "1st person",
     cue: "Needs-on-demand, 'me/mine', crude good/bad dichotomies, no reflection; impulse governs action.",
   },
   {
@@ -57,12 +59,12 @@ export const STAGE_LADDER: DevStage[] = [
   },
   {
     stage: "3/4", name: "Self-conscious", actionLogic: "Expert / Technician", spiral: "Amber→Orange",
-    band: [0.33, 0.42], population: "~30%", perspective: "3rd person (emerging)",
+    band: [0.33, 0.42], population: "~38% — the modal stage (Rooke & Torbert managers/professionals sample)", perspective: "3rd person (emerging)",
     cue: "Craft/technical mastery, right-way perfectionism, 'yes-but' one-upmanship, standards and being correct.",
   },
   {
     stage: "4", name: "Conscientious", actionLogic: "Achiever", spiral: "Orange",
-    band: [0.42, 0.55], population: "~30% (managers higher)", perspective: "3rd person (expanded)",
+    band: [0.42, 0.55], population: "~30% (Rooke & Torbert managers/professionals sample)", perspective: "3rd person (expanded)",
     cue: "Goals, causes, effectiveness, linear time, rational self-improvement, measurable results; the Western 'target' stage.",
   },
   {

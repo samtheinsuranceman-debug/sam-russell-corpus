@@ -29,7 +29,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   // ─── Universal meta-systems (relevant to almost any goal) ───────────────────
   {
     id: "sleep", name: "Sleep protection", section: "14", librarySection: "Sleep — The Foundational System",
-    evidence: "Strong", lifts: ["memory", "emotion", "decision-making", "self-regulation"],
+    evidence: "Strong", lifts: ["volitional", "resilient", "intrapersonal", "memory", "emotion", "decision-making", "self-regulation"],
     prescription: "Protect 7–9h with regular timing — the single highest-leverage move, because sleep gates every other line.",
     horizon: "2–4 weeks to feel it, ongoing to keep it",
     researchBasis: "Even mild chronic sleep restriction accumulates measurable cognitive and emotional-regulation deficits; restoring it reverses them.",
@@ -37,7 +37,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "exercise", name: "Aerobic exercise", section: "13", librarySection: "Aerobic Exercise — The Proven Keystone",
-    evidence: "Strong", lifts: ["cognition", "memory", "mood", "resilience", "self-regulation"],
+    evidence: "Strong", lifts: ["kinesthetic", "volitional", "resilient", "cognition", "memory", "mood", "self-regulation"],
     prescription: "Regular aerobic training (the best-evidenced brain intervention) to lift cognition, mood, and resilience together.",
     horizon: "6–12 weeks for cognitive/mood gains",
     researchBasis: "In randomized trials, aerobic training improved memory and executive function and had a large antidepressant effect.",
@@ -53,7 +53,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "breathwork", name: "Breathwork / HRV", section: "15", librarySection: "Breathwork & HRV — Autonomic Self-Regulation",
-    evidence: "Moderate", lifts: ["self-regulation", "attention", "emotion"],
+    evidence: "Moderate", lifts: ["interoceptive", "resilient", "self-regulation", "attention", "emotion"],
     prescription: "Brief daily slow-breathing (e.g. cyclic sighing) to raise vagal tone and improve emotional control and focus.",
     horizon: "5 min/day for ~4 weeks",
     researchBasis: "A randomized trial found five minutes of daily cyclic-sighing beat mindfulness meditation for mood and physiological arousal over a month.",
@@ -61,7 +61,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "nature", name: "Nature exposure", section: "16", librarySection: "Nature Exposure — Attention Restoration",
-    evidence: "Moderate", lifts: ["attention", "mood", "creativity"],
+    evidence: "Moderate", lifts: ["naturalistic", "intrapersonal", "attention", "mood", "creativity"],
     prescription: "~2 hours/week in natural settings to restore attention, lower rumination, and lift mood — passive and low-effort.",
     horizon: "~2 hours/week, ongoing",
     researchBasis: "A ~2-hour weekly threshold is associated with better health and wellbeing; a single nature walk lowered rumination and its brain signature.",
@@ -69,7 +69,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "thermal", name: "Thermal stress (sauna)", section: "17", librarySection: "Thermal Stress — Sauna & Cold",
-    evidence: "Moderate", lifts: ["resilience", "mood", "healthspan"],
+    evidence: "Moderate", lifts: ["resilient", "adaptive", "interoceptive", "mood", "healthspan"],
     prescription: "Regular sauna use (strong cohort evidence for brain and cardiovascular healthspan); cold exposure is real acute but over-hyped for durable gains.",
     horizon: "several sessions/week, over months",
     researchBasis: "Large cohorts link frequent sauna use to substantially lower dementia and cardiovascular mortality (observational).",
@@ -77,7 +77,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "psychedelic", name: "Psychedelic-assisted therapy (documented, not prescribed)", section: "18", librarySection: "Psychedelic-Assisted Therapy — Deep but Gated",
-    evidence: "Emerging", lifts: ["openness", "meaning", "mood"],
+    evidence: "Moderate", lifts: ["reflective", "integrative", "existential", "openness", "meaning", "mood"],
     prescription: "Documented for durable openness and mood change under strict medical supervision — we DOCUMENT this, we do not prescribe it. Legal, screening, and safety constraints apply.",
     horizon: "n/a — not a self-practice",
     researchBasis: "Supervised psilocybin has produced durable increases in openness and sustained reductions in depression/anxiety in trials — under medical control only.",
@@ -113,7 +113,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "relationship-education", name: "Communication & conflict skills", section: "20", librarySection: "Couples, Relationships & Parenting",
-    evidence: "Moderate", lifts: ["marital", "interpersonal", "intrapersonal"],
+    evidence: "Strong", lifts: ["marital", "interpersonal", "intrapersonal"],
     prescription: "Practice validated communication/conflict-management skills (speaker–listener, repair attempts) — relationship education lowers marital distress, especially with regular practice.",
     horizon: "a structured program over 1–3 months",
     researchBasis: "Meta-analyses show relationship education reliably improves couples' communication and lowers marital distress, strongest for higher-risk couples.",
@@ -121,7 +121,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "parenting", name: "Parenting-skill practice", section: "20", librarySection: "Couples, Relationships & Parenting",
-    evidence: "Moderate", lifts: ["parental", "empathic", "intrapersonal"],
+    evidence: "Strong", lifts: ["parenting", "parental", "empathic", "intrapersonal"],
     prescription: "Practice the validated parenting components — warm-and-structured (authoritative) style, emotional communication, positive interaction — WITH your own child (practice beats concepts).",
     horizon: "a program of several weeks, practiced daily",
     researchBasis: "Meta-analyses of parent-training identify the active ingredients (emotional communication, positive interaction, practicing with your own child) that reliably improve child outcomes.",
@@ -157,7 +157,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "commitment-device", name: "Commitment devices & pre-commitment", section: "Financial Wellbeing & Behavior", librarySection: "Behavior-Change & Psychological Interventions",
-    evidence: "Strong", lifts: ["volitional", "financial-self-management"],
+    evidence: "Moderate", lifts: ["volitional", "financial-self-management"],
     prescription: "Lock your future self in advance — a commitment savings account, a locked deadline, a stake you forfeit if you slip — so willpower isn't required at the moment of temptation.",
     horizon: "set up now; protects every future decision",
     researchBasis: "Commitment savings accounts (e.g. the SEED trial) and pre-commitment devices meaningfully raised follow-through by removing the in-the-moment choice.",
@@ -167,7 +167,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   // ─── Career, skill & learning ───────────────────────────────────────────────
   {
     id: "deliberate-practice", name: "Deliberate practice", section: "Learning Science & Cognition", librarySection: "Learning Science & Cognition",
-    evidence: "Moderate", lifts: ["mastery", "strategic", "volitional"],
+    evidence: "Moderate", lifts: ["tactical", "meta-cognitive", "mastery", "strategic", "volitional"],
     prescription: "Practice at the edge of your ability on the specific sub-skills you're worst at, with immediate feedback and full focus — not comfortable repetition of what you already do well.",
     horizon: "months to years for real mastery",
     researchBasis: "Deliberate practice — focused, feedback-rich reps at the edge of ability — predicts skill gains, though its share of the variance varies by domain (honest: it's a lever, not the whole story).",
@@ -175,7 +175,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "spaced-retrieval", name: "Spaced repetition + retrieval practice", section: "Learning Science & Cognition", librarySection: "Learning Science & Cognition",
-    evidence: "Strong", lifts: ["linguistic", "logical", "memory"],
+    evidence: "Strong", lifts: ["linguistic", "logical", "meta-cognitive", "mathematical", "memory"],
     prescription: "Learn by testing yourself and spacing the reviews out (not rereading) — retrieval and distributed practice are the two best-replicated ways to make knowledge stick.",
     horizon: "weeks; durable for months+",
     researchBasis: "The testing effect and distributed practice are among the most robust findings in learning science, repeatedly beating rereading for long-term retention.",
@@ -183,7 +183,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "deep-work", name: "Deep-work attention blocks", section: "Digital Life, Attention & Wellbeing", librarySection: "Digital Life, Attention & Wellbeing",
-    evidence: "Emerging", lifts: ["strategic", "volitional", "attention"],
+    evidence: "Emerging", lifts: ["strategic", "volitional", "systematic", "attention"],
     prescription: "Protect uninterrupted single-task blocks with the phone out of the room — task-switching carries a real resumption cost, so batching focus beats reacting all day.",
     horizon: "daily; compounds over weeks",
     researchBasis: "Interruption and task-switching research shows measurable resumption-lag costs; the specific 'deep work' protocol is popular but more lightly trialed (honest: Emerging).",
@@ -193,7 +193,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   // ─── Mood, anxiety & mental health ──────────────────────────────────────────
   {
     id: "behavioral-activation", name: "Behavioral activation", section: "Trauma & Mental-Health Treatments", librarySection: "Trauma & Mental-Health Treatments",
-    evidence: "Strong", lifts: ["volitional", "mood", "self-regulation"],
+    evidence: "Strong", lifts: ["volitional", "intrapersonal", "resilient", "mood", "self-regulation"],
     prescription: "Schedule small valued or rewarding actions and do them regardless of motivation — action precedes mood here, not the other way around.",
     horizon: "2–6 weeks to shift mood",
     researchBasis: "Behavioral activation is a first-line, evidence-based treatment for depression, roughly as effective as full CBT in trials.",
@@ -201,7 +201,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "cbt-restructuring", name: "Cognitive restructuring (CBT skills)", section: "Trauma & Mental-Health Treatments", librarySection: "Trauma & Mental-Health Treatments",
-    evidence: "Strong", lifts: ["meta-cognitive", "emotion", "intrapersonal"],
+    evidence: "Strong", lifts: ["meta-cognitive", "resilient", "emotion", "intrapersonal"],
     prescription: "Catch the automatic thought, write it down, and test it against the evidence — the core CBT move that loosens anxious and depressive thinking loops.",
     horizon: "weeks of practice",
     researchBasis: "CBT is one of the most strongly evidenced psychotherapies for anxiety and depression across hundreds of trials.",
@@ -211,7 +211,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   // ─── Strength, body & nutrition ─────────────────────────────────────────────
   {
     id: "resistance-training", name: "Resistance training", section: "Exercise Physiology Specifics", librarySection: "Exercise Physiology Specifics",
-    evidence: "Strong", lifts: ["kinesthetic", "resilient", "mood"],
+    evidence: "Strong", lifts: ["kinesthetic", "resilient", "volitional", "mood"],
     prescription: "Progressive strength training 2–3×/week — it builds muscle and bone, lowers all-cause mortality risk, and has a real antidepressant effect on its own.",
     horizon: "6–12 weeks for strength & mood gains",
     researchBasis: "Meta-analyses link resistance training to lower all-cause mortality and a moderate reduction in depressive symptoms independent of aerobic exercise.",
@@ -219,7 +219,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "protein-fiber", name: "Protein + fiber baseline", section: "Nutrition & Supplements (Graded)", librarySection: "Nutrition & Supplements (Graded)",
-    evidence: "Strong", lifts: ["health", "energy"],
+    evidence: "Moderate", lifts: ["interoceptive", "resilient", "health", "energy"],
     prescription: "Anchor meals around adequate protein and high fiber — the two dietary levers with the strongest, least-hyped evidence for satiety, muscle, and long-term health.",
     horizon: "weeks for satiety/energy; years for health",
     researchBasis: "Higher dietary fiber shows a strong dose-response link to lower all-cause mortality; adequate protein supports muscle retention and satiety.",
@@ -245,7 +245,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "gratitude-kindness", name: "Gratitude & prosocial action", section: "Meaning, Grief & Positive Psychology", librarySection: "Meaning, Grief & Positive Psychology",
-    evidence: "Moderate", lifts: ["intrapersonal", "empathic", "mood"],
+    evidence: "Moderate", lifts: ["intrapersonal", "empathic", "interpersonal", "humor", "mood"],
     prescription: "A brief weekly gratitude reflection plus regular small acts of help — modest but real lifts to wellbeing, and cheap to run.",
     horizon: "weeks; keep it periodic, not daily-forced",
     researchBasis: "Gratitude and kindness interventions produce small-to-moderate wellbeing gains (honest: effect sizes are modest and sensitive to how they're run).",
@@ -253,7 +253,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "expressive-writing", name: "Expressive writing", section: "Meaning, Grief & Positive Psychology", librarySection: "Meaning, Grief & Positive Psychology",
-    evidence: "Moderate", lifts: ["reflective", "emotion", "intrapersonal"],
+    evidence: "Moderate", lifts: ["reflective", "resilient", "emotion", "intrapersonal"],
     prescription: "Write continuously about a stressor for ~15 minutes across a few days — the Pennebaker paradigm helps many people process and get clarity.",
     horizon: "3–4 short sessions",
     researchBasis: "Expressive writing produces modest but replicated improvements in processing stressful experiences and some health markers.",
@@ -271,7 +271,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "morning-light", name: "Morning light + circadian anchoring", section: "Sleep & Circadian Interventions", librarySection: "Sleep & Circadian Interventions",
-    evidence: "Strong", lifts: ["mood", "sleep", "energy"],
+    evidence: "Strong", lifts: ["resilient", "adaptive", "interoceptive", "mood", "sleep", "energy"],
     prescription: "Get bright light early and keep sleep-wake timing consistent — the cheapest lever for stabilizing circadian rhythm, mood, and daytime energy.",
     horizon: "days to a couple of weeks",
     researchBasis: "Morning bright-light exposure and regular timing reliably phase-anchor circadian rhythm and improve mood and alertness.",
