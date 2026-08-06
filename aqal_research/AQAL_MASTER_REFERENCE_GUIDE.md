@@ -930,3 +930,36 @@ Note: Interventions 26-36 are renumbered duplicates of 15-25 (Perplexity re-sent
 
 ### Key Insight:
 > The newest and strongest additions change the **ecology** around the person: social embedding, environment, default behavior, and repeated cueing.
+
+---
+
+## 14. Perplexity Pass 7: Long-Term Efficacy Rates for Ecology-Changing Interventions (August 6, 2026)
+
+### Key Numbers:
+- **66% of conservation/ecosystem interventions** produce net positive long-term effects vs. "do nothing" (GEF meta-analysis)
+- **81% of papers** on conservation interventions reported at least one beneficial response (ScienceDirect 2022)
+- **Multi-level ecological interventions (environment + social + individual) are more durable** than purely individual counseling
+- **Decades-scale monitoring** often required to see true direction — short-term results can be misleading
+
+### What Makes Ecology Interventions Stick:
+1. Repeated contacts (not one-off)
+2. Adjust over time to individual's path
+3. Change the context (defaults, built environment, social norms)
+4. Embed in existing institutions and routines
+5. Monitor with before-after-control-impact designs
+
+### The Convergence Pattern:
+> "Most well-designed ecological interventions outperform 'no intervention' over the long term. Durability depends heavily on design: monitoring, BACI designs, and integration into existing systems are critical."
+
+### Implications for AQAL:
+- The platform's prescription engine should prioritize ecology-changing interventions over single-trait interventions
+- Prescriptions should include REPEATED contacts (not just "try this once")
+- The platform itself IS an ecological intervention (changes schedule, social network, identity, default behavior)
+- Long-term tracking (6-12 month re-assessments) is essential to capture true effects
+
+### Sources:
+- Conservation action success: Science 2024 (DOI: 10.1126/science.adj6598)
+- Species conservation: ScienceDirect 2022 (DOI: 10.1016/j.biocon.2022.109530)
+- Sustaining interventions: PMC 2904839
+- Multilevel ecology: PMC 6454445
+- LTER insights: BioScience 72(9):814, 2022
