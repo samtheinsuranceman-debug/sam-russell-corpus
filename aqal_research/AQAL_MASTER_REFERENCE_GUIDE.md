@@ -528,3 +528,79 @@
 ---
 
 *This document is the living master reference. Every time new research is verified, add it here. Every time a rating changes, update it here. Every time a DOI is confirmed or debunked, note it here. This is the empirical backbone of AQAL.*
+
+---
+
+## 9. Perplexity Pass 2: Independence from G (August 6, 2026)
+
+### Critical Findings That Change the Platform
+
+#### Finding 1: Scale Back Independence Claims to 6-9 Lines
+
+The original handoff targeted 12-15 genuinely independent lines. After rigorous verification, the defensible number is **6-9 lines** with credible independence from g. This is still enough to argue the platform measures something beyond IQ and personality — just not as much as originally hoped.
+
+#### Finding 2: Volitional Is the Strongest Independence Case
+
+Duckworth & Seligman (2005) found self-discipline outperforms IQ almost 2-to-1 in predicting academic outcomes (r = 0.67 vs r = 0.32), holding even after controlling for IQ directly. This is the single strongest non-g finding in the entire research corpus and the flagship empirical claim for the platform.
+
+- **Citation:** Duckworth, A. L., & Seligman, M. E. P. (2005). Self-discipline outdoes IQ in predicting academic performance of adolescents. Psychological Science, 16(12), 939-944.
+- **DOI:** 10.1111/j.1467-9280.2005.01641.x
+
+#### Finding 3: RETRACT the Racetrack Handicapper Citation
+
+Ceci & Liker (1986) "A day at the races" was directly rebutted by Detterman & Spry, who reanalyzed the same data and found the original DOES show an IQ relationship when correctly analyzed. This is a landmine claim.
+
+- **Platform action:** REMOVE from all materials. Do not cite as evidence for practical intelligence independence.
+
+#### Finding 4: Musical Intelligence is NOT Fully Independent of g
+
+Burgoyne et al.'s twin study found music aptitude shares a genetic factor with g while retaining a unique genetic component. Musical is partially, not fully, independent.
+
+- **Platform action:** Downgrade from "Unassailable" to "Partially Independent."
+
+#### Finding 5: Adversarial/Machiavellian Has NO Validated Instrument
+
+Strong evolutionary theory (Byrne & Whiten 1988) but literally no validated individual-differences psychometric instrument exists. Cannot be scored in rarity composite.
+
+- **Platform action:** Flag as "theoretical construct without validated measurement." Exclude from rarity composite.
+
+#### Finding 6: Practical Intelligence (Sternberg) is Contested
+
+Gottfredson (2003) reanalyzed Sternberg's data and found r = 0.34 correlations with IQ. Not debunked but not independent either.
+
+- **Platform action:** Present both sides. Do not claim full independence.
+
+#### Finding 7: Interoceptive Accuracy Holds Up (With Measurement Caveat)
+
+Low g-correlation confirmed, but heartbeat-counting method has known validity problems (Zamariola et al. 2018).
+
+- **Platform action:** Keep as independent but note measurement caveat.
+
+### Revised Independence Scorecard
+
+| Line | Independence Status | Key Evidence | Confidence |
+|------|--------------------|--------------|-----------| 
+| **Volitional** | INDEPENDENT | Duckworth 2005: r=.67 vs IQ r=.32 | HIGH |
+| **Interoceptive** | INDEPENDENT (with caveat) | Low g-correlation; measurement issues | MEDIUM-HIGH |
+| **Kinesthetic** | INDEPENDENT | Motor factor (Gm) in CHC; separate from Gf | HIGH |
+| **Empathic** | PARTIALLY INDEPENDENT | MSCEIT r~0.30 with IQ; 85%+ unique variance | MEDIUM-HIGH |
+| **Resilient** | PARTIALLY INDEPENDENT | CD-RISC not predicted by IQ | MEDIUM |
+| **Interpersonal** | PARTIALLY INDEPENDENT | Social intelligence low g-loading | MEDIUM |
+| **Musical** | PARTIALLY INDEPENDENT (downgraded) | Shares genetic factor with g | MEDIUM |
+| **Aesthetic** | PARTIALLY INDEPENDENT | Openness-based; not cognitive | MEDIUM |
+| Adversarial | THEORETICAL ONLY | No validated instrument | LOW |
+| Spatial | G-LOADED (CHC: Gv) | r~0.60 with g | NOT INDEPENDENT |
+| Logical | G-LOADED (IS Gf) | Basically IS fluid intelligence | NOT INDEPENDENT |
+| Mathematical | G-LOADED (CHC: Gq) | High g-correlation | NOT INDEPENDENT |
+| Linguistic | G-LOADED (CHC: Gc) | r~0.70 with g | NOT INDEPENDENT |
+
+**Defensible independent lines: 6-9**
+
+### Platform Actions Required
+
+1. Adjust rarity composite to weight independent lines more heavily
+2. Commission factor-analytic study when 500+ members assessed
+3. RETRACT racetrack handicapper citation
+4. Present independence claim honestly: "6-9 dimensions beyond g"
+5. Flag Adversarial as unmeasurable until instrument exists
+6. Downgrade Musical from fully to partially independent
