@@ -1557,3 +1557,84 @@ better support use → more clarity about purpose (loop repeats)
 > Any change at lower layers must have a defined feedback path up to at least Strategy. Any change in Identity must eventually alter Processes and Metrics — or it's ceremonial.
 
 ### Sources: LeSS Systems Thinking, Resilience Earth, Stackademic, vFunction Architecture Guide
+
+---
+
+## 28. Perplexity Pass 21: 8 Multi-Line Intervention Architectures with Feedback Loops (August 6, 2026)
+
+### Case 1: Low Interpersonal + Low Emotional
+- **Loop:** Social feedback → Emotional awareness → Better interactions → More positive feedback
+- **R1:** Practice → Positive signals → Motivation → More practice
+- **B1:** Overwhelm → Withdrawal → Stagnation → More overwhelm
+- **Metrics:** Daily social interactions, emotional self-report (1-10), conflict incidents/week, positive feedback count
+- **Signals:** 20% more voluntary interactions (4wk), 30% less post-interaction anxiety, 50% more positive mentions
+- **Frequency:** Daily micro, Weekly review, Monthly deep
+
+### Case 2: Low Volitional + Low Somatic + Interoceptive
+- **Loop:** Body awareness → Better impulse control → Goal achievement → Increased body trust
+- **R2:** Somatic check-ins → Clearer signals → Better decisions → More trust → More check-ins
+- **B2:** Ignoring body → Poor decisions → Doubt → Less checking → Worse decisions
+- **Metrics:** Check-in adherence %, goal completion %, impulse override rate, heartbeat detection score
+- **Signals:** 80% check-in adherence (2wk), 40% goal completion increase, 25% less decision fatigue
+- **Frequency:** Hourly micro, Daily review, Weekly calibration
+
+### Case 3: Low Financial + Low Volitional
+- **Loop:** Financial tracking → Clear picture → Better allocation → Improved finances → More tracking
+- **R3:** Track → See patterns → Align → Progress → Motivation → Track more
+- **B3:** Avoid tracking → Financial fog → Poor decisions → Stress → More avoidance
+- **Metrics:** Days tracked (0-30), savings rate %, financial stress (1-10), spending-goal alignment %
+- **Signals:** 30 consecutive tracking days, savings +5 points, stress drops 3 points
+- **Frequency:** Real-time (auto), Weekly review, Monthly strategy
+
+### Case 4: Low Moral + Low Community + Low Interpersonal
+- **Loop:** Community engagement → Moral clarity through feedback → Better relationships → Deeper integration
+- **R4:** Serve → Receive moral feedback → Refine values → More effective service → Stronger bonds
+- **B4:** Moral isolation → Rigid values → Friction → Withdrawal → More isolation
+- **Metrics:** Service hours/week, dilemma resolution satisfaction (1-10), feedback ratio, relationship depth
+- **Signals:** 5+ hours/week consistent, 30% trust improvement, 40% dilemma confidence increase
+- **Frequency:** Weekly reflection, Monthly community feedback, Quarterly deep review
+
+### Case 5: Low Seduction + Low Logic + Low Persuasion
+- **Loop:** Logic practice → Better arguments → More persuasion success → Social confidence → More practice
+- **R5:** Study logic → Apply → Positive outcomes → Motivation → Better logic
+- **B5:** Over-intellectualizing → Awkwardness → Negative feedback → Avoidance → Stagnation
+- **Metrics:** Logic exercises/week, persuasion attempts, success rate %, avg conversation length
+- **Signals:** 50+ exercises (4wk), success rate 20%→40%, conversation length +50%
+- **Frequency:** Daily practice, Weekly review, Monthly analysis
+
+### Case 6: Low Meta-cognition + Low Intrapersonal + Low Interoceptive
+- **Loop:** Self-observation → Better self-understanding → Improved decisions → Positive outcomes → More trust
+- **R6:** Meta-cognitive practice → Clearer thinking → Better outcomes → Motivation → Deeper practice
+- **B6:** Over-analysis → Paralysis → Negative outcomes → Doubt → Less practice
+- **Metrics:** Check-in adherence %, decision quality (1-10), recurring patterns identified, interoceptive accuracy
+- **Signals:** 90% hourly adherence (1wk), 35% decision satisfaction increase, 5+ patterns in 2wk
+- **Frequency:** Hourly micro, Daily review, Weekly deep dive
+
+### Case 7: HIGH Strategic + Linguistic → LOW Humor + Interpersonal
+- **Loop:** Strategic humor planning → Linguistic practice → Positive feedback → Natural humor emergence
+- **R7:** Prepare → Deploy → Laughter → More practice → Natural emergence
+- **B7:** Forced humor → Awkwardness → Negative feedback → Avoidance → More awkwardness
+- **Metrics:** Humor attempts/interaction, laughter elicited, conversation duration, humor confidence (1-10)
+- **Signals:** Attempts 0→3/interaction, 50%+ positive responses, duration +40%
+- **Frequency:** Per-interaction, Weekly review, Monthly patterns
+
+### Case 8: HIGH Volitional + Logic → LOW Meta-cognition + Moral + Philosophical
+- **Loop:** Volitional schedule → Logical moral analysis → Meta-cognitive insights → Better decisions → More practice
+- **R8:** Schedule practice → Apply logic to philosophy → Gain insights → Better outcomes → More motivation
+- **B8:** Over-intellectualizing → Paralysis → Avoidance → Stagnation → Shallow thinking
+- **Metrics:** Practice sessions/week, dilemma resolution time, insights captured/week, decision quality %
+- **Signals:** 5+ sessions/week (4wk), 50% confidence increase, 10+ insights/week
+- **Frequency:** Daily practice, Weekly review, Monthly synthesis
+
+---
+
+### Master Template (Apply to ANY Multi-Line Combination):
+1. Map to AQAL Quadrants (UL/UR/LL/LR)
+2. Define Primary Feedback Loop (behavior → outcome → motivation → more behavior)
+3. Specify Reinforcing Loop R (growth cycle)
+4. Specify Balancing Loop B (limiting cycle)
+5. Choose 4-6 Key Metrics (mix behavioral + subjective + outcome + social)
+6. Identify Signal Sources per Quadrant (journals, wearables, peer feedback, APIs)
+7. Set Measurement Frequency (micro/review/deep)
+8. Define Success Signals (quantitative thresholds)
+9. Design Interventions per Quadrant (UL reflection, UR drills, LL social experiments, LR automation)
