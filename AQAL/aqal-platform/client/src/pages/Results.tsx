@@ -19,6 +19,7 @@ import { citationHref } from "@shared/citations";
 import { buildTrackerMarkdown } from "@shared/behavioralTracker";
 import { starvationForLine } from "./archetypesData";
 import { keystoneForLine } from "@shared/keystonePractices";
+import { therapiesForLine } from "@shared/therapyLineMap";
 
 // The full 32-line profile, in the order defined by the single source of truth.
 const AXIS_LABELS = ALL_AXES;
@@ -1313,6 +1314,20 @@ function StarvedLineOnRamp({ scores }: { scores: number[] }) {
             <span className="text-muted-foreground/50">Why it works: </span>{rx.practice.researchBasis}
             {" "}<span className="text-muted-foreground/40">· Horizon: {rx.practice.horizon}</span>
           </p>
+          {therapiesForLine(rx.line, 4).length > 0 && (
+            <div className="mb-3">
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-muted-foreground/50 mb-1.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Also lifts this line — from the audited therapy map
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {therapiesForLine(rx.line, 4).map((t) => (
+                  <span key={t.therapy} className={`text-[0.68rem] px-2 py-0.5 rounded-full border ${t.role === "PRIMARY" ? "border-accent/40 text-accent/90" : "border-border/60 text-foreground/60"}`}>
+                    {t.therapy}{t.role === "PRIMARY" ? " ★" : ""}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
           <Link href="/research-library">
             <a className="inline-flex items-center gap-2 text-xs text-accent hover:underline" onClick={playClick}>
               Read the research: {rx.practice.librarySection}
