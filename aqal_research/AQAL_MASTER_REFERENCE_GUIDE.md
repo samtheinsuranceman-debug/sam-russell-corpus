@@ -1703,3 +1703,56 @@ better support use → more clarity about purpose (loop repeats)
 - Contextual Factors: Life stage, culture, trauma, resources, support, health, sleep, nutrition
 
 ### Sources: UI-Patterns (Feedback Loops), Daniel Demmel (Feedback Loop Engineering), Integral Institute, IntegralLife
+
+---
+
+## 30. Perplexity Pass 23: 75 Controller-Based AQAL Scenarios — Unconscious Reorientation Protocols (August 6, 2026)
+
+### Total Scenarios: 158 (8 original + 75 emergent + 75 controller-based)
+
+### 10 Controller Intelligence Types:
+1. Volitional — Will-based habit architecture
+2. Meta-cognition — Awareness-based pattern interruption
+3. Emotional — Affect-based conditioning
+4. Logic — Reason-based cognitive restructuring
+5. Interoceptive — Body-based awareness cultivation
+6. Strategic — Systems-based leverage point identification
+7. Intrapersonal — Identity-based transformation
+8. Persuasion — Social influence-based change
+9. Moral — Values-based alignment
+10. Somatic — Movement-based pattern change
+
+### 4 Time Frame Tiers:
+
+| Time Frame | Duration | Neuroplasticity Phase | Conscious→Automatic | Best For |
+|---|---|---|---|---|
+| Rapid | 7-14 days | Initial synaptic pruning | 90%→10% automatic | Simple behavioral changes |
+| Moderate | 21-30 days | Myelination beginning | 90%→30% automatic | Habit formation, skill acquisition |
+| Deep | 66-90 days | Habit consolidation | 90%→60% automatic | Meta-cognition, interoceptive, somatic |
+| Transformative | 6-12 months | Identity-level rewiring | 90%→80% automatic | Intrapersonal, moral, strategic |
+
+### 5 Unconscious Reorientation Markers:
+1. Reduced conscious effort — from 90% to protocol-specific automaticity
+2. Spontaneous protocol activation — no cues needed
+3. Identity shift — "I'm trying to do X" → "I am someone who does X"
+4. Environmental cue triggering — context automatically activates protocol
+5. Reduced resistance/friction — target behaviors feel natural
+
+### When to Adjust Protocol:
+- No markers by 50% of time frame → increase intensity or change controller
+- Resistance increasing → reduce intensity, focus on environmental design
+- Identity not shifting → switch to intrapersonal or moral controller
+- Automaticity not emerging → extend time frame, add somatic/interoceptive
+
+### Environmental Design by Controller Type:
+- **Meta-cognition:** Cue-rich (alarms, sticky notes, wearable alerts, location cues)
+- **Moral/Intrapersonal:** Values-visible (written values, alignment rituals, exemplar reminders)
+- **Somatic:** Movement-friendly (standing desk, yoga mat, posture cues)
+- **Persuasion:** Socially visible (public commitments, group accountability)
+- **Strategic:** System-visible (dashboards, automated tracking, leverage maps)
+
+### Same vs. Different Approach:
+- 70% of scenarios: Controller uses standard feedback loop (same approach)
+- 30% of scenarios: Controller requires unique intervention strategy (different approach)
+
+### Sources: Neuroplasticity research, habit consolidation literature, identity-level change models
