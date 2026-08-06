@@ -1811,3 +1811,54 @@ better support use → more clarity about purpose (loop repeats)
 - Monthly check-ins are sufficient
 
 ### Sources: Bronfenbrenner ecological systems theory, financial stress research, family-systems interventions, habit formation literature, identity reconstruction models
+
+---
+
+## 32. Perplexity Pass 25: Intervention-Delay Flags — When NOT to Push Change (August 6, 2026)
+
+### 5 Categories of Delay Flags:
+
+**1. Acute Safety/Crisis (Hands-Off Until Resolved):**
+- Active suicidality/homicidality → Hands-off until safety plan in place
+- Active psychosis/severe mania → Postpone until psychiatric stabilization
+- Imminent violence/abuse → Hands-off until legal/safety interventions active
+- Acute medical crisis (ICU, surgery) → Pause until discharge + reorientation
+- Unstable housing/imminent eviction → Delay until 30+ days housing secured
+
+**2. Major Life-Event Transitions (Turn Down, Don't Off):**
+- Bereavement/major loss → Light, grief-focused only for 6-12 weeks
+- Divorce/separation → Soft support only for 4-8 weeks
+- New infant/major caregiving → Radical simplification for 8-16 weeks
+- Job loss/unemployment → Financial triage + survival structure for 4-12 weeks
+- Major relocation → Light/portable habits only for 2-3 months
+- Starting intensive treatment → Adjunctive/minimally intrusive for 3-6 months
+
+**3. Moderate Persistent Distress (Softer, Smaller-Scale):**
+- Sub-clinical anxiety/depression → Soft engagement for 6-12 weeks
+- Chronic pain/fatigue → Reduce intensity, energy management for 4-12 weeks
+- Legal/custody battles → Individual coping only for 3-6 months
+- Severe financial strain → Emergency triage + micro-solutions for 2-6 months
+
+**4. Structural/Systemic Factors (Hands-Off Until Systems Respond):**
+- Systemic discrimination/oppression → Validation + resilience + advocacy
+- Lack of mental-health infrastructure → Remote/low-tech containment
+
+**5. Motivation/Readiness:**
+- Pre-contemplation (no intention to change) → Consciousness-raising for 4-12 weeks
+- Coerced/court-ordered → Autonomy-respecting conversations, very light structure
+
+### The Integrated "When to Wait / When to Go" Logic:
+1. Safety/crisis flag present? → PAUSE full protocol, stabilize first (1-4 weeks)
+2. Major life event active? → TURN DOWN intensity, portable protocols only (4-16 weeks)
+3. Moderate distress/structural oppression? → SOFT engagement, micro-resilience (6-12 weeks)
+4. Low motivation/readiness? → CONSCIOUSNESS-RAISING only (4-12 weeks)
+5. ALL CLEAR? → Activate full stabilization → regulation → structure → connection → transformation → maintenance sequence
+
+### Evidence Base:
+- Behavior Modification (StatPearls/NIH): Pause if cannot be consistently enforced or safety compromised
+- Stages of Change (Prochaska & DiClemente): Pre-contemplation → contemplation → preparation → action
+- Long-term adherence research: High-load during acute stress fails; lighter/persistent succeeds
+- Red-flag frameworks: Suicidality, psychosis, violence, rapid decline → immediate safety/medical triage
+- Family-therapy contraindications: Active violence/abuse rules out family-system work
+
+### Sources: NIH StatPearls, AHA Circulation, PMC (financial stress, ICU reorientation, family interventions), Stages of Change Theory
