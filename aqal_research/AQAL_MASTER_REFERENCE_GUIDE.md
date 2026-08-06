@@ -1392,3 +1392,77 @@ better support use → more clarity about purpose (loop repeats)
 - Is intensity tiered?
 
 ### Sources: PMC 10640495 (Triple P), PMC 8109838, PMC 9525569, PMC 10865193, Urban Institute, DFE-RR156, MTSS/Panorama
+
+---
+
+## 25. Perplexity Pass 18: 10-Point Failure Mode Checklist for Parenting OS Design (August 6, 2026)
+
+### The Checklist (Run at Design Time + Quarterly):
+
+**1. Capacity & Load (B1):**
+- All recurring tasks listed explicitly?
+- Typical week executable given real constraints?
+- Tiers of support (light/moderate/intensive)?
+- Written pruning rule?
+- Minimum viable routines defined for stress periods?
+- Load triggers that force simplification identified?
+
+**2. Parent Mental Health (UL):**
+- Brief repeated stress/burnout measure built in?
+- Explicit threshold for reducing load?
+- Parent-only support time included?
+- Traumatic events/instability tracked with adjustments?
+- Written permission to skip tasks for regulation/safety?
+
+**3. Cultural Fit & Meaning (LL):**
+- Family's own parenting beliefs surfaced and compared?
+- Language matches family culture?
+- Extended family/community norms acknowledged?
+- Mechanism to rewrite scripts in family's own metaphors?
+
+**4. Behavior vs. Capacity Framing (UR vs UL/LR):**
+- Failed routines → first ask "what capacity mismatch?" not "who didn't comply?"
+- Structural barriers logged alongside compliance?
+- Child behaviors interpreted as signals, not defiance?
+- At least one demand-reducing routine for recurring problems?
+
+**5. Monitoring vs. Adaptation:**
+- Each metric has a specific adaptation rule?
+- Feedback loops short (days/weeks)?
+- Parents see benefits from tracking?
+- Exit criterion for metrics that don't change decisions?
+
+**6. Tiering & Optionality:**
+- At least 3 engagement levels defined?
+- Families can move tiers without shame?
+- Plug-in modules (add/remove without breaking core)?
+- Parents co-design sequence?
+
+**7. Culture & System Anchoring (R2):**
+- Scripts written down, visible, teachable?
+- Schools/caregivers/extended family integrated?
+- Policies support the OS (not undercut it)?
+- Handover protocol for staff changes?
+
+**8. Pruning & Sunset Rules:**
+- Written rule: remove/simplify at least one thing per month?
+- Tracking which elements are never used?
+- Explicit sunset criteria (after N weeks stable, remove scaffold)?
+- Permanent vs. temporary practices distinguished?
+
+**9. Failure-Mode Rehearsals:**
+- OS failure defined (what does collapse look like)?
+- Clear fallback mode for high-stress periods?
+- Simulated what happens if key supports go offline?
+- Someone responsible for triggering recovery mode?
+
+**10. AQAL Alignment Check:**
+- UL: Measuring/resourcing parent inner life?
+- UR: Supporting concrete skills with realistic rehearsal?
+- LL: Actively shaping family/community narratives?
+- LR: Simplifying and stabilizing, not just adding more?
+
+### Usage:
+> Each "no" or "uncertain" = one mitigation item. Load/UL/culture/pruning items yield the biggest stability gains.
+
+### Sources: PMC 10640495 (Triple P), Urban Institute, PMC 8109838, Blackpool Better Start, DFE-RR156, PMC 9525569, PMC 10865193, SISEP
