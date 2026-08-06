@@ -1006,3 +1006,50 @@ Identify and strengthen the "good" loops (success → recognition → more engag
 - Ecology of multilevel intervention: PMC 6454445
 - Leverage points/traps: ScienceDirect 2025
 - Symptom feedback loops: Nature SciRep 2026
+
+---
+
+## 16. Perplexity Pass 9: Causal Loop Diagrams & 3-Loop AQAL Model (August 6, 2026)
+
+### The AQAL Reinforcing Loop (Simple):
+```
+Individual skill/support → Daily behavior change → Visible early wins →
+Motivation/self-efficacy → Participation in support system → More data/feedback →
+Better tailoring at group/system level → Improved environment/norms/access →
+Individual skill/support (loop repeats)
+```
+
+### The 3-Loop Model:
+
+**R1 — Growth Loop (Skills & Wins):**
+Higher skills → More early wins → Higher engagement → More feedback → Better tailoring → More supportive environment → Higher skills
+
+**R2 — Culture/Adoption Loop (Meaning & Norms):**
+More shared meaning → Stronger norms → Higher participation → More success stories → Deeper shared meaning
+
+**B1 — Constraint Loop (Fatigue & Capacity):**
+More load → Higher fatigue → Lower quality → Weaker results → Lower motivation → Less load
+
+### AQAL Quadrant Mapping:
+| Quadrant | R1 Growth | R2 Culture | B1 Constraint |
+|---|---|---|---|
+| UL (Interior) | Motivation, self-efficacy | Shared purpose, meaning | Burnout, discouragement |
+| UR (Behavior) | Skills, habits, early wins | Visible role-model behaviors | Degraded performance |
+| LL (Culture) | Emergent growth language | Norms, stories, peer expectations | Cynicism, "initiative fatigue" |
+| LR (Systems) | Feedback channels, dashboards | Policies, routines, institutionalization | Staffing, time, budgets |
+
+### One-Sentence Synthesis:
+> "AQAL intervention growth is best modeled as two reinforcing loops (skill-environment growth + cultural adoption) constrained by a balancing loop (capacity/fatigue), and the art is to strengthen R1/R2 while continuously relieving B1 so the system keeps evolving rather than snapping back to baseline."
+
+### Platform Design Implications:
+- **Maximize R1:** Score → Prescribe → Practice → Re-score → Better prescription (the core product loop)
+- **Maximize R2:** Leaderboard, community matching, success stories, shared language ("lines," "dial," "master weakness")
+- **Relieve B1:** Keep assessment under 30 min, automate prescriptions, realistic weekly practice load, "stop doing" lists, pacing
+
+### Sources:
+- UNDP Causal Loop Diagrams
+- PMC 9661310 (How to use CLDs)
+- PMC 9525569 (Monitor to innovate)
+- Springer 2021 (Multi-tiered facilitation)
+- SISEP/UNC (K-12 feedback)
+- ERIC ED622549 (Transformative interactions)
