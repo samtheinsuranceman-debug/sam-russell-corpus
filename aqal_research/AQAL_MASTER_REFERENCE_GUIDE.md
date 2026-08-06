@@ -2057,3 +2057,51 @@ Every scenario includes a 4-quadrant ecological intervention:
 2. **Transport loss needs a dedicated protocol** — no existing therapy framework addresses "you might lose your car and then your job"
 3. **Multiple-risk overlap (70%)** means single-intervention approaches will fail — the 4-quadrant design is essential, not optional
 4. **Substance escalation (8%)** requires coordination with external treatment systems — platform should detect and refer, not treat
+
+---
+
+## 36. Perplexity Pass 29: Crisis Prioritization Matrix — 400 Scenarios Ranked by Urgency (August 6, 2026)
+
+### Priority Tier Distribution:
+| Priority Tier | Score Range | Count | % | Action Required |
+|---------------|-------------|-------|---|-----------------|
+| CRITICAL | ≥30 | ~45 | 11.25% | Intervene within 7 days |
+| HIGH | 25-29 | ~95 | 23.75% | Intervene within 14 days |
+| MODERATE | 20-24 | ~140 | 35% | Intervene within 30 days |
+| STABLE | <20 | ~120 | 30% | Monitor, intervene within 60 days |
+
+### Critical Tier Profile (Score ≥30):
+- Age ranges: 70-80 (35%), 15-19 (25%), 60-69 (20%)
+- Top monsters: financial panic, identity collapse, learned helplessness
+- Common worst cases: eviction, job loss, hospitalization, custody conflict
+- Typical: Elderly or adolescent, 3+ pressures, behind on bills, identity/financial monster
+
+### High Tier Profile (Score 25-29):
+- Age ranges: 50-59 (30%), 60-69 (25%), 40-49 (20%)
+- Top monsters: executive overload, hypervigilance, control addiction
+- Common worst cases: relationship rupture, transport loss, debt spiral
+- Typical: Middle-aged, 2-3 pressures, volatile cash flow, overload/panic monster
+
+### Moderate Tier Profile (Score 20-24):
+- Age ranges: 30-39 (30%), 40-49 (25%), 50-59 (20%)
+- Top monsters: shame loop, procrastination spiral, avoidance habit, trauma echo
+- Common worst cases: credit collapse, isolation, loss of savings
+- Typical: Working age, 1-2 pressures, stable but no cushion, shame/avoidance monster
+
+### Stable Tier Profile (Score <20):
+- Age ranges: 30-39 (35%), 20-29 (25%), 40-49 (20%)
+- Top monsters: all-or-nothing thinking, family enmeshment, trauma echo
+- Typical: Younger working age, 0-1 pressures, saving slowly, thinking/enmeshment monster
+
+### Critical Insight — Age Vulnerability:
+The CRITICAL tier is dominated by the extremes: **elderly (70-80) and adolescents (15-19)**. These are the populations with the least agency, fewest resources, and highest system-dependence. The platform's triage algorithm should weight age as a risk multiplier at both ends.
+
+### 90-Day Intervention Sequencing:
+- Days 1-7: Top 15 critical cases (daily check-ins, all 4 quadrants activated)
+- Days 8-14: Next 30 critical/high cases (biweekly check-ins)
+- Days 15-30: HIGH priority (weekly reviews, group support pods)
+- Days 31-60: MODERATE priority (monthly reviews, self-guided protocols)
+- Days 61-90: STABLE cases + maintenance for all prior cohorts (quarterly check-ins)
+
+### Platform Design Implication:
+The crisis scoring formula should weight: age extremes (×1.5), number of pressures (×1.2 per pressure), financial severity (behind on bills = +5, paycheck to paycheck = +3), and worst-case severity (eviction/hospitalization = +5, relationship rupture = +3).
