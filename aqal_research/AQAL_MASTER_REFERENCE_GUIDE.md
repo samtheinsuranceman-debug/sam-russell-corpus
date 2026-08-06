@@ -1088,3 +1088,46 @@ More load → Higher fatigue → Lower quality → Weaker results → Lower moti
 - SISEP/UNC (K-12 feedback)
 - ERIC ED622549 (Transformative interactions)
 - UNDP Evaluation (Causal loop diagrams)
+
+---
+
+## 18. Perplexity Pass 11: Parenting Line — 3-Loop Case Study (August 6, 2026)
+
+### R1 Growth Loop (Parenting):
+```
+Better parenting skills → More positive parent-child interactions →
+Higher parental confidence → More honest feedback →
+Better tailoring of support → More supportive home routines →
+Better parenting skills (loop repeats)
+```
+
+### R2 Culture Loop (Parenting):
+```
+Deeper shared meaning ("good parenting = warm + consistent") →
+Stronger norms among caregivers/relatives/teachers →
+More participation in programs and peer circles →
+More visible stories of respectful parenting →
+Deeper shared meaning (loop repeats)
+```
+
+### B1 Constraint Loop (Parenting):
+```
+More demands on parents → Higher fatigue/stress →
+Lower quality of daily parenting → Weaker child outcomes →
+Lower motivation → Reduced engagement/drop-out
+```
+
+### Key Evidence:
+- Meta-analysis of 102 early parenting interventions (0-3 years): improvements in child cognitive, language, motor, socioemotional development, attachment, and behavior (PMC 8109838)
+- Gains STRONGEST when skills practice (UR) supported by ongoing visits/coaching/home routines (LR) — exactly R1
+- Programs do NOT reliably reduce parental depressive symptoms — signals B1 constraint (emotional load persists if parents' own mental health isn't addressed)
+
+### Design Rules for Parenting Line:
+1. **R1:** Every protocol needs micro-skills (UR) + visible early wins + reflection (UL) + feedback channels (LR)
+2. **R2:** Work on shared narratives (LL) + embed in pediatric visits/schools/centers (LR)
+3. **B1 relief:** Realistic session lengths, mental health supports for parents, reduce friction (childcare, transport, timing)
+
+### One-Sentence Synthesis:
+> "For parenting, the AQAL line grows most reliably when skill loops (R1) and culture loops (R2) are designed together, while B1 (fatigue/capacity) is continually relieved so healthy parenting becomes the default ecology of the family rather than an extra task."
+
+### Source: PMC 8109838 (102-study meta-analysis of early parenting interventions)
