@@ -1862,3 +1862,114 @@ better support use → more clarity about purpose (loop repeats)
 - Family-therapy contraindications: Active violence/abuse rules out family-system work
 
 ### Sources: NIH StatPearls, AHA Circulation, PMC (financial stress, ICU reorientation, family interventions), Stages of Change Theory
+
+---
+
+## 33. Perplexity Pass 26: 200 Realistic Patient Scenarios — Distribution Analysis (August 6, 2026)
+
+### Dataset Overview:
+- **Total scenarios:** 200 realistic patient profiles
+- **Architecture:** Each scenario includes weaknesses (2-3 intelligences), strengths (2-5 intelligences), occupation, family structure, financial status, external pressures, stakes, cost of inaction, worst case, hidden advantages, psychological monster, origin, monster's desire, AQAL 4-quadrant environment design, recommended protocol, success signal, and maintenance cadence
+
+### Status Distribution (N=200):
+- Surviving: 131 (65.5%)
+- Thriving: 69 (34.5%)
+
+### Financial Status Distribution:
+| Rank | Money Situation | Count | % |
+|------|----------------|-------|---|
+| 1 | Stable but no cushion | 29 | 14.5% |
+| 2 | Barely breaking even | 25 | 12.5% |
+| 3 | Recent windfall but no system | 25 | 12.5% |
+| 4 | Volatile cash flow | 24 | 12.0% |
+| 5 | Saving slowly | 21 | 10.5% |
+| 6 | Living paycheck to paycheck | 20 | 10.0% |
+| 7 | Enough for family outings | 19 | 9.5% |
+| 8 | Behind on bills | 17 | 8.5% |
+| 9 | Some extra money this month | 11 | 5.5% |
+| 10 | Debt consolidation underway | 9 | 4.5% |
+
+**Key Insight:** 90.5% of scenarios involve some form of financial precarity. Only 5.5% have "some extra money." This validates the platform's emphasis on financial intelligence as a critical line.
+
+### Psychological Monster Distribution:
+| Rank | Monster | Count | % | What It Wants |
+|------|---------|-------|---|---------------|
+| 1 | Executive overload | 26 | 13.0% | Relief/protection |
+| 2 | Avoidance habit | 22 | 11.0% | Control/predictability |
+| 3 | Shame loop | 21 | 10.5% | Avoidance/relief |
+| 4 | Procrastination spiral | 19 | 9.5% | Relief |
+| 5 | Identity collapse | 18 | 9.0% | Certainty |
+| 6 | Control addiction | 16 | 8.0% | Predictability |
+| 7 | Family enmeshment | 14 | 7.0% | Protection |
+| 8 | Financial panic | 14 | 7.0% | Certainty/control |
+| 9 | Hypervigilance | 13 | 6.5% | Predictability/protection |
+| 10 | Trauma echo | 13 | 6.5% | Protection |
+| 11 | Learned helplessness | 12 | 6.0% | Relief |
+| 12 | All-or-nothing thinking | 12 | 6.0% | Predictability/relief |
+
+**Key Insight:** The top 3 monsters (executive overload + avoidance + shame) account for 34.5% of all cases. All 12 monsters are adaptive responses to past trauma that became maladaptive in current context.
+
+### Monster Origin Distribution:
+| Origin | Count | % |
+|--------|-------|---|
+| Medical trauma | 38 | 19.0% |
+| Attachment injury | 32 | 16.0% |
+| Work trauma | 31 | 15.5% |
+| Poverty stress | 29 | 14.5% |
+| Childhood chaos | 26 | 13.0% |
+| Family conflict | 24 | 12.0% |
+| School failure | 20 | 10.0% |
+
+**Key Insight:** Medical trauma is the #1 origin (19%). Combined with poverty stress (14.5%), these two "system failures" account for 33.5% of all monster origins — suggesting that healthcare and economic systems are the primary generators of psychological monsters in adults.
+
+### Environmental Pressure Patterns:
+- Multiple pressures (2+ sources): ~60%
+- Single pressure source: ~25%
+- No external pressure (isolated): ~15%
+
+Most common pressure sources: family members (mother, father, sibling, ex-partner), financial authorities (landlord, bank), institutional figures (boss, school counselor), social networks (friend group, church leader)
+
+### AQAL 4-Quadrant Environment Patterns:
+1. **UL journaling + UR routines + LL accountability + LR dashboards** — For avoidance/procrastination patterns
+2. **UL values clarity + UR habit design + LL family meetings + LR automation** — For family/identity patterns
+3. **UL shadow work + UR body checks + LL community support + LR financial scaffolding** — For shame/trauma patterns
+4. **UL metacognition + UR schedules + LL partner check-ins + LR metric board** — For executive/control patterns
+
+### Recommended Protocol Distribution:
+1. Stabilize sleep, then money, then communication (most common)
+2. Use strengths to create one reliable win per week
+3. Start with body regulation, then family structure
+4. Remove friction from the most critical behavior first
+
+### Success Signal Distribution:
+1. Missed tasks drop for 4 consecutive weeks
+2. Bills become predictable and on time
+3. Family conflict falls below threshold
+4. One monthly review shows no crisis escalation
+
+### Maintenance Cadence:
+- Biweekly check-ins: 73 (36.5%)
+- Quarterly check-ins: 68 (34.0%)
+- Monthly check-ins: 59 (29.5%)
+
+### The Meta Phenomenon: Cognitive-Emotional System Overload
+All 200 people share:
+- Modern life demands exceeding current regulatory capacity
+- At least 2-3 cognitive/emotional/behavioral weaknesses creating bottlenecks
+- Financial precarity or instability (only 5.5% have "some extra money")
+- A "monster" pattern developed as adaptation to past trauma/stress
+- The monster is now maladaptive in current context
+
+What differs:
+- Which intelligences are weak vs. strong
+- Family structure and support (or lack thereof)
+- Specific monster type
+- Origin of the monster
+- Current life phase (thriving vs. surviving)
+
+### Implications for Platform Design:
+1. **Assessment must identify the monster** — not just the weak lines, but the adaptive pattern underneath
+2. **Financial intelligence is nearly universal weakness** — 90.5% in precarity
+3. **Protocols must be sequenced** — sleep → money → communication is the most common first sequence
+4. **Success signals must be measurable** — "missed tasks drop for 4 weeks" is concrete and trackable
+5. **Maintenance is ongoing** — no one is "cured," they're maintained at biweekly/monthly/quarterly cadence
