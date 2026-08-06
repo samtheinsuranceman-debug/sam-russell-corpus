@@ -2105,3 +2105,70 @@ The CRITICAL tier is dominated by the extremes: **elderly (70-80) and adolescent
 
 ### Platform Design Implication:
 The crisis scoring formula should weight: age extremes (×1.5), number of pressures (×1.2 per pressure), financial severity (behind on bills = +5, paycheck to paycheck = +3), and worst-case severity (eviction/hospitalization = +5, relationship rupture = +3).
+
+---
+
+## 37. Perplexity Pass 30: Intervention Playbook + Resource Allocation Model (August 6, 2026)
+
+### 7-Day Critical Protocol Structure (Universal Template):
+
+**Days 1-2: SAFETY & STABILIZATION**
+- UL: 10-min values check-in ("What matters most right now?")
+- UR: Sleep protocol (7+ hours, consistent bedtime, no screens 1hr before)
+- LL: Contact 1 trusted person today
+- LR: List all bills due in next 14 days, total amount needed
+- Crisis safeguard: If worst-case risk >50%, activate emergency resources
+
+**Days 3-4: REGULATION & CONNECTION**
+- UL: Write 1 paragraph: "Who am I when I'm at my best?"
+- UR: 4-7-8 breathing 3x/day, 10-min walk outside
+- LL: Share 1 struggle with accountability partner
+- LR: Set up 1 automated payment or calendar reminder
+- Strength lever: Use strongest trait to support weakest moment
+
+**Days 5-7: STRUCTURE & MOMENTUM**
+- UL: Daily affirmation aligned to identity
+- UR: Morning routine (wake, water, movement, food — in that order)
+- LL: Schedule weekly check-in with support person
+- LR: Create simple budget (Income - Essentials - Debt = Remaining)
+- Monster defusion: "I see you, but you're not driving"
+
+### Day 7 Success Metrics:
+1. Sleep 6+ hours for 5 of 7 nights
+2. No new crisis events
+3. One bill paid or payment plan arranged
+4. One supportive conversation completed
+5. Morning routine done 3+ days
+
+### Escalation Triggers (Return to Day 1):
+- Suicidal thoughts or self-harm urges
+- Missed 2+ critical payments
+- Relationship rupture or domestic conflict
+- Substance use >3 drinks/day or any drug use
+- Can't get out of bed for 2+ days
+
+### Strength Lever Concept:
+Each person's strongest intelligence is used as a bridge to support their weakest moment. Examples:
+- Use numerical to support volitional (spreadsheet as motivation tool)
+- Use humor to support somatic (laughter as body regulation)
+- Use moral to support verbal (values as communication anchor)
+- Use attachment to support somatic (relationships as body-safety cue)
+
+### Resource Allocation Model:
+| Tier | Cases | Coach Ratio | FTE Needed |
+|------|-------|-------------|------------|
+| CRITICAL | 45 | 1:10 | 4.5 |
+| HIGH | 95 | 1:18 | 5.3 |
+| MODERATE | 140 | 1:35 | 4.0 |
+| STABLE | 120 | 1:55 | 2.2 |
+| **TOTAL** | **400** | — | **16 FTE** |
+
+### Cost Model:
+- 16 FTE coaches × $60k avg salary = $960k/year
+- Overhead (20%): $192k
+- Technology/platform (10%): $96k
+- **Total: ~$1.25M/year for 400 clients**
+- **Per client: ~$260/month**
+
+### Platform Pricing Validation:
+At $449/mo membership, each paying client generates $189/mo profit after coach cost ($449 - $260 = $189). At 40,000 members, the platform generates $7.56M/month in profit after coaching costs. The first 10,000 free members cost ~$2.6M/month to serve — funded by the 30,000 paying members generating $5.67M/month.
