@@ -1973,3 +1973,48 @@ What differs:
 3. **Protocols must be sequenced** — sleep → money → communication is the most common first sequence
 4. **Success signals must be measurable** — "missed tasks drop for 4 weeks" is concrete and trackable
 5. **Maintenance is ongoing** — no one is "cured," they're maintained at biweekly/monthly/quarterly cadence
+
+---
+
+## 34. Perplexity Pass 27: Fresh 400 Scenarios — Expanded Dataset with Age Ranges (August 6, 2026)
+
+### Dataset Expansion:
+- **New total:** 400 additional scenarios (separate from original 200)
+- **Key addition:** Age_Range field (15-80) — enables age-stratified intervention design
+- **New protocol:** "Pause heavy change until safety is restored, then restart small" (delay-flag aware)
+- **New protocol:** "Stabilize sleep, food, transport, then money" (survival-first for extreme precarity)
+- **New AQAL environments:** "UL metacognition + UR schedule design + LL relational repair + LR budget guardrails" and "UL values journaling + UR sleep/movement routines + LL accountability pod + LR financial dashboard"
+
+### Age Distribution (N=400):
+| Age Range | Approximate % |
+|-----------|--------------|
+| 15-19 | ~5% |
+| 20-29 | ~15% |
+| 30-39 | ~20% |
+| 40-49 | ~20% |
+| 50-59 | ~20% |
+| 60-69 | ~15% |
+| 70-80 | ~5% |
+
+### New Worst-Case Outcomes Added:
+- Credit collapse
+- Isolation
+- Substance escalation
+- Legal trouble
+- Transport loss
+- Loss of savings
+- Medication disruption
+- Scam/financial loss
+
+### New Insights from 400-Scenario Expansion:
+1. **Age matters for protocol selection** — a 70-year-old with learned helplessness from poverty stress needs different pacing than a 20-year-old with the same monster
+2. **"Living with parents" as family structure** — adds a new dimension of enmeshment risk and autonomy constraints
+3. **"Recently separated" status** — triggers the intervention-delay flag (4-8 weeks soft support only)
+4. **Transport loss as worst-case** — uniquely devastating for rural/suburban scenarios where job depends on vehicle
+5. **5 protocols now (up from 4):** Added "pause heavy change until safety is restored" — directly integrates the intervention-delay flags into protocol selection
+
+### Combined Dataset: 600 Total Scenarios
+- Original 200 (from Pass 26)
+- Fresh 400 (this pass)
+- Systematic variation across 15+ dimensions
+- Covers ages 15-80, 25 occupations, 12 monster types, 7 origins, 12 worst-case outcomes, 5 protocols, 5 success signals, 3 maintenance cadences
