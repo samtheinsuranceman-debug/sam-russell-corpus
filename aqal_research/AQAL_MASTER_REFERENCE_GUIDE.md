@@ -902,3 +902,31 @@ Note: Interventions 26-36 are renumbered duplicates of 15-25 (Perplexity re-sent
 > The site would become much stronger with a new top-level category: **"Ecology-changing interventions"** — including social prescribing, environment redesign, digital hygiene, built-environment changes, and community-based participation tools. Lasting change comes from changing the person's context, not only their traits.
 
 **STATUS: IMPLEMENTED** — The "Ecological Interventions" page is now live at joinaqal.com/ecological-interventions with 25 interventions tiered by ecological impact.
+
+### Perplexity Pass 6 — Clean Audit Sheet (20 interventions with source links)
+
+| Intervention | Why It Matters | Sources |
+|---|---|---|
+| Social prescribing | Strong real-world gains in loneliness, well-being, service use | PMC 9580419, Springer, SAGE |
+| Exposure with response prevention | Strongest behavior-change protocol in clinical psych | NCBI |
+| Problem-solving therapy | Strong practical tool for real-life distress | NCBI Bookshelf |
+| Combined cognitive-physical | Better than exercise alone for cognition | Frontiers HumNeuro, APA PsycNet |
+| Long-term physical activity | Durable health + cognitive benefits | Springer 2024 |
+| Nature-based interventions | Broad gains: mood, attention, relationships, restoration | PMC 6628071 |
+| Nature connectedness | Stronger than one-off exposure when repeated | findingnature.org.uk |
+| Social cognition training | Improves emotion recognition + interpersonal functioning | Nature SciRep 2022 |
+| Mind-body regulation | Strong for stress, attention, emotional regulation | PMC 6429408, 9575688 |
+| Positive psychology | Reliable small-to-moderate well-being gains | Springer BMC 2013, PMC 10202508 |
+| Self-compassion training | Shame, burnout, recovery after failure | PMC 9575688 |
+| Climate-friendly behavior prompts | Prompts + relevance framing move behavior | PMC 10108067, Frontiers 2024 |
+| Positive behavior-change bundles | Bundled > single techniques | PMC 10108067 |
+| Goal setting + planning | Classic high-value intervention | Frontiers 2024 |
+| Repetition and substitution | Strong habit-building technique | Frontiers 2024 |
+| Concrete instruction / shaping knowledge | Converts intention into implementation | Frontiers 2024 |
+| Green-space use interventions | Built-environment + cue-based strategies | Born in Bradford |
+| Conservation / ecosystem restoration | Positive ecological + identity effects | Science 2024 |
+| Indigenous/local stewardship | Better outcomes with real local governance | PMC 11383897 |
+| Community gardening | Nature + routine + movement + social cohesion | PMC 6628071 |
+
+### Key Insight:
+> The newest and strongest additions change the **ecology** around the person: social embedding, environment, default behavior, and repeated cueing.
