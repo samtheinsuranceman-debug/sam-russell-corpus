@@ -77,7 +77,7 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
   },
   {
     id: "psychedelic", name: "Psychedelic-assisted therapy (documented, not prescribed)", section: "18", librarySection: "Psychedelic-Assisted Therapy — Deep but Gated",
-    evidence: "Moderate", lifts: ["reflective", "integrative", "existential", "openness", "meaning", "mood"],
+    evidence: "Moderate", lifts: ["reflective", "integrative", "openness", "meaning", "mood"],
     prescription: "Documented for durable openness and mood change under strict medical supervision — we DOCUMENT this, we do not prescribe it. Legal, screening, and safety constraints apply.",
     horizon: "n/a — not a self-practice",
     researchBasis: "Supervised psilocybin has produced durable increases in openness and sustained reductions in depression/anxiety in trials — under medical control only.",
