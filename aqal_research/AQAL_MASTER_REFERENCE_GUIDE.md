@@ -2018,3 +2018,42 @@ What differs:
 - Fresh 400 (this pass)
 - Systematic variation across 15+ dimensions
 - Covers ages 15-80, 25 occupations, 12 monster types, 7 origins, 12 worst-case outcomes, 5 protocols, 5 success signals, 3 maintenance cadences
+
+---
+
+## 35. Perplexity Pass 28: High-Risk Scenario Categorization — 400 Scenarios by Catastrophe Type (August 6, 2026)
+
+### Risk Distribution Across 400 Scenarios:
+| Risk Category | Count | % | Intervention Priority |
+|---------------|-------|---|----------------------|
+| Relationship rupture | 43 | 10.75% | High — cascading isolation effects |
+| Transport loss | 41 | 10.25% | Critical — job depends on vehicle in rural/suburban |
+| Job loss | 36 | 9.0% | Critical — income collapse triggers all other risks |
+| Substance escalation | 32 | 8.0% | High — medical + legal + relational cascade |
+| Eviction | 30 | 7.5% | Critical — homelessness = total system collapse |
+| Debt spiral | ~25 | ~6.25% | Moderate — slow burn, treatable with scaffolding |
+| Hospitalization | ~25 | ~6.25% | High — medical crisis = intervention-delay flag |
+| Credit collapse | ~25 | ~6.25% | Moderate — recoverable with 12-24 month plan |
+| Custody conflict | ~25 | ~6.25% | High — legal + emotional + child wellbeing |
+| Isolation | ~25 | ~6.25% | Moderate — but compounds all other risks silently |
+| Legal trouble | ~25 | ~6.25% | High — external system control, limited agency |
+| Loss of savings | ~25 | ~6.25% | Moderate — psychological blow + future insecurity |
+
+### Key Findings:
+- **100% of scenarios carry at least one catastrophic risk**
+- **70% carry multiple overlapping risks** (280/400)
+- **Top 3 risks (relationship + transport + job) account for 30%** of all worst-case outcomes
+- **Transport loss is uniquely devastating** — not typically tracked in clinical settings but destroys employment access in non-urban areas
+
+### Ecological Intervention Patterns (All 400 Scenarios):
+Every scenario includes a 4-quadrant ecological intervention:
+- **UL:** Values journaling, identity mapping, shadow work, metacognition
+- **UR:** Sleep/movement routines, habit stacking, body regulation, schedule design
+- **LL:** Accountability pod, family meeting, peer support, relational repair
+- **LR:** Financial dashboard, automated reminders, budget guardrails, environment simplification
+
+### Platform Design Implications:
+1. **Risk-tier the assessment output** — after scoring 32 lines, flag which catastrophic risks the person's profile predicts
+2. **Transport loss needs a dedicated protocol** — no existing therapy framework addresses "you might lose your car and then your job"
+3. **Multiple-risk overlap (70%)** means single-intervention approaches will fail — the 4-quadrant design is essential, not optional
+4. **Substance escalation (8%)** requires coordination with external treatment systems — platform should detect and refer, not treat
