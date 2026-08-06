@@ -789,3 +789,45 @@ Note: Interventions 26-36 are renumbered duplicates of 15-25 (Perplexity re-sent
 - Self-Affirmation / Values Affirmation
 - Graded Task Assignment
 - Skills Coaching for Self-Efficacy
+
+### Perplexity Pass 5 — Full Master Table (25 interventions with regions and sources)
+
+| Intervention | Region | Primary AQAL Line | Ecology Impact | Key Source |
+|---|---|---|---|---|
+| Social prescribing | U.S./U.K./Global | Interpersonal | Social access, schedule, community | Frontiers Psych 2024 |
+| Combined cognitive-physical | U.S./Global | Meta-Cognitive | Body + cognition together | Frontiers HumNeuro 2022 |
+| Exposure with response prevention | U.S./Global | Emotional | Fear learning + avoidance | Clinical literature |
+| Problem-solving therapy | U.S./Global | Logical | Converts overwhelm to action | Clinical literature |
+| Digital hygiene / attention management | U.S. | Meta-Cognitive | Removes fragmentation | PMC 6429408 |
+| Environment redesign / friction | U.S./Global | Volitional | Changes defaults | PMC 6454445 |
+| Financial autopilot / default saving | U.S./Global | Financial | Removes repeated decisions | Behavioral economics |
+| Self-affirmation / values affirmation | U.S./Global | Intrapersonal | Reduces identity threat | PMC 7245409 |
+| Public commitment / accountability | U.S./Global | Volitional | Social pressure + identity | PMC 1550624 |
+| Structured conversation skills | U.S./Global | Interpersonal | Household + work climate | PMC 9575688 |
+| Nature connectedness | Europe/Global | Naturalist | Daily environment + recovery | findingnature.org.uk |
+| Social cognition training | Europe/Global | Social-Perceptual | Conversation + conflict | Nature SciRep 2022 |
+| Community gardening | Europe/Global | Naturalist | Movement + nature + social | PMC 6628071 |
+| Peer-support groups | Europe/Global | Interpersonal | Reduces isolation | Springer JGIM 2023 |
+| Community-based skill circles | Europe/Global | Interpersonal | Learning identity + social | PMC 6454445 |
+| Mind-body regulation practices | Asia/Global | Intrapersonal | Reactivity + sleep + stress | PMC 6429408 |
+| Group social connection (older adults) | Asia/Global | Interpersonal | Social world + routines | Springer JGIM 2023 |
+| Cognitively stimulating leisure | Asia/Global | Meta-Cognitive | Structure + novelty + reserve | Stanford Lifestyle Med |
+| Diet-pattern interventions | Asia/Global | Kinesthetic | Metabolic + inflammatory | Stanford Lifestyle Med |
+| Morning light + sleep regularization | Global | Interoceptive | Stabilizes daily schedule | PMC 6405415 |
+| Positive psychology interventions | Global | Emotional | Emotional tone + coping | Springer BMC 2013 |
+| Self-compassion training | Global | Intrapersonal | Self-talk + stress response | PMC 9575688 |
+| Meaning-centered / purpose interventions | Global | Existential | Aligns action with values | PMC 10202508 |
+| Volunteer service / prosocial action | Global | Empathic | Expands community role | PMC 2910600 |
+| Combined movement + sunlight + social | Global | Interpersonal | Sleep + mood + social | PMC 6628071 |
+
+### Priority Additions (Top 10):
+1. Social prescribing — strongest ecological effect
+2. Self-compassion training — high leverage for shame/resilience
+3. Exposure with response prevention — high-evidence fear protocol
+4. Problem-solving therapy — practical overwhelm tool
+5. Digital hygiene — major attention/sleep/deep work effect
+6. Environment redesign — alters defaults durably
+7. Community gardening — movement + nature + social
+8. Combined cognitive-physical — hits cognition + body
+9. Social cognition training — interpersonal accuracy
+10. Positive psychology — reliable small-to-moderate gains
