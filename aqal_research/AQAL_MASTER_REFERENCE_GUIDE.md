@@ -1294,3 +1294,61 @@ Lower motivation → Reduced engagement/drop-out
 > Do not treat improvement in only one quadrant as full progress. AQAL progress requires all four quadrants moving in the right direction.
 
 ### Sources: MaaPs, KIPS, Blackpool Better Start, PMC 9844204, PMC 8109838, DFE-RR156
+
+---
+
+## 23. Perplexity Pass 16: Parenting OS — Operating System for Family Growth (August 6, 2026)
+
+### Six-Layer Architecture:
+
+| Layer | Purpose | Rhythm | AQAL Quadrant |
+|---|---|---|---|
+| Purpose | Defines what the family optimizes for | Monthly | UL + LL |
+| Attention | Captures what needs action now | Daily | UR + LR |
+| Relationship | Tracks attunement and repair | Daily/after rupture | UL + LL |
+| Routine | Runs the household clock | Daily/weekly | UR + LR |
+| Learning | Converts experience into better practice | Weekly | UL + LR |
+| Support | Pulls in outside resources | Weekly/as needed | LL + LR |
+
+### 10X Density Design Rules:
+1. One source of truth (family hub for schedules, scripts, notes, routines, contacts)
+2. One daily check-in (5-10 min: attention, relationship, routine layers)
+3. One weekly review (what worked, what failed, what gets simplified)
+4. One visible scoreboard (4 quadrant scores + 1 loop score)
+5. One repair protocol (every rupture gets standard repair sequence)
+6. One simplification rule (if it creates friction twice, redesign it)
+7. One support escalator (define when to ask for help)
+8. One family language (same phrases for routines, emotions, boundaries)
+9. One visible environment (calendar, cues, checklists visible)
+10. One learning log (short record of patterns, not just anecdotes)
+
+### AQAL Scorecard (Traffic Light):
+
+| Quadrant | Green | Yellow | Red |
+|---|---|---|---|
+| UL | Calm, reflective, confident | Tired, reactive | Burned out, detached |
+| UR | Responsive, consistent, repair | Mixed execution | Harsh, inconsistent |
+| LL | Warm, coherent, cooperative | Mixed messages | Chronic conflict |
+| LR | Routines run themselves | Some structure, lots of friction | Chaos, no reliable system |
+
+### The Flywheel:
+```
+Purpose → clearer rules → better routines → less conflict → more energy →
+better attunement → better behavior → more trust → stronger culture →
+better support use → more clarity about purpose (loop repeats)
+```
+
+### Simplest Usable Version:
+
+| Cadence | Question | Action |
+|---|---|---|
+| Daily | What is the one thing that matters today? | Execute routine + one repair if needed |
+| Daily | Who is dysregulated? | Attune before instructing |
+| Weekly | What repeated friction is slowing us down? | Remove or automate one thing |
+| Weekly | What pattern is emerging? | Update the family script |
+| Monthly | What are we optimizing for? | Reset purpose and priorities |
+
+### Key Insight:
+> This is denser than a dashboard because it doesn't just show status — it RUNS the family system: defines operating principles, captures signals, turns them into action, and uses feedback loops to improve over time.
+
+### Sources: PMC 8109838, PMC 9525569, PMC 10865193, SISEP, IntegralLife, ECDAN Systems Thinking
