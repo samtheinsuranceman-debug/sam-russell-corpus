@@ -963,3 +963,46 @@ Note: Interventions 26-36 are renumbered duplicates of 15-25 (Perplexity re-sent
 - Sustaining interventions: PMC 2904839
 - Multilevel ecology: PMC 6454445
 - LTER insights: BioScience 72(9):814, 2022
+
+---
+
+## 15. Perplexity Pass 8: Feedback Loops in Multi-Layer Interventions (August 6, 2026)
+
+### Core Finding:
+> "In multi-layer interventions, feedback loops are the difference between a static blueprint and a self-correcting ecosystem: they amplify effective components, dampen failures early, and significantly increase the chances that impact persists as conditions change."
+
+### What Feedback Loops Do:
+| Role | Effect |
+|---|---|
+| Real-time adjustment | Data flows back so implementers adjust content/dose/delivery mid-intervention |
+| Tailoring by site/subgroup | Support tailored to emerging needs, not generic protocol |
+| Preventing system drift | Keeps sites from drifting away from core components |
+| Creating shared understanding | All layers get shared view of what's actually happening |
+| Supporting continuous improvement | Systems iteratively refine instead of static rollout |
+
+### With vs. Without Feedback Loops:
+| Feature | Without | With |
+|---|---|---|
+| Adaptation | One-time design; drift unnoticed | Continuous adaptation to local conditions |
+| Detection of failure | Problems appear late (outcome failure) | Problems appear early (process data) |
+| Learning | Post-hoc evaluation only | Ongoing mid-course learning |
+| Trust | Participants feel "studied" not heard | Input changes the system; trust grows |
+| Equity | Static design replicates inequities | Differential impact visible, adjustable |
+
+### AQAL Implication:
+The platform's re-assessment system IS a feedback loop:
+- Score → Prescription → Practice → Re-score → Adjusted Prescription
+- This makes AQAL a self-correcting ecosystem, not a one-shot quiz
+- The 6-month re-assessment captures whether the ecology changed
+- The AI panel's inter-rater reliability data feeds back into scoring calibration
+
+### Key Insight for Platform Design:
+Identify and strengthen the "good" loops (success → recognition → more engagement) rather than generic tinkering. The platform's leaderboard, progress tracking, and community matching are all reinforcing loops.
+
+### Sources:
+- Multi-tiered facilitation: Springer 2021 (DOI: 10.1186/s43058-021-00180-3)
+- Digital feedback loops: PMC 9525569
+- K-12 feedback: SISEP/UNC
+- Ecology of multilevel intervention: PMC 6454445
+- Leverage points/traps: ScienceDirect 2025
+- Symptom feedback loops: Nature SciRep 2026
