@@ -1756,3 +1756,58 @@ better support use → more clarity about purpose (loop repeats)
 - 30% of scenarios: Controller requires unique intervention strategy (different approach)
 
 ### Sources: Neuroplasticity research, habit consolidation literature, identity-level change models
+
+---
+
+## 31. Perplexity Pass 24: The Master's Underwriting System — Complete Protocol for Lasting Change (August 6, 2026)
+
+### 7 Tool Categories (44 total tools):
+1. **Assessment Tools** (8) — AQAL mapping, weakness-strength clusters, financial stress, family systems, monster identification
+2. **Stabilization Tools** (6) — Sleep regulation, financial triage, crisis de-escalation, environment simplification, friction reduction
+3. **Regulation Tools** (6) — Somatic check-ins, breathwork, HRV training, body scan, emotional labeling, interoceptive awareness
+4. **Structure Tools** (6) — Habit architecture, implementation intentions, pre-commitment, environmental design, routine scaffolding
+5. **Connection Tools** (6) — Peer accountability pods, family meetings, therapeutic alliance, social proof, values alignment
+6. **Transformation Tools** (6) — Shadow work, identity reconstruction, narrative reframing, cognitive restructuring, meta-cognitive training
+7. **Maintenance Tools** (6) — Monthly review, relapse prevention, environmental optimization, feedback monitoring, celebration ritual
+
+### The 6-Step Underwriting Algorithm:
+1. **Assess Acute Crisis (0-7 days):** Housing at risk? Bills 30+ days? Sleep <5hr? → STABILIZATION ONLY
+2. **Assess Chronic Dysregulation (1-4 weeks):** Daily anxiety? Decision paralysis? → REGULATION PHASE
+3. **Assess Capacity for Structure (4-8 weeks):** 1-2 hrs/week? Sleep 6+? Basic needs met? → STRUCTURE PHASE
+4. **Assess Readiness for Connection (8-12 weeks):** Stable enough for social complexity? → CONNECTION PHASE
+5. **Assess Readiness for Transformation (12+ weeks):** 6-8 weeks consistent? Plateau? → TRANSFORMATION PHASE
+6. **Transition to Maintenance (8-12 weeks progress):** Crisis frequency dropped? Habits 60%+ automatic? → MAINTENANCE PHASE
+
+### Critical Rules:
+- NEVER skip stabilization. Change is impossible in survival mode.
+- Regulation BEFORE structure. Dysregulated nervous systems cannot sustain new patterns.
+- Structure BEFORE connection. Social complexity adds cognitive load.
+- Connection BEFORE transformation. Identity work requires stability.
+- If crisis returns at ANY stage, drop back to appropriate earlier stage.
+
+### 10 Resistance-Handling Tactics:
+1. Autonomy respect: "You can do this or not."
+2. Collaborative framing: "Let's figure this out together."
+3. Values alignment: "You said you want X. This is how."
+4. Small wins: Start tiny, build momentum.
+5. Transparency: "Here's what and why. You can stop anytime."
+6. Empathy first: "It makes sense you'd feel this way."
+7. Choice architecture: "X, Y, or Z. Which feels easiest?"
+8. Reframe change: "This is who you already are."
+9. Externalize problem: "The monster is the issue, not you."
+10. Honor expertise: "You're the expert on you."
+
+### The Hidden Monster (recurring across 200 scenarios):
+- Shame loop, Avoidance habit, Learned helplessness, Trauma echo, Control addiction, Financial panic
+- What it wants: Relief.
+- The trick: Give relief through structure, not escape.
+
+### When Treatment is Working:
+- Crisis frequency drops
+- Bills become predictable
+- Conflict becomes containable
+- Sleep and follow-through improve
+- Person maintains without constant external rescue
+- Monthly check-ins are sufficient
+
+### Sources: Bronfenbrenner ecological systems theory, financial stress research, family-systems interventions, habit formation literature, identity reconstruction models
