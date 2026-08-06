@@ -604,3 +604,131 @@ Low g-correlation confirmed, but heartbeat-counting method has known validity pr
 4. Present independence claim honestly: "6-9 dimensions beyond g"
 5. Flag Adversarial as unmeasurable until instrument exists
 6. Downgrade Musical from fully to partially independent
+
+---
+
+## 10. Perplexity Pass 3: Live Site Code Audit (August 6, 2026)
+
+### Key Findings from Perplexity's Code-Level Audit of joinaqal.com
+
+#### 7 of 9 Major Prescriptions Held Up or Were Understated:
+
+| Practice | Platform Rating | Perplexity Finding | Verdict |
+|----------|----------------|-------------------|---------|
+| Resistance Training | Strong | Actually STRONGER in 2025 data (SMD=-0.94) | UNDERSTATED — upgrade |
+| Spaced Repetition | Strong | Confirmed across 7 meta-analyses, 586 studies | CONFIRMED |
+| Empathy Training | Moderate | True effect may be moderate-to-large | UNDERSTATED — consider upgrade |
+| Sleep Protection | Strong | Confirmed | CONFIRMED |
+| Cognitive Restructuring (CBT) | Strong | Confirmed | CONFIRMED |
+| Deep-Work Attention | Strong | Confirmed | CONFIRMED |
+| Low-Cost Index Investing | Strong | Confirmed by SPIVA (but omits Berk & van Binsbergen counter-argument) | CONFIRMED with caveat |
+
+#### 2 Prescriptions Weaker Than Advertised:
+
+| Practice | Platform Rating | Perplexity Finding | Correct Rating |
+|----------|----------------|-------------------|----------------|
+| WOOP/Mental Contrasting | Strong | g=0.336 (small-to-medium) with publication bias concerns, N=15,907 | MODERATE |
+| Behavioral Activation | Strong | Holds for general depression but NULL results in comorbid depression/substance-use | STRONG (with population caveat) |
+
+#### DOI: 10.3389/fpsyg.2021.565202 — WOOP meta-analysis showing g=0.336
+#### DOI: 10.1001/jamapsychiatry.2018.0572 — Resistance training SMD for depression
+
+#### Validation Findings:
+
+- No fabricated citations detected in spot-checks
+- Platform's "Limitation:" clauses on citations confirmed as rare and commendable
+- Every practice already mapped to intelligence lines via "lifts" array in code
+- One gap: "always choose index funds" omits Berk & van Binsbergen dollar-weighted-returns critique
+
+### Action Items:
+
+1. WOOP/Mental Contrasting: Downgrade from Strong to Moderate in keystonePractices.ts
+2. Add Berk & van Binsbergen caveat to index investing prescription
+3. Consider upgrading Empathy Training from Moderate to Strong
+4. Update Resistance Training citation to 2025 data (SMD=-0.94)
+5. Add population caveat to Behavioral Activation (null in comorbid substance-use)
+
+---
+
+## 11. Perplexity Pass 4: Archetypes & Prescriptions Audit (August 6, 2026)
+
+### Key Corrections from Perplexity's Archetype-Level Audit:
+
+| Item | Current Rating | Perplexity Finding | Action |
+|------|---------------|-------------------|--------|
+| Psychedelic-assisted therapy | Moderate (understated) | Multiple RCTs show large effects; Nature Medicine 2023 MDMA trial | UPGRADE to Strong |
+| WOOP/Mental Contrasting | Strong (overstated) | g=0.336 with publication bias (PMC8149892) | DOWNGRADE to Moderate |
+| Commitment devices | Strong (over-labeled) | Real but effect sizes modest; nudging meta-analysis (PNAS) | Add caveat |
+| Nature exposure | Strong (undifferentiated) | Should SPLIT into mood claims vs. cognition claims | Split entry |
+
+### Key Citations Added:
+
+- DOI: 10.1038/s41591-023-02565-4 — MDMA-assisted therapy for moderate-to-severe PTSD (Nature Medicine 2023)
+- PMC7736164 — Meta-analysis of placebo-controlled psychedelic trials
+- PMC8149892 — WOOP meta-analysis (g=0.336, N=15,907)
+- PNAS 10.1073/pnas.2107346118 — Nudging/commitment meta-analysis
+- PMC8125471 — Nature exposure and health associations
+- Attention Restoration Theory systematic review (2016)
+
+### Summary:
+
+Perplexity's archetype audit confirms the platform's prescriptions are largely well-calibrated. The 4 corrections above are consistent with our earlier findings (WOOP downgrade, psychedelic upgrade, nature split). No new critical errors discovered. The archetype-to-line mappings in the code are structurally sound.
+
+---
+
+## 12. Perplexity Pass 5: Unlabeled Interventions Dossier (August 6, 2026)
+
+### 10 New Interventions to Add to the Platform (Not Currently Labeled)
+
+These interventions change the person's ECOLOGY (body + schedule + social network + environment + default action path) rather than just a single trait. That's where durable effects come from.
+
+| # | Intervention | Target Lines | Duration | Key Citation |
+|---|---|---|---|---|
+| 1 | Social Prescribing / Community Navigation | Interpersonal, Community, Resilient, Purpose | 8 wks–18 mo | Frontiers in Psychology 2024 |
+| 2 | Nature Connectedness Training | Naturalist, Attention, Creativity, Presence | Sustained with repetition | findingnature.org.uk meta-analysis |
+| 3 | Social Cognition Training | Social-Perceptual, Empathic, Interpersonal, Intuitive | 8–39 weeks | Nature Scientific Reports 2022 |
+| 4 | Combined Cognitive-Physical Training | Meta-Cognitive, Attention, Resilient, Volitional | 4–24 weeks | Frontiers Human Neuroscience 2022 |
+| 5 | Pro-Social Behavior Prompts | Volitional, Strategic, Moral, Interpersonal | Brief (needs repeated cueing) | PNAS 2022, Nature Comms 2020 |
+| 6 | Active Mindfulness in Real-World Contexts | Intrapersonal, Emotional, Interoceptive | Sustained with practice | Nature Human Behaviour 2025 |
+| 7 | Automated Social Accountability Systems | Volitional, Financial, Interpersonal | Strongest first weeks–months | — |
+| 8 | Place-Based Community Gardening | Interpersonal, Naturalist, Resilient, Purpose | Multi-week (routine) | SAGE Journals 2024 |
+| 9 | Digital Social Connection Training | Interpersonal, Community, Adaptive | 2–4 months | Springer JGIM 2023 |
+| 10 | Acute Exercise for Same-Day Cognition | Attention, Meta-Cognitive, Volitional | Immediate (same-day) | PsycNet meta-review 2025 |
+
+### Key Insight:
+
+> "The site already captures many strong interventions, but it would be more complete if it explicitly labeled interventions that change the person's ecology rather than only their traits. That is where many durable effects actually come from."
+
+### Cross-Cutting Pattern:
+
+The strongest gains come when the intervention changes MORE than one layer:
+1. The body
+2. The schedule
+3. The social network
+4. The environment
+5. The default action path
+
+### Top 8 Candidates to Add Immediately:
+1. Social prescribing
+2. Nature connectedness training
+3. Social cognition training
+4. Combined cognitive-physical training
+5. Automated accountability systems
+6. Place-based community gardening
+7. Digital social connection training
+8. Acute exercise for same-day cognition
+
+### Line Mapping for New Interventions:
+
+| Intervention | Primary AQAL Line | Secondary Lines |
+|---|---|---|
+| Social Prescribing | Interpersonal | Community-Founding, Existential, Emotional |
+| Nature Connectedness | Naturalist | Interoceptive, Meta-Cognitive, Aesthetic |
+| Social Cognition Training | Social-Perceptual | Empathic, Interpersonal |
+| Combined Cognitive-Physical | Meta-Cognitive | Volitional, Kinesthetic |
+| Pro-Social Prompts | Volitional | Moral, Strategic |
+| Active Mindfulness | Intrapersonal | Interoceptive, Emotional |
+| Accountability Systems | Volitional | Financial, Strategic |
+| Community Gardening | Naturalist | Interpersonal, Community-Founding |
+| Digital Connection Training | Interpersonal | Community-Founding, Adaptive |
+| Acute Exercise | Meta-Cognitive | Volitional, Kinesthetic |
