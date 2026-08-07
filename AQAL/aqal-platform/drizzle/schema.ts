@@ -536,3 +536,39 @@ export const reports = mysqlTable("reports", {
 });
 
 export type Report = typeof reports.$inferSelect;
+
+// ============================================================
+// GOALS — the outcome-engineering dashboard (up to 10 per member)
+// ============================================================
+// Each goal decomposes into staged requirements (template-matched, editable)
+// and carries an AI/template baseline estimate. The countdown clock is
+// COMPUTED from baseline + stage completion + logged monthly effort — the
+// clock only moves when the member does (see shared/goalClock.ts).
+export const goals = mysqlTable("goals", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  category: varchar("category", { length: 60 }), // template key or "custom"
+  baselineMonths: float("baselineMonths").notNull(), // estimate at normal effort
+  minMonthlyHours: float("minMonthlyHours").notNull(), // the pace baseline assumes
+  // [{ name: string, done: boolean }] — the requirement staircase
+  stages: json("stages"),
+  status: mysqlEnum("status", ["active", "achieved", "paused", "retired"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Goal = typeof goals.$inferSelect;
+
+// Monthly effort logs — one row per goal per month ("2026-08"), upserted.
+export const goalLogs = mysqlTable("goal_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  goalId: int("goalId").notNull(),
+  userId: int("userId").notNull(),
+  month: varchar("month", { length: 7 }).notNull(), // YYYY-MM
+  hours: float("hours").notNull(),
+  note: text("note"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GoalLog = typeof goalLogs.$inferSelect;

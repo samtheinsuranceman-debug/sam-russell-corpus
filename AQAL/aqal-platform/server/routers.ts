@@ -28,6 +28,7 @@ import { storagePut, storageGetSignedUrl } from "./platform/storage";
 import { getFreshMatches, requestConnection, respondToConnection, getConnectionState } from "./matching";
 import { matchTier } from "@shared/matching";
 import { sendMessage, getThread, listThreads, ATTACHMENT_TTL_HOURS, blockUser, unblockUser, listBlocked, reportUser } from "./messaging";
+import { createGoal, listGoals, toggleStage, logEffort, setGoalStatus } from "./goals";
 import { hashFoundingPassword, verifyFoundingPassword } from "./foundingPassword";
 import { runPanel, panelSize, panelDevelopers } from "./platform/panel";
 import { consensusScores } from "./scoring/consensus";
@@ -2183,6 +2184,41 @@ CRITICAL RULES:
         if (ok) await recordEvent({ type: "member_reported", userId: ctx.user.id, meta: { reportedUserId: input.userId } });
         return { ok };
       }),
+  }),
+
+  // ── GOALS — the outcome-engineering dashboard (clocks that respond to effort) ─
+  goals: router({
+    list: protectedProcedure.query(({ ctx }) => listGoals(ctx.user.id)),
+
+    create: protectedProcedure
+      .input(z.object({ title: z.string().min(3).max(200) }))
+      .mutation(async ({ ctx, input }) => {
+        const res = await createGoal(ctx.user.id, input.title);
+        if (!res.ok) throw new TRPCError({ code: "BAD_REQUEST", message: res.error });
+        await recordEvent({ type: "goal_created", userId: ctx.user.id, meta: { template: res.template } });
+        return res;
+      }),
+
+    toggleStage: protectedProcedure
+      .input(z.object({ goalId: z.number().int().positive(), stageIndex: z.number().int().min(0).max(20) }))
+      .mutation(({ ctx, input }) => toggleStage(ctx.user.id, input.goalId, input.stageIndex).then((ok) => ({ ok }))),
+
+    logEffort: protectedProcedure
+      .input(z.object({
+        goalId: z.number().int().positive(),
+        month: z.string().regex(/^\d{4}-\d{2}$/),
+        hours: z.number().min(0).max(744),
+        note: z.string().max(2000).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const ok = await logEffort(ctx.user.id, input.goalId, input.month, input.hours, input.note);
+        if (ok) await recordEvent({ type: "goal_effort_logged", userId: ctx.user.id, meta: { goalId: input.goalId, hours: input.hours } });
+        return { ok };
+      }),
+
+    setStatus: protectedProcedure
+      .input(z.object({ goalId: z.number().int().positive(), status: z.enum(["active", "achieved", "paused", "retired"]) }))
+      .mutation(({ ctx, input }) => setGoalStatus(ctx.user.id, input.goalId, input.status).then((ok) => ({ ok }))),
   }),
 });
 export type AppRouter = typeof appRouter;

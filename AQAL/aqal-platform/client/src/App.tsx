@@ -54,6 +54,7 @@ const ResearchLibrary = lazy(() => import("./pages/ResearchLibrary"));
 const Archetypes = lazy(() => import("./pages/Archetypes"));
 const Matches = lazy(() => import("./pages/Matches"));
 const Messages = lazy(() => import("./pages/Messages"));
+const Goals = lazy(() => import("./pages/Goals"));
 const VerificationLedger = lazy(() => import("./pages/VerificationLedger"));
 const PricingStructure = lazy(() => import("./pages/PricingStructure"));
 const BlindSideAnalyzer = lazy(() => import("./pages/BlindSideAnalyzer"));
@@ -369,6 +370,11 @@ function Router() {
         <Route path={"/messages"}>
           <PageErrorBoundary pageName="Messages">
             <Suspense fallback={<PageSkeleton />}><Messages /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/goals"}>
+          <PageErrorBoundary pageName="Goals">
+            <Suspense fallback={<PageSkeleton />}><Goals /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/verification"}>

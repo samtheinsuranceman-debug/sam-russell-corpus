@@ -32,6 +32,7 @@ const navLinks: NavItem[] = [
   { label: "Network", children: [
     { href: "/matches", label: "Your Matches" },
     { href: "/messages", label: "Messages" },
+    { href: "/goals", label: "Goals & Clocks" },
   ]},
   { href: "/leaderboard", label: "Leaderboard" },
 ];
