@@ -18,7 +18,7 @@ import { Cite } from "@/components/Cite";
 import { citationHref } from "@shared/citations";
 import { buildTrackerMarkdown } from "@shared/behavioralTracker";
 import { starvationForLine } from "./archetypesData";
-import { keystoneForLine } from "@shared/keystonePractices";
+import { keystoneForLine, ecologicalDriverForMonth } from "@shared/keystonePractices";
 import { therapiesForLine } from "@shared/therapyLineMap";
 
 // The full 32-line profile, in the order defined by the single source of truth.
@@ -1314,6 +1314,12 @@ function StarvedLineOnRamp({ scores }: { scores: number[] }) {
             <span className="text-muted-foreground/50">Why it works: </span>{rx.practice.researchBasis}
             {" "}<span className="text-muted-foreground/40">· Horizon: {rx.practice.horizon}</span>
           </p>
+          {ecologicalDriverForMonth() && (
+            <p className="text-[0.72rem] text-muted-foreground/70 leading-relaxed mb-3">
+              <span className="text-accent/80" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase" }}>This month's ecological driver · </span>
+              {ecologicalDriverForMonth()!.name} — a whole-organism lever that stacks with your line practice. {ecologicalDriverForMonth()!.prescription}
+            </p>
+          )}
           {therapiesForLine(rx.line, 4).length > 0 && (
             <div className="mb-3">
               <p className="text-[0.6rem] uppercase tracking-[0.15em] text-muted-foreground/50 mb-1.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>

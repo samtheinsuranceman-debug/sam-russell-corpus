@@ -302,6 +302,49 @@ export const appRouter = router({
         return { success: true, responseId: response?.id, audioUrl: url };
       }),
 
+    // FIRST-ANSWER INSTANT INSIGHT — the magic moment. One fast LLM read of the
+    // member's first answer: which 3 lines are already lighting up. Proof the
+    // machine heard them, delivered in the first minute instead of day 30.
+    // Honest: returns nothing (rather than fake lines) when no AI is configured.
+    firstInsight: protectedProcedure
+      .input(z.object({ assessmentId: z.number() }))
+      .query(async ({ ctx, input }) => {
+        const assessment = await getAssessmentById(input.assessmentId);
+        if (!assessment || assessment.userId !== ctx.user.id) return { available: false as const };
+        const { llmProvider } = await import("./platform/config");
+        if (llmProvider() === "mock") return { available: false as const };
+        const responsesList = await getResponsesByAssessment(input.assessmentId);
+        const first = responsesList.sort((a, b) => a.questionIndex - b.questionIndex)[0];
+        if (!first) return { available: false as const };
+        let transcript = first.transcript;
+        if (!transcript && first.audioUrl) {
+          try {
+            const t = (await transcribeAudio({ audioUrl: first.audioUrl })) as { text?: string };
+            transcript = t?.text ?? null;
+          } catch { /* transcription failed — no insight, no fake */ }
+        }
+        if (!transcript || transcript.trim().split(/\s+/).length < 40) return { available: false as const };
+        try {
+          const result = await invokeLLM({
+            messages: [
+              { role: "system" as const, content: "You identify which intelligence lines a spoken answer demonstrates. Respond ONLY with JSON: {\"lines\": [up to 3 line names], \"note\": one encouraging sentence about what the answer revealed}. Line names must come from the provided list. Be honest and specific, never flattering." },
+              { role: "user" as const, content: `Lines: ${ALL_AXES.join(", ")}\n\nFirst answer transcript:\n${transcript.slice(0, 8000)}` },
+            ],
+            maxTokens: 200,
+          } as InvokeParams);
+          const raw = (result as any)?.content ?? (result as any)?.text ?? "";
+          const m = String(raw).match(/\{[\s\S]*\}/);
+          if (!m) return { available: false as const };
+          const parsed = JSON.parse(m[0]) as { lines?: string[]; note?: string };
+          const lines = (parsed.lines ?? []).filter((l) => ALL_AXES.includes(l)).slice(0, 3);
+          if (lines.length === 0) return { available: false as const };
+          await recordEvent({ type: "first_insight_shown", userId: ctx.user.id });
+          return { available: true as const, lines, note: (parsed.note ?? "").slice(0, 300) };
+        } catch {
+          return { available: false as const };
+        }
+      }),
+
     // Submit a text response (typed answer, or a pasted transcript of a tape)
     submitTextResponse: protectedProcedure
       .input(z.object({

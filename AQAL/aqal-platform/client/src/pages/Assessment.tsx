@@ -970,6 +970,8 @@ export default function Assessment() {
   const trackMutation = trpc.analytics.track.useMutation();
   const companionSavedRef = useRef(false);
   const micPrimedRef = useRef(false);
+  const utils = trpc.useUtils();
+  const firstInsightShownRef = useRef(false);
 
   // ── Incremental background upload ─────────────────────────────
   // Ensure the server-side assessment exists (once), then push each answer up
@@ -1009,11 +1011,30 @@ export default function Assessment() {
       } else {
         return;
       }
-      setUploadedIdx((u) => ({ ...u, [index]: true }));
+      setUploadedIdx((u) => {
+        const next = { ...u, [index]: true };
+        // THE MAGIC MOMENT: on the very first uploaded answer, fetch a fast
+        // one-shot read — "3 lines already lighting up" — so the member gets
+        // proof the machine heard them in minute one, not on day 30.
+        if (!firstInsightShownRef.current && Object.keys(next).length === 1) {
+          firstInsightShownRef.current = true;
+          void (async () => {
+            try {
+              const aId2 = assessmentIdRef.current;
+              if (!aId2) return;
+              const r = await utils.client.assessment.firstInsight.query({ assessmentId: aId2 });
+              if (r.available) {
+                toast.success(`Your first answer is already lighting up: ${r.lines.join(" · ")}. ${r.note}`, { duration: 10000 });
+              }
+            } catch { /* best-effort — never block the flow */ }
+          })();
+        }
+        return next;
+      });
     } catch {
       // Silent: the answer stays local and the final submit re-sends it.
     }
-  }, [ensureAssessment, submitTextMutation, uploadResponseMutation]);
+  }, [ensureAssessment, submitTextMutation, uploadResponseMutation, utils]);
 
   // ── Tape-recorder mode: upload a pre-recorded answer file ─────────────────
   // For members who print the questions and answer offline (voice-memo app,
@@ -1689,7 +1710,6 @@ export default function Assessment() {
   });
 
   // Beta access — free for the first N testers via a passcode.
-  const utils = trpc.useUtils();
   const betaStatus = trpc.beta.status.useQuery();
   const [betaCode, setBetaCode] = useState("");
   const betaRedeem = trpc.beta.redeem.useMutation({
@@ -2662,21 +2682,24 @@ export default function Assessment() {
             </div>
           ) : (
             <>
-          {/* Text mode toggle + tape-recorder upload */}
+          {/* Tape-recorder mode is the RECOMMENDED path (founder decision):
+              browser mics fail people; voice-memo apps don't. */}
+          <div className="mb-3 max-w-lg mx-auto text-center rounded-lg border border-accent/25 bg-accent/[0.04] px-4 py-2.5">
+            <p className="text-xs text-foreground/80 leading-snug">
+              <span className="text-accent font-semibold">Recommended:</span> print the questions, record your answer
+              in your phone&rsquo;s voice-memo app — on a walk, in the car, wherever you ramble best — then{" "}
+              <button onClick={() => tapeInputRef.current?.click()} disabled={tapeUploading}
+                className="text-accent underline underline-offset-2">
+                {tapeUploading ? "uploading…" : "upload the recording here"}
+              </button>. The browser mic below works too.
+            </p>
+          </div>
           <div className="flex items-center gap-4 mb-4">
             <button
               onClick={() => setUseTextMode(true)}
               className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
             >
               Prefer to type? Switch to text mode
-            </button>
-            <span className="text-muted-foreground/25 text-xs">·</span>
-            <button
-              onClick={() => tapeInputRef.current?.click()}
-              disabled={tapeUploading}
-              className="text-xs text-primary/60 hover:text-primary transition-colors"
-            >
-              {tapeUploading ? "Uploading…" : "Recorded on tape? Upload this answer"}
             </button>
             <span className="text-muted-foreground/25 text-xs">·</span>
             <button
@@ -2882,15 +2905,15 @@ export default function Assessment() {
                 Pace yourself — this is by design
               </p>
               <p className="text-base sm:text-lg text-foreground/90 leading-relaxed font-medium">
-                You&rsquo;re moving muscles in your brain you may not have used in fifty years. Doing all 27 questions
-                in one sitting is a genuine <span className="text-accent">brain drain</span> — cognitive fatigue sets in
-                and your later answers measure your exhaustion, not your mind.
+                You&rsquo;re moving muscles in your brain you may not have used in fifty years. Binging questions is a
+                genuine <span className="text-accent">brain drain</span> — cognitive fatigue sets in and your later
+                answers measure your exhaustion, not your mind.
               </p>
               <p className="text-sm sm:text-base text-foreground/75 leading-relaxed mt-2">
-                For your best results: <span className="text-accent font-semibold">answer 2&ndash;3 questions a day,
-                10&ndash;20 minutes each — about 30&ndash;40 minutes daily, for 2&ndash;3 weeks.</span> Come back only
-                when you&rsquo;re alert, awake, and have your full faculties. Your progress saves automatically —
-                stopping here costs you nothing.
+                The designed ritual: <span className="text-accent font-semibold">one question a day, about 30 minutes
+                of talking, for a month.</span> Get sucked into the story, make it personal, ramble — that&rsquo;s where
+                the intelligence lives. Come back only when you&rsquo;re alert and have your full faculties. Your
+                progress saves automatically — stopping here costs you nothing.
               </p>
             </motion.div>
           )}

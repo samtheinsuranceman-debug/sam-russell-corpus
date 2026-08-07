@@ -277,6 +277,91 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
     researchBasis: "Morning bright-light exposure and regular timing reliably phase-anchor circadian rhythm and improve mood and alertness.",
     goalKeywords: ["sleep", "energy", "mood", "circadian", "focus", "morning", "jetlag", "tired", "routine"],
   },
+
+  // ─── Skill curricula — the gap-line practices ────────────────────────────────
+  // The lines therapies never target (Influence, Musical, Spatial, Adversarial…)
+  // respond to deliberate skill-building curricula, not clinical interventions.
+  // These ten complete keystone coverage of all 32 lines.
+  {
+    id: "public-speaking", name: "Structured public speaking (Toastmasters-style)", section: "Communication & Influence Training", librarySection: "Communication Skills & Persuasion",
+    evidence: "Strong", lifts: ["influence", "linguistic", "interpersonal", "resilient"],
+    prescription: "Join a weekly speaking club (Toastmasters or equivalent) and deliver one prepared talk a month plus impromptu rounds — the best-evidenced influence-builder there is.",
+    horizon: "3–6 months of weekly reps",
+    researchBasis: "Communication-skills training with live practice and feedback reliably improves persuasion, delivery, and speaking anxiety across many controlled studies.",
+    goalKeywords: ["influence", "persuasion", "speaking", "leadership", "sales", "confidence", "presentation", "charisma"],
+  },
+  {
+    id: "improv", name: "Improv comedy classes", section: "Play, Humor & Social Confidence", librarySection: "Humor & Improvisation Training",
+    evidence: "Moderate", lifts: ["humor", "adaptive", "interpersonal", "linguistic"],
+    prescription: "An 8-week beginner improv course: 'yes-and' under pressure trains wit, adaptability, and social ease faster than anything else that's also this fun.",
+    horizon: "8 weeks",
+    researchBasis: "Improv training studies show gains in divergent thinking, tolerance of uncertainty, and social confidence; humor production is a trainable skill.",
+    goalKeywords: ["humor", "funny", "social", "confidence", "quick", "wit", "spontaneity", "public"],
+  },
+  {
+    id: "choir", name: "Group singing / choir", section: "Music & Community Interventions", librarySection: "Group Singing & Wellbeing",
+    evidence: "Moderate", lifts: ["musical", "community-founding", "interpersonal", "mood"],
+    prescription: "Join a weekly choir or singing group — no audition needed. Active music-making trains pitch and rhythm while the group trains belonging.",
+    horizon: "8–12 weeks",
+    researchBasis: "Group singing shows consistent wellbeing, social-bonding, and mood benefits; active music training measurably improves auditory-musical skills at any age.",
+    goalKeywords: ["music", "sing", "band", "instrument", "community", "belong", "joy"],
+  },
+  {
+    id: "drawing", name: "Observational drawing course", section: "Visual-Spatial Training", librarySection: "Drawing & Spatial Skill Training",
+    evidence: "Moderate", lifts: ["spatial", "aesthetic", "meta-cognitive"],
+    prescription: "A structured 'learn to see' drawing course (8+ weeks): observational drawing is the most direct trainer of spatial perception and visual judgment.",
+    horizon: "8–12 weeks",
+    researchBasis: "Drawing instruction produces measurable gains in observational accuracy and spatial representation; aesthetic judgment sharpens with deliberate visual practice.",
+    goalKeywords: ["draw", "art", "design", "visual", "creative", "spatial", "aesthetic"],
+  },
+  {
+    id: "strategy-games", name: "Chess/poker study with post-game review", section: "Strategic & Adversarial Training", librarySection: "Strategic Games & Decision Training",
+    evidence: "Moderate", lifts: ["adversarial", "strategic", "meta-cognitive", "mathematical"],
+    prescription: "Play chess or poker seriously — with the non-negotiable: review every game/session afterward. The review, not the play, is where adversarial thinking is built.",
+    horizon: "3–6 months",
+    researchBasis: "Deliberate game study with error review trains opponent modeling, probabilistic judgment, and calibration; transfer is strongest to structurally similar competitive decisions.",
+    goalKeywords: ["strategy", "compete", "negotiate", "chess", "poker", "win", "opponent", "odds"],
+  },
+  {
+    id: "negotiation-reps", name: "Negotiation practice reps", section: "Negotiation Training", librarySection: "Negotiation Skills Research",
+    evidence: "Strong", lifts: ["adversarial", "influence", "interpersonal"],
+    prescription: "Run one deliberate negotiation per week — a purchase, a bill, a scheduling conflict — using a named framework (anchoring, calibrated questions, BATNA), and debrief in two sentences.",
+    horizon: "6–12 weeks of weekly reps",
+    researchBasis: "Negotiation training with practice and feedback shows large skill gains in controlled studies; the skill compounds because opportunities to use it are everywhere.",
+    goalKeywords: ["negotiate", "deal", "raise", "salary", "buy", "sell", "conflict", "influence"],
+  },
+  {
+    id: "philosophy-circle", name: "Philosophy reading circle / Socratic practice", section: "Philosophical & Reflective Training", librarySection: "Philosophical Inquiry & Wise Reasoning",
+    evidence: "Moderate", lifts: ["philosophical", "existential", "reflective", "linguistic"],
+    prescription: "Monthly: one primary text (not commentary) + one discussion — a local philosophy meetup, a Socratic circle, or a serious reading partner. Argue positions you don't hold.",
+    horizon: "3–6 months",
+    researchBasis: "Structured philosophical dialogue programs improve reasoning quality and perspective-taking; wise-reasoning research shows deliberate practice effects.",
+    goalKeywords: ["meaning", "philosophy", "wisdom", "think", "ethics", "existential", "depth"],
+  },
+  {
+    id: "systems-course", name: "Systems-thinking practice (causal loop mapping)", section: "Systems & Design Thinking", librarySection: "Systems Thinking Training",
+    evidence: "Moderate", lifts: ["systematic", "architectural", "strategic", "integrative"],
+    prescription: "Once a week, diagram one real system you're inside — your job's workflow, your family's mornings, your finances — as a causal loop map: stocks, flows, feedback, delays.",
+    horizon: "8–12 weeks",
+    researchBasis: "Systems-thinking instruction with active modeling improves understanding of feedback and delay dynamics — the core failure mode of untrained planning.",
+    goalKeywords: ["systems", "process", "design", "architecture", "organize", "build", "plan", "workflow"],
+  },
+  {
+    id: "social-confidence", name: "Graduated social-confidence practice", section: "Social Skills & Courtship Confidence", librarySection: "Social Anxiety & Social Skills Training",
+    evidence: "Moderate", lifts: ["seduction", "interpersonal", "resilient", "influence"],
+    prescription: "A graduated-exposure ladder for romantic/social confidence: eye contact and small talk daily, one genuine compliment a day, one real conversation with someone new per week — difficulty rising weekly.",
+    horizon: "8–12 weeks",
+    researchBasis: "Graduated exposure with behavioral practice is the best-evidenced treatment for social anxiety and reliably builds approach confidence; charisma behaviors are trainable.",
+    goalKeywords: ["dating", "partner", "confidence", "social", "charisma", "romance", "approach", "attraction"],
+  },
+  {
+    id: "mentoring", name: "Mentor someone", section: "Mentoring & Generativity", librarySection: "Mentoring — Mentor-Side Benefits",
+    evidence: "Moderate", lifts: ["parenting", "community-founding", "interpersonal", "existential"],
+    prescription: "Take on one mentee — formally (a program) or informally (a junior colleague, a nephew, a newcomer at your club) — with a standing monthly session.",
+    horizon: "ongoing; benefits measurable by 6 months",
+    researchBasis: "Mentor-side research shows generativity, purpose, and leadership-skill benefits for the mentor, not just the mentee — teaching is the strongest form of mastery.",
+    goalKeywords: ["mentor", "teach", "legacy", "parenting", "give back", "lead", "community"],
+  },
 ];
 
 // Evidence tier → the confidence band of an outcome PROJECTION. Honest mapping:
@@ -323,6 +408,17 @@ export function practicesForGoals(goals: string): KeystonePractice[] {
 // exists. Matches on the lowercased line token in a practice's `lifts` (the lifts
 // use canonical line tokens like "interoceptive" / "financial-self-management"),
 // so it returns a genuine match or nothing — never a forced/irrelevant practice.
+// ─── The ecological stack ─────────────────────────────────────────────────────
+// Whole-organism environmental drivers (founder's "second library"): they lift
+// mood, energy, anxiety, and sociability across the board rather than one line.
+// One is prescribed per month, rotating — they stack, and effects compound.
+export const ECOLOGICAL_STACK_IDS = ["morning-light", "nature", "thermal", "social-connection"] as const;
+
+export function ecologicalDriverForMonth(date = new Date()): KeystonePractice | undefined {
+  const idx = (date.getFullYear() * 12 + date.getMonth()) % ECOLOGICAL_STACK_IDS.length;
+  return KEYSTONE_PRACTICES.find((p) => p.id === ECOLOGICAL_STACK_IDS[idx]);
+}
+
 export function keystoneForLine(line: string): KeystonePractice | undefined {
   const token = (line || "").toLowerCase().trim();
   if (!token) return undefined;

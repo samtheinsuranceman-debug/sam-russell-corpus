@@ -15,10 +15,10 @@ describe("keystoneForLine", () => {
     expect(keystoneForLine("volitional")?.lifts).toContain("volitional");
   });
 
-  it("returns undefined for lines with no honest practice match (no forced fit)", () => {
-    // These lines aren't in any practice's lifts — better to show nothing.
-    expect(keystoneForLine("Musical")).toBeUndefined();
-    expect(keystoneForLine("Seduction")).toBeUndefined();
+  it("covers every one of the 32 lines with an honest practice (skill curricula filled the gaps)", () => {
+    expect(keystoneForLine("Musical")?.id).toBe("choir");
+    expect(keystoneForLine("Seduction")?.id).toBe("social-confidence");
+    expect(keystoneForLine("Influence")?.id).toBe("public-speaking");
     expect(keystoneForLine("")).toBeUndefined();
   });
 });
