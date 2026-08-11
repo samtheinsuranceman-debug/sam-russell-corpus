@@ -199,6 +199,7 @@ function FreeFoundingAccess() {
 // ============================================================
 function HeroSection() {
   const [mounted, setMounted] = useState(false);
+  const [heroSel, setHeroSel] = useState<number | null>(null);
   const hero = useHeroVariant();
   useEffect(() => { const t = setTimeout(() => setMounted(true), 60); return () => clearTimeout(t); }, []);
 
@@ -315,18 +316,35 @@ function HeroSection() {
               />
               {pts.map((p) => {
                 const c = MODE[p.l.mode].c;
+                const on = heroSel === p.i;
                 return (
-                  <g key={"pt" + p.i}>
-                    {p.l.indep && <circle cx={p.x} cy={p.y} r={8} fill="none" stroke={c} strokeOpacity="0.5" strokeDasharray="2 2" />}
-                    <circle cx={p.x} cy={p.y} r={4.2} fill={c} />
-                    <circle cx={p.x} cy={p.y} r={1.8} fill={INK} />
+                  <g key={"pt" + p.i} className="cursor-pointer"
+                    onPointerEnter={() => setHeroSel(p.i)}
+                    onPointerDown={() => setHeroSel(p.i)}>
+                    {/* Oversized invisible hit target — finger-friendly on touch screens */}
+                    <circle cx={p.x} cy={p.y} r={20} fill="transparent" />
+                    {p.l.indep && <circle cx={p.x} cy={p.y} r={on ? 11 : 8} fill="none" stroke={c} strokeOpacity="0.5" strokeDasharray="2 2" />}
+                    <circle cx={p.x} cy={p.y} r={on ? 7 : 4.2} fill={c} />
+                    <circle cx={p.x} cy={p.y} r={on ? 2.8 : 1.8} fill={INK} />
                   </g>
                 );
               })}
-              {/* Center text */}
-              <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.24em' }} fill={CREAM2} x={CX} y={CY - 34} textAnchor="middle">AGGREGATE · SAMPLE</text>
-              <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY + 4} textAnchor="middle" fontSize="34">32 lines</text>
-              <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 24} textAnchor="middle">CAPABILITY {aggregate} · 32 LINES · ~6.5 EFF. DIM</text>
+              {/* Center text — becomes a live readout when a point is touched */}
+              {heroSel === null ? (
+                <>
+                  <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.24em' }} fill={CREAM2} x={CX} y={CY - 34} textAnchor="middle">AGGREGATE · SAMPLE</text>
+                  <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY + 4} textAnchor="middle" fontSize="34">32 lines</text>
+                  <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 24} textAnchor="middle">CAPABILITY {aggregate} · 32 LINES · ~6.5 EFF. DIM</text>
+                  <text className="aq-pulse" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.18em' }} fill={CHAMPAGNE} x={CX} y={CY + 44} textAnchor="middle">◇ TAP ANY POINT</text>
+                </>
+              ) : (
+                <>
+                  <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.24em' }} fill={MODE[LINES[heroSel].mode].c} x={CX} y={CY - 36} textAnchor="middle">{MODE[LINES[heroSel].mode].label.toUpperCase()}</text>
+                  <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY - 6} textAnchor="middle" fontSize="27">{LINES[heroSel].short}</text>
+                  <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={MODE[LINES[heroSel].mode].c} x={CX} y={CY + 30} textAnchor="middle" fontSize="34">{LINES[heroSel].v}</text>
+                  <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '7.5px', letterSpacing: '0.14em' }} fill={MUTED} x={CX} y={CY + 48} textAnchor="middle">/ 100 · SAMPLE PROFILE</text>
+                </>
+              )}
             </svg>
           </div>
         </div>
@@ -885,6 +903,16 @@ function EngineeringSection() {
 // ============================================================
 function DialSection() {
   const [selected, setSelected] = useState(14);
+  const [touched, setTouched] = useState(false);
+
+  // Until the visitor touches it, the dial tours itself — one line every
+  // 2.4s — so its interactivity is visible instead of waiting to be found.
+  useEffect(() => {
+    if (touched) return;
+    const t = setInterval(() => setSelected((s) => (s + 1) % N), 2400);
+    return () => clearInterval(t);
+  }, [touched]);
+  const pick = (i: number) => { setTouched(true); setSelected(i); };
 
   const pts = useMemo(() => LINES.map((l, i) => {
     const a = angFor(i);
@@ -919,7 +947,7 @@ function DialSection() {
           Thirty-two lines on <em style={{ fontStyle: 'italic', color: CHAMPAGNE }}>one dial</em>.
         </h2>
         <p style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '40em' }}>
-          Every intelligence, plotted in its honest mode — and read as one aggregate. The <b style={{ color: CREAM, fontWeight: 600 }}>independent axes</b> are ringed; they're the lines a single IQ score never even sees. Hover any point to read it — this is the map you walk away with.
+          Every intelligence, plotted in its honest mode — and read as one aggregate. The <b style={{ color: CREAM, fontWeight: 600 }}>independent axes</b> are ringed; they're the lines a single IQ score never even sees. <b style={{ color: CHAMPAGNE, fontWeight: 600 }}>Tap or hover any line</b> — the panel beside the dial reads it out. This is the map you walk away with.
         </p>
 
         {/* Dial + Detail panel */}
@@ -948,7 +976,10 @@ function DialSection() {
               {pts.map((p) => {
                 const on = selected === p.i; const c = MODE[p.l.mode].c;
                 return (
-                  <g key={"pt2" + p.i} className="cursor-pointer" onMouseEnter={() => setSelected(p.i)} onClick={() => setSelected(p.i)}>
+                  <g key={"pt2" + p.i} className="cursor-pointer"
+                    onPointerEnter={() => pick(p.i)} onPointerDown={() => pick(p.i)}>
+                    {/* Oversized invisible hit target — a fingertip, not a 4px dot */}
+                    <circle cx={p.x} cy={p.y} r={20} fill="transparent" />
                     {p.l.indep && <circle cx={p.x} cy={p.y} r={on ? 11 : 8} fill="none" stroke={c} strokeOpacity="0.5" strokeDasharray="2 2" />}
                     <circle cx={p.x} cy={p.y} r={on ? 7 : 4.2} fill={c} />
                     <circle cx={p.x} cy={p.y} r={on ? 2.8 : 1.8} fill={INK} />
@@ -962,7 +993,7 @@ function DialSection() {
                     className="cursor-pointer select-none"
                     style={{ fontFamily: "'Inter', sans-serif", fontWeight: on ? 700 : 600, fontSize: on ? '12.5px' : '11px', letterSpacing: '0.005em', paintOrder: 'stroke', stroke: INK, strokeWidth: '3px', strokeLinejoin: 'round', transition: 'font-size .16s ease, fill .16s ease' }}
                     fill={on ? MODE[p.l.mode].c : CREAM}
-                    onMouseEnter={() => setSelected(p.i)} onClick={() => setSelected(p.i)}>
+                    onPointerEnter={() => pick(p.i)} onPointerDown={() => pick(p.i)}>
                     {p.l.short}
                   </text>
                 );
@@ -972,7 +1003,7 @@ function DialSection() {
               <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 32} textAnchor="middle">32 LINES · ONE SYSTEM</text>
             </svg>
             <div className="text-center mt-3" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: MUTED }}>
-              Illustrative example — not your data
+              {touched ? "Illustrative example — not your data" : <span className="aq-pulse" style={{ color: CHAMPAGNE }}>◇ Touring the 32 lines — tap any point to take the wheel</span>}
             </div>
           </div>
 
@@ -1010,8 +1041,8 @@ function DialSection() {
               {grouped[m].map((l) => (
                 <div key={l.i} tabIndex={0} className="flex items-center justify-between gap-3 rounded-[5px] cursor-pointer border border-transparent transition-all duration-150 hover:border-[rgba(241,234,219,0.10)]"
                   style={{ padding: '8px', background: selected === l.i ? INK3 : 'transparent', borderColor: selected === l.i ? LINE_C : 'transparent' }}
-                  onMouseEnter={() => setSelected(l.i)} onFocus={() => setSelected(l.i)} onClick={() => setSelected(l.i)}
-                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelected(l.i); } }}>
+                  onPointerEnter={() => pick(l.i)} onFocus={() => pick(l.i)} onPointerDown={() => pick(l.i)}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(l.i); } }}>
                   <span className="flex items-center gap-[7px]" style={{ fontSize: '14px', color: CREAM }}>
                     {l.indep && <span style={{ color: CHAMPAGNE, fontSize: '10px' }}>◇</span>}{l.name}
                   </span>
