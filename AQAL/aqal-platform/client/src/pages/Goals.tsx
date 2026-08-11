@@ -75,6 +75,7 @@ export default function Goals() {
   const { user, loading } = useAuth();
   const utils = trpc.useUtils();
   const q = trpc.goals.list.useQuery(undefined, { enabled: !!user, retry: false });
+  const suggestions = trpc.goals.suggestFromAssessment.useQuery(undefined, { enabled: !!user, retry: false, staleTime: 5 * 60_000 });
   const [newTitle, setNewTitle] = useState("");
   const [logDraft, setLogDraft] = useState<Record<number, { hours: string; note: string }>>({});
   // One-Thing focus mode: hide everything but a single goal. Simplicity = compliance.
@@ -140,6 +141,26 @@ export default function Goals() {
                 {create.isPending ? "Mapping…" : "Add goal"}
               </button>
             </div>
+
+            {/* THE BRIDGE — goals they already spoke in their assessment answers */}
+            {suggestions.data?.available && allActive.length < 10 && (
+              <div className="mb-8 rounded-xl px-5 py-4" style={{ border: `1px solid ${JADE}44`, background: "rgba(155,192,178,0.05)" }}>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: JADE, marginBottom: "8px" }}>
+                  We heard these in your assessment — put them on the clock?
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {suggestions.data.suggestions
+                    .filter((s) => !allActive.some((g) => g.title.toLowerCase() === s.toLowerCase()))
+                    .map((s) => (
+                      <button key={s} onClick={() => create.mutate({ title: s })} disabled={create.isPending}
+                        className="rounded-full px-3 py-1.5 text-sm transition-colors hover:opacity-80"
+                        style={{ border: `1px solid ${JADE}55`, background: "transparent", color: CREAM, cursor: "pointer" }}>
+                        + {s}
+                      </button>
+                    ))}
+                </div>
+              </div>
+            )}
 
             {/* Focus-mode banner */}
             {focusId && (

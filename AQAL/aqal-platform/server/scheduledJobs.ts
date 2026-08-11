@@ -49,6 +49,12 @@ const JOBS: HeartbeatJob[] = [
     path: "/api/scheduled/reentry",
     description: "One-time 'before you quit' re-entry email for members 30+ days stalled mid-assessment.",
   },
+  {
+    name: "aqal-question-of-day",
+    cron: "0 0 13 * * *", // daily 13:00 UTC (~morning in the Americas)
+    path: "/api/scheduled/question-of-day",
+    description: "The daily ritual: one email naming today's next unanswered question. Skips members who already answered today.",
+  },
 ];
 
 export async function ensureScheduledJobs(): Promise<void> {

@@ -28,7 +28,7 @@ import { storagePut, storageGetSignedUrl } from "./platform/storage";
 import { getFreshMatches, requestConnection, respondToConnection, getConnectionState } from "./matching";
 import { matchTier } from "@shared/matching";
 import { sendMessage, getThread, listThreads, ATTACHMENT_TTL_HOURS, blockUser, unblockUser, listBlocked, reportUser } from "./messaging";
-import { createGoal, listGoals, toggleStage, logEffort, setGoalStatus } from "./goals";
+import { createGoal, listGoals, toggleStage, logEffort, setGoalStatus, suggestGoalsFromAssessment } from "./goals";
 import { crisisCheck, rateProtocol, myRatings, submitPulse, pulseHistory, whatChanged, answerDays } from "./growth";
 import { hashFoundingPassword, verifyFoundingPassword } from "./foundingPassword";
 import { runPanel, panelSize, panelDevelopers } from "./platform/panel";
@@ -1103,7 +1103,7 @@ Return ONLY valid JSON.` },
   payment: router({
     createCheckout: protectedProcedure
       .input(z.object({
-        productKey: z.enum(["audio", "underwritten", "membership"]),
+        productKey: z.enum(["audio", "underwritten", "membership", "membershipAnnual"]),
         promoCode: z.string().optional(),
         origin: z.string(),
       }))
@@ -1202,6 +1202,16 @@ Return ONLY valid JSON.` },
         passcode: z.string().min(1).max(120),
       }))
       .mutation(async ({ ctx, input }) => {
+        // Founding-pool protection: throttle per IP and reject disposable
+        // domains — the 10,000 lifetime spots are the scarcest asset we have.
+        const { checkLimit, isDisposableEmail, clientIp } = await import("./rateLimit");
+        const ip = clientIp(ctx.req as never);
+        if (!checkLimit(`claim:${ip}`, 6, 60 * 60 * 1000) || !checkLimit(`claim-day:${ip}`, 20, 24 * 60 * 60 * 1000)) {
+          return { success: false, error: "Too many attempts from this connection — try again in an hour." };
+        }
+        if (isDisposableEmail(input.email)) {
+          return { success: false, error: "Please use a real, lasting email — it's your username and where your results live." };
+        }
         // No invite code: ANY password is accepted on first claim and becomes
         // this member's password. Returning sign-ins must match it — otherwise
         // typing someone else's email would open their account.
@@ -2286,6 +2296,31 @@ CRITICAL RULES:
     setStatus: protectedProcedure
       .input(z.object({ goalId: z.number().int().positive(), status: z.enum(["active", "achieved", "paused", "retired"]) }))
       .mutation(({ ctx, input }) => setGoalStatus(ctx.user.id, input.goalId, input.status).then((ok) => ({ ok }))),
+
+    // The bridge: goals the member already SPOKE in their assessment answers.
+    suggestFromAssessment: protectedProcedure.query(({ ctx }) => suggestGoalsFromAssessment(ctx.user.id)),
+  }),
+
+  // ── BELIEFS — the Belief Paradigm (elicit · evidence · member decides) ─────
+  beliefs: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const { listBeliefs } = await import("./beliefs");
+      return listBeliefs(ctx.user.id);
+    }),
+    elicit: protectedProcedure.mutation(async ({ ctx }) => {
+      const { elicitBeliefs } = await import("./beliefs");
+      const res = await elicitBeliefs(ctx.user.id);
+      await recordEvent({ type: "beliefs_elicited", userId: ctx.user.id, meta: { added: res.added, reason: res.reason } });
+      return res;
+    }),
+    setStatus: protectedProcedure
+      .input(z.object({ beliefId: z.number().int().positive(), status: z.enum(["active", "revised", "dismissed"]) }))
+      .mutation(async ({ ctx, input }) => {
+        const { setBeliefStatus } = await import("./beliefs");
+        const ok = await setBeliefStatus(ctx.user.id, input.beliefId, input.status);
+        if (ok && input.status === "revised") await recordEvent({ type: "belief_revised", userId: ctx.user.id });
+        return { ok };
+      }),
   }),
 
   // ── GROWTH — ratings, weekly pulse, what-changed, streaks, crisis queue ────

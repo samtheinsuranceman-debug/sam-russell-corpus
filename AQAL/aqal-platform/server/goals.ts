@@ -87,6 +87,46 @@ export async function logEffort(userId: number, goalId: number, month: string, h
   return true;
 }
 
+// ── The goals⇄assessment bridge ──────────────────────────────────────────────
+// Members already SPOKE their goals in the goals-elicitation questions
+// (positions in shared/goalsQuestions). Parse those transcripts into
+// ready-to-add goal suggestions so the dashboard starts full, not empty.
+export async function suggestGoalsFromAssessment(userId: number): Promise<{ available: boolean; suggestions: string[] }> {
+  const db = await getDb();
+  if (!db) return { available: false, suggestions: [] };
+  const { llmProvider } = await import("./platform/config");
+  if (llmProvider() === "mock") return { available: false, suggestions: [] };
+
+  const { getLatestAssessment, getResponsesByAssessment } = await import("./db");
+  const { GOALS_QUESTION_INDICES } = await import("@shared/goalsQuestions");
+  const latest = await getLatestAssessment(userId);
+  if (!latest) return { available: false, suggestions: [] };
+  const rows = await getResponsesByAssessment(latest.id);
+  const goalTexts = rows
+    .filter((r) => (GOALS_QUESTION_INDICES as readonly number[]).includes(r.questionIndex) && r.transcript)
+    .map((r) => r.transcript as string);
+  if (goalTexts.length === 0) return { available: false, suggestions: [] };
+
+  try {
+    const { invokeLLM } = await import("./platform/llm");
+    const result = await invokeLLM({
+      messages: [
+        { role: "system" as const, content: 'Extract the person\'s REAL stated life goals from these spoken answers. Respond ONLY with JSON: {"goals": [up to 8 short goal statements, each under 12 words, first person, e.g. "Start my own consulting business"]}. Only goals they actually stated or clearly implied — never invent.' },
+        { role: "user" as const, content: goalTexts.join("\n\n---\n\n").slice(0, 24_000) },
+      ],
+      maxTokens: 400,
+    } as import("./platform/llm").InvokeParams);
+    const raw = (result as { content?: string; text?: string })?.content ?? (result as { text?: string })?.text ?? "";
+    const m = String(raw).match(/\{[\s\S]*\}/);
+    if (!m) return { available: false, suggestions: [] };
+    const parsed = JSON.parse(m[0]) as { goals?: string[] };
+    const suggestions = (parsed.goals ?? []).filter((g) => typeof g === "string" && g.length >= 3).slice(0, 8).map((g) => g.slice(0, 200));
+    return { available: suggestions.length > 0, suggestions };
+  } catch {
+    return { available: false, suggestions: [] };
+  }
+}
+
 export async function setGoalStatus(userId: number, goalId: number, status: "active" | "achieved" | "paused" | "retired") {
   const db = await getDb();
   if (!db) return false;

@@ -176,6 +176,13 @@
       "when": 1786447155255,
       "tag": "0024_soft_domino",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1786448599012,
+      "tag": "0025_careful_blob",
+      "breakpoints": true
     }
   ]
 }

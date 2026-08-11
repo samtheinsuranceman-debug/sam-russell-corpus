@@ -141,7 +141,7 @@ export default function Pricing() {
   };
 
   // Paid products (audio / underwritten / membership) → Stripe checkout.
-  const buyProduct = (productKey: "audio" | "underwritten" | "membership") => {
+  const buyProduct = (productKey: "audio" | "underwritten" | "membership" | "membershipAnnual") => {
     playClick();
     track.mutate({ type: "checkout_start", variant: currentHeroId() });
     if (!user) { beginAuth(); return; }
@@ -403,6 +403,14 @@ export default function Pricing() {
               >
                 Start your {MEMBERSHIP.trialDays}-day free trial
               </Button>
+              {/* Annual option — 12 months of commitment, $889 back */}
+              <button
+                onClick={() => buyProduct("membershipAnnual")}
+                className="w-full mt-2 rounded-md border border-accent/40 bg-transparent py-2.5 text-xs text-accent hover:bg-accent/10 transition-colors"
+                style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.06em" }}
+              >
+                Or go annual: $4,499/year — save $889 (same free trial)
+              </button>
             </div>
 
             {/* Coaching-fee disclosure — separate, never discounted */}

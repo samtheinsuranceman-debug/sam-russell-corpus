@@ -68,6 +68,8 @@ async function startServer() {
   app.post("/api/scheduled/message-digest", messageDigestHandler);
   const { reentryHandler } = await import("../scheduledReentry");
   app.post("/api/scheduled/reentry", reentryHandler);
+  const { questionOfDayHandler } = await import("../scheduledQuestionOfDay");
+  app.post("/api/scheduled/question-of-day", questionOfDayHandler);
   // Make sure the Heartbeat cron service actually CALLS those routes —
   // idempotent, non-blocking, silently skipped when Heartbeat isn't configured.
   const { ensureScheduledJobs } = await import("../scheduledJobs");

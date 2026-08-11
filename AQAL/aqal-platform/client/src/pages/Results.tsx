@@ -1221,7 +1221,7 @@ const VOICE_HARD_LINES = new Set([
   "Naturalistic", "Financial-Self-Management", "Parenting", "Community-Founding",
 ]);
 
-function StarvedLineOnRamp({ scores }: { scores: number[] }) {
+function StarvedLineOnRamp({ scores, errBars }: { scores: number[]; errBars?: (number | null)[] }) {
   const lowest = useMemo(() => {
     return scores
       .map((score, i) => ({ i, score, line: AXIS_LABELS[i], card: starvationForLine(AXIS_LABELS[i]) }))
@@ -1270,7 +1270,7 @@ function StarvedLineOnRamp({ scores }: { scores: number[] }) {
                   {card ? card.name : line}
                 </h3>
                 <span className={`shrink-0 px-2 py-0.5 rounded-full text-[0.58rem] border ${hardToHear ? "border-amber-500/30 text-amber-300/80 bg-amber-500/[0.05]" : "border-red-500/25 text-red-300/80 bg-red-500/[0.05]"}`} style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                  {line} · {Math.round(score * 100)}
+                  {line} · {Math.round(score * 100)}{errBars?.[i] != null ? ` ±${errBars[i]}` : ""}
                 </span>
               </div>
               {hardToHear ? (
@@ -1586,9 +1586,9 @@ export default function Results() {
   const assessmentQuery = trpc.assessment.current.useQuery(undefined, { enabled: !!user });
 
   // Derive strength/weakness clusters from scores
-  const { strengths, growthEdges, allScores, compositeRarity, cohortRarity, generation } = useMemo(() => {
+  const { strengths, growthEdges, allScores, allErrBars, compositeRarity, cohortRarity, generation } = useMemo(() => {
     if (!assessmentQuery.data?.scores?.length) {
-      return { strengths: [], growthEdges: [], allScores: Array(AXIS_LABELS.length).fill(0), compositeRarity: 1, cohortRarity: null as number | null, generation: null as string | null };
+      return { strengths: [], growthEdges: [], allScores: Array(AXIS_LABELS.length).fill(0), allErrBars: Array(AXIS_LABELS.length).fill(null) as (number | null)[], compositeRarity: 1, cohortRarity: null as number | null, generation: null as string | null };
     }
 
     const scoreData = assessmentQuery.data.scores;
@@ -1607,11 +1607,20 @@ export default function Results() {
     // Build full line-score array (indexed by axisIndex)
     const allScores = Array(AXIS_LABELS.length).fill(0);
     indexed.forEach((s: any) => { allScores[s.axisIndex] = s.score; });
+    // Error bars: panel confidence → interval half-width. High confidence = tight
+    // bar; low = wide. "74 ±3" reads as instrumentation, and it's honest.
+    const allErrBars = Array(AXIS_LABELS.length).fill(null as number | null);
+    indexed.forEach((s: any) => {
+      if (typeof s.confidence === "number") {
+        allErrBars[s.axisIndex] = Math.max(1, Math.min(9, Math.round((1 - s.confidence) * 12)));
+      }
+    });
 
     return {
       strengths,
       growthEdges,
       allScores,
+      allErrBars,
       compositeRarity: assessmentQuery.data.compositeRarity || 1,
       cohortRarity: (assessmentQuery.data as any).cohortRarity ?? null,
       generation: (assessmentQuery.data as any).generation ?? null,
@@ -1785,7 +1794,7 @@ export default function Results() {
             </section>
 
             {/* On-ramp: your two lowest lines → the research, the prescriptions, the network */}
-            <StarvedLineOnRamp scores={allScores} />
+            <StarvedLineOnRamp scores={allScores} errBars={allErrBars} />
             <GrowthStudio scores={allScores} />
 
             {/* Companion reveal — the self–other gap, if a companion played along */}

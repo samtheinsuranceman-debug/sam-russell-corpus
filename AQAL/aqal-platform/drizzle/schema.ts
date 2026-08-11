@@ -593,6 +593,26 @@ export const pulseChecks = mysqlTable("pulse_checks", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
+// BELIEFS — the Belief Paradigm: formative beliefs elicited from the member's
+// own spoken answers, classified, and worked monthly. Limiting beliefs carry
+// research-grounded counter-evidence; empowering ones get reinforcement.
+// The member decides — we show evidence, never argue.
+export const beliefs = mysqlTable("beliefs", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  text: varchar("text", { length: 500 }).notNull(), // the belief, in their voice
+  kind: mysqlEnum("kind", ["limiting", "empowering"]).notNull(),
+  // For limiting: the honest counter-evidence summary. For empowering: the reinforcement.
+  evidence: text("evidence"),
+  // Which goals/lines this belief touches (display context)
+  touches: varchar("touches", { length: 300 }),
+  status: mysqlEnum("status", ["active", "revised", "dismissed"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Belief = typeof beliefs.$inferSelect;
+
 // CRISIS FLAGS — deterministic safety-net hits on member-submitted content
 // (assessment answers, tracker/pulse logs — never private messages).
 // Queue for human review; the member sees the support-resources panel.
