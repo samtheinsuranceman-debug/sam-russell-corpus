@@ -1,0 +1,3830 @@
+{
+ "meta": {
+  "title": "AQAL Platform - Engine Data Handoff for Perplexity",
+  "generated": "2026-08-11",
+  "purpose": "Unblocks work-order tasks that require the platform's own data. Everything here is the live engine's actual configuration, exported verbatim from the codebase.",
+  "integrityRule": "Deliverables built on this data still require checked DOIs for every empirical claim. Where you correct one of our numbers, show receipts.",
+  "taskUnblockMap": {
+   "18 edge-case personas": "Use taxonomy + engineSamples to see what the engine prescribes per weak line; your own 400-persona format is the base. NOTE: we still need your 400 personas sent back to the platform team for tasks 17/20.",
+   "20 scoring QA pack": "taxonomy.axes gives the exact 32 line names + scoring modes; questions gives the 27-question order your expected ranges attach to.",
+   "22 expand goal templates": "goals.templates is the exact schema (key, label, keywords, stages, baselineMonths, minMonthlyHours). Deliver new templates in this shape.",
+   "23 science of quitting": "goals.clockLogic is the verbatim clock algorithm your disengagement rules must plug into (states, the 'never' rule, pace math).",
+   "25 complementarity weights": "matching block: current weights, floor, axis subset, and the verbatim scoring function.",
+   "27 library sweep 2024-2026": "library.clusterSchema + samples show the exact shape new clusters must arrive in.",
+   "33 cascade mapping": "taxonomy.axes is the canonical node list for your directed cascade edges (fromLine/toLine must use these names).",
+   "35 deposit contracts": "goals.clockLogic + templates show where stakes would attach (per-goal, per-month logging).",
+   "36-40 age/circadian/natural-experiments/elite/cultural": "therapyMap + keystones are the intervention universe to annotate; deliver annotations keyed by therapy name / practice id.",
+   "42 money pathways": "Not actually blocked - pure regulatory research. Pricing context: $449/mo, $4,499/yr, assessments $500-$1,500, first 10,000 free lifetime."
+  }
+ },
+ "taxonomy": {
+  "axes": [
+   {
+    "line": "Logical",
+    "mode": "measured",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Mathematical",
+    "mode": "measured",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Spatial",
+    "mode": "measured",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Linguistic",
+    "mode": "measured",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Volitional",
+    "mode": "measured",
+    "indep": true,
+    "feedsRarity": true
+   },
+   {
+    "line": "Meta-Cognitive",
+    "mode": "calibration",
+    "indep": true,
+    "feedsRarity": true
+   },
+   {
+    "line": "Intrapersonal",
+    "mode": "altitude",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Reflective",
+    "mode": "altitude",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Existential",
+    "mode": "altitude",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Philosophical",
+    "mode": "altitude",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Integrative",
+    "mode": "altitude",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Interpersonal",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Empathic",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Intuitive",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Musical",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Kinesthetic",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Naturalistic",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Strategic",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Tactical",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Adaptive",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Resilient",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Systematic",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Architectural",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Adversarial",
+    "mode": "demonstrated",
+    "indep": true,
+    "feedsRarity": true
+   },
+   {
+    "line": "Interoceptive",
+    "mode": "demonstrated",
+    "indep": true,
+    "feedsRarity": true
+   },
+   {
+    "line": "Aesthetic",
+    "mode": "demonstrated",
+    "indep": true,
+    "feedsRarity": true
+   },
+   {
+    "line": "Influence",
+    "mode": "demonstrated",
+    "indep": false,
+    "feedsRarity": true
+   },
+   {
+    "line": "Humor",
+    "mode": "demonstrated",
+    "indep": true,
+    "feedsRarity": true
+   },
+   {
+    "line": "Parenting",
+    "mode": "stance",
+    "indep": false,
+    "feedsRarity": false
+   },
+   {
+    "line": "Seduction",
+    "mode": "stance",
+    "indep": false,
+    "feedsRarity": false
+   },
+   {
+    "line": "Community-Founding",
+    "mode": "stance",
+    "indep": false,
+    "feedsRarity": false
+   },
+   {
+    "line": "Financial-Self-Management",
+    "mode": "stance",
+    "indep": false,
+    "feedsRarity": false
+   }
+  ],
+  "modes": {
+   "measured": "CHC-normed cognitive percentile (real percentile once standardized score uploaded)",
+   "calibration": "objectively tested on its own scale",
+   "altitude": "developmental stage band, never a population percentile",
+   "demonstrated": "verified achievement floor from evidence",
+   "stance": "nine-stage developmental grading; never a percentile; excluded from rarity"
+  },
+  "indepFlagMeaning": "indep:true = currently treated as genuinely independent of g; feeds the effective-dimension count. The Prove-Independence-From-G scorecard will confirm or flip these flags.",
+  "therapyGapLines": [
+   "Mathematical",
+   "Spatial",
+   "Philosophical",
+   "Intuitive",
+   "Musical",
+   "Architectural",
+   "Adversarial",
+   "Aesthetic",
+   "Influence",
+   "Seduction",
+   "Financial-Self-Management"
+  ]
+ },
+ "therapyMap": {
+  "entryCount": 136,
+  "entries": [
+   {
+    "line": "Adaptive",
+    "therapy": "Bibliotherapy (Guided Self-Help)",
+    "role": "PRIMARY",
+    "capacity": "Ability to maintain psychological flexibility and experiential acceptance in the presence of difficult thoughts and feelings",
+    "cite": "Fledderus, M., Bohlmeijer, E. T., Pieterse, M. E., & Schreurs, K. M. G. (2012). Acceptance and commitment therapy as guided self-help for psychological distress and positive mental health: a randomized controlled trial. Psychological Medicine, 42(3), 485- 495.",
+    "doi": "10.1017/S003329171100144X",
+    "finding": "Showed that improved psychological flexibility mediated the effects of the ACT bibliotherapy intervention on psychological distress and positive mental health."
+   },
+   {
+    "line": "Adaptive",
+    "therapy": "Cognitive Processing Therapy (CPT)",
+    "role": "PRIMARY",
+    "capacity": "Ability to modify one’s perspective based on new information and accurately incorporate new information resulting from traumatic events (cognitive flexibility and accommodation)",
+    "cite": "Alpert, E., Carpenter, J. K., Smith, B. N., Woolley, M. G., Raterman, C., Farmer, C. C., Kehle-Forbes, S. M., & Galovski, T. E. (2023). Leveraging observational data to identify in-session patient and therapist predictors of cognitive processing therapy response and completion. Journal of Traumatic Stress, 36(2), 397-408.",
+    "doi": "10.1002/jts.22924",
+    "finding": "Showed that cognitive flexibility predicted self-reported PTSD symptom improvement and higher rates of treatment completion, indicating CPT develops this capacity."
+   },
+   {
+    "line": "Adaptive",
+    "therapy": "EMDR",
+    "role": "PRIMARY",
+    "capacity": "Ability to change cognitive sets to adapt to variable stimuli and inhibit unwanted cognitive or behavioral responses",
+    "cite": "Bonyadi, T., Homaei, R., & Heidari, A. (2023). Effectiveness of Eye Movement Desensitization and Reprocessing Therapy in Response Inhibition and Cognitive Flexibility of Veterans with Posttraumatic Stress Disorder. Journal of Archives in Military Medicine.",
+    "doi": "10.5812/jamm-138324",
+    "finding": "Showed EMDR therapy improved cognitive flexibility and response inhibition in veterans with PTSD"
+   },
+   {
+    "line": "Adaptive",
+    "therapy": "Psilocybin-Assisted Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to flexibly shift cognitive sets and adapt to new perspectives or changing environments",
+    "cite": "Doss et al. (2021). Psilocybin therapy increases cognitive and neural flexibility in patients with major depressive disorder. Translational Psychiatry.",
+    "doi": "10.1038/s41398-021-",
+    "finding": "Showed significant increases in cognitive flexibility for at least 4 weeks post- treatment, accompanied by changes in neural network dynamics"
+   },
+   {
+    "line": "Community-Founding",
+    "therapy": "Social Prescribing",
+    "role": "SECONDARY",
+    "capacity": "Capacity to build social capital and navigate community resources to meet personal social needs.",
+    "cite": "Dingle, G. A., & Sharman, L. S. (2022). Social prescribing: A review of the literature. In R. G. Menzies, R. E. Menzies, & G. A. Dingle (Eds.), Existential concerns and cognitive-behavioral procedures: An integrative approach to mental health (pp. 125–142). Springer.",
+    "doi": "10.1007⁄978-3-031-06932-1_8",
+    "finding": "Showed that social prescribing to community groups helps participants overcome cognitive barriers to connecting with others and improves social skills within a safe social context."
+   },
+   {
+    "line": "Empathic",
+    "therapy": "Emotionally Focused Couples Therapy (EFT)",
+    "role": "PRIMARY",
+    "capacity": "Ability to emotionally resonate with and attune to the feelings of a partner",
+    "cite": "Niyakan, A., Hoseinzadeh, M., & … (2026). The Effectiveness of Emotionally Focused Couple Therapy on Emotional Empathy, Sexual Functioning, and Marital Relationship Quality in Couples Experiencing Marital Conflict. Jundishapur Journal of Health Sciences.",
+    "doi": "10.22118/jjhs.2026.573930.1036",
+    "finding": "Showed that Emotionally Focused Couple Therapy led to statistically significant improvements in emotional empathy in couples experiencing marital conflict."
+   },
+   {
+    "line": "Empathic",
+    "therapy": "Forgiveness Interventions (Wade)",
+    "role": "PRIMARY",
+    "capacity": "Ability to take the perspective of and generate empathy for an offender or opposing viewpoint",
+    "cite": "Wade, N. G., Hoyt, W. T., Kidwell, J. E. M., & Worthington, E. L., Jr. (2014). Efficacy of psychotherapeutic interventions to promote forgiveness: A meta-analysis. Journal of Consulting and Clinical Psychology, 82(1), 154–170.",
+    "doi": "10.1037/a0035268",
+    "finding": "Showed that explicit forgiveness interventions significantly improve the capacity for empathy and perspective-taking toward offenders compared to no-treatment controls."
+   },
+   {
+    "line": "Empathic",
+    "therapy": "Music Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to recognize diverse emotions and feel empathy towards others",
+    "cite": "Huang, C., & Gu, S. (2024). Effectiveness of music therapy in enhancing empathy and emotional recognition in adolescents with intellectual disabilities. Acta Psychologica, 243, 104152.",
+    "doi": "10.1016/j.actpsy.2024.104152",
+    "finding": "Showed significant improvements in empathy towards peers, strangers, elderly individuals, animals, and cartoon characters, as well as enhanced ability to recognize diverse emotions."
+   },
+   {
+    "line": "Empathic",
+    "therapy": "Pet-Assisted Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to comprehend and identify emotional states in oneself and others",
+    "cite": "Scandurra, C., et al. (2021). An Animal-Assisted Education Intervention with Dogs to Promote Emotion Comprehension in Primary School Children—The Federico II Model of Healthcare Zooanthropology. Animals, 11(6), 1504.",
+    "doi": "10.3390/ani11061504",
+    "finding": "Showed significant improvement in emotion comprehension and empathy compared to the control group after the intervention"
+   },
+   {
+    "line": "Empathic",
+    "therapy": "Gottman Method Couples Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to feel and attune to the emotional states of a partner",
+    "cite": "Irvine, T. J., Peluso, P. R., Benson, K., Cole, C., & Gottman, J. M. (2024). A pilot study examining the effectiveness of Gottman method couples therapy over treatment-as- usual approaches for treating couples dealing with infidelity. The Family Journal.",
+    "doi": "10.1177⁄10664807231210123",
+    "finding": "Showed that Gottman Method Couples Therapy was globally more effective in facilitating affair recovery than TAU approaches, notably in the areas of trust, conflict management, relational satisfaction, and quality of sex."
+   },
+   {
+    "line": "Empathic",
+    "therapy": "Group Therapy",
+    "role": "SECONDARY",
+    "capacity": "Capacity to resonate with and understand the emotional states of others within a shared context",
+    "cite": "Dark, F., Scott, J. G., Baker, A., Parker, S., Gordon, A., Newman, E., Gore-Jones, V., Lim, C. C. W., Jones, L., & Penn, D. L. (2020). Randomized controlled trial of social cognition and interaction training compared to befriending group. British Journal of Clinical Psychology.",
+    "doi": "10.1111/bjc.12252",
+    "finding": "Demonstrated that Social Cognition and Interaction Training (SCIT) in a group therapy setting targets and develops the cognitive processes involved in the recognition, understanding, accurate processing, and effective use of social cues."
+   },
+   {
+    "line": "Empathic",
+    "therapy": "Interpersonal Therapy (IPT)",
+    "role": "SECONDARY",
+    "capacity": "Ability to identify, process, and express emotions in a relational context",
+    "cite": "Lipsitz, J. D., & Markowitz, J. C. (2013). Mechanisms of change in interpersonal therapy (IPT). Clinical Psychology Review.",
+    "doi": "10.1016/j.cpr.2013.09.002",
+    "finding": "Showed that Interpersonal Therapy works by improving interpersonal skills, enhancing social support, decreasing interpersonal stress, and facilitating emotional processing."
+   },
+   {
+    "line": "Existential",
+    "therapy": "Logotherapy (Frankl)",
+    "role": "PRIMARY",
+    "capacity": "Ability to discover and construct personal meaning and purpose in life despite suffering",
+    "cite": "Sun, F. K., Chiu, N. M., & Chiang, C. Y. (2022). The effects of logotherapy on meaning in life, depression, hopelessness, and suicidal ideation, in patients with depression: An intervention study. Perspectives in Psychiatric Care.",
+    "doi": "10.1111/ppc.13003",
+    "finding": "Showed significant improvement in meaning in life scores (using the Meaning in Life Questionnaire) after a logotherapy intervention"
+   },
+   {
+    "line": "Existential",
+    "therapy": "Meaning-Oriented Grief Therapy (Neimeyer)",
+    "role": "PRIMARY",
+    "capacity": "Ability to reconstruct meaning and integrate profound loss into a coherent life narrative",
+    "cite": "Batista, J., Alves, D., Pires, N., Silva, J. R., Mendes, I., & Neimeyer, R. A. (2025). The Meaning in Loss protocol: A clinical trial of online grief therapy. Death Studies, 49(1), 8- 20.",
+    "doi": "10.1080⁄07481187.2024.2370633",
+    "finding": "Showed that fostering meaning-making regarding the loss led to improved ability to reconstruct meaning and integrate the loss into a coherent life narrative"
+   },
+   {
+    "line": "Existential",
+    "therapy": "Psilocybin-Assisted Therapy",
+    "role": "SECONDARY",
+    "capacity": "Capacity to construct profound personal meaning and confront mortality without overwhelming distress",
+    "cite": "Doss et al. (2021). Psilocybin therapy increases cognitive and neural flexibility in patients with major depressive disorder. Translational Psychiatry.",
+    "doi": "10.1038/s41398-021-",
+    "finding": "Showed significant increases in cognitive flexibility for at least 4 weeks post- treatment, accompanied by changes in neural network dynamics"
+   },
+   {
+    "line": "Humor",
+    "therapy": "Laughter Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to reframe negative experiences through a humorous or positive lens",
+    "cite": "Aydın, R., & Aslan, E. (2024). Effectiveness of yoga and laughter yoga in improving psychological resilience of mothers with babies hospitalized in neonatal intensive care unit. Journal of Health Psychology.",
+    "doi": "10.1177⁄13591053241262006",
+    "finding": "Showed significant improvement in psychological resilience scores for mothers in the laughter yoga group compared to the control group."
+   },
+   {
+    "line": "Integrative",
+    "therapy": "Ketamine-Assisted Therapy",
+    "role": "PRIMARY",
+    "capacity": "Capacity to hold multiple perspectives simultaneously and revise high-level narrative self-representations",
+    "cite": "Marguilho, M., Figueiredo, I., & Castro-Rodrigues, P. (2022). A unified model of ketamine’s dissociative and psychedelic properties. Journal of Psychopharmacology.",
+    "doi": "10.1177⁄02698811221140011",
+    "finding": "Proposed that ketamine’s psychedelic state allows relaxation of highest-level beliefs and revision of pathological self-representation models through neuroplasticity."
+   },
+   {
+    "line": "Integrative",
+    "therapy": "Dance Therapy (Wu 2021)",
+    "role": "SECONDARY",
+    "capacity": "Ability to hold and process multiple streams of information simultaneously (music, movement, social cues)",
+    "cite": "Liu, C., Su, M., Jiao, Y., Ji, Y., & Zhu, S. (2021). Effects of dance interventions on cognition, psycho-behavioral symptoms, motor functions, and quality of life in older adult patients with mild cognitive impairment: a systematic review and meta-analysis. Frontiers in Aging Neuroscience, 13, 706609.",
+    "doi": "10.3389/fnagi.2021.706609",
+    "finding": "Showed significant improvement in global cognition, rote memory, immediate recall, delayed recall, and attention after dance interventions"
+   },
+   {
+    "line": "Integrative",
+    "therapy": "Forgiveness Interventions (Wade)",
+    "role": "SECONDARY",
+    "capacity": "Ability to synthesize multiple perspectives and hold contradictory views of a person (as both offender and human)",
+    "cite": "Wade, N. G., Hoyt, W. T., Kidwell, J. E. M., & Worthington, E. L., Jr. (2014). Efficacy of psychotherapeutic interventions to promote forgiveness: A meta-analysis. Journal of Consulting and Clinical Psychology, 82(1), 154–170.",
+    "doi": "10.1037/a0035268",
+    "finding": "Showed that explicit forgiveness interventions significantly improve the capacity for empathy and perspective-taking toward offenders compared to no-treatment controls."
+   },
+   {
+    "line": "Integrative",
+    "therapy": "Internal Family Systems (IFS)",
+    "role": "SECONDARY",
+    "capacity": "Ability to hold multiple internal perspectives and coordinate them (Self-leadership)",
+    "cite": "Shadick, N. A., Sowell, N. F., Frits, M. L., Hoffman, S. M., Hartz, S. A., Booth, F. D., Sweezy, M., Rogers, P. R., Dubin, R. L., Atkinson, J. C., Friedman, A. L., Perez, F., Parker, T. A., Liao, K. P., Coblyn, J. S., Weinblatt, M. E., & Schwartz, R. C. (2013). A randomized controlled trial of an internal family systems-based psychotherapeutic intervention on outcomes in rheumatoid arthritis: a proof-of-concept study. The Journal of Rheumatology, 40(11), 1831-1841.",
+    "doi": "10.3899/jrheum.121465",
+    "finding": "Showed sustained improvements in self-compassion 1 year after a 9-month IFS intervention compared to an education control group."
+   },
+   {
+    "line": "Integrative",
+    "therapy": "Reminiscence Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to synthesize past experiences into a coherent sense of meaning and ego integrity",
+    "cite": "Kirk, M., et al. (2019). Five weeks of immersive reminiscence therapy improves autobiographical memory in Alzheimer’s disease. Memory, 27(4), 441-454.",
+    "doi": "10.1080⁄09658211.2018.1515960",
+    "finding": "Showed that immersive reminiscence therapy significantly improved autobiographical memory recall in older adults with Alzheimer’s disease."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Acupuncture",
+    "role": "PRIMARY",
+    "capacity": "Ability to sense, interpret, and voluntarily attend to internal bodily signals and physiological states",
+    "cite": "Jung, C., Kim, J., & Park, K. (2023). Cognitive and affective interaction with somatosensory afference in acupuncture–a specific brain response to compound stimulus. Frontiers in Human Neuroscience, 17, 1105703.",
+    "doi": "10.3389/fnhum.2023.1105703",
+    "finding": "Showed that acupuncture treatment induces voluntary attention for interoception and modulates brain interactions associated with interoceptive attention and somatosensory representation."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Biofeedback HRV",
+    "role": "PRIMARY",
+    "capacity": "Ability to regulate distress by attending to bodily signals and intentionally influencing physiological states through breathing",
+    "cite": "Schumann, A., Schmitt, L., Rieger, K., Çalışkan, E., De la Cruz, F., Geisler, M., Gupta, Y., & Bär, K. J. (2026). Physiological correlates of interoception and the effect of heart rate variability biofeedback. Frontiers in Network Physiology, 6, 1846014.",
+    "doi": "10.3389/fnetp.2026.1846014",
+    "finding": "Showed large effect size improvements in the MAIA Self-Regulation subscale, indicating enhanced perceived ability to modulate internal states and regulate distress by attending to bodily signals."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Cold Exposure (Wim Hof)",
+    "role": "PRIMARY",
+    "capacity": "Ability to consciously perceive and regulate internal physiological states and autonomic responses",
+    "cite": "Fox, N., Biddell, H., & King, J. (2025). A semi-randomised control trial assessing psychophysiological effects of breathwork and cold immersion. Scientific Reports.",
+    "doi": "10.1038/s41598-025-29187-9",
+    "finding": "Showed that intentional short-term stress induced by cyclic hyperventilation and cold exposure (the Wim Hof Method) improves interoceptive awareness."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Float Tanks REST",
+    "role": "PRIMARY",
+    "capacity": "Ability to perceive and sustain attention on internal bodily sensations (interoceptive awareness)",
+    "cite": "Feinstein, J. S., Khalsa, S. S., Yeh, H., Al-Zoubi, O., Arevian, A. C., Wohlrab, C., … & Paulus, M. P. (2018). The elicitation of relaxation and interoceptive awareness using floatation therapy in individuals with high anxiety sensitivity. Biological Psychiatry: Cognitive Neuroscience and Neuroimaging, 3(6), 555-562.",
+    "doi": "10.1016/j.bpsc.2018.02.005",
+    "finding": "Showed that Floatation-REST induced a state of heightened interoceptive awareness for cardiorespiratory sensations in individuals with high anxiety sensitivity."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "MBSR (Mindfulness-Based Stress Reduction)",
+    "role": "PRIMARY",
+    "capacity": "Ability to consciously perceive and process internal bodily sensations and physiological signals (interoceptive awareness)",
+    "cite": "Guu, S. F., et al. (2023). Interoceptive awareness: MBSR training alters information processing of salience network. Frontiers in Behavioral Neuroscience, 17, 1008086.",
+    "doi": "10.3389/fnbeh.2023.1008086",
+    "finding": "Showed that 8 weeks of MBSR training increased functional connectivity in the salience network during interoceptive practices (breathing and body scan), indicating enhanced interoceptive awareness and information processing."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Polyvagal Exercises",
+    "role": "PRIMARY",
+    "capacity": "Ability to consciously perceive, identify, and regulate internal bodily sensations and autonomic states",
+    "cite": "Sullivan, M. B., Erb, M., Schmalzl, L., Moonaz, S., Noggle Taylor, J., & Porges, S. W. (2018). Yoga therapy and polyvagal theory: The convergence of traditional wisdom and contemporary neuroscience for self-regulation and resilience. Frontiers in Human Neuroscience.",
+    "doi": "10.3389/fnhum.2018.00067",
+    "finding": "Showed that polyvagal-informed practices link awareness of bodily sensations with self-regulatory capacity, improving interoceptive awareness and vagal regulation for enhanced resilience"
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Progressive Muscle Relaxation (PMR)",
+    "role": "PRIMARY",
+    "capacity": "Ability to consciously detect, identify, and differentiate internal physical sensations and muscle tension states",
+    "cite": "Smith, A. R., et al. (2021). Reconnecting to Internal Sensation and Experiences: A Pilot Feasibility Study of an Online Intervention to Improve Interoception and Reduce Suicidal Ideation. Behavior Therapy.",
+    "doi": "10.1016/j.beth.2021.02.001",
+    "finding": "Showed that participating in a progressive muscle relaxation exercise was associated with improved interoceptive awareness and reduced suicidal ideation."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Somatic Experiencing",
+    "role": "PRIMARY",
+    "capacity": "Ability to consciously sense, identify, and track internal bodily sensations and physiological states",
+    "cite": "Lee, M. S., et al. (2023). Pilot Study About the Effects of the Soma Experiencing Motion (Soma e-Motion) Program on Interoceptive Awareness and Self-Compassion. Psychiatry Investigation.",
+    "doi": "10.30773/pi.2022.0312",
+    "finding": "Showed significant improvement in interoceptive awareness and self-compassion scores after the Soma e-Motion program based on Somatic Experiencing"
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Yoga Nidra (NSDR)",
+    "role": "PRIMARY",
+    "capacity": "Ability to sense and become aware of internal bodily signals and sensations",
+    "cite": "Moszeik, E. N., Rohleder, N., & Renner, K. H. (2025). The Effects of an Online Yoga Nidra Meditation on Subjective Well-Being and Diurnal Salivary Cortisol: A Randomised Controlled Trial. Stress and Health, 41(3), e70049.",
+    "doi": "10.1002/smi.70049",
+    "finding": "Showed that Yoga Nidra functions as a specific form of attention control (mindfulness) and enhances the ability to observe internal states and regulate emotions."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Compassion-Focused Therapy (CFT)",
+    "role": "SECONDARY",
+    "capacity": "Capacity to regulate autonomic nervous system arousal and physiological threat responses.",
+    "cite": "Vidal, J., & Soldevilla, J. M. (2022). Effect of compassion-focused therapy on self-criticism and self-soothing: A meta-analysis. British Journal of Clinical Psychology, 62(1), 70-81.",
+    "doi": "10.1111/bjc.12394",
+    "finding": "Showed that CFT significantly decreases self-criticism and increases the ability to experience self-soothing and contentment in response to distress."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Forest Bathing (Shinrin-yoku)",
+    "role": "SECONDARY",
+    "capacity": "Ability to sense and regulate internal physiological states through mindful awareness of the body in space",
+    "cite": "Keller, J., Chawla, L., Kayira, J., & Rhoades, J. (2024). Forest bathing increases adolescent connection to nature: A mixed methods study. Ecopsychology, 16(4), 302-314.",
+    "doi": "10.1089/eco.2023.0070",
+    "finding": "After forest bathing three times over 3 weeks, participants’ connectedness to nature increased significantly as measured by the Connectedness to Nature Scale."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "MDMA-Assisted Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to identify and label internal emotional states (reduced alexithymia)",
+    "cite": "Agin-Liebes, G., et al. (2025). Self-compassion mediates treatment effects in MDMA-assisted therapy for posttraumatic stress disorder. European Journal of Psychotraumatology.",
+    "doi": "10.1080⁄20008066.2025",
+    "finding": "Showed that MDMA-assisted therapy significantly improves self-compassion, which mediates the treatment effects for posttraumatic stress disorder."
+   },
+   {
+    "line": "Interoceptive",
+    "therapy": "Prolonged Exposure (PE)",
+    "role": "SECONDARY",
+    "capacity": "Ability to regulate and modulate intense emotional responses to trauma reminders",
+    "cite": "Bluett, E. J., Zoellner, L. A., & Feeny, N. C. (2014). Does change in distress matter? Mechanisms of change in prolonged exposure for PTSD. Journal of Behavior Therapy and Experimental Psychiatry, 45(1), 97-104.",
+    "doi": "10.1016/j.jbtep.2013.09.003",
+    "finding": "Showed that increases in distress tolerance mediated the relationship between prolonged exposure treatment and reductions in PTSD symptom severity."
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "Gottman Method Couples Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to manage conflict, build trust, and emotionally attune to a partner’s internal states",
+    "cite": "Irvine, T. J., Peluso, P. R., Benson, K., Cole, C., & Gottman, J. M. (2024). A pilot study examining the effectiveness of Gottman method couples therapy over treatment-as- usual approaches for treating couples dealing with infidelity. The Family Journal.",
+    "doi": "10.1177⁄10664807231210123",
+    "finding": "Showed that Gottman Method Couples Therapy was globally more effective in facilitating affair recovery than TAU approaches, notably in the areas of trust, conflict management, relational satisfaction, and quality of sex."
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "Group Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to accurately perceive, interpret, and respond to social cues and interactions in real-world situations",
+    "cite": "Dark, F., Scott, J. G., Baker, A., Parker, S., Gordon, A., Newman, E., Gore-Jones, V., Lim, C. C. W., Jones, L., & Penn, D. L. (2020). Randomized controlled trial of social cognition and interaction training compared to befriending group. British Journal of Clinical Psychology.",
+    "doi": "10.1111/bjc.12252",
+    "finding": "Demonstrated that Social Cognition and Interaction Training (SCIT) in a group therapy setting targets and develops the cognitive processes involved in the recognition, understanding, accurate processing, and effective use of social cues."
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "Interpersonal Therapy (IPT)",
+    "role": "PRIMARY",
+    "capacity": "Ability to communicate effectively, resolve relational conflicts, and mobilize social support",
+    "cite": "Lipsitz, J. D., & Markowitz, J. C. (2013). Mechanisms of change in interpersonal therapy (IPT). Clinical Psychology Review.",
+    "doi": "10.1016/j.cpr.2013.09.002",
+    "finding": "Showed that Interpersonal Therapy works by improving interpersonal skills, enhancing social support, decreasing interpersonal stress, and facilitating emotional processing."
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "Social Prescribing",
+    "role": "PRIMARY",
+    "capacity": "Ability to overcome cognitive barriers to social connection and develop practical conversational and interpersonal skills within a safe social context.",
+    "cite": "Dingle, G. A., & Sharman, L. S. (2022). Social prescribing: A review of the literature. In R. G. Menzies, R. E. Menzies, & G. A. Dingle (Eds.), Existential concerns and cognitive-behavioral procedures: An integrative approach to mental health (pp. 125–142). Springer.",
+    "doi": "10.1007⁄978-3-031-06932-1_8",
+    "finding": "Showed that social prescribing to community groups helps participants overcome cognitive barriers to connecting with others and improves social skills within a safe social context."
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "Cognitive Stimulation Therapy (CST)",
+    "role": "SECONDARY",
+    "capacity": "Ability to engage in social interactions and group communication",
+    "cite": "Calatayud, E., Subiron-Valera, A. B., & Marcén-Román, Y. (2023). Effects on Language and Verbal Fluency of a Cognitive Stimulation Program in Older Adults: Randomized Controlled Trial. Sustainability, 15(3), 2533.",
+    "doi": "10.3390/su15032533",
+    "finding": "Showed significant improvement in language and verbal fluency following the cognitive stimulation program in older adults with dementia."
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "DBT (Linehan)",
+    "role": "SECONDARY",
+    "capacity": "Ability to navigate social interactions effectively while maintaining self- respect and achieving objectives",
+    "cite": "Zeifman, R. J., Boritz, T., Barnhart, R., Eynan, R., & McMain, S. (2020). The independent roles of mindfulness and distress tolerance in treatment outcomes in dialectical behavior therapy skills training. Personality Disorders: Theory, Research, and Treatment, 11(3), 181–190.",
+    "doi": "10.1037/per0000368",
+    "finding": "Showed that DBT skills training enhances the capacity for emotion regulation through the independent development of mindfulness and distress tolerance skills."
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "Emotionally Focused Couples Therapy (EFT)",
+    "role": "SECONDARY",
+    "capacity": "Ability to read others and maintain functional intimacy within relationships",
+    "cite": "Niyakan, A., Hoseinzadeh, M., & … (2026). The Effectiveness of Emotionally Focused Couple Therapy on Emotional Empathy, Sexual Functioning, and Marital Relationship Quality in Couples Experiencing Marital Conflict. Jundishapur Journal of Health Sciences.",
+    "doi": "10.22118/jjhs.2026.573930.1036",
+    "finding": "Showed that Emotionally Focused Couple Therapy led to statistically significant improvements in emotional empathy in couples experiencing marital conflict."
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "Mentalization-Based Treatment (MBT)",
+    "role": "SECONDARY",
+    "capacity": "Ability to accurately read and respond to the emotional states and intentions of others in social interactions",
+    "cite": "Bateman, A., & Fonagy, P. (2008). 8-Year Follow-Up of Patients Treated for Borderline Personality Disorder: Mentalization-Based Treatment Versus Treatment as Usual. American Journal of Psychiatry.",
+    "doi": "10.1176/appi.ajp.2007.07040636",
+    "finding": "Showed that Mentalization-Based Treatment significantly improved mentalizing capacity (reflective functioning) and that this improvement mediated clinical outcomes over the 8-year follow-up period."
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "Parent-Child Interaction Therapy (PCIT)",
+    "role": "SECONDARY",
+    "capacity": "Ability to regulate own emotional responses during child interactions",
+    "cite": "Hare, M. M., et al. (2021). The Cost-Effectiveness of Parent-Child Interaction Therapy. Administration and Policy in Mental Health and Mental Health Services Research.",
+    "doi": "10.1007/s10488-020-01083-6",
+    "finding": "Showed significant improvement in positive parenting skills as measured by the do skills in the Dyadic Parent-Child Interaction Coding System (DPICS)"
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "Pet-Assisted Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to interact and build relationships with others",
+    "cite": "Scandurra, C., et al. (2021). An Animal-Assisted Education Intervention with Dogs to Promote Emotion Comprehension in Primary School Children—The Federico II Model of Healthcare Zooanthropology. Animals, 11(6), 1504.",
+    "doi": "10.3390/ani11061504",
+    "finding": "Showed significant improvement in emotion comprehension and empathy compared to the control group after the intervention"
+   },
+   {
+    "line": "Interpersonal",
+    "therapy": "Psychodynamic Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to accurately read and respond to the emotional states and intentions of others.",
+    "cite": "Keefe, J. R., Levy, K. N., Sowislo, J. F., Diamond, D., Doering, S., Hörz- Sagstetter, S., … & Clarkin, J. F. (2023). Reflective functioning and its potential to moderate the efficacy of manualized psychodynamic therapies versus other treatments for borderline personality disorder. Journal of Consulting and Clinical Psychology, 91(1), 1-13.",
+    "doi": "10.1037/ccp0000760",
+    "finding": "Transference-focused psychotherapy (a manualized psychodynamic treatment) improved reflective functioning most strongly among patients with poor baseline reflective functioning, whereas dialectical behavior therapy and enhanced treatment as usual did not."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Compassion-Focused Therapy (CFT)",
+    "role": "PRIMARY",
+    "capacity": "Ability to access and activate the affiliative/soothing emotional regulation system in response to internal or external threats.",
+    "cite": "Vidal, J., & Soldevilla, J. M. (2022). Effect of compassion-focused therapy on self-criticism and self-soothing: A meta-analysis. British Journal of Clinical Psychology, 62(1), 70-81.",
+    "doi": "10.1111/bjc.12394",
+    "finding": "Showed that CFT significantly decreases self-criticism and increases the ability to experience self-soothing and contentment in response to distress."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "DBT (Linehan)",
+    "role": "PRIMARY",
+    "capacity": "Ability to identify, label, and regulate internal emotional states and tolerate distress without impulsive reactivity",
+    "cite": "Zeifman, R. J., Boritz, T., Barnhart, R., Eynan, R., & McMain, S. (2020). The independent roles of mindfulness and distress tolerance in treatment outcomes in dialectical behavior therapy skills training. Personality Disorders: Theory, Research, and Treatment, 11(3), 181–190.",
+    "doi": "10.1037/per0000368",
+    "finding": "Showed that DBT skills training enhances the capacity for emotion regulation through the independent development of mindfulness and distress tolerance skills."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Executive Coaching",
+    "role": "PRIMARY",
+    "capacity": "Ability to accurately identify, reflect upon, and articulate one’s own behavioral patterns, emotional triggers, and underlying motivational logic",
+    "cite": "Stephens, M. (2026). Intellectual Bypass in Executive Coaching: When Self- Awareness Fails to Produce Change. Coaching: An International Journal of Theory, Research and Practice.",
+    "doi": "10.1177⁄17418305261469750",
+    "finding": "Showed that executive coaching develops increasingly accurate and sophisticated insight into recurring behavioral, emotional, or relational patterns, though this self-awareness must be integrated beyond intellectual understanding to produce structural transformation."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Internal Family Systems (IFS)",
+    "role": "PRIMARY",
+    "capacity": "Ability to direct self-compassion toward internal parts and emotional states",
+    "cite": "Shadick, N. A., Sowell, N. F., Frits, M. L., Hoffman, S. M., Hartz, S. A., Booth, F. D., Sweezy, M., Rogers, P. R., Dubin, R. L., Atkinson, J. C., Friedman, A. L., Perez, F., Parker, T. A., Liao, K. P., Coblyn, J. S., Weinblatt, M. E., & Schwartz, R. C. (2013). A randomized controlled trial of an internal family systems-based psychotherapeutic intervention on outcomes in rheumatoid arthritis: a proof-of-concept study. The Journal of Rheumatology, 40(11), 1831-1841.",
+    "doi": "10.3899/jrheum.121465",
+    "finding": "Showed sustained improvements in self-compassion 1 year after a 9-month IFS intervention compared to an education control group."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "MDMA-Assisted Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to relate to oneself with kindness and understanding during moments of suffering or perceived inadequacy",
+    "cite": "Agin-Liebes, G., et al. (2025). Self-compassion mediates treatment effects in MDMA-assisted therapy for posttraumatic stress disorder. European Journal of Psychotraumatology.",
+    "doi": "10.1080⁄20008066.2025",
+    "finding": "Showed that MDMA-assisted therapy significantly improves self-compassion, which mediates the treatment effects for posttraumatic stress disorder."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Mentalization-Based Treatment (MBT)",
+    "role": "PRIMARY",
+    "capacity": "Ability to identify, understand, and reflect upon one’s own and others’ internal mental states (intentions, feelings, thoughts)",
+    "cite": "Bateman, A., & Fonagy, P. (2008). 8-Year Follow-Up of Patients Treated for Borderline Personality Disorder: Mentalization-Based Treatment Versus Treatment as Usual. American Journal of Psychiatry.",
+    "doi": "10.1176/appi.ajp.2007.07040636",
+    "finding": "Showed that Mentalization-Based Treatment significantly improved mentalizing capacity (reflective functioning) and that this improvement mediated clinical outcomes over the 8-year follow-up period."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Mindful Self-Compassion (MSC)",
+    "role": "PRIMARY",
+    "capacity": "Ability to identify, accept, and self-soothe during difficult internal emotional states without judgment",
+    "cite": "Neff, K. D., & Germer, C. K. (2013). A pilot study and randomized controlled trial of the mindful self-compassion program. Journal of Clinical Psychology, 69(1), 28-44.",
+    "doi": "10.1002/jclp.21923",
+    "finding": "Showed significant increases in self-compassion, mindfulness, and wellbeing, demonstrating an enhanced ability to self-soothe and regulate emotions when facing difficulties."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Psychodynamic Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to understand and interpret one’s own and others’ mental states, intentions, and emotions (reflective functioning/mentalization).",
+    "cite": "Keefe, J. R., Levy, K. N., Sowislo, J. F., Diamond, D., Doering, S., Hörz- Sagstetter, S., … & Clarkin, J. F. (2023). Reflective functioning and its potential to moderate the efficacy of manualized psychodynamic therapies versus other treatments for borderline personality disorder. Journal of Consulting and Clinical Psychology, 91(1), 1-13.",
+    "doi": "10.1037/ccp0000760",
+    "finding": "Transference-focused psychotherapy (a manualized psychodynamic treatment) improved reflective functioning most strongly among patients with poor baseline reflective functioning, whereas dialectical behavior therapy and enhanced treatment as usual did not."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Reminiscence Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to recall and structure autobiographical memories and personal history",
+    "cite": "Kirk, M., et al. (2019). Five weeks of immersive reminiscence therapy improves autobiographical memory in Alzheimer’s disease. Memory, 27(4), 441-454.",
+    "doi": "10.1080⁄09658211.2018.1515960",
+    "finding": "Showed that immersive reminiscence therapy significantly improved autobiographical memory recall in older adults with Alzheimer’s disease."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Sandplay Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to express internal emotional states and regulate emotions through nonverbal symbolic representation",
+    "cite": "Tan, J. (2021). Effects of sandplay therapy in reducing emotional and behavioral problems in school-age children. Journal of Environmental and Public Health.",
+    "doi": "10.1155/2021/8510721",
+    "finding": "Showed improvement in self-expression and emotional regulation abilities through nonverbal symbolic representation"
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Self-Compassion (Neff)",
+    "role": "PRIMARY",
+    "capacity": "Ability to observe and relate to one’s own painful emotional patterns with non-judgmental awareness and self-kindness",
+    "cite": "Neff, K. D., & Germer, C. K. (2013). A pilot study and randomized controlled trial of the mindful self-compassion program. Journal of Clinical Psychology.",
+    "doi": "10.1002/jclp.21923",
+    "finding": "Showed significant increases in self-compassion and mindfulness scores after 8 weeks of training, demonstrating the development of active self-soothing and internal emotional regulation skills."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Trauma-Focused CBT (TF-CBT)",
+    "role": "PRIMARY",
+    "capacity": "Ability to explicitly regulate emotions through cognitive reappraisal and affective modulation",
+    "cite": "Cisler, J. M., Sigel, B. A., Steele, J. S., Smitherman, S., Ambadar, Z., & Kilts, C. D. (2016). Changes in functional connectivity of the amygdala during cognitive reappraisal predict symptom reduction during trauma-focused cognitive-behavioral therapy among adolescent girls with posttraumatic stress disorder. Psychological Medicine.",
+    "doi": "10.1017/s0033291716001847",
+    "finding": "Showed that pre- to post-treatment changes in right amygdala to left insula functional connectivity scaled with improvements in emotion regulation ability during cognitive reappraisal."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Virtual Reality Exposure Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to implement strategies to modulate emotional responses and reach desirable goals",
+    "cite": "Colombo, D., Díaz-García, A., Fernandez-Álvarez, J., & Botella, C. (2021). Virtual reality for the enhancement of emotion regulation. Clinical Psychology & Psychotherapy.",
+    "doi": "10.1002/cpp.2618",
+    "finding": "Virtual reality exposure therapy enhances the ability to implement strategies to modulate emotional responses and reach desirable goals."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Biofeedback HRV",
+    "role": "SECONDARY",
+    "capacity": "Enhanced perceived ability to modulate internal states and regulate distress",
+    "cite": "Schumann, A., Schmitt, L., Rieger, K., Çalışkan, E., De la Cruz, F., Geisler, M., Gupta, Y., & Bär, K. J. (2026). Physiological correlates of interoception and the effect of heart rate variability biofeedback. Frontiers in Network Physiology, 6, 1846014.",
+    "doi": "10.3389/fnetp.2026.1846014",
+    "finding": "Showed large effect size improvements in the MAIA Self-Regulation subscale, indicating enhanced perceived ability to modulate internal states and regulate distress by attending to bodily signals."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Cognitive Defusion (ACT)",
+    "role": "SECONDARY",
+    "capacity": "Ability to create psychological distance from internal emotional states and observe them without immediate reactivity",
+    "cite": "Bernstein, A., Hadash, Y., Lichtash, Y., Feldman, G., Cullen, J. M., & Fresco, D. M. (2015). Decentering and Related Constructs: A Critical Review and Metacognitive Processes Model. Perspectives on Psychological Science.",
+    "doi": "10.1177⁄1745691615594577",
+    "finding": "Showed that cognitive defusion and related constructs develop metacognitive awareness, specifically the capacity to observe thoughts as transient mental events rather than objective truths."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Emotionally Focused Therapy (EFT)",
+    "role": "SECONDARY",
+    "capacity": "Ability to regulate emotions and form secure attachments",
+    "cite": "MacIntosh, H. B., Fletcher, K., & Godbout, N. (2019). Measuring mentalizing in emotionally focused therapy for couples with childhood sexual abuse survivors and their partners. Journal of Couple & Relationship Therapy.",
+    "doi": "10.1080⁄15332691.2019.1590274",
+    "finding": "Showed that positive mentalizing responses increased over the course of therapy, demonstrating a development in the capacity to flexibly and reflectively make sense of internal and interpersonal mental worlds"
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Float Tanks REST",
+    "role": "SECONDARY",
+    "capacity": "Ability to monitor and regulate internal emotional states and self- knowledge",
+    "cite": "Feinstein, J. S., Khalsa, S. S., Yeh, H., Al-Zoubi, O., Arevian, A. C., Wohlrab, C., … & Paulus, M. P. (2018). The elicitation of relaxation and interoceptive awareness using floatation therapy in individuals with high anxiety sensitivity. Biological Psychiatry: Cognitive Neuroscience and Neuroimaging, 3(6), 555-562.",
+    "doi": "10.1016/j.bpsc.2018.02.005",
+    "finding": "Showed that Floatation-REST induced a state of heightened interoceptive awareness for cardiorespiratory sensations in individuals with high anxiety sensitivity."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Gratitude Interventions",
+    "role": "SECONDARY",
+    "capacity": "Ability to identify and label internal emotional states",
+    "cite": "Bryan, J. L., Young, C. M., Lucas, S., & Quist, M. C. (2018). Should I say thank you? Gratitude encourages cognitive reappraisal and buffers the negative impact of ambivalence over emotional expression on depression. Personality and Individual Differences, 120, 253-258.",
+    "doi": "10.1016/j.paid.2017.09.007",
+    "finding": "Showed that higher levels of gratitude encouraged the use of cognitive reappraisal, mediating the relationship between ambivalence over emotional expression and depressive symptoms."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Gut Microbiome Probiotics",
+    "role": "SECONDARY",
+    "capacity": "Ability to reduce cognitive reactivity (rumination and aggressive thoughts) in response to transient sad mood",
+    "cite": "Papalini, S., Michels, F., Kohn, N., Wegusk, M. C., van Hemert, S., Roelofs, K., … & Fernández, G. (2019). Stress matters: Randomized controlled trial on the effect of probiotics on neurocognition. Neurobiology of Stress.",
+    "doi": "10.1016/j.ynstr.2018.100141",
+    "finding": "Showed a significant stress-related increase in working memory performance and neural changes in the frontal cortex during cognitive control after 28 days of multispecies probiotic supplementation"
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Ketamine-Assisted Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to observe internal emotional states with increased psychological flexibility and reduced avoidance",
+    "cite": "Marguilho, M., Figueiredo, I., & Castro-Rodrigues, P. (2022). A unified model of ketamine’s dissociative and psychedelic properties. Journal of Psychopharmacology.",
+    "doi": "10.1177⁄02698811221140011",
+    "finding": "Proposed that ketamine’s psychedelic state allows relaxation of highest-level beliefs and revision of pathological self-representation models through neuroplasticity."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "MBCT (Mindfulness-Based Cognitive Therapy)",
+    "role": "SECONDARY",
+    "capacity": "Ability to examine internal experiences with curiosity and non- judgmental awareness",
+    "cite": "Bieling, P. J., Hawley, L. L., Bloch, L., Corcoran, K. M., Levitan, R. D., Young, L. T., MacQueen, G. M., & Segal, Z. V. (2012). Treatment-specific changes in decentering following mindfulness-based cognitive therapy versus antidepressant medication or placebo for prevention of depressive relapse. Journal of Consulting and Clinical Psychology, 80(3), 365–372.",
+    "doi": "10.1037/a0027483",
+    "finding": "Showed that MBCT increases the capacity for decentering, allowing individuals to experience negative thoughts and feelings as mental events rather than as the self."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Music Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to identify and regulate internal emotional states",
+    "cite": "Huang, C., & Gu, S. (2024). Effectiveness of music therapy in enhancing empathy and emotional recognition in adolescents with intellectual disabilities. Acta Psychologica, 243, 104152.",
+    "doi": "10.1016/j.actpsy.2024.104152",
+    "finding": "Showed significant improvements in empathy towards peers, strangers, elderly individuals, animals, and cartoon characters, as well as enhanced ability to recognize diverse emotions."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Positive Psychology Interventions (Strengths-Based)",
+    "role": "SECONDARY",
+    "capacity": "Ability to identify and leverage personal strengths",
+    "cite": "Amonoo, H. L., Kurukulasuriya, C., Chilson, K., et al. (2020). Improving quality of life in hematopoietic stem cell transplantation survivors through a positive psychology intervention. Biology of Blood and Marrow Transplantation, 26(12), 2354-2362.",
+    "doi": "10.1016/j.bbmt.2020.08.013",
+    "finding": "Showed significant improvement in resilience scores (measured by CD-RISC) after a positive psychology intervention"
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Schema Therapy",
+    "role": "SECONDARY",
+    "capacity": "Capacity to identify unmet core emotional needs and provide self- compassion and self-reparenting to vulnerable child states.",
+    "cite": "Yakın, D., & Arntz, A. (2023). Understanding the reparative effects of schema modes: an in-depth analysis of the healthy adult mode. Frontiers in Psychiatry, 14, 1204177.",
+    "doi": "10.3389/fpsyt.2023.1204177",
+    "finding": "Showed that the Healthy Adult mode develops the specific metacognitive and intrapersonal capacities to bond with vulnerable child modes, balance emotional expression and inhibition, and battle critical voices and maladaptive coping styles."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Self-Distancing Third-Person Self-Talk (Kross)",
+    "role": "SECONDARY",
+    "capacity": "Capacity to understand personal emotional patterns without being overwhelmed by them",
+    "cite": "Kross et al. (2014). Self-talk as a regulatory mechanism: How you do it matters. Journal of Personality and Social Psychology.",
+    "doi": "10.1037/a0035173",
+    "finding": "Showed that using non-first-person pronouns and one’s own name during introspection significantly improves the cognitive capacity to self-distance and objectively appraise stressful situations."
+   },
+   {
+    "line": "Intrapersonal",
+    "therapy": "Solution-Focused Brief Therapy (SFBT)",
+    "role": "SECONDARY",
+    "capacity": "Ability to identify and leverage personal strengths and past successes",
+    "cite": "Himmelberger, K., & Ikonomopoulos, J. (2022). Evaluating the impact of solution- focused brief therapy on hope and clinical symptoms with Latine clients. The Professional Counselor, 12(3), 198-216.",
+    "doi": "10.15241/kh.12.3.198",
+    "finding": "Showed improvement in hope and goal-directed thinking as measured by the Dispositional Hope Scale"
+   },
+   {
+    "line": "Kinesthetic",
+    "therapy": "Dance Therapy (Wu 2021)",
+    "role": "PRIMARY",
+    "capacity": "Ability to sustain attention and encode/retrieve memory patterns through complex movement sequences",
+    "cite": "Liu, C., Su, M., Jiao, Y., Ji, Y., & Zhu, S. (2021). Effects of dance interventions on cognition, psycho-behavioral symptoms, motor functions, and quality of life in older adult patients with mild cognitive impairment: a systematic review and meta-analysis. Frontiers in Aging Neuroscience, 13, 706609.",
+    "doi": "10.3389/fnagi.2021.706609",
+    "finding": "Showed significant improvement in global cognition, rote memory, immediate recall, delayed recall, and attention after dance interventions"
+   },
+   {
+    "line": "Kinesthetic",
+    "therapy": "Tai Chi",
+    "role": "SECONDARY",
+    "capacity": "Ability to sense the position and movement of the body in space (proprioception)",
+    "cite": "Wayne, P. M., et al. (2014). The Impact of Tai Chi on Cognitive Performance in Older Adults: A Systematic Review and Meta-Analysis. Journal of the American Geriatrics Society.",
+    "doi": "10.1111/jgs.12611",
+    "finding": "Showed significant improvements in executive function and lower limb proprioception, indicating enhanced cognitive control and bodily awareness."
+   },
+   {
+    "line": "Linguistic",
+    "therapy": "Cognitive Stimulation Therapy (CST)",
+    "role": "PRIMARY",
+    "capacity": "Ability to access and express vocabulary and verbal concepts fluently",
+    "cite": "Calatayud, E., Subiron-Valera, A. B., & Marcén-Román, Y. (2023). Effects on Language and Verbal Fluency of a Cognitive Stimulation Program in Older Adults: Randomized Controlled Trial. Sustainability, 15(3), 2533.",
+    "doi": "10.3390/su15032533",
+    "finding": "Showed significant improvement in language and verbal fluency following the cognitive stimulation program in older adults with dementia."
+   },
+   {
+    "line": "Linguistic",
+    "therapy": "Sandplay Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to process and communicate experiences without relying on verbal language",
+    "cite": "Tan, J. (2021). Effects of sandplay therapy in reducing emotional and behavioral problems in school-age children. Journal of Environmental and Public Health.",
+    "doi": "10.1155/2021/8510721",
+    "finding": "Showed improvement in self-expression and emotional regulation abilities through nonverbal symbolic representation"
+   },
+   {
+    "line": "Logical",
+    "therapy": "Mediterranean Diet",
+    "role": "PRIMARY",
+    "capacity": "Ability to maintain working memory and execute complex cognitive tasks (executive function)",
+    "cite": "Valls-Pedret, C., et al. (2015). Mediterranean Diet and Age-Related Cognitive Decline: A Randomized Clinical Trial. JAMA Internal Medicine.",
+    "doi": "10.1001/jamainternmed.2015.1668",
+    "finding": "Showed significant improvement in executive function and working memory composite scores after 4 years of intervention"
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "CBT-I (Cognitive Behavioral Therapy for Insomnia)",
+    "role": "PRIMARY",
+    "capacity": "Ability to reflect on one’s mental state and govern sleep-related thoughts and beliefs (metacognition)",
+    "cite": "Galbiati, A., et al. (2021). “Thinking About Thinking” in Insomnia Disorder: The Effect of Cognitive-Behavioral Therapy for Insomnia on Sleep-Related Metacognition. Frontiers in Psychology.",
+    "doi": "10.3389/fpsyg.2021.705112",
+    "finding": "Showed significant global improvement in dysfunctional metacognitive levels (assessed by the Metacognitions Questionnaire-Insomnia) after CBT-I treatment, though a subset of patients required further specific metacognitive intervention."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Clinical Hypnosis",
+    "role": "PRIMARY",
+    "capacity": "Ability to hold and manipulate a limited amount of information for a short time in order to produce a response (working memory capacity)",
+    "cite": "Lindeløv, J. K., Overgaard, R., & Overgaard, M. (2017). Improving working memory performance in brain-injured patients using hypnotic suggestion. Brain, 140(4), 1100-1106.",
+    "doi": "10.1093/brain/awx001",
+    "finding": "Showed that hypnotic suggestion can effectively improve working memory performance in brain-injured patients, indicating a restoration of working memory capacity."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Cognitive Defusion (ACT)",
+    "role": "PRIMARY",
+    "capacity": "Ability to observe one’s own thoughts as transient mental events rather than objective truths or facts",
+    "cite": "Bernstein, A., Hadash, Y., Lichtash, Y., Feldman, G., Cullen, J. M., & Fresco, D. M. (2015). Decentering and Related Constructs: A Critical Review and Metacognitive Processes Model. Perspectives on Psychological Science.",
+    "doi": "10.1177⁄1745691615594577",
+    "finding": "Showed that cognitive defusion and related constructs develop metacognitive awareness, specifically the capacity to observe thoughts as transient mental events rather than objective truths."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Emotionally Focused Therapy (EFT)",
+    "role": "PRIMARY",
+    "capacity": "Ability to mentalize, which includes flexibly and reflectively making sense of internal and interpersonal mental worlds",
+    "cite": "MacIntosh, H. B., Fletcher, K., & Godbout, N. (2019). Measuring mentalizing in emotionally focused therapy for couples with childhood sexual abuse survivors and their partners. Journal of Couple & Relationship Therapy.",
+    "doi": "10.1080⁄15332691.2019.1590274",
+    "finding": "Showed that positive mentalizing responses increased over the course of therapy, demonstrating a development in the capacity to flexibly and reflectively make sense of internal and interpersonal mental worlds"
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "MBCT (Mindfulness-Based Cognitive Therapy)",
+    "role": "PRIMARY",
+    "capacity": "Ability to decenter and experience negative thoughts and feelings as passing mental events rather than identifying with them as the self",
+    "cite": "Bieling, P. J., Hawley, L. L., Bloch, L., Corcoran, K. M., Levitan, R. D., Young, L. T., MacQueen, G. M., & Segal, Z. V. (2012). Treatment-specific changes in decentering following mindfulness-based cognitive therapy versus antidepressant medication or placebo for prevention of depressive relapse. Journal of Consulting and Clinical Psychology, 80(3), 365–372.",
+    "doi": "10.1037/a0027483",
+    "finding": "Showed that MBCT increases the capacity for decentering, allowing individuals to experience negative thoughts and feelings as mental events rather than as the self."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Occupational Therapy (CO-OP)",
+    "role": "PRIMARY",
+    "capacity": "Ability to use metacognitive problem-solving strategies to achieve daily occupational performance goals",
+    "cite": "Lebrault, H., Martini, R., Manolov, R., et al. (2024). Cognitive Orientation to daily Occupational Performance to improve occupational performance goals for children with executive function deficits after acquired brain injury. Developmental Medicine & Child Neurology, 66(4).",
+    "doi": "10.1111/dmcn.15759",
+    "finding": "Showed significant improvement in occupational performance goals for children with executive function deficits after acquired brain injury using the CO-OP approach."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Schema Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to recognize, distance from, and regulate one’s own emotional- cognitive states (schema modes) through the activation of the Healthy Adult mode.",
+    "cite": "Yakın, D., & Arntz, A. (2023). Understanding the reparative effects of schema modes: an in-depth analysis of the healthy adult mode. Frontiers in Psychiatry, 14, 1204177.",
+    "doi": "10.3389/fpsyt.2023.1204177",
+    "finding": "Showed that the Healthy Adult mode develops the specific metacognitive and intrapersonal capacities to bond with vulnerable child modes, balance emotional expression and inhibition, and battle critical voices and maladaptive coping styles."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Self-Distancing Third-Person Self-Talk (Kross)",
+    "role": "PRIMARY",
+    "capacity": "Ability to observe and evaluate one’s own internal experiences from an objective, psychologically distanced perspective",
+    "cite": "Kross et al. (2014). Self-talk as a regulatory mechanism: How you do it matters. Journal of Personality and Social Psychology.",
+    "doi": "10.1037/a0035173",
+    "finding": "Showed that using non-first-person pronouns and one’s own name during introspection significantly improves the cognitive capacity to self-distance and objectively appraise stressful situations."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Spaced Repetition Retrieval Practice",
+    "role": "PRIMARY",
+    "capacity": "Ability to accurately monitor one’s own knowledge state and regulate learning effort (metacognitive monitoring and control)",
+    "cite": "Cogliano, M. C., Bernacki, M. L., & Kardash, C. M. (2021). A metacognitive retrieval practice intervention to improve undergraduates’ monitoring and control processes and use of performance feedback for classroom learning. Journal of Educational Psychology, 113(6), 1173–1191.",
+    "doi": "10.1037/edu0000654",
+    "finding": "Showed that a metacognitive retrieval practice intervention significantly improved students’ metacognitive monitoring accuracy and their ability to use performance feedback for learning control."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Tai Chi",
+    "role": "PRIMARY",
+    "capacity": "Ability to execute cognitive control, working memory, and mental flexibility (executive function)",
+    "cite": "Wayne, P. M., et al. (2014). The Impact of Tai Chi on Cognitive Performance in Older Adults: A Systematic Review and Meta-Analysis. Journal of the American Geriatrics Society.",
+    "doi": "10.1111/jgs.12611",
+    "finding": "Showed significant improvements in executive function and lower limb proprioception, indicating enhanced cognitive control and bodily awareness."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Transcranial Magnetic Stimulation (TMS)",
+    "role": "PRIMARY",
+    "capacity": "Ability to hold and manipulate information in working memory and exert cognitive control over mental processes",
+    "cite": "Senczyszyn, A., et al. (2023). Improvement of working memory in older adults with mild cognitive impairment after repetitive transcranial magnetic stimulation – a randomized controlled pilot study. Frontiers in Psychiatry.",
+    "doi": "10.3389/fpsyt.2023.1196478",
+    "finding": "Showed significant improvement in working memory and overall cognitive function after 10 sessions of high-frequency rTMS over the left dorsolateral prefrontal cortex"
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Bibliotherapy (Guided Self-Help)",
+    "role": "SECONDARY",
+    "capacity": "Ability to observe one’s own internal states and cognitive processes without fusion",
+    "cite": "Fledderus, M., Bohlmeijer, E. T., Pieterse, M. E., & Schreurs, K. M. G. (2012). Acceptance and commitment therapy as guided self-help for psychological distress and positive mental health: a randomized controlled trial. Psychological Medicine, 42(3), 485- 495.",
+    "doi": "10.1017/S003329171100144X",
+    "finding": "Showed that improved psychological flexibility mediated the effects of the ACT bibliotherapy intervention on psychological distress and positive mental health."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Cognitive Processing Therapy (CPT)",
+    "role": "SECONDARY",
+    "capacity": "Ability to identify and challenge maladaptive thoughts and beliefs",
+    "cite": "Alpert, E., Carpenter, J. K., Smith, B. N., Woolley, M. G., Raterman, C., Farmer, C. C., Kehle-Forbes, S. M., & Galovski, T. E. (2023). Leveraging observational data to identify in-session patient and therapist predictors of cognitive processing therapy response and completion. Journal of Traumatic Stress, 36(2), 397-408.",
+    "doi": "10.1002/jts.22924",
+    "finding": "Showed that cognitive flexibility predicted self-reported PTSD symptom improvement and higher rates of treatment completion, indicating CPT develops this capacity."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Executive Coaching",
+    "role": "SECONDARY",
+    "capacity": "Capacity to observe and evaluate one’s own thought processes and organizing logic (moving from subject to object)",
+    "cite": "Stephens, M. (2026). Intellectual Bypass in Executive Coaching: When Self- Awareness Fails to Produce Change. Coaching: An International Journal of Theory, Research and Practice.",
+    "doi": "10.1177⁄17418305261469750",
+    "finding": "Showed that executive coaching develops increasingly accurate and sophisticated insight into recurring behavioral, emotional, or relational patterns, though this self-awareness must be integrated beyond intellectual understanding to produce structural transformation."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Flow State Training",
+    "role": "SECONDARY",
+    "capacity": "Ability to self-monitor and regulate attentional resources during complex tasks.",
+    "cite": "Yoshida, K., Sawamura, D., Ogawa, K., Ikoma, K., Asakawa, K., Yamauchi, T., & Sakai, S. (2014). Flow experience during attentional training improves cognitive functions in patients with traumatic brain injury: An exploratory case study. Hong Kong Journal of Occupational Therapy, 24(2), 81-87.",
+    "doi": "10.1016/j.hkjot.2015.01.001",
+    "finding": "Showed improvement on the Continuous Performance Test, Symbol Digit Modalities Test, and Moss Attention Rating Scale after the flow task, indicating enhanced attention and cognitive function."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "MBSR (Mindfulness-Based Stress Reduction)",
+    "role": "SECONDARY",
+    "capacity": "Ability to monitor and regulate one’s own cognitive and emotional states",
+    "cite": "Guu, S. F., et al. (2023). Interoceptive awareness: MBSR training alters information processing of salience network. Frontiers in Behavioral Neuroscience, 17, 1008086.",
+    "doi": "10.3389/fnbeh.2023.1008086",
+    "finding": "Showed that 8 weeks of MBSR training increased functional connectivity in the salience network during interoceptive practices (breathing and body scan), indicating enhanced interoceptive awareness and information processing."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Narrative Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to monitor and regulate one’s own emotional states (meta- emotion)",
+    "cite": "Dafeian, F., & Yousefi, Z. (2024). The Effectiveness of Narrative Therapy on Meta-Emotion and Reflective Functioning Among Adolescent Girls in Isfahan. Journal of Sabzevar University of Medical Sciences, 31(2), 146-157.",
+    "doi": "10.22038/jsums.2024.24000",
+    "finding": "Showed significant improvement in reflective functioning and positive meta- emotion compared to the control group after 8 sessions of narrative therapy."
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Neurofeedback",
+    "role": "SECONDARY",
+    "capacity": "Ability to self-monitor and regulate internal cognitive states",
+    "cite": "Chiu, H. J., et al. (2022). Surface electroencephalographic neurofeedback improves sustained attention in ADHD: a meta-analysis of randomized controlled trials. Child and Adolescent Psychiatry and Mental Health.",
+    "doi": "10.1186/s13034-022-00543-1",
+    "finding": "Showed significant improvement in sustained attention capacity (SMD = 0.64) across multiple randomized controlled trials"
+   },
+   {
+    "line": "Meta-Cognitive",
+    "therapy": "Yoga Nidra (NSDR)",
+    "role": "SECONDARY",
+    "capacity": "Ability to intentionally manage and sustain attention on present- moment experiences (mindfulness)",
+    "cite": "Moszeik, E. N., Rohleder, N., & Renner, K. H. (2025). The Effects of an Online Yoga Nidra Meditation on Subjective Well-Being and Diurnal Salivary Cortisol: A Randomised Controlled Trial. Stress and Health, 41(3), e70049.",
+    "doi": "10.1002/smi.70049",
+    "finding": "Showed that Yoga Nidra functions as a specific form of attention control (mindfulness) and enhances the ability to observe internal states and regulate emotions."
+   },
+   {
+    "line": "Naturalistic",
+    "therapy": "Forest Bathing (Shinrin-yoku)",
+    "role": "PRIMARY",
+    "capacity": "Ability to feel a sense of kinship, community, and emotional connection with the natural environment",
+    "cite": "Keller, J., Chawla, L., Kayira, J., & Rhoades, J. (2024). Forest bathing increases adolescent connection to nature: A mixed methods study. Ecopsychology, 16(4), 302-314.",
+    "doi": "10.1089/eco.2023.0070",
+    "finding": "After forest bathing three times over 3 weeks, participants’ connectedness to nature increased significantly as measured by the Connectedness to Nature Scale."
+   },
+   {
+    "line": "Naturalistic",
+    "therapy": "Walking in Nature",
+    "role": "SECONDARY",
+    "capacity": "Ability to recognize and connect with ecological patterns and natural environments",
+    "cite": "Berman, M. G., Jonides, J., & Kaplan, S. (2008). The Cognitive Benefits of Interacting with Nature. Psychological Science.",
+    "doi": "10.1111/j.1467-9280.2008.02225.x",
+    "finding": "Showed significant improvement in directed-attention abilities, as measured by a backward digit-span task, after a 50-minute walk in nature compared to an urban walk."
+   },
+   {
+    "line": "Parenting",
+    "therapy": "Parent-Child Interaction Therapy (PCIT)",
+    "role": "PRIMARY",
+    "capacity": "Ability to consistently apply positive reinforcement and child-centered interaction skills",
+    "cite": "Hare, M. M., et al. (2021). The Cost-Effectiveness of Parent-Child Interaction Therapy. Administration and Policy in Mental Health and Mental Health Services Research.",
+    "doi": "10.1007/s10488-020-01083-6",
+    "finding": "Showed significant improvement in positive parenting skills as measured by the do skills in the Dyadic Parent-Child Interaction Coding System (DPICS)"
+   },
+   {
+    "line": "Reflective",
+    "therapy": "Gratitude Interventions",
+    "role": "PRIMARY",
+    "capacity": "Ability to reinterpret or reframe emotional experiences and situations (cognitive reappraisal)",
+    "cite": "Bryan, J. L., Young, C. M., Lucas, S., & Quist, M. C. (2018). Should I say thank you? Gratitude encourages cognitive reappraisal and buffers the negative impact of ambivalence over emotional expression on depression. Personality and Individual Differences, 120, 253-258.",
+    "doi": "10.1016/j.paid.2017.09.007",
+    "finding": "Showed that higher levels of gratitude encouraged the use of cognitive reappraisal, mediating the relationship between ambivalence over emotional expression and depressive symptoms."
+   },
+   {
+    "line": "Reflective",
+    "therapy": "Narrative Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to examine and reflect upon one’s own thoughts, emotions, and experiences (reflective functioning)",
+    "cite": "Dafeian, F., & Yousefi, Z. (2024). The Effectiveness of Narrative Therapy on Meta-Emotion and Reflective Functioning Among Adolescent Girls in Isfahan. Journal of Sabzevar University of Medical Sciences, 31(2), 146-157.",
+    "doi": "10.22038/jsums.2024.24000",
+    "finding": "Showed significant improvement in reflective functioning and positive meta- emotion compared to the control group after 8 sessions of narrative therapy."
+   },
+   {
+    "line": "Reflective",
+    "therapy": "Meaning-Oriented Grief Therapy (Neimeyer)",
+    "role": "SECONDARY",
+    "capacity": "Ability to examine and learn from painful experiences to rebuild a sense of self",
+    "cite": "Batista, J., Alves, D., Pires, N., Silva, J. R., Mendes, I., & Neimeyer, R. A. (2025). The Meaning in Loss protocol: A clinical trial of online grief therapy. Death Studies, 49(1), 8- 20.",
+    "doi": "10.1080⁄07481187.2024.2370633",
+    "finding": "Showed that fostering meaning-making regarding the loss led to improved ability to reconstruct meaning and integrate the loss into a coherent life narrative"
+   },
+   {
+    "line": "Reflective",
+    "therapy": "Trauma-Focused CBT (TF-CBT)",
+    "role": "SECONDARY",
+    "capacity": "Ability to construct a coherent narrative of past experiences and integrate them into one’s life story",
+    "cite": "Cisler, J. M., Sigel, B. A., Steele, J. S., Smitherman, S., Ambadar, Z., & Kilts, C. D. (2016). Changes in functional connectivity of the amygdala during cognitive reappraisal predict symptom reduction during trauma-focused cognitive-behavioral therapy among adolescent girls with posttraumatic stress disorder. Psychological Medicine.",
+    "doi": "10.1017/s0033291716001847",
+    "finding": "Showed that pre- to post-treatment changes in right amygdala to left insula functional connectivity scaled with improvements in emotion regulation ability during cognitive reappraisal."
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Gut Microbiome Probiotics",
+    "role": "PRIMARY",
+    "capacity": "Ability to buffer against the detrimental effects of acute stress on working memory and cognitive control",
+    "cite": "Papalini, S., Michels, F., Kohn, N., Wegusk, M. C., van Hemert, S., Roelofs, K., … & Fernández, G. (2019). Stress matters: Randomized controlled trial on the effect of probiotics on neurocognition. Neurobiology of Stress.",
+    "doi": "10.1016/j.ynstr.2018.100141",
+    "finding": "Showed a significant stress-related increase in working memory performance and neural changes in the frontal cortex during cognitive control after 28 days of multispecies probiotic supplementation"
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Laughter Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to bounce back from stress and adapt to challenging circumstances",
+    "cite": "Aydın, R., & Aslan, E. (2024). Effectiveness of yoga and laughter yoga in improving psychological resilience of mothers with babies hospitalized in neonatal intensive care unit. Journal of Health Psychology.",
+    "doi": "10.1177⁄13591053241262006",
+    "finding": "Showed significant improvement in psychological resilience scores for mothers in the laughter yoga group compared to the control group."
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Positive Psychology Interventions (Strengths-Based)",
+    "role": "PRIMARY",
+    "capacity": "Ability to bounce back from adversity and handle stress effectively",
+    "cite": "Amonoo, H. L., Kurukulasuriya, C., Chilson, K., et al. (2020). Improving quality of life in hematopoietic stem cell transplantation survivors through a positive psychology intervention. Biology of Blood and Marrow Transplantation, 26(12), 2354-2362.",
+    "doi": "10.1016/j.bbmt.2020.08.013",
+    "finding": "Showed significant improvement in resilience scores (measured by CD-RISC) after a positive psychology intervention"
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Prolonged Exposure (PE)",
+    "role": "PRIMARY",
+    "capacity": "Ability to tolerate and remain present with highly distressing internal emotional and physiological states without avoiding them",
+    "cite": "Bluett, E. J., Zoellner, L. A., & Feeny, N. C. (2014). Does change in distress matter? Mechanisms of change in prolonged exposure for PTSD. Journal of Behavior Therapy and Experimental Psychiatry, 45(1), 97-104.",
+    "doi": "10.1016/j.jbtep.2013.09.003",
+    "finding": "Showed that increases in distress tolerance mediated the relationship between prolonged exposure treatment and reductions in PTSD symptom severity."
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Acupuncture",
+    "role": "SECONDARY",
+    "capacity": "Ability to recover from stress and regulate autonomic nervous system responses via vagal tone modulation",
+    "cite": "Jung, C., Kim, J., & Park, K. (2023). Cognitive and affective interaction with somatosensory afference in acupuncture–a specific brain response to compound stimulus. Frontiers in Human Neuroscience, 17, 1105703.",
+    "doi": "10.3389/fnhum.2023.1105703",
+    "finding": "Showed that acupuncture treatment induces voluntary attention for interoception and modulates brain interactions associated with interoceptive attention and somatosensory representation."
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Aerobic Exercise",
+    "role": "SECONDARY",
+    "capacity": "Capacity to recover from physiological and psychological stress",
+    "cite": "Ludyga, S., et al. (2016). Acute effects of moderate aerobic exercise on specific aspects of executive function in different age and fitness groups: A meta-analysis. Psychophysiology.",
+    "doi": "10.1111/psyp.12736",
+    "finding": "Showed significant improvements in inhibitory control and cognitive flexibility following moderate aerobic exercise across multiple age groups"
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Mindful Self-Compassion (MSC)",
+    "role": "SECONDARY",
+    "capacity": "Capacity to recover from stress and bounce back from emotional difficulties",
+    "cite": "Neff, K. D., & Germer, C. K. (2013). A pilot study and randomized controlled trial of the mindful self-compassion program. Journal of Clinical Psychology, 69(1), 28-44.",
+    "doi": "10.1002/jclp.21923",
+    "finding": "Showed significant increases in self-compassion, mindfulness, and wellbeing, demonstrating an enhanced ability to self-soothe and regulate emotions when facing difficulties."
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Polyvagal Exercises",
+    "role": "SECONDARY",
+    "capacity": "Capacity to adaptively shift autonomic states and recover physiological homeostasis following stress or threat",
+    "cite": "Sullivan, M. B., Erb, M., Schmalzl, L., Moonaz, S., Noggle Taylor, J., & Porges, S. W. (2018). Yoga therapy and polyvagal theory: The convergence of traditional wisdom and contemporary neuroscience for self-regulation and resilience. Frontiers in Human Neuroscience.",
+    "doi": "10.3389/fnhum.2018.00067",
+    "finding": "Showed that polyvagal-informed practices link awareness of bodily sensations with self-regulatory capacity, improving interoceptive awareness and vagal regulation for enhanced resilience"
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Self-Compassion (Neff)",
+    "role": "SECONDARY",
+    "capacity": "Capacity to bounce back from failure or stress by actively self- soothing rather than self-criticizing",
+    "cite": "Neff, K. D., & Germer, C. K. (2013). A pilot study and randomized controlled trial of the mindful self-compassion program. Journal of Clinical Psychology.",
+    "doi": "10.1002/jclp.21923",
+    "finding": "Showed significant increases in self-compassion and mindfulness scores after 8 weeks of training, demonstrating the development of active self-soothing and internal emotional regulation skills."
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Somatic Experiencing",
+    "role": "SECONDARY",
+    "capacity": "Capacity to recover from stress and bounce back from physiological overwhelm",
+    "cite": "Lee, M. S., et al. (2023). Pilot Study About the Effects of the Soma Experiencing Motion (Soma e-Motion) Program on Interoceptive Awareness and Self-Compassion. Psychiatry Investigation.",
+    "doi": "10.30773/pi.2022.0312",
+    "finding": "Showed significant improvement in interoceptive awareness and self-compassion scores after the Soma e-Motion program based on Somatic Experiencing"
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Transcendental Meditation ™",
+    "role": "SECONDARY",
+    "capacity": "Capacity to recover from stress and maintain physiological calmness",
+    "cite": "Mahone, M. C., Travis, F., Gevirtz, R., & Hubbard, D. (2018). fMRI during Transcendental Meditation practice. Brain and Cognition.",
+    "doi": "10.1016/j.bandc.2018.02.011",
+    "finding": "Showed significantly higher blood flow in executive and attention areas (anterior cingulate and dorsolateral prefrontal cortices) during practice, indicating development of automatic attentional control."
+   },
+   {
+    "line": "Resilient",
+    "therapy": "Virtual Reality Exposure Therapy",
+    "role": "SECONDARY",
+    "capacity": "Ability to bounce back from stress and trauma",
+    "cite": "Colombo, D., Díaz-García, A., Fernandez-Álvarez, J., & Botella, C. (2021). Virtual reality for the enhancement of emotion regulation. Clinical Psychology & Psychotherapy.",
+    "doi": "10.1002/cpp.2618",
+    "finding": "Virtual reality exposure therapy enhances the ability to implement strategies to modulate emotional responses and reach desirable goals."
+   },
+   {
+    "line": "Strategic",
+    "therapy": "Contingency Management",
+    "role": "PRIMARY",
+    "capacity": "Ability to value delayed rewards over immediate gratification (reduced delay discounting)",
+    "cite": "Weidberg, S., Landes, R. D., García-Rodríguez, O., Yoon, J. H., & Secades-Villa, R. (2015). Interaction effect of contingency management and sex on delay-discounting changes among treatment-seeking smokers. Experimental and Clinical Psychopharmacology.",
+    "doi": "10.1037/pha0000043",
+    "finding": "Showed that contingency management intervention significantly decreased delay discounting rates (improved ability to delay gratification), particularly among those who discounted most at intake."
+   },
+   {
+    "line": "Strategic",
+    "therapy": "Solution-Focused Brief Therapy (SFBT)",
+    "role": "PRIMARY",
+    "capacity": "Ability to generate goal-directed pathways and maintain agency toward future outcomes",
+    "cite": "Himmelberger, K., & Ikonomopoulos, J. (2022). Evaluating the impact of solution- focused brief therapy on hope and clinical symptoms with Latine clients. The Professional Counselor, 12(3), 198-216.",
+    "doi": "10.15241/kh.12.3.198",
+    "finding": "Showed improvement in hope and goal-directed thinking as measured by the Dispositional Hope Scale"
+   },
+   {
+    "line": "Systematic",
+    "therapy": "Habit Stacking",
+    "role": "PRIMARY",
+    "capacity": "Ability to build repeatable structures and automate goal-directed behaviors through strategic environmental cues",
+    "cite": "Trenz, N., & Keith, N. (2024). Promoting new habits at work through implementation intentions. Journal of Occupational and Organizational Psychology.",
+    "doi": "10.1111/joop.12540",
+    "finding": "Showed that implementation intentions (habit stacking) predicted frequency of the habitual behaviour and in turn increased automaticity of this behaviour"
+   },
+   {
+    "line": "Tactical",
+    "therapy": "Goal-Setting Theory (SMART goals)",
+    "role": "PRIMARY",
+    "capacity": "Ability to structure, plan, and execute specific objectives systematically",
+    "cite": "Bahrami, Z., Heidari, A., & Cranney, J. (2022). Applying SMART Goal Intervention Leads to Greater Goal Attainment, Need Satisfaction and Positive Affect. International Journal of Mental Health Promotion, 24(6), 869-882.",
+    "doi": "10.32604/ijmhp.2022.018954",
+    "finding": "Showed that the SMART goal intervention led to greater goal attainment and need satisfaction, which are components of self-regulation and execution."
+   },
+   {
+    "line": "Tactical",
+    "therapy": "Light Therapy",
+    "role": "PRIMARY",
+    "capacity": "Ability to sustain attention and vigilance",
+    "cite": "Chen, G., et al. (2024). Bright light therapy-induced improvements of mood, cognitive functions and cerebellar functional connectivity in subthreshold depression: A randomized controlled trial. Asian Journal of Psychiatry.",
+    "doi": "10.1016/j.ajp.2024.103986",
+    "finding": "Showed improvement in attention/vigilance cognitive function after 8 weeks of bright light therapy"
+   },
+   {
+    "line": "Tactical",
+    "therapy": "Behavioral Activation",
+    "role": "SECONDARY",
+    "capacity": "Capacity to execute short-term tasks and optimize daily routines.",
+    "cite": "Nagy, G. A., et al. (2020). Reward Network Modulation as a Mechanism of Change in Behavioral Activation. Behavior Modification.",
+    "doi": "10.1177⁄0145445518805682",
+    "finding": "Showed that Behavioral Activation is associated with increased self-reported goal- directed behavior and modulates the reward network to support this capacity."
+   },
+   {
+    "line": "Tactical",
+    "therapy": "Habit Stacking",
+    "role": "SECONDARY",
+    "capacity": "Ability to execute short-term optimizations and follow-through on specific situational plans",
+    "cite": "Trenz, N., & Keith, N. (2024). Promoting new habits at work through implementation intentions. Journal of Occupational and Organizational Psychology.",
+    "doi": "10.1111/joop.12540",
+    "finding": "Showed that implementation intentions (habit stacking) predicted frequency of the habitual behaviour and in turn increased automaticity of this behaviour"
+   },
+   {
+    "line": "Tactical",
+    "therapy": "Implementation Intentions (Gollwitzer)",
+    "role": "SECONDARY",
+    "capacity": "Capacity to execute short-term plans by pre-defining responses to anticipated obstacles",
+    "cite": "Gollwitzer, P. M., & Sheeran, P. (2006). Implementation intentions and goal achievement: A meta-analysis of effects and processes. Advances in Experimental Social Psychology.",
+    "doi": "10.1016/S0065-2601(06)38002-1",
+    "finding": "Showed a medium-to-large effect size (d = 0.65) in enhancing the rate of goal attainment and automating the initiation of goal-directed responses"
+   },
+   {
+    "line": "Tactical",
+    "therapy": "Occupational Therapy (CO-OP)",
+    "role": "SECONDARY",
+    "capacity": "Ability to execute short-term optimization and task performance",
+    "cite": "Lebrault, H., Martini, R., Manolov, R., et al. (2024). Cognitive Orientation to daily Occupational Performance to improve occupational performance goals for children with executive function deficits after acquired brain injury. Developmental Medicine & Child Neurology, 66(4).",
+    "doi": "10.1111/dmcn.15759",
+    "finding": "Showed significant improvement in occupational performance goals for children with executive function deficits after acquired brain injury using the CO-OP approach."
+   },
+   {
+    "line": "Tactical",
+    "therapy": "Transcranial Magnetic Stimulation (TMS)",
+    "role": "SECONDARY",
+    "capacity": "Ability to execute short-term optimization through improved executive functioning and inhibitory control",
+    "cite": "Senczyszyn, A., et al. (2023). Improvement of working memory in older adults with mild cognitive impairment after repetitive transcranial magnetic stimulation – a randomized controlled pilot study. Frontiers in Psychiatry.",
+    "doi": "10.3389/fpsyt.2023.1196478",
+    "finding": "Showed significant improvement in working memory and overall cognitive function after 10 sessions of high-frequency rTMS over the left dorsolateral prefrontal cortex"
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Aerobic Exercise",
+    "role": "PRIMARY",
+    "capacity": "Ability to exert inhibitory control and sustain goal-directed behavior",
+    "cite": "Ludyga, S., et al. (2016). Acute effects of moderate aerobic exercise on specific aspects of executive function in different age and fitness groups: A meta-analysis. Psychophysiology.",
+    "doi": "10.1111/psyp.12736",
+    "finding": "Showed significant improvements in inhibitory control and cognitive flexibility following moderate aerobic exercise across multiple age groups"
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Behavioral Activation",
+    "role": "PRIMARY",
+    "capacity": "Ability to initiate and sustain goal-directed behavior and volitional activity despite lack of motivation.",
+    "cite": "Nagy, G. A., et al. (2020). Reward Network Modulation as a Mechanism of Change in Behavioral Activation. Behavior Modification.",
+    "doi": "10.1177⁄0145445518805682",
+    "finding": "Showed that Behavioral Activation is associated with increased self-reported goal- directed behavior and modulates the reward network to support this capacity."
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Flow State Training",
+    "role": "PRIMARY",
+    "capacity": "Ability to sustain focused attention and concentration on a specific task while circumventing external and internal distractions.",
+    "cite": "Yoshida, K., Sawamura, D., Ogawa, K., Ikoma, K., Asakawa, K., Yamauchi, T., & Sakai, S. (2014). Flow experience during attentional training improves cognitive functions in patients with traumatic brain injury: An exploratory case study. Hong Kong Journal of Occupational Therapy, 24(2), 81-87.",
+    "doi": "10.1016/j.hkjot.2015.01.001",
+    "finding": "Showed improvement on the Continuous Performance Test, Symbol Digit Modalities Test, and Moss Attention Rating Scale after the flow task, indicating enhanced attention and cognitive function."
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Implementation Intentions (Gollwitzer)",
+    "role": "PRIMARY",
+    "capacity": "Ability to automatically initiate goal-directed behavior in response to specific situational cues without relying on conscious willpower",
+    "cite": "Gollwitzer, P. M., & Sheeran, P. (2006). Implementation intentions and goal achievement: A meta-analysis of effects and processes. Advances in Experimental Social Psychology.",
+    "doi": "10.1016/S0065-2601(06)38002-1",
+    "finding": "Showed a medium-to-large effect size (d = 0.65) in enhancing the rate of goal attainment and automating the initiation of goal-directed responses"
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Neurofeedback",
+    "role": "PRIMARY",
+    "capacity": "Ability to maintain sustained attention and focus on specific tasks over extended periods",
+    "cite": "Chiu, H. J., et al. (2022). Surface electroencephalographic neurofeedback improves sustained attention in ADHD: a meta-analysis of randomized controlled trials. Child and Adolescent Psychiatry and Mental Health.",
+    "doi": "10.1186/s13034-022-00543-1",
+    "finding": "Showed significant improvement in sustained attention capacity (SMD = 0.64) across multiple randomized controlled trials"
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Resistance Training",
+    "role": "PRIMARY",
+    "capacity": "Ability to exercise inhibitory control, selective attention, and conflict resolution (executive functions)",
+    "cite": "Liu-Ambrose, T., Nagamatsu, L. S., Graf, P., Beattie, B. L., Ashe, M. C., & Handy, T. C. (2010). Resistance training and executive functions: a 12-month randomized controlled trial. Archives of Internal Medicine, 170(2), 170-178.",
+    "doi": "10.1001/archinternmed.2009.494",
+    "finding": "Showed significant improvements in selective attention and conflict resolution (executive functions) after 12 months of resistance training"
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Transcendental Meditation ™",
+    "role": "PRIMARY",
+    "capacity": "Ability to sustain effortless attention and executive control",
+    "cite": "Mahone, M. C., Travis, F., Gevirtz, R., & Hubbard, D. (2018). fMRI during Transcendental Meditation practice. Brain and Cognition.",
+    "doi": "10.1016/j.bandc.2018.02.011",
+    "finding": "Showed significantly higher blood flow in executive and attention areas (anterior cingulate and dorsolateral prefrontal cortices) during practice, indicating development of automatic attentional control."
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Walking in Nature",
+    "role": "PRIMARY",
+    "capacity": "Ability to sustain directed attention and replenish cognitive control resources",
+    "cite": "Berman, M. G., Jonides, J., & Kaplan, S. (2008). The Cognitive Benefits of Interacting with Nature. Psychological Science.",
+    "doi": "10.1111/j.1467-9280.2008.02225.x",
+    "finding": "Showed significant improvement in directed-attention abilities, as measured by a backward digit-span task, after a 50-minute walk in nature compared to an urban walk."
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Cold Exposure (Wim Hof)",
+    "role": "SECONDARY",
+    "capacity": "Capacity to consciously influence the autonomic nervous system and immune response",
+    "cite": "Fox, N., Biddell, H., & King, J. (2025). A semi-randomised control trial assessing psychophysiological effects of breathwork and cold immersion. Scientific Reports.",
+    "doi": "10.1038/s41598-025-29187-9",
+    "finding": "Showed that intentional short-term stress induced by cyclic hyperventilation and cold exposure (the Wim Hof Method) improves interoceptive awareness."
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Contingency Management",
+    "role": "SECONDARY",
+    "capacity": "Capacity for cognitive flexibility and deliberative decision-making",
+    "cite": "Weidberg, S., Landes, R. D., García-Rodríguez, O., Yoon, J. H., & Secades-Villa, R. (2015). Interaction effect of contingency management and sex on delay-discounting changes among treatment-seeking smokers. Experimental and Clinical Psychopharmacology.",
+    "doi": "10.1037/pha0000043",
+    "finding": "Showed that contingency management intervention significantly decreased delay discounting rates (improved ability to delay gratification), particularly among those who discounted most at intake."
+   },
+   {
+    "line": "Volitional",
+    "therapy": "EMDR",
+    "role": "SECONDARY",
+    "capacity": "Ability to control motor behaviors and prevent unwanted reactive behaviors",
+    "cite": "Bonyadi, T., Homaei, R., & Heidari, A. (2023). Effectiveness of Eye Movement Desensitization and Reprocessing Therapy in Response Inhibition and Cognitive Flexibility of Veterans with Posttraumatic Stress Disorder. Journal of Archives in Military Medicine.",
+    "doi": "10.5812/jamm-138324",
+    "finding": "Showed EMDR therapy improved cognitive flexibility and response inhibition in veterans with PTSD"
+   },
+   {
+    "line": "Volitional",
+    "therapy": "Goal-Setting Theory (SMART goals)",
+    "role": "SECONDARY",
+    "capacity": "Ability to maintain self-regulation and sustained effort toward a chosen objective",
+    "cite": "Bahrami, Z., Heidari, A., & Cranney, J. (2022). Applying SMART Goal Intervention Leads to Greater Goal Attainment, Need Satisfaction and Positive Affect. International Journal of Mental Health Promotion, 24(6), 869-882.",
+    "doi": "10.32604/ijmhp.2022.018954",
+    "finding": "Showed that the SMART goal intervention led to greater goal attainment and need satisfaction, which are components of self-regulation and execution."
+   }
+  ]
+ },
+ "keystones": {
+  "practiceCount": 39,
+  "ecologicalStackIds": [
+   "morning-light",
+   "nature",
+   "thermal",
+   "social-connection"
+  ],
+  "corePracticeIds": [
+   "sleep",
+   "exercise",
+   "interoception",
+   "implementation"
+  ],
+  "practices": [
+   {
+    "id": "sleep",
+    "name": "Sleep protection",
+    "section": "14",
+    "librarySection": "Sleep — The Foundational System",
+    "evidence": "Strong",
+    "lifts": [
+     "volitional",
+     "resilient",
+     "intrapersonal",
+     "memory",
+     "emotion",
+     "decision-making",
+     "self-regulation"
+    ],
+    "prescription": "Protect 7–9h with regular timing — the single highest-leverage move, because sleep gates every other line.",
+    "horizon": "2–4 weeks to feel it, ongoing to keep it",
+    "researchBasis": "Even mild chronic sleep restriction accumulates measurable cognitive and emotional-regulation deficits; restoring it reverses them.",
+    "goalKeywords": [
+     "focus",
+     "energy",
+     "health",
+     "performance",
+     "stress",
+     "burnout",
+     "memory",
+     "productivity",
+     "discipline"
+    ]
+   },
+   {
+    "id": "exercise",
+    "name": "Aerobic exercise",
+    "section": "13",
+    "librarySection": "Aerobic Exercise — The Proven Keystone",
+    "evidence": "Strong",
+    "lifts": [
+     "kinesthetic",
+     "volitional",
+     "resilient",
+     "cognition",
+     "memory",
+     "mood",
+     "self-regulation"
+    ],
+    "prescription": "Regular aerobic training (the best-evidenced brain intervention) to lift cognition, mood, and resilience together.",
+    "horizon": "6–12 weeks for cognitive/mood gains",
+    "researchBasis": "In randomized trials, aerobic training improved memory and executive function and had a large antidepressant effect.",
+    "goalKeywords": [
+     "focus",
+     "energy",
+     "health",
+     "mood",
+     "memory",
+     "performance",
+     "depression",
+     "discipline",
+     "productivity",
+     "fitness"
+    ]
+   },
+   {
+    "id": "interoception",
+    "name": "Interoception / floatation practice",
+    "section": "12",
+    "librarySection": "Interoception — The Cross-Line Keystone",
+    "evidence": "Moderate",
+    "lifts": [
+     "interoceptive",
+     "empathic",
+     "intrapersonal",
+     "decision-making"
+    ],
+    "prescription": "Train interoception (breath/body attention, or floatation) — one practice that plausibly lifts self-regulation, empathy, and intuition via the shared insula hub.",
+    "horizon": "4–8 weeks of regular practice",
+    "researchBasis": "Interoceptive training and floatation reliably raise body-awareness and lower anxiety; the insula hub links it to empathy and decision-making.",
+    "goalKeywords": [
+     "emotion",
+     "anxiety",
+     "intuition",
+     "self-awareness",
+     "calm",
+     "stress",
+     "regulation",
+     "empathy",
+     "mindfulness"
+    ]
+   },
+   {
+    "id": "breathwork",
+    "name": "Breathwork / HRV",
+    "section": "15",
+    "librarySection": "Breathwork & HRV — Autonomic Self-Regulation",
+    "evidence": "Moderate",
+    "lifts": [
+     "interoceptive",
+     "resilient",
+     "self-regulation",
+     "attention",
+     "emotion"
+    ],
+    "prescription": "Brief daily slow-breathing (e.g. cyclic sighing) to raise vagal tone and improve emotional control and focus.",
+    "horizon": "5 min/day for ~4 weeks",
+    "researchBasis": "A randomized trial found five minutes of daily cyclic-sighing beat mindfulness meditation for mood and physiological arousal over a month.",
+    "goalKeywords": [
+     "stress",
+     "anxiety",
+     "focus",
+     "calm",
+     "regulation",
+     "emotion",
+     "burnout",
+     "performance"
+    ]
+   },
+   {
+    "id": "nature",
+    "name": "Nature exposure",
+    "section": "16",
+    "librarySection": "Nature Exposure — Attention Restoration",
+    "evidence": "Moderate",
+    "lifts": [
+     "naturalistic",
+     "intrapersonal",
+     "attention",
+     "mood",
+     "creativity"
+    ],
+    "prescription": "~2 hours/week in natural settings to restore attention, lower rumination, and lift mood — passive and low-effort.",
+    "horizon": "~2 hours/week, ongoing",
+    "researchBasis": "A ~2-hour weekly threshold is associated with better health and wellbeing; a single nature walk lowered rumination and its brain signature.",
+    "goalKeywords": [
+     "stress",
+     "creativity",
+     "focus",
+     "mood",
+     "rumination",
+     "burnout",
+     "wellbeing"
+    ]
+   },
+   {
+    "id": "thermal",
+    "name": "Thermal stress (sauna)",
+    "section": "17",
+    "librarySection": "Thermal Stress — Sauna & Cold",
+    "evidence": "Moderate",
+    "lifts": [
+     "resilient",
+     "adaptive",
+     "interoceptive",
+     "mood",
+     "healthspan"
+    ],
+    "prescription": "Regular sauna use (strong cohort evidence for brain and cardiovascular healthspan); cold exposure is real acute but over-hyped for durable gains.",
+    "horizon": "several sessions/week, over months",
+    "researchBasis": "Large cohorts link frequent sauna use to substantially lower dementia and cardiovascular mortality (observational).",
+    "goalKeywords": [
+     "resilience",
+     "health",
+     "longevity",
+     "stress",
+     "mood",
+     "fitness"
+    ]
+   },
+   {
+    "id": "psychedelic",
+    "name": "Psychedelic-assisted therapy (documented, not prescribed)",
+    "section": "18",
+    "librarySection": "Psychedelic-Assisted Therapy — Deep but Gated",
+    "evidence": "Moderate",
+    "lifts": [
+     "reflective",
+     "integrative",
+     "openness",
+     "meaning",
+     "mood"
+    ],
+    "prescription": "Documented for durable openness and mood change under strict medical supervision — we DOCUMENT this, we do not prescribe it. Legal, screening, and safety constraints apply.",
+    "horizon": "n/a — not a self-practice",
+    "researchBasis": "Supervised psilocybin has produced durable increases in openness and sustained reductions in depression/anxiety in trials — under medical control only.",
+    "goalKeywords": [
+     "meaning",
+     "openness",
+     "depression",
+     "transformation",
+     "purpose"
+    ]
+   },
+   {
+    "id": "nonverbal",
+    "name": "Nonverbal-decoding practice",
+    "section": "19",
+    "librarySection": "Reading People — Nonverbal Decoding",
+    "evidence": "Moderate",
+    "lifts": [
+     "interpersonal",
+     "empathic",
+     "intuitive"
+    ],
+    "prescription": "Deliberate emotion-reading practice (validated to improve nonverbal decoding). Watching muted interaction is a plausible but UNTESTED exercise — try it, don't bank on it.",
+    "horizon": "a few weeks of deliberate practice",
+    "researchBasis": "A meta-analysis found person-perception training reliably improves the accuracy of reading others' nonverbal cues.",
+    "goalKeywords": [
+     "relationship",
+     "social",
+     "leadership",
+     "sales",
+     "team",
+     "communication",
+     "dating",
+     "negotiation",
+     "influence"
+    ]
+   },
+   {
+    "id": "relationship-media",
+    "name": "Watch + discuss relationship media",
+    "section": "20",
+    "librarySection": "Couples, Relationships & Parenting",
+    "evidence": "Strong",
+    "lifts": [
+     "marital",
+     "empathic",
+     "interpersonal"
+    ],
+    "prescription": "With your partner, WATCH and DISCUSS relationship films regularly (the Rogge protocol — halved the 3-year divorce rate; the discussion is the active ingredient).",
+    "horizon": "5 films with discussion over ~1 month",
+    "researchBasis": "In a randomized trial, newlyweds who watched and discussed five relationship movies cut their 3-year divorce/separation rate roughly in half (24% → 11%) — matching intensive therapy.",
+    "goalKeywords": [
+     "marriage",
+     "spouse",
+     "partner",
+     "relationship",
+     "divorce",
+     "wife",
+     "husband",
+     "romance",
+     "dating"
+    ]
+   },
+   {
+    "id": "empathy-training",
+    "name": "Empathy & perspective-taking practice",
+    "section": "20",
+    "librarySection": "Couples, Relationships & Parenting",
+    "evidence": "Moderate",
+    "lifts": [
+     "empathic",
+     "interpersonal"
+    ],
+    "prescription": "Structured perspective-taking practice (imagining the other's experience) — a meta-analysis of RCTs shows empathy is trainable; maintain it with repetition.",
+    "horizon": "weeks of repeated practice",
+    "researchBasis": "A meta-analysis of randomized trials found empathy training produces a moderate, reliable increase in empathy.",
+    "goalKeywords": [
+     "relationship",
+     "empathy",
+     "conflict",
+     "team",
+     "parenting",
+     "leadership",
+     "marriage",
+     "communication"
+    ]
+   },
+   {
+    "id": "relationship-education",
+    "name": "Communication & conflict skills",
+    "section": "20",
+    "librarySection": "Couples, Relationships & Parenting",
+    "evidence": "Strong",
+    "lifts": [
+     "marital",
+     "interpersonal",
+     "intrapersonal"
+    ],
+    "prescription": "Practice validated communication/conflict-management skills (speaker–listener, repair attempts) — relationship education lowers marital distress, especially with regular practice.",
+    "horizon": "a structured program over 1–3 months",
+    "researchBasis": "Meta-analyses show relationship education reliably improves couples' communication and lowers marital distress, strongest for higher-risk couples.",
+    "goalKeywords": [
+     "marriage",
+     "relationship",
+     "communication",
+     "conflict",
+     "spouse",
+     "partner"
+    ]
+   },
+   {
+    "id": "parenting",
+    "name": "Parenting-skill practice",
+    "section": "20",
+    "librarySection": "Couples, Relationships & Parenting",
+    "evidence": "Strong",
+    "lifts": [
+     "parenting",
+     "parental",
+     "empathic",
+     "intrapersonal"
+    ],
+    "prescription": "Practice the validated parenting components — warm-and-structured (authoritative) style, emotional communication, positive interaction — WITH your own child (practice beats concepts).",
+    "horizon": "a program of several weeks, practiced daily",
+    "researchBasis": "Meta-analyses of parent-training identify the active ingredients (emotional communication, positive interaction, practicing with your own child) that reliably improve child outcomes.",
+    "goalKeywords": [
+     "parent",
+     "child",
+     "children",
+     "kids",
+     "family",
+     "son",
+     "daughter",
+     "fatherhood",
+     "motherhood"
+    ]
+   },
+   {
+    "id": "implementation",
+    "name": "Close the knowing–doing gap (implementation science)",
+    "section": "21",
+    "librarySection": "Knowing vs. Doing — Making It Stick",
+    "evidence": "Strong",
+    "lifts": [
+     "volitional",
+     "self-regulation",
+     "follow-through"
+    ],
+    "prescription": "Convert every prescription into an if-then plan ('If it's 8pm Tuesday, then we watch our film'), stack it onto an existing habit, and track it. This is the step that turns knowing into doing.",
+    "horizon": "set up now; ~66 days to automaticity",
+    "researchBasis": "Implementation intentions (if-then plans) have a medium-to-large effect on actually enacting goals across 90+ studies; habits take a median of ~66 days to form.",
+    "goalKeywords": [
+     "habit",
+     "consistency",
+     "discipline",
+     "follow-through",
+     "procrastination",
+     "stick",
+     "commit",
+     "change",
+     "goal"
+    ]
+   },
+   {
+    "id": "auto-savings",
+    "name": "Automate & escalate saving",
+    "section": "Financial Wellbeing & Behavior",
+    "librarySection": "Financial Wellbeing & Behavior",
+    "evidence": "Strong",
+    "lifts": [
+     "financial-self-management",
+     "volitional"
+    ],
+    "prescription": "Automate a fixed transfer to savings/investing on payday and pre-commit to escalate it with every raise (the 'Save More Tomorrow' design) so the choice happens once, not monthly.",
+    "horizon": "set up once; compounds for years",
+    "researchBasis": "Automatic enrollment and Save-More-Tomorrow escalation dramatically raised real savings rates in field studies by defaulting people into the behavior.",
+    "goalKeywords": [
+     "money",
+     "save",
+     "savings",
+     "wealth",
+     "retirement",
+     "financial",
+     "rich",
+     "debt",
+     "budget"
+    ]
+   },
+   {
+    "id": "index-investing",
+    "name": "Low-cost index investing",
+    "section": "Financial Wellbeing & Behavior",
+    "librarySection": "Financial Wellbeing & Behavior",
+    "evidence": "Strong",
+    "lifts": [
+     "financial-self-management",
+     "logical"
+    ],
+    "prescription": "Default to broad, low-fee index funds and hold — most active managers underperform the index net of fees over time, and fees compound against you.",
+    "horizon": "years to decades",
+    "researchBasis": "SPIVA and related data show the large majority of active funds underperform their benchmark net of fees over 10–15 year windows.",
+    "goalKeywords": [
+     "invest",
+     "investing",
+     "wealth",
+     "money",
+     "retirement",
+     "rich",
+     "financial",
+     "portfolio",
+     "stocks"
+    ]
+   },
+   {
+    "id": "commitment-device",
+    "name": "Commitment devices & pre-commitment",
+    "section": "Financial Wellbeing & Behavior",
+    "librarySection": "Behavior-Change & Psychological Interventions",
+    "evidence": "Moderate",
+    "lifts": [
+     "volitional",
+     "financial-self-management"
+    ],
+    "prescription": "Lock your future self in advance — a commitment savings account, a locked deadline, a stake you forfeit if you slip — so willpower isn't required at the moment of temptation.",
+    "horizon": "set up now; protects every future decision",
+    "researchBasis": "Commitment savings accounts (e.g. the SEED trial) and pre-commitment devices meaningfully raised follow-through by removing the in-the-moment choice.",
+    "goalKeywords": [
+     "discipline",
+     "save",
+     "quit",
+     "habit",
+     "temptation",
+     "money",
+     "goal",
+     "willpower",
+     "consistency"
+    ]
+   },
+   {
+    "id": "deliberate-practice",
+    "name": "Deliberate practice",
+    "section": "Learning Science & Cognition",
+    "librarySection": "Learning Science & Cognition",
+    "evidence": "Moderate",
+    "lifts": [
+     "tactical",
+     "meta-cognitive",
+     "mastery",
+     "strategic",
+     "volitional"
+    ],
+    "prescription": "Practice at the edge of your ability on the specific sub-skills you're worst at, with immediate feedback and full focus — not comfortable repetition of what you already do well.",
+    "horizon": "months to years for real mastery",
+    "researchBasis": "Deliberate practice — focused, feedback-rich reps at the edge of ability — predicts skill gains, though its share of the variance varies by domain (honest: it's a lever, not the whole story).",
+    "goalKeywords": [
+     "skill",
+     "master",
+     "career",
+     "expert",
+     "improve",
+     "learn",
+     "craft",
+     "business",
+     "performance",
+     "practice"
+    ]
+   },
+   {
+    "id": "spaced-retrieval",
+    "name": "Spaced repetition + retrieval practice",
+    "section": "Learning Science & Cognition",
+    "librarySection": "Learning Science & Cognition",
+    "evidence": "Strong",
+    "lifts": [
+     "linguistic",
+     "logical",
+     "meta-cognitive",
+     "mathematical",
+     "memory"
+    ],
+    "prescription": "Learn by testing yourself and spacing the reviews out (not rereading) — retrieval and distributed practice are the two best-replicated ways to make knowledge stick.",
+    "horizon": "weeks; durable for months+",
+    "researchBasis": "The testing effect and distributed practice are among the most robust findings in learning science, repeatedly beating rereading for long-term retention.",
+    "goalKeywords": [
+     "learn",
+     "study",
+     "language",
+     "exam",
+     "skill",
+     "memory",
+     "knowledge",
+     "master",
+     "school",
+     "certification"
+    ]
+   },
+   {
+    "id": "deep-work",
+    "name": "Deep-work attention blocks",
+    "section": "Digital Life, Attention & Wellbeing",
+    "librarySection": "Digital Life, Attention & Wellbeing",
+    "evidence": "Emerging",
+    "lifts": [
+     "strategic",
+     "volitional",
+     "systematic",
+     "attention"
+    ],
+    "prescription": "Protect uninterrupted single-task blocks with the phone out of the room — task-switching carries a real resumption cost, so batching focus beats reacting all day.",
+    "horizon": "daily; compounds over weeks",
+    "researchBasis": "Interruption and task-switching research shows measurable resumption-lag costs; the specific 'deep work' protocol is popular but more lightly trialed (honest: Emerging).",
+    "goalKeywords": [
+     "focus",
+     "productivity",
+     "work",
+     "distraction",
+     "deep",
+     "attention",
+     "procrastination",
+     "output",
+     "writing"
+    ]
+   },
+   {
+    "id": "behavioral-activation",
+    "name": "Behavioral activation",
+    "section": "Trauma & Mental-Health Treatments",
+    "librarySection": "Trauma & Mental-Health Treatments",
+    "evidence": "Strong",
+    "lifts": [
+     "volitional",
+     "intrapersonal",
+     "resilient",
+     "mood",
+     "self-regulation"
+    ],
+    "prescription": "Schedule small valued or rewarding actions and do them regardless of motivation — action precedes mood here, not the other way around.",
+    "horizon": "2–6 weeks to shift mood",
+    "researchBasis": "Behavioral activation is a first-line, evidence-based treatment for depression, roughly as effective as full CBT in trials.",
+    "goalKeywords": [
+     "depression",
+     "mood",
+     "motivation",
+     "low",
+     "sad",
+     "stuck",
+     "energy",
+     "anhedonia",
+     "rut"
+    ]
+   },
+   {
+    "id": "cbt-restructuring",
+    "name": "Cognitive restructuring (CBT skills)",
+    "section": "Trauma & Mental-Health Treatments",
+    "librarySection": "Trauma & Mental-Health Treatments",
+    "evidence": "Strong",
+    "lifts": [
+     "meta-cognitive",
+     "resilient",
+     "emotion",
+     "intrapersonal"
+    ],
+    "prescription": "Catch the automatic thought, write it down, and test it against the evidence — the core CBT move that loosens anxious and depressive thinking loops.",
+    "horizon": "weeks of practice",
+    "researchBasis": "CBT is one of the most strongly evidenced psychotherapies for anxiety and depression across hundreds of trials.",
+    "goalKeywords": [
+     "anxiety",
+     "worry",
+     "negative",
+     "mood",
+     "depression",
+     "stress",
+     "confidence",
+     "self-talk",
+     "overthinking"
+    ]
+   },
+   {
+    "id": "resistance-training",
+    "name": "Resistance training",
+    "section": "Exercise Physiology Specifics",
+    "librarySection": "Exercise Physiology Specifics",
+    "evidence": "Strong",
+    "lifts": [
+     "kinesthetic",
+     "resilient",
+     "volitional",
+     "mood"
+    ],
+    "prescription": "Progressive strength training 2–3×/week — it builds muscle and bone, lowers all-cause mortality risk, and has a real antidepressant effect on its own.",
+    "horizon": "6–12 weeks for strength & mood gains",
+    "researchBasis": "Meta-analyses link resistance training to lower all-cause mortality and a moderate reduction in depressive symptoms independent of aerobic exercise.",
+    "goalKeywords": [
+     "strength",
+     "muscle",
+     "fitness",
+     "body",
+     "health",
+     "aging",
+     "mood",
+     "energy",
+     "gym",
+     "weight"
+    ]
+   },
+   {
+    "id": "protein-fiber",
+    "name": "Protein + fiber baseline",
+    "section": "Nutrition & Supplements (Graded)",
+    "librarySection": "Nutrition & Supplements (Graded)",
+    "evidence": "Moderate",
+    "lifts": [
+     "interoceptive",
+     "resilient",
+     "health",
+     "energy"
+    ],
+    "prescription": "Anchor meals around adequate protein and high fiber — the two dietary levers with the strongest, least-hyped evidence for satiety, muscle, and long-term health.",
+    "horizon": "weeks for satiety/energy; years for health",
+    "researchBasis": "Higher dietary fiber shows a strong dose-response link to lower all-cause mortality; adequate protein supports muscle retention and satiety.",
+    "goalKeywords": [
+     "weight",
+     "muscle",
+     "health",
+     "energy",
+     "diet",
+     "nutrition",
+     "gut",
+     "fat loss",
+     "fitness"
+    ]
+   },
+   {
+    "id": "social-connection",
+    "name": "Invest in social connection",
+    "section": "Social Connection, Purpose & Longevity",
+    "librarySection": "Social Connection, Purpose & Longevity",
+    "evidence": "Strong",
+    "lifts": [
+     "interpersonal",
+     "empathic",
+     "resilient"
+    ],
+    "prescription": "Protect regular, real, face-to-face contact with people you care about — social connection is one of the strongest predictors of health and longevity there is.",
+    "horizon": "ongoing; effects build over years",
+    "researchBasis": "Holt-Lunstad's meta-analyses put weak social connection on par with well-known mortality risks like smoking (honest: observational, but very robust).",
+    "goalKeywords": [
+     "lonely",
+     "friends",
+     "connection",
+     "relationship",
+     "community",
+     "belonging",
+     "isolation",
+     "social",
+     "health"
+    ]
+   },
+   {
+    "id": "purpose",
+    "name": "Anchor a sense of purpose",
+    "section": "Social Connection, Purpose & Longevity",
+    "librarySection": "Social Connection, Purpose & Longevity",
+    "evidence": "Moderate",
+    "lifts": [
+     "existential",
+     "volitional",
+     "intrapersonal"
+    ],
+    "prescription": "Name a purpose bigger than yourself and put one concrete weekly action behind it — a stronger sense of purpose tracks with better health and longevity.",
+    "horizon": "ongoing",
+    "researchBasis": "Cohort studies associate a stronger sense of purpose/ikigai with lower mortality and better health (honest: observational, confounding possible).",
+    "goalKeywords": [
+     "purpose",
+     "meaning",
+     "direction",
+     "lost",
+     "motivation",
+     "legacy",
+     "why",
+     "fulfillment"
+    ]
+   },
+   {
+    "id": "gratitude-kindness",
+    "name": "Gratitude & prosocial action",
+    "section": "Meaning, Grief & Positive Psychology",
+    "librarySection": "Meaning, Grief & Positive Psychology",
+    "evidence": "Moderate",
+    "lifts": [
+     "intrapersonal",
+     "empathic",
+     "interpersonal",
+     "humor",
+     "mood"
+    ],
+    "prescription": "A brief weekly gratitude reflection plus regular small acts of help — modest but real lifts to wellbeing, and cheap to run.",
+    "horizon": "weeks; keep it periodic, not daily-forced",
+    "researchBasis": "Gratitude and kindness interventions produce small-to-moderate wellbeing gains (honest: effect sizes are modest and sensitive to how they're run).",
+    "goalKeywords": [
+     "happiness",
+     "wellbeing",
+     "gratitude",
+     "meaning",
+     "giving",
+     "positivity",
+     "mood",
+     "content"
+    ]
+   },
+   {
+    "id": "expressive-writing",
+    "name": "Expressive writing",
+    "section": "Meaning, Grief & Positive Psychology",
+    "librarySection": "Meaning, Grief & Positive Psychology",
+    "evidence": "Moderate",
+    "lifts": [
+     "reflective",
+     "resilient",
+     "emotion",
+     "intrapersonal"
+    ],
+    "prescription": "Write continuously about a stressor for ~15 minutes across a few days — the Pennebaker paradigm helps many people process and get clarity.",
+    "horizon": "3–4 short sessions",
+    "researchBasis": "Expressive writing produces modest but replicated improvements in processing stressful experiences and some health markers.",
+    "goalKeywords": [
+     "stress",
+     "processing",
+     "emotion",
+     "writing",
+     "clarity",
+     "grief",
+     "closure",
+     "overwhelm"
+    ]
+   },
+   {
+    "id": "woop",
+    "name": "WOOP / mental contrasting",
+    "section": "Behavior-Change & Psychological Interventions",
+    "librarySection": "Behavior-Change & Psychological Interventions",
+    "evidence": "Strong",
+    "lifts": [
+     "volitional",
+     "strategic",
+     "meta-cognitive"
+    ],
+    "prescription": "Run every goal through WOOP — Wish, Outcome, Obstacle, Plan — pairing the vision with the concrete obstacle and an if-then plan for it, which beats visualizing success alone.",
+    "horizon": "minutes to set up per goal",
+    "researchBasis": "Mental contrasting with implementation intentions (WOOP) outperforms indulging in positive fantasy alone for actual goal attainment across trials.",
+    "goalKeywords": [
+     "goal",
+     "motivation",
+     "habit",
+     "discipline",
+     "procrastination",
+     "change",
+     "plan",
+     "obstacle",
+     "follow-through"
+    ]
+   },
+   {
+    "id": "morning-light",
+    "name": "Morning light + circadian anchoring",
+    "section": "Sleep & Circadian Interventions",
+    "librarySection": "Sleep & Circadian Interventions",
+    "evidence": "Strong",
+    "lifts": [
+     "resilient",
+     "adaptive",
+     "interoceptive",
+     "mood",
+     "sleep",
+     "energy"
+    ],
+    "prescription": "Get bright light early and keep sleep-wake timing consistent — the cheapest lever for stabilizing circadian rhythm, mood, and daytime energy.",
+    "horizon": "days to a couple of weeks",
+    "researchBasis": "Morning bright-light exposure and regular timing reliably phase-anchor circadian rhythm and improve mood and alertness.",
+    "goalKeywords": [
+     "sleep",
+     "energy",
+     "mood",
+     "circadian",
+     "focus",
+     "morning",
+     "jetlag",
+     "tired",
+     "routine"
+    ]
+   },
+   {
+    "id": "public-speaking",
+    "name": "Structured public speaking (Toastmasters-style)",
+    "section": "Communication & Influence Training",
+    "librarySection": "Communication Skills & Persuasion",
+    "evidence": "Strong",
+    "lifts": [
+     "influence",
+     "linguistic",
+     "interpersonal",
+     "resilient"
+    ],
+    "prescription": "Join a weekly speaking club (Toastmasters or equivalent) and deliver one prepared talk a month plus impromptu rounds — the best-evidenced influence-builder there is.",
+    "horizon": "3–6 months of weekly reps",
+    "researchBasis": "Communication-skills training with live practice and feedback reliably improves persuasion, delivery, and speaking anxiety across many controlled studies.",
+    "goalKeywords": [
+     "influence",
+     "persuasion",
+     "speaking",
+     "leadership",
+     "sales",
+     "confidence",
+     "presentation",
+     "charisma"
+    ]
+   },
+   {
+    "id": "improv",
+    "name": "Improv comedy classes",
+    "section": "Play, Humor & Social Confidence",
+    "librarySection": "Humor & Improvisation Training",
+    "evidence": "Moderate",
+    "lifts": [
+     "humor",
+     "adaptive",
+     "interpersonal",
+     "linguistic"
+    ],
+    "prescription": "An 8-week beginner improv course: 'yes-and' under pressure trains wit, adaptability, and social ease faster than anything else that's also this fun.",
+    "horizon": "8 weeks",
+    "researchBasis": "Improv training studies show gains in divergent thinking, tolerance of uncertainty, and social confidence; humor production is a trainable skill.",
+    "goalKeywords": [
+     "humor",
+     "funny",
+     "social",
+     "confidence",
+     "quick",
+     "wit",
+     "spontaneity",
+     "public"
+    ]
+   },
+   {
+    "id": "choir",
+    "name": "Group singing / choir",
+    "section": "Music & Community Interventions",
+    "librarySection": "Group Singing & Wellbeing",
+    "evidence": "Moderate",
+    "lifts": [
+     "musical",
+     "community-founding",
+     "interpersonal",
+     "mood"
+    ],
+    "prescription": "Join a weekly choir or singing group — no audition needed. Active music-making trains pitch and rhythm while the group trains belonging.",
+    "horizon": "8–12 weeks",
+    "researchBasis": "Group singing shows consistent wellbeing, social-bonding, and mood benefits; active music training measurably improves auditory-musical skills at any age.",
+    "goalKeywords": [
+     "music",
+     "sing",
+     "band",
+     "instrument",
+     "community",
+     "belong",
+     "joy"
+    ]
+   },
+   {
+    "id": "drawing",
+    "name": "Observational drawing course",
+    "section": "Visual-Spatial Training",
+    "librarySection": "Drawing & Spatial Skill Training",
+    "evidence": "Moderate",
+    "lifts": [
+     "spatial",
+     "aesthetic",
+     "meta-cognitive"
+    ],
+    "prescription": "A structured 'learn to see' drawing course (8+ weeks): observational drawing is the most direct trainer of spatial perception and visual judgment.",
+    "horizon": "8–12 weeks",
+    "researchBasis": "Drawing instruction produces measurable gains in observational accuracy and spatial representation; aesthetic judgment sharpens with deliberate visual practice.",
+    "goalKeywords": [
+     "draw",
+     "art",
+     "design",
+     "visual",
+     "creative",
+     "spatial",
+     "aesthetic"
+    ]
+   },
+   {
+    "id": "strategy-games",
+    "name": "Chess/poker study with post-game review",
+    "section": "Strategic & Adversarial Training",
+    "librarySection": "Strategic Games & Decision Training",
+    "evidence": "Moderate",
+    "lifts": [
+     "adversarial",
+     "strategic",
+     "meta-cognitive",
+     "mathematical"
+    ],
+    "prescription": "Play chess or poker seriously — with the non-negotiable: review every game/session afterward. The review, not the play, is where adversarial thinking is built.",
+    "horizon": "3–6 months",
+    "researchBasis": "Deliberate game study with error review trains opponent modeling, probabilistic judgment, and calibration; transfer is strongest to structurally similar competitive decisions.",
+    "goalKeywords": [
+     "strategy",
+     "compete",
+     "negotiate",
+     "chess",
+     "poker",
+     "win",
+     "opponent",
+     "odds"
+    ]
+   },
+   {
+    "id": "negotiation-reps",
+    "name": "Negotiation practice reps",
+    "section": "Negotiation Training",
+    "librarySection": "Negotiation Skills Research",
+    "evidence": "Strong",
+    "lifts": [
+     "adversarial",
+     "influence",
+     "interpersonal"
+    ],
+    "prescription": "Run one deliberate negotiation per week — a purchase, a bill, a scheduling conflict — using a named framework (anchoring, calibrated questions, BATNA), and debrief in two sentences.",
+    "horizon": "6–12 weeks of weekly reps",
+    "researchBasis": "Negotiation training with practice and feedback shows large skill gains in controlled studies; the skill compounds because opportunities to use it are everywhere.",
+    "goalKeywords": [
+     "negotiate",
+     "deal",
+     "raise",
+     "salary",
+     "buy",
+     "sell",
+     "conflict",
+     "influence"
+    ]
+   },
+   {
+    "id": "philosophy-circle",
+    "name": "Philosophy reading circle / Socratic practice",
+    "section": "Philosophical & Reflective Training",
+    "librarySection": "Philosophical Inquiry & Wise Reasoning",
+    "evidence": "Moderate",
+    "lifts": [
+     "philosophical",
+     "existential",
+     "reflective",
+     "linguistic"
+    ],
+    "prescription": "Monthly: one primary text (not commentary) + one discussion — a local philosophy meetup, a Socratic circle, or a serious reading partner. Argue positions you don't hold.",
+    "horizon": "3–6 months",
+    "researchBasis": "Structured philosophical dialogue programs improve reasoning quality and perspective-taking; wise-reasoning research shows deliberate practice effects.",
+    "goalKeywords": [
+     "meaning",
+     "philosophy",
+     "wisdom",
+     "think",
+     "ethics",
+     "existential",
+     "depth"
+    ]
+   },
+   {
+    "id": "systems-course",
+    "name": "Systems-thinking practice (causal loop mapping)",
+    "section": "Systems & Design Thinking",
+    "librarySection": "Systems Thinking Training",
+    "evidence": "Moderate",
+    "lifts": [
+     "systematic",
+     "architectural",
+     "strategic",
+     "integrative"
+    ],
+    "prescription": "Once a week, diagram one real system you're inside — your job's workflow, your family's mornings, your finances — as a causal loop map: stocks, flows, feedback, delays.",
+    "horizon": "8–12 weeks",
+    "researchBasis": "Systems-thinking instruction with active modeling improves understanding of feedback and delay dynamics — the core failure mode of untrained planning.",
+    "goalKeywords": [
+     "systems",
+     "process",
+     "design",
+     "architecture",
+     "organize",
+     "build",
+     "plan",
+     "workflow"
+    ]
+   },
+   {
+    "id": "social-confidence",
+    "name": "Graduated social-confidence practice",
+    "section": "Social Skills & Courtship Confidence",
+    "librarySection": "Social Anxiety & Social Skills Training",
+    "evidence": "Moderate",
+    "lifts": [
+     "seduction",
+     "interpersonal",
+     "resilient",
+     "influence"
+    ],
+    "prescription": "A graduated-exposure ladder for romantic/social confidence: eye contact and small talk daily, one genuine compliment a day, one real conversation with someone new per week — difficulty rising weekly.",
+    "horizon": "8–12 weeks",
+    "researchBasis": "Graduated exposure with behavioral practice is the best-evidenced treatment for social anxiety and reliably builds approach confidence; charisma behaviors are trainable.",
+    "goalKeywords": [
+     "dating",
+     "partner",
+     "confidence",
+     "social",
+     "charisma",
+     "romance",
+     "approach",
+     "attraction"
+    ]
+   },
+   {
+    "id": "mentoring",
+    "name": "Mentor someone",
+    "section": "Mentoring & Generativity",
+    "librarySection": "Mentoring — Mentor-Side Benefits",
+    "evidence": "Moderate",
+    "lifts": [
+     "parenting",
+     "community-founding",
+     "interpersonal",
+     "existential"
+    ],
+    "prescription": "Take on one mentee — formally (a program) or informally (a junior colleague, a nephew, a newcomer at your club) — with a standing monthly session.",
+    "horizon": "ongoing; benefits measurable by 6 months",
+    "researchBasis": "Mentor-side research shows generativity, purpose, and leadership-skill benefits for the mentor, not just the mentee — teaching is the strongest form of mastery.",
+    "goalKeywords": [
+     "mentor",
+     "teach",
+     "legacy",
+     "parenting",
+     "give back",
+     "lead",
+     "community"
+    ]
+   }
+  ]
+ },
+ "engine": {
+  "note": "Live outputs of the actual prescription engine, one scenario per weakest line.",
+  "samples": [
+   {
+    "weakestLine": "Logical",
+    "therapies": [
+     {
+      "therapy": "Mediterranean Diet",
+      "role": "PRIMARY"
+     }
+    ],
+    "keystone": "index-investing"
+   },
+   {
+    "weakestLine": "Mathematical",
+    "therapies": [],
+    "keystone": "spaced-retrieval"
+   },
+   {
+    "weakestLine": "Spatial",
+    "therapies": [],
+    "keystone": "drawing"
+   },
+   {
+    "weakestLine": "Linguistic",
+    "therapies": [
+     {
+      "therapy": "Cognitive Stimulation Therapy (CST)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Sandplay Therapy",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "spaced-retrieval"
+   },
+   {
+    "weakestLine": "Volitional",
+    "therapies": [
+     {
+      "therapy": "Aerobic Exercise",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Behavioral Activation",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Flow State Training",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Implementation Intentions (Gollwitzer)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Neurofeedback",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Resistance Training",
+      "role": "PRIMARY"
+     }
+    ],
+    "keystone": "sleep"
+   },
+   {
+    "weakestLine": "Meta-Cognitive",
+    "therapies": [
+     {
+      "therapy": "CBT-I (Cognitive Behavioral Therapy for Insomnia)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Clinical Hypnosis",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Cognitive Defusion (ACT)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Emotionally Focused Therapy (EFT)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "MBCT (Mindfulness-Based Cognitive Therapy)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Occupational Therapy (CO-OP)",
+      "role": "PRIMARY"
+     }
+    ],
+    "keystone": "deliberate-practice"
+   },
+   {
+    "weakestLine": "Intrapersonal",
+    "therapies": [
+     {
+      "therapy": "Compassion-Focused Therapy (CFT)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "DBT (Linehan)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Executive Coaching",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Internal Family Systems (IFS)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "MDMA-Assisted Therapy",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Mentalization-Based Treatment (MBT)",
+      "role": "PRIMARY"
+     }
+    ],
+    "keystone": "sleep"
+   },
+   {
+    "weakestLine": "Reflective",
+    "therapies": [
+     {
+      "therapy": "Gratitude Interventions",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Narrative Therapy",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Meaning-Oriented Grief Therapy (Neimeyer)",
+      "role": "SECONDARY"
+     },
+     {
+      "therapy": "Trauma-Focused CBT (TF-CBT)",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "psychedelic"
+   },
+   {
+    "weakestLine": "Existential",
+    "therapies": [
+     {
+      "therapy": "Logotherapy (Frankl)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Meaning-Oriented Grief Therapy (Neimeyer)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Psilocybin-Assisted Therapy",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "purpose"
+   },
+   {
+    "weakestLine": "Philosophical",
+    "therapies": [],
+    "keystone": "philosophy-circle"
+   },
+   {
+    "weakestLine": "Integrative",
+    "therapies": [
+     {
+      "therapy": "Ketamine-Assisted Therapy",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Dance Therapy (Wu 2021)",
+      "role": "SECONDARY"
+     },
+     {
+      "therapy": "Forgiveness Interventions (Wade)",
+      "role": "SECONDARY"
+     },
+     {
+      "therapy": "Internal Family Systems (IFS)",
+      "role": "SECONDARY"
+     },
+     {
+      "therapy": "Reminiscence Therapy",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "psychedelic"
+   },
+   {
+    "weakestLine": "Interpersonal",
+    "therapies": [
+     {
+      "therapy": "Gottman Method Couples Therapy",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Group Therapy",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Interpersonal Therapy (IPT)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Social Prescribing",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Cognitive Stimulation Therapy (CST)",
+      "role": "SECONDARY"
+     },
+     {
+      "therapy": "DBT (Linehan)",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "nonverbal"
+   },
+   {
+    "weakestLine": "Empathic",
+    "therapies": [
+     {
+      "therapy": "Emotionally Focused Couples Therapy (EFT)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Forgiveness Interventions (Wade)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Music Therapy",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Pet-Assisted Therapy",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Gottman Method Couples Therapy",
+      "role": "SECONDARY"
+     },
+     {
+      "therapy": "Group Therapy",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "interoception"
+   },
+   {
+    "weakestLine": "Intuitive",
+    "therapies": [],
+    "keystone": "nonverbal"
+   },
+   {
+    "weakestLine": "Musical",
+    "therapies": [],
+    "keystone": "choir"
+   },
+   {
+    "weakestLine": "Kinesthetic",
+    "therapies": [
+     {
+      "therapy": "Dance Therapy (Wu 2021)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Tai Chi",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "exercise"
+   },
+   {
+    "weakestLine": "Naturalistic",
+    "therapies": [
+     {
+      "therapy": "Forest Bathing (Shinrin-yoku)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Walking in Nature",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "nature"
+   },
+   {
+    "weakestLine": "Strategic",
+    "therapies": [
+     {
+      "therapy": "Contingency Management",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Solution-Focused Brief Therapy (SFBT)",
+      "role": "PRIMARY"
+     }
+    ],
+    "keystone": "deliberate-practice"
+   },
+   {
+    "weakestLine": "Tactical",
+    "therapies": [
+     {
+      "therapy": "Goal-Setting Theory (SMART goals)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Light Therapy",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Behavioral Activation",
+      "role": "SECONDARY"
+     },
+     {
+      "therapy": "Habit Stacking",
+      "role": "SECONDARY"
+     },
+     {
+      "therapy": "Implementation Intentions (Gollwitzer)",
+      "role": "SECONDARY"
+     },
+     {
+      "therapy": "Occupational Therapy (CO-OP)",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "deliberate-practice"
+   },
+   {
+    "weakestLine": "Adaptive",
+    "therapies": [
+     {
+      "therapy": "Bibliotherapy (Guided Self-Help)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Cognitive Processing Therapy (CPT)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "EMDR",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Psilocybin-Assisted Therapy",
+      "role": "PRIMARY"
+     }
+    ],
+    "keystone": "thermal"
+   },
+   {
+    "weakestLine": "Resilient",
+    "therapies": [
+     {
+      "therapy": "Gut Microbiome Probiotics",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Laughter Therapy",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Positive Psychology Interventions (Strengths-Based)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Prolonged Exposure (PE)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Acupuncture",
+      "role": "SECONDARY"
+     },
+     {
+      "therapy": "Aerobic Exercise",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "sleep"
+   },
+   {
+    "weakestLine": "Systematic",
+    "therapies": [
+     {
+      "therapy": "Habit Stacking",
+      "role": "PRIMARY"
+     }
+    ],
+    "keystone": "deep-work"
+   },
+   {
+    "weakestLine": "Architectural",
+    "therapies": [],
+    "keystone": "systems-course"
+   },
+   {
+    "weakestLine": "Adversarial",
+    "therapies": [],
+    "keystone": "strategy-games"
+   },
+   {
+    "weakestLine": "Interoceptive",
+    "therapies": [
+     {
+      "therapy": "Acupuncture",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Biofeedback HRV",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Cold Exposure (Wim Hof)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Float Tanks REST",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "MBSR (Mindfulness-Based Stress Reduction)",
+      "role": "PRIMARY"
+     },
+     {
+      "therapy": "Polyvagal Exercises",
+      "role": "PRIMARY"
+     }
+    ],
+    "keystone": "interoception"
+   },
+   {
+    "weakestLine": "Aesthetic",
+    "therapies": [],
+    "keystone": "drawing"
+   },
+   {
+    "weakestLine": "Influence",
+    "therapies": [],
+    "keystone": "public-speaking"
+   },
+   {
+    "weakestLine": "Humor",
+    "therapies": [
+     {
+      "therapy": "Laughter Therapy",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "gratitude-kindness"
+   },
+   {
+    "weakestLine": "Parenting",
+    "therapies": [
+     {
+      "therapy": "Parent-Child Interaction Therapy (PCIT)",
+      "role": "PRIMARY"
+     }
+    ],
+    "keystone": "parenting"
+   },
+   {
+    "weakestLine": "Seduction",
+    "therapies": [],
+    "keystone": "social-confidence"
+   },
+   {
+    "weakestLine": "Community-Founding",
+    "therapies": [
+     {
+      "therapy": "Social Prescribing",
+      "role": "SECONDARY"
+     }
+    ],
+    "keystone": "choir"
+   },
+   {
+    "weakestLine": "Financial-Self-Management",
+    "therapies": [],
+    "keystone": "auto-savings"
+   }
+  ],
+  "prescriptionFrequency": [
+   {
+    "therapy": "Cognitive Stimulation Therapy (CST)",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Aerobic Exercise",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Behavioral Activation",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Implementation Intentions (Gollwitzer)",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Occupational Therapy (CO-OP)",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "DBT (Linehan)",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Internal Family Systems (IFS)",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Meaning-Oriented Grief Therapy (Neimeyer)",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Psilocybin-Assisted Therapy",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Dance Therapy (Wu 2021)",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Forgiveness Interventions (Wade)",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Gottman Method Couples Therapy",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Group Therapy",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Social Prescribing",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Habit Stacking",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Laughter Therapy",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Acupuncture",
+    "timesPrescribed": 2
+   },
+   {
+    "therapy": "Mediterranean Diet",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Sandplay Therapy",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Flow State Training",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Neurofeedback",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Resistance Training",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "CBT-I (Cognitive Behavioral Therapy for Insomnia)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Clinical Hypnosis",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Cognitive Defusion (ACT)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Emotionally Focused Therapy (EFT)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "MBCT (Mindfulness-Based Cognitive Therapy)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Compassion-Focused Therapy (CFT)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Executive Coaching",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "MDMA-Assisted Therapy",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Mentalization-Based Treatment (MBT)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Gratitude Interventions",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Narrative Therapy",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Trauma-Focused CBT (TF-CBT)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Logotherapy (Frankl)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Ketamine-Assisted Therapy",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Reminiscence Therapy",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Interpersonal Therapy (IPT)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Emotionally Focused Couples Therapy (EFT)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Music Therapy",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Pet-Assisted Therapy",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Tai Chi",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Forest Bathing (Shinrin-yoku)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Walking in Nature",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Contingency Management",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Solution-Focused Brief Therapy (SFBT)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Goal-Setting Theory (SMART goals)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Light Therapy",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Bibliotherapy (Guided Self-Help)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Cognitive Processing Therapy (CPT)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "EMDR",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Gut Microbiome Probiotics",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Positive Psychology Interventions (Strengths-Based)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Prolonged Exposure (PE)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Biofeedback HRV",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Cold Exposure (Wim Hof)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Float Tanks REST",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "MBSR (Mindfulness-Based Stress Reduction)",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Polyvagal Exercises",
+    "timesPrescribed": 1
+   },
+   {
+    "therapy": "Parent-Child Interaction Therapy (PCIT)",
+    "timesPrescribed": 1
+   }
+  ]
+ },
+ "goals": {
+  "templates": [
+   {
+    "key": "own-business",
+    "label": "Start & run a business",
+    "keywords": [
+     "business",
+     "startup",
+     "company",
+     "entrepreneur",
+     "founder",
+     "self-employed"
+    ],
+    "baselineMonths": 36,
+    "minMonthlyHours": 40,
+    "stages": [
+     "Pick the offer & the customer (validated by 10 real conversations)",
+     "First paying customer",
+     "Repeatable sales process (10+ customers)",
+     "Replace half your income",
+     "Full-time on the business, 6 months of runway"
+    ]
+   },
+   {
+    "key": "family-kids",
+    "label": "Marriage & family",
+    "keywords": [
+     "kids",
+     "children",
+     "family",
+     "married",
+     "marriage",
+     "wife",
+     "husband",
+     "father",
+     "mother",
+     "grandkids"
+    ],
+    "baselineMonths": 48,
+    "minMonthlyHours": 20,
+    "stages": [
+     "Actively meeting people (real hours, every month)",
+     "Committed relationship",
+     "Built trust — merged lives (living together / engaged)",
+     "Married / partnered for life",
+     "First child"
+    ]
+   },
+   {
+    "key": "financial-advisor",
+    "label": "Become a licensed financial professional",
+    "keywords": [
+     "financial advisor",
+     "series 7",
+     "series 65",
+     "insurance license",
+     "advisor"
+    ],
+    "baselineMonths": 24,
+    "minMonthlyHours": 30,
+    "stages": [
+     "Pass licensing exams (Series / state insurance)",
+     "Join a firm or broker-dealer",
+     "First 25 clients",
+     "$50K marketing/lead budget deployed",
+     "Self-sustaining book of business"
+    ]
+   },
+   {
+    "key": "write-book",
+    "label": "Write & publish a book",
+    "keywords": [
+     "book",
+     "write",
+     "author",
+     "publish",
+     "novel",
+     "memoir"
+    ],
+    "baselineMonths": 18,
+    "minMonthlyHours": 20,
+    "stages": [
+     "Outline + first chapter",
+     "Complete first draft",
+     "Revised draft through beta readers",
+     "Edited, designed, publication-ready",
+     "Published & first 100 readers"
+    ]
+   },
+   {
+    "key": "fitness-body",
+    "label": "Transform health & body",
+    "keywords": [
+     "weight",
+     "fit",
+     "fitness",
+     "muscle",
+     "health",
+     "shape",
+     "marathon",
+     "strong",
+     "lose"
+    ],
+    "baselineMonths": 12,
+    "minMonthlyHours": 16,
+    "stages": [
+     "Consistent training habit (4 weeks unbroken)",
+     "Nutrition baseline locked in",
+     "First measurable milestone (strength / distance / weight)",
+     "Halfway to target",
+     "Target reached & held for 90 days"
+    ]
+   },
+   {
+    "key": "financial-freedom",
+    "label": "Financial freedom / retire",
+    "keywords": [
+     "retire",
+     "financial freedom",
+     "passive income",
+     "wealth",
+     "million",
+     "invest",
+     "debt"
+    ],
+    "baselineMonths": 120,
+    "minMonthlyHours": 10,
+    "stages": [
+     "Full financial picture on paper (net worth, burn, debts)",
+     "Automatic savings/investing running monthly",
+     "High-interest debt gone",
+     "One year of expenses invested",
+     "Work optional (25x annual expenses)"
+    ]
+   },
+   {
+    "key": "career-change",
+    "label": "Change careers / land the role",
+    "keywords": [
+     "career",
+     "job",
+     "promotion",
+     "role",
+     "industry",
+     "switch"
+    ],
+    "baselineMonths": 12,
+    "minMonthlyHours": 15,
+    "stages": [
+     "Target role & gap analysis (skills, credentials)",
+     "Credential/skill gap closed",
+     "Network inside the target field (10 real conversations)",
+     "Interviews in progress",
+     "Offer accepted"
+    ]
+   },
+   {
+    "key": "home",
+    "label": "Buy a home",
+    "keywords": [
+     "house",
+     "home",
+     "property",
+     "mortgage",
+     "real estate"
+    ],
+    "baselineMonths": 24,
+    "minMonthlyHours": 8,
+    "stages": [
+     "Budget + mortgage pre-qualification",
+     "Down payment fund at 25%",
+     "Down payment fund complete",
+     "Actively viewing / offers in",
+     "Keys in hand"
+    ]
+   },
+   {
+    "key": "relationship",
+    "label": "Find a life partner",
+    "keywords": [
+     "partner",
+     "girlfriend",
+     "boyfriend",
+     "relationship",
+     "love",
+     "date",
+     "dating",
+     "soulmate"
+    ],
+    "baselineMonths": 24,
+    "minMonthlyHours": 12,
+    "stages": [
+     "Actively meeting people (logged hours, monthly)",
+     "Dating with intention",
+     "Exclusive relationship",
+     "Six months of built trust",
+     "Committed for the long term"
+    ]
+   },
+   {
+    "key": "travel",
+    "label": "Travel goal",
+    "keywords": [
+     "travel",
+     "trip",
+     "country",
+     "world",
+     "visit",
+     "abroad"
+    ],
+    "baselineMonths": 12,
+    "minMonthlyHours": 5,
+    "stages": [
+     "Destination list + budget",
+     "Fund at 50%",
+     "Fully funded & time blocked",
+     "Booked",
+     "Boarding pass scanned"
+    ]
+   },
+   {
+    "key": "custom",
+    "label": "Custom goal",
+    "keywords": [],
+    "baselineMonths": 24,
+    "minMonthlyHours": 10,
+    "stages": [
+     "Define what done looks like (measurable)",
+     "First real action taken",
+     "Quarter of the way (first milestone)",
+     "Halfway — the habit is holding",
+     "Done — and held for 30 days"
+    ]
+   }
+  ],
+  "clockLogic": "// ============================================================\n// THE GOAL CLOCK — an honest countdown that responds to effort\n// ============================================================\n// The founder's spec, verbatim: \"If you are single and you say you want five\n// kids and you spend zero hours a month for six months meeting women, it's\n// going to tell you that this goal is never going to happen... because you're\n// not putting in the basic energy.\"\n//\n// Mechanics (deterministic, explainable — no AI call needed to tick):\n//   remaining = baselineMonths × (1 − stageProgress)\n//   paceRatio = recent avg logged hours / minMonthlyHours (capped at 2×)\n//   eta       = remaining / paceRatio\n// Zero effort across enough logged months → \"at this pace: never.\"\n// No logs yet → the clock hasn't started (unstarted, not never).\n\nexport type GoalStage = { name: string; done: boolean };\n\nexport type ClockInput = {\n  baselineMonths: number;\n  minMonthlyHours: number;\n  stages: GoalStage[];\n  /** hours logged per month, most recent last; months with no log = 0 ONLY if later months exist */\n  monthlyHours: number[];\n};\n\nexport type ClockReading = {\n  state: \"unstarted\" | \"on_pace\" | \"behind\" | \"ahead\" | \"stalled\" | \"never\" | \"achieved\";\n  etaMonths: number | null; // null when never/unstarted/achieved\n  paceRatio: number; // 0..2\n  stageProgress: number; // 0..1\n  headline: string; // the member-facing clock line\n};\n\nconst RECENT_WINDOW = 3; // pace = average of the last 3 logged months\nconst NEVER_AFTER_MONTHS = 3; // this many logged months at ~zero effort → \"never\"\n\nexport function readClock(input: ClockInput): ClockReading {\n  const stages = input.stages ?? [];\n  const doneCount = stages.filter((s) => s.done).length;\n  const stageProgress = stages.length > 0 ? doneCount / stages.length : 0;\n\n  if (stages.length > 0 && doneCount === stages.length) {\n    return { state: \"achieved\", etaMonths: null, paceRatio: 1, stageProgress: 1, headline: \"Achieved. Log it, frame it, pick the next one.\" };\n  }\n\n  const logs = input.monthlyHours;\n  if (logs.length === 0) {\n    return {\n      state: \"unstarted\", etaMonths: null, paceRatio: 0, stageProgress,\n      headline: `Clock not started — log your first month of effort to start it. At the recommended ${input.minMonthlyHours}h/month: ~${fmtMonths(input.baselineMonths * (1 - stageProgress))}.`,\n    };\n  }\n\n  const recent = logs.slice(-RECENT_WINDOW);\n  const avg = recent.reduce((s, h) => s + h, 0) / recent.length;\n  const paceRatio = Math.min(2, avg / Math.max(1e-9, input.minMonthlyHours));\n  const remainingBase = input.baselineMonths * (1 - stageProgress);\n\n  // The honest verdict: enough months of ~zero effort = never, said plainly.\n  const zeroish = logs.slice(-NEVER_AFTER_MONTHS);\n  if (logs.length >= NEVER_AFTER_MONTHS && zeroish.every((h) => h < input.minMonthlyHours * 0.1)) {\n    return {\n      state: \"never\", etaMonths: null, paceRatio, stageProgress,\n      headline: \"At this pace: never. You've logged essentially zero hours for months. The clock only moves when you do — one real hour restarts it.\",\n    };\n  }\n\n  if (paceRatio < 0.1) {\n    return {\n      state: \"stalled\", etaMonths: null, paceRatio, stageProgress,\n      headline: `Stalled — effort has dropped to near zero. At the recommended ${input.minMonthlyHours}h/month this is ~${fmtMonths(remainingBase)} away; right now it isn't approaching at all.`,\n    };\n  }\n\n  const eta = remainingBase / paceRatio;\n  const state: ClockReading[\"state\"] = paceRatio >= 1.15 ? \"ahead\" : paceRatio >= 0.75 ? \"on_pace\" : \"behind\";\n  const headlines: Record<string, string> = {\n    ahead: `~${fmtMonths(eta)} at your current pace — you're running ${Math.round(paceRatio * 100)}% of baseline effort. Ahead of schedule.`,\n    on_pace: `~${fmtMonths(eta)} at your current pace. On schedule — keep logging.`,\n    behind: `~${fmtMonths(eta)} at your current pace — that's slower than the ${input.minMonthlyHours}h/month this estimate assumes. More hours, shorter clock.`,\n  };\n  return { state, etaMonths: eta, paceRatio, stageProgress, headline: headlines[state] };\n}\n\nexport function fmtMonths(m: number): string {\n  if (!isFinite(m)) return \"never\";\n  if (m < 1) return \"under a month\";\n  if (m < 18) return `${Math.round(m)} month${Math.round(m) === 1 ? \"\" : \"s\"}`;\n  const years = m / 12;\n  const rounded = Math.round(years * 2) / 2;\n  return `${rounded} year${rounded === 1 ? \"\" : \"s\"}`;\n}\n",
+  "goalsQuestionIndices": [
+   5,
+   6,
+   21
+  ]
+ },
+ "matching": {
+  "weights": {
+   "strengthCoverage": 0.35,
+   "gapFilling": 0.3,
+   "sharedFoundation": 0.2,
+   "growthPotential": 0.15
+  },
+  "floor": 0.55,
+  "rarityAxisIndices": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27
+  ],
+  "scoringLogic": "// ============================================================\n// COMPLEMENTARY MATCHING — the schematic's formula, made honest\n// ============================================================\n// ComplementarityScore(A,B) = α·StrengthCoverage + β·GapFilling\n//                           + γ·SharedFoundation + δ·GrowthPotential\n//\n// Vectors are aligned to ALL_AXES (32 entries, 0..1). One correction to the\n// schematic: the four STANCE lines (Parenting, Seduction, Community-Founding,\n// Financial-Self-Management) are developmental stages, not amounts — treating\n// stage-4 as \"less than\" stage-6 numerically would poison every component. So\n// the formula runs on the 28 amount-scored lines only (same rule the rarity\n// composite already follows).\n\nimport { ALL_AXES, axisFeedsRarity } from \"./axisModes\";\n\nexport const MATCH_WEIGHTS = {\n  strengthCoverage: 0.35,\n  gapFilling: 0.3,\n  sharedFoundation: 0.2,\n  growthPotential: 0.15,\n} as const;\n\n// Indices (into ALL_AXES) actually used by the formula.\nexport const MATCH_AXIS_INDICES = ALL_AXES.map((a, i) => (axisFeedsRarity(a) ? i : -1)).filter(\n  (i) => i >= 0,\n);\n\nexport type ComplementarityBreakdown = {\n  score: number; // 0..1\n  strengthCoverage: number;\n  gapFilling: number;\n  sharedFoundation: number;\n  growthPotential: number;\n};\n\nexport function complementarityScore(a: number[], b: number[]): ComplementarityBreakdown {\n  let coverageSum = 0;\n  let gapSum = 0;\n  let gapCount = 0;\n  let sharedSum = 0;\n  let sharedCount = 0;\n  let growthSum = 0;\n  let growthCount = 0;\n\n  for (const i of MATCH_AXIS_INDICES) {\n    const ai = a[i] ?? 0;\n    const bi = b[i] ?? 0;\n\n    // 1. Strength coverage — together, how much of the spectrum is covered?\n    coverageSum += Math.max(ai, bi);\n\n    // 2. Gap filling — one is weak (<0.4) exactly where the other is strong (>0.7).\n    if ((ai < 0.4 && bi > 0.7) || (bi < 0.4 && ai > 0.7)) {\n      gapSum += Math.abs(ai - bi);\n      gapCount++;\n    }\n\n    // 3. Shared foundation — where both are solid, how similar are they?\n    if (ai > 0.5 && bi > 0.5) {\n      sharedSum += 1 - Math.abs(ai - bi);\n      sharedCount++;\n    }\n\n    // 4. Growth potential — mentorship headroom, both directions.\n    if (ai < 0.5 && bi > 0.6) {\n      growthSum += bi - ai;\n      growthCount++;\n    }\n    if (bi < 0.5 && ai > 0.6) {\n      growthSum += ai - bi;\n      growthCount++;\n    }\n  }\n\n  const n = MATCH_AXIS_INDICES.length;\n  const strengthCoverage = coverageSum / n;\n  const gapFilling = gapCount > 0 ? gapSum / gapCount : 0;\n  const sharedFoundation = sharedCount > 0 ? sharedSum / sharedCount : 0;\n  const growthPotential = growthCount > 0 ? growthSum / growthCount : 0;\n\n  const score =\n    MATCH_WEIGHTS.strengthCoverage * strengthCoverage +\n    MATCH_WEIGHTS.gapFilling * gapFilling +\n    MATCH_WEIGHTS.sharedFoundation * sharedFoundation +\n    MATCH_WEIGHTS.growthPotential * growthPotential;\n\n  return { score, strengthCoverage, gapFilling, sharedFoundation, growthPotential };\n}\n\n// Quality floor + display tiers, straight from the schematic.\nexport const MATCH_FLOOR = 0.55;\n\nexport function matchTier(score: number): { label: string; blurb: string } | null {\n  if (score >= 0.85)\n    return {\n      label: \"Exceptional Match\",\n      blurb: \"Rare complementarity — together, significantly stronger than either alone.\",\n    };\n  if (score >= 0.7)\n    return { label: \"Strong Match\", blurb: \"Meaningful complementarity with good shared foundation.\" };\n  if (score >= MATCH_FLOOR)\n    return { label: \"Good Match\", blurb: \"Solid potential — some gaps filled, some shared ground.\" };\n  return null; // never surface weak matches\n}\n\n// The card copy: the axes where their strength most dramatically fills your gap\n// (and vice versa), sorted by how dramatic the fill is.\nexport type ComplementAxis = { axis: string; direction: \"they_fill\" | \"you_fill\"; delta: number };\n\nexport function topComplementaryAxes(mine: number[], theirs: number[], limit = 3): ComplementAxis[] {\n  const out: ComplementAxis[] = [];\n  for (const i of MATCH_AXIS_INDICES) {\n    const m = mine[i] ?? 0;\n    const t = theirs[i] ?? 0;\n    if (m < 0.4 && t > 0.7) out.push({ axis: ALL_AXES[i], direction: \"they_fill\", delta: t - m });\n    else if (t < 0.4 && m > 0.7) out.push({ axis: ALL_AXES[i], direction: \"you_fill\", delta: m - t });\n  }\n  return out.sort((a, b) => b.delta - a.delta).slice(0, limit);\n}\n"
+ },
+ "growthLoop": {
+  "quickWins": [
+   {
+    "id": "qw-walk",
+    "name": "The Daily 20",
+    "dose": "20-minute brisk walk, outside if possible",
+    "why": "The best-evidenced all-purpose intervention there is — mood, energy, and cognition all respond within days."
+   },
+   {
+    "id": "qw-sleep",
+    "name": "Anchor Your Wake Time",
+    "dose": "Same wake-up time every day, light within 30 minutes",
+    "why": "One anchor stabilizes the whole sleep system — and sleep gates every other line you're about to measure."
+   },
+   {
+    "id": "qw-log",
+    "name": "The Three-Minute Log",
+    "dose": "Each evening: what you did, how it felt, one sentence each",
+    "why": "You're rehearsing the exact tracking habit the whole platform runs on — starting now makes month one effortless."
+   }
+  ],
+  "ladderTiers": [
+   {
+    "tier": 1,
+    "window": "Weeks 1–2",
+    "rule": "ONE practice, small dose. Your only job is showing up.",
+    "count": 1
+   },
+   {
+    "tier": 2,
+    "window": "Weeks 3–4",
+    "rule": "Add a second practice once the first survives two weeks.",
+    "count": 2
+   },
+   {
+    "tier": 3,
+    "window": "Month 2+",
+    "rule": "Add this month's ecological driver. Three running, none heroic.",
+    "count": 3
+   }
+  ],
+  "doseCurve": [
+   {
+    "minutes": 7,
+    "effect": 40,
+    "label": "the floor that still works"
+   },
+   {
+    "minutes": 15,
+    "effect": 75,
+    "label": "the sweet spot"
+   },
+   {
+    "minutes": 30,
+    "effect": 95,
+    "label": "near-max — more is mostly polish"
+   }
+  ],
+  "strengthChallenges": {
+   "Logical": "Find one decision you're avoiding and write the actual argument for each side — five premises each, then decide.",
+   "Mathematical": "Put numbers on something you've only felt: your real hourly cost of a habit, the compound value of a monthly saving.",
+   "Spatial": "Redesign one physical space you use daily — sketch it, then move three things. Live in the new layout a week.",
+   "Linguistic": "Write a 500-word letter to someone you've been meaning to thank. Send it.",
+   "Volitional": "Pick the task you've dodged longest. Do the first 25 minutes before noon, three days this week.",
+   "Meta-Cognitive": "Predict how three decisions will turn out — write the predictions down. Score yourself at week's end.",
+   "Intrapersonal": "Fifteen minutes, three evenings: write what you actually felt today and what triggered it. No editing.",
+   "Reflective": "Reread something you wrote a year ago. Write one page on who's changed — you or your circumstances.",
+   "Existential": "Write your own obituary the way you hope it reads. Circle the one sentence you're not yet living.",
+   "Philosophical": "Take a belief you hold firmly and argue the opposite for one page — steelman, not strawman.",
+   "Integrative": "Take two unrelated ideas from your week and force a connection: one paragraph on what each teaches the other.",
+   "Interpersonal": "Have one conversation this week where your only job is questions. No stories of your own until they ask.",
+   "Empathic": "Pick someone who frustrated you. Write their side of it so well they'd say 'yes — exactly.'",
+   "Intuitive": "Before three meetings or calls, write one sentence predicting the mood you'll walk into. Check yourself after.",
+   "Musical": "Learn 60 seconds of a song — voice or any instrument. Play it for one human being.",
+   "Kinesthetic": "Learn one physical skill-bite this week: juggle two balls, hold a 60-second plank, land a dance step.",
+   "Naturalistic": "Spend one hour somewhere green with no phone. Name five living things you've never bothered to notice.",
+   "Strategic": "Map one goal three moves deep: your move, the world's likely response, your counter. Write it down.",
+   "Tactical": "Take something you've planned to death and ship the ugly version this week. Done teaches faster than perfect.",
+   "Adaptive": "Break one routine on purpose — new route, new tool, new order. Note what the friction teaches you.",
+   "Resilient": "Do one hard thing you'd normally avoid, then write down: it did not break me. Evidence accumulates.",
+   "Systematic": "Diagram one recurring mess in your life as a system: what feeds it, what it feeds. Find the loop.",
+   "Architectural": "Design something end-to-end on paper this week — a room, a course, a product — every layer labeled.",
+   "Adversarial": "Negotiate one real thing this week — a bill, a price, a deadline. Open with a number. Debrief in two lines.",
+   "Interoceptive": "Three times a day, pause: where is tension sitting in your body right now? Name the spot out loud.",
+   "Aesthetic": "Make one corner of your world deliberately beautiful this week — then notice who else notices.",
+   "Influence": "Pitch one idea to one person this week with a clear ask at the end. Count the yes.",
+   "Humor": "Collect three things that made you laugh this week and retell one — landing a laugh is a rep.",
+   "Parenting": "Give someone younger 30 undistracted minutes: their agenda, your full attention, zero advice unless asked.",
+   "Seduction": "Give three genuine, specific compliments to three different people this week. Specific beats smooth.",
+   "Community-Founding": "Gather people once this week — a dinner, a game, a walk. You call it, you host it.",
+   "Financial-Self-Management": "Automate one money move this week — a transfer, a payment, a rule — so future-you can't forget it."
+  }
+ },
+ "questions": {
+  "orderedTitles": [
+   "The Theme Park",
+   "The Superpower Trial",
+   "The Jet",
+   "The Road Trip",
+   "The Zoo of Impossible Animals",
+   "The Blueprint",
+   "The Seven Perfect Things",
+   "The Dream Concert",
+   "The App That Prints Money",
+   "The Island",
+   "The Half-Million Build",
+   "System Redesign",
+   "The Casino Night",
+   "One Hundred Million",
+   "The Mentor Windfall",
+   "The Charm Offensive",
+   "The Negotiation",
+   "Two People You Love",
+   "Parallel Dinner",
+   "The Peak-You Year",
+   "The Underdog Bet",
+   "The Goal Pre-Mortem",
+   "The Signature Move",
+   "The Founder's Grip",
+   "The Unsaid Thing",
+   "The Standing Ovation",
+   "The Torch You Pass"
+  ],
+  "count": 27
+ },
+ "library": {
+  "clusterSchema": [
+   "id",
+   "title",
+   "evidence",
+   "conclusion",
+   "links"
+  ],
+  "samples": [
+   {
+    "id": "sys-centrality",
+    "title": "Which Weakness Controls the Others — Network Centrality",
+    "evidence": "Emerging",
+    "conclusion": "Traits behave as a web of mutually reinforcing nodes, not symptoms of one hidden cause. The most central node — highest expected influence — is the one whose change ripples furthest through the rest. This is the rigorous form of “which weakness has the most controlling influence over the others.” Honest boundary: what centrality means in psychological networks is actively debated, so we treat “your most central weakness” as a model-based hypothesis to confirm on our own cohort, not a settled fact.",
+    "links": [
+     {
+      "cite": "Borsboom, D., & Cramer, A. O. J. (2013). Network analysis: An integrative approach to the structure of psychopathology. Annual Review of Clinical Psychology, 9, 91–121.",
+      "link": "https://doi.org/10.1146/annurev-clinpsy-050212-185608"
+     },
+     {
+      "cite": "Robinaugh, D. J., Millner, A. J., & McNally, R. J. (2016). Identifying highly influential nodes in the complicated grief network. Journal of Abnormal Psychology, 125(6), 747–757.",
+      "link": "https://scholar.google.com/scholar?q=Robinaugh%20Millner%20McNally%202016%20highly%20influential%20nodes%20complicated%20grief%20network"
+     },
+     {
+      "cite": "Bringmann, L. F., Elmer, T., Epskamp, S., et al. (2019). What do centrality measures measure in psychological networks? Journal of Abnormal Psychology, 128(8), 892–903.",
+      "link": "https://doi.org/10.1037/abn0000446"
+     },
+     {
+      "cite": "Hallquist, M. N., Wright, A. G. C., & Molenaar, P. C. M. (2021). Problems with centrality measures in psychopathology symptom networks: Why network psychometrics cannot escape psychometric theory. Multivariate Behavioral Research, 56(2), 199–223.",
+      "link": "https://doi.org/10.1080/00273171.2019.1640103"
+     },
+     {
+      "cite": "Dablander, F., & Hinne, M. (2019). Node centrality measures are a poor substitute for causal inference. Scientific Reports, 9, 6846.",
+      "link": "https://doi.org/10.1038/s41598-019-43033-9"
+     },
+     {
+      "cite": "Forbes, M. K., Wright, A. G. C., Markon, K. E., & Krueger, R. F. (2017). Evidence that psychopathology symptom networks have limited replicability. Journal of Abnormal Psychology, 126(7), 969–988.",
+      "link": "https://doi.org/10.1037/abn0000276"
+     },
+     {
+      "cite": "Robinaugh, D. J., Millner, A. J., & McNally, R. J. (2016). Identifying highly influential nodes in the complicated grief network. Journal of Abnormal Psychology, 125(6), 747–757.",
+      "link": "https://doi.org/10.1037/abn0000181"
+     },
+     {
+      "cite": "Jones, P. J., Ma, R., & McNally, R. J. (2019). Bridge centrality: A network approach to understanding comorbidity. Multivariate Behavioral Research, 54(5), 698–712.",
+      "link": "https://doi.org/10.1080/00273171.2019.1614898"
+     },
+     {
+      "cite": "Rodebaugh, T. L., Tonge, N. A., Piccirillo, M. L., et al. (2018). Does centrality in a cross-sectional network suggest intervention targets for social anxiety disorder? Journal of Consulting and Clinical Psychology, 86(10), 831–844.",
+      "link": "https://doi.org/10.1037/ccp0000336"
+     },
+     {
+      "cite": "Haslbeck, J. M. B., & Waldorp, L. J. (2018). How well do network models predict observations? On the importance of predictability in network models. Behavior Research Methods, 50(6), 2521–2543.",
+      "link": "https://doi.org/10.3758/s13428-018-1010-2"
+     },
+     {
+      "cite": "Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195–212.",
+      "link": "https://doi.org/10.3758/s13428-017-0862-1"
+     },
+     {
+      "cite": "Epskamp, S., Waldorp, L. J., Mõttus, R., & Borsboom, D. (2018). The Gaussian graphical model in cross-sectional and time-series data. Multivariate Behavioral Research, 53(4), 453–480.",
+      "link": "https://doi.org/10.1080/00273171.2018.1454823"
+     },
+     {
+      "cite": "Fried, E. I., & Cramer, A. O. J. (2017). Moving forward: Challenges and directions for psychopathological network analysis. Perspectives on Psychological Science, 12(6), 999–1020.",
+      "link": "https://doi.org/10.1177/1745691617705892"
+     },
+     {
+      "cite": "Guloksuz, S., Pries, L.-K., & van Os, J. (2017). Application of network theory to psychopathology: A critical review and conceptual framework. Schizophrenia Bulletin, 43(2), 197–209.",
+      "link": "https://doi.org/10.1093/schbul/sbw099"
+     },
+     {
+      "cite": "Robinaugh, D. J., Hoekstra, R. H. A., Toner, E. R., & Borsboom, D. (2020). The network approach to psychopathology: A review of the literature 2010–2019 and an agenda for future research. Psychological Medicine, 50(3), 353–366.",
+      "link": "https://doi.org/10.1017/S0033291719003404"
+     }
+    ]
+   },
+   {
+    "id": "sys-weakest-link",
+    "title": "The Weakest Link Caps the Whole — Bottleneck & O-Ring",
+    "evidence": "Strong",
+    "conclusion": "A profile is not the average of its lines — a single deficiency can cap the whole outcome no matter how strong the rest. Liebig's Law of the Minimum (growth limited by the scarcest input) and Kremer's O-Ring theory (one faulty component ruins the finished product) are the rigorous forms of “your weakest cluster sinks your best strengths.” This is why weakness-shielding, not just strength-maximizing, is core to the platform.",
+    "links": [
+     {
+      "cite": "Kremer, M. (1993). The O-Ring theory of economic development. The Quarterly Journal of Economics, 108(3), 551–575.",
+      "link": "https://doi.org/10.2307/2118400"
+     },
+     {
+      "cite": "Liebig's Law of the Minimum — limiting-factor theory applied to human performance and organizations.",
+      "link": "https://scholar.google.com/scholar?q=Liebig%20law%20of%20the%20minimum%20limiting%20factor%20human%20performance%20organizations"
+     },
+     {
+      "cite": "Goldratt, E. M. (1990). What Is This Thing Called Theory of Constraints and How Should It Be Implemented? North River Press.",
+      "link": "https://scholar.google.com/scholar?q=Goldratt%20Theory%20of%20Constraints%20what%20is%20this%20thing%20called%20how%20should%20it%20be%20implemented"
+     },
+     {
+      "cite": "Blackstone, J. H. (2001). Theory of constraints — a status report. International Journal of Production Research, 39(6), 1053–1080.",
+      "link": "https://scholar.google.com/scholar?q=Blackstone%202001%20Theory%20of%20constraints%20a%20status%20report%20International%20Journal%20of%20Production%20Research"
+     }
+    ]
+   },
+   {
+    "id": "sys-mutualism-keystone",
+    "title": "One Strength Lifts the Rest — Mutualism & Keystone Effects",
+    "evidence": "Moderate",
+    "conclusion": "Strengths don't just co-occur — they pull each other up. The mutualism model shows cognitive abilities reciprocally reinforce each other in development (why strong minds tend to be broadly strong), and “keystone” research shows a single sustained habit spilling over into unrelated domains. Together: sharpening the right strength can raise the entire profile.",
+    "links": [
+     {
+      "cite": "van der Maas, H. L. J., Dolan, C. V., Grasman, R. P. P. P., et al. (2006). A dynamical model of general intelligence: The positive manifold of intelligence by mutualism. Psychological Review, 113(4), 842–861.",
+      "link": "https://doi.org/10.1037/0033-295X.113.4.842"
+     },
+     {
+      "cite": "Oaten, M., & Cheng, K. (2006). Longitudinal gains in self-regulation from regular physical exercise. British Journal of Health Psychology, 11(4), 717–733.",
+      "link": "https://scholar.google.com/scholar?q=Oaten%20Cheng%202006%20longitudinal%20gains%20self-regulation%20regular%20physical%20exercise"
+     }
+    ]
+   },
+   {
+    "id": "sys-leverage",
+    "title": "Where to Intervene, and How to Hold It — Leverage Points & Tracking",
+    "evidence": "Moderate",
+    "conclusion": "Not all interventions are equal — a few nodes are high-leverage (a small change moves everything), most are not. Meadows' leverage-points hierarchy is the map for choosing which node to enhance or deplete. And implementation-intention research (if-then plans) is the evidence base for the tracking that keeps a targeted weakness from unconsciously derailing goals.",
+    "links": [
+     {
+      "cite": "Meadows, D. H. (1999). Leverage Points: Places to Intervene in a System. The Sustainability Institute.",
+      "link": "https://scholar.google.com/scholar?q=Meadows%201999%20Leverage%20Points%20Places%20to%20Intervene%20in%20a%20System"
+     },
+     {
+      "cite": "Gollwitzer, P. M., & Sheeran, P. (2006). Implementation intentions and goal achievement: A meta-analysis of effects and processes. Advances in Experimental Social Psychology, 38, 69–119.",
+      "link": "https://doi.org/10.1016/S0065-2601(06)38002-1"
+     }
+    ]
+   },
+   {
+    "id": "sys-matching",
+    "title": "Complementary Matching — Collective Intelligence",
+    "evidence": "Moderate",
+    "conclusion": "The network reaches past one person: a partner whose strengths cover your blind spots measurably raises joint performance. The collective-intelligence “c factor” shows group ability depends on composition and social sensitivity, not just individual IQ. Honest boundary: diversity helps on an inverted-U — too much hurts coordination — so matching is tuned, not maximized.",
+    "links": [
+     {
+      "cite": "Woolley, A. W., Chabris, C. F., Pentland, A., Hashmi, N., & Malone, T. W. (2010). Evidence for a collective intelligence factor in the performance of human groups. Science, 330(6004), 686–688.",
+      "link": "https://doi.org/10.1126/science.1193147"
+     },
+     {
+      "cite": "Aggarwal, I., Woolley, A. W., Chabris, C. F., & Malone, T. W. (2019). The impact of cognitive style diversity on implicit learning in teams. Frontiers in Psychology, 10, 112.",
+      "link": "https://doi.org/10.3389/fpsyg.2019.00112"
+     }
+    ]
+   },
+   {
+    "id": "p-1a",
+    "title": "Strength & Resistance Training",
+    "evidence": "Strong",
+    "conclusion": "Resistance training is among the most robustly evidenced levers for longevity and daily function, and it builds the volitional follow-through that sits downstream of every other line. Bolsters clusters: body-disconnect, burnout-pattern, imposter-complex. Honest note: mortality findings come from large cohorts — associated with better outcomes, never a guarantee for any one person.",
+    "links": [
+     {
+      "cite": "Shailendra, Boyle et al. (2022). Resistance training and mortality. American Journal of Preventive Medicine.",
+      "link": "https://scholar.google.com/scholar?q=Shailendra%20Boyle%20resistance%20training%20mortality%20American%20Journal%20of%20Preventive%20Medicine%202022"
+     },
+     {
+      "cite": "Overview of systematic reviews (2021). Applied Physiology, Nutrition, and Metabolism.",
+      "link": "https://scholar.google.com/scholar?q=overview%20of%20systematic%20reviews%20resistance%20training%20mortality%20functioning%20Applied%20Physiology%20Nutrition%20Metabolism%202021"
+     },
+     {
+      "cite": "Weight training and mortality in older adults (2024). International Journal of Epidemiology.",
+      "link": "https://scholar.google.com/scholar?q=weight%20training%20mortality%20older%20adults%20International%20Journal%20of%20Epidemiology%202024"
+     },
+     {
+      "cite": "Combined resistance + cognitive training review, older adults.",
+      "link": "https://scholar.google.com/scholar?q=combined%20resistance%20cognitive%20training%20older%20adults%20strength%20bone%20balance%20falls%20review"
+     },
+     {
+      "cite": "Resistance training and all-cause mortality, NHANES 1999–2006 (PMC11562137).",
+      "link": "https://scholar.google.com/scholar?q=resistance%20training%20all-cause%20mortality%20NHANES%201999-2006%20PMC11562137"
+     }
+    ]
+   }
+  ]
+ }
+}
