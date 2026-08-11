@@ -43,6 +43,12 @@ const JOBS: HeartbeatJob[] = [
     path: "/api/scheduled/message-digest",
     description: "Unread-messages email digest (count only, never content; max one per member per day).",
   },
+  {
+    name: "aqal-reentry",
+    cron: "0 0 16 * * *", // daily 16:00 UTC
+    path: "/api/scheduled/reentry",
+    description: "One-time 'before you quit' re-entry email for members 30+ days stalled mid-assessment.",
+  },
 ];
 
 export async function ensureScheduledJobs(): Promise<void> {

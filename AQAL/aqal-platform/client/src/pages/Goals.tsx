@@ -12,6 +12,9 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import { whatWouldItTake, monthStreak } from "@shared/growthEngine";
+import { fmtMonths } from "@shared/goalClock";
+import CrisisSupport from "@/components/CrisisSupport";
 
 const INK = "#141009";
 const INK2 = "#1B1610";
@@ -74,6 +77,10 @@ export default function Goals() {
   const q = trpc.goals.list.useQuery(undefined, { enabled: !!user, retry: false });
   const [newTitle, setNewTitle] = useState("");
   const [logDraft, setLogDraft] = useState<Record<number, { hours: string; note: string }>>({});
+  // One-Thing focus mode: hide everything but a single goal. Simplicity = compliance.
+  const [focusId, setFocusId] = useState<number | null>(null);
+  const [wwitOpen, setWwitOpen] = useState<Record<number, boolean>>({});
+  const [showCrisis, setShowCrisis] = useState(false);
 
   const create = trpc.goals.create.useMutation({
     onSuccess: (r) => { toast.success(`Goal added — mapped to the "${r.template}" staircase.`); setNewTitle(""); utils.goals.list.invalidate(); },
@@ -81,11 +88,16 @@ export default function Goals() {
   });
   const toggle = trpc.goals.toggleStage.useMutation({ onSuccess: () => utils.goals.list.invalidate() });
   const logEffort = trpc.goals.logEffort.useMutation({
-    onSuccess: () => { toast.success("Effort logged — clock updated."); utils.goals.list.invalidate(); },
+    onSuccess: (res) => {
+      toast.success("Effort logged — clock updated.");
+      if ((res as { crisis?: boolean })?.crisis) setShowCrisis(true);
+      utils.goals.list.invalidate();
+    },
   });
   const setStatus = trpc.goals.setStatus.useMutation({ onSuccess: () => utils.goals.list.invalidate() });
 
-  const activeGoals = (q.data ?? []).filter((g) => g.status === "active" || g.status === "achieved");
+  const allActive = (q.data ?? []).filter((g) => g.status === "active" || g.status === "achieved");
+  const activeGoals = focusId ? allActive.filter((g) => g.id === focusId) : allActive;
 
   return (
     <div className="min-h-screen relative" style={{ background: INK }}>
@@ -129,6 +141,19 @@ export default function Goals() {
               </button>
             </div>
 
+            {/* Focus-mode banner */}
+            {focusId && (
+              <div className="flex items-center justify-between gap-3 mb-6 rounded-xl px-4 py-3" style={{ border: `1px solid ${CHAMPAGNE}44`, background: "rgba(224,198,140,0.06)" }}>
+                <span style={{ ...mono, fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: CHAMPAGNE }}>
+                  ◎ Focus mode — one goal, everything else paused
+                </span>
+                <button onClick={() => setFocusId(null)}
+                  style={{ ...mono, fontSize: "10px", letterSpacing: "0.08em", textTransform: "uppercase", background: "none", border: 0, color: CREAM2, cursor: "pointer" }}>
+                  Show all goals
+                </button>
+              </div>
+            )}
+
             {q.data && activeGoals.length === 0 && (
               <div style={{ border: `1px solid ${LINE_C}`, borderRadius: "12px", padding: "26px", color: CREAM2 }}>
                 No goals on the clock yet. State your first one above — it gets decomposed into a requirement staircase
@@ -150,15 +175,58 @@ export default function Goals() {
                           {CLOCK_LABEL[g.clock.state]}
                         </div>
                       </div>
-                      <button onClick={() => setStatus.mutate({ goalId: g.id, status: "retired" })}
-                        title="Retire this goal"
-                        style={{ ...mono, fontSize: "9px", letterSpacing: "0.08em", textTransform: "uppercase", background: "none", border: 0, color: MUTED, cursor: "pointer" }}>
-                        Retire
-                      </button>
+                      <span className="flex items-center gap-3">
+                        {monthStreak(g.logs.map((l) => l.month)) >= 2 && (
+                          <span title="Consecutive months logged"
+                            style={{ ...mono, fontSize: "10px", color: CHAMPAGNE }}>
+                            🔥 {monthStreak(g.logs.map((l) => l.month))}-month streak
+                          </span>
+                        )}
+                        {!focusId && (
+                          <button onClick={() => setFocusId(g.id)} title="Focus on only this goal"
+                            style={{ ...mono, fontSize: "9px", letterSpacing: "0.08em", textTransform: "uppercase", background: "none", border: 0, color: CHAMPAGNE, cursor: "pointer" }}>
+                            ◎ Focus
+                          </button>
+                        )}
+                        <button onClick={() => setStatus.mutate({ goalId: g.id, status: "retired" })}
+                          title="Retire this goal"
+                          style={{ ...mono, fontSize: "9px", letterSpacing: "0.08em", textTransform: "uppercase", background: "none", border: 0, color: MUTED, cursor: "pointer" }}>
+                          Retire
+                        </button>
+                      </span>
                     </div>
-                    <p style={{ color: g.clock.state === "never" ? EMBER : CREAM2, fontSize: "14px", lineHeight: 1.55, marginBottom: "16px" }}>
+                    <p style={{ color: g.clock.state === "never" ? EMBER : CREAM2, fontSize: "14px", lineHeight: 1.55, marginBottom: "10px" }}>
                       {g.clock.headline}
                     </p>
+
+                    {/* WHAT WOULD IT TAKE — the honest price tag, itemized */}
+                    <button onClick={() => setWwitOpen((o) => ({ ...o, [g.id]: !o[g.id] }))}
+                      style={{ ...mono, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", background: "none", border: 0, color: JADE, cursor: "pointer", padding: 0, marginBottom: "12px" }}>
+                      {wwitOpen[g.id] ? "▾ Hide the price tag" : "▸ What would it take?"}
+                    </button>
+                    {wwitOpen[g.id] && (() => {
+                      const w = whatWouldItTake(g.stages, g.baselineMonths);
+                      return w.rows.length > 0 ? (
+                        <div className="mb-4 rounded-xl px-4 py-3" style={{ border: `1px solid ${JADE}33`, background: "rgba(155,192,178,0.05)" }}>
+                          <p style={{ ...mono, fontSize: "9.5px", letterSpacing: "0.14em", textTransform: "uppercase", color: JADE, marginBottom: "8px" }}>
+                            The itemized price, at real effort ({g.minMonthlyHours}h/month)
+                          </p>
+                          {w.rows.map((r) => (
+                            <div key={r.stage} className="flex items-baseline justify-between gap-3 py-1">
+                              <span style={{ fontSize: "13px", color: CREAM2 }}>{r.stage}</span>
+                              <span style={{ ...mono, fontSize: "11px", color: CREAM, whiteSpace: "nowrap" }}>~{fmtMonths(r.months)}</span>
+                            </div>
+                          ))}
+                          <div className="flex items-baseline justify-between gap-3 pt-2 mt-1" style={{ borderTop: `1px solid ${LINE_C}` }}>
+                            <span style={{ fontSize: "13px", color: CREAM, fontWeight: 600 }}>Total, from where you stand</span>
+                            <span style={{ ...mono, fontSize: "12px", color: JADE, fontWeight: 700 }}>~{fmtMonths(w.totalMonths)}</span>
+                          </div>
+                          <p style={{ fontSize: "11.5px", color: MUTED, marginTop: "8px", lineHeight: 1.5 }}>
+                            That's the honest bill. Pay it, or trade for a goal shaped more like you — both are winning moves.
+                          </p>
+                        </div>
+                      ) : null;
+                    })()}
 
                     <div className="grid gap-6" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))" }}>
                       {/* The staircase */}
@@ -213,6 +281,7 @@ export default function Goals() {
           </>
         )}
       </div>
+      {showCrisis && <CrisisSupport onClose={() => setShowCrisis(false)} />}
       <PublicFooter />
     </div>
   );

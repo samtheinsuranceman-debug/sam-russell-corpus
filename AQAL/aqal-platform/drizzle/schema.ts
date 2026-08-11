@@ -572,3 +572,36 @@ export const goalLogs = mysqlTable("goal_logs", {
 });
 
 export type GoalLog = typeof goalLogs.$inferSelect;
+
+// PROTOCOL RATINGS — member stars per prescribed practice (1-5, monthly).
+// Feeds the learning loop: evidence_weight × observed member experience.
+export const protocolRatings = mysqlTable("protocol_ratings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  practiceId: varchar("practiceId", { length: 64 }).notNull(),
+  stars: int("stars").notNull(), // 1-5
+  month: varchar("month", { length: 7 }).notNull(), // YYYY-MM
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+// WEEKLY PULSE — one short between-cycles check-in on the weakest line.
+export const pulseChecks = mysqlTable("pulse_checks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  line: varchar("line", { length: 64 }).notNull(),
+  text: text("text").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+// CRISIS FLAGS — deterministic safety-net hits on member-submitted content
+// (assessment answers, tracker/pulse logs — never private messages).
+// Queue for human review; the member sees the support-resources panel.
+export const crisisFlags = mysqlTable("crisis_flags", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  source: varchar("source", { length: 40 }).notNull(), // "assessment" | "pulse" | "goal_log"
+  excerpt: varchar("excerpt", { length: 300 }), // minimal context, not the full text
+  status: mysqlEnum("status", ["open", "reviewed"]).default("open").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  reviewedAt: timestamp("reviewedAt"),
+});

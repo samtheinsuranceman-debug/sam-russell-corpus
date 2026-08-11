@@ -11,6 +11,8 @@ import { trpc } from "@/lib/trpc";
 import AssessmentResumeDialog from "@/components/AssessmentResumeDialog";
 import { ALL_AXES } from "@shared/axisModes";
 import { splitTranscript, type TranscriptSegment } from "@shared/transcriptSplit";
+import { QUICK_WINS, dayStreak } from "@shared/growthEngine";
+import CrisisSupport from "@/components/CrisisSupport";
 import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 import { GOALS_QUESTION_IDS, GOALS_QUESTION_INDICES } from "@shared/goalsQuestions";
 
@@ -871,6 +873,26 @@ function AssessmentManifesto({ companion, onBegin }: { companion: boolean; onBeg
             </p>
 
             <p className="text-foreground/90">Have fun. Then begin.</p>
+
+            {/* QUICK WINS — start improving in week one, while the map is still drawing */}
+            <div className="mt-6 rounded-2xl border border-accent/25 bg-accent/[0.05] p-5 text-left">
+              <p className="text-[0.62rem] uppercase tracking-[0.2em] text-accent/80 mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Start winning before you're even measured
+              </p>
+              <p className="text-sm text-foreground/80 leading-relaxed mb-3">
+                Your personal prescriptions arrive when your map is complete. These three work for{" "}
+                <span className="text-accent font-semibold">every human alive</span> — start any one today:
+              </p>
+              <div className="grid gap-2.5 sm:grid-cols-3">
+                {QUICK_WINS.map((w) => (
+                  <div key={w.id} className="rounded-lg border border-border/40 bg-background/40 px-3 py-2.5">
+                    <p className="text-sm font-semibold text-foreground mb-0.5">{w.name}</p>
+                    <p className="text-[0.7rem] text-accent/90 mb-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{w.dose}</p>
+                    <p className="text-xs text-muted-foreground/80 leading-snug">{w.why}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </motion.div>
 
           {companion && (
@@ -972,6 +994,10 @@ export default function Assessment() {
   const micPrimedRef = useRef(false);
   const utils = trpc.useUtils();
   const firstInsightShownRef = useRef(false);
+  // Crisis safety net + the day-streak flame.
+  const [showCrisis, setShowCrisis] = useState(false);
+  const answerDaysQ = trpc.growth.answerDays.useQuery(undefined, { enabled: !!user, staleTime: 60_000, retry: false });
+  const streak = dayStreak(answerDaysQ.data ?? []);
 
   // ── Incremental background upload ─────────────────────────────
   // Ensure the server-side assessment exists (once), then push each answer up
@@ -1003,7 +1029,8 @@ export default function Assessment() {
       const aId = await ensureAssessment();
       if (!aId) return; // not logged in / start failed — final submit will handle it
       if (transcript.trim().length > 0) {
-        await submitTextMutation.mutateAsync({ assessmentId: aId, questionIndex: index, text: transcript.trim() });
+        const res = await submitTextMutation.mutateAsync({ assessmentId: aId, questionIndex: index, text: transcript.trim() });
+        if ((res as { crisis?: boolean })?.crisis) setShowCrisis(true);
       } else if (blob) {
         const arrayBuffer = await blob.arrayBuffer();
         const base64 = btoa(new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ""));
@@ -1102,7 +1129,8 @@ export default function Assessment() {
       let ok = 0;
       for (const seg of txtReview) {
         try {
-          await submitTextMutation.mutateAsync({ assessmentId: aId, questionIndex: seg.question - 1, text: seg.text });
+          const segRes = await submitTextMutation.mutateAsync({ assessmentId: aId, questionIndex: seg.question - 1, text: seg.text });
+          if ((segRes as { crisis?: boolean })?.crisis) setShowCrisis(true);
           setTextResponses((prev) => { const n = [...prev]; n[seg.question - 1] = seg.text; return n; });
           setUploadedIdx((u) => ({ ...u, [seg.question - 1]: true }));
           ok++;
@@ -2888,6 +2916,18 @@ export default function Assessment() {
             </div>
           )}
 
+          {/* DAY-STREAK FLAME — visible momentum; loss aversion does the rest */}
+          {streak >= 2 && (
+            <div className="mt-6 flex justify-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/[0.07] px-4 py-1.5"
+                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", letterSpacing: "0.08em" }}>
+                <span aria-hidden>🔥</span>
+                <span className="text-accent font-bold">{streak}-day streak</span>
+                <span className="text-muted-foreground/70">— one question today keeps it alive</span>
+              </span>
+            </div>
+          )}
+
           {/* PACING BANNER — every 3rd question, large, at the bottom of the
               screen. 27 questions in one sitting is a genuine brain drain:
               performance degrades as cognitive fatigue builds, which corrupts
@@ -2917,6 +2957,8 @@ export default function Assessment() {
               </p>
             </motion.div>
           )}
+
+          {showCrisis && <CrisisSupport onClose={() => setShowCrisis(false)} />}
 
           {/* Transcript review modal — confirm the question mapping before submit */}
           {txtReview && (

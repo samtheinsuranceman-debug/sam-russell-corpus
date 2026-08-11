@@ -169,6 +169,13 @@
       "when": 1786130712513,
       "tag": "0023_natural_albert_cleary",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1786447155255,
+      "tag": "0024_soft_domino",
+      "breakpoints": true
     }
   ]
 }

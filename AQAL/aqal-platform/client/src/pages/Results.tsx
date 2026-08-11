@@ -20,6 +20,8 @@ import { buildTrackerMarkdown } from "@shared/behavioralTracker";
 import { starvationForLine } from "./archetypesData";
 import { keystoneForLine, ecologicalDriverForMonth } from "@shared/keystonePractices";
 import { therapiesForLine } from "@shared/therapyLineMap";
+import { LADDER_TIERS, DOSE_CURVE, challengeForWeek } from "@shared/growthEngine";
+import CrisisSupport from "@/components/CrisisSupport";
 
 // The full 32-line profile, in the order defined by the single source of truth.
 const AXIS_LABELS = ALL_AXES;
@@ -1365,6 +1367,219 @@ function StarvedLineOnRamp({ scores }: { scores: number[] }) {
   );
 }
 
+// ============================================================
+// GROWTH STUDIO — the living month, right on the results page
+// ============================================================
+// The ladder (how prescriptions roll out), the dose curve (something beats
+// nothing), this week's strength challenge, the weekly pulse on the weakest
+// line, the what-changed report, prescription star-ratings, and export.
+function GrowthStudio({ scores }: { scores: number[] }) {
+  const utils = trpc.useUtils();
+  const [pulseText, setPulseText] = useState("");
+  const [showCrisis, setShowCrisis] = useState(false);
+  const changed = trpc.growth.whatChanged.useQuery(undefined, { retry: false });
+  const pulses = trpc.growth.pulseHistory.useQuery(undefined, { retry: false });
+  const ratings = trpc.growth.myRatings.useQuery(undefined, { retry: false });
+  const rate = trpc.growth.rateProtocol.useMutation({ onSuccess: () => utils.growth.myRatings.invalidate() });
+  const sendPulse = trpc.growth.submitPulse.useMutation({
+    onSuccess: (r) => {
+      toast.success("Pulse logged — your weakest line just got a data point.");
+      if (r.flagged) setShowCrisis(true);
+      setPulseText("");
+      utils.growth.pulseHistory.invalidate();
+    },
+    onError: (e) => toast.error(e.message || "Couldn't save your pulse."),
+  });
+
+  const ranked = scores
+    .map((s, i) => ({ line: AXIS_LABELS[i], score: s }))
+    .filter((x) => x.score > 0);
+  const topLines = [...ranked].sort((a, b) => b.score - a.score).slice(0, 3).map((x) => x.line);
+  const weakest = [...ranked].sort((a, b) => a.score - b.score).find((x) => !VOICE_HARD_LINES.has(x.line));
+  const weekly = challengeForWeek(topLines);
+  const month = new Date().toISOString().slice(0, 7);
+  const rxPractice = weakest ? keystoneForLine(weakest.line) : undefined;
+  const eco = ecologicalDriverForMonth();
+  const myStars = (practiceId: string) => ratings.data?.find((r) => r.practiceId === practiceId && r.month === month)?.stars ?? 0;
+
+  const pulsedThisWeek = (pulses.data ?? []).some(
+    (p) => Date.now() - new Date(p.createdAt).getTime() < 7 * 24 * 3600 * 1000,
+  );
+
+  const Stars = ({ practiceId }: { practiceId: string }) => (
+    <span className="inline-flex gap-0.5" title="How is this practice working for you this month?">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <button key={s} onClick={() => rate.mutate({ practiceId, stars: s, month })}
+          className="text-base leading-none" style={{ background: "none", border: 0, cursor: "pointer", color: s <= myStars(practiceId) ? "#E0C68C" : "rgba(241,234,219,0.25)" }}>
+          ★
+        </button>
+      ))}
+    </span>
+  );
+
+  return (
+    <section className="mb-16">
+      <div className="text-center mb-8">
+        <p className="text-xs uppercase tracking-[0.2em] text-accent/60 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          Your growth studio
+        </p>
+        <h2 className="text-2xl sm:text-3xl text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+          The map was the beginning. This is the month.
+        </h2>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* THE LADDER — one rung at a time */}
+        <div className="glass-card rounded-2xl p-5 border border-white/[0.06]">
+          <p className="text-[0.62rem] uppercase tracking-[0.18em] text-accent/80 mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            The ladder — how your prescriptions roll out
+          </p>
+          {LADDER_TIERS.map((t) => (
+            <div key={t.tier} className="flex items-start gap-3 py-2">
+              <span className="flex-none w-8 h-8 rounded-full border border-accent/40 text-accent flex items-center justify-center text-sm font-bold"
+                style={{ fontFamily: "'JetBrains Mono', monospace" }}>{t.tier}</span>
+              <div>
+                <p className="text-sm text-foreground font-semibold">{t.window}</p>
+                <p className="text-xs text-muted-foreground/80 leading-snug">{t.rule}</p>
+              </div>
+            </div>
+          ))}
+          <p className="text-[0.7rem] text-muted-foreground/60 mt-2 leading-snug">
+            Members who start with everything quit by day nine. Members who start with one thing are still here at month six.
+          </p>
+        </div>
+
+        {/* THE DOSE CURVE — something beats nothing, visibly */}
+        <div className="glass-card rounded-2xl p-5 border border-white/[0.06]">
+          <p className="text-[0.62rem] uppercase tracking-[0.18em] text-accent/80 mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            Minimum effective dose — pick the day you're having
+          </p>
+          <svg viewBox="0 0 300 110" className="w-full" aria-label="Benefit rises steeply with the first minutes, then flattens">
+            <path d="M 20 95 C 70 90 70 40 110 32 C 160 22 220 16 285 13" stroke="#E0C68C" strokeWidth="2.5" fill="none" />
+            {DOSE_CURVE.map((d, i) => {
+              const xs = [78, 148, 240][i]; const ys = [52, 24, 14][i];
+              return (
+                <g key={d.minutes}>
+                  <circle cx={xs} cy={ys} r="4.5" fill="#E0C68C" />
+                  <text x={xs} y={ys + 18} textAnchor="middle" fill="#F1EADB" fontSize="11" fontWeight="700" fontFamily="'JetBrains Mono', monospace">{d.minutes} min</text>
+                  <text x={xs} y={ys + 30} textAnchor="middle" fill="#9C8F79" fontSize="9" fontFamily="'JetBrains Mono', monospace">~{d.effect}% of max</text>
+                </g>
+              );
+            })}
+            <line x1="15" y1="100" x2="290" y2="100" stroke="rgba(241,234,219,0.15)" strokeWidth="1" />
+          </svg>
+          <p className="text-[0.7rem] text-muted-foreground/60 mt-1 leading-snug">
+            Seven minutes on a brutal day still counts — the curve is steepest at the start. Zero is the only losing dose.
+          </p>
+        </div>
+
+        {/* THIS WEEK'S STRENGTH CHALLENGE */}
+        {weekly && (
+          <div className="glass-card rounded-2xl p-5 border border-accent/25 bg-accent/[0.04]">
+            <p className="text-[0.62rem] uppercase tracking-[0.18em] text-accent/80 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              This week's strength deployment · {weekly.line}
+            </p>
+            <p className="text-sm text-foreground/90 leading-relaxed mb-2">{weekly.challenge}</p>
+            <p className="text-[0.7rem] text-muted-foreground/60 leading-snug">
+              Strengths grow through <span className="text-accent">use</span>, not through reading about them. One line,
+              one real-world rep, every week — it rotates through your top lines automatically.
+            </p>
+          </div>
+        )}
+
+        {/* WEEKLY PULSE — 3 minutes on the weakest line */}
+        {weakest && (
+          <div className="glass-card rounded-2xl p-5 border border-white/[0.06]">
+            <div className="flex items-baseline justify-between gap-2 mb-2">
+              <p className="text-[0.62rem] uppercase tracking-[0.18em] text-accent/80" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Weekly pulse · {weakest.line}
+              </p>
+              {pulsedThisWeek && <span className="text-[0.62rem] text-green-400/80" style={{ fontFamily: "'JetBrains Mono', monospace" }}>✓ done this week</span>}
+            </div>
+            <p className="text-xs text-muted-foreground/80 leading-snug mb-2">
+              Three minutes, once a week, on your weakest line — so you can watch it move between monthly cycles.
+              Where did <span className="text-foreground">{weakest.line}</span> show up this week — and what did you do about it?
+            </p>
+            <textarea value={pulseText} onChange={(e) => setPulseText(e.target.value)}
+              placeholder="Talk it out in a few sentences — honest beats polished…"
+              className="w-full h-20 rounded-lg bg-background/50 border border-border/50 p-3 text-sm text-foreground placeholder:text-muted-foreground/40 resize-none focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            <button onClick={() => { if (pulseText.trim().length < 30) { toast.error("Give it at least a few sentences — thin pulses measure nothing."); return; } sendPulse.mutate({ line: weakest.line, text: pulseText.trim() }); }}
+              disabled={sendPulse.isPending}
+              className="mt-2 rounded-lg px-4 py-2 text-[0.68rem] uppercase tracking-widest font-bold bg-primary text-white"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              {sendPulse.isPending ? "Saving…" : "Log this week's pulse"}
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* WHAT CHANGED — the before/after receipt */}
+      {changed.data && (
+        <div className="glass-card rounded-2xl p-5 border border-white/[0.06] mt-4">
+          <p className="text-[0.62rem] uppercase tracking-[0.18em] text-accent/80 mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            What changed since your last assessment
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="text-xs text-green-400/80 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>▲ RISING</p>
+              {changed.data.up.map((d) => (
+                <div key={d.axis} className="mb-1.5">
+                  <div className="flex justify-between text-xs text-foreground/80"><span>{d.axis}</span><span className="text-green-400/90">+{Math.round(d.delta * 100)}</span></div>
+                  <div className="h-1.5 rounded bg-white/[0.06]"><div className="h-1.5 rounded" style={{ width: `${Math.min(100, Math.abs(d.delta) * 300)}%`, background: "#9BC0B2" }} /></div>
+                </div>
+              ))}
+              {changed.data.up.length === 0 && <p className="text-xs text-muted-foreground/50">No lines rose this cycle.</p>}
+            </div>
+            <div>
+              <p className="text-xs mb-2" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#E2604A" }}>▼ SLIPPING</p>
+              {changed.data.down.map((d) => (
+                <div key={d.axis} className="mb-1.5">
+                  <div className="flex justify-between text-xs text-foreground/80"><span>{d.axis}</span><span style={{ color: "#E2604A" }}>{Math.round(d.delta * 100)}</span></div>
+                  <div className="h-1.5 rounded bg-white/[0.06]"><div className="h-1.5 rounded" style={{ width: `${Math.min(100, Math.abs(d.delta) * 300)}%`, background: "#E2604A" }} /></div>
+                </div>
+              ))}
+              {changed.data.down.length === 0 && <p className="text-xs text-muted-foreground/50">Nothing slipping. Hold the line.</p>}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* RATE + EXPORT ROW */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mt-4 glass-card rounded-2xl p-5 border border-white/[0.06]">
+        <div className="flex flex-wrap gap-6">
+          {rxPractice && (
+            <div>
+              <p className="text-[0.62rem] uppercase tracking-[0.15em] text-muted-foreground/60 mb-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Rate: {rxPractice.name}
+              </p>
+              <Stars practiceId={rxPractice.id} />
+            </div>
+          )}
+          {eco && (
+            <div>
+              <p className="text-[0.62rem] uppercase tracking-[0.15em] text-muted-foreground/60 mb-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Rate: {eco.name}
+              </p>
+              <Stars practiceId={eco.id} />
+            </div>
+          )}
+        </div>
+        <button onClick={() => window.print()}
+          className="rounded-lg px-4 py-2.5 text-[0.68rem] uppercase tracking-widest font-bold border border-accent/40 text-accent hover:bg-accent/10"
+          style={{ fontFamily: "'JetBrains Mono', monospace", background: "transparent", cursor: "pointer" }}>
+          Print / share with your therapist
+        </button>
+      </div>
+      <p className="text-[0.68rem] text-muted-foreground/50 mt-2 text-center leading-snug">
+        Your ratings teach the prescription engine what actually works for members like you. The export gives your
+        therapist or coach the data they've never had.
+      </p>
+
+      {showCrisis && <CrisisSupport onClose={() => setShowCrisis(false)} />}
+    </section>
+  );
+}
+
 export default function Results() {
   const { user, loading: authLoading } = useAuth();
   const [, navigate] = useLocation();
@@ -1571,6 +1786,7 @@ export default function Results() {
 
             {/* On-ramp: your two lowest lines → the research, the prescriptions, the network */}
             <StarvedLineOnRamp scores={allScores} />
+            <GrowthStudio scores={allScores} />
 
             {/* Companion reveal — the self–other gap, if a companion played along */}
             {companionGap && (

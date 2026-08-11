@@ -29,6 +29,7 @@ import { getFreshMatches, requestConnection, respondToConnection, getConnectionS
 import { matchTier } from "@shared/matching";
 import { sendMessage, getThread, listThreads, ATTACHMENT_TTL_HOURS, blockUser, unblockUser, listBlocked, reportUser } from "./messaging";
 import { createGoal, listGoals, toggleStage, logEffort, setGoalStatus } from "./goals";
+import { crisisCheck, rateProtocol, myRatings, submitPulse, pulseHistory, whatChanged, answerDays } from "./growth";
 import { hashFoundingPassword, verifyFoundingPassword } from "./foundingPassword";
 import { runPanel, panelSize, panelDevelopers } from "./platform/panel";
 import { consensusScores } from "./scoring/consensus";
@@ -359,7 +360,9 @@ export const appRouter = router({
           transcript: input.text,
         });
         await syncCompletedQuestions(input.assessmentId);
-        return { success: true, responseId: response?.id };
+        // Safety net: deterministic crisis-language scan on submitted answers.
+        const crisis = await crisisCheck(ctx.user.id, "assessment", input.text);
+        return { success: true, responseId: response?.id, crisis };
       }),
 
     // Companion mode: persist the informant's read (separate channel, never scored as the member).
@@ -945,6 +948,26 @@ Return ONLY valid JSON.` },
         const db = await getDb();
         if (!db) return { ok: false };
         await db.update(reports).set({ status: input.status, reviewedAt: new Date() }).where(eq(reports.id, input.reportId));
+        return { ok: true };
+      }),
+    // Crisis-flag queue: the human-review side of the deterministic safety net.
+    crisisFlags: adminProcedure.query(async () => {
+      const { getDb } = await import("./db");
+      const { crisisFlags } = await import("../drizzle/schema");
+      const { desc } = await import("drizzle-orm");
+      const db = await getDb();
+      if (!db) return [];
+      return db.select().from(crisisFlags).orderBy(desc(crisisFlags.createdAt)).limit(200);
+    }),
+    resolveCrisisFlag: adminProcedure
+      .input(z.object({ flagId: z.number().int().positive() }))
+      .mutation(async ({ input }) => {
+        const { getDb } = await import("./db");
+        const { crisisFlags } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        const db = await getDb();
+        if (!db) return { ok: false };
+        await db.update(crisisFlags).set({ status: "reviewed", reviewedAt: new Date() }).where(eq(crisisFlags.id, input.flagId));
         return { ok: true };
       }),
     stats: adminProcedure.query(async () => {
@@ -2256,12 +2279,34 @@ CRITICAL RULES:
       .mutation(async ({ ctx, input }) => {
         const ok = await logEffort(ctx.user.id, input.goalId, input.month, input.hours, input.note);
         if (ok) await recordEvent({ type: "goal_effort_logged", userId: ctx.user.id, meta: { goalId: input.goalId, hours: input.hours } });
-        return { ok };
+        const crisis = input.note ? await crisisCheck(ctx.user.id, "goal_log", input.note) : false;
+        return { ok, crisis };
       }),
 
     setStatus: protectedProcedure
       .input(z.object({ goalId: z.number().int().positive(), status: z.enum(["active", "achieved", "paused", "retired"]) }))
       .mutation(({ ctx, input }) => setGoalStatus(ctx.user.id, input.goalId, input.status).then((ok) => ({ ok }))),
+  }),
+
+  // ── GROWTH — ratings, weekly pulse, what-changed, streaks, crisis queue ────
+  growth: router({
+    rateProtocol: protectedProcedure
+      .input(z.object({ practiceId: z.string().max(64), stars: z.number().int().min(1).max(5), month: z.string().regex(/^\d{4}-\d{2}$/) }))
+      .mutation(({ ctx, input }) => rateProtocol(ctx.user.id, input.practiceId, input.stars, input.month).then((ok) => ({ ok }))),
+    myRatings: protectedProcedure.query(({ ctx }) => myRatings(ctx.user.id)),
+
+    submitPulse: protectedProcedure
+      .input(z.object({ line: z.string().max(64), text: z.string().min(30).max(20_000) }))
+      .mutation(async ({ ctx, input }) => {
+        const res = await submitPulse(ctx.user.id, input.line, input.text);
+        await recordEvent({ type: "pulse_submitted", userId: ctx.user.id, meta: { line: input.line } });
+        return res;
+      }),
+    pulseHistory: protectedProcedure.query(({ ctx }) => pulseHistory(ctx.user.id)),
+
+    whatChanged: protectedProcedure.query(({ ctx }) => whatChanged(ctx.user.id)),
+
+    answerDays: protectedProcedure.query(({ ctx }) => answerDays(ctx.user.id)),
   }),
 });
 export type AppRouter = typeof appRouter;
