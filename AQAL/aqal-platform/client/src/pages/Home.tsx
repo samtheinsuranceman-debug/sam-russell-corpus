@@ -427,6 +427,86 @@ function ActDivider() {
   );
 }
 
+// ============================================================
+// THE TEN PROMISES — what's in it for you, before any detail.
+// The founder's ten strongest scripts, in their persuasion order:
+// promise → stakes → honesty → summary → fun → proof → belonging
+// → science → offer → fear. Sits right under the hero, ahead of
+// the 32-line dial, so a visitor knows what the machine DOES
+// before they meet its parts.
+// ============================================================
+
+const TEN_PROMISES: { arc: string; title: string; text: string; accent: string }[] = [
+  { arc: "The Promise", title: "The Direct Hit", accent: "#E0C68C",
+    text: "Tell us your 10 biggest life goals. We'll tell you exactly how long each one will take, what's standing in your way, and which ones you should abandon before they waste another decade of your life. Then we'll engineer the fastest path to the ones worth keeping — using more data about your actual capabilities than any therapist, coach, or mentor has ever had. This is outcome engineering. You're the first generation to have it." },
+  { arc: "The Stakes", title: "The Uninsured Mind", accent: "#E2604A",
+    text: "You insure your car, your house, and your phone. Your mind — the machine that produces your marriage, your money, your health, and every outcome you'll ever have — runs uninsured, unmeasured, and unmaintained. Isn't that odd? Fix it in 30 days, one fun question at a time. The first 10,000 do it free, for life." },
+  { arc: "The Honesty", title: "What You'll Never Be Good At", accent: "#E0C68C",
+    text: "Every other platform tells you you can be anything. We're the only one honest enough to tell you what you'd be fighting your own wiring to become — and what to build instead. Low persuasion, low volitional, low financial self-management? Business ownership will eat you alive. But consulting might fit you like a glove — same authority, same expertise, none of the parts you're missing." },
+  { arc: "The Whole Machine", title: "In One Breath", accent: "#E0C68C",
+    text: "We measure everything your life runs on, tell you the truth about it, prescribe what the research proves works, track you every 30 days, and surround you with the people your mind has been looking for. First 10,000: free for life." },
+  { arc: "The Experience", title: "The Test You'll Miss When It's Over", accent: "#9BC0B2",
+    text: "IQ tests ask if you know what seven plus three is. Dating sites give you multiple choice. We hand you a private island, $80 million, and 180 days — and listen to what you build. Thirty questions, one a day for a month, each engineered to be the most fun conversation you've had with yourself in years." },
+  { arc: "The Proof of Teeth", title: "The Clock Doesn't Lie", accent: "#E2604A",
+    text: "Say you want five kids, then log zero hours meeting anyone for six months — and your clock will tell you: at this pace, never. That honesty stings once. Wasting a decade stings forever. The clock responds to effort, which means you control the clock." },
+  { arc: "The Belonging", title: "Your Village", accent: "#9BC0B2",
+    text: "If you're high in existential, moral, and linguistic intelligence, almost nobody around you can meet you where you think. We connect you with dozens of people whose minds run exactly where yours does — instant peers, conversations you've been starving for, a village where you finally fit. Whatever your highs are, your village exists here." },
+  { arc: "The Science", title: "The Second Village", accent: "#9BC0B2",
+    text: "Then there's the second village — the people whose strengths are your weaknesses, and whose weaknesses are your strengths. The research is real: sustained proximity to someone strong where you're weak measurably grows that line in you. Every friendship in this village upgrades both of you, automatically, just by existing." },
+  { arc: "The Offer", title: "Free For Life, In Writing", accent: "#E0C68C",
+    text: "The first 10,000 members get the entire platform free — lifetime. It's written into the user agreement; there is no going back on it. We're not discounting; we're choosing our founders. One condition: membership is earned by finishing your assessment." },
+  { arc: "The Warning", title: "Blind Spots Bankrupt", accent: "#E2604A",
+    text: "Nobody loses their marriage, their savings, and their health because their strengths failed. They lose it all to a weakness they were blind to — firing at the worst moment, unmanaged, unwatched. We find yours before it finds you." },
+];
+
+function TenPromisesSection() {
+  const [first, ...rest] = TEN_PROMISES;
+  return (
+    <section style={{ background: `radial-gradient(760px 380px at 50% 0%, rgba(224,198,140,0.06), transparent 62%), linear-gradient(180deg,${INK},${INK2})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, margin: '0 0 14px' }}>
+          What this platform does for you · in ten statements
+        </p>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(30px,4.6vw,52px)', lineHeight: 1.06, color: CREAM, margin: '0 0 10px', maxWidth: '18em' }}>
+          Before the thirty-two lines — here&rsquo;s what&rsquo;s in it for you.
+        </h2>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.1em', color: MUTED, margin: '0 0 36px' }}>
+          Read these ten. If none of them lands, this isn&rsquo;t your platform. If one of them does — keep scrolling.
+        </p>
+
+        {/* #1 — full-width feature card */}
+        <div style={{ position: 'relative', border: `1px solid ${first.accent}55`, borderLeft: `3px solid ${first.accent}`, borderRadius: '16px', background: 'rgba(224,198,140,0.05)', padding: 'clamp(24px,3.5vw,40px)', marginBottom: '18px' }}>
+          <div className="flex items-baseline gap-4 flex-wrap" style={{ marginBottom: '12px' }}>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(34px,4vw,48px)', lineHeight: 1, color: first.accent }}>01</span>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.22em', textTransform: 'uppercase', color: first.accent }}>{first.arc}</span>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(22px,2.6vw,30px)', color: CREAM }}>{first.title}</span>
+          </div>
+          <p style={{ fontSize: 'clamp(17px,2vw,21px)', lineHeight: 1.6, color: CREAM, margin: 0, maxWidth: '52em' }}>{first.text}</p>
+        </div>
+
+        {/* #2–#10 — two-column ledger */}
+        <div className="aq-ten-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+          {rest.map((p, i) => (
+            <div key={p.title} style={{ border: `1px solid ${LINE_C}`, borderLeft: `3px solid ${p.accent}`, borderRadius: '14px', background: INK2, padding: 'clamp(20px,2.6vw,28px)' }}>
+              <div className="flex items-baseline gap-3 flex-wrap" style={{ marginBottom: '10px' }}>
+                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '30px', lineHeight: 1, color: p.accent }}>{String(i + 2).padStart(2, '0')}</span>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.2em', textTransform: 'uppercase', color: p.accent }}>{p.arc}</span>
+              </div>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(20px,2.2vw,24px)', lineHeight: 1.15, color: CREAM, margin: '0 0 8px' }}>{p.title}</p>
+              <p style={{ fontSize: 'clamp(15px,1.6vw,17px)', lineHeight: 1.65, color: CREAM2, margin: 0 }}>{p.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 820px) {
+          .aq-ten-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 // §2 THE PROBLEM — the founder story, the hook.
 function FounderStorySection() {
   return (
@@ -1369,6 +1449,8 @@ export default function Home() {
       <div className="relative z-10">
         {/* ── THE HOOK ── promise, then an immediate toy to play with */}
         <HeroSection />
+        {/* What's in it for them — the ten promises, before any 32-line detail */}
+        <div data-reveal><TenPromisesSection /></div>
         {/* Instant payoff: the interactive 32-line dial — touch the product before reading a word */}
         <div data-reveal><DialSection /></div>
         <ActDivider />
