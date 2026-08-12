@@ -48,7 +48,7 @@ export const PANEL_MEMBERS: PanelMember[] = [
     key: env("ANTHROPIC_API_KEY"), model: env("ANTHROPIC_MODEL") || "claude-3-5-sonnet-latest" },
   { id: "google", name: "Gemini", developer: "Google",
     base: env("GOOGLE_BASE_URL") || "https://generativelanguage.googleapis.com/v1beta/openai",
-    key: env("GOOGLE_API_KEY"), model: env("GOOGLE_MODEL") || "gemini-1.5-pro" },
+    key: env("GOOGLE_API_KEY") || env("GEMINI_API_KEY"), model: env("GOOGLE_MODEL") || "gemini-1.5-pro" },
   { id: "xai", name: "Grok", developer: "xAI",
     base: env("XAI_BASE_URL") || "https://api.x.ai/v1",
     key: env("XAI_API_KEY"), model: env("XAI_MODEL") || "grok-2-latest" },

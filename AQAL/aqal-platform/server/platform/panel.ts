@@ -63,11 +63,31 @@ export type PanelMemberHealth = {
   name: string;
   developer: string;
   model: string;
+  keySource: string;       // which env var actually supplied this member's key
   ok: boolean;
   status: number | null;   // HTTP status, or null if the request threw
   latencyMs: number;
   note: string;            // human-readable pass/fail reason
 };
+
+// Which env var is actually supplying each member's key — surfaced in health
+// output so a green check can't hide a fallback. Cohere/AI21 legitimately ride
+// OPENROUTER_API_KEY by design, but the readout must SAY so; and Gemini shows
+// which of its two accepted names was found.
+function keySourceFor(id: string): string {
+  const has = (k: string) => !!process.env[k];
+  switch (id) {
+    case "openai": return has("OPENAI_API_KEY") ? "OPENAI_API_KEY" : "missing";
+    case "anthropic": return has("ANTHROPIC_API_KEY") ? "ANTHROPIC_API_KEY" : "missing";
+    case "google": return has("GOOGLE_API_KEY") ? "GOOGLE_API_KEY" : has("GEMINI_API_KEY") ? "GEMINI_API_KEY" : "missing";
+    case "xai": return has("XAI_API_KEY") ? "XAI_API_KEY" : "missing";
+    case "llama": return has("GROQ_API_KEY") ? "GROQ_API_KEY" : "missing";
+    case "mistral": return has("MISTRAL_API_KEY") ? "MISTRAL_API_KEY" : "missing";
+    case "cohere": return has("COHERE_API_KEY") ? "COHERE_API_KEY" : has("OPENROUTER_API_KEY") ? "OPENROUTER_API_KEY (fallback)" : "missing";
+    case "ai21": return has("AI21_API_KEY") ? "AI21_API_KEY" : has("OPENROUTER_API_KEY") ? "OPENROUTER_API_KEY (fallback)" : "missing";
+    default: return "unknown";
+  }
+}
 
 // Live health check: ping every CONFIGURED member with a tiny structured request
 // and report which ones actually respond with usable JSON. This is what turns
@@ -87,7 +107,7 @@ export async function panelHealth(): Promise<PanelMemberHealth[]> {
   return Promise.all(
     members.map(async (m): Promise<PanelMemberHealth> => {
       const started = Date.now();
-      const base = { id: m.id, name: m.name, developer: m.developer, model: m.model };
+      const base = { id: m.id, name: m.name, developer: m.developer, model: m.model, keySource: keySourceFor(m.id) };
       try {
         const res = await fetch(`${m.base.replace(/\/$/, "")}/chat/completions`, {
           method: "POST",
