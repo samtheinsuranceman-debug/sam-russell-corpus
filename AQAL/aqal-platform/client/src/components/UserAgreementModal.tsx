@@ -27,7 +27,7 @@ export default function UserAgreementModal() {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[9998] flex items-center justify-center px-4"
+          className="fixed inset-0 z-[9998] flex items-center justify-center px-4 py-6 overflow-y-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -41,7 +41,7 @@ export default function UserAgreementModal() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-            className="relative z-10 w-full max-w-md glass-card rounded-2xl border border-white/[0.08] p-7"
+            className="relative z-10 w-full max-w-md glass-card rounded-2xl border border-white/[0.08] p-7 my-auto max-h-[90vh] overflow-y-auto"
           >
             <p
               className="text-[0.6rem] uppercase tracking-[0.2em] text-primary/60 mb-2"

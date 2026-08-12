@@ -189,7 +189,7 @@ export default function Login() {
             className="w-full h-11 text-sm font-medium border-white/[0.12] text-muted-foreground hover:text-foreground rounded-xl active:scale-[0.97] transition-all duration-150"
           >
             <Fingerprint className="w-4 h-4 mr-2" />
-            Sign In with Manus
+            Sign In
           </Button>
 
           <div className="mt-6 pt-6 border-t border-white/[0.06]">

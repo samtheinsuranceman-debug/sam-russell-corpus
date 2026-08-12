@@ -34,6 +34,9 @@ const navLinks: NavItem[] = [
     { href: "/messages", label: "Messages" },
     { href: "/goals", label: "Goals & Clocks" },
     { href: "/beliefs", label: "Belief Paradigm" },
+    { href: "/ecological-interventions", label: "Ecological Interventions" },
+    { href: "/meta-systems", label: "Meta-Systems" },
+    { href: "/scenario-intelligence", label: "Scenario Intelligence" },
   ]},
   { href: "/leaderboard", label: "Leaderboard" },
 ];

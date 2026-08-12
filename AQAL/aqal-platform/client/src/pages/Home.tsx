@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+// AQAL Intelligence Platform — joinaqal.com
 import { useState, useEffect, useMemo } from "react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
@@ -44,14 +45,14 @@ const LINES = [
   { name: "Mathematical",        short: "Math",          mode: "measured",      v: 68, note: "Quantitative fluency across symbolic systems." },
   { name: "Spatial",             short: "Spatial",       mode: "measured",      v: 74, note: "Mental rotation; holding a whole system in view." },
   { name: "Linguistic",          short: "Linguistic",    mode: "measured",      v: 88, note: "Range, precision, and generativity in language." },
-  { name: "Musical",             short: "Musical",       mode: "measured",      v: 55, note: "Pitch, rhythm, phrasing; structure in sound." },
-  { name: "Bodily-Kinesthetic",  short: "Kinesthetic",   mode: "demonstrated",  v: 60, note: "Trained control of the body toward a skilled end." },
+  { name: "Musical",             short: "Musical",       mode: "measured",      v: 55, indep: true, note: "Pitch, rhythm, phrasing; structure in sound." },
+  { name: "Bodily-Kinesthetic",  short: "Kinesthetic",   mode: "demonstrated",  v: 60, indep: true, note: "Trained control of the body toward a skilled end." },
   { name: "Naturalist",          short: "Naturalist",    mode: "demonstrated",  v: 48, note: "Reading living systems; fine distinctions within them." },
   { name: "Interpersonal",       short: "Interpersonal", mode: "measured",      v: 80, note: "Modelling other minds; moving a room." },
   { name: "Intrapersonal",       short: "Intrapersonal", mode: "developmental", v: 72, note: "Accuracy of the self-model; knowing your own states." },
   { name: "Existential",         short: "Existential",   mode: "developmental", v: 78, note: "Working seriously with meaning and mortality." },
   { name: "Moral",               short: "Moral",         mode: "developmental", v: 76, note: "Altitude of the ethical frame actually lived." },
-  { name: "Aesthetic",           short: "Aesthetic",     mode: "developmental", v: 70, note: "Discernment of form; what makes a thing land." },
+  { name: "Aesthetic",           short: "Aesthetic",     mode: "developmental", v: 70, indep: true, note: "Discernment of form; what makes a thing land." },
   { name: "Emotional",           short: "Emotional",     mode: "measured",      v: 66, note: "Granularity and regulation of affect in real time." },
   { name: "Meta-Cognitive",      short: "Meta-Cog",      mode: "measured",      v: 90, indep: true, note: "Catching your own moves mid-flight." },
   { name: "Volitional",          short: "Volitional",    mode: "demonstrated",  v: 93, indep: true, note: "Sustained will — starting, continuing, finishing under friction." },
@@ -64,14 +65,14 @@ const LINES = [
   { name: "Rhetorical",          short: "Rhetorical",    mode: "demonstrated",  v: 88, note: "Moving a listener from one position to another." },
   { name: "Leadership",          short: "Leadership",    mode: "demonstrated",  v: 79, note: "Real commitment and coordinated action from others." },
   { name: "Mechanical",          short: "Mechanical",    mode: "demonstrated",  v: 64, note: "Practical mastery of how physical things work." },
-  { name: "Pattern-Recognition", short: "Pattern",       mode: "measured",      v: 87, note: "Seeing the shape early, from sparse signal." },
-  { name: "Social-Perceptual",   short: "Social",        mode: "measured",      v: 81, note: "Reading status, intent, and the unspoken." },
+  { name: "Pattern-Recognition", short: "Pattern",       mode: "measured",      v: 87, indep: true, note: "Seeing the shape early, from sparse signal." },
+  { name: "Social-Perceptual",   short: "Social",        mode: "measured",      v: 81, indep: true, note: "Reading status, intent, and the unspoken." },
   { name: "Financial",           short: "Financial",     mode: "measured",      v: 77, indep: true, note: "Conative money sense, largely independent of IQ." },
   { name: "Humor",               short: "Humor",         mode: "developmental", v: 82, note: "State-change capacity; shifting a room at will." },
   { name: "Parenting",           short: "Parenting",     mode: "developmental", v: 69, note: "Developmental altitude expressed in raising a person." },
   { name: "Seduction",           short: "Seduction",     mode: "developmental", v: 74, note: "Relational draw, severed from appearance." },
   { name: "Community-Founding",  short: "Community",     mode: "developmental", v: 85, note: "Bringing a durable group into being around a frame." },
-  { name: "Street Smarts",       short: "Street",        mode: "demonstrated",  v: 80, note: "Real-world reads under real stakes." },
+  { name: "Street Smarts",       short: "Street",        mode: "demonstrated",  v: 80, indep: true, note: "Real-world reads under real stakes." },
 ];
 
 const CX = 310, CY = 310;
@@ -88,7 +89,7 @@ const STEPS = [
 
 const EVIDENCE = [
   { t: "Rare because capable — not odd", d: "Your number climbs with genuine capability across independent lines, not with being a statistical weirdo. A mind that's low everywhere isn't rare to us — it's just low." },
-  { t: "Only independent axes count", d: "Thirty-two lines, but ~6.5 genuinely independent dimensions. Your aggregate is built from those — so it can't be inflated by stacking scores that all move together." },
+  { t: "Only independent axes count", d: "Thirty-two lines resting on at least ~6.5 verified independent dimensions — rising toward ten as our citation audit pins the sixteen g-free axes. Your aggregate is built only from verified dimensions, so it can't be inflated by stacking scores that all move together." },
   { t: "Mahalanobis, not multiplication", d: "Rarity is computed from the geometry of your whole profile — never by multiplying correlated scores into a fantasy figure with too many zeros." },
   { t: "No inflation. Ever.", d: "Most tests flatter you. This one won't. An honest aggregate is the only one worth sharing — and the only one that matches you to the right people." },
 ];
@@ -133,7 +134,7 @@ function FreeFoundingAccess() {
   return (
     <section id="claim" style={{ background: `linear-gradient(180deg,${INK},${INK2})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(48px,7vw,88px) 0' }}>
       <div className="max-w-[640px] mx-auto px-[clamp(20px,5vw,56px)] text-center">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
           Free founding access — no card
         </div>
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.04, color: CREAM, margin: '0 0 12px' }}>
@@ -155,7 +156,7 @@ function FreeFoundingAccess() {
         </p>
         {remaining !== null && cap > 0 && (
           <div style={{ margin: '4px 0 20px' }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: CREAM, border: `1px solid ${CHAMPAGNE}55`, borderRadius: '999px', padding: '5px 12px', background: 'rgba(224,198,140,0.06)' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', color: CREAM, border: `1px solid ${CHAMPAGNE}55`, borderRadius: '999px', padding: '5px 12px', background: 'rgba(224,198,140,0.06)' }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '999px', background: CHAMPAGNE, boxShadow: `0 0 7px ${CHAMPAGNE}` }} />
               <b style={{ color: CHAMPAGNE }}>{remaining.toLocaleString()}</b> of {cap.toLocaleString()} free spots left
             </span>
@@ -164,7 +165,7 @@ function FreeFoundingAccess() {
         {full ? (
           <div style={{ marginTop: '18px' }}>
             <div style={{ color: CREAM2, marginBottom: '12px' }}>All free founding spots have been claimed.</div>
-            <Link href="/pricing"><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: `linear-gradient(180deg,${CHAMPAGNE},${CHAMPAGNE_D})`, color: INK, fontWeight: 500, borderRadius: '3px', display: 'inline-block', cursor: 'pointer' }}>See pricing</span></Link>
+            <Link href="/pricing"><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: `linear-gradient(180deg,${CHAMPAGNE},${CHAMPAGNE_D})`, color: INK, fontWeight: 500, borderRadius: '3px', display: 'inline-block', cursor: 'pointer' }}>See pricing</span></Link>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '380px', margin: '20px auto 0' }}>
@@ -185,7 +186,7 @@ function FreeFoundingAccess() {
             >
               {claim.isPending ? 'Unlocking…' : 'Get free founding access'}
             </button>
-            <p style={{ fontSize: '11px', color: MUTED, lineHeight: 1.5, margin: '4px 0 0' }}>
+            <p style={{ fontSize: '13px', color: MUTED, lineHeight: 1.5, margin: '4px 0 0' }}>
               Your email is your username. We'll email your results there. No card, ever.
             </p>
           </div>
@@ -225,38 +226,36 @@ function HeroSection() {
           <div>
             <motion.div
               className="mb-4"
-              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.30em', textTransform: 'uppercase', color: CHAMPAGNE }}
+              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.30em', textTransform: 'uppercase', color: CHAMPAGNE }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.05, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              32 lines · measured, mapped, engineered
+              outcome hacking
             </motion.div>
 
             <motion.h1
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 0.98, fontSize: 'clamp(44px,7vw,80px)', letterSpacing: '-0.01em', color: CREAM, marginTop: '20px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              {hero.lead}<em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{hero.emph}</em>
+              Highest desired outcomes.{" "}<em style={{ fontStyle: 'italic', background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Surgically engineered.</em>
             </motion.h1>
 
             <motion.p
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontSize: 'clamp(17px,2.1vw,24px)', lineHeight: 1.25, color: CREAM2, margin: '14px 0 0' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              You've probably never measured it — almost no one has. <b style={{ color: CREAM, fontWeight: 600 }}>We do.</b> Then we re-engineer the mind to close the gap between where you stand today and the outcomes you're chasing.
-            </motion.p>
-
-            <motion.p
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(21px,2.7vw,32px)', lineHeight: 1.15, color: CREAM, margin: '20px 0 0' }}
-              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.2, 0.7, 0.3, 1] }}
-            >
-              Measure the mind. <span style={{ color: CHAMPAGNE }}>Map the system.</span> Engineer the outcome.
+              Full 32-line intelligence map + Belief Systems analysis.
             </motion.p>
 
             <motion.p
               style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.6, maxWidth: '34em', margin: '18px 0 30px' }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              Every other test hands you a number and walks away. We map your mind as a <b style={{ color: CREAM, fontWeight: 600 }}>system of 32 lines</b> and run precise, surgical interventions on the ones that matter — <b style={{ color: CREAM, fontWeight: 600 }}>fortifying the strengths that drive your goals</b> and <b style={{ color: CREAM, fontWeight: 600 }}>dismantling the weaknesses that sabotage them</b> — so you reach your outcomes with the greatest result and the least time, effort, and failure. The tools, the training, and the research, individualized to your assessment and your goals.
+              <b style={{ color: CREAM, fontWeight: 600 }}>10,000+ peer-reviewed interventions</b>, selected specifically to your Mental Assessment Map, goals, and timeframe.<br /><br />
+              <b style={{ color: CREAM, fontWeight: 600 }}>Strength systems amplified.</b><br />
+              <b style={{ color: EMBER, fontWeight: 600 }}>Weakness systems removed.</b><br />
+              <b style={{ color: CREAM, fontWeight: 600 }}>Risk of failure engineered out.</b><br /><br />
+              Goals Dashboard tracks both time and probability of arriving early.<br />
+              Complete profile feedback loops recalibrated every 30 days.
             </motion.p>
 
             <motion.div
@@ -264,15 +263,15 @@ function HeroSection() {
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
             >
               <a href="#claim" className="inline-flex items-center gap-2 cursor-pointer border-0 no-underline rounded-[3px] transition-all duration-150 hover:-translate-y-[1px]" onClick={playClick}>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: `linear-gradient(180deg,${CHAMPAGNE},${CHAMPAGNE_D})`, color: INK, fontWeight: 500, boxShadow: '0 6px 26px -10px rgba(224,198,140,0.6)', borderRadius: '3px', display: 'inline-block' }}>Measure yourself — free</span>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: `linear-gradient(180deg,${CHAMPAGNE},${CHAMPAGNE_D})`, color: INK, fontWeight: 500, boxShadow: '0 6px 26px -10px rgba(224,198,140,0.6)', borderRadius: '3px', display: 'inline-block' }}>Measure yourself — free</span>
               </a>
               <Link href="/weakness-finder" className="inline-flex items-center gap-2 cursor-pointer border rounded-[3px] no-underline transition-all duration-150 hover:border-[#C85C44] hover:text-[#C85C44]"
-                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: 'transparent', color: CREAM, borderColor: LINE_C }}
+                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: 'transparent', color: CREAM, borderColor: LINE_C }}
               >
                 See what your strengths can’t protect you from
               </Link>
               <a href="#dial" className="inline-flex items-center gap-2 cursor-pointer border rounded-[3px] no-underline transition-all duration-150 hover:border-[#E0C68C] hover:text-[#E0C68C]"
-                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: 'transparent', color: CREAM, borderColor: LINE_C }}
+                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '11px 20px', background: 'transparent', color: CREAM, borderColor: LINE_C }}
               >
                 See how it works ↓
               </a>
@@ -280,7 +279,7 @@ function HeroSection() {
 
             <motion.div
               className="flex gap-[18px] flex-wrap mt-[26px]"
-              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.10em', color: MUTED }}
+              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.10em', color: MUTED }}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
             >
               <span className="inline-flex items-center gap-[7px]"><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> Methodology disclosed</span>
@@ -334,7 +333,7 @@ function HeroSection() {
                 <>
                   <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.24em' }} fill={CREAM2} x={CX} y={CY - 34} textAnchor="middle">AGGREGATE · SAMPLE</text>
                   <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY + 4} textAnchor="middle" fontSize="34">32 lines</text>
-                  <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 24} textAnchor="middle">CAPABILITY {aggregate} · 32 LINES · ~6.5 EFF. DIM</text>
+                  <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 24} textAnchor="middle">CAPABILITY {aggregate} · 32 LINES · ≥6.5 EFF. DIM</text>
                   <text className="aq-pulse" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.18em' }} fill={CHAMPAGNE} x={CX} y={CY + 44} textAnchor="middle">◇ TAP ANY POINT</text>
                 </>
               ) : (
@@ -439,7 +438,7 @@ function ActDivider() {
       <div className="section-divider" style={{ margin: '0' }} />
       <span style={{
         position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)',
-        color: CHAMPAGNE, fontSize: '11px', background: INK, padding: '0 14px', letterSpacing: '0.1em',
+        color: CHAMPAGNE, fontSize: '13px', background: INK, padding: '0 14px', letterSpacing: '0.1em',
       }}>◇</span>
     </div>
   );
@@ -456,7 +455,7 @@ function ActDivider() {
 
 const TEN_PROMISES: { arc: string; title: string; text: string; accent: string }[] = [
   { arc: "The Promise", title: "The Direct Hit", accent: "#E0C68C",
-    text: "Tell us your 10 biggest life goals. We'll tell you exactly how long each one will take, what's standing in your way, and which ones you should abandon before they waste another decade of your life. Then we'll engineer the fastest path to the ones worth keeping — using more data about your actual capabilities than any therapist, coach, or mentor has ever had. This is outcome engineering. You're the first generation to have it." },
+    text: "Tell us your 10 biggest life goals. We'll put an honest clock on every one — how long at your pace, what's standing in your way, and which ones to walk away from before they waste another decade of your life. Then we'll engineer the fastest path to the ones worth keeping — using more data about your actual capabilities than any therapist, coach, or mentor has ever had. This is outcome engineering. You're the first generation to have it." },
   { arc: "The Stakes", title: "The Uninsured Mind", accent: "#E2604A",
     text: "You insure your car, your house, and your phone. Your mind — the machine that produces your marriage, your money, your health, and every outcome you'll ever have — runs uninsured, unmeasured, and unmaintained. Isn't that odd? Fix it in 30 days, one fun question at a time. The first 10,000 do it free, for life." },
   { arc: "The Honesty", title: "What You'll Never Be Good At", accent: "#E0C68C",
@@ -482,13 +481,13 @@ function TenPromisesSection() {
   return (
     <section style={{ background: `radial-gradient(760px 380px at 50% 0%, rgba(224,198,140,0.06), transparent 62%), linear-gradient(180deg,${INK},${INK2})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, margin: '0 0 14px' }}>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, margin: '0 0 14px' }}>
           What this platform does for you · in ten statements
         </p>
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(30px,4.6vw,52px)', lineHeight: 1.06, color: CREAM, margin: '0 0 10px', maxWidth: '18em' }}>
           Before the thirty-two lines — here&rsquo;s what&rsquo;s in it for you.
         </h2>
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.1em', color: MUTED, margin: '0 0 36px' }}>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.1em', color: MUTED, margin: '0 0 36px' }}>
           Read these ten. If none of them lands, this isn&rsquo;t your platform. If one of them does — keep scrolling.
         </p>
 
@@ -496,7 +495,7 @@ function TenPromisesSection() {
         <div style={{ position: 'relative', border: `1px solid ${first.accent}55`, borderLeft: `3px solid ${first.accent}`, borderRadius: '16px', background: 'rgba(224,198,140,0.05)', padding: 'clamp(24px,3.5vw,40px)', marginBottom: '18px' }}>
           <div className="flex items-baseline gap-4 flex-wrap" style={{ marginBottom: '12px' }}>
             <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(34px,4vw,48px)', lineHeight: 1, color: first.accent }}>01</span>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.22em', textTransform: 'uppercase', color: first.accent }}>{first.arc}</span>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.22em', textTransform: 'uppercase', color: first.accent }}>{first.arc}</span>
             <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(22px,2.6vw,30px)', color: CREAM }}>{first.title}</span>
           </div>
           <p style={{ fontSize: 'clamp(17px,2vw,21px)', lineHeight: 1.6, color: CREAM, margin: 0, maxWidth: '52em' }}>{first.text}</p>
@@ -508,7 +507,7 @@ function TenPromisesSection() {
             <div key={p.title} style={{ border: `1px solid ${LINE_C}`, borderLeft: `3px solid ${p.accent}`, borderRadius: '14px', background: INK2, padding: 'clamp(20px,2.6vw,28px)' }}>
               <div className="flex items-baseline gap-3 flex-wrap" style={{ marginBottom: '10px' }}>
                 <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '30px', lineHeight: 1, color: p.accent }}>{String(i + 2).padStart(2, '0')}</span>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.2em', textTransform: 'uppercase', color: p.accent }}>{p.arc}</span>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.2em', textTransform: 'uppercase', color: p.accent }}>{p.arc}</span>
               </div>
               <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(20px,2.2vw,24px)', lineHeight: 1.15, color: CREAM, margin: '0 0 8px' }}>{p.title}</p>
               <p style={{ fontSize: 'clamp(15px,1.6vw,17px)', lineHeight: 1.65, color: CREAM2, margin: 0 }}>{p.text}</p>
@@ -530,25 +529,22 @@ function FounderStorySection() {
   return (
     <section style={{ background: `radial-gradient(720px 340px at 18% 0%, rgba(226,96,74,0.07), transparent 62%), linear-gradient(180deg,${INK},${INK2})`, borderTop: `2px solid ${EMBER_D}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.28em', textTransform: 'uppercase', color: EMBER, marginBottom: '18px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.28em', textTransform: 'uppercase', color: EMBER, marginBottom: '18px' }}>
           <span className="aq-pulse" style={{ width: '7px', height: '7px', borderRadius: '999px', background: EMBER, boxShadow: `0 0 9px ${EMBER}`, flex: 'none' }} />
           From the founder — read this before you start
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(30px,5vw,54px)', lineHeight: 1.06, color: CREAM, margin: '0 0 22px' }}>
           My strengths never failed me.<br />
-          <span style={{ color: EMBER }}>My unmanaged weaknesses cost me fortunes.</span>
+          <span style={{ color: EMBER }}>My weaknesses cost me untold fortunes.</span>
         </p>
         <div style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.7, maxWidth: '46em' }}>
           <p style={{ margin: '0 0 16px' }}>
-            I test exceptionally high across almost every line of intelligence — and it didn&rsquo;t save me. I followed
-            the best-selling advice of the strengths-finder movement: <em>maximize your strengths, mostly ignore your
-            weaknesses.</em> It gave me an unbalanced way of navigating the world. I fell flat on my face a dozen times —
-            money, romantic relationships, friendships — and it never mattered how high, strong, or integrated my
-            strength clusters were. <b style={{ color: CREAM }}>They were null and void the moment a blind-spotted weak
-            cluster activated at the exact wrong time, in the exact wrong place, with the exact wrong people.</b>
+            I test exceptionally high across almost every line of intelligence — and it didn&rsquo;t save me. Not once. I followed
+            the best-selling advice of the strengths-finder movement: <em>maximize your strengths, ignore your
+            weaknesses.</em> It gave me a lopsided, overconfident way of moving through the world. I lost romantic relationships that could have been lifelong. I lost friendships that mattered. I lost housing, security, financial opportunities — and the chance to apologize to the people who suffered alongside me from my failures. <b style={{ color: CREAM }}>None of it happened because my strengths failed. Every single catastrophe fired from a weakness I was blind to — at the worst possible moment, with the people I could least afford to lose.</b>
           </p>
           <p style={{ margin: 0 }}>
-            That insight — learned the expensive way — is what this entire platform is built on.
+            That insight — paid for in years, not dollars — is what this entire platform is built on. I built it so no one else has to learn it the way I did.
           </p>
         </div>
       </div>
@@ -582,7 +578,7 @@ function MechanismSection() {
   return (
     <section style={{ background: `radial-gradient(720px 360px at 82% 18%, rgba(224,198,140,0.055), transparent 62%), linear-gradient(180deg,${INK2},${INK})`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
           The mechanism · the Master Weakness
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.06, color: CREAM, margin: '0 0 18px' }}>
@@ -615,7 +611,7 @@ function InsuranceSection() {
   return (
     <section style={{ background: `radial-gradient(720px 340px at 22% 8%, rgba(226,96,74,0.06), transparent 62%), linear-gradient(180deg,${INK},${INK2})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: EMBER, marginBottom: '14px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: EMBER, marginBottom: '14px' }}>
           This is insurance for your future
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.06, color: CREAM, margin: '0 0 18px' }}>
@@ -654,7 +650,7 @@ function ProtocolSection() {
   return (
     <section style={{ background: `radial-gradient(760px 380px at 50% 100%, rgba(224,198,140,0.06), transparent 65%), linear-gradient(180deg,${INK2},${INK})`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
           The protocol · every 30 days
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.06, color: CREAM, margin: '0 0 18px' }}>
@@ -711,7 +707,7 @@ function ArchetypeShowcaseSection() {
   return (
     <section style={{ background: `linear-gradient(180deg,${INK2},${INK})`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '14px' }}>
           240+ documented archetypes · which one is quietly running you?
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(28px,4.5vw,46px)', lineHeight: 1.06, color: CREAM, margin: '0 0 14px' }}>
@@ -731,16 +727,16 @@ function ArchetypeShowcaseSection() {
                 <div style={{ marginBottom: '10px' }}><ArchetypeSpectrum high={a.highLines} low={a.lowLines} /></div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '10px' }}>
                   {a.highLines.slice(0, 3).map((l) => (
-                    <span key={l} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '999px', border: `1px solid ${CHAMPAGNE}55`, color: CHAMPAGNE }}>{l}</span>
+                    <span key={l} style={{ fontSize: '12px', padding: '3px 8px', borderRadius: '999px', border: `1px solid ${CHAMPAGNE}55`, color: CHAMPAGNE }}>{l}</span>
                   ))}
                   {a.lowLines.slice(0, 2).map((l) => (
-                    <span key={l} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '999px', border: `1px solid ${EMBER}66`, color: EMBER }}>low {l}</span>
+                    <span key={l} style={{ fontSize: '12px', padding: '3px 8px', borderRadius: '999px', border: `1px solid ${EMBER}66`, color: EMBER }}>low {l}</span>
                   ))}
                 </div>
-                <p style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.55, margin: '0 0 10px' }}>
+                <p style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.55, margin: '0 0 10px' }}>
                   <span style={{ color: EMBER }}>The threat: </span>{firstSentence(a.untreatedTrajectory)}
                 </p>
-                <p style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.55, margin: 0 }}>
+                <p style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.55, margin: 0 }}>
                   <span style={{ color: CHAMPAGNE }}>The prescription: </span>
                   {rx ? `${rx.name} — ${rx.evidence.toLowerCase()} evidence.` : firstSentence(a.connectionCase)}
                 </p>
@@ -749,7 +745,7 @@ function ArchetypeShowcaseSection() {
           })}
         </div>
         <div style={{ marginTop: '24px' }}>
-          <Link href="/archetypes" className="no-underline" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: CHAMPAGNE, borderBottom: `1px solid ${CHAMPAGNE}66`, paddingBottom: '2px' }}>
+          <Link href="/archetypes" className="no-underline" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.12em', textTransform: 'uppercase', color: CHAMPAGNE, borderBottom: `1px solid ${CHAMPAGNE}66`, paddingBottom: '2px' }}>
           See all 240+ archetypes and the research behind them →
           </Link>
         </div>
@@ -765,7 +761,7 @@ function ThesisSection() {
   return (
     <section style={{ background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,108px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
           Why one number undervalues you
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500, fontSize: 'clamp(34px,6vw,64px)', lineHeight: 1.02, color: CREAM, margin: '0 0 20px' }}>
@@ -789,7 +785,7 @@ function GenerationSection() {
   return (
     <section style={{ background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,108px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
           Measured by generation · matched by generation
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500, fontSize: 'clamp(34px,6vw,64px)', lineHeight: 1.02, color: CREAM, margin: '0 0 20px' }}>
@@ -803,13 +799,13 @@ function GenerationSection() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 'clamp(20px,3vw,40px)' }}>
           <div style={{ borderLeft: `2px solid ${CHAMPAGNE}`, paddingLeft: '18px' }}>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', color: CREAM, marginBottom: '8px' }}>Cohort rarity</div>
-            <p style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>
+            <p style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.6 }}>
               Two numbers, both true: how rare you are in the whole population, and how rare you are among people your age. The second is the one that moves you.
             </p>
           </div>
           <div style={{ borderLeft: `2px solid ${CHAMPAGNE}`, paddingLeft: '18px' }}>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', color: CREAM, marginBottom: '8px' }}>Generational matching</div>
-            <p style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>
+            <p style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.6 }}>
               A generation apart to cover your blind spots — mentor to protégé, protégé to mentor. Same generation to find the peers who move at your pace.
             </p>
           </div>
@@ -830,13 +826,13 @@ function TestimonialsStrip() {
   return (
     <section style={{ background: INK2, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,100px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '28px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '28px' }}>
           In their words
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 'clamp(16px,2vw,28px)' }}>
           {items.map((t, i) => (
             <div key={i} style={{ border: `1px solid ${LINE_C}`, borderRadius: '10px', padding: '24px', background: INK }}>
-              <div style={{ color: CHAMPAGNE, letterSpacing: '2px', fontSize: '14px', marginBottom: '12px' }}>
+              <div style={{ color: CHAMPAGNE, letterSpacing: '2px', fontSize: '16px', marginBottom: '12px' }}>
                 {'★'.repeat(Math.max(1, Math.min(5, t.rating || 5)))}<span style={{ color: MUTED }}>{'★'.repeat(5 - Math.max(1, Math.min(5, t.rating || 5)))}</span>
               </div>
               {t.quote && (
@@ -844,7 +840,7 @@ function TestimonialsStrip() {
                   &ldquo;{t.quote}&rdquo;
                 </p>
               )}
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.08em', color: CREAM2 }}>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.08em', color: CREAM2 }}>
                 {t.displayName || 'Verified member'}
               </div>
             </div>
@@ -868,7 +864,7 @@ function EngineeringSection() {
   return (
     <section style={{ background: INK, padding: 'clamp(56px,8vw,108px) 0' }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
           Diagnosis, then intervention
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500, fontSize: 'clamp(32px,5.5vw,58px)', lineHeight: 1.03, color: CREAM, margin: '0 0 20px', maxWidth: '16em' }}>
@@ -885,7 +881,7 @@ function EngineeringSection() {
           {principles.map((p) => (
             <div key={p.h} style={{ border: `1px solid ${LINE_C}`, borderRadius: '8px', padding: '22px', background: `linear-gradient(180deg,${INK2},${INK})` }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '21px', color: CREAM, marginBottom: '8px' }}>{p.h}</div>
-              <p style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.6 }}>{p.d}</p>
+              <p style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.6 }}>{p.d}</p>
             </div>
           ))}
         </div>
@@ -901,6 +897,189 @@ function EngineeringSection() {
 // ============================================================
 // INTERACTIVE DIAL — Full 32-line exploration
 // ============================================================
+// ============================================================
+// THE SIXTEEN INDEPENDENT AXES — why IQ can't see you, drawn.
+// ============================================================
+// Left diagram: the four lines every IQ test measures collapsing into one
+// g node. Right: the sixteen lines that stand apart from g, in two honest
+// tiers. The section's claim IS the tier structure — ten effectively
+// orthogonal, six minimally connected — never "all independent."
+
+const TIER_A_AXES = [
+  { name: "Interoceptive", r: "~.05", proof: "heartbeat-detection accuracy (Garfinkel; Murphy)" },
+  { name: "Volitional", r: "~.00", proof: "self-discipline out-predicts IQ (Duckworth & Seligman)" },
+  { name: "Kinesthetic", r: "~.10", proof: "psychomotor factor, CHC canon (Ackerman)" },
+  { name: "Pattern-Recognition", r: "~.10", proof: "implicit learning (Reber; Kaufman)" },
+  { name: "Resilience", r: "~.05", proof: "stress recovery tracks stability, not IQ (CD-RISC)" },
+  { name: "Adaptive Flexibility", r: "~.10", proof: "psychological flexibility (ACT / AAQ-II)" },
+  { name: "Aesthetic", r: "~.10–.20", proof: "tracks Openness, not g" },
+  { name: "Street Smarts", r: "~.00 in-domain", proof: "expert handicappers vs IQ (Ceci & Liker; Lave)" },
+  { name: "Social-Perceptual", r: "~.15–.20", proof: "face recognition dissociates from IQ (Wilmer, PNAS)" },
+  { name: "Musical", r: "~.15–.25", proof: "pitch/rhythm discrimination; absolute pitch ≈ 0" },
+];
+const TIER_B_AXES = [
+  { name: "Creative", r: "~.17", proof: "divergent thinking above the threshold (Kim meta-analysis)" },
+  { name: "Emotional", r: "~.30", proof: "MSCEIT ability EI (Mayer-Salovey-Caruso)" },
+  { name: "Humor", r: "~.10 style", proof: "humor style is g-free (Greengross & Miller)" },
+  { name: "Existential", r: "~.20", proof: "wisdom-related performance (Berlin Wisdom Paradigm)" },
+  { name: "Community-Founding", r: "~.15–.19", proof: "group c-factor vs member IQ (Woolley, Science)" },
+  { name: "Financial Self-Management", r: "~.30", proof: "financial behavior vs IQ (Lusardi & Mitchell)" },
+];
+
+function IQCollapseDiagram() {
+  // Four IQ lines funneling into a single g node.
+  const lines = ["Logical", "Mathematical", "Spatial", "Linguistic"];
+  return (
+    <svg viewBox="0 0 300 220" className="w-full h-auto block" role="img" aria-label="The four IQ-test lines collapsing into one g factor">
+      {lines.map((l, i) => {
+        const y = 30 + i * 50;
+        return (
+          <g key={l}>
+            <line x1="96" y1={y} x2="212" y2="110" stroke={CHAMPAGNE} strokeOpacity="0.35" strokeWidth="1.4" />
+            <circle cx="88" cy={y} r="6" fill={CHAMPAGNE} />
+            <text x="76" y={y + 4} textAnchor="end" fill={CREAM} style={{ fontFamily: "'Inter', sans-serif", fontSize: '12px', fontWeight: 600 }}>{l}</text>
+          </g>
+        );
+      })}
+      <circle cx="226" cy="110" r="22" fill="rgba(226,96,74,0.12)" stroke={EMBER} strokeWidth="1.8" className="aq-pulse" />
+      <text x="226" y="117" textAnchor="middle" fill={EMBER} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '26px', fontWeight: 600, fontStyle: 'italic' }}>g</text>
+      <text x="226" y="152" textAnchor="middle" fill={MUTED} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.12em' }}>ONE DIMENSION</text>
+      <text x="150" y="205" textAnchor="middle" fill={CREAM2} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.1em' }}>CORRELATED .60–.80 — FOUR NAMES, ONE NUMBER</text>
+    </svg>
+  );
+}
+
+function SixteenSpokesDiagram() {
+  // Sixteen spokes standing apart: 10 champagne (Tier A), 6 jade (Tier B).
+  const all = [...TIER_A_AXES.map((a) => ({ ...a, tier: "A" })), ...TIER_B_AXES.map((a) => ({ ...a, tier: "B" }))];
+  const CXS = 150, CYS = 105, R = 78;
+  return (
+    <svg viewBox="0 0 300 220" className="w-full h-auto block" role="img" aria-label="Sixteen axes independent of g, radiating as separate spokes">
+      {all.map((a, i) => {
+        const ang = (-90 + (i * 360) / all.length) * (Math.PI / 180);
+        const x2 = CXS + R * Math.cos(ang), y2 = CYS + R * Math.sin(ang);
+        const c = a.tier === "A" ? CHAMPAGNE : JADE;
+        return (
+          <g key={a.name}>
+            <line x1={CXS} y1={CYS} x2={x2} y2={y2} stroke={c} strokeOpacity="0.55" strokeWidth="1.6" strokeDasharray={a.tier === "B" ? "3 3" : undefined} />
+            <circle cx={x2} cy={y2} r="4.5" fill={c} />
+          </g>
+        );
+      })}
+      <circle cx={CXS} cy={CYS} r="20" fill="rgba(224,198,140,0.10)" stroke={CHAMPAGNE} strokeWidth="1.4" />
+      <text x={CXS} y={CYS + 4} textAnchor="middle" fill={CREAM} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.14em' }}>YOU</text>
+      <text x="150" y="205" textAnchor="middle" fill={CREAM2} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.1em' }}>SIXTEEN AXES g CANNOT SEE — EACH ONE REAL SIGNAL</text>
+    </svg>
+  );
+}
+
+function SixteenAxesSection() {
+  return (
+    <section id="sixteen" style={{ background: `radial-gradient(760px 380px at 50% 0%, rgba(155,192,178,0.05), transparent 62%), linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: 'clamp(56px,8vw,104px) 0' }}>
+      <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, margin: '0 0 14px' }}>
+          The sixteen independent axes · what IQ can never see
+        </p>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(30px,4.6vw,52px)', lineHeight: 1.06, color: CREAM, margin: '0 0 16px', maxWidth: '20em' }}>
+          An IQ test measures four lines. And the four collapse into <em style={{ fontStyle: 'italic', color: EMBER }}>one</em>.
+        </h2>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '46em', marginBottom: '8px' }}>
+          A century of psychometrics found that the four abilities every IQ test samples — logical, mathematical,
+          spatial, linguistic — are so tightly correlated (.60–.80) that they behave as <b style={{ color: CREAM }}>a single
+          underlying factor</b>. Researchers call it <b style={{ color: EMBER }}><em>g</em></b>, general intelligence. That's why an IQ
+          test can hand you one number with a straight face: it really is measuring one thing, four different ways.
+        </p>
+        <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.7vw,18px)', lineHeight: 1.65, maxWidth: '46em', marginBottom: '36px' }}>
+          Here's what that century of research <b style={{ color: CREAM }}>also</b> found — and what never made it into any test
+          you've taken: <b style={{ color: CREAM }}>sixteen documented lines of human capability stand apart from g.</b> Ten are
+          effectively orthogonal — their correlation with IQ in published studies is near zero. Six more are only minimally
+          connected. Your self-control, your read of a room, your body's signal fidelity, your resilience, your street
+          instincts — <b style={{ color: CREAM }}>an IQ score carries almost no information about any of them.</b>
+        </p>
+
+        {/* The two diagrams, side by side */}
+        <div className="aq-sixteen-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(18px,3vw,40px)', alignItems: 'start', marginBottom: '36px' }}>
+          <div style={{ border: `1px solid ${LINE_C}`, borderRadius: '14px', background: INK2, padding: '22px' }}>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase', color: EMBER, marginBottom: '10px' }}>What an IQ test sees</p>
+            <IQCollapseDiagram />
+          </div>
+          <div style={{ border: `1px solid ${LINE_C}`, borderRadius: '14px', background: INK2, padding: '22px' }}>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase', color: JADE, marginBottom: '10px' }}>What we measure that it can't</p>
+            <SixteenSpokesDiagram />
+          </div>
+        </div>
+
+        {/* Tier A */}
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '12px' }}>
+          Tier one — effectively orthogonal to g (published r ≈ .00–.15) · ten axes
+        </p>
+        <div className="aq-sixteen-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '26px' }}>
+          {TIER_A_AXES.map((a) => (
+            <div key={a.name} className="flex items-baseline justify-between gap-3" style={{ border: `1px solid ${LINE_C}`, borderLeft: `3px solid ${CHAMPAGNE}`, borderRadius: '10px', padding: '12px 16px', background: 'rgba(224,198,140,0.03)' }}>
+              <span>
+                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '19px', color: CREAM }}>{a.name}</span>
+                <span style={{ display: 'block', fontSize: '12.5px', color: MUTED, lineHeight: 1.45 }}>{a.proof}</span>
+              </span>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: CHAMPAGNE, whiteSpace: 'nowrap' }}>r {a.r}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Tier B */}
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase', color: JADE, marginBottom: '12px' }}>
+          Tier two — minimally connected (published r ≈ .15–.35) · six axes
+        </p>
+        <div className="aq-sixteen-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '32px' }}>
+          {TIER_B_AXES.map((a) => (
+            <div key={a.name} className="flex items-baseline justify-between gap-3" style={{ border: `1px solid ${LINE_C}`, borderLeft: `3px solid ${JADE}`, borderRadius: '10px', padding: '12px 16px', background: 'rgba(155,192,178,0.03)' }}>
+              <span>
+                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '19px', color: CREAM }}>{a.name}</span>
+                <span style={{ display: 'block', fontSize: '12.5px', color: MUTED, lineHeight: 1.45 }}>{a.proof}</span>
+              </span>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: JADE, whiteSpace: 'nowrap' }}>r {a.r}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Why it matters — the competitive edge, stated honestly */}
+        <div style={{ border: `1px solid ${CHAMPAGNE}44`, borderRadius: '14px', background: 'rgba(224,198,140,0.05)', padding: 'clamp(22px,3vw,32px)', marginBottom: '14px' }}>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(21px,2.4vw,27px)', color: CREAM, margin: '0 0 10px' }}>
+            Why this is your edge — and why nobody else can hand it to you
+          </p>
+          <p style={{ color: CREAM2, fontSize: 'clamp(14.5px,1.6vw,16.5px)', lineHeight: 1.68, margin: '0 0 10px' }}>
+            Every axis independent of g is <b style={{ color: CREAM }}>new information about you</b> — signal no IQ score, no SAT, no
+            aptitude test ever captured. Sixteen quasi-independent axes means your profile lives in a space of roughly
+            <b style={{ color: CREAM }}> nine to ten effective dimensions</b> instead of the one dimension the testing industry has ranked
+            you on your whole life. That's not a slogan; it's arithmetic on the correlation matrix.
+          </p>
+          <p style={{ color: CREAM2, fontSize: 'clamp(14.5px,1.6vw,16.5px)', lineHeight: 1.68, margin: '0 0 10px' }}>
+            The practical edge: <b style={{ color: CREAM }}>your rarity becomes real</b> (top-quintile across ten independent axes is a
+            one-in-millions profile — computed honestly, because the axes don't double-count), <b style={{ color: CREAM }}>your matches
+            get sharper</b> (we pair minds on dimensions that carry actual signal, not noise), and <b style={{ color: CREAM }}>your
+            prescriptions stop being redundant</b> — an independent axis needs its own training, not "get smarter." A strong
+            volitional line can carry a weak financial one. A strong interoceptive line can rescue an overloaded emotional one.
+            None of those moves is visible — or coachable — on a one-number map.
+          </p>
+          <p style={{ color: CREAM2, fontSize: 'clamp(14.5px,1.6vw,16.5px)', lineHeight: 1.68, margin: 0 }}>
+            You've spent your life being measured on the one dimension. The other fifteen are where most lives are actually
+            won or lost — <b style={{ color: CREAM }}>and this is the only place that measures them together.</b>
+          </p>
+        </div>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10.5px', color: MUTED, lineHeight: 1.6, maxWidth: '60em' }}>
+          Honesty note: the r-values above are from the published literature named on each card. The two-tier structure IS the
+          claim — ten near-orthogonal, six minimally connected — and our composite counts only conservatively verified
+          dimensions. A full citation audit is pinning every value; where the data moves, these cards move with it.
+        </p>
+      </div>
+      <style>{`
+        @media (max-width: 820px) {
+          .aq-sixteen-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 function DialSection() {
   const [selected, setSelected] = useState(14);
   const [touched, setTouched] = useState(false);
@@ -940,7 +1119,7 @@ function DialSection() {
   return (
     <section id="dial" style={{ padding: 'clamp(56px,8vw,108px) 0', background: INK }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
           Your mind, in full
         </div>
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
@@ -1009,11 +1188,11 @@ function DialSection() {
 
           {/* Detail Panel */}
           <div style={{ background: `linear-gradient(180deg,${INK2},${INK})`, border: `1px solid ${LINE_C}`, borderRadius: '6px', padding: '26px 28px' }} aria-live="polite">
-            <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.16em', textTransform: 'uppercase', color: MODE[sel.mode].c }}>
+            <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.16em', textTransform: 'uppercase', color: MODE[sel.mode].c }}>
               <span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: MODE[sel.mode].c }} /> {MODE[sel.mode].label}
             </span>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: 'clamp(30px,4.4vw,44px)', lineHeight: 1.0, margin: '12px 0 3px', color: CREAM }}>{sel.name}</div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.08em', color: CREAM2, marginBottom: '18px' }}>{MODE[sel.mode].verb}</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.08em', color: CREAM2, marginBottom: '18px' }}>{MODE[sel.mode].verb}</div>
             <div className="flex items-baseline justify-between mb-[9px]">
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '26px', color: MODE[sel.mode].c }}>{sel.v}</span>
               <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.14em', color: MUTED }}>/ 100</span>
@@ -1021,12 +1200,12 @@ function DialSection() {
             <div className="h-[4px] rounded-[4px] relative overflow-hidden" style={{ background: 'rgba(241,234,219,0.10)' }}>
               <span className="absolute inset-y-0 left-0 rounded-[4px]" style={{ width: `${sel.v}%`, background: MODE[sel.mode].c, transition: 'width .7s cubic-bezier(.22,.61,.36,1)' }} />
             </div>
-            <div style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.62, marginTop: '18px' }}>{sel.note}</div>
+            <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.62, marginTop: '18px' }}>{sel.note}</div>
             {sel.indep && <div className="mt-[15px] inline-flex items-center gap-[7px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.10em', color: CHAMPAGNE }}>◇ Independent axis — carries the effective-dimension count</div>}
             <div className="flex gap-5 flex-wrap mt-6 pt-[18px]" style={{ borderTop: `1px solid ${LINE_C}` }}>
-              <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.08em', color: CREAM2 }}><span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: CHAMPAGNE }} /> Measured · {counts.measured}</span>
-              <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.08em', color: CREAM2 }}><span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: JADE }} /> Developmental · {counts.developmental}</span>
-              <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.08em', color: CREAM2 }}><span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: BRONZE }} /> Demonstrated · {counts.demonstrated}</span>
+              <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.08em', color: CREAM2 }}><span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: CHAMPAGNE }} /> Measured · {counts.measured}</span>
+              <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.08em', color: CREAM2 }}><span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: JADE }} /> Developmental · {counts.developmental}</span>
+              <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.08em', color: CREAM2 }}><span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: BRONZE }} /> Demonstrated · {counts.demonstrated}</span>
             </div>
           </div>
         </div>
@@ -1035,7 +1214,7 @@ function DialSection() {
         <div className="grid gap-[clamp(16px,3vw,32px)] mt-[38px]" style={{ gridTemplateColumns: 'repeat(3,minmax(0,1fr))' }}>
           {(["measured", "developmental", "demonstrated"] as const).map((m) => (
             <div key={m}>
-              <div className="flex items-center gap-2 pb-[9px] mb-[5px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.14em', textTransform: 'uppercase', color: MODE[m].c, borderBottom: `1px solid ${LINE_C}` }}>
+              <div className="flex items-center gap-2 pb-[9px] mb-[5px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', color: MODE[m].c, borderBottom: `1px solid ${LINE_C}` }}>
                 <span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: MODE[m].c }} /> {MODE[m].label}
               </div>
               {grouped[m].map((l) => (
@@ -1043,8 +1222,8 @@ function DialSection() {
                   style={{ padding: '8px', background: selected === l.i ? INK3 : 'transparent', borderColor: selected === l.i ? LINE_C : 'transparent' }}
                   onPointerEnter={() => pick(l.i)} onFocus={() => pick(l.i)} onPointerDown={() => pick(l.i)}
                   onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(l.i); } }}>
-                  <span className="flex items-center gap-[7px]" style={{ fontSize: '14px', color: CREAM }}>
-                    {l.indep && <span style={{ color: CHAMPAGNE, fontSize: '10px' }}>◇</span>}{l.name}
+                  <span className="flex items-center gap-[7px]" style={{ fontSize: '16px', color: CREAM }}>
+                    {l.indep && <span style={{ color: CHAMPAGNE, fontSize: '12px' }}>◇</span>}{l.name}
                   </span>
                   <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '19px', color: MODE[m].c }}>{l.v}</span>
                 </div>
@@ -1075,7 +1254,7 @@ function ProcessSection() {
     <section id="how" style={{ padding: 'clamp(56px,8vw,108px) 0', background: INK }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
         <div className="h-[1px] mb-[clamp(56px,8vw,108px)]" style={{ background: LINE_C }} />
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
           The process
         </div>
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
@@ -1087,9 +1266,9 @@ function ProcessSection() {
         <div className="grid gap-[clamp(20px,3vw,40px)] mt-[clamp(24px,3vw,44px)]" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
           {STEPS.map((s) => (
             <div key={s.n} className="pt-[26px]" style={{ borderTop: `2px solid ${CHAMPAGNE}` }}>
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.16em', color: CHAMPAGNE, marginBottom: '10px' }}>{s.n}</div>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.16em', color: CHAMPAGNE, marginBottom: '10px' }}>{s.n}</div>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '26px', color: CREAM, marginBottom: '8px' }}>{s.t}</div>
-              <div style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.6 }}>{s.d}</div>
+              <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.6 }}>{s.d}</div>
             </div>
           ))}
         </div>
@@ -1110,7 +1289,7 @@ function EvidenceSection() {
   return (
     <section id="evidence" style={{ padding: 'clamp(56px,8vw,108px) 0', background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}` }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
           Why you can trust the number
         </div>
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
@@ -1123,9 +1302,9 @@ function EvidenceSection() {
           {EVIDENCE.map((e) => (
             <div key={e.t} className="rounded-[6px] transition-all duration-200 hover:-translate-y-[2px]" style={{ background: `linear-gradient(180deg,${INK2},${INK})`, border: `1px solid ${LINE_C}`, padding: '24px 26px' }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', marginBottom: '8px', color: CREAM }}>
-                <span style={{ color: CHAMPAGNE, fontSize: '14px', marginRight: '9px', verticalAlign: 'middle' }}>◇</span>{e.t}
+                <span style={{ color: CHAMPAGNE, fontSize: '16px', marginRight: '9px', verticalAlign: 'middle' }}>◇</span>{e.t}
               </div>
-              <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>{e.d}</div>
+              <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.6 }}>{e.d}</div>
             </div>
           ))}
         </div>
@@ -1146,7 +1325,7 @@ function SamplesSection() {
   return (
     <section style={{ padding: 'clamp(56px,8vw,108px) 0', background: INK }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
           What a rare mind looks like
         </div>
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
@@ -1159,12 +1338,12 @@ function SamplesSection() {
           {SAMPLES.map((s) => (
             <div key={s.rarity} className="rounded-[6px] text-center" style={{ border: `1px solid ${LINE_C}`, padding: '26px', background: `radial-gradient(420px 200px at 50% 0%, rgba(224,198,140,0.06), transparent 70%), ${INK2}` }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(30px,4.5vw,44px)', lineHeight: 1, background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.rarity}</div>
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: CREAM, margin: '14px 0 8px' }}>{s.shape}</div>
-              <div style={{ color: CREAM2, fontSize: '14px', lineHeight: 1.55 }}>{s.desc}</div>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', color: CREAM, margin: '14px 0 8px' }}>{s.shape}</div>
+              <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.55 }}>{s.desc}</div>
             </div>
           ))}
         </div>
-        <div className="text-center mt-[18px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.12em', color: MUTED }}>
+        <div className="text-center mt-[18px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.12em', color: MUTED }}>
           Sample results · every figure is an estimate within the AQAL population, computed from your own aggregate, then refined by the evidence-based scoring method
         </div>
       </div>
@@ -1239,7 +1418,7 @@ function ServicePillars() {
   return (
     <section style={{ padding: 'clamp(56px,8vw,108px) 0', background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}` }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
           What we do with your architecture
         </div>
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
@@ -1256,7 +1435,7 @@ function ServicePillars() {
             <ClusterGlyph />
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: CHAMPAGNE, margin: '10px 0 12px' }}>01 · Maximize</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Strength Cluster Optimization</div>
-            <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>
+            <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.6 }}>
               <p style={{ marginBottom: '12px' }}>Your highest lines form <b style={{ color: CREAM, fontWeight: 600 }}>strength clusters</b> — groups that amplify each other when used together. We identify these clusters and show you how to deploy them toward your stated goals.</p>
               <p style={{ marginBottom: '12px' }}>The <b style={{ color: CREAM, fontWeight: 600 }}>second-order effects</b> of combining your top lines optimally are often more powerful than any individual strength. Strategic × Interpersonal doesn't just mean "good at planning and people" — it means you can architect social outcomes most people can't even see.</p>
               <p>A panel of independent AIs analyzes your specific cluster patterns and generates prescriptions for career decisions, relationship dynamics, creative output, and long-term planning.</p>
@@ -1268,7 +1447,7 @@ function ServicePillars() {
             <ShieldGlyph />
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: '#C85C44', margin: '10px 0 12px' }}>02 · Shield</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Weakness Cluster Protection</div>
-            <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>
+            <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.6 }}>
               <p style={{ marginBottom: '12px' }}>Your lowest lines aren't just "areas for improvement" — they're <b style={{ color: CREAM, fontWeight: 600 }}>structural vulnerabilities</b> that can destroy everything your strengths have built. One weak line can collapse the entire system geometrically, not additively.</p>
               <p style={{ marginBottom: '12px' }}>We assess the <b style={{ color: CREAM, fontWeight: 600 }}>likelihood</b> of your weakness clusters threatening the system, then prescribe: identify, shield with structural protections, bolster through targeted training (permanent gains, per the research), and insure against worst-case scenarios.</p>
               <p>The evidence shows intelligence lines can be trained. The gains persist across decades. Your weaknesses are not destiny — but unattended, they control the outcome.</p>
@@ -1280,7 +1459,7 @@ function ServicePillars() {
             <MatchGlyph />
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.20em', textTransform: 'uppercase', color: JADE, margin: '10px 0 12px' }}>03 · Connect</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '24px', color: CREAM, marginBottom: '14px' }}>Complementary Relationship Matching</div>
-            <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>
+            <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.6 }}>
               <p style={{ marginBottom: '12px' }}>We match you with members whose <b style={{ color: CREAM, fontWeight: 600 }}>strength clusters align with your weakness clusters</b> — and vice versa. By forming friendships and professional relationships with these people, their natural strengths begin to elevate your weak areas through proximity and collaboration.</p>
               <p style={{ marginBottom: '12px' }}>The relationship itself is the intervention. Sustained connection with someone strong in your weak area produces measurable, permanent improvement in that line — not through formal training, but through friendship and shared problem-solving.</p>
               <p>We offer members the opportunity to reach out, connect, and build genuine relationships as friends, colleagues, and accountability partners.</p>
@@ -1304,7 +1483,7 @@ function FinalCTA() {
   return (
     <section id="start" className="text-center" style={{ padding: 'clamp(64px,9vw,120px) 0', background: `radial-gradient(700px 380px at 50% 10%, rgba(224,198,140,0.10), transparent 65%)` }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div className="flex justify-center mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE }}>
+        <div className="flex justify-center mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE }}>
           Know your mind. Protect it. Maximize it.
         </div>
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 14px' }}>
@@ -1363,7 +1542,7 @@ function ResearchLibrarySection() {
   return (
     <section id="library" style={{ padding: 'clamp(56px,8vw,108px) 0', background: INK }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
           The research library
         </div>
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
@@ -1378,7 +1557,7 @@ function ResearchLibrarySection() {
           {LIB_STATS.map((s) => (
             <div key={s.l} className="rounded-[6px] text-center" style={{ border: `1px solid ${LINE_C}`, padding: '22px 14px', background: `radial-gradient(360px 160px at 50% 0%, rgba(224,198,140,0.06), transparent 70%), ${INK2}` }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(26px,4vw,40px)', lineHeight: 1, background: `linear-gradient(96deg,${CHAMPAGNE},${BRONZE})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.n}</div>
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '0.14em', textTransform: 'uppercase', color: CREAM2, marginTop: '10px' }}>{s.l}</div>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', color: CREAM2, marginTop: '10px' }}>{s.l}</div>
             </div>
           ))}
         </div>
@@ -1388,14 +1567,14 @@ function ResearchLibrarySection() {
           {LIB_POINTS.map((p) => (
             <div key={p.t} className="rounded-[6px]" style={{ background: `linear-gradient(180deg,${INK2},${INK})`, border: `1px solid ${LINE_C}`, padding: '24px 26px' }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', marginBottom: '8px', color: CREAM }}>
-                <span style={{ color: CHAMPAGNE, fontSize: '14px', marginRight: '9px', verticalAlign: 'middle' }}>◇</span>{p.t}
+                <span style={{ color: CHAMPAGNE, fontSize: '16px', marginRight: '9px', verticalAlign: 'middle' }}>◇</span>{p.t}
               </div>
-              <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>{p.d}</div>
+              <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.6 }}>{p.d}</div>
             </div>
           ))}
         </div>
         <div className="mt-[clamp(20px,2.5vw,28px)]">
-          <Link href="/research-library"><span className="inline-flex items-center gap-[8px] cursor-pointer hover:opacity-80 transition-opacity" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: CHAMPAGNE }}><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> Browse the library →</span></Link>
+          <Link href="/research-library"><span className="inline-flex items-center gap-[8px] cursor-pointer hover:opacity-80 transition-opacity" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', letterSpacing: '0.12em', textTransform: 'uppercase', color: CHAMPAGNE }}><span className="w-[5px] h-[5px] rounded-full" style={{ background: JADE, boxShadow: `0 0 7px ${JADE}` }} /> Browse the library →</span></Link>
         </div>
       </div>
       <style>{`
@@ -1415,7 +1594,7 @@ function CompanionSection() {
   return (
     <section id="companion" style={{ padding: 'clamp(56px,8vw,108px) 0', background: `linear-gradient(180deg,${INK2},${INK})`, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}` }}>
       <div className="max-w-[1160px] mx-auto px-[clamp(20px,5vw,56px)]">
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.26em', textTransform: 'uppercase', color: CHAMPAGNE, marginBottom: '16px' }}>
           Companion mode · optional, recommended
         </div>
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.02, fontSize: 'clamp(32px,5vw,54px)', letterSpacing: '-0.005em', color: CREAM, margin: '0 0 18px' }}>
@@ -1435,7 +1614,7 @@ function CompanionSection() {
           ].map((c) => (
             <div key={c.t} className="rounded-[6px]" style={{ border: `1px solid ${LINE_C}`, padding: '26px 24px', background: `radial-gradient(300px 180px at 50% 0%, rgba(224,198,140,0.05), transparent 70%), ${INK}` }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: '22px', color: CREAM, marginBottom: '10px' }}>{c.t}</div>
-              <div style={{ color: CREAM2, fontSize: '14.5px', lineHeight: 1.6 }}>{c.d}</div>
+              <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.6 }}>{c.d}</div>
             </div>
           ))}
         </div>
@@ -1484,6 +1663,8 @@ export default function Home() {
         <div data-reveal><TenPromisesSection /></div>
         {/* Instant payoff: the interactive 32-line dial — touch the product before reading a word */}
         <div data-reveal><DialSection /></div>
+        {/* The scientific backbone: four IQ lines collapse into g; sixteen axes stand apart */}
+        <div data-reveal><SixteenAxesSection /></div>
         <ActDivider />
         {/* ── THE STORY ARC ── tension → aha → "that's me" → fear → plan */}
         <div data-reveal><FounderStorySection /></div>

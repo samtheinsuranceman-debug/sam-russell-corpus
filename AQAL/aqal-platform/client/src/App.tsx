@@ -56,6 +56,9 @@ const Matches = lazy(() => import("./pages/Matches"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Goals = lazy(() => import("./pages/Goals"));
 const Beliefs = lazy(() => import("./pages/Beliefs"));
+const EcologicalInterventions = lazy(() => import("./pages/EcologicalInterventions"));
+const MetaSystems = lazy(() => import("./pages/MetaSystems"));
+const ScenarioIntelligence = lazy(() => import("./pages/ScenarioIntelligence"));
 const VerificationLedger = lazy(() => import("./pages/VerificationLedger"));
 const PricingStructure = lazy(() => import("./pages/PricingStructure"));
 const BlindSideAnalyzer = lazy(() => import("./pages/BlindSideAnalyzer"));
@@ -381,6 +384,21 @@ function Router() {
         <Route path={"/beliefs"}>
           <PageErrorBoundary pageName="Beliefs">
             <Suspense fallback={<PageSkeleton />}><Beliefs /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/ecological-interventions"}>
+          <PageErrorBoundary pageName="EcologicalInterventions">
+            <Suspense fallback={<PageSkeleton />}><EcologicalInterventions /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/meta-systems"}>
+          <PageErrorBoundary pageName="MetaSystems">
+            <Suspense fallback={<PageSkeleton />}><MetaSystems /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/scenario-intelligence"}>
+          <PageErrorBoundary pageName="ScenarioIntelligence">
+            <Suspense fallback={<PageSkeleton />}><ScenarioIntelligence /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/verification"}>

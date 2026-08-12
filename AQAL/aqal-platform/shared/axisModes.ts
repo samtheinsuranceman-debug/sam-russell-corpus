@@ -73,14 +73,14 @@ export const AXIS_MODE: Record<string, { mode: AxisMode; indep: boolean; feedsRa
   // No normed population distribution exists.
   Interpersonal:  { mode: "demonstrated", indep: false, feedsRarity: true },
   Empathic:       { mode: "demonstrated", indep: false, feedsRarity: true },
-  Intuitive:      { mode: "demonstrated", indep: false, feedsRarity: true },
-  Musical:        { mode: "demonstrated", indep: false, feedsRarity: true },
-  Kinesthetic:    { mode: "demonstrated", indep: false, feedsRarity: true },
+  Intuitive:      { mode: "demonstrated", indep: true, feedsRarity: true },   // implicit learning r~.10 with g (Reber; Kaufman, Cognition)
+  Musical:        { mode: "demonstrated", indep: true, feedsRarity: true },   // pitch/rhythm discrimination r~.15-.25; absolute pitch ~0 (Seashore lineage)
+  Kinesthetic:    { mode: "demonstrated", indep: true, feedsRarity: true },   // psychomotor factor Gp, r~.10 (CHC canon; Ackerman)
   Naturalistic:   { mode: "demonstrated", indep: false, feedsRarity: true },
   Strategic:      { mode: "demonstrated", indep: false, feedsRarity: true },
   Tactical:       { mode: "demonstrated", indep: false, feedsRarity: true },
-  Adaptive:       { mode: "demonstrated", indep: false, feedsRarity: true },
-  Resilient:      { mode: "demonstrated", indep: false, feedsRarity: true },
+  Adaptive:       { mode: "demonstrated", indep: true, feedsRarity: true },   // psychological flexibility (AAQ-II) r~.10 with g (ACT literature)
+  Resilient:      { mode: "demonstrated", indep: true, feedsRarity: true },   // CD-RISC tracks emotional stability, r~.05 with g
   Systematic:     { mode: "demonstrated", indep: false, feedsRarity: true },
   Architectural:  { mode: "demonstrated", indep: false, feedsRarity: true },
   Adversarial:    { mode: "demonstrated", indep: true, feedsRarity: true },   // genuinely independent of g

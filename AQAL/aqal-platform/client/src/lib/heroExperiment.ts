@@ -24,22 +24,22 @@ export const HERO_VARIANTS: HeroVariant[] = [
     // Control — the founder-worded outcome headline.
     id: "outcome",
     lead: "How predictable, protected, and reliable is your mind ",
-    emph: "at producing your dreams and outcomes?",
-    sub: "Almost no one has ever measured it. We do — then we engineer the mind to close the gap between where you stand and what you're chasing.",
+    emph: "at producing the outcomes you actually want?",
+    sub: "Almost no one has ever measured this. We do — then we engineer the system so the gap between where you stand and what you're chasing finally closes.",
   },
   {
     // Commitment-elite: finishing is the flex (true — short answers score zero).
     id: "commitment",
     lead: "Most people won't finish this. The ones who do get ",
     emph: "the only real map of their mind.",
-    sub: "It takes 90 minutes and total honesty. That's the filter. The first 10,000 who finish join free, for life.",
+    sub: "It takes real honesty and about 90 minutes. That is the filter. The first 10,000 who finish join free — for life.",
   },
   {
     // Revealed rarity: the product literally computes 1-in-X.
     id: "rarity",
     lead: "Find out how rare your mind actually is — ",
     emph: "across all 32 lines, not just the one a test measured.",
-    sub: "Every other test scored a sliver of you. This one measures the whole system, and tells you where you stand.",
+    sub: "Every other test scored a sliver of you. This one measures the whole system and tells you exactly where you stand.",
   },
   {
     // Refusal / identity: for people who reject a single number.
