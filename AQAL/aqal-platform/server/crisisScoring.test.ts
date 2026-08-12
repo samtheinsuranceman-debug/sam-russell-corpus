@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { calculateCrisisScore, TIER_INFO } from "./crisisScoring";
-import type { CrisisInput } from "./crisisScoring";
+import { calculateCrisisScore, TIER_INFO } from "../shared/crisisScoring";
+import type { CrisisInput } from "../shared/crisisScoring";
 
 describe("Crisis Scoring Algorithm", () => {
   it("scores a critical-tier case (elderly, behind on bills, 3 pressures)", () => {

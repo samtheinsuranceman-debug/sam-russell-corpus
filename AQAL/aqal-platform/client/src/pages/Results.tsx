@@ -11,7 +11,7 @@ import { SHOW_GENERATIONAL_RARITY } from "@/config/features";
 import { PageSkeleton } from "@/components/ui/loading-skeleton";
 import { STRENGTH_CLUSTERS, GROWTH_CLUSTERS, type ClusterDefinition } from "@shared/clusters";
 import { CLUSTER_IMAGE_MAP } from "@shared/clusterImages";
-import { axisMode, modeColor, MODE_META, ALL_AXES } from "@shared/axisModes";
+import { axisMode, modeColor, MODE_META, ALL_AXES, axisIndep } from "@shared/axisModes";
 import { effectivePotential } from "@shared/effectivePotential";
 import { bottleneckRole } from "@shared/bottleneckRoles";
 import { Cite } from "@/components/Cite";
@@ -1373,6 +1373,223 @@ function StarvedLineOnRamp({ scores, errBars }: { scores: number[]; errBars?: (n
 // The ladder (how prescriptions roll out), the dose curve (something beats
 // nothing), this week's strength challenge, the weekly pulse on the weakest
 // line, the what-changed report, prescription star-ratings, and export.
+// ============================================================
+// THE G-FREE PROFILE — the member's scores on the axes documented
+// as independent of general intelligence. This is the panel that
+// makes the homepage's sixteen-axes claim personal: "here is the
+// part of you no IQ score ever carried information about."
+// ============================================================
+function GFreeProfile({ scores, errBars }: { scores: number[]; errBars?: (number | null)[] }) {
+  const rows = ALL_AXES
+    .map((axis, i) => ({ axis, i, score: scores[i] ?? 0 }))
+    .filter((r) => axisIndep(r.axis) && r.score > 0)
+    .sort((a, b) => b.score - a.score);
+  if (rows.length < 3) return null;
+
+  const top = rows[0];
+  const low = rows[rows.length - 1];
+  return (
+    <section className="mb-16 rounded-2xl border border-[#9BC0B2]/30 bg-[#9BC0B2]/[0.04] p-7">
+      <p className="text-[0.62rem] uppercase tracking-[0.2em] text-[#9BC0B2] mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        Your g-free profile — what no IQ test could see
+      </p>
+      <p className="text-sm text-foreground/85 leading-relaxed mb-2">
+        These {rows.length} lines are documented in the research as{" "}
+        <span className="text-foreground font-medium">independent of general intelligence</span> — an IQ score carries
+        almost no information about any of them. Every score below is <em>new signal about you</em>: capability no test
+        you&rsquo;ve ever taken was able to measure.
+      </p>
+      <p className="text-sm text-foreground/75 leading-relaxed mb-6">
+        Your strongest invisible asset: <span className="text-[#9BC0B2] font-medium">{top.axis} ({Math.round(top.score * 100)})</span> — it
+        has been carrying outcomes your whole life without ever showing up on a score. Your most invisible exposure:{" "}
+        <span className="text-[#E2604A] font-medium">{low.axis} ({Math.round(low.score * 100)})</span> — weak here is
+        invisible to every conventional measure, which is exactly how blind spots stay blind.
+      </p>
+      <div className="grid gap-2 sm:grid-cols-2">
+        {rows.map((r) => (
+          <div key={r.axis} className="flex items-center gap-3">
+            <span className="w-[150px] flex-none text-[12.5px] text-foreground/85 truncate">{r.axis}</span>
+            <div className="h-[5px] flex-1 rounded-full overflow-hidden bg-white/[0.07]">
+              <div className="h-full rounded-full" style={{ width: `${Math.round(r.score * 100)}%`, background: modeColor(r.axis) }} />
+            </div>
+            <span className="w-[52px] flex-none text-right text-[12px]" style={{ fontFamily: "'JetBrains Mono', monospace", color: modeColor(r.axis) }}>
+              {Math.round(r.score * 100)}{errBars?.[r.i] != null ? <span className="text-foreground/40"> ±{errBars[r.i]}</span> : ""}
+            </span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-5 text-[11px] leading-relaxed text-foreground/50" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        Independence claims per line are anchored to published research (Duckworth, Garfinkel, Reber, Wilmer, CHC canon)
+        — see the Sixteen Axes section on the homepage. A full citation audit is pinning exact correlations.
+      </p>
+    </section>
+  );
+}
+
+// ============================================================
+// STABILITY CHECK — Manus's research-weighted triage engine, wired.
+// Runs entirely client-side from the member's own scores plus four
+// quick context answers. Nothing is stored; nothing is diagnosed.
+// ============================================================
+const FIN_OPTIONS: { v: string; label: string }[] = [
+  { v: "behind_on_bills", label: "Behind on bills" },
+  { v: "living_paycheck_to_paycheck", label: "Paycheck to paycheck" },
+  { v: "barely_breaking_even", label: "Barely breaking even" },
+  { v: "volatile_cash_flow", label: "Volatile cash flow" },
+  { v: "debt_consolidation", label: "Working down debt" },
+  { v: "stable_no_cushion", label: "Stable, no cushion" },
+  { v: "saving_slowly", label: "Saving slowly" },
+  { v: "some_extra_money", label: "Some extra money" },
+];
+const EVENT_OPTIONS: { v: string; label: string }[] = [
+  { v: "bereavement", label: "Bereavement" },
+  { v: "divorce_separation", label: "Divorce / separation" },
+  { v: "new_infant", label: "New baby" },
+  { v: "job_loss", label: "Job loss" },
+  { v: "major_relocation", label: "Major move" },
+  { v: "intensive_treatment", label: "Intensive treatment" },
+  { v: "hospitalization", label: "Hospitalization" },
+];
+const PRESSURE_OPTIONS = ["Work", "Money", "Family", "Health", "Legal", "Caregiving"];
+const FEAR_OPTIONS: { v: string; label: string }[] = [
+  { v: "eviction", label: "Losing my housing" },
+  { v: "job_loss", label: "Losing my job" },
+  { v: "debt_spiral", label: "Debt spiraling" },
+  { v: "relationship_rupture", label: "A relationship rupturing" },
+  { v: "custody_conflict", label: "Custody conflict" },
+  { v: "isolation", label: "Ending up alone" },
+  { v: "loss_of_savings", label: "Losing my savings" },
+];
+
+function StabilityCheck({ scores }: { scores: number[] }) {
+  const [open, setOpen] = useState(false);
+  const [fin, setFin] = useState<string>("");
+  const [events, setEvents] = useState<string[]>([]);
+  const [pressures, setPressures] = useState<string[]>([]);
+  const [fear, setFear] = useState<string>("");
+  const [result, setResult] = useState<import("@shared/crisisScoring").CrisisScoreResult | null>(null);
+
+  const toggle = (arr: string[], set: (v: string[]) => void, v: string) =>
+    set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
+
+  const run = async () => {
+    const { calculateCrisisScore } = await import("@shared/crisisScoring");
+    const weaknesses = ALL_AXES.filter((a, i) => (scores[i] ?? 0) > 0 && (scores[i] ?? 0) < 0.4).map((a) => a.toLowerCase());
+    const strengths = ALL_AXES.filter((a, i) => (scores[i] ?? 0) > 0.7).map((a) => a.toLowerCase());
+    setResult(calculateCrisisScore({
+      weaknesses, strengths,
+      financialStatus: (fin || undefined) as import("@shared/crisisScoring").FinancialStatus | undefined,
+      pressureSources: pressures.length ? pressures.map((p) => p.toLowerCase()) : undefined,
+      recentLifeEvents: events.length ? (events as import("@shared/crisisScoring").LifeEvent[]) : undefined,
+      worstCaseFear: fear || undefined,
+    }));
+  };
+
+  const chip = (on: boolean) =>
+    `px-3 py-1.5 rounded-full text-[12px] border transition-colors cursor-pointer ${on ? "border-primary/60 bg-primary/15 text-foreground" : "border-white/10 text-foreground/60 hover:border-white/25"}`;
+
+  return (
+    <section className="mb-16 rounded-2xl border border-white/10 bg-white/[0.02] p-7">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <p className="text-[0.62rem] uppercase tracking-[0.2em] text-primary/80 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            Stability check — optional, 60 seconds, stored nowhere
+          </p>
+          <p className="text-sm text-foreground/80 leading-relaxed max-w-[52em]">
+            Your map shows <em>what</em> to work on. This answers <em>how urgently</em>. Four quick context questions,
+            weighed together with your line scores by a research-weighted triage engine — financial-stress research,
+            stages-of-change, life-event load — to set your intervention pace. It runs on your device and saves nothing.
+          </p>
+        </div>
+        {!open && (
+          <button onClick={() => setOpen(true)} className="px-4 py-2.5 rounded-lg text-[12px] uppercase tracking-[0.1em] bg-primary text-primary-foreground font-semibold cursor-pointer" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            Run my stability check
+          </button>
+        )}
+      </div>
+
+      {open && !result && (
+        <div className="mt-6 space-y-5">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/60 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>1 · Money right now</p>
+            <div className="flex gap-2 flex-wrap">{FIN_OPTIONS.map((o) => <button key={o.v} className={chip(fin === o.v)} onClick={() => setFin(fin === o.v ? "" : o.v)}>{o.label}</button>)}</div>
+          </div>
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/60 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>2 · Big events in the last 12 months (all that apply)</p>
+            <div className="flex gap-2 flex-wrap">{EVENT_OPTIONS.map((o) => <button key={o.v} className={chip(events.includes(o.v))} onClick={() => toggle(events, setEvents, o.v)}>{o.label}</button>)}</div>
+          </div>
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/60 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>3 · Where the pressure is coming from (all that apply)</p>
+            <div className="flex gap-2 flex-wrap">{PRESSURE_OPTIONS.map((o) => <button key={o} className={chip(pressures.includes(o))} onClick={() => toggle(pressures, setPressures, o)}>{o}</button>)}</div>
+          </div>
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/60 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>4 · The worst case that worries you most</p>
+            <div className="flex gap-2 flex-wrap">{FEAR_OPTIONS.map((o) => <button key={o.v} className={chip(fear === o.v)} onClick={() => setFear(fear === o.v ? "" : o.v)}>{o.label}</button>)}</div>
+          </div>
+          <button onClick={run} className="px-5 py-3 rounded-lg text-[12px] uppercase tracking-[0.1em] bg-primary text-primary-foreground font-bold cursor-pointer" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            Compute my pace
+          </button>
+        </div>
+      )}
+
+      {result && (
+        <StabilityResult result={result} onRedo={() => setResult(null)} />
+      )}
+    </section>
+  );
+}
+
+function StabilityResult({ result, onRedo }: { result: import("@shared/crisisScoring").CrisisScoreResult; onRedo: () => void }) {
+  const [tierInfo, setTierInfo] = useState<{ label: string; color: string; description: string; cadence: string } | null>(null);
+  useEffect(() => {
+    import("@shared/crisisScoring").then((m) => setTierInfo(m.TIER_INFO[result.tier]));
+  }, [result.tier]);
+  if (!tierInfo) return null;
+  return (
+    <div className="mt-6">
+      <div className="flex items-center gap-3 flex-wrap mb-4">
+        <span className="px-4 py-2 rounded-lg text-[13px] font-bold uppercase tracking-[0.1em]" style={{ fontFamily: "'JetBrains Mono', monospace", background: `${tierInfo.color}22`, color: tierInfo.color, border: `1px solid ${tierInfo.color}55` }}>
+          {tierInfo.label}
+        </span>
+        <span className="text-[12px] text-foreground/70" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          intervention window: {result.interventionWindow} · {tierInfo.cadence.toLowerCase()}
+        </span>
+      </div>
+      <p className="text-sm text-foreground/80 leading-relaxed mb-4">{tierInfo.description}</p>
+      {result.topRisks.length > 0 && (
+        <div className="mb-4">
+          <p className="text-[11px] uppercase tracking-[0.14em] text-[#E2604A] mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>What's driving the pace</p>
+          <ul className="space-y-1">{result.topRisks.map((r) => <li key={r} className="text-[13px] text-foreground/75">— {r}</li>)}</ul>
+        </div>
+      )}
+      {result.strengthLever && (
+        <p className="text-[13px] text-foreground/80 mb-3">
+          <span className="text-[#9BC0B2] font-medium">Your lever:</span> use your strong{" "}
+          <span className="capitalize text-foreground">{result.strengthLever.use}</span> line to carry the weak{" "}
+          <span className="capitalize text-foreground">{result.strengthLever.toSupport}</span> line while it rebuilds.
+        </p>
+      )}
+      <p className="text-[13px] text-foreground/80 mb-4"><span className="text-foreground/60">Recommended starting protocol:</span> {result.recommendedProtocol}</p>
+      {result.delayFlags.length > 0 && (
+        <div className="mb-4 rounded-xl border border-[#F59E0B]/30 bg-[#F59E0B]/[0.06] p-4">
+          <p className="text-[11px] uppercase tracking-[0.14em] text-[#F59E0B] mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Sequencing flags — the research says wait</p>
+          <ul className="space-y-1">{result.delayFlags.map((f) => <li key={f} className="text-[13px] text-foreground/75">— {f}</li>)}</ul>
+        </div>
+      )}
+      {result.tier === "CRITICAL" && (
+        <p className="text-[13px] leading-relaxed text-foreground/80 mb-4 rounded-xl border border-[#EF4444]/30 bg-[#EF4444]/[0.06] p-4">
+          If any part of what you're carrying feels like more than a planning problem, real people answer right now:{" "}
+          <b className="text-foreground">988</b> (call or text, US) · <b className="text-foreground">Crisis Text Line — text HOME to 741741</b>. This platform is a map, not a lifeline; those are lifelines.
+        </p>
+      )}
+      <div className="flex items-center gap-4 flex-wrap">
+        <button onClick={onRedo} className="text-[11px] uppercase tracking-[0.1em] text-foreground/50 hover:text-foreground/80 cursor-pointer" style={{ fontFamily: "'JetBrains Mono', monospace" }}>← Change answers</button>
+        <p className="text-[10.5px] text-foreground/40" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Not a medical or psychological diagnosis — a pacing recommendation. Nothing you selected was stored.</p>
+      </div>
+    </div>
+  );
+}
+
 function GrowthStudio({ scores }: { scores: number[] }) {
   const utils = trpc.useUtils();
   const [pulseText, setPulseText] = useState("");
@@ -1792,6 +2009,12 @@ export default function Results() {
                 first (it holds the others in place), and watch the map change month over month.
               </p>
             </section>
+
+            {/* The g-free profile: their scores on the independence-documented axes */}
+            <GFreeProfile scores={allScores} errBars={allErrBars} />
+
+            {/* Optional triage: how urgently to work the map (client-side only) */}
+            <StabilityCheck scores={allScores} />
 
             {/* On-ramp: your two lowest lines → the research, the prescriptions, the network */}
             <StarvedLineOnRamp scores={allScores} errBars={allErrBars} />
