@@ -538,6 +538,16 @@ function FounderStorySection() {
           <span style={{ color: EMBER }}>My weaknesses cost me untold fortunes.</span>
         </p>
         <div style={{ color: CREAM2, fontSize: 'clamp(16px,1.7vw,18px)', lineHeight: 1.7, maxWidth: '46em' }}>
+          {/* Universal claim first; the founder's story below is the receipt. */}
+          <p style={{ margin: '0 0 16px' }}>
+            This is not one man&rsquo;s story — it&rsquo;s nearly everyone&rsquo;s. <b style={{ color: CREAM }}>Everyone carries a fault
+            line</b>: a weakness they don&rsquo;t see, don&rsquo;t understand, or don&rsquo;t take seriously — and it has cost them,
+            or it will. Fortunes missed. Relationships strained past repair. Moments they&rsquo;d give anything to take back.
+            Almost never because a strength failed — because a blind spot fired at the worst possible moment.
+          </p>
+          <p style={{ margin: '0 0 16px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: EMBER }}>
+            Here&rsquo;s how I paid for that lesson —
+          </p>
           <p style={{ margin: '0 0 16px' }}>
             I test exceptionally high across almost every line of intelligence — and it didn&rsquo;t save me. Not once. I followed
             the best-selling advice of the strengths-finder movement: <em>maximize your strengths, ignore your

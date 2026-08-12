@@ -833,6 +833,20 @@ function AssessmentManifesto({ companion, onBegin }: { companion: boolean; onBeg
             </div>
 
             <p>
+              <span className="text-foreground">Why thirty-two?</span> Because that&rsquo;s what it takes to capture the full
+              spectrum of human capability — cognitive, creative, social, spatial, emotional, practical, and abstract — and
+              how those capacities operate <em>together</em>. An IQ test samples four lines, and the four are so tightly
+              correlated they collapse into a single number. The SAT samples two. Thirty-two is the map, not a slice.
+            </p>
+
+            <p>
+              And this is not a personality test. Traits like openness, conscientiousness, and extraversion describe how you{" "}
+              <em>tend to behave</em>. These thirty-two lines measure something different:{" "}
+              <span className="text-foreground">what you can actually do</span> when you&rsquo;re handed a difficult, complex
+              problem and asked to work it.
+            </p>
+
+            <p>
               That&rsquo;s why some of these questions will be more demanding — emotionally, cognitively, mentally — than
               any test you&rsquo;ve taken. Those were always singular and narrow. This one is broad <em>and</em> deep. But
               it&rsquo;s also far more rewarding: it hands you the map, the blueprint, the architecture of your own mind —

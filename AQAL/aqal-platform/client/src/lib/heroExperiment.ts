@@ -48,6 +48,14 @@ export const HERO_VARIANTS: HeroVariant[] = [
     emph: "refuse to be one number.",
     sub: "A selective network of people who wanted their whole mind measured — and had the nerve to be seen completely.",
   },
+  {
+    // Measured voice (Uncle Mike's register): calm, precise, zero hype —
+    // tests whether the technical-reader segment converts on restraint.
+    id: "measured",
+    lead: "A complete measure of your capabilities — ",
+    emph: "all thirty-two lines, mapped together.",
+    sub: "Structured to help you make better decisions about your goals, using a fuller picture of what you can do than any single test provides.",
+  },
 ];
 
 // The one we'd ship if we had to pick without data (used as the static default
