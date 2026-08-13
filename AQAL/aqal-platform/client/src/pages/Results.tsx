@@ -1433,6 +1433,106 @@ function GFreeProfile({ scores, errBars }: { scores: number[]; errBars?: (number
 }
 
 // ============================================================
+// SHARE CARD — the member's real map, rendered to a PNG they can
+// post. Honest by construction: their actual polygon, their actual
+// top lines, no invented rarity numbers.
+// ============================================================
+function drawShareCard(canvas: HTMLCanvasElement, scores: number[]) {
+  const W = 1200, H = 630;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d")!;
+  ctx.fillStyle = "#141009"; ctx.fillRect(0, 0, W, H);
+  const grad = ctx.createRadialGradient(880, 315, 40, 880, 315, 360);
+  grad.addColorStop(0, "rgba(224,198,140,0.16)"); grad.addColorStop(1, "rgba(224,198,140,0)");
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+
+  // Radar polygon from the member's real scores
+  const cx = 880, cy = 315, rMax = 230, rMin = 40;
+  const n = ALL_AXES.length;
+  ctx.strokeStyle = "rgba(241,234,219,0.10)";
+  [0.25, 0.5, 0.75, 1].forEach((g) => {
+    ctx.beginPath(); ctx.arc(cx, cy, rMin + (rMax - rMin) * g, 0, Math.PI * 2); ctx.stroke();
+  });
+  ctx.beginPath();
+  for (let i = 0; i < n; i++) {
+    const a = (-90 + (i * 360) / n) * (Math.PI / 180);
+    const r = rMin + (rMax - rMin) * Math.max(0.05, scores[i] ?? 0);
+    const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = "rgba(224,198,140,0.10)"; ctx.fill();
+  ctx.strokeStyle = "#E0C68C"; ctx.lineWidth = 2.5; ctx.stroke();
+  for (let i = 0; i < n; i++) {
+    const a = (-90 + (i * 360) / n) * (Math.PI / 180);
+    const r = rMin + (rMax - rMin) * Math.max(0.05, scores[i] ?? 0);
+    ctx.beginPath(); ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), 4, 0, Math.PI * 2);
+    ctx.fillStyle = "#E0C68C"; ctx.fill();
+  }
+
+  // Left column: the words
+  ctx.fillStyle = "#E0C68C";
+  ctx.font = "600 20px 'Courier New', monospace";
+  ctx.fillText("M Y   M I N D ,   M E A S U R E D", 70, 110);
+  ctx.fillStyle = "#F1EADB";
+  ctx.font = "600 64px Georgia, serif";
+  ctx.fillText("All 32 lines.", 70, 190);
+  ctx.fillText("One map.", 70, 260);
+  const top = ALL_AXES.map((axis, i) => ({ axis, s: scores[i] ?? 0 })).sort((a, b) => b.s - a.s).slice(0, 3);
+  ctx.font = "600 17px 'Courier New', monospace";
+  ctx.fillStyle = "#9C8F79";
+  ctx.fillText("MY STRONGEST LINES", 70, 330);
+  top.forEach((t, i) => {
+    ctx.fillStyle = "#F1EADB"; ctx.font = "600 30px Georgia, serif";
+    ctx.fillText(t.axis, 70, 375 + i * 46);
+    ctx.fillStyle = "#E0C68C"; ctx.font = "600 26px 'Courier New', monospace";
+    ctx.fillText(String(Math.round(t.s * 100)), 70 + ctx.measureText(t.axis).width + 250, 375 + i * 46);
+  });
+  ctx.fillStyle = "#9BC0B2"; ctx.font = "600 19px 'Courier New', monospace";
+  ctx.fillText("joinaqal.com", 70, 560);
+  ctx.fillStyle = "#9C8F79"; ctx.font = "15px 'Courier New', monospace";
+  ctx.fillText("32-line assessment · scored by an 8-AI panel · first 10,000 free for life", 70, 588);
+}
+
+function ShareCard({ scores }: { scores: number[] }) {
+  const [busy, setBusy] = useState(false);
+  const make = async (share: boolean) => {
+    setBusy(true);
+    try {
+      const canvas = document.createElement("canvas");
+      drawShareCard(canvas, scores);
+      const blob: Blob = await new Promise((res) => canvas.toBlob((b) => res(b!), "image/png"));
+      const file = new File([blob], "my-32-line-map.png", { type: "image/png" });
+      if (share && navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: "My 32-line map", text: "All 32 lines of my mind, measured. joinaqal.com — first 10,000 free for life." });
+      } else {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob); a.download = "my-32-line-map.png"; a.click();
+        URL.revokeObjectURL(a.href);
+      }
+    } catch { /* user cancelled share — fine */ }
+    setBusy(false);
+  };
+  return (
+    <div className="flex items-center gap-3 flex-wrap justify-center -mt-8 mb-16">
+      <button onClick={() => make(true)} disabled={busy}
+        className="px-4 py-2.5 rounded-lg text-[11px] uppercase tracking-[0.12em] bg-primary text-primary-foreground font-semibold cursor-pointer disabled:opacity-50"
+        style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        {busy ? "Rendering…" : "Share my map"}
+      </button>
+      <button onClick={() => make(false)} disabled={busy}
+        className="px-4 py-2.5 rounded-lg text-[11px] uppercase tracking-[0.12em] border border-white/15 text-foreground/70 hover:text-foreground cursor-pointer disabled:opacity-50"
+        style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        Download PNG
+      </button>
+      <span className="text-[10.5px] text-foreground/40" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        Your real polygon and top lines — nothing invented, nothing inflated.
+      </span>
+    </div>
+  );
+}
+
+// ============================================================
 // STABILITY CHECK — Manus's research-weighted triage engine, wired.
 // Runs entirely client-side from the member's own scores plus four
 // quick context answers. Nothing is stored; nothing is diagnosed.
@@ -1995,6 +2095,9 @@ export default function Results() {
             <div className="mb-16">
               <FullRadarChart scores={allScores} />
             </div>
+
+            {/* Post the shape: real polygon, real top lines */}
+            <ShareCard scores={allScores} />
 
             {/* Standard on every completed profile: why this map is insurance, and the cycle */}
             <section className="mb-16 rounded-2xl border-2 border-[#C85C44]/40 bg-[#C85C44]/[0.05] p-7">

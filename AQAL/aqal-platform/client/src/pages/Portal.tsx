@@ -137,6 +137,66 @@ function PortalNav({ activeTab, setActiveTab, user }: { activeTab: TabId; setAct
 // ============================================================
 // OVERVIEW TAB
 // ============================================================
+// ============================================================
+// MISSION CONTROL — the member's live next-step engine. Five stations,
+// real data, one glowing "do this next." Nobody lands in the portal
+// wondering what to do anymore.
+// ============================================================
+function MissionControl() {
+  const cur = trpc.assessment.current.useQuery();
+  const goals = trpc.goals.list.useQuery(undefined, { retry: false });
+  const beliefs = trpc.beliefs.list.useQuery(undefined, { retry: false });
+
+  const total = (cur.data as any)?.totalQuestions || 27;
+  const done = (cur.data as any)?.completedQuestions || 0;
+  const scored = ((cur.data as any)?.scores?.length ?? 0) > 0;
+  const goalCount = goals.data?.length ?? 0;
+  const beliefCount = beliefs.data?.length ?? 0;
+
+  const steps = [
+    { n: 1, title: "Speak your assessment", detail: done > 0 ? `${done} of ${total} questions answered` : "27 questions — one a day is the ritual", href: "/assessment", complete: done >= total, cta: done > 0 ? "Continue" : "Begin" },
+    { n: 2, title: "Read your map", detail: scored ? "Your 32-line report is live" : "Unlocks when the panel scores your answers", href: "/results", complete: scored, cta: "Open results" },
+    { n: 3, title: "Put your goals on the clock", detail: goalCount > 0 ? `${goalCount} goal${goalCount === 1 ? "" : "s"} ticking` : "Honest clocks. They respond to effort.", href: "/goals", complete: goalCount > 0, cta: "Open goals" },
+    { n: 4, title: "Surface your beliefs", detail: beliefCount > 0 ? `${beliefCount} belief${beliefCount === 1 ? "" : "s"} on the board` : "The saboteur votes before you do", href: "/beliefs", complete: beliefCount > 0, cta: "Open beliefs" },
+    { n: 5, title: "Meet your villages", detail: "Peers who think where you think — and complements who cover your edges", href: "/matches", complete: false, cta: "Explore" },
+  ];
+  const next = steps.find((s) => !s.complete);
+
+  return (
+    <div className="rounded-xl border border-border bg-secondary/60 p-6">
+      <div className="flex items-baseline justify-between flex-wrap gap-2 mb-4">
+        <p className="font-mono text-[10px] tracking-[0.3em] text-primary">MISSION CONTROL</p>
+        {next && (
+          <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-primary/90 animate-pulse">
+            ▸ next move: {next.title}
+          </span>
+        )}
+      </div>
+      <div className="space-y-2">
+        {steps.map((s) => {
+          const isNext = next?.n === s.n;
+          return (
+            <Link key={s.n} href={s.href}>
+              <a className={`flex items-center gap-4 rounded-lg border px-4 py-3 transition-colors ${isNext ? "border-primary/50 bg-primary/[0.07]" : s.complete ? "border-border/50 opacity-70 hover:opacity-100" : "border-border/50 hover:border-border"}`}>
+                <span className={`flex-none w-7 h-7 rounded-full flex items-center justify-center font-mono text-[12px] ${s.complete ? "bg-[#9BC0B2] text-black" : isNext ? "bg-primary text-primary-foreground" : "bg-white/[0.06] text-muted-foreground"}`}>
+                  {s.complete ? "✓" : s.n}
+                </span>
+                <span className="flex-1 min-w-0">
+                  <span className={`block text-sm ${s.complete ? "line-through decoration-[#9BC0B2]/60 text-foreground/70" : "text-foreground"}`}>{s.title}</span>
+                  <span className="block text-[12px] text-muted-foreground truncate">{s.detail}</span>
+                </span>
+                <span className={`flex-none font-mono text-[10px] tracking-[0.1em] uppercase ${isNext ? "text-primary" : "text-muted-foreground/70"}`}>
+                  {s.complete ? "done" : s.cta} →
+                </span>
+              </a>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function OverviewTab({ user, scores, assessment }: { user: any; scores: any; assessment: any }) {
   const hasResults = scores && scores.length > 0;
   const topScores = useMemo(() => {
@@ -154,6 +214,9 @@ function OverviewTab({ user, scores, assessment }: { user: any; scores: any; ass
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Live next-step engine */}
+      <MissionControl />
+
       {/* Welcome Card */}
       <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-secondary to-background p-8">
         <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-primary/5 blur-3xl -translate-y-1/2 translate-x-1/2" />
