@@ -19,7 +19,7 @@ import { citationHref } from "@shared/citations";
 import { buildTrackerMarkdown } from "@shared/behavioralTracker";
 import { starvationForLine } from "./archetypesData";
 import { keystoneForLine, ecologicalDriverForMonth } from "@shared/keystonePractices";
-import { therapiesForLine } from "@shared/therapyLineMap";
+import { therapiesForLine, THERAPY_THIN_LINES } from "@shared/therapyLineMap";
 import { LADDER_TIERS, DOSE_CURVE, challengeForWeek } from "@shared/growthEngine";
 import CrisisSupport from "@/components/CrisisSupport";
 
@@ -1334,6 +1334,12 @@ function StarvedLineOnRamp({ scores, errBars }: { scores: number[]; errBars?: (n
                   </span>
                 ))}
               </div>
+              {THERAPY_THIN_LINES.includes(rx.line) && (
+                <p className="mt-1.5 text-[0.62rem] text-muted-foreground/50 leading-relaxed" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  Honest label: the intervention evidence for this line is thinner than most — drawn from reviews and
+                  adjacent literatures. It's flagged in our open citation audit.
+                </p>
+              )}
             </div>
           )}
           <Link href="/research-library">

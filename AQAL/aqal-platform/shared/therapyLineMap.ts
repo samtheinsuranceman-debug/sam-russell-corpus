@@ -558,6 +558,97 @@ export const THERAPY_LINE_MAP: TherapyLineEntry[] = [
     capacity: "Ability to maintain self-regulation and sustained effort toward a chosen objective",
     cite: "Bahrami, Z., Heidari, A., & Cranney, J. (2022). Applying SMART Goal Intervention Leads to Greater Goal Attainment, Need Satisfaction and Positive Affect. International Journal of Mental Health Promotion, 24(6), 869-882.", doi: "10.32604/ijmhp.2022.018954",
     finding: "Showed that the SMART goal intervention led to greater goal attainment and need satisfaction, which are components of self-regulation and execution." },
+
+  // ============================================================
+  // GAP-LINE PROTOCOLS (added 8.13.2026) — the eleven lines that had
+  // zero therapy coverage now carry interventions from landmark,
+  // widely-replicated literature. INTEGRITY NOTE: doi.org is blocked
+  // from this build environment, so these DOIs are stated from the
+  // primary literature but not yet machine-verified; they are the FIRST
+  // item queued in the Perplexity citation audit (work-order Task 1).
+  // Roles are conservative: PRIMARY only where meta-analytic evidence
+  // exists; reviews and adjacent literatures enter as SECONDARY/TERTIARY.
+  // ============================================================
+  { line: "Mathematical", therapy: "Statistical Reasoning Training", role: "PRIMARY",
+    capacity: "Ability to apply statistical principles (law of large numbers, regression to the mean) to everyday quantitative judgments",
+    cite: "Fong, G. T., Krantz, D. H., & Nisbett, R. E. (1986). The effects of statistical training on thinking about everyday problems. Cognitive Psychology, 18(3), 253-292.", doi: "10.1016/0010-0285(86)90001-0",
+    finding: "Brief statistical training measurably improved the quality of statistical reasoning about everyday problems, with transfer beyond trained domains." },
+  { line: "Mathematical", therapy: "Approximate Number System Training", role: "SECONDARY",
+    capacity: "Precision of core numerical intuition supporting exact arithmetic performance",
+    cite: "Park, J., & Brannon, E. M. (2013). Training the approximate number system improves math proficiency. Psychological Science, 24(10), 2013-2019.", doi: "10.1177/0956797613482944",
+    finding: "Adults trained on approximate arithmetic improved on symbolic math; later replications found smaller effects, hence SECONDARY." },
+  { line: "Spatial", therapy: "Spatial Skills Training (mental rotation, sketching, gesture)", role: "PRIMARY",
+    capacity: "Mental rotation, spatial visualization, and perspective-taking; durable and transferable gains",
+    cite: "Uttal, D. H., Meadow, N. G., Tipton, E., Hand, L. L., Alden, A. R., Warren, C., & Newcombe, N. S. (2013). The malleability of spatial skills: A meta-analysis of training studies. Psychological Bulletin, 139(2), 352-402.", doi: "10.1037/a0028446",
+    finding: "Meta-analysis of 217 studies: spatial skills are highly trainable (mean g ~0.47), gains persist and transfer across spatial tasks." },
+  { line: "Spatial", therapy: "Action Video Game Training", role: "SECONDARY",
+    capacity: "Spatial attention and mental rotation, including reduction of pre-existing individual differences",
+    cite: "Feng, J., Spence, I., & Pratt, J. (2007). Playing an action video game reduces gender differences in spatial cognition. Psychological Science, 18(10), 850-855.", doi: "10.1111/j.1467-9280.2007.01990.x",
+    finding: "Ten hours of action video game training improved spatial attention and mental rotation, with the largest gains in the lowest-scoring players." },
+  { line: "Philosophical", therapy: "Structured Philosophical Dialogue (P4C-style communities of inquiry)", role: "SECONDARY",
+    capacity: "Epistemic cognition: reasoning about ill-structured questions, weighing justification and evidence",
+    cite: "Trickey, S., & Topping, K. J. (2004). 'Philosophy for children': A systematic review. Research Papers in Education, 19(3), 365-380.", doi: "10.1080/0267152042000248016",
+    finding: "Systematic review: structured communities of philosophical inquiry produce consistent gains in reasoning; evidence base is strongest in school samples, hence SECONDARY for adults." },
+  { line: "Philosophical", therapy: "Dialogic Argumentation Practice", role: "SECONDARY",
+    capacity: "Constructing, critiquing, and revising arguments about contested questions",
+    cite: "Kuhn, D., & Crowell, A. (2011). Dialogic argumentation as a vehicle for developing young adolescents' thinking. Psychological Science, 22(4), 545-552.", doi: "10.1177/0956797611402512",
+    finding: "Sustained dialogic argumentation practice produced durable gains in argument quality that transferred to individual written reasoning." },
+  { line: "Intuitive", therapy: "High-Validity Feedback Environments (deliberate intuition training)", role: "SECONDARY",
+    capacity: "Calibrated intuitive judgment: recognizing when pattern-based intuition is trustworthy and building it through rapid feedback",
+    cite: "Kahneman, D., & Klein, G. (2009). Conditions for intuitive expertise: A failure to disagree. American Psychologist, 64(6), 515-526.", doi: "10.1037/a0016755",
+    finding: "Landmark adversarial collaboration: intuitive expertise develops reliably only in high-validity environments with fast, unambiguous feedback — making feedback design the trainable lever." },
+  { line: "Intuitive", therapy: "Perceptual Learning Modules", role: "SECONDARY",
+    capacity: "Fast, accurate pattern extraction from complex displays (structure recognition before deliberate analysis)",
+    cite: "Kellman, P. J., Massey, C. M., & Son, J. Y. (2010). Perceptual learning modules in mathematics: Enhancing students' pattern recognition, structure extraction, and fluency. Topics in Cognitive Science, 2(2), 285-305.", doi: "10.1111/j.1756-8765.2009.01053.x",
+    finding: "Short perceptual-learning modules produced large, durable gains in pattern recognition and structural fluency." },
+  { line: "Musical", therapy: "Individualized Instrumental Instruction (adult)", role: "PRIMARY",
+    capacity: "Auditory-motor integration, working memory, and executive control built through adult music training",
+    cite: "Bugos, J. A., Perlstein, W. M., McCrae, C. S., Brophy, T. S., & Bedenbaugh, P. H. (2007). Individualized piano instruction enhances executive functioning and working memory in older adults. Aging & Mental Health, 11(4), 464-471.", doi: "10.1080/13607860601086504",
+    finding: "RCT: six months of piano instruction improved executive function and working memory in musically naive older adults versus controls." },
+  { line: "Musical", therapy: "Musical Training as Neuroplasticity Protocol", role: "SECONDARY",
+    capacity: "Structural and functional auditory-system change from training at any age",
+    cite: "Herholz, S. C., & Zatorre, R. J. (2012). Musical training as a framework for brain plasticity: Behavior, function, and structure. Neuron, 76(3), 486-502.", doi: "10.1016/j.neuron.2012.10.011",
+    finding: "Review of training-induced plasticity: musical training reshapes auditory perception and its neural substrates, including in adult learners." },
+  { line: "Architectural", therapy: "Complex Problem Solving Microworlds", role: "SECONDARY",
+    capacity: "Exploring, modeling, and controlling multi-variable dynamic systems (knowledge acquisition + application)",
+    cite: "Greiff, S., Wüstenberg, S., & Funke, J. (2012). Dynamic problem solving: A new assessment perspective. Applied Psychological Measurement, 36(3), 189-213.", doi: "10.1177/0146621612439620",
+    finding: "Validated the microworld paradigm for measuring — and by extension training — the distinct capacity to explore and control dynamic systems." },
+  { line: "Architectural", therapy: "Systems Dynamics Training", role: "TERTIARY",
+    capacity: "Stock-and-flow reasoning: tracking accumulations, delays, and feedback instead of surface trends",
+    cite: "Sweeney, L. B., & Sterman, J. D. (2000). Bathtub dynamics: Initial results of a systems thinking inventory. System Dynamics Review, 16(4), 249-286.", doi: "10.1002/sdr.198",
+    finding: "Documented pervasive stock-flow reasoning failures in highly educated adults — defining the precise deficits systems training targets." },
+  { line: "Adversarial", therapy: "Negotiation Skills Training", role: "PRIMARY",
+    capacity: "Preparing, executing, and adapting strategy against a counterparty with opposed interests",
+    cite: "ElShenawy, E. (2010). Does negotiation training improve negotiators' performance? Journal of European Industrial Training, 34(3), 192-210.", doi: "10.1108/03090591011031728",
+    finding: "Meta-analysis: negotiation training produces significant performance gains versus untrained controls, with practice-plus-feedback formats strongest." },
+  { line: "Adversarial", therapy: "Structured Negotiation Pedagogy", role: "SECONDARY",
+    capacity: "Transferable adversarial judgment: applying learned strategy to novel counterparties and stakes",
+    cite: "Movius, H. (2008). The effectiveness of negotiation training. Negotiation Journal, 24(4), 509-531.", doi: "10.1111/j.1571-9979.2008.00201.x",
+    finding: "Review of training evaluations: skills gains are real and measurable, with clear conditions (feedback, spaced practice) under which they transfer." },
+  { line: "Aesthetic", therapy: "Structured Aesthetic Appraisal Practice", role: "TERTIARY",
+    capacity: "Discernment of form: perceiving structure, style, and expressive content in artworks with increasing depth",
+    cite: "Leder, H., Belke, B., Oeberst, A., & Augustin, D. (2004). A model of aesthetic appreciation and aesthetic judgments. British Journal of Psychology, 95(4), 489-508.", doi: "10.1348/0007126042369811",
+    finding: "The dominant model of aesthetic processing: expertise measurably changes classification and evaluation stages — the mechanism structured appraisal practice trains." },
+  { line: "Influence", therapy: "Communication Skills Training (structured, feedback-based)", role: "PRIMARY",
+    capacity: "Deliberate communication behavior change: framing, listening, and message adaptation under real stakes",
+    cite: "Berkhof, M., van Rijssen, H. J., Schellart, A. J., Anema, J. R., & van der Beek, A. J. (2011). Effective training strategies for teaching communication skills to physicians: An overview of systematic reviews. Patient Education and Counseling, 84(2), 152-162.", doi: "10.1016/j.pec.2010.06.010",
+    finding: "Overview of systematic reviews: role-play, feedback, and small-group practice reliably change communication behavior in high-stakes professional settings." },
+  { line: "Influence", therapy: "Motivational Interviewing Training", role: "SECONDARY",
+    capacity: "Evoking motivation and steering conversations toward commitment without triggering resistance",
+    cite: "Madson, M. B., Loignon, A. C., & Lane, C. (2009). Training in motivational interviewing: A systematic review. Journal of Substance Abuse Treatment, 36(1), 101-109.", doi: "10.1016/j.jsat.2008.05.005",
+    finding: "Systematic review: MI training measurably improves trainees' influence-relevant micro-skills (open questions, reflections, autonomy support)." },
+  { line: "Seduction", therapy: "Social Skills Training (romantic-adjacent)", role: "TERTIARY",
+    capacity: "Initiating and sustaining warm social contact — approach behavior, conversation, and read-and-respond skills",
+    cite: "Herbert, J. D., Gaudiano, B. A., Rheingold, A. A., Myers, V. H., Dalrymple, K., & Nolan, E. M. (2005). Social skills training augments the effectiveness of cognitive behavioral group therapy for social anxiety disorder. Behavior Therapy, 36(2), 125-138.", doi: "10.1016/S0005-7894(05)80061-9",
+    finding: "Adding explicit social skills training to group CBT improved social functioning beyond CBT alone — the adjacent evidence base for trainable relational approach skills." },
+  { line: "Financial-Self-Management", therapy: "Financial Education Programs", role: "PRIMARY",
+    capacity: "Financial knowledge and downstream financial behaviors: budgeting, saving, credit management",
+    cite: "Kaiser, T., Lusardi, A., Menkhoff, L., & Urban, C. (2022). Financial education affects financial knowledge and downstream behaviors. Journal of Financial Economics, 145(2), 255-272.", doi: "10.1016/j.jfineco.2021.09.022",
+    finding: "Meta-analysis of 76 RCTs (160,000+ participants): financial education reliably improves both knowledge and actual financial behaviors, with effects comparable to interventions in other domains." },
+  { line: "Financial-Self-Management", therapy: "Targeted Financial Literacy Instruction", role: "SECONDARY",
+    capacity: "Domain-specific money knowledge applied at decision points (debt, savings, retirement timing)",
+    cite: "Kaiser, T., & Menkhoff, L. (2017). Does financial education impact financial literacy and financial behavior, and if so, when? World Bank Economic Review, 31(3), 611-630.", doi: "10.1093/wber/lhx018",
+    finding: "Meta-analysis: financial education works best when tied to teachable moments and specific upcoming decisions — timing is part of the dose." },
 ];
 
 /** Therapies mapped to a line, PRIMARY first. */
@@ -567,4 +658,8 @@ export function therapiesForLine(line: string, limit = 4): TherapyLineEntry[] {
 
 // Lines with no audited-therapy coverage (V2 gap list) — these rely on the
 // wider research library (skill curricula, deliberate practice), not clinical therapies.
-export const THERAPY_GAP_LINES = ["Mathematical", "Spatial", "Philosophical", "Intuitive", "Musical", "Architectural", "Adversarial", "Aesthetic", "Influence", "Seduction", "Financial-Self-Management"];
+// All 32 lines now carry at least one therapy-channel protocol (gap closed 8.13.2026).
+export const THERAPY_GAP_LINES: string[] = [];
+// Lines whose therapy-channel evidence is genuinely thinner — adjacent literatures,
+// reviews, or school-age samples. Shown honestly; targets of Perplexity work-order Task 4.
+export const THERAPY_THIN_LINES = ["Aesthetic", "Seduction", "Philosophical", "Intuitive", "Architectural"];
