@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 // AQAL Intelligence Platform — joinaqal.com
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { playClick } from "@/lib/audio";
 import { SHOW_GENERATIONAL_RARITY } from "@/config/features";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import LineInfoModal from "@/components/LineInfoModal";
 import { trpc } from "@/lib/trpc";
 import { requireAgreement } from "@/lib/agreement";
 import { useHeroVariant, currentHeroId } from "@/lib/heroExperiment";
@@ -1093,6 +1094,9 @@ function SixteenAxesSection() {
 function DialSection() {
   const [selected, setSelected] = useState(14);
   const [touched, setTouched] = useState(false);
+  // The encyclopedia popup: definition, researchers, measurability, the g-question
+  const [infoLine, setInfoLine] = useState<string | null>(null);
+  const pickedAtRef = useRef(0);
 
   // Until the visitor touches it, the dial tours itself — one line every
   // 2.4s — so its interactivity is visible instead of waiting to be found.
@@ -1101,7 +1105,16 @@ function DialSection() {
     const t = setInterval(() => setSelected((s) => (s + 1) % N), 2400);
     return () => clearInterval(t);
   }, [touched]);
-  const pick = (i: number) => { setTouched(true); setSelected(i); };
+  const pick = (i: number) => {
+    setTouched(true);
+    setSelected((prev) => { if (prev !== i) pickedAtRef.current = Date.now(); return i; });
+  };
+  // Second interaction with an already-selected line opens the encyclopedia:
+  // desktop = hover previews then click opens; mobile = first tap selects,
+  // second tap opens. The 450ms gate stops select+open firing as one gesture.
+  const maybeOpenInfo = (i: number, name: string) => {
+    if (selected === i && Date.now() - pickedAtRef.current > 450) setInfoLine(name);
+  };
 
   const pts = useMemo(() => LINES.map((l, i) => {
     const a = angFor(i);
@@ -1166,7 +1179,8 @@ function DialSection() {
                 const on = selected === p.i; const c = MODE[p.l.mode].c;
                 return (
                   <g key={"pt2" + p.i} className="cursor-pointer"
-                    onPointerEnter={() => pick(p.i)} onPointerDown={() => pick(p.i)}>
+                    onPointerEnter={() => pick(p.i)} onPointerDown={() => pick(p.i)}
+                    onClick={() => maybeOpenInfo(p.i, p.l.name)}>
                     {/* Oversized invisible hit target — a fingertip, not a 4px dot */}
                     <circle cx={p.x} cy={p.y} r={20} fill="transparent" />
                     {p.l.indep && <circle cx={p.x} cy={p.y} r={on ? 11 : 8} fill="none" stroke={c} strokeOpacity="0.5" strokeDasharray="2 2" />}
@@ -1182,7 +1196,8 @@ function DialSection() {
                     className="cursor-pointer select-none"
                     style={{ fontFamily: "'Inter', sans-serif", fontWeight: on ? 700 : 600, fontSize: on ? '12.5px' : '11px', letterSpacing: '0.005em', paintOrder: 'stroke', stroke: INK, strokeWidth: '3px', strokeLinejoin: 'round', transition: 'font-size .16s ease, fill .16s ease' }}
                     fill={on ? MODE[p.l.mode].c : CREAM}
-                    onPointerEnter={() => pick(p.i)} onPointerDown={() => pick(p.i)}>
+                    onPointerEnter={() => pick(p.i)} onPointerDown={() => pick(p.i)}
+                    onClick={() => maybeOpenInfo(p.i, p.l.name)}>
                     {p.l.short}
                   </text>
                 );
@@ -1192,7 +1207,7 @@ function DialSection() {
               <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 32} textAnchor="middle">32 LINES · ONE SYSTEM</text>
             </svg>
             <div className="text-center mt-3" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: MUTED }}>
-              {touched ? "Illustrative example — not your data" : <span className="aq-pulse" style={{ color: CHAMPAGNE }}>◇ Touring the 32 lines — tap any point to take the wheel</span>}
+              {touched ? "Illustrative example — not your data" : <span className="aq-pulse" style={{ color: CHAMPAGNE }}>◇ Touring the 32 lines — tap once to read a line, tap it again for the full story</span>}
             </div>
           </div>
 
@@ -1211,6 +1226,10 @@ function DialSection() {
               <span className="absolute inset-y-0 left-0 rounded-[4px]" style={{ width: `${sel.v}%`, background: MODE[sel.mode].c, transition: 'width .7s cubic-bezier(.22,.61,.36,1)' }} />
             </div>
             <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.62, marginTop: '18px' }}>{sel.note}</div>
+            <button onClick={() => setInfoLine(sel.name)}
+              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10.5px', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '14px', padding: '10px 16px', background: 'rgba(224,198,140,0.10)', color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}55`, borderRadius: '7px', cursor: 'pointer' }}>
+              What is this line? Definition, researchers & the g-question →
+            </button>
             {sel.indep && <div className="mt-[15px] inline-flex items-center gap-[7px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.10em', color: CHAMPAGNE }}>◇ Independent axis — carries the effective-dimension count</div>}
             <div className="flex gap-5 flex-wrap mt-6 pt-[18px]" style={{ borderTop: `1px solid ${LINE_C}` }}>
               <span className="inline-flex items-center gap-2" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', letterSpacing: '0.08em', color: CREAM2 }}><span className="w-[9px] h-[9px] rounded-[2px] flex-none" style={{ background: CHAMPAGNE }} /> Measured · {counts.measured}</span>
@@ -1234,6 +1253,10 @@ function DialSection() {
                   onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(l.i); } }}>
                   <span className="flex items-center gap-[7px]" style={{ fontSize: '16px', color: CREAM }}>
                     {l.indep && <span style={{ color: CHAMPAGNE, fontSize: '12px' }}>◇</span>}{l.name}
+                    <button
+                      onPointerDown={(e) => { e.stopPropagation(); setInfoLine(l.name); }}
+                      onClick={(e) => e.stopPropagation()} aria-label={`About ${l.name}`}
+                      style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: MUTED, background: 'none', border: 0, cursor: 'pointer', padding: '0 2px' }}>ⓘ</button>
                   </span>
                   <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '19px', color: MODE[m].c }}>{l.v}</span>
                 </div>
@@ -1242,6 +1265,8 @@ function DialSection() {
           ))}
         </div>
       </div>
+
+      <LineInfoModal line={infoLine} onClose={() => setInfoLine(null)} />
 
       {/* Responsive */}
       <style>{`
