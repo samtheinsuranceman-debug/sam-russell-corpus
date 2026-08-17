@@ -947,6 +947,115 @@ function AssessmentManifesto({ companion, onBegin }: { companion: boolean; onBeg
 // ============================================================
 // MAIN ASSESSMENT PAGE
 // ============================================================
+// ============================================================
+// THE FINAL THREE — optional crash-recollection bridge, shown at
+// the moment of maximum momentum (assessment complete). Zero
+// pressure by design: the founding spot is already earned. Answers
+// feed the Black Box engine (crashes annotate, never penalize).
+// ============================================================
+const FINAL_THREE = [
+  { key: "controlled", title: "The one you never saw coming",
+    prompt: "Think of a time you had everything under control — planned, prepared, confident — and it fell apart anyway. Tell it like it happened: what was supposed to succeed, what slid first, what was going through your mind, what impulses took over, what it cost." },
+  { key: "costliest", title: "The one that cost the most",
+    prompt: "The failure with the biggest bill — money, a person, health, years. What did you believe going in? What did other people see that you couldn't? What single intervention might have changed the outcome?" },
+  { key: "nearmiss", title: "The near-miss you caught",
+    prompt: "One that ALMOST crashed — and you pulled it back. What warned you? What did you do differently that time? (Recoveries carry as much signal as crashes — this is how the panel learns what saving you looks like.)" },
+];
+
+function FinalThreeBridge({ onCrisis }: { onCrisis: () => void }) {
+  const utils = trpc.useUtils();
+  const [openKey, setOpenKey] = useState<string | null>(null);
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState<string[]>([]);
+  const add = trpc.blackBox.add.useMutation();
+
+  const submit = async (key: string, title: string) => {
+    const narrative = (drafts[key] ?? "").trim();
+    if (narrative.length < 200) {
+      toast.error("Give it a few more sentences — an honest forensic read needs the real story.");
+      return;
+    }
+    const r = await add.mutateAsync({ title, narrative, scope: "coaching" }).catch(() => null);
+    if (r?.ok) {
+      setSubmitted((x) => [...x, key]); setOpenKey(null);
+      toast.success("Sealed in your Black Box. The panel reads it for pattern, never for punishment.");
+      if (r.crisis) onCrisis();
+      utils.blackBox.list.invalidate();
+    } else if (r && "error" in r) toast.error(r.error);
+    else toast.error("Couldn't save just now — your text is still here, try again.");
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.7, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+      className="glass-card rounded-2xl p-7 mb-8 border border-[#E2604A]/25 text-left"
+    >
+      <p className="text-xs uppercase tracking-[0.2em] mb-2 text-center" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#E2604A" }}>
+        The Final Three — optional, and possibly the most valuable
+      </p>
+      <p className="text-sm text-foreground/80 leading-relaxed mb-2">
+        Your spot is already earned — the 27 did that, and nothing below is required. But here's the honest truth:
+        the panel now knows what you <em>can do</em>. What it can't yet see is <b className="text-foreground">where
+        you've crashed when you thought you had everything under control</b> — and that may be the most valuable
+        information in your entire file. Crashes are where the blind spots live. Naming three of them is how we make
+        sure the next one never gets the same free shot at you.
+      </p>
+      <p className="text-[11px] leading-relaxed mb-5" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#9C8F79" }}>
+        Zero pressure. Skip any or all. Share only what you're willing to relive; initials instead of names is fine.
+        Prefer to speak? Record on your voice app and paste the transcript — or do this later, in full, at your Black
+        Box. These annotate your map; they never lower a score.
+      </p>
+      <div className="space-y-2.5">
+        {FINAL_THREE.map((q) => {
+          const done = submitted.includes(q.key);
+          const isOpen = openKey === q.key;
+          return (
+            <div key={q.key} className="rounded-xl border" style={{ borderColor: done ? "#9BC0B255" : isOpen ? "#E2604A55" : "rgba(241,234,219,0.1)" }}>
+              <button onClick={() => !done && setOpenKey(isOpen ? null : q.key)}
+                className="w-full text-left px-4 py-3 flex items-baseline justify-between gap-3 cursor-pointer"
+                style={{ background: "none", border: 0 }}>
+                <span className="text-[15px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, color: done ? "#9BC0B2" : "#F1EADB" }}>
+                  {done ? "✓ " : ""}{q.title}
+                </span>
+                {!done && <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", color: "#9C8F79" }}>{isOpen ? "−" : "+"}</span>}
+              </button>
+              {isOpen && !done && (
+                <div className="px-4 pb-4">
+                  <p className="text-[13px] text-foreground/70 leading-relaxed mb-3">{q.prompt}</p>
+                  <textarea value={drafts[q.key] ?? ""} onChange={(e) => setDrafts((d) => ({ ...d, [q.key]: e.target.value }))}
+                    rows={7} placeholder="Tell it like it happened — don't clean it up…"
+                    className="w-full rounded-lg p-3 text-[14px] leading-relaxed"
+                    style={{ background: "rgba(241,234,219,0.04)", border: "1px solid rgba(241,234,219,0.12)", color: "#F1EADB", outline: "none", resize: "vertical" }} />
+                  <div className="flex items-center gap-3 mt-2 flex-wrap">
+                    <button onClick={() => submit(q.key, q.title)} disabled={add.isPending}
+                      className="px-4 py-2.5 rounded-lg text-[11px] uppercase tracking-[0.1em] font-bold cursor-pointer disabled:opacity-50"
+                      style={{ fontFamily: "'JetBrains Mono', monospace", background: "#E0C68C", color: "#141009", border: 0 }}>
+                      {add.isPending ? "Sealing…" : "Seal it in my Black Box"}
+                    </button>
+                    <button onClick={() => setOpenKey(null)}
+                      className="text-[10px] uppercase tracking-[0.1em] cursor-pointer"
+                      style={{ fontFamily: "'JetBrains Mono', monospace", color: "#9C8F79", background: "none", border: 0 }}>
+                      Skip this one
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {submitted.length > 0 && (
+        <p className="text-[12px] mt-4" style={{ color: "#CFC5B0" }}>
+          {submitted.length} of 3 sealed. When you're ready, run the forensics at{" "}
+          <Link href="/black-box"><a style={{ color: "#E0C68C" }}>your Black Box</a></Link> — the panel extracts the
+          pattern across everything you've given it.
+        </p>
+      )}
+    </motion.div>
+  );
+}
+
 export default function Assessment() {
   const { user, loading: authLoading } = useAuth();
   const [, navigate] = useLocation();
@@ -2247,6 +2356,10 @@ export default function Assessment() {
               )}
             </motion.div>
           )}
+
+          {/* The Final Three — optional crash bridge at peak momentum */}
+          <FinalThreeBridge onCrisis={() => setShowCrisis(true)} />
+          {showCrisis && <CrisisSupport onClose={() => setShowCrisis(false)} />}
 
           {/* CTAs */}
           <motion.div
