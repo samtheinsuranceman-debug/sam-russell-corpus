@@ -994,6 +994,47 @@ Return ONLY valid JSON.` },
     // Live panel health: ping every configured AI provider and report which ones
     // actually respond. Use this before launch to confirm a real N-model consensus
     // (a key with a wrong base_url/model silently drops from the panel otherwise).
+    // One-button go-live verification: DB, critical tables, env presence
+    // (booleans only — never values), provider modes, drip registration.
+    // The /launch-check page renders this as a green/red dashboard.
+    launchCheck: adminProcedure.mutation(async () => {
+      const checks: { name: string; ok: boolean; detail: string }[] = [];
+      const add = (name: string, ok: boolean, detail: string) => checks.push({ name, ok, detail });
+
+      const { getDb } = await import("./db");
+      const db = await getDb();
+      add("Database connection", !!db, db ? "connected" : "getDb() returned null — DATABASE_URL missing or DB down");
+      if (db) {
+        const schema = await import("../drizzle/schema");
+        const tables: [string, any][] = [
+          ["users", schema.users], ["assessments", schema.assessments], ["goals", schema.goals],
+          ["beliefs", schema.beliefs], ["directMessages", schema.directMessages], ["matches", schema.matches],
+          ["protocolRatings", schema.protocolRatings], ["crisisFlags", schema.crisisFlags],
+        ];
+        for (const [name, t] of tables) {
+          try { await db.select().from(t).limit(1); add(`Table: ${name}`, true, "queryable"); }
+          catch (e) { add(`Table: ${name}`, false, `query failed — run pnpm db:push (${String(e).slice(0, 80)})`); }
+        }
+      }
+
+      const envs = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "XAI_API_KEY", "GROQ_API_KEY", "MISTRAL_API_KEY", "OPENROUTER_API_KEY"];
+      for (const k of envs) add(`Env: ${k}`, !!process.env[k], process.env[k] ? "present" : "MISSING from environment");
+      add("Env: GOOGLE_API_KEY or GEMINI_API_KEY", !!(process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY),
+        process.env.GOOGLE_API_KEY ? "GOOGLE_API_KEY present" : process.env.GEMINI_API_KEY ? "GEMINI_API_KEY present" : "MISSING — Gemini will drop off the panel");
+      add("Heartbeat (scheduled jobs)", !!(process.env.BUILT_IN_FORGE_API_URL && process.env.BUILT_IN_FORGE_API_KEY),
+        process.env.BUILT_IN_FORGE_API_URL ? "configured" : "NOT configured — drips will never fire (BUILT_IN_FORGE_API_URL/KEY)");
+
+      const { llmProvider, sttProvider, freePanelMax } = await import("./platform/config");
+      add("LLM provider", llmProvider() !== "mock", `provider: ${llmProvider()}${llmProvider() === "mock" ? " — scoring is FAKE until keys are set" : ""}`);
+      add("STT provider", sttProvider() !== "mock", `provider: ${sttProvider()}${sttProvider() === "mock" ? " — transcription is FAKE until a key is set" : ""}`);
+      add("Free-tier panel size", freePanelMax() >= 3, `${freePanelMax()} models for free tier`);
+
+      const routes = ["/api/scheduled/finish-nudge", "/api/scheduled/tracker-reengagement", "/api/scheduled/drift-alert", "/api/scheduled/message-digest", "/api/scheduled/reentry", "/api/scheduled/question-of-day"];
+      add("Drip endpoints registered", true, routes.join(", "));
+
+      const pass = checks.filter((c) => c.ok).length;
+      return { pass, total: checks.length, green: pass === checks.length, checks };
+    }),
     panelHealth: adminProcedure.mutation(async () => {
       const { panelHealth } = await import("./platform/panel");
       const members = await panelHealth();

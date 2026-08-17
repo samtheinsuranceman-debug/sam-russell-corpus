@@ -57,6 +57,9 @@ const Messages = lazy(() => import("./pages/Messages"));
 const Goals = lazy(() => import("./pages/Goals"));
 const Beliefs = lazy(() => import("./pages/Beliefs"));
 const EcologicalInterventions = lazy(() => import("./pages/EcologicalInterventions"));
+const LaunchCheck = lazy(() => import("./pages/LaunchCheck"));
+const Lines = lazy(() => import("./pages/Lines"));
+const WhichArchetype = lazy(() => import("./pages/WhichArchetype"));
 const MetaSystems = lazy(() => import("./pages/MetaSystems"));
 const ScenarioIntelligence = lazy(() => import("./pages/ScenarioIntelligence"));
 const VerificationLedger = lazy(() => import("./pages/VerificationLedger"));
@@ -384,6 +387,21 @@ function Router() {
         <Route path={"/beliefs"}>
           <PageErrorBoundary pageName="Beliefs">
             <Suspense fallback={<PageSkeleton />}><Beliefs /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/launch-check"}>
+          <PageErrorBoundary pageName="LaunchCheck">
+            <Suspense fallback={<PageSkeleton />}><LaunchCheck /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/lines"}>
+          <PageErrorBoundary pageName="Lines">
+            <Suspense fallback={<PageSkeleton />}><Lines /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/which-archetype"}>
+          <PageErrorBoundary pageName="WhichArchetype">
+            <Suspense fallback={<PageSkeleton />}><WhichArchetype /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/ecological-interventions"}>

@@ -302,6 +302,12 @@ export function PublicFooter() {
             <Link href="/leaderboard">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Leaderboard</span>
             </Link>
+            <Link href="/lines">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">The 32 Lines</span>
+            </Link>
+            <Link href="/which-archetype">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">2-Minute Teaser Quiz</span>
+            </Link>
           </div>
 
           {/* Trust & Legal */}
