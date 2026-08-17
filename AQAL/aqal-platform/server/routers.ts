@@ -1218,6 +1218,55 @@ Return ONLY valid JSON.` },
   // cap). We create a free account keyed to that email and log them in. Their
   // low-confidence result is emailed to that address when the assessment completes.
   freeAccess: router({
+    // Email verification: the emailed token proves the address is real.
+    verifyEmail: publicProcedure
+      .input(z.object({ token: z.string().length(64) }))
+      .mutation(async ({ input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) return { ok: false as const, error: "Try again in a moment." };
+        const { users } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        const { createHash } = await import("node:crypto");
+        const hash = createHash("sha256").update(input.token).digest("hex");
+        const [user] = await db.select().from(users).where(eq(users.verifyTokenHash, hash));
+        if (!user) return { ok: false as const, error: "That link was already used or doesn't match — request a fresh one from your portal." };
+        await db.update(users).set({ emailVerifiedAt: new Date(), verifyTokenHash: null }).where(eq(users.id, user.id));
+        return { ok: true as const };
+      }),
+    resendVerification: protectedProcedure.mutation(async ({ ctx }) => {
+      const { getDb } = await import("./db");
+      const db = await getDb();
+      if (!db || !ctx.user.email) return { ok: false as const };
+      const { checkLimit } = await import("./rateLimit");
+      if (!checkLimit(`verify:${ctx.user.id}`, 3, 60 * 60 * 1000)) return { ok: true as const };
+      const { users } = await import("../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      const { randomBytes, createHash } = await import("node:crypto");
+      const vtoken = randomBytes(32).toString("hex");
+      await db.update(users).set({ verifyTokenHash: createHash("sha256").update(vtoken).digest("hex") }).where(eq(users.id, ctx.user.id));
+      const appUrl = (((ctx.req as any)?.headers?.origin as string) || "https://joinaqal.com").replace(/\/$/, "");
+      await sendEmail(ctx.user.email, "Confirm your AQAL email",
+        `<div style="font-family:monospace;font-size:13px;line-height:1.7;background:#161310;color:#f1eadb;padding:28px;border-radius:12px">
+          <p style="letter-spacing:.2em;font-size:10px;color:#e0c68c">AQAL · CONFIRM YOUR EMAIL</p>
+          <p>Your founding spot and password recovery depend on this address being real. One tap:</p>
+          <p><a href="${appUrl}/verify-email?token=${vtoken}" style="display:inline-block;background:#e0c68c;color:#161310;font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:13px 22px;border-radius:4px;font-weight:600">Confirm my email</a></p>
+        </div>`);
+      return { ok: true as const };
+    }),
+    // Founding member number: rank among founding claims, by claim order.
+    myFoundingNumber: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb } = await import("./db");
+      const db = await getDb();
+      if (!db) return { number: null as number | null, cap: FREE_ASSESSMENT_CAP, verified: false };
+      const { users } = await import("../drizzle/schema");
+      const { and, eq, lte, sql } = await import("drizzle-orm");
+      const [me] = await db.select().from(users).where(eq(users.id, ctx.user.id));
+      if (!me?.betaAccess) return { number: null as number | null, cap: FREE_ASSESSMENT_CAP, verified: !!me?.emailVerifiedAt };
+      const [row] = await db.select({ n: sql<number>`count(*)` }).from(users)
+        .where(and(eq(users.betaAccess, true), lte(users.id, ctx.user.id)));
+      return { number: Number(row?.n ?? 0) || null, cap: FREE_ASSESSMENT_CAP, verified: !!me.emailVerifiedAt };
+    }),
     // Password reset, step 1: request the emailed link. Always answers the same
     // way whether or not the email exists (no account enumeration).
     requestPasswordReset: publicProcedure
@@ -1357,10 +1406,27 @@ Return ONLY valid JSON.` },
         const token = await sdk.createSessionToken(openId, { name });
         ctx.res.cookie(COOKIE_NAME, token, { ...getSessionCookieOptions(ctx.req), maxAge: ONE_YEAR_MS });
         await recordEvent({ type: "free_access_claimed" });
-        // Fire the founding welcome once, only for a truly new member (best-effort).
+        // Fire the founding welcome once, only for a truly new member (best-effort),
+        // carrying the email-verification link — the address the lifetime spot and
+        // password recovery hang off must be proven real.
         if (!alreadyClaimed) {
-          const appUrl = ctx.req.headers.origin || undefined;
-          sendEmail(email, "Welcome — you're one of the first 10,000", foundingWelcomeEmailHtml({ name, appUrl }))
+          const appUrl = (ctx.req.headers.origin || "https://joinaqal.com").replace(/\/$/, "");
+          let verifyUrl: string | undefined;
+          try {
+            const { randomBytes, createHash } = await import("node:crypto");
+            const vtoken = randomBytes(32).toString("hex");
+            const { getDb } = await import("./db");
+            const db = await getDb();
+            if (db) {
+              const { users } = await import("../drizzle/schema");
+              const { eq } = await import("drizzle-orm");
+              await db.update(users)
+                .set({ verifyTokenHash: createHash("sha256").update(vtoken).digest("hex") })
+                .where(eq(users.openId, openId));
+              verifyUrl = `${appUrl}/verify-email?token=${vtoken}`;
+            }
+          } catch (e) { console.warn("[freeAccess] verify token skipped:", e); }
+          sendEmail(email, "Welcome — you're one of the first 10,000", foundingWelcomeEmailHtml({ name, appUrl, verifyUrl }))
             .catch((e) => console.warn("[freeAccess] welcome email skipped:", e));
         }
         return { success: true };

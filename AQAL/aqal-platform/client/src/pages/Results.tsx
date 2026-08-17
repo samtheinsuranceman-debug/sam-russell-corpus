@@ -1380,6 +1380,135 @@ function StarvedLineOnRamp({ scores, errBars }: { scores: number[]; errBars?: (n
 // nothing), this week's strength challenge, the weekly pulse on the weakest
 // line, the what-changed report, prescription star-ratings, and export.
 // ============================================================
+// PANEL DELIBERATION — the honest wait screen. The REAL panel roster
+// with motion; no fake per-model progress, just the true composition
+// and the true promise: minutes, not days.
+// ============================================================
+const PANEL_ROSTER = [
+  { name: "GPT", dev: "OpenAI · USA" }, { name: "Claude", dev: "Anthropic · USA" },
+  { name: "Gemini", dev: "Google · USA" }, { name: "Grok", dev: "xAI · USA" },
+  { name: "Llama", dev: "Meta · USA" }, { name: "Mistral", dev: "Mistral AI · France" },
+  { name: "Command", dev: "Cohere · Canada" }, { name: "Jamba", dev: "AI21 · Israel" },
+];
+function PanelDeliberation() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="max-w-lg w-full text-center">
+        <p className="text-xs uppercase tracking-[0.24em] mb-3" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#E0C68C" }}>
+          All 27 answers received
+        </p>
+        <h1 className="text-3xl sm:text-4xl mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, color: "#F1EADB" }}>
+          Eight independent minds are<br />arguing about you.
+        </h1>
+        <p className="text-sm mb-8 leading-relaxed" style={{ color: "#CFC5B0" }}>
+          Your transcripts are with the full panel — five countries, eight labs, no shared training lineage. Each scores
+          all 32 lines alone; the consensus becomes your map. This usually takes minutes. Come back or stay — we'll be here.
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8">
+          {PANEL_ROSTER.map((m, i) => (
+            <div key={m.name} className="rounded-xl border px-3 py-3" style={{ borderColor: "rgba(241,234,219,0.12)", background: "#1B1610" }}>
+              <span className="inline-block w-2 h-2 rounded-full mb-1.5 animate-pulse" style={{ background: "#E0C68C", animationDelay: `${i * 0.3}s` }} />
+              <p className="text-[13px]" style={{ color: "#F1EADB", fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{m.name}</p>
+              <p className="text-[9px] tracking-wide" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#9C8F79" }}>{m.dev}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-[10px]" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#9C8F79" }}>
+          This is the real panel composition — deliberation runs server-side. Refresh anytime.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// REPORT REVEAL — the staged unveiling: top line → the shape →
+// rarity → the Master Weakness → begin. Once per assessment.
+// ============================================================
+function RevealOverlay({ topLine, topScore, weakLine, rarity, onDone }: {
+  topLine: string; topScore: number; weakLine: string; rarity: number; onDone: () => void;
+}) {
+  const [step, setStep] = useState(0);
+  const steps = [
+    { k: "YOUR STRONGEST LINE", t: topLine, d: `The panel scored it ${Math.round(topScore * 100)} — this line has been carrying outcomes your whole life. Now it has a name.`, c: "#9BC0B2" },
+    { k: "THE SHAPE OF YOU", t: "All 32 lines, one map", d: "No one number. A system — peaks, valleys, and the ridgelines between them. You're about to see the whole thing at once.", c: "#E0C68C" },
+    { k: "YOUR RARITY", t: rarity > 1 ? `1 in ${rarity.toLocaleString()}` : "Computed honestly", d: "Built only from verified independent dimensions — it can't be inflated by stacking scores that move together.", c: "#E0C68C" },
+    { k: "AND THE ONE THAT DECIDES", t: weakLine, d: "Your most starved line. Nobody loses to their strengths — they lose to the weakness they were blind to. Yours is no longer invisible. That changes everything below.", c: "#E2604A" },
+  ];
+  const cur = steps[step];
+  return (
+    <div className="fixed inset-0 z-[9992] flex items-center justify-center p-6" style={{ background: "rgba(10,8,5,0.94)", backdropFilter: "blur(4px)" }}>
+      <div className="max-w-md w-full text-center">
+        <p className="text-[10px] uppercase tracking-[0.26em] mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", color: cur.c }}>{cur.k}</p>
+        <p className="mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: "clamp(34px,7vw,52px)", lineHeight: 1.05, color: "#F1EADB" }}>{cur.t}</p>
+        <p className="text-[15px] leading-relaxed mb-8" style={{ color: "#CFC5B0" }}>{cur.d}</p>
+        <div className="flex items-center justify-center gap-2 mb-6">
+          {steps.map((_, i) => <span key={i} className="w-8 h-[3px] rounded-full" style={{ background: i <= step ? cur.c : "rgba(241,234,219,0.15)" }} />)}
+        </div>
+        <button onClick={() => (step < steps.length - 1 ? setStep(step + 1) : onDone())}
+          className="px-6 py-3.5 rounded-lg font-bold cursor-pointer"
+          style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", background: cur.c, color: "#141009", border: 0 }}>
+          {step < steps.length - 1 ? "Continue" : "Open my full map"}
+        </button>
+        <p className="mt-4"><button onClick={onDone} className="text-[10px] cursor-pointer" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#9C8F79", background: "none", border: 0 }}>skip the reveal</button></p>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// FIRST WEEK PLAN — the bridge from insight to habit, day by day.
+// Check-offs live in localStorage; the plan personalizes from the
+// member's actual weakest line and prescribed practice.
+// ============================================================
+function FirstWeekPlan({ scores }: { scores: number[] }) {
+  const ranked = ALL_AXES.map((axis, i) => ({ axis, score: scores[i] ?? 0 })).filter((r) => r.score > 0);
+  if (ranked.length < 5) return null;
+  const weak = [...ranked].sort((a, b) => a.score - b.score)[0];
+  const rx = keystoneForLine(weak.axis);
+  const days = [
+    { d: 1, t: `Read your Master Weakness deep-dive`, sub: `${weak.axis} — the research on what moves it, 10 minutes` },
+    { d: 2, t: rx ? `First dose: ${rx.name}` : "First protocol dose", sub: "7 minutes counts. The dose curve says start small." },
+    { d: 3, t: "Put one goal on the clock", sub: "The one that stings most. Honest baseline, honest clock." },
+    { d: 4, t: "Second dose + quick-log it", sub: "Two data points make a line. Tap the hours chip." },
+    { d: 5, t: "Surface your beliefs", sub: "The saboteur votes before you do — see its ballot." },
+    { d: 6, t: "This month's ecological driver", sub: "The whole-organism lever that stacks under everything." },
+    { d: 7, t: "Weekly pulse + share your map", sub: "One honest pulse, and let one person you love see the shape." },
+  ];
+  const key = "aqal_week1";
+  const [done, setDone] = useState<number[]>(() => { try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch { return []; } });
+  const toggleDay = (d: number) => {
+    const next = done.includes(d) ? done.filter((x) => x !== d) : [...done, d];
+    setDone(next); try { localStorage.setItem(key, JSON.stringify(next)); } catch { /* private mode */ }
+  };
+  return (
+    <section className="mb-16 rounded-2xl border border-[#E0C68C]/30 bg-[#E0C68C]/[0.04] p-7">
+      <p className="text-[0.62rem] uppercase tracking-[0.2em] text-[#E0C68C] mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        Your first seven days — the map becomes a habit here
+      </p>
+      <p className="text-sm text-foreground/80 leading-relaxed mb-5 max-w-[52em]">
+        Insight fades in 72 hours unless it becomes behavior. Seven days, one small move a day, personalized to your map —
+        finish this week and you're statistically a different kind of member.
+      </p>
+      <div className="space-y-1.5">
+        {days.map((day) => (
+          <button key={day.d} onClick={() => toggleDay(day.d)} className="w-full flex items-center gap-3 text-left rounded-lg border px-4 py-2.5 cursor-pointer transition-colors"
+            style={{ borderColor: done.includes(day.d) ? "#9BC0B255" : "rgba(241,234,219,0.1)", background: done.includes(day.d) ? "rgba(155,192,178,0.06)" : "transparent" }}>
+            <span className="flex-none w-7 h-7 rounded-full flex items-center justify-center text-[11px]" style={{ fontFamily: "'JetBrains Mono', monospace", background: done.includes(day.d) ? "#9BC0B2" : "rgba(241,234,219,0.08)", color: done.includes(day.d) ? "#141009" : "#9C8F79" }}>
+              {done.includes(day.d) ? "✓" : day.d}
+            </span>
+            <span className="min-w-0">
+              <span className={`block text-[13.5px] ${done.includes(day.d) ? "line-through text-foreground/60" : "text-foreground"}`}>{day.t}</span>
+              <span className="block text-[11.5px] text-muted-foreground truncate">{day.sub}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
 // THE G-FREE PROFILE — the member's scores on the axes documented
 // as independent of general intelligence. This is the panel that
 // makes the homepage's sixteen-axes claim personal: "here is the
@@ -1437,7 +1566,7 @@ function GFreeProfile({ scores, errBars }: { scores: number[]; errBars?: (number
 // post. Honest by construction: their actual polygon, their actual
 // top lines, no invented rarity numbers.
 // ============================================================
-function drawShareCard(canvas: HTMLCanvasElement, scores: number[]) {
+function drawShareCard(canvas: HTMLCanvasElement, scores: number[], foundingNumber?: number | null) {
   const W = 1200, H = 630;
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext("2d")!;
@@ -1490,17 +1619,22 @@ function drawShareCard(canvas: HTMLCanvasElement, scores: number[]) {
   });
   ctx.fillStyle = "#9BC0B2"; ctx.font = "600 19px 'Courier New', monospace";
   ctx.fillText("joinaqal.com", 70, 560);
+  if (foundingNumber) {
+    ctx.fillStyle = "#E0C68C"; ctx.font = "600 15px 'Courier New', monospace";
+    ctx.fillText(`FOUNDING MEMBER #${foundingNumber.toLocaleString()} OF 10,000`, 240, 560);
+  }
   ctx.fillStyle = "#9C8F79"; ctx.font = "15px 'Courier New', monospace";
   ctx.fillText("32-line assessment · scored by an 8-AI panel · first 10,000 free for life", 70, 588);
 }
 
 function ShareCard({ scores }: { scores: number[] }) {
   const [busy, setBusy] = useState(false);
+  const founding = trpc.freeAccess.myFoundingNumber.useQuery(undefined, { retry: false });
   const make = async (share: boolean) => {
     setBusy(true);
     try {
       const canvas = document.createElement("canvas");
-      drawShareCard(canvas, scores);
+      drawShareCard(canvas, scores, founding.data?.number ?? null);
       const blob: Blob = await new Promise((res) => canvas.toBlob((b) => res(b!), "image/png"));
       const file = new File([blob], "my-32-line-map.png", { type: "image/png" });
       if (share && navigator.share && navigator.canShare?.({ files: [file] })) {
@@ -1911,7 +2045,7 @@ function GrowthStudio({ scores }: { scores: number[] }) {
         <button onClick={() => window.print()}
           className="rounded-lg px-4 py-2.5 text-[0.68rem] uppercase tracking-widest font-bold border border-accent/40 text-accent hover:bg-accent/10"
           style={{ fontFamily: "'JetBrains Mono', monospace", background: "transparent", cursor: "pointer" }}>
-          Print / share with your therapist
+          Save frozen copy (PDF) / therapist export
         </button>
       </div>
       <p className="text-[0.68rem] text-muted-foreground/50 mt-2 text-center leading-snug">
@@ -1928,6 +2062,16 @@ export default function Results() {
   const { user, loading: authLoading } = useAuth();
   const [, navigate] = useLocation();
   const assessmentQuery = trpc.assessment.current.useQuery(undefined, { enabled: !!user });
+  const [revealDone, setRevealDone] = useState(true);
+  useEffect(() => {
+    const id = (assessmentQuery.data as any)?.id;
+    if (!id || !(assessmentQuery.data as any)?.scores?.length) return;
+    try { setRevealDone(localStorage.getItem(`aqal_reveal_${id}`) === "1"); } catch { /* noop */ }
+  }, [assessmentQuery.data]);
+  const finishReveal = () => {
+    try { localStorage.setItem(`aqal_reveal_${(assessmentQuery.data as any)?.id}`, "1"); } catch { /* noop */ }
+    setRevealDone(true);
+  };
 
   // Derive strength/weakness clusters from scores
   const { strengths, growthEdges, allScores, allErrBars, compositeRarity, cohortRarity, generation } = useMemo(() => {
@@ -2035,6 +2179,10 @@ export default function Results() {
   if (assessmentQuery.isLoading) return <PageSkeleton />;
 
   if (!assessmentQuery.data || !assessmentQuery.data.scores?.length) {
+    const a: any = assessmentQuery.data;
+    if (a && (a.completedQuestions ?? 0) >= (a.totalQuestions ?? 27)) {
+      return <PanelDeliberation />;
+    }
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
         {/* Ambient glow */}
@@ -2070,6 +2218,21 @@ export default function Results() {
 
   return (
     <div className="min-h-screen bg-background relative">
+      {!revealDone && strengths.length > 0 && (
+        <RevealOverlay
+          topLine={(strengths[0] as any)?.axis ?? "Your top line"}
+          topScore={(strengths[0] as any)?.score ?? 0}
+          weakLine={(growthEdges[0] as any)?.axis ?? "your weakest line"}
+          rarity={compositeRarity}
+          onDone={finishReveal}
+        />
+      )}
+      {/* Frozen-snapshot stamp — print only */}
+      <div className="hidden print:block" style={{ padding: "12px 0", borderBottom: "2px solid #999", marginBottom: "12px" }}>
+        <p style={{ fontFamily: "monospace", fontSize: "10px", letterSpacing: "0.1em", margin: 0 }}>
+          AQAL INTELLIGENCE PLATFORM — FROZEN REPORT SNAPSHOT · scored {new Date((assessmentQuery.data as any)?.updatedAt ?? Date.now()).toLocaleDateString()} · norming {(assessmentQuery.data as any)?.normingVersion ?? "v1"} · this copy is immutable: your scores as of this date, regardless of how the platform evolves
+        </p>
+      </div>
       {/* Sticky nav header */}
       <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-primary/10">
         <div className="container py-3 flex items-center justify-between">
@@ -2145,6 +2308,9 @@ export default function Results() {
 
             {/* Optional triage: how urgently to work the map (client-side only) */}
             <StabilityCheck scores={allScores} />
+
+            {/* The bridge from insight to habit */}
+            <FirstWeekPlan scores={allScores} />
 
             {/* On-ramp: your two lowest lines → the research, the prescriptions, the network */}
             <StarvedLineOnRamp scores={allScores} errBars={allErrBars} />

@@ -309,6 +309,9 @@ export function PublicFooter() {
             <Link href="/which-archetype">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">2-Minute Teaser Quiz</span>
             </Link>
+            <Link href="/sample-report">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">See a Sample Report</span>
+            </Link>
             <Link href="/black-box">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">The Black Box</span>
             </Link>

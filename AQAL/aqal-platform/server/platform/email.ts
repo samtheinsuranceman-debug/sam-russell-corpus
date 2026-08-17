@@ -80,7 +80,7 @@ export function resultEmailHtml(opts: {
 // Founding-member welcome — fires once, when a NEW member claims free access.
 // Seeds retention by setting the expectation that finishing (long, deep answers)
 // is the whole game, and points them straight to the assessment.
-export function foundingWelcomeEmailHtml(opts: { name?: string; appUrl?: string } = {}): string {
+export function foundingWelcomeEmailHtml(opts: { name?: string; appUrl?: string; verifyUrl?: string } = {}): string {
   const first = (opts.name || "").split(" ")[0];
   const hi = first ? `Welcome, ${first.replace(/[<>&"]/g, "")}.` : "Welcome.";
   const cta = opts.appUrl ? `${opts.appUrl.replace(/\/$/, "")}/assessment` : "/assessment";
@@ -92,6 +92,10 @@ export function foundingWelcomeEmailHtml(opts: { name?: string; appUrl?: string 
       Your assessment and your membership are <b style="color:#e0c68c;">free, for life</b> — the founding rate, locked
       in. In return, you help build the network that makes this worth joining.
     </p>
+    ${opts.verifyUrl ? `<div style="border:1px solid rgba(226,96,74,.35);border-radius:12px;padding:16px 18px;background:rgba(226,96,74,.06);margin:0 0 18px;">
+      <p style="margin:0 0 10px;font-size:13.5px;color:#efe9dc;"><b>One required step:</b> confirm this email address. Your founding spot and password recovery both depend on it being real.</p>
+      <a href="${opts.verifyUrl}" style="display:inline-block;background:#e0c68c;color:#161310;font-family:monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:11px 18px;border-radius:4px;font-weight:600;">Confirm my email</a>
+    </div>` : ""}
     <div style="border:1px solid rgba(201,162,75,.2);border-radius:14px;padding:22px;background:rgba(201,162,75,.05);margin:0 0 18px;">
       <div style="font-family:monospace;font-size:10px;letter-spacing:.2em;color:#c9a24b;text-transform:uppercase;margin-bottom:8px;">The one thing that matters</div>
       <p style="color:#efe9dc;font-size:14px;line-height:1.6;margin:0;">

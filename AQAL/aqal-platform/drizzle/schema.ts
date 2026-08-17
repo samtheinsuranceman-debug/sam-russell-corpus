@@ -38,6 +38,10 @@ export const users = mysqlTable("users", {
   // Password reset: sha256 hash of the emailed token + its expiry (1h).
   resetTokenHash: varchar("reset_token_hash", { length: 64 }),
   resetTokenExpiresAt: timestamp("reset_token_expires_at"),
+  // Email verification: founding accounts must prove the address is real —
+  // password recovery and the lifetime spot both hang off it.
+  emailVerifiedAt: timestamp("email_verified_at"),
+  verifyTokenHash: varchar("verify_token_hash", { length: 64 }),
 });
 
 export type User = typeof users.$inferSelect;

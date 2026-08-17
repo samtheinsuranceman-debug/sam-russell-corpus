@@ -146,6 +146,10 @@ function MissionControl() {
   const cur = trpc.assessment.current.useQuery();
   const goals = trpc.goals.list.useQuery(undefined, { retry: false });
   const beliefs = trpc.beliefs.list.useQuery(undefined, { retry: false });
+  const founding = trpc.freeAccess.myFoundingNumber.useQuery(undefined, { retry: false });
+  const resend = trpc.freeAccess.resendVerification.useMutation({
+    onSuccess: () => toast.success("Confirmation email sent — check your inbox (and spam, the first time)."),
+  });
 
   const total = (cur.data as any)?.totalQuestions || 27;
   const done = (cur.data as any)?.completedQuestions || 0;
@@ -165,8 +169,22 @@ function MissionControl() {
 
   return (
     <div className="rounded-xl border border-border bg-secondary/60 p-6">
+      {founding.data && founding.data.number !== null && !founding.data.verified && (
+        <div className="mb-4 rounded-lg border border-[#E2604A]/40 bg-[#E2604A]/[0.06] px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+          <span className="text-[12.5px] text-foreground/85">
+            <b className="text-[#E2604A]">Confirm your email.</b> Your founding spot and password recovery depend on it being real.
+          </span>
+          <button onClick={() => resend.mutate()} disabled={resend.isPending}
+            className="font-mono text-[10px] tracking-[0.1em] uppercase px-3 py-2 rounded-md border border-[#E2604A]/50 text-[#E2604A] cursor-pointer">
+            {resend.isPending ? "Sending…" : "Resend the link"}
+          </button>
+        </div>
+      )}
       <div className="flex items-baseline justify-between flex-wrap gap-2 mb-4">
-        <p className="font-mono text-[10px] tracking-[0.3em] text-primary">MISSION CONTROL</p>
+        <p className="font-mono text-[10px] tracking-[0.3em] text-primary">
+          MISSION CONTROL
+          {founding.data?.number ? <span className="ml-3 text-[#E0C68C]">· FOUNDING MEMBER #{founding.data.number.toLocaleString()}{founding.data.cap ? ` OF ${founding.data.cap.toLocaleString()}` : ""}</span> : null}
+        </p>
         {next && (
           <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-primary/90 animate-pulse">
             ▸ next move: {next.title}
