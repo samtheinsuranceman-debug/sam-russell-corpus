@@ -158,7 +158,8 @@ function MissionControl() {
     { n: 2, title: "Read your map", detail: scored ? "Your 32-line report is live" : "Unlocks when the panel scores your answers", href: "/results", complete: scored, cta: "Open results" },
     { n: 3, title: "Put your goals on the clock", detail: goalCount > 0 ? `${goalCount} goal${goalCount === 1 ? "" : "s"} ticking` : "Honest clocks. They respond to effort.", href: "/goals", complete: goalCount > 0, cta: "Open goals" },
     { n: 4, title: "Surface your beliefs", detail: beliefCount > 0 ? `${beliefCount} belief${beliefCount === 1 ? "" : "s"} on the board` : "The saboteur votes before you do", href: "/beliefs", complete: beliefCount > 0, cta: "Open beliefs" },
-    { n: 5, title: "Meet your villages", detail: "Peers who think where you think — and complements who cover your edges", href: "/matches", complete: false, cta: "Explore" },
+    { n: 5, title: "Open your Black Box", detail: "3–5 crashes, forensically read — the fault line with receipts", href: "/black-box", complete: false, cta: "Open" },
+    { n: 6, title: "Meet your villages", detail: "Peers who think where you think — and complements who cover your edges", href: "/matches", complete: false, cta: "Explore" },
   ];
   const next = steps.find((s) => !s.complete);
 

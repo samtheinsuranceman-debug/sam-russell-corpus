@@ -1218,6 +1218,63 @@ Return ONLY valid JSON.` },
   // cap). We create a free account keyed to that email and log them in. Their
   // low-confidence result is emailed to that address when the assessment completes.
   freeAccess: router({
+    // Password reset, step 1: request the emailed link. Always answers the same
+    // way whether or not the email exists (no account enumeration).
+    requestPasswordReset: publicProcedure
+      .input(z.object({ email: z.string().email().max(320) }))
+      .mutation(async ({ ctx, input }) => {
+        const { checkLimit, clientIp } = await import("./rateLimit");
+        const ip = clientIp(ctx.req as never);
+        if (!checkLimit(`pwreset:${ip}`, 5, 60 * 60 * 1000)) return { ok: true as const };
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) return { ok: true as const };
+        const { users } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        const [user] = await db.select().from(users).where(eq(users.email, input.email.toLowerCase().trim()));
+        if (user?.passwordHash) {
+          const { randomBytes, createHash } = await import("node:crypto");
+          const token = randomBytes(32).toString("hex");
+          const tokenHash = createHash("sha256").update(token).digest("hex");
+          await db.update(users)
+            .set({ resetTokenHash: tokenHash, resetTokenExpiresAt: new Date(Date.now() + 60 * 60 * 1000) })
+            .where(eq(users.id, user.id));
+          const appUrl = (((ctx.req as any)?.headers?.origin as string) || "https://joinaqal.com").replace(/\/$/, "");
+          const { sendEmail } = await import("./platform/email");
+          await sendEmail(
+            input.email,
+            "Reset your AQAL password",
+            `<div style="font-family:monospace;font-size:13px;line-height:1.7;background:#161310;color:#f1eadb;padding:28px;border-radius:12px">
+              <p style="letter-spacing:.2em;font-size:10px;color:#e0c68c">AQAL · PASSWORD RESET</p>
+              <p>Someone (hopefully you) asked to reset the password for this founding account.</p>
+              <p><a href="${appUrl}/reset-password?token=${token}" style="display:inline-block;background:#e0c68c;color:#161310;font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:13px 22px;border-radius:4px;font-weight:600">Choose a new password</a></p>
+              <p style="color:#9c8f79;font-size:11px">The link works for one hour. If you didn't ask for this, ignore it — your password is unchanged.</p>
+            </div>`,
+          );
+        }
+        return { ok: true as const };
+      }),
+    // Step 2: the emailed token sets the new password.
+    resetPassword: publicProcedure
+      .input(z.object({ token: z.string().length(64), newPassword: z.string().min(8).max(200) }))
+      .mutation(async ({ input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) return { ok: false as const, error: "Try again in a moment." };
+        const { users } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        const { createHash } = await import("node:crypto");
+        const tokenHash = createHash("sha256").update(input.token).digest("hex");
+        const [user] = await db.select().from(users).where(eq(users.resetTokenHash, tokenHash));
+        if (!user || !user.resetTokenExpiresAt || user.resetTokenExpiresAt.getTime() < Date.now()) {
+          return { ok: false as const, error: "That link has expired or was already used — request a fresh one." };
+        }
+        await db.update(users).set({
+          passwordHash: hashFoundingPassword(input.newPassword),
+          resetTokenHash: null, resetTokenExpiresAt: null,
+        }).where(eq(users.id, user.id));
+        return { ok: true as const };
+      }),
     // Public: whether the free gate is enabled + how many giveaway spots remain,
     // so the UI can show "N of 1,000 free spots left" and close the door at 0.
     info: publicProcedure.query(async () => {
@@ -2343,6 +2400,76 @@ CRITICAL RULES:
   }),
 
   // ── BELIEFS — the Belief Paradigm (elicit · evidence · member decides) ─────
+  // ── THE BLACK BOX — crash forensics ────────────────────────────────────────
+  blackBox: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const { listEvents } = await import("./blackBox");
+      return listEvents(ctx.user.id);
+    }),
+    add: protectedProcedure
+      .input(z.object({
+        title: z.string().min(3).max(200),
+        narrative: z.string().min(1).max(30_000),
+        scope: z.enum(["private", "coaching"]).default("coaching"),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { addEvent } = await import("./blackBox");
+        return addEvent(ctx.user.id, input.title, input.narrative, input.scope);
+      }),
+    remove: protectedProcedure
+      .input(z.object({ eventId: z.number().int().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        const { removeEvent } = await import("./blackBox");
+        return { ok: await removeEvent(ctx.user.id, input.eventId) };
+      }),
+    extract: protectedProcedure
+      .input(z.object({ eventId: z.number().int().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        const { extractEvent } = await import("./blackBox");
+        return extractEvent(ctx.user.id, input.eventId);
+      }),
+    buildSignature: protectedProcedure.mutation(async ({ ctx }) => {
+      const { buildSignature } = await import("./blackBox");
+      return buildSignature(ctx.user.id);
+    }),
+    getSignature: protectedProcedure.query(async ({ ctx }) => {
+      const { getSignature } = await import("./blackBox");
+      return getSignature(ctx.user.id);
+    }),
+  }),
+
+  // ── SUPPORT — the box that forwards straight to Sam ────────────────────────
+  support: router({
+    send: publicProcedure
+      .input(z.object({
+        message: z.string().min(10).max(5000),
+        replyTo: z.string().email().max(320).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { checkLimit, clientIp } = await import("./rateLimit");
+        const ip = clientIp(ctx.req as never);
+        if (!checkLimit(`support:${ip}`, 3, 60 * 60 * 1000)) {
+          return { ok: false as const, error: "A few messages are already on their way — give us an hour." };
+        }
+        const { sendEmail } = await import("./platform/email");
+        const from = ctx.user?.email ?? input.replyTo ?? "anonymous visitor";
+        const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const res = await sendEmail(
+          "sam@russellcapitalsystems.com",
+          `AQAL support — from ${from}`,
+          `<div style="font-family:monospace;font-size:13px;line-height:1.6">
+            <p><b>From:</b> ${esc(from)}${ctx.user ? ` (member #${ctx.user.id})` : " (not signed in)"}</p>
+            <p><b>Reply to:</b> ${esc(input.replyTo ?? ctx.user?.email ?? "not provided")}</p>
+            <hr/>
+            <p style="white-space:pre-wrap">${esc(input.message)}</p>
+          </div>`,
+        );
+        return res.ok
+          ? { ok: true as const }
+          : { ok: false as const, error: "Couldn't send just now — try again in a minute." };
+      }),
+  }),
+
   beliefs: router({
     list: protectedProcedure.query(async ({ ctx }) => {
       const { listBeliefs } = await import("./beliefs");

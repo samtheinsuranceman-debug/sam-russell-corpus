@@ -202,6 +202,14 @@ function FreeFoundingAccess() {
 function HeroSection() {
   const [mounted, setMounted] = useState(false);
   const [heroSel, setHeroSel] = useState<number | null>(null);
+  const [heroInfo, setHeroInfo] = useState<string | null>(null);
+  const heroPickedAtRef = useRef(0);
+  const heroPick = (i: number) => {
+    setHeroSel((prev) => { if (prev !== i) heroPickedAtRef.current = Date.now(); return i; });
+  };
+  const heroMaybeOpen = (i: number, name: string) => {
+    if (heroSel === i && Date.now() - heroPickedAtRef.current > 450) setHeroInfo(name);
+  };
   const hero = useHeroVariant();
   useEffect(() => { const t = setTimeout(() => setMounted(true), 60); return () => clearTimeout(t); }, []);
 
@@ -319,8 +327,9 @@ function HeroSection() {
                 const on = heroSel === p.i;
                 return (
                   <g key={"pt" + p.i} className="cursor-pointer"
-                    onPointerEnter={() => setHeroSel(p.i)}
-                    onPointerDown={() => setHeroSel(p.i)}>
+                    onPointerEnter={() => heroPick(p.i)}
+                    onPointerDown={() => heroPick(p.i)}
+                    onClick={() => heroMaybeOpen(p.i, p.l.name)}>
                     {/* Oversized invisible hit target — finger-friendly on touch screens */}
                     <circle cx={p.x} cy={p.y} r={20} fill="transparent" />
                     {p.l.indep && <circle cx={p.x} cy={p.y} r={on ? 11 : 8} fill="none" stroke={c} strokeOpacity="0.5" strokeDasharray="2 2" />}
@@ -335,7 +344,7 @@ function HeroSection() {
                   <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8.5px', letterSpacing: '0.24em' }} fill={CREAM2} x={CX} y={CY - 34} textAnchor="middle">AGGREGATE · SAMPLE</text>
                   <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY + 4} textAnchor="middle" fontSize="34">32 lines</text>
                   <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.10em' }} fill={MUTED} x={CX} y={CY + 24} textAnchor="middle">CAPABILITY {aggregate} · 32 LINES · ≥6.5 EFF. DIM</text>
-                  <text className="aq-pulse" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.18em' }} fill={CHAMPAGNE} x={CX} y={CY + 44} textAnchor="middle">◇ TAP ANY POINT</text>
+                  <text className="aq-pulse" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.18em' }} fill={CHAMPAGNE} x={CX} y={CY + 44} textAnchor="middle">◇ TAP A POINT · TAP AGAIN TO LEARN IT</text>
                 </>
               ) : (
                 <>
@@ -343,12 +352,15 @@ function HeroSection() {
                   <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY - 6} textAnchor="middle" fontSize="27">{LINES[heroSel].short}</text>
                   <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={MODE[LINES[heroSel].mode].c} x={CX} y={CY + 30} textAnchor="middle" fontSize="34">{LINES[heroSel].v}</text>
                   <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '7.5px', letterSpacing: '0.14em' }} fill={MUTED} x={CX} y={CY + 48} textAnchor="middle">/ 100 · SAMPLE PROFILE</text>
+                  <text className="aq-pulse cursor-pointer" onPointerDown={() => heroSel !== null && setHeroInfo(LINES[heroSel].name)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.16em' }} fill={CHAMPAGNE} x={CX} y={CY + 66} textAnchor="middle">◇ WHAT IS THIS? TAP TO LEARN IT</text>
                 </>
               )}
             </svg>
           </div>
         </div>
       </div>
+
+      <LineInfoModal line={heroInfo} onClose={() => setHeroInfo(null)} />
 
       {/* Responsive override for mobile */}
       <style>{`

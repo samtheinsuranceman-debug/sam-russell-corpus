@@ -61,6 +61,8 @@ const LaunchCheck = lazy(() => import("./pages/LaunchCheck"));
 const Lines = lazy(() => import("./pages/Lines"));
 const WhichArchetype = lazy(() => import("./pages/WhichArchetype"));
 const WelcomeBack = lazy(() => import("./pages/WelcomeBack"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const BlackBox = lazy(() => import("./pages/BlackBox"));
 const MetaSystems = lazy(() => import("./pages/MetaSystems"));
 const ScenarioIntelligence = lazy(() => import("./pages/ScenarioIntelligence"));
 const VerificationLedger = lazy(() => import("./pages/VerificationLedger"));
@@ -398,6 +400,16 @@ function Router() {
         <Route path={"/lines"}>
           <PageErrorBoundary pageName="Lines">
             <Suspense fallback={<PageSkeleton />}><Lines /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/reset-password"}>
+          <PageErrorBoundary pageName="ResetPassword">
+            <Suspense fallback={<PageSkeleton />}><ResetPassword /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/black-box"}>
+          <PageErrorBoundary pageName="BlackBox">
+            <Suspense fallback={<PageSkeleton />}><BlackBox /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/welcome-back"}>

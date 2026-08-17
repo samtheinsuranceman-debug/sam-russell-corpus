@@ -3,6 +3,7 @@ import { beginAuth } from "@/lib/agreement";
 import { trpc } from "@/lib/trpc";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import SupportWidget from "@/components/SupportWidget";
 import { motion } from "framer-motion";
 import { Menu, X, User, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
@@ -308,6 +309,12 @@ export function PublicFooter() {
             <Link href="/which-archetype">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">2-Minute Teaser Quiz</span>
             </Link>
+            <Link href="/black-box">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">The Black Box</span>
+            </Link>
+            <Link href="/reset-password">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Reset Password</span>
+            </Link>
           </div>
 
           {/* Trust & Legal */}
@@ -348,6 +355,7 @@ export function PublicFooter() {
           </div>
         </div>
       </div>
+      <SupportWidget />
     </footer>
   );
 }

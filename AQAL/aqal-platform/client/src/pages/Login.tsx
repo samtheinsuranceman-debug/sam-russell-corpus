@@ -197,6 +197,11 @@ export default function Login() {
               You must accept the User Agreement before signing in.
               Your data is encrypted end-to-end.
             </p>
+            <p className="text-xs text-center mt-3">
+              <a href="/reset-password" className="text-primary/80 hover:text-primary underline underline-offset-2">
+                Forgot your password?
+              </a>
+            </p>
           </div>
         </motion.div>
 

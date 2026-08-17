@@ -35,6 +35,9 @@ export const users = mysqlTable("users", {
   passwordHash: varchar("password_hash", { length: 200 }),
   // Unread-messages email digest throttle (at most one per 24h).
   messageDigestLastSentAt: timestamp("message_digest_last_sent_at"),
+  // Password reset: sha256 hash of the emailed token + its expiry (1h).
+  resetTokenHash: varchar("reset_token_hash", { length: 64 }),
+  resetTokenExpiresAt: timestamp("reset_token_expires_at"),
 });
 
 export type User = typeof users.$inferSelect;
@@ -625,3 +628,35 @@ export const crisisFlags = mysqlTable("crisis_flags", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   reviewedAt: timestamp("reviewedAt"),
 });
+
+// ── THE BLACK BOX — crash forensics (member-narrated failure events) ─────────
+// The member's own account of a major life crash or near-miss. The panel
+// extracts the eight forensic layers into `extraction`; nothing is scored
+// against them — crashes annotate, they never penalize.
+export const crashEvents = mysqlTable("crash_events", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  narrative: text("narrative").notNull(),
+  // "private" = reflection only, excluded from coaching/algorithms (member's choice)
+  scope: mysqlEnum("scope", ["private", "coaching"]).default("coaching").notNull(),
+  // Panel extraction: the 8 layers (expectedOutcome, timeline, internalState,
+  // takeover, blindSpot, consequences, counterfactual, recurrenceRisk) + lines[]
+  extraction: json("extraction"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CrashEvent = typeof crashEvents.$inferSelect;
+
+// Cross-event synthesis: the Crash Signature + prevention architecture.
+export const crashSignatures = mysqlTable("crash_signatures", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  report: json("report").notNull(),
+  eventCount: int("eventCount").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CrashSignature = typeof crashSignatures.$inferSelect;
