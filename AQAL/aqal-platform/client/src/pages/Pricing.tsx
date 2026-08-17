@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { playClick } from "@/lib/audio";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PanelTrust from "@/components/PanelTrust";
 import { COHORT_SIZE, MEMBERSHIP_TRIAL_DAYS, UNDERWRITTEN_TRIAL_DAYS } from "@shared/giveawayLadder";
 import { useHeroVariant, currentHeroId } from "@/lib/heroExperiment";
 
@@ -570,6 +571,7 @@ export default function Pricing() {
         </DialogContent>
       </Dialog>
 
+      <div className="max-w-[760px] mx-auto px-6 pb-14"><PanelTrust /></div>
       <PublicFooter />
     </div>
   );

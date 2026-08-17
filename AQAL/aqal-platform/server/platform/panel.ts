@@ -25,7 +25,15 @@ async function invokeMember(m: PanelMember, params: InvokeParams): Promise<Invok
       console.warn(`[panel] ${m.name} (${m.developer}) → HTTP ${res.status}`);
       return null;
     }
-    return (await res.json()) as InvokeResult;
+    const json = (await res.json()) as InvokeResult;
+    // Cost ledger — best-effort, never blocks scoring.
+    try {
+      const { recordUsage, usageFrom } = await import("../costMonitor");
+      const u = usageFrom(json);
+      void recordUsage({ source: m.id, model: m.model, ...u,
+        promptChars: JSON.stringify(params.messages).length, context: "panel" });
+    } catch { /* noop */ }
+    return json;
   } catch (err) {
     console.warn(`[panel] ${m.name} (${m.developer}) failed:`, err);
     return null;

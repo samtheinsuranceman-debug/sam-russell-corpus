@@ -7,6 +7,7 @@
 import { Link } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { ALL_AXES } from "@shared/axisModes";
+import PanelTrust from "@/components/PanelTrust";
 
 const INK = "#141009";
 const INK2 = "#1B1610";
@@ -148,6 +149,8 @@ export default function SampleReport() {
             </div>
           ))}
         </div>
+
+        <div className="mb-8"><PanelTrust /></div>
 
         <div className="text-center">
           <p style={{ ...serif, fontSize: "clamp(22px,3.5vw,30px)", color: CREAM, marginBottom: "16px" }}>

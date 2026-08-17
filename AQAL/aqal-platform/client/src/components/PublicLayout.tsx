@@ -315,6 +315,9 @@ export function PublicFooter() {
             <Link href="/black-box">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">The Black Box</span>
             </Link>
+            <Link href="/help">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Help & FAQ</span>
+            </Link>
             <Link href="/reset-password">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Reset Password</span>
             </Link>

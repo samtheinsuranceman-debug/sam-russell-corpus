@@ -88,6 +88,14 @@ export default function Goals() {
     onError: (e) => toast.error(e.message),
   });
   const toggle = trpc.goals.toggleStage.useMutation({ onSuccess: () => utils.goals.list.invalidate() });
+  const [askTestimonial, setAskTestimonial] = useState<string | null>(null);
+  const [tRating, setTRating] = useState(0);
+  const [tQuote, setTQuote] = useState("");
+  const [tName, setTName] = useState("");
+  const [tConsent, setTConsent] = useState(false);
+  const submitTestimonial = trpc.testimonials.submit.useMutation({
+    onSuccess: () => { toast.success("Thank you — that goes in the record."); setAskTestimonial(null); setTRating(0); setTQuote(""); setTConsent(false); },
+  });
   // Beliefs⇄goals wiring: surface limiting beliefs whose own words overlap this goal
   const beliefsQ = trpc.beliefs.list.useQuery(undefined, { retry: false });
   const beliefsForGoal = (title: string) => {
@@ -269,6 +277,7 @@ export default function Goals() {
                               // Celebration: this click completes the final stage → the goal is achieved
                               if (!s.done && g.stages.every((st, j) => j === i || st.done)) {
                                 toast.success(`🏆 "${g.title}" — ACHIEVED. Every stage climbed. The clock stops because you beat it.`, { duration: 9000 });
+                                setTimeout(() => setAskTestimonial(g.title), 1600);
                               }
                               toggle.mutate({ goalId: g.id, stageIndex: i });
                             }}
@@ -345,6 +354,35 @@ export default function Goals() {
         )}
       </div>
       {showCrisis && <CrisisSupport onClose={() => setShowCrisis(false)} />}
+      {askTestimonial && (
+        <div className="fixed inset-0 z-[9991] flex items-center justify-center p-5" style={{ background: "rgba(10,8,5,0.85)" }} onClick={() => setAskTestimonial(null)}>
+          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-[460px] rounded-2xl p-6" style={{ background: "#1B1610", border: `1px solid ${CHAMPAGNE}55` }}>
+            <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase", color: CHAMPAGNE, marginBottom: "8px" }}>You just achieved a goal — say one sentence about it?</p>
+            <p style={{ fontSize: "13.5px", color: CREAM2, lineHeight: 1.6, marginBottom: "12px" }}>
+              Totally optional. What happened with &ldquo;{askTestimonial}&rdquo;? Your words help the next founding member believe this works.
+            </p>
+            <div className="mb-3">{[1,2,3,4,5].map((n) => (
+              <button key={n} onClick={() => setTRating(n)} style={{ background: "none", border: 0, cursor: "pointer", fontSize: "22px", color: n <= tRating ? CHAMPAGNE : "rgba(241,234,219,0.25)" }}>★</button>
+            ))}</div>
+            <textarea value={tQuote} onChange={(e) => setTQuote(e.target.value)} rows={3} placeholder="One honest sentence…"
+              style={{ width: "100%", background: "rgba(241,234,219,0.04)", border: `1px solid ${LINE_C}`, borderRadius: "9px", padding: "11px", fontSize: "14px", color: CREAM, outline: "none", marginBottom: "8px" }} />
+            <input value={tName} onChange={(e) => setTName(e.target.value)} placeholder="Display name (optional — e.g. 'Sarah K., Ohio')"
+              style={{ width: "100%", background: "rgba(241,234,219,0.04)", border: `1px solid ${LINE_C}`, borderRadius: "9px", padding: "10px 11px", fontSize: "13px", color: CREAM, outline: "none", marginBottom: "8px" }} />
+            <label className="flex items-center gap-2 mb-4" style={{ cursor: "pointer" }}>
+              <input type="checkbox" checked={tConsent} onChange={(e) => setTConsent(e.target.checked)} />
+              <span style={{ ...mono, fontSize: "10px", color: CREAM2 }}>AQAL may display this publicly (never without this box checked)</span>
+            </label>
+            <div className="flex gap-3">
+              <button onClick={() => { if (!tRating) { toast.error("Tap a star first."); return; } submitTestimonial.mutate({ rating: tRating, quote: tQuote.trim() || undefined, displayName: tName.trim() || undefined, consentToDisplay: tConsent, moment: "goal_achieved" }); }}
+                disabled={submitTestimonial.isPending}
+                style={{ ...mono, fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700, padding: "11px 18px", background: CHAMPAGNE, color: "#141009", border: 0, borderRadius: "8px", cursor: "pointer" }}>
+                Submit
+              </button>
+              <button onClick={() => setAskTestimonial(null)} style={{ ...mono, fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", color: MUTED, background: "none", border: 0, cursor: "pointer" }}>Not now</button>
+            </div>
+          </div>
+        </div>
+      )}
       <PublicFooter />
     </div>
   );

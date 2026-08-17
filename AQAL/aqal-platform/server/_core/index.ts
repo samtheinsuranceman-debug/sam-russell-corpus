@@ -68,6 +68,20 @@ async function startServer() {
   app.post("/api/scheduled/message-digest", messageDigestHandler);
   const { reentryHandler } = await import("../scheduledReentry");
   app.post("/api/scheduled/reentry", reentryHandler);
+  // Client-side error intake: member-facing breakage becomes visible.
+  app.post("/api/client-error", express.json({ limit: "16kb" }), async (req, res) => {
+    try {
+      const { checkLimit, clientIp } = await import("../rateLimit");
+      if (!checkLimit(`cerr:${clientIp(req as never)}`, 10, 60 * 60 * 1000)) { res.json({ ok: true }); return; }
+      const { recordEvent } = await import("../db");
+      const b = (req.body ?? {}) as { message?: string; stack?: string; url?: string; ua?: string };
+      await recordEvent({ type: "client_error", ok: false, meta: {
+        message: String(b.message ?? "").slice(0, 300), stack: String(b.stack ?? "").slice(0, 800),
+        url: String(b.url ?? "").slice(0, 200), ua: String(b.ua ?? "").slice(0, 160),
+      }});
+    } catch { /* error intake must never error */ }
+    res.json({ ok: true });
+  });
   const { questionOfDayHandler } = await import("../scheduledQuestionOfDay");
   app.post("/api/scheduled/question-of-day", questionOfDayHandler);
   // Make sure the Heartbeat cron service actually CALLS those routes —

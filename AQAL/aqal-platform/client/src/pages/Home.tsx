@@ -159,7 +159,7 @@ function FreeFoundingAccess() {
           <div style={{ margin: '4px 0 20px' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', color: CREAM, border: `1px solid ${CHAMPAGNE}55`, borderRadius: '999px', padding: '5px 12px', background: 'rgba(224,198,140,0.06)' }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '999px', background: CHAMPAGNE, boxShadow: `0 0 7px ${CHAMPAGNE}` }} />
-              <b style={{ color: CHAMPAGNE }}>{remaining.toLocaleString()}</b> of {cap.toLocaleString()} free spots left
+              <b style={{ color: CHAMPAGNE }}>{remaining.toLocaleString()}</b> of {cap.toLocaleString()} free spots left{(info.data as any)?.claimedThisWeek >= 3 ? <span style={{ color: CREAM2 }}> · {(info.data as any).claimedThisWeek} claimed this week</span> : null}
             </span>
           </div>
         )}
@@ -326,7 +326,9 @@ function HeroSection() {
                 const c = MODE[p.l.mode].c;
                 const on = heroSel === p.i;
                 return (
-                  <g key={"pt" + p.i} className="cursor-pointer"
+                  <g key={"pt" + p.i} className="cursor-pointer" role="button" tabIndex={0}
+                    aria-label={`${p.l.name} — select, activate again for definition`}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); heroSel === p.i ? setHeroInfo(p.l.name) : heroPick(p.i); } }}
                     onPointerEnter={() => heroPick(p.i)}
                     onPointerDown={() => heroPick(p.i)}
                     onClick={() => heroMaybeOpen(p.i, p.l.name)}>
@@ -1190,7 +1192,9 @@ function DialSection() {
               {pts.map((p) => {
                 const on = selected === p.i; const c = MODE[p.l.mode].c;
                 return (
-                  <g key={"pt2" + p.i} className="cursor-pointer"
+                  <g key={"pt2" + p.i} className="cursor-pointer" role="button" tabIndex={0}
+                    aria-label={`${p.l.name} — select, activate again for definition`}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selected === p.i ? setInfoLine(p.l.name) : pick(p.i); } }}
                     onPointerEnter={() => pick(p.i)} onPointerDown={() => pick(p.i)}
                     onClick={() => maybeOpenInfo(p.i, p.l.name)}>
                     {/* Oversized invisible hit target — a fingertip, not a 4px dot */}

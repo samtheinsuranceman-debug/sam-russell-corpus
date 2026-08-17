@@ -850,7 +850,7 @@ function AssessmentManifesto({ companion, onBegin }: { companion: boolean; onBeg
               That&rsquo;s why some of these questions will be more demanding — emotionally, cognitively, mentally — than
               any test you&rsquo;ve taken. Those were always singular and narrow. This one is broad <em>and</em> deep. But
               it&rsquo;s also far more rewarding: it hands you the map, the blueprint, the architecture of your own mind —
-              and then draws protocols and procedures from a curated database of <span className="text-foreground">7,000
+              and then draws protocols and procedures from a curated database of <span className="text-foreground">6,500+
               therapeutic prescriptions</span>, each with cited resources from verified researchers, to help you reach your
               goals, outcomes, and visions in less time, with less failure, fewer tangents, and less wasted energy.
             </p>

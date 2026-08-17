@@ -1029,11 +1029,17 @@ Return ONLY valid JSON.` },
       add("STT provider", sttProvider() !== "mock", `provider: ${sttProvider()}${sttProvider() === "mock" ? " — transcription is FAKE until a key is set" : ""}`);
       add("Free-tier panel size", freePanelMax() >= 3, `${freePanelMax()} models for free tier`);
 
+      add("LLM daily budget guard", !!process.env.LLM_DAILY_BUDGET_USD,
+        process.env.LLM_DAILY_BUDGET_USD ? `alerts over $${process.env.LLM_DAILY_BUDGET_USD}/day (estimates)` : "LLM_DAILY_BUDGET_USD not set — no cost smoke alarm");
       const routes = ["/api/scheduled/finish-nudge", "/api/scheduled/tracker-reengagement", "/api/scheduled/drift-alert", "/api/scheduled/message-digest", "/api/scheduled/reentry", "/api/scheduled/question-of-day"];
       add("Drip endpoints registered", true, routes.join(", "));
 
       const pass = checks.filter((c) => c.ok).length;
       return { pass, total: checks.length, green: pass === checks.length, checks };
+    }),
+    costSummary: adminProcedure.query(async () => {
+      const { costSummary } = await import("./costMonitor");
+      return costSummary();
     }),
     panelHealth: adminProcedure.mutation(async () => {
       const { panelHealth } = await import("./platform/panel");
@@ -1334,11 +1340,25 @@ Return ONLY valid JSON.` },
         const count = await countFreeUsers();
         if (count !== null) { used = count; remaining = Math.max(0, cap - count); }
       }
+      // Living pace: real claims in the trailing 7 days (0 hides the line).
+      let claimedThisWeek = 0;
+      try {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (db) {
+          const { users } = await import("../drizzle/schema");
+          const { and, eq, gte, sql } = await import("drizzle-orm");
+          const [row] = await db.select({ n: sql<number>`count(*)` }).from(users)
+            .where(and(eq(users.betaAccess, true), gte(users.createdAt, new Date(Date.now() - 7 * 24 * 3600 * 1000))));
+          claimedThisWeek = Number(row?.n ?? 0);
+        }
+      } catch { /* best-effort */ }
       return {
         enabled: true, // no invite code — email + a member-chosen password
         cap,                      // 0 = unlimited
         used,
         remaining,                // null = uncapped or DB down
+        claimedThisWeek,
         full: cap > 0 && remaining === 0,
       };
     }),

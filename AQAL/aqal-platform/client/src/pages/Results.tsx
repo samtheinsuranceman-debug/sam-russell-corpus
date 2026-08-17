@@ -2239,6 +2239,9 @@ export default function Results() {
           <Link href="/">
             <span className="text-sm font-bold text-foreground hover:text-accent transition-colors cursor-pointer" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
               AQAL
+              <span className="ml-3 font-normal text-[9px] tracking-[0.12em] uppercase text-muted-foreground/70" title="Your scores are frozen under this norming version — recalibrations never silently rewrite you.">
+                norms {(assessmentQuery.data as any)?.normingVersion ?? "v1"}
+              </span>
             </span>
           </Link>
           <span className="text-xs text-primary/60 tracking-wider uppercase" style={{ fontFamily: "'JetBrains Mono', monospace" }}>

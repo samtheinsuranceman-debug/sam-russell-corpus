@@ -30,7 +30,15 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     }
     return mockInvokeLLM(params);
   }
-  return realInvokeLLM(params);
+  const result = await realInvokeLLM(params);
+  try {
+    const { recordUsage, usageFrom } = await import("../costMonitor");
+    const u = usageFrom(result);
+    void recordUsage({ source: "core", ...u,
+      promptChars: JSON.stringify(params.messages ?? "").length,
+      completionChars: JSON.stringify(result ?? "").length, context: "core" });
+  } catch { /* noop */ }
+  return result;
 }
 
 export { llmConfigured };

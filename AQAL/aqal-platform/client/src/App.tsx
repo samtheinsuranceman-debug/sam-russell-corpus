@@ -65,6 +65,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const BlackBox = lazy(() => import("./pages/BlackBox"));
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
 const SampleReport = lazy(() => import("./pages/SampleReport"));
+const Help = lazy(() => import("./pages/Help"));
 const MetaSystems = lazy(() => import("./pages/MetaSystems"));
 const ScenarioIntelligence = lazy(() => import("./pages/ScenarioIntelligence"));
 const VerificationLedger = lazy(() => import("./pages/VerificationLedger"));
@@ -101,6 +102,25 @@ export function usePrefetch() {
     prefetched.add(path);
     prefetchMap[path]();
   }, []);
+}
+
+// Global client-error reporter — member-facing breakage becomes server-visible.
+// Throttled to 5 reports per page load; never throws itself.
+let errorReports = 0;
+function reportClientError(message: string, stack?: string) {
+  if (errorReports >= 5) return;
+  errorReports += 1;
+  try {
+    fetch("/api/client-error", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, stack, url: location.pathname, ua: navigator.userAgent }),
+    }).catch(() => { /* noop */ });
+  } catch { /* noop */ }
+}
+if (typeof window !== "undefined" && !(window as any).__aqalErrHook) {
+  (window as any).__aqalErrHook = true;
+  window.addEventListener("error", (e) => reportClientError(e.message, e.error?.stack));
+  window.addEventListener("unhandledrejection", (e) => reportClientError(`unhandledrejection: ${String(e.reason).slice(0, 200)}`, (e.reason as any)?.stack));
 }
 
 // Top loading bar component
@@ -402,6 +422,11 @@ function Router() {
         <Route path={"/lines"}>
           <PageErrorBoundary pageName="Lines">
             <Suspense fallback={<PageSkeleton />}><Lines /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/help"}>
+          <PageErrorBoundary pageName="Help">
+            <Suspense fallback={<PageSkeleton />}><Help /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/verify-email"}>

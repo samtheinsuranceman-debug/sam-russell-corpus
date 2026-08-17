@@ -57,7 +57,7 @@ export default function SupportWidget() {
               Whatever's wrong or confusing — type it here. It forwards <b style={{ color: CREAM }}>directly to Sam</b>, not
               a ticket queue.
             </p>
-            <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={5}
+            <textarea aria-label="Describe your problem" value={message} onChange={(e) => setMessage(e.target.value)} rows={5}
               placeholder="What's going on? The more specific, the faster the fix."
               style={{ width: "100%", background: "rgba(241,234,219,0.04)", border: `1px solid ${LINE_C}`, borderRadius: "10px", padding: "12px", fontSize: "14px", color: CREAM, outline: "none", resize: "vertical", marginBottom: "10px" }} />
             {!user && (
