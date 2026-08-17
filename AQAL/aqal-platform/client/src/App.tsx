@@ -60,6 +60,7 @@ const EcologicalInterventions = lazy(() => import("./pages/EcologicalInterventio
 const LaunchCheck = lazy(() => import("./pages/LaunchCheck"));
 const Lines = lazy(() => import("./pages/Lines"));
 const WhichArchetype = lazy(() => import("./pages/WhichArchetype"));
+const WelcomeBack = lazy(() => import("./pages/WelcomeBack"));
 const MetaSystems = lazy(() => import("./pages/MetaSystems"));
 const ScenarioIntelligence = lazy(() => import("./pages/ScenarioIntelligence"));
 const VerificationLedger = lazy(() => import("./pages/VerificationLedger"));
@@ -397,6 +398,11 @@ function Router() {
         <Route path={"/lines"}>
           <PageErrorBoundary pageName="Lines">
             <Suspense fallback={<PageSkeleton />}><Lines /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/welcome-back"}>
+          <PageErrorBoundary pageName="WelcomeBack">
+            <Suspense fallback={<PageSkeleton />}><WelcomeBack /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/which-archetype"}>

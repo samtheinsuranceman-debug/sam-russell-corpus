@@ -32,7 +32,7 @@ function reentryHtml(opts: { name?: string | null; completed: number; total: num
       Your progress is exactly where you left it${left > 0 ? ` — ${left} question${left === 1 ? "" : "s"} between you and your complete 32-line map, your prescriptions, and your founding membership locked for life` : ""}.
       Nothing reset. Nothing expired quietly. Scores don't decay while you breathe.
     </p>
-    <a href="${opts.appUrl}/assessment" style="display:inline-block;background:#e0c68c;color:#161310;font-family:monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:13px 22px;border-radius:4px;font-weight:600;">Open it — just to look</a>
+    <a href="${opts.appUrl}/welcome-back" style="display:inline-block;background:#e0c68c;color:#161310;font-family:monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:13px 22px;border-radius:4px;font-weight:600;">Open it — just to look</a>
     <p style="color:#6f6a60;font-size:12px;margin-top:26px;">This is the only one of these we'll ever send. Come back when you're ready — even if it's just three minutes.</p>
   </div></body></html>`;
 }

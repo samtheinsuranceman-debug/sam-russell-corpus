@@ -1740,6 +1740,26 @@ function GrowthStudio({ scores }: { scores: number[] }) {
     </span>
   );
 
+  // Auto-swap: a protocol rated ≤2 stars in two different months isn't working
+  // for THIS member — propose the evidence-backed alternative unprompted.
+  const strugglingIds = useMemo(() => {
+    const low: Record<string, number> = {};
+    (ratings.data ?? []).forEach((r) => { if (r.stars <= 2) low[r.practiceId] = (low[r.practiceId] ?? 0) + 1; });
+    return Object.keys(low).filter((id) => low[id] >= 2);
+  }, [ratings.data]);
+  const SwapSuggestion = ({ practiceId, line }: { practiceId: string; line: string }) => {
+    if (!strugglingIds.includes(practiceId)) return null;
+    const alts = therapiesForLine(line, 2);
+    if (alts.length === 0) return null;
+    return (
+      <p className="text-[12px] leading-relaxed mt-2 rounded-lg border border-[#9BC0B2]/30 bg-[#9BC0B2]/[0.05] px-3 py-2" style={{ color: "#CFC5B0" }}>
+        <span style={{ color: "#9BC0B2", fontWeight: 600 }}>This one isn't landing for you — two months of low ratings say so. </span>
+        The evidence offers a different door to the same line: <b style={{ color: "#F1EADB" }}>{alts.map((a) => a.therapy).join(" or ")}</b>.
+        Swapping isn't quitting; it's dosing by data.
+      </p>
+    );
+  };
+
   return (
     <section className="mb-16">
       <div className="text-center mb-8">
@@ -1876,6 +1896,7 @@ function GrowthStudio({ scores }: { scores: number[] }) {
                 Rate: {rxPractice.name}
               </p>
               <Stars practiceId={rxPractice.id} />
+              {weakest && <SwapSuggestion practiceId={rxPractice.id} line={weakest.line} />}
             </div>
           )}
           {eco && (

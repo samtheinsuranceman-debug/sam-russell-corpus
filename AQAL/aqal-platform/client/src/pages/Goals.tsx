@@ -88,6 +88,15 @@ export default function Goals() {
     onError: (e) => toast.error(e.message),
   });
   const toggle = trpc.goals.toggleStage.useMutation({ onSuccess: () => utils.goals.list.invalidate() });
+  // Beliefs⇄goals wiring: surface limiting beliefs whose own words overlap this goal
+  const beliefsQ = trpc.beliefs.list.useQuery(undefined, { retry: false });
+  const beliefsForGoal = (title: string) => {
+    const words = title.toLowerCase().split(/\W+/).filter((w) => w.length > 3);
+    return (beliefsQ.data ?? []).filter((b) =>
+      b.status === "active" && b.kind === "limiting" &&
+      words.some((w) => b.text.toLowerCase().includes(w) || (b.touches ?? "").toLowerCase().includes(w))
+    ).slice(0, 2);
+  };
   const logEffort = trpc.goals.logEffort.useMutation({
     onSuccess: (res) => {
       toast.success("Effort logged — clock updated.");
@@ -256,7 +265,13 @@ export default function Goals() {
                           The staircase · {Math.round(g.clock.stageProgress * 100)}% climbed
                         </div>
                         {g.stages.map((s, i) => (
-                          <button key={i} onClick={() => toggle.mutate({ goalId: g.id, stageIndex: i })}
+                          <button key={i} onClick={() => {
+                              // Celebration: this click completes the final stage → the goal is achieved
+                              if (!s.done && g.stages.every((st, j) => j === i || st.done)) {
+                                toast.success(`🏆 "${g.title}" — ACHIEVED. Every stage climbed. The clock stops because you beat it.`, { duration: 9000 });
+                              }
+                              toggle.mutate({ goalId: g.id, stageIndex: i });
+                            }}
                             className="w-full text-left flex items-start gap-2 py-1.5"
                             style={{ background: "none", border: 0, cursor: "pointer" }}>
                             <span style={{ ...mono, fontSize: "12px", color: s.done ? JADE : MUTED, marginTop: "1px" }}>{s.done ? "◉" : "○"}</span>
@@ -267,13 +282,40 @@ export default function Goals() {
                         ))}
                       </div>
 
+                      {/* The saboteur check: limiting beliefs aimed at this goal */}
+                      {beliefsForGoal(g.title).length > 0 && (
+                        <div style={{ gridColumn: "1 / -1", border: `1px solid ${EMBER}44`, borderRadius: "10px", background: "rgba(226,96,74,0.05)", padding: "12px 16px" }}>
+                          <span style={{ ...mono, fontSize: "9.5px", letterSpacing: "0.14em", textTransform: "uppercase", color: EMBER }}>
+                            A belief is working against this clock —{" "}
+                          </span>
+                          {beliefsForGoal(g.title).map((b) => (
+                            <span key={b.id} style={{ fontSize: "13px", color: CREAM2 }}>
+                              &ldquo;{b.text}&rdquo;{" "}
+                            </span>
+                          ))}
+                          <Link href="/beliefs"><a style={{ ...mono, fontSize: "10px", color: CHAMPAGNE, textTransform: "uppercase", letterSpacing: "0.08em" }}>review the evidence →</a></Link>
+                        </div>
+                      )}
+
                       {/* Effort bars + log */}
                       <div>
                         <div style={{ ...mono, fontSize: "9.5px", letterSpacing: "0.16em", textTransform: "uppercase", color: CHAMPAGNE, marginBottom: "8px" }}>
                           Effort · last 6 months
                         </div>
                         <EffortBars logs={g.logs} minHours={g.minMonthlyHours} />
-                        <div className="flex gap-2 mt-4 flex-wrap items-center">
+                        {/* One-tap quick log — every friction second costs clock accuracy */}
+                        <div className="flex gap-1.5 mt-3 flex-wrap items-center">
+                          <span style={{ ...mono, fontSize: "9px", letterSpacing: "0.12em", textTransform: "uppercase", color: MUTED }}>quick-log {thisMonth()}:</span>
+                          {[5, 10, 20, 40].map((h) => (
+                            <button key={h} onClick={() => logEffort.mutate({ goalId: g.id, month: thisMonth(), hours: h })}
+                              disabled={logEffort.isPending}
+                              style={{ ...mono, fontSize: "10.5px", padding: "6px 12px", background: "rgba(224,198,140,0.08)", color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}44`, borderRadius: "999px", cursor: "pointer" }}>
+                              {h}h
+                            </button>
+                          ))}
+                          <span style={{ ...mono, fontSize: "9px", color: MUTED }}>or exact:</span>
+                        </div>
+                        <div className="flex gap-2 mt-2 flex-wrap items-center">
                           <input type="number" min={0} max={744} value={draft.hours}
                             onChange={(e) => setLogDraft((d) => ({ ...d, [g.id]: { ...draft, hours: e.target.value } }))}
                             placeholder="hrs"
