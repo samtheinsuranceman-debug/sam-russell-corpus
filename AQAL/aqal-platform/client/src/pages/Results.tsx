@@ -1342,6 +1342,7 @@ function StarvedLineOnRamp({ scores, errBars }: { scores: number[]; errBars?: (n
               )}
             </div>
           )}
+          <CrashConcordance weakLine={rx.line} />
           <Link href="/research-library">
             <a className="inline-flex items-center gap-2 text-xs text-accent hover:underline" onClick={playClick}>
               Read the research: {rx.practice.librarySection}
@@ -1826,6 +1827,27 @@ function StabilityResult({ result, onRedo }: { result: import("@shared/crisisSco
         <button onClick={onRedo} className="text-[11px] uppercase tracking-[0.1em] text-foreground/50 hover:text-foreground/80 cursor-pointer" style={{ fontFamily: "'JetBrains Mono', monospace" }}>← Change answers</button>
         <p className="text-[10.5px] text-foreground/40" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Not a medical or psychological diagnosis — a pacing recommendation. Nothing you selected was stored.</p>
       </div>
+    </div>
+  );
+}
+
+// Black Box ⇄ Results: does lived history agree with the panel's simulation?
+function CrashConcordance({ weakLine }: { weakLine: string }) {
+  const sig = trpc.blackBox.getSignature.useQuery(undefined, { retry: false, staleTime: 60_000 });
+  const report = (sig.data?.report ?? null) as { signature?: string; recurringLines?: string[] } | null;
+  if (!report?.recurringLines?.length) return null;
+  const agrees = report.recurringLines.some((l) => l.toLowerCase() === weakLine.toLowerCase());
+  return (
+    <div className="mt-3 rounded-xl border px-4 py-3" style={{ borderColor: agrees ? "#9BC0B255" : "#E0C68C55", background: agrees ? "rgba(155,192,178,0.05)" : "rgba(224,198,140,0.05)" }}>
+      <p className="text-[0.6rem] uppercase tracking-[0.15em] mb-1" style={{ fontFamily: "'JetBrains Mono', monospace", color: agrees ? "#9BC0B2" : "#E0C68C" }}>
+        Your Black Box {agrees ? "confirms this" : "points somewhere else"}
+      </p>
+      <p className="text-[13px] leading-relaxed" style={{ color: "#CFC5B0" }}>
+        {agrees
+          ? `Your real crash history ran through ${weakLine} too — the simulation and your lived receipts agree. This is the line.`
+          : `Your crashes ran through ${report.recurringLines.join(" and ")} — while the panel's simulation flags ${weakLine}. When history and simulation disagree, work the history first: receipts outrank predictions.`}
+        {report.signature ? ` Your signature: "${report.signature}"` : ""}
+      </p>
     </div>
   );
 }

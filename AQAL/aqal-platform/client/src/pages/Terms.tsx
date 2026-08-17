@@ -136,6 +136,41 @@ export default function Terms() {
             </section>
 
             <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">8B. Assessment Content, the Black Box &amp; Safety Scanning</h2>
+              <p className="mb-3">
+                <strong>Your narratives are yours.</strong> Assessment answers, goal notes, belief records, and Black Box
+                (crash forensics) entries are member content. Black Box entries marked "private" are excluded from all
+                coaching, synthesis, and algorithmic use — they exist for your reflection alone. Staff do not read this
+                content; it is processed only by the automated scoring systems that produce your results.
+              </p>
+              <p className="mb-3">
+                <strong>Safety scanning, disclosed.</strong> Assessment answers, goal notes, and Black Box entries are
+                checked by a deterministic word-list scanner (never an AI interpreting your life) solely to surface
+                crisis-support resources to you. This scanner never runs on member-to-member messages, and its results
+                are never used for marketing, scoring penalties, or disclosure to third parties.
+              </p>
+              <p className="mb-3">
+                <strong>Crashes annotate; they never penalize.</strong> Black Box content is used to identify patterns
+                and prescribe safeguards. It is never used to lower any intelligence-line score.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">8C. Founding Access &amp; Data Rights</h2>
+              <p className="mb-3">
+                <strong>Free for life, in writing.</strong> For founding members (the first 10,000 who complete the
+                assessment), the complimentary core access described in these Terms is lifetime. It will not be revoked,
+                converted to a paid requirement, or materially degraded for the life of the Service.
+              </p>
+              <p className="mb-3">
+                <strong>Export and deletion, self-serve.</strong> Every member — regardless of jurisdiction — may export
+                a complete copy of their own data (profile, assessment answers, scores, goals, beliefs, and Black Box
+                entries) from their Profile page at any time, and may request full account deletion from the same page.
+                Deletion requests are processed within 30 days.
+              </p>
+            </section>
+
+            <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">12. Contact</h2>
               <p>
                 For questions about these Terms, contact us at legal@aqalintelligence.com.

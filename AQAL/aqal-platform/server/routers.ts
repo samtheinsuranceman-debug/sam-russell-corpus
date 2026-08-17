@@ -1528,6 +1528,50 @@ Return ONLY valid JSON.` },
   // ============================================================
   // PROFILE PROCEDURES
   // ============================================================
+  // ── ACCOUNT SOVEREIGNTY — the Terms 8C promises, functioning ──────────────
+  account: router({
+    exportData: protectedProcedure.query(async ({ ctx }) => {
+      const uid = ctx.user.id;
+      const { getDb, getLatestAssessment, getResponsesByAssessment, getScoresByAssessment } = await import("./db");
+      const db = await getDb();
+      const out: Record<string, unknown> = {
+        exportedAt: new Date().toISOString(),
+        profile: { id: ctx.user.id, email: ctx.user.email, name: ctx.user.name, createdAt: (ctx.user as any).createdAt },
+        note: "Your complete AQAL data. Scores are frozen under their norming version. This file is yours.",
+      };
+      if (db) {
+        try {
+          const latest = await getLatestAssessment(uid);
+          if (latest) {
+            out.assessment = latest;
+            out.responses = await getResponsesByAssessment(latest.id);
+            out.scores = await getScoresByAssessment(latest.id);
+          }
+          const schema = await import("../drizzle/schema");
+          const { eq } = await import("drizzle-orm");
+          out.goals = await db.select().from(schema.goals).where(eq(schema.goals.userId, uid));
+          out.goalLogs = await db.select().from(schema.goalLogs).where(eq(schema.goalLogs.userId, uid));
+          out.beliefs = await db.select().from(schema.beliefs).where(eq(schema.beliefs.userId, uid));
+          out.blackBox = await db.select().from(schema.crashEvents).where(eq(schema.crashEvents.userId, uid));
+          out.crashSignature = (await db.select().from(schema.crashSignatures).where(eq(schema.crashSignatures.userId, uid)))[0] ?? null;
+          out.protocolRatings = await db.select().from(schema.protocolRatings).where(eq(schema.protocolRatings.userId, uid));
+          out.pulseChecks = await db.select().from(schema.pulseChecks).where(eq(schema.pulseChecks.userId, uid));
+        } catch (e) { out.partial = `some sections unavailable: ${String(e).slice(0, 100)}`; }
+      }
+      return out;
+    }),
+    requestDeletion: protectedProcedure.mutation(async ({ ctx }) => {
+      await recordEvent({ type: "deletion_requested", userId: ctx.user.id });
+      const { sendEmail } = await import("./platform/email");
+      await sendEmail(
+        "sam@russellcapitalsystems.com",
+        `DELETION REQUEST — member #${ctx.user.id} (${ctx.user.email ?? "no email"})`,
+        `<p style="font-family:monospace">Member #${ctx.user.id} (${ctx.user.email ?? "no email"}) requested full account deletion on ${new Date().toISOString()}. Terms 8C commits to processing within 30 days.</p>`,
+      ).catch(() => { /* the analytics record is the source of truth */ });
+      return { ok: true as const };
+    }),
+  }),
+
   profile: router({
     get: protectedProcedure.query(async ({ ctx }) => {
       const assessment = await getLatestAssessment(ctx.user.id);

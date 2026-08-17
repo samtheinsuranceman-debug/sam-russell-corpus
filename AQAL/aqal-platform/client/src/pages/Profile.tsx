@@ -528,8 +528,60 @@ export default function Profile() {
             <LeaderboardOptIn userName={userName} />
           </div>
         </motion.section>
+
+        {/* Terms 8C, functioning: export everything, or leave entirely */}
+        <DataSovereignty />
       </main>
     </div>
+  );
+}
+
+function DataSovereignty() {
+  const utils = trpc.useUtils();
+  const [busy, setBusy] = useState(false);
+  const requestDeletion = trpc.account.requestDeletion.useMutation();
+  const doExport = async () => {
+    setBusy(true);
+    try {
+      const data = await utils.account.exportData.fetch();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `aqal-my-data-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } catch { /* toast below */ }
+    setBusy(false);
+  };
+  const doDelete = async () => {
+    const sure = confirm("Request full account deletion? Your founding spot, scores, goals, beliefs, and Black Box will be permanently removed within 30 days. Export your data first if you want to keep it.");
+    if (!sure) return;
+    const r = await requestDeletion.mutateAsync().catch(() => null);
+    if (r?.ok) alert("Deletion requested. It will be processed within 30 days (Terms 8C). You'll keep access until then — if you change your mind, just tell us via Support.");
+  };
+  return (
+    <section className="mt-16 mb-8 rounded-2xl border border-white/10 p-7">
+      <p className="text-[0.62rem] uppercase tracking-[0.2em] text-primary/70 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        Your data is yours — Terms 8C
+      </p>
+      <p className="text-sm text-muted-foreground leading-relaxed mb-5 max-w-[52em]">
+        The platform that measures your mind must be the easiest place on the internet to take it back from. One tap
+        exports everything — profile, answers, scores, goals, beliefs, Black Box. One tap begins full deletion
+        (processed within 30 days).
+      </p>
+      <div className="flex gap-3 flex-wrap">
+        <button onClick={doExport} disabled={busy}
+          className="px-4 py-2.5 rounded-lg text-[11px] uppercase tracking-[0.1em] font-semibold border border-primary/40 text-primary cursor-pointer disabled:opacity-50"
+          style={{ fontFamily: "'JetBrains Mono', monospace", background: "transparent" }}>
+          {busy ? "Building export…" : "Export all my data (JSON)"}
+        </button>
+        <button onClick={doDelete} disabled={requestDeletion.isPending}
+          className="px-4 py-2.5 rounded-lg text-[11px] uppercase tracking-[0.1em] border border-red-400/40 text-red-400/90 cursor-pointer disabled:opacity-50"
+          style={{ fontFamily: "'JetBrains Mono', monospace", background: "transparent" }}>
+          Request account deletion
+        </button>
+      </div>
+    </section>
   );
 }
 
