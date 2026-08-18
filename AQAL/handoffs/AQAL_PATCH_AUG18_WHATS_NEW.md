@@ -1,6 +1,6 @@
-# WHAT'S NEW — AUG 18 delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18B delta (since the AUG17 bundle)
 
-Six commits, 29 files. Feature-by-feature, with the files each one touches.
+Seven commits, 35 files. Feature-by-feature, with the files each one touches.
 
 ---
 
@@ -124,8 +124,37 @@ the active goal, achievement toast + testimonial-capture moment on completion.
 
 - **MOD** `client/src/pages/Goals.tsx`
 
+## 11. The unconstrained-roadmap five (AUG 18B additions)
+
+- **Pre-Mortem Engine** — on every goal card: "It's six months from now and
+  this goal is dead. What killed it?" Up to three named causes, each with the
+  earliest warning sign and the prevention move — written BEFORE they happen,
+  in the member's own words. No probabilities, no scores.
+  **MOD** `client/src/pages/Goals.tsx`, `server/goals.ts`, `server/routers.ts`,
+  `drizzle/schema.ts` (goals.premortem column)
+- **The Corrections Ledger** — `/corrections`, public and append-only: every
+  claim we corrected (7,000 → 6,500+), every open challenge (the DOI audit),
+  every challenge sustained. Linked from the footer under Trust & Security.
+  **NEW** `client/src/pages/Corrections.tsx`
+- **Zero-trace audio retention** — raw assessment voice recordings are
+  permanently purged from storage 72 hours after scoring completes (the
+  transcript — the scored record — stays, and says so in Terms and Help).
+  Opportunistic self-throttled sweep, no cron needed.
+  **NEW** `server/audioRetention.ts`; **MOD** `server/routers.ts`,
+  `client/src/pages/Terms.tsx`, `client/src/pages/Help.tsx`
+- **The Owner's Runbook** — `/runbook`: Sam's one-page, no-jargon operations
+  manual. Nine plays (voice broken, emails missing, panel down, site down,
+  deploys, spend alarm, crisis flags, key rotation, backups) each ending in
+  "point at Claude" or "point at Manus." **NEW** `client/src/pages/Runbook.tsx`
+- **Mobile funnel audit** — 13 public pages driven at iPhone size (390×844):
+  zero horizontal overflow everywhere; fixed 17 invalid nested `<a>` elements
+  (wouter 3 Links wrapping raw anchors) across 13 pages — these were producing
+  React hydration warnings on most page loads.
+  **MOD** small `<Link>` fixes in 13 page files
+
 ---
 
-**Verified before cutting this patch:** `pnpm check` clean, `pnpm build`
-green, 270/270 tests passing, homepage dial + hero popup browser-tested
-(desktop + touch).
+**Verified before cutting this patch:** `pnpm check` clean, `pnpm build` green, 270/270 tests passing (including
+live-server tests against a running dev instance), homepage dial + hero popup
+browser-tested (desktop + touch), and the 13-page mobile viewport sweep passing
+with zero layout overflow and zero DOM-validity warnings.

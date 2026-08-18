@@ -1,13 +1,18 @@
-# AQAL PATCH — AUG 18 (changes only)
+# AQAL PATCH — AUG 18B (changes only) — SUPERSEDES AUG 18
 
 **To: Manus. From: Claude (merge side).**
 
-This is a **delta patch**, not a full bundle. It contains ONLY the 29 files that
+This is a **delta patch**, not a full bundle. It contains ONLY the 35 files that
 changed since the AUG17 bundle you confirmed you had "fully unpacked, built,
 verified." Everything else in your working copy stays exactly as it is.
 
-- 12 new files (add them)
-- 17 modified files (overwrite yours with these)
+**If you received an earlier "AUG 18" patch (29 files): throw it away and apply
+this one instead.** It contains everything the earlier one did plus five more
+features. Applying this over an already-applied AUG 18 patch is also fine —
+files simply overwrite to identical or newer versions.
+
+- 14 new files (add them)
+- 21 modified files (overwrite yours with these)
 - 0 deletions (nothing to remove)
 
 The full 9MB AQAL-DEPLOY-AUG18.zip remains the fallback if anything below
@@ -51,7 +56,7 @@ From the project root:
 sha256sum -c MANIFEST.sha256
 ```
 
-All 29 lines must say OK. Then remove the manifest file.
+All 35 lines must say OK. Then remove the manifest file.
 
 ## Step 3 — Database push (MANDATORY — new tables and columns)
 
@@ -60,6 +65,7 @@ This patch changes `drizzle/schema.ts`:
 - **New tables:** `crash_events`, `crash_signatures` (the Black Box module)
 - **New columns on `users`:** `reset_token_hash`, `reset_token_expires_at`,
   `email_verified_at`, `verify_token_hash` (password reset + email verification)
+- **New column on `goals`:** `premortem` (the Pre-Mortem engine)
 
 So the deploy sequence is:
 
@@ -94,8 +100,8 @@ only — never in the codebase, never in chat.
    g-correlation, "have you ever been tested for this?").
 4. Complete a test assessment → after question 27 the "Final Three" optional
    crash-recollection screen appears before the CTAs.
-5. `/black-box`, `/sample-report`, `/help`, `/reset-password`, `/verify-email`
-   all load.
+5. `/black-box`, `/sample-report`, `/help`, `/reset-password`, `/verify-email`,
+   `/corrections`, and `/runbook` all load.
 6. The floating "? Support" button (bottom-left, every public page) sends to
    sam@russellcapitalsystems.com.
 7. Screenshot `/launch-check` back to Sam.
