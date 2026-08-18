@@ -12,6 +12,9 @@ Cross-AI coordination documents for the AQAL Intelligence Platform build
 | `AQAL_50_Homepage_Scripts.md` | Full set of 50 homepage scripts written from Sam's dictated vision. |
 | `AQAL_27_Questions_Print_Pack.md` | All 27 assessment questions with option-B and option-C backups per question — the tape-recorder answer pack. |
 | `AQAL_100X_Strategy.md` | 25 growth suggestions, 20 high-value metrics, and overlooked protocols for making the platform 100X more effective and durable. |
+| `AQAL_PATCH_AUG18_APPLY_INSTRUCTIONS.md` | Manus apply guide for the AUG18 delta patch (29 changed files on top of the AUG17 bundle): base fingerprint checks, copy step, checksum verify, mandatory `pnpm db:push` (new `crash_events`/`crash_signatures` tables + 4 `users` columns), new env vars (`RESEND_API_KEY`, `LLM_DAILY_BUDGET_USD`), post-deploy checklist. |
+| `AQAL_PATCH_AUG18_WHATS_NEW.md` | Feature-by-feature description of the AUG18 delta: Line Encyclopedia popup, Black Box + Final Three, support-to-Sam, password reset + email verification, the Results launch experience, cost monitor, Terms 8B/8C + data sovereignty, claims fixes, Goals upgrades. |
+| `AQAL_PATCH_AUG18_MANIFEST.sha256` | SHA-256 checksums of the 29 files in the AUG18 patch, for integrity verification after copying. |
 
 Incoming Perplexity deliverables get verified by Claude (every DOI checked at
 doi.org, sustain-or-concede against current platform numbers) before anything
