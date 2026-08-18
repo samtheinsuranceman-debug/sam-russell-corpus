@@ -1048,7 +1048,7 @@ function FinalThreeBridge({ onCrisis }: { onCrisis: () => void }) {
       {submitted.length > 0 && (
         <p className="text-[12px] mt-4" style={{ color: "#CFC5B0" }}>
           {submitted.length} of 3 sealed. When you're ready, run the forensics at{" "}
-          <Link href="/black-box"><a style={{ color: "#E0C68C" }}>your Black Box</a></Link> — the panel extracts the
+          <Link href="/black-box" style={{ color: "#E0C68C" }}>your Black Box</Link> — the panel extracts the
           pattern across everything you've given it.
         </p>
       )}

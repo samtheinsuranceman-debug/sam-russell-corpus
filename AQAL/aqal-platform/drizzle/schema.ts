@@ -560,6 +560,10 @@ export const goals = mysqlTable("goals", {
   minMonthlyHours: float("minMonthlyHours").notNull(), // the pace baseline assumes
   // [{ name: string, done: boolean }] — the requirement staircase
   stages: json("stages"),
+  // Pre-mortem: the member assumes total failure 6 months out and works backward.
+  // { causes: [{ cause, sign, prevention }], writtenAt: ISO string } — written in
+  // their own words; no probabilities, no scores. Rewritable any time.
+  premortem: json("premortem"),
   status: mysqlEnum("status", ["active", "achieved", "paused", "retired"]).default("active").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

@@ -140,7 +140,7 @@ export default function BlackBox() {
 
         {!loading && !user && (
           <div style={{ border: `1px solid ${LINE_C}`, borderRadius: "12px", padding: "26px", color: CREAM2 }}>
-            <Link href="/login"><a style={{ color: CHAMPAGNE }}>Sign in</a></Link> to open your black box. Its contents are
+            <Link href="/login" style={{ color: CHAMPAGNE }}>Sign in</Link> to open your black box. Its contents are
             yours alone.
           </div>
         )}

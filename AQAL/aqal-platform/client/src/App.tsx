@@ -61,6 +61,8 @@ const LaunchCheck = lazy(() => import("./pages/LaunchCheck"));
 const Lines = lazy(() => import("./pages/Lines"));
 const WhichArchetype = lazy(() => import("./pages/WhichArchetype"));
 const WelcomeBack = lazy(() => import("./pages/WelcomeBack"));
+const Corrections = lazy(() => import("./pages/Corrections"));
+const Runbook = lazy(() => import("./pages/Runbook"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const BlackBox = lazy(() => import("./pages/BlackBox"));
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
@@ -452,6 +454,16 @@ function Router() {
         <Route path={"/welcome-back"}>
           <PageErrorBoundary pageName="WelcomeBack">
             <Suspense fallback={<PageSkeleton />}><WelcomeBack /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/corrections"}>
+          <PageErrorBoundary pageName="Corrections">
+            <Suspense fallback={<PageSkeleton />}><Corrections /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/runbook"}>
+          <PageErrorBoundary pageName="Runbook">
+            <Suspense fallback={<PageSkeleton />}><Runbook /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/which-archetype"}>

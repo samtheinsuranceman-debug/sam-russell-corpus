@@ -101,7 +101,7 @@ export default function ResetPassword() {
         )}
 
         <p style={{ ...mono, fontSize: "10.5px", color: MUTED, marginTop: "22px" }}>
-          <Link href="/login"><a style={{ color: CHAMPAGNE }}>← Back to sign in</a></Link>
+          <Link href="/login" style={{ color: CHAMPAGNE }}>← Back to sign in</Link>
         </p>
       </div>
       <PublicFooter />

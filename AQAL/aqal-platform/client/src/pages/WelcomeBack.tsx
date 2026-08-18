@@ -44,7 +44,7 @@ export default function WelcomeBack() {
 
         {!loading && !user && (
           <p style={{ color: CREAM2, fontSize: "14px", marginTop: "18px" }}>
-            <Link href="/login"><a style={{ color: CHAMPAGNE }}>Sign in</a></Link> and we&rsquo;ll show you exactly where you left off.
+            <Link href="/login" style={{ color: CHAMPAGNE }}>Sign in</Link> and we&rsquo;ll show you exactly where you left off.
           </p>
         )}
 

@@ -1357,7 +1357,7 @@ function StarvedLineOnRamp({ scores, errBars }: { scores: number[]; errBars?: (n
         <p className="text-[0.82rem] text-muted-foreground/70 leading-relaxed max-w-2xl mx-auto">
           A voice interview can&rsquo;t fully see every line — hands-on, physical, musical, or intimate lines often
           read low here simply because they&rsquo;re hard to hear in a story, not because they&rsquo;re weak. That&rsquo;s
-          exactly what the <Link href="/pricing"><a className="text-primary hover:underline">fully underwritten assessment</a></Link>{" "}
+          exactly what the <Link href="/pricing" className="text-primary hover:underline">fully underwritten assessment</Link>{" "}
           is for: upload the evidence and the panel scores those lines for real.
         </p>
       </div>

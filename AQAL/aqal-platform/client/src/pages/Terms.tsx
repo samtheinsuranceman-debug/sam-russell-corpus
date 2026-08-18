@@ -101,6 +101,13 @@ export default function Terms() {
                 should save anything important locally before the 72-hour window expires.
               </p>
               <p className="mb-3">
+                <strong>Assessment voice recordings.</strong> The raw audio of your spoken assessment answers exists
+                only to be transcribed and scored. Beginning 72 hours after your assessment completes, the audio files
+                themselves are permanently deleted from storage — your voice is not retained. The written transcript
+                is retained: it is the scored record your report, coaching, and any future re-scoring are built on,
+                and it is included in your data export and covered by your deletion rights (Section 8C).
+              </p>
+              <p className="mb-3">
                 <strong>Encryption and no sale of data.</strong> Member Content is encrypted in transit and at rest.
                 AQAL does not sell, license, share, or monetize Member Content or communication metadata (who messaged
                 whom, when, or how often) to any third party for any purpose.

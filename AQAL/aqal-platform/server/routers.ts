@@ -234,6 +234,9 @@ export const appRouter = router({
 
     // Get current assessment status
     current: protectedProcedure.query(async ({ ctx }) => {
+      // Opportunistic zero-trace sweep (self-throttled, fire-and-forget):
+      // raw audio older than 72h past scoring gets wiped from storage.
+      import("./audioRetention").then((m) => m.purgeScoredAudio()).catch(() => {});
       const assessment = await getLatestAssessment(ctx.user.id);
       if (!assessment) return null;
       const scoresList = await getScoresByAssessment(assessment.id);
@@ -2527,6 +2530,26 @@ CRITICAL RULES:
 
     // The bridge: goals the member already SPOKE in their assessment answers.
     suggestFromAssessment: protectedProcedure.query(({ ctx }) => suggestGoalsFromAssessment(ctx.user.id)),
+
+    // Pre-mortem: named failure causes + tripwires, written before they happen.
+    setPremortem: protectedProcedure
+      .input(z.object({
+        goalId: z.number().int().positive(),
+        causes: z.array(z.object({
+          cause: z.string().min(3).max(500),
+          sign: z.string().max(500).default(""),
+          prevention: z.string().max(500).default(""),
+        })).min(1).max(5),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { setPremortem } = await import("./goals");
+        const ok = await setPremortem(ctx.user.id, input.goalId, input.causes);
+        if (ok) await recordEvent({ type: "premortem_written", userId: ctx.user.id, meta: { goalId: input.goalId, causes: input.causes.length } });
+        // Deterministic safety scan on the member's own narrative, same as goals/pulse.
+        const joined = input.causes.map((c) => `${c.cause} ${c.sign} ${c.prevention}`).join(" ");
+        const crisis = await crisisCheck(ctx.user.id, "premortem", joined);
+        return { ok, crisis };
+      }),
   }),
 
   // ── BELIEFS — the Belief Paradigm (elicit · evidence · member decides) ─────

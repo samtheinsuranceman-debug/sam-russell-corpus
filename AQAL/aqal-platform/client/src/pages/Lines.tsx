@@ -74,7 +74,7 @@ export default function Lines() {
           an IQ score tells you nothing about them.
         </p>
         <p className="font-mono text-[10.5px] mb-10" style={{ color: MUTED }}>
-          Tap any line to expand it. Then <Link href="/assessment"><a style={{ color: CHAMPAGNE }}>measure yours</a></Link>.
+          Tap any line to expand it. Then <Link href="/assessment" style={{ color: CHAMPAGNE }}>measure yours</Link>.
         </p>
 
         <div className="space-y-2">
@@ -128,11 +128,9 @@ export default function Lines() {
         </div>
 
         <div className="mt-12 text-center">
-          <Link href="/assessment">
-            <a className="inline-block px-6 py-3.5 rounded-lg font-mono text-[12px] uppercase tracking-[0.12em] font-bold"
-              style={{ background: CHAMPAGNE, color: INK }}>
-              Measure all 32 of yours
-            </a>
+          <Link href="/assessment" className="inline-block px-6 py-3.5 rounded-lg font-mono text-[12px] uppercase tracking-[0.12em] font-bold"
+            style={{ background: CHAMPAGNE, color: INK }}>
+            Measure all 32 of yours
           </Link>
         </div>
       </div>

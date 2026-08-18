@@ -27,7 +27,7 @@ const FAQS: { q: string; a: string }[] = [
   { q: "Payments, the free founding spots, and the trial",
     a: "The first 10,000 founding members get the assessment and membership free for life — no card, ever. A signup reserves your spot for 14 days; completing the assessment claims it permanently. After the founding cohort, membership is $449/month or $4,499/year with a free trial, and premium assessments run $500–$1,500. Billing questions: the Support button reaches Sam directly." },
   { q: "Is my data private?",
-    a: "Your answers are yours: staff never read private messages (only content you report), message attachments wipe within 72 hours, Black Box entries can be marked private and excluded from coaching, and you can request a full export or deletion any time. Crisis-safety scanning is deterministic (a word list, not an AI reading your life) and only runs on assessments, goals, and Black Box text — never messages." },
+    a: "Your answers are yours: staff never read private messages (only content you report), message attachments wipe within 72 hours, and the raw audio of your assessment answers is permanently deleted 72 hours after scoring — only the transcript (the scored record) is kept, and it's covered by your export and deletion rights. Black Box entries can be marked private and excluded from coaching. Crisis-safety scanning is deterministic (a word list, not an AI reading your life) and only runs on assessments, goals, and Black Box text — never messages." },
 ];
 
 export default function Help() {
@@ -60,9 +60,9 @@ export default function Help() {
           ))}
         </div>
         <p style={{ ...mono, fontSize: "10.5px", color: MUTED, marginTop: "24px" }}>
-          Also useful: <Link href="/sample-report"><a style={{ color: CHAMPAGNE }}>see a sample report</a></Link> ·{" "}
-          <Link href="/lines"><a style={{ color: CHAMPAGNE }}>the 32 lines defined</a></Link> ·{" "}
-          <Link href="/reset-password"><a style={{ color: CHAMPAGNE }}>reset your password</a></Link>
+          Also useful: <Link href="/sample-report" style={{ color: CHAMPAGNE }}>see a sample report</Link> ·{" "}
+          <Link href="/lines" style={{ color: CHAMPAGNE }}>the 32 lines defined</Link> ·{" "}
+          <Link href="/reset-password" style={{ color: CHAMPAGNE }}>reset your password</Link>
         </p>
       </div>
       <PublicFooter />

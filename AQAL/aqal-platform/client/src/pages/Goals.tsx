@@ -71,6 +71,135 @@ function EffortBars({ logs, minHours }: { logs: { month: string; hours: number }
   );
 }
 
+// ── The Pre-Mortem ───────────────────────────────────────────────────────────
+// "It's six months from now and this goal is dead. What killed it?" Named
+// causes become tripwires: the early sign is written down BEFORE it happens,
+// so when it shows up it's recognized instead of rationalized. No probabilities,
+// no scores — the member's own words, stored verbatim.
+type PremortemData = { causes: { cause: string; sign: string; prevention: string }[]; writtenAt: string } | null;
+
+function PremortemPanel({ goalId, premortem, onCrisis }: { goalId: number; premortem: PremortemData; onCrisis: () => void }) {
+  const utils = trpc.useUtils();
+  const [editing, setEditing] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const blank = { cause: "", sign: "", prevention: "" };
+  const [rows, setRows] = useState([{ ...blank }, { ...blank }, { ...blank }]);
+  const save = trpc.goals.setPremortem.useMutation({
+    onSuccess: (r) => {
+      if (r.ok) {
+        toast.success("Pre-mortem on file — those signs are tripwires now.");
+        if (r.crisis) onCrisis();
+        setEditing(false);
+        utils.goals.list.invalidate();
+      }
+    },
+    onError: (e) => toast.error(e.message || "Couldn't save the pre-mortem."),
+  });
+
+  const fieldStyle = {
+    width: "100%", background: "rgba(241,234,219,0.04)", border: `1px solid ${LINE_C}`,
+    borderRadius: "7px", padding: "9px 10px", fontSize: "13px", color: CREAM, outline: "none",
+  } as const;
+
+  if (editing) {
+    return (
+      <div style={{ gridColumn: "1 / -1", border: `1px solid ${CHAMPAGNE}44`, borderRadius: "10px", background: "rgba(224,198,140,0.04)", padding: "16px" }}>
+        <p style={{ ...mono, fontSize: "9.5px", letterSpacing: "0.16em", textTransform: "uppercase", color: CHAMPAGNE, margin: "0 0 6px" }}>
+          The pre-mortem
+        </p>
+        <p style={{ fontSize: "13.5px", lineHeight: 1.6, color: CREAM2, margin: "0 0 12px" }}>
+          Assume it's six months from now and this goal <b style={{ color: CREAM }}>failed completely</b>. Don't defend
+          it — perform the autopsy. Name up to three causes. One is enough to start.
+        </p>
+        <div className="space-y-4">
+          {rows.map((r, i) => (
+            <div key={i} className="space-y-1.5">
+              <input value={r.cause} placeholder={`Cause ${i + 1} — what killed it?`}
+                onChange={(e) => setRows((rs) => rs.map((x, j) => (j === i ? { ...x, cause: e.target.value } : x)))}
+                style={fieldStyle} />
+              {r.cause.trim().length >= 3 && (
+                <>
+                  <input value={r.sign} placeholder="The earliest sign it was starting to happen"
+                    onChange={(e) => setRows((rs) => rs.map((x, j) => (j === i ? { ...x, sign: e.target.value } : x)))}
+                    style={fieldStyle} />
+                  <input value={r.prevention} placeholder="The move that prevents it"
+                    onChange={(e) => setRows((rs) => rs.map((x, j) => (j === i ? { ...x, prevention: e.target.value } : x)))}
+                    style={fieldStyle} />
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-3 mt-4 items-center flex-wrap">
+          <button
+            onClick={() => {
+              const filled = rows.filter((r) => r.cause.trim().length >= 3);
+              if (filled.length === 0) { toast.error("Name at least one cause — the honest one you'd rather not write."); return; }
+              save.mutate({ goalId, causes: filled });
+            }}
+            disabled={save.isPending}
+            style={{ ...mono, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700, padding: "10px 16px", background: CHAMPAGNE, color: INK, border: 0, borderRadius: "7px", cursor: "pointer" }}>
+            {save.isPending ? "Saving…" : "File the pre-mortem"}
+          </button>
+          <button onClick={() => setEditing(false)} style={{ ...mono, fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", color: MUTED, background: "none", border: 0, cursor: "pointer" }}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (premortem && premortem.causes.length > 0) {
+    return (
+      <div style={{ gridColumn: "1 / -1", border: `1px solid ${LINE_C}`, borderRadius: "10px", background: "rgba(241,234,219,0.02)", padding: "12px 16px" }}>
+        <button onClick={() => setExpanded((v) => !v)} className="w-full text-left flex items-baseline justify-between gap-3"
+          style={{ background: "none", border: 0, cursor: "pointer", padding: 0 }}>
+          <span style={{ ...mono, fontSize: "9.5px", letterSpacing: "0.16em", textTransform: "uppercase", color: JADE }}>
+            ◉ Pre-mortem on file · {premortem.causes.length} named {premortem.causes.length === 1 ? "cause" : "causes"} · {premortem.writtenAt.slice(0, 10)}
+          </span>
+          <span style={{ ...mono, fontSize: "11px", color: MUTED }}>{expanded ? "−" : "+"}</span>
+        </button>
+        {expanded && (
+          <div className="mt-3 space-y-3">
+            {premortem.causes.map((c, i) => (
+              <div key={i} style={{ borderLeft: `2px solid ${CHAMPAGNE}55`, paddingLeft: "12px" }}>
+                <p style={{ fontSize: "13.5px", color: CREAM, margin: "0 0 2px" }}>{c.cause}</p>
+                {c.sign && <p style={{ ...mono, fontSize: "10.5px", color: CREAM2, margin: "0 0 2px" }}>tripwire: {c.sign}</p>}
+                {c.prevention && <p style={{ ...mono, fontSize: "10.5px", color: JADE, margin: 0 }}>prevention: {c.prevention}</p>}
+              </div>
+            ))}
+            <button
+              onClick={() => {
+                setRows([0, 1, 2].map((i) => premortem.causes[i] ? { ...premortem.causes[i] } : { ...blank }));
+                setEditing(true);
+              }}
+              style={{ ...mono, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", color: CHAMPAGNE, background: "none", border: 0, cursor: "pointer", padding: 0 }}>
+              rewrite the pre-mortem →
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ gridColumn: "1 / -1", border: `1px dashed ${LINE_C}`, borderRadius: "10px", padding: "12px 16px" }}>
+      <button onClick={() => setEditing(true)} className="w-full text-left flex items-baseline justify-between gap-3"
+        style={{ background: "none", border: 0, cursor: "pointer", padding: 0 }}>
+        <span>
+          <span style={{ ...mono, fontSize: "9.5px", letterSpacing: "0.16em", textTransform: "uppercase", color: CHAMPAGNE }}>
+            Run the pre-mortem —{" "}
+          </span>
+          <span style={{ fontSize: "13px", color: CREAM2 }}>
+            it's six months from now and this goal is dead. What killed it? Naming the cause now is what stops it later.
+          </span>
+        </span>
+        <span style={{ ...mono, fontSize: "11px", color: MUTED }}>+</span>
+      </button>
+    </div>
+  );
+}
+
 export default function Goals() {
   const { user, loading } = useAuth();
   const utils = trpc.useUtils();
@@ -302,9 +431,12 @@ export default function Goals() {
                               &ldquo;{b.text}&rdquo;{" "}
                             </span>
                           ))}
-                          <Link href="/beliefs"><a style={{ ...mono, fontSize: "10px", color: CHAMPAGNE, textTransform: "uppercase", letterSpacing: "0.08em" }}>review the evidence →</a></Link>
+                          <Link href="/beliefs" style={{ ...mono, fontSize: "10px", color: CHAMPAGNE, textTransform: "uppercase", letterSpacing: "0.08em" }}>review the evidence →</Link>
                         </div>
                       )}
+
+                      {/* The pre-mortem: failure causes named before they happen */}
+                      <PremortemPanel goalId={g.id} premortem={g.premortem} onCrisis={() => setShowCrisis(true)} />
 
                       {/* Effort bars + log */}
                       <div>

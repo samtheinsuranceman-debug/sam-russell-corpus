@@ -55,6 +55,7 @@ export async function listGoals(userId: number) {
       baselineMonths: g.baselineMonths, minMonthlyHours: g.minMonthlyHours,
       stages, clock,
       logs: mine.slice(-6).map((l) => ({ month: l.month, hours: l.hours, note: l.note })),
+      premortem: (g.premortem as { causes: { cause: string; sign: string; prevention: string }[]; writtenAt: string } | null) ?? null,
       createdAt: g.createdAt,
     };
   });
@@ -131,6 +132,31 @@ export async function setGoalStatus(userId: number, goalId: number, status: "act
   const db = await getDb();
   if (!db) return false;
   await db.update(goals).set({ status })
+    .where(and(eq(goals.id, goalId), eq(goals.userId, userId)));
+  return true;
+}
+
+// ── Pre-mortem ───────────────────────────────────────────────────────────────
+// The member assumes the goal has completely failed six months from now and
+// names what killed it, the early sign it was happening, and the prevention
+// move. Stored verbatim — no scoring, no probabilities. The value is that the
+// causes are named BEFORE they happen, so the early signs become tripwires.
+export type PremortemCause = { cause: string; sign: string; prevention: string };
+
+export async function setPremortem(userId: number, goalId: number, causes: PremortemCause[]) {
+  const db = await getDb();
+  if (!db) return false;
+  const clean = causes
+    .filter((c) => c.cause.trim().length >= 3)
+    .slice(0, 5)
+    .map((c) => ({
+      cause: c.cause.trim().slice(0, 500),
+      sign: c.sign.trim().slice(0, 500),
+      prevention: c.prevention.trim().slice(0, 500),
+    }));
+  if (clean.length === 0) return false;
+  await db.update(goals)
+    .set({ premortem: { causes: clean, writtenAt: new Date().toISOString() } })
     .where(and(eq(goals.id, goalId), eq(goals.userId, userId)));
   return true;
 }

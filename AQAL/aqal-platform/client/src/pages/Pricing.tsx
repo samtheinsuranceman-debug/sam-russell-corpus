@@ -374,7 +374,7 @@ export default function Pricing() {
                 proven developmental-measurement method</span> — the constructivist ego-development framework, validated across
                 decades of peer-reviewed research in academic psychology — and scores every one of your 32 lines against it with
                 an independent multi-AI panel. The research foundation is already built and documented, not a promise: {" "}
-                <Link href="/archetypes"><a className="text-accent hover:underline">see the evidence</a></Link>.
+                <Link href="/archetypes" className="text-accent hover:underline">see the evidence</Link>.
               </p>
             </div>
 

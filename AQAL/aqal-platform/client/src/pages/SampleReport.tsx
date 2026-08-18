@@ -156,10 +156,8 @@ export default function SampleReport() {
           <p style={{ ...serif, fontSize: "clamp(22px,3.5vw,30px)", color: CREAM, marginBottom: "16px" }}>
             Jordan is invented. Your map won&rsquo;t be.
           </p>
-          <Link href="/assessment">
-            <a className="inline-block px-7 py-4 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", background: CHAMPAGNE, color: INK }}>
-              Claim yours — free for the first 10,000
-            </a>
+          <Link href="/assessment" className="inline-block px-7 py-4 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", background: CHAMPAGNE, color: INK }}>
+            Claim yours — free for the first 10,000
           </Link>
         </div>
       </div>

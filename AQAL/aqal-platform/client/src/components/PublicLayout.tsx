@@ -335,6 +335,9 @@ export function PublicFooter() {
               7 Patents Pending
               <span className="text-xs text-muted-foreground/35">Proprietary methodology</span>
             </span>
+            <Link href="/corrections">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Corrections Ledger</span>
+            </Link>
             <Link href="/terms">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Terms of Service</span>
             </Link>
