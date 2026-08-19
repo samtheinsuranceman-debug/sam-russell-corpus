@@ -210,6 +210,24 @@ function HeroSection() {
   const heroMaybeOpen = (i: number, name: string) => {
     if (heroSel === i && Date.now() - heroPickedAtRef.current > 450) setHeroInfo(name);
   };
+  // Desktop hover: resting the mouse on a point for a beat opens the full
+  // encyclopedia popup. Mouse pointers only — touch keeps tap-then-tap.
+  const heroHoverTimer = useRef<number | null>(null);
+  // When the modal closes with the mouse still resting on the point, the point
+  // re-fires pointerenter instantly — without this guard the popup reopens in
+  // a loop and can never be dismissed.
+  const heroClosedAtRef = useRef(0);
+  const heroHoverStart = (i: number, name: string, e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
+    heroPick(i);
+    if (Date.now() - heroClosedAtRef.current < 700) return;
+    if (heroHoverTimer.current) window.clearTimeout(heroHoverTimer.current);
+    heroHoverTimer.current = window.setTimeout(() => setHeroInfo(name), 350);
+  };
+  const heroHoverEnd = () => {
+    if (heroHoverTimer.current) { window.clearTimeout(heroHoverTimer.current); heroHoverTimer.current = null; }
+  };
+  const heroCloseInfo = () => { heroClosedAtRef.current = Date.now(); heroHoverEnd(); setHeroInfo(null); };
   const hero = useHeroVariant();
   useEffect(() => { const t = setTimeout(() => setMounted(true), 60); return () => clearTimeout(t); }, []);
 
@@ -329,7 +347,8 @@ function HeroSection() {
                   <g key={"pt" + p.i} className="cursor-pointer" role="button" tabIndex={0}
                     aria-label={`${p.l.name} — select, activate again for definition`}
                     onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); heroSel === p.i ? setHeroInfo(p.l.name) : heroPick(p.i); } }}
-                    onPointerEnter={() => heroPick(p.i)}
+                    onPointerEnter={(e) => (e.pointerType === "mouse" ? heroHoverStart(p.i, p.l.name, e) : heroPick(p.i))}
+                    onPointerLeave={heroHoverEnd}
                     onPointerDown={() => heroPick(p.i)}
                     onClick={() => heroMaybeOpen(p.i, p.l.name)}>
                     {/* Oversized invisible hit target — finger-friendly on touch screens */}
@@ -362,7 +381,7 @@ function HeroSection() {
         </div>
       </div>
 
-      <LineInfoModal line={heroInfo} onClose={() => setHeroInfo(null)} />
+      <LineInfoModal line={heroInfo} onClose={heroCloseInfo} />
 
       {/* Responsive override for mobile */}
       <style>{`
@@ -1129,6 +1148,23 @@ function DialSection() {
   const maybeOpenInfo = (i: number, name: string) => {
     if (selected === i && Date.now() - pickedAtRef.current > 450) setInfoLine(name);
   };
+  // Desktop hover: resting the mouse on a dial point for a beat opens the
+  // encyclopedia popup directly. Mouse pointers only — touch keeps tap-then-tap.
+  const hoverTimer = useRef<number | null>(null);
+  // Same reopen-loop guard as the hero ring: closing the modal while the mouse
+  // still rests on the point must not immediately re-trigger it.
+  const closedAtRef = useRef(0);
+  const hoverStart = (i: number, name: string, e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") { pick(i); return; }
+    pick(i);
+    if (Date.now() - closedAtRef.current < 700) return;
+    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
+    hoverTimer.current = window.setTimeout(() => setInfoLine(name), 350);
+  };
+  const hoverEnd = () => {
+    if (hoverTimer.current) { window.clearTimeout(hoverTimer.current); hoverTimer.current = null; }
+  };
+  const closeInfo = () => { closedAtRef.current = Date.now(); hoverEnd(); setInfoLine(null); };
 
   const pts = useMemo(() => LINES.map((l, i) => {
     const a = angFor(i);
@@ -1195,7 +1231,7 @@ function DialSection() {
                   <g key={"pt2" + p.i} className="cursor-pointer" role="button" tabIndex={0}
                     aria-label={`${p.l.name} — select, activate again for definition`}
                     onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selected === p.i ? setInfoLine(p.l.name) : pick(p.i); } }}
-                    onPointerEnter={() => pick(p.i)} onPointerDown={() => pick(p.i)}
+                    onPointerEnter={(e) => hoverStart(p.i, p.l.name, e)} onPointerLeave={hoverEnd} onPointerDown={() => pick(p.i)}
                     onClick={() => maybeOpenInfo(p.i, p.l.name)}>
                     {/* Oversized invisible hit target — a fingertip, not a 4px dot */}
                     <circle cx={p.x} cy={p.y} r={20} fill="transparent" />
@@ -1212,7 +1248,7 @@ function DialSection() {
                     className="cursor-pointer select-none"
                     style={{ fontFamily: "'Inter', sans-serif", fontWeight: on ? 700 : 600, fontSize: on ? '12.5px' : '11px', letterSpacing: '0.005em', paintOrder: 'stroke', stroke: INK, strokeWidth: '3px', strokeLinejoin: 'round', transition: 'font-size .16s ease, fill .16s ease' }}
                     fill={on ? MODE[p.l.mode].c : CREAM}
-                    onPointerEnter={() => pick(p.i)} onPointerDown={() => pick(p.i)}
+                    onPointerEnter={(e) => hoverStart(p.i, p.l.name, e)} onPointerLeave={hoverEnd} onPointerDown={() => pick(p.i)}
                     onClick={() => maybeOpenInfo(p.i, p.l.name)}>
                     {p.l.short}
                   </text>
@@ -1282,7 +1318,7 @@ function DialSection() {
         </div>
       </div>
 
-      <LineInfoModal line={infoLine} onClose={() => setInfoLine(null)} />
+      <LineInfoModal line={infoLine} onClose={closeInfo} />
 
       {/* Responsive */}
       <style>{`

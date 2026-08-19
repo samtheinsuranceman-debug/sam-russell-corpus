@@ -16,6 +16,11 @@ export type LineInfo = {
   g: GBand;
   gNote: string;                     // the correlation story in one sentence
   everTested: string;                // has the visitor likely ever been measured on this?
+  // Out of 1,000 adults, how many have EVER been formally tested on this line.
+  // Honest estimates from testing-industry reach (school, military, corporate,
+  // clinical), not measured survey data — presented as estimates in the UI.
+  testedOdds: number;
+  benefit: string;                   // what a measurement + active development buys you
 };
 
 export const G_BAND_LABEL: Record<GBand, { label: string; color: string }> = {
@@ -37,6 +42,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "g-cluster",
     gNote: "This IS the heart of g — the line IQ tests measure best.",
     everTested: "Almost certainly yes — every IQ test, and much of the SAT/ACT, is substantially this line.",
+    testedOdds: 950,
+    benefit: "You already have a proxy score from school — but measured alongside 31 other lines it stops masquerading as your whole mind, and you learn whether you over-rely on it when another line should lead.",
   },
   Mathematical: {
     def: "Quantitative reasoning — fluency with numbers, proportions, probabilities, and symbolic systems in real decisions.",
@@ -49,6 +56,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "g-cluster",
     gNote: "Correlates strongly with g, though number sense has its own machinery.",
     everTested: "Yes — every math class and standardized test you ever sat scored a slice of it.",
+    testedOdds: 970,
+    benefit: "Knowing your real quantitative floor tells you which decisions to model yourself and which to delegate or double-check — most expensive money mistakes come from unexamined confidence here.",
   },
   Spatial: {
     def: "Holding shapes and systems in the mind's eye — rotating objects mentally, navigating, seeing the whole layout at once.",
@@ -61,6 +70,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "partially-linked",
     gNote: "A distinct broad ability (Gv) in the CHC model — related to g but separable.",
     everTested: "Probably not since childhood puzzles — schools systematically under-test it, which is why spatially-gifted people often feel mislabeled.",
+    testedOdds: 120,
+    benefit: "Strong spatial ability predicts engineering, design, and surgical aptitude better than grades do — and it's highly trainable; a measurement tells you whether an unopened door is standing right there.",
   },
   Linguistic: {
     def: "Range, precision, and generativity in language — saying exactly what you mean, and building things out of words.",
@@ -73,6 +84,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "g-cluster",
     gNote: "Crystallized verbal ability (Gc) — one of g's two anchors.",
     everTested: "Yes — the verbal half of every standardized test you've taken.",
+    testedOdds: 960,
+    benefit: "Measured against your other lines, it shows whether words are your best export — and whether the gap between what you know and what you can say is costing you influence.",
   },
   Musical: {
     def: "Pitch, rhythm, and phrasing — hearing structure in sound, and producing it.",
@@ -85,6 +98,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Pitch and rhythm discrimination correlate only weakly with IQ; absolute pitch is essentially unrelated.",
     everTested: "Almost certainly never — unless you auditioned for a music program, no one has ever measured this in you.",
+    testedOdds: 90,
+    benefit: "A real score separates 'I'm not musical' (usually false) from an untrained ear — and rhythm-and-pitch training transfers to language, memory, and emotional regulation.",
   },
   "Bodily-Kinesthetic": {
     def: "Trained control of the body toward a skilled end — coordination, timing, and physical problem-solving.",
@@ -97,6 +112,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "independent",
     gNote: "Psychomotor ability is its own factor in the psychometric canon, near-zero g-loading.",
     everTested: "Only informally — a coach's eye or a tryout. Never as an intelligence.",
+    testedOdds: 140,
+    benefit: "Knowing how fast your body actually acquires skill changes how you train everything physical — and this line quietly drives presence, stress discharge, and health span.",
   },
   Naturalist: {
     def: "Reading living systems — fine distinctions in plants, animals, weather, land, and how they interconnect.",
@@ -109,6 +126,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Ecological pattern expertise develops with exposure, largely apart from g.",
     everTested: "Never — no standardized test on earth samples it.",
+    testedOdds: 15,
+    benefit: "Pattern-reading in living systems transfers to markets, organizations, and people — a measurement reveals a sensing ability most careers never ask about and some depend on.",
   },
   Interpersonal: {
     def: "Modeling other minds — reading what people want, fear, and intend, and moving a room with that knowledge.",
@@ -121,6 +140,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Social intelligence measures show low g-loading; a group's collective intelligence tracks members' social sensitivity, not their IQs.",
     everTested: "Almost certainly never formally — the world just quietly promoted or passed on you based on it.",
+    testedOdds: 60,
+    benefit: "This line moves salary, hiring, and marriage outcomes more than IQ does — a measurement shows whether to lead with it or build deliberate systems to compensate.",
   },
   Intrapersonal: {
     def: "Accuracy of the self-model — how well your story about yourself matches the person who actually acts.",
@@ -133,6 +154,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Self-insight correlates weakly with IQ — smart people are not reliably self-aware.",
     everTested: "Never — and most people go a whole life without one honest reading of it.",
+    testedOdds: 25,
+    benefit: "An accurate self-model is the line every other line's growth depends on — measure it and you learn how far to trust your own explanations of yourself.",
   },
   Existential: {
     def: "Working seriously with meaning, mortality, and what any of it is for.",
@@ -145,6 +168,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Wisdom-related performance correlates only ~.20 with intelligence — life experience carries more weight.",
     everTested: "Never — no institution in your life has ever asked, let alone measured.",
+    testedOdds: 5,
+    benefit: "People strong here handle mortality, loss, and meaning-collapse without shattering — knowing your level tells you what reserves you'll have when life gets serious.",
   },
   Moral: {
     def: "The altitude of the ethical frame you actually live — not the one you claim.",
@@ -157,6 +182,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Moral development correlates modestly with cognition but develops on its own track.",
     everTested: "Almost certainly never — unless you took part in a university study.",
+    testedOdds: 8,
+    benefit: "Your ethical altitude decides who trusts you with what — a measurement shows whether your principles are actually load-bearing or just preferences you haven't tested.",
   },
   Aesthetic: {
     def: "Discernment of form — perceiving what makes a thing land, in any medium.",
@@ -169,6 +196,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "independent",
     gNote: "Tracks the personality trait Openness, not IQ.",
     everTested: "Never — taste has shaped your whole life without once being measured.",
+    testedOdds: 10,
+    benefit: "Discernment of form is a commercial superpower — products, rooms, documents, and personal presence all convert better when someone on the team can see why a thing lands.",
   },
   Emotional: {
     def: "Granularity and regulation of feeling in real time — naming what's happening inside and steering it.",
@@ -181,6 +210,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Ability EI correlates ~.30 with IQ and predicts outcomes beyond it.",
     everTested: "Probably only by quiz-magazine versions — the real ability test almost certainly never.",
+    testedOdds: 110,
+    benefit: "Granularity — naming states precisely — is trainable and measurably lowers reactivity; a baseline score turns 'work on your emotions' into a specific, trackable practice.",
   },
   "Meta-Cognitive": {
     def: "Knowing what you know and don't — catching your own thinking mid-flight and correcting it.",
@@ -193,6 +224,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "partially-linked",
     gNote: "Contested: calibration accuracy does correlate with ability, but monitoring skill is partly its own capacity — our audit tracks this one closely.",
     everTested: "Never explicitly — though every bad bet you ever made was this line failing silently.",
+    testedOdds: 12,
+    benefit: "Knowing when your own thinking is degrading is the difference between one bad hour and one bad decade — this line is why smart people crash, and it responds fast to training.",
   },
   Volitional: {
     def: "Sustained will — starting, continuing, and finishing under friction. The line that ships things.",
@@ -205,6 +238,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "independent",
     gNote: "Correlates near zero with IQ — sometimes negative. Genuinely its own axis.",
     everTested: "Never — the most outcome-deciding line in your life has never once been scored.",
+    testedOdds: 30,
+    benefit: "Follow-through predicts outcomes independent of talent — a measurement tells you whether to build on natural discipline or engineer external structure, which are opposite strategies.",
   },
   Adversarial: {
     def: "Performance against an opponent trying to beat you — strategy, deception-reading, and nerve under opposition.",
@@ -217,6 +252,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "independent",
     gNote: "Game performance and negotiation outcomes are weakly predicted by IQ.",
     everTested: "Never formally — though every rival you've faced has been scoring you informally.",
+    testedOdds: 4,
+    benefit: "Seeing the move against you — in negotiation, competition, manipulation — is a line schools never touch; knowing yours tells you when to trust your read and when to get a second opinion.",
   },
   Interoceptive: {
     def: "Fidelity of the inward signal — how accurately you read your own body's data: heartbeat, gut, fatigue, hunger, alarm.",
@@ -229,6 +266,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "independent",
     gNote: "Essentially zero correlation with IQ — the cleanest independent line in the set.",
     everTested: "Categorically never — fewer than one person in ten thousand has ever had this measured.",
+    testedOdds: 3,
+    benefit: "Reading your body's signals early — fatigue, stress, gut-sense — is upstream of burnout, health, and even good judgment; a baseline makes an invisible skill visible.",
   },
   Strategic: {
     def: "Multi-move sequencing toward an end nobody can see yet — playing the long game well.",
@@ -241,6 +280,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "partially-linked",
     gNote: "Planning draws on fluid reasoning but expert strategy is domain-built and partly separable.",
     everTested: "Never directly — chess ratings and won campaigns are the closest proxies most people have.",
+    testedOdds: 40,
+    benefit: "Multi-move thinking under uncertainty is what separates operators from owners — a measurement shows whether you naturally play the long board or need frameworks to force it.",
   },
   Systemic: {
     def: "Seeing wholes, loops, and second-order effects — what happens after what happens.",
@@ -253,6 +294,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "partially-linked",
     gNote: "Related to reasoning but trained systems thinking is its own discipline.",
     everTested: "Almost certainly never — most people first meet this line when their second-order effects arrive.",
+    testedOdds: 20,
+    benefit: "Seeing feedback loops and second-order effects is why some people's fixes stick and others' backfire — measured, it tells you which class of problem you should be the one to hold.",
   },
   Entrepreneurial: {
     def: "Turning a vision into a shipped, funded, surviving thing — opportunity recognition plus execution under uncertainty.",
@@ -265,6 +308,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Founder performance is weakly predicted by IQ; execution and opportunity-reading carry it.",
     everTested: "Never — the market has been your only examiner.",
+    testedOdds: 15,
+    benefit: "Opportunity-spotting and risk digestion can be scored and grown — knowing your level tells you whether to found, join early, or partner with someone who carries this line.",
   },
   Creative: {
     def: "Producing the genuinely new — not the recombined. Fluency, originality, and taste in generation.",
@@ -277,6 +322,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Above IQ ~120, creativity and intelligence essentially decorrelate (the threshold effect).",
     everTested: "Possibly once, if you were in a gifted program — otherwise never.",
+    testedOdds: 70,
+    benefit: "Original output is the least automatable human line — a measurement distinguishes true generativity from taste, and both from fluency, which changes what work you should own.",
   },
   Rhetorical: {
     def: "Moving a listener from one position to another — persuasion as a craft of framing, timing, and delivery.",
@@ -289,6 +336,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Persuasive skill is weakly predicted by IQ; delivery and audience-reading dominate.",
     everTested: "Never — juries, customers, and dates have graded it your whole life, without a rubric.",
+    testedOdds: 50,
+    benefit: "Moving a room decides funding, verdicts, and movements — measured, it shows whether your ideas are under-traveling because the delivery line lags the thinking line.",
   },
   Leadership: {
     def: "Real commitment and coordinated action from others — not the title, the following.",
@@ -301,6 +350,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "IQ predicts leader emergence weakly; personality and social skill carry most of it.",
     everTested: "Only if an employer ran a 360 on you — and that measured your title's shadow, not the line.",
+    testedOdds: 90,
+    benefit: "People follow gradients they can feel — a real score separates being in charge from being followed, and tells you which leadership muscle (vision, trust, decision) to train first.",
   },
   Mechanical: {
     def: "Practical mastery of how physical things work — forces, mechanisms, tools, repair.",
@@ -313,6 +364,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "partially-linked",
     gNote: "Correlates with spatial and reasoning ability but hands-on mastery is its own accumulation.",
     everTested: "Only if you took a trade or military entrance test — the college-bound were never asked.",
+    testedOdds: 130,
+    benefit: "Intuition for how physical things work compounds into repair, invention, and cost savings for life — and it's one of the best-paying lines that credentials ignore.",
   },
   "Pattern-Recognition": {
     def: "Seeing the shape early, from sparse signal — the trained hunch that arrives before the analysis.",
@@ -325,6 +378,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "independent",
     gNote: "Implicit learning correlates ~.10 with IQ — a genuine learning ability IQ tests cannot see.",
     everTested: "Never — this line has been running your best calls invisibly for decades.",
+    testedOdds: 350,
+    benefit: "Fast structure-detection is the raw feed most other lines consume — knowing yours explains why you're quick in some rooms and lost in others, and where to point it.",
   },
   "Social-Perceptual": {
     def: "Reading status, intent, and the unspoken — faces, rooms, and what isn't being said.",
@@ -337,6 +392,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "independent",
     gNote: "Face-reading ability dissociates from both IQ and general memory in twin studies.",
     everTested: "Never — despite it deciding half your first impressions and negotiations.",
+    testedOdds: 20,
+    benefit: "Reading faces, tone, and rooms in real time is measurable to the millisecond — a score tells you whether your social instincts are data or guesses.",
   },
   Financial: {
     def: "Conative money sense — the actual behaviors that compound or destroy wealth, distinct from knowing arithmetic.",
@@ -349,6 +406,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Financial behavior is driven by domain knowledge and self-regulation more than IQ.",
     everTested: "Almost certainly never — the most expensive untested line in most lives.",
+    testedOdds: 60,
+    benefit: "Money behavior — not income — decides net worth; a measurement of this line predicts your financial trajectory better than your salary does, and every sub-skill is learnable.",
   },
   Humor: {
     def: "State-change capacity — shifting a room, a mood, or a standoff at will.",
@@ -361,6 +420,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "independent",
     gNote: "Humor style is essentially g-free; only produced-joke quality correlates modestly with IQ.",
     everTested: "Never formally — though every room you've ever entered ran the informal version.",
+    testedOdds: 2,
+    benefit: "Timing and reframing under pressure defuse conflict and buy social grace — an unmeasured line that, once seen, can be deliberately deployed instead of left to luck.",
   },
   Parenting: {
     def: "Developmental altitude expressed in raising a person — treating the child as a mind, not a behavior problem.",
@@ -373,6 +434,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Parental mentalizing predicts child outcomes independent of parental IQ.",
     everTested: "Never — the highest-stakes role most people ever hold, and nobody ever measured readiness.",
+    testedOdds: 6,
+    benefit: "The developmental stakes are the highest of any line — a measurement replaces inherited guesswork with a map of what you're actually transmitting.",
   },
   Seduction: {
     def: "Relational draw severed from appearance — initiating and deepening romantic connection by skill, not luck.",
@@ -385,6 +448,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "Romantic competence is weakly related to IQ; attunement and confidence carry it.",
     everTested: "Never — the market ran the only tests, and never showed you your scores.",
+    testedOdds: 1,
+    benefit: "Attraction dynamics run on skills nobody will grade you on — measured honestly, this line stops being mystery or shame and becomes learnable calibration.",
   },
   "Community-Founding": {
     def: "Bringing a durable group into being around a shared frame — and keeping it alive.",
@@ -397,6 +462,8 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "mostly-independent",
     gNote: "A group's collective intelligence tracks social process, not the founders' IQs.",
     everTested: "Never — civilization depends on this line and has never once tested for it.",
+    testedOdds: 1,
+    benefit: "Building a village around you is the strongest longevity and resilience intervention known — a score tells you whether you're a founder, a joiner, or currently exposed.",
   },
   "Street Smarts": {
     def: "Real-world reads under real stakes — practical intelligence where the textbook ends.",
@@ -409,5 +476,7 @@ export const LINE_ENCYCLOPEDIA: Record<string, LineInfo> = {
     g: "independent",
     gNote: "In-domain practical expertise shows near-zero correlation with IQ in the classic studies.",
     everTested: "Never on paper — the street has been examining you your whole life.",
+    testedOdds: 2,
+    benefit: "Threat-reading and situational awareness have only ever been graded by consequences — a measurement lets you train the line before the street runs the next exam.",
   },
 };

@@ -31,6 +31,13 @@ export default function LineInfoModal({ line, onClose }: { line: string | null; 
   const info = LINE_ENCYCLOPEDIA[line];
   if (!info) return null;
   const band = G_BAND_LABEL[info.g];
+  const JADE = "#9BC0B2";
+  // Plain-English verdict on the g relationship — no jargon required.
+  const gVerdict =
+    info.g === "g-cluster" ? "Part of general intelligence (g) — IQ tests DO measure this line."
+    : info.g === "partially-linked" ? "Partially overlaps g — an IQ score hints at it but doesn't capture it."
+    : "NOT part of general intelligence — an IQ test cannot see this line at all.";
+  const oddsPct = Math.min(100, Math.max(0.4, (info.testedOdds / 1000) * 100));
 
   return (
     <div className="fixed inset-0 z-[9990] flex items-center justify-center p-4 sm:p-6"
@@ -80,14 +87,34 @@ export default function LineInfoModal({ line, onClose }: { line: string | null; 
               {band.label}
             </span>
           </div>
+          <p style={{ color: CREAM, fontSize: "13.5px", lineHeight: 1.6, marginBottom: "4px", fontWeight: 600 }}>{gVerdict}</p>
           <p style={{ color: CREAM2, fontSize: "13.5px", lineHeight: 1.6, marginBottom: "18px" }}>{info.gNote}</p>
 
-          {/* Ever tested? */}
-          <div style={{ border: `1px solid ${EMBER}44`, borderLeft: `3px solid ${EMBER}`, borderRadius: "10px", background: "rgba(226,96,74,0.05)", padding: "14px 16px", marginBottom: "20px" }}>
+          {/* Ever tested? — the 1-in-1,000 odds meter */}
+          <div style={{ border: `1px solid ${EMBER}44`, borderLeft: `3px solid ${EMBER}`, borderRadius: "10px", background: "rgba(226,96,74,0.05)", padding: "14px 16px", marginBottom: "16px" }}>
             <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: EMBER, marginBottom: "5px" }}>
               Have you ever been tested for this?
             </p>
+            <div className="flex items-baseline gap-2 flex-wrap" style={{ marginBottom: "6px" }}>
+              <span style={{ ...serif, fontSize: "26px", color: CREAM, lineHeight: 1 }}>
+                ~{info.testedOdds.toLocaleString()} in 1,000
+              </span>
+              <span style={{ ...mono, fontSize: "10px", color: MUTED }}>
+                adults have ever been formally measured on this line (our estimate)
+              </span>
+            </div>
+            <div aria-hidden="true" style={{ height: "6px", borderRadius: "999px", background: "rgba(241,234,219,0.10)", overflow: "hidden", marginBottom: "8px" }}>
+              <div style={{ height: "100%", width: `${oddsPct}%`, borderRadius: "999px", background: info.testedOdds >= 500 ? JADE : EMBER }} />
+            </div>
             <p style={{ color: CREAM2, fontSize: "13.5px", lineHeight: 1.6, margin: 0 }}>{info.everTested}</p>
+          </div>
+
+          {/* Why measure it */}
+          <div style={{ border: `1px solid ${CHAMPAGNE}33`, borderLeft: `3px solid ${CHAMPAGNE}`, borderRadius: "10px", background: "rgba(224,198,140,0.05)", padding: "14px 16px", marginBottom: "20px" }}>
+            <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: CHAMPAGNE, marginBottom: "5px" }}>
+              What a measurement buys you
+            </p>
+            <p style={{ color: CREAM2, fontSize: "13.5px", lineHeight: 1.6, margin: 0 }}>{info.benefit}</p>
           </div>
 
           {/* CTA */}
