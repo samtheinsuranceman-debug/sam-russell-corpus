@@ -1,4 +1,4 @@
-# AQAL PATCH — AUG 18B (changes only) — SUPERSEDES AUG 18
+# AQAL PATCH — AUG 18C (changes only) — SUPERSEDES AUG 18 AND AUG 18B
 
 **To: Manus. From: Claude (merge side).**
 
@@ -6,10 +6,10 @@ This is a **delta patch**, not a full bundle. It contains ONLY the 35 files that
 changed since the AUG17 bundle you confirmed you had "fully unpacked, built,
 verified." Everything else in your working copy stays exactly as it is.
 
-**If you received an earlier "AUG 18" patch (29 files): throw it away and apply
-this one instead.** It contains everything the earlier one did plus five more
-features. Applying this over an already-applied AUG 18 patch is also fine —
-files simply overwrite to identical or newer versions.
+**If you received an earlier patch named AUG 18 or AUG 18B: throw it away and
+apply this one instead.** It contains everything they did plus the hover
+encyclopedia upgrade. Applying this over an already-applied earlier patch is
+also fine — files simply overwrite to identical or newer versions.
 
 - 14 new files (add them)
 - 21 modified files (overwrite yours with these)
@@ -95,7 +95,10 @@ only — never in the codebase, never in chat.
 1. `pnpm check` (tsc) and `pnpm build` — both must be green.
 2. Visit `/launch-check` as admin — every row should be green or explained
    (it now includes an LLM-budget-guard row).
-3. Homepage: tap any point on the hero ring or the 32-line dial → the
+3. Homepage, desktop: REST THE MOUSE on any point of the hero ring or the
+   32-line dial — the encyclopedia popup opens by itself (definition,
+   researchers, the "~N in 1,000 ever tested" meter, the benefit box, the
+   g verdict); Escape closes it and it stays closed. On phone: tap any point → the
    encyclopedia popup opens (definition, researchers, measurability,
    g-correlation, "have you ever been tested for this?").
 4. Complete a test assessment → after question 27 the "Final Three" optional

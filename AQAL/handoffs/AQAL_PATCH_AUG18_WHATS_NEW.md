@@ -1,6 +1,6 @@
-# WHAT'S NEW — AUG 18B delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18C delta (since the AUG17 bundle)
 
-Seven commits, 35 files. Feature-by-feature, with the files each one touches.
+Eight commits, 35 files. Feature-by-feature, with the files each one touches.
 
 ---
 
@@ -152,9 +152,26 @@ the active goal, achievement toast + testimonial-capture moment on completion.
   React hydration warnings on most page loads.
   **MOD** small `<Link>` fixes in 13 page files
 
+## 12. Hover-to-learn encyclopedia (AUG 18C addition)
+
+- On desktop, RESTING THE MOUSE on any point of the hero ring or the big
+  32-line dial now opens the full encyclopedia popup by itself (350ms hover
+  intent; touch devices keep the tap-then-tap flow unchanged).
+- Every one of the 32 entries gained two new sections: an honest
+  "~N in 1,000 adults have ever been formally tested on this line" odds meter
+  (labeled as our estimate, with a visual bar), and a "What a measurement
+  buys you" benefit paragraph.
+- The popup now states the g relationship in plain English: "Part of general
+  intelligence — IQ tests DO measure this line" / "Partially overlaps g" /
+  "NOT part of general intelligence — an IQ test cannot see this line at all."
+- Fixed a reopen loop: closing the popup while the mouse still rests on a
+  point no longer re-triggers it instantly.
+- **MOD** `client/src/lib/lineEncyclopedia.ts`,
+  `client/src/components/LineInfoModal.tsx`, `client/src/pages/Home.tsx`
+
 ---
 
 **Verified before cutting this patch:** `pnpm check` clean, `pnpm build` green, 270/270 tests passing (including
 live-server tests against a running dev instance), homepage dial + hero popup
 browser-tested (desktop + touch), and the 13-page mobile viewport sweep passing
-with zero layout overflow and zero DOM-validity warnings.
+with zero layout overflow and zero DOM-validity warnings; hover-popup flow browser-verified 10/10 (hero + dial, content, close-stays-closed).
