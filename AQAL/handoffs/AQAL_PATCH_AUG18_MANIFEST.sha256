@@ -1,9 +1,14 @@
-da5b2e9f4e4e441eb2fb463f88723000d2d340efecf2a3aab37bceb1ba8a10f0  ./client/src/App.tsx
+86c9fc7287a4980e6133dad0b12c15caea3013386b7efe1be3be71a5b6a07dd4  ./client/index.html
+9c45f0473b1d9f518026df8a94d5b3f1d97aa75d85049e447beef3256c17edbc  ./client/public/founder-sam-russell.jpg
+c4c18d53c938cacf6438e600a07d7baebe5179655da710248f8c3cb9ae66cd89  ./client/public/og-cover.png
+6b3370a4c9005dadbfe9cb4e2a0da4c12d1341c9026975c71a1cf338c0c6770e  ./client/src/App.tsx
 ca982f5bccf3296c45d26bdd37b76b9dbd8d27ce930c620664dd78df0148152b  ./client/src/components/LineInfoModal.tsx
 02caacbf3030dee29708a71f061d2cf104f9c52d8d7e52cde14dc750098d7217  ./client/src/components/PanelTrust.tsx
 a8465568ec93a9db011aa0231169ebe05df99a40f6930a41a190640c87dae624  ./client/src/components/PublicLayout.tsx
-b69301daf73994da5459c7553fe17618b1653fb588a8a23a71dc9d99e0d3b7aa  ./client/src/components/SupportWidget.tsx
+86a53b523611f799b9c004c2cdf752a6142c867d4356b69344d826b71f4e92ee  ./client/src/components/RouteMeta.tsx
+648fdb5485538e3816179e81565cbe27053d6d460263076279a19e9fe23355ce  ./client/src/components/SupportWidget.tsx
 74544b5572c44658e72bc7b644eaf68725b346079250a1517bd43ef19c392554  ./client/src/lib/lineEncyclopedia.ts
+af7808f66f817e7a91a5d2b05f4afb06ea8a127894cc339f698c7d25082ae2fd  ./client/src/pages/About.tsx
 53fb4a0d2fa2688c994ba850222432f7807438fbe6456e0c83f38cb859d02baf  ./client/src/pages/Assessment.tsx
 88945d98eb231480df04dd0a1fe9d8cc778daae23af6d5342ab5183b7eb4908d  ./client/src/pages/BlackBox.tsx
 2a1207f60a81078332ff05c752cb56fe6283dffbd7c9c0f0af276a0126172d75  ./client/src/pages/Corrections.tsx
@@ -12,6 +17,7 @@ b69301daf73994da5459c7553fe17618b1653fb588a8a23a71dc9d99e0d3b7aa  ./client/src/c
 8c4bfe9ed2d665a408c69b90762b4151c2ef28ab302e6fe54bb0a8c06d3b4eff  ./client/src/pages/Home.tsx
 ae8d3bdee51649e6d2e8c6eaf0abe90b447fbd738b9de7d596900a46158bdb16  ./client/src/pages/Lines.tsx
 534f97c40b3cb84b8073fe710d96ab6c6c8f80a11b242736e353e6caa8cf09e9  ./client/src/pages/Login.tsx
+78273e8dbb092b91618a912ba9c7a3eb07d94098a26e581547b935d972c300a9  ./client/src/pages/Messages.tsx
 7ea4cc4759d88a56fa2eed1982050ab256c333a76b8e062900fae2df7b57f0e8  ./client/src/pages/Portal.tsx
 0fca15a089f59c212525ff029347034b91540a33ea5684dcffdf84e0696e87bb  ./client/src/pages/Pricing.tsx
 85094885fef4e6772cf9a157bb5920d4379388028adcabf5fb527e4cb081f2c4  ./client/src/pages/Profile.tsx
@@ -24,7 +30,8 @@ ae8d3bdee51649e6d2e8c6eaf0abe90b447fbd738b9de7d596900a46158bdb16  ./client/src/p
 07d5dc8a96ce6a934392336f496152ec0e917691d2a1fe6e7a792410aafd0830  ./client/src/pages/WelcomeBack.tsx
 5515e028ce18be6b69e5a42d2b91fcc79a0f130892fb14534fe35c7a1374c611  ./client/src/pages/WhichArchetype.tsx
 7468a0af753690c95ea39a42210142b03224439aadb1eb844c9c604508245d81  ./drizzle/schema.ts
-2981fd94ab33d77793f329f0e190e6c329fa5fbc52e442c631761690f81e6723  ./server/_core/index.ts
+606a596992425d15c12f115c04e9b0eb2f63081ba43356362fc6dd3c5e3e57aa  ./server/_core/index.ts
+fc268be6b966e9749fef4027535585d999e27be01300af3dc61e7ee2dfbe3989  ./server/_core/vite.ts
 8bc8d43293fdfdf82deca86c56a15aa534f2bf0136a6defbb7273db310f465a3  ./server/audioRetention.ts
 c371a7464181a246cfc8b8762ca03c35c286e0d6f776d762a68c5415ad55195a  ./server/blackBox.ts
 57c391be927d821a7aeb9a7a23088c52602b92e8e8481592c7cb03a39063edea  ./server/costMonitor.ts
@@ -32,4 +39,5 @@ c371a7464181a246cfc8b8762ca03c35c286e0d6f776d762a68c5415ad55195a  ./server/black
 ea9033f4553fb9a3fa6528c58930960955ac1e732a185ad9650dc6e1285e730f  ./server/platform/email.ts
 e1f4a4e5872a8274d1a1bc3ff30dd0a32cd9b2f259c141892f49d841077c1302  ./server/platform/llm.ts
 2d9a36c9f4772c32ac77e1d9823492717d5ac64f34a20acfdf4a1d3d6ef10adb  ./server/platform/panel.ts
-eecad1effd846fa4e2c1733329425dc19e78d89bbf2f9a0c0ef35d2488f3aaf6  ./server/routers.ts
+e1e565157eb3d01d5469e9c446d8e2410def75dc6ddae4808142186f31fe25cd  ./server/routers.ts
+af7bca021dbd191b470d7f86cf34558d9ed5f08ad115a68c9625fc04f8f00ed4  ./shared/seo.ts

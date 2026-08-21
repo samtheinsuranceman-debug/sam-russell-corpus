@@ -1,6 +1,6 @@
-# WHAT'S NEW — AUG 18C delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18D delta (since the AUG17 bundle)
 
-Eight commits, 35 files. Feature-by-feature, with the files each one touches.
+Nine commits, 43 files. Feature-by-feature, with the files each one touches.
 
 ---
 
@@ -168,6 +168,33 @@ the active goal, achievement toast + testimonial-capture moment on completion.
   point no longer re-triggers it instantly.
 - **MOD** `client/src/lib/lineEncyclopedia.ts`,
   `client/src/components/LineInfoModal.tsx`, `client/src/pages/Home.tsx`
+
+## 13. The SEO, security & performance layer (AUG 18D addition)
+
+Sam's website checklist (technical SEO, on-page SEO, images, speed, security,
+privacy), implemented directly in code — no CMS or plugins involved:
+
+- **`shared/seo.ts`** — unique SEO title + meta description for all 29 public
+  pages; noindex list for member/admin surfaces. One table drives everything.
+- **NEW `client/src/components/RouteMeta.tsx`** — on every navigation sets the
+  page title, meta description, per-route canonical URL, og: tags, and
+  noindex where appropriate; injects FAQPage JSON-LD on /help.
+- **`client/index.html`** — Organization + WebSite JSON-LD structured data.
+- **Server** — `/robots.txt` and `/sitemap.xml` generated from the same table;
+  HTTPS + canonical-host 301 redirects (set `CANONICAL_HOST=joinaqal.com`);
+  security headers on every response (HSTS, nosniff, X-Frame-Options,
+  Referrer-Policy, Permissions-Policy).
+- **Caching** — hashed `/assets` files: 1-year immutable cache; index.html:
+  no-cache so deploys are picked up instantly.
+- **Core Web Vitals** — first-party LCP/CLS/INP/TTFB beacon → `/api/vitals`
+  → analytics. Page speed is monitored from real users, no Google Analytics,
+  no cookie banner needed.
+- **Support form** — honeypot field; bots get a fake success and no email.
+- **Images** — founder photo compressed 2.0MB → 103KB with lazy loading;
+  `og-cover.png` (1200×630) actually created — the old build referenced a
+  PNG that didn't exist, so link previews on social/messaging were broken.
+- **Audits passed** — exactly one H1 per public page; zero broken internal
+  links; clean descriptive URLs already in place.
 
 ---
 
