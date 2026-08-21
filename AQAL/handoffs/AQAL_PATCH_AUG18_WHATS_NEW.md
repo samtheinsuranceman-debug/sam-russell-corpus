@@ -1,6 +1,6 @@
-# WHAT'S NEW — AUG 18F delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18G delta (since the AUG17 bundle)
 
-Eleven commits, 49 files. Feature-by-feature, with the files each one touches.
+Twelve commits, 54 files. Feature-by-feature, with the files each one touches.
 
 ---
 
@@ -236,6 +236,25 @@ Sitemap: 154 URLs.
 - **NEW** `client/src/pages/TherapyDetail.tsx`, `client/src/pages/Protocols.tsx`,
   `client/src/lib/therapyKinds.ts`
 - **MOD** `shared/seo.ts`, `RouteMeta.tsx`, `LineDetail.tsx`, `Lines.tsx`,
+  `PublicLayout.tsx`, `App.tsx`
+
+## 16. 550 more pages: Power Combinations + Keystone Practices (AUG 18G)
+
+- **/pair/<a>--<b>** — 496 pages, one per unordered pair of the 32 lines.
+  A hand-written role engine (32 functional identities: the Prover, the
+  Barometer, the Weaver…) composes with both lines' real content into:
+  what each gives the other, the multiplication, both shadow
+  configurations, independence/rarity logic, a compound "both ever
+  tested" per-million estimate, and studies from both lines. Pair-level
+  interaction claims are explicitly labeled framework synthesis.
+- **/pairs** — pick-a-line index of all 496.
+- **/practice/<id>** — 54 keystone-practice pages: the prescription, the
+  research basis, honest evidence tier, horizon, what it lifts.
+- **/practices** — index of all 54. Footer links added; line pages link
+  into their pairings. Sitemap: 706 URLs.
+- **NEW** `PairDetail.tsx`, `Pairs.tsx`, `PracticeDetail.tsx`,
+  `Practices.tsx`, `client/src/lib/linePairs.ts`;
+  **MOD** `shared/seo.ts`, `RouteMeta.tsx`, `LineDetail.tsx`,
   `PublicLayout.tsx`, `App.tsx`
 
 ---
