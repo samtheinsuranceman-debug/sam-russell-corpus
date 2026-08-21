@@ -1,17 +1,17 @@
-# AQAL PATCH — AUG 18D (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
+# AQAL PATCH — AUG 18E (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
 
 **To: Manus. From: Claude (merge side).**
 
-This is a **delta patch**, not a full bundle. It contains ONLY the 43 files that
+This is a **delta patch**, not a full bundle. It contains ONLY the 46 files that
 changed since the AUG17 bundle you confirmed you had "fully unpacked, built,
 verified." Everything else in your working copy stays exactly as it is.
 
-**If you received an earlier patch named AUG 18, AUG 18B, or AUG 18C: throw it away and
+**If you received ANY earlier AUG-18 patch (18, 18B, 18C, 18D): throw it away and
 apply this one instead.** It contains everything they did plus the hover
 encyclopedia upgrade. Applying this over an already-applied earlier patch is
 also fine — files simply overwrite to identical or newer versions.
 
-- 17 new files (add them)
+- 20 new files (add them)
 - 26 modified files (overwrite yours with these)
 - 0 deletions (nothing to remove)
 
@@ -56,7 +56,7 @@ From the project root:
 sha256sum -c MANIFEST.sha256
 ```
 
-All 43 lines must say OK. Then remove the manifest file.
+All 46 lines must say OK. Then remove the manifest file.
 
 ## Step 3 — Database push (MANDATORY — new tables and columns)
 
@@ -107,6 +107,9 @@ only — never in the codebase, never in chat.
    `/corrections`, and `/runbook` all load.
 6. The floating "? Support" button (bottom-left, every public page) sends to
    sam@russellcapitalsystems.com.
+6a. The 32 line pages: /line/logical, /line/interoceptive, /line/street-smarts
+   (and 29 more) each load as a full landing page; clicking any dial or ring
+   point twice navigates there; the sitemap now lists 61 URLs.
 6b. SEO layer: `https://joinaqal.com/robots.txt` and `/sitemap.xml` both serve;
    the browser tab title CHANGES per page (e.g. /pricing vs /help); view-source
    on / shows the Organization JSON-LD; response headers include

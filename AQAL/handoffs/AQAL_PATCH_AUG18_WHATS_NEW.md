@@ -1,6 +1,6 @@
-# WHAT'S NEW — AUG 18D delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18E delta (since the AUG17 bundle)
 
-Nine commits, 43 files. Feature-by-feature, with the files each one touches.
+Ten commits, 46 files. Feature-by-feature, with the files each one touches.
 
 ---
 
@@ -195,6 +195,28 @@ privacy), implemented directly in code — no CMS or plugins involved:
   PNG that didn't exist, so link previews on social/messaging were broken.
 - **Audits passed** — exactly one H1 per public page; zero broken internal
   links; clean descriptive URLs already in place.
+
+## 14. The 32 line landing pages (AUG 18E addition)
+
+Every intelligence line now has its own real page at /line/<slug> — no popup
+to block, a shareable URL, and a Google-indexable landing page per line:
+
+- Full breakdown per line: the hook, what it actually is, the
+  "~N in 1,000 ever tested" odds meter, the plain-English g verdict,
+  "if you measure it" (outcomes), "if it's weak and invisible" (the honest
+  threat), keystone practice + member-library protocols, and 3 landmark
+  peer-reviewed studies each (96 citations, flagged pending the audit).
+- Reachable from everywhere: second click/tap on any hero-ring or dial point
+  navigates there; the hover popup and the /lines glossary link there too.
+- Video slots: `client/src/lib/lineVideos.ts` is Sam's config file — paste a
+  YouTube/Vimeo/mp4 URL per line and it renders on that page; `HOME_VIDEO`
+  adds a film to the homepage. Empty = elegant "in production" frame on line
+  pages, nothing on the homepage.
+- SEO: all 32 pages carry unique titles/descriptions and sit in the sitemap
+  (61 URLs total).
+- **NEW** `client/src/pages/LineDetail.tsx`, `client/src/lib/lineDeepDives.ts`,
+  `client/src/lib/lineVideos.ts`; **MOD** `Home.tsx`, `Lines.tsx`,
+  `LineInfoModal.tsx`, `RouteMeta.tsx`, `App.tsx`, `shared/seo.ts`
 
 ---
 
