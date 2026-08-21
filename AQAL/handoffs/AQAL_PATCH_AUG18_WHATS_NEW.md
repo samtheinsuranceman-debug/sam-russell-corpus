@@ -1,6 +1,6 @@
-# WHAT'S NEW — AUG 18E delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18F delta (since the AUG17 bundle)
 
-Ten commits, 46 files. Feature-by-feature, with the files each one touches.
+Eleven commits, 49 files. Feature-by-feature, with the files each one touches.
 
 ---
 
@@ -217,6 +217,26 @@ to block, a shareable URL, and a Google-indexable landing page per line:
 - **NEW** `client/src/pages/LineDetail.tsx`, `client/src/lib/lineDeepDives.ts`,
   `client/src/lib/lineVideos.ts`; **MOD** `Home.tsx`, `Lines.tsx`,
   `LineInfoModal.tsx`, `RouteMeta.tsx`, `App.tsx`, `shared/seo.ts`
+
+## 15. The Protocol Library — 92 public pages (AUG 18F addition)
+
+Every distinct citation-backed therapy in the mapped library now has its own
+indexable landing page at /protocol/<slug>, plus a /protocols index (grouped
+by kind, footer-linked). Each page carries: which intelligence lines it
+builds (PRIMARY/SECONDARY/ADJUNCT with the exact capacity), literature-
+typical dose & frequency, honest intensity, honest durability, "Direction
+One" (how it compounds WITH an individual strength and the strength
+cluster), "Direction Two" (how it operates AGAINST the weakness cluster and
+the dominant governing weakness — fragility reduction), the peer-reviewed
+citations with DOIs, and an explicit "our estimate — not a guarantee" block
+with a medical-advice disclaimer. Line pages and the /lines glossary now
+link into the protocol pages and back — a full internal-linking web.
+Sitemap: 154 URLs.
+
+- **NEW** `client/src/pages/TherapyDetail.tsx`, `client/src/pages/Protocols.tsx`,
+  `client/src/lib/therapyKinds.ts`
+- **MOD** `shared/seo.ts`, `RouteMeta.tsx`, `LineDetail.tsx`, `Lines.tsx`,
+  `PublicLayout.tsx`, `App.tsx`
 
 ---
 
