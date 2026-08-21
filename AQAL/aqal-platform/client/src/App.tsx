@@ -65,6 +65,8 @@ const WelcomeBack = lazy(() => import("./pages/WelcomeBack"));
 const Corrections = lazy(() => import("./pages/Corrections"));
 const Runbook = lazy(() => import("./pages/Runbook"));
 const LineDetail = lazy(() => import("./pages/LineDetail"));
+const TherapyDetail = lazy(() => import("./pages/TherapyDetail"));
+const Protocols = lazy(() => import("./pages/Protocols"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const BlackBox = lazy(() => import("./pages/BlackBox"));
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
@@ -467,6 +469,16 @@ function Router() {
         <Route path={"/line/:slug"}>
           <PageErrorBoundary pageName="LineDetail">
             <Suspense fallback={<PageSkeleton />}><LineDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/protocol/:slug"}>
+          <PageErrorBoundary pageName="TherapyDetail">
+            <Suspense fallback={<PageSkeleton />}><TherapyDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/protocols"}>
+          <PageErrorBoundary pageName="Protocols">
+            <Suspense fallback={<PageSkeleton />}><Protocols /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/runbook"}>

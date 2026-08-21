@@ -6,7 +6,7 @@
 // ============================================================
 import { useState } from "react";
 import { Link } from "wouter";
-import { LINE_NAMES, lineSlug } from "@shared/seo";
+import { LINE_NAMES, lineSlug, therapySlug } from "@shared/seo";
 
 // Engine-taxonomy name -> homepage display name (which owns the /line page).
 const ENGINE_TO_DISPLAY: Record<string, string> = {
@@ -122,7 +122,12 @@ export default function Lines() {
                     {therapies.length > 0 && (
                       <p className="text-[13px] mb-2" style={{ color: CREAM2 }}>
                         <span style={{ color: CHAMPAGNE, fontWeight: 600 }}>Evidence-backed protocols: </span>
-                        {therapies.map((t) => t.therapy).join(" · ")}
+                        {therapies.map((t, ti) => (
+                          <span key={t.therapy}>
+                            {ti > 0 && " · "}
+                            <Link href={`/protocol/${therapySlug(t.therapy)}`} onClick={(e: any) => e.stopPropagation()} style={{ color: CREAM2, textDecoration: "underline", textDecorationColor: "rgba(224,198,140,0.4)" }}>{t.therapy}</Link>
+                          </span>
+                        ))}
                       </p>
                     )}
                     {displayFor(line) && (

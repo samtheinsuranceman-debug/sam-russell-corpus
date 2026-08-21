@@ -13,7 +13,7 @@ import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { LINE_ENCYCLOPEDIA, G_BAND_LABEL } from "@/lib/lineEncyclopedia";
 import { LINE_DEEP } from "@/lib/lineDeepDives";
 import { LINE_VIDEOS, toEmbed } from "@/lib/lineVideos";
-import { LINE_NAMES, lineSlug, lineFromSlug } from "@shared/seo";
+import { LINE_NAMES, lineSlug, lineFromSlug, therapySlug } from "@shared/seo";
 import { keystoneForLine } from "@shared/keystonePractices";
 import { therapiesForLine, THERAPY_THIN_LINES } from "@shared/therapyLineMap";
 import NotFound from "@/pages/NotFound";
@@ -187,7 +187,7 @@ export default function LineDetail() {
             </p>
             {therapies.map((t) => (
               <p key={t.therapy} style={{ fontSize: "13.5px", lineHeight: 1.6, color: CREAM2, margin: "0 0 6px" }}>
-                <b style={{ color: CREAM }}>{t.therapy}</b> — {t.capacity}
+                <Link href={`/protocol/${therapySlug(t.therapy)}`} style={{ color: CREAM, fontWeight: 700 }}>{t.therapy}</Link> — {t.capacity}
               </p>
             ))}
           </div>

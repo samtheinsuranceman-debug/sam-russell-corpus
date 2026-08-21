@@ -8,8 +8,9 @@
 // ============================================================
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { PAGE_META, NOINDEX_PATHS, SITE_NAME, canonicalUrl, lineFromSlug } from "@shared/seo";
+import { PAGE_META, NOINDEX_PATHS, SITE_NAME, canonicalUrl, lineFromSlug, therapyFromSlug, therapyDisplay } from "@shared/seo";
 import { LINE_ENCYCLOPEDIA } from "@/lib/lineEncyclopedia";
+import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
 
 function setMeta(name: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
@@ -73,6 +74,18 @@ export default function RouteMeta() {
         meta = {
           title: `${name} Intelligence — The Full Breakdown — AQAL`,
           description: enc.def.slice(0, 158),
+        };
+      }
+    }
+    // /protocol/:slug pages get generated meta from the therapy map.
+    if (!meta && path.startsWith("/protocol/")) {
+      const tname = therapyFromSlug(path.slice("/protocol/".length));
+      if (tname) {
+        const entry = THERAPY_LINE_MAP.find((t) => t.therapy === tname);
+        const lines = THERAPY_LINE_MAP.filter((t) => t.therapy === tname).map((t) => t.line).join(", ");
+        meta = {
+          title: `${therapyDisplay(tname).split(" (")[0]} — Which Intelligence Lines It Builds — AQAL`,
+          description: (entry ? `${entry.capacity} Mapped to: ${lines}. Dose, durability, and the peer-reviewed evidence.` : "").slice(0, 158),
         };
       }
     }

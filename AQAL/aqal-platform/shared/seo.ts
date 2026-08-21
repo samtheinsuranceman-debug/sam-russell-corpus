@@ -160,6 +160,11 @@ export const PAGE_META: Record<string, PageMeta> = {
     description:
       "You already know your IQ. That's ~4 of 32 lines. Measure the other 28 — the ones that decide whether high g actually converts into outcomes.",
   },
+  "/protocols": {
+    title: "The Protocol Library — 92 Evidence-Backed Interventions — AQAL",
+    description:
+      "Every protocol mapped to the intelligence lines it builds — EMDR, MBSR, DBT, IFS, and 88 more — each with the peer-reviewed study behind the mapping.",
+  },
 };
 
 // Everything a crawler should stay out of: member surfaces, admin, and
@@ -194,9 +199,31 @@ export function lineFromSlug(slug: string): string | undefined {
   return LINE_NAMES.find((n) => lineSlug(n) === slug);
 }
 
+// Protocol pages — one per distinct mapped therapy. The display name keeps
+// author/parenthetical attributions; the slug drops them ("EMDR", not
+// "EMDR (Shapiro)"). Names come from the therapy map so the sitemap can
+// never drift from the actual library.
+import { THERAPY_LINE_MAP } from "./therapyLineMap";
+
+export function therapyDisplay(name: string): string {
+  return name.replace(/\s*™\s*/g, "").trim();
+}
+
+export function therapySlug(name: string): string {
+  const base = therapyDisplay(name).split(" (")[0];
+  return base.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export const THERAPY_NAMES: string[] = Array.from(new Set(THERAPY_LINE_MAP.map((t) => t.therapy))).sort();
+
+export function therapyFromSlug(slug: string): string | undefined {
+  return THERAPY_NAMES.find((n) => therapySlug(n) === slug);
+}
+
 export const SITEMAP_PATHS = [
   ...Object.keys(PAGE_META),
   ...LINE_NAMES.map((n) => `/line/${lineSlug(n)}`),
+  ...THERAPY_NAMES.map((n) => `/protocol/${therapySlug(n)}`),
 ];
 
 export function canonicalUrl(path: string): string {
