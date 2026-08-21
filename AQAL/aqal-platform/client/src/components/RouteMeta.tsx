@@ -8,7 +8,8 @@
 // ============================================================
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { PAGE_META, NOINDEX_PATHS, SITE_NAME, canonicalUrl } from "@shared/seo";
+import { PAGE_META, NOINDEX_PATHS, SITE_NAME, canonicalUrl, lineFromSlug } from "@shared/seo";
+import { LINE_ENCYCLOPEDIA } from "@/lib/lineEncyclopedia";
 
 function setMeta(name: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
@@ -63,7 +64,18 @@ export default function RouteMeta() {
 
   useEffect(() => {
     const path = location === "" ? "/" : location;
-    const meta = PAGE_META[path];
+    let meta = PAGE_META[path];
+    // /line/:slug pages get generated meta from the encyclopedia.
+    if (!meta && path.startsWith("/line/")) {
+      const name = lineFromSlug(path.slice("/line/".length));
+      const enc = name ? LINE_ENCYCLOPEDIA[name] : undefined;
+      if (name && enc) {
+        meta = {
+          title: `${name} Intelligence — The Full Breakdown — AQAL`,
+          description: enc.def.slice(0, 158),
+        };
+      }
+    }
     const noindex = NOINDEX_PATHS.some((p) => path === p || path.startsWith(p + "/"));
 
     if (meta) {

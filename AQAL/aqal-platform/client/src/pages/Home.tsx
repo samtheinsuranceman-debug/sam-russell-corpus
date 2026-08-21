@@ -14,6 +14,8 @@ import { useHeroVariant, currentHeroId } from "@/lib/heroExperiment";
 import { ARCHETYPES } from "./archetypesData";
 import { keystoneForLine } from "@shared/keystonePractices";
 import { ALL_AXES } from "@shared/axisModes";
+import { lineSlug } from "@shared/seo";
+import { HOME_VIDEO, toEmbed } from "@/lib/lineVideos";
 
 // ============================================================
 // AQAL HOME — Merged: Viral hook + Claude's Atelier dial UI
@@ -207,8 +209,9 @@ function HeroSection() {
   const heroPick = (i: number) => {
     setHeroSel((prev) => { if (prev !== i) heroPickedAtRef.current = Date.now(); return i; });
   };
+  const [, heroNavigate] = useLocation();
   const heroMaybeOpen = (i: number, name: string) => {
-    if (heroSel === i && Date.now() - heroPickedAtRef.current > 450) setHeroInfo(name);
+    if (heroSel === i && Date.now() - heroPickedAtRef.current > 450) heroNavigate(`/line/${lineSlug(name)}`);
   };
   // Desktop hover: resting the mouse on a point for a beat opens the full
   // encyclopedia popup. Mouse pointers only — touch keeps tap-then-tap.
@@ -346,7 +349,7 @@ function HeroSection() {
                 return (
                   <g key={"pt" + p.i} className="cursor-pointer" role="button" tabIndex={0}
                     aria-label={`${p.l.name} — select, activate again for definition`}
-                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); heroSel === p.i ? setHeroInfo(p.l.name) : heroPick(p.i); } }}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); heroSel === p.i ? heroNavigate(`/line/${lineSlug(p.l.name)}`) : heroPick(p.i); } }}
                     onPointerEnter={(e) => (e.pointerType === "mouse" ? heroHoverStart(p.i, p.l.name, e) : heroPick(p.i))}
                     onPointerLeave={heroHoverEnd}
                     onPointerDown={() => heroPick(p.i)}
@@ -373,7 +376,7 @@ function HeroSection() {
                   <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={CREAM} x={CX} y={CY - 6} textAnchor="middle" fontSize="27">{LINES[heroSel].short}</text>
                   <text style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }} fill={MODE[LINES[heroSel].mode].c} x={CX} y={CY + 30} textAnchor="middle" fontSize="34">{LINES[heroSel].v}</text>
                   <text style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '7.5px', letterSpacing: '0.14em' }} fill={MUTED} x={CX} y={CY + 48} textAnchor="middle">/ 100 · SAMPLE PROFILE</text>
-                  <text className="aq-pulse cursor-pointer" onPointerDown={() => heroSel !== null && setHeroInfo(LINES[heroSel].name)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.16em' }} fill={CHAMPAGNE} x={CX} y={CY + 66} textAnchor="middle">◇ WHAT IS THIS? TAP TO LEARN IT</text>
+                  <text className="aq-pulse cursor-pointer" onPointerDown={() => heroSel !== null && heroNavigate(`/line/${lineSlug(LINES[heroSel].name)}`)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '8px', letterSpacing: '0.16em' }} fill={CHAMPAGNE} x={CX} y={CY + 66} textAnchor="middle">◇ WHAT IS THIS? TAP TO LEARN IT</text>
                 </>
               )}
             </svg>
@@ -1145,8 +1148,9 @@ function DialSection() {
   // Second interaction with an already-selected line opens the encyclopedia:
   // desktop = hover previews then click opens; mobile = first tap selects,
   // second tap opens. The 450ms gate stops select+open firing as one gesture.
+  const [, dialNavigate] = useLocation();
   const maybeOpenInfo = (i: number, name: string) => {
-    if (selected === i && Date.now() - pickedAtRef.current > 450) setInfoLine(name);
+    if (selected === i && Date.now() - pickedAtRef.current > 450) dialNavigate(`/line/${lineSlug(name)}`);
   };
   // Desktop hover: resting the mouse on a dial point for a beat opens the
   // encyclopedia popup directly. Mouse pointers only — touch keeps tap-then-tap.
@@ -1230,7 +1234,7 @@ function DialSection() {
                 return (
                   <g key={"pt2" + p.i} className="cursor-pointer" role="button" tabIndex={0}
                     aria-label={`${p.l.name} — select, activate again for definition`}
-                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selected === p.i ? setInfoLine(p.l.name) : pick(p.i); } }}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selected === p.i ? dialNavigate(`/line/${lineSlug(p.l.name)}`) : pick(p.i); } }}
                     onPointerEnter={(e) => hoverStart(p.i, p.l.name, e)} onPointerLeave={hoverEnd} onPointerDown={() => pick(p.i)}
                     onClick={() => maybeOpenInfo(p.i, p.l.name)}>
                     {/* Oversized invisible hit target — a fingertip, not a 4px dot */}
@@ -1718,6 +1722,25 @@ function CompanionSection() {
 // ============================================================
 // MAIN EXPORT
 // ============================================================
+// The founder film — renders ONLY when HOME_VIDEO in lib/lineVideos.ts has a
+// URL. Until then the homepage stays exactly as designed, no empty frame.
+function HomeVideoSection() {
+  const embed = toEmbed(HOME_VIDEO);
+  if (!embed) return null;
+  return (
+    <section style={{ background: INK, padding: "clamp(24px,4vw,56px) 0" }}>
+      <div className="max-w-[900px] mx-auto px-[clamp(20px,5vw,56px)]">
+        <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${CHAMPAGNE}33`, aspectRatio: "16 / 9", background: "#000" }}>
+          {embed.kind === "video"
+            ? <video src={embed.src} controls playsInline style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            : <iframe src={embed.src} title="AQAL — the film" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen style={{ width: "100%", height: "100%", border: 0 }} loading="lazy" />}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   useScrollReveal();
 
@@ -1746,6 +1769,7 @@ export default function Home() {
       <div className="relative z-10">
         {/* ── THE HOOK ── promise, then an immediate toy to play with */}
         <HeroSection />
+        <HomeVideoSection />
         {/* What's in it for them — the ten promises, before any 32-line detail */}
         <div data-reveal><TenPromisesSection /></div>
         {/* Instant payoff: the interactive 32-line dial — touch the product before reading a word */}

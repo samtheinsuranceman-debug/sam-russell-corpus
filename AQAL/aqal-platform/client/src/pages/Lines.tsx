@@ -6,6 +6,16 @@
 // ============================================================
 import { useState } from "react";
 import { Link } from "wouter";
+import { LINE_NAMES, lineSlug } from "@shared/seo";
+
+// Engine-taxonomy name -> homepage display name (which owns the /line page).
+const ENGINE_TO_DISPLAY: Record<string, string> = {
+  Kinesthetic: "Bodily-Kinesthetic", Naturalistic: "Naturalist",
+  Systematic: "Systemic", "Financial-Self-Management": "Financial",
+  Empathic: "Emotional", Influence: "Rhetorical",
+};
+const displayFor = (engine: string): string | undefined =>
+  ENGINE_TO_DISPLAY[engine] ?? (LINE_NAMES.includes(engine) ? engine : undefined);
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { ALL_AXES, axisMode, axisIndep, MODE_META } from "@shared/axisModes";
 import { keystoneForLine } from "@shared/keystonePractices";
@@ -113,6 +123,14 @@ export default function Lines() {
                       <p className="text-[13px] mb-2" style={{ color: CREAM2 }}>
                         <span style={{ color: CHAMPAGNE, fontWeight: 600 }}>Evidence-backed protocols: </span>
                         {therapies.map((t) => t.therapy).join(" · ")}
+                      </p>
+                    )}
+                    {displayFor(line) && (
+                      <p className="mb-2">
+                        <Link href={`/line/${lineSlug(displayFor(line)!)}`} onClick={(e: any) => e.stopPropagation()}
+                          className="font-mono text-[11px] uppercase tracking-[0.1em]" style={{ color: CHAMPAGNE }}>
+                          Read the full breakdown →
+                        </Link>
                       </p>
                     )}
                     {thin && (

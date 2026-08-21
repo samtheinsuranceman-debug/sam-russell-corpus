@@ -119,13 +119,14 @@ export default function LineInfoModal({ line, onClose }: { line: string | null; 
 
           {/* CTA */}
           <div className="flex items-center gap-3 flex-wrap">
-            <a href="/assessment"
+            <a href={`/line/${line.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
               style={{ ...mono, fontSize: "11px", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, padding: "12px 18px", borderRadius: "8px", background: CHAMPAGNE, color: INK, textDecoration: "none" }}>
-              Measure yours — all 32 lines
+              Read the full breakdown →
             </a>
-            <span style={{ ...mono, fontSize: "10px", color: MUTED }}>
-              exact correlations pinned by our open citation audit
-            </span>
+            <a href="/assessment"
+              style={{ ...mono, fontSize: "11px", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, padding: "12px 18px", borderRadius: "8px", background: "transparent", color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}66`, textDecoration: "none" }}>
+              Measure yours
+            </a>
           </div>
         </div>
       </div>

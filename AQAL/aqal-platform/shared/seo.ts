@@ -173,7 +173,31 @@ export const NOINDEX_PATHS: string[] = [
   "/signin", "/ui-preview", "/challenge", "/404",
 ];
 
-export const SITEMAP_PATHS = Object.keys(PAGE_META);
+// The 32 homepage line names — each gets its own indexable page at
+// /line/<slug>. Kept here (shared) so the server sitemap and the client
+// router agree without importing client code.
+export const LINE_NAMES: string[] = [
+  "Logical", "Mathematical", "Spatial", "Linguistic", "Musical",
+  "Bodily-Kinesthetic", "Naturalist", "Interpersonal", "Intrapersonal",
+  "Existential", "Moral", "Aesthetic", "Emotional", "Meta-Cognitive",
+  "Volitional", "Adversarial", "Interoceptive", "Strategic", "Systemic",
+  "Entrepreneurial", "Creative", "Rhetorical", "Leadership", "Mechanical",
+  "Pattern-Recognition", "Social-Perceptual", "Financial", "Humor",
+  "Parenting", "Seduction", "Community-Founding", "Street Smarts",
+];
+
+export function lineSlug(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export function lineFromSlug(slug: string): string | undefined {
+  return LINE_NAMES.find((n) => lineSlug(n) === slug);
+}
+
+export const SITEMAP_PATHS = [
+  ...Object.keys(PAGE_META),
+  ...LINE_NAMES.map((n) => `/line/${lineSlug(n)}`),
+];
 
 export function canonicalUrl(path: string): string {
   return SITE_ORIGIN + (path === "/" ? "/" : path.replace(/\/$/, ""));
