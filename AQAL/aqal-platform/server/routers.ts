@@ -2597,8 +2597,12 @@ CRITICAL RULES:
       .input(z.object({
         message: z.string().min(10).max(5000),
         replyTo: z.string().email().max(320).optional(),
+        // Honeypot — hidden field humans never see. Filled = bot.
+        company: z.string().max(200).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
+        // Bots that autofill the honeypot get a fake success and no email.
+        if (input.company && input.company.trim().length > 0) return { ok: true as const };
         const { checkLimit, clientIp } = await import("./rateLimit");
         const ip = clientIp(ctx.req as never);
         if (!checkLimit(`support:${ip}`, 3, 60 * 60 * 1000)) {

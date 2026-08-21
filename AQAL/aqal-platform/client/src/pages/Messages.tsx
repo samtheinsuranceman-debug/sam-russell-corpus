@@ -37,7 +37,7 @@ function AttachmentView({ a }: { a: { name: string | null; type: string | null; 
     return <div style={{ ...mono, fontSize: "11px", color: MUTED, fontStyle: "italic" }}>[Attachment expired — files wipe after 72 hours]</div>;
   }
   if (a.type?.startsWith("image/")) {
-    return <a href={a.url} target="_blank" rel="noreferrer"><img src={a.url} alt={a.name ?? "image"} style={{ maxWidth: "100%", maxHeight: "260px", borderRadius: "10px", display: "block" }} /></a>;
+    return <a href={a.url} target="_blank" rel="noreferrer"><img src={a.url} alt={a.name ?? "image"} loading="lazy" style={{ maxWidth: "100%", maxHeight: "260px", borderRadius: "10px", display: "block" }} /></a>;
   }
   if (a.type?.startsWith("video/")) {
     return <video src={a.url} controls style={{ maxWidth: "100%", maxHeight: "280px", borderRadius: "10px", display: "block" }} />;

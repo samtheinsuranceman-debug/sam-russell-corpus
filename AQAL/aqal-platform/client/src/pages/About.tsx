@@ -15,6 +15,7 @@ function FounderPhoto() {
         <img
           src="/founder-sam-russell.jpg"
           alt="Samuel A. Russell V"
+          loading="lazy"
           className="w-full h-full object-cover"
           onError={() => setFailed(true)}
         />

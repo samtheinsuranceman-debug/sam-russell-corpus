@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
+import RouteMeta from "@/components/RouteMeta";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import PageErrorBoundary from "./components/PageErrorBoundary";
@@ -241,6 +242,7 @@ function BackToTop() {
 function Router() {
   return (
     <PageTransition>
+      <RouteMeta />
       <Switch>
         <Route path={"/"}>
           <PageErrorBoundary pageName="Home">
