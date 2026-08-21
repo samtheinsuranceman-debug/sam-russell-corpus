@@ -165,6 +165,16 @@ export const PAGE_META: Record<string, PageMeta> = {
     description:
       "Every protocol mapped to the intelligence lines it builds — EMDR, MBSR, DBT, IFS, and 88 more — each with the peer-reviewed study behind the mapping.",
   },
+  "/pairs": {
+    title: "Power Combinations — All 496 Intelligence Line Pairings — AQAL",
+    description:
+      "Every two-line combination mapped: what each line gives the other, what the multiplication unlocks, and what half a pair quietly costs.",
+  },
+  "/practices": {
+    title: "The 54 Keystone Practices — Evidence-Tiered — AQAL",
+    description:
+      "Sleep protection, implementation intentions, interoception training, and 51 more daily practices — each with its prescription, research basis, and honest evidence tier.",
+  },
 };
 
 // Everything a crawler should stay out of: member surfaces, admin, and
@@ -220,10 +230,42 @@ export function therapyFromSlug(slug: string): string | undefined {
   return THERAPY_NAMES.find((n) => therapySlug(n) === slug);
 }
 
+// Line-pair pages — one per unordered pair of lines, canonical order =
+// LINE_NAMES index order. C(32,2) = 496 pages at /pair/<a>--<b>.
+export function pairSlug(a: string, b: string): string {
+  const ia = LINE_NAMES.indexOf(a), ib = LINE_NAMES.indexOf(b);
+  const [first, second] = ia <= ib ? [a, b] : [b, a];
+  return `${lineSlug(first)}--${lineSlug(second)}`;
+}
+
+export const PAIR_SLUGS: string[] = (() => {
+  const out: string[] = [];
+  for (let i = 0; i < LINE_NAMES.length; i++)
+    for (let j = i + 1; j < LINE_NAMES.length; j++)
+      out.push(pairSlug(LINE_NAMES[i], LINE_NAMES[j]));
+  return out;
+})();
+
+export function pairFromSlug(slug: string): [string, string] | undefined {
+  const parts = slug.split("--");
+  if (parts.length !== 2) return undefined;
+  const a = lineFromSlug(parts[0]);
+  const b = lineFromSlug(parts[1]);
+  if (!a || !b || a === b) return undefined;
+  return LINE_NAMES.indexOf(a) <= LINE_NAMES.indexOf(b) ? [a, b] : [b, a];
+}
+
+// Keystone-practice pages — one per practice in the shared library.
+import { KEYSTONE_PRACTICES } from "./keystonePractices";
+
+export const PRACTICE_IDS: string[] = KEYSTONE_PRACTICES.map((p) => p.id);
+
 export const SITEMAP_PATHS = [
   ...Object.keys(PAGE_META),
   ...LINE_NAMES.map((n) => `/line/${lineSlug(n)}`),
   ...THERAPY_NAMES.map((n) => `/protocol/${therapySlug(n)}`),
+  ...PRACTICE_IDS.map((id) => `/practice/${id}`),
+  ...PAIR_SLUGS.map((s) => `/pair/${s}`),
 ];
 
 export function canonicalUrl(path: string): string {

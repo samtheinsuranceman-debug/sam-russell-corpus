@@ -13,7 +13,7 @@ import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { LINE_ENCYCLOPEDIA, G_BAND_LABEL } from "@/lib/lineEncyclopedia";
 import { LINE_DEEP } from "@/lib/lineDeepDives";
 import { LINE_VIDEOS, toEmbed } from "@/lib/lineVideos";
-import { LINE_NAMES, lineSlug, lineFromSlug, therapySlug } from "@shared/seo";
+import { LINE_NAMES, lineSlug, lineFromSlug, therapySlug, pairSlug } from "@shared/seo";
 import { keystoneForLine } from "@shared/keystonePractices";
 import { therapiesForLine, THERAPY_THIN_LINES } from "@shared/therapyLineMap";
 import NotFound from "@/pages/NotFound";
@@ -217,6 +217,23 @@ export default function LineDetail() {
           Honesty note: these are landmark works as cited in the literature; independent DOI-level verification of the
           full library is in progress and its results post to the <Link href="/corrections" style={{ color: CHAMPAGNE }}>Corrections Ledger</Link>.
         </p>
+
+        {/* Power combinations teaser */}
+        <SectionLabel>This line in combination</SectionLabel>
+        <p style={{ fontSize: "14px", lineHeight: 1.7, color: CREAM2, margin: "0 0 10px" }}>
+          Lines multiply — {name} paired with another strong line unlocks capabilities neither has alone. Explore its pairings:
+        </p>
+        <div className="flex items-center gap-3 flex-wrap mb-10">
+          {[LINE_NAMES[(idx + 5) % 32], LINE_NAMES[(idx + 11) % 32], LINE_NAMES[(idx + 19) % 32]]
+            .filter((n) => n !== name).slice(0, 3).map((n) => (
+              <Link key={n} href={`/pair/${pairSlug(name, n)}`} style={{ ...mono, fontSize: "10.5px", letterSpacing: "0.06em", color: CHAMPAGNE }}>
+                {name} × {n}
+              </Link>
+            ))}
+          <Link href="/pairs" style={{ ...mono, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED }}>
+            all 496 pairings →
+          </Link>
+        </div>
 
         {/* CTA */}
         <div className="rounded-2xl p-7 mb-10 text-center" style={{ border: `1px solid ${CHAMPAGNE}44`, background: "rgba(224,198,140,0.05)" }}>

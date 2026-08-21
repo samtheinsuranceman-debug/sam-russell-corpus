@@ -67,6 +67,10 @@ const Runbook = lazy(() => import("./pages/Runbook"));
 const LineDetail = lazy(() => import("./pages/LineDetail"));
 const TherapyDetail = lazy(() => import("./pages/TherapyDetail"));
 const Protocols = lazy(() => import("./pages/Protocols"));
+const PairDetail = lazy(() => import("./pages/PairDetail"));
+const Pairs = lazy(() => import("./pages/Pairs"));
+const PracticeDetail = lazy(() => import("./pages/PracticeDetail"));
+const Practices = lazy(() => import("./pages/Practices"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const BlackBox = lazy(() => import("./pages/BlackBox"));
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
@@ -479,6 +483,26 @@ function Router() {
         <Route path={"/protocols"}>
           <PageErrorBoundary pageName="Protocols">
             <Suspense fallback={<PageSkeleton />}><Protocols /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/pair/:slug"}>
+          <PageErrorBoundary pageName="PairDetail">
+            <Suspense fallback={<PageSkeleton />}><PairDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/pairs"}>
+          <PageErrorBoundary pageName="Pairs">
+            <Suspense fallback={<PageSkeleton />}><Pairs /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/practice/:id"}>
+          <PageErrorBoundary pageName="PracticeDetail">
+            <Suspense fallback={<PageSkeleton />}><PracticeDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/practices"}>
+          <PageErrorBoundary pageName="Practices">
+            <Suspense fallback={<PageSkeleton />}><Practices /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/runbook"}>

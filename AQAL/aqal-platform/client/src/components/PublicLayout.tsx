@@ -309,6 +309,12 @@ export function PublicFooter() {
             <Link href="/protocols">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">The Protocol Library</span>
             </Link>
+            <Link href="/pairs">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Power Combinations</span>
+            </Link>
+            <Link href="/practices">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Keystone Practices</span>
+            </Link>
             <Link href="/which-archetype">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">2-Minute Teaser Quiz</span>
             </Link>

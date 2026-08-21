@@ -8,9 +8,11 @@
 // ============================================================
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { PAGE_META, NOINDEX_PATHS, SITE_NAME, canonicalUrl, lineFromSlug, therapyFromSlug, therapyDisplay } from "@shared/seo";
+import { PAGE_META, NOINDEX_PATHS, SITE_NAME, canonicalUrl, lineFromSlug, therapyFromSlug, therapyDisplay, pairFromSlug } from "@shared/seo";
 import { LINE_ENCYCLOPEDIA } from "@/lib/lineEncyclopedia";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
+import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
+import { LINE_ROLE } from "@/lib/linePairs";
 
 function setMeta(name: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
@@ -74,6 +76,28 @@ export default function RouteMeta() {
         meta = {
           title: `${name} Intelligence — The Full Breakdown — AQAL`,
           description: enc.def.slice(0, 158),
+        };
+      }
+    }
+    // /pair/:slug pages — meta composed from both lines' data.
+    if (!meta && path.startsWith("/pair/")) {
+      const pr = pairFromSlug(path.slice("/pair/".length));
+      if (pr) {
+        const [a, b] = pr;
+        const ra = LINE_ROLE[a], rb = LINE_ROLE[b];
+        meta = {
+          title: `${a} × ${b} Intelligence — The ${ra?.adj ?? ""} ${rb?.noun ?? ""} — AQAL`,
+          description: `What the ${a} and ${b} lines give each other, what the combination unlocks, and what half the pair quietly costs.`.slice(0, 158),
+        };
+      }
+    }
+    // /practice/:id pages — meta from the keystone library.
+    if (!meta && path.startsWith("/practice/")) {
+      const pr = KEYSTONE_PRACTICES.find((k) => k.id === path.slice("/practice/".length));
+      if (pr) {
+        meta = {
+          title: `${pr.name} — Prescription, Evidence & Horizon — AQAL`,
+          description: pr.prescription.slice(0, 158),
         };
       }
     }
