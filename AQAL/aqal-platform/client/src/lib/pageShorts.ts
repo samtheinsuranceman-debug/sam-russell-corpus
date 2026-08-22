@@ -11,6 +11,7 @@
 import {
   PAGE_META, lineFromSlug, pairFromSlug, therapyFromSlug, therapyDisplay,
   compareFromSlug, goalFromSlug, engineLineFromSlug,
+  CAPACITY_ONLY_LINES, KIND_IDS, WING_IDS, VERDICT_SLUGS,
 } from "@shared/seo";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
 import { mythById } from "@/lib/mythMuseum";
@@ -81,6 +82,28 @@ export function shortFor(path: string): string | undefined {
   if (p.startsWith("/myth/")) {
     const m = mythById(p.slice(6));
     return m ? fit(`${m.name}: ${m.verdict.toLowerCase()} — and why it sold.`) : undefined;
+  }
+  if (p.startsWith("/capacity/")) {
+    const l = engineLineFromSlug(p.slice(10));
+    return l && CAPACITY_ONLY_LINES.includes(l)
+      ? fit(`The ${l} capacity: unmeasured until now.`) : undefined;
+  }
+  if (p.startsWith("/kind/")) {
+    const id = p.slice(6);
+    return KIND_IDS.includes(id)
+      ? fit(`${id.charAt(0).toUpperCase() + id.slice(1)} protocols: dose, demands, durability.`) : undefined;
+  }
+  if (p.startsWith("/wing/")) {
+    const id = p.slice(6);
+    if (!WING_IDS.includes(id)) return undefined;
+    const cap = id.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+    return fit(`${cap}: how one myth family fools you.`);
+  }
+  if (p.startsWith("/verdict/")) {
+    const slug = p.slice(9);
+    if (!VERDICT_SLUGS.includes(slug)) return undefined;
+    const cap = slug.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+    return fit(`${cap}: the standard, and who earned it.`);
   }
   if (p.startsWith("/build/")) {
     const segs = p.slice(7).split("/");

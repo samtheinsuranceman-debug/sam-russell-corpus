@@ -49,10 +49,24 @@ export default function Protocols() {
           the full member library holds 6,500+ interventions; these {THERAPY_NAMES.length} are the audited therapy-channel core
         </p>
 
+        <div className="rounded-xl border p-4 mb-8" style={{ borderColor: "rgba(224,198,140,0.25)", background: "rgba(224,198,140,0.04)" }}>
+          <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase", color: CHAMPAGNE, marginBottom: "8px" }}>
+            The hidden axes — eight capacities the engine scores that no test ever showed you
+          </p>
+          <div className="flex gap-1.5 flex-wrap">
+            {["Adaptive","Architectural","Integrative","Intuitive","Philosophical","Reflective","Resilient","Tactical"].map((c) => (
+              <Link key={c} href={`/capacity/${c.toLowerCase()}`}
+                style={{ ...mono, fontSize: "10px", letterSpacing: "0.08em", textTransform: "uppercase", padding: "6px 11px", borderRadius: "999px", color: CREAM2, border: "1px solid rgba(241,234,219,0.16)" }}>
+                {c}
+              </Link>
+            ))}
+          </div>
+        </div>
+
         {KIND_ORDER.filter((k) => byKind[k]?.length).map((k) => (
           <div key={k} className="mb-8">
             <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase", color: JADE, marginBottom: "10px" }}>
-              {KIND_PROFILES[k].label} · {byKind[k].length}
+              <Link href={`/kind/${k}`} style={{ color: JADE }}>{KIND_PROFILES[k].label} · {byKind[k].length} — the kind's own page →</Link>
             </p>
             <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}>
               {byKind[k].map((n) => (

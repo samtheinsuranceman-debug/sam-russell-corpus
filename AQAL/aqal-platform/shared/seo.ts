@@ -191,10 +191,10 @@ export const PAGE_META: Record<string, PageMeta> = {
     short: "IQ is 4 lines of 32. Measure the other 28.",
   },
   "/protocols": {
-    title: "The Protocol Library — 92 Evidence-Backed Interventions — AQAL",
+    title: "The Protocol Library — 156 Evidence-Backed Interventions — AQAL",
     description:
-      "Every protocol mapped to the intelligence lines it builds — EMDR, MBSR, DBT, IFS, and 88 more — each with the peer-reviewed study behind the mapping.",
-    short: "92 protocols mapped to the lines they build.",
+      "Every protocol mapped to the intelligence lines it builds — EMDR, MBSR, DBT, ACT, and 152 more — each with the peer-reviewed study behind the mapping.",
+    short: "156 protocols mapped to the lines they build.",
   },
   "/pairs": {
     title: "Power Combinations — All 496 Intelligence Line Pairings — AQAL",
@@ -372,6 +372,41 @@ export function engineLineFromSlug(slug: string): string | undefined {
   return ENGINE_LINES.find((l) => engineLineSlug(l) === slug);
 }
 
+// The eight engine capacities that have no /line/ display page of their
+// own — each gets a /capacity/ landing page instead. Mirrored from the
+// engine↔display mapping; the pageShorts test suite fails on drift.
+export const CAPACITY_ONLY_LINES: string[] = [
+  "Adaptive", "Architectural", "Integrative", "Intuitive",
+  "Philosophical", "Reflective", "Resilient", "Tactical",
+];
+
+// Protocol-kind ids — mirrored from client/src/lib/therapyKinds.ts
+// KIND_PROFILES; the pageShorts test suite fails if the two drift.
+export const KIND_IDS: string[] = [
+  "psychotherapy", "relational", "mindfulness", "somatic", "physical",
+  "skill", "psychedelic", "neuromodulation", "lifestyle", "expressive",
+  "community",
+];
+
+// Myth Museum wing ids — mirrored from client/src/lib/mythWings.ts
+// WING_PROFILES; the pageShorts test suite fails if the two drift.
+export const WING_IDS: string[] = [
+  "heroic-medicine", "miracle-cure", "substitution-harm", "energy-device",
+  "purification", "pill-and-powder", "diet-cult", "false-oracle",
+  "classroom-ghost", "replication-graveyard", "unlicensed-couch",
+  "cosmic-counsel",
+];
+
+// Museum verdict slugs — mirrored from mythMuseum.ts MYTH_VERDICT_META.
+export const VERDICT_SLUGS: string[] = [
+  "debunked", "no-evidence", "harmful", "replication-failed", "overclaimed",
+];
+
+export function verdictFromSlug(slug: string): string | undefined {
+  const v = VERDICT_SLUGS.find((s) => s === slug);
+  return v ? v.replace(/-/g, " ").toUpperCase() : undefined;
+}
+
 // Myth Museum exhibit ids — mirrored from client/src/lib/mythMuseum.ts;
 // the pageShorts test suite fails if the two drift.
 export const MYTH_IDS: string[] = ["phrenology","mesmerism","lobotomy","insulin-coma","orgone","trepanation-revival","facilitated-communication","recovered-memory","conversion-therapy","attachment-holding","cisd","scared-straight","dare-original","boot-camps","primal-scream","dianetics","attack-therapy","past-life-regression","polygraph","graphology","learning-styles","brain-gym","mozart-effect","ten-percent-brain","left-right-brain","subliminal-tapes","speed-reading","sleep-learning","brain-training","growth-mindset-overclaim","power-posing","ego-depletion","mbti-clinical","enneagram-clinical","nlp-claims","homeopathy","bach-flowers","crystal-healing","therapeutic-touch","reiki-distant","magnet-therapy","ear-candling","detox-cleanses","adrenal-fatigue","candida-everything","applied-kinesiology","craniosacral","chiropractic-nonmsk","iridology","reflexology-diagnostic","grounding-claims","binaural-claims","essential-oil-cures","cbd-cure-all","microdosing-overclaim","law-of-attraction","affirmations-backfire","vision-boards","astrology-counseling","numerology","human-design","psychic-mediums","angel-therapy","faith-healing-substitution","intercessory-prayer-rct","vaccines-autism","chelation-autism","mms-bleach","secretin","dolphin-therapy","wellness-mlm","prosperity-gospel-therapy","bloodletting","rotational-chair","radithor","violet-ray","krebiozen","refrigerator-mother","rebirthing","orthomolecular","laetrile","gerson","black-salve","shark-cartilage","essiac","colloidal-silver","ozone-therapy","hbot-autism","stem-cell-tourism","iv-drips","naturopathic-cancer","exorcism-substitution","troubled-teen","breatharianism","sungazing","kambo","bee-venom","rasa-shastra","aristolochia","placenta-encapsulation","vaginal-steaming","jade-eggs","perineum-sunning","urine-therapy","oil-pulling","hulda-clark-zapper","rife-machines","bioresonance","radionics","kirlian-aura","emf-harmonizers","power-balance","copper-bracelets","pemf-consumer","daith-piercing","ionic-footbath","detox-foot-pads","salt-lamps","halotherapy","oxygen-bars","alkaline-water","hydrogen-water","structured-water","solfeggio","chromotherapy","blue-blockers","cryo-chambers","infrared-detox","tdcs-consumer","toning-shoes","kinesio-overclaim","cupping-performance","mouth-taping","polyphasic-sleep","mewing","lymphatic-detox","live-blood-analysis","hair-mineral-analysis","igg-food-tests","mthfr-protocols","dna-diet-tests","microbiome-consumer","telomere-tests","epigenetic-clearing","airborne","prevagen","ginkgo-memory","antioxidant-megadose","multivitamin-prevention","nootropic-stacks","t-boosters","celery-juice","acv-cureall","blood-type-diet","gaps-diet","feingold-cure","gluten-free-everyone","carnivore-cureall","doman-delacato","primitive-reflex","auditory-integration","son-rise","vision-therapy-ld","bates-method","irlen-lenses","dore-program","fast-forword","baby-genius-media","ambidexterity-movement","social-priming","marshmallow-destiny","facial-feedback-pencil","microexpression-detection","forensic-hypnosis","truth-serum","rorschach-overclaim","grit-revolution","ten-thousand-hours","eft-tapping","thought-field-therapy","havening","brainspotting","emotion-code","family-constellations","lgat","holotropic-overclaim","ayahuasca-tourism","equine-breakthrough","indigo-children","biorhythms","full-moon-effect"];
@@ -388,6 +423,10 @@ export const SITEMAP_PATHS = [
   ...LINE_NAMES.map((n) => `/gift/${lineSlug(n)}`),
   ...BUILD_ENTRIES.map((e) => `/build/${engineLineSlug(e.line)}/${therapySlug(e.therapy)}`),
   ...MYTH_IDS.map((id) => `/myth/${id}`),
+  ...CAPACITY_ONLY_LINES.map((l) => `/capacity/${engineLineSlug(l)}`),
+  ...KIND_IDS.map((id) => `/kind/${id}`),
+  ...WING_IDS.map((id) => `/wing/${id}`),
+  ...VERDICT_SLUGS.map((s) => `/verdict/${s}`),
 ];
 
 export function canonicalUrl(path: string): string {

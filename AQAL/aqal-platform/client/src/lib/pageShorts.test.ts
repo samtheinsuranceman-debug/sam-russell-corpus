@@ -44,6 +44,26 @@ describe("myth museum sitemap sync", () => {
     expect(MYTH_IDS).toEqual(MYTHS.map((m) => m.id));
   });
 
+  it("shared mirrors match their client sources (kinds, wings, verdicts, capacities)", async () => {
+    const { KIND_IDS, WING_IDS, VERDICT_SLUGS, CAPACITY_ONLY_LINES, ENGINE_LINES, LINE_NAMES } = await import("@shared/seo");
+    const { KIND_PROFILES } = await import("./therapyKinds");
+    const { WING_PROFILES } = await import("./mythWings");
+    const { MYTH_VERDICT_META } = await import("./mythMuseum");
+    const { CAPACITY_AXES } = await import("./capacityAxes");
+    expect([...KIND_IDS].sort()).toEqual(Object.keys(KIND_PROFILES).sort());
+    expect([...WING_IDS].sort()).toEqual(Object.keys(WING_PROFILES).sort());
+    expect([...VERDICT_SLUGS].sort()).toEqual(
+      Object.keys(MYTH_VERDICT_META).map((v) => v.toLowerCase().replace(/ /g, "-")).sort(),
+    );
+    // Every capacity-only line has an authored axis, exists in the engine,
+    // and is genuinely display-page-less.
+    expect([...CAPACITY_ONLY_LINES].sort()).toEqual(Object.keys(CAPACITY_AXES).sort());
+    for (const l of CAPACITY_ONLY_LINES) {
+      expect(ENGINE_LINES).toContain(l);
+      expect(LINE_NAMES).not.toContain(l);
+    }
+  });
+
   it("every exhibit belongs to a wing with a real profile", async () => {
     const { MYTHS } = await import("./mythMuseum");
     const { MYTH_WING, WING_PROFILES } = await import("./mythWings");

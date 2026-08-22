@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { MYTHS, MYTH_VERDICT_META, type MythVerdict } from "@/lib/mythMuseum";
+import { WING_PROFILES } from "@/lib/mythWings";
 
 const INK = "#141009";
 const CREAM = "#F1EADB";
@@ -39,6 +40,26 @@ export default function Myths() {
         <p style={{ ...mono, fontSize: "10.5px", color: MUTED, marginBottom: "26px" }}>
           entries never contradict our own cited library · challenge any exhibit via the Corrections Ledger
         </p>
+
+        <div className="rounded-xl border p-4 mb-6" style={{ borderColor: LINE_C, background: "rgba(241,234,219,0.02)" }}>
+          <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase", color: CHAMPAGNE, marginBottom: "8px" }}>
+            Walk the museum by wing — each family's full anatomy on its own page
+          </p>
+          <div className="flex gap-1.5 flex-wrap">
+            {Object.entries(WING_PROFILES).map(([id, w]) => (
+              <Link key={id} href={`/wing/${id}`}
+                style={{ ...mono, fontSize: "10px", letterSpacing: "0.08em", textTransform: "uppercase", padding: "6px 11px", borderRadius: "999px", color: CREAM2, border: `1px solid ${LINE_C}` }}>
+                {w.label.split(" — ")[0]}
+              </Link>
+            ))}
+          </div>
+          <p style={{ ...mono, fontSize: "10px", color: MUTED, margin: "10px 0 0" }}>
+            or by verdict:{" "}
+            {(["debunked","no-evidence","harmful","replication-failed","overclaimed"] as const).map((v, i) => (
+              <span key={v}>{i > 0 && " · "}<Link href={`/verdict/${v}`} style={{ color: CHAMPAGNE }}>{v.replace(/-/g, " ")}</Link></span>
+            ))}
+          </p>
+        </div>
 
         <div className="flex gap-1.5 flex-wrap mb-8">
           <button onClick={() => setFilter(null)}
