@@ -76,6 +76,17 @@ function UnreadMessagesBadge() {
   );
 }
 
+function SkipLink() {
+  return (
+    <a href="#main-h1"
+      onClick={(e) => { e.preventDefault(); const h = document.querySelector("h1"); if (h) { h.setAttribute("tabindex", "-1"); (h as HTMLElement).focus(); h.scrollIntoView(); } }}
+      className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg"
+      style={{ background: "#E0C68C", color: "#141009", fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", fontWeight: 700 }}>
+      Skip to content
+    </a>
+  );
+}
+
 export function PublicHeader() {
   const { user, loading } = useAuth();
   const [location] = useLocation();
@@ -94,6 +105,7 @@ export function PublicHeader() {
 
   return (
     <>
+      <SkipLink />
       <header
         className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-200 ${
           scrolled
@@ -292,14 +304,14 @@ export function PublicFooter() {
             >
               AQAL
             </span>
-            <p className="mt-2 text-sm text-muted-foreground/60 leading-relaxed max-w-xs">
+            <p className="mt-2 text-sm text-muted-foreground/90 leading-relaxed max-w-xs">
               Voice-first intelligence assessment. A panel of independent AIs. Evidence-verified.
             </p>
           </div>
 
           {/* Links */}
           <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase tracking-wider text-muted-foreground/40 mb-1"
+            <span className="text-xs uppercase tracking-wider text-muted-foreground/90 mb-1"
               style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem' }}>
               Platform
             </span>
@@ -346,15 +358,15 @@ export function PublicFooter() {
 
           {/* Trust & Legal */}
           <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase tracking-wider text-muted-foreground/40 mb-1"
+            <span className="text-xs uppercase tracking-wider text-muted-foreground/90 mb-1"
               style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem' }}>
               Trust & Security
             </span>
-            <span className="text-sm text-muted-foreground/60">Private & Encrypted</span>
-            <span className="text-sm text-muted-foreground/60">Bank-Grade Encryption</span>
-            <span className="text-sm text-muted-foreground/60 flex flex-col leading-tight">
+            <span className="text-sm text-muted-foreground/90">Private & Encrypted</span>
+            <span className="text-sm text-muted-foreground/90">Bank-Grade Encryption</span>
+            <span className="text-sm text-muted-foreground/90 flex flex-col leading-tight">
               7 Patents Pending
-              <span className="text-xs text-muted-foreground/35">Proprietary methodology</span>
+              <span className="text-xs text-muted-foreground/90">Proprietary methodology</span>
             </span>
             <Link href="/corrections">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Corrections Ledger</span>
@@ -369,18 +381,18 @@ export function PublicFooter() {
         </div>
 
         <div className="mt-8 pt-6 border-t border-border/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground/40">
+          <p className="text-xs text-muted-foreground/90">
             &copy; {new Date().getFullYear()} AQAL Intelligence. 7 Patents Pending &middot; Proprietary methodology.
           </p>
           <div className="flex items-center gap-4">
             <Link href="/terms">
-              <span className="text-xs text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-pointer">Terms</span>
+              <span className="text-xs text-muted-foreground/90 hover:text-muted-foreground transition-colors cursor-pointer">Terms</span>
             </Link>
             <Link href="/privacy">
-              <span className="text-xs text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-pointer">Privacy</span>
+              <span className="text-xs text-muted-foreground/90 hover:text-muted-foreground transition-colors cursor-pointer">Privacy</span>
             </Link>
             <Link href="/login">
-              <span className="text-xs text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-pointer">Sign In</span>
+              <span className="text-xs text-muted-foreground/90 hover:text-muted-foreground transition-colors cursor-pointer">Sign In</span>
             </Link>
           </div>
         </div>

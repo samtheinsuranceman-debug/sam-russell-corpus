@@ -321,7 +321,7 @@ function HeroSection() {
           {/* Right: The Dial (hero medallion) */}
           <div className="relative">
             <div className="absolute inset-[-6%] z-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 46%, rgba(224,198,140,0.14), transparent 62%)' }} />
-            <svg className="relative z-[1] w-full h-auto block overflow-visible" viewBox="0 0 620 620" role="img" aria-label="Sample AQAL profile: aggregate capability across 32 lines">
+            <svg className="relative z-[1] w-full h-auto block overflow-visible" viewBox="0 0 620 620" role="group" aria-label="Sample AQAL profile: aggregate capability across 32 lines — select any point to explore that line">
               <g style={{ opacity: mounted ? 1 : 0, transition: 'opacity 1000ms ease 80ms' }}>
                 <circle cx={CX} cy={CY} r={272} fill="none" stroke={CHAMPAGNE} strokeOpacity="0.30" strokeWidth="1" />
                 <circle cx={CX} cy={CY} r={250} fill="none" stroke={CHAMPAGNE} strokeOpacity="0.16" strokeWidth="1" />
@@ -1211,7 +1211,7 @@ function DialSection() {
           {/* SVG Dial */}
           <div className="relative">
             <div className="absolute inset-[-6%] z-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 46%, rgba(224,198,140,0.14), transparent 62%)' }} />
-            <svg className="relative z-[1] w-full h-auto block overflow-visible" viewBox="0 0 620 620" role="img" aria-label="Interactive dial of 32 intelligence lines">
+            <svg className="relative z-[1] w-full h-auto block overflow-visible" viewBox="0 0 620 620" role="group" aria-label="Interactive dial of 32 intelligence lines — select any line to explore it">
               <g style={{ opacity: 1 }}>
                 <circle cx={CX} cy={CY} r={272} fill="none" stroke={CHAMPAGNE} strokeOpacity="0.30" strokeWidth="1" />
                 <circle cx={CX} cy={CY} r={250} fill="none" stroke={CHAMPAGNE} strokeOpacity="0.16" strokeWidth="1" />

@@ -26,7 +26,7 @@ export type Myth = {
 export const MYTH_VERDICT_META: Record<MythVerdict, { color: string; note: string }> = {
   DEBUNKED: { color: "#E2604A", note: "tested properly, failed decisively" },
   "NO EVIDENCE": { color: "#D08B6C", note: "never produced controlled evidence for its claims" },
-  HARMFUL: { color: "#C74634", note: "documented harm — worse than doing nothing" },
+  HARMFUL: { color: "#EE6A4F", note: "documented harm — worse than doing nothing" },
   "REPLICATION FAILED": { color: "#E0C68C", note: "a famous finding that would not replicate" },
   OVERCLAIMED: { color: "#CBAA6A", note: "a real kernel, sold far beyond its evidence" },
 };

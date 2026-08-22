@@ -546,3 +546,13 @@
   outline-offset: 2px;
   border-radius: var(--radius);
 }
+
+
+/* A11y: links inside body text must be distinguishable without color
+   alone (WCAG 1.4.1 / axe link-in-text-block). Nav and card links are
+   outside <p>, so this targets exactly the inline-prose case. */
+p a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
