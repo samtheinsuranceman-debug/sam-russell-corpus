@@ -1,11 +1,11 @@
 86c9fc7287a4980e6133dad0b12c15caea3013386b7efe1be3be71a5b6a07dd4  ./client/index.html
 9c45f0473b1d9f518026df8a94d5b3f1d97aa75d85049e447beef3256c17edbc  ./client/public/founder-sam-russell.jpg
 c4c18d53c938cacf6438e600a07d7baebe5179655da710248f8c3cb9ae66cd89  ./client/public/og-cover.png
-430cd2e35c1c965b349f44b19612a61f80d5b9cadaee9647e131b5632285514f  ./client/src/App.tsx
+66a9d0470205acb706d15f36f8e3d72e417de89a9b561fc63f5e2c6dc35262b1  ./client/src/App.tsx
 b6b7d8d39e70f4785844b3e6199c99969e2810a41a7c3256096af79f9365de2f  ./client/src/components/LineInfoModal.tsx
 02caacbf3030dee29708a71f061d2cf104f9c52d8d7e52cde14dc750098d7217  ./client/src/components/PanelTrust.tsx
 15c42902c4b3ba097452d7dee481c4706927d8d1563a0ec2e048e78a6407f032  ./client/src/components/PublicLayout.tsx
-abcf4060c09ffdde69a2d0a7d15b090d17d081cacd9de459bfda6d5c361f929b  ./client/src/components/RouteMeta.tsx
+e3f492fab4055d3a1bc0208b60dbe2392633f00cd2920e60f20a354278c38329  ./client/src/components/RouteMeta.tsx
 648fdb5485538e3816179e81565cbe27053d6d460263076279a19e9fe23355ce  ./client/src/components/SupportWidget.tsx
 c90637844bf80b197c9342c736c28dd60cb430ac4092f491a74fa63aa6333314  ./client/src/lib/lineDeepDives.ts
 74544b5572c44658e72bc7b644eaf68725b346079250a1517bd43ef19c392554  ./client/src/lib/lineEncyclopedia.ts
@@ -15,11 +15,15 @@ c90637844bf80b197c9342c736c28dd60cb430ac4092f491a74fa63aa6333314  ./client/src/l
 af7808f66f817e7a91a5d2b05f4afb06ea8a127894cc339f698c7d25082ae2fd  ./client/src/pages/About.tsx
 53fb4a0d2fa2688c994ba850222432f7807438fbe6456e0c83f38cb859d02baf  ./client/src/pages/Assessment.tsx
 88945d98eb231480df04dd0a1fe9d8cc778daae23af6d5342ab5183b7eb4908d  ./client/src/pages/BlackBox.tsx
+f3ae391e823b1a6c048a1b022de90c12b49a800a6e62a5fbfbb8a7ae93714c8d  ./client/src/pages/BuildDetail.tsx
+9cd8820319440fd3483dc8ac1b62c21c5d8ec3831268a16b87123220104ab238  ./client/src/pages/CompareDetail.tsx
 2a1207f60a81078332ff05c752cb56fe6283dffbd7c9c0f0af276a0126172d75  ./client/src/pages/Corrections.tsx
+00f8cd86b43ab386049e45c2ce50d4a12b02c3e42bfc2f8012d66911d8111ad6  ./client/src/pages/GiftLine.tsx
+03f29533b5c940069a11a6d19a9b6266a23d9bbe0efa7bb866cf58baafda86de  ./client/src/pages/GoalDetail.tsx
 5bbbb3157b31f3feae0894eefe31f26f92738aaef5856141871697a75fae764f  ./client/src/pages/Goals.tsx
 77788973bfdd44c58aa8a811b86e8b62e1d5ac0559c52b245b423f6e66241ada  ./client/src/pages/Help.tsx
 e0b38710ab37ad8ebeff94be239e30cf077589763df065ef14f28c5f3331a79e  ./client/src/pages/Home.tsx
-ed51be6419ad753eee208f3e63f1bcd5e404329495d69a5124d4ca7edf64f7f9  ./client/src/pages/LineDetail.tsx
+2104ca0207e3744a4990774f654446a9c367d9af303a0ef993963d5f5a1b0cae  ./client/src/pages/LineDetail.tsx
 e2b070df32dea957f4b46e47744216a532e936ea10db471bf33cbabb640e7a76  ./client/src/pages/Lines.tsx
 534f97c40b3cb84b8073fe710d96ab6c6c8f80a11b242736e353e6caa8cf09e9  ./client/src/pages/Login.tsx
 78273e8dbb092b91618a912ba9c7a3eb07d94098a26e581547b935d972c300a9  ./client/src/pages/Messages.tsx
@@ -27,7 +31,7 @@ da26bbe55038b4af310561d4582d9f812ec941b10c0c364cf894669ca08c9be0  ./client/src/p
 4285047f4505dd8b83a3213420022054ac57c92f368b2ed2b8cc0982ed572106  ./client/src/pages/Pairs.tsx
 7ea4cc4759d88a56fa2eed1982050ab256c333a76b8e062900fae2df7b57f0e8  ./client/src/pages/Portal.tsx
 25215ad49e6ec145514627e2bd7668b8ac0fc508739820e019163ac43196bb8d  ./client/src/pages/PracticeDetail.tsx
-70dcacf40687071de0b06a659507d19783dbb3338afcef8a16a49ade2a377104  ./client/src/pages/Practices.tsx
+6b4297fbcb2e7851314ba96964a610b48801d4853e57153a9ca4662df04e4f27  ./client/src/pages/Practices.tsx
 0fca15a089f59c212525ff029347034b91540a33ea5684dcffdf84e0696e87bb  ./client/src/pages/Pricing.tsx
 85094885fef4e6772cf9a157bb5920d4379388028adcabf5fb527e4cb081f2c4  ./client/src/pages/Profile.tsx
 6f6c09c3ff8b27c285476b73ee67048f2070b005f0b76d9f1b0c3676e4551600  ./client/src/pages/Protocols.tsx
@@ -36,8 +40,9 @@ da26bbe55038b4af310561d4582d9f812ec941b10c0c364cf894669ca08c9be0  ./client/src/p
 237776d775d17c11261340b27bb710b14ae1a8b4eea1d62107018b75948fb3d6  ./client/src/pages/Runbook.tsx
 15cc70827f0de8af3ce93ec71940cc6a8d8bacdbed8df32c3a33cafb1dd71d2d  ./client/src/pages/SampleReport.tsx
 3658f6309cf0bef9f744bc3b9b9fc73b584a0f9338314f5f27e069b180b656b1  ./client/src/pages/Terms.tsx
-61a3c7e50b2e101fff7f89603d6f18fa58477ec38c723b499406f73ce5b897b6  ./client/src/pages/TherapyDetail.tsx
+796df9333b560e187433da6ec32a267559703c6a983c38aa79ae241788c35db7  ./client/src/pages/TherapyDetail.tsx
 0a330beb015f5426c86a9f38f9e0fe8c0ee22b44b08e058cf8c176806c5a2631  ./client/src/pages/VerifyEmail.tsx
+bec04bb2b4e21fdb5271e6606f8d8d2205698208d4835e4340264967a81b58cd  ./client/src/pages/WeakLine.tsx
 07d5dc8a96ce6a934392336f496152ec0e917691d2a1fe6e7a792410aafd0830  ./client/src/pages/WelcomeBack.tsx
 5515e028ce18be6b69e5a42d2b91fcc79a0f130892fb14534fe35c7a1374c611  ./client/src/pages/WhichArchetype.tsx
 7468a0af753690c95ea39a42210142b03224439aadb1eb844c9c604508245d81  ./drizzle/schema.ts
@@ -51,4 +56,4 @@ ea9033f4553fb9a3fa6528c58930960955ac1e732a185ad9650dc6e1285e730f  ./server/platf
 e1f4a4e5872a8274d1a1bc3ff30dd0a32cd9b2f259c141892f49d841077c1302  ./server/platform/llm.ts
 2d9a36c9f4772c32ac77e1d9823492717d5ac64f34a20acfdf4a1d3d6ef10adb  ./server/platform/panel.ts
 e1e565157eb3d01d5469e9c446d8e2410def75dc6ddae4808142186f31fe25cd  ./server/routers.ts
-9ddae678d68d2789679f342a754113438757bb74d958208c212f5f040f450240  ./shared/seo.ts
+b0b80088e0455125bd1652d581737f86c5f8c56573aa01cc4c390e02a1a568e6  ./shared/seo.ts

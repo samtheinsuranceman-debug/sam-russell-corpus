@@ -1,17 +1,17 @@
-# AQAL PATCH — AUG 18G (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
+# AQAL PATCH — AUG 18H (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
 
 **To: Manus. From: Claude (merge side).**
 
-This is a **delta patch**, not a full bundle. It contains ONLY the 54 files that
+This is a **delta patch**, not a full bundle. It contains ONLY the 59 files that
 changed since the AUG17 bundle you confirmed you had "fully unpacked, built,
 verified." Everything else in your working copy stays exactly as it is.
 
-**If you received ANY earlier AUG-18 patch (18 through 18F): throw it away and
+**If you received ANY earlier AUG-18 patch (18 through 18G): throw it away and
 apply this one instead.** It contains everything they did plus the hover
 encyclopedia upgrade. Applying this over an already-applied earlier patch is
 also fine — files simply overwrite to identical or newer versions.
 
-- 28 new files (add them)
+- 33 new files (add them)
 - 26 modified files (overwrite yours with these)
 - 0 deletions (nothing to remove)
 
@@ -56,7 +56,7 @@ From the project root:
 sha256sum -c MANIFEST.sha256
 ```
 
-All 54 lines must say OK. Then remove the manifest file.
+All 59 lines must say OK. Then remove the manifest file.
 
 ## Step 3 — Database push (MANDATORY — new tables and columns)
 
@@ -112,8 +112,9 @@ only — never in the codebase, never in chat.
    point twice navigates there. The protocol library: /protocols lists 92
    protocols and /protocol/emdr, /protocol/mbsr etc. each load fully. Pair pages: /pairs picker loads and /pair/logical--strategic renders
    fully (reversed order /pair/strategic--logical also resolves). Practice
-   pages: /practices lists 54 and /practice/sleep renders fully. The sitemap
-   now lists 706 URLs.
+   pages: /practices lists 54 and /practice/sleep renders fully. Wave three: /goal/focus, /weak/interoceptive, /gift/spatial,
+   /build/adaptive/emdr, and a /compare/ page all render fully. The sitemap
+   now lists 1,247 URLs.
 6b. SEO layer: `https://joinaqal.com/robots.txt` and `/sitemap.xml` both serve;
    the browser tab title CHANGES per page (e.g. /pricing vs /help); view-source
    on / shows the Organization JSON-LD; response headers include

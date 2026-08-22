@@ -1,6 +1,6 @@
-# WHAT'S NEW — AUG 18G delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18H delta (since the AUG17 bundle)
 
-Twelve commits, 54 files. Feature-by-feature, with the files each one touches.
+Thirteen commits, 59 files. Feature-by-feature, with the files each one touches.
 
 ---
 
@@ -256,6 +256,29 @@ Sitemap: 154 URLs.
   `Practices.tsx`, `client/src/lib/linePairs.ts`;
   **MOD** `shared/seo.ts`, `RouteMeta.tsx`, `LineDetail.tsx`,
   `PublicLayout.tsx`, `App.tsx`
+
+## 17. Wave three: 541 more pages — sitemap 1,247 (AUG 18H)
+
+Five new families, all composed from real held data:
+
+- **/compare/<a>--vs--<b>** (225) — every pair of protocols both PRIMARY on
+  a shared line: side-by-side dose/durability, each one's evidence on the
+  shared capacity, honest choose-which-when logic, explicit
+  not-medical-advice.
+- **/goal/<keyword>** (96) — goal keywords carried by 2+ keystone practices
+  (focus, stress, discipline…): evidence-sorted practice cards + the lines
+  underneath.
+- **/weak/<line>** (32) — signs, costs, and the repair plan per line.
+- **/gift/<line>** (32) — signs you're gifted, why school missed it, the
+  shadow of unexamined strength, best pairings.
+- **/build/<line>/<therapy>** (156) — one page per therapy-map entry with
+  that entry's own capacity, citation + DOI, finding, dose, alternatives.
+- Cross-linking web extended: line pages → weak/gift; protocol pages →
+  comparisons + capacity pages; practices index → goal chips.
+- **NEW** `CompareDetail.tsx`, `GoalDetail.tsx`, `WeakLine.tsx`,
+  `GiftLine.tsx`, `BuildDetail.tsx`; **MOD** `shared/seo.ts`,
+  `RouteMeta.tsx`, `LineDetail.tsx`, `TherapyDetail.tsx`,
+  `Practices.tsx`, `App.tsx`
 
 ---
 
