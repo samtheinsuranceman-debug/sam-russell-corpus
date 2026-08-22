@@ -1,12 +1,12 @@
-# AQAL PATCH — AUG 18O (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
+# AQAL PATCH — AUG 18P (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
 
 **To: Manus. From: Claude (merge side).**
 
-This is a **delta patch**, not a full bundle. It contains ONLY the 76 files that
+This is a **delta patch**, not a full bundle. It contains ONLY the 79 files that
 changed since the AUG17 bundle you confirmed you had "fully unpacked, built,
 verified." Everything else in your working copy stays exactly as it is.
 
-**If you received ANY earlier AUG-18 patch (18 through 18N): throw it away and
+**If you received ANY earlier AUG-18 patch (18 through 18O): throw it away and
 apply this one instead.** It contains everything they did plus the therapy
 library expansion to 156 protocols, the Myth Museum expansion to 191 sourced
 exhibits, and the four new browse families — capacities, kinds, wings,
@@ -14,7 +14,7 @@ verdicts (2,466 public pages). Applying this over an already-applied earlier pat
 also fine — files simply overwrite to identical or newer versions.
 
 - 48 new files (add them)
-- 28 modified files (overwrite yours with these)
+- 31 modified files (overwrite yours with these)
 - 0 deletions (nothing to remove)
 
 The full 9MB AQAL-DEPLOY-AUG18.zip remains the fallback if anything below
@@ -58,7 +58,7 @@ From the project root:
 sha256sum -c MANIFEST.sha256
 ```
 
-All 76 lines must say OK. Then remove the manifest file.
+All 79 lines must say OK. Then remove the manifest file.
 
 ## Step 3 — Database push (MANDATORY — new tables and columns)
 
@@ -75,7 +75,7 @@ This patch changes `drizzle/schema.ts`:
 So the deploy sequence is:
 
 ```
-backup the DB  →  pnpm install (no new deps, but run it)  →  pnpm db:push  →  pnpm build
+backup the DB  →  pnpm install (REQUIRED in 18P: drizzle-orm upgraded to 0.45.2 for a HIGH SQL-injection advisory, plus security overrides for mermaid/dompurify/body-parser — package.json and pnpm-lock.yaml both changed)  →  pnpm db:push  →  pnpm build
 ```
 
 `db:push` is the true `drizzle-kit push` (schema diff, no journal replay) — the
@@ -152,6 +152,12 @@ only — never in the codebase, never in chat.
    view-source on /protocol/emdr after JS loads shows a BreadcrumbList
    JSON-LD script (id ld-breadcrumb); the header Explore menu includes
    The Hidden Axes entry.
+6g. New in 18P: pinch-zoom works on mobile (viewport no longer capped);
+   Tab from the top of any public page reveals a "Skip to content"
+   button; the HARMFUL verdict chips are a brighter red; links inside
+   paragraphs are underlined; `pnpm audit --prod` reports ZERO known
+   vulnerabilities (was 9, including a high-severity drizzle-orm
+   SQL-injection advisory).
 7. Screenshot `/launch-check` back to Sam.
 
 See `WHATS_NEW.md` for the feature-by-feature description of what changed.

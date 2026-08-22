@@ -1,6 +1,33 @@
-# WHAT'S NEW — AUG 18O delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18P delta (since the AUG17 bundle)
 
-Twenty commits, 76 files. Feature-by-feature, with the files each one touches.
+Twenty-one commits, 79 files. Feature-by-feature, with the files each one touches.
+
+---
+
+## 00000. NEW IN 18P — WCAG AA accessibility, zero vulnerabilities, link audit
+
+Accessibility: an axe-core WCAG 2.0 A/AA scan across every page family
+now reports ZERO violations. Fixed: pinch-zoom re-enabled (viewport tag
+no longer caps scale), footer muted-text contrast raised past 4.5:1,
+the HARMFUL verdict red brightened to 6.2:1, both interactive dials
+given role=group (their focusable points were illegal under role=img),
+inline body-text links underlined (WCAG 1.4.1), and a skip-to-content
+link added to the header on every public page.
+
+Security: pnpm audit had 9 known vulnerabilities including a HIGH
+drizzle-orm SQL-injection advisory. drizzle-orm upgraded 0.44.7 ->
+0.45.2; mermaid, dompurify, and body-parser forced to patched versions
+via pnpm overrides. Audit now: ZERO known vulnerabilities. THIS IS WHY
+pnpm install IS MANDATORY FOR THIS PATCH.
+
+Link integrity: 573 distinct internal links harvested from 33 rendered
+pages across every family, verified against the sitemap and route
+resolvers — zero broken links.
+
+- MOD package.json, pnpm-lock.yaml (dependency security)
+- MOD client/index.html (viewport), client/src/index.css (link
+  underlines), components/PublicLayout.tsx (contrast + skip link),
+  pages/Home.tsx (dial roles), lib/mythMuseum.ts (HARMFUL color)
 
 ---
 
