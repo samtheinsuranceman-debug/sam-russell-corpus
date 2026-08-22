@@ -71,6 +71,11 @@ const PairDetail = lazy(() => import("./pages/PairDetail"));
 const Pairs = lazy(() => import("./pages/Pairs"));
 const PracticeDetail = lazy(() => import("./pages/PracticeDetail"));
 const Practices = lazy(() => import("./pages/Practices"));
+const CompareDetail = lazy(() => import("./pages/CompareDetail"));
+const GoalDetail = lazy(() => import("./pages/GoalDetail"));
+const WeakLine = lazy(() => import("./pages/WeakLine"));
+const GiftLine = lazy(() => import("./pages/GiftLine"));
+const BuildDetail = lazy(() => import("./pages/BuildDetail"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const BlackBox = lazy(() => import("./pages/BlackBox"));
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
@@ -503,6 +508,31 @@ function Router() {
         <Route path={"/practices"}>
           <PageErrorBoundary pageName="Practices">
             <Suspense fallback={<PageSkeleton />}><Practices /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/compare/:slug"}>
+          <PageErrorBoundary pageName="CompareDetail">
+            <Suspense fallback={<PageSkeleton />}><CompareDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/goal/:keyword"}>
+          <PageErrorBoundary pageName="GoalDetail">
+            <Suspense fallback={<PageSkeleton />}><GoalDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/weak/:slug"}>
+          <PageErrorBoundary pageName="WeakLine">
+            <Suspense fallback={<PageSkeleton />}><WeakLine /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/gift/:slug"}>
+          <PageErrorBoundary pageName="GiftLine">
+            <Suspense fallback={<PageSkeleton />}><GiftLine /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/build/:line/:therapy"}>
+          <PageErrorBoundary pageName="BuildDetail">
+            <Suspense fallback={<PageSkeleton />}><BuildDetail /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/runbook"}>

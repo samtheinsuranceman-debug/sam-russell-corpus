@@ -124,6 +124,11 @@ export default function LineDetail() {
           </span>
         </div>
 
+        <p style={{ ...mono, fontSize: "10.5px", color: MUTED, margin: "-24px 0 28px" }}>
+          deep dives: <Link href={`/weak/${lineSlug(name)}`} style={{ color: CHAMPAGNE }}>the weak {name} line</Link> ·{" "}
+          <Link href={`/gift/${lineSlug(name)}`} style={{ color: CHAMPAGNE }}>signs you're gifted here</Link>
+        </p>
+
         <VideoSlot line={name} />
 
         {/* What it is */}

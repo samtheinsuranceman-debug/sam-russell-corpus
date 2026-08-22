@@ -6,6 +6,7 @@
 import { Link } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
+import { GOAL_KEYWORDS, goalSlug } from "@shared/seo";
 
 const INK = "#141009";
 const CREAM = "#F1EADB";
@@ -39,6 +40,18 @@ export default function Practices() {
         <p style={{ ...mono, fontSize: "10.5px", color: MUTED, marginBottom: "28px" }}>
           also see: <Link href="/protocols" style={{ color: CHAMPAGNE }}>the 92 clinical protocols</Link> · <Link href="/pairs" style={{ color: CHAMPAGNE }}>the 496 line pairings</Link>
         </p>
+
+        <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase", color: JADE, marginBottom: "8px" }}>
+          Or start from your goal
+        </p>
+        <div className="flex gap-1.5 flex-wrap mb-8">
+          {GOAL_KEYWORDS.slice(0, 28).map((k) => (
+            <Link key={k} href={`/goal/${goalSlug(k)}`}
+              style={{ ...mono, fontSize: "10px", letterSpacing: "0.05em", padding: "6px 11px", borderRadius: "999px", color: CREAM2, border: `1px solid ${LINE_C}`, textDecoration: "none" }}>
+              {k}
+            </Link>
+          ))}
+        </div>
 
         <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}>
           {KEYSTONE_PRACTICES.map((p) => (

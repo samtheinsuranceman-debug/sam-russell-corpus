@@ -8,7 +8,7 @@
 // ============================================================
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { PAGE_META, NOINDEX_PATHS, SITE_NAME, canonicalUrl, lineFromSlug, therapyFromSlug, therapyDisplay, pairFromSlug } from "@shared/seo";
+import { PAGE_META, NOINDEX_PATHS, SITE_NAME, canonicalUrl, lineFromSlug, therapyFromSlug, therapyDisplay, pairFromSlug, compareFromSlug, goalFromSlug, engineLineFromSlug } from "@shared/seo";
 import { LINE_ENCYCLOPEDIA } from "@/lib/lineEncyclopedia";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
@@ -98,6 +98,53 @@ export default function RouteMeta() {
         meta = {
           title: `${pr.name} — Prescription, Evidence & Horizon — AQAL`,
           description: pr.prescription.slice(0, 158),
+        };
+      }
+    }
+    // /compare/:a--vs--:b — protocol comparison pages.
+    if (!meta && path.startsWith("/compare/")) {
+      const c = compareFromSlug(path.slice("/compare/".length));
+      if (c) {
+        const [ta, tb] = c.map((n) => therapyDisplay(n).split(" (")[0]);
+        meta = {
+          title: `${ta} vs ${tb} — Honest Comparison — AQAL`,
+          description: `${ta} and ${tb} target the same capacity. Dose, durability, evidence, and how to choose — compared honestly, estimates never guarantees.`.slice(0, 158),
+        };
+      }
+    }
+    // /goal/:keyword — goal-matched practice pages.
+    if (!meta && path.startsWith("/goal/")) {
+      const g = goalFromSlug(path.slice("/goal/".length));
+      if (g) {
+        const cap = g.charAt(0).toUpperCase() + g.slice(1);
+        meta = {
+          title: `${cap} — The Evidence-Tiered Practices — AQAL`,
+          description: `The keystone practices mapped to ${g}: concrete prescriptions, honest evidence tiers, and realistic time horizons — no hacks, no miracles.`.slice(0, 158),
+        };
+      }
+    }
+    // /weak/:slug and /gift/:slug — per-line problem/gift pages.
+    if (!meta && (path.startsWith("/weak/") || path.startsWith("/gift/"))) {
+      const weak = path.startsWith("/weak/");
+      const name = lineFromSlug(path.slice(6));
+      const enc = name ? LINE_ENCYCLOPEDIA[name] : undefined;
+      if (name && enc) {
+        meta = weak
+          ? { title: `The Weak ${name} Line — Signs, Costs & Repair — AQAL`,
+              description: `What a weak ${name} line looks like from inside, what it quietly costs, and the evidence-backed repair plan.`.slice(0, 158) }
+          : { title: `Signs You're Gifted on the ${name} Line — AQAL`,
+              description: `The signs of a strong ${name} line, why school never caught it, what it's worth deployed on purpose, and its best pairings.`.slice(0, 158) };
+      }
+    }
+    // /build/:line/:therapy — capacity-building entry pages.
+    if (!meta && path.startsWith("/build/")) {
+      const segs = path.slice("/build/".length).split("/");
+      const l = engineLineFromSlug(segs[0] ?? "");
+      const t = therapyFromSlug(segs[1] ?? "");
+      if (l && t) {
+        meta = {
+          title: `${therapyDisplay(t).split(" (")[0]} for the ${l} Capacity — AQAL`,
+          description: `Building ${l} with ${therapyDisplay(t).split(" (")[0]}: the exact capacity developed, the peer-reviewed evidence, the dose, and the alternatives.`.slice(0, 158),
         };
       }
     }

@@ -12,7 +12,7 @@
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { THERAPY_LINE_MAP, THERAPY_THIN_LINES, type TherapyLineEntry } from "@shared/therapyLineMap";
-import { THERAPY_NAMES, therapySlug, therapyFromSlug, therapyDisplay, LINE_NAMES, lineSlug } from "@shared/seo";
+import { THERAPY_NAMES, therapySlug, therapyFromSlug, therapyDisplay, LINE_NAMES, lineSlug, COMPARE_PAIRS, compareSlug, engineLineSlug } from "@shared/seo";
 import { kindFor, KIND_PROFILES, THERAPY_KIND } from "@/lib/therapyKinds";
 import NotFound from "@/pages/NotFound";
 
@@ -211,6 +211,35 @@ export default function TherapyDetail() {
           Citations as published in the mapped literature; independent DOI-level verification is in progress and posts
           to the <Link href="/corrections" style={{ color: CHAMPAGNE }}>Corrections Ledger</Link>.
         </p>
+
+        {/* Comparisons + capacity pages */}
+        {(() => {
+          const comps = COMPARE_PAIRS.filter(([x, y]) => x === name || y === name).slice(0, 4);
+          return (comps.length > 0 || entries.length > 0) ? (
+            <div className="mb-8">
+              {comps.length > 0 && (
+                <>
+                  <Label>Compared head-to-head</Label>
+                  <div className="flex items-center gap-3 flex-wrap mb-4">
+                    {comps.map(([x, y]) => (
+                      <Link key={x + y} href={`/compare/${compareSlug(x, y)}`} style={{ ...mono, fontSize: "10.5px", color: CHAMPAGNE }}>
+                        {therapyDisplay(x).split(" (")[0]} vs {therapyDisplay(y).split(" (")[0]}
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              )}
+              <Label>Capacity deep-dives</Label>
+              <div className="flex items-center gap-3 flex-wrap">
+                {entries.map((e) => (
+                  <Link key={e.line} href={`/build/${engineLineSlug(e.line)}/${therapySlug(name)}`} style={{ ...mono, fontSize: "10.5px", color: CHAMPAGNE }}>
+                    {display} for {e.line} →
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : null;
+        })()}
 
         {/* The honest estimate */}
         <div className="rounded-2xl p-6 mb-10" style={{ border: `1px solid ${CHAMPAGNE}44`, background: "rgba(224,198,140,0.05)" }}>

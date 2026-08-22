@@ -260,12 +260,80 @@ import { KEYSTONE_PRACTICES } from "./keystonePractices";
 
 export const PRACTICE_IDS: string[] = KEYSTONE_PRACTICES.map((p) => p.id);
 
+// ── Wave three: comparisons, goals, weak/gift, and build pages ──────────────
+import { KEYSTONE_PRACTICES as KP } from "./keystonePractices";
+
+// Protocol comparisons: every pair of protocols that are BOTH mapped PRIMARY
+// on at least one shared line — genuine "which of these two for this
+// capacity" pages. Canonical slug order: alphabetical by therapy slug.
+export const COMPARE_PAIRS: [string, string][] = (() => {
+  const byLine: Record<string, string[]> = {};
+  for (const e of THERAPY_LINE_MAP) if (e.role === "PRIMARY") (byLine[e.line] ??= []).push(e.therapy);
+  const seen = new Set<string>();
+  const out: [string, string][] = [];
+  for (const line of Object.keys(byLine)) {
+    const ts = Array.from(new Set(byLine[line])).sort((x, y) => therapySlug(x) < therapySlug(y) ? -1 : 1);
+    for (let i = 0; i < ts.length; i++) for (let j = i + 1; j < ts.length; j++) {
+      const key = therapySlug(ts[i]) + "||" + therapySlug(ts[j]);
+      if (!seen.has(key)) { seen.add(key); out.push([ts[i], ts[j]]); }
+    }
+  }
+  return out;
+})();
+
+export function compareSlug(a: string, b: string): string {
+  const [x, y] = therapySlug(a) < therapySlug(b) ? [a, b] : [b, a];
+  return `${therapySlug(x)}--vs--${therapySlug(y)}`;
+}
+
+export function compareFromSlug(slug: string): [string, string] | undefined {
+  const parts = slug.split("--vs--");
+  if (parts.length !== 2) return undefined;
+  const a = therapyFromSlug(parts[0]), b = therapyFromSlug(parts[1]);
+  if (!a || !b || a === b) return undefined;
+  return COMPARE_PAIRS.find(([x, y]) => compareSlug(x, y) === compareSlug(a, b)) ? (therapySlug(a) < therapySlug(b) ? [a, b] : [b, a]) : undefined;
+}
+
+// Goal pages: keystone goalKeywords carried by at least two practices.
+export const GOAL_KEYWORDS: string[] = (() => {
+  const counts: Record<string, number> = {};
+  for (const p of KP) for (const k of (p.goalKeywords ?? [])) counts[k] = (counts[k] ?? 0) + 1;
+  return Object.keys(counts).filter((k) => counts[k] >= 2).sort();
+})();
+
+export function goalSlug(k: string): string {
+  return k.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export function goalFromSlug(slug: string): string | undefined {
+  return GOAL_KEYWORDS.find((k) => goalSlug(k) === slug);
+}
+
+// Build pages: one per (line, therapy) mapping entry — 156, engine-line slugs.
+export function engineLineSlug(line: string): string {
+  return line.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export const BUILD_ENTRIES: { line: string; therapy: string }[] =
+  THERAPY_LINE_MAP.map((e) => ({ line: e.line, therapy: e.therapy }));
+
+export const ENGINE_LINES: string[] = Array.from(new Set(THERAPY_LINE_MAP.map((e) => e.line))).sort();
+
+export function engineLineFromSlug(slug: string): string | undefined {
+  return ENGINE_LINES.find((l) => engineLineSlug(l) === slug);
+}
+
 export const SITEMAP_PATHS = [
   ...Object.keys(PAGE_META),
   ...LINE_NAMES.map((n) => `/line/${lineSlug(n)}`),
   ...THERAPY_NAMES.map((n) => `/protocol/${therapySlug(n)}`),
   ...PRACTICE_IDS.map((id) => `/practice/${id}`),
   ...PAIR_SLUGS.map((s) => `/pair/${s}`),
+  ...COMPARE_PAIRS.map(([a, b]) => `/compare/${compareSlug(a, b)}`),
+  ...GOAL_KEYWORDS.map((k) => `/goal/${goalSlug(k)}`),
+  ...LINE_NAMES.map((n) => `/weak/${lineSlug(n)}`),
+  ...LINE_NAMES.map((n) => `/gift/${lineSlug(n)}`),
+  ...BUILD_ENTRIES.map((e) => `/build/${engineLineSlug(e.line)}/${therapySlug(e.therapy)}`),
 ];
 
 export function canonicalUrl(path: string): string {
