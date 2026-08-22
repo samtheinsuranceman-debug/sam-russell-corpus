@@ -1,6 +1,6 @@
 // ============================================================
 // THE STANDING GUARANTEE, ENFORCED — every sitemap URL carries a
-// unique short description under 69 characters. This test fails
+// unique short description under 60 characters. This test fails
 // the build if a future page family forgets its branch in
 // pageShorts.ts, which is what makes the upgrade automatic.
 // ============================================================
@@ -14,10 +14,10 @@ describe("page short descriptions", () => {
     expect(missing).toEqual([]);
   });
 
-  it("every one is under 69 characters", () => {
+  it("every one is under 60 characters", () => {
     const tooLong = SITEMAP_PATHS
       .map((p) => [p, shortFor(p) ?? ""] as const)
-      .filter(([, s]) => s.length >= 69);
+      .filter(([, s]) => s.length >= 60);
     expect(tooLong).toEqual([]);
   });
 

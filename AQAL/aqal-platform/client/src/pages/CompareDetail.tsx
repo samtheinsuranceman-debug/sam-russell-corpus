@@ -36,12 +36,19 @@ export default function CompareDetail() {
   const da = therapyDisplay(a).split(" (")[0], db = therapyDisplay(b).split(" (")[0];
   const ka = kindFor(a), kb = kindFor(b);
   const kindA = THERAPY_KIND[a] ?? "skill", kindB = THERAPY_KIND[b] ?? "skill";
-  const sharedLines = Array.from(new Set(
-    THERAPY_LINE_MAP.filter((e) => e.therapy === a && e.role === "PRIMARY").map((e) => e.line)
-  )).filter((l) => THERAPY_LINE_MAP.some((e) => e.therapy === b && e.line === l && e.role === "PRIMARY"));
+  const linesA = new Set(THERAPY_LINE_MAP.filter((e) => e.therapy === a).map((e) => e.line));
+  const sharedLines = Array.from(new Set(THERAPY_LINE_MAP.filter((e) => e.therapy === b).map((e) => e.line)))
+    .filter((l) => linesA.has(l))
+    .filter((l) => THERAPY_LINE_MAP.some((e) => e.line === l && e.role === "PRIMARY" && (e.therapy === a || e.therapy === b)))
+    .sort((x, y) => {
+      const primaries = (l: string) => THERAPY_LINE_MAP.filter((e) => e.line === l && e.role === "PRIMARY" && (e.therapy === a || e.therapy === b)).length;
+      return primaries(y) - primaries(x);
+    });
   if (sharedLines.length === 0) return <NotFound />;
   const entryA = THERAPY_LINE_MAP.find((e) => e.therapy === a && e.line === sharedLines[0])!;
   const entryB = THERAPY_LINE_MAP.find((e) => e.therapy === b && e.line === sharedLines[0])!;
+  const bothPrimary = entryA.role === "PRIMARY" && entryB.role === "PRIMARY";
+  const roleWord = (r: string) => (r === "PRIMARY" ? "PRIMARY — targets it directly" : r === "SECONDARY" ? "SECONDARY — lifts it as a side effect" : "ADJUNCT — supportive alongside a primary");
 
   const practA = PRACTITIONER_KINDS.has(kindA), practB = PRACTITIONER_KINDS.has(kindB);
   const chooseLogic: string[] = [];
@@ -53,6 +60,10 @@ export default function CompareDetail() {
     chooseLogic.push(`Both run through qualified practitioners — availability and personal fit with the clinician often decide more than the modality does, which the outcome literature keeps confirming.`);
   } else {
     chooseLogic.push(`Both are self-run protocols — the honest tiebreaker is adherence: the one you will actually still be doing in week six is the better protocol for you, whatever the effect sizes say.`);
+  }
+  if (!bothPrimary) {
+    const [prim, sec] = entryA.role === "PRIMARY" ? [da, db] : [db, da];
+    chooseLogic.push(`On this specific capacity the mapping is asymmetric: ${prim} treats it as the direct target; ${sec} lifts it as a documented side effect. If this line is your gating weakness, the direct road usually earns first position — the supporting road stacks beautifully on top, or stands in when the primary isn't accessible.`);
   }
   if (kindA !== kindB) {
     chooseLogic.push(`They work through different channels — ${KIND_PROFILES[kindA].label.toLowerCase()} versus ${KIND_PROFILES[kindB].label.toLowerCase()}. Different channel, same target capacity: when one has failed you before, the other is the rational next attempt, not more of the same.`);
@@ -77,7 +88,9 @@ export default function CompareDetail() {
           {da} vs {db}
         </h1>
         <p style={{ fontSize: "15px", lineHeight: 1.7, color: CREAM2, margin: "0 0 8px" }}>
-          Both are mapped PRIMARY for the same capacity — {" "}
+          {bothPrimary
+            ? <>Both are mapped PRIMARY for the same capacity — </>
+            : <>Two roads to one capacity — {da}: {roleWord(entryA.role).toLowerCase()}; {db}: {roleWord(entryB.role).toLowerCase()} — </>}
           <b style={{ color: CREAM }}>{entryA.capacity.charAt(0).toLowerCase() + entryA.capacity.slice(1)}</b>
           {" "}on the {lineName(sharedLines[0])} line{sharedLines.length > 1 ? <> (and they overlap on {sharedLines.length - 1} more)</> : null}.
           Which road fits you is a real question with a real answer — here is the honest comparison.
