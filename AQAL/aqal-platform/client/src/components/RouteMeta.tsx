@@ -13,6 +13,7 @@ import { LINE_ENCYCLOPEDIA } from "@/lib/lineEncyclopedia";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
 import { LINE_ROLE } from "@/lib/linePairs";
+import { shortFor } from "@/lib/pageShorts";
 
 function setMeta(name: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
@@ -67,7 +68,7 @@ export default function RouteMeta() {
 
   useEffect(() => {
     const path = location === "" ? "/" : location;
-    let meta = PAGE_META[path];
+    let meta: { title: string; description: string } | undefined = PAGE_META[path];
     // /line/:slug pages get generated meta from the encyclopedia.
     if (!meta && path.startsWith("/line/")) {
       const name = lineFromSlug(path.slice("/line/".length));
@@ -166,7 +167,11 @@ export default function RouteMeta() {
       document.title = meta.title;
       setMeta("description", meta.description);
       setOg("og:title", meta.title);
-      setOg("og:description", meta.description);
+      // The one-liner: every page's unique <69-char "what it is and what it
+      // means to you," served where shares and previews read it.
+      const short = shortFor(path) ?? meta.description;
+      setOg("og:description", short);
+      setMeta("twitter:description", short);
       setOg("og:url", canonicalUrl(path));
     } else if (noindex) {
       // Private surfaces get a generic title — nothing member-specific leaks

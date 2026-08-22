@@ -22,6 +22,16 @@ const navLinks: NavItem[] = [
   { href: "/science", label: "Science" },
   { href: "/pricing", label: "Pricing" },
   { href: "/assessment", label: "Assessment" },
+  { label: "Explore", children: [
+    { href: "/lines", label: "The 32 Lines" },
+    { href: "/pairs", label: "Power Combinations" },
+    { href: "/protocols", label: "Protocol Library" },
+    { href: "/practices", label: "Keystone Practices" },
+    { href: "/sample-report", label: "Sample Report" },
+    { href: "/which-archetype", label: "2-Minute Quiz" },
+    { href: "/corrections", label: "Corrections Ledger" },
+    { href: "/help", label: "Help & FAQ" },
+  ]},
   { label: "Tools", children: [
     { href: "/weakness-finder", label: "Weakness-Finder" },
     { href: "/blind-side", label: "Blind-Side Analyzer" },

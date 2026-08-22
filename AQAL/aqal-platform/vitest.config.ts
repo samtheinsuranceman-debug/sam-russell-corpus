@@ -20,6 +20,7 @@ export default defineConfig({
       "shared/**/*.test.ts",
       // Pure-data integrity tests (no DOM) can live under client/ too.
       "client/src/pages/archetypesData.test.ts",
+      "client/src/lib/pageShorts.test.ts",
     ],
   },
 });
