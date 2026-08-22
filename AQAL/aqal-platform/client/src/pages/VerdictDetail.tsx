@@ -5,6 +5,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { MYTHS, MYTH_VERDICT_META, type MythVerdict } from "@/lib/mythMuseum";
 import { VERDICT_SLUGS } from "@shared/seo";
 import NotFound from "@/pages/NotFound";
@@ -71,6 +72,7 @@ export default function VerdictDetail() {
           Verdict: {essay.title}
         </h1>
         <p style={{ ...mono, fontSize: "11px", letterSpacing: "0.1em", color: meta.color, margin: "0 0 22px" }}>{meta.note}</p>
+        <PageVideo label={`the ${essay.title.toLowerCase()} verdict`} />
 
         <div className="rounded-2xl p-6 mb-4" style={{ border: `1px solid ${meta.color}44`, borderLeft: `3px solid ${meta.color}`, background: `${meta.color}0d` }}>
           <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase", color: meta.color, margin: "0 0 8px" }}>The standard this verdict applies</p>
@@ -93,6 +95,20 @@ export default function VerdictDetail() {
               <p style={{ fontSize: "12px", lineHeight: 1.55, color: MUTED, margin: 0 }}>&ldquo;{m.claim}&rdquo;</p>
             </Link>
           ))}
+        </div>
+
+        <div className="rounded-2xl p-7 mb-8 text-center" style={{ border: `1px solid ${CHAMPAGNE}44`, background: "rgba(224,198,140,0.05)" }}>
+          <p style={{ ...serif, fontSize: "clamp(20px,3vw,26px)", color: CREAM, margin: "0 0 6px" }}>
+            Hold us to this same standard.
+          </p>
+          <p style={{ fontSize: "14px", lineHeight: 1.65, color: CREAM2, margin: "0 0 16px" }}>
+            Every verdict here is a bar we also have to clear. The 32-line assessment ships with error bars,
+            sourced claims, and a public Corrections Ledger — challenge anything.
+          </p>
+          <Link href="/assessment" className="inline-block rounded-lg"
+            style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, padding: "15px 28px", background: CHAMPAGNE, color: INK }}>
+            Measure all 32 lines
+          </Link>
         </div>
 
         <div className="flex items-center justify-between gap-3 flex-wrap">

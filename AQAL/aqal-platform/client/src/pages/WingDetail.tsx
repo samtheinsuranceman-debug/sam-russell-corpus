@@ -6,6 +6,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { WING_PROFILES, MYTH_WING } from "@/lib/mythWings";
 import { MYTHS, MYTH_VERDICT_META } from "@/lib/mythMuseum";
 import { WING_IDS } from "@shared/seo";
@@ -46,6 +47,7 @@ export default function WingDetail() {
         <h1 style={{ ...serif, fontSize: "clamp(28px,5vw,46px)", lineHeight: 1.08, color: CREAM, margin: "0 0 18px" }}>
           {wing.label}
         </h1>
+        <PageVideo label={wing.label.split(" — ")[0]} />
 
         <div className="space-y-4 mb-8">
           <div className="rounded-2xl p-6" style={{ border: `1px solid ${EMBER}44`, borderLeft: `3px solid ${EMBER}`, background: "rgba(226,96,74,0.05)" }}>
@@ -86,6 +88,20 @@ export default function WingDetail() {
               </Link>
             );
           })}
+        </div>
+
+        <div className="rounded-2xl p-7 mb-8 text-center" style={{ border: `1px solid ${CHAMPAGNE}44`, background: "rgba(224,198,140,0.05)" }}>
+          <p style={{ ...serif, fontSize: "clamp(20px,3vw,26px)", color: CREAM, margin: "0 0 6px" }}>
+            Every wing sold a shortcut around measurement.
+          </p>
+          <p style={{ fontSize: "14px", lineHeight: 1.65, color: CREAM2, margin: "0 0 16px" }}>
+            The 32-line assessment is the long way — spoken evidence, eight independent AI judges, error bars,
+            and a public corrections trail.
+          </p>
+          <Link href="/assessment" className="inline-block rounded-lg"
+            style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, padding: "15px 28px", background: CHAMPAGNE, color: INK }}>
+            Measure all 32 lines
+          </Link>
         </div>
 
         <div className="flex items-center justify-between gap-3 flex-wrap">

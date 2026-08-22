@@ -235,6 +235,40 @@ export default function RouteMeta() {
     setCanonical(canonicalUrl(meta ? path : "/"));
     setMeta("robots", noindex ? "noindex, nofollow" : "index, follow");
     setJsonLd("ld-faq", path === "/help" ? HELP_FAQ_LD : null);
+
+    // BreadcrumbList structured data for every deep page family — tells
+    // crawlers where each of the 2,400+ pages sits in the site's tree.
+    const CRUMB_PARENT: Record<string, { path: string; name: string }> = {
+      "/line/": { path: "/lines", name: "The 32 Lines" },
+      "/weak/": { path: "/lines", name: "The 32 Lines" },
+      "/gift/": { path: "/lines", name: "The 32 Lines" },
+      "/pair/": { path: "/pairs", name: "Power Combinations" },
+      "/protocol/": { path: "/protocols", name: "Protocol Library" },
+      "/compare/": { path: "/protocols", name: "Protocol Library" },
+      "/build/": { path: "/protocols", name: "Protocol Library" },
+      "/kind/": { path: "/protocols", name: "Protocol Library" },
+      "/capacity/": { path: "/protocols", name: "Protocol Library" },
+      "/practice/": { path: "/practices", name: "Keystone Practices" },
+      "/goal/": { path: "/practices", name: "Keystone Practices" },
+      "/myth/": { path: "/myths", name: "The Myth Museum" },
+      "/wing/": { path: "/myths", name: "The Myth Museum" },
+      "/verdict/": { path: "/myths", name: "The Myth Museum" },
+    };
+    const crumbPrefix = Object.keys(CRUMB_PARENT).find((k) => path.startsWith(k));
+    if (crumbPrefix && meta) {
+      const parent = CRUMB_PARENT[crumbPrefix];
+      setJsonLd("ld-breadcrumb", {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: SITE_NAME, item: canonicalUrl("/") },
+          { "@type": "ListItem", position: 2, name: parent.name, item: canonicalUrl(parent.path) },
+          { "@type": "ListItem", position: 3, name: meta.title.replace(/ — AQAL.*$/, ""), item: canonicalUrl(path) },
+        ],
+      });
+    } else {
+      setJsonLd("ld-breadcrumb", null);
+    }
   }, [location]);
 
   // Core Web Vitals — one beacon per pageload, sent when the tab hides.

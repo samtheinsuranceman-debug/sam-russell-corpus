@@ -7,6 +7,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { CAPACITY_AXES } from "@/lib/capacityAxes";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
 import { engineLineFromSlug, engineLineSlug, therapySlug, therapyDisplay, CAPACITY_ONLY_LINES } from "@shared/seo";
@@ -52,6 +53,8 @@ export default function CapacityDetail() {
           Framework, labeled as framework: this axis is how our scoring engine construes the capacity when reading your
           spoken evidence. The protocols below carry their own peer-reviewed citations.
         </p>
+
+        <PageVideo label={`the ${axis.name} capacity`} />
 
         <div className="rounded-2xl p-6 mb-6" style={{ border: `1px solid ${CHAMPAGNE}33`, borderLeft: `3px solid ${CHAMPAGNE}`, background: "rgba(224,198,140,0.04)" }}>
           <Label>Why nothing ever measured it in you</Label>

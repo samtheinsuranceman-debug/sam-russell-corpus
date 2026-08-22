@@ -27,6 +27,7 @@ const navLinks: NavItem[] = [
     { href: "/pairs", label: "Power Combinations" },
     { href: "/protocols", label: "Protocol Library" },
     { href: "/practices", label: "Keystone Practices" },
+    { href: "/capacity/adaptive", label: "The Hidden Axes" },
     { href: "/sample-report", label: "Sample Report" },
     { href: "/which-archetype", label: "2-Minute Quiz" },
     { href: "/myths", label: "The Myth Museum" },

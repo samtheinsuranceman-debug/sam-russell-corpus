@@ -22,13 +22,13 @@ export const PAGE_META: Record<string, PageMeta> = {
     title: "AQAL Intelligence — Measure All 32 Lines of Your Mind",
     description:
       "IQ tests measure ~4 intelligence lines. AQAL measures 32 — spoken answers, scored by a panel of 8 AI labs, mapped into strengths, blind spots, and a plan.",
-    short: "32 lines of intelligence, measured. IQ saw only 4.",
+    short: "IQ graded 4 lines of you. We measure all 32.",
   },
   "/assessment": {
     title: "The 32-Line Intelligence Assessment — AQAL",
     description:
       "27 spoken questions. A panel of eight AI models scores all 32 intelligence lines and returns your full cognitive map. Free for the first 10,000 founding members.",
-    short: "27 spoken answers. 8 AI labs. Your whole mind, mapped.",
+    short: "Speak 27 answers. Eight AIs map your entire mind.",
   },
   "/pricing": {
     title: "Pricing & Founding Membership — AQAL Intelligence",
@@ -40,185 +40,185 @@ export const PAGE_META: Record<string, PageMeta> = {
     title: "Sample Intelligence Report — See the Deliverable — AQAL",
     description:
       "A complete example AQAL report: 32 scored intelligence lines, master strength and weakness, prescriptions, and the first-week plan. Fictional member, real format.",
-    short: "See a complete report before you claim your spot.",
+    short: "Hold the map of a whole mind. Yours is next.",
   },
   "/lines": {
     title: "The 32 Lines of Intelligence, Defined — AQAL",
     description:
       "Every intelligence line we measure — from Logical and Spatial to Interoceptive, Adversarial, and Street Smarts — defined in plain language with the research behind each.",
-    short: "All 32 intelligence lines, defined. Which are yours?",
+    short: "School graded 4 intelligences. Meet all 32.",
   },
   "/science": {
     title: "The Science Behind the 32 Lines — AQAL Intelligence",
     description:
       "Why intelligence is not one number: the research on g, the independent lines IQ tests can't see, and how a multi-model AI panel scores spoken evidence.",
-    short: "Why one number can't hold a mind. The research.",
+    short: "One number can't hold a mind. Here's the proof.",
   },
   "/evidence": {
     title: "The Evidence Library — 10,000+ Sources — AQAL",
     description:
       "The research base behind AQAL's 6,500+ prescriptions: 12,341 source links across therapy, training, and intervention literature, organized by intelligence line.",
-    short: "12,341 source links behind our prescriptions.",
+    short: "12,341 sources. Zero faith required.",
   },
   "/method": {
     title: "How the Assessment Works — Voice, Panel, Report — AQAL",
     description:
       "Speak 27 answers. Eight AI models from different labs score them independently. Get your 32-line map, rarity, and prescriptions. The full method, step by step.",
-    short: "Speak. Get scored by 8 AIs. Get your map.",
+    short: "You talk. Eight AI judges score. Your map lands.",
   },
   "/which-archetype": {
     title: "2-Minute Cognitive Archetype Quiz — AQAL",
     description:
       "A free two-minute teaser: answer a handful of questions and see which cognitive archetype you lean toward — then measure the real thing across 32 lines.",
-    short: "2-minute quiz: find your cognitive archetype.",
+    short: "2 minutes to your cognitive archetype. Start.",
   },
   "/archetypes": {
     title: "The Cognitive Archetypes — AQAL Intelligence",
     description:
       "The recurring 32-line profiles we see — how strengths cluster, what each archetype over-relies on, and where each one predictably crashes.",
-    short: "The recurring profiles — and where each crashes.",
+    short: "The recurring minds — and where each one crashes.",
   },
   "/about": {
     title: "About AQAL Intelligence — Why We Built This",
     description:
       "The founder's story and the platform's one promise: measure the whole mind honestly — 32 lines, no single number, no claims the data can't defend.",
-    short: "Who built this, and the promise behind it.",
+    short: "Why we built the test school never gave you.",
   },
   "/membership": {
     title: "What Membership Includes — AQAL Intelligence",
     description:
       "Beyond the assessment: goal clocks, monthly protocols, the Black Box crash forensics, beliefs work, pulse checks, and a village of members who think like you don't.",
-    short: "Goal clocks, protocols, the Black Box. What you get.",
+    short: "Goal clocks, crash forensics, and your village.",
   },
   "/help": {
     title: "Help & FAQ — AQAL Intelligence",
     description:
       "Microphone problems, uploads, sign-in, scoring times, founding spots, and privacy — the six most common questions answered, with human support one click away.",
-    short: "Six common problems, solved. Humans right behind.",
+    short: "Stuck? Six instant fixes. Humans one click away.",
   },
   "/corrections": {
     title: "The Corrections Ledger — Where We Were Wrong — AQAL",
     description:
       "Every claim we've corrected, every challenge sustained, every audit still open — published in full. A measurement company that hides corrections asks for faith.",
-    short: "Every claim we corrected, in public.",
+    short: "We publish every mistake we make. All of them.",
   },
   "/terms": {
     title: "Terms of Service — AQAL Intelligence",
     description:
       "The plain-language terms: founding members free for life in writing, private messages never read, data export and deletion rights, and the Black Box privacy contract.",
-    short: "Free-for-life in writing. Your data, your rights.",
+    short: "Free-for-life in writing. Your data, your rules.",
   },
   "/privacy": {
     title: "Privacy Policy — AQAL Intelligence",
     description:
       "What we collect, what we never do (no data sales, no message reading, no ad trackers), the 72-hour audio wipe, and your export and deletion rights.",
-    short: "No trackers. No data sales. 72-hour audio wipe.",
+    short: "No trackers. No selling you. Audio gone in 72h.",
   },
   "/black-box": {
     title: "The Black Box — Crash Forensics for Your Life — AQAL",
     description:
       "Record your biggest failures once, honestly. The panel extracts your Crash Signature — when X, you do Y, which causes Z — and builds the prevention architecture.",
-    short: "Record your crashes. Get your Crash Signature.",
+    short: "Your crashes share a signature. We extract it.",
   },
   "/login": {
     title: "Sign In — AQAL Intelligence",
     description: "Sign in to your AQAL member portal — your 32-line profile, goals, protocols, and Black Box.",
-    short: "Sign in: profile, goals, protocols, Black Box.",
+    short: "The control room for your mind. Sign in.",
   },
   "/reset-password": {
     title: "Reset Your Password — AQAL Intelligence",
     description: "Request a secure one-hour reset link for your AQAL account.",
-    short: "Locked out? A one-hour secure reset link.",
+    short: "Locked out? One secure link. One hour.",
   },
   "/ecological-interventions": {
     title: "Ecological Interventions — Change the Environment — AQAL",
     description:
       "The intervention class most programs skip: changing your environment instead of your willpower. Research-backed ecological levers mapped to the 32 lines.",
-    short: "Change the environment, not your willpower.",
+    short: "Stop fighting willpower. Rig your environment.",
   },
   "/meta-systems": {
     title: "Meta-Systems Thinking — AQAL Intelligence",
     description:
       "How the 32 lines interact as one system — feedback loops, cascade paths, and why fixing the weakest line moves outcomes more than sharpening the strongest.",
-    short: "Your 32 lines as one system — loops and all.",
+    short: "32 lines, one machine. Pull the master lever.",
   },
   "/scenario-intelligence": {
     title: "Scenario Intelligence — Decisions Under Pressure — AQAL",
     description:
       "How your intelligence profile behaves in real scenarios — negotiations, crises, opportunities — and where your line pattern predicts pressure failures.",
-    short: "How your mind behaves under real pressure.",
+    short: "Where your mind breaks under pressure — mapped.",
   },
   "/research-library": {
     title: "Research Library — AQAL Intelligence",
     description:
       "Browse the intervention research behind the platform: thousands of clustered sources across therapy, training, and behavior-change literature.",
-    short: "Thousands of sources, organized by line.",
+    short: "Thousands of studies, aimed at your weak line.",
   },
   "/verification": {
     title: "The Verification Ledger — AQAL Intelligence",
     description:
       "How AQAL's numbers get checked: counting audits, citation verification in progress, and the sustain-or-concede record for every challenged claim.",
-    short: "How our numbers get checked, in the open.",
+    short: "Every number we claim, audited in the open.",
   },
   "/pricing-structure": {
     title: "How Pricing Is Structured — AQAL Intelligence",
     description:
       "The full pricing logic: free-for-life founding cohort, standard membership, premium assessments, and what each tier actually includes.",
-    short: "Every tier explained, free cohort to premium.",
+    short: "What every tier really buys you. No fog.",
   },
   "/blind-side": {
     title: "The Blind-Side Analyzer — AQAL Intelligence",
     description:
       "The lines you can't see are the ones that cost you. Explore how AQAL surfaces the blind spots your strongest lines are hiding.",
-    short: "The lines you can't see cost you the most.",
+    short: "Your strengths are hiding your killers. Look.",
   },
   "/weakness-finder": {
     title: "The Master Weakness Finder — AQAL Intelligence",
     description:
       "One weakness usually gates everything else. How the panel isolates your master weakness across 32 lines — and what the fix pipeline looks like.",
-    short: "One weakness gates the rest. We find it.",
+    short: "One weakness gates your whole life. We find it.",
   },
   "/synergy-report": {
     title: "Line Synergies & Power Combinations — AQAL",
     description:
       "Rare line pairings compound: see how power combinations of intelligence lines create capabilities neither line has alone.",
-    short: "Rare pairings compound. See what yours unlock.",
+    short: "Your rare pairings compound. See what they unlock.",
   },
   "/mensa": {
     title: "Beyond IQ — For High-IQ Minds — AQAL Intelligence",
     description:
       "You already know your IQ. That's ~4 of 32 lines. Measure the other 28 — the ones that decide whether high g actually converts into outcomes.",
-    short: "IQ is 4 lines of 32. Measure the other 28.",
+    short: "Your IQ is 4 lines of 32. Measure the rest.",
   },
   "/protocols": {
     title: "The Protocol Library — 156 Evidence-Backed Interventions — AQAL",
     description:
       "Every protocol mapped to the intelligence lines it builds — EMDR, MBSR, DBT, ACT, and 152 more — each with the peer-reviewed study behind the mapping.",
-    short: "156 protocols mapped to the lines they build.",
+    short: "156 proven protocols. One is built for your repair.",
   },
   "/pairs": {
     title: "Power Combinations — All 496 Intelligence Line Pairings — AQAL",
     description:
       "Every two-line combination mapped: what each line gives the other, what the multiplication unlocks, and what half a pair quietly costs.",
-    short: "All 496 pairings: what multiplies, what it costs.",
+    short: "496 pairings. One of them is your multiplier.",
   },
   "/myths": {
     title: "The Myth Museum — Therapies That Failed, Sourced — AQAL",
     description:
       "Documented failed, debunked, and overclaimed therapies — each with the claim, the sourced verdict, why people bought it, and what holds up instead.",
-    short: "The therapies that failed — sourced, exhibit by exhibit.",
+    short: "191 therapies that failed — with the receipts.",
   },
   "/why-we-fall": {
     title: "Why We Fall for False Therapies — The Essay — AQAL",
     description:
       "Why America keeps buying therapies that fail their tests: the measured psychology, the cultural amplifiers, and one labeled speculation about the national soul.",
-    short: "Why America keeps buying cures that fail their tests.",
+    short: "Why smart Americans keep buying broken cures.",
   },
   "/practices": {
     title: "The 54 Keystone Practices — Evidence-Tiered — AQAL",
     description:
       "Sleep protection, implementation intentions, interoception training, and 51 more daily practices — each with its prescription, research basis, and honest evidence tier.",
-    short: "54 daily practices with honest evidence tiers.",
+    short: "54 keystone practices. Small doses, real returns.",
   },
 };
 

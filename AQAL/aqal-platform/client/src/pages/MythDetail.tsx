@@ -7,6 +7,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { MYTHS, MYTH_VERDICT_META, mythById } from "@/lib/mythMuseum";
 import { wingFor } from "@/lib/mythWings";
 import NotFound from "@/pages/NotFound";
@@ -56,6 +57,8 @@ export default function MythDetail() {
             </span>
           )}
         </div>
+
+        <PageVideo label={m.name} />
 
         <Label>The claim it made</Label>
         <p style={{ ...serif, fontSize: "clamp(18px,2.6vw,22px)", lineHeight: 1.5, color: CREAM, margin: "0 0 26px" }}>

@@ -11,6 +11,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { THERAPY_LINE_MAP, THERAPY_THIN_LINES, type TherapyLineEntry } from "@shared/therapyLineMap";
 import { THERAPY_NAMES, therapySlug, therapyFromSlug, therapyDisplay, LINE_NAMES, lineSlug, COMPARE_PAIRS, compareSlug, engineLineSlug } from "@shared/seo";
 import { kindFor, KIND_PROFILES, THERAPY_KIND } from "@/lib/therapyKinds";
@@ -100,6 +101,7 @@ export default function TherapyDetail() {
         <h1 style={{ ...serif, fontSize: "clamp(32px,5.5vw,54px)", lineHeight: 1.04, color: CREAM, margin: "0 0 12px" }}>
           {display}
         </h1>
+        <PageVideo label={display} />
         <div className="flex items-center gap-2 flex-wrap mb-6">
           <span style={{ ...mono, fontSize: "10px", letterSpacing: "0.14em", textTransform: "uppercase", padding: "6px 12px", borderRadius: "999px", color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}55`, background: `${CHAMPAGNE}11` }}>
             {kindLabel}

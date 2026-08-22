@@ -5,6 +5,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { KIND_PROFILES, THERAPY_KIND } from "@/lib/therapyKinds";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
 import { therapySlug, therapyDisplay, KIND_IDS } from "@shared/seo";
@@ -49,6 +50,7 @@ export default function KindDetail() {
           {profile.label}
         </h1>
         <p style={{ fontSize: "15px", lineHeight: 1.8, color: CREAM2, margin: "0 0 26px" }}>{profile.what}</p>
+        <PageVideo label={profile.label.split(" — ")[0]} />
 
         <div className="space-y-4 mb-8">
           <div className="rounded-2xl p-6" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
@@ -82,6 +84,20 @@ export default function KindDetail() {
               </p>
             </Link>
           ))}
+        </div>
+
+        <div className="rounded-2xl p-7 mb-8 text-center" style={{ border: `1px solid ${CHAMPAGNE}44`, background: "rgba(224,198,140,0.05)" }}>
+          <p style={{ ...serif, fontSize: "clamp(20px,3vw,26px)", color: CREAM, margin: "0 0 6px" }}>
+            The right kind depends on the right diagnosis.
+          </p>
+          <p style={{ fontSize: "14px", lineHeight: 1.65, color: CREAM2, margin: "0 0 16px" }}>
+            The 32-line assessment finds your master weakness first — then the library matches the kind, the protocol,
+            and the dose to it. Measurement before medicine.
+          </p>
+          <Link href="/assessment" className="inline-block rounded-lg"
+            style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, padding: "15px 28px", background: CHAMPAGNE, color: INK }}>
+            Measure all 32 lines
+          </Link>
         </div>
 
         <div className="flex items-center justify-between gap-3 flex-wrap">
