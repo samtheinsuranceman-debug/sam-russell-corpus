@@ -1,6 +1,39 @@
-# WHAT'S NEW — AUG 18M delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18N delta (since the AUG17 bundle)
 
-Eighteen commits, 69 files. Feature-by-feature, with the files each one touches.
+Nineteen commits, 74 files. Feature-by-feature, with the files each one touches.
+
+---
+
+## 000. NEW IN 18N — the remaining library pieces: 36 pages in 4 families
+
+Every held data structure that lacked its own URL now has one:
+
+- **/capacity/:slug (8)** — the engine capacities with no /line/ display
+  page (Adaptive, Architectural, Integrative, Intuitive, Philosophical,
+  Reflective, Resilient, Tactical). Each page: the framework definition
+  (explicitly labeled as our framework), why standardized testing
+  structurally misses the capacity, strength and weakness portraits, and
+  the cited protocols that build it, linking into /build and /protocol.
+- **/kind/:id (11)** — one page per protocol kind (psychotherapy,
+  relational, mindfulness, somatic, physical, skill, psychedelic,
+  neuromodulation, lifestyle, expressive, community): dose, honest
+  demands, honest durability, every member protocol.
+- **/wing/:id (12)** — one page per Myth Museum wing with the family's
+  full anatomy and every exhibit in the wing.
+- **/verdict/:slug (5)** — one page per museum verdict (debunked,
+  no-evidence, harmful, replication-failed, overclaimed): the evidential
+  standard each applies, what meeting one means, and every exhibit that
+  earned it.
+
+All four wired into RouteMeta, pageShorts, sitemap, and the
+Protocols/Myths index pages; shared-mirror drift is test-enforced. Also
+fixes the stale "92 protocols" static meta (the library is 156).
+Sitemap: 2,430 → 2,466.
+
+- **NEW** `client/src/lib/capacityAxes.ts`, `pages/CapacityDetail.tsx`,
+  `pages/KindDetail.tsx`, `pages/WingDetail.tsx`, `pages/VerdictDetail.tsx`
+- **MOD** `shared/seo.ts`, `App.tsx`, `RouteMeta.tsx`, `pageShorts.ts`,
+  `Protocols.tsx`, `Myths.tsx`, tests
 
 ---
 
