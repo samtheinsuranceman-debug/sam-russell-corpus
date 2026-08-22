@@ -14,6 +14,7 @@ import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
 import { LINE_ROLE } from "@/lib/linePairs";
 import { shortFor } from "@/lib/pageShorts";
+import { mythById } from "@/lib/mythMuseum";
 
 function setMeta(name: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
@@ -146,6 +147,16 @@ export default function RouteMeta() {
         meta = {
           title: `${therapyDisplay(t).split(" (")[0]} for the ${l} Capacity — AQAL`,
           description: `Building ${l} with ${therapyDisplay(t).split(" (")[0]}: the exact capacity developed, the peer-reviewed evidence, the dose, and the alternatives.`.slice(0, 158),
+        };
+      }
+    }
+    // /myth/:id — Myth Museum exhibits.
+    if (!meta && path.startsWith("/myth/")) {
+      const m = mythById(path.slice("/myth/".length));
+      if (m) {
+        meta = {
+          title: `${m.name} — ${m.verdict.charAt(0) + m.verdict.slice(1).toLowerCase()} — The Myth Museum — AQAL`,
+          description: `${m.claim} The sourced verdict: ${m.verdict.toLowerCase()}. Why it failed, why people bought it, and what holds up instead.`.slice(0, 158),
         };
       }
     }

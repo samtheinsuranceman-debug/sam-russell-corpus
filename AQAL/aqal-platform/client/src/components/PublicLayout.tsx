@@ -29,6 +29,7 @@ const navLinks: NavItem[] = [
     { href: "/practices", label: "Keystone Practices" },
     { href: "/sample-report", label: "Sample Report" },
     { href: "/which-archetype", label: "2-Minute Quiz" },
+    { href: "/myths", label: "The Myth Museum" },
     { href: "/corrections", label: "Corrections Ledger" },
     { href: "/help", label: "Help & FAQ" },
   ]},

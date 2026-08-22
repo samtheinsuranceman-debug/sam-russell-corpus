@@ -202,6 +202,18 @@ export const PAGE_META: Record<string, PageMeta> = {
       "Every two-line combination mapped: what each line gives the other, what the multiplication unlocks, and what half a pair quietly costs.",
     short: "All 496 pairings: what multiplies, what it costs.",
   },
+  "/myths": {
+    title: "The Myth Museum — Therapies That Failed, Sourced — AQAL",
+    description:
+      "Documented failed, debunked, and overclaimed therapies — each with the claim, the sourced verdict, why people bought it, and what holds up instead.",
+    short: "The therapies that failed — sourced, exhibit by exhibit.",
+  },
+  "/why-we-fall": {
+    title: "Why We Fall for False Therapies — The Essay — AQAL",
+    description:
+      "Why America keeps buying therapies that fail their tests: the measured psychology, the cultural amplifiers, and one labeled speculation about the national soul.",
+    short: "Why America keeps buying cures that fail their tests.",
+  },
   "/practices": {
     title: "The 54 Keystone Practices — Evidence-Tiered — AQAL",
     description:
@@ -360,6 +372,10 @@ export function engineLineFromSlug(slug: string): string | undefined {
   return ENGINE_LINES.find((l) => engineLineSlug(l) === slug);
 }
 
+// Myth Museum exhibit ids — mirrored from client/src/lib/mythMuseum.ts;
+// the pageShorts test suite fails if the two drift.
+export const MYTH_IDS: string[] = ["phrenology", "mesmerism", "lobotomy", "insulin-coma", "orgone", "trepanation-revival", "facilitated-communication", "recovered-memory", "conversion-therapy", "attachment-holding", "cisd", "scared-straight", "dare-original", "boot-camps", "primal-scream", "dianetics", "attack-therapy", "past-life-regression", "polygraph", "graphology", "learning-styles", "brain-gym", "mozart-effect", "ten-percent-brain", "left-right-brain", "subliminal-tapes", "speed-reading", "sleep-learning", "brain-training", "growth-mindset-overclaim", "power-posing", "ego-depletion", "mbti-clinical", "enneagram-clinical", "nlp-claims", "homeopathy", "bach-flowers", "crystal-healing", "therapeutic-touch", "reiki-distant", "magnet-therapy", "ear-candling", "detox-cleanses", "adrenal-fatigue", "candida-everything", "applied-kinesiology", "craniosacral", "chiropractic-nonmsk", "iridology", "reflexology-diagnostic", "grounding-claims", "binaural-claims", "essential-oil-cures", "cbd-cure-all", "microdosing-overclaim", "law-of-attraction", "affirmations-backfire", "vision-boards", "astrology-counseling", "numerology", "human-design", "psychic-mediums", "angel-therapy", "faith-healing-substitution", "intercessory-prayer-rct", "vaccines-autism", "chelation-autism", "mms-bleach", "secretin", "dolphin-therapy", "wellness-mlm", "prosperity-gospel-therapy"];
+
 export const SITEMAP_PATHS = [
   ...Object.keys(PAGE_META),
   ...LINE_NAMES.map((n) => `/line/${lineSlug(n)}`),
@@ -371,6 +387,7 @@ export const SITEMAP_PATHS = [
   ...LINE_NAMES.map((n) => `/weak/${lineSlug(n)}`),
   ...LINE_NAMES.map((n) => `/gift/${lineSlug(n)}`),
   ...BUILD_ENTRIES.map((e) => `/build/${engineLineSlug(e.line)}/${therapySlug(e.therapy)}`),
+  ...MYTH_IDS.map((id) => `/myth/${id}`),
 ];
 
 export function canonicalUrl(path: string): string {

@@ -13,6 +13,7 @@ import {
   compareFromSlug, goalFromSlug, engineLineFromSlug,
 } from "@shared/seo";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
+import { mythById } from "@/lib/mythMuseum";
 
 const MAX = 59; // "under sixty characters" — always
 
@@ -76,6 +77,10 @@ export function shortFor(path: string): string | undefined {
   if (p.startsWith("/goal/")) {
     const g = goalFromSlug(p.slice(6));
     return g ? fit(`${g.charAt(0).toUpperCase() + g.slice(1)}: practices with real evidence.`) : undefined;
+  }
+  if (p.startsWith("/myth/")) {
+    const m = mythById(p.slice(6));
+    return m ? fit(`${m.name}: ${m.verdict.toLowerCase()} — and why it sold.`) : undefined;
   }
   if (p.startsWith("/build/")) {
     const segs = p.slice(7).split("/");

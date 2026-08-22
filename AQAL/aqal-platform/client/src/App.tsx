@@ -76,6 +76,9 @@ const GoalDetail = lazy(() => import("./pages/GoalDetail"));
 const WeakLine = lazy(() => import("./pages/WeakLine"));
 const GiftLine = lazy(() => import("./pages/GiftLine"));
 const BuildDetail = lazy(() => import("./pages/BuildDetail"));
+const MythDetail = lazy(() => import("./pages/MythDetail"));
+const Myths = lazy(() => import("./pages/Myths"));
+const WhyWeFall = lazy(() => import("./pages/WhyWeFall"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const BlackBox = lazy(() => import("./pages/BlackBox"));
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
@@ -533,6 +536,21 @@ function Router() {
         <Route path={"/build/:line/:therapy"}>
           <PageErrorBoundary pageName="BuildDetail">
             <Suspense fallback={<PageSkeleton />}><BuildDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/myth/:id"}>
+          <PageErrorBoundary pageName="MythDetail">
+            <Suspense fallback={<PageSkeleton />}><MythDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/myths"}>
+          <PageErrorBoundary pageName="Myths">
+            <Suspense fallback={<PageSkeleton />}><Myths /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/why-we-fall"}>
+          <PageErrorBoundary pageName="WhyWeFall">
+            <Suspense fallback={<PageSkeleton />}><WhyWeFall /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/runbook"}>

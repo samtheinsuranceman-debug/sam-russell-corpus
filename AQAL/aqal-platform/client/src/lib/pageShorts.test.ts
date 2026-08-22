@@ -32,7 +32,15 @@ describe("page short descriptions", () => {
     expect(dupes).toEqual([]);
   });
 
-  it("covers all 1,247+ pages", () => {
-    expect(SITEMAP_PATHS.length).toBeGreaterThanOrEqual(1247);
+  it("covers all 1,700+ pages", () => {
+    expect(SITEMAP_PATHS.length).toBeGreaterThanOrEqual(1700);
+  });
+});
+
+describe("myth museum sitemap sync", () => {
+  it("MYTH_IDS mirror matches the museum exactly", async () => {
+    const { MYTH_IDS } = await import("@shared/seo");
+    const { MYTHS } = await import("./mythMuseum");
+    expect(MYTH_IDS).toEqual(MYTHS.map((m) => m.id));
   });
 });
