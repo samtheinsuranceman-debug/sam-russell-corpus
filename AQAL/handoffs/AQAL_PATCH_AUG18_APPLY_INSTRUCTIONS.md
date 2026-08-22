@@ -1,17 +1,18 @@
-# AQAL PATCH — AUG 18L (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
+# AQAL PATCH — AUG 18M (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
 
 **To: Manus. From: Claude (merge side).**
 
-This is a **delta patch**, not a full bundle. It contains ONLY the 68 files that
+This is a **delta patch**, not a full bundle. It contains ONLY the 69 files that
 changed since the AUG17 bundle you confirmed you had "fully unpacked, built,
 verified." Everything else in your working copy stays exactly as it is.
 
-**If you received ANY earlier AUG-18 patch (18 through 18K): throw it away and
+**If you received ANY earlier AUG-18 patch (18 through 18L): throw it away and
 apply this one instead.** It contains everything they did plus the therapy
-library expansion to 156 protocols (2,311 public pages). Applying this over an already-applied earlier patch is
+library expansion to 156 protocols and the Myth Museum expansion to 191
+sourced exhibits (2,430 public pages). Applying this over an already-applied earlier patch is
 also fine — files simply overwrite to identical or newer versions.
 
-- 40 new files (add them)
+- 41 new files (add them)
 - 28 modified files (overwrite yours with these)
 - 0 deletions (nothing to remove)
 
@@ -56,11 +57,11 @@ From the project root:
 sha256sum -c MANIFEST.sha256
 ```
 
-All 68 lines must say OK. Then remove the manifest file.
+All 69 lines must say OK. Then remove the manifest file.
 
 ## Step 3 — Database push (MANDATORY — new tables and columns)
 
-(Nothing in 18L itself touches the schema — if you already applied any AUG-18
+(Nothing in 18L or 18M touches the schema — if you already applied any AUG-18
 patch and ran `db:push`, this run will be a fast no-op. Run it anyway.)
 
 This patch changes `drizzle/schema.ts`:
@@ -116,9 +117,9 @@ only — never in the codebase, never in chat.
    protocols and /protocol/emdr, /protocol/mbsr etc. each load fully. Pair pages: /pairs picker loads and /pair/logical--strategic renders
    fully (reversed order /pair/strategic--logical also resolves). Practice
    pages: /practices lists 54 and /practice/sleep renders fully. Wave three: /goal/focus, /weak/interoceptive, /gift/spatial,
-   /build/adaptive/emdr, and a /compare/ page all render fully. The Myth Museum: /myths lists 72
+   /build/adaptive/emdr, and a /compare/ page all render fully. The Myth Museum: /myths lists 191
    exhibits and /myth/therapeutic-touch, /why-we-fall render fully. The sitemap
-   lists 2,311 URLs — and every URL in it must say https://www.joinaqal.com.
+   lists 2,430 URLs — and every URL in it must say https://www.joinaqal.com.
    The header's new "Explore" menu must appear on deep pages (e.g.
    /protocol/emdr), desktop and mobile. View-source any page after JS loads:
    og:description must be a one-liner under 60 characters.
@@ -132,9 +133,12 @@ only — never in the codebase, never in chat.
 6c. New in 18L: /protocol/acceptance-and-commitment-therapy,
    /protocol/unified-protocol, /protocol/triple-p,
    /protocol/high-intensity-interval-training, and
-   /build/adaptive/acceptance-and-commitment-therapy all render fully; the
-   Corrections Ledger's top entry is dated 2026-08-22 (the 64-entry
-   pending-audit disclosure).
+   /build/adaptive/acceptance-and-commitment-therapy all render fully.
+6d. New in 18M: /myth/laetrile, /myth/prevagen, /myth/ionic-footbath, and
+   /myth/marshmallow-destiny all render fully, each showing the four-part
+   "anatomy of this family" section; the Corrections Ledger's top two
+   entries are dated 2026-08-22 (the 119-exhibit and 64-protocol
+   pending-audit disclosures).
 7. Screenshot `/launch-check` back to Sam.
 
 See `WHATS_NEW.md` for the feature-by-feature description of what changed.

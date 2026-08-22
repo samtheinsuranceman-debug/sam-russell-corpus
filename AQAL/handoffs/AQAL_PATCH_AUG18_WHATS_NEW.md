@@ -1,6 +1,38 @@
-# WHAT'S NEW — AUG 18L delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18M delta (since the AUG17 bundle)
 
-Seventeen commits, 68 files. Feature-by-feature, with the files each one touches.
+Eighteen commits, 69 files. Feature-by-feature, with the files each one touches.
+
+---
+
+## 00. NEW IN 18M — Myth Museum wave 2: 72 → 191 exhibits + wing anatomy
+
+119 new documented failed, debunked, and overclaimed therapies join the
+museum — historical medical overreach (bloodletting, radium tonics),
+miracle-cure quackery (laetrile, Gerson, black salve), substitution harms
+(alternative-only cancer care, coercive teen programs), devices and
+frequencies (Rife machines, ionic foot baths, Power Balance), failed
+supplements (Airborne, Prevagen, ginkgo), diet cults (blood-type,
+carnivore-cure), pseudo-diagnostics (live blood analysis, IgG panels),
+learning products (Doman-Delacato, Baby-Genius DVDs), the replication
+graveyard (priming, the marshmallow test, the pencil smile), unlicensed
+therapy cousins (tapping, Havening, family constellations), and
+divination-as-counseling (biorhythms, indigo children). Every exhibit
+anchors to a named ruling, trial, or case record; the pending-audit
+disclosure is on the Corrections Ledger.
+
+NEW depth system: `mythWings.ts` gives every exhibit the same structural
+richness as a protocol page — twelve wing profiles rendering four
+sections on each of the 191 pages: how the family claims to work, why it
+FEELS like it works, the tell-tale signs, and the American-culture hook
+(labeled as analysis). Coverage is test-enforced.
+
+Page yield: +119 /myth/ pages, all with unique sub-60-character
+descriptions. Sitemap: 2,311 → 2,430 URLs.
+
+- **MOD** `client/src/lib/mythMuseum.ts` — the 119 new exhibits
+- **NEW** `client/src/lib/mythWings.ts` — wing profiles + full coverage map
+- **MOD** `client/src/pages/MythDetail.tsx` — the anatomy section
+- **MOD** `client/src/pages/Corrections.tsx`, `shared/seo.ts`, tests
 
 ---
 
