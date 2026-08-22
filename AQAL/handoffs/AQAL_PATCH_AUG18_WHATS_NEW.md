@@ -1,6 +1,28 @@
-# WHAT'S NEW — AUG 18K delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18L delta (since the AUG17 bundle)
 
-Sixteen commits, 67 files. Feature-by-feature, with the files each one touches.
+Seventeen commits, 68 files. Feature-by-feature, with the files each one touches.
+
+---
+
+## 0. NEW IN 18L — Therapy library Batch 2: 92 → 156 protocols, 2,311 pages
+
+64 additional real, landmark-literature interventions authored into the
+therapy map (ACT, Exposure and Response Prevention, Unified Protocol,
+Metacognitive Therapy, Triple P, Circle of Security, Integrative Behavioral
+Couples Therapy, Multisystemic Therapy, HIIT, Loving-Kindness Meditation,
+Mental Contrasting/WOOP, After-Action Reviews, Premortem Technique, JOBS
+Program, and 50 more) — 67 new line mappings, each with an author-year-venue
+citation and conservative role assignments. DOI fields are deliberately BLANK
+pending the external citation audit — nothing is invented — and that
+disclosure is the newest entry on the public Corrections Ledger.
+
+Page yield, all generated automatically with unique sub-60-character
+descriptions: +64 /protocol/ pages, +67 /build/ pages, +462 /compare/ pages.
+Sitemap: 1,718 → 2,311 URLs.
+
+- **MOD** `shared/therapyLineMap.ts` — the 67 new mappings
+- **MOD** `client/src/lib/therapyKinds.ts` — kind profiles for all 64
+- **MOD** `client/src/pages/Corrections.tsx` — the pending-audit ledger entry
 
 ---
 

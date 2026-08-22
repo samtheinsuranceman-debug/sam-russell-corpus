@@ -1,18 +1,18 @@
-# AQAL PATCH — AUG 18K (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
+# AQAL PATCH — AUG 18L (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
 
 **To: Manus. From: Claude (merge side).**
 
-This is a **delta patch**, not a full bundle. It contains ONLY the 67 files that
+This is a **delta patch**, not a full bundle. It contains ONLY the 68 files that
 changed since the AUG17 bundle you confirmed you had "fully unpacked, built,
 verified." Everything else in your working copy stays exactly as it is.
 
-**If you received ANY earlier AUG-18 patch (18 through 18J): throw it away and
-apply this one instead.** It contains everything they did plus the hover
-encyclopedia upgrade. Applying this over an already-applied earlier patch is
+**If you received ANY earlier AUG-18 patch (18 through 18K): throw it away and
+apply this one instead.** It contains everything they did plus the therapy
+library expansion to 156 protocols (2,311 public pages). Applying this over an already-applied earlier patch is
 also fine — files simply overwrite to identical or newer versions.
 
 - 40 new files (add them)
-- 27 modified files (overwrite yours with these)
+- 28 modified files (overwrite yours with these)
 - 0 deletions (nothing to remove)
 
 The full 9MB AQAL-DEPLOY-AUG18.zip remains the fallback if anything below
@@ -56,9 +56,12 @@ From the project root:
 sha256sum -c MANIFEST.sha256
 ```
 
-All 67 lines must say OK. Then remove the manifest file.
+All 68 lines must say OK. Then remove the manifest file.
 
 ## Step 3 — Database push (MANDATORY — new tables and columns)
+
+(Nothing in 18L itself touches the schema — if you already applied any AUG-18
+patch and ran `db:push`, this run will be a fast no-op. Run it anyway.)
 
 This patch changes `drizzle/schema.ts`:
 
@@ -109,21 +112,29 @@ only — never in the codebase, never in chat.
    sam@russellcapitalsystems.com.
 6a. The 32 line pages: /line/logical, /line/interoceptive, /line/street-smarts
    (and 29 more) each load as a full landing page; clicking any dial or ring
-   point twice navigates there. The protocol library: /protocols lists 92
+   point twice navigates there. The protocol library: /protocols lists 156
    protocols and /protocol/emdr, /protocol/mbsr etc. each load fully. Pair pages: /pairs picker loads and /pair/logical--strategic renders
    fully (reversed order /pair/strategic--logical also resolves). Practice
    pages: /practices lists 54 and /practice/sleep renders fully. Wave three: /goal/focus, /weak/interoceptive, /gift/spatial,
    /build/adaptive/emdr, and a /compare/ page all render fully. The Myth Museum: /myths lists 72
    exhibits and /myth/therapeutic-touch, /why-we-fall render fully. The sitemap
-   lists 1,718 URLs — and every URL in it must say https://www.joinaqal.com.
+   lists 2,311 URLs — and every URL in it must say https://www.joinaqal.com.
    The header's new "Explore" menu must appear on deep pages (e.g.
    /protocol/emdr), desktop and mobile. View-source any page after JS loads:
    og:description must be a one-liner under 60 characters.
-6b. SEO layer: `https://joinaqal.com/robots.txt` and `/sitemap.xml` both serve;
+6b. SEO layer: `https://www.joinaqal.com/robots.txt` and `/sitemap.xml` both serve;
    the browser tab title CHANGES per page (e.g. /pricing vs /help); view-source
    on / shows the Organization JSON-LD; response headers include
    Strict-Transport-Security and X-Content-Type-Options. `http://` and
-   `www.` URLs 301 onto `https://joinaqal.com` (requires CANONICAL_HOST).
+   bare `joinaqal.com` URLs 301 onto `https://www.joinaqal.com` — this
+   REQUIRES `CANONICAL_HOST=www.joinaqal.com` in the deployment env plus a
+   www DNS record. www is the canonical host everywhere now.
+6c. New in 18L: /protocol/acceptance-and-commitment-therapy,
+   /protocol/unified-protocol, /protocol/triple-p,
+   /protocol/high-intensity-interval-training, and
+   /build/adaptive/acceptance-and-commitment-therapy all render fully; the
+   Corrections Ledger's top entry is dated 2026-08-22 (the 64-entry
+   pending-audit disclosure).
 7. Screenshot `/launch-check` back to Sam.
 
 See `WHATS_NEW.md` for the feature-by-feature description of what changed.

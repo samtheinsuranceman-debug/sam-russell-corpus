@@ -14,13 +14,13 @@ c90637844bf80b197c9342c736c28dd60cb430ac4092f491a74fa63aa6333314  ./client/src/l
 cc9e367de9f88ef32871a10ad28aaf4dfadc95156bfd2902b3951d4faa03a4c1  ./client/src/lib/mythMuseum.ts
 bb752f660f3f23c8715560650b165ab486614629e449b5b800fd52fd56e538f3  ./client/src/lib/pageShorts.test.ts
 ad0f998d78e17de02cbd08beaa33c2416e92924ca883373d17458b36709c7075  ./client/src/lib/pageShorts.ts
-38c433906958e3e7072583cf7fec3bbed4b0d910a11eca207de85a0e240b0e88  ./client/src/lib/therapyKinds.ts
+ee696fda7de7b901f36d47cdaea30c3b8ab030f10d843f7e29b13ddf53584e9f  ./client/src/lib/therapyKinds.ts
 af7808f66f817e7a91a5d2b05f4afb06ea8a127894cc339f698c7d25082ae2fd  ./client/src/pages/About.tsx
 53fb4a0d2fa2688c994ba850222432f7807438fbe6456e0c83f38cb859d02baf  ./client/src/pages/Assessment.tsx
 88945d98eb231480df04dd0a1fe9d8cc778daae23af6d5342ab5183b7eb4908d  ./client/src/pages/BlackBox.tsx
 f3ae391e823b1a6c048a1b022de90c12b49a800a6e62a5fbfbb8a7ae93714c8d  ./client/src/pages/BuildDetail.tsx
 133b1c5f9627504e6d3c328257076bb74c2918f2a71e8916cd36ce1bf474b0cf  ./client/src/pages/CompareDetail.tsx
-2a1207f60a81078332ff05c752cb56fe6283dffbd7c9c0f0af276a0126172d75  ./client/src/pages/Corrections.tsx
+51df21982ddd498a86d4e8f24c3eaf0bc6b104a0723fcbbf04e5be36bac005d9  ./client/src/pages/Corrections.tsx
 00f8cd86b43ab386049e45c2ce50d4a12b02c3e42bfc2f8012d66911d8111ad6  ./client/src/pages/GiftLine.tsx
 03f29533b5c940069a11a6d19a9b6266a23d9bbe0efa7bb866cf58baafda86de  ./client/src/pages/GoalDetail.tsx
 5bbbb3157b31f3feae0894eefe31f26f92738aaef5856141871697a75fae764f  ./client/src/pages/Goals.tsx
@@ -64,4 +64,5 @@ e1f4a4e5872a8274d1a1bc3ff30dd0a32cd9b2f259c141892f49d841077c1302  ./server/platf
 2d9a36c9f4772c32ac77e1d9823492717d5ac64f34a20acfdf4a1d3d6ef10adb  ./server/platform/panel.ts
 e1e565157eb3d01d5469e9c446d8e2410def75dc6ddae4808142186f31fe25cd  ./server/routers.ts
 deb3d74bff24e03276286909a3ac1366b74c70ef97a25b5c30f9082046e19409  ./shared/seo.ts
+413e5842184996604656b37922bbccb3188817944afafd990d1435dfdee80c80  ./shared/therapyLineMap.ts
 76fcc0a5858a74554275ac6d3346a8f0e4fc823241178163a52870fd91a0cb46  ./vitest.config.ts
