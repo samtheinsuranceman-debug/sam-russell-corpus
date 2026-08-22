@@ -1,6 +1,19 @@
-# WHAT'S NEW — AUG 18P delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18Q delta (since the AUG17 bundle)
 
-Twenty-one commits, 79 files. Feature-by-feature, with the files each one touches.
+Twenty-two commits, 80 files. Feature-by-feature, with the files each one touches.
+
+---
+
+## NEW IN 18Q — video slots on every page family
+
+The PageVideo slot now mounts on ALL remaining families: pair, compare,
+practice, goal, weak, gift, and build detail pages plus the Pairs,
+Practices, Protocols, Myths, Lines, and Why-We-Fall indexes — every SEO
+page type on the site. Also fixes the 404 page's white-on-gold button
+(now black-on-gold, passes contrast); axe re-scan across the new
+families and the 404: zero WCAG A/AA violations.
+
+- MOD 13 page files (PageVideo mounts), NotFound.tsx (contrast)
 
 ---
 
