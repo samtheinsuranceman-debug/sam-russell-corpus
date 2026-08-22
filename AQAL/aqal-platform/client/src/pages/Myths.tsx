@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { MYTHS, MYTH_VERDICT_META, type MythVerdict } from "@/lib/mythMuseum";
 import { WING_PROFILES } from "@/lib/mythWings";
 
@@ -32,6 +33,7 @@ export default function Myths() {
         <h1 style={{ ...serif, fontSize: "clamp(30px,5vw,48px)", color: CREAM, margin: "0 0 10px" }}>
           The therapies that failed.
         </h1>
+        <PageVideo label="the myth museum" />
         <p style={{ color: CREAM2, fontSize: "14.5px", lineHeight: 1.7, marginBottom: "8px" }}>
           A platform that sells honest measurement owes you its debunking shelf. Each exhibit: the claim, the sourced
           verdict, why smart people bought it anyway, and what holds up instead. The cultural story behind the whole

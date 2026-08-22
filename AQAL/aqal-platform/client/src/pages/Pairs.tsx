@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { LINE_NAMES, pairSlug } from "@shared/seo";
 import { LINE_ROLE } from "@/lib/linePairs";
 
@@ -30,6 +31,7 @@ export default function Pairs() {
         <h1 style={{ ...serif, fontSize: "clamp(30px,5vw,48px)", color: CREAM, margin: "0 0 10px" }}>
           Lines don&rsquo;t add. They multiply.
         </h1>
+        <PageVideo label="the power combinations" />
         <p style={{ color: CREAM2, fontSize: "14.5px", lineHeight: 1.7, marginBottom: "26px" }}>
           Every combination of two intelligence lines has its own chemistry — what each gives the other, what the
           multiplication unlocks, and what half-a-pair quietly costs. Pick a line to see its 31 pairings.

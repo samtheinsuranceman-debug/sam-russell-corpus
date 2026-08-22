@@ -7,6 +7,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
 import { compareFromSlug, therapySlug, therapyDisplay, engineLineSlug, LINE_NAMES, lineSlug } from "@shared/seo";
 import { kindFor, KIND_PROFILES, THERAPY_KIND } from "@/lib/therapyKinds";
@@ -87,6 +88,7 @@ export default function CompareDetail() {
         <h1 style={{ ...serif, fontSize: "clamp(30px,5vw,50px)", lineHeight: 1.05, color: CREAM, margin: "0 0 12px" }}>
           {da} vs {db}
         </h1>
+        <PageVideo label="this comparison" />
         <p style={{ fontSize: "15px", lineHeight: 1.7, color: CREAM2, margin: "0 0 8px" }}>
           {bothPrimary
             ? <>Both are mapped PRIMARY for the same capacity — </>

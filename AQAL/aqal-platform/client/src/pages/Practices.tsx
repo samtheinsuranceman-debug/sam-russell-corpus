@@ -5,6 +5,7 @@
 // ============================================================
 import { Link } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
 import { GOAL_KEYWORDS, goalSlug } from "@shared/seo";
 
@@ -32,6 +33,7 @@ export default function Practices() {
         <h1 style={{ ...serif, fontSize: "clamp(30px,5vw,48px)", color: CREAM, margin: "0 0 10px" }}>
           The daily moves that hold everything up.
         </h1>
+        <PageVideo label="the keystone practices" />
         <p style={{ color: CREAM2, fontSize: "14.5px", lineHeight: 1.7, marginBottom: "8px" }}>
           Clinical protocols repair; keystone practices maintain and build. Each carries a concrete prescription, its
           research basis, an honest evidence tier, and the time horizon before you should expect to feel it. The{" "}

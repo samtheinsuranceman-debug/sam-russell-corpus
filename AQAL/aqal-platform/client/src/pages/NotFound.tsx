@@ -39,7 +39,7 @@ export default function NotFound() {
           Lost in the Dimensions
         </h1>
 
-        <p className="text-muted-foreground/60 text-sm leading-relaxed mb-8">
+        <p className="text-muted-foreground/90 text-sm leading-relaxed mb-8">
           This page doesn't exist in any of the 32 dimensions we measure.
           <br />
           Let's get you back to mapped territory.
@@ -48,7 +48,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button
             onClick={() => setLocation("/")}
-            className="bg-primary text-white glow-gold hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150"
+            className="bg-primary text-black glow-gold hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150"
           >
             Return Home
           </Button>

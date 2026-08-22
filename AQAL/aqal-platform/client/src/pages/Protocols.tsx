@@ -5,6 +5,7 @@
 // ============================================================
 import { Link } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
 import { THERAPY_NAMES, therapySlug, therapyDisplay } from "@shared/seo";
 import { KIND_PROFILES, THERAPY_KIND } from "@/lib/therapyKinds";
@@ -39,6 +40,7 @@ export default function Protocols() {
         <h1 style={{ ...serif, fontSize: "clamp(30px,5vw,48px)", color: CREAM, margin: "0 0 10px" }}>
           The protocols, in the open.
         </h1>
+        <PageVideo label="the protocol library" />
         <p style={{ color: CREAM2, fontSize: "14.5px", lineHeight: 1.7, marginBottom: "8px" }}>
           Every protocol here is mapped to the specific intelligence lines it builds, with the peer-reviewed study
           behind each mapping on its page. What we can't do publicly is tell you <i>which ones are yours</i> — that's

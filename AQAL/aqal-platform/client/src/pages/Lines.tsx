@@ -17,6 +17,7 @@ const ENGINE_TO_DISPLAY: Record<string, string> = {
 const displayFor = (engine: string): string | undefined =>
   ENGINE_TO_DISPLAY[engine] ?? (LINE_NAMES.includes(engine) ? engine : undefined);
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { ALL_AXES, axisMode, axisIndep, MODE_META } from "@shared/axisModes";
 import { keystoneForLine } from "@shared/keystonePractices";
 import { therapiesForLine, THERAPY_THIN_LINES } from "@shared/therapyLineMap";
@@ -77,6 +78,7 @@ export default function Lines() {
         <h1 className="text-5xl mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, color: CREAM }}>
           The 32 Lines
         </h1>
+        <PageVideo label="the 32 lines" />
         <p className="text-[15px] mb-3 max-w-[46em]" style={{ color: CREAM2, lineHeight: 1.65 }}>
           Every line we measure, in plain language: what it is, how it&rsquo;s scored, whether the research shows it&rsquo;s
           independent of IQ, and the practice and protocols that move it. Lines marked{" "}

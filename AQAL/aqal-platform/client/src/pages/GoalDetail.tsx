@@ -7,6 +7,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
 import { goalFromSlug, GOAL_KEYWORDS, goalSlug, LINE_NAMES, lineSlug } from "@shared/seo";
 import NotFound from "@/pages/NotFound";
@@ -50,6 +51,7 @@ export default function GoalDetail() {
         <h1 style={{ ...serif, fontSize: "clamp(32px,5.5vw,52px)", lineHeight: 1.05, color: CREAM, margin: "0 0 12px" }}>
           {cap(kw)}: the practices with evidence behind them.
         </h1>
+        <PageVideo label="this goal" />
         <p style={{ fontSize: "15px", lineHeight: 1.7, color: CREAM2, margin: "0 0 8px" }}>
           {sorted.length} keystone practices in our library are mapped to <b style={{ color: CREAM }}>{kw}</b> — each with
           a concrete prescription, an honest evidence tier, and the time horizon before you should expect to feel it.

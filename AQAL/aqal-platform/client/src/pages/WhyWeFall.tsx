@@ -7,6 +7,7 @@
 // ============================================================
 import { Link } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 
 const INK = "#141009";
 const CREAM = "#F1EADB";
@@ -40,6 +41,7 @@ export default function WhyWeFall() {
         <h1 style={{ ...serif, fontSize: "clamp(32px,5.5vw,52px)", lineHeight: 1.05, color: CREAM, margin: "0 0 14px" }}>
           Why we fall for it.
         </h1>
+        <PageVideo label="why we fall for it" />
         <P>
           The Museum holds phrenology heads and $200 grounding sheets, insulin comas and manifestation journals — two
           centuries of therapies that failed their tests and thrived anyway. The interesting question isn't why sellers

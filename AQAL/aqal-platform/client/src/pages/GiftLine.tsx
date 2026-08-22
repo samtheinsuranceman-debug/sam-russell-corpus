@@ -6,6 +6,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { LINE_ENCYCLOPEDIA, G_BAND_LABEL } from "@/lib/lineEncyclopedia";
 import { LINE_DEEP } from "@/lib/lineDeepDives";
 import { LINE_ROLE } from "@/lib/linePairs";
@@ -50,6 +51,7 @@ export default function GiftLine() {
         <h1 style={{ ...serif, fontSize: "clamp(30px,5.2vw,50px)", lineHeight: 1.06, color: CREAM, margin: "0 0 12px" }}>
           Signs you&rsquo;re gifted on the {name} line — and nobody ever told you.
         </h1>
+        <PageVideo label="this gift" />
         <p style={{ fontSize: "15px", lineHeight: 1.7, color: CREAM2, margin: "0 0 26px" }}>
           {deep.expanded}
         </p>

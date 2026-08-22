@@ -7,6 +7,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { LINE_ENCYCLOPEDIA } from "@/lib/lineEncyclopedia";
 import { LINE_DEEP } from "@/lib/lineDeepDives";
 import { lineFromSlug, lineSlug, therapySlug } from "@shared/seo";
@@ -55,6 +56,7 @@ export default function WeakLine() {
         <h1 style={{ ...serif, fontSize: "clamp(30px,5.2vw,50px)", lineHeight: 1.06, color: CREAM, margin: "0 0 12px" }}>
           The weak {name} line: signs, costs, and the repair plan.
         </h1>
+        <PageVideo label="this weak line" />
         <p style={{ fontSize: "15px", lineHeight: 1.7, color: CREAM2, margin: "0 0 28px" }}>
           {info.def} When this line is weak — and almost nobody has ever had it measured — it doesn&rsquo;t feel like weakness.
           It feels like bad luck, other people&rsquo;s fault, or just how life is. Here is what it actually looks like.

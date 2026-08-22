@@ -7,6 +7,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
 import { engineLineFromSlug, therapyFromSlug, therapySlug, therapyDisplay, engineLineSlug, LINE_NAMES, lineSlug, compareSlug, COMPARE_PAIRS } from "@shared/seo";
 import { kindFor, KIND_PROFILES, THERAPY_KIND } from "@/lib/therapyKinds";
@@ -65,6 +66,7 @@ export default function BuildDetail() {
         <h1 style={{ ...serif, fontSize: "clamp(28px,4.8vw,44px)", lineHeight: 1.08, color: CREAM, margin: "0 0 12px" }}>
           Building the {line} capacity with {display}.
         </h1>
+        <PageVideo label="this build path" />
         <p style={{ fontSize: "15.5px", lineHeight: 1.72, color: CREAM, margin: "0 0 8px" }}>
           The specific capacity this pairing develops: <b>{entry.capacity.charAt(0).toLowerCase() + entry.capacity.slice(1)}</b>.
         </p>

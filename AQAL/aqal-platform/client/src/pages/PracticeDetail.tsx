@@ -6,6 +6,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { KEYSTONE_PRACTICES, confidenceFromEvidence } from "@shared/keystonePractices";
 import { LINE_NAMES, lineSlug } from "@shared/seo";
 import NotFound from "@/pages/NotFound";
@@ -52,6 +53,7 @@ export default function PracticeDetail() {
         <h1 style={{ ...serif, fontSize: "clamp(32px,5.5vw,52px)", lineHeight: 1.05, color: CREAM, margin: "0 0 12px" }}>
           {p.name}
         </h1>
+        <PageVideo label="this practice" />
         <div className="flex items-center gap-2 flex-wrap mb-8">
           <span style={{ ...mono, fontSize: "10px", letterSpacing: "0.14em", textTransform: "uppercase", padding: "6px 12px", borderRadius: "999px", color: evColor, border: `1px solid ${evColor}55`, background: `${evColor}0d` }}>
             evidence: {p.evidence} · confidence: {confidence}

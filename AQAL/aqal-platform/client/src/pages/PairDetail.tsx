@@ -8,6 +8,7 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
+import PageVideo from "@/components/PageVideo";
 import { LINE_ENCYCLOPEDIA, G_BAND_LABEL } from "@/lib/lineEncyclopedia";
 import { LINE_DEEP } from "@/lib/lineDeepDives";
 import { LINE_ROLE } from "@/lib/linePairs";
@@ -74,6 +75,7 @@ export default function PairDetail() {
         <h1 style={{ ...serif, fontSize: "clamp(34px,6vw,58px)", lineHeight: 1.03, color: CREAM, margin: "0 0 10px" }}>
           {pairName}
         </h1>
+        <PageVideo label="this combination" />
         <p style={{ ...serif, fontSize: "clamp(18px,2.4vw,22px)", lineHeight: 1.4, color: CREAM2, margin: "0 0 16px" }}>
           What happens when {ra.noun.toLowerCase() === rb.noun.toLowerCase() ? "two of a kind" : `the ${ra.noun} and the ${rb.noun}`} run in one mind —
           and what it costs when only half the pair showed up.
