@@ -34,6 +34,15 @@ type LedgerEntry = {
 // and finding text stay as written.
 const LEDGER: LedgerEntry[] = [
   {
+    date: "2026-08-22",
+    status: "under_challenge",
+    claim: "The 64 protocol entries added in the August 22 library expansion (ACT, ERP, Unified Protocol, Triple P, HIIT, and 59 more) cite landmark literature.",
+    finding:
+      "Each entry names a real, well-known study or meta-analysis (author, year, venue), but our build environment could not machine-verify DOIs, so the batch ships with citation anchors and deliberately blank DOI fields rather than invented ones.",
+    action:
+      "All 64 entries are queued for the same independent citation audit as the earlier batch of 20. DOIs will be filled in only from verified records; any entry whose cited finding doesn't survive the audit will be corrected or removed here, publicly.",
+  },
+  {
     date: "2026-08-18",
     status: "corrected",
     claim: "“7,000 research-backed prescriptions.”",
