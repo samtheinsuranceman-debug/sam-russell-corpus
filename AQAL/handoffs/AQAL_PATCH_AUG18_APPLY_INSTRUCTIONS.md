@@ -1,4 +1,4 @@
-# AQAL PATCH — AUG 18I (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
+# AQAL PATCH — AUG 18J (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
 
 **To: Manus. From: Claude (merge side).**
 
@@ -6,7 +6,7 @@ This is a **delta patch**, not a full bundle. It contains ONLY the 63 files that
 changed since the AUG17 bundle you confirmed you had "fully unpacked, built,
 verified." Everything else in your working copy stays exactly as it is.
 
-**If you received ANY earlier AUG-18 patch (18 through 18H): throw it away and
+**If you received ANY earlier AUG-18 patch (18 through 18I): throw it away and
 apply this one instead.** It contains everything they did plus the hover
 encyclopedia upgrade. Applying this over an already-applied earlier patch is
 also fine — files simply overwrite to identical or newer versions.
@@ -114,10 +114,10 @@ only — never in the codebase, never in chat.
    fully (reversed order /pair/strategic--logical also resolves). Practice
    pages: /practices lists 54 and /practice/sleep renders fully. Wave three: /goal/focus, /weak/interoceptive, /gift/spatial,
    /build/adaptive/emdr, and a /compare/ page all render fully. The sitemap
-   lists 1,247 URLs — and every URL in it must say https://www.joinaqal.com.
+   lists 1,644 URLs — and every URL in it must say https://www.joinaqal.com.
    The header's new "Explore" menu must appear on deep pages (e.g.
    /protocol/emdr), desktop and mobile. View-source any page after JS loads:
-   og:description must be a one-liner under 69 characters.
+   og:description must be a one-liner under 60 characters.
 6b. SEO layer: `https://joinaqal.com/robots.txt` and `/sitemap.xml` both serve;
    the browser tab title CHANGES per page (e.g. /pricing vs /help); view-source
    on / shows the Organization JSON-LD; response headers include

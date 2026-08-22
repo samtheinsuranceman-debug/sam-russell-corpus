@@ -1,6 +1,6 @@
-# WHAT'S NEW — AUG 18I delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18J delta (since the AUG17 bundle)
 
-Fourteen commits, 63 files. Feature-by-feature, with the files each one touches.
+Fifteen commits, 63 files. Feature-by-feature, with the files each one touches.
 
 ---
 
@@ -282,13 +282,13 @@ Five new families, all composed from real held data:
 
 ## 18. Per-page one-liners, Explore nav, www canonical (AUG 18I)
 
-- **Every one of the 1,247 pages now carries a UNIQUE short description
-  under 69 characters** — what the page is and what it means to the
+- **Every one of the 1,644 pages now carries a UNIQUE short description
+  under 60 characters** — what the page is and what it means to the
   reader — served as og:description/twitter:description (the long meta
   description stays). 32 hand-written for the core pages; the nine
   dynamic families compose theirs from real data.
 - **Enforced automatically:** a new test suite fails the build if any
-  page ever ships without a short, at 69+ characters, or duplicating
+  page ever ships without a short, at 60+ characters, or duplicating
   another — so every future page family inherits the rule.
 - **"Explore" menu in the site header on every page** (desktop + mobile):
   the 32 Lines, Power Combinations, Protocol Library, Keystone
@@ -299,6 +299,21 @@ Five new families, all composed from real held data:
 - **NEW** `client/src/lib/pageShorts.ts`, `pageShorts.test.ts`,
   `scripts/verify-shorts.ts`; **MOD** `shared/seo.ts`, `RouteMeta.tsx`,
   `PublicLayout.tsx`, `client/index.html`, `vitest.config.ts`
+
+## 19. Sub-60 shorts sitewide + 622 comparisons + the therapy pipeline (AUG 18J)
+
+- All page one-liners revised to UNDER 60 characters (was <69): 32
+  statics rewritten, all dynamic templates tightened. Verified
+  1,644/1,644 unique, longest 59. Tests enforce <60 from now on.
+- Comparison pages expanded 225 → 622: now every pair of protocols
+  sharing a line where at least one is PRIMARY — asymmetric pages
+  render "direct road vs supporting road" copy with role-aware
+  choose-logic. Sitemap: 1,644 URLs.
+- The 1,000-therapy expansion pipeline: intake spec + research
+  commission committed to handoffs. Verified batches of 100 real,
+  DOI-backed therapies merge into the map and pages auto-generate
+  (~300–600 per batch) with metadata, shorts, and tests enforced.
+  No therapy publishes without a resolving citation.
 
 ---
 
