@@ -1,6 +1,6 @@
-# WHAT'S NEW — AUG 18J delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18K delta (since the AUG17 bundle)
 
-Fifteen commits, 63 files. Feature-by-feature, with the files each one touches.
+Sixteen commits, 67 files. Feature-by-feature, with the files each one touches.
 
 ---
 
@@ -314,6 +314,24 @@ Five new families, all composed from real held data:
   DOI-backed therapies merge into the map and pages auto-generate
   (~300–600 per batch) with metadata, shorts, and tests enforced.
   No therapy publishes without a resolving citation.
+
+## 20. The Myth Museum + Why We Fall (AUG 18K)
+
+- **/myths + /myth/<id>** — 72 documented failed therapies, verdict-
+  filterable (DEBUNKED / NO EVIDENCE / HARMFUL / REPLICATION FAILED /
+  OVERCLAIMED). Every exhibit: the claim, why it failed with a named
+  checkable source anchor, the cultural-appeal reading explicitly
+  labeled as analysis, and the real library alternative. Exhibits never
+  contradict our own cited protocols.
+- **/why-we-fall** — the long-form essay on why America buys therapies
+  that fail their tests: measured mechanisms tagged ESTABLISHED,
+  cultural amplifiers tagged INTERPRETATION, one paragraph tagged
+  SPECULATION. The house rule made visible.
+- Explore nav gains The Myth Museum. Sitemap: 1,718 URLs, every page
+  still carrying its unique sub-60-character description (enforced).
+- **NEW** `client/src/lib/mythMuseum.ts`, `MythDetail.tsx`, `Myths.tsx`,
+  `WhyWeFall.tsx`; **MOD** `shared/seo.ts`, `RouteMeta.tsx`,
+  `pageShorts.ts`, `PublicLayout.tsx`, `App.tsx`, tests
 
 ---
 
