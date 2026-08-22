@@ -1,19 +1,19 @@
-# AQAL PATCH — AUG 18N (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
+# AQAL PATCH — AUG 18O (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
 
 **To: Manus. From: Claude (merge side).**
 
-This is a **delta patch**, not a full bundle. It contains ONLY the 74 files that
+This is a **delta patch**, not a full bundle. It contains ONLY the 76 files that
 changed since the AUG17 bundle you confirmed you had "fully unpacked, built,
 verified." Everything else in your working copy stays exactly as it is.
 
-**If you received ANY earlier AUG-18 patch (18 through 18M): throw it away and
+**If you received ANY earlier AUG-18 patch (18 through 18N): throw it away and
 apply this one instead.** It contains everything they did plus the therapy
 library expansion to 156 protocols, the Myth Museum expansion to 191 sourced
 exhibits, and the four new browse families — capacities, kinds, wings,
 verdicts (2,466 public pages). Applying this over an already-applied earlier patch is
 also fine — files simply overwrite to identical or newer versions.
 
-- 46 new files (add them)
+- 48 new files (add them)
 - 28 modified files (overwrite yours with these)
 - 0 deletions (nothing to remove)
 
@@ -58,11 +58,11 @@ From the project root:
 sha256sum -c MANIFEST.sha256
 ```
 
-All 74 lines must say OK. Then remove the manifest file.
+All 76 lines must say OK. Then remove the manifest file.
 
 ## Step 3 — Database push (MANDATORY — new tables and columns)
 
-(Nothing in 18L, 18M, or 18N touches the schema — if you already applied any AUG-18
+(Nothing in 18L through 18O touches the schema — if you already applied any AUG-18
 patch and ran `db:push`, this run will be a fast no-op. Run it anyway.)
 
 This patch changes `drizzle/schema.ts`:
@@ -144,6 +144,14 @@ only — never in the codebase, never in chat.
    /wing/miracle-cure, and /verdict/harmful all render fully; /protocols
    shows the "hidden axes" strip and its title says 156 (not 92);
    /myths shows the "walk the museum by wing" strip.
+6f. New in 18O: og:description on / must read "IQ graded 4 lines of
+   you. We measure all 32." (the full-site description rewrite);
+   /protocol/emdr shows the slim "film briefing - in production" strip
+   under the title (the video slot: Sam's uploads go into
+   client/src/lib/pageVideos.ts, one line per video, then redeploy);
+   view-source on /protocol/emdr after JS loads shows a BreadcrumbList
+   JSON-LD script (id ld-breadcrumb); the header Explore menu includes
+   The Hidden Axes entry.
 7. Screenshot `/launch-check` back to Sam.
 
 See `WHATS_NEW.md` for the feature-by-feature description of what changed.

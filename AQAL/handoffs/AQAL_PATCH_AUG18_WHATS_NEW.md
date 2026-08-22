@@ -1,6 +1,33 @@
-# WHAT'S NEW — AUG 18N delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18O delta (since the AUG17 bundle)
 
-Nineteen commits, 74 files. Feature-by-feature, with the files each one touches.
+Twenty commits, 76 files. Feature-by-feature, with the files each one touches.
+
+---
+
+## 0000. NEW IN 18O — the magnetism pass + the video system
+
+Every description on the site — all 34 static page shorts (homepage
+included) and all 14 dynamic family formulas covering 2,466 pages — was
+rewritten for maximum pull, each still unique and under 60 characters
+(build-enforced). Sample: the homepage now reads "IQ graded 4 lines of
+you. We measure all 32."
+
+NEW site-wide video system: client/src/lib/pageVideos.ts maps ANY page
+path to a video URL (YouTube/Vimeo/direct file). The PageVideo component
+is mounted on the protocol, myth, capacity, kind, wing, and verdict
+families — a configured page renders a lazy 16:9 player, an unconfigured
+one shows the slim "film briefing - in production" strip. Adding a video
+is a one-line config edit + redeploy.
+
+SEO checklist re-applied to all new families: BreadcrumbList JSON-LD on
+every deep-page family (14 path prefixes), assessment CTAs on the
+kind/wing/verdict pages, The Hidden Axes in the Explore menu.
+
+- NEW client/src/lib/pageVideos.ts, components/PageVideo.tsx
+- MOD shared/seo.ts (all static shorts), lib/pageShorts.ts (all
+  formulas), components/RouteMeta.tsx (breadcrumbs),
+  components/PublicLayout.tsx (menu), six detail pages (video slots,
+  CTAs)
 
 ---
 
