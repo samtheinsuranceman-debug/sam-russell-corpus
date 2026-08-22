@@ -43,4 +43,15 @@ describe("myth museum sitemap sync", () => {
     const { MYTHS } = await import("./mythMuseum");
     expect(MYTH_IDS).toEqual(MYTHS.map((m) => m.id));
   });
+
+  it("every exhibit belongs to a wing with a real profile", async () => {
+    const { MYTHS } = await import("./mythMuseum");
+    const { MYTH_WING, WING_PROFILES } = await import("./mythWings");
+    const missing = MYTHS.filter((m) => !(m.id in MYTH_WING)).map((m) => m.id);
+    expect(missing).toEqual([]);
+    const badRefs = Object.entries(MYTH_WING).filter(([, w]) => !(w in WING_PROFILES));
+    expect(badRefs).toEqual([]);
+    const orphans = Object.keys(MYTH_WING).filter((k) => !MYTHS.some((m) => m.id === k));
+    expect(orphans).toEqual([]);
+  });
 });

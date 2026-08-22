@@ -8,6 +8,7 @@
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { MYTHS, MYTH_VERDICT_META, mythById } from "@/lib/mythMuseum";
+import { wingFor } from "@/lib/mythWings";
 import NotFound from "@/pages/NotFound";
 
 const INK = "#141009";
@@ -30,6 +31,7 @@ export default function MythDetail() {
   const m = mythById(params.id ?? "");
   if (!m) return <NotFound />;
   const v = MYTH_VERDICT_META[m.verdict];
+  const wing = wingFor(m.id);
   const idx = MYTHS.indexOf(m);
   const prev = MYTHS[(idx + MYTHS.length - 1) % MYTHS.length];
   const next = MYTHS[(idx + 1) % MYTHS.length];
@@ -48,6 +50,11 @@ export default function MythDetail() {
           <span style={{ ...mono, fontSize: "10px", letterSpacing: "0.14em", textTransform: "uppercase", padding: "6px 12px", borderRadius: "999px", color: v.color, border: `1px solid ${v.color}66`, background: `${v.color}11` }}>
             {m.verdict} · {v.note}
           </span>
+          {wing && (
+            <span style={{ ...mono, fontSize: "10px", letterSpacing: "0.14em", textTransform: "uppercase", padding: "6px 12px", borderRadius: "999px", color: MUTED, border: `1px solid ${LINE_C}` }}>
+              {wing.label.split(" — ")[0]}
+            </span>
+          )}
         </div>
 
         <Label>The claim it made</Label>
@@ -69,6 +76,30 @@ export default function MythDetail() {
             <Link href="/why-we-fall" style={{ color: CHAMPAGNE }}>Why We Fall for It</Link>.
           </p>
         </div>
+
+        {wing && (
+          <div className="rounded-2xl p-6 mb-6" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
+            <Label color={CREAM2}>The anatomy of this family — {wing.label}</Label>
+            <div className="space-y-4">
+              <div>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: EMBER, margin: "0 0 4px" }}>How the family claims to work</p>
+                <p style={{ fontSize: "13.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{wing.pattern}</p>
+              </div>
+              <div>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: CHAMPAGNE, margin: "0 0 4px" }}>Why it feels like it works — the honest psychology</p>
+                <p style={{ fontSize: "13.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{wing.seduction}</p>
+              </div>
+              <div>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: JADE, margin: "0 0 4px" }}>The tell-tale signs</p>
+                <p style={{ fontSize: "13.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{wing.tell}</p>
+              </div>
+              <div>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED, margin: "0 0 4px" }}>The American hook — our analysis, labeled as analysis</p>
+                <p style={{ fontSize: "13.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{wing.hook}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {m.instead && (
           <div className="rounded-2xl p-6 mb-8" style={{ border: `1px solid ${JADE}44`, borderLeft: `3px solid ${JADE}`, background: "rgba(155,192,178,0.05)" }}>

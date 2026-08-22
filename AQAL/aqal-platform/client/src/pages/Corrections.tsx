@@ -36,6 +36,15 @@ const LEDGER: LedgerEntry[] = [
   {
     date: "2026-08-22",
     status: "under_challenge",
+    claim: "The 119 Myth Museum exhibits added in the August 22 expansion carry accurate sourced verdicts.",
+    finding:
+      "Each new exhibit names a checkable anchor — a ruling, trial, or documented case (FTC settlements, JAMA/NEJM/Lancet trials, GAO reports) — but the anchors have not yet passed the same independent citation audit as the protocol library, and each 'appeal' and 'American hook' section is cultural interpretation, labeled as such on every page.",
+    action:
+      "All 119 exhibits are queued for the standing citation audit alongside the therapy batches. Any exhibit whose verdict or anchor doesn't survive verification will be corrected or withdrawn here, publicly — the Museum is held to the same standard as the library it guards.",
+  },
+  {
+    date: "2026-08-22",
+    status: "under_challenge",
     claim: "The 64 protocol entries added in the August 22 library expansion (ACT, ERP, Unified Protocol, Triple P, HIIT, and 59 more) cite landmark literature.",
     finding:
       "Each entry names a real, well-known study or meta-analysis (author, year, venue), but our build environment could not machine-verify DOIs, so the batch ships with citation anchors and deliberately blank DOI fields rather than invented ones.",
