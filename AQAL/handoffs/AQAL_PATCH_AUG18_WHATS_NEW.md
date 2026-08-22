@@ -1,6 +1,6 @@
-# WHAT'S NEW — AUG 18H delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18I delta (since the AUG17 bundle)
 
-Thirteen commits, 59 files. Feature-by-feature, with the files each one touches.
+Fourteen commits, 63 files. Feature-by-feature, with the files each one touches.
 
 ---
 
@@ -279,6 +279,26 @@ Five new families, all composed from real held data:
   `GiftLine.tsx`, `BuildDetail.tsx`; **MOD** `shared/seo.ts`,
   `RouteMeta.tsx`, `LineDetail.tsx`, `TherapyDetail.tsx`,
   `Practices.tsx`, `App.tsx`
+
+## 18. Per-page one-liners, Explore nav, www canonical (AUG 18I)
+
+- **Every one of the 1,247 pages now carries a UNIQUE short description
+  under 69 characters** — what the page is and what it means to the
+  reader — served as og:description/twitter:description (the long meta
+  description stays). 32 hand-written for the core pages; the nine
+  dynamic families compose theirs from real data.
+- **Enforced automatically:** a new test suite fails the build if any
+  page ever ships without a short, at 69+ characters, or duplicating
+  another — so every future page family inherits the rule.
+- **"Explore" menu in the site header on every page** (desktop + mobile):
+  the 32 Lines, Power Combinations, Protocol Library, Keystone
+  Practices, Sample Report, 2-Minute Quiz, Corrections Ledger, Help.
+- **Canonical host is now www.joinaqal.com** across all canonicals,
+  og:urls, the sitemap, robots.txt, and index.html. See the
+  APPLY_INSTRUCTIONS env section — DNS for www is REQUIRED before deploy.
+- **NEW** `client/src/lib/pageShorts.ts`, `pageShorts.test.ts`,
+  `scripts/verify-shorts.ts`; **MOD** `shared/seo.ts`, `RouteMeta.tsx`,
+  `PublicLayout.tsx`, `client/index.html`, `vitest.config.ts`
 
 ---
 

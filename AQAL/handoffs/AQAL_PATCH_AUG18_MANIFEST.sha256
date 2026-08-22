@@ -1,16 +1,18 @@
-86c9fc7287a4980e6133dad0b12c15caea3013386b7efe1be3be71a5b6a07dd4  ./client/index.html
+e163d3d2d7988748b6daf08fe611a63a2e76228ffb99c79f52e935e3912cbe95  ./client/index.html
 9c45f0473b1d9f518026df8a94d5b3f1d97aa75d85049e447beef3256c17edbc  ./client/public/founder-sam-russell.jpg
 c4c18d53c938cacf6438e600a07d7baebe5179655da710248f8c3cb9ae66cd89  ./client/public/og-cover.png
 66a9d0470205acb706d15f36f8e3d72e417de89a9b561fc63f5e2c6dc35262b1  ./client/src/App.tsx
 b6b7d8d39e70f4785844b3e6199c99969e2810a41a7c3256096af79f9365de2f  ./client/src/components/LineInfoModal.tsx
 02caacbf3030dee29708a71f061d2cf104f9c52d8d7e52cde14dc750098d7217  ./client/src/components/PanelTrust.tsx
-15c42902c4b3ba097452d7dee481c4706927d8d1563a0ec2e048e78a6407f032  ./client/src/components/PublicLayout.tsx
-e3f492fab4055d3a1bc0208b60dbe2392633f00cd2920e60f20a354278c38329  ./client/src/components/RouteMeta.tsx
+76152bf9bb3af05504c84c707d3eb7e0f5baf405e1959fc4793ac49c89e64f22  ./client/src/components/PublicLayout.tsx
+dd2806d6672b28866b56bb6de1d6784e076b2305084bb6346dcdb9c50ccc9c88  ./client/src/components/RouteMeta.tsx
 648fdb5485538e3816179e81565cbe27053d6d460263076279a19e9fe23355ce  ./client/src/components/SupportWidget.tsx
 c90637844bf80b197c9342c736c28dd60cb430ac4092f491a74fa63aa6333314  ./client/src/lib/lineDeepDives.ts
 74544b5572c44658e72bc7b644eaf68725b346079250a1517bd43ef19c392554  ./client/src/lib/lineEncyclopedia.ts
 895a883a7642fabf67b4ef0fbeea6e84820b592ab9fe45336dcc2b1b3fd97414  ./client/src/lib/linePairs.ts
 44967fa36b6d558263da2c1564fa613683a3d5545beedd7bb8904ab0747373dd  ./client/src/lib/lineVideos.ts
+b1f420274adb42ff728aa9e372014fcc13b36bd0d56347d3c452c417c1a7af58  ./client/src/lib/pageShorts.test.ts
+74b0d3617b130056412d40ba734b424b26bee6a677a7f56403d18cdf225214c7  ./client/src/lib/pageShorts.ts
 38c433906958e3e7072583cf7fec3bbed4b0d910a11eca207de85a0e240b0e88  ./client/src/lib/therapyKinds.ts
 af7808f66f817e7a91a5d2b05f4afb06ea8a127894cc339f698c7d25082ae2fd  ./client/src/pages/About.tsx
 53fb4a0d2fa2688c994ba850222432f7807438fbe6456e0c83f38cb859d02baf  ./client/src/pages/Assessment.tsx
@@ -46,6 +48,7 @@ bec04bb2b4e21fdb5271e6606f8d8d2205698208d4835e4340264967a81b58cd  ./client/src/p
 07d5dc8a96ce6a934392336f496152ec0e917691d2a1fe6e7a792410aafd0830  ./client/src/pages/WelcomeBack.tsx
 5515e028ce18be6b69e5a42d2b91fcc79a0f130892fb14534fe35c7a1374c611  ./client/src/pages/WhichArchetype.tsx
 7468a0af753690c95ea39a42210142b03224439aadb1eb844c9c604508245d81  ./drizzle/schema.ts
+0a251bdf69958655f8fbb9ed956cfbb813f99bcb47b8521fb75a43610479719c  ./scripts/verify-shorts.ts
 606a596992425d15c12f115c04e9b0eb2f63081ba43356362fc6dd3c5e3e57aa  ./server/_core/index.ts
 fc268be6b966e9749fef4027535585d999e27be01300af3dc61e7ee2dfbe3989  ./server/_core/vite.ts
 8bc8d43293fdfdf82deca86c56a15aa534f2bf0136a6defbb7273db310f465a3  ./server/audioRetention.ts
@@ -56,4 +59,5 @@ ea9033f4553fb9a3fa6528c58930960955ac1e732a185ad9650dc6e1285e730f  ./server/platf
 e1f4a4e5872a8274d1a1bc3ff30dd0a32cd9b2f259c141892f49d841077c1302  ./server/platform/llm.ts
 2d9a36c9f4772c32ac77e1d9823492717d5ac64f34a20acfdf4a1d3d6ef10adb  ./server/platform/panel.ts
 e1e565157eb3d01d5469e9c446d8e2410def75dc6ddae4808142186f31fe25cd  ./server/routers.ts
-b0b80088e0455125bd1652d581737f86c5f8c56573aa01cc4c390e02a1a568e6  ./shared/seo.ts
+4689b37e0f82dfda688ff7bc54952a59ed6e8aa938b38005a0f93a9ecd2ea743  ./shared/seo.ts
+76fcc0a5858a74554275ac6d3346a8f0e4fc823241178163a52870fd91a0cb46  ./vitest.config.ts
