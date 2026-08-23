@@ -6,6 +6,7 @@
 // ============================================================
 import { useEffect } from "react";
 import { LINE_ENCYCLOPEDIA, G_BAND_LABEL } from "@/lib/lineEncyclopedia";
+import { LINE_MEANING } from "@/lib/lineMeaning";
 
 const INK = "#141009";
 const INK2 = "#1B1610";
@@ -38,14 +39,15 @@ export default function LineInfoModal({ line, onClose }: { line: string | null; 
     : info.g === "partially-linked" ? "Partially overlaps g — an IQ score hints at it but doesn't capture it."
     : "NOT part of general intelligence — an IQ test cannot see this line at all.";
   const oddsPct = Math.min(100, Math.max(0.4, (info.testedOdds / 1000) * 100));
+  const meaning = LINE_MEANING[line];
 
   return (
-    <div className="fixed inset-0 z-[9990] flex items-center justify-center p-4 sm:p-6"
+    <div className="fixed inset-0 z-[9990] flex items-start justify-center p-2 pt-2 sm:p-4 sm:pt-3"
       role="dialog" aria-modal="true" aria-label={`About the ${line} line`}
       onClick={onClose}
       style={{ background: "rgba(10,8,5,0.82)", backdropFilter: "blur(3px)" }}>
       <div onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-[620px] max-h-[88vh] overflow-y-auto rounded-2xl"
+        className="w-full max-w-[680px] max-h-[96vh] overflow-y-auto rounded-2xl overscroll-contain"
         style={{ background: `linear-gradient(180deg,${INK2},${INK})`, border: `1px solid ${CHAMPAGNE}44`, boxShadow: "0 24px 80px rgba(0,0,0,0.6)" }}>
         <div className="p-6 sm:p-8">
           {/* Header */}
@@ -116,6 +118,44 @@ export default function LineInfoModal({ line, onClose }: { line: string | null; 
             </p>
             <p style={{ color: CREAM2, fontSize: "13.5px", lineHeight: 1.6, margin: 0 }}>{info.benefit}</p>
           </div>
+
+          {meaning && (
+            <>
+              <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase", color: CHAMPAGNE, margin: "0 0 10px", paddingTop: "6px", borderTop: `1px solid ${LINE_C}` }}>
+                Keep reading — what this line could mean for you
+              </p>
+              <div className="space-y-4" style={{ marginBottom: "20px" }}>
+                <div>
+                  <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: JADE, margin: "0 0 4px" }}>For your life and outcomes</p>
+                  <p style={{ color: CREAM2, fontSize: "13.5px", lineHeight: 1.65, margin: 0 }}>{meaning.forYou}</p>
+                </div>
+                <div>
+                  <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: JADE, margin: "0 0 4px" }}>Used consciously, every day</p>
+                  <p style={{ color: CREAM2, fontSize: "13.5px", lineHeight: 1.65, margin: 0 }}>{meaning.lived}</p>
+                </div>
+                <div>
+                  <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: JADE, margin: "0 0 4px" }}>What it changes for the people you love</p>
+                  <p style={{ color: CREAM2, fontSize: "13.5px", lineHeight: 1.65, margin: 0 }}>{meaning.others}</p>
+                </div>
+                <div>
+                  <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: EMBER, margin: "0 0 4px" }}>The cost of never measuring it</p>
+                  <p style={{ color: CREAM2, fontSize: "13.5px", lineHeight: 1.65, margin: 0 }}>{meaning.cost}</p>
+                </div>
+                <div>
+                  <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: CHAMPAGNE, margin: "0 0 4px" }}>How new is this science?</p>
+                  <p style={{ color: CREAM2, fontSize: "13.5px", lineHeight: 1.65, margin: 0 }}>{meaning.history}</p>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {meaning.personas.map((pe) => (
+                    <div key={pe.tag} style={{ border: `1px solid ${LINE_C}`, borderRadius: "10px", background: "rgba(241,234,219,0.02)", padding: "12px 14px" }}>
+                      <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.14em", textTransform: "uppercase", color: CHAMPAGNE, margin: "0 0 5px" }}>{pe.tag}</p>
+                      <p style={{ color: CREAM2, fontSize: "12.5px", lineHeight: 1.6, margin: 0 }}>{pe.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
 
           {/* CTA */}
           <div className="flex items-center gap-3 flex-wrap">

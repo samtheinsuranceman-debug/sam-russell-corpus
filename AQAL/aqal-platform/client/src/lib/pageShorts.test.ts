@@ -64,6 +64,16 @@ describe("myth museum sitemap sync", () => {
     }
   });
 
+  it("line and therapy meaning content covers every line and kind", async () => {
+    const { LINE_NAMES, KIND_IDS } = await import("@shared/seo");
+    const { LINE_MEANING } = await import("./lineMeaning");
+    const { THERAPY_MEANING } = await import("./therapyMeaning");
+    expect(LINE_NAMES.filter((n) => !(n in LINE_MEANING))).toEqual([]);
+    expect(Object.keys(LINE_MEANING).filter((k) => !LINE_NAMES.includes(k))).toEqual([]);
+    expect(KIND_IDS.filter((k) => !(k in THERAPY_MEANING))).toEqual([]);
+    for (const m of Object.values(LINE_MEANING)) expect(m.personas.length).toBe(2);
+  });
+
   it("every exhibit belongs to a wing with a real profile", async () => {
     const { MYTHS } = await import("./mythMuseum");
     const { MYTH_WING, WING_PROFILES } = await import("./mythWings");

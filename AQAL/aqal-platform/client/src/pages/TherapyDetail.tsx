@@ -12,6 +12,7 @@
 import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
+import { THERAPY_MEANING } from "@/lib/therapyMeaning";
 import { THERAPY_LINE_MAP, THERAPY_THIN_LINES, type TherapyLineEntry } from "@shared/therapyLineMap";
 import { THERAPY_NAMES, therapySlug, therapyFromSlug, therapyDisplay, LINE_NAMES, lineSlug, COMPARE_PAIRS, compareSlug, engineLineSlug } from "@shared/seo";
 import { kindFor, KIND_PROFILES, THERAPY_KIND } from "@/lib/therapyKinds";
@@ -77,6 +78,7 @@ export default function TherapyDetail() {
   const targetLines = entries.map((e) => e.line);
   const anyThin = targetLines.some((l) => THERAPY_THIN_LINES.includes(l));
   const est = estimateFor(entries, THERAPY_KIND[name] ?? "skill");
+  const meaning = THERAPY_MEANING[THERAPY_KIND[name] ?? "skill"];
 
   const idx = THERAPY_NAMES.indexOf(name);
   const prev = THERAPY_NAMES[(idx + THERAPY_NAMES.length - 1) % THERAPY_NAMES.length];
@@ -242,6 +244,41 @@ export default function TherapyDetail() {
             </div>
           ) : null;
         })()}
+
+        {/* What it could mean for you — the second page */}
+        {meaning && (
+          <>
+            <Label>What committing to this could mean for you</Label>
+            <div className="space-y-4 mb-8">
+              <div className="rounded-2xl p-6" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: "#9BC0B2", margin: "0 0 6px" }}>For your life and outcomes</p>
+                <p style={{ fontSize: "14.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{meaning.forYou}</p>
+              </div>
+              <div className="rounded-2xl p-6" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: "#9BC0B2", margin: "0 0 6px" }}>What it changes for the people around you</p>
+                <p style={{ fontSize: "14.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{meaning.ripple}</p>
+              </div>
+              <div className="rounded-2xl p-6" style={{ border: `1px solid #E2604A44`, borderLeft: `3px solid #E2604A`, background: "rgba(226,96,74,0.05)" }}>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: "#E2604A", margin: "0 0 6px" }}>The cost of leaving the gap alone</p>
+                <p style={{ fontSize: "14.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{meaning.cost}</p>
+              </div>
+            </div>
+
+            <Label>Two people, one protocol — how it lands differently</Label>
+            <div className="grid sm:grid-cols-2 gap-4 mb-4">
+              {meaning.personas.map((pe) => (
+                <div key={pe.tag} className="rounded-2xl p-6" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
+                  <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: CHAMPAGNE, margin: "0 0 6px" }}>{pe.tag}</p>
+                  <p style={{ fontSize: "13.5px", lineHeight: 1.7, color: CREAM2, margin: 0 }}>{pe.text}</p>
+                </div>
+              ))}
+            </div>
+            <p style={{ ...mono, fontSize: "10px", lineHeight: 1.7, color: MUTED, margin: "0 0 28px" }}>
+              These sections characterize this protocol's KIND ({kindLabel.toLowerCase()}) — honest generalizations from the
+              family's literature, applied to this protocol's mapped capacity. Typical, never a personal guarantee.
+            </p>
+          </>
+        )}
 
         {/* The honest estimate */}
         <div className="rounded-2xl p-6 mb-10" style={{ border: `1px solid ${CHAMPAGNE}44`, background: "rgba(224,198,140,0.05)" }}>

@@ -12,6 +12,7 @@ import { Link, useParams } from "wouter";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { LINE_ENCYCLOPEDIA, G_BAND_LABEL } from "@/lib/lineEncyclopedia";
 import { LINE_DEEP } from "@/lib/lineDeepDives";
+import { LINE_MEANING } from "@/lib/lineMeaning";
 import { LINE_VIDEOS, toEmbed } from "@/lib/lineVideos";
 import { LINE_NAMES, lineSlug, lineFromSlug, therapySlug, pairSlug } from "@shared/seo";
 import { keystoneForLine } from "@shared/keystonePractices";
@@ -84,6 +85,7 @@ export default function LineDetail() {
   if (!name) return <NotFound />;
   const info = LINE_ENCYCLOPEDIA[name];
   const deep = LINE_DEEP[name];
+  const meaning = LINE_MEANING[name];
   if (!info || !deep) return <NotFound />;
 
   const idx = LINE_NAMES.indexOf(name);
@@ -239,6 +241,45 @@ export default function LineDetail() {
             all 496 pairings →
           </Link>
         </div>
+
+        {/* What it could mean for you — the second page */}
+        {meaning && (
+          <>
+            <SectionLabel>What this line could mean for you</SectionLabel>
+            <div className="space-y-4 mb-8">
+              <div className="rounded-2xl p-6" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: "#9BC0B2", margin: "0 0 6px" }}>For your life and outcomes</p>
+                <p style={{ fontSize: "14.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{meaning.forYou}</p>
+              </div>
+              <div className="rounded-2xl p-6" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: "#9BC0B2", margin: "0 0 6px" }}>Used consciously, every day</p>
+                <p style={{ fontSize: "14.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{meaning.lived}</p>
+              </div>
+              <div className="rounded-2xl p-6" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: "#9BC0B2", margin: "0 0 6px" }}>What it changes for the people you love</p>
+                <p style={{ fontSize: "14.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{meaning.others}</p>
+              </div>
+              <div className="rounded-2xl p-6" style={{ border: `1px solid #E2604A44`, borderLeft: `3px solid #E2604A`, background: "rgba(226,96,74,0.05)" }}>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: "#E2604A", margin: "0 0 6px" }}>The cost of never measuring it</p>
+                <p style={{ fontSize: "14.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{meaning.cost}</p>
+              </div>
+              <div className="rounded-2xl p-6" style={{ border: `1px solid ${CHAMPAGNE}33`, borderLeft: `3px solid ${CHAMPAGNE}`, background: "rgba(224,198,140,0.04)" }}>
+                <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: CHAMPAGNE, margin: "0 0 6px" }}>How new is this science?</p>
+                <p style={{ fontSize: "14.5px", lineHeight: 1.75, color: CREAM2, margin: 0 }}>{meaning.history}</p>
+              </div>
+            </div>
+
+            <SectionLabel>Two people, one line — how it lands differently</SectionLabel>
+            <div className="grid sm:grid-cols-2 gap-4 mb-10">
+              {meaning.personas.map((pe) => (
+                <div key={pe.tag} className="rounded-2xl p-6" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
+                  <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.16em", textTransform: "uppercase", color: CHAMPAGNE, margin: "0 0 6px" }}>{pe.tag}</p>
+                  <p style={{ fontSize: "13.5px", lineHeight: 1.7, color: CREAM2, margin: 0 }}>{pe.text}</p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
         {/* CTA */}
         <div className="rounded-2xl p-7 mb-10 text-center" style={{ border: `1px solid ${CHAMPAGNE}44`, background: "rgba(224,198,140,0.05)" }}>
