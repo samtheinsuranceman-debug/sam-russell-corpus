@@ -1,19 +1,19 @@
-# AQAL PATCH — AUG 18Q (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
+# AQAL PATCH — AUG 18R (changes only) — SUPERSEDES ALL EARLIER AUG-18 PATCHES
 
 **To: Manus. From: Claude (merge side).**
 
-This is a **delta patch**, not a full bundle. It contains ONLY the 80 files that
+This is a **delta patch**, not a full bundle. It contains ONLY the 82 files that
 changed since the AUG17 bundle you confirmed you had "fully unpacked, built,
 verified." Everything else in your working copy stays exactly as it is.
 
-**If you received ANY earlier AUG-18 patch (18 through 18P): throw it away and
+**If you received ANY earlier AUG-18 patch (18 through 18Q): throw it away and
 apply this one instead.** It contains everything they did plus the therapy
 library expansion to 156 protocols, the Myth Museum expansion to 191 sourced
 exhibits, and the four new browse families — capacities, kinds, wings,
 verdicts (2,466 public pages). Applying this over an already-applied earlier patch is
 also fine — files simply overwrite to identical or newer versions.
 
-- 48 new files (add them)
+- 50 new files (add them)
 - 32 modified files (overwrite yours with these)
 - 0 deletions (nothing to remove)
 
@@ -58,7 +58,7 @@ From the project root:
 sha256sum -c MANIFEST.sha256
 ```
 
-All 80 lines must say OK. Then remove the manifest file.
+All 82 lines must say OK. Then remove the manifest file.
 
 ## Step 3 — Database push (MANDATORY — new tables and columns)
 
@@ -162,6 +162,13 @@ only — never in the codebase, never in chat.
    family — check /pair/logical--strategic, /practice/sleep,
    /goal/focus, /weak/interoceptive, /build/adaptive/emdr, /pairs,
    /lines, and /why-we-fall. The 404 page's gold button is black-text.
+6i. New in 18R: hover any homepage dial point — the popup now opens
+   from the TOP of the screen, full height, and scrolls; its lower half
+   is the new "what this line could mean for you" content (six
+   sections + two personas). /line/emotional and /protocol/emdr both
+   show the new "What this could mean for you" and "Two people"
+   sections. Roughly double the content on all 32 line pages and all
+   156 protocol pages.
 7. Screenshot `/launch-check` back to Sam.
 
 See `WHATS_NEW.md` for the feature-by-feature description of what changed.

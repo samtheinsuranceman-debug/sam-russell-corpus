@@ -1,6 +1,28 @@
-# WHAT'S NEW — AUG 18Q delta (since the AUG17 bundle)
+# WHAT'S NEW — AUG 18R delta (since the AUG17 bundle)
 
-Twenty-two commits, 80 files. Feature-by-feature, with the files each one touches.
+Twenty-three commits, 82 files. Feature-by-feature, with the files each one touches.
+
+---
+
+## NEW IN 18R — popup visibility fix + the meaning layer
+
+The encyclopedia popup now opens anchored to the TOP of the screen,
+spans the full viewport height, and scrolls internally — no more
+partially hidden content anywhere.
+
+The meaning layer doubles the 32 line pages and 156 protocol pages:
+every line now carries six authored dimensions (what it could mean for
+your life, conscious daily use, what it changes for loved ones, the
+cost of never measuring it, how old/new the science is with honest
+anchors, and two contrasting personas), rendered on the /line/ pages
+AND inside the popup as its scrollable second page. Every protocol
+carries the same structure authored per kind (for-you, ripple to
+others, cost of the gap, two personas) with an explicit kind-level
+disclosure. Coverage is test-enforced.
+
+- NEW client/src/lib/lineMeaning.ts, lib/therapyMeaning.ts
+- MOD components/LineInfoModal.tsx (top anchor + second page),
+  pages/LineDetail.tsx, pages/TherapyDetail.tsx, tests
 
 ---
 
