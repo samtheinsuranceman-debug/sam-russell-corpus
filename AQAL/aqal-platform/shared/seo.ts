@@ -27,7 +27,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/assessment": {
     title: "The 32-Line Intelligence Assessment — AQAL",
     description:
-      "27 spoken questions. A panel of eight AI models scores all 32 intelligence lines and returns your full cognitive map. Free for the first 10,000 founding members.",
+      "27 spoken questions. Eight AI models score all 32 intelligence lines and return your full cognitive map. Free for the first 10,000 founding members.",
     short: "Speak 27 answers. Eight AIs map your entire mind.",
   },
   "/pricing": {
@@ -39,13 +39,13 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/sample-report": {
     title: "Sample Intelligence Report — See the Deliverable — AQAL",
     description:
-      "A complete example AQAL report: 32 scored intelligence lines, master strength and weakness, prescriptions, and the first-week plan. Fictional member, real format.",
+      "An example AQAL report: 32 scored intelligence lines, master strength and weakness, prescriptions, and the first-week plan. Fictional member, real format.",
     short: "Hold the map of a whole mind. Yours is next.",
   },
   "/lines": {
     title: "The 32 Lines of Intelligence, Defined — AQAL",
     description:
-      "Every intelligence line we measure — from Logical and Spatial to Interoceptive, Adversarial, and Street Smarts — defined in plain language with the research behind each.",
+      "Every intelligence line we measure — from Logical and Spatial to Interoceptive, Adversarial, and Street Smarts — defined with the research behind each.",
     short: "School graded 4 intelligences. Meet all 32.",
   },
   "/science": {
@@ -87,7 +87,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/membership": {
     title: "What Membership Includes — AQAL Intelligence",
     description:
-      "Beyond the assessment: goal clocks, monthly protocols, the Black Box crash forensics, beliefs work, pulse checks, and a village of members who think like you don't.",
+      "Beyond the assessment: goal clocks, protocols, the Black Box crash forensics, beliefs work, pulse checks, and a village of members who think like you don't.",
     short: "Goal clocks, crash forensics, and your village.",
   },
   "/help": {
@@ -105,7 +105,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/terms": {
     title: "Terms of Service — AQAL Intelligence",
     description:
-      "The plain-language terms: founding members free for life in writing, private messages never read, data export and deletion rights, and the Black Box privacy contract.",
+      "Plain-language terms: founding members free for life in writing, private messages never read, data export and deletion rights, and the Black Box contract.",
     short: "Free-for-life in writing. Your data, your rules.",
   },
   "/privacy": {
@@ -117,17 +117,17 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/black-box": {
     title: "The Black Box — Crash Forensics for Your Life — AQAL",
     description:
-      "Record your biggest failures once, honestly. The panel extracts your Crash Signature — when X, you do Y, which causes Z — and builds the prevention architecture.",
+      "Record your biggest failures once, honestly. The panel extracts your Crash Signature — when X, you do Y, which causes Z — and builds your prevention plan.",
     short: "Your crashes share a signature. We extract it.",
   },
   "/login": {
     title: "Sign In — AQAL Intelligence",
-    description: "Sign in to your AQAL member portal — your 32-line profile, goals, protocols, and Black Box.",
+    description: "Sign in to your AQAL member portal — your 32-line profile, goal clocks, protocols, and Black Box. Founding members use the password chosen at claim.",
     short: "The control room for your mind. Sign in.",
   },
   "/reset-password": {
     title: "Reset Your Password — AQAL Intelligence",
-    description: "Request a secure one-hour reset link for your AQAL account.",
+    description: "Locked out? Request a secure reset link for your AQAL account — it lands in your verified email and stays valid for one hour. Check spam, then support.",
     short: "Locked out? One secure link. One hour.",
   },
   "/ecological-interventions": {
@@ -191,13 +191,13 @@ export const PAGE_META: Record<string, PageMeta> = {
     short: "Your IQ is 4 lines of 32. Measure the rest.",
   },
   "/protocols": {
-    title: "The Protocol Library — 156 Evidence-Backed Interventions — AQAL",
+    title: "Protocol Library — 156 Evidence-Backed Interventions — AQAL",
     description:
       "Every protocol mapped to the intelligence lines it builds — EMDR, MBSR, DBT, ACT, and 152 more — each with the peer-reviewed study behind the mapping.",
     short: "156 proven protocols. One is built for your repair.",
   },
   "/pairs": {
-    title: "Power Combinations — All 496 Intelligence Line Pairings — AQAL",
+    title: "Power Combinations — 496 Intelligence Line Pairings — AQAL",
     description:
       "Every two-line combination mapped: what each line gives the other, what the multiplication unlocks, and what half a pair quietly costs.",
     short: "496 pairings. One of them is your multiplier.",
@@ -217,7 +217,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/practices": {
     title: "The 54 Keystone Practices — Evidence-Tiered — AQAL",
     description:
-      "Sleep protection, implementation intentions, interoception training, and 51 more daily practices — each with its prescription, research basis, and honest evidence tier.",
+      "Sleep protection, implementation intentions, interoception training, and 51 more daily practices — each with its prescription and honest evidence tier.",
     short: "54 keystone practices. Small doses, real returns.",
   },
 };

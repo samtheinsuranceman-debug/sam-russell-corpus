@@ -11,7 +11,7 @@ import type { Request, Response } from "express";
 import { and, eq, lt, sql } from "drizzle-orm";
 import { getDb } from "./db";
 import { analyticsEvents, assessments, users } from "../drizzle/schema";
-import { sendEmail } from "./platform/email";
+import { sendMarketingEmail } from "./marketingEmail";
 
 const STALE_DAYS = 30;
 
@@ -55,11 +55,13 @@ export async function reentryHandler(req: Request, res: Response) {
         .where(and(eq(analyticsEvents.type, "reentry_sent"), eq(analyticsEvents.userId, u.id)));
       if (Number(n) > 0) continue;
       const appUrl = ((req.headers.origin as string) || `https://${req.headers.host || "joinaqal.com"}`).replace(/\/$/, "");
-      const result = await sendEmail(
+      const result = await sendMarketingEmail(
         u.email,
         "Nothing was lost — here's the 5-minute way back in",
         reentryHtml({ name: u.name, completed: a.completedQuestions, total: a.totalQuestions, appUrl }),
+        appUrl,
       );
+      if (result.skipped) continue;
       if (result.ok) {
         await db.insert(analyticsEvents).values({ type: "reentry_sent", userId: u.id, ok: true });
         sent++;

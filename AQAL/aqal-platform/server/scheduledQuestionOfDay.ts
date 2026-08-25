@@ -11,7 +11,7 @@ import type { Request, Response } from "express";
 import { and, eq, gte, sql } from "drizzle-orm";
 import { getDb } from "./db";
 import { analyticsEvents, assessments, responses, users } from "../drizzle/schema";
-import { sendEmail } from "./platform/email";
+import { sendMarketingEmail } from "./marketingEmail";
 import { QUESTION_TITLES } from "@shared/questionTitles";
 
 function qotdHtml(opts: { name?: string | null; n: number; title: string; streakLine: string; appUrl: string }): string {
@@ -68,11 +68,13 @@ export async function questionOfDayHandler(req: Request, res: Response) {
         : "";
 
       const appUrl = ((req.headers.origin as string) || `https://${req.headers.host || "joinaqal.com"}`).replace(/\/$/, "");
-      const result = await sendEmail(
+      const result = await sendMarketingEmail(
         u.email,
         `Today's question: "${QUESTION_TITLES[nextIdx]}"`,
         qotdHtml({ name: u.name, n: nextIdx + 1, title: QUESTION_TITLES[nextIdx], streakLine, appUrl }),
+        appUrl,
       );
+      if (result.skipped) continue;
       if (result.ok) {
         await db.insert(analyticsEvents).values({ type: "qotd_sent", userId: u.id, ok: true });
         sent++;

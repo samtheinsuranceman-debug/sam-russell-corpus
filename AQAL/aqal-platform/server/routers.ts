@@ -2,6 +2,7 @@ import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
 import { sendEmail, resultEmailHtml, dailyCheckinEmailHtml, foundingWelcomeEmailHtml } from "./platform/email";
+import { sendMarketingEmail } from "./marketingEmail";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
@@ -2138,8 +2139,8 @@ CRITICAL RULES:
             const r = await sendSms(t.reminderPhone, dailyCheckinSms());
             r.ok ? sent++ : failed++;
           } else if (t.reminderChannel === "email" && t.email) {
-            const r = await sendEmail(t.email, "Your AQAL daily check-in — reply Y or N", dailyCheckinEmailHtml({ dayNumber: day }));
-            r.ok ? sent++ : failed++;
+            const r = await sendMarketingEmail(t.email, "Your AQAL daily check-in — reply Y or N", dailyCheckinEmailHtml({ dayNumber: day }));
+            r.skipped ? skipped++ : r.ok ? sent++ : failed++;
           } else {
             skipped++;
           }

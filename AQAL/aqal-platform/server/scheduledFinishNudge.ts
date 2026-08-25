@@ -14,8 +14,8 @@
 import type { Request, Response } from "express";
 import { sdk } from "./_core/sdk";
 import { getUnfinishedAssessmentRecipients, markFinishNudgeSent } from "./db";
-import { sendEmail } from "./platform/email";
 import { unfinishedAssessmentEmailHtml } from "./platform/email";
+import { sendMarketingEmail } from "./marketingEmail";
 
 const MIN_HOURS = 24;  // wait at least a day before nudging
 const MAX_HOURS = 96;  // don't chase people who signed up >4 days ago
@@ -30,11 +30,13 @@ export async function finishNudgeHandler(req: Request, res: Response) {
     const recipients = await getUnfinishedAssessmentRecipients(MIN_HOURS, MAX_HOURS);
     let sent = 0, failed = 0;
     for (const r of recipients) {
-      const result = await sendEmail(
+      const result = await sendMarketingEmail(
         r.email,
         "Your AQAL map is half-drawn — finish it",
         unfinishedAssessmentEmailHtml({ name: r.name ?? undefined, appUrl }),
+        appUrl,
       );
+      if (result.skipped) { await markFinishNudgeSent(r.userId); continue; }
       if (result.ok) {
         await markFinishNudgeSent(r.userId);
         sent++;

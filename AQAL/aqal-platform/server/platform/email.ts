@@ -5,6 +5,7 @@
 // Swap seam mirrors the LLM/STT/storage providers: real when configured,
 // safe deterministic fallback otherwise.
 
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { RESEND_API_KEY, EMAIL_FROM, emailProvider } from "./config";
 
 export type SendEmailResult = { ok: boolean; mocked: boolean; error?: string };
@@ -13,6 +14,7 @@ export async function sendEmail(
   to: string,
   subject: string,
   html: string,
+  opts?: { headers?: Record<string, string> },
 ): Promise<SendEmailResult> {
   if (emailProvider() === "mock") {
     console.log(`[email:mock] → ${to} · ${subject}`);
@@ -25,7 +27,7 @@ export async function sendEmail(
         Authorization: `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from: EMAIL_FROM, to, subject, html }),
+      body: JSON.stringify({ from: EMAIL_FROM, to, subject, html, ...(opts?.headers ? { headers: opts.headers } : {}) }),
     });
     if (!res.ok) {
       const body = await res.text().catch(() => "");
@@ -35,6 +37,34 @@ export async function sendEmail(
   } catch (err) {
     return { ok: false, mocked: false, error: err instanceof Error ? err.message : String(err) };
   }
+}
+
+// ── CAN-SPAM unsubscribe plumbing ─────────────────────────────────────────
+// Every marketing/nudge email carries a working, no-login unsubscribe link
+// (and RFC 8058 one-click headers). The link is an HMAC over the address, so
+// it can't be forged to opt other people out. Transactional mail (verify,
+// reset, results, support) is exempt and never carries the footer.
+
+export function unsubscribeToken(email: string): string {
+  const secret = process.env.JWT_SECRET || "aqal-unsubscribe";
+  return createHmac("sha256", secret).update(email.trim().toLowerCase()).digest("hex").slice(0, 32);
+}
+
+export function verifyUnsubscribeToken(email: string, token: string): boolean {
+  const expected = Buffer.from(unsubscribeToken(email));
+  const got = Buffer.from(String(token));
+  return got.length === expected.length && timingSafeEqual(expected, got);
+}
+
+export function unsubscribeUrl(appUrl: string, email: string): string {
+  const base = (appUrl || "https://www.joinaqal.com").replace(/\/$/, "");
+  return `${base}/api/unsubscribe?e=${encodeURIComponent(email)}&t=${unsubscribeToken(email)}`;
+}
+
+export function withUnsubscribeFooter(html: string, url: string): string {
+  const footer = `<p style="color:#6f6a60;font-size:11px;margin-top:18px;">Don't want these emails? <a href="${url}" style="color:#8c857a;">Unsubscribe</a> — one click, no login, honored immediately. Account emails (receipts, password resets) still work.</p>`;
+  const close = "</div></body></html>";
+  return html.includes(close) ? html.replace(close, `${footer}${close}`) : html + footer;
 }
 
 // Minimal branded HTML for the free, voice-based result email.
@@ -161,6 +191,6 @@ export function dailyCheckinEmailHtml(opts: { dayNumber?: number; recoveryLine?:
     <h1 style="font-size:22px;font-weight:600;margin:0 0 12px;">Did you complete today's tracking?</h1>
     <p style="color:#b9b2a6;font-size:15px;line-height:1.6;margin:0;">Just reply <b style="color:#e0c68c;">Y</b> or <b style="color:#e0c68c;">N</b>. That's the whole thing. Showing up beats getting it perfect.</p>
     ${anchor}
-    <p style="color:#6f6a60;font-size:12px;margin-top:26px;">You asked for these for your first 30 days. Reply STOP to turn them off any time.</p>
+    <p style="color:#6f6a60;font-size:12px;margin-top:26px;">You asked for these for your first 30 days. The unsubscribe link below turns them off any time.</p>
   </div></body></html>`;
 }

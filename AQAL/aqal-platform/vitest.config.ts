@@ -21,6 +21,7 @@ export default defineConfig({
       // Pure-data integrity tests (no DOM) can live under client/ too.
       "client/src/pages/archetypesData.test.ts",
       "client/src/lib/pageShorts.test.ts",
+      "client/src/lib/routeMetaFor.test.ts",
     ],
   },
 });

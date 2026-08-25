@@ -131,6 +131,44 @@ async function startServer() {
     res.json({ ok: true });
   });
 
+  // ── CAN-SPAM unsubscribe — no login, signed link, honored immediately ──────
+  // GET renders a tiny confirmation page (the footer link); POST is the
+  // RFC 8058 one-click endpoint mailbox providers hit from the header.
+  {
+    const handleUnsubscribe = async (req: express.Request): Promise<boolean> => {
+      const e = String(req.query.e ?? "").trim();
+      const t = String(req.query.t ?? "").trim();
+      if (!e || !t) return false;
+      const { verifyUnsubscribeToken } = await import("../platform/email");
+      if (!verifyUnsubscribeToken(e, t)) return false;
+      const { getDb } = await import("../db");
+      const db = await getDb();
+      if (!db) return false;
+      const { users } = await import("../../drizzle/schema");
+      const { and, eq, isNull } = await import("drizzle-orm");
+      await db.update(users).set({ emailOptOutAt: new Date() })
+        .where(and(eq(users.email, e), isNull(users.emailOptOutAt)));
+      return true;
+    };
+    const page = (ok: boolean) =>
+      `<!doctype html><html><body style="margin:0;background:#161310;font-family:Georgia,serif;color:#efe9dc;">
+      <div style="max-width:520px;margin:0 auto;padding:60px 28px;">
+        <div style="font-family:monospace;font-size:11px;letter-spacing:.24em;color:#c9a24b;text-transform:uppercase;margin-bottom:18px;">AQAL Intelligence</div>
+        <h1 style="font-size:24px;font-weight:600;margin:0 0 14px;">${ok ? "You're unsubscribed." : "That link didn't check out."}</h1>
+        <p style="color:#b9b2a6;font-size:15px;line-height:1.65;">${ok
+          ? "No more reminder or update emails — effective immediately. Account emails (receipts, password resets, verification) still work. Changed your mind? Just write support and we'll switch it back on."
+          : "The unsubscribe link looks incomplete or altered. Open the link straight from the email footer, or contact support and we'll take you off by hand."}</p>
+      </div></body></html>`;
+    app.get("/api/unsubscribe", async (req, res) => {
+      try { res.status(200).type("html").send(page(await handleUnsubscribe(req))); }
+      catch { res.status(200).type("html").send(page(false)); }
+    });
+    app.post("/api/unsubscribe", async (req, res) => {
+      try { await handleUnsubscribe(req); } catch { /* one-click must 200 */ }
+      res.status(200).json({ ok: true });
+    });
+  }
+
   // ── robots.txt + sitemap.xml, generated from the shared SEO table ──────────
   {
     const { SITE_ORIGIN, SITEMAP_PATHS, NOINDEX_PATHS, canonicalUrl } = await import("@shared/seo");

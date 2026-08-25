@@ -14,7 +14,7 @@
 import type { Request, Response } from "express";
 import { sdk } from "./_core/sdk";
 import { getTrackerReengagementRecipients, markTrackerReminderSent } from "./db";
-import { sendEmail } from "./platform/email";
+import { sendMarketingEmail } from "./marketingEmail";
 
 const THROTTLE_DAYS = 14; // ~twice a month
 
@@ -43,7 +43,8 @@ export async function trackerReengagementHandler(req: Request, res: Response) {
     const recipients = await getTrackerReengagementRecipients(THROTTLE_DAYS);
     let sent = 0, failed = 0;
     for (const r of recipients) {
-      const result = await sendEmail(r.email, "Ready for your next AQAL cycle?", reengagementHtml());
+      const result = await sendMarketingEmail(r.email, "Ready for your next AQAL cycle?", reengagementHtml());
+      if (result.skipped) { await markTrackerReminderSent(r.userId); continue; }
       if (result.ok) {
         await markTrackerReminderSent(r.userId);
         sent++;

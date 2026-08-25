@@ -13,7 +13,7 @@ import type { Request, Response } from "express";
 import { and, eq, isNull, lt, sql } from "drizzle-orm";
 import { getDb } from "./db";
 import { directMessages, users } from "../drizzle/schema";
-import { sendEmail } from "./platform/email";
+import { sendMarketingEmail } from "./marketingEmail";
 
 const MIN_AGE_MS = 30 * 60 * 1000; // unread for 30+ min (they're clearly away)
 const THROTTLE_MS = 24 * 60 * 60 * 1000; // one digest per member per day
@@ -56,11 +56,13 @@ export async function messageDigestHandler(req: Request, res: Response) {
       if (!u?.email) continue;
       if (u.messageDigestLastSentAt && new Date(u.messageDigestLastSentAt) > throttleCutoff) continue;
       const appUrl = (req.headers.origin as string) || `https://${req.headers.host || "joinaqal.com"}`;
-      const result = await sendEmail(
+      const result = await sendMarketingEmail(
         u.email,
         `You have ${row.count} unread message${Number(row.count) === 1 ? "" : "s"} on AQAL`,
         digestHtml({ name: u.name, count: Number(row.count), appUrl }),
+        appUrl,
       );
+      if (result.skipped) continue;
       if (result.ok) {
         await db.update(users).set({ messageDigestLastSentAt: new Date() }).where(eq(users.id, u.id));
         sent++;

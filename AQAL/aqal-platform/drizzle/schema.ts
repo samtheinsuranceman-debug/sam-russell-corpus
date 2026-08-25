@@ -42,6 +42,11 @@ export const users = mysqlTable("users", {
   // password recovery and the lifetime spot both hang off it.
   emailVerifiedAt: timestamp("email_verified_at"),
   verifyTokenHash: varchar("verify_token_hash", { length: 64 }),
+  // CAN-SPAM: when the person clicked unsubscribe. Non-null silences every
+  // marketing/nudge email (transactional mail — verify, reset, results — still
+  // sends). Set only by the signed /api/unsubscribe link; never cleared
+  // automatically.
+  emailOptOutAt: timestamp("email_opt_out_at"),
 });
 
 export type User = typeof users.$inferSelect;
