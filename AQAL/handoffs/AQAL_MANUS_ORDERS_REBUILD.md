@@ -64,7 +64,7 @@ FIRST deliverable, before any deploy work.
    `/goal/focus`, `/weak/interoceptive`, `/build/adaptive/emdr` — all
    render fully, each with the slim "film briefing" video strip.
 5. `/protocols` lists 156 (title says 156); `/myths` lists 191 with the
-   wing strip; sitemap.xml lists 2,466 URLs, every one https://www.joinaqal.com.
+   wing strip; sitemap.xml lists 3,558 URLs, every one https://www.joinaqal.com.
 6. og:description on `/` reads "IQ graded 4 lines of you. We measure all 32."
    View-source after JS: BreadcrumbList JSON-LD (id ld-breadcrumb) on deep pages.
 7. robots.txt serves; security headers present (HSTS, nosniff,

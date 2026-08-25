@@ -65,7 +65,7 @@ export default function RouteMeta() {
 
   useEffect(() => {
     const path = location === "" ? "/" : location;
-    // All 2,466 pages' titles/descriptions come from one testable builder —
+    // All 3,558 pages' titles/descriptions come from one testable builder —
     // titles hard-capped at 60 chars, descriptions at 160 (routeMetaFor.test.ts).
     const meta = routeMetaFor(path);
     const noindex = NOINDEX_PATHS.some((p) => path === p || path.startsWith(p + "/"));

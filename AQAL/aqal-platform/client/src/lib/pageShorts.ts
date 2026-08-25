@@ -64,8 +64,26 @@ export function shortFor(path: string): string | undefined {
     return pr ? fit(`${pr[0]} × ${pr[1]}: where your power multiplies.`) : undefined;
   }
   if (p.startsWith("/protocol/")) {
-    const t = therapyFromSlug(p.slice(10));
-    return t ? fit(`${shortName(t)}: the proven fix — dose and proof inside.`) : undefined;
+    const segs = p.slice(10).split("/");
+    const t = therapyFromSlug(segs[0] ?? "");
+    if (!t) return undefined;
+    const sn = shortName(t);
+    if (segs.length === 2) {
+      // The seven deep sub-pages — one magnetic angle each, unique because
+      // protocol short-names are unique and every suffix is distinct.
+      const SUB_SHORTS: Record<string, string> = {
+        "first-week": `${sn}: week one, mapped day by day.`,
+        evidence: `${sn}: the receipts, study by study.`,
+        dose: `${sn}: the exact dose that works.`,
+        "who-its-for": `${sn}: who it fits — who should skip.`,
+        mistakes: `${sn}: the mistakes that waste it.`,
+        results: `${sn}: what changes, and when.`,
+        stack: `${sn}: what to pair it with.`,
+      };
+      const s = SUB_SHORTS[segs[1] ?? ""];
+      return s ? fit(s) : undefined;
+    }
+    return fit(`${sn}: the proven fix — dose and proof inside.`);
   }
   if (p.startsWith("/compare/")) {
     const c = compareFromSlug(p.slice(9));

@@ -1,7 +1,7 @@
 // ============================================================
 // TITLE/DESCRIPTION HARD RULES, ENFORCED — search results lop
 // titles at ~60 characters and descriptions at ~160, so every
-// one of the 2,466 sitemap URLs must fit. This fails the build
+// one of the 3,558 sitemap URLs must fit. This fails the build
 // if any page family's formula (or any new page's static meta)
 // runs long, which is what makes the guarantee automatic.
 // ============================================================

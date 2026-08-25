@@ -66,6 +66,7 @@ const Corrections = lazy(() => import("./pages/Corrections"));
 const Runbook = lazy(() => import("./pages/Runbook"));
 const LineDetail = lazy(() => import("./pages/LineDetail"));
 const TherapyDetail = lazy(() => import("./pages/TherapyDetail"));
+const ProtocolSubpage = lazy(() => import("./pages/ProtocolSubpage"));
 const Protocols = lazy(() => import("./pages/Protocols"));
 const PairDetail = lazy(() => import("./pages/PairDetail"));
 const Pairs = lazy(() => import("./pages/Pairs"));
@@ -485,6 +486,11 @@ function Router() {
         <Route path={"/line/:slug"}>
           <PageErrorBoundary pageName="LineDetail">
             <Suspense fallback={<PageSkeleton />}><LineDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/protocol/:slug/:sub"}>
+          <PageErrorBoundary pageName="ProtocolSubpage">
+            <Suspense fallback={<PageSkeleton />}><ProtocolSubpage /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/protocol/:slug"}>

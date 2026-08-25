@@ -275,6 +275,15 @@ export function therapyFromSlug(slug: string): string | undefined {
   return THERAPY_NAMES.find((n) => therapySlug(n) === slug);
 }
 
+// Seven deep sub-pages under every protocol — /protocol/:slug/:sub —
+// each composed from the same authored data as the parent page
+// (therapyLineMap evidence, kind profiles, kind-level meaning), so
+// 156 × 7 = 1,092 pages that stay honest by construction.
+export const PROTOCOL_SUBPAGES = [
+  "first-week", "evidence", "dose", "who-its-for", "mistakes", "results", "stack",
+] as const;
+export type ProtocolSubpageId = (typeof PROTOCOL_SUBPAGES)[number];
+
 // Line-pair pages — one per unordered pair of lines, canonical order =
 // LINE_NAMES index order. C(32,2) = 496 pages at /pair/<a>--<b>.
 export function pairSlug(a: string, b: string): string {
@@ -415,6 +424,7 @@ export const SITEMAP_PATHS = [
   ...Object.keys(PAGE_META),
   ...LINE_NAMES.map((n) => `/line/${lineSlug(n)}`),
   ...THERAPY_NAMES.map((n) => `/protocol/${therapySlug(n)}`),
+  ...THERAPY_NAMES.flatMap((n) => PROTOCOL_SUBPAGES.map((s) => `/protocol/${therapySlug(n)}/${s}`)),
   ...PRACTICE_IDS.map((id) => `/practice/${id}`),
   ...PAIR_SLUGS.map((s) => `/pair/${s}`),
   ...COMPARE_PAIRS.map(([a, b]) => `/compare/${compareSlug(a, b)}`),

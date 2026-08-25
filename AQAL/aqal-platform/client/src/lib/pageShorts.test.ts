@@ -74,6 +74,19 @@ describe("myth museum sitemap sync", () => {
     for (const m of Object.values(LINE_MEANING)) expect(m.personas.length).toBe(2);
   });
 
+  it("every protocol kind has a full sub-page playbook", async () => {
+    const { KIND_IDS } = await import("@shared/seo");
+    const { KIND_PLAYBOOKS } = await import("./protocolSubpages");
+    expect(KIND_IDS.filter((k) => !(k in KIND_PLAYBOOKS))).toEqual([]);
+    for (const [id, p] of Object.entries(KIND_PLAYBOOKS)) {
+      expect(KIND_IDS, `${id} is not a library kind`).toContain(id);
+      expect(p.firstWeek.length, `${id} firstWeek`).toBeGreaterThanOrEqual(4);
+      expect(p.mistakes.length, `${id} mistakes`).toBe(5);
+      expect(p.results.length, `${id} results`).toBe(4);
+      expect(p.caution.length, `${id} caution`).toBeGreaterThan(80);
+    }
+  });
+
   it("every exhibit belongs to a wing with a real profile", async () => {
     const { MYTHS } = await import("./mythMuseum");
     const { MYTH_WING, WING_PROFILES } = await import("./mythWings");

@@ -2,14 +2,14 @@
 // ROUTE META BUILDER — the pure function behind RouteMeta.
 // Given a path, returns the page's <title> + meta description.
 // Extracted from the component so the SEO hard rules are
-// build-enforced by routeMetaFor.test.ts across all 2,466
+// build-enforced by routeMetaFor.test.ts across all 3,558
 // sitemap URLs: every title ≤ 60 characters (search results
 // truncate at ~60), every description ≤ 160.
 // ============================================================
 import {
   PAGE_META, lineFromSlug, therapyFromSlug, therapyDisplay, pairFromSlug,
   compareFromSlug, goalFromSlug, engineLineFromSlug, CAPACITY_ONLY_LINES,
-  KIND_IDS, WING_IDS, VERDICT_SLUGS,
+  KIND_IDS, WING_IDS, VERDICT_SLUGS, PROTOCOL_SUBPAGES,
 } from "@shared/seo";
 import { LINE_ENCYCLOPEDIA } from "@/lib/lineEncyclopedia";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
@@ -221,8 +221,48 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
       };
     }
   }
+  // /protocol/:slug/:sub — the seven deep sub-pages per protocol.
+  if (!meta && path.startsWith("/protocol/") && path.slice("/protocol/".length).includes("/")) {
+    const [pslug, sub] = path.slice("/protocol/".length).split("/");
+    const tname = therapyFromSlug(pslug ?? "");
+    if (tname && (PROTOCOL_SUBPAGES as readonly string[]).includes(sub ?? "")) {
+      const tn = therapyDisplay(tname).split(" (")[0];
+      const SUB_META: Record<string, { titles: (n: string) => string[]; desc: (n: string) => string }> = {
+        "first-week": {
+          titles: (n) => [`${n} — Your First Week, Day by Day — AQAL`, `${n} — Your First Week — AQAL`, `${n} — First Week`],
+          desc: (n) => `The first seven days of ${n}, mapped day by day: setup, the starting dose, what to expect to feel, and the week-one mistake that sinks most people.`,
+        },
+        evidence: {
+          titles: (n) => [`${n} — The Evidence, Study by Study — AQAL`, `${n} — The Evidence — AQAL`, `${n} — The Evidence`],
+          desc: (n) => `Every peer-reviewed study behind ${n} in this library — the capacity each one measured, the finding, the citation — plus what the evidence honestly doesn't show.`,
+        },
+        dose: {
+          titles: (n) => [`${n} — Dose, Schedule & Durability — AQAL`, `${n} — The Dose — AQAL`, `${n} — The Dose`],
+          desc: (n) => `The literature-typical dose of ${n}: format, frequency, course length, what it honestly demands, how long gains last, and what to do about missed days.`,
+        },
+        "who-its-for": {
+          titles: (n) => [`${n} — Who It's For (and Who It Isn't) — AQAL`, `${n} — Who It's For — AQAL`, `${n} — Who It's For`],
+          desc: (n) => `Who ${n} actually fits: the intelligence-line profile that points here, two personas who end up on this page, and who should route to a professional first.`,
+        },
+        mistakes: {
+          titles: (n) => [`${n} — The Mistakes That Waste It — AQAL`, `${n} — The Mistakes — AQAL`, `${n} — The Mistakes`],
+          desc: (n) => `The five predictable ways people waste ${n} — and the honest test that separates a protocol that isn't working from one that isn't finished yet.`,
+        },
+        results: {
+          titles: (n) => [`${n} — What Changes, and When — AQAL`, `${n} — Results Timeline — AQAL`, `${n} — Results`],
+          desc: (n) => `The honest results timeline for ${n}: what week one really looks like, where the literature places the real gains, and the spread nobody advertises.`,
+        },
+        stack: {
+          titles: (n) => [`${n} — What to Stack It With — AQAL`, `${n} — The Stack — AQAL`, `${n} — The Stack`],
+          desc: (n) => `How to combine ${n} with the other mapped protocols that share its intelligence lines: what carries the load, what supports, and the order that compounds.`,
+        },
+      };
+      const sm = SUB_META[sub!];
+      if (sm) meta = { title: fitTitle(...sm.titles(tn)), description: sm.desc(tn).slice(0, 158) };
+    }
+  }
   // /protocol/:slug pages get generated meta from the therapy map.
-  if (!meta && path.startsWith("/protocol/")) {
+  if (!meta && path.startsWith("/protocol/") && !path.slice("/protocol/".length).includes("/")) {
     const tname = therapyFromSlug(path.slice("/protocol/".length));
     if (tname) {
       const entry = THERAPY_LINE_MAP.find((t) => t.therapy === tname);

@@ -4,7 +4,7 @@
 with no dependence on Manus or anyone's three-day update.**
 
 You already hold everything you need. The zip named `AQAL-FULL-INDEPENDENCE.zip`
-is the COMPLETE site — all 2,466 pages, the assessment engine, the database
+is the COMPLETE site — all 3,558 pages, the assessment engine, the database
 schema, everything. The API keys are yours. The only thing living on Manus's
 side is the database contents (test data, unless real members signed up), and
 Step 8 covers that.
@@ -119,7 +119,7 @@ NEVER paste key values into any chat — only into Railway's Variables screen.
 
 - Homepage loads; hover a dial point → the encyclopedia popup opens top-anchored.
 - `/protocols`, `/myths`, `/line/logical`, `/protocol/emdr` all load.
-- `/sitemap.xml` lists 2,466 URLs; `/robots.txt` serves.
+- `/sitemap.xml` lists 3,558 URLs; `/robots.txt` serves.
 - Take the 2-minute quiz end-to-end.
 - THEN do Google Search Console + submit the sitemap — on a site that's up
   because you own it.
