@@ -52,6 +52,8 @@ export function toEmbed(url: string): { kind: "iframe" | "video"; src: string } 
   if (yt) return { kind: "iframe", src: `https://www.youtube-nocookie.com/embed/${yt[1]}` };
   const vim = url.match(/vimeo\.com\/(\d+)/);
   if (vim) return { kind: "iframe", src: `https://player.vimeo.com/video/${vim[1]}` };
+  const hg = url.match(/(?:app|share)\.heygen\.com\/(?:share|embeds?|videos?)\/([\w-]+)/);
+  if (hg) return { kind: "iframe", src: `https://app.heygen.com/embeds/${hg[1]}` };
   if (/\.(mp4|webm|mov)(\?|$)/i.test(url)) return { kind: "video", src: url };
   return { kind: "iframe", src: url };
 }

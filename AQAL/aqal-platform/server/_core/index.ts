@@ -67,17 +67,19 @@ async function startServer() {
       res.setHeader("Strict-Transport-Security", "max-age=15552000; includeSubDomains");
     }
     // Production only: the Vite dev server needs inline/eval scripts for HMR.
-    // 'unsafe-inline' styles are required by React inline style attributes;
-    // frame-src is limited to the two video players toEmbed can produce.
+    // Fonts are self-hosted (bundled @fontsource files), so no font origin is
+    // whitelisted. 'unsafe-inline' styles are required by React inline style
+    // attributes; frame-src is limited to the video players toEmbed can
+    // produce: YouTube, Vimeo, and HeyGen.
     if (process.env.NODE_ENV !== "development") {
       res.setHeader("Content-Security-Policy", [
         "default-src 'self'",
         "script-src 'self'",
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-        "font-src 'self' data: https://fonts.gstatic.com",
+        "style-src 'self' 'unsafe-inline'",
+        "font-src 'self' data:",
         "img-src 'self' data: blob:",
         "media-src 'self' blob: https:",
-        "frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com",
+        "frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com https://app.heygen.com https://share.heygen.com",
         "connect-src 'self'",
         "worker-src 'self' blob:",
         "object-src 'none'",

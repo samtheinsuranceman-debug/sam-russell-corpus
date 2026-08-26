@@ -13,8 +13,8 @@ export default function UIPreview() {
   return (
     <div className="wi-root">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
-
+        /* Fraunces, Inter, and JetBrains Mono are self-hosted via the
+           @fontsource imports in main.tsx — no external font origin. */
         .wi-root {
           --cream: #FAF8F3;
           --cream2: #F2EDE4;
