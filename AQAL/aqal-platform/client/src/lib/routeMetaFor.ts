@@ -2,7 +2,7 @@
 // ROUTE META BUILDER — the pure function behind RouteMeta.
 // Given a path, returns the page's <title> + meta description.
 // Extracted from the component so the SEO hard rules are
-// build-enforced by routeMetaFor.test.ts across all 3,558
+// build-enforced by routeMetaFor.test.ts across all 6,579
 // sitemap URLs: every title ≤ 60 characters (search results
 // truncate at ~60), every description ≤ 160.
 // ============================================================
@@ -10,6 +10,9 @@ import {
   PAGE_META, lineFromSlug, therapyFromSlug, therapyDisplay, pairFromSlug,
   compareFromSlug, goalFromSlug, engineLineFromSlug, CAPACITY_ONLY_LINES,
   KIND_IDS, WING_IDS, VERDICT_SLUGS, PROTOCOL_SUBPAGES,
+  MYTH_SUBPAGES, PAIR_SUBPAGES, LINE_SUBPAGES, PRACTICE_SUBPAGES,
+  GOAL_SUBPAGES, KIND_SUBPAGES, WING_SUBPAGES, CAPACITY_SUBPAGES,
+  bestComboFromSlug,
 } from "@shared/seo";
 import { LINE_ENCYCLOPEDIA } from "@/lib/lineEncyclopedia";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
@@ -32,8 +35,31 @@ function fitTitle(...variants: string[]): string {
 
 export function routeMetaFor(path: string): RouteMetaData | undefined {
   let meta: RouteMetaData | undefined = PAGE_META[path];
+  // /line/:slug/:sub — the six deep pages per line.
+  if (!meta && path.startsWith("/line/") && path.slice("/line/".length).includes("/")) {
+    const [ls, sub] = path.slice("/line/".length).split("/");
+    const name = lineFromSlug(ls ?? "");
+    if (name && (LINE_SUBPAGES as readonly string[]).includes(sub ?? "")) {
+      const T: Record<string, [string[], string]> = {
+        "at-work": [[`${name} Intelligence at Work — AQAL`, `${name} at Work — AQAL`],
+          `Where the ${name} line earns: its native arena, what it contributes, how a strong one reads to colleagues, and what the weak version costs a career.`],
+        "in-relationships": [[`${name} Intelligence in Relationships — AQAL`, `${name} in Relationships — AQAL`, `${name} at Home — AQAL`],
+          `How the ${name} line shapes love, conflict, and parenting: what the people around you experience, two personas you may recognize, and the couple move.`],
+        history: [[`The History of ${name} Intelligence — AQAL`, `${name} — The History — AQAL`],
+          `When the ${name} line entered the research record, the scientists who fought for it, how it's measured — and why the testing industry ignored it anyway.`],
+        "raise-it": [[`How to Raise Your ${name} Line — AQAL`, `Raising ${name} — AQAL`],
+          `The honest toolkit for training the ${name} line: the keystone practice, the cited protocols mapped to it, and what raising it actually buys you.`],
+        "self-check": [[`The Honest ${name} Self-Check — AQAL`, `${name} Self-Check — AQAL`],
+          `Not a measurement — a structured mirror: the lived experience of a strong ${name} line, five honest questions, and what self-report can't tell you.`],
+        "never-tested": [[`Why Your ${name} Line Was Never Tested — AQAL`, `${name} — Never Tested — AQAL`, `${name}: Never Tested`],
+          `Out of 1,000 adults, how many were ever scored on the ${name} line — the estimate, why the tests skipped it, and what never measuring it has cost.`],
+      };
+      const t = T[sub!];
+      if (t) meta = { title: fitTitle(...t[0]), description: t[1].slice(0, 158) };
+    }
+  }
   // /line/:slug pages get generated meta from the encyclopedia.
-  if (!meta && path.startsWith("/line/")) {
+  if (!meta && path.startsWith("/line/") && !path.slice("/line/".length).includes("/")) {
     const name = lineFromSlug(path.slice("/line/".length));
     const enc = name ? LINE_ENCYCLOPEDIA[name] : undefined;
     if (name && enc) {
@@ -46,8 +72,26 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
       };
     }
   }
+  // /pair/:slug/:sub — the three deep pages per pair.
+  if (!meta && path.startsWith("/pair/") && path.slice("/pair/".length).includes("/")) {
+    const [ps, sub] = path.slice("/pair/".length).split("/");
+    const pr = pairFromSlug(ps ?? "");
+    if (pr && (PAIR_SUBPAGES as readonly string[]).includes(sub ?? "")) {
+      const [a, b] = pr;
+      const T: Record<string, [string[], string]> = {
+        collide: [[`When ${a} and ${b} Collide — AQAL`, `${a} × ${b} — The Collision — AQAL`, `${a} × ${b} — Collision`],
+          `The strong-weak configurations of ${a} × ${b}: what the carrying line keeps delivering, what the weak half quietly costs, and why the imbalance hides.`],
+        train: [[`Training ${a} and ${b} Together — AQAL`, `${a} × ${b} — Training the Pair — AQAL`, `${a} × ${b} — Training`],
+          `The honest toolkit for both halves of ${a} × ${b}: keystone practices, cited protocols for each line, and the sequencing rule that makes pairs move.`],
+        "at-work": [[`${a} × ${b} at Work — AQAL`, `${a} × ${b} — At Work`],
+          `Where the ${a} × ${b} pairing earns: what each half brings, the rooms where the combination compounds, and how it reads to the people around you.`],
+      };
+      const t = T[sub!];
+      if (t) meta = { title: fitTitle(...t[0]), description: t[1].slice(0, 158) };
+    }
+  }
   // /pair/:slug pages — meta composed from both lines' data.
-  if (!meta && path.startsWith("/pair/")) {
+  if (!meta && path.startsWith("/pair/") && !path.slice("/pair/".length).includes("/")) {
     const pr = pairFromSlug(path.slice("/pair/".length));
     if (pr) {
       const [a, b] = pr;
@@ -63,8 +107,29 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
       };
     }
   }
+  // /practice/:id/:sub — the four deep pages per practice.
+  if (!meta && path.startsWith("/practice/") && path.slice("/practice/".length).includes("/")) {
+    const [pid, sub] = path.slice("/practice/".length).split("/");
+    const pr = KEYSTONE_PRACTICES.find((k) => k.id === pid);
+    if (pr && (PRACTICE_SUBPAGES as readonly string[]).includes(sub ?? "")) {
+      const n0 = pr.name.split(" (")[0].trim();
+      const n = n0.length > 32 ? n0.slice(0, 32).replace(/\s+\S*$/, "").trim() : n0;
+      const T: Record<string, [string[], string]> = {
+        start: [[`Starting ${n} — The First Two Weeks — AQAL`, `Starting ${n} — AQAL`, `${n} — Starting It`],
+          `How to install ${n} so it survives: the prescription verbatim, the anchoring move, the two-week floor, and the honest payoff horizon to hold in mind.`],
+        evidence: [[`The Evidence Behind ${n} — AQAL`, `${n} — The Evidence — AQAL`, `${n} — The Evidence`],
+          `${n}'s research basis, its evidence tier stated plainly, what it's mapped to lift — and what the evidence honestly does not say.`],
+        mistakes: [[`The Mistakes That Waste ${n} — AQAL`, `${n} — The Mistakes — AQAL`, `${n} — The Mistakes`],
+          `The five failure modes that kill keystone practices, aimed at ${n}: quitting inside the horizon, dose creep, no trigger, wrong metric, substitution.`],
+        "pair-with": [[`What to Pair With ${n} — AQAL`, `${n} — Pair It With — AQAL`, `${n} — Pairings`],
+          `What stacks cleanly with ${n}: the practices sharing its targets, the one-at-a-time stacking rule, and the goals its evidence serves.`],
+      };
+      const t = T[sub!];
+      if (t) meta = { title: fitTitle(...t[0]), description: t[1].slice(0, 158) };
+    }
+  }
   // /practice/:id pages — meta from the keystone library.
-  if (!meta && path.startsWith("/practice/")) {
+  if (!meta && path.startsWith("/practice/") && !path.slice("/practice/".length).includes("/")) {
     const pr = KEYSTONE_PRACTICES.find((k) => k.id === path.slice("/practice/".length));
     if (pr) {
       meta = {
@@ -94,8 +159,24 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
       };
     }
   }
+  // /goal/:keyword/:sub — the two deep pages per goal.
+  if (!meta && path.startsWith("/goal/") && path.slice("/goal/".length).includes("/")) {
+    const [gs, sub] = path.slice("/goal/".length).split("/");
+    const g = goalFromSlug(gs ?? "");
+    if (g && (GOAL_SUBPAGES as readonly string[]).includes(sub ?? "")) {
+      const cap = g.charAt(0).toUpperCase() + g.slice(1);
+      const T: Record<string, [string[], string]> = {
+        plan: [[`${cap} — The 30-Day Plan — AQAL`, `${cap} — 30-Day Plan`],
+          `A 30-day schedule for ${g}, built from the evidence-matched keystone practices: baseline first, one habit at a time, measurement at the end.`],
+        mistakes: [[`${cap} — The Mistakes That Sink It — AQAL`, `${cap} — The Mistakes — AQAL`, `${cap} — The Mistakes`],
+          `The five patterns that sink ${g} goals: no baseline, everything at once, judging inside the horizon, motivation as a plan, and working the wrong layer.`],
+      };
+      const t = T[sub!];
+      if (t) meta = { title: fitTitle(...t[0]), description: t[1].slice(0, 158) };
+    }
+  }
   // /goal/:keyword — goal-matched practice pages.
-  if (!meta && path.startsWith("/goal/")) {
+  if (!meta && path.startsWith("/goal/") && !path.slice("/goal/".length).includes("/")) {
     const g = goalFromSlug(path.slice("/goal/".length));
     if (g) {
       const cap = g.charAt(0).toUpperCase() + g.slice(1);
@@ -148,8 +229,27 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
       };
     }
   }
+  // /myth/:id/:sub — the four deep pages per exhibit.
+  if (!meta && path.startsWith("/myth/") && path.slice("/myth/".length).includes("/")) {
+    const [mid, sub] = path.slice("/myth/".length).split("/");
+    const m = mythById(mid ?? "");
+    if (m && (MYTH_SUBPAGES as readonly string[]).includes(sub ?? "")) {
+      const T: Record<string, [string[], string]> = {
+        "feels-real": [[`Why ${m.name} Feels So Real — AQAL`, `${m.name} — Why It Feels Real`, `${m.name} — Feels Real`],
+          `The honest psychology of why ${m.name} convinced smart people: its specific seduction, its wing's family pattern, and the four machines under everything.`],
+        receipts: [[`${m.name} — The Receipts — AQAL`, `${m.name} — The Receipts`, `${m.name} — Receipts`],
+          `${m.name}'s full evidence record: the claim as sold, the verdict it earned, why, and the named source you can check without trusting us.`],
+        instead: [[`What Works Instead of ${m.name} — AQAL`, `${m.name} — What Works Instead`, `${m.name} — Instead`],
+          `The legitimate need under ${m.name}, routed honestly: where the evidence points, and the four questions any replacement must pass first.`],
+        "talk-someone-out": [[`Talking Someone Out of ${m.name} — AQAL`, `${m.name} — The Rescue Script`, `${m.name} — Rescue`],
+          `The five-step sequence for helping someone you love leave ${m.name} — without the backfire: lead with the problem, ask the calibration question, then receipts.`],
+      };
+      const t = T[sub!];
+      if (t) meta = { title: fitTitle(...t[0]), description: t[1].slice(0, 158) };
+    }
+  }
   // /myth/:id — Myth Museum exhibits.
-  if (!meta && path.startsWith("/myth/")) {
+  if (!meta && path.startsWith("/myth/") && !path.slice("/myth/".length).includes("/")) {
     const m = mythById(path.slice("/myth/".length));
     if (m) {
       const verdict = m.verdict.charAt(0) + m.verdict.slice(1).toLowerCase();
@@ -164,8 +264,25 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
       };
     }
   }
+  // /capacity/:slug/:sub — the three deep pages per hidden capacity.
+  if (!meta && path.startsWith("/capacity/") && path.slice("/capacity/".length).includes("/")) {
+    const [cs, sub] = path.slice("/capacity/".length).split("/");
+    const l = engineLineFromSlug(cs ?? "");
+    if (l && CAPACITY_ONLY_LINES.includes(l) && (CAPACITY_SUBPAGES as readonly string[]).includes(sub ?? "")) {
+      const T: Record<string, [string[], string]> = {
+        signs: [[`The Signs of Strong and Weak ${l} — AQAL`, `${l} — The Signs — AQAL`, `${l} — The Signs`],
+          `What strong ${l} looks like, what weak looks like, and why no conventional test ever told you which one you are.`],
+        build: [[`Building the ${l} Capacity — AQAL`, `${l} — Building It — AQAL`, `${l} — Building It`],
+          `The cited protocols mapped to the ${l} capacity, strongest first, with the sequencing rule that turns a list into a season.`],
+        cost: [[`What Weak ${l} Quietly Costs — AQAL`, `${l} — The Cost — AQAL`, `${l} — The Cost`],
+          `The itemized tax of a weak ${l} capacity, why it stays invisible, and the trained counterfactual the cited library maps.`],
+      };
+      const t = T[sub!];
+      if (t) meta = { title: fitTitle(...t[0]), description: t[1].slice(0, 158) };
+    }
+  }
   // /capacity/:slug — the eight engine-only capacity pages.
-  if (!meta && path.startsWith("/capacity/")) {
+  if (!meta && path.startsWith("/capacity/") && !path.slice("/capacity/".length).includes("/")) {
     const l = engineLineFromSlug(path.slice("/capacity/".length));
     if (l && CAPACITY_ONLY_LINES.includes(l)) {
       meta = {
@@ -177,8 +294,25 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
       };
     }
   }
+  // /kind/:id/:sub — the three deep pages per protocol kind.
+  if (!meta && path.startsWith("/kind/") && path.slice("/kind/".length).includes("/")) {
+    const [kid, sub] = path.slice("/kind/".length).split("/");
+    if (KIND_IDS.includes(kid ?? "") && (KIND_SUBPAGES as readonly string[]).includes(sub ?? "")) {
+      const cap = kid!.charAt(0).toUpperCase() + kid!.slice(1);
+      const T: Record<string, [string[], string]> = {
+        choose: [[`Choosing a ${cap} Protocol — AQAL`, `${cap} — Choosing One — AQAL`, `${cap} — Choosing One`],
+          `How to pick between the ${kid} family's protocols: the three deciding questions — target line, dose fit, honest demands — and the full roster.`],
+        "first-month": [[`Your First Month of ${cap} Work — AQAL`, `${cap} — The First Month — AQAL`, `${cap} — First Month`],
+          `The ${kid} family's first month: week one day by day, then the honest early curve — what moves, what doesn't yet, and why that's normal.`],
+        standards: [[`The Evidence Standards for ${cap} — AQAL`, `${cap} — The Standards — AQAL`, `${cap} — Standards`],
+          `How to read claims in the ${kid} family — including ours: the evidential bar, the durability line, and the public Corrections Ledger behind it.`],
+      };
+      const t = T[sub!];
+      if (t) meta = { title: fitTitle(...t[0]), description: t[1].slice(0, 158) };
+    }
+  }
   // /kind/:id — protocol-kind profile pages.
-  if (!meta && path.startsWith("/kind/")) {
+  if (!meta && path.startsWith("/kind/") && !path.slice("/kind/".length).includes("/")) {
     const id = path.slice("/kind/".length);
     if (KIND_IDS.includes(id)) {
       const cap = id.charAt(0).toUpperCase() + id.slice(1);
@@ -191,8 +325,23 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
       };
     }
   }
+  // /wing/:id/:sub — the two deep pages per museum wing.
+  if (!meta && path.startsWith("/wing/") && path.slice("/wing/".length).includes("/")) {
+    const [wid, sub] = path.slice("/wing/".length).split("/");
+    if (WING_IDS.includes(wid ?? "") && (WING_SUBPAGES as readonly string[]).includes(sub ?? "")) {
+      const cap = wid!.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+      const T: Record<string, [string[], string]> = {
+        spot: [[`How to Spot the ${cap} Pattern — AQAL`, `${cap} — Spotting It — AQAL`, `${cap} — Spotting It`],
+          `The ${cap.toLowerCase()} family's tells: how it claims to work, the red flags that mark it, the four-question field test, and the documented members.`],
+        escape: [[`Getting Out of the ${cap} Trap — AQAL`, `${cap} — The Way Out — AQAL`, `${cap} — The Way Out`],
+          `The exit ramp from the ${cap.toLowerCase()} family: naming the grip honestly, the four-step sequence out, and the cultural pull you're swimming against.`],
+      };
+      const t = T[sub!];
+      if (t) meta = { title: fitTitle(...t[0]), description: t[1].slice(0, 158) };
+    }
+  }
   // /wing/:id — Myth Museum wing pages.
-  if (!meta && path.startsWith("/wing/")) {
+  if (!meta && path.startsWith("/wing/") && !path.slice("/wing/".length).includes("/")) {
     const id = path.slice("/wing/".length);
     if (WING_IDS.includes(id)) {
       const cap = id.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
@@ -218,6 +367,22 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
           `Verdict: ${cap}`,
         ),
         description: `What the "${cap.toLowerCase()}" verdict means, the evidential standard it applies, and every Myth Museum exhibit that earned it — sourced, exhibit by exhibit.`.slice(0, 158),
+      };
+    }
+  }
+  // /best/:kind/:line — best-protocols combo pages.
+  if (!meta && path.startsWith("/best/")) {
+    const [bk, bl] = path.slice("/best/".length).split("/");
+    const combo = bestComboFromSlug(bk ?? "", bl ?? "");
+    if (combo) {
+      const cap = combo.kind.charAt(0).toUpperCase() + combo.kind.slice(1);
+      meta = {
+        title: fitTitle(
+          `Best ${cap} Protocols for ${combo.line} — AQAL`,
+          `${cap} Protocols for ${combo.line} — AQAL`,
+          `${cap} for ${combo.line} — Ranked`,
+        ),
+        description: `The ${combo.kind} protocols with peer-reviewed mappings to the ${combo.line} capacity — ranked by mapped role, with dose, demands, and durability.`.slice(0, 158),
       };
     }
   }

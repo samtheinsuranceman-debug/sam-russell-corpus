@@ -5,6 +5,8 @@
 // horizon, the research basis, and what it lifts.
 // ============================================================
 import { Link, useParams } from "wouter";
+import { GoDeeper } from "@/components/DeepPage";
+import { PRACTICE_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { KEYSTONE_PRACTICES, confidenceFromEvidence } from "@shared/keystonePractices";
@@ -100,6 +102,7 @@ export default function PracticeDetail() {
           <Link href={`/practice/${next.id}`} style={{ ...mono, fontSize: "10.5px", letterSpacing: "0.08em", textTransform: "uppercase", color: CHAMPAGNE }}>{next.name} →</Link>
         </div>
       </div>
+      <GoDeeper base={`/practice/${params.id}`} subs={PRACTICE_SUBPAGES} labels={{ start: "Starting it", evidence: "The evidence", mistakes: "The mistakes", "pair-with": "Pair it with" }} />
       <PublicFooter />
     </div>
   );

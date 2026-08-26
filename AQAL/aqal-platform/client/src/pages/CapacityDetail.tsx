@@ -6,6 +6,8 @@
 // the therapy map.
 // ============================================================
 import { Link, useParams } from "wouter";
+import { GoDeeper } from "@/components/DeepPage";
+import { CAPACITY_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { CAPACITY_AXES } from "@/lib/capacityAxes";
@@ -111,6 +113,7 @@ export default function CapacityDetail() {
           <Link href={`/capacity/${engineLineSlug(next)}`} style={{ ...mono, fontSize: "10.5px", letterSpacing: "0.08em", textTransform: "uppercase", color: CHAMPAGNE }}>{next} →</Link>
         </div>
       </div>
+      <GoDeeper base={`/capacity/${params.slug}`} subs={CAPACITY_SUBPAGES} labels={{ signs: "The signs", build: "Building it", cost: "The cost" }} />
       <PublicFooter />
     </div>
   );

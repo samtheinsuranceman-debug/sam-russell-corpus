@@ -4,6 +4,8 @@
 // plus every protocol in the library belonging to the kind.
 // ============================================================
 import { Link, useParams } from "wouter";
+import { GoDeeper } from "@/components/DeepPage";
+import { KIND_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { KIND_PROFILES, THERAPY_KIND } from "@/lib/therapyKinds";
@@ -106,6 +108,7 @@ export default function KindDetail() {
           <Link href={`/kind/${next}`} style={{ ...mono, fontSize: "10.5px", letterSpacing: "0.08em", textTransform: "uppercase", color: CHAMPAGNE }}>{KIND_PROFILES[next]?.label.split(" — ")[0].split(" / ")[0]} →</Link>
         </div>
       </div>
+      <GoDeeper base={`/kind/${params.id}`} subs={KIND_SUBPAGES} labels={{ choose: "Choosing one", "first-month": "The first month", standards: "The standards" }} />
       <PublicFooter />
     </div>
   );

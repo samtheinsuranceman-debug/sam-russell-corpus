@@ -48,8 +48,22 @@ export function shortFor(path: string): string | undefined {
   if (staticMeta) return fit(staticMeta.short);
 
   if (p.startsWith("/line/")) {
-    const n = lineFromSlug(p.slice(6));
-    return n ? fit(`${n}: the intelligence no test ever caught.`) : undefined;
+    const segs = p.slice(6).split("/");
+    const n = lineFromSlug(segs[0] ?? "");
+    if (!n) return undefined;
+    if (segs.length === 2) {
+      const SUB: Record<string, string> = {
+        "at-work": `${n} at work: the rooms where it pays.`,
+        "in-relationships": `${n} at home: what your people feel.`,
+        history: `${n}: the discovery nobody used.`,
+        "raise-it": `Raise your ${n} line — the cited route.`,
+        "self-check": `${n}: five questions, one honest mirror.`,
+        "never-tested": `${n}: the score no test ever took.`,
+      };
+      const sv = SUB[segs[1] ?? ""];
+      return sv ? fit(sv) : undefined;
+    }
+    return fit(`${n}: the intelligence no test ever caught.`);
   }
   if (p.startsWith("/weak/")) {
     const n = lineFromSlug(p.slice(6));
@@ -60,8 +74,19 @@ export function shortFor(path: string): string | undefined {
     return n ? fit(`Gifted at ${n} — and nobody ever told you.`) : undefined;
   }
   if (p.startsWith("/pair/")) {
-    const pr = pairFromSlug(p.slice(6));
-    return pr ? fit(`${pr[0]} × ${pr[1]}: where your power multiplies.`) : undefined;
+    const segs = p.slice(6).split("/");
+    const pr = pairFromSlug(segs[0] ?? "");
+    if (!pr) return undefined;
+    if (segs.length === 2) {
+      const SUB: Record<string, string> = {
+        collide: `${pr[0]} × ${pr[1]}: where they clash.`,
+        train: `${pr[0]} × ${pr[1]}: train the duo.`,
+        "at-work": `${pr[0]} × ${pr[1]}: on the job.`,
+      };
+      const sv = SUB[segs[1] ?? ""];
+      return sv ? fit(sv) : undefined;
+    }
+    return fit(`${pr[0]} × ${pr[1]}: where your power multiplies.`);
   }
   if (p.startsWith("/protocol/")) {
     const segs = p.slice(10).split("/");
@@ -90,32 +115,109 @@ export function shortFor(path: string): string | undefined {
     return c ? fit(`${shortName(c[0])} vs ${shortName(c[1])}: one of these is yours.`) : undefined;
   }
   if (p.startsWith("/practice/")) {
-    const pr = KEYSTONE_PRACTICES.find((k) => k.id === p.slice(10));
-    return pr ? fit(`${pr.name}: tiny dose, compounding payoff.`) : undefined;
+    const segs = p.slice(10).split("/");
+    const pr = KEYSTONE_PRACTICES.find((k) => k.id === segs[0]);
+    if (!pr) return undefined;
+    // Same abbreviation rule as myths: keep the suffix, trim the name.
+    const pn0 = pr.name.split(" (")[0].trim();
+    const pn = pn0.length > 30 ? pn0.slice(0, 30).replace(/\s+\S*$/, "").trim() : pn0;
+    if (segs.length === 2) {
+      const SUB: Record<string, string> = {
+        start: `${pn}: the two-week install.`,
+        evidence: `${pn}: the tier, told straight.`,
+        mistakes: `${pn}: five ways it dies.`,
+        "pair-with": `${pn}: what stacks clean.`,
+      };
+      const sv = SUB[segs[1] ?? ""];
+      return sv ? fit(sv) : undefined;
+    }
+    return fit(`${pn}: tiny dose, compounding payoff.`);
   }
   if (p.startsWith("/goal/")) {
-    const g = goalFromSlug(p.slice(6));
-    return g ? fit(`${g.charAt(0).toUpperCase() + g.slice(1)}: the moves that actually work.`) : undefined;
+    const segs = p.slice(6).split("/");
+    const g = goalFromSlug(segs[0] ?? "");
+    if (!g) return undefined;
+    const cap = g.charAt(0).toUpperCase() + g.slice(1);
+    if (segs.length === 2) {
+      const SUB: Record<string, string> = {
+        plan: `${cap}: the 30-day schedule.`,
+        mistakes: `${cap}: five classic sinkholes.`,
+      };
+      const sv = SUB[segs[1] ?? ""];
+      return sv ? fit(sv) : undefined;
+    }
+    return fit(`${cap}: the moves that actually work.`);
   }
   if (p.startsWith("/myth/")) {
-    const m = mythById(p.slice(6));
-    return m ? fit(`${m.name}: ${m.verdict.toLowerCase()}. See the receipts.`) : undefined;
+    const segs = p.slice(6).split("/");
+    const m = mythById(segs[0] ?? "");
+    if (!m) return undefined;
+    // Long exhibit names get abbreviated so the distinguishing suffix —
+    // not the name — is what survives the character budget.
+    const mn = m.name.length > 30 ? m.name.split(/[/(]/)[0].trim().slice(0, 30).trim() : m.name;
+    if (segs.length === 2) {
+      const SUB: Record<string, string> = {
+        "feels-real": `${mn}: why it fools people.`,
+        receipts: `${mn}: the receipts, named.`,
+        instead: `${mn}: the honest swap.`,
+        "talk-someone-out": `${mn}: the rescue script.`,
+      };
+      const sv = SUB[segs[1] ?? ""];
+      return sv ? fit(sv) : undefined;
+    }
+    return fit(`${m.name}: ${m.verdict.toLowerCase()}. See the receipts.`);
   }
   if (p.startsWith("/capacity/")) {
-    const l = engineLineFromSlug(p.slice(10));
-    return l && CAPACITY_ONLY_LINES.includes(l)
-      ? fit(`${l}: the power no test ever found in you.`) : undefined;
+    const segs = p.slice(10).split("/");
+    const l = engineLineFromSlug(segs[0] ?? "");
+    if (!l || !CAPACITY_ONLY_LINES.includes(l)) return undefined;
+    if (segs.length === 2) {
+      const SUB: Record<string, string> = {
+        signs: `${l}: strong vs weak, named.`,
+        build: `${l}: the cited way to build it.`,
+        cost: `${l}: the invisible tax, itemized.`,
+      };
+      const sv = SUB[segs[1] ?? ""];
+      return sv ? fit(sv) : undefined;
+    }
+    return fit(`${l}: the power no test ever found in you.`);
   }
   if (p.startsWith("/kind/")) {
-    const id = p.slice(6);
-    return KIND_IDS.includes(id)
-      ? fit(`${id.charAt(0).toUpperCase() + id.slice(1)} protocols: what they really deliver.`) : undefined;
+    const segs = p.slice(6).split("/");
+    const id = segs[0] ?? "";
+    if (!KIND_IDS.includes(id)) return undefined;
+    const cap = id.charAt(0).toUpperCase() + id.slice(1);
+    if (segs.length === 2) {
+      const SUB: Record<string, string> = {
+        choose: `${cap} protocols: how to pick yours.`,
+        "first-month": `${cap} work: month one, mapped.`,
+        standards: `${cap} claims: the bar they clear.`,
+      };
+      const sv = SUB[segs[1] ?? ""];
+      return sv ? fit(sv) : undefined;
+    }
+    return fit(`${cap} protocols: what they really deliver.`);
   }
   if (p.startsWith("/wing/")) {
-    const id = p.slice(6);
+    const segs = p.slice(6).split("/");
+    const id = segs[0] ?? "";
     if (!WING_IDS.includes(id)) return undefined;
     const cap = id.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+    if (segs.length === 2) {
+      const SUB: Record<string, string> = {
+        spot: `${cap}: the red flags, listed.`,
+        escape: `${cap}: the way out, mapped.`,
+      };
+      const sv = SUB[segs[1] ?? ""];
+      return sv ? fit(sv) : undefined;
+    }
     return fit(`${cap}: how this family fools smart people.`);
+  }
+  if (p.startsWith("/best/")) {
+    const segs = p.slice(6).split("/");
+    const l = engineLineFromSlug(segs[1] ?? "");
+    if (!l || !KIND_IDS.includes(segs[0] ?? "")) return undefined;
+    return fit(`${l} via ${segs[0]}: ranked, cited.`);
   }
   if (p.startsWith("/verdict/")) {
     const slug = p.slice(9);

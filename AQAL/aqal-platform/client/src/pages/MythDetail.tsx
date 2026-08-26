@@ -6,6 +6,8 @@
 // honest measurement owes the public its debunking shelf.
 // ============================================================
 import { Link, useParams } from "wouter";
+import { GoDeeper } from "@/components/DeepPage";
+import { MYTH_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { MYTHS, MYTH_VERDICT_META, mythById } from "@/lib/mythMuseum";
@@ -137,6 +139,7 @@ export default function MythDetail() {
           <Link href={`/myth/${next.id}`} style={{ ...mono, fontSize: "10.5px", letterSpacing: "0.08em", textTransform: "uppercase", color: CHAMPAGNE }}>{next.name} →</Link>
         </div>
       </div>
+      <GoDeeper base={`/myth/${params.id}`} subs={MYTH_SUBPAGES} labels={{ "feels-real": "Why it feels real", receipts: "The receipts", instead: "What works instead", "talk-someone-out": "Talking someone out" }} />
       <PublicFooter />
     </div>
   );

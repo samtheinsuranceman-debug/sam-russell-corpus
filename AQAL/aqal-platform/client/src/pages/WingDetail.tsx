@@ -5,6 +5,8 @@
 // belongs to the wing, with verdicts.
 // ============================================================
 import { Link, useParams } from "wouter";
+import { GoDeeper } from "@/components/DeepPage";
+import { WING_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { WING_PROFILES, MYTH_WING } from "@/lib/mythWings";
@@ -110,6 +112,7 @@ export default function WingDetail() {
           <Link href={`/wing/${next}`} style={{ ...mono, fontSize: "10.5px", letterSpacing: "0.08em", textTransform: "uppercase", color: CHAMPAGNE }}>{WING_PROFILES[next]?.label.split(" — ")[0]} →</Link>
         </div>
       </div>
+      <GoDeeper base={`/wing/${params.id}`} subs={WING_SUBPAGES} labels={{ spot: "Spotting the pattern", escape: "Getting out" }} />
       <PublicFooter />
     </div>
   );

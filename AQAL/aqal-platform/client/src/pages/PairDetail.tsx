@@ -7,6 +7,8 @@
 // independence math, and the evidence from both lines.
 // ============================================================
 import { Link, useParams } from "wouter";
+import { GoDeeper } from "@/components/DeepPage";
+import { PAIR_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { LINE_ENCYCLOPEDIA, G_BAND_LABEL } from "@/lib/lineEncyclopedia";
@@ -196,6 +198,7 @@ export default function PairDetail() {
           </Link>
         </div>
       </div>
+      <GoDeeper base={`/pair/${params.slug}`} subs={PAIR_SUBPAGES} labels={{ collide: "When they collide", train: "Training the pair", "at-work": "At work" }} />
       <PublicFooter />
     </div>
   );

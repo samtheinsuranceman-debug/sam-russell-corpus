@@ -284,6 +284,26 @@ export const PROTOCOL_SUBPAGES = [
 ] as const;
 export type ProtocolSubpageId = (typeof PROTOCOL_SUBPAGES)[number];
 
+// ── The deep-page expansion (Aug 2026): sub-pages under every major
+// family, each composed from the same authored data as its parent and
+// carrying its own unique <60-char short + ≤60-char title (test-enforced).
+export const MYTH_SUBPAGES = ["feels-real", "receipts", "instead", "talk-someone-out"] as const;
+export type MythSubpageId = (typeof MYTH_SUBPAGES)[number];
+export const PAIR_SUBPAGES = ["collide", "train", "at-work"] as const;
+export type PairSubpageId = (typeof PAIR_SUBPAGES)[number];
+export const LINE_SUBPAGES = ["at-work", "in-relationships", "history", "raise-it", "self-check", "never-tested"] as const;
+export type LineSubpageId = (typeof LINE_SUBPAGES)[number];
+export const PRACTICE_SUBPAGES = ["start", "evidence", "mistakes", "pair-with"] as const;
+export type PracticeSubpageId = (typeof PRACTICE_SUBPAGES)[number];
+export const GOAL_SUBPAGES = ["plan", "mistakes"] as const;
+export type GoalSubpageId = (typeof GOAL_SUBPAGES)[number];
+export const KIND_SUBPAGES = ["choose", "first-month", "standards"] as const;
+export type KindSubpageId = (typeof KIND_SUBPAGES)[number];
+export const WING_SUBPAGES = ["spot", "escape"] as const;
+export type WingSubpageId = (typeof WING_SUBPAGES)[number];
+export const CAPACITY_SUBPAGES = ["signs", "build", "cost"] as const;
+export type CapacitySubpageId = (typeof CAPACITY_SUBPAGES)[number];
+
 // Line-pair pages — one per unordered pair of lines, canonical order =
 // LINE_NAMES index order. C(32,2) = 496 pages at /pair/<a>--<b>.
 export function pairSlug(a: string, b: string): string {
@@ -420,6 +440,26 @@ export function verdictFromSlug(slug: string): string | undefined {
 // the pageShorts test suite fails if the two drift.
 export const MYTH_IDS: string[] = ["phrenology","mesmerism","lobotomy","insulin-coma","orgone","trepanation-revival","facilitated-communication","recovered-memory","conversion-therapy","attachment-holding","cisd","scared-straight","dare-original","boot-camps","primal-scream","dianetics","attack-therapy","past-life-regression","polygraph","graphology","learning-styles","brain-gym","mozart-effect","ten-percent-brain","left-right-brain","subliminal-tapes","speed-reading","sleep-learning","brain-training","growth-mindset-overclaim","power-posing","ego-depletion","mbti-clinical","enneagram-clinical","nlp-claims","homeopathy","bach-flowers","crystal-healing","therapeutic-touch","reiki-distant","magnet-therapy","ear-candling","detox-cleanses","adrenal-fatigue","candida-everything","applied-kinesiology","craniosacral","chiropractic-nonmsk","iridology","reflexology-diagnostic","grounding-claims","binaural-claims","essential-oil-cures","cbd-cure-all","microdosing-overclaim","law-of-attraction","affirmations-backfire","vision-boards","astrology-counseling","numerology","human-design","psychic-mediums","angel-therapy","faith-healing-substitution","intercessory-prayer-rct","vaccines-autism","chelation-autism","mms-bleach","secretin","dolphin-therapy","wellness-mlm","prosperity-gospel-therapy","bloodletting","rotational-chair","radithor","violet-ray","krebiozen","refrigerator-mother","rebirthing","orthomolecular","laetrile","gerson","black-salve","shark-cartilage","essiac","colloidal-silver","ozone-therapy","hbot-autism","stem-cell-tourism","iv-drips","naturopathic-cancer","exorcism-substitution","troubled-teen","breatharianism","sungazing","kambo","bee-venom","rasa-shastra","aristolochia","placenta-encapsulation","vaginal-steaming","jade-eggs","perineum-sunning","urine-therapy","oil-pulling","hulda-clark-zapper","rife-machines","bioresonance","radionics","kirlian-aura","emf-harmonizers","power-balance","copper-bracelets","pemf-consumer","daith-piercing","ionic-footbath","detox-foot-pads","salt-lamps","halotherapy","oxygen-bars","alkaline-water","hydrogen-water","structured-water","solfeggio","chromotherapy","blue-blockers","cryo-chambers","infrared-detox","tdcs-consumer","toning-shoes","kinesio-overclaim","cupping-performance","mouth-taping","polyphasic-sleep","mewing","lymphatic-detox","live-blood-analysis","hair-mineral-analysis","igg-food-tests","mthfr-protocols","dna-diet-tests","microbiome-consumer","telomere-tests","epigenetic-clearing","airborne","prevagen","ginkgo-memory","antioxidant-megadose","multivitamin-prevention","nootropic-stacks","t-boosters","celery-juice","acv-cureall","blood-type-diet","gaps-diet","feingold-cure","gluten-free-everyone","carnivore-cureall","doman-delacato","primitive-reflex","auditory-integration","son-rise","vision-therapy-ld","bates-method","irlen-lenses","dore-program","fast-forword","baby-genius-media","ambidexterity-movement","social-priming","marshmallow-destiny","facial-feedback-pencil","microexpression-detection","forensic-hypnosis","truth-serum","rorschach-overclaim","grit-revolution","ten-thousand-hours","eft-tapping","thought-field-therapy","havening","brainspotting","emotion-code","family-constellations","lgat","holotropic-overclaim","ayahuasca-tourism","equine-breakthrough","indigo-children","biorhythms","full-moon-effect"];
 
+// "Best <kind> protocols for the <line> capacity" — one page per (kind, line)
+// combination that actually exists in the evidence map. Computed, so a new
+// mapping automatically mints its page.
+import { THERAPY_KIND } from "./therapyKindMap";
+export const BEST_COMBOS: { kind: string; line: string }[] = (() => {
+  const seen = new Set<string>();
+  const out: { kind: string; line: string }[] = [];
+  for (const e of THERAPY_LINE_MAP) {
+    const kind = THERAPY_KIND[e.therapy] ?? "skill";
+    const key = `${kind}||${e.line}`;
+    if (!seen.has(key)) { seen.add(key); out.push({ kind, line: e.line }); }
+  }
+  return out.sort((a, b) => (a.kind + a.line).localeCompare(b.kind + b.line));
+})();
+export function bestComboFromSlug(kind: string, lineSlugStr: string): { kind: string; line: string } | undefined {
+  const line = engineLineFromSlug(lineSlugStr);
+  if (!line) return undefined;
+  return BEST_COMBOS.find((c) => c.kind === kind && c.line === line);
+}
+
 export const SITEMAP_PATHS = [
   ...Object.keys(PAGE_META),
   ...LINE_NAMES.map((n) => `/line/${lineSlug(n)}`),
@@ -437,6 +477,15 @@ export const SITEMAP_PATHS = [
   ...KIND_IDS.map((id) => `/kind/${id}`),
   ...WING_IDS.map((id) => `/wing/${id}`),
   ...VERDICT_SLUGS.map((s) => `/verdict/${s}`),
+  ...MYTH_IDS.flatMap((id) => MYTH_SUBPAGES.map((s) => `/myth/${id}/${s}`)),
+  ...PAIR_SLUGS.flatMap((p) => PAIR_SUBPAGES.map((s) => `/pair/${p}/${s}`)),
+  ...LINE_NAMES.flatMap((n) => LINE_SUBPAGES.map((s) => `/line/${lineSlug(n)}/${s}`)),
+  ...PRACTICE_IDS.flatMap((id) => PRACTICE_SUBPAGES.map((s) => `/practice/${id}/${s}`)),
+  ...GOAL_KEYWORDS.flatMap((k) => GOAL_SUBPAGES.map((s) => `/goal/${goalSlug(k)}/${s}`)),
+  ...KIND_IDS.flatMap((id) => KIND_SUBPAGES.map((s) => `/kind/${id}/${s}`)),
+  ...WING_IDS.flatMap((id) => WING_SUBPAGES.map((s) => `/wing/${id}/${s}`)),
+  ...CAPACITY_ONLY_LINES.flatMap((l) => CAPACITY_SUBPAGES.map((s) => `/capacity/${engineLineSlug(l)}/${s}`)),
+  ...BEST_COMBOS.map((c) => `/best/${c.kind}/${engineLineSlug(c.line)}`),
 ];
 
 export function canonicalUrl(path: string): string {

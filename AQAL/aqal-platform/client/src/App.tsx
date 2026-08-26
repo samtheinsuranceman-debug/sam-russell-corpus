@@ -67,6 +67,15 @@ const Runbook = lazy(() => import("./pages/Runbook"));
 const LineDetail = lazy(() => import("./pages/LineDetail"));
 const TherapyDetail = lazy(() => import("./pages/TherapyDetail"));
 const ProtocolSubpage = lazy(() => import("./pages/ProtocolSubpage"));
+const MythDeep = lazy(() => import("./pages/MythDeep"));
+const PairDeep = lazy(() => import("./pages/PairDeep"));
+const LineDeep = lazy(() => import("./pages/LineDeep"));
+const PracticeDeep = lazy(() => import("./pages/PracticeDeep"));
+const GoalDeep = lazy(() => import("./pages/GoalDeep"));
+const KindDeep = lazy(() => import("./pages/KindDeep"));
+const WingDeep = lazy(() => import("./pages/WingDeep"));
+const CapacitySub = lazy(() => import("./pages/CapacitySub"));
+const BestProtocols = lazy(() => import("./pages/BestProtocols"));
 const Protocols = lazy(() => import("./pages/Protocols"));
 const PairDetail = lazy(() => import("./pages/PairDetail"));
 const Pairs = lazy(() => import("./pages/Pairs"));
@@ -483,6 +492,11 @@ function Router() {
             <Suspense fallback={<PageSkeleton />}><Corrections /></Suspense>
           </PageErrorBoundary>
         </Route>
+        <Route path={"/line/:slug/:sub"}>
+          <PageErrorBoundary pageName="LineDeep">
+            <Suspense fallback={<PageSkeleton />}><LineDeep /></Suspense>
+          </PageErrorBoundary>
+        </Route>
         <Route path={"/line/:slug"}>
           <PageErrorBoundary pageName="LineDetail">
             <Suspense fallback={<PageSkeleton />}><LineDetail /></Suspense>
@@ -503,6 +517,11 @@ function Router() {
             <Suspense fallback={<PageSkeleton />}><Protocols /></Suspense>
           </PageErrorBoundary>
         </Route>
+        <Route path={"/pair/:slug/:sub"}>
+          <PageErrorBoundary pageName="PairDeep">
+            <Suspense fallback={<PageSkeleton />}><PairDeep /></Suspense>
+          </PageErrorBoundary>
+        </Route>
         <Route path={"/pair/:slug"}>
           <PageErrorBoundary pageName="PairDetail">
             <Suspense fallback={<PageSkeleton />}><PairDetail /></Suspense>
@@ -511,6 +530,11 @@ function Router() {
         <Route path={"/pairs"}>
           <PageErrorBoundary pageName="Pairs">
             <Suspense fallback={<PageSkeleton />}><Pairs /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/practice/:id/:sub"}>
+          <PageErrorBoundary pageName="PracticeDeep">
+            <Suspense fallback={<PageSkeleton />}><PracticeDeep /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/practice/:id"}>
@@ -526,6 +550,11 @@ function Router() {
         <Route path={"/compare/:slug"}>
           <PageErrorBoundary pageName="CompareDetail">
             <Suspense fallback={<PageSkeleton />}><CompareDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/goal/:g/:sub"}>
+          <PageErrorBoundary pageName="GoalDeep">
+            <Suspense fallback={<PageSkeleton />}><GoalDeep /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/goal/:keyword"}>
@@ -548,14 +577,29 @@ function Router() {
             <Suspense fallback={<PageSkeleton />}><BuildDetail /></Suspense>
           </PageErrorBoundary>
         </Route>
+        <Route path={"/capacity/:slug/:sub"}>
+          <PageErrorBoundary pageName="CapacitySub">
+            <Suspense fallback={<PageSkeleton />}><CapacitySub /></Suspense>
+          </PageErrorBoundary>
+        </Route>
         <Route path={"/capacity/:slug"}>
           <PageErrorBoundary pageName="CapacityDetail">
             <Suspense fallback={<PageSkeleton />}><CapacityDetail /></Suspense>
           </PageErrorBoundary>
         </Route>
+        <Route path={"/kind/:id/:sub"}>
+          <PageErrorBoundary pageName="KindDeep">
+            <Suspense fallback={<PageSkeleton />}><KindDeep /></Suspense>
+          </PageErrorBoundary>
+        </Route>
         <Route path={"/kind/:id"}>
           <PageErrorBoundary pageName="KindDetail">
             <Suspense fallback={<PageSkeleton />}><KindDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/wing/:id/:sub"}>
+          <PageErrorBoundary pageName="WingDeep">
+            <Suspense fallback={<PageSkeleton />}><WingDeep /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/wing/:id"}>
@@ -566,6 +610,16 @@ function Router() {
         <Route path={"/verdict/:slug"}>
           <PageErrorBoundary pageName="VerdictDetail">
             <Suspense fallback={<PageSkeleton />}><VerdictDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/myth/:id/:sub"}>
+          <PageErrorBoundary pageName="MythDeep">
+            <Suspense fallback={<PageSkeleton />}><MythDeep /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/best/:kind/:line"}>
+          <PageErrorBoundary pageName="BestProtocols">
+            <Suspense fallback={<PageSkeleton />}><BestProtocols /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/myth/:id"}>

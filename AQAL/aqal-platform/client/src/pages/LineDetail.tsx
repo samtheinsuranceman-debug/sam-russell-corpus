@@ -9,6 +9,8 @@
 // per-line titles; each page is in the sitemap.
 // ============================================================
 import { Link, useParams } from "wouter";
+import { GoDeeper } from "@/components/DeepPage";
+import { LINE_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { LINE_ENCYCLOPEDIA, G_BAND_LABEL } from "@/lib/lineEncyclopedia";
 import { LINE_DEEP } from "@/lib/lineDeepDives";
@@ -308,6 +310,7 @@ export default function LineDetail() {
           </Link>
         </div>
       </div>
+      <GoDeeper base={`/line/${lineSlug(name)}`} subs={LINE_SUBPAGES} labels={{ "at-work": "At work", "in-relationships": "In relationships", history: "The history", "raise-it": "Raising it", "self-check": "Self-check", "never-tested": "Never tested" }} />
       <PublicFooter />
     </div>
   );

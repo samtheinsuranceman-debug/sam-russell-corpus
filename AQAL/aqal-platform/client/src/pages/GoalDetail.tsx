@@ -6,6 +6,8 @@
 // keystone library.
 // ============================================================
 import { Link, useParams } from "wouter";
+import { GoDeeper } from "@/components/DeepPage";
+import { GOAL_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
@@ -119,6 +121,7 @@ export default function GoalDetail() {
           <Link href="/practices" style={{ ...mono, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED }}>all 54 practices</Link>
         </div>
       </div>
+      <GoDeeper base={`/goal/${params.keyword}`} subs={GOAL_SUBPAGES} labels={{ plan: "The 30-day plan", mistakes: "The mistakes" }} />
       <PublicFooter />
     </div>
   );
