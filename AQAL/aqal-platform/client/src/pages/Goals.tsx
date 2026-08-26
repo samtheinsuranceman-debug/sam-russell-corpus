@@ -226,7 +226,7 @@ export default function Goals() {
     onSuccess: () => { toast.success("Thank you — that goes in the record."); setAskTestimonial(null); setTRating(0); setTQuote(""); setTConsent(false); },
   });
   // Beliefs⇄goals wiring: surface limiting beliefs whose own words overlap this goal
-  const beliefsQ = trpc.beliefs.list.useQuery(undefined, { retry: false });
+  const beliefsQ = trpc.beliefs.list.useQuery(undefined, { enabled: !!user, retry: false });
   const beliefsForGoal = (title: string) => {
     const words = title.toLowerCase().split(/\W+/).filter((w) => w.length > 3);
     return (beliefsQ.data ?? []).filter((b) =>

@@ -82,7 +82,7 @@ export default function PracticeDeep() {
         <H2>What it's mapped to lift</H2>
         <Body>
           In our framework, {practice.name} bolsters: <b>{practice.lifts.join(", ")}</b>. Reading topic: {practice.librarySection}
-          {" "}(Research Library §{practice.section}) — the <Gold href="/research">library shelf</Gold> this practice's literature lives on.
+          {" "}(Research Library §{practice.section}) — the <Gold href="/research-library">library shelf</Gold> this practice's literature lives on.
         </Body>
         <H2>What the evidence does not say</H2>
         <Body>
