@@ -59,11 +59,9 @@ export default function WelcomeBack() {
             <p style={{ color: CREAM2, fontSize: "13.5px", marginBottom: "18px" }}>
               One answer. Ramble as long as you like — rambling is data.
             </p>
-            <Link href="/assessment">
-              <a className="inline-block px-6 py-3.5 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", background: CHAMPAGNE, color: INK }}>
+            <Link href="/assessment" className="inline-block px-6 py-3.5 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", background: CHAMPAGNE, color: INK }}>
                 Answer it now — 5 minutes
-              </a>
-            </Link>
+              </Link>
           </div>
         )}
 
@@ -75,11 +73,9 @@ export default function WelcomeBack() {
             <p style={{ color: CREAM2, fontSize: "14px", marginBottom: "18px" }}>
               The comeback you&rsquo;re looking for is in the work itself — your map, your clocks, your beliefs.
             </p>
-            <Link href="/portal">
-              <a className="inline-block px-6 py-3.5 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", background: JADE, color: INK }}>
+            <Link href="/portal" className="inline-block px-6 py-3.5 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", background: JADE, color: INK }}>
                 Open Mission Control
-              </a>
-            </Link>
+              </Link>
           </div>
         )}
 

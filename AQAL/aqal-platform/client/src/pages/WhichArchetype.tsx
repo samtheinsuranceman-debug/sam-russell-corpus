@@ -176,16 +176,12 @@ export default function WhichArchetype() {
             </div>
 
             <div className="flex gap-3 flex-wrap">
-              <Link href="/assessment">
-                <a className="px-5 py-3.5 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.1em", textTransform: "uppercase", background: CHAMPAGNE, color: INK }}>
+              <Link href="/assessment" className="px-5 py-3.5 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.1em", textTransform: "uppercase", background: CHAMPAGNE, color: INK }}>
                   Take the real assessment — free for the first 10,000
-                </a>
-              </Link>
-              <Link href="/sample-report">
-                <a className="px-5 py-3.5 rounded-lg" style={{ ...mono, fontSize: "12px", letterSpacing: "0.1em", textTransform: "uppercase", background: "transparent", color: CREAM2, border: `1px solid ${LINE_C}` }}>
+                </Link>
+              <Link href="/sample-report" className="px-5 py-3.5 rounded-lg" style={{ ...mono, fontSize: "12px", letterSpacing: "0.1em", textTransform: "uppercase", background: "transparent", color: CREAM2, border: `1px solid ${LINE_C}` }}>
                   See a full sample report
-                </a>
-              </Link>
+                </Link>
               <button onClick={shareResult} className="px-5 py-3.5 rounded-lg cursor-pointer" style={{ ...mono, fontSize: "12px", letterSpacing: "0.1em", textTransform: "uppercase", background: "transparent", color: JADE, border: `1px solid ${JADE}55` }}>
                 Share my result
               </button>

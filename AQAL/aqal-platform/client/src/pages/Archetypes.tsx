@@ -370,11 +370,9 @@ export default function Archetypes() {
             The assessment maps all 32 of your lines, not just g. Then it prescribes the work,
             and points you toward the people who share your highest lines.
           </p>
-          <Link href="/assessment">
-            <a className="inline-block px-8 py-3 rounded-full bg-primary text-white text-sm font-medium hover:translate-y-[-1px] transition-transform">
+          <Link href="/assessment" className="inline-block px-8 py-3 rounded-full bg-primary text-white text-sm font-medium hover:translate-y-[-1px] transition-transform">
               Map my 32 lines
-            </a>
-          </Link>
+            </Link>
         </section>
       </div>
     </div>

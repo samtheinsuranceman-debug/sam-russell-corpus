@@ -540,7 +540,8 @@ function DataSovereignty() {
   const utils = trpc.useUtils();
   const [busy, setBusy] = useState(false);
   const requestDeletion = trpc.account.requestDeletion.useMutation();
-  const emailPreferences = trpc.account.emailPreferences.useQuery();
+  const { user: authedUser } = useAuth();
+  const emailPreferences = trpc.account.emailPreferences.useQuery(undefined, { enabled: !!authedUser });
   const setMarketingEmail = trpc.account.setMarketingEmail.useMutation({
     onSuccess: () => emailPreferences.refetch(),
   });
@@ -671,7 +672,8 @@ function ChallengeInviteButton({ rarity }: { rarity: number }) {
 }
 
 function LeaderboardOptIn({ userName }: { userName: string }) {
-  const { data: myEntry, isLoading } = trpc.leaderboard.myEntry.useQuery();
+  const { user: authedUser } = useAuth();
+  const { data: myEntry, isLoading } = trpc.leaderboard.myEntry.useQuery(undefined, { enabled: !!authedUser });
   const utils = trpc.useUtils();
   const [displayName, setDisplayName] = useState(userName);
 
@@ -802,7 +804,8 @@ function ShareCardButton() {
 }
 
 function ProfileComparison() {
-  const { data: comparison, isLoading } = trpc.profile.comparison.useQuery();
+  const { user: authedUser } = useAuth();
+  const { data: comparison, isLoading } = trpc.profile.comparison.useQuery(undefined, { enabled: !!authedUser });
 
   if (isLoading) {
     return (

@@ -1343,12 +1343,10 @@ function StarvedLineOnRamp({ scores, errBars }: { scores: number[]; errBars?: (n
             </div>
           )}
           <CrashConcordance weakLine={rx.line} />
-          <Link href="/research-library">
-            <a className="inline-flex items-center gap-2 text-xs text-accent hover:underline" onClick={playClick}>
+          <Link href="/research-library" className="inline-flex items-center gap-2 text-xs text-accent hover:underline" onClick={playClick}>
               Read the research: {rx.practice.librarySection}
               <ArrowRight className="w-3.5 h-3.5" />
-            </a>
-          </Link>
+            </Link>
         </div>
       )}
 
@@ -1363,12 +1361,10 @@ function StarvedLineOnRamp({ scores, errBars }: { scores: number[]; errBars?: (n
       </div>
 
       <div className="text-center mt-6">
-        <Link href="/archetypes">
-          <a className="inline-flex items-center gap-2 text-sm text-accent hover:underline" onClick={playClick}>
+        <Link href="/archetypes" className="inline-flex items-center gap-2 text-sm text-accent hover:underline" onClick={playClick}>
             See all {AXIS_LABELS.length} lines, the isolation science, and what connection changes
             <ArrowRight className="w-4 h-4" />
-          </a>
-        </Link>
+          </Link>
       </div>
     </section>
   );
@@ -2191,12 +2187,16 @@ export default function Results() {
     return allScores.map(s => Math.max(0.1, 1 - s + (Math.random() * 0.15 - 0.075)));
   }, [allScores]);
 
+  // Redirect signed-out visitors from an effect, never during render —
+  // navigating mid-render updates the router while Results is rendering.
+  const signedOut = !authLoading && !user;
+  useEffect(() => {
+    if (signedOut) navigate("/assessment");
+  }, [signedOut, navigate]);
+
   if (authLoading) return <PageSkeleton />;
 
-  if (!user) {
-    navigate("/assessment");
-    return null;
-  }
+  if (!user) return null;
 
   if (assessmentQuery.isLoading) return <PageSkeleton />;
 

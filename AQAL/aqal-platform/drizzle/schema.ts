@@ -424,6 +424,10 @@ export const dailyAccountability = mysqlTable("dailyAccountability", {
   localDate: varchar("localDate", { length: 10 }).notNull(), // YYYY-MM-DD in the member's IANA timezone
   channel: mysqlEnum("channel", ["email", "text"]).notNull(),
   status: mysqlEnum("status", ["pending", "sent", "failed"]).default("pending").notNull(),
+  // Bounded-retry counter: attempt 1 is the initial claim; a failed send may
+  // be re-claimed by a later same-day callback until the cap in
+  // claimDailyAccountabilitySend is reached. Never resets within a day.
+  attemptCount: int("attemptCount").default(1).notNull(),
   reply: mysqlEnum("reply", ["yes", "no", "stop"]),
   sourceMessageSid: varchar("sourceMessageSid", { length: 64 }),
   sentAt: timestamp("sentAt"),

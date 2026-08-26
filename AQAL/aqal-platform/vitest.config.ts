@@ -5,6 +5,9 @@ const templateRoot = path.resolve(import.meta.dirname);
 
 export default defineConfig({
   root: templateRoot,
+  // Page components under test use JSX without importing React; match the
+  // app build's automatic runtime instead of esbuild's classic default.
+  esbuild: { jsx: "automatic" },
   resolve: {
     alias: {
       "@": path.resolve(templateRoot, "client", "src"),
@@ -26,6 +29,7 @@ export default defineConfig({
       "client/src/lib/deepPageNavigationContracts.test.ts",
       "client/src/lib/expansion203Contracts.test.ts",
       "client/src/lib/expansion500Contracts.test.ts",
+      "client/src/lib/nestedAnchors.test.ts",
       "client/src/lib/pageShorts.test.ts",
       "client/src/lib/routeMetaFor.test.ts",
     ],

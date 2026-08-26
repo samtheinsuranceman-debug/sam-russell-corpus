@@ -1,4 +1,4 @@
-import { eq, sql, and, or, desc, gte, inArray } from "drizzle-orm";
+import { eq, sql, and, or, desc, gte, lt, inArray, isNull } from "drizzle-orm";
 import { RESERVATION_DAYS } from "@shared/giveawayLadder";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend, testimonials, InsertTestimonial, commitments, dailyAccountability, trackerCycles, InsertTrackerCycle } from "../drizzle/schema";
@@ -1460,6 +1460,11 @@ export async function getActiveReminderCommitments() {
   ) as any;
 }
 
+// Delivery contract: bounded retry. At most one logical check-in per person
+// per local day, with up to this many provider attempts for it (initial send
+// plus same-day retries of FAILED sends, one per scheduled callback).
+export const DAILY_ACCOUNTABILITY_MAX_ATTEMPTS = 3;
+
 export async function claimDailyAccountabilitySend(input: {
   commitmentId: number;
   userId: number;
@@ -1473,16 +1478,22 @@ export async function claimDailyAccountabilitySend(input: {
     return true;
   } catch (error: any) {
     if (error?.code === "ER_DUP_ENTRY" || String(error?.message ?? "").includes("Duplicate")) {
-      // A row already exists for this commitment/day. If its send FAILED,
-      // atomically re-claim it so a later callback retries that same day;
-      // the status guard means concurrent callbacks can't both win, and
-      // pending/sent rows are never re-claimed.
+      // A row already exists for this commitment/day. Bounded retry: if its
+      // send FAILED, atomically re-claim it so a later callback retries the
+      // same day — but only while under the attempt cap and only if no reply
+      // (including STOP) has been recorded. The status guard makes the
+      // reclaim single-winner under concurrent callbacks; pending/sent rows
+      // are never re-claimed, and there is always exactly one row per
+      // person per local day. Callbacks run hourly, so retries are naturally
+      // spaced at least an hour apart.
       const res: any = await db.update(dailyAccountability)
-        .set({ status: "pending" })
+        .set({ status: "pending", attemptCount: sql`${dailyAccountability.attemptCount} + 1` })
         .where(and(
           eq(dailyAccountability.commitmentId, input.commitmentId),
           eq(dailyAccountability.localDate, input.localDate),
           eq(dailyAccountability.status, "failed"),
+          lt(dailyAccountability.attemptCount, DAILY_ACCOUNTABILITY_MAX_ATTEMPTS),
+          isNull(dailyAccountability.reply),
         ));
       const affected = Number((Array.isArray(res) ? res[0]?.affectedRows : res?.affectedRows) ?? 0);
       return affected > 0;

@@ -47,11 +47,9 @@ export default function VerifyEmail() {
             <p style={{ color: CREAM2, fontSize: "14.5px", lineHeight: 1.65, marginBottom: "24px" }}>
               Password recovery now works, your founding claim is anchored, and every report we ever send knows where home is.
             </p>
-            <Link href="/portal">
-              <a className="inline-block px-6 py-3.5 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", background: JADE, color: INK }}>
+            <Link href="/portal" className="inline-block px-6 py-3.5 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", background: JADE, color: INK }}>
                 Open Mission Control
-              </a>
-            </Link>
+              </Link>
           </>
         )}
         {state === "fail" && (

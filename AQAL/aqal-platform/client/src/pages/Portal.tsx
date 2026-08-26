@@ -195,8 +195,7 @@ function MissionControl() {
         {steps.map((s) => {
           const isNext = next?.n === s.n;
           return (
-            <Link key={s.n} href={s.href}>
-              <a className={`flex items-center gap-4 rounded-lg border px-4 py-3 transition-colors ${isNext ? "border-primary/50 bg-primary/[0.07]" : s.complete ? "border-border/50 opacity-70 hover:opacity-100" : "border-border/50 hover:border-border"}`}>
+            <Link key={s.n} href={s.href} className={`flex items-center gap-4 rounded-lg border px-4 py-3 transition-colors ${isNext ? "border-primary/50 bg-primary/[0.07]" : s.complete ? "border-border/50 opacity-70 hover:opacity-100" : "border-border/50 hover:border-border"}`}>
                 <span className={`flex-none w-7 h-7 rounded-full flex items-center justify-center font-mono text-[12px] ${s.complete ? "bg-[#9BC0B2] text-black" : isNext ? "bg-primary text-primary-foreground" : "bg-white/[0.06] text-muted-foreground"}`}>
                   {s.complete ? "✓" : s.n}
                 </span>
@@ -207,8 +206,7 @@ function MissionControl() {
                 <span className={`flex-none font-mono text-[10px] tracking-[0.1em] uppercase ${isNext ? "text-primary" : "text-muted-foreground/70"}`}>
                   {s.complete ? "done" : s.cta} →
                 </span>
-              </a>
-            </Link>
+              </Link>
           );
         })}
       </div>
