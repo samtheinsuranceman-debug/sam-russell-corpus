@@ -16,6 +16,7 @@ import {
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
 import { mythById } from "@/lib/mythMuseum";
 import { hypnosisById } from "@shared/hypnosisTopics";
+import { archById, ARCH_ABBR, archBlendFromSlug, ARCH_BLENDS } from "@shared/seo";
 
 const MAX = 59; // "under sixty characters" — always
 
@@ -240,6 +241,33 @@ export function shortFor(path: string): string | undefined {
     const l = engineLineFromSlug(segs[1] ?? "");
     if (!l || !KIND_IDS.includes(segs[0] ?? "")) return undefined;
     return fit(`${l} via ${segs[0]}: ranked, cited.`);
+  }
+  if (p.startsWith("/archetype/")) {
+    const segs = p.slice(11).split("/");
+    const a = archById(segs[0] ?? "");
+    if (!a) return undefined;
+    const n = ARCH_ABBR[a.id] ?? a.name;
+    if (segs.length === 2) {
+      const SUB: Record<string, string> = {
+        verify: `${n}: the three-part self-test.`,
+        "break-out": `${n}: the cited way out.`,
+      };
+      const sv = SUB[segs[1] ?? ""];
+      return sv ? fit(sv) : undefined;
+    }
+    return fit(`${n}: the full dossier, cited.`);
+  }
+  if (p.startsWith("/archetype-blend/")) {
+    const pr = archBlendFromSlug(p.slice(17));
+    if (!pr) return undefined;
+    // Numbered so every blend short is unique BY CONSTRUCTION even where
+    // abbreviated pool names collide; capped so fit() never trims.
+    const idx = ARCH_BLENDS.findIndex(([a, b]) => a === pr[0] && b === pr[1]) + 1;
+    const c18 = (id: string) => {
+      const n = ARCH_ABBR[id] ?? id;
+      return n.length <= 18 ? n : n.slice(0, 18).replace(/\s+\S*$/, "").replace(/[\s,;:(—-]+$/, "");
+    };
+    return fit(`Mix ${idx}: ${c18(pr[0])} × ${c18(pr[1])}.`);
   }
   if (p.startsWith("/hypnosis/")) {
     const t = hypnosisById(p.slice(10));

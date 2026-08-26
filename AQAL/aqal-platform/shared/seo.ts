@@ -132,6 +132,24 @@ export const PAGE_META: Record<string, PageMeta> = {
       "Fifty overt self-hypnosis and mental-rehearsal sessions — sleep, focus, courage, follow-through — honestly framed, mapped to the lines and goals they serve.",
     short: "50 guided sessions. Overt, honest, mapped.",
   },
+  "/archetypes/research": {
+    title: "The Science Behind the Archetypes — AQAL",
+    description:
+      "What archetype profiles really are, the cited research on configurations, isolation, and connection behind all 246 entries — and what we honestly can't claim.",
+    short: "246 archetypes. Every one carries its receipts.",
+  },
+  "/archetypes/blending": {
+    title: "Can You Be More Than One Archetype? — AQAL",
+    description:
+      "One, two, even three archetypes at once: what blending means, what it looks like, how often it happens — and the honest answer about the data we don't have yet.",
+    short: "Two archetypes at once? Three? Honest answers.",
+  },
+  "/archetypes/integrated": {
+    title: "The Integrated Archetypes — The Positive Set — AQAL",
+    description:
+      "The 28 positive archetypes — the Integrated Leader, the Grounded Genius, the Wise Elder — what the research says builds them, and the routes this library maps.",
+    short: "28 positive archetypes. The versions worth becoming.",
+  },
   "/login": {
     title: "Sign In — AQAL Intelligence",
     description: "Sign in to your AQAL member portal — your 32-line profile, goal clocks, protocols, and Black Box. Founding members use the password chosen at claim.",
@@ -319,6 +337,8 @@ export type CapacitySubpageId = (typeof CAPACITY_SUBPAGES)[number];
 export const COMPARE_SUBPAGES = ["verdict", "switch"] as const;
 export type CompareSubpageId = (typeof COMPARE_SUBPAGES)[number];
 export const BUILD_SUBPAGES = ["plan"] as const;
+export const ARCH_SUBPAGES = ["verify", "break-out"] as const;
+export type ArchSubpageId = (typeof ARCH_SUBPAGES)[number];
 
 // Line-pair pages — one per unordered pair of lines, canonical order =
 // LINE_NAMES index order. C(32,2) = 496 pages at /pair/<a>--<b>.
@@ -477,6 +497,50 @@ export function bestComboFromSlug(kind: string, lineSlugStr: string): { kind: st
   return BEST_COMBOS.find((c) => c.kind === kind && c.line === line);
 }
 
+// ── Archetype deep pages: 246 dossiers + verify/break-out subs, plus the
+// blend pages — every meaningful pairing (shared high line, or a high/low
+// crossover) among the 100 real profiles (kind archetype|integrated).
+import { ARCHETYPES } from "./archetypesData";
+export const ARCH_IDS: string[] = ARCHETYPES.map((a) => a.id);
+export function archById(id: string) {
+  return ARCHETYPES.find((a) => a.id === id);
+}
+// Unique display-shorts for titles/descriptions: word-trim at 24, escalate to
+// 30 on collision, fall back to the id — uniqueness is test-enforced.
+export const ARCH_ABBR: Record<string, string> = (() => {
+  const trim = (n: string, max: number) => (n.length <= max ? n : n.slice(0, max).replace(/\s+\S*$/, "").replace(/[\s,;:(—-]+$/, "").trim());
+  const out: Record<string, string> = {};
+  const used = new Set<string>();
+  for (const a of ARCHETYPES) {
+    let c = trim(a.name, 24);
+    if (used.has(c)) c = trim(a.name, 30);
+    if (used.has(c)) c = a.id;
+    used.add(c);
+    out[a.id] = c;
+  }
+  return out;
+})();
+const BLEND_POOL = ARCHETYPES.filter((a) => a.kind === "archetype" || a.kind === "integrated");
+export const ARCH_BLENDS: [string, string][] = (() => {
+  const out: [string, string][] = [];
+  for (let i = 0; i < BLEND_POOL.length; i++) for (let j = i + 1; j < BLEND_POOL.length; j++) {
+    const a = BLEND_POOL[i], b = BLEND_POOL[j];
+    const sharedHigh = a.highLines.some((l) => b.highLines.includes(l));
+    const cross = a.highLines.some((l) => b.lowLines.includes(l)) || a.lowLines.some((l) => b.highLines.includes(l));
+    if (sharedHigh || cross) out.push(a.id < b.id ? [a.id, b.id] : [b.id, a.id]);
+  }
+  return out.sort((x, y) => (x[0] + x[1]).localeCompare(y[0] + y[1]));
+})();
+export function archBlendSlug(a: string, b: string): string {
+  return a < b ? `${a}--x--${b}` : `${b}--x--${a}`;
+}
+export function archBlendFromSlug(slug: string): [string, string] | undefined {
+  const parts = slug.split("--x--");
+  if (parts.length !== 2) return undefined;
+  const [a, b] = parts[0] < parts[1] ? [parts[0], parts[1]] : [parts[1], parts[0]];
+  return ARCH_BLENDS.find(([x, y]) => x === a && y === b);
+}
+
 export const SITEMAP_PATHS = [
   ...Object.keys(PAGE_META),
   ...LINE_NAMES.map((n) => `/line/${lineSlug(n)}`),
@@ -506,6 +570,9 @@ export const SITEMAP_PATHS = [
   ...CAPACITY_ONLY_LINES.flatMap((l) => CAPACITY_SUBPAGES.map((s) => `/capacity/${engineLineSlug(l)}/${s}`)),
   ...BEST_COMBOS.map((c) => `/best/${c.kind}/${engineLineSlug(c.line)}`),
   ...HYPNOSIS_IDS.map((id) => `/hypnosis/${id}`),
+  ...ARCH_IDS.map((id) => `/archetype/${id}`),
+  ...ARCH_IDS.flatMap((id) => ARCH_SUBPAGES.map((s2) => `/archetype/${id}/${s2}`)),
+  ...ARCH_BLENDS.map(([a, b]) => `/archetype-blend/${archBlendSlug(a, b)}`),
 ];
 
 export function canonicalUrl(path: string): string {

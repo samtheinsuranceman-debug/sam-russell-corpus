@@ -20,6 +20,7 @@ import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
 import { LINE_ROLE } from "@/lib/linePairs";
 import { mythById } from "@/lib/mythMuseum";
 import { hypnosisById } from "@shared/hypnosisTopics";
+import { archById, ARCH_ABBR, ARCH_SUBPAGES, archBlendFromSlug, ARCH_BLENDS } from "@shared/seo";
 
 export type RouteMetaData = { title: string; description: string };
 
@@ -414,6 +415,49 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
           `Verdict: ${cap}`,
         ),
         description: `What the "${cap.toLowerCase()}" verdict means, the evidential standard it applies, and every Myth Museum exhibit that earned it — sourced, exhibit by exhibit.`.slice(0, 158),
+      };
+    }
+  }
+  // /archetype/:id and /archetype/:id/:sub — the dossier family.
+  if (!meta && path.startsWith("/archetype/")) {
+    const segs = path.slice("/archetype/".length).split("/");
+    const a = archById(segs[0] ?? "");
+    if (a) {
+      const n = ARCH_ABBR[a.id] ?? a.name;
+      if (segs.length === 1) {
+        meta = {
+          title: fitTitle(
+            `${a.name} — The Archetype Dossier — AQAL`,
+            `${n} — Archetype Dossier — AQAL`,
+            `${n} — The Dossier`,
+          ),
+          description: `${a.pattern}`.slice(0, 158),
+        };
+      } else if ((ARCH_SUBPAGES as readonly string[]).includes(segs[1] ?? "")) {
+        const T: Record<string, [string[], string]> = {
+          verify: [[`Are You ${a.name}? The Self-Test — AQAL`, `Are You ${n}? — AQAL`, `Are You ${n}?`],
+            `The disciplined three-part check for the ${n} archetype — configuration test, trajectory test, witness test — and the honest limits of self-recognition.`],
+          "break-out": [[`Breaking Out of ${a.name} — AQAL`, `${n} — Breaking Out — AQAL`, `${n} — Breaking Out`],
+            `The cited route out of the ${n} configuration: the development case, keystone practices and protocols for each starved line, and the measured gains.`],
+        };
+        const t = T[segs[1]!];
+        if (t) meta = { title: fitTitle(...t[0]), description: t[1].slice(0, 158) };
+      }
+    }
+  }
+  // /archetype-blend/:slug — blend anatomy pages.
+  if (!meta && path.startsWith("/archetype-blend/")) {
+    const pr = archBlendFromSlug(path.slice("/archetype-blend/".length));
+    if (pr) {
+      const [na, nb] = [ARCH_ABBR[pr[0]] ?? pr[0], ARCH_ABBR[pr[1]] ?? pr[1]];
+      const idx = ARCH_BLENDS.findIndex(([a, b]) => a === pr[0] && b === pr[1]) + 1;
+      const c18 = (x: string) => x.length <= 18 ? x : x.slice(0, 18).replace(/\s+\S*$/, "").replace(/[\s,;:(—-]+$/, "");
+      meta = {
+        title: fitTitle(
+          `${na} × ${nb} — The Blend — AQAL`,
+          `Blend ${idx}: ${c18(na)} × ${c18(nb)}`,
+        ),
+        description: `Can you be both ${na} and ${nb}? The computed anatomy of the blend: where it amplifies, where it argues with itself, and the honest frequency answer.`.slice(0, 158),
       };
     }
   }

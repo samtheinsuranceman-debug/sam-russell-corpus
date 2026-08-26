@@ -136,8 +136,13 @@ function ArchetypeCard({ a }: { a: Archetype }) {
   return (
     <div className="rounded-2xl border border-border/50 bg-card/40 p-6 sm:p-7">
       <h3 className="text-2xl sm:text-3xl text-foreground mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
-        {a.name}
+        <Link href={`/archetype/${a.id}`} className="transition-colors hover:text-[#E0C68C]" style={{ color: "inherit", textDecoration: "underline", textDecorationColor: "rgba(224,198,140,0.5)", textUnderlineOffset: "5px" }}>
+          {a.name} <span aria-hidden style={{ color: "#E0C68C", fontSize: "0.7em" }}>→</span>
+        </Link>
       </h3>
+      <p className="text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground/60 -mt-2 mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        click the title — full dossier, verify test & break-out plan
+      </p>
       <div className="space-y-1.5 mb-4">
         <LineChips label="High" lines={a.highLines} tone="high" />
         <LineChips label="Starved" lines={a.lowLines} tone="low" />
@@ -169,7 +174,9 @@ function ArchetypeCard({ a }: { a: Archetype }) {
 function FindingCard({ a }: { a: Archetype }) {
   return (
     <div className="rounded-xl border border-border/50 bg-card/30 p-5">
-      <h4 className="text-lg text-foreground mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>{a.name}</h4>
+      <h4 className="text-lg text-foreground mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
+        <Link href={`/archetype/${a.id}`} className="transition-colors hover:text-[#E0C68C]" style={{ color: "inherit", textDecoration: "underline", textDecorationColor: "rgba(224,198,140,0.5)", textUnderlineOffset: "5px" }}>{a.name} <span aria-hidden style={{ color: "#E0C68C", fontSize: "0.75em" }}>→</span></Link>
+      </h4>
       <p className="text-sm text-foreground/75 leading-relaxed mb-2">
         <span className="text-red-300/70">Isolated: </span>{a.untreatedTrajectory}
       </p>
@@ -187,7 +194,9 @@ function StarvationCard({ a }: { a: Archetype }) {
   return (
     <div className="rounded-xl border border-border/50 bg-card/30 p-5">
       <div className="flex items-baseline justify-between gap-3 mb-2">
-        <h4 className="text-lg text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>{a.name}</h4>
+        <h4 className="text-lg text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
+          <Link href={`/archetype/${a.id}`} className="transition-colors hover:text-[#E0C68C]" style={{ color: "inherit", textDecoration: "underline", textDecorationColor: "rgba(224,198,140,0.5)", textUnderlineOffset: "5px" }}>{a.name} <span aria-hidden style={{ color: "#E0C68C", fontSize: "0.75em" }}>→</span></Link>
+        </h4>
         <span className="shrink-0 px-2 py-0.5 rounded-full text-[0.6rem] border border-red-500/25 text-red-300/80 bg-red-500/[0.05]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
           low {line}
         </span>
@@ -207,7 +216,9 @@ function StarvationCard({ a }: { a: Archetype }) {
 function IntegratedCard({ a }: { a: Archetype }) {
   return (
     <div className="rounded-2xl border border-accent/30 bg-accent/[0.05] p-6 sm:p-7">
-      <h3 className="text-2xl sm:text-3xl text-foreground mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>{a.name}</h3>
+      <h3 className="text-2xl sm:text-3xl text-foreground mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
+        <Link href={`/archetype/${a.id}`} className="transition-colors hover:text-[#E0C68C]" style={{ color: "inherit", textDecoration: "underline", textDecorationColor: "rgba(224,198,140,0.5)", textUnderlineOffset: "5px" }}>{a.name} <span aria-hidden style={{ color: "#E0C68C", fontSize: "0.7em" }}>→</span></Link>
+      </h3>
       <div className="mb-4"><LineChips label="Developed together" lines={a.highLines} tone="high" /></div>
       <p className="text-sm text-foreground/80 leading-relaxed mb-4">{a.pattern}</p>
       <p className="text-sm text-foreground/75 leading-relaxed mb-2">

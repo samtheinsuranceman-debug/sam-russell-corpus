@@ -81,6 +81,9 @@ const BuildPlan = lazy(() => import("./pages/BuildPlan"));
 const Rankings = lazy(() => import("./pages/Rankings"));
 const HypnosisLibrary = lazy(() => import("./pages/HypnosisLibrary"));
 const HypnosisDetail = lazy(() => import("./pages/HypnosisDetail"));
+const ArchetypeDetail = lazy(() => import("./pages/ArchetypeDetail"));
+const ArchetypeBlend = lazy(() => import("./pages/ArchetypeBlend"));
+const ArchetypesLibrary = lazy(() => import("./pages/ArchetypesLibrary"));
 const Protocols = lazy(() => import("./pages/Protocols"));
 const PairDetail = lazy(() => import("./pages/PairDetail"));
 const Pairs = lazy(() => import("./pages/Pairs"));
@@ -550,6 +553,36 @@ function Router() {
         <Route path={"/practices"}>
           <PageErrorBoundary pageName="Practices">
             <Suspense fallback={<PageSkeleton />}><Practices /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/archetype/:id/:sub"}>
+          <PageErrorBoundary pageName="ArchetypeDetail">
+            <Suspense fallback={<PageSkeleton />}><ArchetypeDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/archetype/:id"}>
+          <PageErrorBoundary pageName="ArchetypeDetail">
+            <Suspense fallback={<PageSkeleton />}><ArchetypeDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/archetype-blend/:slug"}>
+          <PageErrorBoundary pageName="ArchetypeBlend">
+            <Suspense fallback={<PageSkeleton />}><ArchetypeBlend /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/archetypes/research"}>
+          <PageErrorBoundary pageName="ArchetypesLibrary">
+            <Suspense fallback={<PageSkeleton />}><ArchetypesLibrary /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/archetypes/blending"}>
+          <PageErrorBoundary pageName="ArchetypesLibrary">
+            <Suspense fallback={<PageSkeleton />}><ArchetypesLibrary /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/archetypes/integrated"}>
+          <PageErrorBoundary pageName="ArchetypesLibrary">
+            <Suspense fallback={<PageSkeleton />}><ArchetypesLibrary /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/compare/:slug/:sub"}>
