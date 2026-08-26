@@ -1,7 +1,7 @@
 // ============================================================
 // GROWTH ENGINE — the member's living month, in one module
 // ============================================================
-// Powers the Manus build-now set: quick-win starters, the protocol difficulty
+// Powers the AQAL build-now set: quick-win starters, the protocol difficulty
 // ladder, minimum-effective-dose curves, weekly strength-deployment challenges
 // (all 32 lines), the What-Would-It-Take calculator, streak math, and the
 // crisis-language safety net. Pure functions — testable, no server needed.

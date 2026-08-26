@@ -363,11 +363,11 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
     goalKeywords: ["mentor", "teach", "legacy", "parenting", "give back", "lead", "community"],
   },
 
-  // ─── MANUS ADDITIONS (merged from production build 8.12) ────────────────────
+  // ─── AQAL ADDITIONS (merged from production build 8.12) ────────────────────
 
-  // ─── MANUS ADDITIONS (merged from production build 8.12.2026) ───────────────
+  // ─── AQAL ADDITIONS (merged from production build 8.12.2026) ───────────────
 
-  // ─── MANUS ADDITIONS (merged from production build 8.12.2026) ───────────────
+  // ─── AQAL ADDITIONS (merged from production build 8.12.2026) ───────────────
   {
     id: "spatial-training", name: "Spatial reasoning training", section: "Learning Science & Cognition", librarySection: "Learning Science & Cognition",
     evidence: "Strong", lifts: ["spatial", "mathematical", "architectural"],

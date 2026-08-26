@@ -9,11 +9,11 @@
 // ============================================================
 
 export type KindProfile = {
-  label: string;       // chip text
-  what: string;        // one-paragraph "what this kind of protocol is"
-  dose: string;        // format · frequency · course length
-  intensity: string;   // how demanding it is, honestly
-  durability: string;  // how long gains typically last, honestly
+  label: string;
+  what: string;
+  dose: string;
+  intensity: string;
+  durability: string;
 };
 
 export const KIND_PROFILES: Record<string, KindProfile> = {
@@ -96,14 +96,9 @@ export const KIND_PROFILES: Record<string, KindProfile> = {
   },
 };
 
-// Every distinct mapped therapy → its kind. Names must match
-// shared/therapyLineMap.ts exactly (verified by test).
 import { THERAPY_KIND } from "@shared/therapyKindMap";
 export { THERAPY_KIND };
 
-
-// Protocol-specific dose/durability overrides where the literature pins a
-// well-known schedule tighter than the kind default.
 export const THERAPY_OVERRIDES: Record<string, Partial<Pick<KindProfile, "dose" | "durability" | "intensity">>> = {
   "EMDR": { dose: "Typically 6–12 sessions of 60–90 minutes with a certified clinician; single-incident trauma sometimes resolves in as few as 3–6 sessions." },
   "MBSR (Mindfulness-Based Stress Reduction)": { dose: "The standardized course: 8 weeks, one 2.5-hour class weekly, ~45 minutes daily home practice, one day-long retreat. Most of the outcome literature is anchored to exactly this dose." },
@@ -124,7 +119,7 @@ export const THERAPY_OVERRIDES: Record<string, Partial<Pick<KindProfile, "dose" 
 };
 
 export function kindFor(therapy: string): KindProfile {
-  const k = KIND_PROFILES[THERAPY_KIND[therapy] ?? "skill"] ?? KIND_PROFILES.skill;
-  const o = THERAPY_OVERRIDES[therapy];
-  return o ? { ...k, ...o } : k;
+  const profile = KIND_PROFILES[THERAPY_KIND[therapy] ?? "skill"] ?? KIND_PROFILES.skill;
+  const override = THERAPY_OVERRIDES[therapy];
+  return override ? { ...profile, ...override } : profile;
 }

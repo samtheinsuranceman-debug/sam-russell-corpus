@@ -20,8 +20,6 @@ export default function WingDeep() {
   if (!WING_IDS.includes(id) || !wing || !sub) return <NotFound />;
   const base = `/wing/${id}`;
   const members = MYTHS.filter((m) => MYTH_WING[m.id] === id).slice(0, 6);
-  // Wing labels are long gallery titles ("The Gadget Gallery — Energy
-  // Fields, Frequencies & Devices"); headlines use the short half.
   const shortLabel = wing.label.split("—")[0].trim();
   const family = shortLabel.replace(/^the\s+/i, "").toLowerCase();
 

@@ -356,8 +356,8 @@ function PageVignette() {
 // Family photos fade in/out at different z-depths.
 // ============================================================
 const FAMILY_PHOTOS = [
-  { src: "/manus-storage/family_father_children_65dda520.png", label: "father-children" },
-  { src: "/manus-storage/family_together_e25ef6bf.png", label: "family-together" },
+  { src: "/aqal-storage/family_father_children_65dda520.png", label: "father-children" },
+  { src: "/aqal-storage/family_together_e25ef6bf.png", label: "family-together" },
 ];
 
 const FORMULAS = [

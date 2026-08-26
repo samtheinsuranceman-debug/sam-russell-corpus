@@ -11,7 +11,10 @@ import { getDb } from "./db";
 import { users } from "../drizzle/schema";
 import { sendEmail, unsubscribeUrl, withUnsubscribeFooter, type SendEmailResult } from "./platform/email";
 
-export type MarketingEmailResult = SendEmailResult & { skipped?: boolean };
+export type MarketingEmailResult = SendEmailResult & {
+  skipped?: boolean;
+  reason?: "opted-out" | "database-unavailable" | "opt-out-check-failed";
+};
 
 export async function sendMarketingEmail(
   to: string,
@@ -19,23 +22,28 @@ export async function sendMarketingEmail(
   html: string,
   appUrl?: string,
 ): Promise<MarketingEmailResult> {
+  const normalized = to.trim().toLowerCase();
   // Any account holding this address that has opted out silences it entirely.
+  // Marketing mail fails closed if suppression state cannot be checked.
   try {
     const db = await getDb();
-    if (db) {
-      const optedOut = await db
-        .select({ id: users.id })
-        .from(users)
-        .where(and(eq(users.email, to), isNotNull(users.emailOptOutAt)))
-        .limit(1);
-      if (optedOut.length > 0) return { ok: false, mocked: false, skipped: true };
+    if (!db) {
+      return { ok: false, mocked: false, skipped: true, reason: "database-unavailable", error: "database unavailable" };
+    }
+    const optedOut = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(and(eq(users.email, normalized), isNotNull(users.emailOptOutAt)))
+      .limit(1);
+    if (optedOut.length > 0) {
+      return { ok: false, mocked: false, skipped: true, reason: "opted-out" };
     }
   } catch {
     // If the opt-out check itself fails, do not send — err on the quiet side.
-    return { ok: false, mocked: false, skipped: true, error: "opt-out check failed" };
+    return { ok: false, mocked: false, skipped: true, reason: "opt-out-check-failed", error: "opt-out check failed" };
   }
-  const url = unsubscribeUrl(appUrl ?? "", to);
-  return sendEmail(to, subject, withUnsubscribeFooter(html, url), {
+  const url = unsubscribeUrl(appUrl ?? "", normalized);
+  return sendEmail(normalized, subject, withUnsubscribeFooter(html, url), {
     headers: {
       "List-Unsubscribe": `<${url}>`,
       "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",

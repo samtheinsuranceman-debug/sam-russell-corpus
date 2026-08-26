@@ -23,13 +23,13 @@ export default function KindDeep() {
   if (!prof || !play) return <NotFound />;
   const cap = id.charAt(0).toUpperCase() + id.slice(1);
   const base = `/kind/${id}`;
-  const members = Object.entries(THERAPY_KIND).filter(([, k]) => k === id).map(([t]) => t).slice(0, 8);
+  const members = Object.entries(THERAPY_KIND).filter(([, kind]) => kind === id).map(([therapy]) => therapy).slice(0, 8);
 
   const sections: Record<KindSubpageId, React.ReactNode> = {
     choose: (
       <>
         <Body>
-          The {prof.label.toLowerCase()} family holds {Object.values(THERAPY_KIND).filter((k) => k === id).length} protocols
+          The {prof.label.toLowerCase()} family holds {Object.values(THERAPY_KIND).filter((kind) => kind === id).length} protocols
           in our library. Choosing between siblings inside one kind comes down to three honest questions — here they
           are, with the family roster underneath.
         </Body>
@@ -43,10 +43,10 @@ export default function KindDeep() {
           {prof.intensity}
         </Body>
         <H2>The family roster</H2>
-        {members.map((t) => (
-          <Card key={t} accent={CHAMPAGNE}>
+        {members.map((therapy) => (
+          <Card key={therapy} accent={CHAMPAGNE}>
             <CardText>
-              <Gold href={`/protocol/${therapySlug(t)}`}>{therapyDisplay(t).split(" (")[0]}</Gold> — full page with
+              <Gold href={`/protocol/${therapySlug(therapy)}`}>{therapyDisplay(therapy).split(" (")[0]}</Gold> — full page with
               mapped lines, citations, dose, and its seven deep pages.
             </CardText>
           </Card>
@@ -64,10 +64,10 @@ export default function KindDeep() {
           shape. Here it is — week one day by day, then the honest early curve.
         </Body>
         <H2>The first week, day by day</H2>
-        {play.firstWeek.map((s) => (
-          <Card key={s.day} accent={CHAMPAGNE}>
-            <Label>{s.day}</Label>
-            <CardText>{s.text}</CardText>
+        {play.firstWeek.map((step) => (
+          <Card key={step.day} accent={CHAMPAGNE}>
+            <Label>{step.day}</Label>
+            <CardText>{step.text}</CardText>
           </Card>
         ))}
         <H2>What the rest of the month looks like</H2>
@@ -116,7 +116,7 @@ export default function KindDeep() {
     >
       <SiblingNav base={base} subs={KIND_SUBPAGES} current={sub} labels={SUB_LABELS} />
       {sections[sub]}
-      <DeepDisclosure text={`Kind-level characterizations are literature-typical for the family.`} />
+      <DeepDisclosure text="Kind-level characterizations are literature-typical for the family." />
       <DeepCta heading={`Which ${id} protocol is yours?`} body="The family's best member for you depends on your weakest line — a measurement, not a guess." />
     </DeepFrame>
   );

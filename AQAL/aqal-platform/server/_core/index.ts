@@ -8,6 +8,7 @@ import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { canonicalRedirectLocation } from "./canonical";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -34,18 +35,24 @@ async function startServer() {
   app.set("trust proxy", true); // read x-forwarded-proto/host behind the deployment proxy
 
   // ── HTTPS + canonical-host redirects (production only) ─────────────────────
-  // CANONICAL_HOST (e.g. "joinaqal.com") 301s www/other aliases onto one host
-  // so search engines see a single URL per page. HTTP 301s to HTTPS.
-  const CANONICAL_HOST = (process.env.CANONICAL_HOST ?? "").trim();
+  // www.joinaqal.com is the sole production canonical host. Redirect only the
+  // known bare domain; managed deployment origins must remain directly healthy
+  // for platform routing, validation, and rollback access.
+  const CANONICAL_HOST = (process.env.CANONICAL_HOST ?? "www.joinaqal.com")
+    .trim()
+    .toLowerCase();
   if (process.env.NODE_ENV !== "development") {
     app.use((req, res, next) => {
       const proto = (req.headers["x-forwarded-proto"] as string) ?? req.protocol;
       const host = (req.headers["x-forwarded-host"] as string) ?? req.headers.host ?? "";
-      const wrongProto = proto === "http";
-      const wrongHost = CANONICAL_HOST && host && host !== CANONICAL_HOST && !host.startsWith("localhost");
-      if ((wrongProto || wrongHost) && req.method === "GET") {
-        return res.redirect(301, `https://${wrongHost ? CANONICAL_HOST : host}${req.originalUrl}`);
-      }
+      const location = canonicalRedirectLocation({
+        method: req.method,
+        proto,
+        host,
+        originalUrl: req.originalUrl,
+        canonicalHost: CANONICAL_HOST,
+      });
+      if (location) return res.redirect(301, location);
       next();
     });
   }
@@ -70,6 +77,8 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
+  const { twilioInboundHandler } = await import("../twilioInbound");
+  app.post("/api/webhooks/twilio/inbound", twilioInboundHandler);
 
   // Platform storage routes (S3/R2 signed-redirect + local filesystem).
   const { storageGetSignedUrl, LOCAL_STORAGE_DIR } = await import("../platform/storage");
@@ -88,6 +97,41 @@ async function startServer() {
   const { platformStatus } = await import("../platform/config");
   app.get("/health", (_req, res) => res.json({ ok: true, platform: platformStatus() }));
 
+  // Marketing-email opt-out. GET is confirmation-only so link scanners cannot
+  // silently change state; RFC 8058 mail clients POST to the same signed URL.
+  app.get("/api/unsubscribe", async (req, res) => {
+    const { readUnsubscribeToken } = await import("../platform/email");
+    const token = typeof req.query.t === "string" ? req.query.t : "";
+    const valid = Boolean(readUnsubscribeToken(token));
+    res.set("Cache-Control", "no-store");
+    res.set("Referrer-Policy", "no-referrer");
+    res.status(valid ? 200 : 400).type("html").send(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AQAL Email Preferences</title></head><body style="margin:0;background:#141009;color:#F1EADB;font-family:Georgia,serif"><main style="max-width:560px;margin:10vh auto;padding:32px"><p style="font-family:monospace;letter-spacing:.2em;color:#E0C68C">AQAL · EMAIL PREFERENCES</p>${valid ? `<h1>Stop marketing and reminder emails?</h1><p>This stops optional reminders and promotional messages. Verification, password reset, receipts, security notices, and results you explicitly request can still arrive.</p><form method="post" action="/api/unsubscribe"><input type="hidden" name="t" value="${token.replace(/[&<>"']/g, "")}"><button type="submit" style="padding:12px 18px;background:#E0C68C;color:#141009;border:0;border-radius:4px;font-weight:700">Unsubscribe</button></form>` : `<h1>This link is invalid or expired.</h1><p>Sign in to AQAL to update your email preferences.</p>`}</main></body></html>`);
+  });
+  app.post("/api/unsubscribe", async (req, res) => {
+    const { readUnsubscribeToken } = await import("../platform/email");
+    const token = typeof req.query.t === "string"
+      ? req.query.t
+      : typeof req.body?.t === "string"
+        ? req.body.t
+        : "";
+    const email = readUnsubscribeToken(token);
+    res.set("Cache-Control", "no-store");
+    res.set("Referrer-Policy", "no-referrer");
+    if (!email) return res.status(400).type("text").send("Invalid unsubscribe token");
+    try {
+      const { getDb } = await import("../db");
+      const { users } = await import("../../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      const db = await getDb();
+      if (!db) return res.status(503).type("text").send("Email preferences are temporarily unavailable");
+      await db.update(users).set({ emailOptOutAt: new Date() }).where(eq(users.email, email));
+      return res.status(200).type("html").send(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unsubscribed · AQAL</title></head><body style="margin:0;background:#141009;color:#F1EADB;font-family:Georgia,serif"><main style="max-width:560px;margin:10vh auto;padding:32px"><p style="font-family:monospace;letter-spacing:.2em;color:#E0C68C">AQAL · EMAIL PREFERENCES</p><h1>You are unsubscribed.</h1><p>Optional marketing and reminder emails are off. Account, security, receipt, and explicitly requested result messages can still arrive.</p><p><a href="/login" style="color:#E0C68C">Sign in to manage preferences</a></p></main></body></html>`);
+    } catch (error) {
+      console.error("[unsubscribe] preference update failed", error);
+      return res.status(500).type("text").send("Email preferences could not be updated");
+    }
+  });
+
   // Scheduled handlers (before tRPC and Vite fallthrough)
   const { driftAlertHandler } = await import("../scheduledDriftAlert");
   app.post("/api/scheduled/drift-alert", driftAlertHandler);
@@ -99,6 +143,8 @@ async function startServer() {
   app.post("/api/scheduled/message-digest", messageDigestHandler);
   const { reentryHandler } = await import("../scheduledReentry");
   app.post("/api/scheduled/reentry", reentryHandler);
+  const { dailyRemindersHandler } = await import("../scheduledDailyReminders");
+  app.post("/api/scheduled/daily-reminders", dailyRemindersHandler);
   // Client-side error intake: member-facing breakage becomes visible.
   app.post("/api/client-error", express.json({ limit: "16kb" }), async (req, res) => {
     try {
@@ -130,44 +176,6 @@ async function startServer() {
     } catch { /* vitals intake must never error */ }
     res.json({ ok: true });
   });
-
-  // ── CAN-SPAM unsubscribe — no login, signed link, honored immediately ──────
-  // GET renders a tiny confirmation page (the footer link); POST is the
-  // RFC 8058 one-click endpoint mailbox providers hit from the header.
-  {
-    const handleUnsubscribe = async (req: express.Request): Promise<boolean> => {
-      const e = String(req.query.e ?? "").trim();
-      const t = String(req.query.t ?? "").trim();
-      if (!e || !t) return false;
-      const { verifyUnsubscribeToken } = await import("../platform/email");
-      if (!verifyUnsubscribeToken(e, t)) return false;
-      const { getDb } = await import("../db");
-      const db = await getDb();
-      if (!db) return false;
-      const { users } = await import("../../drizzle/schema");
-      const { and, eq, isNull } = await import("drizzle-orm");
-      await db.update(users).set({ emailOptOutAt: new Date() })
-        .where(and(eq(users.email, e), isNull(users.emailOptOutAt)));
-      return true;
-    };
-    const page = (ok: boolean) =>
-      `<!doctype html><html><body style="margin:0;background:#161310;font-family:Georgia,serif;color:#efe9dc;">
-      <div style="max-width:520px;margin:0 auto;padding:60px 28px;">
-        <div style="font-family:monospace;font-size:11px;letter-spacing:.24em;color:#c9a24b;text-transform:uppercase;margin-bottom:18px;">AQAL Intelligence</div>
-        <h1 style="font-size:24px;font-weight:600;margin:0 0 14px;">${ok ? "You're unsubscribed." : "That link didn't check out."}</h1>
-        <p style="color:#b9b2a6;font-size:15px;line-height:1.65;">${ok
-          ? "No more reminder or update emails — effective immediately. Account emails (receipts, password resets, verification) still work. Changed your mind? Just write support and we'll switch it back on."
-          : "The unsubscribe link looks incomplete or altered. Open the link straight from the email footer, or contact support and we'll take you off by hand."}</p>
-      </div></body></html>`;
-    app.get("/api/unsubscribe", async (req, res) => {
-      try { res.status(200).type("html").send(page(await handleUnsubscribe(req))); }
-      catch { res.status(200).type("html").send(page(false)); }
-    });
-    app.post("/api/unsubscribe", async (req, res) => {
-      try { await handleUnsubscribe(req); } catch { /* one-click must 200 */ }
-      res.status(200).json({ ok: true });
-    });
-  }
 
   // ── robots.txt + sitemap.xml, generated from the shared SEO table ──────────
   {
@@ -216,19 +224,19 @@ async function startServer() {
   }
 
   const preferredPort = parseInt(process.env.PORT || "3000");
-  // In production, the host (Railway/Render/etc.) routes traffic to EXACTLY
-  // process.env.PORT — silently falling back to another port would leave the
-  // app running but unreachable from the internet. Bind it or crash loudly.
-  // The scan-for-a-free-port convenience is development-only.
+  // Production ingress targets exactly process.env.PORT. Falling back to a
+  // different port would leave a healthy process unreachable from the web.
+  // Keep free-port discovery as a local development convenience only.
   const port = process.env.NODE_ENV === "development"
     ? await findAvailablePort(preferredPort)
     : preferredPort;
+  const bindHost = (process.env.BIND_HOST || "0.0.0.0").trim();
 
   if (port !== preferredPort) {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
-  server.listen(port, "0.0.0.0", () => {
+  server.listen(port, bindHost, () => {
     console.log(`Server running on http://localhost:${port}/`);
   });
 }

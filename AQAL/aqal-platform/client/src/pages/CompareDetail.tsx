@@ -6,8 +6,6 @@
 // derived from real structural differences. Never medical advice.
 // ============================================================
 import { Link, useParams } from "wouter";
-import { GoDeeper } from "@/components/DeepPage";
-import { COMPARE_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
@@ -103,6 +101,14 @@ export default function CompareDetail() {
           full pages: <Link href={`/protocol/${therapySlug(a)}`} style={{ color: CHAMPAGNE }}>{da}</Link> · <Link href={`/protocol/${therapySlug(b)}`} style={{ color: CHAMPAGNE }}>{db}</Link>
         </p>
 
+        <div className="rounded-xl p-4 mb-8" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
+          <Label>Go deeper on this comparison</Label>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Link href={`/compare/${params.slug}/verdict`} style={{ ...mono, fontSize: "10px", letterSpacing: "0.12em", textTransform: "uppercase", padding: "7px 12px", borderRadius: "999px", color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}55`, textDecoration: "none" }}>Editorial verdict</Link>
+            <Link href={`/compare/${params.slug}/switch`} style={{ ...mono, fontSize: "10px", letterSpacing: "0.12em", textTransform: "uppercase", padding: "7px 12px", borderRadius: "999px", color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}55`, textDecoration: "none" }}>When to review a switch</Link>
+          </div>
+        </div>
+
         {/* Side by side */}
         <div className="grid gap-3 mb-9" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
           {[{ n: da, full: a, k: ka, kid: kindA, e: entryA }, { n: db, full: b, k: kb, kid: kindB, e: entryB }].map(({ n, full, k, kid, e }) => (
@@ -152,7 +158,6 @@ export default function CompareDetail() {
           </Link>
         </div>
       </div>
-      <GoDeeper base={`/compare/${params.slug}`} subs={COMPARE_SUBPAGES} labels={{ verdict: "The verdict", switch: "When to switch" }} />
       <PublicFooter />
     </div>
   );

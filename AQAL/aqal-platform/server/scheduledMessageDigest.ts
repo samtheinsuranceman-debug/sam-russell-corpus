@@ -14,6 +14,7 @@ import { and, eq, isNull, lt, sql } from "drizzle-orm";
 import { getDb } from "./db";
 import { directMessages, users } from "../drizzle/schema";
 import { sendMarketingEmail } from "./marketingEmail";
+import { requireScheduledCron, scheduledFailure } from "./scheduledAuth";
 
 const MIN_AGE_MS = 30 * 60 * 1000; // unread for 30+ min (they're clearly away)
 const THROTTLE_MS = 24 * 60 * 60 * 1000; // one digest per member per day
@@ -37,9 +38,13 @@ function digestHtml(opts: { name?: string | null; count: number; appUrl?: string
 }
 
 export async function messageDigestHandler(req: Request, res: Response) {
-  const db = await getDb();
-  if (!db) { res.json({ ok: false, reason: "no-db" }); return; }
+  let taskUid: string | undefined;
   try {
+    const user = await requireScheduledCron(req, res);
+    if (!user) return;
+    taskUid = user.taskUid;
+    const db = await getDb();
+    if (!db) return res.json({ ok: true, skipped: "no-db" });
     const cutoff = new Date(Date.now() - MIN_AGE_MS);
     const throttleCutoff = new Date(Date.now() - THROTTLE_MS);
 
@@ -53,16 +58,15 @@ export async function messageDigestHandler(req: Request, res: Response) {
     let sent = 0;
     for (const row of unread) {
       const [u] = await db.select().from(users).where(eq(users.id, row.toUserId));
-      if (!u?.email) continue;
+      if (!u?.email || u.emailOptOutAt) continue;
       if (u.messageDigestLastSentAt && new Date(u.messageDigestLastSentAt) > throttleCutoff) continue;
-      const appUrl = (req.headers.origin as string) || `https://${req.headers.host || "joinaqal.com"}`;
+      const appUrl = (req.headers.origin as string) || `https://${req.headers.host || "www.joinaqal.com"}`;
       const result = await sendMarketingEmail(
         u.email,
         `You have ${row.count} unread message${Number(row.count) === 1 ? "" : "s"} on AQAL`,
         digestHtml({ name: u.name, count: Number(row.count), appUrl }),
         appUrl,
       );
-      if (result.skipped) continue;
       if (result.ok) {
         await db.update(users).set({ messageDigestLastSentAt: new Date() }).where(eq(users.id, u.id));
         sent++;
@@ -71,6 +75,6 @@ export async function messageDigestHandler(req: Request, res: Response) {
     res.json({ ok: true, candidates: unread.length, sent });
   } catch (err) {
     console.error("[messageDigest] failed:", err);
-    res.status(500).json({ ok: false });
+    return scheduledFailure(req, res, err, taskUid);
   }
 }

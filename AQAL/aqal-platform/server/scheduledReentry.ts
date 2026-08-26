@@ -12,6 +12,7 @@ import { and, eq, lt, sql } from "drizzle-orm";
 import { getDb } from "./db";
 import { analyticsEvents, assessments, users } from "../drizzle/schema";
 import { sendMarketingEmail } from "./marketingEmail";
+import { requireScheduledCron, scheduledFailure } from "./scheduledAuth";
 
 const STALE_DAYS = 30;
 
@@ -38,9 +39,13 @@ function reentryHtml(opts: { name?: string | null; completed: number; total: num
 }
 
 export async function reentryHandler(req: Request, res: Response) {
-  const db = await getDb();
-  if (!db) { res.json({ ok: false, reason: "no-db" }); return; }
+  let taskUid: string | undefined;
   try {
+    const user = await requireScheduledCron(req, res);
+    if (!user) return;
+    taskUid = user.taskUid;
+    const db = await getDb();
+    if (!db) return res.json({ ok: true, skipped: "no-db" });
     const cutoff = new Date(Date.now() - STALE_DAYS * 24 * 3600 * 1000);
     const stale = await db.select().from(assessments)
       .where(and(eq(assessments.status, "in_progress"), lt(assessments.updatedAt, cutoff)));
@@ -49,19 +54,18 @@ export async function reentryHandler(req: Request, res: Response) {
     for (const a of stale) {
       if (a.completedQuestions === 0) continue; // never started answering — finish-nudge territory
       const [u] = await db.select().from(users).where(eq(users.id, a.userId));
-      if (!u?.email) continue;
+      if (!u?.email || u.emailOptOutAt) continue;
       // Once per member, ever — deduped via the analytics stream.
       const [{ n }] = await db.select({ n: sql<number>`COUNT(*)` }).from(analyticsEvents)
         .where(and(eq(analyticsEvents.type, "reentry_sent"), eq(analyticsEvents.userId, u.id)));
       if (Number(n) > 0) continue;
-      const appUrl = ((req.headers.origin as string) || `https://${req.headers.host || "joinaqal.com"}`).replace(/\/$/, "");
+      const appUrl = ((req.headers.origin as string) || `https://${req.headers.host || "www.joinaqal.com"}`).replace(/\/$/, "");
       const result = await sendMarketingEmail(
         u.email,
         "Nothing was lost — here's the 5-minute way back in",
         reentryHtml({ name: u.name, completed: a.completedQuestions, total: a.totalQuestions, appUrl }),
         appUrl,
       );
-      if (result.skipped) continue;
       if (result.ok) {
         await db.insert(analyticsEvents).values({ type: "reentry_sent", userId: u.id, ok: true });
         sent++;
@@ -70,6 +74,6 @@ export async function reentryHandler(req: Request, res: Response) {
     res.json({ ok: true, candidates: stale.length, sent });
   } catch (err) {
     console.error("[reentry] failed:", err);
-    res.status(500).json({ ok: false });
+    return scheduledFailure(req, res, err, taskUid);
   }
 }

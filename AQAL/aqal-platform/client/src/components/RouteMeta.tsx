@@ -90,7 +90,7 @@ export default function RouteMeta() {
     setJsonLd("ld-faq", path === "/help" ? HELP_FAQ_LD : null);
 
     // BreadcrumbList structured data for every deep page family — tells
-    // crawlers where each of the 2,400+ pages sits in the site's tree.
+    // crawlers where each deep page sits in the site's tree.
     const CRUMB_PARENT: Record<string, { path: string; name: string }> = {
       "/line/": { path: "/lines", name: "The 32 Lines" },
       "/weak/": { path: "/lines", name: "The 32 Lines" },
@@ -99,10 +99,12 @@ export default function RouteMeta() {
       "/protocol/": { path: "/protocols", name: "Protocol Library" },
       "/compare/": { path: "/protocols", name: "Protocol Library" },
       "/build/": { path: "/protocols", name: "Protocol Library" },
+      "/best/": { path: "/protocols", name: "Protocol Library" },
       "/kind/": { path: "/protocols", name: "Protocol Library" },
       "/capacity/": { path: "/protocols", name: "Protocol Library" },
       "/practice/": { path: "/practices", name: "Keystone Practices" },
       "/goal/": { path: "/practices", name: "Keystone Practices" },
+      "/hypnosis/": { path: "/hypnosis", name: "Hypnosis Library" },
       "/myth/": { path: "/myths", name: "The Myth Museum" },
       "/wing/": { path: "/myths", name: "The Myth Museum" },
       "/verdict/": { path: "/myths", name: "The Myth Museum" },

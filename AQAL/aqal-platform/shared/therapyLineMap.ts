@@ -1,7 +1,7 @@
 // ============================================================
 // THERAPY → INTELLIGENCE-LINE MAP (V2 — audit-derived, evidence-carrying)
 // ============================================================
-// Source: Manus therapy→line mapping V2 (Aug 2026), parsed and validated
+// Source: AQAL therapy→line mapping V2 (Aug 2026), parsed and validated
 // against ALL_AXES with per-line counts matching the source exactly.
 // Each entry carries the CAPACITY the therapy develops (skill growth, not
 // symptom reduction), its peer-reviewed citation + DOI, and the finding.

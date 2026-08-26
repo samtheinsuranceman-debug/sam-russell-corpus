@@ -7,11 +7,11 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { GoDeeper } from "@/components/DeepPage";
-import { MYTH_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { MYTHS, MYTH_VERDICT_META, mythById } from "@/lib/mythMuseum";
 import { wingFor } from "@/lib/mythWings";
+import { MYTH_SUBPAGES } from "@shared/seo";
 import NotFound from "@/pages/NotFound";
 
 const INK = "#141009";

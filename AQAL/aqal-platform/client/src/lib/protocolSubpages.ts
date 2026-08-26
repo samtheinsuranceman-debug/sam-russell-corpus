@@ -273,52 +273,54 @@ export function playbookFor(kindId: string): KindPlaybook {
   return KIND_PLAYBOOKS[kindId] ?? KIND_PLAYBOOKS.skill;
 }
 
-// ── Daily-life embedding, per kind: where the capacity this kind builds
-// actually gets USED (and therefore exercised) in an ordinary day.
 export type DailyProfile = { when: string; looksLike: string; microUse: string };
+
+// Kind-level illustrations only: these are practical examples, not diagnostic
+// descriptions, clinical directions, or promises that every protocol/user will
+// express the same pattern.
 export const KIND_DAILY: Record<string, DailyProfile> = {
   psychotherapy: {
-    when: "The skills fire at the exact moments that used to run you: the criticism that lands wrong, the 2am rumination loop, the decision you keep deferring.",
-    looksLike: "From outside it looks like nothing — a person who pauses two seconds longer before responding, reschedules the spiral, has the hard conversation on purpose.",
-    microUse: "Every trigger survived using the technique is a live rep — daily life IS the practice field after the course ends, which is why the gains compound instead of fading." },
+    when: "The skills may be used at moments that previously felt automatic: criticism, a rumination loop, or a decision repeatedly deferred.",
+    looksLike: "A person pauses before responding, schedules a worry rather than feeding it, or starts a hard conversation more deliberately.",
+    microUse: "Using a learned technique during a real trigger can serve as practice after a course ends; clinical work still follows the provider's plan." },
   relational: {
-    when: "At the friction points every couple owns: the logistics negotiation, the tone that starts the old fight, the repair attempt after.",
-    looksLike: "Fights that still start but end differently; the de-escalation move that feels scripted for a month and then just becomes how you two talk.",
-    microUse: "One deliberate repair attempt per week keeps the new pattern load-bearing; the weekly check-in most methods prescribe is the formal rep." },
+    when: "At ordinary friction points: logistics, tone shifts that start an old cycle, and the repair attempt afterward.",
+    looksLike: "Conflict may still begin, but a practiced de-escalation or repair move changes how it proceeds.",
+    microUse: "A deliberate check-in or repair attempt can reinforce the pattern between formal sessions." },
   mindfulness: {
-    when: "In the transitions — commute, queue, the walk between meetings — and at every spike of irritation, craving, or dread.",
-    looksLike: "The half-second gap between trigger and reaction, used. Catching the phone-reach, the snap, the doomscroll AS it starts.",
-    microUse: "Three conscious breaths before opening email counts. The formal sit installs the skill; these micro-deployments keep it warm all day." },
+    when: "During transitions and moments of irritation, craving, distraction, or anticipatory stress.",
+    looksLike: "The person notices the start of a reaction — a phone reach, a snap, or a spiral — before choosing the next move.",
+    microUse: "A brief intentional pause can rehearse the attention skill; it does not replace the dose or structure of a formal program." },
   somatic: {
-    when: "Before the performance moments (the meeting, the call, the confrontation) and after the stressors — anywhere your state needs steering.",
-    looksLike: "A person who down-regulates in ninety seconds instead of ninety minutes; who notices the jaw, the shoulders, the shallow breath early.",
-    microUse: "One sixty-second body scan at a red light or between tasks — the interoceptive channel trains on every deliberate read." },
+    when: "Before ordinary performance moments and after stressors, when body-state awareness may help guide the next action.",
+    looksLike: "The person notices jaw, shoulder, breathing, or gut signals earlier and uses a learned regulation step.",
+    microUse: "A brief, safe body check between tasks can rehearse interoceptive awareness. Stop if it increases distress." },
   physical: {
-    when: "The training slots are scheduled, but the dividend pays all day: the 3pm hour that used to crash, the stairs, the stress that burns off instead of accumulating.",
-    looksLike: "Energy that lasts the whole workday, sleep that arrives on time, a mood floor that sits noticeably higher.",
-    microUse: "Walking meetings, stairs over elevators, carrying the groceries — incidental movement keeps the adaptation ticking between sessions." },
+    when: "In scheduled training and ordinary movement across the day, with effects depending on current condition, dose, and medical context.",
+    looksLike: "Movement becomes more consistent and may support energy, sleep, and mood without guaranteeing any specific cognitive outcome.",
+    microUse: "Walking meetings, stairs, and carrying routine loads can add incidental movement between planned sessions when safe for the individual." },
   skill: {
-    when: "Every real-world use of the trained skill is a rep: the presentation, the negotiation, the analysis, the instrument.",
-    looksLike: "Performance conditions stop taxing the skill — it runs below conscious attention while attention goes to the situation.",
-    microUse: "Five-minute micro-drills on the weakest component keep the edge; real deployment with a one-line self-review afterward counts double." },
+    when: "Whenever the trained skill is used in a real presentation, negotiation, analysis, craft, or performance setting.",
+    looksLike: "Some components require less conscious effort, allowing attention to shift toward the situation rather than the mechanics.",
+    microUse: "A short drill on one weak component plus a brief self-review can create a bounded practice rep." },
   psychedelic: {
-    when: "The sessions are rare and clinical; daily life is where the integration happens — the conversation finally had, the avoidance finally dropped.",
-    looksLike: "Not visions — behavior: the flexibility window used to install new patterns while it's open.",
-    microUse: "The integration journal and the weekly commitments from integration sessions are the daily interface; the substance is not." },
+    when: "Only within legal, screened, professionally supervised care; daily life is where clinician-guided integration commitments are practiced.",
+    looksLike: "Behavioral follow-through, support conversations, and integration work matter more than retelling the acute experience.",
+    microUse: "Use only the integration plan from the qualified care team. Substance use is never a daily-life practice recommendation here." },
   neuromodulation: {
-    when: "The course is clinical and scheduled; the daily-life job is capitalizing on the shifted substrate — the therapy homework, the behavior change, the re-engagement.",
-    looksLike: "Doing the things depression or the target condition had shelved — because the course made them possible, not because it did them for you.",
-    microUse: "Whatever behavioral activation the clinic pairs with the course IS the daily practice; the machine moves the floor, you build on it." },
+    when: "Within a clinician-directed course; ordinary-life work concerns the therapy, activation, and re-engagement paired with treatment.",
+    looksLike: "The person may resume activities that the target condition had limited, with response monitored by the treating team.",
+    microUse: "Follow the clinic's paired behavioral plan. A device page is not a substitute for screening, dosing, or medical monitoring." },
   lifestyle: {
-    when: "It IS daily life — the bedtime, the light, the meals, the screens. The protocol dissolves into the day it reorganizes.",
-    looksLike: "Nothing dramatic: a person whose environment quietly makes the right thing the default thing.",
-    microUse: "Every kept anchor (charger outside the bedroom, walk after lunch) is the rep; the environment does the counting." },
+    when: "In daily anchors such as sleep timing, light, meals, movement, and screen boundaries.",
+    looksLike: "The environment makes a chosen behavior easier or more automatic rather than relying on willpower alone.",
+    microUse: "Each kept anchor is a small repetition; effects still vary and medical concerns belong with qualified care." },
   expressive: {
-    when: "At the pressure points — after the hard day, before the hard conversation, when the same thought has circled three times.",
-    looksLike: "A notebook session instead of a rumination night; charged events that get processed within days instead of carried for years.",
-    microUse: "Even ten minutes of honest writing at the week's worst moment keeps the expressive channel open and the backlog empty." },
+    when: "After a difficult day, before a difficult conversation, or when the same non-crisis thought has repeated without new information.",
+    looksLike: "A bounded writing or creative session replaces some unstructured rumination and produces a concrete reflection.",
+    microUse: "Short, time-limited expression may be useful for ordinary stress; trauma processing and destabilizing material require appropriate support." },
   community: {
-    when: "The scheduled gathering, plus the connective tissue between: the check-in text, the favor done, the name remembered.",
-    looksLike: "A person with somewhere to be and people who notice absence — the infrastructure invisible until the bad season hits.",
-    microUse: "One real conversation per gathering and one reach-out between them — belonging is maintained in minutes a week, not hours." },
+    when: "At gatherings and in the connective tissue between them: a check-in, a practical favor, or remembering who has gone quiet.",
+    looksLike: "The person has recurring places to belong and relationships in which absence is noticed.",
+    microUse: "One genuine conversation and one reach-out can maintain contact; community support does not replace professional care when needed." },
 };

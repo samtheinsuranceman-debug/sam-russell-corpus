@@ -6,7 +6,6 @@
 // and finding are the unique payload.
 // ============================================================
 import { Link, useParams } from "wouter";
-import { GoDeeper } from "@/components/DeepPage";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
@@ -80,6 +79,16 @@ export default function BuildDetail() {
           {entry.doi && <p style={{ ...mono, fontSize: "10px", color: MUTED, margin: 0 }}>doi: {entry.doi}</p>}
         </div>
 
+        <div className="rounded-xl p-4 mb-7" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
+          <Label>Go deeper</Label>
+          <Link
+            href={`/build/${engineLineSlug(line)}/${therapySlug(therapy)}/plan`}
+            style={{ ...mono, display: "inline-block", fontSize: "10px", letterSpacing: "0.12em", textTransform: "uppercase", padding: "7px 12px", borderRadius: "999px", color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}55`, textDecoration: "none" }}
+          >
+            Week-by-week planning view
+          </Link>
+        </div>
+
         <Label>How strong is the mapping?</Label>
         <p style={{ fontSize: "14.5px", lineHeight: 1.72, color: CREAM2, margin: "0 0 26px" }}>{ROLE_NOTE[entry.role]}</p>
 
@@ -143,7 +152,6 @@ export default function BuildDetail() {
           </Link>
         </div>
       </div>
-      <GoDeeper base={`/build/${params.line}/${params.therapy}`} subs={["plan"]} labels={{ plan: "The week-by-week plan" }} />
       <PublicFooter />
     </div>
   );

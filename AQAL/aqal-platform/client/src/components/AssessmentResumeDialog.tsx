@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const STORAGE_KEY = "aqal_assessment_progress";
+const TOTAL_QUESTIONS = 27;
 
 interface SavedProgress {
   question: number;
@@ -84,7 +85,7 @@ export default function AssessmentResumeDialog({
             <span className="text-accent font-medium">
               question {progress.question + 1}
             </span>{" "}
-            of 26. Would you like to continue where you left off, or start a new
+            of {TOTAL_QUESTIONS}. Would you like to continue where you left off, or start a new
             assessment?
           </AlertDialogDescription>
         </AlertDialogHeader>

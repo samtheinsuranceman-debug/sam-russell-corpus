@@ -5,15 +5,15 @@ import { PrefetchLink } from "@/components/PrefetchLink";
 import { Button } from "@/components/ui/button";
 import { Shield, Brain, Users, Zap, TrendingUp, AlertTriangle, Mic, FileCheck, ArrowRight } from "lucide-react";
 
-// Founder portrait. Drop a photo at client/public/founder-sam-russell.jpg and it
-// appears automatically; until then, a tasteful monogram stands in.
+// Founder portrait is stored in persistent project media storage; the original
+// monogram fallback remains if the asset cannot be reached.
 function FounderPhoto() {
   const [failed, setFailed] = useState(false);
   return (
     <div className="relative w-full aspect-[4/5] max-w-[340px] mx-auto rounded-2xl overflow-hidden border border-primary/15 bg-gradient-to-b from-primary/[0.06] to-transparent">
       {!failed ? (
         <img
-          src="/founder-sam-russell.jpg"
+          src="/aqal-storage/founder-sam-russell_29554987.jpg"
           alt="Samuel A. Russell V"
           loading="lazy"
           className="w-full h-full object-cover"

@@ -1,15 +1,8 @@
-// ============================================================
-// COMPARE DEEP PAGES — /compare/:a--vs--:b/:sub (1,084 × 2 =
-// 2,168 URLs): verdict · switch. Every judgment on these pages
-// is COMPUTED from the two protocols' scorecards (roles, lines,
-// kind profiles, schedules, decay curves) — same data, same
-// formula, printed side by side. Estimates never guarantees.
-// ============================================================
 import { useParams } from "wouter";
 import { compareFromSlug, compareSlug, therapySlug, therapyDisplay, COMPARE_SUBPAGES, type CompareSubpageId } from "@shared/seo";
 import { THERAPY_KIND } from "@shared/therapyKindMap";
 import { KIND_PROFILES } from "@/lib/therapyKinds";
-import { scoreFor } from "@shared/therapyScores";
+import { scoreFor, type TherapyScore } from "@shared/therapyScores";
 import { DeepFrame, SiblingNav, DeepDisclosure, DeepCta, Card, CardText, Body, H2, Label, Gold, EMBER, JADE, CHAMPAGNE } from "@/components/DeepPage";
 import NotFound from "@/pages/NotFound";
 
@@ -20,35 +13,36 @@ export default function CompareDeep() {
   const pair = compareFromSlug(params.slug ?? "");
   const sub = (COMPARE_SUBPAGES as readonly string[]).includes(params.sub ?? "") ? (params.sub as CompareSubpageId) : undefined;
   if (!pair || !sub) return <NotFound />;
-  const [na, nb] = pair;
-  const sa = scoreFor(na), sb = scoreFor(nb);
-  if (!sa || !sb) return <NotFound />;
-  const [da, db] = [na, nb].map((n) => therapyDisplay(n).split(" (")[0]);
-  const [ka, kb] = [THERAPY_KIND[na] ?? "skill", THERAPY_KIND[nb] ?? "skill"];
-  const base = `/compare/${compareSlug(na, nb)}`;
-  const higher = sa.total >= sb.total ? { s: sa, d: da, n: na } : { s: sb, d: db, n: nb };
-  const lower = sa.total >= sb.total ? { s: sb, d: db, n: nb } : { s: sa, d: da, n: na };
-  const close = Math.abs(sa.total - sb.total) < 3;
+  const [nameA, nameB] = pair;
+  const scoreA = scoreFor(nameA);
+  const scoreB = scoreFor(nameB);
+  if (!scoreA || !scoreB) return <NotFound />;
+  const [displayA, displayB] = [nameA, nameB].map((name) => therapyDisplay(name).split(" (")[0]);
+  const [kindA, kindB] = [THERAPY_KIND[nameA] ?? "skill", THERAPY_KIND[nameB] ?? "skill"];
+  const base = `/compare/${compareSlug(nameA, nameB)}`;
+  const higher = scoreA.total >= scoreB.total ? { score: scoreA, display: displayA, name: nameA } : { score: scoreB, display: displayB, name: nameB };
+  const lower = scoreA.total >= scoreB.total ? { score: scoreB, display: displayB } : { score: scoreA, display: displayA };
+  const close = Math.abs(scoreA.total - scoreB.total) < 3;
 
-  // Component-level winners drive the "choose X if" logic.
-  const edge = (get: (s: NonNullable<typeof sa>) => number) => {
-    const va = get(sa), vb = get(sb);
-    return va === vb ? null : va > vb ? da : db;
+  const edge = (get: (score: TherapyScore) => number) => {
+    const a = get(scoreA);
+    const b = get(scoreB);
+    return a === b ? null : a > b ? displayA : displayB;
   };
   const edges = {
-    durability: edge((s) => s.components.durability),
-    speed: edge((s) => s.components.speed),
-    ease: edge((s) => s.components.ease),
-    breadth: edge((s) => s.components.breadth),
-    evidence: edge((s) => s.components.evidence),
+    durability: edge((score) => score.components.durability),
+    speed: edge((score) => score.components.speed),
+    ease: edge((score) => score.components.ease),
+    breadth: edge((score) => score.components.breadth),
+    evidence: edge((score) => score.components.evidence),
   };
 
-  const scoreRow = (d: string, s: typeof sa, kind: string) => (
-    <Card accent={s === higher.s ? JADE : CHAMPAGNE}>
-      <Label color={s === higher.s ? JADE : CHAMPAGNE}>{d} — {s.total}/100 (rank {s.rank})</Label>
+  const scoreRow = (display: string, score: TherapyScore, kind: string) => (
+    <Card accent={score === higher.score ? JADE : CHAMPAGNE}>
+      <Label color={score === higher.score ? JADE : CHAMPAGNE}>{display} — {score.total}/100 (rank {score.rank})</Label>
       <CardText>
-        {KIND_PROFILES[kind]?.label ?? kind} · targets {s.primaryLines.length ? s.primaryLines.join(", ") : s.secondaryLines.join(", ")} ·
-        {" "}{s.schedule.minutes} min, {s.schedule.perWeek}, {s.schedule.course}
+        {KIND_PROFILES[kind]?.label ?? kind} · targets {score.primaryLines.length ? score.primaryLines.join(", ") : score.secondaryLines.join(", ")} ·{" "}
+        {score.schedule.minutes} min, {score.schedule.perWeek}, {score.schedule.course}
       </CardText>
     </Card>
   );
@@ -57,98 +51,64 @@ export default function CompareDeep() {
     verdict: (
       <>
         <Body>
-          The <Gold href={base}>main comparison</Gold> lays the two side by side; this page renders the verdict — not
-          "which is better" in the abstract (that question is malformed), but which one is better <b>for whom</b>,
-          computed from both scorecards with the same open formula.
+          The <Gold href={base}>main comparison</Gold> lays the two side by side; this page renders the editorial verdict — not
+          which is universally better, but which mapped profile may fit which constraint under the same open formula.
         </Body>
         <H2>The scorecards</H2>
-        {scoreRow(da, sa, ka)}
-        {scoreRow(db, sb, kb)}
+        {scoreRow(displayA, scoreA, kindA)}
+        {scoreRow(displayB, scoreB, kindB)}
         <H2>The verdict, honestly framed</H2>
         <Body>
           {close
-            ? `On the composite formula these two are effectively tied (${sa.total} vs ${sb.total}) — which means the deciding vote belongs entirely to fit: your profile, your calendar, your tolerance for what each demands.`
-            : `${higher.d} scores higher (${higher.s.total} vs ${lower.s.total}), driven mostly by its component edges below — but a composite is a summary, not a sentence: the right answer still flips person to person on fit.`}
+            ? `On the composite formula these two are effectively tied (${scoreA.total} vs ${scoreB.total}); fit, calendar, and burden decide more than the aggregate score.`
+            : `${higher.display} scores higher (${higher.score.total} vs ${lower.score.total}) in this editorial model, but the right choice can still flip by person and target.`}
         </Body>
-        <H2>Choose {da} if…</H2>
-        <Card accent={JADE}>
-          <CardText>
-            {[
-              edges.durability === da ? "you want the gains that hold longer after you stop" : null,
-              edges.speed === da ? "you need the earlier first effect" : null,
-              edges.ease === da ? "your calendar and energy budget are the binding constraint" : null,
-              edges.breadth === da ? "you want more lines lifted per hour invested" : null,
-              edges.evidence === da ? "you want the stronger evidence base behind you" : null,
-              `your profile flags ${sa.primaryLines.length ? sa.primaryLines.join(" or ") : sa.secondaryLines.join(" or ")} as the line to move`,
-            ].filter(Boolean).join("; ")}.
-          </CardText>
-        </Card>
-        <H2>Choose {db} if…</H2>
-        <Card accent={JADE}>
-          <CardText>
-            {[
-              edges.durability === db ? "you want the gains that hold longer after you stop" : null,
-              edges.speed === db ? "you need the earlier first effect" : null,
-              edges.ease === db ? "your calendar and energy budget are the binding constraint" : null,
-              edges.breadth === db ? "you want more lines lifted per hour invested" : null,
-              edges.evidence === db ? "you want the stronger evidence base behind you" : null,
-              `your profile flags ${sb.primaryLines.length ? sb.primaryLines.join(" or ") : sb.secondaryLines.join(" or ")} as the line to move`,
-            ].filter(Boolean).join("; ")}.
-          </CardText>
-        </Card>
-        <H2>The likely gains, stated as bands</H2>
-        <Card accent={EMBER}>
-          <Label color={EMBER}>{da}</Label>
-          <CardText>{sa.gainBand}</CardText>
-        </Card>
-        <Card accent={EMBER}>
-          <Label color={EMBER}>{db}</Label>
-          <CardText>{sb.gainBand}</CardText>
-        </Card>
-        <Body>
-          And the tiebreaker that outranks every row above: which of these targets YOUR weakest load-bearing line.
-          That's not a comparison question — it's a <Gold href="/assessment">measurement question</Gold>.
-        </Body>
+        <H2>Choose {displayA} if…</H2>
+        <Card accent={JADE}><CardText>{[
+          edges.durability === displayA ? "you value modeled durability" : null,
+          edges.speed === displayA ? "you value modeled speed" : null,
+          edges.ease === displayA ? "burden is the binding constraint" : null,
+          edges.breadth === displayA ? "you value mapped breadth" : null,
+          edges.evidence === displayA ? "you value the stronger mapped evidence component" : null,
+          `your profile flags ${scoreA.primaryLines.length ? scoreA.primaryLines.join(" or ") : scoreA.secondaryLines.join(" or ")} as the target`,
+        ].filter(Boolean).join("; ")}.</CardText></Card>
+        <H2>Choose {displayB} if…</H2>
+        <Card accent={JADE}><CardText>{[
+          edges.durability === displayB ? "you value modeled durability" : null,
+          edges.speed === displayB ? "you value modeled speed" : null,
+          edges.ease === displayB ? "burden is the binding constraint" : null,
+          edges.breadth === displayB ? "you value mapped breadth" : null,
+          edges.evidence === displayB ? "you value the stronger mapped evidence component" : null,
+          `your profile flags ${scoreB.primaryLines.length ? scoreB.primaryLines.join(" or ") : scoreB.secondaryLines.join(" or ")} as the target`,
+        ].filter(Boolean).join("; ")}.</CardText></Card>
+        <H2>The gain language, stated as bands</H2>
+        <Card accent={EMBER}><Label color={EMBER}>{displayA}</Label><CardText>{scoreA.gainBand}</CardText></Card>
+        <Card accent={EMBER}><Label color={EMBER}>{displayB}</Label><CardText>{scoreB.gainBand}</CardText></Card>
       </>
     ),
     switch: (
       <>
+        <Body>Before switching, determine whether the first attempt was a real trial. Switching too early discards incomplete data; switching too late can waste a season.</Body>
+        <H2>Was it a real trial?</H2>
         <Body>
-          You ran one of these and it didn't move. Before switching to the other, this page — because switching too
-          early wastes a working protocol, and switching too late wastes a season.
+          A useful comparison requires the represented dose ({displayA}: {scoreA.schedule.minutes}, {scoreA.schedule.perWeek} · {displayB}: {scoreB.schedule.minutes}, {scoreB.schedule.perWeek}),
+          the represented course ({displayA}: {scoreA.schedule.course} · {displayB}: {scoreB.schedule.course}), and the mapped capacity as the measure. An incomplete attempt is unfinished, not failed.
         </Body>
-        <H2>First: was it a real trial?</H2>
+        <H2>When switching may make sense</H2>
         <Body>
-          Non-response only counts as data if the trial was real. The checklist for whichever you ran:{" "}
-          <b>full dose</b> ({da}: {sa.schedule.minutes} min, {sa.schedule.perWeek} · {db}: {sb.schedule.minutes} min,{" "}
-          {sb.schedule.perWeek}), <b>full course</b> ({da}: {sa.schedule.course} · {db}: {sb.schedule.course}), and{" "}
-          <b>the right measure</b> — the mapped capacity, not a mood. An incomplete trial's honest verdict is
-          "unfinished," not "failed."
+          A completed course with no movement is a reason to review fit with an appropriate professional. These two protocols{" "}
+          {kindA === kindB
+            ? "share a mechanism family, so a cross-mechanism alternative may deserve review too."
+            : "use different modeled mechanism families, which is why the comparison may be informative."}
         </Body>
-        <H2>When switching makes sense</H2>
-        <Body>
-          The completed-course, full-dose, no-movement case is exactly what the switch exists for — non-response to
-          one method is not non-response to all of them, and these two{" "}
-          {ka === kb
-            ? "share a mechanism family, so a genuine non-response to one modestly lowers the odds on its sibling: consider a cross-mechanism alternative too (each protocol's synergy page lists them)."
-            : "work through different mechanism families — which is what makes this switch rational: a wall in one mechanism says little about the other door."}
-        </Body>
-        <H2>How to run the switch</H2>
-        <Card accent={JADE}>
-          <CardText>
-            One: close the first trial formally — write the three-line summary (dose run, course completed, what
-            moved/didn't). Two: rest the target line for a week or two; back-to-back protocols on one line blur the
-            reading. Three: start the successor at ITS full schedule ({higher.d}'s is {higher.s.schedule.minutes} min,{" "}
-            {higher.s.schedule.perWeek}) with the same baseline measure, so the comparison is clean. Four: pre-commit
-            the judging date from its course length — {higher.s.schedule.course}.
-          </CardText>
-        </Card>
+        <H2>Document the handoff</H2>
+        <Card accent={JADE}><CardText>
+          Record the dose attempted, course completed, target measure, changes observed, and adverse effects. Use that record with a qualified provider when the protocol is clinical. Do not stop prescribed care or start a replacement solely from this page.
+        </CardText></Card>
         <H2>The case for stacking instead</H2>
         <Body>
-          If the first protocol produced PARTIAL movement, switching may be the wrong call entirely — partial
-          response usually argues for keeping the responder and adding a cross-mechanism support, not replacing it.
-          {" "}The <Gold href={`/protocol/${therapySlug(higher.n)}/synergy`}>synergy pages</Gold> map those
-          combinations, and two consecutive partial responders often beat one full switch.
+          A partial response may support reviewing an adjunct rather than replacing the responder. The{" "}
+          <Gold href={`/protocol/${therapySlug(higher.name)}/synergy`}>synergy page</Gold> shows the library's mapped cross-mechanism options; it is educational, not a personal prescription.
         </Body>
       </>
     ),
@@ -156,14 +116,14 @@ export default function CompareDeep() {
 
   return (
     <DeepFrame
-      crumb={<><Gold href="/protocols">Protocol Library</Gold>{" · "}<Gold href={base}>{da} vs {db}</Gold>{" · "}{SUB_LABELS[sub]}</>}
-      h1={sub === "verdict" ? `${da} vs ${db}: the verdict` : `${da} vs ${db}: when to switch`}
-      videoLabel={`${da} vs ${db} — ${SUB_LABELS[sub]}`}
+      crumb={<><Gold href="/protocols">Protocol Library</Gold>{" · "}<Gold href={base}>{displayA} vs {displayB}</Gold>{" · "}{SUB_LABELS[sub]}</>}
+      h1={sub === "verdict" ? `${displayA} vs ${displayB}: the verdict` : `${displayA} vs ${displayB}: when to switch`}
+      videoLabel={`${displayA} vs ${displayB} — ${SUB_LABELS[sub]}`}
     >
       <SiblingNav base={base} subs={COMPARE_SUBPAGES} current={sub} labels={SUB_LABELS} />
       {sections[sub]}
-      <DeepDisclosure text={`Verdicts are computed from both protocols' scorecards by the library's open formula (evidence 40%, durability 20%, breadth 15%, speed 15%, ease 10%); gain bands are literature-typical effect-size language.`} />
-      <DeepCta heading={`${da} or ${db}? Your profile already knows.`} body="The comparison narrows it to two. The measurement picks the one — by finding which line is actually yours to fix." />
+      <DeepDisclosure text="The verdict is an editorial composite over mapped library data, not a clinical recommendation or outcome guarantee. Per-study citations remain on each protocol's evidence page." />
+      <DeepCta heading={`${displayA} or ${displayB}? Your profile narrows the question.`} body="The comparison shows modeled tradeoffs. Measurement identifies the line; qualified care handles clinical decisions." />
     </DeepFrame>
   );
 }

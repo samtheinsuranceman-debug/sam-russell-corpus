@@ -7,17 +7,17 @@
  */
 
 import type { Request, Response } from "express";
-import { sdk } from "./_core/sdk";
 import { notifyOwner } from "./_core/notification";
 import { getEvaluationReport } from "./corpus";
+import { requireScheduledCron, scheduledFailure } from "./scheduledAuth";
 
 export async function driftAlertHandler(req: Request, res: Response) {
+  let taskUid: string | undefined;
   try {
     // Authenticate — only cron can call this
-    const user = await sdk.authenticateRequest(req);
-    if (!user.isCron || !user.taskUid) {
-      return res.status(403).json({ error: "cron-only" });
-    }
+    const user = await requireScheduledCron(req, res);
+    if (!user) return;
+    taskUid = user.taskUid;
 
     // Get the evaluation report
     const report = getEvaluationReport();
@@ -62,11 +62,6 @@ export async function driftAlertHandler(req: Request, res: Response) {
     });
   } catch (error: any) {
     console.error("[DriftAlert] Error:", error);
-    return res.status(500).json({
-      error: error.message || "Unknown error",
-      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
-      context: { url: req.url, taskUid: "unknown" },
-      timestamp: new Date().toISOString(),
-    });
+    return scheduledFailure(req, res, error, taskUid);
   }
 }

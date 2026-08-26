@@ -1,6 +1,6 @@
 // ============================================================
 // THE BLACK BOX — crash forensics for the member's own history.
-// Sam's invitation voice on Manus's forensic skeleton: narrate
+// Sam's invitation voice on AQAL's forensic framework: narrate
 // 3–5 crashes or near-misses freely; the panel extracts the eight
 // layers, then synthesizes the Crash Signature + prevention
 // architecture with the failure-cascade diagram. Crashes annotate;

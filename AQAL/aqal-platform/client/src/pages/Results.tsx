@@ -1668,7 +1668,7 @@ function ShareCard({ scores }: { scores: number[] }) {
 }
 
 // ============================================================
-// STABILITY CHECK — Manus's research-weighted triage engine, wired.
+// STABILITY CHECK — AQAL's research-weighted triage engine, wired.
 // Runs entirely client-side from the member's own scores plus four
 // quick context answers. Nothing is stored; nothing is diagnosed.
 // ============================================================

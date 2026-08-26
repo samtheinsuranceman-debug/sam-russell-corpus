@@ -5,12 +5,11 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { GoDeeper } from "@/components/DeepPage";
-import { KIND_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { KIND_PROFILES, THERAPY_KIND } from "@/lib/therapyKinds";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
-import { therapySlug, therapyDisplay, KIND_IDS } from "@shared/seo";
+import { therapySlug, therapyDisplay, KIND_IDS, KIND_SUBPAGES } from "@shared/seo";
 import NotFound from "@/pages/NotFound";
 
 const INK = "#141009";

@@ -4,7 +4,7 @@
 // One swappable interface for audio / video / evidence blobs:
 //   s3    → AWS S3 or any S3-compatible store (Cloudflare R2, MinIO) via the
 //           AWS SDK already in the dependencies. Set S3_ENDPOINT for R2/MinIO.
-//   forge → the legacy Manus presigned-URL gateway (kept for migration).
+//   forge → the legacy presigned-URL gateway (kept for migration).
 //   local → filesystem under ./.local-storage, served at /local-storage/*.
 //           Lets the whole upload → transcribe → score loop run with no cloud.
 

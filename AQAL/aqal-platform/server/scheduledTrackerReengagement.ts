@@ -12,9 +12,9 @@
  */
 
 import type { Request, Response } from "express";
-import { sdk } from "./_core/sdk";
 import { getTrackerReengagementRecipients, markTrackerReminderSent } from "./db";
 import { sendMarketingEmail } from "./marketingEmail";
+import { requireScheduledCron, scheduledFailure } from "./scheduledAuth";
 
 const THROTTLE_DAYS = 14; // ~twice a month
 
@@ -35,25 +35,27 @@ function reengagementHtml(): string {
 }
 
 export async function trackerReengagementHandler(req: Request, res: Response) {
+  let taskUid: string | undefined;
   try {
-    const user = await sdk.authenticateRequest(req);
-    if (!user.isCron || !user.taskUid) {
-      return res.status(403).json({ error: "cron-only" });
-    }
+    const user = await requireScheduledCron(req, res);
+    if (!user) return;
+    taskUid = user.taskUid;
     const recipients = await getTrackerReengagementRecipients(THROTTLE_DAYS);
-    let sent = 0, failed = 0;
+    let sent = 0, failed = 0, skipped = 0;
     for (const r of recipients) {
-      const result = await sendMarketingEmail(r.email, "Ready for your next AQAL cycle?", reengagementHtml());
-      if (result.skipped) { await markTrackerReminderSent(r.userId); continue; }
-      if (result.ok) {
+      const appUrl = ((req.headers.origin as string) || `https://${req.headers.host || "www.joinaqal.com"}`).replace(/\/$/, "");
+      const result = await sendMarketingEmail(r.email, "Ready for your next AQAL cycle?", reengagementHtml(), appUrl);
+      if (result.skipped) {
+        skipped++;
+      } else if (result.ok) {
         await markTrackerReminderSent(r.userId);
         sent++;
       } else {
         failed++;
       }
     }
-    return res.json({ ok: true, candidates: recipients.length, sent, failed });
+    return res.json({ ok: true, candidates: recipients.length, sent, skipped, failed });
   } catch (err) {
-    return res.status(500).json({ error: err instanceof Error ? err.message : "tracker-reengagement failed" });
+    return scheduledFailure(req, res, err, taskUid);
   }
 }

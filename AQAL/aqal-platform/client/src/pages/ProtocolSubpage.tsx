@@ -131,15 +131,12 @@ export default function ProtocolSubpage() {
     }
   }
 
-  const sc = scoreFor(name);
+  const score = scoreFor(name);
   const daily = KIND_DAILY[kindId] ?? KIND_DAILY.skill;
-  // Cross-kind synergy partners: protocols sharing a target line but working
-  // through a DIFFERENT mechanism family — the combinations that compound
-  // instead of overlapping. Ranked by composite score.
-  const synergyPartners = (sub === "synergy")
+  const synergyPartners = sub === "synergy"
     ? THERAPY_SCORES
-        .filter((s) => s.therapy !== name && (THERAPY_KIND[s.therapy] ?? "skill") !== kindId &&
-          [...s.primaryLines, ...s.secondaryLines].some((l) => entries.some((e) => e.line === l)))
+        .filter((candidate) => candidate.therapy !== name && (THERAPY_KIND[candidate.therapy] ?? "skill") !== kindId &&
+          [...candidate.primaryLines, ...candidate.secondaryLines].some((line) => entries.some((entry) => entry.line === line)))
         .slice(0, 8)
     : [];
 
@@ -400,49 +397,52 @@ export default function ProtocolSubpage() {
     score: (
       <>
         <Body>
-          Every protocol in the library is scored 0–100 by one open formula: 40% evidence strength, 20% durability,
-          15% breadth of lines lifted, 15% speed to first effect, and — deliberately only 10% — ease of use, because
-          hard protocols that work outrank easy ones that don't. Nothing is hand-tuned; every component comes from
-          the mapped data. Here is {display}'s card in full.
+          AQAL scores every mapped protocol 0–100 with one published editorial formula: 40% evidence component,
+          20% durability, 15% breadth, 15% speed, and 10% ease. Every component comes from the library's mapped
+          roles, lines, and kind profile; this is not a customer rating, clinical recommendation, or personal forecast.
         </Body>
-        {sc && (
+        {score && (
           <>
             <H2>The headline</H2>
             <Card accent={JADE}>
-              <Label color={JADE}>Composite score · rank {sc.rank} of {THERAPY_SCORES.length}</Label>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: "40px", color: "#F1EADB", margin: "0" }}>{sc.total}<span style={{ fontSize: "18px", color: "#9C8F79" }}> / 100</span></p>
+              <Label color={JADE}>Editorial score · rank {score.rank} of {THERAPY_SCORES.length}</Label>
+              <p style={{ ...serif, fontSize: "40px", color: CREAM, margin: 0 }}>{score.total}<span style={{ fontSize: "18px", color: MUTED }}> / 100</span></p>
             </Card>
             <H2>The five components</H2>
-            {([["Evidence strength (40%)", sc.components.evidence, "mapped role quality plus the kind's trial base"],
-               ["Durability (20%)", sc.components.durability, "how long gains typically hold, kind-typical"],
-               ["Breadth (15%)", sc.components.breadth, "how many intelligence lines it lifts"],
-               ["Speed (15%)", sc.components.speed, "time to first measurable effect"],
-               ["Ease of use (10%)", sc.components.ease, "inverse of burden — deliberately the smallest weight"]] as const).map(([label, v, note]) => (
+            {([[
+              "Evidence component (40%)", score.components.evidence, "mapped role quality plus the kind-level evidence model",
+            ], [
+              "Durability (20%)", score.components.durability, "the kind-level maintenance and decay model",
+            ], [
+              "Breadth (15%)", score.components.breadth, "the number of mapped intelligence lines",
+            ], [
+              "Speed (15%)", score.components.speed, "the kind-level time-to-effect model",
+            ], [
+              "Ease (10%)", score.components.ease, "the modeled burden, deliberately the smallest weight",
+            ]] as const).map(([label, value, note]) => (
               <Card key={label} accent={CHAMPAGNE}>
-                <Label>{label} — {v}/100</Label>
-                <p style={{ fontSize: "13px", lineHeight: 1.6, color: "#9C8F79", margin: 0 }}>{note}</p>
+                <Label>{label} — {value}/100</Label>
+                <CardText>{note}</CardText>
               </Card>
             ))}
-            <H2>Targeted lines</H2>
+            <H2>Mapped lines</H2>
             <Body>
-              <b style={{ color: "#F1EADB" }}>Primary targets (the weaknesses it's aimed at):</b>{" "}
-              {sc.primaryLines.length ? sc.primaryLines.join(", ") : "none — this protocol is mapped as a supporting move"}.
-              {sc.secondaryLines.length ? <> <b style={{ color: "#F1EADB" }}>Also lifts:</b> {sc.secondaryLines.join(", ")}.</> : null}
+              <b style={{ color: CREAM }}>Primary:</b>{" "}
+              {score.primaryLines.length ? score.primaryLines.join(", ") : "none; this protocol is mapped as supporting"}.
+              {score.secondaryLines.length ? <> <b style={{ color: CREAM }}>Also mapped:</b> {score.secondaryLines.join(", ")}.</> : null}
             </Body>
-            <H2>How long it's been known</H2>
-            <Body>{sc.knownSince}</Body>
-            <H2>The practice schedule</H2>
-            <Card accent={JADE}>
-              <CardText><b style={{ color: "#F1EADB" }}>{sc.schedule.minutes} minutes</b> per session · <b style={{ color: "#F1EADB" }}>{sc.schedule.perWeek}</b> per week · course: <b style={{ color: "#F1EADB" }}>{sc.schedule.course}</b></CardText>
-            </Card>
-            <Body>{sc.schedule.window}</Body>
-            <H2>The likely gain — stated honestly</H2>
-            <Card accent={EMBER}><CardText>{sc.gainBand}</CardText></Card>
-            <H2>How long the gain lasts</H2>
-            <Body>{sc.atrophy.curve} The full decay-and-maintenance picture is on the{" "}
-              <Link href={`/protocol/${slug}/atrophy`} style={{ color: "#E0C68C" }}>atrophy page</Link>; the complete
-              ranked table of all {THERAPY_SCORES.length} protocols is at{" "}
-              <Link href="/rankings" style={{ color: "#E0C68C" }}>the rankings</Link>.</Body>
+            <H2>The represented schedule</H2>
+            <Card accent={JADE}><CardText>
+              <b style={{ color: CREAM }}>{score.schedule.minutes} minutes</b> per session ·{" "}
+              <b style={{ color: CREAM }}>{score.schedule.perWeek}</b> · course: <b style={{ color: CREAM }}>{score.schedule.course}</b>
+            </CardText></Card>
+            <Body>{score.schedule.window}</Body>
+            <H2>The estimate band</H2>
+            <Card accent={EMBER}><CardText>{score.gainBand}</CardText></Card>
+            <Body>
+              The kind-level maintenance model is on the <Link href={`/protocol/${slug}/atrophy`} style={{ color: CHAMPAGNE }}>durability page</Link>;
+              the full computed table is on <Link href="/rankings" style={{ color: CHAMPAGNE }}>Protocol Rankings</Link>.
+            </Body>
           </>
         )}
       </>
@@ -450,90 +450,78 @@ export default function ProtocolSubpage() {
     synergy: (
       <>
         <Body>
-          The <Link href={`/protocol/${slug}/stack`} style={{ color: "#E0C68C" }}>stack page</Link> covers same-family
-          alternatives. This page covers the more interesting connection: protocols that share {display}'s target
-          lines but work through a DIFFERENT mechanism family — body reaching what talk can't, habit architecture
-          holding what insight opens. Cross-mechanism pairs compound instead of overlapping.
+          The <Link href={`/protocol/${slug}/stack`} style={{ color: CHAMPAGNE }}>stack page</Link> lists protocols that share
+          this protocol's mapped lines. This view highlights candidates from a different mechanism family so visitors
+          can compare alternatives without treating one mechanism as the only door.
         </Body>
-        <H2>The cross-mechanism partners, ranked by score</H2>
-        {synergyPartners.map((sp) => {
-          const shared = [...sp.primaryLines, ...sp.secondaryLines].filter((l) => entries.some((e) => e.line === l));
+        <H2>Cross-family candidates, ordered by the editorial score</H2>
+        {synergyPartners.map((partner) => {
+          const shared = [...partner.primaryLines, ...partner.secondaryLines].filter((line) => entries.some((entry) => entry.line === line));
           return (
-            <Card key={sp.therapy} accent={JADE}>
-              <Label color={JADE}>score {sp.total} · shares: {shared.join(", ")}</Label>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: "17px", color: "#F1EADB", margin: "0 0 4px" }}>
-                <Link href={`/protocol/${therapySlug(sp.therapy)}`} style={{ color: "#F1EADB" }}>{therapyDisplay(sp.therapy).split(" (")[0]}</Link>
+            <Card key={partner.therapy} accent={JADE}>
+              <Label color={JADE}>editorial score {partner.total} · shared maps: {shared.join(", ")}</Label>
+              <p style={{ ...serif, fontSize: "17px", color: CREAM, margin: "0 0 4px" }}>
+                <Link href={`/protocol/${therapySlug(partner.therapy)}`} style={{ color: CREAM }}>{therapyDisplay(partner.therapy).split(" (")[0]}</Link>
               </p>
-              <p style={{ fontSize: "13px", lineHeight: 1.6, color: "#9C8F79", margin: 0 }}>
-                {KIND_PROFILES[THERAPY_KIND[sp.therapy] ?? "skill"]?.label ?? ""} — a different door into the same room.
-              </p>
+              <CardText>{KIND_PROFILES[THERAPY_KIND[partner.therapy] ?? "skill"]?.label ?? ""} — a different mapped family for review.</CardText>
             </Card>
           );
         })}
-        <H2>Why cross-mechanism beats more-of-the-same</H2>
+        <H2>How to use this map</H2>
         <Body>
-          Two protocols from one family usually tax the same budget (the same hour, the same kind of effort) while
-          touching the same mechanism — redundancy dressed as intensity. A cross-family pair splits the load: a
-          {" "}{kindLabel.toLowerCase()} protocol plus, say, a body-side or habit-side partner reaches the shared line
-          from two directions and shares almost no failure modes. The standing rule still holds — one PRIMARY
-          carries, the partner supports — and which line deserves the pair is a{" "}
-          <Link href="/assessment" style={{ color: "#E0C68C" }}>measurement question</Link>.
+          Shared targets do not prove that two protocols should be combined, nor do editorial scores settle a clinical
+          choice. Compare evidence, burden, contraindications, and preferences; use qualified guidance for clinical
+          care, and never stop prescribed treatment solely because another page scores higher.
         </Body>
       </>
     ),
     atrophy: (
       <>
         <Body>
-          Nobody sells you the decay curve, which is exactly why we publish it. Gains are not furniture — every
-          capacity {display} builds sits somewhere on a use-it-or-lose-it spectrum, and knowing where BEFORE you
-          start is the difference between owning a skill and renting one.
+          Maintenance matters, but this page presents a kind-level editorial model rather than a personal decay curve.
+          Individual durability varies with the protocol, target, dose, context, and continued real-world use.
         </Body>
-        {sc && (
+        {score && (
           <>
-            <H2>The decay curve</H2>
-            <Card accent={EMBER}><CardText>{sc.atrophy.curve}</CardText></Card>
-            <H2>The maintenance dose that holds it</H2>
-            <Card accent={JADE}><CardText>{sc.atrophy.maintenance}</CardText></Card>
+            <H2>The represented decay pattern</H2>
+            <Card accent={EMBER}><CardText>{score.atrophy.curve}</CardText></Card>
+            <H2>The represented maintenance pattern</H2>
+            <Card accent={JADE}><CardText>{score.atrophy.maintenance}</CardText></Card>
             <H2>Re-sharpening after a lapse</H2>
-            <Card accent={CHAMPAGNE}><CardText>{sc.atrophy.resharpen}</CardText></Card>
+            <Card accent={CHAMPAGNE}><CardText>{score.atrophy.resharpen}</CardText></Card>
           </>
         )}
-        <H2>The lines it built don't all fade alike</H2>
+        <H2>The lines do not all fade alike</H2>
         <Body>
-          {display}'s targets — {entries.map((e) => e.line).join(", ")} — atrophy at the rate of their USE, not just
-          their training: a capacity your daily life keeps demanding maintains itself nearly free (the{" "}
-          <Link href={`/protocol/${slug}/daily-life`} style={{ color: "#E0C68C" }}>daily-life page</Link> maps exactly
-          where those demands live). The honest planning move: budget the maintenance dose into your calendar on the
-          day you START the protocol — deciding it later means deciding it during the decay.
+          {display}'s mapped targets — {entries.map((entry) => entry.line).join(", ")} — can be practiced through
+          ordinary life as well as formal sessions. The <Link href={`/protocol/${slug}/daily-life`} style={{ color: CHAMPAGNE }}>daily-life page</Link>{" "}
+          shows where those non-clinical practice opportunities may appear.
         </Body>
       </>
     ),
     "daily-life": (
       <>
         <Body>
-          A protocol that lives only in its sessions dies with them. Here's where {display}'s capacities actually
-          operate in an ordinary day — which is both where the payoff shows up and where the free maintenance reps
-          come from.
+          This page translates the kind-level model into ordinary situations. It is a practical illustration, not a
+          diagnosis, prescription, or promise that the same pattern will fit every person.
         </Body>
-        <H2>When it fires</H2>
+        <H2>When it may show up</H2>
         <Card accent={CHAMPAGNE}><CardText>{daily.when}</CardText></Card>
-        <H2>What it looks like from outside</H2>
+        <H2>What practice may look like from outside</H2>
         <Card accent={JADE}><CardText>{daily.looksLike}</CardText></Card>
-        <H2>The micro-doses that keep it alive</H2>
+        <H2>Small real-world practice opportunities</H2>
         <Card accent={JADE}><CardText>{daily.microUse}</CardText></Card>
         <H2>The activity map for its lines</H2>
         <Body>
-          Each line {display} builds has natural gymnasiums in an ordinary week:{" "}
-          {entries.map((e, i) => {
-            const d = displayFor(e.line);
+          {entries.map((entry, index) => {
+            const displayLine = displayFor(entry.line);
             return (
-              <span key={e.line}>{i > 0 ? " · " : ""}<b style={{ color: "#F1EADB" }}>{e.line}</b>
-                {d ? <> (<Link href={`/line/${lineSlug(d)}/at-work`} style={{ color: "#E0C68C" }}>where it pays at work</Link>)</> : null}
+              <span key={entry.line}>{index > 0 ? " · " : ""}<b style={{ color: CREAM }}>{entry.line}</b>
+                {displayLine ? <> (<Link href={`/line/${lineSlug(displayLine)}/at-work`} style={{ color: CHAMPAGNE }}>at work</Link>)</> : null}
               </span>
             );
-          })}. Using a trained capacity on live problems is not separate from training it — after the course, the
-          use IS the training, which is why the <Link href={`/protocol/${slug}/atrophy`} style={{ color: "#E0C68C" }}>
-          decay curve</Link> bends friendlier for people whose days demand the skill.
+          })}. Continued use may support retention, but it does not replace the evidence, dose, or professional guidance
+          appropriate to a clinical protocol.
         </Body>
       </>
     ),
@@ -554,7 +542,7 @@ export default function ProtocolSubpage() {
         </h1>
         <PageVideo label={`${display} — ${labels.nav}`} />
 
-        {/* Sibling nav — the seven deep pages, one click apart */}
+        {/* Sibling nav — all eleven deep pages, one click apart */}
         <div className="flex items-center gap-2 flex-wrap mb-8">
           {PROTOCOL_SUBPAGES.map((s) => (
             <Link key={s} href={`/protocol/${slug}/${s}`}

@@ -10,15 +10,14 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { GoDeeper } from "@/components/DeepPage";
-import { LINE_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import { LINE_ENCYCLOPEDIA, G_BAND_LABEL } from "@/lib/lineEncyclopedia";
 import { LINE_DEEP } from "@/lib/lineDeepDives";
 import { LINE_MEANING } from "@/lib/lineMeaning";
 import { LINE_VIDEOS, toEmbed } from "@/lib/lineVideos";
-import { LINE_NAMES, lineSlug, lineFromSlug, therapySlug, pairSlug } from "@shared/seo";
-import { keystoneForLine } from "@shared/keystonePractices";
 import { dynamicsFor } from "@/lib/lineDynamics";
+import { LINE_NAMES, LINE_SUBPAGES, lineSlug, lineFromSlug, therapySlug, pairSlug } from "@shared/seo";
+import { keystoneForLine } from "@shared/keystonePractices";
 import { therapiesForLine, THERAPY_THIN_LINES } from "@shared/therapyLineMap";
 import NotFound from "@/pages/NotFound";
 
@@ -299,25 +298,23 @@ export default function LineDetail() {
           </Link>
         </div>
 
-        {/* ── The dynamics dossier: high/low signs, self-regulation, the
-            power trio, the weakness cluster, and the controlling-weakness
-            dynamic — the interaction layer of this line. ── */}
+        {/* Interaction dossier: transparent framework interpretations, not diagnoses. */}
         {dyn && (
           <div className="mb-10">
-            <SectionLabel color={JADE}>Signs you're HIGH in it</SectionLabel>
+            <SectionLabel color={JADE}>Signs you may be high in it</SectionLabel>
             <p style={{ fontSize: "14.5px", lineHeight: 1.72, color: CREAM2, margin: "0 0 8px" }}>
-              The fastest field test: do people ROUTE these problems to you without being asked? Persistent routing is
-              real-world evidence. The full inside description of the strong version lives on{" "}
+              A useful field signal is whether people repeatedly route these problems to you without being asked. That is
+              not a measurement by itself. The strong-version description lives on{" "}
               <Link href={`/gift/${lineSlug(name)}`} style={{ color: CHAMPAGNE }}>the gifted-{name} page</Link>, and the
-              structured five-question mirror is the <Link href={`/line/${lineSlug(name)}/self-check`} style={{ color: CHAMPAGNE }}>self-check</Link>.
+              structured five-question mirror is the{" "}
+              <Link href={`/line/${lineSlug(name)}/self-check`} style={{ color: CHAMPAGNE }}>self-check</Link>.
             </p>
-            <SectionLabel color={EMBER}>Signs you're LOW in it</SectionLabel>
+            <SectionLabel color={EMBER}>Signs you may be low in it</SectionLabel>
             <p style={{ fontSize: "14.5px", lineHeight: 1.72, color: CREAM2, margin: "0 0 16px" }}>
-              Weak lines rarely feel like weakness — they feel like bad luck, difficult people, and plans that almost
-              work. The itemized signs and costs of the weak version are on{" "}
-              <Link href={`/weak/${lineSlug(name)}`} style={{ color: CHAMPAGNE }}>the weak-{name} page</Link>.
+              Weak lines can feel like bad luck, difficult people, or plans that almost work. The itemized signs and costs
+              are on <Link href={`/weak/${lineSlug(name)}`} style={{ color: CHAMPAGNE }}>the weak-{name} page</Link>.
             </p>
-            <SectionLabel>Self-awareness & self-control</SectionLabel>
+            <SectionLabel>Self-awareness &amp; self-control</SectionLabel>
             <p style={{ fontSize: "14.5px", lineHeight: 1.72, color: CREAM2, margin: "0 0 16px" }}>{dyn.selfReg}</p>
             <SectionLabel color={JADE}>The power trio — emergent property</SectionLabel>
             <div className="rounded-xl p-4 mb-4" style={{ border: `1px solid ${LINE_C}`, borderLeft: `3px solid ${JADE}`, background: "rgba(241,234,219,0.02)" }}>
@@ -336,13 +333,12 @@ export default function LineDetail() {
               </p>
               <p style={{ fontSize: "14px", lineHeight: 1.7, color: CREAM2, margin: 0 }}>{dyn.weakCluster.failure}</p>
             </div>
-            <SectionLabel color={EMBER}>If this is your controlling weakness</SectionLabel>
+            <SectionLabel color={EMBER}>If this is a controlling weakness</SectionLabel>
             <p style={{ fontSize: "14.5px", lineHeight: 1.72, color: CREAM2, margin: "0 0 8px" }}>{dyn.controlling}</p>
             <p style={{ fontSize: "13.5px", lineHeight: 1.65, color: MUTED, margin: 0 }}>
-              Whether this line IS your controlling weakness — the one taxing the whole cluster — is precisely what the{" "}
-              <Link href="/weakness-finder" style={{ color: CHAMPAGNE }}>Master Weakness Finder</Link> determines from
-              your assessment. Trio and cluster dynamics are our framework's construals, built on each line's cited
-              research profile.
+              The <Link href="/weakness-finder" style={{ color: CHAMPAGNE }}>Master Weakness Finder</Link> helps you test
+              that possibility as a working hypothesis. Trio and cluster dynamics are AQAL editorial framework
+              interpretations built on each line's cited research profile; they are not diagnoses or guarantees.
             </p>
           </div>
         )}

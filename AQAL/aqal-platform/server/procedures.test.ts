@@ -20,7 +20,7 @@ function createUserContext(overrides?: Partial<NonNullable<TrpcContext["user"]>>
       openId: "test-user-999",
       email: "test@example.com",
       name: "Test User",
-      loginMethod: "manus",
+      loginMethod: "oauth",
       role: "user",
       createdAt: new Date(),
       updatedAt: new Date(),

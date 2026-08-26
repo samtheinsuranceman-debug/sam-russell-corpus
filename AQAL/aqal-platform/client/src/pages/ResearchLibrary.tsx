@@ -25,10 +25,10 @@ const CHAMPAGNE_D = "#C9A24B";
 const JADE = "#9BC0B2";
 const BRONZE = "#D19A72";
 
-const VOL1_URL = "/manus-storage/AQALResearchLibraryVol1_0c460f0e.pdf";
-const VOL2_URL = "/manus-storage/AQALResearchLibraryVol2_77564b0b.pdf";
-const VOL3_URL = "/manus-storage/AQALResearchLibraryVol3_6017e939.pdf";
-const WEAKNESS_REPORT_URL = "/manus-storage/AQALWeaknessClusterReport_c23fda66.pdf";
+const VOL1_URL = "/aqal-storage/AQALResearchLibraryVol1_0c460f0e.pdf";
+const VOL2_URL = "/aqal-storage/AQALResearchLibraryVol2_77564b0b.pdf";
+const VOL3_URL = "/aqal-storage/AQALResearchLibraryVol3_6017e939.pdf";
+const WEAKNESS_REPORT_URL = "/aqal-storage/AQALWeaknessClusterReport_c23fda66.pdf";
 
 const TIER: Record<string, { label: string; c: string; desc: string }> = {
   established: { label: "Established", c: CHAMPAGNE, desc: "Decades of psychometrics behind a dedicated, validated instrument." },

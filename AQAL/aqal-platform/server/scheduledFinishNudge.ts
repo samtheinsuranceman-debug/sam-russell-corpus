@@ -12,23 +12,23 @@
  */
 
 import type { Request, Response } from "express";
-import { sdk } from "./_core/sdk";
 import { getUnfinishedAssessmentRecipients, markFinishNudgeSent } from "./db";
-import { unfinishedAssessmentEmailHtml } from "./platform/email";
 import { sendMarketingEmail } from "./marketingEmail";
+import { unfinishedAssessmentEmailHtml } from "./platform/email";
+import { requireScheduledCron, scheduledFailure } from "./scheduledAuth";
 
 const MIN_HOURS = 24;  // wait at least a day before nudging
 const MAX_HOURS = 96;  // don't chase people who signed up >4 days ago
 
 export async function finishNudgeHandler(req: Request, res: Response) {
+  let taskUid: string | undefined;
   try {
-    const user = await sdk.authenticateRequest(req);
-    if (!user.isCron || !user.taskUid) {
-      return res.status(403).json({ error: "cron-only" });
-    }
+    const user = await requireScheduledCron(req, res);
+    if (!user) return;
+    taskUid = user.taskUid;
     const appUrl = req.headers.origin as string | undefined;
     const recipients = await getUnfinishedAssessmentRecipients(MIN_HOURS, MAX_HOURS);
-    let sent = 0, failed = 0;
+    let sent = 0, failed = 0, skipped = 0;
     for (const r of recipients) {
       const result = await sendMarketingEmail(
         r.email,
@@ -36,16 +36,17 @@ export async function finishNudgeHandler(req: Request, res: Response) {
         unfinishedAssessmentEmailHtml({ name: r.name ?? undefined, appUrl }),
         appUrl,
       );
-      if (result.skipped) { await markFinishNudgeSent(r.userId); continue; }
-      if (result.ok) {
+      if (result.skipped) {
+        skipped++;
+      } else if (result.ok) {
         await markFinishNudgeSent(r.userId);
         sent++;
       } else {
         failed++;
       }
     }
-    return res.json({ ok: true, candidates: recipients.length, sent, failed });
+    return res.json({ ok: true, candidates: recipients.length, sent, skipped, failed });
   } catch (err) {
-    return res.status(500).json({ error: err instanceof Error ? err.message : "finish-nudge failed" });
+    return scheduledFailure(req, res, err, taskUid);
   }
 }

@@ -1,8 +1,7 @@
 import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
-import { sendEmail, resultEmailHtml, dailyCheckinEmailHtml, foundingWelcomeEmailHtml } from "./platform/email";
-import { sendMarketingEmail } from "./marketingEmail";
+import { sendEmail, resultEmailHtml, foundingWelcomeEmailHtml } from "./platform/email";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
@@ -65,11 +64,11 @@ import {
   startUnderwrittenTrialIfNeeded, unlockUnderwritten, getUnderwrittenTimestamps,
   getCommitmentByUser, getCurrentSignedCommitment, getCommitmentHistory,
   saveCommitmentDraft, signCommitment, startNewCommitment,
-  updateCommitmentReminder, getActiveReminderCommitments,
+  updateCommitmentReminder,
 } from "./db";
-import { sendSms, dailyCheckinSms } from "./platform/sms";
 import { CRON_SECRET } from "./platform/config";
-import { COMMITMENT_QUESTIONS, commitmentReady, answersByKey, shouldSendCheckinNow, DAILY_CHECKIN_HOUR, type CommitmentAnswer } from "@shared/commitment";
+import { COMMITMENT_QUESTIONS, commitmentReady, answersByKey, type CommitmentAnswer } from "@shared/commitment";
+import { runDailyAccountability } from "./accountability";
 import { underwrittenAccess } from "@shared/underwritingGate";
 import { extractGoalsText } from "@shared/goalsQuestions";
 import { createTrackerCycle, getTrackerCyclesByUser, setTrackerReminderOptIn, getTrackerReminderOptIn } from "./db";
@@ -1014,6 +1013,8 @@ Return ONLY valid JSON.` },
           ["users", schema.users], ["assessments", schema.assessments], ["goals", schema.goals],
           ["beliefs", schema.beliefs], ["directMessages", schema.directMessages], ["matches", schema.matches],
           ["protocolRatings", schema.protocolRatings], ["crisisFlags", schema.crisisFlags],
+          ["commitments", schema.commitments], ["trackerCycles", schema.trackerCycles],
+          ["dailyAccountability", schema.dailyAccountability],
         ];
         for (const [name, t] of tables) {
           try { await db.select().from(t).limit(1); add(`Table: ${name}`, true, "queryable"); }
@@ -1026,7 +1027,9 @@ Return ONLY valid JSON.` },
       add("Env: GOOGLE_API_KEY or GEMINI_API_KEY", !!(process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY),
         process.env.GOOGLE_API_KEY ? "GOOGLE_API_KEY present" : process.env.GEMINI_API_KEY ? "GEMINI_API_KEY present" : "MISSING — Gemini will drop off the panel");
       add("Heartbeat (scheduled jobs)", !!(process.env.BUILT_IN_FORGE_API_URL && process.env.BUILT_IN_FORGE_API_KEY),
-        process.env.BUILT_IN_FORGE_API_URL ? "configured" : "NOT configured — drips will never fire (BUILT_IN_FORGE_API_URL/KEY)");
+        process.env.BUILT_IN_FORGE_API_URL ? "runtime supports managed Heartbeat; owner must create schedules after publishing this callback code" : "NOT configured — scheduled callbacks cannot run");
+      add("Inbound accountability replies", !!process.env.TWILIO_AUTH_TOKEN,
+        process.env.TWILIO_AUTH_TOKEN ? "signed Twilio Y/N/STOP webhook enabled" : "TWILIO_AUTH_TOKEN missing — outbound SMS remains mock/disabled and inbound replies return unavailable");
 
       const { llmProvider, sttProvider, freePanelMax } = await import("./platform/config");
       add("LLM provider", llmProvider() !== "mock", `provider: ${llmProvider()}${llmProvider() === "mock" ? " — scoring is FAKE until keys are set" : ""}`);
@@ -1035,8 +1038,9 @@ Return ONLY valid JSON.` },
 
       add("LLM daily budget guard", !!process.env.LLM_DAILY_BUDGET_USD,
         process.env.LLM_DAILY_BUDGET_USD ? `alerts over $${process.env.LLM_DAILY_BUDGET_USD}/day (estimates)` : "LLM_DAILY_BUDGET_USD not set — no cost smoke alarm");
-      const routes = ["/api/scheduled/finish-nudge", "/api/scheduled/tracker-reengagement", "/api/scheduled/drift-alert", "/api/scheduled/message-digest", "/api/scheduled/reentry", "/api/scheduled/question-of-day"];
-      add("Drip endpoints registered", true, routes.join(", "));
+      const routes = ["/api/scheduled/finish-nudge", "/api/scheduled/tracker-reengagement", "/api/scheduled/drift-alert", "/api/scheduled/message-digest", "/api/scheduled/reentry", "/api/scheduled/question-of-day", "/api/scheduled/daily-reminders"];
+      add("Scheduled callbacks registered", true, routes.join(", "));
+      add("Twilio reply callback registered", true, "/api/webhooks/twilio/inbound (signature required; stores Y/N/STOP only)");
 
       const pass = checks.filter((c) => c.ok).length;
       return { pass, total: checks.length, green: pass === checks.length, checks };
@@ -1255,7 +1259,7 @@ Return ONLY valid JSON.` },
       const { randomBytes, createHash } = await import("node:crypto");
       const vtoken = randomBytes(32).toString("hex");
       await db.update(users).set({ verifyTokenHash: createHash("sha256").update(vtoken).digest("hex") }).where(eq(users.id, ctx.user.id));
-      const appUrl = (((ctx.req as any)?.headers?.origin as string) || "https://joinaqal.com").replace(/\/$/, "");
+      const appUrl = (((ctx.req as any)?.headers?.origin as string) || "https://www.joinaqal.com").replace(/\/$/, "");
       await sendEmail(ctx.user.email, "Confirm your AQAL email",
         `<div style="font-family:monospace;font-size:13px;line-height:1.7;background:#161310;color:#f1eadb;padding:28px;border-radius:12px">
           <p style="letter-spacing:.2em;font-size:10px;color:#e0c68c">AQAL · CONFIRM YOUR EMAIL</p>
@@ -1298,7 +1302,7 @@ Return ONLY valid JSON.` },
           await db.update(users)
             .set({ resetTokenHash: tokenHash, resetTokenExpiresAt: new Date(Date.now() + 60 * 60 * 1000) })
             .where(eq(users.id, user.id));
-          const appUrl = (((ctx.req as any)?.headers?.origin as string) || "https://joinaqal.com").replace(/\/$/, "");
+          const appUrl = (((ctx.req as any)?.headers?.origin as string) || "https://www.joinaqal.com").replace(/\/$/, "");
           const { sendEmail } = await import("./platform/email");
           await sendEmail(
             input.email,
@@ -1434,7 +1438,7 @@ Return ONLY valid JSON.` },
         // carrying the email-verification link — the address the lifetime spot and
         // password recovery hang off must be proven real.
         if (!alreadyClaimed) {
-          const appUrl = (ctx.req.headers.origin || "https://joinaqal.com").replace(/\/$/, "");
+          const appUrl = (ctx.req.headers.origin || "https://www.joinaqal.com").replace(/\/$/, "");
           let verifyUrl: string | undefined;
           try {
             const { randomBytes, createHash } = await import("node:crypto");
@@ -1534,6 +1538,38 @@ Return ONLY valid JSON.` },
   // ============================================================
   // ── ACCOUNT SOVEREIGNTY — the Terms 8C promises, functioning ──────────────
   account: router({
+    emailPreferences: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb } = await import("./db");
+      const { users } = await import("../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Email preferences are unavailable" });
+      const row = await db
+        .select({ emailOptOutAt: users.emailOptOutAt })
+        .from(users)
+        .where(eq(users.id, ctx.user.id))
+        .limit(1);
+      return {
+        marketingEnabled: !row[0]?.emailOptOutAt,
+        optedOutAt: row[0]?.emailOptOutAt ?? null,
+      };
+    }),
+    setMarketingEmail: protectedProcedure
+      .input(z.object({ enabled: z.boolean() }))
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const { users } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Email preferences are unavailable" });
+        const emailOptOutAt = input.enabled ? null : new Date();
+        await db.update(users).set({ emailOptOutAt }).where(eq(users.id, ctx.user.id));
+        await recordEvent({
+          type: input.enabled ? "marketing_email_resubscribed" : "marketing_email_unsubscribed",
+          userId: ctx.user.id,
+        });
+        return { ok: true as const, marketingEnabled: input.enabled, emailOptOutAt };
+      }),
     exportData: protectedProcedure.query(async ({ ctx }) => {
       const uid = ctx.user.id;
       const { getDb, getLatestAssessment, getResponsesByAssessment, getScoresByAssessment } = await import("./db");
@@ -1923,6 +1959,7 @@ CRITICAL RULES:
         const responsesList = await getResponsesByAssessment(assessment.id);
         const goals = extractGoalsText(responsesList as any);
         const analysis = await analyzeJournal({ journalText: input.journalText, goals, scores: scores as any, days: input.days });
+        const testimonialInvite = analysis.adjustments.some((item: any) => item?.direction === "up");
         const cycle = await createTrackerCycle({
           userId: ctx.user.id,
           assessmentId: assessment.id,
@@ -1932,9 +1969,10 @@ CRITICAL RULES:
           adjustments: analysis.adjustments as any,
           freshVision: analysis.freshVision,
           adherenceNote: analysis.adherenceNote,
+          testimonialInvite,
         });
         await recordEvent({ type: "tracker_cycle", userId: ctx.user.id });
-        return { cycle, analysis };
+        return { cycle, analysis: { ...analysis, testimonialInvite } };
       }),
 
     // Cycle history for the portal.
@@ -2105,9 +2143,9 @@ CRITICAL RULES:
   // ============================================================
   reminders: router({
     // Send today's Y/N check-in to everyone with an active channel who is still
-    // inside their 30-day window. Auth: CRON_SECRET (host scheduler) or an admin.
-    // Idempotency (once-per-day) and the inbound Y/N reply webhook are the host's
-    // job — see HANDOFF_TO_MANUS.md.
+    // inside their 30-day window. Managed Heartbeat uses the dedicated HTTP
+    // handler; this tRPC path remains for an admin or legacy CRON_SECRET trigger.
+    // Both paths share the same database-backed once-per-local-day idempotency.
     sendDaily: publicProcedure
       .input(z.object({
         secret: z.string().optional(),
@@ -2122,31 +2160,7 @@ CRITICAL RULES:
         if (!isAdmin && !secretOk) {
           throw new TRPCError({ code: "UNAUTHORIZED", message: "Cron secret or admin required." });
         }
-        const targets = await getActiveReminderCommitments();
-        const now = new Date();
-        const nowMs = now.getTime();
-        const WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
-        const targetHour = input.targetHour ?? DAILY_CHECKIN_HOUR;
-        let sent = 0, skipped = 0, failed = 0;
-        for (const t of targets) {
-          // Respect the 30-day window when a start date is set.
-          const start = t.reminderStartAt ? new Date(t.reminderStartAt).getTime() : nowMs;
-          const day = Math.floor((nowMs - start) / (24 * 60 * 60 * 1000)) + 1;
-          if (nowMs - start > WINDOW_MS) { skipped++; continue; }
-          // Only fire when it's ~8 PM in the person's own timezone.
-          if (!input.ignoreTime && !shouldSendCheckinNow(t.reminderTimezone, now, targetHour)) { skipped++; continue; }
-          if (t.reminderChannel === "text" && t.reminderPhone) {
-            const r = await sendSms(t.reminderPhone, dailyCheckinSms());
-            r.ok ? sent++ : failed++;
-          } else if (t.reminderChannel === "email" && t.email) {
-            const r = await sendMarketingEmail(t.email, "Your AQAL daily check-in — reply Y or N", dailyCheckinEmailHtml({ dayNumber: day }));
-            r.skipped ? skipped++ : r.ok ? sent++ : failed++;
-          } else {
-            skipped++;
-          }
-        }
-        await recordEvent({ type: "reminders_daily", numericValue: sent });
-        return { sent, skipped, failed, total: targets.length };
+        return runDailyAccountability({ targetHour: input.targetHour, ignoreTime: input.ignoreTime });
       }),
   }),
 
@@ -2253,7 +2267,7 @@ CRITICAL RULES:
         }
 
         // Get a signed URL for the video for LLM access
-        const videoKey = input.videoKey || input.videoUrl.replace("/manus-storage/", "");
+        const videoKey = input.videoKey || input.videoUrl.replace("/aqal-storage/", "");
         let signedVideoUrl: string;
         try {
           signedVideoUrl = await storageGetSignedUrl(videoKey);

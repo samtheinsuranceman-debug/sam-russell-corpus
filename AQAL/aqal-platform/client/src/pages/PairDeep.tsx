@@ -1,12 +1,10 @@
 // ============================================================
 // PAIR DEEP PAGES — /pair/:slug/:sub (496 × 3 = 1,488 URLs):
-// collide · train · at-work. Composed from each line's own
-// authored data: LINE_ROLE (what each line gives), LINE_MEANING
-// (lived/others/cost), keystone practices, and mapped protocols
-// — so every pair page is built from its two real halves.
+// collide · train · at-work. Composed from each line's current
+// profile, keystone practices, and mapped protocols.
 // ============================================================
 import { useParams } from "wouter";
-import { pairFromSlug, pairSlug, lineSlug, PAIR_SUBPAGES, type PairSubpageId, therapySlug, therapyDisplay } from "@shared/seo";
+import { pairFromSlug, pairSlug, PAIR_SUBPAGES, type PairSubpageId, therapySlug, therapyDisplay } from "@shared/seo";
 import { LINE_ROLE } from "@/lib/linePairs";
 import { LINE_MEANING } from "@/lib/lineMeaning";
 import { keystoneForLine } from "@shared/keystonePractices";
@@ -30,25 +28,25 @@ const H1S: Record<PairSubpageId, (a: string, b: string) => string> = {
   "at-work": (a, b) => `${a} × ${b} at work`,
 };
 
-function protocolsFor(display: string, n: number) {
-  const eng = engineName(display);
+function protocolsFor(display: string, count: number) {
+  const engine = engineName(display);
   const rank = { PRIMARY: 0, SECONDARY: 1, TERTIARY: 2 } as Record<string, number>;
-  return THERAPY_LINE_MAP.filter((t) => t.line === eng)
-    .sort((x, y) => rank[x.role] - rank[y.role]).slice(0, n);
+  return THERAPY_LINE_MAP.filter((therapy) => therapy.line === engine)
+    .sort((left, right) => rank[left.role] - rank[right.role]).slice(0, count);
 }
 
 export default function PairDeep() {
   const params = useParams<{ slug: string; sub: string }>();
-  const pr = pairFromSlug(params.slug ?? "");
+  const pair = pairFromSlug(params.slug ?? "");
   const sub = (PAIR_SUBPAGES as readonly string[]).includes(params.sub ?? "") ? (params.sub as PairSubpageId) : undefined;
-  if (!pr || !sub) return <NotFound />;
-  const [a, b] = pr;
-  const ra = LINE_ROLE[a], rb = LINE_ROLE[b];
-  const ma = LINE_MEANING[a], mb = LINE_MEANING[b];
-  if (!ra || !rb || !ma || !mb) return <NotFound />;
+  if (!pair || !sub) return <NotFound />;
+  const [a, b] = pair;
+  const roleA = LINE_ROLE[a], roleB = LINE_ROLE[b];
+  const meaningA = LINE_MEANING[a], meaningB = LINE_MEANING[b];
+  if (!roleA || !roleB || !meaningA || !meaningB) return <NotFound />;
   const base = `/pair/${pairSlug(a, b)}`;
 
-  const halfCard = (name: string, role: typeof ra, text: string, accent: string) => (
+  const halfCard = (name: string, role: typeof roleA, text: string, accent: string) => (
     <Card accent={accent}>
       <Label color={accent}>{name} — the {role.noun.toLowerCase()}</Label>
       <CardText>{text}</CardText>
@@ -64,16 +62,16 @@ export default function PairDeep() {
           line quietly failing, and the carry disguising the failure.
         </Body>
         <H2>Strong {a}, weak {b}</H2>
-        {halfCard(a, ra, `What the strong half keeps delivering: ${ra.gives}`, JADE)}
+        {halfCard(a, roleA, `What the strong half keeps delivering: ${roleA.gives}`, JADE)}
         <Card accent={EMBER}>
           <Label color={EMBER}>What the weak {b} half is costing meanwhile</Label>
-          <CardText>{mb.cost}</CardText>
+          <CardText>{meaningB.cost}</CardText>
         </Card>
         <H2>Strong {b}, weak {a}</H2>
-        {halfCard(b, rb, `What the strong half keeps delivering: ${rb.gives}`, JADE)}
+        {halfCard(b, roleB, `What the strong half keeps delivering: ${roleB.gives}`, JADE)}
         <Card accent={EMBER}>
           <Label color={EMBER}>What the weak {a} half is costing meanwhile</Label>
-          <CardText>{ma.cost}</CardText>
+          <CardText>{meaningA.cost}</CardText>
         </Card>
         <H2>Why the imbalance hides</H2>
         <Body>
@@ -82,8 +80,7 @@ export default function PairDeep() {
           the engine revs, the wheels slip, and nobody checks the axle. The repair math is friendly, though: raising
           the weak partner one honest notch typically pays more than pushing the strong line further, because the
           strong line finally gets traction. The <Gold href={`${base}/train`}>training page</Gold> maps exactly that
-          move — and which half is actually your weak one is a{" "}
-          <Gold href="/assessment">measurement question</Gold>, not a feeling.
+          move — and which half is actually your weak one is a <Gold href="/assessment">measurement question</Gold>, not a feeling.
         </Body>
       </>
     ),
@@ -94,24 +91,24 @@ export default function PairDeep() {
           one gets traction, then alternate. Here is the honest toolkit for both halves of {a} × {b}, drawn from the
           same cited library as everything else on this site.
         </Body>
-        {[{ n: a }, { n: b }].map(({ n }) => {
-          const key = keystoneForLine(engineName(n));
-          const prot = protocolsFor(n, 3);
+        {[a, b].map((name) => {
+          const keystone = keystoneForLine(engineName(name));
+          const protocols = protocolsFor(name, 3);
           return (
-            <div key={n}>
-              <H2>Raising the {n} half</H2>
-              {key && (
+            <div key={name}>
+              <H2>Raising the {name} half</H2>
+              {keystone && (
                 <Card accent={JADE}>
-                  <Label color={JADE}>The keystone practice — {key.name} ({key.evidence.toLowerCase()} evidence)</Label>
-                  <CardText>{key.prescription}</CardText>
+                  <Label color={JADE}>The keystone practice — {keystone.name} ({keystone.evidence.toLowerCase()} evidence)</Label>
+                  <CardText>{keystone.prescription}</CardText>
                 </Card>
               )}
-              {prot.map((p) => (
-                <Card key={p.therapy} accent={CHAMPAGNE}>
-                  <Label>{p.role} protocol</Label>
+              {protocols.map((protocol) => (
+                <Card key={protocol.therapy} accent={CHAMPAGNE}>
+                  <Label>{protocol.role} protocol</Label>
                   <CardText>
-                    <Gold href={`/protocol/${therapySlug(p.therapy)}`}>{therapyDisplay(p.therapy).split(" (")[0]}</Gold>
-                    {" — "}{p.capacity}
+                    <Gold href={`/protocol/${therapySlug(protocol.therapy)}`}>{therapyDisplay(protocol.therapy).split(" (")[0]}</Gold>
+                    {" — "}{protocol.capacity}
                   </CardText>
                 </Card>
               ))}
@@ -136,27 +133,27 @@ export default function PairDeep() {
         </Body>
         <H2>What each half brings to the table</H2>
         <Card accent={JADE}>
-          <Label color={JADE}>{a} — the {ra.noun.toLowerCase()}'s contribution</Label>
-          <CardText>Native arena: {ra.arena}. What it hands the partner line: {ra.gives}</CardText>
+          <Label color={JADE}>{a} — the {roleA.noun.toLowerCase()}'s contribution</Label>
+          <CardText>Native arena: {roleA.arena}. What it hands the partner line: {roleA.gives}</CardText>
         </Card>
         <Card accent={JADE}>
-          <Label color={JADE}>{b} — the {rb.noun.toLowerCase()}'s contribution</Label>
-          <CardText>Native arena: {rb.arena}. What it hands the partner line: {rb.gives}</CardText>
+          <Label color={JADE}>{b} — the {roleB.noun.toLowerCase()}'s contribution</Label>
+          <CardText>Native arena: {roleB.arena}. What it hands the partner line: {roleB.gives}</CardText>
         </Card>
         <H2>The rooms where the pair compounds</H2>
         <Body>
           Put those two contributions in one head and you get someone valuable precisely where those arenas overlap —
-          where {ra.arena.split(",")[0].trim()} meets {rb.arena.split(",")[0].trim()}. In our framework, that overlap
-          is this pair's professional edge: the {ra.adj.toLowerCase()} {rb.noun.toLowerCase()}.
+          where {roleA.arena.split(",")[0].trim()} meets {roleB.arena.split(",")[0].trim()}. In our framework, that overlap
+          is this pair's professional edge: the {roleA.adj.toLowerCase()} {roleB.noun.toLowerCase()}.
         </Body>
         <H2>How it reads to the people around you</H2>
         <Card accent={CHAMPAGNE}>
           <Label>{a}, from the outside</Label>
-          <CardText>{ma.others}</CardText>
+          <CardText>{meaningA.others}</CardText>
         </Card>
         <Card accent={CHAMPAGNE}>
           <Label>{b}, from the outside</Label>
-          <CardText>{mb.others}</CardText>
+          <CardText>{meaningB.others}</CardText>
         </Card>
         <H2>The honest caveat</H2>
         <Body>
@@ -177,7 +174,7 @@ export default function PairDeep() {
     >
       <SiblingNav base={base} subs={PAIR_SUBPAGES} current={sub} labels={SUB_LABELS} />
       {sections[sub]}
-      <DeepDisclosure text={`Pair dynamics are our framework's construal, composed from each line's cited research profile.`} />
+      <DeepDisclosure text="Pair dynamics are our framework's construal, composed from each line's cited research profile." />
       <DeepCta heading={`Which version of ${a} × ${b} are you running?`} body="Strong-strong, strong-weak, weak-weak — the same pair, three different lives. Measure all 32 lines and see your actual configuration." />
     </DeepFrame>
   );

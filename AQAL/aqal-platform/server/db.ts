@@ -1,7 +1,7 @@
 import { eq, sql, and, or, desc, gte, inArray } from "drizzle-orm";
 import { RESERVATION_DAYS } from "@shared/giveawayLadder";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend, testimonials, InsertTestimonial, commitments, trackerCycles, InsertTrackerCycle } from "../drizzle/schema";
+import { InsertUser, users, waitlist, assessments, responses, scores, powerCombinations, promoCodes, evidence, referralPayments, leaderboardEntries, challengeInvites, nlpProfiles, coachingLetters, videoAssessments, analyticsEvents, marketingSpend, testimonials, InsertTestimonial, commitments, dailyAccountability, trackerCycles, InsertTrackerCycle } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -274,6 +274,7 @@ export async function saveScores(assessmentId: number, scoreData: Array<{ axisIn
     confidence: s.confidence || null,
     reasoning: s.reasoning || null,
   }));
+  if (values.length === 0) return;
   await db.insert(scores).values(values);
 }
 
@@ -297,6 +298,7 @@ export async function savePowerCombinations(assessmentId: number, combos: Array<
     axes: JSON.stringify(c.axes),
     rarityMultiplier: c.rarityMultiplier || null,
   }));
+  if (values.length === 0) return;
   await db.insert(powerCombinations).values(values);
 }
 
@@ -1435,20 +1437,110 @@ export async function updateCommitmentReminder(userId: number, data: {
 export async function getActiveReminderCommitments() {
   const db = await getDb();
   if (!db) return [] as Array<{
-    userId: number; email: string | null; reminderChannel: "email" | "text";
-    reminderPhone: string | null; reminderTimezone: string | null; reminderStartAt: Date | null;
+    commitmentId: number; userId: number; email: string | null; reminderChannel: "email" | "text";
+    reminderPhone: string | null; reminderTimezone: string | null; reminderConsentAt: Date | null; reminderStartAt: Date | null;
+    emailOptOutAt: Date | null;
   }>;
   const rows = await db.select({
+    commitmentId: commitments.id,
     userId: commitments.userId,
     email: users.email,
+    emailOptOutAt: users.emailOptOutAt,
     reminderChannel: commitments.reminderChannel,
     reminderPhone: commitments.reminderPhone,
     reminderTimezone: commitments.reminderTimezone,
+    reminderConsentAt: commitments.reminderConsentAt,
     reminderStartAt: commitments.reminderStartAt,
   }).from(commitments)
     .innerJoin(users, eq(users.id, commitments.userId))
     .where(and(eq(commitments.status, "signed"), sql`${commitments.supersededAt} IS NULL`));
-  return rows.filter((r) => r.reminderChannel === "email" || r.reminderChannel === "text") as any;
+  return rows.filter((row) =>
+    row.reminderChannel === "text" ||
+    (row.reminderChannel === "email" && !row.emailOptOutAt)
+  ) as any;
+}
+
+export async function claimDailyAccountabilitySend(input: {
+  commitmentId: number;
+  userId: number;
+  localDate: string;
+  channel: "email" | "text";
+}): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  try {
+    await db.insert(dailyAccountability).values({ ...input, status: "pending" });
+    return true;
+  } catch (error: any) {
+    if (error?.code === "ER_DUP_ENTRY" || String(error?.message ?? "").includes("Duplicate")) return false;
+    throw error;
+  }
+}
+
+export async function finishDailyAccountabilitySend(
+  commitmentId: number,
+  localDate: string,
+  status: "sent" | "failed",
+): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(dailyAccountability)
+    .set({ status, sentAt: status === "sent" ? new Date() : null })
+    .where(and(eq(dailyAccountability.commitmentId, commitmentId), eq(dailyAccountability.localDate, localDate)));
+}
+
+export async function getCurrentTextCommitmentByPhone(phone: string) {
+  const normalized = phone.replace(/\D/g, "");
+  const targets = await getActiveReminderCommitments();
+  return targets.find((target: any) =>
+    target.reminderChannel === "text" &&
+    target.reminderConsentAt !== null &&
+    String(target.reminderPhone ?? "").replace(/\D/g, "") === normalized
+  ) ?? null;
+}
+
+export async function recordDailyAccountabilityReply(input: {
+  commitmentId: number;
+  userId: number;
+  localDate: string;
+  reply: "yes" | "no" | "stop";
+  sourceMessageSid?: string | null;
+}): Promise<"recorded" | "duplicate"> {
+  const db = await getDb();
+  if (!db) return "duplicate";
+  if (input.sourceMessageSid) {
+    const prior = await db.select({ id: dailyAccountability.id }).from(dailyAccountability)
+      .where(eq(dailyAccountability.sourceMessageSid, input.sourceMessageSid)).limit(1);
+    if (prior.length > 0) return "duplicate";
+  }
+  const existing = await db.select({ id: dailyAccountability.id }).from(dailyAccountability)
+    .where(and(eq(dailyAccountability.commitmentId, input.commitmentId), eq(dailyAccountability.localDate, input.localDate)))
+    .limit(1);
+  if (existing[0]) {
+    await db.update(dailyAccountability).set({
+      reply: input.reply,
+      repliedAt: new Date(),
+      sourceMessageSid: input.sourceMessageSid ?? undefined,
+    }).where(eq(dailyAccountability.id, existing[0].id));
+  } else {
+    await db.insert(dailyAccountability).values({
+      commitmentId: input.commitmentId,
+      userId: input.userId,
+      localDate: input.localDate,
+      channel: "text",
+      status: "sent",
+      reply: input.reply,
+      repliedAt: new Date(),
+      sourceMessageSid: input.sourceMessageSid ?? undefined,
+    });
+  }
+  return "recorded";
+}
+
+export async function stopTextRemindersForCommitment(commitmentId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(commitments).set({ reminderChannel: "none" }).where(eq(commitments.id, commitmentId));
 }
 
 // ============================================================

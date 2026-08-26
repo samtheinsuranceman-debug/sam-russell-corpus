@@ -14,17 +14,16 @@
 export type HypnosisFamily = "line" | "state" | "future" | "habit" | "recover";
 export type HypnosisTopic = {
   id: string;
-  title: string;       // ≤ 28 chars
+  title: string;
   family: HypnosisFamily;
-  target: string;      // the line / goal / state it serves
-  purpose: string;     // what the session is for, honestly
-  suggestions: string; // the overt suggestion themes the script should carry
-  imagery: string;     // the sensory scene(s) to build
-  length: string;      // recommended runtime
+  target: string;
+  purpose: string;
+  suggestions: string;
+  imagery: string;
+  length: string;
 };
 
 export const HYPNOSIS_TOPICS: HypnosisTopic[] = [
-  // ── Line-targeted rehearsal (16) ──────────────────────────────────────────
   { id: "emotional-steadiness", title: "Emotional Steadiness", family: "line", target: "Emotional line",
     purpose: "Rehearse meeting a strong emotion — yours or someone else's — without being run by it.",
     suggestions: "Name the feeling, breathe around it, let it crest and pass; 'I can feel this fully and still choose my next move.'",
@@ -89,7 +88,6 @@ export const HYPNOSIS_TOPICS: HypnosisTopic[] = [
     purpose: "Reconnect daily effort to what it's actually for — a session for the weeks when the point goes missing.",
     suggestions: "'This day is a brick in something I chose'; recall the chooser; choose again on purpose.",
     imagery: "Standing at a high overlook at dusk seeing your whole path — where it came from, where it's pointed, why.", length: "15–20 min" },
-  // ── State sessions (10) ───────────────────────────────────────────────────
   { id: "deep-sleep-descent", title: "Deep Sleep Descent", family: "state", target: "Sleep onset",
     purpose: "A descent protocol for racing-mind bedtimes — downshifting body first, thoughts second.",
     suggestions: "Heavy limbs, slow warm breath, 'the day is filed; nothing needs me until morning.'",
@@ -130,7 +128,6 @@ export const HYPNOSIS_TOPICS: HypnosisTopic[] = [
     purpose: "Rehearse the conversation you're avoiding — opening line, their worst response, your regulated reply — until avoidance loses its grip.",
     suggestions: "'Clear is kind'; say the true sentence early; their reaction is theirs to have; stay in your chair.",
     imagery: "Two chairs in a quiet room: the talk run three times — easy, hard, and real — your voice level in all three.", length: "15 min" },
-  // ── Future-pacing (8) ─────────────────────────────────────────────────────
   { id: "ninety-day-rehearsal", title: "90-Day Goal Rehearsal", family: "future", target: "Any 90-day goal",
     purpose: "Classic future-pacing: live a day, ninety days out, with the goal already achieved — in enough sensory detail that the path back to today feels obvious.",
     suggestions: "'This is what done feels like'; walk backward from the achieved day to today's single next action.",
@@ -163,7 +160,6 @@ export const HYPNOSIS_TOPICS: HypnosisTopic[] = [
     purpose: "Future-pace one year of actually running your profile's plan — the weak line raised, the feedback loop kept, the compounding felt.",
     suggestions: "'Thirty minutes at lunch, five days a week'; see the 30-day re-maps stacking into a different year.",
     imagery: "Twelve monthly maps of your own mind laid in a row — watching one line rise across them like a sunrise.", length: "12–15 min" },
-  // ── Habit support (8) ─────────────────────────────────────────────────────
   { id: "urge-surfing", title: "Urge Surfing", family: "habit", target: "Any craving or urge",
     purpose: "The classic urge-surfing protocol in session form: ride the wave of a craving to its crest and down the far side without acting.",
     suggestions: "'Urges peak and pass in minutes — I can outlast weather'; locate it in the body; breathe at it.",
@@ -196,7 +192,6 @@ export const HYPNOSIS_TOPICS: HypnosisTopic[] = [
     purpose: "Rehearse a real decompression that arrives BEFORE the default pour — so the unwind need gets met on purpose. (Habit support for the autopilot pattern — dependence is clinical territory: see a professional.)",
     suggestions: "'What I want is the exhale, and I can pour that straight'; ritual, glass, breath — contents optional.",
     imagery: "The evening's first ten minutes rebuilt: the chair, the music, the long exhale arriving BEFORE any bottle decision.", length: "12 min" },
-  // ── Recovery & processing (8) ─────────────────────────────────────────────
   { id: "post-conflict-cooldown", title: "Post-Conflict Cooldown", family: "recover", target: "After an argument",
     purpose: "The half-hour-after session: discharge the adrenaline, reclaim your side of it, and choose the repair move.",
     suggestions: "'I can be right later; I can be regulated now'; find your 10 percent; plan one repair sentence.",

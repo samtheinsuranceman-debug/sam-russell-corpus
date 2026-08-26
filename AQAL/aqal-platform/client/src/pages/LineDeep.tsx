@@ -1,8 +1,7 @@
 // ============================================================
 // LINE DEEP PAGES — /line/:slug/:sub (32 × 6 = 192 URLs):
 // at-work · in-relationships · history · raise-it · self-check
-// · never-tested. Composed from LINE_MEANING, LINE_ENCYCLOPEDIA,
-// LINE_ROLE, keystone practices, and the mapped protocols.
+// · never-tested. Composed from the current line data sources.
 // ============================================================
 import { useParams } from "wouter";
 import { lineFromSlug, lineSlug, LINE_SUBPAGES, type LineSubpageId, therapySlug, therapyDisplay } from "@shared/seo";
@@ -25,13 +24,13 @@ const SUB_LABELS: Record<LineSubpageId, string> = {
   "at-work": "At work", "in-relationships": "In relationships", history: "The history",
   "raise-it": "Raising it", "self-check": "Self-check", "never-tested": "Never tested",
 };
-const H1S: Record<LineSubpageId, (n: string) => string> = {
-  "at-work": (n) => `${n} intelligence at work`,
-  "in-relationships": (n) => `${n} intelligence in your relationships`,
-  history: (n) => `The history of ${n} intelligence`,
-  "raise-it": (n) => `How to raise your ${n} line`,
-  "self-check": (n) => `The honest ${n} self-check`,
-  "never-tested": (n) => `Why your ${n} line was never tested`,
+const H1S: Record<LineSubpageId, (name: string) => string> = {
+  "at-work": (name) => `${name} intelligence at work`,
+  "in-relationships": (name) => `${name} intelligence in your relationships`,
+  history: (name) => `The history of ${name} intelligence`,
+  "raise-it": (name) => `How to raise your ${name} line`,
+  "self-check": (name) => `The honest ${name} self-check`,
+  "never-tested": (name) => `Why your ${name} line was never tested`,
 };
 
 export default function LineDeep() {
@@ -39,16 +38,16 @@ export default function LineDeep() {
   const name = lineFromSlug(params.slug ?? "");
   const sub = (LINE_SUBPAGES as readonly string[]).includes(params.sub ?? "") ? (params.sub as LineSubpageId) : undefined;
   if (!name || !sub) return <NotFound />;
-  const m = LINE_MEANING[name];
-  const e = LINE_ENCYCLOPEDIA[name];
+  const meaning = LINE_MEANING[name];
+  const encyclopedia = LINE_ENCYCLOPEDIA[name];
   const role = LINE_ROLE[name];
-  if (!m || !e || !role) return <NotFound />;
+  if (!meaning || !encyclopedia || !role) return <NotFound />;
   const base = `/line/${lineSlug(name)}`;
-  const eng = engineName(name);
-  const keystone = keystoneForLine(eng);
+  const engine = engineName(name);
+  const keystone = keystoneForLine(engine);
   const rank = { PRIMARY: 0, SECONDARY: 1, TERTIARY: 2 } as Record<string, number>;
-  const protocols = THERAPY_LINE_MAP.filter((t) => t.line === eng)
-    .sort((x, y) => rank[x.role] - rank[y.role]).slice(0, 4);
+  const protocols = THERAPY_LINE_MAP.filter((therapy) => therapy.line === engine)
+    .sort((left, right) => rank[left.role] - rank[right.role]).slice(0, 4);
 
   const sections: Record<LineSubpageId, React.ReactNode> = {
     "at-work": (
@@ -69,7 +68,7 @@ export default function LineDeep() {
           keeps happening to you, that's field evidence of the line. If you keep routing those problems AWAY, read on.
         </Body>
         <H2>What the weak version costs professionally</H2>
-        <Card accent={EMBER}><CardText>{m.cost}</CardText></Card>
+        <Card accent={EMBER}><CardText>{meaning.cost}</CardText></Card>
         <H2>The pairing move</H2>
         <Body>
           Lines compound at work — {name} multiplied by the right partner line is worth more than either doubled.
@@ -86,15 +85,15 @@ export default function LineDeep() {
           usually without anyone in the house having a name for what they're experiencing. Here's that name.
         </Body>
         <H2>What the people around you experience</H2>
-        <Card accent={CHAMPAGNE}><CardText>{m.others}</CardText></Card>
+        <Card accent={CHAMPAGNE}><CardText>{meaning.others}</CardText></Card>
         <H2>Two people you may recognize at your own table</H2>
         <Card accent={JADE}>
-          <Label color={JADE}>{m.personas[0].tag}</Label>
-          <CardText>{m.personas[0].text}</CardText>
+          <Label color={JADE}>{meaning.personas[0].tag}</Label>
+          <CardText>{meaning.personas[0].text}</CardText>
         </Card>
         <Card accent={JADE}>
-          <Label color={JADE}>{m.personas[1].tag}</Label>
-          <CardText>{m.personas[1].text}</CardText>
+          <Label color={JADE}>{meaning.personas[1].tag}</Label>
+          <CardText>{meaning.personas[1].text}</CardText>
         </Card>
         <H2>The couple move</H2>
         <Body>
@@ -113,17 +112,17 @@ export default function LineDeep() {
           it took the testing industry to ignore it anyway. Here's {name}'s.
         </Body>
         <H2>When it entered the map</H2>
-        <Card accent={CHAMPAGNE}><CardText>{m.history}</CardText></Card>
+        <Card accent={CHAMPAGNE}><CardText>{meaning.history}</CardText></Card>
         <H2>The researchers behind it</H2>
-        {e.researchers.map((r) => (
-          <Card key={r.name} accent={JADE}>
-            <Label color={JADE}>{r.name}</Label>
-            <CardText>{r.note}</CardText>
+        {encyclopedia.researchers.map((researcher) => (
+          <Card key={researcher.name} accent={JADE}>
+            <Label color={JADE}>{researcher.name}</Label>
+            <CardText>{researcher.note}</CardText>
           </Card>
         ))}
         <H2>How it's measured — and how rarely</H2>
         <Body>
-          {e.measurement} {e.everTested} That gap — a line with real research behind it that almost nobody has ever
+          {encyclopedia.measurement} {encyclopedia.everTested} That gap — a line with real research behind it that almost nobody has ever
           been scored on — is the whole reason <Gold href={`${base}/never-tested`}>the never-tested page</Gold> exists,
           and the whole reason this platform does.
         </Body>
@@ -145,23 +144,22 @@ export default function LineDeep() {
           </>
         )}
         <H2>The mapped protocols</H2>
-        {protocols.map((p) => (
-          <Card key={p.therapy} accent={p.role === "PRIMARY" ? JADE : CHAMPAGNE}>
-            <Label color={p.role === "PRIMARY" ? JADE : CHAMPAGNE}>{p.role}</Label>
+        {protocols.map((protocol) => (
+          <Card key={protocol.therapy} accent={protocol.role === "PRIMARY" ? JADE : CHAMPAGNE}>
+            <Label color={protocol.role === "PRIMARY" ? JADE : CHAMPAGNE}>{protocol.role}</Label>
             <CardText>
-              <Gold href={`/protocol/${therapySlug(p.therapy)}`}>{therapyDisplay(p.therapy).split(" (")[0]}</Gold>
-              {" — "}{p.capacity}
+              <Gold href={`/protocol/${therapySlug(protocol.therapy)}`}>{therapyDisplay(protocol.therapy).split(" (")[0]}</Gold>
+              {" — "}{protocol.capacity}
             </CardText>
           </Card>
         ))}
         <H2>What raising it buys</H2>
-        <Body>{e.benefit}</Body>
+        <Body>{encyclopedia.benefit}</Body>
         <Body>
           The sequencing rule from the <Gold href="/protocols">library</Gold> applies here: one primary protocol at a
           time, at full dose, with the keystone practice underneath it. And before spending a season on this line,
-          confirm it's actually your weakest load-bearing one — <Gold href="/weakness-finder">the Master Weakness
-          Finder</Gold> exists because disciplined effort aimed at the wrong line is the most expensive mistake in
-          self-development.
+          confirm it's actually your weakest load-bearing one — <Gold href="/weakness-finder">the Master Weakness Finder</Gold>
+          exists because disciplined effort aimed at the wrong line is the most expensive mistake in self-development.
         </Body>
       </>
     ),
@@ -173,15 +171,15 @@ export default function LineDeep() {
           measurement is 27 spoken questions away.
         </Body>
         <H2>The inside experience of the strong version</H2>
-        <Card accent={JADE}><CardText>{m.lived}</CardText></Card>
+        <Card accent={JADE}><CardText>{meaning.lived}</CardText></Card>
         <H2>Five honest questions</H2>
         <Body>
           Read these slowly. <b>One:</b> do people repeatedly bring you {role.arena.split(",")[0].trim()} problems
           without being asked? Routing is field evidence. <b>Two:</b> when you read the strong-version description
           above, did it feel like a description of you — or an aspiration? Those feel different, and you know which
           one you felt. <b>Three:</b> in the last month, name one concrete outcome this line produced. Strong lines
-          leave receipts. <b>Four:</b> would the three people who know you best say this is your line? (Asking them is
-          the cheapest audit available.) <b>Five:</b> have you ever been formally scored on it? {e.everTested}
+          leave receipts. <b>Four:</b> would the three people who know you best say this is your line? Asking them is
+          the cheapest audit available. <b>Five:</b> have you ever been formally scored on it? {encyclopedia.everTested}
         </Body>
         <H2>What the mirror can't do</H2>
         <Body>
@@ -196,23 +194,23 @@ export default function LineDeep() {
     "never-tested": (
       <>
         <Body>
-          Here's a number to sit with: out of a thousand adults, our estimate is that about {e.testedOdds} have EVER
+          Here's a number to sit with: out of a thousand adults, our estimate is that about {encyclopedia.testedOdds} have EVER
           been formally tested on the {name} line. Presented as an estimate, built from testing-industry reach —
           school, military, corporate, clinical — not a survey. This page explains the gap.
         </Body>
         <H2>Why the tests skipped it</H2>
-        <Body>{e.measurement} {e.everTested}</Body>
+        <Body>{encyclopedia.measurement} {encyclopedia.everTested}</Body>
         <H2>The IQ blind spot, precisely</H2>
-        <Card accent={CHAMPAGNE}><CardText>{e.gNote}</CardText></Card>
+        <Card accent={CHAMPAGNE}><CardText>{encyclopedia.gNote}</CardText></Card>
         <Body>
           Translation: your IQ score — whatever it was — carried little to no information about this line. Not
           because IQ is fake, but because it measures a different slice. A sorting system that graded you at
           seventeen on four lines never looked here.
         </Body>
         <H2>What never measuring it has been costing</H2>
-        <Card accent={EMBER}><CardText>{m.cost}</CardText></Card>
+        <Card accent={EMBER}><CardText>{meaning.cost}</CardText></Card>
         <H2>What measuring it would change</H2>
-        <Body>{m.forYou}</Body>
+        <Body>{meaning.forYou}</Body>
       </>
     ),
   };
@@ -225,8 +223,9 @@ export default function LineDeep() {
     >
       <SiblingNav base={base} subs={LINE_SUBPAGES} current={sub} labels={SUB_LABELS} />
       {sections[sub]}
-      <DeepDisclosure text={`Line profiles compose the cited research record with our framework's construals, and tested-rate figures are labeled estimates.`} />
+      <DeepDisclosure text="Line profiles compose the cited research record with our framework's construals, and tested-rate figures are labeled estimates." />
       <DeepCta heading={`Where does your ${name} line actually stand?`} body="Recognition is not measurement. 27 spoken questions, eight AI graders, all 32 lines — including this one." />
     </DeepFrame>
   );
 }
+

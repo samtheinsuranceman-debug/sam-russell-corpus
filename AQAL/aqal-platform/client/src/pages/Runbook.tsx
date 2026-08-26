@@ -28,7 +28,7 @@ const PLAYS: Play[] = [
     when: "A member says the mic won't record, or answers come back as gibberish/placeholder text.",
     steps: [
       "First, rule out the member's browser: the /help page's first answer covers mic permissions — send them there.",
-      "If it's everyone, not one person: open /launch-check and look at the STT row. \"mock\" means the speech-to-text key is missing from the deployment environment — that's a Manus fix (set the key, redeploy), not a code bug.",
+      "If it's everyone, not one person: open /launch-check and look at the STT row. \"mock\" means the speech-to-text key is missing from the production environment — update it in Settings → Secrets, save a verified checkpoint, and publish that checkpoint; it is not a browser bug.",
       "Members are never stuck: they can upload a voice-memo file or a typed .txt transcript instead — all routes score identically.",
     ],
   },
@@ -36,8 +36,8 @@ const PLAYS: Play[] = [
     title: "Emails aren't arriving (verification, password reset, support)",
     when: "Members say they never got the link, or you stop receiving support messages.",
     steps: [
-      "Check /launch-check → the email row. \"mock\" means RESEND_API_KEY is missing from the environment — emails are only being logged, not sent. Manus sets the key.",
-      "If the key is set but mail lands in spam: the domain's SPF/DKIM/DMARC DNS records need to be completed (Manus task, one-time).",
+      "Check /launch-check → the email row. \"mock\" means RESEND_API_KEY is missing from the environment — emails are only being logged, not sent. Sam sets or rotates the key in Settings → Secrets.",
+      "If the key is set but mail lands in spam: complete the sender domain's SPF/DKIM/DMARC records in Sam's DNS account, following the email provider's exact values.",
       "Password reset and verification links expire in 1 hour — a member with an old link should just request a fresh one.",
     ],
   },
@@ -46,7 +46,7 @@ const PLAYS: Play[] = [
     when: "A member finished all 27 answers over an hour ago and still sees the deliberation screen.",
     steps: [
       "Open /launch-check → \"Panel: live\" shows how many of the 8 labs are responding. Fewer than 8 usually means one provider's key expired or their service is down.",
-      "The keySource column names which environment variable each lab reads — tell Manus which one to check or rotate.",
+      "The keySource column names which environment variable each lab reads — check or rotate that value in Settings → Secrets, then publish a verified checkpoint.",
       "Scoring tolerates missing labs; total failure (0 live) means keys were never set in this deployment.",
     ],
   },
@@ -54,17 +54,19 @@ const PLAYS: Play[] = [
     title: "The whole site is down",
     when: "joinaqal.com won't load at all.",
     steps: [
-      "This layer is entirely Manus's: hosting, domain, and deploys live in the Manus project. Message Manus: \"site down, restart the deployment.\"",
+      "First identify the page: a generic maintenance screen means the hosting visibility is Maintenance or Private, not an AQAL application crash. Open Dashboard/Settings → General, set visibility to Public, and publish the newest verified checkpoint.",
+      "If the page is an AQAL error instead, inspect the latest production logs in the project Dashboard and restore the last known-good checkpoint from Version history if needed.",
+      "In Settings → Domains, confirm both joinaqal.com and www.joinaqal.com remain attached. Do not replace the purchased domain; www.joinaqal.com is the canonical address.",
       "After it's back, open /launch-check and run the full check before announcing anything.",
     ],
   },
   {
     title: "Deploying an update",
-    when: "Claude hands you a zip (full bundle or small patch).",
+    when: "A developer provides a reviewed release bundle or patch.",
     steps: [
-      "Give the zip to Manus with its APPLY_INSTRUCTIONS — the instructions always include the check that proves he's applying it to the right base.",
-      "Manus's order is always: backup the database → apply files → pnpm db:push (only when the instructions say the database changed) → build → deploy.",
-      "Afterward, Manus screenshots /launch-check back to you. All green (or explained) = done. Never accept \"deployed\" without the screenshot.",
+      "Keep the bundle in Sam's release archive and verify its change notes against the current project checkpoint before applying it.",
+      "Sam's release order is always: backup the database → apply reviewed files → migrate only an approved schema change → run checks and tests → save a checkpoint → review Preview → Publish.",
+      "Afterward, save a screenshot of /launch-check in Sam's release archive. All green, or every exception explained, means the deployment is complete.",
     ],
   },
   {
@@ -87,8 +89,8 @@ const PLAYS: Play[] = [
     title: "Rotating a leaked or expired API key",
     when: "A key was pasted somewhere public, or a provider disabled one.",
     steps: [
-      "Rule one: keys live ONLY in the Manus deployment environment. Never in chat, never in the code, never in a zip.",
-      "Generate the new key at the provider's console, give it to Manus to set as the environment variable, then have Manus restart. /launch-check confirms the lab is live again.",
+      "Rule one: keys live only in Sam's sealed deployment environment or password manager. Never in chat, never in the code, and never in a zip.",
+      "Generate the replacement in the provider's console, update it through Settings → Secrets, then publish a verified checkpoint. /launch-check confirms the lab is live again.",
       "If the old key was exposed anywhere, revoke it at the provider — rotation without revocation fixes nothing.",
     ],
   },
@@ -96,7 +98,7 @@ const PLAYS: Play[] = [
     title: "Backups and the restore drill",
     when: "Before every schema-changing deploy, and once a month regardless.",
     steps: [
-      "Manus owns backups. The standing order: automatic daily database backups, and a monthly RESTORE DRILL — actually restoring one backup to a scratch database and checking a member's data is intact.",
+      "Sam owns backups. Keep automatic daily, weekly, and monthly database backups plus a monthly restore drill to a scratch database, then verify representative member data.",
       "A backup that has never been restored is a hope, not a backup. Ask for the drill result monthly.",
     ],
   },
@@ -115,10 +117,9 @@ export default function Runbook() {
           When it breaks, do this.
         </h1>
         <p style={{ color: CREAM2, fontSize: "14.5px", lineHeight: 1.7, marginBottom: "6px" }}>
-          One page, no jargon. The division of labor behind it:{" "}
-          <b style={{ color: CREAM }}>Claude writes and merges the code</b> and hands over zips with instructions;{" "}
-          <b style={{ color: CREAM }}>Manus owns the live deployment</b> — hosting, database, environment keys, DNS,
-          backups. When something breaks, this page tells you which of the two to point at.
+          One page, no jargon. <b style={{ color: CREAM }}>Sam owns the live deployment</b> — source releases,
+          hosting, database, environment keys, DNS, and backups. When something breaks, this page identifies the
+          owner-controlled account and the exact recovery action.
         </p>
         <p style={{ ...mono, fontSize: "10.5px", color: MUTED, marginBottom: "26px" }}>
           Daily glance: <Link href="/launch-check" style={{ color: CHAMPAGNE }}>/launch-check</Link> (all green?) ·

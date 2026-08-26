@@ -8,13 +8,12 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { GoDeeper } from "@/components/DeepPage";
-import { PAIR_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { LINE_ENCYCLOPEDIA, G_BAND_LABEL } from "@/lib/lineEncyclopedia";
 import { LINE_DEEP } from "@/lib/lineDeepDives";
 import { LINE_ROLE } from "@/lib/linePairs";
-import { LINE_NAMES, lineSlug, pairFromSlug, pairSlug } from "@shared/seo";
+import { LINE_NAMES, PAIR_SUBPAGES, lineSlug, pairFromSlug, pairSlug } from "@shared/seo";
 import NotFound from "@/pages/NotFound";
 
 const INK = "#141009";

@@ -617,7 +617,7 @@ function ResearchLibraryTab() {
           <div className="font-display text-xl font-semibold mb-1">The Five New Lines</div>
           <p className="text-[12.5px] text-muted-foreground mb-3">Financial, Humor, Seductive, Parental, and Community-Founding — annotated, source by source.</p>
           <div className="font-mono text-[10px] text-muted-foreground mb-3">37 sources · 12 pages</div>
-          <a href="/manus-storage/AQALResearchLibraryVol1_0c460f0e.pdf" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-mono text-[10.5px] tracking-[0.10em] uppercase text-primary border border-primary/40 rounded px-3 py-2 hover:bg-primary/5 transition-colors">
+          <a href="/aqal-storage/AQALResearchLibraryVol1_0c460f0e.pdf" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-mono text-[10.5px] tracking-[0.10em] uppercase text-primary border border-primary/40 rounded px-3 py-2 hover:bg-primary/5 transition-colors">
             <FileText className="w-3 h-3" /> View PDF
           </a>
         </div>
@@ -626,7 +626,7 @@ function ResearchLibraryTab() {
           <div className="font-display text-xl font-semibold mb-1">The Twenty-Seven Classical &amp; Applied Lines</div>
           <p className="text-[12.5px] text-muted-foreground mb-3">From Logical to Street-Smarts — every remaining line, sourced across five families.</p>
           <div className="font-mono text-[10px] text-muted-foreground mb-3">81 sources · 18 pages</div>
-          <a href="/manus-storage/AQALResearchLibraryVol2_77564b0b.pdf" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-mono text-[10.5px] tracking-[0.10em] uppercase text-primary border border-primary/40 rounded px-3 py-2 hover:bg-primary/5 transition-colors">
+          <a href="/aqal-storage/AQALResearchLibraryVol2_77564b0b.pdf" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-mono text-[10.5px] tracking-[0.10em] uppercase text-primary border border-primary/40 rounded px-3 py-2 hover:bg-primary/5 transition-colors">
             <FileText className="w-3 h-3" /> View PDF
           </a>
         </div>
@@ -650,6 +650,10 @@ function BehavioralTrackerCard({ user }: { user: any }) {
   const [days, setDays] = useState(30);
   const [journal, setJournal] = useState("");
   const [analysis, setAnalysis] = useState<any>(null);
+  const [story, setStory] = useState("");
+  const [storyRating, setStoryRating] = useState(5);
+  const [storyConsent, setStoryConsent] = useState(false);
+  const [storySubmitted, setStorySubmitted] = useState(false);
   const isFree = !user?.membershipTier || user?.membershipTier === "free";
   const docQuery = trpc.tracker.doc.useQuery({ days }, { enabled: !isFree });
   const cyclesQuery = trpc.tracker.cycles.useQuery(undefined, { enabled: !isFree });
@@ -665,6 +669,14 @@ function BehavioralTrackerCard({ user }: { user: any }) {
       toast.success("Cycle logged — profile updated (self-reported).");
     },
     onError: () => toast.error("Could not process the journal. Try again."),
+  });
+  const submitStory = trpc.testimonials.submit.useMutation({
+    onSuccess: () => {
+      setStorySubmitted(true);
+      setStory("");
+      toast.success("Thank you — your story was submitted for review.");
+    },
+    onError: () => toast.error("Could not submit your story. Try again."),
   });
 
   function downloadDoc() {
@@ -754,6 +766,43 @@ function BehavioralTrackerCard({ user }: { user: any }) {
                 </div>
               )}
               {analysis.disclaimer && <p className="text-[11px] text-muted-foreground/70">{analysis.disclaimer}</p>}
+              {analysis.testimonialInvite && !storySubmitted && (
+                <div className="rounded-md border border-emerald-400/20 bg-emerald-400/[0.04] p-4 space-y-3">
+                  <div>
+                    <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-emerald-300 mb-1">Your movement, in your words</p>
+                    <p className="text-[13px] text-muted-foreground">
+                      You reported positive movement this cycle. If you want, describe what changed. AQAL never writes or edits your story, and nothing appears publicly without your consent and review.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2" aria-label="Rating">
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <button key={rating} type="button" onClick={() => setStoryRating(rating)}
+                        className={`p-1 rounded transition-colors ${rating <= storyRating ? "text-primary" : "text-muted-foreground/40"}`}
+                        aria-label={`${rating} star${rating === 1 ? "" : "s"}`}>
+                        <Star className="w-4 h-4" fill={rating <= storyRating ? "currentColor" : "none"} />
+                      </button>
+                    ))}
+                  </div>
+                  <Textarea value={story} onChange={(event) => setStory(event.target.value)} rows={4} maxLength={1000}
+                    placeholder="What changed in your behavior, outcome, or understanding?" className="bg-background/40" />
+                  <label className="flex items-start gap-2 text-[11px] text-muted-foreground">
+                    <input type="checkbox" checked={storyConsent} onChange={(event) => setStoryConsent(event.target.checked)} className="mt-0.5" />
+                    AQAL may display my exact words and rating publicly after moderation. Leaving this unchecked records private product feedback only.
+                  </label>
+                  <Button size="sm" disabled={submitStory.isPending || story.trim().length < 20}
+                    onClick={() => submitStory.mutate({
+                      rating: storyRating,
+                      quote: story.trim(),
+                      consentToDisplay: storyConsent,
+                      moment: "tracker_positive_cycle",
+                    })}>
+                    {submitStory.isPending ? "Submitting…" : "Submit my words"}
+                  </Button>
+                </div>
+              )}
+              {storySubmitted && (
+                <p className="text-[12px] text-emerald-300">Your words were received and remain pending review.</p>
+              )}
             </div>
           )}
 

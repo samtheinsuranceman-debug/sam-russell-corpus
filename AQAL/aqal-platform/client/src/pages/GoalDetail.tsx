@@ -7,11 +7,10 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { GoDeeper } from "@/components/DeepPage";
-import { GOAL_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
-import { goalFromSlug, GOAL_KEYWORDS, goalSlug, LINE_NAMES, lineSlug } from "@shared/seo";
+import { goalFromSlug, GOAL_KEYWORDS, GOAL_SUBPAGES, goalSlug, LINE_NAMES, lineSlug } from "@shared/seo";
 import NotFound from "@/pages/NotFound";
 
 const INK = "#141009";

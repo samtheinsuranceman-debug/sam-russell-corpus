@@ -5,7 +5,7 @@
 // Swap seam mirrors the LLM/STT/storage providers: real when configured,
 // safe deterministic fallback otherwise.
 
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 import { RESEND_API_KEY, EMAIL_FROM, emailProvider } from "./config";
 
 export type SendEmailResult = { ok: boolean; mocked: boolean; error?: string };
@@ -27,7 +27,13 @@ export async function sendEmail(
         Authorization: `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from: EMAIL_FROM, to, subject, html, ...(opts?.headers ? { headers: opts.headers } : {}) }),
+      body: JSON.stringify({
+        from: EMAIL_FROM,
+        to,
+        subject,
+        html,
+        ...(opts?.headers ? { headers: opts.headers } : {}),
+      }),
     });
     if (!res.ok) {
       const body = await res.text().catch(() => "");
@@ -39,30 +45,46 @@ export async function sendEmail(
   }
 }
 
-// ── CAN-SPAM unsubscribe plumbing ─────────────────────────────────────────
-// Every marketing/nudge email carries a working, no-login unsubscribe link
-// (and RFC 8058 one-click headers). The link is an HMAC over the address, so
-// it can't be forged to opt other people out. Transactional mail (verify,
-// reset, results, support) is exempt and never carries the footer.
-
-export function unsubscribeToken(email: string): string {
-  const secret = process.env.JWT_SECRET || "aqal-unsubscribe";
-  return createHmac("sha256", secret).update(email.trim().toLowerCase()).digest("hex").slice(0, 32);
+function unsubscribeKey(): Buffer {
+  const secret = process.env.JWT_SECRET?.trim();
+  if (!secret) throw new Error("JWT_SECRET is required for unsubscribe tokens");
+  return createHash("sha256").update(`aqal-unsubscribe:${secret}`).digest();
 }
 
-export function verifyUnsubscribeToken(email: string, token: string): boolean {
-  const expected = Buffer.from(unsubscribeToken(email));
-  const got = Buffer.from(String(token));
-  return got.length === expected.length && timingSafeEqual(expected, got);
+/** Encrypt the normalized address into one authenticated opaque URL token. */
+export function createUnsubscribeToken(email: string): string {
+  const normalized = email.trim().toLowerCase();
+  if (!normalized || normalized.length > 320) throw new Error("Valid email is required");
+  const iv = randomBytes(12);
+  const cipher = createCipheriv("aes-256-gcm", unsubscribeKey(), iv);
+  const encrypted = Buffer.concat([cipher.update(normalized, "utf8"), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return Buffer.concat([iv, tag, encrypted]).toString("base64url");
+}
+
+export function readUnsubscribeToken(token: string): string | null {
+  try {
+    const packed = Buffer.from(String(token), "base64url");
+    if (packed.length < 29) return null;
+    const iv = packed.subarray(0, 12);
+    const tag = packed.subarray(12, 28);
+    const encrypted = packed.subarray(28);
+    const decipher = createDecipheriv("aes-256-gcm", unsubscribeKey(), iv);
+    decipher.setAuthTag(tag);
+    const email = Buffer.concat([decipher.update(encrypted), decipher.final()]).toString("utf8");
+    return email && email.length <= 320 ? email : null;
+  } catch {
+    return null;
+  }
 }
 
 export function unsubscribeUrl(appUrl: string, email: string): string {
   const base = (appUrl || "https://www.joinaqal.com").replace(/\/$/, "");
-  return `${base}/api/unsubscribe?e=${encodeURIComponent(email)}&t=${unsubscribeToken(email)}`;
+  return `${base}/api/unsubscribe?t=${encodeURIComponent(createUnsubscribeToken(email))}`;
 }
 
 export function withUnsubscribeFooter(html: string, url: string): string {
-  const footer = `<p style="color:#6f6a60;font-size:11px;margin-top:18px;">Don't want these emails? <a href="${url}" style="color:#8c857a;">Unsubscribe</a> — one click, no login, honored immediately. Account emails (receipts, password resets) still work.</p>`;
+  const footer = `<p style="color:#6f6a60;font-size:11px;margin-top:18px;">Don't want these emails? <a href="${url}" style="color:#8c857a;">Unsubscribe</a>. Account emails such as receipts, verification, password reset, and requested results still work.</p>`;
   const close = "</div></body></html>";
   return html.includes(close) ? html.replace(close, `${footer}${close}`) : html + footer;
 }
@@ -191,6 +213,6 @@ export function dailyCheckinEmailHtml(opts: { dayNumber?: number; recoveryLine?:
     <h1 style="font-size:22px;font-weight:600;margin:0 0 12px;">Did you complete today's tracking?</h1>
     <p style="color:#b9b2a6;font-size:15px;line-height:1.6;margin:0;">Just reply <b style="color:#e0c68c;">Y</b> or <b style="color:#e0c68c;">N</b>. That's the whole thing. Showing up beats getting it perfect.</p>
     ${anchor}
-    <p style="color:#6f6a60;font-size:12px;margin-top:26px;">You asked for these for your first 30 days. The unsubscribe link below turns them off any time.</p>
+    <p style="color:#6f6a60;font-size:12px;margin-top:26px;">You asked for these for your first 30 days. Reply STOP to turn them off any time.</p>
   </div></body></html>`;
 }

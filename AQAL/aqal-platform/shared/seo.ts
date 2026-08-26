@@ -27,7 +27,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/assessment": {
     title: "The 32-Line Intelligence Assessment — AQAL",
     description:
-      "27 spoken questions. Eight AI models score all 32 intelligence lines and return your full cognitive map. Free for the first 10,000 founding members.",
+      "Answer 27 spoken questions. Eight AI models score all 32 intelligence lines and return your cognitive map, strengths, blind spots, and next steps.",
     short: "Speak 27 answers. Eight AIs map your entire mind.",
   },
   "/pricing": {
@@ -39,13 +39,13 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/sample-report": {
     title: "Sample Intelligence Report — See the Deliverable — AQAL",
     description:
-      "An example AQAL report: 32 scored intelligence lines, master strength and weakness, prescriptions, and the first-week plan. Fictional member, real format.",
+      "Explore a complete example AQAL report with 32 scored intelligence lines, a master strength and weakness, prescriptions, and a first-week plan.",
     short: "Hold the map of a whole mind. Yours is next.",
   },
   "/lines": {
     title: "The 32 Lines of Intelligence, Defined — AQAL",
     description:
-      "Every intelligence line we measure — from Logical and Spatial to Interoceptive, Adversarial, and Street Smarts — defined with the research behind each.",
+      "Explore all 32 intelligence lines, from Logical and Spatial to Interoceptive, Adversarial, and Street Smarts, with plain-language definitions and research.",
     short: "School graded 4 intelligences. Meet all 32.",
   },
   "/science": {
@@ -87,7 +87,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/membership": {
     title: "What Membership Includes — AQAL Intelligence",
     description:
-      "Beyond the assessment: goal clocks, protocols, the Black Box crash forensics, beliefs work, pulse checks, and a village of members who think like you don't.",
+      "Beyond the assessment: goal clocks, monthly protocols, Black Box crash forensics, beliefs work, pulse checks, and a member community built for unusual minds.",
     short: "Goal clocks, crash forensics, and your village.",
   },
   "/help": {
@@ -105,7 +105,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/terms": {
     title: "Terms of Service — AQAL Intelligence",
     description:
-      "Plain-language terms: founding members free for life in writing, private messages never read, data export and deletion rights, and the Black Box contract.",
+      "Read AQAL's plain-language terms covering founding access, private messages, data export and deletion, payments, conduct, and the Black Box privacy contract.",
     short: "Free-for-life in writing. Your data, your rules.",
   },
   "/privacy": {
@@ -117,20 +117,20 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/black-box": {
     title: "The Black Box — Crash Forensics for Your Life — AQAL",
     description:
-      "Record your biggest failures once, honestly. The panel extracts your Crash Signature — when X, you do Y, which causes Z — and builds your prevention plan.",
+      "Record a major failure once. The panel extracts your Crash Signature — when X, you do Y, causing Z — and builds practical prevention architecture.",
     short: "Your crashes share a signature. We extract it.",
   },
   "/rankings": {
-    title: "The Protocol Rankings — All 156 Scored 0–100 — AQAL",
+    title: "Protocol Rankings — All 156 Scored 0–100 — AQAL",
     description:
-      "Every protocol in the library ranked by one open formula: 40% evidence, 20% durability, 15% breadth, 15% speed, 10% ease. Components shown, nothing hidden.",
-    short: "156 protocols. One open formula. Ranked.",
+      "All 156 mapped protocols scored by AQAL's open editorial formula: evidence 40%, durability 20%, breadth 15%, speed 15%, ease 10%. Not customer ratings.",
+    short: "156 protocols. One transparent editorial formula.",
   },
   "/hypnosis": {
-    title: "The Hypnosis Library — 50 Guided Sessions — AQAL",
+    title: "Hypnosis Library — 50 Overt Guided Sessions — AQAL",
     description:
-      "Fifty overt self-hypnosis and mental-rehearsal sessions — sleep, focus, courage, follow-through — honestly framed, mapped to the lines and goals they serve.",
-    short: "50 guided sessions. Overt, honest, mapped.",
+      "Fifty overt, voluntary mental-rehearsal and relaxation outlines with every planned suggestion disclosed. Non-medical, no guarantees, reviewed audio pending.",
+    short: "50 overt rehearsal outlines. Every theme disclosed.",
   },
   "/archetypes/research": {
     title: "The Science Behind the Archetypes — AQAL",
@@ -152,12 +152,12 @@ export const PAGE_META: Record<string, PageMeta> = {
   },
   "/login": {
     title: "Sign In — AQAL Intelligence",
-    description: "Sign in to your AQAL member portal — your 32-line profile, goal clocks, protocols, and Black Box. Founding members use the password chosen at claim.",
+    description: "Sign in securely to your AQAL member portal to access your 32-line profile, goals, protocols, messages, assessment history, and private Black Box.",
     short: "The control room for your mind. Sign in.",
   },
   "/reset-password": {
     title: "Reset Your Password — AQAL Intelligence",
-    description: "Locked out? Request a secure reset link for your AQAL account — it lands in your verified email and stays valid for one hour. Check spam, then support.",
+    description: "Request a secure, single-use password reset link for your AQAL account. The link expires after one hour and does not reveal whether an address is registered.",
     short: "Locked out? One secure link. One hour.",
   },
   "/ecological-interventions": {
@@ -221,13 +221,13 @@ export const PAGE_META: Record<string, PageMeta> = {
     short: "Your IQ is 4 lines of 32. Measure the rest.",
   },
   "/protocols": {
-    title: "Protocol Library — 156 Evidence-Backed Interventions — AQAL",
+    title: "Protocol Library — 156 Evidence-Backed Interventions | AQAL",
     description:
       "Every protocol mapped to the intelligence lines it builds — EMDR, MBSR, DBT, ACT, and 152 more — each with the peer-reviewed study behind the mapping.",
     short: "156 proven protocols. One is built for your repair.",
   },
   "/pairs": {
-    title: "Power Combinations — 496 Intelligence Line Pairings — AQAL",
+    title: "Power Combinations — 496 Intelligence Line Pairings | AQAL",
     description:
       "Every two-line combination mapped: what each line gives the other, what the multiplication unlocks, and what half a pair quietly costs.",
     short: "496 pairings. One of them is your multiplier.",
@@ -247,7 +247,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/practices": {
     title: "The 54 Keystone Practices — Evidence-Tiered — AQAL",
     description:
-      "Sleep protection, implementation intentions, interoception training, and 51 more daily practices — each with its prescription and honest evidence tier.",
+      "Explore 54 daily practices, including sleep protection, implementation intentions, and interoception training, with prescriptions, research, and evidence tiers.",
     short: "54 keystone practices. Small doses, real returns.",
   },
 };
@@ -289,6 +289,8 @@ export function lineFromSlug(slug: string): string | undefined {
 // "EMDR (Shapiro)"). Names come from the therapy map so the sitemap can
 // never drift from the actual library.
 import { THERAPY_LINE_MAP } from "./therapyLineMap";
+import { THERAPY_KIND } from "./therapyKindMap";
+import { HYPNOSIS_IDS } from "./hypnosisTopics";
 
 export function therapyDisplay(name: string): string {
   return name.replace(/\s*™\s*/g, "").trim();
@@ -305,19 +307,25 @@ export function therapyFromSlug(slug: string): string | undefined {
   return THERAPY_NAMES.find((n) => therapySlug(n) === slug);
 }
 
-// Seven deep sub-pages under every protocol — /protocol/:slug/:sub —
-// each composed from the same authored data as the parent page
-// (therapyLineMap evidence, kind profiles, kind-level meaning), so
-// 156 × 7 = 1,092 pages that stay honest by construction.
+// Eleven authored deep pages beneath every protocol. Content is composed from
+// the protocol's mapped evidence plus kind-level playbooks, so the sitemap and
+// client router share one typed source of truth.
 export const PROTOCOL_SUBPAGES = [
-  "first-week", "evidence", "dose", "who-its-for", "mistakes", "results", "stack",
-  "score", "synergy", "atrophy", "daily-life",
+  "first-week",
+  "evidence",
+  "dose",
+  "who-its-for",
+  "mistakes",
+  "results",
+  "stack",
+  "score",
+  "synergy",
+  "atrophy",
+  "daily-life",
 ] as const;
 export type ProtocolSubpageId = (typeof PROTOCOL_SUBPAGES)[number];
 
-// ── The deep-page expansion (Aug 2026): sub-pages under every major
-// family, each composed from the same authored data as its parent and
-// carrying its own unique <60-char short + ≤60-char title (test-enforced).
+// Deep-page expansion: sub-pages under every major public content family.
 export const MYTH_SUBPAGES = ["feels-real", "receipts", "instead", "talk-someone-out"] as const;
 export type MythSubpageId = (typeof MYTH_SUBPAGES)[number];
 export const PAIR_SUBPAGES = ["collide", "train", "at-work"] as const;
@@ -445,6 +453,27 @@ export const CAPACITY_ONLY_LINES: string[] = [
   "Philosophical", "Reflective", "Resilient", "Tactical",
 ];
 
+// One ranked page per protocol-kind and intelligence-line combination that
+// actually exists in the evidence map. New mappings mint their own page.
+export const BEST_COMBOS: { kind: string; line: string }[] = (() => {
+  const seen = new Set<string>();
+  const out: { kind: string; line: string }[] = [];
+  for (const entry of THERAPY_LINE_MAP) {
+    const kind = THERAPY_KIND[entry.therapy] ?? "skill";
+    const key = `${kind}||${entry.line}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      out.push({ kind, line: entry.line });
+    }
+  }
+  return out.sort((a, b) => (a.kind + a.line).localeCompare(b.kind + b.line));
+})();
+
+export function bestComboFromSlug(kind: string, lineSlugStr: string): { kind: string; line: string } | undefined {
+  const line = engineLineFromSlug(lineSlugStr);
+  return line ? BEST_COMBOS.find((combo) => combo.kind === kind && combo.line === line) : undefined;
+}
+
 // Protocol-kind ids — mirrored from client/src/lib/therapyKinds.ts
 // KIND_PROFILES; the pageShorts test suite fails if the two drift.
 export const KIND_IDS: string[] = [
@@ -475,27 +504,6 @@ export function verdictFromSlug(slug: string): string | undefined {
 // Myth Museum exhibit ids — mirrored from client/src/lib/mythMuseum.ts;
 // the pageShorts test suite fails if the two drift.
 export const MYTH_IDS: string[] = ["phrenology","mesmerism","lobotomy","insulin-coma","orgone","trepanation-revival","facilitated-communication","recovered-memory","conversion-therapy","attachment-holding","cisd","scared-straight","dare-original","boot-camps","primal-scream","dianetics","attack-therapy","past-life-regression","polygraph","graphology","learning-styles","brain-gym","mozart-effect","ten-percent-brain","left-right-brain","subliminal-tapes","speed-reading","sleep-learning","brain-training","growth-mindset-overclaim","power-posing","ego-depletion","mbti-clinical","enneagram-clinical","nlp-claims","homeopathy","bach-flowers","crystal-healing","therapeutic-touch","reiki-distant","magnet-therapy","ear-candling","detox-cleanses","adrenal-fatigue","candida-everything","applied-kinesiology","craniosacral","chiropractic-nonmsk","iridology","reflexology-diagnostic","grounding-claims","binaural-claims","essential-oil-cures","cbd-cure-all","microdosing-overclaim","law-of-attraction","affirmations-backfire","vision-boards","astrology-counseling","numerology","human-design","psychic-mediums","angel-therapy","faith-healing-substitution","intercessory-prayer-rct","vaccines-autism","chelation-autism","mms-bleach","secretin","dolphin-therapy","wellness-mlm","prosperity-gospel-therapy","bloodletting","rotational-chair","radithor","violet-ray","krebiozen","refrigerator-mother","rebirthing","orthomolecular","laetrile","gerson","black-salve","shark-cartilage","essiac","colloidal-silver","ozone-therapy","hbot-autism","stem-cell-tourism","iv-drips","naturopathic-cancer","exorcism-substitution","troubled-teen","breatharianism","sungazing","kambo","bee-venom","rasa-shastra","aristolochia","placenta-encapsulation","vaginal-steaming","jade-eggs","perineum-sunning","urine-therapy","oil-pulling","hulda-clark-zapper","rife-machines","bioresonance","radionics","kirlian-aura","emf-harmonizers","power-balance","copper-bracelets","pemf-consumer","daith-piercing","ionic-footbath","detox-foot-pads","salt-lamps","halotherapy","oxygen-bars","alkaline-water","hydrogen-water","structured-water","solfeggio","chromotherapy","blue-blockers","cryo-chambers","infrared-detox","tdcs-consumer","toning-shoes","kinesio-overclaim","cupping-performance","mouth-taping","polyphasic-sleep","mewing","lymphatic-detox","live-blood-analysis","hair-mineral-analysis","igg-food-tests","mthfr-protocols","dna-diet-tests","microbiome-consumer","telomere-tests","epigenetic-clearing","airborne","prevagen","ginkgo-memory","antioxidant-megadose","multivitamin-prevention","nootropic-stacks","t-boosters","celery-juice","acv-cureall","blood-type-diet","gaps-diet","feingold-cure","gluten-free-everyone","carnivore-cureall","doman-delacato","primitive-reflex","auditory-integration","son-rise","vision-therapy-ld","bates-method","irlen-lenses","dore-program","fast-forword","baby-genius-media","ambidexterity-movement","social-priming","marshmallow-destiny","facial-feedback-pencil","microexpression-detection","forensic-hypnosis","truth-serum","rorschach-overclaim","grit-revolution","ten-thousand-hours","eft-tapping","thought-field-therapy","havening","brainspotting","emotion-code","family-constellations","lgat","holotropic-overclaim","ayahuasca-tourism","equine-breakthrough","indigo-children","biorhythms","full-moon-effect"];
-
-// "Best <kind> protocols for the <line> capacity" — one page per (kind, line)
-// combination that actually exists in the evidence map. Computed, so a new
-// mapping automatically mints its page.
-import { THERAPY_KIND } from "./therapyKindMap";
-import { HYPNOSIS_IDS } from "./hypnosisTopics";
-export const BEST_COMBOS: { kind: string; line: string }[] = (() => {
-  const seen = new Set<string>();
-  const out: { kind: string; line: string }[] = [];
-  for (const e of THERAPY_LINE_MAP) {
-    const kind = THERAPY_KIND[e.therapy] ?? "skill";
-    const key = `${kind}||${e.line}`;
-    if (!seen.has(key)) { seen.add(key); out.push({ kind, line: e.line }); }
-  }
-  return out.sort((a, b) => (a.kind + a.line).localeCompare(b.kind + b.line));
-})();
-export function bestComboFromSlug(kind: string, lineSlugStr: string): { kind: string; line: string } | undefined {
-  const line = engineLineFromSlug(lineSlugStr);
-  if (!line) return undefined;
-  return BEST_COMBOS.find((c) => c.kind === kind && c.line === line);
-}
 
 // ── Archetype deep pages: 246 dossiers + verify/break-out subs, plus the
 // blend pages — every meaningful pairing (shared high line, or a high/low
@@ -545,11 +553,13 @@ export const SITEMAP_PATHS = [
   ...Object.keys(PAGE_META),
   ...LINE_NAMES.map((n) => `/line/${lineSlug(n)}`),
   ...THERAPY_NAMES.map((n) => `/protocol/${therapySlug(n)}`),
-  ...THERAPY_NAMES.flatMap((n) => PROTOCOL_SUBPAGES.map((s) => `/protocol/${therapySlug(n)}/${s}`)),
+  ...THERAPY_NAMES.flatMap((n) =>
+    PROTOCOL_SUBPAGES.map((subpage) => `/protocol/${therapySlug(n)}/${subpage}`),
+  ),
   ...PRACTICE_IDS.map((id) => `/practice/${id}`),
   ...PAIR_SLUGS.map((s) => `/pair/${s}`),
   ...COMPARE_PAIRS.map(([a, b]) => `/compare/${compareSlug(a, b)}`),
-  ...COMPARE_PAIRS.flatMap(([a, b]) => COMPARE_SUBPAGES.map((s2) => `/compare/${compareSlug(a, b)}/${s2}`)),
+  ...COMPARE_PAIRS.flatMap(([a, b]) => COMPARE_SUBPAGES.map((subpage) => `/compare/${compareSlug(a, b)}/${subpage}`)),
   ...GOAL_KEYWORDS.map((k) => `/goal/${goalSlug(k)}`),
   ...LINE_NAMES.map((n) => `/weak/${lineSlug(n)}`),
   ...LINE_NAMES.map((n) => `/gift/${lineSlug(n)}`),
@@ -560,15 +570,15 @@ export const SITEMAP_PATHS = [
   ...KIND_IDS.map((id) => `/kind/${id}`),
   ...WING_IDS.map((id) => `/wing/${id}`),
   ...VERDICT_SLUGS.map((s) => `/verdict/${s}`),
-  ...MYTH_IDS.flatMap((id) => MYTH_SUBPAGES.map((s) => `/myth/${id}/${s}`)),
-  ...PAIR_SLUGS.flatMap((p) => PAIR_SUBPAGES.map((s) => `/pair/${p}/${s}`)),
-  ...LINE_NAMES.flatMap((n) => LINE_SUBPAGES.map((s) => `/line/${lineSlug(n)}/${s}`)),
-  ...PRACTICE_IDS.flatMap((id) => PRACTICE_SUBPAGES.map((s) => `/practice/${id}/${s}`)),
-  ...GOAL_KEYWORDS.flatMap((k) => GOAL_SUBPAGES.map((s) => `/goal/${goalSlug(k)}/${s}`)),
-  ...KIND_IDS.flatMap((id) => KIND_SUBPAGES.map((s) => `/kind/${id}/${s}`)),
-  ...WING_IDS.flatMap((id) => WING_SUBPAGES.map((s) => `/wing/${id}/${s}`)),
-  ...CAPACITY_ONLY_LINES.flatMap((l) => CAPACITY_SUBPAGES.map((s) => `/capacity/${engineLineSlug(l)}/${s}`)),
-  ...BEST_COMBOS.map((c) => `/best/${c.kind}/${engineLineSlug(c.line)}`),
+  ...MYTH_IDS.flatMap((id) => MYTH_SUBPAGES.map((subpage) => `/myth/${id}/${subpage}`)),
+  ...PAIR_SLUGS.flatMap((pair) => PAIR_SUBPAGES.map((subpage) => `/pair/${pair}/${subpage}`)),
+  ...LINE_NAMES.flatMap((name) => LINE_SUBPAGES.map((subpage) => `/line/${lineSlug(name)}/${subpage}`)),
+  ...PRACTICE_IDS.flatMap((id) => PRACTICE_SUBPAGES.map((subpage) => `/practice/${id}/${subpage}`)),
+  ...GOAL_KEYWORDS.flatMap((keyword) => GOAL_SUBPAGES.map((subpage) => `/goal/${goalSlug(keyword)}/${subpage}`)),
+  ...KIND_IDS.flatMap((id) => KIND_SUBPAGES.map((subpage) => `/kind/${id}/${subpage}`)),
+  ...WING_IDS.flatMap((id) => WING_SUBPAGES.map((subpage) => `/wing/${id}/${subpage}`)),
+  ...CAPACITY_ONLY_LINES.flatMap((line) => CAPACITY_SUBPAGES.map((subpage) => `/capacity/${engineLineSlug(line)}/${subpage}`)),
+  ...BEST_COMBOS.map((combo) => `/best/${combo.kind}/${engineLineSlug(combo.line)}`),
   ...HYPNOSIS_IDS.map((id) => `/hypnosis/${id}`),
   ...ARCH_IDS.map((id) => `/archetype/${id}`),
   ...ARCH_IDS.flatMap((id) => ARCH_SUBPAGES.map((s2) => `/archetype/${id}/${s2}`)),

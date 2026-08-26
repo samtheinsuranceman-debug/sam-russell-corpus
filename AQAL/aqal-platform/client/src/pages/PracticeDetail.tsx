@@ -6,11 +6,10 @@
 // ============================================================
 import { Link, useParams } from "wouter";
 import { GoDeeper } from "@/components/DeepPage";
-import { PRACTICE_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { KEYSTONE_PRACTICES, confidenceFromEvidence } from "@shared/keystonePractices";
-import { LINE_NAMES, lineSlug } from "@shared/seo";
+import { LINE_NAMES, PRACTICE_SUBPAGES, lineSlug } from "@shared/seo";
 import NotFound from "@/pages/NotFound";
 
 const INK = "#141009";

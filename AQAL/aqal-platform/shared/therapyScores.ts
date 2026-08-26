@@ -24,31 +24,30 @@ export type ScoreComponents = {
 };
 export type TherapyScore = {
   therapy: string;
-  total: number;            // 0–100, one decimal
-  rank: number;             // 1 = best
+  total: number;
+  rank: number;
   components: ScoreComponents;
-  primaryLines: string[];   // targeted weaknesses (PRIMARY mappings)
-  secondaryLines: string[]; // other lines it also lifts
-  gainBand: string;         // percentile-shift language, labeled estimate
-  knownSince: string;       // era of the protocol / its family
+  primaryLines: string[];
+  secondaryLines: string[];
+  gainBand: string;
+  knownSince: string;
   schedule: KindSchedule;
   atrophy: AtrophyProfile;
 };
 
 export type KindSchedule = {
-  minutes: string;   // per session
-  perWeek: string;   // sessions per week
-  course: string;    // course length
-  window: string;    // what a 30–60 day window honestly buys
+  minutes: string;
+  perWeek: string;
+  course: string;
+  window: string;
 };
 
 export type AtrophyProfile = {
-  curve: string;       // what happens when you stop
-  maintenance: string; // the dose that holds the gain
-  resharpen: string;   // how fast it comes back on restart
+  curve: string;
+  maintenance: string;
+  resharpen: string;
 };
 
-// ── Kind-level tables (literature-typical characterizations) ────────────────
 const KIND_EVIDENCE: Record<string, number> = {
   psychotherapy: 12, relational: 10, physical: 10, mindfulness: 8, lifestyle: 6,
   expressive: 6, skill: 5, somatic: 5, community: 5, neuromodulation: 5, psychedelic: 0,
@@ -138,8 +137,6 @@ export const KIND_ATROPHY: Record<string, AtrophyProfile> = {
     resharpen: "Faster than joining cold — returning members are re-absorbed in weeks; the awkward stage doesn't fully repeat." },
 };
 
-// Era of the protocol family, with specific overrides where the origin is
-// well-established public record.
 const KIND_ERA: Record<string, string> = {
   psychotherapy: "The protocol-therapy wave of the 1960s–1980s; manualized and trial-tested since.",
   relational: "The evidence-based couples methods emerged through the 1980s–1990s.",

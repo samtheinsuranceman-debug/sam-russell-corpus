@@ -103,7 +103,7 @@ export default function WhichArchetype() {
   };
 
   const shareResult = async () => {
-    const text = `The 2-minute teaser says I might be near "${result?.best?.name}" — the real measurement is 32 lines, scored by an 8-AI panel. First 10,000 free for life: https://joinaqal.com/which-archetype`;
+    const text = `The 2-minute teaser says I might be near "${result?.best?.name}" — the real measurement is 32 lines, scored by an 8-AI panel. First 10,000 free for life: https://www.joinaqal.com/which-archetype`;
     try {
       if (navigator.share) await navigator.share({ text });
       else { await navigator.clipboard.writeText(text); toast.success("Copied — paste it anywhere."); }

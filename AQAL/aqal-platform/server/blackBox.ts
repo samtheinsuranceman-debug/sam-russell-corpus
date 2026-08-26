@@ -2,7 +2,7 @@
 // THE BLACK BOX — crash forensics engine (server side)
 // ============================================================
 // Members narrate 3–5 major life crashes or near-misses in their own
-// words. The panel extracts Manus's eight forensic layers per event,
+// words. The panel extracts AQAL's eight forensic layers per event,
 // then synthesizes a cross-event Crash Signature + prevention
 // architecture. Honest rules: crashes ANNOTATE, they never lower
 // scores; mock provider → unavailable, never fabricated; crisis
@@ -17,7 +17,7 @@ import { scanForCrisis } from "@shared/growthEngine";
 export const MAX_EVENTS = 7;
 export const MIN_NARRATIVE_CHARS = 200; // an honest forensic read needs a real story
 
-const EXTRACT_SYSTEM = `You are a failure-forensics analyst for the AQAL platform. The member has narrated a major life crash or near-miss. Extract Manus's eight forensic layers FROM THEIR OWN WORDS — quote or closely paraphrase them; never invent facts they did not state. This is engineering, not judgment: identify mechanisms, not character flaws.
+const EXTRACT_SYSTEM = `You are a failure-forensics analyst for the AQAL platform. The member has narrated a major life crash or near-miss. Extract AQAL's eight forensic layers FROM THEIR OWN WORDS — quote or closely paraphrase them; never invent facts they did not state. This is engineering, not judgment: identify mechanisms, not character flaws.
 
 Respond ONLY with JSON:
 {

@@ -118,29 +118,53 @@ export default function TherapyDetail() {
           })}
         </div>
 
-        {/* Go deeper — the seven sub-pages under this protocol */}
-        <div className="rounded-xl p-4 mb-8" style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}>
-          <Label>Go deeper on this protocol</Label>
-          <div className="flex items-center gap-2 flex-wrap">
-            {([
-              ["first-week", "Your first week"], ["evidence", "The evidence"], ["dose", "The dose"],
-              ["who-its-for", "Who it's for"], ["mistakes", "The mistakes"], ["results", "Results timeline"], ["stack", "What to stack"],
-              ["score", "The scorecard"], ["synergy", "Synergies"], ["atrophy", "Atrophy curve"], ["daily-life", "In daily life"],
-            ] as const).map(([sub, label]) => (
-              <Link key={sub} href={`/protocol/${therapySlug(name)}/${sub}`}
-                style={{ ...mono, fontSize: "10px", letterSpacing: "0.12em", textTransform: "uppercase", padding: "6px 12px", borderRadius: "999px", textDecoration: "none", color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}55`, background: `${CHAMPAGNE}0d` }}>
-                {label}
-              </Link>
-            ))}
-          </div>
-        </div>
-
         {/* What it is */}
         <p style={{ fontSize: "16px", lineHeight: 1.75, color: CREAM, margin: "0 0 8px" }}>{kind.what}</p>
         <p style={{ fontSize: "14.5px", lineHeight: 1.7, color: CREAM2, margin: "0 0 28px" }}>
           In this library, {display} is mapped for one job above all:{" "}
           <b style={{ color: CREAM }}>{primary.capacity.charAt(0).toLowerCase() + primary.capacity.slice(1)}</b>.
         </p>
+
+        <div
+          className="rounded-xl p-4 mb-8"
+          style={{ border: `1px solid ${LINE_C}`, background: "rgba(241,234,219,0.02)" }}
+        >
+          <Label>Go deeper on this protocol</Label>
+          <div className="flex items-center gap-2 flex-wrap">
+            {([
+              ["first-week", "Your first week"],
+              ["evidence", "The evidence"],
+              ["dose", "The dose"],
+              ["who-its-for", "Who it's for"],
+              ["mistakes", "The mistakes"],
+              ["results", "Results timeline"],
+              ["stack", "What to stack"],
+              ["score", "Open scorecard"],
+              ["synergy", "Options & synergy"],
+              ["atrophy", "Durability"],
+              ["daily-life", "Daily life"],
+            ] as const).map(([subpage, label]) => (
+              <Link
+                key={subpage}
+                href={`/protocol/${therapySlug(name)}/${subpage}`}
+                style={{
+                  ...mono,
+                  fontSize: "10px",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  padding: "6px 12px",
+                  borderRadius: "999px",
+                  textDecoration: "none",
+                  color: CHAMPAGNE,
+                  border: `1px solid ${CHAMPAGNE}55`,
+                  background: `${CHAMPAGNE}0d`,
+                }}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+        </div>
 
         {/* The lines it works on */}
         <Label>Which intelligence lines it works on</Label>

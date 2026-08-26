@@ -1283,7 +1283,7 @@ function DialSection() {
             </div>
             <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.62, marginTop: '18px' }}>{sel.note}</div>
             <button onClick={() => dialNavigate(`/line/${lineSlug(sel.name)}`)}
-              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10.5px', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '14px', padding: '10px 16px', background: 'rgba(224,198,140,0.10)', color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}55`, borderRadius: '7px', cursor: 'pointer' }}>
+               style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10.5px', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '14px', padding: '10px 16px', background: 'rgba(224,198,140,0.10)', color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}55`, borderRadius: '7px', cursor: 'pointer' }}>
               What is this line? Definition, researchers & the g-question →
             </button>
             {sel.indep && <div className="mt-[15px] inline-flex items-center gap-[7px]" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', letterSpacing: '0.10em', color: CHAMPAGNE }}>◇ Independent axis — carries the effective-dimension count</div>}
@@ -1310,8 +1310,8 @@ function DialSection() {
                   <span className="flex items-center gap-[7px]" style={{ fontSize: '16px', color: CREAM }}>
                     {l.indep && <span style={{ color: CHAMPAGNE, fontSize: '12px' }}>◇</span>}{l.name}
                     <button
-                      onPointerDown={(e) => { e.stopPropagation(); dialNavigate(`/line/${lineSlug(l.name)}`); }}
-                      onClick={(e) => e.stopPropagation()} aria-label={`About ${l.name} — full page`}
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={(e) => { e.stopPropagation(); dialNavigate(`/line/${lineSlug(l.name)}`); }} aria-label={`About ${l.name} — full page`}
                       style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: MUTED, background: 'none', border: 0, cursor: 'pointer', padding: '0 2px' }}>ⓘ</button>
                   </span>
                   <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '19px', color: MODE[m].c }}>{l.v}</span>

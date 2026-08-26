@@ -1,81 +1,65 @@
+export type ScheduledJob = {
+  name: string;
+  cron: string;
+  path: string;
+  description: string;
+};
+
 /**
- * Boot-time Heartbeat registration for the scheduled jobs.
+ * Owner-controlled managed Heartbeat manifest.
  *
- * The three job handlers are Express routes under /api/scheduled/* — they can
- * only RECEIVE calls. This module makes sure something actually CALLS them:
- * on server startup it registers each job with the platform Heartbeat cron
- * service, idempotently (list first, create only what's missing by name).
- *
- * Safe by construction:
- * - No Forge credentials (local dev, or a non-Manus host using an external
- *   scheduler per LAUNCH_RUNBOOK §5b) → logs one line and does nothing.
- * - Any Heartbeat API failure → warn and continue; boot is never blocked.
- * - Already registered → left untouched, so cadence edits made in the
- *   dashboard survive restarts.
+ * The handlers are Express routes under /api/scheduled/* and accept only
+ * authenticated cron identities. Expressions use the required six-field UTC
+ * format. Create or update these jobs only after the owner publishes callback
+ * code; a development preview is not a valid callback target.
  */
-
-import { createHeartbeatJob, listHeartbeatJobs, type HeartbeatJob } from "./_core/heartbeat";
-import { ENV } from "./_core/env";
-
-// 6-field cron with seconds, UTC (see _core/heartbeat.ts).
-const JOBS: HeartbeatJob[] = [
+export const SCHEDULED_JOBS: ScheduledJob[] = [
   {
     name: "aqal-finish-nudge",
-    cron: "0 0 * * * *", // hourly
+    cron: "0 0 * * * *",
     path: "/api/scheduled/finish-nudge",
-    description: "One-time 'finish your assessment' email, 24-96h after signup, for members with no completed assessment.",
+    description: "One-time finish-your-assessment email, 24–96 hours after signup.",
   },
   {
     name: "aqal-tracker-reengagement",
-    cron: "0 0 17 1,15 * *", // 1st + 15th, 17:00 UTC (~twice a month)
+    cron: "0 0 17 1,15 * *",
     path: "/api/scheduled/tracker-reengagement",
-    description: "Invites opted-in members to start their next behavioral-tracker cycle.",
+    description: "Twice-monthly invitation for opted-in members to start their next tracker cycle.",
   },
   {
     name: "aqal-drift-alert",
-    cron: "0 0 9 * * *", // daily 09:00 UTC
+    cron: "0 0 9 * * *",
     path: "/api/scheduled/drift-alert",
     description: "Daily evaluation-cadence drift check.",
   },
   {
     name: "aqal-message-digest",
-    cron: "0 0 */2 * * *", // every 2 hours
+    cron: "0 0 */2 * * *",
     path: "/api/scheduled/message-digest",
-    description: "Unread-messages email digest (count only, never content; max one per member per day).",
+    description: "Unread-message count digest; never content; at most one per member per day.",
   },
   {
     name: "aqal-reentry",
-    cron: "0 0 16 * * *", // daily 16:00 UTC
+    cron: "0 0 16 * * *",
     path: "/api/scheduled/reentry",
-    description: "One-time 'before you quit' re-entry email for members 30+ days stalled mid-assessment.",
+    description: "One-time re-entry email for members stalled mid-assessment for at least 30 days.",
   },
   {
     name: "aqal-question-of-day",
-    cron: "0 0 13 * * *", // daily 13:00 UTC (~morning in the Americas)
+    cron: "0 0 13 * * *",
     path: "/api/scheduled/question-of-day",
-    description: "The daily ritual: one email naming today's next unanswered question. Skips members who already answered today.",
+    description: "Daily next-unanswered-question email, skipped when the member already answered that day.",
+  },
+  {
+    name: "aqal-daily-reminders",
+    cron: "0 0 * * * *",
+    path: "/api/scheduled/daily-reminders",
+    description: "Hourly timezone-aware Y/N check-ins, deduplicated per commitment and local date.",
   },
 ];
 
 export async function ensureScheduledJobs(): Promise<void> {
-  if (!ENV.forgeApiUrl || !ENV.forgeApiKey) {
-    console.log("[scheduledJobs] Heartbeat not configured — register an external scheduler for /api/scheduled/* (see LAUNCH_RUNBOOK §5b).");
-    return;
-  }
-  try {
-    // Empty userSession = project-owner identity (see heartbeat.ts).
-    const existing = await listHeartbeatJobs("", { pageSize: 100 });
-    const have = new Set(existing.jobs.map((j) => j.name));
-    for (const job of JOBS) {
-      if (have.has(job.name)) continue;
-      try {
-        const created = await createHeartbeatJob(job, "");
-        console.log(`[scheduledJobs] registered ${job.name} (${job.cron}) → ${job.path} [${created.taskUid}]`);
-      } catch (err) {
-        console.warn(`[scheduledJobs] could not register ${job.name}:`, err instanceof Error ? err.message : err);
-      }
-    }
-  } catch (err) {
-    console.warn("[scheduledJobs] Heartbeat registration skipped:", err instanceof Error ? err.message : err);
-  }
+  console.log(
+    `[scheduledJobs] ${SCHEDULED_JOBS.length} managed Heartbeat callbacks are defined. Create or update schedules only after the owner publishes this version.`,
+  );
 }

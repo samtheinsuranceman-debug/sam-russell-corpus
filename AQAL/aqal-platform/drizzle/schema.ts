@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, float, bigint, boolean } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, float, bigint, boolean, uniqueIndex } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -42,10 +42,10 @@ export const users = mysqlTable("users", {
   // password recovery and the lifetime spot both hang off it.
   emailVerifiedAt: timestamp("email_verified_at"),
   verifyTokenHash: varchar("verify_token_hash", { length: 64 }),
-  // CAN-SPAM: when the person clicked unsubscribe. Non-null silences every
-  // marketing/nudge email (transactional mail — verify, reset, results — still
-  // sends). Set only by the signed /api/unsubscribe link; never cleared
-  // automatically.
+  // Marketing/nudge email suppression. Transactional account, security,
+  // receipt, verification, reset, and explicitly requested result messages
+  // bypass this field. It is changed only by signed unsubscribe or an
+  // authenticated member preference action.
   emailOptOutAt: timestamp("email_opt_out_at"),
 });
 
@@ -413,6 +413,31 @@ export const commitments = mysqlTable("commitments", {
 export type Commitment = typeof commitments.$inferSelect;
 export type InsertCommitment = typeof commitments.$inferInsert;
 
+// One row per current commitment and local calendar day. The unique key is the
+// retry-safety boundary for Heartbeat: duplicate callbacks can never send a
+// second check-in for the same person/day. Replies store only Y/N/STOP — never
+// arbitrary message content.
+export const dailyAccountability = mysqlTable("dailyAccountability", {
+  id: int("id").autoincrement().primaryKey(),
+  commitmentId: int("commitmentId").notNull(),
+  userId: int("userId").notNull(),
+  localDate: varchar("localDate", { length: 10 }).notNull(), // YYYY-MM-DD in the member's IANA timezone
+  channel: mysqlEnum("channel", ["email", "text"]).notNull(),
+  status: mysqlEnum("status", ["pending", "sent", "failed"]).default("pending").notNull(),
+  reply: mysqlEnum("reply", ["yes", "no", "stop"]),
+  sourceMessageSid: varchar("sourceMessageSid", { length: 64 }),
+  sentAt: timestamp("sentAt"),
+  repliedAt: timestamp("repliedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  commitmentDayUnique: uniqueIndex("daily_accountability_commitment_day_uq").on(table.commitmentId, table.localDate),
+  messageSidUnique: uniqueIndex("daily_accountability_message_sid_uq").on(table.sourceMessageSid),
+}));
+
+export type DailyAccountability = typeof dailyAccountability.$inferSelect;
+export type InsertDailyAccountability = typeof dailyAccountability.$inferInsert;
+
 // ============================================================
 // TRACKER CYCLES — the 30/60/90-day behavioral-journal loop
 // ============================================================
@@ -433,6 +458,9 @@ export const trackerCycles = mysqlTable("trackerCycles", {
   adjustments: json("adjustments"),       // [{ line, direction, note }] directional profile deltas
   freshVision: text("freshVision"),       // updated, hypothetical future-pace off this cycle
   adherenceNote: text("adherenceNote"),   // honest read on consistency from the journal
+  // A positive directional cycle may invite the member to submit their own
+  // testimonial. This is only an invitation flag; no quote/rating is generated.
+  testimonialInvite: boolean("testimonialInvite").default(false).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

@@ -13,6 +13,7 @@ import { getDb } from "./db";
 import { analyticsEvents, assessments, responses, users } from "../drizzle/schema";
 import { sendMarketingEmail } from "./marketingEmail";
 import { QUESTION_TITLES } from "@shared/questionTitles";
+import { requireScheduledCron, scheduledFailure } from "./scheduledAuth";
 
 function qotdHtml(opts: { name?: string | null; n: number; title: string; streakLine: string; appUrl: string }): string {
   const first = (opts.name || "").split(" ")[0].replace(/[<>&"]/g, "");
@@ -32,16 +33,20 @@ function qotdHtml(opts: { name?: string | null; n: number; title: string; streak
 }
 
 export async function questionOfDayHandler(req: Request, res: Response) {
-  const db = await getDb();
-  if (!db) { res.json({ ok: false, reason: "no-db" }); return; }
+  let taskUid: string | undefined;
   try {
+    const user = await requireScheduledCron(req, res);
+    if (!user) return;
+    taskUid = user.taskUid;
+    const db = await getDb();
+    if (!db) return res.json({ ok: true, skipped: "no-db" });
     const inProgress = await db.select().from(assessments).where(eq(assessments.status, "in_progress"));
     const todayStart = new Date(); todayStart.setUTCHours(0, 0, 0, 0);
     let sent = 0;
     for (const a of inProgress) {
       if (a.completedQuestions >= a.totalQuestions) continue;
       const [u] = await db.select().from(users).where(eq(users.id, a.userId));
-      if (!u?.email) continue;
+      if (!u?.email || u.emailOptOutAt) continue;
 
       // Skip if they already answered today (they're pacing themselves fine)
       const answered = await db.select({ questionIndex: responses.questionIndex, createdAt: responses.createdAt })
@@ -67,14 +72,13 @@ export async function questionOfDayHandler(req: Request, res: Response) {
         ? `<p style="color:#e0c68c;font-family:monospace;font-size:12px;margin:0 0 16px;">🔥 ${days.size} answer days so far — today keeps the run alive.</p>`
         : "";
 
-      const appUrl = ((req.headers.origin as string) || `https://${req.headers.host || "joinaqal.com"}`).replace(/\/$/, "");
+      const appUrl = ((req.headers.origin as string) || `https://${req.headers.host || "www.joinaqal.com"}`).replace(/\/$/, "");
       const result = await sendMarketingEmail(
         u.email,
         `Today's question: "${QUESTION_TITLES[nextIdx]}"`,
         qotdHtml({ name: u.name, n: nextIdx + 1, title: QUESTION_TITLES[nextIdx], streakLine, appUrl }),
         appUrl,
       );
-      if (result.skipped) continue;
       if (result.ok) {
         await db.insert(analyticsEvents).values({ type: "qotd_sent", userId: u.id, ok: true });
         sent++;
@@ -83,6 +87,6 @@ export async function questionOfDayHandler(req: Request, res: Response) {
     res.json({ ok: true, candidates: inProgress.length, sent });
   } catch (err) {
     console.error("[qotd] failed:", err);
-    res.status(500).json({ ok: false });
+    return scheduledFailure(req, res, err, taskUid);
   }
 }

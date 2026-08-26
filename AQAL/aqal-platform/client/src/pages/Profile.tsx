@@ -540,6 +540,10 @@ function DataSovereignty() {
   const utils = trpc.useUtils();
   const [busy, setBusy] = useState(false);
   const requestDeletion = trpc.account.requestDeletion.useMutation();
+  const emailPreferences = trpc.account.emailPreferences.useQuery();
+  const setMarketingEmail = trpc.account.setMarketingEmail.useMutation({
+    onSuccess: () => emailPreferences.refetch(),
+  });
   const doExport = async () => {
     setBusy(true);
     try {
@@ -569,6 +573,27 @@ function DataSovereignty() {
         exports everything — profile, answers, scores, goals, beliefs, Black Box. One tap begins full deletion
         (processed within 30 days).
       </p>
+      <div className="mb-5 rounded-xl border border-white/10 p-4 max-w-[52em]">
+        <p className="text-sm text-foreground mb-1">Optional emails</p>
+        <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+          {emailPreferences.data?.marketingEnabled === false
+            ? "Marketing, reminder, and re-entry emails are off. Account verification, password resets, receipts, security notices, and results you request can still arrive."
+            : "Marketing, reminder, and re-entry emails are on. You can turn them off here or from the unsubscribe link in any optional email."}
+        </p>
+        <button
+          type="button"
+          disabled={emailPreferences.isLoading || setMarketingEmail.isPending}
+          onClick={() => setMarketingEmail.mutate({ enabled: emailPreferences.data?.marketingEnabled === false })}
+          className="px-4 py-2 rounded-lg text-[11px] uppercase tracking-[0.1em] border border-primary/40 text-primary cursor-pointer disabled:opacity-50"
+          style={{ fontFamily: "'JetBrains Mono', monospace", background: "transparent" }}
+        >
+          {setMarketingEmail.isPending
+            ? "Saving…"
+            : emailPreferences.data?.marketingEnabled === false
+              ? "Turn optional emails on"
+              : "Turn optional emails off"}
+        </button>
+      </div>
       <div className="flex gap-3 flex-wrap">
         <button onClick={doExport} disabled={busy}
           className="px-4 py-2.5 rounded-lg text-[11px] uppercase tracking-[0.1em] font-semibold border border-primary/40 text-primary cursor-pointer disabled:opacity-50"

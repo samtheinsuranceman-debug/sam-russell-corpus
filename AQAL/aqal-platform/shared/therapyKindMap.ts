@@ -162,3 +162,4 @@ export const THERAPY_KIND: Record<string, string> = {
   "Worry Postponement (Stimulus Control)": "psychotherapy",
   "Written Exposure Therapy": "psychotherapy",
 };
+

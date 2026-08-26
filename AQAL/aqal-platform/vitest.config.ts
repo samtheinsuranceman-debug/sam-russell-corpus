@@ -19,7 +19,13 @@ export default defineConfig({
       "server/**/*.spec.ts",
       "shared/**/*.test.ts",
       // Pure-data integrity tests (no DOM) can live under client/ too.
+      "client/src/components/PageErrorBoundary.test.tsx",
       "client/src/pages/archetypesData.test.ts",
+      "client/src/pages/researchLibraryData.corrections.test.ts",
+      "client/src/lib/deepPageExpansion.test.ts",
+      "client/src/lib/deepPageNavigationContracts.test.ts",
+      "client/src/lib/expansion203Contracts.test.ts",
+      "client/src/lib/expansion500Contracts.test.ts",
       "client/src/lib/pageShorts.test.ts",
       "client/src/lib/routeMetaFor.test.ts",
     ],

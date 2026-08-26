@@ -26,10 +26,10 @@ const navLinks: NavItem[] = [
     { href: "/lines", label: "The 32 Lines" },
     { href: "/pairs", label: "Power Combinations" },
     { href: "/protocols", label: "Protocol Library" },
+    { href: "/rankings", label: "Protocol Rankings" },
     { href: "/practices", label: "Keystone Practices" },
-    { href: "/capacity/adaptive", label: "The Hidden Axes" },
-    { href: "/rankings", label: "The Rankings" },
     { href: "/hypnosis", label: "Hypnosis Library" },
+    { href: "/capacity/adaptive", label: "The Hidden Axes" },
     { href: "/sample-report", label: "Sample Report" },
     { href: "/which-archetype", label: "2-Minute Quiz" },
     { href: "/myths", label: "The Myth Museum" },
@@ -335,11 +335,17 @@ export function PublicFooter() {
             <Link href="/protocols">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">The Protocol Library</span>
             </Link>
+            <Link href="/rankings">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Protocol Rankings</span>
+            </Link>
             <Link href="/pairs">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Power Combinations</span>
             </Link>
             <Link href="/practices">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Keystone Practices</span>
+            </Link>
+            <Link href="/hypnosis">
+              <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Hypnosis Library</span>
             </Link>
             <Link href="/which-archetype">
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">2-Minute Teaser Quiz</span>

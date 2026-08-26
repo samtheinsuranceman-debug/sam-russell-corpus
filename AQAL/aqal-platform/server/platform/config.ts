@@ -21,7 +21,7 @@ export const OPENAI_BASE_URL = env("OPENAI_BASE_URL") || "https://api.openai.com
 export const OPENAI_MODEL = env("OPENAI_MODEL") || "gpt-4o";
 export const OPENAI_TRANSCRIBE_MODEL = env("OPENAI_TRANSCRIBE_MODEL") || "whisper-1";
 
-// Forge (the previous Manus-hosted, OpenAI-compatible gateway) is kept as a
+// Forge (the previous OpenAI-compatible gateway) is kept as a
 // fallback so existing deployments keep working during migration.
 export const FORGE_API_URL = env("BUILT_IN_FORGE_API_URL");
 export const FORGE_API_KEY = env("BUILT_IN_FORGE_API_KEY");

@@ -32,8 +32,8 @@ describe("page short descriptions", () => {
     expect(dupes).toEqual([]);
   });
 
-  it("covers all 1,700+ pages", () => {
-    expect(SITEMAP_PATHS.length).toBeGreaterThanOrEqual(1700);
+  it("covers all 3,500+ pages", () => {
+    expect(SITEMAP_PATHS.length).toBeGreaterThanOrEqual(3500);
   });
 });
 
@@ -74,32 +74,32 @@ describe("myth museum sitemap sync", () => {
     for (const m of Object.values(LINE_MEANING)) expect(m.personas.length).toBe(2);
   });
 
-  it("every protocol kind has a full sub-page playbook", async () => {
+  it("every protocol kind has a complete deep-page playbook", async () => {
     const { KIND_IDS } = await import("@shared/seo");
     const { KIND_PLAYBOOKS } = await import("./protocolSubpages");
-    expect(KIND_IDS.filter((k) => !(k in KIND_PLAYBOOKS))).toEqual([]);
-    for (const [id, p] of Object.entries(KIND_PLAYBOOKS)) {
-      expect(KIND_IDS, `${id} is not a library kind`).toContain(id);
-      expect(p.firstWeek.length, `${id} firstWeek`).toBeGreaterThanOrEqual(4);
-      expect(p.mistakes.length, `${id} mistakes`).toBe(5);
-      expect(p.results.length, `${id} results`).toBe(4);
-      expect(p.caution.length, `${id} caution`).toBeGreaterThan(80);
+    expect(KIND_IDS.filter((kind) => !(kind in KIND_PLAYBOOKS))).toEqual([]);
+    for (const [kind, playbook] of Object.entries(KIND_PLAYBOOKS)) {
+      expect(KIND_IDS, `${kind} is not a library kind`).toContain(kind);
+      expect(playbook.firstWeek.length, `${kind} firstWeek`).toBeGreaterThanOrEqual(4);
+      expect(playbook.mistakes.length, `${kind} mistakes`).toBe(5);
+      expect(playbook.results.length, `${kind} results`).toBe(4);
+      expect(playbook.caution.length, `${kind} caution`).toBeGreaterThan(80);
     }
   });
 
-  it("every line has a full dynamics dossier with valid partner names", async () => {
+  it("every line has a complete dynamics dossier with valid partner names", async () => {
     const { LINE_NAMES } = await import("@shared/seo");
     const { LINE_DYNAMICS } = await import("./lineDynamics");
-    expect(LINE_NAMES.filter((n) => !(n in LINE_DYNAMICS))).toEqual([]);
-    expect(Object.keys(LINE_DYNAMICS).filter((k) => !LINE_NAMES.includes(k))).toEqual([]);
-    for (const [line, d] of Object.entries(LINE_DYNAMICS)) {
-      for (const p of [...d.trio.partners, ...d.weakCluster.partners]) {
-        expect(LINE_NAMES, `${line} names unknown partner ${p}`).toContain(p);
-        expect(p, `${line} partners itself`).not.toBe(line);
+    expect(LINE_NAMES.filter((name) => !(name in LINE_DYNAMICS))).toEqual([]);
+    expect(Object.keys(LINE_DYNAMICS).filter((key) => !LINE_NAMES.includes(key))).toEqual([]);
+    for (const [line, dossier] of Object.entries(LINE_DYNAMICS)) {
+      for (const partner of [...dossier.trio.partners, ...dossier.weakCluster.partners]) {
+        expect(LINE_NAMES, `${line} names unknown partner ${partner}`).toContain(partner);
+        expect(partner, `${line} partners itself`).not.toBe(line);
       }
-      expect(d.weakCluster.partners.length).toBeGreaterThanOrEqual(3);
-      expect(d.selfReg.length).toBeGreaterThan(80);
-      expect(d.controlling.length).toBeGreaterThan(80);
+      expect(dossier.weakCluster.partners.length).toBeGreaterThanOrEqual(3);
+      expect(dossier.selfReg.length).toBeGreaterThan(80);
+      expect(dossier.controlling.length).toBeGreaterThan(80);
     }
   });
 

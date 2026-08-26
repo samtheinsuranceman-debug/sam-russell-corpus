@@ -18,7 +18,7 @@ vi.mock("./_core/llm", () => ({
 
 // Mock storage
 vi.mock("./storage", () => ({
-  storagePut: vi.fn().mockResolvedValue({ key: "video-assessments/test.webm", url: "/manus-storage/video-assessments/test.webm" }),
+  storagePut: vi.fn().mockResolvedValue({ key: "video-assessments/test.webm", url: "/aqal-storage/video-assessments/test.webm" }),
   storageGetSignedUrl: vi.fn().mockResolvedValue("https://signed-url.example.com/video.webm"),
 }));
 
@@ -59,13 +59,13 @@ describe("Video Assessment Pipeline", () => {
   it("should create a video assessment record", async () => {
     const id = await createVideoAssessment({
       userId: 1,
-      videoUrl: "/manus-storage/video-assessments/test.webm",
+      videoUrl: "/aqal-storage/video-assessments/test.webm",
       durationMs: 120000,
     });
     expect(id).toBe(1);
     expect(createVideoAssessment).toHaveBeenCalledWith({
       userId: 1,
-      videoUrl: "/manus-storage/video-assessments/test.webm",
+      videoUrl: "/aqal-storage/video-assessments/test.webm",
       durationMs: 120000,
     });
   });
@@ -74,7 +74,7 @@ describe("Video Assessment Pipeline", () => {
     const buffer = Buffer.from("fake-video-data");
     const result = await storagePut("video-assessments/test.webm", buffer, "video/webm");
     expect(result.key).toBe("video-assessments/test.webm");
-    expect(result.url).toContain("/manus-storage/");
+    expect(result.url).toContain("/aqal-storage/");
   });
 
   it("should get a signed URL for LLM access", async () => {
