@@ -216,13 +216,19 @@ async function startServer() {
   }
 
   const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
+  // In production, the host (Railway/Render/etc.) routes traffic to EXACTLY
+  // process.env.PORT — silently falling back to another port would leave the
+  // app running but unreachable from the internet. Bind it or crash loudly.
+  // The scan-for-a-free-port convenience is development-only.
+  const port = process.env.NODE_ENV === "development"
+    ? await findAvailablePort(preferredPort)
+    : preferredPort;
 
   if (port !== preferredPort) {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
-  server.listen(port, () => {
+  server.listen(port, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${port}/`);
   });
 }
