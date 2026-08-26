@@ -18,6 +18,7 @@ import { LINE_MEANING } from "@/lib/lineMeaning";
 import { LINE_VIDEOS, toEmbed } from "@/lib/lineVideos";
 import { LINE_NAMES, lineSlug, lineFromSlug, therapySlug, pairSlug } from "@shared/seo";
 import { keystoneForLine } from "@shared/keystonePractices";
+import { dynamicsFor } from "@/lib/lineDynamics";
 import { therapiesForLine, THERAPY_THIN_LINES } from "@shared/therapyLineMap";
 import NotFound from "@/pages/NotFound";
 
@@ -101,6 +102,7 @@ export default function LineDetail() {
   const oddsPct = Math.min(100, Math.max(0.4, (info.testedOdds / 1000) * 100));
   const eng = engineName(name);
   const keystone = keystoneForLine(eng);
+  const dyn = dynamicsFor(name);
   const therapies = therapiesForLine(eng, 3);
   const thinEvidence = THERAPY_THIN_LINES.includes(eng);
 
@@ -296,6 +298,54 @@ export default function LineDetail() {
             Measure all 32 — claim a founding spot
           </Link>
         </div>
+
+        {/* ── The dynamics dossier: high/low signs, self-regulation, the
+            power trio, the weakness cluster, and the controlling-weakness
+            dynamic — the interaction layer of this line. ── */}
+        {dyn && (
+          <div className="mb-10">
+            <SectionLabel color={JADE}>Signs you're HIGH in it</SectionLabel>
+            <p style={{ fontSize: "14.5px", lineHeight: 1.72, color: CREAM2, margin: "0 0 8px" }}>
+              The fastest field test: do people ROUTE these problems to you without being asked? Persistent routing is
+              real-world evidence. The full inside description of the strong version lives on{" "}
+              <Link href={`/gift/${lineSlug(name)}`} style={{ color: CHAMPAGNE }}>the gifted-{name} page</Link>, and the
+              structured five-question mirror is the <Link href={`/line/${lineSlug(name)}/self-check`} style={{ color: CHAMPAGNE }}>self-check</Link>.
+            </p>
+            <SectionLabel color={EMBER}>Signs you're LOW in it</SectionLabel>
+            <p style={{ fontSize: "14.5px", lineHeight: 1.72, color: CREAM2, margin: "0 0 16px" }}>
+              Weak lines rarely feel like weakness — they feel like bad luck, difficult people, and plans that almost
+              work. The itemized signs and costs of the weak version are on{" "}
+              <Link href={`/weak/${lineSlug(name)}`} style={{ color: CHAMPAGNE }}>the weak-{name} page</Link>.
+            </p>
+            <SectionLabel>Self-awareness & self-control</SectionLabel>
+            <p style={{ fontSize: "14.5px", lineHeight: 1.72, color: CREAM2, margin: "0 0 16px" }}>{dyn.selfReg}</p>
+            <SectionLabel color={JADE}>The power trio — emergent property</SectionLabel>
+            <div className="rounded-xl p-4 mb-4" style={{ border: `1px solid ${LINE_C}`, borderLeft: `3px solid ${JADE}`, background: "rgba(241,234,219,0.02)" }}>
+              <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.14em", textTransform: "uppercase", color: JADE, margin: "0 0 6px" }}>
+                {name} ×{" "}
+                <Link href={`/pair/${pairSlug(name, dyn.trio.partners[0])}`} style={{ color: JADE }}>{dyn.trio.partners[0]}</Link>
+                {" × "}
+                <Link href={`/pair/${pairSlug(name, dyn.trio.partners[1])}`} style={{ color: JADE }}>{dyn.trio.partners[1]}</Link>
+              </p>
+              <p style={{ fontSize: "14px", lineHeight: 1.7, color: CREAM2, margin: 0 }}>{dyn.trio.emergent}</p>
+            </div>
+            <SectionLabel color={EMBER}>The weakness cluster — when lows compound</SectionLabel>
+            <div className="rounded-xl p-4 mb-4" style={{ border: `1px solid ${LINE_C}`, borderLeft: `3px solid ${EMBER}`, background: "rgba(241,234,219,0.02)" }}>
+              <p style={{ ...mono, fontSize: "10px", letterSpacing: "0.14em", textTransform: "uppercase", color: EMBER, margin: "0 0 6px" }}>
+                weak {name} + weak {dyn.weakCluster.partners.join(" + weak ")}
+              </p>
+              <p style={{ fontSize: "14px", lineHeight: 1.7, color: CREAM2, margin: 0 }}>{dyn.weakCluster.failure}</p>
+            </div>
+            <SectionLabel color={EMBER}>If this is your controlling weakness</SectionLabel>
+            <p style={{ fontSize: "14.5px", lineHeight: 1.72, color: CREAM2, margin: "0 0 8px" }}>{dyn.controlling}</p>
+            <p style={{ fontSize: "13.5px", lineHeight: 1.65, color: MUTED, margin: 0 }}>
+              Whether this line IS your controlling weakness — the one taxing the whole cluster — is precisely what the{" "}
+              <Link href="/weakness-finder" style={{ color: CHAMPAGNE }}>Master Weakness Finder</Link> determines from
+              your assessment. Trio and cluster dynamics are our framework's construals, built on each line's cited
+              research profile.
+            </p>
+          </div>
+        )}
 
         {/* Prev / next */}
         <div className="flex items-center justify-between gap-3 flex-wrap">

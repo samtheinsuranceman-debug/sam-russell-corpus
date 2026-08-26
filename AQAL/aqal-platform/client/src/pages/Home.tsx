@@ -1282,7 +1282,7 @@ function DialSection() {
               <span className="absolute inset-y-0 left-0 rounded-[4px]" style={{ width: `${sel.v}%`, background: MODE[sel.mode].c, transition: 'width .7s cubic-bezier(.22,.61,.36,1)' }} />
             </div>
             <div style={{ color: CREAM2, fontSize: '16px', lineHeight: 1.62, marginTop: '18px' }}>{sel.note}</div>
-            <button onClick={() => setInfoLine(sel.name)}
+            <button onClick={() => dialNavigate(`/line/${lineSlug(sel.name)}`)}
               style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10.5px', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '14px', padding: '10px 16px', background: 'rgba(224,198,140,0.10)', color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}55`, borderRadius: '7px', cursor: 'pointer' }}>
               What is this line? Definition, researchers & the g-question →
             </button>
@@ -1310,8 +1310,8 @@ function DialSection() {
                   <span className="flex items-center gap-[7px]" style={{ fontSize: '16px', color: CREAM }}>
                     {l.indep && <span style={{ color: CHAMPAGNE, fontSize: '12px' }}>◇</span>}{l.name}
                     <button
-                      onPointerDown={(e) => { e.stopPropagation(); setInfoLine(l.name); }}
-                      onClick={(e) => e.stopPropagation()} aria-label={`About ${l.name}`}
+                      onPointerDown={(e) => { e.stopPropagation(); dialNavigate(`/line/${lineSlug(l.name)}`); }}
+                      onClick={(e) => e.stopPropagation()} aria-label={`About ${l.name} — full page`}
                       style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: MUTED, background: 'none', border: 0, cursor: 'pointer', padding: '0 2px' }}>ⓘ</button>
                   </span>
                   <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '19px', color: MODE[m].c }}>{l.v}</span>
