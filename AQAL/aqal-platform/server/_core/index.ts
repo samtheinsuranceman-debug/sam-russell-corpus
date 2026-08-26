@@ -66,6 +66,26 @@ async function startServer() {
     if (process.env.NODE_ENV !== "development" && (req.headers["x-forwarded-proto"] ?? req.protocol) === "https") {
       res.setHeader("Strict-Transport-Security", "max-age=15552000; includeSubDomains");
     }
+    // Production only: the Vite dev server needs inline/eval scripts for HMR.
+    // 'unsafe-inline' styles are required by React inline style attributes;
+    // frame-src is limited to the two video players toEmbed can produce.
+    if (process.env.NODE_ENV !== "development") {
+      res.setHeader("Content-Security-Policy", [
+        "default-src 'self'",
+        "script-src 'self'",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' data: https://fonts.gstatic.com",
+        "img-src 'self' data: blob:",
+        "media-src 'self' blob: https:",
+        "frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com",
+        "connect-src 'self'",
+        "worker-src 'self' blob:",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "frame-ancestors 'self'",
+      ].join("; "));
+    }
     next();
   });
 

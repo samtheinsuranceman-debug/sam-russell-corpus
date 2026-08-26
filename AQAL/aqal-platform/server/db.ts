@@ -1472,7 +1472,21 @@ export async function claimDailyAccountabilitySend(input: {
     await db.insert(dailyAccountability).values({ ...input, status: "pending" });
     return true;
   } catch (error: any) {
-    if (error?.code === "ER_DUP_ENTRY" || String(error?.message ?? "").includes("Duplicate")) return false;
+    if (error?.code === "ER_DUP_ENTRY" || String(error?.message ?? "").includes("Duplicate")) {
+      // A row already exists for this commitment/day. If its send FAILED,
+      // atomically re-claim it so a later callback retries that same day;
+      // the status guard means concurrent callbacks can't both win, and
+      // pending/sent rows are never re-claimed.
+      const res: any = await db.update(dailyAccountability)
+        .set({ status: "pending" })
+        .where(and(
+          eq(dailyAccountability.commitmentId, input.commitmentId),
+          eq(dailyAccountability.localDate, input.localDate),
+          eq(dailyAccountability.status, "failed"),
+        ));
+      const affected = Number((Array.isArray(res) ? res[0]?.affectedRows : res?.affectedRows) ?? 0);
+      return affected > 0;
+    }
     throw error;
   }
 }
