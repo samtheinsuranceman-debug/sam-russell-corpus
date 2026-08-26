@@ -6,6 +6,7 @@
 // and finding are the unique payload.
 // ============================================================
 import { Link, useParams } from "wouter";
+import { GoDeeper } from "@/components/DeepPage";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
@@ -142,6 +143,7 @@ export default function BuildDetail() {
           </Link>
         </div>
       </div>
+      <GoDeeper base={`/build/${params.line}/${params.therapy}`} subs={["plan"]} labels={{ plan: "The week-by-week plan" }} />
       <PublicFooter />
     </div>
   );

@@ -28,6 +28,8 @@ const navLinks: NavItem[] = [
     { href: "/protocols", label: "Protocol Library" },
     { href: "/practices", label: "Keystone Practices" },
     { href: "/capacity/adaptive", label: "The Hidden Axes" },
+    { href: "/rankings", label: "The Rankings" },
+    { href: "/hypnosis", label: "Hypnosis Library" },
     { href: "/sample-report", label: "Sample Report" },
     { href: "/which-archetype", label: "2-Minute Quiz" },
     { href: "/myths", label: "The Myth Museum" },

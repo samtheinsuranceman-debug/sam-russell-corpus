@@ -17,7 +17,8 @@ import {
 } from "@shared/seo";
 import { kindFor, KIND_PROFILES, THERAPY_KIND } from "@/lib/therapyKinds";
 import { THERAPY_MEANING } from "@/lib/therapyMeaning";
-import { playbookFor } from "@/lib/protocolSubpages";
+import { playbookFor, KIND_DAILY } from "@/lib/protocolSubpages";
+import { scoreFor, THERAPY_SCORES } from "@shared/therapyScores";
 import NotFound from "@/pages/NotFound";
 
 const INK = "#141009";
@@ -47,6 +48,10 @@ export const SUBPAGE_LABELS: Record<ProtocolSubpageId, { nav: string; kicker: st
   mistakes: { nav: "Mistakes", kicker: "The failure modes", h1: (n) => `The mistakes that waste ${n}` },
   results: { nav: "Results", kicker: "The honest timeline", h1: (n) => `What ${n} changes — and when` },
   stack: { nav: "Stack", kicker: "Combinations", h1: (n) => `What to stack with ${n}` },
+  score: { nav: "Score", kicker: "The scorecard", h1: (n) => `${n}: the full scorecard` },
+  synergy: { nav: "Synergy", kicker: "Cross-connections", h1: (n) => `What ${n} connects with` },
+  atrophy: { nav: "Atrophy", kicker: "Use it or lose it", h1: (n) => `How ${n}'s gains fade — and how to keep them` },
+  "daily-life": { nav: "Daily life", kicker: "Where it lives", h1: (n) => `${n} in your actual day` },
 };
 
 function Label({ children, color = CHAMPAGNE }: { children: React.ReactNode; color?: string }) {
@@ -67,6 +72,10 @@ function Body({ children }: { children: React.ReactNode }) {
 
 function H2({ children }: { children: React.ReactNode }) {
   return <h2 style={{ ...serif, fontSize: "26px", color: CREAM, margin: "30px 0 10px" }}>{children}</h2>;
+}
+
+function CardText({ children }: { children: React.ReactNode }) {
+  return <p style={{ fontSize: "14px", lineHeight: 1.7, color: CREAM2, margin: 0 }}>{children}</p>;
 }
 
 // Kind-level disclosure — the same honesty pattern as TherapyDetail.
@@ -121,6 +130,18 @@ export default function ProtocolSubpage() {
       if (neighbors.length >= 8) break;
     }
   }
+
+  const sc = scoreFor(name);
+  const daily = KIND_DAILY[kindId] ?? KIND_DAILY.skill;
+  // Cross-kind synergy partners: protocols sharing a target line but working
+  // through a DIFFERENT mechanism family — the combinations that compound
+  // instead of overlapping. Ranked by composite score.
+  const synergyPartners = (sub === "synergy")
+    ? THERAPY_SCORES
+        .filter((s) => s.therapy !== name && (THERAPY_KIND[s.therapy] ?? "skill") !== kindId &&
+          [...s.primaryLines, ...s.secondaryLines].some((l) => entries.some((e) => e.line === l)))
+        .slice(0, 8)
+    : [];
 
   const sections: Record<ProtocolSubpageId, React.ReactNode> = {
     "first-week": (
@@ -373,6 +394,146 @@ export default function ProtocolSubpage() {
           on top of them. They're the soil, not a competing crop. And which line deserves your one primary slot is
           a measurement question, not a vibes question:{" "}
           <Link href="/assessment" style={{ color: CHAMPAGNE }}>that's the assessment's job</Link>.
+        </Body>
+      </>
+    ),
+    score: (
+      <>
+        <Body>
+          Every protocol in the library is scored 0–100 by one open formula: 40% evidence strength, 20% durability,
+          15% breadth of lines lifted, 15% speed to first effect, and — deliberately only 10% — ease of use, because
+          hard protocols that work outrank easy ones that don't. Nothing is hand-tuned; every component comes from
+          the mapped data. Here is {display}'s card in full.
+        </Body>
+        {sc && (
+          <>
+            <H2>The headline</H2>
+            <Card accent={JADE}>
+              <Label color={JADE}>Composite score · rank {sc.rank} of {THERAPY_SCORES.length}</Label>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: "40px", color: "#F1EADB", margin: "0" }}>{sc.total}<span style={{ fontSize: "18px", color: "#9C8F79" }}> / 100</span></p>
+            </Card>
+            <H2>The five components</H2>
+            {([["Evidence strength (40%)", sc.components.evidence, "mapped role quality plus the kind's trial base"],
+               ["Durability (20%)", sc.components.durability, "how long gains typically hold, kind-typical"],
+               ["Breadth (15%)", sc.components.breadth, "how many intelligence lines it lifts"],
+               ["Speed (15%)", sc.components.speed, "time to first measurable effect"],
+               ["Ease of use (10%)", sc.components.ease, "inverse of burden — deliberately the smallest weight"]] as const).map(([label, v, note]) => (
+              <Card key={label} accent={CHAMPAGNE}>
+                <Label>{label} — {v}/100</Label>
+                <p style={{ fontSize: "13px", lineHeight: 1.6, color: "#9C8F79", margin: 0 }}>{note}</p>
+              </Card>
+            ))}
+            <H2>Targeted lines</H2>
+            <Body>
+              <b style={{ color: "#F1EADB" }}>Primary targets (the weaknesses it's aimed at):</b>{" "}
+              {sc.primaryLines.length ? sc.primaryLines.join(", ") : "none — this protocol is mapped as a supporting move"}.
+              {sc.secondaryLines.length ? <> <b style={{ color: "#F1EADB" }}>Also lifts:</b> {sc.secondaryLines.join(", ")}.</> : null}
+            </Body>
+            <H2>How long it's been known</H2>
+            <Body>{sc.knownSince}</Body>
+            <H2>The practice schedule</H2>
+            <Card accent={JADE}>
+              <CardText><b style={{ color: "#F1EADB" }}>{sc.schedule.minutes} minutes</b> per session · <b style={{ color: "#F1EADB" }}>{sc.schedule.perWeek}</b> per week · course: <b style={{ color: "#F1EADB" }}>{sc.schedule.course}</b></CardText>
+            </Card>
+            <Body>{sc.schedule.window}</Body>
+            <H2>The likely gain — stated honestly</H2>
+            <Card accent={EMBER}><CardText>{sc.gainBand}</CardText></Card>
+            <H2>How long the gain lasts</H2>
+            <Body>{sc.atrophy.curve} The full decay-and-maintenance picture is on the{" "}
+              <Link href={`/protocol/${slug}/atrophy`} style={{ color: "#E0C68C" }}>atrophy page</Link>; the complete
+              ranked table of all {THERAPY_SCORES.length} protocols is at{" "}
+              <Link href="/rankings" style={{ color: "#E0C68C" }}>the rankings</Link>.</Body>
+          </>
+        )}
+      </>
+    ),
+    synergy: (
+      <>
+        <Body>
+          The <Link href={`/protocol/${slug}/stack`} style={{ color: "#E0C68C" }}>stack page</Link> covers same-family
+          alternatives. This page covers the more interesting connection: protocols that share {display}'s target
+          lines but work through a DIFFERENT mechanism family — body reaching what talk can't, habit architecture
+          holding what insight opens. Cross-mechanism pairs compound instead of overlapping.
+        </Body>
+        <H2>The cross-mechanism partners, ranked by score</H2>
+        {synergyPartners.map((sp) => {
+          const shared = [...sp.primaryLines, ...sp.secondaryLines].filter((l) => entries.some((e) => e.line === l));
+          return (
+            <Card key={sp.therapy} accent={JADE}>
+              <Label color={JADE}>score {sp.total} · shares: {shared.join(", ")}</Label>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: "17px", color: "#F1EADB", margin: "0 0 4px" }}>
+                <Link href={`/protocol/${therapySlug(sp.therapy)}`} style={{ color: "#F1EADB" }}>{therapyDisplay(sp.therapy).split(" (")[0]}</Link>
+              </p>
+              <p style={{ fontSize: "13px", lineHeight: 1.6, color: "#9C8F79", margin: 0 }}>
+                {KIND_PROFILES[THERAPY_KIND[sp.therapy] ?? "skill"]?.label ?? ""} — a different door into the same room.
+              </p>
+            </Card>
+          );
+        })}
+        <H2>Why cross-mechanism beats more-of-the-same</H2>
+        <Body>
+          Two protocols from one family usually tax the same budget (the same hour, the same kind of effort) while
+          touching the same mechanism — redundancy dressed as intensity. A cross-family pair splits the load: a
+          {" "}{kindLabel.toLowerCase()} protocol plus, say, a body-side or habit-side partner reaches the shared line
+          from two directions and shares almost no failure modes. The standing rule still holds — one PRIMARY
+          carries, the partner supports — and which line deserves the pair is a{" "}
+          <Link href="/assessment" style={{ color: "#E0C68C" }}>measurement question</Link>.
+        </Body>
+      </>
+    ),
+    atrophy: (
+      <>
+        <Body>
+          Nobody sells you the decay curve, which is exactly why we publish it. Gains are not furniture — every
+          capacity {display} builds sits somewhere on a use-it-or-lose-it spectrum, and knowing where BEFORE you
+          start is the difference between owning a skill and renting one.
+        </Body>
+        {sc && (
+          <>
+            <H2>The decay curve</H2>
+            <Card accent={EMBER}><CardText>{sc.atrophy.curve}</CardText></Card>
+            <H2>The maintenance dose that holds it</H2>
+            <Card accent={JADE}><CardText>{sc.atrophy.maintenance}</CardText></Card>
+            <H2>Re-sharpening after a lapse</H2>
+            <Card accent={CHAMPAGNE}><CardText>{sc.atrophy.resharpen}</CardText></Card>
+          </>
+        )}
+        <H2>The lines it built don't all fade alike</H2>
+        <Body>
+          {display}'s targets — {entries.map((e) => e.line).join(", ")} — atrophy at the rate of their USE, not just
+          their training: a capacity your daily life keeps demanding maintains itself nearly free (the{" "}
+          <Link href={`/protocol/${slug}/daily-life`} style={{ color: "#E0C68C" }}>daily-life page</Link> maps exactly
+          where those demands live). The honest planning move: budget the maintenance dose into your calendar on the
+          day you START the protocol — deciding it later means deciding it during the decay.
+        </Body>
+      </>
+    ),
+    "daily-life": (
+      <>
+        <Body>
+          A protocol that lives only in its sessions dies with them. Here's where {display}'s capacities actually
+          operate in an ordinary day — which is both where the payoff shows up and where the free maintenance reps
+          come from.
+        </Body>
+        <H2>When it fires</H2>
+        <Card accent={CHAMPAGNE}><CardText>{daily.when}</CardText></Card>
+        <H2>What it looks like from outside</H2>
+        <Card accent={JADE}><CardText>{daily.looksLike}</CardText></Card>
+        <H2>The micro-doses that keep it alive</H2>
+        <Card accent={JADE}><CardText>{daily.microUse}</CardText></Card>
+        <H2>The activity map for its lines</H2>
+        <Body>
+          Each line {display} builds has natural gymnasiums in an ordinary week:{" "}
+          {entries.map((e, i) => {
+            const d = displayFor(e.line);
+            return (
+              <span key={e.line}>{i > 0 ? " · " : ""}<b style={{ color: "#F1EADB" }}>{e.line}</b>
+                {d ? <> (<Link href={`/line/${lineSlug(d)}/at-work`} style={{ color: "#E0C68C" }}>where it pays at work</Link>)</> : null}
+              </span>
+            );
+          })}. Using a trained capacity on live problems is not separate from training it — after the course, the
+          use IS the training, which is why the <Link href={`/protocol/${slug}/atrophy`} style={{ color: "#E0C68C" }}>
+          decay curve</Link> bends friendlier for people whose days demand the skill.
         </Body>
       </>
     ),

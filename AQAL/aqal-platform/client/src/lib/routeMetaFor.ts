@@ -2,7 +2,7 @@
 // ROUTE META BUILDER — the pure function behind RouteMeta.
 // Given a path, returns the page's <title> + meta description.
 // Extracted from the component so the SEO hard rules are
-// build-enforced by routeMetaFor.test.ts across all 6,579
+// build-enforced by routeMetaFor.test.ts across all 9,646
 // sitemap URLs: every title ≤ 60 characters (search results
 // truncate at ~60), every description ≤ 160.
 // ============================================================
@@ -11,7 +11,7 @@ import {
   compareFromSlug, goalFromSlug, engineLineFromSlug, CAPACITY_ONLY_LINES,
   KIND_IDS, WING_IDS, VERDICT_SLUGS, PROTOCOL_SUBPAGES,
   MYTH_SUBPAGES, PAIR_SUBPAGES, LINE_SUBPAGES, PRACTICE_SUBPAGES,
-  GOAL_SUBPAGES, KIND_SUBPAGES, WING_SUBPAGES, CAPACITY_SUBPAGES,
+  GOAL_SUBPAGES, KIND_SUBPAGES, WING_SUBPAGES, CAPACITY_SUBPAGES, COMPARE_SUBPAGES,
   bestComboFromSlug,
 } from "@shared/seo";
 import { LINE_ENCYCLOPEDIA } from "@/lib/lineEncyclopedia";
@@ -19,6 +19,7 @@ import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
 import { KEYSTONE_PRACTICES } from "@shared/keystonePractices";
 import { LINE_ROLE } from "@/lib/linePairs";
 import { mythById } from "@/lib/mythMuseum";
+import { hypnosisById } from "@shared/hypnosisTopics";
 
 export type RouteMetaData = { title: string; description: string };
 
@@ -143,8 +144,37 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
       };
     }
   }
+  // /compare/:a--vs--:b/:sub — verdict and switch pages.
+  if (!meta && path.startsWith("/compare/") && path.slice("/compare/".length).includes("/")) {
+    const [cs, sub] = path.slice("/compare/".length).split("/");
+    const c = compareFromSlug(cs ?? "");
+    if (c && (COMPARE_SUBPAGES as readonly string[]).includes(sub ?? "")) {
+      const [ta, tb] = c.map((n) => therapyDisplay(n).split(" (")[0]);
+      // Abbreviated names (acronym when available, else word-capped at 20)
+      // so the tersest variant ALWAYS fits 60 — word-trimming would delete
+      // the second name and collide same-prefix pairs.
+      const abbrev = (n: string) => {
+        const d = therapyDisplay(n);
+        const paren = d.match(/\(([^)]+)\)/);
+        const base = d.split(" (")[0];
+        if (base.length > 20 && paren && paren[1].length <= 8 && /^[A-Z0-9-]+$/.test(paren[1])) {
+          return base.includes("Couples") ? `${paren[1]} Couples` : paren[1];
+        }
+        return base.length <= 20 ? base : base.slice(0, 20).replace(/\s+\S*$/, "").replace(/[\s,;:—-]+$/, "");
+      };
+      const [aa, ab] = [abbrev(c[0]), abbrev(c[1])];
+      const T: Record<string, [string[], string]> = {
+        verdict: [[`${ta} vs ${tb} — The Verdict — AQAL`, `${aa} vs ${ab} — The Verdict — AQAL`, `Verdict: ${aa} vs ${ab}`],
+          `Which of ${ta} and ${tb} is better for whom — computed from both scorecards: component edges, choose-if lists, and honest gain bands for each.`],
+        switch: [[`${ta} vs ${tb} — When to Switch — AQAL`, `${aa} vs ${ab} — When to Switch — AQAL`, `Switch: ${aa} vs ${ab}`],
+          `Ran one of ${ta} or ${tb} without results? The switch protocol: the real-trial checklist, when switching beats stacking, and how to run a clean handoff.`],
+      };
+      const t = T[sub!];
+      if (t) meta = { title: fitTitle(...t[0]), description: t[1].slice(0, 158) };
+    }
+  }
   // /compare/:a--vs--:b — protocol comparison pages.
-  if (!meta && path.startsWith("/compare/")) {
+  if (!meta && path.startsWith("/compare/") && !path.slice("/compare/".length).includes("/")) {
     const c = compareFromSlug(path.slice("/compare/".length));
     if (c) {
       const [ta, tb] = c.map((n) => therapyDisplay(n).split(" (")[0]);
@@ -210,8 +240,25 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
             description: `The signs of a strong ${name} line, why school never caught it, what it's worth deployed on purpose, and its best pairings.`.slice(0, 158) };
     }
   }
+  // /build/:line/:therapy/plan — the week-by-week working plan.
+  if (!meta && path.startsWith("/build/") && path.slice("/build/".length).split("/").length === 3) {
+    const segs = path.slice("/build/".length).split("/");
+    const l = engineLineFromSlug(segs[0] ?? "");
+    const t = therapyFromSlug(segs[1] ?? "");
+    if (l && t && segs[2] === "plan") {
+      const tn = therapyDisplay(t).split(" (")[0];
+      meta = {
+        title: fitTitle(
+          `The ${l} Plan: ${tn}, Week by Week — AQAL`,
+          `${tn} × ${l} — The Plan — AQAL`,
+          `${tn} × ${l} — The Plan`,
+        ),
+        description: `The week-by-week plan for building ${l} with ${tn}: the operating schedule, day-by-day first week, checkpoints, and both exits defined in advance.`.slice(0, 158),
+      };
+    }
+  }
   // /build/:line/:therapy — capacity-building entry pages.
-  if (!meta && path.startsWith("/build/")) {
+  if (!meta && path.startsWith("/build/") && path.slice("/build/".length).split("/").length === 2) {
     const segs = path.slice("/build/".length).split("/");
     const l = engineLineFromSlug(segs[0] ?? "");
     const t = therapyFromSlug(segs[1] ?? "");
@@ -370,6 +417,20 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
       };
     }
   }
+  // /hypnosis/:id — guided session pages.
+  if (!meta && path.startsWith("/hypnosis/")) {
+    const t = hypnosisById(path.slice("/hypnosis/".length));
+    if (t) {
+      meta = {
+        title: fitTitle(
+          `${t.title} — Guided Self-Hypnosis — AQAL`,
+          `${t.title} — Guided Session — AQAL`,
+          `${t.title} — Guided Session`,
+        ),
+        description: `A ${t.length} guided self-hypnosis session for ${t.target.toLowerCase()}. ${t.purpose}`.slice(0, 158),
+      };
+    }
+  }
   // /best/:kind/:line — best-protocols combo pages.
   if (!meta && path.startsWith("/best/")) {
     const [bk, bl] = path.slice("/best/".length).split("/");
@@ -420,6 +481,22 @@ export function routeMetaFor(path: string): RouteMetaData | undefined {
         stack: {
           titles: (n) => [`${n} — What to Stack It With — AQAL`, `${n} — The Stack — AQAL`, `${n} — The Stack`],
           desc: (n) => `How to combine ${n} with the other mapped protocols that share its intelligence lines: what carries the load, what supports, and the order that compounds.`,
+        },
+        score: {
+          titles: (n) => [`${n} — The Full Scorecard — AQAL`, `${n} — Scorecard — AQAL`, `${n} — Scorecard`],
+          desc: (n) => `${n} scored 0–100 by the open formula: evidence, durability, breadth, speed, ease — plus targeted lines, schedule, likely-gain band, and decay curve.`,
+        },
+        synergy: {
+          titles: (n) => [`${n} — Cross-Mechanism Synergies — AQAL`, `${n} — Synergies — AQAL`, `${n} — Synergies`],
+          desc: (n) => `The protocols that compound with ${n}: different mechanism families sharing its target lines, ranked by score — and why cross-mechanism beats more-of-the-same.`,
+        },
+        atrophy: {
+          titles: (n) => [`${n} — The Atrophy Curve — AQAL`, `${n} — Atrophy — AQAL`, `${n} — Atrophy`],
+          desc: (n) => `How ${n}'s gains fade without use: the decay curve, the maintenance dose that holds them, and how fast they re-sharpen after a lapse — published, not hidden.`,
+        },
+        "daily-life": {
+          titles: (n) => [`${n} in Your Actual Day — AQAL`, `${n} — Daily Life — AQAL`, `${n} — Daily Life`],
+          desc: (n) => `Where ${n}'s capacities operate in an ordinary day: when they fire, what they look like from outside, and the micro-doses that keep them alive for free.`,
         },
       };
       const sm = SUB_META[sub!];

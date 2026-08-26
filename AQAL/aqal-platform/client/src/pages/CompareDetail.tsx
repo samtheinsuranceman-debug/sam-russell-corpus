@@ -6,6 +6,8 @@
 // derived from real structural differences. Never medical advice.
 // ============================================================
 import { Link, useParams } from "wouter";
+import { GoDeeper } from "@/components/DeepPage";
+import { COMPARE_SUBPAGES } from "@shared/seo";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PageVideo from "@/components/PageVideo";
 import { THERAPY_LINE_MAP } from "@shared/therapyLineMap";
@@ -150,6 +152,7 @@ export default function CompareDetail() {
           </Link>
         </div>
       </div>
+      <GoDeeper base={`/compare/${params.slug}`} subs={COMPARE_SUBPAGES} labels={{ verdict: "The verdict", switch: "When to switch" }} />
       <PublicFooter />
     </div>
   );

@@ -272,3 +272,53 @@ export const KIND_PLAYBOOKS: Record<string, KindPlaybook> = {
 export function playbookFor(kindId: string): KindPlaybook {
   return KIND_PLAYBOOKS[kindId] ?? KIND_PLAYBOOKS.skill;
 }
+
+// ── Daily-life embedding, per kind: where the capacity this kind builds
+// actually gets USED (and therefore exercised) in an ordinary day.
+export type DailyProfile = { when: string; looksLike: string; microUse: string };
+export const KIND_DAILY: Record<string, DailyProfile> = {
+  psychotherapy: {
+    when: "The skills fire at the exact moments that used to run you: the criticism that lands wrong, the 2am rumination loop, the decision you keep deferring.",
+    looksLike: "From outside it looks like nothing — a person who pauses two seconds longer before responding, reschedules the spiral, has the hard conversation on purpose.",
+    microUse: "Every trigger survived using the technique is a live rep — daily life IS the practice field after the course ends, which is why the gains compound instead of fading." },
+  relational: {
+    when: "At the friction points every couple owns: the logistics negotiation, the tone that starts the old fight, the repair attempt after.",
+    looksLike: "Fights that still start but end differently; the de-escalation move that feels scripted for a month and then just becomes how you two talk.",
+    microUse: "One deliberate repair attempt per week keeps the new pattern load-bearing; the weekly check-in most methods prescribe is the formal rep." },
+  mindfulness: {
+    when: "In the transitions — commute, queue, the walk between meetings — and at every spike of irritation, craving, or dread.",
+    looksLike: "The half-second gap between trigger and reaction, used. Catching the phone-reach, the snap, the doomscroll AS it starts.",
+    microUse: "Three conscious breaths before opening email counts. The formal sit installs the skill; these micro-deployments keep it warm all day." },
+  somatic: {
+    when: "Before the performance moments (the meeting, the call, the confrontation) and after the stressors — anywhere your state needs steering.",
+    looksLike: "A person who down-regulates in ninety seconds instead of ninety minutes; who notices the jaw, the shoulders, the shallow breath early.",
+    microUse: "One sixty-second body scan at a red light or between tasks — the interoceptive channel trains on every deliberate read." },
+  physical: {
+    when: "The training slots are scheduled, but the dividend pays all day: the 3pm hour that used to crash, the stairs, the stress that burns off instead of accumulating.",
+    looksLike: "Energy that lasts the whole workday, sleep that arrives on time, a mood floor that sits noticeably higher.",
+    microUse: "Walking meetings, stairs over elevators, carrying the groceries — incidental movement keeps the adaptation ticking between sessions." },
+  skill: {
+    when: "Every real-world use of the trained skill is a rep: the presentation, the negotiation, the analysis, the instrument.",
+    looksLike: "Performance conditions stop taxing the skill — it runs below conscious attention while attention goes to the situation.",
+    microUse: "Five-minute micro-drills on the weakest component keep the edge; real deployment with a one-line self-review afterward counts double." },
+  psychedelic: {
+    when: "The sessions are rare and clinical; daily life is where the integration happens — the conversation finally had, the avoidance finally dropped.",
+    looksLike: "Not visions — behavior: the flexibility window used to install new patterns while it's open.",
+    microUse: "The integration journal and the weekly commitments from integration sessions are the daily interface; the substance is not." },
+  neuromodulation: {
+    when: "The course is clinical and scheduled; the daily-life job is capitalizing on the shifted substrate — the therapy homework, the behavior change, the re-engagement.",
+    looksLike: "Doing the things depression or the target condition had shelved — because the course made them possible, not because it did them for you.",
+    microUse: "Whatever behavioral activation the clinic pairs with the course IS the daily practice; the machine moves the floor, you build on it." },
+  lifestyle: {
+    when: "It IS daily life — the bedtime, the light, the meals, the screens. The protocol dissolves into the day it reorganizes.",
+    looksLike: "Nothing dramatic: a person whose environment quietly makes the right thing the default thing.",
+    microUse: "Every kept anchor (charger outside the bedroom, walk after lunch) is the rep; the environment does the counting." },
+  expressive: {
+    when: "At the pressure points — after the hard day, before the hard conversation, when the same thought has circled three times.",
+    looksLike: "A notebook session instead of a rumination night; charged events that get processed within days instead of carried for years.",
+    microUse: "Even ten minutes of honest writing at the week's worst moment keeps the expressive channel open and the backlog empty." },
+  community: {
+    when: "The scheduled gathering, plus the connective tissue between: the check-in text, the favor done, the name remembered.",
+    looksLike: "A person with somewhere to be and people who notice absence — the infrastructure invisible until the bad season hits.",
+    microUse: "One real conversation per gathering and one reach-out between them — belonging is maintained in minutes a week, not hours." },
+};

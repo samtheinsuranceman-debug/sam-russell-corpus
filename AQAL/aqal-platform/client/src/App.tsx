@@ -76,6 +76,11 @@ const KindDeep = lazy(() => import("./pages/KindDeep"));
 const WingDeep = lazy(() => import("./pages/WingDeep"));
 const CapacitySub = lazy(() => import("./pages/CapacitySub"));
 const BestProtocols = lazy(() => import("./pages/BestProtocols"));
+const CompareDeep = lazy(() => import("./pages/CompareDeep"));
+const BuildPlan = lazy(() => import("./pages/BuildPlan"));
+const Rankings = lazy(() => import("./pages/Rankings"));
+const HypnosisLibrary = lazy(() => import("./pages/HypnosisLibrary"));
+const HypnosisDetail = lazy(() => import("./pages/HypnosisDetail"));
 const Protocols = lazy(() => import("./pages/Protocols"));
 const PairDetail = lazy(() => import("./pages/PairDetail"));
 const Pairs = lazy(() => import("./pages/Pairs"));
@@ -547,6 +552,26 @@ function Router() {
             <Suspense fallback={<PageSkeleton />}><Practices /></Suspense>
           </PageErrorBoundary>
         </Route>
+        <Route path={"/compare/:slug/:sub"}>
+          <PageErrorBoundary pageName="CompareDeep">
+            <Suspense fallback={<PageSkeleton />}><CompareDeep /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/rankings"}>
+          <PageErrorBoundary pageName="Rankings">
+            <Suspense fallback={<PageSkeleton />}><Rankings /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/hypnosis/:id"}>
+          <PageErrorBoundary pageName="HypnosisDetail">
+            <Suspense fallback={<PageSkeleton />}><HypnosisDetail /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/hypnosis"}>
+          <PageErrorBoundary pageName="HypnosisLibrary">
+            <Suspense fallback={<PageSkeleton />}><HypnosisLibrary /></Suspense>
+          </PageErrorBoundary>
+        </Route>
         <Route path={"/compare/:slug"}>
           <PageErrorBoundary pageName="CompareDetail">
             <Suspense fallback={<PageSkeleton />}><CompareDetail /></Suspense>
@@ -570,6 +595,11 @@ function Router() {
         <Route path={"/gift/:slug"}>
           <PageErrorBoundary pageName="GiftLine">
             <Suspense fallback={<PageSkeleton />}><GiftLine /></Suspense>
+          </PageErrorBoundary>
+        </Route>
+        <Route path={"/build/:line/:therapy/plan"}>
+          <PageErrorBoundary pageName="BuildPlan">
+            <Suspense fallback={<PageSkeleton />}><BuildPlan /></Suspense>
           </PageErrorBoundary>
         </Route>
         <Route path={"/build/:line/:therapy"}>

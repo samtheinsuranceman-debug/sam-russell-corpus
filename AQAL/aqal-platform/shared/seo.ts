@@ -120,6 +120,18 @@ export const PAGE_META: Record<string, PageMeta> = {
       "Record your biggest failures once, honestly. The panel extracts your Crash Signature — when X, you do Y, which causes Z — and builds your prevention plan.",
     short: "Your crashes share a signature. We extract it.",
   },
+  "/rankings": {
+    title: "The Protocol Rankings — All 156 Scored 0–100 — AQAL",
+    description:
+      "Every protocol in the library ranked by one open formula: 40% evidence, 20% durability, 15% breadth, 15% speed, 10% ease. Components shown, nothing hidden.",
+    short: "156 protocols. One open formula. Ranked.",
+  },
+  "/hypnosis": {
+    title: "The Hypnosis Library — 50 Guided Sessions — AQAL",
+    description:
+      "Fifty overt self-hypnosis and mental-rehearsal sessions — sleep, focus, courage, follow-through — honestly framed, mapped to the lines and goals they serve.",
+    short: "50 guided sessions. Overt, honest, mapped.",
+  },
   "/login": {
     title: "Sign In — AQAL Intelligence",
     description: "Sign in to your AQAL member portal — your 32-line profile, goal clocks, protocols, and Black Box. Founding members use the password chosen at claim.",
@@ -281,6 +293,7 @@ export function therapyFromSlug(slug: string): string | undefined {
 // 156 × 7 = 1,092 pages that stay honest by construction.
 export const PROTOCOL_SUBPAGES = [
   "first-week", "evidence", "dose", "who-its-for", "mistakes", "results", "stack",
+  "score", "synergy", "atrophy", "daily-life",
 ] as const;
 export type ProtocolSubpageId = (typeof PROTOCOL_SUBPAGES)[number];
 
@@ -303,6 +316,9 @@ export const WING_SUBPAGES = ["spot", "escape"] as const;
 export type WingSubpageId = (typeof WING_SUBPAGES)[number];
 export const CAPACITY_SUBPAGES = ["signs", "build", "cost"] as const;
 export type CapacitySubpageId = (typeof CAPACITY_SUBPAGES)[number];
+export const COMPARE_SUBPAGES = ["verdict", "switch"] as const;
+export type CompareSubpageId = (typeof COMPARE_SUBPAGES)[number];
+export const BUILD_SUBPAGES = ["plan"] as const;
 
 // Line-pair pages — one per unordered pair of lines, canonical order =
 // LINE_NAMES index order. C(32,2) = 496 pages at /pair/<a>--<b>.
@@ -444,6 +460,7 @@ export const MYTH_IDS: string[] = ["phrenology","mesmerism","lobotomy","insulin-
 // combination that actually exists in the evidence map. Computed, so a new
 // mapping automatically mints its page.
 import { THERAPY_KIND } from "./therapyKindMap";
+import { HYPNOSIS_IDS } from "./hypnosisTopics";
 export const BEST_COMBOS: { kind: string; line: string }[] = (() => {
   const seen = new Set<string>();
   const out: { kind: string; line: string }[] = [];
@@ -468,10 +485,12 @@ export const SITEMAP_PATHS = [
   ...PRACTICE_IDS.map((id) => `/practice/${id}`),
   ...PAIR_SLUGS.map((s) => `/pair/${s}`),
   ...COMPARE_PAIRS.map(([a, b]) => `/compare/${compareSlug(a, b)}`),
+  ...COMPARE_PAIRS.flatMap(([a, b]) => COMPARE_SUBPAGES.map((s2) => `/compare/${compareSlug(a, b)}/${s2}`)),
   ...GOAL_KEYWORDS.map((k) => `/goal/${goalSlug(k)}`),
   ...LINE_NAMES.map((n) => `/weak/${lineSlug(n)}`),
   ...LINE_NAMES.map((n) => `/gift/${lineSlug(n)}`),
   ...BUILD_ENTRIES.map((e) => `/build/${engineLineSlug(e.line)}/${therapySlug(e.therapy)}`),
+  ...BUILD_ENTRIES.map((e) => `/build/${engineLineSlug(e.line)}/${therapySlug(e.therapy)}/plan`),
   ...MYTH_IDS.map((id) => `/myth/${id}`),
   ...CAPACITY_ONLY_LINES.map((l) => `/capacity/${engineLineSlug(l)}`),
   ...KIND_IDS.map((id) => `/kind/${id}`),
@@ -486,6 +505,7 @@ export const SITEMAP_PATHS = [
   ...WING_IDS.flatMap((id) => WING_SUBPAGES.map((s) => `/wing/${id}/${s}`)),
   ...CAPACITY_ONLY_LINES.flatMap((l) => CAPACITY_SUBPAGES.map((s) => `/capacity/${engineLineSlug(l)}/${s}`)),
   ...BEST_COMBOS.map((c) => `/best/${c.kind}/${engineLineSlug(c.line)}`),
+  ...HYPNOSIS_IDS.map((id) => `/hypnosis/${id}`),
 ];
 
 export function canonicalUrl(path: string): string {

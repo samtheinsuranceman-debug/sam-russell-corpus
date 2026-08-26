@@ -125,6 +125,7 @@ export default function TherapyDetail() {
             {([
               ["first-week", "Your first week"], ["evidence", "The evidence"], ["dose", "The dose"],
               ["who-its-for", "Who it's for"], ["mistakes", "The mistakes"], ["results", "Results timeline"], ["stack", "What to stack"],
+              ["score", "The scorecard"], ["synergy", "Synergies"], ["atrophy", "Atrophy curve"], ["daily-life", "In daily life"],
             ] as const).map(([sub, label]) => (
               <Link key={sub} href={`/protocol/${therapySlug(name)}/${sub}`}
                 style={{ ...mono, fontSize: "10px", letterSpacing: "0.12em", textTransform: "uppercase", padding: "6px 12px", borderRadius: "999px", textDecoration: "none", color: CHAMPAGNE, border: `1px solid ${CHAMPAGNE}55`, background: `${CHAMPAGNE}0d` }}>
