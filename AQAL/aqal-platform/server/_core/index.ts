@@ -7,7 +7,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
-import { serveStatic, setupVite } from "./vite";
+import { serveStatic } from "./staticServe";
 import { canonicalRedirectLocation } from "./canonical";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -240,6 +240,11 @@ async function startServer() {
   );
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
+    // Non-literal specifier: keeps ./vite (and the vite devDependency it
+    // statically imports) completely OUT of the production bundle. This
+    // branch only runs under tsx in development, where the file resolves.
+    const devViteModule = "./vite" as string;
+    const { setupVite } = await import(devViteModule);
     await setupVite(app, server);
   } else {
     serveStatic(app);
