@@ -573,15 +573,26 @@ Respond in JSON format.`;
             const panelResults = await runPanel(invokeParams, isFree ? modelsToUse : 0);
             const parsed = panelResults
               .map((r) => {
-                try { return JSON.parse((r.result.choices?.[0]?.message?.content as string) ?? ""); }
-                catch { return null; }
+                try {
+                  const p = JSON.parse((r.result.choices?.[0]?.message?.content as string) ?? "");
+                  return p && Array.isArray(p.scores) ? { model: r.member.id, parsed: p } : null;
+                } catch { return null; }
               })
-              .filter((p) => p && Array.isArray(p.scores));
-            // 1 model → solo scores; 2+ → trimmed-mean consensus (both via consensusScores).
+              .filter((p): p is { model: string; parsed: any } => p !== null);
+            // 1 model → solo scores; 2+ → calibration-weighted trimmed-mean
+            // consensus (equal weights until a model has real per-dimension
+            // history — see server/patents/calibrationBus.ts).
             if (parsed.length >= 1) {
+              const { calibratedConsensus, calibrationObservations, loadCalibrationStats, weightsFromStats, recordCalibrationObservations } = await import("./patents/calibrationBus");
+              const perModel = parsed.map((p) => ({ model: p.model, scores: p.parsed.scores }));
+              const stats = await loadCalibrationStats();
+              const combined = calibratedConsensus(perModel, weightsFromStats(stats));
+              if (parsed.length >= 2) {
+                await recordCalibrationObservations(calibrationObservations(perModel, combined));
+              }
               analysis = {
-                scores: consensusScores(parsed.map((p: any) => p.scores)),
-                powerCombinations: parsed[0].powerCombinations ?? [],
+                scores: combined,
+                powerCombinations: parsed[0].parsed.powerCombinations ?? [],
               };
               await recordEvent({
                 type: parsed.length >= 2 ? "score_consensus" : "score_llm",
@@ -2354,6 +2365,17 @@ CRITICAL RULES:
           minScore: 20,
           limit: input.limit,
         });
+
+        // Ledger: commit the served match set (ids + rounded scores only —
+        // no profile content) to the hash-chained audit ledger.
+        if (ranked.length > 0) {
+          const { appendLedgerEntry } = await import("./patents/ledger");
+          await appendLedgerEntry("match", {
+            userId: ctx.user.id,
+            mode: input.mode,
+            served: ranked.map((r) => ({ id: r.candidate.id, score: Math.round(r.score) })),
+          });
+        }
 
         return {
           matches: ranked.map(r => {

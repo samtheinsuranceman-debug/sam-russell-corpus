@@ -50,12 +50,14 @@ export async function runPanel(
   // consensus). 0 → the full panel (paid tier). Order = config order, so the
   // strongest general models (GPT, Claude, Gemini) are chosen first.
   const members = limit > 0 ? enabledPanel().slice(0, limit) : enabledPanel();
-  const settled = await Promise.all(
-    members.map(async (m) => {
-      const result = await invokeMember(m, params);
-      return result ? { member: m, result } : null;
-    }),
-  );
+  // Fan-out runs through the compute fabric — the pluggable-backend seam
+  // (software CPU today; a hardware co-processor implements the same
+  // interface). See server/patents/computeFabric.ts.
+  const { computeFabric } = await import("../patents/computeFabric");
+  const settled = await computeFabric().runParallel(members, async (m) => {
+    const result = await invokeMember(m, params);
+    return result ? { member: m, result } : null;
+  });
   return settled.filter(
     (x): x is { member: PanelMember; result: InvokeResult } => x !== null,
   );

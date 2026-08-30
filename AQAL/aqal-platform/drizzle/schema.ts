@@ -442,6 +442,39 @@ export const dailyAccountability = mysqlTable("dailyAccountability", {
 export type DailyAccountability = typeof dailyAccountability.$inferSelect;
 export type InsertDailyAccountability = typeof dailyAccountability.$inferInsert;
 
+// Hash-chained append-only audit ledger (software embodiment of the patent
+// family's immutable-ledger component). Rows are only ever INSERTed; each
+// hash commits to the previous row's hash + the canonical payload, so any
+// edit/delete/reorder of history is detectable by verifyLedger().
+export const auditLedger = mysqlTable("auditLedger", {
+  id: int("id").autoincrement().primaryKey(),
+  kind: varchar("kind", { length: 32 }).notNull(), // score | norm_version | floor_event | match | calibration_update
+  payload: json("payload").notNull(),
+  prevHash: varchar("prevHash", { length: 64 }).notNull(),
+  hash: varchar("hash", { length: 64 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  hashUnique: uniqueIndex("audit_ledger_hash_uq").on(table.hash),
+}));
+
+export type AuditLedgerEntry = typeof auditLedger.$inferSelect;
+
+// Per-model, per-dimension calibration accumulators for the consensus bus:
+// n observations and the running sum of absolute error vs the settled panel
+// consensus. Weight derivation lives in server/patents/calibrationBus.ts.
+export const modelCalibration = mysqlTable("modelCalibration", {
+  id: int("id").autoincrement().primaryKey(),
+  model: varchar("model", { length: 64 }).notNull(),
+  axisIndex: int("axisIndex").notNull(),
+  n: int("n").default(0).notNull(),
+  sumAbsErr: float("sumAbsErr").default(0).notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  modelAxisUnique: uniqueIndex("model_calibration_model_axis_uq").on(table.model, table.axisIndex),
+}));
+
+export type ModelCalibration = typeof modelCalibration.$inferSelect;
+
 // ============================================================
 // TRACKER CYCLES — the 30/60/90-day behavioral-journal loop
 // ============================================================

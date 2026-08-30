@@ -276,6 +276,17 @@ export async function saveScores(assessmentId: number, scoreData: Array<{ axisIn
   }));
   if (values.length === 0) return;
   await db.insert(scores).values(values);
+
+  // Ledger: commit this scoring event to the hash-chained audit ledger.
+  // Payload is a compact digest (no reasoning text) — enough to prove later
+  // that these exact numbers were produced at this point in history.
+  const { appendLedgerEntry } = await import("./patents/ledger");
+  const { ACTIVE_NORMING_VERSION } = await import("./scoring/norming");
+  await appendLedgerEntry("score", {
+    assessmentId,
+    normVersion: ACTIVE_NORMING_VERSION,
+    axes: scoreData.map((s) => ({ i: s.axisIndex, s: Math.round(s.score * 10000) / 10000 })),
+  });
 }
 
 export async function getScoresByAssessment(assessmentId: number) {
