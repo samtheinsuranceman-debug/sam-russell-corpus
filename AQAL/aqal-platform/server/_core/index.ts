@@ -101,6 +101,10 @@ async function startServer() {
   registerOAuthRoutes(app);
   const { twilioInboundHandler } = await import("../twilioInbound");
   app.post("/api/webhooks/twilio/inbound", twilioInboundHandler);
+  // Cross-company integration surface (/api/v1/joinaqal/*) per the
+  // API Integration Specification v1.0 — see server/integrationApi.ts.
+  const { registerIntegrationApi } = await import("../integrationApi");
+  registerIntegrationApi(app);
 
   // Platform storage routes (S3/R2 signed-redirect + local filesystem).
   const { storageGetSignedUrl, LOCAL_STORAGE_DIR } = await import("../platform/storage");
