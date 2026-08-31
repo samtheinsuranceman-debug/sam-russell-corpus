@@ -1,0 +1,12 @@
+{
+  "filesScanned": 332,
+  "uniqueTokens": 891,
+  "totals": {
+    "Other Hardcoded Token": 17683,
+    "Legacy Surface / Neutral": 12763,
+    "Finance Positive / Legacy Green": 6913,
+    "Semantic Status / Warning": 5691,
+    "Informational Accent": 2805,
+    "Scoped Purple System": 1946
+  }
+}

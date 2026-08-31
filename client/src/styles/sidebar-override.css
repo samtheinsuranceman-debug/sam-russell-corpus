@@ -1,0 +1,179 @@
+/* ============================================================
+   RUSSELL CAPITAL SYSTEMS — SIDEBAR STYLING OVERRIDE
+   Purpose: Smaller uniform font sizes + brighter vibrant coloring
+   ============================================================ */
+
+/* ── SECTION HEADERS (HOME, CLIENTS, PLANNING, PRODUCTS, etc.) ── */
+/* Current: 26px for main sections, 22px for lower sections — TOO BIG */
+/* Fix: All section headers to 13px, vibrant gradient colors */
+
+nav.rc-sidebar-nav .flex-1.text-left {
+  font-size: 13px !important;
+  letter-spacing: 1.2px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+}
+
+/* ── VIBRANT COLOR SCHEME FOR SECTION HEADERS ── */
+/* HOME section — bright emerald */
+nav.rc-sidebar-nav button:nth-of-type(1) .flex-1.text-left {
+  color: #34d399 !important;  /* emerald-400 */
+}
+
+/* CLIENTS section — bright cyan */
+nav.rc-sidebar-nav button:nth-of-type(2) .flex-1.text-left {
+  color: #22d3ee !important;  /* cyan-400 */
+}
+
+/* PLANNING section — bright violet */
+nav.rc-sidebar-nav button:nth-of-type(3) .flex-1.text-left {
+  color: #a78bfa !important;  /* violet-400 */
+}
+
+/* PRODUCTS section — bright amber */
+nav.rc-sidebar-nav button:nth-of-type(4) .flex-1.text-left {
+  color: #fbbf24 !important;  /* amber-400 */
+}
+
+/* MASSIVE CALCULATORS — bright rose */
+nav.rc-sidebar-nav button:nth-of-type(5) .flex-1.text-left {
+  color: #fb7185 !important;  /* rose-400 */
+}
+
+/* AI & TOOLS — bright sky */
+nav.rc-sidebar-nav button:nth-of-type(6) .flex-1.text-left {
+  color: #38bdf8 !important;  /* sky-400 */
+}
+
+/* COMPLIANCE — bright lime */
+nav.rc-sidebar-nav button:nth-of-type(7) .flex-1.text-left {
+  color: #a3e635 !important;  /* lime-400 */
+}
+
+/* THE EXPERIENCE — bright fuchsia */
+nav.rc-sidebar-nav button:nth-of-type(8) .flex-1.text-left {
+  color: #e879f9 !important;  /* fuchsia-400 */
+}
+
+/* COMMAND — bright orange */
+nav.rc-sidebar-nav button:nth-of-type(9) .flex-1.text-left {
+  color: #fb923c !important;  /* orange-400 */
+}
+
+/* COMPETE — bright teal */
+nav.rc-sidebar-nav button:nth-of-type(10) .flex-1.text-left {
+  color: #2dd4bf !important;  /* teal-400 */
+}
+
+/* EARN — bright yellow */
+nav.rc-sidebar-nav button:nth-of-type(11) .flex-1.text-left {
+  color: #facc15 !important;  /* yellow-400 */
+}
+
+/* EXPLORE — bright indigo */
+nav.rc-sidebar-nav button:nth-of-type(12) .flex-1.text-left {
+  color: #818cf8 !important;  /* indigo-400 */
+}
+
+/* TRANSCEND — bright pink */
+nav.rc-sidebar-nav button:nth-of-type(13) .flex-1.text-left {
+  color: #f472b6 !important;  /* pink-400 */
+}
+
+/* SETTINGS — bright slate/blue */
+nav.rc-sidebar-nav button:nth-of-type(14) .flex-1.text-left {
+  color: #60a5fa !important;  /* blue-400 */
+}
+
+/* INTEROP ENGINE — bright emerald glow */
+nav.rc-sidebar-nav button:nth-of-type(15) .flex-1.text-left {
+  color: #6ee7b7 !important;  /* emerald-300 */
+}
+
+/* ── SUB-ITEMS (Dashboard, Wealth Reels, Advisory Summary, etc.) ── */
+/* Current: 15-16px — too big */
+/* Fix: All sub-items to 12.5px, bright white with vibrant hover */
+
+nav.rc-sidebar-nav a {
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  color: #e2e8f0 !important;  /* slate-200 — bright white-ish */
+  letter-spacing: 0.3px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Active sub-item — vibrant emerald with glow */
+nav.rc-sidebar-nav a[aria-current="page"],
+nav.rc-sidebar-nav a.active,
+nav.rc-sidebar-nav a[data-active="true"] {
+  color: #34d399 !important;  /* emerald-400 */
+  font-weight: 600 !important;
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.4) !important;
+}
+
+/* Hover state — bright cyan glow */
+nav.rc-sidebar-nav a:hover {
+  color: #22d3ee !important;  /* cyan-400 */
+  text-shadow: 0 0 6px rgba(34, 211, 238, 0.3) !important;
+  background-color: rgba(34, 211, 238, 0.08) !important;
+}
+
+/* ── SECTION HEADER BUTTONS — Uniform sizing ── */
+nav.rc-sidebar-nav button {
+  font-size: 13px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Section header hover — subtle glow */
+nav.rc-sidebar-nav button:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ── BADGE NUMBERS (9, 5, 3, 2, 6) ── */
+nav.rc-sidebar-nav .text-\[14px\] {
+  font-size: 10px !important;
+  opacity: 0.7 !important;
+}
+
+nav.rc-sidebar-nav .text-\[11px\] {
+  font-size: 10px !important;
+}
+
+/* ── FAVORITES SECTION HEADER ── */
+nav.rc-sidebar-nav .text-\[13px\] {
+  font-size: 11px !important;
+  color: #fbbf24 !important;  /* amber-400 — keep the amber but brighter */
+}
+
+/* ── CHEVRON/EXPAND ICONS ── */
+nav.rc-sidebar-nav svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* ── SIDEBAR SECTION DIVIDERS ── */
+nav.rc-sidebar-nav > div {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ── SCROLLBAR STYLING ── */
+nav.rc-sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+nav.rc-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+nav.rc-sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(52, 211, 153, 0.3);
+  border-radius: 4px;
+}
+
+nav.rc-sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(52, 211, 153, 0.5);
+}

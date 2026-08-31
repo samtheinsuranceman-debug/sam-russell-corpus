@@ -1,0 +1,892 @@
+token,count,file_count,category
+#7a95b8,5811,112,Other Hardcoded Token
+#12233e,5681,115,Legacy Surface / Neutral
+#22c55e,2563,149,Finance Positive / Legacy Green
+#3b82f6,1719,161,Other Hardcoded Token
+#c8d8ec,1603,87,Other Hardcoded Token
+#0d1a2e,1342,75,Other Hardcoded Token
+text-emerald-400,1029,133,Finance Positive / Legacy Green
+#060d19,997,50,Other Hardcoded Token
+text-red-400,914,165,Semantic Status / Warning
+text-amber-400,831,135,Semantic Status / Warning
+text-blue-400,799,145,Informational Accent
+text-slate-400,745,49,Legacy Surface / Neutral
+#f0c040,741,86,Other Hardcoded Token
+#ef4444,642,140,Other Hardcoded Token
+border-slate-700,578,30,Legacy Surface / Neutral
+bg-emerald-500,444,117,Finance Positive / Legacy Green
+#f59e0b,441,109,Other Hardcoded Token
+bg-slate-800,440,31,Legacy Surface / Neutral
+border-emerald-500,416,114,Finance Positive / Legacy Green
+#fff,412,92,Other Hardcoded Token
+text-green-400,411,66,Finance Positive / Legacy Green
+bg-blue-500,393,119,Informational Accent
+text-slate-300,392,38,Legacy Surface / Neutral
+bg-red-500,388,130,Semantic Status / Warning
+text-gray-400,388,40,Legacy Surface / Neutral
+border-blue-500,355,109,Informational Accent
+#1e3a5f,350,23,Legacy Surface / Neutral
+bg-amber-500,344,115,Semantic Status / Warning
+border-amber-500,341,114,Semantic Status / Warning
+text-purple-400,339,105,Scoped Purple System
+#0b1628,307,47,Legacy Surface / Neutral
+bg-slate-900,306,28,Legacy Surface / Neutral
+text-slate-500,300,37,Legacy Surface / Neutral
+#8b5cf6,286,93,Scoped Purple System
+#10b981,277,63,Finance Positive / Legacy Green
+border-red-500,270,105,Semantic Status / Warning
+border-slate-800,255,19,Legacy Surface / Neutral
+#1e293b,251,38,Legacy Surface / Neutral
+text-gray-500,239,17,Legacy Surface / Neutral
+#94a3b8,218,36,Other Hardcoded Token
+#0a1628,184,26,Other Hardcoded Token
+#0f1e35,181,17,Legacy Surface / Neutral
+#334155,162,29,Legacy Surface / Neutral
+bg-green-500,161,54,Finance Positive / Legacy Green
+#a855f7,154,46,Scoped Purple System
+text-green-600,152,15,Finance Positive / Legacy Green
+#64748b,149,27,Other Hardcoded Token
+#1a3050,145,9,Other Hardcoded Token
+text-red-500,145,42,Semantic Status / Warning
+#1a3055,143,20,Other Hardcoded Token
+border-gray-700,142,12,Legacy Surface / Neutral
+text-yellow-400,142,45,Semantic Status / Warning
+text-amber-600,138,21,Semantic Status / Warning
+bg-purple-500,136,69,Scoped Purple System
+border-purple-500,136,60,Scoped Purple System
+text-cyan-400,136,48,Informational Accent
+text-amber-300,135,42,Semantic Status / Warning
+text-emerald-500,132,30,Finance Positive / Legacy Green
+#a78bfa,130,40,Other Hardcoded Token
+#8884d8,124,45,Other Hardcoded Token
+#ec4899,124,81,Other Hardcoded Token
+text-red-300,122,44,Semantic Status / Warning
+#0f172a,119,24,Legacy Surface / Neutral
+text-blue-300,119,41,Informational Accent
+text-gray-300,117,26,Legacy Surface / Neutral
+text-slate-200,116,19,Legacy Surface / Neutral
+bg-blue-600,115,32,Informational Accent
+text-zinc-400,114,18,Legacy Surface / Neutral
+#1a3a5c,113,2,Other Hardcoded Token
+text-violet-400,112,26,Scoped Purple System
+text-blue-600,110,16,Informational Accent
+#1a2e4c,108,6,Other Hardcoded Token
+text-emerald-300,108,37,Finance Positive / Legacy Green
+text-orange-400,107,45,Semantic Status / Warning
+#0a1424,106,15,Other Hardcoded Token
+text-amber-500,106,34,Semantic Status / Warning
+border-green-500,105,41,Finance Positive / Legacy Green
+text-blue-500,105,36,Informational Accent
+border-zinc-700,103,17,Legacy Surface / Neutral
+bg-gray-800,99,13,Legacy Surface / Neutral
+from-amber-500,93,44,Semantic Status / Warning
+#0a1526,90,6,Other Hardcoded Token
+bg-emerald-600,90,45,Finance Positive / Legacy Green
+text-zinc-500,90,16,Legacy Surface / Neutral
+bg-slate-700,88,19,Legacy Surface / Neutral
+#06b6d4,86,52,Other Hardcoded Token
+#f97316,83,56,Other Hardcoded Token
+text-zinc-300,81,16,Legacy Surface / Neutral
+bg-violet-500,80,28,Scoped Purple System
+#888,79,10,Other Hardcoded Token
+#0a1120,77,4,Other Hardcoded Token
+from-emerald-500,77,50,Finance Positive / Legacy Green
+#333,75,10,Other Hardcoded Token
+#14b8a6,74,44,Finance Positive / Legacy Green
+text-emerald-600,73,9,Finance Positive / Legacy Green
+text-green-500,73,24,Finance Positive / Legacy Green
+text-red-600,70,16,Semantic Status / Warning
+bg-zinc-800,69,16,Legacy Surface / Neutral
+bg-zinc-900,69,12,Legacy Surface / Neutral
+bg-gray-700,67,10,Legacy Surface / Neutral
+bg-yellow-500,63,32,Semantic Status / Warning
+border-violet-500,59,20,Scoped Purple System
+border-cyan-500,55,29,Informational Accent
+text-violet-300,55,23,Scoped Purple System
+border-zinc-800,54,5,Legacy Surface / Neutral
+#82ca9d,53,27,Other Hardcoded Token
+#1a2f4c,52,1,Other Hardcoded Token
+border-gray-800,51,7,Legacy Surface / Neutral
+text-rose-400,51,23,Semantic Status / Warning
+text-slate-600,51,22,Legacy Surface / Neutral
+bg-slate-950,50,8,Legacy Surface / Neutral
+#9ca3af,48,9,Other Hardcoded Token
+bg-orange-500,48,28,Semantic Status / Warning
+text-purple-600,48,14,Scoped Purple System
+#1e3a63,47,1,Legacy Surface / Neutral
+border-orange-500,47,24,Semantic Status / Warning
+border-violet-400,47,15,Scoped Purple System
+bg-emerald-700,46,28,Finance Positive / Legacy Green
+border-yellow-500,46,23,Semantic Status / Warning
+#4a6a8e,45,8,Other Hardcoded Token
+bg-cyan-500,45,25,Informational Accent
+#374151,44,8,Other Hardcoded Token
+bg-amber-50,44,11,Semantic Status / Warning
+bg-gray-900,44,10,Legacy Surface / Neutral
+text-purple-300,44,22,Scoped Purple System
+#060f20,43,5,Other Hardcoded Token
+#4f8cff,43,4,Other Hardcoded Token
+bg-amber-950,43,14,Semantic Status / Warning
+text-purple-500,43,17,Scoped Purple System
+#60a5fa,42,23,Other Hardcoded Token
+from-blue-500,42,36,Informational Accent
+border-slate-600,40,14,Legacy Surface / Neutral
+#00c49f,39,35,Other Hardcoded Token
+#0088fe,38,35,Other Hardcoded Token
+text-green-300,38,17,Finance Positive / Legacy Green
+#f8fafc,37,8,Other Hardcoded Token
+bg-amber-600,37,21,Semantic Status / Warning
+bg-red-400,37,26,Semantic Status / Warning
+text-teal-400,37,14,Finance Positive / Legacy Green
+#060d18,36,3,Other Hardcoded Token
+#16a34a,36,18,Other Hardcoded Token
+#6366f1,36,25,Other Hardcoded Token
+#ff8042,36,34,Other Hardcoded Token
+#ffbb28,36,35,Other Hardcoded Token
+bg-blue-700,36,17,Informational Accent
+bg-green-50,36,6,Finance Positive / Legacy Green
+border-amber-400,36,19,Semantic Status / Warning
+#1e3a66,35,4,Legacy Surface / Neutral
+#2563eb,35,22,Other Hardcoded Token
+bg-blue-50,35,13,Informational Accent
+text-orange-300,35,14,Semantic Status / Warning
+text-amber-200,34,21,Semantic Status / Warning
+#0a1428,33,3,Other Hardcoded Token
+#0f1d33,32,1,Legacy Surface / Neutral
+ring-blue-500,32,14,Informational Accent
+#f43f5e,31,15,Other Hardcoded Token
+bg-blue-950,31,13,Informational Accent
+to-cyan-500,31,26,Informational Accent
+to-orange-500,31,19,Semantic Status / Warning
+text-zinc-200,30,12,Legacy Surface / Neutral
+#1a2c4b,29,1,Other Hardcoded Token
+#2a4365,29,4,Other Hardcoded Token
+to-blue-500,29,22,Informational Accent
+#0a1929,28,1,Other Hardcoded Token
+#1a1a2e,28,6,Other Hardcoded Token
+#1a2c47,28,2,Other Hardcoded Token
+bg-amber-400,28,19,Semantic Status / Warning
+border-amber-800,28,10,Semantic Status / Warning
+text-amber-700,28,7,Semantic Status / Warning
+#4a6585,27,5,Other Hardcoded Token
+bg-red-950,27,19,Semantic Status / Warning
+bg-red-900,26,8,Semantic Status / Warning
+from-purple-500,26,23,Scoped Purple System
+#888888,25,3,Other Hardcoded Token
+bg-blue-400,25,16,Informational Accent
+text-red-200,25,13,Semantic Status / Warning
+#111827,24,2,Legacy Surface / Neutral
+#cbd5e1,24,4,Other Hardcoded Token
+border-zinc-600,24,12,Legacy Surface / Neutral
+text-slate-100,24,2,Legacy Surface / Neutral
+bg-green-950,23,5,Finance Positive / Legacy Green
+border-slate-500,23,16,Legacy Surface / Neutral
+to-emerald-500,23,17,Finance Positive / Legacy Green
+#1f2937,22,5,Other Hardcoded Token
+#6b7280,22,7,Other Hardcoded Token
+#e2e8f0,22,4,Other Hardcoded Token
+bg-zinc-700,22,9,Legacy Surface / Neutral
+border-amber-600,22,10,Semantic Status / Warning
+border-red-400,22,18,Semantic Status / Warning
+from-red-500,22,18,Semantic Status / Warning
+text-gray-200,22,2,Legacy Surface / Neutral
+to-purple-500,22,16,Scoped Purple System
+bg-amber-700,21,11,Semantic Status / Warning
+border-blue-400,21,15,Informational Accent
+from-violet-500,21,14,Scoped Purple System
+ring-emerald-500,21,11,Finance Positive / Legacy Green
+text-blue-700,21,8,Informational Accent
+text-cyan-300,21,9,Informational Accent
+#0f2942,20,1,Legacy Surface / Neutral
+#f87171,20,12,Other Hardcoded Token
+#ffc658,20,16,Other Hardcoded Token
+bg-amber-900,20,8,Semantic Status / Warning
+bg-red-50,20,9,Semantic Status / Warning
+from-amber-600,20,14,Semantic Status / Warning
+text-violet-200,20,14,Scoped Purple System
+to-amber-500,20,13,Semantic Status / Warning
+to-amber-600,20,15,Semantic Status / Warning
+to-blue-600,20,16,Informational Accent
+#050a14,19,1,Other Hardcoded Token
+#1e3a8a,19,4,Legacy Surface / Neutral
+bg-emerald-900,19,8,Finance Positive / Legacy Green
+text-green-700,19,7,Finance Positive / Legacy Green
+text-red-700,19,6,Semantic Status / Warning
+text-violet-100,19,7,Scoped Purple System
+text-yellow-500,19,11,Semantic Status / Warning
+to-orange-600,19,12,Semantic Status / Warning
+#fbbf24,18,10,Other Hardcoded Token
+bg-purple-600,18,13,Scoped Purple System
+bg-rose-500,18,14,Semantic Status / Warning
+border-amber-200,18,9,Semantic Status / Warning
+#030712,17,1,Other Hardcoded Token
+#34d399,17,6,Other Hardcoded Token
+#eab308,17,13,Other Hardcoded Token
+bg-blue-900,17,11,Informational Accent
+bg-red-600,17,15,Semantic Status / Warning
+border-rose-500,17,12,Semantic Status / Warning
+text-gray-600,17,9,Legacy Surface / Neutral
+#4b6282,16,1,Other Hardcoded Token
+#84cc16,16,14,Other Hardcoded Token
+bg-emerald-400,16,13,Finance Positive / Legacy Green
+bg-green-900,16,5,Finance Positive / Legacy Green
+bg-purple-50,16,6,Scoped Purple System
+bg-slate-50,16,5,Legacy Surface / Neutral
+bg-slate-500,16,13,Legacy Surface / Neutral
+border-gray-300,16,8,Legacy Surface / Neutral
+to-emerald-600,16,13,Finance Positive / Legacy Green
+#0d1f3c,15,7,Other Hardcoded Token
+#ff7300,15,15,Other Hardcoded Token
+bg-emerald-950,15,10,Finance Positive / Legacy Green
+border-blue-200,15,9,Informational Accent
+border-emerald-400,15,14,Finance Positive / Legacy Green
+border-green-600,15,3,Finance Positive / Legacy Green
+border-teal-500,15,10,Finance Positive / Legacy Green
+from-amber-950,15,8,Semantic Status / Warning
+from-emerald-900,15,13,Finance Positive / Legacy Green
+#0ea5e9,14,5,Other Hardcoded Token
+#ff7a59,14,1,Other Hardcoded Token
+bg-emerald-50,14,8,Finance Positive / Legacy Green
+bg-green-400,14,8,Finance Positive / Legacy Green
+bg-violet-400,14,9,Scoped Purple System
+from-cyan-500,14,11,Informational Accent
+#111c32,13,2,Legacy Surface / Neutral
+#1a3258,13,5,Other Hardcoded Token
+#3d5a7a,13,3,Other Hardcoded Token
+#71717a,13,4,Other Hardcoded Token
+#dc2626,13,10,Other Hardcoded Token
+#e5e7eb,13,4,Other Hardcoded Token
+#f1f5f9,13,2,Other Hardcoded Token
+bg-teal-500,13,7,Finance Positive / Legacy Green
+border-green-200,13,7,Finance Positive / Legacy Green
+from-green-500,13,9,Finance Positive / Legacy Green
+to-yellow-500,13,8,Semantic Status / Warning
+#1a365d,12,2,Other Hardcoded Token
+#22d3ee,12,5,Other Hardcoded Token
+#413ea0,12,11,Other Hardcoded Token
+#a1a1aa,12,3,Other Hardcoded Token
+bg-gray-500,12,8,Legacy Surface / Neutral
+bg-purple-900,12,5,Scoped Purple System
+bg-violet-600,12,3,Scoped Purple System
+border-blue-600,12,6,Informational Accent
+border-gray-600,12,6,Legacy Surface / Neutral
+from-amber-400,12,10,Semantic Status / Warning
+from-amber-900,12,10,Semantic Status / Warning
+from-emerald-600,12,10,Finance Positive / Legacy Green
+text-purple-700,12,6,Scoped Purple System
+to-rose-600,12,6,Semantic Status / Warning
+#00ff88,11,1,Other Hardcoded Token
+#060f1e,11,2,Other Hardcoded Token
+#27272a,11,4,Other Hardcoded Token
+#475569,11,7,Other Hardcoded Token
+#4b6382,11,4,Other Hardcoded Token
+#c8d6e5,11,3,Other Hardcoded Token
+#ccc,11,2,Other Hardcoded Token
+#e11d48,11,4,Other Hardcoded Token
+#ff4444,11,1,Other Hardcoded Token
+bg-gray-400,11,8,Legacy Surface / Neutral
+bg-gray-600,11,6,Legacy Surface / Neutral
+border-green-400,11,8,Finance Positive / Legacy Green
+border-purple-200,11,7,Scoped Purple System
+border-red-900,11,8,Semantic Status / Warning
+from-orange-500,11,6,Semantic Status / Warning
+text-amber-800,11,4,Semantic Status / Warning
+text-orange-600,11,6,Semantic Status / Warning
+to-purple-600,11,9,Scoped Purple System
+to-red-500,11,10,Semantic Status / Warning
+#2a3f5f,10,2,Other Hardcoded Token
+bg-amber-100,10,5,Semantic Status / Warning
+bg-blue-100,10,7,Informational Accent
+bg-green-100,10,6,Finance Positive / Legacy Green
+bg-green-600,10,8,Finance Positive / Legacy Green
+bg-purple-400,10,5,Scoped Purple System
+border-blue-800,10,7,Informational Accent
+border-emerald-600,10,5,Finance Positive / Legacy Green
+border-gray-500,10,8,Legacy Surface / Neutral
+border-purple-400,10,6,Scoped Purple System
+border-red-200,10,7,Semantic Status / Warning
+from-blue-600,10,8,Informational Accent
+text-blue-100,10,2,Informational Accent
+text-emerald-700,10,4,Finance Positive / Legacy Green
+text-green-200,10,2,Finance Positive / Legacy Green
+text-rose-300,10,5,Semantic Status / Warning
+to-amber-900,10,9,Semantic Status / Warning
+to-red-600,10,7,Semantic Status / Warning
+#0a0e17,9,4,Other Hardcoded Token
+#132544,9,2,Other Hardcoded Token
+#18181b,9,4,Other Hardcoded Token
+#3f3f46,9,4,Other Hardcoded Token
+#8dd1e1,9,9,Other Hardcoded Token
+bg-emerald-100,9,3,Finance Positive / Legacy Green
+bg-purple-950,9,5,Scoped Purple System
+from-yellow-500,9,6,Semantic Status / Warning
+ring-amber-500,9,9,Semantic Status / Warning
+text-blue-200,9,9,Informational Accent
+text-emerald-200,9,8,Finance Positive / Legacy Green
+text-orange-500,9,7,Semantic Status / Warning
+text-teal-300,9,4,Finance Positive / Legacy Green
+text-yellow-300,9,8,Semantic Status / Warning
+to-emerald-900,9,7,Finance Positive / Legacy Green
+#1a3158,8,1,Other Hardcoded Token
+#f3f4f6,8,3,Other Hardcoded Token
+border-amber-300,8,5,Semantic Status / Warning
+from-rose-500,8,7,Semantic Status / Warning
+text-red-100,8,8,Semantic Status / Warning
+text-zinc-600,8,5,Legacy Surface / Neutral
+to-emerald-400,8,6,Finance Positive / Legacy Green
+to-emerald-950,8,5,Finance Positive / Legacy Green
+to-violet-600,8,6,Scoped Purple System
+#164a30,7,1,Other Hardcoded Token
+#2a3f5a,7,3,Other Hardcoded Token
+#3a5375,7,1,Other Hardcoded Token
+#4a154b,7,1,Other Hardcoded Token
+#4ade80,7,5,Other Hardcoded Token
+#a4de6c,7,7,Other Hardcoded Token
+#d0ed57,7,7,Other Hardcoded Token
+#f5f5f5,7,6,Other Hardcoded Token
+bg-red-100,7,4,Semantic Status / Warning
+bg-violet-950,7,5,Scoped Purple System
+bg-yellow-400,7,4,Semantic Status / Warning
+border-amber-700,7,5,Semantic Status / Warning
+border-orange-400,7,3,Semantic Status / Warning
+border-slate-200,7,4,Legacy Surface / Neutral
+from-amber-700,7,4,Semantic Status / Warning
+from-emerald-950,7,6,Finance Positive / Legacy Green
+text-purple-200,7,3,Scoped Purple System
+to-rose-500,7,5,Semantic Status / Warning
+to-teal-600,7,6,Finance Positive / Legacy Green
+#670,6,3,Other Hardcoded Token
+#b45309,6,3,Other Hardcoded Token
+#f5b14c,6,5,Other Hardcoded Token
+bg-purple-100,6,6,Scoped Purple System
+bg-red-700,6,6,Semantic Status / Warning
+bg-zinc-500,6,5,Legacy Surface / Neutral
+border-purple-800,6,4,Scoped Purple System
+border-red-800,6,5,Semantic Status / Warning
+from-blue-900,6,6,Informational Accent
+text-sky-400,6,2,Informational Accent
+text-slate-700,6,3,Legacy Surface / Neutral
+to-violet-500,6,5,Scoped Purple System
+to-yellow-400,6,5,Semantic Status / Warning
+#0b162c,5,1,Legacy Surface / Neutral
+#1a0d2e,5,3,Other Hardcoded Token
+#1a2f52,5,1,Other Hardcoded Token
+#1ea34d,5,4,Legacy Surface / Neutral
+#1ea950,5,3,Legacy Surface / Neutral
+#2a4060,5,1,Other Hardcoded Token
+#7c3aed,5,5,Scoped Purple System
+#c084fc,5,2,Other Hardcoded Token
+#d4a853,5,1,Other Hardcoded Token
+#d97706,5,5,Other Hardcoded Token
+#f472b6,5,5,Other Hardcoded Token
+#facc15,5,3,Other Hardcoded Token
+#fecaca,5,2,Other Hardcoded Token
+#ffffff08,5,2,Other Hardcoded Token
+bg-slate-100,5,2,Legacy Surface / Neutral
+bg-slate-600,5,3,Legacy Surface / Neutral
+bg-violet-700,5,2,Scoped Purple System
+bg-yellow-900,5,2,Semantic Status / Warning
+border-blue-700,5,4,Informational Accent
+border-emerald-200,5,3,Finance Positive / Legacy Green
+border-emerald-300,5,4,Finance Positive / Legacy Green
+border-emerald-700,5,5,Finance Positive / Legacy Green
+border-gray-400,5,5,Legacy Surface / Neutral
+border-green-800,5,3,Finance Positive / Legacy Green
+border-sky-500,5,2,Informational Accent
+border-teal-400,5,2,Finance Positive / Legacy Green
+from-orange-950,5,4,Semantic Status / Warning
+from-purple-900,5,4,Scoped Purple System
+from-red-900,5,5,Semantic Status / Warning
+from-slate-900,5,5,Legacy Surface / Neutral
+from-violet-600,5,4,Scoped Purple System
+ring-purple-500,5,3,Scoped Purple System
+ring-violet-500,5,5,Scoped Purple System
+to-amber-800,5,5,Semantic Status / Warning
+to-emerald-800,5,4,Finance Positive / Legacy Green
+to-orange-700,5,4,Semantic Status / Warning
+to-teal-900,5,5,Finance Positive / Legacy Green
+via-purple-500,5,5,Scoped Purple System
+via-yellow-500,5,4,Semantic Status / Warning
+#000000,4,3,Other Hardcoded Token
+#0d1a0d,4,2,Other Hardcoded Token
+#1a1a19,4,2,Other Hardcoded Token
+#245,4,1,Other Hardcoded Token
+#3b82f620,4,2,Other Hardcoded Token
+#8892b0,4,1,Other Hardcoded Token
+#991b1b,4,4,Other Hardcoded Token
+#c0c0c0,4,2,Other Hardcoded Token
+#cd7f32,4,2,Other Hardcoded Token
+#d4a017,4,1,Other Hardcoded Token
+#ea580c,4,4,Other Hardcoded Token
+#f5a623,4,1,Other Hardcoded Token
+bg-cyan-400,4,4,Informational Accent
+bg-cyan-600,4,3,Informational Accent
+bg-orange-400,4,2,Semantic Status / Warning
+bg-purple-700,4,4,Scoped Purple System
+bg-slate-200,4,2,Legacy Surface / Neutral
+bg-zinc-600,4,4,Legacy Surface / Neutral
+bg-zinc-950,4,2,Legacy Surface / Neutral
+border-cyan-400,4,3,Informational Accent
+border-emerald-800,4,3,Finance Positive / Legacy Green
+border-purple-600,4,4,Scoped Purple System
+border-red-600,4,3,Semantic Status / Warning
+border-violet-300,4,4,Scoped Purple System
+border-zinc-500,4,4,Legacy Surface / Neutral
+from-gray-900,4,4,Legacy Surface / Neutral
+from-orange-600,4,3,Semantic Status / Warning
+from-red-600,4,3,Semantic Status / Warning
+from-red-950,4,3,Semantic Status / Warning
+ring-yellow-400,4,2,Semantic Status / Warning
+text-fuchsia-400,4,2,Scoped Purple System
+text-orange-200,4,2,Semantic Status / Warning
+text-slate-800,4,3,Legacy Surface / Neutral
+text-slate-900,4,3,Legacy Surface / Neutral
+text-teal-500,4,2,Finance Positive / Legacy Green
+text-teal-600,4,1,Finance Positive / Legacy Green
+text-yellow-600,4,4,Semantic Status / Warning
+to-amber-400,4,4,Semantic Status / Warning
+to-blue-800,4,4,Informational Accent
+to-blue-900,4,3,Informational Accent
+to-cyan-600,4,3,Informational Accent
+to-cyan-950,4,3,Informational Accent
+to-green-600,4,3,Finance Positive / Legacy Green
+to-teal-700,4,4,Finance Positive / Legacy Green
+to-yellow-600,4,4,Semantic Status / Warning
+via-amber-800,4,4,Semantic Status / Warning
+via-emerald-500,4,4,Finance Positive / Legacy Green
+via-red-500,4,1,Semantic Status / Warning
+#00cc66,3,1,Other Hardcoded Token
+#020611,3,1,Other Hardcoded Token
+#0f1520,3,2,Legacy Surface / Neutral
+#1a1a1a,3,1,Other Hardcoded Token
+#1e40af,3,3,Legacy Surface / Neutral
+#22c55e20,3,1,Finance Positive / Legacy Green
+#233859,3,1,Other Hardcoded Token
+#253858,3,1,Other Hardcoded Token
+#5c4a18,3,1,Other Hardcoded Token
+#666,3,3,Other Hardcoded Token
+bg-gray-300,3,3,Legacy Surface / Neutral
+bg-gray-50,3,1,Legacy Surface / Neutral
+bg-orange-100,3,3,Semantic Status / Warning
+bg-orange-50,3,3,Semantic Status / Warning
+bg-orange-600,3,2,Semantic Status / Warning
+bg-orange-950,3,3,Semantic Status / Warning
+bg-rose-400,3,3,Semantic Status / Warning
+border-blue-300,3,2,Informational Accent
+border-blue-900,3,3,Informational Accent
+border-green-900,3,1,Finance Positive / Legacy Green
+border-violet-800,3,2,Scoped Purple System
+border-yellow-400,3,2,Semantic Status / Warning
+border-yellow-900,3,2,Semantic Status / Warning
+from-emerald-400,3,2,Finance Positive / Legacy Green
+from-emerald-700,3,3,Finance Positive / Legacy Green
+from-fuchsia-600,3,2,Scoped Purple System
+from-gray-500,3,3,Legacy Surface / Neutral
+from-green-950,3,2,Finance Positive / Legacy Green
+from-orange-900,3,2,Semantic Status / Warning
+from-purple-600,3,3,Scoped Purple System
+from-red-400,3,3,Semantic Status / Warning
+from-slate-800,3,3,Legacy Surface / Neutral
+from-violet-900,3,3,Scoped Purple System
+ring-amber-400,3,2,Semantic Status / Warning
+ring-emerald-400,3,3,Finance Positive / Legacy Green
+text-amber-100,3,3,Semantic Status / Warning
+text-blue-800,3,3,Informational Accent
+text-cyan-600,3,1,Informational Accent
+text-emerald-800,3,2,Finance Positive / Legacy Green
+to-blue-700,3,3,Informational Accent
+to-emerald-700,3,3,Finance Positive / Legacy Green
+to-green-500,3,2,Finance Positive / Legacy Green
+to-orange-900,3,3,Semantic Status / Warning
+to-orange-950,3,2,Semantic Status / Warning
+to-purple-900,3,3,Scoped Purple System
+to-red-400,3,3,Semantic Status / Warning
+to-red-800,3,3,Semantic Status / Warning
+to-red-900,3,3,Semantic Status / Warning
+to-slate-600,3,3,Legacy Surface / Neutral
+to-slate-800,3,3,Legacy Surface / Neutral
+to-slate-900,3,3,Legacy Surface / Neutral
+to-teal-500,3,2,Finance Positive / Legacy Green
+to-violet-900,3,3,Scoped Purple System
+to-yellow-900,3,3,Semantic Status / Warning
+to-yellow-950,3,3,Semantic Status / Warning
+#000,2,1,Other Hardcoded Token
+#050d1a,2,1,Other Hardcoded Token
+#059669,2,2,Other Hardcoded Token
+#064e3b,2,1,Other Hardcoded Token
+#0a0812,2,1,Other Hardcoded Token
+#0a1220,2,1,Other Hardcoded Token
+#0d1526,2,1,Other Hardcoded Token
+#0d1b2f,2,1,Other Hardcoded Token
+#0d2a1c,2,1,Other Hardcoded Token
+#0d9488,2,2,Other Hardcoded Token
+#0f2035,2,1,Legacy Surface / Neutral
+#162a4a,2,1,Other Hardcoded Token
+#166534,2,2,Other Hardcoded Token
+#1a3a6c,2,1,Other Hardcoded Token
+#1d4ed8,2,2,Other Hardcoded Token
+#1ea850,2,1,Legacy Surface / Neutral
+#22c55e15,2,2,Finance Positive / Legacy Green
+#22c55e40,2,1,Finance Positive / Legacy Green
+#2c446b,2,1,Other Hardcoded Token
+#34322d,2,2,Other Hardcoded Token
+#38bdf8,2,2,Other Hardcoded Token
+#3a2e10,2,1,Other Hardcoded Token
+#451a03,2,2,Other Hardcoded Token
+#4b5563,2,2,Other Hardcoded Token
+#613,2,2,Other Hardcoded Token
+#858481,2,2,Other Hardcoded Token
+#9333ea,2,2,Other Hardcoded Token
+#93c5fd,2,2,Other Hardcoded Token
+#a7f3d0,2,1,Other Hardcoded Token
+#b8a060,2,1,Other Hardcoded Token
+#c4b5fd,2,1,Scoped Purple System
+#c9a84c,2,1,Other Hardcoded Token
+#d4af37,2,1,Other Hardcoded Token
+#e8d5a3,2,1,Other Hardcoded Token
+#ef444440,2,1,Other Hardcoded Token
+#f8f8f7,2,2,Other Hardcoded Token
+#fb7185,2,1,Other Hardcoded Token
+#ff0000,2,2,Other Hardcoded Token
+#ffaa00,2,1,Other Hardcoded Token
+#ffffff,2,2,Other Hardcoded Token
+#ffffff10,2,2,Other Hardcoded Token
+bg-cyan-50,2,2,Informational Accent
+bg-emerald-200,2,2,Finance Positive / Legacy Green
+bg-fuchsia-500,2,2,Scoped Purple System
+bg-orange-900,2,2,Semantic Status / Warning
+bg-red-200,2,2,Semantic Status / Warning
+bg-rose-50,2,2,Semantic Status / Warning
+bg-rose-900,2,1,Semantic Status / Warning
+bg-sky-500,2,2,Informational Accent
+bg-teal-600,2,1,Finance Positive / Legacy Green
+bg-violet-50,2,2,Scoped Purple System
+bg-yellow-50,2,1,Semantic Status / Warning
+bg-zinc-400,2,1,Legacy Surface / Neutral
+border-fuchsia-500,2,2,Scoped Purple System
+border-orange-200,2,2,Semantic Status / Warning
+border-orange-800,2,2,Semantic Status / Warning
+border-purple-300,2,2,Scoped Purple System
+border-purple-700,2,2,Scoped Purple System
+border-red-300,2,2,Semantic Status / Warning
+border-red-700,2,2,Semantic Status / Warning
+border-rose-400,2,2,Semantic Status / Warning
+border-slate-300,2,2,Legacy Surface / Neutral
+border-slate-400,2,2,Legacy Surface / Neutral
+border-yellow-200,2,1,Semantic Status / Warning
+from-blue-50,2,2,Informational Accent
+from-blue-700,2,2,Informational Accent
+from-blue-950,2,2,Informational Accent
+from-cyan-600,2,2,Informational Accent
+from-cyan-900,2,2,Informational Accent
+from-cyan-950,2,2,Informational Accent
+from-gray-400,2,2,Legacy Surface / Neutral
+from-green-400,2,2,Finance Positive / Legacy Green
+from-green-600,2,2,Finance Positive / Legacy Green
+from-purple-950,2,2,Scoped Purple System
+from-red-700,2,2,Semantic Status / Warning
+from-rose-600,2,2,Semantic Status / Warning
+from-slate-500,2,2,Legacy Surface / Neutral
+from-slate-950,2,1,Legacy Surface / Neutral
+from-teal-900,2,1,Finance Positive / Legacy Green
+from-violet-950,2,2,Scoped Purple System
+ring-cyan-400,2,2,Informational Accent
+ring-orange-400,2,1,Semantic Status / Warning
+ring-red-500,2,1,Semantic Status / Warning
+ring-violet-400,2,2,Scoped Purple System
+text-blue-900,2,2,Informational Accent
+text-cyan-500,2,2,Informational Accent
+text-emerald-100,2,2,Finance Positive / Legacy Green
+text-violet-50,2,2,Scoped Purple System
+to-amber-700,2,2,Semantic Status / Warning
+to-blue-400,2,2,Informational Accent
+to-cyan-400,2,2,Informational Accent
+to-cyan-900,2,2,Informational Accent
+to-fuchsia-500,2,1,Scoped Purple System
+to-gray-600,2,2,Legacy Surface / Neutral
+to-purple-400,2,2,Scoped Purple System
+to-purple-700,2,2,Scoped Purple System
+to-purple-800,2,2,Scoped Purple System
+to-red-950,2,1,Semantic Status / Warning
+to-violet-800,2,2,Scoped Purple System
+to-violet-950,2,2,Scoped Purple System
+via-amber-400,2,2,Semantic Status / Warning
+via-amber-500,2,2,Semantic Status / Warning
+via-blue-950,2,2,Informational Accent
+via-emerald-400,2,2,Finance Positive / Legacy Green
+via-emerald-800,2,2,Finance Positive / Legacy Green
+via-emerald-900,2,1,Finance Positive / Legacy Green
+via-orange-400,2,2,Semantic Status / Warning
+via-orange-500,2,2,Semantic Status / Warning
+via-orange-900,2,1,Semantic Status / Warning
+via-rose-950,2,1,Semantic Status / Warning
+via-slate-900,2,1,Legacy Surface / Neutral
+via-slate-950,2,2,Legacy Surface / Neutral
+via-teal-800,2,1,Finance Positive / Legacy Green
+via-yellow-400,2,1,Semantic Status / Warning
+#002855,1,1,Other Hardcoded Token
+#006d32,1,1,Other Hardcoded Token
+#0070ba,1,1,Other Hardcoded Token
+#0088ff,1,1,Other Hardcoded Token
+#00a1e0,1,1,Other Hardcoded Token
+#00ff00,1,1,Other Hardcoded Token
+#0284c7,1,1,Other Hardcoded Token
+#050a12,1,1,Other Hardcoded Token
+#060e1a,1,1,Other Hardcoded Token
+#07060d,1,1,Other Hardcoded Token
+#080f1e,1,1,Other Hardcoded Token
+#08101c,1,1,Other Hardcoded Token
+#08101d,1,1,Other Hardcoded Token
+#081221,1,1,Other Hardcoded Token
+#0891b2,1,1,Other Hardcoded Token
+#090710,1,1,Other Hardcoded Token
+#090712,1,1,Other Hardcoded Token
+#0a0f1a,1,1,Other Hardcoded Token
+#0a111c,1,1,Other Hardcoded Token
+#0a1324,1,1,Other Hardcoded Token
+#0a1b28,1,1,Other Hardcoded Token
+#0a2e2e,1,1,Other Hardcoded Token
+#0c1425,1,1,Other Hardcoded Token
+#0d1b30,1,1,Other Hardcoded Token
+#0d1e3a,1,1,Other Hardcoded Token
+#0d2e1a,1,1,Other Hardcoded Token
+#0d3b3b,1,1,Other Hardcoded Token
+#0e4429,1,1,Other Hardcoded Token
+#102a1a,1,1,Other Hardcoded Token
+#111111,1,1,Legacy Surface / Neutral
+#11182700,1,1,Legacy Surface / Neutral
+#15803d,1,1,Other Hardcoded Token
+#1a1025,1,1,Other Hardcoded Token
+#1a153a,1,1,Other Hardcoded Token
+#1a2a42,1,1,Other Hardcoded Token
+#1a3a2a,1,1,Other Hardcoded Token
+#1c1c1c,1,1,Other Hardcoded Token
+#1da34d,1,1,Other Hardcoded Token
+#1e324f,1,1,Legacy Surface / Neutral
+#222,1,1,Other Hardcoded Token
+#22334a,1,1,Other Hardcoded Token
+#22c55e33,1,1,Finance Positive / Legacy Green
+#26a641,1,1,Other Hardcoded Token
+#2a1010,1,1,Other Hardcoded Token
+#2a1025,1,1,Other Hardcoded Token
+#2a1a0a,1,1,Other Hardcoded Token
+#2a2010,1,1,Other Hardcoded Token
+#2a3520,1,1,Other Hardcoded Token
+#2a4a7f,1,1,Other Hardcoded Token
+#2a4d7a,1,1,Other Hardcoded Token
+#2dd4bf,1,1,Other Hardcoded Token
+#39d353,1,1,Other Hardcoded Token
+#3a103b,1,1,Other Hardcoded Token
+#3a1520,1,1,Other Hardcoded Token
+#3a1a4c,1,1,Other Hardcoded Token
+#3a2010,1,1,Other Hardcoded Token
+#4b5e78,1,1,Other Hardcoded Token
+#4f46e5,1,1,Other Hardcoded Token
+#582,1,1,Other Hardcoded Token
+#5a7a9e,1,1,Other Hardcoded Token
+#5c7394,1,1,Other Hardcoded Token
+#6366f130,1,1,Other Hardcoded Token
+#65a30d,1,1,Other Hardcoded Token
+#67e8f9,1,1,Other Hardcoded Token
+#680,1,1,Other Hardcoded Token
+#6b21a8,1,1,Other Hardcoded Token
+#6ba3ff,1,1,Other Hardcoded Token
+#78350f,1,1,Other Hardcoded Token
+#7dd3fc,1,1,Other Hardcoded Token
+#7f1d1d,1,1,Other Hardcoded Token
+#884,1,1,Other Hardcoded Token
+#8b7bf0,1,1,Other Hardcoded Token
+#90b0a0,1,1,Other Hardcoded Token
+#90d0c0,1,1,Other Hardcoded Token
+#92400e,1,1,Other Hardcoded Token
+#94a3b820,1,1,Other Hardcoded Token
+#999,1,1,Other Hardcoded Token
+#a0a080,1,1,Other Hardcoded Token
+#a855f740,1,1,Scoped Purple System
+#a8c8b8,1,1,Other Hardcoded Token
+#b48600,1,1,Other Hardcoded Token
+#b91c1c,1,1,Other Hardcoded Token
+#be123c,1,1,Other Hardcoded Token
+#c0d4e8,1,1,Other Hardcoded Token
+#c8d8e8,1,1,Other Hardcoded Token
+#c8dcd0,1,1,Other Hardcoded Token
+#ca8a04,1,1,Other Hardcoded Token
+#d070a0,1,1,Other Hardcoded Token
+#d0b080,1,1,Other Hardcoded Token
+#d1fae5,1,1,Other Hardcoded Token
+#d4a040,1,1,Other Hardcoded Token
+#d946ef,1,1,Other Hardcoded Token
+#dbeafe,1,1,Other Hardcoded Token
+#dc262615,1,1,Other Hardcoded Token
+#dc262633,1,1,Other Hardcoded Token
+#dcfce7,1,1,Other Hardcoded Token
+#ddd,1,1,Other Hardcoded Token
+#e07050,1,1,Other Hardcoded Token
+#e0e7ff,1,1,Other Hardcoded Token
+#e86c4f,1,1,Other Hardcoded Token
+#e8c080,1,1,Other Hardcoded Token
+#eab30820,1,1,Other Hardcoded Token
+#ec489930,1,1,Other Hardcoded Token
+#ede9fe,1,1,Other Hardcoded Token
+#ef444415,1,1,Other Hardcoded Token
+#ef444420,1,1,Other Hardcoded Token
+#ef444430,1,1,Other Hardcoded Token
+#ef444433,1,1,Other Hardcoded Token
+#ef444480,1,1,Other Hardcoded Token
+#f3e8ff,1,1,Other Hardcoded Token
+#f59e0b15,1,1,Other Hardcoded Token
+#f59e0b20,1,1,Other Hardcoded Token
+#f59e0b33,1,1,Other Hardcoded Token
+#fb923c,1,1,Other Hardcoded Token
+#fca5a5,1,1,Other Hardcoded Token
+#fee2e2,1,1,Other Hardcoded Token
+#fef2f2,1,1,Other Hardcoded Token
+#fef3c7,1,1,Other Hardcoded Token
+#ff6644,1,1,Other Hardcoded Token
+#ffffff05,1,1,Other Hardcoded Token
+bg-amber-200,1,1,Semantic Status / Warning
+bg-amber-300,1,1,Semantic Status / Warning
+bg-amber-800,1,1,Semantic Status / Warning
+bg-blue-200,1,1,Informational Accent
+bg-blue-300,1,1,Informational Accent
+bg-cyan-300,1,1,Informational Accent
+bg-cyan-700,1,1,Informational Accent
+bg-cyan-900,1,1,Informational Accent
+bg-cyan-950,1,1,Informational Accent
+bg-emerald-300,1,1,Finance Positive / Legacy Green
+bg-gray-100,1,1,Legacy Surface / Neutral
+bg-gray-200,1,1,Legacy Surface / Neutral
+bg-green-700,1,1,Finance Positive / Legacy Green
+bg-orange-300,1,1,Semantic Status / Warning
+bg-orange-700,1,1,Semantic Status / Warning
+bg-purple-200,1,1,Scoped Purple System
+bg-red-300,1,1,Semantic Status / Warning
+bg-rose-300,1,1,Semantic Status / Warning
+bg-rose-600,1,1,Semantic Status / Warning
+bg-rose-700,1,1,Semantic Status / Warning
+bg-rose-950,1,1,Semantic Status / Warning
+bg-sky-50,1,1,Informational Accent
+bg-sky-950,1,1,Informational Accent
+bg-slate-300,1,1,Legacy Surface / Neutral
+bg-slate-400,1,1,Legacy Surface / Neutral
+bg-teal-300,1,1,Finance Positive / Legacy Green
+bg-teal-50,1,1,Finance Positive / Legacy Green
+bg-violet-300,1,1,Scoped Purple System
+bg-yellow-100,1,1,Semantic Status / Warning
+bg-yellow-300,1,1,Semantic Status / Warning
+bg-yellow-600,1,1,Semantic Status / Warning
+border-blue-100,1,1,Informational Accent
+border-cyan-300,1,1,Informational Accent
+border-cyan-700,1,1,Informational Accent
+border-emerald-900,1,1,Finance Positive / Legacy Green
+border-green-300,1,1,Finance Positive / Legacy Green
+border-orange-300,1,1,Semantic Status / Warning
+border-orange-600,1,1,Semantic Status / Warning
+border-rose-200,1,1,Semantic Status / Warning
+border-rose-300,1,1,Semantic Status / Warning
+border-rose-800,1,1,Semantic Status / Warning
+border-sky-200,1,1,Informational Accent
+border-sky-800,1,1,Informational Accent
+border-slate-900,1,1,Legacy Surface / Neutral
+border-slate-950,1,1,Legacy Surface / Neutral
+border-teal-300,1,1,Finance Positive / Legacy Green
+border-violet-200,1,1,Scoped Purple System
+border-yellow-800,1,1,Semantic Status / Warning
+from-amber-50,1,1,Semantic Status / Warning
+from-blue-400,1,1,Informational Accent
+from-fuchsia-500,1,1,Scoped Purple System
+from-fuchsia-700,1,1,Scoped Purple System
+from-gray-300,1,1,Legacy Surface / Neutral
+from-gray-700,1,1,Legacy Surface / Neutral
+from-gray-950,1,1,Legacy Surface / Neutral
+from-green-300,1,1,Finance Positive / Legacy Green
+from-green-50,1,1,Finance Positive / Legacy Green
+from-orange-400,1,1,Semantic Status / Warning
+from-purple-400,1,1,Scoped Purple System
+from-purple-50,1,1,Scoped Purple System
+from-red-50,1,1,Semantic Status / Warning
+from-rose-400,1,1,Semantic Status / Warning
+from-rose-700,1,1,Semantic Status / Warning
+from-rose-950,1,1,Semantic Status / Warning
+from-sky-500,1,1,Informational Accent
+from-slate-400,1,1,Legacy Surface / Neutral
+from-teal-400,1,1,Finance Positive / Legacy Green
+from-teal-500,1,1,Finance Positive / Legacy Green
+from-teal-600,1,1,Finance Positive / Legacy Green
+from-violet-700,1,1,Scoped Purple System
+from-yellow-400,1,1,Semantic Status / Warning
+from-yellow-600,1,1,Semantic Status / Warning
+from-zinc-800,1,1,Legacy Surface / Neutral
+from-zinc-900,1,1,Legacy Surface / Neutral
+ring-fuchsia-500,1,1,Scoped Purple System
+ring-green-500,1,1,Finance Positive / Legacy Green
+ring-orange-500,1,1,Semantic Status / Warning
+text-cyan-200,1,1,Informational Accent
+text-cyan-700,1,1,Informational Accent
+text-cyan-800,1,1,Informational Accent
+text-emerald-50,1,1,Finance Positive / Legacy Green
+text-gray-900,1,1,Legacy Surface / Neutral
+text-orange-700,1,1,Semantic Status / Warning
+text-orange-800,1,1,Semantic Status / Warning
+text-purple-800,1,1,Scoped Purple System
+text-red-800,1,1,Semantic Status / Warning
+text-rose-500,1,1,Semantic Status / Warning
+text-rose-800,1,1,Semantic Status / Warning
+text-slate-50,1,1,Legacy Surface / Neutral
+text-teal-800,1,1,Finance Positive / Legacy Green
+text-violet-500,1,1,Scoped Purple System
+text-violet-800,1,1,Scoped Purple System
+text-yellow-200,1,1,Semantic Status / Warning
+text-yellow-800,1,1,Semantic Status / Warning
+text-zinc-100,1,1,Legacy Surface / Neutral
+to-amber-950,1,1,Semantic Status / Warning
+to-blue-950,1,1,Informational Accent
+to-cyan-700,1,1,Informational Accent
+to-cyan-800,1,1,Informational Accent
+to-emerald-50,1,1,Finance Positive / Legacy Green
+to-fuchsia-400,1,1,Scoped Purple System
+to-fuchsia-950,1,1,Scoped Purple System
+to-gray-300,1,1,Legacy Surface / Neutral
+to-gray-400,1,1,Legacy Surface / Neutral
+to-gray-500,1,1,Legacy Surface / Neutral
+to-gray-700,1,1,Legacy Surface / Neutral
+to-gray-950,1,1,Legacy Surface / Neutral
+to-green-400,1,1,Finance Positive / Legacy Green
+to-green-700,1,1,Finance Positive / Legacy Green
+to-green-800,1,1,Finance Positive / Legacy Green
+to-orange-400,1,1,Semantic Status / Warning
+to-purple-950,1,1,Scoped Purple System
+to-rose-400,1,1,Semantic Status / Warning
+to-rose-700,1,1,Semantic Status / Warning
+to-sky-600,1,1,Informational Accent
+to-slate-400,1,1,Legacy Surface / Neutral
+to-slate-950,1,1,Legacy Surface / Neutral
+to-violet-400,1,1,Scoped Purple System
+to-violet-700,1,1,Scoped Purple System
+to-yellow-300,1,1,Semantic Status / Warning
+to-yellow-50,1,1,Semantic Status / Warning
+to-yellow-800,1,1,Semantic Status / Warning
+to-zinc-700,1,1,Legacy Surface / Neutral
+to-zinc-900,1,1,Legacy Surface / Neutral
+via-amber-900,1,1,Semantic Status / Warning
+via-amber-950,1,1,Semantic Status / Warning
+via-blue-400,1,1,Informational Accent
+via-blue-500,1,1,Informational Accent
+via-blue-800,1,1,Informational Accent
+via-cyan-500,1,1,Informational Accent
+via-green-500,1,1,Finance Positive / Legacy Green
+via-green-800,1,1,Finance Positive / Legacy Green
+via-orange-800,1,1,Semantic Status / Warning
+via-purple-800,1,1,Scoped Purple System
+via-purple-900,1,1,Scoped Purple System
+via-purple-950,1,1,Scoped Purple System
+via-red-900,1,1,Semantic Status / Warning
+via-red-950,1,1,Semantic Status / Warning
+via-sky-950,1,1,Informational Accent
+via-slate-800,1,1,Legacy Surface / Neutral
+via-teal-900,1,1,Finance Positive / Legacy Green
+via-teal-950,1,1,Finance Positive / Legacy Green
+via-violet-500,1,1,Scoped Purple System
+via-violet-950,1,1,Scoped Purple System
+via-yellow-950,1,1,Semantic Status / Warning
+via-zinc-900,1,1,Legacy Surface / Neutral

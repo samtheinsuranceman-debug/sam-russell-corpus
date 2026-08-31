@@ -1,0 +1,42 @@
+CREATE TABLE IF NOT EXISTS `user_achievements` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` int NOT NULL,
+  `achievementSlug` varchar(100) NOT NULL,
+  `title` varchar(300) NOT NULL,
+  `description` text,
+  `emoji` varchar(20) NOT NULL DEFAULT '🏆',
+  `rarity` enum('common','rare','epic','legendary') NOT NULL DEFAULT 'common',
+  `xpReward` int NOT NULL DEFAULT 100,
+  `coinReward` int NOT NULL DEFAULT 50,
+  `unlockedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_user_achievements_user` (`userId`),
+  KEY `idx_user_achievements_user_slug` (`userId`,`achievementSlug`)
+);
+
+CREATE TABLE IF NOT EXISTS `user_pets` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` int NOT NULL,
+  `speciesId` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `level` int NOT NULL DEFAULT 1,
+  `xp` int NOT NULL DEFAULT 0,
+  `xpToNext` int NOT NULL DEFAULT 100,
+  `happiness` int NOT NULL DEFAULT 100,
+  `hunger` int NOT NULL DEFAULT 100,
+  `strength` int NOT NULL DEFAULT 5,
+  `wisdom` int NOT NULL DEFAULT 5,
+  `charisma` int NOT NULL DEFAULT 5,
+  `luck` int NOT NULL DEFAULT 5,
+  `evolutionStage` enum('hatchling','juvenile','adolescent','adult','elder','legendary') NOT NULL DEFAULT 'hatchling',
+  `totalFeedings` int NOT NULL DEFAULT 0,
+  `totalDeals` int NOT NULL DEFAULT 0,
+  `isActive` boolean NOT NULL DEFAULT true,
+  `lastFedAt` timestamp NULL,
+  `lastInteractedAt` timestamp NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_user_pets_user` (`userId`)
+);
