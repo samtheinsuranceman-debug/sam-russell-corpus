@@ -51,7 +51,8 @@ import { z } from "zod";
 import { rankMatches, type MatchMode, type Profile } from "@shared/matchEngine";
 import { runVideoAnalysis } from "./videoAnalysis";
 import { createVideoAssessment, getVideoAssessment, getUserVideoAssessments, updateVideoAssessmentStatus } from "./db";
-import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisMode, MODE_META } from "@shared/axisModes";
+import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisIndep, axisMode, MODE_META } from "@shared/axisModes";
+import { multiplicativeRarity, geometricMeanRarityFallback } from "./scoring/multiplicativeRarity";
 import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
 import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, FREE_ASSESSMENT_CAP, voiceConsensus, freePanelMax, sttProvider } from "./platform/config";
@@ -157,6 +158,22 @@ export function calculateCompositeRarity(
  * doesn't decide rank; age-normed CHC lines are left untouched. Returns null
  * when no birth year is on file.
  */
+/**
+ * Floor-gated TRUE MULTIPLICATIVE composite rarity — L1-04 / AQAL-002 patent
+ * embodiment. When verified achievement floors exist for the user, each line's
+ * rarity is bounded below by its proven floor and the joint rarity is the
+ * PRODUCT of independence-weighted per-line rarities (not the geometric mean).
+ * Falls back to the legacy geometric mean when no floors exist or the flag is off.
+ */
+export function calculateCompositeRarityMultiplicative(
+  scores: Array<{ score: number; confidence: number; axisIndex?: number; axisName?: string }>,
+  floors: Array<{ axisIndex: number; floor: number }>,
+): number {
+  if (!scores || scores.length === 0) return 1;
+  if (!floors || floors.length === 0) return geometricMeanRarityFallback(scores);
+  return multiplicativeRarity(scores, floors);
+}
+
 export function computeCohortRarity(
   scoresList: Array<{ axisName: string; score: number; confidence?: number | null }>,
   birthYear: number | null | undefined,

@@ -211,6 +211,13 @@
       "when": 1788061197452,
       "tag": "0029_nostalgic_callisto",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "5",
+      "when": 1788207493063,
+      "tag": "0030_secret_whiplash",
+      "breakpoints": true
     }
   ]
 }

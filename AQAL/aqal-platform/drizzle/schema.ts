@@ -476,6 +476,67 @@ export const modelCalibration = mysqlTable("modelCalibration", {
 export type ModelCalibration = typeof modelCalibration.$inferSelect;
 
 // ============================================================
+// ACHIEVEMENT FLOORS — L1-07 / AQAL-012 verified-floor ratchet.
+// One row per (userId, axisIndex); floor only rises (GREATEST) and
+// evidenceHours accumulate. Written by server/patents/achievementFloors.ts.
+// ============================================================
+export const achievementFloors = mysqlTable("achievement_floors", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  axisIndex: int("axisIndex").notNull(),
+  floor: float("floor").default(0).notNull(),
+  evidenceHours: float("evidenceHours").default(0).notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userAxisUnique: uniqueIndex("achievement_floors_user_axis_uq").on(table.userId, table.axisIndex),
+}));
+export type AchievementFloor = typeof achievementFloors.$inferSelect;
+export type InsertAchievementFloor = typeof achievementFloors.$inferInsert;
+
+// ============================================================
+// RESEARCH PROVENANCE — L1-10. Each of the 32 lines maps to the
+// published sources that ground it (measurement traceability).
+// ============================================================
+export const researchProvenance = mysqlTable("research_provenance", {
+  id: int("id").autoincrement().primaryKey(),
+  axisIndex: int("axisIndex").notNull().unique(),
+  theoryName: varchar("theoryName", { length: 255 }).notNull(),
+  authors: json("authors"), // string[]
+  doi: varchar("doi", { length: 255 }),
+  peerReviewed: boolean("peerReviewed").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type ResearchProvenance = typeof researchProvenance.$inferSelect;
+export type InsertResearchProvenance = typeof researchProvenance.$inferInsert;
+
+// ============================================================
+// VOICE FEATURES — L1-01 / DSP voice-tone analyzer (owner-approved).
+// Rich prosodic/spectral features extracted in-process by
+// server/patents/voiceFeatures.ts. Maps onto nlp_profiles' voice fields.
+// ============================================================
+export const voiceFeatures = mysqlTable("voice_features", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  assessmentId: int("assessmentId"),
+  responseId: int("responseId"), // link to the responses row (audio source)
+  pitchMeanHz: float("pitchMeanHz"),
+  pitchRangeHz: float("pitchRangeHz"),
+  speakingRateWPM: float("speakingRateWPM"),
+  pauseCount: int("pauseCount"),
+  avgPauseDurationMs: float("avgPauseDurationMs"),
+  hesitationFrequency: float("hesitationFrequency"),
+  jitter: float("jitter"),
+  shimmer: float("shimmer"),
+  spectralCentroidMean: float("spectralCentroidMean"),
+  rmsEnergyMean: float("rmsEnergyMean"),
+  confidenceIndex: float("confidenceIndex"),
+  arousalIndex: float("arousalIndex"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type VoiceFeature = typeof voiceFeatures.$inferSelect;
+export type InsertVoiceFeature = typeof voiceFeatures.$inferInsert;
+
+// ============================================================
 // TRACKER CYCLES — the 30/60/90-day behavioral-journal loop
 // ============================================================
 // Each row is one completed cycle: the person dictated a daily journal, uploaded
