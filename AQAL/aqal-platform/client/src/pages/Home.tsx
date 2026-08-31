@@ -1724,6 +1724,42 @@ function CompanionSection() {
 // ============================================================
 // The founder film — renders ONLY when HOME_VIDEO in lib/lineVideos.ts has a
 // URL. Until then the homepage stays exactly as designed, no empty frame.
+// ── WHAT'S INSIDE ── the size of the place, stated plainly near the top.
+// The 11,659 figure is build-enforced: homeCounts.test.ts fails the suite if
+// it ever drifts from the real sitemap count.
+function WhatsInsideStrip() {
+  const items = [
+    { n: "11,659", label: "pages inside", href: "/lines" },
+    { n: "32", label: "intelligence lines", href: "/lines" },
+    { n: "156", label: "ranked protocols", href: "/rankings" },
+    { n: "246", label: "archetype dossiers", href: "/archetypes" },
+    { n: "191", label: "Myth Museum exhibits", href: "/myths" },
+    { n: "6,500+", label: "cited studies", href: "/research-library" },
+  ];
+  return (
+    <section aria-label="What's inside this site" style={{ background: INK2, borderTop: `1px solid ${LINE_C}`, borderBottom: `1px solid ${LINE_C}`, padding: "18px 0" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 20px" }}>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "10px", letterSpacing: "0.22em", textTransform: "uppercase", color: CHAMPAGNE, margin: "0 0 10px", textAlign: "center" }}>
+          This is not a landing page — it's a library
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px 26px" }}>
+          {items.map((it) => (
+            <Link key={it.label} href={it.href} style={{ textDecoration: "none", textAlign: "center" }}>
+              <span style={{ display: "block", fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: "clamp(18px,2.4vw,26px)", color: "#F1EADB", lineHeight: 1.1 }}>{it.n}</span>
+              <span style={{ display: "block", fontFamily: "'JetBrains Mono', monospace", fontSize: "9.5px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(241,234,219,0.55)" }}>{it.label}</span>
+            </Link>
+          ))}
+        </div>
+        <p style={{ fontSize: "12.5px", lineHeight: 1.55, color: "rgba(241,234,219,0.6)", maxWidth: "760px", margin: "12px auto 0", textAlign: "center" }}>
+          Every intelligence line, protocol, archetype, and debunked therapy has its own researched, cited
+          page — plus deep sub-pages on evidence, dosing, first weeks, mistakes, synergies, and atrophy.
+          Eleven thousand six hundred fifty-nine pages, every claim sourced. Wander anywhere.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function HomeVideoSection() {
   const embed = toEmbed(HOME_VIDEO);
   if (!embed) return null;
@@ -1769,6 +1805,7 @@ export default function Home() {
       <div className="relative z-10">
         {/* ── THE HOOK ── promise, then an immediate toy to play with */}
         <HeroSection />
+        <WhatsInsideStrip />
         <HomeVideoSection />
         {/* What's in it for them — the ten promises, before any 32-line detail */}
         <div data-reveal><TenPromisesSection /></div>

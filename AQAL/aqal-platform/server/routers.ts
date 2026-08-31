@@ -320,6 +320,21 @@ export const appRouter = router({
         // Recount answered slots (upsert-safe, order-independent)
         await syncCompletedQuestions(input.assessmentId);
 
+        // OVERT voice-feature extraction (owner-approved; disclosed on the
+        // assessment page): prosodic/spectral features are computed in-process
+        // — audio never leaves the server for this — and stored per response.
+        // Best-effort: decode failures (e.g. no ffmpeg for webm) skip quietly
+        // and NEVER block the member's upload.
+        (async () => {
+          try {
+            const { processAudioForVoiceFeatures, saveVoiceFeatures } = await import("./patents/voiceFeatures");
+            const features = await processAudioForVoiceFeatures(audioBuffer, mime);
+            await saveVoiceFeatures(ctx.user.id, features, { assessmentId: input.assessmentId, responseId: response?.id });
+          } catch (e) {
+            console.warn("[voiceFeatures] extraction skipped:", String(e).slice(0, 120));
+          }
+        })();
+
         return { success: true, responseId: response?.id, audioUrl: url };
       }),
 
@@ -1565,6 +1580,35 @@ Return ONLY valid JSON.` },
   // PROFILE PROCEDURES
   // ============================================================
   // ── ACCOUNT SOVEREIGNTY — the Terms 8C promises, functioning ──────────────
+  // Patent-family transparency APIs: per-line research provenance and the
+  // consolidated, exportable identity document (L1-10 / AQAL Sovereign).
+  sovereign: router({
+    provenance: publicProcedure.query(async () => {
+      const { getAllProvenance } = await import("./patents/provenance");
+      return getAllProvenance();
+    }),
+    identityExport: protectedProcedure.query(async ({ ctx }) => {
+      const assessment = await getLatestAssessment(ctx.user.id);
+      const scores = assessment ? await getScoresByAssessment(assessment.id) : [];
+      const { getFloors } = await import("./patents/achievementFloors");
+      const { controllingWeakness } = await import("./scoring/controllingWeakness");
+      const { getAllProvenance } = await import("./patents/provenance");
+      const vector = scores
+        .slice()
+        .sort((a, b) => a.axisIndex - b.axisIndex)
+        .map((s) => s.score);
+      return {
+        exportedAt: new Date().toISOString(),
+        userId: ctx.user.id,
+        normingVersion: assessment?.normingVersion ?? null,
+        scores: scores.map((s) => ({ axisIndex: s.axisIndex, axisName: s.axisName, score: s.score, confidence: s.confidence })),
+        floors: await getFloors(ctx.user.id),
+        controllingWeakness: vector.length ? controllingWeakness(vector) : null,
+        provenance: await getAllProvenance(),
+      };
+    }),
+  }),
+
   account: router({
     emailPreferences: protectedProcedure.query(async ({ ctx }) => {
       const { getDb } = await import("./db");

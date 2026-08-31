@@ -119,6 +119,31 @@ async function startServer() {
   const { platformStatus } = await import("../platform/config");
   app.get("/health", (_req, res) => res.json({ ok: true, platform: platformStatus() }));
 
+  // Public norming changelog — regulatory-transparency embodiment: every
+  // norming snapshot ever used, with its description, so any historical score
+  // can be traced to the exact population model it was computed under.
+  app.get("/api/norms/changelog", async (_req, res) => {
+    const { NORMING_SNAPSHOTS, ACTIVE_NORMING_VERSION } = await import("../scoring/norming");
+    res.set("Cache-Control", "public, max-age=3600");
+    res.json({
+      active: ACTIVE_NORMING_VERSION,
+      versions: Object.values(NORMING_SNAPSHOTS).map((s) => ({
+        version: s.version,
+        description: s.description,
+      })),
+    });
+  });
+
+  // Public ledger integrity check — anyone can confirm the append-only audit
+  // chain verifies end to end. Returns chain length + validity, never payloads.
+  app.get("/api/ledger/verify", async (_req, res) => {
+    const { verifyLedger } = await import("../patents/ledger");
+    const result = await verifyLedger();
+    res.set("Cache-Control", "no-store");
+    if (!result) return res.status(503).json({ ok: false, reason: "ledger unavailable" });
+    res.json({ ok: result.valid, length: result.length, firstInvalidId: result.badId });
+  });
+
   // Marketing-email opt-out. GET is confirmation-only so link scanners cannot
   // silently change state; RFC 8058 mail clients POST to the same signed URL.
   app.get("/api/unsubscribe", async (req, res) => {

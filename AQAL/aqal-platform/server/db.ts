@@ -1488,7 +1488,11 @@ export async function claimDailyAccountabilitySend(input: {
     await db.insert(dailyAccountability).values({ ...input, status: "pending" });
     return true;
   } catch (error: any) {
-    if (error?.code === "ER_DUP_ENTRY" || String(error?.message ?? "").includes("Duplicate")) {
+    // Some MySQL drivers wrap the driver error: the real code can live on
+    // error.cause.code rather than error.code. Check both so a duplicate-key
+    // reclaim is never missed.
+    const dupCode = error?.code ?? (error?.cause as { code?: string } | undefined)?.code;
+    if (dupCode === "ER_DUP_ENTRY" || String(error?.message ?? "").includes("Duplicate")) {
       // A row already exists for this commitment/day. Bounded retry: if its
       // send FAILED, atomically re-claim it so a later callback retries the
       // same day — but only while under the attempt cap and only if no reply

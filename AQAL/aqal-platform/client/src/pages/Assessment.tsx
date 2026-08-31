@@ -2789,6 +2789,12 @@ export default function Assessment() {
             </button>
           )}
 
+          {/* Overt voice-analysis disclosure — nothing about the measurement is hidden. */}
+          <p className="text-center text-[11px] leading-relaxed max-w-md mx-auto mb-3" style={{ color: "rgba(241,234,219,0.45)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.04em" }}>
+            Analyzed openly: your words AND your delivery — pace, pauses, steadiness.
+            Audio is processed on our servers only and becomes part of your scored profile.
+          </p>
+
           {/* Mode toggle — voice or text */}
           {(!recordingSupported || useTextMode) ? (
             <div className="w-full max-w-lg space-y-4">

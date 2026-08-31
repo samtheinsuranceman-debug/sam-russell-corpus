@@ -30,6 +30,7 @@ export default defineConfig({
       "client/src/lib/expansion203Contracts.test.ts",
       "client/src/lib/expansion500Contracts.test.ts",
       "client/src/lib/nestedAnchors.test.ts",
+      "client/src/lib/homeCounts.test.ts",
       "client/src/lib/pageShorts.test.ts",
       "client/src/lib/routeMetaFor.test.ts",
     ],

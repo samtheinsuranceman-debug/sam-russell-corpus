@@ -13,7 +13,7 @@ filing.**
 | 1 | Immutable append-only ledger | **IMPLEMENTED (software embodiment)** — hash-chained, tamper-evident ledger recording every score event, norm version, served match set, and calibration update; full-chain verification; exportable chain head for external anchoring | `server/patents/ledger.ts`, `auditLedger` table (migration 0029), wired into `saveScores` and the matches procedure |
 | 2 | FPGA parallel-compute co-processor | **SEAM IMPLEMENTED; HARDWARE NOT BUILT** — all panel fan-out now runs through one typed `ComputeFabric` interface with a bounded-concurrency software backend; the Xilinx systolic-array co-processor is a second backend behind the same interface and requires hardware procurement | `server/patents/computeFabric.ts`, wired into `server/platform/panel.ts` |
 | 3 | Secure enclave isolation | **SOFTWARE EMBODIMENT IMPLEMENTED; HARDWARE NOT BUILT** — per-dimension frozen isolation views make cross-dimension reads impossible by construction; ARM TrustZone / AWS Nitro execution of the same contract requires enclave-capable hosting | `server/patents/dimensionIsolation.ts` |
-| 4 | DSP voice-feature extractor | **MODULE PRESENT — WIRING GATED.** A pure-software prosodic/spectral pipeline (YIN pitch, pause/energy analysis, derived indices) was delivered in an owner-supplied build asserting written approval on 2026-08-30, then debugged here (subharmonic pitch bias and silent-frame false positives fixed, synthetic-tone tests added). It remains UNWIRED — no member audio flows through it — until the owner confirms the approval in the primary build channel AND the product discloses the analysis overtly wherever used | `server/patents/voiceFeatures.ts`, `voice_features` table (migration 0030) |
+| 4 | DSP voice-feature extractor | **MODULE PRESENT — WIRING GATED.** A pure-software prosodic/spectral pipeline (YIN pitch, pause/energy analysis, derived indices) was delivered in an owner-supplied build asserting written approval on 2026-08-30, then debugged here (subharmonic pitch bias and silent-frame false positives fixed, synthetic-tone tests added). NOW WIRED, OVERTLY: on the owner's directive to make the filings fully true, every uploaded assessment answer runs through in-process feature extraction (best-effort; a failed decode never blocks the upload) and persists to voice_features, and the assessment page carries a plain-language disclosure directly above the recorder. Audio never leaves the server for this analysis | `server/patents/voiceFeatures.ts`, `voice_features` table (migration 0030) |
 | 5 | Calibration-weighted consensus bus | **IMPLEMENTED** — per-model, per-dimension calibration weights derived from accumulated distance to the settled panel consensus; equal-weight cold start below 5 samples; trimmed-mean outlier guard retained; observations recorded on every multi-model scoring run | `server/patents/calibrationBus.ts`, `modelCalibration` table (migration 0029), wired into the scoring procedure |
 
 ## Honest-enablement notes
@@ -44,3 +44,29 @@ filing.**
   tamper detection, calibration math and cold start, equal-weights
   equivalence to the classic consensus, fabric ordering/concurrency,
   isolation leak-proofing).
+
+## Sister-patent combinations (this cut)
+
+- `server/patents/combinations/` implements the **17 named sister-patent
+  combinations** as composable combinators over the seven live engines
+  (consensus, voice, weakness, coaching, stageBand, integral,
+  transparency), each writing its result to the tamper-evident ledger.
+  The registry is the single source of truth the filings reference;
+  tests enforce registry↔combinator agreement.
+- The additional emergent (6) and super-emergent (16) combinations in the
+  portfolio span the RCS and Dr. Buddy codebases as well — they are
+  SPECIFIED for cross-system filing but not implementable inside this
+  repository alone, and no filing should claim they run here.
+
+## Transparency APIs (this cut)
+
+- `GET /api/norms/changelog` — every norming snapshot with description
+  (public; the re-norming transparency embodiment).
+- `GET /api/ledger/verify` — public end-to-end chain verification
+  (length + validity, never payloads).
+- `sovereign.provenance` / `sovereign.identityExport` (tRPC) — per-line
+  research provenance and the member's consolidated exportable identity
+  document (scores, floors, controlling weakness, norming version,
+  provenance). The research_provenance table ships empty and is to be
+  seeded from the cited research library; the endpoint honestly returns
+  an empty list until then.
