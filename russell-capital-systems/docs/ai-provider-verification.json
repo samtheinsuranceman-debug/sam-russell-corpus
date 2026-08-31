@@ -1,0 +1,79 @@
+{
+  "successful_providers": 1,
+  "required_minimum": 5,
+  "gate_passed": false,
+  "results": [
+    {
+      "provider": "Grok / xAI",
+      "success": false,
+      "status": 403,
+      "latency_ms": 2144,
+      "model": "grok-4",
+      "response": "",
+      "error": "Your team 162b29f0-54be-4cdb-8be0-2cc9e20b1723 has either used all available credits or reached its monthly spending limit. To continue making API requests, please purchase more credits or raise your spending limit."
+    },
+    {
+      "provider": "Google Gemini",
+      "success": false,
+      "status": 400,
+      "latency_ms": 124,
+      "model": "provider-default",
+      "response": "",
+      "error": "API key not valid. Please pass a valid API key."
+    },
+    {
+      "provider": "Claude / Anthropic",
+      "success": false,
+      "status": 401,
+      "latency_ms": 2991,
+      "model": "claude-haiku-4-5",
+      "response": "",
+      "error": "API key is invalid."
+    },
+    {
+      "provider": "Perplexity",
+      "success": false,
+      "status": 401,
+      "latency_ms": 3053,
+      "model": "sonar-pro",
+      "response": "",
+      "error": "Invalid API key provided. You can find your API key at https://www.perplexity.ai/settings/api."
+    },
+    {
+      "provider": "OpenRouter",
+      "success": false,
+      "status": 401,
+      "latency_ms": 4651,
+      "model": "openai/gpt-4o-mini",
+      "response": "",
+      "error": "User not found."
+    },
+    {
+      "provider": "Cohere",
+      "success": true,
+      "status": 200,
+      "latency_ms": 4625,
+      "model": "command-a-03-2025",
+      "response": "I'm ready to contribute to the architecture review, and a key priority for safely merging the primary app with the added pages is ensuring consistent and secure routing configurations to prevent conflicts and maintain seamless navigation across all 229 routes.",
+      "error": ""
+    },
+    {
+      "provider": "OpenAI-compatible gateway",
+      "success": false,
+      "status": 0,
+      "latency_ms": 0,
+      "model": "",
+      "response": "",
+      "error": "Missing environment variable: OPENAI_API_KEY and OPENAI_API_BASE"
+    },
+    {
+      "provider": "Mistral AI / Le Chat",
+      "success": false,
+      "status": 0,
+      "latency_ms": 0,
+      "model": "",
+      "response": "",
+      "error": "Missing environment variable: MISTRAL_API_KEY"
+    }
+  ]
+}

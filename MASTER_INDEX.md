@@ -88,6 +88,13 @@ This is the single source of truth. All brothers (Peter, Matthew, Paul, Luke, Jo
 
 ### `/kanawha-covenant/` — Kanawha Covenant
 
+### `/russell-capital-systems/` — Russell Capital Unified Portal (code)
+Full-stack advisor-platform build (React/Express/Drizzle): 60+ routed pages
+(annuities, estate planning, compliance vault, deal room, the seven Grok
+pages), 114 test files, and its Manus audit trail under `audit/`.
+Self-contained; run tooling from inside the directory. Supersedes the older
+`russell-capital/` prototype, which is kept for reference.
+
 ---
 
 ## How to Use This Repo

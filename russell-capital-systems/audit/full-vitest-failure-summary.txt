@@ -1,0 +1,143 @@
+ FAIL  server/batch9-features.test.ts > Open Access — All Users Get Full Access > executive entrance should create unlimited advisor account
+AssertionError: expected 'import "dotenv/config";\nimport expre…' to contain 'executive-access'
+ FAIL  server/complianceTracking.test.ts > complianceTracking > hasSignedThisSession > returns signed: false when no session exists
+ FAIL  server/complianceTracking.test.ts > complianceTracking > sign > creates a compliance signature and session
+ FAIL  server/complianceTracking.test.ts > complianceTracking > logPageVisit > logs a page visit for an active session
+ FAIL  server/complianceTracking.test.ts > complianceTracking > endSession > ends an active session
+ FAIL  server/complianceTracking.test.ts > websiteUsage > verifyPassword > rejects non-admin users
+AssertionError: expected [Function] to throw error matching /Only Sam Russell/ but got 'You do not have required permission (…'
+ FAIL  server/complianceTracking.test.ts > websiteUsage > verifyPassword > rejects wrong password for admin
+AssertionError: promise resolved "{ verified: true, …(1) }" instead of rejecting
+ FAIL  server/complianceTracking.test.ts > websiteUsage > getSummary > returns summary stats for admin with correct password
+ FAIL  server/complianceTracking.test.ts > websiteUsage > listUsers > returns a list of users for admin with correct password
+ FAIL  server/data-integrity.test.ts > combos.json data integrity > each combo has 8-10 sequential steps with financial data
+AssertionError: expected 11 to be less than or equal to 10
+ FAIL  server/features.test.ts > Password Gate — Access Control > Welcome@1 is recognized as trial password
+AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { valid: true, type: 'trial' }
+ FAIL  server/features.test.ts > Password Gate — Access Control > Welcome@7 is recognized as eternal password
+AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { valid: true, type: 'eternal' }
+ FAIL  server/features.test.ts > Password Gate — Access Control > 18aLiHeap* is recognized as eternal password
+AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { valid: true, type: 'eternal' }
+ FAIL  server/features.test.ts > Password Gate — Access Control > ETERNAL_PASSWORDS contains exactly 2 backdoor passwords
+AssertionError: expected [] to include 'Welcome@7'
+ FAIL  server/integration.test.ts > RESEND_API_KEY environment variable > is defined in the environment
+AssertionError: expected undefined to be defined
+ FAIL  server/integration.test.ts > RESEND_API_KEY environment variable > has sufficient length to be a real API key (>= 8 chars)
+AssertionError: expected 0 to be greater than or equal to 8
+ FAIL  server/mortgage-killer-pdf-scenarios.test.ts > Mortgage Killer Frontend — PDF & Scenario UI > server should have mortgage-killer PDF endpoint
+AssertionError: expected 'import "dotenv/config";\nimport expre…' to contain '/api/mortgage-killer/pdf'
+ FAIL  server/mortgage-killer-pdf-scenarios.test.ts > Mortgage Killer Frontend — PDF & Scenario UI > server should have mortgage-killer email endpoint
+AssertionError: expected 'import "dotenv/config";\nimport expre…' to contain '/api/mortgage-killer/send'
+ FAIL  server/openrouter.secret.test.ts > OPENROUTER_API_KEY > authenticates with an OpenRouter chat completion
+AssertionError: OpenRouter rejected the configured credential with HTTP 401: {"error":{"message":"Missing Authentication header","code":401}}: expected false to be true // Object.is equality
+ FAIL  server/owner-bypass.test.ts > Owner Bypass — shared/accessControl > OWNER_BYPASS_EMAILS constant > should contain exactly 3 emails
+AssertionError: expected [] to have a length of 3 but got +0
+ FAIL  server/owner-bypass.test.ts > Owner Bypass — shared/accessControl > OWNER_BYPASS_EMAILS constant > should contain samtheinsuranceman@gmail.com
+AssertionError: expected [] to include 'samtheinsuranceman@gmail.com'
+ FAIL  server/owner-bypass.test.ts > Owner Bypass — shared/accessControl > OWNER_BYPASS_EMAILS constant > should contain sam@russellcapitalsystems.com
+AssertionError: expected [] to include 'sam@russellcapitalsystems.com'
+ FAIL  server/owner-bypass.test.ts > Owner Bypass — shared/accessControl > isOwnerBypassEmail() > returns true for samtheinsuranceman@gmail.com
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/owner-bypass.test.ts > Owner Bypass — shared/accessControl > isOwnerBypassEmail() > returns true for sam@russellcapitalsystems.com
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/owner-bypass.test.ts > Owner Bypass — shared/accessControl > isOwnerBypassEmail() > is case-insensitive
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/owner-bypass.test.ts > Owner Bypass — shared/accessControl > isOwnerBypassEmail() > trims whitespace
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/owner-bypass.test.ts > Owner Bypass — shared/accessControl > isOwnerBypassEmail() > rejects spoofed emails
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/owner-bypass.test.ts > Owner Bypass — shared/accessControl > Integration with db.ts re-exports > isOwnerEmail should be the same function as isOwnerBypassEmail
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/owner-bypass.test.ts > Owner Bypass — shared/accessControl > Integration with db.ts re-exports > isAdminEmail should be the same function as isOwnerBypassEmail
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/phase3-features.test.ts > Owner Bypass Emails > isOwnerBypassEmail recognizes both Sam emails
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/phase3-features.test.ts > Owner Bypass Emails > OWNER_BYPASS_EMAILS contains exactly 3 emails
+AssertionError: expected +0 to be 3 // Object.is equality
+ FAIL  server/phase3-features.test.ts > Access Control > getEffectiveTier returns unlimited for owner emails
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/resend.secret.test.ts > RESEND_API_KEY secret > is set in the environment
+AssertionError: RESEND_API_KEY must be set: expected undefined to be defined
+ FAIL  server/resend.secret.test.ts > RESEND_API_KEY secret > has a non-trivial length (at least 8 characters)
+AssertionError: RESEND_API_KEY must be at least 8 characters: expected 0 to be greater than or equal to 8
+ FAIL  server/round12.test.ts > getDueReportSchedules > returns an array
+Error: Failed query: select `id`, `clientId`, `workspaceId`, `frequency`, `recipientEmail`, `active`, `lastSentAt`, `nextSendAt`, `createdAt`, `updatedAt` from `report_schedules` where (`report_schedules`.`active` = ? and `report_schedules`.`nextSendAt` <= ?)
+ FAIL  server/round16.test.ts > leaderboard > leaderboard.list returns an array
+ FAIL  server/round16.test.ts > leaderboard > each entry has enhanced performance fields
+ FAIL  server/round16.test.ts > leaderboard > entries are sorted by score descending
+ FAIL  server/round16.test.ts > leaderboard > ranks are sequential starting from 1
+ FAIL  server/round17.test.ts > leaderboard with period filtering > leaderboard.list accepts period=all
+ FAIL  server/round17.test.ts > leaderboard with period filtering > leaderboard.list accepts period=month
+ FAIL  server/round17.test.ts > leaderboard with period filtering > leaderboard.list accepts period=quarter
+ FAIL  server/round17.test.ts > leaderboard with period filtering > leaderboard.list accepts period=year
+ FAIL  server/round17.test.ts > leaderboard with period filtering > leaderboard.list defaults to all when no input
+ FAIL  server/round17.test.ts > leaderboard with period filtering > all period results have correct structure
+ FAIL  server/round17.test.ts > reminderPrefs > reminderPrefs.get returns an array
+ FAIL  server/round17.test.ts > reminderPrefs > reminderPrefs.get returns 4 entries (one per meeting type)
+ FAIL  server/round17.test.ts > reminderPrefs > each pref entry has meetingType, enabled, leadTimeMinutes
+ FAIL  server/round17.test.ts > reminderPrefs > reminderPrefs.update saves preferences
+ FAIL  server/round20.test.ts > Onboarding Status > isOnboardingComplete returns false for non-existent user
+Error: Failed query: select `onboardingCompleted` from `users` where `users`.`id` = ? limit ?
+ FAIL  server/round20.test.ts > Onboarding Status > markOnboardingComplete does not throw for non-existent user
+AssertionError: promise rejected "Error: Failed query: update `users` set `… { …(2) }" instead of resolving
+ FAIL  server/round21.test.ts > Client Properties DB Helpers > getClientProperties returns array for non-existent client
+Error: Failed query: select `id`, `clientId`, `workspaceId`, `propertyName`, `propertyType`, `propertyValue`, `monthlyMortgagePayment`, `monthlyInterestOnlyPayment`, `totalInterestPayment`, `monthlyRentalIncome`, `annualAppreciation`, `isPrimary`, `mortgageBalance`, `interestRate`, `loanTermYears`, `createdAt`, `updatedAt` from `client_properties` where (`client_properties`.`clientId` = ? and `client_properties`.`workspaceId` = ?) order by `client_properties`.`createdAt`
+ FAIL  server/round21.test.ts > Client Crypto Holdings DB Helpers > getClientCryptoHoldings returns array for non-existent client
+Error: Failed query: select `id`, `clientId`, `workspaceId`, `coinId`, `coinName`, `coinSymbol`, `quantity`, `avgPurchasePrice`, `amountStaked`, `stakingPercentage`, `predictedStakingIncome`, `createdAt`, `updatedAt` from `client_crypto_holdings` where (`client_crypto_holdings`.`clientId` = ? and `client_crypto_holdings`.`workspaceId` = ?) order by `client_crypto_holdings`.`createdAt`
+ FAIL  server/round67-70-features.test.ts > Round 66 — Enhanced Client Portal > ClientPortalView should exist as a page
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/round67-70-features.test.ts > Round 66 — Enhanced Client Portal > ClientPortalView should contain scorecard section
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/client/src/pages/ClientPortalView.tsx'
+ FAIL  server/round67-70-features.test.ts > Round 66 — Enhanced Client Portal > ClientPortalView should contain income timeline section
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/client/src/pages/ClientPortalView.tsx'
+ FAIL  server/round67-70-features.test.ts > Round 68 — Email PDF Delivery > routers.ts should contain email delivery endpoints
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/server/routers.ts'
+ FAIL  server/round67-70-features.test.ts > Round 68 — Email Delivery UI Wiring > AdvancedReporting should contain emailReport mutation call
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/client/src/pages/portal/AdvancedReporting.tsx'
+ FAIL  server/round67-70-features.test.ts > Round 68 — Email Delivery UI Wiring > MeetingAgenda should contain emailAgenda mutation call
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/client/src/pages/portal/MeetingAgenda.tsx'
+ FAIL  server/round67-70-features.test.ts > Round 68 — Email Delivery UI Wiring > routers.ts should contain emailReport and emailAgenda procedures
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/server/routers.ts'
+ FAIL  server/round67-70-features.test.ts > Round 69 — Client Portal Tabbed Dashboard > ClientPortalView should use Tabs component for navigation
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/client/src/pages/ClientPortalView.tsx'
+ FAIL  server/round67-70-features.test.ts > Round 69 — Client Portal Tabbed Dashboard > ClientPortalView should have four tab sections
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/client/src/pages/ClientPortalView.tsx'
+ FAIL  server/round67-70-features.test.ts > Round 69 — Client Portal Tabbed Dashboard > ClientPortalView should contain financial health scorecard
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/client/src/pages/ClientPortalView.tsx'
+ FAIL  server/round67-70-features.test.ts > Round 70 — Index Performance Data > CarrierRatings page should display index performance section
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/client/src/pages/portal/CarrierRatings.tsx'
+ FAIL  server/round67-70-features.test.ts > Round 70 — Index Performance Data > routers.ts should contain indexPerformance procedure
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/server/routers.ts'
+ FAIL  server/round67-70-features.test.ts > Round 70 — Index Performance Data > index performance should include 6 indices
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/server/routers.ts'
+ FAIL  server/round67-70-features.test.ts > Round 67 — Mortgage Killer HELOC Cycles > MortgageKiller page should exist with all required sections
+Error: ENOENT: no such file or directory, open '/home/ubuntu/russell-capital/client/src/pages/portal/MortgageKiller.tsx'
+ FAIL  server/slide-ratelimit.test.ts > Slide Rate-Limiting & Usage Tracking > Trial user rate-limit (3/day) > rejects trial user at 3/3 (limit reached)
+AssertionError: promise resolved "{ slides: [ { …(5) }, …(2) ], …(1) }" instead of rejecting
+ FAIL  server/slide-ratelimit.test.ts > Slide Rate-Limiting & Usage Tracking > Trial user rate-limit (3/day) > rejects trial user at 5/3 (over limit)
+AssertionError: promise resolved "{ slides: [ { …(5) }, …(2) ], …(1) }" instead of rejecting
+ FAIL  server/slide-ratelimit.test.ts > Slide Rate-Limiting & Usage Tracking > slides.remainingToday > returns remaining count for trial user
+AssertionError: expected 999 to be 3 // Object.is equality
+ FAIL  server/slides-ratelimit.test.ts > slides rate-limiting > slideQuota endpoint > returns quota information for authenticated users
+ FAIL  server/slides-ratelimit.test.ts > slides rate-limiting > rate limit constants > TRIAL_SLIDE_DAILY_LIMIT should be 3
+ FAIL  server/slides-ratelimit.test.ts > slides rate-limiting > slideUsageAnalytics endpoint > returns analytics data structure
+ FAIL  server/subscriptionGate.test.ts > Access Control — ALL Restrictions Permanently Removed > isOwnerEmail > returns true for samtheinsuranceman@gmail.com
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/subscriptionGate.test.ts > Access Control — ALL Restrictions Permanently Removed > isOwnerEmail > returns true for sam@russellcapitalsystems.com
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/subscriptionGate.test.ts > Access Control — ALL Restrictions Permanently Removed > isOwnerEmail > is case-insensitive
+AssertionError: expected false to be true // Object.is equality
+ FAIL  server/trialAndCommission.test.ts > Trial Login API > should reject login with wrong password
+SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON
+ FAIL  server/trialAndCommission.test.ts > Trial Login API > should reject login with missing email
+SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON
+ FAIL  server/trialAndCommission.test.ts > Trial Login API > should reject login with missing password
+SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON
+ FAIL  server/trialAndCommission.test.ts > Trial Login API > should accept login with correct password Welcome@1
+SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON
+ FAIL  server/trialAndCommission.test.ts > Trial Login API > should return a session token on successful login
+SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON
+ FAIL  server/trialAndCommission.test.ts > Trial Login API > should return inactive for missing trial cookie
+SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON
+ FAIL  server/xai.secret.test.ts > XAI_API_KEY > authenticates with a funded xAI Grok chat completion
+AssertionError: xAI rejected the configured credential with HTTP 403: {"code":"permission-denied","error":"Your newly created team doesn't have any credits or licenses yet. You can purchase those on https://console.x.ai/team/0be90224-8679-4ed5-bbab-5f6b59c17515."}: expected false to be true // Object.is equality
