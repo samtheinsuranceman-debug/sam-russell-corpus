@@ -1291,11 +1291,14 @@ export default function Assessment() {
   // only replace title/text — axes, dimension, and flags stay the base
   // question's, so live-radar tagging and companion/solo logic are unchanged.
   const baseQuestion = QUESTIONS[currentQuestion];
-  const variantIdx = questionVariants[baseQuestion.id] ?? 0;
+  const altsForQuestion = QUESTION_ALTS[baseQuestion.id]?.length ?? 0;
+  // Normalize any stored index into the cycle [0 .. alts] so a restored or
+  // over-incremented value can never point past the list (which used to
+  // silently re-display the ORIGINAL question — the "clicked but nothing
+  // changed" bug).
+  const variantIdx = altsForQuestion > 0 ? (questionVariants[baseQuestion.id] ?? 0) % (altsForQuestion + 1) : 0;
   const activeAlt = variantIdx > 0 ? QUESTION_ALTS[baseQuestion.id]?.[variantIdx - 1] : undefined;
   const question = activeAlt ? { ...baseQuestion, title: activeAlt.title, text: activeAlt.text } : baseQuestion;
-  const altsForQuestion = QUESTION_ALTS[baseQuestion.id]?.length ?? 0;
-  const swapsLeft = Math.max(0, altsForQuestion - variantIdx);
   const progress = ((currentQuestion + 1) / TOTAL_QUESTIONS) * 100;
   const hasRecording = recordings[currentQuestion] !== null;
   const hasTextResponse = textResponses[currentQuestion]?.trim().length > 20;
@@ -2751,26 +2754,48 @@ export default function Assessment() {
           {/* Swap: trade this world for an equally-deep one that reads the same lines.
               Works even after answering (e.g. they came back via the dots): swapping
               an answered question wipes that answer so it always matches the prompt. */}
-          {swapsLeft > 0 && !isRecording && (
-            <button
-              onClick={() => {
-                playClick();
-                if (hasRecording || hasTextResponse) {
-                  setRecordings((r) => { const n = [...r]; n[currentQuestion] = null; return n; });
-                  setTextResponses((t) => { const n = [...t]; n[currentQuestion] = ""; return n; });
-                  setCompanionResponses((c) => { const n = [...c]; n[currentQuestion] = ""; return n; });
-                  setUploadedIdx((u) => ({ ...u, [currentQuestion]: false }));
-                }
-                setQuestionVariants((v) => ({ ...v, [baseQuestion.id]: (v[baseQuestion.id] ?? 0) + 1 }));
-              }}
-              className="flex items-center gap-2 mx-auto text-xs text-muted-foreground/60 hover:text-primary transition-colors mb-4 border border-muted-foreground/20 rounded-full px-4 py-1.5 hover:border-primary/40"
-              style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.06em" }}
-            >
-              <RefreshCw className="w-3 h-3" />
-              {hasRecording || hasTextResponse
-                ? `Swap & re-answer — clears this answer (${swapsLeft} left)`
-                : `Not feeling this one? Swap it — same depth, different world (${swapsLeft} left)`}
-            </button>
+          {altsForQuestion > 0 && !isRecording && (
+            <div className="mb-4">
+              {/* Cycle: original → alt 1 → alt 2 → original → … The button NEVER
+                  runs out and every press ALWAYS presents a different question. */}
+              <button
+                onClick={() => {
+                  playClick();
+                  if (hasRecording || hasTextResponse) {
+                    setRecordings((r) => { const n = [...r]; n[currentQuestion] = null; return n; });
+                    setTextResponses((t) => { const n = [...t]; n[currentQuestion] = ""; return n; });
+                    setCompanionResponses((c) => { const n = [...c]; n[currentQuestion] = ""; return n; });
+                    setUploadedIdx((u) => ({ ...u, [currentQuestion]: false }));
+                  }
+                  setQuestionVariants((v) => ({ ...v, [baseQuestion.id]: (variantIdx + 1) % (altsForQuestion + 1) }));
+                }}
+                className="flex items-center gap-2 mx-auto text-xs text-muted-foreground/60 hover:text-primary transition-colors border border-muted-foreground/20 rounded-full px-4 py-1.5 hover:border-primary/40"
+                style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.06em" }}
+              >
+                <RefreshCw className="w-3 h-3" />
+                {hasRecording || hasTextResponse
+                  ? `Show me a different world — clears this answer (${variantIdx + 1} of ${altsForQuestion + 1})`
+                  : `Not feeling this one? Show me a different world (${variantIdx + 1} of ${altsForQuestion + 1})`}
+              </button>
+              {variantIdx > 0 && (
+                <button
+                  onClick={() => {
+                    playClick();
+                    if (hasRecording || hasTextResponse) {
+                      setRecordings((r) => { const n = [...r]; n[currentQuestion] = null; return n; });
+                      setTextResponses((t) => { const n = [...t]; n[currentQuestion] = ""; return n; });
+                      setCompanionResponses((c) => { const n = [...c]; n[currentQuestion] = ""; return n; });
+                      setUploadedIdx((u) => ({ ...u, [currentQuestion]: false }));
+                    }
+                    setQuestionVariants((v) => ({ ...v, [baseQuestion.id]: 0 }));
+                  }}
+                  className="block mx-auto mt-1.5 text-[11px] text-muted-foreground/50 hover:text-primary underline underline-offset-2 transition-colors"
+                  style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.04em" }}
+                >
+                  ← Take me back to the original question
+                </button>
+              )}
+            </div>
           )}
 
           {/* Talk-longer nudge (honest framing) */}
