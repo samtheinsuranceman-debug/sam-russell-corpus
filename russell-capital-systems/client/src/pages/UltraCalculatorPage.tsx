@@ -130,7 +130,8 @@ export default function UltraCalculatorPage() {
     <div className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100">
       <div className="mx-auto max-w-6xl">
         <p className="text-xs uppercase tracking-widest text-amber-500">Russell Capital Systems</p>
-        <h1 className="mt-1 text-3xl font-bold">The Ultra Calculator</h1>
+        <h1 className="mt-1 text-3xl font-bold">The Decade Machine</h1>
+        <p className="text-sm font-medium text-amber-300/80">The Ultra Calculator — every calculator, one machine, decade after decade.</p>
         <p className="mt-2 max-w-3xl text-sm text-slate-400">
           Every calculator on this site as one machine. Enter the household once, toggle the strategy modules,
           set your planning windows — each window's goals in your words — and every window starts from the previous
