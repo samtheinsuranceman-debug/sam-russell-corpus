@@ -1,8 +1,13 @@
 // ============================================================
 // SISTER-PATENT COMBINATIONS REGISTRY
-// Maps all 17 named sister-patent combinations to the engines they
-// combine and the combinator that produces them. This is the single
-// source of truth the patents reference.
+// Maps the ACTIVE sister-patent combinations to the engines they
+// combine and the combinator that produces them — the single source
+// of truth the filings reference. Ids 1-17 are the original sister
+// set; ids 18-38 (sparse) follow the Six-AI Consolidated Portfolio
+// (JQ numbering), which marked them ACTIVE WITH SAFETY GATES:
+// educational/non-clinical outputs, transparency of inputs, no
+// medical claims. The portfolio's 22 cross-company ideas remain
+// DEFERRED and are intentionally absent here.
 // ============================================================
 import type { EngineName } from "./index";
 
@@ -31,6 +36,16 @@ export const SISTER_COMBINATIONS: SisterCombination[] = [
   { id: 15, name: "Consensus-Driven Integral Coaching with Transparency",engines: ["consensus", "integral", "coaching", "transparency"], combinator: "consensusIntegralCoachingTransparency" },
   { id: 16, name: "Voice-Driven Staged Integral Weakness Coaching",      engines: ["voice", "stageBand", "integral", "weakness", "coaching"], combinator: "voiceStagedIntegralWeaknessCoaching" },
   { id: 17, name: "Full-Spectrum Integral AI Coaching",                  engines: ["consensus", "voice", "weakness", "coaching", "stageBand", "integral", "transparency"], combinator: "fullSpectrumIntegralCoaching" },
+  // ── Six-AI Consolidated Portfolio additions (ACTIVE, WITH SAFETY GATES) ──
+  { id: 18, name: "Adaptive Voice Consensus",                             engines: ["voice", "consensus"],                             combinator: "adaptiveVoiceConsensus" },
+  { id: 19, name: "Transparent Voice Coaching",                           engines: ["voice", "coaching", "transparency"],              combinator: "transparentVoiceCoaching" },
+  { id: 20, name: "Integral Weakness Consensus",                          engines: ["integral", "weakness", "consensus"],              combinator: "integralWeaknessConsensus" },
+  { id: 27, name: "Voice-Driven Cognitive Coaching",                      engines: ["voice", "coaching"],                              combinator: "voiceDrivenCognitiveCoaching" },
+  { id: 28, name: "Transparent Cognitive Assessment",                     engines: ["consensus", "transparency"],                      combinator: "transparentCognitiveAssessment" },
+  { id: 30, name: "Voice-Driven Cognitive Assessment",                    engines: ["voice", "consensus"],                             combinator: "voiceDrivenCognitiveAssessment" },
+  { id: 34, name: "Cognitive-Financial Development Tracker",              engines: ["stageBand", "weakness", "coaching"],              combinator: "cognitiveFinancialDevelopmentTracker" },
+  { id: 36, name: "Voice-Driven Cognitive Coaching with Transparency",    engines: ["voice", "coaching", "transparency"],              combinator: "voiceCognitiveCoachingTransparent" },
+  { id: 38, name: "Voice-Driven Cognitive Assessment with Transparency",  engines: ["voice", "consensus", "transparency"],             combinator: "voiceCognitiveAssessmentTransparent" },
 ];
 
 export function getCombination(id: number): SisterCombination | undefined {

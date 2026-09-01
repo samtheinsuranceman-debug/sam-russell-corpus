@@ -47,14 +47,19 @@ filing.**
 
 ## Sister-patent combinations (this cut)
 
-- `server/patents/combinations/` implements the **17 named sister-patent
-  combinations** as composable combinators over the seven live engines
+- `server/patents/combinations/` implements the **26 ACTIVE combinations**
+  (the 17 original sister combinations plus the 9 additions the Six-AI
+  Consolidated Portfolio marked ACTIVE WITH SAFETY GATES — JQ-018/019/020/
+  027/028/030/034/036/038, whose outputs carry the educational-only,
+  non-clinical, inputs-disclosed, no-medical-claims gates) as composable
+  combinators over the seven live engines
   (consensus, voice, weakness, coaching, stageBand, integral,
   transparency), each writing its result to the tamper-evident ledger.
   The registry is the single source of truth the filings reference;
   tests enforce registry↔combinator agreement.
-- The additional emergent (6) and super-emergent (16) combinations in the
-  portfolio span the RCS and Dr. Buddy codebases as well — they are
+- The Six-AI portfolio's 22 DEFERRED/BLOCKED ideas (JQ-021…026, 029,
+  031…033, 035, 037, 039…) and the earlier emergent (6) and super-emergent
+  (16) combinations span the RCS and Dr. Buddy codebases as well — they are
   SPECIFIED for cross-system filing but not implementable inside this
   repository alone, and no filing should claim they run here.
 

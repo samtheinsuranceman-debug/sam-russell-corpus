@@ -88,3 +88,40 @@ export async function voiceStagedIntegralWeaknessCoaching(userId: number, voice:
 export async function fullSpectrumIntegralCoaching(userId: number, all: Record<EngineName, unknown>) {
   return log("Full-Spectrum Integral AI Coaching", ["consensus", "voice", "weakness", "coaching", "stageBand", "integral", "transparency"], { userId, ...all });
 }
+
+// ── Six-AI Consolidated Portfolio additions (ACTIVE, WITH SAFETY GATES) ─────
+// Every combinator below stamps its output with the safety gates the
+// portfolio requires: educational/non-clinical framing, transparent inputs,
+// no medical claims. Callers surface the gates verbatim to the member.
+const SAFETY_GATES = "educational-only; non-clinical; inputs disclosed; no medical claims" as const;
+async function gated(combination: string, engines: EngineName[], result: Record<string, unknown>): Promise<CombinationOutput> {
+  return log(combination, engines, { ...result, safetyGates: SAFETY_GATES });
+}
+
+export async function adaptiveVoiceConsensus(userId: number, voice: Record<string, unknown>, consensus: number[]) {
+  return gated("Adaptive Voice Consensus", ["voice", "consensus"], { userId, voice, consensus });
+}
+export async function transparentVoiceCoaching(userId: number, voice: Record<string, unknown>, coaching: Record<string, unknown>, provenance: unknown) {
+  return gated("Transparent Voice Coaching", ["voice", "coaching", "transparency"], { userId, voice, coaching, provenance });
+}
+export async function integralWeaknessConsensus(userId: number, integralProfile: Record<string, unknown>, weakness: Record<string, unknown>, consensus: number[]) {
+  return gated("Integral Weakness Consensus", ["integral", "weakness", "consensus"], { userId, integralProfile, weakness, consensus });
+}
+export async function voiceDrivenCognitiveCoaching(userId: number, voice: Record<string, unknown>, coaching: Record<string, unknown>) {
+  return gated("Voice-Driven Cognitive Coaching", ["voice", "coaching"], { userId, voice, coaching });
+}
+export async function transparentCognitiveAssessment(userId: number, consensus: number[], provenance: unknown) {
+  return gated("Transparent Cognitive Assessment", ["consensus", "transparency"], { userId, consensus, provenance });
+}
+export async function voiceDrivenCognitiveAssessment(userId: number, voice: Record<string, unknown>, consensus: number[]) {
+  return gated("Voice-Driven Cognitive Assessment", ["voice", "consensus"], { userId, voice, consensus });
+}
+export async function cognitiveFinancialDevelopmentTracker(userId: number, stageBand: Record<string, unknown>, weakness: Record<string, unknown>, coaching: Record<string, unknown>) {
+  return gated("Cognitive-Financial Development Tracker", ["stageBand", "weakness", "coaching"], { userId, stageBand, weakness, coaching });
+}
+export async function voiceCognitiveCoachingTransparent(userId: number, voice: Record<string, unknown>, coaching: Record<string, unknown>, provenance: unknown) {
+  return gated("Voice-Driven Cognitive Coaching with Transparency", ["voice", "coaching", "transparency"], { userId, voice, coaching, provenance });
+}
+export async function voiceCognitiveAssessmentTransparent(userId: number, voice: Record<string, unknown>, consensus: number[], provenance: unknown) {
+  return gated("Voice-Driven Cognitive Assessment with Transparency", ["voice", "consensus", "transparency"], { userId, voice, consensus, provenance });
+}

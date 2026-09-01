@@ -6,10 +6,10 @@ import * as combinators from "./index";
 import { SISTER_COMBINATIONS, getCombination } from "./registry";
 
 describe("sister-patent combinations", () => {
-  it("registers exactly 17 combinations with unique ids and names", () => {
-    expect(SISTER_COMBINATIONS).toHaveLength(17);
-    expect(new Set(SISTER_COMBINATIONS.map((c) => c.id)).size).toBe(17);
-    expect(new Set(SISTER_COMBINATIONS.map((c) => c.name)).size).toBe(17);
+  it("registers exactly 26 active combinations (17 sister + 9 six-AI additions) with unique ids and names", () => {
+    expect(SISTER_COMBINATIONS).toHaveLength(26);
+    expect(new Set(SISTER_COMBINATIONS.map((c) => c.id)).size).toBe(26);
+    expect(new Set(SISTER_COMBINATIONS.map((c) => c.name)).size).toBe(26);
   });
 
   it("every registered combinator exists as an exported function", () => {
@@ -29,5 +29,11 @@ describe("sister-patent combinations", () => {
   it("getCombination resolves by id", () => {
     expect(getCombination(17)?.name).toBe("Full-Spectrum Integral AI Coaching");
     expect(getCombination(99)).toBeUndefined();
+  });
+
+  it("six-AI additions carry the required safety gates in their output", async () => {
+    const out = await combinators.voiceDrivenCognitiveAssessment(3, { pitchMeanHz: 200 }, [0.6, 0.7]);
+    expect((out.result as any).safetyGates).toContain("non-clinical");
+    expect((out.result as any).safetyGates).toContain("no medical claims");
   });
 });
