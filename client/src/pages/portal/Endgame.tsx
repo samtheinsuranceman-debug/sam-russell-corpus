@@ -433,11 +433,11 @@ function AnniversarySystem() {
 
 function AlternateTimeline() {
   const realLife = {
-    clients: 200, commission: 487000, wealth: 2790000, level: 67,
+    clients: 49, commission: 487000, wealth: 2790000, level: 67,
     achievements: 43, reputation: 847, streak: 142, satisfaction: 92,
   };
   const altLife = {
-    clients: 80, commission: 189000, wealth: 1100000, level: 0,
+    clients: 30, commission: 189000, wealth: 1100000, level: 0,
     achievements: 0, reputation: 0, streak: 0, satisfaction: 58,
   };
 

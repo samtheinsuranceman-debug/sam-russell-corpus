@@ -299,20 +299,20 @@ export default function Team() {
   ];
 
   const growthData = [
-    { month: 'Jan', members: 5, clients: 120, revenue: 45000 },
-    { month: 'Feb', members: 6, clients: 135, revenue: 52000 },
-    { month: 'Mar', members: 8, clients: 150, revenue: 61000 },
-    { month: 'Apr', members: 8, clients: 170, revenue: 75000 },
-    { month: 'May', members: 10, clients: 195, revenue: 89000 },
-    { month: 'Jun', members: 12, clients: 220, revenue: 105000 },
+    { month: 'Jan', members: 5, clients: 36, revenue: 45000 },
+    { month: 'Feb', members: 6, clients: 38, revenue: 52000 },
+    { month: 'Mar', members: 8, clients: 41, revenue: 61000 },
+    { month: 'Apr', members: 8, clients: 43, revenue: 75000 },
+    { month: 'May', members: 10, clients: 47, revenue: 89000 },
+    { month: 'Jun', members: 12, clients: 49, revenue: 105000 },
   ];
 
   const workloadData = [
     { name: 'Alice', activeClients: 45, pendingTasks: 12, completedTasks: 88 },
     { name: 'Bob', activeClients: 32, pendingTasks: 8, completedTasks: 65 },
-    { name: 'Charlie', activeClients: 55, pendingTasks: 18, completedTasks: 102 },
+    { name: 'Charlie', activeClients: 30, pendingTasks: 18, completedTasks: 102 },
     { name: 'Diana', activeClients: 28, pendingTasks: 5, completedTasks: 45 },
-    { name: 'Eve', activeClients: 62, pendingTasks: 22, completedTasks: 115 },
+    { name: 'Eve', activeClients: 32, pendingTasks: 22, completedTasks: 115 },
   ];
 
   return (
@@ -971,11 +971,11 @@ function TeamPerformanceDetailed() {
   const [timeframe, setTimeframe] = useState("ytd");
   
   const detailedData = [
-    { name: "John D.", aum: 45, clients: 120, retention: 98, satisfaction: 4.8 },
-    { name: "Sarah M.", aum: 62, clients: 150, retention: 99, satisfaction: 4.9 },
-    { name: "Michael R.", aum: 38, clients: 95, retention: 95, satisfaction: 4.5 },
-    { name: "Emily C.", aum: 55, clients: 135, retention: 97, satisfaction: 4.7 },
-    { name: "David L.", aum: 70, clients: 180, retention: 96, satisfaction: 4.6 },
+    { name: "John D.", aum: 45, clients: 36, retention: 98, satisfaction: 4.8 },
+    { name: "Sarah M.", aum: 62, clients: 41, retention: 99, satisfaction: 4.9 },
+    { name: "Michael R.", aum: 38, clients: 34, retention: 95, satisfaction: 4.5 },
+    { name: "Emily C.", aum: 55, clients: 38, retention: 97, satisfaction: 4.7 },
+    { name: "David L.", aum: 70, clients: 45, retention: 96, satisfaction: 4.6 },
   ];
   
   return (

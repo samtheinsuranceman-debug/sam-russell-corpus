@@ -189,16 +189,16 @@ function ParallelLifeSimulator() {
 
   const scenarios = {
     "6mo": {
-      real: { clients: 142, commission: 243000, wealth: 1890000, satisfaction: 87 },
-      shadow: { clients: 89, commission: 112000, wealth: 780000, satisfaction: 61 },
+      real: { clients: 38, commission: 243000, wealth: 1890000, satisfaction: 87 },
+      shadow: { clients: 30, commission: 112000, wealth: 780000, satisfaction: 61 },
     },
     "1yr": {
-      real: { clients: 200, commission: 487000, wealth: 2790000, satisfaction: 92 },
-      shadow: { clients: 120, commission: 189000, wealth: 1100000, satisfaction: 58 },
+      real: { clients: 45, commission: 487000, wealth: 2790000, satisfaction: 92 },
+      shadow: { clients: 34, commission: 189000, wealth: 1100000, satisfaction: 58 },
     },
     "3yr": {
-      real: { clients: 340, commission: 1420000, wealth: 8900000, satisfaction: 96 },
-      shadow: { clients: 180, commission: 520000, wealth: 2800000, satisfaction: 52 },
+      real: { clients: 49, commission: 1420000, wealth: 8900000, satisfaction: 96 },
+      shadow: { clients: 41, commission: 520000, wealth: 2800000, satisfaction: 52 },
     },
   };
 

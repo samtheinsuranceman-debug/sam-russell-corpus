@@ -14,3 +14,8 @@ repository after verification:
 
 The owner removed the Manus-side GitHub backup from scope, so this copy
 may be the only backup of this codebase outside the Manus platform.
+3. Owner directive (Sep 2026): all fabricated demo client counts across
+   portal pages were scaled to below 50 per page, order-preserving
+   (7 files: Team, TeamManagement, BlackMirror, ClientHealthDashboard,
+   Endgame, AgencyTutorial, NerveCenter). Verified zero client-count
+   values >= 50 remain in the UI source.
