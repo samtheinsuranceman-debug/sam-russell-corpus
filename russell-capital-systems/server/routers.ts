@@ -6,6 +6,7 @@ import { SYSTEM_PREAMBLE, BRAND_SYSTEM_IDENTITY } from "@shared/branding";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
 import { invokePortalAI } from "./portalAI";
+import { ultraRouter } from "./ultraAI";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -301,6 +302,7 @@ const mortgageKillerInputSchema = z.object({
 export const appRouter = router({
   system: systemRouter,
   planningCases: planningCasesRouter,
+  ultra: ultraRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
