@@ -70,7 +70,7 @@ const MassiveCalculatorsPage: React.FC = () => {
         <Link to="/ultra-calculator"
           className="block mb-8 rounded-xl border border-amber-500/50 bg-amber-500/10 p-5 hover:bg-amber-500/20 transition-all"
         >
-          <h2 className="text-2xl font-bold text-amber-400">⚡ The Ultra Calculator — every calculator, one machine</h2>
+          <h2 className="text-2xl font-bold text-amber-400">⚡ The Decade Machine — every calculator, one machine</h2>
           <p className="mt-1 text-gray-300 text-sm">
             One mega calculator with module toggles, chained 5/10/20/30-year windows that carry every number forward,
             the mortgage-killer recycle cycle, trust-owned IUL flows, and the AI team that tells you which
