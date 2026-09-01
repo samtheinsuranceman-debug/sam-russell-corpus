@@ -37,8 +37,8 @@ describe("verified Grok delta merge", () => {
   const currentApp = readFileSync(resolve("client/src/App.tsx"), "utf8");
   const currentRoutes = routeSet(currentApp);
 
-  it("retains every Grok and unified-platform route in the 232-route application", () => {
-    expect(currentRoutes.size).toBe(232);
+  it("retains every Grok and unified-platform route in the 235-route application", () => {
+    expect(currentRoutes.size).toBe(235); // 232 + ultra-calculator, fact-finder, calculators
     for (const route of [...addedRoutes, ...unifiedPlatformRoutes]) {
       expect(currentRoutes.has(route), route).toBe(true);
     }

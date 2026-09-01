@@ -14,6 +14,7 @@ import { GlobalHooks } from "./components/GlobalHooks";
 import { OnboardingTour } from "./components/OnboardingTour";
 import { AchievementUnlockOverlay } from "./components/AchievementUnlockOverlay";
 import { PetEvolutionOverlay } from "./components/PetEvolutionOverlay";
+import VoiceAdvisor from "./components/VoiceAdvisor";
 
 // Public pages — lazy-loaded to reduce initial bundle
 const Landing = lazy(() => import("./pages/Landing"));
@@ -30,6 +31,9 @@ const TrialLogin = lazy(() => import("./pages/ManagedAuthLegacy"));
 const AdministratorPortal = lazy(() => import("./pages/AdministratorPortal"));
 const ExecutiveEntrance = lazy(() => import("./pages/ExecutiveEntrance"));
 const ClientPortalView = lazy(() => import("./pages/ClientPortalView"));
+const UltraCalculatorPage = lazy(() => import("./pages/UltraCalculatorPage"));
+const FactFinderPage = lazy(() => import("./pages/FactFinderPage"));
+const MassiveCalculatorsPage = lazy(() => import("./pages/MassiveCalculatorsPage"));
 const SharedProjection = lazy(() => import("./pages/SharedProjection"));
 const SharedSlidesViewer = lazy(() => import("./pages/SharedSlidesViewer"));
 
@@ -303,6 +307,12 @@ function Router() {
       <Route path="/trial" component={TrialLogin} />
       <Route path="/administrator" component={AdministratorPortal} />
       <Route path="/executive" component={ExecutiveEntrance} />
+
+      {/* Ultra Calculator suite — public: the one-machine mega calculator,
+          the discovery fact finder, and the full calculator catalog */}
+      <Route path="/ultra-calculator" component={UltraCalculatorPage} />
+      <Route path="/fact-finder" component={FactFinderPage} />
+      <Route path="/calculators" component={MassiveCalculatorsPage} />
 
       {/* Onboarding — accessible without auth or compliance */}
       <Route path="/onboarding" component={Onboarding} />
@@ -580,6 +590,9 @@ function App() {
           <TooltipProvider>
             <Toaster richColors position="top-right" />
             <Router />
+            {/* The every-page AI voice advisor — speak on any page, the AI
+                answers in context of that page and the saved profile. */}
+            <VoiceAdvisor />
             <TrialTimer />
           </TooltipProvider>
         </EntrainmentProvider>
