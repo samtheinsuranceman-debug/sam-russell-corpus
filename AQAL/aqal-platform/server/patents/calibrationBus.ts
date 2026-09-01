@@ -146,6 +146,18 @@ export async function recordCalibrationObservations(
           },
         });
     }
+    // One ledger digest per scoring run (not per observation): which models
+    // reported, how many axes, and the run's mean absolute error vs consensus.
+    const models = Array.from(new Set(obs.map((o) => o.model))).sort();
+    const axes = new Set(obs.map((o) => o.axisIndex)).size;
+    const meanAbsErr = obs.reduce((a, o) => a + o.absErr, 0) / obs.length;
+    const { appendLedgerEntry } = await import("./ledger");
+    await appendLedgerEntry("calibration_update", {
+      models,
+      axisCount: axes,
+      observations: obs.length,
+      meanAbsErr: Math.round(meanAbsErr * 10000) / 10000,
+    });
   } catch (error) {
     console.warn("[calibration] record failed:", String(error).slice(0, 200));
   }

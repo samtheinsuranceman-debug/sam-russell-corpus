@@ -26,11 +26,16 @@ filing.**
   scoring runs. They are not a ground-truth validity claim; no instrument
   has population ground truth for these constructs yet, and filings should
   say so.
-- AQAL-012's verified-floor engine is now implemented: `server/patents/
+- AQAL-012's verified-floor engine is implemented AND ACTIVE: `server/patents/
   achievementFloors.ts` (ratchet via conditional GREATEST update, evidence
   hours accumulated, every accepted state committed to the ledger's
   "floor_event" kind). The `raised` flag reports true only when evidence
-  actually moved the ratchet.
+  actually moved the ratchet. Activation source: the repeated-demonstration
+  rule (`repeatedFloorLevels`) — a level counts as demonstrated when produced
+  on TWO separate completed assessments at ≥0.6 confidence, and the floor is
+  the MINIMUM of the two scores. It runs automatically after every scoring
+  pass (`recordRepeatedDemonstrationFloors` in the scoring procedure), with
+  evidence hours taken from the current assessment's recorded answer time.
 - AQAL-002's multiplicative rarity engine is implemented but DELIBERATELY
   UNWIRED from any displayed number: with ~32 terms and heuristic
   independence damping, typical profiles saturate its cap, and a ceiling
@@ -38,12 +43,28 @@ filing.**
   the legacy calibrated curve until real inter-line correlations from the
   founding cohort justify more.
 - AQAL-004's controlling-weakness argmin and the per-line research
-  provenance table (`research_provenance`, to be seeded from the cited
-  sources) are implemented as callable modules.
+  provenance table (`research_provenance`) are implemented AND ACTIVE.
+  The provenance table is seeded at boot (`server/patents/provenanceSeed.ts`,
+  idempotent upsert) with all 32 lines mapped to their real research
+  traditions and scholars (CHC/Gf-Gc, mental rotation, reflective judgment,
+  interoception, financial-literacy research, etc.). Honesty rules: `doi`
+  is NULL on every row — DOIs are never invented; specific vetted paper
+  DOIs can be added from the research catalog later. `peerReviewed=true`
+  asserts the tradition rests on peer-reviewed literature, not that the row
+  cites one specific paper. `sovereign.provenance` now returns real rows.
+- All five ledger kinds now FIRE in production: `score` (every scoring run),
+  `norm_version` (appended at boot only when the active norming version
+  differs from the last recorded one), `floor_event` (every accepted floor
+  ratchet), `match` (every served match set), and `calibration_update`
+  (one digest per multi-model scoring run: participating models, axis
+  count, observation count, mean absolute error vs. the settled consensus).
 - Test coverage: `server/patents/patents.test.ts` (chain verification and
   tamper detection, calibration math and cold start, equal-weights
   equivalence to the classic consensus, fabric ordering/concurrency,
-  isolation leak-proofing).
+  isolation leak-proofing); `server/patents/provenanceSeed.test.ts` (32
+  unique axes, real scholars named, doi strictly null everywhere);
+  `server/patents/achievementFloors.test.ts` (min-of-two floor rule,
+  confidence gating, both-runs-required, missing-confidence-is-zero).
 
 ## Sister-patent combinations (this cut)
 
@@ -57,6 +78,13 @@ filing.**
   transparency), each writing its result to the tamper-evident ledger.
   The registry is the single source of truth the filings reference;
   tests enforce registry↔combinator agreement.
+- **INVOKED IN PRODUCTION:** after every scoring run the activation pass in
+  the scoring procedure calls the combination engines over the REAL outputs
+  of that run — `transparentCognitiveAssessment` always; `integralWeakness
+  Consensus` when a controlling weakness resolves; and, when the assessment
+  has a persisted `voice_features` row, `voiceDrivenCognitiveAssessment` and
+  `voiceCognitiveAssessmentTransparent` over the actual prosodic digest.
+  The pass is best-effort and can never block or fail a member's scoring.
 - The Six-AI portfolio's 22 DEFERRED/BLOCKED ideas (JQ-021…026, 029,
   031…033, 035, 037, 039…) and the earlier emergent (6) and super-emergent
   (16) combinations span the RCS and Dr. Buddy codebases as well — they are
@@ -72,6 +100,6 @@ filing.**
 - `sovereign.provenance` / `sovereign.identityExport` (tRPC) — per-line
   research provenance and the member's consolidated exportable identity
   document (scores, floors, controlling weakness, norming version,
-  provenance). The research_provenance table ships empty and is to be
-  seeded from the cited research library; the endpoint honestly returns
-  an empty list until then.
+  provenance). The research_provenance table is seeded at boot with the
+  32 real research traditions (see above), so the endpoint returns real
+  rows; DOIs remain null until specific vetted papers are attached.

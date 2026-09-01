@@ -664,6 +664,41 @@ Respond in JSON format.`;
           // Save scores (capped)
           await saveScores(input.assessmentId, cappedScores);
 
+          // ── Patent-engine activation pass (best-effort, never blocks scoring) ──
+          // Floors ratchet on repeated demonstration; the active combination
+          // engines run over the REAL outputs of this scoring event and log
+          // their emergent results to the tamper-evident ledger.
+          (async () => {
+            try {
+              const { recordRepeatedDemonstrationFloors } = await import("./patents/achievementFloors");
+              await recordRepeatedDemonstrationFloors(assessment.userId, input.assessmentId, cappedScores);
+              const { controllingWeakness } = await import("./scoring/controllingWeakness");
+              const vector = [...cappedScores].sort((a: any, b: any) => a.axisIndex - b.axisIndex).map((s: any) => s.score);
+              const weakness = controllingWeakness(vector);
+              const combos = await import("./patents/combinations/index");
+              const { PROVENANCE_SEED } = await import("./patents/provenanceSeed");
+              const provDigest = { lines: PROVENANCE_SEED.length, peerReviewedTraditions: true };
+              await combos.transparentCognitiveAssessment(assessment.userId, vector, provDigest);
+              if (weakness) {
+                await combos.integralWeaknessConsensus(assessment.userId, { lines: vector.length, model: "AQAL-32" }, weakness, vector);
+              }
+              const { getDb } = await import("./db");
+              const db = await getDb();
+              if (db) {
+                const { voiceFeatures: vfTable } = await import("../drizzle/schema");
+                const { eq } = await import("drizzle-orm");
+                const vf = await db.select().from(vfTable).where(eq(vfTable.assessmentId, input.assessmentId)).limit(1);
+                if (vf[0]) {
+                  const digest = { pitchMeanHz: vf[0].pitchMeanHz, speakingRateWPM: vf[0].speakingRateWPM, pauseCount: vf[0].pauseCount };
+                  await combos.voiceDrivenCognitiveAssessment(assessment.userId, digest, vector);
+                  await combos.voiceCognitiveAssessmentTransparent(assessment.userId, digest, vector, provDigest);
+                }
+              }
+            } catch (e) {
+              console.warn("[patent-activation] scoring pass skipped:", String(e).slice(0, 150));
+            }
+          })();
+
           // Save power combinations (only if responses warranted them)
           const validCombos = scoreCeiling < 0.5
             ? [] // Low-effort responses don't get power combinations

@@ -259,6 +259,40 @@ async function startServer() {
   const { ensureScheduledJobs } = await import("../scheduledJobs");
   void ensureScheduledJobs();
 
+  // ── Patent-engine boot activation (best-effort, never blocks startup) ──────
+  // 1. Seed the research-provenance table: all 32 lines mapped to their real
+  //    research traditions (idempotent upsert; DOIs stay null — never invented).
+  // 2. Commit the active norming version to the audit ledger, but only when it
+  //    differs from the last recorded norm_version entry (no duplicate spam).
+  void (async () => {
+    try {
+      const { seedProvenance } = await import("../patents/provenanceSeed");
+      const seeded = await seedProvenance();
+      if (seeded > 0) console.log(`[patents] research provenance seeded: ${seeded} lines`);
+
+      const { getDb } = await import("../db");
+      const db = await getDb();
+      if (!db) return;
+      const { auditLedger } = await import("../../drizzle/schema");
+      const { desc, eq } = await import("drizzle-orm");
+      const { ACTIVE_NORMING_VERSION, NORMING_SNAPSHOTS } = await import("../scoring/norming");
+      const last = await db.select({ payload: auditLedger.payload })
+        .from(auditLedger).where(eq(auditLedger.kind, "norm_version"))
+        .orderBy(desc(auditLedger.id)).limit(1);
+      const lastVersion = (last[0]?.payload as { version?: string } | undefined)?.version;
+      if (lastVersion !== ACTIVE_NORMING_VERSION) {
+        const { appendLedgerEntry } = await import("../patents/ledger");
+        await appendLedgerEntry("norm_version", {
+          version: ACTIVE_NORMING_VERSION,
+          description: NORMING_SNAPSHOTS[ACTIVE_NORMING_VERSION]?.description ?? "",
+        });
+        console.log(`[patents] norm_version ledger entry appended: ${ACTIVE_NORMING_VERSION}`);
+      }
+    } catch (e) {
+      console.warn("[patents] boot activation skipped:", String(e).slice(0, 150));
+    }
+  })();
+
   // tRPC API
   app.use(
     "/api/trpc",
