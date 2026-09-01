@@ -320,13 +320,13 @@ export default function TeamManagement() {
 
   const teamMetricsData = useMemo(() => {
     return [
-      { name: 'Jan', aum: 4000, revenue: 2400, clients: 2400 },
-      { name: 'Feb', aum: 3000, revenue: 1398, clients: 2210 },
-      { name: 'Mar', aum: 2000, revenue: 9800, clients: 2290 },
-      { name: 'Apr', aum: 2780, revenue: 3908, clients: 2000 },
-      { name: 'May', aum: 1890, revenue: 4800, clients: 2181 },
-      { name: 'Jun', aum: 2390, revenue: 3800, clients: 2500 },
-      { name: 'Jul', aum: 3490, revenue: 4300, clients: 2100 },
+      { name: 'Jan', aum: 4000, revenue: 2400, clients: 46 },
+      { name: 'Feb', aum: 3000, revenue: 1398, clients: 40 },
+      { name: 'Mar', aum: 2000, revenue: 9800, clients: 43 },
+      { name: 'Apr', aum: 2780, revenue: 3908, clients: 30 },
+      { name: 'May', aum: 1890, revenue: 4800, clients: 36 },
+      { name: 'Jun', aum: 2390, revenue: 3800, clients: 49 },
+      { name: 'Jul', aum: 3490, revenue: 4300, clients: 33 },
     ];
   }, []);
 

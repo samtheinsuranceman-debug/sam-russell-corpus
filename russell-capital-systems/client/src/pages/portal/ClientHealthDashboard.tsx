@@ -238,8 +238,8 @@ export default function ClientHealthDashboard() {
     { ageGroup: "< 35", aum: 2.5, clients: 15 },
     { ageGroup: "35-45", aum: 8.2, clients: 32 },
     { ageGroup: "46-55", aum: 15.7, clients: 45 },
-    { ageGroup: "56-65", aum: 28.4, clients: 68 },
-    { ageGroup: "66-75", aum: 22.1, clients: 54 },
+    { ageGroup: "56-65", aum: 28.4, clients: 49 },
+    { ageGroup: "66-75", aum: 22.1, clients: 30 },
     { ageGroup: "> 75", aum: 12.8, clients: 28 },
   ], []);
 

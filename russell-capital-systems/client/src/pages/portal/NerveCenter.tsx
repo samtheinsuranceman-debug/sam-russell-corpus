@@ -306,7 +306,7 @@ function QuickWinCards() {
 function AchievementShowcase() {
   const achievements = [
     { name: "First Blood", emoji: "⚔️", desc: "Closed your first deal", unlocked: true },
-    { name: "Century Club", emoji: "💯", desc: "100 clients managed", unlocked: true },
+    { name: "Century Club", emoji: "💯", desc: "45 clients managed", unlocked: true },
     { name: "Million Dollar Baby", emoji: "💎", desc: "$1M in discovered wealth", unlocked: true },
     { name: "Streak Master", emoji: "🔥", desc: "30-day login streak", unlocked: false, progress: 18, max: 30 },
     { name: "Calculator King", emoji: "🧮", desc: "Used every calculator", unlocked: false, progress: 14, max: 20 },

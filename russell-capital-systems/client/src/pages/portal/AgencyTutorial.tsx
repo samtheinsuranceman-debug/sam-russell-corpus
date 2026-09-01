@@ -157,7 +157,7 @@ const TOP_FEATURES = [{
     retailBuildCost: "$240,000",
     timeToLearn: "15 min",
     description: "Your existing client database is a goldmine sitting in a spreadsheet. Upload it to Russell Capital Systems™ and every client instantly gets an opportunity score, tax bracket analysis, and system-recommended strategies. What used to be a static list becomes an active, intelligent pipeline.",
-    whyItMatters: "Most agencies have 200-2,000+ clients scattered across spreadsheets and CRMs. Each client represents $500-$5,000 in untapped annual premium. By uploading your database, the the system identifies the top 20% of clients with the highest opportunity scores — that's where your team should focus first.",
+    whyItMatters: "Most agencies have 200-2,0+ clients scattered across spreadsheets and CRMs. Each client represents $500-$5,000 in untapped annual premium. By uploading your database, the the system identifies the top 20% of clients with the highest opportunity scores — that's where your team should focus first.",
     howItWorks: "Go to Clients → Import. Upload a CSV with columns: Name, Age, Email, Phone, IRA Balance, Roth Balance, Taxable Assets, Income, Filing Status. The system auto-maps columns, validates data, and creates client profiles. Each client gets an system-generated opportunity score (1-100) within seconds.",
     salesImpact: "Agencies that upload their full database see an average $8,000/month revenue increase in the first 60 days. The the system surfaces 'hidden gold' — clients who looked dormant but have massive Roth conversion opportunities or IUL potential that was never identified.",
     drillDowns: [
@@ -165,7 +165,7 @@ const TOP_FEATURES = [{
       { id: "d1-2", title: "Data Validation & Cleanup", content: "The importer flags issues: duplicate names, invalid emails, missing ages. Fix them before import or let the system create partial profiles. Partial profiles still get scored — you can enrich them later." },
       { id: "d1-3", title: "Opportunity Scoring", content: "Each client gets a score from 1-100 based on: IRA size (Roth conversion potential), age (urgency), income (tax bracket optimization), and existing coverage gaps. Sort by score to find your best opportunities instantly." },
       { id: "d1-4", title: "Assigning Clients to Advisors", content: "During import, you can assign clients to specific advisors via the 'Assigned Advisor' column. Or import first and bulk-assign later from the client list. Each advisor sees only their assigned clients in their dashboard." },
-      { id: "d1-5", title: "What to Do After Upload", content: "Step 1: Sort by opportunity score. Step 2: Assign top-50 clients to your best closers. Step 3: Run batch smart strategies on the top 20. Step 4: Schedule follow-up campaigns. Your database just went from 'dead list' to 'active pipeline.'" },
+      { id: "d1-5", title: "What to Do After Upload", content: "Step 1: Sort by opportunity score. Step 2: Assign top-45 clients to your best closers. Step 3: Run batch smart strategies on the top 20. Step 4: Schedule follow-up campaigns. Your database just went from 'dead list' to 'active pipeline.'" },
     ],
   },
 ,
@@ -869,7 +869,7 @@ export default function AgencyTutorial() {
                 { step: 2, text: "Upload your lead database and set up auto-distribution rules", path: "/portal/clients" },
                 { step: 3, text: "Send your advisors to the Individual Agent Tutorial", path: "/portal/agent-tutorial" },
                 { step: 4, text: "Set up the Leaderboard and announce the first weekly challenge", path: "/portal/leaderboard" },
-                { step: 5, text: "Run a bulk smart strategy generation on your top 50 clients", path: "/portal/bulk-generation" },
+                { step: 5, text: "Run a bulk smart strategy generation on your top 45 clients", path: "/portal/bulk-generation" },
               ].map((item) => (
                 <a key={item.step} href={item.path} className="flex items-center gap-4 p-4 rounded-xl border border-[#12233e] hover:border-amber-500/30 hover:bg-amber-500/5 transition-all">
                   <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold">{item.step}</div>
