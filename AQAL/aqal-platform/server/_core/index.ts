@@ -138,6 +138,41 @@ async function startServer() {
     });
   });
 
+  // NormChain: re-compute rarity for a score vector under any FROZEN norming
+  // version without mutating stored data. ?version=<v>&scores=0.5,0.7,...
+  app.get("/api/norms/recompute", async (req, res) => {
+    const { NORMING_SNAPSHOTS, ACTIVE_NORMING_VERSION } = await import("../scoring/norming");
+    const version = typeof req.query.version === "string" ? req.query.version : ACTIVE_NORMING_VERSION;
+    const snapshot = NORMING_SNAPSHOTS[version];
+    res.set("Cache-Control", "no-store");
+    if (!snapshot) {
+      return res.status(404).json({ ok: false, reason: "unknown norming version", known: Object.keys(NORMING_SNAPSHOTS) });
+    }
+    const raw = typeof req.query.scores === "string" ? req.query.scores : "";
+    const scores = raw.split(",").map((s) => Number(s.trim())).filter((n) => Number.isFinite(n));
+    if (scores.length === 0 || scores.length > 32 || scores.some((s) => s < 0 || s > 1)) {
+      return res.status(400).json({ ok: false, reason: "scores must be 1..32 comma-separated values on 0..1" });
+    }
+    res.json({
+      ok: true,
+      version: snapshot.version,
+      method: snapshot.method,
+      rarities: scores.map((s) => ({ score: s, oneInN: Math.round(snapshot.scoreToRarity(s) * 100) / 100 })),
+    });
+  });
+
+  // The ledger's current chain head — the single 64-hex commitment to the
+  // entire audit history. Published so anyone (including the member) can
+  // externally anchor it: HSM signature, RFC 3161 timestamp, DID document,
+  // or a public chain. Anchoring upgrades tamper-EVIDENT to tamper-PROOF.
+  app.get("/api/ledger/head", async (_req, res) => {
+    const { exportChainHead } = await import("../patents/ledger");
+    const head = await exportChainHead();
+    res.set("Cache-Control", "no-store");
+    if (!head) return res.status(503).json({ ok: false, reason: "ledger unavailable" });
+    res.json({ ok: true, id: head.id, hash: head.hash, exportedAt: new Date().toISOString() });
+  });
+
   // Public ledger integrity check — anyone can confirm the append-only audit
   // chain verifies end to end. Returns chain length + validity, never payloads.
   app.get("/api/ledger/verify", async (_req, res) => {

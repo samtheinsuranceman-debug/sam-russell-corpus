@@ -91,6 +91,44 @@ filing.**
   SPECIFIED for cross-system filing but not implementable inside this
   repository alone, and no filing should claim they run here.
 
+## Roadmap-bottom additions (the patent PDFs' "additional code" list)
+
+The implementation roadmap at the bottom of the patent portfolio PDFs
+(RarityForge → AQAL Sovereign, "END OF ROADMAP") named CODEBASE and MISSING
+items per patent. This cut closes every item buildable inside this codebase:
+
+- **VectorCore validation layer** — `shared/vector32.ts` enforces the
+  fixed-width contract at the score write path: exactly 32 lines, indices
+  0..31, no duplicates, scores on 0..1; a violating write is a hard error.
+- **WeakLink interventions lookup** — `server/patents/weaknessInterventions.ts`
+  maps each line to the evidence-carrying protocols that develop it, drawn
+  from the audited THERAPY_LINE_MAP (real citations; DOIs pass through from
+  the source and are never invented). Served as `sovereign.weaknessPlan`
+  (the "Focus Here" payload) with an educational-only disclosure.
+- **MatchForge constraint-satisfaction team formation** —
+  `server/patents/teamFormation.ts`: greedy complementary assembly under the
+  "no two members share a controlling weakness" constraint, maximizing
+  per-axis team coverage; reports satisfied=false honestly when the pool
+  cannot comply, and labels itself a heuristic (no optimality claim).
+- **LogVault voice history** — `sovereign.voiceHistory` returns the member's
+  time-series of persisted voice features (append-order, capped at 500).
+- **NormChain as-of-version recompute** — `GET /api/norms/recompute
+  ?version=&scores=` re-computes rarity under any frozen norming snapshot
+  without mutating stored data.
+- **AQAL Sovereign** — `sovereign.identityExport` now supports scoped
+  read-only slices (`full | rarity | weakness | floors`) and a JSON-LD
+  rendering with schema.org annotations; EVERY export access is written to
+  the append-only `identity_access_log` table (migration 0031) and the
+  member audits it via `sovereign.accessLog`. `GET /api/ledger/head`
+  publishes the chain-head commitment for external anchoring (HSM, RFC 3161,
+  DID, or public chain).
+- Still OWNER/INFRA-DEPENDENT from that list, honestly: enterprise OAuth2
+  scope grants (needs the production identity provider), the external
+  evidence-ingestion pipeline (webhooks/certification uploads), S3/Glacier
+  lifecycle policies, the multi-model cost-tracking orchestration layer's
+  paid API accounts, and the DID/blockchain anchor *service* and
+  `/marketplace` bidding module — specified, not represented as built.
+
 ## Transparency APIs (this cut)
 
 - `GET /api/norms/changelog` — every norming snapshot with description

@@ -661,6 +661,11 @@ Respond in JSON format.`;
           // ============================================================
           const compositeRarity = calculateCompositeRarity(cappedScores);
 
+          // VectorCore fixed-width contract: exactly 32 lines, indices 0..31,
+          // no duplicates, scores on 0..1 — a violating write is a hard error.
+          const { assertVector32 } = await import("../shared/vector32");
+          assertVector32(cappedScores.map((s: { axisIndex: number; score: number }) => ({ axisIndex: s.axisIndex, score: s.score })));
+
           // Save scores (capped)
           await saveScores(input.assessmentId, cappedScores);
 
@@ -1622,25 +1627,139 @@ Return ONLY valid JSON.` },
       const { getAllProvenance } = await import("./patents/provenance");
       return getAllProvenance();
     }),
-    identityExport: protectedProcedure.query(async ({ ctx }) => {
+    // Consolidated identity document. Supports scoped slices (rarity |
+    // weakness | floors | full) and a JSON-LD rendering with schema.org
+    // annotations. EVERY access — including the member's own — is written
+    // to identity_access_log so the member can audit reads of their data.
+    identityExport: protectedProcedure
+      .input(z.object({
+        scope: z.enum(["full", "rarity", "weakness", "floors"]).default("full"),
+        format: z.enum(["json", "jsonld"]).default("json"),
+      }).optional())
+      .query(async ({ ctx, input }) => {
+        const scope = input?.scope ?? "full";
+        const format = input?.format ?? "json";
+        const assessment = await getLatestAssessment(ctx.user.id);
+        const scores = assessment ? await getScoresByAssessment(assessment.id) : [];
+        const { getFloors } = await import("./patents/achievementFloors");
+        const { controllingWeakness } = await import("./scoring/controllingWeakness");
+        const { getAllProvenance } = await import("./patents/provenance");
+        const vector = scores
+          .slice()
+          .sort((a, b) => a.axisIndex - b.axisIndex)
+          .map((s) => s.score);
+        const weakness = vector.length ? controllingWeakness(vector) : null;
+        const floors = await getFloors(ctx.user.id);
+
+        // Append-only access audit — best-effort, never blocks the export.
+        try {
+          const { getDb } = await import("./db");
+          const db = await getDb();
+          if (db) {
+            const { identityAccessLog } = await import("../drizzle/schema");
+            await db.insert(identityAccessLog).values({
+              userId: ctx.user.id,
+              scope,
+              endpoint: "sovereign.identityExport",
+              accessorEmail: null, // session-auth: the member themself
+            });
+          }
+        } catch (e) { console.warn("[sovereign] access log skipped:", String(e).slice(0, 120)); }
+
+        const full = {
+          exportedAt: new Date().toISOString(),
+          userId: ctx.user.id,
+          scope,
+          normingVersion: assessment?.normingVersion ?? null,
+          scores: scores.map((s) => ({ axisIndex: s.axisIndex, axisName: s.axisName, score: s.score, confidence: s.confidence })),
+          floors,
+          controllingWeakness: weakness,
+          provenance: await getAllProvenance(),
+        };
+        // Scoped read-only slices: an accessor granted one scope sees only it.
+        const sliced =
+          scope === "rarity" ? { exportedAt: full.exportedAt, userId: full.userId, scope, normingVersion: full.normingVersion, scores: full.scores }
+          : scope === "weakness" ? { exportedAt: full.exportedAt, userId: full.userId, scope, controllingWeakness: weakness }
+          : scope === "floors" ? { exportedAt: full.exportedAt, userId: full.userId, scope, floors }
+          : full;
+        if (format === "json") return sliced;
+        // JSON-LD rendering with schema.org annotations — the exportable,
+        // machine-readable "My AQAL Identity" document.
+        return {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          identifier: `aqal:member:${ctx.user.id}`,
+          description: `AQAL 32-line identity document (scope: ${scope}).`,
+          subjectOf: {
+            "@type": "Dataset",
+            name: "AQAL Intelligence Profile",
+            dateCreated: full.exportedAt,
+            version: full.normingVersion,
+          },
+          additionalProperty: (scope === "weakness" ? [] : full.scores).map((s) => ({
+            "@type": "PropertyValue",
+            propertyID: `aqal:line:${s.axisIndex}`,
+            name: s.axisName,
+            value: s.score,
+            ...(scope === "full" || scope === "floors"
+              ? { minValue: floors.find((f) => f.axisIndex === s.axisIndex)?.floor ?? undefined }
+              : {}),
+          })),
+          ...(weakness && (scope === "full" || scope === "weakness")
+            ? { aqalControllingWeakness: weakness }
+            : {}),
+        } as Record<string, unknown>;
+      }),
+    // The member's own audit trail of identity reads.
+    accessLog: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb } = await import("./db");
+      const db = await getDb();
+      if (!db) return [];
+      const { identityAccessLog } = await import("../drizzle/schema");
+      const { eq, desc } = await import("drizzle-orm");
+      return db.select().from(identityAccessLog)
+        .where(eq(identityAccessLog.userId, ctx.user.id))
+        .orderBy(desc(identityAccessLog.id)).limit(200);
+    }),
+    // LogVault time series: the member's voice-feature history, oldest first.
+    voiceHistory: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb } = await import("./db");
+      const db = await getDb();
+      if (!db) return [];
+      const { voiceFeatures } = await import("../drizzle/schema");
+      const { eq, asc } = await import("drizzle-orm");
+      const rows = await db.select().from(voiceFeatures)
+        .where(eq(voiceFeatures.userId, ctx.user.id))
+        .orderBy(asc(voiceFeatures.id)).limit(500);
+      return rows.map((r) => ({
+        recordedAt: r.createdAt,
+        assessmentId: r.assessmentId,
+        pitchMeanHz: r.pitchMeanHz,
+        pitchRangeHz: r.pitchRangeHz,
+        speakingRateWPM: r.speakingRateWPM,
+        pauseCount: r.pauseCount,
+        confidenceIndex: r.confidenceIndex,
+        arousalIndex: r.arousalIndex,
+      }));
+    }),
+    // WeakLink "Focus Here": the controlling weakness plus the specific
+    // evidence-carrying protocols (real citations, real DOIs) that develop it.
+    weaknessPlan: protectedProcedure.query(async ({ ctx }) => {
       const assessment = await getLatestAssessment(ctx.user.id);
       const scores = assessment ? await getScoresByAssessment(assessment.id) : [];
-      const { getFloors } = await import("./patents/achievementFloors");
+      if (!scores.length) return null;
       const { controllingWeakness } = await import("./scoring/controllingWeakness");
-      const { getAllProvenance } = await import("./patents/provenance");
-      const vector = scores
-        .slice()
-        .sort((a, b) => a.axisIndex - b.axisIndex)
-        .map((s) => s.score);
-      return {
-        exportedAt: new Date().toISOString(),
-        userId: ctx.user.id,
-        normingVersion: assessment?.normingVersion ?? null,
-        scores: scores.map((s) => ({ axisIndex: s.axisIndex, axisName: s.axisName, score: s.score, confidence: s.confidence })),
-        floors: await getFloors(ctx.user.id),
-        controllingWeakness: vector.length ? controllingWeakness(vector) : null,
-        provenance: await getAllProvenance(),
-      };
+      const vector = scores.slice().sort((a, b) => a.axisIndex - b.axisIndex).map((s) => s.score);
+      const weakness = controllingWeakness(vector);
+      if (!weakness) return null;
+      const { getFloors } = await import("./patents/achievementFloors");
+      const floors = await getFloors(ctx.user.id);
+      const { weaknessInterventionPlan } = await import("./patents/weaknessInterventions");
+      return weaknessInterventionPlan(
+        weakness.axisIndex,
+        weakness.score,
+        floors.find((f) => f.axisIndex === weakness.axisIndex)?.floor ?? null,
+      );
     }),
   }),
 

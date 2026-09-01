@@ -537,6 +537,22 @@ export type VoiceFeature = typeof voiceFeatures.$inferSelect;
 export type InsertVoiceFeature = typeof voiceFeatures.$inferInsert;
 
 // ============================================================
+// IDENTITY ACCESS LOG — L1-10 / AQAL Sovereign. Every read of a
+// member's consolidated identity document (any scope) is logged
+// here so the member can audit who saw what, when. Append-only
+// by convention; rows are never updated.
+// ============================================================
+export const identityAccessLog = mysqlTable("identity_access_log", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(), // whose identity was read
+  scope: varchar("scope", { length: 32 }).notNull(), // full | rarity | weakness | floors
+  endpoint: varchar("endpoint", { length: 64 }).notNull(),
+  accessorEmail: varchar("accessorEmail", { length: 320 }), // who read it (null = the member themself)
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type IdentityAccessLogRow = typeof identityAccessLog.$inferSelect;
+
+// ============================================================
 // TRACKER CYCLES — the 30/60/90-day behavioral-journal loop
 // ============================================================
 // Each row is one completed cycle: the person dictated a daily journal, uploaded
