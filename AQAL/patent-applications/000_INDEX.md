@@ -12,6 +12,13 @@ Inventor: Samuel Andrew Russell V · Assignee: Russell Holdings Management, LLC,
 
 Readiness scores are the company's application-package estimates on the rubric printed in every application (eligibility positioning, enablement, reduction to practice, claim architecture, prior-art documentation). They are NOT legal opinions and NOT predictions of USPTO allowance.
 
+## Founding (Level-One) Applications — Originals, No Combinations
+
+The original founding patents of each website live under `founding/` — see
+`founding/000_FOUNDING_INDEX.md`: **JQ-L1** (10, joinaqal.com, implemented),
+**RCS-L1** (20, russellcapitalsystems.com, implemented engines), **DRB-L1**
+(6, Dr. Buddy, operating document-protocols; service embodiment specified).
+
 ## Series A — JoinAQAL Sister Combinations
 
 - **AQAL-C-01** — Consensus-Driven Coaching Synthesis (`series-a-joinaqal-sister/AQAL-C-01_Consensus_Driven_Coaching_Synthesis.md`)
