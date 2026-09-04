@@ -88,6 +88,14 @@ This is the single source of truth. All brothers (Peter, Matthew, Paul, Luke, Jo
 
 ### `/kanawha-covenant/` — Kanawha Covenant
 
+### `/AQAL/patent-applications/` — Draft Provisional Patent Applications
+Forty draft provisional patent applications for the combination portfolio:
+Series A (26 JoinAQAL sister combinations — implemented, reduction to
+practice), Series B (6 JoinAQAL x RCS emergent combinations), Series C
+(8 super-emergent Dr. Buddy / tri-platform combinations — specified only).
+Markdown sources per application plus compiled series PDFs under `pdf/`.
+ALL DRAFTS — not filed; attorney review required. Start at `000_INDEX.md`.
+
 ### `/russell-capital-systems/` — Russell Capital Unified Portal (code)
 Full-stack advisor-platform build (React/Express/Drizzle): 60+ routed pages
 (annuities, estate planning, compliance vault, deal room, the seven Grok
