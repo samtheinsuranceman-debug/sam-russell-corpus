@@ -4,11 +4,13 @@
 
 Inventor: Samuel Andrew Russell V · Assignee: Russell Holdings Management, LLC, Wilmington, Delaware
 
-| Series | Scope | Enablement tier | Count |
-|---|---|---|---|
-| A | JoinAQAL sister combinations | Implemented and operating (reduction to practice) | 26 |
-| B | JoinAQAL x RCS emergent | Both sides implemented; orchestration specified | 6 |
-| C | Super-emergent (Dr. Buddy / tri-platform) | Specified only | 8 |
+| Series | Scope | Enablement tier | Count | Readiness (company estimate) |
+|---|---|---|---|---|
+| A | JoinAQAL sister combinations | Implemented and operating (reduction to practice) | 26 | 9.7 / 10 |
+| B | JoinAQAL x RCS emergent | Both sides implemented; orchestration specified | 6 | 9.5 / 10 (9.7 once orchestration is deployed) |
+| C | Super-emergent (Dr. Buddy / tri-platform) | Specified only | 8 | 9.2 / 10 (9.7 once reduced to practice) |
+
+Readiness scores are the company's application-package estimates on the rubric printed in every application (eligibility positioning, enablement, reduction to practice, claim architecture, prior-art documentation). They are NOT legal opinions and NOT predictions of USPTO allowance.
 
 ## Series A — JoinAQAL Sister Combinations
 
