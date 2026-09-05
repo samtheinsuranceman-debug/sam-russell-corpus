@@ -31,6 +31,8 @@ describe("Concept 16 physician homepage", () => {
     expect(landing).toContain("Transform Debt Into a");
     expect(landing).toContain("Tax-Free Liquid War Chest");
     expect(landing).toContain("The Physician War-Chest Strategy");
+    expect(landing).toContain("We build the tailored");
+    expect(landing).toContain("around that.");
     expect(landing).toContain("Design Your Physician Financial System");
     expect(landing).toContain("Plan Beyond the Practice");
     expect(landing).toContain("Book a Physician Planning Review");
