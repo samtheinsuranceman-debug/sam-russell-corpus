@@ -250,7 +250,7 @@ export default function Landing() {
       </nav>
 
       <section id="top" className="rc-homepage-hero rc-command-center relative flex min-h-[100vh] items-center overflow-hidden bg-[#050b0a]">
-        <img src="/rcs-neon-hero.png" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover object-center blur-[16px] brightness-[.28]" />
+        <img src="/rcs-neon-hero.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover object-center blur-[16px] brightness-[.28]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,11,10,.74)_0%,rgba(5,11,10,.5)_42%,#050b0a_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_36%,rgba(16,185,129,.18),transparent_46%)]" />
         <div aria-hidden="true" className="absolute inset-0 opacity-[.13] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:46px_46px]" />
@@ -330,7 +330,7 @@ export default function Landing() {
       </section>
 
       <section aria-label="Relief today, recovery for life" className="relative overflow-hidden border-y border-emerald-300/20 bg-[#050b0a] py-20">
-        <img src="/rcs-neon-banner.png" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover object-center blur-[18px] brightness-[.3]" />
+        <img src="/rcs-neon-banner.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover object-center blur-[18px] brightness-[.3]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#050b0a,rgba(5,11,10,.5),#050b0a)]" />
         <div aria-hidden="true" className="absolute inset-0 opacity-[.1] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:44px_44px]" />
         <div className="container relative z-10 text-center">
@@ -350,6 +350,17 @@ export default function Landing() {
 
       <ClientLoginSection />
 
+      <section aria-label="Built for high-income medicine" className="relative overflow-hidden border-y border-emerald-300/15 bg-[#050b0a] py-16">
+        <div aria-hidden="true" className="absolute inset-0 opacity-[.08] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:44px_44px]" />
+        <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,.12),transparent_55%)]" />
+        <div className="container relative z-10 text-center">
+          <h2 className="mx-auto max-w-4xl text-[clamp(1.6rem,3.6vw,3rem)] font-bold text-white [text-shadow:_0_0_22px_rgba(16,185,129,.35)]" style={{ fontFamily: "Georgia,'Times New Roman',serif" }}>
+            Built for <span className="text-emerald-300 [text-shadow:_0_0_24px_rgba(52,211,153,.85)]">High-Income Medicine.</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-white/70">The financial pressures of a medical career are specific. So is the system built to answer them.</p>
+        </div>
+      </section>
+
       <section className="container py-20" id="physician-planning">
         <div className="mb-12 text-center">
           <h2 className="mb-3 text-3xl font-bold text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>Planning built around a medical career</h2>
@@ -364,6 +375,16 @@ export default function Landing() {
               <p className="text-sm leading-relaxed text-[#7a95b8]">{desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section aria-label="One coordinated system" className="relative overflow-hidden bg-[#050b0a] py-16">
+        <div aria-hidden="true" className="absolute inset-0 opacity-[.08] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:44px_44px]" />
+        <div className="container relative z-10 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[.28em] text-emerald-300/80">Tax reduction · Interest recovery · Legacy</p>
+          <h2 className="mx-auto mt-3 max-w-4xl text-[clamp(1.6rem,3.6vw,3rem)] font-bold text-white" style={{ fontFamily: "Georgia,'Times New Roman',serif" }}>
+            Every Strategy. <span className="text-emerald-300 [text-shadow:_0_0_24px_rgba(52,211,153,.85)]">One Coordinated System.</span>
+          </h2>
         </div>
       </section>
 

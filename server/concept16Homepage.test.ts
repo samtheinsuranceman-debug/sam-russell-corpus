@@ -10,8 +10,8 @@ describe("Concept 16 physician homepage", () => {
   it("uses the clean persistent background and selected command-center hierarchy", () => {
     // Neon "Financial & Tax Relief and Recovery" rebrand — words rendered as
     // live text; the two images demoted to blurred atmospheric backgrounds.
-    expect(landing).toContain("/rcs-neon-hero.png");
-    expect(landing).toContain("/rcs-neon-banner.png");
+    expect(landing).toContain("/rcs-neon-hero.webp");
+    expect(landing).toContain("/rcs-neon-banner.webp");
     expect(landing).toContain("Financial &amp; Tax");
     expect(landing).toContain("Relief and Recovery");
     expect(landing).toContain("For Physicians, Psychiatrists, &amp; Surgeons");
@@ -19,6 +19,8 @@ describe("Concept 16 physician homepage", () => {
     expect(landing).toContain("Keep More of What You Earn.");
     expect(landing).toContain("Protect What You Built.");
     expect(landing).toContain("Relief today · Recovery for life");
+    expect(landing).toContain("High-Income Medicine.");
+    expect(landing).toContain("One Coordinated System.");
     expect(landing).toContain("Plan Beyond the Practice");
     expect(landing).toContain("Book a Physician Planning Review");
     expect(landing).toContain("Tax &amp; Interest Savings Calculator");
