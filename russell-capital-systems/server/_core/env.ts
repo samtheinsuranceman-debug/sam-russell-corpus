@@ -10,6 +10,8 @@ export const ENV = {
   ownerEmail: process.env.OWNER_EMAIL ?? "",
   ownerPasswordHash: process.env.OWNER_PASSWORD_HASH ?? "",
   ownerName: process.env.OWNER_NAME ?? "",
+  // Where "new lead" alerts go (falls back to OWNER_EMAIL).
+  leadNotifyEmail: process.env.LEAD_NOTIFY_EMAIL ?? "",
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",

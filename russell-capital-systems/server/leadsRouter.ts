@@ -18,7 +18,7 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { ENV } from "./_core/env";
 import { notifyOwner } from "./_core/notification";
-import { sendLeadAcknowledgement } from "./email";
+import { sendLeadAcknowledgement, sendNewLeadAlert } from "./email";
 import { computeLeadAnalysis } from "./leadStrategy";
 import { getLeadById, getLeadByPublicId, listLeads, updateLeadStatus, upsertLead } from "./leadsDb";
 import type { LeadFactFinder } from "@shared/leadTypes";
@@ -136,6 +136,19 @@ export const leadsRouter = router({
             `\nOpen the lead inbox to review the full fact-finder and advisor figures.`,
         });
       } catch { /* notification is best-effort */ }
+
+      // Email the owner too — the managed notification above only exists on the
+      // managed host; on a plain host this is how the owner hears about a lead.
+      const alertTo = ENV.leadNotifyEmail || ENV.ownerEmail;
+      if (alertTo) {
+        try {
+          const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
+          const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
+          const host = typeof ctx.req.headers.host === "string" ? ctx.req.headers.host : "";
+          const proto = ctx.req.headers["x-forwarded-proto"] === "https" || host.endsWith(".com") ? "https" : "http";
+          await sendNewLeadAlert({ toEmail: alertTo, who, contact, bestTime: input.bestTimeToContact, question: input.question, inboxUrl: host ? `${proto}://${host}/portal/leads` : undefined });
+        } catch { /* alert is best-effort */ }
+      }
 
       // Send the prospect a warm acknowledgement — best-effort, no figures.
       if (input.email) {

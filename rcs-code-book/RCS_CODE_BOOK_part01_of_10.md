@@ -22,6 +22,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `scripts/build_database.sh`
 - `scripts/build_deploy_bundle.sh`
 - `scripts/check-concept16-browser.mjs`
+- `scripts/check_production_bundle.mjs`
 - `scripts/export_schema_sql.sh`
 - `scripts/owner_password_hash.mjs`
 - `scripts/react-runtime-inject.mjs`
@@ -142,6 +143,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/_core/imageGeneration.ts`
 - `server/_core/index.ts`
 - `server/_core/llm.ts`
+- `server/_core/mailer.ts`
 - `server/_core/map.ts`
 - `server/_core/notification.ts`
 - `server/_core/oauth.ts`
@@ -209,15 +211,21 @@ server, database, or keys: `docs/index.html` at the repo root (built from
 page — every image, the AI concierge (falls back to email), the lead fact-finder
 (pre-filled email to the advisor), and Calendly booking.
 
-**One click makes it public on GitHub Pages:**
+**One click makes it public on GitHub Pages** (a workflow does the rest):
 
 1. Open https://github.com/samtheinsuranceman-debug/sam-russell-corpus/settings/pages
-2. Under **Build and deployment → Source** choose **Deploy from a branch**,
-   branch **`master`**, folder **`/docs`**, and click **Save**.
-3. Within a minute or two the homepage is live at
+2. Under **Build and deployment → Source** choose **GitHub Actions**. That's it —
+   there is nothing to save separately.
+3. Open https://github.com/samtheinsuranceman-debug/sam-russell-corpus/actions/workflows/pages.yml
+   and click **Run workflow** (or just wait for the next merge to `master`).
+   Within a minute or two the homepage is live at
    **https://samtheinsuranceman-debug.github.io/sam-russell-corpus/**
-4. (Optional) Add a custom domain on the same settings page and point its DNS
+4. (Optional) Add a custom domain on the Pages settings page and point its DNS
    `CNAME` at `samtheinsuranceman-debug.github.io`.
+
+The workflow (`.github/workflows/pages.yml`) republishes `docs/` on every push to
+`master`. It cannot switch Pages on by itself — GitHub only lets a repository
+admin do that, which is step 2.
 
 Every later `pnpm release` + merge to `master` updates the live page automatically.
 The full app (portal, lead inbox, nine-AI panel, database) still deploys per the
@@ -271,7 +279,8 @@ cd sam-russell-corpus/russell-capital-systems   # master is the release branch
 
 ```bash
 pnpm install --frozen-lockfile
-# (npm ci also works if you prefer npm)
+# npm also works: `npm install` (the repo's .npmrc sets legacy-peer-deps, which
+# npm needs here — without it npm refuses to resolve the tree)
 ```
 
 ## 4. Configure environment variables
@@ -298,9 +307,23 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 `BUILT_IN_FORGE_API_KEY` (Manus / built‑in gateway; also powers `BUILT_IN_FORGE_API_URL` if self‑hosted).
 > With zero AI keys the homepage concierge degrades gracefully to a written teaser.
 
-### Email + voice (optional)
-`RESEND_API_KEY` (prospect acknowledgement emails), `ELEVENLABS_API_KEY` +
-`ELEVENLABS_VOICE_ID` (spoken answers).
+### Email (pick one — this is how you hear about new leads)
+- **Plain SMTP, nothing to verify:** `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USER`,
+  `SMTP_PASS`, optional `SMTP_FROM`. For Gmail: host `smtp.gmail.com`, port `587`,
+  user = your Gmail address, pass = a Google **App Password** (Google Account →
+  Security → 2‑Step Verification → App passwords). Bluehost's own mail server
+  works the same way with a cPanel mailbox.
+- **Or Resend:** `RESEND_API_KEY` (the sender domain `russellcapitalsystems.com`
+  must be verified in Resend first).
+- `LEAD_NOTIFY_EMAIL` — where "new lead" alerts go (defaults to `OWNER_EMAIL`).
+
+Every new homepage lead then emails you (name, contact, best time, their question,
+and a link to the inbox — never the figures) and sends the prospect a warm
+acknowledgement. With no mail configured, leads are still saved to the inbox;
+you just won't be emailed.
+
+### Voice (optional)
+`ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` (spoken answers).
 
 ### Client build‑time (optional)
 `VITE_APP_ID`.
@@ -517,6 +540,7 @@ magic beyond the scripts named here (`build`, `start`, `check`, `db:push`).*
     "mysql2": "^3.15.0",
     "nanoid": "^5.1.16",
     "next-themes": "^0.4.6",
+    "nodemailer": "10.0.0",
     "pdfkit": "^0.20.1",
     "pptxgenjs": "^4.0.1",
     "react": "^19.2.1",
@@ -547,6 +571,7 @@ magic beyond the scripts named here (`build`, `start`, `check`, `db:push`).*
     "@types/express": "4.17.21",
     "@types/google.maps": "^3.58.1",
     "@types/node": "^24.7.0",
+    "@types/nodemailer": "8.0.1",
     "@types/pdfkit": "^0.17.6",
     "@types/react": "^19.2.1",
     "@types/react-dom": "^19.2.1",
@@ -1262,8 +1287,11 @@ AI (any you use; skip-if-absent):
   ANTHROPIC_API_KEY  OPENAI_API_KEY  XAI_API_KEY  GEMINI_API_KEY
   PERPLEXITY_API_KEY  OPENROUTER_API_KEY  MISTRAL_API_KEY  GROQ_API_KEY
   BUILT_IN_FORGE_API_KEY   (Manus / built-in gateway)
-Email + voice (optional):
-  RESEND_API_KEY   ELEVENLABS_API_KEY   ELEVENLABS_VOICE_ID
+Email — how you hear about new leads (pick one):
+  SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS [SMTP_FROM]   (Gmail app password or a cPanel mailbox; nothing to verify)
+  or RESEND_API_KEY                                    (needs the sender domain verified in Resend)
+  LEAD_NOTIFY_EMAIL                                    (optional; defaults to OWNER_EMAIL)
+Voice (optional): ELEVENLABS_API_KEY ELEVENLABS_VOICE_ID
 > Owner sign-in: set OWNER_EMAIL and OWNER_PASSWORD_HASH (make the hash with
 > `npm run owner:password` on your own computer; never store the password).
 > Then /login shows the owner form and /portal/leads opens for you.
@@ -1273,7 +1301,8 @@ Email + voice (optional):
 ## 4. Install dependencies
 In the cPanel Node app's virtualenv terminal (or "Run NPM Install"):
   npm install --omit=dev
-(The server bundle imports packages at runtime, so node_modules must exist.)
+(The bundle ships an .npmrc with legacy-peer-deps=true, which npm needs to resolve
+this tree. The server bundle imports packages at runtime, so node_modules must exist.)
 
 ## 5. Build the database (one time; safe to repeat)
 Create an empty MySQL database in cPanel → MySQL Databases, grant the user ALL
@@ -1764,7 +1793,7 @@ trap 'rm -rf "$STAGE"' EXIT
 mkdir -p "$STAGE/rcs-deploy"
 cp -r "$APP/dist" "$STAGE/rcs-deploy/dist"
 cp -r "$APP/drizzle" "$STAGE/rcs-deploy/drizzle"
-cp "$APP/package.json" "$APP/pnpm-lock.yaml" "$APP/drizzle.config.ts" "$STAGE/rcs-deploy/"
+cp "$APP/package.json" "$APP/pnpm-lock.yaml" "$APP/drizzle.config.ts" "$APP/.npmrc" "$STAGE/rcs-deploy/"
 cp "$APP/scripts/DEPLOY.md" "$STAGE/rcs-deploy/DEPLOY.md"
 # Database: the schema file + the builder/verifier + the live smoke test.
 mkdir -p "$STAGE/rcs-deploy/database" "$STAGE/rcs-deploy/scripts"
@@ -1871,6 +1900,42 @@ const results = [
 
 console.log(JSON.stringify({ ok: true, results }, null, 2));
 socket.close();
+```
+
+## `scripts/check_production_bundle.mjs`
+
+```js
+#!/usr/bin/env node
+// Guard for the production bundle: dist/index.js must not statically import any
+// package that is not in "dependencies" (devDependencies are absent on a host
+// installed with `npm install --omit=dev`, and one such import — vite — once
+// crashed the server at startup). Run after `pnpm build`; part of `pnpm release`.
+import { readFileSync } from "node:fs";
+import { builtinModules } from "node:module";
+
+const pkg = JSON.parse(readFileSync("package.json", "utf8"));
+const deps = new Set(Object.keys(pkg.dependencies ?? {}));
+const dev = new Set(Object.keys(pkg.devDependencies ?? {}));
+const bundle = readFileSync("dist/index.js", "utf8");
+
+// Static ESM imports only — `import("x")` is lazy and allowed.
+const specs = new Set();
+for (const m of bundle.matchAll(/^\s*import\s+(?:[^'"]*?\s+from\s+)?["']([^"']+)["']/gm)) specs.add(m[1]);
+for (const m of bundle.matchAll(/^\s*export\s+\*\s+from\s+["']([^"']+)["']/gm)) specs.add(m[1]);
+
+const pkgName = (s) => (s.startsWith("@") ? s.split("/").slice(0, 2).join("/") : s.split("/")[0]);
+const isBuiltin = (s) => s.startsWith("node:") || builtinModules.includes(pkgName(s));
+const problems = [];
+for (const s of specs) {
+  if (s.startsWith(".") || s.startsWith("/") || isBuiltin(s)) continue;
+  const name = pkgName(s);
+  if (!deps.has(name)) problems.push(`${name}${dev.has(name) ? " (devDependency)" : " (not in package.json)"}`);
+}
+if (problems.length) {
+  console.error("✘ dist/index.js statically imports packages that won't exist on a production host:\n  " + [...new Set(problems)].join("\n  "));
+  process.exit(1);
+}
+console.log(`✔ production bundle imports ${[...specs].filter((s) => !s.startsWith(".") && !isBuiltin(s)).length} runtime packages, all in dependencies`);
 ```
 
 ## `scripts/export_schema_sql.sh`
@@ -2014,8 +2079,8 @@ step "3/7 database schema SQL";  bash scripts/export_schema_sql.sh
 # with no database. (`pnpm test` runs the whole suite, parts of which need a live DB.)
 step "4/7 tests";               npx vitest run server/concept16Homepage.test.ts server/livePageParity.test.ts server/databaseSchemaFile.test.ts \
                                   server/homepage-typography-scale.test.ts server/leadStrategy.test.ts \
-                                  server/leadsRouter.test.ts server/ownerLogin.test.ts server/ultraAI-providers.test.ts
-step "5/7 production build";    pnpm build
+                                  server/leadsRouter.test.ts server/ownerLogin.test.ts server/mailer.test.ts server/ultraAI-providers.test.ts
+step "5/7 production build";    pnpm build && node scripts/check_production_bundle.mjs
 step "6/7 deploy bundle";       bash scripts/build_deploy_bundle.sh
 step "7/7 code book";           python3 scripts/build_code_book.py | tail -1
 
@@ -24625,6 +24690,8 @@ export const ENV = {
   ownerEmail: process.env.OWNER_EMAIL ?? "",
   ownerPasswordHash: process.env.OWNER_PASSWORD_HASH ?? "",
   ownerName: process.env.OWNER_NAME ?? "",
+  // Where "new lead" alerts go (falls back to OWNER_EMAIL).
+  leadNotifyEmail: process.env.LEAD_NOTIFY_EMAIL ?? "",
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
@@ -25548,6 +25615,91 @@ export async function listLLMModels(): Promise<ModelsResponse> {
   }
 
   return (await response.json()) as ModelsResponse;
+}
+```
+
+## `server/_core/mailer.ts`
+
+```ts
+// ============================================================
+// MAIL TRANSPORT — one sendMail() for the app, two ways to deliver:
+//   1. Resend            RESEND_API_KEY (+ verified sender domain)
+//   2. Plain SMTP        SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM
+//                        (Gmail with an app password, the host's own mail
+//                        server, or any provider — nothing to verify first)
+// With neither configured the message is not sent and the caller is told so.
+// Secrets are read from the environment only.
+// ============================================================
+import nodemailer from "nodemailer";
+import type { Transporter } from "nodemailer";
+
+export type MailMessage = { to: string; subject: string; text: string; html?: string; from?: string };
+export type MailResult = { sent: boolean; via?: "resend" | "smtp"; reason?: string };
+
+export const DEFAULT_FROM = "Russell Capital Systems™ <hello@russellcapitalsystems.com>";
+
+export type MailEnv = {
+  RESEND_API_KEY?: string;
+  SMTP_HOST?: string;
+  SMTP_PORT?: string;
+  SMTP_USER?: string;
+  SMTP_PASS?: string;
+  SMTP_FROM?: string;
+  SMTP_SECURE?: string;
+};
+
+export function mailMode(env: MailEnv = process.env as MailEnv): "resend" | "smtp" | "none" {
+  if (env.RESEND_API_KEY) return "resend";
+  if (env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASS) return "smtp";
+  return "none";
+}
+
+export function smtpOptions(env: MailEnv = process.env as MailEnv) {
+  const port = Number(env.SMTP_PORT || 587);
+  const secure = env.SMTP_SECURE ? env.SMTP_SECURE === "true" : port === 465;
+  return { host: env.SMTP_HOST, port, secure, auth: { user: env.SMTP_USER!, pass: env.SMTP_PASS! } };
+}
+
+/** The From header: SMTP providers usually require it to match the account. */
+export function fromAddress(env: MailEnv = process.env as MailEnv): string {
+  if (mailMode(env) === "smtp") return env.SMTP_FROM || env.SMTP_USER!;
+  return DEFAULT_FROM;
+}
+
+let _transport: Transporter | null = null;
+function smtpTransport(): Transporter {
+  if (!_transport) _transport = nodemailer.createTransport(smtpOptions());
+  return _transport;
+}
+export function _resetTransportForTests(t: Transporter | null = null) { _transport = t; }
+
+type ResendLike = { emails: { send: (m: { from: string; to: string; subject: string; text: string; html?: string }) => Promise<{ error?: unknown }> } };
+let _resend: ResendLike | null = null;
+async function resendClient(): Promise<ResendLike> {
+  if (!_resend) {
+    const { Resend } = await import("resend");
+    _resend = new Resend(process.env.RESEND_API_KEY) as unknown as ResendLike;
+  }
+  return _resend;
+}
+export function _resetResendForTests(r: ResendLike | null = null) { _resend = r; }
+
+export async function sendMail(msg: MailMessage): Promise<MailResult> {
+  const mode = mailMode();
+  if (mode === "none") return { sent: false, reason: "No mail transport configured (set RESEND_API_KEY or SMTP_*)" };
+  const from = msg.from ?? fromAddress();
+  try {
+    if (mode === "resend") {
+      const { error } = await (await resendClient()).emails.send({ from, to: msg.to, subject: msg.subject, text: msg.text, html: msg.html });
+      if (error) return { sent: false, via: "resend", reason: "Email delivery failed" };
+      return { sent: true, via: "resend" };
+    }
+    await smtpTransport().sendMail({ from, to: msg.to, subject: msg.subject, text: msg.text, html: msg.html });
+    return { sent: true, via: "smtp" };
+  } catch (error) {
+    console.warn("[Mail] delivery failed via", mode, String(error).slice(0, 200));
+    return { sent: false, via: mode, reason: "Email delivery failed" };
+  }
 }
 ```
 
@@ -26818,10 +26970,18 @@ import fs from "fs";
 import { type Server } from "http";
 import { nanoid } from "nanoid";
 import path from "path";
-import { createServer as createViteServer } from "vite";
-import viteConfig from "../../vite.config";
 
 export async function setupVite(app: Express, server: Server) {
+  // Loaded on demand: vite and the vite config (and its plugins) are dev-only
+  // dependencies. Importing them at the top would make the production bundle
+  // crash on hosts installed with `--omit=dev`.
+  // (The config path is a variable so esbuild leaves it out of the production
+  // bundle instead of inlining the config and its plugin imports.)
+  const viteConfigPath = "../../vite.config";
+  const [{ createServer: createViteServer }, { default: viteConfig }] = await Promise.all([
+    import("vite"),
+    import(viteConfigPath) as Promise<{ default: Record<string, unknown> }>,
+  ]);
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },
@@ -33311,6 +33471,7 @@ export async function upsertUserPortalPreferences(userId: number, workspaceId: n
  * so the app works in dev without an API key configured.
  */
 import { Resend } from "resend";
+import { sendMail } from "./_core/mailer";
 
 let _resend: Resend | null = null;
 
@@ -33458,7 +33619,6 @@ export interface LeadAckOptions {
  * no promises — just confirms receipt and that an advisor will follow up.
  */
 export async function sendLeadAcknowledgement(opts: LeadAckOptions): Promise<{ sent: boolean; reason?: string }> {
-  const resend = getResend();
   const name = (opts.firstName ?? "").trim() || "there";
   const subject = "Thanks — your Russell Capital Systems estimate is on its way";
   const text =
@@ -33480,28 +33640,55 @@ export async function sendLeadAcknowledgement(opts: LeadAckOptions): Promise<{ s
   </div>
 </body></html>`;
 
-  if (!resend) {
-    emailStatus("lead_ack_skipped_no_key", false);
-    return { sent: false, reason: "RESEND_API_KEY not configured" };
-  }
-  try {
-    const { error } = await resend.emails.send({
-      from: "Russell Capital Systems™ <hello@russellcapitalsystems.com>",
-      to: opts.toEmail,
-      subject,
-      html: sanitizeEmailHtml(html),
-      text,
-    });
-    if (error) {
-      emailStatus("lead_ack_resend_error", false);
-      return { sent: false, reason: "Email delivery failed" };
-    }
-    emailStatus("lead_ack_sent", true);
-    return { sent: true };
-  } catch {
-    emailStatus("lead_ack_failed", false);
-    return { sent: false, reason: "Email delivery failed" };
-  }
+  // Delivered through whichever transport the host has: Resend, or plain SMTP.
+  const result = await sendMail({ to: opts.toEmail, subject, text, html: sanitizeEmailHtml(html) });
+  emailStatus(result.sent ? "lead_ack_sent" : "lead_ack_not_sent", result.sent);
+  return result.sent ? { sent: true } : { sent: false, reason: result.reason ?? "Email delivery failed" };
+}
+
+// ─── New-lead alert to the owner ─────────────────────────────────────────────
+
+export interface NewLeadAlertOptions {
+  toEmail: string;
+  who: string;
+  contact: string;
+  bestTime?: string | null;
+  question?: string | null;
+  inboxUrl?: string;
+}
+
+/**
+ * Tells the owner a homepage lead just arrived. Contact details and the
+ * visitor's question only — never the illustrative figures, which stay in the
+ * inbox behind sign-in. Works on any host with RESEND_API_KEY or SMTP_* set.
+ */
+export async function sendNewLeadAlert(opts: NewLeadAlertOptions): Promise<{ sent: boolean; reason?: string }> {
+  const subject = `New homepage lead: ${opts.who}`;
+  const lines = [
+    `${opts.who} just completed the Tax & Savings Estimate on the homepage.`,
+    ``,
+    `Contact: ${opts.contact}`,
+    opts.bestTime ? `Best time to reach them: ${opts.bestTime}` : null,
+    opts.question ? `Their question: ${opts.question.slice(0, 500)}` : null,
+    ``,
+    `Open the lead inbox to review the full fact-finder and the advisor figures:`,
+    opts.inboxUrl ?? "/portal/leads",
+  ].filter((l): l is string => l !== null);
+  const text = lines.join("\n");
+  const esc = (v: string) => v.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c] as string));
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><title>${esc(subject)}</title></head>
+<body style="margin:0;padding:0;background:#060f1e;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;color:#c8d8ec;">
+  <div style="max-width:560px;margin:0 auto;padding:32px 24px;">
+    <h1 style="color:#34d399;font-size:20px;margin:0 0 16px;">New homepage lead: ${esc(opts.who)}</h1>
+    <p style="line-height:1.6;">Contact: <strong style="color:#fff">${esc(opts.contact)}</strong></p>
+    ${opts.bestTime ? `<p style="line-height:1.6;">Best time to reach them: ${esc(opts.bestTime)}</p>` : ""}
+    ${opts.question ? `<p style="line-height:1.6;">Their question: ${esc(opts.question.slice(0, 500))}</p>` : ""}
+    <p style="line-height:1.6;"><a href="${esc(opts.inboxUrl ?? "/portal/leads")}" style="color:#34d399;">Open the lead inbox</a> to review the full fact-finder and the advisor figures.</p>
+  </div>
+</body></html>`;
+  const result = await sendMail({ to: opts.toEmail, subject, text, html: sanitizeEmailHtml(html) });
+  emailStatus(result.sent ? "new_lead_alert_sent" : "new_lead_alert_not_sent", result.sent);
+  return result.sent ? { sent: true } : { sent: false, reason: result.reason ?? "Email delivery failed" };
 }
 
 // ─── Stale Client Digest Email ───────────────────────────────────────────────
@@ -38754,7 +38941,7 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { ENV } from "./_core/env";
 import { notifyOwner } from "./_core/notification";
-import { sendLeadAcknowledgement } from "./email";
+import { sendLeadAcknowledgement, sendNewLeadAlert } from "./email";
 import { computeLeadAnalysis } from "./leadStrategy";
 import { getLeadById, getLeadByPublicId, listLeads, updateLeadStatus, upsertLead } from "./leadsDb";
 import type { LeadFactFinder } from "@shared/leadTypes";
@@ -38872,6 +39059,19 @@ export const leadsRouter = router({
             `\nOpen the lead inbox to review the full fact-finder and advisor figures.`,
         });
       } catch { /* notification is best-effort */ }
+
+      // Email the owner too — the managed notification above only exists on the
+      // managed host; on a plain host this is how the owner hears about a lead.
+      const alertTo = ENV.leadNotifyEmail || ENV.ownerEmail;
+      if (alertTo) {
+        try {
+          const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
+          const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
+          const host = typeof ctx.req.headers.host === "string" ? ctx.req.headers.host : "";
+          const proto = ctx.req.headers["x-forwarded-proto"] === "https" || host.endsWith(".com") ? "https" : "http";
+          await sendNewLeadAlert({ toEmail: alertTo, who, contact, bestTime: input.bestTimeToContact, question: input.question, inboxUrl: host ? `${proto}://${host}/portal/leads` : undefined });
+        } catch { /* alert is best-effort */ }
+      }
 
       // Send the prospect a warm acknowledgement — best-effort, no figures.
       if (input.email) {

@@ -14,7 +14,7 @@ trap 'rm -rf "$STAGE"' EXIT
 mkdir -p "$STAGE/rcs-deploy"
 cp -r "$APP/dist" "$STAGE/rcs-deploy/dist"
 cp -r "$APP/drizzle" "$STAGE/rcs-deploy/drizzle"
-cp "$APP/package.json" "$APP/pnpm-lock.yaml" "$APP/drizzle.config.ts" "$STAGE/rcs-deploy/"
+cp "$APP/package.json" "$APP/pnpm-lock.yaml" "$APP/drizzle.config.ts" "$APP/.npmrc" "$STAGE/rcs-deploy/"
 cp "$APP/scripts/DEPLOY.md" "$STAGE/rcs-deploy/DEPLOY.md"
 # Database: the schema file + the builder/verifier + the live smoke test.
 mkdir -p "$STAGE/rcs-deploy/database" "$STAGE/rcs-deploy/scripts"

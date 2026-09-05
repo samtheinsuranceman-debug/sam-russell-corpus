@@ -92,7 +92,8 @@ cd sam-russell-corpus/russell-capital-systems   # master is the release branch
 
 ```bash
 pnpm install --frozen-lockfile
-# (npm ci also works if you prefer npm)
+# npm also works: `npm install` (the repo's .npmrc sets legacy-peer-deps, which
+# npm needs here — without it npm refuses to resolve the tree)
 ```
 
 ## 4. Configure environment variables
@@ -119,9 +120,23 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 `BUILT_IN_FORGE_API_KEY` (Manus / built‑in gateway; also powers `BUILT_IN_FORGE_API_URL` if self‑hosted).
 > With zero AI keys the homepage concierge degrades gracefully to a written teaser.
 
-### Email + voice (optional)
-`RESEND_API_KEY` (prospect acknowledgement emails), `ELEVENLABS_API_KEY` +
-`ELEVENLABS_VOICE_ID` (spoken answers).
+### Email (pick one — this is how you hear about new leads)
+- **Plain SMTP, nothing to verify:** `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USER`,
+  `SMTP_PASS`, optional `SMTP_FROM`. For Gmail: host `smtp.gmail.com`, port `587`,
+  user = your Gmail address, pass = a Google **App Password** (Google Account →
+  Security → 2‑Step Verification → App passwords). Bluehost's own mail server
+  works the same way with a cPanel mailbox.
+- **Or Resend:** `RESEND_API_KEY` (the sender domain `russellcapitalsystems.com`
+  must be verified in Resend first).
+- `LEAD_NOTIFY_EMAIL` — where "new lead" alerts go (defaults to `OWNER_EMAIL`).
+
+Every new homepage lead then emails you (name, contact, best time, their question,
+and a link to the inbox — never the figures) and sends the prospect a warm
+acknowledgement. With no mail configured, leads are still saved to the inbox;
+you just won't be emailed.
+
+### Voice (optional)
+`ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` (spoken answers).
 
 ### Client build‑time (optional)
 `VITE_APP_ID`.

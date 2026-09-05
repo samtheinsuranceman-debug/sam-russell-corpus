@@ -25,8 +25,11 @@ AI (any you use; skip-if-absent):
   ANTHROPIC_API_KEY  OPENAI_API_KEY  XAI_API_KEY  GEMINI_API_KEY
   PERPLEXITY_API_KEY  OPENROUTER_API_KEY  MISTRAL_API_KEY  GROQ_API_KEY
   BUILT_IN_FORGE_API_KEY   (Manus / built-in gateway)
-Email + voice (optional):
-  RESEND_API_KEY   ELEVENLABS_API_KEY   ELEVENLABS_VOICE_ID
+Email — how you hear about new leads (pick one):
+  SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS [SMTP_FROM]   (Gmail app password or a cPanel mailbox; nothing to verify)
+  or RESEND_API_KEY                                    (needs the sender domain verified in Resend)
+  LEAD_NOTIFY_EMAIL                                    (optional; defaults to OWNER_EMAIL)
+Voice (optional): ELEVENLABS_API_KEY ELEVENLABS_VOICE_ID
 > Owner sign-in: set OWNER_EMAIL and OWNER_PASSWORD_HASH (make the hash with
 > `npm run owner:password` on your own computer; never store the password).
 > Then /login shows the owner form and /portal/leads opens for you.
@@ -36,7 +39,8 @@ Email + voice (optional):
 ## 4. Install dependencies
 In the cPanel Node app's virtualenv terminal (or "Run NPM Install"):
   npm install --omit=dev
-(The server bundle imports packages at runtime, so node_modules must exist.)
+(The bundle ships an .npmrc with legacy-peer-deps=true, which npm needs to resolve
+this tree. The server bundle imports packages at runtime, so node_modules must exist.)
 
 ## 5. Build the database (one time; safe to repeat)
 Create an empty MySQL database in cPanel → MySQL Databases, grant the user ALL
