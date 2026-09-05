@@ -157,4 +157,20 @@ describe("Concept 16 physician homepage", () => {
       expect(landing).not.toContain(prohibited);
     }
   });
+
+  it("mounts the trust sections (how we work, who we serve, FAQ) and the mobile CTA", () => {
+    for (const c of ["HomeHowWeWork", "HomeFaq", "MobileStickyCta"]) expect(landing).toContain(`<${c}`);
+    const trust = readFileSync(resolve("client/src/components/HomeTrustSections.tsx"), "utf8");
+    for (const step of ["Review", "Coordinate", "Implement", "Monitor"]) expect(trust).toContain(`title: "${step}"`);
+    expect(trust).toContain("Who we serve");
+    expect(trust).toContain("Straight answers");
+    expect((trust.match(/\{ q: "/g) ?? []).length).toBe(7);
+    // FAQ stays compliance-safe: no guarantees, no figures on the public page.
+    expect(trust).toContain("Neither.");
+    expect(trust).toContain("prepared for your licensed advisor");
+    // Copy-my-summary fallback on the estimator result.
+    const ff = readFileSync(resolve("client/src/components/HomeLeadFactFinder.tsx"), "utf8");
+    expect(ff).toContain("Copy my summary");
+    expect(ff).toContain("navigator.clipboard");
+  });
 });
