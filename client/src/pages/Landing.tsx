@@ -27,6 +27,7 @@ import {
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import HomeAIConcierge from "@/components/HomeAIConcierge";
+import HomeLeadFactFinder from "@/components/HomeLeadFactFinder";
 
 const CALENDLY_URL = "https://calendly.com/samtheinsuranceman-1/30min";
 
@@ -337,6 +338,8 @@ export default function Landing() {
       </section>
 
       <HomeAIConcierge />
+
+      <HomeLeadFactFinder />
 
       {/* ── Chapter: Concept 06 — Tax Strategy for High-Earning Physicians ── */}
       <section aria-label="Tax strategy for high-earning physicians" className="relative flex min-h-[100vh] items-center overflow-hidden border-t border-emerald-300/10 bg-[#050b0a]">

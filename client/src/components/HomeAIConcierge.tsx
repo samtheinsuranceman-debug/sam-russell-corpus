@@ -177,7 +177,7 @@ export default function HomeAIConcierge() {
               )}
               <div className="whitespace-pre-wrap text-[15px] leading-relaxed text-white/90">{answer}</div>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                <a href="#calculator" className="rc-btn rc-btn-primary flex-1 justify-center rounded-xl py-3 text-sm"><ArrowRight size={16} /> See your estimate &amp; get a plan</a>
+                <a href="#planning-estimator" className="rc-btn rc-btn-primary flex-1 justify-center rounded-xl py-3 text-sm"><ArrowRight size={16} /> See your estimate &amp; get a plan</a>
                 <a href="#consultation" className="rc-btn flex-1 justify-center rounded-xl border border-emerald-300/45 bg-black/30 py-3 text-sm text-white hover:bg-emerald-300/10"><Calendar size={16} /> Book a thorough evaluation</a>
               </div>
             </div>

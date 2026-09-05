@@ -1318,6 +1318,34 @@ export const leaderboardConsents = mysqlTable("leaderboard_consents", {
 export type LeaderboardConsent = typeof leaderboardConsents.$inferSelect;
 export type InsertLeaderboardConsent = typeof leaderboardConsents.$inferInsert;
 
+// ─── Public Leads (homepage fact-finder / AI concierge prospects) ───────────
+// Anonymous or self-identified prospects captured from the PUBLIC homepage —
+// distinct from the advisor-side household_fact_finders (which are workspace-
+// scoped and auth-gated). Sensitive financial inputs and the illustrative
+// analysis live in JSON blobs; identity/consent/recognition are scalar columns.
+export const publicLeads = mysqlTable("public_leads", {
+  id:               int("id").autoincrement().primaryKey(),
+  publicId:         varchar("publicId", { length: 40 }).notNull().unique(), // first-party cookie id
+  firstName:        varchar("firstName", { length: 120 }),
+  lastName:         varchar("lastName", { length: 120 }),
+  email:            varchar("email", { length: 320 }),
+  phone:            varchar("phone", { length: 40 }),
+  bestTimeToContact: varchar("bestTimeToContact", { length: 200 }),
+  consentedAt:      timestamp("consentedAt"),
+  consentVersion:   varchar("consentVersion", { length: 40 }),
+  lastIp:           varchar("lastIp", { length: 64 }),
+  ipHistory:        json("ipHistory").$type<string[]>(),
+  question:         text("question"),
+  factFinder:       json("factFinder").$type<import("../shared/leadTypes").LeadFactFinder>(),
+  analysis:         json("analysis").$type<import("../shared/leadTypes").LeadAnalysis>(),
+  status:           mysqlEnum("status", ["new", "contacted", "qualified", "client"]).default("new").notNull(),
+  createdAt:        timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:        timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  lastSeenAt:       timestamp("lastSeenAt").defaultNow().notNull(),
+});
+export type PublicLead = typeof publicLeads.$inferSelect;
+export type InsertPublicLead = typeof publicLeads.$inferInsert;
+
 // ─── Payment Disclosure Records (Legal Payment Folder) ──────────────────────
 export const paymentDisclosures = mysqlTable("payment_disclosures", {
   id:                   int("id").autoincrement().primaryKey(),
