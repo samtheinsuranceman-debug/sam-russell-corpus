@@ -107,7 +107,7 @@ export default function HomeAIConcierge() {
       className="relative overflow-hidden border-t border-emerald-300/10 bg-[#050b0a] py-24"
     >
       {/* Emerald Dawn skyline, crisp — darkened only enough to read over */}
-      <img src="/rcs-city-emerald.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-top brightness-[.5] saturate-[1.1]" />
+      <img src="/rcs-city-emerald.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-top brightness-[.5] saturate-[1.1]" loading="lazy" decoding="async" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,#03090a_0%,rgba(3,9,10,.5)_30%,rgba(3,9,10,.75)_100%)]" />
       <div className="container relative z-10">
         <div className="mx-auto max-w-3xl text-center">

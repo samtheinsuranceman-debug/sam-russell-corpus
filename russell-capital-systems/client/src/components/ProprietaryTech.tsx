@@ -72,7 +72,7 @@ export default function ProprietaryTech() {
   return (
     <section id="technology" aria-label="Patent-pending technology behind Russell Capital Systems" className="relative overflow-hidden bg-[#03090a] py-28">
       {/* Crisp Emerald Dawn skyline behind the engines — no blur, just darkened for legibility */}
-      <img src="/rcs-city-emerald.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-center brightness-[.62] saturate-[1.15]" />
+      <img src="/rcs-city-emerald.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-center brightness-[.62] saturate-[1.15]" loading="lazy" decoding="async" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,#03090a_0%,rgba(3,9,10,.55)_12%,rgba(3,9,10,.55)_88%,#03090a_100%)]" />
 
       <div className="container relative z-10">

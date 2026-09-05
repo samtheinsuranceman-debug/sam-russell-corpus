@@ -1,16 +1,18 @@
-# Russell Capital Systems — Source Code Book (Part 1 of 9)
+# Russell Capital Systems — Source Code Book (Part 1 of 10)
 
-Complete, readable source for the Russell Capital Systems app, split into parts. Read `RCS_CODE_BOOK_00_INDEX.md` first. Each file below is shown verbatim under its repo path (relative to `russell-capital-systems/`). Follow `LAUNCH.md` (Part 1) to build and deploy.
+This is one part of the complete, plain-Markdown source of the Russell Capital Systems web app (React 19 + Vite client, Express + tRPC server, Drizzle ORM / MySQL), split so an assistant that cannot open archives can read every file. `LAUNCH.md` (in Part 1) is the runbook for installing, configuring, building, migrating, and running the app; read it first. Each file below is shown verbatim under its path relative to `russell-capital-systems/`. The source of truth is GitHub `samtheinsuranceman-debug/sam-russell-corpus` (branch `claude/claude-md-docs-0qgcvw`, folder `russell-capital-systems/`); the book is a derived snapshot generated on 2026-09-05. See `RCS_CODE_BOOK_00_INDEX.md` for the full file-to-part map and the list of intentionally excluded paths.
 
 ### Files in this part
 
 - `LAUNCH.md`
-- `.gitignore`
-- `components.json`
-- `drizzle.config.ts`
 - `package.json`
 - `tsconfig.json`
 - `vite.config.ts`
+- `drizzle.config.ts`
+- `components.json`
+- `.gitignore`
+- `template.json`
+- `vitest.config.ts`
 - `PROVENANCE.md`
 - `todo.md`
 - `scripts/audit-interior-colors.mjs`
@@ -167,6 +169,7 @@ Complete, readable source for the Russell Capital Systems app, split into parts.
 - `server/portalAI.ts`
 - `server/rothPdfReport.ts`
 
+---
 
 ## `LAUNCH.md`
 
@@ -357,178 +360,7 @@ for secure cookies.
 *Build is verified: `pnpm check`, the test suite, and `pnpm build` all pass on
 this branch. Everything above is standard Node deployment — no repo‑specific
 magic beyond the scripts named here (`build`, `start`, `check`, `db:push`).*
-
 ````
-
-
-## `.gitignore`
-
-```
-# Dependencies
-**/node_modules
-.pnpm-store/
-
-# Build outputs
-dist/
-build/
-*.dist
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# IDE and editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-*.bak
-
-# Coverage directory used by tools like istanbul
-coverage/
-*.lcov
-
-# nyc test coverage
-.nyc_output
-
-# Dependency directories
-jspm_packages/
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# Next.js build output
-.next
-
-# Nuxt.js build / generate output
-.nuxt
-
-# Gatsby files
-.cache/
-
-# Storybook build outputs
-.out
-.storybook-out
-
-# Temporary folders
-tmp/
-temp/
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Webdev artifacts (checkpoint zips, migrations, etc.)
-.webdev/
-
-# Manus version file (auto-generated, not part of source)
-client/public/__manus__/version.json
-.project-config.json
-
-```
-
-
-## `components.json`
-
-```json
-{
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "new-york",
-  "rsc": false,
-  "tsx": true,
-  "tailwind": {
-    "css": "client/src/index.css",
-    "baseColor": "neutral",
-    "cssVariables": true,
-    "prefix": ""
-  },
-  "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
-  }
-}
-
-```
-
-
-## `drizzle.config.ts`
-
-```ts
-import { defineConfig } from "drizzle-kit";
-
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error("DATABASE_URL is required to run drizzle commands");
-}
-
-export default defineConfig({
-  schema: "./drizzle/schema.ts",
-  out: "./drizzle",
-  dialect: "mysql",
-  dbCredentials: {
-    url: connectionString,
-  },
-});
-
-```
-
 
 ## `package.json`
 
@@ -655,9 +487,7 @@ export default defineConfig({
     }
   }
 }
-
 ```
-
 
 ## `tsconfig.json`
 
@@ -685,9 +515,7 @@ export default defineConfig({
     }
   }
 }
-
 ```
-
 
 ## `vite.config.ts`
 
@@ -901,9 +729,220 @@ export default defineConfig({
     },
   },
 });
-
 ```
 
+## `drizzle.config.ts`
+
+```ts
+import { defineConfig } from "drizzle-kit";
+
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error("DATABASE_URL is required to run drizzle commands");
+}
+
+export default defineConfig({
+  schema: "./drizzle/schema.ts",
+  out: "./drizzle",
+  dialect: "mysql",
+  dbCredentials: {
+    url: connectionString,
+  },
+});
+```
+
+## `components.json`
+
+```json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "css": "client/src/index.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  }
+}
+```
+
+## `.gitignore`
+
+```
+# Dependencies
+**/node_modules
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+*.dist
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+*.bak
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+
+# Gatsby files
+.cache/
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Webdev artifacts (checkpoint zips, migrations, etc.)
+.webdev/
+
+# Manus version file (auto-generated, not part of source)
+client/public/__manus__/version.json
+.project-config.json
+```
+
+## `template.json`
+
+```json
+{
+  "id": "web-db-user",
+  "name": "Web App (db,user)",
+  "description": "Full-stack web template with database + user flows",
+  "capabilities": [
+    "server",
+    "db",
+    "user"
+  ],
+  "files": {
+    "package.json": "{\n  \"name\": \"russell-capital-unified\",\n  \"version\": \"1.0.0\",\n  \"type\": \"module\",\n  \"license\": \"MIT\",\n  \"scripts\": {\n    \"dev\": \"NODE_ENV=development tsx watch server/_core/index.ts\",\n    \"build\": \"vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist\",\n    \"start\": \"NODE_ENV=production node dist/index.js\",\n    \"check\": \"tsc --noEmit\",\n    \"format\": \"prettier --write .\",\n    \"test\": \"vitest run\",\n    \"db:push\": \"drizzle-kit generate && drizzle-kit migrate\"\n  },\n  \"dependencies\": {\n    \"@aws-sdk/client-s3\": \"^3.693.0\",\n    \"@aws-sdk/s3-request-presigner\": \"^3.693.0\",\n    \"@hookform/resolvers\": \"^5.2.2\",\n    \"@radix-ui/react-accordion\": \"^1.2.12\",\n    \"@radix-ui/react-alert-dialog\": \"^1.1.15\",\n    \"@radix-ui/react-aspect-ratio\": \"^1.1.7\",\n    \"@radix-ui/react-avatar\": \"^1.1.10\",\n    \"@radix-ui/react-checkbox\": \"^1.3.3\",\n    \"@radix-ui/react-collapsible\": \"^1.1.12\",\n    \"@radix-ui/react-context-menu\": \"^2.2.16\",\n    \"@radix-ui/react-dialog\": \"^1.1.15\",\n    \"@radix-ui/react-dropdown-menu\": \"^2.1.16\",\n    \"@radix-ui/react-hover-card\": \"^1.1.15\",\n    \"@radix-ui/react-label\": \"^2.1.7\",\n    \"@radix-ui/react-menubar\": \"^1.1.16\",\n    \"@radix-ui/react-navigation-menu\": \"^1.2.14\",\n    \"@radix-ui/react-popover\": \"^1.1.15\",\n    \"@radix-ui/react-progress\": \"^1.1.7\",\n    \"@radix-ui/react-radio-group\": \"^1.3.8\",\n    \"@radix-ui/react-scroll-area\": \"^1.2.10\",\n    \"@radix-ui/react-select\": \"^2.2.6\",\n    \"@radix-ui/react-separator\": \"^1.1.7\",\n    \"@radix-ui/react-slider\": \"^1.3.6\",\n    \"@radix-ui/react-slot\": \"^1.2.3\",\n    \"@radix-ui/react-switch\": \"^1.2.6\",\n    \"@radix-ui/react-tabs\": \"^1.1.13\",\n    \"@radix-ui/react-toggle\": \"^1.1.10\",\n    \"@radix-ui/react-toggle-group\": \"^1.1.11\",\n    \"@radix-ui/react-tooltip\": \"^1.2.8\",\n    \"@tanstack/react-query\": \"^5.90.2\",\n    \"@trpc/client\": \"^11.6.0\",\n    \"@trpc/react-query\": \"^11.6.0\",\n    \"@trpc/server\": \"^11.6.0\",\n    \"axios\": \"^1.12.0\",\n    \"class-variance-authority\": \"^0.7.1\",\n    \"clsx\": \"^2.1.1\",\n    \"cmdk\": \"^1.1.1\",\n    \"cookie\": \"^1.0.2\",\n    \"date-fns\": \"^4.1.0\",\n    \"dotenv\": \"^17.2.2\",\n    \"drizzle-orm\": \"^0.44.5\",\n    \"embla-carousel-react\": \"^8.6.0\",\n    \"express\": \"^4.21.2\",\n    \"framer-motion\": \"^12.23.22\",\n    \"input-otp\": \"^1.4.2\",\n    \"jose\": \"6.1.0\",\n    \"lucide-react\": \"^0.453.0\",\n    \"mysql2\": \"^3.15.0\",\n    \"nanoid\": \"^5.1.5\",\n    \"next-themes\": \"^0.4.6\",\n    \"react\": \"^19.2.1\",\n    \"react-day-picker\": \"^9.11.1\",\n    \"react-dom\": \"^19.2.1\",\n    \"react-hook-form\": \"^7.64.0\",\n    \"react-resizable-panels\": \"^3.0.6\",\n    \"recharts\": \"^2.15.2\",\n    \"sonner\": \"^2.0.7\",\n    \"streamdown\": \"^1.4.0\",\n    \"superjson\": \"^1.13.3\",\n    \"tailwind-merge\": \"^3.3.1\",\n    \"tailwindcss-animate\": \"^1.0.7\",\n    \"vaul\": \"^1.1.2\",\n    \"wouter\": \"^3.3.5\",\n    \"zod\": \"^4.1.12\"\n  },\n  \"devDependencies\": {\n    \"@builder.io/vite-plugin-jsx-loc\": \"^0.1.1\",\n    \"@tailwindcss/typography\": \"^0.5.15\",\n    \"@tailwindcss/vite\": \"^4.1.3\",\n    \"@types/express\": \"4.17.21\",\n    \"@types/google.maps\": \"^3.58.1\",\n    \"@types/node\": \"^24.7.0\",\n    \"@types/react\": \"^19.2.1\",\n    \"@types/react-dom\": \"^19.2.1\",\n    \"@vitejs/plugin-react\": \"^5.0.4\",\n    \"add\": \"^2.0.6\",\n    \"autoprefixer\": \"^10.4.20\",\n    \"drizzle-kit\": \"^0.31.4\",\n    \"esbuild\": \"^0.25.0\",\n    \"pnpm\": \"^10.15.1\",\n    \"postcss\": \"^8.4.47\",\n    \"prettier\": \"^3.6.2\",\n    \"tailwindcss\": \"^4.1.14\",\n    \"tsx\": \"^4.19.1\",\n    \"tw-animate-css\": \"^1.4.0\",\n    \"typescript\": \"5.9.3\",\n    \"vite\": \"^7.1.7\",\n    \"vite-plugin-manus-runtime\": \"0.0.59\",\n    \"vitest\": \"^2.1.4\"\n  },\n  \"packageManager\": \"pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af\",\n  \"pnpm\": {\n    \"patchedDependencies\": {\n      \"wouter@3.7.1\": \"patches/wouter@3.7.1.patch\"\n    },\n    \"overrides\": {\n      \"tailwindcss>nanoid\": \"3.3.7\"\n    }\n  }\n}",
+    "drizzle/schema.ts": "import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from \"drizzle-orm/mysql-core\";\n\n/**\n * Core user table backing auth flow.\n * Extend this file with additional tables as your product grows.\n * Columns use camelCase to match both database fields and generated types.\n */\nexport const users = mysqlTable(\"users\", {\n  /**\n   * Surrogate primary key. Auto-incremented numeric value managed by the database.\n   * Use this for relations between tables.\n   */\n  id: int(\"id\").autoincrement().primaryKey(),\n  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */\n  openId: varchar(\"openId\", { length: 64 }).notNull().unique(),\n  name: text(\"name\"),\n  email: varchar(\"email\", { length: 320 }),\n  loginMethod: varchar(\"loginMethod\", { length: 64 }),\n  role: mysqlEnum(\"role\", [\"user\", \"admin\"]).default(\"user\").notNull(),\n  createdAt: timestamp(\"createdAt\").defaultNow().notNull(),\n  updatedAt: timestamp(\"updatedAt\").defaultNow().onUpdateNow().notNull(),\n  lastSignedIn: timestamp(\"lastSignedIn\").defaultNow().notNull(),\n});\n\nexport type User = typeof users.$inferSelect;\nexport type InsertUser = typeof users.$inferInsert;\n\n// TODO: Add your tables here",
+    "server/db.ts": "import { eq } from \"drizzle-orm\";\nimport { drizzle } from \"drizzle-orm/mysql2\";\nimport { InsertUser, users } from \"../drizzle/schema\";\nimport { ENV } from './_core/env';\n\nlet _db: ReturnType<typeof drizzle> | null = null;\n\n// Lazily create the drizzle instance so local tooling can run without a DB.\nexport async function getDb() {\n  if (!_db && process.env.DATABASE_URL) {\n    try {\n      _db = drizzle(process.env.DATABASE_URL);\n    } catch (error) {\n      console.warn(\"[Database] Failed to connect:\", error);\n      _db = null;\n    }\n  }\n  return _db;\n}\n\nexport async function upsertUser(user: InsertUser): Promise<void> {\n  if (!user.openId) {\n    throw new Error(\"User openId is required for upsert\");\n  }\n\n  const db = await getDb();\n  if (!db) {\n    console.warn(\"[Database] Cannot upsert user: database not available\");\n    return;\n  }\n\n  try {\n    const values: InsertUser = {\n      openId: user.openId,\n    };\n    const updateSet: Record<string, unknown> = {};\n\n    const textFields = [\"name\", \"email\", \"loginMethod\"] as const;\n    type TextField = (typeof textFields)[number];\n\n    const assignNullable = (field: TextField) => {\n      const value = user[field];\n      if (value === undefined) return;\n      const normalized = value ?? null;\n      values[field] = normalized;\n      updateSet[field] = normalized;\n    };\n\n    textFields.forEach(assignNullable);\n\n    if (user.lastSignedIn !== undefined) {\n      values.lastSignedIn = user.lastSignedIn;\n      updateSet.lastSignedIn = user.lastSignedIn;\n    }\n    if (user.role !== undefined) {\n      values.role = user.role;\n      updateSet.role = user.role;\n    } else if (user.openId === ENV.ownerOpenId) {\n      values.role = 'admin';\n      updateSet.role = 'admin';\n    }\n\n    if (!values.lastSignedIn) {\n      values.lastSignedIn = new Date();\n    }\n\n    if (Object.keys(updateSet).length === 0) {\n      updateSet.lastSignedIn = new Date();\n    }\n\n    await db.insert(users).values(values).onDuplicateKeyUpdate({\n      set: updateSet,\n    });\n  } catch (error) {\n    console.error(\"[Database] Failed to upsert user:\", error);\n    throw error;\n  }\n}\n\nexport async function getUserByOpenId(openId: string) {\n  const db = await getDb();\n  if (!db) {\n    console.warn(\"[Database] Cannot get user: database not available\");\n    return undefined;\n  }\n\n  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);\n\n  return result.length > 0 ? result[0] : undefined;\n}\n\n// TODO: add feature queries here as your schema grows.",
+    "server/routers.ts": "import { COOKIE_NAME } from \"@shared/const\";\nimport { getSessionCookieOptions } from \"./_core/cookies\";\nimport { systemRouter } from \"./_core/systemRouter\";\nimport { publicProcedure, router } from \"./_core/trpc\";\n\nexport const appRouter = router({\n    // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly\n  system: systemRouter,\n  auth: router({\n    me: publicProcedure.query(opts => opts.ctx.user),\n    logout: publicProcedure.mutation(({ ctx }) => {\n      const cookieOptions = getSessionCookieOptions(ctx.req);\n      ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });\n      return {\n        success: true,\n      } as const;\n    }),\n  }),\n\n  // TODO: add feature routers here, e.g.\n  // todo: router({\n  //   list: protectedProcedure.query(({ ctx }) =>\n  //     db.getUserTodos(ctx.user.id)\n  //   ),\n  // }),\n});\n\nexport type AppRouter = typeof appRouter;",
+    "client/index.html": "<!doctype html>\n<html lang=\"en\">\n\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta\n      name=\"viewport\"\n      content=\"width=device-width, initial-scale=1.0, maximum-scale=1\" />\n    <title>Russell Capital Systems</title>    \n    <!-- THIS IS THE START OF A COMMENT BLOCK, BLOCK TO BE DELETED: Google Fonts here, example:\n    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />\n    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />\n    <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\" />\n    THIS IS THE END OF A COMMENT BLOCK, BLOCK TO BE DELETED -->\n  </head>\n\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/src/main.tsx\"></script>\n    <script\n      defer\n      src=\"%VITE_ANALYTICS_ENDPOINT%/umami\"\n      data-website-id=\"%VITE_ANALYTICS_WEBSITE_ID%\"></script>\n  </body>\n\n</html>",
+    "client/src/App.tsx": "import { Toaster } from \"@/components/ui/sonner\";\nimport { TooltipProvider } from \"@/components/ui/tooltip\";\nimport NotFound from \"@/pages/NotFound\";\nimport { Route, Switch } from \"wouter\";\nimport ErrorBoundary from \"./components/ErrorBoundary\";\nimport { ThemeProvider } from \"./contexts/ThemeContext\";\nimport Home from \"./pages/Home\";\n\nfunction Router() {\n  // make sure to consider if you need authentication for certain routes\n  return (\n    <Switch>\n      <Route path={\"/\"} component={Home} />\n      <Route path={\"/404\"} component={NotFound} />\n      {/* Final fallback route */}\n      <Route component={NotFound} />\n    </Switch>\n  );\n}\n\n// NOTE: About Theme\n// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css\n//   to keep consistent foreground/background color across components\n// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook\n\nfunction App() {\n  return (\n    <ErrorBoundary>\n      <ThemeProvider\n        defaultTheme=\"light\"\n        // switchable\n      >\n        <TooltipProvider>\n          <Toaster />\n          <Router />\n        </TooltipProvider>\n      </ThemeProvider>\n    </ErrorBoundary>\n  );\n}\n\nexport default App;",
+    "client/src/lib/trpc.ts": "import { createTRPCReact } from \"@trpc/react-query\";\nimport type { AppRouter } from \"../../../server/routers\";\n\nexport const trpc = createTRPCReact<AppRouter>();",
+    "client/src/pages/Home.tsx": "import { useAuth } from \"@/_core/hooks/useAuth\";\nimport { Button } from \"@/components/ui/button\";\nimport { Loader2 } from \"lucide-react\";\nimport { Streamdown } from 'streamdown';\n\n/**\n * All content in this page are only for example, replace with your own feature implementation\n * When building pages, remember your instructions in Frontend Workflow, Frontend Best Practices, Design Guide and Common Pitfalls\n */\nexport default function Home() {\n  // The useAuth hook provides authentication state.\n  // To implement login/logout, call logout(), or start login from an event\n  // handler: onClick={() => startLogin()} (imported from \"@/const\"). Never call\n  // startLogin() during render (no href={startLogin()}) — it mints a one-time\n  // nonce cookie and must run only at the moment of navigation.\n  let { user, loading, error, isAuthenticated, logout } = useAuth();\n\n  // If theme is switchable in App.tsx, we can implement theme toggling like this:\n  // const { theme, toggleTheme } = useTheme();\n\n  return (\n    <div className=\"min-h-screen flex flex-col\">\n      <main>\n        {/* Example: lucide-react for icons */}\n        <Loader2 className=\"animate-spin\" />\n        Example Page\n        {/* Example: Streamdown for markdown rendering */}\n        <Streamdown>Any **markdown** content</Streamdown>\n        <Button variant=\"default\">Example Button</Button>\n      </main>\n    </div>\n  );\n}",
+    "server/auth.logout.test.ts": "import { describe, expect, it } from \"vitest\";\nimport { appRouter } from \"./routers\";\nimport { COOKIE_NAME } from \"../shared/const\";\nimport type { TrpcContext } from \"./_core/context\";\n\ntype CookieCall = {\n  name: string;\n  options: Record<string, unknown>;\n};\n\ntype AuthenticatedUser = NonNullable<TrpcContext[\"user\"]>;\n\nfunction createAuthContext(): { ctx: TrpcContext; clearedCookies: CookieCall[] } {\n  const clearedCookies: CookieCall[] = [];\n\n  const user: AuthenticatedUser = {\n    id: 1,\n    openId: \"sample-user\",\n    email: \"sample@example.com\",\n    name: \"Sample User\",\n    loginMethod: \"manus\",\n    role: \"user\",\n    createdAt: new Date(),\n    updatedAt: new Date(),\n    lastSignedIn: new Date(),\n  };\n\n  const ctx: TrpcContext = {\n    user,\n    req: {\n      protocol: \"https\",\n      headers: {},\n    } as TrpcContext[\"req\"],\n    res: {\n      clearCookie: (name: string, options: Record<string, unknown>) => {\n        clearedCookies.push({ name, options });\n      },\n    } as TrpcContext[\"res\"],\n  };\n\n  return { ctx, clearedCookies };\n}\n\ndescribe(\"auth.logout\", () => {\n  it(\"clears the session cookie and reports success\", async () => {\n    const { ctx, clearedCookies } = createAuthContext();\n    const caller = appRouter.createCaller(ctx);\n\n    const result = await caller.auth.logout();\n\n    expect(result).toEqual({ success: true });\n    expect(clearedCookies).toHaveLength(1);\n    expect(clearedCookies[0]?.name).toBe(COOKIE_NAME);\n    expect(clearedCookies[0]?.options).toMatchObject({\n      maxAge: -1,\n      secure: true,\n      sameSite: \"none\",\n      httpOnly: true,\n      path: \"/\",\n    });\n  });\n});"
+  }
+}
+```
+
+## `vitest.config.ts`
+
+```ts
+import { defineConfig } from "vitest/config";
+import path from "path";
+
+const templateRoot = path.resolve(import.meta.dirname);
+
+export default defineConfig({
+  root: templateRoot,
+  resolve: {
+    alias: {
+      "@": path.resolve(templateRoot, "client", "src"),
+      "@shared": path.resolve(templateRoot, "shared"),
+      "@assets": path.resolve(templateRoot, "attached_assets"),
+    },
+  },
+  test: {
+    environment: "node",
+    include: ["server/**/*.test.ts", "server/**/*.spec.ts"],
+  },
+});
+```
 
 ## `PROVENANCE.md`
 
@@ -929,9 +968,7 @@ may be the only backup of this codebase outside the Manus platform.
    (7 files: Team, TeamManagement, BlackMirror, ClientHealthDashboard,
    Endgame, AgencyTutorial, NerveCenter). Verified zero client-count
    values >= 50 remain in the UI source.
-
 ```
-
 
 ## `todo.md`
 
@@ -1107,9 +1144,7 @@ may be the only backup of this codebase outside the Manus platform.
 - [ ] Add Grok, Claude, Perplexity, or OpenRouter to the review only after their provider-specific credential probes pass; never represent failed connections as participants.
 - [x] Verify all AI recommendations against the actual managed-domain requirements and live deployment before changing GoDaddy DNS.
 - [ ] Remove the expected anonymous `Missing session cookie` warning from public `auth.me` checks so production logs reserve warnings for malformed or invalid sessions.
-
 ```
-
 
 ## `scripts/audit-interior-colors.mjs`
 
@@ -1167,9 +1202,7 @@ const totals = rows.reduce((acc, row) => {
 }, {});
 writeFileSync(path.join(root, "audit", "interior-color-token-summary.json"), JSON.stringify({ filesScanned: files.length, uniqueTokens: rows.length, totals }, null, 2));
 console.log(JSON.stringify({ filesScanned: files.length, uniqueTokens: rows.length, totals }, null, 2));
-
 ```
-
 
 ## `scripts/build.mjs`
 
@@ -1262,9 +1295,7 @@ if (analyticsEndpoint && analyticsWebsiteId) {
 
 writeFileSync(path.join(outDir, "index.html"), html);
 console.log("[build] Frontend emitted to dist/public with esbuild code splitting and compiled Tailwind CSS.");
-
 ```
-
 
 ## `scripts/check-concept16-browser.mjs`
 
@@ -1355,9 +1386,7 @@ const results = [
 
 console.log(JSON.stringify({ ok: true, results }, null, 2));
 socket.close();
-
 ```
-
 
 ## `scripts/react-runtime-inject.mjs`
 
@@ -1365,9 +1394,7 @@ socket.close();
 import * as React from "react";
 
 export { React };
-
 ```
-
 
 ## `scripts/reconcile-route-manifest.mjs`
 
@@ -1397,9 +1424,7 @@ if (!Array.isArray(document)) {
 }
 writeFileSync(path, `${JSON.stringify(document, null, 2)}\n`);
 console.log(`[route-manifest] ${routes.length} routes`);
-
 ```
-
 
 ## `scripts/smoke-production-routes.mjs`
 
@@ -1448,9 +1473,7 @@ console.log(JSON.stringify({
   requiredEndpointsChecked: required,
   baseUrl,
 }, null, 2));
-
 ```
-
 
 ## `drizzle/0000_cool_starfox.sql`
 
@@ -1468,9 +1491,7 @@ CREATE TABLE `users` (
 	CONSTRAINT `users_id` PRIMARY KEY(`id`),
 	CONSTRAINT `users_openId_unique` UNIQUE(`openId`)
 );
-
 ```
-
 
 ## `drizzle/0000_misty_alex_wilder.sql`
 
@@ -1488,9 +1509,7 @@ CREATE TABLE `users` (
 	CONSTRAINT `users_id` PRIMARY KEY(`id`),
 	CONSTRAINT `users_openId_unique` UNIQUE(`openId`)
 );
-
 ```
-
 
 ## `drizzle/0067_lively_nicolaos.sql`
 
@@ -1713,7 +1732,6 @@ ALTER TABLE `reel_interactions` DROP COLUMN `user_id`;--> statement-breakpoint
 ALTER TABLE `reel_interactions` DROP COLUMN `reel_id`;
 ```
 
-
 ## `drizzle/0068_dark_invaders.sql`
 
 ```sql
@@ -1797,9 +1815,7 @@ CREATE TABLE `user_portal_preferences` (
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `user_portal_preferences_id` PRIMARY KEY(`id`)
 );
-
 ```
-
 
 ## `drizzle/0069_core_portal_bootstrap.sql`
 
@@ -2190,377 +2206,283 @@ CREATE TABLE `workspaces` (
 	CONSTRAINT `workspaces_id` PRIMARY KEY(`id`),
 	CONSTRAINT `workspaces_slug_unique` UNIQUE(`slug`)
 );
-
 ```
-
 
 ## `drizzle/migrations/0000_magenta_sue_storm.sql`
 
 ```sql
 -- already applied: 0000_magenta_sue_storm
-
 ```
-
 
 ## `drizzle/migrations/0001_dashing_thena.sql`
 
 ```sql
 -- already applied: 0001_dashing_thena
-
 ```
-
 
 ## `drizzle/migrations/0002_fearless_shriek.sql`
 
 ```sql
 -- already applied: 0002_fearless_shriek
-
 ```
-
 
 ## `drizzle/migrations/0003_wakeful_lily_hollister.sql`
 
 ```sql
 -- already applied: 0003_wakeful_lily_hollister
-
 ```
-
 
 ## `drizzle/migrations/0004_stale_pride.sql`
 
 ```sql
 -- already applied: 0004_stale_pride
-
 ```
-
 
 ## `drizzle/migrations/0005_previous_sunfire.sql`
 
 ```sql
 -- already applied: 0005_previous_sunfire
-
 ```
-
 
 ## `drizzle/migrations/0006_large_psynapse.sql`
 
 ```sql
 -- already applied: 0006_large_psynapse
-
 ```
-
 
 ## `drizzle/migrations/0007_plain_quicksilver.sql`
 
 ```sql
 -- already applied: 0007_plain_quicksilver
-
 ```
-
 
 ## `drizzle/migrations/0008_big_celestials.sql`
 
 ```sql
 -- already applied: 0008_big_celestials
-
 ```
-
 
 ## `drizzle/migrations/0009_typical_rictor.sql`
 
 ```sql
 -- already applied: 0009_typical_rictor
-
 ```
-
 
 ## `drizzle/migrations/0010_classy_gargoyle.sql`
 
 ```sql
 -- already applied: 0010_classy_gargoyle
-
 ```
-
 
 ## `drizzle/migrations/0011_fancy_matthew_murdock.sql`
 
 ```sql
 -- already applied: 0011_fancy_matthew_murdock
-
 ```
-
 
 ## `drizzle/migrations/0012_hot_sharon_ventura.sql`
 
 ```sql
 -- already applied: 0012_hot_sharon_ventura
-
 ```
-
 
 ## `drizzle/migrations/0013_bitter_layla_miller.sql`
 
 ```sql
 -- already applied: 0013_bitter_layla_miller
-
 ```
-
 
 ## `drizzle/migrations/0014_cool_unicorn.sql`
 
 ```sql
 -- already applied: 0014_cool_unicorn
-
 ```
-
 
 ## `drizzle/migrations/0015_mean_blink.sql`
 
 ```sql
 -- already applied: 0015_mean_blink
-
 ```
-
 
 ## `drizzle/migrations/0016_great_vector.sql`
 
 ```sql
 -- already applied: 0016_great_vector
-
 ```
-
 
 ## `drizzle/migrations/0017_exotic_boomer.sql`
 
 ```sql
 -- already applied: 0017_exotic_boomer
-
 ```
-
 
 ## `drizzle/migrations/0018_dry_beast.sql`
 
 ```sql
 -- already applied: 0018_dry_beast
-
 ```
-
 
 ## `drizzle/migrations/0019_supreme_supreme_intelligence.sql`
 
 ```sql
 -- already applied: 0019_supreme_supreme_intelligence
-
 ```
-
 
 ## `drizzle/migrations/0020_moaning_dagger.sql`
 
 ```sql
 -- already applied: 0020_moaning_dagger
-
 ```
-
 
 ## `drizzle/migrations/0021_bored_nextwave.sql`
 
 ```sql
 -- already applied: 0021_bored_nextwave
-
 ```
-
 
 ## `drizzle/migrations/0022_young_zemo.sql`
 
 ```sql
 -- already applied: 0022_young_zemo
-
 ```
-
 
 ## `drizzle/migrations/0023_salty_expediter.sql`
 
 ```sql
 -- already applied: 0023_salty_expediter
-
 ```
-
 
 ## `drizzle/migrations/0024_overjoyed_black_bird.sql`
 
 ```sql
 -- already applied: 0024_overjoyed_black_bird
-
 ```
-
 
 ## `drizzle/migrations/0025_nasty_wraith.sql`
 
 ```sql
 -- already applied: 0025_nasty_wraith
-
 ```
-
 
 ## `drizzle/migrations/0026_ambitious_devos.sql`
 
 ```sql
 -- already applied: 0026_ambitious_devos
-
 ```
-
 
 ## `drizzle/migrations/0027_natural_luminals.sql`
 
 ```sql
 -- already applied: 0027_natural_luminals
-
 ```
-
 
 ## `drizzle/migrations/0028_flawless_baron_zemo.sql`
 
 ```sql
 -- already applied: 0028_flawless_baron_zemo
-
 ```
-
 
 ## `drizzle/migrations/0029_curvy_clint_barton.sql`
 
 ```sql
 -- already applied: 0029_curvy_clint_barton
-
 ```
-
 
 ## `drizzle/migrations/0030_supreme_leech.sql`
 
 ```sql
 -- already applied: 0030_supreme_leech
-
 ```
-
 
 ## `drizzle/migrations/0031_skinny_puff_adder.sql`
 
 ```sql
 -- already applied: 0031_skinny_puff_adder
-
 ```
-
 
 ## `drizzle/migrations/0032_shallow_the_anarchist.sql`
 
 ```sql
 -- already applied: 0032_shallow_the_anarchist
-
 ```
-
 
 ## `drizzle/migrations/0033_common_nightshade.sql`
 
 ```sql
 -- already applied: 0033_common_nightshade
-
 ```
-
 
 ## `drizzle/migrations/0034_open_carlie_cooper.sql`
 
 ```sql
 -- already applied: 0034_open_carlie_cooper
-
 ```
-
 
 ## `drizzle/migrations/0035_lumpy_bloodstorm.sql`
 
 ```sql
 -- already applied: 0035_lumpy_bloodstorm
-
 ```
-
 
 ## `drizzle/migrations/0036_ambitious_steel_serpent.sql`
 
 ```sql
 -- already applied: 0036_ambitious_steel_serpent
-
 ```
-
 
 ## `drizzle/migrations/0037_mature_nightmare.sql`
 
 ```sql
 -- already applied: 0037_mature_nightmare
-
 ```
-
 
 ## `drizzle/migrations/0038_lonely_firedrake.sql`
 
 ```sql
 -- already applied: 0038_lonely_firedrake
-
 ```
-
 
 ## `drizzle/migrations/0039_certain_giant_man.sql`
 
 ```sql
 -- already applied: 0039_certain_giant_man
-
 ```
-
 
 ## `drizzle/migrations/0040_zippy_sunspot.sql`
 
 ```sql
 -- already applied: 0040_zippy_sunspot
-
 ```
-
 
 ## `drizzle/migrations/0041_parallel_xorn.sql`
 
 ```sql
 -- already applied: 0041_parallel_xorn
-
 ```
-
 
 ## `drizzle/migrations/0042_overconfident_goliath.sql`
 
 ```sql
 -- already applied: 0042_overconfident_goliath
-
 ```
-
 
 ## `drizzle/migrations/0043_fearless_justice.sql`
 
 ```sql
 -- already applied: 0043_fearless_justice
-
 ```
-
 
 ## `drizzle/migrations/0044_workable_luminals.sql`
 
 ```sql
 -- already applied: 0044_workable_luminals
-
 ```
-
 
 ## `drizzle/migrations/0045_perpetual_alex_wilder.sql`
 
 ```sql
 -- already applied: 0045_perpetual_alex_wilder
-
 ```
-
 
 ## `drizzle/migrations/0046_minor_harry_osborn.sql`
 
@@ -2581,81 +2503,61 @@ CREATE TABLE `tutorial_progress` (
 	`updatedAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `tutorial_progress_id` PRIMARY KEY(`id`)
 );
-
 ```
-
 
 ## `drizzle/migrations/0047_red_newton_destine.sql`
 
 ```sql
 -- already applied: 0047_red_newton_destine
-
 ```
-
 
 ## `drizzle/migrations/0048_yielding_stryfe.sql`
 
 ```sql
 -- already applied: 0048_yielding_stryfe
-
 ```
-
 
 ## `drizzle/migrations/0049_luxuriant_spyke.sql`
 
 ```sql
 -- already applied: 0049_luxuriant_spyke
-
 ```
-
 
 ## `drizzle/migrations/0050_dusty_living_mummy.sql`
 
 ```sql
 -- already applied: 0050_dusty_living_mummy
-
 ```
-
 
 ## `drizzle/migrations/0051_exotic_pride.sql`
 
 ```sql
 -- already applied: 0051_exotic_pride
-
 ```
-
 
 ## `drizzle/migrations/0052_magenta_hellion.sql`
 
 ```sql
 -- already applied: 0052_magenta_hellion
-
 ```
-
 
 ## `drizzle/migrations/0053_romantic_warhawk.sql`
 
 ```sql
 -- already applied: 0053_romantic_warhawk
-
 ```
-
 
 ## `drizzle/migrations/0054_clean_sharon_ventura.sql`
 
 ```sql
 -- already applied: 0054_clean_sharon_ventura
-
 ```
-
 
 ## `drizzle/migrations/0055_loud_bug.sql`
 
 ```sql
 -- already applied: 0055_loud_bug
-
 ```
-
 
 ## `drizzle/migrations/0070_runtime_schema_alignment.sql`
 
@@ -2754,9 +2656,7 @@ CREATE TABLE IF NOT EXISTS `user_sessions` (
   `isActive` boolean NOT NULL DEFAULT true,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
 ```
-
 
 ## `drizzle/migrations/0071_slide_usage.sql`
 
@@ -2773,9 +2673,7 @@ CREATE TABLE IF NOT EXISTS `slide_usage` (
   `action` enum('generate','export_pptx','save') NOT NULL DEFAULT 'generate',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
 ```
-
 
 ## `drizzle/migrations/0072_risk_compliance_runtime.sql`
 
@@ -2807,9 +2705,7 @@ CREATE TABLE IF NOT EXISTS `compliance_alerts` (
   `metadata` json,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
 ```
-
 
 ## `drizzle/migrations/0073_runtime_experience_tables.sql`
 
@@ -2856,17 +2752,13 @@ CREATE TABLE IF NOT EXISTS `user_pets` (
   PRIMARY KEY (`id`),
   KEY `idx_user_pets_user` (`userId`)
 );
-
 ```
-
 
 ## `drizzle/relations.ts`
 
 ```ts
 import {} from "./schema";
-
 ```
-
 
 ## `drizzle/schema.ts`
 
@@ -5086,9 +4978,7 @@ export const userPortalPreferences = mysqlTable("user_portal_preferences", {
 });
 export type UserPortalPreference = typeof userPortalPreferences.$inferSelect;
 export type InsertUserPortalPreference = typeof userPortalPreferences.$inferInsert;
-
 ```
-
 
 ## `shared/_core/errors.ts`
 
@@ -5112,9 +5002,7 @@ export const BadRequestError = (msg: string) => new HttpError(400, msg);
 export const UnauthorizedError = (msg: string) => new HttpError(401, msg);
 export const ForbiddenError = (msg: string) => new HttpError(403, msg);
 export const NotFoundError = (msg: string) => new HttpError(404, msg);
-
 ```
-
 
 ## `shared/accessControl.ts`
 
@@ -5148,9 +5036,7 @@ export type SubscriptionTier = keyof typeof SUBSCRIPTION_TIERS;
 export function isValidPassword(_password: string): { valid: boolean; type: "trial" | "eternal" | "invalid" } {
   return { valid: false, type: "invalid" };
 }
-
 ```
-
 
 ## `shared/advancedAnalytics.ts`
 
@@ -6152,9 +6038,7 @@ export function calculateComprehensiveTaxWaterfall(input: ComprehensiveTaxInput)
     scenarioComparison: { currentScenario, withRothConversion, withIULIncome, optimizedStrategy },
   };
 }
-
 ```
-
 
 ## `shared/advisorySummaryData.ts`
 
@@ -7737,9 +7621,7 @@ export function getRecommendedPath(
   
   return result;
 }
-
 ```
-
 
 ## `shared/annuityData.ts`
 
@@ -8760,9 +8642,7 @@ export function getFullStateReport(stateCode: StateCode) {
     totalProducts: incomeProducts.length + growthProducts.length + mygaProducts.length,
   };
 }
-
 ```
-
 
 ## `shared/branding.ts`
 
@@ -8790,9 +8670,7 @@ export const SYSTEM_PREAMBLE = `You are ${BRAND_SYSTEM_IDENTITY}, an advanced fi
  */
 export const CREDIT_BRAND = "Russell Capital Systems™ Credits";
 export const LEAD_SOURCE_BRAND = "Russell Capital Systems™";
-
 ```
-
 
 ## `shared/carrierRatings.ts`
 
@@ -9005,9 +8883,7 @@ export function getComdexDescription(score: number): string {
   if (score >= 70) return 'Good — Above average financial strength';
   return 'Fair — Average financial strength';
 }
-
 ```
-
 
 ## `shared/carrierRecommendation.ts`
 
@@ -9181,9 +9057,7 @@ export function getTopRecommendations(
 ): CarrierScore[] {
   return recommendCarriers(carriers, profile).slice(0, topN);
 }
-
 ```
-
 
 ## `shared/const.ts`
 
@@ -9218,9 +9092,7 @@ export const decodeOAuthState = (state: string): OAuthState => {
 
   return { redirectUri: decoded };
 };
-
 ```
-
 
 ## `shared/cryptoCycleEngine.ts`
 
@@ -9876,9 +9748,7 @@ export function fmtCurrency(n: number): string {
 export function fmtPct(n: number): string {
   return `${n >= 0 ? "+" : ""}${n.toFixed(1)}%`;
 }
-
 ```
-
 
 ## `shared/estateTaxEngine.ts`
 
@@ -10336,9 +10206,7 @@ export function formatCurrency(n: number): string {
 export function formatFullCurrency(n: number): string {
   return `$${Math.round(n).toLocaleString()}`;
 }
-
 ```
-
 
 ## `shared/fiaCollateralEngine.ts`
 
@@ -11009,9 +10877,7 @@ export function runAllCombinations(baseInput: FIAWaterfallInput): ProductCombo[]
   }
   return combos.sort((a, b) => b.totalBenefit - a.totalBenefit);
 }
-
 ```
-
 
 ## `shared/growthAnnuityEngine.ts`
 
@@ -11459,9 +11325,7 @@ export function formatCurrency(n: number): string {
 export function formatPct(n: number): string {
   return `${n >= 0 ? "+" : ""}${n.toFixed(1)}%`;
 }
-
 ```
-
 
 ## `shared/householdWealth.bak.ts`
 
@@ -12133,9 +11997,7 @@ export function formatCurrency(value: number): string {
 export function formatFullCurrency(value: number): string {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
 }
-
 ```
-
 
 ## `shared/householdWealth.ts`
 
@@ -13088,9 +12950,7 @@ export function formatCurrency(value: number): string {
 export function formatFullCurrency(value: number): string {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
 }
-
 ```
-
 
 ## `shared/ibbotsonModel.ts`
 
@@ -13509,9 +13369,7 @@ export const IBBOTSON_DISCLAIMER =
 export const IBBOTSON_SHORT_DISCLAIMER =
   "Based on Ibbotson SBBI historical data. Research-based estimates only — not guaranteed. " +
   "Past performance ≠ future results. AG 49 max illustrated rate: 7.5%.";
-
 ```
-
 
 ## `shared/indexCreditingData.ts`
 
@@ -14201,9 +14059,7 @@ export const SYMETRA_INDEX_OPTIONS = A_MINUS_MUTUAL_INDEX_OPTIONS;
 export const AVAILABLE_YEARS = Object.keys(RAW_INDEX_RETURNS.SP500).map(Number).sort((a, b) => a - b);
 export const MIN_YEAR = AVAILABLE_YEARS[0]; // 1994
 export const MAX_YEAR = AVAILABLE_YEARS[AVAILABLE_YEARS.length - 1]; // 2025
-
 ```
-
 
 ## `shared/iulCarriers.ts`
 
@@ -14427,9 +14283,7 @@ export const ILLUSTRATION_TOOLS = [
     description: "Industry-standard life insurance illustration software used by many carriers and agencies.",
   },
 ];
-
 ```
-
 
 ## `shared/leadTypes.ts`
 
@@ -14505,9 +14359,7 @@ export type LeadAnalysis = {
 };
 
 export type LeadStatus = "new" | "contacted" | "qualified" | "client";
-
 ```
-
 
 ## `shared/lifetimeIncomeEngine.ts`
 
@@ -15343,9 +15195,7 @@ export function getDefaultExistingAnnuityInput(): ExistingAnnuityInput {
     },
   };
 }
-
 ```
-
 
 ## `shared/livingRiskProfile.ts`
 
@@ -15839,9 +15689,7 @@ export function getReassessmentRecommendation(
     reason: `Next assessment in ${daysUntilDue} days. Profile is current.`,
   };
 }
-
 ```
-
 
 ## `shared/modelPortfolios.ts`
 
@@ -16093,9 +15941,7 @@ export function getPortfolioAllocations(
   }
   return allocs;
 }
-
 ```
-
 
 ## `shared/monteCarloEngine.ts`
 
@@ -16348,9 +16194,7 @@ export function compareScenarios(
     result: runMonteCarlo(s.config),
   }));
 }
-
 ```
-
 
 ## `shared/mortgageKiller.ts`
 
@@ -17051,9 +16895,7 @@ export function runMortgageKillerAnalysis(input: MortgageKillerInput): MortgageK
     },
   };
 }
-
 ```
-
 
 ## `shared/multiPropertyMyga.ts`
 
@@ -17509,9 +17351,7 @@ export function runMultiPropertyMyga(input: MultiPropertyInput): MultiPropertyRe
     },
   };
 }
-
 ```
-
 
 ## `shared/mygaWaterfall.ts`
 
@@ -18452,9 +18292,7 @@ export function runScenarioComparison(baseInput: MYGAWaterfallInput): ScenarioCo
     optimalLabel: optimal.label,
   };
 }
-
 ```
-
 
 ## `shared/policyLoanOptimizer.ts`
 
@@ -18657,9 +18495,7 @@ export function compareLoanStrategies(baseInput: Omit<PolicyLoanInput, 'loanType
 
   return { fixed, variable, wash, recommendation };
 }
-
 ```
-
 
 ## `shared/premiumFinancing.ts`
 
@@ -18804,9 +18640,7 @@ export function calculatePremiumFinancing(input: PremiumFinancingInput): Premium
     selfFundedFinalCV: Math.round(selfFundedCV),
   };
 }
-
 ```
-
 
 ## `shared/replacementScoring.ts`
 
@@ -19699,9 +19533,7 @@ export function scoreReplacementOpportunity(
     solarEnhancedVerdictLabel: solarVerdict.label,
   };
 }
-
 ```
-
 
 ## `shared/retirementDNA.ts`
 
@@ -20195,9 +20027,7 @@ function generatePeerComparison(drivers: DriverScore[], inputs: EcologicalInputs
 // ── Export all archetypes for UI rendering ───────────────────────────────────
 export const ALL_ARCHETYPES = ARCHETYPES;
 export const ALL_DRIVER_META = DRIVER_META;
-
 ```
-
 
 ## `shared/reverseHeloc.ts`
 
@@ -20938,9 +20768,7 @@ export function runReverseHeloc(input: ReverseHelocInput): ReverseHelocResult {
 
   return { input, projection, summary, tranches };
 }
-
 ```
-
 
 ## `shared/slideThemes.ts`
 
@@ -21038,9 +20866,7 @@ export const DEFAULT_THEME_ID = "executive-dark";
 export function getThemeById(id: string): SlideTheme {
   return SLIDE_THEMES.find((t) => t.id === id) || SLIDE_THEMES[0];
 }
-
 ```
-
 
 ## `shared/tabScores.ts`
 
@@ -21249,9 +21075,7 @@ export function isHighScoreTab(path: string): boolean {
   const score = TAB_SCORES[path];
   return score !== undefined && score >= 9;
 }
-
 ```
-
 
 ## `shared/taxBracketEngine.ts`
 
@@ -21925,9 +21749,7 @@ export function compareStrategies(
     yearByYearDelta,
   };
 }
-
 ```
-
 
 ## `shared/timeMachineEngine.ts`
 
@@ -22414,9 +22236,7 @@ export function generateTimeMachineOverlay(
     annualLoanAmount,
   );
 }
-
 ```
-
 
 ## `shared/types.ts`
 
@@ -22428,9 +22248,7 @@ export function generateTimeMachineOverlay(
 
 export type * from "../drizzle/schema";
 export * from "./_core/errors";
-
 ```
-
 
 ## `shared/ultraEngine.ts`
 
@@ -22921,9 +22739,7 @@ export const MODULE_CATALOG: Record<ModuleKey, { name: string; whenNecessary: st
     benefit: "Converts a lump sum into level lifetime-style income beginning in the year you choose.",
   },
 };
-
 ```
-
 
 ## `shared/weaponizeEngines.ts`
 
@@ -23909,9 +23725,7 @@ export const ALL_PLATFORM_EVENTS: { event: PlatformEvent; label: string; categor
   { event: "scenario.saved", label: "Scenario Saved", category: "Strategy" },
   { event: "report.generated", label: "Report Generated", category: "Reports" },
 ];
-
 ```
-
 
 ## `server/_core/context.ts`
 
@@ -23944,9 +23758,7 @@ export async function createContext(
     user,
   };
 }
-
 ```
-
 
 ## `server/_core/cookies.ts`
 
@@ -23999,9 +23811,7 @@ export function getSessionCookieOptions(
     secure: isSecureRequest(req),
   };
 }
-
 ```
-
 
 ## `server/_core/dataApi.ts`
 
@@ -24112,9 +23922,7 @@ export async function callDataApi(apiId: string, options: DataApiCallOptions = {
 
   throw new Error(`Data API request failed (${lastFailure})`);
 }
-
 ```
-
 
 ## `server/_core/env.ts`
 
@@ -24129,9 +23937,7 @@ export const ENV = {
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
 };
-
 ```
-
 
 ## `server/_core/heartbeat.ts`
 
@@ -24349,9 +24155,7 @@ export async function listHeartbeatJobs(
     jobs: HeartbeatJobInfo[];
   }>("ListHeartbeatJobs", body, userSession);
 }
-
 ```
-
 
 ## `server/_core/imageGeneration.ts`
 
@@ -24516,9 +24320,7 @@ export async function listImageModels(): Promise<ListImageModelsResponse> {
   const result = (await response.json()) as { models?: ImageModelInfo[] };
   return { models: result.models ?? [] };
 }
-
 ```
-
 
 ## `server/_core/index.ts`
 
@@ -24597,9 +24399,7 @@ async function startServer() {
 }
 
 startServer().catch(console.error);
-
 ```
-
 
 ## `server/_core/llm.ts`
 
@@ -25055,9 +24855,7 @@ export async function listLLMModels(): Promise<ModelsResponse> {
 
   return (await response.json()) as ModelsResponse;
 }
-
 ```
-
 
 ## `server/_core/map.ts`
 
@@ -25381,9 +25179,7 @@ export type RoadsResult = {
 
 
 
-
 ```
-
 
 ## `server/_core/notification.ts`
 
@@ -25502,9 +25298,7 @@ export async function notifyOwner(
     return false;
   }
 }
-
 ```
-
 
 ## `server/_core/oauth.ts`
 
@@ -25575,9 +25369,7 @@ export function registerOAuthRoutes(app: Express) {
     }
   });
 }
-
 ```
-
 
 ## `server/_core/sdk.ts`
 
@@ -25933,9 +25725,7 @@ function buildCronUser(
 }
 
 export const sdk = new SDKServer();
-
 ```
-
 
 ## `server/_core/storageProxy.ts`
 
@@ -26005,9 +25795,7 @@ export function registerStorageProxy(app: Express) {
     }
   });
 }
-
 ```
-
 
 ## `server/_core/systemRouter.ts`
 
@@ -26041,9 +25829,7 @@ export const systemRouter = router({
       } as const;
     }),
 });
-
 ```
-
 
 ## `server/_core/trpc.ts`
 
@@ -26104,9 +25890,7 @@ export const adminProcedure = t.procedure.use(
     });
   }),
 );
-
 ```
-
 
 ## `server/_core/types/cookie.d.ts`
 
@@ -26117,9 +25901,7 @@ declare module "cookie" {
     options?: Record<string, unknown>
   ): Record<string, string>;
 }
-
 ```
-
 
 ## `server/_core/types/manusTypes.ts`
 
@@ -26195,9 +25977,7 @@ export interface GetUserInfoWithJwtResponse {
   /** Cron-only; references `schedule_task.uid`. */
   taskUid?: string | null;
 }
-
 ```
-
 
 ## `server/_core/vite.ts`
 
@@ -26269,9 +26049,7 @@ export function serveStatic(app: Express) {
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }
-
 ```
-
 
 ## `server/_core/voiceTranscription.ts`
 
@@ -26560,9 +26338,7 @@ function getLanguageName(langCode: string): string {
  * });
  * ```
  */
-
 ````
-
 
 ## `server/batchStrategyPdf.ts`
 
@@ -26890,9 +26666,7 @@ export async function generateBatchStrategyPdf(params: {
     doc.on("end", () => resolve(Buffer.concat(chunks)));
   });
 }
-
 ```
-
 
 ## `server/bulkComparisonPdf.ts`
 
@@ -27245,9 +27019,7 @@ export async function generateBulkComparisonPdf(params: {
     doc.on("end", () => resolve(Buffer.concat(chunks)));
   });
 }
-
 ```
-
 
 ## `server/calendarService.ts`
 
@@ -27390,9 +27162,7 @@ export async function syncMeetingsToCalendar(meetings: any[]): Promise<{
 
   return { synced, failed, results };
 }
-
 ```
-
 
 ## `server/carrierRatingsService.ts`
 
@@ -27462,9 +27232,7 @@ export function invalidateCarrierCache(): void {
   cachedRatings = null;
   cacheTimestamp = 0;
 }
-
 ```
-
 
 ## `server/csvTemplate.ts`
 
@@ -27591,9 +27359,7 @@ export function generateProtocolDoc(): object {
     },
   };
 }
-
 ```
-
 
 ## `server/dataFeedService.ts`
 
@@ -27825,9 +27591,7 @@ export function invalidateFeed(feed: "cpi" | "treasury" | "commodities" | "mygaR
   if (feed === "mygaRates") return;
   delete cache[feed];
 }
-
 ```
-
 
 ## `server/db.ts`
 
@@ -32705,9 +32469,7 @@ export async function upsertUserPortalPreferences(userId: number, workspaceId: n
   }
   return getUserPortalPreferences(userId, workspaceId);
 }
-
 ```
-
 
 ## `server/email.ts`
 
@@ -34341,9 +34103,7 @@ export async function sendWithdrawalEmail(opts: WithdrawalEmailOptions): Promise
     return { sent: false, reason: "Email delivery failed" };
   }
 }
-
 ```
-
 
 ## `server/emailPinService.ts`
 
@@ -34479,9 +34239,7 @@ export async function verifyPin(email: string, code: string, purpose = "pre_chec
 
   return { valid: true };
 }
-
 ```
-
 
 ## `server/experienceDb.ts`
 
@@ -36105,9 +35863,7 @@ export async function voteOnPrediction(userId: number, questionId: number, vote:
   await earnXp(userId, 25, "prediction_vote", `Voted on prediction #${questionId}`);
   return { success: true };
 }
-
 ```
-
 
 ## `server/experienceRouter.ts`
 
@@ -37242,9 +36998,7 @@ export const errorLogRouter = router({
     return getErrorLogStats();
   }),
 });
-
 ```
-
 
 ## `server/generate1035Pdf.ts`
 
@@ -37703,9 +37457,7 @@ export async function handleBulk1035PdfRequest(req: Request, res: Response) {
     res.status(500).json({ error: err.message || "Failed to generate bulk PDF" });
   }
 }
-
 ```
-
 
 ## `server/heygenService.ts`
 
@@ -37920,9 +37672,7 @@ export async function getShareableUrl(videoId: string): Promise<string | null> {
     return null;
   }
 }
-
 ```
-
 
 ## `server/index.ts`
 
@@ -37960,9 +37710,7 @@ async function startServer() {
 }
 
 startServer().catch(console.error);
-
 ```
-
 
 ## `server/leadStrategy.ts`
 
@@ -38065,9 +37813,7 @@ export function computeLeadAnalysis(ff: LeadFactFinder): LeadAnalysis {
     computedAt: new Date().toISOString(),
   };
 }
-
 ```
-
 
 ## `server/leadsDb.ts`
 
@@ -38152,9 +37898,7 @@ export async function updateLeadStatus(id: number, status: LeadStatusValue): Pro
   await db.update(publicLeads).set({ status }).where(eq(publicLeads.id, id));
   return getLeadById(id);
 }
-
 ```
-
 
 ## `server/leadsRouter.ts`
 
@@ -38340,9 +38084,7 @@ export const leadsRouter = router({
       return lead;
     }),
 });
-
 ```
-
 
 ## `server/mortgageKillerPdf.ts`
 
@@ -38905,9 +38647,7 @@ export function generateMortgageKillerPdf(input: MortgageKillerPdfInput): Promis
     doc.end();
   });
 }
-
 ```
-
 
 ## `server/pdfExportService.ts`
 
@@ -39447,9 +39187,7 @@ function getSectionContent(sectionId: string, clientName: string): string[] {
     "- Action items and next steps",
   ];
 }
-
 ```
-
 
 ## `server/pdfReport.ts`
 
@@ -39592,9 +39330,7 @@ export async function generateClientReport(clientId: number, workspaceId: number
     doc.end();
   });
 }
-
 ```
-
 
 ## `server/planningCasesRouter.ts`
 
@@ -39732,9 +39468,7 @@ export const planningCasesRouter = router({
     return upsertUserPortalPreferences(ctx.user.id, workspace.id, input);
   }),
 });
-
 ```
-
 
 ## `server/portalAI.ts`
 
@@ -39787,9 +39521,7 @@ export async function invokePortalAI(
     if (timer) clearTimeout(timer);
   }
 }
-
 ```
-
 
 ## `server/rothPdfReport.ts`
 
@@ -40536,5 +40268,5 @@ export async function generateRothReport(params: {
     doc.end();
   });
 }
-
 ```
+
