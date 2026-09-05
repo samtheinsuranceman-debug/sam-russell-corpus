@@ -77,6 +77,8 @@ export default function HomeLeadFactFinder() {
   const [goals, setGoals] = useState("");
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState("");
+  const [summary, setSummary] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const setNum = (k: NumKey, v: string) => setNums((prev) => ({ ...prev, [k]: v }));
   const parse = (v: string | undefined): number | undefined => {
@@ -95,6 +97,14 @@ export default function HomeLeadFactFinder() {
       if (val !== undefined) factFinder[key] = val;
     }
     if (goals.trim()) factFinder.goals = goals.trim();
+    setSummary([
+      `Name: ${[firstName, lastName].filter(Boolean).join(" ") || "—"}`,
+      `Email: ${email || "—"}`, `Phone: ${phone || "—"}`, `Best time: ${bestTimeToContact || "—"}`, "",
+      "FINANCIAL PICTURE",
+      ...NUM_FIELDS.map(({ key, label }) => `${label}: ${nums[key] || "—"}`),
+      `Liquid taxability: ${liquidTaxability}`, "",
+      `Goals: ${goals.trim() || "—"}`,
+    ].join("\n"));
     try {
       await capture.mutateAsync({
         firstName: firstName || undefined,
@@ -192,7 +202,16 @@ export default function HomeLeadFactFinder() {
               ))}
             </ul>
             <p className="mt-5 text-sm text-white/60">{teaser.note}</p>
-            <a href="#consultation" className="rc-btn rc-btn-primary mt-6 inline-flex justify-center rounded-xl px-6 py-3.5 text-base"><Calendar size={16} /> Book my thorough evaluation</a>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <a href="#consultation" className="rc-btn rc-btn-primary inline-flex justify-center rounded-xl px-6 py-3.5 text-base"><Calendar size={16} /> Book my thorough evaluation</a>
+              <button
+                type="button"
+                onClick={() => { navigator.clipboard?.writeText(summary).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2500); }).catch(() => {}); }}
+                className="rc-btn inline-flex justify-center rounded-xl border border-emerald-300/45 bg-black/30 px-6 py-3.5 text-base text-white hover:bg-emerald-300/10"
+              >
+                {copied ? "Copied ✓" : "Copy my summary"}
+              </button>
+            </div>
           </div>
         )}
 

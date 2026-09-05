@@ -30,6 +30,7 @@ import HomeAIConcierge from "@/components/HomeAIConcierge";
 import SeniorPartnerBand from "@/components/SeniorPartnerBand";
 import HomeLeadFactFinder from "@/components/HomeLeadFactFinder";
 import ProprietaryTech from "@/components/ProprietaryTech";
+import { HomeHowWeWork, HomeFaq, MobileStickyCta } from "@/components/HomeTrustSections";
 
 const CALENDLY_URL = "https://calendly.com/samtheinsuranceman-1/30min";
 
@@ -481,6 +482,8 @@ export default function Landing() {
 
       <ProprietaryTech />
 
+      <HomeHowWeWork />
+
       <section aria-label="Relief today, recovery for life" className="relative overflow-hidden border-y border-emerald-300/20 bg-[#050b0a] py-20">
         <img src="/rcs-neon-banner.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover object-center blur-[18px] brightness-[.3]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#050b0a,rgba(5,11,10,.5),#050b0a)]" />
@@ -562,6 +565,8 @@ export default function Landing() {
         </div>
       </section>
 
+      <HomeFaq />
+
       <ConsultationSection />
 
       <section className="container py-20">
@@ -581,6 +586,8 @@ export default function Landing() {
           <div className="flex gap-6"><Link href="/privacy" className="hover:text-white">Privacy</Link><Link href="/terms" className="hover:text-white">Terms</Link><Link href="/support" className="hover:text-white">Support</Link></div>
         </div>
       </footer>
+
+      <MobileStickyCta calendlyUrl={CALENDLY_URL} />
     </div>
   );
 }
