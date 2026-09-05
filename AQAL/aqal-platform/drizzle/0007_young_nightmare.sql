@@ -1,0 +1,1 @@
+ALTER TABLE `assessments` MODIFY COLUMN `totalQuestions` int NOT NULL DEFAULT 24;

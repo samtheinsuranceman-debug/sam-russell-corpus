@@ -1,0 +1,560 @@
+// ============================================================
+// Keystone practices — the prescribable menu behind the coaching
+// ============================================================
+// Every entry is a research-backed practice that lives in the Research Library
+// (see section numbers). The outcome-engineering coach draws prescribed moves
+// from THIS menu so its advice is specific, cited, and honest — not generic.
+//
+// Each practice also carries the fields that power an honest OUTCOME PROJECTION:
+//   horizon       — the recommended length of time to run the behavior
+//   researchBasis — the real, headline finding (what the evidence actually shows)
+//   evidence      — tier, which maps to the projection's confidence band
+// A projection is an explicitly HYPOTHETICAL, confidence-tiered glimpse of what
+// the person could expect IF they implement — never a guarantee.
+
+export type KeystonePractice = {
+  id: string;
+  name: string;
+  section: string;        // Research Library section number
+  librarySection: string; // display label (the "read this" topic)
+  evidence: "Strong" | "Moderate" | "Emerging";
+  lifts: string[];        // lines / clusters it bolsters
+  prescription: string;   // the concrete, honest "do this"
+  horizon: string;        // recommended time to run it
+  researchBasis: string;  // the honest headline finding
+  goalKeywords: string[]; // words in a person's stated goals that make it relevant
+};
+
+export const KEYSTONE_PRACTICES: KeystonePractice[] = [
+  // ─── Universal meta-systems (relevant to almost any goal) ───────────────────
+  {
+    id: "sleep", name: "Sleep protection", section: "14", librarySection: "Sleep — The Foundational System",
+    evidence: "Strong", lifts: ["volitional", "resilient", "intrapersonal", "memory", "emotion", "decision-making", "self-regulation"],
+    prescription: "Protect 7–9h with regular timing — the single highest-leverage move, because sleep gates every other line.",
+    horizon: "2–4 weeks to feel it, ongoing to keep it",
+    researchBasis: "Even mild chronic sleep restriction accumulates measurable cognitive and emotional-regulation deficits; restoring it reverses them.",
+    goalKeywords: ["focus", "energy", "health", "performance", "stress", "burnout", "memory", "productivity", "discipline"],
+  },
+  {
+    id: "exercise", name: "Aerobic exercise", section: "13", librarySection: "Aerobic Exercise — The Proven Keystone",
+    evidence: "Strong", lifts: ["kinesthetic", "volitional", "resilient", "cognition", "memory", "mood", "self-regulation"],
+    prescription: "Regular aerobic training (the best-evidenced brain intervention) to lift cognition, mood, and resilience together.",
+    horizon: "6–12 weeks for cognitive/mood gains",
+    researchBasis: "In randomized trials, aerobic training improved memory and executive function and had a large antidepressant effect.",
+    goalKeywords: ["focus", "energy", "health", "mood", "memory", "performance", "depression", "discipline", "productivity", "fitness"],
+  },
+  {
+    id: "interoception", name: "Interoception / floatation practice", section: "12", librarySection: "Interoception — The Cross-Line Keystone",
+    evidence: "Moderate", lifts: ["interoceptive", "empathic", "intrapersonal", "decision-making"],
+    prescription: "Train interoception (breath/body attention, or floatation) — one practice that plausibly lifts self-regulation, empathy, and intuition via the shared insula hub.",
+    horizon: "4–8 weeks of regular practice",
+    researchBasis: "Interoceptive training and floatation reliably raise body-awareness and lower anxiety; the insula hub links it to empathy and decision-making.",
+    goalKeywords: ["emotion", "anxiety", "intuition", "self-awareness", "calm", "stress", "regulation", "empathy", "mindfulness"],
+  },
+  {
+    id: "breathwork", name: "Breathwork / HRV", section: "15", librarySection: "Breathwork & HRV — Autonomic Self-Regulation",
+    evidence: "Moderate", lifts: ["interoceptive", "resilient", "self-regulation", "attention", "emotion"],
+    prescription: "Brief daily slow-breathing (e.g. cyclic sighing) to raise vagal tone and improve emotional control and focus.",
+    horizon: "5 min/day for ~4 weeks",
+    researchBasis: "A randomized trial found five minutes of daily cyclic-sighing beat mindfulness meditation for mood and physiological arousal over a month.",
+    goalKeywords: ["stress", "anxiety", "focus", "calm", "regulation", "emotion", "burnout", "performance"],
+  },
+  {
+    id: "nature", name: "Nature exposure", section: "16", librarySection: "Nature Exposure — Attention Restoration",
+    evidence: "Moderate", lifts: ["naturalistic", "intrapersonal", "attention", "mood", "creativity"],
+    prescription: "~2 hours/week in natural settings to restore attention, lower rumination, and lift mood — passive and low-effort.",
+    horizon: "~2 hours/week, ongoing",
+    researchBasis: "A ~2-hour weekly threshold is associated with better health and wellbeing; a single nature walk lowered rumination and its brain signature.",
+    goalKeywords: ["stress", "creativity", "focus", "mood", "rumination", "burnout", "wellbeing"],
+  },
+  {
+    id: "thermal", name: "Thermal stress (sauna)", section: "17", librarySection: "Thermal Stress — Sauna & Cold",
+    evidence: "Moderate", lifts: ["resilient", "adaptive", "interoceptive", "mood", "healthspan"],
+    prescription: "Regular sauna use (strong cohort evidence for brain and cardiovascular healthspan); cold exposure is real acute but over-hyped for durable gains.",
+    horizon: "several sessions/week, over months",
+    researchBasis: "Large cohorts link frequent sauna use to substantially lower dementia and cardiovascular mortality (observational).",
+    goalKeywords: ["resilience", "health", "longevity", "stress", "mood", "fitness"],
+  },
+  {
+    id: "psychedelic", name: "Psychedelic-assisted therapy (documented, not prescribed)", section: "18", librarySection: "Psychedelic-Assisted Therapy — Deep but Gated",
+    evidence: "Moderate", lifts: ["reflective", "integrative", "openness", "meaning", "mood"],
+    prescription: "Documented for durable openness and mood change under strict medical supervision — we DOCUMENT this, we do not prescribe it. Legal, screening, and safety constraints apply.",
+    horizon: "n/a — not a self-practice",
+    researchBasis: "Supervised psilocybin has produced durable increases in openness and sustained reductions in depression/anxiety in trials — under medical control only.",
+    goalKeywords: ["meaning", "openness", "depression", "transformation", "purpose"],
+  },
+
+  // ─── Social / relational lines ──────────────────────────────────────────────
+  {
+    id: "nonverbal", name: "Nonverbal-decoding practice", section: "19", librarySection: "Reading People — Nonverbal Decoding",
+    evidence: "Moderate", lifts: ["interpersonal", "empathic", "intuitive"],
+    prescription: "Deliberate emotion-reading practice (validated to improve nonverbal decoding). Watching muted interaction is a plausible but UNTESTED exercise — try it, don't bank on it.",
+    horizon: "a few weeks of deliberate practice",
+    researchBasis: "A meta-analysis found person-perception training reliably improves the accuracy of reading others' nonverbal cues.",
+    goalKeywords: ["relationship", "social", "leadership", "sales", "team", "communication", "dating", "negotiation", "influence"],
+  },
+
+  // ─── Couples / marriage / parenting (the abundant relational set) ────────────
+  {
+    id: "relationship-media", name: "Watch + discuss relationship media", section: "20", librarySection: "Couples, Relationships & Parenting",
+    evidence: "Strong", lifts: ["marital", "empathic", "interpersonal"],
+    prescription: "With your partner, WATCH and DISCUSS relationship films regularly (the Rogge protocol — halved the 3-year divorce rate; the discussion is the active ingredient).",
+    horizon: "5 films with discussion over ~1 month",
+    researchBasis: "In a randomized trial, newlyweds who watched and discussed five relationship movies cut their 3-year divorce/separation rate roughly in half (24% → 11%) — matching intensive therapy.",
+    goalKeywords: ["marriage", "spouse", "partner", "relationship", "divorce", "wife", "husband", "romance", "dating"],
+  },
+  {
+    id: "empathy-training", name: "Empathy & perspective-taking practice", section: "20", librarySection: "Couples, Relationships & Parenting",
+    evidence: "Moderate", lifts: ["empathic", "interpersonal"],
+    prescription: "Structured perspective-taking practice (imagining the other's experience) — a meta-analysis of RCTs shows empathy is trainable; maintain it with repetition.",
+    horizon: "weeks of repeated practice",
+    researchBasis: "A meta-analysis of randomized trials found empathy training produces a moderate, reliable increase in empathy.",
+    goalKeywords: ["relationship", "empathy", "conflict", "team", "parenting", "leadership", "marriage", "communication"],
+  },
+  {
+    id: "relationship-education", name: "Communication & conflict skills", section: "20", librarySection: "Couples, Relationships & Parenting",
+    evidence: "Strong", lifts: ["marital", "interpersonal", "intrapersonal"],
+    prescription: "Practice validated communication/conflict-management skills (speaker–listener, repair attempts) — relationship education lowers marital distress, especially with regular practice.",
+    horizon: "a structured program over 1–3 months",
+    researchBasis: "Meta-analyses show relationship education reliably improves couples' communication and lowers marital distress, strongest for higher-risk couples.",
+    goalKeywords: ["marriage", "relationship", "communication", "conflict", "spouse", "partner"],
+  },
+  {
+    id: "parenting", name: "Parenting-skill practice", section: "20", librarySection: "Couples, Relationships & Parenting",
+    evidence: "Strong", lifts: ["parenting", "parental", "empathic", "intrapersonal"],
+    prescription: "Practice the validated parenting components — warm-and-structured (authoritative) style, emotional communication, positive interaction — WITH your own child (practice beats concepts).",
+    horizon: "a program of several weeks, practiced daily",
+    researchBasis: "Meta-analyses of parent-training identify the active ingredients (emotional communication, positive interaction, practicing with your own child) that reliably improve child outcomes.",
+    goalKeywords: ["parent", "child", "children", "kids", "family", "son", "daughter", "fatherhood", "motherhood"],
+  },
+
+  // ─── The universal bottleneck: closing the knowing–doing gap ─────────────────
+  {
+    id: "implementation", name: "Close the knowing–doing gap (implementation science)", section: "21", librarySection: "Knowing vs. Doing — Making It Stick",
+    evidence: "Strong", lifts: ["volitional", "self-regulation", "follow-through"],
+    prescription: "Convert every prescription into an if-then plan ('If it's 8pm Tuesday, then we watch our film'), stack it onto an existing habit, and track it. This is the step that turns knowing into doing.",
+    horizon: "set up now; ~66 days to automaticity",
+    researchBasis: "Implementation intentions (if-then plans) have a medium-to-large effect on actually enacting goals across 90+ studies; habits take a median of ~66 days to form.",
+    goalKeywords: ["habit", "consistency", "discipline", "follow-through", "procrastination", "stick", "commit", "change", "goal"],
+  },
+
+  // ─── Money & wealth behavior ────────────────────────────────────────────────
+  {
+    id: "auto-savings", name: "Automate & escalate saving", section: "Financial Wellbeing & Behavior", librarySection: "Financial Wellbeing & Behavior",
+    evidence: "Strong", lifts: ["financial-self-management", "volitional"],
+    prescription: "Automate a fixed transfer to savings/investing on payday and pre-commit to escalate it with every raise (the 'Save More Tomorrow' design) so the choice happens once, not monthly.",
+    horizon: "set up once; compounds for years",
+    researchBasis: "Automatic enrollment and Save-More-Tomorrow escalation dramatically raised real savings rates in field studies by defaulting people into the behavior.",
+    goalKeywords: ["money", "save", "savings", "wealth", "retirement", "financial", "rich", "debt", "budget"],
+  },
+  {
+    id: "index-investing", name: "Low-cost index investing", section: "Financial Wellbeing & Behavior", librarySection: "Financial Wellbeing & Behavior",
+    evidence: "Strong", lifts: ["financial-self-management", "logical"],
+    prescription: "Default to broad, low-fee index funds and hold — most active managers underperform the index net of fees over time, and fees compound against you.",
+    horizon: "years to decades",
+    researchBasis: "SPIVA and related data show the large majority of active funds underperform their benchmark net of fees over 10–15 year windows.",
+    goalKeywords: ["invest", "investing", "wealth", "money", "retirement", "rich", "financial", "portfolio", "stocks"],
+  },
+  {
+    id: "commitment-device", name: "Commitment devices & pre-commitment", section: "Financial Wellbeing & Behavior", librarySection: "Behavior-Change & Psychological Interventions",
+    evidence: "Moderate", lifts: ["volitional", "financial-self-management"],
+    prescription: "Lock your future self in advance — a commitment savings account, a locked deadline, a stake you forfeit if you slip — so willpower isn't required at the moment of temptation.",
+    horizon: "set up now; protects every future decision",
+    researchBasis: "Commitment savings accounts (e.g. the SEED trial) and pre-commitment devices meaningfully raised follow-through by removing the in-the-moment choice.",
+    goalKeywords: ["discipline", "save", "quit", "habit", "temptation", "money", "goal", "willpower", "consistency"],
+  },
+
+  // ─── Career, skill & learning ───────────────────────────────────────────────
+  {
+    id: "deliberate-practice", name: "Deliberate practice", section: "Learning Science & Cognition", librarySection: "Learning Science & Cognition",
+    evidence: "Moderate", lifts: ["tactical", "meta-cognitive", "mastery", "strategic", "volitional"],
+    prescription: "Practice at the edge of your ability on the specific sub-skills you're worst at, with immediate feedback and full focus — not comfortable repetition of what you already do well.",
+    horizon: "months to years for real mastery",
+    researchBasis: "Deliberate practice — focused, feedback-rich reps at the edge of ability — predicts skill gains, though its share of the variance varies by domain (honest: it's a lever, not the whole story).",
+    goalKeywords: ["skill", "master", "career", "expert", "improve", "learn", "craft", "business", "performance", "practice"],
+  },
+  {
+    id: "spaced-retrieval", name: "Spaced repetition + retrieval practice", section: "Learning Science & Cognition", librarySection: "Learning Science & Cognition",
+    evidence: "Strong", lifts: ["linguistic", "logical", "meta-cognitive", "mathematical", "memory"],
+    prescription: "Learn by testing yourself and spacing the reviews out (not rereading) — retrieval and distributed practice are the two best-replicated ways to make knowledge stick.",
+    horizon: "weeks; durable for months+",
+    researchBasis: "The testing effect and distributed practice are among the most robust findings in learning science, repeatedly beating rereading for long-term retention.",
+    goalKeywords: ["learn", "study", "language", "exam", "skill", "memory", "knowledge", "master", "school", "certification"],
+  },
+  {
+    id: "deep-work", name: "Deep-work attention blocks", section: "Digital Life, Attention & Wellbeing", librarySection: "Digital Life, Attention & Wellbeing",
+    evidence: "Emerging", lifts: ["strategic", "volitional", "systematic", "attention"],
+    prescription: "Protect uninterrupted single-task blocks with the phone out of the room — task-switching carries a real resumption cost, so batching focus beats reacting all day.",
+    horizon: "daily; compounds over weeks",
+    researchBasis: "Interruption and task-switching research shows measurable resumption-lag costs; the specific 'deep work' protocol is popular but more lightly trialed (honest: Emerging).",
+    goalKeywords: ["focus", "productivity", "work", "distraction", "deep", "attention", "procrastination", "output", "writing"],
+  },
+
+  // ─── Mood, anxiety & mental health ──────────────────────────────────────────
+  {
+    id: "behavioral-activation", name: "Behavioral activation", section: "Trauma & Mental-Health Treatments", librarySection: "Trauma & Mental-Health Treatments",
+    evidence: "Strong", lifts: ["volitional", "intrapersonal", "resilient", "mood", "self-regulation"],
+    prescription: "Schedule small valued or rewarding actions and do them regardless of motivation — action precedes mood here, not the other way around.",
+    horizon: "2–6 weeks to shift mood",
+    researchBasis: "Behavioral activation is a first-line, evidence-based treatment for depression, roughly as effective as full CBT in trials.",
+    goalKeywords: ["depression", "mood", "motivation", "low", "sad", "stuck", "energy", "anhedonia", "rut"],
+  },
+  {
+    id: "cbt-restructuring", name: "Cognitive restructuring (CBT skills)", section: "Trauma & Mental-Health Treatments", librarySection: "Trauma & Mental-Health Treatments",
+    evidence: "Strong", lifts: ["meta-cognitive", "resilient", "emotion", "intrapersonal"],
+    prescription: "Catch the automatic thought, write it down, and test it against the evidence — the core CBT move that loosens anxious and depressive thinking loops.",
+    horizon: "weeks of practice",
+    researchBasis: "CBT is one of the most strongly evidenced psychotherapies for anxiety and depression across hundreds of trials.",
+    goalKeywords: ["anxiety", "worry", "negative", "mood", "depression", "stress", "confidence", "self-talk", "overthinking"],
+  },
+
+  // ─── Strength, body & nutrition ─────────────────────────────────────────────
+  {
+    id: "resistance-training", name: "Resistance training", section: "Exercise Physiology Specifics", librarySection: "Exercise Physiology Specifics",
+    evidence: "Strong", lifts: ["kinesthetic", "resilient", "volitional", "mood"],
+    prescription: "Progressive strength training 2–3×/week — it builds muscle and bone, lowers all-cause mortality risk, and has a real antidepressant effect on its own.",
+    horizon: "6–12 weeks for strength & mood gains",
+    researchBasis: "Meta-analyses link resistance training to lower all-cause mortality and a moderate reduction in depressive symptoms independent of aerobic exercise.",
+    goalKeywords: ["strength", "muscle", "fitness", "body", "health", "aging", "mood", "energy", "gym", "weight"],
+  },
+  {
+    id: "protein-fiber", name: "Protein + fiber baseline", section: "Nutrition & Supplements (Graded)", librarySection: "Nutrition & Supplements (Graded)",
+    evidence: "Moderate", lifts: ["interoceptive", "resilient", "health", "energy"],
+    prescription: "Anchor meals around adequate protein and high fiber — the two dietary levers with the strongest, least-hyped evidence for satiety, muscle, and long-term health.",
+    horizon: "weeks for satiety/energy; years for health",
+    researchBasis: "Higher dietary fiber shows a strong dose-response link to lower all-cause mortality; adequate protein supports muscle retention and satiety.",
+    goalKeywords: ["weight", "muscle", "health", "energy", "diet", "nutrition", "gut", "fat loss", "fitness"],
+  },
+
+  // ─── Connection, purpose & positive psychology ──────────────────────────────
+  {
+    id: "social-connection", name: "Invest in social connection", section: "Social Connection, Purpose & Longevity", librarySection: "Social Connection, Purpose & Longevity",
+    evidence: "Strong", lifts: ["interpersonal", "empathic", "resilient"],
+    prescription: "Protect regular, real, face-to-face contact with people you care about — social connection is one of the strongest predictors of health and longevity there is.",
+    horizon: "ongoing; effects build over years",
+    researchBasis: "Holt-Lunstad's meta-analyses put weak social connection on par with well-known mortality risks like smoking (honest: observational, but very robust).",
+    goalKeywords: ["lonely", "friends", "connection", "relationship", "community", "belonging", "isolation", "social", "health"],
+  },
+  {
+    id: "purpose", name: "Anchor a sense of purpose", section: "Social Connection, Purpose & Longevity", librarySection: "Social Connection, Purpose & Longevity",
+    evidence: "Moderate", lifts: ["existential", "volitional", "intrapersonal"],
+    prescription: "Name a purpose bigger than yourself and put one concrete weekly action behind it — a stronger sense of purpose tracks with better health and longevity.",
+    horizon: "ongoing",
+    researchBasis: "Cohort studies associate a stronger sense of purpose/ikigai with lower mortality and better health (honest: observational, confounding possible).",
+    goalKeywords: ["purpose", "meaning", "direction", "lost", "motivation", "legacy", "why", "fulfillment"],
+  },
+  {
+    id: "gratitude-kindness", name: "Gratitude & prosocial action", section: "Meaning, Grief & Positive Psychology", librarySection: "Meaning, Grief & Positive Psychology",
+    evidence: "Moderate", lifts: ["intrapersonal", "empathic", "interpersonal", "humor", "mood"],
+    prescription: "A brief weekly gratitude reflection plus regular small acts of help — modest but real lifts to wellbeing, and cheap to run.",
+    horizon: "weeks; keep it periodic, not daily-forced",
+    researchBasis: "Gratitude and kindness interventions produce small-to-moderate wellbeing gains (honest: effect sizes are modest and sensitive to how they're run).",
+    goalKeywords: ["happiness", "wellbeing", "gratitude", "meaning", "giving", "positivity", "mood", "content"],
+  },
+  {
+    id: "expressive-writing", name: "Expressive writing", section: "Meaning, Grief & Positive Psychology", librarySection: "Meaning, Grief & Positive Psychology",
+    evidence: "Moderate", lifts: ["reflective", "resilient", "emotion", "intrapersonal"],
+    prescription: "Write continuously about a stressor for ~15 minutes across a few days — the Pennebaker paradigm helps many people process and get clarity.",
+    horizon: "3–4 short sessions",
+    researchBasis: "Expressive writing produces modest but replicated improvements in processing stressful experiences and some health markers.",
+    goalKeywords: ["stress", "processing", "emotion", "writing", "clarity", "grief", "closure", "overwhelm"],
+  },
+
+  // ─── Volition & regulation extras ───────────────────────────────────────────
+  {
+    id: "woop", name: "WOOP / mental contrasting", section: "Behavior-Change & Psychological Interventions", librarySection: "Behavior-Change & Psychological Interventions",
+    evidence: "Strong", lifts: ["volitional", "strategic", "meta-cognitive"],
+    prescription: "Run every goal through WOOP — Wish, Outcome, Obstacle, Plan — pairing the vision with the concrete obstacle and an if-then plan for it, which beats visualizing success alone.",
+    horizon: "minutes to set up per goal",
+    researchBasis: "Mental contrasting with implementation intentions (WOOP) outperforms indulging in positive fantasy alone for actual goal attainment across trials.",
+    goalKeywords: ["goal", "motivation", "habit", "discipline", "procrastination", "change", "plan", "obstacle", "follow-through"],
+  },
+  {
+    id: "morning-light", name: "Morning light + circadian anchoring", section: "Sleep & Circadian Interventions", librarySection: "Sleep & Circadian Interventions",
+    evidence: "Strong", lifts: ["resilient", "adaptive", "interoceptive", "mood", "sleep", "energy"],
+    prescription: "Get bright light early and keep sleep-wake timing consistent — the cheapest lever for stabilizing circadian rhythm, mood, and daytime energy.",
+    horizon: "days to a couple of weeks",
+    researchBasis: "Morning bright-light exposure and regular timing reliably phase-anchor circadian rhythm and improve mood and alertness.",
+    goalKeywords: ["sleep", "energy", "mood", "circadian", "focus", "morning", "jetlag", "tired", "routine"],
+  },
+
+  // ─── Skill curricula — the gap-line practices ────────────────────────────────
+  // The lines therapies never target (Influence, Musical, Spatial, Adversarial…)
+  // respond to deliberate skill-building curricula, not clinical interventions.
+  // These ten complete keystone coverage of all 32 lines.
+  {
+    id: "public-speaking", name: "Structured public speaking (Toastmasters-style)", section: "Communication & Influence Training", librarySection: "Communication Skills & Persuasion",
+    evidence: "Strong", lifts: ["influence", "linguistic", "interpersonal", "resilient"],
+    prescription: "Join a weekly speaking club (Toastmasters or equivalent) and deliver one prepared talk a month plus impromptu rounds — the best-evidenced influence-builder there is.",
+    horizon: "3–6 months of weekly reps",
+    researchBasis: "Communication-skills training with live practice and feedback reliably improves persuasion, delivery, and speaking anxiety across many controlled studies.",
+    goalKeywords: ["influence", "persuasion", "speaking", "leadership", "sales", "confidence", "presentation", "charisma"],
+  },
+  {
+    id: "improv", name: "Improv comedy classes", section: "Play, Humor & Social Confidence", librarySection: "Humor & Improvisation Training",
+    evidence: "Moderate", lifts: ["humor", "adaptive", "interpersonal", "linguistic"],
+    prescription: "An 8-week beginner improv course: 'yes-and' under pressure trains wit, adaptability, and social ease faster than anything else that's also this fun.",
+    horizon: "8 weeks",
+    researchBasis: "Improv training studies show gains in divergent thinking, tolerance of uncertainty, and social confidence; humor production is a trainable skill.",
+    goalKeywords: ["humor", "funny", "social", "confidence", "quick", "wit", "spontaneity", "public"],
+  },
+  {
+    id: "choir", name: "Group singing / choir", section: "Music & Community Interventions", librarySection: "Group Singing & Wellbeing",
+    evidence: "Moderate", lifts: ["musical", "community-founding", "interpersonal", "mood"],
+    prescription: "Join a weekly choir or singing group — no audition needed. Active music-making trains pitch and rhythm while the group trains belonging.",
+    horizon: "8–12 weeks",
+    researchBasis: "Group singing shows consistent wellbeing, social-bonding, and mood benefits; active music training measurably improves auditory-musical skills at any age.",
+    goalKeywords: ["music", "sing", "band", "instrument", "community", "belong", "joy"],
+  },
+  {
+    id: "drawing", name: "Observational drawing course", section: "Visual-Spatial Training", librarySection: "Drawing & Spatial Skill Training",
+    evidence: "Moderate", lifts: ["spatial", "aesthetic", "meta-cognitive"],
+    prescription: "A structured 'learn to see' drawing course (8+ weeks): observational drawing is the most direct trainer of spatial perception and visual judgment.",
+    horizon: "8–12 weeks",
+    researchBasis: "Drawing instruction produces measurable gains in observational accuracy and spatial representation; aesthetic judgment sharpens with deliberate visual practice.",
+    goalKeywords: ["draw", "art", "design", "visual", "creative", "spatial", "aesthetic"],
+  },
+  {
+    id: "strategy-games", name: "Chess/poker study with post-game review", section: "Strategic & Adversarial Training", librarySection: "Strategic Games & Decision Training",
+    evidence: "Moderate", lifts: ["adversarial", "strategic", "meta-cognitive", "mathematical"],
+    prescription: "Play chess or poker seriously — with the non-negotiable: review every game/session afterward. The review, not the play, is where adversarial thinking is built.",
+    horizon: "3–6 months",
+    researchBasis: "Deliberate game study with error review trains opponent modeling, probabilistic judgment, and calibration; transfer is strongest to structurally similar competitive decisions.",
+    goalKeywords: ["strategy", "compete", "negotiate", "chess", "poker", "win", "opponent", "odds"],
+  },
+  {
+    id: "negotiation-reps", name: "Negotiation practice reps", section: "Negotiation Training", librarySection: "Negotiation Skills Research",
+    evidence: "Strong", lifts: ["adversarial", "influence", "interpersonal"],
+    prescription: "Run one deliberate negotiation per week — a purchase, a bill, a scheduling conflict — using a named framework (anchoring, calibrated questions, BATNA), and debrief in two sentences.",
+    horizon: "6–12 weeks of weekly reps",
+    researchBasis: "Negotiation training with practice and feedback shows large skill gains in controlled studies; the skill compounds because opportunities to use it are everywhere.",
+    goalKeywords: ["negotiate", "deal", "raise", "salary", "buy", "sell", "conflict", "influence"],
+  },
+  {
+    id: "philosophy-circle", name: "Philosophy reading circle / Socratic practice", section: "Philosophical & Reflective Training", librarySection: "Philosophical Inquiry & Wise Reasoning",
+    evidence: "Moderate", lifts: ["philosophical", "existential", "reflective", "linguistic"],
+    prescription: "Monthly: one primary text (not commentary) + one discussion — a local philosophy meetup, a Socratic circle, or a serious reading partner. Argue positions you don't hold.",
+    horizon: "3–6 months",
+    researchBasis: "Structured philosophical dialogue programs improve reasoning quality and perspective-taking; wise-reasoning research shows deliberate practice effects.",
+    goalKeywords: ["meaning", "philosophy", "wisdom", "think", "ethics", "existential", "depth"],
+  },
+  {
+    id: "systems-course", name: "Systems-thinking practice (causal loop mapping)", section: "Systems & Design Thinking", librarySection: "Systems Thinking Training",
+    evidence: "Moderate", lifts: ["systematic", "architectural", "strategic", "integrative"],
+    prescription: "Once a week, diagram one real system you're inside — your job's workflow, your family's mornings, your finances — as a causal loop map: stocks, flows, feedback, delays.",
+    horizon: "8–12 weeks",
+    researchBasis: "Systems-thinking instruction with active modeling improves understanding of feedback and delay dynamics — the core failure mode of untrained planning.",
+    goalKeywords: ["systems", "process", "design", "architecture", "organize", "build", "plan", "workflow"],
+  },
+  {
+    id: "social-confidence", name: "Graduated social-confidence practice", section: "Social Skills & Courtship Confidence", librarySection: "Social Anxiety & Social Skills Training",
+    evidence: "Moderate", lifts: ["seduction", "interpersonal", "resilient", "influence"],
+    prescription: "A graduated-exposure ladder for romantic/social confidence: eye contact and small talk daily, one genuine compliment a day, one real conversation with someone new per week — difficulty rising weekly.",
+    horizon: "8–12 weeks",
+    researchBasis: "Graduated exposure with behavioral practice is the best-evidenced treatment for social anxiety and reliably builds approach confidence; charisma behaviors are trainable.",
+    goalKeywords: ["dating", "partner", "confidence", "social", "charisma", "romance", "approach", "attraction"],
+  },
+  {
+    id: "mentoring", name: "Mentor someone", section: "Mentoring & Generativity", librarySection: "Mentoring — Mentor-Side Benefits",
+    evidence: "Moderate", lifts: ["parenting", "community-founding", "interpersonal", "existential"],
+    prescription: "Take on one mentee — formally (a program) or informally (a junior colleague, a nephew, a newcomer at your club) — with a standing monthly session.",
+    horizon: "ongoing; benefits measurable by 6 months",
+    researchBasis: "Mentor-side research shows generativity, purpose, and leadership-skill benefits for the mentor, not just the mentee — teaching is the strongest form of mastery.",
+    goalKeywords: ["mentor", "teach", "legacy", "parenting", "give back", "lead", "community"],
+  },
+
+  // ─── AQAL ADDITIONS (merged from production build 8.12) ────────────────────
+
+  // ─── AQAL ADDITIONS (merged from production build 8.12.2026) ───────────────
+
+  // ─── AQAL ADDITIONS (merged from production build 8.12.2026) ───────────────
+  {
+    id: "spatial-training", name: "Spatial reasoning training", section: "Learning Science & Cognition", librarySection: "Learning Science & Cognition",
+    evidence: "Strong", lifts: ["spatial", "mathematical", "architectural"],
+    prescription: "Practice mental rotation, map reading, 3D visualization, and spatial puzzles — spatial ability is reliably trainable and transfers to STEM reasoning.",
+    horizon: "6–12 weeks of regular practice",
+    researchBasis: "Uttal et al. (2013) meta-analysis of 217 studies: spatial training produces durable, transferable gains (d = 0.47). Sorby (2009): spatial curricula improved engineering retention.",
+    goalKeywords: ["spatial", "design", "architecture", "engineering", "math", "navigation", "3D", "visualization", "building"],
+  },
+  {
+    id: "musical-training", name: "Structured music practice", section: "Learning Science & Cognition", librarySection: "Learning Science & Cognition",
+    evidence: "Moderate", lifts: ["musical", "attention", "linguistic"],
+    prescription: "Learn an instrument or practice structured music training (rhythm, pitch, melody) — even 20 days of music training improved verbal intelligence in children (Moreno 2011).",
+    horizon: "8–16 weeks of regular practice",
+    researchBasis: "Moreno et al. (2011): 20 days of music training improved verbal intelligence in 90% of preschoolers. Schellenberg (2004): music lessons raised IQ slightly but reliably in children.",
+    goalKeywords: ["music", "instrument", "rhythm", "creativity", "listening", "ear", "singing", "piano", "guitar"],
+  },
+  {
+    id: "mathematical-practice", name: "Numeracy & mathematical reasoning", section: "Learning Science & Cognition", librarySection: "Learning Science & Cognition",
+    evidence: "Strong", lifts: ["mathematical", "logical", "systematic"],
+    prescription: "Practice quantitative reasoning through structured problems — financial literacy education, statistics courses, or deliberate math practice. Numeracy is trainable at any age.",
+    horizon: "4–12 weeks of structured practice",
+    researchBasis: "Lusardi & Mitchell (2014): financial literacy interventions reliably improve numerical decision-making. ACTIVE trial: reasoning training transferred to real-world tasks 10 years later.",
+    goalKeywords: ["math", "numbers", "statistics", "finance", "logic", "reasoning", "quantitative", "data", "calculation"],
+  },
+  {
+    id: "humor-practice", name: "Humor production & appreciation training", section: "Social Connection, Purpose & Longevity", librarySection: "Social Connection, Purpose & Longevity",
+    evidence: "Moderate", lifts: ["humor", "interpersonal", "resilient"],
+    prescription: "Practice humor production (improv classes, comedy writing, reframing stressors humorously) — humor is a trainable cognitive skill that buffers stress and strengthens social bonds.",
+    horizon: "4–8 weeks of deliberate practice",
+    researchBasis: "McGhee (2010): structured humor training improved coping and reduced stress. Ruch & Hofmann (2017): humor strengths are trainable through deliberate exercises.",
+    goalKeywords: ["humor", "funny", "social", "stress", "coping", "charisma", "wit", "comedy", "lighten"],
+  },
+  {
+    id: "adversarial-thinking", name: "Red-team & adversarial reasoning", section: "Learning Science & Cognition", librarySection: "Learning Science & Cognition",
+    evidence: "Moderate", lifts: ["adversarial", "tactical", "strategic"],
+    prescription: "Practice structured devil's-advocate thinking, red-teaming your own plans, and studying negotiation/game theory — adversarial intelligence is the ability to think like your opponent.",
+    horizon: "ongoing; sharpens with each application",
+    researchBasis: "Schwenk (1990): devil's advocacy improves decision quality. De Dreu & Carnevale (2003): negotiation training reliably improves outcomes. Kahneman's pre-mortem technique reduces overconfidence.",
+    goalKeywords: ["negotiation", "strategy", "competition", "debate", "defense", "risk", "opponent", "conflict", "protect"],
+  },
+  {
+    id: "aesthetic-engagement", name: "Aesthetic experience & appreciation", section: "Meaning, Grief & Positive Psychology", librarySection: "Meaning, Grief & Positive Psychology",
+    evidence: "Moderate", lifts: ["aesthetic", "reflective", "creativity"],
+    prescription: "Engage deliberately with beauty — art museums, nature aesthetics, design study, or creative expression. Aesthetic experience activates default-mode network and enhances meaning-making.",
+    horizon: "ongoing; weekly engagement",
+    researchBasis: "Vessel et al. (2012): aesthetic experience activates self-referential brain networks. Chatterjee & Vartanian (2014): art engagement enhances wellbeing and cognitive flexibility.",
+    goalKeywords: ["beauty", "art", "design", "creativity", "taste", "culture", "visual", "style", "appreciation"],
+  },
+  {
+    id: "systems-thinking", name: "Systems thinking & architectural design", section: "Learning Science & Cognition", librarySection: "Learning Science & Cognition",
+    evidence: "Moderate", lifts: ["architectural", "systematic", "integrative"],
+    prescription: "Study and practice systems thinking — causal loop diagrams, system dynamics, architectural patterns. The ability to see how parts connect into wholes is trainable through deliberate modeling.",
+    horizon: "8–16 weeks of structured study",
+    researchBasis: "Sterman (2000): systems dynamics training improves complex decision-making. Sweeney & Sterman (2000): stock-flow thinking is reliably trainable. Meadows (2008): leverage-point identification improves with practice.",
+    goalKeywords: ["systems", "architecture", "design", "complexity", "organization", "structure", "planning", "engineering", "building"],
+  },
+  {
+    id: "community-building", name: "Community organizing & founding", section: "Social Connection, Purpose & Longevity", librarySection: "Social Connection, Purpose & Longevity",
+    evidence: "Moderate", lifts: ["community-founding", "influence", "interpersonal"],
+    prescription: "Practice community-building skills — convening groups, facilitating shared purpose, organizing collective action. Start small (a dinner group, a study circle, a neighborhood project).",
+    horizon: "3–6 months to establish a functioning group",
+    researchBasis: "Putnam (2000): social capital formation follows predictable patterns. Ostrom (1990): commons governance is a learnable skill set. Block (2008): community-building has documented methodology.",
+    goalKeywords: ["community", "leadership", "group", "organize", "network", "tribe", "belonging", "founding", "movement"],
+  },
+  {
+    id: "influence-persuasion", name: "Ethical influence & persuasion practice", section: "Social Connection, Purpose & Longevity", librarySection: "Social Connection, Purpose & Longevity",
+    evidence: "Strong", lifts: ["influence", "interpersonal", "tactical"],
+    prescription: "Study and practice ethical persuasion (Cialdini's principles, motivational interviewing, active listening) — influence is a skill set, not a personality trait.",
+    horizon: "4–12 weeks of deliberate practice",
+    researchBasis: "Cialdini (2001): influence principles are learnable and replicable. Miller & Rollnick (2012): motivational interviewing training reliably improves practitioner effectiveness.",
+    goalKeywords: ["influence", "persuasion", "sales", "leadership", "negotiation", "communication", "charisma", "convince", "motivate"],
+  },
+  {
+    id: "nature-connection", name: "Nature-connection & ecological literacy", section: "Social Connection, Purpose & Longevity", librarySection: "Social Connection, Purpose & Longevity",
+    evidence: "Moderate", lifts: ["naturalistic", "attention", "existential"],
+    prescription: "Build nature-connection through regular outdoor immersion, species identification, and ecological observation — nature-connectedness is trainable through contact, not just education.",
+    horizon: "2+ hours/week, ongoing",
+    researchBasis: "Barragan-Jason et al. (2022): 59 experiments show nature-contact interventions raise nature-connectedness (education alone does not). Lumber et al. (2017): pathways to nature-connectedness are documented.",
+    goalKeywords: ["nature", "environment", "outdoor", "ecology", "garden", "animals", "plants", "sustainability", "earth"],
+  },
+  {
+    id: "parenting-practice", name: "Evidence-based parenting skills", section: "Couples, Relationships & Parenting", librarySection: "Couples, Relationships & Parenting",
+    evidence: "Strong", lifts: ["parenting", "empathic", "interpersonal"],
+    prescription: "Practice the validated parenting components — authoritative warmth + structure, emotional coaching, positive interaction time — with your own children. Practice beats theory.",
+    horizon: "a structured program of several weeks",
+    researchBasis: "Kaminski et al. (2008) meta-analysis: active ingredients of effective parenting programs are emotional communication, positive interaction, and practicing with your own child.",
+    goalKeywords: ["parent", "child", "children", "kids", "family", "son", "daughter", "fatherhood", "motherhood", "discipline"],
+  },
+  {
+    id: "philosophical-inquiry", name: "Philosophical reasoning & inquiry", section: "Meaning, Grief & Positive Psychology", librarySection: "Meaning, Grief & Positive Psychology",
+    evidence: "Moderate", lifts: ["philosophical", "reflective", "integrative"],
+    prescription: "Practice structured philosophical inquiry — Socratic questioning, ethical dilemma analysis, reading and discussing philosophy. Philosophy for Children (P4C) programs show reliable reasoning gains.",
+    horizon: "ongoing; weekly engagement",
+    researchBasis: "Topping & Trickey (2007): Philosophy for Children produced sustained cognitive gains (2-year follow-up). Lipman (2003): community of inquiry methodology reliably improves reasoning.",
+    goalKeywords: ["meaning", "philosophy", "ethics", "wisdom", "thinking", "truth", "values", "purpose", "existential"],
+  },
+  {
+    id: "seduction-social", name: "Social-sexual intelligence & attraction", section: "Social Connection, Purpose & Longevity", librarySection: "Social Connection, Purpose & Longevity",
+    evidence: "Emerging", lifts: ["seduction", "interpersonal", "intrapersonal"],
+    prescription: "Develop social-sexual intelligence through embodiment practices, nonverbal awareness, vulnerability training, and understanding attachment styles. This is relational skill, not manipulation.",
+    horizon: "3–6 months of deliberate social practice",
+    researchBasis: "Levine & Heller (2010): attachment-style awareness improves relationship outcomes. Hall et al. (2015): flirting/courtship signals are learnable. Gottman (1999): attraction maintenance has documented mechanics.",
+    goalKeywords: ["dating", "attraction", "romance", "relationship", "confidence", "sex", "charm", "flirting", "partner"],
+  },
+  {
+    id: "tactical-execution", name: "Tactical execution & project management", section: "Behavior-Change & Psychological Interventions", librarySection: "Behavior-Change & Psychological Interventions",
+    evidence: "Moderate", lifts: ["tactical", "volitional", "systematic"],
+    prescription: "Practice breaking goals into concrete next-actions, time-boxing, and GTD-style capture-process-execute systems. Tactical intelligence is the ability to convert strategy into completed tasks.",
+    horizon: "2–4 weeks to establish system; ongoing",
+    researchBasis: "Allen (2001): GTD methodology reduces cognitive load. Locke & Latham (2002): specific, challenging goals with clear action steps outperform vague intentions across 1,000+ studies.",
+    goalKeywords: ["execution", "productivity", "tasks", "projects", "organize", "action", "complete", "deliver", "manage"],
+  },
+  {
+    id: "adaptive-flexibility", name: "Cognitive flexibility & adaptive thinking", section: "Behavior-Change & Psychological Interventions", librarySection: "Behavior-Change & Psychological Interventions",
+    evidence: "Moderate", lifts: ["adaptive", "meta-cognitive", "resilient"],
+    prescription: "Practice cognitive flexibility through perspective-shifting exercises, novel-situation exposure, and ACT-based psychological flexibility training. Adaptiveness is trainable.",
+    horizon: "4–8 weeks of deliberate practice",
+    researchBasis: "Kashdan & Rottenberg (2010): psychological flexibility predicts wellbeing. Hayes et al. (2006): ACT reliably increases cognitive flexibility. Diamond (2013): executive function training transfers.",
+    goalKeywords: ["flexible", "adapt", "change", "resilience", "pivot", "uncertainty", "stuck", "rigid", "open"],
+  },
+];
+
+// Evidence tier → the confidence band of an outcome PROJECTION. Honest mapping:
+// stronger evidence = higher confidence in the DIRECTION, never a promise of magnitude.
+export function confidenceFromEvidence(e: KeystonePractice["evidence"]): "Low" | "Moderate" | "High" {
+  return e === "Strong" ? "High" : e === "Moderate" ? "Moderate" : "Low";
+}
+
+export type OutcomeProjection = {
+  goalArea: string;
+  practice: string;
+  horizon: string;
+  confidence: "Low" | "Moderate" | "High";
+  researchBasis: string;
+  librarySection: string;
+};
+
+// Build honest, confidence-tiered projections for a person's goals: the practices
+// whose keywords match, each expressed as an explicitly hypothetical "if you commit
+// for <horizon>, the evidence points this way, at <confidence> confidence".
+export function buildProjections(goals: string, max = 4): OutcomeProjection[] {
+  const g = (goals || "").trim();
+  const area = g ? "your stated goals" : "your outcomes";
+  const matched = practicesForGoals(g);
+  const list = matched.length ? matched : corePractices();
+  return list.slice(0, max).map((p) => ({
+    goalArea: area,
+    practice: p.name,
+    horizon: p.horizon,
+    confidence: confidenceFromEvidence(p.evidence),
+    researchBasis: p.researchBasis,
+    librarySection: p.librarySection,
+  }));
+}
+
+// Practices whose goal-keywords appear in the person's stated goals.
+export function practicesForGoals(goals: string): KeystonePractice[] {
+  const g = (goals || "").toLowerCase();
+  if (!g.trim()) return [];
+  return KEYSTONE_PRACTICES.filter((p) => p.goalKeywords.some((k) => g.includes(k)));
+}
+
+// The keystone practice that most directly bolsters a given 32-line name, if one
+// exists. Matches on the lowercased line token in a practice's `lifts` (the lifts
+// use canonical line tokens like "interoceptive" / "financial-self-management"),
+// so it returns a genuine match or nothing — never a forced/irrelevant practice.
+// ─── The ecological stack ─────────────────────────────────────────────────────
+// Whole-organism environmental drivers (founder's "second library"): they lift
+// mood, energy, anxiety, and sociability across the board rather than one line.
+// One is prescribed per month, rotating — they stack, and effects compound.
+export const ECOLOGICAL_STACK_IDS = ["morning-light", "nature", "thermal", "social-connection"] as const;
+
+export function ecologicalDriverForMonth(date = new Date()): KeystonePractice | undefined {
+  const idx = (date.getFullYear() * 12 + date.getMonth()) % ECOLOGICAL_STACK_IDS.length;
+  return KEYSTONE_PRACTICES.find((p) => p.id === ECOLOGICAL_STACK_IDS[idx]);
+}
+
+export function keystoneForLine(line: string): KeystonePractice | undefined {
+  const token = (line || "").toLowerCase().trim();
+  if (!token) return undefined;
+  return KEYSTONE_PRACTICES.find((p) => p.lifts.some((l) => l.toLowerCase() === token));
+}
+
+// A compact, universally-useful core the coach can always draw on.
+export const CORE_PRACTICE_IDS = ["sleep", "exercise", "interoception", "implementation"];
+export function corePractices(): KeystonePractice[] {
+  return CORE_PRACTICE_IDS
+    .map((id) => KEYSTONE_PRACTICES.find((p) => p.id === id))
+    .filter((p): p is KeystonePractice => !!p);
+}

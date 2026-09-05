@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BioChem Atlas — US Top 100 Biochemistry Labs & Innovation Engine</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2330;--ink:#e6edf3;--muted:#9aa7b4;--line:#2a3340;
+--accent:#3fb98f;--accent2:#5aa9e6;--a:#3fb98f;--b:#5aa9e6;--c:#e0b23c;--d:#c77dff;--warn:#e5834a}
+@media(prefers-color-scheme:light){:root{--bg:#f6f8fa;--panel:#fff;--panel2:#f0f3f7;--ink:#121a24;
+--muted:#5a6673;--line:#dbe2ea;--accent:#158463;--accent2:#2b6cb0}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+header{padding:26px 0 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--bg))}
+h1{margin:2px 0 4px;font-size:25px}.tag{color:var(--accent);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+.sub{color:var(--muted);max-width:800px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+nav button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:7px 14px;cursor:pointer;font-size:13px}
+nav button.active{background:var(--accent);color:#03130d;border-color:var(--accent);font-weight:700}
+section{padding:24px 0}h2{font-size:19px;margin:0 0 10px;border-left:3px solid var(--accent);padding-left:10px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.card h3{margin:0 0 4px;font-size:15px}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.grade{width:26px;height:26px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:#06131b;flex:none}
+.A{background:var(--a)}.B{background:var(--b)}.C{background:var(--c)}.D{background:var(--d)}
+.muted{color:var(--muted);font-size:13px}.pill{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:2px 9px}
+.links{margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;font-size:13px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+input,select{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:9px 11px;font-size:14px}
+input[type=text]{min-width:220px;flex:1}.count{color:var(--muted);font-size:13px;margin-bottom:8px}
+.findbtn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 12px;font-size:12.5px;cursor:pointer;margin-top:8px}
+.finding{border-top:1px dashed var(--line);padding:8px 0;font-size:13px}.finding .t{font-weight:600}
+.note{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;padding:12px 14px;color:var(--muted);font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted)}
+.kpis{display:flex;gap:22px;flex-wrap:wrap;margin-top:10px}.kpi b{font-size:22px;display:block;color:var(--accent)}
+.xp{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+.brief{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:14px;margin-top:12px;white-space:pre-wrap;font-size:14px}
+[hidden]{display:none!important}footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:12px}
+</style></head><body>
+<header><div class="wrap">
+<div class="tag">BioChem Atlas · Russell BioMedical</div>
+<h1>US Top 100 Biochemistry Labs &amp; Innovation Engine</h1>
+<p class="sub">The 100 leading U.S. biochemistry research universities, graded A–D, each wired to pull its <b>real, most-cited biochemistry findings live from OpenAlex</b> — then turn those findings into cross-pollinated innovation leads. Real papers, real DOIs, nothing fabricated.</p>
+<div class="kpis">
+<div class="kpi"><b>100</b><span class="muted">US universities graded</span></div>
+<div class="kpi"><b id="kStates">0</b><span class="muted">states + DC</span></div>
+<div class="kpi"><b>250M+</b><span class="muted">works reachable (OpenAlex)</span></div>
+<div class="kpi"><b>10</b><span class="muted">databases federated</span></div>
+</div>
+<nav>
+<button data-tab="labs" class="active">Top 100 Labs</button>
+<button data-tab="live">Findings Search</button>
+<button data-tab="innovate">Innovation Engine</button>
+<button data-tab="databases">Databases</button>
+<button data-tab="rubric">Grading</button>
+<button data-tab="about">Method &amp; Honesty</button>
+</nav></div></header>
+<div class="wrap">
+
+<section id="labs">
+<h2>Top 100 U.S. Biochemistry Universities</h2>
+<div class="controls">
+<input type="text" id="search" placeholder="Search university, city…">
+<select id="fGrade"><option value="">All grades</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
+<select id="fState"><option value="">All states</option></select>
+<select id="fSort"><option value="grade">Sort: grade</option><option value="name">Sort: name</option><option value="state">Sort: state</option></select>
+</div>
+<div class="count" id="labCount"></div>
+<div class="grid" id="labGrid"></div>
+</section>
+
+<section id="live" hidden>
+<h2>Findings Search <span class="muted" style="font-weight:400">— live OpenAlex, real DOIs</span></h2>
+<div class="note">Runs in your browser against the OpenAlex API. If opening the file locally blocks the request, host the page — the "Open in OpenAlex" button always works.</div>
+<div class="controls" style="margin-top:12px">
+<input type="text" id="q" value="allosteric enzyme inhibitor mechanism">
+<select id="qOA"><option value="">Any access</option><option value="true">Open access only</option></select>
+<button class="findbtn" onclick="runLive()">Search</button>
+<button class="findbtn" onclick="window.open('https://openalex.org/works?search='+encodeURIComponent(document.getElementById('q').value)+'&sort=cited_by_count:desc','_blank')">Open in OpenAlex ↗</button>
+</div>
+<div id="liveOut"><p class="muted">Enter a query and Search.</p></div>
+</section>
+
+<section id="innovate" hidden>
+<h2>Innovation Engine <span class="muted" style="font-weight:400">— findings → cross-pollinated leads</span></h2>
+<p class="muted">Pick two research areas. The engine writes an honest <b>innovation lead brief</b> — a hypothesis to investigate, with live links to the intersection literature and a prior-art check. A lead is a starting point, never a claim of invention.</p>
+<div class="controls" style="margin-top:12px">
+<select id="xA"></select><select id="xB"></select>
+<button class="findbtn" onclick="genBrief()">Generate lead brief</button>
+</div>
+<div id="briefOut"></div>
+<div class="note" style="margin-top:12px">Every lead must clear prior art (Google Patents / USPTO / Espacenet / WIPO) and a registered patent attorney before it means anything. Thin literature is a signal to investigate, not proof of novelty.</div>
+</section>
+
+<section id="databases" hidden><h2>Federated Databases</h2><div class="grid" id="dbGrid"></div></section>
+
+<section id="rubric" hidden>
+<h2>Grading (A–D)</h2>
+<p class="muted">A curated tier reflecting consensus standing across published biochemistry / life-science subject rankings (Times Higher Education, U.S. News Best Global Universities, SCImago, Research.com), 2025–2026 — not our own measurement, and not a judgment of any single paper.</p>
+<table><thead><tr><th>Grade</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><span class="grade A">A</span></td><td>National top tier — highest sustained biochemistry output &amp; citation impact.</td></tr>
+<tr><td><span class="grade B">B</span></td><td>Research-intensive leader — frequently top-50 nationally for the subject.</td></tr>
+<tr><td><span class="grade C">C</span></td><td>Solid contributor — established program, meaningful output.</td></tr>
+<tr><td><span class="grade D">D</span></td><td>Emerging / specialized — growing or narrowly focused program.</td></tr>
+</tbody></table></section>
+
+<section id="about" hidden>
+<h2>Method &amp; Honesty</h2>
+<div class="xp"><b>Real.</b> All 100 are real US universities. Findings are fetched live from OpenAlex — titles, authors, years, and DOIs are theirs, not ours. No fabricated findings, citations, or DOIs.</div>
+<div class="xp"><b>How "connecting to labs" works.</b> Clicking <em>Load top findings</em> resolves the university in OpenAlex by name, then pulls its most-cited biochemistry works. This reaches every lab's published output through the aggregator that already federates them — no brittle per-university scraping.</div>
+<div class="xp"><b>Grades</b> summarize published third-party rankings (below), labeled as a curated tier.</div>
+<div class="xp"><b>Not.</b> Not medical advice; not a claim that any innovation lead is patentable or clinically valid. Patentability needs prior-art search + counsel.</div>
+<div class="xp"><b>Sources.</b>
+<a href="https://www.timeshighereducation.com/world-university-rankings/2025/subject-ranking/life-sciences" target="_blank" rel="noopener">THE Life Sciences 2025</a> ·
+<a href="https://www.usnews.com/education/best-global-universities/biology-biochemistry" target="_blank" rel="noopener">U.S. News Biology &amp; Biochemistry</a> ·
+<a href="https://www.scimagoir.com/rankings.php?area=1300&sector=Higher+educ." target="_blank" rel="noopener">SCImago</a> ·
+<a href="https://research.com/university-rankings/biology-and-biochemistry" target="_blank" rel="noopener">Research.com</a></div>
+</section>
+
+<footer class="wrap">BioChem Atlas — Russell BioMedical. Grades summarize published third-party rankings; live data © respective publishers via OpenAlex. No findings, citations, or DOIs fabricated.</footer>
+</div>
+<script>
+const US100=[{"n":"Harvard University","c":"Cambridge","st":"MA","g":"A"},{"n":"Massachusetts Institute of Technology","c":"Cambridge","st":"MA","g":"A"},{"n":"Stanford University","c":"Stanford","st":"CA","g":"A"},{"n":"University of California, San Francisco","c":"San Francisco","st":"CA","g":"A"},{"n":"University of California, Berkeley","c":"Berkeley","st":"CA","g":"A"},{"n":"California Institute of Technology","c":"Pasadena","st":"CA","g":"A"},{"n":"Scripps Research","c":"La Jolla","st":"CA","g":"A"},{"n":"Johns Hopkins University","c":"Baltimore","st":"MD","g":"A"},{"n":"Yale University","c":"New Haven","st":"CT","g":"A"},{"n":"Princeton University","c":"Princeton","st":"NJ","g":"A"},{"n":"Columbia University","c":"New York","st":"NY","g":"A"},{"n":"University of Pennsylvania","c":"Philadelphia","st":"PA","g":"A"},{"n":"University of California, Los Angeles","c":"Los Angeles","st":"CA","g":"A"},{"n":"University of California, San Diego","c":"La Jolla","st":"CA","g":"A"},{"n":"University of Washington","c":"Seattle","st":"WA","g":"A"},{"n":"University of Michigan","c":"Ann Arbor","st":"MI","g":"A"},{"n":"University of Wisconsin\u2013Madison","c":"Madison","st":"WI","g":"A"},{"n":"Cornell University","c":"Ithaca","st":"NY","g":"A"},{"n":"Rockefeller University","c":"New York","st":"NY","g":"A"},{"n":"Duke University","c":"Durham","st":"NC","g":"A"},{"n":"University of Chicago","c":"Chicago","st":"IL","g":"B"},{"n":"Northwestern University","c":"Evanston","st":"IL","g":"B"},{"n":"Washington University in St. Louis","c":"St. Louis","st":"MO","g":"B"},{"n":"University of North Carolina at Chapel Hill","c":"Chapel Hill","st":"NC","g":"B"},{"n":"UT Southwestern Medical Center","c":"Dallas","st":"TX","g":"B"},{"n":"Baylor College of Medicine","c":"Houston","st":"TX","g":"B"},{"n":"Emory University","c":"Atlanta","st":"GA","g":"B"},{"n":"Vanderbilt University","c":"Nashville","st":"TN","g":"B"},{"n":"Icahn School of Medicine at Mount Sinai","c":"New York","st":"NY","g":"B"},{"n":"New York University","c":"New York","st":"NY","g":"B"},{"n":"University of Minnesota","c":"Minneapolis","st":"MN","g":"B"},{"n":"University of Illinois Urbana\u2013Champaign","c":"Urbana","st":"IL","g":"B"},{"n":"Ohio State University","c":"Columbus","st":"OH","g":"B"},{"n":"Pennsylvania State University","c":"University Park","st":"PA","g":"B"},{"n":"University of Pittsburgh","c":"Pittsburgh","st":"PA","g":"B"},{"n":"University of Colorado Boulder","c":"Boulder","st":"CO","g":"B"},{"n":"University of California, Davis","c":"Davis","st":"CA","g":"B"},{"n":"University of California, Irvine","c":"Irvine","st":"CA","g":"B"},{"n":"University of California, Santa Barbara","c":"Santa Barbara","st":"CA","g":"B"},{"n":"University of Southern California","c":"Los Angeles","st":"CA","g":"B"},{"n":"Rice University","c":"Houston","st":"TX","g":"B"},{"n":"Georgia Institute of Technology","c":"Atlanta","st":"GA","g":"B"},{"n":"University of Texas at Austin","c":"Austin","st":"TX","g":"B"},{"n":"University of Florida","c":"Gainesville","st":"FL","g":"B"},{"n":"University of Maryland, College Park","c":"College Park","st":"MD","g":"B"},{"n":"Rutgers University","c":"New Brunswick","st":"NJ","g":"B"},{"n":"Boston University","c":"Boston","st":"MA","g":"B"},{"n":"Brown University","c":"Providence","st":"RI","g":"B"},{"n":"Dartmouth College","c":"Hanover","st":"NH","g":"B"},{"n":"Case Western Reserve University","c":"Cleveland","st":"OH","g":"B"},{"n":"Indiana University Bloomington","c":"Bloomington","st":"IN","g":"B"},{"n":"Michigan State University","c":"East Lansing","st":"MI","g":"B"},{"n":"Purdue University","c":"West Lafayette","st":"IN","g":"B"},{"n":"University of Rochester","c":"Rochester","st":"NY","g":"B"},{"n":"University of Virginia","c":"Charlottesville","st":"VA","g":"B"},{"n":"University of Arizona","c":"Tucson","st":"AZ","g":"B"},{"n":"Stony Brook University","c":"Stony Brook","st":"NY","g":"B"},{"n":"University of Utah","c":"Salt Lake City","st":"UT","g":"B"},{"n":"Carnegie Mellon University","c":"Pittsburgh","st":"PA","g":"B"},{"n":"Texas A&M University","c":"College Station","st":"TX","g":"C"},{"n":"University of Georgia","c":"Athens","st":"GA","g":"C"},{"n":"University of Iowa","c":"Iowa City","st":"IA","g":"C"},{"n":"UMass Chan Medical School","c":"Worcester","st":"MA","g":"C"},{"n":"University of Miami","c":"Coral Gables","st":"FL","g":"C"},{"n":"University of Cincinnati","c":"Cincinnati","st":"OH","g":"C"},{"n":"University of Kansas","c":"Lawrence","st":"KS","g":"C"},{"n":"University of Kentucky","c":"Lexington","st":"KY","g":"C"},{"n":"University of Alabama at Birmingham","c":"Birmingham","st":"AL","g":"C"},{"n":"University of Nebraska\u2013Lincoln","c":"Lincoln","st":"NE","g":"C"},{"n":"University of Oklahoma","c":"Norman","st":"OK","g":"C"},{"n":"University of South Carolina","c":"Columbia","st":"SC","g":"C"},{"n":"University of Tennessee, Knoxville","c":"Knoxville","st":"TN","g":"C"},{"n":"Wake Forest University","c":"Winston-Salem","st":"NC","g":"C"},{"n":"Tufts University","c":"Medford","st":"MA","g":"C"},{"n":"Georgetown University","c":"Washington","st":"DC","g":"C"},{"n":"George Washington University","c":"Washington","st":"DC","g":"C"},{"n":"Colorado State University","c":"Fort Collins","st":"CO","g":"C"},{"n":"Oregon State University","c":"Corvallis","st":"OR","g":"C"},{"n":"Oregon Health & Science University","c":"Portland","st":"OR","g":"C"},{"n":"University of Oregon","c":"Eugene","st":"OR","g":"C"},{"n":"Iowa State University","c":"Ames","st":"IA","g":"C"},{"n":"Louisiana State University","c":"Baton Rouge","st":"LA","g":"C"},{"n":"University of Missouri","c":"Columbia","st":"MO","g":"C"},{"n":"University of Connecticut","c":"Storrs","st":"CT","g":"C"},{"n":"University of Delaware","c":"Newark","st":"DE","g":"C"},{"n":"Virginia Tech","c":"Blacksburg","st":"VA","g":"C"},{"n":"North Carolina State University","c":"Raleigh","st":"NC","g":"C"},{"n":"Florida State University","c":"Tallahassee","st":"FL","g":"C"},{"n":"University of South Florida","c":"Tampa","st":"FL","g":"C"},{"n":"Temple University","c":"Philadelphia","st":"PA","g":"D"},{"n":"Drexel University","c":"Philadelphia","st":"PA","g":"D"},{"n":"Northeastern University","c":"Boston","st":"MA","g":"D"},{"n":"Rensselaer Polytechnic Institute","c":"Troy","st":"NY","g":"D"},{"n":"Lehigh University","c":"Bethlehem","st":"PA","g":"D"},{"n":"Clemson University","c":"Clemson","st":"SC","g":"D"},{"n":"Auburn University","c":"Auburn","st":"AL","g":"D"},{"n":"University of New Mexico","c":"Albuquerque","st":"NM","g":"D"},{"n":"University of Vermont","c":"Burlington","st":"VT","g":"D"},{"n":"University of Hawai'i at M\u0101noa","c":"Honolulu","st":"HI","g":"D"},{"n":"Montana State University","c":"Bozeman","st":"MT","g":"D"}], TOPICS=["enzyme catalysis","allosteric regulation","protein folding","membrane transport","signal transduction","gene expression","metabolomics","cryo-EM structural biology","proteostasis","redox biology","lipid biochemistry","glycobiology","RNA biochemistry","drug-target binding kinetics","protein-protein interaction","post-translational modification","mitochondrial bioenergetics","targeted protein degradation","CRISPR biochemistry","synthetic biology","immunometabolism","neurochemistry"], DATABASES=[["PubMed","38M+ biomedical citations (US NLM).","https://pubmed.ncbi.nlm.nih.gov/","USA \u00b7 global"],["PubMed Central","Free full-text biomedical archive.","https://www.ncbi.nlm.nih.gov/pmc/","open access"],["Europe PMC","PubMed + preprints, patents, linked data.","https://europepmc.org/","global"],["OpenAlex","~250M works, ROR-linked institutions \u2014 this library's live backbone.","https://openalex.org/","open \u00b7 federating"],["bioRxiv","Biology preprints \u2014 earliest findings.","https://www.biorxiv.org/","preprints"],["Semantic Scholar","AI citation graph (Allen Institute).","https://www.semanticscholar.org/","AI index"],["NIH RePORTER","US federally-funded research projects & grants.","https://reporter.nih.gov/","funding"],["ClinicalTrials.gov","Registered clinical studies (context only).","https://clinicaltrials.gov/","trials"],["Google Patents","Prior-art check before calling anything novel.","https://patents.google.com/","prior art"],["USPTO Patent Search","US patents & applications full-text.","https://ppubs.uspto.gov/pubwebapp/","prior art"]], CONCEPT="C55493867";
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s),enc=encodeURIComponent;
+const MAIL="mailto=research@russellcap.com";
+function oaWorks(name){return `https://openalex.org/works?search=${enc(name+' biochemistry')}&sort=cited_by_count:desc`;}
+function pubmed(name){return `https://pubmed.ncbi.nlm.nih.gov/?term=${enc(name.replace(/\s*\(.*\)/,''))}[Affiliation]+AND+biochemistry`;}
+function nih(name){return `https://reporter.nih.gov/search/?projects.orgNames=${enc(name)}`;}
+
+function renderLabs(){
+ const q=$("#search").value.toLowerCase(),fg=$("#fGrade").value,fs=$("#fState").value,so=$("#fSort").value;
+ let L=US100.filter(u=>(!fg||u.g===fg)&&(!fs||u.st===fs)&&(!q||(u.n+u.c+u.st).toLowerCase().includes(q)));
+ const go={A:0,B:1,C:2,D:3};
+ L.sort((a,b)=>so==="name"?a.n.localeCompare(b.n):so==="state"?a.st.localeCompare(b.st)||go[a.g]-go[b.g]:go[a.g]-go[b.g]||a.n.localeCompare(b.n));
+ $("#labCount").textContent=`${L.length} universit${L.length!==1?'ies':'y'} shown`;
+ $("#labGrid").innerHTML=L.map((u,i)=>`<div class="card" data-name="${u.n.replace(/"/g,'&quot;')}">
+  <div class="row"><span class="grade ${u.g}">${u.g}</span><h3>${u.n}</h3></div>
+  <div class="muted">${u.c}, ${u.st}</div>
+  <div class="links"><a href="${oaWorks(u.n)}" target="_blank" rel="noopener">OpenAlex ↗</a>
+  <a href="${pubmed(u.n)}" target="_blank" rel="noopener">PubMed ↗</a>
+  <a href="${nih(u.n)}" target="_blank" rel="noopener">NIH grants ↗</a></div>
+  <button class="findbtn" onclick="loadFindings(this)">↓ Load top findings (live)</button>
+  <div class="findings"></div></div>`).join("");
+}
+async function loadFindings(btn){
+ const card=btn.closest(".card"),name=card.dataset.name,box=card.querySelector(".findings");
+ btn.disabled=true;btn.textContent="Loading from OpenAlex…";
+ try{
+  const ir=await fetch(`https://api.openalex.org/institutions?search=${enc(name)}&per-page=1&${MAIL}`);
+  const ij=await ir.json();const inst=ij.results&&ij.results[0];
+  if(!inst) throw new Error("institution not resolved");
+  const iid=inst.id.split("/").pop();
+  const wr=await fetch(`https://api.openalex.org/works?filter=institutions.id:${iid},concepts.id:${CONCEPT}&sort=cited_by_count:desc&per-page=5&${MAIL}`);
+  const wj=await wr.json();const w=wj.results||[];
+  if(!w.length){box.innerHTML='<div class="finding muted">No biochemistry works resolved. Try the OpenAlex link above.</div>';}
+  else box.innerHTML=w.map(x=>{
+   const a=(x.authorships||[]).slice(0,2).map(z=>z.author&&z.author.display_name).filter(Boolean).join(", ");
+   const doi=x.doi?`<a href="${x.doi}" target="_blank" rel="noopener">${x.doi.replace('https://doi.org/','doi:')}</a>`:'<span class="muted">no DOI</span>';
+   return `<div class="finding"><div class="t">${x.display_name||'(untitled)'}</div>
+    <div class="muted">${a||'—'}${x.publication_year?' · '+x.publication_year:''}${x.cited_by_count?' · cited '+x.cited_by_count+'×':''}</div>${doi}</div>`;}).join("");
+  btn.textContent="✓ Top findings loaded";
+ }catch(e){box.innerHTML=`<div class="note">Live fetch blocked here (${e.message}). Use the OpenAlex ↗ link — it runs the same query.</div>`;btn.textContent="↓ Retry";btn.disabled=false;}
+}
+async function runLive(){
+ const out=$("#liveOut"),q=$("#q").value.trim(),oa=$("#qOA").value;out.innerHTML='<p class="muted">Querying OpenAlex…</p>';
+ let f="concepts.id:"+CONCEPT;if(oa)f+=",is_oa:true";
+ try{
+  const r=await fetch(`https://api.openalex.org/works?search=${enc(q)}&filter=${f}&per-page=25&sort=relevance_score:desc&${MAIL}`);
+  const j=await r.json(),w=j.results||[];
+  if(!w.length){out.innerHTML='<p class="muted">No results.</p>';return;}
+  out.innerHTML=`<div class="count">${((j.meta&&j.meta.count)||w.length).toLocaleString()} works — showing ${w.length}</div>`+w.map(x=>{
+   const a=(x.authorships||[]).slice(0,3).map(z=>z.author&&z.author.display_name).filter(Boolean).join(", ");
+   const inst=(x.authorships||[]).flatMap(z=>z.institutions||[]).map(i=>i.display_name)[0]||'';
+   const doi=x.doi?`<a href="${x.doi}" target="_blank" rel="noopener">${x.doi.replace('https://doi.org/','doi:')}</a>`:'<span class="muted">no DOI</span>';
+   return `<div class="finding"><div class="t">${x.display_name||'(untitled)'}</div><div class="muted">${a||'—'}${x.publication_year?' · '+x.publication_year:''}${x.cited_by_count?' · cited '+x.cited_by_count+'×':''} ${inst?'· '+inst:''}</div>${doi}</div>`;}).join("");
+ }catch(e){out.innerHTML=`<div class="note">Live fetch blocked (${e.message}). Use Open in OpenAlex ↗.</div>`;}
+}
+function genBrief(){
+ const a=$("#xA").value,b=$("#xB").value;
+ const brief=`INNOVATION LEAD BRIEF  (draft hypothesis — not an invention)
+Intersection:  ${a}  ×  ${b}
+
+Hypothesis to investigate:
+  Whether mechanisms/tools established in "${a}" can be applied to open
+  problems in "${b}" to produce an effect neither field achieves alone.
+
+Why this pairing:
+  Both are active, well-funded biochemistry areas; their intersection is
+  where terminology, methods, and reagents rarely overlap — the kind of
+  white space where genuinely novel, patentable ideas tend to appear.
+
+Investigate now:
+  1. Read the intersection literature (link below). Sparse + credible = a lead.
+  2. Prior-art check in patents (link below). Anything close kills or reshapes it.
+  3. If it survives, draft a technical disclosure and take it to patent counsel.
+
+Discipline: a thin literature can also mean the two fields use different words
+for the same thing. Confirm before treating anything as novel.`;
+ $("#briefOut").innerHTML=`<div class="brief">${brief}</div>
+  <div class="links" style="margin-top:10px">
+   <a class="findbtn" href="https://openalex.org/works?search=${enc(a+' '+b)}&sort=cited_by_count:desc" target="_blank" rel="noopener">Intersection literature (OpenAlex) ↗</a>
+   <a class="findbtn" href="https://patents.google.com/?q=${enc(a+' '+b)}" target="_blank" rel="noopener">Prior-art check (Google Patents) ↗</a>
+   <a class="findbtn" href="https://ppubs.uspto.gov/pubwebapp/" target="_blank" rel="noopener">USPTO search ↗</a></div>`;
+}
+function fill(){
+ const states=[...new Set(US100.map(u=>u.st))].sort();
+ $("#fState").insertAdjacentHTML("beforeend",states.map(s=>`<option>${s}</option>`).join(""));
+ $("#kStates").textContent=states.length;
+ const opts=TOPICS.map(t=>`<option>${t}</option>`).join("");
+ $("#xA").innerHTML=opts;$("#xB").innerHTML=opts;$("#xB").selectedIndex=1;
+ $("#dbGrid").innerHTML=DATABASES.map(d=>`<div class="card"><div class="row"><h3>${d[0]}</h3><span class="pill">${d[3]}</span></div><div class="muted">${d[1]}</div><div class="links"><a href="${d[2]}" target="_blank" rel="noopener">Open ↗</a></div></div>`).join("");
+}
+$$("nav button").forEach(b=>b.onclick=()=>{$$("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");$$("section").forEach(s=>s.hidden=true);$("#"+b.dataset.tab).hidden=false;});
+["#search","#fGrade","#fState","#fSort"].forEach(s=>$(s).addEventListener("input",renderLabs));
+fill();renderLabs();
+</script></body></html>

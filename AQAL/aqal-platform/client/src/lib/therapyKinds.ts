@@ -1,0 +1,125 @@
+// ============================================================
+// THERAPY KINDS — the content backbone behind /protocol/:slug.
+// Every mapped therapy is classified into a kind; the kind
+// carries the literature-typical dose (format, frequency,
+// course length), intensity, and durability profile. Individual
+// therapies with well-known protocols get overrides.
+// These are literature-typical characterizations, presented on
+// the page as exactly that — typical, not personal guarantees.
+// ============================================================
+
+export type KindProfile = {
+  label: string;
+  what: string;
+  dose: string;
+  intensity: string;
+  durability: string;
+};
+
+export const KIND_PROFILES: Record<string, KindProfile> = {
+  psychotherapy: {
+    label: "Clinical psychotherapy",
+    what: "A structured, evidence-tested clinical method delivered by a trained practitioner. Not advice, not venting — a specific protocol with a mechanism, a course, and outcome literature behind it.",
+    dose: "Typically weekly 50-minute sessions with a qualified clinician; standard courses run 8–20 sessions, with between-session practice doing much of the real work.",
+    intensity: "Moderate to high — the sessions are the easy part; the change comes from what you practice between them, and from tolerating discomfort on purpose.",
+    durability: "Skill-based therapies show the strongest staying power in follow-up studies — what you learn keeps working after the course ends, with occasional boosters extending gains further.",
+  },
+  relational: {
+    label: "Relational / couples work",
+    what: "A protocol that operates on a relationship system, not just one mind — both (or all) parties in the room, working on the pattern between them with a trained facilitator.",
+    dose: "Typically weekly 60–90-minute joint sessions; standard courses run 8–25 sessions depending on the method and the depth of the pattern.",
+    intensity: "High — you do it with witnesses, and the material is the relationship you live inside. Also one of the highest-payoff formats in the entire library for exactly that reason.",
+    durability: "Durable when the new interaction pattern gets rehearsed into habit; follow-up studies on the major couples methods show gains holding years out for a majority of completers.",
+  },
+  mindfulness: {
+    label: "Mindfulness / contemplative",
+    what: "Systematic attention training — a formal daily practice that changes how you relate to your own thoughts, states, and impulses, with a research base measured in thousands of trials.",
+    dose: "Typically daily practice of 10–45 minutes; structured programs (MBSR/MBCT-style) run 8 weeks, which is where most of the outcome literature is anchored.",
+    intensity: "Low per session, high in consistency demanded — the dose is the streak, not the sitting.",
+    durability: "Practice-dependent: gains track continued practice. The 8-week course installs the skill; keeping ~10+ minutes daily keeps the effect live indefinitely.",
+  },
+  somatic: {
+    label: "Somatic / body-based",
+    what: "A protocol that reaches the mind through the body — nervous-system regulation, interoceptive signal training, and state control built from the physiology upward.",
+    dose: "Typically 2–5 short sessions per week (10–30 minutes); courses of 6–12 weeks establish the baseline shift.",
+    intensity: "Low to moderate — physically simple, but it asks you to stay present with body sensations most people spend their lives avoiding.",
+    durability: "The regulation skill persists; the tone it builds fades over months without occasional practice, like fitness does.",
+  },
+  physical: {
+    label: "Physical training",
+    what: "Exercise as cognitive and emotional infrastructure — among the most replicated findings in all of psychology: the body's condition sets the operating range of the mind.",
+    dose: "Typically 3–5 sessions weekly, 20–60 minutes; measurable cognitive and mood effects appear within 6–12 weeks and scale with consistency.",
+    intensity: "Moderate — programmable to any starting fitness; consistency outperforms heroics in every study that compares them.",
+    durability: "Use-it-or-lose-it: benefits track ongoing training, with detraining effects measurable within weeks of stopping. The habit IS the intervention.",
+  },
+  skill: {
+    label: "Deliberate skill training",
+    what: "Structured practice with feedback on a specific capacity — the deliberate-practice model applied to a mental skill: drills, reps, error correction, progressive difficulty.",
+    dose: "Typically 3–5 practice blocks weekly of 20–45 minutes; meaningful gains in most trained skills appear across 4–12 weeks, expertise across years.",
+    intensity: "Moderate — the defining feature is practicing at the edge of your current ability, which is mildly and permanently uncomfortable.",
+    durability: "Among the most durable gains in the library: trained skills behave like riding a bicycle — they decay slowly and re-sharpen fast.",
+  },
+  psychedelic: {
+    label: "Psychedelic-assisted (clinical)",
+    what: "A small number of supervised medicine sessions embedded in preparation and integration therapy, under clinical/legal frameworks — the medicine opens a window; the therapy does the building.",
+    dose: "Typically 1–3 medicine sessions inside a course of preparation and integration psychotherapy over several weeks to months — clinical settings only, screened, never self-administered.",
+    intensity: "Very high per session, by design — these are among the most intense structured experiences in medicine, which is why the surrounding protocol matters more than the medicine.",
+    durability: "Trials report effects persisting months after 1–3 sessions — unusually durable per dose — with integration work strongly shaping how much survives.",
+  },
+  neuromodulation: {
+    label: "Neuromodulation / applied physiology",
+    what: "Direct training or stimulation of nervous-system activity — measured signals (or targeted stimulation) with feedback, changing brain-state regulation from the hardware side.",
+    dose: "Typically 2–5 sessions weekly in a structured course (e.g., 4–8 weeks); clinical variants run under practitioner supervision on fixed schedules.",
+    intensity: "Low subjective effort per session — the demand is showing up for the full course; partial courses show partial effects.",
+    durability: "Protocol-dependent: some effects consolidate and hold for months after a completed course; others need maintenance sessions. Course completion is the strongest predictor.",
+  },
+  lifestyle: {
+    label: "Lifestyle / biological",
+    what: "A daily biological input — nutrition, light, sleep architecture — whose cognitive and emotional effects run through body chemistry rather than psychology.",
+    dose: "Daily, indefinitely — these are standing inputs, not courses; measurable effects typically emerge across 4–12 weeks of consistency.",
+    intensity: "Low per day, high in permanence — the challenge is that it never ends, which is also why it works.",
+    durability: "Exactly as durable as the habit: effects persist while the input persists and reverse when it stops.",
+  },
+  expressive: {
+    label: "Expressive / arts-based",
+    what: "A protocol that works through making and doing — music, movement, play, laughter — reaching regulation and connection through channels talk can't access.",
+    dose: "Typically 1–3 sessions weekly of 30–60 minutes; group formats add a social-bonding effect the solo versions don't have.",
+    intensity: "Low — often genuinely enjoyable, which the adherence data notices: these have some of the best completion rates in the library.",
+    durability: "Mood and regulation effects are strongest around active practice; skill and connection gains accumulate and persist.",
+  },
+  community: {
+    label: "Community / social architecture",
+    what: "A protocol that changes your social structure itself — prescribed connection, structured groups, community roles — treating the village as the medicine.",
+    dose: "Typically weekly group participation for 8+ weeks, transitioning into standing membership — the protocol succeeds when it stops being a protocol and becomes your life.",
+    intensity: "Moderate — the hard part is walking in the first three times. After that the structure carries you.",
+    durability: "The most durable class in the library when it takes: a community that outlives the intervention keeps paying for decades.",
+  },
+};
+
+import { THERAPY_KIND } from "@shared/therapyKindMap";
+export { THERAPY_KIND };
+
+export const THERAPY_OVERRIDES: Record<string, Partial<Pick<KindProfile, "dose" | "durability" | "intensity">>> = {
+  "EMDR": { dose: "Typically 6–12 sessions of 60–90 minutes with a certified clinician; single-incident trauma sometimes resolves in as few as 3–6 sessions." },
+  "MBSR (Mindfulness-Based Stress Reduction)": { dose: "The standardized course: 8 weeks, one 2.5-hour class weekly, ~45 minutes daily home practice, one day-long retreat. Most of the outcome literature is anchored to exactly this dose." },
+  "MBCT (Mindfulness-Based Cognitive Therapy)": { dose: "The standardized course: 8 weekly 2-hour group sessions plus daily home practice — designed and trialed specifically for relapse prevention." },
+  "DBT (Linehan)": { dose: "The full protocol: weekly individual therapy + weekly skills group + phone coaching, typically 6–12 months — the most comprehensive (and most demanding) course in the clinical library." },
+  "Psilocybin-Assisted Therapy": { dose: "In trials: 1–2 supervised medicine sessions inside 6–10 preparation and integration sessions over ~8 weeks. Clinical/legal settings only; screened; never self-administered.", durability: "Trial follow-ups report clinically significant effects persisting 6–12 months after 1–2 sessions — among the most durable per-dose effects ever measured in psychiatry." },
+  "MDMA-Assisted Therapy": { dose: "In trials: 3 supervised medicine sessions inside ~12 preparation and integration sessions over ~18 weeks. Regulatory status evolving; clinical settings only." },
+  "Ketamine-Assisted Therapy": { dose: "Typically a series of 4–6 clinical sessions over 2–3 weeks with integration therapy; effects without maintenance typically fade in weeks, which is why the therapy wrapper matters.", durability: "Rapid onset (days) but shorter-lived than the classic psychedelics without boosters or paired psychotherapy — honest trade: speed for duration." },
+  "Transcranial Magnetic Stimulation (TMS)": { dose: "Clinical standard: 5 sessions weekly for 4–6 weeks (20–40 minutes each), prescribed and administered medically." },
+  "Gottman Method Couples Therapy": { dose: "Typically an extended assessment (1–3 sessions) then weekly 80–90-minute sessions; courses commonly run 12–26 sessions." },
+  "Implementation Intentions (Gollwitzer)": { dose: "Minutes, once — write the if-then plan ('If situation X, then I will Y') for a specific goal. The cheapest verified intervention in the entire library.", durability: "Holds for the planned situation as long as the plan stays relevant; meta-analysis of 94 studies shows medium-to-large effects from this single act." },
+  "Cold Exposure (Wim Hof)": { dose: "Typically 2–5 brief exposures weekly (cold shower 30s–3min or supervised immersion), built up gradually; effects on stress tolerance appear within weeks. Medical clearance if cardiovascular history." },
+  "Aerobic Exercise": { dose: "The literature's workhorse dose: 150+ minutes weekly of moderate cardio (or 75 vigorous), in 3–5 sessions; cognitive effects measurable from ~6 weeks." },
+  "Resistance Training": { dose: "2–4 sessions weekly, progressive load; mood and cognitive benefits appear at surprisingly modest doses (even 1–2 sessions weekly registers in meta-analyses)." },
+  "Light Therapy": { dose: "10,000-lux light box, 20–30 minutes within an hour of waking, daily through the dark season; effects typically within 1–2 weeks." },
+  "Walking in Nature": { dose: "The measured dose from the attention-restoration studies: a 50-minute walk in a natural setting; population studies find ~120 minutes weekly in nature the wellbeing threshold." },
+  "Spaced Repetition Retrieval Practice": { dose: "10–20 minutes daily against a spaced deck; the effect (testing + spacing) is among the most replicated in the learning sciences.", durability: "This IS the durability protocol — its entire mechanism is converting fast-fading memory into long-term retention." },
+};
+
+export function kindFor(therapy: string): KindProfile {
+  const profile = KIND_PROFILES[THERAPY_KIND[therapy] ?? "skill"] ?? KIND_PROFILES.skill;
+  const override = THERAPY_OVERRIDES[therapy];
+  return override ? { ...profile, ...override } : profile;
+}

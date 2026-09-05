@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Russell BioMedical — Research & Intellectual-Property Venture</title>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#121820; --panel2:#182230; --ink:#e8eef4; --muted:#94a3b2;
+    --line:#243040; --teal:#2fb6a4; --blue:#4d93d6; --gold:#d8b45a; --warn:#e0824a;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f5f8fb; --panel:#ffffff; --panel2:#eef3f8; --ink:#101a26; --muted:#54636f;
+           --line:#dce4ee; --teal:#0f7d70; --blue:#2360a8; --gold:#9a7414; }
+  }
+  *{box-sizing:border-box} html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--blue);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+  .mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--teal),var(--blue));display:flex;align-items:center;justify-content:center;color:#03130f;font-weight:900}
+  .navlinks{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}
+  .navlinks a{color:var(--muted)} .navlinks a:hover{color:var(--ink)}
+  .hero{padding:72px 0 46px;background:radial-gradient(1000px 400px at 70% -10%,color-mix(in srgb,var(--teal) 22%,transparent),transparent)}
+  .eyebrow{color:var(--teal);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:12px}
+  h1{font-size:clamp(30px,5vw,50px);line-height:1.08;margin:.35em 0 .3em;letter-spacing:-.5px}
+  .lead{font-size:19px;color:var(--muted);max-width:720px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+  .btn{padding:12px 20px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;border:1px solid var(--line)}
+  .btn.p{background:linear-gradient(135deg,var(--teal),var(--blue));color:#03130f;border:0}
+  .btn.s{background:var(--panel);color:var(--ink)}
+  section{padding:52px 0;border-top:1px solid var(--line)}
+  h2{font-size:26px;margin:0 0 6px;letter-spacing:-.3px}
+  .sec-sub{color:var(--muted);max-width:680px;margin:0 0 26px}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{margin:0 0 6px;font-size:17px}
+  .card p{margin:0;color:var(--muted);font-size:14.5px}
+  .ico{width:38px;height:38px;border-radius:9px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:8px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .kpi b{font-size:30px;display:block;background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .kpi span{color:var(--muted);font-size:13px}
+  .steps{counter-reset:s}
+  .step{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:0}
+  .step .num{counter-increment:s;flex:none;width:34px;height:34px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--teal)}
+  .step .num::before{content:counter(s)}
+  .step h4{margin:0 0 3px;font-size:16px}
+  .step p{margin:0;color:var(--muted);font-size:14.5px}
+  .note{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:16px 18px;color:var(--muted);font-size:14px}
+  .pill{display:inline-block;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:3px 11px;margin:2px 4px 2px 0}
+  .disc{font-size:13px;color:var(--muted)}
+  footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:13px}
+  .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  ul.clean{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:14.5px} ul.clean li{margin:4px 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <div class="logo"><span class="mark">R</span> Russell BioMedical</div>
+    <nav class="navlinks">
+      <a href="#mission">Mission</a>
+      <a href="#what">What We Do</a>
+      <a href="#method">Method</a>
+      <a href="#library">Library</a>
+      <a href="#pipeline">IP Pipeline</a>
+      <a href="#transparency">Transparency</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="border-top:0" id="mission">
+  <div class="wrap">
+    <div class="eyebrow">Russell Holdings Management · Biomedical Research &amp; IP</div>
+    <h1>Mining the world's biochemistry for what nobody has connected yet.</h1>
+    <p class="lead">Russell BioMedical is a research and intellectual-property venture. We read the entire open biochemistry literature at machine scale, grade its sources, and hunt the intersections between established fields — the emergent, cross-pollinated ideas most likely to be novel and patentable — then take the strongest leads through prior-art review toward filing with counsel.</p>
+    <div class="cta">
+      <a class="btn p" href="platform.html">Open the Platform →</a>
+      <a class="btn s" href="../biochem-library/index.html">Open the Research Library →</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b id="kInst">43</b><span>graded institutions tracked (seed, growing)</span></div>
+      <div class="kpi"><b>14</b><span>countries incl. Japan &amp; China</span></div>
+      <div class="kpi"><b>250M+</b><span>publications reachable via open aggregators</span></div>
+      <div class="kpi"><b>8</b><span>AI models on the discovery panel</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="what">
+  <div class="wrap">
+    <h2>What we do</h2>
+    <p class="sec-sub">Four capabilities, each built on real, open research infrastructure — not proprietary claims.</p>
+    <div class="grid g3">
+      <div class="card"><div class="ico">📚</div><h3>Literature intelligence</h3><p>A graded A–D atlas of the world's biochemistry institutions, wired to the aggregators that federate all of them (OpenAlex, PubMed, Europe PMC, bioRxiv, J-STAGE). Live search returns real papers with real DOIs.</p></div>
+      <div class="card"><div class="ico">🔗</div><h3>Cross-pollination discovery</h3><p>Systematic pairing of established research areas to surface intersections that are thin in the literature — candidate white space where genuinely new, patentable ideas tend to live.</p></div>
+      <div class="card"><div class="ico">🧠</div><h3>Multi-AI research panel</h3><p>The same eight-model consensus approach used across the Russell platform, applied to reading, summarizing, and stress-testing candidate mechanisms from several independent models rather than one.</p></div>
+      <div class="card"><div class="ico">⚖️</div><h3>IP development, done honestly</h3><p>Leads are triaged, checked against prior art (Google Patents, USPTO, Espacenet, WIPO), and only the survivors go to a registered patent attorney. We draft; counsel decides what is filable.</p></div>
+      <div class="card"><div class="ico">🌏</div><h3>Global &amp; multilingual reach</h3><p>Because we index the aggregators, Japanese (J-STAGE) and Chinese (CAS-network) output is in scope alongside US and European research — not walled off.</p></div>
+      <div class="card"><div class="ico">🔒</div><h3>Auditable by design</h3><p>Every discovery step is logged and traceable to its sources, the same tamper-evident, provenance-first ethos the Russell platform is built on.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="method">
+  <div class="wrap">
+    <h2>The discovery method</h2>
+    <p class="sec-sub">A repeatable pipeline from open literature to a counsel-ready lead. Every step is grounded in real data.</p>
+    <div class="steps card">
+      <div class="step"><div class="num"></div><div><h4>Index</h4><p>Reach the global corpus through open aggregators — ~250M works, ROR-linked institutions — instead of scraping universities one by one.</p></div></div>
+      <div class="step"><div class="num"></div><div><h4>Grade</h4><p>Rank sources A–D using a transparent rubric built on published third-party rankings (THE, U.S. News, SCImago, Research.com), so signal is weighted honestly.</p></div></div>
+      <div class="step"><div class="num"></div><div><h4>Cross-pollinate</h4><p>Pair established fields and measure how thin the intersection literature is. Sparse, credible intersections become hypotheses.</p></div></div>
+      <div class="step"><div class="num"></div><div><h4>Stress-test</h4><p>Run each hypothesis past the multi-AI panel and the live literature to separate real white space from mere terminology gaps.</p></div></div>
+      <div class="step"><div class="num"></div><div><h4>Prior-art check</h4><p>Search patent databases before anything is called novel. A thin literature is a lead, never proof.</p></div></div>
+      <div class="step"><div class="num"></div><div><h4>Draft &amp; refer</h4><p>Draft a technical disclosure with real module/mechanism detail and hand it to a registered patent attorney, who decides what is filable.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="library">
+  <div class="wrap">
+    <h2>The Research Library</h2>
+    <p class="sec-sub">BioChem Atlas is the working engine underneath Russell BioMedical — open it and use it now.</p>
+    <div class="card">
+      <div class="frow">
+        <div style="max-width:640px">
+          <h3 style="margin-top:0">BioChem Atlas — Global Biochemistry Research Library</h3>
+          <p style="color:var(--muted)">A graded directory of biochemistry institutions across 14 countries, a live OpenAlex literature search returning real papers and DOIs, ten federated databases, and a cross-pollination workspace with built-in prior-art links.</p>
+          <div>
+            <span class="pill">OpenAlex live</span><span class="pill">PubMed</span><span class="pill">Europe PMC</span><span class="pill">bioRxiv</span><span class="pill">J-STAGE (Japan)</span><span class="pill">CAS (China)</span><span class="pill">Google Patents</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center"><a class="btn p" href="../biochem-library/index.html">Open BioChem Atlas →</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pipeline">
+  <div class="wrap">
+    <h2>IP pipeline status</h2>
+    <p class="sec-sub">Honest staging. Nothing here is presented as filed, granted, or clinically validated.</p>
+    <div class="grid g4">
+      <div class="card"><h3>Discovery</h3><p>Cross-pollination hypotheses generated from the atlas. <b style="color:var(--teal)">Active</b></p></div>
+      <div class="card"><h3>Prior-art review</h3><p>Leads checked against patent databases. <b style="color:var(--teal)">Active</b></p></div>
+      <div class="card"><h3>Drafting</h3><p>Technical disclosures written for counsel review. <b style="color:var(--gold)">In progress</b></p></div>
+      <div class="card"><h3>Filed</h3><p>Applications submitted through a registered attorney. <b style="color:var(--muted)">None yet — per company records</b></p></div>
+    </div>
+    <p class="note" style="margin-top:18px">Status is stated plainly: as of this build, no biomedical application has been filed and none is patent-pending. "Patent-pending" will appear only after a real filing, confirmed by patent counsel.</p>
+  </div>
+</section>
+
+<section id="transparency">
+  <div class="wrap">
+    <h2>Transparency &amp; honest scope</h2>
+    <div class="grid g3">
+      <div class="card"><h3>What is real</h3><p>Real institutions, real databases, real live results with real DOIs. No fabricated findings, citations, or DOIs — ever.</p></div>
+      <div class="card"><h3>What the grades mean</h3><p>A curated tier summarizing published third-party rankings — not our own measurement, and not a judgment of any single study.</p></div>
+      <div class="card"><h3>What this is NOT</h3><p>Not a clinical provider, hospital, laboratory, or pharmacy. Nothing here is medical advice, diagnosis, or treatment, and no product is claimed to be on market or approved.</p></div>
+    </div>
+    <p class="note" style="margin-top:18px"><b>Medical &amp; regulatory disclosure.</b> Russell BioMedical is a research and intellectual-property venture. It does not provide medical care and makes no health, efficacy, safety, or regulatory-status claims. Any intersection identified is a research lead, not an invention or a treatment; patentability requires prior-art search and a registered patent attorney; clinical relevance would require separate, properly-regulated study. Consult qualified professionals for medical, legal, and regulatory matters.</p>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <h2>Contact &amp; partnerships</h2>
+    <p class="sec-sub">For research collaboration, university partnership, or IP licensing inquiries.</p>
+    <div class="card">
+      <p style="margin:0 0 8px">Russell Holdings Management, LLC — Wilmington, Delaware</p>
+      <ul class="clean">
+        <li>Web: <a href="https://www.russellbiomedical.com">www.russellbiomedical.com</a> · <a href="https://www.joinaqal.com">joinaqal.com</a> · <a href="https://www.russellcapitalsystems.com">russellcapitalsystems.com</a></li>
+        <li>Inquiries: set your real contact address here before publishing (kept out of source until then).</li>
+      </ul>
+      <p class="disc" style="margin-top:12px">Note for deployment: replace the placeholder contact line with your monitored inbox. Do not embed private keys or personal contact details in the source.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap frow">
+    <div>© <span id="yr"></span> Russell Holdings Management, LLC. Russell BioMedical is a research &amp; IP venture — not a clinical provider. No medical advice; no findings, citations, or DOIs are fabricated.</div>
+    <div><a href="#mission">Back to top ↑</a></div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent=new Date().getFullYear();
+  // If the atlas is present alongside this file, reflect its live institution count.
+  fetch('../biochem-library/index.html').then(r=>r.ok?r.text():'').then(t=>{
+    const m=t.match(/const INSTITUTIONS\s*=\s*\[([\s\S]*?)\];/);
+    if(m){const n=(m[1].match(/\{n:/g)||[]).length; if(n) document.getElementById('kInst').textContent=n;}
+  }).catch(()=>{});
+</script>
+</body>
+</html>

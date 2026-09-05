@@ -1,0 +1,49 @@
+{
+  "route_metadata": {
+    "index": 4,
+    "route": "/terms",
+    "component": "Terms",
+    "category": "public_or_auth",
+    "source_file": "client/src/pages/Legal.tsx",
+    "source_hash": "5e6097629a2c66cecde005af462690b58d5d75336b6824fe5a002c153518fc2c",
+    "metrics": {
+      "lines": 73,
+      "trpc_queries": 0,
+      "trpc_mutations": 0,
+      "forms": 0,
+      "buttons": 0,
+      "links": 5,
+      "charts": 0,
+      "loading_states": 0,
+      "error_states": 0,
+      "empty_states": 0,
+      "simulated_timers": 0,
+      "random_values": 0,
+      "placeholder_terms": 0,
+      "hardcoded_success_toasts": 0,
+      "external_urls": 0,
+      "local_storage": 0,
+      "download_actions": 0
+    },
+    "same_source_routes": [
+      "/privacy",
+      "/terms",
+      "/support"
+    ]
+  },
+  "audit_rubric": {
+    "usefulness_9_10": "Essential differentiated workflow with real persistence or reliable server behavior and strong user states.",
+    "usefulness_7_8": "High-value page with clear workflow; minor integration, duplication, or state gaps.",
+    "usefulness_5_6": "Useful supporting page but partial, narrow, duplicative, or presentation-heavy.",
+    "usefulness_3_4": "Low-value prototype, mostly static or simulated; better merged or moved to Secondary Information.",
+    "usefulness_1_2": "Broken, misleading, near-empty, unsafe, or obsolete; retire only after owner approval.",
+    "recommendations": [
+      "Keep",
+      "Improve",
+      "Merge",
+      "Move to Secondary Information",
+      "Retire"
+    ]
+  },
+  "source": "import { ArrowLeft } from \"lucide-react\";\nimport { Link } from \"wouter\";\n\nfunction LegalShell({ title, children }: { title: string; children: React.ReactNode }) {\n  return (\n    <div className=\"min-h-screen bg-[#060f20] text-[#c8d8ec]\">\n      <div className=\"container max-w-3xl py-12\">\n        <Link href=\"/\" className=\"inline-flex items-center gap-2 text-sm text-[#7a95b8] hover:text-white mb-8 transition-colors\">\n          <ArrowLeft size={14} /> Back to Home\n        </Link>\n        <h1 className=\"text-3xl font-extrabold text-white mb-8\" style={{ fontFamily: \"DM Sans, sans-serif\" }}>{title}</h1>\n        <div className=\"prose prose-invert max-w-none text-[#c8d8ec] space-y-6 text-sm leading-relaxed\">\n          {children}\n        </div>\n      </div>\n    </div>\n  );\n}\n\nexport function Privacy() {\n  return (\n    <LegalShell title=\"Privacy Policy\">\n      <p><strong className=\"text-white\">Effective Date:</strong> January 1, 2026</p>\n      <p>Russell Capital Systems\u2122 (\"we\", \"our\", \"us\") operates the Russell Capital Systems\u2122 Wealth OS platform. www.RussellCapitalSystems.com is owned and operated by Russell Holdings Management LLC. This Privacy Policy explains how we collect, use, and protect your information.</p>\n      <h2 className=\"text-white font-bold text-lg\">Information We Collect</h2>\n      <p>We collect information you provide when creating an account, including your name, email address, and professional credentials. We also collect usage data, session logs, and financial modeling inputs you enter into the platform.</p>\n      <h2 className=\"text-white font-bold text-lg\">How We Use Your Information</h2>\n      <p>We use your information to provide and improve the platform, generate financial strategies and projections, send operational notifications, and comply with legal obligations. We do not sell your personal information to third parties.</p>\n      <h2 className=\"text-white font-bold text-lg\">Data Security</h2>\n      <p>All data is encrypted in transit (TLS 1.3) and at rest (AES-256). Access is restricted to authenticated users with role-based permissions. We maintain audit logs of all data access and modifications.</p>\n      <h2 className=\"text-white font-bold text-lg\">Financial Data</h2>\n      <p>Client financial data entered into the platform is used solely to generate planning scenarios. We do not share individual client data with third parties without explicit consent.</p>\n      <h2 className=\"text-white font-bold text-lg\">Contact</h2>\n      <p>For privacy inquiries, contact us at <a href=\"mailto:privacy@russellcapitalsystems.com\" className=\"text-[#22c55e]\">privacy@russellcapitalsystems.com</a>.</p>\n    </LegalShell>\n  );\n}\n\nexport function Terms() {\n  return (\n    <LegalShell title=\"Terms of Service\">\n      <p><strong className=\"text-white\">Effective Date:</strong> January 1, 2026</p>\n      <p>By accessing or using the Russell Capital Systems\u2122 Wealth OS platform, you agree to these Terms of Service.</p>\n      <h2 className=\"text-white font-bold text-lg\">Platform Use</h2>\n      <p>The platform is licensed for use by licensed financial professionals and their authorized team members. You are responsible for ensuring your use complies with applicable financial regulations in your jurisdiction.</p>\n      <h2 className=\"text-white font-bold text-lg\">Strategy Outputs & Projections</h2>\n      <p>Strategy outputs, projections, and modeling results are provided for informational and planning purposes only. They do not constitute financial, tax, or legal advice. You are responsible for independently verifying all recommendations and projections before presenting them to clients.</p>\n      <h2 className=\"text-white font-bold text-lg\">Subscription and Billing</h2>\n      <p>Subscriptions are billed monthly or annually as selected. You may cancel at any time. Refunds are provided at our discretion for annual plans cancelled within 30 days of purchase.</p>\n      <h2 className=\"text-white font-bold text-lg\">Intellectual Property</h2>\n      <p>All platform software, proprietary models, and financial engines are the intellectual property of Russell Holdings Management LLC, doing business as Russell Capital Systems\u2122. You may not reverse-engineer, copy, or redistribute any platform components.</p>\n      <h2 className=\"text-white font-bold text-lg\">Contact</h2>\n      <p>For legal inquiries, contact us at <a href=\"mailto:legal@russellcapitalsystems.com\" className=\"text-[#22c55e]\">legal@russellcapitalsystems.com</a>.</p>\n    </LegalShell>\n  );\n}\n\nexport function Support() {\n  return (\n    <LegalShell title=\"Support\">\n      <p>Our support team is available to help you get the most out of Russell Capital Systems\u2122 Wealth OS.</p>\n      <h2 className=\"text-white font-bold text-lg\">Getting Started</h2>\n      <p>After signing in, you'll land on your advisor dashboard. Use the Strategy Lab to run Roth conversion ladders and IUL projections. Add clients via the Clients section, then track deals in the Pipeline.</p>\n      <h2 className=\"text-white font-bold text-lg\">Strategy Engine</h2>\n      <p>The Strategy Assist panel generates full financial strategies based on client demographics and asset data. Results are grounded in your Knowledge Library documents for compliance-aligned output.</p>\n      <h2 className=\"text-white font-bold text-lg\">Team Management</h2>\n      <p>Invite team members from the Team settings page. Roles include Admin, Advisor, Analyst, and Viewer. Invitations expire after 7 days.</p>\n      <h2 className=\"text-white font-bold text-lg\">Contact Support</h2>\n      <p>Email: <a href=\"mailto:support@russellcapitalsystems.com\" className=\"text-[#22c55e]\">support@russellcapitalsystems.com</a></p>\n      <p>Response time: within 1 business day for Growth plans, same-day for Professional and Enterprise.</p>\n    </LegalShell>\n  );\n}\n"
+}

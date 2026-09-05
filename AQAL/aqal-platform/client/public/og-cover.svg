@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <radialGradient id="glow" cx="82%" cy="12%" r="70%">
+      <stop offset="0%" stop-color="#2a2318"/>
+      <stop offset="55%" stop-color="#191510"/>
+      <stop offset="100%" stop-color="#141009"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8cf94"/>
+      <stop offset="100%" stop-color="#c79a52"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- faint 32-line radial motif on the right -->
+  <g transform="translate(920,315)" stroke="rgba(224,198,140,0.16)" fill="none" stroke-width="1">
+    <circle r="70"/><circle r="130"/><circle r="190"/>
+    <g id="spokes">
+      <line x1="0" y1="0" x2="0" y2="-200"/>
+    </g>
+    <use href="#spokes" transform="rotate(11.25)"/><use href="#spokes" transform="rotate(22.5)"/>
+    <use href="#spokes" transform="rotate(33.75)"/><use href="#spokes" transform="rotate(45)"/>
+    <use href="#spokes" transform="rotate(56.25)"/><use href="#spokes" transform="rotate(67.5)"/>
+    <use href="#spokes" transform="rotate(78.75)"/><use href="#spokes" transform="rotate(90)"/>
+    <use href="#spokes" transform="rotate(101.25)"/><use href="#spokes" transform="rotate(112.5)"/>
+    <use href="#spokes" transform="rotate(123.75)"/><use href="#spokes" transform="rotate(135)"/>
+    <use href="#spokes" transform="rotate(146.25)"/><use href="#spokes" transform="rotate(157.5)"/>
+    <use href="#spokes" transform="rotate(168.75)"/><use href="#spokes" transform="rotate(180)"/>
+    <polygon points="0,-150 88,-96 130,-40 150,60 96,120 20,175 -70,150 -150,70 -160,-30 -110,-110 -40,-140"
+      stroke="url(#gold)" stroke-width="2" fill="rgba(224,198,140,0.06)"/>
+  </g>
+
+  <text x="90" y="150" font-family="monospace" font-size="22" letter-spacing="8" fill="#c79a52">AQAL INTELLIGENCE</text>
+
+  <text x="86" y="270" font-size="72" font-weight="600" fill="#efe9dc">Every test measured</text>
+  <text x="86" y="352" font-size="72" font-weight="600" fill="#efe9dc">one thing. This one</text>
+  <text x="86" y="434" font-size="72" font-weight="600" fill="url(#gold)">measures all thirty-two.</text>
+
+  <text x="90" y="512" font-size="30" fill="#b9b2a6">Voice-first. Scored by a panel of independent AIs.</text>
+  <text x="90" y="556" font-size="30" fill="#b9b2a6">Find out how rare your mind actually is.</text>
+</svg>

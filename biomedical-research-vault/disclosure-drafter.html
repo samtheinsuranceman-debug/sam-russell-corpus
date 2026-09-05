@@ -1,0 +1,235 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Disclosure Drafter — Russell Biomedical Research Vault</title>
+<style>
+:root{--bg:#0a0e13;--panel:#131b24;--panel2:#1a2530;--ink:#e9f0f6;--muted:#8fa0b0;--line:#243240;
+--teal:#33b8a6;--blue:#4f9fe0;--gold:#d8b154;--warn:#e2814a;--pink:#c65b9e}
+@media(prefers-color-scheme:light){:root{--bg:#f3f6fa;--panel:#fff;--panel2:#eef3f8;--ink:#0e1a26;
+--muted:#54636f;--line:#dbe3ec;--teal:#0d7a6c;--blue:#255fa6}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header{padding:24px 0 12px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--bg))}
+h1{margin:2px 0 4px;font-size:25px}.tag{color:var(--gold);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+.sub{color:var(--muted);max-width:840px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+nav button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:7px 14px;cursor:pointer;font-size:13px}
+nav button.active{background:var(--gold);color:#191203;border-color:var(--gold);font-weight:700}
+section{padding:22px 0}h2{font-size:19px;margin:0 0 4px;border-left:3px solid var(--gold);padding-left:10px}
+h2+.muted{margin:0 0 14px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+input,select,textarea{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:9px 11px;font-size:14px;font-family:inherit}
+input[type=text]{min-width:220px;flex:1}
+.go{background:var(--gold);color:#191203;border:0;border-radius:8px;padding:9px 15px;font-weight:700;cursor:pointer}
+.go2{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 15px;cursor:pointer}
+.lead{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--pink);border-radius:10px;padding:11px 13px;margin-bottom:8px}
+.lead .t{font-weight:600;font-size:13.5px}.lead .meta{color:var(--muted);font-size:12px;margin:2px 0}
+.doc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:12px;white-space:pre-wrap;font:13.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
+.note{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;padding:12px 14px;color:var(--muted);font-size:13px}
+.kpis{display:flex;gap:20px;flex-wrap:wrap;margin-top:10px}.kpi b{font-size:22px;display:block;color:var(--gold)}
+.xp{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+[hidden]{display:none!important}footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:12px}
+.mini{font-size:11.5px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:6px;padding:4px 10px;cursor:pointer}
+label{font-size:13px;color:var(--muted);display:block;margin:8px 0 3px}
+</style></head><body>
+<header><div class="wrap">
+<div class="tag">Russell BioMedical · Evidence Vault</div>
+<h1>Disclosure Drafter</h1>
+<p class="sub">Turn a saved cross-pollination lead into a DRAFT technical disclosure — the same structure as a provisional patent application — ready to review with counsel. Pulls your saved leads from the <a href="cross-pollination.html">Cross-Pollination Engine</a>. Every draft is explicitly not filed, not reduced to practice, and requires prior-art search and a registered patent attorney.</p>
+<div class="kpis">
+<div class="kpi"><b id="kLeads">0</b><span class="muted">saved leads available</span></div>
+<div class="kpi"><b id="kDrafts">0</b><span class="muted">drafts saved</span></div>
+<div class="kpi"><b>0</b><span class="muted">filed (drafting stage only)</span></div>
+</div>
+<nav>
+<button data-tab="pick" class="active">From Saved Leads</button>
+<button data-tab="manual">Manual Draft</button>
+<button data-tab="drafts">My Drafts</button>
+<button data-tab="about">Method &amp; Honesty</button>
+</nav></div></header>
+<div class="wrap">
+
+<section id="pick">
+<h2>Draft from a Saved Lead</h2>
+<p class="muted">Select a lead saved in the Cross-Pollination Engine. The drafter composes a structured disclosure from its two source findings.</p>
+<div class="controls"><button class="go2" onclick="location.href='cross-pollination.html'">← Make more leads</button></div>
+<div id="leadList"></div>
+<div id="docOut"></div>
+</section>
+
+<section id="manual" hidden>
+<h2>Manual Draft</h2>
+<p class="muted">No saved leads yet, or drafting a fresh idea? Enter the two findings/fields directly.</p>
+<label>Working title (optional)</label>
+<input type="text" id="mTitle" placeholder="e.g. Senolytic Clearance as an Antifibrotic Strategy">
+<label>Finding / field A</label>
+<textarea id="mA" rows="2" placeholder="The mechanism or result you're bringing FROM…"></textarea>
+<label>Finding / field B</label>
+<textarea id="mB" rows="2" placeholder="The problem you're applying it TO…"></textarea>
+<div class="controls" style="margin-top:10px"><button class="go" onclick="draftManual()">Draft disclosure</button></div>
+<div id="mDocOut"></div>
+</section>
+
+<section id="drafts" hidden>
+<h2>My Drafts</h2>
+<div class="controls">
+<button class="go2" onclick="exportAll()">Export all (JSON)</button>
+<button class="go2" onclick="clearDrafts()">Clear drafts</button>
+<span class="muted" id="dInfo" style="align-self:center"></span>
+</div>
+<div id="draftsOut"></div>
+</section>
+
+<section id="about" hidden>
+<h2>Method &amp; Honesty</h2>
+<div class="xp"><b>What this produces.</b> A DRAFT technical disclosure in provisional-application format: title, field, background (the two real source findings and their gap), summary of the proposed combination, an enablement scaffold, a claim skeleton, and prior-art positioning. It is a starting document for a patent attorney — not a filed application.</div>
+<div class="xp"><b>Not reduced to practice.</b> A cross-pollination lead is a hypothesis. The draft says so plainly and lists what would need to be built and experimentally validated before any real filing. Claims are placeholders for counsel to write.</div>
+<div class="xp"><b>Real sourcing.</b> Background cites the actual findings (with DOIs) from your vault — originally fetched live from Europe PMC / OpenAlex. No fabricated data, results, or citations.</div>
+<div class="xp"><b>Required next steps (in every draft).</b> Prior-art search (Google Patents, USPTO, Espacenet, WIPO); experimental validation; review and claim drafting by a registered patent attorney. Nothing here is legal or medical advice, and no draft is patent-pending.</div>
+<div class="xp"><b>Private.</b> Leads and drafts live in your browser only; downloads are generated locally.</div>
+</div>
+</section>
+
+<footer class="wrap">Disclosure Drafter — Russell BioMedical. Drafts are unfiled starting documents requiring prior-art search + patent counsel; not reduced to practice; not legal or medical advice. Source findings © respective publishers. Nothing fabricated.</footer>
+</div>
+<script>
+const LK="bioevidence_leads_v1", DK="bioevidence_drafts_v1";
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s),enc=encodeURIComponent;
+const TN={1:"Definitive Consensus",2:"Randomized Trial",3:"Prospective Cohort",4:"Case-Control",5:"Cross-Sectional/Population",6:"In Vivo Mechanism",7:"In Vitro/Molecular",8:"Computational/In Silico",9:"Review/Synthesis",10:"Case Report/Series",11:"Correlational/Hypothesis",12:"Preprint/Speculative"};
+const STOP=new Set("the a an of and or in on for to with without via using into from by is are be as at study results show showed suggests associated between effect effects role novel new human patients cells cell disease clinical trial analysis review".split(" "));
+function getLeads(){try{return JSON.parse(localStorage.getItem(LK)||"[]");}catch(e){return[];}}
+function getDrafts(){try{return JSON.parse(localStorage.getItem(DK)||"[]");}catch(e){return[];}}
+function setDrafts(v){try{localStorage.setItem(DK,JSON.stringify(v));}catch(e){}counts();}
+function counts(){$("#kLeads").textContent=getLeads().length;$("#kDrafts").textContent=getDrafts().length;if($("#dInfo"))$("#dInfo").textContent=`${getDrafts().length} drafts · stored in this browser`;}
+function terms(t,n){return [...new Set(String(t||"").toLowerCase().replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w.length>3&&!STOP.has(w)))].slice(0,n||4);}
+function titleCase(s){return s.replace(/\b\w/g,c=>c.toUpperCase());}
+
+function buildDoc(aTitle,aTier,aDoi,bTitle,bTier,bDoi,workTitle){
+ const ta=terms(aTitle,3),tb=terms(bTitle,3);
+ const title=workTitle||titleCase(`${ta.slice(0,2).join(" ")} for ${tb.slice(0,2).join(" ")}`)||"Cross-Domain Biomedical Method";
+ const qs=enc(ta.concat(tb).join(" "));
+ const aRef=aDoi?`(doi:${aDoi})`:"(see source)";
+ const bRef=bDoi?`(doi:${bDoi})`:"(see source)";
+ return `DRAFT TECHNICAL DISCLOSURE — provisional-application format
+STATUS: DRAFT — NOT FILED. Not patent-pending. Not reduced to practice.
+Prepared as a starting document for a registered patent attorney.
+Inventor: Samuel Andrew Russell V   Assignee: Russell Holdings Management, LLC
+
+TITLE
+  ${title}
+
+FIELD OF THE INVENTION
+  Biomedical methods; the application of ${ta.join(", ")||"the mechanism of Finding A"}
+  to ${tb.join(", ")||"the problem addressed in Finding B"}.
+
+BACKGROUND (real source findings)
+  Finding A — evidence tier: ${aTier?("T"+aTier+" "+ (TN[aTier]||"")):"(field)"}.
+    "${aTitle}" ${aRef}
+  Finding B — evidence tier: ${bTier?("T"+bTier+" "+ (TN[bTier]||"")):"(field)"}.
+    "${bTitle}" ${bRef}
+  These bodies of work sit in different fields and, to the applicant's present
+  knowledge, have not been combined. The unmet need is the open problem in B;
+  the candidate solution is the mechanism/result established in A.
+
+SUMMARY OF THE PROPOSED INVENTION
+  A method of addressing ${tb.slice(0,2).join(" ")||"the problem of Finding B"} by
+  applying ${ta.slice(0,2).join(" ")||"the mechanism of Finding A"}. The proposed
+  combination is hypothesized to produce an effect neither field reports alone.
+  The strength of the underlying evidence on each side is stated above so counsel
+  can weight enablement risk realistically.
+
+DETAILED DESCRIPTION / ENABLEMENT SCAFFOLD (to be completed)
+  The following must be specified and, where required, experimentally reduced to
+  practice before filing a non-provisional application:
+    1. The specific agent/mechanism from A (composition, dose, or method step).
+    2. The specific target/model in B (system, endpoint, measurable outcome).
+    3. The protocol linking them (how A is applied to B; controls; readouts).
+    4. Data demonstrating the combined effect (in vitro / in vivo as appropriate).
+    5. The boundary of the claim (what is and is not covered).
+  NOTE: This disclosure does not yet contain such data. It is a hypothesis-stage
+  scaffold; the effect is proposed, not demonstrated.
+
+DRAFT CLAIM SKELETON (placeholders — for attorney drafting)
+  1. A method of [effect on B], the method comprising applying [agent/mechanism
+     from A] to [target/system of B] under [conditions], thereby [measurable
+     outcome].
+  2. The method of claim 1, wherein [agent/mechanism from A] is [specific form].
+  3. The method of claim 1, wherein [target/system of B] is [specific system].
+  4. A composition / system for performing the method of claim 1.
+  (Claims are non-limiting placeholders. A registered patent attorney must draft
+   enforceable claims against the prior art.)
+
+PRIOR-ART POSITIONING (required before filing)
+  Search and document the closest art before treating anything as novel:
+    Google Patents:  https://patents.google.com/?q=${qs}
+    USPTO:           https://ppubs.uspto.gov/pubwebapp/
+    Espacenet:       https://worldwide.espacenet.com/patent/search?q=${qs}
+    WIPO PATENTSCOPE:https://patentscope.wipo.int/search/en/result.jsf?query=${qs}
+    Literature:      https://openalex.org/works?search=${qs}&sort=cited_by_count:desc
+  A close reference reshapes or defeats the claim. Thin results can also mean the
+  fields use different terminology — confirm before relying on apparent novelty.
+
+REQUIRED NEXT STEPS
+  (a) Complete prior-art search.  (b) Specify and validate the enablement items
+  above.  (c) Have a registered patent attorney review, revise claims, and decide
+  what is filable.  Only after a real filing may "patent pending" be used.
+
+DISCLAIMER
+  This is a DRAFT engineering/scientific disclosure prepared with AI assistance.
+  It has not been filed, is not patent-pending, is not reduced to practice, and
+  is not legal or medical advice. Confirm all statuses with patent counsel.`;
+}
+
+function docBlock(text,key){
+ return `<div class="doc" id="doc_${key}">${text.replace(/</g,"&lt;")}</div>
+  <div class="controls" style="margin-top:8px">
+   <button class="mini" onclick='saveDraft(${JSON.stringify(key)})'>+ Save draft</button>
+   <button class="mini" onclick='downloadText(${JSON.stringify(key)})'>↓ Download .md</button>
+   <button class="mini" onclick='copyText(${JSON.stringify(key)})'>Copy</button></div>`;
+}
+const DOCS={};
+function renderLeadDoc(lead){
+ const text=buildDoc(lead.a_title,lead.a_tier,lead.a_doi,lead.b_title,lead.b_tier,lead.b_doi);
+ DOCS[lead.id]=text; $("#docOut").innerHTML=docBlock(text,lead.id);
+ window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+}
+function renderLeads(){
+ const L=getLeads();
+ if(!L.length){$("#leadList").innerHTML='<div class="note">No saved leads yet. Create leads in the Cross-Pollination Engine, or use Manual Draft.</div>';return;}
+ $("#leadList").innerHTML=L.slice().sort((a,b)=>b.score-a.score).map(x=>`<div class="lead">
+  <div class="t">Novelty ${x.score}/100</div>
+  <div class="meta"><b>A</b> (T${x.a_tier}): ${x.a_title}</div>
+  <div class="meta"><b>B</b> (T${x.b_tier}): ${x.b_title}</div>
+  <button class="mini" onclick='draftLead(${JSON.stringify(x.id)})'>Draft disclosure →</button></div>`).join("");
+}
+function draftLead(id){const l=getLeads().find(x=>x.id===id);if(l)renderLeadDoc(l);}
+function draftManual(){
+ const t=$("#mTitle").value.trim(),a=$("#mA").value.trim(),b=$("#mB").value.trim();
+ if(!a||!b){$("#mDocOut").innerHTML='<div class="note">Enter both Finding A and Finding B.</div>';return;}
+ const key="manual_"+Date.now();const text=buildDoc(a,null,"",b,null,"",t);DOCS[key]=text;
+ $("#mDocOut").innerHTML=docBlock(text,key);
+}
+function saveDraft(key){const text=DOCS[key];if(!text)return;const d=getDrafts();
+ const title=(text.match(/TITLE\n\s+(.+)/)||[])[1]||"Untitled draft";
+ d.push({id:key+"_"+Date.now(),title,text,savedAt:Date.now()});setDrafts(d);alert("Draft saved to My Drafts.");}
+function downloadText(key){const text=DOCS[key];if(!text)return;
+ const blob=new Blob([text],{type:"text/markdown"});const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);a.download="draft_disclosure.md";a.click();URL.revokeObjectURL(a.href);}
+function copyText(key){const text=DOCS[key];if(!text)return;navigator.clipboard&&navigator.clipboard.writeText(text).then(()=>alert("Copied."),()=>{});}
+function renderDrafts(){const d=getDrafts();
+ if(!d.length){$("#draftsOut").innerHTML='<p class="muted">No drafts saved.</p>';return;}
+ $("#draftsOut").innerHTML=d.slice().reverse().map(x=>{DOCS[x.id]=x.text;return `<div class="xp"><b>${x.title}</b>
+  <div class="muted">saved ${new Date(x.savedAt).toLocaleString()}</div>
+  <div class="controls" style="margin-top:8px"><button class="mini" onclick='downloadText(${JSON.stringify(x.id)})'>↓ Download .md</button>
+  <button class="mini" onclick='copyText(${JSON.stringify(x.id)})'>Copy</button>
+  <button class="mini" onclick='delDraft(${JSON.stringify(x.id)})'>− Remove</button></div></div>`;}).join("");}
+function delDraft(id){setDrafts(getDrafts().filter(x=>x.id!==id));renderDrafts();}
+function clearDrafts(){if(confirm("Clear all saved drafts?")){setDrafts([]);renderDrafts();}}
+function exportAll(){const d=getDrafts();if(!d.length){alert("No drafts.");return;}
+ const blob=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);a.download="disclosure_drafts.json";a.click();URL.revokeObjectURL(a.href);}
+$$("nav button").forEach(b=>b.onclick=()=>{$$("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ $$("section").forEach(s=>s.hidden=true);$("#"+b.dataset.tab).hidden=false;
+ if(b.dataset.tab==="pick")renderLeads();if(b.dataset.tab==="drafts")renderDrafts();});
+renderLeads();counts();
+</script></body></html>

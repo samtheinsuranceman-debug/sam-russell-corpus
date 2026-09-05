@@ -1,0 +1,3258 @@
+import { Button } from "@/components/ui/button";
+import { Link, useLocation } from "wouter";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { Mic, MicOff, ArrowRight, ArrowLeft, Check, SkipForward, Lock, Star, Users, Zap, Shield, Crown, Sparkles, RefreshCw } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { beginAuth } from "@/lib/agreement";
+import { playComplete, playClick } from "@/lib/audio";
+import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
+import AssessmentResumeDialog from "@/components/AssessmentResumeDialog";
+import { ALL_AXES } from "@shared/axisModes";
+import { splitTranscript, type TranscriptSegment } from "@shared/transcriptSplit";
+import { QUICK_WINS, dayStreak } from "@shared/growthEngine";
+import CrisisSupport from "@/components/CrisisSupport";
+import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
+import { GOALS_QUESTION_IDS, GOALS_QUESTION_INDICES } from "@shared/goalsQuestions";
+
+// ============================================================
+// ASSESSMENT QUESTIONS — 24 open-ended voice prompts
+// Optimized sequence: maximum momentum, trust-building, elicitation
+// ============================================================
+const QUESTIONS_SOURCE: {
+  id: number;
+  title: string;
+  text: string;
+  dimension: string;
+  axes: number[];
+  skippable?: boolean;
+  skipLabel?: string;
+  // Companion mode: private questions where a partner in the room would suppress
+  // honesty (impression management). These stay solo even in companion mode.
+  soloOnly?: boolean;
+}[] = [
+  {
+    id: 1,
+    title: "The Theme Park",
+    text: "You're handed a theme park and a blank check to add three rides that don't exist anywhere. Build the first one — walk me through what it feels like to ride it. What's the one that's a little dangerous? What's the one nobody expects? And here's what I'm really curious about: what do you want a person to feel by the time they walk out the gate — and what does building the whole place around that feeling say about you?",
+    dimension: "Imaginative Design",
+    axes: [22, 25, 2, 15, 17, 10, 27],
+  },
+  {
+    id: 2,
+    title: "The Superpower Trial",
+    text: "You test-drive a different superpower every day this week — flight, invisibility, super-strength, telepathy, teleportation, healing touch, and one you invent for Sunday. Which day are you most excited for, and what's the first thing you do that morning? Which one do you keep forever? And be honest about the one you invented for Sunday — what problem in your own real life were you secretly building it to solve?",
+    dimension: "Playful Agency",
+    axes: [4, 17, 6, 19, 5, 15, 27],
+  },
+  {
+    id: 3,
+    title: "The Jet",
+    text: "You're given $25 million and a private jet for 72 hours with zero consequences. The only rule: create one unforgettable experience involving water, music, and at least three people you've never met. Walk me through the whole 72 hours — where you go, what you invent, how the days and nights feel, and who you are by the end.",
+    dimension: "Big-Sandbox Strategy",
+    axes: [17, 25, 11, 31, 14, 15, 29],
+  },
+  {
+    id: 4,
+    title: "The Road Trip",
+    text: "Unlimited money, one month, any vehicle you want, and you can pick up anyone along the way. Where does the trip start, and where's it pointed? What's the vehicle? Who's riding shotgun? What's the first detour you take that wasn't on the map?",
+    dimension: "Freedom & Momentum",
+    axes: [19, 11, 17, 25, 2, 15, 4],
+  },
+  {
+    id: 5,
+    title: "The App That Prints Money",
+    text: "You've got the product everyone's obsessed with in five years. Pitch it to me right now like I'm about to write the check — what's it called, what problem does it kill, and why hasn't anyone built it yet?",
+    dimension: "Entrepreneurial Vision",
+    axes: [17, 31, 21, 0, 26, 10, 25],
+  },
+  {
+    id: 6,
+    title: "Parallel Dinner",
+    text: "A secret midnight dinner for six, each guest a different version of you from a parallel life: one richer, one freer, one softer, one more dangerous, one who took a completely different path, one who stayed. Describe the table and the atmosphere. What conversation breaks out once it gets real? Which version surprises everyone — including you — and what happens after that surprise?",
+    dimension: "Identity & Story",
+    axes: [6, 11, 8, 7, 3, 27, 5],
+  },
+  {
+    id: 7,
+    title: "The Island",
+    text: "You wake up and you've been given a private island the size of Manhattan, $80 million that can only be spent developing it, and 180 days before the first guests arrive. Walk me through the first two weeks. What do you build or create first? How many people do you bring early, and who are they? What secret rule or atmosphere do you invent that only the island itself seems to know? What happens when the first unexpected problem shows up?",
+    dimension: "World-Building",
+    axes: [2, 17, 30, 22, 31, 1, 16],
+  },
+  {
+    id: 8,
+    title: "The Casino Night",
+    text: "Tonight the games are rigged in your favor — but only if you read the odds right. Which table do you sit at first? How do you bet — big swings or steady grind? When do you cash out and walk? What does the way you play the table say about you?",
+    dimension: "Risk & Reading Odds",
+    axes: [1, 0, 17, 31, 23, 13, 5],
+  },
+  {
+    id: 9,
+    title: "System Redesign",
+    text: "You get to redesign one major system in the world — money, dating, cities, time, education, or desire — for one full year. Which do you pick, and what's the first wild, beautiful, slightly chaotic version you build? What does a normal Tuesday feel like inside it?",
+    dimension: "Systems & Philosophy",
+    axes: [21, 17, 22, 9, 0, 25, 8],
+  },
+  {
+    id: 10,
+    title: "The Zoo of Impossible Animals",
+    text: "You run a zoo that only holds animals that don't exist. Fill the first enclosure — what goes in, and what does the crowd do when they see it? What's the one that's a little scary? What do you feed them, and how does the whole place stay alive? And tell me — which of your impossible animals is secretly you? The one you'd go sit with alone after the gates close, and why that one?",
+    dimension: "Creative Systems",
+    axes: [16, 22, 25, 2, 21, 10, 27],
+  },
+  {
+    id: 11,
+    title: "The Half-Million Build",
+    text: "$500,000, 48 hours, and one other person. You're going to build or make something real. What are you building? Describe it to me like you're already standing inside it. How do you spend the money — what do you buy, find, invent, or hire? Hour one, first move — go.",
+    dimension: "Hands-On Creation",
+    axes: [22, 2, 17, 31, 15, 30, 18],
+  },
+  {
+    id: 12,
+    title: "One Hundred Million",
+    text: "$100 million, released — spent or given away — within 30 days. No investing, no saving. The only rule: by the end you feel more alive than you ever have. How do you release the first big wave in the opening 48 hours? How do your patterns — spending vs. giving — shift across the four weeks? What changes inside you that changes how you handle the later money?",
+    dimension: "Money & Meaning",
+    axes: [31, 17, 1, 12, 8, 19, 5],
+  },
+  {
+    id: 13,
+    title: "The Blueprint",
+    text: "Dream out loud with me — if you literally could not fail, what are you actually chasing? Say the first few that jump to mind: the money-and-work stuff, the people you love, your health and body, the legacy or spiritual side — whatever's real. For each one, ballpark when you want it — a few years, ten, someday. And the part that matters most: under each, why — what's the real reason it made your list? Start with whatever's loudest and just keep talking.",
+    dimension: "Goals & Values",
+    axes: [17, 4, 31, 8, 6, 5, 9],
+  },
+  {
+    id: 14,
+    title: "The Seven Perfect Things",
+    text: "Picture your life a few years out and seven things are just completely dialed in — your version of perfect, not fantasy-perfect. Say the first seven that come to mind, fast, out loud — the work, the money, the people, the body, the home, the everyday, whatever's yours. Don't overthink the order. Which one, if you're honest, matters more than all the rest? And which one surprised you by making the list?",
+    dimension: "Life Vision",
+    axes: [6, 8, 4, 17, 25, 31, 7],
+  },
+  {
+    id: 15,
+    title: "The Dream Concert",
+    text: "You throw one impossible concert — any artists, any era, alive or dead, your stage, your crowd, your city. Who opens? Who headlines? Where's it held, and what's the moment the whole crowd loses its mind?",
+    dimension: "Sound & Spectacle",
+    axes: [14, 25, 30, 11, 17, 2, 4],
+  },
+  {
+    id: 16,
+    title: "The Mentor Windfall",
+    text: "You're given $20 million and one year, one mission: take a young person with raw talent and zero resources and change the whole trajectory of their life. Who do you pick? What do you pour in first — and what do you deliberately make them earn? What's the one lesson you make sure they carry for forty years? How do you know when to push and when to let them fall?",
+    dimension: "Nurture & Legacy",
+    axes: [28, 12, 17, 31, 26, 4, 10],
+  },
+  {
+    id: 17,
+    title: "Two People You Love",
+    text: "Two people you love are in conflict, and each wants you on their side. First, get inside both: describe each one's real grievance so well they'd say 'yes — that's exactly it.' What's the thing neither is saying out loud? Now you get one private conversation with each. Here's the real game: can you open both their eyes enough that they actually understand each other — a resolution where both win? Walk me through how. And if it can't be saved cleanly — how do you tell?",
+    dimension: "Peacemaking",
+    axes: [12, 11, 5, 17, 3, 26, 9],
+  },
+  {
+    id: 18,
+    title: "The Negotiation",
+    text: "You want something badly and the only person who can give it is a tough, sharp negotiator across the table. What's the thing you want? What's your opening move? What do you offer that they didn't expect? Where do you refuse to budge?",
+    dimension: "Clean Competition",
+    axes: [23, 17, 18, 26, 11, 13, 5],
+  },
+  {
+    id: 19,
+    title: "The Charm Offensive",
+    text: "There's an inner circle — a family, a crew — that's wary of outsiders, and you've got one dinner to win them over. How do you walk in? What do you bring? What's the first thing you do to make them relax? What's the moment you know you're in?",
+    dimension: "Presence & Warmth",
+    axes: [29, 26, 12, 11, 13, 19, 25],
+  },
+  {
+    id: 20,
+    title: "The Goal Pre-Mortem",
+    text: "Give me your top five or so real goals right now — the ones you'd actually chase if you got dead serious. Say them as they come. Now be honest: for each one, how hard is it really — a layup, an uphill climb, or a long shot? And here's the useful part — take your biggest one and name the three or four things most likely to sabotage it: the ways you've watched yourself trip before, or the stuff outside your control. Say them out loud now, so we can catch them coming.",
+    dimension: "Goals & Pre-Mortem",
+    axes: [17, 5, 4, 23, 20, 6, 31],
+  },
+  {
+    id: 21,
+    title: "The Peak-You Year",
+    text: "One year from today you're going to be at your absolute peak — strongest, sharpest, most alive you've ever been — and it's entirely down to how you spend this year. What's the first thing you build or change this month? Who do you bring into your corner? What do you cut out completely? Walk me through an ordinary Tuesday at month three, month nine, and the anniversary.",
+    dimension: "Building Yourself",
+    axes: [4, 17, 20, 21, 19, 11, 5],
+  },
+  {
+    id: 22,
+    title: "The Underdog Bet",
+    text: "Everyone says the thing you want to do is impossible — too late, too risky, not for someone like you. You decide to prove them dead wrong. What's the thing? Who's the loudest voice saying no? What's your very first move to start proving them wrong? What does it feel like the day it starts working?",
+    dimension: "Grit & Proving Them Wrong",
+    axes: [20, 4, 23, 17, 24, 19, 26],
+  },
+  {
+    id: 23,
+    title: "The Signature Move",
+    text: "Everybody's got a thing they do better than the people around them — the way you tell a story, cook one dish, close a deal, fix a problem, calm a room. What's yours? Show me — walk me through you doing it at your absolute best. How'd you get that good without really trying?",
+    dimension: "Mastery",
+    axes: [15, 6, 25, 11, 5, 4, 7],
+  },
+  {
+    id: 24,
+    title: "The Founder's Grip",
+    text: "You built something real from nothing — a little world that works. What is it, and where were you taking it? Now someone inside — loyal, shares the original vision — wants to pull it somewhere that doesn't sit right with you. What's driving them, really — ego, or a frustration with you that might be fair? Can you feel the difference in your body? At what point does the person who started something need to loosen their grip — and does that feel like wisdom or like loss?",
+    dimension: "Vision & Letting Go",
+    axes: [30, 17, 11, 5, 24, 4, 9],
+  },
+  {
+    id: 25,
+    title: "The Unsaid Thing",
+    text: "There's something you've been carrying — for weeks, maybe years — that you need to say to someone. Not cruel, just true. What is it? Where do you feel the weight of it in your body? If you were going to say it, what are the exact words? Walk me through their face, their first response. And why haven't you said it yet — is it protecting them, or protecting you?",
+    dimension: "Honest Voice",
+    axes: [3, 12, 24, 6, 4, 11, 7],
+    soloOnly: true,
+  },
+  {
+    id: 26,
+    title: "The Standing Ovation",
+    text: "Fast-forward to a night, years from now, where a whole room is on its feet applauding you for something you actually did. What are they clapping for? Who's in the front row? What did it cost you to get there? What are you feeling as you stand there?",
+    dimension: "Achievement & Cost",
+    axes: [4, 8, 7, 20, 11, 25, 10],
+  },
+  {
+    id: 27,
+    title: "The Torch You Pass",
+    text: "At the very end of a long, full life, you get to hand one thing to the people who come after you — a lesson, a value, a way of being, a single sentence. You're smiling. What do you pass them? Who's standing there to receive it? And what do you hope they do with it?",
+    dimension: "Legacy",
+    axes: [8, 28, 10, 7, 12, 4, 9],
+  },
+];
+
+// ============================================================
+// ELICITATION SEQUENCE — rapport → depth arc
+// Disarm & warm up (novel, low-threat, universal) → pride & story → identity
+// → intimacy → sacred crescendo. Fun openers make people over-disclose early,
+// so momentum (and the signal) build before the deep questions arrive.
+// Values are QUESTIONS_SOURCE ids, in display order.
+// ============================================================
+// Final 24, curated for maximum rapport + momentum + strength/growth signal.
+// Arc 1 (1–12): disarm → delight/pride → story/agency → the "purpose" hook.
+// Arc 2 (13–24): depth & sensory → heart → shadow/growth → sacred crescendo.
+// All 24 are free; the evidence-based scoring method is what's gated.
+// Retired for this build (still authored in QUESTIONS_SOURCE, just unsequenced):
+//   2 The Natural, 3 The Flex, 4 The Negotiation, 6 The Read, 11 The Robbery,
+//   12 The Tense Table, 13 The Wedding Chaos, 16 The Stranger — the weakest
+//   overlaps / partner-or-married assumptions. Swapped in: 25–32.
+// Momentum-first order: widest/easiest play openers build the talking habit,
+// then bigger builds, then scale + goals once bought in, then people/persuasion,
+// then depth/identity, then the vulnerable legacy close. (Goals-question
+// positions are tracked in shared/goalsQuestions.ts — keep them in sync.)
+const QUESTION_ORDER = [
+  // Phase 1 — FIVE lay-ups: the widest, most impulsively-answerable worlds.
+  // Anyone can jump in mid-sentence; the only job here is the talking habit.
+  1, 2, 3, 4, 10,
+  // Phase 2 — values/goals early, while it's still a DREAM (reminds them what
+  // this is FOR: engineering THEIR outcomes) — aspirational, keeps energy up
+  13, 14,
+  // Phase 3 — bigger imaginative builds, complexity rising a notch each time
+  15, 5, 7, 11, 9, 8, 12,
+  // Phase 4 — people / persuasion (relational warmth, still playable)
+  16, 19, 18, 17, 6,
+  // Phase 5 — depth / resilience / identity (incl. the Pre-Mortem, the hard one)
+  21, 22, 20, 23, 24,
+  // Phase 6 — vulnerable / legacy close
+  25, 26, 27,
+];
+const QUESTIONS = QUESTION_ORDER.map((id) => QUESTIONS_SOURCE.find((q) => q.id === id)!);
+
+// The six-phase arc, surfaced to the member for goal-gradient momentum: a named
+// milestone at each boundary makes progress feel like chapters, not a slog.
+// Ranges are 0-based positions in QUESTION_ORDER — keep in sync with it.
+const PHASES: { start: number; end: number; name: string; entryToast?: string }[] = [
+  { start: 0, end: 4, name: "Warm-up" },
+  { start: 5, end: 6, name: "Your goals", entryToast: "Warm-up complete — now the part it's all for: your goals." },
+  { start: 7, end: 13, name: "Big builds", entryToast: "Goals locked in. Now let's build some worlds." },
+  { start: 14, end: 18, name: "People", entryToast: "Halfway there — you're outpacing most people already." },
+  { start: 19, end: 23, name: "Depth", entryToast: "Now the questions that separate a profile from a portrait." },
+  { start: 24, end: 26, name: "Legacy", entryToast: "Final stretch — 3 left. Most people never get this far." },
+];
+const phaseFor = (i: number) => PHASES.find((p) => i >= p.start && i <= p.end) ?? PHASES[0];
+
+// 0-based positions where the ground-floor reminder can appear (questions 7 and 15).
+const MOTIVATION_CHECKPOINTS = [6, 14];
+
+// ============================================================
+// QUESTION ALTERNATES — "not feeling this one? swap it."
+// ============================================================
+// Every non-structural question has two alternates of EQUAL complexity that
+// elicit the SAME intelligence lines (alternates inherit the base question's
+// axes/dimension/flags by construction, so coverage can't drift). A person who
+// isn't drawn to one world can swap up to twice until they find the puzzle they
+// actually want to solve. The three goals questions (13/14/20) are structural —
+// the coach parses their answers — so they have no alternates.
+const QUESTION_ALTS: Record<number, { title: string; text: string }[]> = {
+  1: [
+    { title: "The Restaurant That Breaks the Rules", text: "You're handed a building and a blank check to open a restaurant unlike any on Earth. Walk me through a full night there — the room, the theater of the meal, the dish that's a little dangerous, the moment mid-dinner nobody sees coming. What do you want a person to feel when they step back onto the street — and what does building the whole night around that feeling say about you?" },
+    { title: "The Open World", text: "A game studio hands you the keys to build an open-world game of your own invention. Build the first zone out loud — what it looks like, how moving through it feels, the secret only 1% of players ever find, the rule of normal life that doesn't apply here. What do you want a player to feel at the end — and why that feeling?" },
+  ],
+  2: [
+    { title: "The Time-Loop Day", text: "You're caught in a time loop — the same day, resetting every midnight, and only you remember. By loop ten, what are you doing? By loop fifty, what have you mastered, learned, or fixed? And when the loop finally breaks, what's the one thing from all those practice runs you carry into your real life — what were you secretly training for?" },
+    { title: "The Genie's Weird Rule", text: "A genie grants you three wishes — but the rule is every wish has to upgrade YOU, not the world. New abilities, new traits, new wiring. What three upgrades do you take, and walk me through the first morning you wake up with all three. Which one were you secretly building to fix a real problem in your life right now?" },
+  ],
+  3: [
+    { title: "The Private Train", text: "You're given a restored luxury train and a year of open track across any continent. Plan the maiden journey — the route, who rides in which car, what plays in the lounge car at midnight, the stop that isn't on any schedule. Somewhere on that train is a night that becomes legend among everyone aboard — tell me about it." },
+    { title: "The Yacht Summer", text: "A fully-crewed yacht is yours for one summer. Chart it — the ports, the rotating cast of guests, the music on deck at sunset, the dinner that goes until 3am. How do you decide who gets the final invitation of the season — and what happens the night everything comes together?" },
+  ],
+  4: [
+    { title: "The Van Year", text: "You convert a van and take three months with no bookings and no plan. How do you build the van — what's clever about it? How do you decide each morning where to point it? Who joins for a stretch, and who do you go pick up? Tell me about the detour that wasn't on any map and becomes the story you tell for years." },
+    { title: "The Lost Weekend", text: "You land in a foreign city where you don't speak the language. Phone's dead, you've got 48 hours and a pocket of cash. Walk me through it hour by hour — how you find food, the neighborhood you gravitate to, the stranger you end up spending an evening with, and the thing you do there that you'd never do at home." },
+  ],
+  5: [
+    { title: "The Subscription Nobody Cancels", text: "Invent the $9-a-month product that nobody ever cancels. What is it, why does it hook so deep, and how does it work under the hood? How do you get the first thousand subscribers without an ad budget? What's the pricing trick that makes it feel free — and where does the real money quietly come from?" },
+    { title: "The Marketplace", text: "Build a marketplace that connects two groups who desperately need each other but can't find each other today. Who are they? Solve the chicken-and-egg — which side do you seduce first, and how? What's your cut, how does trust work between strangers, and what does it look like when it's the default place everyone goes?" },
+  ],
+  6: [
+    { title: "The Interview With Younger You", text: "Fifteen-year-old you gets one hour to interview present-day you, and they came with hard questions. What do they ask first? Which answer makes them light up, which one disappoints them, and which question do you have to sit in silence before answering honestly? What do they say as they leave — and what do you wish you'd said back?" },
+    { title: "The Council of Yous", text: "Around one table: eight-year-old you, twenty-year-old you, present you, and seventy-year-old you — convened to decide your next big move. Who talks first, and what's their case? Who disagrees with whom? What does the eight-year-old want that everyone forgot about? And what does the seventy-year-old say that ends the debate?" },
+  ],
+  7: [
+    { title: "The Mountain Town", text: "You're deeded a valley in the mountains and the resources to found a town from nothing. How many people do you start with, and who are they? Lay it out — the center, the economy, what it trades with the outside world, the festival it becomes known for. What are the three laws, and what do you refuse to let it become as it grows?" },
+    { title: "The Orbital Neighborhood", text: "You design a 500-person space-station neighborhood — humanity's first real town off Earth. Who gets a berth, and how do you choose? Arrange it — where people gather, how food and money work, what keeps 500 people sane in a can. What tradition do you install in year one so it still feels human in year fifty?" },
+  ],
+  8: [
+    { title: "The Poker Table", text: "You sit down at a high-stakes table with five strangers and a bankroll you set. Set your rules — how much of it are you willing to lose tonight, and why that number? Read the table for me: who's loose, who's scared, who's trapping. When do you bluff, when do you fold a good hand, and how do you know when to stand up and walk?" },
+    { title: "The Prediction Year", text: "You get $10,000 that can only be used to bet on real-world outcomes for one year — elections, markets, sports, weather, anything with odds. What do you bet on, and at what odds? Where do you honestly believe you have an edge over the crowd — and what result would prove you wrong? How do you size the bets so one bad call can't end you?" },
+  ],
+  9: [
+    { title: "The School Rebuilt", text: "You're given a blank campus and total authority to redesign school from zero for a ten-year-old you love. What does Monday look like? What subjects exist that don't today, what's gone entirely, and how do you know if a kid is thriving? What's the deeper idea about what a human is that your school is quietly built on?" },
+    { title: "The Four-Year Mayor", text: "Your city elects you mayor with a supermajority — you can actually do things. First 90 days: what do you gut, what do you build? Walk me through the one broken system you redesign end-to-end and how the new one works. What does the city feel like in year four — and what did you refuse to touch, on principle?" },
+  ],
+  10: [
+    { title: "The Garden of Invented Plants", text: "You keep a botanical garden of plants that don't exist. Plant the first bed — what grows there, what does it do at night, which one is a little dangerous to stand near? How do the plants feed, and how does the whole garden keep itself alive? And which invented plant is secretly you — the one you'd sit beside alone after closing, and why?" },
+    { title: "The Museum of Things That Never Happened", text: "You curate a museum of alternate history — halls full of things that never happened. Build the first three exhibits — what's in them, how are the rooms staged, what does the crowd do? Which exhibit makes strangers cry, and why does it get to them? What's in the gift shop — and which exhibit is secretly about your own life?" },
+  ],
+  11: [
+    { title: "The Workshop Compound", text: "You get $500,000 to build a workshop compound for your people — the makers, the builders, the ones with projects in their garage. Where is it, and what's in each building? How does the money actually break down? Who gets a key, what are the rules, and what gets built there in year one that couldn't have been built anywhere else?" },
+    { title: "The Venue", text: "You get $500,000 to open the room your town is missing — the place people will say changed everything. What is it? Walk me through the build — the space, where the money goes, who you hire first. Then walk me through a Friday night there at full capacity, and how it pays its own rent by year two." },
+  ],
+  12: [
+    { title: "The Anonymous Fortune", text: "A hundred million dollars lands in your account tonight — but the condition is no one can ever know it's you. Walk me through the first 90 days. What moves quietly, what changes in your life, and what absolutely must not change? Who benefits without ever knowing why — and what does staying invisible cost you emotionally?" },
+    { title: "The Family Bank", text: "You're made steward of a hundred million dollars for the people you love — across the next fifty years, including people not born yet. Design it: the rules, who can draw what and when, what it funds automatically. What do you protect them from — including the money itself? And what do you want the fund to have produced by the time someone else takes your seat?" },
+  ],
+  15: [
+    { title: "The Festival You Found", text: "You found an annual festival, and any artist living or dead plays it. Book the lineup — who opens the first night, who closes the last, and how does the arc between them build? Design the grounds — the stages, the food, the corner nobody expects. What's the moment at midnight the whole festival is secretly built around — and who's standing next to you?" },
+    { title: "The Soundtrack of You", text: "A director is scoring the film of your life and you control the music. What's the opening track, and over what scene? What plays at the lowest point? What's the training-montage song for the comeback, and what plays over the final credits? Now the premiere — who do you most want in that theater hearing it, and which song do you watch them react to?" },
+  ],
+  16: [
+    { title: "The Scholarship", text: "You fund ten kids a year, full ride, for life-changing education — and you design everything but the check. How do you find the ten the system missed? What comes with the money — the mentoring, the doors, the summers? What do you say to them the day they're selected? And twenty years on, what do you hope they do that has nothing to do with money?" },
+    { title: "The Apprentice", text: "A wildly talented 19-year-old version of you shows up and asks to apprentice under you for a year. Design the curriculum — what do you teach in month one, and what can only be taught by watching you work? What's the hard lesson you don't warn them about in advance? And what do you secretly hope they steal from you and do better?" },
+  ],
+  17: [
+    { title: "The Family Table", text: "Two people you love haven't spoken in a year, and you decide it ends this winter — at your table. Plan the dinner: who sits where, what do you cook, how do you open? What's really underneath the feud — and how do you steer the night so both of them keep their dignity? Walk me to the moment it thaws, and what you say if it starts to go wrong instead." },
+    { title: "The Referee", text: "Two close friends want the same thing — same job, same house, same opportunity — and both come to you first. What do you say to each of them privately? Is there a version where neither loses — and how do you build it? If there truly isn't, how do you play it so that a year later all three of you are still close — and what would you sacrifice yourself to keep it that way?" },
+  ],
+  18: [
+    { title: "The Salary Play", text: "Dream company, dream role — and the offer comes in 30% low. You have one call to fix it. Prep me: what do you find out before the call, what's your number, what's your walk-away? Run the call — your opening, the silence, their pushback, the creative asks beyond salary. And how do you win the number without souring the people you're about to work with?" },
+    { title: "The House", text: "You find the house — THE house — and there's one other serious bidder with more money than you. You get one meeting with the seller. What do you learn about them first? Run the meeting — how do you win it without the highest number? What do you offer that money can't, where's your true ceiling, and how do you know when to walk away from your own dream?" },
+  ],
+  19: [
+    { title: "The Wedding Table", text: "You're seated at a wedding next to a stranger you find genuinely fascinating. Take me through the night — your opener, how you get them actually talking, the moment it stops being small talk. How do you read whether they're enjoying you? The band starts — what do you do? And how do you leave it so they're still thinking about the conversation tomorrow?" },
+    { title: "The Regular", text: "There's someone at your regular coffee shop you've noticed for weeks — and lately they've noticed you back. You've got eight weeks of ordinary mornings. Walk me through the campaign — the first word, the small moves week by week, how you make them curious instead of crowded. How do you read the signals honestly? And when do you finally make the real ask, and how?" },
+  ],
+  21: [
+    { title: "The Comeback Season", text: "You're the aging champion everyone's written off, and you've got one season left in you. Design the comeback — the training block, who's in your corner, what you rebuild first: body, mind, or team? What's the game plan against younger, faster rivals? Take me through the slump mid-season, how you climb out — and the final match, point by point." },
+    { title: "The 90-Day Sprint", text: "Pick one domain of your life and give it one all-in 90-day sprint — the most focused you've ever been. What's the domain, and what's the protocol: the daily non-negotiables, the schedule, the people who hold you to it? Week six you slip — what happened, and how does the system catch you? Day 90: what's the evidence, on paper, that it worked?" },
+  ],
+  22: [
+    { title: "The Written-Off Team", text: "You're handed the worst team in the league — the one everyone jokes about — and one season to change the story. Where do you start: talent, belief, or system? Who becomes your locker-room general, and how do you pick them? Take me through the mid-season loss that almost breaks it, what you say that night — and the final game that makes people believe." },
+    { title: "The Doubted Pitch", text: "Everyone passed on your idea — investors, bosses, even friends. You decide to spend a year proving them wrong. What's the idea, and what do the doubters not see? Where does the doubt sit in your body when you replay the rejections — and what do you do with that feeling? Map the year: the scrappy first win, the ally who joins, and the day one of the doubters calls you back." },
+  ],
+  23: [
+    { title: "The Craft Year", text: "You get a year of Sundays to master one physical craft with your hands — woodworking, pottery, boxing, piano, anything. Which one, and why that one? Describe the first ugly attempts honestly — what your hands get wrong. Then the Sunday something clicks and your body knows before your brain does. What do you make or perform at the end, and who do you give it to?" },
+    { title: "The Walk-Up Ritual", text: "The biggest moment of your life is on the other side of a door — and you get to design the ritual that walks you through it. What's your walk-up song? Build the ritual: what your body does, the breath, the phrase, the physical move that means 'I'm ready.' Where did each piece come from in your real life? Then take me through the door — how does your body carry the first sixty seconds?" },
+  ],
+  24: [
+    { title: "The Band Breaks Big", text: "Your band — or crew, or collective — built something raw and real, and now it's breaking big. The label arrives with money and 'notes.' What did you all build, and what made it yours? The meeting: what are they asking you to change? What's sacred and non-negotiable — and how do you feel that answer in your gut before you can even argue it? Who in the band disagrees with you, and how does it resolve?" },
+    { title: "The Recipe", text: "Your family restaurant — built on one recipe that made it beloved — gets an offer to go national. The investor wants to 'optimize' the recipe for scale. What's the dish, and what's the story in it? The meeting: what does your body tell you before your mouth answers? Where's the line between growing the thing and losing it — and what deal do you actually sign, if any?" },
+  ],
+  25: [
+    { title: "The Letter You Never Sent", text: "There's a letter you've written a hundred times in your head and never sent. This is just you and me — say it out loud now, start to finish, to the person it belongs to. Who is it for? Take your time with the middle part — the part you always skip. And when it's all said: do you actually send it? Why or why not — and how does your chest feel right now?" },
+    { title: "The Apology or the Thank-You", text: "Somewhere out there is either an apology you owe or a thank-you you never gave fully — you know instantly which one it is and who it's for. It's just us. Deliver it now, out loud, complete — not the polished version, the true one. What made it so hard to say all this time? And what do you imagine their face doing as they hear it?" },
+  ],
+  26: [
+    { title: "The Documentary", text: "A director follows you for the next decade and cuts it into the documentary of your rise. What's the title? Walk me through the arc — the opening scene of you now, the montage of the work, the setback episode the audience gasps at. What's the scene near the end that makes strangers cry? And when the lights come up, what do you want the audience to do with their own lives?" },
+    { title: "The Eightieth Birthday", text: "Your eightieth birthday. Three people rise to give a toast — pick them (they can be people not yet in your life). What does each one say about you, specifically — which stories do they tell? Which line in which toast means the most, and why that one? And what has to happen between now and then for every word of it to be true?" },
+  ],
+  27: [
+    { title: "The Letter to the Grandchild", text: "You're writing a letter to a grandchild — maybe not born yet — to be opened when they turn eighteen, long after you're gone. Say it out loud now. What do you want them to know about how to live? Which hard-won lesson cost you the most to learn? What family story must not be lost? And how do you close a letter like that — what are the last two sentences?" },
+    { title: "The Last Lecture", text: "One hour, one stage, one final lecture to a room full of people who will outlive you — everything that matters in sixty minutes. What's the title? Walk me through it: the opening story, the three things you know are true, the mistake you'd save them all from. What's the moment mid-lecture where your voice almost breaks? And what's the closing line you leave hanging in the air?" },
+  ],
+};
+
+// Guard: the server identifies goals answers by their display-order position
+// (shared/goalsQuestions.ts GOALS_QUESTION_INDICES). Assert those positions still
+// point at the goals question ids, so reordering QUESTION_ORDER can't silently
+// misroute the goals→coaching wiring.
+if (import.meta.env.DEV) {
+  GOALS_QUESTION_IDS.forEach((id, i) => {
+    const pos = GOALS_QUESTION_INDICES[i];
+    if (QUESTION_ORDER[pos] !== id) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `[assessment] goals-question drift: QUESTION_ORDER[${pos}] = ${QUESTION_ORDER[pos]}, expected ${id}. ` +
+        `Update GOALS_QUESTION_INDICES in shared/goalsQuestions.ts.`,
+      );
+    }
+  });
+}
+
+// All questions are free. The gate is on the evidence-based SCORING method
+// (the verified, high-confidence report) — unlocked by payment or a beta code —
+// not on the questions.
+const TOTAL_QUESTIONS = QUESTIONS.length;
+
+// ============================================================
+// PER-ANSWER RICHNESS FEEDBACK — the momentum flywheel
+// Rewards over-disclosure and teaches the behavior we want (talk more, go
+// personal). It rates HOW MUCH you shared, never who you are, and the low tier
+// is a warm invitation to say more — never a grade, never "weak".
+// Signal available client-side: speaking duration (voice) / word count (text).
+// ============================================================
+type FeedbackTier = "seed" | "good" | "rich" | "gold";
+const FEEDBACK_COPY: Record<FeedbackTier, { message: string }> = {
+  gold: { message: "That was gold — we got a ton from that one. This is exactly it." },
+  rich: { message: "Excellent — really rich. Keep telling it to us just like that." },
+  good: { message: "Nice — and the details are where you really show up. Give us even more on the next one." },
+  seed: { message: "There's clearly more to this one. Want to keep going or add a detail before we move on? Tap the mic to add to it." },
+};
+const FEEDBACK_STYLE: Record<FeedbackTier, string> = {
+  gold: "border-primary/40 bg-primary/[0.06] text-primary",
+  rich: "border-emerald-500/30 bg-emerald-500/[0.05] text-emerald-300",
+  good: "border-primary/15 bg-primary/[0.03] text-foreground/80",
+  seed: "border-muted-foreground/20 bg-white/[0.02] text-muted-foreground",
+};
+function tierForDepth(depth: number): FeedbackTier {
+  if (depth >= 0.85) return "gold";
+  if (depth >= 0.5) return "rich";
+  if (depth >= 0.25) return "good";
+  return "seed";
+}
+// Momentum-generous but monotonic: ~2 min / ~150 words reads as "gold".
+const voiceDepth = (durationSec: number) => Math.max(0, Math.min(1, durationSec / 120));
+const textDepth = (words: number) => Math.max(0, Math.min(1, words / 175));
+
+const AXIS_LABELS = ALL_AXES;
+
+// ============================================================
+// WAVEFORM VISUALIZER — Audio waves dancing like northern lights
+// ============================================================
+function WaveformVisualizer({ isRecording, analyserNode }: { isRecording: boolean; analyserNode: AnalyserNode | null }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (!isRecording || !analyserNode || !canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const bufferLength = analyserNode.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const draw = () => {
+      animationRef.current = requestAnimationFrame(draw);
+      analyserNode.getByteTimeDomainData(dataArray);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Gradient line
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+      gradient.addColorStop(0, "rgba(216, 192, 138, 0.2)");
+      gradient.addColorStop(0.5, "rgba(216, 192, 138, 0.7)");
+      gradient.addColorStop(1, "rgba(216, 192, 138, 0.2)");
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = gradient;
+      ctx.beginPath();
+
+      const sliceWidth = canvas.width / bufferLength;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const v = dataArray[i] / 128.0;
+        const y = (v * canvas.height) / 2;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+        x += sliceWidth;
+      }
+
+      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.stroke();
+
+      // Glow line (thicker, more transparent)
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = "rgba(216, 192, 138, 0.12)";
+      ctx.stroke();
+    };
+
+    draw();
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [isRecording, analyserNode]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={500}
+      height={60}
+      className={`w-full max-w-lg rounded-xl transition-opacity duration-500 ${
+        isRecording ? "opacity-100" : "opacity-0"
+      }`}
+    />
+  );
+}
+
+// ============================================================
+// ASSESSMENT RADAR — Real-time building radar with glow
+// ============================================================
+function AssessmentRadar({ scores }: { scores: number[] }) {
+  const axes = AXIS_LABELS.length;
+  const cx = 130, cy = 130, r = 110;
+
+  const polygonPoints = scores
+    .map((v, i) => {
+      const angle = (Math.PI * 2 * i) / axes - Math.PI / 2;
+      const val = Math.max(v, 0.02);
+      return `${cx + Math.cos(angle) * r * val},${cy + Math.sin(angle) * r * val}`;
+    })
+    .join(" ");
+
+  const gridScales = [0.25, 0.5, 0.75, 1];
+
+  return (
+    <div className="relative">
+      {/* Soft glow behind */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-[200px] h-[200px] rounded-full bg-primary/[0.06] blur-[40px]" />
+      </div>
+      <svg viewBox="0 0 260 260" className="w-full max-w-[260px] relative z-10">
+        {/* Grid */}
+        {gridScales.map((scale, i) => (
+          <polygon
+            key={i}
+            points={Array.from({ length: axes }, (_, j) => {
+              const angle = (Math.PI * 2 * j) / axes - Math.PI / 2;
+              return `${cx + Math.cos(angle) * r * scale},${cy + Math.sin(angle) * r * scale}`;
+            }).join(" ")}
+            fill="none"
+            stroke="oklch(0.24 0.03 65)"
+            strokeWidth="0.5"
+            opacity={0.3}
+          />
+        ))}
+        {/* Axis lines */}
+        {Array.from({ length: axes }, (_, i) => {
+          const angle = (Math.PI * 2 * i) / axes - Math.PI / 2;
+          const hasScore = scores[i] > 0;
+          return (
+            <line
+              key={i}
+              x1={cx} y1={cy}
+              x2={cx + Math.cos(angle) * r}
+              y2={cy + Math.sin(angle) * r}
+              stroke={hasScore ? "oklch(0.68 0.08 165)" : "oklch(0.17 0.02 55)"}
+              strokeWidth={hasScore ? "1" : "0.3"}
+              opacity={hasScore ? 0.8 : 0.25}
+              style={{ transition: "all 0.6s cubic-bezier(0.23, 1, 0.32, 1)" }}
+            />
+          );
+        })}
+        {/* Score polygon */}
+        <motion.polygon
+          points={polygonPoints}
+          fill="oklch(0.68 0.08 165)"
+          fillOpacity={0.15}
+          stroke="oklch(0.78 0.12 85)"
+          strokeWidth="1.5"
+          initial={false}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+        />
+        {/* Axis dots */}
+        {scores.map((v, i) => {
+          if (v <= 0) return null;
+          const angle = (Math.PI * 2 * i) / axes - Math.PI / 2;
+          return (
+            <motion.circle
+              key={i}
+              cx={cx + Math.cos(angle) * r * v}
+              cy={cy + Math.sin(angle) * r * v}
+              r={3.5}
+              fill="oklch(0.78 0.12 85)"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+            />
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ============================================================
+// RECORDING TIMER
+// ============================================================
+function RecordingTimer({ isRecording, startTime }: { isRecording: boolean; startTime: number | null }) {
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    if (!isRecording || !startTime) {
+      setElapsed(0);
+      return;
+    }
+    const interval = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startTime) / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isRecording, startTime]);
+
+  const minutes = Math.floor(elapsed / 60);
+  const seconds = elapsed % 60;
+
+  return (
+    <span className="font-mono text-sm" style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.78 0.12 85 / 0.8)", fontSize: "0.7rem" }}>
+      {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+    </span>
+  );
+}
+
+// Turn a spoken self-introduction into just the name to show on screen:
+// "um, my name is Marcus" → "Marcus". Keeps up to the first two words so
+// "Mary Jane" survives, strips common lead-ins and stray punctuation.
+function cleanSpokenName(raw: string): string {
+  let s = raw.trim().replace(/[.,!?]+$/g, "");
+  s = s.replace(/^(um+|uh+|well|so|okay|ok|hi|hey|hello)[,\s]+/i, "");
+  s = s.replace(/^(my name('s| is)|i'?m|it'?s|this is|they call me|i am|call me)\s+/i, "");
+  const words = s.split(/\s+/).filter(Boolean).slice(0, 2);
+  return words
+    .map((w) => (w.length ? w[0].toUpperCase() + w.slice(1) : w))
+    .join(" ");
+}
+
+// ============================================================
+// VOICE CAPTURE — mic-only short-utterance input (no typing anywhere).
+// Used for the companion's spoken name and their per-question take. Runs the
+// browser's SpeechRecognition, shows the words as they land, and commits the
+// final transcript on stop. This is why the whole assessment stays voice-first.
+// ============================================================
+function VoiceCapture({
+  value,
+  onCommit,
+  promptLabel,
+  transform,
+  tone = "accent",
+}: {
+  value: string;
+  onCommit: (text: string) => void;
+  promptLabel: string;
+  transform?: (raw: string) => string;
+  tone?: "accent" | "primary";
+}) {
+  const [listening, setListening] = useState(false);
+  const [interim, setInterim] = useState("");
+  const recRef = useRef<any>(null);
+  const finalRef = useRef("");
+
+  const supported =
+    typeof window !== "undefined" &&
+    !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+
+  const stop = useCallback(() => {
+    if (recRef.current) {
+      try { recRef.current.stop(); } catch { /* noop */ }
+    }
+  }, []);
+
+  const start = useCallback(() => {
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      toast.error("Voice input isn't supported in this browser. Try Chrome or Safari.");
+      return;
+    }
+    try {
+      const rec = new SR();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.lang = "en-US";
+      finalRef.current = "";
+      rec.onresult = (e: any) => {
+        let fin = "";
+        let intr = "";
+        for (let r = e.resultIndex; r < e.results.length; r++) {
+          const t = e.results[r][0].transcript;
+          if (e.results[r].isFinal) fin += t + " ";
+          else intr += t;
+        }
+        if (fin) finalRef.current += fin;
+        setInterim(intr);
+      };
+      rec.onerror = () => { /* stay quiet; user can just tap again */ };
+      rec.onend = () => {
+        const heard = finalRef.current.trim();
+        if (heard) onCommit(transform ? transform(heard) : heard);
+        setInterim("");
+        setListening(false);
+        recRef.current = null;
+      };
+      rec.start();
+      recRef.current = rec;
+      setListening(true);
+    } catch {
+      toast.error("Couldn't start the mic. Check your browser's microphone permission.");
+    }
+  }, [onCommit, transform]);
+
+  useEffect(() => () => { if (recRef.current) { try { recRef.current.stop(); } catch { /* noop */ } } }, []);
+
+  const ring = tone === "primary" ? "ring-primary/40 text-primary" : "ring-accent/40 text-accent";
+  const glow = tone === "primary" ? "border-primary/30 bg-primary/[0.06]" : "border-accent/30 bg-accent/[0.06]";
+
+  return (
+    <div className="w-full">
+      <button
+        type="button"
+        onClick={listening ? stop : start}
+        disabled={!supported}
+        aria-pressed={listening}
+        className={`w-full flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all ${glow} ${
+          listening ? "ring-2 " + ring : "hover:brightness-110"
+        } ${!supported ? "opacity-40 cursor-not-allowed" : ""}`}
+      >
+        <span
+          className={`shrink-0 grid place-items-center w-9 h-9 rounded-full ${
+            listening ? "bg-red-500/20" : tone === "primary" ? "bg-primary/15" : "bg-accent/15"
+          }`}
+        >
+          {listening ? (
+            <span className="w-3 h-3 rounded-sm bg-red-500 signal-dot-amber" aria-hidden="true" />
+          ) : (
+            <Mic className={`w-4 h-4 ${tone === "primary" ? "text-primary" : "text-accent"}`} />
+          )}
+        </span>
+        <span className="flex-1 min-w-0">
+          {value ? (
+            <span className="text-sm text-foreground font-medium break-words">{value}</span>
+          ) : listening ? (
+            <span className="text-sm text-foreground/70 italic break-words">
+              {interim || "Listening…"}
+            </span>
+          ) : (
+            <span className="text-sm text-muted-foreground/60">{promptLabel}</span>
+          )}
+        </span>
+        <span className="shrink-0 text-[0.6rem] uppercase tracking-[0.12em] text-muted-foreground/50" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          {listening ? "Tap to stop" : value ? "Re-record" : "Tap to talk"}
+        </span>
+      </button>
+      {!supported && (
+        <p className="text-[0.6rem] text-muted-foreground/40 mt-1">
+          Voice input needs Chrome, Edge, or Safari.
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ============================================================
+// MANIFESTO GATE — "why this test is different", shown once before Q1.
+// Primes the member to go deep: every prior test measured ONE line; this one
+// measures all 32, including the atrophied ones — and depth of answer is the
+// whole measurement. Voice-first framing.
+// ============================================================
+function AssessmentManifesto({ companion, onBegin }: { companion: boolean; onBegin: () => void }) {
+  return (
+    <div className="min-h-screen bg-background relative overflow-y-auto flex flex-col">
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse at 50% 30%, oklch(0.15 0.02 55) 0%, oklch(0.13 0.02 55) 45%, oklch(0.12 0.02 55) 100%)`,
+        }}
+      />
+      <div className="gradient-mesh" />
+
+      <div className="relative z-10 flex-1 flex flex-col items-center px-5 py-14 sm:py-20">
+        <div className="max-w-2xl w-full">
+          <motion.p
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-[0.62rem] uppercase tracking-[0.22em] text-primary/70 mb-4"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+          >
+            Before you begin — read this once
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="text-3xl sm:text-4xl leading-tight text-foreground mb-8"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}
+          >
+            Every test you&rsquo;ve ever taken measured <em>one</em> thing.<br />
+            This one measures all thirty-two.
+          </motion.h1>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="space-y-5 text-[0.95rem] sm:text-base text-foreground/80 leading-relaxed"
+          >
+            <p>
+              A math exam had one right answer — you knew it or you didn&rsquo;t. It was testing your{" "}
+              <span className="text-foreground">mathematical</span> intelligence, and nothing else. The SAT handed you
+              words; knowing what they meant tested your <span className="text-foreground">linguistic</span> intelligence,
+              and nothing else. When an English or debate class asked you to write a paper, that was richer — it might
+              have measured five or six at once: linguistic, logical, strategic, moral, maybe adversarial. Still a
+              handful.
+            </p>
+
+            <div className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-5">
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-primary/70 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                What we&rsquo;re actually doing
+              </p>
+              <p>
+                We are measuring <span className="text-foreground font-medium">all thirty-two known lines of intelligence</span> —
+                and quite frankly, some of these are muscles you&rsquo;ve never used, or that have atrophied over the years.
+                So when a question positions you to reach into one of them, lifting five pounds is going to feel very, very
+                heavy. We respect that, and we know it. We&rsquo;re just going to ask you to lift that five pounds as best
+                you can — once, twice, three times. Pull it off the ground and press it all the way overhead. We&rsquo;re
+                measuring the strength not only of your strongest intelligences, but of the weakest ones you almost never
+                tap in any of your decisions.
+              </p>
+            </div>
+
+            <p>
+              <span className="text-foreground">Why thirty-two?</span> Because that&rsquo;s what it takes to capture the full
+              spectrum of human capability — cognitive, creative, social, spatial, emotional, practical, and abstract — and
+              how those capacities operate <em>together</em>. An IQ test samples four lines, and the four are so tightly
+              correlated they collapse into a single number. The SAT samples two. Thirty-two is the map, not a slice.
+            </p>
+
+            <p>
+              And this is not a personality test. Traits like openness, conscientiousness, and extraversion describe how you{" "}
+              <em>tend to behave</em>. These thirty-two lines measure something different:{" "}
+              <span className="text-foreground">what you can actually do</span> when you&rsquo;re handed a difficult, complex
+              problem and asked to work it.
+            </p>
+
+            <p>
+              That&rsquo;s why some of these questions will be more demanding — emotionally, cognitively, mentally — than
+              any test you&rsquo;ve taken. Those were always singular and narrow. This one is broad <em>and</em> deep. But
+              it&rsquo;s also far more rewarding: it hands you the map, the blueprint, the architecture of your own mind —
+              and then draws protocols and procedures from a curated database of <span className="text-foreground">6,500+
+              therapeutic prescriptions</span>, each with cited resources from verified researchers, to help you reach your
+              goals, outcomes, and visions in less time, with less failure, fewer tangents, and less wasted energy.
+            </p>
+
+            <p>
+              To do that, we need to <span className="text-foreground">MRI your mind</span> — something no test has done
+              before. And the way we run that MRI is by handing you whole worlds to build, expand, explain, imagine,
+              explore, and tell stories about. Play with them. Build them as large and as detailed as you can. Make each
+              one as much an expression of <em>you</em> as possible. The more you give — the longer you talk, the more
+              involved you get, the more you color and construct the world you&rsquo;re handed — the more there is for our
+              panel of independent, non-AI-and-AI underwriters to observe and argue over: which intelligences poke their
+              head above the water, and what developmental stage each one is operating at.
+            </p>
+
+            <div className="rounded-2xl border border-accent/20 bg-accent/[0.05] p-5">
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-accent/80 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                The one rule that decides everything
+              </p>
+              <p>
+                If you give short answers, we can&rsquo;t measure anything — you&rsquo;ll simply score a zero. One-minute
+                answers make for a boring assessment and a level-one reading on everything. But{" "}
+                <span className="text-foreground font-medium">the more you give to the assessment, the more it gives back
+                to you — for the rest of your life</span>. It will surface the weaknesses that can quietly undermine every
+                one of your strengths. That&rsquo;s worth it.
+              </p>
+            </div>
+
+            <p>
+              Aim for <span className="text-foreground">five to ten minutes on each question</span>, and really get
+              involved. If you have to come back five days in a row and answer four at a time, do it. If it takes you two
+              weeks, it takes you two weeks — your progress is saved. This is not a normal exam. There are no right or
+              wrong answers. It&rsquo;s all about how you <em>play</em> — how you&rsquo;d color, construct, and build the
+              world around you, given the one you&rsquo;re handed.
+            </p>
+
+            <p className="text-foreground/90">Have fun. Then begin.</p>
+
+            {/* QUICK WINS — start improving in week one, while the map is still drawing */}
+            <div className="mt-6 rounded-2xl border border-accent/25 bg-accent/[0.05] p-5 text-left">
+              <p className="text-[0.62rem] uppercase tracking-[0.2em] text-accent/80 mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Start winning before you're even measured
+              </p>
+              <p className="text-sm text-foreground/80 leading-relaxed mb-3">
+                Your personal prescriptions arrive when your map is complete. These three work for{" "}
+                <span className="text-accent font-semibold">every human alive</span> — start any one today:
+              </p>
+              <div className="grid gap-2.5 sm:grid-cols-3">
+                {QUICK_WINS.map((w) => (
+                  <div key={w.id} className="rounded-lg border border-border/40 bg-background/40 px-3 py-2.5">
+                    <p className="text-sm font-semibold text-foreground mb-0.5">{w.name}</p>
+                    <p className="text-[0.7rem] text-accent/90 mb-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{w.dose}</p>
+                    <p className="text-xs text-muted-foreground/80 leading-snug">{w.why}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {companion && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+              className="mt-6 text-sm text-muted-foreground/70 border-l-2 border-primary/25 pl-4"
+            >
+              You&rsquo;re doing this with a companion. When a question&rsquo;s signal light is green, invite them in —
+              their view of you from the outside is part of the measurement.
+            </motion.p>
+          )}
+
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-10 flex flex-col items-center gap-3"
+          >
+            <Button
+              onClick={onBegin}
+              size="lg"
+              className="bg-primary text-primary-foreground rounded-full px-10 py-6 text-base hover:translate-y-[-1px] transition-transform"
+            >
+              I understand — let&rsquo;s begin
+            </Button>
+            <p className="text-muted-foreground/40 text-xs">
+              Voice-first. No typing required. Your data is encrypted end-to-end.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// MAIN ASSESSMENT PAGE
+// ============================================================
+// ============================================================
+// THE FINAL THREE — optional crash-recollection bridge, shown at
+// the moment of maximum momentum (assessment complete). Zero
+// pressure by design: the founding spot is already earned. Answers
+// feed the Black Box engine (crashes annotate, never penalize).
+// ============================================================
+const FINAL_THREE = [
+  { key: "controlled", title: "The one you never saw coming",
+    prompt: "Think of a time you had everything under control — planned, prepared, confident — and it fell apart anyway. Tell it like it happened: what was supposed to succeed, what slid first, what was going through your mind, what impulses took over, what it cost." },
+  { key: "costliest", title: "The one that cost the most",
+    prompt: "The failure with the biggest bill — money, a person, health, years. What did you believe going in? What did other people see that you couldn't? What single intervention might have changed the outcome?" },
+  { key: "nearmiss", title: "The near-miss you caught",
+    prompt: "One that ALMOST crashed — and you pulled it back. What warned you? What did you do differently that time? (Recoveries carry as much signal as crashes — this is how the panel learns what saving you looks like.)" },
+];
+
+function FinalThreeBridge({ onCrisis }: { onCrisis: () => void }) {
+  const utils = trpc.useUtils();
+  const [openKey, setOpenKey] = useState<string | null>(null);
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState<string[]>([]);
+  const add = trpc.blackBox.add.useMutation();
+
+  const submit = async (key: string, title: string) => {
+    const narrative = (drafts[key] ?? "").trim();
+    if (narrative.length < 200) {
+      toast.error("Give it a few more sentences — an honest forensic read needs the real story.");
+      return;
+    }
+    const r = await add.mutateAsync({ title, narrative, scope: "coaching" }).catch(() => null);
+    if (r?.ok) {
+      setSubmitted((x) => [...x, key]); setOpenKey(null);
+      toast.success("Sealed in your Black Box. The panel reads it for pattern, never for punishment.");
+      if (r.crisis) onCrisis();
+      utils.blackBox.list.invalidate();
+    } else if (r && "error" in r) toast.error(r.error);
+    else toast.error("Couldn't save just now — your text is still here, try again.");
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.7, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+      className="glass-card rounded-2xl p-7 mb-8 border border-[#E2604A]/25 text-left"
+    >
+      <p className="text-xs uppercase tracking-[0.2em] mb-2 text-center" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#E2604A" }}>
+        The Final Three — optional, and possibly the most valuable
+      </p>
+      <p className="text-sm text-foreground/80 leading-relaxed mb-2">
+        Your spot is already earned — the 27 did that, and nothing below is required. But here's the honest truth:
+        the panel now knows what you <em>can do</em>. What it can't yet see is <b className="text-foreground">where
+        you've crashed when you thought you had everything under control</b> — and that may be the most valuable
+        information in your entire file. Crashes are where the blind spots live. Naming three of them is how we make
+        sure the next one never gets the same free shot at you.
+      </p>
+      <p className="text-[11px] leading-relaxed mb-5" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#9C8F79" }}>
+        Zero pressure. Skip any or all. Share only what you're willing to relive; initials instead of names is fine.
+        Prefer to speak? Record on your voice app and paste the transcript — or do this later, in full, at your Black
+        Box. These annotate your map; they never lower a score.
+      </p>
+      <div className="space-y-2.5">
+        {FINAL_THREE.map((q) => {
+          const done = submitted.includes(q.key);
+          const isOpen = openKey === q.key;
+          return (
+            <div key={q.key} className="rounded-xl border" style={{ borderColor: done ? "#9BC0B255" : isOpen ? "#E2604A55" : "rgba(241,234,219,0.1)" }}>
+              <button onClick={() => !done && setOpenKey(isOpen ? null : q.key)}
+                className="w-full text-left px-4 py-3 flex items-baseline justify-between gap-3 cursor-pointer"
+                style={{ background: "none", border: 0 }}>
+                <span className="text-[15px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, color: done ? "#9BC0B2" : "#F1EADB" }}>
+                  {done ? "✓ " : ""}{q.title}
+                </span>
+                {!done && <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", color: "#9C8F79" }}>{isOpen ? "−" : "+"}</span>}
+              </button>
+              {isOpen && !done && (
+                <div className="px-4 pb-4">
+                  <p className="text-[13px] text-foreground/70 leading-relaxed mb-3">{q.prompt}</p>
+                  <textarea value={drafts[q.key] ?? ""} onChange={(e) => setDrafts((d) => ({ ...d, [q.key]: e.target.value }))}
+                    rows={7} placeholder="Tell it like it happened — don't clean it up…"
+                    className="w-full rounded-lg p-3 text-[14px] leading-relaxed"
+                    style={{ background: "rgba(241,234,219,0.04)", border: "1px solid rgba(241,234,219,0.12)", color: "#F1EADB", outline: "none", resize: "vertical" }} />
+                  <div className="flex items-center gap-3 mt-2 flex-wrap">
+                    <button onClick={() => submit(q.key, q.title)} disabled={add.isPending}
+                      className="px-4 py-2.5 rounded-lg text-[11px] uppercase tracking-[0.1em] font-bold cursor-pointer disabled:opacity-50"
+                      style={{ fontFamily: "'JetBrains Mono', monospace", background: "#E0C68C", color: "#141009", border: 0 }}>
+                      {add.isPending ? "Sealing…" : "Seal it in my Black Box"}
+                    </button>
+                    <button onClick={() => setOpenKey(null)}
+                      className="text-[10px] uppercase tracking-[0.1em] cursor-pointer"
+                      style={{ fontFamily: "'JetBrains Mono', monospace", color: "#9C8F79", background: "none", border: 0 }}>
+                      Skip this one
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {submitted.length > 0 && (
+        <p className="text-[12px] mt-4" style={{ color: "#CFC5B0" }}>
+          {submitted.length} of 3 sealed. When you're ready, run the forensics at{" "}
+          <Link href="/black-box" style={{ color: "#E0C68C" }}>your Black Box</Link> — the panel extracts the
+          pattern across everything you've given it.
+        </p>
+      )}
+    </motion.div>
+  );
+}
+
+export default function Assessment() {
+  const { user, loading: authLoading } = useAuth();
+  const [, navigate] = useLocation();
+
+  // Assessment state
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingStartTime, setRecordingStartTime] = useState<number | null>(null);
+  const [recordings, setRecordings] = useState<(Blob | null)[]>(Array(TOTAL_QUESTIONS).fill(null));
+  const [textResponses, setTextResponses] = useState<string[]>(Array(TOTAL_QUESTIONS).fill(""));
+  const [skippedQuestions, setSkippedQuestions] = useState<number[]>([]);
+  // Per-question alternate selection: question id → 0 (original) | 1 | 2 (alts).
+  // Lets a person swap a question they're not drawn to for an equally-complex
+  // one eliciting the same lines, until they find a puzzle they want to solve.
+  const [questionVariants, setQuestionVariants] = useState<Record<number, number>>({});
+  // Which question slots have been safely uploaded to the server. Answers are
+  // uploaded in the BACKGROUND the moment they're captured (crash-proof: a
+  // refresh/tab-close can no longer lose recorded work), and the final submit
+  // only sends whatever didn't make it. Marked false again when an answer is
+  // re-recorded or swapped away.
+  const [uploadedIdx, setUploadedIdx] = useState<Record<number, boolean>>({});
+  // Ground-floor checkpoint reminders (once each, at questions 7 and 15): the
+  // stakes-framing for people whose momentum is flagging mid-assessment.
+  const [seenCheckpoints, setSeenCheckpoints] = useState<number[]>([]);
+  const [useTextMode, setUseTextMode] = useState(false);
+  // ── Companion mode ─────────────────────────────────────────────────────────
+  // Optional, strongly recommended: a partner / best friend / anyone who knows the
+  // member well plays along. Their read is captured on a SEPARATE channel (never
+  // merged into the member's own scored answer) so the self-signal stays pure and
+  // the self–other gap can be scored later. Not spouse-only.
+  const [companionMode, setCompanionMode] = useState(false);
+  const [companionName, setCompanionName] = useState("");
+  const [companionRelation, setCompanionRelation] = useState("");
+  const [companionResponses, setCompanionResponses] = useState<string[]>(Array(TOTAL_QUESTIONS).fill(""));
+  const [scores, setScores] = useState<number[]>(Array(AXIS_LABELS.length).fill(0));
+  const [isComplete, setIsComplete] = useState(false);
+  const [assessmentId, setAssessmentId] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [analysisSucceeded, setAnalysisSucceeded] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [birthYear, setBirthYear] = useState<number | null>(() => {
+    if (typeof window === "undefined") return null;
+    const saved = localStorage.getItem("aqal_birth_year");
+    const n = saved ? parseInt(saved, 10) : NaN;
+    return Number.isFinite(n) ? n : null;
+  });
+  // Per-answer richness reaction (shown in the pause before "Next").
+  const [feedback, setFeedback] = useState<{ tier: FeedbackTier; newLines: number; totalLines: number } | null>(null);
+  const scoresRef = useRef<number[]>([]);
+
+  // tRPC mutations for backend submission
+  const startMutation = trpc.assessment.start.useMutation();
+  const uploadResponseMutation = trpc.assessment.uploadResponse.useMutation();
+  const submitTextMutation = trpc.assessment.submitTextResponse.useMutation();
+  const analyzeMutation = trpc.assessment.analyze.useMutation();
+  const saveCompanionMutation = trpc.assessment.saveCompanion.useMutation();
+  const trackMutation = trpc.analytics.track.useMutation();
+  const companionSavedRef = useRef(false);
+  const micPrimedRef = useRef(false);
+  const utils = trpc.useUtils();
+  const firstInsightShownRef = useRef(false);
+  // Crisis safety net + the day-streak flame.
+  const [showCrisis, setShowCrisis] = useState(false);
+  const answerDaysQ = trpc.growth.answerDays.useQuery(undefined, { enabled: !!user, staleTime: 60_000, retry: false });
+  const streak = dayStreak(answerDaysQ.data ?? []);
+
+  // ── Incremental background upload ─────────────────────────────
+  // Ensure the server-side assessment exists (once), then push each answer up
+  // the moment it's captured. Failures stay silent — the final submit retries
+  // anything unmarked. Requires a logged-in user; otherwise the legacy
+  // everything-at-the-end path still applies.
+  const ensureAssessmentInFlight = useRef<Promise<number | null> | null>(null);
+  const assessmentIdRef = useRef<number | null>(null);
+  useEffect(() => { assessmentIdRef.current = assessmentId; }, [assessmentId]);
+
+  const ensureAssessment = useCallback(async (): Promise<number | null> => {
+    if (assessmentIdRef.current) return assessmentIdRef.current;
+    if (!user) return null;
+    if (!ensureAssessmentInFlight.current) {
+      ensureAssessmentInFlight.current = startMutation
+        .mutateAsync(birthYear ? { birthYear } : {})
+        .then((r) => {
+          const id = r.success && r.assessmentId ? r.assessmentId : null;
+          if (id) { setAssessmentId(id); assessmentIdRef.current = id; }
+          return id;
+        })
+        .catch(() => { ensureAssessmentInFlight.current = null; return null; });
+    }
+    return ensureAssessmentInFlight.current;
+  }, [user, birthYear, startMutation]);
+
+  const backgroundUploadAnswer = useCallback(async (index: number, blob: Blob | null, transcript: string, durationMs: number) => {
+    try {
+      const aId = await ensureAssessment();
+      if (!aId) return; // not logged in / start failed — final submit will handle it
+      if (transcript.trim().length > 0) {
+        const res = await submitTextMutation.mutateAsync({ assessmentId: aId, questionIndex: index, text: transcript.trim() });
+        if ((res as { crisis?: boolean })?.crisis) setShowCrisis(true);
+      } else if (blob) {
+        const arrayBuffer = await blob.arrayBuffer();
+        const base64 = btoa(new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ""));
+        await uploadResponseMutation.mutateAsync({ assessmentId: aId, questionIndex: index, audioBase64: base64, durationMs });
+      } else {
+        return;
+      }
+      setUploadedIdx((u) => {
+        const next = { ...u, [index]: true };
+        // THE MAGIC MOMENT: on the very first uploaded answer, fetch a fast
+        // one-shot read — "3 lines already lighting up" — so the member gets
+        // proof the machine heard them in minute one, not on day 30.
+        if (!firstInsightShownRef.current && Object.keys(next).length === 1) {
+          firstInsightShownRef.current = true;
+          void (async () => {
+            try {
+              const aId2 = assessmentIdRef.current;
+              if (!aId2) return;
+              const r = await utils.client.assessment.firstInsight.query({ assessmentId: aId2 });
+              if (r.available) {
+                toast.success(`Your first answer is already lighting up: ${r.lines.join(" · ")}. ${r.note}`, { duration: 10000 });
+              }
+            } catch { /* best-effort — never block the flow */ }
+          })();
+        }
+        return next;
+      });
+    } catch {
+      // Silent: the answer stays local and the final submit re-sends it.
+    }
+  }, [ensureAssessment, submitTextMutation, uploadResponseMutation, utils]);
+
+  // ── Tape-recorder mode: upload a pre-recorded answer file ─────────────────
+  // For members who print the questions and answer offline (voice-memo app,
+  // tape recorder). One file per question (mp3/m4a/wav/mp4…); server-side
+  // Whisper transcribes it at scoring time, same as live-mic answers.
+  const tapeInputRef = useRef<HTMLInputElement>(null);
+  const [tapeUploading, setTapeUploading] = useState(false);
+  const uploadFileAnswer = useCallback(async (file: File | null) => {
+    if (!file) return;
+    if (file.size > 45 * 1024 * 1024) {
+      toast.error("That file is too large — keep each answer under 45 MB (about an hour of audio).");
+      return;
+    }
+    setTapeUploading(true);
+    try {
+      const aId = await ensureAssessment();
+      if (!aId) { toast.error("Sign in first, then upload your recording."); return; }
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      let binary = "";
+      const CHUNK = 0x8000;
+      for (let i = 0; i < bytes.length; i += CHUNK) binary += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + CHUNK)));
+      await uploadResponseMutation.mutateAsync({
+        assessmentId: aId,
+        questionIndex: currentQuestion,
+        audioBase64: btoa(binary),
+        durationMs: 0,
+        mimeType: file.type || "audio/mpeg",
+      });
+      setRecordings((prev) => { const n = [...prev]; n[currentQuestion] = file; return n; });
+      setUploadedIdx((u) => ({ ...u, [currentQuestion]: true }));
+      toast.success(`Question ${currentQuestion + 1} recording uploaded — it'll be transcribed and scored with the rest.`);
+    } catch {
+      toast.error("Upload failed — check your connection and try again.");
+    } finally {
+      setTapeUploading(false);
+    }
+  }, [ensureAssessment, uploadResponseMutation, currentQuestion]);
+
+  // ── Multi-answer .txt transcript upload ───────────────────────────────────
+  // One transcript file covering MANY questions (tape-recorded offline, then
+  // transcribed). Split client-side on spoken "Question N" markers, review the
+  // mapping, then bulk-submit each segment as that question's text answer.
+  const txtInputRef = useRef<HTMLInputElement>(null);
+  const [txtReview, setTxtReview] = useState<TranscriptSegment[] | null>(null);
+  const [txtSubmitting, setTxtSubmitting] = useState(false);
+  const handleTxtFile = useCallback(async (file: File | null) => {
+    if (!file) return;
+    const text = await file.text();
+    if (!text.trim()) { toast.error("That file is empty."); return; }
+    const segs = splitTranscript(text, TOTAL_QUESTIONS);
+    if (segs.length === 0) {
+      // No markers — treat the whole file as the CURRENT question's answer.
+      setTxtReview([{ question: currentQuestion + 1, text: text.trim(), words: text.trim().split(/\s+/).filter(Boolean).length }]);
+      toast.info("No 'Question N' markers found — mapping the whole file to the current question. Review before submitting.");
+    } else {
+      setTxtReview(segs);
+    }
+  }, [currentQuestion]);
+  const submitTxtSegments = useCallback(async () => {
+    if (!txtReview || txtSubmitting) return;
+    setTxtSubmitting(true);
+    try {
+      const aId = await ensureAssessment();
+      if (!aId) { toast.error("Sign in first, then upload your transcript."); return; }
+      let ok = 0;
+      for (const seg of txtReview) {
+        try {
+          const segRes = await submitTextMutation.mutateAsync({ assessmentId: aId, questionIndex: seg.question - 1, text: seg.text });
+          if ((segRes as { crisis?: boolean })?.crisis) setShowCrisis(true);
+          setTextResponses((prev) => { const n = [...prev]; n[seg.question - 1] = seg.text; return n; });
+          setUploadedIdx((u) => ({ ...u, [seg.question - 1]: true }));
+          ok++;
+        } catch {
+          toast.error(`Question ${seg.question} failed to upload — try again.`);
+        }
+      }
+      if (ok > 0) {
+        toast.success(`${ok} answer${ok === 1 ? "" : "s"} uploaded and saved — they'll be scored with the rest.`);
+        setTxtReview(null);
+      }
+    } finally {
+      setTxtSubmitting(false);
+    }
+  }, [txtReview, txtSubmitting, ensureAssessment, submitTextMutation]);
+
+  // Detect if voice recording is supported
+  const recordingSupported = typeof window !== "undefined" && typeof window.MediaRecorder !== "undefined" && !!navigator.mediaDevices?.getUserMedia;
+
+  // Audio refs
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  // Browser speech-to-text (free, no API key — Chrome/Edge/Safari). Runs during
+  // recording and captures a transcript so a spoken answer can be scored WITHOUT
+  // a server transcription provider (Whisper). This is what lets the beta run on
+  // a chat-only model like Grok, which cannot transcribe audio itself.
+  const recognitionRef = useRef<any>(null);
+  const liveTranscriptRef = useRef<string>("");
+
+  // Resolve the displayed question through any chosen alternate. Alternates
+  // only replace title/text — axes, dimension, and flags stay the base
+  // question's, so live-radar tagging and companion/solo logic are unchanged.
+  const baseQuestion = QUESTIONS[currentQuestion];
+  const altsForQuestion = QUESTION_ALTS[baseQuestion.id]?.length ?? 0;
+  // Normalize any stored index into the cycle [0 .. alts] so a restored or
+  // over-incremented value can never point past the list (which used to
+  // silently re-display the ORIGINAL question — the "clicked but nothing
+  // changed" bug).
+  const variantIdx = altsForQuestion > 0 ? (questionVariants[baseQuestion.id] ?? 0) % (altsForQuestion + 1) : 0;
+  const activeAlt = variantIdx > 0 ? QUESTION_ALTS[baseQuestion.id]?.[variantIdx - 1] : undefined;
+  const question = activeAlt ? { ...baseQuestion, title: activeAlt.title, text: activeAlt.text } : baseQuestion;
+  const progress = ((currentQuestion + 1) / TOTAL_QUESTIONS) * 100;
+  const hasRecording = recordings[currentQuestion] !== null;
+  const hasTextResponse = textResponses[currentQuestion]?.trim().length > 20;
+  // Furthest question they've reached or touched — derived (resume-safe), so the
+  // step dots can jump anywhere already visited without unlocking the future.
+  const furthestReached = Math.max(
+    currentQuestion,
+    ...recordings.map((r, i) => (r !== null ? i : 0)),
+    ...textResponses.map((t, i) => (t && t.trim().length > 0 ? i : 0)),
+    ...(skippedQuestions.length ? skippedQuestions : [0]),
+  );
+  const isSkipped = skippedQuestions.includes(currentQuestion);
+  // Companion panel shows only when companion mode is on AND this isn't a private question.
+  const companionActive = companionMode && !question.soloOnly;
+
+  // ── Companion reveal (the "gap") ───────────────────────────────────────────
+  // Run the companion channel through the SAME depth engine as the member, then
+  // surface the honest, fun signal the coarse scorer supports: lines your person
+  // lit up brighter than you did — "what they see in you that you undersold" — plus
+  // a light "how well do they know you" agreement score. (The precise SOKA per-line
+  // gap lands with the evidence-based server analysis; see the audit doc, Part D.)
+  const companionReveal = useMemo(() => {
+    if (!companionMode) return null;
+    const answered = companionResponses.filter((r) => (r?.trim().split(/\s+/).length ?? 0) >= 5).length;
+    if (answered === 0) return null;
+    const comp = Array(AXIS_LABELS.length).fill(0);
+    QUESTIONS.forEach((q, i) => {
+      const words = companionResponses[i]?.trim() ? companionResponses[i].trim().split(/\s+/).length : 0;
+      if (words < 5) return;
+      const depth = Math.min(0.5, 0.2 + (words / 120) * 0.3);
+      q.axes.forEach((a) => { comp[a] = Math.max(comp[a], depth); });
+    });
+    const topSees = comp
+      .map((c, i) => ({ i, name: AXIS_LABELS[i], gap: c - (scores[i] ?? 0), comp: c }))
+      .filter((g) => g.comp > 0 && g.gap > 0.03)
+      .sort((a, b) => b.gap - a.gap)
+      .slice(0, 4);
+    const memberLit = scores.map((s, i) => (s > 0 ? i : -1)).filter((i) => i >= 0);
+    const bothLit = memberLit.filter((i) => comp[i] > 0).length;
+    const knows = memberLit.length ? Math.round((100 * bothLit) / memberLit.length) : 0;
+    return { answered, topSees, knows, vector: comp };
+  }, [companionMode, companionResponses, scores]);
+
+  // Persist the companion channel to the assessment once, on completion — separate
+  // from the member's scored answers, so Results can render the self–other gap.
+  useEffect(() => {
+    if (!isComplete || !companionMode || companionSavedRef.current) return;
+    if (!assessmentId || !companionReveal || companionReveal.answered === 0) return;
+    companionSavedRef.current = true;
+    saveCompanionMutation.mutate({
+      assessmentId,
+      relation: companionRelation || "companion",
+      vector: companionReveal.vector,
+      answered: companionReveal.answered,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isComplete, companionMode, assessmentId, companionReveal]);
+
+  // ============================================================
+  // PROGRESS PERSISTENCE — Save/resume from localStorage
+  // ============================================================
+  const [showResumeDialog, setShowResumeDialog] = useState(false);
+  // The "why this test is different" manifesto gate, shown once before Q1.
+  const [showManifesto, setShowManifesto] = useState(true);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('aqal_assessment_progress');
+    if (saved) {
+      try {
+        const { question: q } = JSON.parse(saved);
+        if (typeof q === 'number' && q > 0) {
+          setShowResumeDialog(true);
+        }
+      } catch {
+        localStorage.removeItem('aqal_assessment_progress');
+      }
+    }
+  }, []);
+
+  const handleResume = useCallback(() => {
+    const saved = localStorage.getItem('aqal_assessment_progress');
+    if (saved) {
+      try {
+        const { question: q, scores: s, textResponses: tr, textMode, skipped, companion, variants, uploaded, assessmentId: savedAid } = JSON.parse(saved);
+        if (variants && typeof variants === "object") setQuestionVariants(variants);
+        // Restore what's already on the server: answers uploaded in a previous
+        // session survive the refresh even though their audio blobs don't.
+        if (uploaded && typeof uploaded === "object") setUploadedIdx(uploaded);
+        if (typeof savedAid === "number" && savedAid > 0) setAssessmentId(savedAid);
+        const { checkpoints } = JSON.parse(saved);
+        if (Array.isArray(checkpoints)) setSeenCheckpoints(checkpoints);
+        if (typeof q === 'number' && q > 0) setCurrentQuestion(q);
+        if (Array.isArray(s) && s.length === 22) setScores(s);
+        if (Array.isArray(tr) && tr.length === TOTAL_QUESTIONS) setTextResponses(tr);
+        if (typeof textMode === 'boolean') setUseTextMode(textMode);
+        if (Array.isArray(skipped)) setSkippedQuestions(skipped);
+        if (companion && typeof companion === 'object') {
+          if (typeof companion.mode === 'boolean') setCompanionMode(companion.mode);
+          if (typeof companion.name === 'string') setCompanionName(companion.name);
+          if (typeof companion.relation === 'string') setCompanionRelation(companion.relation);
+          if (Array.isArray(companion.responses) && companion.responses.length === TOTAL_QUESTIONS) setCompanionResponses(companion.responses);
+        }
+      } catch {}
+    }
+    setShowResumeDialog(false);
+    setShowManifesto(false); // resuming mid-assessment: skip the intro
+  }, []);
+
+  const handleStartFresh = useCallback(() => {
+    setCurrentQuestion(0);
+    setScores(Array(AXIS_LABELS.length).fill(0));
+    setRecordings(Array(TOTAL_QUESTIONS).fill(null));
+    setTextResponses(Array(TOTAL_QUESTIONS).fill(""));
+    setSkippedQuestions([]);
+    setUseTextMode(false);
+    setCompanionResponses(Array(TOTAL_QUESTIONS).fill(""));
+    setQuestionVariants({});
+    setUploadedIdx({});
+    setAssessmentId(null);
+    setShowResumeDialog(false);
+  }, []);
+
+  useEffect(() => {
+    // Save progress on every question change
+    if (currentQuestion > 0 || scores.some(s => s > 0) || companionMode) {
+      localStorage.setItem('aqal_assessment_progress', JSON.stringify({
+        question: currentQuestion,
+        scores,
+        textResponses,
+        textMode: useTextMode,
+        skipped: skippedQuestions,
+        companion: { mode: companionMode, name: companionName, relation: companionRelation, responses: companionResponses },
+        variants: questionVariants,
+        uploaded: uploadedIdx,
+        assessmentId,
+        checkpoints: seenCheckpoints,
+      }));
+    }
+  }, [currentQuestion, scores, textResponses, useTextMode, skippedQuestions, companionMode, companionName, companionRelation, companionResponses, questionVariants, uploadedIdx, assessmentId, seenCheckpoints]);
+
+  // Clear progress on completion
+  useEffect(() => {
+    if (isComplete) {
+      localStorage.removeItem('aqal_assessment_progress');
+    }
+  }, [isComplete]);
+
+  // Mirror scores for pre-update diffing, and clear the reaction on question change.
+  useEffect(() => { scoresRef.current = scores; }, [scores]);
+  useEffect(() => { setFeedback(null); }, [currentQuestion]);
+
+  // Text mode: a live reaction that grows as they write more (voice uses onstop).
+  useEffect(() => {
+    if (!(useTextMode || !recordingSupported)) return;
+    const t = textResponses[currentQuestion] ?? "";
+    const words = t.trim() ? t.trim().split(/\s+/).length : 0;
+    if (words < 8) { setFeedback(null); return; }
+    const qAxes = QUESTIONS[currentQuestion].axes;
+    let newLines = 0;
+    qAxes.forEach((a) => { if ((scoresRef.current[a] ?? 0) === 0) newLines++; });
+    const totalLines = scoresRef.current.filter((s) => s > 0).length + newLines;
+    setFeedback({ tier: tierForDepth(textDepth(words)), newLines, totalLines });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [textResponses, currentQuestion, useTextMode, recordingSupported]);
+
+  // Start recording
+  const startRecording = useCallback(async () => {
+    try {
+      if (typeof window.MediaRecorder === "undefined") {
+        toast.error("Voice recording is not supported in this browser. Please use Chrome, Firefox, or Safari 14.5+.");
+        return;
+      }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        toast.error("Microphone access is not available. Please check your browser permissions.");
+        return;
+      }
+      // Permission priming: one line, once, so the browser's mic prompt reads
+      // as expected rather than suspicious — grant rates go up.
+      if (!micPrimedRef.current) {
+        micPrimedRef.current = true;
+        toast.info("Your browser will ask for microphone access — that's us. Allow it so we can hear you.", { duration: 5000 });
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const source = audioContext.createMediaStreamSource(stream);
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 2048;
+      source.connect(analyser);
+      audioContextRef.current = audioContext;
+      analyserRef.current = analyser;
+
+      const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus"
+        : MediaRecorder.isTypeSupported("audio/webm")
+        ? "audio/webm"
+        : MediaRecorder.isTypeSupported("audio/mp4")
+        ? "audio/mp4"
+        : MediaRecorder.isTypeSupported("audio/aac")
+        ? "audio/aac"
+        : "";
+      const mediaRecorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      chunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const actualMime = mediaRecorderRef.current?.mimeType || mimeType || "audio/webm";
+        const blob = new Blob(chunksRef.current, { type: actualMime });
+        setRecordings((prev) => {
+          const next = [...prev];
+          next[currentQuestion] = blob;
+          return next;
+        });
+
+        const questionAxes = QUESTIONS[currentQuestion].axes;
+        const durationSec = recordingStartTime ? (Date.now() - recordingStartTime) / 1000 : 5;
+        const prelimScore = Math.min(0.5, 0.2 + (durationSec / 60) * 0.3);
+        setScores((prev) => {
+          const next = [...prev];
+          questionAxes.forEach((axis) => {
+            next[axis] = Math.max(next[axis], prelimScore);
+          });
+          return next;
+        });
+
+        // Warm richness reaction + how many new lines this answer lit up.
+        const prevScores = scoresRef.current;
+        let newLines = 0;
+        questionAxes.forEach((a) => { if ((prevScores[a] ?? 0) === 0) newLines++; });
+        const totalLines = prevScores.filter((s) => s > 0).length + newLines;
+        setFeedback({ tier: tierForDepth(voiceDepth(durationSec)), newLines, totalLines });
+
+        // Crash-proof: push this answer to the server NOW, in the background.
+        // (Re-recording marks the slot dirty and re-uploads — server upserts.)
+        const heard = liveTranscriptRef.current.trim();
+        setUploadedIdx((u) => ({ ...u, [currentQuestion]: false }));
+        void backgroundUploadAnswer(currentQuestion, blob, heard, Math.round(durationSec * 1000));
+
+        // Silent-mic guard: they talked for a while but the browser transcriber
+        // (when available) heard nothing — warn NOW, not at scoring time.
+        const srSupported = !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+        if (srSupported && durationSec > 20 && heard.length === 0) {
+          toast.warning("We couldn't make out any words — check your microphone and tap the mic to re-record this one.");
+        } else if (heard.length > 0) {
+          const words = heard.split(/\s+/).length;
+          toast.success(`Captured — ~${words} words heard.`);
+        }
+      };
+
+      mediaRecorder.start(250);
+
+      // Fire up free browser transcription in parallel, if the browser supports it.
+      const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      liveTranscriptRef.current = "";
+      if (SR) {
+        try {
+          const recognition = new SR();
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.lang = "en-US";
+          recognition.onresult = (event: any) => {
+            let finalChunk = "";
+            for (let r = event.resultIndex; r < event.results.length; r++) {
+              if (event.results[r].isFinal) finalChunk += event.results[r][0].transcript + " ";
+            }
+            if (finalChunk) liveTranscriptRef.current += finalChunk;
+          };
+          recognition.onerror = () => { /* stay silent; audio upload remains the fallback */ };
+          recognition.start();
+          recognitionRef.current = recognition;
+        } catch {
+          recognitionRef.current = null;
+        }
+      }
+
+      setIsRecording(true);
+      setRecordingStartTime(Date.now());
+    } catch (err: any) {
+      console.error("Failed to start recording:", err);
+      if (err?.name === "NotAllowedError" || err?.name === "PermissionDeniedError") {
+        toast.error("Microphone permission denied. Please allow microphone access in your browser settings.");
+      } else if (err?.name === "NotFoundError" || err?.name === "DevicesNotFoundError") {
+        toast.error("No microphone found. Please connect a microphone and try again.");
+      } else if (err?.name === "NotReadableError" || err?.name === "TrackStartError") {
+        toast.error("Microphone is in use by another application. Please close other apps using the mic.");
+      } else {
+        toast.error("Failed to start recording. Please try a different browser.");
+      }
+    }
+  }, [currentQuestion, recordingStartTime, backgroundUploadAnswer]);
+
+  // Stop recording
+  const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+      mediaRecorderRef.current.stop();
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+    }
+    // Stop browser transcription and, if it heard anything, store it as this
+    // question's text answer. The submit step prefers text over audio, so a
+    // browser-transcribed answer is scored directly — no server Whisper needed.
+    if (recognitionRef.current) {
+      try { recognitionRef.current.stop(); } catch { /* noop */ }
+      recognitionRef.current = null;
+    }
+    const heard = liveTranscriptRef.current.trim();
+    if (heard.length > 0) {
+      const q = currentQuestion;
+      setTextResponses((prev) => {
+        const next = [...prev];
+        // Only fill from speech if the user didn't already type something here.
+        if (!next[q] || next[q].trim().length === 0) next[q] = heard;
+        return next;
+      });
+    }
+    setIsRecording(false);
+    setRecordingStartTime(null);
+  }, [currentQuestion]);
+
+  // Skip current question
+  const skipQuestion = useCallback(() => {
+    setSkippedQuestions((prev) => prev.includes(currentQuestion) ? prev : [...prev, currentQuestion]);
+    if (currentQuestion < TOTAL_QUESTIONS - 1) {
+      setCurrentQuestion((q) => q + 1);
+    } else {
+      setIsSubmitting(true);
+      playComplete();
+      toast.success("Assessment complete! Submitting your responses...");
+      submitAllResponses();
+    }
+  }, [currentQuestion]);
+
+  // Navigation
+  const goNext = useCallback(() => {
+    if (!recordings[currentQuestion] && textResponses[currentQuestion]?.trim().length > 20) {
+      const questionAxes = QUESTIONS[currentQuestion].axes;
+      const wordCount = textResponses[currentQuestion].trim().split(/\s+/).length;
+      const prelimScore = Math.min(0.5, 0.2 + (wordCount / 200) * 0.3);
+      setScores((prev) => {
+        const next = [...prev];
+        questionAxes.forEach((axis) => {
+          next[axis] = Math.max(next[axis], prelimScore);
+        });
+        return next;
+      });
+    }
+
+    // Typed/text-mode answers get the same crash-proof background upload the
+    // voice path gets in onstop (skip if this slot already made it up).
+    const txt = textResponses[currentQuestion]?.trim() ?? "";
+    if (!uploadedIdx[currentQuestion] && txt.length > 0) {
+      void backgroundUploadAnswer(currentQuestion, recordings[currentQuestion], txt, 0);
+    }
+
+    // Per-question funnel signal: WHERE people are in the assessment is the
+    // data that tunes the question order later. Best-effort.
+    trackMutation.mutate({ type: "question_answered", question: currentQuestion, variant: String(questionVariants[QUESTIONS[currentQuestion].id] ?? 0) });
+
+    // All questions are free. The paywall now gates the evidence-based
+    // scoring method after completion — not the questions themselves.
+    if (currentQuestion < TOTAL_QUESTIONS - 1) {
+      // Phase-milestone moment (goal-gradient): celebrate crossing a chapter.
+      const nextPhase = phaseFor(currentQuestion + 1);
+      if (nextPhase !== phaseFor(currentQuestion) && nextPhase.entryToast) {
+        toast.success(nextPhase.entryToast, { duration: 4500 });
+      }
+      setCurrentQuestion((q) => q + 1);
+    } else {
+      setIsSubmitting(true);
+      playComplete();
+      toast.success("Assessment complete! Submitting your responses...");
+      submitAllResponses();
+    }
+  }, [currentQuestion, recordings, textResponses, user, uploadedIdx, questionVariants, backgroundUploadAnswer]);
+
+  // Submit all recordings/text to backend, then trigger analysis
+  const submitAllResponses = useCallback(async () => {
+    if (!user) {
+      localStorage.setItem('aqal_assessment_progress', JSON.stringify({
+        question: TOTAL_QUESTIONS - 1,
+        scores,
+        textResponses,
+        textMode: useTextMode,
+        skipped: skippedQuestions,
+      }));
+      toast.info("Please log in to save your assessment results.");
+      beginAuth();
+      return;
+    }
+    try {
+      let aId = assessmentId;
+      if (!aId) {
+        const startResult = await startMutation.mutateAsync(birthYear ? { birthYear } : {});
+        if (!startResult.success || !startResult.assessmentId) {
+          toast.error("Failed to start assessment. Please try again.");
+          setIsSubmitting(false);
+          return;
+        }
+        aId = startResult.assessmentId;
+        setAssessmentId(aId);
+      }
+
+      // Upload each response (skip skipped questions and anything the
+      // incremental background uploader already delivered).
+      for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        if (skippedQuestions.includes(i)) continue;
+        if (uploadedIdx[i]) continue;
+        
+        const recording = recordings[i];
+        const textResp = textResponses[i];
+
+        // Prefer TEXT when we have it — a typed answer or a browser-transcribed
+        // spoken answer. This routes scoring straight to the LLM (e.g. Grok) with
+        // no server transcription needed. Raw audio upload (server Whisper) is the
+        // fallback only when there's no text for this question.
+        if (textResp?.trim().length > 0) {
+          await submitTextMutation.mutateAsync({
+            assessmentId: aId,
+            questionIndex: i,
+            text: textResp.trim(),
+          });
+        } else if (recording) {
+          const arrayBuffer = await recording.arrayBuffer();
+          const base64 = btoa(
+            new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+          );
+          await uploadResponseMutation.mutateAsync({
+            assessmentId: aId,
+            questionIndex: i,
+            audioBase64: base64,
+            durationMs: 30000,
+          });
+        }
+      }
+
+      toast.info("Responses submitted. AI analysis in progress...");
+      const analyzeResult = await analyzeMutation.mutateAsync({ assessmentId: aId });
+
+      if (analyzeResult.success) {
+        toast.success("Analysis complete!");
+        setAnalysisSucceeded(true);
+      } else {
+        toast.error(analyzeResult.error || "Analysis failed. Your responses are saved.");
+        setAnalysisSucceeded(false);
+      }
+
+      setIsComplete(true);
+      setIsSubmitting(false);
+    } catch (err: any) {
+      console.error("Assessment submission error:", err);
+      toast.error("Submission failed. Your progress is saved locally — try again.");
+      setIsSubmitting(false);
+      setAnalysisSucceeded(false);
+      setIsComplete(true);
+    }
+  }, [recordings, textResponses, assessmentId, skippedQuestions, uploadedIdx, startMutation, uploadResponseMutation, submitTextMutation, analyzeMutation]);
+
+  const goPrev = useCallback(() => {
+    if (currentQuestion > 0) setCurrentQuestion((q) => q - 1);
+  }, [currentQuestion]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isRecording) return;
+      if (e.key === 'ArrowRight' && (hasRecording || hasTextResponse || isSkipped)) goNext();
+      if (e.key === 'ArrowLeft') goPrev();
+      if (e.key === ' ' && !isRecording && !hasRecording) {
+        e.preventDefault();
+        startRecording();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isRecording, hasRecording, hasTextResponse, isSkipped, goNext, goPrev, startRecording]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop());
+      if (audioContextRef.current) audioContextRef.current.close();
+    };
+  }, []);
+
+  // Calculate preliminary rarity
+  function scoreToRarity(score: number): number {
+    const s = Math.max(0, Math.min(1, score));
+    if (s <= 0.3) return 1.0 + (s / 0.3) * 2.0;
+    if (s <= 0.5) { const t = (s - 0.3) / 0.2; return 3.0 + t * 7.0; }
+    if (s <= 0.7) { const t = (s - 0.5) / 0.2; return 10.0 * Math.pow(10, t); }
+    if (s <= 0.85) { const t = (s - 0.7) / 0.15; return 100.0 * Math.pow(10, t); }
+    if (s <= 0.95) { const t = (s - 0.85) / 0.10; return 1000.0 * Math.pow(10, t); }
+    const t = (s - 0.95) / 0.05; return 10000.0 * Math.pow(10, t);
+  }
+
+  const activeScores = scores.filter((s) => s > 0);
+  let preliminaryRarity = 0;
+  if (activeScores.length > 0) {
+    const logSum = activeScores.reduce((sum, s) => sum + Math.log(Math.max(1, scoreToRarity(s))), 0);
+    const geoMean = Math.exp(logSum / activeScores.length);
+    preliminaryRarity = Math.max(1, Math.min(1_000_000, Math.round(geoMean)));
+  }
+
+  // Cohort rarity — the same shape scored against the user's OWN generation.
+  // Developmental lines are age-adjusted so a young high-scorer reads as rarer
+  // among peers (and an elder less rare) than the whole-population number.
+  const currentYear = new Date().getFullYear();
+  const cohortAge = birthYear ? Math.max(10, currentYear - birthYear) : null;
+  const generation: Generation | null = birthYear ? generationForBirthYear(birthYear) : null;
+  let cohortRarity = 0;
+  if (cohortAge != null && activeScores.length > 0) {
+    const cohortScores = scores
+      .map((s, i) => (s > 0 ? cohortAdjustedScore(s, ALL_AXES[i], cohortAge) : null))
+      .filter((x): x is number => x != null);
+    const logSum = cohortScores.reduce((sum, s) => sum + Math.log(Math.max(1, scoreToRarity(s))), 0);
+    cohortRarity = Math.max(1, Math.min(1_000_000, Math.round(Math.exp(logSum / cohortScores.length))));
+  }
+
+  // Confidence of the FREE, voice-only result. It is capped at "Moderate" by
+  // design — reaching high confidence requires the evidence-based scoring
+  // method, which is unlocked by payment or a beta code.
+  const coverage = Math.min(1, activeScores.length / 32);
+  const avgStrength = activeScores.length
+    ? activeScores.reduce((a, b) => a + b, 0) / activeScores.length
+    : 0;
+  const confSignal = coverage * 0.55 + avgStrength * 0.45;
+  const confidenceTier: "Low" | "Low–Moderate" | "Moderate" =
+    confSignal >= 0.62 ? "Moderate" : confSignal >= 0.38 ? "Low–Moderate" : "Low";
+  // A visible band that never reaches "high" (caps ~55%), reinforcing that
+  // verification is what sharpens the estimate.
+  const confidencePct = Math.round((0.15 + confSignal * 0.4) * 100);
+
+  // Full evidence-based access: paid tiers OR a redeemed beta code (grants
+  // "silver"). Free users see the low-confidence estimate and a locked upgrade.
+  const hasFullAccess = !!(user?.membershipTier && user.membershipTier !== "free");
+
+  // ============================================================
+  // PAYWALL / EVIDENCE-BASED UNLOCK GATE
+  // ============================================================
+  const checkoutMutation = trpc.payment.createCheckout.useMutation({
+    onSuccess: (data) => {
+      if (data.url) {
+        window.open(data.url, "_blank");
+        toast.info("Checkout opened in a new tab. Complete payment to unlock evidence-based verification.");
+      } else {
+        toast.error("Could not create checkout session. Please try again.");
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message || "Something went wrong. Please try again.");
+    },
+  });
+
+  // Beta access — free for the first N testers via a passcode.
+  const betaStatus = trpc.beta.status.useQuery();
+  const [betaCode, setBetaCode] = useState("");
+  const betaRedeem = trpc.beta.redeem.useMutation({
+    onSuccess: (r) => {
+      if (r.success) {
+        toast.success("Beta access unlocked — the full assessment is on us. Enjoy.");
+        utils.auth.me.invalidate();
+        setBetaCode("");
+        setShowPaywall(false);
+        setCurrentQuestion((q) => Math.min(q + 1, TOTAL_QUESTIONS - 1));
+      } else {
+        toast.error(r.error || "Couldn't redeem that code.");
+      }
+    },
+    onError: () => toast.error("Something went wrong redeeming your code."),
+  });
+
+  if (showPaywall) {
+    const handleUnlock = () => {
+      playClick();
+      if (!user) {
+        localStorage.setItem('aqal_assessment_progress', JSON.stringify({
+          question: currentQuestion,
+          scores,
+          textResponses,
+          textMode: useTextMode,
+          skipped: skippedQuestions,
+        }));
+        toast.info("Please log in first to unlock evidence-based verification.");
+        beginAuth();
+        return;
+      }
+      checkoutMutation.mutate({
+        productKey: "underwritten",
+        origin: window.location.origin,
+      });
+    };
+
+    const handleBeta = () => {
+      playClick();
+      if (!user) {
+        localStorage.setItem('aqal_assessment_progress', JSON.stringify({
+          question: currentQuestion, scores, textResponses, textMode: useTextMode, skipped: skippedQuestions,
+        }));
+        toast.info("Please log in first, then enter your beta code.");
+        beginAuth();
+        return;
+      }
+      const code = betaCode.trim();
+      if (!code) { toast.error("Enter your beta access code first."); return; }
+      betaRedeem.mutate({ code });
+    };
+
+    return (
+      <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center px-4 py-12">
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse at 50% 30%, oklch(0.17 0.03 55) 0%, oklch(0.13 0.02 55) 50%, oklch(0.12 0.02 55) 100%)`,
+          }}
+        />
+
+        {/* Floating particles */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 rounded-full"
+              style={{
+                left: `${15 + Math.random() * 70}%`,
+                top: `${10 + Math.random() * 80}%`,
+                background: i % 2 === 0 ? 'oklch(0.68 0.08 165 / 0.6)' : 'oklch(0.78 0.12 85 / 0.5)',
+              }}
+              animate={{
+                y: [0, -20, 0],
+                opacity: [0.2, 0.6, 0.2],
+              }}
+              transition={{
+                duration: 4 + Math.random() * 3,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+          className="relative z-10 max-w-2xl w-full"
+        >
+          {/* Assessment complete badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-center mb-8"
+          >
+            <div className="inline-flex items-center gap-2 bg-accent/[0.08] border border-accent/20 rounded-full px-5 py-2 mb-6">
+              <Check className="w-4 h-4 text-accent" />
+              <span className="text-sm text-accent font-medium">All {TOTAL_QUESTIONS} Questions Complete</span>
+            </div>
+
+            <h1
+              className="text-3xl sm:text-4xl md:text-5xl text-foreground mb-4"
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
+            >
+              Unlock Evidence-Based Verification
+            </h1>
+            <p className="text-muted-foreground/70 text-base max-w-lg mx-auto leading-relaxed">
+              Your voice assessment gives a low-to-moderate confidence estimate. The evidence-based scoring method verifies your full 32-line profile — a panel of independent AIs, cross-checked against the evidence you submit — and raises your result to high confidence.
+            </p>
+          </motion.div>
+
+          {/* Preliminary rarity tease */}
+          {preliminaryRarity > 1 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="glass-card rounded-2xl p-6 mb-8 border border-primary/10 text-center"
+            >
+              <p className="text-xs uppercase tracking-[0.2em] text-primary/60 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Your Voice-Based Estimate
+              </p>
+              <p className="text-3xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}>
+                1 in {preliminaryRarity.toLocaleString()}
+              </p>
+              <p className="text-muted-foreground/40 text-xs mt-2">
+                A {confidenceTier.toLowerCase()}-confidence estimate from your voice responses. Evidence-based verification sharpens it and raises confidence to high.
+              </p>
+            </motion.div>
+          )}
+
+          {/* Value stack */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="glass-card rounded-2xl p-8 mb-8 border border-primary/15"
+          >
+            <p className="text-xs uppercase tracking-[0.2em] text-accent/60 mb-6 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              What You&rsquo;re Unlocking
+            </p>
+
+            <div className="space-y-5">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/[0.08] border border-primary/20 flex items-center justify-center shrink-0">
+                  <Users className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground mb-1">Elite Network — Strength-to-Weakness Matching</p>
+                  <p className="text-xs text-muted-foreground/60 leading-relaxed">We pattern-match your weakness clusters to other members&rsquo; strength clusters. You get friends, collaborators, and partners who cover exactly where you&rsquo;re blind. For business, romance, and friendship.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/[0.08] border border-primary/20 flex items-center justify-center shrink-0">
+                  <Crown className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground mb-1">Personalized Consulting — Your Unique Profile</p>
+                  <p className="text-xs text-muted-foreground/60 leading-relaxed">Consulting services built from YOUR cognitive shape. More meaning, purpose, and goal achievement — with less strain, less anxiety, and less time. We show you the path that fits how your brain actually works.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-accent/[0.08] border border-accent/20 flex items-center justify-center shrink-0">
+                  <Sparkles className="w-5 h-5 text-accent" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground mb-1">Full 32-Dimension Intelligence Map + Rarity Underwriting</p>
+                  <p className="text-xs text-muted-foreground/60 leading-relaxed">A panel of AIs from different developers scores your complete cognitive shape across 32 dimensions. Your composite rarity estimate shows approximately where you stand — refined further once you submit evidence.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/[0.08] border border-purple-500/20 flex items-center justify-center shrink-0">
+                  <Star className="w-5 h-5 text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground mb-1">An Elite Social Platform Unlike Anything Online</p>
+                  <p className="text-xs text-muted-foreground/60 leading-relaxed">This isn&rsquo;t LinkedIn. This isn&rsquo;t a dating app. This is a network of highly intelligent, highly functional, highly capable people — verified by AI consensus scoring. You belong here. Prove it.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-green-500/[0.08] border border-green-500/20 flex items-center justify-center shrink-0">
+                  <Shield className="w-5 h-5 text-green-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground mb-1">30-Day Retake Guarantee + Lifetime Access</p>
+                  <p className="text-xs text-muted-foreground/60 leading-relaxed">Disagree with your results? Retake free within 30 days. No questions asked. Your data is encrypted end-to-end. Only you see your results. Ever.</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="text-center"
+          >
+            <Button
+              onClick={handleUnlock}
+              disabled={checkoutMutation.isPending}
+              className="w-full max-w-md py-7 text-lg font-semibold bg-primary text-primary-foreground glow-gold hover:translate-y-[-2px] active:scale-[0.97] transition-all duration-150"
+            >
+              {checkoutMutation.isPending ? (
+                <span className="flex items-center gap-2">
+                  <motion.div className="w-4 h-4 border-2 border-background/40 border-t-background rounded-full" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+                  Processing...
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  Unlock Evidence-Based Scoring — $299
+                </span>
+              )}
+            </Button>
+
+            <p className="text-muted-foreground/40 text-xs mt-4">
+              One-time payment. Lifetime access. 30-day retake guarantee.
+            </p>
+
+            {/* Beta access — free for the first N testers */}
+            {betaStatus.data?.enabled && betaStatus.data.remaining > 0 && (
+              <div className="mt-8 max-w-md mx-auto">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex-1 h-px bg-white/10" />
+                  <span className="text-[10px] uppercase tracking-widest text-muted-foreground/40">or, if you have a code</span>
+                  <div className="flex-1 h-px bg-white/10" />
+                </div>
+                <p className="text-xs text-muted-foreground/60 mb-2 text-center">
+                  Free for our first {betaStatus.data.cap} beta testers — <span className="text-accent/80">{betaStatus.data.remaining} spot{betaStatus.data.remaining !== 1 ? "s" : ""} left</span>. No card, no charge.
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    value={betaCode}
+                    onChange={(e) => setBetaCode(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleBeta(); }}
+                    placeholder="Enter beta access code"
+                    className="flex-1 bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  />
+                  <Button onClick={handleBeta} disabled={betaRedeem.isPending || !betaCode.trim()} variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">
+                    {betaRedeem.isPending ? "…" : "Unlock free"}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Trust bar */}
+            <div className="flex flex-wrap justify-center gap-4 text-[10px] text-muted-foreground/30 uppercase tracking-wider mt-6">
+              <span>Bank-Grade Encryption</span>
+              <span className="text-muted-foreground/15">&bull;</span>
+              <span>Private & Encrypted</span>
+              <span className="text-muted-foreground/15">&bull;</span>
+              <span className="flex flex-col items-center leading-tight">
+                <span>7 Patents Pending</span>
+                <span className="text-[0.55rem] text-muted-foreground/20 normal-case tracking-normal">Proprietary methodology</span>
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Back button */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="text-center mt-8"
+          >
+            <button
+              onClick={() => setShowPaywall(false)}
+              className="text-sm text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
+            >
+              &larr; Back to my results
+            </button>
+          </motion.div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // ============================================================
+  // SUBMITTING SCREEN
+  // ============================================================
+  if (isSubmitting && !isComplete) {
+    return (
+      <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center px-4">
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse at 50% 40%, oklch(0.15 0.02 55) 0%, oklch(0.13 0.02 55) 50%, oklch(0.12 0.02 55) 100%)`,
+          }}
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+          className="relative z-10 text-center max-w-lg"
+        >
+          <motion.div
+            className="w-24 h-24 rounded-full border-2 border-primary/40 border-t-primary flex items-center justify-center mx-auto mb-8"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          />
+          <h1
+            className="text-3xl sm:text-4xl text-foreground mb-4"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
+          >
+            Five Minds Are Listening
+          </h1>
+          <p className="text-muted-foreground/70 mb-3 leading-relaxed">
+            Uploading your responses and running analysis across 32 cognitive dimensions...
+          </p>
+          <p className="text-sm text-muted-foreground/50 mb-2">This may take 30–60 seconds.</p>
+          <p className="text-xs text-muted-foreground/40 max-w-sm mx-auto leading-relaxed">
+            Your answers are already saved. If you need to go, it's safe to close this page — your results will be
+            emailed to you the moment they're ready.
+          </p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // ============================================================
+  // COMPLETION SCREEN
+  // ============================================================
+  if (isComplete) {
+    return (
+      <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center px-4">
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse at 50% 30%, oklch(0.17 0.03 55) 0%, oklch(0.13 0.02 55) 50%, oklch(0.12 0.02 55) 100%)`,
+          }}
+        />
+
+        {/* Floating particles — celebration */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 rounded-full"
+              style={{
+                left: `${10 + Math.random() * 80}%`,
+                top: `${20 + Math.random() * 60}%`,
+                background: i % 3 === 0 ? 'oklch(0.78 0.12 85)' : i % 3 === 1 ? 'oklch(0.68 0.08 165)' : 'oklch(0.78 0.12 85)',
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.3, 0.8, 0.3],
+                scale: [1, 1.5, 1],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+          className="relative z-10 text-center max-w-lg"
+        >
+          {/* Success icon with glow */}
+          <motion.div
+            className="w-24 h-24 rounded-full bg-primary/[0.08] border border-primary/30 flex items-center justify-center mx-auto mb-8"
+            animate={{ boxShadow: ["0 0 30px oklch(0.78 0.12 85 / 0.15)", "0 0 60px oklch(0.78 0.12 85 / 0.3)", "0 0 30px oklch(0.78 0.12 85 / 0.15)"] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            <Check className="w-12 h-12 text-primary" />
+          </motion.div>
+
+          <h1
+            className="text-3xl sm:text-4xl text-foreground mb-3"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
+          >
+            Assessment Complete
+          </h1>
+          <p className="text-muted-foreground/60 text-sm mb-8 leading-relaxed max-w-md mx-auto">
+            A panel of AIs from different developers has analyzed your responses across 32 cognitive dimensions.
+          </p>
+
+          {/* Rarity reveal */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+            className="glass-card rounded-2xl p-8 mb-8 border border-primary/10"
+          >
+            {generation && cohortRarity > 0 ? (
+              <>
+                <p
+                  className="text-xs uppercase tracking-[0.2em] text-primary/60 mb-3"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                >
+                  Your Rarity — Among {generation}
+                </p>
+                <p
+                  className="text-4xl sm:text-5xl font-bold text-glow-gold"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}
+                >
+                  1 in {cohortRarity.toLocaleString()}
+                </p>
+                <p className="text-muted-foreground/50 text-sm mt-3">
+                  1 in {preliminaryRarity.toLocaleString()} <span className="text-muted-foreground/35">across the whole population</span>
+                </p>
+                <p className="text-muted-foreground/40 text-xs mt-2">
+                  A model-based estimate — not a measured percentile — across {activeScores.length} dimensions,
+                  scored within your generation and then the population. Developmental lines are age-adjusted so
+                  time-to-compound doesn&rsquo;t decide your rank.
+                </p>
+              </>
+            ) : (
+              <>
+                <p
+                  className="text-xs uppercase tracking-[0.2em] text-primary/60 mb-3"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                >
+                  Your Composite Rarity
+                </p>
+                <p
+                  className="text-4xl sm:text-5xl font-bold text-glow-gold"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}
+                >
+                  1 in {preliminaryRarity.toLocaleString()}
+                </p>
+                <p className="text-muted-foreground/40 text-xs mt-3">
+                  A model-based estimate — not a measured percentile — across {activeScores.length} scored dimensions.
+                  Add your birth year next time to also see your rarity within your generation.
+                </p>
+              </>
+            )}
+
+            {/* Confidence meter — capped in the low range for the voice-only pass */}
+            <div className="mt-5 pt-5 border-t border-white/[0.06] text-left">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground/50" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  Confidence
+                </span>
+                <span className="text-xs font-semibold text-accent">{confidenceTier}</span>
+              </div>
+              <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                <div className="h-full rounded-full bg-accent/70" style={{ width: `${confidencePct}%` }} />
+              </div>
+              <p className="text-muted-foreground/40 text-[0.7rem] mt-2 leading-relaxed">
+                This is a voice-only estimate. The evidence-based scoring method raises it to high confidence.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Companion reveal — "how well do they know you" + what they saw you undersell */}
+          {companionReveal && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+              className="glass-card rounded-2xl p-7 mb-8 border border-accent/20 text-left"
+            >
+              <p className="text-xs uppercase tracking-[0.2em] text-accent/70 mb-3 text-center" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                {companionName ? `How well ${companionName} knows you` : "How well your person knows you"}
+              </p>
+              <p className="text-4xl sm:text-5xl font-bold text-center" style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}>
+                {companionReveal.knows}%
+              </p>
+              <p className="text-muted-foreground/50 text-xs mt-2 text-center">
+                Your stories lined up on {companionReveal.knows}% of the lines you lit — across {companionReveal.answered} they weighed in on.
+              </p>
+              {companionReveal.topSees.length > 0 && (
+                <div className="mt-5 pt-5 border-t border-white/[0.06]">
+                  <p className="text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground/50 mb-2.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                    What {companionName || "they"} saw that you undersold
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {companionReveal.topSees.map((s) => (
+                      <span key={s.i} className="px-3 py-1 rounded-full text-xs border border-accent/30 text-accent bg-accent/[0.06]">
+                        {s.name}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground/40 text-[0.7rem] mt-3 leading-relaxed">
+                    A person who knows you well reads your outward side — humor, charm, presence — more clearly than you read yourself. The precise line-by-line gap sharpens with the full evidence-based analysis.
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* The Final Three — optional crash bridge at peak momentum */}
+          <FinalThreeBridge onCrisis={() => setShowCrisis(true)} />
+          {showCrisis && <CrisisSupport onClose={() => setShowCrisis(false)} />}
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+            className="flex flex-col gap-3"
+          >
+            {analysisSucceeded ? (
+              hasFullAccess ? (
+                <>
+                  <Link href="/results">
+                    <Button className="w-full bg-primary text-primary-foreground border-0 text-base py-5 shadow-lg shadow-primary/20 hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150">
+                      See Your Full Report
+                    </Button>
+                  </Link>
+                  <Link href="/evidence">
+                    <Button variant="outline" className="w-full border-primary/20 text-primary hover:bg-primary/[0.06] py-5 hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150">
+                      Upload Evidence to Verify Scores
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className="glass-card rounded-xl p-4 border border-primary/15 text-left">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Lock className="w-3.5 h-3.5 text-primary" />
+                      <span className="text-sm font-semibold text-foreground">Evidence-Based Verification — Locked</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground/60 leading-relaxed">
+                      Your voice result is a {confidenceTier.toLowerCase()}-confidence estimate. Unlock the evidence-based scoring method to verify your full 32-line profile and raise it to high confidence — free with a beta code, or by card.
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => { playClick(); setShowPaywall(true); }}
+                    className="w-full bg-primary text-primary-foreground border-0 text-base py-5 shadow-lg shadow-primary/20 hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Lock className="w-4 h-4" /> Unlock Evidence-Based Scoring
+                    </span>
+                  </Button>
+                </>
+              )
+            ) : (
+              <>
+                <p className="text-amber-400/80 text-sm mb-2 bg-amber-500/[0.05] border border-amber-500/20 rounded-lg px-4 py-3">
+                  Analysis is still processing. Your responses are saved securely.
+                </p>
+                <Button
+                  onClick={() => {
+                    setIsComplete(false);
+                    setIsSubmitting(true);
+                    submitAllResponses();
+                  }}
+                  className="w-full bg-primary text-white glow-gold text-base py-5 hover:translate-y-[-1px] active:scale-[0.97] transition-all duration-150"
+                >
+                  Retry Analysis
+                </Button>
+                <Link href="/">
+                  <Button variant="outline" className="w-full border-muted-foreground/30 text-muted-foreground py-5">
+                    Return Home
+                  </Button>
+                </Link>
+              </>
+            )}
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="text-muted-foreground/30 text-xs mt-8"
+          >
+            Your data is encrypted end-to-end. Only you can see your results.
+          </motion.p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // ============================================================
+  // MANIFESTO GATE — shown once before the first question (not on resume).
+  // ============================================================
+  if (showManifesto && !showResumeDialog) {
+    return <AssessmentManifesto companion={companionMode} onBegin={() => setShowManifesto(false)} />;
+  }
+
+  // ============================================================
+  // MAIN ASSESSMENT FLOW
+  // ============================================================
+  return (
+    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col">
+      {/* Background depth */}
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse at 50% 50%, oklch(0.14 0.02 55) 0%, oklch(0.13 0.02 55) 40%, oklch(0.12 0.02 55) 100%)`,
+        }}
+      />
+      <div className="gradient-mesh" />
+
+      {/* Resume dialog */}
+      {showResumeDialog && (
+        <AssessmentResumeDialog onResume={handleResume} onStartFresh={handleStartFresh} />
+      )}
+
+      {/* Ground-floor checkpoint reminder — once each at questions 7 and 15 */}
+      {MOTIVATION_CHECKPOINTS.includes(currentQuestion) && !seenCheckpoints.includes(currentQuestion) && !isRecording && !showResumeDialog && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center px-4 bg-black/70 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+            className="glass-card rounded-2xl border border-primary/25 max-w-md w-full p-7"
+          >
+            <p className="text-[0.6rem] uppercase tracking-[0.18em] text-primary/70 mb-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              A reminder of what you&rsquo;re earning
+            </p>
+            <h3 className="text-2xl text-foreground mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+              You&rsquo;re on the ground floor.
+            </h3>
+            <p className="text-sm text-foreground/80 leading-relaxed mb-3">
+              This is a <span className="text-primary font-medium">lifetime membership</span> — $5,388 a year in fixed cost
+              waived for life, a network whose future dividends nobody can predict yet, and you&rsquo;re among the first
+              10,000 in the door.
+            </p>
+            <p className="text-sm text-foreground/80 leading-relaxed mb-3">
+              But membership is <span className="text-primary font-medium">earned</span>: only a completed assessment
+              makes you a member. It takes dedication, energy, and stamina to go through the whole exam — that&rsquo;s
+              the point. Just do the best you can on each question.
+            </p>
+            <p className="text-sm text-muted-foreground/70 leading-relaxed mb-6">
+              And you don&rsquo;t have to do it in one sitting. Half an hour a day, five days a week on your lunch break
+              until it&rsquo;s done — your progress saves every step.
+            </p>
+            <Button
+              onClick={() => { playClick(); setSeenCheckpoints((s) => [...s, currentQuestion]); }}
+              className="w-full bg-primary text-primary-foreground py-5"
+            >
+              I&rsquo;m earning this — keep going
+            </Button>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Progress bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-[3px] bg-muted/30">
+        <motion.div
+          className="h-full bg-primary"
+          style={{ boxShadow: "0 0 10px oklch(0.68 0.08 165 / 0.5)" }}
+          initial={false}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+        />
+      </div>
+
+      {/* Header */}
+      <header className="relative z-20 pt-6 pb-4 px-4">
+        <div className="container flex items-center justify-between">
+          <Link href="/">
+            <Button variant="ghost" size="sm" className="text-muted-foreground/60 hover:text-foreground">
+              <ArrowLeft className="w-4 h-4 mr-1" /> Exit
+            </Button>
+          </Link>
+
+          {/* Step dots — clickable back-navigation to any question already visited */}
+          <div className="flex items-center gap-1">
+            {Array.from({ length: TOTAL_QUESTIONS }).map((_, i) => {
+              const reachable = i <= furthestReached && !isRecording;
+              return (
+                <motion.button
+                  key={i}
+                  onClick={() => { if (reachable && i !== currentQuestion) { playClick(); setCurrentQuestion(i); } }}
+                  disabled={!reachable}
+                  title={i <= furthestReached ? `Go to question ${i + 1}: ${QUESTIONS[i].title}` : undefined}
+                  className={`rounded-full transition-all duration-300 ${reachable && i !== currentQuestion ? "cursor-pointer hover:scale-150" : "cursor-default"} ${
+                    i === currentQuestion
+                      ? "w-4 h-1.5 bg-primary"
+                      : i < currentQuestion
+                      ? skippedQuestions.includes(i)
+                        ? "w-1.5 h-1.5 bg-muted-foreground/30"
+                        : "w-1.5 h-1.5 bg-accent/60"
+                      : "w-1.5 h-1.5 bg-muted-foreground/20"
+                  }`}
+                  style={i === currentQuestion ? { boxShadow: "0 0 8px oklch(0.68 0.08 165 / 0.4)" } : undefined}
+                  layout
+                  transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                />
+              );
+            })}
+          </div>
+
+          <span
+            className="text-muted-foreground/50 text-xs text-right"
+            style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.1em" }}
+          >
+            {currentQuestion + 1} / {TOTAL_QUESTIONS}
+            <span className="hidden sm:inline text-primary/60"> · {phaseFor(currentQuestion).name}</span>
+          </span>
+        </div>
+      </header>
+
+      {/* Main content */}
+      <main className="relative z-10 flex-1 flex flex-col lg:flex-row items-center justify-center gap-10 px-4 pb-8">
+        {/* Left: Question + Recording */}
+        <div className="flex-1 max-w-xl w-full flex flex-col items-center text-center">
+          {/* First-question primer — sets the "great conversation, not a test" frame */}
+          {currentQuestion === 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-6 max-w-md mx-auto rounded-xl border border-primary/15 bg-primary/[0.04] px-5 py-4"
+            >
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-primary/70 mb-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Before we start
+              </p>
+              <p className="text-sm text-foreground/80 leading-relaxed">
+                This isn't a test — it's the best kind of bar conversation, with a listener who's genuinely into your stories. There are no right answers. Ramble, chase the tangents, say more than the question asked. The longer and more openly you talk, the more accurate your read. Ready? Tap the mic.
+              </p>
+
+              {/* Birth year — used only to score you against your own generation */}
+              <div className="mt-4 pt-4 border-t border-white/[0.06]">
+                <label className="flex items-center justify-between gap-3">
+                  <span className="text-xs text-muted-foreground/70 leading-snug">
+                    What year were you born?
+                    <span className="block text-[0.65rem] text-muted-foreground/40">Optional — lets us also rank you within your generation, not just the whole population.</span>
+                  </span>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="1998"
+                    min={1920}
+                    max={currentYear}
+                    defaultValue={birthYear ?? ""}
+                    onChange={(e) => {
+                      const n = parseInt(e.target.value, 10);
+                      if (Number.isFinite(n) && n >= 1920 && n <= currentYear) {
+                        setBirthYear(n);
+                        localStorage.setItem("aqal_birth_year", String(n));
+                      } else {
+                        setBirthYear(null);
+                        localStorage.removeItem("aqal_birth_year");
+                      }
+                    }}
+                    className="w-20 shrink-0 bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-center text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  />
+                </label>
+              </div>
+
+              {/* Companion mode opt-in — optional, strongly recommended, NOT spouse-only */}
+              <div className="mt-4 pt-4 border-t border-white/[0.06]">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs text-foreground/85 font-medium leading-snug">
+                      Bring your person? <span className="text-primary/70">Optional — recommended</span>
+                    </p>
+                    <p className="text-[0.7rem] text-foreground/70 leading-snug mt-1 italic">
+                      Do it solo for a private read, or bring your partner or best friend for a sharper, funnier one.
+                    </p>
+                    <p className="text-[0.65rem] text-muted-foreground/50 leading-snug mt-1">
+                      A partner, best friend, sibling, close colleague — anyone who knows you well. They read your outward side (humor, charm, presence) more clearly than you do, so the read gets sharper. Private questions stay just you.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={companionMode}
+                    aria-label="Companion mode"
+                    onClick={() => setCompanionMode((v) => !v)}
+                    className={`shrink-0 mt-0.5 relative w-11 h-6 rounded-full transition-colors ${companionMode ? "bg-primary" : "bg-muted/40"}`}
+                  >
+                    <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${companionMode ? "translate-x-5" : ""}`} />
+                  </button>
+                </div>
+                {companionMode && (
+                  <div className="mt-3 space-y-2">
+                    <div className="flex flex-wrap gap-1.5">
+                      {["Partner", "Best friend", "Family", "Colleague", "Someone who knows me"].map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setCompanionRelation(r)}
+                          className={`px-2.5 py-1 rounded-full text-[0.65rem] border transition-colors ${companionRelation === r ? "border-primary text-primary bg-primary/10" : "border-border/50 text-muted-foreground/70 hover:text-foreground"}`}
+                        >
+                          {r}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[0.62rem] uppercase tracking-[0.12em] text-primary/70 mb-1.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                      {companionName ? `Hey, ${companionName} 👋` : "Companion — say your name"}
+                    </p>
+                    <VoiceCapture
+                      value={companionName}
+                      onCommit={setCompanionName}
+                      promptLabel="Tap the mic and say your first name"
+                      tone="primary"
+                      transform={cleanSpokenName}
+                    />
+                    <p className="text-[0.6rem] text-muted-foreground/40 leading-snug">
+                      They answer out loud — no typing anywhere. You speak first in your own words; then, when the light turns green, your person speaks their take. We keep the two apart and score the <em>gap</em> — that's the fun part.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Question title */}
+          <motion.p
+            key={`title-${currentQuestion}`}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="text-xs uppercase tracking-[0.2em] mb-2"
+            style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.78 0.12 85 / 0.7)" }}
+          >
+            {question.title}
+          </motion.p>
+
+          {/* Dimension label */}
+          <motion.p
+            key={`dim-${currentQuestion}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="text-[0.6rem] uppercase tracking-[0.15em] mb-6 text-muted-foreground/40"
+          >
+            {question.dimension}
+          </motion.p>
+
+          {/* ── Companion signal light ──────────────────────────────────────────
+              A blinking beacon so the room instantly knows whose turn it is.
+              GREEN = companion, jump in.  AMBER = private, member answers alone.
+              Only shows when companion mode is on. */}
+          {companionMode && (
+            <motion.div
+              key={`signal-${currentQuestion}`}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              role="status"
+              aria-live="polite"
+              className={`mb-6 max-w-md w-full mx-auto flex items-center gap-3 rounded-xl border px-4 py-2.5 text-left ${
+                companionActive ? "signal-banner-green" : "signal-banner-amber"
+              }`}
+            >
+              <span
+                className={`shrink-0 w-3.5 h-3.5 rounded-full ${
+                  companionActive ? "signal-dot-green" : "signal-dot-amber"
+                }`}
+                aria-hidden="true"
+              />
+              {companionActive ? (
+                <span className="text-xs sm:text-sm leading-snug" style={{ color: "oklch(0.82 0.09 165)" }}>
+                  <strong className="font-semibold">
+                    {companionName ? `${companionName}, jump in` : "Companion, jump in"}
+                  </strong>{" "}
+                  — follow up, push back, or add the part they're too modest to say.
+                </span>
+              ) : (
+                <span className="text-xs sm:text-sm leading-snug" style={{ color: "oklch(0.84 0.10 55)" }}>
+                  <strong className="font-semibold">Just you on this one.</strong>{" "}
+                  {companionName ? `${companionName}, sit this one out` : "Companion, sit this one out"} — it's more honest when it's only you.
+                </span>
+              )}
+            </motion.div>
+          )}
+
+          {/* Question text */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`q-${currentQuestion}`}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+              className="mb-8"
+            >
+              <h2
+                className="text-xl sm:text-2xl md:text-3xl text-foreground leading-relaxed"
+                style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, lineHeight: 1.5 }}
+              >
+                &ldquo;{question.text}&rdquo;
+              </h2>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Swap: trade this world for an equally-deep one that reads the same lines.
+              Works even after answering (e.g. they came back via the dots): swapping
+              an answered question wipes that answer so it always matches the prompt. */}
+          {altsForQuestion > 0 && !isRecording && (
+            <div className="mb-4">
+              {/* Cycle: original → alt 1 → alt 2 → original → … The button NEVER
+                  runs out and every press ALWAYS presents a different question. */}
+              <button
+                onClick={() => {
+                  playClick();
+                  if (hasRecording || hasTextResponse) {
+                    setRecordings((r) => { const n = [...r]; n[currentQuestion] = null; return n; });
+                    setTextResponses((t) => { const n = [...t]; n[currentQuestion] = ""; return n; });
+                    setCompanionResponses((c) => { const n = [...c]; n[currentQuestion] = ""; return n; });
+                    setUploadedIdx((u) => ({ ...u, [currentQuestion]: false }));
+                  }
+                  setQuestionVariants((v) => ({ ...v, [baseQuestion.id]: (variantIdx + 1) % (altsForQuestion + 1) }));
+                }}
+                className="flex items-center gap-2 mx-auto text-xs text-muted-foreground/60 hover:text-primary transition-colors border border-muted-foreground/20 rounded-full px-4 py-1.5 hover:border-primary/40"
+                style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.06em" }}
+              >
+                <RefreshCw className="w-3 h-3" />
+                {hasRecording || hasTextResponse
+                  ? `Show me a different world — clears this answer (${variantIdx + 1} of ${altsForQuestion + 1})`
+                  : `Not feeling this one? Show me a different world (${variantIdx + 1} of ${altsForQuestion + 1})`}
+              </button>
+              {variantIdx > 0 && (
+                <button
+                  onClick={() => {
+                    playClick();
+                    if (hasRecording || hasTextResponse) {
+                      setRecordings((r) => { const n = [...r]; n[currentQuestion] = null; return n; });
+                      setTextResponses((t) => { const n = [...t]; n[currentQuestion] = ""; return n; });
+                      setCompanionResponses((c) => { const n = [...c]; n[currentQuestion] = ""; return n; });
+                      setUploadedIdx((u) => ({ ...u, [currentQuestion]: false }));
+                    }
+                    setQuestionVariants((v) => ({ ...v, [baseQuestion.id]: 0 }));
+                  }}
+                  className="block mx-auto mt-1.5 text-[11px] text-muted-foreground/50 hover:text-primary underline underline-offset-2 transition-colors"
+                  style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.04em" }}
+                >
+                  ← Take me back to the original question
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Talk-longer nudge (honest framing) */}
+          <p className="text-xs text-primary/80 tracking-wide text-center max-w-md mx-auto font-bold mb-8" style={{ fontFamily: "'Inter', sans-serif" }}>
+            There's no such thing as talking too long here. The more you actually tell the story — who was there, what you felt, the tangents you'd normally cut — the more of you we can see, and the sharper your profile. Don't summarize. Go deep. Show off.
+          </p>
+
+          {/* Skip button for skippable questions */}
+          {question.skippable && !hasRecording && !hasTextResponse && (
+            <button
+              onClick={skipQuestion}
+              className="flex items-center gap-2 text-sm text-muted-foreground/60 hover:text-muted-foreground transition-colors mb-6 border border-muted-foreground/20 rounded-full px-4 py-2 hover:border-muted-foreground/40"
+            >
+              <SkipForward className="w-3.5 h-3.5" />
+              {question.skipLabel}
+            </button>
+          )}
+
+          {/* Overt voice-analysis disclosure — nothing about the measurement is hidden. */}
+          <p className="text-center text-[11px] leading-relaxed max-w-md mx-auto mb-3" style={{ color: "rgba(241,234,219,0.45)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.04em" }}>
+            Analyzed openly: your words AND your delivery — pace, pauses, steadiness.
+            Audio is processed on our servers only and becomes part of your scored profile.
+          </p>
+
+          {/* Mode toggle — voice or text */}
+          {(!recordingSupported || useTextMode) ? (
+            <div className="w-full max-w-lg space-y-4">
+              {!recordingSupported && (
+                <div className="text-center text-amber-400/80 text-xs mb-4 bg-amber-500/[0.05] border border-amber-500/20 rounded-lg px-4 py-2">
+                  Voice recording is not supported in this browser. Type your response below instead.
+                </div>
+              )}
+              <textarea
+                value={textResponses[currentQuestion]}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setTextResponses((prev) => {
+                    const next = [...prev];
+                    next[currentQuestion] = val;
+                    return next;
+                  });
+                }}
+                placeholder="Just say what comes to mind — there's no wrong answer here..."
+                className="w-full h-40 bg-background/50 border border-border/50 rounded-xl p-4 text-foreground placeholder:text-muted-foreground/40 resize-none focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              />
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <span className={`text-xs ${hasTextResponse ? 'text-green-400/70' : 'text-muted-foreground/40'}`}>
+                  {textResponses[currentQuestion]?.trim().length || 0} / 20 min characters
+                </span>
+                <span className="flex items-center gap-3">
+                  <button
+                    onClick={() => tapeInputRef.current?.click()}
+                    disabled={tapeUploading}
+                    className="text-xs text-primary/60 hover:text-primary transition-colors"
+                  >
+                    {tapeUploading ? "Uploading…" : "Upload a recording"}
+                  </button>
+                  {recordingSupported && (
+                    <button
+                      onClick={() => setUseTextMode(false)}
+                      className="text-xs text-primary/70 hover:text-primary transition-colors"
+                    >
+                      Switch to voice →
+                    </button>
+                  )}
+                </span>
+              </div>
+              <input ref={tapeInputRef} type="file" hidden accept="audio/*,video/*,.mp3,.m4a,.wav,.ogg,.aac,.mp4,.mov"
+                onChange={(e) => { void uploadFileAnswer(e.target.files?.[0] ?? null); e.target.value = ""; }} />
+            </div>
+          ) : (
+            <>
+          {/* Tape-recorder mode is the RECOMMENDED path (founder decision):
+              browser mics fail people; voice-memo apps don't. */}
+          <div className="mb-3 max-w-lg mx-auto text-center rounded-lg border border-accent/25 bg-accent/[0.04] px-4 py-2.5">
+            <p className="text-xs text-foreground/80 leading-snug">
+              <span className="text-accent font-semibold">Recommended:</span> print the questions, record your answer
+              in your phone&rsquo;s voice-memo app — on a walk, in the car, wherever you ramble best — then{" "}
+              <button onClick={() => tapeInputRef.current?.click()} disabled={tapeUploading}
+                className="text-accent underline underline-offset-2">
+                {tapeUploading ? "uploading…" : "upload the recording here"}
+              </button>. The browser mic below works too.
+            </p>
+          </div>
+          <div className="flex items-center gap-4 mb-4">
+            <button
+              onClick={() => setUseTextMode(true)}
+              className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+            >
+              Prefer to type? Switch to text mode
+            </button>
+            <span className="text-muted-foreground/25 text-xs">·</span>
+            <button
+              onClick={() => txtInputRef.current?.click()}
+              className="text-xs text-accent/70 hover:text-accent transition-colors"
+            >
+              Upload a .txt transcript (covers many questions)
+            </button>
+          </div>
+          <input ref={txtInputRef} type="file" hidden accept=".txt,text/plain"
+            onChange={(e) => { void handleTxtFile(e.target.files?.[0] ?? null); e.target.value = ""; }} />
+          <input ref={tapeInputRef} type="file" hidden accept="audio/*,video/*,.mp3,.m4a,.wav,.ogg,.aac,.mp4,.mov"
+            onChange={(e) => { void uploadFileAnswer(e.target.files?.[0] ?? null); e.target.value = ""; }} />
+          {/* Optional camera channel — voice stays the scored signal; video adds
+              body-language/congruence analysis on top, never a penalty. */}
+          <Link href="/video-assessment" className="text-[0.65rem] text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors mb-3">
+            Optional: sit in front of a camera too — add a video session for body-language &amp; congruence analysis →
+          </Link>
+
+          {/* Mic Button */}
+          <motion.button
+            onClick={isRecording ? stopRecording : startRecording}
+            className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center focus:outline-none"
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.12 }}
+          >
+            {/* Rotating ring 3 */}
+            <motion.div
+              className={`absolute inset-[-28px] rounded-full border transition-colors duration-500 ${
+                isRecording ? "border-red-500/15" : "border-primary/[0.08]"
+              }`}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+            />
+
+            {/* Rotating ring 2 */}
+            <motion.div
+              className={`absolute inset-[-18px] rounded-full border transition-colors duration-500 ${
+                isRecording ? "border-red-500/20" : "border-primary/[0.15]"
+              }`}
+              animate={{ rotate: -360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            />
+
+            {/* Outer glow ring */}
+            <div
+              className={`absolute inset-[-12px] rounded-full transition-all duration-500 ${
+                isRecording
+                  ? "border border-red-500/30"
+                  : hasRecording
+                  ? "border border-green-500/20"
+                  : "border border-primary/20 mic-pulse"
+              }`}
+            />
+
+            {/* Recording ping */}
+            {isRecording && (
+              <motion.div
+                className="absolute inset-[-8px] rounded-full bg-red-500/10"
+                animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.2, 0.5] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+            )}
+
+            {/* Main circle */}
+            <div
+              className={`w-full h-full rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                isRecording
+                  ? "border-red-500/60 bg-red-500/[0.08]"
+                  : hasRecording
+                  ? "border-green-500/50 bg-green-500/[0.06]"
+                  : "border-primary/60 bg-primary/[0.06]"
+              }`}
+              style={{
+                boxShadow: isRecording
+                  ? "0 0 30px oklch(0.6 0.25 25 / 0.3), inset 0 0 20px oklch(0.6 0.25 25 / 0.05)"
+                  : hasRecording
+                  ? "0 0 20px oklch(0.6 0.2 145 / 0.2)"
+                  : "0 0 30px oklch(0.68 0.08 165 / 0.2), inset 0 0 20px oklch(0.68 0.08 165 / 0.03)",
+              }}
+            >
+              {isRecording ? (
+                <MicOff className="w-10 h-10 text-red-400" />
+              ) : hasRecording ? (
+                <Check className="w-10 h-10 text-green-400" />
+              ) : (
+                <motion.div
+                  animate={{ y: [0, -2, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <Mic className="w-10 h-10 text-primary" />
+                </motion.div>
+              )}
+            </div>
+          </motion.button>
+
+          {/* Recording status */}
+          <div className="mt-5 h-8 flex items-center gap-3">
+            {isRecording && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex items-center gap-3"
+              >
+                <motion.div
+                  className="w-2 h-2 rounded-full bg-red-500"
+                  animate={{ opacity: [1, 0.3, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                />
+                <span className="text-red-400/80 text-xs uppercase tracking-wider">Recording</span>
+                <RecordingTimer isRecording={isRecording} startTime={recordingStartTime} />
+              </motion.div>
+            )}
+            {!isRecording && hasRecording && (
+              <span className="text-green-400/70 text-xs">Got it — tap again if you want to redo</span>
+            )}
+            {!isRecording && !hasRecording && (
+              <span className="text-muted-foreground/40 text-xs tracking-wide">Tap and just start talking</span>
+            )}
+          </div>
+
+          {/* Waveform */}
+          <div className="mt-6 w-full max-w-lg h-[60px]">
+            <WaveformVisualizer isRecording={isRecording} analyserNode={analyserRef.current} />
+          </div>
+            </>
+          )}
+
+          {/* Per-answer richness reaction — the momentum flywheel */}
+          <AnimatePresence>
+            {!isRecording && feedback && (
+              <motion.div
+                key={`fb-${currentQuestion}`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                className={`mt-6 max-w-md w-full mx-auto rounded-xl border px-5 py-3 text-center ${FEEDBACK_STYLE[feedback.tier]}`}
+              >
+                <p className="text-sm font-semibold leading-snug">{FEEDBACK_COPY[feedback.tier].message}</p>
+                {feedback.newLines > 0 && (
+                  <p className="text-[0.62rem] uppercase tracking-[0.14em] mt-1.5 text-accent/80" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                    Lit up {feedback.newLines} new line{feedback.newLines !== 1 ? "s" : ""} · {feedback.totalLines} of 32
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Companion channel — a SEPARATE take, never merged into the member's scored answer */}
+          {companionActive && (
+            <motion.div
+              key={`comp-${currentQuestion}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+              className="mt-6 max-w-md w-full mx-auto rounded-xl border border-accent/25 bg-accent/[0.05] px-5 py-4 text-left"
+            >
+              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-accent/80 mb-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                {companionName ? `${companionName}'s take` : "Your person's take"} · doesn't change their answer
+              </p>
+              <p className="text-xs text-foreground/70 leading-snug mb-2">
+                {companionName ? `${companionName}, speak up` : "Speak up"} — did they nail it, undersell it, or leave out the best part? Say the version they're too modest, or too generous, to tell.
+              </p>
+              <VoiceCapture
+                value={companionResponses[currentQuestion]}
+                onCommit={(text) =>
+                  setCompanionResponses((prev) => {
+                    const n = [...prev];
+                    n[currentQuestion] = text;
+                    return n;
+                  })
+                }
+                promptLabel="Tap the mic and give your take out loud"
+                tone="accent"
+              />
+            </motion.div>
+          )}
+
+          {/* Private question, companion present — protect honesty */}
+          {companionMode && question.soloOnly && (
+            <div className="mt-6 max-w-md w-full mx-auto rounded-xl border border-border/40 bg-muted/[0.04] px-5 py-3 text-center">
+              <p className="text-xs text-muted-foreground/60 leading-snug">
+                🙈 Just you for this one{companionName ? ` — ${companionName}, look away` : ""}. Some questions are more honest when it's only you.
+              </p>
+            </div>
+          )}
+
+          {/* DAY-STREAK FLAME — visible momentum; loss aversion does the rest */}
+          {streak >= 2 && (
+            <div className="mt-6 flex justify-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/[0.07] px-4 py-1.5"
+                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", letterSpacing: "0.08em" }}>
+                <span aria-hidden>🔥</span>
+                <span className="text-accent font-bold">{streak}-day streak</span>
+                <span className="text-muted-foreground/70">— one question today keeps it alive</span>
+              </span>
+            </div>
+          )}
+
+          {/* PACING BANNER — every 3rd question, large, at the bottom of the
+              screen. 27 questions in one sitting is a genuine brain drain:
+              performance degrades as cognitive fatigue builds, which corrupts
+              the very signal being measured. The recommended protocol is 2-3
+              questions a day, 10-20 minutes each, across 2-3 weeks. */}
+          {(currentQuestion + 1) % 3 === 0 && currentQuestion < TOTAL_QUESTIONS - 1 && (
+            <motion.div
+              key={`pace-${currentQuestion}`}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+              className="mt-8 w-full max-w-2xl mx-auto rounded-2xl border border-accent/30 bg-accent/[0.06] px-6 py-5 text-center"
+            >
+              <p className="text-[0.62rem] uppercase tracking-[0.2em] text-accent/80 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                Pace yourself — this is by design
+              </p>
+              <p className="text-base sm:text-lg text-foreground/90 leading-relaxed font-medium">
+                You&rsquo;re moving muscles in your brain you may not have used in fifty years. Binging questions is a
+                genuine <span className="text-accent">brain drain</span> — cognitive fatigue sets in and your later
+                answers measure your exhaustion, not your mind.
+              </p>
+              <p className="text-sm sm:text-base text-foreground/75 leading-relaxed mt-2">
+                The designed ritual: <span className="text-accent font-semibold">one question a day, about 30 minutes
+                of talking, for a month.</span> Get sucked into the story, make it personal, ramble — that&rsquo;s where
+                the intelligence lives. Come back only when you&rsquo;re alert and have your full faculties. Your
+                progress saves automatically — stopping here costs you nothing.
+              </p>
+            </motion.div>
+          )}
+
+          {showCrisis && <CrisisSupport onClose={() => setShowCrisis(false)} />}
+
+          {/* Transcript review modal — confirm the question mapping before submit */}
+          {txtReview && (
+            <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" style={{ background: "rgba(10,8,5,0.8)" }}>
+              <div className="w-full max-w-lg rounded-2xl border border-accent/30 bg-background p-6 max-h-[80vh] overflow-y-auto">
+                <p className="text-[0.62rem] uppercase tracking-[0.2em] text-accent/80 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  Transcript detected — review the mapping
+                </p>
+                <h3 className="text-xl text-foreground mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+                  {txtReview.length} answer{txtReview.length === 1 ? "" : "s"} found in your file
+                </h3>
+                <div className="space-y-2 mb-4">
+                  {txtReview.map((s) => (
+                    <div key={s.question} className="rounded-lg border border-border/50 bg-background/50 px-3 py-2">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="text-sm text-foreground font-semibold">Question {s.question}</span>
+                        <span className={`text-xs ${s.words < 100 ? "text-amber-400/80" : "text-green-400/70"}`} style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                          {s.words.toLocaleString()} words{s.words < 100 ? " — thin" : ""}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground/70 mt-1 line-clamp-2">{s.text.slice(0, 160)}…</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground/60 mb-4">
+                  Each segment saves as that question&rsquo;s answer (replacing any earlier answer to the same question).
+                  Anything mis-mapped? Cancel, fix the &ldquo;Question N&rdquo; markers in your file, and re-upload.
+                </p>
+                <div className="flex gap-3 justify-end">
+                  <Button variant="ghost" size="sm" onClick={() => setTxtReview(null)} disabled={txtSubmitting}>Cancel</Button>
+                  <Button size="sm" onClick={() => void submitTxtSegments()} disabled={txtSubmitting} className="bg-primary text-white">
+                    {txtSubmitting ? "Uploading…" : `Submit ${txtReview.length} answer${txtReview.length === 1 ? "" : "s"}`}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Navigation */}
+          <div className="mt-10 flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={goPrev}
+              disabled={currentQuestion === 0}
+              className="text-muted-foreground/50 hover:text-foreground"
+            >
+              <ArrowLeft className="w-4 h-4 mr-1" /> Previous
+            </Button>
+            <Button
+              onClick={goNext}
+              disabled={!hasRecording && !hasTextResponse && !isSkipped}
+              className={`px-8 py-5 transition-all duration-200 ${
+                (hasRecording || hasTextResponse || isSkipped)
+                  ? "bg-primary text-white glow-gold hover:translate-y-[-1px] active:scale-[0.97]"
+                  : "bg-muted/30 text-muted-foreground/40 cursor-not-allowed"
+              }`}
+            >
+              {currentQuestion === TOTAL_QUESTIONS - 1 ? "Complete" : "Next"}
+              <ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Right: Radar Chart */}
+        <div className="lg:w-[300px] flex flex-col items-center gap-6">
+          <motion.p
+            className="text-[0.6rem] uppercase tracking-[0.15em] text-muted-foreground/30 mb-[-8px]"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            32-Dimension Intelligence Map
+          </motion.p>
+          {activeScores.length > 0 && (
+            <motion.p
+              key={activeScores.length}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-[0.62rem] tracking-[0.12em] text-accent/70 mt-1"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            >
+              {activeScores.length} OF 32 LINES LIT
+            </motion.p>
+          )}
+          <AssessmentRadar scores={scores} />
+
+          {/* Preliminary rarity */}
+          {preliminaryRarity > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+              className="text-center"
+            >
+              <p
+                className="text-xs uppercase tracking-[0.15em] mb-1"
+                style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.55 0.04 65)" }}
+              >
+                Preliminary
+              </p>
+              <p
+                className="text-xl font-bold text-glow-gold"
+                style={{ fontFamily: "'Cormorant Garamond', serif", color: "oklch(0.78 0.12 85)" }}
+              >
+                1 in {preliminaryRarity.toLocaleString()}
+              </p>
+            </motion.div>
+          )}
+
+          {/* Scored axes list */}
+          <div className="space-y-1.5 w-full max-w-[220px]">
+            {scores.map((s, i) =>
+              s > 0 ? (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -5 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                  className="flex items-center gap-2 text-xs"
+                >
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent/80" />
+                  <span className="text-muted-foreground/60 flex-1 truncate">{AXIS_LABELS[i]}</span>
+                  <span
+                    className="text-accent/80"
+                    style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.6rem" }}
+                  >
+                    {Math.round(s * 100)}
+                  </span>
+                </motion.div>
+              ) : null
+            )}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

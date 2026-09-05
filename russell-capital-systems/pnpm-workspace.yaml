@@ -1,0 +1,9 @@
+packages:
+  - "."
+
+overrides:
+  "tailwindcss>nanoid": "3.3.7"
+  "pptxgenjs>image-size": "-"
+  "lodash": "4.18.0"
+  "lodash-es": "4.18.0"
+  "path-to-regexp": "0.1.13"

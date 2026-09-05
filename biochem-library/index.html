@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BioChem Atlas — Global Biochemistry Research Library</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --ink:#e6edf3; --muted:#9aa7b4;
+    --line:#2a3340; --accent:#3fb98f; --accent2:#5aa9e6; --a:#3fb98f; --b:#5aa9e6; --c:#e0b23c; --d:#c77dff;
+    --warn:#e5834a;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f6f8fa; --panel:#ffffff; --panel2:#f0f3f7; --ink:#121a24; --muted:#5a6673;
+           --line:#dbe2ea; --accent:#158463; --accent2:#2b6cb0; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--accent2);text-decoration:none} a:hover{text-decoration:underline}
+  header{padding:28px 20px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--bg))}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  h1{margin:0 0 4px;font-size:26px;letter-spacing:.2px}
+  .tag{color:var(--accent);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+  .sub{color:var(--muted);max-width:760px}
+  nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+  nav button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:7px 14px;cursor:pointer;font-size:13px}
+  nav button.active{background:var(--accent);color:#03130d;border-color:var(--accent);font-weight:700}
+  section{padding:26px 0}
+  h2{font-size:19px;margin:0 0 10px;border-left:3px solid var(--accent);padding-left:10px}
+  .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .card h3{margin:0 0 4px;font-size:15px}
+  .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .grade{width:26px;height:26px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:#06131b;flex:none}
+  .A{background:var(--a)} .B{background:var(--b)} .C{background:var(--c)} .D{background:var(--d)}
+  .muted{color:var(--muted);font-size:13px}
+  .pill{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:2px 9px}
+  .links{margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;font-size:13px}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  input,select{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:9px 11px;font-size:14px}
+  input[type=text]{min-width:240px;flex:1}
+  .count{color:var(--muted);font-size:13px;margin-bottom:8px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600}
+  .db{display:inline-block;margin:0 0 0 0}
+  .note{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;padding:12px 14px;color:var(--muted);font-size:13px}
+  .live-result{border-bottom:1px solid var(--line);padding:10px 0}
+  .live-result .t{font-weight:600}
+  footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:12px}
+  .kpis{display:flex;gap:22px;flex-wrap:wrap;margin-top:10px}
+  .kpi b{font-size:22px;display:block;color:var(--accent)}
+  [hidden]{display:none!important}
+  .spin{color:var(--muted)}
+  .xp{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="tag">BioChem Atlas</div>
+    <h1>Global Biochemistry Research Library</h1>
+    <p class="sub">A curated, transparently-graded directory of the world's biochemistry research institutions, wired to the open aggregators that federate their published work. Live results come from <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a> — real papers, real DOIs, nothing fabricated.</p>
+    <p class="sub" style="margin-top:8px"><a href="us-top-100.html"><b>→ Open the US Top 100 Biochemistry Labs &amp; Innovation Engine</b></a> — per-university live findings + cross-pollination lead briefs.</p>
+    <div class="kpis">
+      <div class="kpi"><b id="kInst">0</b><span class="muted">graded institutions (seed)</span></div>
+      <div class="kpi"><b id="kCountries">0</b><span class="muted">countries</span></div>
+      <div class="kpi"><b>250M+</b><span class="muted">works reachable via OpenAlex</span></div>
+      <div class="kpi"><b>10</b><span class="muted">federated databases</span></div>
+    </div>
+    <nav>
+      <button data-tab="institutions" class="active">Institutions</button>
+      <button data-tab="live">Live Literature Search</button>
+      <button data-tab="databases">Research Databases</button>
+      <button data-tab="rubric">Grading Rubric</button>
+      <button data-tab="crosspollinate">Cross-Pollination Lab</button>
+      <button data-tab="about">Method &amp; Honesty</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- INSTITUTIONS -->
+<section id="institutions">
+  <h2>Graded Institutions</h2>
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search institution, city, country…">
+    <select id="fGrade"><option value="">All grades</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
+    <select id="fCountry"><option value="">All countries</option></select>
+    <select id="fSort"><option value="grade">Sort: grade</option><option value="name">Sort: name</option><option value="country">Sort: country</option></select>
+  </div>
+  <div class="count" id="instCount"></div>
+  <div class="grid" id="instGrid"></div>
+</section>
+
+<!-- LIVE SEARCH -->
+<section id="live" hidden>
+  <h2>Live Literature Search <span class="muted" style="font-weight:400">— powered by the OpenAlex API</span></h2>
+  <div class="note">This queries OpenAlex live in your browser and shows real, current publications with working DOI links. If your browser blocks the request when opening the file locally, host the page (or use the "Open in OpenAlex" button) — the directory below still works offline.</div>
+  <div class="controls" style="margin-top:14px">
+    <input type="text" id="q" placeholder='e.g. "allosteric regulation kinase", "cryo-EM membrane protein"…' value="enzyme catalysis mechanism">
+    <select id="qOA"><option value="">Any access</option><option value="true">Open access only</option></select>
+    <button onclick="runLive()" style="background:var(--accent);color:#03130d;border:0;border-radius:8px;padding:9px 16px;font-weight:700;cursor:pointer">Search</button>
+    <button onclick="openInOpenAlex()" style="background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 16px;cursor:pointer">Open in OpenAlex ↗</button>
+  </div>
+  <div id="liveOut"><p class="spin">Enter a query and press Search.</p></div>
+</section>
+
+<!-- DATABASES -->
+<section id="databases" hidden>
+  <h2>Federated Research Databases</h2>
+  <p class="muted">These are the legitimate connection points to global biochemistry research. Each already aggregates thousands of universities and journals — including Japan and China — so the library reaches the entire field without scraping any single university.</p>
+  <div class="grid" id="dbGrid"></div>
+</section>
+
+<!-- RUBRIC -->
+<section id="rubric" hidden>
+  <h2>Grading Rubric (A–D)</h2>
+  <p class="muted">Grades are a transparent, curated tier reflecting an institution's <b>consensus standing across published biochemistry / life-science subject rankings</b> (Times Higher Education, U.S. News Best Global Universities, SCImago Institutions Rankings, Research.com) as of 2025–2026. They are a directory tier, not a precise score, and not our own measurement. Sources are linked on the Method page.</p>
+  <table>
+    <thead><tr><th>Grade</th><th>Meaning</th><th>Signal basis</th></tr></thead>
+    <tbody>
+      <tr><td><span class="grade A">A</span></td><td>Global top tier</td><td>Consistently top-ranked across multiple subject rankings; very high citation impact and output in biochemistry &amp; molecular biology.</td></tr>
+      <tr><td><span class="grade B">B</span></td><td>Research-intensive leader</td><td>Strong, sustained output and impact; frequently ranked in the global top 100–200 for the subject.</td></tr>
+      <tr><td><span class="grade C">C</span></td><td>Solid national contributor</td><td>Established program with meaningful output; notable regionally or nationally.</td></tr>
+      <tr><td><span class="grade D">D</span></td><td>Emerging / specialized</td><td>Growing program or narrow specialization; included to track trajectory.</td></tr>
+    </tbody>
+  </table>
+  <p class="note" style="margin-top:14px">Honesty: a grade is a summary of other people's published rankings, verifiable at the sources on the Method page. Where rankings disagree, the more conservative tier is used. Any institution can be re-graded as newer ranking data is added.</p>
+</section>
+
+<!-- CROSS POLLINATION -->
+<section id="crosspollinate" hidden>
+  <h2>Cross-Pollination Lab <span class="muted" style="font-weight:400">— emergent-property workspace</span></h2>
+  <p class="muted">A structured workspace for the real goal: spotting where two established research areas intersect in ways that may be novel and patentable. This is a <b>hypothesis scaffold</b>, not a claim of discovery — each pairing is a prompt to investigate, and every lead must be checked for prior art (start with the live search and a patent database) before it means anything.</p>
+  <div class="controls" style="margin-top:14px">
+    <select id="xA"></select>
+    <select id="xB"></select>
+    <button onclick="crossQuery()" style="background:var(--accent);color:#03130d;border:0;border-radius:8px;padding:9px 16px;font-weight:700;cursor:pointer">Find intersection literature ↗</button>
+  </div>
+  <div id="xNote" class="muted" style="margin:10px 0"></div>
+  <div>
+    <h3 style="font-size:15px">Seeded intersection prompts</h3>
+    <div id="xSeeds"></div>
+  </div>
+  <p class="note" style="margin-top:6px">Prior-art discipline: an intersection returning <em>few</em> results is a lead, not proof of novelty — it can also mean the field uses different terms. Confirm with a patent search (Google Patents, USPTO, Espacenet, WIPO PATENTSCOPE) and a registered patent attorney before treating anything as inventive.</p>
+</section>
+
+<!-- ABOUT -->
+<section id="about" hidden>
+  <h2>Method &amp; Honesty</h2>
+  <div class="xp"><b>What is real here.</b> Every institution is a real institution. Every database and every link resolves to a genuine, public resource. Live search results are fetched from OpenAlex at query time — the titles, authors, years, and DOIs are theirs, not ours. We do not fabricate findings, citations, or DOIs.</div>
+  <div class="xp"><b>What the grades are.</b> A curated tier summarizing published third-party rankings (below), not an original measurement and not a guarantee of any specific study's quality. Individual papers must be judged on their own merits.</div>
+  <div class="xp"><b>What this is not.</b> Not a live scrape of hundreds of university servers, not medical advice, and not a claim that any intersection in the Cross-Pollination Lab is patentable. Patentability requires prior-art search and patent counsel.</div>
+  <div class="xp"><b>Ranking sources.</b>
+    <a href="https://www.timeshighereducation.com/world-university-rankings/2025/subject-ranking/life-sciences" target="_blank" rel="noopener">Times Higher Education — Life Sciences 2025</a> ·
+    <a href="https://www.usnews.com/education/best-global-universities/biology-biochemistry" target="_blank" rel="noopener">U.S. News Best Global Universities — Biology &amp; Biochemistry</a> ·
+    <a href="https://www.scimagoir.com/rankings.php?area=1300&sector=Higher+educ." target="_blank" rel="noopener">SCImago Institutions Rankings — Biochemistry, Genetics &amp; Molecular Biology</a> ·
+    <a href="https://research.com/university-rankings/biology-and-biochemistry" target="_blank" rel="noopener">Research.com — Biology &amp; Biochemistry</a>
+  </div>
+  <div class="xp"><b>How it grows.</b> The institution list is a seed. Add rows to the <code>INSTITUTIONS</code> array (name, city, country, grade, ror). Everything else — filters, live search, cross-pollination — scales automatically. Grades update as newer ranking data is added.</div>
+  <div class="xp"><b>Data backbone.</b> <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a> (open, ~250M works, ROR-linked institutions), which itself ingests Crossref, PubMed, ROR, and publisher metadata — the single most efficient way to reach "all universities" without hundreds of brittle connections.</div>
+</section>
+
+<footer class="wrap">
+  BioChem Atlas — a curated directory over open research infrastructure. Grades summarize published third-party rankings; live data © their respective publishers via OpenAlex. No findings, citations, or DOIs are fabricated. Built for Russell Holdings Management research use.
+</footer>
+</div>
+
+<script>
+// ── Seed dataset: real institutions. grade = consensus tier from published
+// subject rankings (see Method). ror = ROR id (used for exact OpenAlex links).
+const INSTITUTIONS = [
+ {n:"Harvard University",c:"Cambridge, MA",k:"USA",g:"A",ror:"03vek6s52"},
+ {n:"Massachusetts Institute of Technology",c:"Cambridge, MA",k:"USA",g:"A",ror:"042nb2s44"},
+ {n:"Stanford University",c:"Stanford, CA",k:"USA",g:"A",ror:"00f54p054"},
+ {n:"University of California, San Francisco",c:"San Francisco, CA",k:"USA",g:"A",ror:"043mz5j54"},
+ {n:"University of California, Berkeley",c:"Berkeley, CA",k:"USA",g:"A",ror:"01an7q238"},
+ {n:"Scripps Research",c:"La Jolla, CA",k:"USA",g:"A",ror:"02dxx6824"},
+ {n:"Johns Hopkins University",c:"Baltimore, MD",k:"USA",g:"A",ror:"00za53h95"},
+ {n:"Yale University",c:"New Haven, CT",k:"USA",g:"B",ror:"03v76x132"},
+ {n:"University of Washington",c:"Seattle, WA",k:"USA",g:"B",ror:"00cvxb145"},
+ {n:"University of Michigan",c:"Ann Arbor, MI",k:"USA",g:"B",ror:"00jmfr291"},
+ {n:"University of Wisconsin–Madison",c:"Madison, WI",k:"USA",g:"B",ror:"01y2jtd41"},
+ {n:"Duke University",c:"Durham, NC",k:"USA",g:"B",ror:"00py81415"},
+ {n:"University of Cambridge (incl. MRC LMB)",c:"Cambridge",k:"UK",g:"A",ror:"013meh722"},
+ {n:"University of Oxford",c:"Oxford",k:"UK",g:"A",ror:"052gg0110"},
+ {n:"University College London",c:"London",k:"UK",g:"B",ror:"02jx3x895"},
+ {n:"Imperial College London",c:"London",k:"UK",g:"B",ror:"041kmwe10"},
+ {n:"University of Edinburgh",c:"Edinburgh",k:"UK",g:"B",ror:"01nrxwf90"},
+ {n:"Max Planck Society",c:"Munich (network)",k:"Germany",g:"A",ror:"01hhn8329"},
+ {n:"Heidelberg University",c:"Heidelberg",k:"Germany",g:"B",ror:"038t36y30"},
+ {n:"Technical University of Munich",c:"Munich",k:"Germany",g:"B",ror:"02kkvpp62"},
+ {n:"ETH Zürich",c:"Zürich",k:"Switzerland",g:"A",ror:"05a28rw58"},
+ {n:"EPFL",c:"Lausanne",k:"Switzerland",g:"B",ror:"02s376052"},
+ {n:"Karolinska Institutet",c:"Stockholm",k:"Sweden",g:"A",ror:"056d84691"},
+ {n:"Utrecht University",c:"Utrecht",k:"Netherlands",g:"B",ror:"04pp8hn57"},
+ {n:"Weizmann Institute of Science",c:"Rehovot",k:"Israel",g:"A",ror:"0316ej306"},
+ {n:"University of Toronto",c:"Toronto",k:"Canada",g:"B",ror:"03dbr7087"},
+ {n:"McGill University",c:"Montreal",k:"Canada",g:"B",ror:"01pxwe438"},
+ {n:"University of Tokyo",c:"Tokyo",k:"Japan",g:"A",ror:"057zh3y96"},
+ {n:"Kyoto University",c:"Kyoto",k:"Japan",g:"A",ror:"02kpeqv85"},
+ {n:"Osaka University",c:"Osaka",k:"Japan",g:"B",ror:"035t8zc32"},
+ {n:"RIKEN",c:"Wako (network)",k:"Japan",g:"A",ror:"01sjwvz98"},
+ {n:"Tohoku University",c:"Sendai",k:"Japan",g:"B",ror:"01dq60k83"},
+ {n:"Tsinghua University",c:"Beijing",k:"China",g:"A",ror:"03cve4549"},
+ {n:"Peking University",c:"Beijing",k:"China",g:"A",ror:"02v51f717"},
+ {n:"Chinese Academy of Sciences (incl. SIBCB Shanghai)",c:"Beijing / Shanghai (network)",k:"China",g:"A",ror:"034t30j35"},
+ {n:"Fudan University",c:"Shanghai",k:"China",g:"B",ror:"013q1eq08"},
+ {n:"Zhejiang University",c:"Hangzhou",k:"China",g:"B",ror:"00a2xv884"},
+ {n:"University of Science and Technology of China",c:"Hefei",k:"China",g:"B",ror:"04c4dkn09"},
+ {n:"ShanghaiTech University",c:"Shanghai",k:"China",g:"C",ror:"030bhh786"},
+ {n:"National University of Singapore",c:"Singapore",k:"Singapore",g:"B",ror:"01tgyzw49"},
+ {n:"University of Melbourne",c:"Melbourne",k:"Australia",g:"B",ror:"01ej9dk98"},
+ {n:"Seoul National University",c:"Seoul",k:"South Korea",g:"B",ror:"04h9pn542"},
+ {n:"Indian Institute of Science",c:"Bengaluru",k:"India",g:"C",ror:"04dese585"},
+];
+
+const DATABASES = [
+ {n:"PubMed",d:"38M+ biomedical citations (US NLM). The canonical biochemistry index.",u:"https://pubmed.ncbi.nlm.nih.gov/",tag:"USA · global"},
+ {n:"PubMed Central (PMC)",d:"Free full-text archive of biomedical & life-science literature.",u:"https://www.ncbi.nlm.nih.gov/pmc/",tag:"open access"},
+ {n:"Europe PMC",d:"European mirror + preprints, patents, and linked data over PubMed.",u:"https://europepmc.org/",tag:"Europe · global"},
+ {n:"OpenAlex",d:"Open graph of ~250M works, authors, and ROR-linked institutions. This site's live backbone.",u:"https://openalex.org/",tag:"open · federating"},
+ {n:"bioRxiv",d:"Preprint server for biology — earliest look at emerging findings.",u:"https://www.biorxiv.org/",tag:"preprints"},
+ {n:"Semantic Scholar",d:"AI-driven literature graph with citation context (Allen Institute).",u:"https://www.semanticscholar.org/",tag:"AI index"},
+ {n:"CORE",d:"World's largest aggregator of open-access research papers.",u:"https://core.ac.uk/",tag:"open access"},
+ {n:"DOAJ",d:"Directory of vetted open-access journals.",u:"https://doaj.org/",tag:"journals"},
+ {n:"J-STAGE",d:"Japan's national platform for its scientific journals (JST).",u:"https://www.jstage.jst.go.jp/",tag:"Japan"},
+ {n:"Google Patents",d:"Cross-check any lead for prior art before calling it novel.",u:"https://patents.google.com/",tag:"prior art"},
+];
+
+const TOPICS = ["enzyme catalysis","allosteric regulation","protein folding","membrane transport",
+ "signal transduction","gene expression","metabolomics","structural biology (cryo-EM)","proteostasis",
+ "redox biology","lipid biochemistry","glycobiology","RNA biochemistry","drug-target binding kinetics",
+ "protein–protein interaction","post-translational modification","mitochondrial bioenergetics","CRISPR biochemistry"];
+
+const XSEEDS = [
+ ["structural biology (cryo-EM)","drug-target binding kinetics","Structure-resolved kinetics could yield novel binding-mode IP for hard targets."],
+ ["redox biology","mitochondrial bioenergetics","Redox-tuned bioenergetic modulators — an active, patent-dense frontier; check prior art hard."],
+ ["glycobiology","protein–protein interaction","Glycan-mediated interaction disruptors are underexplored vs. classic small molecules."],
+ ["RNA biochemistry","post-translational modification","RNA-guided PTM control sits between two fast-moving fields."],
+ ["lipid biochemistry","membrane transport","Lipid-composition-dependent transporter modulation — device/formulation angles."],
+ ["proteostasis","signal transduction","Targeted degradation coupled to signaling state (conditional degraders)."],
+];
+
+// ── render ─────────────────────────────────────────────────────────────────
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+function oaInst(i){return i.ror?`https://openalex.org/works?filter=institutions.ror:${i.ror},concepts.id:C55493867&sort=cited_by_count:desc`:`https://openalex.org/institutions?search=${encodeURIComponent(i.n)}`;}
+function pubmed(i){return `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(i.n.replace(/\s*\(.*\)/,''))}[Affiliation]+AND+biochemistry`;}
+
+function renderInst(){
+  const q=$("#search").value.toLowerCase(), fg=$("#fGrade").value, fc=$("#fCountry").value, so=$("#fSort").value;
+  let list=INSTITUTIONS.filter(i=>(!fg||i.g===fg)&&(!fc||i.k===fc)&&
+    (!q||(i.n+i.c+i.k).toLowerCase().includes(q)));
+  const gOrd={A:0,B:1,C:2,D:3};
+  list.sort((a,b)=> so==="name"?a.n.localeCompare(b.n): so==="country"?a.k.localeCompare(b.k)||gOrd[a.g]-gOrd[b.g] : gOrd[a.g]-gOrd[b.g]||a.n.localeCompare(b.n));
+  $("#instCount").textContent=`${list.length} institution${list.length!==1?'s':''} shown`;
+  $("#instGrid").innerHTML=list.map(i=>`<div class="card">
+    <div class="row"><span class="grade ${i.g}">${i.g}</span><h3>${i.n}</h3></div>
+    <div class="muted">${i.c} · <span class="pill">${i.k}</span></div>
+    <div class="links">
+      <a href="${oaInst(i)}" target="_blank" rel="noopener">Biochem works (OpenAlex) ↗</a>
+      <a href="${pubmed(i)}" target="_blank" rel="noopener">PubMed affiliation ↗</a>
+    </div></div>`).join("");
+}
+function renderDb(){
+  $("#dbGrid").innerHTML=DATABASES.map(d=>`<div class="card">
+    <div class="row"><h3>${d.n}</h3><span class="pill">${d.tag}</span></div>
+    <div class="muted">${d.d}</div>
+    <div class="links"><a href="${d.u}" target="_blank" rel="noopener">Open ↗</a></div></div>`).join("");
+}
+function fillSelectors(){
+  const countries=[...new Set(INSTITUTIONS.map(i=>i.k))].sort();
+  $("#fCountry").insertAdjacentHTML("beforeend",countries.map(c=>`<option>${c}</option>`).join(""));
+  const opts=TOPICS.map(t=>`<option>${t}</option>`).join("");
+  $("#xA").innerHTML=opts; $("#xB").innerHTML=opts; $("#xB").selectedIndex=1;
+  $("#kInst").textContent=INSTITUTIONS.length; $("#kCountries").textContent=countries.length;
+  $("#xSeeds").innerHTML=XSEEDS.map(s=>`<div class="xp"><b>${s[0]} × ${s[1]}</b><br><span class="muted">${s[2]}</span><div class="links"><a href="https://openalex.org/works?search=${encodeURIComponent(s[0]+' '+s[1])}&sort=cited_by_count:desc" target="_blank" rel="noopener">See intersection literature ↗</a> <a href="https://patents.google.com/?q=${encodeURIComponent(s[0]+' '+s[1])}" target="_blank" rel="noopener">Prior-art check ↗</a></div></div>`).join("");
+}
+
+// ── live OpenAlex search ─────────────────────────────────────────────────────
+function liveURL(){
+  const q=$("#q").value.trim(), oa=$("#qOA").value;
+  let f="concepts.id:C55493867"; if(oa) f+=",is_oa:true";
+  return `https://api.openalex.org/works?search=${encodeURIComponent(q)}&filter=${f}&per-page=25&sort=relevance_score:desc&mailto=research@russellcap.com`;
+}
+function openInOpenAlex(){window.open(`https://openalex.org/works?search=${encodeURIComponent($("#q").value)}&sort=cited_by_count:desc`,"_blank");}
+async function runLive(){
+  const out=$("#liveOut"); out.innerHTML='<p class="spin">Querying OpenAlex…</p>';
+  try{
+    const r=await fetch(liveURL()); if(!r.ok) throw new Error("HTTP "+r.status);
+    const j=await r.json(); const w=j.results||[];
+    if(!w.length){out.innerHTML='<p class="muted">No results — try broader terms.</p>';return;}
+    out.innerHTML=`<div class="count">${(j.meta&&j.meta.count||w.length).toLocaleString()} works match — showing ${w.length}</div>`+
+      w.map(x=>{
+        const auth=(x.authorships||[]).slice(0,3).map(a=>a.author&&a.author.display_name).filter(Boolean).join(", ");
+        const inst=(x.authorships||[]).flatMap(a=>a.institutions||[]).map(i=>i.display_name).filter(Boolean);
+        const doi=x.doi?`<a href="${x.doi}" target="_blank" rel="noopener">${x.doi.replace('https://doi.org/','doi:')}</a>`:'<span class="muted">no DOI</span>';
+        return `<div class="live-result"><div class="t">${x.display_name||'(untitled)'}</div>
+          <div class="muted">${auth||'—'}${x.publication_year?' · '+x.publication_year:''}${x.cited_by_count?' · cited '+x.cited_by_count+'×':''}${x.open_access&&x.open_access.is_oa?' · <span style="color:var(--accent)">open access</span>':''}</div>
+          <div class="muted">${inst.slice(0,2).join(' · ')}</div>
+          <div class="links">${doi}</div></div>`;
+      }).join("");
+  }catch(e){
+    out.innerHTML=`<div class="note">Live fetch was blocked in this context (${e.message}). This commonly happens when opening the file directly from disk. Host the page, or click <b>Open in OpenAlex ↗</b> to run the same query on their site.</div>`;
+  }
+}
+function crossQuery(){
+  const a=$("#xA").value,b=$("#xB").value;
+  $("#xNote").innerHTML=`Investigating <b>${a} × ${b}</b>. Low result counts = a lead to probe, not proof of novelty.`;
+  window.open(`https://openalex.org/works?search=${encodeURIComponent(a+' '+b)}&sort=cited_by_count:desc`,"_blank");
+}
+
+// tabs
+$$("nav button").forEach(b=>b.onclick=()=>{
+  $$("nav button").forEach(x=>x.classList.remove("active")); b.classList.add("active");
+  $$("section").forEach(s=>s.hidden=true); $("#"+b.dataset.tab).hidden=false;
+});
+["#search","#fGrade","#fCountry","#fSort"].forEach(s=>$(s).addEventListener("input",renderInst));
+fillSelectors(); renderInst(); renderDb();
+</script>
+</body>
+</html>

@@ -1,0 +1,1456 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─── Russell Capital Design Tokens ──────────────────────────────────────── */
+:root {
+  --navy-950: #040d1a;
+  --navy-900: #060f20;
+  --navy-800: #0b1628;
+  --navy-700: #0f1e35;
+  --navy-600: #132544;
+  --navy-500: #1a3055;
+  --navy-400: #1e3a66;
+  --blue-accent: #22c55e;
+  --blue-accent-hover: #16a34a;
+  --gold: #f0c040;
+  --gold-muted: #c9a030;
+  --green: #22c55e;
+  --red: #ef4444;
+  --muted-text: #7a95b8;
+  --body-text: #c8d8ec;
+  --heading-text: #e8f0fa;
+  --border-subtle: #12233e;
+  --border-medium: #1a3055;
+  --card-bg: #0b1628;
+  --card-bg-hover: #0f1e35;
+  --sidebar-width: 280px;
+
+  /* shadcn/ui tokens — dark theme by default */
+  --background: oklch(0.08 0.02 240);
+  --foreground: oklch(0.92 0.02 220);
+  --card: oklch(0.10 0.025 240);
+  --card-foreground: oklch(0.92 0.02 220);
+  --popover: oklch(0.10 0.025 240);
+  --popover-foreground: oklch(0.92 0.02 220);
+  --primary: oklch(0.65 0.22 145);
+  --primary-foreground: oklch(0.98 0.005 145);
+  --secondary: oklch(0.14 0.03 240);
+  --secondary-foreground: oklch(0.85 0.02 220);
+  --muted: oklch(0.14 0.03 240);
+  --muted-foreground: oklch(0.55 0.04 230);
+  --accent: oklch(0.16 0.04 240);
+  --accent-foreground: oklch(0.90 0.02 220);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0.005 25);
+  --border: oklch(0.20 0.04 240);
+  --input: oklch(0.16 0.03 240);
+  --ring: oklch(0.65 0.22 145);
+  --radius: 0.75rem;
+  --chart-1: oklch(0.65 0.22 145);
+  --chart-2: oklch(0.75 0.15 150);
+  --chart-3: oklch(0.80 0.18 80);
+  --chart-4: oklch(0.65 0.20 320);
+  --chart-5: oklch(0.70 0.20 30);
+  --sidebar: oklch(0.08 0.025 240);
+  --sidebar-foreground: oklch(0.85 0.02 220);
+  --sidebar-primary: oklch(0.65 0.22 145);
+  --sidebar-primary-foreground: oklch(0.98 0.005 145);
+  --sidebar-accent: oklch(0.14 0.03 240);
+  --sidebar-accent-foreground: oklch(0.85 0.02 220);
+  --sidebar-border: oklch(0.18 0.04 240);
+  --sidebar-ring: oklch(0.65 0.22 145);
+}
+
+/* ─── Light Theme Override ─────────────────────────────────────────────── */
+:root:not(.dark) {
+  --navy-950: #f8fafc;
+  --navy-900: #f1f5f9;
+  --navy-800: #e2e8f0;
+  --navy-700: #cbd5e1;
+  --navy-600: #94a3b8;
+  --navy-500: #64748b;
+  --navy-400: #475569;
+  --muted-text: #64748b;
+  --body-text: #334155;
+  --heading-text: #0f172a;
+  --border-subtle: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --card-bg: #ffffff;
+  --card-bg-hover: #f8fafc;
+  --background: oklch(0.98 0.005 240);
+  --foreground: oklch(0.15 0.02 240);
+  --card: oklch(1.0 0 0);
+  --card-foreground: oklch(0.15 0.02 240);
+  --popover: oklch(1.0 0 0);
+  --popover-foreground: oklch(0.15 0.02 240);
+  --primary: oklch(0.55 0.22 145);
+  --primary-foreground: oklch(0.98 0.005 145);
+  --secondary: oklch(0.94 0.01 240);
+  --secondary-foreground: oklch(0.25 0.02 240);
+  --muted: oklch(0.94 0.01 240);
+  --muted-foreground: oklch(0.45 0.03 240);
+  --accent: oklch(0.94 0.01 240);
+  --accent-foreground: oklch(0.20 0.02 240);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0.005 25);
+  --border: oklch(0.88 0.01 240);
+  --input: oklch(0.94 0.01 240);
+  --ring: oklch(0.55 0.22 145);
+  --sidebar: oklch(0.97 0.005 240);
+  --sidebar-foreground: oklch(0.25 0.02 240);
+  --sidebar-primary: oklch(0.55 0.22 145);
+  --sidebar-primary-foreground: oklch(0.98 0.005 145);
+  --sidebar-accent: oklch(0.94 0.01 240);
+  --sidebar-accent-foreground: oklch(0.25 0.02 240);
+  --sidebar-border: oklch(0.88 0.01 240);
+  --sidebar-ring: oklch(0.55 0.22 145);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: "Inter", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "DM Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ─── Base ────────────────────────────────────────────────────────────────── */
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { @apply scroll-smooth; }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    background-color: #060f20;
+    color: #c8d8ec;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "DM Sans", "Inter", sans-serif;
+    color: #e8f0fa;
+    font-weight: 700;
+  }
+  .flex { min-width: 0; min-height: 0; }
+  .container { @apply mx-auto px-4 sm:px-6 lg:px-8; max-width: 1280px; }
+}
+
+/* ─── RC Utility Classes ──────────────────────────────────────────────────── */
+.rc-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 20px 24px;
+  transition: background 0.15s;
+}
+.rc-card:hover { background: var(--card-bg-hover); }
+
+.rc-stat-value {
+  font-family: "DM Sans", sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #e8f0fa;
+  line-height: 1.1;
+}
+.rc-stat-label {
+  font-size: 15px;
+  color: var(--muted-text);
+  margin-top: 4px;
+  font-weight: 600;
+}
+.rc-stat-delta {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+  margin-top: 6px;
+}
+.rc-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.rc-badge-blue { background: rgba(34,197,94,0.15); color: #22c55e; }
+.rc-badge-green { background: rgba(34,197,94,0.15); color: #22c55e; }
+.rc-badge-gold { background: rgba(240,192,64,0.15); color: #f0c040; }
+.rc-badge-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+.rc-badge-muted { background: rgba(122,149,184,0.12); color: #7a95b8; }
+
+.rc-score-ring {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800;
+  border: 3px solid;
+}
+.rc-score-high { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,0.08); }
+.rc-score-med { border-color: #f0c040; color: #f0c040; background: rgba(240,192,64,0.08); }
+.rc-score-low { border-color: #ef4444; color: #ef4444; background: rgba(239,68,68,0.08); }
+
+/* ─── Sidebar ─────────────────────────────────────────────────────────────── */
+.rc-sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  max-height: 100vh;
+  background: #040d1a;
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0; top: 0;
+  z-index: 40;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.rc-sidebar-logo {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.rc-sidebar-nav {
+  flex: 1 1 0;
+  min-height: 0;
+  padding: 6px 4px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(122,149,184,0.25) transparent;
+}
+.rc-sidebar-nav::-webkit-scrollbar { width: 5px; }
+.rc-sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.rc-sidebar-nav::-webkit-scrollbar-thumb { background: rgba(122,149,184,0.25); border-radius: 4px; }
+.rc-sidebar-nav::-webkit-scrollbar-thumb:hover { background: rgba(122,149,184,0.4); }
+.rc-sidebar-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px; font-weight: 600;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  margin-bottom: 0px;
+  min-height: 28px;
+  line-height: 1.35;
+  letter-spacing: 0.2px;
+}
+.rc-sidebar-item svg {
+  flex-shrink: 0;
+  margin-top: 0px;
+  width: 14px;
+  height: 14px;
+}
+.rc-sidebar-item:hover { background: rgba(34, 211, 238, 0.08); color: #e2e8f0; text-shadow: 0 0 6px rgba(34, 211, 238, 0.2); }
+.rc-sidebar-item.active { background: rgba(34,197,94,0.15); color: #34d399; font-weight: 700; text-shadow: 0 0 8px rgba(52, 211, 153, 0.4); }
+.rc-sidebar-item.active svg { color: #34d399; filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.4)); }
+.rc-sidebar-section {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted-text);
+  padding: 10px 10px 4px; margin-top: 8px;
+  border-top: 1px solid rgba(122,149,184,0.08);
+}
+.rc-sidebar-section:first-child {
+  border-top: none;
+  margin-top: 0;
+}
+
+/* ─── Main content area ───────────────────────────────────────────────────── */
+.rc-main {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+  background: #060f20;
+}
+@media (max-width: 768px) {
+  .rc-sidebar { transform: translateX(-100%); }
+  .rc-sidebar.open { transform: translateX(0); }
+  .rc-main { margin-left: 0; padding-bottom: 72px; font-weight: 600; }
+}
+
+/* ─── Top header bar ──────────────────────────────────────────────────────── */
+.rc-topbar {
+  height: 60px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex; align-items: center;
+  padding: 0 24px;
+  background: #060f20;
+  position: sticky; top: 0; z-index: 30;
+  gap: 12px;
+}
+
+/* ─── Bottom tab bar (mobile) ─────────────────────────────────────────────── */
+.rc-bottom-tabs {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: auto;
+  min-height: 56px;
+  background: #040d1a;
+  border-top: 1px solid var(--border-subtle);
+  display: none;
+  z-index: 50;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: stretch;
+  padding: 4px 2px;
+}
+@media (max-width: 768px) { .rc-bottom-tabs { display: flex; } }
+
+/* ─── Landscape mode on mobile phones ─────────────────────────────────────── */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Compact sidebar for landscape */
+  .rc-sidebar { width: 280px; }
+  .rc-sidebar.open { transform: translateX(0); }
+  .rc-sidebar-logo { padding: 10px 14px 8px; }
+  .rc-sidebar-logo .text-sm { font-size: 12px; }
+  .rc-sidebar-item { padding: 3px 8px; font-size: 11px; font-weight: 600; gap: 6px; margin-bottom: 0px; min-height: 24px; }
+  .rc-sidebar-item svg { width: 12px; height: 12px; }
+  .rc-sidebar-section { font-size: 9px; padding: 6px 8px 2px; margin-top: 4px; }
+  /* Compact top bar */
+  .rc-topbar { height: 40px; padding: 0 12px; }
+  /* Compact bottom tabs */
+  .rc-bottom-tabs { height: 44px; }
+  .rc-tab-item { font-size: 9px; gap: 1px; }
+  .rc-tab-item svg { width: 16px; height: 16px; }
+  /* Wider content area — reduce padding for more field of vision */
+  .rc-page-header { padding: 12px 16px 0; margin-bottom: 12px; }
+  .rc-page-title { font-size: 18px; }
+  .rc-card { padding: 12px 16px; border-radius: 12px; }
+  .rc-main main { padding-left: 8px; padding-right: 8px; }
+}
+
+/* Landscape on tablets — show sidebar in compact mode */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+  .rc-sidebar { width: 300px; }
+  .rc-main { margin-left: 300px; }
+  .rc-sidebar-item { padding: 4px 10px; font-size: 12px; font-weight: 600; min-height: 26px; }
+  .rc-sidebar-section { font-size: 10px; padding: 8px 10px 3px; margin-top: 4px; }
+}
+.rc-tab-item {
+  flex: 1 1 auto; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2px; font-size: 10px; font-weight: 600;
+  color: var(--muted-text); cursor: pointer;
+  transition: color 0.12s; text-decoration: none;
+  padding: 6px 4px;
+  min-width: 56px;
+  text-align: center;
+  white-space: nowrap;
+}
+.rc-tab-item.active { color: #22c55e; }
+.rc-tab-item svg { width: 20px; height: 20px; }
+
+/* ─── Page header ─────────────────────────────────────────────────────────── */
+.rc-page-header {
+  padding: 28px 28px 0;
+  margin-bottom: 24px;
+}
+.rc-page-title {
+  font-size: 24px; font-weight: 800;
+  color: #e8f0fa; font-family: "DM Sans", sans-serif;
+}
+.rc-page-subtitle { font-size: 14px; color: var(--muted-text); margin-top: 4px; }
+
+/* ─── Tables ──────────────────────────────────────────────────────────────── */
+.rc-table { width: 100%; border-collapse: collapse; }
+.rc-table th {
+  text-align: left; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted-text); padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.rc-table td {
+  padding: 14px 16px; font-size: 14px; color: var(--body-text);
+  border-bottom: 1px solid rgba(18,35,62,0.6);
+}
+.rc-table tr:hover td { background: rgba(15,30,53,0.5); }
+
+/* ─── Kanban board ────────────────────────────────────────────────────────── */
+.rc-kanban { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px; }
+.rc-kanban-col {
+  min-width: 240px; flex: 1;
+  background: #0b1628;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px; padding: 14px;
+}
+.rc-kanban-col-header {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted-text);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.rc-kanban-card {
+  background: #0f1e35;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px; padding: 12px;
+  margin-bottom: 8px; cursor: pointer;
+  transition: border-color 0.12s;
+}
+.rc-kanban-card:hover { border-color: #22c55e; }
+
+/* ─── Forms — white border on ALL data entry fields ──────────────────────── */
+.rc-input,
+input[type="text"], input[type="email"], input[type="password"],
+input[type="number"], input[type="tel"], input[type="url"],
+input[type="search"], input[type="date"], input[type="datetime-local"],
+select, textarea,
+[role="combobox"], [role="listbox"],
+[data-slot="input"], [data-slot="textarea"],
+.rc-card input, .rc-card select, .rc-card textarea {
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  border-radius: 10px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.rc-input:focus,
+input:focus, select:focus, textarea:focus,
+[data-slot="input"]:focus, [data-slot="textarea"]:focus {
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.15);
+}
+.rc-input {
+  width: 100%;
+  background: #0b1628;
+  padding: 10px 14px;
+  font-size: 14px; color: #e8f0fa;
+  outline: none;
+}
+.rc-input::placeholder { color: var(--muted-text); }
+.rc-label {
+  display: block; font-size: 12px; font-weight: 600;
+  color: var(--muted-text); margin-bottom: 6px; letter-spacing: 0.04em;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────────────────── */
+.rc-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px; border-radius: 10px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all 0.12s; border: none; outline: none;
+}
+.rc-btn-primary { background: #22c55e; color: #fff; }
+.rc-btn-primary:hover { background: #16a34a; }
+.rc-btn-secondary { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+.rc-btn-secondary:hover { background: rgba(34,197,94,0.2); }
+.rc-btn-ghost { background: transparent; color: var(--muted-text); }
+.rc-btn-ghost:hover { background: var(--navy-700); color: var(--body-text); }
+.rc-btn-danger { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+
+/* ─── Score bar ───────────────────────────────────────────────────────────── */
+.rc-score-bar { height: 6px; border-radius: 3px; background: var(--border-subtle); overflow: hidden; }
+.rc-score-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+
+/* ─── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.rc-fade-in { animation: fadeIn 0.3s ease forwards; }
+@keyframes pulse-glow { 0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } 50% { box-shadow: 0 0 12px 3px rgba(34,197,94,0.25); } }
+.rc-pulse { animation: pulse-glow 2s infinite; }
+
+/* ─── Global Text Overflow Safety ──────────────────────────────────────── */
+/* Prevent text from overflowing containers globally */
+h1, h2, h3, h4, h5, h6, p, span, label, th, td, a, button {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Tab triggers should always wrap text instead of overflowing */
+[role="tablist"] button,
+[data-state] {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Table headers should not overflow — allow wrapping */
+th {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Badge text should truncate if too long */
+[class*="badge"] {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Stat cards and metric labels should wrap */
+.text-\[10px\], .text-\[9px\] {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  line-height: 1.3;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UPGRADE 10: Mobile-Optimized Client App Experience
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Touch-friendly interactions ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Larger touch targets */
+  button, a, [role="button"], .rc-sidebar-item, .rc-tab-item {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Prevent accidental double-tap zoom */
+  * { touch-action: manipulation; }
+
+  /* Safe area insets for notched phones */
+  .rc-main {
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+  }
+  .rc-bottom-tabs {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    height: auto;
+    min-height: calc(56px + env(safe-area-inset-bottom, 0));
+  }
+
+  /* Smoother scrolling */
+  .rc-sidebar-nav, .rc-main, main {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  /* Cards: reduce padding for mobile */
+  .rc-card, [class*="CardContent"] {
+    padding: 12px !important;
+  }
+
+  /* Page content padding */
+  .rc-main main {
+    padding: 12px 12px 80px;
+  }
+
+  /* Page header compact */
+  .rc-page-header {
+    padding: 16px 12px 0;
+    margin-bottom: 16px;
+  }
+  .rc-page-title {
+    font-size: 20px;
+  }
+
+  /* Tables: horizontal scroll wrapper */
+  .rc-table-wrapper, table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  /* Grid adjustments: stack columns on mobile */
+  .grid-cols-2 { grid-template-columns: 1fr !important; }
+  .grid-cols-3 { grid-template-columns: 1fr !important; }
+  .grid-cols-4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .grid-cols-5 { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* md:grid-cols should not be overridden on mobile — they use min-width */
+
+  /* Dialog/modal: full-width on mobile */
+  [role="dialog"], [data-radix-popper-content-wrapper] {
+    max-width: calc(100vw - 24px) !important;
+    width: calc(100vw - 24px) !important;
+  }
+
+  /* Sidebar overlay: full width on mobile */
+  .rc-sidebar {
+    width: 100vw;
+    max-width: 320px;
+    z-index: 40;
+  }
+  .rc-sidebar-nav {
+    padding: 8px 6px;
+  }
+  .rc-sidebar-item {
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 32px;
+    gap: 8px;
+    border-radius: 8px;
+    margin-bottom: 0px;
+  }
+  .rc-sidebar-section {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 10px 10px 4px;
+    margin-top: 6px;
+    letter-spacing: 0.1em;
+  }
+
+  /* Topbar: compact on mobile */
+  .rc-topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  /* Charts: ensure they don't overflow */
+  .recharts-responsive-container {
+    max-width: 100% !important;
+  }
+
+  /* Input fields: prevent zoom on iOS (font-size >= 16px) */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  /* Kanban: single column on mobile */
+  .rc-kanban {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .rc-kanban-col {
+    min-width: 100%;
+  }
+
+  /* Hide non-essential elements on mobile */
+  .rc-hide-mobile { display: none !important; }
+
+  /* ─── Tab lists: wrap onto multiple lines on mobile ──────────────── */
+  [data-slot="tabs-list"],
+  [role="tablist"] {
+    flex-wrap: wrap !important;
+    height: auto !important;
+    min-height: 36px;
+    width: 100% !important;
+    gap: 4px;
+    padding: 4px !important;
+  }
+  [data-slot="tabs-trigger"],
+  [role="tab"] {
+    white-space: normal !important;
+    text-align: center;
+    height: auto !important;
+    min-height: 32px;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    flex: 0 1 auto !important;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+
+  /* ─── Buttons: allow text wrapping on mobile ─────────────────────── */
+  button, .rc-btn, [role="button"] {
+    white-space: normal !important;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  /* ─── Bottom tab bar safe area ──────────────────────────────────── */
+  .rc-bottom-tabs {
+    padding-bottom: max(4px, env(safe-area-inset-bottom, 4px));
+  }
+  .rc-tab-item {
+    min-height: 44px;
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+}
+
+/* ─── Small phone screens (< 380px) ─────────────────────────────────────── */
+@media (max-width: 380px) {
+  .rc-page-title { font-size: 18px; }
+  .rc-topbar { padding: 0 8px; height: 48px; }
+  .rc-main main { padding: 8px 8px 80px; }
+  .rc-tab-item { font-size: 9px; padding: 3px 4px; min-width: 48px; }
+  .rc-tab-item svg { width: 18px; height: 18px; }
+  .grid-cols-4, .grid-cols-5 { grid-template-columns: 1fr !important; }
+
+  /* Even smaller tab triggers on tiny screens */
+  [data-slot="tabs-trigger"],
+  [role="tab"] {
+    font-size: 11px !important;
+    padding: 5px 8px !important;
+    min-height: 30px;
+  }
+
+  /* Sidebar: full width on small phones */
+  .rc-sidebar {
+    width: 100vw;
+    max-width: 100vw;
+  }
+  .rc-sidebar-item {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    min-height: 28px;
+  }
+}
+
+/* ─── PWA-like experience ────────────────────────────────────────────────── */
+@media (display-mode: standalone) {
+  .rc-topbar { padding-top: env(safe-area-inset-top, 0); }
+  .rc-bottom-tabs { padding-bottom: env(safe-area-inset-bottom, 0); }
+}
+
+/* ─── Improved focus states for accessibility ────────────────────────────── */
+@media (max-width: 768px) {
+  :focus-visible {
+    outline: 2px solid #22c55e;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* ─── Pull-to-refresh indicator styling ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .rc-pull-indicator {
+    position: fixed;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    padding: 8px 16px;
+    background: rgba(34, 197, 94, 0.15);
+    border-radius: 0 0 8px 8px;
+    font-size: 12px;
+    color: #22c55e;
+    display: none;
+  }
+}
+
+/* ─── Swipe gesture area for sidebar ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .rc-swipe-edge {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 20px;
+    z-index: 25;
+  }
+}
+
+/* ─── Smooth page transition for lazy-loaded routes ────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: fadeInUp 0.2s ease-out;
+}
+
+/* Apply to all direct route children for seamless transitions */
+[data-page-transition] {
+  animation: fadeInUp 0.2s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COHERENT BREATHING — Flow State Entrainment System
+   ═══════════════════════════════════════════════════════════════════════════
+   Medical basis: Coherent / resonance breathing at exactly 6 breaths/min
+   (Lehrer & Gevirtz, 2014; Vaschillo et al., 2006) produces maximum heart
+   rate variability coherence by matching the baroreflex resonance frequency
+   (~0.1 Hz). This activates parasympathetic dominance — the physiological
+   signature of calm, focused flow state.
+
+   Nature (2025): Light-guided resonant breathing at ~6 breaths/min
+   significantly enhances parasympathetic activity (s41598-025-24813-y).
+   Frontiers in Human Neuroscience: "Breath of life" respiratory vagal
+   stimulation model confirms 0.1 Hz as optimal (fnhum.2018.00397).
+
+   Cycle: 10.0s total (4.2s inhale / 5.8s exhale ≈ 42/58 ratio)
+   Rate: 6.0 breaths/min — exact resonance frequency
+   Inhale is slightly faster than exhale, matching natural diaphragmatic
+   breathing and maximizing vagal tone on the longer exhale phase.
+
+   All animations are SUBLIMINAL — below conscious detection threshold.
+   The user should never consciously notice the breathing, but their
+   autonomic nervous system will entrain to the 0.1 Hz rhythm.
+
+   AMPLIFIED 300% — intentionally visible breathing.
+   Scale shifts: 0.5-1.5%  |  Brightness: 1-2%
+   Orb opacity: 5-15%       |  Glow radius: 4-12px
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Breathing Timing Variables ──────────────────────────────────────── */
+:root {
+  --breath-duration: 10s;
+  --breath-scale-peak: 1.005;
+  --breath-brightness-peak: 1.012;
+  --breath-ease: cubic-bezier(0.37, 0.0, 0.25, 1.0);
+}
+
+/* ─── Core Breathing Keyframes ─────────────────────────────────────────── */
+
+/* Body-level entrainment — imperceptible brightness pulse + viewport scale.
+   This is the primary nervous-system driver: every pixel on screen
+   participates in a coherent 0.1 Hz luminance oscillation.
+   The scale transform creates a subliminal looming/receding effect
+   that the autonomic nervous system interprets as approach/withdraw,
+   driving respiratory entrainment (Vagnoni et al., 2012). */
+@keyframes bodyBreathe {
+  0%   { filter: brightness(1.000); transform: scale(1.000); }
+  42%  { filter: brightness(var(--breath-brightness-peak)); transform: scale(var(--breath-scale-peak)); }
+  58%  { filter: brightness(calc(var(--breath-brightness-peak) - 0.003)); transform: scale(calc(var(--breath-scale-peak) - 0.001)); }
+  100% { filter: brightness(1.000); transform: scale(1.000); }
+}
+
+/* Ambient content wrapper — micro hue-rotate + brightness for depth */
+@keyframes ambientShift {
+  0%   { filter: hue-rotate(0deg) brightness(1.000); }
+  42%  { filter: hue-rotate(0.5deg) brightness(1.008); }
+  100% { filter: hue-rotate(0deg) brightness(1.000); }
+}
+
+/* Primary orb glow breath */
+@keyframes orbBreathe {
+  0%   { opacity: 0.04; transform: scale(0.95); filter: blur(60px); }
+  42%  { opacity: 0.12; transform: scale(1.05); filter: blur(70px); }
+  100% { opacity: 0.04; transform: scale(0.95); filter: blur(60px); }
+}
+
+/* Secondary orb — counter-phase for organic feel */
+@keyframes orbBreatheAlt {
+  0%   { opacity: 0.06; transform: scale(1.03); filter: blur(65px); }
+  42%  { opacity: 0.025; transform: scale(0.97); filter: blur(55px); }
+  100% { opacity: 0.06; transform: scale(1.03); filter: blur(65px); }
+}
+
+/* Card border glow — imperceptible edge luminance shift */
+@keyframes borderBreathe {
+  0%   { border-color: rgba(34, 197, 94, 0.08); box-shadow: 0 0 0px rgba(34, 197, 94, 0); }
+  42%  { border-color: rgba(34, 197, 94, 0.20); box-shadow: 0 0 12px rgba(34, 197, 94, 0.06); }
+  100% { border-color: rgba(34, 197, 94, 0.08); box-shadow: 0 0 0px rgba(34, 197, 94, 0); }
+}
+
+/* Text shadow breath — subliminal heading glow */
+@keyframes shadowBreathe {
+  0%   { text-shadow: 0 0 0px rgba(34, 197, 94, 0.00); }
+  42%  { text-shadow: 0 0 8px rgba(34, 197, 94, 0.12); }
+  100% { text-shadow: 0 0 0px rgba(34, 197, 94, 0.00); }
+}
+
+/* ─── Body-Level Entrainment ──────────────────────────────────────────── */
+/* Applied to <body> via base layer — every page breathes at 6 breaths/min.
+   The 0.25% brightness oscillation is far below the ~1% JND threshold,
+   making it invisible to conscious perception while the autonomic nervous
+   system entrains to the coherent rhythm. */
+@layer base {
+  body {
+    animation: bodyBreathe var(--breath-duration) var(--breath-ease) infinite;
+    will-change: filter, transform;
+    transform-origin: 50% 50%;
+  }
+}
+
+/* ─── Global Breathing Layer ───────────────────────────────────────────── */
+/* Two ambient gradient orbs that breathe behind all content */
+.rc-breathe-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.rc-breathe-layer::before,
+.rc-breathe-layer::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  will-change: opacity, transform, filter;
+}
+
+/* Primary orb — top-right, green-tinted (AMPLIFIED) */
+.rc-breathe-layer::before {
+  top: -15%;
+  right: -10%;
+  width: 70vw;
+  height: 70vw;
+  max-width: 1000px;
+  max-height: 1000px;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.04) 40%, transparent 70%);
+  animation: orbBreathe var(--breath-duration) var(--breath-ease) infinite;
+}
+
+/* Secondary orb — bottom-left, blue-tinted, phase-offset (AMPLIFIED) */
+.rc-breathe-layer::after {
+  bottom: -20%;
+  left: -15%;
+  width: 60vw;
+  height: 60vw;
+  max-width: 900px;
+  max-height: 900px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.03) 40%, transparent 70%);
+  animation: orbBreatheAlt var(--breath-duration) var(--breath-ease) infinite;
+  animation-delay: calc(var(--breath-duration) * -0.5);
+}
+
+/* ─── Subtle Card Border Breathing ─────────────────────────────────────── */
+.rc-breathe-border {
+  animation: borderBreathe var(--breath-duration) var(--breath-ease) infinite;
+}
+
+/* ─── Ambient Shift on Main Content ────────────────────────────────────── */
+.rc-breathe-ambient {
+  animation: ambientShift var(--breath-duration) var(--breath-ease) infinite;
+}
+
+/* ─── Heading Shadow Breath ────────────────────────────────────────────── */
+.rc-breathe-text {
+  animation: shadowBreathe var(--breath-duration) var(--breath-ease) infinite;
+}
+
+/* ─── Context-Aware Breathing States ──────────────────────────────────── */
+/* The EntrainmentEngine sets data-breathing attribute on <html>.
+   CSS custom properties are also updated via JS for the body animation.
+   These state-specific classes add visual cues for mega/alert reels. */
+
+[data-breathing="mega"] .rc-breathe-layer::before {
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.22) 0%, rgba(234, 179, 8, 0.06) 40%, transparent 70%);
+}
+[data-breathing="mega"] .rc-breathe-layer::after {
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.15) 0%, rgba(234, 179, 8, 0.04) 40%, transparent 70%);
+}
+[data-breathing="alert"] .rc-breathe-layer::before {
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.18) 0%, rgba(239, 68, 68, 0.05) 40%, transparent 70%);
+}
+[data-breathing="excitement"] .rc-breathe-layer::before {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.20) 0%, rgba(59, 130, 246, 0.06) 40%, transparent 70%);
+}
+
+/* ─── Reduce motion: respect user preferences ──────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none !important;
+  }
+  .rc-breathe-layer::before,
+  .rc-breathe-layer::after,
+  .rc-breathe-border,
+  .rc-breathe-ambient,
+  .rc-breathe-text {
+    animation: none !important;
+  }
+}
+
+/* ─── AMPLIFIED: Third Breathing Orb + Vignette Pulse ─────────────────── */
+/* A center-screen amber orb that adds warmth and depth to the breathing */
+@keyframes orbBreatheCenter {
+  0%   { opacity: 0.03; transform: translate(-50%, -50%) scale(0.9); filter: blur(80px); }
+  42%  { opacity: 0.08; transform: translate(-50%, -50%) scale(1.08); filter: blur(90px); }
+  100% { opacity: 0.03; transform: translate(-50%, -50%) scale(0.9); filter: blur(80px); }
+}
+
+/* Vignette that pulses with the breath — darkens edges rhythmically */
+@keyframes vignetteBreathe {
+  0%   { opacity: 0.15; }
+  42%  { opacity: 0.08; }
+  100% { opacity: 0.15; }
+}
+
+/* Third orb element — injected via additional layer */
+.rc-breathe-layer-extra {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Center amber orb */
+.rc-breathe-layer-extra::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50vw;
+  height: 50vw;
+  max-width: 700px;
+  max-height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.06) 0%, rgba(234, 179, 8, 0.02) 35%, transparent 65%);
+  animation: orbBreatheCenter var(--breath-duration) var(--breath-ease) infinite;
+  animation-delay: calc(var(--breath-duration) * -0.25);
+  will-change: opacity, transform, filter;
+}
+
+/* Breathing vignette overlay */
+.rc-breathe-layer-extra::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+  animation: vignetteBreathe var(--breath-duration) var(--breath-ease) infinite;
+  will-change: opacity;
+}
+
+/* State-aware center orb colors */
+[data-breathing="mega"] .rc-breathe-layer-extra::before {
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.15) 0%, rgba(234, 179, 8, 0.04) 35%, transparent 65%);
+}
+[data-breathing="alert"] .rc-breathe-layer-extra::before {
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.10) 0%, rgba(239, 68, 68, 0.03) 35%, transparent 65%);
+}
+[data-breathing="excitement"] .rc-breathe-layer-extra::before {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.03) 35%, transparent 65%);
+}
+
+/* ─── AMPLIFIED: Card Glow Pulse ──────────────────────────────────────── */
+/* Cards with .rc-breathe-card get a subtle green glow pulse */
+@keyframes cardGlowPulse {
+  0%   { box-shadow: 0 0 0px rgba(34, 197, 94, 0), 0 1px 3px rgba(0,0,0,0.3); }
+  42%  { box-shadow: 0 0 15px rgba(34, 197, 94, 0.04), 0 1px 3px rgba(0,0,0,0.3); }
+  100% { box-shadow: 0 0 0px rgba(34, 197, 94, 0), 0 1px 3px rgba(0,0,0,0.3); }
+}
+
+.rc-breathe-card {
+  animation: cardGlowPulse var(--breath-duration) var(--breath-ease) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-breathe-layer-extra::before,
+  .rc-breathe-layer-extra::after,
+  .rc-breathe-card {
+    animation: none !important;
+  }
+}
+
+/* ─── Unified Portal Theme: Grok-inspired purple interiors ──────────────── */
+/* Scoped to AppShell so the public homepage retains its emerald city identity. */
+.rc-portal-theme {
+  --navy-950: #05030a;
+  --navy-900: #080611;
+  --navy-800: #0d0918;
+  --navy-700: #130d22;
+  --navy-600: #1c1230;
+  --navy-500: #2a1b46;
+  --navy-400: #3c2861;
+  --blue-accent: #8b5cf6;
+  --blue-accent-hover: #a78bfa;
+  --muted-text: #9b8fb5;
+  --body-text: #ddd6ec;
+  --heading-text: #faf7ff;
+  --border-subtle: rgba(167, 139, 250, 0.14);
+  --border-medium: rgba(167, 139, 250, 0.25);
+  --card-bg: rgba(13, 9, 24, 0.92);
+  --card-bg-hover: rgba(20, 13, 35, 0.96);
+  --background: oklch(0.075 0.025 300);
+  --foreground: oklch(0.93 0.018 300);
+  --card: oklch(0.105 0.035 300);
+  --card-foreground: oklch(0.93 0.018 300);
+  --popover: oklch(0.095 0.035 300);
+  --popover-foreground: oklch(0.93 0.018 300);
+  --primary: oklch(0.67 0.22 295);
+  --primary-foreground: oklch(0.99 0.005 300);
+  --secondary: oklch(0.15 0.045 300);
+  --secondary-foreground: oklch(0.90 0.02 300);
+  --muted: oklch(0.14 0.04 300);
+  --muted-foreground: oklch(0.64 0.04 300);
+  --accent: oklch(0.17 0.06 300);
+  --accent-foreground: oklch(0.94 0.02 300);
+  --border: oklch(0.24 0.06 300);
+  --input: oklch(0.16 0.05 300);
+  --ring: oklch(0.67 0.22 295);
+  min-height: 100vh;
+  color: #ddd6ec;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(124, 58, 237, 0.18), transparent 30rem),
+    radial-gradient(circle at 90% 28%, rgba(76, 29, 149, 0.12), transparent 34rem),
+    #07050d;
+  font-family: "Inter", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+.rc-portal-theme::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.26;
+  background-image:
+    linear-gradient(rgba(167, 139, 250, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167, 139, 250, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+.rc-portal-theme .rc-main {
+  position: relative;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 78% 4%, rgba(124, 58, 237, 0.12), transparent 28rem),
+    linear-gradient(145deg, #080611 0%, #0b0714 58%, #07050d 100%);
+}
+
+.rc-portal-theme .rc-sidebar {
+  background: linear-gradient(180deg, rgba(8, 5, 15, 0.99), rgba(11, 7, 20, 0.99));
+  border-right-color: rgba(167, 139, 250, 0.18);
+  box-shadow: 18px 0 60px rgba(5, 2, 12, 0.38);
+}
+
+.rc-portal-theme .rc-sidebar-logo,
+.rc-portal-theme .rc-sidebar > div,
+.rc-portal-theme .rc-topbar {
+  border-color: rgba(167, 139, 250, 0.14);
+}
+
+.rc-portal-theme .rc-topbar {
+  background: rgba(8, 5, 15, 0.84);
+  backdrop-filter: blur(18px);
+}
+
+.rc-portal-theme .rc-card {
+  border-color: rgba(167, 139, 250, 0.14);
+  background: linear-gradient(145deg, rgba(18, 11, 32, 0.94), rgba(10, 7, 18, 0.94));
+  box-shadow: 0 20px 55px rgba(5, 2, 12, 0.2);
+}
+
+.rc-portal-theme .rc-card:hover {
+  border-color: rgba(167, 139, 250, 0.26);
+  background: linear-gradient(145deg, rgba(24, 15, 42, 0.96), rgba(12, 8, 22, 0.96));
+}
+
+.rc-portal-theme .rc-sidebar-item:hover {
+  color: #f5f0ff;
+  background: rgba(139, 92, 246, 0.09);
+  text-shadow: 0 0 10px rgba(167, 139, 250, 0.24);
+}
+
+.rc-portal-theme .rc-sidebar-item.active {
+  color: #ddd6fe;
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.24), rgba(139, 92, 246, 0.08));
+  box-shadow: inset 2px 0 #a78bfa;
+  text-shadow: 0 0 10px rgba(167, 139, 250, 0.36);
+}
+
+.rc-portal-theme .rc-sidebar-item.active svg,
+.rc-portal-theme .rc-tab-item.active {
+  color: #c4b5fd;
+  filter: drop-shadow(0 0 5px rgba(167, 139, 250, 0.5));
+}
+
+.rc-portal-theme .rc-bottom-tabs {
+  background: rgba(8, 5, 15, 0.96);
+  border-color: rgba(167, 139, 250, 0.18);
+  backdrop-filter: blur(18px);
+}
+
+.rc-portal-theme .rc-btn-primary {
+  color: white;
+  background: linear-gradient(135deg, #7c3aed, #8b5cf6 58%, #a78bfa);
+  box-shadow: 0 10px 30px rgba(76, 29, 149, 0.34);
+}
+
+.rc-portal-theme .rc-btn-primary:hover {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  transform: translateY(-1px);
+}
+
+.rc-portal-theme .rc-btn-secondary {
+  color: #c4b5fd;
+  background: rgba(124, 58, 237, 0.12);
+  border-color: rgba(167, 139, 250, 0.28);
+}
+
+.rc-portal-theme input:focus,
+.rc-portal-theme select:focus,
+.rc-portal-theme textarea:focus,
+.rc-portal-theme .rc-input:focus {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.16);
+}
+
+.rc-portal-theme ::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.34);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-portal-theme .rc-btn-primary:hover { transform: none; }
+}
+
+/* ─── Public homepage 1.6 typography scale ──────────────────────────────────
+   Requested owner scale: every visible homepage font is 60% larger. The
+   selector is intentionally rooted at .rc-homepage so portal and auth pages
+   retain their existing type sizes. */
+.rc-homepage-type-scale {
+  --rc-homepage-font-scale: 1.6;
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+.rc-homepage-type-scale .text-xs {
+  font-size: 1.2rem !important;
+  line-height: 1.75rem !important;
+}
+
+.rc-homepage-type-scale .text-sm {
+  font-size: 1.4rem !important;
+  line-height: 2rem !important;
+}
+
+.rc-homepage-type-scale .text-base {
+  font-size: 1.6rem !important;
+  line-height: 2.35rem !important;
+}
+
+.rc-homepage-type-scale .text-lg {
+  font-size: 1.8rem !important;
+  line-height: 2.5rem !important;
+}
+
+.rc-homepage-type-scale .text-xl {
+  font-size: 2rem !important;
+  line-height: 2.7rem !important;
+}
+
+.rc-homepage-type-scale .text-2xl {
+  font-size: 2.4rem !important;
+  line-height: 3rem !important;
+}
+
+.rc-homepage-type-scale .text-3xl {
+  font-size: 3rem !important;
+  line-height: 3.6rem !important;
+}
+
+.rc-homepage-type-scale .text-5xl {
+  font-size: 4.8rem !important;
+  line-height: 1.02 !important;
+}
+
+.rc-homepage-type-scale .rc-btn,
+.rc-homepage-type-scale .rc-input {
+  font-size: 1.4rem;
+  line-height: 2rem;
+}
+
+.rc-homepage-type-scale .rc-stat-value {
+  font-size: 2.8rem;
+  line-height: 1.1;
+}
+
+.rc-homepage-type-scale .rc-stat-label {
+  font-size: 1.5rem;
+  line-height: 1.45;
+  margin-top: 0.4rem;
+}
+
+.rc-homepage-type-scale .rc-badge {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  padding: 0.35rem 0.9rem;
+}
+
+.rc-homepage nav .container {
+  min-height: 7rem;
+  height: auto;
+  gap: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.rc-homepage nav .w-8.h-8 {
+  width: 3.2rem;
+  height: 3.2rem;
+  flex: 0 0 auto;
+}
+
+.rc-homepage-hero {
+  min-height: 108vh;
+  padding-top: 11rem;
+  padding-bottom: 8rem;
+}
+
+.rc-homepage-hero-content {
+  max-width: 72rem;
+}
+
+.rc-homepage-hero .w-12.h-12 {
+  width: 4.8rem;
+  height: 4.8rem;
+}
+
+.rc-homepage-hero .flex.flex-col.sm\:flex-row {
+  flex-wrap: wrap;
+}
+
+.rc-homepage-type-scale .rc-card {
+  padding: 2rem 2.25rem;
+}
+
+.rc-homepage-type-scale .rc-btn {
+  min-height: 3.65rem;
+  padding: 0.85rem 1.35rem;
+  white-space: normal;
+  text-align: center;
+  justify-content: center;
+}
+
+.rc-homepage-type-scale .rc-input {
+  min-height: 4rem;
+  padding: 0.8rem 1rem;
+}
+
+.rc-homepage-type-scale section.container,
+.rc-homepage-type-scale footer {
+  scroll-margin-top: 8rem;
+}
+
+.rc-homepage-type-scale #pricing .max-w-5xl {
+  max-width: 78rem;
+}
+
+.rc-homepage-type-scale footer .container > div:first-child {
+  flex-wrap: wrap;
+  max-width: 64rem;
+}
+
+/* Concept 16 command-center components retain the owner's enlarged hierarchy
+   while using bounded control typography so the functional panel remains usable. */
+.rc-homepage-type-scale .rc-concept16-nav .text-sm,
+.rc-homepage-type-scale .rc-command-center .text-sm {
+  font-size: 1rem !important;
+  line-height: 1.45rem !important;
+}
+
+.rc-homepage-type-scale .rc-command-center .text-xs {
+  font-size: 0.82rem !important;
+  line-height: 1.2rem !important;
+}
+
+.rc-homepage-type-scale .rc-command-center input,
+.rc-homepage-type-scale .rc-command-center select {
+  font-size: 0.9rem !important;
+  line-height: 1.3rem !important;
+}
+
+.rc-homepage-type-scale .rc-command-center .text-lg {
+  font-size: 1.28rem !important;
+  line-height: 1.9rem !important;
+}
+
+@media (min-width: 768px) {
+  .rc-homepage-type-scale .md\:text-lg {
+    font-size: 1.8rem !important;
+    line-height: 2.5rem !important;
+  }
+
+  .rc-homepage-type-scale .md\:text-xl {
+    font-size: 2rem !important;
+    line-height: 2.7rem !important;
+  }
+
+  .rc-homepage-type-scale .md\:text-3xl {
+    font-size: 3rem !important;
+    line-height: 3.6rem !important;
+  }
+
+  .rc-homepage-type-scale .md\:text-7xl {
+    font-size: 7.2rem !important;
+    line-height: 0.98 !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .rc-homepage nav .container {
+    min-height: 6.5rem;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .rc-homepage nav .container > div:first-child > span:last-child {
+    display: none;
+  }
+
+  .rc-homepage nav .hidden.md\:flex {
+    display: none !important;
+  }
+
+  .rc-homepage nav .rc-btn {
+    font-size: 1.15rem !important;
+    line-height: 1.45rem !important;
+    min-height: 3.2rem;
+    padding: 0.7rem 0.9rem;
+    max-width: 13rem;
+  }
+
+  .rc-homepage-hero {
+    min-height: auto;
+    padding-top: 10rem;
+    padding-bottom: 7rem;
+    background-position: center 54% !important;
+  }
+
+  .rc-homepage-hero-content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .rc-homepage-type-scale .text-5xl {
+    font-size: 4.8rem !important;
+    overflow-wrap: anywhere;
+  }
+
+  .rc-homepage-hero .rc-btn {
+    width: min(100%, 22rem);
+  }
+
+  .rc-homepage-type-scale .rc-card {
+    padding: 1.5rem;
+  }
+
+  .rc-homepage-type-scale section.container {
+    padding-top: 5.5rem;
+    padding-bottom: 5.5rem;
+  }
+
+  .rc-homepage-type-scale .grid.grid-cols-2.md\:grid-cols-4 {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.25rem;
+  }
+
+  .rc-homepage-type-scale footer .container,
+  .rc-homepage-type-scale footer .container > div {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .rc-homepage-type-scale footer .container > div:last-child {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+}

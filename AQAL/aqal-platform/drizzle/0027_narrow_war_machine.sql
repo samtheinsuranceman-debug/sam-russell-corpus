@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `email_opt_out_at` timestamp;
