@@ -1330,6 +1330,14 @@ th {
   scroll-margin-top: 8rem;
 }
 
+/* every in-page anchor lands below the fixed nav bar */
+.rc-homepage [id] {
+  scroll-margin-top: 6rem;
+}
+.rc-homepage [hidden] {
+  display: none !important;
+}
+
 .rc-homepage-type-scale #pricing .max-w-5xl {
   max-width: 78rem;
 }
