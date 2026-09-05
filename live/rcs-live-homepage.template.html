@@ -1,0 +1,707 @@
+<title>Russell Capital Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&display=swap">
+<style>
+  /* ── Russell Capital Systems — deliberate single-theme neon world ─────── */
+  :root{
+    --ground:#050b0a; --panel:#00110d; --panel-2:#071a15; --ink:#e9f3ee; --ink-2:rgba(255,255,255,.78);
+    --muted:rgba(255,255,255,.58); --faint:rgba(255,255,255,.42);
+    --em-200:#a7f3d0; --em-300:#6ee7b7; --em-400:#34d399; --em-500:#10b981;
+    --line:rgba(52,211,153,.22); --line-2:rgba(52,211,153,.4);
+    --amber:#fbbf24; --amber-ink:#fde68a; --danger:#f87171;
+    --glow:0 0 26px rgba(52,211,153,.85); --glow-soft:0 0 26px rgba(16,185,129,.4);
+    --display:"DM Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --serif:Georgia,"Times New Roman",Times,serif;
+    --radius:18px; --radius-lg:26px; --max:1180px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--display);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit}
+  h1,h2,h3{margin:0;text-wrap:balance;line-height:1.1}
+  p{margin:0}
+  .grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;background-image:linear-gradient(rgba(52,211,153,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(52,211,153,.6) 1px,transparent 1px);background-size:56px 56px}
+  .radial-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 85% 12%,rgba(16,185,129,.08),transparent 34%),radial-gradient(circle at 10% 80%,rgba(16,185,129,.06),transparent 36%)}
+  .wrap{position:relative;z-index:1;width:min(var(--max),100% - 2.5rem);margin-inline:auto}
+  .eyebrow{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--line-2);background:rgba(52,211,153,.1);color:var(--em-300);border-radius:999px;padding:.4rem 1rem;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;border-radius:14px;padding:.95rem 1.6rem;font:inherit;font-weight:700;font-size:1rem;cursor:pointer;text-decoration:none;border:1px solid transparent;transition:transform .2s,background .2s,border-color .2s,box-shadow .2s}
+  .btn:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--em-400);outline-offset:2px}
+  .btn-primary{background:linear-gradient(135deg,#10b981,#059669);color:#04110c;box-shadow:0 16px 42px rgba(34,197,94,.28)}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 20px 50px rgba(34,197,94,.36)}
+  .btn-ghost{background:rgba(0,0,0,.3);border-color:var(--line-2);color:#fff;backdrop-filter:blur(8px)}
+  .btn-ghost:hover{background:rgba(52,211,153,.1)}
+  .btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+  .glass{border:1px solid rgba(167,243,208,.3);background:rgba(0,0,0,.55);backdrop-filter:blur(18px);border-radius:var(--radius-lg);box-shadow:0 28px 90px rgba(0,0,0,.5),inset 0 0 45px rgba(16,185,129,.045)}
+  .neon-white{color:#fff;text-shadow:0 0 18px rgba(255,255,255,.45)}
+  .neon{color:var(--em-300);text-shadow:var(--glow)}
+  .grad-text{background:linear-gradient(95deg,#ffffff 0%,#bbf7d0 50%,#34d399 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .section{position:relative;overflow:hidden;border-top:1px solid rgba(52,211,153,.1);background:var(--ground)}
+  .bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.15);filter:blur(16px) brightness(.28)}
+  .bg-veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,11,10,.74) 0%,rgba(5,11,10,.5) 42%,#050b0a 100%)}
+  .bg-veil-h{position:absolute;inset:0;background:linear-gradient(90deg,#050b0a 0%,rgba(5,11,10,.72) 46%,rgba(5,11,10,.35) 100%)}
+  .bg-grid{position:absolute;inset:0;opacity:.12;background-image:linear-gradient(rgba(52,211,153,.55) 1px,transparent 1px),linear-gradient(90deg,rgba(52,211,153,.55) 1px,transparent 1px);background-size:46px 46px;pointer-events:none}
+  .disclaimer{display:flex;gap:.75rem;align-items:flex-start;border:1px solid rgba(251,191,36,.3);background:rgba(251,191,36,.06);border-radius:14px;padding:.9rem 1rem;font-size:.72rem;line-height:1.55;color:var(--muted)}
+  .disclaimer b{color:var(--amber-ink)}
+  .disclaimer svg{flex:none;margin-top:.1rem;color:var(--amber)}
+  input,select,textarea{font:inherit;color:#fff;background:rgba(0,17,13,.7);border:1px solid rgba(167,243,208,.2);border-radius:12px;padding:.7rem .85rem;width:100%}
+  input::placeholder,textarea::placeholder{color:var(--faint)}
+  input:focus,select:focus,textarea:focus{border-color:var(--em-400)}
+  select option{background:#00110d}
+  label.f{display:block;font-size:.74rem;color:var(--muted)}
+  label.f input,label.f select{margin-top:.3rem}
+
+  /* nav */
+  .nav{position:sticky;top:0;z-index:50;padding:.9rem 0}
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:4.6rem;padding:0 1.25rem;border:1px solid rgba(110,231,183,.25);background:rgba(0,0,0,.6);backdrop-filter:blur(18px);border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+  .brand{display:flex;align-items:center;gap:.75rem;text-decoration:none;min-width:0}
+  .brand-mark{display:grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:12px;border:1px solid rgba(110,231,183,.5);background:rgba(110,231,183,.1);color:var(--em-300);font-weight:900;box-shadow:inset 0 0 22px rgba(52,211,153,.12)}
+  .brand-name{font-weight:700;font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-links{display:none;gap:1.6rem;font-size:.92rem}
+  .nav-links a{color:var(--ink-2);text-decoration:none}
+  .nav-links a:hover{color:var(--em-300)}
+  .nav-cta{display:flex;align-items:center;gap:.5rem}
+  .menu-btn{display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:transparent;color:#fff;cursor:pointer}
+  .mobile-menu{margin-top:.5rem;border:1px solid var(--line);background:rgba(0,0,0,.92);backdrop-filter:blur(18px);border-radius:16px;padding:.5rem}
+  .mobile-menu a{display:block;padding:.8rem 1rem;border-radius:10px;color:var(--ink-2);text-decoration:none}
+  .mobile-menu a:hover{background:rgba(255,255,255,.05);color:var(--em-300)}
+  @media(min-width:980px){.nav-links{display:flex}.menu-btn{display:none}}
+
+  /* hero */
+  .hero{padding:5.5rem 0 5rem}
+  .hero-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center}
+  .sign{display:flex;flex-direction:column;gap:.75rem;width:100%;max-width:56rem;font-family:var(--serif)}
+  .sign span{display:block;border-radius:18px;padding:.6rem 1.25rem;font-weight:700;line-height:1.15;backdrop-filter:blur(4px)}
+  .sign .s1{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.06);font-size:clamp(1.8rem,4.4vw,3.6rem)}
+  .sign .s2{border:1px solid rgba(110,231,183,.6);background:rgba(52,211,153,.06);font-size:clamp(1.8rem,4.4vw,3.6rem);color:var(--em-300);text-shadow:0 0 22px rgba(52,211,153,.9),0 0 46px rgba(16,185,129,.5)}
+  .sign .s3{border:1px solid rgba(110,231,183,.45);background:rgba(52,211,153,.05);font-size:clamp(1.35rem,3.4vw,2.7rem);color:var(--em-200);text-shadow:0 0 18px rgba(52,211,153,.7)}
+  .hero-sub{max-width:40rem;margin-top:2rem;font-size:1.12rem;color:rgba(255,255,255,.86);text-shadow:0 5px 20px rgba(0,0,0,.9)}
+  .hero-sub b{color:var(--em-300);font-weight:600}
+  .hero-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;margin-top:2rem}
+  .pillars{display:grid;grid-template-columns:repeat(2,1fr);width:100%;max-width:64rem;margin-top:3.5rem;border:1px solid rgba(167,243,208,.25);background:rgba(0,0,0,.45);backdrop-filter:blur(18px);border-radius:18px;overflow:hidden}
+  .pillar{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;min-height:8rem;padding:1.4rem .8rem;color:rgba(255,255,255,.86);text-decoration:none;border-right:1px solid rgba(167,243,208,.12);border-bottom:1px solid rgba(167,243,208,.12);font-size:.9rem;font-weight:600;text-align:center}
+  .pillar svg{color:var(--em-300)}
+  .pillar:hover{background:rgba(52,211,153,.1);color:var(--em-200)}
+  @media(min-width:640px){.pillars{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:980px){.pillars{grid-template-columns:repeat(5,1fr)}.pillar{border-bottom:0}}
+
+  /* concierge */
+  .center{text-align:center}
+  .h2{font-weight:800;font-size:clamp(2rem,5vw,3.8rem);color:#fff;text-shadow:var(--glow-soft)}
+  .lead{max-width:42rem;margin:1rem auto 0;font-size:1.12rem;color:var(--ink-2)}
+  .concierge{max-width:52rem;margin:2.5rem auto 0;padding:1.5rem}
+  .ask-row{display:flex;flex-direction:column;gap:.75rem}
+  @media(min-width:640px){.ask-row{flex-direction:row}}
+  .ask-row textarea{flex:1;min-height:6.2rem;resize:vertical}
+  .mic{white-space:nowrap}
+  .mic.listening{background:#ef4444;color:#fff;border-color:#ef4444;box-shadow:none}
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+  .chip{border:1px solid rgba(167,243,208,.2);background:rgba(0,0,0,.3);color:var(--muted);border-radius:999px;padding:.4rem .8rem;font:inherit;font-size:.74rem;cursor:pointer;text-align:left}
+  .chip:hover{border-color:var(--line-2);color:var(--em-200)}
+  .status{margin-top:.8rem;text-align:center;font-size:.9rem;color:var(--muted);min-height:1.2em}
+  .answer{display:none;margin-top:1.25rem;border:1px solid rgba(167,243,208,.2);background:rgba(0,17,13,.72);border-radius:14px;padding:1.25rem}
+  .answer.show{display:block}
+  .answer-meta{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--em-300);margin-bottom:.75rem}
+  .answer-body{white-space:pre-wrap;font-size:.98rem;line-height:1.65;color:rgba(255,255,255,.9)}
+  .answer-ctas{display:flex;flex-direction:column;gap:.6rem;margin-top:1.2rem}
+  @media(min-width:640px){.answer-ctas{flex-direction:row}.answer-ctas .btn{flex:1}}
+  .fine{margin-top:1rem;text-align:center;font-size:.7rem;color:var(--faint);line-height:1.55}
+
+  /* retention band */
+  .band-card{position:relative;overflow:hidden;max-width:64rem;margin:0 auto;padding:2rem;border:1px solid rgba(110,231,183,.3);background:linear-gradient(150deg,rgba(6,24,19,.94),rgba(3,10,9,.7));backdrop-filter:blur(24px);border-radius:2rem;box-shadow:0 34px 90px rgba(0,0,0,.55)}
+  @media(min-width:640px){.band-card{padding:3rem}}
+  .accent-top{position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,transparent,rgba(52,211,153,.95),transparent)}
+  .corner{position:absolute;width:14rem;height:14rem;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(16,185,129,.22),transparent 70%)}
+  .band-grid{position:relative;display:grid;gap:2.5rem;align-items:center}
+  @media(min-width:820px){.band-grid{grid-template-columns:auto 1fr}}
+  .medal{position:relative;width:11rem;height:11rem;margin:0 auto;display:grid;place-items:center}
+  .medal .ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 210deg,rgba(52,211,153,.9),rgba(16,185,129,.15) 60%,rgba(52,211,153,.9));opacity:.8;filter:blur(2px)}
+  .medal .core{position:absolute;inset:3px;border-radius:50%;background:radial-gradient(circle at 50% 35%,rgba(6,26,20,.95),#03100c)}
+  .medal .num{position:relative;font-size:3.6rem;font-weight:900;letter-spacing:-.02em;line-height:1}
+  .medal .lbl{position:relative;margin-top:.25rem;font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(110,231,183,.85)}
+  .band-h{margin-top:1rem;font-size:clamp(1.9rem,4.2vw,3rem);font-weight:900;letter-spacing:-.015em;line-height:1.08}
+  .band-p{margin-top:1rem;max-width:36rem;font-size:.98rem;color:rgba(255,255,255,.82)}
+  .band-p b{color:#fff;font-weight:600}.band-p .em{color:var(--em-300);font-weight:600}
+  .tags{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.4rem}
+  .tag{display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgba(167,243,208,.2);background:rgba(0,0,0,.4);border-radius:999px;padding:.4rem .9rem;font-size:.78rem;color:rgba(255,255,255,.78)}
+  .tag svg{color:var(--em-300)}
+
+  /* estimator */
+  .form-card{max-width:52rem;margin:2.5rem auto 0;padding:1.5rem}
+  @media(min-width:640px){.form-card{padding:2rem}}
+  .two{display:grid;gap:.75rem}
+  @media(min-width:640px){.two{grid-template-columns:1fr 1fr}.span2{grid-column:span 2}}
+  .sub{margin:1.5rem 0 .6rem;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--em-300)}
+  .consent{display:flex;gap:.75rem;align-items:flex-start;margin-top:1.25rem;border:1px solid rgba(167,243,208,.2);background:rgba(0,0,0,.3);border-radius:14px;padding:1rem;font-size:.76rem;line-height:1.55;color:rgba(255,255,255,.72)}
+  .consent input{width:1rem;height:1rem;margin-top:.15rem;accent-color:var(--em-400);flex:none}
+  .err{margin-top:.75rem;color:var(--danger);font-size:.9rem;min-height:1.2em}
+  .result{display:none;max-width:52rem;margin:2.5rem auto 0;padding:2rem;border-color:rgba(110,231,183,.35)}
+  .result.show{display:block}
+  .result h3{font-size:clamp(1.3rem,3vw,2rem);font-weight:800;line-height:1.3;color:#fff;margin-top:.75rem}
+  .pills{display:grid;gap:.5rem;margin-top:1.25rem}
+  @media(min-width:640px){.pills{grid-template-columns:1fr 1fr}}
+  .pill{display:flex;align-items:center;gap:.5rem;border:1px solid rgba(167,243,208,.15);background:rgba(0,17,13,.6);border-radius:10px;padding:.65rem .8rem;font-size:.9rem;color:rgba(255,255,255,.85)}
+  .pill svg{color:var(--em-300);flex:none}
+
+  /* chapters */
+  .chapter{padding:6rem 0}
+  .chapter-grid{position:relative;z-index:1;display:grid;gap:2.5rem;align-items:center}
+  @media(min-width:980px){.chapter-grid{grid-template-columns:1fr 1fr}}
+  .big{font-weight:800;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.03em;line-height:1.02;color:#fff}
+  .rule{height:4px;width:6rem;border-radius:4px;background:var(--em-400);margin-top:1.25rem}
+  .chapter p.lead-l{margin-top:1.5rem;max-width:28rem;font-size:1.12rem;color:rgba(255,255,255,.8)}
+  .stack{display:flex;flex-direction:column;gap:.75rem;margin-top:2rem;max-width:28rem}
+  .war{max-width:60rem;margin:0 auto 3rem;text-align:center}
+  .war h2{margin-top:.75rem;font-size:clamp(2.6rem,6.4vw,5.4rem);font-weight:800;letter-spacing:-.02em;line-height:1.03;color:#fff;text-shadow:0 0 30px rgba(16,185,129,.45)}
+  .war .bridge{margin:1rem auto 0;max-width:42rem;font-size:clamp(1rem,2.1vw,1.4rem);font-weight:500;color:rgba(255,255,255,.85)}
+  .war .bridge b{color:var(--em-300);font-weight:600}
+  .war .note{margin:.75rem auto 0;max-width:42rem;font-size:.9rem;color:var(--muted)}
+  .selector{padding:1.25rem}
+  .selector .t{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;font-weight:600;font-size:1.05rem;color:var(--em-300)}
+  .selector .row{display:flex;align-items:center;gap:.75rem;border:1px solid rgba(167,243,208,.2);background:rgba(0,17,13,.7);border-radius:12px;padding:.7rem 1rem;margin-bottom:.75rem}
+  .selector .row svg{flex:none;color:var(--em-300)}
+  .selector .row select{border:0;background:transparent;padding:0}
+  .cols{display:grid;gap:1.5rem;margin-top:3rem;padding:1.5rem;border:1px solid rgba(167,243,208,.15);background:rgba(0,0,0,.4);backdrop-filter:blur(18px);border-radius:18px}
+  @media(min-width:640px){.cols{grid-template-columns:1fr 1fr}}
+  @media(min-width:980px){.cols{grid-template-columns:repeat(4,1fr)}}
+  .col{display:flex;gap:.75rem}
+  .col .ic{display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:50%;border:1px solid rgba(110,231,183,.35);color:var(--em-300);flex:none}
+  .col b{display:block;color:#fff;font-weight:600}.col span{font-size:.88rem;color:rgba(255,255,255,.65)}
+  .badge{display:inline-flex;align-items:center;gap:.75rem;margin-top:1.5rem;border:1px solid rgba(110,231,183,.25);background:rgba(0,0,0,.4);border-radius:12px;padding:.75rem 1rem}
+  .badge b{display:block;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--em-300)}
+  .badge span{font-size:.9rem;color:rgba(255,255,255,.75)}
+  .feat5{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:2.5rem;padding:1.25rem;border:1px solid rgba(167,243,208,.15);background:rgba(0,0,0,.4);backdrop-filter:blur(18px);border-radius:18px;text-align:center}
+  @media(min-width:640px){.feat5{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:980px){.feat5{grid-template-columns:repeat(5,1fr)}}
+  .feat5 svg{color:var(--em-300)}.feat5 b{display:block;margin-top:.5rem;font-size:.9rem;color:#fff}.feat5 span{display:block;margin-top:.25rem;font-size:.76rem;color:rgba(255,255,255,.6)}
+
+  /* tech */
+  .tech{padding:7rem 0}
+  .tech-grid{display:grid;gap:1.5rem;margin-top:3rem}
+  @media(min-width:700px){.tech-grid{grid-template-columns:1fr 1fr}}
+  @media(min-width:1024px){.tech-grid{grid-template-columns:repeat(3,1fr)}}
+  .tcard{position:relative;overflow:hidden;border:1px solid rgba(110,231,183,.2);background:linear-gradient(158deg,rgba(6,22,18,.92),rgba(3,10,9,.72));backdrop-filter:blur(18px);border-radius:18px;padding:1.5rem;box-shadow:0 18px 50px rgba(0,0,0,.45);transition:transform .3s,border-color .3s,box-shadow .3s}
+  .tcard:hover{transform:translateY(-6px);border-color:rgba(110,231,183,.6);box-shadow:0 28px 72px rgba(16,185,129,.22)}
+  .tcard .accent-top{opacity:.5;transition:opacity .3s}.tcard:hover .accent-top{opacity:1}
+  .tcard .corner{right:-2.5rem;top:-2.5rem;width:8rem;height:8rem;opacity:0;transition:opacity .3s}.tcard:hover .corner{opacity:1}
+  .tcard-head{position:relative;display:flex;align-items:center;justify-content:space-between}
+  .tcard .ic{display:grid;place-items:center;width:3rem;height:3rem;border-radius:12px;border:1px solid rgba(110,231,183,.4);background:linear-gradient(135deg,rgba(16,185,129,.3),rgba(16,185,129,.05));color:var(--em-200);box-shadow:inset 0 0 18px rgba(52,211,153,.28);transition:transform .3s}
+  .tcard:hover .ic{transform:scale(1.05)}
+  .only{border:1px solid rgba(110,231,183,.3);background:rgba(110,231,183,.06);border-radius:999px;padding:.3rem .7rem;font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(110,231,183,.8)}
+  .tcard h3{position:relative;margin-top:1.25rem;font-size:1.4rem;font-weight:900;letter-spacing:-.015em;line-height:1.12;text-shadow:0 0 34px rgba(52,211,153,.22)}
+  .tcard .ul{height:2px;width:4rem;border-radius:2px;margin-top:.75rem;background:linear-gradient(90deg,#34d399,rgba(52,211,153,0))}
+  .tcard p{position:relative;margin-top:1rem;font-size:.95rem;line-height:1.6;color:rgba(255,255,255,.85)}
+  .tcard p b{display:block;margin-bottom:.35rem;font-size:.66rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--em-300)}
+  .more{max-width:48rem;margin:3rem auto 0;padding:1.5rem;text-align:center;border:1px solid rgba(110,231,183,.3);background:rgba(110,231,183,.06);backdrop-filter:blur(18px);border-radius:18px}
+  .more b{display:block;font-size:clamp(1.2rem,3vw,1.9rem);font-weight:800;color:#fff}
+  .more p{margin:.5rem auto 0;max-width:40rem;color:rgba(255,255,255,.78)}.more p b{display:inline;font-size:inherit;color:var(--em-300)}
+
+  /* slogan bands */
+  .slogan{padding:5rem 0;text-align:center}
+  .slogan .k{font-size:.72rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(110,231,183,.8)}
+  .slogan h2{margin:.75rem auto 0;max-width:56rem;font-family:var(--serif);font-weight:700;font-size:clamp(1.7rem,4vw,3.2rem);color:#fff;text-shadow:0 0 22px rgba(16,185,129,.4)}
+  .slogan p{margin:1rem auto 0;max-width:40rem;color:rgba(255,255,255,.7)}
+  .principles{border-top:1px solid #12233e;border-bottom:1px solid #12233e;background:rgba(11,22,40,.5)}
+  .principles .wrap{display:grid;gap:.75rem;padding:1.5rem 0;text-align:center;font-size:.9rem;color:#c8d8ec}
+  @media(min-width:640px){.principles .wrap{grid-template-columns:1fr 1fr}}@media(min-width:980px){.principles .wrap{grid-template-columns:repeat(4,1fr)}}
+  .principles span{display:inline-flex;align-items:center;justify-content:center;gap:.5rem}.principles svg{color:#22c55e}
+
+  /* consult + footer */
+  .consult{padding:5rem 0}
+  .consult-card{max-width:48rem;margin:0 auto;padding:3rem 1.5rem;text-align:center;border:1px solid #12233e;background:rgba(11,22,40,.6);border-radius:18px}
+  .consult-card .ic{display:grid;place-items:center;width:3rem;height:3rem;margin:0 auto 1.25rem;border-radius:12px;border:1px solid rgba(34,197,94,.2);background:rgba(34,197,94,.12);color:#22c55e}
+  .consult-card h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff}
+  .consult-card p{margin:1rem auto 2rem;max-width:34rem;color:#7a95b8}
+  .ticks{display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;margin-top:1.5rem;font-size:.78rem;color:#7a95b8}
+  .ticks span{display:inline-flex;align-items:center;gap:.4rem}.ticks svg{color:#22c55e}
+  footer{border-top:1px solid #12233e;padding:2rem 0}
+  footer .wrap{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:1rem;font-size:.9rem;color:#7a95b8;text-align:center}
+  @media(min-width:768px){footer .wrap{flex-direction:row}}
+  footer .rcs{color:#22c55e}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="radial-bg" aria-hidden="true"></div>
+
+<!-- ───────── NAV ───────── -->
+<nav class="nav" aria-label="Public navigation">
+  <div class="wrap">
+    <div class="nav-bar">
+      <a href="#top" class="brand" aria-label="Russell Capital Systems homepage"><span class="brand-mark">R</span><span class="brand-name">Russell Capital Systems™</span></a>
+      <div class="nav-links">
+        <a href="#physicians">For Physicians</a><a href="#about">About</a><a href="#ask">Ask AI</a><a href="#technology">Technology</a><a href="#estimate">Estimate</a>
+      </div>
+      <div class="nav-cta">
+        <a class="btn btn-ghost" style="padding:.6rem 1rem;font-size:.9rem" href="__CALENDLY__" target="_blank" rel="noopener noreferrer">Book a Review</a>
+        <button class="menu-btn" id="menuBtn" aria-label="Open navigation menu" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu" hidden>
+      <a href="#physicians">For Physicians</a><a href="#about">About</a><a href="#ask">Ask AI</a><a href="#technology">Technology</a><a href="#estimate">Estimate</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ───────── HERO ───────── -->
+<header id="top" class="section hero">
+  <img class="bg-img" src="__IMG_HERO__" alt="" aria-hidden="true">
+  <div class="bg-veil"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <h1 class="sign">
+      <span class="s1 neon-white">Financial &amp; Tax</span>
+      <span class="s2">Relief and Recovery</span>
+      <span class="s3">For Physicians, Psychiatrists, &amp; Surgeons</span>
+    </h1>
+    <p class="hero-sub">Coordinated <b>tax reduction</b>, <b>interest recovery</b>, practice, risk, retirement, and legacy planning — built for the finances of physicians, psychiatrists, and surgeons.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#consult">Plan Beyond the Practice</a>
+      <a class="btn btn-ghost" href="__CALENDLY__" target="_blank" rel="noopener noreferrer">Book a Physician Planning Review</a>
+    </div>
+    <div class="pillars">
+      <a class="pillar" href="#physicians"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Practice Economics</a>
+      <a class="pillar" href="#physicians"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>Physician Tax Strategy</a>
+      <a class="pillar" href="#about"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>Risk &amp; Protection</a>
+      <a class="pillar" href="#about"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 6 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>Retirement Income</a>
+      <a class="pillar" href="#about"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z"/><path d="M12 22v-3"/></svg>Succession &amp; Legacy</a>
+    </div>
+  </div>
+</header>
+
+<!-- ───────── AI CONCIERGE ───────── -->
+<section id="ask" class="section" style="padding:6rem 0" aria-label="Ask the AI brain trust">
+  <div class="bg-grid" aria-hidden="true" style="opacity:.09"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(16,185,129,.12),transparent 48%)"></div>
+  <div class="wrap">
+    <div class="center">
+      <p class="eyebrow" id="askEyebrow">AI Brain Trust</p>
+      <h2 class="h2" style="margin-top:1.25rem">Press the mic. Ask <span class="neon">anything</span>.</h2>
+      <p class="lead">Describe your situation in as much detail as you want — income, debt, mortgage, savings, goals. Get the plain-language shape of a plan.</p>
+    </div>
+    <div class="glass concierge">
+      <div class="ask-row">
+        <button class="btn btn-primary mic" id="micBtn" type="button" aria-label="Start recording your question">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg><span id="micLabel">Speak your question</span>
+        </button>
+        <textarea id="question" placeholder="…or type it here. The more detail, the better the answer."></textarea>
+      </div>
+      <div class="chips" id="chips"></div>
+      <button class="btn btn-primary" id="askBtn" type="button" style="width:100%;margin-top:1rem">Ask the AI Brain Trust →</button>
+      <button class="btn btn-ghost" id="stopBtn" type="button" style="width:100%;margin-top:.6rem" hidden>■ Stop</button>
+      <div class="status" id="askStatus"></div>
+      <div class="answer" id="answer">
+        <div class="answer-meta" id="answerMeta">Answered by the AI advisor</div>
+        <div class="answer-body" id="answerBody"></div>
+        <div class="answer-ctas">
+          <a class="btn btn-primary" href="#estimate">See your estimate &amp; get a plan</a>
+          <a class="btn btn-ghost" href="__CALENDLY__" target="_blank" rel="noopener noreferrer">Book a thorough evaluation</a>
+        </div>
+      </div>
+      <p class="fine">General education only — not tax, legal, or investment advice, and no specific figures are shared here. Your speech is transcribed in your browser; only the text of your question is sent. A licensed professional confirms every specific in a personal review.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── RETENTION BAND ───────── -->
+<section class="section" style="padding:6rem 0" aria-label="Experience and client retention">
+  <img class="bg-img" src="__IMG_25__" alt="" aria-hidden="true" style="filter:blur(22px) brightness(.22)">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,#050b0a,rgba(5,11,10,.55),#050b0a)"></div>
+  <div class="bg-grid" aria-hidden="true" style="opacity:.07"></div>
+  <div class="wrap">
+    <div class="band-card">
+      <div class="accent-top"></div>
+      <div class="corner" style="right:-4rem;top:-4rem"></div>
+      <div class="corner" style="left:-4rem;bottom:-5rem;opacity:.7"></div>
+      <div class="band-grid">
+        <div class="medal"><div class="ring"></div><div class="core"></div><div style="position:relative;text-align:center"><div class="num grad-text">60%</div><div class="lbl">20+ years</div></div></div>
+        <div>
+          <p class="eyebrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>Experience you can lean on</p>
+          <h2 class="band-h"><span class="grad-text">Clients who stay for decades.</span></h2>
+          <p class="band-p">Our senior business partner — <b>69 years old</b>, with a long career working in <b>medical malpractice</b> — has kept more than <span class="em">60% of their clients on the books for 20 years or longer</span>. That kind of loyalty is earned, not bought.</p>
+          <div class="tags">
+            <span class="tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>Medical-malpractice specialty</span>
+            <span class="tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Senior partnership · 69</span>
+            <span class="tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Two-decade retention</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── ESTIMATOR / LEAD FACT-FINDER ───────── -->
+<section id="estimate" class="section" style="padding:6rem 0" aria-label="Tax and savings estimator">
+  <div class="bg-grid" aria-hidden="true" style="opacity:.07"></div>
+  <div class="wrap">
+    <div class="center">
+      <h2 class="h2">Your <span class="neon">Tax &amp; Savings Estimate</span></h2>
+      <p class="lead">Share your picture and we'll show you the shape of a coordinated plan — then an advisor prepares the specifics for your evaluation.</p>
+    </div>
+
+    <form class="glass form-card" id="leadForm" novalidate>
+      <div class="two">
+        <input id="firstName" placeholder="First name" aria-label="First name" autocomplete="given-name">
+        <input id="lastName" placeholder="Last name" aria-label="Last name" autocomplete="family-name">
+        <input id="email" type="email" placeholder="Email" aria-label="Email" autocomplete="email">
+        <input id="phone" type="tel" placeholder="Phone" aria-label="Phone" autocomplete="tel">
+        <input id="bestTime" class="span2" placeholder="Best time to reach you / book an appointment" aria-label="Best time to contact">
+      </div>
+      <p class="sub">Your financial picture</p>
+      <div class="two" id="numFields"></div>
+      <label class="f" style="margin-top:.75rem">Anything else about your goals?<textarea id="goals" rows="2" aria-label="Goals" style="margin-top:.3rem"></textarea></label>
+      <label class="consent"><input type="checkbox" id="consent" aria-label="Consent to be contacted and to store this information"><span>I agree that Russell Capital Systems may store this information and contact me about a planning evaluation. This is general education, not tax, legal, or investment advice, and no figures shown are guarantees.</span></label>
+      <div class="err" id="formErr" role="alert"></div>
+      <button class="btn btn-primary" type="submit" style="width:100%;margin-top:.5rem">Show me the shape of my plan →</button>
+    </form>
+
+    <div class="glass result" id="result">
+      <p class="eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>Your coordinated strategy</p>
+      <h3>Accelerated mortgage payoff + low tax liability + Roth conversion + oil &amp; gas drilling + trust-owned Index Universal Life — combined to help make your money divorce-proof.</h3>
+      <div class="pills">
+        <div class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Accelerated mortgage payoff</div>
+        <div class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Lower tax liability</div>
+        <div class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Roth-conversion sequencing</div>
+        <div class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Oil &amp; gas drilling deduction</div>
+        <div class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Trust-owned Index Universal Life</div>
+      </div>
+      <p style="margin-top:1.25rem;font-size:.9rem;color:var(--muted)">General concepts and sequence only — the specific numbers, timing, and structure are worked out with a licensed advisor in your evaluation.</p>
+      <div class="answer-ctas">
+        <a class="btn btn-primary" id="sendLead" href="#" target="_blank" rel="noopener noreferrer">Send my details to an advisor</a>
+        <a class="btn btn-ghost" href="__CALENDLY__" target="_blank" rel="noopener noreferrer">Book my thorough evaluation</a>
+      </div>
+      <p class="fine" id="sendNote">Sending opens a pre-filled email to our advisory team with what you entered — nothing leaves this page until you send it.</p>
+    </div>
+
+    <div class="disclaimer" style="max-width:52rem;margin:1.5rem auto 0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      <p><b>Important:</b> These results are not guaranteed. Any figures or strategies shown represent the best outcomes we have produced for some of our clients under certain conditions — they may or may not reflect the results you would receive. Every result must be thoroughly examined by our tax professional team for suitability and for compliance with applicable IRS statutes before anything is implemented. This estimator is general education only and is not tax, legal, or investment advice. The specific dollar amounts, percentages, and structure are prepared for your licensed advisor and shared in your personal evaluation — not shown here.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── CHAPTER: WAR CHEST + TAX STRATEGY ───────── -->
+<section class="section chapter" aria-label="Tax strategy for high-earning physicians">
+  <img class="bg-img" src="__IMG_06__" alt="" aria-hidden="true" style="transform:scale(1.05);filter:brightness(.5)">
+  <div class="bg-veil-h"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <div class="war">
+      <p class="eyebrow">The Physician War-Chest Strategy</p>
+      <h2>Transform Debt Into a <span class="neon">Tax-Free Liquid War Chest</span> — On Demand™</h2>
+      <p class="bridge">You bring the goal. We build the tailored <b>Systems</b> around that.</p>
+      <p class="note">Directional strategy education for physicians — not tax, legal, or investment advice. Confirm with your professionals.</p>
+    </div>
+    <div class="chapter-grid">
+      <div>
+        <h2 class="big">Tax Strategy for<br>High-Earning Physicians</h2>
+        <div class="rule"></div>
+        <p class="lead-l">Explore coordinated planning opportunities for medical income, practice entities, retirement plans, and long-term wealth.</p>
+        <div class="stack">
+          <a class="btn btn-primary" href="#technology">Explore Physician Tax Strategies</a>
+          <a class="btn btn-ghost" href="#estimate">Build My Physician Plan</a>
+        </div>
+      </div>
+      <div class="glass selector">
+        <p class="t"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22h18"/><path d="M6 18v-7"/><path d="M10 18v-7"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M12 2 3 7h18Z"/></svg>Physician Tax-Planning Review</p>
+        <div class="row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg><select aria-label="Medical Specialty"><option value="" selected disabled>Select specialty</option><option>Surgery</option><option>Psychiatry</option><option>Internal Medicine</option><option>Radiology</option><option>Anesthesiology</option><option>Other</option></select></div>
+        <div class="row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg><select aria-label="Income Range"><option value="" selected disabled>Select income</option><option>$300k–$500k</option><option>$500k–$1M</option><option>$1M–$2M</option><option>$2M+</option></select></div>
+        <div class="row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><select aria-label="Filing Status"><option value="" selected disabled>Select status</option><option>Single</option><option>Married filing jointly</option></select></div>
+        <div class="row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><select aria-label="State"><option value="" selected disabled>Select state</option><option>California</option><option>Florida</option><option>New York</option><option>Texas</option><option>Other</option></select></div>
+        <div class="row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/></svg><select aria-label="Practice Entity"><option value="" selected disabled>Select entity</option><option>W-2 employee</option><option>Sole proprietor</option><option>S-Corp</option><option>Partnership/Group</option></select></div>
+        <a class="btn btn-primary" href="#estimate" style="width:100%;margin-top:.25rem">See My Planning Opportunities</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── CHAPTER: ABOUT / TURN CAPITAL INTO INCOME ───────── -->
+<section id="about" class="section chapter" aria-label="Turn capital into income">
+  <img class="bg-img" src="__IMG_23__" alt="" aria-hidden="true" style="transform:scale(1.05);filter:brightness(.55)">
+  <div class="bg-veil-h" style="background:linear-gradient(90deg,#050b0a 0%,rgba(5,11,10,.72) 50%,rgba(5,11,10,.4) 100%)"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <p class="eyebrow">Russell Capital Systems™</p>
+    <h2 class="big" style="margin-top:.75rem;color:var(--em-400);text-shadow:0 0 26px rgba(52,211,153,.5)">Turn Capital Into Income™</h2>
+    <div class="rule"></div>
+    <p class="lead-l" style="margin-top:1.5rem;max-width:36rem;font-size:1.12rem;color:rgba(255,255,255,.8)">Advanced, tax-efficient retirement strategies designed to help you keep more, grow confidently, and create lasting income.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem">
+      <a class="btn btn-primary" href="#estimate">Create Client Plan</a>
+      <a class="btn btn-ghost" href="__CALENDLY__" target="_blank" rel="noopener noreferrer">Book Consultation</a>
+    </div>
+    <div class="badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--em-300)"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><div><b>Systems-Driven</b><span>Proprietary Retirement Income Engine™</span></div></div>
+    <div class="cols">
+      <div class="col"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span><div><b>Fiduciary-Led</b><span>Acting in your best interest.</span></div></div>
+      <div class="col"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><div><b>Tax-Efficient</b><span>Strategies designed to keep more.</span></div></div>
+      <div class="col"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg></span><div><b>Income-Focused</b><span>Built to deliver confidence in retirement.</span></div></div>
+      <div class="col"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span><div><b>Disciplined Process</b><span>Proprietary engine. Proven discipline.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── CHAPTER: FOR PHYSICIANS ───────── -->
+<section id="physicians" class="section chapter" aria-label="Russell Capital Systems for physicians">
+  <img class="bg-img" src="__IMG_25__" alt="" aria-hidden="true" style="transform:scale(1.05);filter:brightness(.5)">
+  <div class="bg-veil-h"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <div class="chapter-grid">
+      <div>
+        <h2 class="big">Russell Capital<br>Systems for Physicians</h2>
+        <p style="margin-top:1rem;font-size:clamp(1.1rem,2.4vw,1.7rem);font-weight:600;color:var(--em-300);text-shadow:0 0 18px rgba(52,211,153,.6)">Turn Medical Income Into Lasting Wealth™</p>
+        <p class="lead-l">Specialized tax, practice, retirement, risk, and legacy planning for physicians, specialists, and medical practice owners.</p>
+        <div class="stack">
+          <a class="btn btn-primary" href="#estimate">Build My Physician Plan</a>
+          <a class="btn btn-ghost" href="__CALENDLY__" target="_blank" rel="noopener noreferrer">Book a Physician Planning Review</a>
+        </div>
+      </div>
+      <div class="glass selector">
+        <p class="t"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>Design Your Physician Financial System</p>
+        <div class="row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg><select aria-label="Medical Specialty"><option value="" selected disabled>Select your specialty</option><option>Surgery</option><option>Psychiatry</option><option>Internal Medicine</option><option>Radiology</option><option>Other</option></select></div>
+        <div class="row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><select aria-label="Career Stage"><option value="" selected disabled>Select your stage</option><option>Resident/Fellow</option><option>Early career</option><option>Mid-career</option><option>Approaching retirement</option></select></div>
+        <div class="row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/></svg><select aria-label="Practice Structure"><option value="" selected disabled>Select your structure</option><option>Employed</option><option>Private practice</option><option>Group/Partnership</option><option>Locum</option></select></div>
+        <div class="row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><select aria-label="Primary Priority"><option value="" selected disabled>Select your priority</option><option>Reduce taxes</option><option>Build retirement income</option><option>Protect assets</option><option>Plan legacy</option></select></div>
+      </div>
+    </div>
+    <div class="feat5">
+      <div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg><b>Physician Tax</b><span>Optimize today. Protect tomorrow.</span></div>
+      <div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/></svg><b>Practice Planning</b><span>Strengthen your practice. Build lasting value.</span></div>
+      <div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg><b>Risk Protection</b><span>Protect what matters most.</span></div>
+      <div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v8"/><path d="m8 6 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/><path d="M22 22H2"/></svg><b>Retirement Income</b><span>Create confidence. Live on your terms.</span></div>
+      <div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z"/><path d="M12 22v-3"/></svg><b>Legacy Design</b><span>Your legacy. Their future.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── TECHNOLOGY SHOWCASE ───────── -->
+<section id="technology" class="section tech" aria-label="Patent-pending technology behind Russell Capital Systems">
+  <img class="bg-img" src="__IMG_23__" alt="" aria-hidden="true" style="transform:scale(1.1);filter:blur(20px) brightness(.24)">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,#050b0a 0%,rgba(5,11,10,.55) 45%,#050b0a 100%)"></div>
+  <div class="bg-grid" aria-hidden="true" style="opacity:.08"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <div class="center">
+      <p class="eyebrow">Patent-pending · 15 patents in process</p>
+      <h2 class="h2" style="margin-top:1.25rem">Engines that work for <span class="neon">you and your family</span></h2>
+      <p class="lead">These are purpose-built engines behind your plan — with <b style="color:var(--em-300);font-weight:600">15 patents in process</b> — and you <b style="color:var(--em-300);font-weight:600">won't find them anywhere else</b>. Here's what each one means for you, now and for the years ahead.</p>
+    </div>
+    <div class="tech-grid" id="techGrid"></div>
+    <div class="more">
+      <b>And we're just getting started.</b>
+      <p>Beyond these, <b>45 more unique patent-pending technologies</b> are in process — built to keep giving you and your family an edge no one else can offer. <b>Stay tuned.</b></p>
+    </div>
+    <p class="fine" style="max-width:52rem;margin:2rem auto 0">Patent-pending methods developed by Russell Capital Systems — 15 patent applications in process, with 45 more underway — described here at a high level. Not tax, legal, or investment advice; results are not guaranteed and are reviewed by our tax professional team for suitability and IRS compliance before implementation.</p>
+  </div>
+</section>
+
+<!-- ───────── SLOGAN BANDS ───────── -->
+<section class="section slogan" aria-label="Relief today, recovery for life">
+  <img class="bg-img" src="__IMG_BANNER__" alt="" aria-hidden="true" style="filter:blur(18px) brightness(.3)">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,#050b0a,rgba(5,11,10,.5),#050b0a)"></div>
+  <div class="bg-grid" aria-hidden="true" style="opacity:.1"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <p class="k">Relief today · Recovery for life</p>
+    <h2>Keep More of What You Earn. <span class="neon">Protect What You Built.</span></h2>
+    <p>Tax reduction, interest recovery, and coordinated planning — engineered for the finances of physicians, psychiatrists, and surgeons.</p>
+  </div>
+</section>
+
+<section class="principles" aria-label="Planning principles">
+  <div class="wrap">
+    <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Medical-career coordination</span>
+    <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Practice-owner planning</span>
+    <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Tax-aware scenario review</span>
+    <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Secure advisor collaboration</span>
+  </div>
+</section>
+
+<section class="section slogan" aria-label="Built for high-income medicine" style="padding:4.5rem 0">
+  <div class="bg-grid" aria-hidden="true" style="opacity:.08"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(16,185,129,.12),transparent 55%)"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <h2>Built for <span class="neon">High-Income Medicine.</span></h2>
+    <p>The financial pressures of a medical career are specific. So is the system built to answer them.</p>
+  </div>
+</section>
+
+<section class="section slogan" aria-label="One coordinated system" style="padding:4.5rem 0">
+  <div class="bg-grid" aria-hidden="true" style="opacity:.08"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <p class="k">Tax reduction · Interest recovery · Legacy</p>
+    <h2>Every Strategy. <span class="neon">One Coordinated System.</span></h2>
+  </div>
+</section>
+
+<!-- ───────── CONSULTATION ───────── -->
+<section id="consult" class="section consult" aria-label="Book a consultation">
+  <div class="wrap">
+    <div class="consult-card">
+      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+      <h2>Book a Free Consultation</h2>
+      <p>Discuss how your medical career, practice ownership, benefits, taxes, protection needs, and retirement goals fit together. Schedule a 30-minute introductory conversation with an advisor to identify the planning questions that deserve a deeper review.</p>
+      <a class="btn btn-primary" href="__CALENDLY__" target="_blank" rel="noopener noreferrer">Schedule Now</a>
+      <div class="ticks">
+        <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>No obligation</span>
+        <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>30-minute call</span>
+        <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Personalized strategy review</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><span class="rcs">RCS</span> Russell Capital Systems™ © <span id="year"></span>. All rights reserved.</div>
+    <div>Not tax, legal, or investment advice. Results are not guaranteed.</div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const CALENDLY = "__CALENDLY__";
+  const ADVISOR_EMAIL = "__ADVISOR_EMAIL__";
+  const $ = (id) => document.getElementById(id);
+  $("year").textContent = new Date().getFullYear();
+
+  /* nav */
+  const menuBtn = $("menuBtn"), mobileMenu = $("mobileMenu");
+  menuBtn.addEventListener("click", () => { const open = mobileMenu.hidden; mobileMenu.hidden = !open; menuBtn.setAttribute("aria-expanded", String(open)); menuBtn.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu"); });
+  mobileMenu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { mobileMenu.hidden = true; menuBtn.setAttribute("aria-expanded","false"); }));
+
+  /* ── technology cards ── */
+  const ICON = {
+    waves:'<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>',
+    home:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+    boxes:'<path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z"/><path d="m7 16.5-4.74-2.85"/><path d="m7 16.5 5-3"/><path d="M7 16.5v5.17"/><path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z"/><path d="m17 16.5-5-3"/><path d="m17 16.5 4.74-2.85"/><path d="M17 16.5v5.17"/><path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z"/><path d="M12 8 7.26 5.15"/><path d="m12 8 4.74-2.85"/><path d="M12 13.5V8"/>',
+    repeat:'<path d="m2 9 3-3 3 3"/><path d="M13 18H7a2 2 0 0 1-2-2V6"/><path d="m22 15-3 3-3-3"/><path d="M11 6h6a2 2 0 0 1 2 2v10"/>',
+    landmark:'<path d="M3 22h18"/><path d="M6 18v-7"/><path d="M10 18v-7"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M12 2 3 7h18Z"/>',
+    shield:'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+    dna:'<path d="m10 16 1.5 1.5"/><path d="m14 8-1.5-1.5"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m16.5 10.5 1 1"/><path d="m17 6-2.891-2.891"/><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="m20 9 .891.891"/><path d="M3.109 14.109 4 15"/><path d="m6.5 12.5 1 1"/><path d="m7 18 2.891 2.891"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/>',
+    radar:'<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/>',
+    dice:'<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M16 8h.01"/><path d="M8 8h.01"/><path d="M8 16h.01"/><path d="M16 16h.01"/><path d="M12 12h.01"/>',
+    history:'<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+    brain:'<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/>',
+    layers:'<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+    award:'<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>',
+    network:'<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>'
+  };
+  const TECH = [
+    ["waves","Optimized Tax Waterfall Engine","Keeps more of your money in your pocket through retirement by drawing your income in the smartest possible order — so your family keeps what you worked a lifetime to build instead of overpaying the IRS."],
+    ["home","Mortgage Killer™","Puts you on a path to own your home free and clear years — sometimes decades — sooner, freeing cash flow for your family today and leaving a paid-off legacy tomorrow."],
+    ["boxes","Zero-Cost Roth Conversion Engine","Helps move your savings toward tax-free status without the usual painful tax bill — so more of your nest egg grows for you and can pass to your children untaxed."],
+    ["repeat","Equity Arbitrage Engine","Turns the equity sitting idle in your home into a working asset that quietly builds wealth for your family — instead of just sitting in the walls."],
+    ["landmark","FIA Collateral Optimizer","Gives you dependable retirement income while keeping access to your capital — so you can live confidently now and still reach your funds if life changes."],
+    ["shield","Divorce-Proof Asset Shield","Shows you how to protect what you've built so a divorce, lawsuit, or creditor can't take it — safeguarding your family's security for good."],
+    ["dna","Wealth Genome™ Profile","Builds your plan around your exact life — your income, your family, your goals — so every recommendation fits you, never a generic template."],
+    ["radar","Retirement Risk Radar","Spots every threat to your retirement — not just the market, but healthcare, inflation, and a long life — so nothing blindsides your family."],
+    ["dice","10,000-Scenario Stress Test","Tests your plan against ten thousand possible futures, so you can retire knowing it holds up even when markets don't — real peace of mind for the whole family."],
+    ["history","Time Machine Dual-View","Lets you see how a strategy would have actually performed through real market history — so your family's decisions rest on evidence, not just promises."],
+    ["brain","Behavioral Safeguard","Quietly protects you from the costly money mistakes everyone's brain is wired to make — keeping more of your family's wealth intact over a lifetime."],
+    ["layers","Cascading Calculator Core","Shows your entire financial picture moving together, so you instantly see how one decision touches your taxes, retirement, and legacy — clarity behind every choice."],
+    ["award","The Russell Number™","Means your advisor is held to a measurable, transparent quality standard — so your family is guided by someone proven, not simply licensed."],
+    ["network","Advisor Practice Platform","Means a disciplined, well-run practice is working behind the scenes on your plan — consistent follow-through you and your family can count on for years."]
+  ];
+  $("techGrid").innerHTML = TECH.map(([ic,name,benefit]) => `
+    <article class="tcard">
+      <div class="accent-top"></div><div class="corner"></div>
+      <div class="tcard-head"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICON[ic]}</svg></span><span class="only">Only at RCS</span></div>
+      <h3 class="grad-text">${name}</h3><div class="ul"></div>
+      <p><b>What it means for you</b>${benefit}</p>
+    </article>`).join("");
+
+  /* ── estimator fields ── */
+  const NUM = [["w2Income","Your W-2 earnings"],["estimatedTaxes","Your estimated annual taxes"],["spouseIncome","Spouse income"],["spouseTaxes","Spouse estimated taxes"],["studentDebt","Student debt owed"],["studentDebtRate","Student loan interest rate (%)"],["homeEquity","Home equity"],["mortgageBalance","Mortgage balance (if known)"],["mortgageRate","Mortgage rate (%)"],["mortgageIO","Interest-only payment / month"],["mortgageYears","Years remaining on mortgage"],["taxDeferredSelf","Your tax-deferred (IRA/401k/403b/TSP)"],["taxDeferredSpouse","Spouse tax-deferred"],["liquid","Total liquid investments (brokerage, etc.)"]];
+  $("numFields").innerHTML = NUM.map(([k,l]) => `<label class="f">${l}<input id="${k}" inputmode="decimal" aria-label="${l}"></label>`).join("") +
+    `<label class="f">Are those liquid investments taxable?<select id="liquidTax" aria-label="Liquid investment taxability"><option value="Not sure">Not sure</option><option>Taxable</option><option>Non-taxable</option><option>A mix of both</option></select></label>`;
+
+  const v = (id) => ($(id).value || "").trim();
+  $("leadForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const err = $("formErr"); err.textContent = "";
+    if (!$("consent").checked) { err.textContent = "Please check the consent box so we can prepare your estimate."; return; }
+    if (!v("email") && !v("phone")) { err.textContent = "Add an email or phone so an advisor can send your evaluation."; return; }
+    const lines = [
+      `Name: ${[v("firstName"), v("lastName")].filter(Boolean).join(" ") || "—"}`,
+      `Email: ${v("email") || "—"}`, `Phone: ${v("phone") || "—"}`, `Best time: ${v("bestTime") || "—"}`, "",
+      "FINANCIAL PICTURE",
+      ...NUM.map(([k,l]) => `${l}: ${v(k) || "—"}`),
+      `Liquid taxability: ${v("liquidTax")}`, "",
+      `Goals: ${v("goals") || "—"}`, "",
+      "Consent given: yes (Russell Capital Systems may store this and contact me about a planning evaluation)",
+      `Submitted from the Russell Capital Systems estimate page on ${new Date().toLocaleString()}`
+    ];
+    const subject = encodeURIComponent(`Planning estimate request — ${[v("firstName"), v("lastName")].filter(Boolean).join(" ") || "new prospect"}`);
+    $("sendLead").href = `mailto:${ADVISOR_EMAIL}?subject=${subject}&body=${encodeURIComponent(lines.join("\n"))}`;
+    $("leadForm").hidden = true;
+    const r = $("result"); r.classList.add("show"); r.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  /* ── AI concierge (sample capability; graceful fallback) ── */
+  const RULES = "You are the AI concierge on the Russell Capital Systems PUBLIC homepage, speaking to a prospective client — often a physician, psychiatrist, or surgeon — who may know nothing about the firm yet. Explain, in warm and confident plain language, the KINDS of strategies and the general FRAME that could apply to their situation: accelerated mortgage payoff, lowering tax liability, Roth-conversion sequencing, oil & gas drilling deductions, and trust-owned Index Universal Life used together — a coordinated combination designed to help make wealth resilient and hard to touch ('divorce-proof'). Talk about the IDEA of combining strategies in a sequence and why coordination beats any single tactic. HARD RULES — never break these: reveal NO specific dollar amounts, NO percentages, NO calculation formulas, NO exact number-of-combinations, NO named internal parameters, and NO step-by-step numeric instructions. Keep it to concepts, frames, and general sequences only. Never guarantee any outcome. State plainly that this is general education, not tax, legal, or investment advice, and that a licensed professional confirms every specific in a personal review. Close by inviting them to complete the short planning estimator and book a thorough evaluation. Under 180 words.";
+  const EXAMPLES = [
+    "I'm a surgeon with student loans, a big mortgage, and a 401(k) — how would you help me keep more and pay debt off faster?",
+    "How do you turn my home equity and taxable accounts into something that's protected and tax-efficient?",
+    "What's the general idea behind making my money 'divorce-proof'?"
+  ];
+  const q = $("question"), askBtn = $("askBtn"), stopBtn = $("stopBtn"), status = $("askStatus"), answer = $("answer"), body = $("answerBody"), meta = $("answerMeta");
+  $("chips").innerHTML = EXAMPLES.map(t => `<button type="button" class="chip">${t.length > 60 ? t.slice(0,60) + "…" : t}</button>`).join("");
+  [...$("chips").children].forEach((c, i) => c.addEventListener("click", () => { q.value = EXAMPLES[i]; q.focus(); }));
+
+  let sampleFn = null, ctl = null;
+  const COPY = { rate_limited: "The advisor is busy right now — please try again in a moment.", session_expired: "Please sign in again to ask the advisor.", refused: "The advisor couldn't answer that one — try rephrasing your question.", empty_completion: "No answer came back — try asking with a little more detail.", upstream_error: "The connection dropped — please try again." };
+  const HIDE = new Set(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"]);
+
+  function fallbackMode() {
+    sampleFn = null;
+    $("askEyebrow").textContent = "Ask an advisor";
+    askBtn.textContent = "Send my question to an advisor →";
+    status.textContent = "";
+  }
+  function sendToAdvisor(text) {
+    const subject = encodeURIComponent("Question from the Russell Capital Systems homepage");
+    window.open(`mailto:${ADVISOR_EMAIL}?subject=${subject}&body=${encodeURIComponent(text + "\n\n(Sent from the Russell Capital Systems homepage)")}`, "_blank");
+    status.textContent = "Your email app should open with your question ready to send. Prefer a call? Book below.";
+  }
+  async function ask(text) {
+    const t = (text || "").trim(); if (!t) { q.focus(); return; }
+    if (!sampleFn) { sendToAdvisor(t); return; }
+    ctl = new AbortController();
+    askBtn.disabled = true; stopBtn.hidden = false;
+    status.textContent = "The AI advisor is reviewing your question…"; answer.classList.remove("show"); body.textContent = "";
+    try {
+      const res = await sampleFn([{ role: "user", content: RULES }, { role: "user", content: `The visitor asked: "${t}"\n\nAnswer per your hard rules — concepts and frames only, no numbers or formulas.` }], {
+        cache: false, signal: ctl.signal,
+        onText: ({ text }) => { status.textContent = ""; answer.classList.add("show"); body.textContent = text; }
+      });
+      body.textContent = res.text; meta.textContent = "Answered by the AI advisor · general education only";
+      if (res.truncated) status.textContent = "Answer was cut short — ask a shorter question for the rest.";
+    } catch (e) {
+      if (e && e.code === "cancelled") { status.textContent = e.text ? "Stopped." : ""; if (e.text) { answer.classList.add("show"); body.textContent = e.text; } }
+      else if (e && HIDE.has(e.code)) { fallbackMode(); sendToAdvisor(t); }
+      else { if (e && e.text) { answer.classList.add("show"); body.textContent = e.text; } status.textContent = COPY[e && e.code] || COPY.upstream_error; }
+    } finally { askBtn.disabled = false; stopBtn.hidden = true; ctl = null; }
+  }
+  askBtn.addEventListener("click", () => ask(q.value));
+  stopBtn.addEventListener("click", () => ctl && ctl.abort());
+
+  (async () => {
+    try { sampleFn = (window.claude && typeof window.claude.use === "function") ? await window.claude.use("sample") : null; } catch { sampleFn = null; }
+    if (!sampleFn) fallbackMode(); else { $("askEyebrow").textContent = "AI Brain Trust · live"; }
+  })();
+
+  /* ── mic (browser speech recognition, hidden where unsupported) ── */
+  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const micBtn = $("micBtn"), micLabel = $("micLabel");
+  let rec = null, listening = false;
+  if (!Rec) { micBtn.hidden = true; }
+  micBtn.addEventListener("click", () => {
+    if (listening) { rec && rec.stop(); return; }
+    rec = new Rec(); rec.lang = "en-US"; rec.continuous = true; rec.interimResults = true;
+    let finalText = "";
+    rec.onresult = (ev) => { let t = ""; for (let i = 0; i < ev.results.length; i++) t += ev.results[i][0].transcript; finalText = t; q.value = t; };
+    rec.onend = () => { listening = false; micBtn.classList.remove("listening"); micLabel.textContent = "Speak your question"; micBtn.setAttribute("aria-label","Start recording your question"); if (finalText.trim()) ask(finalText); };
+    rec.onerror = () => { listening = false; micBtn.classList.remove("listening"); micLabel.textContent = "Speak your question"; status.textContent = "Microphone unavailable or permission denied — type your question instead."; };
+    q.value = ""; status.textContent = "Listening… describe your situation in as much detail as you like, then tap the mic again.";
+    listening = true; micBtn.classList.add("listening"); micLabel.textContent = "Stop & ask"; micBtn.setAttribute("aria-label","Stop recording and ask");
+    try { rec.start(); } catch { rec.onerror(); }
+  });
+})();
+</script>
