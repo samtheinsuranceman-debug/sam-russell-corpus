@@ -341,6 +341,7 @@ export default function Landing() {
           <div className="mx-auto mb-12 max-w-4xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[.24em] text-emerald-300">The Physician War-Chest Strategy</p>
             <h2 className="mt-3 text-[clamp(1.9rem,4.6vw,3.6rem)] font-extrabold leading-tight text-white [text-shadow:_0_0_26px_rgba(16,185,129,.4)]" style={{ fontFamily: "DM Sans, sans-serif" }}>Transform Debt Into a <span className="text-emerald-300 [text-shadow:_0_0_26px_rgba(52,211,153,.85)]">Tax-Free Liquid War Chest</span> — On Demand&trade;</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-[clamp(1rem,2.1vw,1.4rem)] font-medium text-white/85">You bring the goal. We build the tailored <span className="font-semibold text-emerald-300">Systems</span> around that.</p>
             <p className="mx-auto mt-3 max-w-2xl text-sm text-white/60">Directional strategy education for physicians — not tax, legal, or investment advice. Confirm with your professionals.</p>
           </div>
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
