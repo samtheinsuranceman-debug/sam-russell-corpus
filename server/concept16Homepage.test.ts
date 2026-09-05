@@ -8,23 +8,25 @@ const css = readFileSync(resolve("client/src/index.css"), "utf8");
 
 describe("Concept 16 physician homepage", () => {
   it("uses the clean persistent background and selected command-center hierarchy", () => {
-    // Neon "Financial & Tax Relief and Recovery" rebrand — words rendered as
-    // live text; the two images demoted to blurred atmospheric backgrounds.
-    expect(landing).toContain("/rcs-neon-hero.webp");
-    expect(landing).toContain("/rcs-neon-banner.webp");
-    expect(landing).toContain("Financial &amp; Tax");
-    expect(landing).toContain("Relief and Recovery");
+    // All six owner images shown CRISP, one per screen — never blurred.
+    // The neon sign is the hero (its words are the headline); the Green City
+    // carries the War Chest; bridge / canyon / interchange each get a page.
+    for (const img of ["/rcs-neon-a.webp", "/rcs-city-emerald.webp", "/rcs-city-bridge.webp", "/rcs-city-canyon.webp", "/rcs-city-interchange.webp"]) {
+      expect(landing, img).toContain(img);
+    }
+    expect(readFileSync(resolve("client/src/components/SeniorPartnerBand.tsx"), "utf8")).toContain("/rcs-neon-b.webp");
+    expect(landing).not.toMatch(/blur-\[/);
+    expect(landing).toContain("Financial &amp; Tax Relief and Recovery");
     expect(landing).toContain("For Physicians, Psychiatrists, &amp; Surgeons");
+    expect(landing).toContain("Your Practice Builds Income.");
+    expect(landing).toContain("We Build the System Around It.");
     // Additional slogans
     expect(landing).toContain("Keep More of What You Earn.");
     expect(landing).toContain("Protect What You Built.");
     expect(landing).toContain("Relief today · Recovery for life");
     expect(landing).toContain("High-Income Medicine.");
     expect(landing).toContain("One Coordinated System.");
-    // Multi-background scroll chapters (Concepts 06 / 23 / 25)
-    expect(landing).toContain("/rcs-bg-06.webp");
-    expect(landing).toContain("/rcs-bg-23.webp");
-    expect(landing).toContain("/rcs-bg-25.webp");
+    // Image pages (Concepts 06 / 23 / 25 / 10 as crisp crops)
     expect(landing).toContain("Tax Strategy for");
     expect(landing).toContain("Turn Capital Into Income");
     // Senior-partner credibility band (its own component, mounted before the estimator)
@@ -90,9 +92,15 @@ describe("Concept 16 physician homepage", () => {
     // 14 engines shown (all core patents except the AI advisor-coaching one).
     expect((tech.match(/ref: "/g) ?? []).length).toBe(14);
     expect(tech).not.toContain("Whisper");
-    // Benefit-oriented framing only — no "how it works" mechanics.
-    expect(tech).toContain("What it means for you");
-    expect(tech).not.toContain("How it works");
+    // Each engine explained in depth (five to six sentences) in building order,
+    // with a bold closing line — and the crisp Emerald Dawn image behind them.
+    expect((tech.match(/punch: "/g) ?? []).length).toBe(14);
+    for (const body of tech.match(/body: "([^"]+)"/g) ?? []) {
+      expect((body.match(/[.!?](\s|"|$)/g) ?? []).length, body.slice(0, 60)).toBeGreaterThanOrEqual(4);
+    }
+    expect(tech).toContain("Engine {ref} of 14");
+    expect(tech).toContain("/rcs-city-emerald.webp");
+    expect(tech).not.toMatch(/blur-\[/);
     // Patent-pending status + the 45-more / stay-tuned message.
     expect(tech).toContain("Patent-pending");
     expect(tech).toContain("15 patents in process");

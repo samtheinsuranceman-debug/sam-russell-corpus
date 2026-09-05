@@ -33,8 +33,10 @@ const GRID = "pointer-events-none absolute inset-0 opacity-[.07] [background-ima
 
 export function HomeHowWeWork() {
   return (
-    <section id="how-we-work" aria-label="How we work" className="relative overflow-hidden border-t border-emerald-300/10 bg-[#050b0a] py-24">
-      <div aria-hidden="true" className={GRID} />
+    <section id="how-we-work" aria-label="How we work" className="relative isolate overflow-hidden bg-[#03090a] py-24">
+      {/* The canyon, crisp, behind the process */}
+      <img src="/rcs-city-canyon.webp" alt="" aria-hidden="true" className="absolute inset-0 z-0 h-full w-full object-cover object-center brightness-[.42] saturate-[1.1]" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,#03090a_0%,rgba(3,9,10,.72)_20%,rgba(3,9,10,.72)_80%,#03090a_100%)]" />
       <div className="container relative z-10">
         <div className="mx-auto max-w-3xl text-center">
           <p className="inline-flex items-center rounded-full border border-emerald-300/35 bg-emerald-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[.2em] text-emerald-300">How we work</p>
