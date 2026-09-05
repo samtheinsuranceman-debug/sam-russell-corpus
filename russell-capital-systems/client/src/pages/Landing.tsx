@@ -76,7 +76,7 @@ const BTN_GHOST = "rc-btn rounded-xl border border-emerald-300/45 bg-[#030f0c]/5
 function Photo({ src, alt, caption }: { src: string; alt: string; caption: string }) {
   return (
     <div className={PHOTO}>
-      <img src={src} alt={alt} className="block h-full w-full object-cover" />
+      <img src={src} alt={alt} className="block h-full w-full object-cover" loading="lazy" decoding="async" />
       <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,9,10,0)_60%,rgba(3,9,10,.55)_100%)]" />
       <span className="absolute inset-x-5 bottom-4 text-[11px] uppercase tracking-[.2em] text-emerald-300 [text-shadow:_0_0_12px_rgba(52,211,153,.8)]">{caption}</span>
     </div>
@@ -223,7 +223,7 @@ export default function Landing() {
 
       {/* ── PAGE 1 · HERO: the neon sign, full and crisp. Its words are the headline. ── */}
       <header id="top" className={PAGE} aria-label="Financial and Tax Relief and Recovery for Physicians, Psychiatrists, and Surgeons">
-        <img src="/rcs-neon-a.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons, over a glowing green city skyline" className={PIC} />
+        <img src="/rcs-neon-a.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons, over a glowing green city skyline" className={PIC} fetchPriority="high" decoding="async" />
         <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(3,9,10,.15)_0%,rgba(3,9,10,0)_35%,rgba(3,9,10,.55)_78%,#03090a_100%)]" />
         <h1 className="sr-only">Financial &amp; Tax Relief and Recovery For Physicians, Psychiatrists, &amp; Surgeons</h1>
         <div className="container relative z-10 flex min-h-[100svh] flex-col justify-end pb-16 pt-28">
@@ -241,7 +241,7 @@ export default function Landing() {
 
       {/* ── PAGE 2 · THE GREEN CITY: the War Chest ── */}
       <section id="warchest" className={PAGE} aria-label="Transform debt into a tax-free liquid war chest">
-        <img src="/rcs-city-emerald.webp" alt="Emerald-lit city skyline at dawn with a river winding through it" className={PIC} />
+        <img src="/rcs-city-emerald.webp" alt="Emerald-lit city skyline at dawn with a river winding through it" className={PIC} loading="lazy" decoding="async" />
         <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(3,9,10,.9)_0%,rgba(3,9,10,.6)_38%,rgba(3,9,10,.05)_70%)]" />
         <div className="container relative z-10 py-28">
           <div className="max-w-[62rem]">
@@ -370,7 +370,7 @@ export default function Landing() {
 
       {/* ── COMMAND CENTER: Tax & Interest Savings Calculator ── */}
       <section className="rc-command-center relative isolate overflow-hidden bg-[#03090a] py-24" aria-label="Tax and interest savings calculator">
-        <img src="/rcs-city-interchange.webp" alt="" aria-hidden="true" className={`${PIC} brightness-[.45] saturate-[1.1]`} />
+        <img src="/rcs-city-interchange.webp" alt="" aria-hidden="true" className={`${PIC} brightness-[.45] saturate-[1.1]`} loading="lazy" decoding="async" />
         <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,#03090a_0%,rgba(3,9,10,.65)_25%,rgba(3,9,10,.65)_75%,#03090a_100%)]" />
         <div className="container relative z-10">
           <div className={`${GLASS} mx-auto max-w-3xl p-4 sm:p-5`}>
@@ -427,7 +427,7 @@ export default function Landing() {
 
       {/* ── NEON CLOSE: Relief today · Recovery for life ── */}
       <section aria-label="Relief today, recovery for life" className={PAGE}>
-        <img src="/rcs-neon-a.webp" alt="" aria-hidden="true" className={`${PIC} object-[center_70%]`} />
+        <img src="/rcs-neon-a.webp" alt="" aria-hidden="true" className={`${PIC} object-[center_70%]`} loading="lazy" decoding="async" />
         <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_50%_55%,rgba(3,9,10,.72)_0%,rgba(3,9,10,.35)_45%,rgba(3,9,10,.1)_75%)]" />
         <div className="container relative z-10 py-28 text-center">
           <div className={`${GLASS} mx-auto max-w-[46rem] px-6 py-12`}>
