@@ -26,7 +26,7 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { QuickActionsFAB } from "@/components/QuickActionsFAB";
 import { SessionTimeout } from "@/components/SessionTimeout";
 import TrialCountdownWidget from "@/components/TrialCountdownWidget";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Inbox } from "lucide-react";
 import { MusicPlayerMiniBar } from "@/components/MusicPlayerMiniBar";
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -131,6 +131,7 @@ const NAV_SECTIONS: NavSection[] = [
     color: "blue",
     items: [
       { path: "/portal/clients", label: "Client Directory", icon: Users, color: "blue" },
+      { path: "/portal/leads", label: "Lead Inbox", icon: Inbox, color: "blue" },
       { path: "/portal/client-onboarding", label: "Onboarding", icon: Sparkles, color: "blue" },
       { path: "/portal/client-intake", label: "Smart Intake", icon: MessageCircle, color: "blue" },
       { path: "/portal/ai-meeting-notes", label: "Meeting Notes", icon: Brain, color: "blue" },
