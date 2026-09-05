@@ -10,7 +10,9 @@ import {
   KeyRound,
   Landmark,
   Lock,
+  MapPin,
   Menu,
+  Target,
   ScanSearch,
   Settings2,
   Shield,
@@ -232,6 +234,7 @@ export default function Landing() {
               <a href="#practice-planning" className="text-white/80 transition-colors hover:text-emerald-300">Practice Owners</a>
               <a href="#planning-framework" className="text-white/80 transition-colors hover:text-emerald-300">Strategies</a>
               <a href="#client-login" className="text-white/80 transition-colors hover:text-emerald-300">Resources</a>
+              <a href="#about" className="text-white/80 transition-colors hover:text-emerald-300">About</a>
             </div>
             <div className="flex items-center gap-2">
               <ManagedPortalAction href="/portal/dashboard" className="rc-btn border border-emerald-300/35 bg-emerald-300/10 text-sm text-white hover:bg-emerald-300/20"><Lock size={14} /> {isAuthenticated ? "Dashboard" : "Physician Login"}</ManagedPortalAction>
@@ -244,6 +247,7 @@ export default function Landing() {
               <a href="#practice-planning" className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>Practice Owners</a>
               <a href="#planning-framework" className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>Strategies</a>
               <a href="#client-login" className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>Resources</a>
+              <a href="#about" className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>About</a>
             </div>
           )}
         </div>
@@ -325,6 +329,130 @@ export default function Landing() {
                 <a href="#consultation" className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-emerald-300 hover:text-emerald-200">See your full optimization plan <ArrowRight size={13} /></a>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Chapter: Concept 06 — Tax Strategy for High-Earning Physicians ── */}
+      <section aria-label="Tax strategy for high-earning physicians" className="relative flex min-h-[100vh] items-center overflow-hidden border-t border-emerald-300/10 bg-[#050b0a]">
+        <img src="/rcs-bg-06.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-105 object-cover object-center brightness-[.5]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,#050b0a_0%,rgba(5,11,10,.72)_46%,rgba(5,11,10,.35)_100%)]" />
+        <div className="container relative z-10 grid gap-10 py-28 lg:grid-cols-2 lg:items-center">
+          <div>
+            <h2 className="text-[clamp(2.2rem,5vw,4rem)] font-extrabold leading-[1.02] tracking-[-.03em] text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>Tax Strategy for<br />High-Earning Physicians</h2>
+            <div className="mt-5 h-1 w-24 rounded bg-emerald-400" />
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-white/80">Explore coordinated planning opportunities for medical income, practice entities, retirement plans, and long-term wealth.</p>
+            <div className="mt-8 flex flex-col gap-3 sm:max-w-md">
+              <a href="#planning-options" className="rc-btn rc-btn-primary rounded-xl px-6 py-3.5 text-base"><CircleDollarSign size={18} /> Explore Physician Tax Strategies</a>
+              <a href="#physician-planning" className="rc-btn rounded-xl border border-emerald-300/45 bg-black/30 px-6 py-3.5 text-base text-white hover:bg-emerald-300/10"><Stethoscope size={18} /> Build My Physician Plan</a>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-emerald-300/35 bg-black/55 p-5 shadow-[0_28px_90px_rgba(0,0,0,.5)] backdrop-blur-xl">
+            <p className="mb-4 flex items-center gap-2 text-lg font-semibold text-emerald-300"><Landmark size={20} /> Physician Tax-Planning Review</p>
+            <div className="space-y-3">
+              {[
+                { label: "Medical Specialty", Icon: Stethoscope, opts: ["Select specialty", "Surgery", "Psychiatry", "Internal Medicine", "Radiology", "Anesthesiology", "Other"] },
+                { label: "Income Range", Icon: TrendingUp, opts: ["Select income", "$300k–$500k", "$500k–$1M", "$1M–$2M", "$2M+"] },
+                { label: "Filing Status", Icon: Users, opts: ["Select status", "Single", "Married filing jointly"] },
+                { label: "State", Icon: MapPin, opts: ["Select state", "California", "Florida", "New York", "Texas", "Other"] },
+                { label: "Practice Entity", Icon: Building2, opts: ["Select entity", "W-2 employee", "Sole proprietor", "S-Corp", "Partnership/Group"] },
+              ].map(({ label, Icon, opts }) => (
+                <label key={label} className="flex items-center gap-3 rounded-xl border border-emerald-200/20 bg-[#00110d]/70 px-4 py-3">
+                  <Icon size={18} className="shrink-0 text-emerald-300" />
+                  <select aria-label={label} defaultValue="" className="w-full bg-transparent text-sm text-white outline-none">
+                    {opts.map((o, i) => <option key={o} value={i === 0 ? "" : o} disabled={i === 0} className="bg-[#00110d]">{o}</option>)}
+                  </select>
+                </label>
+              ))}
+            </div>
+            <a href="#calculator" className="rc-btn rc-btn-primary mt-4 w-full justify-center rounded-xl py-3.5 text-base"><Calendar size={18} /> See My Planning Opportunities</a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Chapter: Concept 23 — Turn Capital Into Income (Emerald Dawn) ── */}
+      <section id="about" aria-label="Turn capital into income" className="relative flex min-h-[100vh] items-center overflow-hidden border-t border-emerald-300/10 bg-[#050b0a]">
+        <img src="/rcs-bg-23.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-105 object-cover object-center brightness-[.55]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,#050b0a_0%,rgba(5,11,10,.72)_50%,rgba(5,11,10,.4)_100%)]" />
+        <div className="container relative z-10 py-28">
+          <p className="text-sm font-semibold uppercase tracking-[.24em] text-emerald-300">Russell Capital Systems&trade;</p>
+          <h2 className="mt-3 text-[clamp(2.4rem,5.4vw,4.6rem)] font-extrabold leading-[1.0] tracking-[-.03em] text-emerald-400 [text-shadow:_0_0_26px_rgba(52,211,153,.5)]" style={{ fontFamily: "DM Sans, sans-serif" }}>Turn Capital Into Income&trade;</h2>
+          <div className="mt-5 h-1 w-24 rounded bg-emerald-400" />
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">Advanced, tax-efficient retirement strategies designed to help you keep more, grow confidently, and create lasting income.</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <ManagedPortalAction href="/portal/planning-cases" className="rc-btn rc-btn-primary rounded-xl px-6 py-3.5 text-base"><ArrowRight size={18} /> Create Client Plan</ManagedPortalAction>
+            <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className="rc-btn rounded-xl border border-emerald-300/45 bg-black/30 px-6 py-3.5 text-base text-white hover:bg-emerald-300/10"><Calendar size={18} /> Book Consultation</a>
+            <ManagedPortalAction href="/portal/dashboard" className="rc-btn rounded-xl border border-emerald-300/45 bg-black/30 px-6 py-3.5 text-base text-white hover:bg-emerald-300/10"><TrendingUp size={18} /> Go to Dashboard</ManagedPortalAction>
+          </div>
+          <div className="mt-6 inline-flex items-center gap-3 rounded-xl border border-emerald-300/25 bg-black/40 px-4 py-3">
+            <ShieldCheck size={20} className="text-emerald-300" />
+            <div><p className="text-xs font-semibold uppercase tracking-wide text-emerald-300">Systems-Driven</p><p className="text-sm text-white/75">Proprietary Retirement Income Engine&trade;</p></div>
+          </div>
+          <div className="mt-12 grid gap-6 rounded-2xl border border-emerald-200/15 bg-black/40 p-6 backdrop-blur-xl sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { Icon: ShieldCheck, t: "Fiduciary-Led", d: "Acting in your best interest." },
+              { Icon: TrendingUp, t: "Tax-Efficient", d: "Strategies designed to keep more." },
+              { Icon: CircleDollarSign, t: "Income-Focused", d: "Built to deliver confidence in retirement." },
+              { Icon: Target, t: "Disciplined Process", d: "Proprietary engine. Proven discipline." },
+            ].map(({ Icon, t, d }) => (
+              <div key={t} className="flex gap-3">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-emerald-300/35 text-emerald-300"><Icon size={20} /></span>
+                <div><p className="font-semibold text-white">{t}</p><p className="text-sm text-white/65">{d}</p></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Chapter: Concept 25 — Turn Medical Income Into Lasting Wealth ── */}
+      <section aria-label="Russell Capital Systems for physicians" className="relative flex min-h-[100vh] items-center overflow-hidden border-t border-emerald-300/10 bg-[#050b0a]">
+        <img src="/rcs-bg-25.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-105 object-cover object-center brightness-[.5]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,#050b0a_0%,rgba(5,11,10,.72)_46%,rgba(5,11,10,.35)_100%)]" />
+        <div className="container relative z-10 py-24">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div>
+              <h2 className="text-[clamp(2.2rem,5vw,4rem)] font-extrabold leading-[1.02] tracking-[-.03em] text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>Russell Capital<br />Systems for Physicians</h2>
+              <p className="mt-4 text-[clamp(1.1rem,2.4vw,1.7rem)] font-semibold text-emerald-300 [text-shadow:_0_0_18px_rgba(52,211,153,.6)]">Turn Medical Income Into Lasting Wealth&trade;</p>
+              <p className="mt-5 max-w-md text-lg leading-relaxed text-white/80">Specialized tax, practice, retirement, risk, and legacy planning for physicians, specialists, and medical practice owners.</p>
+              <div className="mt-8 flex flex-col gap-3 sm:max-w-md">
+                <a href="#physician-planning" className="rc-btn rc-btn-primary rounded-xl px-6 py-3.5 text-base"><Stethoscope size={18} /> Build My Physician Plan</a>
+                <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className="rc-btn rounded-xl border border-emerald-300/45 bg-black/30 px-6 py-3.5 text-base text-white hover:bg-emerald-300/10"><Calendar size={18} /> Book a Physician Planning Review</a>
+                <ManagedPortalAction href="/portal/dashboard" className="rc-btn rounded-xl border border-emerald-300/45 bg-black/30 px-6 py-3.5 text-base text-white hover:bg-emerald-300/10"><Lock size={18} /> Enter the Physician Portal</ManagedPortalAction>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-emerald-300/35 bg-black/55 p-5 backdrop-blur-xl">
+              <p className="mb-4 flex items-center gap-2 text-lg font-semibold text-emerald-300"><ShieldCheck size={20} /> Design Your Physician Financial System</p>
+              <div className="space-y-3">
+                {[
+                  { label: "Medical Specialty", Icon: Stethoscope, opts: ["Select your specialty", "Surgery", "Psychiatry", "Internal Medicine", "Radiology", "Other"] },
+                  { label: "Career Stage", Icon: Users, opts: ["Select your stage", "Resident/Fellow", "Early career", "Mid-career", "Approaching retirement"] },
+                  { label: "Practice Structure", Icon: Building2, opts: ["Select your structure", "Employed", "Private practice", "Group/Partnership", "Locum"] },
+                  { label: "Primary Priority", Icon: Target, opts: ["Select your priority", "Reduce taxes", "Build retirement income", "Protect assets", "Plan legacy"] },
+                ].map(({ label, Icon, opts }) => (
+                  <label key={label} className="flex items-center gap-3 rounded-xl border border-emerald-200/20 bg-[#00110d]/70 px-4 py-3">
+                    <Icon size={18} className="shrink-0 text-emerald-300" />
+                    <select aria-label={label} defaultValue="" className="w-full bg-transparent text-sm text-white outline-none">
+                      {opts.map((o, i) => <option key={o} value={i === 0 ? "" : o} disabled={i === 0} className="bg-[#00110d]">{o}</option>)}
+                    </select>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="mt-10 grid grid-cols-2 gap-4 rounded-2xl border border-emerald-200/15 bg-black/40 p-5 backdrop-blur-xl sm:grid-cols-3 lg:grid-cols-5">
+            {[
+              { Icon: CircleDollarSign, t: "Physician Tax", d: "Optimize today. Protect tomorrow." },
+              { Icon: Building2, t: "Practice Planning", d: "Strengthen your practice. Build lasting value." },
+              { Icon: Shield, t: "Risk Protection", d: "Protect what matters most." },
+              { Icon: Sunrise, t: "Retirement Income", d: "Create confidence. Live on your terms." },
+              { Icon: TreePine, t: "Legacy Design", d: "Your legacy. Their future." },
+            ].map(({ Icon, t, d }) => (
+              <div key={t} className="text-center">
+                <Icon size={26} className="mx-auto text-emerald-300" />
+                <p className="mt-2 text-sm font-semibold text-white">{t}</p>
+                <p className="mt-1 text-xs text-white/60">{d}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

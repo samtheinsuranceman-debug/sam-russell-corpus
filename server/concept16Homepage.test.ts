@@ -21,6 +21,14 @@ describe("Concept 16 physician homepage", () => {
     expect(landing).toContain("Relief today · Recovery for life");
     expect(landing).toContain("High-Income Medicine.");
     expect(landing).toContain("One Coordinated System.");
+    // Multi-background scroll chapters (Concepts 06 / 23 / 25)
+    expect(landing).toContain("/rcs-bg-06.webp");
+    expect(landing).toContain("/rcs-bg-23.webp");
+    expect(landing).toContain("/rcs-bg-25.webp");
+    expect(landing).toContain("Tax Strategy for");
+    expect(landing).toContain("Turn Capital Into Income");
+    expect(landing).toContain("Turn Medical Income Into Lasting Wealth");
+    expect(landing).toContain("Design Your Physician Financial System");
     expect(landing).toContain("Plan Beyond the Practice");
     expect(landing).toContain("Book a Physician Planning Review");
     expect(landing).toContain("Tax &amp; Interest Savings Calculator");
