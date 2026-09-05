@@ -52,7 +52,8 @@ describe("Concept 16 physician homepage", () => {
     // concierge section), so resolve ids against the page plus those.
     const concierge = readFileSync(resolve("client/src/components/HomeAIConcierge.tsx"), "utf8");
     const factFinder = readFileSync(resolve("client/src/components/HomeLeadFactFinder.tsx"), "utf8");
-    const idSources = landing + concierge + factFinder;
+    const tech = readFileSync(resolve("client/src/components/ProprietaryTech.tsx"), "utf8");
+    const idSources = landing + concierge + factFinder + tech;
     const anchors = Array.from(landing.matchAll(/href="#([a-z0-9-]+)"/g), match => match[1]);
     expect(anchors.length).toBeGreaterThan(0);
     for (const id of new Set(anchors)) expect(idSources, id).toMatch(new RegExp(`id=["']${id}["']`));
@@ -70,6 +71,23 @@ describe("Concept 16 physician homepage", () => {
     // Collects the household picture (a representative field is present).
     expect(ff).toContain("Interest-only payment / month");
     expect(ff).toContain("tax-deferred (IRA/401k/403b/TSP)");
+  });
+
+  it("fills the long scroll with the proprietary technology showcase", () => {
+    expect(landing).toContain("ProprietaryTech");
+    expect(landing).toContain('href="#technology"');
+    const tech = readFileSync(resolve("client/src/components/ProprietaryTech.tsx"), "utf8");
+    expect(tech).toContain('id="technology"');
+    // The two engines the owner named must be present.
+    expect(tech).toContain("Optimized Tax Waterfall Engine");
+    expect(tech).toContain("Mortgage Killer");
+    // Ten engines, each with a how/why framing.
+    expect((tech.match(/ref: "/g) ?? []).length).toBe(10);
+    expect(tech).toContain("How it works");
+    expect(tech).toContain("Why it's only here");
+    // Honest status wording — proprietary, not a granted-patent claim.
+    expect(tech).toContain("Proprietary technology");
+    expect(tech).toContain("tax, legal, or investment advice");
   });
 
   it("mounts the AI Brain Trust concierge wired to the nine-AI panel", () => {
