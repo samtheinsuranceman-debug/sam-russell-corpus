@@ -13,6 +13,9 @@
 //     GEMINI_API_KEY         (Gemini)
 //     PERPLEXITY_API_KEY     (Perplexity)
 //     OPENROUTER_API_KEY     (OpenRouter — routes to many models)
+//     MISTRAL_API_KEY        (Mistral)
+//     GROQ_API_KEY           (Groq)
+//     BUILT_IN_FORGE_API_KEY (Manus — the built-in Forge gateway)
 //     ELEVENLABS_API_KEY + ELEVENLABS_VOICE_ID  (voice output)
 // - Any provider without a key is skipped and reported as
 //   "not configured" — the panel degrades gracefully, and with zero
@@ -23,7 +26,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { MODULE_CATALOG, type ModuleKey } from "@shared/ultraEngine";
 
-type ProviderId = "claude" | "chatgpt" | "grok" | "gemini" | "perplexity" | "openrouter";
+type ProviderId = "claude" | "chatgpt" | "grok" | "gemini" | "perplexity" | "openrouter" | "mistral" | "groq" | "manus";
 
 type Provider = {
   id: ProviderId;
@@ -84,6 +87,28 @@ const PROVIDERS: Provider[] = [
     call: (k, s, u) => openAiCompatible("https://api.perplexity.ai", "sonar-pro", k, s, u) },
   { id: "openrouter", label: "OpenRouter", envKey: "OPENROUTER_API_KEY",
     call: (k, s, u) => openAiCompatible("https://openrouter.ai/api/v1", "anthropic/claude-sonnet-4.5", k, s, u) },
+  { id: "mistral", label: "Mistral", envKey: "MISTRAL_API_KEY",
+    call: (k, s, u) => openAiCompatible("https://api.mistral.ai/v1", "mistral-large-latest", k, s, u) },
+  { id: "groq", label: "Groq", envKey: "GROQ_API_KEY",
+    call: (k, s, u) => openAiCompatible("https://api.groq.com/openai/v1", "llama-3.3-70b-versatile", k, s, u) },
+  {
+    // Manus routes through the built-in Forge gateway (OpenAI-compatible),
+    // keyed by BUILT_IN_FORGE_API_KEY. We reuse invokeLLM so the gateway's
+    // own default model and retry/backoff logic apply — the apiKey argument
+    // is ignored because invokeLLM reads the key from the server env itself.
+    id: "manus", label: "Manus", envKey: "BUILT_IN_FORGE_API_KEY",
+    call: async (_apiKey, system, user) => {
+      const res = await invokeLLM({ messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ], maxTokens: 1500 });
+      const raw = res.choices[0]?.message?.content;
+      const text = typeof raw === "string" ? raw.trim()
+        : Array.isArray(raw) ? raw.filter((p) => p.type === "text").map((p) => (p as { text: string }).text).join("\n").trim() : "";
+      if (!text) throw new Error("empty response");
+      return text;
+    },
+  },
   {
     id: "gemini", label: "Gemini", envKey: "GEMINI_API_KEY",
     call: async (apiKey, system, user) => {
@@ -117,6 +142,26 @@ const ADVISOR_SYSTEM =
   "never give individualized tax or legal advice (recommend licensed professionals for that), " +
   "label every number as a projection under stated assumptions, and never invent facts about " +
   "the client that were not provided.";
+
+// Public homepage concierge. This prompt DELIBERATELY withholds the firm's
+// proprietary method ("the secret sauce"): it names the strategy pillars and
+// the general frame, but gives NO dollar amounts, NO percentages, NO formulas,
+// and NO step-by-step numeric sequences. The detailed math lives behind the
+// planning estimator and the licensed-advisor review, never in a public answer.
+const PUBLIC_TEASER_SYSTEM =
+  "You are the AI concierge on the Russell Capital Systems PUBLIC homepage, speaking to a prospective " +
+  "client — often a physician, psychiatrist, or surgeon — who may know nothing about the firm yet. " +
+  "Explain, in warm and confident plain language, the KINDS of strategies and the general FRAME that " +
+  "could apply to their situation: accelerated mortgage payoff, lowering tax liability, Roth-conversion " +
+  "sequencing, oil & gas drilling deductions, and trust-owned Index Universal Life used together — a " +
+  "coordinated combination designed to help make wealth resilient and hard to touch ('divorce-proof'). " +
+  "Talk about the IDEA of combining strategies in a sequence and why coordination beats any single tactic. " +
+  "HARD RULES — never break these: reveal NO specific dollar amounts, NO percentages, NO calculation " +
+  "formulas, NO exact number-of-combinations, NO named internal parameters, and NO step-by-step numeric " +
+  "instructions. Keep it to concepts, frames, and general sequences only. Never guarantee any outcome. " +
+  "State plainly that this is general education, not tax, legal, or investment advice, and that a licensed " +
+  "professional confirms every specific in a personal review. Close by inviting them to complete the short " +
+  "planning estimator and book a thorough evaluation. Under 180 words.";
 
 /** Lead-model call: Claude direct if keyed, else the built-in Forge LLM, else null. */
 async function leadModel(system: string, user: string): Promise<{ text: string; via: string } | null> {
@@ -294,6 +339,54 @@ export const ultraRouter = router({
         synthesis = lead?.text ?? null;
       }
       return { responses: results, skipped, synthesis };
+    }),
+
+  // PUBLIC homepage concierge: press-the-mic / type-a-question. Fans the
+  // question out to every configured AI using the teaser prompt (no numbers,
+  // no formulas — concepts and frames only), then the lead model synthesizes
+  // ONE warm answer. Returns the answer plus the names of the AIs that
+  // contributed, so the page can say "answered by 9 AI advisors" honestly.
+  homepagePanel: publicProcedure
+    .input(z.object({
+      question: z.string().min(1).max(4_000),
+      contextSummary: z.string().max(8_000).default(""),
+    }))
+    .mutation(async ({ input }) => {
+      const team = configuredProviders();
+      const userMsg =
+        (input.contextSummary ? `What the visitor has shared so far:\n${input.contextSummary}\n\n` : "") +
+        `The visitor asked: "${input.question}"\n\n` +
+        `Answer per your hard rules — concepts and frames only, no numbers or formulas.`;
+      const results = await Promise.all(team.map(async (p) => {
+        try {
+          return { id: p.id, label: p.label, ok: true as const, text: await p.call(process.env[p.envKey]!, PUBLIC_TEASER_SYSTEM, userMsg) };
+        } catch (e) {
+          return { id: p.id, label: p.label, ok: false as const, text: `unavailable (${String(e).slice(0, 60)})` };
+        }
+      }));
+      const contributors = results.filter((r) => r.ok).map((r) => r.label);
+      let answer: string | null = null;
+      if (contributors.length > 0) {
+        const lead = await leadModel(
+          PUBLIC_TEASER_SYSTEM,
+          `${contributors.length} AI advisors each answered the same visitor question below. ` +
+          `Synthesize them into ONE warm, plain-language answer that follows every hard rule ` +
+          `(concepts and frames only — absolutely no dollar amounts, percentages, or formulas). ` +
+          `Under 180 words.\n\nVisitor question: "${input.question}"\n\n` +
+          results.filter((r) => r.ok).map((r) => `--- ${r.label} ---\n${r.text}`).join("\n\n"),
+        );
+        answer = lead?.text ?? results.find((r) => r.ok)?.text ?? null;
+      }
+      return {
+        answer: answer ??
+          "Our AI concierge isn't switched on yet — but a Russell Capital Systems advisor can walk you " +
+          "through how accelerated mortgage payoff, tax-liability reduction, Roth-conversion sequencing, " +
+          "oil & gas deductions, and trust-owned Index Universal Life combine into one coordinated plan. " +
+          "Complete the short estimator below and book a thorough evaluation.",
+        contributors,
+        contributorCount: contributors.length,
+        configured: team.length > 0,
+      };
     }),
 
   // Voice output via ElevenLabs (the owner's cloned voice) — env-keyed only.

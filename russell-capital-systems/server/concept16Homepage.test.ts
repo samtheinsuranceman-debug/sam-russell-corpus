@@ -48,9 +48,23 @@ describe("Concept 16 physician homepage", () => {
   });
 
   it("keeps every public navigation anchor resolvable", () => {
+    // Anchor targets may live in components the page mounts (e.g. the AI
+    // concierge section), so resolve ids against the page plus those.
+    const concierge = readFileSync(resolve("client/src/components/HomeAIConcierge.tsx"), "utf8");
+    const idSources = landing + concierge;
     const anchors = Array.from(landing.matchAll(/href="#([a-z0-9-]+)"/g), match => match[1]);
     expect(anchors.length).toBeGreaterThan(0);
-    for (const id of new Set(anchors)) expect(landing, id).toMatch(new RegExp(`id=["']${id}["']`));
+    for (const id of new Set(anchors)) expect(idSources, id).toMatch(new RegExp(`id=["']${id}["']`));
+  });
+
+  it("mounts the AI Brain Trust concierge wired to the nine-AI panel", () => {
+    expect(landing).toContain("HomeAIConcierge");
+    expect(landing).toContain('href="#ai-brain-trust"');
+    const concierge = readFileSync(resolve("client/src/components/HomeAIConcierge.tsx"), "utf8");
+    expect(concierge).toContain("trpc.ultra.homepagePanel");
+    expect(concierge).toContain('id="ai-brain-trust"');
+    // No specific figures promised in the public concierge UI copy.
+    expect(concierge).toContain("not tax, legal, or investment advice");
   });
 
   it("exposes accessible mobile navigation and keyboard-capable command controls", () => {
