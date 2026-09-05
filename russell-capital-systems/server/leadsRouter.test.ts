@@ -37,5 +37,9 @@ describe("public leads router + advisor inbox", () => {
     expect(inbox).toContain("trpc.leads.list");
     expect(inbox).toContain("trpc.leads.updateStatus");
     expect(inbox).toContain("Illustrative advisor figures");
+    // CSV export is available and self-documents its illustrative nature.
+    expect(inbox).toContain("Export CSV");
+    expect(inbox).toContain("text/csv");
+    expect(inbox).toContain("for advisor review only");
   });
 });

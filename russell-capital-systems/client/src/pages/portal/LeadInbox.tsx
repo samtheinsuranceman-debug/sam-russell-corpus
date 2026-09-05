@@ -6,7 +6,7 @@
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
-import { Mail, Phone, Clock, AlertTriangle, User, Inbox } from "lucide-react";
+import { Mail, Phone, Clock, AlertTriangle, User, Inbox, Download } from "lucide-react";
 import type { LeadStatus } from "@shared/leadTypes";
 
 const STATUSES: LeadStatus[] = ["new", "contacted", "qualified", "client"];
@@ -28,18 +28,89 @@ export default function LeadInbox() {
 
   const leads = list.data ?? [];
   const selected = leads.find((l) => l.id === selectedId) ?? leads[0] ?? null;
+
+  type Lead = (typeof leads)[number];
+  const exportCsv = () => {
+    if (leads.length === 0) return;
+    const cell = (v: unknown): string => {
+      if (v === null || v === undefined) return "";
+      const s = typeof v === "object" ? JSON.stringify(v) : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const cols: Array<{ h: string; get: (l: Lead) => unknown }> = [
+      { h: "id", get: (l) => l.id },
+      { h: "createdAt", get: (l) => l.createdAt },
+      { h: "lastSeenAt", get: (l) => l.lastSeenAt },
+      { h: "status", get: (l) => l.status },
+      { h: "firstName", get: (l) => l.firstName },
+      { h: "lastName", get: (l) => l.lastName },
+      { h: "email", get: (l) => l.email },
+      { h: "phone", get: (l) => l.phone },
+      { h: "bestTimeToContact", get: (l) => l.bestTimeToContact },
+      { h: "question", get: (l) => l.question },
+      { h: "consentedAt", get: (l) => l.consentedAt },
+      { h: "lastIp", get: (l) => l.lastIp },
+      { h: "w2Income", get: (l) => l.factFinder?.w2Income },
+      { h: "estimatedTaxes", get: (l) => l.factFinder?.estimatedTaxes },
+      { h: "spouseIncome", get: (l) => l.factFinder?.spouseIncome },
+      { h: "spouseTaxes", get: (l) => l.factFinder?.spouseTaxes },
+      { h: "studentDebt", get: (l) => l.factFinder?.studentDebt },
+      { h: "studentDebtRate", get: (l) => l.factFinder?.studentDebtRate },
+      { h: "homeEquity", get: (l) => l.factFinder?.homeEquity },
+      { h: "mortgageBalance", get: (l) => l.factFinder?.mortgageBalance },
+      { h: "mortgageInterestOnlyMonthly", get: (l) => l.factFinder?.mortgageInterestOnlyMonthly },
+      { h: "mortgageYearsRemaining", get: (l) => l.factFinder?.mortgageYearsRemaining },
+      { h: "taxDeferredSelf", get: (l) => l.factFinder?.taxDeferredSelf },
+      { h: "taxDeferredSpouse", get: (l) => l.factFinder?.taxDeferredSpouse },
+      { h: "liquidInvestments", get: (l) => l.factFinder?.liquidInvestments },
+      { h: "liquidTaxability", get: (l) => l.factFinder?.liquidTaxability },
+      { h: "goals", get: (l) => l.factFinder?.goals },
+      { h: "illustrative_rothBase", get: (l) => l.analysis?.advisorFigures?.rothConversionBase },
+      { h: "illustrative_rothReference", get: (l) => l.analysis?.advisorFigures?.illustrativeRothTaxValue },
+      { h: "illustrative_interestOnlyExposure", get: (l) => l.analysis?.advisorFigures?.lifetimeInterestOnlyExposure },
+      { h: "illustrative_interestSaved", get: (l) => l.analysis?.advisorFigures?.illustrativeInterestPotentiallySaved },
+      { h: "illustrative_equityFirstStep", get: (l) => l.analysis?.advisorFigures?.equityDeployedFirstStep },
+      { h: "illustrative_oilGasDeduction", get: (l) => l.analysis?.advisorFigures?.oilGasDeduction },
+      { h: "illustrative_oilGasTaxOffset", get: (l) => l.analysis?.advisorFigures?.illustrativeOilGasTaxOffset },
+      { h: "illustrative_blendedRate", get: (l) => l.analysis?.advisorFigures?.blendedTaxRateUsed },
+    ];
+    const header = cols.map((c) => c.h).join(",");
+    const rows = leads.map((l) => cols.map((c) => cell(c.get(l))).join(","));
+    // Prepend a note row so the file is self-documenting on its illustrative nature.
+    const note = cell("Illustrative, assumption-based figures for advisor review only — not projections, guarantees, or advice.");
+    const csv = `${note}\n${header}\n${rows.join("\n")}`;
+    const blob = new Blob([`﻿${csv}`], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `rcs-leads-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
   const ff = selected?.factFinder ?? null;
   const fig = selected?.analysis?.advisorFigures ?? null;
 
   return (
     <AppShell title="Lead Inbox">
       <div className="rc-page-header">
-        <div className="flex items-center gap-3">
-          <Inbox size={22} className="text-emerald-400" />
-          <div>
-            <h1 className="text-xl font-bold text-white">Homepage Lead Inbox</h1>
-            <p className="text-sm text-slate-400">Prospects from the AI concierge and Tax &amp; Savings Estimate. Figures are illustrative — for advisor review only.</p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <Inbox size={22} className="text-emerald-400" />
+            <div>
+              <h1 className="text-xl font-bold text-white">Homepage Lead Inbox</h1>
+              <p className="text-sm text-slate-400">Prospects from the AI concierge and Tax &amp; Savings Estimate. Figures are illustrative — for advisor review only.</p>
+            </div>
           </div>
+          <button
+            type="button"
+            onClick={exportCsv}
+            disabled={leads.length === 0}
+            className="flex items-center gap-2 rounded-lg border border-emerald-400/40 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300 transition hover:bg-emerald-400/20 disabled:opacity-40"
+          >
+            <Download size={15} /> Export CSV{leads.length > 0 ? ` (${leads.length})` : ""}
+          </button>
         </div>
       </div>
 
