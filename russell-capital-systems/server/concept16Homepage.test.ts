@@ -9,9 +9,16 @@ const css = readFileSync(resolve("client/src/index.css"), "utf8");
 describe("Concept 16 physician homepage", () => {
   it("uses the clean persistent background and selected command-center hierarchy", () => {
     expect(landing).toContain("/manus-storage/rcs-concept-16-clean-background_a6ddebf1.png");
-    expect(landing).toContain("The Physician Wealth Command Center");
-    expect(landing).toContain("Enter the Physician Portal");
-    expect(landing).toContain("Start My Physician Plan");
+    // Concept 10 hero
+    expect(landing).toContain("Your Practice Builds Income.");
+    expect(landing).toContain("We Build the System Around It.");
+    expect(landing).toContain("Plan Beyond the Practice");
+    expect(landing).toContain("Book a Physician Planning Review");
+    // Concept 10 five-pillar strip
+    for (const pillar of ["Practice Economics", "Physician Tax Strategy", "Risk & Protection", "Retirement Income", "Succession & Legacy"]) {
+      expect(landing).toContain(pillar);
+    }
+    // Retained command-center panel labels
     for (const label of ["Tax", "Practice", "Retirement", "Legacy", "Review", "Coordinate", "Implement", "Monitor"]) {
       expect(landing).toContain(label);
     }
@@ -59,7 +66,7 @@ describe("Concept 16 physician homepage", () => {
     expect(css).toContain(".rc-homepage-type-scale .rc-command-center input");
     expect(css).toContain(".rc-homepage-type-scale .rc-command-center select");
     expect(landing).toContain("sm:grid-cols-4");
-    expect(landing).toContain("lg:grid-cols-[.86fr_1.14fr]");
+    expect(landing).toContain("lg:grid-cols-5");
   });
 
   it("does not restore public AUM, demo, fake phone, or inactive pricing claims", () => {
