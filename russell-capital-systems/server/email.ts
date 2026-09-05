@@ -4,6 +4,7 @@
  * so the app works in dev without an API key configured.
  */
 import { Resend } from "resend";
+import { sendMail } from "./_core/mailer";
 
 let _resend: Resend | null = null;
 
@@ -151,7 +152,6 @@ export interface LeadAckOptions {
  * no promises — just confirms receipt and that an advisor will follow up.
  */
 export async function sendLeadAcknowledgement(opts: LeadAckOptions): Promise<{ sent: boolean; reason?: string }> {
-  const resend = getResend();
   const name = (opts.firstName ?? "").trim() || "there";
   const subject = "Thanks — your Russell Capital Systems estimate is on its way";
   const text =
@@ -173,28 +173,55 @@ export async function sendLeadAcknowledgement(opts: LeadAckOptions): Promise<{ s
   </div>
 </body></html>`;
 
-  if (!resend) {
-    emailStatus("lead_ack_skipped_no_key", false);
-    return { sent: false, reason: "RESEND_API_KEY not configured" };
-  }
-  try {
-    const { error } = await resend.emails.send({
-      from: "Russell Capital Systems™ <hello@russellcapitalsystems.com>",
-      to: opts.toEmail,
-      subject,
-      html: sanitizeEmailHtml(html),
-      text,
-    });
-    if (error) {
-      emailStatus("lead_ack_resend_error", false);
-      return { sent: false, reason: "Email delivery failed" };
-    }
-    emailStatus("lead_ack_sent", true);
-    return { sent: true };
-  } catch {
-    emailStatus("lead_ack_failed", false);
-    return { sent: false, reason: "Email delivery failed" };
-  }
+  // Delivered through whichever transport the host has: Resend, or plain SMTP.
+  const result = await sendMail({ to: opts.toEmail, subject, text, html: sanitizeEmailHtml(html) });
+  emailStatus(result.sent ? "lead_ack_sent" : "lead_ack_not_sent", result.sent);
+  return result.sent ? { sent: true } : { sent: false, reason: result.reason ?? "Email delivery failed" };
+}
+
+// ─── New-lead alert to the owner ─────────────────────────────────────────────
+
+export interface NewLeadAlertOptions {
+  toEmail: string;
+  who: string;
+  contact: string;
+  bestTime?: string | null;
+  question?: string | null;
+  inboxUrl?: string;
+}
+
+/**
+ * Tells the owner a homepage lead just arrived. Contact details and the
+ * visitor's question only — never the illustrative figures, which stay in the
+ * inbox behind sign-in. Works on any host with RESEND_API_KEY or SMTP_* set.
+ */
+export async function sendNewLeadAlert(opts: NewLeadAlertOptions): Promise<{ sent: boolean; reason?: string }> {
+  const subject = `New homepage lead: ${opts.who}`;
+  const lines = [
+    `${opts.who} just completed the Tax & Savings Estimate on the homepage.`,
+    ``,
+    `Contact: ${opts.contact}`,
+    opts.bestTime ? `Best time to reach them: ${opts.bestTime}` : null,
+    opts.question ? `Their question: ${opts.question.slice(0, 500)}` : null,
+    ``,
+    `Open the lead inbox to review the full fact-finder and the advisor figures:`,
+    opts.inboxUrl ?? "/portal/leads",
+  ].filter((l): l is string => l !== null);
+  const text = lines.join("\n");
+  const esc = (v: string) => v.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c] as string));
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><title>${esc(subject)}</title></head>
+<body style="margin:0;padding:0;background:#060f1e;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;color:#c8d8ec;">
+  <div style="max-width:560px;margin:0 auto;padding:32px 24px;">
+    <h1 style="color:#34d399;font-size:20px;margin:0 0 16px;">New homepage lead: ${esc(opts.who)}</h1>
+    <p style="line-height:1.6;">Contact: <strong style="color:#fff">${esc(opts.contact)}</strong></p>
+    ${opts.bestTime ? `<p style="line-height:1.6;">Best time to reach them: ${esc(opts.bestTime)}</p>` : ""}
+    ${opts.question ? `<p style="line-height:1.6;">Their question: ${esc(opts.question.slice(0, 500))}</p>` : ""}
+    <p style="line-height:1.6;"><a href="${esc(opts.inboxUrl ?? "/portal/leads")}" style="color:#34d399;">Open the lead inbox</a> to review the full fact-finder and the advisor figures.</p>
+  </div>
+</body></html>`;
+  const result = await sendMail({ to: opts.toEmail, subject, text, html: sanitizeEmailHtml(html) });
+  emailStatus(result.sent ? "new_lead_alert_sent" : "new_lead_alert_not_sent", result.sent);
+  return result.sent ? { sent: true } : { sent: false, reason: result.reason ?? "Email delivery failed" };
 }
 
 // ─── Stale Client Digest Email ───────────────────────────────────────────────

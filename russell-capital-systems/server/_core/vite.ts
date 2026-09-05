@@ -3,10 +3,18 @@ import fs from "fs";
 import { type Server } from "http";
 import { nanoid } from "nanoid";
 import path from "path";
-import { createServer as createViteServer } from "vite";
-import viteConfig from "../../vite.config";
 
 export async function setupVite(app: Express, server: Server) {
+  // Loaded on demand: vite and the vite config (and its plugins) are dev-only
+  // dependencies. Importing them at the top would make the production bundle
+  // crash on hosts installed with `--omit=dev`.
+  // (The config path is a variable so esbuild leaves it out of the production
+  // bundle instead of inlining the config and its plugin imports.)
+  const viteConfigPath = "../../vite.config";
+  const [{ createServer: createViteServer }, { default: viteConfig }] = await Promise.all([
+    import("vite"),
+    import(viteConfigPath) as Promise<{ default: Record<string, unknown> }>,
+  ]);
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },
