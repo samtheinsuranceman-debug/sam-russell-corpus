@@ -39,3 +39,13 @@ an "Open in OpenAlex" button always works).
 Add rows to the `INSTITUTIONS` array (`name, city, country, grade, ror`). Filters,
 live search, and the cross-pollination selectors scale automatically. ROR IDs give
 exact OpenAlex links; without one it falls back to a name search.
+
+## us-top-100.html — US Top 100 Labs & Innovation Engine
+A dedicated page: the 100 leading U.S. biochemistry research universities
+(across 41 states + DC), graded A–D. Each card has a **Load top findings (live)**
+button that resolves the university in OpenAlex and pulls its most-cited
+biochemistry papers with real DOIs — the honest form of "connecting to the labs."
+Plus an **Innovation Engine** that turns a pair of research areas into a
+cross-pollinated lead brief with live intersection-literature and prior-art
+links. Leads require prior-art search + patent counsel; nothing is a claim of
+invention. Grades summarize published third-party rankings.
