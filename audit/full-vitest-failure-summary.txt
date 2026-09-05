@@ -14,12 +14,12 @@ AssertionError: promise resolved "{ verified: true, …(1) }" instead of rejecti
 AssertionError: expected 11 to be less than or equal to 10
  FAIL  server/features.test.ts > Password Gate — Access Control > Welcome@1 is recognized as trial password
 AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { valid: true, type: 'trial' }
- FAIL  server/features.test.ts > Password Gate — Access Control > Welcome@7 is recognized as eternal password
+ FAIL  server/features.test.ts > Password Gate — Access Control > [password redacted] is recognized as eternal password
 AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { valid: true, type: 'eternal' }
- FAIL  server/features.test.ts > Password Gate — Access Control > 18aLiHeap* is recognized as eternal password
+ FAIL  server/features.test.ts > Password Gate — Access Control > [password redacted] is recognized as eternal password
 AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { valid: true, type: 'eternal' }
  FAIL  server/features.test.ts > Password Gate — Access Control > ETERNAL_PASSWORDS contains exactly 2 backdoor passwords
-AssertionError: expected [] to include 'Welcome@7'
+AssertionError: expected [] to include '[password redacted]'
  FAIL  server/integration.test.ts > RESEND_API_KEY environment variable > is defined in the environment
 AssertionError: expected undefined to be defined
  FAIL  server/integration.test.ts > RESEND_API_KEY environment variable > has sufficient length to be a real API key (>= 8 chars)

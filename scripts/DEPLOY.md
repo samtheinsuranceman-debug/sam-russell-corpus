@@ -17,14 +17,19 @@ cPanel File Manager or SFTP. Keep the structure: `dist/`, `drizzle/`,
 Required:
   DATABASE_URL          mysql://USER:PASS@HOST:3306/DBNAME
   JWT_SECRET            (long random string)
-  OAUTH_SERVER_URL      (your managed-auth server URL)
-  OWNER_OPEN_ID         (your owner id — gates the Lead Inbox)
+  OWNER_EMAIL           (your sign-in email for /login and the Lead Inbox)
+  OWNER_PASSWORD_HASH   (bcrypt hash from `npm run owner:password`)
+  OWNER_NAME            (optional display name)
+  OAUTH_SERVER_URL      (managed host only — leave unset on cPanel)
 AI (any you use; skip-if-absent):
   ANTHROPIC_API_KEY  OPENAI_API_KEY  XAI_API_KEY  GEMINI_API_KEY
   PERPLEXITY_API_KEY  OPENROUTER_API_KEY  MISTRAL_API_KEY  GROQ_API_KEY
   BUILT_IN_FORGE_API_KEY   (Manus / built-in gateway)
 Email + voice (optional):
   RESEND_API_KEY   ELEVENLABS_API_KEY   ELEVENLABS_VOICE_ID
+> Owner sign-in: set OWNER_EMAIL and OWNER_PASSWORD_HASH (make the hash with
+> `npm run owner:password` on your own computer; never store the password).
+> Then /login shows the owner form and /portal/leads opens for you.
 > Rotate the 3 burned keys (OpenAI, Mistral, HeyGen) before using them.
 > The Resend sender domain (russellcapitalsystems.com) must be verified in Resend.
 

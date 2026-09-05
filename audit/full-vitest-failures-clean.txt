@@ -1967,7 +1967,7 @@ AssertionError: expected [Function] to throw error matching /Only Sam Russell/ b
     113|       const caller = appRouter.createCaller(ctx);
     114|       await expect(
        |       ^
-    115|         caller.websiteUsage.verifyPassword({ password: "Mike1248(?)" })
+    115|         caller.websiteUsage.verifyPassword({ password: "[password redacted]" })
     116|       ).rejects.toThrow(/Only Sam Russell/);
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/91]⎯
  FAIL  server/complianceTracking.test.ts > websiteUsage > verifyPassword > rejects wrong password for admin
@@ -2097,7 +2097,7 @@ AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { val
     270|   });
     271| 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/91]⎯
- FAIL  server/features.test.ts > Password Gate — Access Control > Welcome@7 is recognized as eternal password
+ FAIL  server/features.test.ts > Password Gate — Access Control > [password redacted] is recognized as eternal password
 AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { valid: true, type: 'eternal' }
 - Expected
 + Received
@@ -2109,13 +2109,13 @@ AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { val
   }
  ❯ server/features.test.ts:275:20
     273|     const { isValidPassword } = await import("../shared/accessControl"…
-    274|     const result = isValidPassword("Welcome@7");
+    274|     const result = isValidPassword("[password redacted]");
     275|     expect(result).toEqual({ valid: true, type: "eternal" });
        |                    ^
     276|   });
     277| 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/91]⎯
- FAIL  server/features.test.ts > Password Gate — Access Control > 18aLiHeap* is recognized as eternal password
+ FAIL  server/features.test.ts > Password Gate — Access Control > [password redacted] is recognized as eternal password
 AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { valid: true, type: 'eternal' }
 - Expected
 + Received
@@ -2127,20 +2127,20 @@ AssertionError: expected { valid: false, type: 'invalid' } to deeply equal { val
   }
  ❯ server/features.test.ts:281:20
     279|     const { isValidPassword } = await import("../shared/accessControl"…
-    280|     const result = isValidPassword("18aLiHeap*");
+    280|     const result = isValidPassword("[password redacted]");
     281|     expect(result).toEqual({ valid: true, type: "eternal" });
        |                    ^
     282|   });
     283| 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/91]⎯
  FAIL  server/features.test.ts > Password Gate — Access Control > ETERNAL_PASSWORDS contains exactly 2 backdoor passwords
-AssertionError: expected [] to include 'Welcome@7'
+AssertionError: expected [] to include '[password redacted]'
  ❯ server/features.test.ts:292:31
     290|   it("ETERNAL_PASSWORDS contains exactly 2 backdoor passwords", async …
     291|     const { ETERNAL_PASSWORDS } = await import("../shared/accessContro…
-    292|     expect(ETERNAL_PASSWORDS).toContain("Welcome@7");
+    292|     expect(ETERNAL_PASSWORDS).toContain("[password redacted]");
        |                               ^
-    293|     expect(ETERNAL_PASSWORDS).toContain("18aLiHeap*");
+    293|     expect(ETERNAL_PASSWORDS).toContain("[password redacted]");
     294|     expect(ETERNAL_PASSWORDS).toHaveLength(2);
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/91]⎯
  FAIL  server/integration.test.ts > RESEND_API_KEY environment variable > is defined in the environment

@@ -5,12 +5,12 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 describe("Access Control — Advisor Accounts & Trial System", () => {
   // Test access tier determination
   describe("Access Tier Logic", () => {
-    it("Welcome@1 password should map to 'trial' access tier", () => {
-      const password = "Welcome@1";
+    it("legacy-trial-pass password should map to 'trial' access tier", () => {
+      const password = "legacy-trial-pass";
       let accessTier: "trial" | "unlimited";
-      if (password === "Welcome@7") {
+      if (password === "legacy-eternal-pass-b") {
         accessTier = "unlimited";
-      } else if (password === "Welcome@1") {
+      } else if (password === "legacy-trial-pass") {
         accessTier = "trial";
       } else {
         accessTier = "trial"; // fallback
@@ -18,12 +18,12 @@ describe("Access Control — Advisor Accounts & Trial System", () => {
       expect(accessTier).toBe("trial");
     });
 
-    it("Welcome@7 password should map to 'unlimited' access tier", () => {
-      const password = "Welcome@7";
+    it("legacy-eternal-pass-b password should map to 'unlimited' access tier", () => {
+      const password = "legacy-eternal-pass-b";
       let accessTier: "trial" | "unlimited";
-      if (password === "Welcome@7") {
+      if (password === "legacy-eternal-pass-b") {
         accessTier = "unlimited";
-      } else if (password === "Welcome@1") {
+      } else if (password === "legacy-trial-pass") {
         accessTier = "trial";
       } else {
         accessTier = "trial";
@@ -33,13 +33,13 @@ describe("Access Control — Advisor Accounts & Trial System", () => {
 
     it("Invalid password should be rejected", () => {
       const password = "WrongPassword";
-      const isValid = password === "Welcome@1" || password === "Welcome@7";
+      const isValid = password === "legacy-trial-pass" || password === "legacy-eternal-pass-b";
       expect(isValid).toBe(false);
     });
 
     it("Empty password should be rejected", () => {
       const password = "";
-      const isValid = password === "Welcome@1" || password === "Welcome@7";
+      const isValid = password === "legacy-trial-pass" || password === "legacy-eternal-pass-b";
       expect(isValid).toBe(false);
     });
   });
@@ -161,7 +161,7 @@ describe("Access Control — Advisor Accounts & Trial System", () => {
       })).toBe("unlimited");
     });
 
-    it("Welcome@7 user gets unlimited regardless of account state", () => {
+    it("legacy-eternal-pass-b user gets unlimited regardless of account state", () => {
       expect(getEffectiveTier({
         isSam: false,
         accountAccessTier: "trial",
@@ -250,7 +250,7 @@ describe("Access Control — Advisor Accounts & Trial System", () => {
       })).toBe(false);
     });
 
-    it("should NOT enforce trial for Welcome@7 users", () => {
+    it("should NOT enforce trial for legacy-eternal-pass-b users", () => {
       expect(shouldEnforceTrial({
         isSam: false, accessTier: "unlimited", accountAccessTier: "trial", subscriptionStatus: null,
       })).toBe(false);
@@ -262,7 +262,7 @@ describe("Access Control — Advisor Accounts & Trial System", () => {
       })).toBe(false);
     });
 
-    it("should enforce trial for regular Welcome@1 users", () => {
+    it("should enforce trial for regular legacy-trial-pass users", () => {
       expect(shouldEnforceTrial({
         isSam: false, accessTier: "trial", accountAccessTier: "trial", subscriptionStatus: null,
       })).toBe(true);
