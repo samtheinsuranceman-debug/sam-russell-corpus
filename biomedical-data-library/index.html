@@ -1,0 +1,182 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BioData Atlas — Russell Biomedical Data Library</title>
+<style>
+:root{--bg:#0c1116;--panel:#151c25;--panel2:#1b2531;--ink:#e7eef5;--muted:#93a2b2;--line:#26313f;
+--teal:#33b8a6;--blue:#519fe0;--gold:#dcb154;--warn:#e2814a}
+@media(prefers-color-scheme:light){:root{--bg:#f4f7fb;--panel:#fff;--panel2:#eef3f8;--ink:#0f1a26;
+--muted:#54636f;--line:#dbe3ec;--teal:#0d7a6c;--blue:#255fa6;--gold:#8f6d12}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+header{padding:26px 0 14px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--bg))}
+h1{margin:2px 0 4px;font-size:26px}.tag{color:var(--teal);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+.sub{color:var(--muted);max-width:820px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+nav button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:7px 14px;cursor:pointer;font-size:13px}
+nav button.active{background:var(--teal);color:#04140f;border-color:var(--teal);font-weight:700}
+section{padding:24px 0}h2{font-size:19px;margin:0 0 4px;border-left:3px solid var(--teal);padding-left:10px}
+h2+.muted{margin:0 0 14px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.card h3{margin:0 0 4px;font-size:15px}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.muted{color:var(--muted);font-size:13px}
+.pill{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:2px 9px}
+.pill.open{color:var(--teal);border-color:var(--teal)}.pill.reg{color:var(--gold);border-color:var(--gold)}
+.links{margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;font-size:13px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+input,select{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:9px 11px;font-size:14px}
+input[type=text]{min-width:220px;flex:1}.count{color:var(--muted);font-size:13px;margin:6px 0}
+.dom{margin:18px 0 6px;font-size:13px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.08em}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:13px}
+.tabs button.on{background:var(--blue);color:#04121f;font-weight:700;border-color:var(--blue)}
+.res{border-top:1px dashed var(--line);padding:9px 0;font-size:13px}.res .t{font-weight:600}
+.go{background:var(--teal);color:#04140f;border:0;border-radius:8px;padding:9px 15px;font-weight:700;cursor:pointer}
+.note{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;padding:12px 14px;color:var(--muted);font-size:13px}
+.kpis{display:flex;gap:22px;flex-wrap:wrap;margin-top:10px}.kpi b{font-size:22px;display:block;color:var(--teal)}
+.xp{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+[hidden]{display:none!important}footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:12px}
+</style></head><body>
+<header><div class="wrap">
+<div class="tag">Russell BioMedical · Data Library</div>
+<h1>BioData Atlas — The Biomedical Data Library</h1>
+<p class="sub">Every major biomedical data repository on Earth, organized and access-labeled — genomes, protein structures, variants, drugs, pathways, clinical trials, imaging. The open ones are wired for <b>live search in your browser</b>: real records, real accession IDs, straight from the source. Nothing fabricated.</p>
+<div class="kpis">
+<div class="kpi"><b id="kRepos">0</b><span class="muted">repositories</span></div>
+<div class="kpi"><b id="kDomains">0</b><span class="muted">data domains</span></div>
+<div class="kpi"><b>4</b><span class="muted">live search engines</span></div>
+<div class="kpi"><b>0</b><span class="muted">fabricated records</span></div>
+</div>
+<nav>
+<button data-tab="repos" class="active">Repositories</button>
+<button data-tab="search">Live Data Search</button>
+<button data-tab="access">Access &amp; Standards</button>
+<button data-tab="about">Method &amp; Honesty</button>
+</nav></div></header>
+<div class="wrap">
+
+<section id="repos">
+<h2>Repository Directory</h2>
+<p class="muted">Grouped by data domain. Each entry links to the real source and is labeled by access model.</p>
+<div class="controls">
+<input type="text" id="search" placeholder="Search repository, domain, data type…">
+<select id="fDomain"><option value="">All domains</option></select>
+<select id="fAccess"><option value="">Any access</option><option value="Open">Open</option><option value="reg">Registered / controlled</option></select>
+</div>
+<div class="count" id="repoCount"></div>
+<div id="repoGroups"></div>
+</section>
+
+<section id="search" hidden>
+<h2>Live Data Search</h2>
+<p class="muted">Runs in your browser against open, no-key APIs. If a query is blocked when opening the file locally, host the page — an "Open on source" button always works.</p>
+<div class="tabs" style="margin-top:12px">
+<button class="on" data-eng="lit">Literature (Europe PMC)</button>
+<button data-eng="pdb">Protein structures (RCSB PDB)</button>
+<button data-eng="trials">Clinical trials (ClinicalTrials.gov)</button>
+<button data-eng="gene">Genes (MyGene.info)</button>
+</div>
+<div class="controls">
+<input type="text" id="q" value="">
+<button class="go" onclick="runSearch()">Search</button>
+<button class="go" style="background:var(--panel2);color:var(--ink);border:1px solid var(--line)" onclick="openSource()">Open on source ↗</button>
+</div>
+<div id="out"><p class="muted">Pick an engine, type a query, Search.</p></div>
+</section>
+
+<section id="access" hidden>
+<h2>Access Models &amp; Data Standards</h2>
+<div class="grid">
+<div class="card"><h3>Open</h3><p class="muted">Freely downloadable/queryable, often via public APIs. Most repositories here.</p></div>
+<div class="card"><h3>Registered / controlled</h3><p class="muted">Human-subject data (dbGaP, UK Biobank, All of Us, ImmPort) requires application, approval, and a data-use agreement. This library links to the front door; it never holds or redistributes controlled data.</p></div>
+<div class="card"><h3>Accessions &amp; identifiers</h3><p class="muted">Records are cited by stable IDs — DOI, PMID, PDB ID, NCT number, Entrez Gene ID, UniProt accession — so any result is independently verifiable at its source.</p></div>
+<div class="card"><h3>Licensing</h3><p class="muted">Each repository sets its own license/terms. Some (KEGG, DrugBank) are open for academic use but licensed commercially. Check terms before commercial use.</p></div>
+</div>
+</section>
+
+<section id="about" hidden>
+<h2>Method &amp; Honesty</h2>
+<div class="xp"><b>Real.</b> Every repository is real with a verified URL. Live results are fetched from the source APIs at query time — accessions and DOIs are theirs. No fabricated datasets, records, or IDs.</div>
+<div class="xp"><b>What this is.</b> A curated directory + live front-end over public biomedical data infrastructure — the fastest honest way to reach the world's data without warehousing or re-hosting it.</div>
+<div class="xp"><b>What it is NOT.</b> Not a data owner or re-distributor; not a source of controlled/patient data; not medical advice. Controlled datasets require their own approvals.</div>
+<div class="xp"><b>Live APIs used.</b>
+<a href="https://europepmc.org/RestfulWebService" target="_blank" rel="noopener">Europe PMC REST</a> ·
+<a href="https://search.rcsb.org/" target="_blank" rel="noopener">RCSB PDB Search</a> ·
+<a href="https://clinicaltrials.gov/data-api/api" target="_blank" rel="noopener">ClinicalTrials.gov API v2</a> ·
+<a href="https://mygene.info/" target="_blank" rel="noopener">MyGene.info</a> — all free, no key.</div>
+<div class="xp"><b>Ecosystem.</b> Pairs with <a href="../biochem-library/index.html">BioChem Atlas</a> (institutions &amp; findings) and <a href="../russell-biomedical/index.html">Russell BioMedical</a> (the research &amp; IP venture).</div>
+</div>
+</section>
+
+<footer class="wrap">BioData Atlas — Russell BioMedical. A directory + live front-end over public biomedical data. Data © respective sources under their own licenses. No records, accessions, or DOIs are fabricated. Not medical advice.</footer>
+</div>
+<script>
+const REPOS=[["NCBI GenBank","Genomes & Sequences","Annotated DNA/RNA sequence records.","Open","https://www.ncbi.nlm.nih.gov/genbank/"],["European Nucleotide Archive (ENA)","Genomes & Sequences","Nucleotide sequence + raw reads (EMBL-EBI).","Open","https://www.ebi.ac.uk/ena/browser/"],["Sequence Read Archive (SRA)","Genomes & Sequences","Raw next-gen sequencing reads.","Open","https://www.ncbi.nlm.nih.gov/sra"],["Ensembl","Genomes & Sequences","Genome annotation across vertebrates & more.","Open","https://www.ensembl.org/"],["UCSC Genome Browser","Genomes & Sequences","Interactive reference-genome browser & tracks.","Open","https://genome.ucsc.edu/"],["UniProt","Proteins & Structures","Protein sequence & functional annotation.","Open","https://www.uniprot.org/"],["RCSB Protein Data Bank","Proteins & Structures","3D experimental macromolecular structures.","Open","https://www.rcsb.org/"],["PDBe","Proteins & Structures","European Protein Data Bank (EMBL-EBI).","Open","https://www.ebi.ac.uk/pdbe/"],["AlphaFold DB","Proteins & Structures","AI-predicted protein structures (DeepMind/EBI).","Open","https://alphafold.ebi.ac.uk/"],["PRIDE","Proteins & Structures","Mass-spectrometry proteomics data.","Open","https://www.ebi.ac.uk/pride/"],["ProteomeXchange","Proteins & Structures","Federated proteomics data hub.","Open","http://www.proteomexchange.org/"],["Gene Expression Omnibus (GEO)","Expression & Functional Genomics","Functional genomics / expression datasets.","Open","https://www.ncbi.nlm.nih.gov/geo/"],["Expression Atlas","Expression & Functional Genomics","Gene/protein expression across conditions.","Open","https://www.ebi.ac.uk/gxa/"],["GTEx Portal","Expression & Functional Genomics","Tissue-specific human gene expression.","Open","https://gtexportal.org/"],["Human Cell Atlas","Expression & Functional Genomics","Single-cell reference maps of the human body.","Open","https://www.humancellatlas.org/"],["ArrayExpress (BioStudies)","Expression & Functional Genomics","Functional genomics experiments (EMBL-EBI).","Open","https://www.ebi.ac.uk/biostudies/arrayexpress"],["dbSNP","Variants & Clinical Genetics","Short genetic variation catalog.","Open","https://www.ncbi.nlm.nih.gov/snp/"],["ClinVar","Variants & Clinical Genetics","Variant\u2013phenotype clinical significance.","Open","https://www.ncbi.nlm.nih.gov/clinvar/"],["gnomAD","Variants & Clinical Genetics","Population allele frequencies (Broad).","Open","https://gnomad.broadinstitute.org/"],["OMIM","Variants & Clinical Genetics","Mendelian genes & genetic disorders.","Open (registered for bulk)","https://www.omim.org/"],["dbGaP","Variants & Clinical Genetics","Genotype\u2013phenotype (controlled access).","Registered / controlled","https://www.ncbi.nlm.nih.gov/gap/"],["PubChem","Chemicals & Drugs","Chemical compounds, bioassays, activities.","Open","https://pubchem.ncbi.nlm.nih.gov/"],["ChEMBL","Chemicals & Drugs","Bioactive molecules & drug-like activity.","Open","https://www.ebi.ac.uk/chembl/"],["DrugBank","Chemicals & Drugs","Drug + drug-target reference.","Open / licensed","https://go.drugbank.com/"],["BindingDB","Chemicals & Drugs","Measured binding affinities.","Open","https://www.bindingdb.org/"],["KEGG","Pathways & Systems","Pathways, genomes, and reactions.","Open / licensed","https://www.kegg.jp/"],["Reactome","Pathways & Systems","Curated human biological pathways.","Open","https://reactome.org/"],["STRING","Pathways & Systems","Protein\u2013protein interaction networks.","Open","https://string-db.org/"],["BioGRID","Pathways & Systems","Genetic & protein interactions.","Open","https://thebiogrid.org/"],["HMDB","Metabolomics","Human Metabolome Database.","Open","https://hmdb.ca/"],["MetaboLights","Metabolomics","Metabolomics experiments (EMBL-EBI).","Open","https://www.ebi.ac.uk/metabolights/"],["ClinicalTrials.gov","Clinical, Cohorts & Trials","Registered clinical studies (US NLM).","Open","https://clinicaltrials.gov/"],["WHO ICTRP","Clinical, Cohorts & Trials","International trial registry network.","Open","https://trials.who.int/"],["UK Biobank","Clinical, Cohorts & Trials","500k-participant deep phenotype cohort.","Registered / approved","https://www.ukbiobank.ac.uk/"],["All of Us (NIH)","Clinical, Cohorts & Trials","1M+ diverse US participant program.","Registered / approved","https://allofus.nih.gov/"],["NIH RePORTER","Clinical, Cohorts & Trials","US federally-funded research & grants.","Open","https://reporter.nih.gov/"],["GDC (TCGA)","Cancer Genomics","NCI Genomic Data Commons / TCGA.","Open / controlled","https://portal.gdc.cancer.gov/"],["cBioPortal","Cancer Genomics","Cancer genomics visualization & analysis.","Open","https://www.cbioportal.org/"],["The Cancer Imaging Archive","Cancer Genomics","De-identified cancer imaging.","Open","https://www.cancerimagingarchive.net/"],["OpenNeuro","Imaging & Signals","Open neuroimaging (BIDS) datasets.","Open","https://openneuro.org/"],["PhysioNet","Imaging & Signals","Physiologic signals & clinical datasets.","Open / credentialed","https://physionet.org/"],["ImmPort","Immunology","Immunology research data sharing (NIAID).","Registered","https://www.immport.org/"],["MGI","Model Organisms","Mouse genome & phenotype (Jackson Lab).","Open","https://www.informatics.jax.org/"],["SGD","Model Organisms","Saccharomyces (yeast) genome database.","Open","https://www.yeastgenome.org/"],["FlyBase","Model Organisms","Drosophila genes & genomes.","Open","https://flybase.org/"],["WormBase","Model Organisms","C. elegans biology & genome.","Open","https://wormbase.org/"],["ZFIN","Model Organisms","Zebrafish model organism database.","Open","https://zfin.org/"],["Europe PMC","Literature & Metascience","Biomedical literature + preprints/patents.","Open","https://europepmc.org/"],["PubMed","Literature & Metascience","38M+ biomedical citations (US NLM).","Open","https://pubmed.ncbi.nlm.nih.gov/"],["OpenAlex","Literature & Metascience","Open scholarly graph, ROR-linked.","Open","https://openalex.org/"],["bioRxiv / medRxiv","Literature & Metascience","Biology & health-science preprints.","Open","https://www.biorxiv.org/"]], DOMAINS=["Genomes & Sequences","Proteins & Structures","Expression & Functional Genomics","Variants & Clinical Genetics","Chemicals & Drugs","Pathways & Systems","Metabolomics","Clinical, Cohorts & Trials","Cancer Genomics","Imaging & Signals","Immunology","Model Organisms","Literature & Metascience"];
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s),enc=encodeURIComponent;
+let ENG="lit";
+const PH={lit:"metformin alzheimer",pdb:"CRISPR Cas9",trials:"pancreatic cancer immunotherapy",gene:"TP53"};
+
+function accClass(a){return a.toLowerCase().startsWith("open")?"open":"reg";}
+function renderRepos(){
+ const q=$("#search").value.toLowerCase(),fd=$("#fDomain").value,fa=$("#fAccess").value;
+ let L=REPOS.filter(r=>(!fd||r[1]===fd)&&(!q||(r[0]+r[1]+r[2]).toLowerCase().includes(q))&&
+   (!fa|| (fa==="Open"?r[3].toLowerCase().startsWith("open"):!r[3].toLowerCase().startsWith("open"))));
+ $("#repoCount").textContent=`${L.length} repositor${L.length!==1?'ies':'y'} shown`;
+ let html="";
+ for(const d of DOMAINS){
+  const g=L.filter(r=>r[1]===d); if(!g.length) continue;
+  html+=`<div class="dom">${d}</div><div class="grid">`+g.map(r=>`<div class="card">
+   <div class="row"><h3>${r[0]}</h3><span class="pill ${accClass(r[3])}">${r[3]}</span></div>
+   <div class="muted">${r[2]}</div>
+   <div class="links"><a href="${r[4]}" target="_blank" rel="noopener">Open ↗</a></div></div>`).join("")+`</div>`;
+ }
+ $("#repoGroups").innerHTML=html;
+}
+function fill(){
+ $("#fDomain").insertAdjacentHTML("beforeend",DOMAINS.map(d=>`<option>${d}</option>`).join(""));
+ $("#kRepos").textContent=REPOS.length;
+ $("#kDomains").textContent=new Set(REPOS.map(r=>r[1])).size;
+ $("#q").value=PH[ENG];
+}
+$$(".tabs button").forEach(b=>b.onclick=()=>{$$(".tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");ENG=b.dataset.eng;$("#q").value=PH[ENG];$("#out").innerHTML='<p class="muted">Press Search.</p>';});
+function openSource(){const q=enc($("#q").value);
+ const u={lit:`https://europepmc.org/search?query=${q}`,pdb:`https://www.rcsb.org/search?request=%7B%22query%22%3A%7B%22type%22%3A%22terminal%22%2C%22service%22%3A%22full_text%22%2C%22parameters%22%3A%7B%22value%22%3A%22${q}%22%7D%7D%7D`,
+  trials:`https://clinicaltrials.gov/search?term=${q}`,gene:`https://www.ncbi.nlm.nih.gov/gene/?term=${q}`}[ENG];
+ window.open(u,"_blank");}
+async function runSearch(){
+ const out=$("#out"),q=$("#q").value.trim();if(!q){out.innerHTML='<p class="muted">Enter a query.</p>';return;}
+ out.innerHTML='<p class="muted">Querying source…</p>';
+ try{
+  if(ENG==="lit"){
+   const r=await fetch(`https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=${enc(q)}&format=json&pageSize=25&resultType=core`);
+   const j=await r.json(),w=(j.resultList&&j.resultList.result)||[];
+   out.innerHTML=head(j.hitCount,w.length)+w.map(x=>{
+    const doi=x.doi?`<a href="https://doi.org/${x.doi}" target="_blank" rel="noopener">doi:${x.doi}</a>`:(x.pmid?`<a href="https://europepmc.org/article/MED/${x.pmid}" target="_blank" rel="noopener">PMID ${x.pmid}</a>`:'<span class="muted">no id</span>');
+    return res(x.title,`${(x.authorString||'—')}${x.pubYear?' · '+x.pubYear:''}${x.source?' · '+x.source:''}`,doi);}).join("");
+  }else if(ENG==="pdb"){
+   const body={query:{type:"terminal",service:"full_text",parameters:{value:q}},return_type:"entry",request_options:{paginate:{start:0,rows:15}}};
+   const r=await fetch("https://search.rcsb.org/rcsbsearch/v2/query",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+   const j=await r.json(),w=(j.result_set)||[];
+   out.innerHTML=head(j.total_count,w.length)+w.map(x=>{const id=x.identifier;
+    return res(`PDB ${id}`,`Experimental macromolecular structure`,`<a href="https://www.rcsb.org/structure/${id}" target="_blank" rel="noopener">rcsb.org/structure/${id} ↗</a>`);}).join("");
+  }else if(ENG==="trials"){
+   const r=await fetch(`https://clinicaltrials.gov/api/v2/studies?query.term=${enc(q)}&pageSize=20&format=json`);
+   const j=await r.json(),w=(j.studies)||[];
+   out.innerHTML=head(j.totalCount,w.length)+w.map(s=>{const p=s.protocolSection||{},id=(p.identificationModule||{});
+    const nct=id.nctId,st=(p.statusModule||{}).overallStatus||'';
+    return res(id.briefTitle||nct,`${nct||''}${st?' · '+st:''}`,nct?`<a href="https://clinicaltrials.gov/study/${nct}" target="_blank" rel="noopener">clinicaltrials.gov/study/${nct} ↗</a>`:'');}).join("");
+  }else if(ENG==="gene"){
+   const r=await fetch(`https://mygene.info/v3/query?q=${enc(q)}&species=human&size=15&fields=symbol,name,entrezgene,taxid`);
+   const j=await r.json(),w=(j.hits)||[];
+   out.innerHTML=head(j.total,w.length)+w.map(g=>res(`${g.symbol||''} — ${g.name||''}`,`Entrez ${g.entrezgene||'?'}`,g.entrezgene?`<a href="https://www.ncbi.nlm.nih.gov/gene/${g.entrezgene}" target="_blank" rel="noopener">NCBI Gene ↗</a>`:'')).join("");
+  }
+  if(!$("#out").querySelector(".res")&&!$("#out").querySelector(".note")) out.innerHTML='<p class="muted">No results — broaden the query.</p>';
+ }catch(e){out.innerHTML=`<div class="note">Live fetch was blocked in this context (${e.message}). This is common when opening the file directly from disk — host the page, or click <b>Open on source ↗</b> to run the same query.</div>`;}
+}
+function head(total,shown){return `<div class="count">${(Number(total)||shown).toLocaleString()} records — showing ${shown}</div>`;}
+function res(t,sub,link){return `<div class="res"><div class="t">${t||'(untitled)'}</div><div class="muted">${sub}</div>${link||''}</div>`;}
+["#search","#fDomain","#fAccess"].forEach(s=>$(s).addEventListener("input",renderRepos));
+$$("nav button").forEach(b=>b.onclick=()=>{$$("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");$$("section").forEach(s=>s.hidden=true);$("#"+b.dataset.tab).hidden=false;});
+fill();renderRepos();
+</script></body></html>

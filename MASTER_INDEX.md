@@ -103,6 +103,14 @@ literature for patentable cross-pollinated intersections, anchored to the
 BioChem Atlas library. Honest scope — not a clinical provider, no medical
 claims, nothing filed/patent-pending, no fabricated findings.
 
+### `/biomedical-data-library/` — BioData Atlas (biomedical data library)
+Self-contained website (index.html) cataloging 51 real biomedical data
+repositories across 13 domains (genomes, proteins/structures, variants, drugs,
+pathways, trials, imaging, model organisms, literature), access-labeled and
+linked, with four live-search engines over open no-key APIs (Europe PMC, RCSB
+PDB, ClinicalTrials.gov v2, MyGene.info) returning real records/accessions. No
+fabricated data; not a data re-distributor; not medical advice.
+
 ### `/biochem-library/` — BioChem Atlas (biochemistry research library)
 Self-contained website (index.html, no build) cataloging global biochemistry
 research institutions graded A–D on a sourced rubric, wired to open aggregators
