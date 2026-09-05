@@ -412,7 +412,7 @@ export default function Landing() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <h2 className="text-[clamp(2.2rem,5vw,4rem)] font-extrabold leading-[1.02] tracking-[-.03em] text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>Russell Capital<br />Systems for Physicians</h2>
-              <p className="mt-4 text-[clamp(1.1rem,2.4vw,1.7rem)] font-semibold text-emerald-300 [text-shadow:_0_0_18px_rgba(52,211,153,.6)]">Turn Medical Income Into Lasting Wealth&trade;</p>
+              <p className="mt-4 text-[clamp(1.1rem,2.4vw,1.7rem)] font-semibold text-emerald-300 [text-shadow:_0_0_18px_rgba(52,211,153,.6)]">Transform Debt Into a Tax-Free Liquid War Chest — On Demand&trade;</p>
               <p className="mt-5 max-w-md text-lg leading-relaxed text-white/80">Specialized tax, practice, retirement, risk, and legacy planning for physicians, specialists, and medical practice owners.</p>
               <div className="mt-8 flex flex-col gap-3 sm:max-w-md">
                 <a href="#physician-planning" className="rc-btn rc-btn-primary rounded-xl px-6 py-3.5 text-base"><Stethoscope size={18} /> Build My Physician Plan</a>

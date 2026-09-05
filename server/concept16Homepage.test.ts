@@ -27,7 +27,7 @@ describe("Concept 16 physician homepage", () => {
     expect(landing).toContain("/rcs-bg-25.webp");
     expect(landing).toContain("Tax Strategy for");
     expect(landing).toContain("Turn Capital Into Income");
-    expect(landing).toContain("Turn Medical Income Into Lasting Wealth");
+    expect(landing).toContain("Transform Debt Into a Tax-Free Liquid War Chest");
     expect(landing).toContain("Design Your Physician Financial System");
     expect(landing).toContain("Plan Beyond the Practice");
     expect(landing).toContain("Book a Physician Planning Review");
