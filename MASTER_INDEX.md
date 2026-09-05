@@ -96,6 +96,13 @@ practice), Series B (6 JoinAQAL x RCS emergent combinations), Series C
 Markdown sources per application plus compiled series PDFs under `pdf/`.
 ALL DRAFTS — not filed; attorney review required. Start at `000_INDEX.md`.
 
+### `/biochem-library/` — BioChem Atlas (biochemistry research library)
+Self-contained website (index.html, no build) cataloging global biochemistry
+research institutions graded A–D on a sourced rubric, wired to open aggregators
+(OpenAlex, PubMed, Europe PMC, bioRxiv, J-STAGE, etc.) with live literature
+search and a cross-pollination workspace for patent-lead hunting. No fabricated
+findings/DOIs; grades summarize published third-party rankings.
+
 ### `/russell-capital-systems/` — Russell Capital Unified Portal (code)
 Full-stack advisor-platform build (React/Express/Drizzle): 60+ routed pages
 (annuities, estate planning, compliance vault, deal room, the seven Grok
