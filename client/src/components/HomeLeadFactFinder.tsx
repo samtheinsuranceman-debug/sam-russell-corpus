@@ -12,13 +12,33 @@ import { trpc } from "@/lib/trpc";
 import type { LiquidTaxability } from "@shared/leadTypes";
 
 // Suitability / compliance disclaimer shown on the estimator in both the
-// input and result states. Wording per owner direction.
-const ESTIMATOR_DISCLAIMER =
-  "These results are not guaranteed. Any figures or strategies shown represent the best outcomes we have " +
-  "produced for some of our clients under certain conditions — they may or may not reflect the results you " +
-  "would receive. Every result must be thoroughly examined by our tax professional team for suitability and " +
-  "for compliance with applicable IRS statutes before anything is implemented. This estimator is general " +
-  "education only and is not tax, legal, or investment advice.";
+// input and result states.
+//
+// COMPLIANCE SWITCH — flip DISCLAIMER_MODE to choose the wording:
+//   "client-results" — owner's dictated wording (references "the best
+//       outcomes we have produced for some of our clients"). This is a
+//       past-performance claim; use only if the tax/compliance team can
+//       substantiate it and it fits FINRA/state advertising rules.
+//   "illustrative"   — the compliance-safe variant with no client-results
+//       claim. Switch to this if the team prefers not to make that claim.
+const DISCLAIMER_MODE: "client-results" | "illustrative" = "client-results";
+
+const DISCLAIMERS = {
+  "client-results":
+    "These results are not guaranteed. Any figures or strategies shown represent the best outcomes we have " +
+    "produced for some of our clients under certain conditions — they may or may not reflect the results you " +
+    "would receive. Every result must be thoroughly examined by our tax professional team for suitability and " +
+    "for compliance with applicable IRS statutes before anything is implemented. This estimator is general " +
+    "education only and is not tax, legal, or investment advice.",
+  illustrative:
+    "These results are not guaranteed. Any figures or strategies shown are illustrative and based on stated " +
+    "assumptions — they may or may not reflect the results you would receive. Every result must be thoroughly " +
+    "examined by our tax professional team for suitability and for compliance with applicable IRS statutes " +
+    "before anything is implemented. This estimator is general education only and is not tax, legal, or " +
+    "investment advice.",
+} as const;
+
+const ESTIMATOR_DISCLAIMER = DISCLAIMERS[DISCLAIMER_MODE];
 
 type NumKey =
   | "w2Income" | "estimatedTaxes" | "spouseIncome" | "spouseTaxes"
