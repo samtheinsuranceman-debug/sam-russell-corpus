@@ -1,16 +1,19 @@
 // ============================================================
-// PROPRIETARY TECHNOLOGY SHOWCASE — fills the long homepage scroll with
-// the engines behind the Russell Capital Systems platform. Drawn from the
-// core platform engines (PAT-001…015 in the internal patent workbook),
-// described at the concept level only — no secret formulas or figures.
+// PROPRIETARY TECHNOLOGY SHOWCASE — the engines behind the Russell Capital
+// Systems platform, drawn from the core patent workbook (PAT-001…015).
 //
-// STATUS: 15 patent applications are in process for the core platform
-// engines — "patent-pending" is accurate per the owner. Do not claim a patent
-// has been GRANTED (issued) until an issue number exists; "patent-pending" and
-// "in process" are correct for filed-and-pending applications.
+// Descriptions are BENEFIT-ORIENTED only: what each engine means for the
+// client and their family, now and in the future. We intentionally do NOT
+// explain how the engines work.
+//
+// STATUS: 15 core patent applications are in process (patent-pending), plus
+// 45 more unique applications in process — per the owner, accurate and true.
+// Do NOT claim a patent has been GRANTED (issued) until an issue number
+// exists; "patent-pending" / "in process" are correct for filed applications.
 // ============================================================
 import {
-  Layers, Waves, Home, Dna, ShieldCheck, Repeat2, History, Dice5, Boxes, Landmark,
+  Layers, Waves, Home, Dna, ShieldCheck, Repeat2, History, Dice5, Boxes,
+  Landmark, Radar, Brain, Award, Network,
 } from "lucide-react";
 
 const TECH_STATUS_LABEL = "Patent-pending · 15 patents in process";
@@ -19,60 +22,69 @@ export type Technology = {
   ref: string; // internal engine index
   name: string;
   icon: typeof Layers;
-  how: string; // plain-language "how it works"
-  why: string; // "why it's different / only found here"
+  benefit: string; // what it means for you and your family — now and in the future
 };
 
+// Ordered to build credibility and confidence: the most personal, high-impact
+// wins first (keep more, own your home, protect the family), then
+// personalization, then the confidence/validation and quality engines.
+// The AI advisor-coaching engine is intentionally omitted from display.
 export const TECHNOLOGIES: Technology[] = [
   {
     ref: "05", name: "Optimized Tax Waterfall Engine", icon: Waves,
-    how: "Models every retirement income bucket — Roth, IRA, Social Security, pension, rental, policy loans — and finds the order to draw them that leaves the least tax over your whole retirement.",
-    why: "Most tools optimize two or three sources. Ours coordinates seven-plus at once, so it finds savings that only appear when the sources are sequenced together.",
+    benefit: "Keeps more of your money in your pocket through retirement by drawing your income in the smartest possible order — so your family keeps what you worked a lifetime to build instead of overpaying the IRS.",
   },
   {
     ref: "09", name: "Mortgage Killer™", icon: Home,
-    how: "Turns idle home equity into a growth engine, uses that growth to retire the mortgage years early, then recycles the freed equity into the next property — cycle after cycle.",
-    why: "Real-estate and insurance tactics exist separately; nobody else runs them as one automated recycling loop that accelerates with every cycle.",
-  },
-  {
-    ref: "02", name: "Equity Arbitrage Engine", icon: Repeat2,
-    how: "Finds the sweet spot for borrowing against your home at a low cost and positioning it where it can grow faster — timing draws and premiums across decades.",
-    why: "Advisors attempt this by hand in spreadsheets; our engine weighs thousands of variables to surface windows a person can't calculate manually.",
-  },
-  {
-    ref: "01", name: "Cascading Calculator Core", icon: Layers,
-    how: "Snaps 15+ financial calculators onto one base so changing a single number ripples through every connected calculator instantly and in the right order.",
-    why: "Legacy platforms treat each calculator as an island. Ours reveals cross-calculator insight — like how a mortgage choice moves your future tax bracket.",
-  },
-  {
-    ref: "04", name: "Wealth Genome™ Profile", icon: Dna,
-    how: "Reads 20+ signals about your money life and maps you to the strategy set that fits your exact situation — not a generic risk bucket.",
-    why: "Standard questionnaires use 5–10 questions; ours weighs 20+ interacting factors, so people who look similar on the surface get very different, better-fit plans.",
-  },
-  {
-    ref: "06", name: "Divorce-Proof Asset Shield", icon: ShieldCheck,
-    how: "Shows which assets sit inside protected vehicles versus exposed accounts, applying the protection rules for your state across multiple what-if scenarios.",
-    why: "No mainstream planning tool models asset protection this way across all 50 states with multi-scenario modeling.",
+    benefit: "Puts you on a path to own your home free and clear years — sometimes decades — sooner, freeing cash flow for your family today and leaving a paid-off legacy tomorrow.",
   },
   {
     ref: "12", name: "Zero-Cost Roth Conversion Engine", icon: Boxes,
-    how: "Pairs a Roth conversion with offsetting deductions so the tax the conversion creates can be balanced out — moving money toward tax-free status thoughtfully.",
-    why: "Both pieces are known individually; combining them so they cancel is a coordination almost no one models automatically.",
+    benefit: "Helps move your savings toward tax-free status without the usual painful tax bill — so more of your nest egg grows for you and can pass to your children untaxed.",
   },
   {
-    ref: "10", name: "Time Machine Dual-View", icon: History,
-    how: "Puts the required forward projection side-by-side with a look-back at how the same strategy would have behaved through real historical markets.",
-    why: "Seeing real history next to the projection builds trust no single illustration can — evidence beside estimate.",
-  },
-  {
-    ref: "13", name: "10,000-Scenario Stress Test", icon: Dice5,
-    how: "Runs your plan through ten thousand different market futures — crashes, booms, and everything between — to show the range of outcomes, not one rosy line.",
-    why: "It models the protective floor and the growth cap correctly, which ordinary simulations get wrong.",
+    ref: "02", name: "Equity Arbitrage Engine", icon: Repeat2,
+    benefit: "Turns the equity sitting idle in your home into a working asset that quietly builds wealth for your family — instead of just sitting in the walls.",
   },
   {
     ref: "14", name: "FIA Collateral Optimizer", icon: Landmark,
-    how: "Splits a fixed indexed annuity into a piece that generates income and a piece you can borrow against, coordinating the two with tax-aware debt paydown.",
-    why: "The specific split-and-lend architecture, tuned to real carrier products, is a combination you won't find in off-the-shelf software.",
+    benefit: "Gives you dependable retirement income while keeping access to your capital — so you can live confidently now and still reach your funds if life changes.",
+  },
+  {
+    ref: "06", name: "Divorce-Proof Asset Shield", icon: ShieldCheck,
+    benefit: "Shows you how to protect what you've built so a divorce, lawsuit, or creditor can't take it — safeguarding your family's security for good.",
+  },
+  {
+    ref: "04", name: "Wealth Genome™ Profile", icon: Dna,
+    benefit: "Builds your plan around your exact life — your income, your family, your goals — so every recommendation fits you, never a generic template.",
+  },
+  {
+    ref: "07", name: "Retirement Risk Radar", icon: Radar,
+    benefit: "Spots every threat to your retirement — not just the market, but healthcare, inflation, and a long life — so nothing blindsides your family.",
+  },
+  {
+    ref: "13", name: "10,000-Scenario Stress Test", icon: Dice5,
+    benefit: "Tests your plan against ten thousand possible futures, so you can retire knowing it holds up even when markets don't — real peace of mind for the whole family.",
+  },
+  {
+    ref: "10", name: "Time Machine Dual-View", icon: History,
+    benefit: "Lets you see how a strategy would have actually performed through real market history — so your family's decisions rest on evidence, not just promises.",
+  },
+  {
+    ref: "08", name: "Behavioral Safeguard", icon: Brain,
+    benefit: "Quietly protects you from the costly money mistakes everyone's brain is wired to make — keeping more of your family's wealth intact over a lifetime.",
+  },
+  {
+    ref: "01", name: "Cascading Calculator Core", icon: Layers,
+    benefit: "Shows your entire financial picture moving together, so you instantly see how one decision touches your taxes, retirement, and legacy — clarity behind every choice.",
+  },
+  {
+    ref: "11", name: "The Russell Number™", icon: Award,
+    benefit: "Means your advisor is held to a measurable, transparent quality standard — so your family is guided by someone proven, not simply licensed.",
+  },
+  {
+    ref: "15", name: "Advisor Practice Platform", icon: Network,
+    benefit: "Means a disciplined, well-run practice is working behind the scenes on your plan — consistent follow-through you and your family can count on for years.",
   },
 ];
 
@@ -80,7 +92,7 @@ export default function ProprietaryTech() {
   return (
     <section
       id="technology"
-      aria-label="Proprietary technology behind Russell Capital Systems"
+      aria-label="Patent-pending technology behind Russell Capital Systems"
       className="relative overflow-hidden border-t border-emerald-300/10 bg-[#050b0a] py-28"
     >
       <img src="/rcs-bg-23.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover object-center blur-[20px] brightness-[.24]" />
@@ -93,34 +105,42 @@ export default function ProprietaryTech() {
             {TECH_STATUS_LABEL}
           </p>
           <h2 className="mt-5 text-[clamp(2rem,5vw,3.8rem)] font-extrabold leading-tight text-white [text-shadow:_0_0_26px_rgba(16,185,129,.4)]" style={{ fontFamily: "DM Sans, sans-serif" }}>
-            The <span className="text-emerald-300 [text-shadow:_0_0_26px_rgba(52,211,153,.85)]">engines</span> behind your plan
+            Engines that work for <span className="text-emerald-300 [text-shadow:_0_0_26px_rgba(52,211,153,.85)]">you and your family</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/75">
-            Coordinated planning runs on purpose-built engines you won't find in off-the-shelf software —
-            with <span className="font-semibold text-emerald-300">15 patents in process</span>. Here's a
-            plain-language look at ten of them; the specifics are worked through with an advisor.
+            These are purpose-built engines behind your plan — with <span className="font-semibold text-emerald-300">15 patents in process</span> — and
+            you <span className="font-semibold text-emerald-300">won't find them anywhere else</span>. Here's what each one means for you, now and for the years ahead.
           </p>
         </div>
 
         <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {TECHNOLOGIES.map(({ ref, name, icon: Icon, how, why }) => (
+          {TECHNOLOGIES.map(({ ref, name, icon: Icon, benefit }) => (
             <div key={ref} className="group relative rounded-2xl border border-emerald-200/20 bg-black/55 p-6 backdrop-blur-xl transition hover:border-emerald-300/45 hover:bg-black/65">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-300/35 bg-emerald-300/10 text-emerald-300"><Icon size={20} /></span>
-                <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-emerald-300/70">Engine {ref}</span>
+                <span className="rounded-full border border-emerald-300/25 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[.14em] text-emerald-300/70">Only at RCS</span>
               </div>
               <h3 className="mt-4 text-lg font-bold leading-snug text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>{name}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-white/75"><span className="font-semibold text-emerald-200">How it works — </span>{how}</p>
-              <p className="mt-2 text-sm leading-relaxed text-white/60"><span className="font-semibold text-emerald-200">Why it's only here — </span>{why}</p>
+              <p className="mt-3 text-sm leading-relaxed text-white/75"><span className="font-semibold text-emerald-200">What it means for you — </span>{benefit}</p>
             </div>
           ))}
         </div>
 
-        <p className="mx-auto mt-10 max-w-3xl text-center text-[11px] leading-relaxed text-white/45">
-          Patent-pending methods developed by Russell Capital Systems — 15 patent applications in process —
-          described here at a high level for education. Not tax, legal, or investment advice; results are not
-          guaranteed and are reviewed by our tax professional team for suitability and IRS compliance before
-          implementation.
+        {/* 45 more in process — stay tuned */}
+        <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-emerald-300/30 bg-emerald-300/[.06] p-6 text-center backdrop-blur-xl">
+          <p className="text-[clamp(1.2rem,3vw,1.9rem)] font-extrabold text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>
+            And we're just getting started.
+          </p>
+          <p className="mx-auto mt-2 max-w-2xl text-white/75">
+            Beyond these, <span className="font-semibold text-emerald-300">45 more unique patent-pending technologies</span> are in process —
+            built to keep giving you and your family an edge no one else can offer. <span className="font-semibold text-emerald-300">Stay tuned.</span>
+          </p>
+        </div>
+
+        <p className="mx-auto mt-8 max-w-3xl text-center text-[11px] leading-relaxed text-white/45">
+          Patent-pending methods developed by Russell Capital Systems — 15 patent applications in process, with 45 more
+          underway — described here at a high level. Not tax, legal, or investment advice; results are not guaranteed and
+          are reviewed by our tax professional team for suitability and IRS compliance before implementation.
         </p>
       </div>
     </section>
