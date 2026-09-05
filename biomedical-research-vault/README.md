@@ -34,3 +34,14 @@ you accumulate a persistent, exportable research database.
 ## Ecosystem
 Third sibling with `../biochem-library/` and `../biomedical-data-library/`,
 under the `../russell-biomedical/` venture. Keep folders as siblings.
+
+## cross-pollination.html — Cross-Pollination Engine
+The capstone. Reads the same persistent vault (`bioevidence_vault_v1`) and turns
+accumulated findings into patent leads: drop strong findings from two different
+fields into Basket A and Basket B, and it generates intersection lead briefs —
+each with both source citations, a transparent **novelty signal** score
+(evidence strength of both × field-distance), and live prior-art links (Google
+Patents, USPTO, Espacenet, WIPO) plus intersection literature. Leads save to a
+separate persistent store (`bioevidence_leads_v1`), exportable JSON/CSV. Topic
+Mode pairs two fields directly when the vault is empty. Leads are hypotheses
+requiring prior-art search + patent counsel — never a claim of invention.

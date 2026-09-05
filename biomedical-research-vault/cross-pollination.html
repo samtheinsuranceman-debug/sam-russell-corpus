@@ -1,0 +1,235 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cross-Pollination Engine — Russell Biomedical Research Vault</title>
+<style>
+:root{--bg:#0a0e13;--panel:#131b24;--panel2:#1a2530;--ink:#e9f0f6;--muted:#8fa0b0;--line:#243240;
+--teal:#33b8a6;--blue:#4f9fe0;--gold:#d8b154;--warn:#e2814a;--pink:#c65b9e}
+@media(prefers-color-scheme:light){:root{--bg:#f3f6fa;--panel:#fff;--panel2:#eef3f8;--ink:#0e1a26;
+--muted:#54636f;--line:#dbe3ec;--teal:#0d7a6c;--blue:#255fa6}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+header{padding:24px 0 12px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--bg))}
+h1{margin:2px 0 4px;font-size:25px}.tag{color:var(--pink);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+.sub{color:var(--muted);max-width:860px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+nav button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:7px 14px;cursor:pointer;font-size:13px}
+nav button.active{background:var(--pink);color:#150610;border-color:var(--pink);font-weight:700}
+section{padding:22px 0}h2{font-size:19px;margin:0 0 4px;border-left:3px solid var(--pink);padding-left:10px}
+h2+.muted{margin:0 0 14px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:820px){.cols{grid-template-columns:1fr}}
+.basket{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;min-height:120px}
+.basket h3{margin:0 0 8px;font-size:15px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+input,select{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:9px 11px;font-size:14px}
+input[type=text]{min-width:220px;flex:1}
+.go{background:var(--pink);color:#150610;border:0;border-radius:8px;padding:9px 15px;font-weight:700;cursor:pointer}
+.go2{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 15px;cursor:pointer}
+.finding{background:var(--panel);border:1px solid var(--line);border-left-width:4px;border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.finding .t{font-weight:600;font-size:13.5px}.finding .meta{color:var(--muted);font-size:12px;margin:2px 0}
+.tchip{width:28px;height:22px;border-radius:5px;color:#06131b;font-weight:800;display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex:none}
+.mini{font-size:11.5px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:6px;padding:3px 8px;cursor:pointer}
+.count{color:var(--muted);font-size:13px;margin:6px 0}
+.note{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;padding:12px 14px;color:var(--muted);font-size:13px}
+.brief{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:12px;padding:16px;margin-bottom:12px}
+.brief .h{font-weight:700;font-size:15px;margin-bottom:6px}
+.brief pre{white-space:pre-wrap;font:13px/1.5 inherit;margin:8px 0;color:var(--ink)}
+.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.kpis{display:flex;gap:20px;flex-wrap:wrap;margin-top:10px}.kpi b{font-size:22px;display:block;color:var(--pink)}
+.score{font-weight:800}.xp{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+[hidden]{display:none!important}footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:12px}
+</style></head><body>
+<header><div class="wrap">
+<div class="tag">Russell BioMedical · Evidence Vault</div>
+<h1>Cross-Pollination Engine</h1>
+<p class="sub">Turn the findings you've accumulated in <a href="index.html">BioEvidence Atlas</a> into patent leads. Drop strong findings from two different fields into Basket A and Basket B; the engine writes an intersection lead brief — with both source citations, a novelty-signal score, and live prior-art checks. A lead is a hypothesis to investigate, never a claim of invention.</p>
+<div class="kpis">
+<div class="kpi"><b id="kPool">0</b><span class="muted">findings in your vault</span></div>
+<div class="kpi"><b id="kA">0</b><span class="muted">in Basket A</span></div>
+<div class="kpi"><b id="kB">0</b><span class="muted">in Basket B</span></div>
+<div class="kpi"><b id="kLeads">0</b><span class="muted">saved leads</span></div>
+</div>
+<nav>
+<button data-tab="pool" class="active">Findings Pool</button>
+<button data-tab="generate">Generate Leads</button>
+<button data-tab="leads">Saved Leads</button>
+<button data-tab="topic">Topic Mode</button>
+<button data-tab="about">Method &amp; Honesty</button>
+</nav></div></header>
+<div class="wrap">
+
+<section id="pool">
+<h2>Findings Pool <span class="muted" style="font-weight:400">— from your BioEvidence vault</span></h2>
+<div class="controls">
+<input type="text" id="poolSearch" placeholder="Filter findings…">
+<select id="poolTier"><option value="">All tiers</option></select>
+<button class="go2" onclick="location.href='index.html'">← Harvest more in BioEvidence Atlas</button>
+</div>
+<div class="cols" style="margin-bottom:12px">
+<div class="basket"><h3>🧺 Basket A <span class="muted" id="aName"></span> <button class="mini" onclick="clearBasket('A')">clear</button></h3><div id="basketA"></div></div>
+<div class="basket"><h3>🧺 Basket B <span class="muted" id="bName"></span> <button class="mini" onclick="clearBasket('B')">clear</button></h3><div id="basketB"></div></div>
+</div>
+<div class="count" id="poolCount"></div>
+<div id="poolOut"></div>
+</section>
+
+<section id="generate" hidden>
+<h2>Generate Cross-Pollination Leads</h2>
+<p class="muted">Every Basket A finding is paired with every Basket B finding. Each pair becomes a lead brief scored by a transparent <b>novelty signal</b> (higher = stronger evidence on both sides + fields that rarely co-occur).</p>
+<div class="controls">
+<button class="go" onclick="generate()">Generate A × B briefs</button>
+<span class="muted" id="genInfo" style="align-self:center"></span>
+</div>
+<div id="genOut"><p class="muted">Fill both baskets in the Findings Pool, then generate.</p></div>
+</section>
+
+<section id="leads" hidden>
+<h2>Saved Leads</h2>
+<div class="controls">
+<button class="go2" onclick="exportLeads('json')">Export JSON</button>
+<button class="go2" onclick="exportLeads('csv')">Export CSV</button>
+<button class="go2" onclick="clearLeads()">Clear leads</button>
+<span class="muted" id="leadInfo" style="align-self:center"></span>
+</div>
+<div id="leadsOut"></div>
+</section>
+
+<section id="topic" hidden>
+<h2>Topic Mode <span class="muted" style="font-weight:400">— when the vault is empty</span></h2>
+<p class="muted">No accumulated findings yet? Pair two research areas directly and get the same lead brief with live intersection-literature and prior-art links.</p>
+<div class="controls">
+<input type="text" id="tA" placeholder="Field A — e.g. senolytics" value="senolytics">
+<input type="text" id="tB" placeholder="Field B — e.g. pulmonary fibrosis" value="pulmonary fibrosis">
+<button class="go" onclick="topicBrief()">Generate lead brief</button>
+</div>
+<div id="topicOut"></div>
+</section>
+
+<section id="about" hidden>
+<h2>Method &amp; Honesty</h2>
+<div class="xp"><b>What it does.</b> Combines two real, evidence-tiered findings from different fields into a hypothesis that neither field states alone — the classic route to a non-obvious, potentially patentable invention.</div>
+<div class="xp"><b>Novelty signal (transparent).</b> score = (evidence strength of A + of B) × (field-distance). Evidence strength is higher for lower tier numbers (T1 strongest). Field-distance is higher when the two findings share few words — a proxy for "these fields rarely meet." It is a PRIORITIZATION heuristic, not a measure of patentability.</div>
+<div class="xp"><b>Discipline.</b> A lead is a starting point. It must clear a real prior-art search (Google Patents, USPTO, Espacenet, WIPO — links provided) and a registered patent attorney before it means anything. Thin intersection literature can also just mean the fields use different words.</div>
+<div class="xp"><b>Real &amp; private.</b> Source findings and DOIs come from your vault (originally live from Europe PMC / OpenAlex) — never fabricated. Baskets and saved leads live in your browser only.</div>
+<div class="xp"><b>Not.</b> Not a claim of invention, not medical advice. Patentability and clinical relevance require separate, proper processes.</div>
+</div>
+</section>
+
+<footer class="wrap">Cross-Pollination Engine — Russell BioMedical. Leads are hypotheses requiring prior-art search + patent counsel; nothing here is a claim of invention or medical advice. Source data © respective publishers. Nothing fabricated.</footer>
+</div>
+<script>
+const VK="bioevidence_vault_v1", LK="bioevidence_leads_v1";
+const TIERS=[[1,"Definitive Consensus","#2fae6b"],[2,"Randomized Trial","#49b85a"],[3,"Prospective Cohort","#7cbf3f"],
+[4,"Case-Control","#a9c035"],[5,"Cross-Sectional / Population","#c9bd2f"],[6,"In Vivo Mechanism","#d8a933"],
+[7,"In Vitro / Molecular","#e0913c"],[8,"Computational / In Silico","#e37a45"],[9,"Review / Synthesis","#e06355"],
+[10,"Case Report / Series","#d85070"],[11,"Correlational / Hypothesis","#c74d8f"],[12,"Preprint / Speculative","#b25bc0"]];
+const TC={}; TIERS.forEach(t=>TC[t[0]]={name:t[1],col:t[2]});
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s),enc=encodeURIComponent;
+const STOP=new Set("the a an of and or in on for to with without via using into from by is are be as at we our their study results show showed suggests associated between effect effects role novel new human patients cells cell disease clinical trial analysis review".split(" "));
+let A=[],B=[];
+
+function getVault(){try{return JSON.parse(localStorage.getItem(VK)||"[]");}catch(e){return[];}}
+function getLeads(){try{return JSON.parse(localStorage.getItem(LK)||"[]");}catch(e){return[];}}
+function setLeads(v){try{localStorage.setItem(LK,JSON.stringify(v));}catch(e){}refreshCounts();}
+function refreshCounts(){$("#kPool").textContent=getVault().length;$("#kA").textContent=A.length;$("#kB").textContent=B.length;$("#kLeads").textContent=getLeads().length;
+ if($("#leadInfo"))$("#leadInfo").textContent=`${getLeads().length} leads · stored in this browser`;}
+function words(t){return new Set(String(t||"").toLowerCase().replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w.length>3&&!STOP.has(w)));}
+function keyTerms(t,n){return [...words(t)].slice(0,n||4);}
+
+function fillTiers(){$("#poolTier").innerHTML='<option value="">All tiers</option>'+TIERS.map(t=>`<option value="${t[0]}">T${t[0]} · ${t[1]}</option>`).join("");}
+function fCard(f,ctx){const c=TC[f.tier]||{name:"?",col:"#888"};
+ const inA=A.some(x=>x.id===f.id),inB=B.some(x=>x.id===f.id);
+ return `<div class="finding" style="border-left-color:${c.col}">
+  <div class="t"><span class="tchip" style="background:${c.col}">T${f.tier}</span> ${f.title||'(untitled)'}</div>
+  <div class="meta">${c.name} · ${f.authors||'—'}${f.year?' · '+f.year:''}</div>
+  <div class="links">${ctx==='pool'?`<button class="mini" onclick='toBasket("A",${JSON.stringify(f.id)})' ${inA?'disabled':''}>→ A</button>
+   <button class="mini" onclick='toBasket("B",${JSON.stringify(f.id)})' ${inB?'disabled':''}>→ B</button>`:''}
+   ${ctx!=='pool'?`<button class="mini" onclick='fromBasket("${ctx}",${JSON.stringify(f.id)})'>remove</button>`:''}
+   ${f.doi?`<a href="https://doi.org/${f.doi}" target="_blank" rel="noopener">doi ↗</a>`:''}</div></div>`;}
+function renderPool(){
+ const v=getVault(),q=($("#poolSearch").value||"").toLowerCase(),ft=$("#poolTier").value;
+ let L=v.filter(f=>(!ft||String(f.tier)===ft)&&(!q||(f.title+f.authors).toLowerCase().includes(q)));
+ L.sort((a,b)=>a.tier-b.tier);
+ $("#poolCount").textContent=v.length?`${L.length} of ${v.length} vault findings`:"Vault empty — harvest findings in BioEvidence Atlas first, or use Topic Mode.";
+ $("#poolOut").innerHTML=L.map(f=>fCard(f,'pool')).join("")||(v.length?'<p class="muted">No matches.</p>':'');
+ $("#basketA").innerHTML=A.map(f=>fCard(f,'A')).join("")||'<p class="muted">Empty.</p>';
+ $("#basketB").innerHTML=B.map(f=>fCard(f,'B')).join("")||'<p class="muted">Empty.</p>';
+ const an=commonTerm(A),bn=commonTerm(B);$("#aName").textContent=an?`· ${an}`:"";$("#bName").textContent=bn?`· ${bn}`:"";
+ refreshCounts();
+}
+function commonTerm(arr){if(!arr.length)return"";const freq={};arr.forEach(f=>keyTerms(f.title,6).forEach(w=>freq[w]=(freq[w]||0)+1));
+ const s=Object.entries(freq).sort((a,b)=>b[1]-a[1]);return s.length?s[0][0]:"";}
+function toBasket(which,id){const v=getVault(),f=v.find(x=>x.id===id);if(!f)return;const arr=which==="A"?A:B;if(!arr.some(x=>x.id===id))arr.push(f);renderPool();}
+function fromBasket(which,id){if(which==="A")A=A.filter(x=>x.id!==id);else B=B.filter(x=>x.id!==id);renderPool();}
+function clearBasket(w){if(w==="A")A=[];else B=[];renderPool();}
+
+// ── novelty signal + brief ───────────────────────────────────────────────────
+function strength(tier){return (13-tier)/12;} // T1 -> ~1.0, T12 -> ~0.08
+function fieldDistance(t1,t2){const a=words(t1),b=words(t2);let inter=0;a.forEach(w=>{if(b.has(w))inter++;});
+ const uni=new Set([...a,...b]).size||1;return 1-(inter/uni);} // 1 = no shared words
+function noveltyScore(fa,fb){return Math.round((strength(fa.tier)+strength(fb.tier))*fieldDistance(fa.title,fb.title)*50);}
+function briefText(fa,fb){const ta=keyTerms(fa.title,3).join(", ")||"field A",tb=keyTerms(fb.title,3).join(", ")||"field B";
+ return `HYPOTHESIS (lead — not an invention)
+Apply the mechanism/result from Finding A to the open problem in Finding B:
+
+  A (T${fa.tier} ${TC[fa.tier].name}): ${fa.title}
+  B (T${fb.tier} ${TC[fb.tier].name}): ${fb.title}
+
+Question to investigate:
+  Whether "${ta}" (established in A) can act on / explain / improve
+  "${tb}" (the subject of B) in a way neither literature reports alone.
+
+Why this pairing may be non-obvious:
+  Both findings rest on real evidence, yet their fields share little vocabulary
+  — the kind of gap where genuinely new, patentable combinations tend to hide.
+
+Do next:
+  1. Read the intersection literature (link). Sparse + credible = a live lead.
+  2. Prior-art check in patents (links). Anything close reshapes or kills it.
+  3. If it survives, draft a disclosure and take it to patent counsel.`;}
+function leadLinks(fa,fb){const qs=enc(keyTerms(fa.title,3).concat(keyTerms(fb.title,3)).join(" "));
+ return `<div class="links">
+  <a class="mini" href="https://openalex.org/works?search=${qs}&sort=cited_by_count:desc" target="_blank" rel="noopener">Intersection literature ↗</a>
+  <a class="mini" href="https://patents.google.com/?q=${qs}" target="_blank" rel="noopener">Google Patents ↗</a>
+  <a class="mini" href="https://ppubs.uspto.gov/pubwebapp/" target="_blank" rel="noopener">USPTO ↗</a>
+  <a class="mini" href="https://worldwide.espacenet.com/patent/search?q=${qs}" target="_blank" rel="noopener">Espacenet ↗</a>
+  <a class="mini" href="https://patentscope.wipo.int/search/en/result.jsf?query=${qs}" target="_blank" rel="noopener">WIPO ↗</a></div>`;}
+function briefCard(fa,fb,idx){const sc=noveltyScore(fa,fb);
+ return `<div class="brief"><div class="h">Lead ${idx!=null?('#'+(idx+1)):''} · novelty signal <span class="score" style="color:var(--pink)">${sc}</span>/100</div>
+  <pre>${briefText(fa,fb)}</pre>${leadLinks(fa,fb)}
+  <div class="links"><button class="mini" onclick='saveLead(${JSON.stringify({a:fa,b:fb,score:sc}).replace(/'/g,"&#39;")})'>+ Save lead</button></div></div>`;}
+function generate(){
+ if(!A.length||!B.length){$("#genOut").innerHTML='<div class="note">Add at least one finding to each basket in the Findings Pool.</div>';return;}
+ const pairs=[];A.forEach(fa=>B.forEach(fb=>{if(fa.id!==fb.id)pairs.push([fa,fb,noveltyScore(fa,fb)]);}));
+ pairs.sort((x,y)=>y[2]-x[2]);
+ $("#genInfo").textContent=`${pairs.length} pair(s), ranked by novelty signal`;
+ $("#genOut").innerHTML=pairs.map((p,i)=>briefCard(p[0],p[1],i)).join("");
+}
+function saveLead(o){const L=getLeads();const id=(o.a.id||"")+"|"+(o.b.id||"");
+ if(!L.some(x=>x.id===id)){L.push({id,score:o.score,a_title:o.a.title,a_tier:o.a.tier,a_doi:o.a.doi||"",
+  b_title:o.b.title,b_tier:o.b.tier,b_doi:o.b.doi||"",savedAt:Date.now()});setLeads(L);}
+ alert("Lead saved to Saved Leads.");}
+function renderLeads(){const L=getLeads().slice().sort((a,b)=>b.score-a.score);
+ if(!L.length){$("#leadsOut").innerHTML='<p class="muted">No leads saved yet.</p>';return;}
+ $("#leadsOut").innerHTML=L.map(x=>`<div class="brief"><div class="h">Novelty ${x.score}/100</div>
+  <div class="meta"><b>A</b> (T${x.a_tier}): ${x.a_title} ${x.a_doi?`· <a href="https://doi.org/${x.a_doi}" target="_blank" rel="noopener">doi</a>`:''}</div>
+  <div class="meta"><b>B</b> (T${x.b_tier}): ${x.b_title} ${x.b_doi?`· <a href="https://doi.org/${x.b_doi}" target="_blank" rel="noopener">doi</a>`:''}</div>
+  <div class="links"><button class="mini" onclick='delLead(${JSON.stringify(x.id)})'>− Remove</button></div></div>`).join("");}
+function delLead(id){setLeads(getLeads().filter(x=>x.id!==id));renderLeads();}
+function clearLeads(){if(confirm("Clear all saved leads?")){setLeads([]);renderLeads();}}
+function exportLeads(fmt){const L=getLeads();if(!L.length){alert("No leads to export.");return;}
+ let blob,name;if(fmt==="json"){blob=new Blob([JSON.stringify(L,null,2)],{type:"application/json"});name="cross_pollination_leads.json";}
+ else{const cols=["score","a_tier","a_title","a_doi","b_tier","b_title","b_doi"];
+  const rows=[cols.join(",")].concat(L.map(x=>cols.map(k=>'"'+String(x[k]??"").replace(/"/g,'""')+'"').join(",")));
+  blob=new Blob([rows.join("\n")],{type:"text/csv"});name="cross_pollination_leads.csv";}
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);}
+function topicBrief(){const a=$("#tA").value.trim(),b=$("#tB").value.trim();if(!a||!b)return;
+ const fa={title:a,tier:9,doi:""},fb={title:b,tier:9,doi:""};
+ $("#topicOut").innerHTML=briefCard(fa,fb,null);}
+
+["#poolSearch","#poolTier"].forEach(s=>$(s)&&$(s).addEventListener("input",renderPool));
+$$("nav button").forEach(b=>b.onclick=()=>{$$("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ $$("section").forEach(s=>s.hidden=true);$("#"+b.dataset.tab).hidden=false;
+ if(b.dataset.tab==="leads")renderLeads();if(b.dataset.tab==="pool")renderPool();});
+fillTiers();renderPool();refreshCounts();
+</script></body></html>
