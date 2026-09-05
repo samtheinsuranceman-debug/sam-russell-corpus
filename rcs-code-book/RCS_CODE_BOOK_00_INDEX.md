@@ -20,7 +20,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 
 ## Parts (10)
 
-- `RCS_CODE_BOOK_part01_of_10.md` — 168 files, 1,729,576 bytes
+- `RCS_CODE_BOOK_part01_of_10.md` — 171 files, 1,740,506 bytes
 - `RCS_CODE_BOOK_part02_of_10.md` — 163 files, 1,834,531 bytes
 - `RCS_CODE_BOOK_part03_of_10.md` — 72 files, 1,816,607 bytes
 - `RCS_CODE_BOOK_part04_of_10.md` — 32 files, 1,824,201 bytes
@@ -29,9 +29,9 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `RCS_CODE_BOOK_part07_of_10.md` — 27 files, 1,772,155 bytes
 - `RCS_CODE_BOOK_part08_of_10.md` — 31 files, 1,820,792 bytes
 - `RCS_CODE_BOOK_part09_of_10.md` — 50 files, 1,774,703 bytes
-- `RCS_CODE_BOOK_part10_of_10.md` — 34 files, 301,778 bytes
+- `RCS_CODE_BOOK_part10_of_10.md` — 35 files, 366,088 bytes
 
-**Total: 637 files across 10 parts.**
+**Total: 641 files across 10 parts.**
 
 ## File → part map
 
@@ -50,12 +50,15 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `scripts/audit-interior-colors.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/build.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/build_code_book.py` → `RCS_CODE_BOOK_part01_of_10.md`
+- `scripts/build_database.sh` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/build_deploy_bundle.sh` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/check-concept16-browser.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
+- `scripts/export_schema_sql.sh` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/react-runtime-inject.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/reconcile-route-manifest.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/release.sh` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/smoke-production-routes.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
+- `scripts/smoke_lead_capture.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `drizzle/0000_cool_starfox.sql` → `RCS_CODE_BOOK_part01_of_10.md`
 - `drizzle/0000_misty_alex_wilder.sql` → `RCS_CODE_BOOK_part01_of_10.md`
 - `drizzle/0067_lively_nicolaos.sql` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -650,6 +653,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/hooks/useSoundOfMoney.ts` → `RCS_CODE_BOOK_part10_of_10.md`
 - `client/src/styles/animations.css` → `RCS_CODE_BOOK_part10_of_10.md`
 - `client/src/styles/sidebar-override.css` → `RCS_CODE_BOOK_part10_of_10.md`
+- `database/rcs-schema.sql` → `RCS_CODE_BOOK_part10_of_10.md`
 - `docs/ULTRA_AI_ENV.md` → `RCS_CODE_BOOK_part10_of_10.md`
 - `docs/ai-architecture-council-review.md` → `RCS_CODE_BOOK_part10_of_10.md`
 - `docs/comprehensive-audit-2026-08-27.md` → `RCS_CODE_BOOK_part10_of_10.md`

@@ -140,6 +140,9 @@ Self-contained; run tooling from inside the directory. Supersedes the older
 - `LAUNCH.md` — launch runbook (fastest path: GitHub Pages; full app: cPanel/Node host).
 - `pnpm release` — one command regenerating every shippable artifact below.
 - `live/` — template + builder for the single-file public homepage.
+- `database/rcs-schema.sql` — the complete 115-table schema as plain SQL (phpMyAdmin import);
+  `pnpm db:build` builds/verifies a database from it; `scripts/smoke_lead_capture.mjs`
+  proves the lead pipeline on a running site.
 
 ### `/docs/` — Public homepage (GitHub Pages)
 `docs/index.html` is the built, self-contained Russell Capital Systems homepage

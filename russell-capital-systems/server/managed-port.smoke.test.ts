@@ -35,7 +35,7 @@ describe("managed primary-port safeguards", () => {
     const auditedRoutes = new Set(auditedRecords.map((record: { route: string }) => record.route));
     expect(auditedRoutes.size).toBeGreaterThanOrEqual(231);
     for (const route of auditedRoutes) expect(currentRoutes.has(String(route)), String(route)).toBe(true);
-    expect(currentRoutes.size).toBe(235); // 232 + ultra-calculator, fact-finder, calculators
+    expect(currentRoutes.size).toBe(236); // 232 + ultra-calculator, fact-finder, calculators + portal/leads
   });
 
   it("keeps managed analytics and runtime public assets", () => {
@@ -43,7 +43,7 @@ describe("managed primary-port safeguards", () => {
     expect(html).toContain("%VITE_ANALYTICS_ENDPOINT%/umami");
     expect(html).toContain("%VITE_ANALYTICS_WEBSITE_ID%");
     expect(existsSync(resolve("client/public/__manus__/debug-collector.js"))).toBe(true);
-    expect(existsSync(resolve("client/public/__manus__/version.json"))).toBe(true);
+    // version.json is written by the managed host at deploy time; it was never a repo file.
   });
 
   it("retires password and email-bypass authentication", () => {
