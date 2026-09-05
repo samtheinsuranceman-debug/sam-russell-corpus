@@ -45,3 +45,15 @@ Patents, USPTO, Espacenet, WIPO) plus intersection literature. Leads save to a
 separate persistent store (`bioevidence_leads_v1`), exportable JSON/CSV. Topic
 Mode pairs two fields directly when the vault is empty. Leads are hypotheses
 requiring prior-art search + patent counsel — never a claim of invention.
+
+## disclosure-drafter.html — Disclosure Drafter
+Closes the loop to IP. Reads saved leads (`bioevidence_leads_v1`) from the
+Cross-Pollination Engine and drafts each into a DRAFT technical disclosure in
+provisional-application format: title, field, background (the two real source
+findings + DOIs and their gap), summary of the proposed combination, an
+enablement scaffold (what must be specified and experimentally validated), a
+draft claim skeleton (placeholders for counsel), prior-art positioning (Google
+Patents / USPTO / Espacenet / WIPO links), and the standard disclaimer.
+Drafts save (`bioevidence_drafts_v1`) and download as .md. Manual Mode drafts
+from two entered fields. Every draft is explicitly NOT filed, NOT reduced to
+practice, and requires prior-art search + a registered patent attorney.
