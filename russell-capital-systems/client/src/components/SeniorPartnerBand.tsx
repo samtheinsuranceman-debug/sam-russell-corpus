@@ -7,10 +7,10 @@ import { ShieldCheck, Stethoscope, Users, TrendingUp } from "lucide-react";
 
 export default function SeniorPartnerBand() {
   return (
-    <section aria-label="Experience and client retention" className="relative overflow-hidden border-t border-emerald-300/10 bg-[#050b0a] py-24">
-      <img src="/rcs-bg-25.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover object-center blur-[22px] brightness-[.22]" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,#050b0a,rgba(5,11,10,.55),#050b0a)]" />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[.07] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:46px_46px]" />
+    <section id="proof" aria-label="Experience and client retention" className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-[#03090a] py-24">
+      {/* The second neon sign, full and crisp — no blur */}
+      <img src="/rcs-neon-b.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons over a green city at night" className="absolute inset-0 z-0 h-full w-full object-cover object-center" />
+      <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_50%_55%,rgba(3,9,10,.72)_0%,rgba(3,9,10,.35)_45%,rgba(3,9,10,.1)_75%)]" />
       <div className="container relative z-10">
         <div className="group relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-emerald-300/30 bg-[linear-gradient(150deg,rgba(6,24,19,.94),rgba(3,10,9,.7))] p-8 shadow-[0_34px_90px_rgba(0,0,0,.55)] backdrop-blur-2xl sm:p-12">
           <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,transparent,rgba(52,211,153,.95),transparent)]" />
