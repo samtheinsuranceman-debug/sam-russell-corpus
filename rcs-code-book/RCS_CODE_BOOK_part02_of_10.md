@@ -1,6 +1,6 @@
-# Russell Capital Systems — Source Code Book (Part 2 of 9)
+# Russell Capital Systems — Source Code Book (Part 2 of 10)
 
-Complete, readable source for the Russell Capital Systems app, split into parts. Read `RCS_CODE_BOOK_00_INDEX.md` first. Each file below is shown verbatim under its repo path (relative to `russell-capital-systems/`). Follow `LAUNCH.md` (Part 1) to build and deploy.
+This is one part of the complete, plain-Markdown source of the Russell Capital Systems web app (React 19 + Vite client, Express + tRPC server, Drizzle ORM / MySQL), split so an assistant that cannot open archives can read every file. `LAUNCH.md` (in Part 1) is the runbook for installing, configuring, building, migrating, and running the app; read it first. Each file below is shown verbatim under its path relative to `russell-capital-systems/`. The source of truth is GitHub `samtheinsuranceman-debug/sam-russell-corpus` (branch `claude/claude-md-docs-0qgcvw`, folder `russell-capital-systems/`); the book is a derived snapshot generated on 2026-09-05. See `RCS_CODE_BOOK_00_INDEX.md` for the full file-to-part map and the list of intentionally excluded paths.
 
 ### Files in this part
 
@@ -17,14 +17,14 @@ Complete, readable source for the Russell Capital Systems app, split into parts.
 - `server/videoScriptGenerator.ts`
 - `server/webhookDispatch.ts`
 - `client/index.html`
+- `client/src/main.tsx`
 - `client/src/App.tsx`
-- `client/src/_core/hooks/useAuth.ts`
 - `client/src/index.css`
 - `client/src/lib/excelExport.ts`
 - `client/src/lib/secondaryCatalog.ts`
 - `client/src/lib/trpc.ts`
 - `client/src/lib/utils.ts`
-- `client/src/main.tsx`
+- `client/src/_core/hooks/useAuth.ts`
 - `client/src/components/AIBrainAdvisorConnector.tsx`
 - `client/src/components/AIBrainFloatingWidget.tsx`
 - `client/src/components/AIChatBox.tsx`
@@ -55,6 +55,7 @@ Complete, readable source for the Russell Capital Systems app, split into parts.
 - `client/src/components/GuidedWizard.tsx`
 - `client/src/components/HomeAIConcierge.tsx`
 - `client/src/components/HomeLeadFactFinder.tsx`
+- `client/src/components/HomeTrustSections.tsx`
 - `client/src/components/IbbotsonCredibilityOverlay.tsx`
 - `client/src/components/IbbotsonYearSelector.tsx`
 - `client/src/components/ManagedAuthGuard.tsx`
@@ -166,19 +167,8 @@ Complete, readable source for the Russell Capital Systems app, split into parts.
 - `client/src/pages/CryptoCyclePage.tsx`
 - `client/src/pages/DealRoomPage.tsx`
 - `client/src/pages/DivorceCalculatorPage.tsx`
-- `client/src/pages/DivorceILITStrategyPage.tsx`
-- `client/src/pages/EarnPage.tsx`
-- `client/src/pages/EstatePlanningPage.tsx`
-- `client/src/pages/ExecutiveEntrance.tsx`
-- `client/src/pages/ExplorePage.tsx`
-- `client/src/pages/FactFinderPage.tsx`
-- `client/src/pages/ForgotPassword.tsx`
-- `client/src/pages/Home.tsx`
-- `client/src/pages/IncomeAnnuityPage.tsx`
-- `client/src/pages/IndexBacktesterPage.tsx`
-- `client/src/pages/InteropEnginePage.tsx`
-- `client/src/pages/IulProjectionPage.tsx`
 
+---
 
 ## `server/routers.ts`
 
@@ -9684,9 +9674,7 @@ Generate the full HTML report with professional styling. Include a cover page, t
     }),
 });
 export type AppRouter = typeof appRouter;
-
 ```
-
 
 ## `server/seed-owner.mjs`
 
@@ -9757,9 +9745,7 @@ main().catch(err => {
   console.error("[Seed] Error:", err);
   process.exit(1);
 });
-
 ```
-
 
 ## `server/seedReels.mjs`
 
@@ -10380,9 +10366,7 @@ async function seed() {
 }
 
 seed().catch(err => { console.error('Seed failed:', err); process.exit(1); });
-
 ```
-
 
 ## `server/slackBot.ts`
 
@@ -10540,9 +10524,7 @@ export async function resolveWorkspaceFromSlack(teamId: string): Promise<number 
   const [integration] = await db.select().from(slackIntegrations).where(eq(slackIntegrations.teamId, teamId)).limit(1);
   return integration?.workspaceId ?? null;
 }
-
 ```
-
 
 ## `server/storage.ts`
 
@@ -10644,9 +10626,7 @@ export async function storageGetSignedUrl(relKey: string): Promise<string> {
   const { url } = (await resp.json()) as { url: string };
   return url;
 }
-
 ```
-
 
 ## `server/strategyPdfService.ts`
 
@@ -10794,9 +10774,7 @@ export function generateStrategyPdf(input: StrategyPdfInput): Promise<Buffer> {
     doc.end();
   });
 }
-
 ```
-
 
 ## `server/stripeClient.ts`
 
@@ -10943,9 +10921,7 @@ export async function createPortalSession(opts: {
   });
   return session.url;
 }
-
 ```
-
 
 ## `server/stripeProducts.ts`
 
@@ -10994,9 +10970,7 @@ export function getAnnualSavings(plan: StripePlan): number {
 export function getPlanBySlug(slug: string): StripePlan | undefined {
   return STRIPE_PLANS.find((p) => p.slug === slug);
 }
-
 ```
-
 
 ## `server/stripeWebhook.ts`
 
@@ -11154,9 +11128,7 @@ export async function handleStripeWebhook(req: Request, res: Response): Promise<
 
   res.json({ received: true });
 }
-
 ```
-
 
 ## `server/ultraAI.ts`
 
@@ -11571,9 +11543,7 @@ export const ultraRouter = router({
       return { ok: true as const, audioBase64: audio, mimeType: "audio/mpeg" };
     }),
 });
-
 ```
-
 
 ## `server/videoScriptGenerator.ts`
 
@@ -11852,9 +11822,7 @@ Write the script as natural spoken text. Address the client by their first name.
     durationEstimate: Math.ceil(wordCount / 2.5),
   };
 }
-
 ```
-
 
 ## `server/webhookDispatch.ts`
 
@@ -11933,9 +11901,7 @@ export async function dispatchWebhook(workspaceId: number, event: WebhookEventTy
     console.error("[Webhook dispatch error]", err);
   }
 }
-
 ```
-
 
 ## `client/index.html`
 
@@ -11966,9 +11932,98 @@ export async function dispatchWebhook(workspaceId: number, event: WebhookEventTy
   </body>
 
 </html>
-
 ```
 
+## `client/src/main.tsx`
+
+```tsx
+import { trpc } from "@/lib/trpc";
+import { UNAUTHED_ERR_MSG } from '@shared/const';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink, TRPCClientError } from "@trpc/client";
+import { createRoot } from "react-dom/client";
+import { AccessProvider } from "@/contexts/AccessContext";
+import superjson from "superjson";
+import App from "./App";
+import { ClientDataProvider } from "./contexts/ClientDataContext";
+import { StrategyProvider } from "./contexts/StrategyContext";
+import { DisclaimerProvider } from "./contexts/DisclaimerContext";
+import { startLogin } from "./const";
+import "./index.css";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,       // Data stays fresh for 60s — prevents redundant refetches on navigation
+      gcTime: 5 * 60_000,      // Keep unused data in cache for 5 min
+      refetchOnWindowFocus: false, // Don't refetch when user tabs back
+      retry: 1,                // Only retry once on failure
+    },
+  },
+});
+
+const redirectToLoginIfUnauthorized = (error: unknown) => {
+  if (!(error instanceof TRPCClientError)) return;
+  if (typeof window === "undefined") return;
+
+  const isUnauthorized = error.message === UNAUTHED_ERR_MSG;
+
+  if (!isUnauthorized) return;
+
+  startLogin(window.location.pathname);
+};
+
+queryClient.getQueryCache().subscribe(event => {
+  if (event.type === "updated" && event.action.type === "error") {
+    const error = event.query.state.error;
+    redirectToLoginIfUnauthorized(error);
+    // Don't spam console with expected UNAUTHORIZED errors on public portal pages
+    if (error instanceof TRPCClientError && error.message === UNAUTHED_ERR_MSG && window.location.pathname.startsWith("/portal")) return;
+    console.error("[API Query Error]", error);
+  }
+});
+
+queryClient.getMutationCache().subscribe(event => {
+  if (event.type === "updated" && event.action.type === "error") {
+    const error = event.mutation.state.error;
+    redirectToLoginIfUnauthorized(error);
+    // Don't spam console with expected UNAUTHORIZED errors on public portal pages
+    if (error instanceof TRPCClientError && error.message === UNAUTHED_ERR_MSG && window.location.pathname.startsWith("/portal")) return;
+    console.error("[API Mutation Error]", error);
+  }
+});
+
+const trpcClient = trpc.createClient({
+  links: [
+    httpBatchLink({
+      url: "/api/trpc",
+      transformer: superjson,
+      fetch(input, init) {
+        return globalThis.fetch(input, {
+          ...(init ?? {}),
+          credentials: "include",
+        });
+      },
+    }),
+  ],
+});
+
+createRoot(document.getElementById("root")!).render(
+  <trpc.Provider client={trpcClient} queryClient={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <AccessProvider>
+        <DisclaimerProvider>
+          <ClientDataProvider>
+            <StrategyProvider>
+              <App />
+            </StrategyProvider>
+          </ClientDataProvider>
+        </DisclaimerProvider>
+      </AccessProvider>
+    </QueryClientProvider>
+  </trpc.Provider>
+);
+```
 
 ## `client/src/App.tsx`
 
@@ -12579,114 +12634,7 @@ function App() {
 }
 
 export default App;
-
 ```
-
-
-## `client/src/_core/hooks/useAuth.ts`
-
-```ts
-import { startLogin } from "@/const";
-import { trpc } from "@/lib/trpc";
-import { TRPCClientError } from "@trpc/client";
-import { useCallback, useEffect, useMemo } from "react";
-
-type UseAuthOptions = {
-  redirectOnUnauthenticated?: boolean;
-  redirectPath?: string;
-};
-
-export function useAuth(options?: UseAuthOptions) {
-  // Login is started via startLogin() in the effect below, only when we actually
-  // navigate — never during render. startLogin() mints a one-time nonce + writes
-  // the state cookie, so calling it per render would overwrite the cookie and
-  // desync it from an in-flight login's `state`.
-  const { redirectOnUnauthenticated = false, redirectPath } = options ?? {};
-  const utils = trpc.useUtils();
-
-  const meQuery = trpc.auth.me.useQuery(undefined, {
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
-
-  const logoutMutation = trpc.auth.logout.useMutation({
-    onSuccess: () => {
-      utils.auth.me.setData(undefined, null);
-    },
-  });
-
-  const logout = useCallback(async () => {
-    try {
-      await logoutMutation.mutateAsync();
-    } catch (error: unknown) {
-      if (
-        error instanceof TRPCClientError &&
-        error.data?.code === "UNAUTHORIZED"
-      ) {
-        return;
-      }
-      throw error;
-    } finally {
-      // Clear the Preview auto-login token mirrored into sessionStorage, so
-      // header-based sessions (Safari ITP / WebView) are logged out too. The
-      // backend cookie is cleared by the logout mutation.
-      try {
-        sessionStorage.removeItem("manus-cookie");
-      } catch {}
-      utils.auth.me.setData(undefined, null);
-      await utils.auth.me.invalidate();
-    }
-  }, [logoutMutation, utils]);
-
-  const state = useMemo(() => {
-    localStorage.setItem(
-      "manus-runtime-user-info",
-      JSON.stringify(meQuery.data)
-    );
-    return {
-      user: meQuery.data ?? null,
-      loading: meQuery.isLoading || logoutMutation.isPending,
-      error: meQuery.error ?? logoutMutation.error ?? null,
-      isAuthenticated: Boolean(meQuery.data),
-    };
-  }, [
-    meQuery.data,
-    meQuery.error,
-    meQuery.isLoading,
-    logoutMutation.error,
-    logoutMutation.isPending,
-  ]);
-
-  useEffect(() => {
-    if (!redirectOnUnauthenticated) return;
-    if (meQuery.isLoading || logoutMutation.isPending) return;
-    if (state.user) return;
-    if (typeof window === "undefined") return;
-    if (redirectPath && window.location.pathname === redirectPath) return;
-
-    // Navigate at this moment only. startLogin() mints the nonce + cookie itself.
-    if (redirectPath) {
-      window.location.href = redirectPath;
-    } else {
-      startLogin();
-    }
-  }, [
-    redirectOnUnauthenticated,
-    redirectPath,
-    logoutMutation.isPending,
-    meQuery.isLoading,
-    state.user,
-  ]);
-
-  return {
-    ...state,
-    refresh: () => meQuery.refetch(),
-    logout,
-  };
-}
-
-```
-
 
 ## `client/src/index.css`
 
@@ -14147,9 +14095,7 @@ th {
     gap: 1.5rem;
   }
 }
-
 ```
-
 
 ## `client/src/lib/excelExport.ts`
 
@@ -14182,9 +14128,7 @@ export function exportClientsToExcel(clients: any[], filename = "clients-export"
   link.click();
   URL.revokeObjectURL(url);
 }
-
 ```
-
 
 ## `client/src/lib/secondaryCatalog.ts`
 
@@ -14297,9 +14241,7 @@ export const SECONDARY_CATEGORIES: SecondaryCatalogCategory[] = [
   "Experience & Experimental",
   "Additional Tools",
 ];
-
 ```
-
 
 ## `client/src/lib/trpc.ts`
 
@@ -14308,9 +14250,7 @@ import { createTRPCReact } from "@trpc/react-query";
 import type { AppRouter } from "../../../server/routers";
 
 export const trpc = createTRPCReact<AppRouter>();
-
 ```
-
 
 ## `client/src/lib/utils.ts`
 
@@ -14321,102 +14261,110 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
 ```
 
+## `client/src/_core/hooks/useAuth.ts`
 
-## `client/src/main.tsx`
-
-```tsx
+```ts
+import { startLogin } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { UNAUTHED_ERR_MSG } from '@shared/const';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink, TRPCClientError } from "@trpc/client";
-import { createRoot } from "react-dom/client";
-import { AccessProvider } from "@/contexts/AccessContext";
-import superjson from "superjson";
-import App from "./App";
-import { ClientDataProvider } from "./contexts/ClientDataContext";
-import { StrategyProvider } from "./contexts/StrategyContext";
-import { DisclaimerProvider } from "./contexts/DisclaimerContext";
-import { startLogin } from "./const";
-import "./index.css";
+import { TRPCClientError } from "@trpc/client";
+import { useCallback, useEffect, useMemo } from "react";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 60_000,       // Data stays fresh for 60s — prevents redundant refetches on navigation
-      gcTime: 5 * 60_000,      // Keep unused data in cache for 5 min
-      refetchOnWindowFocus: false, // Don't refetch when user tabs back
-      retry: 1,                // Only retry once on failure
-    },
-  },
-});
-
-const redirectToLoginIfUnauthorized = (error: unknown) => {
-  if (!(error instanceof TRPCClientError)) return;
-  if (typeof window === "undefined") return;
-
-  const isUnauthorized = error.message === UNAUTHED_ERR_MSG;
-
-  if (!isUnauthorized) return;
-
-  startLogin(window.location.pathname);
+type UseAuthOptions = {
+  redirectOnUnauthenticated?: boolean;
+  redirectPath?: string;
 };
 
-queryClient.getQueryCache().subscribe(event => {
-  if (event.type === "updated" && event.action.type === "error") {
-    const error = event.query.state.error;
-    redirectToLoginIfUnauthorized(error);
-    // Don't spam console with expected UNAUTHORIZED errors on public portal pages
-    if (error instanceof TRPCClientError && error.message === UNAUTHED_ERR_MSG && window.location.pathname.startsWith("/portal")) return;
-    console.error("[API Query Error]", error);
-  }
-});
+export function useAuth(options?: UseAuthOptions) {
+  // Login is started via startLogin() in the effect below, only when we actually
+  // navigate — never during render. startLogin() mints a one-time nonce + writes
+  // the state cookie, so calling it per render would overwrite the cookie and
+  // desync it from an in-flight login's `state`.
+  const { redirectOnUnauthenticated = false, redirectPath } = options ?? {};
+  const utils = trpc.useUtils();
 
-queryClient.getMutationCache().subscribe(event => {
-  if (event.type === "updated" && event.action.type === "error") {
-    const error = event.mutation.state.error;
-    redirectToLoginIfUnauthorized(error);
-    // Don't spam console with expected UNAUTHORIZED errors on public portal pages
-    if (error instanceof TRPCClientError && error.message === UNAUTHED_ERR_MSG && window.location.pathname.startsWith("/portal")) return;
-    console.error("[API Mutation Error]", error);
-  }
-});
+  const meQuery = trpc.auth.me.useQuery(undefined, {
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
 
-const trpcClient = trpc.createClient({
-  links: [
-    httpBatchLink({
-      url: "/api/trpc",
-      transformer: superjson,
-      fetch(input, init) {
-        return globalThis.fetch(input, {
-          ...(init ?? {}),
-          credentials: "include",
-        });
-      },
-    }),
-  ],
-});
+  const logoutMutation = trpc.auth.logout.useMutation({
+    onSuccess: () => {
+      utils.auth.me.setData(undefined, null);
+    },
+  });
 
-createRoot(document.getElementById("root")!).render(
-  <trpc.Provider client={trpcClient} queryClient={queryClient}>
-    <QueryClientProvider client={queryClient}>
-      <AccessProvider>
-        <DisclaimerProvider>
-          <ClientDataProvider>
-            <StrategyProvider>
-              <App />
-            </StrategyProvider>
-          </ClientDataProvider>
-        </DisclaimerProvider>
-      </AccessProvider>
-    </QueryClientProvider>
-  </trpc.Provider>
-);
+  const logout = useCallback(async () => {
+    try {
+      await logoutMutation.mutateAsync();
+    } catch (error: unknown) {
+      if (
+        error instanceof TRPCClientError &&
+        error.data?.code === "UNAUTHORIZED"
+      ) {
+        return;
+      }
+      throw error;
+    } finally {
+      // Clear the Preview auto-login token mirrored into sessionStorage, so
+      // header-based sessions (Safari ITP / WebView) are logged out too. The
+      // backend cookie is cleared by the logout mutation.
+      try {
+        sessionStorage.removeItem("manus-cookie");
+      } catch {}
+      utils.auth.me.setData(undefined, null);
+      await utils.auth.me.invalidate();
+    }
+  }, [logoutMutation, utils]);
 
+  const state = useMemo(() => {
+    localStorage.setItem(
+      "manus-runtime-user-info",
+      JSON.stringify(meQuery.data)
+    );
+    return {
+      user: meQuery.data ?? null,
+      loading: meQuery.isLoading || logoutMutation.isPending,
+      error: meQuery.error ?? logoutMutation.error ?? null,
+      isAuthenticated: Boolean(meQuery.data),
+    };
+  }, [
+    meQuery.data,
+    meQuery.error,
+    meQuery.isLoading,
+    logoutMutation.error,
+    logoutMutation.isPending,
+  ]);
+
+  useEffect(() => {
+    if (!redirectOnUnauthenticated) return;
+    if (meQuery.isLoading || logoutMutation.isPending) return;
+    if (state.user) return;
+    if (typeof window === "undefined") return;
+    if (redirectPath && window.location.pathname === redirectPath) return;
+
+    // Navigate at this moment only. startLogin() mints the nonce + cookie itself.
+    if (redirectPath) {
+      window.location.href = redirectPath;
+    } else {
+      startLogin();
+    }
+  }, [
+    redirectOnUnauthenticated,
+    redirectPath,
+    logoutMutation.isPending,
+    meQuery.isLoading,
+    state.user,
+  ]);
+
+  return {
+    ...state,
+    refresh: () => meQuery.refetch(),
+    logout,
+  };
+}
 ```
-
 
 ## `client/src/components/AIBrainAdvisorConnector.tsx`
 
@@ -14523,9 +14471,7 @@ const AIBrainAdvisorConnector: React.FC<AIBrainAdvisorConnectorProps> = ({
 };
 
 export default AIBrainAdvisorConnector;
-
 ```
-
 
 ## `client/src/components/AIBrainFloatingWidget.tsx`
 
@@ -14681,9 +14627,7 @@ const AIBrainFloatingWidget: React.FC = () => {
 };
 
 export default AIBrainFloatingWidget;
-
 ```
-
 
 ## `client/src/components/AIChatBox.tsx`
 
@@ -15023,9 +14967,7 @@ export function AIChatBox({
     </div>
   );
 }
-
 ````
-
 
 ## `client/src/components/AccessibilityHelpers.tsx`
 
@@ -15101,9 +15043,7 @@ export function LiveRegion({ message }: { message: string }) {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/AchievementUnlockOverlay.tsx`
 
@@ -15286,9 +15226,7 @@ export function AchievementUnlockOverlay() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/ActivityHeatmap.tsx`
 
@@ -15437,9 +15375,7 @@ export function ActivityHeatmap({ data, title = "Activity" }: ActivityHeatmapPro
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/AppShell.tsx`
 
@@ -16665,9 +16601,7 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/AuthDialog.tsx`
 
@@ -16762,9 +16696,7 @@ export function AuthDialog({
   );
 }
 
-
 ```
-
 
 ## `client/src/components/Breadcrumbs.tsx`
 
@@ -16960,9 +16892,7 @@ export function Breadcrumbs() {
     </nav>
   );
 }
-
 ```
-
 
 ## `client/src/components/BulkEmailTemplates.tsx`
 
@@ -17197,9 +17127,7 @@ export function BulkEmailTemplates({ onClose }: { onClose: () => void }) {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/CalculationSyncBar.tsx`
 
@@ -17424,9 +17352,7 @@ export function CalculationSyncBar() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/ClientSelectorBar.tsx`
 
@@ -17585,9 +17511,7 @@ export function ClientSelectorBar({
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/CommandPalette.tsx`
 
@@ -17922,9 +17846,7 @@ export function CommandPalette() {
     </>
   );
 }
-
 ```
-
 
 ## `client/src/components/ComplianceFooter.tsx`
 
@@ -18100,9 +18022,7 @@ export function ComplianceFooter({
 }
 
 export default ComplianceFooter;
-
 ```
-
 
 ## `client/src/components/ComplianceGate.tsx`
 
@@ -18358,9 +18278,7 @@ export default function ComplianceGate({ children, returnTo }: ComplianceGatePro
     </SessionContext.Provider>
   );
 }
-
 ```
-
 
 ## `client/src/components/ConsumerOutcomeBlocks.tsx`
 
@@ -18962,9 +18880,7 @@ export function TaxBracketPanel({
     </Card>
   );
 }
-
 ```
-
 
 ## `client/src/components/DashboardLayout.tsx`
 
@@ -19238,9 +19154,7 @@ function DashboardLayoutContent({
     </>
   );
 }
-
 ```
-
 
 ## `client/src/components/DashboardLayoutSkeleton.tsx`
 
@@ -19291,9 +19205,7 @@ export function DashboardLayoutSkeleton() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/DataFeedBadge.tsx`
 
@@ -19401,9 +19313,7 @@ export function DataFeedInline({ feeds, className = "" }: DataFeedInlineProps) {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/DepthSelector.tsx`
 
@@ -19640,9 +19550,7 @@ export default function DepthSelector({
 }
 
 export { DEPTH_LEVELS };
-
 ```
-
 
 ## `client/src/components/ErrorBoundary.tsx`
 
@@ -19841,9 +19749,7 @@ function ErrorFallback({ error, errorInfo, reported, onReset, fallbackRoute }: {
 
 export default ErrorBoundary;
 export { reportError };
-
 ```
-
 
 ## `client/src/components/ExportPdfButton.tsx`
 
@@ -19921,9 +19827,7 @@ export default function ExportPdfButton({
     </Button>
   );
 }
-
 ```
-
 
 ## `client/src/components/ExportToSlides.tsx`
 
@@ -20327,9 +20231,7 @@ export function ExportToSlides({
     </Dialog>
   );
 }
-
 ```
-
 
 ## `client/src/components/GenerateOutcomeTab.tsx`
 
@@ -20739,9 +20641,7 @@ export function GenerateOutcomeTab({
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/GlobalHooks.tsx`
 
@@ -20762,9 +20662,7 @@ export function GlobalHooks() {
   useRealtimeEvents();
   return null;
 }
-
 ```
-
 
 ## `client/src/components/GlobalSearch.tsx`
 
@@ -20867,9 +20765,7 @@ export function GlobalSearch() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/GuaranteedMinimumFootnote.tsx`
 
@@ -20952,9 +20848,7 @@ export function GuaranteedMinimumFootnote({
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/GuidedWizard.tsx`
 
@@ -21299,9 +21193,7 @@ export function GuidedModeToggle({ isGuided, onToggle, className = "" }: GuidedM
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/HomeAIConcierge.tsx`
 
@@ -21414,8 +21306,9 @@ export default function HomeAIConcierge() {
       aria-label="Ask the AI brain trust"
       className="relative overflow-hidden border-t border-emerald-300/10 bg-[#050b0a] py-24"
     >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[.09] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:46px_46px]" />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(16,185,129,.12),transparent_48%)]" />
+      {/* Emerald Dawn skyline, crisp — darkened only enough to read over */}
+      <img src="/rcs-city-emerald.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-top brightness-[.5] saturate-[1.1]" loading="lazy" decoding="async" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,#03090a_0%,rgba(3,9,10,.5)_30%,rgba(3,9,10,.75)_100%)]" />
       <div className="container relative z-10">
         <div className="mx-auto max-w-3xl text-center">
           <p className="inline-flex items-center gap-2 rounded-full border border-emerald-300/35 bg-emerald-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[.2em] text-emerald-300">
@@ -21501,9 +21394,7 @@ export default function HomeAIConcierge() {
     </section>
   );
 }
-
 ```
-
 
 ## `client/src/components/HomeLeadFactFinder.tsx`
 
@@ -21587,6 +21478,8 @@ export default function HomeLeadFactFinder() {
   const [goals, setGoals] = useState("");
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState("");
+  const [summary, setSummary] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const setNum = (k: NumKey, v: string) => setNums((prev) => ({ ...prev, [k]: v }));
   const parse = (v: string | undefined): number | undefined => {
@@ -21605,6 +21498,14 @@ export default function HomeLeadFactFinder() {
       if (val !== undefined) factFinder[key] = val;
     }
     if (goals.trim()) factFinder.goals = goals.trim();
+    setSummary([
+      `Name: ${[firstName, lastName].filter(Boolean).join(" ") || "—"}`,
+      `Email: ${email || "—"}`, `Phone: ${phone || "—"}`, `Best time: ${bestTimeToContact || "—"}`, "",
+      "FINANCIAL PICTURE",
+      ...NUM_FIELDS.map(({ key, label }) => `${label}: ${nums[key] || "—"}`),
+      `Liquid taxability: ${liquidTaxability}`, "",
+      `Goals: ${goals.trim() || "—"}`,
+    ].join("\n"));
     try {
       await capture.mutateAsync({
         firstName: firstName || undefined,
@@ -21624,8 +21525,10 @@ export default function HomeLeadFactFinder() {
   const greeting = recognize.data?.known && recognize.data.firstName ? recognize.data.firstName : null;
 
   return (
-    <section id="planning-estimator" aria-label="Tax and savings estimator" className="relative overflow-hidden border-t border-emerald-300/10 bg-[#050b0a] py-24">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[.07] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:46px_46px]" />
+    <section id="planning-estimator" aria-label="Tax and savings estimator" className="relative isolate overflow-hidden bg-[#03090a] py-24">
+      {/* The bridge, crisp, behind the estimator */}
+      <img src="/rcs-city-bridge.webp" alt="" aria-hidden="true" className="absolute inset-0 z-0 h-full w-full object-cover object-center brightness-[.55] saturate-[1.1]" loading="lazy" decoding="async" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,#03090a_0%,rgba(3,9,10,.6)_25%,rgba(3,9,10,.6)_75%,#03090a_100%)]" />
       <div className="container relative z-10">
         <div className="mx-auto max-w-3xl text-center">
           {greeting && (
@@ -21702,7 +21605,16 @@ export default function HomeLeadFactFinder() {
               ))}
             </ul>
             <p className="mt-5 text-sm text-white/60">{teaser.note}</p>
-            <a href="#consultation" className="rc-btn rc-btn-primary mt-6 inline-flex justify-center rounded-xl px-6 py-3.5 text-base"><Calendar size={16} /> Book my thorough evaluation</a>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <a href="#consultation" className="rc-btn rc-btn-primary inline-flex justify-center rounded-xl px-6 py-3.5 text-base"><Calendar size={16} /> Book my thorough evaluation</a>
+              <button
+                type="button"
+                onClick={() => { navigator.clipboard?.writeText(summary).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2500); }).catch(() => {}); }}
+                className="rc-btn inline-flex justify-center rounded-xl border border-emerald-300/45 bg-black/30 px-6 py-3.5 text-base text-white hover:bg-emerald-300/10"
+              >
+                {copied ? "Copied ✓" : "Copy my summary"}
+              </button>
+            </div>
           </div>
         )}
 
@@ -21718,9 +21630,128 @@ export default function HomeLeadFactFinder() {
     </section>
   );
 }
-
 ```
 
+## `client/src/components/HomeTrustSections.tsx`
+
+```tsx
+// ============================================================
+// HOME TRUST SECTIONS — "How we work" (Review → Coordinate → Implement →
+// Monitor), "Who we serve", and a compliance-safe FAQ. Mirrors the
+// published live homepage so the deployed site and the live page match.
+// ============================================================
+import { ArrowRight, ScanSearch, Users, Settings2, ShieldCheck } from "lucide-react";
+
+const STEPS = [
+  { n: 1, Icon: ScanSearch, title: "Review", body: "We map your full picture — income, practice, debt, protection, retirement, and legacy — before recommending anything." },
+  { n: 2, Icon: Users, title: "Coordinate", body: "Your advisor, tax professional, and attorney align on one documented plan, with responsibilities assigned." },
+  { n: 3, Icon: Settings2, title: "Implement", body: "Strategies are sequenced deliberately, each checked for suitability and IRS compliance before anything moves." },
+  { n: 4, Icon: ShieldCheck, title: "Monitor", body: "Reviewed on a cadence as tax law, markets, and your life change — so the plan stays current, not static." },
+];
+
+const SERVE = [
+  { t: "Physicians", d: "Employed and private practice" },
+  { t: "Psychiatrists", d: "Practice owners and group partners" },
+  { t: "Surgeons", d: "High-income, high-liability careers" },
+  { t: "Practice Owners", d: "Entity, succession, and exit planning" },
+];
+
+export const FAQ: Array<{ q: string; a: string }> = [
+  { q: "Who is this for?", a: "Physicians, psychiatrists, surgeons, and medical practice owners — anyone whose income, debt, practice, and tax picture is too complex for a one-size-fits-all plan." },
+  { q: "Is the estimate a quote or a guarantee?", a: "Neither. It's general education showing the shape of a coordinated plan. Nothing is implemented until our tax professional team has examined it for suitability and compliance with applicable IRS statutes — and your own results may differ." },
+  { q: "Why don't you show me the numbers here?", a: "Because the specific dollar amounts, percentages, and structure depend on your exact situation. They're prepared for your licensed advisor and shared with you in your personal evaluation, not on a public page." },
+  { q: "What happens after I submit the estimate?", a: "An advisor reviews what you shared, prepares the specifics, and reaches out — by email or phone, at the time you gave — to schedule a thorough evaluation. There's no obligation." },
+  { q: "What does \"divorce-proof\" mean?", a: "It's the general idea of positioning assets inside structures designed to be more resilient to divorce, lawsuits, or creditors. How much protection applies depends on your state and circumstances, and is confirmed by your professionals." },
+  { q: "What are the patent-pending engines?", a: "Fifteen core planning technologies with patent applications in process — plus 45 more underway — built to coordinate strategies that most tools treat as separate islands. You won't find them offered anywhere else." },
+  { q: "Is my information safe?", a: "Nothing is shared beyond what you enter, and you can ask for it to be removed at any time. Your details go only to the advisory team preparing your evaluation." },
+];
+
+const GRID = "pointer-events-none absolute inset-0 opacity-[.07] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:46px_46px]";
+
+export function HomeHowWeWork() {
+  return (
+    <section id="how-we-work" aria-label="How we work" className="relative isolate overflow-hidden bg-[#03090a] py-24">
+      {/* The canyon, crisp, behind the process */}
+      <img src="/rcs-city-canyon.webp" alt="" aria-hidden="true" className="absolute inset-0 z-0 h-full w-full object-cover object-center brightness-[.42] saturate-[1.1]" loading="lazy" decoding="async" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,#03090a_0%,rgba(3,9,10,.72)_20%,rgba(3,9,10,.72)_80%,#03090a_100%)]" />
+      <div className="container relative z-10">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="inline-flex items-center rounded-full border border-emerald-300/35 bg-emerald-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[.2em] text-emerald-300">How we work</p>
+          <h2 className="mt-5 text-[clamp(2rem,5vw,3.8rem)] font-extrabold leading-tight text-white [text-shadow:_0_0_26px_rgba(16,185,129,.4)]" style={{ fontFamily: "DM Sans, sans-serif" }}>
+            One documented process. <span className="text-emerald-300 [text-shadow:_0_0_26px_rgba(52,211,153,.85)]">Every professional on the same page.</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/75">Your advisor, tax professional, and attorney work from a single plan — so strategies are sequenced deliberately, never bolted on one at a time.</p>
+        </div>
+
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {STEPS.map(({ n, Icon, title, body }, i) => (
+            <div key={title} className="relative rounded-2xl border border-emerald-200/15 bg-black/40 p-6 backdrop-blur-xl">
+              <div className="flex items-center justify-between">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-300/35 text-emerald-300 font-extrabold tabular-nums">{n}</span>
+                <Icon size={20} className="text-emerald-300/70" />
+              </div>
+              <p className="mt-4 text-lg font-bold text-white">{title}</p>
+              <p className="mt-2 text-sm leading-relaxed text-white/65">{body}</p>
+              {i < STEPS.length - 1 && <ArrowRight size={16} className="absolute -right-3 top-9 hidden text-emerald-300/70 lg:block" />}
+            </div>
+          ))}
+        </div>
+
+        <div className="mx-auto mt-20 max-w-3xl text-center">
+          <p className="inline-flex items-center rounded-full border border-emerald-300/35 bg-emerald-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[.2em] text-emerald-300">Who we serve</p>
+          <h2 className="mt-5 text-[clamp(1.7rem,4vw,3rem)] font-extrabold leading-tight text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>Built for the finances of medicine</h2>
+        </div>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {SERVE.map(({ t, d }) => (
+            <div key={t} className="rounded-2xl border border-emerald-300/25 bg-emerald-300/[.06] p-5 text-center">
+              <p className="font-semibold text-white">{t}</p>
+              <p className="mt-1 text-sm text-white/60">{d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function HomeFaq() {
+  return (
+    <section id="faq" aria-label="Frequently asked questions" className="relative overflow-hidden border-t border-emerald-300/10 bg-[#050b0a] py-20">
+      <div aria-hidden="true" className={GRID} />
+      <div className="container relative z-10">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="inline-flex items-center rounded-full border border-emerald-300/35 bg-emerald-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[.2em] text-emerald-300">Questions physicians ask first</p>
+          <h2 className="mt-5 text-[clamp(1.7rem,4vw,3rem)] font-extrabold leading-tight text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>Straight answers</h2>
+        </div>
+        <div className="mx-auto mt-10 grid max-w-3xl gap-3">
+          {FAQ.map(({ q, a }) => (
+            <details key={q} className="group rounded-2xl border border-emerald-200/20 bg-black/45 px-5 backdrop-blur-xl">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-semibold text-white [&::-webkit-details-marker]:hidden">
+                {q}
+                <span aria-hidden="true" className="shrink-0 text-xl font-normal text-emerald-300 group-open:hidden">+</span>
+                <span aria-hidden="true" className="hidden shrink-0 text-xl font-normal text-emerald-300 group-open:inline">−</span>
+              </summary>
+              <p className="pb-4 text-[15px] leading-relaxed text-white/72">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function MobileStickyCta({ calendlyUrl }: { calendlyUrl: string }) {
+  return (
+    <>
+      <div aria-hidden="true" className="h-[4.6rem] sm:hidden" />
+      <div aria-label="Quick actions" className="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-emerald-300/30 bg-[#030a09]/92 px-3 py-2.5 backdrop-blur-xl sm:hidden [padding-bottom:calc(.65rem+env(safe-area-inset-bottom))]">
+        <a href="#planning-estimator" className="rc-btn flex-1 justify-center rounded-xl border border-emerald-300/45 bg-black/30 py-3 text-sm text-white">Get my estimate</a>
+        <a href={calendlyUrl} target="_blank" rel="noopener noreferrer" className="rc-btn rc-btn-primary flex-1 justify-center rounded-xl py-3 text-sm">Book a Review</a>
+      </div>
+    </>
+  );
+}
+```
 
 ## `client/src/components/IbbotsonCredibilityOverlay.tsx`
 
@@ -21962,9 +21993,7 @@ export function IbbotsonCredibilityOverlay({
 }
 
 export default IbbotsonCredibilityOverlay;
-
 ```
-
 
 ## `client/src/components/IbbotsonYearSelector.tsx`
 
@@ -22088,9 +22117,7 @@ export function IbbotsonYearSelector({
 }
 
 export default IbbotsonYearSelector;
-
 ```
-
 
 ## `client/src/components/ManagedAuthGuard.tsx`
 
@@ -22139,9 +22166,7 @@ export default function ManagedAuthGuard({ children, returnPath }: { children: R
 
   return <>{children}</>;
 }
-
 ```
-
 
 ## `client/src/components/ManusDialog.tsx`
 
@@ -22235,9 +22260,7 @@ export function ManusDialog({
     </Dialog>
   );
 }
-
 ```
-
 
 ## `client/src/components/Map.tsx`
 
@@ -22397,9 +22420,7 @@ export function MapView({
     <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />
   );
 }
-
 ```
-
 
 ## `client/src/components/MarketDataWidget.tsx`
 
@@ -22506,9 +22527,7 @@ export default function MarketDataWidget({ compact = false }: { compact?: boolea
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/MonteCarloChart.tsx`
 
@@ -22938,9 +22957,7 @@ export function MonteCarloInline({ result, className = "" }: MonteCarloInlinePro
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/MultiPropertyTab.tsx`
 
@@ -23450,9 +23467,7 @@ export function MultiPropertyTab() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/MusicPlayerMiniBar.tsx`
 
@@ -23639,9 +23654,7 @@ export function MusicPlayerMiniBar() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/NAICDisclaimer.tsx`
 
@@ -23812,9 +23825,7 @@ export function ComplianceBadge({ className = "" }: { className?: string }) {
 }
 
 export default NAICDisclaimer;
-
 ```
-
 
 ## `client/src/components/NetWorthHistoryChart.tsx`
 
@@ -23915,9 +23926,7 @@ export function NetWorthHistoryChart({ client }: NetWorthHistoryChartProps) {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/NotificationBadge.tsx`
 
@@ -23937,9 +23946,7 @@ export function NotificationBadge({ count, className = "" }: NotificationBadgePr
     </span>
   );
 }
-
 ```
-
 
 ## `client/src/components/NumberInput.tsx`
 
@@ -24046,9 +24053,7 @@ export function NumberInput({
     />
   );
 }
-
 ```
-
 
 ## `client/src/components/OilGasToggle.tsx`
 
@@ -24348,9 +24353,7 @@ export function OilGasToggle({ taxableIncome = 250000, onChange, compact = false
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/OnboardingTour.tsx`
 
@@ -24565,9 +24568,7 @@ export function OnboardingTour() {
     </>
   );
 }
-
 ```
-
 
 ## `client/src/components/PDFExport.tsx`
 
@@ -24852,9 +24853,7 @@ export function PDFExportButton({ data, type }: { data: StrategyData; type: "str
 }
 
 export default PDFExportButton;
-
 ```
-
 
 ## `client/src/components/PageInsights.tsx`
 
@@ -25140,9 +25139,7 @@ export function PageInsights({ pageId, activeSubTab, className = "" }: PageInsig
     </>
   );
 }
-
 ```
-
 
 ## `client/src/components/PageStandardFooter.tsx`
 
@@ -25253,9 +25250,7 @@ const PageStandardFooter: React.FC<PageStandardFooterProps> = ({
 };
 
 export default PageStandardFooter;
-
 ```
-
 
 ## `client/src/components/PetEvolutionOverlay.tsx`
 
@@ -25425,9 +25420,7 @@ export function PetEvolutionOverlay() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/PlatformEnhancements.tsx`
 
@@ -25620,9 +25613,7 @@ export function PlatformEnhancements({
 }
 
 export default PlatformEnhancements;
-
 ```
-
 
 ## `client/src/components/ProjectionSlider.tsx`
 
@@ -25750,183 +25741,133 @@ const ProjectionSlider: React.FC<ProjectionSliderProps> = ({ projectionData, col
 };
 
 export default ProjectionSlider;
-
 ```
-
 
 ## `client/src/components/ProprietaryTech.tsx`
 
 ```tsx
 // ============================================================
-// PROPRIETARY TECHNOLOGY SHOWCASE — the engines behind the Russell Capital
-// Systems platform, drawn from the core patent workbook (PAT-001…015).
+// THE ENGINES — 14 patent-pending planning technologies, in the order
+// they build on one another, each explained in five to six sentences.
+// Drawn from the core patent workbook (PAT-001…015; the AI advisor-
+// coaching engine is intentionally omitted from display).
 //
-// Descriptions are BENEFIT-ORIENTED only: what each engine means for the
-// client and their family, now and in the future. We intentionally do NOT
-// explain how the engines work.
-//
-// STATUS: 15 core patent applications are in process (patent-pending), plus
-// 45 more unique applications in process — per the owner, accurate and true.
-// Do NOT claim a patent has been GRANTED (issued) until an issue number
-// exists; "patent-pending" / "in process" are correct for filed applications.
+// STATUS: 15 core patent applications are in process (patent-pending),
+// plus 45 more in process — per the owner. Do NOT claim a patent has been
+// GRANTED until an issue number exists.
 // ============================================================
 import {
-  Layers, Waves, Home, Dna, ShieldCheck, Repeat2, History, Dice5, Boxes,
-  Landmark, Radar, Brain, Award, Network,
+  Layers, Dna, Waves, Boxes, Repeat2, Home, Landmark, ShieldCheck, Radar, Dice5, History, Brain, Award, Network,
 } from "lucide-react";
 
 const TECH_STATUS_LABEL = "Patent-pending · 15 patents in process";
 
 export type Technology = {
-  ref: string; // internal engine index
+  ref: string;
   name: string;
   icon: typeof Layers;
-  benefit: string; // what it means for you and your family — now and in the future
+  why: string; // the one-line reason this engine matters, in sequence
+  body: string; // five sentences — what it means for you and your family
+  punch: string; // the closing sentence, set in bold
 };
 
-// Ordered to build credibility and confidence: the most personal, high-impact
-// wins first (keep more, own your home, protect the family), then
-// personalization, then the confidence/validation and quality engines.
-// The AI advisor-coaching engine is intentionally omitted from display.
 export const TECHNOLOGIES: Technology[] = [
-  {
-    ref: "05", name: "Optimized Tax Waterfall Engine", icon: Waves,
-    benefit: "Keeps more of your money in your pocket through retirement by drawing your income in the smartest possible order — so your family keeps what you worked a lifetime to build instead of overpaying the IRS.",
-  },
-  {
-    ref: "09", name: "Mortgage Killer™", icon: Home,
-    benefit: "Puts you on a path to own your home free and clear years — sometimes decades — sooner, freeing cash flow for your family today and leaving a paid-off legacy tomorrow.",
-  },
-  {
-    ref: "12", name: "Zero-Cost Roth Conversion Engine", icon: Boxes,
-    benefit: "Helps move your savings toward tax-free status without the usual painful tax bill — so more of your nest egg grows for you and can pass to your children untaxed.",
-  },
-  {
-    ref: "02", name: "Equity Arbitrage Engine", icon: Repeat2,
-    benefit: "Turns the equity sitting idle in your home into a working asset that quietly builds wealth for your family — instead of just sitting in the walls.",
-  },
-  {
-    ref: "14", name: "FIA Collateral Optimizer", icon: Landmark,
-    benefit: "Gives you dependable retirement income while keeping access to your capital — so you can live confidently now and still reach your funds if life changes.",
-  },
-  {
-    ref: "06", name: "Divorce-Proof Asset Shield", icon: ShieldCheck,
-    benefit: "Shows you how to protect what you've built so a divorce, lawsuit, or creditor can't take it — safeguarding your family's security for good.",
-  },
-  {
-    ref: "04", name: "Wealth Genome™ Profile", icon: Dna,
-    benefit: "Builds your plan around your exact life — your income, your family, your goals — so every recommendation fits you, never a generic template.",
-  },
-  {
-    ref: "07", name: "Retirement Risk Radar", icon: Radar,
-    benefit: "Spots every threat to your retirement — not just the market, but healthcare, inflation, and a long life — so nothing blindsides your family.",
-  },
-  {
-    ref: "13", name: "10,000-Scenario Stress Test", icon: Dice5,
-    benefit: "Tests your plan against ten thousand possible futures, so you can retire knowing it holds up even when markets don't — real peace of mind for the whole family.",
-  },
-  {
-    ref: "10", name: "Time Machine Dual-View", icon: History,
-    benefit: "Lets you see how a strategy would have actually performed through real market history — so your family's decisions rest on evidence, not just promises.",
-  },
-  {
-    ref: "08", name: "Behavioral Safeguard", icon: Brain,
-    benefit: "Quietly protects you from the costly money mistakes everyone's brain is wired to make — keeping more of your family's wealth intact over a lifetime.",
-  },
-  {
-    ref: "01", name: "Cascading Calculator Core", icon: Layers,
-    benefit: "Shows your entire financial picture moving together, so you instantly see how one decision touches your taxes, retirement, and legacy — clarity behind every choice.",
-  },
-  {
-    ref: "11", name: "The Russell Number™", icon: Award,
-    benefit: "Means your advisor is held to a measurable, transparent quality standard — so your family is guided by someone proven, not simply licensed.",
-  },
-  {
-    ref: "15", name: "Advisor Practice Platform", icon: Network,
-    benefit: "Means a disciplined, well-run practice is working behind the scenes on your plan — consistent follow-through you and your family can count on for years.",
-  },
+  { ref: "01", name: "Cascading Calculator Core", icon: Layers, why: "The foundation",
+    body: "Most financial software treats your mortgage, your taxes, your retirement, and your insurance as separate islands — you change one and nothing else notices. Our core snaps every calculator we own onto a single base, so when one number in your life changes, everything connected to it updates at once, in the right order. That's how we can show you, in one view, that a mortgage decision quietly moves your future tax bracket, or that a practice choice reshapes your retirement income. You stop guessing at how the pieces interact, because the system shows you. It's the foundation every other engine below stands on — and it's the reason a plan from us behaves like one machine instead of a stack of spreadsheets.",
+    punch: "No off-the-shelf tool does this. It's ours." },
+  { ref: "02", name: "Wealth Genome™ Profile", icon: Dna, why: "It starts with you",
+    body: "Before we recommend anything, we read your financial DNA. A standard risk questionnaire asks a handful of questions and drops you into a bucket; the Wealth Genome reads dozens of signals about your money life — your income sources, your practice, your family, your debts, your health, your career arc, your comfort with risk — and how they interact with each other. Two physicians who look identical on paper can come out with very different, better-fitting plans, because the genome captures the hidden connections between the factors. It maps you to the specific set of strategies that fit you, not a template. Everything we build next is built around that profile, so nothing in your plan is generic.",
+    punch: "You've never been a category to us. You're a genome." },
+  { ref: "03", name: "Optimized Tax Waterfall Engine", icon: Waves, why: "Keep more, for life",
+    body: "When you retire, your money sits in many buckets — Roth, IRA, Social Security, pension, rental income, policy cash values — and the IRS taxes each one differently. The order you draw from them can change what you keep over a lifetime by a staggering amount. Most tools optimize two or three sources; our Waterfall coordinates all of them together, year by year, across your whole retirement, and finds the drawdown sequence that leaves the least on the table. The savings it finds only appear when the sources are sequenced as a system — they're invisible when each bucket is planned alone. Every move is checked against the tax code, so your professionals can confirm it.",
+    punch: "For your family, it means more of what you earned stays yours, and passes on intact." },
+  { ref: "04", name: "Zero-Cost Roth Conversion Engine", icon: Boxes, why: "Tax-free, without the sting",
+    body: "Moving money from a taxable retirement account into a Roth is one of the most powerful things you can do for your future — but the tax bill in the year you convert stops most people cold. This engine pairs the conversion with offsetting deductions, sequenced in the same year, so the tax the conversion creates can be balanced out rather than paid in full. Both halves are well known on their own; almost no one models them together, because the coordination is where the value hides. The result is a path toward tax-free growth and tax-free withdrawals — money that can pass to your children without the IRS in the middle. Whether it fits you depends on your situation, and a licensed professional confirms every specific.",
+    punch: "But the idea that a Roth conversion has to hurt is one we retire for our clients." },
+  { ref: "05", name: "Equity Arbitrage Engine", icon: Repeat2, why: "Put idle equity to work",
+    body: "The equity in your home may be the largest asset you own that earns nothing. It just sits in the walls. This engine finds the sweet spot for borrowing against that equity at a low cost and positioning it where it can grow faster than it costs to borrow — timing the draws and the premiums across decades, not months. Advisors have attempted this by hand in spreadsheets for years; the engine weighs thousands of interacting variables at once and surfaces windows no one could calculate manually. It accounts for the fees, the caps, the exit schedules, and the rate changes that trip people up.",
+    punch: "Done right, idle equity becomes a working asset for your family, quietly compounding while you practice medicine." },
+  { ref: "06", name: "Mortgage Killer™", icon: Home, why: "Own your home, decades sooner",
+    body: "This is where the equity engine turns into freedom. Mortgage Killer runs a recycling loop: put your idle equity to work, use that growth to pay down the mortgage years ahead of schedule, and when the home is free and clear, recycle the freed equity into the next property — cycle after cycle. Each cycle finishes faster than the last, because the growth from earlier cycles fuels the next one. Real-estate investors and insurance professionals each know their piece of this; nobody else runs it as one automated, compounding engine over a lifetime. For your family it means owning your home outright far sooner, cash flow freed up today, and a paid-off legacy tomorrow instead of thirty years of interest.",
+    punch: "It's the single most-requested engine we own." },
+  { ref: "07", name: "FIA Collateral Optimizer", icon: Landmark, why: "Income you can count on, capital you can reach",
+    body: "Retirement income usually forces a trade: lock money away for a guaranteed stream, or keep it accessible and give up the guarantee. This engine splits a fixed indexed annuity into two sleeves — one that generates dependable income, and one you can borrow against — and tunes the split to real carrier products and real lending limits. It then coordinates that borrowing power with tax-aware debt paydown, so the same dollars do more than one job. The architecture is a combination you won't find in off-the-shelf software, because it requires modeling the products, the lending, and the taxes together. What you feel is confidence: an income floor you can count on, and capital within reach if life changes.",
+    punch: "Your money works without being locked in a box." },
+  { ref: "08", name: "Divorce-Proof Asset Shield", icon: ShieldCheck, why: "Protect everything you just built",
+    body: "Everything you build is only as safe as its structure. This engine shows you which of your assets sit inside protected vehicles and which sit exposed — to a divorce, a lawsuit, a creditor — and applies the protection rules for your own state, because they differ enormously across the country. It can model more than one life event, so you see the difference protection makes over decades, not just once. Mainstream planning tools don't model asset protection this way at all; divorce attorneys work from simple asset lists after the fact. We do it before anything happens, which is the only time it helps.",
+    punch: "It's how we help make a family's security durable — the part of your plan that protects all the other parts." },
+  { ref: "09", name: "Retirement Risk Radar", icon: Radar, why: "See every threat, not just the market",
+    body: "Most retirement tools worry about exactly one danger: the stock market. But a long retirement faces ten of them at once — healthcare inflation, the odds of needing long-term care, changes to Social Security, tax law, general inflation, living longer than expected, interest rates, housing, and more. The Radar models all of them and, critically, how they cluster: three or four risks arriving together can do far more damage than any one alone, and single-factor tools never see it coming. You get one clear picture of how prepared you actually are, and specific ways to reduce each exposure.",
+    punch: "Nothing blindsides your family, because we looked at the whole sky, not just the weather." },
+  { ref: "10", name: "10,000-Scenario Stress Test", icon: Dice5, why: "Prove the plan survives",
+    body: "A plan that only works in a rising market isn't a plan. This engine runs yours through ten thousand different futures — crashes, booms, long flat stretches, and everything in between — and shows the full range of outcomes, not one rosy line. It's built specifically for the protective floor and growth cap of the strategies we use, which ordinary simulations get mathematically wrong; that precision reveals patterns standard tools miss entirely. You'll see the best case, the worst case, and how likely each really is. Then you retire knowing the plan holds up when markets don't.",
+    punch: "That's real peace of mind for the whole family — not something a brochure projection can give you." },
+  { ref: "11", name: "Time Machine Dual-View", icon: History, why: "Evidence beside the estimate",
+    body: "Regulations require insurance illustrations to show you a hypothetical future — an estimate, however careful. The Time Machine adds what the estimate can't: a look back at how the same strategy would actually have behaved through real market history, decade by decade, with the strategy's true mechanics applied. You see the required forward projection and the historical evidence side by side. It changes how a decision feels, because you're no longer trusting a promise; you're reading a record. No other platform pairs the two views this way.",
+    punch: "For a family making a decades-long commitment, evidence beside estimate is the difference between hoping and knowing." },
+  { ref: "12", name: "Behavioral Safeguard", icon: Brain, why: "Protect the plan from human nature",
+    body: "Every human brain is wired to make the same expensive money mistakes — panicking at a loss, anchoring on a number, chasing whatever did well last month, freezing when a change is needed. Over a lifetime those instincts can quietly cost a family more than any fee. This engine watches for those patterns as decisions happen and shows you the real numbers, drawn from your own plan, at the moment you need them most. It doesn't lecture; it quantifies, so the better choice is obvious. Behavioral science and financial planning have existed separately for years — putting them together, personally, in real time is what's new.",
+    punch: "It protects your plan from the one risk no market model can: you." },
+  { ref: "13", name: "The Russell Number™", icon: Award, why: "Your advisor, measured",
+    body: "You've seen how much of a plan's quality depends on the person running it. The Russell Number is a single, transparent score for financial advisors, built from many dimensions at once — client retention, satisfaction, compliance record, continuing education, technology adoption, and more — instead of the one or two revenue metrics the industry usually uses. It's portable, so an advisor can show it to you the way a credit score shows lenders who you are. And because it's earned, it changes behavior: the things that matter to clients are the things that move the score. For your family, it means the person guiding you is measured against a standard, not just licensed.",
+    punch: "Nobody else scores advisors this way." },
+  { ref: "14", name: "Advisor Practice Platform", icon: Network, why: "Discipline that lasts for decades",
+    body: "Behind every plan that lasts is a practice that runs with discipline. This platform is the nervous system of ours: it forecasts the work ahead, tracks every client's next action, flags anyone who hasn't been heard from, rehearses difficult conversations, and fires automated reminders so nothing falls through the cracks. Most advisory practices bolt these together from separate apps, and things get lost in the seams; ours works as one organism. You'll never experience the platform directly — but you'll feel it as consistent follow-through, year after year, from a practice that runs like the systems it builds.",
+    punch: "It's how everything above stays true for the long haul." },
 ];
 
 export default function ProprietaryTech() {
   return (
-    <section
-      id="technology"
-      aria-label="Patent-pending technology behind Russell Capital Systems"
-      className="relative overflow-hidden border-t border-emerald-300/10 bg-[#050b0a] py-28"
-    >
-      <img src="/rcs-bg-23.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover object-center blur-[20px] brightness-[.24]" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,#050b0a_0%,rgba(5,11,10,.55)_45%,#050b0a_100%)]" />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[.08] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:48px_48px]" />
+    <section id="technology" aria-label="Patent-pending technology behind Russell Capital Systems" className="relative overflow-hidden bg-[#03090a] py-28">
+      {/* Crisp Emerald Dawn skyline behind the engines — no blur, just darkened for legibility */}
+      <img src="/rcs-city-emerald.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-center brightness-[.62] saturate-[1.15]" loading="lazy" decoding="async" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,#03090a_0%,rgba(3,9,10,.55)_12%,rgba(3,9,10,.55)_88%,#03090a_100%)]" />
 
       <div className="container relative z-10">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-emerald-300/35 bg-emerald-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[.2em] text-emerald-300">
-            {TECH_STATUS_LABEL}
-          </p>
-          <h2 className="mt-5 text-[clamp(2rem,5vw,3.8rem)] font-extrabold leading-tight text-white [text-shadow:_0_0_26px_rgba(16,185,129,.4)]" style={{ fontFamily: "DM Sans, sans-serif" }}>
-            Engines that work for <span className="text-emerald-300 [text-shadow:_0_0_26px_rgba(52,211,153,.85)]">you and your family</span>
+          <p className="inline-flex items-center gap-2 rounded-full border border-emerald-300/45 bg-[#030f0c]/60 px-4 py-1.5 text-xs font-bold uppercase tracking-[.22em] text-emerald-300 backdrop-blur-sm">{TECH_STATUS_LABEL}</p>
+          <h2 className="mt-5 text-[clamp(2.2rem,5.4vw,4.2rem)] font-black leading-[1.02] tracking-[-.025em] text-white [text-shadow:_0_6px_30px_rgba(0,0,0,.8),_0_0_40px_rgba(16,185,129,.3)]" style={{ fontFamily: "DM Sans, sans-serif" }}>
+            Engines that work for <span className="text-emerald-400 [text-shadow:_0_0_22px_rgba(52,211,153,.8)]">you and your family</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/75">
-            These are purpose-built engines behind your plan — with <span className="font-semibold text-emerald-300">15 patents in process</span> — and
-            you <span className="font-semibold text-emerald-300">won't find them anywhere else</span>. Here's what each one means for you, now and for the years ahead.
+          <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/80">
+            Fourteen purpose-built engines, in the order they build on one another — with <span className="font-semibold text-emerald-300">15 patents in process</span>, and <span className="font-semibold text-emerald-300">not offered anywhere else</span>. Read them top to bottom: each one makes the next possible. Here's what each means for you, now and for the years ahead.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {TECHNOLOGIES.map(({ ref, name, icon: Icon, benefit }) => (
-            <div
-              key={ref}
-              className="group relative overflow-hidden rounded-2xl border border-emerald-300/20 bg-[linear-gradient(158deg,rgba(6,22,18,.92),rgba(3,10,9,.72))] p-6 shadow-[0_18px_50px_rgba(0,0,0,.45)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-emerald-300/60 hover:shadow-[0_28px_72px_rgba(16,185,129,.22)]"
-            >
-              {/* Top accent bar — glows on hover */}
-              <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,transparent,rgba(52,211,153,.95),transparent)] opacity-50 transition-opacity duration-300 group-hover:opacity-100" />
-              {/* Soft corner glow */}
-              <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(16,185,129,.22),transparent_70%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-              <div className="relative flex items-center justify-between">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-emerald-300/40 bg-[linear-gradient(135deg,rgba(16,185,129,.30),rgba(16,185,129,.05))] text-emerald-200 shadow-[inset_0_0_18px_rgba(52,211,153,.28)] transition-transform duration-300 group-hover:scale-105"><Icon size={22} strokeWidth={1.6} /></span>
-                <span className="rounded-full border border-emerald-300/30 bg-emerald-300/[.06] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[.16em] text-emerald-300/80">Only at RCS</span>
+        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          {TECHNOLOGIES.map(({ ref, name, icon: Icon, why, body, punch }) => (
+            <article key={ref} className="group relative overflow-hidden rounded-[22px] border border-emerald-300/30 bg-[linear-gradient(160deg,rgba(4,20,16,.9),rgba(2,10,9,.86))] p-7 shadow-[0_24px_70px_rgba(0,0,0,.55)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-emerald-300/70 hover:shadow-[0_30px_80px_rgba(16,185,129,.25)]">
+              <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,transparent,rgba(52,211,153,.95),transparent)] opacity-60 transition-opacity group-hover:opacity-100" />
+              <div className="flex items-center gap-3.5">
+                <span className="flex h-[3.2rem] w-[3.2rem] shrink-0 items-center justify-center rounded-[14px] border border-emerald-300/45 bg-[linear-gradient(135deg,rgba(16,185,129,.32),rgba(16,185,129,.06))] p-3 text-emerald-200 shadow-[inset_0_0_18px_rgba(52,211,153,.3),_0_0_18px_rgba(52,211,153,.25)]"><Icon size={24} strokeWidth={1.6} /></span>
+                <span className="text-[11px] font-extrabold uppercase tracking-[.22em] text-emerald-300/85">Engine {ref} of 14</span>
+                <span className="ml-auto whitespace-nowrap rounded-full border border-emerald-300/35 bg-emerald-300/[.07] px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[.16em] text-emerald-300/85">Only at RCS</span>
               </div>
-
-              <h3
-                className="relative mt-5 text-[1.4rem] font-black leading-[1.12] tracking-[-.015em] bg-[linear-gradient(95deg,#ffffff_0%,#bbf7d0_50%,#34d399_100%)] bg-clip-text text-transparent [text-shadow:_0_0_34px_rgba(52,211,153,.22)]"
-                style={{ fontFamily: "DM Sans, sans-serif" }}
-              >
-                {name}
-              </h3>
-              <div aria-hidden="true" className="mt-3 h-[2px] w-16 rounded bg-[linear-gradient(90deg,#34d399,rgba(52,211,153,0))]" />
-
-              <p className="relative mt-4 text-[15px] leading-relaxed text-white/85">
-                <span className="mb-1.5 block text-[10.5px] font-bold uppercase tracking-[.18em] text-emerald-300">What it means for you</span>
-                {benefit}
+              <h3 className="mt-4 bg-[linear-gradient(95deg,#ffffff_0%,#bbf7d0_48%,#34d399_100%)] bg-clip-text text-[clamp(1.5rem,2.4vw,1.9rem)] font-black leading-[1.1] tracking-[-.015em] text-transparent [text-shadow:_0_0_34px_rgba(52,211,153,.25)]" style={{ fontFamily: "DM Sans, sans-serif" }}>{name}</h3>
+              <div aria-hidden="true" className="mt-3 h-[2px] w-[4.5rem] rounded bg-[linear-gradient(90deg,#34d399,rgba(52,211,153,0))] shadow-[0_0_10px_rgba(52,211,153,.7)]" />
+              <p className="mt-3.5 text-[11px] font-extrabold uppercase tracking-[.18em] text-emerald-300">{why}</p>
+              <p className="mt-2 text-[1.02rem] leading-[1.72] text-white/88">
+                {body} <b className="font-semibold text-white">{punch}</b>
               </p>
-            </div>
+            </article>
           ))}
         </div>
 
-        {/* 45 more in process — stay tuned */}
-        <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-emerald-300/30 bg-emerald-300/[.06] p-6 text-center backdrop-blur-xl">
-          <p className="text-[clamp(1.2rem,3vw,1.9rem)] font-extrabold text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>
-            And we're just getting started.
-          </p>
-          <p className="mx-auto mt-2 max-w-2xl text-white/75">
-            Beyond these, <span className="font-semibold text-emerald-300">45 more unique patent-pending technologies</span> are in process —
-            built to keep giving you and your family an edge no one else can offer. <span className="font-semibold text-emerald-300">Stay tuned.</span>
+        <div className="mx-auto mt-12 max-w-3xl rounded-[20px] border border-emerald-300/35 bg-[#020c0a]/70 p-7 text-center backdrop-blur-md">
+          <p className="text-[clamp(1.3rem,3vw,2rem)] font-black text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>And we're just getting started.</p>
+          <p className="mx-auto mt-2 max-w-2xl text-[1.02rem] text-white/82">
+            Beyond these fourteen, <span className="font-semibold text-emerald-300">45 more unique patent-pending technologies</span> are in process — built to keep giving you and your family an edge no one else can offer. <span className="font-semibold text-emerald-300">Stay tuned.</span>
           </p>
         </div>
 
-        <p className="mx-auto mt-8 max-w-3xl text-center text-[11px] leading-relaxed text-white/45">
-          Patent-pending methods developed by Russell Capital Systems — 15 patent applications in process, with 45 more
-          underway — described here at a high level. Not tax, legal, or investment advice; results are not guaranteed and
-          are reviewed by our tax professional team for suitability and IRS compliance before implementation.
+        <p className="mx-auto mt-8 max-w-3xl text-center text-[11px] leading-relaxed text-white/50">
+          Patent-pending methods developed by Russell Capital Systems — 15 patent applications in process, with 45 more underway — described here at a high level. Not tax, legal, or investment advice; results are not guaranteed and are reviewed by our tax professional team for suitability and IRS compliance before implementation.
         </p>
       </div>
     </section>
   );
 }
-
 ```
-
 
 ## `client/src/components/QuickActionsFAB.tsx`
 
@@ -25996,9 +25937,7 @@ export function QuickActionsFAB() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/RelatedCalculators.tsx`
 
@@ -26485,9 +26424,7 @@ export function RelatedCalculators({ currentPage }: RelatedCalculatorsProps) {
 }
 
 export default RelatedCalculators;
-
 ```
-
 
 ## `client/src/components/ReplacementRadarPanel.tsx`
 
@@ -27001,9 +26938,7 @@ export function ReplacementRadarPanel() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/ReportGenerator.tsx`
 
@@ -27329,9 +27264,7 @@ export function ReportGenerator({
     </Dialog>
   );
 }
-
 ```
-
 
 ## `client/src/components/RiskGauge.tsx`
 
@@ -27442,9 +27375,7 @@ export function RiskGauge({ score, size = 160, label = "Risk Score" }: RiskGauge
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/SeniorPartnerBand.tsx`
 
@@ -27458,10 +27389,10 @@ import { ShieldCheck, Stethoscope, Users, TrendingUp } from "lucide-react";
 
 export default function SeniorPartnerBand() {
   return (
-    <section aria-label="Experience and client retention" className="relative overflow-hidden border-t border-emerald-300/10 bg-[#050b0a] py-24">
-      <img src="/rcs-bg-25.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover object-center blur-[22px] brightness-[.22]" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,#050b0a,rgba(5,11,10,.55),#050b0a)]" />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[.07] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:46px_46px]" />
+    <section id="proof" aria-label="Experience and client retention" className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-[#03090a] py-24">
+      {/* The second neon sign, full and crisp — no blur */}
+      <img src="/rcs-neon-b.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons over a green city at night" className="absolute inset-0 z-0 h-full w-full object-cover object-center" loading="lazy" decoding="async" />
+      <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_50%_55%,rgba(3,9,10,.72)_0%,rgba(3,9,10,.35)_45%,rgba(3,9,10,.1)_75%)]" />
       <div className="container relative z-10">
         <div className="group relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-emerald-300/30 bg-[linear-gradient(150deg,rgba(6,24,19,.94),rgba(3,10,9,.7))] p-8 shadow-[0_34px_90px_rgba(0,0,0,.55)] backdrop-blur-2xl sm:p-12">
           <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,transparent,rgba(52,211,153,.95),transparent)]" />
@@ -27505,9 +27436,7 @@ export default function SeniorPartnerBand() {
     </section>
   );
 }
-
 ```
-
 
 ## `client/src/components/SessionTimeout.tsx`
 
@@ -27521,9 +27450,7 @@ export default function SeniorPartnerBand() {
 export function SessionTimeout() {
   return null;
 }
-
 ```
-
 
 ## `client/src/components/SlideComments.tsx`
 
@@ -27725,9 +27652,7 @@ export default function SlideComments({ deckId, activeSlideIndex }: SlideComment
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/SlideSharing.tsx`
 
@@ -27902,9 +27827,7 @@ export default function SlideSharing({ deckId, deckTitle }: SlideSharingProps) {
     </Dialog>
   );
 }
-
 ```
-
 
 ## `client/src/components/StrategyFlowBanner.tsx`
 
@@ -28125,9 +28048,7 @@ export function StrategyFlowBanner({ currentStrategy, onApplyInbound, className 
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/StrategyPerformanceTracker.tsx`
 
@@ -28257,9 +28178,7 @@ export function StrategyPerformanceTracker({ strategies }: StrategyPerformancePr
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/StreamdownLite.tsx`
 
@@ -28373,9 +28292,7 @@ export function Streamdown({ children, content, className, ...props }: Streamdow
 }
 
 export default Streamdown;
-
 ```
-
 
 ## `client/src/components/SubscriptionDisclaimer.tsx`
 
@@ -29244,9 +29161,7 @@ export default function SubscriptionDisclaimer({
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/SubscriptionGuard.tsx`
 
@@ -29532,9 +29447,7 @@ export default function SubscriptionGuard({ children }: SubscriptionGuardProps) 
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/ThemePicker.tsx`
 
@@ -29593,9 +29506,7 @@ export default function ThemePicker({ value, onChange, compact }: ThemePickerPro
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/TimeMachineInlineDisclaimer.tsx`
 
@@ -29626,9 +29537,7 @@ export function TimeMachineInlineDisclaimer() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/TimeMachineToggle.tsx`
 
@@ -29929,9 +29838,7 @@ export function useTimeMachine(defaults?: {
 }
 
 export default TimeMachineToggle;
-
 ```
-
 
 ## `client/src/components/TrialCountdownWidget.tsx`
 
@@ -29945,9 +29852,7 @@ export default TimeMachineToggle;
 export default function TrialCountdownWidget() {
   return null;
 }
-
 ```
-
 
 ## `client/src/components/TrialTimer.tsx`
 
@@ -30207,9 +30112,7 @@ function formatTimeCompact(seconds: number): string {
   if (m > 0) return `${m}m ${s}s`;
   return `${s}s`;
 }
-
 ```
-
 
 ## `client/src/components/VoiceAdvisor.tsx`
 
@@ -30397,9 +30300,7 @@ export default function VoiceAdvisor() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/components/ui/accordion.tsx`
 
@@ -30468,9 +30369,7 @@ function AccordionContent({
 }
 
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
-
 ```
-
 
 ## `client/src/components/ui/alert-dialog.tsx`
 
@@ -30630,9 +30529,7 @@ export {
   AlertDialogAction,
   AlertDialogCancel,
 };
-
 ```
-
 
 ## `client/src/components/ui/alert.tsx`
 
@@ -30703,9 +30600,7 @@ function AlertDescription({
 }
 
 export { Alert, AlertTitle, AlertDescription };
-
 ```
-
 
 ## `client/src/components/ui/aspect-ratio.tsx`
 
@@ -30719,9 +30614,7 @@ function AspectRatio({
 }
 
 export { AspectRatio };
-
 ```
-
 
 ## `client/src/components/ui/avatar.tsx`
 
@@ -30777,9 +30670,7 @@ function AvatarFallback({
 }
 
 export { Avatar, AvatarImage, AvatarFallback };
-
 ```
-
 
 ## `client/src/components/ui/badge.tsx`
 
@@ -30830,9 +30721,7 @@ function Badge({
 }
 
 export { Badge, badgeVariants };
-
 ```
-
 
 ## `client/src/components/ui/breadcrumb.tsx`
 
@@ -30946,9 +30835,7 @@ export {
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
 };
-
 ```
-
 
 ## `client/src/components/ui/button-group.tsx`
 
@@ -31036,9 +30923,7 @@ export {
   ButtonGroupText,
   buttonGroupVariants,
 };
-
 ```
-
 
 ## `client/src/components/ui/button.tsx`
 
@@ -31103,9 +30988,7 @@ function Button({
 }
 
 export { Button, buttonVariants };
-
 ```
-
 
 ## `client/src/components/ui/calendar.tsx`
 
@@ -31321,9 +31204,7 @@ function CalendarDayButton({
 }
 
 export { Calendar, CalendarDayButton };
-
 ```
-
 
 ## `client/src/components/ui/card.tsx`
 
@@ -31420,9 +31301,7 @@ export {
   CardDescription,
   CardContent,
 };
-
 ```
-
 
 ## `client/src/components/ui/carousel.tsx`
 
@@ -31666,9 +31545,7 @@ export {
   CarouselPrevious,
   CarouselNext,
 };
-
 ```
-
 
 ## `client/src/components/ui/chart.tsx`
 
@@ -32028,9 +31905,7 @@ export {
   ChartLegendContent,
   ChartStyle,
 };
-
 ```
-
 
 ## `client/src/components/ui/checkbox.tsx`
 
@@ -32065,9 +31940,7 @@ function Checkbox({
 }
 
 export { Checkbox };
-
 ```
-
 
 ## `client/src/components/ui/collapsible.tsx`
 
@@ -32103,9 +31976,7 @@ function CollapsibleContent({
 }
 
 export { Collapsible, CollapsibleTrigger, CollapsibleContent };
-
 ```
-
 
 ## `client/src/components/ui/command.tsx`
 
@@ -32294,9 +32165,7 @@ export {
   CommandShortcut,
   CommandSeparator,
 };
-
 ```
-
 
 ## `client/src/components/ui/context-menu.tsx`
 
@@ -32551,9 +32420,7 @@ export {
   ContextMenuSubTrigger,
   ContextMenuRadioGroup,
 };
-
 ```
-
 
 ## `client/src/components/ui/dialog.tsx`
 
@@ -32767,9 +32634,7 @@ export {
   DialogTrigger
 };
 
-
 ```
-
 
 ## `client/src/components/ui/drawer.tsx`
 
@@ -32907,9 +32772,7 @@ export {
   DrawerTitle,
   DrawerDescription,
 };
-
 ```
-
 
 ## `client/src/components/ui/dropdown-menu.tsx`
 
@@ -33169,9 +33032,7 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 };
-
 ```
-
 
 ## `client/src/components/ui/empty.tsx`
 
@@ -33280,9 +33141,7 @@ export {
   EmptyContent,
   EmptyMedia,
 };
-
 ```
-
 
 ## `client/src/components/ui/field.tsx`
 
@@ -33529,9 +33388,7 @@ export {
   FieldContent,
   FieldTitle,
 };
-
 ```
-
 
 ## `client/src/components/ui/form.tsx`
 
@@ -33704,9 +33561,7 @@ export {
   FormMessage,
   FormField,
 };
-
 ```
-
 
 ## `client/src/components/ui/hover-card.tsx`
 
@@ -33753,9 +33608,7 @@ function HoverCardContent({
 }
 
 export { HoverCard, HoverCardTrigger, HoverCardContent };
-
 ```
-
 
 ## `client/src/components/ui/input-group.tsx`
 
@@ -33928,9 +33781,7 @@ export {
   InputGroupInput,
   InputGroupTextarea,
 };
-
 ```
-
 
 ## `client/src/components/ui/input-otp.tsx`
 
@@ -34010,9 +33861,7 @@ function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
 }
 
 export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator };
-
 ```
-
 
 ## `client/src/components/ui/input.tsx`
 
@@ -34087,9 +33936,7 @@ function Input({
 }
 
 export { Input };
-
 ```
-
 
 ## `client/src/components/ui/item.tsx`
 
@@ -34287,9 +34134,7 @@ export {
   ItemHeader,
   ItemFooter,
 };
-
 ```
-
 
 ## `client/src/components/ui/kbd.tsx`
 
@@ -34322,9 +34167,7 @@ function KbdGroup({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 export { Kbd, KbdGroup };
-
 ```
-
 
 ## `client/src/components/ui/label.tsx`
 
@@ -34351,9 +34194,7 @@ function Label({
 }
 
 export { Label };
-
 ```
-
 
 ## `client/src/components/ui/menubar.tsx`
 
@@ -34632,9 +34473,7 @@ export {
   MenubarSubTrigger,
   MenubarSubContent,
 };
-
 ```
-
 
 ## `client/src/components/ui/navigation-menu.tsx`
 
@@ -34807,9 +34646,7 @@ export {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
 };
-
 ```
-
 
 ## `client/src/components/ui/pagination.tsx`
 
@@ -34941,9 +34778,7 @@ export {
   PaginationNext,
   PaginationEllipsis,
 };
-
 ```
-
 
 ## `client/src/components/ui/popover.tsx`
 
@@ -34994,9 +34829,7 @@ function PopoverAnchor({
 }
 
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor };
-
 ```
-
 
 ## `client/src/components/ui/progress.tsx`
 
@@ -35030,9 +34863,7 @@ function Progress({
 }
 
 export { Progress };
-
 ```
-
 
 ## `client/src/components/ui/radio-group.tsx`
 
@@ -35080,9 +34911,7 @@ function RadioGroupItem({
 }
 
 export { RadioGroup, RadioGroupItem };
-
 ```
-
 
 ## `client/src/components/ui/resizable.tsx`
 
@@ -35141,9 +34970,7 @@ function ResizableHandle({
 }
 
 export { ResizablePanelGroup, ResizablePanel, ResizableHandle };
-
 ```
-
 
 ## `client/src/components/ui/scroll-area.tsx`
 
@@ -35204,9 +35031,7 @@ function ScrollBar({
 }
 
 export { ScrollArea, ScrollBar };
-
 ```
-
 
 ## `client/src/components/ui/select.tsx`
 
@@ -35396,9 +35221,7 @@ export {
   SelectTrigger,
   SelectValue,
 };
-
 ```
-
 
 ## `client/src/components/ui/separator.tsx`
 
@@ -35429,9 +35252,7 @@ function Separator({
 }
 
 export { Separator };
-
 ```
-
 
 ## `client/src/components/ui/sheet.tsx`
 
@@ -35575,9 +35396,7 @@ export {
   SheetTitle,
   SheetDescription,
 };
-
 ```
-
 
 ## `client/src/components/ui/sidebar.tsx`
 
@@ -36316,9 +36135,7 @@ export {
   useSidebar
 };
 
-
 ```
-
 
 ## `client/src/components/ui/skeleton.tsx`
 
@@ -36336,9 +36153,7 @@ function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 export { Skeleton };
-
 ```
-
 
 ## `client/src/components/ui/slider.tsx`
 
@@ -36404,9 +36219,7 @@ function Slider({
 }
 
 export { Slider };
-
 ```
-
 
 ## `client/src/components/ui/sonner.tsx`
 
@@ -36434,9 +36247,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
 };
 
 export { Toaster };
-
 ```
-
 
 ## `client/src/components/ui/spinner.tsx`
 
@@ -36457,9 +36268,7 @@ function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
 }
 
 export { Spinner };
-
 ```
-
 
 ## `client/src/components/ui/switch.tsx`
 
@@ -36493,9 +36302,7 @@ function Switch({
 }
 
 export { Switch };
-
 ```
-
 
 ## `client/src/components/ui/table.tsx`
 
@@ -36614,9 +36421,7 @@ export {
   TableCell,
   TableCaption,
 };
-
 ```
-
 
 ## `client/src/components/ui/tabs.tsx`
 
@@ -36694,9 +36499,7 @@ function TabsContent({
 }
 
 export { Tabs, TabsList, TabsTrigger, TabsContent };
-
 ```
-
 
 ## `client/src/components/ui/textarea.tsx`
 
@@ -36768,9 +36571,7 @@ function Textarea({
 }
 
 export { Textarea };
-
 ```
-
 
 ## `client/src/components/ui/toggle-group.tsx`
 
@@ -36848,9 +36649,7 @@ function ToggleGroupItem({
 }
 
 export { ToggleGroup, ToggleGroupItem };
-
 ```
-
 
 ## `client/src/components/ui/toggle.tsx`
 
@@ -36900,9 +36699,7 @@ function Toggle({
 }
 
 export { Toggle, toggleVariants };
-
 ```
-
 
 ## `client/src/components/ui/tooltip.tsx`
 
@@ -36966,9 +36763,7 @@ function TooltipContent({
 }
 
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
-
 ```
-
 
 ## `client/src/pages/AIBrainHubPage.tsx`
 
@@ -37151,9 +36946,7 @@ export default function AIBrainHubPage() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/pages/AcceptInvite.tsx`
 
@@ -37261,9 +37054,7 @@ export default function AcceptInvite() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/pages/AdministratorPortal.tsx`
 
@@ -37296,9 +37087,7 @@ export default function AdministratorPortal() {
     </main>
   );
 }
-
 ```
-
 
 ## `client/src/pages/AnnuityExplorerPage.tsx`
 
@@ -37455,9 +37244,7 @@ const AnnuityExplorerPage: React.FC = () => {
 }
 
 export default AnnuityExplorerPage;
-
 ```
-
 
 ## `client/src/pages/AutoCloserPage.tsx`
 
@@ -37635,9 +37422,7 @@ const AutoCloserPage: React.FC = () => {
 }
 
 export default AutoCloserPage;
-
 ```
-
 
 ## `client/src/pages/CareerPathPage.tsx`
 
@@ -37820,9 +37605,7 @@ const CareerPathPage: React.FC = () => {
 }
 
 export default CareerPathPage;
-
 ```
-
 
 ## `client/src/pages/CertificationsPage.tsx`
 
@@ -38002,9 +37785,7 @@ const CertificationsPage: React.FC = () => {
 }
 
 export default CertificationsPage;
-
 ```
-
 
 ## `client/src/pages/ClientPortalView.tsx`
 
@@ -38739,9 +38520,7 @@ export default function ClientPortalView() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/pages/CommandPage.tsx`
 
@@ -38850,9 +38629,7 @@ const CommandPage: React.FC = () => {
 }
 
 export default CommandPage;
-
 ```
-
 
 ## `client/src/pages/CompetePage.tsx`
 
@@ -38958,9 +38735,7 @@ const CompetePage: React.FC = () => {
 }
 
 export default CompetePage;
-
 ```
-
 
 ## `client/src/pages/ComplianceDisclosure.tsx`
 
@@ -39805,9 +39580,7 @@ export default function ComplianceDisclosure({ returnTo, onSigned, isAnonymous }
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/pages/ComplianceVaultPage.tsx`
 
@@ -39995,9 +39768,7 @@ const ComplianceVaultPage: React.FC = () => {
 }
 
 export default ComplianceVaultPage;
-
 ```
-
 
 ## `client/src/pages/ComponentShowcase.tsx`
 
@@ -41439,9 +41210,7 @@ export default function ComponentsShowcase() {
     </div>
   );
 }
-
 ```
-
 
 ## `client/src/pages/CryptoCyclePage.tsx`
 
@@ -41570,9 +41339,7 @@ const CryptoCyclePage: React.FC = () => {
 }
 
 export default CryptoCyclePage;
-
 ```
-
 
 ## `client/src/pages/DealRoomPage.tsx`
 
@@ -41746,9 +41513,7 @@ const DealRoomPage: React.FC = () => {
 }
 
 export default DealRoomPage;
-
 ```
-
 
 ## `client/src/pages/DivorceCalculatorPage.tsx`
 
@@ -41931,1469 +41696,5 @@ const DivorceCalculatorPage: React.FC = () => {
 }
 
 export default DivorceCalculatorPage;
-
 ```
 
-
-## `client/src/pages/DivorceILITStrategyPage.tsx`
-
-```tsx
-import React, { useState } from 'react';
-
-export default function DivorceILITStrategyPage() {
-  const [activeTab, setActiveTab] = useState(0);
-  const [isReferencesOpen, setIsReferencesOpen] = useState(false);
-
-  const tabs = [
-    'The Divorce Asset Crisis',
-    'ILIT as Divorce Shield',
-    'SLAT Strategy for Married Couples',
-    'PLAT for Unmarried Partners',
-    'Implementation Roadmap',
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#0f172a] text-gray-300 p-6 lg:p-10">
-      {/* References Section */}
-      <div className="mb-8 bg-[#1e293b] rounded-lg shadow-lg p-6">
-        <button
-          className="w-full flex justify-between items-center text-white text-xl font-semibold"
-          onClick={() => setIsReferencesOpen(!isReferencesOpen)}
-        >
-          <span>References</span>
-          <svg
-            className={`w-6 h-6 transform transition-transform ${isReferencesOpen ? 'rotate-180' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        {isReferencesOpen && (
-          <ul className="mt-4 space-y-2 text-gray-300">
-            <li>• IRC Section 2042 - Incidents of ownership</li>
-            <li>• IRC Section 2035 - Three-year lookback rule</li>
-            <li>• Treas. Reg. 20.2031-8(a)(1) - Goodman Rule</li>
-            <li>• Hofstein Weiner & Meyer, P.C. - "Irrevocable Life Insurance Trusts in Event of a Divorce"</li>
-            <li>• PA Probate Code Sections 6111.1 and 6111.2 - Divorce effect on revocable transfers</li>
-            <li>• Securian Financial - Estate Planning ILIT Foreword to Counsel and Specimen Documents (F74093-25)</li>
-          </ul>
-        )}
-      </div>
-
-      {/* Header */}
-      <h1 className="text-4xl font-bold text-white mb-6">Divorce Protection with ILIT Strategies</h1>
-      <p className="mb-8 max-w-3xl">
-        Divorce can devastate wealth, splitting assets and disrupting long-term financial plans. At Russell Capital Systems, we specialize in using Irrevocable Life Insurance Trusts (ILITs) to shield your wealth from marital dissolution. Explore the strategies below to learn how ILITs, including specialized variants like SLATs and PLATs, can safeguard your legacy.
-      </p>
-
-      {/* Tabs */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        {tabs.map((tab, index) => (
-          <button
-            key={index}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              activeTab === index
-                ? 'bg-[#1e293b] text-white'
-                : 'bg-transparent text-gray-400 hover:text-white'
-            }`}
-            onClick={() => setActiveTab(index)}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Content */}
-      <div className="bg-[#1e293b] rounded-lg shadow-lg p-6">
-        {activeTab === 0 && (
-          <div>
-            <h2 className="text-3xl font-bold text-white mb-4">The Divorce Asset Crisis</h2>
-            <p className="mb-4">
-              Divorce is a financial wrecking ball, with approximately 50% of marriages ending in dissolution and average legal costs ranging from $15,000 to $30,000 per couple. Beyond attorney fees, the division of assets can shatter retirement plans as accounts like 401(k)s are split via Qualified Domestic Relations Orders (QDROs), home equity is divided, and business valuations force liquidations at unfavorable terms. For high-net-worth individuals, the stakes are even higher, as complex portfolios and illiquid assets become battlegrounds for equitable distribution. This wealth destruction often leaves both parties with diminished financial security heading into their later years.
-            </p>
-            <p className="mb-4">
-              Consider a couple with a $2 million joint portfolio, including a $500,000 home, $1 million in retirement accounts, and $500,000 in business interests. In a typical divorce settlement, each spouse might receive $1 million in assets, but after legal fees, taxes on liquidated assets, and market timing losses, the net value could drop to $800,000 per person. This 20% reduction in wealth—compounded by lost growth over time—can derail retirement plans. Emotional stress further clouds decision-making, often leading to suboptimal financial outcomes. Protecting assets before marital issues arise is critical to preserving your legacy.
-            </p>
-            <p>
-              At Russell Capital Systems, we use our AI Strategy Engine to model divorce risk scenarios and identify proactive asset protection strategies. By placing key assets outside the marital estate, you can mitigate the financial fallout of divorce. Our tools provide clarity on how to structure your wealth to withstand legal challenges, ensuring your financial future remains intact.
-            </p>
-          </div>
-        )}
-        {activeTab === 1 && (
-          <div>
-            <h2 className="text-3xl font-bold text-white mb-4">ILIT as Divorce Shield</h2>
-            <p className="mb-4">
-              An Irrevocable Life Insurance Trust (ILIT) is a powerful tool to protect wealth from divorce settlements. By transferring ownership of a life insurance policy—often an Indexed Universal Life (IUL) policy—to an ILIT, the policy’s cash value and death benefit are removed from the grantor’s taxable estate and marital property. Under IRC Section 2042, as long as the grantor retains no incidents of ownership, the asset is shielded from both estate taxes and divorce claims. This structure ensures that, in the event of marital dissolution, the policy remains outside the divisible estate, preserving wealth for designated beneficiaries like children or a charitable cause.
-            </p>
-            <p className="mb-4">
-              For example, a high-net-worth individual might fund an ILIT with a $2 million IUL policy, naming their children as beneficiaries. If a divorce occurs, the ex-spouse typically cannot claim the policy’s cash value—potentially $600,000 after 15 years of growth—or the death benefit, as the trust is irrevocable and independently managed by a trustee. Legal precedents, such as those discussed by Hofstein Weiner & Meyer, P.C., reinforce that properly structured ILITs withstand challenges in divorce court, provided no fraudulent transfer is alleged under state law. Timing is critical—establishing the ILIT well before marital issues arise avoids scrutiny under the IRS three-year lookback rule (IRC 2035).
-            </p>
-            <p>
-              Russell Capital Systems’ AI Strategy Engine optimizes ILIT design by simulating funding strategies, premium schedules, and growth projections to maximize divorce protection while aligning with estate planning goals. Our platform ensures compliance with complex IRS rules and state-specific divorce statutes. Partner with us to build an ILIT that acts as an impenetrable financial shield.
-            </p>
-          </div>
-        )}
-        {activeTab === 2 && (
-          <div>
-            <h2 className="text-3xl font-bold text-white mb-4">SLAT Strategy for Married Couples</h2>
-            <p className="mb-4">
-              A Spousal Limited Access Trust (SLAT) is a specialized ILIT variant for married couples seeking divorce protection while maintaining spousal benefits. As outlined in Securian Financial’s estate planning documents, a SLAT allows one spouse (the grantor) to establish an irrevocable trust for the benefit of the other spouse, often funding it with an IUL policy. The beneficiary spouse can access cash value for health, education, maintenance, and support (HEMS) needs, but the asset remains outside the marital estate for divorce purposes. Upon the grantor’s death, the death benefit passes to remainder beneficiaries, such as children, free of estate tax.
-            </p>
-            <p className="mb-4">
-              Imagine a couple where Spouse A funds a SLAT with a $1 million IUL policy for Spouse B’s benefit. If divorce occurs, Spouse B’s access is limited to HEMS distributions determined by an independent trustee, and the policy itself is not subject to equitable distribution. Post-divorce, the trust can be amended to name new beneficiaries, leveraging provisions like Pennsylvania Probate Code Section 6111.1, which treats an ex-spouse as predeceased. This dual protection—divorce shielding and estate tax exclusion—makes SLATs ideal for couples with significant assets and complex family dynamics, such as blended families.
-            </p>
-            <p>
-              Russell Capital Systems’ AI Strategy Engine customizes SLAT setups by modeling premium funding, cash value growth, and distribution scenarios to align with your family’s needs. We ensure proper drafting to avoid IRS pitfalls like retained interest under IRC Section 2036. Collaborate with us to implement a SLAT that balances flexibility and protection.
-            </p>
-          </div>
-        )}
-        {activeTab === 3 && (
-          <div>
-            <h2 className="text-3xl font-bold text-white mb-4">PLAT for Unmarried Partners</h2>
-            <p className="mb-4">
-              A Partner Limited Access Trust (PLAT) is an ILIT variant designed for unmarried partners, addressing unique needs in relationships like young cohabitating couples, second marriages with children from prior relationships, divorced individuals who don’t remarry, or senior couples avoiding legal marriage. As detailed in Securian Financial’s research, a PLAT allows the grantor to provide for a partner’s lifetime needs via limited access to cash value while stipulating ultimate beneficiaries (often children) for the death benefit. This structure keeps the policy outside the taxable estate and protects assets from potential future relationship disputes.
-            </p>
-            <p className="mb-4">
-              For instance, a grantor in a second relationship might establish a PLAT with a $1.5 million IUL policy, naming their partner and children from a prior marriage as beneficiaries. The partner can access up to $40,000 annually from cash value for living expenses, as determined by an independent trustee, while the death benefit is reserved for the children. This setup ensures financial support for the partner without risking the legacy intended for the grantor’s heirs, even if the relationship ends. The irrevocable nature of the trust further shields the asset from legal challenges.
-            </p>
-            <p>
-              Russell Capital Systems leverages our AI Strategy Engine to tailor PLAT structures, balancing support for partners with legacy protection for other beneficiaries. We simulate distribution schedules and tax implications to ensure compliance and efficiency. Work with us to secure your financial intentions across complex personal dynamics.
-            </p>
-          </div>
-        )}
-        {activeTab === 4 && (
-          <div>
-            <h2 className="text-3xl font-bold text-white mb-4">Implementation Roadmap</h2>
-            <p className="mb-4">
-              Implementing an ILIT for divorce protection follows a structured roadmap to ensure legal compliance and financial efficacy. Step one involves a comprehensive assessment with Russell Capital Systems’ AI Strategy Engine, which analyzes your asset portfolio, income, and family dynamics to recommend the optimal trust type (Traditional ILIT, SLAT, or PLAT). Step two engages a qualified attorney to draft the irrevocable trust, incorporating provisions for divorce protection, such as treating an ex-spouse as predeceased. Step three sees the trustee purchase an IUL policy, often with a death benefit tailored to your estate planning goals.
-            </p>
-            <p className="mb-4">
-              In step four, the trust is funded via annual exclusion gifts—$18,000 per person in 2024—or lifetime exemption amounts, ensuring premiums are paid without triggering gift taxes. Step five requires sending Crummey notices to beneficiaries, qualifying the gifts for exclusion under IRS rules. Over time, in step six, the cash value builds tax-free within the trust, potentially reaching $500,000 on a $1 million policy over 20 years. Finally, in step seven, distributions for HEMS needs become available to designated beneficiaries, providing flexibility while maintaining asset protection.
-            </p>
-            <p>
-              Russell Capital Systems guides you through each step, using our AI Engine to model funding strategies, growth projections, and distribution impacts. Our platform ensures alignment with IRS regulations like the three-year lookback rule (IRC 2035) while optimizing for divorce and creditor protection. Partner with us to execute an ILIT strategy that secures your wealth against life’s uncertainties.
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-      <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-        <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-        <div className="flex items-center gap-4 mb-6">
-          <label className="text-sm text-slate-400">Projection Horizon:</label>
-          <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-            onChange={(e) => {
-              const val = e.target.value;
-              document.getElementById(`proj-year-divorce-ilit`)!.textContent = val;
-            }} />
-          <span id={`proj-year-divorce-ilit`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-          <span className="text-slate-500 text-sm">years</span>
-        </div>
-        <div className="flex gap-2 mb-6">
-          {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-            <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-            }`}>{s}</button>
-          ))}
-        </div>
-        <div className="grid grid-cols-5 gap-4 text-center">
-          {[5, 10, 20, 30, 50].map(yr => (
-            <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-              <div className="text-emerald-400 font-bold text-lg">[ILIT Asset Growth]</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-      <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <span className="text-purple-400">🧠</span> AI Brain Analysis
-          </h2>
-          <div className="flex gap-2">
-            <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-              Send to AI Advisor →
-            </a>
-            <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-              View AI Brain Hub →
-            </a>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-[#1e293b] rounded-lg p-4">
-            <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-            <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-          </div>
-          <div className="bg-[#1e293b] rounded-lg p-4">
-            <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-            <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-          </div>
-          <div className="bg-[#1e293b] rounded-lg p-4">
-            <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-            <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-```
-
-
-## `client/src/pages/EarnPage.tsx`
-
-```tsx
-import React from 'react';
-import { Link } from 'wouter';
-
-const EarnPage: React.FC = () => {
-  const subPages = [
-    { path: '/portal/rewards', title: 'Rewards Vault', description: 'Access rewards, badges, and incentives for your achievements.', icon: '🏅' },
-    { path: '/portal/revenue-guarantee', title: 'Revenue Guarantee', description: 'AI-driven strategies to secure and grow your recurring revenue.', icon: '💎' },
-    { path: '/portal/pet', title: 'Pet Companion', description: 'Your AI practice companion that grows as your business grows.', icon: '🐾' },
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center mb-4">
-          <span className="text-4xl mr-4">💰</span>
-          <h1 className="text-4xl font-bold">Earn</h1>
-        </div>
-        <p className="mb-8 text-lg text-gray-300">
-          Monetization tools, gamified rewards, and revenue optimization strategies 
-          to maximize your advisory practice income.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {subPages.map((page) => (
-            <Link key={page.path} href={page.path}
-              className="bg-[#1a1f2a] border border-white/10 rounded-xl p-6 shadow-lg hover:bg-[#22c55e]/10 hover:scale-105 transition-all duration-300"
-            >
-              <div className="text-3xl mb-3">{page.icon}</div>
-              <h2 className="text-xl font-semibold mb-2">{page.title}</h2>
-              <p className="text-gray-400 text-sm">{page.description}</p>
-            </Link>
-          ))}
-        </div>
-
-        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-          <div className="flex items-center gap-4 mb-6">
-            <label className="text-sm text-slate-400">Projection Horizon:</label>
-            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-              onChange={(e) => {
-                const val = e.target.value;
-                document.getElementById(`proj-year-earn`)!.textContent = val;
-              }} />
-            <span id={`proj-year-earn`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-            <span className="text-slate-500 text-sm">years</span>
-          </div>
-          <div className="flex gap-2 mb-6">
-            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-              }`}>{s}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-5 gap-4 text-center">
-            {[5, 10, 20, 30, 50].map(yr => (
-              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-                <div className="text-emerald-400 font-bold text-lg">[Revenue Growth]</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-purple-400">🧠</span> AI Brain Analysis
-            </h2>
-            <div className="flex gap-2">
-              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-                Send to AI Advisor →
-              </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-                View AI Brain Hub →
-              </a>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default EarnPage;
-
-```
-
-
-## `client/src/pages/EstatePlanningPage.tsx`
-
-```tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const EstatePlanningPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("overview");
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <header className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Estate Planning Portal</h1>
-          <div className="bg-[#22c55e]/20 text-[#22c55e] px-4 py-2 rounded-lg text-sm">
-            Page Insights Score: 92/100
-          </div>
-        </header>
-
-        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="bg-[#141925] border-[#22c55e]/30 w-full justify-start">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Estate Overview</TabsTrigger>
-            <TabsTrigger value="ilit" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">ILIT Planner</TabsTrigger>
-            <TabsTrigger value="tax" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Tax Minimization</TabsTrigger>
-            <TabsTrigger value="transfer" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Wealth Transfer</TabsTrigger>
-            <TabsTrigger value="beneficiary" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Beneficiary Optimizer</TabsTrigger>
-            <TabsTrigger value="outcome" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Generate Outcome</TabsTrigger>
-          </TabsList>
-          <TabsContent value="overview" className="mt-0">
-            <Card className="bg-[#141925] border-[#22c55e]/30">
-              <CardHeader><CardTitle>Estate Overview</CardTitle></CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Estate Value ($)</Label><Input className="bg-[#0a0f1a] border-[#22c55e]/30" placeholder="5,000,000" /></div>
-                  <div><Label>Expected Growth (%)</Label><Input className="bg-[#0a0f1a] border-[#22c55e]/30" placeholder="3.5" /></div>
-                </div>
-                <p className="text-gray-400 mt-4">Placeholder: Estimated Tax Exposure - $1.2M</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="ilit" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>ILIT Planner</CardTitle></CardHeader><CardContent><p className="text-gray-400">ILIT setup data will be displayed here.</p></CardContent></Card></TabsContent>
-          <TabsContent value="tax" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Tax Minimization</CardTitle></CardHeader><CardContent><p className="text-gray-400">Tax strategies will be calculated here.</p></CardContent></Card></TabsContent>
-          <TabsContent value="transfer" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Wealth Transfer</CardTitle></CardHeader><CardContent><p className="text-gray-400">Transfer scenarios will be shown here.</p></CardContent></Card></TabsContent>
-          <TabsContent value="beneficiary" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Beneficiary Optimizer</CardTitle></CardHeader><CardContent><p className="text-gray-400">Beneficiary allocations will be optimized here.</p></CardContent></Card></TabsContent>
-          <TabsContent value="outcome" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Generate Outcome</CardTitle></CardHeader><CardContent><Button className="bg-[#22c55e] hover:bg-[#22c55e]/90">Generate Report</Button><p className="text-gray-400 mt-4">Outcome report will be generated here.</p></CardContent></Card></TabsContent>
-        </Tabs>
-
-        <Card className="bg-[#141925] border-[#22c55e]/30">
-          <CardHeader><CardTitle>Cross-Tool Integration</CardTitle></CardHeader>
-          <CardContent>
-            <p className="text-gray-400">Integrate with IUL Planner, FIA Calculator, and Solar Roth Analyzer for comprehensive planning.</p>
-            <Button variant="outline" className="mt-4 border-[#22c55e] text-[#22c55e] hover:bg-[#22c55e]/10">Connect Tools</Button>
-          </CardContent>
-        </Card>
-
-        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-          <div className="flex items-center gap-4 mb-6">
-            <label className="text-sm text-slate-400">Projection Horizon:</label>
-            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-              onChange={(e) => {
-                const val = e.target.value;
-                document.getElementById(`proj-year-estate-planning`)!.textContent = val;
-              }} />
-            <span id={`proj-year-estate-planning`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-            <span className="text-slate-500 text-sm">years</span>
-          </div>
-          <div className="flex gap-2 mb-6">
-            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-              }`}>{s}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-5 gap-4 text-center">
-            {[5, 10, 20, 30, 50].map(yr => (
-              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-                <div className="text-emerald-400 font-bold text-lg">[Estate Value]</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-purple-400">🧠</span> AI Brain Analysis
-            </h2>
-            <div className="flex gap-2">
-              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-                Send to AI Advisor →
-              </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-                View AI Brain Hub →
-              </a>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-            </div>
-          </div>
-        </div>
-
-        <footer className="text-gray-500 text-sm mt-6">
-          <p>Regulatory Disclaimer: Russell Capital Systems provides tools for life & annuity agents only. Not for use by series-licensed professionals. All calculations are estimates and not guaranteed. Consult legal and tax professionals for estate planning advice.</p>
-        </footer>
-      </div>
-    </div>
-  );
-}
-
-export default EstatePlanningPage;
-
-```
-
-
-## `client/src/pages/ExecutiveEntrance.tsx`
-
-```tsx
-import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, LockKeyhole, ShieldCheck } from "lucide-react";
-import { Link } from "wouter";
-
-export default function ExecutiveEntrance() {
-  const { user, isAuthenticated, loading } = useAuth();
-  const isAdmin = user?.role === "admin";
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-[#060f20] p-6 text-white">
-      <Card className="w-full max-w-xl border-emerald-400/20 bg-slate-950/80">
-        <CardHeader><ShieldCheck className="mb-4 h-10 w-10 text-emerald-300" /><CardTitle>Executive Access</CardTitle></CardHeader>
-        <CardContent className="space-y-5 text-slate-300">
-          <p>Executive tools use managed sign-in and server-enforced roles. Local passcodes and browser-stored access flags are retired.</p>
-          {loading ? <p>Checking managed session…</p> : !isAuthenticated ? (
-            <Button onClick={() => { window.location.href = getLoginUrl("/executive"); }}><LockKeyhole className="mr-2 h-4 w-4" />Sign in securely</Button>
-          ) : !isAdmin ? (
-            <div className="rounded-xl border border-amber-400/25 bg-amber-950/25 p-4 text-amber-100">Your account does not have the executive administrator role.</div>
-          ) : (
-            <Link href="/portal/owner-war-room"><Button>Open Owner War Room <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
-          )}
-        </CardContent>
-      </Card>
-    </main>
-  );
-}
-
-```
-
-
-## `client/src/pages/ExplorePage.tsx`
-
-```tsx
-import React from 'react';
-import { Link } from 'wouter';
-
-const ExplorePage: React.FC = () => {
-  const subPages = [
-    { path: '/portal/black-mirror', title: 'Black Mirror', description: 'See the dark side of financial inaction — what happens if you do nothing.', icon: '🪞' },
-    { path: '/portal/social', title: 'Social Narcotic', description: 'Gamified social features that make financial planning addictive.', icon: '🎮' },
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center mb-4">
-          <span className="text-4xl mr-4">🧭</span>
-          <h1 className="text-4xl font-bold">Explore</h1>
-        </div>
-        <p className="mb-8 text-lg text-gray-300">
-          Innovative tools that push the boundaries of financial planning — 
-          from behavioral psychology to gamified engagement.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {subPages.map((page) => (
-            <Link key={page.path} href={page.path}
-              className="bg-[#1a1f2a] border border-white/10 rounded-xl p-6 shadow-lg hover:bg-[#22c55e]/10 hover:scale-105 transition-all duration-300"
-            >
-              <div className="text-3xl mb-3">{page.icon}</div>
-              <h2 className="text-xl font-semibold mb-2">{page.title}</h2>
-              <p className="text-gray-400 text-sm">{page.description}</p>
-            </Link>
-          ))}
-        </div>
-
-        {/* AI Strategy Engine Integration */}
-        <div className="mt-12 bg-gradient-to-r from-[#1e293b] to-[#0f172a] border border-emerald-500/30 rounded-xl p-8">
-          <div className="flex items-center mb-4">
-            <span className="text-3xl mr-3">🧠</span>
-            <h2 className="text-2xl font-bold text-emerald-400">AI Strategy Engine — Explore Intelligence</h2>
-          </div>
-          <p className="text-gray-300 mb-4">
-            The AI Brain monitors your exploration patterns and behavioral engagement to surface personalized 
-            strategy recommendations. Every tool in the Explore section feeds data back to the AI Strategy Engine, 
-            creating a feedback loop that continuously refines your financial plan.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <div className="bg-[#0f172a] border border-white/10 rounded-lg p-4">
-              <h3 className="text-emerald-400 font-semibold mb-2">Behavioral Insights</h3>
-              <p className="text-gray-400 text-sm">AI analyzes your Black Mirror scenarios to identify blind spots in your financial plan and generate targeted recommendations.</p>
-            </div>
-            <div className="bg-[#0f172a] border border-white/10 rounded-lg p-4">
-              <h3 className="text-emerald-400 font-semibold mb-2">Engagement Scoring</h3>
-              <p className="text-gray-400 text-sm">The AI Brain tracks which tools you use most and suggests unexplored calculators that could unlock additional tax savings or wealth growth.</p>
-            </div>
-            <div className="bg-[#0f172a] border border-white/10 rounded-lg p-4">
-              <h3 className="text-emerald-400 font-semibold mb-2">Cross-Tool Synergy</h3>
-              <p className="text-gray-400 text-sm">Explore tools connect to the full 248+ calculator ecosystem via StrategyContext, ensuring every insight flows into your holistic financial strategy.</p>
-            </div>
-          </div>
-          <Link href="/portal/ai-brain" className="mt-6 inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-            Open AI Brain Hub →
-          </Link>
-        </div>
-
-        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-          <div className="flex items-center gap-4 mb-6">
-            <label className="text-sm text-slate-400">Projection Horizon:</label>
-            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-              onChange={(e) => {
-                const val = e.target.value;
-                document.getElementById(`proj-year-explore`)!.textContent = val;
-              }} />
-            <span id={`proj-year-explore`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-            <span className="text-slate-500 text-sm">years</span>
-          </div>
-          <div className="flex gap-2 mb-6">
-            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-              }`}>{s}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-5 gap-4 text-center">
-            {[5, 10, 20, 30, 50].map(yr => (
-              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-                <div className="text-emerald-400 font-bold text-lg">[Behavioral Impact]</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-purple-400">🧠</span> AI Brain Analysis
-            </h2>
-            <div className="flex gap-2">
-              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-                Send to AI Advisor →
-              </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-                View AI Brain Hub →
-              </a>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default ExplorePage;
-
-```
-
-
-## `client/src/pages/FactFinderPage.tsx`
-
-```tsx
-// ============================================================
-// FACT FINDER — the discovery intake that feeds the Ultra
-// Calculator and the every-page AI advisor. Answers persist in
-// this browser only (localStorage) and become the advisor's
-// profile context. Speak any answer with the 🎙 button.
-// ============================================================
-import { useEffect, useState } from "react";
-import { Link } from "wouter";
-import { ULTRA_PROFILE_KEY } from "@/components/VoiceAdvisor";
-
-const QUESTIONS: Array<{ id: string; q: string; hint?: string }> = [
-  { id: "background", q: "Tell us your background — family, work, how you got to where you are financially." },
-  { id: "assets", q: "Walk through everything you own: accounts, balances, real estate, businesses — and what's taxable vs. tax-advantaged." },
-  { id: "income", q: "Your income, your spouse's income, and every other household income source — itemized." },
-  { id: "expenses", q: "Your base household expenses per year — and is that likely to change in the next 5, 10, or 20 years? How?" },
-  { id: "debt", q: "The full debt picture: mortgages, student loans, long-term loans — balances, rates, payments." },
-  { id: "goals", q: "What are your goals — in 5-year and 10-year windows if you can? What does 'made it' look like?" },
-  { id: "advisorFailures", q: "What have your money advisors failed to do for you in the past?" },
-  { id: "moreMoney", q: "If you had two to three times more money and just three more years, what would you do? How would your goals change from what they are now?" },
-  { id: "protection", q: "How important are divorce protection, creditor protection, and tax-free future income to you — and why?" },
-  { id: "health", q: "Any health or family considerations (chronic illness risk, caregiving, special needs) the plan must survive?" },
-];
-
-export default function FactFinderPage() {
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [savedAt, setSavedAt] = useState<number | null>(null);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(ULTRA_PROFILE_KEY);
-      if (raw) {
-        const data = JSON.parse(raw) as { factFinder?: Record<string, string>; savedAt?: number };
-        if (data.factFinder) setAnswers(data.factFinder);
-        if (data.savedAt) setSavedAt(data.savedAt);
-      }
-    } catch { /* fresh start */ }
-  }, []);
-
-  const save = () => {
-    const summary = QUESTIONS
-      .filter((q) => answers[q.id]?.trim())
-      .map((q) => `${q.q}\n→ ${answers[q.id].trim()}`)
-      .join("\n\n");
-    try {
-      const raw = localStorage.getItem(ULTRA_PROFILE_KEY);
-      const prev = raw ? (JSON.parse(raw) as Record<string, unknown>) : {};
-      localStorage.setItem(ULTRA_PROFILE_KEY, JSON.stringify({
-        ...prev,
-        summary: [prev.summary, summary].filter(Boolean).join("\n\n— Fact Finder —\n"),
-        factFinder: answers,
-        savedAt: Date.now(),
-      }));
-      setSavedAt(Date.now());
-    } catch { /* private mode */ }
-  };
-
-  return (
-    <div className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100">
-      <div className="mx-auto max-w-3xl">
-        <p className="text-xs uppercase tracking-widest text-amber-500">Russell Capital Systems</p>
-        <h1 className="mt-1 text-3xl font-bold">Fact Finder</h1>
-        <p className="mt-2 text-sm text-slate-400">
-          Answer in your own words — type, or use the 🎙 advisor button (bottom-right) to dictate and paste.
-          Your answers stay in this browser and become the profile the AI advisor and the{" "}
-          <Link href="/ultra-calculator" className="text-amber-400 underline">Ultra Calculator</Link> personalize from.
-        </p>
-
-        <div className="mt-8 space-y-6">
-          {QUESTIONS.map((q, i) => (
-            <label key={q.id} className="block rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-              <span className="text-sm font-semibold text-slate-200">{i + 1}. {q.q}</span>
-              {q.hint && <span className="block text-xs text-slate-500">{q.hint}</span>}
-              <textarea
-                rows={3}
-                value={answers[q.id] ?? ""}
-                onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
-                className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100"
-              />
-            </label>
-          ))}
-        </div>
-
-        <button onClick={save}
-          className="mt-6 w-full rounded-xl bg-amber-500 px-4 py-3 text-lg font-bold text-slate-900 hover:bg-amber-400">
-          Save my profile for the AI advisor
-        </button>
-        {savedAt && (
-          <p className="mt-2 text-center text-xs text-emerald-400">
-            Saved {new Date(savedAt).toLocaleString()} — the advisor on every page now knows this profile.
-          </p>
-        )}
-        <p className="mt-4 text-center text-[11px] text-slate-600">
-          Stored only in this browser. Nothing is uploaded until you ask the advisor a question, and then only
-          as the text context for that question. Educational planning only — not tax, legal, or investment advice.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-```
-
-
-## `client/src/pages/ForgotPassword.tsx`
-
-```tsx
-import { useState } from "react";
-import { useLocation } from "wouter";
-import { trpc } from "@/lib/trpc";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, AlertCircle, ArrowLeft, CheckCircle2, Send } from "lucide-react";
-
-export default function ForgotPassword() {
-  const [, navigate] = useLocation();
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [sent, setSent] = useState(false);
-
-  const forgotMutation = trpc.auth.forgotPassword.useMutation({
-    onSuccess: () => setSent(true),
-    onError: (err) => setError(err.message || "Something went wrong"),
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    if (!email) { setError("Please enter your email address"); return; }
-    forgotMutation.mutate({ email });
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/20 via-transparent to-transparent" />
-
-      <div className="relative w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/25 mb-4">
-            <span className="text-2xl font-bold text-white">RC</span>
-          </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Russell Capital Systems™</h1>
-          <p className="text-emerald-400/80 text-sm mt-1 italic">Turn Capital Into Income&trade;</p>
-        </div>
-
-        <Card className="bg-slate-900/80 border-slate-700/50 backdrop-blur-xl shadow-2xl">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl text-white">
-              {sent ? "Check Your Email" : "Reset Password"}
-            </CardTitle>
-            <CardDescription className="text-slate-400">
-              {sent
-                ? "We've sent a password reset link to your email"
-                : "Enter your email and we'll send you a reset link"
-              }
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {sent ? (
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                  <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0" />
-                  <div>
-                    <p className="text-emerald-300 text-sm font-medium">Reset link sent!</p>
-                    <p className="text-emerald-400/70 text-xs mt-1">
-                      Check your inbox at <span className="font-medium text-emerald-300">{email}</span>. The link expires in 1 hour.
-                    </p>
-                  </div>
-                </div>
-                <p className="text-slate-500 text-xs text-center">
-                  Didn't receive the email? Check your spam folder or{" "}
-                  <button onClick={() => { setSent(false); setError(""); }} className="text-emerald-400 hover:text-emerald-300">
-                    try again
-                  </button>
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {error && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    <span>{error}</span>
-                  </div>
-                )}
-
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-slate-300">Email Address</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-emerald-500 focus:ring-emerald-500/20"
-                      autoComplete="email"
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={forgotMutation.isPending}
-                  className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-semibold py-2.5 shadow-lg shadow-emerald-500/25"
-                >
-                  {forgotMutation.isPending ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Sending...
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <Send className="w-4 h-4" /> Send Reset Link
-                    </div>
-                  )}
-                </Button>
-              </form>
-            )}
-
-            <div className="mt-6 text-center">
-              <button
-                onClick={() => navigate("/login")}
-                className="inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-300 text-sm transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" /> Back to Sign In
-              </button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <p className="text-center text-slate-600 text-xs mt-6">
-          &copy; {new Date().getFullYear()} Russell Capital Systems™ &bull; www.RussellCapitalSystems.com
-        </p>
-      </div>
-    </div>
-  );
-}
-
-```
-
-
-## `client/src/pages/Home.tsx`
-
-```tsx
-import { useAuth } from "@/_core/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { getLoginUrl } from "@/const";
-
-/**
- * Home page placeholder — the actual landing page is in Landing.tsx
- * This file is kept for template compatibility but is not used in routing.
- */
-export default function Home() {
-  const { user, loading, error, isAuthenticated, logout } = useAuth();
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      <main className="rc-breathe-ambient">
-        <Loader2 className="animate-spin" />
-        <p>Loading...</p>
-        <Button variant="default">Example Button</Button>
-      </main>
-    </div>
-  );
-}
-
-```
-
-
-## `client/src/pages/IncomeAnnuityPage.tsx`
-
-```tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
-
-const IncomeAnnuityPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("Income Calculator");
-  const tabs = ["Income Calculator", "Solar Strategy", "Tax-Free Comparison", "Carrier Ranking", "Generate Outcome"];
-
-  const [incomeData, setIncomeData] = useState({ annualIncome: 50000, solarBoost: 25 });
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold">Income Annuity Planner</h1>
-        <p className="text-gray-400">Lifetime Guaranteed Income with Solar Roth Strategy</p>
-      </header>
-
-      {/* Tabs Navigation */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {tabs.map((tab) => (
-          <Button
-            key={tab}
-            variant={activeTab === tab ? "default" : "outline"}
-            className={`${
-              activeTab === tab ? "bg-[#22c55e] text-white" : "text-gray-300 border-gray-700"
-            } hover:bg-[#22c55e] hover:text-white transition`}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab}
-          </Button>
-        ))}
-      </div>
-
-      {/* Tab Content */}
-      <div className="bg-[#141925] p-6 rounded-lg shadow-md">
-        {activeTab === "Income Calculator" && (
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Calculate Lifetime Income</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-400 mb-1">Desired Annual Income ($)</label>
-                <input
-                  type="number"
-                  defaultValue={incomeData.annualIncome}
-                  className="w-full p-2 bg-[#0a0f1a] border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-[#22c55e]"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-400 mb-1">Age at Start</label>
-                <input
-                  type="number"
-                  defaultValue={65}
-                  className="w-full p-2 bg-[#0a0f1a] border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-[#22c55e]"
-                />
-              </div>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-lg font-medium">Projected Income</h3>
-              <p className="mt-2 p-3 bg-[#0a0f1a] rounded-md">
-                Base Income: ${incomeData.annualIncome.toLocaleString()} / year
-              </p>
-            </div>
-          </div>
-        )}
-        {activeTab === "Solar Strategy" && (
-          <div className="text-center py-6">Solar Roth Strategy Placeholder (22-28% Tax-Free Boost)</div>
-        )}
-        {activeTab === "Tax-Free Comparison" && <div className="text-center py-6">Tax-Free Comparison Placeholder</div>}
-        {activeTab === "Carrier Ranking" && <div className="text-center py-6">Carrier Ranking Placeholder</div>}
-        {activeTab === "Generate Outcome" && (
-          <div className="text-center py-6">
-            <Button className="bg-[#22c55e] hover:bg-[#1ca34d]">Generate Report</Button>
-          </div>
-        )}
-      </div>
-
-      {/* Cross-Tool Integration */}
-      <div className="mt-6 bg-[#141925] p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Cross-Tool Integration</h2>
-        <p className="text-gray-400">
-          Link with Risk Score for income protection analysis or Wealth Genome for holistic planning.
-        </p>
-        <Button variant="outline" className="mt-4 text-[#22c55e] border-[#22c55e]">
-          Connect Tools <ChevronRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* Page Insights Badge */}
-      <div className="mt-6 flex justify-center">
-        <div className="bg-[#141925] px-4 py-2 rounded-md border border-[#22c55e]">
-          <p className="text-[#22c55e]">Page Insights Score: 88/100</p>
-        </div>
-      </div>
-
-      {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-      <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-        <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-        <div className="flex items-center gap-4 mb-6">
-          <label className="text-sm text-slate-400">Projection Horizon:</label>
-          <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-            onChange={(e) => {
-              const val = e.target.value;
-              document.getElementById(`proj-year-income-annuity`)!.textContent = val;
-            }} />
-          <span id={`proj-year-income-annuity`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-          <span className="text-slate-500 text-sm">years</span>
-        </div>
-        <div className="flex gap-2 mb-6">
-          {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-            <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-            }`}>{s}</button>
-          ))}
-        </div>
-        <div className="grid grid-cols-5 gap-4 text-center">
-          {[5, 10, 20, 30, 50].map(yr => (
-            <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-              <div className="text-emerald-400 font-bold text-lg">[Annuity Income]</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-      <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <span className="text-purple-400">🧠</span> AI Brain Analysis
-          </h2>
-          <div className="flex gap-2">
-            <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-              Send to AI Advisor →
-            </a>
-            <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-              View AI Brain Hub →
-            </a>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-[#1e293b] rounded-lg p-4">
-            <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-            <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-          </div>
-          <div className="bg-[#1e293b] rounded-lg p-4">
-            <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-            <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-          </div>
-          <div className="bg-[#1e293b] rounded-lg p-4">
-            <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-            <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Regulatory Disclaimer */}
-      <footer className="mt-8 text-center text-gray-500 text-sm">
-        <p>
-          Russell Capital Systems tools are for informational use only. Annuity products carry risks and are not FDIC insured. Consult a professional advisor for guidance.
-        </p>
-      </footer>
-    </div>
-  );
-}
-
-export default IncomeAnnuityPage;
-
-```
-
-
-## `client/src/pages/IndexBacktesterPage.tsx`
-
-```tsx
-// FILE: client/src/pages/IndexBacktesterPage.tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const IndexBacktesterPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("selection");
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <header className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Index Backtester Portal</h1>
-          <div className="bg-[#22c55e]/20 text-[#22c55e] px-4 py-2 rounded-lg text-sm">
-            Page Insights Score: 95/100
-          </div>
-        </header>
-
-        <Tabs defaultValue="selection" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="bg-[#141925] border-[#22c55e]/30 w-full justify-start">
-            <TabsTrigger value="selection" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Index Selection</TabsTrigger>
-            <TabsTrigger value="results" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Backtest Results</TabsTrigger>
-            <TabsTrigger value="comparison" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Strategy Comparison</TabsTrigger>
-            <TabsTrigger value="capfloor" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Cap/Floor Analysis</TabsTrigger>
-            <TabsTrigger value="outcome" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Generate Outcome</TabsTrigger>
-          </TabsList>
-          <TabsContent value="selection" className="mt-0">
-            <Card className="bg-[#141925] border-[#22c55e]/30">
-              <CardHeader><CardTitle>Index Selection</CardTitle></CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Index Type</Label><Input className="bg-[#0a0f1a] border-[#22c55e]/30" placeholder="S&P 500" /></div>
-                  <div><Label>Backtest Period (Years)</Label><Input className="bg-[#0a0f1a] border-[#22c55e]/30" placeholder="10" /></div>
-                </div>
-                <p className="text-gray-400 mt-4">Placeholder: Historical Data Loaded for S&P 500</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="results" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Backtest Results</CardTitle></CardHeader><CardContent><p className="text-gray-400">Backtest results will be displayed here.</p></CardContent></Card></TabsContent>
-          <TabsContent value="comparison" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Strategy Comparison</CardTitle></CardHeader><CardContent><p className="text-gray-400">Strategy comparisons will be shown here.</p></CardContent></Card></TabsContent>
-          <TabsContent value="capfloor" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Cap/Floor Analysis</CardTitle></CardHeader><CardContent><p className="text-gray-400">Cap and floor impact will be calculated here.</p></CardContent></Card></TabsContent>
-          <TabsContent value="outcome" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Generate Outcome</CardTitle></CardHeader><CardContent><Button className="bg-[#22c55e] hover:bg-[#22c55e]/90">Generate Report</Button><p className="text-gray-400 mt-4">Outcome report will be generated here.</p></CardContent></Card></TabsContent>
-        </Tabs>
-
-        <Card className="bg-[#141925] border-[#22c55e]/30">
-          <CardHeader><CardTitle>Cross-Tool Integration</CardTitle></CardHeader>
-          <CardContent>
-            <p className="text-gray-400">Integrate with IUL Planner and FIA Calculator for index-linked product analysis.</p>
-            <Button variant="outline" className="mt-4 border-[#22c55e] text-[#22c55e] hover:bg-[#22c55e]/10">Connect Tools</Button>
-          </CardContent>
-        </Card>
-
-        <footer className="text-gray-500 text-sm mt-6">
-          <p>Regulatory Disclaimer: Russell Capital Systems provides tools for life & annuity agents only. Not for use by series-licensed professionals. Backtest results are not indicative of future performance. Consult financial advisors for strategy implementation.</p>
-        </footer>
-      </div>
-    </div>
-  );
-};
-
-export default IndexBacktesterPage;
-
-```
-
-
-## `client/src/pages/InteropEnginePage.tsx`
-
-```tsx
-import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'wouter';
-
-interface CalculatorNode {
-  id: string;
-  name: string;
-  category: string;
-  x: number;
-  y: number;
-  active: boolean;
-  connections: string[];
-}
-
-const CALCULATOR_CATEGORIES = [
-  { name: 'Retirement & Income', color: '#22c55e', icon: '💰', count: 7 },
-  { name: 'Tax & Estate', color: '#3b82f6', icon: '📊', count: 6 },
-  { name: 'IUL & Insurance', color: '#a855f7', icon: '🛡️', count: 14 },
-  { name: 'Real Estate', color: '#f59e0b', icon: '🏠', count: 5 },
-  { name: 'Life Events', color: '#ef4444', icon: '🎯', count: 8 },
-  { name: 'Wealth Building', color: '#06b6d4', icon: '📈', count: 8 },
-  { name: 'Advanced Strategies', color: '#ec4899', icon: '🧠', count: 13 },
-  { name: 'Lifestyle & Protection', color: '#84cc16', icon: '🏥', count: 12 },
-];
-
-const InteropEnginePage: React.FC = () => {
-  const [activeFlows, setActiveFlows] = useState(0);
-  const [totalSyncs, setTotalSyncs] = useState(0);
-
-  useEffect(() => {
-    // Simulate live data flow counter
-    const interval = setInterval(() => {
-      setActiveFlows(prev => Math.min(prev + Math.floor(Math.random() * 3), 248));
-      setTotalSyncs(prev => prev + Math.floor(Math.random() * 5));
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center mb-4 animate-fade-in">
-          <span className="text-4xl mr-4">⚡</span>
-          <div>
-            <h1 className="text-4xl font-bold">Interop Engine</h1>
-            <p className="text-[#22c55e] text-sm font-mono">PATENT PENDING — Cascading Multi-Calculator Financial Interoperability Engine</p>
-          </div>
-        </div>
-
-        <p className="mb-8 text-lg text-gray-300 max-w-3xl">
-          The Interop Engine is the neural network of Russell Capital Systems. It enables real-time 
-          bidirectional data propagation across 248+ interconnected financial calculators, ensuring 
-          that a single variable change cascades intelligently through every relevant model.
-        </p>
-
-        {/* Live Stats Dashboard */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-[#1a1f2a] border border-[#22c55e]/30 rounded-xl p-4 text-center">
-            <p className="text-3xl font-bold text-[#22c55e]">248+</p>
-            <p className="text-gray-400 text-sm">Connected Calculators</p>
-          </div>
-          <div className="bg-[#1a1f2a] border border-[#22c55e]/30 rounded-xl p-4 text-center">
-            <p className="text-3xl font-bold text-[#22c55e]">{activeFlows}</p>
-            <p className="text-gray-400 text-sm">Active Data Flows</p>
-          </div>
-          <div className="bg-[#1a1f2a] border border-[#22c55e]/30 rounded-xl p-4 text-center">
-            <p className="text-3xl font-bold text-[#22c55e]">{totalSyncs.toLocaleString()}</p>
-            <p className="text-gray-400 text-sm">Total Syncs Today</p>
-          </div>
-          <div className="bg-[#1a1f2a] border border-[#22c55e]/30 rounded-xl p-4 text-center">
-            <p className="text-3xl font-bold text-[#22c55e]">100%</p>
-            <p className="text-gray-400 text-sm">Engine Health</p>
-          </div>
-        </div>
-
-        {/* Network Visualization Placeholder */}
-        <div className="bg-[#1a1f2a] border border-[#22c55e]/20 rounded-xl p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-[#22c55e]">Calculator Network Graph</h2>
-          <div className="relative h-96 bg-[#0d1117] rounded-lg overflow-hidden">
-            <svg width="100%" height="100%" className="absolute inset-0">
-              {/* Animated connection lines */}
-              {CALCULATOR_CATEGORIES.map((cat, i) => (
-                <g key={cat.name}>
-                  <circle
-                    cx={200 + (i % 4) * 200}
-                    cy={100 + Math.floor(i / 4) * 200}
-                    r={30 + cat.count}
-                    fill={cat.color}
-                    opacity={0.3}
-                    className="animate-pulse"
-                  />
-                  <circle
-                    cx={200 + (i % 4) * 200}
-                    cy={100 + Math.floor(i / 4) * 200}
-                    r={15}
-                    fill={cat.color}
-                  />
-                  <text
-                    x={200 + (i % 4) * 200}
-                    y={100 + Math.floor(i / 4) * 200 + 50}
-                    fill="white"
-                    textAnchor="middle"
-                    fontSize="11"
-                  >
-                    {cat.name}
-                  </text>
-                  <text
-                    x={200 + (i % 4) * 200}
-                    y={100 + Math.floor(i / 4) * 200 + 5}
-                    fill="white"
-                    textAnchor="middle"
-                    fontSize="14"
-                  >
-                    {cat.icon}
-                  </text>
-                </g>
-              ))}
-            </svg>
-          </div>
-        </div>
-
-        {/* Calculator Categories Grid */}
-        <h2 className="text-2xl font-semibold mb-4">Calculator Categories</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {CALCULATOR_CATEGORIES.map((cat) => (
-            <div
-              key={cat.name}
-              className="bg-[#1a1f2a] border border-white/10 rounded-xl p-5 hover:border-[#22c55e]/50 hover:scale-105 transition-all duration-300"
-            >
-              <div className="text-3xl mb-2">{cat.icon}</div>
-              <h3 className="text-lg font-semibold mb-1">{cat.name}</h3>
-              <p className="text-sm text-gray-400">{cat.count} interconnected calculators</p>
-              <div className="mt-3 h-1 bg-gray-700 rounded">
-                <div
-                  className="h-1 rounded transition-all duration-1000"
-                  style={{ width: '100%', backgroundColor: cat.color }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Cascade Simulator */}
-        <div className="bg-[#1a1f2a] border border-[#22c55e]/20 rounded-xl p-6">
-          <h2 className="text-xl font-semibold mb-4 text-[#22c55e]">Cascade Simulator</h2>
-          <p className="text-gray-400 mb-4">
-            Select a calculator and change a variable to see how the change cascades through 
-            all connected models in real-time.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <select className="bg-[#0d1117] border border-gray-600 rounded-lg px-4 py-2 text-white">
-              <option value="">Select Calculator...</option>
-              <option value="mortgage-killer">Mortgage Killer</option>
-              <option value="iul-projection">IUL Projection</option>
-              <option value="roth-conversion">Roth Conversion</option>
-              <option value="tax-waterfall">Tax Waterfall</option>
-              <option value="social-security">Social Security</option>
-            </select>
-            <input
-              type="text"
-              placeholder="Variable name"
-              className="bg-[#0d1117] border border-gray-600 rounded-lg px-4 py-2 text-white"
-            />
-            <input
-              type="number"
-              placeholder="New value"
-              className="bg-[#0d1117] border border-gray-600 rounded-lg px-4 py-2 text-white"
-            />
-            <button className="bg-[#22c55e] hover:bg-[#1e9b4f] text-white px-6 py-2 rounded-lg transition-all">
-              Simulate Cascade
-            </button>
-          </div>
-        </div>
-
-        {/* AI Strategy Engine Integration */}
-        <div className="mt-8 bg-gradient-to-r from-[#1e293b] to-[#0f172a] border border-emerald-500/30 rounded-xl p-8">
-          <div className="flex items-center mb-4">
-            <span className="text-3xl mr-3">🧠</span>
-            <h2 className="text-2xl font-bold text-emerald-400">AI Strategy Engine — Interop Intelligence</h2>
-          </div>
-          <p className="text-gray-300 mb-4">
-            The AI Brain sits at the center of the Interop Engine, orchestrating data flows between all 248+ calculators.
-            When a variable changes in any calculator, the AI Strategy Engine determines which downstream models are affected,
-            prioritizes the cascade order, and generates real-time impact reports for the advisor.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <div className="bg-[#0f172a] border border-white/10 rounded-lg p-4">
-              <h3 className="text-emerald-400 font-semibold mb-2">Intelligent Cascade Routing</h3>
-              <p className="text-gray-400 text-sm">The AI determines the optimal propagation path for each variable change, ensuring calculators update in the correct dependency order.</p>
-            </div>
-            <div className="bg-[#0f172a] border border-white/10 rounded-lg p-4">
-              <h3 className="text-emerald-400 font-semibold mb-2">Conflict Resolution</h3>
-              <p className="text-gray-400 text-sm">When cascading changes create conflicting outputs, the AI Strategy Engine resolves them using priority rules and alerts the advisor.</p>
-            </div>
-            <div className="bg-[#0f172a] border border-white/10 rounded-lg p-4">
-              <h3 className="text-emerald-400 font-semibold mb-2">Impact Scoring</h3>
-              <p className="text-gray-400 text-sm">Every cascade generates an AI-scored impact report showing which client outcomes changed and by how much — in real dollars.</p>
-            </div>
-          </div>
-          <Link href="/portal/ai-brain" className="mt-6 inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-            Open AI Brain Hub →
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default InteropEnginePage;
-
-```
-
-
-## `client/src/pages/IulProjectionPage.tsx`
-
-```tsx
-// FILE: client/src/pages/IulProjectionPage.tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-const IulProjectionPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("projection");
-  const [selectedYear, setSelectedYear] = useState("2005");
-
-  const tabs = [
-    "Projection", "Ibbotson History", "Cash Value Growth", 
-    "Surrender Values", "Policy Loans", "Generate Outcome"
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <h1 className="text-3xl font-bold mb-6">IUL Projection Tool</h1>
-
-        {/* Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {tabs.map((tab) => (
-            <Button
-              key={tab}
-              variant={activeTab === tab.toLowerCase() ? "default" : "outline"}
-              className={`${
-                activeTab === tab.toLowerCase() 
-                  ? "bg-[#22c55e] hover:bg-[#22c55e]/90" 
-                  : "border-gray-600 text-gray-300 hover:text-white"
-              }`}
-              onClick={() => setActiveTab(tab.toLowerCase())}
-            >
-              {tab}
-            </Button>
-          ))}
-        </div>
-
-        {/* Content */}
-        <Card className="bg-[#0a0f1a] border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-xl">IUL Projection (8% Cap / 0% Floor)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {activeTab === "projection" && (
-              <div className="space-y-4">
-                <Select value={selectedYear} onValueChange={setSelectedYear}>
-                  <SelectTrigger className="bg-[#0a0f1a] border-gray-600 text-white">
-                    <SelectValue placeholder="Select Year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Array.from({ length: 2023 - 1929 + 1 }, (_, i) => 1929 + i).map((year) => (
-                      <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <div className="h-64 bg-gray-800 rounded-lg flex items-center justify-center">
-                  <p className="text-gray-400">Ibbotson Chart Basis (1929-Present) Placeholder</p>
-                </div>
-              </div>
-            )}
-            {activeTab !== "projection" && (
-              <div className="h-64 bg-gray-800 rounded-lg flex items-center justify-center">
-                <p className="text-gray-400">Content for {activeTab.replace("-", " ")} coming soon...</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Page Insights */}
-        <div className="mt-6 flex justify-end">
-          <div className="bg-[#22c55e]/20 text-[#22c55e] px-4 py-2 rounded-lg text-sm">
-            Page Insights Score: 92/100
-          </div>
-        </div>
-
-        {/* Cross-Tool Integration */}
-        <Card className="mt-6 bg-[#0a0f1a] border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-lg">Cross-Tool Integration</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-400 text-sm">
-              Link projections to Strategy Lab, Annuity Explorer, or Real Estate tools for comprehensive analysis.
-            </p>
-            <Button variant="outline" className="mt-2 border-[#22c55e] text-[#22c55e] hover:bg-[#22c55e]/10">
-              Connect Tools
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Disclaimer */}
-        <p className="mt-6 text-gray-500 text-xs text-center">
-          Russell Capital Systems provides tools for educational purposes only. Not intended as financial advice. Consult a qualified professional. Not for use by series-licensed agents.
-        </p>
-      </div>
-    </div>
-  );
-};
-
-export default IulProjectionPage;
-
-```
