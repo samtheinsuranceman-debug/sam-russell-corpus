@@ -8,12 +8,13 @@ const css = readFileSync(resolve("client/src/index.css"), "utf8");
 
 describe("Concept 16 physician homepage", () => {
   it("uses the clean persistent background and selected command-center hierarchy", () => {
-    expect(landing).toContain("/manus-storage/rcs-concept-16-clean-background_a6ddebf1.png");
-    // Concept 10 hero
-    expect(landing).toContain("Your Practice Builds Income.");
-    expect(landing).toContain("We Build the System Around It.");
+    // Neon "Financial & Tax Relief and Recovery" rebrand
+    expect(landing).toContain("/rcs-neon-hero.png");
+    expect(landing).toContain("/rcs-neon-banner.png");
+    expect(landing).toContain("Financial &amp; Tax Relief and Recovery — For Physicians, Psychiatrists, &amp; Surgeons");
     expect(landing).toContain("Plan Beyond the Practice");
     expect(landing).toContain("Book a Physician Planning Review");
+    expect(landing).toContain("Tax &amp; Interest Savings Calculator");
     // Concept 10 five-pillar strip
     for (const pillar of ["Practice Economics", "Physician Tax Strategy", "Risk & Protection", "Retirement Income", "Succession & Legacy"]) {
       expect(landing).toContain(pillar);
