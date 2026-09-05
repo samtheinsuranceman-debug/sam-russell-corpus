@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
+import HomeAIConcierge from "@/components/HomeAIConcierge";
 
 const CALENDLY_URL = "https://calendly.com/samtheinsuranceman-1/30min";
 
@@ -233,6 +234,7 @@ export default function Landing() {
               <a href="#physician-planning" className="text-white/80 transition-colors hover:text-emerald-300">For Physicians</a>
               <a href="#practice-planning" className="text-white/80 transition-colors hover:text-emerald-300">Practice Owners</a>
               <a href="#planning-framework" className="text-white/80 transition-colors hover:text-emerald-300">Strategies</a>
+              <a href="#ai-brain-trust" className="text-white/80 transition-colors hover:text-emerald-300">Ask AI</a>
               <a href="#client-login" className="text-white/80 transition-colors hover:text-emerald-300">Resources</a>
               <a href="#about" className="text-white/80 transition-colors hover:text-emerald-300">About</a>
             </div>
@@ -246,6 +248,7 @@ export default function Landing() {
               <a href="#physician-planning" className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>For Physicians</a>
               <a href="#practice-planning" className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>Practice Owners</a>
               <a href="#planning-framework" className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>Strategies</a>
+              <a href="#ai-brain-trust" className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>Ask AI</a>
               <a href="#client-login" className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>Resources</a>
               <a href="#about" className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>About</a>
             </div>
@@ -332,6 +335,8 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      <HomeAIConcierge />
 
       {/* ── Chapter: Concept 06 — Tax Strategy for High-Earning Physicians ── */}
       <section aria-label="Tax strategy for high-earning physicians" className="relative flex min-h-[100vh] items-center overflow-hidden border-t border-emerald-300/10 bg-[#050b0a]">
