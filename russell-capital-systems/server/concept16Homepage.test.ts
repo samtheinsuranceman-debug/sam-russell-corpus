@@ -27,7 +27,10 @@ describe("Concept 16 physician homepage", () => {
     expect(landing).toContain("/rcs-bg-25.webp");
     expect(landing).toContain("Tax Strategy for");
     expect(landing).toContain("Turn Capital Into Income");
-    expect(landing).toContain("Transform Debt Into a Tax-Free Liquid War Chest");
+    // War-chest phrase leads Chapter 2; the highlight word is wrapped in a span.
+    expect(landing).toContain("Transform Debt Into a");
+    expect(landing).toContain("Tax-Free Liquid War Chest");
+    expect(landing).toContain("The Physician War-Chest Strategy");
     expect(landing).toContain("Design Your Physician Financial System");
     expect(landing).toContain("Plan Beyond the Practice");
     expect(landing).toContain("Book a Physician Planning Review");

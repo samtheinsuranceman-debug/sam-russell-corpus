@@ -337,7 +337,13 @@ export default function Landing() {
       <section aria-label="Tax strategy for high-earning physicians" className="relative flex min-h-[100vh] items-center overflow-hidden border-t border-emerald-300/10 bg-[#050b0a]">
         <img src="/rcs-bg-06.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-105 object-cover object-center brightness-[.5]" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#050b0a_0%,rgba(5,11,10,.72)_46%,rgba(5,11,10,.35)_100%)]" />
-        <div className="container relative z-10 grid gap-10 py-28 lg:grid-cols-2 lg:items-center">
+        <div className="container relative z-10 py-24">
+          <div className="mx-auto mb-12 max-w-4xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[.24em] text-emerald-300">The Physician War-Chest Strategy</p>
+            <h2 className="mt-3 text-[clamp(1.9rem,4.6vw,3.6rem)] font-extrabold leading-tight text-white [text-shadow:_0_0_26px_rgba(16,185,129,.4)]" style={{ fontFamily: "DM Sans, sans-serif" }}>Transform Debt Into a <span className="text-emerald-300 [text-shadow:_0_0_26px_rgba(52,211,153,.85)]">Tax-Free Liquid War Chest</span> — On Demand&trade;</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-sm text-white/60">Directional strategy education for physicians — not tax, legal, or investment advice. Confirm with your professionals.</p>
+          </div>
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
             <h2 className="text-[clamp(2.2rem,5vw,4rem)] font-extrabold leading-[1.02] tracking-[-.03em] text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>Tax Strategy for<br />High-Earning Physicians</h2>
             <div className="mt-5 h-1 w-24 rounded bg-emerald-400" />
@@ -366,6 +372,7 @@ export default function Landing() {
               ))}
             </div>
             <a href="#calculator" className="rc-btn rc-btn-primary mt-4 w-full justify-center rounded-xl py-3.5 text-base"><Calendar size={18} /> See My Planning Opportunities</a>
+          </div>
           </div>
         </div>
       </section>
@@ -412,7 +419,7 @@ export default function Landing() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <h2 className="text-[clamp(2.2rem,5vw,4rem)] font-extrabold leading-[1.02] tracking-[-.03em] text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>Russell Capital<br />Systems for Physicians</h2>
-              <p className="mt-4 text-[clamp(1.1rem,2.4vw,1.7rem)] font-semibold text-emerald-300 [text-shadow:_0_0_18px_rgba(52,211,153,.6)]">Transform Debt Into a Tax-Free Liquid War Chest — On Demand&trade;</p>
+              <p className="mt-4 text-[clamp(1.1rem,2.4vw,1.7rem)] font-semibold text-emerald-300 [text-shadow:_0_0_18px_rgba(52,211,153,.6)]">Turn Medical Income Into Lasting Wealth&trade;</p>
               <p className="mt-5 max-w-md text-lg leading-relaxed text-white/80">Specialized tax, practice, retirement, risk, and legacy planning for physicians, specialists, and medical practice owners.</p>
               <div className="mt-8 flex flex-col gap-3 sm:max-w-md">
                 <a href="#physician-planning" className="rc-btn rc-btn-primary rounded-xl px-6 py-3.5 text-base"><Stethoscope size={18} /> Build My Physician Plan</a>
