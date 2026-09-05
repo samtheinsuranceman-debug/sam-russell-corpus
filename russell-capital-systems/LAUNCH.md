@@ -79,9 +79,7 @@ from a broken build. Then commit and push.
 
 ```bash
 git clone https://github.com/samtheinsuranceman-debug/sam-russell-corpus.git
-cd sam-russell-corpus
-git checkout claude/claude-md-docs-0qgcvw
-cd russell-capital-systems
+cd sam-russell-corpus/russell-capital-systems   # master is the release branch
 ```
 
 ## 3. Install dependencies
@@ -101,8 +99,11 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 |---|---|
 | `DATABASE_URL` | `mysql://USER:PASS@HOST:3306/DBNAME` |
 | `JWT_SECRET` | long random string (session signing) |
-| `OAUTH_SERVER_URL` | your managed‑auth server URL |
-| `OWNER_OPEN_ID` | the owner's id — **gates the `/portal/leads` inbox** |
+| `OWNER_EMAIL` | the owner's sign‑in email — **this is how you reach `/portal/leads` on your own host** |
+| `OWNER_PASSWORD_HASH` | bcrypt hash of the owner password; generate with `pnpm owner:password` (never store the password itself) |
+| `OWNER_NAME` | display name for the owner account (optional) |
+| `OWNER_OPEN_ID` | the owner's user id (optional; defaults to `owner`). Also gates the inbox for a managed‑OAuth user |
+| `OAUTH_SERVER_URL` | **managed host only** (Manus). Leave unset on cPanel/VPS — the owner sign‑in above replaces it |
 | `NODE_ENV` | `production` |
 | `PORT` | port to listen on (default `3000`) |
 
@@ -220,8 +221,14 @@ visitor sees only the qualitative teaser (no figures), that the returning-visito
 cookie works, and (with `DATABASE_URL`) that the `public_leads` row exists with
 the advisor analysis. Delete "Smoke Test" from `/portal/leads` afterwards.
 
+Add `SMOKE_OWNER_EMAIL=… SMOKE_OWNER_PASSWORD=…` to also sign in as the owner and
+confirm the lead is visible in the inbox.
+
 **Manual check:**
 - Homepage loads at the domain over HTTPS.
+- **Sign in**: `/login` shows the owner email + password form (it appears only when
+  `OWNER_EMAIL` and `OWNER_PASSWORD_HASH` are set). Five wrong attempts lock that
+  client out for 15 minutes.
 - **Ask AI Brain Trust**: press the mic / type a question → an answer returns
   (or the graceful teaser if no AI keys are set).
 - **Tax & Savings Estimate**: submit a test lead with consent → you see the

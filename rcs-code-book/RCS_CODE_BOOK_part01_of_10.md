@@ -23,6 +23,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `scripts/build_deploy_bundle.sh`
 - `scripts/check-concept16-browser.mjs`
 - `scripts/export_schema_sql.sh`
+- `scripts/owner_password_hash.mjs`
 - `scripts/react-runtime-inject.mjs`
 - `scripts/reconcile-route-manifest.mjs`
 - `scripts/release.sh`
@@ -144,6 +145,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/_core/map.ts`
 - `server/_core/notification.ts`
 - `server/_core/oauth.ts`
+- `server/_core/ownerLogin.ts`
 - `server/_core/sdk.ts`
 - `server/_core/storageProxy.ts`
 - `server/_core/systemRouter.ts`
@@ -262,9 +264,7 @@ from a broken build. Then commit and push.
 
 ```bash
 git clone https://github.com/samtheinsuranceman-debug/sam-russell-corpus.git
-cd sam-russell-corpus
-git checkout claude/claude-md-docs-0qgcvw
-cd russell-capital-systems
+cd sam-russell-corpus/russell-capital-systems   # master is the release branch
 ```
 
 ## 3. Install dependencies
@@ -284,8 +284,11 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 |---|---|
 | `DATABASE_URL` | `mysql://USER:PASS@HOST:3306/DBNAME` |
 | `JWT_SECRET` | long random string (session signing) |
-| `OAUTH_SERVER_URL` | your managed‑auth server URL |
-| `OWNER_OPEN_ID` | the owner's id — **gates the `/portal/leads` inbox** |
+| `OWNER_EMAIL` | the owner's sign‑in email — **this is how you reach `/portal/leads` on your own host** |
+| `OWNER_PASSWORD_HASH` | bcrypt hash of the owner password; generate with `pnpm owner:password` (never store the password itself) |
+| `OWNER_NAME` | display name for the owner account (optional) |
+| `OWNER_OPEN_ID` | the owner's user id (optional; defaults to `owner`). Also gates the inbox for a managed‑OAuth user |
+| `OAUTH_SERVER_URL` | **managed host only** (Manus). Leave unset on cPanel/VPS — the owner sign‑in above replaces it |
 | `NODE_ENV` | `production` |
 | `PORT` | port to listen on (default `3000`) |
 
@@ -403,8 +406,14 @@ visitor sees only the qualitative teaser (no figures), that the returning-visito
 cookie works, and (with `DATABASE_URL`) that the `public_leads` row exists with
 the advisor analysis. Delete "Smoke Test" from `/portal/leads` afterwards.
 
+Add `SMOKE_OWNER_EMAIL=… SMOKE_OWNER_PASSWORD=…` to also sign in as the owner and
+confirm the lead is visible in the inbox.
+
 **Manual check:**
 - Homepage loads at the domain over HTTPS.
+- **Sign in**: `/login` shows the owner email + password form (it appears only when
+  `OWNER_EMAIL` and `OWNER_PASSWORD_HASH` are set). Five wrong attempts lock that
+  client out for 15 minutes.
 - **Ask AI Brain Trust**: press the mic / type a question → an answer returns
   (or the graceful teaser if no AI keys are set).
 - **Tax & Savings Estimate**: submit a test lead with consent → you see the
@@ -453,7 +462,8 @@ magic beyond the scripts named here (`build`, `start`, `check`, `db:push`).*
     "live:build": "python3 live/build_live_homepage.py",
     "release": "bash scripts/release.sh",
     "db:build": "bash scripts/build_database.sh",
-    "db:schema": "bash scripts/export_schema_sql.sh"
+    "db:schema": "bash scripts/export_schema_sql.sh",
+    "owner:password": "node scripts/owner_password_hash.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1120.0",
@@ -1244,14 +1254,19 @@ cPanel File Manager or SFTP. Keep the structure: `dist/`, `drizzle/`,
 Required:
   DATABASE_URL          mysql://USER:PASS@HOST:3306/DBNAME
   JWT_SECRET            (long random string)
-  OAUTH_SERVER_URL      (your managed-auth server URL)
-  OWNER_OPEN_ID         (your owner id — gates the Lead Inbox)
+  OWNER_EMAIL           (your sign-in email for /login and the Lead Inbox)
+  OWNER_PASSWORD_HASH   (bcrypt hash from `npm run owner:password`)
+  OWNER_NAME            (optional display name)
+  OAUTH_SERVER_URL      (managed host only — leave unset on cPanel)
 AI (any you use; skip-if-absent):
   ANTHROPIC_API_KEY  OPENAI_API_KEY  XAI_API_KEY  GEMINI_API_KEY
   PERPLEXITY_API_KEY  OPENROUTER_API_KEY  MISTRAL_API_KEY  GROQ_API_KEY
   BUILT_IN_FORGE_API_KEY   (Manus / built-in gateway)
 Email + voice (optional):
   RESEND_API_KEY   ELEVENLABS_API_KEY   ELEVENLABS_VOICE_ID
+> Owner sign-in: set OWNER_EMAIL and OWNER_PASSWORD_HASH (make the hash with
+> `npm run owner:password` on your own computer; never store the password).
+> Then /login shows the owner form and /portal/leads opens for you.
 > Rotate the 3 burned keys (OpenAI, Mistral, HeyGen) before using them.
 > The Resend sender domain (russellcapitalsystems.com) must be verified in Resend.
 
@@ -1897,6 +1912,47 @@ mkdir -p database
 echo "wrote database/rcs-schema.sql ($(grep -c '^CREATE TABLE' database/rcs-schema.sql) tables)"
 ```
 
+## `scripts/owner_password_hash.mjs`
+
+```js
+#!/usr/bin/env node
+// Generate the bcrypt hash for OWNER_PASSWORD_HASH. Run it on your own machine:
+//
+//   pnpm owner:password            (prompts, input hidden)
+//   pnpm owner:password -- 'p@ss'  (argument form; avoid in shared shells)
+//
+// Put the printed hash in the host's environment panel as OWNER_PASSWORD_HASH,
+// together with OWNER_EMAIL. The password itself is never stored anywhere.
+import bcrypt from "bcryptjs";
+import { createInterface } from "node:readline";
+
+const COST = 12;
+
+async function prompt() {
+  if (!process.stdin.isTTY) {
+    const chunks = [];
+    for await (const c of process.stdin) chunks.push(c);
+    return Buffer.concat(chunks).toString("utf8").replace(/\r?\n$/, "");
+  }
+  return new Promise((resolve) => {
+    const rl = createInterface({ input: process.stdin, output: process.stdout, terminal: true });
+    process.stdout.write("Owner password (input hidden): ");
+    const orig = rl._writeToOutput;
+    rl._writeToOutput = () => {};
+    rl.question("", (answer) => { rl._writeToOutput = orig; process.stdout.write("\n"); rl.close(); resolve(answer); });
+  });
+}
+
+const password = process.argv[2] ?? (await prompt());
+if (!password || password.length < 12) {
+  console.error("Use at least 12 characters.");
+  process.exit(1);
+}
+const hash = await bcrypt.hash(password, COST);
+console.log("\nOWNER_PASSWORD_HASH=" + hash);
+console.log("\nAdd that line (and OWNER_EMAIL=you@example.com) to the host's environment variables.");
+```
+
 ## `scripts/react-runtime-inject.mjs`
 
 ```js
@@ -1958,7 +2014,7 @@ step "3/7 database schema SQL";  bash scripts/export_schema_sql.sh
 # with no database. (`pnpm test` runs the whole suite, parts of which need a live DB.)
 step "4/7 tests";               npx vitest run server/concept16Homepage.test.ts server/livePageParity.test.ts server/databaseSchemaFile.test.ts \
                                   server/homepage-typography-scale.test.ts server/leadStrategy.test.ts \
-                                  server/leadsRouter.test.ts server/ultraAI-providers.test.ts
+                                  server/leadsRouter.test.ts server/ownerLogin.test.ts server/ultraAI-providers.test.ts
 step "5/7 production build";    pnpm build
 step "6/7 deploy bundle";       bash scripts/build_deploy_bundle.sh
 step "7/7 code book";           python3 scripts/build_code_book.py | tail -1
@@ -2081,6 +2137,22 @@ if (process.env.DATABASE_URL) {
   console.log("✔ public_leads row present:", { publicId: row.publicId, status: row.status, lastIp: row.lastIp, factFinderFields: row.factFinderFields, hasAnalysis: !!row.hasAnalysis });
 } else {
   console.log("  (set DATABASE_URL to also verify the public_leads row)");
+}
+// Optional: sign in as the owner and confirm the lead shows up in the advisor inbox.
+if (process.env.SMOKE_OWNER_EMAIL && process.env.SMOKE_OWNER_PASSWORD) {
+  const login = await fetch(`${base}/api/auth/owner-login`, {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ email: process.env.SMOKE_OWNER_EMAIL, password: process.env.SMOKE_OWNER_PASSWORD }),
+  });
+  if (login.status !== 200) fail(`owner sign-in failed: HTTP ${login.status} ${await login.text()}`);
+  const session = (login.headers.get("set-cookie") || "").split(";")[0];
+  const q = encodeURIComponent(JSON.stringify({ json: { search: input.email } }));
+  const inbox = await fetch(`${base}/api/trpc/leads.list?input=${q}`, { headers: { cookie: session } });
+  const inboxBody = await inbox.json().catch(() => null);
+  const inboxData = inboxBody?.result?.data?.json ?? inboxBody?.result?.data;
+  const items = Array.isArray(inboxData) ? inboxData : inboxData?.items ?? inboxData?.leads ?? [];
+  if (inbox.status !== 200 || !items.some((l) => l.email === input.email)) fail(`lead not visible in the owner inbox: HTTP ${inbox.status} ${JSON.stringify(inboxData).slice(0, 200)}`);
+  console.log("✔ owner signed in and sees the lead in /portal/leads");
 }
 console.log("✔ lead pipeline OK");
 ```
@@ -24414,11 +24486,15 @@ export function getSessionCookieOptions(
   //       ? hostname
   //       : undefined;
 
+  // Browsers drop `SameSite=None` cookies that are not `Secure`, so over plain
+  // HTTP (local runs, a host before TLS is set up) fall back to `Lax` — the
+  // session still works for same-site navigation and API calls.
+  const secure = isSecureRequest(req);
   return {
     httpOnly: true,
     path: "/",
-    sameSite: "none",
-    secure: isSecureRequest(req),
+    sameSite: secure ? "none" : "lax",
+    secure,
   };
 }
 ```
@@ -24538,11 +24614,17 @@ export async function callDataApi(apiId: string, options: DataApiCallOptions = {
 
 ```ts
 export const ENV = {
-  appId: process.env.VITE_APP_ID ?? "",
+  // The managed host supplies VITE_APP_ID; a self-hosted install has none, but
+  // sessions are only valid when the app id is non-empty, so default it.
+  appId: process.env.VITE_APP_ID || "russell-capital-systems",
   cookieSecret: process.env.JWT_SECRET ?? "",
   databaseUrl: process.env.DATABASE_URL ?? "",
   oAuthServerUrl: process.env.OAUTH_SERVER_URL ?? "",
   ownerOpenId: process.env.OWNER_OPEN_ID ?? "",
+  // Self-hosted owner sign-in (see _core/ownerLogin.ts). The hash is bcrypt.
+  ownerEmail: process.env.OWNER_EMAIL ?? "",
+  ownerPasswordHash: process.env.OWNER_PASSWORD_HASH ?? "",
+  ownerName: process.env.OWNER_NAME ?? "",
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
@@ -24941,6 +25023,7 @@ import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
+import { registerOwnerLoginRoutes } from "./ownerLogin";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
@@ -24981,6 +25064,7 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
+  registerOwnerLoginRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",
@@ -25976,6 +26060,143 @@ export function registerOAuthRoutes(app: Express) {
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
       res.status(500).json({ error: "OAuth callback failed" });
+    }
+  });
+}
+```
+
+## `server/_core/ownerLogin.ts`
+
+```ts
+// ============================================================
+// SELF-HOSTED OWNER SIGN-IN
+// The portal's normal sign-in is the managed OAuth server (Manus). On a plain
+// host (cPanel, VPS) there is no such server, so nobody could reach
+// /portal/leads. This adds one narrowly-scoped alternative: the OWNER signs in
+// with an email + password whose bcrypt HASH lives only in the host's
+// environment. It issues the same signed session cookie the OAuth flow does,
+// so every downstream permission check is unchanged.
+//
+//   OWNER_EMAIL          the owner's sign-in email
+//   OWNER_PASSWORD_HASH  bcrypt hash — generate with `pnpm owner:password`
+//   OWNER_NAME           display name (optional)
+//   OWNER_OPEN_ID        the owner's user id (optional; defaults to "owner")
+//
+// Nothing here is a bypass: with the two variables unset the routes refuse
+// every request, and there are no built-in passwords anywhere in the code.
+// ============================================================
+import bcrypt from "bcryptjs";
+import type { Express, Request, Response } from "express";
+import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import * as db from "../db";
+import { getSessionCookieOptions } from "./cookies";
+import { ENV } from "./env";
+import { sdk } from "./sdk";
+
+export const OWNER_LOGIN_PATH = "/api/auth/owner-login";
+export const AUTH_MODE_PATH = "/api/auth/mode";
+const DEFAULT_OWNER_OPEN_ID = "owner";
+
+// Sign-in attempts per client IP: 5 per 15 minutes, then a cool-off.
+const WINDOW_MS = 15 * 60 * 1000;
+const MAX_ATTEMPTS = 5;
+type Bucket = { count: number; resetAt: number };
+const attempts = new Map<string, Bucket>();
+
+export function isOwnerLoginConfigured(env = ENV): boolean {
+  return Boolean(env.ownerEmail && env.ownerPasswordHash);
+}
+
+export function authMode(env = ENV) {
+  return {
+    managedOAuth: Boolean(env.oAuthServerUrl),
+    ownerLogin: isOwnerLoginConfigured(env),
+  };
+}
+
+/** Rate limiter — returns seconds to wait, or 0 when the attempt may proceed. */
+export function checkRateLimit(key: string, now = Date.now()): number {
+  const bucket = attempts.get(key);
+  if (!bucket || bucket.resetAt <= now) {
+    attempts.set(key, { count: 1, resetAt: now + WINDOW_MS });
+    return 0;
+  }
+  if (bucket.count >= MAX_ATTEMPTS) return Math.ceil((bucket.resetAt - now) / 1000);
+  bucket.count += 1;
+  return 0;
+}
+export function clearRateLimit(key: string) { attempts.delete(key); }
+export function _resetRateLimitsForTests() { attempts.clear(); }
+
+/**
+ * Constant-work credential check: the bcrypt comparison always runs, even when
+ * the email does not match, so timing does not reveal which half was wrong.
+ */
+export async function verifyOwnerCredentials(email: string, password: string, env = ENV): Promise<boolean> {
+  if (!isOwnerLoginConfigured(env)) return false;
+  const emailMatches = email.trim().toLowerCase() === env.ownerEmail.trim().toLowerCase();
+  const passwordMatches = await bcrypt.compare(password, env.ownerPasswordHash);
+  return emailMatches && passwordMatches;
+}
+
+export function ownerOpenId(env = ENV): string {
+  return env.ownerOpenId || DEFAULT_OWNER_OPEN_ID;
+}
+
+function clientKey(req: Request): string {
+  const fwd = req.headers["x-forwarded-for"];
+  if (typeof fwd === "string" && fwd.length > 0) return fwd.split(",")[0]!.trim();
+  return req.socket?.remoteAddress ?? "unknown";
+}
+
+export function registerOwnerLoginRoutes(app: Express) {
+  app.get(AUTH_MODE_PATH, (_req: Request, res: Response) => {
+    res.json(authMode());
+  });
+
+  app.post(OWNER_LOGIN_PATH, async (req: Request, res: Response) => {
+    if (!isOwnerLoginConfigured()) {
+      res.status(404).json({ error: "Owner sign-in is not configured on this host." });
+      return;
+    }
+    const key = clientKey(req);
+    const wait = checkRateLimit(key);
+    if (wait > 0) {
+      res.status(429).json({ error: `Too many attempts. Try again in ${Math.ceil(wait / 60)} minute(s).` });
+      return;
+    }
+    const email = typeof req.body?.email === "string" ? req.body.email : "";
+    const password = typeof req.body?.password === "string" ? req.body.password : "";
+    if (!email || !password || password.length > 1024) {
+      res.status(400).json({ error: "Email and password are required." });
+      return;
+    }
+
+    const ok = await verifyOwnerCredentials(email, password);
+    if (!ok) {
+      console.warn("[OwnerLogin] rejected sign-in attempt from", key);
+      res.status(401).json({ error: "Incorrect email or password." });
+      return;
+    }
+
+    try {
+      const openId = ownerOpenId();
+      const name = ENV.ownerName || "Owner";
+      await db.upsertUser({
+        openId,
+        name,
+        email: ENV.ownerEmail,
+        loginMethod: "owner-password",
+        role: "admin",
+        lastSignedIn: new Date(),
+      });
+      const sessionToken = await sdk.createSessionToken(openId, { name, expiresInMs: ONE_YEAR_MS });
+      res.cookie(COOKIE_NAME, sessionToken, { ...getSessionCookieOptions(req), maxAge: ONE_YEAR_MS });
+      clearRateLimit(key);
+      res.json({ ok: true, name });
+    } catch (error) {
+      console.error("[OwnerLogin] failed to establish session", error);
+      res.status(500).json({ error: "Could not establish a session." });
     }
   });
 }

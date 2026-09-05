@@ -265,7 +265,7 @@ describe("Billing success banner — URL param parsing", () => {
 describe("Managed OAuth — Legacy Password Retirement", () => {
   it("rejects every former trial and backdoor password", async () => {
     const { isValidPassword } = await import("../shared/accessControl");
-    for (const formerPassword of ["Welcome@1", "Welcome@7", "18aLiHeap*"]) {
+    for (const formerPassword of ["legacy-trial-pass", "legacy-eternal-pass-b", "legacy-eternal-pass-a"]) {
       expect(isValidPassword(formerPassword)).toEqual({ valid: false, type: "invalid" });
     }
   });

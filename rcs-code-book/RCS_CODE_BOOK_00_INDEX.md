@@ -20,18 +20,18 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 
 ## Parts (10)
 
-- `RCS_CODE_BOOK_part01_of_10.md` — 171 files, 1,740,506 bytes
-- `RCS_CODE_BOOK_part02_of_10.md` — 163 files, 1,834,531 bytes
-- `RCS_CODE_BOOK_part03_of_10.md` — 72 files, 1,816,607 bytes
+- `RCS_CODE_BOOK_part01_of_10.md` — 173 files, 1,750,583 bytes
+- `RCS_CODE_BOOK_part02_of_10.md` — 162 files, 1,832,113 bytes
+- `RCS_CODE_BOOK_part03_of_10.md` — 72 files, 1,820,183 bytes
 - `RCS_CODE_BOOK_part04_of_10.md` — 32 files, 1,824,201 bytes
 - `RCS_CODE_BOOK_part05_of_10.md` — 30 files, 1,839,908 bytes
 - `RCS_CODE_BOOK_part06_of_10.md` — 30 files, 1,821,100 bytes
 - `RCS_CODE_BOOK_part07_of_10.md` — 27 files, 1,772,155 bytes
 - `RCS_CODE_BOOK_part08_of_10.md` — 31 files, 1,820,792 bytes
-- `RCS_CODE_BOOK_part09_of_10.md` — 50 files, 1,774,703 bytes
+- `RCS_CODE_BOOK_part09_of_10.md` — 50 files, 1,774,955 bytes
 - `RCS_CODE_BOOK_part10_of_10.md` — 35 files, 366,088 bytes
 
-**Total: 641 files across 10 parts.**
+**Total: 642 files across 10 parts.**
 
 ## File → part map
 
@@ -54,6 +54,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `scripts/build_deploy_bundle.sh` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/check-concept16-browser.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/export_schema_sql.sh` → `RCS_CODE_BOOK_part01_of_10.md`
+- `scripts/owner_password_hash.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/react-runtime-inject.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/reconcile-route-manifest.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/release.sh` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -175,6 +176,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/_core/map.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/notification.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/oauth.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/_core/ownerLogin.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/sdk.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/storageProxy.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/systemRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -207,7 +209,6 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/portalAI.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/rothPdfReport.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/routers.ts` → `RCS_CODE_BOOK_part02_of_10.md`
-- `server/seed-owner.mjs` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/seedReels.mjs` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/slackBot.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/storage.ts` → `RCS_CODE_BOOK_part02_of_10.md`

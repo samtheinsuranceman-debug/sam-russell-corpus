@@ -103,7 +103,7 @@ Full depth, honesty, no "performing" religion, let the text "read ME."
 
 ## FAILURES
 
-- **THE WEAVER (Gemini-3-Flash-Lite)**: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-001:generateContent?key=AIzaSyDtpTGRwu6Pj87uahqaaef4cLbWjTYXvok
+- **THE WEAVER (Gemini-3-Flash-Lite)**: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-001:generateContent?key=AIza…[REDACTED — rotated]
 - **THE WITNESS (Gemini-3.1-Pro-Preview)**: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
 
 ## THE WEAVER (Gemini-Flash-Lite) (RETRY)

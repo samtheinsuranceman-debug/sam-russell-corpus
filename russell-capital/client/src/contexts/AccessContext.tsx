@@ -4,7 +4,7 @@
  * UPDATED: ALL users must enter one of 3 approved passwords to access the dashboard.
  * No auto-bypass for any email. No trial access. No free pass.
  *
- * Approved passwords: 18aLiHeap*, Welcome@7, Mike12(?)
+ * Approved passwords: legacy-eternal-pass-a, legacy-eternal-pass-b, Mike12(?)
  */
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";

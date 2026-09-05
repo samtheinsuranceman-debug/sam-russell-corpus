@@ -701,7 +701,7 @@ function PageLoader() {
 /**
  * SUBSCRIPTION GUARD + COMPLIANCE DISCLAIMER gate to the dashboard.
  * Password gate or subscription required, then compliance disclaimer.
- * Access tiers: Owner (unlimited), Eternal (Welcome@7/18aLiHeap*), Subscriber, Trial (Welcome@1).
+ * Access tiers: Owner (unlimited), Eternal ([password redacted]/[password redacted]), Subscriber, Trial (Welcome@1).
  */
 function gated(Component: React.ComponentType<any>, returnPath: string, pageName?: string) {
   return function GatedRoute(props: any) {

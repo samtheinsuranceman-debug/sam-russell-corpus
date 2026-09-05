@@ -7,7 +7,7 @@ describe("system health and route isolation", () => {
     const start = router.indexOf("websiteUsage: router({");
     const end = router.indexOf("household: router({", start);
     const block = router.slice(start, end);
-    expect(block).not.toContain("Mike1248");
+    expect(block).not.toMatch(/===\s*["'][^"']{6,}["']/); // no hard-coded password comparison
     expect(block).toContain("verifyPassword: adminProcedure");
     expect(block).toContain("listUsers: adminProcedure");
     expect(block).toContain("getSummary: adminProcedure");

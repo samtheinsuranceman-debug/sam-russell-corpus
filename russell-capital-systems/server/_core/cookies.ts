@@ -39,10 +39,14 @@ export function getSessionCookieOptions(
   //       ? hostname
   //       : undefined;
 
+  // Browsers drop `SameSite=None` cookies that are not `Secure`, so over plain
+  // HTTP (local runs, a host before TLS is set up) fall back to `Lax` — the
+  // session still works for same-site navigation and API calls.
+  const secure = isSecureRequest(req);
   return {
     httpOnly: true,
     path: "/",
-    sameSite: "none",
-    secure: isSecureRequest(req),
+    sameSite: secure ? "none" : "lax",
+    secure,
   };
 }
