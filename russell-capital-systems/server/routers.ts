@@ -7,6 +7,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
 import { invokePortalAI } from "./portalAI";
 import { ultraRouter } from "./ultraAI";
+import { leadsRouter } from "./leadsRouter";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -303,6 +304,7 @@ export const appRouter = router({
   system: systemRouter,
   planningCases: planningCasesRouter,
   ultra: ultraRouter,
+  leads: leadsRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

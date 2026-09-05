@@ -51,10 +51,25 @@ describe("Concept 16 physician homepage", () => {
     // Anchor targets may live in components the page mounts (e.g. the AI
     // concierge section), so resolve ids against the page plus those.
     const concierge = readFileSync(resolve("client/src/components/HomeAIConcierge.tsx"), "utf8");
-    const idSources = landing + concierge;
+    const factFinder = readFileSync(resolve("client/src/components/HomeLeadFactFinder.tsx"), "utf8");
+    const idSources = landing + concierge + factFinder;
     const anchors = Array.from(landing.matchAll(/href="#([a-z0-9-]+)"/g), match => match[1]);
     expect(anchors.length).toBeGreaterThan(0);
     for (const id of new Set(anchors)) expect(idSources, id).toMatch(new RegExp(`id=["']${id}["']`));
+  });
+
+  it("mounts the homepage lead fact-finder wired to public lead capture", () => {
+    expect(landing).toContain("HomeLeadFactFinder");
+    const ff = readFileSync(resolve("client/src/components/HomeLeadFactFinder.tsx"), "utf8");
+    expect(ff).toContain('id="planning-estimator"');
+    expect(ff).toContain("trpc.leads.capture");
+    expect(ff).toContain("trpc.leads.recognize");
+    // Consent is required and no figures are shown to the visitor.
+    expect(ff).toContain("consent");
+    expect(ff).toContain("not tax, legal, or investment advice");
+    // Collects the household picture (a representative field is present).
+    expect(ff).toContain("Interest-only payment / month");
+    expect(ff).toContain("tax-deferred (IRA/401k/403b/TSP)");
   });
 
   it("mounts the AI Brain Trust concierge wired to the nine-AI panel", () => {
