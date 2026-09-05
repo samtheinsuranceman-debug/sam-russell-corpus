@@ -219,6 +219,44 @@
   @media(min-width:768px){footer .wrap{flex-direction:row}}
   footer .rcs{color:#22c55e}
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  /* process */
+  .process{display:grid;gap:1rem;margin-top:3rem}
+  @media(min-width:640px){.process{grid-template-columns:1fr 1fr}}@media(min-width:980px){.process{grid-template-columns:repeat(4,1fr)}}
+  .step{position:relative;border:1px solid rgba(167,243,208,.15);background:rgba(0,0,0,.4);backdrop-filter:blur(18px);border-radius:16px;padding:1.5rem}
+  .step .n{display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:50%;border:1px solid rgba(110,231,183,.35);color:var(--em-300);font-weight:800;font-variant-numeric:tabular-nums}
+  .step b{display:block;margin-top:1rem;font-size:1.1rem;color:#fff}.step p{margin-top:.5rem;font-size:.92rem;color:rgba(255,255,255,.68)}
+  .step .arrow{position:absolute;right:-.9rem;top:2.3rem;color:rgba(52,211,153,.7);display:none}
+  @media(min-width:980px){.step:not(:last-child) .arrow{display:block}}
+
+  /* planning areas */
+  .areas{display:grid;gap:1rem;margin-top:3rem}
+  @media(min-width:640px){.areas{grid-template-columns:1fr 1fr}}@media(min-width:1024px){.areas{grid-template-columns:repeat(4,1fr)}}
+  .area{display:flex;flex-direction:column;border:1px solid rgba(167,243,208,.15);background:rgba(0,0,0,.4);backdrop-filter:blur(18px);border-radius:16px;padding:1.4rem;transition:transform .25s,border-color .25s}
+  .area:hover{transform:translateY(-4px);border-color:rgba(110,231,183,.4)}
+  .area .ic{display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:12px;border:1px solid rgba(110,231,183,.25);background:rgba(110,231,183,.1);color:var(--em-300);margin-bottom:1rem}
+  .area b{color:#fff;font-weight:600}.area p{margin-top:.5rem;font-size:.88rem;color:rgba(255,255,255,.65);flex:1}
+
+  /* faq */
+  .faq{max-width:52rem;margin:3rem auto 0;display:grid;gap:.75rem}
+  .faq details{border:1px solid rgba(167,243,208,.18);background:rgba(0,0,0,.45);backdrop-filter:blur(14px);border-radius:14px;padding:0 1.25rem}
+  .faq summary{cursor:pointer;list-style:none;padding:1.1rem 0;font-weight:600;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--em-300);font-size:1.4rem;font-weight:400;flex:none}
+  .faq details[open] summary::after{content:"−"}
+  .faq details p{padding:0 0 1.1rem;color:rgba(255,255,255,.72);font-size:.95rem;line-height:1.6}
+
+  /* who we serve */
+  .serve{display:grid;gap:1rem;margin-top:3rem}
+  @media(min-width:640px){.serve{grid-template-columns:repeat(2,1fr)}}@media(min-width:980px){.serve{grid-template-columns:repeat(4,1fr)}}
+  .serve div{border:1px solid rgba(110,231,183,.25);background:rgba(110,231,183,.06);border-radius:14px;padding:1.2rem;text-align:center;color:#fff;font-weight:600}
+  .serve div span{display:block;margin-top:.35rem;font-size:.82rem;font-weight:400;color:rgba(255,255,255,.62)}
+
+  /* mobile sticky CTA */
+  .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;gap:.6rem;padding:.7rem .9rem calc(.7rem + env(safe-area-inset-bottom));background:rgba(3,10,9,.92);backdrop-filter:blur(14px);border-top:1px solid rgba(110,231,183,.3)}
+  .sticky-cta .btn{flex:1;padding:.85rem .6rem;font-size:.9rem}
+  @media(min-width:640px){.sticky-cta{display:none}}
+  @media(max-width:639px){body{padding-bottom:4.6rem}}
 </style>
 
 <div class="grid-bg" aria-hidden="true"></div>
@@ -370,6 +408,7 @@
       <p style="margin-top:1.25rem;font-size:.9rem;color:var(--muted)">General concepts and sequence only — the specific numbers, timing, and structure are worked out with a licensed advisor in your evaluation.</p>
       <div class="answer-ctas">
         <a class="btn btn-primary" id="sendLead" href="#" target="_blank" rel="noopener noreferrer">Send my details to an advisor</a>
+        <button class="btn btn-ghost" id="copyLead" type="button">Copy my summary</button>
         <a class="btn btn-ghost" href="__CALENDLY__" target="_blank" rel="noopener noreferrer">Book my thorough evaluation</a>
       </div>
       <p class="fine" id="sendNote">Sending opens a pre-filled email to our advisory team with what you entered — nothing leaves this page until you send it.</p>
@@ -492,6 +531,51 @@
   </div>
 </section>
 
+<!-- ───────── HOW WE WORK ───────── -->
+<section id="how" class="section" style="padding:6rem 0" aria-label="How we work">
+  <div class="bg-grid" aria-hidden="true" style="opacity:.07"></div>
+  <div class="wrap">
+    <div class="center">
+      <p class="eyebrow">How we work</p>
+      <h2 class="h2" style="margin-top:1.25rem">One documented process. <span class="neon">Every professional on the same page.</span></h2>
+      <p class="lead">Your advisor, tax professional, and attorney work from a single plan — so strategies are sequenced deliberately, never bolted on one at a time.</p>
+    </div>
+    <div class="process">
+      <div class="step"><span class="n">1</span><b>Review</b><p>We map your full picture — income, practice, debt, protection, retirement, and legacy — before recommending anything.</p><svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+      <div class="step"><span class="n">2</span><b>Coordinate</b><p>Your advisor, tax professional, and attorney align on one documented plan, with responsibilities assigned.</p><svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+      <div class="step"><span class="n">3</span><b>Implement</b><p>Strategies are sequenced deliberately, each checked for suitability and IRS compliance before anything moves.</p><svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+      <div class="step"><span class="n">4</span><b>Monitor</b><p>Reviewed on a cadence as tax law, markets, and your life change — so the plan stays current, not static.</p></div>
+    </div>
+
+    <div class="center" style="margin-top:5rem">
+      <p class="eyebrow">Who we serve</p>
+      <h2 class="h2" style="margin-top:1.25rem;font-size:clamp(1.7rem,4vw,3rem)">Built for the finances of medicine</h2>
+    </div>
+    <div class="serve">
+      <div>Physicians<span>Employed and private practice</span></div>
+      <div>Psychiatrists<span>Practice owners and group partners</span></div>
+      <div>Surgeons<span>High-income, high-liability careers</span></div>
+      <div>Practice Owners<span>Entity, succession, and exit planning</span></div>
+    </div>
+
+    <div class="center" style="margin-top:5rem">
+      <p class="eyebrow">Planning areas</p>
+      <h2 class="h2" style="margin-top:1.25rem;font-size:clamp(1.7rem,4vw,3rem)">Every planning area, within reach</h2>
+      <p class="lead">Each area becomes a focused workflow inside your plan after your evaluation — or begin with a consultation when the right starting point isn't clear yet.</p>
+    </div>
+    <div class="areas">
+      <div class="area"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg></span><b>Tax Opportunity Review</b><p>Organize income, contribution, entity, and timing questions for coordinated advisor and tax-professional review.</p></div>
+      <div class="area"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/></svg></span><b>Practice Owner Planning</b><p>Connect practice economics, ownership decisions, succession priorities, and household planning without mixing record systems.</p></div>
+      <div class="area"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span><b>Protection &amp; Policy Review</b><p>Review existing protection, policy assumptions, liquidity needs, and documented follow-up responsibilities.</p></div>
+      <div class="area"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22h18"/><path d="M6 18v-7"/><path d="M10 18v-7"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M12 2 3 7h18Z"/></svg></span><b>Retirement Income Modeling</b><p>Compare retirement timing, income guardrails, and planning assumptions — without presenting projections as guarantees.</p></div>
+      <div class="area"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z"/><path d="M12 22v-3"/></svg></span><b>Estate &amp; Legacy Coordination</b><p>Map estate, family, charitable, and succession priorities to the professionals responsible for implementation.</p></div>
+      <div class="area"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><b>Portfolio &amp; Risk Alignment</b><p>Connect risk tolerance, portfolio drift, tax considerations, and long-term goals in a documented review cycle.</p></div>
+      <div class="area"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></span><b>Physician Planning Cases</b><p>Assumptions, notes, status, and next actions for complex medical-career and practice-owner decisions — saved in one place.</p></div>
+      <div class="area"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><b>Secure Document Vault</b><p>Planning documents kept inside managed access controls and shared only through authorized workflows.</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- ───────── SLOGAN BANDS ───────── -->
 <section class="section slogan" aria-label="Relief today, recovery for life">
   <img class="bg-img" src="__IMG_BANNER__" alt="" aria-hidden="true" style="filter:blur(18px) brightness(.3)">
@@ -530,6 +614,26 @@
   </div>
 </section>
 
+<!-- ───────── FAQ ───────── -->
+<section id="faq" class="section" style="padding:5rem 0" aria-label="Frequently asked questions">
+  <div class="bg-grid" aria-hidden="true" style="opacity:.06"></div>
+  <div class="wrap">
+    <div class="center">
+      <p class="eyebrow">Questions physicians ask first</p>
+      <h2 class="h2" style="margin-top:1.25rem;font-size:clamp(1.7rem,4vw,3rem)">Straight answers</h2>
+    </div>
+    <div class="faq">
+      <details><summary>Who is this for?</summary><p>Physicians, psychiatrists, surgeons, and medical practice owners — anyone whose income, debt, practice, and tax picture is too complex for a one-size-fits-all plan.</p></details>
+      <details><summary>Is the estimate a quote or a guarantee?</summary><p>Neither. It's general education showing the shape of a coordinated plan. Nothing is implemented until our tax professional team has examined it for suitability and compliance with applicable IRS statutes — and your own results may differ.</p></details>
+      <details><summary>Why don't you show me the numbers here?</summary><p>Because the specific dollar amounts, percentages, and structure depend on your exact situation. They're prepared for your licensed advisor and shared with you in your personal evaluation, not on a public page.</p></details>
+      <details><summary>What happens after I submit the estimate?</summary><p>An advisor reviews what you shared, prepares the specifics, and reaches out — by email or phone, at the time you gave — to schedule a thorough evaluation. There's no obligation.</p></details>
+      <details><summary>What does "divorce-proof" mean?</summary><p>It's the general idea of positioning assets inside structures designed to be more resilient to divorce, lawsuits, or creditors. How much protection applies depends on your state and circumstances, and is confirmed by your professionals.</p></details>
+      <details><summary>What are the patent-pending engines?</summary><p>Fifteen core planning technologies with patent applications in process — plus 45 more underway — built to coordinate strategies that most tools treat as separate islands. You won't find them offered anywhere else.</p></details>
+      <details><summary>Is my information safe?</summary><p>Nothing leaves this page until you choose to send it. The estimate opens a pre-filled email you review and send yourself, so you control exactly what's shared.</p></details>
+    </div>
+  </div>
+</section>
+
 <!-- ───────── CONSULTATION ───────── -->
 <section id="consult" class="section consult" aria-label="Book a consultation">
   <div class="wrap">
@@ -553,6 +657,11 @@
     <div>Not tax, legal, or investment advice. Results are not guaranteed.</div>
   </div>
 </footer>
+
+<div class="sticky-cta" aria-label="Quick actions">
+  <a class="btn btn-ghost" href="#estimate">Get my estimate</a>
+  <a class="btn btn-primary" href="__CALENDLY__" target="_blank" rel="noopener noreferrer">Book a Review</a>
+</div>
 
 <script>
 (() => {
@@ -613,6 +722,7 @@
     `<label class="f">Are those liquid investments taxable?<select id="liquidTax" aria-label="Liquid investment taxability"><option value="Not sure">Not sure</option><option>Taxable</option><option>Non-taxable</option><option>A mix of both</option></select></label>`;
 
   const v = (id) => ($(id).value || "").trim();
+  let leadSummary = "";
   $("leadForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const err = $("formErr"); err.textContent = "";
@@ -630,8 +740,18 @@
     ];
     const subject = encodeURIComponent(`Planning estimate request — ${[v("firstName"), v("lastName")].filter(Boolean).join(" ") || "new prospect"}`);
     $("sendLead").href = `mailto:${ADVISOR_EMAIL}?subject=${subject}&body=${encodeURIComponent(lines.join("\n"))}`;
+    leadSummary = lines.join("\n");
     $("leadForm").hidden = true;
     const r = $("result"); r.classList.add("show"); r.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  /* ── copy-my-summary fallback (for devices where mailto doesn't open) ── */
+  const copyBtn = $("copyLead");
+  copyBtn.addEventListener("click", async () => {
+    const text = leadSummary || "";
+    try { await navigator.clipboard.writeText(text); copyBtn.textContent = "Copied ✓"; }
+    catch { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); copyBtn.textContent = "Copied ✓"; } catch { copyBtn.textContent = "Select & copy the email instead"; } ta.remove(); }
+    setTimeout(() => { copyBtn.textContent = "Copy my summary"; }, 2500);
   });
 
   /* ── AI concierge (sample capability; graceful fallback) ── */
