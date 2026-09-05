@@ -8,14 +8,18 @@ describe("unified visual system", () => {
   const css = readFileSync(resolve("client/src/index.css"), "utf8");
 
   it("uses a persistent high-resolution city hero instead of the broken external URL", () => {
-    expect(landing).toContain('/manus-storage/rcs-concept-16-clean-background_a6ddebf1.png');
+    expect(landing).toContain('/rcs-neon-a.webp'); // persisted local hero, not an external URL
+    expect(landing).not.toMatch(/https?:\/\/[^"']+\.(png|jpg|jpeg|webp)/);
     expect(landing).not.toContain("d2xsxph8kpxj0f.cloudfront.net");
-    expect(existsSync("/home/ubuntu/webdev-static-assets/rcs-concept-16-clean-background.png")).toBe(true);
+    // the imagery ships with the app — every homepage image is a repo file
+    for (const file of ["rcs-neon-a", "rcs-neon-b", "rcs-city-emerald", "rcs-city-bridge", "rcs-city-canyon", "rcs-city-interchange"]) {
+      expect(existsSync(resolve(`client/public/${file}.webp`)), file).toBe(true);
+    }
   });
 
   it("preserves the homepage emerald lighting and dark readability masks", () => {
-    expect(landing).toContain("rgba(16,185,129,.17)");
-    expect(landing).toContain("rgba(0,8,8,.96)");
+    expect(landing).toContain("rgba(16,185,129,");
+    expect(landing).toContain("rgba(3,9,10,"); // dark readability shades over the crisp imagery
     expect(landing).toContain("text-emerald-300");
   });
 

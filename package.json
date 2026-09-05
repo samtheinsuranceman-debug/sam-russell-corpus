@@ -12,7 +12,9 @@
     "test": "vitest run",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
     "live:build": "python3 live/build_live_homepage.py",
-    "release": "bash scripts/release.sh"
+    "release": "bash scripts/release.sh",
+    "db:build": "bash scripts/build_database.sh",
+    "db:schema": "bash scripts/export_schema_sql.sh"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1120.0",
