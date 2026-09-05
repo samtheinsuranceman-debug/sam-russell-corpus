@@ -101,7 +101,7 @@ See `stop-fatty/README.md` for the build loop. Unrelated to the corpus content.
 
 ### `russell-capital/` — React/TypeScript app (prototype)
 Another standalone client app (note the `.BACKUP`/`.orig` variants of `App.tsx` — the working
-file is `App.tsx`). `russell-capital-source.zip` at the repo root is an archived snapshot.
+file is `App.tsx`). (The former `russell-capital-source.zip` snapshot was removed; it duplicated this folder and carried retired credentials.)
 
 When working in a subproject, scope commands to that directory and use its own package
 manager and scripts. There is **no repo-wide build, test, or lint** — the root is a content

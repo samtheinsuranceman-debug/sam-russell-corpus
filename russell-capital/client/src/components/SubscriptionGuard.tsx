@@ -3,7 +3,7 @@
  *
  * UPDATED: ALL users must enter one of 3 approved passwords.
  * No auto-bypass for any email. No trial access.
- * Approved passwords: 18aLiHeap*, Welcome@7, Mike1248(?)
+ * Approved passwords: legacy-eternal-pass-a, legacy-eternal-pass-b, legacy-owner-pass
  */
 import { useState } from "react";
 import { useLocation } from "wouter";

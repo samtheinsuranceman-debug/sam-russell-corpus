@@ -57,4 +57,20 @@ if (process.env.DATABASE_URL) {
 } else {
   console.log("  (set DATABASE_URL to also verify the public_leads row)");
 }
+// Optional: sign in as the owner and confirm the lead shows up in the advisor inbox.
+if (process.env.SMOKE_OWNER_EMAIL && process.env.SMOKE_OWNER_PASSWORD) {
+  const login = await fetch(`${base}/api/auth/owner-login`, {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ email: process.env.SMOKE_OWNER_EMAIL, password: process.env.SMOKE_OWNER_PASSWORD }),
+  });
+  if (login.status !== 200) fail(`owner sign-in failed: HTTP ${login.status} ${await login.text()}`);
+  const session = (login.headers.get("set-cookie") || "").split(";")[0];
+  const q = encodeURIComponent(JSON.stringify({ json: { search: input.email } }));
+  const inbox = await fetch(`${base}/api/trpc/leads.list?input=${q}`, { headers: { cookie: session } });
+  const inboxBody = await inbox.json().catch(() => null);
+  const inboxData = inboxBody?.result?.data?.json ?? inboxBody?.result?.data;
+  const items = Array.isArray(inboxData) ? inboxData : inboxData?.items ?? inboxData?.leads ?? [];
+  if (inbox.status !== 200 || !items.some((l) => l.email === input.email)) fail(`lead not visible in the owner inbox: HTTP ${inbox.status} ${JSON.stringify(inboxData).slice(0, 200)}`);
+  console.log("✔ owner signed in and sees the lead in /portal/leads");
+}
 console.log("✔ lead pipeline OK");

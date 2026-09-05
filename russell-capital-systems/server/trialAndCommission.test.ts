@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 describe("Managed OAuth — trial password API retirement", () => {
   it("rejects the former trial password in the compatibility helper", async () => {
     const { isValidPassword } = await import("../shared/accessControl");
-    expect(isValidPassword("Welcome@1")).toEqual({ valid: false, type: "invalid" });
+    expect(isValidPassword("legacy-trial-pass")).toEqual({ valid: false, type: "invalid" });
   });
 
   it("does not mount trial login or status endpoints", async () => {

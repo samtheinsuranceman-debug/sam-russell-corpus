@@ -134,7 +134,7 @@ describe("Annuity Accumulation Database — Managed Admin Gate", () => {
     const ctx = createOwnerContext();
     const caller = appRouter.createCaller(ctx);
     const result = await caller.hiddenMaterial.verifyPassword({
-      password: "Mike1248(?)",
+      password: "legacy-owner-pass",
     });
     expect(result).toEqual({ verified: true, access: "managed_oauth" });
   });

@@ -7,6 +7,13 @@ export const startLogin = (returnPath = window.location.pathname) => {
   const appId = import.meta.env.VITE_APP_ID;
   const redirectUri = `${window.location.origin}/api/oauth/callback`;
 
+  // Self-hosted install (no managed OAuth portal): the /login page offers the
+  // owner sign-in instead of bouncing to a non-existent portal URL.
+  if (!oauthPortalUrl || !appId) {
+    window.location.href = getLoginUrl(returnPath);
+    return;
+  }
+
   const nonce = crypto.randomUUID();
   document.cookie = `${OAUTH_STATE_COOKIE}=${nonce}; Path=/; Max-Age=600; SameSite=None; Secure`;
   const safeReturnPath = returnPath.startsWith("/") && !returnPath.startsWith("//") ? returnPath : "/portal/dashboard";
