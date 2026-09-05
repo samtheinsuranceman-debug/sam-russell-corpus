@@ -33,13 +33,20 @@ In the cPanel Node app's virtualenv terminal (or "Run NPM Install"):
   npm install --omit=dev
 (The server bundle imports packages at runtime, so node_modules must exist.)
 
-## 5. Create the new lead table (one time)
-  npm install drizzle-kit drizzle-orm   # if not present
-  npx drizzle-kit migrate               # applies drizzle/ migrations incl. public_leads
-(or run your existing `db:push` flow against the production DB)
+## 5. Build the database (one time; safe to repeat)
+Create an empty MySQL database in cPanel → MySQL Databases, grant the user ALL
+privileges, and put its URL in DATABASE_URL. Then either:
+  (a) in the app's terminal:   npm run db:build
+      -> applies the full schema (115 tables, incl. public_leads) and verifies it
+  (b) no terminal: phpMyAdmin -> select the database -> Import -> database/rcs-schema.sql
+      (the same 115 tables as one plain SQL file; it's inside this bundle)
+Do NOT run `drizzle-kit migrate` on a fresh database — the migration history is
+incomplete; db:build and the SQL file are generated straight from the schema.
 
 ## 6. Start / Restart the app, then point the domain
 Restart the Node app in cPanel. Map russellcapitalsystems.com to the app
-(cPanel domain/subdomain → application URL). Load the site and verify:
+(cPanel domain/subdomain → application URL). Then prove the lead pipeline:
+  node scripts/smoke_lead_capture.mjs https://russellcapitalsystems.com
+(prefix DATABASE_URL=... to also confirm the public_leads row). Then verify by hand:
   - homepage renders, mic + estimator work
   - a test lead lands in /portal/leads (owner login) and you get a notification

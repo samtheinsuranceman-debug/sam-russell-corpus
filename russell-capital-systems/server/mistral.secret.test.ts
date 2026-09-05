@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 describe("MISTRAL_API_KEY", () => {
-  it(
+  // Live provider check — only meaningful where the key is configured (host env), never in the repo.
+  it.skipIf(!process.env.MISTRAL_API_KEY)(
     "authenticates with a Mistral chat completion",
     async () => {
       const key = process.env.MISTRAL_API_KEY;
