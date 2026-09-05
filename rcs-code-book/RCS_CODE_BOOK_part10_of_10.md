@@ -3305,25 +3305,53 @@ Desktop verification at 1280×900 passed for `/login`, `/register`, `/forgot-pas
 **Live URL:** https://claude.ai/code/artifact/da0f1702-4b60-4091-8643-344b898b1555
 
 A self-contained, single-file version of the Russell Capital Systems public
-homepage, published as a live web page. It carries the full homepage — neon
-hero, AI concierge, senior-partner retention band, Tax & Savings Estimate
-(lead capture), the War-Chest / Tax Strategy / About / Physicians chapters,
-the 14-engine patent-pending technology showcase, slogans, and booking.
+homepage, published as a live web page and kept identical in content to the
+React app's homepage (`client/src/pages/Landing.tsx`).
 
-- `rcs-live-homepage.html` — the published file (background images embedded as data URIs).
-- `rcs-live-homepage.template.html` — the source template; `__IMG_*__`,
-  `__CALENDLY__`, and `__ADVISOR_EMAIL__` placeholders are injected at build time.
+## The page, screen by screen
 
-How it works without a server:
+Every one of the owner's six design images is shown **crisp, full-size, one per
+screen** — nothing is blurred.
+
+1. **Neon sign (hero)** — its words are the headline: *Financial & Tax Relief and
+   Recovery for Physicians, Psychiatrists, & Surgeons*
+2. **The Green City (Emerald Dawn)** — *Transform Debt Into a Tax-Free Liquid War
+   Chest — On Demand™* with the line "You bring the goal. We build the tailored
+   Systems around that."
+3. **The bridge (Concept 10)** — *Your Practice Builds Income. We Build the System
+   Around It.* + the five pillars
+4. **The canyon (Concept 06)** — Tax Strategy for High-Earning Physicians + the
+   tax-planning selector
+5. **The interchange (Concept 25)** — Russell Capital Systems for Physicians /
+   Turn Medical Income Into Lasting Wealth™ + the design-your-system selector
+6. **Second neon sign** — the 60% / 20-year client-retention proof
+7. Ask AI concierge · Tax & Savings Estimate (lead capture) · **the 14 engines**
+   (five to six sentences each, in building order) · How We Work / Who We Serve /
+   Planning Areas / FAQ · neon closing with booking
+
+## Files
+
+- `rcs-live-homepage.html` — the published file (six images embedded as WebP data URIs, ~4.3 MB).
+- `rcs-live-homepage.template.html` — the source template. Placeholders injected at
+  build time: `__IMG_NEON_A__`, `__IMG_NEON_B__`, `__IMG_EMERALD__`, `__IMG_BRIDGE__`,
+  `__IMG_CANYON__`, `__IMG_INTERCHANGE__`, `__CALENDLY__`, `__ADVISOR_EMAIL__`.
+- The image sources live in `../client/public/` as `rcs-neon-a.webp`, `rcs-neon-b.webp`,
+  `rcs-city-emerald.webp`, `rcs-city-bridge.webp`, `rcs-city-canyon.webp`,
+  `rcs-city-interchange.webp` — crisp crops of the photographic regions of the
+  original mockups (their baked-in UI excluded), saved at high quality.
+
+## How it works without a server
+
 - **AI concierge** uses the viewer's own Claude (the page's `sample` capability)
   for signed-in claude.ai viewers; for anyone else it falls back to sending the
-  question to the advisor by email.
+  question to the advisor by email. It never reveals figures or formulas.
 - **Lead capture** composes a pre-filled email to the advisor (nothing leaves the
-  page until the visitor sends it) and links to Calendly booking.
-- No secrets are embedded. Figures are never shown to visitors (teaser only).
+  page until the visitor sends it), offers "Copy my summary", and links to
+  Calendly booking.
+- No secrets are embedded. No figures are shown to visitors (qualitative teaser only).
 
-This is the live preview/landing page. The full app (portal, lead inbox, nine-AI
-panel, database) still deploys per `../LAUNCH.md`.
+This is the live landing page. The full app (portal, lead inbox, nine-AI panel,
+database) deploys per `../LAUNCH.md`.
 ```
 
 ## `live/rcs-live-homepage.template.html`
@@ -3344,6 +3372,8 @@ panel, database) still deploys per `../LAUNCH.md`.
     --max:1240px;
   }
   *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  [id]{scroll-margin-top:6rem}
   html{scroll-behavior:smooth}
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
   body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--display);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -3381,6 +3411,12 @@ panel, database) still deploys per `../LAUNCH.md`.
   .photo img{width:100%;height:100%;object-fit:cover;display:block}
   .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,9,10,0) 60%,rgba(3,9,10,.55) 100%)}
   .photo .cap{position:absolute;left:1.25rem;right:1.25rem;bottom:1.1rem;z-index:1;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--em-300);text-shadow:0 0 12px rgba(52,211,153,.8)}
+  @media(max-width:899px){.photo{aspect-ratio:1/1;max-height:60svh}.photo img{object-position:center 65%}}
+  /* fixed backdrop for long sections: the image stays viewport-sized instead of stretching to the section */
+  .fixed-pic{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;background-attachment:fixed}
+  @media(max-width:900px){.fixed-pic{background-attachment:scroll;background-position:center top}}
+  #estimate .fixed-pic{background-image:url("__IMG_BRIDGE__");filter:brightness(.55) saturate(1.1)}
+  #how .fixed-pic{background-image:url("__IMG_CANYON__");filter:brightness(.42) saturate(1.1)}
 
   /* nav */
   .nav{position:fixed;top:0;left:0;right:0;z-index:60;padding:.8rem 0}
@@ -3389,7 +3425,8 @@ panel, database) still deploys per `../LAUNCH.md`.
   .brand-mark{display:grid;place-items:center;width:2.5rem;height:2.5rem;border-radius:11px;border:1px solid rgba(110,231,183,.55);background:rgba(110,231,183,.12);color:var(--em-300);font-weight:900;box-shadow:inset 0 0 22px rgba(52,211,153,.15),0 0 18px rgba(52,211,153,.25)}
   .brand-name{font-weight:700;font-size:1.02rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .nav-links{display:none;gap:1.5rem;font-size:.92rem}.nav-links a{color:var(--ink-2);text-decoration:none}.nav-links a:hover{color:var(--em-300)}
-  .nav-cta{display:flex;align-items:center;gap:.5rem}
+  .nav-cta{display:flex;align-items:center;gap:.5rem}.nav-cta .btn{white-space:nowrap}
+  @media(max-width:419px){.brand-name{display:none}}
   .menu-btn{display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:transparent;color:#fff;cursor:pointer}
   .mobile-menu{margin-top:.5rem;border:1px solid var(--line);background:rgba(2,10,9,.94);backdrop-filter:blur(18px);border-radius:16px;padding:.5rem}
   .mobile-menu a{display:block;padding:.8rem 1rem;border-radius:10px;color:var(--ink-2);text-decoration:none}.mobile-menu a:hover{background:rgba(255,255,255,.05);color:var(--em-300)}
@@ -3403,6 +3440,15 @@ panel, database) still deploys per `../LAUNCH.md`.
   .hero-tag b{color:var(--em-300);font-weight:600}
   .scroll-hint{position:absolute;left:50%;bottom:1.2rem;transform:translateX(-50%);z-index:3;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(167,243,208,.75);display:flex;flex-direction:column;align-items:center;gap:.35rem}
   .scroll-hint span{width:1px;height:2.2rem;background:linear-gradient(180deg,rgba(52,211,153,.9),transparent)}
+  /* phones & tablets: keep the neon words in frame and give the copy a darker floor */
+  @media(max-width:1023px){.hero .pic{object-position:25% center}}
+  @media(max-width:640px){
+    .hero .pic{object-position:18% center}
+    .hero .shade-b{background:linear-gradient(180deg,rgba(3,9,10,.2) 0%,rgba(3,9,10,.05) 28%,rgba(3,9,10,.78) 62%,#03090a 100%)}
+    .hero .wrap{padding-bottom:3.25rem}
+    .scroll-hint{display:none}
+    .band{margin:0 .25rem}
+  }
 
   /* war chest */
   .war{max-width:62rem}
@@ -3416,6 +3462,7 @@ panel, database) still deploys per `../LAUNCH.md`.
   .pillar{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;min-height:7rem;padding:1.2rem .6rem;color:rgba(255,255,255,.88);text-decoration:none;border-right:1px solid rgba(167,243,208,.14);border-bottom:1px solid rgba(167,243,208,.14);font-size:.86rem;font-weight:600;text-align:center}
   .pillar svg{color:var(--em-300);filter:drop-shadow(0 0 8px rgba(52,211,153,.7))}.pillar:hover{background:rgba(52,211,153,.12);color:var(--em-200)}
   @media(min-width:640px){.pillars{grid-template-columns:repeat(5,1fr)}.pillar{border-bottom:0}}
+  @media(max-width:639px){.pillar:last-child,.feat5>div:last-child{grid-column:span 2}.pillar:last-child{border-bottom:0}}
 
   .h2{font-weight:900;font-size:clamp(2.2rem,5.4vw,4.2rem);letter-spacing:-.025em;line-height:1.02;color:#fff;text-shadow:0 6px 30px rgba(0,0,0,.8),0 0 40px rgba(16,185,129,.3)}
   .h2 .g{color:var(--em-400);text-shadow:0 0 22px rgba(52,211,153,.8)}
@@ -3470,8 +3517,7 @@ panel, database) still deploys per `../LAUNCH.md`.
 
   /* engines */
   .engines{position:relative;background:var(--ground)}
-  .engines .fixed-pic{position:absolute;inset:0;z-index:0;background-image:url("__IMG_EMERALD__");background-size:cover;background-position:center;background-attachment:fixed;filter:brightness(.62) saturate(1.15)}
-  @media(max-width:900px){.engines .fixed-pic{background-attachment:scroll}}
+  .engines .fixed-pic{background-image:url("__IMG_EMERALD__");filter:brightness(.62) saturate(1.15)}
   .engines .shade{background:linear-gradient(180deg,#03090a 0%,rgba(3,9,10,.55) 12%,rgba(3,9,10,.55) 88%,#03090a 100%)}
   .engine-grid{display:grid;gap:1.6rem;margin-top:3rem}@media(min-width:1000px){.engine-grid{grid-template-columns:1fr 1fr}}
   .ecard{position:relative;overflow:hidden;border:1px solid rgba(110,231,183,.28);background:linear-gradient(160deg,rgba(4,20,16,.9),rgba(2,10,9,.86));backdrop-filter:blur(10px);border-radius:22px;padding:1.75rem;box-shadow:0 24px 70px rgba(0,0,0,.55);transition:transform .3s,border-color .3s,box-shadow .3s}
@@ -3738,7 +3784,7 @@ panel, database) still deploys per `../LAUNCH.md`.
 
 <!-- ───────── PAGE 9 · ESTIMATE / LEAD FACT-FINDER ───────── -->
 <section id="estimate" class="page" aria-label="Tax and savings estimator" style="min-height:auto;padding:6rem 0">
-  <img class="pic" src="__IMG_BRIDGE__" alt="" aria-hidden="true" style="filter:brightness(.55) saturate(1.1)">
+  <div class="fixed-pic" aria-hidden="true"></div>
   <div class="shade" style="background:linear-gradient(180deg,#03090a 0%,rgba(3,9,10,.6) 25%,rgba(3,9,10,.6) 75%,#03090a 100%)"></div>
   <div class="wrap" style="padding:0">
     <div class="center">
@@ -3781,7 +3827,7 @@ panel, database) still deploys per `../LAUNCH.md`.
 
 <!-- ───────── PAGE 10 · HOW WE WORK / WHO WE SERVE / AREAS / FAQ ───────── -->
 <section id="how" class="page" aria-label="How we work" style="min-height:auto;padding:6rem 0">
-  <img class="pic" src="__IMG_CANYON__" alt="" aria-hidden="true" style="filter:brightness(.42) saturate(1.1)">
+  <div class="fixed-pic" aria-hidden="true"></div>
   <div class="shade" style="background:linear-gradient(180deg,#03090a 0%,rgba(3,9,10,.72) 20%,rgba(3,9,10,.72) 80%,#03090a 100%)"></div>
   <div class="wrap" style="padding:0">
     <div class="center">

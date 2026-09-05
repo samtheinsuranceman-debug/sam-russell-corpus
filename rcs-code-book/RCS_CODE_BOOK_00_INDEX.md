@@ -17,20 +17,20 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `audit/` test reports and `*.test.ts` / `*.test.tsx` test files
 - binary assets (`.webp`, `.png`, `.zip`, etc.) — they are in the repo, e.g. under `client/public/`
 - anything without a source-code extension (`.yaml`, `.patch`, `.log`, `.prettierrc`, ...)
-- `live/rcs-live-homepage.html` (4,258,340 bytes) — a rendered build output (the template with images embedded as data URIs) larger than a single part; its source, `live/rcs-live-homepage.template.html`, is included
+- `live/rcs-live-homepage.html` (3,780,629 bytes) — a rendered build output (the template with images embedded as data URIs) larger than a single part; its source, `live/rcs-live-homepage.template.html`, is included
 
 ## Parts (10)
 
 - `RCS_CODE_BOOK_part01_of_10.md` — 164 files, 1,712,123 bytes
-- `RCS_CODE_BOOK_part02_of_10.md` — 163 files, 1,834,370 bytes
-- `RCS_CODE_BOOK_part03_of_10.md` — 72 files, 1,816,216 bytes
+- `RCS_CODE_BOOK_part02_of_10.md` — 163 files, 1,834,531 bytes
+- `RCS_CODE_BOOK_part03_of_10.md` — 72 files, 1,816,607 bytes
 - `RCS_CODE_BOOK_part04_of_10.md` — 32 files, 1,824,201 bytes
 - `RCS_CODE_BOOK_part05_of_10.md` — 30 files, 1,839,908 bytes
 - `RCS_CODE_BOOK_part06_of_10.md` — 30 files, 1,821,100 bytes
 - `RCS_CODE_BOOK_part07_of_10.md` — 27 files, 1,772,155 bytes
 - `RCS_CODE_BOOK_part08_of_10.md` — 31 files, 1,820,792 bytes
 - `RCS_CODE_BOOK_part09_of_10.md` — 50 files, 1,774,703 bytes
-- `RCS_CODE_BOOK_part10_of_10.md` — 33 files, 296,571 bytes
+- `RCS_CODE_BOOK_part10_of_10.md` — 33 files, 299,107 bytes
 
 **Total: 632 files across 10 parts.**
 

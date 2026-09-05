@@ -1593,14 +1593,14 @@ const G = "text-emerald-400 [text-shadow:_0_0_22px_rgba(52,211,153,.8)]";
 const EYEBROW = "inline-flex items-center gap-2 rounded-full border border-emerald-300/45 bg-[#030f0c]/60 px-4 py-1.5 text-xs font-bold uppercase tracking-[.22em] text-emerald-300 backdrop-blur-sm";
 const LEAD = "mt-5 max-w-[30rem] text-lg leading-relaxed text-white/85 [text-shadow:_0_3px_14px_rgba(0,0,0,.9)]";
 const GLASS = "rounded-[26px] border border-emerald-200/35 bg-[#020c0a]/70 shadow-[0_30px_90px_rgba(0,0,0,.55),inset_0_0_40px_rgba(16,185,129,.05)] backdrop-blur-md";
-const PHOTO = "relative aspect-[4/5] max-h-[78svh] overflow-hidden rounded-[28px] shadow-[0_40px_120px_rgba(0,0,0,.6),0_0_0_1px_rgba(167,243,208,.3),0_0_60px_rgba(16,185,129,.28)]";
+const PHOTO = "relative aspect-square max-h-[60svh] overflow-hidden lg:aspect-[4/5] lg:max-h-[78svh] rounded-[28px] shadow-[0_40px_120px_rgba(0,0,0,.6),0_0_0_1px_rgba(167,243,208,.3),0_0_60px_rgba(16,185,129,.28)]";
 const SELECT_ROW = "flex items-center gap-3 rounded-xl border border-emerald-200/20 bg-[#00110d]/72 px-4 py-3";
 const BTN_GHOST = "rc-btn rounded-xl border border-emerald-300/45 bg-[#030f0c]/50 px-6 py-3.5 text-base text-white backdrop-blur hover:bg-emerald-300/14";
 
 function Photo({ src, alt, caption }: { src: string; alt: string; caption: string }) {
   return (
     <div className={PHOTO}>
-      <img src={src} alt={alt} className="block h-full w-full object-cover" loading="lazy" decoding="async" />
+      <img src={src} alt={alt} className="block h-full w-full object-cover object-[center_65%] lg:object-center" loading="lazy" decoding="async" />
       <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,9,10,0)_60%,rgba(3,9,10,.55)_100%)]" />
       <span className="absolute inset-x-5 bottom-4 text-[11px] uppercase tracking-[.2em] text-emerald-300 [text-shadow:_0_0_12px_rgba(52,211,153,.8)]">{caption}</span>
     </div>
@@ -1727,13 +1727,13 @@ export default function Landing() {
           <div className="flex min-h-[4.6rem] items-center justify-between gap-4 rounded-2xl border border-emerald-300/30 bg-[#020a09]/65 px-5 shadow-[0_24px_70px_rgba(0,0,0,.45)] backdrop-blur-xl lg:px-6">
             <a href="#top" className="flex min-w-0 items-center gap-3" aria-label="Russell Capital Systems homepage">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-300/55 bg-emerald-300/12 text-base font-black text-emerald-300 shadow-[inset_0_0_22px_rgba(52,211,153,.15),0_0_18px_rgba(52,211,153,.25)]">R</span>
-              <span className="truncate text-base font-bold text-white lg:text-lg" style={{ fontFamily: "DM Sans, sans-serif" }}>Russell Capital Systems™</span>
+              <span className="hidden truncate text-base font-bold text-white min-[420px]:inline lg:text-lg" style={{ fontFamily: "DM Sans, sans-serif" }}>Russell Capital Systems™</span>
             </a>
             <div className="hidden items-center gap-6 text-sm xl:flex">
               {NAV.map(({ href, label }) => <a key={href} href={href} className="text-white/80 transition-colors hover:text-emerald-300">{label}</a>)}
             </div>
             <div className="flex items-center gap-2">
-              <ManagedPortalAction href="/portal/dashboard" className="rc-btn border border-emerald-300/35 bg-emerald-300/10 text-sm text-white hover:bg-emerald-300/20"><Lock size={14} /> {isAuthenticated ? "Dashboard" : "Physician Login"}</ManagedPortalAction>
+              <ManagedPortalAction href="/portal/dashboard" className="rc-btn whitespace-nowrap border border-emerald-300/35 bg-emerald-300/10 text-sm text-white hover:bg-emerald-300/20"><Lock size={14} /> {isAuthenticated ? "Dashboard" : "Physician Login"}</ManagedPortalAction>
               <button type="button" className="rounded-lg border border-white/15 p-2 text-white xl:hidden" aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
             </div>
           </div>
@@ -1747,10 +1747,10 @@ export default function Landing() {
 
       {/* ── PAGE 1 · HERO: the neon sign, full and crisp. Its words are the headline. ── */}
       <header id="top" className={PAGE} aria-label="Financial and Tax Relief and Recovery for Physicians, Psychiatrists, and Surgeons">
-        <img src="/rcs-neon-a.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons, over a glowing green city skyline" className={PIC} fetchPriority="high" decoding="async" />
-        <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(3,9,10,.15)_0%,rgba(3,9,10,0)_35%,rgba(3,9,10,.55)_78%,#03090a_100%)]" />
+        <img src="/rcs-neon-a.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons, over a glowing green city skyline" className={`${PIC} max-sm:object-[18%_center] max-lg:object-[25%_center]`} fetchPriority="high" decoding="async" />
+        <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(3,9,10,.15)_0%,rgba(3,9,10,0)_35%,rgba(3,9,10,.55)_78%,#03090a_100%)] max-sm:bg-[linear-gradient(180deg,rgba(3,9,10,.2)_0%,rgba(3,9,10,.05)_28%,rgba(3,9,10,.78)_62%,#03090a_100%)]" />
         <h1 className="sr-only">Financial &amp; Tax Relief and Recovery For Physicians, Psychiatrists, &amp; Surgeons</h1>
-        <div className="container relative z-10 flex min-h-[100svh] flex-col justify-end pb-16 pt-28">
+        <div className="container relative z-10 flex min-h-[100svh] flex-col justify-end pb-14 pt-28 sm:pb-16">
           <div className="flex flex-col items-start gap-5 lg:flex-row lg:items-end lg:justify-between">
             <p className="max-w-[34rem] text-lg text-white/90 [text-shadow:_0_4px_18px_rgba(0,0,0,.95)]">
               Coordinated <span className="font-semibold text-emerald-300">tax reduction</span>, <span className="font-semibold text-emerald-300">interest recovery</span>, practice, risk, retirement, and legacy planning — built for the finances of physicians, psychiatrists, and surgeons.
@@ -1804,7 +1804,7 @@ export default function Landing() {
                 { label: "Retirement Income", Icon: Sunrise, href: "#planning-options" },
                 { label: "Succession & Legacy", Icon: TreePine, href: "#planning-options" },
               ].map(({ label, Icon, href }) => (
-                <a key={label} href={href} className="flex min-h-[7rem] flex-col items-center justify-center gap-2.5 border-emerald-200/14 px-3 py-5 text-center text-sm font-semibold text-white/88 transition-colors hover:bg-emerald-300/12 hover:text-emerald-200 [&:not(:last-child)]:border-r">
+                <a key={label} href={href} className="flex min-h-[7rem] flex-col items-center justify-center gap-2.5 border-emerald-200/14 px-3 py-5 text-center text-sm font-semibold text-white/88 transition-colors hover:bg-emerald-300/12 hover:text-emerald-200 max-sm:last:col-span-2 max-sm:[&:not(:last-child)]:border-b sm:[&:not(:last-child)]:border-r">
                   <Icon size={28} strokeWidth={1.5} className="text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,.7)]" />
                   <span>{label}</span>
                 </a>
@@ -1885,7 +1885,7 @@ export default function Landing() {
                 { Icon: Sunrise, t: "Retirement Income", d: "Live on your terms." },
                 { Icon: TreePine, t: "Legacy Design", d: "Your legacy. Their future." },
               ].map(({ Icon, t, d }) => (
-                <div key={t}><Icon size={24} className="mx-auto text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,.7)]" /><p className="mt-2 text-sm font-semibold text-white">{t}</p><p className="mt-1 text-xs text-white/62">{d}</p></div>
+                <div key={t} className="max-sm:last:col-span-2"><Icon size={24} className="mx-auto text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,.7)]" /><p className="mt-2 text-sm font-semibold text-white">{t}</p><p className="mt-1 text-xs text-white/62">{d}</p></div>
               ))}
             </div>
           </div>
