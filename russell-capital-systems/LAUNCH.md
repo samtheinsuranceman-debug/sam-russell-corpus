@@ -11,8 +11,45 @@ site; it needs a running Node process and a database.
 
 **Source of truth**
 - Repo: `samtheinsuranceman-debug/sam-russell-corpus`
-- Branch: `claude/claude-md-docs-0qgcvw`
+- Branch: `master` (work lands via PRs from `claude/claude-md-docs-0qgcvw`)
 - App subfolder: `russell-capital-systems/` (run everything from here)
+
+---
+
+## ⚡ Fastest path: the homepage live today, no server
+
+The public homepage also exists as a **single self-contained HTML file** with no
+server, database, or keys: `docs/index.html` at the repo root (built from
+`russell-capital-systems/live/rcs-live-homepage.template.html`). It has the full
+page — every image, the AI concierge (falls back to email), the lead fact-finder
+(pre-filled email to the advisor), and Calendly booking.
+
+**One click makes it public on GitHub Pages:**
+
+1. Open https://github.com/samtheinsuranceman-debug/sam-russell-corpus/settings/pages
+2. Under **Build and deployment → Source** choose **Deploy from a branch**,
+   branch **`master`**, folder **`/docs`**, and click **Save**.
+3. Within a minute or two the homepage is live at
+   **https://samtheinsuranceman-debug.github.io/sam-russell-corpus/**
+4. (Optional) Add a custom domain on the same settings page and point its DNS
+   `CNAME` at `samtheinsuranceman-debug.github.io`.
+
+Every later `pnpm release` + merge to `master` updates the live page automatically.
+The full app (portal, lead inbox, nine-AI panel, database) still deploys per the
+sections below.
+
+## ⚙ One command to regenerate everything
+
+From `russell-capital-systems/`:
+
+```bash
+pnpm release
+```
+
+runs typecheck → builds `docs/index.html` → public-surface tests (including the
+live-page ↔ React parity test) → production build → `rcs-deploy-<date>.zip` →
+`rcs-code-book/`. Any failing step aborts, so stale artifacts are never produced
+from a broken build. Then commit and push.
 
 ---
 

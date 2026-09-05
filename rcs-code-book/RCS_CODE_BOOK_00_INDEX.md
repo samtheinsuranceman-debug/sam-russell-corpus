@@ -17,11 +17,10 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `audit/` test reports and `*.test.ts` / `*.test.tsx` test files
 - binary assets (`.webp`, `.png`, `.zip`, etc.) — they are in the repo, e.g. under `client/public/`
 - anything without a source-code extension (`.yaml`, `.patch`, `.log`, `.prettierrc`, ...)
-- `live/rcs-live-homepage.html` (3,780,629 bytes) — a rendered build output (the template with images embedded as data URIs) larger than a single part; its source, `live/rcs-live-homepage.template.html`, is included
 
 ## Parts (10)
 
-- `RCS_CODE_BOOK_part01_of_10.md` — 164 files, 1,712,123 bytes
+- `RCS_CODE_BOOK_part01_of_10.md` — 168 files, 1,729,576 bytes
 - `RCS_CODE_BOOK_part02_of_10.md` — 163 files, 1,834,531 bytes
 - `RCS_CODE_BOOK_part03_of_10.md` — 72 files, 1,816,607 bytes
 - `RCS_CODE_BOOK_part04_of_10.md` — 32 files, 1,824,201 bytes
@@ -30,9 +29,9 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `RCS_CODE_BOOK_part07_of_10.md` — 27 files, 1,772,155 bytes
 - `RCS_CODE_BOOK_part08_of_10.md` — 31 files, 1,820,792 bytes
 - `RCS_CODE_BOOK_part09_of_10.md` — 50 files, 1,774,703 bytes
-- `RCS_CODE_BOOK_part10_of_10.md` — 33 files, 299,107 bytes
+- `RCS_CODE_BOOK_part10_of_10.md` — 34 files, 301,778 bytes
 
-**Total: 632 files across 10 parts.**
+**Total: 637 files across 10 parts.**
 
 ## File → part map
 
@@ -47,11 +46,15 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `vitest.config.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `PROVENANCE.md` → `RCS_CODE_BOOK_part01_of_10.md`
 - `todo.md` → `RCS_CODE_BOOK_part01_of_10.md`
+- `scripts/DEPLOY.md` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/audit-interior-colors.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/build.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
+- `scripts/build_code_book.py` → `RCS_CODE_BOOK_part01_of_10.md`
+- `scripts/build_deploy_bundle.sh` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/check-concept16-browser.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/react-runtime-inject.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/reconcile-route-manifest.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
+- `scripts/release.sh` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/smoke-production-routes.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `drizzle/0000_cool_starfox.sql` → `RCS_CODE_BOOK_part01_of_10.md`
 - `drizzle/0000_misty_alex_wilder.sql` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -667,4 +670,5 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `docs/visual-system-verification.md` → `RCS_CODE_BOOK_part10_of_10.md`
 - `docs/visual-validation.md` → `RCS_CODE_BOOK_part10_of_10.md`
 - `live/README.md` → `RCS_CODE_BOOK_part10_of_10.md`
+- `live/build_live_homepage.py` → `RCS_CODE_BOOK_part10_of_10.md`
 - `live/rcs-live-homepage.template.html` → `RCS_CODE_BOOK_part10_of_10.md`

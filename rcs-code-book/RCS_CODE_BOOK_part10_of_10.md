@@ -36,6 +36,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `docs/visual-system-verification.md`
 - `docs/visual-validation.md`
 - `live/README.md`
+- `live/build_live_homepage.py`
 - `live/rcs-live-homepage.template.html`
 
 ---
@@ -3331,14 +3332,24 @@ screen** — nothing is blurred.
 
 ## Files
 
-- `rcs-live-homepage.html` — the published file (six images embedded as WebP data URIs, ~4.3 MB).
-- `rcs-live-homepage.template.html` — the source template. Placeholders injected at
+- `rcs-live-homepage.template.html` — **the source.** Placeholders injected at
   build time: `__IMG_NEON_A__`, `__IMG_NEON_B__`, `__IMG_EMERALD__`, `__IMG_BRIDGE__`,
   `__IMG_CANYON__`, `__IMG_INTERCHANGE__`, `__CALENDLY__`, `__ADVISOR_EMAIL__`.
+- `build_live_homepage.py` — builds the template into the **single built copy**,
+  `<repo>/docs/index.html` (~3.8 MB, six images embedded as WebP data URIs).
+  `docs/` is what GitHub Pages serves, so merging to `master` updates the public
+  URL. Run it directly or via `pnpm live:build` / `pnpm release`.
 - The image sources live in `../client/public/` as `rcs-neon-a.webp`, `rcs-neon-b.webp`,
   `rcs-city-emerald.webp`, `rcs-city-bridge.webp`, `rcs-city-canyon.webp`,
   `rcs-city-interchange.webp` — crisp crops of the photographic regions of the
   original mockups (their baked-in UI excluded), saved at high quality.
+
+## Keeping it in step with the React app
+
+`server/livePageParity.test.ts` fails if the template and the React homepage
+disagree on the 14 engines (names and order), the FAQ, the headline promises and
+proof numbers, the six images, or if `docs/index.html` is stale relative to the
+template. Edit the template and the React component together, then `pnpm release`.
 
 ## How it works without a server
 
@@ -3352,6 +3363,62 @@ screen** — nothing is blurred.
 
 This is the live landing page. The full app (portal, lead inbox, nine-AI panel,
 database) deploys per `../LAUNCH.md`.
+```
+
+## `live/build_live_homepage.py`
+
+```python
+#!/usr/bin/env python3
+"""Build the single-file public homepage from its template.
+
+Injects the six WebP images from ../client/public as data URIs plus the
+booking link and advisor email, and writes the result to <repo>/docs/index.html
+(served by GitHub Pages) so there is exactly one built copy in the repo.
+
+    python3 live/build_live_homepage.py            # writes ../../docs/index.html
+    python3 live/build_live_homepage.py out.html   # writes somewhere else
+"""
+import base64, pathlib, sys
+
+HERE = pathlib.Path(__file__).resolve().parent          # russell-capital-systems/live
+APP = HERE.parent                                        # russell-capital-systems
+REPO = APP.parent                                        # repo root
+PUB = APP / "client" / "public"
+DEFAULT_OUT = REPO / "docs" / "index.html"
+
+IMAGES = {
+    "__IMG_NEON_A__": "rcs-neon-a.webp",
+    "__IMG_NEON_B__": "rcs-neon-b.webp",
+    "__IMG_EMERALD__": "rcs-city-emerald.webp",
+    "__IMG_BRIDGE__": "rcs-city-bridge.webp",
+    "__IMG_CANYON__": "rcs-city-canyon.webp",
+    "__IMG_INTERCHANGE__": "rcs-city-interchange.webp",
+}
+CONSTS = {
+    "__CALENDLY__": "https://calendly.com/samtheinsuranceman-1/30min",
+    "__ADVISOR_EMAIL__": "samtheinsuranceman@gmail.com",
+}
+
+
+def build() -> str:
+    html = (HERE / "rcs-live-homepage.template.html").read_text()
+    for key, name in IMAGES.items():
+        data = (PUB / name).read_bytes()
+        uri = "data:image/webp;base64," + base64.b64encode(data).decode()
+        assert key in html, f"placeholder missing: {key}"
+        html = html.replace(key, uri)
+    for key, val in CONSTS.items():
+        html = html.replace(key, val)
+    leftover = [k for k in list(IMAGES) + list(CONSTS) if k in html]
+    assert not leftover, leftover
+    return html
+
+
+if __name__ == "__main__":
+    out = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else DEFAULT_OUT
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(build())
+    print(f"wrote {out} ({out.stat().st_size:,} bytes)")
 ```
 
 ## `live/rcs-live-homepage.template.html`
