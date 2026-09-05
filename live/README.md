@@ -29,14 +29,24 @@ screen** — nothing is blurred.
 
 ## Files
 
-- `rcs-live-homepage.html` — the published file (six images embedded as WebP data URIs, ~4.3 MB).
-- `rcs-live-homepage.template.html` — the source template. Placeholders injected at
+- `rcs-live-homepage.template.html` — **the source.** Placeholders injected at
   build time: `__IMG_NEON_A__`, `__IMG_NEON_B__`, `__IMG_EMERALD__`, `__IMG_BRIDGE__`,
   `__IMG_CANYON__`, `__IMG_INTERCHANGE__`, `__CALENDLY__`, `__ADVISOR_EMAIL__`.
+- `build_live_homepage.py` — builds the template into the **single built copy**,
+  `<repo>/docs/index.html` (~3.8 MB, six images embedded as WebP data URIs).
+  `docs/` is what GitHub Pages serves, so merging to `master` updates the public
+  URL. Run it directly or via `pnpm live:build` / `pnpm release`.
 - The image sources live in `../client/public/` as `rcs-neon-a.webp`, `rcs-neon-b.webp`,
   `rcs-city-emerald.webp`, `rcs-city-bridge.webp`, `rcs-city-canyon.webp`,
   `rcs-city-interchange.webp` — crisp crops of the photographic regions of the
   original mockups (their baked-in UI excluded), saved at high quality.
+
+## Keeping it in step with the React app
+
+`server/livePageParity.test.ts` fails if the template and the React homepage
+disagree on the 14 engines (names and order), the FAQ, the headline promises and
+proof numbers, the six images, or if `docs/index.html` is stale relative to the
+template. Edit the template and the React component together, then `pnpm release`.
 
 ## How it works without a server
 
