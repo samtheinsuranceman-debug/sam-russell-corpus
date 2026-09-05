@@ -96,6 +96,13 @@ practice), Series B (6 JoinAQAL x RCS emergent combinations), Series C
 Markdown sources per application plus compiled series PDFs under `pdf/`.
 ALL DRAFTS — not filed; attorney review required. Start at `000_INDEX.md`.
 
+### `/russell-biomedical/` — Russell BioMedical (research & IP venture site)
+Self-contained website (index.html) for RussellBIOmedical.com: presents the
+biomedical research & intellectual-property venture that mines open biochemistry
+literature for patentable cross-pollinated intersections, anchored to the
+BioChem Atlas library. Honest scope — not a clinical provider, no medical
+claims, nothing filed/patent-pending, no fabricated findings.
+
 ### `/biochem-library/` — BioChem Atlas (biochemistry research library)
 Self-contained website (index.html, no build) cataloging global biochemistry
 research institutions graded A–D on a sourced rubric, wired to open aggregators
