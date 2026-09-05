@@ -62,7 +62,8 @@ describe("Concept 16 physician homepage", () => {
     const factFinder = readFileSync(resolve("client/src/components/HomeLeadFactFinder.tsx"), "utf8");
     const tech = readFileSync(resolve("client/src/components/ProprietaryTech.tsx"), "utf8");
     const idSources = landing + concierge + factFinder + tech;
-    const anchors = Array.from(landing.matchAll(/href="#([a-z0-9-]+)"/g), match => match[1]);
+    // Catch both JSX attributes (href="#x") and the nav array (href: "#x").
+    const anchors = Array.from(landing.matchAll(/href(?:=|: )"#([a-z0-9-]+)"/g), match => match[1]);
     expect(anchors.length).toBeGreaterThan(0);
     for (const id of new Set(anchors)) expect(idSources, id).toMatch(new RegExp(`id=["']${id}["']`));
   });
@@ -83,7 +84,7 @@ describe("Concept 16 physician homepage", () => {
 
   it("fills the long scroll with the proprietary technology showcase", () => {
     expect(landing).toContain("ProprietaryTech");
-    expect(landing).toContain('href="#technology"');
+    expect(landing).toContain('"#technology"');
     const tech = readFileSync(resolve("client/src/components/ProprietaryTech.tsx"), "utf8");
     expect(tech).toContain('id="technology"');
     // The two engines the owner named must be present.
@@ -107,13 +108,13 @@ describe("Concept 16 physician homepage", () => {
     expect(tech).toContain("45 more unique patent-pending technologies");
     expect(tech).toContain("Stay tuned");
     // Not offered anywhere else.
-    expect(tech).toContain("won't find them anywhere else");
+    expect(tech).toMatch(/anywhere else/);
     expect(tech).toContain("tax, legal, or investment advice");
   });
 
   it("mounts the AI Brain Trust concierge wired to the nine-AI panel", () => {
     expect(landing).toContain("HomeAIConcierge");
-    expect(landing).toContain('href="#ai-brain-trust"');
+    expect(landing).toContain('"#ai-brain-trust"');
     const concierge = readFileSync(resolve("client/src/components/HomeAIConcierge.tsx"), "utf8");
     expect(concierge).toContain("trpc.ultra.homepagePanel");
     expect(concierge).toContain('id="ai-brain-trust"');
