@@ -126,7 +126,7 @@ export default function HomeLeadFactFinder() {
   return (
     <section id="planning-estimator" aria-label="Tax and savings estimator" className="relative isolate overflow-hidden bg-[#03090a] py-24">
       {/* The bridge, crisp, behind the estimator */}
-      <img src="/rcs-city-bridge.webp" alt="" aria-hidden="true" className="absolute inset-0 z-0 h-full w-full object-cover object-center brightness-[.55] saturate-[1.1]" />
+      <img src="/rcs-city-bridge.webp" alt="" aria-hidden="true" className="absolute inset-0 z-0 h-full w-full object-cover object-center brightness-[.55] saturate-[1.1]" loading="lazy" decoding="async" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,#03090a_0%,rgba(3,9,10,.6)_25%,rgba(3,9,10,.6)_75%,#03090a_100%)]" />
       <div className="container relative z-10">
         <div className="mx-auto max-w-3xl text-center">

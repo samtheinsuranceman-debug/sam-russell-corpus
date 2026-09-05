@@ -9,7 +9,7 @@ export default function SeniorPartnerBand() {
   return (
     <section id="proof" aria-label="Experience and client retention" className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-[#03090a] py-24">
       {/* The second neon sign, full and crisp — no blur */}
-      <img src="/rcs-neon-b.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons over a green city at night" className="absolute inset-0 z-0 h-full w-full object-cover object-center" />
+      <img src="/rcs-neon-b.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons over a green city at night" className="absolute inset-0 z-0 h-full w-full object-cover object-center" loading="lazy" decoding="async" />
       <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_50%_55%,rgba(3,9,10,.72)_0%,rgba(3,9,10,.35)_45%,rgba(3,9,10,.1)_75%)]" />
       <div className="container relative z-10">
         <div className="group relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-emerald-300/30 bg-[linear-gradient(150deg,rgba(6,24,19,.94),rgba(3,10,9,.7))] p-8 shadow-[0_34px_90px_rgba(0,0,0,.55)] backdrop-blur-2xl sm:p-12">
