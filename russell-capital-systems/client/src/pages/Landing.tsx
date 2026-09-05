@@ -25,7 +25,6 @@ import {
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 
-const HERO_BG = "/manus-storage/rcs-concept-16-clean-background_a6ddebf1.png";
 const CALENDLY_URL = "https://calendly.com/samtheinsuranceman-1/30min";
 
 const COMMAND_PILLARS = [
@@ -248,24 +247,15 @@ export default function Landing() {
         </div>
       </nav>
 
-      <section id="top" className="rc-homepage-hero rc-command-center relative flex min-h-[100vh] items-center overflow-hidden" style={{ backgroundImage: `url(${HERO_BG})`, backgroundPosition: "center", backgroundSize: "cover" }}>
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,8,8,.96)_0%,rgba(0,10,10,.78)_38%,rgba(0,10,10,.3)_70%,rgba(0,8,8,.62)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.52)_0%,transparent_32%,rgba(2,15,12,.25)_68%,#060f20_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_45%,rgba(16,185,129,.17),transparent_32%)]" />
-        <div className="container relative z-10 flex flex-col items-center pb-16 pt-40 text-center lg:pt-44">
-          <p className="mb-6 flex items-center gap-3 text-xs font-semibold uppercase tracking-[.22em] text-emerald-300"><span className="h-px w-8 bg-emerald-300/70" /> Built for physicians &amp; practice owners <span className="h-px w-8 bg-emerald-300/70" /></p>
-          <h1 className="mb-6 text-[clamp(2.5rem,5.2vw,5.2rem)] font-extrabold leading-[1.03] tracking-[-.03em] drop-shadow-[0_10px_35px_rgba(0,0,0,.85)]" style={{ fontFamily: "DM Sans, sans-serif" }}>
-            <span className="text-white">Your Practice Builds Income.</span>
-            <br />
-            <span className="text-emerald-400">We Build the System Around It.</span>
-          </h1>
-          <div className="mb-6 flex items-center justify-center gap-4">
-            <span className="h-px w-16 bg-emerald-300/35" />
-            <span className="flex h-9 w-8 items-center justify-center rounded-md border border-emerald-300/50 text-sm font-black text-emerald-300">R</span>
-            <span className="h-px w-16 bg-emerald-300/35" />
-          </div>
-          <p className="mb-9 max-w-2xl text-lg leading-relaxed text-white/80 drop-shadow-[0_5px_20px_rgba(0,0,0,.9)]">
-            Coordinated tax, practice, risk, retirement, and legacy planning for physicians and medical practice owners.
+      <section id="top" className="rc-homepage-hero rc-command-center relative overflow-hidden bg-[#050b0a]">
+        <div className="relative w-full">
+          <img src="/rcs-neon-hero.png" alt="Financial and Tax Relief and Recovery — For Physicians, Psychiatrists, and Surgeons" className="block max-h-[80vh] w-full object-cover object-left" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-[linear-gradient(180deg,transparent,#050b0a)]" />
+          <h1 className="sr-only">Financial &amp; Tax Relief and Recovery — For Physicians, Psychiatrists, &amp; Surgeons</h1>
+        </div>
+        <div className="container relative z-10 -mt-16 flex flex-col items-center pb-16 text-center sm:-mt-24">
+          <p className="mb-9 max-w-2xl text-lg leading-relaxed text-white/85 drop-shadow-[0_5px_20px_rgba(0,0,0,.9)]">
+            Coordinated <span className="font-semibold text-emerald-300">tax reduction</span>, <span className="font-semibold text-emerald-300">interest recovery</span>, practice, risk, retirement, and legacy planning — built for the finances of physicians, psychiatrists, and surgeons.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
             <a href="#consultation" className="rc-btn rc-btn-primary rounded-xl px-7 py-3.5 text-base shadow-[0_16px_42px_rgba(34,197,94,.28)]"><Calendar size={18} /> Plan Beyond the Practice</a>
@@ -320,7 +310,7 @@ export default function Landing() {
               </div>
 
               <div className="mt-5 border-t border-emerald-200/15 pt-5">
-                <div className="mb-3 flex items-center justify-between gap-4"><div><p className="text-sm font-semibold text-white">Physician tax-planning preview</p><p className="text-xs text-white/50">Directional estimate only—not tax advice.</p></div><span className="text-lg font-bold text-emerald-300">${illustrativeOpportunity.toLocaleString()}</span></div>
+                <div id="calculator" className="mb-3 flex items-center justify-between gap-4"><div><p className="text-sm font-semibold text-white">Tax &amp; Interest Savings Calculator</p><p className="text-xs text-white/50">Directional estimate only—not tax advice.</p></div><span className="text-lg font-bold text-emerald-300">${illustrativeOpportunity.toLocaleString()}</span></div>
                 <div className="grid gap-2 sm:grid-cols-3">
                   <label className="text-xs text-white/60">Annual income<input aria-label="Annual income" type="number" min="0" max="5000000" step="1000" value={income} onChange={(event) => setIncome(event.target.value)} className="mt-1 w-full rounded-lg border border-emerald-200/20 bg-black/45 px-3 py-2 text-sm text-white outline-none focus:border-emerald-300" /></label>
                   <label className="text-xs text-white/60">Filing status<select aria-label="Filing status" value={filingStatus} onChange={(event) => setFilingStatus(event.target.value)} className="mt-1 w-full rounded-lg border border-emerald-200/20 bg-black/45 px-3 py-2 text-sm text-white outline-none focus:border-emerald-300"><option value="married">Married filing jointly</option><option value="single">Single</option></select></label>
@@ -331,6 +321,11 @@ export default function Landing() {
             </div>
           </div>
         </div>
+      </section>
+
+      <section aria-label="Financial and tax relief and recovery for medical professionals" className="relative overflow-hidden border-y border-emerald-300/20 bg-[#050b0a]">
+        <img src="/rcs-neon-banner.png" alt="Relief and Recovery — financial and tax planning for physicians, psychiatrists, and surgeons" className="block max-h-[46vh] w-full object-cover object-center opacity-95" />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,#050b0a_2%,transparent_28%,transparent_72%,#050b0a_98%)]" />
       </section>
 
       <section className="border-y border-[#12233e] bg-[#0b1628]/50" aria-label="Planning principles">
