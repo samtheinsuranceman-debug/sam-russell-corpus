@@ -148,7 +148,7 @@ Self-contained; run tooling from inside the directory. Supersedes the older
 `docs/index.html` is the built, self-contained Russell Capital Systems homepage
 (generated from `russell-capital-systems/live/`; do not hand-edit). Served at
 https://samtheinsuranceman-debug.github.io/sam-russell-corpus/ once Pages is
-enabled on `master` → `/docs`.
+enabled (Settings → Pages → Source: GitHub Actions); the workflow republishes it on every merge.
 
 ### `/rcs-code-book/` and `rcs-deploy-<date>.zip` — release artifacts
 Plain-Markdown source book (10 parts + index, for AI review tools that can't open
