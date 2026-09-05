@@ -7,9 +7,18 @@
 // Returning visitors (first-party cookie) are greeted by name.
 // ============================================================
 import { useState } from "react";
-import { CheckCircle, ShieldCheck, ArrowRight, Calendar } from "lucide-react";
+import { CheckCircle, ShieldCheck, ArrowRight, Calendar, AlertTriangle } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import type { LiquidTaxability } from "@shared/leadTypes";
+
+// Suitability / compliance disclaimer shown on the estimator in both the
+// input and result states. Wording per owner direction.
+const ESTIMATOR_DISCLAIMER =
+  "These results are not guaranteed. Any figures or strategies shown represent the best outcomes we have " +
+  "produced for some of our clients under certain conditions — they may or may not reflect the results you " +
+  "would receive. Every result must be thoroughly examined by our tax professional team for suitability and " +
+  "for compliance with applicable IRS statutes before anything is implemented. This estimator is general " +
+  "education only and is not tax, legal, or investment advice.";
 
 type NumKey =
   | "w2Income" | "estimatedTaxes" | "spouseIncome" | "spouseTaxes"
@@ -167,9 +176,14 @@ export default function HomeLeadFactFinder() {
           </div>
         )}
 
-        <p className="mx-auto mt-4 max-w-3xl text-center text-[11px] leading-relaxed text-white/45">
-          The specific dollar amounts, percentages, and structure are prepared for your licensed advisor and shared in your personal evaluation — not shown here. General education only; not tax, legal, or investment advice.
-        </p>
+        <div className="mx-auto mt-6 flex max-w-3xl items-start gap-3 rounded-xl border border-amber-400/30 bg-amber-400/[.06] px-4 py-3.5">
+          <AlertTriangle size={16} className="mt-0.5 shrink-0 text-amber-300" />
+          <p className="text-[11px] leading-relaxed text-white/60">
+            <span className="font-semibold text-amber-200">Important:</span> {ESTIMATOR_DISCLAIMER} The specific
+            dollar amounts, percentages, and structure are prepared for your licensed advisor and shared in your
+            personal evaluation — not shown here.
+          </p>
+        </div>
       </div>
     </section>
   );
