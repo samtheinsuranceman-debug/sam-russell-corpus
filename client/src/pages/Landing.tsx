@@ -478,6 +478,29 @@ export default function Landing() {
 
       <ProprietaryTech />
 
+      {/* ── Credibility: senior partner & multi-decade client retention ── */}
+      <section aria-label="Experience and client retention" className="relative overflow-hidden border-t border-emerald-300/10 bg-[#050b0a] py-20">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[.06] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:46px_46px]" />
+        <div className="container relative z-10">
+          <div className="mx-auto max-w-4xl rounded-[1.6rem] border border-emerald-300/25 bg-black/50 p-8 shadow-[0_24px_70px_rgba(0,0,0,.4)] backdrop-blur-xl sm:p-10">
+            <div className="grid gap-8 sm:grid-cols-[auto_1fr] sm:items-center">
+              <div className="flex items-center gap-5">
+                <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-emerald-300/40 bg-[linear-gradient(135deg,rgba(16,185,129,.28),rgba(16,185,129,.05))] text-emerald-200 shadow-[inset_0_0_18px_rgba(52,211,153,.28)]"><ShieldCheck size={30} strokeWidth={1.6} /></span>
+                <div>
+                  <p className="text-[clamp(2.6rem,7vw,4rem)] font-black leading-none text-emerald-300 [text-shadow:_0_0_28px_rgba(52,211,153,.7)]" style={{ fontFamily: "DM Sans, sans-serif" }}>60%</p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-[.16em] text-white/70">on the books 20+ years</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[.2em] text-emerald-300">Experience you can lean on</p>
+                <h2 className="mt-2 text-[clamp(1.5rem,3.2vw,2.2rem)] font-extrabold leading-snug text-white [text-shadow:_0_0_20px_rgba(16,185,129,.3)]" style={{ fontFamily: "DM Sans, sans-serif" }}>Clients who stay for decades.</h2>
+                <p className="mt-3 leading-relaxed text-white/75">Our senior business partner — 69 years old, with a long career working in medical malpractice — has kept more than <span className="font-semibold text-emerald-300">60% of their clients on the books for 20 years or longer</span>. That kind of loyalty is earned, not bought.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section aria-label="Relief today, recovery for life" className="relative overflow-hidden border-y border-emerald-300/20 bg-[#050b0a] py-20">
         <img src="/rcs-neon-banner.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover object-center blur-[18px] brightness-[.3]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#050b0a,rgba(5,11,10,.5),#050b0a)]" />
