@@ -103,6 +103,15 @@ literature for patentable cross-pollinated intersections, anchored to the
 BioChem Atlas library. Honest scope — not a clinical provider, no medical
 claims, nothing filed/patent-pending, no fabricated findings.
 
+### `/biomedical-research-vault/` — BioEvidence Atlas (evidence-graded research vault)
+Self-contained site (index.html): harvests real biomedical findings live (Europe
+PMC / OpenAlex) from the open literature and the top 100 US biomedical
+institutions (41 states, graded A–D), auto-sorts each onto a 12-tier evidence
+spectrum (definitive consensus → speculative) grounded in Oxford CEBM / GRADE,
+and accumulates a persistent, exportable (JSON/CSV) vault in the browser. Tiers
+grade evidence-class strength from declared study type, transparently — not a
+verdict of truth. No fabricated records; not medical advice.
+
 ### `/biomedical-data-library/` — BioData Atlas (biomedical data library)
 Self-contained website (index.html) cataloging 51 real biomedical data
 repositories across 13 domains (genomes, proteins/structures, variants, drugs,

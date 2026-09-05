@@ -1,0 +1,245 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BioEvidence Atlas — Russell Biomedical Research Vault</title>
+<style>
+:root{--bg:#0a0e13;--panel:#131b24;--panel2:#1a2530;--ink:#e9f0f6;--muted:#8fa0b0;--line:#243240;
+--teal:#33b8a6;--blue:#4f9fe0;--gold:#d8b154;--warn:#e2814a}
+@media(prefers-color-scheme:light){:root{--bg:#f3f6fa;--panel:#fff;--panel2:#eef3f8;--ink:#0e1a26;
+--muted:#54636f;--line:#dbe3ec;--teal:#0d7a6c;--blue:#255fa6}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+header{padding:24px 0 12px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--bg))}
+h1{margin:2px 0 4px;font-size:26px}.tag{color:var(--teal);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+.sub{color:var(--muted);max-width:860px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+nav button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:7px 14px;cursor:pointer;font-size:13px}
+nav button.active{background:var(--teal);color:#04140f;border-color:var(--teal);font-weight:700}
+section{padding:22px 0}h2{font-size:19px;margin:0 0 4px;border-left:3px solid var(--teal);padding-left:10px}
+h2+.muted{margin:0 0 14px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px}
+.card h3{margin:0 0 4px;font-size:14.5px}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.grade{width:24px;height:24px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:#06131b;flex:none;font-size:13px}
+.A{background:#3fb98f}.B{background:#5aa9e6}.C{background:#e0b23c}.D{background:#c77dff}
+.muted{color:var(--muted);font-size:13px}.pill{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:2px 9px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+input,select{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:9px 11px;font-size:14px}
+input[type=text]{min-width:240px;flex:1}.count{color:var(--muted);font-size:13px;margin:6px 0}
+.go{background:var(--teal);color:#04140f;border:0;border-radius:8px;padding:9px 15px;font-weight:700;cursor:pointer}
+.go2{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 15px;cursor:pointer}
+.tierbar{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:6px 0 2px}
+.tierseg{flex:1}
+.tierrow{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
+.tchip{width:30px;height:24px;border-radius:6px;color:#06131b;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none}
+.finding{background:var(--panel);border:1px solid var(--line);border-left-width:4px;border-radius:10px;padding:11px 13px;margin-bottom:9px}
+.finding .t{font-weight:600}.finding .meta{color:var(--muted);font-size:12.5px;margin:3px 0}
+.save{font-size:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:7px;padding:4px 10px;cursor:pointer}
+.note{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;padding:12px 14px;color:var(--muted);font-size:13px}
+.kpis{display:flex;gap:20px;flex-wrap:wrap;margin-top:10px}.kpi b{font-size:22px;display:block;color:var(--teal)}
+.xp{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+[hidden]{display:none!important}footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:12px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:13px}
+.tabs button.on{background:var(--blue);color:#04121f;font-weight:700;border-color:var(--blue)}
+</style></head><body>
+<header><div class="wrap">
+<div class="tag">Russell BioMedical · Evidence Vault</div>
+<h1>BioEvidence Atlas — The Biomedical Research Vault</h1>
+<p class="sub">Harvest real biomedical findings from the top 100 U.S. research institutions and the open literature, and watch each one sort itself onto a 12-tier evidence spectrum — from <b>definitive consensus</b> down to <b>speculation</b> — built on the established evidence hierarchy. Save what matters into a vault that grows and exports. Real papers, real DOIs, transparent tiering.</p>
+<div class="kpis">
+<div class="kpi"><b>100</b><span class="muted">US biomedical institutions</span></div>
+<div class="kpi"><b>12</b><span class="muted">evidence tiers</span></div>
+<div class="kpi"><b id="kVault">0</b><span class="muted">findings in your vault</span></div>
+<div class="kpi"><b>0</b><span class="muted">fabricated records</span></div>
+</div>
+<nav>
+<button data-tab="harvest" class="active">Harvest by Topic</button>
+<button data-tab="inst">100 Institutions</button>
+<button data-tab="vault">My Vault</button>
+<button data-tab="spectrum">Evidence Spectrum</button>
+<button data-tab="about">Method &amp; Honesty</button>
+</nav></div></header>
+<div class="wrap">
+
+<section id="harvest">
+<h2>Harvest by Topic</h2>
+<p class="muted">Search the live literature (Europe PMC). Every result is auto-tiered by its declared study type. Save the strong ones into your vault.</p>
+<div class="controls">
+<input type="text" id="q" value="senolytics aging clinical">
+<select id="qTier"><option value="">All tiers</option></select>
+<button class="go" onclick="harvest()">Harvest</button>
+<button class="go2" onclick="saveAllVisible()">Save all shown</button>
+</div>
+<div id="dist"></div>
+<div class="count" id="hCount"></div>
+<div id="hOut"><p class="muted">Harvest a topic to begin building the vault.</p></div>
+</section>
+
+<section id="inst" hidden>
+<h2>Top 100 U.S. Biomedical Research Institutions</h2>
+<div class="controls">
+<input type="text" id="isearch" placeholder="Search institution, city…">
+<select id="ifGrade"><option value="">All grades</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
+<select id="ifState"><option value="">All states</option></select>
+</div>
+<div class="count" id="iCount"></div>
+<div class="grid" id="iGrid"></div>
+</section>
+
+<section id="vault" hidden>
+<h2>My Vault <span class="muted" style="font-weight:400">— the database you're building</span></h2>
+<div class="controls">
+<button class="go2" onclick="exportVault('json')">Export JSON</button>
+<button class="go2" onclick="exportVault('csv')">Export CSV</button>
+<button class="go2" onclick="clearVault()">Clear vault</button>
+<span class="muted" id="vInfo" style="align-self:center"></span>
+</div>
+<div id="vOut"></div>
+</section>
+
+<section id="spectrum" hidden>
+<h2>The 12-Tier Evidence Spectrum</h2>
+<p class="muted">Definitive → speculative, grounded in the Oxford CEBM Levels of Evidence and the GRADE / evidence-pyramid tradition. A tier reflects a study's <b>declared design and metadata</b> — how strong the <em>kind</em> of evidence is — not a verdict that the finding is true.</p>
+<div id="tierList"></div>
+<p class="note" style="margin-top:14px">Even Tier 1 can be revised — science is provisional. "Definitive" here means "highest-strength evidence class," not "irrevocable." Tiering is a transparent heuristic from publication type + title/abstract cues; verify any specific paper before relying on it.</p>
+</section>
+
+<section id="about" hidden>
+<h2>Method &amp; Honesty</h2>
+<div class="xp"><b>Real.</b> All 100 institutions are real. Findings are fetched live from Europe PMC / OpenAlex; titles, authors, years, and DOIs are theirs. No fabricated records, findings, or DOIs.</div>
+<div class="xp"><b>How tiering works.</b> Each finding's evidence tier is assigned from its declared publication type (meta-analysis, RCT, cohort, case report, preprint…) plus title/abstract cues (in vitro, in vivo, in silico, correlation). It grades the <em>strength of the evidence class</em>, transparently — not the truth of the claim.</div>
+<div class="xp"><b>How "connecting to archives" works.</b> University output — including open-access copies in their institutional repositories — is reached through OpenAlex and Europe PMC, which already federate those archives. No brittle per-library scraping; the coverage is broader and the links are stable.</div>
+<div class="xp"><b>The vault.</b> Findings you save persist in your browser (localStorage) and export to JSON/CSV — a real, growing, portable database. It lives on your device; it is not uploaded anywhere.</div>
+<div class="xp"><b>Not.</b> Not medical advice; not a claim any finding is true or clinically actionable; not a re-distributor of controlled data. Cross-pollination for IP requires prior-art search + patent counsel.</div>
+<div class="xp"><b>Basis.</b>
+<a href="https://www.cebm.ox.ac.uk/resources/levels-of-evidence/oxford-centre-for-evidence-based-medicine-levels-of-evidence-march-2009" target="_blank" rel="noopener">Oxford CEBM Levels of Evidence</a> ·
+<a href="https://www.gradeworkinggroup.org/" target="_blank" rel="noopener">GRADE</a> ·
+<a href="https://europepmc.org/RestfulWebService" target="_blank" rel="noopener">Europe PMC API</a> ·
+<a href="https://openalex.org/" target="_blank" rel="noopener">OpenAlex</a>.</div>
+</div>
+</section>
+
+<footer class="wrap">BioEvidence Atlas — Russell BioMedical. Live data © respective publishers via Europe PMC / OpenAlex. Evidence tiers are a transparent heuristic on declared study type, not a verdict of truth. No records, findings, or DOIs fabricated. Not medical advice.</footer>
+</div>
+<script>
+const INST=[["Harvard University / Harvard Medical School","Boston","MA","A"],["Johns Hopkins University","Baltimore","MD","A"],["University of California, San Francisco","San Francisco","CA","A"],["Stanford University","Stanford","CA","A"],["Massachusetts Institute of Technology","Cambridge","MA","A"],["Broad Institute of MIT and Harvard","Cambridge","MA","A"],["University of Pennsylvania","Philadelphia","PA","A"],["University of Michigan","Ann Arbor","MI","A"],["University of California, Los Angeles","Los Angeles","CA","A"],["University of California, San Diego","La Jolla","CA","A"],["University of Washington","Seattle","WA","A"],["Washington University in St. Louis","St. Louis","MO","A"],["Duke University","Durham","NC","A"],["Columbia University","New York","NY","A"],["Yale University","New Haven","CT","A"],["University of Pittsburgh","Pittsburgh","PA","A"],["University of North Carolina at Chapel Hill","Chapel Hill","NC","A"],["University of Wisconsin\u2013Madison","Madison","WI","A"],["Weill Cornell Medicine / Cornell University","New York","NY","A"],["Emory University","Atlanta","GA","A"],["Vanderbilt University","Nashville","TN","A"],["Mayo Clinic","Rochester","MN","A"],["Memorial Sloan Kettering Cancer Center","New York","NY","A"],["UT MD Anderson Cancer Center","Houston","TX","A"],["Icahn School of Medicine at Mount Sinai","New York","NY","B"],["University of Chicago","Chicago","IL","B"],["Northwestern University","Chicago","IL","B"],["UT Southwestern Medical Center","Dallas","TX","B"],["Baylor College of Medicine","Houston","TX","B"],["University of Minnesota","Minneapolis","MN","B"],["University of California, Davis","Davis","CA","B"],["University of California, Irvine","Irvine","CA","B"],["University of Southern California","Los Angeles","CA","B"],["New York University / NYU Langone","New York","NY","B"],["University of Colorado Anschutz","Aurora","CO","B"],["Ohio State University","Columbus","OH","B"],["Pennsylvania State University / Hershey","Hershey","PA","B"],["University of Alabama at Birmingham","Birmingham","AL","B"],["University of Florida","Gainesville","FL","B"],["University of Texas at Austin","Austin","TX","B"],["University of Maryland, Baltimore","Baltimore","MD","B"],["University of Rochester","Rochester","NY","B"],["University of Virginia","Charlottesville","VA","B"],["Case Western Reserve University","Cleveland","OH","B"],["Cleveland Clinic (Lerner)","Cleveland","OH","B"],["Oregon Health & Science University","Portland","OR","B"],["Indiana University School of Medicine","Indianapolis","IN","B"],["University of Iowa","Iowa City","IA","B"],["Boston University","Boston","MA","B"],["Tufts University","Boston","MA","B"],["Rockefeller University","New York","NY","A"],["Cold Spring Harbor Laboratory","Cold Spring Harbor","NY","A"],["Fred Hutchinson Cancer Center","Seattle","WA","A"],["Scripps Research","La Jolla","CA","A"],["Salk Institute for Biological Studies","La Jolla","CA","A"],["Dana-Farber Cancer Institute","Boston","MA","A"],["California Institute of Technology","Pasadena","CA","A"],["Princeton University","Princeton","NJ","B"],["University of California, Berkeley","Berkeley","CA","A"],["Rutgers University","New Brunswick","NJ","B"],["University of Cincinnati","Cincinnati","OH","C"],["University of Utah","Salt Lake City","UT","B"],["University of Arizona","Tucson","AZ","B"],["Michigan State University","East Lansing","MI","C"],["Stony Brook University","Stony Brook","NY","B"],["University at Buffalo","Buffalo","NY","C"],["University of Massachusetts / UMass Chan","Worcester","MA","B"],["University of Miami / Miller","Miami","FL","B"],["Wake Forest University","Winston-Salem","NC","C"],["Georgetown University","Washington","DC","C"],["George Washington University","Washington","DC","C"],["University of Kentucky","Lexington","KY","C"],["University of Kansas Medical Center","Kansas City","KS","C"],["University of Nebraska Medical Center","Omaha","NE","C"],["Medical College of Wisconsin","Milwaukee","WI","C"],["Medical University of South Carolina","Charleston","SC","C"],["University of Tennessee Health Science Center","Memphis","TN","C"],["Virginia Commonwealth University","Richmond","VA","C"],["Thomas Jefferson University","Philadelphia","PA","C"],["Temple University","Philadelphia","PA","C"],["University of Illinois Chicago","Chicago","IL","C"],["University of Illinois Urbana\u2013Champaign","Urbana","IL","B"],["Purdue University","West Lafayette","IN","B"],["Texas A&M University","College Station","TX","C"],["University of Georgia","Athens","GA","C"],["University of Oklahoma Health Sciences","Oklahoma City","OK","C"],["Saint Louis University","St. Louis","MO","C"],["Loyola University Chicago (Stritch)","Maywood","IL","C"],["University of Vermont (Larner)","Burlington","VT","D"],["Dartmouth College (Geisel)","Hanover","NH","B"],["Brown University","Providence","RI","B"],["University of New Mexico HSC","Albuquerque","NM","D"],["University of Hawai'i (JABSOM)","Honolulu","HI","D"],["University of Louisville","Louisville","KY","C"],["University of Arkansas for Medical Sciences","Little Rock","AR","D"],["West Virginia University","Morgantown","WV","D"],["University of Mississippi Medical Center","Jackson","MS","D"],["University of South Florida (Morsani)","Tampa","FL","C"],["Florida State University","Tallahassee","FL","D"],["Colorado State University","Fort Collins","CO","C"]], TIERS=[[1,"Definitive Consensus","Systematic review / meta-analysis of RCTs; replicated, guideline-grade.","#2fae6b"],[2,"Randomized Trial","Individual randomized controlled trial (experimental, causal).","#49b85a"],[3,"Prospective Cohort","Longitudinal observational study following groups forward.","#7cbf3f"],[4,"Case-Control","Retrospective comparison of exposed vs. unexposed groups.","#a9c035"],[5,"Cross-Sectional / Population","Snapshot associations across a population.","#c9bd2f"],[6,"In Vivo Mechanism","Animal / whole-organism experimental mechanism.","#d8a933"],[7,"In Vitro / Molecular","Cell-line or biochemical mechanism.","#e0913c"],[8,"Computational / In Silico","Modeling, simulation, bioinformatics prediction.","#e37a45"],[9,"Review / Synthesis","Narrative or scoping review; expert synthesis (non-quantitative).","#e06355"],[10,"Case Report / Series","Individual clinical observation(s); anecdotal.","#d85070"],[11,"Correlational / Hypothesis","Association reported without a causal design.","#c74d8f"],[12,"Preprint / Speculative","Not yet peer-reviewed; hypothesis, commentary, opinion.","#b25bc0"]], CONCEPT="C71924100";
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s),enc=encodeURIComponent;
+const TCOL={}; TIERS.forEach(t=>TCOL[t[0]]={name:t[1],desc:t[2],col:t[3]});
+const VK="bioevidence_vault_v1"; let lastResults=[];
+
+// ── evidence tiering: map declared pubType + title cues -> tier 1..12 ────────
+function tierOf(pubTypes, title, isPreprint){
+ const p=(pubTypes||[]).map(x=>String(x).toLowerCase()).join(" ");
+ const t=(title||"").toLowerCase();
+ if(isPreprint||p.includes("preprint")) return 12;
+ if(p.includes("meta-analysis")||p.includes("systematic")) return 1;
+ if(p.includes("randomized")||p.includes("randomised")||p.includes("clinical trial")||/randomi[sz]ed/.test(t)) return 2;
+ if(p.includes("cohort")||/\bcohort\b|prospective/.test(t)) return 3;
+ if(p.includes("case-control")||/case[- ]control/.test(t)) return 4;
+ if(/cross[- ]sectional|population[- ]based|prevalence/.test(t)) return 5;
+ if(p.includes("case-report")||p.includes("case reports")||/case report|case series/.test(t)) return 10;
+ if(p.includes("review")) return 9;
+ if(/\bin vivo\b|mouse|murine|rat\b|zebrafish|in a mouse|knockout/.test(t)) return 6;
+ if(/\bin vitro\b|cell line|in cultured|biochemical|enzymatic/.test(t)) return 7;
+ if(/in silico|computational|simulation|machine learning|deep learning|bioinformatic|modeling|modelling/.test(t)) return 8;
+ if(/associat|correlat|linked to|risk factor|hypothesis|may be|potential/.test(t)) return 11;
+ return 9; // default: peer-reviewed article treated as synthesis-level unless cues say otherwise
+}
+
+function fill(){
+ $("#qTier").innerHTML='<option value="">All tiers</option>'+TIERS.map(t=>`<option value="${t[0]}">T${t[0]} · ${t[1]}</option>`).join("");
+ const states=[...new Set(INST.map(i=>i[2]))].sort();
+ $("#ifState").insertAdjacentHTML("beforeend",states.map(s=>`<option>${s}</option>`).join(""));
+ $("#tierList").innerHTML=TIERS.map(t=>`<div class="tierrow"><span class="tchip" style="background:${t[3]}">T${t[0]}</span><div><b>${t[1]}</b><div class="muted">${t[2]}</div></div></div>`).join("");
+ renderInst(); refreshVaultCount();
+}
+function renderInst(){
+ const q=($("#isearch").value||"").toLowerCase(),g=$("#ifGrade").value,st=$("#ifState").value;
+ let L=INST.filter(i=>(!g||i[3]===g)&&(!st||i[2]===st)&&(!q||(i[0]+i[1]).toLowerCase().includes(q)));
+ const go={A:0,B:1,C:2,D:3}; L.sort((a,b)=>go[a[3]]-go[b[3]]||a[0].localeCompare(b[0]));
+ $("#iCount").textContent=`${L.length} institution${L.length!==1?'s':''}`;
+ $("#iGrid").innerHTML=L.map(i=>`<div class="card"><div class="row"><span class="grade ${i[3]}">${i[3]}</span><h3>${i[0]}</h3></div>
+  <div class="muted">${i[1]}, ${i[2]}</div>
+  <div class="row" style="margin-top:8px;gap:8px">
+   <a href="https://openalex.org/works?search=${enc(i[0]+' biomedical')}&sort=cited_by_count:desc" target="_blank" rel="noopener">OpenAlex ↗</a>
+   <a class="save" onclick='harvestInst(${JSON.stringify(i[0])})'>↓ Harvest top findings</a></div></div>`).join("");
+}
+
+async function epmc(query,extra){
+ const url=`https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=${enc(query)}&format=json&pageSize=50&resultType=core`;
+ const r=await fetch(url); const j=await r.json(); return (j.resultList&&j.resultList.result)||[];
+}
+function toFinding(x){
+ const pts=(x.pubTypeList&&x.pubTypeList.pubType)||[];
+ const isPre=(x.source==="PPR")||(x.commentCorrectionList===undefined&&x.source==="PPR");
+ const tier=tierOf(pts,x.title,isPre);
+ const id=x.doi?("doi:"+x.doi):(x.pmid?("pmid:"+x.pmid):(x.id||x.title));
+ return {id,tier,title:x.title,authors:x.authorString||"",year:x.pubYear||"",source:x.source||"",
+  doi:x.doi||"",pmid:x.pmid||"",journal:x.journalTitle||""};
+}
+function distBar(items){
+ const c={}; TIERS.forEach(t=>c[t[0]]=0); items.forEach(f=>c[f.tier]++);
+ const tot=items.length||1;
+ const segs=TIERS.map(t=>`<div class="tierseg" title="T${t[0]} ${t[1]}: ${c[t[0]]}" style="background:${t[3]};flex:${c[t[0]]||0.001}"></div>`).join("");
+ const legend=TIERS.filter(t=>c[t[0]]).map(t=>`<span class="pill" style="border-color:${t[3]};color:${t[3]}">T${t[0]} ${t[1]}: ${c[t[0]]}</span>`).join(" ");
+ return `<div class="tierbar">${segs}</div><div style="margin:6px 0 4px">${legend}</div>`;
+}
+function renderFindings(items){
+ const ft=$("#qTier").value;
+ let L=items.slice().sort((a,b)=>a.tier-b.tier);
+ if(ft) L=L.filter(f=>String(f.tier)===ft);
+ $("#hCount").textContent=`${L.length} finding${L.length!==1?'s':''} shown · sorted definitive → speculative`;
+ $("#hOut").innerHTML=L.map(f=>{const c=TCOL[f.tier];
+  const link=f.doi?`https://doi.org/${f.doi}`:(f.pmid?`https://europepmc.org/article/MED/${f.pmid}`:"#");
+  return `<div class="finding" style="border-left-color:${c.col}">
+   <div class="row"><span class="tchip" style="background:${c.col}">T${f.tier}</span><span class="t">${f.title||'(untitled)'}</span></div>
+   <div class="meta">${c.name} · ${f.authors||'—'}${f.year?' · '+f.year:''}${f.journal?' · '+f.journal:''}${f.source?' · '+f.source:''}</div>
+   <div class="row"><a href="${link}" target="_blank" rel="noopener">${f.doi?('doi:'+f.doi):(f.pmid?('PMID '+f.pmid):'source ↗')}</a>
+   <button class="save" onclick='saveOne(${JSON.stringify(f).replace(/'/g,"&#39;")})'>+ Save to vault</button></div></div>`;}).join("")||'<p class="muted">No results.</p>';
+}
+async function harvest(){
+ const q=$("#q").value.trim(); if(!q) return;
+ $("#hOut").innerHTML='<p class="muted">Harvesting from Europe PMC…</p>'; $("#dist").innerHTML="";
+ try{
+  const raw=await epmc(q);
+  lastResults=raw.map(toFinding);
+  $("#dist").innerHTML=distBar(lastResults);
+  renderFindings(lastResults);
+ }catch(e){$("#hOut").innerHTML=`<div class="note">Live fetch was blocked here (${e.message}) — common when opening the file from disk. Host the page, or search <a href="https://europepmc.org/search?query=${enc(q)}" target="_blank" rel="noopener">on Europe PMC ↗</a>.</div>`;}
+}
+async function harvestInst(name){
+ $$("nav button").forEach(x=>x.classList.remove("active")); document.querySelector('[data-tab=harvest]').classList.add("active");
+ $$("section").forEach(s=>s.hidden=true); $("#harvest").hidden=false;
+ $("#q").value=`AFF:"${name}"`; await harvest();
+}
+$("#qTier")&&$("#qTier").addEventListener("change",()=>renderFindings(lastResults));
+
+// ── vault (persistent) ───────────────────────────────────────────────────────
+function getVault(){try{return JSON.parse(localStorage.getItem(VK)||"[]");}catch(e){return[];}}
+function setVault(v){try{localStorage.setItem(VK,JSON.stringify(v));}catch(e){}refreshVaultCount();}
+function refreshVaultCount(){const v=getVault();$("#kVault").textContent=v.length;if($("#vInfo"))$("#vInfo").textContent=`${v.length} saved · stored in this browser only`;}
+function saveOne(f){const v=getVault();if(!v.some(x=>x.id===f.id)){v.push({...f,savedAt:Date.now()});setVault(v);}}
+function saveAllVisible(){const ft=$("#qTier").value;let L=lastResults;if(ft)L=L.filter(f=>String(f.tier)===ft);const v=getVault();let n=0;L.forEach(f=>{if(!v.some(x=>x.id===f.id)){v.push({...f,savedAt:Date.now()});n++;}});setVault(v);alert(`Saved ${n} new finding(s) to the vault (${v.length} total).`);}
+function renderVault(){const v=getVault().slice().sort((a,b)=>a.tier-b.tier);
+ if(!v.length){$("#vOut").innerHTML='<p class="muted">Vault is empty. Harvest a topic and save findings.</p>';return;}
+ $("#vOut").innerHTML=distBar(v)+v.map(f=>{const c=TCOL[f.tier];const link=f.doi?`https://doi.org/${f.doi}`:(f.pmid?`https://europepmc.org/article/MED/${f.pmid}`:"#");
+  return `<div class="finding" style="border-left-color:${c.col}"><div class="row"><span class="tchip" style="background:${c.col}">T${f.tier}</span><span class="t">${f.title}</span></div>
+   <div class="meta">${c.name} · ${f.authors||'—'}${f.year?' · '+f.year:''}</div>
+   <div class="row"><a href="${link}" target="_blank" rel="noopener">${f.doi?('doi:'+f.doi):(f.pmid?('PMID '+f.pmid):'source')}</a>
+   <button class="save" onclick='removeOne(${JSON.stringify(f.id)})'>− Remove</button></div></div>`;}).join("");
+}
+function removeOne(id){setVault(getVault().filter(x=>x.id!==id));renderVault();}
+function clearVault(){if(confirm("Clear the entire vault? This cannot be undone.")){setVault([]);renderVault();}}
+function exportVault(fmt){const v=getVault();if(!v.length){alert("Vault is empty.");return;}
+ let blob,name;
+ if(fmt==="json"){blob=new Blob([JSON.stringify(v,null,2)],{type:"application/json"});name="bioevidence_vault.json";}
+ else{const cols=["tier","tierName","title","authors","year","journal","doi","pmid","source"];
+  const rows=[cols.join(",")].concat(v.map(f=>cols.map(k=>{const val=k==="tierName"?TCOL[f.tier].name:(f[k]??"");return '"'+String(val).replace(/"/g,'""')+'"';}).join(",")));
+  blob=new Blob([rows.join("\n")],{type:"text/csv"});name="bioevidence_vault.csv";}
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);}
+
+["#isearch","#ifGrade","#ifState"].forEach(s=>$(s).addEventListener("input",renderInst));
+$$("nav button").forEach(b=>b.onclick=()=>{$$("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");$$("section").forEach(s=>s.hidden=true);$("#"+b.dataset.tab).hidden=false;if(b.dataset.tab==="vault")renderVault();});
+fill();
+</script></body></html>
