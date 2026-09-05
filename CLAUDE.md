@@ -49,6 +49,7 @@ Top-level content directories (each holds Markdown/PDF, not code unless noted):
 | `research_sources/` | External source material cited in reports |
 | `the-new-plan/`, `kanawha-covenant/`, `quantum/`, `marketing/`, `diagnostics/`, `calibration_answers/`, `AQAL/` | Topic-specific document sets |
 | `books/` | Reference PDFs (AI/ML textbooks) read for the journal arc |
+| `aqal_research/`, `nephew_correspondence/`, `daily-tracker-journal/`, `workout_data/` | Research passes, correspondence project, daily tracker, and workout logs (merged in from `master`) |
 | `vector_db/` | Python semantic-search index over the corpus (**code** — see below) |
 | `russell-capital/`, `stop-fatty/` | Standalone web-app prototypes (**code** — see below) |
 

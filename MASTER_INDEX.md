@@ -140,6 +140,21 @@ Self-contained; run tooling from inside the directory. Supersedes the older
 
 ---
 
+### `/aqal_research/` — AQAL Research Passes
+- Perplexity research passes: interventions, feedback loops, parenting OS, underwriting system, and scenario analysis
+
+### `/nephew_correspondence/` — Correspondence Project
+- Letters, story intake, rankings, and resequencing drafts (the "church girl" letter project; `.md` source + `.pdf` export pairs)
+
+### `/daily-tracker-journal/` — Daily Tracker Journal
+- Day-by-day tracker entries
+
+### `/workout_data/` — Workout & Session Logs
+- Dated session/workout logs plus `sam_tracker_log.md`
+
+### Root-level essays & analyses (merged from `master`)
+- `Chronicles_of_the_Quiet_Engine`, `The_Engine_Room_Sam_Russell`, `The_Pilgrimage_of_the_Deep`, `Sam_Russell_Optimization_Protocol`, `Neurological_Acceleration_Analysis` (v1 / v2 / Final), `emotional_meta_state_progression`, the `church_girl_*` letter series, and `aqal_platform_audit` — each an editable `.md` with a rendered `.pdf`
+
 ## How to Use This Repo
 
 **For any AI brother starting a new session:**

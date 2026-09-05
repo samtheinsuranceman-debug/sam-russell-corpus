@@ -1,0 +1,695 @@
+{
+  "results": [
+    {
+      "input": "Terminal file manager with vim keybindings (like ranger or lf)",
+      "output": {},
+      "error": "too many main events since last plan advance"
+    },
+    {
+      "input": "Static site generator for blogs and documentation (like Hugo)",
+      "output": {
+        "category": "Static Site Generator",
+        "description": "The world's fastest framework for building websites.",
+        "github_url": "https://github.com/gohugoio/hugo",
+        "install_command": "brew install hugo",
+        "stars": "88.7k",
+        "tier": "Legendary",
+        "tool_name": "hugo",
+        "user_request": "I need to build a fast, flexible static website or blog using Markdown and Go templates."
+      },
+      "error": ""
+    },
+    {
+      "input": "Command-line JSON processor and query tool (like jq)",
+      "output": {
+        "category": "Data Processing",
+        "description": "Command-line JSON processor",
+        "github_url": "https://github.com/jqlang/jq",
+        "install_command": "sudo apt-get install jq",
+        "stars": "35.0k",
+        "tier": "Excellent",
+        "tool_name": "jq",
+        "user_request": "\"I need to extract specific fields from a large JSON API response and format them as a CSV file.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Terminal multiplexer modern alternative to tmux (like Zellij)",
+      "output": {
+        "category": "Terminal Multiplexer",
+        "description": "A modern terminal workspace and multiplexer with built-in layouts, mouse support, and WebAssembly plugins.",
+        "github_url": "https://github.com/zellij-org/zellij",
+        "install_command": "cargo install --locked zellij",
+        "stars": "33.9k",
+        "tier": "Excellent",
+        "tool_name": "zellij",
+        "user_request": "\"I need a modern terminal multiplexer with built-in layouts and mouse support to replace tmux\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Git history visualization and interactive rebase tool (like lazygit)",
+      "output": {
+        "category": "Git Tools",
+        "description": "Simple terminal UI for git commands that makes visualizing history and interactive rebasing fast and intuitive",
+        "github_url": "https://github.com/jesseduffield/lazygit",
+        "install_command": "brew install lazygit",
+        "stars": "79.7k",
+        "tier": "Legendary",
+        "tool_name": "lazygit",
+        "user_request": "\"I need a terminal tool to easily visualize my git commit history and perform interactive rebases without memorizing complex git commands\""
+      },
+      "error": ""
+    },
+    {
+      "input": "HTTP client for API testing from terminal (like httpie)",
+      "output": {
+        "category": "API Testing",
+        "description": "Modern, user-friendly command-line HTTP client for the API era with JSON support, colors, and sessions",
+        "github_url": "https://github.com/httpie/cli",
+        "install_command": "pip install httpie",
+        "stars": "38.2k",
+        "tier": "Excellent",
+        "tool_name": "cli",
+        "user_request": "I need to test my REST API endpoints from the terminal with syntax highlighting and easy JSON support"
+      },
+      "error": ""
+    },
+    {
+      "input": "Disk usage analyzer with terminal UI (like ncdu or dust)",
+      "output": {
+        "category": "Disk Usage Analyzer",
+        "description": "A more intuitive version of du in rust",
+        "github_url": "https://github.com/bootandy/dust",
+        "install_command": "cargo install du-dust",
+        "stars": "11.8k",
+        "tier": "Excellent",
+        "tool_name": "dust",
+        "user_request": "\"I need a disk usage analyzer with a terminal UI to quickly find out what's taking up space on my server.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Fast file search tool replacing find (like fd)",
+      "output": {
+        "category": "File Search",
+        "description": "A simple, fast and user-friendly alternative to 'find'",
+        "github_url": "https://github.com/sharkdp/fd",
+        "install_command": "cargo install fd-find",
+        "stars": "43.5k",
+        "tier": "Excellent",
+        "tool_name": "fd",
+        "user_request": "I need to quickly find all Python files in my project directory that contain the word 'test' in their filename"
+      },
+      "error": ""
+    },
+    {
+      "input": "Modern grep replacement with speed (like ripgrep)",
+      "output": {
+        "category": "File Search",
+        "description": "Fast grep replacement written in Rust with smart defaults",
+        "github_url": "https://github.com/BurntSushi/ripgrep",
+        "install_command": "cargo install ripgrep",
+        "stars": "65.5k",
+        "tier": "Legendary",
+        "tool_name": "ripgrep",
+        "user_request": "\"I need to search through 10GB of log files for a specific error pattern\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Cat command replacement with syntax highlighting (like bat)",
+      "output": {
+        "category": "CLI Tools",
+        "description": "A cat(1) clone with wings, providing syntax highlighting and Git integration",
+        "github_url": "https://github.com/sharkdp/bat",
+        "install_command": "cargo install --locked bat",
+        "stars": "59.4k",
+        "tier": "Legendary",
+        "tool_name": "bat",
+        "user_request": "I need a better version of the cat command that shows syntax highlighting when I view source code files in my terminal"
+      },
+      "error": ""
+    },
+    {
+      "input": "Shell prompt customization framework (like starship)",
+      "output": {
+        "category": "Shell Prompt",
+        "description": "The minimal, blazing-fast, and infinitely customizable prompt for any shell",
+        "github_url": "https://github.com/starship/starship",
+        "install_command": "curl -sS https://starship.rs/install.sh | sh",
+        "stars": "58.5k",
+        "tier": "Legendary",
+        "tool_name": "starship",
+        "user_request": "\"I want a fast, customizable, and cross-shell prompt that shows relevant information like git status and language versions.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Docker container management TUI (like lazydocker)",
+      "output": {
+        "category": "DevOps",
+        "description": "The lazier way to manage everything docker",
+        "github_url": "https://github.com/jesseduffield/lazydocker",
+        "install_command": "brew install jesseduffield/lazydocker/lazydocker",
+        "stars": "51.4k",
+        "tier": "Legendary",
+        "tool_name": "lazydocker",
+        "user_request": "I need a simple terminal UI to view logs, restart containers, and manage my Docker compose stack without typing long commands"
+      },
+      "error": ""
+    },
+    {
+      "input": "Database GUI client that works with multiple databases (like DBeaver)",
+      "output": {
+        "category": "Database GUI",
+        "description": "Free universal database tool and SQL client supporting multiple databases including MySQL, PostgreSQL, SQLite, and more",
+        "github_url": "https://github.com/dbeaver/dbeaver",
+        "install_command": "brew install --cask dbeaver-community",
+        "stars": "50.7k",
+        "tier": "Legendary",
+        "tool_name": "dbeaver",
+        "user_request": "\"I need a free, multi-platform database GUI client that can connect to PostgreSQL, MySQL, and SQLite databases all from one application.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "REST API mocking and testing server (like json-server)",
+      "output": {
+        "category": "API Mocking",
+        "description": "Get a full fake REST API with zero coding in less than 30 seconds",
+        "github_url": "https://github.com/typicode/json-server",
+        "install_command": "npm install -g json-server",
+        "stars": "75.6k",
+        "tier": "Legendary",
+        "tool_name": "json-server",
+        "user_request": "\"I need to quickly spin up a fake REST API to test my frontend application without writing any backend code\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Load testing and benchmarking HTTP tool (like k6 or wrk)",
+      "output": {
+        "category": "Load Testing",
+        "description": "Modern HTTP benchmarking tool capable of generating significant load from a single multi-core CPU.",
+        "github_url": "https://github.com/wg/wrk",
+        "install_command": "brew install wrk",
+        "stars": "40.3k",
+        "tier": "Excellent",
+        "tool_name": "wrk",
+        "user_request": "\"I need to benchmark my new HTTP API server to see how many requests per second it can handle under heavy load.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Screenshot tool for code snippets (like carbon or silicon)",
+      "output": {
+        "category": "Code Screenshot",
+        "description": "Create and share beautiful images of your source code",
+        "github_url": "https://github.com/carbon-app/carbon",
+        "install_command": "npm install -g carbon-now-cli",
+        "stars": "36.0k",
+        "tier": "Excellent",
+        "tool_name": "carbon",
+        "user_request": "\"I need to create a beautiful, shareable image of my code snippet for a presentation or social media post.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Markdown presentation tool for terminal slides (like slides or marp)",
+      "output": {
+        "category": "Presentation",
+        "description": "Terminal based presentation tool that renders markdown files as slides directly in your terminal",
+        "github_url": "https://github.com/maaslalani/slides",
+        "install_command": "go install github.com/maaslalani/slides@latest",
+        "stars": "11.5k",
+        "tier": "Excellent",
+        "tool_name": "slides",
+        "user_request": "\"I want to create and present a slide deck directly in my terminal using markdown, without needing a web browser or PowerPoint\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Email sending library for developers (like nodemailer or resend)",
+      "output": {
+        "category": "Email",
+        "description": "The best way to send emails in Go.",
+        "github_url": "https://github.com/go-gomail/gomail",
+        "install_command": "go get gopkg.in/gomail.v2",
+        "stars": "4.7k",
+        "tier": "Solid",
+        "tool_name": "gomail",
+        "user_request": "\"I need a reliable Go library to send automated notification emails with attachments to our users.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "PDF generation from HTML/CSS (like puppeteer or weasyprint)",
+      "output": {
+        "category": "Browser Automation",
+        "description": "JavaScript API for Chrome and Firefox that provides browser automation, web scraping, and HTML to PDF generation.",
+        "github_url": "https://github.com/puppeteer/puppeteer",
+        "install_command": "npm i puppeteer",
+        "stars": "95.2k",
+        "tier": "Legendary",
+        "tool_name": "puppeteer",
+        "user_request": "I need to generate PDF reports from my web application's HTML and CSS"
+      },
+      "error": ""
+    },
+    {
+      "input": "QR code generator library or CLI (like qrcode or qrencode)",
+      "output": {
+        "category": "Utilities",
+        "description": "Cross-browser QRCode generator for javascript",
+        "github_url": "https://github.com/davidshimjs/qrcodejs",
+        "install_command": "npm install qrcodejs",
+        "stars": "14.2k",
+        "tier": "Excellent",
+        "tool_name": "qrcodejs",
+        "user_request": "I need a simple, cross-browser JavaScript library to generate QR codes dynamically on my website without any dependencies."
+      },
+      "error": ""
+    },
+    {
+      "input": "Clipboard manager for developers (like clippy or maccy)",
+      "output": {
+        "category": "Productivity",
+        "description": "Lightweight clipboard manager for macOS",
+        "github_url": "https://github.com/p0deje/Maccy",
+        "install_command": "brew install maccy",
+        "stars": "20.5k",
+        "tier": "Excellent",
+        "tool_name": "Maccy",
+        "user_request": "\"I need a lightweight clipboard manager for my Mac to keep track of copied text and code snippets.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "System monitoring dashboard for terminal (like btop or glances)",
+      "output": {
+        "category": "System Monitoring",
+        "description": "A monitor of resources",
+        "github_url": "https://github.com/aristocratos/btop",
+        "install_command": "sudo snap install btop",
+        "stars": "33.0k",
+        "tier": "Excellent",
+        "tool_name": "btop",
+        "user_request": "I need a system monitoring dashboard for terminal (like btop or glances)"
+      },
+      "error": ""
+    },
+    {
+      "input": "Network packet analysis tool (like wireshark CLI tshark)",
+      "output": {
+        "category": "Network Analysis",
+        "description": "A terminal user-interface for tshark, inspired by Wireshark",
+        "github_url": "https://github.com/gcla/termshark",
+        "install_command": "go install github.com/gcla/termshark/v2/cmd/termshark@v2.4.0",
+        "stars": "9.9k",
+        "tier": "Solid",
+        "tool_name": "termshark",
+        "user_request": "\"I need a terminal-based network packet analysis tool like Wireshark to inspect pcaps on a remote server without X11\""
+      },
+      "error": ""
+    },
+    {
+      "input": "SSL certificate management and auto-renewal (like certbot)",
+      "output": {
+        "category": "DevOps",
+        "description": "A pure Unix shell script ACME client for SSL / TLS certificate automation",
+        "github_url": "https://github.com/acmesh-official/acme.sh",
+        "install_command": "curl https://get.acme.sh | sh -s email=my@example.com",
+        "stars": "47.0k",
+        "tier": "Excellent",
+        "tool_name": "acme.sh",
+        "user_request": "\"I need a lightweight, dependency-free tool to automatically issue and renew Let's Encrypt SSL certificates on my Linux server.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Reverse proxy and load balancer (like Caddy or Traefik)",
+      "output": {
+        "category": "DevOps",
+        "description": "Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS",
+        "github_url": "https://github.com/caddyserver/caddy",
+        "install_command": "sudo apt install caddy",
+        "stars": "73.5k",
+        "tier": "Legendary",
+        "tool_name": "caddy",
+        "user_request": "I need a reverse proxy and load balancer that automatically handles HTTPS certificates for my web applications"
+      },
+      "error": ""
+    },
+    {
+      "input": "Log aggregation and viewing tool (like lnav or GoAccess)",
+      "output": {
+        "category": "Log Analysis",
+        "description": "GoAccess is a real-time web log analyzer and interactive viewer that runs in a terminal in *nix systems or through your browser.",
+        "github_url": "https://github.com/allinurl/goaccess",
+        "install_command": "apt-get install goaccess",
+        "stars": "20.6k",
+        "tier": "Excellent",
+        "tool_name": "goaccess",
+        "user_request": "\"I need a real-time web log analyzer and interactive viewer that runs in a terminal or browser to monitor traffic and detect anomalies.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Cron job monitoring and management (like healthchecks)",
+      "output": {
+        "category": "DevOps",
+        "description": "Open-source cron job and background task monitoring service, written in Python \u0026 Django",
+        "github_url": "https://github.com/healthchecks/healthchecks",
+        "install_command": "git clone https://github.com/healthchecks/healthchecks.git",
+        "stars": "10.1k",
+        "tier": "Excellent",
+        "tool_name": "healthchecks",
+        "user_request": "I need a tool to monitor my scheduled cron jobs and send alerts if they fail to run on time."
+      },
+      "error": ""
+    },
+    {
+      "input": "File synchronization across devices (like Syncthing)",
+      "output": {
+        "category": "File Synchronization",
+        "description": "Open Source Continuous File Synchronization",
+        "github_url": "https://github.com/syncthing/syncthing",
+        "install_command": "sudo apt-get install syncthing",
+        "stars": "85.8k",
+        "tier": "Legendary",
+        "tool_name": "syncthing",
+        "user_request": "I need to sync my documents and photos across my laptop, phone, and home server without relying on a cloud service like Dropbox."
+      },
+      "error": ""
+    },
+    {
+      "input": "Password manager CLI or self-hosted (like Bitwarden or pass)",
+      "output": {
+        "category": "Password Manager",
+        "description": "Unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs",
+        "github_url": "https://github.com/dani-garcia/vaultwarden",
+        "install_command": "docker pull vaultwarden/server:latest",
+        "stars": "63.0k",
+        "tier": "Legendary",
+        "tool_name": "vaultwarden",
+        "user_request": "\"I want to self-host a lightweight Bitwarden-compatible password manager on my Raspberry Pi\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Bookmark manager self-hosted (like Linkding or Shiori)",
+      "output": {
+        "category": "Bookmark Manager",
+        "description": "Self-hosted collaborative bookmark manager to collect, read, annotate, and fully preserve what matters, all in one place.",
+        "github_url": "https://github.com/linkwarden/linkwarden",
+        "install_command": "docker run -d -p 3000:3000 ghcr.io/linkwarden/linkwarden:latest",
+        "stars": "18.8k",
+        "tier": "Excellent",
+        "tool_name": "linkwarden",
+        "user_request": "\"I need a self-hosted bookmark manager like Linkding or Shiori to save, organize, and archive web pages I want to read later.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Note-taking app with markdown support (like Obsidian alternatives - Logseq or Joplin)",
+      "output": {
+        "category": "Note-taking",
+        "description": "Joplin - the privacy-focused note taking app with sync capabilities for Windows, macOS, Linux, Android and iOS.",
+        "github_url": "https://github.com/laurent22/joplin",
+        "install_command": "wget -O - https://raw.githubusercontent.com/laurent22/joplin/master/Joplin_install_and_update.sh | bash",
+        "stars": "55.3k",
+        "tier": "Legendary",
+        "tool_name": "joplin",
+        "user_request": "\"I need a privacy-focused note-taking app with markdown support that syncs across all my devices.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Kanban board self-hosted (like WeKan or Focalboard)",
+      "output": {
+        "category": "Project Management",
+        "description": "Focalboard is an open source, self-hosted alternative to Trello, Notion, and Asana.",
+        "github_url": "https://github.com/mattermost-community/focalboard",
+        "install_command": "docker run -it -p 8000:8000 mattermost/focalboard",
+        "stars": "26.2k",
+        "tier": "Excellent",
+        "tool_name": "focalboard",
+        "user_request": "\"I need a self-hosted Kanban board alternative to Trello or Notion to manage my team's projects without relying on cloud services.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Time tracking tool for developers (like Toggl alternatives - Traggo or ActivityWatch)",
+      "output": {
+        "category": "Time Tracking",
+        "description": "The best free and open-source automated time tracker. Cross-platform, extensible, privacy-focused.",
+        "github_url": "https://github.com/ActivityWatch/activitywatch",
+        "install_command": "make build",
+        "stars": "18.0k",
+        "tier": "Excellent",
+        "tool_name": "activitywatch",
+        "user_request": "I need an automated time tracker that runs in the background to see how much time I spend on different apps and websites without manually starting and stopping timers."
+      },
+      "error": ""
+    },
+    {
+      "input": "Screen recording and GIF creation tool (like Gifski or Peek)",
+      "output": {
+        "category": "Screen Recording",
+        "description": "ScreenToGif allows you to record a selected area of your screen, edit and save it as a gif or video.",
+        "github_url": "https://github.com/NickeManarin/ScreenToGif",
+        "install_command": "winget install -e --id NickeManarin.ScreenToGif",
+        "stars": "27.1k",
+        "tier": "Excellent",
+        "tool_name": "ScreenToGif",
+        "user_request": "\"I need a tool to record a small area of my screen and save it as an animated GIF to show a bug in my bug report.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Font identification and management tool (like fonttools)",
+      "output": {
+        "category": "Font Management",
+        "description": "A library to manipulate font files from Python.",
+        "github_url": "https://github.com/fonttools/fonttools",
+        "install_command": "pip install fonttools",
+        "stars": "5.1k",
+        "tier": "Excellent",
+        "tool_name": "fonttools",
+        "user_request": "I need to convert TrueType and OpenType fonts to and from an XML text format."
+      },
+      "error": ""
+    },
+    {
+      "input": "Color palette generator or picker tool (like pastel CLI)",
+      "output": {
+        "category": "Color Tools",
+        "description": "A command-line tool to generate, analyze, convert and manipulate colors",
+        "github_url": "https://github.com/sharkdp/pastel",
+        "install_command": "cargo install pastel",
+        "stars": "6.4k",
+        "tier": "Solid",
+        "tool_name": "pastel",
+        "user_request": "I need a command-line tool to generate a set of visually distinct colors for my terminal theme"
+      },
+      "error": ""
+    },
+    {
+      "input": "Diagram as code tool (like Mermaid or D2)",
+      "output": {
+        "category": "Diagrams",
+        "description": "Generation of diagrams like flowcharts or sequence diagrams from text in a similar manner as markdown",
+        "github_url": "https://github.com/mermaid-js/mermaid",
+        "install_command": "npm install -g @mermaid-js/mermaid-cli",
+        "stars": "88.9k",
+        "tier": "Legendary",
+        "tool_name": "mermaid",
+        "user_request": "I need to generate a flowchart or sequence diagram from a text description"
+      },
+      "error": ""
+    },
+    {
+      "input": "API documentation generator (like Swagger/OpenAPI - Redoc)",
+      "output": {
+        "category": "API Documentation",
+        "description": "Open source tool for generating beautiful, responsive three-panel API reference documentation from OpenAPI definitions",
+        "github_url": "https://github.com/Redocly/redoc",
+        "install_command": "npx @redocly/cli build-docs openapi.yaml",
+        "stars": "25.8k",
+        "tier": "Excellent",
+        "tool_name": "redoc",
+        "user_request": "\"I need to generate a beautiful, responsive API reference documentation website from my OpenAPI/Swagger specification file\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Regex testing and visualization tool (like regex101 alternatives)",
+      "output": {
+        "category": "Development",
+        "description": "RegExr is a HTML/JS based tool for creating, testing, and learning about Regular Expressions",
+        "github_url": "https://github.com/gskinner/regexr",
+        "install_command": "npm install",
+        "stars": "10.3k",
+        "tier": "Excellent",
+        "tool_name": "regexr",
+        "user_request": "\"I need a visual tool to test and debug my regular expressions with real-time matching and syntax highlighting\""
+      },
+      "error": ""
+    },
+    {
+      "input": "CSV data processing CLI tool (like xsv or csvkit)",
+      "output": {
+        "category": "Data Processing",
+        "description": "A fast CSV command line toolkit written in Rust.",
+        "github_url": "https://github.com/BurntSushi/xsv",
+        "install_command": "cargo install xsv",
+        "stars": "10.7k",
+        "tier": "Excellent",
+        "tool_name": "xsv",
+        "user_request": "I need to quickly filter, slice, and join multiple large CSV files from the command line without loading them into memory"
+      },
+      "error": ""
+    },
+    {
+      "input": "Spell checker for code and documentation (like cspell or codespell)",
+      "output": {
+        "category": "Spell Checker",
+        "description": "Source code spell checker",
+        "github_url": "https://github.com/crate-ci/typos",
+        "install_command": "cargo install typos-cli",
+        "stars": "4.0k",
+        "tier": "Solid",
+        "tool_name": "typos",
+        "user_request": "\"I need a fast spell checker for my source code and documentation that avoids false positives.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Changelog generator from git commits (like conventional-changelog or git-cliff)",
+      "output": {
+        "category": "DevOps",
+        "description": "A highly customizable Changelog Generator that follows Conventional Commit specifications",
+        "github_url": "https://github.com/orhun/git-cliff",
+        "install_command": "cargo install git-cliff",
+        "stars": "11.9k",
+        "tier": "Excellent",
+        "tool_name": "git-cliff",
+        "user_request": "I need to automatically generate a changelog from my git commit history based on conventional commits"
+      },
+      "error": ""
+    },
+    {
+      "input": "Dependency vulnerability scanner (like Trivy or Snyk)",
+      "output": {
+        "category": "Security",
+        "description": "Find vulnerabilities, misconfigurations, secrets, SBOM in containers, Kubernetes, code repositories, clouds and more",
+        "github_url": "https://github.com/aquasecurity/trivy",
+        "install_command": "curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin",
+        "stars": "36.6k",
+        "tier": "Excellent",
+        "tool_name": "trivy",
+        "user_request": "\"I need to scan my Docker images and Kubernetes manifests for known vulnerabilities and misconfigurations before deploying to production.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Container image builder without Docker daemon (like Buildah or Kaniko)",
+      "output": {
+        "category": "DevOps",
+        "description": "Build container images from a Dockerfile inside a container or Kubernetes cluster without a Docker daemon.",
+        "github_url": "https://github.com/GoogleContainerTools/kaniko",
+        "install_command": "docker pull gcr.io/kaniko-project/executor:latest",
+        "stars": "15.8k",
+        "tier": "Excellent",
+        "tool_name": "kaniko",
+        "user_request": "\"I need to securely build Docker images inside my Kubernetes CI/CD pipeline without mounting the Docker daemon socket\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Infrastructure as code tool (like Terraform or Pulumi)",
+      "output": {
+        "category": "DevOps",
+        "description": "Terraform enables you to safely and predictably create, change, and improve infrastructure.",
+        "github_url": "https://github.com/hashicorp/terraform",
+        "install_command": "brew install terraform",
+        "stars": "48.7k",
+        "tier": "Excellent",
+        "tool_name": "terraform",
+        "user_request": "\"I need to provision and manage AWS resources using declarative configuration files.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Secrets management tool (like SOPS or Vault)",
+      "output": {
+        "category": "DevOps",
+        "description": "A tool for secrets management, encryption as a service, and privileged access management",
+        "github_url": "https://github.com/hashicorp/vault",
+        "install_command": "brew tap hashicorp/tap \u0026\u0026 brew install hashicorp/tap/vault",
+        "stars": "35.8k",
+        "tier": "Excellent",
+        "tool_name": "vault",
+        "user_request": "\"I need a secure way to store and manage API keys, passwords, and certificates for my microservices architecture.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Feature flag management self-hosted (like Unleash or Flagsmith)",
+      "output": {
+        "category": "Feature Flags",
+        "description": "Open-source feature management platform",
+        "github_url": "https://github.com/Unleash/unleash",
+        "install_command": "docker compose up -d",
+        "stars": "13.6k",
+        "tier": "Excellent",
+        "tool_name": "unleash",
+        "user_request": "\"I need a self-hosted feature flag management system to gradually roll out new features to specific user segments.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Uptime monitoring self-hosted (like Uptime Kuma)",
+      "output": {
+        "category": "DevOps",
+        "description": "A fancy self-hosted monitoring tool",
+        "github_url": "https://github.com/louislam/uptime-kuma",
+        "install_command": "docker run -d --restart=always -p 3001:3001 -v uptime-kuma:/app/data --name uptime-kuma louislam/uptime-kuma:2",
+        "stars": "88.5k",
+        "tier": "Legendary",
+        "tool_name": "uptime-kuma",
+        "user_request": "\"I need a self-hosted uptime monitoring tool to keep track of my servers and websites.\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Form backend self-hosted (like Formspree alternative - Formbricks)",
+      "output": {
+        "category": "Forms",
+        "description": "Open-source Qualtrics alternative for building surveys and forms with self-hosting capabilities",
+        "github_url": "https://github.com/formbricks/formbricks",
+        "install_command": "docker run -p 3000:3000 formbricks/formbricks",
+        "stars": "12.4k",
+        "tier": "Excellent",
+        "tool_name": "formbricks",
+        "user_request": "\"I need a self-hosted alternative to Formspree or Typeform to build surveys and collect user feedback without sending data to third parties\""
+      },
+      "error": ""
+    },
+    {
+      "input": "Link shortener self-hosted (like Shlink or Dub)",
+      "output": {
+        "category": "Link Shortener",
+        "description": "The modern link attribution platform and self-hosted URL shortener loved by world-class marketing teams",
+        "github_url": "https://github.com/dubinc/dub",
+        "install_command": "git clone https://github.com/dubinc/dub.git \u0026\u0026 cd dub \u0026\u0026 pnpm install",
+        "stars": "23.7k",
+        "tier": "Excellent",
+        "tool_name": "dub",
+        "user_request": "I need a self-hosted link shortener with advanced analytics and attribution tracking for my marketing campaigns"
+      },
+      "error": ""
+    }
+  ]
+}
