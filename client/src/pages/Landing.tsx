@@ -16,6 +16,7 @@ import {
   Shield,
   ShieldCheck,
   Stethoscope,
+  Sunrise,
   TrendingUp,
   TreePine,
   Users,
@@ -251,20 +252,44 @@ export default function Landing() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,8,8,.96)_0%,rgba(0,10,10,.78)_38%,rgba(0,10,10,.3)_70%,rgba(0,8,8,.62)_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.52)_0%,transparent_32%,rgba(2,15,12,.25)_68%,#060f20_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_45%,rgba(16,185,129,.17),transparent_32%)]" />
-        <div className="container relative z-10 grid gap-10 pb-24 pt-40 lg:grid-cols-[.86fr_1.14fr] lg:items-center lg:gap-12 lg:pt-36">
-          <div className="max-w-3xl">
-            <p className="mb-5 flex items-center gap-3 text-sm font-semibold uppercase tracking-[.2em] text-emerald-300"><span className="h-px w-10 bg-emerald-300/70" /> Built for medical professionals</p>
-            <h1 className="mb-7 max-w-[12ch] text-[clamp(3.4rem,6vw,7.1rem)] font-extrabold leading-[.93] tracking-[-.045em] text-white drop-shadow-[0_10px_35px_rgba(0,0,0,.85)]" style={{ fontFamily: "DM Sans, sans-serif" }}>The Physician Wealth Command Center</h1>
-            <p className="mb-9 max-w-2xl text-lg leading-relaxed text-white/80 drop-shadow-[0_5px_20px_rgba(0,0,0,.9)]">
-              A unified planning view for medical income, practice value, tax strategy, protection, retirement, and legacy—with assumptions and responsibilities documented clearly.
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <ManagedPortalAction href="/portal/dashboard" className="rc-btn rc-btn-primary rounded-xl px-7 py-3.5 text-base shadow-[0_16px_42px_rgba(34,197,94,.28)]"><ArrowRight size={18} /> Enter the Physician Portal</ManagedPortalAction>
-              <a href="#consultation" className="rc-btn rounded-xl border border-emerald-300/45 bg-black/30 px-7 py-3.5 text-base text-white backdrop-blur hover:bg-emerald-300/10"><ShieldCheck size={18} /> Start My Physician Plan</a>
-            </div>
+        <div className="container relative z-10 flex flex-col items-center pb-16 pt-40 text-center lg:pt-44">
+          <p className="mb-6 flex items-center gap-3 text-xs font-semibold uppercase tracking-[.22em] text-emerald-300"><span className="h-px w-8 bg-emerald-300/70" /> Built for physicians &amp; practice owners <span className="h-px w-8 bg-emerald-300/70" /></p>
+          <h1 className="mb-6 text-[clamp(2.5rem,5.2vw,5.2rem)] font-extrabold leading-[1.03] tracking-[-.03em] drop-shadow-[0_10px_35px_rgba(0,0,0,.85)]" style={{ fontFamily: "DM Sans, sans-serif" }}>
+            <span className="text-white">Your Practice Builds Income.</span>
+            <br />
+            <span className="text-emerald-400">We Build the System Around It.</span>
+          </h1>
+          <div className="mb-6 flex items-center justify-center gap-4">
+            <span className="h-px w-16 bg-emerald-300/35" />
+            <span className="flex h-9 w-8 items-center justify-center rounded-md border border-emerald-300/50 text-sm font-black text-emerald-300">R</span>
+            <span className="h-px w-16 bg-emerald-300/35" />
+          </div>
+          <p className="mb-9 max-w-2xl text-lg leading-relaxed text-white/80 drop-shadow-[0_5px_20px_rgba(0,0,0,.9)]">
+            Coordinated tax, practice, risk, retirement, and legacy planning for physicians and medical practice owners.
+          </p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
+            <a href="#consultation" className="rc-btn rc-btn-primary rounded-xl px-7 py-3.5 text-base shadow-[0_16px_42px_rgba(34,197,94,.28)]"><Calendar size={18} /> Plan Beyond the Practice</a>
+            <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className="rc-btn rounded-xl border border-emerald-300/45 bg-black/30 px-7 py-3.5 text-base text-white backdrop-blur hover:bg-emerald-300/10"><Calendar size={18} /> Book a Physician Planning Review</a>
           </div>
 
-          <div className="rounded-[1.6rem] border border-emerald-200/35 bg-black/55 p-4 shadow-[0_28px_90px_rgba(0,0,0,.5),inset_0_0_45px_rgba(16,185,129,.045)] backdrop-blur-xl sm:p-5">
+          <div className="mt-16 grid w-full max-w-5xl grid-cols-2 overflow-hidden rounded-2xl border border-emerald-200/25 bg-black/45 backdrop-blur-xl sm:grid-cols-3 lg:grid-cols-5">
+            {[
+              { label: "Practice Economics", Icon: TrendingUp, href: "#practice-planning" },
+              { label: "Physician Tax Strategy", Icon: Stethoscope, href: "#physician-planning" },
+              { label: "Risk & Protection", Icon: ShieldCheck, href: "#planning-options" },
+              { label: "Retirement Income", Icon: Sunrise, href: "#planning-options" },
+              { label: "Succession & Legacy", Icon: TreePine, href: "#planning-options" },
+            ].map(({ label, Icon, href }) => (
+              <a key={label} href={href} className="flex min-h-[8rem] flex-col items-center justify-center gap-3 border-emerald-200/12 px-3 py-6 text-white/85 transition-colors hover:bg-emerald-300/10 hover:text-emerald-200 [&:not(:last-child)]:border-r">
+                <Icon size={30} strokeWidth={1.4} className="text-emerald-300" />
+                <span className="text-sm font-semibold">{label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="container relative z-10 pb-24">
+          <div className="mx-auto max-w-3xl rounded-[1.6rem] border border-emerald-200/35 bg-black/55 p-4 shadow-[0_28px_90px_rgba(0,0,0,.5),inset_0_0_45px_rgba(16,185,129,.045)] backdrop-blur-xl sm:p-5">
             <div className="grid grid-cols-2 overflow-hidden rounded-xl border border-emerald-200/20 sm:grid-cols-4" role="tablist" aria-label="Physician planning pillars">
               {COMMAND_PILLARS.map(({ id, label, icon: Icon }) => (
                 <button key={id} type="button" role="tab" aria-selected={activePillar === id} onClick={() => setActivePillar(id)} className={`relative flex min-h-[6.8rem] flex-col items-center justify-center gap-2 border-emerald-200/15 px-3 py-4 text-white transition-colors hover:bg-emerald-300/10 ${activePillar === id ? "bg-emerald-300/10 text-emerald-200 after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-emerald-300" : "text-white/72"}`}>
