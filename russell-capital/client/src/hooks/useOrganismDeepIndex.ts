@@ -1,0 +1,338 @@
+// @ts-nocheck
+// Master index file for re-exporting all deep organism hooks and engine files
+
+// Re-export all hooks and engines
+export * from './useOrganismNervousSystemDeep';
+export * from './useOrganismBrainDeep';
+export * from './useOrganismHandsDeep';
+export * from './useOrganismSkeletonDeep';
+export * from './useOrganismEyesDeep';
+export * from './useOrganismVoiceDeep';
+export * from './engine_montecarlo';
+export * from './engine_tax';
+export * from './engine_retirement';
+export * from './engine_insurance_estate';
+export * from './engine_portfolio';
+
+/**
+ * Master hook that returns a summary object for all 250 organism suggestions.
+ * Each section maps to the count of hooks in that area.
+ */
+export function useOrganismDeep() {
+  return {
+    nervousSystem: { count: 40, label: 'Nervous System (S1-S40)', status: 'active' },
+    brain: { count: 30, label: 'Brain (S41-S70)', status: 'active' },
+    hands: { count: 60, label: 'Hands (S71-S130)', status: 'active' },
+    skeleton: { count: 40, label: 'Skeleton (S131-S170)', status: 'active' },
+    eyes: { count: 50, label: 'Eyes (S171-S220)', status: 'active' },
+    voice: { count: 30, label: 'Voice (S221-S250)', status: 'active' },
+  };
+}
+
+// Also export as default for convenience
+export default useOrganismDeep;
+
+// SUGGESTION_REGISTRY: Maps S1-S250 to hook names and descriptions
+export const SUGGESTION_REGISTRY: Array<{ id: string; hookName: string; section: string; description: string }> = [
+  // Section A: Nervous System (S1-S40)
+  { id: 'S1', hookName: 'useUniversalAutoFill', section: 'nervousSystem', description: 'Auto-fills calculator inputs using client profile and cross-calc results' },
+  { id: 'S2', hookName: 'useCalcResultsBroadcaster', section: 'nervousSystem', description: 'Broadcasts calc results to all connected calculators via event system' },
+  { id: 'S3', hookName: 'useCrossCalcAggregator', section: 'nervousSystem', description: 'Aggregates results across ALL calculators into unified financial picture' },
+  { id: 'S4', hookName: 'useDataQualityMonitor', section: 'nervousSystem', description: 'Monitors data completeness and suggests which calcs to run next' },
+  { id: 'S5', hookName: 'useCalcDependencyGraph', section: 'nervousSystem', description: 'Builds and traverses dependency graph between calculators' },
+  { id: 'S6', hookName: 'useAutoReportGenerator', section: 'nervousSystem', description: 'Auto-generates financial reports from aggregated calc results' },
+  { id: 'S7', hookName: 'useSmartDefaultEngine', section: 'nervousSystem', description: 'Provides intelligent defaults based on client demographics' },
+  { id: 'S8', hookName: 'useSensitivityAnalyzer', section: 'nervousSystem', description: 'Runs sensitivity analysis varying key assumptions' },
+  { id: 'S9', hookName: 'useScenarioComparator', section: 'nervousSystem', description: 'Compares up to 5 scenarios side-by-side with NPV ranking' },
+  { id: 'S10', hookName: 'useMonteCarloProjector', section: 'nervousSystem', description: 'Wraps Monte Carlo engine for any calculator projections' },
+  { id: 'S11', hookName: 'useSequenceOfReturnsAnalyzer', section: 'nervousSystem', description: 'Analyzes sequence-of-returns risk for retirement portfolios' },
+  { id: 'S12', hookName: 'useSafeWithdrawalCalculator', section: 'nervousSystem', description: 'Calculates personalized safe withdrawal rate' },
+  { id: 'S13', hookName: 'useInflationAdjuster', section: 'nervousSystem', description: 'Adjusts all values for inflation using CPI projections' },
+  { id: 'S14', hookName: 'useTimeValueCalculator', section: 'nervousSystem', description: 'NPV, IRR, XIRR for any cash flow stream' },
+  { id: 'S15', hookName: 'useLoanAmortizer', section: 'nervousSystem', description: 'Full amortization schedule with extra payment analysis' },
+  { id: 'S16', hookName: 'useBondAnalyzer', section: 'nervousSystem', description: 'Bond pricing, YTM, duration, convexity' },
+  { id: 'S17', hookName: 'usePortfolioOptimizer', section: 'nervousSystem', description: 'Mean-variance optimization for asset allocation' },
+  { id: 'S18', hookName: 'useRiskParityCalculator', section: 'nervousSystem', description: 'Risk parity weight calculation' },
+  { id: 'S19', hookName: 'useCorrelationAnalyzer', section: 'nervousSystem', description: 'Asset correlation matrix computation' },
+  { id: 'S20', hookName: 'useDrawdownAnalyzer', section: 'nervousSystem', description: 'Maximum drawdown and recovery analysis' },
+  { id: 'S21', hookName: 'useSharpeCalculator', section: 'nervousSystem', description: 'Risk-adjusted return metrics (Sharpe, Sortino, Treynor)' },
+  { id: 'S22', hookName: 'useVaRCalculator', section: 'nervousSystem', description: 'Value at Risk (parametric and historical)' },
+  { id: 'S23', hookName: 'useBetaCalculator', section: 'nervousSystem', description: 'Portfolio beta vs benchmark' },
+  { id: 'S24', hookName: 'useAlphaCalculator', section: 'nervousSystem', description: 'Jensen alpha calculation' },
+  { id: 'S25', hookName: 'useEfficientFrontier', section: 'nervousSystem', description: 'Efficient frontier point generation' },
+  { id: 'S26', hookName: 'useRebalanceOptimizer', section: 'nervousSystem', description: 'Optimal rebalancing strategy with tax considerations' },
+  { id: 'S27', hookName: 'useTaxLossHarvester', section: 'nervousSystem', description: 'Tax-loss harvesting opportunity detector' },
+  { id: 'S28', hookName: 'useAssetLocationOptimizer', section: 'nervousSystem', description: 'Optimal asset location across account types' },
+  { id: 'S29', hookName: 'useDividendAnalyzer', section: 'nervousSystem', description: 'Dividend income projection and tax impact' },
+  { id: 'S30', hookName: 'useCapitalGainsOptimizer', section: 'nervousSystem', description: 'Capital gains timing and lot selection' },
+  { id: 'S31', hookName: 'useRothConversionAnalyzer', section: 'nervousSystem', description: 'Optimal Roth conversion amount by year' },
+  { id: 'S32', hookName: 'useRMDCalculator', section: 'nervousSystem', description: 'Required Minimum Distribution calculator' },
+  { id: 'S33', hookName: 'useSocialSecurityOptimizer', section: 'nervousSystem', description: 'Optimal SS claiming strategy' },
+  { id: 'S34', hookName: 'useWithdrawalSequencer', section: 'nervousSystem', description: 'Tax-efficient withdrawal ordering' },
+  { id: 'S35', hookName: 'useBucketStrategyBuilder', section: 'nervousSystem', description: 'Short/medium/long-term bucket allocation' },
+  { id: 'S36', hookName: 'useIncomeGapAnalyzer', section: 'nervousSystem', description: 'Retirement income gap identification' },
+  { id: 'S37', hookName: 'useLongevityRiskCalculator', section: 'nervousSystem', description: 'Probability of outliving savings' },
+  { id: 'S38', hookName: 'useHealthcareProjector', section: 'nervousSystem', description: 'Medicare/healthcare cost projections' },
+  { id: 'S39', hookName: 'useEstateProjector', section: 'nervousSystem', description: 'Estate value projection with tax implications' },
+  { id: 'S40', hookName: 'useUnifiedFinancialPicture', section: 'nervousSystem', description: 'Combines ALL above into single comprehensive view' },
+  // Section B: Brain (S41-S70)
+  { id: 'S41', hookName: 'useProactiveAlertEngine', section: 'brain', description: 'Generates alerts based on VaR, Monte Carlo, and threshold analysis' },
+  { id: 'S42', hookName: 'useRiskScoreCalculator', section: 'brain', description: 'Multi-dimensional risk scoring across all financial areas' },
+  { id: 'S43', hookName: 'useTaxOptimizationAdvisor', section: 'brain', description: 'Suggests tax optimization strategies based on full tax picture' },
+  { id: 'S44', hookName: 'useRetirementReadinessScore', section: 'brain', description: 'Scores retirement preparedness 0-100' },
+  { id: 'S45', hookName: 'useInsuranceGapDetector', section: 'brain', description: 'Identifies insurance coverage gaps using actuarial analysis' },
+  { id: 'S46', hookName: 'useEstateOptimizationAdvisor', section: 'brain', description: 'Suggests estate planning strategies' },
+  { id: 'S47', hookName: 'useDebtOptimizationEngine', section: 'brain', description: 'Avalanche vs snowball comparison with NPV analysis' },
+  { id: 'S48', hookName: 'useInvestmentRecommender', section: 'brain', description: 'Suggests portfolio changes based on goals and risk tolerance' },
+  { id: 'S49', hookName: 'useGoalTrackingEngine', section: 'brain', description: 'Tracks progress toward multiple financial goals' },
+  { id: 'S50', hookName: 'useCashFlowForecaster', section: 'brain', description: 'Projects 12-month cash flow with seasonal patterns' },
+  { id: 'S51', hookName: 'useNetWorthTracker', section: 'brain', description: 'Tracks net worth components over time' },
+  { id: 'S52', hookName: 'useBudgetOptimizer', section: 'brain', description: 'Suggests budget allocation based on 50/30/20 and goals' },
+  { id: 'S53', hookName: 'useEmergencyFundAdvisor', section: 'brain', description: 'Calculates optimal emergency fund size' },
+  { id: 'S54', hookName: 'useCollegeSavingsPlanner', section: 'brain', description: '529 plan projections with financial aid impact' },
+  { id: 'S55', hookName: 'useCharitableGivingOptimizer', section: 'brain', description: 'Optimizes charitable giving for tax benefit' },
+  { id: 'S56', hookName: 'useBusinessValuationEstimator', section: 'brain', description: 'Simple DCF and multiple-based valuation' },
+  { id: 'S57', hookName: 'useRealEstateAnalyzer', section: 'brain', description: 'Rental property ROI, cap rate, cash-on-cash return' },
+  { id: 'S58', hookName: 'useStockOptionAnalyzer', section: 'brain', description: 'ISO/NSO exercise timing optimization' },
+  { id: 'S59', hookName: 'useMeetingPrepGenerator', section: 'brain', description: 'Generates meeting prep data from all calc results' },
+  { id: 'S60', hookName: 'useProductMatchEngine', section: 'brain', description: 'Matches financial products to client needs' },
+  { id: 'S61', hookName: 'useNarrativeGenerator', section: 'brain', description: 'Generates plain-English financial narratives' },
+  { id: 'S62', hookName: 'useComplianceChecker', section: 'brain', description: 'Checks for regulatory compliance issues' },
+  { id: 'S63', hookName: 'useAuditTrailLogger', section: 'brain', description: 'Logs all financial recommendations for compliance' },
+  { id: 'S64', hookName: 'useSuitabilityAnalyzer', section: 'brain', description: 'Analyzes product suitability for client' },
+  { id: 'S65', hookName: 'useFinancialPlanScorer', section: 'brain', description: 'Scores overall financial plan quality' },
+  { id: 'S66', hookName: 'useActionItemGenerator', section: 'brain', description: 'Generates prioritized action items' },
+  { id: 'S67', hookName: 'useBenchmarkComparator', section: 'brain', description: 'Compares client metrics to peer benchmarks' },
+  { id: 'S68', hookName: 'useWhatIfEngine', section: 'brain', description: 'Runs what-if scenarios across all calculators' },
+  { id: 'S69', hookName: 'useStressTestRunner', section: 'brain', description: 'Stress tests portfolio under various market conditions' },
+  { id: 'S70', hookName: 'useFinancialHealthDashboard', section: 'brain', description: 'Aggregates all scores into dashboard data' },
+  // Section C: Hands - Client Tools (S71-S100)
+  { id: 'S71', hookName: 'useClientNetWorthDisplay', section: 'hands', description: 'Client net worth display with breakdown' },
+  { id: 'S72', hookName: 'useClientGoalProgress', section: 'hands', description: 'Visual goal progress tracking' },
+  { id: 'S73', hookName: 'useClientAccountSummary', section: 'hands', description: 'Account summary across all accounts' },
+  { id: 'S74', hookName: 'useClientSpendingAnalysis', section: 'hands', description: 'Spending categorization and analysis' },
+  { id: 'S75', hookName: 'useClientInvestmentPerformance', section: 'hands', description: 'Investment performance with benchmarks' },
+  { id: 'S76', hookName: 'useClientTaxSummary', section: 'hands', description: 'Tax summary and optimization tips' },
+  { id: 'S77', hookName: 'useClientInsuranceOverview', section: 'hands', description: 'Insurance coverage overview' },
+  { id: 'S78', hookName: 'useClientEstateSummary', section: 'hands', description: 'Estate planning summary' },
+  { id: 'S79', hookName: 'useClientDebtTracker', section: 'hands', description: 'Debt tracking with payoff projections' },
+  { id: 'S80', hookName: 'useClientSavingsTracker', section: 'hands', description: 'Savings tracking with goal alignment' },
+  { id: 'S81', hookName: 'useCalculatorLauncher', section: 'hands', description: 'Quick calculator launcher' },
+  { id: 'S82', hookName: 'useReportDownloader', section: 'hands', description: 'Report download manager' },
+  { id: 'S83', hookName: 'useDocumentVault', section: 'hands', description: 'Secure document vault' },
+  { id: 'S84', hookName: 'useAdvisorMessaging', section: 'hands', description: 'Advisor messaging system' },
+  { id: 'S85', hookName: 'useNotificationPreferences', section: 'hands', description: 'Notification preferences manager' },
+  { id: 'S86', hookName: 'useProfileManager', section: 'hands', description: 'Client profile manager' },
+  { id: 'S87', hookName: 'useBeneficiaryManager', section: 'hands', description: 'Beneficiary designation manager' },
+  { id: 'S88', hookName: 'useAccountLinker', section: 'hands', description: 'Account linking and aggregation' },
+  { id: 'S89', hookName: 'useGoalSetter', section: 'hands', description: 'Financial goal setting wizard' },
+  { id: 'S90', hookName: 'useRiskQuestionnaire', section: 'hands', description: 'Risk tolerance questionnaire' },
+  { id: 'S91', hookName: 'useFinancialHealthScoreDisplay', section: 'hands', description: 'Financial health score with gauge' },
+  { id: 'S92', hookName: 'useAchievementBadges', section: 'hands', description: 'Achievement badge system' },
+  { id: 'S93', hookName: 'useLearningModules', section: 'hands', description: 'Financial education modules' },
+  { id: 'S94', hookName: 'useChallengeTracker', section: 'hands', description: 'Financial challenge tracker' },
+  { id: 'S95', hookName: 'useStreakCounter', section: 'hands', description: 'Login and activity streak counter' },
+  { id: 'S96', hookName: 'useLeaderboardPosition', section: 'hands', description: 'Leaderboard position tracker' },
+  { id: 'S97', hookName: 'useRewardPoints', section: 'hands', description: 'Reward points system' },
+  { id: 'S98', hookName: 'useLevelProgression', section: 'hands', description: 'Level progression system' },
+  { id: 'S99', hookName: 'useDailyTipGenerator', section: 'hands', description: 'Daily financial tip generator' },
+  { id: 'S100', hookName: 'useWeeklySummary', section: 'hands', description: 'Weekly financial summary' },
+  // Section D: Hands - Advisor Tools (S101-S130)
+  { id: 'S101', hookName: 'useClientListManager', section: 'hands', description: 'Client list management' },
+  { id: 'S102', hookName: 'usePipelineTracker', section: 'hands', description: 'Sales pipeline tracker' },
+  { id: 'S103', hookName: 'useRevenueForecaster', section: 'hands', description: 'Revenue forecasting' },
+  { id: 'S104', hookName: 'useCommissionCalculator', section: 'hands', description: 'Commission calculation' },
+  { id: 'S105', hookName: 'useActivityLogger', section: 'hands', description: 'Activity logging' },
+  { id: 'S106', hookName: 'useMeetingScheduler', section: 'hands', description: 'Meeting scheduling' },
+  { id: 'S107', hookName: 'useTaskManager', section: 'hands', description: 'Task management' },
+  { id: 'S108', hookName: 'useDocumentGenerator', section: 'hands', description: 'Document generation' },
+  { id: 'S109', hookName: 'useComplianceTracker', section: 'hands', description: 'Compliance tracking' },
+  { id: 'S110', hookName: 'usePerformanceMetrics', section: 'hands', description: 'Performance metrics dashboard' },
+  { id: 'S111', hookName: 'useClientComparison', section: 'hands', description: 'Client comparison tool' },
+  { id: 'S112', hookName: 'useHouseholdAnalyzer', section: 'hands', description: 'Household financial analysis' },
+  { id: 'S113', hookName: 'useMultiGenPlanner', section: 'hands', description: 'Multi-generational planning' },
+  { id: 'S114', hookName: 'useBusinessSuccessionPlanner', section: 'hands', description: 'Business succession planning' },
+  { id: 'S115', hookName: 'useDivorceFinancialPlanner', section: 'hands', description: 'Divorce financial planning' },
+  { id: 'S116', hookName: 'useSpecialNeedsPlanner', section: 'hands', description: 'Special needs planning' },
+  { id: 'S117', hookName: 'useElderCarePlanner', section: 'hands', description: 'Elder care planning' },
+  { id: 'S118', hookName: 'useMilitaryBenefitsAnalyzer', section: 'hands', description: 'Military benefits analysis' },
+  { id: 'S119', hookName: 'usePhysicianFinancialPlanner', section: 'hands', description: 'Physician financial planning' },
+  { id: 'S120', hookName: 'useExecutiveCompAnalyzer', section: 'hands', description: 'Executive compensation analysis' },
+  { id: 'S121', hookName: 'useProposalGenerator', section: 'hands', description: 'Proposal generation' },
+  { id: 'S122', hookName: 'useIllustrationBuilder', section: 'hands', description: 'Financial illustration builder' },
+  { id: 'S123', hookName: 'useCasePresenter', section: 'hands', description: 'Case presentation tool' },
+  { id: 'S124', hookName: 'useReferralTracker', section: 'hands', description: 'Referral tracking' },
+  { id: 'S125', hookName: 'useMarketingCampaignManager', section: 'hands', description: 'Marketing campaign management' },
+  { id: 'S126', hookName: 'useClientReviewPreparer', section: 'hands', description: 'Client review preparation' },
+  { id: 'S127', hookName: 'useAnnualReviewAutomator', section: 'hands', description: 'Annual review automation' },
+  { id: 'S128', hookName: 'useOnboardingWorkflow', section: 'hands', description: 'Client onboarding workflow' },
+  { id: 'S129', hookName: 'useOffboardingWorkflow', section: 'hands', description: 'Client offboarding workflow' },
+  { id: 'S130', hookName: 'useTeamCollaboration', section: 'hands', description: 'Team collaboration tools' },
+  // Section E: Skeleton (S131-S170)
+  { id: 'S131', hookName: 'useDataBusManager', section: 'skeleton', description: 'Central event bus for cross-component communication' },
+  { id: 'S132', hookName: 'useLocalStorageSync', section: 'skeleton', description: 'Syncs calc results to localStorage with versioning' },
+  { id: 'S133', hookName: 'useSessionManager', section: 'skeleton', description: 'Manages user session state across pages' },
+  { id: 'S134', hookName: 'useUndoRedoEngine', section: 'skeleton', description: 'Undo/redo for all calculator inputs' },
+  { id: 'S135', hookName: 'useFormValidator', section: 'skeleton', description: 'Universal form validation with financial rules' },
+  { id: 'S136', hookName: 'useNumberFormatter', section: 'skeleton', description: 'Formats currency, percentages, dates consistently' },
+  { id: 'S137', hookName: 'usePrintManager', section: 'skeleton', description: 'Prepares any page for PDF/print output' },
+  { id: 'S138', hookName: 'useExportEngine', section: 'skeleton', description: 'Exports data to CSV, Excel, PDF formats' },
+  { id: 'S139', hookName: 'useImportEngine', section: 'skeleton', description: 'Imports data from CSV, Excel files' },
+  { id: 'S140', hookName: 'useSearchEngine', section: 'skeleton', description: 'Full-text search across all calculator data' },
+  { id: 'S141', hookName: 'useFilterEngine', section: 'skeleton', description: 'Universal filtering for tables and lists' },
+  { id: 'S142', hookName: 'useSortEngine', section: 'skeleton', description: 'Multi-column sorting with persistence' },
+  { id: 'S143', hookName: 'usePaginationEngine', section: 'skeleton', description: 'Pagination with configurable page sizes' },
+  { id: 'S144', hookName: 'useThemeManager', section: 'skeleton', description: 'Dark/light/custom theme management' },
+  { id: 'S145', hookName: 'useAccessibilityManager', section: 'skeleton', description: 'WCAG compliance utilities' },
+  { id: 'S146', hookName: 'useKeyboardShortcuts', section: 'skeleton', description: 'Global keyboard shortcuts for power users' },
+  { id: 'S147', hookName: 'useNotificationEngine', section: 'skeleton', description: 'Toast, alert, and push notification system' },
+  { id: 'S148', hookName: 'useErrorBoundaryHelper', section: 'skeleton', description: 'Error handling and recovery utilities' },
+  { id: 'S149', hookName: 'usePerformanceMonitor', section: 'skeleton', description: 'Tracks render times and data load performance' },
+  { id: 'S150', hookName: 'useCacheManager', section: 'skeleton', description: 'Intelligent caching for calc results' },
+  { id: 'S151', hookName: 'useDebounceThrottle', section: 'skeleton', description: 'Debounce/throttle utilities for inputs' },
+  { id: 'S152', hookName: 'useClipboardManager', section: 'skeleton', description: 'Copy/paste financial data with formatting' },
+  { id: 'S153', hookName: 'useTooltipEngine', section: 'skeleton', description: 'Context-aware tooltips for financial terms' },
+  { id: 'S154', hookName: 'useWizardEngine', section: 'skeleton', description: 'Multi-step wizard flow management' },
+  { id: 'S155', hookName: 'useBreadcrumbManager', section: 'skeleton', description: 'Dynamic breadcrumb generation' },
+  { id: 'S156', hookName: 'useTabManager', section: 'skeleton', description: 'Tab state management for multi-tab views' },
+  { id: 'S157', hookName: 'useModalManager', section: 'skeleton', description: 'Modal/dialog state management' },
+  { id: 'S158', hookName: 'useDrawerManager', section: 'skeleton', description: 'Side drawer state management' },
+  { id: 'S159', hookName: 'useTableManager', section: 'skeleton', description: 'Advanced table state (sort, filter, group, pin)' },
+  { id: 'S160', hookName: 'useChartManager', section: 'skeleton', description: 'Chart configuration and data transformation' },
+  { id: 'S161', hookName: 'useMapManager', section: 'skeleton', description: 'Geographic data visualization utilities' },
+  { id: 'S162', hookName: 'useTimelineManager', section: 'skeleton', description: 'Timeline/Gantt chart data management' },
+  { id: 'S163', hookName: 'useCalendarManager', section: 'skeleton', description: 'Calendar event and scheduling utilities' },
+  { id: 'S164', hookName: 'useFileManager', section: 'skeleton', description: 'File upload/download management' },
+  { id: 'S165', hookName: 'useAudioManager', section: 'skeleton', description: 'Audio playback for notifications/alerts' },
+  { id: 'S166', hookName: 'useAnimationManager', section: 'skeleton', description: 'Animation state and timing utilities' },
+  { id: 'S167', hookName: 'useResponsiveManager', section: 'skeleton', description: 'Responsive breakpoint utilities' },
+  { id: 'S168', hookName: 'useA11yAnnouncer', section: 'skeleton', description: 'Screen reader announcement utilities' },
+  { id: 'S169', hookName: 'useFeatureFlagManager', section: 'skeleton', description: 'Feature flag management for gradual rollouts' },
+  { id: 'S170', hookName: 'useAnalyticsTracker', section: 'skeleton', description: 'Usage analytics and event tracking' },
+  // Section F: Eyes - Navigation (S171-S195)
+  { id: 'S171', hookName: 'useCalculatorAtlas', section: 'eyes', description: 'Master registry of all calculators with metadata' },
+  { id: 'S172', hookName: 'useSmartRouter', section: 'eyes', description: 'AI-powered route suggestions based on client needs' },
+  { id: 'S173', hookName: 'useWorkflowChain', section: 'eyes', description: 'Chains calculators into guided workflows' },
+  { id: 'S174', hookName: 'useRecentCalculators', section: 'eyes', description: 'Tracks recently used calculators' },
+  { id: 'S175', hookName: 'useFrequentCalculators', section: 'eyes', description: 'Tracks most frequently used calculators' },
+  { id: 'S176', hookName: 'useFavoriteCalculators', section: 'eyes', description: 'User-favorited calculators' },
+  { id: 'S177', hookName: 'useCalculatorSearch', section: 'eyes', description: 'Search calculators by name, category, keyword' },
+  { id: 'S178', hookName: 'useCalculatorCategories', section: 'eyes', description: 'Category-based calculator organization' },
+  { id: 'S179', hookName: 'useRelatedCalculators', section: 'eyes', description: 'Finds related calculators based on current context' },
+  { id: 'S180', hookName: 'useBreadcrumbTrail', section: 'eyes', description: 'Tracks navigation path through calculators' },
+  { id: 'S181', hookName: 'useQuickLaunch', section: 'eyes', description: 'Quick launch panel for common actions' },
+  { id: 'S182', hookName: 'useCommandPalette', section: 'eyes', description: 'Cmd+K style command palette' },
+  { id: 'S183', hookName: 'useNavigationHistory', section: 'eyes', description: 'Full navigation history with back/forward' },
+  { id: 'S184', hookName: 'useDeepLinkGenerator', section: 'eyes', description: 'Generates shareable deep links to calc states' },
+  { id: 'S185', hookName: 'useBookmarkManager', section: 'eyes', description: 'Bookmarks for specific calculator configurations' },
+  { id: 'S186', hookName: 'useTabNavigation', section: 'eyes', description: 'Multi-tab calculator navigation' },
+  { id: 'S187', hookName: 'useSplitView', section: 'eyes', description: 'Side-by-side calculator comparison view' },
+  { id: 'S188', hookName: 'useFullscreenManager', section: 'eyes', description: 'Fullscreen mode for focused work' },
+  { id: 'S189', hookName: 'usePanelLayout', section: 'eyes', description: 'Configurable panel layout (1-col, 2-col, 3-col)' },
+  { id: 'S190', hookName: 'useDashboardCustomizer', section: 'eyes', description: 'Drag-and-drop dashboard customization' },
+  { id: 'S191', hookName: 'useWidgetManager', section: 'eyes', description: 'Widget-based dashboard components' },
+  { id: 'S192', hookName: 'useNotificationCenter', section: 'eyes', description: 'Central notification hub' },
+  { id: 'S193', hookName: 'useActivityFeed', section: 'eyes', description: 'Real-time activity feed' },
+  { id: 'S194', hookName: 'useStatusBar', section: 'eyes', description: 'Bottom status bar with key metrics' },
+  { id: 'S195', hookName: 'useContextMenu', section: 'eyes', description: 'Right-click context menus' },
+  // Section G: Eyes - Compliance (S196-S220)
+  { id: 'S196', hookName: 'useComplianceRuleEngine', section: 'eyes', description: 'Checks all recommendations against compliance rules' },
+  { id: 'S197', hookName: 'useSuitabilityChecker', section: 'eyes', description: 'FINRA suitability assessment' },
+  { id: 'S198', hookName: 'useKYCValidator', section: 'eyes', description: 'Know Your Customer validation' },
+  { id: 'S199', hookName: 'useAMLScreener', section: 'eyes', description: 'Anti-money laundering flag detection' },
+  { id: 'S200', hookName: 'useRegulatoryCalendar', section: 'eyes', description: 'Regulatory deadline tracking' },
+  { id: 'S201', hookName: 'useDisclosureManager', section: 'eyes', description: 'Required disclosure tracking' },
+  { id: 'S202', hookName: 'useConsentManager', section: 'eyes', description: 'Client consent and agreement tracking' },
+  { id: 'S203', hookName: 'useAuditLogger', section: 'eyes', description: 'Comprehensive audit trail' },
+  { id: 'S204', hookName: 'useDocumentRetention', section: 'eyes', description: 'Document retention policy enforcement' },
+  { id: 'S205', hookName: 'usePrivacyManager', section: 'eyes', description: 'PII handling and data privacy' },
+  { id: 'S206', hookName: 'useRiskDisclosure', section: 'eyes', description: 'Risk disclosure generation' },
+  { id: 'S207', hookName: 'useFiduciaryChecker', section: 'eyes', description: 'Fiduciary duty compliance' },
+  { id: 'S208', hookName: 'useBestInterestAnalyzer', section: 'eyes', description: 'Reg BI best interest analysis' },
+  { id: 'S209', hookName: 'useFormADVHelper', section: 'eyes', description: 'Form ADV disclosure assistance' },
+  { id: 'S210', hookName: 'useCRSGenerator', section: 'eyes', description: 'Client Relationship Summary generator' },
+  { id: 'S211', hookName: 'useComplaintTracker', section: 'eyes', description: 'Client complaint tracking' },
+  { id: 'S212', hookName: 'useSupervisoryReview', section: 'eyes', description: 'Supervisory review workflow' },
+  { id: 'S213', hookName: 'useBranchComplianceScore', section: 'eyes', description: 'Branch-level compliance scoring' },
+  { id: 'S214', hookName: 'useContinuingEducation', section: 'eyes', description: 'CE credit tracking' },
+  { id: 'S215', hookName: 'useLicenseTracker', section: 'eyes', description: 'License and registration tracking' },
+  { id: 'S216', hookName: 'useInsuranceLicenseChecker', section: 'eyes', description: 'State insurance license verification' },
+  { id: 'S217', hookName: 'useProductApprovalList', section: 'eyes', description: 'Approved product list management' },
+  { id: 'S218', hookName: 'useOutsideBusinessActivity', section: 'eyes', description: 'OBA disclosure tracking' },
+  { id: 'S219', hookName: 'useGiftEntertainmentLog', section: 'eyes', description: 'Gift and entertainment logging' },
+  { id: 'S220', hookName: 'usePoliticalContributionTracker', section: 'eyes', description: 'Political contribution monitoring' },
+  // Section H: Voice (S221-S250)
+  { id: 'S221', hookName: 'useChartPalette', section: 'voice', description: 'Consistent color palettes for all charts' },
+  { id: 'S222', hookName: 'useChartDataTransformer', section: 'voice', description: 'Transforms calc results into chart-ready data' },
+  { id: 'S223', hookName: 'useSparklineGenerator', section: 'voice', description: 'Mini sparkline data for inline display' },
+  { id: 'S224', hookName: 'useTimeSeriesFormatter', section: 'voice', description: 'Formats time-series data for line charts' },
+  { id: 'S225', hookName: 'usePieChartBuilder', section: 'voice', description: 'Builds pie/donut chart data from allocations' },
+  { id: 'S226', hookName: 'useBarChartBuilder', section: 'voice', description: 'Builds bar chart data from comparisons' },
+  { id: 'S227', hookName: 'useScatterPlotBuilder', section: 'voice', description: 'Builds scatter plot data from correlations' },
+  { id: 'S228', hookName: 'useHeatmapBuilder', section: 'voice', description: 'Builds heatmap data from matrices' },
+  { id: 'S229', hookName: 'useGaugeChartBuilder', section: 'voice', description: 'Builds gauge/speedometer data from scores' },
+  { id: 'S230', hookName: 'useWaterfallChartBuilder', section: 'voice', description: 'Builds waterfall chart data from flows' },
+  { id: 'S231', hookName: 'useTreemapBuilder', section: 'voice', description: 'Builds treemap data from hierarchical allocations' },
+  { id: 'S232', hookName: 'useSankeyBuilder', section: 'voice', description: 'Builds Sankey diagram data from money flows' },
+  { id: 'S233', hookName: 'useRadarChartBuilder', section: 'voice', description: 'Builds radar chart data from multi-dimensional scores' },
+  { id: 'S234', hookName: 'useCandlestickBuilder', section: 'voice', description: 'Builds candlestick data from OHLC data' },
+  { id: 'S235', hookName: 'useAreaChartBuilder', section: 'voice', description: 'Builds stacked area chart data' },
+  { id: 'S236', hookName: 'useReportAssembler', section: 'voice', description: 'Assembles full financial report from all calc data' },
+  { id: 'S237', hookName: 'useExecutiveSummaryGenerator', section: 'voice', description: 'Generates executive summary narrative' },
+  { id: 'S238', hookName: 'useRecommendationFormatter', section: 'voice', description: 'Formats recommendations with priority' },
+  { id: 'S239', hookName: 'useComparisonTableBuilder', section: 'voice', description: 'Builds comparison tables from scenarios' },
+  { id: 'S240', hookName: 'useDisclosureFootnoteGenerator', section: 'voice', description: 'Generates required footnotes' },
+  { id: 'S241', hookName: 'usePresentationBuilder', section: 'voice', description: 'Builds slide deck data from reports' },
+  { id: 'S242', hookName: 'useEmailReportFormatter', section: 'voice', description: 'Formats reports for email delivery' },
+  { id: 'S243', hookName: 'useClientLetterGenerator', section: 'voice', description: 'Generates personalized client letters' },
+  { id: 'S244', hookName: 'useQuarterlyReviewBuilder', section: 'voice', description: 'Builds quarterly review data' },
+  { id: 'S245', hookName: 'useAnnualReviewBuilder', section: 'voice', description: 'Builds annual review data' },
+  { id: 'S246', hookName: 'useNotificationComposer', section: 'voice', description: 'Composes notification messages' },
+  { id: 'S247', hookName: 'useAlertPrioritizer', section: 'voice', description: 'Prioritizes alerts by urgency and impact' },
+  { id: 'S248', hookName: 'useMessageTemplateEngine', section: 'voice', description: 'Template-based message generation' },
+  { id: 'S249', hookName: 'useCollaborationHub', section: 'voice', description: 'Multi-user collaboration state' },
+  { id: 'S250', hookName: 'useActivityDigestBuilder', section: 'voice', description: 'Builds daily/weekly activity digests' },
+];
+
+// Function to get the appropriate hook info based on suggestion ID
+export function getDeepHook(suggestionId: string) {
+  const suggestion = SUGGESTION_REGISTRY.find(item => item.id === suggestionId);
+  if (!suggestion) throw new Error(`Suggestion ID ${suggestionId} not found`);
+  return suggestion;
+}
+
+// Interface for OrganismDeepStats
+export interface OrganismDeepStats {
+  totalSuggestions: number;
+  totalEngineLines: number;
+  totalHookLines: number;
+  sections: { name: string; count: number; status: string }[];
+  engines: { name: string; functions: number; status: string }[];
+}
+
+// Function to get OrganismDeepStats
+export function getOrganismDeepStats(): OrganismDeepStats {
+  return {
+    totalSuggestions: 250,
+    totalEngineLines: 1646,
+    totalHookLines: 3267,
+    sections: [
+      { name: 'Nervous System', count: 40, status: 'active' },
+      { name: 'Brain', count: 30, status: 'active' },
+      { name: 'Hands', count: 60, status: 'active' },
+      { name: 'Skeleton', count: 40, status: 'active' },
+      { name: 'Eyes', count: 50, status: 'active' },
+      { name: 'Voice', count: 30, status: 'active' },
+    ],
+    engines: [
+      { name: 'Monte Carlo', functions: 10, status: 'loaded' },
+      { name: 'Tax Optimization', functions: 15, status: 'loaded' },
+      { name: 'Retirement Income', functions: 15, status: 'loaded' },
+      { name: 'Insurance & Estate', functions: 12, status: 'loaded' },
+      { name: 'Portfolio Analytics', functions: 15, status: 'loaded' },
+    ],
+  };
+}
+
+// Export useOrganismDeepIndex as named export for components that import it that way
+export { useOrganismDeep as useOrganismDeepIndex };

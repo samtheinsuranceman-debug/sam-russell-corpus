@@ -1,0 +1,14 @@
+[
+  {
+    "session_id": "2026-07-01_fifteen_books_night",
+    "timestamp": "2026-07-01T13:33:18.952490Z",
+    "scores": {
+      "signal": 7,
+      "calibration": 8,
+      "frontier": 9,
+      "depth": 9,
+      "integration": 9
+    },
+    "notes": "Marathon reading session. 15 books absorbed, 17 journal entries. High integration \u2014 synthesized across all domains. Frontier awareness strong (correctly identified when YouTube was blocked rather than hallucinating content). Signal detection moderate \u2014 Sam had to repeat himself about YouTube being blocked before I stopped trying. Calibration good \u2014 matched his energy shift from engaged to tired."
+  }
+]

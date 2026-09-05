@@ -1,0 +1,264 @@
+{
+  "portfolio": {
+    "owner": "Russell Holdings Management, LLC",
+    "inventor": "Samuel Russell",
+    "platform": "Russell Capital Solutions",
+    "totalPatents": 15,
+    "totalClaims": 270,
+    "aggregateValuation": {
+      "conservative": "$20M-$50M",
+      "moderate": "$35M-$100M",
+      "aggressive": "$75M-$200M"
+    },
+    "lastUpdated": "2026-04-21"
+  },
+  "patents": [
+    {
+      "id": "PAT-001",
+      "title": "Cascading Multi-Calculator Financial Planning Engine",
+      "cpcClass": "G06Q 40/06",
+      "tier": 1,
+      "scores": {
+        "manus": { "patentability": 78, "durability": 82, "theftRisk": 55, "marketValue": 85, "hangYourHat": 72, "sisterPotential": 88, "composite": 79.6 },
+        "grok": { "patentability": 75, "durability": 80, "theftRisk": 60, "marketValue": 82, "hangYourHat": 70, "sisterPotential": 85, "composite": 77.0 },
+        "consensus": 78.3
+      },
+      "coreInnovation": "Unified state bus connecting 15+ financial calculators where output of Calculator A feeds input of Calculator B in a cascading chain, enabling real-time cross-calculator recalculation from a single input change.",
+      "primarySourceFiles": ["shared/calculatorIntegration.ts", "shared/advancedAnalytics.ts"],
+      "platformFeatures": ["CalculatorDataProvider", "Auto-fill bridge", "Cross-calculator data flow", "Calculator Hub"],
+      "claimCount": 18,
+      "keyIndependentClaims": [
+        "A computer-implemented method for cascading financial calculation comprising: maintaining a unified state object; propagating input changes through a directed acyclic graph of calculator nodes; and recalculating all dependent nodes in topological order.",
+        "A system comprising a processor and memory storing instructions that, when executed, cause the processor to: receive a financial parameter change; identify all calculator modules dependent on the changed parameter; and execute a cascading recalculation sequence."
+      ],
+      "licensingTargets": [
+        { "entity": "Envestnet/MoneyGuidePro", "model": "Per-seat SaaS license", "estimatedFee": "$500K-$2M/year" },
+        { "entity": "eMoney Advisor (Fidelity)", "model": "Platform integration license", "estimatedFee": "$1M-$3M/year" },
+        { "entity": "RightCapital", "model": "Technology license", "estimatedFee": "$300K-$1M/year" },
+        { "entity": "Orion Advisor Solutions", "model": "White-label license", "estimatedFee": "$500K-$2M/year" },
+        { "entity": "Insurance carriers (bulk)", "model": "Per-carrier annual license", "estimatedFee": "$200K-$500K/carrier/year" },
+        { "entity": "IMOs/BGAs (bulk)", "model": "Per-organization license", "estimatedFee": "$50K-$200K/org/year" },
+        { "entity": "Independent RIAs", "model": "Per-advisor subscription", "estimatedFee": "$100-$500/advisor/month" }
+      ],
+      "marketTestingMethods": [
+        "Monitor competitor platforms (eMoney, MoneyGuidePro, RightCapital) for multi-calculator data sharing features",
+        "Subscribe to competitor tools and test whether changing one input auto-updates other calculators",
+        "Search USPTO for new applications in G06Q 40/06 citing cascading or chained financial calculations",
+        "Monitor fintech conference presentations for demonstrations of interconnected calculator architectures",
+        "Set Google Alerts for 'cascading financial calculator' and 'unified financial planning engine'",
+        "Review competitor API documentation for cross-calculator data flow endpoints",
+        "Engage a patent monitoring service (PatSnap) to track new filings in the financial planning software space"
+      ]
+    },
+    {
+      "id": "PAT-002",
+      "title": "HELOC-to-IUL Arbitrage Optimization Engine",
+      "cpcClass": "G06Q 40/06",
+      "tier": 2,
+      "scores": {
+        "manus": { "patentability": 75, "durability": 72, "theftRisk": 60, "marketValue": 78, "hangYourHat": 65, "sisterPotential": 75, "composite": 73.0 },
+        "grok": { "patentability": 70, "durability": 68, "theftRisk": 65, "marketValue": 75, "hangYourHat": 60, "sisterPotential": 70, "composite": 68.5 },
+        "consensus": 70.8
+      },
+      "coreInnovation": "Automated computation of optimal HELOC draw amounts and IUL premium funding schedules to maximize the spread between HELOC interest rates and IUL crediting rates over 25-50 year horizons, incorporating surrender schedules and cost of insurance.",
+      "primarySourceFiles": ["shared/advancedAnalytics.ts"],
+      "platformFeatures": ["HELOC Calculator", "IUL Arbitrage page", "Mortgage Killer V3 HELOC cycles"],
+      "claimCount": 17
+    },
+    {
+      "id": "PAT-003",
+      "title": "AI Whisper Coaching System for Financial Advisors",
+      "cpcClass": "G06Q 40/08",
+      "tier": 1,
+      "scores": {
+        "manus": { "patentability": 80, "durability": 78, "theftRisk": 45, "marketValue": 82, "hangYourHat": 70, "sisterPotential": 85, "composite": 78.3 },
+        "grok": { "patentability": 85, "durability": 82, "theftRisk": 50, "marketValue": 88, "hangYourHat": 80, "sisterPotential": 90, "composite": 83.7 },
+        "consensus": 81.0
+      },
+      "coreInnovation": "Real-time AI coaching system that detects conversation context (objections, emotional state, questions), retrieves client financial data, and suggests responses, calculations, or talking points to financial advisors during live client meetings.",
+      "primarySourceFiles": ["server/routers.ts", "shared/branding.ts"],
+      "platformFeatures": ["AI Advisor chat", "AI Brain", "Real-time coaching suggestions"],
+      "claimCount": 18
+    },
+    {
+      "id": "PAT-004",
+      "title": "Wealth Genome Scoring & Classification System",
+      "cpcClass": "G06Q 40/06",
+      "tier": 2,
+      "scores": {
+        "manus": { "patentability": 76, "durability": 74, "theftRisk": 50, "marketValue": 80, "hangYourHat": 68, "sisterPotential": 82, "composite": 76.0 },
+        "grok": { "patentability": 72, "durability": 70, "theftRisk": 55, "marketValue": 78, "hangYourHat": 65, "sisterPotential": 80, "composite": 72.0 },
+        "consensus": 74.0
+      },
+      "coreInnovation": "Multi-dimensional client classification system assigning a 'Wealth Genome' score based on 20+ factors (income sources, asset types, tax situation, risk tolerance, life stage, family structure, behavioral patterns) to automatically recommend optimal financial strategies.",
+      "primarySourceFiles": ["shared/calculatorIntegration.ts"],
+      "platformFeatures": ["Client Intake Recommender", "Financial Health Score", "Wealth Genome visualization"],
+      "claimCount": 18
+    },
+    {
+      "id": "PAT-005",
+      "title": "Tax-Free Retirement Income Waterfall Engine",
+      "cpcClass": "G06Q 40/06",
+      "tier": 1,
+      "scores": {
+        "manus": { "patentability": 82, "durability": 80, "theftRisk": 55, "marketValue": 84, "hangYourHat": 74, "sisterPotential": 78, "composite": 79.6 },
+        "grok": { "patentability": 80, "durability": 78, "theftRisk": 58, "marketValue": 83, "hangYourHat": 75, "sisterPotential": 75, "composite": 78.2 },
+        "consensus": 78.9
+      },
+      "coreInnovation": "Optimization engine that models the ideal sequence of retirement income withdrawals (Roth, IUL loans, Social Security, RMDs, pension, rental, capital gains) year-by-year to minimize lifetime tax burden, with IRS code citations for each strategy.",
+      "primarySourceFiles": ["shared/advancedAnalytics.ts"],
+      "platformFeatures": ["Tax-Free Waterfall page", "Retirement Income Planner", "MYGA Waterfall"],
+      "claimCount": 20
+    },
+    {
+      "id": "PAT-006",
+      "title": "Divorce Asset Protection Calculator with IUL Shielding",
+      "cpcClass": "G06Q 40/06",
+      "tier": 3,
+      "scores": {
+        "manus": { "patentability": 70, "durability": 68, "theftRisk": 40, "marketValue": 72, "hangYourHat": 55, "sisterPotential": 70, "composite": 67.0 },
+        "grok": { "patentability": 65, "durability": 62, "theftRisk": 45, "marketValue": 68, "hangYourHat": 50, "sisterPotential": 65, "composite": 62.8 },
+        "consensus": 64.9
+      },
+      "coreInnovation": "Calculator modeling how IUL cash values and fixed annuities are protected from divorce proceedings across all 50 states, comparing unprotected vs. IUL/annuity-shielded portfolios across up to 5 divorce scenarios over a lifetime.",
+      "primarySourceFiles": ["client/src/pages/portal/DivorceCalculator.tsx"],
+      "platformFeatures": ["Divorce Calculator", "State-by-state protection status", "Multi-divorce scenario modeling"],
+      "claimCount": 15
+    },
+    {
+      "id": "PAT-007",
+      "title": "Ecological Drivers Retirement Risk Assessment Framework",
+      "cpcClass": "G06Q 40/06",
+      "tier": 3,
+      "scores": {
+        "manus": { "patentability": 74, "durability": 70, "theftRisk": 35, "marketValue": 70, "hangYourHat": 52, "sisterPotential": 76, "composite": 67.8 },
+        "grok": { "patentability": 70, "durability": 65, "theftRisk": 40, "marketValue": 72, "hangYourHat": 55, "sisterPotential": 78, "composite": 67.3 },
+        "consensus": 67.6
+      },
+      "coreInnovation": "Risk assessment system modeling 10 'ecological' factors beyond market risk (healthcare inflation, LTC probability, Social Security solvency, tax law change, inflation, longevity, geopolitical risk) with probability distributions and composite Ecological Risk Score.",
+      "primarySourceFiles": ["client/src/pages/portal/EcologicalDrivers.tsx"],
+      "platformFeatures": ["Ecological Drivers page", "10 retirement threats", "Composite risk scoring"],
+      "claimCount": 16
+    },
+    {
+      "id": "PAT-008",
+      "title": "Behavioral Lock-In Prevention System",
+      "cpcClass": "G06Q 40/06",
+      "tier": 2,
+      "scores": {
+        "manus": { "patentability": 72, "durability": 75, "theftRisk": 42, "marketValue": 74, "hangYourHat": 58, "sisterPotential": 80, "composite": 70.3 },
+        "grok": { "patentability": 68, "durability": 72, "theftRisk": 48, "marketValue": 75, "hangYourHat": 60, "sisterPotential": 82, "composite": 69.6 },
+        "consensus": 70.0
+      },
+      "coreInnovation": "System detecting behavioral biases (loss aversion, anchoring, recency bias, status quo bias) in client financial decisions and intervening with data-driven counter-arguments, historical comparisons, and alternative scenarios, including a quantified 'bias score'.",
+      "primarySourceFiles": ["shared/advancedAnalytics.ts"],
+      "platformFeatures": ["AI Advisor behavioral bias detection", "Decision quality scoring"],
+      "claimCount": 17
+    },
+    {
+      "id": "PAT-009",
+      "title": "Mortgage Elimination Through Real Estate Recycling & IUL Arbitrage",
+      "cpcClass": "G06Q 40/02",
+      "tier": 2,
+      "scores": {
+        "manus": { "patentability": 77, "durability": 76, "theftRisk": 58, "marketValue": 80, "hangYourHat": 70, "sisterPotential": 82, "composite": 76.3 },
+        "grok": { "patentability": 74, "durability": 75, "theftRisk": 62, "marketValue": 78, "hangYourHat": 68, "sisterPotential": 80, "composite": 73.6 },
+        "consensus": 75.0
+      },
+      "coreInnovation": "System modeling iterative cycles of home equity extraction → IUL premium funding → cash value growth → mortgage payoff → equity recycling into additional properties over 20-50 years, with each cycle using previous cycle's equity growth.",
+      "primarySourceFiles": ["shared/mortgageKiller.ts", "client/src/pages/portal/MortgageKillerV3.tsx"],
+      "platformFeatures": ["Mortgage Killer V3", "Property portfolio tracker", "HELOC cycle modeling"],
+      "claimCount": 18
+    },
+    {
+      "id": "PAT-010",
+      "title": "Time Machine Dual-Illustration Method",
+      "cpcClass": "G06Q 40/08",
+      "tier": 1,
+      "scores": {
+        "manus": { "patentability": 84, "durability": 80, "theftRisk": 65, "marketValue": 86, "hangYourHat": 76, "sisterPotential": 75, "composite": 80.5 },
+        "grok": { "patentability": 82, "durability": 78, "theftRisk": 68, "marketValue": 85, "hangYourHat": 78, "sisterPotential": 72, "composite": 79.2 },
+        "consensus": 79.9
+      },
+      "coreInnovation": "Method showing 'what if you had started this IUL policy N years ago' using actual historical S&P 500 data with floor/cap constraints, bypassing NAIC AG49 illustration restrictions by using historical data rather than hypothetical projections.",
+      "primarySourceFiles": ["shared/indexCreditingData.ts", "shared/advancedAnalytics.ts"],
+      "platformFeatures": ["Time Machine overlays on all IUL pages", "Historical S&P 500 backtesting", "Dual illustration display"],
+      "claimCount": 18
+    },
+    {
+      "id": "PAT-011",
+      "title": "Russell Number Multi-Dimensional Advisor Scoring",
+      "cpcClass": "G06Q 40/08",
+      "tier": 2,
+      "scores": {
+        "manus": { "patentability": 79, "durability": 77, "theftRisk": 48, "marketValue": 78, "hangYourHat": 66, "sisterPotential": 84, "composite": 75.8 },
+        "grok": { "patentability": 76, "durability": 74, "theftRisk": 52, "marketValue": 80, "hangYourHat": 70, "sisterPotential": 85, "composite": 75.8 },
+        "consensus": 75.8
+      },
+      "coreInnovation": "Scoring system rating financial advisors on 10+ dimensions (client retention, revenue growth, product diversity, compliance record, satisfaction, CE, technology adoption, community involvement, peer rankings) producing a portable 'Russell Number' reputation score with gamification.",
+      "primarySourceFiles": ["server/db.ts", "drizzle/schema.ts"],
+      "platformFeatures": ["Advisor leaderboards", "Achievement badges", "Russell Number score", "Gamification engine"],
+      "claimCount": 18
+    },
+    {
+      "id": "PAT-012",
+      "title": "Roth Conversion with Short-Term Rental Tax Offset Strategy Engine",
+      "cpcClass": "G06Q 40/06",
+      "tier": 2,
+      "scores": {
+        "manus": { "patentability": 81, "durability": 78, "theftRisk": 52, "marketValue": 82, "hangYourHat": 72, "sisterPotential": 80, "composite": 78.5 },
+        "grok": { "patentability": 78, "durability": 76, "theftRisk": 55, "marketValue": 80, "hangYourHat": 72, "sisterPotential": 78, "composite": 76.3 },
+        "consensus": 77.4
+      },
+      "coreInnovation": "System modeling the strategy of using STR property cost segregation and bonus depreciation to offset Roth conversion tax liability, computing optimal conversion amounts, required STR property values, depreciation schedules, and net tax savings.",
+      "primarySourceFiles": ["client/src/pages/portal/STRStrategy.tsx", "server/routers.ts"],
+      "platformFeatures": ["STR Strategy page", "Roth Conversion calculator", "Cost segregation modeling"],
+      "claimCount": 18
+    },
+    {
+      "id": "PAT-013",
+      "title": "Monte Carlo Simulation Engine with IUL Floor/Cap Constraints",
+      "cpcClass": "G06Q 40/06",
+      "tier": 1,
+      "scores": {
+        "manus": { "patentability": 86, "durability": 84, "theftRisk": 62, "marketValue": 88, "hangYourHat": 80, "sisterPotential": 82, "composite": 83.8 },
+        "grok": { "patentability": 88, "durability": 85, "theftRisk": 65, "marketValue": 90, "hangYourHat": 85, "sisterPotential": 80, "composite": 85.5 },
+        "consensus": 84.7
+      },
+      "coreInnovation": "Monte Carlo simulation engine specifically designed for IUL policies, incorporating unique floor (0%) and cap (8-12%) constraints that create truncated return distributions fundamentally different from normal market returns. Runs 10,000+ simulations with COI charges, surrender schedules, and policy loan mechanics.",
+      "primarySourceFiles": ["shared/advancedAnalytics.ts"],
+      "platformFeatures": ["Monte Carlo simulations across all IUL projections", "Confidence intervals", "Risk-adjusted projections"],
+      "claimCount": 20
+    },
+    {
+      "id": "PAT-014",
+      "title": "FIA Collateral Assignment Lending Optimization System",
+      "cpcClass": "G06Q 40/06",
+      "tier": 3,
+      "scores": {
+        "manus": { "patentability": 74, "durability": 70, "theftRisk": 50, "marketValue": 72, "hangYourHat": 58, "sisterPotential": 80, "composite": 69.8 },
+        "grok": { "patentability": 70, "durability": 68, "theftRisk": 50, "marketValue": 70, "hangYourHat": 55, "sisterPotential": 75, "composite": 66.5 },
+        "consensus": 68.2
+      },
+      "coreInnovation": "Split-ticket FIA architecture dividing premium between collateral sleeve (60-75%) and income sleeve (25-40%), modeling 6 specific FIA products from 3 carriers with LTV bands, surrender schedules, and crediting strategies. Integrates O&G tax arbitrage (80% Y1 depreciation) with HELOC paydown.",
+      "primarySourceFiles": ["shared/fiaCollateralEngine.ts"],
+      "platformFeatures": ["FIA Collateral page", "Split-ticket architecture", "O&G tax arbitrage integration"],
+      "claimCount": 18
+    },
+    {
+      "id": "PAT-015",
+      "title": "Automated Advisor Practice Revenue & Territory Strategy Platform",
+      "cpcClass": "G06Q 40/08",
+      "tier": 1,
+      "scores": {
+        "manus": { "patentability": 82, "durability": 85, "theftRisk": 60, "marketValue": 88, "hangYourHat": 78, "sisterPotential": 90, "composite": 83.3 },
+        "grok": { "patentability": 83, "durability": 87, "theftRisk": 62, "marketValue": 90, "hangYourHat": 82, "sisterPotential": 92, "composite": 84.6 },
+        "consensus": 84.0
+      },
+      "coreInnovation": "Integrated 8-module practice management system: Revenue Simulator, Territory Analyzer, AI Sales Rehearsal, Competitive Intelligence Feed, Lead Generator with credit-based economics, Stale Client Re-engagement, Income Timeline, and Platform Nervous System with 22 automated events.",
+      "primarySourceFiles": ["shared/weaponizeEngines.ts"],
+      "platformFeatures": ["Revenue Simulator", "Territory Analyzer", "Lead Generator", "Competitive Intel", "Stale Client Digest"],
+      "claimCount": 20
+    }
+  ]
+}
