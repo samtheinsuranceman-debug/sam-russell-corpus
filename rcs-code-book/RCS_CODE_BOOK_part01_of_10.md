@@ -15,11 +15,15 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `vitest.config.ts`
 - `PROVENANCE.md`
 - `todo.md`
+- `scripts/DEPLOY.md`
 - `scripts/audit-interior-colors.mjs`
 - `scripts/build.mjs`
+- `scripts/build_code_book.py`
+- `scripts/build_deploy_bundle.sh`
 - `scripts/check-concept16-browser.mjs`
 - `scripts/react-runtime-inject.mjs`
 - `scripts/reconcile-route-manifest.mjs`
+- `scripts/release.sh`
 - `scripts/smoke-production-routes.mjs`
 - `drizzle/0000_cool_starfox.sql`
 - `drizzle/0000_misty_alex_wilder.sql`
@@ -187,8 +191,45 @@ site; it needs a running Node process and a database.
 
 **Source of truth**
 - Repo: `samtheinsuranceman-debug/sam-russell-corpus`
-- Branch: `claude/claude-md-docs-0qgcvw`
+- Branch: `master` (work lands via PRs from `claude/claude-md-docs-0qgcvw`)
 - App subfolder: `russell-capital-systems/` (run everything from here)
+
+---
+
+## ⚡ Fastest path: the homepage live today, no server
+
+The public homepage also exists as a **single self-contained HTML file** with no
+server, database, or keys: `docs/index.html` at the repo root (built from
+`russell-capital-systems/live/rcs-live-homepage.template.html`). It has the full
+page — every image, the AI concierge (falls back to email), the lead fact-finder
+(pre-filled email to the advisor), and Calendly booking.
+
+**One click makes it public on GitHub Pages:**
+
+1. Open https://github.com/samtheinsuranceman-debug/sam-russell-corpus/settings/pages
+2. Under **Build and deployment → Source** choose **Deploy from a branch**,
+   branch **`master`**, folder **`/docs`**, and click **Save**.
+3. Within a minute or two the homepage is live at
+   **https://samtheinsuranceman-debug.github.io/sam-russell-corpus/**
+4. (Optional) Add a custom domain on the same settings page and point its DNS
+   `CNAME` at `samtheinsuranceman-debug.github.io`.
+
+Every later `pnpm release` + merge to `master` updates the live page automatically.
+The full app (portal, lead inbox, nine-AI panel, database) still deploys per the
+sections below.
+
+## ⚙ One command to regenerate everything
+
+From `russell-capital-systems/`:
+
+```bash
+pnpm release
+```
+
+runs typecheck → builds `docs/index.html` → public-surface tests (including the
+live-page ↔ React parity test) → production build → `rcs-deploy-<date>.zip` →
+`rcs-code-book/`. Any failing step aborts, so stale artifacts are never produced
+from a broken build. Then commit and push.
 
 ---
 
@@ -377,7 +418,9 @@ magic beyond the scripts named here (`build`, `start`, `check`, `db:push`).*
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
-    "db:push": "drizzle-kit generate && drizzle-kit migrate"
+    "db:push": "drizzle-kit generate && drizzle-kit migrate",
+    "live:build": "python3 live/build_live_homepage.py",
+    "release": "bash scripts/release.sh"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1120.0",
@@ -1146,6 +1189,56 @@ may be the only backup of this codebase outside the Manus platform.
 - [ ] Remove the expected anonymous `Missing session cookie` warning from public `auth.me` checks so production logs reserve warnings for malformed or invalid sessions.
 ```
 
+## `scripts/DEPLOY.md`
+
+```md
+# Russell Capital Systems — Go-Live (Bluehost cPanel Node.js Selector)
+
+This bundle is a VERIFIED production build. To make the site live:
+
+## 1. Upload
+Upload this whole folder to your Bluehost account (e.g. /home/USER/rcs) via
+cPanel File Manager or SFTP. Keep the structure: `dist/`, `drizzle/`,
+`package.json`, `pnpm-lock.yaml`, `drizzle.config.ts`.
+
+## 2. cPanel → Setup Node.js App
+- Node version: 20.19+ or 22
+- Application root: the uploaded folder (…/rcs)
+- Application startup file: dist/index.js
+- Application mode: Production
+
+## 3. Environment variables (cPanel "Environment variables" panel — NEVER in code)
+Required:
+  DATABASE_URL          mysql://USER:PASS@HOST:3306/DBNAME
+  JWT_SECRET            (long random string)
+  OAUTH_SERVER_URL      (your managed-auth server URL)
+  OWNER_OPEN_ID         (your owner id — gates the Lead Inbox)
+AI (any you use; skip-if-absent):
+  ANTHROPIC_API_KEY  OPENAI_API_KEY  XAI_API_KEY  GEMINI_API_KEY
+  PERPLEXITY_API_KEY  OPENROUTER_API_KEY  MISTRAL_API_KEY  GROQ_API_KEY
+  BUILT_IN_FORGE_API_KEY   (Manus / built-in gateway)
+Email + voice (optional):
+  RESEND_API_KEY   ELEVENLABS_API_KEY   ELEVENLABS_VOICE_ID
+> Rotate the 3 burned keys (OpenAI, Mistral, HeyGen) before using them.
+> The Resend sender domain (russellcapitalsystems.com) must be verified in Resend.
+
+## 4. Install dependencies
+In the cPanel Node app's virtualenv terminal (or "Run NPM Install"):
+  npm install --omit=dev
+(The server bundle imports packages at runtime, so node_modules must exist.)
+
+## 5. Create the new lead table (one time)
+  npm install drizzle-kit drizzle-orm   # if not present
+  npx drizzle-kit migrate               # applies drizzle/ migrations incl. public_leads
+(or run your existing `db:push` flow against the production DB)
+
+## 6. Start / Restart the app, then point the domain
+Restart the Node app in cPanel. Map russellcapitalsystems.com to the app
+(cPanel domain/subdomain → application URL). Load the site and verify:
+  - homepage renders, mic + estimator work
+  - a test lead lands in /portal/leads (owner login) and you get a notification
+```
+
 ## `scripts/audit-interior-colors.mjs`
 
 ```js
@@ -1297,6 +1390,275 @@ writeFileSync(path.join(outDir, "index.html"), html);
 console.log("[build] Frontend emitted to dist/public with esbuild code splitting and compiled Tailwind CSS.");
 ```
 
+## `scripts/build_code_book.py`
+
+```python
+#!/usr/bin/env python3
+"""Generate the Russell Capital Systems plain-Markdown source code book."""
+import os
+import re
+import sys
+import json
+
+APP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # russell-capital-systems/
+OUT = os.path.join(os.path.dirname(APP), "rcs-code-book")            # <repo root>/rcs-code-book
+MAX_PART = 1_900_000
+HEADER_RESERVE = 60_000  # room for the per-part heading + file list
+
+TEXT_EXT = {".ts", ".tsx", ".css", ".sql", ".md", ".html", ".mjs", ".cjs", ".js", ".py", ".sh"}
+JSON_MAX = 40 * 1024
+EXCLUDE_SEGMENTS = {"node_modules", "dist", ".git", "audit"}
+LANG = {
+    ".ts": "ts", ".tsx": "tsx", ".css": "css", ".sql": "sql", ".md": "md",
+    ".html": "html", ".mjs": "js", ".cjs": "js", ".js": "js", ".json": "json",
+    ".py": "python", ".sh": "bash",
+}
+
+
+def wanted(rel: str, size: int) -> bool:
+    parts = rel.split("/")
+    if any(seg in EXCLUDE_SEGMENTS for seg in parts):
+        return False
+    if rel.startswith("drizzle/meta/"):
+        return False
+    base = parts[-1]
+    if base in ("pnpm-lock.yaml", "PARTS_MANIFEST.json"):
+        return False
+    if base.endswith(".test.ts") or base.endswith(".test.tsx"):
+        return False
+    if base == ".gitignore":
+        return True
+    ext = os.path.splitext(base)[1].lower()
+    if ext == ".json":
+        if rel.startswith("docs/"):
+            return False
+        return size <= JSON_MAX
+    return ext in TEXT_EXT
+
+
+def is_binary(data: bytes) -> bool:
+    if b"\x00" in data[:8192]:
+        return True
+    try:
+        data.decode("utf-8")
+    except UnicodeDecodeError:
+        return True
+    return False
+
+
+ROOT_CONFIG_ORDER = ["package.json", "tsconfig", "vite.config.ts", "drizzle.config.ts",
+                     "components.json", ".gitignore"]
+CLIENT_ENTRY_ORDER = ["client/index.html", "client/src/main.tsx", "client/src/App.tsx",
+                      "client/src/index.css", "client/src/lib/", "client/src/_core/"]
+
+
+def sort_key(rel: str):
+    base = os.path.basename(rel)
+    is_root = "/" not in rel
+    if rel == "LAUNCH.md":
+        return (0, 0, rel)
+    if is_root and not base.endswith(".md"):
+        for i, pfx in enumerate(ROOT_CONFIG_ORDER):
+            if base == pfx or (pfx == "tsconfig" and base.startswith("tsconfig")):
+                return (1, i, rel)
+        return (1, len(ROOT_CONFIG_ORDER), rel)  # other root config (vitest, template.json)
+    if is_root and base.endswith(".md"):
+        return (2, 0, rel)
+    if rel.startswith("scripts/"):
+        return (3, 0, rel)
+    if rel.startswith("drizzle/"):
+        return (4, 0, rel)
+    if rel.startswith("shared/"):
+        return (5, 0, rel)
+    if rel.startswith("server/_core/"):
+        return (6, 0, rel)
+    if rel.startswith("server/"):
+        return (7, 0, rel)
+    for i, pfx in enumerate(CLIENT_ENTRY_ORDER):
+        if rel == pfx or (pfx.endswith("/") and rel.startswith(pfx)):
+            return (8, i, rel)
+    if rel.startswith("client/src/components/"):
+        return (9, 0, rel)
+    if rel.startswith("client/src/pages/"):
+        return (10, 0, rel)
+    if rel.startswith("client/"):
+        return (11, 0, rel)
+    return (12, 0, rel)
+
+
+def render(rel: str, text: str) -> str:
+    runs = re.findall(r"`+", text)
+    longest = max((len(r) for r in runs), default=0)
+    fence = "`" * max(3, longest + 1)
+    ext = os.path.splitext(rel)[1].lower()
+    lang = "" if os.path.basename(rel) == ".gitignore" else LANG.get(ext, "")
+    body = text if text.endswith("\n") else text + "\n"
+    return f"## `{rel}`\n\n{fence}{lang}\n{body}{fence}\n\n"
+
+
+def main():
+    files = []
+    for dirpath, dirnames, filenames in os.walk(APP):
+        rel_dir = os.path.relpath(dirpath, APP)
+        rel_dir = "" if rel_dir == "." else rel_dir
+        # prune excluded directories early
+        dirnames[:] = sorted(d for d in dirnames if d not in EXCLUDE_SEGMENTS)
+        for fn in filenames:
+            rel = f"{rel_dir}/{fn}" if rel_dir else fn
+            full = os.path.join(dirpath, fn)
+            if not os.path.isfile(full) or os.path.islink(full):
+                continue
+            size = os.path.getsize(full)
+            if not wanted(rel, size):
+                continue
+            with open(full, "rb") as fh:
+                data = fh.read()
+            if is_binary(data):
+                print(f"skip binary: {rel}", file=sys.stderr)
+                continue
+            files.append((rel, data.decode("utf-8")))
+
+    files.sort(key=lambda t: sort_key(t[0]))
+    blocks = [(rel, render(rel, text)) for rel, text in files]
+
+    # drop any single file too large to fit in one part (a file is never split)
+    oversized = [(rel, len(blk.encode("utf-8"))) for rel, blk in blocks
+                 if len(blk.encode("utf-8")) + HEADER_RESERVE > MAX_PART]
+    for rel, b in oversized:
+        print(f"excluded (exceeds part cap): {rel} ({b} bytes)", file=sys.stderr)
+    oversized_set = {rel for rel, _ in oversized}
+    blocks = [(rel, blk) for rel, blk in blocks if rel not in oversized_set]
+    files = [(rel, t) for rel, t in files if rel not in oversized_set]
+
+    # greedy grouping, never splitting a file
+    groups, cur, cur_size = [], [], 0
+    for rel, blk in blocks:
+        b = len(blk.encode("utf-8"))
+        if cur and cur_size + b + HEADER_RESERVE > MAX_PART:
+            groups.append(cur)
+            cur, cur_size = [], 0
+        cur.append((rel, blk))
+        cur_size += b
+    if cur:
+        groups.append(cur)
+
+    M = len(groups)
+    os.makedirs(OUT, exist_ok=True)
+    for old in os.listdir(OUT):
+        os.remove(os.path.join(OUT, old))
+
+    part_names, file_map, sizes = [], {}, []
+    for i, grp in enumerate(groups, 1):
+        name = f"RCS_CODE_BOOK_part{i:02d}_of_{M:02d}.md"
+        part_names.append(name)
+        header = (
+            f"# Russell Capital Systems — Source Code Book (Part {i} of {M})\n\n"
+            f"This is one part of the complete, plain-Markdown source of the Russell Capital Systems "
+            f"web app (React 19 + Vite client, Express + tRPC server, Drizzle ORM / MySQL), split so an "
+            f"assistant that cannot open archives can read every file. `LAUNCH.md` (in Part 1) is the "
+            f"runbook for installing, configuring, building, migrating, and running the app; read it first. "
+            f"Each file below is shown verbatim under its path relative to `russell-capital-systems/`. "
+            f"The source of truth is GitHub `samtheinsuranceman-debug/sam-russell-corpus` "
+            f"(branch `claude/claude-md-docs-0qgcvw`, folder `russell-capital-systems/`); the book is a "
+            f"derived snapshot generated on 2026-09-05. See `RCS_CODE_BOOK_00_INDEX.md` for the full "
+            f"file-to-part map and the list of intentionally excluded paths.\n\n"
+            f"### Files in this part\n\n"
+            + "".join(f"- `{rel}`\n" for rel, _ in grp)
+            + "\n---\n\n"
+        )
+        content = header + "".join(blk for _, blk in grp)
+        path = os.path.join(OUT, name)
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write(content)
+        size = os.path.getsize(path)
+        sizes.append(size)
+        assert size <= MAX_PART, f"{name} is {size} bytes (> {MAX_PART})"
+        for rel, _ in grp:
+            file_map[rel] = name
+
+    total_files = len(files)
+    index = [
+        "# Russell Capital Systems — Source Code Book (INDEX)\n\n",
+        "**What this is:** the complete, human/AI-readable source of the Russell Capital Systems web app "
+        "(React 19 + Vite client, Express + tRPC server, Drizzle ORM / MySQL), delivered as plain Markdown "
+        f"in {M} parts so any assistant can read it without unzipping anything. Every included file is "
+        "rendered verbatim under a `## \\`relative/path\\`` heading inside a fenced code block.\n\n",
+        "**Source of truth:** GitHub `samtheinsuranceman-debug/sam-russell-corpus`, branch "
+        "`claude/claude-md-docs-0qgcvw`, folder `russell-capital-systems/`. This book is a derived snapshot "
+        "generated on 2026-09-05 (after the homepage rebuild); when it and the repo disagree, the repo wins.\n\n",
+        "## How to launch\n\n",
+        "Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: prerequisites, install, "
+        "environment variables (keys live ONLY in the host environment — never in code), database migration, "
+        "build, run, keep-alive, domain + TLS, verification, and troubleshooting. The production deploy bundle "
+        "(`rcs-deploy-2026-09-05.zip` at the repo root) contains the prebuilt `dist/` plus a `DEPLOY.md` for "
+        "the cPanel Node.js path.\n\n",
+        "## What is intentionally NOT included (all still in the repo)\n\n",
+        "- `node_modules/` and `dist/` (rebuild with `pnpm install` + `pnpm build`)\n",
+        "- `pnpm-lock.yaml` (needed for `pnpm install --frozen-lockfile`; in the repo and in the deploy zip)\n",
+        "- large data JSON: any `.json` over 40 KB (e.g. `PARTS_MANIFEST.json`, `client/src/data/*.json`) "
+        "and every `.json` under `docs/`\n",
+        "- `drizzle/meta/` snapshot files\n",
+        "- `audit/` test reports and `*.test.ts` / `*.test.tsx` test files\n",
+        "- binary assets (`.webp`, `.png`, `.zip`, etc.) — they are in the repo, e.g. under `client/public/`\n",
+        "- anything without a source-code extension (`.yaml`, `.patch`, `.log`, `.prettierrc`, ...)\n",
+    ] + [
+        f"- `{rel}` ({b:,} bytes) — a rendered build output (the template with images embedded as data "
+        f"URIs) larger than a single part; its source, `live/rcs-live-homepage.template.html`, is included\n"
+        for rel, b in oversized
+    ] + [
+        "\n",
+        f"## Parts ({M})\n\n",
+    ]
+    for name, size, grp in zip(part_names, sizes, groups):
+        index.append(f"- `{name}` — {len(grp)} files, {size:,} bytes\n")
+    index.append(f"\n**Total: {total_files} files across {M} parts.**\n\n")
+    index.append("## File → part map\n\n")
+    for rel, _ in blocks:
+        index.append(f"- `{rel}` → `{file_map[rel]}`\n")
+    with open(os.path.join(OUT, "RCS_CODE_BOOK_00_INDEX.md"), "w", encoding="utf-8") as fh:
+        fh.write("".join(index))
+
+    print(json.dumps({"files": total_files, "parts": M,
+                      "sizes": dict(zip(part_names, sizes))}, indent=2))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+## `scripts/build_deploy_bundle.sh`
+
+```bash
+#!/usr/bin/env bash
+# Package the production build (dist/, drizzle/, package.json, lockfile, drizzle
+# config, DEPLOY.md) into <repo>/rcs-deploy-<date>.zip for cPanel / any Node host.
+# Assumes `pnpm build` has already run. Usage: scripts/build_deploy_bundle.sh [zip-name]
+set -euo pipefail
+APP="$(cd "$(dirname "$0")/.." && pwd)"
+REPO="$(dirname "$APP")"
+NAME="${1:-rcs-deploy-$(date +%Y-%m-%d).zip}"
+STAGE="$(mktemp -d)"
+trap 'rm -rf "$STAGE"' EXIT
+
+[ -f "$APP/dist/index.js" ] || { echo "dist/index.js missing — run pnpm build first" >&2; exit 1; }
+
+mkdir -p "$STAGE/rcs-deploy"
+cp -r "$APP/dist" "$STAGE/rcs-deploy/dist"
+cp -r "$APP/drizzle" "$STAGE/rcs-deploy/drizzle"
+cp "$APP/package.json" "$APP/pnpm-lock.yaml" "$APP/drizzle.config.ts" "$STAGE/rcs-deploy/"
+cp "$APP/scripts/DEPLOY.md" "$STAGE/rcs-deploy/DEPLOY.md"
+
+# Never ship secrets or local state.
+find "$STAGE/rcs-deploy" \( -name '.env*' -o -name '*.pem' -o -name '*.key' \) -delete
+
+( cd "$STAGE" && rm -f bundle.zip && zip -qr bundle.zip rcs-deploy )
+unzip -tq "$STAGE/bundle.zip" >/dev/null
+# Keep a single bundle at the repo root: replace any older rcs-deploy-*.zip.
+rm -f "$REPO"/rcs-deploy-*.zip
+cp "$STAGE/bundle.zip" "$REPO/$NAME"
+echo "wrote $REPO/$NAME ($(stat -c %s "$REPO/$NAME") bytes, $(unzip -l "$REPO/$NAME" | tail -1 | awk '{print $2}') files)"
+```
+
 ## `scripts/check-concept16-browser.mjs`
 
 ```js
@@ -1424,6 +1786,39 @@ if (!Array.isArray(document)) {
 }
 writeFileSync(path, `${JSON.stringify(document, null, 2)}\n`);
 console.log(`[route-manifest] ${routes.length} routes`);
+```
+
+## `scripts/release.sh`
+
+```bash
+#!/usr/bin/env bash
+# One command from source to every shippable artifact:
+#   typecheck → single-file homepage (docs/index.html) → tests (incl. parity)
+#   → production build → deploy bundle zip → plain-Markdown code book.
+# Any failing step aborts; nothing is regenerated from a broken build.
+# Usage: pnpm release        (from russell-capital-systems/)
+set -euo pipefail
+APP="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$APP"
+
+step() { printf '\n\033[1;32m▶ %s\033[0m\n' "$*"; }
+
+step "1/6 typecheck";           pnpm check
+step "2/6 single-file homepage"; python3 live/build_live_homepage.py
+# The public surface: homepage, live-page parity, lead pipeline, AI panel. These run
+# with no database. (`pnpm test` runs the whole suite, parts of which need a live DB.)
+step "3/6 tests";               npx vitest run server/concept16Homepage.test.ts server/livePageParity.test.ts \
+                                  server/homepage-typography-scale.test.ts server/leadStrategy.test.ts \
+                                  server/leadsRouter.test.ts server/ultraAI-providers.test.ts
+step "4/6 production build";    pnpm build
+step "5/6 deploy bundle";       bash scripts/build_deploy_bundle.sh
+step "6/6 code book";           python3 scripts/build_code_book.py | tail -1
+
+printf '\n\033[1;32m✔ release artifacts are current:\033[0m\n'
+echo "  docs/index.html            — public homepage (GitHub Pages / any static host)"
+echo "  rcs-deploy-<date>.zip      — full app bundle for cPanel / Node host"
+echo "  rcs-code-book/             — plain-Markdown source for AI review"
+echo "Commit and push; master serves docs/ once GitHub Pages is switched on."
 ```
 
 ## `scripts/smoke-production-routes.mjs`
