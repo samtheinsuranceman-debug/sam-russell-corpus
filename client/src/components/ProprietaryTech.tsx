@@ -113,15 +113,34 @@ export default function ProprietaryTech() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {TECHNOLOGIES.map(({ ref, name, icon: Icon, benefit }) => (
-            <div key={ref} className="group relative rounded-2xl border border-emerald-200/20 bg-black/55 p-6 backdrop-blur-xl transition hover:border-emerald-300/45 hover:bg-black/65">
-              <div className="flex items-center justify-between">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-300/35 bg-emerald-300/10 text-emerald-300"><Icon size={20} /></span>
-                <span className="rounded-full border border-emerald-300/25 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[.14em] text-emerald-300/70">Only at RCS</span>
+            <div
+              key={ref}
+              className="group relative overflow-hidden rounded-2xl border border-emerald-300/20 bg-[linear-gradient(158deg,rgba(6,22,18,.92),rgba(3,10,9,.72))] p-6 shadow-[0_18px_50px_rgba(0,0,0,.45)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-emerald-300/60 hover:shadow-[0_28px_72px_rgba(16,185,129,.22)]"
+            >
+              {/* Top accent bar — glows on hover */}
+              <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,transparent,rgba(52,211,153,.95),transparent)] opacity-50 transition-opacity duration-300 group-hover:opacity-100" />
+              {/* Soft corner glow */}
+              <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(16,185,129,.22),transparent_70%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+              <div className="relative flex items-center justify-between">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-emerald-300/40 bg-[linear-gradient(135deg,rgba(16,185,129,.30),rgba(16,185,129,.05))] text-emerald-200 shadow-[inset_0_0_18px_rgba(52,211,153,.28)] transition-transform duration-300 group-hover:scale-105"><Icon size={22} strokeWidth={1.6} /></span>
+                <span className="rounded-full border border-emerald-300/30 bg-emerald-300/[.06] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[.16em] text-emerald-300/80">Only at RCS</span>
               </div>
-              <h3 className="mt-4 text-lg font-bold leading-snug text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>{name}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-white/75"><span className="font-semibold text-emerald-200">What it means for you — </span>{benefit}</p>
+
+              <h3
+                className="relative mt-5 text-[1.4rem] font-black leading-[1.12] tracking-[-.015em] bg-[linear-gradient(95deg,#ffffff_0%,#bbf7d0_50%,#34d399_100%)] bg-clip-text text-transparent [text-shadow:_0_0_34px_rgba(52,211,153,.22)]"
+                style={{ fontFamily: "DM Sans, sans-serif" }}
+              >
+                {name}
+              </h3>
+              <div aria-hidden="true" className="mt-3 h-[2px] w-16 rounded bg-[linear-gradient(90deg,#34d399,rgba(52,211,153,0))]" />
+
+              <p className="relative mt-4 text-[15px] leading-relaxed text-white/85">
+                <span className="mb-1.5 block text-[10.5px] font-bold uppercase tracking-[.18em] text-emerald-300">What it means for you</span>
+                {benefit}
+              </p>
             </div>
           ))}
         </div>
