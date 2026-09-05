@@ -81,13 +81,19 @@ describe("Concept 16 physician homepage", () => {
     // The two engines the owner named must be present.
     expect(tech).toContain("Optimized Tax Waterfall Engine");
     expect(tech).toContain("Mortgage Killer");
-    // Ten engines, each with a how/why framing.
-    expect((tech.match(/ref: "/g) ?? []).length).toBe(10);
-    expect(tech).toContain("How it works");
-    expect(tech).toContain("Why it's only here");
-    // Patent-pending status — accurate for filed-and-pending applications.
+    // 14 engines shown (all core patents except the AI advisor-coaching one).
+    expect((tech.match(/ref: "/g) ?? []).length).toBe(14);
+    expect(tech).not.toContain("Whisper");
+    // Benefit-oriented framing only — no "how it works" mechanics.
+    expect(tech).toContain("What it means for you");
+    expect(tech).not.toContain("How it works");
+    // Patent-pending status + the 45-more / stay-tuned message.
     expect(tech).toContain("Patent-pending");
     expect(tech).toContain("15 patents in process");
+    expect(tech).toContain("45 more unique patent-pending technologies");
+    expect(tech).toContain("Stay tuned");
+    // Not offered anywhere else.
+    expect(tech).toContain("won't find them anywhere else");
     expect(tech).toContain("tax, legal, or investment advice");
   });
 
