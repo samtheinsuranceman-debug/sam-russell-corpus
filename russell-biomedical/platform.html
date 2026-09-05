@@ -1,0 +1,109 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Russell BioMedical — Research-to-IP Platform</title>
+<style>
+:root{--bg:#0a0e13;--panel:#131b24;--panel2:#1a2530;--ink:#e9f0f6;--muted:#8fa0b0;--line:#243240;
+--teal:#33b8a6;--blue:#4f9fe0;--gold:#d8b154;--pink:#c65b9e;--warn:#e2814a}
+@media(prefers-color-scheme:light){:root{--bg:#f3f6fa;--panel:#fff;--panel2:#eef3f8;--ink:#0e1a26;
+--muted:#54636f;--line:#dbe3ec;--teal:#0d7a6c;--blue:#255fa6}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+header{padding:60px 0 30px;background:radial-gradient(1100px 420px at 72% -12%,color-mix(in srgb,var(--teal) 22%,transparent),transparent);border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--teal);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:12px}
+h1{font-size:clamp(30px,5vw,46px);line-height:1.08;margin:.35em 0 .3em;letter-spacing:-.5px}
+.lead{font-size:19px;color:var(--muted);max-width:760px}
+.status{display:flex;gap:18px;flex-wrap:wrap;margin-top:26px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;min-width:150px}
+.stat b{font-size:28px;display:block;color:var(--teal)}.stat span{color:var(--muted);font-size:13px}
+section{padding:46px 0;border-top:1px solid var(--line)}
+h2{font-size:24px;margin:0 0 6px;letter-spacing:-.3px}.sec-sub{color:var(--muted);max-width:720px;margin:0 0 26px}
+.flow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+.stage{flex:1;min-width:170px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;position:relative}
+.stage .n{font-size:12px;color:var(--muted);font-weight:700}
+.stage h4{margin:5px 0 4px;font-size:15px}.stage p{margin:0;color:var(--muted);font-size:13px}
+.stage .arrow{position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--line);font-size:20px;z-index:2}
+@media(max-width:760px){.stage .arrow{display:none}}
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.tool{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column}
+.tool .ic{width:42px;height:42px;border-radius:10px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px}
+.tool h3{margin:0 0 6px;font-size:18px}.tool p{margin:0 0 14px;color:var(--muted);font-size:14.5px;flex:1}
+.tool .go{align-self:flex-start;background:linear-gradient(135deg,var(--teal),var(--blue));color:#03130f;border:0;border-radius:9px;padding:10px 16px;font-weight:700;cursor:pointer;font-size:14px;text-decoration:none}
+.badge{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:2px 9px;margin-left:6px}
+.b-teal{color:var(--teal);border-color:var(--teal)}.b-blue{color:var(--blue);border-color:var(--blue)}
+.b-gold{color:var(--gold);border-color:var(--gold)}.b-pink{color:var(--pink);border-color:var(--pink)}
+.note{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:16px 18px;color:var(--muted);font-size:14px}
+footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:13px}
+</style></head><body>
+<header><div class="wrap">
+<div class="eyebrow">Russell Holdings Management · Biomedical Platform</div>
+<h1>From the world's research to your next patent — one pipeline.</h1>
+<p class="lead">Five connected tools that read the open biomedical literature at scale, grade every finding by evidence strength, cross-pollinate across fields, and draft counsel-ready disclosures. Real data, real DOIs, transparent grading — nothing fabricated.</p>
+<div class="status">
+<div class="stat"><b>100</b><span>US institutions tracked</span></div>
+<div class="stat"><b>51</b><span>data repositories</span></div>
+<div class="stat"><b id="sVault">—</b><span>findings in your vault</span></div>
+<div class="stat"><b id="sLeads">—</b><span>cross-pollination leads</span></div>
+<div class="stat"><b id="sDrafts">—</b><span>draft disclosures</span></div>
+</div>
+</div></header>
+
+<section id="pipeline"><div class="wrap">
+<h2>The pipeline</h2>
+<p class="sec-sub">Each stage feeds the next. Your accumulated findings, leads, and drafts persist across the whole platform.</p>
+<div class="flow">
+<div class="stage"><div class="n">01 · SOURCE</div><h4>Data &amp; Literature</h4><p>Reach every repository and paper through open aggregators.</p><span class="arrow">→</span></div>
+<div class="stage"><div class="n">02 · MAP</div><h4>Institutions &amp; Findings</h4><p>Top-100 labs; pull real most-cited work live.</p><span class="arrow">→</span></div>
+<div class="stage"><div class="n">03 · GRADE</div><h4>Evidence Vault</h4><p>Auto-tier findings definitive→speculative; accumulate.</p><span class="arrow">→</span></div>
+<div class="stage"><div class="n">04 · COMBINE</div><h4>Cross-Pollination</h4><p>Pair strong findings across fields into scored leads.</p><span class="arrow">→</span></div>
+<div class="stage"><div class="n">05 · DRAFT</div><h4>Disclosure</h4><p>Turn leads into counsel-ready draft disclosures.</p></div>
+</div>
+</div></section>
+
+<section id="tools"><div class="wrap">
+<h2>The tools</h2>
+<p class="sec-sub">Open any of them — they share one persistent database in your browser when hosted together.</p>
+<div class="cards">
+<div class="tool"><div class="ic">🧪</div><h3>BioChem Atlas <span class="badge b-teal">directory + live</span></h3>
+<p>The world's biochemistry institutions graded A–D, wired to OpenAlex/PubMed. Includes the US Top-100 labs page and a first innovation engine.</p>
+<a class="go" href="../biochem-library/index.html">Open BioChem Atlas →</a></div>
+
+<div class="tool"><div class="ic">🗄️</div><h3>BioData Atlas <span class="badge b-blue">51 repositories</span></h3>
+<p>Every major biomedical data repository — genomes, structures, variants, drugs, trials — with four live-search engines (Europe PMC, RCSB PDB, ClinicalTrials.gov, MyGene.info).</p>
+<a class="go" href="../biomedical-data-library/index.html">Open BioData Atlas →</a></div>
+
+<div class="tool"><div class="ic">📊</div><h3>BioEvidence Atlas <span class="badge b-teal">12-tier vault</span></h3>
+<p>Harvest findings live from the top-100 institutions and the literature; each auto-sorts onto the evidence spectrum. Save into a persistent, exportable vault.</p>
+<a class="go" href="../biomedical-research-vault/index.html">Open BioEvidence Atlas →</a></div>
+
+<div class="tool"><div class="ic">⚗️</div><h3>Cross-Pollination Engine <span class="badge b-pink">lead generator</span></h3>
+<p>Pair strong findings from two fields; get ranked intersection lead briefs with a transparent novelty signal and live prior-art checks.</p>
+<a class="go" href="../biomedical-research-vault/cross-pollination.html">Open Cross-Pollination →</a></div>
+
+<div class="tool"><div class="ic">✍️</div><h3>Disclosure Drafter <span class="badge b-gold">IP output</span></h3>
+<p>Turn a saved lead into a DRAFT technical disclosure in provisional-patent format — background, enablement scaffold, claim skeleton, prior-art links — downloadable for counsel.</p>
+<a class="go" href="../biomedical-research-vault/disclosure-drafter.html">Open Disclosure Drafter →</a></div>
+
+<div class="tool"><div class="ic">🏛️</div><h3>Russell BioMedical <span class="badge b-blue">venture</span></h3>
+<p>The research &amp; IP venture this platform powers — mission, method, and honest IP pipeline status.</p>
+<a class="go" href="index.html">Open venture site →</a></div>
+</div>
+</div></section>
+
+<section id="honesty"><div class="wrap">
+<h2>How this stays honest</h2>
+<div class="note">Real institutions and repositories; findings, DOIs, and accessions come live from Europe PMC / OpenAlex and are never fabricated. Evidence tiers grade the <b>strength of a study's design</b>, not whether a finding is true. Cross-pollination leads are hypotheses, and draft disclosures are unfiled starting documents — both require a prior-art search and a registered patent attorney before they mean anything. This platform is not a clinical provider, not a data re-distributor, and not medical or legal advice. Your vault, leads, and drafts live in your browser only.</div>
+</div></section>
+
+<footer><div class="wrap">© <span id="yr"></span> Russell Holdings Management, LLC. Russell BioMedical research-to-IP platform. Live data © respective publishers via open APIs. Nothing fabricated; not medical or legal advice.</div></footer>
+
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+function n(k){try{const v=JSON.parse(localStorage.getItem(k)||"[]");return Array.isArray(v)?v.length:0;}catch(e){return null;}}
+function show(id,val){const el=document.getElementById(id);if(el)el.textContent=(val==null?"—":val);}
+show('sVault',n("bioevidence_vault_v1"));
+show('sLeads',n("bioevidence_leads_v1"));
+show('sDrafts',n("bioevidence_drafts_v1"));
+</script>
+</body></html>
