@@ -48,7 +48,7 @@ input[type=text]{min-width:240px;flex:1}.count{color:var(--muted);font-size:13px
 <h1>BioEvidence Atlas — The Biomedical Research Vault</h1>
 <p class="sub">Harvest real biomedical findings from the top 100 U.S. research institutions and the open literature, and watch each one sort itself onto a 12-tier evidence spectrum — from <b>definitive consensus</b> down to <b>speculation</b> — built on the established evidence hierarchy. Save what matters into a vault that grows and exports. Real papers, real DOIs, transparent tiering.</p>
 <div class="kpis">
-<div class="kpi"><b>100</b><span class="muted">US biomedical institutions</span></div>
+<div class="kpi"><b>100+</b><span class="muted">curated institutions · thousands live via OpenAlex</span></div>
 <div class="kpi"><b>12</b><span class="muted">evidence tiers</span></div>
 <div class="kpi"><b id="kVault">0</b><span class="muted">findings in your vault</span></div>
 <div class="kpi"><b>0</b><span class="muted">fabricated records</span></div>
@@ -78,9 +78,17 @@ input[type=text]{min-width:240px;flex:1}.count{color:var(--muted);font-size:13px
 </section>
 
 <section id="inst" hidden>
-<h2>Top 100 U.S. Biomedical Research Institutions</h2>
+<h2>Institutions <span class="muted" style="font-weight:400">— curated top-100 + live finder for any of thousands</span></h2>
+<div class="note" style="margin-bottom:12px">Beyond the curated top-100 below, resolve <b>any</b> research institution live through OpenAlex (it indexes thousands worldwide) and harvest its biomedical findings straight into the tiered vault. This is the real "connect to as many as possible."</div>
 <div class="controls">
-<input type="text" id="isearch" placeholder="Search institution, city…">
+<input type="text" id="instFinder" placeholder="Find ANY institution live — e.g. 'University of Nebraska', 'RIKEN', 'Karolinska'…">
+<select id="instCountry"><option value="US">United States</option><option value="">Any country</option></select>
+<button class="go" onclick="findInstitutions()">Find live ↗</button>
+</div>
+<div id="instFinderOut" style="margin-bottom:14px"></div>
+<h3 style="font-size:15px;margin:6px 0">Curated top-100 (graded)</h3>
+<div class="controls">
+<input type="text" id="isearch" placeholder="Filter the curated 100…">
 <select id="ifGrade"><option value="">All grades</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
 <select id="ifState"><option value="">All states</option></select>
 </div>
@@ -240,6 +248,27 @@ function exportVault(fmt){const v=getVault();if(!v.length){alert("Vault is empty
   blob=new Blob([rows.join("\n")],{type:"text/csv"});name="bioevidence_vault.csv";}
  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);}
 
+// ── live institution finder: resolve ANY institution via OpenAlex ────────────
+async function findInstitutions(){
+ const q=($("#instFinder").value||"").trim(); const cc=$("#instCountry").value;
+ const out=$("#instFinderOut"); if(!q){out.innerHTML='<p class="muted">Type an institution name.</p>';return;}
+ out.innerHTML='<p class="muted">Resolving via OpenAlex…</p>';
+ try{
+  let url=`https://api.openalex.org/institutions?search=${encodeURIComponent(q)}&per-page=8&mailto=research@russellcap.com`;
+  if(cc) url+=`&filter=country_code:${cc}`;
+  const r=await fetch(url); const j=await r.json(); const res=(j.results)||[];
+  if(!res.length){out.innerHTML='<p class="muted">No institutions matched. Try a shorter name.</p>';return;}
+  out.innerHTML='<div class="grid">'+res.map(i=>{
+   const works=(i.works_count||0).toLocaleString(), cc2=(i.country_code||''), city=(i.geo&&i.geo.city)||'';
+   const nm=i.display_name.replace(/'/g,"&#39;").replace(/"/g,'&quot;');
+   return `<div class="card"><div class="row"><h3>${i.display_name}</h3></div>
+    <div class="muted">${[city,cc2].filter(Boolean).join(', ')} · ${works} works indexed</div>
+    <div class="row" style="margin-top:8px;gap:8px">
+     <a href="${i.id}" target="_blank" rel="noopener">OpenAlex profile ↗</a>
+     <a class="save" onclick='harvestInst("${nm}")'>↓ Harvest into vault</a></div></div>`;}).join("")+'</div>';
+ }catch(e){out.innerHTML=`<div class="note">Live lookup blocked here (${e.message}) — common when opening the file from disk. Host the page, or search <a href="https://openalex.org/institutions?search=${encodeURIComponent(q)}" target="_blank" rel="noopener">on OpenAlex ↗</a>.</div>`;}
+}
+$("#instFinder")&&$("#instFinder").addEventListener("keydown",e=>{if(e.key==="Enter")findInstitutions();});
 ["#isearch","#ifGrade","#ifState"].forEach(s=>$(s).addEventListener("input",renderInst));
 $$("nav button").forEach(b=>b.onclick=()=>{$$("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");$$("section").forEach(s=>s.hidden=true);$("#"+b.dataset.tab).hidden=false;if(b.dataset.tab==="vault")renderVault();});
 fill();
