@@ -3,9 +3,11 @@
 // Graceful when the DB is not configured (returns null / no-ops) so the
 // homepage still works before `pnpm db:push` has been run.
 // ============================================================
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { getDb } from "./db";
 import { publicLeads, type InsertPublicLead, type PublicLead } from "../drizzle/schema";
+
+export type LeadStatusValue = PublicLead["status"];
 
 export async function getLeadByPublicId(publicId: string): Promise<PublicLead | null> {
   const db = await getDb();
@@ -54,4 +56,25 @@ export async function upsertLead(publicId: string, patch: Partial<InsertPublicLe
     ipHistory: Array.from(ipHistory),
   });
   return getLeadByPublicId(publicId);
+}
+
+// ─── Advisor-side reads / triage ────────────────────────────────────────────
+export async function listLeads(limit = 200): Promise<PublicLead[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(publicLeads).orderBy(desc(publicLeads.lastSeenAt)).limit(Math.min(500, Math.max(1, limit)));
+}
+
+export async function getLeadById(id: number): Promise<PublicLead | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(publicLeads).where(eq(publicLeads.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function updateLeadStatus(id: number, status: LeadStatusValue): Promise<PublicLead | null> {
+  const db = await getDb();
+  if (!db) return null;
+  await db.update(publicLeads).set({ status }).where(eq(publicLeads.id, id));
+  return getLeadById(id);
 }

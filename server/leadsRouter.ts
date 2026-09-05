@@ -13,11 +13,19 @@
 // ============================================================
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { publicProcedure, router } from "./_core/trpc";
+import { TRPCError } from "@trpc/server";
+import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { getSessionCookieOptions } from "./_core/cookies";
+import { ENV } from "./_core/env";
+import { notifyOwner } from "./_core/notification";
 import { computeLeadAnalysis } from "./leadStrategy";
-import { getLeadByPublicId, upsertLead } from "./leadsDb";
+import { getLeadById, getLeadByPublicId, listLeads, updateLeadStatus, upsertLead } from "./leadsDb";
 import type { LeadFactFinder } from "@shared/leadTypes";
+
+function assertOwner(user: { openId: string; role: string }): void {
+  const isOwner = user.openId === ENV.ownerOpenId || user.role === "admin";
+  if (!isOwner) throw new TRPCError({ code: "FORBIDDEN", message: "Owner access required." });
+}
 
 const COOKIE = "rcs_lead_id";
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
@@ -115,11 +123,52 @@ export const leadsRouter = router({
         analysis,
       }, ip);
 
+      // Ping the owner about the new lead — best-effort, never blocks capture
+      // and never includes the illustrative figures.
+      try {
+        const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
+        const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
+        await notifyOwner({
+          title: "New homepage lead captured",
+          content: `${who} (${contact})` + (input.bestTimeToContact ? ` — best time: ${input.bestTimeToContact}` : "") +
+            (input.question ? `\nQuestion: ${input.question.slice(0, 300)}` : "") +
+            `\nOpen the lead inbox to review the full fact-finder and advisor figures.`,
+        });
+      } catch { /* notification is best-effort */ }
+
       // The visitor only ever sees the qualitative teaser — never the figures.
       return {
         saved: Boolean(lead) as boolean,
         reason: lead ? ("ok" as const) : ("db_unconfigured" as const),
         teaser: analysis.teaser,
       };
+    }),
+
+  // ─── Advisor lead inbox (owner-gated) ────────────────────────────────────
+  // These DO return the illustrative advisor figures — for the licensed
+  // advisor's internal review only.
+  list: protectedProcedure
+    .input(z.object({ limit: z.number().int().min(1).max(500).default(200) }).default({ limit: 200 }))
+    .query(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      return listLeads(input.limit);
+    }),
+
+  get: protectedProcedure
+    .input(z.object({ id: z.number().int().positive() }))
+    .query(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      const lead = await getLeadById(input.id);
+      if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
+      return lead;
+    }),
+
+  updateStatus: protectedProcedure
+    .input(z.object({ id: z.number().int().positive(), status: z.enum(["new", "contacted", "qualified", "client"]) }))
+    .mutation(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      const lead = await updateLeadStatus(input.id, input.status);
+      if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
+      return lead;
     }),
 });

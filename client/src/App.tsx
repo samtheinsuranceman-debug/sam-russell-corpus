@@ -41,6 +41,7 @@ const SharedSlidesViewer = lazy(() => import("./pages/SharedSlidesViewer"));
 const Onboarding = lazy(() => import("./pages/portal/Onboarding"));
 const Dashboard = lazy(() => import("./pages/portal/Dashboard"));
 const Clients = lazy(() => import("./pages/portal/Clients"));
+const LeadInbox = lazy(() => import("./pages/portal/LeadInbox"));
 const ClientDetail = lazy(() => import("./pages/portal/ClientDetail"));
 const Pipeline = lazy(() => import("./pages/portal/Pipeline"));
 const StrategyLab = lazy(() => import("./pages/portal/StrategyLab"));
@@ -325,6 +326,7 @@ function Router() {
       <Route path="/portal/advisory-summary" component={gated(AdvisorySummary, "/portal/advisory-summary")} />
       <Route path="/portal/advisor-directory" component={gated(AdvisorDirectory, "/portal/advisor-directory")} />
       <Route path="/portal/clients" component={gated(Clients, "/portal/clients")} />
+      <Route path="/portal/leads" component={gated(LeadInbox, "/portal/leads")} />
       <Route path="/portal/clients/:id" component={gated(ClientDetail, "/portal/clients")} />
       <Route path="/portal/pipeline" component={gated(Pipeline, "/portal/pipeline")} />
       <Route path="/portal/strategy" component={gated(StrategyLab, "/portal/strategy")} />
