@@ -138,6 +138,65 @@ If you weren't expecting this invitation, you can safely ignore this email.`;
 }
 
 
+// ─── Homepage Lead Acknowledgement ───────────────────────────────────────────
+
+export interface LeadAckOptions {
+  toEmail: string;
+  firstName?: string | null;
+}
+
+/**
+ * Sends a warm, non-committal acknowledgement to a prospect who completed the
+ * homepage estimator. Intentionally contains NO figures, no advice, and makes
+ * no promises — just confirms receipt and that an advisor will follow up.
+ */
+export async function sendLeadAcknowledgement(opts: LeadAckOptions): Promise<{ sent: boolean; reason?: string }> {
+  const resend = getResend();
+  const name = (opts.firstName ?? "").trim() || "there";
+  const subject = "Thanks — your Russell Capital Systems estimate is on its way";
+  const text =
+    `Hi ${name},\n\n` +
+    `Thank you for completing the Russell Capital Systems planning estimate. We've received your information ` +
+    `and an advisor will reach out to schedule your thorough evaluation.\n\n` +
+    `A note on what you saw: any strategies or figures are general education only — not tax, legal, or ` +
+    `investment advice, and not guaranteed. Every result is reviewed by our tax professional team for ` +
+    `suitability and compliance with applicable IRS statutes before anything is implemented, and your own ` +
+    `results may differ.\n\n` +
+    `Talk soon,\nRussell Capital Systems`;
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${subject}</title></head>
+<body style="margin:0;padding:0;background:#060f1e;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;color:#c8d8ec;">
+  <div style="max-width:560px;margin:0 auto;padding:32px 24px;">
+    <h1 style="color:#34d399;font-size:20px;margin:0 0 16px;">Thanks, ${name} — we've got it.</h1>
+    <p style="line-height:1.6;">Thank you for completing the Russell Capital Systems planning estimate. We've received your information and an advisor will reach out to schedule your thorough evaluation.</p>
+    <p style="line-height:1.6;color:#8fa6c4;font-size:13px;border-top:1px solid #1b2a44;padding-top:16px;margin-top:24px;">Any strategies or figures you saw are general education only — not tax, legal, or investment advice, and not guaranteed. Every result is reviewed by our tax professional team for suitability and compliance with applicable IRS statutes before anything is implemented, and your own results may differ.</p>
+    <p style="line-height:1.6;">Talk soon,<br/>Russell Capital Systems</p>
+  </div>
+</body></html>`;
+
+  if (!resend) {
+    emailStatus("lead_ack_skipped_no_key", false);
+    return { sent: false, reason: "RESEND_API_KEY not configured" };
+  }
+  try {
+    const { error } = await resend.emails.send({
+      from: "Russell Capital Systems™ <hello@russellcapitalsystems.com>",
+      to: opts.toEmail,
+      subject,
+      html: sanitizeEmailHtml(html),
+      text,
+    });
+    if (error) {
+      emailStatus("lead_ack_resend_error", false);
+      return { sent: false, reason: "Email delivery failed" };
+    }
+    emailStatus("lead_ack_sent", true);
+    return { sent: true };
+  } catch {
+    emailStatus("lead_ack_failed", false);
+    return { sent: false, reason: "Email delivery failed" };
+  }
+}
+
 // ─── Stale Client Digest Email ───────────────────────────────────────────────
 
 export interface StaleClient {

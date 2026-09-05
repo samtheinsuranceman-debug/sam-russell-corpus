@@ -18,6 +18,7 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { ENV } from "./_core/env";
 import { notifyOwner } from "./_core/notification";
+import { sendLeadAcknowledgement } from "./email";
 import { computeLeadAnalysis } from "./leadStrategy";
 import { getLeadById, getLeadByPublicId, listLeads, updateLeadStatus, upsertLead } from "./leadsDb";
 import type { LeadFactFinder } from "@shared/leadTypes";
@@ -135,6 +136,12 @@ export const leadsRouter = router({
             `\nOpen the lead inbox to review the full fact-finder and advisor figures.`,
         });
       } catch { /* notification is best-effort */ }
+
+      // Send the prospect a warm acknowledgement — best-effort, no figures.
+      if (input.email) {
+        try { await sendLeadAcknowledgement({ toEmail: input.email, firstName: input.firstName }); }
+        catch { /* acknowledgement is best-effort */ }
+      }
 
       // The visitor only ever sees the qualitative teaser — never the figures.
       return {

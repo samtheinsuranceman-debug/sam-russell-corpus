@@ -6,7 +6,7 @@
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
-import { Mail, Phone, Clock, AlertTriangle, User, Inbox, Download } from "lucide-react";
+import { Mail, Phone, Clock, AlertTriangle, User, Inbox, Download, Search } from "lucide-react";
 import type { LeadStatus } from "@shared/leadTypes";
 
 const STATUSES: LeadStatus[] = ["new", "contacted", "qualified", "client"];
@@ -25,8 +25,18 @@ export default function LeadInbox() {
     onSuccess: () => { void utils.leads.list.invalidate(); },
   });
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
 
-  const leads = list.data ?? [];
+  const allLeads = list.data ?? [];
+  const q = search.trim().toLowerCase();
+  const leads = allLeads.filter((l) => {
+    if (statusFilter !== "all" && l.status !== statusFilter) return false;
+    if (!q) return true;
+    const hay = [l.firstName, l.lastName, l.email, l.phone, l.question, l.bestTimeToContact]
+      .filter(Boolean).join(" ").toLowerCase();
+    return hay.includes(q);
+  });
   const selected = leads.find((l) => l.id === selectedId) ?? leads[0] ?? null;
 
   type Lead = (typeof leads)[number];
@@ -116,9 +126,39 @@ export default function LeadInbox() {
 
       {list.isLoading ? (
         <p className="p-6 text-slate-400">Loading leads…</p>
-      ) : leads.length === 0 ? (
+      ) : allLeads.length === 0 ? (
         <p className="p-6 text-slate-400">No leads captured yet. (If you expect some, confirm the database has been migrated with <code>pnpm db:push</code>.)</p>
       ) : (
+        <>
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <div className="relative flex-1 min-w-[220px]">
+            <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search name, email, phone, or question…"
+              aria-label="Search leads"
+              className="w-full rounded-lg border border-slate-700 bg-slate-900/60 py-2 pl-9 pr-3 text-sm text-white outline-none focus:border-emerald-400"
+            />
+          </div>
+          <label className="text-xs text-slate-400">
+            Status
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as LeadStatus | "all")}
+              aria-label="Filter by status"
+              className="ml-2 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white"
+            >
+              <option value="all">All</option>
+              {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </label>
+          <span className="text-xs text-slate-500">{leads.length} of {allLeads.length}</span>
+        </div>
+
+        {leads.length === 0 ? (
+          <p className="p-6 text-slate-400">No leads match your filters.</p>
+        ) : (
         <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
           {/* List */}
           <div className="max-h-[70vh] space-y-2 overflow-y-auto pr-1">
@@ -221,6 +261,8 @@ export default function LeadInbox() {
             </div>
           )}
         </div>
+        )}
+        </>
       )}
     </AppShell>
   );

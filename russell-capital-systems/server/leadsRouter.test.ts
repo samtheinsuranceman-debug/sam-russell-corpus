@@ -31,6 +31,21 @@ describe("public leads router + advisor inbox", () => {
     expect(routerSrc).toMatch(/try \{[\s\S]*notifyOwner[\s\S]*catch/);
   });
 
+  it("sends a best-effort acknowledgement to the prospect (no figures)", () => {
+    const email = readFileSync(resolve("server/email.ts"), "utf8");
+    expect(email).toContain("sendLeadAcknowledgement");
+    expect(email).toContain("not tax, legal, or investment advice");
+    // Router calls it only when an email was given, wrapped so it never blocks.
+    expect(routerSrc).toContain("sendLeadAcknowledgement");
+    expect(routerSrc).toMatch(/if \(input\.email\)[\s\S]*try \{[\s\S]*sendLeadAcknowledgement[\s\S]*catch/);
+  });
+
+  it("gives the inbox search and status filtering", () => {
+    expect(inbox).toContain("Search name, email, phone, or question");
+    expect(inbox).toContain("Filter by status");
+    expect(inbox).toContain("statusFilter");
+  });
+
   it("mounts the owner lead inbox route and page", () => {
     expect(app).toContain('path="/portal/leads"');
     expect(app).toContain("LeadInbox");
