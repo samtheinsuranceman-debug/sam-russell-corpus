@@ -85,8 +85,9 @@ describe("Concept 16 physician homepage", () => {
     expect((tech.match(/ref: "/g) ?? []).length).toBe(10);
     expect(tech).toContain("How it works");
     expect(tech).toContain("Why it's only here");
-    // Honest status wording — proprietary, not a granted-patent claim.
-    expect(tech).toContain("Proprietary technology");
+    // Patent-pending status — accurate for filed-and-pending applications.
+    expect(tech).toContain("Patent-pending");
+    expect(tech).toContain("15 patents in process");
     expect(tech).toContain("tax, legal, or investment advice");
   });
 

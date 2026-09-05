@@ -4,17 +4,16 @@
 // core platform engines (PAT-001…015 in the internal patent workbook),
 // described at the concept level only — no secret formulas or figures.
 //
-// HONESTY NOTE: these are labeled "proprietary technology," not "patented."
-// If/when applications are actually filed, the eyebrow can be switched to
-// "patent-pending" (see TECH_STATUS_LABEL below).
+// STATUS: 15 patent applications are in process for the core platform
+// engines — "patent-pending" is accurate per the owner. Do not claim a patent
+// has been GRANTED (issued) until an issue number exists; "patent-pending" and
+// "in process" are correct for filed-and-pending applications.
 // ============================================================
 import {
   Layers, Waves, Home, Dna, ShieldCheck, Repeat2, History, Dice5, Boxes, Landmark,
 } from "lucide-react";
 
-// Flip to "Patent-pending technology" ONLY once applications are actually
-// filed and counsel confirms the claim.
-const TECH_STATUS_LABEL = "Proprietary technology";
+const TECH_STATUS_LABEL = "Patent-pending · 15 patents in process";
 
 export type Technology = {
   ref: string; // internal engine index
@@ -97,8 +96,9 @@ export default function ProprietaryTech() {
             The <span className="text-emerald-300 [text-shadow:_0_0_26px_rgba(52,211,153,.85)]">engines</span> behind your plan
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/75">
-            Coordinated planning runs on purpose-built engines you won't find in off-the-shelf software.
-            Here's a plain-language look at ten of them — the specifics are worked through with an advisor.
+            Coordinated planning runs on purpose-built engines you won't find in off-the-shelf software —
+            with <span className="font-semibold text-emerald-300">15 patents in process</span>. Here's a
+            plain-language look at ten of them; the specifics are worked through with an advisor.
           </p>
         </div>
 
@@ -117,9 +117,10 @@ export default function ProprietaryTech() {
         </div>
 
         <p className="mx-auto mt-10 max-w-3xl text-center text-[11px] leading-relaxed text-white/45">
-          Proprietary methods developed by Russell Capital Systems, described here at a high level for education.
-          Not tax, legal, or investment advice; results are not guaranteed and are reviewed by our tax professional
-          team for suitability and IRS compliance before implementation.
+          Patent-pending methods developed by Russell Capital Systems — 15 patent applications in process —
+          described here at a high level for education. Not tax, legal, or investment advice; results are not
+          guaranteed and are reviewed by our tax professional team for suitability and IRS compliance before
+          implementation.
         </p>
       </div>
     </section>
