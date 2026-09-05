@@ -217,7 +217,9 @@ export default function Landing() {
   const illustrativeOpportunity = Math.round((numericIncome * (stateFactor + filingAdjustment)) / 250) * 250;
 
   return (
-    <div id="main-content" tabIndex={-1} className="rc-homepage rc-homepage-type-scale min-h-screen bg-[#060f20] text-[#c8d8ec] outline-none">
+    <div id="main-content" tabIndex={-1} className="rc-homepage rc-homepage-type-scale relative min-h-screen bg-[#060f20] text-[#c8d8ec] outline-none">
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 opacity-[.05] [background-image:linear-gradient(rgba(52,211,153,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.6)_1px,transparent_1px)] [background-size:56px_56px]" />
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_85%_12%,rgba(16,185,129,.08),transparent_34%),radial-gradient(circle_at_10%_80%,rgba(16,185,129,.06),transparent_36%)]" />
       <nav className="rc-concept16-nav absolute inset-x-0 top-0 z-50" aria-label="Public navigation">
         <div className="container pt-5">
           <div className="flex min-h-[5.5rem] items-center justify-between gap-4 rounded-2xl border border-emerald-300/25 bg-black/55 px-5 shadow-[0_24px_70px_rgba(0,0,0,.35)] backdrop-blur-xl lg:px-7">
@@ -247,13 +249,17 @@ export default function Landing() {
         </div>
       </nav>
 
-      <section id="top" className="rc-homepage-hero rc-command-center relative overflow-hidden bg-[#050b0a]">
-        <div className="relative w-full">
-          <img src="/rcs-neon-hero.png" alt="Financial and Tax Relief and Recovery — For Physicians, Psychiatrists, and Surgeons" className="block max-h-[80vh] w-full object-cover object-left" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-[linear-gradient(180deg,transparent,#050b0a)]" />
-          <h1 className="sr-only">Financial &amp; Tax Relief and Recovery — For Physicians, Psychiatrists, &amp; Surgeons</h1>
-        </div>
-        <div className="container relative z-10 -mt-16 flex flex-col items-center pb-16 text-center sm:-mt-24">
+      <section id="top" className="rc-homepage-hero rc-command-center relative flex min-h-[100vh] items-center overflow-hidden bg-[#050b0a]">
+        <img src="/rcs-neon-hero.png" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover object-center blur-[16px] brightness-[.28]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,11,10,.74)_0%,rgba(5,11,10,.5)_42%,#050b0a_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_36%,rgba(16,185,129,.18),transparent_46%)]" />
+        <div aria-hidden="true" className="absolute inset-0 opacity-[.13] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:46px_46px]" />
+        <div className="container relative z-10 flex flex-col items-center pb-16 pt-36 text-center">
+          <h1 className="mb-8 flex w-full max-w-4xl flex-col items-center gap-3" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
+            <span className="w-full rounded-2xl border border-white/35 bg-white/[.06] px-5 py-2.5 text-[clamp(1.8rem,4.4vw,3.6rem)] font-bold leading-tight text-white [text-shadow:_0_0_18px_rgba(255,255,255,.45)] backdrop-blur-sm">Financial &amp; Tax</span>
+            <span className="w-full rounded-2xl border border-emerald-300/60 bg-emerald-400/[.06] px-5 py-2.5 text-[clamp(1.8rem,4.4vw,3.6rem)] font-bold leading-tight text-emerald-300 [text-shadow:_0_0_22px_rgba(52,211,153,.9),_0_0_46px_rgba(16,185,129,.5)] backdrop-blur-sm">Relief and Recovery</span>
+            <span className="w-full rounded-2xl border border-emerald-300/45 bg-emerald-400/[.05] px-5 py-3 text-[clamp(1.35rem,3.4vw,2.7rem)] font-bold leading-tight text-emerald-200 [text-shadow:_0_0_18px_rgba(52,211,153,.7)] backdrop-blur-sm">For Physicians, Psychiatrists, &amp; Surgeons</span>
+          </h1>
           <p className="mb-9 max-w-2xl text-lg leading-relaxed text-white/85 drop-shadow-[0_5px_20px_rgba(0,0,0,.9)]">
             Coordinated <span className="font-semibold text-emerald-300">tax reduction</span>, <span className="font-semibold text-emerald-300">interest recovery</span>, practice, risk, retirement, and legacy planning — built for the finances of physicians, psychiatrists, and surgeons.
           </p>
@@ -323,9 +329,17 @@ export default function Landing() {
         </div>
       </section>
 
-      <section aria-label="Financial and tax relief and recovery for medical professionals" className="relative overflow-hidden border-y border-emerald-300/20 bg-[#050b0a]">
-        <img src="/rcs-neon-banner.png" alt="Relief and Recovery — financial and tax planning for physicians, psychiatrists, and surgeons" className="block max-h-[46vh] w-full object-cover object-center opacity-95" />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,#050b0a_2%,transparent_28%,transparent_72%,#050b0a_98%)]" />
+      <section aria-label="Relief today, recovery for life" className="relative overflow-hidden border-y border-emerald-300/20 bg-[#050b0a] py-20">
+        <img src="/rcs-neon-banner.png" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover object-center blur-[18px] brightness-[.3]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,#050b0a,rgba(5,11,10,.5),#050b0a)]" />
+        <div aria-hidden="true" className="absolute inset-0 opacity-[.1] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:44px_44px]" />
+        <div className="container relative z-10 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[.28em] text-emerald-300/80">Relief today · Recovery for life</p>
+          <h2 className="mx-auto mt-3 max-w-4xl text-[clamp(1.7rem,4vw,3.2rem)] font-bold leading-tight text-white [text-shadow:_0_0_22px_rgba(16,185,129,.4)]" style={{ fontFamily: "Georgia,'Times New Roman',serif" }}>
+            Keep More of What You Earn. <span className="text-emerald-300 [text-shadow:_0_0_24px_rgba(52,211,153,.85)]">Protect What You Built.</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-white/70">Tax reduction, interest recovery, and coordinated planning — engineered for the finances of physicians, psychiatrists, and surgeons.</p>
+        </div>
       </section>
 
       <section className="border-y border-[#12233e] bg-[#0b1628]/50" aria-label="Planning principles">
