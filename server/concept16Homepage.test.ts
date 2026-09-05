@@ -27,10 +27,12 @@ describe("Concept 16 physician homepage", () => {
     expect(landing).toContain("/rcs-bg-25.webp");
     expect(landing).toContain("Tax Strategy for");
     expect(landing).toContain("Turn Capital Into Income");
-    // Senior-partner credibility band
-    expect(landing).toContain("Clients who stay for decades");
-    expect(landing).toContain("medical malpractice");
-    expect(landing).toContain("20 years or longer");
+    // Senior-partner credibility band (its own component, mounted before the estimator)
+    expect(landing).toContain("SeniorPartnerBand");
+    const band = readFileSync(resolve("client/src/components/SeniorPartnerBand.tsx"), "utf8");
+    expect(band).toContain("Clients who stay for decades");
+    expect(band).toContain("medical malpractice");
+    expect(band).toContain("20 years or longer");
     // War-chest phrase leads Chapter 2; the highlight word is wrapped in a span.
     expect(landing).toContain("Transform Debt Into a");
     expect(landing).toContain("Tax-Free Liquid War Chest");
