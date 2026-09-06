@@ -24,6 +24,12 @@ const KIND_STYLE: Record<LedgerKind, { label: string; color: string }> = {
   journey: { label: "Journey", color: "text-violet-300 border-violet-400/40" },
   status: { label: "Status", color: "text-orange-300 border-orange-400/40" },
   note: { label: "Note", color: "text-slate-300 border-slate-500/40" },
+  consent: { label: "Consent", color: "text-teal-300 border-teal-400/40" },
+  mandate: { label: "Mandate", color: "text-indigo-300 border-indigo-400/40" },
+  advice: { label: "Advice", color: "text-emerald-200 border-emerald-300/40" },
+  control: { label: "Control", color: "text-rose-200 border-rose-300/40" },
+  automation: { label: "Automation", color: "text-yellow-200 border-yellow-300/40" },
+  rules: { label: "Rules", color: "text-pink-200 border-pink-300/40" },
 };
 
 export default function PlanLedger() {

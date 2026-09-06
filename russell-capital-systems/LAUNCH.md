@@ -217,6 +217,12 @@ Add `OWNER_PASSWORD_HASH` (run `pnpm owner:password` locally) and the AI /
 mail / SMS keys in the Railway Variables panel. DNS records to publish are in
 `docs/grok-handoff/09_DNS_AND_MAIL_RECORDS.md`.
 
+### Controls — consent, mandates, firewall, runtime, bridges (optional)
+`ADVICE_SIGNING_KEY` (signs advice + document provenance; falls back to `JWT_SECRET`),
+`INBOUND_EVENT_SECRET` (signed events into `POST /api/events/inbound`; falls back to
+`EVENT_WEBHOOK_SECRET`), `FHIR_BASE_URL` + `FHIR_ACCESS_TOKEN` (health-data bridge),
+`TAX_FEED_URL` + `TAX_FEED_TOKEN` (tax fact feed). See `docs/grok-handoff/11_CONTROLS_AUTHORITY_LAYER.md`.
+
 ### Voice (optional)
 `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` (spoken answers).
 
