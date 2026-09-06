@@ -32,6 +32,20 @@ type Fetcher = (url: string) => Promise<{ ok: boolean; status: number; json: () 
 let _fetch: Fetcher = (url) => fetch(url, { signal: AbortSignal.timeout(8000) });
 export function _setFetchForTests(f: Fetcher | null) { _fetch = f ?? ((url) => fetch(url, { signal: AbortSignal.timeout(8000) })); }
 
+/** Every observation from `observationStart` (YYYY-MM-DD), oldest first, blanks dropped. Any FRED series id. */
+export async function fetchFredObservationsSince(seriesId: string, observationStart: string, env: NodeJS.ProcessEnv = process.env): Promise<Observation[]> {
+  const key = env.FRED_API_KEY;
+  if (!key) return [];
+  const url = `https://api.stlouisfed.org/fred/series/observations?series_id=${encodeURIComponent(seriesId)}&api_key=${encodeURIComponent(key)}&file_type=json&sort_order=asc&observation_start=${observationStart}`;
+  const res = await _fetch(url);
+  if (!res.ok) throw new Error(`FRED ${seriesId} responded ${res.status}`);
+  const data = (await res.json()) as { observations?: Array<{ date?: string; value?: string }> };
+  return (data.observations ?? []).flatMap((o) => {
+    const v = Number(o.value);
+    return o.date && Number.isFinite(v) && o.value !== "." ? [{ date: o.date, value: v }] : [];
+  });
+}
+
 /** Latest `limit` observations, newest first, blanks ("." on FRED) dropped. */
 export async function fetchFredObservations(series: FredSeries, limit = 1, env: NodeJS.ProcessEnv = process.env): Promise<Observation[]> {
   const key = env.FRED_API_KEY;
