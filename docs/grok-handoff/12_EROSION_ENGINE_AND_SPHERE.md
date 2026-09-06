@@ -89,6 +89,29 @@ recomputes on approval. `erosion.harvestAll` sweeps every enabled source;
 `EROSION_HARVEST_DAYS=7` on the host runs that sweep weekly, a minute after
 boot and then on the interval. Nothing enters the panel without the owner.
 
+### 5. Scoring — what actually happened
+Every metric the panel forecasts maps to the series that records the outcome
+(`ACTUAL_SERIES`: OMB/Treasury figures on FRED, fiscal-year basis — receipts,
+outlays, deficit with the sign flipped, net interest, debt held by the
+public). `scorePanel()` pairs each unscored claim whose year has fully closed
+with the published observation for that year (`matchActuals()`), records it
+with `recordActual()` — which recomputes the source's track record from every
+scored claim (1 ÷ (1 + mean absolute relative error)) — and then regrades
+every source's consistency with `consistencyFor()`: for each metric + year
+the source has published more than once, the relative spread of its values;
+consistency = 1 ÷ (1 + 4 × mean spread). A series that does not answer leaves
+the claim unscored; nothing is typed in. "Score the panel" on the page runs
+it; the scheduled sweep runs it after every harvest. As of September 2026 no
+seeded claim has closed, so the pipeline is armed rather than exercised; the
+first CBO 2035 figures score in 2036.
+
+### PDF sources
+`fetchSourceText()` reads PDFs as well as pages (content type or `.pdf` in
+the URL) through `unpdf`, so the Trustees reports, the Financial Report and
+CBO's own PDF can be harvested directly by pointing a harvest at the file.
+Quotes are verified against the full extracted text (up to 40k characters);
+the council reads the first 14k.
+
 ### Environment
 `FRED_API_KEY` is now optional: without it the ladder and the Treasury
 benchmarks use FRED's public CSV download (`fredgraph.csv`) for the same
@@ -99,9 +122,9 @@ outside. Any AI key enables the council and the harvest. `EROSION_HARVEST_DAYS`
 turns on the scheduled sweep. No other secrets.
 
 ### What is deliberately not done
-- Pages only: the harvest reads HTML text. PDF reports (the Trustees, the
-  Financial Report) are not parsed yet; the owner can point a harvest at
-  the HTML summary page for those.
+- A harvest reads one URL. Walking a source's site to find its newest report
+  is not automated; the owner (or the sweep, on the fixed URLs) chooses the
+  page or file.
 - State income tax paths are not modelled; the record and the panel are
   federal.
 
@@ -116,11 +139,14 @@ point, never adding a menu. The next step is to let the Sphere replace the
 sidebar for clients, with the sidebar kept for the advisor's operations.
 
 ## Tested
-`server/erosion.test.ts` (13 tests): FRED's CSV parsing and the keyless
+`server/erosion.test.ts` (12 test blocks): FRED's CSV parsing and the keyless
 transport (no api_key in any URL), the deterministic metric readings, the
 verbatim-quote guard (curly quotes, whitespace, wrong number, sentence not
 on the page), the harvest reply parser, and a three-voice harvest where a
-hallucinated sentence is dropped and two voices corroborate one figure; plus the record's anchor values and
+hallucinated sentence is dropped and two voices corroborate one figure; outcome matching
+(closed years only, sign flip, last quarter of a quarterly series, a failing
+series leaves the claim unscored), the consistency grade, and a real PDF
+round-trip through pdfkit → unpdf; plus the record's anchor values and
 continuity, window statistics and change events, consensus weighting,
 coverage and agreement, the trajectory's behaviour with and without panel
 coverage, the seeds' citations and the CBO multiplier, annualisation, the
