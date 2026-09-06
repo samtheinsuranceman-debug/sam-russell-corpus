@@ -1,4 +1,5 @@
 import {
+  bigint,
   boolean,
   decimal,
   index,
@@ -2337,7 +2338,7 @@ export const planEvents = mysqlTable("plan_events", {
   clientId:    int("clientId"),
   leadId:      int("leadId"),
   workspaceId: int("workspaceId"),
-  kind:        mysqlEnum("kind", ["fact", "assumption", "decision", "message", "document", "outcome", "scenario", "journey", "status", "note"]).notNull(),
+  kind:        mysqlEnum("kind", ["fact", "assumption", "decision", "message", "document", "outcome", "scenario", "journey", "status", "note", "consent", "mandate", "advice", "control", "automation", "rules"]).notNull(),
   source:      varchar("source", { length: 20 }).notNull(),
   key:         varchar("key", { length: 120 }),
   label:       varchar("label", { length: 200 }),
@@ -2356,3 +2357,174 @@ export const planEvents = mysqlTable("plan_events", {
   byLead:     index("plan_events_lead").on(t.leadId),
 }));
 export type PlanEventRow = typeof planEvents.$inferSelect;
+
+// ─── CONTROLS: consent, mandates, the transaction firewall, the runtime ──────
+// Everything below is the authority layer the Plan Ledger runs under. Each
+// row is mirrored by a ledger event (consent / mandate / control /
+// automation / document), so the chain stays the single source of truth and
+// these tables are the fast index the app reads.
+
+// Who may use which scopes of a subject's data, for what, until when.
+export const consentGrants = mysqlTable("consent_grants", {
+  id:              int("id").autoincrement().primaryKey(),
+  subject:         varchar("subject", { length: 40 }).notNull(),
+  userId:          int("userId"),
+  clientId:        int("clientId"),
+  leadId:          int("leadId"),
+  workspaceId:     int("workspaceId"),
+  granteeType:     mysqlEnum("granteeType", ["person", "agent", "integration", "advisor"]).notNull(),
+  granteeId:       varchar("granteeId", { length: 120 }).notNull(),
+  granteeLabel:    varchar("granteeLabel", { length: 200 }),
+  scopes:          json("scopes").notNull(),
+  purpose:         varchar("purpose", { length: 500 }),
+  startsAt:        timestamp("startsAt").notNull(),
+  expiresAt:       timestamp("expiresAt"),
+  revokedAt:       timestamp("revokedAt"),
+  revokedReason:   varchar("revokedReason", { length: 500 }),
+  grantedByUserId: int("grantedByUserId"),
+  grantedByName:   varchar("grantedByName", { length: 200 }),
+  createdAt:       timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ bySubject: index("consent_grants_subject").on(t.subject) }));
+export type ConsentGrantRow = typeof consentGrants.$inferSelect;
+
+// The bounded authority an agent holds: actions, accounts, ceilings, approval line, window.
+export const agentMandates = mysqlTable("agent_mandates", {
+  id:                 int("id").autoincrement().primaryKey(),
+  subject:            varchar("subject", { length: 40 }).notNull(),
+  userId:             int("userId"),
+  clientId:           int("clientId"),
+  workspaceId:        int("workspaceId"),
+  agentId:            varchar("agentId", { length: 80 }).notNull(),
+  label:              varchar("label", { length: 200 }),
+  actions:            json("actions").notNull(),
+  accounts:           json("accounts").notNull(),
+  purpose:            varchar("purpose", { length: 500 }),
+  ceilingCents:       bigint("ceilingCents", { mode: "number" }),
+  periodCeilingCents: bigint("periodCeilingCents", { mode: "number" }),
+  periodDays:         int("periodDays"),
+  approvalAboveCents: bigint("approvalAboveCents", { mode: "number" }),
+  startsAt:           timestamp("startsAt").notNull(),
+  expiresAt:          timestamp("expiresAt"),
+  revokedAt:          timestamp("revokedAt"),
+  revokedReason:      varchar("revokedReason", { length: 500 }),
+  grantedByUserId:    int("grantedByUserId"),
+  grantedByName:      varchar("grantedByName", { length: 200 }),
+  createdAt:          timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ bySubject: index("agent_mandates_subject").on(t.subject) }));
+export type AgentMandateRow = typeof agentMandates.$inferSelect;
+
+// Every proposed money movement and what the firewall decided.
+export const moneyMovements = mysqlTable("money_movements", {
+  id:                int("id").autoincrement().primaryKey(),
+  subject:           varchar("subject", { length: 40 }).notNull(),
+  userId:            int("userId"),
+  clientId:          int("clientId"),
+  workspaceId:       int("workspaceId"),
+  idempotencyKey:    varchar("idempotencyKey", { length: 120 }),
+  proposedBy:        varchar("proposedBy", { length: 120 }).notNull(),
+  proposedByName:    varchar("proposedByName", { length: 200 }),
+  isAgent:           boolean("isAgent").default(false).notNull(),
+  agentId:           varchar("agentId", { length: 80 }),
+  action:            mysqlEnum("action", ["transfer", "pay", "contribute", "withdraw"]).notNull(),
+  fromAccount:       varchar("fromAccount", { length: 200 }),
+  toAccount:         varchar("toAccount", { length: 200 }),
+  counterparty:      varchar("counterparty", { length: 200 }),
+  amountCents:       bigint("amountCents", { mode: "number" }).notNull(),
+  currency:          varchar("currency", { length: 3 }).default("USD").notNull(),
+  purpose:           varchar("purpose", { length: 500 }).notNull(),
+  decision:          mysqlEnum("decision", ["allow", "hold", "block"]).notNull(),
+  reasons:           json("reasons"),
+  requiredApprovals: json("requiredApprovals"),
+  status:            mysqlEnum("status", ["proposed", "held", "approved", "rejected", "executed", "reversed", "blocked"]).notNull(),
+  mandateId:         int("mandateId"),
+  approvedByUserId:  int("approvedByUserId"),
+  approvedAt:        timestamp("approvedAt"),
+  rejectedReason:    varchar("rejectedReason", { length: 500 }),
+  executedAt:        timestamp("executedAt"),
+  reversibleUntil:   timestamp("reversibleUntil"),
+  reversedAt:        timestamp("reversedAt"),
+  reversedReason:    varchar("reversedReason", { length: 500 }),
+  rail:              varchar("rail", { length: 40 }),
+  createdAt:         timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ bySubject: index("money_movements_subject").on(t.subject), idem: uniqueIndex("money_movements_idem").on(t.idempotencyKey) }));
+export type MoneyMovementRow = typeof moneyMovements.$inferSelect;
+
+// "When this event lands on my ledger, do this."
+export const planAutomations = mysqlTable("plan_automations", {
+  id:              int("id").autoincrement().primaryKey(),
+  subject:         varchar("subject", { length: 40 }).notNull(),
+  userId:          int("userId"),
+  clientId:        int("clientId"),
+  leadId:          int("leadId"),
+  workspaceId:     int("workspaceId"),
+  name:            varchar("name", { length: 200 }).notNull(),
+  enabled:         boolean("enabled").default(true).notNull(),
+  triggerKind:     varchar("triggerKind", { length: 20 }).notNull(),
+  triggerKey:      varchar("triggerKey", { length: 120 }),
+  triggerSource:   varchar("triggerSource", { length: 20 }),
+  actionType:      mysqlEnum("actionType", ["notify", "propose_movement", "append_status"]).notNull(),
+  actionParams:    json("actionParams").notNull(),
+  createdByUserId: int("createdByUserId"),
+  createdAt:       timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ bySubject: index("plan_automations_subject").on(t.subject) }));
+export type PlanAutomationRow = typeof planAutomations.$inferSelect;
+
+// One run per automation per event (the event's content hash) — idempotent by construction.
+export const automationRuns = mysqlTable("automation_runs", {
+  id:           int("id").autoincrement().primaryKey(),
+  automationId: int("automationId").notNull(),
+  subject:      varchar("subject", { length: 40 }).notNull(),
+  eventHash:    varchar("eventHash", { length: 64 }).notNull(),
+  status:       mysqlEnum("status", ["ran", "skipped", "failed", "reversed"]).notNull(),
+  reversible:   boolean("reversible").default(false).notNull(),
+  movementId:   int("movementId"),
+  result:       json("result"),
+  createdAt:    timestamp("createdAt").defaultNow().notNull(),
+  reversedAt:   timestamp("reversedAt"),
+}, (t) => ({ once: uniqueIndex("automation_runs_once").on(t.automationId, t.eventHash), bySubject: index("automation_runs_subject").on(t.subject) }));
+export type AutomationRunRow = typeof automationRuns.$inferSelect;
+
+// Content hash, lineage, signature and plan-consistency check for every vault document.
+export const documentProvenance = mysqlTable("document_provenance", {
+  id:                 int("id").autoincrement().primaryKey(),
+  documentId:         int("documentId").notNull(),
+  clientId:           int("clientId"),
+  workspaceId:        int("workspaceId"),
+  sha256:             varchar("sha256", { length: 64 }).notNull(),
+  sizeBytes:          int("sizeBytes"),
+  mimeType:           varchar("mimeType", { length: 200 }),
+  version:            int("version").default(1).notNull(),
+  previousDocumentId: int("previousDocumentId"),
+  supersedesReason:   varchar("supersedesReason", { length: 500 }),
+  source:             varchar("source", { length: 80 }).default("upload").notNull(),
+  uploadedByUserId:   int("uploadedByUserId"),
+  uploadedByName:     varchar("uploadedByName", { length: 200 }),
+  signature:          varchar("signature", { length: 64 }).notNull(),
+  signedAt:           timestamp("signedAt").notNull(),
+  metadata:           json("metadata"),
+  consistency:        json("consistency"),
+  createdAt:          timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ byDocument: index("document_provenance_document").on(t.documentId), byClient: index("document_provenance_client").on(t.clientId) }));
+export type DocumentProvenanceRow = typeof documentProvenance.$inferSelect;
+
+// Values an outside source proposes for the assessment; the client accepts or rejects each.
+export const factSuggestions = mysqlTable("fact_suggestions", {
+  id:              int("id").autoincrement().primaryKey(),
+  subject:         varchar("subject", { length: 40 }).notNull(),
+  userId:          int("userId"),
+  clientId:        int("clientId"),
+  workspaceId:     int("workspaceId"),
+  key:             varchar("key", { length: 120 }).notNull(),
+  label:           varchar("label", { length: 200 }),
+  value:           json("value"),
+  currentValue:    json("currentValue"),
+  source:          varchar("source", { length: 40 }).notNull(),
+  sourceRef:       varchar("sourceRef", { length: 500 }),
+  confidence:      varchar("confidence", { length: 20 }),
+  note:            varchar("note", { length: 500 }),
+  status:          mysqlEnum("status", ["pending", "accepted", "rejected"]).default("pending").notNull(),
+  decidedAt:       timestamp("decidedAt"),
+  decidedByUserId: int("decidedByUserId"),
+  createdAt:       timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ bySubject: index("fact_suggestions_subject").on(t.subject) }));
+export type FactSuggestionRow = typeof factSuggestions.$inferSelect;

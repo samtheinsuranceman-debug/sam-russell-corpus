@@ -15,6 +15,7 @@
 // ============================================================
 import { z } from "zod";
 import { recordEvent } from "./ledger";
+import { factsUsed, recordAdvice } from "./advice";
 import { protectedProcedure, router } from "./_core/trpc";
 import { ADVISOR_SYSTEM, configuredProviders, leadModel } from "./ultraAI";
 import { getFactFinderForUser, getLatestJourneyForUser, markJourneyStepVisited, saveJourneyForUser } from "./factFinderDb";
@@ -125,6 +126,14 @@ export const librarianRouter = router({
         answer = lead?.text ?? null;
       }
       answer = answer ?? ok[0]?.text ?? offlineAnswer(input.question, data, hint);
+      // Signed advice log: what was asked, what was said, which facts were
+      // seen (by key and hash), the rule version, the disclaimers — sealed.
+      void recordAdvice({ userId: ctx.user.id }, {
+        question: input.question, answer, via: ok.length > 1 ? "synthesis" : ok[0] ? "single-voice" : "offline",
+        voices: ok.map((r) => r.label), dataUsed: factsUsed(data),
+        assumptions: ["Answers are projections under the client's stated facts; no market or tax outcome is guaranteed."],
+        rulesApplied: ["LIBRARIAN_RULES", "ADVISOR_SYSTEM", "journey-engine catalog"],
+      }, { actorName: "Financial Librarian" }).catch(() => undefined);
       return { gated: false as const, answer, spoken: answer, contributors: ok.map((r) => r.label), contributorCount: ok.length, percent: 100, missingSections: [] as string[] };
     }),
 

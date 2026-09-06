@@ -42,7 +42,22 @@ const listTables = async () => {
 };
 const before = await listTables();
 console.log(`▶ applying ${statements.filter((s) => s.startsWith("CREATE TABLE")).length} tables to ${dbName} (${before.size} already there) …`);
-for (const stmt of statements) await conn.query(stmt);
+// CREATE TABLE is made IF NOT EXISTS above; CREATE INDEX has no such form in
+// MySQL, so an index that already exists (every re-run) is simply skipped.
+const IGNORABLE = new Set(["ER_DUP_KEYNAME", "ER_TABLE_EXISTS_ERROR", "ER_DUP_FIELDNAME"]);
+for (const stmt of statements) {
+  try { await conn.query(stmt); }
+  catch (e) { if (!IGNORABLE.has(e.code)) throw e; }
+}
+
+// Column evolutions that CREATE TABLE IF NOT EXISTS cannot apply to a table
+// that already exists. Each is idempotent (MODIFY to the full current list).
+const evolutions = [
+  "ALTER TABLE `plan_events` MODIFY `kind` ENUM('fact','assumption','decision','message','document','outcome','scenario','journey','status','note','consent','mandate','advice','control','automation','rules') NOT NULL",
+];
+for (const stmt of evolutions) {
+  try { await conn.query(stmt); } catch (e) { console.warn("  evolution skipped:", String(e.message ?? e).slice(0, 120)); }
+}
 
 const present = await listTables();
 const created = [...present].filter((t) => !before.has(t)).length;

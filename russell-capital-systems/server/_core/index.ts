@@ -9,6 +9,7 @@ import { registerStorageProxy } from "./storageProxy";
 import { registerMailRoutes } from "./mailer";
 import { registerSmsRoutes } from "./sms";
 import { registerScheduledRoutes, startFollowupScheduler } from "../followups";
+import { registerEventRoutes } from "../automations";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -53,6 +54,8 @@ async function startServer() {
   registerMailRoutes(app);
   registerSmsRoutes(app);
   registerScheduledRoutes(app);
+  // Verified inbound events (signed) feed the plan runtime
+  registerEventRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",

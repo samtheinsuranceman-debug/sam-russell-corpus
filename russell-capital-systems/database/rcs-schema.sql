@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 123
+-- Tables: 130
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -65,6 +65,30 @@ CREATE TABLE `agency_teams` (
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `agency_teams_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `agent_mandates` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`subject` varchar(40) NOT NULL,
+	`userId` int,
+	`clientId` int,
+	`workspaceId` int,
+	`agentId` varchar(80) NOT NULL,
+	`label` varchar(200),
+	`actions` json NOT NULL,
+	`accounts` json NOT NULL,
+	`purpose` varchar(500),
+	`ceilingCents` bigint,
+	`periodCeilingCents` bigint,
+	`periodDays` int,
+	`approvalAboveCents` bigint,
+	`startsAt` timestamp NOT NULL,
+	`expiresAt` timestamp,
+	`revokedAt` timestamp,
+	`revokedReason` varchar(500),
+	`grantedByUserId` int,
+	`grantedByName` varchar(200),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `agent_mandates_id` PRIMARY KEY(`id`)
+);
 CREATE TABLE `ai_memory_notes` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`workspaceId` int NOT NULL,
@@ -95,6 +119,20 @@ CREATE TABLE `audit_logs` (
 	`metadata` json,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `audit_logs_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `automation_runs` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`automationId` int NOT NULL,
+	`subject` varchar(40) NOT NULL,
+	`eventHash` varchar(64) NOT NULL,
+	`status` enum('ran','skipped','failed','reversed') NOT NULL,
+	`reversible` boolean NOT NULL DEFAULT false,
+	`movementId` int,
+	`result` json,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`reversedAt` timestamp,
+	CONSTRAINT `automation_runs_id` PRIMARY KEY(`id`),
+	CONSTRAINT `automation_runs_once` UNIQUE(`automationId`,`eventHash`)
 );
 CREATE TABLE `batch_schedules` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -526,6 +564,27 @@ CREATE TABLE `compliance_signatures` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `compliance_signatures_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `consent_grants` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`subject` varchar(40) NOT NULL,
+	`userId` int,
+	`clientId` int,
+	`leadId` int,
+	`workspaceId` int,
+	`granteeType` enum('person','agent','integration','advisor') NOT NULL,
+	`granteeId` varchar(120) NOT NULL,
+	`granteeLabel` varchar(200),
+	`scopes` json NOT NULL,
+	`purpose` varchar(500),
+	`startsAt` timestamp NOT NULL,
+	`expiresAt` timestamp,
+	`revokedAt` timestamp,
+	`revokedReason` varchar(500),
+	`grantedByUserId` int,
+	`grantedByName` varchar(200),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `consent_grants_id` PRIMARY KEY(`id`)
+);
 CREATE TABLE `daily_reward_claims` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`userId` int NOT NULL,
@@ -574,6 +633,27 @@ CREATE TABLE `deals` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `deals_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `document_provenance` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`documentId` int NOT NULL,
+	`clientId` int,
+	`workspaceId` int,
+	`sha256` varchar(64) NOT NULL,
+	`sizeBytes` int,
+	`mimeType` varchar(200),
+	`version` int NOT NULL DEFAULT 1,
+	`previousDocumentId` int,
+	`supersedesReason` varchar(500),
+	`source` varchar(80) NOT NULL DEFAULT 'upload',
+	`uploadedByUserId` int,
+	`uploadedByName` varchar(200),
+	`signature` varchar(64) NOT NULL,
+	`signedAt` timestamp NOT NULL,
+	`metadata` json,
+	`consistency` json,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `document_provenance_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `email_campaigns` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -643,6 +723,26 @@ CREATE TABLE `error_logs` (
 	`metadata` json,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `error_logs_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `fact_suggestions` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`subject` varchar(40) NOT NULL,
+	`userId` int,
+	`clientId` int,
+	`workspaceId` int,
+	`key` varchar(120) NOT NULL,
+	`label` varchar(200),
+	`value` json,
+	`currentValue` json,
+	`source` varchar(40) NOT NULL,
+	`sourceRef` varchar(500),
+	`confidence` varchar(20),
+	`note` varchar(500),
+	`status` enum('pending','accepted','rejected') NOT NULL DEFAULT 'pending',
+	`decidedAt` timestamp,
+	`decidedByUserId` int,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `fact_suggestions_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `family_groups` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -921,6 +1021,41 @@ CREATE TABLE `memberships` (
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `memberships_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `money_movements` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`subject` varchar(40) NOT NULL,
+	`userId` int,
+	`clientId` int,
+	`workspaceId` int,
+	`idempotencyKey` varchar(120),
+	`proposedBy` varchar(120) NOT NULL,
+	`proposedByName` varchar(200),
+	`isAgent` boolean NOT NULL DEFAULT false,
+	`agentId` varchar(80),
+	`action` enum('transfer','pay','contribute','withdraw') NOT NULL,
+	`fromAccount` varchar(200),
+	`toAccount` varchar(200),
+	`counterparty` varchar(200),
+	`amountCents` bigint NOT NULL,
+	`currency` varchar(3) NOT NULL DEFAULT 'USD',
+	`purpose` varchar(500) NOT NULL,
+	`decision` enum('allow','hold','block') NOT NULL,
+	`reasons` json,
+	`requiredApprovals` json,
+	`status` enum('proposed','held','approved','rejected','executed','reversed','blocked') NOT NULL,
+	`mandateId` int,
+	`approvedByUserId` int,
+	`approvedAt` timestamp,
+	`rejectedReason` varchar(500),
+	`executedAt` timestamp,
+	`reversibleUntil` timestamp,
+	`reversedAt` timestamp,
+	`reversedReason` varchar(500),
+	`rail` varchar(40),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `money_movements_id` PRIMARY KEY(`id`),
+	CONSTRAINT `money_movements_idem` UNIQUE(`idempotencyKey`)
+);
 CREATE TABLE `morning_rituals` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`userId` int NOT NULL,
@@ -1038,6 +1173,24 @@ CREATE TABLE `payment_disclosures` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `payment_disclosures_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `plan_automations` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`subject` varchar(40) NOT NULL,
+	`userId` int,
+	`clientId` int,
+	`leadId` int,
+	`workspaceId` int,
+	`name` varchar(200) NOT NULL,
+	`enabled` boolean NOT NULL DEFAULT true,
+	`triggerKind` varchar(20) NOT NULL,
+	`triggerKey` varchar(120),
+	`triggerSource` varchar(20),
+	`actionType` enum('notify','propose_movement','append_status') NOT NULL,
+	`actionParams` json NOT NULL,
+	`createdByUserId` int,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `plan_automations_id` PRIMARY KEY(`id`)
+);
 CREATE TABLE `plan_events` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`subject` varchar(40) NOT NULL,
@@ -1046,7 +1199,7 @@ CREATE TABLE `plan_events` (
 	`clientId` int,
 	`leadId` int,
 	`workspaceId` int,
-	`kind` enum('fact','assumption','decision','message','document','outcome','scenario','journey','status','note') NOT NULL,
+	`kind` enum('fact','assumption','decision','message','document','outcome','scenario','journey','status','note','consent','mandate','advice','control','automation','rules') NOT NULL,
 	`source` varchar(20) NOT NULL,
 	`key` varchar(120),
 	`label` varchar(200),
