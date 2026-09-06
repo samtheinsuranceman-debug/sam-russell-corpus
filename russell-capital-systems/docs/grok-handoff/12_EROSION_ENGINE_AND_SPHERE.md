@@ -179,8 +179,12 @@ meridian (twelve domains of a financial life, evenly around) and a latitude
 (four layers, in: Facts → Erosion → Moves → Proof). The Plan Ledger is the
 centre; every page is a facet of it. 42 pages are placed so far; a test
 asserts each placed path is a real route. Adding a page means placing a
-point, never adding a menu. The next step is to let the Sphere replace the
-sidebar for clients, with the sidebar kept for the advisor's operations.
+point, never adding a menu. The sidebar now has "Navigate by the Sphere":
+one click swaps the section list for the twelve meridians, each opening
+to its four layers with the placed pages, the Plan Ledger at the centre and
+a link to the whole Sphere; the choice persists per browser
+(`rcs_nav_sphere`), and the section list stays a click away for the
+advisor's operations.
 
 ## Tested
 `server/power.test.ts` (10 tests): the record's continuity and fifteen

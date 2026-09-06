@@ -19,6 +19,7 @@ import { Link, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { useTheme } from "@/contexts/ThemeContext";
 import { TAB_SCORES } from "@shared/tabScores";
+import { LATITUDES, MERIDIANS, pointsAt } from "@shared/sphere";
 import { useClientData } from "@/contexts/ClientDataContext";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -753,8 +754,70 @@ function SubgroupSection({ subgroup, location, onClose, favoritePaths, onToggleF
   );
 }
 
+const SPHERE_MODE_KEY = "rcs_nav_sphere";
+
+/**
+ * The Sphere as navigation: twelve meridians (domains of a financial life)
+ * around, four latitudes (Facts → Erosion → Moves → Proof) in. Every page
+ * placed on the Sphere appears under its domain, deepest layer last, with
+ * the Plan Ledger at the centre. Adding a page means placing a point, never
+ * adding a menu.
+ */
+function SphereNav({ location, onClose }: { location: string; onClose: () => void }) {
+  const [openMeridian, setOpenMeridian] = useState<string | null>(() => {
+    const here = MERIDIANS.find((m) => LATITUDES.some((l) => pointsAt(m.id, l.id).some((p) => location.startsWith(p.path))));
+    return here?.id ?? null;
+  });
+  return (
+    <div className="pb-2">
+      <Link href="/portal/plan-ledger" onClick={onClose} className={`rc-sidebar-item ${location.startsWith("/portal/plan-ledger") ? "active" : ""}`}>
+        <span className="inline-block h-2 w-2 rounded-full bg-amber-300" />
+        The centre: Plan Ledger
+      </Link>
+      {MERIDIANS.map((m) => {
+        const layers = LATITUDES.map((l) => ({ latitude: l, points: pointsAt(m.id, l.id) })).filter((x) => x.points.length);
+        if (!layers.length) return null;
+        const isOpen = openMeridian === m.id;
+        const hasActive = layers.some((x) => x.points.some((p) => location.startsWith(p.path)));
+        return (
+          <div key={m.id} className="mb-0.5">
+            <button
+              type="button"
+              onClick={() => setOpenMeridian(isOpen ? null : m.id)}
+              className={`flex w-full items-center justify-between px-3 py-1.5 text-left text-[11px] font-bold uppercase tracking-[0.08em] ${hasActive ? "text-amber-300" : "text-[#7a95b8]"} hover:text-white`}
+            >
+              <span>{m.label}</span>
+              <span className="text-[9px] font-semibold opacity-60">{m.degree}° · {layers.reduce((s, x) => s + x.points.length, 0)}</span>
+            </button>
+            {isOpen && layers.map((x) => (
+              <div key={x.latitude.id} className="pl-2">
+                <div className="px-3 pt-1 text-[9px] uppercase tracking-[0.1em] text-[#4f6a8f]" title={x.latitude.question}>{x.latitude.label}</div>
+                {x.points.map((p) => {
+                  const isActive = location === p.path || location.startsWith(`${p.path}/`);
+                  return (
+                    <Link key={p.path} href={p.path} onClick={onClose} className={`rc-sidebar-item ${isActive ? "active" : ""}`} title={p.title}>
+                      <span className={`inline-block h-1.5 w-1.5 rounded-full ${p.core ? "bg-amber-300" : "bg-[#4f6a8f]"}`} />
+                      <span className="truncate">{p.title.split(":")[0]}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        );
+      })}
+      <Link href="/portal/sphere" onClick={onClose} className="rc-sidebar-item mt-1 text-amber-300/80">
+        <span className="inline-block h-2 w-2 rounded-full border border-amber-300" />
+        See the whole Sphere
+      </Link>
+    </div>
+  );
+}
+
 function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location] = useLocation();
+  const [sphereMode, setSphereModeState] = useState<boolean>(() => { try { return localStorage.getItem(SPHERE_MODE_KEY) === "1"; } catch { return false; } });
+  const setSphereMode = (v: boolean) => { setSphereModeState(v); try { localStorage.setItem(SPHERE_MODE_KEY, v ? "1" : "0"); } catch { /* private mode */ } };
   const { user, logout, isAuthenticated } = useAuth();
   const statsQuery = trpc.dashboard.stats.useQuery(undefined, { staleTime: 60_000, retry: false });
   const clientCount = statsQuery.data?.clientCount ?? 0;
@@ -848,7 +911,18 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
           )}
 
-          {NAV_SECTIONS.map((section) => (
+          <button
+            type="button"
+            onClick={() => setSphereMode(!sphereMode)}
+            className="mx-2 mb-1 mt-1 flex w-[calc(100%-1rem)] items-center justify-between rounded-lg border border-amber-400/20 bg-amber-400/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-amber-300 hover:bg-amber-400/10"
+            title="One shape for the site: twelve domains of a financial life around, four layers in. Every page is a point."
+          >
+            <span>{sphereMode ? "Navigating by the Sphere" : "Navigate by the Sphere"}</span>
+            <span className="text-[9px] font-semibold text-amber-300/60">{sphereMode ? "list" : "sphere"}</span>
+          </button>
+          {sphereMode ? (
+            <SphereNav location={location} onClose={onClose} />
+          ) : NAV_SECTIONS.map((section) => (
             <CollapsibleSection
               key={section.label}
               section={section}
