@@ -26,6 +26,7 @@ import { deliver } from "./messaging";
 import { cancelFollowupsForLead, listFollowupsForLead, listMessagesForLead } from "./messagingDb";
 import { normalizePhone, sendSms } from "./_core/sms";
 import { recordEvent } from "./ledger";
+import { hubspotConfigured, upsertContact } from "./_core/hubspot";
 import type { LeadFactFinder } from "@shared/leadTypes";
 
 function assertOwner(user: { openId: string; role: string }): void {
@@ -176,6 +177,11 @@ export const leadsRouter = router({
       if (lead) {
         try { await scheduleLeadFollowups(lead); }
         catch { /* automation is best-effort */ }
+        // CRM: the lead becomes a HubSpot contact (best-effort, email required).
+        if (input.email && hubspotConfigured()) {
+          const hs = await upsertContact({ email: input.email, firstname: input.firstName ?? null, lastname: input.lastName ?? null, phone: input.phone ?? null, lifecyclestage: "lead" });
+          if (!hs.ok) console.warn("[HubSpot] lead not synced:", hs.reason);
+        }
         await recordEvent({
           kind: "status", source: "client", key: "lead.captured", label: "Homepage estimate",
           value: { consentVersion: CONSENT_VERSION, fields: Object.keys(input.factFinder).length, hasEmail: Boolean(input.email), hasPhone: Boolean(input.phone) },

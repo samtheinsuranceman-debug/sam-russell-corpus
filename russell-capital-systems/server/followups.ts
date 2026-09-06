@@ -49,23 +49,24 @@ export async function scheduleLeadFollowups(lead: Pick<PublicLead, "id" | "email
 }
 
 // ─── Content (no figures, ever) ──────────────────────────────────────────────
-export function followupContent(step: string, lead: Pick<PublicLead, "firstName">, baseUrl = publicBaseUrl()): { subject: string; body: string } {
+export function followupContent(step: string, lead: Pick<PublicLead, "firstName">, baseUrl = publicBaseUrl(), booking = process.env.CALENDLY_URL || ""): { subject: string; body: string } {
   const name = (lead.firstName ?? "").trim() || "there";
+  const pick = booking ? `Pick a time here: ${booking}` : "Reply with a couple of windows that work and we will set it up.";
   switch (step) {
     case "sms_1h":
       return { subject: "", body: `Hi ${name}, this is Russell Capital Systems. Thanks for requesting your planning estimate — an advisor will reach out to schedule your evaluation. Questions in the meantime? Reply here.` };
     case "email_day1":
       return {
         subject: "What happens next with your planning estimate",
-        body: `Hi ${name},\n\nThank you again for requesting a planning estimate. Here is what happens next:\n\n1. An advisor reviews what you entered and prepares a thorough evaluation — not a sales pitch.\n2. We schedule a short call to walk through it and answer your questions.\n3. If it makes sense, we build the plan together, one variable at a time.\n\nIf you would rather pick a time now, reply to this email with a couple of windows that work.\n\nRussell Capital Systems`,
+        body: `Hi ${name},\n\nThank you again for requesting a planning estimate. Here is what happens next:\n\n1. An advisor reviews what you entered and prepares a thorough evaluation — not a sales pitch.\n2. We schedule a short call to walk through it and answer your questions.\n3. If it makes sense, we build the plan together, one variable at a time.\n\nIf you would rather pick a time now: ${pick}\n\nRussell Capital Systems`,
       };
     case "email_day3":
       return {
         subject: "Three questions worth asking before any strategy",
-        body: `Hi ${name},\n\nBefore anyone recommends a strategy, three questions decide whether it fits:\n\n1. How much of your income is taxed, and which of that is optional?\n2. What is the interest on your debts actually worth over their life?\n3. Which variables do you control — and which does the plan need to survive?\n\nThe evaluation we prepare answers all three from your own numbers. Reply with a time that works and we will walk through it together.\n\nRussell Capital Systems`,
+        body: `Hi ${name},\n\nBefore anyone recommends a strategy, three questions decide whether it fits:\n\n1. How much of your income is taxed, and which of that is optional?\n2. What is the interest on your debts actually worth over their life?\n3. Which variables do you control — and which does the plan need to survive?\n\nThe evaluation we prepare answers all three from your own numbers. ${pick}\n\nRussell Capital Systems`,
       };
     case "sms_day5":
-      return { subject: "", body: `Hi ${name}, Russell Capital Systems here. Your evaluation is ready to walk through whenever you are — reply with a day and time that works and we will set it up.` };
+      return { subject: "", body: `Hi ${name}, Russell Capital Systems here. Your evaluation is ready to walk through whenever you are. ${booking ? `Pick a time: ${booking}` : "Reply with a day and time that works."}` };
     case "email_day7":
       return {
         subject: "Still here when you are ready",

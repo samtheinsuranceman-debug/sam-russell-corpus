@@ -148,6 +148,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/_core/env.ts`
 - `server/_core/fred.ts`
 - `server/_core/heartbeat.ts`
+- `server/_core/hubspot.ts`
 - `server/_core/imageGeneration.ts`
 - `server/_core/index.ts`
 - `server/_core/jsonColumn.ts`
@@ -175,6 +176,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/db.ts`
 - `server/email.ts`
 - `server/emailPinService.ts`
+- `server/eventBus.ts`
 - `server/experienceDb.ts`
 - `server/experienceRouter.ts`
 - `server/factFinderDb.ts`
@@ -183,10 +185,9 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/generate1035Pdf.ts`
 - `server/heygenService.ts`
 - `server/index.ts`
+- `server/integrations.ts`
+- `server/integrationsRouter.ts`
 - `server/leadStrategy.ts`
-- `server/leadsDb.ts`
-- `server/leadsRouter.ts`
-- `server/ledger.ts`
 
 ---
 
@@ -379,6 +380,32 @@ On a host that sleeps the process, add a cron that runs `pnpm followups:run`
 `FRED_API_KEY` (free at fred.stlouisfed.org) → Treasury curve, CPI, 30‑year
 mortgage and Fed funds rates, dated and cached. Without it, dated reference
 values are shown and labelled as such.
+
+### Connections (every outside platform, switched on by variables)
+The portal page **Connections** (`/portal/connections`) shows every platform the
+site can use and whether it is on. The Plan Ledger is the spine: every event it
+records is sent to the automation receivers below, so Zapier / Make / n8n can
+route leads, decisions and messages anywhere.
+
+- `ZAPIER_HOOK_URL`, `MAKE_HOOK_URL`, `N8N_HOOK_URL`, `EVENT_WEBHOOK_URLS` (comma list)
+  — JSON `plan.ledger` events; `EVENT_WEBHOOK_SECRET` signs them (X-RCS-Signature,
+  HMAC-SHA256); `EVENT_WEBHOOK_KINDS` narrows the kinds; facts (financial values)
+  are only sent with `EVENT_WEBHOOK_INCLUDE_FACTS=1`.
+- `SLACK_WEBHOOK_URL` — status, decision, outcome and note events as a Slack message.
+- `HUBSPOT_ACCESS_TOKEN` (private app) — every lead with an email becomes a contact.
+- `CALENDLY_URL` — booking link in follow-ups and templates.
+- Browser: `POSTHOG_KEY` (+`POSTHOG_HOST`), `GA_MEASUREMENT_ID`, `SENTRY_LOADER_URL`,
+  `INTERCOM_APP_ID` — loaded only when set; only public ids ever reach the browser.
+
+### Railway (the full app, one click)
+The project **russell-capital-systems** on Railway runs the whole site (Express +
+React + MySQL). Root directory `/russell-capital-systems`; build
+`pnpm install --frozen-lockfile --prod=false && pnpm build`; start
+`bash scripts/build_database.sh && node dist/index.js` (creates any missing
+tables on every boot). Variables set: `DATABASE_URL` (from the MySQL service),
+`JWT_SECRET`, `SCHEDULER_TOKEN`, `OWNER_EMAIL`, `PUBLIC_BASE_URL`, mail From/Reply-To.
+Add `OWNER_PASSWORD_HASH` (run `pnpm owner:password` locally) and the AI /
+mail / SMS keys in the Railway Variables panel; every push to `master` redeploys.
 
 ### Voice (optional)
 `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` (spoken answers).
@@ -26951,6 +26978,52 @@ export async function listHeartbeatJobs(
 }
 ```
 
+## `server/_core/hubspot.ts`
+
+```ts
+// ============================================================
+// HUBSPOT — every lead and client becomes a contact, best-effort, keyed by
+// email. Private-app token in HUBSPOT_ACCESS_TOKEN. Never throws.
+// ============================================================
+export type HubSpotContact = { email: string; firstname?: string | null; lastname?: string | null; phone?: string | null; lifecyclestage?: string; rcs_status?: string; rcs_source?: string };
+export type HubSpotResult = { ok: boolean; id?: string; reason?: string };
+
+type Fetcher = typeof fetch;
+let _fetch: Fetcher = (...a) => fetch(...a);
+export function _setFetchForTests(f: Fetcher | null) { _fetch = f ?? ((...a) => fetch(...a)); }
+
+export function hubspotConfigured(env: NodeJS.ProcessEnv = process.env): boolean {
+  return Boolean(env.HUBSPOT_ACCESS_TOKEN);
+}
+
+/** Create the contact, or update it if HubSpot says the email already exists (409 carries the existing id). */
+export async function upsertContact(c: HubSpotContact, env: NodeJS.ProcessEnv = process.env): Promise<HubSpotResult> {
+  const token = env.HUBSPOT_ACCESS_TOKEN;
+  if (!token) return { ok: false, reason: "HUBSPOT_ACCESS_TOKEN not set" };
+  const properties: Record<string, string> = { email: c.email.trim().toLowerCase() };
+  if (c.firstname) properties.firstname = c.firstname;
+  if (c.lastname) properties.lastname = c.lastname;
+  if (c.phone) properties.phone = c.phone;
+  if (c.lifecyclestage) properties.lifecyclestage = c.lifecyclestage;
+  const headers = { authorization: `Bearer ${token}`, "content-type": "application/json" };
+  try {
+    const create = await _fetch("https://api.hubapi.com/crm/v3/objects/contacts", { method: "POST", headers, body: JSON.stringify({ properties }), signal: AbortSignal.timeout(10000) });
+    if (create.ok) { const j = (await create.json()) as { id?: string }; return { ok: true, id: j.id }; }
+    if (create.status === 409) {
+      const j = (await create.json().catch(() => ({}))) as { message?: string };
+      const id = (j.message ?? "").match(/Existing ID:\s*(\d+)/)?.[1];
+      if (id) {
+        const patch = await _fetch(`https://api.hubapi.com/crm/v3/objects/contacts/${id}`, { method: "PATCH", headers, body: JSON.stringify({ properties }), signal: AbortSignal.timeout(10000) });
+        return patch.ok ? { ok: true, id } : { ok: false, reason: `HubSpot update failed (${patch.status})` };
+      }
+    }
+    return { ok: false, reason: `HubSpot rejected the contact (${create.status})` };
+  } catch (error) {
+    return { ok: false, reason: `HubSpot unreachable: ${String(error).slice(0, 80)}` };
+  }
+}
+```
+
 ## `server/_core/imageGeneration.ts`
 
 ```ts
@@ -37625,6 +37698,112 @@ export async function verifyPin(email: string, code: string, purpose = "pre_chec
 }
 ```
 
+## `server/eventBus.ts`
+
+```ts
+// ============================================================
+// EVENT BUS — the plan ledger is the spine; this is how the outside world
+// hears it. Every appended ledger event is fanned out, best-effort, to:
+//   - ZAPIER_HOOK_URL, MAKE_HOOK_URL, N8N_HOOK_URL, EVENT_WEBHOOK_URLS (JSON)
+//   - SLACK_WEBHOOK_URL (a short message for the kinds a human wants to see)
+// Facts (financial values) are NOT sent unless EVENT_WEBHOOK_INCLUDE_FACTS=1,
+// and EVENT_WEBHOOK_KINDS can narrow the kinds further. A shared secret goes
+// in the X-RCS-Signature header (HMAC-SHA256 of the body) when
+// EVENT_WEBHOOK_SECRET is set, so receivers can verify the sender.
+// ============================================================
+import { createHmac } from "node:crypto";
+import type { LedgerEventInput, LedgerKind } from "@shared/planLedger";
+
+export type BusEnv = Partial<Record<"ZAPIER_HOOK_URL" | "MAKE_HOOK_URL" | "N8N_HOOK_URL" | "EVENT_WEBHOOK_URLS" | "EVENT_WEBHOOK_SECRET" | "EVENT_WEBHOOK_KINDS" | "EVENT_WEBHOOK_INCLUDE_FACTS" | "SLACK_WEBHOOK_URL" | "PUBLIC_BASE_URL", string>>;
+
+export const SLACK_KINDS: LedgerKind[] = ["status", "decision", "outcome", "note"];
+const DEFAULT_KINDS: LedgerKind[] = ["status", "journey", "message", "decision", "note", "outcome", "scenario", "document", "assumption"];
+
+export function webhookTargets(env: BusEnv = process.env as BusEnv): Array<{ name: string; url: string }> {
+  const out: Array<{ name: string; url: string }> = [];
+  if (env.ZAPIER_HOOK_URL) out.push({ name: "zapier", url: env.ZAPIER_HOOK_URL });
+  if (env.MAKE_HOOK_URL) out.push({ name: "make", url: env.MAKE_HOOK_URL });
+  if (env.N8N_HOOK_URL) out.push({ name: "n8n", url: env.N8N_HOOK_URL });
+  for (const u of (env.EVENT_WEBHOOK_URLS ?? "").split(",").map((s) => s.trim()).filter(Boolean)) out.push({ name: "webhook", url: u });
+  return out;
+}
+
+export function allowedKinds(env: BusEnv = process.env as BusEnv): Set<LedgerKind> {
+  const listed = (env.EVENT_WEBHOOK_KINDS ?? "").split(",").map((s) => s.trim()).filter(Boolean) as LedgerKind[];
+  const kinds = new Set<LedgerKind>(listed.length ? listed : DEFAULT_KINDS);
+  if (env.EVENT_WEBHOOK_INCLUDE_FACTS === "1" || env.EVENT_WEBHOOK_INCLUDE_FACTS === "true") kinds.add("fact");
+  return kinds;
+}
+
+export type BusEvent = {
+  event: "plan.ledger";
+  kind: LedgerKind;
+  source: string;
+  key: string | null;
+  label: string | null;
+  summary: string;
+  value: unknown;
+  actorName: string | null;
+  occurredAt: string;
+  subject: { userId: number | null; clientId: number | null; leadId: number | null; workspaceId: number | null };
+  site: string | null;
+};
+
+export function toBusEvent(e: LedgerEventInput, env: BusEnv = process.env as BusEnv): BusEvent {
+  return {
+    event: "plan.ledger", kind: e.kind, source: e.source, key: e.key ?? null, label: e.label ?? null, summary: e.summary,
+    value: e.kind === "fact" ? e.value ?? null : e.value ?? null, actorName: e.actorName ?? null, occurredAt: (e.occurredAt ?? new Date()).toISOString(),
+    subject: { userId: e.userId ?? null, clientId: e.clientId ?? null, leadId: e.leadId ?? null, workspaceId: e.workspaceId ?? null },
+    site: env.PUBLIC_BASE_URL ?? null,
+  };
+}
+
+export function signBody(body: string, secret: string): string {
+  return createHmac("sha256", secret).update(body).digest("hex");
+}
+
+export function slackText(e: BusEvent): string {
+  const who = e.subject.clientId ? `client #${e.subject.clientId}` : e.subject.leadId ? `lead #${e.subject.leadId}` : e.subject.userId ? `user #${e.subject.userId}` : "system";
+  return `*${e.kind}* · ${e.summary}\n_${who} · ${e.source}${e.actorName ? ` · ${e.actorName}` : ""} · ${new Date(e.occurredAt).toLocaleString("en-US", { timeZone: "America/Chicago" })} CT_`;
+}
+
+type Fetcher = typeof fetch;
+let _fetch: Fetcher = (...a) => fetch(...a);
+export function _setFetchForTests(f: Fetcher | null) { _fetch = f ?? ((...a) => fetch(...a)); }
+
+async function post(url: string, body: string, headers: Record<string, string>): Promise<boolean> {
+  try {
+    const r = await _fetch(url, { method: "POST", headers: { "content-type": "application/json", ...headers }, body, signal: AbortSignal.timeout(8000) });
+    return r.ok;
+  } catch { return false; }
+}
+
+/** Fan events out. Never throws; returns how many deliveries were attempted and how many succeeded. */
+export async function fanOut(events: LedgerEventInput[], env: BusEnv = process.env as BusEnv): Promise<{ attempted: number; delivered: number }> {
+  const targets = webhookTargets(env);
+  const kinds = allowedKinds(env);
+  const chosen = events.filter((e) => kinds.has(e.kind));
+  let attempted = 0, delivered = 0;
+  if (targets.length && chosen.length) {
+    for (const e of chosen) {
+      const body = JSON.stringify(toBusEvent(e, env));
+      const headers: Record<string, string> = {};
+      if (env.EVENT_WEBHOOK_SECRET) headers["x-rcs-signature"] = signBody(body, env.EVENT_WEBHOOK_SECRET);
+      const results = await Promise.all(targets.map((t) => post(t.url, body, headers)));
+      attempted += results.length;
+      delivered += results.filter(Boolean).length;
+    }
+  }
+  if (env.SLACK_WEBHOOK_URL) {
+    for (const e of events.filter((x) => SLACK_KINDS.includes(x.kind))) {
+      attempted += 1;
+      if (await post(env.SLACK_WEBHOOK_URL, JSON.stringify({ text: slackText(toBusEvent(e, env)) }), {})) delivered += 1;
+    }
+  }
+  return { attempted, delivered };
+}
+```
+
 ## `server/experienceDb.ts`
 
 ```ts
@@ -40585,23 +40764,24 @@ export async function scheduleLeadFollowups(lead: Pick<PublicLead, "id" | "email
 }
 
 // ─── Content (no figures, ever) ──────────────────────────────────────────────
-export function followupContent(step: string, lead: Pick<PublicLead, "firstName">, baseUrl = publicBaseUrl()): { subject: string; body: string } {
+export function followupContent(step: string, lead: Pick<PublicLead, "firstName">, baseUrl = publicBaseUrl(), booking = process.env.CALENDLY_URL || ""): { subject: string; body: string } {
   const name = (lead.firstName ?? "").trim() || "there";
+  const pick = booking ? `Pick a time here: ${booking}` : "Reply with a couple of windows that work and we will set it up.";
   switch (step) {
     case "sms_1h":
       return { subject: "", body: `Hi ${name}, this is Russell Capital Systems. Thanks for requesting your planning estimate — an advisor will reach out to schedule your evaluation. Questions in the meantime? Reply here.` };
     case "email_day1":
       return {
         subject: "What happens next with your planning estimate",
-        body: `Hi ${name},\n\nThank you again for requesting a planning estimate. Here is what happens next:\n\n1. An advisor reviews what you entered and prepares a thorough evaluation — not a sales pitch.\n2. We schedule a short call to walk through it and answer your questions.\n3. If it makes sense, we build the plan together, one variable at a time.\n\nIf you would rather pick a time now, reply to this email with a couple of windows that work.\n\nRussell Capital Systems`,
+        body: `Hi ${name},\n\nThank you again for requesting a planning estimate. Here is what happens next:\n\n1. An advisor reviews what you entered and prepares a thorough evaluation — not a sales pitch.\n2. We schedule a short call to walk through it and answer your questions.\n3. If it makes sense, we build the plan together, one variable at a time.\n\nIf you would rather pick a time now: ${pick}\n\nRussell Capital Systems`,
       };
     case "email_day3":
       return {
         subject: "Three questions worth asking before any strategy",
-        body: `Hi ${name},\n\nBefore anyone recommends a strategy, three questions decide whether it fits:\n\n1. How much of your income is taxed, and which of that is optional?\n2. What is the interest on your debts actually worth over their life?\n3. Which variables do you control — and which does the plan need to survive?\n\nThe evaluation we prepare answers all three from your own numbers. Reply with a time that works and we will walk through it together.\n\nRussell Capital Systems`,
+        body: `Hi ${name},\n\nBefore anyone recommends a strategy, three questions decide whether it fits:\n\n1. How much of your income is taxed, and which of that is optional?\n2. What is the interest on your debts actually worth over their life?\n3. Which variables do you control — and which does the plan need to survive?\n\nThe evaluation we prepare answers all three from your own numbers. ${pick}\n\nRussell Capital Systems`,
       };
     case "sms_day5":
-      return { subject: "", body: `Hi ${name}, Russell Capital Systems here. Your evaluation is ready to walk through whenever you are — reply with a day and time that works and we will set it up.` };
+      return { subject: "", body: `Hi ${name}, Russell Capital Systems here. Your evaluation is ready to walk through whenever you are. ${booking ? `Pick a time: ${booking}` : "Reply with a day and time that works."}` };
     case "email_day7":
       return {
         subject: "Still here when you are ready",
@@ -41385,6 +41565,155 @@ async function startServer() {
 startServer().catch(console.error);
 ```
 
+## `server/integrations.ts`
+
+```ts
+// ============================================================
+// INTEGRATIONS REGISTRY — every outside platform the site can use, what it
+// is for, which environment variables switch it on, and whether it is on
+// right now. Values are never exposed; only "configured" booleans.
+//
+// Two ways a platform is "strung in":
+//   runtime  — the server calls it (AI, mail, SMS, data, CRM, billing)
+//   client   — a script is loaded in the browser (analytics, chat widget)
+//   outbound — it receives the plan ledger's events by webhook (Zapier,
+//              Make, n8n, Slack, or any URL) — see eventBus.ts
+// ============================================================
+export type IntegrationCategory = "ai" | "voice" | "messaging" | "data" | "crm" | "billing" | "automation" | "analytics" | "hosting" | "documents";
+export type IntegrationMode = "runtime" | "client" | "outbound";
+
+export type Integration = {
+  id: string;
+  name: string;
+  category: IntegrationCategory;
+  mode: IntegrationMode;
+  purpose: string;
+  /** all of these must be set for the integration to count as configured */
+  envKeys: string[];
+  /** optional keys that refine behaviour */
+  optionalKeys?: string[];
+  docs?: string;
+  /** what the platform does with it, in one line */
+  wiredTo: string;
+};
+
+export const INTEGRATIONS: Integration[] = [
+  // ── AI team (server/ultraAI.ts) ──
+  { id: "anthropic", name: "Claude (Anthropic)", category: "ai", mode: "runtime", purpose: "Lead model: synthesises the team, polishes journeys", envKeys: ["ANTHROPIC_API_KEY"], wiredTo: "ultraAI lead model, Financial Librarian" },
+  { id: "openai", name: "ChatGPT (OpenAI)", category: "ai", mode: "runtime", purpose: "Second opinion on every advisor answer", envKeys: ["OPENAI_API_KEY"], wiredTo: "ultraAI fan-out" },
+  { id: "xai", name: "Grok (xAI)", category: "ai", mode: "runtime", purpose: "Second opinion", envKeys: ["XAI_API_KEY"], wiredTo: "ultraAI fan-out" },
+  { id: "gemini", name: "Gemini (Google)", category: "ai", mode: "runtime", purpose: "Second opinion", envKeys: ["GEMINI_API_KEY"], wiredTo: "ultraAI fan-out" },
+  { id: "perplexity", name: "Perplexity", category: "ai", mode: "runtime", purpose: "Web-grounded research voice", envKeys: ["PERPLEXITY_API_KEY"], wiredTo: "ultraAI fan-out" },
+  { id: "openrouter", name: "OpenRouter", category: "ai", mode: "runtime", purpose: "Gateway to models without their own key", envKeys: ["OPENROUTER_API_KEY"], wiredTo: "ultraAI fan-out" },
+  { id: "mistral", name: "Mistral", category: "ai", mode: "runtime", purpose: "Additional voice", envKeys: ["MISTRAL_API_KEY"], wiredTo: "ultraAI fan-out" },
+  { id: "groq", name: "Groq", category: "ai", mode: "runtime", purpose: "Fast additional voice", envKeys: ["GROQ_API_KEY"], wiredTo: "ultraAI fan-out" },
+  { id: "cohere", name: "Cohere", category: "ai", mode: "runtime", purpose: "Additional voice", envKeys: ["COHERE_API_KEY"], wiredTo: "ultraAI fan-out" },
+  { id: "deepseek", name: "DeepSeek", category: "ai", mode: "runtime", purpose: "Additional voice", envKeys: ["DEEPSEEK_API_KEY"], wiredTo: "ultraAI fan-out" },
+  { id: "together", name: "Together AI", category: "ai", mode: "runtime", purpose: "Additional voice", envKeys: ["TOGETHER_API_KEY"], wiredTo: "ultraAI fan-out" },
+  { id: "manus", name: "Manus / built-in gateway", category: "ai", mode: "runtime", purpose: "Managed-host model, notifications, heartbeat cron", envKeys: ["BUILT_IN_FORGE_API_KEY", "BUILT_IN_FORGE_API_URL"], wiredTo: "portalAI, notifyOwner, heartbeat" },
+  // ── Voice / video ──
+  { id: "elevenlabs", name: "ElevenLabs", category: "voice", mode: "runtime", purpose: "The tape recorder's cloned voice", envKeys: ["ELEVENLABS_API_KEY", "ELEVENLABS_VOICE_ID"], wiredTo: "ultra.speak, journey guides read aloud" },
+  { id: "heygen", name: "HeyGen", category: "voice", mode: "runtime", purpose: "Video proposals", envKeys: ["HEYGEN_API_KEY"], wiredTo: "videoProposal router" },
+  // ── Messaging ──
+  { id: "resend", name: "Resend", category: "messaging", mode: "runtime", purpose: "Transactional + marketing email", envKeys: ["RESEND_API_KEY"], optionalKeys: ["MAIL_FROM", "MAIL_REPLY_TO"], wiredTo: "sendMail, follow-ups, reports, lead alerts" },
+  { id: "smtp", name: "SMTP (Google Workspace / any mailbox)", category: "messaging", mode: "runtime", purpose: "Email without a verified domain", envKeys: ["SMTP_HOST", "SMTP_USER", "SMTP_PASS"], optionalKeys: ["SMTP_PORT", "SMTP_FROM"], wiredTo: "sendMail fallback" },
+  { id: "twilio", name: "Twilio SMS", category: "messaging", mode: "runtime", purpose: "Texts to leads and clients, STOP handling", envKeys: ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"], optionalKeys: ["TWILIO_FROM", "TWILIO_MESSAGING_SERVICE_SID"], wiredTo: "sendSms, follow-ups, lead alerts" },
+  { id: "sms-webhook", name: "SMS relay (Inkbox / Speko / any)", category: "messaging", mode: "runtime", purpose: "Texts through any relay that accepts {to, body}", envKeys: ["SMS_WEBHOOK_URL"], optionalKeys: ["SMS_WEBHOOK_TOKEN"], wiredTo: "sendSms" },
+  { id: "slack", name: "Slack", category: "messaging", mode: "outbound", purpose: "Lead alerts, decisions and status changes into a channel", envKeys: ["SLACK_WEBHOOK_URL"], docs: "https://api.slack.com/messaging/webhooks", wiredTo: "eventBus: status, decision, outcome, note events" },
+  { id: "calendly", name: "Calendly", category: "messaging", mode: "client", purpose: "Booking link in follow-ups and templates", envKeys: ["CALENDLY_URL"], wiredTo: "follow-up emails, message templates, public site config" },
+  // ── Data ──
+  { id: "fred", name: "FRED (St. Louis Fed)", category: "data", mode: "runtime", purpose: "Treasury curve, CPI, mortgage and Fed funds rates", envKeys: ["FRED_API_KEY"], wiredTo: "dataFeeds.benchmarks, Market Data page" },
+  { id: "plaid", name: "Plaid", category: "data", mode: "runtime", purpose: "Account aggregation into the Financial Assessment", envKeys: ["PLAID_CLIENT_ID", "PLAID_SECRET"], optionalKeys: ["PLAID_ENV"], wiredTo: "assessment import (next build)" },
+  // ── CRM ──
+  { id: "hubspot", name: "HubSpot", category: "crm", mode: "runtime", purpose: "Every lead and client becomes a contact; status stays in step", envKeys: ["HUBSPOT_ACCESS_TOKEN"], docs: "https://developers.hubspot.com/docs/api/private-apps", wiredTo: "leads.capture → contact upsert; clients carry hubspotContactId" },
+  // ── Billing ──
+  { id: "stripe", name: "Stripe", category: "billing", mode: "runtime", purpose: "Client billing and subscriptions", envKeys: ["STRIPE_SECRET_KEY"], optionalKeys: ["STRIPE_WEBHOOK_SECRET"], wiredTo: "billing router" },
+  // ── Automation (receive the ledger's events) ──
+  { id: "zapier", name: "Zapier", category: "automation", mode: "outbound", purpose: "Every ledger event to 9,000 apps", envKeys: ["ZAPIER_HOOK_URL"], docs: "https://zapier.com/apps/webhook/integrations", wiredTo: "eventBus (Catch Hook)" },
+  { id: "make", name: "Make", category: "automation", mode: "outbound", purpose: "Every ledger event into Make scenarios", envKeys: ["MAKE_HOOK_URL"], wiredTo: "eventBus (custom webhook)" },
+  { id: "n8n", name: "n8n", category: "automation", mode: "outbound", purpose: "Every ledger event into self-hosted workflows", envKeys: ["N8N_HOOK_URL"], wiredTo: "eventBus (webhook node)" },
+  { id: "webhooks", name: "Any webhook URL(s)", category: "automation", mode: "outbound", purpose: "Comma-separated list of extra receivers", envKeys: ["EVENT_WEBHOOK_URLS"], optionalKeys: ["EVENT_WEBHOOK_SECRET", "EVENT_WEBHOOK_KINDS", "EVENT_WEBHOOK_INCLUDE_FACTS"], wiredTo: "eventBus" },
+  // ── Analytics / observability (browser + server) ──
+  { id: "posthog", name: "PostHog", category: "analytics", mode: "client", purpose: "Which of the 216 pages clients use and where they drop", envKeys: ["POSTHOG_KEY"], optionalKeys: ["POSTHOG_HOST"], wiredTo: "AnalyticsLoader in the portal shell" },
+  { id: "ga4", name: "Google Analytics 4", category: "analytics", mode: "client", purpose: "Traffic on the public site", envKeys: ["GA_MEASUREMENT_ID"], wiredTo: "AnalyticsLoader" },
+  { id: "sentry", name: "Sentry", category: "analytics", mode: "client", purpose: "Errors in the browser bundle", envKeys: ["SENTRY_LOADER_URL"], docs: "https://docs.sentry.io/platforms/javascript/install/loader/", wiredTo: "AnalyticsLoader (loader script)" },
+  { id: "intercom", name: "Intercom", category: "analytics", mode: "client", purpose: "Client support chat in the portal", envKeys: ["INTERCOM_APP_ID"], wiredTo: "AnalyticsLoader (messenger)" },
+  // ── Hosting / infra ──
+  { id: "cloudflare", name: "Cloudflare", category: "hosting", mode: "runtime", purpose: "DNS and edge", envKeys: ["CLOUDFLARE_API_TOKEN"], wiredTo: "domainRedirect helpers" },
+  { id: "github", name: "GitHub", category: "hosting", mode: "runtime", purpose: "Source, Pages homepage, deploys", envKeys: ["GITHUB_TOKEN"], wiredTo: "release tooling" },
+  { id: "railway", name: "Railway", category: "hosting", mode: "runtime", purpose: "The full app and its MySQL", envKeys: ["RAILWAY_PUBLIC_DOMAIN"], wiredTo: "PUBLIC_BASE_URL on the host" },
+];
+
+export function isConfigured(i: Integration, env: NodeJS.ProcessEnv = process.env): boolean {
+  return i.envKeys.every((k) => Boolean(env[k]));
+}
+
+export type IntegrationStatus = Integration & { configured: boolean; missing: string[] };
+
+export function integrationStatus(env: NodeJS.ProcessEnv = process.env): IntegrationStatus[] {
+  return INTEGRATIONS.map((i) => ({ ...i, configured: isConfigured(i, env), missing: i.envKeys.filter((k) => !env[k]) }));
+}
+
+/** What the browser is allowed to know: public ids only, never secrets. */
+export function publicSiteConfig(env: NodeJS.ProcessEnv = process.env) {
+  return {
+    posthogKey: env.POSTHOG_KEY || null,
+    posthogHost: env.POSTHOG_HOST || "https://us.i.posthog.com",
+    gaMeasurementId: env.GA_MEASUREMENT_ID || null,
+    sentryLoaderUrl: env.SENTRY_LOADER_URL || null,
+    intercomAppId: env.INTERCOM_APP_ID || null,
+    calendlyUrl: env.CALENDLY_URL || null,
+    baseUrl: env.PUBLIC_BASE_URL || null,
+  };
+}
+```
+
+## `server/integrationsRouter.ts`
+
+```ts
+// ============================================================
+// INTEGRATIONS ROUTER — what is switched on (booleans only, never values),
+// the public site config the browser may load, and a test event so the
+// owner can prove Zapier / Make / n8n / Slack are receiving the ledger.
+// ============================================================
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { ENV } from "./_core/env";
+import { integrationStatus, publicSiteConfig } from "./integrations";
+import { allowedKinds, fanOut, webhookTargets } from "./eventBus";
+import { hubspotConfigured } from "./_core/hubspot";
+import { messagingStatus } from "./messaging";
+import { fredConfigured } from "./_core/fred";
+import { configuredProviders } from "./ultraAI";
+
+export const integrationsRouter = router({
+  /** Public ids only (analytics keys, booking link). Safe for any visitor. */
+  public: publicProcedure.query(() => publicSiteConfig()),
+
+  status: protectedProcedure.query(() => {
+    const list = integrationStatus();
+    const bus = { targets: webhookTargets().map((t) => t.name), kinds: Array.from(allowedKinds()), slack: Boolean(process.env.SLACK_WEBHOOK_URL) };
+    return {
+      integrations: list,
+      configuredCount: list.filter((i) => i.configured).length,
+      total: list.length,
+      live: { aiProviders: configuredProviders().map((p) => p.label), messaging: messagingStatus(), fred: fredConfigured(), hubspot: hubspotConfigured(), bus },
+    };
+  }),
+
+  /** Owner only: push one test event through the bus and report deliveries. */
+  testEvent: protectedProcedure
+    .input(z.object({ note: z.string().max(200).optional() }).default({}))
+    .mutation(async ({ ctx, input }) => {
+      const isOwner = ctx.user.openId === ENV.ownerOpenId || ctx.user.role === "admin";
+      if (!isOwner) throw new TRPCError({ code: "FORBIDDEN" });
+      const r = await fanOut([{ kind: "note", source: "system", key: "integrations.test", label: "Test event", summary: input.note?.trim() || "Test event from the Russell Capital Systems Connections page", actorName: ctx.user.name ?? null, userId: ctx.user.id }]);
+      return { ...r, targets: webhookTargets().map((t) => t.name), slack: Boolean(process.env.SLACK_WEBHOOK_URL) };
+    }),
+});
+```
+
 ## `server/leadStrategy.ts`
 
 ```ts
@@ -41485,391 +41814,6 @@ export function computeLeadAnalysis(ff: LeadFactFinder): LeadAnalysis {
     rothCaveat: "A Roth conversion is TAXABLE in the year it is performed — it is not tax-free. The Roth figure above is a gross reference value for advisor discussion, not a saving. The benefit is future tax-free growth and withdrawals, weighed against the tax paid at conversion.",
     computedAt: new Date().toISOString(),
   };
-}
-```
-
-## `server/leadsDb.ts`
-
-```ts
-// ============================================================
-// PUBLIC LEADS — data access for homepage fact-finder prospects.
-// Graceful when the DB is not configured (returns null / no-ops) so the
-// homepage still works before `pnpm db:push` has been run.
-// ============================================================
-import { desc, eq } from "drizzle-orm";
-import { getDb } from "./db";
-import { jsonColumn } from "./_core/jsonColumn";
-import { publicLeads, type InsertPublicLead, type PublicLead } from "../drizzle/schema";
-
-export type LeadStatusValue = PublicLead["status"];
-
-/** JSON columns come back as strings on MariaDB; parse them so callers see objects everywhere. */
-function normalizeLead(row: PublicLead): PublicLead {
-  return {
-    ...row,
-    factFinder: jsonColumn(row.factFinder, null),
-    analysis: jsonColumn(row.analysis, null),
-    ipHistory: jsonColumn<string[] | null>(row.ipHistory, null),
-  };
-}
-
-export async function getLeadByPublicId(publicId: string): Promise<PublicLead | null> {
-  const db = await getDb();
-  if (!db) return null;
-  const rows = await db.select().from(publicLeads).where(eq(publicLeads.publicId, publicId)).limit(1);
-  return rows[0] ? normalizeLead(rows[0]) : null;
-}
-
-/**
- * Upsert by first-party publicId. Merges IP history and never overwrites a
- * stored non-empty field with an empty one (so a returning visitor who only
- * asks a question doesn't wipe the financials they entered earlier).
- */
-export async function upsertLead(publicId: string, patch: Partial<InsertPublicLead>, ip: string | null): Promise<PublicLead | null> {
-  const db = await getDb();
-  if (!db) return null;
-  const existing = await getLeadByPublicId(publicId);
-
-  const ipHistory = new Set<string>(existing?.ipHistory ?? []);
-  if (ip) ipHistory.add(ip);
-
-  if (existing) {
-    const merged: Partial<InsertPublicLead> = {
-      firstName: patch.firstName || existing.firstName,
-      lastName: patch.lastName || existing.lastName,
-      email: patch.email || existing.email,
-      phone: patch.phone || existing.phone,
-      bestTimeToContact: patch.bestTimeToContact || existing.bestTimeToContact,
-      consentedAt: patch.consentedAt ?? existing.consentedAt,
-      consentVersion: patch.consentVersion || existing.consentVersion,
-      question: patch.question || existing.question,
-      factFinder: patch.factFinder ?? existing.factFinder,
-      analysis: patch.analysis ?? existing.analysis,
-      lastIp: ip || existing.lastIp,
-      ipHistory: Array.from(ipHistory),
-      lastSeenAt: new Date(),
-    };
-    await db.update(publicLeads).set(merged).where(eq(publicLeads.id, existing.id));
-    return getLeadByPublicId(publicId);
-  }
-
-  await db.insert(publicLeads).values({
-    publicId,
-    ...patch,
-    lastIp: ip ?? undefined,
-    ipHistory: Array.from(ipHistory),
-  });
-  return getLeadByPublicId(publicId);
-}
-
-// ─── Advisor-side reads / triage ────────────────────────────────────────────
-export async function listLeads(limit = 200): Promise<PublicLead[]> {
-  const db = await getDb();
-  if (!db) return [];
-  const rows = await db.select().from(publicLeads).orderBy(desc(publicLeads.lastSeenAt)).limit(Math.min(500, Math.max(1, limit)));
-  return rows.map(normalizeLead);
-}
-
-export async function getLeadById(id: number): Promise<PublicLead | null> {
-  const db = await getDb();
-  if (!db) return null;
-  const rows = await db.select().from(publicLeads).where(eq(publicLeads.id, id)).limit(1);
-  return rows[0] ? normalizeLead(rows[0]) : null;
-}
-
-export async function updateLeadStatus(id: number, status: LeadStatusValue): Promise<PublicLead | null> {
-  const db = await getDb();
-  if (!db) return null;
-  await db.update(publicLeads).set({ status }).where(eq(publicLeads.id, id));
-  return getLeadById(id);
-}
-```
-
-## `server/leadsRouter.ts`
-
-```ts
-// ============================================================
-// PUBLIC LEADS ROUTER — powers the homepage fact-finder / AI concierge
-// lead capture and returning-visitor recognition.
-//
-// PRIVACY / HONESTY CONTRACT:
-// - Recognition uses a first-party cookie (rcs_lead_id), not IP. IP is
-//   stored only as a data point, behind explicit consent.
-// - The illustrative, assumption-based figures are computed and stored in
-//   the advisor's lead file ONLY. The visitor-facing response returns just
-//   the qualitative teaser (pillars, no dollar amounts).
-// - Works gracefully with no DB configured: it still returns the teaser,
-//   it just can't persist (saved:false) until `pnpm db:push` has run.
-// ============================================================
-import { randomUUID } from "node:crypto";
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
-import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import { getSessionCookieOptions } from "./_core/cookies";
-import { ENV } from "./_core/env";
-import { notifyOwner } from "./_core/notification";
-import { sendLeadAcknowledgement, sendNewLeadAlert } from "./email";
-import { computeLeadAnalysis } from "./leadStrategy";
-import { getLeadById, getLeadByPublicId, listLeads, updateLeadStatus, upsertLead } from "./leadsDb";
-import { scheduleLeadFollowups } from "./followups";
-import { deliver } from "./messaging";
-import { cancelFollowupsForLead, listFollowupsForLead, listMessagesForLead } from "./messagingDb";
-import { normalizePhone, sendSms } from "./_core/sms";
-import { recordEvent } from "./ledger";
-import type { LeadFactFinder } from "@shared/leadTypes";
-
-function assertOwner(user: { openId: string; role: string }): void {
-  const isOwner = user.openId === ENV.ownerOpenId || user.role === "admin";
-  if (!isOwner) throw new TRPCError({ code: "FORBIDDEN", message: "Owner access required." });
-}
-
-const COOKIE = "rcs_lead_id";
-const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
-const CONSENT_VERSION = "2026-09-05";
-
-function readCookie(cookieHeader: string | undefined, name: string): string | null {
-  if (!cookieHeader) return null;
-  for (const part of cookieHeader.split(";")) {
-    const [k, ...rest] = part.trim().split("=");
-    if (k === name) return decodeURIComponent(rest.join("="));
-  }
-  return null;
-}
-
-function clientIp(req: { headers: Record<string, unknown>; socket?: { remoteAddress?: string } }): string | null {
-  const fwd = req.headers["x-forwarded-for"];
-  if (typeof fwd === "string" && fwd.length > 0) return fwd.split(",")[0]?.trim() ?? null;
-  return req.socket?.remoteAddress ?? null;
-}
-
-/** Ensure a first-party lead id, minting + setting the cookie if absent. */
-function ensureLeadId(ctx: { req: { headers: Record<string, unknown> }; res: { cookie: (n: string, v: string, o: Record<string, unknown>) => void } }): string {
-  const existing = readCookie(ctx.req.headers.cookie as string | undefined, COOKIE);
-  if (existing) return existing;
-  const id = randomUUID();
-  ctx.res.cookie(COOKIE, id, {
-    ...getSessionCookieOptions(ctx.req as never),
-    httpOnly: true,
-    maxAge: ONE_YEAR_MS,
-  });
-  return id;
-}
-
-const factFinderSchema = z.object({
-  w2Income: z.number().nonnegative().max(1e9).optional(),
-  estimatedTaxes: z.number().nonnegative().max(1e9).optional(),
-  spouseIncome: z.number().nonnegative().max(1e9).optional(),
-  spouseTaxes: z.number().nonnegative().max(1e9).optional(),
-  studentDebt: z.number().nonnegative().max(1e9).optional(),
-  studentDebtRate: z.number().nonnegative().max(100).optional(),
-  homeEquity: z.number().nonnegative().max(1e9).optional(),
-  mortgageBalance: z.number().nonnegative().max(1e9).optional(),
-  mortgageRate: z.number().nonnegative().max(100).optional(),
-  mortgageInterestOnlyMonthly: z.number().nonnegative().max(1e7).optional(),
-  mortgageYearsRemaining: z.number().nonnegative().max(60).optional(),
-  taxDeferredSelf: z.number().nonnegative().max(1e9).optional(),
-  taxDeferredSpouse: z.number().nonnegative().max(1e9).optional(),
-  liquidInvestments: z.number().nonnegative().max(1e9).optional(),
-  liquidTaxability: z.enum(["taxable", "nontaxable", "mixed", "unknown"]).optional(),
-  goals: z.string().max(4000).optional(),
-}) satisfies z.ZodType<LeadFactFinder>;
-
-export const leadsRouter = router({
-  // Greet a returning visitor by name (cookie-based). Returns only the first
-  // name — never the stored financials.
-  recognize: publicProcedure.query(async ({ ctx }) => {
-    const id = readCookie(ctx.req.headers.cookie as string | undefined, COOKIE);
-    if (!id) return { known: false as const };
-    const lead = await getLeadByPublicId(id);
-    if (!lead) return { known: false as const };
-    return { known: true as const, firstName: lead.firstName ?? null, hasEstimate: Boolean(lead.analysis) };
-  }),
-
-  // Capture / update a lead from the homepage estimator. Computes the
-  // illustrative analysis for the advisor file and returns ONLY the teaser.
-  capture: publicProcedure
-    .input(z.object({
-      firstName: z.string().max(120).optional(),
-      lastName: z.string().max(120).optional(),
-      email: z.string().email().max(320).optional(),
-      phone: z.string().max(40).optional(),
-      bestTimeToContact: z.string().max(200).optional(),
-      question: z.string().max(4000).optional(),
-      consent: z.boolean(),
-      factFinder: factFinderSchema.default({}),
-    }))
-    .mutation(async ({ ctx, input }) => {
-      if (!input.consent) {
-        return { saved: false as const, reason: "consent_required", teaser: null };
-      }
-      const publicId = ensureLeadId(ctx as never);
-      const ip = clientIp(ctx.req as never);
-      const analysis = computeLeadAnalysis(input.factFinder);
-
-      const lead = await upsertLead(publicId, {
-        firstName: input.firstName,
-        lastName: input.lastName,
-        email: input.email,
-        phone: input.phone,
-        bestTimeToContact: input.bestTimeToContact,
-        question: input.question,
-        consentedAt: new Date(),
-        consentVersion: CONSENT_VERSION,
-        factFinder: input.factFinder,
-        analysis,
-      }, ip);
-
-      // Ping the owner about the new lead — best-effort, never blocks capture
-      // and never includes the illustrative figures.
-      try {
-        const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
-        const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
-        await notifyOwner({
-          title: "New homepage lead captured",
-          content: `${who} (${contact})` + (input.bestTimeToContact ? ` — best time: ${input.bestTimeToContact}` : "") +
-            (input.question ? `\nQuestion: ${input.question.slice(0, 300)}` : "") +
-            `\nOpen the lead inbox to review the full fact-finder and advisor figures.`,
-        });
-      } catch { /* notification is best-effort */ }
-
-      // Email the owner too — the managed notification above only exists on the
-      // managed host; on a plain host this is how the owner hears about a lead.
-      const alertTo = ENV.leadNotifyEmail || ENV.ownerEmail;
-      if (alertTo) {
-        try {
-          const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
-          const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
-          const host = typeof ctx.req.headers.host === "string" ? ctx.req.headers.host : "";
-          const proto = ctx.req.headers["x-forwarded-proto"] === "https" || host.endsWith(".com") ? "https" : "http";
-          await sendNewLeadAlert({ toEmail: alertTo, who, contact, bestTime: input.bestTimeToContact, question: input.question, inboxUrl: host ? `${proto}://${host}/portal/leads` : undefined });
-        } catch { /* alert is best-effort */ }
-      }
-
-      // Send the prospect a warm acknowledgement — best-effort, no figures.
-      if (input.email) {
-        try { await sendLeadAcknowledgement({ toEmail: input.email, firstName: input.firstName }); }
-        catch { /* acknowledgement is best-effort */ }
-      }
-
-      // Text the owner too when a mobile alert number is set — a lead is
-      // worth interrupting for. Never includes figures.
-      if (ENV.leadNotifyPhone) {
-        try {
-          const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
-          const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
-          await sendSms({ to: ENV.leadNotifyPhone, body: `New RCS lead: ${who} (${contact})${input.bestTimeToContact ? ` — best time: ${input.bestTimeToContact}` : ""}. Open the lead inbox to review.` });
-        } catch { /* alert is best-effort */ }
-      }
-
-      // Schedule the automated follow-up sequence (text in an hour, emails on
-      // days 1/3/7, text on day 5). Stops when the lead is marked contacted.
-      if (lead) {
-        try { await scheduleLeadFollowups(lead); }
-        catch { /* automation is best-effort */ }
-        await recordEvent({
-          kind: "status", source: "client", key: "lead.captured", label: "Homepage estimate",
-          value: { consentVersion: CONSENT_VERSION, fields: Object.keys(input.factFinder).length, hasEmail: Boolean(input.email), hasPhone: Boolean(input.phone) },
-          summary: `Lead captured from the homepage estimate with consent (${Object.keys(input.factFinder).length} fact-finder fields)${input.question ? ` — asked: ${input.question.slice(0, 120)}` : ""}`,
-          leadId: lead.id,
-        });
-      }
-
-      // The visitor only ever sees the qualitative teaser — never the figures.
-      return {
-        saved: Boolean(lead) as boolean,
-        reason: lead ? ("ok" as const) : ("db_unconfigured" as const),
-        teaser: analysis.teaser,
-      };
-    }),
-
-  // ─── Advisor lead inbox (owner-gated) ────────────────────────────────────
-  // These DO return the illustrative advisor figures — for the licensed
-  // advisor's internal review only.
-  list: protectedProcedure
-    .input(z.object({ limit: z.number().int().min(1).max(500).default(200) }).default({ limit: 200 }))
-    .query(async ({ ctx, input }) => {
-      assertOwner(ctx.user);
-      return listLeads(input.limit);
-    }),
-
-  get: protectedProcedure
-    .input(z.object({ id: z.number().int().positive() }))
-    .query(async ({ ctx, input }) => {
-      assertOwner(ctx.user);
-      const lead = await getLeadById(input.id);
-      if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
-      return lead;
-    }),
-
-  updateStatus: protectedProcedure
-    .input(z.object({ id: z.number().int().positive(), status: z.enum(["new", "contacted", "qualified", "client"]) }))
-    .mutation(async ({ ctx, input }) => {
-      assertOwner(ctx.user);
-      const lead = await updateLeadStatus(input.id, input.status);
-      if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
-      // A human has taken over: the automated sequence stops here.
-      if (input.status !== "new") await cancelFollowupsForLead(lead.id, `lead marked ${input.status}`);
-      await recordEvent({ kind: "status", source: "advisor", key: "lead.status", label: "Lead status", value: input.status, summary: `Lead marked ${input.status}`, actorName: ctx.user.name ?? null, leadId: lead.id });
-      return lead;
-    }),
-
-  // ─── Messaging a lead from the inbox (owner-gated) ────────────────────────
-  followups: protectedProcedure
-    .input(z.object({ id: z.number().int().positive() }))
-    .query(async ({ ctx, input }) => {
-      assertOwner(ctx.user);
-      const [followups, messages] = await Promise.all([listFollowupsForLead(input.id), listMessagesForLead(input.id)]);
-      return { followups, messages };
-    }),
-
-  message: protectedProcedure
-    .input(z.object({ id: z.number().int().positive(), channel: z.enum(["email", "sms"]), subject: z.string().max(300).optional(), body: z.string().min(1).max(4000) }))
-    .mutation(async ({ ctx, input }) => {
-      assertOwner(ctx.user);
-      const lead = await getLeadById(input.id);
-      if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
-      const to = input.channel === "email" ? lead.email : normalizePhone(lead.phone);
-      if (!to) throw new TRPCError({ code: "BAD_REQUEST", message: input.channel === "email" ? "This lead gave no email address." : "This lead gave no valid mobile number." });
-      const r = await deliver({ channel: input.channel, to, subject: input.subject, body: input.body, category: "transactional", leadId: lead.id, userId: ctx.user.id, actorName: ctx.user.name ?? "Advisor" });
-      // The advisor has reached out by hand — the sequence is no longer needed.
-      if (r.sent) await cancelFollowupsForLead(lead.id, "advisor messaged the lead");
-      return { sent: r.sent, via: r.via ?? null, reason: r.reason ?? null, suppressed: Boolean(r.suppressed) };
-    }),
-});
-```
-
-## `server/ledger.ts`
-
-```ts
-// ============================================================
-// THE PLAN LEDGER — writers. Every place the platform learns a fact, makes
-// a decision, sends a message, builds a journey or changes a status calls
-// one of these. They never throw: a ledger write must not break the action
-// it records.
-// ============================================================
-import type { ClientFactFinder } from "@shared/clientFactFinder";
-import { diffFactFinder, type LedgerEventInput, type LedgerSource } from "@shared/planLedger";
-import { appendEvents } from "./ledgerDb";
-
-type Ids = { userId?: number | null; clientId?: number | null; leadId?: number | null; workspaceId?: number | null };
-
-async function safeAppend(events: LedgerEventInput[]): Promise<number> {
-  try { return await appendEvents(events); }
-  catch (error) { console.warn("[Ledger] append failed:", String(error).slice(0, 200)); return 0; }
-}
-
-/** Facts: the diff between the previous and the new assessment, one event per changed field. */
-export async function recordAssessmentChange(ids: Ids, prev: ClientFactFinder | null | undefined, next: ClientFactFinder, source: LedgerSource = "client", actorName?: string | null): Promise<number> {
-  const facts = diffFactFinder(prev, next, source).map((e) => ({ ...e, ...ids, actorName: actorName ?? null }));
-  return safeAppend(facts);
-}
-
-export async function recordEvent(e: LedgerEventInput): Promise<number> {
-  return safeAppend([e]);
-}
-
-export function assessmentResetEvent(ids: Ids, actorName?: string | null): LedgerEventInput {
-  return { kind: "status", source: "client", key: "assessment.reset", label: "Financial Assessment", summary: "Financial Assessment reset — all answers cleared", actorName: actorName ?? null, ...ids };
 }
 ```
 
