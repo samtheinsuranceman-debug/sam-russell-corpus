@@ -260,6 +260,7 @@ const Connections = lazy(() => import("./pages/portal/Connections"));
 const Controls = lazy(() => import("./pages/portal/Controls"));
 const Erosion = lazy(() => import("./pages/portal/Erosion"));
 const Forgiveness = lazy(() => import("./pages/portal/Forgiveness"));
+const TaxSchedule = lazy(() => import("./pages/portal/TaxSchedule"));
 const Sphere = lazy(() => import("./pages/portal/Sphere"));
 const TheBrotherhood = lazy(() => import("./pages/portal/TheBrotherhood"));
 const SecondaryInformation = lazy(() => import("./pages/portal/SecondaryInformation"));
@@ -572,6 +573,7 @@ function Router() {
       <Route path="/portal/controls" component={gated(Controls, "/portal/controls")} />
       <Route path="/portal/erosion" component={gated(Erosion, "/portal/erosion")} />
       <Route path="/portal/forgiveness" component={gated(Forgiveness, "/portal/forgiveness")} />
+      <Route path="/portal/tax-schedule" component={gated(TaxSchedule, "/portal/tax-schedule")} />
       <Route path="/portal/sphere" component={gated(Sphere, "/portal/sphere")} />
       <Route path="/portal/wealth-genome" component={gated(WealthGenomePage, "/portal/wealth-genome")} />
       <Route path="/portal/the-arrival" component={gated(TheArrival, "/portal/the-arrival")} />
