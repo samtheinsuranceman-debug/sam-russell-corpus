@@ -129,7 +129,7 @@ export default function UltraCalculatorPage() {
 
   return (
     <div className="relative min-h-screen bg-slate-950 px-4 py-10 text-slate-100">
-      <PageBackdrop src="/rcs-city-harbor.webp" phoneSrc="/rcs-city-towers.webp" alt="Green-lit harbour city at night, towers reflected in the water" fade="#020617" />
+      <PageBackdrop src="/rcs-city-skyway.webp" phoneSrc="/rcs-city-towers.webp" alt="Green-lit skyline at night with a lit highway sweeping through the city" fade="#020617" />
       <div className="relative z-10 mx-auto max-w-6xl">
         <p className="text-xs uppercase tracking-widest text-amber-500">Russell Capital Systems</p>
         <h1 className="mt-1 text-3xl font-bold">The Decade Machine</h1>
