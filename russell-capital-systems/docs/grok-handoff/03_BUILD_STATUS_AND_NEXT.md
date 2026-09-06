@@ -34,8 +34,9 @@ next work in priority order. Do not undo the rules in the spec.
   user's assessment onto the flat data shape every calculator reads (Mortgage
   Killer, Income Gap, Roth Strategies, Stress Test, …); the badge says
   "Pre-filled from your Financial Assessment" and names any blank inputs.
-- **Twelve AI providers**: Cohere, DeepSeek and Together AI join the nine
-  (all keyed by host env variables; skip-if-absent).
+- **Eleven AI providers**: Cohere and Together AI join the nine (all keyed by
+  host env variables; skip-if-absent). DeepSeek was removed on 2026-09-06 by
+  owner decision and must not be re-added.
 - **The journey walks the client through**: every step has a librarian `guide`
   (which question it works on + what to do on the page + what to carry forward),
   every journey names the variables the client controls vs. what the plan must
