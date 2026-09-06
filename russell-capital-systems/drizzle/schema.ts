@@ -1,12 +1,14 @@
 import {
   boolean,
   decimal,
+  index,
   int,
   json,
   mysqlEnum,
   mysqlTable,
   text,
   timestamp,
+  uniqueIndex,
   varchar,
 } from "drizzle-orm/mysql-core";
 
@@ -2321,3 +2323,36 @@ export const marketDataPoints = mysqlTable("market_data_points", {
   source:    varchar("source", { length: 40 }).notNull().default("fred"),
   fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
 });
+
+// ─── THE PLAN LEDGER (append-only) ───────────────────────────────────────────
+// One chain per subject (c:<clientId>, u:<userId>, l:<leadId>): every fact,
+// assumption, decision, message, document, journey step, status and outcome,
+// with time, source and a SHA-256 hash chained to the previous event so the
+// history is tamper-evident. Rows are never updated or deleted by the app.
+export const planEvents = mysqlTable("plan_events", {
+  id:          int("id").autoincrement().primaryKey(),
+  subject:     varchar("subject", { length: 40 }).notNull(),
+  seq:         int("seq").notNull(),
+  userId:      int("userId"),
+  clientId:    int("clientId"),
+  leadId:      int("leadId"),
+  workspaceId: int("workspaceId"),
+  kind:        mysqlEnum("kind", ["fact", "assumption", "decision", "message", "document", "outcome", "scenario", "journey", "status", "note"]).notNull(),
+  source:      varchar("source", { length: 20 }).notNull(),
+  key:         varchar("key", { length: 120 }),
+  label:       varchar("label", { length: 200 }),
+  value:       json("value"),
+  prevValue:   json("prevValue"),
+  summary:     text("summary").notNull(),
+  actorName:   varchar("actorName", { length: 200 }),
+  occurredAt:  timestamp("occurredAt").notNull(),
+  prevHash:    varchar("prevHash", { length: 64 }).notNull(),
+  hash:        varchar("hash", { length: 64 }).notNull(),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({
+  subjectSeq: uniqueIndex("plan_events_subject_seq").on(t.subject, t.seq),
+  byClient:   index("plan_events_client").on(t.clientId),
+  byUser:     index("plan_events_user").on(t.userId),
+  byLead:     index("plan_events_lead").on(t.leadId),
+}));
+export type PlanEventRow = typeof planEvents.$inferSelect;

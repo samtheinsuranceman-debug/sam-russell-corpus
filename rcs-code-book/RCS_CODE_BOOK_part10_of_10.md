@@ -4,6 +4,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 
 ### Files in this part
 
+- `client/src/pages/portal/WorkflowAutomations.tsx`
 - `client/src/pages/portal/WorkspaceBranding.tsx`
 - `client/src/pages/portal/_genome/GenomeKit.tsx`
 - `client/public/__manus__/debug-collector.js`
@@ -43,6 +44,10 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `docs/grok-handoff/02_ASSESSMENT_AND_JOURNEY_DATA.md`
 - `docs/grok-handoff/03_BUILD_STATUS_AND_NEXT.md`
 - `docs/grok-handoff/04_AI_PLATFORM_ROSTER_AND_AUTOMATION.md`
+- `docs/grok-handoff/05_TOP_100_CRITICAL_IMPROVEMENTS.md`
+- `docs/grok-handoff/06_TWENTY_ULTIMATE_IDEAS.md`
+- `docs/grok-handoff/07_TOP_50_CONNECTORS_TO_ADD.md`
+- `docs/grok-handoff/08_PLAN_LEDGER.md`
 - `docs/grok-merge-verification.md`
 - `docs/homepage-hero-asset-review.md`
 - `docs/homepage-typography-validation.md`
@@ -60,6 +65,1144 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `live/rcs-live-homepage.template.html`
 
 ---
+
+## `client/src/pages/portal/WorkflowAutomations.tsx`
+
+```tsx
+// @ts-nocheck
+import React, { useState, useMemo, useEffect, useCallback } from "react";
+import { AppShell } from "@/components/AppShell";
+import { ExportToSlides } from "@/components/ExportToSlides";
+import { PageInsights } from "@/components/PageInsights";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { toast } from "sonner";
+import {
+  Zap,
+  Plus,
+  Play,
+  Clock,
+  Mail,
+  Calendar,
+  Users,
+  TrendingUp,
+  AlertTriangle,
+  CheckCircle2,
+  Settings,
+  ArrowRight,
+  Trash2,
+  Edit,
+  Copy,
+  BarChart3,
+  PieChartIcon,
+  Search,
+  Filter,
+  Download,
+  Activity,
+  RefreshCw,
+  X,
+  ChevronDown,
+  ChevronUp,
+  Target,
+  Smartphone,
+  Briefcase,
+} from "lucide-react";
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
+  PieChart as RechartsPieChart, Pie, Cell, LineChart, Line, Legend, AreaChart, Area,
+  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ComposedChart
+} from "recharts";
+import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+
+interface AutomationRule {
+  id: string;
+  name: string;
+  trigger: string;
+  triggerDetail: string;
+  action: string;
+  actionDetail: string;
+  enabled: boolean;
+  lastTriggered: string | null;
+  triggerCount: number;
+  category: string;
+  roiEstimate: number;
+  complexity: string;
+  createdAt: string;
+  author: string;
+}
+
+const PRESET_RULES: AutomationRule[] = [{
+    id: "age_59_5", name: "Penalty-Free Withdrawal Alert", trigger: "client_age_reaches", triggerDetail: "59.5",
+    action: "notify_advisor", actionDetail: "Alert: Client eligible for penalty-free IRA withdrawals",
+    enabled: true, lastTriggered: null, triggerCount: 0, category: "Milestone", roiEstimate: 500, complexity: "Low", createdAt: "2026-01-15", author: "System"
+  },
+,
+  {
+    id: "age_62", name: "Social Security Eligibility", trigger: "client_age_reaches", triggerDetail: "62",
+    action: "create_task", actionDetail: "Schedule Social Security optimization review meeting",
+    enabled: true, lastTriggered: null, triggerCount: 0, category: "Milestone", roiEstimate: 1200, complexity: "Medium", createdAt: "2026-01-15", author: "System"
+  },
+,
+  {
+    id: "age_65", name: "Medicare Enrollment Reminder", trigger: "client_age_reaches", triggerDetail: "65",
+    action: "send_email", actionDetail: "Send Medicare enrollment guide and IRMAA planning checklist",
+    enabled: true, lastTriggered: null, triggerCount: 0, category: "Milestone", roiEstimate: 300, complexity: "Low", createdAt: "2026-01-15", author: "System"
+  },
+,
+  {
+    id: "age_73", name: "RMD Requirement Alert", trigger: "client_age_reaches", triggerDetail: "73",
+    action: "notify_advisor", actionDetail: "Client must begin Required Minimum Distributions",
+    enabled: true, lastTriggered: null, triggerCount: 0, category: "Compliance", roiEstimate: 0, complexity: "High", createdAt: "2026-01-15", author: "System"
+  },
+,
+  {
+    id: "no_contact_30", name: "Stale Relationship Follow-Up", trigger: "no_contact_days", triggerDetail: "30",
+    action: "create_task", actionDetail: "Create follow-up task: No contact in 30 days",
+    enabled: true, lastTriggered: "2026-03-15", triggerCount: 12, category: "Engagement", roiEstimate: 2000, complexity: "Low", createdAt: "2026-01-15", author: "System"
+  }
+];
+
+const TRIGGER_TYPES = [{ value: "client_age_reaches", label: "Client Reaches Age", icon: Calendar },
+,
+  { value: "no_contact_days", label: "No Contact For X Days", icon: Clock },
+,
+  { value: "deal_status_change", label: "Deal Status Changes", icon: TrendingUp },
+,
+  { value: "client_birthday", label: "Client Birthday", icon: Users },
+,
+  { value: "policy_anniversary", label: "Policy Anniversary", icon: Calendar }
+];
+
+const ACTION_TYPES = [
+  { value: "notify_advisor", label: "Notify Advisor (Dashboard Alert)" },
+  { value: "send_email", label: "Send Email to Client" },
+  { value: "create_task", label: "Create Follow-Up Task" },
+  { value: "schedule_meeting", label: "Suggest Meeting" },
+  { value: "update_crm", label: "Update CRM Record" },
+  { value: "trigger_webhook", label: "Trigger External Webhook" },
+  { value: "generate_report", label: "Generate Portfolio Report" },
+];
+
+const CHART_COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#ec4899', '#8b5cf6', '#06b6d4', '#f97316', '#64748b'];
+
+export default function WorkflowAutomations() {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [rules, setRules] = useState<AutomationRule[]>([]);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newTrigger, setNewTrigger] = useState("");
+  const [newTriggerDetail, setNewTriggerDetail] = useState("");
+  const [newAction, setNewAction] = useState("");
+  const [newActionDetail, setNewActionDetail] = useState("");
+  const [filterCategory, setFilterCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("rules");
+  const [sortField, setSortField] = useState<keyof AutomationRule>("name");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [selectedRules, setSelectedRules] = useState<string[]>([]);
+  const [isBulkEditOpen, setIsBulkEditOpen] = useState(false);
+  const [bulkAction, setBulkAction] = useState("");
+  const [expandedRule, setExpandedRule] = useState<string | null>(null);
+
+  const { data: clientsData } = trpc.clients.list.useQuery();
+  const { data: activityData } = trpc.activity.getRecent.useQuery();
+  const { data: teamData } = trpc.team.members.useQuery();
+  const { data: dashboardData } = trpc.dashboard.getMetrics.useQuery();
+  const { data: reportsData } = trpc.reports.getAutomationStats.useQuery();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setRules(PRESET_RULES);
+      setLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const categories = useMemo(() => Array.from(new Set(rules.map((r) => r.category))), [rules]);
+  
+  const filteredAndSorted = useMemo(() => {
+    let result = rules.filter((r) => {
+      const matchesCategory = filterCategory === "all" || r.category === filterCategory;
+      const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            r.actionDetail.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+
+    result.sort((a, b) => {
+      const aVal = a[sortField];
+      const bVal = b[sortField];
+      if (aVal === null) return sortDirection === "asc" ? 1 : -1;
+      if (bVal === null) return sortDirection === "asc" ? -1 : 1;
+      if (aVal < bVal) return sortDirection === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortDirection === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    return result;
+  }, [rules, filterCategory, searchQuery, sortField, sortDirection]);
+
+  const enabledCount = rules.filter((r) => r.enabled).length;
+  const totalTriggers = rules.reduce((s, r) => s + r.triggerCount, 0);
+  const totalROI = rules.reduce((s, r) => s + r.roiEstimate, 0);
+
+  const categoryData = useMemo(() => {
+    const data: Record<string, number> = {};
+    rules.forEach((rule) => {
+      data[rule.category] = (data[rule.category] || 0) + 1;
+    });
+    return Object.entries(data).map(([name, value]) => ({ name, value }));
+  }, [rules]);
+
+  const triggerStatsData = useMemo(() => {
+    return rules
+      .filter((r) => r.triggerCount > 0)
+      .sort((a, b) => b.triggerCount - a.triggerCount)
+      .slice(0, 5)
+      .map((r) => ({ name: r.name, triggers: r.triggerCount, roi: r.roiEstimate }));
+  }, [rules]);
+
+  const trendData = useMemo(() => {
+    return [
+      { month: 'Jan', triggers: 120, conversions: 15 },
+      { month: 'Feb', triggers: 150, conversions: 20 },
+      { month: 'Mar', triggers: 180, conversions: 25 },
+      { month: 'Apr', triggers: 220, conversions: 35 },
+      { month: 'May', triggers: 260, conversions: 45 },
+      { month: 'Jun', triggers: 310, conversions: 60 },
+    ];
+  }, []);
+
+  const radarData = useMemo(() => {
+    return [
+      { subject: 'Engagement', A: 120, B: 110, fullMark: 150 },
+      { subject: 'Sales', A: 98, B: 130, fullMark: 150 },
+      { subject: 'Service', A: 86, B: 130, fullMark: 150 },
+      { subject: 'Compliance', A: 99, B: 100, fullMark: 150 },
+      { subject: 'Milestone', A: 85, B: 90, fullMark: 150 },
+      { subject: 'Market', A: 65, B: 85, fullMark: 150 },
+    ];
+  }, []);
+
+  const toggleRule = useCallback((id: string) => {
+    setRules(prev => prev.map((r) => r.id === id ? { ...r, enabled: !r.enabled } : r));
+    const rule = rules.find((r) => r.id === id);
+    toast.success(`${rule?.name} ${rule?.enabled ? "disabled" : "enabled"}`);
+  }, [rules]);
+
+  const deleteRule = useCallback((id: string) => {
+    setRules(prev => prev.filter((r) => r.id !== id));
+    toast.success("Automation rule deleted");
+  }, []);
+
+  const duplicateRule = useCallback((id: string) => {
+    const rule = rules.find((r) => r.id === id);
+    if (rule) {
+      const newRule = { ...rule, id: `custom_${Date.now()}`, name: `${rule.name} (Copy)`, triggerCount: 0, lastTriggered: null };
+      setRules(prev => [newRule, ...prev]);
+      toast.success("Rule duplicated");
+    }
+  }, [rules]);
+
+  const createRule = useCallback(() => {
+    if (!newName || !newTrigger || !newAction) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    const rule: AutomationRule = {
+      id: `custom_${Date.now()}`, name: newName, trigger: newTrigger, triggerDetail: newTriggerDetail,
+      action: newAction, actionDetail: newActionDetail, enabled: true, lastTriggered: null,
+      triggerCount: 0, category: "Custom", roiEstimate: 0, complexity: "Low", createdAt: new Date().toISOString().split('T')[0], author: user?.name || "User"
+    };
+    setRules(prev => [rule, ...prev]);
+    setShowCreateDialog(false);
+    setNewName(""); setNewTrigger(""); setNewTriggerDetail(""); setNewAction(""); setNewActionDetail("");
+    toast.success("Automation rule created!");
+  }, [newName, newTrigger, newTriggerDetail, newAction, newActionDetail, user]);
+
+  const handleSort = useCallback((field: keyof AutomationRule) => {
+    if (sortField === field) {
+      setSortDirection(prev => prev === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  }, [sortField]);
+
+  const toggleSelectRule = useCallback((id: string) => {
+    setSelectedRules(prev => prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]);
+  }, []);
+
+  const toggleSelectAll = useCallback(() => {
+    if (selectedRules.length === filteredAndSorted.length) {
+      setSelectedRules([]);
+    } else {
+      setSelectedRules(filteredAndSorted.map((r) => r.id));
+    }
+  }, [filteredAndSorted, selectedRules]);
+
+  const handleBulkAction = useCallback(() => {
+    if (!bulkAction) return;
+    if (bulkAction === "enable") {
+      setRules(prev => prev.map((r) => selectedRules.includes(r.id) ? { ...r, enabled: true } : r));
+      toast.success(`Enabled ${selectedRules.length} rules`);
+    } else if (bulkAction === "disable") {
+      setRules(prev => prev.map((r) => selectedRules.includes(r.id) ? { ...r, enabled: false } : r));
+      toast.success(`Disabled ${selectedRules.length} rules`);
+    } else if (bulkAction === "delete") {
+      setRules(prev => prev.filter((r) => !selectedRules.includes(r.id)));
+      toast.success(`Deleted ${selectedRules.length} rules`);
+    }
+    setSelectedRules([]);
+    setIsBulkEditOpen(false);
+    setBulkAction("");
+  }, [bulkAction, selectedRules]);
+
+  const exportToCSV = useCallback(() => {
+    const headers = ["Rule Name", "Category", "Trigger", "Trigger Detail", "Action", "Action Detail", "Status", "Trigger Count", "Last Triggered", "ROI Estimate"];
+    const csvContent = [
+      headers.join(","),
+      ...rules.map((r) => [
+        `"${r.name}"`, 
+        `"${r.category}"`, 
+        `"${triggerLabel(r.trigger)}"`, 
+        `"${r.triggerDetail}"`, 
+        `"${actionLabel(r.action)}"`, 
+        `"${r.actionDetail}"`, 
+        r.enabled ? "Active" : "Paused", 
+        r.triggerCount, 
+        r.lastTriggered || "Never",
+        r.roiEstimate
+      ].join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `workflow_automations_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Exported to CSV");
+  }, [rules]);
+
+  const triggerLabel = (t: string) => TRIGGER_TYPES.find((tt) => tt.value === t)?.label ?? t;
+  const actionLabel = (a: string) => ACTION_TYPES.find((at) => at.value === a)?.label ?? a;
+  
+  const catBadgeColor = (c: string) => {
+    const colors: Record<string, string> = {
+      Milestone: "rc-badge-blue",
+      Engagement: "rc-badge-gold",
+      Sales: "rc-badge-green",
+      Compliance: "rc-badge-red",
+      Service: "rc-badge-blue",
+      Opportunity: "rc-badge-green",
+      Market: "rc-badge-gold",
+      Custom: "rc-badge-blue",
+    };
+    return colors[c] ? `rc-badge ${colors[c]}` : "rc-badge rc-badge-blue";
+  };
+
+
+  return (
+    <AppShell>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="rc-page-header flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-2xl bg-[#0d1a2e] border border-[#12233e]">
+              <Zap className="h-6 w-6 text-[#22c55e]" />
+            </div>
+            <div>
+              <h1 className="rc-page-title">Workflow Automations</h1>
+              <p className="rc-page-subtitle">Rule-based triggers and actions for client lifecycle events</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" className="rc-btn rc-btn-ghost" onClick={exportToCSV}>
+              <Download className="h-4 w-4 mr-2" />
+              Export CSV
+            </Button>
+            <ExportToSlides
+              toolName="Workflow Automations"
+              getSections={() => [
+                {
+                  title: "Workflow Automations Summary",
+                  items: [
+                    { label: "Total Rules", value: rules.length.toString() },
+                    { label: "Active Rules", value: enabledCount.toString() },
+                    { label: "Paused Rules", value: (rules.length - enabledCount).toString() },
+                    { label: "Total Triggers", value: totalTriggers.toString() }
+                  ]
+                }
+              ]}
+            />
+            <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+              <DialogTrigger asChild>
+                <Button className="rc-btn rc-btn-primary">
+                  <Plus className="h-4 w-4 mr-2" /> New Rule
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#0d1a2e] border-[#12233e] text-white max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-xl font-semibold">Create Automation Rule</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6 py-4">
+                  <div className="space-y-2">
+                    <Label className="text-[#c8d8ec]">Rule Name</Label>
+                    <Input 
+                      value={newName} 
+                      onChange={(e) => setNewName(e.target.value)} 
+                      placeholder="e.g., Annual Review Reminder" 
+                      className="rc-input" 
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4 border p-4 rounded-xl border-[#12233e] bg-[#0d1a2e]/50">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Zap className="h-5 w-5 text-[#f0c040]" />
+                        <h3 className="font-medium text-white">Trigger (When)</h3>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[#c8d8ec]">Select Event</Label>
+                        <Select value={newTrigger} onValueChange={setNewTrigger}>
+                          <SelectTrigger className="rc-input"><SelectValue placeholder="Select trigger..." /></SelectTrigger>
+                          <SelectContent className="bg-[#0d1a2e] border-[#12233e] text-white">
+                            {TRIGGER_TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[#c8d8ec]">Trigger Conditions</Label>
+                        <Input 
+                          value={newTriggerDetail} 
+                          onChange={(e) => setNewTriggerDetail(e.target.value)} 
+                          placeholder="e.g., 65 (age), 30 (days)" 
+                          className="rc-input" 
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4 border p-4 rounded-xl border-[#12233e] bg-[#0d1a2e]/50">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Play className="h-5 w-5 text-[#22c55e]" />
+                        <h3 className="font-medium text-white">Action (Then)</h3>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[#c8d8ec]">Select Action</Label>
+                        <Select value={newAction} onValueChange={setNewAction}>
+                          <SelectTrigger className="rc-input"><SelectValue placeholder="Select action..." /></SelectTrigger>
+                          <SelectContent className="bg-[#0d1a2e] border-[#12233e] text-white">
+                            {ACTION_TYPES.map((a) => <SelectItem key={a.value} value={a.value}>{a.label}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[#c8d8ec]">Action Details</Label>
+                        <Input 
+                          value={newActionDetail} 
+                          onChange={(e) => setNewActionDetail(e.target.value)} 
+                          placeholder="e.g., Send annual review scheduling email" 
+                          className="rc-input" 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <DialogClose asChild><Button variant="outline" className="rc-btn rc-btn-ghost">Cancel</Button></DialogClose>
+                  <Button onClick={createRule} className="rc-btn rc-btn-primary">Create Rule</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="rc-card">
+            <CardContent className="p-0 flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-[#12233e]">
+                <Settings className="h-5 w-5 text-[#c8d8ec]" />
+              </div>
+              <div>
+                <p className="rc-stat-label">Total Rules</p>
+                <p className="rc-stat-value">{loading ? "-" : rules.length}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="rc-card">
+            <CardContent className="p-0 flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-[#22c55e]/10">
+                <Play className="h-5 w-5 text-[#22c55e]" />
+              </div>
+              <div>
+                <p className="rc-stat-label">Active</p>
+                <p className="rc-stat-value text-[#22c55e]">{loading ? "-" : enabledCount}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="rc-card">
+            <CardContent className="p-0 flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-[#3b82f6]/10">
+                <Activity className="h-5 w-5 text-[#3b82f6]" />
+              </div>
+              <div>
+                <p className="rc-stat-label">Total Triggers</p>
+                <p className="rc-stat-value text-[#3b82f6]">{loading ? "-" : totalTriggers}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="rc-card">
+            <CardContent className="p-0 flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-[#f0c040]/10">
+                <TrendingUp className="h-5 w-5 text-[#f0c040]" />
+              </div>
+              <div>
+                <p className="rc-stat-label">Est. Value (ROI)</p>
+                <p className="rc-stat-value text-[#f0c040]">{loading ? "-" : `$${totalROI.toLocaleString()}`}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex space-x-1 border-b border-[#12233e] mb-6">
+          <button
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === "rules"
+                ? "border-[#22c55e] text-[#22c55e]"
+                : "border-transparent text-[#7a95b8] hover:text-[#c8d8ec]"
+            }`}
+            onClick={() => setActiveTab("rules")}
+          >
+            Rules Management
+          </button>
+          <button
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === "analytics"
+                ? "border-[#22c55e] text-[#22c55e]"
+                : "border-transparent text-[#7a95b8] hover:text-[#c8d8ec]"
+            }`}
+            onClick={() => setActiveTab("analytics")}
+          >
+            Analytics & ROI
+          </button>
+          <button
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === "history"
+                ? "border-[#22c55e] text-[#22c55e]"
+                : "border-transparent text-[#7a95b8] hover:text-[#c8d8ec]"
+            }`}
+            onClick={() => setActiveTab("history")}
+          >
+            Execution History
+          </button>
+        </div>
+
+        {activeTab === "analytics" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Chart 1: PieChart */}
+              <Card className="rc-card">
+                <CardHeader className="p-0 mb-4">
+                  <CardTitle className="text-lg font-medium text-white">Rules by Category</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0 h-[300px]">
+                  {loading ? (
+                    <div className="h-full flex items-center justify-center">
+                      <RefreshCw className="h-8 w-8 text-[#7a95b8] animate-spin" />
+                    </div>
+                  ) : categoryData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RechartsPieChart>
+                        <Pie
+                          data={categoryData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={100}
+                          paddingAngle={5}
+                          dataKey="value"
+                        >
+                          {categoryData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <RechartsTooltip 
+                          contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff' }}
+                          itemStyle={{ color: '#c8d8ec' }}
+                        />
+                        <Legend wrapperStyle={{ color: '#c8d8ec' }} />
+                      </RechartsPieChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full flex flex-col items-center justify-center text-[#7a95b8]">
+                      <PieChartIcon className="h-12 w-12 mb-2 opacity-20" />
+                      <p>No data available</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Chart 2: BarChart */}
+              <Card className="rc-card">
+                <CardHeader className="p-0 mb-4">
+                  <CardTitle className="text-lg font-medium text-white">Top Triggered Rules</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0 h-[300px]">
+                  {loading ? (
+                    <div className="h-full flex items-center justify-center">
+                      <RefreshCw className="h-8 w-8 text-[#7a95b8] animate-spin" />
+                    </div>
+                  ) : triggerStatsData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={triggerStatsData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#12233e" horizontal={true} vertical={false} />
+                        <XAxis type="number" stroke="#7a95b8" />
+                        <YAxis dataKey="name" type="category" stroke="#7a95b8" width={150} tick={{ fontSize: 12 }} />
+                        <RechartsTooltip 
+                          contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff' }}
+                          cursor={{ fill: '#12233e' }}
+                        />
+                        <Bar dataKey="triggers" fill="#22c55e" radius={[0, 4, 4, 0]} barSize={20} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full flex flex-col items-center justify-center text-[#7a95b8]">
+                      <BarChart3 className="h-12 w-12 mb-2 opacity-20" />
+                      <p>No trigger data available</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Chart 3: AreaChart */}
+              <Card className="rc-card">
+                <CardHeader className="p-0 mb-4">
+                  <CardTitle className="text-lg font-medium text-white">Automation Trends (6 Months)</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0 h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={trendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorTriggers" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="month" stroke="#7a95b8" />
+                      <YAxis stroke="#7a95b8" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#12233e" />
+                      <RechartsTooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff' }} />
+                      <Area type="monotone" dataKey="triggers" stroke="#3b82f6" fillOpacity={1} fill="url(#colorTriggers)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+
+              {/* Chart 4: RadarChart */}
+              <Card className="rc-card">
+                <CardHeader className="p-0 mb-4">
+                  <CardTitle className="text-lg font-medium text-white">Category Performance vs Target</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0 h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                      <PolarGrid stroke="#12233e" />
+                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 12 }} />
+                      <PolarRadiusAxis angle={30} domain={[0, 150]} stroke="#7a95b8" />
+                      <Radar name="Actual" dataKey="A" stroke="#22c55e" fill="#22c55e" fillOpacity={0.6} />
+                      <Radar name="Target" dataKey="B" stroke="#f0c040" fill="#f0c040" fillOpacity={0.3} />
+                      <Legend wrapperStyle={{ color: '#c8d8ec' }} />
+                      <RechartsTooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff' }} />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Chart 5: ComposedChart */}
+            <Card className="rc-card">
+              <CardHeader className="p-0 mb-4">
+                <CardTitle className="text-lg font-medium text-white">ROI vs Execution Volume</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0 h-[400px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={trendData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                    <CartesianGrid stroke="#12233e" strokeDasharray="3 3" />
+                    <XAxis dataKey="month" stroke="#7a95b8" />
+                    <YAxis yAxisId="left" stroke="#3b82f6" />
+                    <YAxis yAxisId="right" orientation="right" stroke="#f0c040" />
+                    <RechartsTooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff' }} />
+                    <Legend wrapperStyle={{ color: '#c8d8ec' }} />
+                    <Bar yAxisId="left" dataKey="triggers" barSize={20} fill="#3b82f6" />
+                    <Line yAxisId="right" type="monotone" dataKey="conversions" stroke="#f0c040" strokeWidth={3} />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+            
+            {/* Data Table 1: Performance Table */}
+            <Card className="rc-card">
+              <CardHeader className="p-0 mb-4">
+                <CardTitle className="text-lg font-medium text-white">Rule Performance Breakdown</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0 overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="text-xs text-[#7a95b8] uppercase bg-[#12233e]/50 border-b border-[#12233e]">
+                    <tr>
+                      <th className="px-4 py-3 font-medium">Rule Name</th>
+                      <th className="px-4 py-3 font-medium">Category</th>
+                      <th className="px-4 py-3 font-medium">Triggers</th>
+                      <th className="px-4 py-3 font-medium">Est. ROI</th>
+                      <th className="px-4 py-3 font-medium">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rules.slice(0, 5).map((r) => (
+                      <tr key={r.id} className="border-b border-[#12233e] hover:bg-[#12233e]/30">
+                        <td className="px-4 py-3 font-medium text-white">{r.name}</td>
+                        <td className="px-4 py-3"><span className={catBadgeColor(r.category)}>{r.category}</span></td>
+                        <td className="px-4 py-3 text-[#c8d8ec]">{r.triggerCount}</td>
+                        <td className="px-4 py-3 text-[#22c55e]">${(r.roiEstimate || 0).toLocaleString()}</td>
+                        <td className="px-4 py-3">
+                          <Badge variant="outline" className={r.enabled ? "text-[#22c55e] border-[#22c55e]" : "text-[#7a95b8] border-[#7a95b8]"}>
+                            {r.enabled ? "Active" : "Paused"}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeTab === "history" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-white">Recent Executions</h2>
+              <Button variant="outline" className="rc-btn rc-btn-ghost">
+                <Filter className="h-4 w-4 mr-2" /> Filter Logs
+              </Button>
+            </div>
+            
+            {/* Data Table 2: Execution History */}
+            <Card className="rc-card">
+              <CardContent className="p-0 overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="text-xs text-[#7a95b8] uppercase bg-[#12233e]/50 border-b border-[#12233e]">
+                    <tr>
+                      <th className="px-4 py-3 font-medium">Date & Time</th>
+                      <th className="px-4 py-3 font-medium">Rule Executed</th>
+                      <th className="px-4 py-3 font-medium">Target Entity</th>
+                      <th className="px-4 py-3 font-medium">Action Taken</th>
+                      <th className="px-4 py-3 font-medium">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                      <tr key={i} className="border-b border-[#12233e] hover:bg-[#12233e]/30">
+                        <td className="px-4 py-3 text-[#c8d8ec]">2026-04-12 14:3{i}:00</td>
+                        <td className="px-4 py-3 font-medium text-white">Penalty-Free Withdrawal Alert</td>
+                        <td className="px-4 py-3 text-[#7a95b8]">Client ID: 884{i}2</td>
+                        <td className="px-4 py-3 text-[#c8d8ec]">Sent Email Notification</td>
+                        <td className="px-4 py-3">
+                          <span className="flex items-center text-[#22c55e] text-xs font-medium">
+                            <CheckCircle2 className="h-3 w-3 mr-1" /> Success
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </CardContent>
+            </Card>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Data Table 3: Error Logs */}
+              <Card className="rc-card border-red-900/30">
+                <CardHeader className="p-4 border-b border-[#12233e]">
+                  <CardTitle className="text-md font-medium text-red-400 flex items-center">
+                    <AlertTriangle className="h-4 w-4 mr-2" /> Recent Errors
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <table className="w-full text-sm text-left">
+                    <tbody>
+                      <tr className="border-b border-[#12233e]">
+                        <td className="px-4 py-3 text-[#c8d8ec]">2026-04-11</td>
+                        <td className="px-4 py-3 text-white">Webhook Timeout</td>
+                        <td className="px-4 py-3 text-red-400 text-xs">Rule: Sync CRM</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-[#c8d8ec]">2026-04-10</td>
+                        <td className="px-4 py-3 text-white">Invalid Email Address</td>
+                        <td className="px-4 py-3 text-red-400 text-xs">Rule: Birthday</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </CardContent>
+              </Card>
+              
+              {/* Data Table 4: User Activity */}
+              <Card className="rc-card">
+                <CardHeader className="p-4 border-b border-[#12233e]">
+                  <CardTitle className="text-md font-medium text-white flex items-center">
+                    <Users className="h-4 w-4 mr-2 text-[#3b82f6]" /> Rule Editors
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <table className="w-full text-sm text-left">
+                    <tbody>
+                      <tr className="border-b border-[#12233e]">
+                        <td className="px-4 py-3 text-white">Sarah Jenkins</td>
+                        <td className="px-4 py-3 text-[#7a95b8]">Created 3 rules</td>
+                        <td className="px-4 py-3 text-[#c8d8ec] text-right">2 hrs ago</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-white">Mike Ross</td>
+                        <td className="px-4 py-3 text-[#7a95b8]">Disabled 1 rule</td>
+                        <td className="px-4 py-3 text-[#c8d8ec] text-right">1 day ago</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "rules" && (
+          <>
+            {/* Filter & Search */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+              <div className="flex items-center gap-2 flex-wrap w-full lg:w-auto">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setFilterCategory("all")} 
+                  className={filterCategory === "all" ? "bg-[#22c55e] text-white hover:bg-[#16a34a] border-transparent" : "rc-btn-ghost"}
+                >
+                  All
+                </Button>
+                {categories.map((c) => (
+                  <Button 
+                    key={c} 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setFilterCategory(c)} 
+                    className={filterCategory === c ? "bg-[#22c55e] text-white hover:bg-[#16a34a] border-transparent" : "rc-btn-ghost"}
+                  >
+                    {c}
+                  </Button>
+                ))}
+              </div>
+              <div className="flex items-center gap-3 w-full lg:w-auto">
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7a95b8]" />
+                  <Input
+                    placeholder="Search rules..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="rc-input pl-9 w-full"
+                  />
+                </div>
+                <Select value={sortField as string} onValueChange={(v) => handleSort(v as keyof AutomationRule)}>
+                  <SelectTrigger className="rc-input w-[140px]">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#0d1a2e] border-[#12233e] text-white">
+                    <SelectItem value="name">Name</SelectItem>
+                    <SelectItem value="category">Category</SelectItem>
+                    <SelectItem value="triggerCount">Triggers</SelectItem>
+                    <SelectItem value="enabled">Status</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button 
+                  variant="outline" 
+                  className="rc-btn rc-btn-ghost px-2"
+                  onClick={() => setSortDirection(prev => prev === "asc" ? "desc" : "asc")}
+                >
+                  {sortDirection === "asc" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </Button>
+              </div>
+            </div>
+
+            {/* Bulk Actions */}
+            {selectedRules.length > 0 && (
+              <div className="bg-[#3b82f6]/10 border border-[#3b82f6]/30 rounded-xl p-3 flex items-center justify-between animate-in fade-in slide-in-from-top-4">
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-[#3b82f6] text-white hover:bg-[#2563eb]">{selectedRules.length} Selected</Badge>
+                  <span className="text-sm text-[#c8d8ec]">rules ready for bulk action</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Select value={bulkAction} onValueChange={setBulkAction}>
+                    <SelectTrigger className="rc-input h-8 text-xs w-[130px]">
+                      <SelectValue placeholder="Select Action" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#0d1a2e] border-[#12233e] text-white">
+                      <SelectItem value="enable">Enable All</SelectItem>
+                      <SelectItem value="disable">Disable All</SelectItem>
+                      <SelectItem value="delete" className="text-red-400">Delete All</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button size="sm" className="rc-btn rc-btn-primary h-8 text-xs" onClick={handleBulkAction} disabled={!bulkAction}>
+                    Apply
+                  </Button>
+                  <Button size="sm" variant="ghost" className="text-[#7a95b8] hover:text-white h-8 w-8 p-0" onClick={() => setSelectedRules([])}>
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Rules List / Data Table 5 */}
+            <div className="space-y-4">
+              {/* Header row for list */}
+              <div className="hidden md:flex items-center px-5 py-2 text-xs font-medium text-[#7a95b8] uppercase tracking-wider">
+                <div className="w-8">
+                  <input 
+                    type="checkbox" 
+                    className="rounded border-[#12233e] bg-[#0d1a2e] text-[#22c55e] focus:ring-[#22c55e]"
+                    checked={selectedRules.length === filteredAndSorted.length && filteredAndSorted.length > 0}
+                    onChange={toggleSelectAll}
+                  />
+                </div>
+                <div className="flex-1">Rule Details</div>
+                <div className="w-32 text-center">Status</div>
+                <div className="w-32 text-right">Performance</div>
+                <div className="w-16"></div>
+              </div>
+
+              {loading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <Card key={i} className="rc-card animate-pulse">
+                    <CardContent className="p-4 flex items-center justify-between">
+                      <div className="flex items-center gap-4 flex-1">
+                        <div className="w-10 h-6 bg-[#12233e] rounded-full"></div>
+                        <div className="space-y-2 flex-1">
+                          <div className="h-5 bg-[#12233e] rounded w-1/3"></div>
+                          <div className="h-4 bg-[#12233e] rounded w-2/3"></div>
+                        </div>
+                      </div>
+                      <div className="w-20 h-8 bg-[#12233e] rounded"></div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : filteredAndSorted.length === 0 ? (
+                <div className="text-center py-16 border border-dashed border-[#12233e] rounded-2xl bg-[#0d1a2e]/50">
+                  <Filter className="h-12 w-12 text-[#7a95b8] mx-auto mb-4 opacity-50" />
+                  <h3 className="text-lg font-medium text-white mb-1">No rules found</h3>
+                  <p className="text-[#7a95b8]">Try adjusting your search or filters.</p>
+                  <Button 
+                    variant="link" 
+                    onClick={() => { setSearchQuery(""); setFilterCategory("all"); }}
+                    className="text-[#22c55e] hover:text-[#16a34a] mt-2"
+                  >
+                    Clear all filters
+                  </Button>
+                </div>
+              ) : (
+                filteredAndSorted.map((rule) => (
+                  <Card 
+                    key={rule.id} 
+                    className={`rc-card transition-all duration-200 hover:border-[#22c55e]/50 ${
+                      rule.enabled ? "" : "opacity-70 grayscale-[0.2]"
+                    } ${selectedRules.includes(rule.id) ? "border-[#3b82f6] bg-[#3b82f6]/5" : ""}`}
+                  >
+                    <CardContent className="p-0">
+                      <div className="flex flex-col md:flex-row md:items-center p-5 gap-4">
+                        <div className="hidden md:block w-8 pt-1">
+                          <input 
+                            type="checkbox" 
+                            className="rounded border-[#12233e] bg-[#0d1a2e] text-[#22c55e] focus:ring-[#22c55e]"
+                            checked={selectedRules.includes(rule.id)}
+                            onChange={() => toggleSelectRule(rule.id)}
+                          />
+                        </div>
+                        
+                        <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setExpandedRule(expandedRule === rule.id ? null : rule.id)}>
+                          <div className="flex items-center gap-3 mb-2">
+                            <h4 className="text-base font-semibold text-white truncate hover:text-[#22c55e] transition-colors">{rule.name}</h4>
+                            <span className={catBadgeColor(rule.category)}>{rule.category}</span>
+                            {rule.roiEstimate > 1000 && <Badge className="bg-[#f0c040]/20 text-[#f0c040] border-[#f0c040]/30 text-[10px] px-1.5 py-0 h-5">High Value</Badge>}
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2 text-sm text-[#c8d8ec]">
+                            <span className="font-medium text-[#f0c040] flex items-center gap-1">
+                              <Zap className="h-3 w-3" /> WHEN
+                            </span> 
+                            <span className="text-white">{triggerLabel(rule.trigger)}:</span> 
+                            <span className="text-[#7a95b8]">{rule.triggerDetail}</span>
+                            <ArrowRight className="h-4 w-4 mx-1 text-[#7a95b8]" />
+                            <span className="font-medium text-[#22c55e]">THEN</span> 
+                            <span className="text-white">{actionLabel(rule.action)}</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-6 md:ml-4 border-t md:border-t-0 border-[#12233e] pt-4 md:pt-0 w-full md:w-auto justify-between md:justify-end">
+                          <div className="w-32 flex justify-center">
+                            <div className="flex items-center gap-2">
+                              <Switch 
+                                checked={rule.enabled} 
+                                onCheckedChange={() => toggleRule(rule.id)}
+                              />
+                              <span className="text-xs text-[#7a95b8] w-10">{rule.enabled ? "Active" : "Paused"}</span>
+                            </div>
+                          </div>
+                          
+                          <div className="w-32 text-right">
+                            <p className="text-sm font-medium text-white">{rule.triggerCount} <span className="text-[#7a95b8] font-normal text-xs">triggers</span></p>
+                            {rule.lastTriggered ? (
+                              <p className="text-xs text-[#7a95b8]">Last: {rule.lastTriggered}</p>
+                            ) : (
+                              <p className="text-xs text-[#7a95b8]">Never run</p>
+                            )}
+                          </div>
+                          
+                          <div className="flex items-center">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={(e) => { e.stopPropagation(); duplicateRule(rule.id); }} 
+                              className="text-[#7a95b8] hover:text-white hover:bg-[#12233e] h-8 w-8 rounded-lg"
+                              title="Duplicate"
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={(e) => { e.stopPropagation(); deleteRule(rule.id); }} 
+                              className="text-[#7a95b8] hover:text-red-400 hover:bg-red-400/10 h-8 w-8 rounded-lg"
+                              title="Delete"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Expanded View */}
+                      {expandedRule === rule.id && (
+                        <div className="border-t border-[#12233e] p-5 bg-[#0d1a2e]/30 animate-in slide-in-from-top-2">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                              <h5 className="text-xs font-medium text-[#7a95b8] uppercase mb-3">Rule Configuration</h5>
+                              <div className="space-y-3 text-sm">
+                                <div className="flex justify-between">
+                                  <span className="text-[#c8d8ec]">Created</span>
+                                  <span className="text-white">{rule.createdAt}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-[#c8d8ec]">Author</span>
+                                  <span className="text-white">{rule.author}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-[#c8d8ec]">Complexity</span>
+                                  <span className="text-white">{rule.complexity}</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <h5 className="text-xs font-medium text-[#7a95b8] uppercase mb-3">Action Payload</h5>
+                              <pre className="bg-[#0d1a2e] p-3 rounded-lg border border-[#12233e] text-xs font-mono text-[#22c55e] overflow-x-auto whitespace-pre-wrap">
+{JSON.stringify({ action: rule.action, payload: { message: rule.actionDetail, priority: "high", requireAck: true } }, null, 2)}
+                              </pre>
+                            </div>
+                            
+                            <div>
+                              <h5 className="text-xs font-medium text-[#7a95b8] uppercase mb-3">Performance metrics</h5>
+                              <div className="space-y-3 text-sm">
+                                <div className="flex justify-between items-center">
+                                  <span className="text-[#c8d8ec]">Success Rate</span>
+                                  <div className="flex items-center gap-2">
+                                    <div className="w-16 h-1.5 bg-[#12233e] rounded-full overflow-hidden">
+                                      <div className="h-full bg-[#22c55e] w-[98%]"></div>
+                                    </div>
+                                    <span className="text-white">98%</span>
+                                  </div>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-[#c8d8ec]">Est. Value Generated</span>
+                                  <span className="text-[#f0c040] font-medium">${(rule.roiEstimate).toLocaleString()}</span>
+                                </div>
+                                <div className="pt-2">
+                                  <Button size="sm" variant="outline" className="w-full rc-btn-ghost text-xs">
+                                    <Edit className="h-3 w-3 mr-2" /> Edit Configuration
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+            
+            {/* Data Table 6: System integrations */}
+            <div className="mt-12">
+              <h3 className="text-lg font-medium text-white mb-4">Active Integrations</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="rc-card bg-[#0d1a2e]/50">
+                  <CardContent className="p-4 flex items-center gap-4">
+                    <div className="p-3 rounded-xl bg-[#12233e]">
+                      <Mail className="h-5 w-5 text-[#c8d8ec]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">Email Provider</p>
+                      <p className="text-xs text-[#22c55e] flex items-center mt-1"><CheckCircle2 className="h-3 w-3 mr-1" /> Connected</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="rc-card bg-[#0d1a2e]/50">
+                  <CardContent className="p-4 flex items-center gap-4">
+                    <div className="p-3 rounded-xl bg-[#12233e]">
+                      <Briefcase className="h-5 w-5 text-[#c8d8ec]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">CRM System</p>
+                      <p className="text-xs text-[#22c55e] flex items-center mt-1"><CheckCircle2 className="h-3 w-3 mr-1" /> Connected</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="rc-card bg-[#0d1a2e]/50">
+                  <CardContent className="p-4 flex items-center gap-4">
+                    <div className="p-3 rounded-xl bg-[#12233e]">
+                      <Smartphone className="h-5 w-5 text-[#c8d8ec]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">SMS Gateway</p>
+                      <p className="text-xs text-[#7a95b8] flex items-center mt-1">Not configured</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+      <PageInsights pageId="workflow-automations" />
+    </AppShell>
+  );
+}
+```
 
 ## `client/src/pages/portal/WorkspaceBranding.tsx`
 
@@ -7451,7 +8594,7 @@ nav.rc-sidebar-nav::-webkit-scrollbar-thumb:hover {
 ```sql
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 122
+-- Tables: 123
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -8489,6 +9632,29 @@ CREATE TABLE `payment_disclosures` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `payment_disclosures_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `plan_events` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`subject` varchar(40) NOT NULL,
+	`seq` int NOT NULL,
+	`userId` int,
+	`clientId` int,
+	`leadId` int,
+	`workspaceId` int,
+	`kind` enum('fact','assumption','decision','message','document','outcome','scenario','journey','status','note') NOT NULL,
+	`source` varchar(20) NOT NULL,
+	`key` varchar(120),
+	`label` varchar(200),
+	`value` json,
+	`prevValue` json,
+	`summary` text NOT NULL,
+	`actorName` varchar(200),
+	`occurredAt` timestamp NOT NULL,
+	`prevHash` varchar(64) NOT NULL,
+	`hash` varchar(64) NOT NULL,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `plan_events_id` PRIMARY KEY(`id`),
+	CONSTRAINT `plan_events_subject_seq` UNIQUE(`subject`,`seq`)
+);
 CREATE TABLE `planning_case_notes` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`planningCaseId` int NOT NULL,
@@ -9270,6 +10436,7 @@ CREATE TABLE `xp_transactions` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `xp_transactions_id` PRIMARY KEY(`id`)
 );
+CREATE INDEX `plan_events_lead` ON `plan_events` (`leadId`);
 
 SET FOREIGN_KEY_CHECKS = 1;
 ```
@@ -9856,6 +11023,13 @@ human contact), messaging from the client page and lead inbox with a delivery
 log, one-click unsubscribe + STOP handling, `pnpm mail:check` for real DNS
 deliverability, and FRED benchmark rates cached in the database.
 
+## Added since: the Plan Ledger (see `08_PLAN_LEDGER.md`)
+
+Append-only, hash-chained record per client/user/lead: every assessment
+field change, journey, message, lead status and advisor decision, with a
+client page that replays the assessment at any moment and an advisor panel
+on the client record. Idea 1 of doc 06 is live; ideas 2–5 build on it.
+
 ## Next steps, in order
 
 0. **Financial gathering from live sources** — aggregator import (Era Context /
@@ -10048,6 +11222,445 @@ The assessment (`shared/clientFactFinder.ts`) is typed by hand. To make it
 - Set `PUBLIC_BASE_URL`, `MAIL_FROM`, `MAIL_REPLY_TO`, `LEAD_NOTIFY_PHONE`.
 - Rotate the previously published credentials (still burned).
 ````
+
+## `docs/grok-handoff/05_TOP_100_CRITICAL_IMPROVEMENTS.md`
+
+```md
+# The 100 most important things to correct, ranked (handoff for Grok)
+
+Grounded in a full survey of the code on 2026-09-06: 241 routes, 216 portal
+pages (199 with `@ts-nocheck`), `server/routers.ts` 9,513 lines with ~120
+sub-routers and 436 procedures, `server/db.ts` 4,873 lines and 309 functions,
+122 tables with zero secondary indexes, 55 pages using `Math.random`, 85 pages
+reachable only by URL, 127 test files of which roughly half assert on source
+text rather than math. Each item carries an importance score (100 = do first)
+and three sentences on how it makes the site more fluid, more accurate, and
+more useful to the client or advisor. Items are grouped by the single idea that
+runs through all of them: **one truth, one kernel, one spine** — one client
+record, one calculation engine per concept, one event log everything else is
+derived from.
+
+## Tier 1 — foundations (do these before anything else)
+
+1. **(100) One client record.** The Financial Assessment (`client_fact_finders`, keyed by user) and the advisor's household fact finder (`household_fact_finders`, keyed by client) are two disconnected truths. Merge them into one assessment keyed by client with an optional owning user, and have `assessmentBridge` write through to `clients`. Every calculator, report, journey and score then reads the same numbers, and a client who fills in the assessment sees their advisor's tools already populated.
+
+2. **(99) No invented numbers on compliance and audit surfaces.** `AuditTimeline`, `ComplianceAuditTrail`, `ComplianceMonitoringDashboard`, `WebsiteUsage` and `ClientHealthDashboard` render `Math.random` events, scores and visitor counts as if real. Wire them to `client_activity_log`, `website_usage` and the score tables, and show honest empty states when there is nothing. A compliance page that fabricates history is the single largest liability in the codebase.
+
+3. **(98) Turn TypeScript back on.** 199 of 215 portal pages start with `@ts-nocheck`, so the compiler cannot see a single money calculation on the client. Remove it in waves, starting with the ten pages that compute dollars, and fix what surfaces. This is the cheapest way to find silent unit and null errors before a client does.
+
+4. **(97) One tax-bracket engine.** `shared/taxBracketEngine.ts` is the intended source, yet hardcoded 2024/2025 bracket edges appear in three other shared engines and about ten pages. Make brackets data with a year and a source, and delete every copy. A bracket change becomes one edit instead of fifteen, and every page agrees on the marginal rate.
+
+5. **(96) One calculation kernel per concept.** Mortgage payoff exists three times, Roth conversion is 906 inline lines in a router plus seven page-side variants, retirement income and IUL/annuity projections each have five or more overlapping implementations. Move each to one tested module in `shared/` and make pages pure views over it. Clients get the same answer on every page, and a fix propagates everywhere at once.
+
+6. **(95) Indexes on every foreign key.** The schema declares zero secondary indexes across 122 tables, and almost every query filters by `workspaceId`, `clientId` or `userId`. Add them in one migration. Page loads that scan whole tables become instant, and the follow-up scheduler and dashboards stop degrading as data grows.
+
+7. **(94) The advisor sees the client's assessment and journey.** The client page shows nothing of the Financial Assessment, its completeness, the Financial Analysis Document or the secret journey. Add that panel (the endpoints exist) and let the advisor ask the librarian *about* a client. The advisor walks into a meeting knowing exactly what the client has already seen and asked.
+
+8. **(93) Switch on GitHub Pages and the custom domain.** DNS at GoDaddy already points at GitHub Pages and the `CNAME` file is committed, but the publish run fails because Pages is not enabled. One settings click (Source: GitHub Actions, custom domain, HTTPS) publishes the homepage on every push. Nothing else in the launch sequence matters until the site is reachable at its own name.
+
+9. **(92) Publish DKIM and verify the sending domain.** The domain has SPF and DMARC at quarantine but no DKIM key, which is why mail is filtered, and Resend has no verified domain. Publish the key, verify the domain, and re-run `pnpm mail:check`. Every automated message, report and follow-up depends on this one DNS record.
+
+10. **(91) Surface or retire the 85 hidden pages.** Thirty-nine percent of portal routes appear in no navigation and can only be typed. Either add them to a searchable Library index or delete them. A page nobody can reach is maintenance cost with no client value, and a client who lands on one by link has no way back.
+
+11. **(90) Collapse the eleven duplicate-page clusters.** Referral ×2, Team ×2, Onboarding ×5, Compare ×4, Policy Review ×2, Compliance ×4, Mortgage Killer ×2, Intake ×2, Client Portal ×2, Client Score ×3. Keep one page per purpose with tabs for the variants. Advisors stop wondering which of four comparison tools is the real one, and every fix lands once.
+
+12. **(89) Extract the Roth conversion engine.** The projection model (IUL loads, cost of insurance, loan rates, HELOC, rental yield) lives inside a Zod handler in `routers.ts` with no module and no unit tests. Lift it into `shared/rothEngine.ts` with golden-file tests, as `mortgageKiller` already does. The flagship strategy becomes reviewable, testable and reusable by the librarian.
+
+13. **(88) Test the math, not the text.** Roughly half of the 127 test files check that strings exist in source files; only a dozen exercise real engines. Replace them with golden-file tests: fixed inputs, expected outputs, per engine. A wrong number fails the build instead of reaching a client.
+
+14. **(87) Fix the eighteen N+1 loops.** `db.ts` issues per-row queries inside loops in eighteen places and uses `Promise.all` once. Batch them with `inArray` joins. Client lists, dashboards and bulk exports go from seconds to milliseconds.
+
+15. **(86) Gate and rate-limit the public calculators.** About 35 `publicProcedure` calculators accept arbitrary input with no auth or rate limit, and `carrierRatings` and `modelPortfolios` expose proprietary data to anyone. Require sign-in for proprietary data and add a per-IP limiter to the rest. The compute surface stops being a free denial-of-service target.
+
+16. **(85) Remove the fabricated public business metrics.** `demo.data` is an unauthenticated endpoint returning invented advisors, named clients with balances and a total AUM of $47.8M. Delete it or gate it behind the owner and label it demo. A public endpoint that publishes fake assets under management is a regulatory problem waiting to be screenshotted.
+
+17. **(84) One assumption registry.** Inflation, returns, rates, life expectancy and fees are hardcoded per page. Put every named assumption in one table with a value, a source and an as-of date, fed by the FRED benchmarks where possible, and make every engine read it. Every projection on the site shares the same assumptions and can show where each one came from.
+
+18. **(83) Assumption provenance on every input.** Extend the "Pre-filled from your Financial Assessment" badge so every number on a calculator says whether it came from the assessment, a live benchmark, an advisor override or a default. Store that provenance with the scenario. The client trusts the output because they can see the lineage of every input.
+
+19. **(82) One scenario object.** Every calculator should emit the same shape: inputs, assumptions, outputs, provenance, client, timestamp. Store it once in `saved_scenarios` and let comparison, PDF, slides, video and the journey all consume it. Four comparison tools collapse into one, and any result anywhere can be compared with any other.
+
+20. **(81) The activity log as the spine.** Every mutation (note, message, scenario, document, status change) writes one event to `client_activity_log`. Dashboards, audit trails, health scores, stale-client digests and notifications derive from events instead of their own tables and random data. One append-only stream makes every "what happened" view consistent and cheap.
+
+## Tier 2 — accuracy and data flow
+
+21. **(80) Persist the thirty local-state calculators.** About thirty pages hold financial inputs in `useState` only and lose everything on reload. Save inputs to the scenario table keyed to the selected client. A client's work survives, and the advisor can open exactly what the client last saw.
+
+22. **(79) Cross-field validation on the assessment.** Add checks that flag but never auto-correct: mortgage balance above home value, take-home above income, emergency months inconsistent with savings and fixed expenses. Show them inline as questions. Accuracy rises before any calculation runs, and the librarian stops reasoning from contradictory facts.
+
+23. **(78) Import from account aggregators.** Era Context and PocketSmith are connected and expose balances, recurring charges and cash flow. Map them into *suggested* assessment values the client confirms field by field. Gathering becomes minutes instead of an evening, with the human still deciding what is true.
+
+24. **(77) Extract tax figures from uploaded returns.** The `taxReturnOcr` router and the Document Vault exist but do not feed the assessment. Extract AGI, tax paid, filing status and W-2 wages with a citation to the page, and propose them for confirmation. The most error-prone fields become the most accurate ones.
+
+25. **(76) Benchmark-fed calculator defaults.** The mortgage rate, inflation and Treasury defaults on every calculator should read `dataFeeds.benchmarks` first and show the as-of date. Fall back to labelled reference values only when the feed is absent. Projections stop drifting from reality between releases.
+
+26. **(75) Unify Monte Carlo.** `shared/monteCarloEngine.ts`, the inline simulation in `MortgageKiller`, and the p10/p50/p90 bands in `RetirementIncomeProjection` are three random engines with three seeds. One engine with a stored seed per scenario makes results reproducible and comparable.
+
+27. **(74) Lead → client in one click.** A qualified lead's fact finder should become a client record and a partially complete assessment. Today the inbox and the client directory do not touch. The advisor's first meeting starts with the numbers the prospect already gave.
+
+28. **(73) Lead scoring from assessment signals.** `factFinderSignals` already weights topics from the facts; run it on lead fact finders and sort the inbox by opportunity and urgency. Follow-up templates can then mention the prospect's strongest signal. The advisor calls the right person first.
+
+29. **(72) Wealth Genome everywhere.** Compute the eight-dimension score from the merged client record and show it on the client list, The Mirror, reports and the advisor dashboard from one function. One score becomes the shared language between client and advisor.
+
+30. **(71) Social Security, Medicare/IRMAA and estate engines into `shared/`.** They live inside pages today with no tests. Move them next to the tax engine and cover them with golden files. The librarian and the reports can then use them, not just the page.
+
+31. **(70) Journey catalog coverage.** Only 45 of 216 pages can be recommended by the librarian. Add every page worth routing to with honest tags and walkthroughs, and retire the rest. The secret journey can reach the whole site instead of a fifth of it.
+
+32. **(69) Journey analytics feed the catalog.** `visitedAt` is stored but unused. Measure which steps get opened and which lead to a saved scenario or a booked meeting, and feed the weights back into `buildJourney`. Journeys get better with every client who walks one.
+
+33. **(68) Shared Zod schemas for every financial input.** Validate once, on both client and server, from the same schema. Out-of-range values are caught at the input, error messages match, and the engines never see garbage.
+
+34. **(67) Deterministic demo data.** Replace every `Math.random` in render with a seeded generator or a fixture, and label demo data as demo. Screenshots become reproducible and nobody mistakes a fixture for a fact.
+
+35. **(66) Carrier and index data with dates.** `iulCarriers`, `carrierRatings`, `annuityData` and `indexCreditingData` carry no as-of date or source. Add both, and show them wherever the data appears. Product comparisons stop presenting stale rates as current.
+
+36. **(65) One money and percent formatter.** Rounding and formatting differ page to page (`formatTaxCurrency` exists but is rarely used). One formatter with one rounding policy. Totals reconcile across pages and PDFs.
+
+37. **(64) Household view unified.** The `household` and `householdView` routers and pages overlap. One household model with members, and the client record as a member. Couples and families are modelled once.
+
+38. **(63) Remove the dead code.** `shared/householdWealth.bak.ts` (667 lines), the `handleAction0..N` noise in `RetirementIncomeProjection`, seven orphan tables, six placeholder pages, thirty empty `onClick` handlers. Less surface means less to misread and faster builds.
+
+39. **(62) Real website analytics.** `websiteUsage.logPageVisit` records visits, but the `WebsiteUsage` page invents its numbers. Read the real table. The owner learns which tools clients actually use.
+
+40. **(61) Real webhook logs.** The `webhooks` router persists endpoints and deliveries while `Webhooks.tsx` shows random ones. Bind the page to the router. Integrations can be debugged.
+
+## Tier 3 — structure and performance
+
+41. **(60) Split `routers.ts` by domain.** 9,513 lines and 120 sub-routers in one file. One file per domain under `server/routers/` with a barrel. Reviews, merges and onboarding a second builder become possible.
+
+42. **(59) Split `db.ts` into repositories.** 309 functions in one file. One repository per table family with the JSON-column normaliser applied uniformly. The N+1 fixes and indexes land where they are readable.
+
+43. **(58) One PDF layout layer.** Eight independent generators and six `exportPdf` procedures. One layout with a report-kind parameter and the scenario object as input. Every PDF shares the brand, the disclaimers and the numbers.
+
+44. **(57) One email composer.** Sixteen `send*` functions each build their own HTML. One composer with a header, body blocks, compliance footer and the deliverability headers from `sendMail`. Every message is consistent and inbox-safe.
+
+45. **(56) One scheduler.** The managed heartbeat, the follow-up interval and the report schedules are three mechanisms. One `jobs` table, one runner, one external-cron endpoint. Anything time-based (reminders, digests, report posting, data refresh) is one line to add.
+
+46. **(55) One communication log.** `outbound_messages`, `communicationLog` and `emailCampaigns` overlap. One log, one inbox view per client. The advisor sees every touch in one place.
+
+47. **(54) One notification centre.** `smartAlerts`, `complianceAlerts`, `rebalance` alerts and `notifications` are four inboxes. One centre with severity, source and a link to the action. Nothing important is missed because it was in the wrong list.
+
+48. **(53) Lazy AppShell navigation.** The shell is eager on every route with a 132-item hardcoded nav and a large icon surface. Generate the nav from a config file, lazy-load icons, and memoise. First paint gets faster on every page.
+
+49. **(52) Chart wrapper and vendor chunk.** `recharts` is imported at the top of 27 lazily loaded pages. One `<Chart>` wrapper and a shared vendor chunk. Pages load once the library is cached instead of re-downloading it.
+
+50. **(51) Client-side tests for the money pages.** There are none. Testing Library tests for the ten pages that compute dollars, driven by the same golden inputs as the engine tests. Rendering bugs stop reaching clients.
+
+51. **(50) Continuous integration.** Only the Pages workflow exists. Run `pnpm check`, the suite and the bundle guard on every pull request. Nothing broken merges.
+
+52. **(49) Environment validation at boot.** Validate `process.env` with Zod and expose `/api/health` listing what is configured (database, mail, SMS, FRED, each AI). A misconfigured host says so at startup instead of failing quietly at the first lead.
+
+53. **(48) Owner "what is switched on" panel.** Show the health endpoint in the owner dashboard with a fix link per item. The owner sees in one glance why texts or emails are not going out.
+
+54. **(47) Error boundaries and client error reporting.** Every lazy route gets a boundary and client errors post to the server. Blank screens turn into a message and a log entry.
+
+55. **(46) Structured logs without PII.** The email PIN was logged in plain text and console output is free-form. Use one logger with redaction. Logs become useful and safe to share.
+
+56. **(45) Cryptographic PIN generation.** The six-digit verification PIN uses `Math.random`. Use `crypto.randomInt`. An authentication factor stops being guessable.
+
+57. **(44) Workspace access helper.** `getWorkspaceForUser` (private to `routers.ts`) and `getWorkspaceByOwnerId` are used inconsistently. One exported helper, used by every procedure that touches client data. Authorization is the same everywhere.
+
+58. **(43) Database backup and restore.** `db:build` creates tables but nothing dumps them. A nightly dump script and a restore rehearsal. The archive of every client conversation cannot be lost.
+
+59. **(42) Bundle budget on the client.** The server bundle has a guard; the client does not. Fail the build when a route chunk exceeds a size. Performance does not regress silently.
+
+60. **(41) Mobile layouts for the top ten pages.** Clients open links from their phones. Responsive passes on the assessment, journey, advisor, mirror, genome and the five most-used calculators. The secret journey works in a waiting room.
+
+## Tier 4 — experience and flow
+
+61. **(40) Command palette as primary navigation.** Ctrl-K already exists; index every page, client, scenario and template. Typing beats three levels of menus. The site feels like one tool instead of 216.
+
+62. **(39) The journey as the client's home.** `/portal/my-journey` should be what a client lands on after sign-in, with the assessment gate first. The client is always on a path, never lost in a directory.
+
+63. **(38) Post reports to the portal.** Save each generated report to `client_documents` and message the client with the "report ready" template in one action. Reporting becomes a button, not a workflow.
+
+64. **(37) Client and advisor copy modes.** Every page shows advisor jargon to clients. A copy layer with two registers, chosen by role. Clients read plain language; advisors keep the detail.
+
+65. **(36) One disclaimer component.** `DisclaimerContext` and `disclaimerManager` exist alongside hand-written footers. One component, sourced from the manager, on every page and PDF. Compliance text is edited once.
+
+66. **(35) One deck model.** Presentation builder, AI slides and the seminar generator each hold their own slide shape. One deck model fed by the scenario object. Any result becomes a presentation in one click.
+
+67. **(34) Booking link in every follow-up.** Calendly is connected. A `BOOKING_URL` in the follow-ups and templates instead of "reply with a time". Leads book themselves.
+
+68. **(33) Meeting notes import.** Otter, Zoom and Wispr Flow are connected. Import transcripts into client notes with a summary. The activity log fills itself after every meeting.
+
+69. **(32) Streaming voice with cached guides.** Journey guides and advisor answers are synthesised on every play. Cache audio per guide and stream long answers. The tape recorder responds instantly.
+
+70. **(31) Print and PDF of the secret journey.** The journey page has no export. One PDF from the scenario and journey objects. The client can carry the plan into a meeting.
+
+71. **(30) Glossary from one definitions file.** Terms are explained ad hoc. One file, tooltips everywhere. Every page teaches the same definition.
+
+72. **(29) Emergent question with citations.** The AI polish rewords the emergent question without saying which facts it drew on. Return the assessment fields used. The client sees why the librarian asked what they did not.
+
+73. **(28) Knowledge base for the librarian.** The repository root holds a semantic index of the NLP and AQAL references. Feed retrieved passages into the advisor's context. Answers gain depth without inventing anything.
+
+74. **(27) Video proposals from scenarios.** HeyGen proposals take hand-typed inputs. Generate them from the scenario object. Every saved plan can become a personalised video.
+
+75. **(26) Lead consent versioning for clients too.** Leads store consent version; clients do not. Record consent for messaging on the client record and honour it in `deliver()`. Texting a client is defensible.
+
+76. **(25) Data export and deletion.** No way to hand a client their data or delete it on request. One export (assessment, scenarios, messages, documents) and one deletion procedure. Privacy requests take minutes.
+
+77. **(24) Feature flags for unfinished pages.** Six placeholder pages ship live. A flags table hides them until they are real. Clients never meet "coming soon".
+
+78. **(23) Notifications to the advisor's phone.** Lead alerts text the owner; nothing else does. Route high-severity notification-centre items through SMS. The advisor learns of a client action while it still matters.
+
+79. **(22) Rebalance and drift from real holdings.** Drift monitors compute against allocation targets with no holdings source. Connect the aggregator import. Alerts reflect the actual portfolio.
+
+80. **(21) Referral attribution from recorded clicks.** `referralLinks.recordClick` stores clicks that the referral pages ignore. Bind them. Referral rewards are computed from evidence.
+
+## Tier 5 — hygiene and polish
+
+81. **(20) Team and roles enforced server-side.** `accessControl.ts` defines roles; procedures rarely check them. Apply the helper per procedure. Permissions on the page match permissions on the data.
+
+82. **(19) Stripe webhook idempotency and tests.** Billing has no idempotency keys or replay tests. Add both. Double charges and missed upgrades become impossible.
+
+83. **(18) HubSpot sync or removal.** `hubspotContactId` exists without a sync. Either two-way sync through the CRM router or remove the field. No half-built integration confuses the next builder.
+
+84. **(17) Email campaigns through the deliverability layer.** The campaigns router sends outside `sendMail`, without unsubscribe or suppression. Route it through. Campaigns cannot damage the domain's reputation.
+
+85. **(16) Crypto cycle engine labelled speculative.** It projects cycles as if predictive. Label, gate behind advisor, and exclude from client journeys. Education stays honest.
+
+86. **(15) Gamification tied to the journey.** Quest tracker and badges track nothing meaningful. Award them for assessment completion and journey steps. Motivation points at the plan.
+
+87. **(14) Sound and entrainment off by default.** Audio engines can autoplay. Opt-in only, never on first load. Clients are not startled in an office.
+
+88. **(13) One theme token set.** Public emerald and portal purple are both fine, but tokens are duplicated. One token file with two themes. Restyling is one edit.
+
+89. **(12) Component catalogue.** 77 components with no gallery. A lightweight catalogue page. Builders reuse instead of recreating.
+
+90. **(11) Strings in one place.** Copy is scattered through JSX. Centralise the client-facing strings. Copy edits and the client/advisor register (item 64) become trivial.
+
+91. **(10) Session hardening.** Add CSRF protection to the owner login form and confirm cookie flags in production. Sign-in stays safe behind a reverse proxy.
+
+92. **(9) Deterministic seed script.** Demo workspaces are seeded with random values. One fixture with named clients and known totals. Every screenshot and test starts from the same world.
+
+93. **(8) Product manual.** `LAUNCH.md` covers hosting; nothing covers using the site. One manual per role. Advisors onboard themselves.
+
+94. **(7) Rename mislabelled pages.** `WebsiteUsage` is titled "System Compliance Portal"; several files and titles disagree. Titles that match purpose. Search and navigation stop lying.
+
+95. **(6) Bump deprecated actions.** The Pages workflow uses actions on the deprecated Node 20 runtime. Update to current majors. The publish pipeline keeps working after the cutoff.
+
+96. **(5) Lint and format enforced.** Prettier exists; nothing runs it. Enforce in CI. Diffs show intent, not whitespace.
+
+97. **(4) Accessibility pass.** Money inputs and the tape recorder lack labels and keyboard paths in places. Label and test with a screen reader. The site is usable by every client.
+
+98. **(3) Uptime monitor.** Nothing watches production. A ping on `/api/health` every minute with an alert to the owner's phone. Downtime is known before a client mentions it.
+
+99. **(2) Retire the sibling prototype leftovers.** `russell-capital/` keeps `.BACKUP` and `.orig` variants of `App.tsx`. Delete them. One working file per project.
+
+100. **(1) Internationalisation readiness.** Not needed now, but once strings live in one place (item 90) a locale file is trivial. Prepare the hook, ship English. A Spanish-speaking household is one file away.
+
+## How to read this as a plan
+
+Items 1–20 are the foundation and are mostly server and data work; they make
+every later item smaller. Items 21–40 make the numbers trustworthy. Items 41–60
+make the codebase maintainable and fast. Items 61–80 make the client's path
+fluid. Items 81–100 are hygiene. The single most valuable sequence is
+1 → 5 → 17 → 19 → 20: one client record, one engine per concept, one assumption
+registry, one scenario object, one event spine. Once those exist, almost every
+page becomes a view over the same three things, and the site stops being 216
+tools and becomes one instrument.
+```
+
+## `docs/grok-handoff/06_TWENTY_ULTIMATE_IDEAS.md`
+
+```md
+# Twenty ideas that make the hundred unnecessary (handoff for Grok)
+
+The hundred corrections in doc 05 fix the site as it is. These twenty change
+what the site *is*. Each one removes a whole class of the hundred. In order of
+importance.
+
+1. **The Plan is a ledger, not a set of pages.** One append-only record per household: every fact, assumption, decision, message, document and outcome, with time and source. Every page, PDF, journey, video and message becomes a projection of that ledger, so nothing is ever out of sync and any moment can be replayed, diffed or undone. This single change retires items 1, 17, 19, 20, 21, 33, 36, 43, 44, 46 and 63 of the hundred.
+
+2. **Instruments generated from a schema, not 216 hand-built pages.** Describe each tool as data: inputs, engine, charts, narrative, walkthrough, tags. A renderer turns the description into the page, the PDF, the slide and the librarian's guide. New tools become configuration, duplicates cannot exist, and the whole site can be re-themed, re-worded or re-ordered in one file.
+
+3. **A solver instead of calculators.** The client states the objective (retire at 58 on $25,000 a month, divorce-proof, no market dependence) and the variables they control; the solver searches conversion pace, payoff speed, coverage, structures and timing and returns the frontier of plans that reach it. Calculators become explanations of a chosen point on that frontier. This turns "controlling the variables" from a slogan into a computed answer.
+
+4. **One dependency graph across every engine.** Mortgage payoff changes Roth capacity, which changes IUL funding, which changes the estate, which changes protection. Wire the engines as nodes so changing one input ripples through all strategies live, and the client watches the cascade. Isolated calculators lie by omission; the graph tells the truth.
+
+5. **One conversation on every surface.** The librarian is the interface: voice on the deck, text in the portal, SMS, email and a phone agent, all sharing one memory and one gate. Every page is something the librarian can open, pre-fill and narrate, so the client never navigates; they ask, and the site moves. Navigation problems (items 10, 11, 61, 62) disappear because navigation disappears.
+
+6. **A survival number per uncontrolled variable.** Run the plan against real historical sequences and named shocks: 2008, 2022, a rate spike, a malpractice suit, a divorce, a disability, a tax-law change. Report the probability the plan survives each one and which controllable variable most improves it. "Controls volatility" becomes a measured, comparable figure.
+
+7. **The assessment fills itself.** Aggregators, uploaded returns and statements, specialty priors and inference with confidence fill every field; the client confirms deltas rather than typing. Twenty minutes becomes three, and accuracy rises because the numbers come from sources, not memory. Items 22–25 collapse into one pipeline.
+
+8. **Every plan re-runs when the world changes.** New CPI, new rates, new brackets, a new carrier rate: every saved plan is re-evaluated overnight and the advisor wakes to "34 clients now benefit from a conversion; 6 plans lost their survival margin". The practice becomes proactive without a single manual review.
+
+9. **Compliance as code.** A rules engine every output passes through: no guarantees, suitability per product and state, required disclosures, figure-free public surfaces. It stamps a compliance record on every artefact and message, so the audit trail writes itself and is real by construction. Item 2 becomes impossible to regress.
+
+10. **Click any number to see why.** Every figure on the site opens its formula, inputs, assumptions and source dates, all the way back to the ledger. Trust stops depending on the advisor's word and becomes a property of the interface. Explainability is also the fastest debugging tool the builders will ever have.
+
+11. **The advisor copilot pre-meets and post-meets.** Before a meeting it assembles what changed, the three best moves, the likely objections and a draft follow-up; after it, the transcript is ingested, the ledger updated and the next steps scheduled. The advisor spends the meeting on the client, not the preparation.
+
+12. **A decision-and-outcome loop.** Record every recommendation, whether it was taken, and what happened a year later. With consent and anonymisation, the platform learns which strategies worked for which genome and starts predicting rather than projecting. This is the only path to real foresight.
+
+13. **The household as a graph.** People, entities (trusts, practices, LLCs), accounts, policies, properties and debts as nodes; income, premiums, distributions and gifts as flows. Estate flow, asset protection, tax and succession become views of one graph rather than four unrelated pages.
+
+14. **The fact finder gathers itself by phone.** A voice agent calls the lead at the time they chose, runs the assessment conversationally, confirms consent, and writes to the ledger. The follow-up sequence hands off to a conversation instead of a link. Leads are qualified while the advisor sleeps.
+
+15. **Physician-specialty priors.** Specialty-specific distributions for income trajectory, malpractice exposure, practice ownership, loan profiles and retirement age as Bayesian priors. Fewer questions, better defaults, and predictions calibrated to the people this practice actually serves.
+
+16. **A council that shows disagreement.** The multi-model fan-out should surface where the models disagree and which assessment facts drive the disagreement, not just a synthesised consensus. Disagreement is the signal that a human decision is needed; consensus is the default that needs no meeting.
+
+17. **Playbooks.** The best journeys become versioned, shareable playbooks; agencies inherit them; the librarian composes new journeys from playbook fragments. Expertise compounds across advisors instead of living in one head.
+
+18. **A value-created ledger for the owner.** Tax saved, interest recovered, protection added, income guaranteed, per client and in total, derived from the plan ledger. The business is measured by what it did for clients, not by assets under management; that number is also the marketing.
+
+19. **The client owns the vault.** Client data lives in a scoped, revocable, exportable vault; advisor access is granted, logged and can be withdrawn. Privacy becomes a feature clients can see, and portability makes the platform the one they keep.
+
+20. **Understanding on a schedule.** Each journey page emits a micro-lesson; the platform schedules recall messages tied to the client's own plan, spaced to how memory works. Clients who understand act, and clients who act stay.
+
+**Sequence:** 1 → 2 → 4 → 3 → 5. Once the ledger, the schema-generated instruments, the dependency graph and the solver exist, the conversation layer can drive all of it, and the remaining fifteen are additions rather than rewrites.
+```
+
+## `docs/grok-handoff/07_TOP_50_CONNECTORS_TO_ADD.md`
+
+```md
+# The fifty connectors to add next, ranked (owner checklist)
+
+Verified on 2026-09-06 against the Claude connector directory and each
+vendor's own documentation. Score is value to Russell Capital Systems on a
+1–10 scale. Two ways to add:
+
+- **Directory:** open the link (claude.ai → Settings → Connectors → search
+  the name works the same), click Connect, authorise. No URL needed.
+- **Custom URL:** claude.ai → Settings → Connectors → Add → Custom → Web →
+  paste the URL. Only listed where the vendor publishes one.
+
+Where a vendor publishes no remote URL the directory is the only route.
+Nothing below is guessed; "directory only" means exactly that.
+
+| # | Score | Connector | Why it matters here | Add via |
+|---|---|---|---|---|
+| 1 | 10 | **Zapier** | Bridges the site to every app below without code: lead → CRM, meeting → notes, report → drive | Directory: https://claude.ai/directory/connectors/1f6f271e-3d29-4241-b35e-8abe6def4891 · URL `https://mcp.zapier.com/api/v1/connect` |
+| 2 | 10 | **Plaid** | Account aggregation: the self-filling Financial Assessment (balances, mortgages, recurring premiums) | Directory: https://claude.ai/directory/connectors/bacac1ad-ccb1-401e-a5d7-915da9742dce · URL `https://api.dashboard.plaid.com/mcp/` (developer dashboard; runtime aggregation uses the Plaid API with your own keys) |
+| 3 | 10 | **Stripe** | Client billing, subscriptions, invoices; the platform already has Stripe env vars | Directory: https://claude.ai/directory/connectors/de127013-63f1-43d0-8dd2-b6cb5b4e5d1b · URL `https://mcp.stripe.com` |
+| 4 | 9 | **HubSpot** | The clients table already carries a HubSpot contact id; two-way CRM sync | Directory: https://claude.ai/directory/connectors/875dee50-9b3f-452b-af8c-fbc839966273 · URL `https://mcp.hubspot.com` |
+| 5 | 9 | **Docusign** | Engagement letters, advisory agreements, consent forms signed from the portal | Directory: https://claude.ai/directory/connectors/a876b642-2b05-4808-a565-deeb271802fd · URL `https://mcp-d.docusign.com/mcp` (beta; needs an integration key) |
+| 6 | 9 | **Aiwyn Tax (Column Tax)** | A real federal + state tax engine: replaces hand-typed brackets in 15 files | Directory: https://claude.ai/directory/connectors/550d0dd8-46bf-4d76-a938-866afa15841d |
+| 7 | 9 | **Morningstar** | Fund research, screeners, holdings for every allocation and drift page | Directory: https://claude.ai/directory/connectors/2e98be30-8dba-486e-94a9-9a01d34678e2 (already installed, needs reconnect) |
+| 8 | 9 | **PostHog** | Product analytics for 216 pages: which tools clients use, where they drop | Directory: https://claude.ai/directory/connectors/50688846-553c-4a12-bc21-df94d2173734 · URL `https://mcp.posthog.com/mcp` |
+| 9 | 9 | **Sentry** | Error tracking for the client bundle and server; item 54 of the hundred | Directory: https://claude.ai/directory/connectors/46d6322a-5f75-4822-b739-f49261805e9c · URL `https://mcp.sentry.dev/mcp` |
+| 10 | 8 | **Intuit QuickBooks** | Practice-owner clients' books and Sam's own; cash-flow and P&L into the assessment | Directory: https://claude.ai/directory/connectors/a933e343-3389-4a82-beeb-7d5f5c2c4f25 |
+| 11 | 8 | **Alpha Vantage** | Stocks, options, fundamentals, indices, commodities, FX for the market pages | Directory: https://claude.ai/directory/connectors/0f1d77a7-9e03-438a-824d-d66c6dd0f0d5 · URL `https://mcp.alphavantage.co/mcp` |
+| 12 | 8 | **Bigdata.com** | Cited financial research: SEC filings, earnings, news, plus your own documents | Directory: https://claude.ai/directory/connectors/e463df16-b3d7-4bb9-953d-b652a073c764 |
+| 13 | 8 | **Customer.io** | Behaviour-triggered journeys (assessment abandoned → nudge) across email and SMS | Directory: https://claude.ai/directory/connectors/e46d22da-f472-465a-ae46-52f6ac61a97f · URL `https://mcp.customer.io/mcp` |
+| 14 | 8 | **Sumsub** | KYC and identity verification before a client portal is issued | Directory: https://claude.ai/directory/connectors/72396321-bc37-4407-88e5-c07339b80704 |
+| 15 | 8 | **n8n** | Self-hosted automation you own; runs the follow-up sequence on any host | Directory: https://claude.ai/directory/connectors/d86fa999-100c-4212-ad7f-2fefea661ef1 (URL is your own n8n instance) |
+| 16 | 8 | **Slack** | Lead alerts, compliance flags and daily digests into a channel | Directory: https://claude.ai/directory/connectors/597f662f-36de-437e-836e-5a81013cbfbe · URL `https://mcp.slack.com/mcp` |
+| 17 | 7 | **Twilio** | Runtime SMS uses the Twilio API with your keys; this connector is API documentation search | Directory: https://claude.ai/directory/connectors/0f28b719-ce6a-4597-83a6-ff5b2d5b17c5 · URL `https://mcp.twilio.com/docs` |
+| 18 | 7 | **Interactive Brokers** | Live positions and balances for clients who custody there | Directory: https://claude.ai/directory/connectors/d445461d-2337-4e00-b285-b43d111d2912 |
+| 19 | 7 | **Close** | Lightweight sales CRM with calling, if HubSpot is too heavy | Directory: https://claude.ai/directory/connectors/3e12bb5c-11e5-409c-8e73-64d4b625b498 |
+| 20 | 7 | **Microsoft 365** | Outlook, Teams, SharePoint for advisors on Microsoft | Directory: https://claude.ai/directory/connectors/ce0c9cda-5ea5-44c5-9cf2-40810dfa6582 |
+| 21 | 7 | **Dropbox** | Client statements and returns straight into the Document Vault | Directory: https://claude.ai/directory/connectors/1e4280cc-037c-47f0-9873-56bea1871bdb |
+| 22 | 7 | **Klaviyo** | Segmented marketing with consent tracking | Directory: https://claude.ai/directory/connectors/b1a89151-dc5f-4d75-baa7-9da291b81a0c · URL `https://mcp.klaviyo.com/mcp` |
+| 23 | 7 | **Intercom** | Client support inbox and help centre for the portal | Directory: https://claude.ai/directory/connectors/b2def8dc-ae47-4d46-877a-19b6a6ebb771 · URL `https://mcp.intercom.com/mcp` |
+| 24 | 7 | **Airtable** | Lightweight operational tables (carrier rates, playbooks) editable by non-developers | Directory: https://claude.ai/directory/connectors/cb504fab-e494-490f-bff8-bb3ab23a2209 · URL `https://mcp.airtable.com/mcp` |
+| 25 | 7 | **Make** | Visual automation, alternative to Zapier | Directory: https://claude.ai/directory/connectors/038318ff-ed0d-45f8-a453-b01de0071561 · URL `https://<your-zone>.make.com/mcp/api/v1/sse` (token) |
+| 26 | 7 | **PandaDoc** | Proposals and quotes with e-sign, generated from a scenario | Directory: https://claude.ai/directory/connectors/56998cd4-9a3a-4f40-8aa9-5019da8bf96e |
+| 27 | 7 | **Tiller** | Transactions from a client's spreadsheet into the assessment | Directory: https://claude.ai/directory/connectors/ddd60d1b-2e30-4751-808c-b0ac43bf4ce3 |
+| 28 | 6 | **Salesforce** | Enterprise CRM if an agency adopts the platform | Directory: https://claude.ai/directory/connectors/a352dbf6-c732-43d4-84c1-0bbb389d3921 · URL `https://api.salesforce.com/platform/mcp/v1/<server>` (needs an External Client App) |
+| 29 | 6 | **Attio** | Modern CRM with call recordings and notes | Directory: https://claude.ai/directory/connectors/ae5afdb9-e3c6-4b64-a13a-420e7a8d8124 |
+| 30 | 6 | **Clear Street** | Stock and options analytics for the market pages | Directory: https://claude.ai/directory/connectors/8ab3421a-b3c7-4198-967f-94db261d2f51 |
+| 31 | 6 | **viaNexus** | Real-time and historical prices from licensed providers | Directory: https://claude.ai/directory/connectors/01c43f47-7757-4ae7-91f2-310eff8bb58d |
+| 32 | 6 | **MT Newswires** | Real-time financial news by security for client briefings | Directory: https://claude.ai/directory/connectors/441c79ad-8a68-4d73-9263-7cfcadd5d8cf |
+| 33 | 6 | **Box** | Enterprise document store with Box AI over statements | Directory: https://claude.ai/directory/connectors/a5380429-c773-4180-b642-301418240c8c · URL `https://mcp.box.com` (admin must enable) |
+| 34 | 6 | **Mixpanel** | Funnel analytics, alternative to PostHog | Directory: https://claude.ai/directory/connectors/29d60a67-6f16-489b-8a1e-efdcece8d1f6 · URL `https://mcp.mixpanel.com/mcp` |
+| 35 | 6 | **Meridian for QuickBooks** | Write access to QuickBooks Online (bills, deposits, customers) | Directory: https://claude.ai/directory/connectors/72e8740e-8922-4d91-a850-d4d47d3f8ab4 |
+| 36 | 6 | **Tally** | Beautiful intake forms that feed the assessment | Directory: https://claude.ai/directory/connectors/b1c26807-986e-4cf5-99ca-362e5abb7feb |
+| 37 | 6 | **Jotform** | Forms with submissions, including Jotform Sign for e-signature | Directory: https://claude.ai/directory/connectors/aed7e2be-868e-4046-9e12-5c917b4e6b97 |
+| 38 | 6 | **Yardi Matrix** | Real-estate market intelligence for the property and STR pages | Directory: https://claude.ai/directory/connectors/2b245db2-8a73-491a-9849-8f44b9ce9488 |
+| 39 | 6 | **ZoomInfo** | Physician prospect enrichment and intent signals | Directory: https://claude.ai/directory/connectors/f2cdf1b8-2f75-48a4-8d8c-8d9cce1b8643 |
+| 40 | 6 | **Midpage Legal Research** | Case law for asset-protection and trust questions | Directory: https://claude.ai/directory/connectors/1a6a40cd-43c9-4752-9052-fed9c5e8c45c |
+| 41 | 6 | **TaxAct** | Refund estimates, document checklists, deadlines for client education | Directory: https://claude.ai/directory/connectors/f7a0d75b-946d-4e65-bb32-7a7fc98d5497 |
+| 42 | 6 | **Metricool** | Schedule and measure social posts for the Wealth Reels | Directory: https://claude.ai/directory/connectors/70ba6d62-7e98-4ef4-9073-d161d900a95f |
+| 43 | 6 | **Mailchimp** | Newsletter campaigns if Resend broadcasts are not enough | Directory: https://claude.ai/directory/connectors/3a7fa2ac-d655-4479-bce3-8e10fcc26f96 |
+| 44 | 5 | **PayPal** | Alternative client payments and invoices | Directory: https://claude.ai/directory/connectors/001103b7-bcde-4b9c-b5d4-f209c2fed1f3 · URL `https://mcp.paypal.com/http` |
+| 45 | 5 | **Square** | In-person payments at seminars | Directory: https://claude.ai/directory/connectors/25d61b20-3ba1-4477-b51a-a743d1ca65fb · URL `https://mcp.squareup.com/sse` |
+| 46 | 5 | **Xero** | Accounting alternative to QuickBooks (local MCP only, no remote URL) | Directory: https://claude.ai/directory/connectors/4c1fcb68-c482-46c5-a677-659eaf2f2c85 |
+| 47 | 5 | **Datadog** | Full observability once traffic justifies it | Directory: https://claude.ai/directory/connectors/68268024-1a91-4316-a9e1-14ecb814cb18 · URL `https://mcp.datadoghq.com/api/unstable/mcp-server/mcp` (US1 site) |
+| 48 | 5 | **SurveyMonkey** | Client satisfaction and post-meeting surveys | Directory: https://claude.ai/directory/connectors/58ff478e-b9b7-47c9-8253-78fb9364513a |
+| 49 | 5 | **Sprinto** | SOC 2 style controls and evidence when an agency asks for them | Directory: https://claude.ai/directory/connectors/d1e853bb-e524-4771-bb2c-21cef5c67805 |
+| 50 | 5 | **Riverside** | Record, edit and publish the podcast and video content | Directory: https://claude.ai/directory/connectors/3366d1e9-5d1d-49b1-a758-677949a84fd9 |
+
+## Already installed but not active in this session (reconnect these first)
+
+HubSpot, Xero, PayPal, Intercom, Morningstar show as installed with unknown
+status; Tavily and Gal AI need reconnecting. Open Settings → Connectors and
+click Reconnect on each.
+
+## What the top ten unlock together
+
+Zapier + Plaid + Stripe + HubSpot + Docusign + Aiwyn Tax + Morningstar +
+PostHog + Sentry + QuickBooks cover the five pillars the hundred-item review
+called for: gathering (Plaid, QuickBooks, Tiller), accuracy (Aiwyn Tax,
+Morningstar, Alpha Vantage), reaching people (Customer.io, Slack, Intercom),
+closing (Docusign, Stripe, HubSpot), and knowing what works (PostHog, Sentry).
+```
+
+## `docs/grok-handoff/08_PLAN_LEDGER.md`
+
+```md
+# The Plan Ledger (handoff for Grok)
+
+Idea 1 of doc 06, built. One append-only, hash-chained record per subject;
+everything else becomes a projection of it. Paths relative to
+`russell-capital-systems/`.
+
+## What exists
+
+| Piece | File | Notes |
+|---|---|---|
+| Pure logic | `shared/planLedger.ts` | `diffFactFinder(prev, next)` → one fact event per changed field (labelled from `FACT_FINDER_SECTIONS`, lists compared whole); `replayFacts(events, asOf?)` → the assessment as it stood; `canonicalEvent()` (the hashed string); `ledgerSubject()`; `groupByDay()`; `formatFactValue()`. |
+| Storage | `drizzle/schema.ts` → `plan_events`, `server/ledgerDb.ts` | Columns: subject, seq, userId/clientId/leadId/workspaceId, kind, source, key, label, value, prevValue, summary, actorName, occurredAt, prevHash, hash. Unique index on (subject, seq); indexes on client/user/lead — the first secondary indexes in the schema. `appendEvents()` chains with SHA-256 over `prevHash | canonicalEvent`; `verifyChain()` recomputes every hash. Rows are never updated or deleted. |
+| Writers | `server/ledger.ts` | `recordAssessmentChange(ids, prev, next, source)`, `recordEvent(e)`, `assessmentResetEvent(ids)`. Never throw. |
+| Router | `server/ledgerRouter.ts` (`ledger.*`) | `timeline` (newest first, `beforeSeq` pages back), `replay` (`asOf`), `diff` (`from`, `to`), `append` (decision / note / assumption / outcome), `verify`. Scope: no ids → the caller's own chain (`u:<userId>`); `clientId` → a client in the caller's workspace (`c:<id>`); `leadId` → owner only (`l:<id>`). |
+| Client page | `client/src/pages/portal/PlanLedger.tsx` → `/portal/plan-ledger` ("Plan Ledger" in New Client Welcome List) | Timeline grouped by day, kind filters, chain-verified badge, and a time scrubber that replays the assessment as it stood at any fact. |
+| Advisor panel | `client/src/components/ClientLedgerPanel.tsx` (on the client page) | The client's chain: messages, decisions, outcomes; "Record" appends a decision/assumption/note/outcome. |
+
+## Who writes to it today
+
+| Event | kind | source | where |
+|---|---|---|---|
+| Every changed assessment field | fact | client | `factFinder.save` (diff of previous vs new) |
+| Assessment completed for the first time | status `assessment.completed` | system | `factFinder.save` |
+| Assessment reset | status `assessment.reset` | client | `factFinder.reset` (replay honours it) |
+| Journey built | journey `journey.<id>` | ai | `librarian.journey` |
+| Journey page opened (first time) | journey `journey.<id>.<step>` | client | `librarian.markVisited` |
+| Email / text sent, suppressed, or failed | message | advisor or automation | `messaging.deliver()` (clients and leads; follow-ups included) |
+| Lead captured with consent | status `lead.captured` | client | `leads.capture` |
+| Lead status changed | status `lead.status` | advisor | `leads.updateStatus` |
+| Advisor decision / note / assumption / outcome | as chosen | advisor | `ledger.append` |
+
+## Subjects and the join that is still missing
+
+A signed-in client's chain is `u:<userId>`; the advisor's client record is
+`c:<clientId>`; a lead is `l:<leadId>`. They are separate chains because the
+client record and the assessment are still keyed differently (doc 05, item
+1). When that merge lands, add `clientId` to the assessment writers and the
+two chains become one. Until then the advisor sees messages and decisions on
+the client chain, and the client sees facts and journeys on theirs.
+
+## Rules
+
+1. Append only. No procedure updates or deletes a `plan_events` row.
+2. Every writer goes through `server/ledger.ts` so a failed write never breaks the action it records.
+3. Facts are diffs, never snapshots: a save that changes nothing writes nothing.
+4. The summary is human-readable and figure-honest (facts show the number; messages never do).
+5. Verify before trusting: `ledger.verify` recomputes the chain; a break points at the first altered entry.
+
+## Next projections to derive from the ledger
+
+- Wealth Genome history (score after each fact batch) — a sparkline on The Mirror.
+- "What changed since your last visit" on My Secret Journey (`ledger.diff` from the last `journey` event).
+- Compliance audit trail page reading `plan_events` instead of random data (doc 05, item 2).
+- Scenario events from every calculator save (doc 06, idea 2 makes this one line per instrument).
+
+## Tests
+
+`server/ledger.test.ts` (10): diff labelling and blank handling, list comparison, replay with resets, day grouping, chain append/verify through the router, tamper detection, workspace scoping, diff between moments.
+```
 
 ## `docs/grok-merge-verification.md`
 

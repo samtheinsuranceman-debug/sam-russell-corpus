@@ -11,6 +11,7 @@ import { leadsRouter } from "./leadsRouter";
 import { factFinderRouter } from "./factFinderRouter";
 import { librarianRouter } from "./librarianRouter";
 import { messagesRouter } from "./messagesRouter";
+import { ledgerRouter } from "./ledgerRouter";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -311,6 +312,7 @@ export const appRouter = router({
   factFinder: factFinderRouter,
   librarian: librarianRouter,
   messages: messagesRouter,
+  ledger: ledgerRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

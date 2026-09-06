@@ -4,6 +4,10 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 
 ### Files in this part
 
+- `server/ledgerDb.ts`
+- `server/ledgerRouter.ts`
+- `server/librarianRouter.ts`
+- `server/messagesRouter.ts`
 - `server/messaging.ts`
 - `server/messagingDb.ts`
 - `server/mortgageKillerPdf.ts`
@@ -43,6 +47,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/components/Breadcrumbs.tsx`
 - `client/src/components/BulkEmailTemplates.tsx`
 - `client/src/components/CalculationSyncBar.tsx`
+- `client/src/components/ClientLedgerPanel.tsx`
 - `client/src/components/ClientSelectorBar.tsx`
 - `client/src/components/CommandPalette.tsx`
 - `client/src/components/ComplianceFooter.tsx`
@@ -168,10 +173,479 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/pages/AutoCloserPage.tsx`
 - `client/src/pages/CareerPathPage.tsx`
 - `client/src/pages/CertificationsPage.tsx`
-- `client/src/pages/ClientPortalView.tsx`
-- `client/src/pages/CommandPage.tsx`
 
 ---
+
+## `server/ledgerDb.ts`
+
+```ts
+// ============================================================
+// THE PLAN LEDGER — storage. Append-only, hash-chained per subject.
+// Graceful when the database is not configured (no-ops / empty).
+// ============================================================
+import { createHash } from "node:crypto";
+import { and, asc, desc, eq, gt, inArray, lt, lte, sql } from "drizzle-orm";
+import { getDb } from "./db";
+import { jsonColumn } from "./_core/jsonColumn";
+import { planEvents, type PlanEventRow } from "../drizzle/schema";
+import { canonicalEvent, ledgerSubject, type LedgerEvent, type LedgerEventInput, type LedgerKind } from "@shared/planLedger";
+
+export const GENESIS_HASH = "0".repeat(64);
+
+export function hashEvent(prevHash: string, e: Parameters<typeof canonicalEvent>[0]): string {
+  return createHash("sha256").update(`${prevHash}|${canonicalEvent(e)}`).digest("hex");
+}
+
+function rowToEvent(r: PlanEventRow): LedgerEvent {
+  return {
+    id: r.id, subject: r.subject, seq: r.seq, kind: r.kind, source: r.source as LedgerEvent["source"], key: r.key, label: r.label,
+    value: jsonColumn<unknown>(r.value, null), prevValue: jsonColumn<unknown>(r.prevValue, null), summary: r.summary, actorName: r.actorName,
+    occurredAt: r.occurredAt, userId: r.userId, clientId: r.clientId, leadId: r.leadId, workspaceId: r.workspaceId, prevHash: r.prevHash, hash: r.hash, createdAt: r.createdAt,
+  };
+}
+
+async function chainHead(subject: string): Promise<{ seq: number; hash: string }> {
+  const db = await getDb();
+  if (!db) return { seq: 0, hash: GENESIS_HASH };
+  const rows = await db.select({ seq: planEvents.seq, hash: planEvents.hash }).from(planEvents).where(eq(planEvents.subject, subject)).orderBy(desc(planEvents.seq)).limit(1);
+  return rows[0] ? { seq: rows[0].seq, hash: rows[0].hash } : { seq: 0, hash: GENESIS_HASH };
+}
+
+/**
+ * Append events to their subject's chain, in order. All events in one call
+ * must share a subject (derived from clientId > userId > leadId). Returns the
+ * number written. Never throws on a missing database.
+ */
+export async function appendEvents(inputs: LedgerEventInput[]): Promise<number> {
+  const db = await getDb();
+  if (!db || inputs.length === 0) return 0;
+  const subject = ledgerSubject(inputs[0]!);
+  let { seq, hash: prevHash } = await chainHead(subject);
+  const rows = inputs.map((e) => {
+    seq += 1;
+    // MySQL TIMESTAMP keeps whole seconds: hash exactly what will be read back.
+    const occurredAt = new Date(Math.floor((e.occurredAt ?? new Date()).getTime() / 1000) * 1000);
+    const hash = hashEvent(prevHash, { subject, seq, kind: e.kind, source: e.source, key: e.key ?? null, value: e.value ?? null, prevValue: e.prevValue ?? null, summary: e.summary, occurredAt });
+    const row = {
+      subject, seq, userId: e.userId ?? null, clientId: e.clientId ?? null, leadId: e.leadId ?? null, workspaceId: e.workspaceId ?? null,
+      kind: e.kind, source: e.source, key: e.key ?? null, label: e.label?.slice(0, 200) ?? null, value: e.value ?? null, prevValue: e.prevValue ?? null,
+      summary: e.summary.slice(0, 4000), actorName: e.actorName?.slice(0, 200) ?? null, occurredAt, prevHash, hash,
+    };
+    prevHash = hash;
+    return row;
+  });
+  await db.insert(planEvents).values(rows);
+  return rows.length;
+}
+
+export type ListOptions = { kinds?: LedgerKind[]; since?: Date; until?: Date; beforeSeq?: number; limit?: number; ascending?: boolean };
+
+export async function listEvents(subject: string, opts: ListOptions = {}): Promise<LedgerEvent[]> {
+  const db = await getDb();
+  if (!db) return [];
+  const conds = [eq(planEvents.subject, subject)];
+  if (opts.kinds?.length) conds.push(inArray(planEvents.kind, opts.kinds));
+  if (opts.since) conds.push(gt(planEvents.occurredAt, opts.since));
+  if (opts.until) conds.push(lte(planEvents.occurredAt, opts.until));
+  if (opts.beforeSeq) conds.push(lt(planEvents.seq, opts.beforeSeq));
+  const rows = await db.select().from(planEvents).where(and(...conds)).orderBy(opts.ascending ? asc(planEvents.seq) : desc(planEvents.seq)).limit(Math.min(2000, Math.max(1, opts.limit ?? 200)));
+  return rows.map(rowToEvent);
+}
+
+export async function countEvents(subject: string): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const rows = await db.select({ n: sql<number>`count(*)` }).from(planEvents).where(eq(planEvents.subject, subject));
+  return Number(rows[0]?.n ?? 0);
+}
+
+/** Recompute every hash on a subject's chain and report the first break, if any. */
+export async function verifyChain(subject: string): Promise<{ ok: boolean; events: number; brokenAtSeq: number | null }> {
+  const events = await listEvents(subject, { ascending: true, limit: 2000 });
+  let prevHash = GENESIS_HASH;
+  let expectedSeq = 1;
+  for (const e of events) {
+    const h = hashEvent(prevHash, { subject: e.subject, seq: e.seq, kind: e.kind, source: e.source, key: e.key, value: e.value, prevValue: e.prevValue, summary: e.summary, occurredAt: e.occurredAt });
+    if (e.seq !== expectedSeq || e.prevHash !== prevHash || e.hash !== h) return { ok: false, events: events.length, brokenAtSeq: e.seq };
+    prevHash = h;
+    expectedSeq += 1;
+  }
+  return { ok: true, events: events.length, brokenAtSeq: null };
+}
+```
+
+## `server/ledgerRouter.ts`
+
+```ts
+// ============================================================
+// THE PLAN LEDGER — tRPC. A signed-in client reads their own chain; an
+// advisor reads a client's or a lead's chain in their workspace. Anyone can
+// replay the assessment as it stood at a moment, diff two moments, add a
+// decision or note, and verify the chain has not been altered.
+// ============================================================
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+import { protectedProcedure, router } from "./_core/trpc";
+import { ENV } from "./_core/env";
+import { getClientById, getWorkspaceByOwnerId } from "./db";
+import { countEvents, listEvents, verifyChain } from "./ledgerDb";
+import { recordEvent } from "./ledger";
+import { LEDGER_KINDS, ledgerSubject, replayFacts, diffFactFinder, type LedgerKind } from "@shared/planLedger";
+import { factFinderCompleteness } from "@shared/clientFactFinder";
+
+const scope = z.object({ clientId: z.number().int().positive().optional(), leadId: z.number().int().positive().optional() });
+
+/** Resolve which chain the caller may read: their own, or a client/lead they own. */
+async function resolveSubject(ctx: { user: { id: number; openId: string; role: string } }, input: { clientId?: number; leadId?: number }): Promise<{ subject: string; ids: { userId?: number; clientId?: number; leadId?: number; workspaceId?: number } }> {
+  if (input.clientId) {
+    const ws = await getWorkspaceByOwnerId(ctx.user.id);
+    if (!ws) throw new TRPCError({ code: "NOT_FOUND" });
+    const client = await getClientById(input.clientId, ws.id);
+    if (!client) throw new TRPCError({ code: "NOT_FOUND" });
+    return { subject: ledgerSubject({ clientId: client.id }), ids: { clientId: client.id, workspaceId: ws.id } };
+  }
+  if (input.leadId) {
+    const isOwner = ctx.user.openId === ENV.ownerOpenId || ctx.user.role === "admin";
+    if (!isOwner) throw new TRPCError({ code: "FORBIDDEN" });
+    return { subject: ledgerSubject({ leadId: input.leadId }), ids: { leadId: input.leadId } };
+  }
+  return { subject: ledgerSubject({ userId: ctx.user.id }), ids: { userId: ctx.user.id } };
+}
+
+export const ledgerRouter = router({
+  /** Newest first. `beforeSeq` pages backwards. */
+  timeline: protectedProcedure
+    .input(scope.extend({ kinds: z.array(z.enum(LEDGER_KINDS)).optional(), limit: z.number().int().min(1).max(500).default(100), beforeSeq: z.number().int().positive().optional() }).default({ limit: 100 }))
+    .query(async ({ ctx, input }) => {
+      const { subject } = await resolveSubject(ctx, input);
+      const [events, total] = await Promise.all([listEvents(subject, { kinds: input.kinds as LedgerKind[] | undefined, limit: input.limit, beforeSeq: input.beforeSeq }), countEvents(subject)]);
+      return { subject, total, events };
+    }),
+
+  /** The assessment as it stood at `asOf` (default now), rebuilt from fact events alone. */
+  replay: protectedProcedure
+    .input(scope.extend({ asOf: z.string().datetime().optional() }).default({}))
+    .query(async ({ ctx, input }) => {
+      const { subject } = await resolveSubject(ctx, input);
+      const facts = await listEvents(subject, { kinds: ["fact", "status"], ascending: true, limit: 2000 });
+      const asOf = input.asOf ? new Date(input.asOf) : undefined;
+      const data = replayFacts(facts, asOf);
+      const applied = asOf ? facts.filter((e) => e.occurredAt.getTime() <= asOf.getTime()).length : facts.length;
+      return { asOf: (asOf ?? new Date()).toISOString(), data, completeness: factFinderCompleteness(data), applied, firstEventAt: facts[0]?.occurredAt ?? null, lastEventAt: facts.at(-1)?.occurredAt ?? null };
+    }),
+
+  /** What changed between two moments, as fact events. */
+  diff: protectedProcedure
+    .input(scope.extend({ from: z.string().datetime(), to: z.string().datetime().optional() }))
+    .query(async ({ ctx, input }) => {
+      const { subject } = await resolveSubject(ctx, input);
+      const facts = await listEvents(subject, { kinds: ["fact", "status"], ascending: true, limit: 2000 });
+      const before = replayFacts(facts, new Date(input.from));
+      const after = replayFacts(facts, input.to ? new Date(input.to) : undefined);
+      return { from: input.from, to: input.to ?? new Date().toISOString(), changes: diffFactFinder(before, after, "system") };
+    }),
+
+  /** An advisor's decision or a note, in the client's own words or the advisor's. */
+  append: protectedProcedure
+    .input(scope.extend({ kind: z.enum(["decision", "note", "assumption", "outcome"]), summary: z.string().min(1).max(2000), key: z.string().max(120).optional(), value: z.union([z.string().max(4000), z.number(), z.boolean(), z.null()]).optional() }))
+    .mutation(async ({ ctx, input }) => {
+      const { ids } = await resolveSubject(ctx, input);
+      const source = input.clientId || input.leadId ? "advisor" : "client";
+      const n = await recordEvent({ kind: input.kind, source, key: input.key ?? null, label: null, value: input.value ?? null, summary: input.summary, actorName: ctx.user.name ?? null, ...ids });
+      return { recorded: n > 0 };
+    }),
+
+  verify: protectedProcedure.input(scope.default({})).query(async ({ ctx, input }) => {
+    const { subject } = await resolveSubject(ctx, input);
+    return { subject, ...(await verifyChain(subject)) };
+  }),
+});
+```
+
+## `server/librarianRouter.ts`
+
+```ts
+// ============================================================
+// THE FINANCIAL LIBRARIAN — the AI advisory team as ONE voice.
+//
+// Gate: it will not answer a planning question until the signed-in user's
+// Financial Assessment is complete. Once it is, the client may ask as many
+// questions as they like; the librarian answers each one, and on request
+// distils everything asked into 3–5 core questions, names the emergent
+// question they have not asked, and composes a 10–15 page journey through
+// the site (calculators included) that answers them in a logical sequence.
+//
+// The deterministic journey engine (shared/journeyEngine.ts) always produces
+// the journey; the AI team only polishes wording and is validated against the
+// catalog. No figures are ever invented: every number the librarian cites
+// comes from the client's own assessment.
+// ============================================================
+import { z } from "zod";
+import { recordEvent } from "./ledger";
+import { protectedProcedure, router } from "./_core/trpc";
+import { ADVISOR_SYSTEM, configuredProviders, leadModel } from "./ultraAI";
+import { getFactFinderForUser, getLatestJourneyForUser, markJourneyStepVisited, saveJourneyForUser } from "./factFinderDb";
+import { factFinderCompleteness, factFinderSummary, type ClientFactFinder } from "@shared/clientFactFinder";
+import { JOURNEY_CATALOG } from "@shared/journeyCatalog";
+import { buildJourney, factFinderSignals, fmtMoney, validateJourney, type Journey } from "@shared/journeyEngine";
+
+const LIBRARIAN_RULES =
+  " You are the Financial Librarian of Russell Capital Systems: one calm, warm voice that speaks for a team of AI models. " +
+  "You are talking to a client (or their advisor) inside a private portal, and you have their complete Financial Assessment, " +
+  "so you may refer to their own figures. Everything you say is education and projection under stated assumptions — never a " +
+  "guarantee, never a product solicitation, never individualized tax or legal advice; the licensed Russell Capital Systems " +
+  "advisor and the tax professional team review every strategy for suitability and IRS compliance before anything is implemented. " +
+  "Do not invent facts that are not in the assessment. Speak plainly, as if reading aloud, in under 200 words. " +
+  "When a page on the site answers part of the question, name it (the catalog is provided) so the client can click through.";
+
+function catalogText(): string {
+  return JOURNEY_CATALOG.map((p) => `- ${p.title} (${p.path}): ${p.purpose}`).join("\n");
+}
+
+async function loadAssessment(userId: number) {
+  const stored = await getFactFinderForUser(userId);
+  const completeness = factFinderCompleteness(stored?.data);
+  const missingSections = Array.from(new Set(completeness.missing.map((m) => m.section))).slice(0, 6);
+  return { stored, completeness, missingSections };
+}
+
+function gateMessage(percent: number, missingSections: string[]): string {
+  const where = missingSections.length ? ` The sections still open are ${missingSections.join(", ")}.` : "";
+  return `Before I can advise you I need the full picture — that is what makes the advice worth having. Your Financial Assessment is ${percent}% complete.${where} Finish it and ask me again; I'll be here.`;
+}
+
+/** Deterministic answer when no AI provider is configured: restate the relevant facts, point to the pages. */
+function offlineAnswer(question: string, data: ClientFactFinder, journeyHint: Journey): string {
+  const s = (id: string) => data.sections?.[id] ?? {};
+  const inc = s("income"), tax = s("taxes"), re = s("realEstate"), debt = s("debts"), inv = s("investments"), goals = s("goals");
+  const n = (v: unknown) => (typeof v === "number" ? v : 0);
+  const income = n(inc.w2Income) + n(inc.bonusIncome) + n(inc.contractorIncome) + n(inc.practiceDistributions) + n(inc.spouseIncome);
+  const facts: string[] = [];
+  if (income) facts.push(`household income of about ${fmtMoney(income)}`);
+  if (n(tax.federalTaxPaid)) facts.push(`federal tax of ${fmtMoney(n(tax.federalTaxPaid))} last year`);
+  if (n(re.primaryMortgageBalance)) facts.push(`a mortgage balance of ${fmtMoney(n(re.primaryMortgageBalance))}`);
+  if (n(re.homeEquity)) facts.push(`${fmtMoney(n(re.homeEquity))} of home equity`);
+  if (n(debt.studentLoanBalance)) facts.push(`student loans of ${fmtMoney(n(debt.studentLoanBalance))}`);
+  const investable = n(inv.taxableBrokerage) + n(inv.employerPlanBalance) + n(inv.traditionalIra) + n(inv.rothIra) + n(inv.roth401k);
+  if (investable) facts.push(`about ${fmtMoney(investable)} in investment and retirement accounts`);
+  const top = typeof goals.topGoals === "string" ? goals.topGoals.split(/\n|;/)[0]?.trim() : "";
+  const pages = journeyHint.steps.slice(0, 3).map((st) => `${st.title} (${st.path})`).join(", ");
+  return (
+    `The AI advisory team is not switched on for this installation yet, so here is what I can say from your assessment alone. ` +
+    `You asked: "${question}". Your file shows ${facts.length ? facts.join(", ") : "the details you entered"}` +
+    `${top ? `, and your first stated goal is "${top}"` : ""}. ` +
+    `The pages that answer this best, in order, are ${pages}. ` +
+    `Everything here is education, not advice; your Russell Capital Systems advisor and the tax professional team confirm suitability before anything is implemented.`
+  );
+}
+
+export const librarianRouter = router({
+  status: protectedProcedure.query(async ({ ctx }) => {
+    const { stored, completeness, missingSections } = await loadAssessment(ctx.user.id);
+    const team = configuredProviders();
+    return {
+      complete: completeness.complete,
+      percent: completeness.percent,
+      missingCount: completeness.missing.length,
+      missingSections,
+      completedAt: stored?.completedAt ?? null,
+      configured: team.length > 0,
+      contributorCount: team.length,
+      contributors: team.map((p) => p.label),
+      voiceConfigured: Boolean(process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_VOICE_ID),
+    };
+  }),
+
+  /** Answer one question. Unlimited questions are welcome once the assessment is complete. */
+  ask: protectedProcedure
+    .input(z.object({
+      question: z.string().min(1).max(2000),
+      history: z.array(z.object({ role: z.enum(["user", "librarian"]), text: z.string().max(2000) })).max(12).default([]),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const { stored, completeness, missingSections } = await loadAssessment(ctx.user.id);
+      if (!stored || !completeness.complete) {
+        return { gated: true as const, percent: completeness.percent, missingSections, spoken: gateMessage(completeness.percent, missingSections), answer: null, contributors: [] as string[], contributorCount: 0 };
+      }
+      const data = stored.data;
+      const team = configuredProviders();
+      const hint = buildJourney([...input.history.filter((h) => h.role === "user").map((h) => h.text), input.question], data);
+      if (team.length === 0) {
+        const answer = offlineAnswer(input.question, data, hint);
+        return { gated: false as const, answer, spoken: answer, contributors: [] as string[], contributorCount: 0, percent: 100, missingSections: [] as string[] };
+      }
+      const system = ADVISOR_SYSTEM + LIBRARIAN_RULES;
+      const history = input.history.slice(-6).map((h) => `${h.role === "user" ? "Client" : "Librarian"}: ${h.text}`).join("\n");
+      const userMsg =
+        `CLIENT FACT FINDER (complete):\n${factFinderSummary(data)}\n\n` +
+        `SITE PAGES YOU MAY POINT TO:\n${catalogText()}\n\n` +
+        (history ? `RECENT CONVERSATION:\n${history}\n\n` : "") +
+        `The client asks: "${input.question}"\n\nAnswer per your rules, for speech, under 200 words.`;
+      const results = await Promise.all(team.map(async (p) => {
+        try { return { label: p.label, ok: true as const, text: await p.call(process.env[p.envKey]!, system, userMsg) }; }
+        catch (e) { return { label: p.label, ok: false as const, text: String(e).slice(0, 80) }; }
+      }));
+      const ok = results.filter((r) => r.ok);
+      let answer: string | null = null;
+      if (ok.length > 1) {
+        const lead = await leadModel(system, `${ok.length} advisors answered the same client question. Synthesize ONE answer in the librarian's voice, under 200 words, keeping only claims supported by the fact finder.\n\nQuestion: "${input.question}"\n\n${ok.map((r) => `--- ${r.label} ---\n${r.text}`).join("\n\n")}`);
+        answer = lead?.text ?? null;
+      }
+      answer = answer ?? ok[0]?.text ?? offlineAnswer(input.question, data, hint);
+      return { gated: false as const, answer, spoken: answer, contributors: ok.map((r) => r.label), contributorCount: ok.length, percent: 100, missingSections: [] as string[] };
+    }),
+
+  /** Distil everything asked into 3–5 core questions + the emergent question, and compose the journey. */
+  journey: protectedProcedure
+    .input(z.object({ questions: z.array(z.string().min(1).max(2000)).min(1).max(40) }))
+    .mutation(async ({ ctx, input }) => {
+      const { stored, completeness, missingSections } = await loadAssessment(ctx.user.id);
+      if (!stored || !completeness.complete) {
+        return { gated: true as const, percent: completeness.percent, missingSections, spoken: gateMessage(completeness.percent, missingSections), journey: null };
+      }
+      const data = stored.data;
+      let journey = buildJourney(input.questions, data);
+      const signals = factFinderSignals(data);
+
+      // Let the AI team polish the wording of the questions and the "why" of
+      // each step — never the pages themselves.
+      const team = configuredProviders();
+      if (team.length > 0) {
+        try {
+          const polished = await leadModel(
+            ADVISOR_SYSTEM + LIBRARIAN_RULES + " Reply with JSON only.",
+            `The client asked these questions:\n${input.questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}\n\n` +
+            `Their assessment signals: ${signals.slice(0, 8).map((s) => `${s.tag} (${s.reason})`).join("; ")}\n\n` +
+            `The journey engine proposes:\n${JSON.stringify({ coreQuestions: journey.coreQuestions, emergentQuestion: journey.emergentQuestion, steps: journey.steps.map((s) => ({ id: s.id, title: s.title, why: s.why })) }, null, 1)}\n\n` +
+            `Rewrite ONLY the wording: make each core question sound like this client (keep 3–5 of them, same order, same meaning), ` +
+            `make the emergent question land (one or two sentences, referencing their actual facts), and make each step's "why" one warm sentence that connects it to the previous step. ` +
+            `Keep every step id exactly as given, same order. Return JSON: {"coreQuestions":[...],"emergentQuestion":"...","steps":[{"id":"...","why":"..."}]}`,
+          );
+          const raw = polished?.text?.match(/\{[\s\S]*\}/)?.[0];
+          if (raw) {
+            const p = JSON.parse(raw) as { coreQuestions?: string[]; emergentQuestion?: string; steps?: Array<{ id: string; why: string }> };
+            const candidate: Journey = {
+              coreQuestions: Array.isArray(p.coreQuestions) && p.coreQuestions.length ? p.coreQuestions.map(String).slice(0, 5) : journey.coreQuestions,
+              emergentQuestion: typeof p.emergentQuestion === "string" && p.emergentQuestion.length > 20 ? p.emergentQuestion : journey.emergentQuestion,
+              steps: journey.steps.map((s) => ({ ...s, why: p.steps?.find((x) => x.id === s.id)?.why?.slice(0, 400) || s.why })),
+              controls: journey.controls,
+              generatedBy: `journey-engine + ${polished?.via ?? "ai"}`,
+            };
+            if (validateJourney(candidate).ok) journey = candidate;
+          }
+        } catch { /* keep the deterministic journey */ }
+      }
+
+      const check = validateJourney(journey);
+      if (!check.ok) throw new Error(`journey failed validation: ${check.problems.join("; ")}`);
+      const id = await saveJourneyForUser(ctx.user.id, input.questions, {
+        coreQuestions: journey.coreQuestions,
+        emergentQuestion: journey.emergentQuestion,
+        steps: journey.steps.map((s) => ({ id: s.id, path: s.path, title: s.title, why: s.why, guide: s.guide, kind: s.kind })),
+        controls: journey.controls,
+        generatedBy: journey.generatedBy,
+      });
+      await recordEvent({
+        kind: "journey", source: "ai", key: id ? `journey.${id}` : "journey", label: "Secret journey built",
+        value: { journeyId: id, questions: input.questions, coreQuestions: journey.coreQuestions, emergentQuestion: journey.emergentQuestion, steps: journey.steps.map((s) => s.id), generatedBy: journey.generatedBy },
+        summary: `Journey built from ${input.questions.length} question${input.questions.length === 1 ? "" : "s"}: ${journey.coreQuestions.length} core questions, ${journey.steps.length} pages, first ${journey.steps[0]!.title}`,
+        userId: ctx.user.id,
+      });
+      const spoken =
+        `I've read everything you asked and everything in your assessment. It comes down to ${journey.coreQuestions.length} questions. ` +
+        journey.coreQuestions.map((q, i) => `${i + 1}: ${q}`).join(" ") +
+        ` And one you haven't asked yet: ${journey.emergentQuestion} ` +
+        `I've laid out ${journey.steps.length} pages in order — start with ${journey.steps[0]!.title} and each one builds on the last. ` +
+        `Along the way you control ${journey.controls.youControl.length} variables; the rest the plan is built to survive.`;
+      return { gated: false as const, journey, journeyId: id, spoken };
+    }),
+
+  latestJourney: protectedProcedure.query(async ({ ctx }) => getLatestJourneyForUser(ctx.user.id)),
+
+  /** The client opened a journey page: record it so progress carries across devices. */
+  markVisited: protectedProcedure
+    .input(z.object({ journeyId: z.number().int().positive(), stepId: z.string().min(1).max(64) }))
+    .mutation(async ({ ctx, input }) => {
+      const journey = await markJourneyStepVisited(ctx.user.id, input.journeyId, input.stepId);
+      const step = journey?.steps.find((s) => s.id === input.stepId);
+      if (step && step.visitedAt && new Date(step.visitedAt).getTime() > Date.now() - 5000) {
+        await recordEvent({ kind: "journey", source: "client", key: `journey.${input.journeyId}.${input.stepId}`, label: step.title, value: { path: step.path }, summary: `Opened journey page: ${step.title}`, userId: ctx.user.id });
+      }
+      return { ok: Boolean(journey), visited: journey ? journey.steps.filter((s) => s.visitedAt).length : 0, total: journey?.steps.length ?? 0 };
+    }),
+});
+```
+
+## `server/messagesRouter.ts`
+
+```ts
+// ============================================================
+// MESSAGES ROUTER — the advisor sends email or text to a client from the
+// website, picks a template or writes freehand, and sees the delivery log.
+// Every send goes through deliver(): opt-outs honoured, outcome recorded,
+// activity logged. Figures never travel by message.
+// ============================================================
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+import { protectedProcedure, router } from "./_core/trpc";
+import { getClientById, getWorkspaceByOwnerId } from "./db";
+import { deliver, MESSAGE_TEMPLATES, messagingStatus, renderTemplate } from "./messaging";
+import { listMessagesForClient } from "./messagingDb";
+import { normalizePhone } from "./_core/sms";
+
+const bodySchema = z.string().min(1).max(4000);
+
+export const messagesRouter = router({
+  status: protectedProcedure.query(() => messagingStatus()),
+
+  templates: protectedProcedure.query(() => MESSAGE_TEMPLATES.map((t) => ({ id: t.id, label: t.label, subject: t.subject }))),
+
+  /** Fill a template for a client so the advisor can edit before sending. */
+  preview: protectedProcedure
+    .input(z.object({ clientId: z.number().int().positive(), channel: z.enum(["email", "sms"]), template: z.string().max(60) }))
+    .query(async ({ ctx, input }) => {
+      const ws = await getWorkspaceByOwnerId(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "NOT_FOUND" });
+      const client = await getClientById(input.clientId, ws.id);
+      if (!client) throw new TRPCError({ code: "NOT_FOUND" });
+      const firstName = client.firstName || client.name.split(" ")[0] || "";
+      const rendered = renderTemplate(input.template, input.channel, { firstName, advisorName: ctx.user.name ?? undefined });
+      if (!rendered) throw new TRPCError({ code: "BAD_REQUEST", message: "Unknown template" });
+      return rendered;
+    }),
+
+  send: protectedProcedure
+    .input(z.object({
+      clientId: z.number().int().positive(),
+      channel: z.enum(["email", "sms"]),
+      subject: z.string().max(300).optional(),
+      body: bodySchema,
+      template: z.string().max(60).optional(),
+      category: z.enum(["transactional", "marketing"]).default("transactional"),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceByOwnerId(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "NOT_FOUND" });
+      const client = await getClientById(input.clientId, ws.id);
+      if (!client) throw new TRPCError({ code: "NOT_FOUND" });
+      const to = input.channel === "email" ? client.email : normalizePhone(client.phone);
+      if (!to) throw new TRPCError({ code: "BAD_REQUEST", message: input.channel === "email" ? "This client has no email address on file." : "This client has no valid mobile number on file." });
+      const r = await deliver({
+        channel: input.channel, to, subject: input.subject, body: input.body, category: input.category, template: input.template,
+        clientId: client.id, workspaceId: ws.id, userId: ctx.user.id, actorName: ctx.user.name ?? "Advisor",
+      });
+      return { sent: r.sent, via: r.via ?? null, reason: r.reason ?? null, suppressed: Boolean(r.suppressed), logId: r.logId };
+    }),
+
+  list: protectedProcedure
+    .input(z.object({ clientId: z.number().int().positive(), limit: z.number().int().min(1).max(200).default(50) }))
+    .query(async ({ ctx, input }) => {
+      const ws = await getWorkspaceByOwnerId(ctx.user.id);
+      if (!ws) return [];
+      return listMessagesForClient(input.clientId, ws.id, input.limit);
+    }),
+});
+```
 
 ## `server/messaging.ts`
 
@@ -187,6 +661,7 @@ import { sendSms, smsMode } from "./_core/sms";
 import { mailMode } from "./_core/mailer";
 import { logOutboundMessage } from "./messagingDb";
 import { logClientActivity } from "./db";
+import { recordEvent } from "./ledger";
 
 export type Channel = "email" | "sms";
 export type Category = "transactional" | "marketing";
@@ -256,6 +731,14 @@ export async function deliver(input: DeliverInput): Promise<DeliverResult> {
     via: result.via ?? null,
     reason: result.reason ?? null,
   });
+  if (input.clientId || input.leadId) {
+    await recordEvent({
+      kind: "message", source: input.userId ? "advisor" : "automation", key: input.template ?? `message.${input.channel}`, label: input.channel === "email" ? "Email" : "Text",
+      value: { channel: input.channel, to: input.to, subject: input.subject ?? null, status: result.sent ? "sent" : result.suppressed ? "suppressed" : "failed", via: result.via ?? null, template: input.template ?? null },
+      summary: `${input.channel === "email" ? "Email" : "Text"} ${result.sent ? "sent" : result.suppressed ? "suppressed (opted out)" : "failed"}${input.subject ? `: ${input.subject}` : input.template ? ` (${input.template})` : ""}${result.reason && !result.sent ? ` — ${result.reason}` : ""}`,
+      actorName: input.actorName ?? null, clientId: input.clientId ?? null, leadId: input.clientId ? null : input.leadId ?? null, workspaceId: input.workspaceId ?? null, userId: null,
+    });
+  }
   if (input.clientId && input.workspaceId) {
     try {
       await logClientActivity({
@@ -2644,6 +3127,7 @@ import { leadsRouter } from "./leadsRouter";
 import { factFinderRouter } from "./factFinderRouter";
 import { librarianRouter } from "./librarianRouter";
 import { messagesRouter } from "./messagesRouter";
+import { ledgerRouter } from "./ledgerRouter";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -2944,6 +3428,7 @@ export const appRouter = router({
   factFinder: factFinderRouter,
   librarian: librarianRouter,
   messages: messagesRouter,
+  ledger: ledgerRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -14690,6 +15175,7 @@ const WealthGenomePage = lazy(() => import("./pages/WealthGenomePage"));
 const FinancialAssessment = lazy(() => import("./pages/portal/FinancialAssessment"));
 const AIFinancialAdvisor = lazy(() => import("./pages/portal/AIFinancialAdvisor"));
 const MyJourney = lazy(() => import("./pages/portal/MyJourney"));
+const PlanLedger = lazy(() => import("./pages/portal/PlanLedger"));
 const TheBrotherhood = lazy(() => import("./pages/portal/TheBrotherhood"));
 const SecondaryInformation = lazy(() => import("./pages/portal/SecondaryInformation"));
 const PlanningCases = lazy(() => import("./pages/portal/PlanningCases"));
@@ -14996,6 +15482,7 @@ function Router() {
       <Route path="/portal/financial-assessment" component={gated(FinancialAssessment, "/portal/financial-assessment")} />
       <Route path="/portal/ai-advisor" component={gated(AIFinancialAdvisor, "/portal/ai-advisor")} />
       <Route path="/portal/my-journey" component={gated(MyJourney, "/portal/my-journey")} />
+      <Route path="/portal/plan-ledger" component={gated(PlanLedger, "/portal/plan-ledger")} />
       <Route path="/portal/wealth-genome" component={gated(WealthGenomePage, "/portal/wealth-genome")} />
       <Route path="/portal/the-arrival" component={gated(TheArrival, "/portal/the-arrival")} />
       <Route path="/portal/the-mirror" component={gated(TheMirror, "/portal/the-mirror")} />
@@ -17813,7 +18300,7 @@ import {
   ClipboardList, Activity, FileBarChart, ScrollText, Phone, TrendingUp, Home as HomeIcon, Swords, Sparkles, Leaf, Lock, PiggyBank, Mail,
   History, Layers, Award, Flame, FileUp, Recycle, GraduationCap, Crown, ShieldCheck, Eye, UserCheck, Database, FolderLock,
   Heart, HeartPulse, Scissors, UserPlus, Gift, Receipt, ArrowRightLeft, Search, Gauge,
-  Presentation, FileSpreadsheet, Umbrella, BarChart, LineChart, Compass, Gem,
+  Presentation, FileSpreadsheet, Umbrella, BarChart, LineChart, Compass, BookOpenCheck, Gem,
   Ghost, Radio, Dna, Archive, GitBranch, Waves, Megaphone, Image,
   Sword, Volume2, Video, User
 } from "lucide-react";
@@ -17956,6 +18443,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/financial-assessment", label: "Financial Assessment", icon: ClipboardList, color: "purple" },
       { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
       { path: "/portal/my-journey", label: "My Secret Journey", icon: Compass, color: "purple" },
+      { path: "/portal/plan-ledger", label: "Plan Ledger", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/wealth-genome", label: "Wealth Genome Analysis", icon: Activity, color: "purple" },
       { path: "/portal/the-arrival", label: "1. The Arrival", icon: Sparkles, color: "purple" },
       { path: "/portal/the-mirror", label: "2. The Mirror", icon: Eye, color: "purple" },
@@ -19787,6 +20275,76 @@ export function CalculationSyncBar() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+```
+
+## `client/src/components/ClientLedgerPanel.tsx`
+
+```tsx
+// ============================================================
+// CLIENT LEDGER PANEL — the advisor's view of a client's chain: messages,
+// decisions, notes and outcomes, sealed in order. The advisor appends a
+// decision here; it is the one record every report and journey derives from.
+// ============================================================
+import { useState } from "react";
+import { BookOpenCheck, ShieldCheck, ShieldAlert, Plus } from "lucide-react";
+import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
+
+type Kind = "decision" | "note" | "assumption" | "outcome";
+
+export function ClientLedgerPanel({ clientId }: { clientId: number }) {
+  const utils = trpc.useUtils();
+  const timeline = trpc.ledger.timeline.useQuery({ clientId, limit: 50 }, { refetchOnWindowFocus: false });
+  const verify = trpc.ledger.verify.useQuery({ clientId }, { refetchOnWindowFocus: false });
+  const [kind, setKind] = useState<Kind>("decision");
+  const [text, setText] = useState("");
+  const append = trpc.ledger.append.useMutation({
+    onSuccess: (r) => {
+      if (r.recorded) { toast.success("Recorded in the ledger"); setText(""); }
+      else toast.error("Not recorded — database not configured");
+      void utils.ledger.timeline.invalidate({ clientId, limit: 50 });
+      void utils.ledger.verify.invalidate({ clientId });
+    },
+    onError: (e) => toast.error(e.message),
+  });
+  const events = timeline.data?.events ?? [];
+
+  return (
+    <div className="rc-card" aria-label="Plan ledger">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <BookOpenCheck size={16} className="text-[#a78bfa]" />
+          <span className="font-semibold text-white">Plan Ledger</span>
+          <span className="text-xs text-[#7a95b8]">{timeline.data?.total ?? 0} sealed entries</span>
+        </div>
+        {verify.data && (verify.data.ok
+          ? <span className="inline-flex items-center gap-1 text-xs text-emerald-400"><ShieldCheck size={13} /> chain verified</span>
+          : <span className="inline-flex items-center gap-1 text-xs text-rose-400"><ShieldAlert size={13} /> chain broken at #{verify.data.brokenAtSeq}</span>)}
+      </div>
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+        <select value={kind} onChange={(e) => setKind(e.target.value as Kind)} aria-label="Entry kind" className="rounded-lg border border-[#12233e] bg-[#0f1e35] px-3 py-2 text-sm text-[#c8d8ec]">
+          <option value="decision">Decision</option><option value="assumption">Assumption</option><option value="note">Note</option><option value="outcome">Outcome</option>
+        </select>
+        <input value={text} onChange={(e) => setText(e.target.value)} placeholder="What was decided, assumed, or observed…" aria-label="Ledger entry"
+          onKeyDown={(e) => { if (e.key === "Enter" && text.trim()) append.mutate({ clientId, kind, summary: text.trim() }); }}
+          className="flex-1 rounded-lg border border-[#12233e] bg-[#0f1e35] px-3 py-2 text-sm text-[#c8d8ec]" />
+        <button type="button" disabled={!text.trim() || append.isPending} onClick={() => append.mutate({ clientId, kind, summary: text.trim() })}
+          className="flex items-center justify-center gap-1 rounded-lg bg-[#a78bfa] px-4 py-2 text-sm font-semibold text-black transition hover:bg-[#c4b5fd] disabled:opacity-40"><Plus size={14} /> Record</button>
+      </div>
+      {events.length > 0 && (
+        <ol className="mt-4 space-y-1.5 text-xs">
+          {events.map((e) => (
+            <li key={e.id} className="flex items-start gap-2 border-b border-[#12233e] pb-1.5">
+              <span className="mt-0.5 shrink-0 rounded-full border border-[#12233e] px-1.5 py-0.5 text-[10px] font-semibold uppercase text-[#7a95b8]">{e.kind}</span>
+              <span className="text-[#c8d8ec]">{e.summary}<span className="text-[#7a95b8]"> · {new Date(e.occurredAt).toLocaleString()}{e.actorName ? ` · ${e.actorName}` : ""} · #{e.seq}</span></span>
+            </li>
+          ))}
+        </ol>
+      )}
+      {events.length === 0 && !timeline.isLoading && <p className="mt-3 text-xs text-[#7a95b8]">No entries yet. Messages you send and decisions you record land here, sealed in order.</p>}
     </div>
   );
 }
@@ -40689,849 +41247,5 @@ const CertificationsPage: React.FC = () => {
 }
 
 export default CertificationsPage;
-```
-
-## `client/src/pages/ClientPortalView.tsx`
-
-```tsx
-import { trpc } from "@/lib/trpc";
-import { useParams } from "wouter";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  User, FileText, Brain, MessageSquare, Lock, ExternalLink,
-  Calendar, DollarSign, PieChart, Clock, MapPin, Video, Phone, Users,
-  TrendingUp, Shield, ChevronDown, ChevronUp, BarChart3, Home,
-  Target, Wallet, Activity,
-} from "lucide-react";
-import { useState, useMemo } from "react";
-
-const CATEGORY_LABELS: Record<string, string> = {
-  TAX_RETURN: "Tax Return",
-  ESTATE_PLAN: "Estate Plan",
-  INSURANCE_POLICY: "Insurance Policy",
-  INVESTMENT_STATEMENT: "Investment Statement",
-  TRUST_DOCUMENT: "Trust Document",
-  LEGAL_AGREEMENT: "Legal Agreement",
-  FINANCIAL_PLAN: "Financial Plan",
-  OTHER: "Other",
-};
-
-const MEETING_TYPE_ICONS: Record<string, typeof Video> = {
-  VIDEO: Video,
-  PHONE: Phone,
-  IN_PERSON: Users,
-  OTHER: Calendar,
-};
-
-function formatCurrency(value: number): string {
-  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`;
-  return `$${value.toLocaleString()}`;
-}
-
-/* ── Saved Strategy Detail Component ── */
-function SavedStrategiesSection({ strategies, primaryColor, accentColor }: {
-  strategies: any[]; primaryColor: string; accentColor: string;
-}) {
-  const [expandedId, setExpandedId] = useState<number | null>(null);
-
-  const fmtFull = (n: number) => `$${Math.round(n).toLocaleString()}`;
-  const fmt = (n: number) =>
-    n >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M`
-    : n >= 1_000 ? `$${(n / 1_000).toFixed(0)}K`
-    : `$${Math.round(n).toLocaleString()}`;
-
-  return (
-    <div className="space-y-4">
-      {strategies.map((ss: any) => {
-        const summary = ss.summaryJson as any;
-        const inputs = ss.inputsJson as any;
-        const isExpanded = expandedId === ss.id;
-        return (
-          <Card key={ss.id} className="border-border/50">
-            <CardContent className="pt-4">
-              <div
-                className="flex items-center justify-between cursor-pointer"
-                onClick={() => setExpandedId(isExpanded ? null : ss.id)}
-              >
-                <div>
-                  <p className="font-medium text-sm">{ss.strategyName || "Roth Conversion Strategy"}</p>
-                  <p className="text-xs text-muted-foreground">
-                    Created {new Date(ss.createdAt).toLocaleDateString()}
-                    {inputs?.annualConversion && ` · $${Number(inputs.annualConversion).toLocaleString()}/yr conversion`}
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  {summary?.totalTaxSavings && (
-                    <Badge variant="outline" className="text-xs" style={{ borderColor: primaryColor, color: primaryColor }}>
-                      {fmt(summary.totalTaxSavings)} tax savings
-                    </Badge>
-                  )}
-                  {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </div>
-              </div>
-              {isExpanded && summary && (
-                <div className="mt-4 space-y-4">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {summary.year10CashValue && (
-                      <div className="p-3 rounded-lg bg-muted/30 text-center">
-                        <p className="text-[10px] text-muted-foreground">Year 10 Cash Value</p>
-                        <p className="font-bold text-sm" style={{ color: primaryColor }}>{fmt(summary.year10CashValue)}</p>
-                      </div>
-                    )}
-                    {summary.year20CashValue && (
-                      <div className="p-3 rounded-lg bg-muted/30 text-center">
-                        <p className="text-[10px] text-muted-foreground">Year 20 Cash Value</p>
-                        <p className="font-bold text-sm" style={{ color: accentColor }}>{fmt(summary.year20CashValue)}</p>
-                      </div>
-                    )}
-                    {summary.deathBenefit && (
-                      <div className="p-3 rounded-lg bg-muted/30 text-center">
-                        <p className="text-[10px] text-muted-foreground">Death Benefit</p>
-                        <p className="font-bold text-sm">{fmt(summary.deathBenefit)}</p>
-                      </div>
-                    )}
-                    {summary.totalTaxSavings && (
-                      <div className="p-3 rounded-lg bg-muted/30 text-center">
-                        <p className="text-[10px] text-muted-foreground">Total Tax Savings</p>
-                        <p className="font-bold text-sm text-green-500">{fmt(summary.totalTaxSavings)}</p>
-                      </div>
-                    )}
-                  </div>
-                  {summary.iulProjection && summary.iulProjection.length > 0 && (
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-xs">
-                        <thead>
-                          <tr className="border-b border-border/30">
-                            <th className="text-left py-1.5 px-2">Year</th>
-                            <th className="text-right py-1.5 px-2">Premium</th>
-                            <th className="text-right py-1.5 px-2">Cash Value</th>
-                            <th className="text-right py-1.5 px-2">Death Benefit</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {summary.iulProjection.filter((_: any, i: number) => i % 5 === 0 || i === summary.iulProjection.length - 1).map((row: any) => (
-                            <tr key={row.year} className="border-b border-border/10">
-                              <td className="py-1 px-2">{row.year}</td>
-                              <td className="py-1 px-2 text-right">{fmtFull(row.premium)}</td>
-                              <td className="py-1 px-2 text-right" style={{ color: primaryColor }}>{fmtFull(row.netCashValue)}</td>
-                              <td className="py-1 px-2 text-right">{fmtFull(row.deathBenefit)}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                  <MonteCarloSummary iulProjection={summary.iulProjection ?? []} primaryColor={primaryColor} />
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ── Monte Carlo Summary for Client Portal ── */
-function MonteCarloSummary({ iulProjection, primaryColor }: { iulProjection: any[]; primaryColor: string }) {
-  const mcData = useMemo(() => {
-    if (!iulProjection || iulProjection.length === 0) return null;
-    const SIMS = 300;
-    const VOL = 0.15;
-    const AVG_RETURN = 0.10;
-    const LOAD_FEE = 0.06;
-    const COI_RATE = 0.05;
-    const years = iulProjection.length;
-    const allFinals: number[] = [];
-
-    for (let s = 0; s < SIMS; s++) {
-      let av = 0;
-      for (let y = 0; y < years; y++) {
-        const premium = iulProjection[y].premium;
-        const u1 = Math.random();
-        const u2 = Math.random();
-        const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-        const randomReturn = Math.max(0, AVG_RETURN + VOL * z);
-        av += premium * (1 - LOAD_FEE);
-        av += av * randomReturn;
-        av -= av * COI_RATE;
-        av = Math.max(0, av);
-      }
-      const loanBal = iulProjection[years - 1]?.cumulativeLoanBalance ?? 0;
-      allFinals.push(Math.max(0, av - loanBal));
-    }
-    allFinals.sort((a, b) => a - b);
-    const pct = (p: number) => Math.round(allFinals[Math.floor(allFinals.length * p)]);
-    return {
-      p10: pct(0.10), p25: pct(0.25), p50: pct(0.50),
-      p75: pct(0.75), p90: pct(0.90),
-      actual: iulProjection[years - 1]?.netCashValue ?? 0,
-    };
-  }, [iulProjection]);
-
-  if (!mcData) return null;
-
-  const fmt = (n: number) =>
-    n >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M`
-    : n >= 1_000 ? `$${(n / 1_000).toFixed(0)}K`
-    : `$${Math.round(n).toLocaleString()}`;
-
-  const items = [
-    { label: "Worst Case (10th %ile)", value: mcData.p10, color: "#ef4444" },
-    { label: "Below Avg (25th %ile)", value: mcData.p25, color: "#f59e0b" },
-    { label: "Median (50th %ile)", value: mcData.p50, color: "#8b5cf6" },
-    { label: "Above Avg (75th %ile)", value: mcData.p75, color: "#3b82f6" },
-    { label: "Best Case (90th %ile)", value: mcData.p90, color: primaryColor },
-  ];
-
-  return (
-    <div>
-      <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-        <BarChart3 className="h-4 w-4 text-purple-400" /> Monte Carlo Analysis
-        <span className="text-xs text-muted-foreground font-normal">(300 simulations, 15% volatility)</span>
-      </h4>
-      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-        {items.map((item) => (
-          <div key={item.label} className="p-2 rounded-lg bg-background border border-border/30 text-center">
-            <div className="text-[10px] text-muted-foreground leading-tight">{item.label}</div>
-            <div className="font-bold text-sm" style={{ color: item.color }}>{fmt(item.value)}</div>
-          </div>
-        ))}
-      </div>
-      <div className="mt-2 p-2 rounded bg-muted/20 border border-border/20 text-[10px] text-muted-foreground">
-        Monte Carlo simulation models {iulProjection.length}-year IUL outcomes using 15% annual volatility (historical S&P 500). The IUL floor of 0% prevents negative returns. Base case uses a fixed 10% return: <strong style={{ color: primaryColor }}>{fmt(mcData.actual)}</strong>.
-      </div>
-    </div>
-  );
-}
-
-/* ── Tab: Overview / Dashboard ── */
-function OverviewTab({ client, portfolio, upcomingMeetings, scorecard, primaryColor, accentColor, firmName }: any) {
-  return (
-    <div className="space-y-6">
-      {/* Welcome Banner */}
-      <div className="p-6 rounded-xl border border-border/50" style={{ background: `linear-gradient(135deg, ${primaryColor}10, ${accentColor}10)` }}>
-        <h2 className="text-xl font-semibold mb-1">Welcome back, {client.name?.split(" ")[0] || "Client"}</h2>
-        <p className="text-sm text-muted-foreground">Here's a snapshot of your financial health and upcoming activities.</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Portfolio Summary */}
-        {portfolio && portfolio.totalAssets > 0 && (
-          <Card className="border-border/50">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <PieChart className="h-4 w-4" style={{ color: accentColor }} />
-                Portfolio Summary
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold mb-4" style={{ color: primaryColor }}>
-                {formatCurrency(portfolio.totalAssets)}
-              </p>
-              <div className="space-y-2">
-                {portfolio.breakdown.map((item: { label: string; value: number }) => {
-                  const pct = (item.value / portfolio.totalAssets) * 100;
-                  return (
-                    <div key={item.label}>
-                      <div className="flex items-center justify-between text-xs mb-0.5">
-                        <span>{item.label}</span>
-                        <span className="font-medium">{formatCurrency(item.value)} ({pct.toFixed(1)}%)</span>
-                      </div>
-                      <div className="h-1.5 rounded-full bg-muted/50 overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: primaryColor }} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Financial Scorecard */}
-        {scorecard && (
-          <Card className="border-border/50">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Target className="h-4 w-4" style={{ color: primaryColor }} />
-                Financial Health Score
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-5 mb-4">
-                <div className="relative w-20 h-20">
-                  <svg viewBox="0 0 36 36" className="w-20 h-20 -rotate-90">
-                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted/30" />
-                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={primaryColor} strokeWidth="2.5" strokeDasharray={`${scorecard.overallScore}, 100`} strokeLinecap="round" />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-xl font-bold" style={{ color: primaryColor }}>{scorecard.overallScore}</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="font-semibold">
-                    {scorecard.overallScore >= 80 ? "Excellent" : scorecard.overallScore >= 60 ? "Good" : "Needs Attention"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {scorecard.overallScore >= 80 ? "Your financial health is strong" : scorecard.overallScore >= 60 ? "Good progress, room to grow" : "Action needed in key areas"}
-                  </p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                {scorecard.categories.map((cat: any) => (
-                  <div key={cat.name} className="space-y-0.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <span>{cat.name}</span>
-                      <span className="text-muted-foreground">{cat.score}/100</span>
-                    </div>
-                    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: `${cat.score}%`, backgroundColor: cat.score >= 70 ? primaryColor : cat.score >= 40 ? '#f59e0b' : '#ef4444' }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-
-      {/* Upcoming Meetings */}
-      {upcomingMeetings && upcomingMeetings.length > 0 && (
-        <Card className="border-border/50">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-orange-400" />
-              Upcoming Meetings ({upcomingMeetings.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {upcomingMeetings.map((meeting: any) => {
-                const MeetingIcon = MEETING_TYPE_ICONS[meeting.meetingType] ?? Calendar;
-                const meetingDate = new Date(meeting.scheduledAt);
-                return (
-                  <div key={meeting.id} className="flex items-start gap-4 p-3 rounded-lg bg-muted/30 border border-border/30">
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: `${primaryColor}20` }}>
-                      <MeetingIcon className="h-4 w-4" style={{ color: primaryColor }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm">{meeting.title}</p>
-                      <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {meetingDate.toLocaleDateString()} at {meetingDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                        </span>
-                        <span>{meeting.durationMin} min</span>
-                        {meeting.location && (
-                          <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{meeting.location}</span>
-                        )}
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="text-xs shrink-0">{meeting.meetingType.replace("_", " ")}</Badge>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  );
-}
-
-/* ── Tab: Income Timeline ── */
-function IncomeTimelineTab({ incomeTimeline, primaryColor, accentColor }: any) {
-  if (!incomeTimeline || incomeTimeline.length === 0) {
-    return (
-      <Card className="border-border/50">
-        <CardContent className="py-12 text-center">
-          <Wallet className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-          <p className="text-muted-foreground">No income timeline data available yet.</p>
-          <p className="text-xs text-muted-foreground mt-1">Your advisor will configure your projected retirement income sources.</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const maxTotal = Math.max(...incomeTimeline.map((r: any) => r.total || 0));
-
-  return (
-    <div className="space-y-6">
-      <Card className="border-border/50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5" style={{ color: accentColor }} />
-            Projected Retirement Income Timeline
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">Estimated annual income from all sources by age</p>
-        </CardHeader>
-        <CardContent>
-          {/* Visual Bar Chart */}
-          <div className="space-y-1.5 mb-6">
-            {incomeTimeline.filter((_: any, i: number) => i % 3 === 0).slice(0, 20).map((row: any) => (
-              <div key={row.age} className="flex items-center gap-3">
-                <span className="text-xs font-medium w-8 text-right">{row.age}</span>
-                <div className="flex-1 h-5 bg-muted/30 rounded overflow-hidden flex">
-                  {row.socialSecurity > 0 && (
-                    <div className="h-full bg-blue-500" style={{ width: `${(row.socialSecurity / maxTotal) * 100}%` }} title={`SS: ${formatCurrency(row.socialSecurity)}`} />
-                  )}
-                  {row.rothDistributions > 0 && (
-                    <div className="h-full bg-green-500" style={{ width: `${(row.rothDistributions / maxTotal) * 100}%` }} title={`Roth: ${formatCurrency(row.rothDistributions)}`} />
-                  )}
-                  {row.iulLoans > 0 && (
-                    <div className="h-full bg-purple-500" style={{ width: `${(row.iulLoans / maxTotal) * 100}%` }} title={`IUL: ${formatCurrency(row.iulLoans)}`} />
-                  )}
-                  {row.iraRmd > 0 && (
-                    <div className="h-full bg-amber-500" style={{ width: `${(row.iraRmd / maxTotal) * 100}%` }} title={`IRA: ${formatCurrency(row.iraRmd)}`} />
-                  )}
-                </div>
-                <span className="text-xs font-medium w-16 text-right" style={{ color: row.total > 0 ? primaryColor : undefined }}>
-                  {row.total > 0 ? formatCurrency(row.total) : '—'}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Legend */}
-          <div className="flex flex-wrap gap-4 mb-4 text-xs">
-            <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-blue-500" /> Social Security</span>
-            <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-green-500" /> Roth Distributions</span>
-            <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-purple-500" /> IUL Policy Loans</span>
-            <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-amber-500" /> IRA RMDs</span>
-          </div>
-
-          {/* Detailed Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b border-border/30">
-                  <th className="text-left py-2 px-2">Age</th>
-                  <th className="text-right py-2 px-2">Social Security</th>
-                  <th className="text-right py-2 px-2">Roth</th>
-                  <th className="text-right py-2 px-2">IUL Loans</th>
-                  <th className="text-right py-2 px-2">IRA RMD</th>
-                  <th className="text-right py-2 px-2 font-bold">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {incomeTimeline.filter((_: any, i: number) => i % 5 === 0 || incomeTimeline[i]?.total > 0).slice(0, 15).map((row: any) => (
-                  <tr key={row.age} className="border-b border-border/10 hover:bg-muted/20">
-                    <td className="py-1.5 px-2 font-medium">{row.age}</td>
-                    <td className="py-1.5 px-2 text-right">{row.socialSecurity > 0 ? formatCurrency(row.socialSecurity) : '—'}</td>
-                    <td className="py-1.5 px-2 text-right">{row.rothDistributions > 0 ? formatCurrency(row.rothDistributions) : '—'}</td>
-                    <td className="py-1.5 px-2 text-right">{row.iulLoans > 0 ? formatCurrency(row.iulLoans) : '—'}</td>
-                    <td className="py-1.5 px-2 text-right">{row.iraRmd > 0 ? formatCurrency(row.iraRmd) : '—'}</td>
-                    <td className="py-1.5 px-2 text-right font-bold" style={{ color: row.total > 0 ? primaryColor : undefined }}>
-                      {row.total > 0 ? formatCurrency(row.total) : '—'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="text-[10px] text-muted-foreground mt-3">
-            Projections are estimates based on current account balances and standard assumptions. Social Security begins at age 67. IRA RMDs begin at age 72. Actual results will vary.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-/* ── Tab: Documents ── */
-function DocumentsTab({ documents, primaryColor }: any) {
-  return (
-    <div className="space-y-6">
-      <Card className="border-border/50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-blue-400" />
-            Your Documents ({documents.length})
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">All documents shared by your advisor</p>
-        </CardHeader>
-        <CardContent>
-          {documents.length === 0 ? (
-            <div className="text-center py-8">
-              <FileText className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-              <p className="text-muted-foreground">No documents available yet.</p>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {documents.map((doc: any) => (
-                <div key={doc.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                      <FileText className="h-4 w-4 text-blue-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">{doc.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {CATEGORY_LABELS[doc.category] ?? doc.category} · {new Date(doc.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                  <a href={doc.url} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg hover:bg-muted/50 transition-colors" style={{ color: primaryColor }}>
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-/* ── Tab: Strategies ── */
-function StrategiesTab({ strategies, savedStrategies, notes, primaryColor, accentColor }: any) {
-  return (
-    <div className="space-y-6">
-      {/* Saved Roth/IUL Strategies */}
-      {savedStrategies && savedStrategies.length > 0 && (
-        <div>
-          <h3 className="text-base font-semibold mb-3 flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" style={{ color: primaryColor }} />
-            Roth Conversion Strategies ({savedStrategies.length})
-          </h3>
-          <SavedStrategiesSection strategies={savedStrategies} primaryColor={primaryColor} accentColor={accentColor} />
-        </div>
-      )}
-
-      {/* Strategy Summaries */}
-      <Card className="border-border/50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Brain className="h-5 w-5 text-purple-400" />
-            Strategy Summaries ({strategies.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {strategies.length === 0 ? (
-            <div className="text-center py-8">
-              <Brain className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-              <p className="text-muted-foreground">No strategies available yet.</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {strategies.map((s: any) => (
-                <div key={s.id} className="p-4 rounded-lg bg-muted/30 border border-border/30">
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {new Date(s.createdAt).toLocaleDateString()}
-                  </p>
-                  <p className="text-sm whitespace-pre-wrap">{s.summary ?? "No summary available."}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Recent Notes */}
-      <Card className="border-border/50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-amber-400" />
-            Recent Notes ({notes.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {notes.length === 0 ? (
-            <div className="text-center py-8">
-              <MessageSquare className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-              <p className="text-muted-foreground">No notes available.</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {notes.map((n: any) => (
-                <div key={n.id} className="p-4 rounded-lg bg-muted/30 border border-border/30">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="text-xs">{n.noteType}</Badge>
-                    <span className="text-xs text-muted-foreground">
-                      {n.authorName} · {new Date(n.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="text-sm whitespace-pre-wrap">{n.content}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-/* ── Main Client Portal View ── */
-export default function ClientPortalView() {
-  const params = useParams<{ token: string }>();
-  const token = params.token ?? "";
-
-  const { data, isLoading, error } = trpc.clientPortal.view.useQuery(
-    { token },
-    { enabled: !!token, retry: false }
-  );
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-3">
-          <div className="animate-spin h-8 w-8 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto" />
-          <p className="text-muted-foreground">Loading your portal...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !data) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="max-w-md w-full mx-4">
-          <CardContent className="pt-6 text-center space-y-4">
-            <Lock className="h-12 w-12 text-muted-foreground mx-auto" />
-            <h2 className="text-xl font-semibold">Portal Access Denied</h2>
-            <p className="text-muted-foreground">
-              This link may have expired or been revoked. Please contact your financial advisor for a new portal link.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const { client, documents, strategies, notes, upcomingMeetings, portfolio, savedStrategies, branding, scorecard, incomeTimeline } = data as any;
-
-  const primaryColor = branding?.primaryColor || "#10b981";
-  const accentColor = branding?.accentColor || "#059669";
-  const firmName = branding?.name || "Russell Capital Systems™";
-  const logoUrl = branding?.logoUrl;
-
-  const tabCounts = {
-    documents: documents?.length ?? 0,
-    strategies: (strategies?.length ?? 0) + (savedStrategies?.length ?? 0),
-  };
-
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Header with branding */}
-      <header
-        className="border-b border-border/50 backdrop-blur-sm sticky top-0 z-10"
-        style={{ backgroundColor: `${primaryColor}10` }}
-      >
-        <div className="container max-w-5xl py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {logoUrl ? (
-              <img src={logoUrl} alt={firmName} className="h-10 w-10 rounded-lg object-cover" />
-            ) : (
-              <div
-                className="h-10 w-10 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: `${primaryColor}30` }}
-              >
-                <span style={{ color: primaryColor }} className="font-bold text-sm">
-                  {firmName.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase()}
-                </span>
-              </div>
-            )}
-            <div>
-              <h1 className="font-semibold">{firmName}</h1>
-              <p className="text-xs text-muted-foreground">Client Portal — {client.name}</p>
-            </div>
-          </div>
-          <Badge variant="outline" className="text-xs">
-            <Lock className="h-3 w-3 mr-1" /> Read-Only Access
-          </Badge>
-        </div>
-      </header>
-
-      <main className="container max-w-5xl py-6">
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 h-11">
-            <TabsTrigger value="overview" className="flex items-center gap-1.5 text-xs sm:text-sm">
-              <Home className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Overview</span>
-              <span className="sm:hidden">Home</span>
-            </TabsTrigger>
-            <TabsTrigger value="income" className="flex items-center gap-1.5 text-xs sm:text-sm">
-              <Wallet className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Income Timeline</span>
-              <span className="sm:hidden">Income</span>
-            </TabsTrigger>
-            <TabsTrigger value="documents" className="flex items-center gap-1.5 text-xs sm:text-sm">
-              <FileText className="h-3.5 w-3.5" />
-              Documents
-              {tabCounts.documents > 0 && (
-                <Badge variant="secondary" className="h-4 px-1 text-[10px] ml-0.5">{tabCounts.documents}</Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="strategies" className="flex items-center gap-1.5 text-xs sm:text-sm">
-              <Activity className="h-3.5 w-3.5" />
-              Strategies
-              {tabCounts.strategies > 0 && (
-                <Badge variant="secondary" className="h-4 px-1 text-[10px] ml-0.5">{tabCounts.strategies}</Badge>
-              )}
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview">
-            <OverviewTab
-              client={client}
-              portfolio={portfolio}
-              upcomingMeetings={upcomingMeetings}
-              scorecard={scorecard}
-              primaryColor={primaryColor}
-              accentColor={accentColor}
-              firmName={firmName}
-            />
-          </TabsContent>
-
-          <TabsContent value="income">
-            <IncomeTimelineTab
-              incomeTimeline={incomeTimeline}
-              primaryColor={primaryColor}
-              accentColor={accentColor}
-            />
-          </TabsContent>
-
-          <TabsContent value="documents">
-            <DocumentsTab documents={documents} primaryColor={primaryColor} />
-          </TabsContent>
-
-          <TabsContent value="strategies">
-            <StrategiesTab
-              strategies={strategies}
-              savedStrategies={savedStrategies}
-              notes={notes}
-              primaryColor={primaryColor}
-              accentColor={accentColor}
-            />
-          </TabsContent>
-        </Tabs>
-
-        {/* Footer */}
-        <div className="text-center text-xs text-muted-foreground py-6 mt-6 border-t border-border/30">
-          <p>This portal provides read-only access to your financial information.</p>
-          <p className="mt-1">For questions or changes, please contact your financial advisor at <strong>{firmName}</strong>.</p>
-        </div>
-      </main>
-    </div>
-  );
-}
-```
-
-## `client/src/pages/CommandPage.tsx`
-
-```tsx
-import React from 'react';
-import { Link } from 'wouter';
-
-const CommandPage: React.FC = () => {
-  const subPages = [
-    { path: '/portal/daily-briefing', title: 'Daily Briefing', description: 'AI-curated morning overview of your practice, markets, and client alerts.', icon: '📋' },
-    { path: '/portal/toilet', title: 'Quick Glance', description: 'Fast 60-second insights into key financial metrics while on the go.', icon: '⚡' },
-    { path: '/portal/russell-number', title: 'Russell Number', description: 'Your personalized financial health score across all dimensions.', icon: '🔢' },
-    { path: '/portal/daily-discovery', title: 'Daily Discovery', description: 'AI-surfaced opportunities and insights you might have missed.', icon: '🔍' },
-    { path: '/portal/my-world', title: 'My World', description: 'Personalized command center for your entire financial world.', icon: '🌍' },
-    { path: '/portal/avatar-twins', title: 'Avatar Twins', description: 'Compare your practice profile with top-performing advisor archetypes.', icon: '👥' },
-    { path: '/portal/morning-ritual', title: 'Morning Ritual', description: 'Guided daily routine to maximize your advisory practice performance.', icon: '🌅' },
-    { path: '/portal/infinite-scroll', title: 'Wealth Feed', description: 'Endless scroll of wealth-building tips, market news, and strategy ideas.', icon: '📰' },
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center mb-4">
-          <span className="text-4xl mr-4">🎮</span>
-          <h1 className="text-4xl font-bold">Command</h1>
-        </div>
-        <p className="mb-8 text-lg text-gray-300">
-          Your daily command center. Tools for morning routines, quick insights, personalized 
-          briefings, and practice optimization — all powered by AI.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {subPages.map((page) => (
-            <Link key={page.path} href={page.path}
-              className="bg-[#1a1f2a] border border-white/10 rounded-xl p-6 shadow-lg hover:bg-[#22c55e]/10 hover:scale-105 transition-all duration-300"
-            >
-              <div className="text-3xl mb-3">{page.icon}</div>
-              <h2 className="text-xl font-semibold mb-2">{page.title}</h2>
-              <p className="text-gray-400 text-sm">{page.description}</p>
-            </Link>
-          ))}
-        </div>
-
-        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-          <div className="flex items-center gap-4 mb-6">
-            <label className="text-sm text-slate-400">Projection Horizon:</label>
-            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-              onChange={(e) => {
-                const val = e.target.value;
-                document.getElementById('proj-year-command')!.textContent = val;
-              }} />
-            <span id="proj-year-command" className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-            <span className="text-slate-500 text-sm">years</span>
-          </div>
-          <div className="flex gap-2 mb-6">
-            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-              }`}>{s}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-5 gap-4 text-center">
-            {[5, 10, 20, 30, 50].map(yr => (
-              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-                <div className="text-emerald-400 font-bold text-lg">[Practice Growth]</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-purple-400">🧠</span> AI Brain Analysis
-            </h2>
-            <div className="flex gap-2">
-              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-                Send to AI Advisor →
-              </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-                View AI Brain Hub →
-              </a>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default CommandPage;
 ```
 

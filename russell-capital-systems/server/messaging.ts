@@ -9,6 +9,7 @@ import { sendSms, smsMode } from "./_core/sms";
 import { mailMode } from "./_core/mailer";
 import { logOutboundMessage } from "./messagingDb";
 import { logClientActivity } from "./db";
+import { recordEvent } from "./ledger";
 
 export type Channel = "email" | "sms";
 export type Category = "transactional" | "marketing";
@@ -78,6 +79,14 @@ export async function deliver(input: DeliverInput): Promise<DeliverResult> {
     via: result.via ?? null,
     reason: result.reason ?? null,
   });
+  if (input.clientId || input.leadId) {
+    await recordEvent({
+      kind: "message", source: input.userId ? "advisor" : "automation", key: input.template ?? `message.${input.channel}`, label: input.channel === "email" ? "Email" : "Text",
+      value: { channel: input.channel, to: input.to, subject: input.subject ?? null, status: result.sent ? "sent" : result.suppressed ? "suppressed" : "failed", via: result.via ?? null, template: input.template ?? null },
+      summary: `${input.channel === "email" ? "Email" : "Text"} ${result.sent ? "sent" : result.suppressed ? "suppressed (opted out)" : "failed"}${input.subject ? `: ${input.subject}` : input.template ? ` (${input.template})` : ""}${result.reason && !result.sent ? ` — ${result.reason}` : ""}`,
+      actorName: input.actorName ?? null, clientId: input.clientId ?? null, leadId: input.clientId ? null : input.leadId ?? null, workspaceId: input.workspaceId ?? null, userId: null,
+    });
+  }
   if (input.clientId && input.workspaceId) {
     try {
       await logClientActivity({

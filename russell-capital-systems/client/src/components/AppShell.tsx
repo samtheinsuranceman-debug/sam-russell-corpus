@@ -8,7 +8,7 @@ import {
   ClipboardList, Activity, FileBarChart, ScrollText, Phone, TrendingUp, Home as HomeIcon, Swords, Sparkles, Leaf, Lock, PiggyBank, Mail,
   History, Layers, Award, Flame, FileUp, Recycle, GraduationCap, Crown, ShieldCheck, Eye, UserCheck, Database, FolderLock,
   Heart, HeartPulse, Scissors, UserPlus, Gift, Receipt, ArrowRightLeft, Search, Gauge,
-  Presentation, FileSpreadsheet, Umbrella, BarChart, LineChart, Compass, Gem,
+  Presentation, FileSpreadsheet, Umbrella, BarChart, LineChart, Compass, BookOpenCheck, Gem,
   Ghost, Radio, Dna, Archive, GitBranch, Waves, Megaphone, Image,
   Sword, Volume2, Video, User
 } from "lucide-react";
@@ -151,6 +151,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/financial-assessment", label: "Financial Assessment", icon: ClipboardList, color: "purple" },
       { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
       { path: "/portal/my-journey", label: "My Secret Journey", icon: Compass, color: "purple" },
+      { path: "/portal/plan-ledger", label: "Plan Ledger", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/wealth-genome", label: "Wealth Genome Analysis", icon: Activity, color: "purple" },
       { path: "/portal/the-arrival", label: "1. The Arrival", icon: Sparkles, color: "purple" },
       { path: "/portal/the-mirror", label: "2. The Mirror", icon: Eye, color: "purple" },
