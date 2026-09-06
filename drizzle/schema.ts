@@ -2591,3 +2591,18 @@ export const forecastHarvests = mysqlTable("forecast_harvests", {
   createdAt:        timestamp("createdAt").defaultNow().notNull(),
 }, (t) => ({ bySource: index("forecast_harvests_source").on(t.sourceId, t.status), once: uniqueIndex("forecast_harvests_once").on(t.sourceId, t.metric, t.horizonYear, t.asOf) }));
 export type ForecastHarvestRow = typeof forecastHarvests.$inferSelect;
+
+// The pulse: dated readings of who holds each lever and the market odds it
+// changes hands. One row per lever × measure × as-of date, so the week-by-
+// week movement is a query, not a memory.
+export const powerSnapshots = mysqlTable("power_snapshots", {
+  id:        int("id").autoincrement().primaryKey(),
+  lever:     varchar("lever", { length: 40 }).notNull(),     // president | senate | house | judiciary | governors | legislatures | mayors
+  measure:   varchar("measure", { length: 60 }).notNull(),   // e.g. dem_share, dem_seats, rep_seats, p_dem_next
+  value:     decimal("value", { precision: 12, scale: 4 }).notNull(),
+  asOf:      varchar("asOf", { length: 10 }).notNull(),      // YYYY-MM-DD the reading refers to
+  source:    varchar("source", { length: 120 }).notNull(),   // feed id or URL
+  detail:    varchar("detail", { length: 500 }),             // what was read (market question, counts)
+  fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
+}, (t) => ({ byLever: index("power_snapshots_lever").on(t.lever, t.measure, t.asOf), once: uniqueIndex("power_snapshots_once").on(t.lever, t.measure, t.asOf, t.source) }));
+export type PowerSnapshotRow = typeof powerSnapshots.$inferSelect;

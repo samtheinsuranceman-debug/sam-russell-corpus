@@ -112,6 +112,50 @@ CBO's own PDF can be harvested directly by pointing a harvest at the file.
 Quotes are verified against the full extracted text (up to 40k characters);
 the council reads the first 14k.
 
+### 6. The power layer — who holds the levers (`shared/powerHistory.ts`, `server/power.ts`)
+The tax path is read against political control, continuously.
+
+**The record.** `CONTROL` gives, for every year 1945–2026, the party of the
+president, the Senate majority and the House majority, verified against
+senate.gov "Party Division", history.house.gov "Party Divisions" and
+whitehouse.gov (the 2001 Jeffords flip and the 2021–22 50–50 Senate are
+scored as the text explains). `demLeverShare(year)` weights president ½,
+Senate ¼, House ¼. `conditionalWindowStats(series, h, bucket)` is
+`windowStats` restricted to the h-year windows whose mean share was
+left-held (≥ ⅔), divided, or right-held (≤ ⅓): the checkable record of what
+happened to the top rate under each configuration. Buckets with fewer than
+`MIN_WINDOWS` (15) windows are too thin and fall back to all windows.
+
+**The pulse.** `powerSweep()` reads three keyless feeds and stores every
+reading in `power_snapshots` (lever × measure × as-of date × source):
+the unitedstates/congress-legislators current-members file (seats by party),
+the Federal Judicial Center judges.csv (share of sitting Article III judges
+appointed by Democratic presidents, by court level), and the prediction
+markets — Polymarket's Gamma search and Kalshi's public markets list — for
+the chance of Democratic control of the presidency, Senate and House at the
+next election, with the market's own question stored beside the price and
+Republican-framed questions flipped. Governors, state legislatures and mayors
+go through the harvest path (council + verbatim quote + owner approval); they
+are not machine feeds. `powerNow()` combines live seats (else the record),
+the markets where they have spoken (else today's holder) into
+`expectedShareNext`. The weekly sweep takes the pulse first, then harvests,
+then scores; "Take the pulse now" on the page runs it on demand.
+
+**The model.** `taxTrajectory({ power })`: the expected lever share over
+each horizon is today's share until the next government is seated, the
+market-implied share for one term, then the long-run mean since 1946
+(`expectedShareOver`). The history term's `pUp` and typical move come from
+the bucket that share lands in (`baseRateFor`), or the unconditional record
+when the bucket is thin — and the page says which. Every horizon also
+reports `pHigherIfLeft`, `pHigherIfRight` and `powerSwing` (their
+difference): how much control alone moves the odds at that horizon.
+`inflationByControl()` computes average December-over-December CPI inflation
+under each configuration since 1947 from FRED's CPI series; it is shown as
+history with a caveat and does not feed the ladder.
+
+**Public check.** `erosion.powerStatus` reports which feeds have answered and
+when, with no client data.
+
 ### Environment
 `FRED_API_KEY` is now optional: without it the ladder and the Treasury
 benchmarks use FRED's public CSV download (`fredgraph.csv`) for the same
@@ -139,6 +183,14 @@ point, never adding a menu. The next step is to let the Sphere replace the
 sidebar for clients, with the sidebar kept for the advisor's operations.
 
 ## Tested
+`server/power.test.ts` (10 tests): the record's continuity and fifteen
+anchor years against the official pages, lever shares and buckets, the
+partition of every window into left/divided/right reproducing the
+unconditional counts, the thin-bucket fallback, the expected-share path, the
+trajectory's power point and swing, the Congress and FJC parsers on
+fixtures, both market parsers including the Republican-framed flip, and the
+inflation-by-control averages on a synthetic 3 % series.
+
 `server/erosion.test.ts` (12 test blocks): FRED's CSV parsing and the keyless
 transport (no api_key in any URL), the deterministic metric readings, the
 verbatim-quote guard (curly quotes, whitespace, wrong number, sentence not

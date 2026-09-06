@@ -11,6 +11,7 @@ import { registerSmsRoutes } from "./sms";
 import { registerScheduledRoutes, startFollowupScheduler } from "../followups";
 import { registerEventRoutes } from "../automations";
 import { startHarvestSchedule } from "../forecastSources";
+import { startPulseSchedule } from "../power";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -85,6 +86,8 @@ async function startServer() {
     startFollowupScheduler();
     // Erosion engine: EROSION_HARVEST_DAYS=7 has the AI council re-read every forecaster weekly (off unless set).
     if (startHarvestSchedule()) console.log("[erosion] harvest sweep scheduled every", process.env.EROSION_HARVEST_DAYS, "days");
+    // The political pulse (seats, bench, market odds) is keyless and free: weekly by default, POWER_PULSE_DAYS=0 turns it off.
+    if (startPulseSchedule()) console.log("[power] pulse scheduled every", process.env.POWER_PULSE_DAYS ?? 7, "days");
   });
 }
 

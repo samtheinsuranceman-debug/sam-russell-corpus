@@ -9,7 +9,9 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { ENV } from "./_core/env";
 import { recordEvent } from "./ledger";
 import { getFactFinderForUser } from "./factFinderDb";
-import { HORIZONS, LADDER_YEARS, basketRate, erosionSummary, hurdleRate, purchasingPower, taxTrajectory, type BasketItem } from "@shared/erosion";
+import { HORIZONS, LADDER_YEARS, basketRate, conditionalOddsTable, erosionSummary, hurdleRate, longRunLeverShare, purchasingPower, taxTrajectory, type BasketItem, type PowerInput } from "@shared/erosion";
+import { CONTROL, POWER_HISTORY_SOURCES, controlAt, demLeverShare } from "@shared/powerHistory";
+import { inflationByControl, latestReadings, listSnapshots, powerNow, powerSweep } from "./power";
 import { ESTATE_EXCLUSION, MAX_LTCG_RATE, TAX_HISTORY_SOURCES, TOP_CORPORATE_RATE, TOP_MARGINAL_RATE, changeEvents, windowStats } from "@shared/taxHistory";
 import { filingKeyFromLabel } from "@shared/taxRules";
 import { CATEGORIES, inflationLadder } from "./inflation";
@@ -17,6 +19,14 @@ import { fredMode } from "./_core/fred";
 import { ACTUAL_SERIES, SOURCES, addClaim, councilReview, fetchSourceText, harvestAll, harvestSource, listClaims, listHarvests, listSources, recordActual, reviewHarvest, scorePanel, updateSource, weightedClaims } from "./forecastSources";
 
 const isOwner = (ctx: { user: { openId: string; role: string } }) => ctx.user.openId === ENV.ownerOpenId || ctx.user.role === "admin";
+
+/** The year the next elected federal government is seated (January after an even-year November election). */
+export function nextSeatedYear(now = new Date()): number { const y = now.getFullYear(); return y % 2 === 0 ? y + 1 : y + 2; }
+
+async function powerInput(now = new Date()): Promise<{ input: PowerInput; now: Awaited<ReturnType<typeof powerNow>> }> {
+  const p = await powerNow();
+  return { now: p, input: { shareToday: p.today.leverShare, expectedShareNext: p.expectedShareNext, seatedYear: nextSeatedYear(now), longRunShare: longRunLeverShare() } };
+}
 
 export const erosionRouter = router({
   /** The published record: statutory series, the change events, and the base rates by horizon. */
@@ -66,9 +76,30 @@ export const erosionRouter = router({
 
   /** The expected tax path: history blended with the weighted panel, by five-year horizon. */
   trajectory: protectedProcedure.query(async () => {
-    const { claims, totalPanelWeight, allPanelWeight, sources } = await weightedClaims();
+    const [{ claims, totalPanelWeight, allPanelWeight, sources }, pw] = await Promise.all([weightedClaims(), powerInput()]);
     const startYear = new Date().getFullYear();
-    return { startYear, points: taxTrajectory({ startYear, claims, totalPanelWeight, allPanelWeight }), panel: sources.filter((s) => s.weight > 0).map((s) => ({ id: s.id, name: s.name, weight: s.weight })), claimsUsed: claims.length };
+    return { startYear, points: taxTrajectory({ startYear, claims, totalPanelWeight, allPanelWeight, power: pw.input }), panel: sources.filter((s) => s.weight > 0).map((s) => ({ id: s.id, name: s.name, weight: s.weight })), claimsUsed: claims.length, power: pw.input };
+  }),
+
+  /** Who holds the levers, the odds they change hands, the conditional record, and the pulse over time. */
+  power: protectedProcedure.query(async () => {
+    const [now, snapshots, byControl] = await Promise.all([powerNow(), listSnapshots({ limit: 3000 }), inflationByControl()]);
+    const seated = nextSeatedYear();
+    const series: Record<string, Array<{ asOf: string; value: number; source: string }>> = {};
+    for (const s of snapshots) { const k = `${s.lever}.${s.measure}`; (series[k] ??= []).push({ asOf: s.asOf, value: s.value, source: s.source }); }
+    for (const k of Object.keys(series)) series[k]!.sort((a, b) => a.asOf.localeCompare(b.asOf));
+    return { now, seatedYear: seated, longRunShare: longRunLeverShare(), record: CONTROL.filter((c) => c.year >= 1946).map((c) => ({ ...c, share: demLeverShare(c.year) })), recordSources: POWER_HISTORY_SOURCES, odds: conditionalOddsTable(), inflationByControl: byControl, series, leverWeights: { president: 0.5, senate: 0.25, house: 0.25 } };
+  }),
+  powerPulse: protectedProcedure.mutation(async ({ ctx }) => {
+    if (!isOwner(ctx)) throw new TRPCError({ code: "FORBIDDEN" });
+    return powerSweep();
+  }),
+  /** Public, no client data: which feeds have answered and when. */
+  powerStatus: publicProcedure.query(async () => {
+    const latest = await latestReadings();
+    const feeds = Object.entries(latest).map(([k, v]) => ({ key: k, asOf: v.asOf, sources: v.sources }));
+    const year = new Date().getFullYear();
+    return { record: controlAt(year), feeds, seatedYear: nextSeatedYear() };
   }),
 
   /** Read one source's page with the AI council; verified figures queue for review. Owner only. */
@@ -121,9 +152,9 @@ export const erosionRouter = router({
     const income = input.income ?? (n(t.adjustedGrossIncome) || n(inc.w2Income) + n(inc.bonusIncome) + n(inc.contractorIncome) + n(inc.practiceDistributions) + n(inc.spouseIncome));
     if (!income) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Enter income (or complete the Income and Taxes sections of the assessment) first" });
     const filing = input.filing ?? filingKeyFromLabel(t.filingStatus);
-    const [{ claims, totalPanelWeight, allPanelWeight }, ladder] = await Promise.all([weightedClaims(), inflationLadder()]);
+    const [{ claims, totalPanelWeight, allPanelWeight }, ladder, pw] = await Promise.all([weightedClaims(), inflationLadder(), powerInput()]);
     const startYear = new Date().getFullYear();
-    const trajectory = taxTrajectory({ startYear, claims, totalPanelWeight, allPanelWeight });
+    const trajectory = taxTrajectory({ startYear, claims, totalPanelWeight, allPanelWeight, power: pw.input });
     let inflation = input.inflation ?? null;
     let basket: { rate: number | null; covered: number } | null = null;
     if (inflation == null && input.basket?.length) { basket = basketRate(input.basket as BasketItem[], ladder, 20); inflation = basket.rate; }

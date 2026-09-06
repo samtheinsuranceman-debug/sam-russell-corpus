@@ -195,7 +195,12 @@ page from the Purchasing Power page ("Harvest"); figures arrive with their
 verbatim sentence and wait for approval. `EROSION_HARVEST_DAYS=7` runs that
 sweep weekly on its own, then scores every closed-year claim against the
 published outcome on FRED and regrades each source. Nothing enters the panel
-without the owner. Harvests read PDFs as well as pages.
+without the owner. Harvests read PDFs as well as pages. The same sweep takes
+the political pulse first: live seat counts, the federal bench, and the
+prediction-market odds of a change of control, all keyless, so the tax path
+is read against who is expected to hold the levers. The pulse itself is free
+and runs weekly on its own (`POWER_PULSE_DAYS`, default 7; 0 turns it off),
+with a first reading half a minute after boot.
 
 ### Connections (every outside platform, switched on by variables)
 The portal page **Connections** (`/portal/connections`) shows every platform the
