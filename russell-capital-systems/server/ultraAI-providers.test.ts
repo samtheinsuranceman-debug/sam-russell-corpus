@@ -4,8 +4,8 @@ import { describe, expect, it } from "vitest";
 
 const src = readFileSync(resolve("server/ultraAI.ts"), "utf8");
 
-describe("Ultra AI orchestrator — nine AI advisors", () => {
-  it("wires all nine providers, each gated on its own environment key", () => {
+describe("Ultra AI orchestrator — twelve AI advisors", () => {
+  it("wires all twelve providers, each gated on its own environment key", () => {
     const envKeys = [
       "ANTHROPIC_API_KEY", // Claude (lead)
       "OPENAI_API_KEY", // ChatGPT
@@ -15,11 +15,14 @@ describe("Ultra AI orchestrator — nine AI advisors", () => {
       "OPENROUTER_API_KEY", // OpenRouter
       "MISTRAL_API_KEY", // Mistral
       "GROQ_API_KEY", // Groq
+      "COHERE_API_KEY", // Cohere
+      "DEEPSEEK_API_KEY", // DeepSeek
+      "TOGETHER_API_KEY", // Together AI
       "BUILT_IN_FORGE_API_KEY", // Manus (Forge gateway)
     ];
     for (const key of envKeys) expect(src, key).toContain(`envKey: "${key}"`);
-    // The provider id union must list exactly these nine.
-    for (const id of ["claude", "chatgpt", "grok", "gemini", "perplexity", "openrouter", "mistral", "groq", "manus"]) {
+    // The provider id union must list exactly these twelve.
+    for (const id of ["claude", "chatgpt", "grok", "gemini", "perplexity", "openrouter", "mistral", "groq", "cohere", "deepseek", "together", "manus"]) {
       expect(src, id).toContain(`"${id}"`);
     }
   });

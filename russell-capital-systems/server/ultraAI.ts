@@ -26,7 +26,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { MODULE_CATALOG, type ModuleKey } from "@shared/ultraEngine";
 
-type ProviderId = "claude" | "chatgpt" | "grok" | "gemini" | "perplexity" | "openrouter" | "mistral" | "groq" | "manus";
+type ProviderId = "claude" | "chatgpt" | "grok" | "gemini" | "perplexity" | "openrouter" | "mistral" | "groq" | "cohere" | "deepseek" | "together" | "manus";
 
 export type Provider = {
   id: ProviderId;
@@ -91,6 +91,13 @@ const PROVIDERS: Provider[] = [
     call: (k, s, u) => openAiCompatible("https://api.mistral.ai/v1", "mistral-large-latest", k, s, u) },
   { id: "groq", label: "Groq", envKey: "GROQ_API_KEY",
     call: (k, s, u) => openAiCompatible("https://api.groq.com/openai/v1", "llama-3.3-70b-versatile", k, s, u) },
+  // Cohere's OpenAI-compatible endpoint (Command A).
+  { id: "cohere", label: "Cohere", envKey: "COHERE_API_KEY",
+    call: (k, s, u) => openAiCompatible("https://api.cohere.ai/compatibility/v1", "command-a-03-2025", k, s, u) },
+  { id: "deepseek", label: "DeepSeek", envKey: "DEEPSEEK_API_KEY",
+    call: (k, s, u) => openAiCompatible("https://api.deepseek.com/v1", "deepseek-chat", k, s, u) },
+  { id: "together", label: "Together AI", envKey: "TOGETHER_API_KEY",
+    call: (k, s, u) => openAiCompatible("https://api.together.xyz/v1", "meta-llama/Llama-3.3-70B-Instruct-Turbo", k, s, u) },
   {
     // Manus routes through the built-in Forge gateway (OpenAI-compatible),
     // keyed by BUILT_IN_FORGE_API_KEY. We reuse invokeLLM so the gateway's

@@ -20,18 +20,18 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 
 ## Parts (10)
 
-- `RCS_CODE_BOOK_part01_of_10.md` — 182 files, 1,845,188 bytes
-- `RCS_CODE_BOOK_part02_of_10.md` — 161 files, 1,805,794 bytes
+- `RCS_CODE_BOOK_part01_of_10.md` — 181 files, 1,844,595 bytes
+- `RCS_CODE_BOOK_part02_of_10.md` — 163 files, 1,814,290 bytes
 - `RCS_CODE_BOOK_part03_of_10.md` — 74 files, 1,793,264 bytes
 - `RCS_CODE_BOOK_part04_of_10.md` — 33 files, 1,838,678 bytes
 - `RCS_CODE_BOOK_part05_of_10.md` — 31 files, 1,838,522 bytes
 - `RCS_CODE_BOOK_part06_of_10.md` — 29 files, 1,826,443 bytes
 - `RCS_CODE_BOOK_part07_of_10.md` — 29 files, 1,801,874 bytes
 - `RCS_CODE_BOOK_part08_of_10.md` — 30 files, 1,824,210 bytes
-- `RCS_CODE_BOOK_part09_of_10.md` — 50 files, 1,838,063 bytes
-- `RCS_CODE_BOOK_part10_of_10.md` — 40 files, 414,846 bytes
+- `RCS_CODE_BOOK_part09_of_10.md` — 50 files, 1,840,031 bytes
+- `RCS_CODE_BOOK_part10_of_10.md` — 40 files, 415,119 bytes
 
-**Total: 659 files across 10 parts.**
+**Total: 660 files across 10 parts.**
 
 ## File → part map
 
@@ -133,6 +133,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `shared/advancedAnalytics.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `shared/advisorySummaryData.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `shared/annuityData.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `shared/assessmentBridge.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `shared/branding.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `shared/carrierRatings.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `shared/carrierRecommendation.ts` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -215,8 +216,8 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/mortgageKillerPdf.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/pdfExportService.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/pdfReport.ts` → `RCS_CODE_BOOK_part01_of_10.md`
-- `server/planningCasesRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
-- `server/portalAI.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/planningCasesRouter.ts` → `RCS_CODE_BOOK_part02_of_10.md`
+- `server/portalAI.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/rothPdfReport.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/routers.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/seedReels.mjs` → `RCS_CODE_BOOK_part02_of_10.md`

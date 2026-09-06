@@ -29,6 +29,7 @@ import TrialCountdownWidget from "@/components/TrialCountdownWidget";
 import { Sun, Moon, Inbox } from "lucide-react";
 import { MusicPlayerMiniBar } from "@/components/MusicPlayerMiniBar";
 import { JourneyProgressBar } from "@/components/JourneyProgressBar";
+import { FactFinderBadge } from "@/contexts/ClientDataContext";
 
 /* ═══════════════════════════════════════════════════════════════════
    COLOR-CODED NAVIGATION — Intuitive categories with visual coding
@@ -1164,6 +1165,13 @@ function SubTabDisclaimer() {
   );
 }
 
+/** One line on every portal page when the calculators are running on the user's own assessment. */
+function AssessmentPrefillNotice() {
+  const { source } = useClientData();
+  if (source !== "assessment") return null;
+  return <div className="mb-3"><FactFinderBadge /></div>;
+}
+
 export function AppShell({ children, title: _title, subtitle: _subtitle }: { children: React.ReactNode; title?: string; subtitle?: string }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [location] = useLocation();
@@ -1199,6 +1207,7 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
         {/* Page content — ambient breathing micro-shift */}
         <main id="main-content" className="rc-fade-in page-enter rc-breathe-ambient">
           <JourneyProgressBar />
+          <AssessmentPrefillNotice />
           {children}
         </main>
       </div>

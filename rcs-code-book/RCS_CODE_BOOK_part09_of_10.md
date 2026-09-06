@@ -32371,6 +32371,7 @@ export function AccessProvider({ children }: { children: ReactNode }) {
 
 ```tsx
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { assessmentToClientData } from "@shared/assessmentBridge";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 
@@ -32445,8 +32446,13 @@ interface ClientDataContextType {
   selectedClientId: number | null;
   /** Set the active client — triggers data reload */
   setSelectedClientId: (id: number | null) => void;
-  /** The merged Fact Finder data for the selected client */
+  /** The merged Fact Finder data for the selected client — or, when no client is
+   *  selected, the signed-in user's own Financial Assessment mapped onto the same shape. */
   data: ClientFactFinderData | null;
+  /** Where `data` came from: an advisor-selected client, or the user's own assessment. */
+  source: "client" | "assessment" | null;
+  /** Calculator inputs the assessment could not supply (left at 0). */
+  missingInputs: string[];
   /** Whether data is currently loading */
   loading: boolean;
   /** All available clients for the selector */
@@ -32459,6 +32465,8 @@ const ClientDataContext = createContext<ClientDataContextType>({
   selectedClientId: null,
   setSelectedClientId: () => {},
   data: null,
+  source: null,
+  missingInputs: [],
   loading: false,
   clients: [],
   clientsLoading: false,
@@ -32474,7 +32482,7 @@ function n(v: any): number {
 
 export function ClientDataProvider({ children: childrenProp }: { children: ReactNode }) {
   // Use shared auth hook — single source of truth, no duplicate trpc.auth.me query
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const [selectedClientId, setSelectedClientIdRaw] = useState<number | null>(() => {
     try {
@@ -32505,6 +32513,14 @@ export function ClientDataProvider({ children: childrenProp }: { children: React
   });
 
   // Fetch the household fact finder for the selected client (only when authenticated)
+  // The user's own Financial Assessment (New Client Welcome List) — used when no
+  // advisor client is selected, so every calculator starts pre-filled.
+  const assessmentQuery = trpc.factFinder.get.useQuery(undefined, {
+    enabled: isAuthenticated && selectedClientId === null,
+    staleTime: 30_000,
+    retry: false,
+  });
+
   const factFinderQuery = trpc.household.getFactFinder.useQuery(
     { clientId: selectedClientId! },
     { enabled: selectedClientId !== null && isAuthenticated, staleTime: 30_000, retry: false }
@@ -32539,11 +32555,21 @@ export function ClientDataProvider({ children: childrenProp }: { children: React
 
   // Merge client record + fact finder + notes into unified data
   const [data, setData] = useState<ClientFactFinderData | null>(null);
+  const [source, setSource] = useState<"client" | "assessment" | null>(null);
+  const [missingInputs, setMissingInputs] = useState<string[]>([]);
   const loading = (selectedClientId !== null) && (clientQuery.isLoading || factFinderQuery.isLoading);
 
   useEffect(() => {
     if (!selectedClientId || !clientQuery.data) {
-      setData(null);
+      const a = assessmentQuery.data;
+      if (!selectedClientId && a?.persisted) {
+        const bridged = assessmentToClientData(a.data, { fallbackName: user?.name ?? "You" });
+        setData(bridged.data as ClientFactFinderData);
+        setSource("assessment");
+        setMissingInputs(bridged.missing);
+      } else {
+        setData(null); setSource(null); setMissingInputs([]);
+      }
       return;
     }
     const client = (clientQuery.data as any[]).find((c: any) => c.id === selectedClientId);
@@ -32595,13 +32621,17 @@ export function ClientDataProvider({ children: childrenProp }: { children: React
       grandchildren: (ff?.grandchildren as any[]) ?? [],
     };
     setData(merged);
-  }, [selectedClientId, clientQuery.data, factFinderQuery.data, parseNotesData]);
+    setSource("client");
+    setMissingInputs([]);
+  }, [selectedClientId, clientQuery.data, factFinderQuery.data, parseNotesData, assessmentQuery.data, user?.name]);
 
   return (
     <ClientDataContext.Provider value={{
       selectedClientId,
       setSelectedClientId,
       data,
+      source,
+      missingInputs,
       loading,
       clients: clientsList,
       clientsLoading: isAuthenticated ? clientsQuery.isLoading : false,
@@ -32621,12 +32651,16 @@ export function useClientData() {
  * Import and render at the top of any calculator page.
  */
 export function FactFinderBadge({ className = "" }: { className?: string }) {
-  const { data } = useClientData();
+  const { data, source, missingInputs } = useClientData();
   if (!data) return null;
+  const fromAssessment = source === "assessment";
   return (
-    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-medium ${className}`}>
+    <div className={`inline-flex flex-wrap items-center gap-1.5 px-2.5 py-1 rounded-full ${fromAssessment ? "bg-violet-500/15 border border-violet-400/30 text-violet-200" : "bg-emerald-500/15 border border-emerald-500/30 text-emerald-400"} text-xs font-medium ${className}`}>
       <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-      Auto-filled from {data.clientName}'s Fact Finder
+      {fromAssessment ? "Pre-filled from your Financial Assessment" : `Auto-filled from ${data.clientName}'s Fact Finder`}
+      {fromAssessment && missingInputs.length > 0 && (
+        <a href="/portal/financial-assessment" className="underline decoration-dotted opacity-80 hover:opacity-100" title={missingInputs.join(", ")}>· {missingInputs.length} input{missingInputs.length === 1 ? "" : "s"} still blank</a>
+      )}
     </div>
   );
 }
