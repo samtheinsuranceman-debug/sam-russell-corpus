@@ -28,6 +28,7 @@ import { SessionTimeout } from "@/components/SessionTimeout";
 import TrialCountdownWidget from "@/components/TrialCountdownWidget";
 import { Sun, Moon, Inbox } from "lucide-react";
 import { MusicPlayerMiniBar } from "@/components/MusicPlayerMiniBar";
+import { JourneyProgressBar } from "@/components/JourneyProgressBar";
 
 /* ═══════════════════════════════════════════════════════════════════
    COLOR-CODED NAVIGATION — Intuitive categories with visual coding
@@ -1197,6 +1198,7 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
 
         {/* Page content — ambient breathing micro-shift */}
         <main id="main-content" className="rc-fade-in page-enter rc-breathe-ambient">
+          <JourneyProgressBar />
           {children}
         </main>
       </div>

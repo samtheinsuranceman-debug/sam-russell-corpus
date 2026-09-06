@@ -4971,6 +4971,12 @@ next work in priority order. Do not undo the rules in the spec.
   Financial Advisor → Wealth Genome Analysis → The Arrival … The Brotherhood.
 - One-command release: `pnpm release` (typecheck → docs/index.html → schema SQL
   → public-surface tests → build + bundle guard → deploy zip → code book).
+- **Wealth Genome driven by the assessment** (`shared/wealthGenome.ts`,
+  `factFinder.genome`): eight dimensions, 0–100, each with reasons from the
+  client's facts and what would raise it; tests prove no invented figures.
+- **Journey carried page to page**: `JourneyProgressBar` in the portal shell
+  shows "Step N of M · next" on any page that is a journey step and stamps
+  `visitedAt` server-side (`librarian.markVisited`).
 
 ## Verified how
 
@@ -4989,33 +4995,24 @@ Genome pages were already merged; they are now grouped under New Client Welcome
 List, with the Wealth Genome page given a portal route (`/portal/wealth-genome`).
 One caveat for the owner: those pages are visually from the purple "genome"
 design and the public homepage is emerald/neon; the portal shell is purple, so
-inside the portal they match. `WealthGenomePage` still shows placeholder scores
-(it is not yet driven by the assessment) — see next steps.
+inside the portal they match. `WealthGenomePage` is now driven by the
+assessment (`shared/wealthGenome.ts`), with reasons and "what would raise it"
+per dimension.
 
 ## Next steps, in order
 
-1. **Drive the Wealth Genome from the assessment.** Replace the placeholder
-   dimension scores in `client/src/pages/WealthGenomePage.tsx` with scores
-   computed from `factFinderSignals()` / the assessment (income stability, tax
-   efficiency, insurance coverage, retirement readiness, estate planning, debt
-   management, diversification, risk mitigation). Keep it explanatory, no
-   guarantees.
-2. **Journey progress on the pages themselves.** When a client opens a journey
-   step, show a small "Step N of M — next: …" bar (read `librarian.latestJourney`)
-   so the journey carries them page to page. Mark steps visited server-side
-   (add `visitedAt` per step to `client_journeys.journey`).
-3. **Calculators pre-filled from the assessment.** Mortgage Killer, Income Gap,
+1. **Calculators pre-filled from the assessment.** Mortgage Killer, Income Gap,
    Roth Strategies, Market Stress Test: read the relevant assessment fields on
    load so the client does not retype. Keep the assessment the single source.
-4. **Advisor view of a client's assessment and journey.** In the client
+2. **Advisor view of a client's assessment and journey.** In the client
    directory, show the client's completeness, the Financial Analysis Document,
    and their latest journey; let the advisor ask the librarian *about* a client
    (same gate, client's data).
-5. **Voice.** With `ELEVENLABS_API_KEY`/`ELEVENLABS_VOICE_ID` set the deck speaks
+3. **Voice.** With `ELEVENLABS_API_KEY`/`ELEVENLABS_VOICE_ID` set the deck speaks
    in the cloned voice. Consider streaming for long answers.
-6. **More catalog coverage.** Any planning page not yet in
+4. **More catalog coverage.** Any planning page not yet in
    `shared/journeyCatalog.ts` cannot be recommended; add it with honest tags.
-7. **Owner tasks (not code):** GitHub Pages → Source: GitHub Actions; set
+5. **Owner tasks (not code):** GitHub Pages → Source: GitHub Actions; set
    `OWNER_EMAIL`/`OWNER_PASSWORD_HASH`, `DATABASE_URL`, mail (`SMTP_*` or
    `RESEND_API_KEY`), AI keys; rotate the published credentials (see PR #10).
 

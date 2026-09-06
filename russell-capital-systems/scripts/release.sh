@@ -18,7 +18,7 @@ step "3/7 database schema SQL";  bash scripts/export_schema_sql.sh
 # with no database. (`pnpm test` runs the whole suite, parts of which need a live DB.)
 step "4/7 tests";               npx vitest run server/concept16Homepage.test.ts server/livePageParity.test.ts server/databaseSchemaFile.test.ts \
                                   server/homepage-typography-scale.test.ts server/leadStrategy.test.ts \
-                                  server/leadsRouter.test.ts server/ownerLogin.test.ts server/mailer.test.ts server/journeyEngine.test.ts server/librarian.test.ts server/jsonColumn.test.ts server/ultraAI-providers.test.ts
+                                  server/leadsRouter.test.ts server/ownerLogin.test.ts server/mailer.test.ts server/journeyEngine.test.ts server/librarian.test.ts server/wealthGenome.test.ts server/jsonColumn.test.ts server/ultraAI-providers.test.ts
 step "5/7 production build";    pnpm build && node scripts/check_production_bundle.mjs
 step "6/7 deploy bundle";       bash scripts/build_deploy_bundle.sh
 step "7/7 code book";           python3 scripts/build_code_book.py | tail -1
