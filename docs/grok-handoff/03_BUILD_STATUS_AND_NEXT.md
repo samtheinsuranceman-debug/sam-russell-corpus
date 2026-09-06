@@ -29,6 +29,13 @@ next work in priority order. Do not undo the rules in the spec.
 - **Wealth Genome driven by the assessment** (`shared/wealthGenome.ts`,
   `factFinder.genome`): eight dimensions, 0–100, each with reasons from the
   client's facts and what would raise it; tests prove no invented figures.
+- **Calculators pre-filled from the assessment** (`shared/assessmentBridge.ts`):
+  when no advisor client is selected, `ClientDataContext` maps the signed-in
+  user's assessment onto the flat data shape every calculator reads (Mortgage
+  Killer, Income Gap, Roth Strategies, Stress Test, …); the badge says
+  "Pre-filled from your Financial Assessment" and names any blank inputs.
+- **Twelve AI providers**: Cohere, DeepSeek and Together AI join the nine
+  (all keyed by host env variables; skip-if-absent).
 - **Journey carried page to page**: `JourneyProgressBar` in the portal shell
   shows "Step N of M · next" on any page that is a journey step and stamps
   `visitedAt` server-side (`librarian.markVisited`).
@@ -56,18 +63,15 @@ per dimension.
 
 ## Next steps, in order
 
-1. **Calculators pre-filled from the assessment.** Mortgage Killer, Income Gap,
-   Roth Strategies, Market Stress Test: read the relevant assessment fields on
-   load so the client does not retype. Keep the assessment the single source.
-2. **Advisor view of a client's assessment and journey.** In the client
+1. **Advisor view of a client's assessment and journey.** In the client
    directory, show the client's completeness, the Financial Analysis Document,
    and their latest journey; let the advisor ask the librarian *about* a client
    (same gate, client's data).
-3. **Voice.** With `ELEVENLABS_API_KEY`/`ELEVENLABS_VOICE_ID` set the deck speaks
+2. **Voice.** With `ELEVENLABS_API_KEY`/`ELEVENLABS_VOICE_ID` set the deck speaks
    in the cloned voice. Consider streaming for long answers.
-4. **More catalog coverage.** Any planning page not yet in
+3. **More catalog coverage.** Any planning page not yet in
    `shared/journeyCatalog.ts` cannot be recommended; add it with honest tags.
-5. **Owner tasks (not code):** GitHub Pages → Source: GitHub Actions; set
+4. **Owner tasks (not code):** GitHub Pages → Source: GitHub Actions; set
    `OWNER_EMAIL`/`OWNER_PASSWORD_HASH`, `DATABASE_URL`, mail (`SMTP_*` or
    `RESEND_API_KEY`), AI keys; rotate the published credentials (see PR #10).
 
