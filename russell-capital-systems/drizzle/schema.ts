@@ -2528,3 +2528,39 @@ export const factSuggestions = mysqlTable("fact_suggestions", {
   createdAt:       timestamp("createdAt").defaultNow().notNull(),
 }, (t) => ({ bySubject: index("fact_suggestions_subject").on(t.subject) }));
 export type FactSuggestionRow = typeof factSuggestions.$inferSelect;
+
+// ─── THE EROSION ENGINE: forecaster panel and their claims ──────────────────
+// The published long-horizon fiscal forecasts the tax trajectory is built
+// from. Sources carry the owner's (or the AI council's) evidence grades and a
+// track record that accrues as actual outcomes are recorded against claims.
+export const forecastSources = mysqlTable("forecast_sources", {
+  id:            varchar("id", { length: 40 }).primaryKey(),
+  enabled:       boolean("enabled").default(true).notNull(),
+  evidence:      decimal("evidence", { precision: 4, scale: 3 }),       // 0..1, methodology and data quality
+  trackRecord:   decimal("trackRecord", { precision: 4, scale: 3 }),    // 0..1, from scored claims
+  consistency:   decimal("consistency", { precision: 4, scale: 3 }),    // 0..1, stability of successive projections
+  aiEvidence:    decimal("aiEvidence", { precision: 4, scale: 3 }),     // the AI council's grade, if asked
+  aiRationale:   text("aiRationale"),
+  reviewedAt:    timestamp("reviewedAt"),
+  updatedAt:     timestamp("updatedAt").defaultNow().notNull(),
+});
+export type ForecastSourceRow = typeof forecastSources.$inferSelect;
+
+export const forecastClaims = mysqlTable("forecast_claims", {
+  id:               int("id").autoincrement().primaryKey(),
+  sourceId:         varchar("sourceId", { length: 40 }).notNull(),
+  metric:           varchar("metric", { length: 80 }).notNull(),      // e.g. revenue_pct_gdp, debt_pct_gdp
+  horizonYear:      int("horizonYear").notNull(),
+  value:            decimal("value", { precision: 14, scale: 4 }),
+  unit:             varchar("unit", { length: 20 }),
+  baseValue:        decimal("baseValue", { precision: 14, scale: 4 }),  // the same metric today, per the source
+  direction:        int("direction").notNull(),                        // +1 up, 0 flat, -1 down (tax burden)
+  burdenMultiplier: decimal("burdenMultiplier", { precision: 8, scale: 4 }),
+  asOf:             varchar("asOf", { length: 10 }).notNull(),
+  citation:         varchar("citation", { length: 500 }),
+  note:             varchar("note", { length: 500 }),
+  actualValue:      decimal("actualValue", { precision: 14, scale: 4 }),
+  actualAsOf:       varchar("actualAsOf", { length: 10 }),
+  createdAt:        timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ bySource: index("forecast_claims_source").on(t.sourceId), byMetric: index("forecast_claims_metric").on(t.metric, t.horizonYear), once: uniqueIndex("forecast_claims_once").on(t.sourceId, t.metric, t.horizonYear, t.asOf) }));
+export type ForecastClaimRow = typeof forecastClaims.$inferSelect;

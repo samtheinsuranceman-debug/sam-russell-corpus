@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 130
+-- Tables: 132
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -801,6 +801,37 @@ CREATE TABLE `follow_up_emails` (
 	`status` enum('pending','sent','cancelled','failed') NOT NULL DEFAULT 'pending',
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `follow_up_emails_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `forecast_claims` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`sourceId` varchar(40) NOT NULL,
+	`metric` varchar(80) NOT NULL,
+	`horizonYear` int NOT NULL,
+	`value` decimal(14,4),
+	`unit` varchar(20),
+	`baseValue` decimal(14,4),
+	`direction` int NOT NULL,
+	`burdenMultiplier` decimal(8,4),
+	`asOf` varchar(10) NOT NULL,
+	`citation` varchar(500),
+	`note` varchar(500),
+	`actualValue` decimal(14,4),
+	`actualAsOf` varchar(10),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `forecast_claims_id` PRIMARY KEY(`id`),
+	CONSTRAINT `forecast_claims_once` UNIQUE(`sourceId`,`metric`,`horizonYear`,`asOf`)
+);
+CREATE TABLE `forecast_sources` (
+	`id` varchar(40) NOT NULL,
+	`enabled` boolean NOT NULL DEFAULT true,
+	`evidence` decimal(4,3),
+	`trackRecord` decimal(4,3),
+	`consistency` decimal(4,3),
+	`aiEvidence` decimal(4,3),
+	`aiRationale` text,
+	`reviewedAt` timestamp,
+	`updatedAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `forecast_sources_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `hidden_material_config` (
 	`id` int AUTO_INCREMENT NOT NULL,
