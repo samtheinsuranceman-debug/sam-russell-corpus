@@ -53,7 +53,8 @@ export default function Login() {
   return (
     <main className="min-h-screen grid lg:grid-cols-[1.05fr_.95fr] bg-[#07060d] text-white">
       <section className="relative hidden overflow-hidden border-r border-violet-400/15 lg:block">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_20%,rgba(124,58,237,.34),transparent_32%),radial-gradient(circle_at_70%_70%,rgba(34,197,94,.16),transparent_30%),linear-gradient(155deg,#07060d,#100a1d_55%,#08070d)]" />
+        <img src="/rcs-city-glass.webp" alt="Green-lit skyscrapers at night above a dark river" className="absolute inset-0 h-full w-full object-cover object-center brightness-[.7] saturate-[1.15]" loading="lazy" decoding="async" />
+        <div className="absolute inset-0 opacity-50 bg-[radial-gradient(circle_at_28%_20%,rgba(124,58,237,.34),transparent_32%),radial-gradient(circle_at_70%_70%,rgba(34,197,94,.16),transparent_30%),linear-gradient(155deg,#07060d,#100a1d_55%,#08070d)]" />
         <div className="relative z-10 flex h-full flex-col justify-between p-12">
           <p className="text-sm font-semibold uppercase tracking-[0.26em] text-violet-300">Russell Capital Systems</p>
           <div className="max-w-xl">
