@@ -15,6 +15,7 @@ import { ledgerRouter } from "./ledgerRouter";
 import { integrationsRouter } from "./integrationsRouter";
 import { controlsRouter } from "./controlsRouter";
 import { erosionRouter } from "./erosionRouter";
+import { forgivenessRouter } from "./forgivenessRouter";
 import { recordDocumentProvenance } from "./provenance";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
@@ -320,6 +321,7 @@ export const appRouter = router({
   integrations: integrationsRouter,
   controls: controlsRouter,
   erosion: erosionRouter,
+  forgiveness: forgivenessRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
