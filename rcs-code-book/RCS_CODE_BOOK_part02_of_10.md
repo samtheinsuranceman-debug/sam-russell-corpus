@@ -4,6 +4,9 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 
 ### Files in this part
 
+- `server/messaging.ts`
+- `server/messagingDb.ts`
+- `server/mortgageKillerPdf.ts`
 - `server/pdfExportService.ts`
 - `server/pdfReport.ts`
 - `server/planningCasesRouter.ts`
@@ -67,6 +70,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/components/ManusDialog.tsx`
 - `client/src/components/Map.tsx`
 - `client/src/components/MarketDataWidget.tsx`
+- `client/src/components/MessageClientPanel.tsx`
 - `client/src/components/MonteCarloChart.tsx`
 - `client/src/components/MultiPropertyTab.tsx`
 - `client/src/components/MusicPlayerMiniBar.tsx`
@@ -166,11 +170,842 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/pages/CertificationsPage.tsx`
 - `client/src/pages/ClientPortalView.tsx`
 - `client/src/pages/CommandPage.tsx`
-- `client/src/pages/CompetePage.tsx`
-- `client/src/pages/ComplianceDisclosure.tsx`
-- `client/src/pages/ComplianceVaultPage.tsx`
 
 ---
+
+## `server/messaging.ts`
+
+```ts
+// ============================================================
+// MESSAGING — one deliver() for every email or text the platform sends to a
+// lead or client, by hand or by automation. Chooses the transport, honours
+// opt-outs, writes the outbound log, and never puts figures in a message.
+// Templates are plain, short, and end with the compliance line.
+// ============================================================
+import { publicBaseUrl, sendMail } from "./_core/mailer";
+import { sendSms, smsMode } from "./_core/sms";
+import { mailMode } from "./_core/mailer";
+import { logOutboundMessage } from "./messagingDb";
+import { logClientActivity } from "./db";
+
+export type Channel = "email" | "sms";
+export type Category = "transactional" | "marketing";
+
+export type DeliverInput = {
+  channel: Channel;
+  to: string;
+  subject?: string;
+  body: string;        // plain text; html is derived
+  html?: string;
+  category?: Category;
+  template?: string;
+  clientId?: number | null;
+  leadId?: number | null;
+  workspaceId?: number | null;
+  userId?: number | null;
+  actorName?: string;
+};
+export type DeliverResult = { sent: boolean; via?: string; reason?: string; suppressed?: boolean; logId: number | null };
+
+export const COMPLIANCE_LINE = "General education only — not tax, legal, or investment advice. Every strategy is reviewed by a licensed advisor and the tax professional team before anything is implemented.";
+
+const esc = (v: string) => v.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c] as string));
+
+/** Wrap plain text in the site's email frame. Paragraphs split on blank lines; URLs become links. */
+export function textToHtml(text: string, title = "Russell Capital Systems"): string {
+  const paras = text.trim().split(/\n\s*\n/).map((p) => {
+    const withLinks = esc(p).replace(/(https?:\/\/[^\s<]+)/g, (u) => `<a href="${u}" style="color:#34d399;">${u}</a>`).replace(/\n/g, "<br/>");
+    return `<p style="line-height:1.6;margin:0 0 14px;">${withLinks}</p>`;
+  }).join("");
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${esc(title)}</title></head>
+<body style="margin:0;padding:0;background:#060f1e;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;color:#c8d8ec;">
+  <div style="max-width:560px;margin:0 auto;padding:32px 24px;">
+    <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:20px;">Russell<span style="color:#4f8cff">Capital</span></div>
+    ${paras}
+    <p style="line-height:1.6;color:#8fa6c4;font-size:12px;border-top:1px solid #1b2a44;padding-top:14px;margin-top:20px;">${esc(COMPLIANCE_LINE)}</p>
+  </div>
+</body></html>`;
+}
+
+export function messagingStatus() {
+  return { email: mailMode(), sms: smsMode(), emailConfigured: mailMode() !== "none", smsConfigured: smsMode() !== "none", baseUrl: publicBaseUrl() };
+}
+
+export async function deliver(input: DeliverInput): Promise<DeliverResult> {
+  const category = input.category ?? "transactional";
+  let result: { sent: boolean; via?: string; reason?: string; suppressed?: boolean };
+  if (input.channel === "email") {
+    const subject = (input.subject ?? "A note from Russell Capital Systems").slice(0, 300);
+    result = await sendMail({ to: input.to, subject, text: `${input.body.trim()}\n\n${COMPLIANCE_LINE}`, html: input.html ?? textToHtml(input.body, subject), category });
+  } else {
+    const r = await sendSms({ to: input.to, body: input.body, category });
+    result = { sent: r.sent, via: r.via, reason: r.reason, suppressed: r.reason?.includes("opted out") };
+  }
+  const logId = await logOutboundMessage({
+    workspaceId: input.workspaceId ?? null,
+    clientId: input.clientId ?? null,
+    leadId: input.leadId ?? null,
+    userId: input.userId ?? null,
+    channel: input.channel,
+    category,
+    toAddress: input.to.slice(0, 320),
+    subject: input.channel === "email" ? (input.subject ?? null) : null,
+    body: input.body,
+    template: input.template ?? null,
+    status: result.sent ? "sent" : result.suppressed ? "suppressed" : "failed",
+    via: result.via ?? null,
+    reason: result.reason ?? null,
+  });
+  if (input.clientId && input.workspaceId) {
+    try {
+      await logClientActivity({
+        clientId: input.clientId, workspaceId: input.workspaceId, action: input.channel === "email" ? "email" : "sms",
+        actorName: input.actorName ?? "Automation", actorUserId: input.userId ?? undefined, entityType: "message", entityId: logId ?? undefined,
+        summary: `${input.channel === "email" ? "Email" : "Text"} ${result.sent ? "sent" : "not sent"}${input.template ? ` (${input.template})` : ""}${input.subject ? `: ${input.subject}` : ""}`,
+      });
+    } catch { /* activity log is best-effort */ }
+  }
+  return { ...result, logId };
+}
+
+// ─── Templates the advisor can pick from ─────────────────────────────────────
+export type TemplateVars = { firstName: string; advisorName: string; baseUrl: string };
+export type MessageTemplate = { id: string; label: string; subject: string; email: (v: TemplateVars) => string; sms: (v: TemplateVars) => string };
+
+export const MESSAGE_TEMPLATES: MessageTemplate[] = [
+  {
+    id: "check_in", label: "Friendly check-in", subject: "Checking in",
+    email: (v) => `Hi ${v.firstName},\n\nJust checking in. If anything has changed — income, a move, a new practice, a question that has been on your mind — reply to this email and we will work it into the plan.\n\nTalk soon,\n${v.advisorName}`,
+    sms: (v) => `Hi ${v.firstName}, ${v.advisorName} at Russell Capital Systems. Checking in — anything changed, or a question on your mind? Reply here anytime.`,
+  },
+  {
+    id: "assessment_reminder", label: "Finish your Financial Assessment", subject: "Your Financial Assessment is waiting",
+    email: (v) => `Hi ${v.firstName},\n\nYour Financial Assessment is the foundation for everything we build. It takes about twenty minutes and saves as you go:\n\n${v.baseUrl}/portal/financial-assessment\n\nOnce it is complete, the AI Financial Advisor can answer your questions and lay out your customized journey through the site.\n\n${v.advisorName}`,
+    sms: (v) => `Hi ${v.firstName}, your Financial Assessment is waiting (about 20 min, saves as you go): ${v.baseUrl}/portal/financial-assessment — ${v.advisorName}`,
+  },
+  {
+    id: "journey_ready", label: "Your secret journey is ready", subject: "Your customized journey is ready",
+    email: (v) => `Hi ${v.firstName},\n\nYour questions have been boiled down to their core, and the librarian has laid out a page-by-page journey through the site that answers them in order — calculators included, pre-filled from your assessment.\n\nStart here: ${v.baseUrl}/portal/my-journey\n\n${v.advisorName}`,
+    sms: (v) => `Hi ${v.firstName}, your customized journey is ready — a page-by-page path that answers your questions in order: ${v.baseUrl}/portal/my-journey — ${v.advisorName}`,
+  },
+  {
+    id: "report_ready", label: "A report is ready in your portal", subject: "A new report is ready for you",
+    email: (v) => `Hi ${v.firstName},\n\nA new report has been posted to your client portal. Sign in to review it, and reply with any question — no detail is too small.\n\n${v.baseUrl}/portal\n\n${v.advisorName}`,
+    sms: (v) => `Hi ${v.firstName}, a new report is ready in your Russell Capital Systems portal: ${v.baseUrl}/portal — ${v.advisorName}`,
+  },
+  {
+    id: "meeting_reminder", label: "Meeting reminder", subject: "Reminder: our meeting",
+    email: (v) => `Hi ${v.firstName},\n\nA quick reminder about our upcoming meeting. If you have recent tax returns or statements handy, have them nearby — we will use them.\n\nNeed to move it? Reply to this email.\n\n${v.advisorName}`,
+    sms: (v) => `Hi ${v.firstName}, reminder about our upcoming meeting with ${v.advisorName}. Have recent returns or statements nearby if you can. Need to move it? Reply here.`,
+  },
+  {
+    id: "thank_you", label: "Thank you after a meeting", subject: "Thank you",
+    email: (v) => `Hi ${v.firstName},\n\nThank you for the time today. The next steps we discussed are being written up, and you will see them in your portal shortly.\n\n${v.baseUrl}/portal\n\n${v.advisorName}`,
+    sms: (v) => `Hi ${v.firstName}, thank you for today. The next steps are being written up and will be in your portal shortly. — ${v.advisorName}`,
+  },
+];
+
+export function renderTemplate(id: string, channel: Channel, vars: Partial<TemplateVars>): { subject: string; body: string } | null {
+  const t = MESSAGE_TEMPLATES.find((x) => x.id === id);
+  if (!t) return null;
+  const v: TemplateVars = { firstName: vars.firstName?.trim() || "there", advisorName: vars.advisorName?.trim() || "Russell Capital Systems", baseUrl: vars.baseUrl ?? publicBaseUrl() };
+  return { subject: t.subject, body: channel === "email" ? t.email(v) : t.sms(v) };
+}
+```
+
+## `server/messagingDb.ts`
+
+```ts
+// ============================================================
+// MESSAGING + AUTOMATION — data access for opt-outs, the outbound message
+// log, lead follow-up sequences, and cached market benchmarks. Graceful when
+// the DB is not configured (returns empty / no-ops), like leadsDb.ts.
+// ============================================================
+import { and, desc, eq, inArray, lte } from "drizzle-orm";
+import { getDb } from "./db";
+import { emailOptOuts, leadFollowups, marketDataPoints, outboundMessages, smsOptOuts, type LeadFollowup, type OutboundMessage } from "../drizzle/schema";
+
+// ─── Opt-outs ────────────────────────────────────────────────────────────────
+export async function isSmsOptedOut(phone: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  const rows = await db.select({ id: smsOptOuts.id }).from(smsOptOuts).where(eq(smsOptOuts.phone, phone)).limit(1);
+  return rows.length > 0;
+}
+export async function recordSmsOptOut(phone: string, source = "reply"): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  if (await isSmsOptedOut(phone)) return;
+  await db.insert(smsOptOuts).values({ phone, source });
+}
+export async function clearSmsOptOut(phone: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(smsOptOuts).where(eq(smsOptOuts.phone, phone));
+}
+
+export async function isEmailOptedOut(email: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  const rows = await db.select({ id: emailOptOuts.id }).from(emailOptOuts).where(eq(emailOptOuts.email, email.trim().toLowerCase())).limit(1);
+  return rows.length > 0;
+}
+export async function recordEmailOptOut(email: string, source = "link"): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  const normalized = email.trim().toLowerCase();
+  if (await isEmailOptedOut(normalized)) return;
+  await db.insert(emailOptOuts).values({ email: normalized, source });
+}
+
+// ─── Outbound message log ────────────────────────────────────────────────────
+export type LogMessageInput = Omit<typeof outboundMessages.$inferInsert, "id" | "createdAt">;
+export async function logOutboundMessage(entry: LogMessageInput): Promise<number | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.insert(outboundMessages).values({ ...entry, body: entry.body.slice(0, 20000) });
+  const id = Number((result as unknown as [{ insertId?: number }])[0]?.insertId ?? 0);
+  return id || null;
+}
+export async function listMessagesForClient(clientId: number, workspaceId: number, limit = 100): Promise<OutboundMessage[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(outboundMessages)
+    .where(and(eq(outboundMessages.clientId, clientId), eq(outboundMessages.workspaceId, workspaceId)))
+    .orderBy(desc(outboundMessages.createdAt)).limit(limit);
+}
+export async function listMessagesForLead(leadId: number, limit = 100): Promise<OutboundMessage[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(outboundMessages).where(eq(outboundMessages.leadId, leadId)).orderBy(desc(outboundMessages.createdAt)).limit(limit);
+}
+
+// ─── Lead follow-up sequence ─────────────────────────────────────────────────
+export type FollowupPlanStep = { step: string; channel: "email" | "sms"; scheduledFor: Date };
+
+/** Create the pending rows for a lead; a lead only ever gets one sequence. */
+export async function scheduleFollowups(leadId: number, plan: FollowupPlanStep[]): Promise<number> {
+  const db = await getDb();
+  if (!db || plan.length === 0) return 0;
+  const existing = await db.select({ id: leadFollowups.id }).from(leadFollowups).where(eq(leadFollowups.leadId, leadId)).limit(1);
+  if (existing.length) return 0;
+  await db.insert(leadFollowups).values(plan.map((p) => ({ leadId, step: p.step, channel: p.channel, scheduledFor: p.scheduledFor })));
+  return plan.length;
+}
+export async function dueFollowups(now = new Date(), limit = 50): Promise<LeadFollowup[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(leadFollowups)
+    .where(and(eq(leadFollowups.status, "pending"), lte(leadFollowups.scheduledFor, now)))
+    .orderBy(leadFollowups.scheduledFor).limit(limit);
+}
+/** Flip a pending row to its final state. Returns false if it was no longer pending (another worker took it). */
+export async function settleFollowup(id: number, status: "sent" | "skipped" | "failed", reason?: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  const result = await db.update(leadFollowups)
+    .set({ status, reason: reason?.slice(0, 300), sentAt: status === "sent" ? new Date() : null })
+    .where(and(eq(leadFollowups.id, id), eq(leadFollowups.status, "pending")));
+  const affected = Number((result as unknown as [{ affectedRows?: number }])[0]?.affectedRows ?? 0);
+  return affected > 0;
+}
+export async function cancelFollowupsForLead(leadId: number, reason: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(leadFollowups).set({ status: "cancelled", reason: reason.slice(0, 300) })
+    .where(and(eq(leadFollowups.leadId, leadId), eq(leadFollowups.status, "pending")));
+}
+export async function listFollowupsForLead(leadId: number): Promise<LeadFollowup[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(leadFollowups).where(eq(leadFollowups.leadId, leadId)).orderBy(leadFollowups.scheduledFor);
+}
+export async function listFollowupsForLeads(leadIds: number[]): Promise<LeadFollowup[]> {
+  const db = await getDb();
+  if (!db || leadIds.length === 0) return [];
+  return db.select().from(leadFollowups).where(inArray(leadFollowups.leadId, leadIds)).orderBy(leadFollowups.scheduledFor);
+}
+
+// ─── Market benchmarks cache ─────────────────────────────────────────────────
+export type MarketPoint = { series: string; value: number; asOf: string; source: string; fetchedAt: Date };
+export async function upsertMarketPoint(p: { series: string; value: number; asOf: string; source?: string }): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  const existing = await db.select({ id: marketDataPoints.id }).from(marketDataPoints).where(eq(marketDataPoints.series, p.series)).limit(1);
+  const row = { value: p.value.toFixed(4), asOf: p.asOf, source: p.source ?? "fred", fetchedAt: new Date() };
+  if (existing[0]) await db.update(marketDataPoints).set(row).where(eq(marketDataPoints.id, existing[0].id));
+  else await db.insert(marketDataPoints).values({ series: p.series, ...row });
+}
+export async function getMarketPoints(series: string[]): Promise<MarketPoint[]> {
+  const db = await getDb();
+  if (!db || series.length === 0) return [];
+  const rows = await db.select().from(marketDataPoints).where(inArray(marketDataPoints.series, series));
+  return rows.map((r) => ({ series: r.series, value: Number(r.value), asOf: r.asOf, source: r.source, fetchedAt: r.fetchedAt }));
+}
+```
+
+## `server/mortgageKillerPdf.ts`
+
+```ts
+/**
+ * Mortgage Killer Strategy — PDF Export Service
+ * Branded client-facing PDF with dual amortization schedules,
+ * HELOC cycle diagram, IUL policy summary, and total wealth created.
+ */
+
+import PDFDocument from "pdfkit";
+import type { MortgageKillerResult } from "../shared/mortgageKiller";
+
+// ─── Brand Colors ───────────────────────────────────────────────────────────
+const C = {
+  bg: "#0f1117",
+  card: "#1a1d27",
+  cardAlt: "#141720",
+  border: "#2a2d3a",
+  text: "#e4e4e7",
+  muted: "#a1a1aa",
+  blue: "#3b82f6",
+  emerald: "#22c55e",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  purple: "#8b5cf6",
+  cyan: "#06b6d4",
+  white: "#ffffff",
+  orange: "#f97316",
+};
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+function fmt(n: number): string {
+  return "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
+}
+
+function fmtPct(n: number): string {
+  return (n * 100).toFixed(1) + "%";
+}
+
+function newPage(doc: PDFKit.PDFDocument) {
+  doc.addPage();
+  doc.rect(0, 0, doc.page.width, doc.page.height).fill(C.bg);
+}
+
+function drawPageHeader(doc: PDFKit.PDFDocument, title: string, subtitle?: string) {
+  doc.rect(0, 0, doc.page.width, 80).fill(C.card);
+  doc.rect(0, 78, doc.page.width, 2).fill(C.blue);
+  doc.fillColor(C.blue).fontSize(20).font("Helvetica-Bold").text(title, 40, 22);
+  if (subtitle) {
+    doc.fillColor(C.muted).fontSize(10).font("Helvetica").text(subtitle, 40, 50);
+  }
+  doc.y = 100;
+}
+
+function drawSectionTitle(doc: PDFKit.PDFDocument, title: string) {
+  if (doc.y > doc.page.height - 100) newPage(doc);
+  doc.fillColor(C.blue).fontSize(13).font("Helvetica-Bold").text(title, 40, doc.y);
+  doc.moveDown(0.3);
+  doc.strokeColor(C.border).lineWidth(0.5).moveTo(40, doc.y).lineTo(doc.page.width - 40, doc.y).stroke();
+  doc.moveDown(0.6);
+}
+
+function drawText(doc: PDFKit.PDFDocument, text: string, opts?: { bold?: boolean; color?: string; size?: number }) {
+  doc.fillColor(opts?.color ?? C.text)
+    .fontSize(opts?.size ?? 9.5)
+    .font(opts?.bold ? "Helvetica-Bold" : "Helvetica")
+    .text(text, 40, doc.y, { width: doc.page.width - 80 });
+}
+
+function drawKpiRow(doc: PDFKit.PDFDocument, items: { label: string; value: string; color?: string }[]) {
+  const y = doc.y;
+  const colW = (doc.page.width - 80) / items.length;
+  items.forEach((item, i) => {
+    const x = 40 + i * colW;
+    doc.fillColor(item.color ?? C.emerald).fontSize(18).font("Helvetica-Bold").text(item.value, x, y, { width: colW });
+    doc.fillColor(C.muted).fontSize(8).font("Helvetica").text(item.label, x, y + 22, { width: colW });
+  });
+  doc.y = y + 45;
+}
+
+function drawTableHeader(doc: PDFKit.PDFDocument, cols: { label: string; x: number; w: number }[]) {
+  const y = doc.y;
+  doc.rect(40, y, doc.page.width - 80, 18).fill(C.card);
+  cols.forEach(col => {
+    doc.fillColor(C.muted).fontSize(7.5).font("Helvetica-Bold").text(col.label, col.x, y + 4, { width: col.w, align: "right" });
+  });
+  doc.y = y + 20;
+}
+
+function drawTableRow(doc: PDFKit.PDFDocument, cols: { value: string; x: number; w: number; color?: string }[], highlight?: boolean) {
+  const y = doc.y;
+  if (highlight) {
+    doc.rect(40, y, doc.page.width - 80, 14).fill("#1e2a1e");
+  }
+  cols.forEach(col => {
+    doc.fillColor(col.color ?? C.text).fontSize(7.5).font("Helvetica").text(col.value, col.x, y + 2, { width: col.w, align: "right" });
+  });
+  doc.y = y + 14;
+}
+
+function addPageNumbers(doc: PDFKit.PDFDocument) {
+  const range = doc.bufferedPageRange();
+  for (let i = range.start; i < range.start + range.count; i++) {
+    doc.switchToPage(i);
+    doc.fillColor(C.muted).fontSize(7).font("Helvetica")
+      .text(`Russell Capital Systems™  •  Mortgage Killer Strategy  •  Page ${i + 1} of ${range.count}`, 0, doc.page.height - 25, { align: "center", width: doc.page.width });
+  }
+}
+
+// ─── Main PDF Generator ─────────────────────────────────────────────────────
+
+export interface MortgageKillerPdfInput {
+  result: MortgageKillerResult;
+  clientName: string;
+  advisorName: string;
+  firmName?: string;
+  mortgageRate: number;
+  annualIncome: number;
+  mortgageBalance: number;
+  homeMarketValue: number;
+  homeEquityValue: number;
+  incomeAllocationPct: number;
+}
+
+export function generateMortgageKillerPdf(input: MortgageKillerPdfInput): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const { result, clientName, advisorName } = input;
+    const doc = new PDFDocument({
+      size: "LETTER",
+      margins: { top: 40, bottom: 40, left: 40, right: 40 },
+      bufferPages: true,
+      info: {
+        Title: `Mortgage Killer Strategy — ${clientName}`,
+        Author: advisorName,
+        Subject: "Mortgage Acceleration Analysis",
+      },
+    });
+
+    const chunks: Buffer[] = [];
+    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PAGE 1: COVER
+    // ═══════════════════════════════════════════════════════════════════════
+    doc.rect(0, 0, doc.page.width, doc.page.height).fill(C.bg);
+
+    // Accent bar
+    doc.rect(0, 0, doc.page.width, 6).fill(C.blue);
+
+    // Title block
+    doc.fillColor(C.blue).fontSize(36).font("Helvetica-Bold").text("MORTGAGE", 60, 160);
+    doc.fillColor(C.emerald).fontSize(36).font("Helvetica-Bold").text("KILLER", 60, 200);
+    doc.fillColor(C.text).fontSize(14).font("Helvetica").text("STRATEGY", 60, 244);
+
+    doc.moveDown(3);
+    doc.fillColor(C.text).fontSize(14).font("Helvetica").text(`Prepared for: ${clientName}`, 60);
+    doc.moveDown(0.5);
+    doc.fillColor(C.muted).fontSize(11).text(`Advisor: ${advisorName}`, 60);
+    if (input.firmName) {
+      doc.moveDown(0.3);
+      doc.text(`Firm: ${input.firmName}`, 60);
+    }
+    doc.moveDown(1);
+    doc.fillColor(C.muted).fontSize(10).text(`Generated: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, 60);
+
+    // Summary KPIs on cover
+    doc.y = 420;
+    doc.rect(50, doc.y, doc.page.width - 100, 120).lineWidth(1).strokeColor(C.border).stroke();
+    doc.y += 15;
+    doc.fillColor(C.white).fontSize(11).font("Helvetica-Bold").text("Strategy Highlights", 70, doc.y);
+    doc.y += 25;
+
+    const highlights = [
+      { label: "Years Saved", value: `${result.summary.yearsSaved} yrs ${result.summary.monthsSaved % 12} mo`, color: C.emerald },
+      { label: "Interest Saved", value: fmt(result.summary.totalInterestSaved), color: C.emerald },
+      { label: "Total Wealth Created", value: fmt(result.summary.totalWealthCreated), color: C.blue },
+    ];
+    drawKpiRow(doc, highlights);
+
+    const highlights2 = [
+      { label: "Mortgage-Free Date", value: result.summary.mortgageFreeDate, color: C.cyan },
+      { label: "Original Payoff Date", value: result.summary.originalPayoffDate, color: C.amber },
+      { label: "Final IUL Cash Value", value: fmt(result.summary.finalPolicyCashValue), color: C.purple },
+    ];
+    drawKpiRow(doc, highlights2);
+
+    // Disclaimer
+    doc.fillColor(C.muted).fontSize(7).font("Helvetica")
+      .text("This analysis is for illustrative purposes only and does not constitute financial advice. Actual results may vary. IUL projections use non-guaranteed illustrated rates.", 60, doc.page.height - 60, { width: doc.page.width - 120 });
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PAGE 2: CLIENT FACT FINDER SUMMARY
+    // ═══════════════════════════════════════════════════════════════════════
+    newPage(doc);
+    drawPageHeader(doc, "Client Financial Snapshot", `${clientName} — Current Position`);
+
+    drawSectionTitle(doc, "Mortgage Details");
+    const mortgageDetails = [
+      ["Current Balance", fmt(input.mortgageBalance)],
+      ["Interest Rate", fmtPct(input.mortgageRate)],
+      ["Monthly Payment", fmt(result.currentPlan.monthlyPayment)],
+      ["Remaining Term", `${Math.ceil(result.currentPlan.payoffMonths / 12)} years (${result.currentPlan.payoffMonths} months)`],
+      ["Total Interest (Current Plan)", fmt(result.currentPlan.totalInterest)],
+    ];
+    mortgageDetails.forEach(([label, value]) => {
+      doc.fillColor(C.muted).fontSize(9).font("Helvetica").text(label, 50, doc.y, { continued: true, width: 200 });
+      doc.fillColor(C.white).font("Helvetica-Bold").text(`  ${value}`, { width: 300 });
+      doc.moveDown(0.2);
+    });
+
+    doc.moveDown(0.8);
+    drawSectionTitle(doc, "Property & Assets");
+    const assetDetails = [
+      ["Home Market Value", fmt(input.homeMarketValue)],
+      ["Home Equity", fmt(input.homeEquityValue)],
+      ["Annual Income", fmt(input.annualIncome)],
+      ["IUL Premium (20% of Income)", fmt(result.summary.annualIulPremium)],
+    ];
+    assetDetails.forEach(([label, value]) => {
+      doc.fillColor(C.muted).fontSize(9).font("Helvetica").text(label, 50, doc.y, { continued: true, width: 200 });
+      doc.fillColor(C.white).font("Helvetica-Bold").text(`  ${value}`, { width: 300 });
+      doc.moveDown(0.2);
+    });
+
+    doc.moveDown(0.8);
+    drawSectionTitle(doc, "Strategy Parameters");
+    const stratParams = [
+      ["Income Allocation", fmtPct(input.incomeAllocationPct)],
+      ["HELOC Funding (Years 1-2)", fmt(result.summary.totalHelocDrawn)],
+      ["Total IUL Premiums", fmt(result.summary.totalIulPremiums)],
+      ["Total Policy Loans Applied", fmt(result.summary.totalPolicyLoans)],
+    ];
+    stratParams.forEach(([label, value]) => {
+      doc.fillColor(C.muted).fontSize(9).font("Helvetica").text(label, 50, doc.y, { continued: true, width: 200 });
+      doc.fillColor(C.white).font("Helvetica-Bold").text(`  ${value}`, { width: 300 });
+      doc.moveDown(0.2);
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PAGE 3: CURRENT PLAN — AMORTIZATION SCHEDULE
+    // ═══════════════════════════════════════════════════════════════════════
+    newPage(doc);
+    drawPageHeader(doc, "Current Plan — Standard Amortization", `Total Interest: ${fmt(result.currentPlan.totalInterest)} over ${Math.ceil(result.currentPlan.payoffMonths / 12)} years`);
+
+    drawSectionTitle(doc, "Annual Amortization Summary");
+
+    const amortCols = [
+      { label: "Year", x: 40, w: 45 },
+      { label: "Beg. Balance", x: 85, w: 80 },
+      { label: "Annual Payment", x: 165, w: 80 },
+      { label: "Principal", x: 245, w: 75 },
+      { label: "Interest", x: 320, w: 75 },
+      { label: "End Balance", x: 395, w: 80 },
+      { label: "Cum. Interest", x: 475, w: 80 },
+    ];
+    drawTableHeader(doc, amortCols);
+
+    // Aggregate by year for current plan
+    const currentByYear = new Map<number, { begBal: number; payment: number; principal: number; interest: number; endBal: number; cumInt: number }>();
+    for (const row of result.currentPlan.schedule) {
+      if (!currentByYear.has(row.year)) {
+        currentByYear.set(row.year, { begBal: row.beginningBalance, payment: 0, principal: 0, interest: 0, endBal: 0, cumInt: 0 });
+      }
+      const yr = currentByYear.get(row.year)!;
+      yr.payment += row.payment;
+      yr.principal += row.principal;
+      yr.interest += row.interest;
+      yr.endBal = row.endingBalance;
+      yr.cumInt = row.cumulativeInterest;
+    }
+
+    let rowCount = 0;
+    for (const [year, data] of Array.from(currentByYear)) {
+      if (doc.y > doc.page.height - 50) {
+        newPage(doc);
+        drawPageHeader(doc, "Current Plan — Continued", "Standard Amortization Schedule");
+        drawTableHeader(doc, amortCols);
+      }
+      const highlight = year % 5 === 0;
+      drawTableRow(doc, [
+        { value: `${year}`, x: 40, w: 45 },
+        { value: fmt(data.begBal), x: 85, w: 80 },
+        { value: fmt(data.payment), x: 165, w: 80 },
+        { value: fmt(data.principal), x: 245, w: 75 },
+        { value: fmt(data.interest), x: 320, w: 75, color: C.red },
+        { value: fmt(data.endBal), x: 395, w: 80 },
+        { value: fmt(data.cumInt), x: 475, w: 80, color: C.amber },
+      ], highlight);
+      rowCount++;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PAGE 4+: RECOMMENDED PLAN — ACCELERATED AMORTIZATION
+    // ═══════════════════════════════════════════════════════════════════════
+    newPage(doc);
+    drawPageHeader(doc, "Recommended Plan — Accelerated Payoff", `Total Interest: ${fmt(result.recommendedPlan.totalInterest)} | Payoff in ${Math.ceil(result.recommendedPlan.payoffMonths / 12)} years`);
+
+    drawSectionTitle(doc, "Accelerated Amortization with IUL Policy Loan Payments");
+
+    const accelCols = [
+      { label: "Year", x: 40, w: 40 },
+      { label: "Beg. Balance", x: 80, w: 70 },
+      { label: "Regular Pmt", x: 150, w: 70 },
+      { label: "Extra Principal", x: 220, w: 70 },
+      { label: "Total Principal", x: 290, w: 70 },
+      { label: "Interest", x: 360, w: 60 },
+      { label: "End Balance", x: 420, w: 70 },
+      { label: "Source", x: 490, w: 65 },
+    ];
+    drawTableHeader(doc, accelCols);
+
+    // Aggregate recommended by year
+    const accelByYear = new Map<number, { begBal: number; payment: number; principal: number; interest: number; endBal: number; extraPrincipal: number; source: string }>();
+    for (const row of result.recommendedPlan.schedule) {
+      if (!accelByYear.has(row.year)) {
+        accelByYear.set(row.year, { begBal: row.beginningBalance, payment: 0, principal: 0, interest: 0, endBal: 0, extraPrincipal: 0, source: "regular" });
+      }
+      const yr = accelByYear.get(row.year)!;
+      yr.payment += row.payment;
+      yr.principal += row.principal;
+      yr.interest += row.interest;
+      yr.endBal = row.endingBalance;
+      yr.extraPrincipal += (row.extraPrincipal ?? 0);
+      if (row.source === "iul_loan") yr.source = "IUL Loan";
+      else if (row.source === "heloc") yr.source = "HELOC";
+    }
+
+    for (const [year, data] of Array.from(accelByYear)) {
+      if (doc.y > doc.page.height - 50) {
+        newPage(doc);
+        drawPageHeader(doc, "Recommended Plan — Continued", "Accelerated Amortization Schedule");
+        drawTableHeader(doc, accelCols);
+      }
+      const hasExtra = data.extraPrincipal > 0;
+      drawTableRow(doc, [
+        { value: `${year}`, x: 40, w: 40 },
+        { value: fmt(data.begBal), x: 80, w: 70 },
+        { value: fmt(data.payment - data.extraPrincipal), x: 150, w: 70 },
+        { value: hasExtra ? fmt(data.extraPrincipal) : "—", x: 220, w: 70, color: hasExtra ? C.emerald : C.muted },
+        { value: fmt(data.principal), x: 290, w: 70 },
+        { value: fmt(data.interest), x: 360, w: 60, color: C.red },
+        { value: fmt(data.endBal), x: 420, w: 70 },
+        { value: data.source !== "regular" ? data.source : "—", x: 490, w: 65, color: data.source === "IUL Loan" ? C.emerald : data.source === "HELOC" ? C.cyan : C.muted },
+      ], hasExtra);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PAGE: IUL POLICY SUMMARY
+    // ═══════════════════════════════════════════════════════════════════════
+    newPage(doc);
+    drawPageHeader(doc, "IUL Policy Projection", `Annual Premium: ${fmt(result.summary.annualIulPremium)} | Total Premiums: ${fmt(result.summary.totalIulPremiums)}`);
+
+    drawSectionTitle(doc, "Year-by-Year IUL Cash Value & Policy Loans");
+
+    const iulCols = [
+      { label: "Year", x: 40, w: 40 },
+      { label: "Premium", x: 80, w: 65 },
+      { label: "Source", x: 145, w: 55 },
+      { label: "Cash Value", x: 200, w: 75 },
+      { label: "Surrender Value", x: 275, w: 75 },
+      { label: "Policy Loan", x: 350, w: 75 },
+      { label: "Applied To", x: 425, w: 75 },
+      { label: "Net CV", x: 500, w: 55 },
+    ];
+    drawTableHeader(doc, iulCols);
+
+    for (const py of result.iulPolicy) {
+      if (doc.y > doc.page.height - 50) {
+        newPage(doc);
+        drawPageHeader(doc, "IUL Policy — Continued", "Policy Projection");
+        drawTableHeader(doc, iulCols);
+      }
+      const hasLoan = py.policyLoan > 0;
+      drawTableRow(doc, [
+        { value: `${py.year}`, x: 40, w: 40 },
+        { value: py.premium > 0 ? fmt(py.premium) : "—", x: 80, w: 65 },
+        { value: py.premiumSource === "heloc" ? "HELOC" : py.premiumSource === "income" ? "Income" : "—", x: 145, w: 55, color: py.premiumSource === "heloc" ? C.cyan : C.muted },
+        { value: fmt(py.cashValue), x: 200, w: 75, color: C.blue },
+        { value: fmt(py.surrenderValue), x: 275, w: 75 },
+        { value: hasLoan ? fmt(py.policyLoan) : "—", x: 350, w: 75, color: hasLoan ? C.emerald : C.muted },
+        { value: hasLoan ? "Mortgage" : "—", x: 425, w: 75, color: hasLoan ? C.emerald : C.muted },
+        { value: fmt(py.netCashValue), x: 500, w: 55, color: C.purple },
+      ], hasLoan);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PAGE: HELOC CYCLE DIAGRAM
+    // ═══════════════════════════════════════════════════════════════════════
+    newPage(doc);
+    drawPageHeader(doc, "HELOC Funding Cycle", `Total HELOC Drawn: ${fmt(result.summary.totalHelocDrawn)}`);
+
+    drawSectionTitle(doc, "How the HELOC-to-IUL Cycle Works");
+
+    const steps = [
+      { num: "1", text: "Take 60% HELOC against home equity to fund Year 1 IUL premium", color: C.cyan },
+      { num: "2", text: "IUL policy earns 12% annual compound return on cash value", color: C.blue },
+      { num: "3", text: "Month 13: Take 80% policy loan against surrender value", color: C.emerald },
+      { num: "4", text: "Apply policy loan as principal-only payment to mortgage", color: C.emerald },
+      { num: "5", text: "Repeat HELOC draw for Year 2 IUL premium", color: C.cyan },
+      { num: "6", text: "Years 3-9: Continue cycle — HELOC supplements IUL funding", color: C.purple },
+      { num: "7", text: "Each year's policy loan accelerates mortgage payoff", color: C.emerald },
+      { num: "8", text: "Mortgage paid off years early — all saved interest compounds at 7%", color: C.amber },
+    ];
+
+    steps.forEach(step => {
+      const y = doc.y;
+      doc.circle(55, y + 6, 10).fill(step.color);
+      doc.fillColor(C.white).fontSize(9).font("Helvetica-Bold").text(step.num, 50, y + 1);
+      doc.fillColor(C.text).fontSize(9.5).font("Helvetica").text(step.text, 75, y, { width: doc.page.width - 120 });
+      doc.moveDown(0.8);
+    });
+
+    doc.moveDown(1);
+    drawSectionTitle(doc, "HELOC Draw Schedule");
+
+    const helocCols = [
+      { label: "Year", x: 40, w: 50 },
+      { label: "Draw Amount", x: 90, w: 90 },
+      { label: "Purpose", x: 180, w: 180 },
+      { label: "Balance", x: 360, w: 80 },
+      { label: "Interest Paid", x: 440, w: 80 },
+    ];
+    drawTableHeader(doc, helocCols);
+
+    for (const h of result.helocSchedule) {
+      drawTableRow(doc, [
+        { value: `${h.year}`, x: 40, w: 50 },
+        { value: h.drawAmount > 0 ? fmt(h.drawAmount) : "—", x: 90, w: 90, color: h.drawAmount > 0 ? C.cyan : C.muted },
+        { value: h.purpose, x: 180, w: 180 },
+        { value: fmt(h.balance), x: 360, w: 80 },
+        { value: fmt(h.interestPaid), x: 440, w: 80, color: C.amber },
+      ], h.drawAmount > 0);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PAGE: INTEREST SAVINGS & COMPOUND GROWTH
+    // ═══════════════════════════════════════════════════════════════════════
+    newPage(doc);
+    drawPageHeader(doc, "Interest Savings & Wealth Accumulation", `${fmt(result.interestSavings.totalInterestSaved)} saved → ${fmt(result.interestSavings.compoundedValue20yr)} at 7% over 20 years`);
+
+    drawSectionTitle(doc, "Year-by-Year Interest Savings Compounding at 7%");
+
+    const savCols = [
+      { label: "Year", x: 40, w: 50 },
+      { label: "Interest Saved", x: 90, w: 100 },
+      { label: "Cumulative Saved", x: 190, w: 100 },
+      { label: "Compounded Value (7%)", x: 290, w: 120 },
+    ];
+    drawTableHeader(doc, savCols);
+
+    for (const s of result.interestSavings.yearByYear) {
+      if (doc.y > doc.page.height - 50) {
+        newPage(doc);
+        drawPageHeader(doc, "Interest Savings — Continued", "Compound Growth at 7%");
+        drawTableHeader(doc, savCols);
+      }
+      drawTableRow(doc, [
+        { value: `${s.year}`, x: 40, w: 50 },
+        { value: s.interestSaved > 0 ? fmt(s.interestSaved) : "—", x: 90, w: 100, color: s.interestSaved > 0 ? C.emerald : C.muted },
+        { value: fmt(s.cumulativeSaved), x: 190, w: 100 },
+        { value: fmt(s.compoundedValue), x: 290, w: 120, color: C.blue },
+      ], s.year % 5 === 0);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PAGE: EXECUTIVE SUMMARY
+    // ═══════════════════════════════════════════════════════════════════════
+    newPage(doc);
+    drawPageHeader(doc, "Executive Summary", "Side-by-Side Comparison");
+
+    drawSectionTitle(doc, "Current Plan vs. Recommended Plan");
+
+    const comparisonRows = [
+      { label: "Total Interest Paid", current: fmt(result.currentPlan.totalInterest), recommended: fmt(result.recommendedPlan.totalInterest), diff: fmt(result.summary.totalInterestSaved), diffColor: C.emerald },
+      { label: "Total Payments", current: fmt(result.currentPlan.totalPayments), recommended: fmt(result.recommendedPlan.totalPayments), diff: fmt(result.currentPlan.totalPayments - result.recommendedPlan.totalPayments), diffColor: C.emerald },
+      { label: "Payoff Timeline", current: `${Math.ceil(result.currentPlan.payoffMonths / 12)} years`, recommended: `${Math.ceil(result.recommendedPlan.payoffMonths / 12)} years`, diff: `${result.summary.yearsSaved} years saved`, diffColor: C.emerald },
+      { label: "Mortgage-Free Date", current: result.summary.originalPayoffDate, recommended: result.summary.mortgageFreeDate, diff: "Earlier!", diffColor: C.emerald },
+    ];
+
+    const compCols = [
+      { label: "Metric", x: 40, w: 120 },
+      { label: "Current Plan", x: 160, w: 110 },
+      { label: "Recommended Plan", x: 270, w: 110 },
+      { label: "Savings", x: 380, w: 110 },
+    ];
+    drawTableHeader(doc, compCols);
+
+    comparisonRows.forEach(row => {
+      drawTableRow(doc, [
+        { value: row.label, x: 40, w: 120, color: C.muted },
+        { value: row.current, x: 160, w: 110, color: C.red },
+        { value: row.recommended, x: 270, w: 110, color: C.emerald },
+        { value: row.diff, x: 380, w: 110, color: row.diffColor },
+      ]);
+    });
+
+    doc.moveDown(2);
+    drawSectionTitle(doc, "Wealth Created Through This Strategy");
+
+    const wealthItems = [
+      { label: "Interest Saved (Compounded at 7% for 20 years)", value: fmt(result.interestSavings.compoundedValue20yr), color: C.blue },
+      { label: "Final IUL Cash Value", value: fmt(result.summary.finalPolicyCashValue), color: C.purple },
+      { label: "Total Wealth Created", value: fmt(result.summary.totalWealthCreated), color: C.emerald },
+    ];
+
+    wealthItems.forEach(item => {
+      doc.fillColor(C.muted).fontSize(10).font("Helvetica").text(item.label, 50, doc.y, { continued: true, width: 300 });
+      doc.fillColor(item.color).font("Helvetica-Bold").text(`  ${item.value}`, { width: 200 });
+      doc.moveDown(0.4);
+    });
+
+    doc.moveDown(2);
+    drawSectionTitle(doc, "Strategy Costs");
+
+    const costItems = [
+      { label: "Total IUL Premiums Paid", value: fmt(result.summary.totalIulPremiums) },
+      { label: "Total HELOC Interest", value: fmt(result.helocSchedule.reduce((s, h) => s + h.interestPaid, 0)) },
+      { label: "Net Benefit", value: fmt(result.summary.totalWealthCreated - result.summary.totalIulPremiums - result.helocSchedule.reduce((s, h) => s + h.interestPaid, 0)) },
+    ];
+
+    costItems.forEach(item => {
+      doc.fillColor(C.muted).fontSize(10).font("Helvetica").text(item.label, 50, doc.y, { continued: true, width: 300 });
+      doc.fillColor(C.white).font("Helvetica-Bold").text(`  ${item.value}`, { width: 200 });
+      doc.moveDown(0.4);
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // FINAL PAGE: DISCLAIMERS
+    // ═══════════════════════════════════════════════════════════════════════
+    newPage(doc);
+    drawPageHeader(doc, "Important Disclosures", "Please read carefully");
+
+    const disclaimers = [
+      "The values shown in this report are based on non-guaranteed illustrated rates. Actual policy performance may vary significantly from the projections shown.",
+      "IUL projections assume a 12% annual crediting rate, which represents a non-guaranteed illustrated rate. The actual crediting rate will depend on index performance and policy caps/floors.",
+      "HELOC rates are variable and may change over the life of the loan. The rate used in this analysis may not reflect your actual HELOC terms.",
+      "Policy loans reduce the death benefit and cash value of the policy. Excessive policy loans may cause the policy to lapse.",
+      "This analysis does not account for potential changes in tax law, interest rates, or personal financial circumstances.",
+      "Past performance of any index does not guarantee future results. Index-linked insurance products are not direct investments in any index.",
+      "Consult with a qualified financial advisor, tax professional, and insurance specialist before implementing this strategy.",
+      "This material is for informational purposes only and should not be construed as legal, tax, or financial advice.",
+    ];
+
+    disclaimers.forEach(d => {
+      if (doc.y > doc.page.height - 60) {
+        newPage(doc);
+        drawPageHeader(doc, "Disclosures — Continued", "");
+      }
+      const y = doc.y;
+      doc.fillColor(C.amber).fontSize(7).text("●", 50, y + 1);
+      doc.fillColor(C.text).fontSize(8.5).font("Helvetica").text(d, 65, y, { width: doc.page.width - 110 });
+      doc.moveDown(0.5);
+    });
+
+    addPageNumbers(doc);
+    doc.end();
+  });
+}
+```
 
 ## `server/pdfExportService.ts`
 
@@ -1808,6 +2643,7 @@ import { ultraRouter } from "./ultraAI";
 import { leadsRouter } from "./leadsRouter";
 import { factFinderRouter } from "./factFinderRouter";
 import { librarianRouter } from "./librarianRouter";
+import { messagesRouter } from "./messagesRouter";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -2107,6 +2943,7 @@ export const appRouter = router({
   leads: leadsRouter,
   factFinder: factFinderRouter,
   librarian: librarianRouter,
+  messages: messagesRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -10430,6 +11267,12 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
     mygaRates: publicProcedure.input(z.object({ state: z.string().optional() }).optional()).query(async ({ input }) => {
       const { getMYGARates } = await import("./dataFeedService");
       return getMYGARates(input?.state);
+    }),
+    /** FRED benchmarks: 30-yr mortgage, Fed funds, 10-yr Treasury — dated, sourced, never invented. */
+    benchmarks: publicProcedure.query(async () => {
+      const { getRateBenchmarks } = await import("./dataFeedService");
+      const { fredConfigured } = await import("./_core/fred");
+      return { configured: fredConfigured(), benchmarks: await getRateBenchmarks() };
     }),
     refresh: protectedProcedure.mutation(async () => {
       const { invalidateAllFeeds } = await import("./dataFeedService");
@@ -24199,6 +25042,116 @@ export default function MarketDataWidget({ compact = false }: { compact?: boolea
           );
         })}
       </div>
+    </div>
+  );
+}
+```
+
+## `client/src/components/MessageClientPanel.tsx`
+
+```tsx
+// ============================================================
+// MESSAGE CLIENT PANEL — email or text a client from their page. Pick a
+// template (editable) or write freehand; every send is logged with its
+// delivery outcome. No figures travel by message — the templates point the
+// client back into the portal instead.
+// ============================================================
+import { useEffect, useState } from "react";
+import { Mail, MessageSquare, Send, CheckCircle2, XCircle, Ban } from "lucide-react";
+import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
+
+type Channel = "email" | "sms";
+
+export function MessageClientPanel({ clientId, clientEmail, clientPhone }: { clientId: number; clientEmail?: string | null; clientPhone?: string | null }) {
+  const utils = trpc.useUtils();
+  const status = trpc.messages.status.useQuery();
+  const templates = trpc.messages.templates.useQuery();
+  const log = trpc.messages.list.useQuery({ clientId, limit: 20 });
+  const [channel, setChannel] = useState<Channel>(clientEmail ? "email" : "sms");
+  const [template, setTemplate] = useState<string>("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const preview = trpc.messages.preview.useQuery({ clientId, channel, template }, { enabled: Boolean(template) });
+  useEffect(() => {
+    if (preview.data) { setSubject(preview.data.subject); setBody(preview.data.body); }
+  }, [preview.data]);
+  const send = trpc.messages.send.useMutation({
+    onSuccess: (r) => {
+      if (r.sent) toast.success(`${channel === "email" ? "Email" : "Text"} sent via ${r.via}`);
+      else toast.error(r.reason ?? "Not sent");
+      void utils.messages.list.invalidate({ clientId, limit: 20 });
+      if (r.sent) { setBody(""); setSubject(""); setTemplate(""); }
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const configured = channel === "email" ? status.data?.emailConfigured : status.data?.smsConfigured;
+  const hasAddress = channel === "email" ? Boolean(clientEmail) : Boolean(clientPhone);
+  const canSend = Boolean(configured && hasAddress && body.trim() && !send.isPending);
+
+  return (
+    <div className="rc-card" aria-label="Message this client">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <MessageSquare size={16} className="text-[#3b82f6]" />
+          <span className="font-semibold text-white">Message this client</span>
+        </div>
+        <div className="flex rounded-lg border border-[#12233e] bg-[#0f1e35] p-0.5 text-xs">
+          {(["email", "sms"] as Channel[]).map((c) => (
+            <button key={c} type="button" onClick={() => setChannel(c)} aria-pressed={channel === c}
+              className={`flex items-center gap-1 rounded-md px-3 py-1.5 font-medium transition ${channel === c ? "bg-[#3b82f6]/20 text-[#c8d8ec]" : "text-[#7a95b8]"}`}>
+              {c === "email" ? <Mail size={12} /> : <MessageSquare size={12} />} {c === "email" ? "Email" : "Text"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <p className="mt-2 text-xs text-[#7a95b8]">
+        {channel === "email" ? (clientEmail ? `To ${clientEmail}` : "No email on file") : (clientPhone ? `To ${clientPhone}` : "No mobile number on file")}
+        {status.data && !configured && <span className="ml-2 text-amber-300">· {channel === "email" ? "mail transport" : "SMS transport"} not configured on the host</span>}
+      </p>
+
+      <div className="mt-3 grid gap-2 sm:grid-cols-[1fr_auto]">
+        <select value={template} onChange={(e) => setTemplate(e.target.value)} aria-label="Message template"
+          className="rounded-lg border border-[#12233e] bg-[#0f1e35] px-3 py-2 text-sm text-[#c8d8ec]">
+          <option value="">Write my own…</option>
+          {(templates.data ?? []).map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
+        </select>
+        <span className="self-center text-[11px] text-[#7a95b8]">Templates never include figures — they point the client into the portal.</span>
+      </div>
+      {channel === "email" && (
+        <input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Subject" aria-label="Subject"
+          className="mt-2 w-full rounded-lg border border-[#12233e] bg-[#0f1e35] px-3 py-2 text-sm text-[#c8d8ec]" />
+      )}
+      <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={channel === "email" ? 6 : 3} aria-label="Message body"
+        placeholder={channel === "email" ? "Your message…" : "Your text (keep it short; STOP handling is automatic)…"}
+        className="mt-2 w-full rounded-lg border border-[#12233e] bg-[#0f1e35] px-3 py-2 text-sm text-[#c8d8ec]" />
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <span className="text-[11px] text-[#7a95b8]">{channel === "sms" ? `${body.length} characters` : "A plain-text copy and the compliance line are added automatically."}</span>
+        <button type="button" disabled={!canSend}
+          onClick={() => send.mutate({ clientId, channel, subject: channel === "email" ? subject || undefined : undefined, body, template: template || undefined })}
+          className="flex items-center gap-1.5 rounded-lg bg-[#3b82f6] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2f6fd6] disabled:opacity-40">
+          <Send size={14} /> {send.isPending ? "Sending…" : channel === "email" ? "Send email" : "Send text"}
+        </button>
+      </div>
+
+      {(log.data?.length ?? 0) > 0 && (
+        <div className="mt-4 border-t border-[#12233e] pt-3">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-[#7a95b8]">Recent messages</p>
+          <ul className="space-y-1.5 text-xs">
+            {log.data!.map((m) => (
+              <li key={m.id} className="flex items-start gap-2">
+                {m.status === "sent" ? <CheckCircle2 size={13} className="mt-0.5 shrink-0 text-emerald-400" /> : m.status === "suppressed" ? <Ban size={13} className="mt-0.5 shrink-0 text-amber-300" /> : <XCircle size={13} className="mt-0.5 shrink-0 text-rose-400" />}
+                <span className="text-[#c8d8ec]">
+                  <span className="uppercase text-[#7a95b8]">{m.channel}</span> · {new Date(m.createdAt).toLocaleString()} · {m.subject || m.body.slice(0, 60)}
+                  {m.status !== "sent" && m.reason && <span className="text-[#7a95b8]"> — {m.reason}</span>}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
@@ -40580,1144 +41533,5 @@ const CommandPage: React.FC = () => {
 }
 
 export default CommandPage;
-```
-
-## `client/src/pages/CompetePage.tsx`
-
-```tsx
-import React from 'react';
-import { Link } from 'wouter';
-
-const CompetePage: React.FC = () => {
-  const subPages = [
-    { path: '/portal/arena', title: 'The Arena', description: 'Compete in financial strategy challenges against peer advisors.', icon: '🏟️' },
-    { path: '/portal/war-room', title: 'War Room', description: 'Strategic planning and competitive intelligence for your practice.', icon: '⚔️' },
-    { path: '/portal/war-story-generator', title: 'War Story Generator', description: 'Generate compelling case studies from your client success data.', icon: '📖' },
-    { path: '/portal/time-machine', title: 'Time Machine', description: 'Simulate "what if" scenarios across any historical period.', icon: '⏰' },
-    { path: '/portal/time-lapse', title: 'Time-Lapse', description: 'Visualize financial trajectories accelerated across decades.', icon: '🎬' },
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center mb-4">
-          <span className="text-4xl mr-4">🏆</span>
-          <h1 className="text-4xl font-bold">Compete</h1>
-        </div>
-        <p className="mb-8 text-lg text-gray-300">
-          Benchmark your performance, challenge your strategies, and prove your edge 
-          with competitive tools designed for elite advisors.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {subPages.map((page) => (
-            <Link key={page.path} href={page.path}
-              className="bg-[#1a1f2a] border border-white/10 rounded-xl p-6 shadow-lg hover:bg-[#22c55e]/10 hover:scale-105 transition-all duration-300"
-            >
-              <div className="text-3xl mb-3">{page.icon}</div>
-              <h2 className="text-xl font-semibold mb-2">{page.title}</h2>
-              <p className="text-gray-400 text-sm">{page.description}</p>
-            </Link>
-          ))}
-        </div>
-
-        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-          <div className="flex items-center gap-4 mb-6">
-            <label className="text-sm text-slate-400">Projection Horizon:</label>
-            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-              onChange={(e) => {
-                const val = e.target.value;
-                document.getElementById('proj-year-compete')!.textContent = val;
-              }} />
-            <span id="proj-year-compete" className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-            <span className="text-slate-500 text-sm">years</span>
-          </div>
-          <div className="flex gap-2 mb-6">
-            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-              }`}>{s}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-5 gap-4 text-center">
-            {[5, 10, 20, 30, 50].map(yr => (
-              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-                <div className="text-emerald-400 font-bold text-lg">[Competitive Edge]</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-purple-400">🧠</span> AI Brain Analysis
-            </h2>
-            <div className="flex gap-2">
-              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-                Send to AI Advisor →
-              </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-                View AI Brain Hub →
-              </a>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default CompetePage;
-```
-
-## `client/src/pages/ComplianceDisclosure.tsx`
-
-```tsx
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { useLocation } from "wouter";
-import { Shield, FileText, AlertTriangle, Scale, Lock, CheckCircle2, PenTool, ChevronRight } from "lucide-react";
-import { trpc } from "@/lib/trpc";
-
-/* ─── Legal Content Data ─── */
-
-const TERMS_SECTIONS = [
-  {
-    id: "scope",
-    title: "1. Scope of Service",
-    body: `Equity Express Inc. & Drass Wealth Management LLC provides educational calculators, charts, visualizations, and user-directed modeling tools for general informational use only. The website does not provide carrier-issued illustrations, insurance quotes, underwriting decisions, guarantees, or personalized legal, tax, accounting, actuarial, investment, or insurance advice.`,
-  },
-  {
-    id: "no-illustration",
-    title: "2. No Insurance Illustration; No Reliance",
-    body: `Any output, chart, report, or summary generated through this website is not a life insurance illustration, not a policy ledger, not a quote, not a policy proposal, and not a supplemental illustration. It may not be relied upon as the basis for purchasing, replacing, financing, exchanging, or surrendering any insurance or financial product.`,
-  },
-  {
-    id: "historical",
-    title: "3. Historical and Hypothetical Results",
-    body: `Any historical data, back-tested information, hypothetical calculations, or scenario modeling provided through this website is educational only. Such material depends on assumptions, formulas, data availability, and user inputs, and does not predict or guarantee future market behavior, future credited rates, future policy values, future tax treatment, or future financial results.`,
-  },
-  {
-    id: "user-responsibility",
-    title: "4. User Responsibility",
-    body: `Users are solely responsible for the information entered into the tool, all assumptions selected, and all interpretations or decisions made from any website output. Users agree not to interpret any output as individualized advice or as a substitute for carrier-issued materials or professional advice.`,
-  },
-  {
-    id: "no-advice",
-    title: "5. No Advisory or Fiduciary Relationship",
-    body: `Use of the website does not create any fiduciary, advisory, broker-client, attorney-client, accountant-client, insurance-client, or other professional relationship. No duty is undertaken to monitor, update, verify, correct, or warn regarding user assumptions, calculations, outputs, or decisions.`,
-  },
-  {
-    id: "prohibited",
-    title: "6. Prohibited Uses",
-    list: [
-      "Representing any website output as a carrier-issued illustration, ledger, quote, or product projection.",
-      "Using any output as the sole basis for a purchase, replacement, financing, exchange, or surrender decision.",
-      "Removing, obscuring, or altering required disclosures, legends, or acknowledgments.",
-      "Misattributing any output to an insurer, policy form, licensed producer, or regulated financial institution.",
-      "Using the website or any generated output in violation of insurance, advertising, consumer protection, privacy, securities, or other applicable law.",
-    ],
-  },
-  {
-    id: "warranty",
-    title: "7. No Warranty",
-    body: `The website and all content, tools, outputs, data, and software are provided "as is" and "as available" without warranties of any kind, express or implied, including accuracy, completeness, merchantability, fitness for a particular purpose, noninfringement, availability, security, or uninterrupted operation.`,
-  },
-  {
-    id: "liability",
-    title: "8. Limitation of Liability",
-    body: `To the fullest extent permitted by law, Equity Express Inc. & Drass Wealth Management LLC, its affiliates, owners, officers, employees, contractors, licensors, and representatives shall not be liable for any direct, indirect, incidental, consequential, special, punitive, or exemplary damages arising from or relating to the use of, inability to use, reliance on, or misuse of the website, the tools, or any generated output, including loss of profits, tax consequences, policy outcomes, lost opportunity, financing decisions, replacement decisions, data loss, or regulatory issues.`,
-  },
-  {
-    id: "indemnity",
-    title: "9. Indemnification",
-    body: `You agree to defend, indemnify, and hold harmless Equity Express Inc. & Drass Wealth Management LLC, its affiliates, owners, officers, employees, contractors, licensors, and representatives from and against claims, liabilities, damages, losses, costs, and expenses, including reasonable attorneys' fees, arising out of your use of the website, your misuse of any output, your violation of these Terms, or your violation of any law or third-party right.`,
-  },
-  {
-    id: "changes",
-    title: "10. Changes and Availability",
-    body: `We may modify, suspend, restrict, or discontinue any feature, tool, methodology, formula, assumption set, content, or output format at any time without notice. We are under no obligation to preserve any prior output, export, or methodology.`,
-  },
-  {
-    id: "law",
-    title: "11. Governing Law; Venue; Arbitration",
-    body: `These Terms shall be governed by the laws of the State of Delaware, without regard to conflict-of-law principles. Any dispute arising out of or relating to the website or these Terms shall be resolved exclusively by binding arbitration in New Castle, Delaware, except that Equity Express Inc. & Drass Wealth Management LLC may seek injunctive or equitable relief in a court of competent jurisdiction to protect intellectual property, confidential information, or platform integrity.`,
-  },
-  {
-    id: "severability",
-    title: "12. Severability",
-    body: `If any provision of these Terms is held invalid or unenforceable, the remaining provisions shall remain in full force and effect.`,
-  },
-  {
-    id: "contact",
-    title: "13. Contact",
-    body: `Questions regarding these Terms may be directed to Equity Express Inc. & Drass Wealth Management LLC, Wilmington, Delaware, at support@drasswealthmanagement.com.`,
-  },
-];
-
-const DISCLAIMER_PARAGRAPHS = [
-  `The tools, calculators, charts, and reports on this website are provided solely for general educational and informational purposes.`,
-  `They are designed to demonstrate how selected historical market index movements may interact with user-selected formulas or assumptions. They are not life insurance policy illustrations, are not issued by any insurance company, and do not represent the current illustrated scale, disciplined current scale, currently payable scale, premiums, policy charges, policy values, death benefits, surrender values, loan performance, lapse risk, or any other guaranteed or nonguaranteed element of any life insurance policy.`,
-  `No output generated by this website is a solicitation, recommendation, offer, or promise regarding any specific life insurance product, insurer, policy form, or policy outcome. Historical index performance, hypothetical crediting calculations, and user-generated scenarios are not predictive of future results and are not representations or estimates of future index changes, future credited rates, or future policy performance.`,
-  `This website does not provide legal, tax, accounting, investment, fiduciary, actuarial, or insurance advice. Any discussion of life insurance, indexed universal life insurance, policy loans, taxation, retirement planning, estate planning, or business planning is general in nature only and may not apply to your circumstances.`,
-  `No insurance purchase, replacement, exchange, surrender, financing decision, tax decision, or planning decision should be made based on this website or any output it generates. Any decision regarding a life insurance policy should be based only on a carrier-issued illustration and the applicable policy form, reviewed with a properly licensed insurance professional authorized to discuss the product in the applicable jurisdiction.`,
-  `Use of this website does not create an advisory, fiduciary, broker-client, attorney-client, accountant-client, or other professional relationship. By using this website, you acknowledge that you are solely responsible for how you interpret and use any information or output generated here.`,
-];
-
-const INTERNAL_POLICY_SECTIONS = [
-  {
-    title: "Purpose",
-    body: `This policy governs the use of all website calculators, historical modeling tools, back-testing tools, charts, downloadable reports, and similar educational software made available through Equity Express Inc. & Drass Wealth Management LLC.`,
-  },
-  {
-    title: "Policy Statement",
-    body: `These tools are educational resources only. They are not approved carrier illustrations and may not be used as substitutes for carrier-issued materials in any insurance solicitation, recommendation, replacement analysis, or application process.`,
-  },
-  {
-    title: "Prohibited Conduct",
-    list: [
-      "Describing any website output as an illustration, ledger, proposal, quote, carrier numbers, or policy projection.",
-      "Stating or implying that any historical or hypothetical result is likely, expected, projected, or representative of future policy performance.",
-      "Pairing tool output with a specific insurer or policy unless a carrier-issued illustration is separately provided and clearly identified as the only official illustration.",
-      "Using the tool to show policy performance more favorably than a carrier-issued illustration.",
-      "Emailing, texting, screen-sharing, posting, or presenting tool output as part of a policy recommendation without prior compliance approval.",
-      "Using tool output in any policy replacement, exchange, premium-financing, rollover, or similar recommendation.",
-      "Removing or altering any disclosure, watermark, acknowledgment, or educational-use legend from any output.",
-    ],
-  },
-  {
-    title: "Required Procedure When a Prospect Requests Numbers",
-    orderedList: [
-      "Stop using the educational tool for product discussion.",
-      "State that the website output is educational only and not a policy illustration.",
-      "Obtain a carrier-issued illustration through approved channels.",
-      "Use only the carrier-issued illustration for policy-specific discussion.",
-      "Retain the carrier illustration and any required acknowledgments in the client file.",
-    ],
-  },
-  {
-    title: "Recordkeeping",
-    list: [
-      "Maintain current versions of website disclaimers and Terms.",
-      "Maintain version history of tool disclosures.",
-      "Store compliance approvals for any producer training related to tool use.",
-      "Maintain logs of complaints, inquiries, corrections, and sample exports used in production.",
-    ],
-  },
-  {
-    title: "Training and Certification",
-    body: `All producers and staff with access to the tool must complete annual training and certify that they understand the educational-only nature of the tool, the prohibition on using it as a carrier illustration, and the requirement that policy-specific discussions use carrier-issued illustrations only.`,
-  },
-  {
-    title: "Enforcement",
-    body: `Violation of this policy may result in immediate removal of access, internal discipline, mandatory remediation, reporting to compliance leadership, reporting to carriers where required, and any other corrective action deemed appropriate.`,
-  },
-];
-
-const ACKNOWLEDGMENTS = [
-  "This tool is for educational and informational purposes only.",
-  "Any report or output may include historical data, hypothetical calculations, and user-selected assumptions that do not predict future results.",
-  "No output represents any insurer's current illustrated scale, disciplined current scale, currently payable scale, premiums, charges, policy values, policy loan results, death benefits, or tax treatment.",
-  "I will not rely on this tool or any output from it as the sole basis for purchasing, replacing, financing, exchanging, or surrendering any life insurance policy or other financial product.",
-  "Any actual life insurance discussion must be based solely on a carrier-issued illustration and applicable policy materials.",
-  "No legal, tax, accounting, investment, fiduciary, actuarial, or insurance advice is being provided through this tool.",
-  "My use of this tool is subject to the website Terms of Use and Privacy Policy.",
-];
-
-/* ─── Compliance is now DB-backed (no localStorage) ─── */
-
-/* ─── Sub-components ─── */
-
-function SectionCard({
-  title,
-  body,
-  list,
-  orderedList,
-  id,
-}: {
-  title: string;
-  body?: string;
-  list?: string[];
-  orderedList?: string[];
-  id?: string;
-}) {
-  return (
-    <section
-      id={id}
-      className="rounded-xl border border-white/10 bg-white/[0.03] p-5"
-    >
-      <h3 className="text-lg font-semibold text-white mb-3">{title}</h3>
-      {body && <p className="text-sm text-slate-300 leading-relaxed">{body}</p>}
-      {list && (
-        <ul className="list-disc pl-5 space-y-2 mt-2">
-          {list.map((item) => (
-            <li key={item} className="text-sm text-slate-300 leading-relaxed">
-              {item}
-            </li>
-          ))}
-        </ul>
-      )}
-      {orderedList && (
-        <ol className="list-decimal pl-5 space-y-2 mt-2">
-          {orderedList.map((item) => (
-            <li key={item} className="text-sm text-slate-300 leading-relaxed">
-              {item}
-            </li>
-          ))}
-        </ol>
-      )}
-    </section>
-  );
-}
-
-type TabId = "tool-page" | "terms" | "disclaimer" | "internal-policy";
-
-const TABS: { id: TabId; label: string; icon: typeof Shield }[] = [
-  { id: "tool-page", label: "Tool Page", icon: Shield },
-  { id: "terms", label: "Terms of Use", icon: FileText },
-  { id: "disclaimer", label: "Public Disclaimer", icon: AlertTriangle },
-  { id: "internal-policy", label: "Internal Policy", icon: Lock },
-];
-
-/* ─── Main Page Component ─── */
-
-interface ComplianceDisclosureProps {
-  returnTo?: string;
-  onSigned?: (sessionId: number) => void;
-  isAnonymous?: boolean;
-}
-
-export default function ComplianceDisclosure({ returnTo, onSigned, isAnonymous }: ComplianceDisclosureProps) {
-  const [, navigate] = useLocation();
-  const signMut = trpc.complianceTracking.sign.useMutation();
-  const [signing, setSigning] = useState(false);
-  const [activeTab, setActiveTab] = useState<TabId>("tool-page");
-  const [checkedItems, setCheckedItems] = useState<boolean[]>(
-    new Array(ACKNOWLEDGMENTS.length).fill(false)
-  );
-  const [signatureName, setSignatureName] = useState("");
-  const [signatureEmail, setSignatureEmail] = useState("");
-  const [signatureDate, setSignatureDate] = useState("");
-  const [showSignatureSection, setShowSignatureSection] = useState(false);
-
-  // Set today's date as default
-  useEffect(() => {
-    const today = new Date();
-    const formatted = `${String(today.getMonth() + 1).padStart(2, "0")}/${String(
-      today.getDate()
-    ).padStart(2, "0")}/${today.getFullYear()}`;
-    setSignatureDate(formatted);
-  }, []);
-
-  const allChecked = checkedItems.every(Boolean);
-  const nameValid = signatureName.trim().length >= 2;
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signatureEmail.trim());
-  const dateValid = signatureDate.trim().length >= 8;
-  const canSign = allChecked && nameValid && emailValid && dateValid;
-
-  const toggleCheck = useCallback(
-    (index: number) => {
-      setCheckedItems((prev) => {
-        const next = [...prev];
-        next[index] = !next[index];
-        return next;
-      });
-    },
-    []
-  );
-
-  const termsToc = useMemo(
-    () =>
-      TERMS_SECTIONS.filter((s) =>
-        [
-          "scope",
-          "no-illustration",
-          "historical",
-          "user-responsibility",
-          "no-advice",
-          "prohibited",
-          "warranty",
-          "liability",
-          "indemnity",
-          "law",
-        ].includes(s.id)
-      ),
-    []
-  );
-
-  const handleSign = async () => {
-    if (!canSign || signing) return;
-    setSigning(true);
-    try {
-      // Store email in localStorage for all users
-      try { localStorage.setItem("rc_user_email", signatureEmail.trim()); } catch {}
-      if (isAnonymous) {
-        if (onSigned) {
-          onSigned(0);
-        } else {
-          navigate(returnTo || "/portal/dashboard");
-        }
-        return;
-      }
-      const result = await signMut.mutateAsync({
-        signedName: signatureName.trim(),
-        signedDate: signatureDate.trim(),
-        userAgent: navigator.userAgent,
-      });
-      if (result.success && result.sessionId && onSigned) {
-        onSigned(result.sessionId);
-      } else {
-        navigate(returnTo || "/portal/dashboard");
-      }
-    } catch (err) {
-      console.error("Failed to sign compliance:", err);
-      // If the sign mutation fails (e.g. not authenticated), allow entry anyway
-      // The compliance disclaimer + name signature is the ONLY gate
-      if (onSigned) {
-        onSigned(0);
-        return;
-      }
-      navigate(returnTo || "/portal/dashboard");
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a1020] to-[#0d1430] text-slate-100">
-      {/* Hero Section */}
-      <section className="pt-14 pb-5">
-        <div className="w-[min(100%-32px,1040px)] mx-auto">
-          <span className="inline-block text-xs tracking-[0.12em] uppercase text-blue-400 font-bold mb-2.5">
-            Educational Modeling Tool
-          </span>
-          <h1 className="text-[clamp(34px,5vw,50px)] font-bold leading-[1.15] mb-3.5 text-white">
-            Historical Index Modeling & Disclosure Center
-          </h1>
-          <p className="text-slate-400">
-            Equity Express Inc. & Drass Wealth Management LLC — Compliance &
-            Disclosure Center
-          </p>
-
-          {/* Important Disclosure Banner */}
-          <div className="rounded-[14px] p-4 border border-yellow-500/30 bg-yellow-500/[0.08] my-5">
-            <strong className="block mb-1.5 text-yellow-300">
-              <AlertTriangle className="inline w-4 h-4 mr-1.5 -mt-0.5" />
-              Important Disclosure
-            </strong>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              This tool is for general educational use only. It is not a
-              carrier-issued life insurance illustration, not a quote, not a
-              policy proposal, and not a prediction of future policy performance.
-            </p>
-          </div>
-
-          {/* Main Card */}
-          <div className="bg-gradient-to-b from-[#121933] to-[#0f1730] border border-white/10 rounded-2xl shadow-[0_12px_30px_rgba(0,0,0,0.28)] p-6 space-y-3.5">
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Outputs may include historical data, hypothetical calculations, and
-              user-selected assumptions. They do not represent any insurer's
-              current illustrated scale, disciplined current scale, premiums,
-              policy charges, policy values, surrender values, death benefits,
-              loan performance, lapse risk, or tax treatment.
-            </p>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Do not use any report generated by this tool as the basis for
-              purchasing, replacing, financing, exchanging, or surrendering a
-              life insurance policy or other financial product.
-            </p>
-
-            <div className="flex flex-wrap gap-3 mt-5">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-xl px-5 py-3.5 font-semibold text-[15px] bg-gradient-to-b from-blue-500 to-blue-700 text-white transition hover:-translate-y-0.5"
-                onClick={() => setShowSignatureSection(true)}
-              >
-                <PenTool className="w-4 h-4 mr-2" />
-                Sign & Enter
-              </button>
-              <a
-                href="#terms-anchor"
-                className="inline-flex items-center justify-center rounded-xl px-4 py-3.5 font-semibold text-[15px] border border-white/10 bg-transparent text-slate-100 hover:bg-white/[0.04] transition"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveTab("terms");
-                }}
-              >
-                Terms of Use
-              </a>
-              <a
-                href="#disclaimer-anchor"
-                className="inline-flex items-center justify-center rounded-xl px-4 py-3.5 font-semibold text-[15px] border border-white/10 bg-transparent text-slate-100 hover:bg-white/[0.04] transition"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveTab("disclaimer");
-                }}
-              >
-                Public Disclaimer
-              </a>
-              <a
-                href="#internal-anchor"
-                className="inline-flex items-center justify-center rounded-xl px-4 py-3.5 font-semibold text-[15px] border border-white/10 bg-transparent text-slate-100 hover:bg-white/[0.04] transition"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveTab("internal-policy");
-                }}
-              >
-                Internal Policy
-              </a>
-            </div>
-
-            <div className="mt-4 pt-3.5 border-t border-white/10 text-slate-400 text-[13px]">
-              By continuing, you agree that any actual insurance discussion must
-              rely only on a carrier-issued illustration and applicable policy
-              materials.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Tabbed Content Section */}
-      <section className="py-8">
-        <div className="w-[min(100%-32px,1040px)] mx-auto">
-          {/* Tab Buttons */}
-          <div className="flex flex-wrap gap-2.5 mb-5" role="tablist" aria-label="Compliance sections">
-            {TABS.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeTab === tab.id}
-                  className={`inline-flex items-center gap-2 rounded-full px-3.5 py-2.5 text-sm font-medium border transition ${
-                    activeTab === tab.id
-                      ? "bg-gradient-to-b from-blue-500 to-blue-700 border-transparent text-white"
-                      : "border-white/10 bg-white/[0.03] text-slate-200 hover:bg-white/[0.06]"
-                  }`}
-                  onClick={() => setActiveTab(tab.id)}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Tool Page Tab */}
-          {activeTab === "tool-page" && (
-            <div className="bg-gradient-to-b from-[#121933] to-[#0f1730] border border-white/10 rounded-2xl shadow-[0_12px_30px_rgba(0,0,0,0.28)] p-6 space-y-3.5">
-              <h2 className="text-[clamp(24px,3vw,32px)] font-bold text-white mb-3.5">
-                Tool Entry Page
-              </h2>
-
-              <div className="rounded-[14px] p-4 border border-red-500/20 bg-red-500/[0.08]">
-                <strong className="block mb-1.5 text-red-300">
-                  <AlertTriangle className="inline w-4 h-4 mr-1.5 -mt-0.5" />
-                  Before Using This Tool
-                </strong>
-                <p className="text-sm text-slate-300">
-                  Educational calculator only. Not a carrier-issued life insurance
-                  illustration. Historical and hypothetical outputs do not predict
-                  future results.
-                </p>
-              </div>
-
-              <div className="mt-5 p-4 border border-dashed border-white/10 rounded-[14px] bg-white/[0.02]">
-                <div className="border border-white/10 rounded-[14px] p-4 bg-white/[0.03] min-h-[180px] space-y-3.5">
-                  <h3 className="text-xl font-semibold text-white mb-3.5">
-                    <Scale className="inline w-5 h-5 mr-2 -mt-0.5 text-blue-400" />
-                    Russell Capital Systems™ Tools
-                  </h3>
-                  <p className="text-slate-400 text-sm">
-                    Access to all financial modeling tools, strategy builders,
-                    calculators, and educational resources requires acknowledgment
-                    of the terms below.
-                  </p>
-
-                  <div className="rounded-[14px] p-4 border border-red-500/20 bg-red-500/[0.08]">
-                    <strong className="block mb-1.5 text-red-300">
-                      Results Disclosure
-                    </strong>
-                    <p className="text-sm text-slate-300">
-                      This report is educational output only. It is not a life
-                      insurance illustration, not an insurer projection, and not a
-                      basis for a policy purchase, replacement, financing,
-                      exchange, or surrender decision. Any actual policy discussion
-                      must rely on a carrier-issued illustration.
-                    </p>
-                  </div>
-
-                  <div className="mt-4 pt-3.5 border-t border-white/10 text-slate-400 text-[13px]">
-                    Educational output only. Not a carrier-issued life insurance
-                    illustration. Not for policy purchase, replacement,
-                    financing, exchange, or surrender decisions.
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Terms of Use Tab */}
-          {activeTab === "terms" && (
-            <div
-              className="bg-gradient-to-b from-[#121933] to-[#0f1730] border border-white/10 rounded-2xl shadow-[0_12px_30px_rgba(0,0,0,0.28)] p-6 space-y-3.5"
-              id="terms-anchor"
-            >
-              <span className="inline-block text-xs tracking-[0.12em] uppercase text-blue-400 font-bold">
-                Legal
-              </span>
-              <h2 className="text-[clamp(24px,3vw,32px)] font-bold text-white mb-3.5">
-                Terms of Use
-              </h2>
-              <p className="text-slate-400 text-sm">Effective Date: April 1, 2026</p>
-
-              <div className="flex flex-wrap gap-2.5 mb-5">
-                {termsToc.map((section) => (
-                  <a
-                    key={section.id}
-                    href={`#${section.id}`}
-                    className="inline-block px-3 py-2.5 border border-white/10 rounded-full bg-white/[0.03] text-slate-200 text-sm no-underline hover:bg-white/[0.06] transition"
-                  >
-                    {section.title.replace(/^\d+\.\s*/, "")}
-                  </a>
-                ))}
-              </div>
-
-              {TERMS_SECTIONS.map((section) => (
-                <SectionCard key={section.id} {...section} />
-              ))}
-            </div>
-          )}
-
-          {/* Public Disclaimer Tab */}
-          {activeTab === "disclaimer" && (
-            <div
-              className="bg-gradient-to-b from-[#121933] to-[#0f1730] border border-white/10 rounded-2xl shadow-[0_12px_30px_rgba(0,0,0,0.28)] p-6 space-y-3.5"
-              id="disclaimer-anchor"
-            >
-              <span className="inline-block text-xs tracking-[0.12em] uppercase text-blue-400 font-bold">
-                Disclosure
-              </span>
-              <h2 className="text-[clamp(24px,3vw,32px)] font-bold text-white mb-3.5">
-                Educational Tool Disclaimer
-              </h2>
-
-              <div className="rounded-[14px] p-4 border border-yellow-500/30 bg-yellow-500/[0.08]">
-                <strong className="block mb-1.5 text-yellow-300">
-                  General Educational Use Only
-                </strong>
-                <p className="text-sm text-slate-300">
-                  The tools, calculators, charts, and reports on this website are
-                  provided solely for general educational and informational
-                  purposes.
-                </p>
-              </div>
-
-              {DISCLAIMER_PARAGRAPHS.map((paragraph, i) => (
-                <p key={i} className="text-sm text-slate-300 leading-relaxed">
-                  {paragraph}
-                </p>
-              ))}
-
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
-                <h3 className="text-lg font-semibold text-white mb-3">Contact</h3>
-                <p className="text-sm text-slate-300">
-                  Equity Express Inc. & Drass Wealth Management LLC
-                  <br />
-                  Wilmington, Delaware
-                  <br />
-                  <a
-                    href="mailto:support@drasswealthmanagement.com"
-                    className="text-blue-400 hover:text-blue-300"
-                  >
-                    support@drasswealthmanagement.com
-                  </a>
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Internal Policy Tab */}
-          {activeTab === "internal-policy" && (
-            <div
-              className="bg-gradient-to-b from-[#121933] to-[#0f1730] border border-white/10 rounded-2xl shadow-[0_12px_30px_rgba(0,0,0,0.28)] p-6 space-y-3.5"
-              id="internal-anchor"
-            >
-              <span className="inline-block text-xs tracking-[0.12em] uppercase text-blue-400 font-bold">
-                Internal Compliance
-              </span>
-              <h2 className="text-[clamp(24px,3vw,32px)] font-bold text-white mb-3.5">
-                Producer Internal-Use Policy
-              </h2>
-              <p className="text-slate-400 text-sm">
-                For internal staff and producer use only.
-              </p>
-
-              {INTERNAL_POLICY_SECTIONS.map((section) => (
-                <SectionCard
-                  key={section.title}
-                  title={section.title}
-                  body={section.body}
-                  list={section.list}
-                  orderedList={section.orderedList}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* E-Signature Section */}
-      {showSignatureSection && (
-        <section className="py-8" id="esign-section">
-          <div className="w-[min(100%-32px,1040px)] mx-auto">
-            <div className="bg-gradient-to-b from-[#121933] to-[#0f1730] border-2 border-blue-500/30 rounded-2xl shadow-[0_12px_30px_rgba(0,0,0,0.28)] p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                  <PenTool className="w-6 h-6 text-blue-400" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-white">
-                    Electronic Signature Required
-                  </h2>
-                  <p className="text-slate-400 text-sm">
-                    Please review and accept all acknowledgments, then sign below
-                    to proceed
-                  </p>
-                </div>
-              </div>
-
-              {/* Danger Notice */}
-              <div className="rounded-[14px] p-4 border border-red-500/20 bg-red-500/[0.08] mb-6">
-                <strong className="block mb-1.5 text-red-300">
-                  <AlertTriangle className="inline w-4 h-4 mr-1.5 -mt-0.5" />
-                  Not a Life Insurance Illustration
-                </strong>
-                <p className="text-sm text-slate-300">
-                  This tool is an educational calculator only. It is not a
-                  carrier-issued illustration, policy ledger, quote,
-                  recommendation, or solicitation.
-                </p>
-              </div>
-
-              {/* Acknowledgments */}
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5 mb-6">
-                <p className="text-white font-semibold mb-4">
-                  I acknowledge and agree that:
-                </p>
-                <div className="space-y-3">
-                  {ACKNOWLEDGMENTS.map((item, index) => (
-                    <label
-                      key={index}
-                      className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition ${
-                        checkedItems[index]
-                          ? "border-green-500/30 bg-green-500/[0.08]"
-                          : "border-white/10 bg-white/[0.03] hover:bg-white/[0.05]"
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={checkedItems[index]}
-                        onChange={() => toggleCheck(index)}
-                        className="mt-1 scale-110 accent-green-500"
-                      />
-                      <span
-                        className={`text-sm leading-relaxed ${
-                          checkedItems[index] ? "text-green-200" : "text-slate-300"
-                        }`}
-                      >
-                        {item}
-                      </span>
-                      {checkedItems[index] && (
-                        <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
-                      )}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Master Checkbox */}
-              <label
-                className={`flex items-start gap-3 p-4 rounded-xl border mb-6 cursor-pointer transition ${
-                  allChecked
-                    ? "border-blue-500/30 bg-blue-500/[0.08]"
-                    : "border-white/10 bg-white/[0.03]"
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  checked={allChecked}
-                  onChange={() => {
-                    const newVal = !allChecked;
-                    setCheckedItems(new Array(ACKNOWLEDGMENTS.length).fill(newVal));
-                  }}
-                  className="mt-1 scale-125 accent-blue-500"
-                />
-                <span className="text-sm text-white font-semibold leading-relaxed">
-                  I understand that this tool is educational only, is not a
-                  carrier-issued life insurance illustration, and may not be
-                  relied on to make an insurance purchase or replacement decision.
-                </span>
-              </label>
-
-              {/* E-Signature Fields */}
-              <div className="rounded-xl border border-white/10 bg-[#0a1020] p-6 mb-6">
-                <h3 className="text-lg font-semibold text-white mb-1">
-                  <PenTool className="inline w-5 h-5 mr-2 -mt-0.5 text-blue-400" />
-                  E-Signature
-                </h3>
-                <p className="text-slate-400 text-sm mb-5">
-                  Type your full legal name and today's date to electronically
-                  sign this acknowledgment.
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Full Legal Name <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={signatureName}
-                      onChange={(e) => setSignatureName(e.target.value)}
-                      placeholder="Type your full name..."
-                      className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/[0.05] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 font-serif text-lg italic"
-                      autoComplete="name"
-                    />
-                    {signatureName.trim().length > 0 && (
-                      <p className="mt-2 text-sm text-slate-400">
-                        Signature preview:{" "}
-                        <span className="font-serif italic text-blue-300 text-lg">
-                          {signatureName}
-                        </span>
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Email Address <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      value={signatureEmail}
-                      onChange={(e) => setSignatureEmail(e.target.value)}
-                      placeholder="you@example.com"
-                      className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/[0.05] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
-                      autoComplete="email"
-                    />
-                    {signatureEmail.trim().length > 0 && !emailValid && (
-                      <p className="mt-2 text-xs text-red-400">Please enter a valid email address</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Date <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={signatureDate}
-                      onChange={(e) => setSignatureDate(e.target.value)}
-                      placeholder="MM/DD/YYYY"
-                      className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/[0.05] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Progress Indicator */}
-              <div className="flex items-center gap-4 mb-6 text-sm">
-                <div
-                  className={`flex items-center gap-1.5 ${
-                    allChecked ? "text-green-400" : "text-slate-500"
-                  }`}
-                >
-                  {allChecked ? (
-                    <CheckCircle2 className="w-4 h-4" />
-                  ) : (
-                    <div className="w-4 h-4 rounded-full border border-slate-500" />
-                  )}
-                  All acknowledged
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-600" />
-                <div
-                  className={`flex items-center gap-1.5 ${
-                    nameValid ? "text-green-400" : "text-slate-500"
-                  }`}
-                >
-                  {nameValid ? (
-                    <CheckCircle2 className="w-4 h-4" />
-                  ) : (
-                    <div className="w-4 h-4 rounded-full border border-slate-500" />
-                  )}
-                  Name signed
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-600" />
-                <div
-                  className={`flex items-center gap-1.5 ${
-                    dateValid ? "text-green-400" : "text-slate-500"
-                  }`}
-                >
-                  {dateValid ? (
-                    <CheckCircle2 className="w-4 h-4" />
-                  ) : (
-                    <div className="w-4 h-4 rounded-full border border-slate-500" />
-                  )}
-                  Date entered
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  onClick={handleSign}
-                  disabled={!canSign || signing}
-                  className={`inline-flex items-center justify-center rounded-xl px-6 py-3.5 font-semibold text-[15px] transition ${
-                    canSign
-                      ? "bg-gradient-to-b from-green-500 to-green-700 text-white hover:-translate-y-0.5 cursor-pointer"
-                      : "bg-slate-700 text-slate-400 cursor-not-allowed opacity-50"
-                  }`}
-                >
-                  <CheckCircle2 className="w-4 h-4 mr-2" />
-                  {signing ? "Signing..." : "I Agree and Continue"}
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center rounded-xl px-5 py-3.5 font-semibold text-[15px] border border-white/10 bg-transparent text-slate-100 hover:bg-white/[0.04] transition"
-                  onClick={() => setShowSignatureSection(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Footer */}
-      <footer className="py-8 border-t border-white/10">
-        <div className="w-[min(100%-32px,1040px)] mx-auto text-center text-slate-500 text-sm">
-          <p>
-            &copy; {new Date().getFullYear()} Equity Express Inc. & Drass Wealth
-            Russell Holdings Management LLC. All rights reserved. www.RussellCapitalSystems.com is owned by Russell Holdings Management LLC.
-          </p>
-          <p className="mt-2">
-            Wilmington, Delaware &middot;{" "}
-            <a
-              href="mailto:support@drasswealthmanagement.com"
-              className="text-blue-400 hover:text-blue-300"
-            >
-              support@drasswealthmanagement.com
-            </a>
-          </p>
-        </div>
-      </footer>
-    </div>
-  );
-}
-```
-
-## `client/src/pages/ComplianceVaultPage.tsx`
-
-```tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Upload, FileText, AlertCircle, Calendar } from "lucide-react";
-
-interface ComplianceDocument {
-  id: string;
-  name: string;
-  uploaded: string;
-  expires: string;
-}
-
-const ComplianceVaultPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("library");
-  const tabs = ["library", "upload", "audit", "alerts", "outcome"];
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <h1 className="text-3xl font-bold mb-6">Compliance Vault</h1>
-        <p className="text-gray-400 mb-6">Secure storage for compliance records.</p>
-
-        {/* Tabs Navigation */}
-        <div className="flex gap-2 mb-6 overflow-x-auto">
-          {tabs.map((tab) => (
-            <Button
-              key={tab}
-              variant={activeTab === tab ? "default" : "outline"}
-              className={`${
-                activeTab === tab ? "bg-[#22c55e] hover:bg-[#1ea34e]" : "text-gray-300"
-              } capitalize`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab.replace("outcome", "Generate Outcome")}
-            </Button>
-          ))}
-        </div>
-
-        {/* Tab Content */}
-        <div className="bg-[#141925] p-6 rounded-lg shadow-md">
-          {activeTab === "library" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Document Library</h2>
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 p-3 bg-[#0a0f1a] rounded-md">
-                  <FileText className="text-[#22c55e]" />
-                  <div className="flex-1">
-                    <p>Agent Certification 2023.pdf</p>
-                    <p className="text-sm text-gray-400">Uploaded: 10/15/2023</p>
-                  </div>
-                  <Button variant="outline" size="sm" className="text-[#22c55e]">
-                    Download
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-          {activeTab === "upload" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Upload Documents</h2>
-              <div className="border-2 border-dashed border-gray-600 p-6 rounded-md text-center">
-                <Upload className="mx-auto text-[#22c55e] mb-2" size={32} />
-                <p className="text-gray-400">Drag & drop or click to upload compliance records</p>
-                <Button className="mt-4 bg-[#22c55e] hover:bg-[#1ea34e]">Browse</Button>
-              </div>
-            </div>
-          )}
-          {activeTab === "audit" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Audit Trail</h2>
-              <p className="text-gray-400">Activity log placeholder (e.g., uploads, downloads).</p>
-            </div>
-          )}
-          {activeTab === "alerts" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Expiration Alerts</h2>
-              <div className="flex items-center gap-2 p-3 bg-[#0a0f1a] rounded-md">
-                <AlertCircle className="text-[#22c55e]" />
-                <p>License Renewal - Expires in 10 days</p>
-              </div>
-            </div>
-          )}
-          {activeTab === "outcome" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Generate Outcome</h2>
-              <p className="text-gray-400">Compliance status report will be generated here.</p>
-              <Button className="mt-4 bg-[#22c55e] hover:bg-[#1ea34e]">Generate Report</Button>
-            </div>
-          )}
-        </div>
-
-        {/* Page Insights Badge */}
-        <div className="mt-6 p-4 bg-[#141925] rounded-lg">
-          <h3 className="text-lg font-medium">Page Insights Score</h3>
-          <div className="flex items-center gap-2 mt-2">
-            <div className="w-16 h-2 bg-[#22c55e] rounded-full"></div>
-            <p className="text-gray-400">92/100 - Excellent</p>
-          </div>
-        </div>
-
-        {/* Cross-Tool Integration */}
-        <div className="mt-6 p-4 bg-[#141925] rounded-lg">
-          <h3 className="text-lg font-medium">Cross-Tool Integration</h3>
-          <p className="text-gray-400 mt-2">
-            Link compliance records to Deal Room or Meeting Prep for seamless workflows.
-          </p>
-          <Button variant="outline" className="mt-4 text-[#22c55e]">
-            Connect Tools
-          </Button>
-        </div>
-
-        {/* Regulatory Disclaimer */}
-        <p className="text-sm text-gray-500 mt-6 text-center">
-          Russell Capital Systems is not a licensed broker-dealer. Tools are for life & annuity
-          agents only. Ensure compliance with state and federal regulations.
-        </p>
-
-        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-          <div className="flex items-center gap-4 mb-6">
-            <label className="text-sm text-slate-400">Projection Horizon:</label>
-            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-              onChange={(e) => {
-                const val = e.target.value;
-                document.getElementById('proj-year-compliance-vault')!.textContent = val;
-              }} />
-            <span id="proj-year-compliance-vault" className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-            <span className="text-slate-500 text-sm">years</span>
-          </div>
-          <div className="flex gap-2 mb-6">
-            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-              }`}>{s}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-5 gap-4 text-center">
-            {[5, 10, 20, 30, 50].map(yr => (
-              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-                <div className="text-emerald-400 font-bold text-lg">[Compliance Risk]</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-purple-400">🧠</span> AI Brain Analysis
-            </h2>
-            <div className="flex gap-2">
-              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-                Send to AI Advisor →
-              </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-                View AI Brain Hub →
-              </a>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default ComplianceVaultPage;
 ```
 

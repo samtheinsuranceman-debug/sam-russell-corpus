@@ -12,6 +12,8 @@ export const ENV = {
   ownerName: process.env.OWNER_NAME ?? "",
   // Where "new lead" alerts go (falls back to OWNER_EMAIL).
   leadNotifyEmail: process.env.LEAD_NOTIFY_EMAIL ?? "",
+  // Optional mobile number (E.164 or 10 digits) that gets a text per new lead.
+  leadNotifyPhone: process.env.LEAD_NOTIFY_PHONE ?? "",
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",

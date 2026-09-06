@@ -15,7 +15,9 @@
     "release": "bash scripts/release.sh",
     "db:build": "bash scripts/build_database.sh",
     "db:schema": "bash scripts/export_schema_sql.sh",
-    "owner:password": "node scripts/owner_password_hash.mjs"
+    "owner:password": "node scripts/owner_password_hash.mjs",
+    "mail:check": "node scripts/check_mail_dns.mjs",
+    "followups:run": "curl -s -X POST -H \"x-scheduler-token: $SCHEDULER_TOKEN\" \"${PUBLIC_BASE_URL:-http://localhost:3000}/api/scheduled/followups\""
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1120.0",

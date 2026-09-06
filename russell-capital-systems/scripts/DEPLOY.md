@@ -30,6 +30,14 @@ Email — how you hear about new leads (pick one):
   SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS [SMTP_FROM]   (Gmail app password or a cPanel mailbox; nothing to verify)
   or RESEND_API_KEY                                    (needs the sender domain verified in Resend)
   LEAD_NOTIFY_EMAIL                                    (optional; defaults to OWNER_EMAIL)
+  MAIL_FROM MAIL_REPLY_TO PUBLIC_BASE_URL              (deliverability; run `npm run mail:check`)
+Text messages (optional):
+  TWILIO_ACCOUNT_SID TWILIO_AUTH_TOKEN TWILIO_FROM     (or TWILIO_MESSAGING_SERVICE_SID)
+  or SMS_WEBHOOK_URL [SMS_WEBHOOK_TOKEN]               (any relay that accepts {to, body})
+  LEAD_NOTIFY_PHONE                                    (text you on every lead)
+Automation: FOLLOWUPS_DISABLED=1 to turn the lead sequence off; SCHEDULER_TOKEN + cron
+  `npm run followups:run` every 5 min on hosts that sleep the process.
+Market data (optional): FRED_API_KEY
 Voice (optional): ELEVENLABS_API_KEY ELEVENLABS_VOICE_ID
 > Owner sign-in: set OWNER_EMAIL and OWNER_PASSWORD_HASH (make the hash with
 > `npm run owner:password` on your own computer; never store the password).

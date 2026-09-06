@@ -4,6 +4,8 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 
 ### Files in this part
 
+- `client/src/pages/portal/CommissionTracker.tsx`
+- `client/src/pages/portal/ComparisonDashboard.tsx`
 - `client/src/pages/portal/CompetitiveAnalysis.tsx`
 - `client/src/pages/portal/ComplianceAlerts.tsx`
 - `client/src/pages/portal/ComplianceAuditCenter.tsx`
@@ -33,10 +35,1803 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/pages/portal/FeeTransparencyDashboard.tsx`
 - `client/src/pages/portal/FinancialAssessment.tsx`
 - `client/src/pages/portal/FinancialVitalsScorecard.tsx`
-- `client/src/pages/portal/GoalsBasedPlanning.tsx`
-- `client/src/pages/portal/GrowthAnnuities.tsx`
 
 ---
+
+## `client/src/pages/portal/CommissionTracker.tsx`
+
+```tsx
+// @ts-nocheck
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  DollarSign,
+  TrendingUp,
+  Home,
+  Building2,
+  Users,
+  Shield,
+  Target,
+  BarChart3,
+  PiggyBank,
+  ArrowUpRight,
+  Flame,
+  Crown,
+  AlertTriangle,
+  ChevronDown,
+  ChevronUp,
+  Scale,
+  Briefcase,
+  LineChart,
+  PieChartIcon,
+  Activity,
+  CheckCircle2,
+  Calendar,
+  Search,
+  Filter,
+  Download,
+  ArrowRight,
+  Star,
+} from "lucide-react";
+import { ExportToSlides } from "@/components/ExportToSlides";
+import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { 
+  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, 
+  Tooltip as RechartsTooltip, Legend, ResponsiveContainer, 
+  PieChart, Pie, Cell, AreaChart, Area, RadarChart, PolarGrid, 
+  PolarAngleAxis, PolarRadiusAxis, Radar 
+} from "recharts";
+
+type CommissionType = "life" | "annuity" | "both";
+
+interface ToolCommission {
+  id: string;
+  name: string;
+  route: string;
+  icon: React.ElementType;
+  commissionType: CommissionType;
+  monthlyCommission: number;        // monthly commission potential
+  annualPremiumBasis: string;        // explanation of the premium basis
+  description: string;               // how the tool generates this commission
+  clientProfile: string;             // who the ideal client is
+  withoutTool: string;               // what happens without this tool
+  enabled: boolean;                  // toggle on/off
+  category: "core" | "advanced" | "niche";
+  difficulty: "beginner" | "intermediate" | "expert";
+  avgCaseSize: number;
+  conversionRate: number;
+}
+
+const TOOL_COMMISSIONS: ToolCommission[] = [{
+    id: "mortgage-killer",
+    name: "Mortgage Killer",
+    route: "/portal/mortgage-killer",
+    icon: Home,
+    commissionType: "life",
+    monthlyCommission: 40000,
+    annualPremiumBasis: "$80,000/yr IUL per client with mortgage + home equity",
+    description: "Every client with a mortgage and home equity is an $80,000/yr IUL candidate. The Mortgage Killer shows them how to redirect mortgage interest into a tax-free IUL that builds wealth while eliminating their mortgage faster. Standard conversion: 1 client/month = $40K in new life commissions.",
+    clientProfile: "Homeowners with $200K+ mortgage balance and $100K+ in home equity",
+    withoutTool: "These clients keep paying mortgage interest to the bank and never consider IUL — you'd never even bring it up.",
+    enabled: true,
+    category: "core",
+    difficulty: "beginner",
+    avgCaseSize: 40000,
+    conversionRate: 25,
+  },
+,
+  {
+    id: "roth-strategy",
+    name: "2-Year Roth Strategy",
+    route: "/portal/roth-conversion",
+    icon: Target,
+    commissionType: "life",
+    monthlyCommission: 100000,
+    annualPremiumBasis: "$200K-$500K Roth conversions driving IUL + annuity placements",
+    description: "The Solar Strategy Roth conversion typically adds 22-28% tax-free income to the principal base. After converting, clients need a vehicle for the tax-free growth — that's where large IUL policies and lifetime income annuities come in. Each Roth conversion client is a $200K+ annual premium opportunity.",
+    clientProfile: "Pre-retirees (55-70) with $500K+ in traditional IRA/401k balances",
+    withoutTool: "Advisors leave massive Roth conversion opportunities on the table, missing the IUL upsell entirely.",
+    enabled: true,
+    category: "advanced",
+    difficulty: "expert",
+    avgCaseSize: 100000,
+    conversionRate: 15,
+  },
+,
+  {
+    id: "retirement-drivers",
+    name: "Retirement Drivers",
+    route: "/portal/retirement-drivers",
+    icon: TrendingUp,
+    commissionType: "both",
+    monthlyCommission: 100000,
+    annualPremiumBasis: "$100K+ in combined life & annuity commissions per month",
+    description: "The Retirement Drivers engine identifies every gap in a client's retirement plan — income shortfalls, tax exposure, longevity risk, inflation vulnerability. Each gap is a product placement opportunity: IUL for tax-free income, FIA for guaranteed income, MYGA for safe growth. One comprehensive retirement plan = multiple product sales.",
+    clientProfile: "Anyone within 10 years of retirement with $250K+ in investable assets",
+    withoutTool: "You present a generic retirement plan and miss 3-4 product placement opportunities per client.",
+    enabled: true,
+    category: "core",
+    difficulty: "intermediate",
+    avgCaseSize: 50000,
+    conversionRate: 30,
+  },
+,
+  {
+    id: "house-recycling",
+    name: "House Recycling for Big Sales",
+    route: "/portal/house-recycling",
+    icon: Building2,
+    commissionType: "life",
+    monthlyCommission: 200000,
+    annualPremiumBasis: "$300K-$1M+ annual premium IUL policies from equity recycling",
+    description: "House Recycling shows high-net-worth clients how to extract home equity via HELOC, redirect it into a max-funded IUL, and create a tax-free wealth engine. These are BIG cases — $300K to $1M+ annual premium IULs that would never exist without this specific strategy presentation. The visual before/after is what closes the deal.",
+    clientProfile: "High-net-worth homeowners with $500K+ equity in primary or investment properties",
+    withoutTool: "You'd never think to pitch a $500K annual premium IUL to a homeowner. This tool makes it obvious and compelling.",
+    enabled: true,
+    category: "advanced",
+    difficulty: "expert",
+    avgCaseSize: 200000,
+    conversionRate: 10,
+  },
+,
+  {
+    id: "household-wealth",
+    name: "Household Wealth Engine",
+    route: "/portal/household-wealth",
+    icon: Users,
+    commissionType: "life",
+    monthlyCommission: 250000,
+    annualPremiumBasis: "4-6 × $80,000/yr IUL policies per household = $250K+ in life commissions",
+    description: "The Household Wealth Engine maps every member of a household and identifies IUL opportunities for each: breadwinner protection, spousal coverage, children's policies, grandparent legacy plans. One household visit = 4-6 separate $80,000/yr IUL policies. These are policies advisors never even thought of going after.",
+    clientProfile: "Multi-generational households with combined income $150K+ and 2+ insurable members",
+    withoutTool: "You write one policy on the breadwinner and leave 4-5 additional policies on the table per household.",
+    enabled: true,
+    category: "core",
+    difficulty: "intermediate",
+    avgCaseSize: 80000,
+    conversionRate: 20,
+  }
+];
+
+function fmt(n: number): string {
+  if (n >= 1000000) return `$${(n / 1000000).toFixed(1)}M`;
+  if (n >= 1000) return `$${(n / 1000).toFixed(0)}K`;
+  return `$${n.toLocaleString()}`;
+}
+
+function fmtFull(n: number): string {
+  return `$${n.toLocaleString()}`;
+}
+
+const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#ef4444', '#f59e0b', '#06b6d4', '#ec4899', '#84cc16'];
+
+export default function CommissionTracker() {
+  const { user } = useAuth();
+  const [tools, setTools] = useState(TOOL_COMMISSIONS);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState<string>("all");
+  const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState("overview");
+  const [goalTarget, setGoalTarget] = useState<number>(2000000);
+  const [timeframe, setTimeframe] = useState<string>("12");
+
+  const { data: clientsData } = trpc.clients.list.useQuery(undefined, { enabled: false });
+  const { data: notesData } = trpc.notes.list.useQuery({ clientId: "all" }, { enabled: false });
+  const { data: activityData } = trpc.activity.recent.useQuery(undefined, { enabled: false });
+  const { data: dashboardData } = trpc.dashboard.summary.useQuery(undefined, { enabled: false });
+  const { data: userData } = trpc.users.me.useQuery(undefined, { enabled: false });
+
+  const [interactionCount, setInteractionCount] = useState(0);
+
+  const historicalData = useMemo(() => {
+    return Array.from({ length: 12 }).map((_, i) => {
+      const month = new Date();
+      month.setMonth(month.getMonth() - (11 - i));
+      const baseVal = 50000 + (i * 15000) + (Math.random() * 20000);
+      return {
+        name: month.toLocaleString('default', { month: 'short' }),
+        life: Math.round(baseVal * 0.6),
+        annuity: Math.round(baseVal * 0.4),
+        total: Math.round(baseVal),
+        target: 150000
+      };
+    });
+  }, []);
+
+  const categoryData = useMemo(() => {
+    const data = [
+      { name: 'Core Tools', value: tools.filter((t) => t.category === 'core' && t.enabled).reduce((s, t) => s + t.monthlyCommission, 0) },
+      { name: 'Advanced Tools', value: tools.filter((t) => t.category === 'advanced' && t.enabled).reduce((s, t) => s + t.monthlyCommission, 0) },
+      { name: 'Niche Tools', value: tools.filter((t) => t.category === 'niche' && t.enabled).reduce((s, t) => s + t.monthlyCommission, 0) },
+    ];
+    return data.filter((d) => d.value > 0);
+  }, [tools]);
+
+  const difficultyData = useMemo(() => {
+    return [
+      { difficulty: 'Beginner', potential: tools.filter((t) => t.difficulty === 'beginner' && t.enabled).reduce((s, t) => s + t.monthlyCommission, 0) },
+      { difficulty: 'Intermediate', potential: tools.filter((t) => t.difficulty === 'intermediate' && t.enabled).reduce((s, t) => s + t.monthlyCommission, 0) },
+      { difficulty: 'Expert', potential: tools.filter((t) => t.difficulty === 'expert' && t.enabled).reduce((s, t) => s + t.monthlyCommission, 0) },
+    ];
+  }, [tools]);
+
+  const conversionData = useMemo(() => {
+    return tools.filter((t) => t.enabled).map((t) => ({
+      name: t.name,
+      rate: t.conversionRate,
+      size: t.avgCaseSize / 1000
+    })).sort((a, b) => b.rate - a.rate).slice(0, 6);
+  }, [tools]);
+
+  const radarData = useMemo(() => {
+    return [
+      { subject: 'Life Potential', A: tools.filter((t) => (t.commissionType === 'life' || t.commissionType === 'both') && t.enabled).reduce((s, t) => s + t.monthlyCommission, 0), fullMark: 1000000 },
+      { subject: 'Annuity Potential', A: tools.filter((t) => (t.commissionType === 'annuity' || t.commissionType === 'both') && t.enabled).reduce((s, t) => s + t.monthlyCommission, 0), fullMark: 1000000 },
+      { subject: 'Conversion Rate', A: tools.filter((t) => t.enabled).reduce((s, t) => s + t.conversionRate, 0) / (tools.filter((t) => t.enabled).length || 1) * 10000, fullMark: 1000000 },
+      { subject: 'Avg Case Size', A: tools.filter((t) => t.enabled).reduce((s, t) => s + t.avgCaseSize, 0) / (tools.filter((t) => t.enabled).length || 1) * 5, fullMark: 1000000 },
+      { subject: 'Tool Utilization', A: (tools.filter((t) => t.enabled).length / tools.length) * 1000000, fullMark: 1000000 },
+    ];
+  }, [tools]);
+
+  const toggleTool = useCallback((id: string) => {
+    setTools(prev => prev.map((t) => t.id === id ? { ...t, enabled: !t.enabled } : t));
+    setInteractionCount(c => c + 1);
+  }, []);
+
+  const toggleAll = useCallback(() => {
+    const newState = !showAll;
+    setShowAll(newState);
+    setTools(prev => prev.map((t) => ({ ...t, enabled: newState })));
+    setInteractionCount(c => c + 1);
+  }, [showAll]);
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setInteractionCount(c => c + 1);
+  }, []);
+
+  const handleFilterTypeChange = useCallback((val: string) => {
+    setFilterType(val);
+    setInteractionCount(c => c + 1);
+  }, []);
+
+  const handleFilterCategoryChange = useCallback((val: string) => {
+    setFilterCategory(val);
+    setInteractionCount(c => c + 1);
+  }, []);
+
+  const handleGoalChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value.replace(/[^0-9]/g, ''));
+    if (!isNaN(val)) {
+      setGoalTarget(val);
+      setInteractionCount(c => c + 1);
+    }
+  }, []);
+
+  const filteredTools = useMemo(() => {
+    return tools.filter((t) => {
+      const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            t.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesType = filterType === "all" || t.commissionType === filterType;
+      const matchesCategory = filterCategory === "all" || t.category === filterCategory;
+      return matchesSearch && matchesType && matchesCategory;
+    });
+  }, [tools, searchQuery, filterType, filterCategory]);
+
+  const stats = useMemo(() => {
+    const active = tools.filter((t) => t.enabled);
+    const lifeTotal = active.filter((t) => t.commissionType === "life" || t.commissionType === "both")
+      .reduce((sum, t) => sum + (t.commissionType === "both" ? t.monthlyCommission * 0.5 : t.monthlyCommission), 0);
+    const annuityTotal = active.filter((t) => t.commissionType === "annuity" || t.commissionType === "both")
+      .reduce((sum, t) => sum + (t.commissionType === "both" ? t.monthlyCommission * 0.5 : t.monthlyCommission), 0);
+    const grandTotal = active.reduce((sum, t) => sum + t.monthlyCommission, 0);
+    const leftOnTable = tools.filter((t) => !t.enabled).reduce((sum, t) => sum + t.monthlyCommission, 0);
+    
+    const annualTotal = grandTotal * 12;
+    const goalProgress = Math.min(100, Math.round((annualTotal / goalTarget) * 100));
+    
+    return { lifeTotal, annuityTotal, grandTotal, leftOnTable, activeCount: active.length, annualTotal, goalProgress };
+  }, [tools, goalTarget]);
+
+  const typeColor = (type: CommissionType) => {
+    if (type === "life") return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+    if (type === "annuity") return "bg-purple-500/20 text-purple-400 border-purple-500/30";
+    return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+  };
+
+  const typeLabel = (type: CommissionType) => {
+    if (type === "life") return "Life Commissions";
+    if (type === "annuity") return "Annuity Commissions";
+    return "Life + Annuity";
+  };
+
+  const categoryColor = (cat: string) => {
+    if (cat === "core") return "text-emerald-400";
+    if (cat === "advanced") return "text-amber-400";
+    return "text-purple-400";
+  };
+
+  useEffect(() => {
+    if (interactionCount > 0 && interactionCount % 5 === 0) {
+    }
+  }, [interactionCount]);
+
+  return (
+    <div className="space-y-6 pb-20">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0">
+              <DollarSign className="w-5 h-5 text-red-400" />
+            </div>
+            Commission Tracker Pro
+          </h1>
+          <p className="text-slate-400 mt-1 text-sm sm:text-base">
+            Track, project, and maximize the commission potential of your advisory practice
+          </p>
+        </div>
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-shrink-0">
+          <ExportToSlides
+            toolName="Commission Tracker Pro"
+            getSections={() => [
+              {
+                title: "Commission Potential Summary",
+                items: [
+                  { label: "Total Monthly", value: fmt(stats.grandTotal) },
+                  { label: "Total Annual", value: fmtFull(stats.grandTotal * 12) },
+                  { label: "Life Commissions", value: fmt(stats.lifeTotal) },
+                  { label: "Annuity Commissions", value: fmt(stats.annuityTotal) },
+                  { label: "Active Tools", value: `${stats.activeCount} / ${tools.length}` },
+                  { label: "Left on Table", value: fmt(stats.leftOnTable) }
+                ]
+              },
+              ...tools.filter((t) => t.enabled).map((t) => ({
+                title: t.name,
+                items: [
+                  { label: "Monthly Potential", value: fmt(t.monthlyCommission) },
+                  { label: "Annual Premium Basis", value: t.annualPremiumBasis },
+                  { label: "Ideal Client Profile", value: t.clientProfile }
+                ]
+              }))
+            ]}
+          />
+          <Button
+            onClick={toggleAll}
+            variant="outline"
+            className="border-slate-600 text-slate-300 hover:bg-slate-700"
+          >
+            {showAll ? "Disable All" : "Enable All"}
+          </Button>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/30">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-emerald-400 text-xs font-semibold uppercase tracking-wider">Total Monthly</span>
+              <TrendingUp className="w-4 h-4 text-emerald-400" />
+            </div>
+            <p className="text-3xl font-bold text-white">{fmt(stats.grandTotal)}</p>
+            <p className="text-emerald-400/70 text-xs mt-1">{fmtFull(stats.grandTotal * 12)}/year potential</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/30">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-blue-400 text-xs font-semibold uppercase tracking-wider">Life Commissions</span>
+              <Shield className="w-4 h-4 text-blue-400" />
+            </div>
+            <p className="text-3xl font-bold text-white">{fmt(stats.lifeTotal)}</p>
+            <p className="text-blue-400/70 text-xs mt-1">IUL + Term + Whole Life</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/30">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-purple-400 text-xs font-semibold uppercase tracking-wider">Annuity Commissions</span>
+              <PiggyBank className="w-4 h-4 text-purple-400" />
+            </div>
+            <p className="text-3xl font-bold text-white">{fmt(stats.annuityTotal)}</p>
+            <p className="text-purple-400/70 text-xs mt-1">FIA + MYGA + SPIA</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-red-500/10 to-red-600/5 border-red-500/30">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-red-400 text-xs font-semibold uppercase tracking-wider">Left on Table</span>
+              <AlertTriangle className="w-4 h-4 text-red-400" />
+            </div>
+            <p className="text-3xl font-bold text-white">{fmt(stats.leftOnTable)}</p>
+            <p className="text-red-400/70 text-xs mt-1">
+              {tools.filter((t) => !t.enabled).length} tools not activated
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Goal Tracking & Money Left on Table */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <Card className="bg-[#111c32] border-slate-700/50 lg:col-span-2">
+          <CardContent className="p-5">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+              <div>
+                <h3 className="text-white font-semibold flex items-center gap-2">
+                  <Target className="w-4 h-4 text-emerald-400" />
+                  Annual Production Goal Tracker
+                </h3>
+                <p className="text-slate-400 text-xs mt-1">Track your projected potential against your annual target</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400 text-xs">Target:</span>
+                <div className="relative">
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-xs">$</span>
+                  <Input 
+                    value={goalTarget.toLocaleString()} 
+                    onChange={handleGoalChange}
+                    className="w-28 h-8 bg-slate-800/50 border-slate-700 text-xs pl-5"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-emerald-400 font-medium">{fmtFull(stats.annualTotal)} Projected</span>
+                <span className="text-slate-400">{fmtFull(goalTarget)} Goal</span>
+              </div>
+              <Progress value={stats.goalProgress} className="h-3 bg-slate-800" />
+              <div className="flex justify-between text-xs text-slate-500">
+                <span>{stats.goalProgress}% of Goal</span>
+                {stats.annualTotal >= goalTarget ? (
+                  <span className="text-emerald-400 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Goal Exceeded</span>
+                ) : (
+                  <span>{fmtFull(goalTarget - stats.annualTotal)} needed</span>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {stats.leftOnTable > 0 ? (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-5 flex flex-col justify-center gap-3 h-full">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                <Flame className="w-5 h-5 text-red-400" />
+              </div>
+              <h3 className="text-red-400 font-semibold text-sm">
+                Missing {fmtFull(stats.leftOnTable)}/mo!
+              </h3>
+            </div>
+            <p className="text-red-400/70 text-xs leading-relaxed">
+              That's {fmtFull(stats.leftOnTable * 12)}/year in commissions you could be earning by activating all tools.
+            </p>
+            <Button
+              onClick={() => { setShowAll(true); setTools(prev => prev.map((t) => ({ ...t, enabled: true }))); }}
+              className="bg-red-600 hover:bg-red-500 text-white text-xs w-full mt-auto"
+              size="sm"
+            >
+              Activate All Tools
+            </Button>
+          </div>
+        ) : (
+          <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-5 flex flex-col justify-center items-center text-center gap-3 h-full">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+              <Crown className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div>
+              <h3 className="text-emerald-400 font-semibold text-sm">Maximum Potential Reached!</h3>
+              <p className="text-emerald-400/70 text-xs mt-1">All tools activated and contributing to your pipeline.</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Main Content Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="bg-[#111c32] border border-slate-700/50 p-1 w-full flex overflow-x-auto justify-start sm:justify-center">
+          <TabsTrigger value="overview" className="flex-1 min-w-[120px] data-[state=active]:bg-slate-800">
+            <Activity className="w-4 h-4 mr-2" /> Overview
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex-1 min-w-[120px] data-[state=active]:bg-slate-800">
+            <BarChart3 className="w-4 h-4 mr-2" /> Analytics
+          </TabsTrigger>
+          <TabsTrigger value="tools" className="flex-1 min-w-[120px] data-[state=active]:bg-slate-800">
+            <Briefcase className="w-4 h-4 mr-2" /> Tool Details
+          </TabsTrigger>
+          <TabsTrigger value="projections" className="flex-1 min-w-[120px] data-[state=active]:bg-slate-800">
+            <TrendingUp className="w-4 h-4 mr-2" /> Projections
+          </TabsTrigger>
+        </TabsList>
+
+        {/* OVERVIEW TAB */}
+        <TabsContent value="overview" className="space-y-6 mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Historical Trend Chart */}
+            <Card className="bg-[#111c32] border-slate-700/50">
+              <CardHeader>
+                <CardTitle className="text-white text-base flex items-center gap-2">
+                  <LineChart className="w-4 h-4 text-blue-400" /> 12-Month Production Trend
+                </CardTitle>
+                <CardDescription>Historical vs Projected Commissions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={historicalData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                      <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value/1000}k`} />
+                      <RechartsTooltip 
+                        contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc' }}
+                        itemStyle={{ color: '#f8fafc' }}
+                        formatter={(value: number) => [`$${value.toLocaleString()}`, '']}
+                      />
+                      <Legend />
+                      <Area type="monotone" dataKey="total" name="Total Revenue" stroke="#10b981" fillOpacity={1} fill="url(#colorTotal)" />
+                      <Line type="monotone" dataKey="target" name="Monthly Target" stroke="#ef4444" strokeDasharray="5 5" dot={false} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Category Breakdown */}
+            <Card className="bg-[#111c32] border-slate-700/50">
+              <CardHeader>
+                <CardTitle className="text-white text-base flex items-center gap-2">
+                  <PieChartIcon className="w-4 h-4 text-purple-400" /> Revenue by Category
+                </CardTitle>
+                <CardDescription>Active tools commission distribution</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px] w-full flex items-center justify-center">
+                  {stats.grandTotal > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={categoryData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={100}
+                          paddingAngle={5}
+                          dataKey="value"
+                        >
+                          {categoryData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <RechartsTooltip 
+                          contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc' }}
+                          formatter={(value: number) => [`$${value.toLocaleString()}`, 'Potential']}
+                        />
+                        <Legend verticalAlign="bottom" height={36} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="text-slate-500 flex flex-col items-center">
+                      <AlertTriangle className="w-8 h-8 mb-2 opacity-50" />
+                      <p>No active tools to display</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Stats Table */}
+          <Card className="bg-[#111c32] border-slate-700/50">
+            <CardHeader>
+              <CardTitle className="text-white text-base">Top Performing Tools</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-slate-700/50 hover:bg-transparent">
+                      <TableHead className="text-slate-400">Tool Name</TableHead>
+                      <TableHead className="text-slate-400">Category</TableHead>
+                      <TableHead className="text-slate-400 text-right">Monthly Potential</TableHead>
+                      <TableHead className="text-slate-400 text-right">Annual Potential</TableHead>
+                      <TableHead className="text-slate-400 text-center">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {tools.sort((a, b) => b.monthlyCommission - a.monthlyCommission).slice(0, 5).map((tool) => (
+                      <TableRow key={tool.id} className="border-slate-700/50 hover:bg-slate-800/50">
+                        <TableCell className="font-medium text-slate-200 flex items-center gap-2">
+                          <tool.icon className="w-4 h-4 text-slate-400" />
+                          {tool.name}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className={`text-[10px] capitalize ${
+                            tool.category === 'core' ? 'text-emerald-400 border-emerald-400/30' : 
+                            tool.category === 'advanced' ? 'text-amber-400 border-amber-400/30' : 
+                            'text-purple-400 border-purple-400/30'
+                          }`}>
+                            {tool.category}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right text-emerald-400 font-medium">{fmt(tool.monthlyCommission)}</TableCell>
+                        <TableCell className="text-right text-slate-300">{fmtFull(tool.monthlyCommission * 12)}</TableCell>
+                        <TableCell className="text-center">
+                          <Switch
+                            checked={tool.enabled}
+                            onCheckedChange={() => toggleTool(tool.id)}
+                            className="scale-75 data-[state=checked]:bg-emerald-500"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ANALYTICS TAB */}
+        <TabsContent value="analytics" className="space-y-6 mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Conversion Rates */}
+            <Card className="bg-[#111c32] border-slate-700/50">
+              <CardHeader>
+                <CardTitle className="text-white text-base flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-emerald-400" /> Conversion Rates by Tool
+                </CardTitle>
+                <CardDescription>Estimated closing ratio for active tools</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={conversionData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={true} vertical={false} />
+                      <XAxis type="number" stroke="#94a3b8" fontSize={12} tickFormatter={(val) => `${val}%`} />
+                      <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={10} width={100} />
+                      <RechartsTooltip 
+                        contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc' }}
+                        formatter={(value: number) => [`${value}%`, 'Conversion Rate']}
+                      />
+                      <Bar dataKey="rate" name="Conversion Rate" fill="#10b981" radius={[0, 4, 4, 0]}>
+                        {conversionData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Radar Analysis */}
+            <Card className="bg-[#111c32] border-slate-700/50">
+              <CardHeader>
+                <CardTitle className="text-white text-base flex items-center gap-2">
+                  <Target className="w-4 h-4 text-blue-400" /> Practice Optimization Profile
+                </CardTitle>
+                <CardDescription>Multi-dimensional view of your practice</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                      <PolarGrid stroke="#334155" />
+                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 10 }} />
+                      <PolarRadiusAxis angle={30} domain={[0, 1000000]} tick={false} axisLine={false} />
+                      <Radar name="Current Profile" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.4} />
+                      <RechartsTooltip 
+                        contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc' }}
+                        formatter={() => ['Optimized', 'Score']}
+                      />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Difficulty Breakdown */}
+            <Card className="bg-[#111c32] border-slate-700/50 lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="text-white text-base flex items-center gap-2">
+                  <Scale className="w-4 h-4 text-amber-400" /> Revenue Potential by Difficulty
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[250px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={difficultyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                      <XAxis dataKey="difficulty" stroke="#94a3b8" />
+                      <YAxis stroke="#94a3b8" tickFormatter={(val) => `$${val/1000}k`} />
+                      <RechartsTooltip 
+                        contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc' }}
+                        formatter={(value: number) => [`$${value.toLocaleString()}`, 'Monthly Potential']}
+                      />
+                      <Bar dataKey="potential" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* TOOLS TAB */}
+        <TabsContent value="tools" className="space-y-4 mt-6">
+          {/* Filters & Search */}
+          <div className="bg-[#111c32] p-4 rounded-xl border border-slate-700/50 flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Input 
+                placeholder="Search tools, descriptions, strategies..." 
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="pl-9 bg-slate-800/50 border-slate-700 text-slate-200 w-full"
+              />
+            </div>
+            <div className="flex gap-2 w-full md:w-auto">
+              <Select value={filterType} onValueChange={handleFilterTypeChange}>
+                <SelectTrigger className="w-full md:w-[160px] bg-slate-800/50 border-slate-700 text-slate-200">
+                  <div className="flex items-center gap-2">
+                    <Filter className="w-3 h-3" />
+                    <SelectValue placeholder="Product Type" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-slate-800 border-slate-700 text-slate-200">
+                  <SelectItem value="all">All Products</SelectItem>
+                  <SelectItem value="life">Life Insurance</SelectItem>
+                  <SelectItem value="annuity">Annuities</SelectItem>
+                  <SelectItem value="both">Life & Annuity</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select value={filterCategory} onValueChange={handleFilterCategoryChange}>
+                <SelectTrigger className="w-full md:w-[160px] bg-slate-800/50 border-slate-700 text-slate-200">
+                  <div className="flex items-center gap-2">
+                    <Filter className="w-3 h-3" />
+                    <SelectValue placeholder="Category" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-slate-800 border-slate-700 text-slate-200">
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="core">Core Strategies</SelectItem>
+                  <SelectItem value="advanced">Advanced</SelectItem>
+                  <SelectItem value="niche">Niche Markets</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-lg font-semibold text-white">Tool-by-Tool Commission Breakdown</h2>
+            <span className="text-slate-400 text-sm">Showing {filteredTools.length} of {tools.length} tools</span>
+          </div>
+
+          <TooltipProvider>
+            {filteredTools.map((tool) => {
+              const isExpanded = expandedId === tool.id;
+              const Icon = tool.icon;
+              return (
+                <Card
+                  key={tool.id}
+                  className={`transition-all duration-200 ${
+                    tool.enabled
+                      ? "bg-[#111c32] border-slate-700/50 hover:border-slate-600/70"
+                      : "bg-[#0a1220] border-slate-800/50 opacity-60"
+                  }`}
+                >
+                  <CardContent className="p-0">
+                    {/* Main Row */}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4">
+                      {/* Top row on mobile: Toggle + Icon + Name + Expand */}
+                      <div className="flex items-center gap-3 w-full sm:contents">
+                        {/* Toggle */}
+                        <Switch
+                          checked={tool.enabled}
+                          onCheckedChange={() => toggleTool(tool.id)}
+                          className="flex-shrink-0 data-[state=checked]:bg-emerald-500"
+                        />
+
+                        {/* Icon */}
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                          tool.enabled ? "bg-slate-700/50" : "bg-slate-800/50"
+                        }`}>
+                          <Icon className={`w-5 h-5 ${tool.enabled ? "text-white" : "text-slate-600"}`} />
+                        </div>
+
+                        {/* Name & Type */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className={`font-semibold text-sm ${tool.enabled ? "text-white" : "text-slate-500"}`}>
+                              {tool.name}
+                            </h3>
+                            <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${typeColor(tool.commissionType)}`}>
+                              {typeLabel(tool.commissionType)}
+                            </Badge>
+                            <Badge variant="outline" className={`text-[10px] px-1.5 py-0 border-slate-700 ${categoryColor(tool.category)}`}>
+                              {tool.category}
+                            </Badge>
+                          </div>
+                          <p className="text-slate-500 text-xs truncate">{tool.annualPremiumBasis}</p>
+                        </div>
+
+                        {/* Expand — visible on mobile in top row */}
+                        <button
+                          onClick={() => setExpandedId(isExpanded ? null : tool.id)}
+                          className="text-slate-500 hover:text-slate-300 transition-colors p-1 flex-shrink-0 sm:hidden"
+                        >
+                          {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                        </button>
+                      </div>
+
+                      {/* Bottom row on mobile: Commission Amount */}
+                      <div className="flex items-center justify-between sm:justify-end gap-3 pl-[3.25rem] sm:pl-0">
+                        <div className="text-left sm:text-right flex-shrink-0">
+                          <p className={`text-xl font-bold ${tool.enabled ? "text-emerald-400" : "text-slate-600"}`}>
+                            {fmt(tool.monthlyCommission)}
+                          </p>
+                          <p className="text-slate-500 text-[10px]">per month</p>
+                        </div>
+
+                        {/* Expand — visible on desktop only */}
+                        <button
+                          onClick={() => setExpandedId(isExpanded ? null : tool.id)}
+                          className="text-slate-500 hover:text-slate-300 transition-colors p-1 hidden sm:block"
+                        >
+                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Expanded Details */}
+                    {isExpanded && (
+                      <div className="px-4 pb-4 pt-0 border-t border-slate-700/30">
+                        <div className="grid md:grid-cols-2 gap-4 mt-4">
+                          <div className="space-y-4">
+                            <div>
+                              <h4 className="text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-1 flex items-center gap-1">
+                                <Activity className="w-3 h-3" /> How It Generates Commission
+                              </h4>
+                              <p className="text-slate-300 text-sm leading-relaxed">{tool.description}</p>
+                            </div>
+                            <div>
+                              <h4 className="text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-1 flex items-center gap-1">
+                                <Users className="w-3 h-3" /> Ideal Client Profile
+                              </h4>
+                              <p className="text-slate-400 text-sm">{tool.clientProfile}</p>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-2 pt-2">
+                              <div className="bg-slate-800/50 p-2 rounded-lg border border-slate-700/50">
+                                <span className="text-slate-500 text-[10px] uppercase block mb-1">Avg Case Size</span>
+                                <span className="text-slate-200 font-medium text-sm">{fmtFull(tool.avgCaseSize)}</span>
+                              </div>
+                              <div className="bg-slate-800/50 p-2 rounded-lg border border-slate-700/50">
+                                <span className="text-slate-500 text-[10px] uppercase block mb-1">Est. Conversion</span>
+                                <span className="text-slate-200 font-medium text-sm">{tool.conversionRate}%</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-4 flex flex-col h-full">
+                            <div>
+                              <h4 className="text-red-400 text-xs font-semibold uppercase tracking-wider mb-1 flex items-center gap-1">
+                                <AlertTriangle className="w-3 h-3" /> Without This Tool
+                              </h4>
+                              <p className="text-slate-400 text-sm leading-relaxed">{tool.withoutTool}</p>
+                            </div>
+                            
+                            <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 mt-auto">
+                              <div className="flex justify-between items-center pb-2 border-b border-slate-700/50">
+                                <span className="text-slate-400 text-xs flex items-center gap-1"><Calendar className="w-3 h-3" /> Monthly Potential</span>
+                                <span className="text-emerald-400 font-bold">{fmtFull(tool.monthlyCommission)}</span>
+                              </div>
+                              <div className="flex justify-between items-center pt-2">
+                                <span className="text-slate-400 text-xs flex items-center gap-1"><Star className="w-3 h-3" /> Annual Potential</span>
+                                <span className="text-emerald-400 font-bold">{fmtFull(tool.monthlyCommission * 12)}</span>
+                              </div>
+                            </div>
+                            
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="w-full border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 text-xs"
+                              onClick={() => window.location.href = tool.route}
+                            >
+                              Open {tool.name} <ArrowUpRight className="w-3 h-3 ml-1" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+            
+            {filteredTools.length === 0 && (
+              <div className="text-center py-12 bg-[#111c32] rounded-xl border border-slate-700/50">
+                <Search className="w-8 h-8 text-slate-600 mx-auto mb-3" />
+                <h3 className="text-slate-300 font-medium">No tools found</h3>
+                <p className="text-slate-500 text-sm mt-1">Try adjusting your search or filters</p>
+                <Button 
+                  variant="link" 
+                  onClick={() => { setSearchQuery(""); setFilterType("all"); setFilterCategory("all"); }}
+                  className="text-emerald-400 mt-2"
+                >
+                  Clear all filters
+                </Button>
+              </div>
+            )}
+          </TooltipProvider>
+        </TabsContent>
+
+        {/* PROJECTIONS TAB */}
+        <TabsContent value="projections" className="space-y-6 mt-6">
+          <Card className="bg-[#111c32] border-slate-700/50">
+            <CardHeader>
+              <CardTitle className="text-white text-base flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-emerald-400" /> Revenue Projections Builder
+              </CardTitle>
+              <CardDescription>Forecast your growth based on tool utilization</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col md:flex-row gap-8">
+                <div className="w-full md:w-1/3 space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-sm text-slate-300">Projection Timeframe</label>
+                    <Select value={timeframe} onValueChange={setTimeframe}>
+                      <SelectTrigger className="bg-slate-800/50 border-slate-700 text-slate-200">
+                        <SelectValue placeholder="Select timeframe" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-700 text-slate-200">
+                        <SelectItem value="6">6 Months</SelectItem>
+                        <SelectItem value="12">1 Year</SelectItem>
+                        <SelectItem value="36">3 Years</SelectItem>
+                        <SelectItem value="60">5 Years</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 space-y-4">
+                    <h4 className="text-sm font-medium text-slate-200 border-b border-slate-700 pb-2">Projection Summary</h4>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400 text-xs">Current Monthly</span>
+                      <span className="text-slate-200 font-medium">{fmtFull(stats.grandTotal)}</span>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400 text-xs">Projected Total ({timeframe} mo)</span>
+                      <span className="text-emerald-400 font-bold">{fmtFull(stats.grandTotal * parseInt(timeframe))}</span>
+                    </div>
+                    
+                    <div className="pt-2 border-t border-slate-700">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400 text-xs">Life Contribution</span>
+                        <span className="text-blue-400 text-sm">{Math.round((stats.lifeTotal / stats.grandTotal) * 100 || 0)}%</span>
+                      </div>
+                      <div className="flex justify-between items-center mt-1">
+                        <span className="text-slate-400 text-xs">Annuity Contribution</span>
+                        <span className="text-purple-400 text-sm">{Math.round((stats.annuityTotal / stats.grandTotal) * 100 || 0)}%</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-2">
+                    <Download className="w-4 h-4" /> Export Projection PDF
+                  </Button>
+                </div>
+                
+                <div className="w-full md:w-2/3">
+                  <div className="h-[350px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart 
+                        data={Array.from({ length: parseInt(timeframe) }).map((_, i) => ({
+                          month: `Month ${i+1}`,
+                          projected: stats.grandTotal * (1 + (i * 0.05)), // 5% growth per month assumed
+                          baseline: stats.grandTotal
+                        }))} 
+                        margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
+                      >
+                        <defs>
+                          <linearGradient id="colorProjected" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                        <XAxis dataKey="month" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} 
+                               interval={parseInt(timeframe) > 12 ? Math.floor(parseInt(timeframe)/6) : 0} />
+                        <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} 
+                               tickFormatter={(value) => `$${value/1000}k`} />
+                        <RechartsTooltip 
+                          contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc' }}
+                          formatter={(value: number) => [`$${Math.round(value).toLocaleString()}`, '']}
+                        />
+                        <Legend />
+                        <Area type="monotone" dataKey="projected" name="Projected Growth (w/ Optimization)" stroke="#10b981" fillOpacity={1} fill="url(#colorProjected)" />
+                        <Line type="monotone" dataKey="baseline" name="Flat Baseline" stroke="#94a3b8" strokeDasharray="5 5" dot={false} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Grand Total Summary Sticky Footer */}
+      <div className="fixed bottom-0 left-0 right-0 bg-[#0a1220]/90 backdrop-blur-md border-t border-slate-800 p-4 z-40">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+              <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
+            </div>
+            <div>
+              <h3 className="text-white font-bold text-sm sm:text-base">Total Commission Potential</h3>
+              <p className="text-slate-400 text-xs">
+                Using {stats.activeCount} active tools as the core engine
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="text-right hidden md:block">
+              <p className="text-slate-400 text-xs">Annual Projection</p>
+              <p className="text-lg font-bold text-white">{fmtFull(stats.grandTotal * 12)}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-slate-400 text-xs">Monthly Potential</p>
+              <p className="text-2xl sm:text-3xl font-bold text-emerald-400">
+                {fmt(stats.grandTotal)}
+              </p>
+            </div>
+            <Button className="hidden sm:flex bg-emerald-600 hover:bg-emerald-500 text-white gap-2">
+              Action Plan <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Disclaimer */}
+      <div className="pt-8 pb-12">
+        <p className="text-slate-600 text-[10px] text-center leading-relaxed max-w-4xl mx-auto">
+          Commission estimates are based on maximum potential when each tool is used correctly with qualified clients.
+          Actual results vary based on market conditions, client suitability, carrier compensation schedules, and individual advisor effort.
+          These figures represent the additional income opportunity that exists when using Russell Capital Systems™' tools as the core engine of your practice.
+          Past performance does not guarantee future results. For illustration purposes only. Not an offer or guarantee of income.
+        </p>
+      </div>
+    </div>
+  );
+}
+```
+
+## `client/src/pages/portal/ComparisonDashboard.tsx`
+
+```tsx
+// @ts-nocheck
+import { useState, useMemo } from "react";
+import { AppShell } from "@/components/AppShell";
+import {
+  useStrategy,
+  STRATEGY_LABELS,
+  STRATEGY_PATHS,
+  type StrategyType,
+  type ComparisonSlot,
+} from "@/contexts/StrategyContext";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  GitCompare,
+  Trash2,
+  TrendingUp,
+  DollarSign,
+  Zap,
+  Trophy,
+  Target,
+  Wallet,
+  PiggyBank,
+  Building2,
+  Heart,
+  Banknote,
+  Scale,
+  ChevronRight,
+} from "lucide-react";
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RTooltip,
+  ResponsiveContainer,
+  Legend,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+} from "recharts";
+import { toast } from "sonner";
+import { useLocation } from "wouter";
+
+const fmt = (n: number) => {
+  if (!n || isNaN(n)) return "$0";
+  if (Math.abs(n) >= 1_000_000) return `$${(n / 1_000_000).toFixed(2)}M`;
+  if (Math.abs(n) >= 1_000) return `$${(n / 1_000).toFixed(1)}K`;
+  return `$${n.toFixed(0)}`;
+};
+
+const SLOT_COLORS = ["#22c55e", "#3b82f6", "#a855f7", "#f59e0b", "#ef4444"];
+
+const METRIC_ICONS = {
+  "Net Positive": TrendingUp,
+  "Interest Paid": Wallet,
+  "Interest Saved": PiggyBank,
+  "Equity Built": Building2,
+  "Tax Savings": Scale,
+  "Cash Value": Banknote,
+  "Death Benefit": Heart,
+  "Income Generated": DollarSign,
+  "Opportunity Cost": Target,
+};
+
+const ALL_STRATEGY_TYPES: StrategyType[] = [
+  "mortgage-killer", "iul-projection", "roth-conversion", "myga-waterfall",
+  "tax-waterfall", "retirement-income", "premium-financing", "real-estate-mogul",
+  "social-security", "annuity-income", "estate-tax", "fia-collateral",
+  "hot-income", "time-machine", "lifetime-income", "dynamic-tax",
+  "black-mirror", "endgame", "inflation-analysis", "advisor-income",
+];
+
+export default function ComparisonDashboard() {
+  const {
+    comparisonSlots,
+    setComparisonSlot,
+    clearComparisonSlot,
+    clearAllComparisons,
+    getComparisonSummaries,
+    activeStrategies,
+    results,
+  } = useStrategy();
+  const [, navigate] = useLocation();
+  const [activeTab, setActiveTab] = useState("overview");
+
+  const summaries = getComparisonSummaries();
+  const filledSlots = comparisonSlots.filter(s => s.strategyType !== null);
+  const availableStrategies = ALL_STRATEGY_TYPES.filter(st => activeStrategies.includes(st));
+
+  const chartData = useMemo(() => {
+    if (filledSlots.length === 0) return [];
+    const years = [];
+    for (let y = 1; y <= 20; y++) {
+      const row: any = { year: y };
+      filledSlots.forEach(slot => {
+        const yearData = slot.projection?.find(p => p.year === y);
+        if (yearData) {
+          row[`slot${slot.id}_netPositive`] = yearData.cumulativeNetPositive;
+          row[`slot${slot.id}_cashValue`] = yearData.cashValue;
+          row[`slot${slot.id}_taxSavings`] = yearData.taxSavings;
+          row[`slot${slot.id}_income`] = yearData.incomeGenerated;
+          row[`slot${slot.id}_equity`] = yearData.equityBuilt;
+          row[`slot${slot.id}_interestSaved`] = yearData.interestSaved;
+          row[`slot${slot.id}_deathBenefit`] = yearData.deathBenefit;
+        }
+      });
+      years.push(row);
+    }
+    return years;
+  }, [filledSlots]);
+
+  const radarData = useMemo(() => {
+    if (summaries.length === 0) return [];
+    const maxVals = {
+      netPositive: Math.max(...summaries.map(s => Math.abs(s.totalNetPositive)), 1),
+      taxSavings: Math.max(...summaries.map(s => s.totalTaxSavings), 1),
+      cashValue: Math.max(...summaries.map(s => s.finalCashValue), 1),
+      income: Math.max(...summaries.map(s => s.totalIncomeGenerated), 1),
+      equity: Math.max(...summaries.map(s => s.totalEquityBuilt), 1),
+      deathBenefit: Math.max(...summaries.map(s => s.finalDeathBenefit), 1),
+    };
+    const metrics = [
+      { metric: "Net Positive", key: "netPositive" },
+      { metric: "Tax Savings", key: "taxSavings" },
+      { metric: "Cash Value", key: "cashValue" },
+      { metric: "Income", key: "income" },
+      { metric: "Equity", key: "equity" },
+      { metric: "Death Benefit", key: "deathBenefit" },
+    ];
+    return metrics.map(m => {
+      const row: any = { metric: m.metric };
+      summaries.forEach(s => {
+        const val = m.key === "netPositive" ? s.totalNetPositive
+          : m.key === "taxSavings" ? s.totalTaxSavings
+          : m.key === "cashValue" ? s.finalCashValue
+          : m.key === "income" ? s.totalIncomeGenerated
+          : m.key === "equity" ? s.totalEquityBuilt
+          : s.finalDeathBenefit;
+        row[s.label] = Math.round((val / maxVals[m.key]) * 100);
+      });
+      return row;
+    });
+  }, [summaries]);
+
+  const winner = summaries.length > 0
+    ? summaries.reduce((best, s) => s.totalNetPositive > best.totalNetPositive ? s : best, summaries[0])
+    : null;
+
+  return (
+    <AppShell>
+      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500/20 to-cyan-500/20 border border-purple-500/30">
+                <GitCompare className="w-6 h-6 text-purple-400" />
+              </div>
+              Strategy Comparison Dashboard
+            </h1>
+            <p className="text-sm text-zinc-400 mt-1">
+              Run up to 5 strategies side-by-side with 20-year projections
+            </p>
+          </div>
+          {filledSlots.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs text-zinc-500 hover:text-red-400"
+              onClick={() => {
+                clearAllComparisons();
+                toast.info("All comparison slots cleared");
+              }}
+            >
+              <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+              Clear All
+            </Button>
+          )}
+        </div>
+
+        {/* 5 Comparison Slots */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          {comparisonSlots.map((slot, i) => (
+            <Card
+              key={slot.id}
+              className={`border-2 transition-all ${
+                slot.strategyType
+                  ? "bg-zinc-900/80 border-zinc-600/50"
+                  : "bg-zinc-900/40 border-dashed border-zinc-700/40 hover:border-zinc-600/50"
+              }`}
+              style={slot.strategyType ? { borderColor: `${SLOT_COLORS[i]}40` } : undefined}
+            >
+              <CardContent className="p-3">
+                {slot.strategyType ? (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: SLOT_COLORS[i] }}
+                      />
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-5 w-5 p-0 text-zinc-500 hover:text-red-400"
+                        onClick={() => clearComparisonSlot(slot.id)}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                    <div className="text-xs font-semibold text-zinc-200 truncate">
+                      {slot.label}
+                    </div>
+                    {slot.projection && (
+                      <div className="mt-1 text-[10px] text-emerald-400">
+                        Net: {fmt(slot.projection[19]?.cumulativeNetPositive ?? 0)}
+                      </div>
+                    )}
+                    <Badge
+                      variant="outline"
+                      className="mt-1.5 text-[9px] px-1 py-0"
+                      style={{ borderColor: `${SLOT_COLORS[i]}60`, color: SLOT_COLORS[i] }}
+                    >
+                      20yr projected
+                    </Badge>
+                  </div>
+                ) : (
+                  <div className="text-center py-2">
+                    <div className="text-xs text-zinc-500 mb-2">Slot {i + 1}</div>
+                    <Select
+                      onValueChange={(val) => {
+                        if (val) setComparisonSlot(slot.id, val as StrategyType);
+                      }}
+                    >
+                      <SelectTrigger className="h-7 text-[10px] bg-zinc-800/50 border-zinc-700/50">
+                        <SelectValue placeholder="Select strategy..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableStrategies.length > 0 ? (
+                          availableStrategies.map(st => (
+                            <SelectItem key={st} value={st} className="text-xs">
+                              {STRATEGY_LABELS[st]}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="px-3 py-2 text-xs text-zinc-500">
+                            Run calculators first to add strategies
+                          </div>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* No strategies message */}
+        {filledSlots.length === 0 && (
+          <Card className="bg-zinc-900/40 border-zinc-700/30">
+            <CardContent className="py-12 text-center">
+              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500/10 to-cyan-500/10 border border-purple-500/20 flex items-center justify-center">
+                <GitCompare className="w-8 h-8 text-purple-400/60" />
+              </div>
+              <h3 className="text-lg font-semibold text-zinc-300 mb-2">No Strategies to Compare</h3>
+              <p className="text-sm text-zinc-500 max-w-lg mx-auto mb-4">
+                Run any calculator and click "Add to Comparison" in the Generate Outcome tab,
+                or select from your synced strategies above.
+              </p>
+              {activeStrategies.length > 0 && (
+                <p className="text-xs text-emerald-400">
+                  <Zap className="w-3 h-3 inline mr-1" />
+                  {activeStrategies.length} strategies available — select them in the slots above
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Results Tabs */}
+        {filledSlots.length > 0 && (
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="bg-zinc-800/50 border border-zinc-700/30">
+              <TabsTrigger value="overview" className="text-xs">Overview</TabsTrigger>
+              <TabsTrigger value="projection" className="text-xs">20-Year Projection</TabsTrigger>
+              <TabsTrigger value="metrics" className="text-xs">Detailed Metrics</TabsTrigger>
+              <TabsTrigger value="radar" className="text-xs">Radar Analysis</TabsTrigger>
+              <TabsTrigger value="yearly" className="text-xs">Year-by-Year</TabsTrigger>
+            </TabsList>
+
+            {/* OVERVIEW TAB */}
+            <TabsContent value="overview" className="space-y-4">
+              {/* Winner banner */}
+              {winner && summaries.length >= 2 && (
+                <Card className="bg-gradient-to-r from-amber-500/10 to-emerald-500/10 border-amber-500/30">
+                  <CardContent className="py-3 flex items-center gap-3">
+                    <Trophy className="w-5 h-5 text-amber-400" />
+                    <div>
+                      <span className="text-sm font-semibold text-amber-400">{winner.label}</span>
+                      <span className="text-xs text-zinc-400 ml-2">
+                        leads with {fmt(winner.totalNetPositive)} net positive over 20 years
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Summary cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {summaries.map((s, i) => {
+                  const slotIdx = comparisonSlots.findIndex(sl => sl.id === s.slotId);
+                  const color = SLOT_COLORS[slotIdx] ?? SLOT_COLORS[0];
+                  const isWinner = winner && s.slotId === winner.slotId && summaries.length >= 2;
+
+                  return (
+                    <Card
+                      key={s.slotId}
+                      className={`bg-zinc-900/60 border-zinc-700/50 ${isWinner ? "ring-1 ring-amber-500/40" : ""}`}
+                    >
+                      <CardHeader className="pb-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
+                            <CardTitle className="text-sm font-semibold text-zinc-200">
+                              {s.label}
+                            </CardTitle>
+                          </div>
+                          {isWinner && (
+                            <Badge className="text-[9px] bg-amber-500/20 text-amber-400 border-amber-500/30">
+                              <Trophy className="w-2.5 h-2.5 mr-0.5" /> Best
+                            </Badge>
+                          )}
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <div className="grid grid-cols-2 gap-2">
+                          <MetricRow label="Net Positive" value={fmt(s.totalNetPositive)} highlight />
+                          <MetricRow label="Interest Saved" value={fmt(s.totalInterestSaved)} />
+                          <MetricRow label="Tax Savings" value={fmt(s.totalTaxSavings)} />
+                          <MetricRow label="Cash Value" value={fmt(s.finalCashValue)} />
+                          <MetricRow label="Death Benefit" value={fmt(s.finalDeathBenefit)} />
+                          <MetricRow label="Income" value={fmt(s.totalIncomeGenerated)} />
+                          <MetricRow label="Equity Built" value={fmt(s.totalEquityBuilt)} />
+                          <MetricRow label="Interest Paid" value={fmt(s.totalInterestPaid)} negative />
+                        </div>
+                        <div className="pt-2 border-t border-zinc-700/30">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] text-zinc-500">Best metric:</span>
+                            <Badge variant="outline" className="text-[9px]" style={{ borderColor: `${color}60`, color }}>
+                              {s.bestMetric}: {fmt(s.bestMetricValue)}
+                            </Badge>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </TabsContent>
+
+            {/* 20-YEAR PROJECTION TAB */}
+            <TabsContent value="projection" className="space-y-4">
+              <Card className="bg-zinc-900/60 border-zinc-700/50">
+                <CardHeader>
+                  <CardTitle className="text-sm text-zinc-200">Cumulative Net Positive — 20-Year Trajectory</CardTitle>
+                  <CardDescription className="text-xs text-zinc-500">
+                    Total wealth accumulation across all strategies
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={chartData}>
+                        <defs>
+                          {filledSlots.map((slot, i) => (
+                            <linearGradient key={slot.id} id={`cmp-grad-${slot.id}`} x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor={SLOT_COLORS[i]} stopOpacity={0.3} />
+                              <stop offset="95%" stopColor={SLOT_COLORS[i]} stopOpacity={0} />
+                            </linearGradient>
+                          ))}
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                        <XAxis dataKey="year" stroke="#71717a" tick={{ fontSize: 10 }} />
+                        <YAxis stroke="#71717a" tick={{ fontSize: 10 }} tickFormatter={v => fmt(v)} />
+                        <RTooltip
+                          contentStyle={{ backgroundColor: "#18181b", border: "1px solid #3f3f46", borderRadius: "8px", fontSize: "11px" }}
+                          formatter={(value: number) => [fmt(value), ""]}
+                          labelFormatter={(l) => `Year ${l}`}
+                        />
+                        <Legend wrapperStyle={{ fontSize: "11px" }} />
+                        {filledSlots.map((slot, i) => (
+                          <Area
+                            key={slot.id}
+                            type="monotone"
+                            dataKey={`slot${slot.id}_netPositive`}
+                            name={slot.label}
+                            stroke={SLOT_COLORS[i]}
+                            fill={`url(#cmp-grad-${slot.id})`}
+                            strokeWidth={2}
+                          />
+                        ))}
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Cash Value comparison */}
+              <Card className="bg-zinc-900/60 border-zinc-700/50">
+                <CardHeader>
+                  <CardTitle className="text-sm text-zinc-200">Cash Value Growth Comparison</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                        <XAxis dataKey="year" stroke="#71717a" tick={{ fontSize: 10 }} />
+                        <YAxis stroke="#71717a" tick={{ fontSize: 10 }} tickFormatter={v => fmt(v)} />
+                        <RTooltip
+                          contentStyle={{ backgroundColor: "#18181b", border: "1px solid #3f3f46", borderRadius: "8px", fontSize: "11px" }}
+                          formatter={(value: number) => [fmt(value), ""]}
+                        />
+                        <Legend wrapperStyle={{ fontSize: "11px" }} />
+                        {filledSlots.map((slot, i) => (
+                          <Line
+                            key={slot.id}
+                            type="monotone"
+                            dataKey={`slot${slot.id}_cashValue`}
+                            name={`${slot.label} Cash Value`}
+                            stroke={SLOT_COLORS[i]}
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                        ))}
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Tax Savings comparison */}
+              <Card className="bg-zinc-900/60 border-zinc-700/50">
+                <CardHeader>
+                  <CardTitle className="text-sm text-zinc-200">Annual Tax Savings Comparison</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                        <XAxis dataKey="year" stroke="#71717a" tick={{ fontSize: 10 }} />
+                        <YAxis stroke="#71717a" tick={{ fontSize: 10 }} tickFormatter={v => fmt(v)} />
+                        <RTooltip
+                          contentStyle={{ backgroundColor: "#18181b", border: "1px solid #3f3f46", borderRadius: "8px", fontSize: "11px" }}
+                          formatter={(value: number) => [fmt(value), ""]}
+                        />
+                        <Legend wrapperStyle={{ fontSize: "11px" }} />
+                        {filledSlots.map((slot, i) => (
+                          <Bar
+                            key={slot.id}
+                            dataKey={`slot${slot.id}_taxSavings`}
+                            name={`${slot.label} Tax Savings`}
+                            fill={SLOT_COLORS[i]}
+                            opacity={0.8}
+                          />
+                        ))}
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* DETAILED METRICS TAB */}
+            <TabsContent value="metrics" className="space-y-4">
+              <Card className="bg-zinc-900/60 border-zinc-700/50 overflow-x-auto">
+                <CardContent className="p-0">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-zinc-700/30">
+                        <th className="text-left px-4 py-3 text-zinc-400 font-medium">Metric</th>
+                        {summaries.map((s, i) => {
+                          const slotIdx = comparisonSlots.findIndex(sl => sl.id === s.slotId);
+                          return (
+                            <th key={s.slotId} className="text-right px-4 py-3 font-medium" style={{ color: SLOT_COLORS[slotIdx] }}>
+                              {s.label}
+                            </th>
+                          );
+                        })}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { label: "Total Net Positive", key: "totalNetPositive", icon: TrendingUp },
+                        { label: "Total Interest Paid", key: "totalInterestPaid", icon: Wallet },
+                        { label: "Total Interest Saved", key: "totalInterestSaved", icon: PiggyBank },
+                        { label: "Total Equity Built", key: "totalEquityBuilt", icon: Building2 },
+                        { label: "Total Tax Savings", key: "totalTaxSavings", icon: Scale },
+                        { label: "Final Cash Value", key: "finalCashValue", icon: Banknote },
+                        { label: "Final Death Benefit", key: "finalDeathBenefit", icon: Heart },
+                        { label: "Total Income Generated", key: "totalIncomeGenerated", icon: DollarSign },
+                        { label: "Total Opportunity Cost", key: "totalOpportunityCost", icon: Target },
+                      ].map((metric) => {
+                        const values = summaries.map(s => s[metric.key] ?? 0);
+                        const maxVal = Math.max(...values);
+                        const Icon = metric.icon;
+                        return (
+                          <tr key={metric.key} className="border-b border-zinc-700/20 hover:bg-zinc-800/30">
+                            <td className="px-4 py-2.5 text-zinc-300 flex items-center gap-2">
+                              <Icon className="w-3.5 h-3.5 text-zinc-500" />
+                              {metric.label}
+                            </td>
+                            {summaries.map((s, i) => {
+                              const val = s[metric.key] ?? 0;
+                              const isMax = val === maxVal && val > 0;
+                              const slotIdx = comparisonSlots.findIndex(sl => sl.id === s.slotId);
+                              return (
+                                <td
+                                  key={s.slotId}
+                                  className={`px-4 py-2.5 text-right font-mono ${
+                                    isMax ? "font-bold" : "text-zinc-400"
+                                  }`}
+                                  style={isMax ? { color: SLOT_COLORS[slotIdx] } : undefined}
+                                >
+                                  {fmt(val)}
+                                  {isMax && summaries.length >= 2 && (
+                                    <Trophy className="w-3 h-3 inline ml-1 text-amber-400" />
+                                  )}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* RADAR TAB */}
+            <TabsContent value="radar" className="space-y-4">
+              <Card className="bg-zinc-900/60 border-zinc-700/50">
+                <CardHeader>
+                  <CardTitle className="text-sm text-zinc-200">Strategy Strength Radar</CardTitle>
+                  <CardDescription className="text-xs text-zinc-500">
+                    Normalized comparison across 6 key dimensions (0-100 scale)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-96">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RadarChart data={radarData}>
+                        <PolarGrid stroke="#3f3f46" />
+                        <PolarAngleAxis dataKey="metric" tick={{ fontSize: 11, fill: "#a1a1aa" }} />
+                        <PolarRadiusAxis tick={{ fontSize: 9, fill: "#71717a" }} domain={[0, 100]} />
+                        {summaries.map((s, i) => {
+                          const slotIdx = comparisonSlots.findIndex(sl => sl.id === s.slotId);
+                          return (
+                            <Radar
+                              key={s.slotId}
+                              name={s.label}
+                              dataKey={s.label}
+                              stroke={SLOT_COLORS[slotIdx]}
+                              fill={SLOT_COLORS[slotIdx]}
+                              fillOpacity={0.15}
+                              strokeWidth={2}
+                            />
+                          );
+                        })}
+                        <Legend wrapperStyle={{ fontSize: "11px" }} />
+                      </RadarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* YEAR-BY-YEAR TAB */}
+            <TabsContent value="yearly" className="space-y-4">
+              <Card className="bg-zinc-900/60 border-zinc-700/50 overflow-x-auto">
+                <CardHeader>
+                  <CardTitle className="text-sm text-zinc-200">Year-by-Year Net Positive Comparison</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-zinc-700/30">
+                        <th className="text-left px-3 py-2 text-zinc-400 font-medium sticky left-0 bg-zinc-900">Year</th>
+                        {filledSlots.map((slot, i) => (
+                          <th key={slot.id} className="text-right px-3 py-2 font-medium" style={{ color: SLOT_COLORS[i] }}>
+                            {slot.label}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Array.from({ length: 20 }, (_, y) => {
+                        const yearNum = y + 1;
+                        const values = filledSlots.map(slot => {
+                          const yearData = slot.projection?.find(p => p.year === yearNum);
+                          return yearData?.cumulativeNetPositive ?? 0;
+                        });
+                        const maxVal = Math.max(...values);
+
+                        return (
+                          <tr key={yearNum} className="border-b border-zinc-700/20 hover:bg-zinc-800/30">
+                            <td className="px-3 py-1.5 text-zinc-300 font-medium sticky left-0 bg-zinc-900">{yearNum}</td>
+                            {filledSlots.map((slot, i) => {
+                              const yearData = slot.projection?.find(p => p.year === yearNum);
+                              const val = yearData?.cumulativeNetPositive ?? 0;
+                              const isMax = val === maxVal && val > 0 && filledSlots.length >= 2;
+                              return (
+                                <td
+                                  key={slot.id}
+                                  className={`px-3 py-1.5 text-right font-mono ${isMax ? "font-bold" : "text-zinc-400"}`}
+                                  style={isMax ? { color: SLOT_COLORS[i] } : undefined}
+                                >
+                                  {fmt(val)}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        )}
+
+        {/* Quick-add from active strategies */}
+        {availableStrategies.length > 0 && filledSlots.length < 5 && (
+          <Card className="bg-zinc-900/40 border-zinc-700/30">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs font-semibold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
+                <Zap className="w-3.5 h-3.5 text-emerald-400" />
+                Quick Add from Synced Strategies
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-2">
+                {availableStrategies
+                  .filter(st => !filledSlots.some(s => s.strategyType === st))
+                  .map(st => (
+                    <Button
+                      key={st}
+                      size="sm"
+                      variant="outline"
+                      className="text-xs h-7 border-zinc-700/50 hover:border-emerald-500/40 hover:text-emerald-400"
+                      onClick={() => {
+                        const emptySlot = comparisonSlots.find(s => !s.strategyType);
+                        if (emptySlot) {
+                          setComparisonSlot(emptySlot.id, st);
+                          toast.success(`Added ${STRATEGY_LABELS[st]} to comparison`);
+                        }
+                      }}
+                    >
+                      {STRATEGY_LABELS[st]}
+                      <ChevronRight className="w-3 h-3 ml-1" />
+                    </Button>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </AppShell>
+  );
+}
+
+function MetricRow({ label, value, highlight, negative }: { label: string; value: string; highlight?: boolean; negative?: boolean }) {
+  return (
+    <div className="flex flex-col">
+      <span className="text-[9px] text-zinc-500 uppercase tracking-wider">{label}</span>
+      <span className={`text-xs font-semibold ${
+        highlight ? "text-emerald-400" : negative ? "text-red-400" : "text-zinc-200"
+      }`}>
+        {value}
+      </span>
+    </div>
+  );
+}
+```
 
 ## `client/src/pages/portal/CompetitiveAnalysis.tsx`
 
@@ -30890,1989 +32685,6 @@ export default function FinancialVitalsScorecard() {
 
       <PageInsights pageId="financial-vitals-scorecard" />
     </AppShell>
-  );
-}
-```
-
-## `client/src/pages/portal/GoalsBasedPlanning.tsx`
-
-```tsx
-// @ts-nocheck
-import { useState, useEffect, useMemo } from "react";
-import { AppShell } from "@/components/AppShell";
-import { OilGasToggle } from "@/components/OilGasToggle";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { NAICDisclaimer } from "@/components/NAICDisclaimer";
-import { NumberInput } from "@/components/NumberInput";
-import {
-  Target,
-  Plus,
-  Trash2,
-  CheckCircle2,
-  AlertTriangle,
-  DollarSign,
-  TrendingUp,
-  Home,
-  Briefcase,
-  GraduationCap,
-  Plane,
-  Heart,
-  Shield,
-  Car,
-  Wallet,
-  Settings,
-} from "lucide-react";
-import { useClientData, FactFinderBadge } from "@/contexts/ClientDataContext";
-import { ExportToSlides } from "@/components/ExportToSlides";
-import { trpc } from "@/lib/trpc";
-import { useAuth } from "@/_core/hooks/useAuth";
-import {
-  BarChart, LineChart, PieChart, AreaChart, RadarChart, ComposedChart,
-  ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  Bar, Line, Pie, Cell, Area, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
-  Scatter
-} from "recharts";
-import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
-import { RelatedCalculators } from "@/components/RelatedCalculators";
-import { ComplianceFooter } from "@/components/ComplianceFooter";
-
-interface Goal {
-  id: string;
-  name: string;
-  category: string;
-  targetAmount: number;
-  currentAmount: number;
-  monthlyContribution: number;
-  targetDate: string;
-  priority: "essential" | "important" | "aspirational";
-  fundingSource: string;
-  icon: string;
-}
-
-const GOAL_ICONS: Record<string, React.ReactNode> = {
-  retirement: <Wallet className="h-5 w-5" />,
-  home: <Home className="h-5 w-5" />,
-  education: <GraduationCap className="h-5 w-5" />,
-  travel: <Plane className="h-5 w-5" />,
-  healthcare: <Heart className="h-5 w-5" />,
-  insurance: <Shield className="h-5 w-5" />,
-  vehicle: <Car className="h-5 w-5" />,
-  business: <Briefcase className="h-5 w-5" />,
-  legacy: <Target className="h-5 w-5" />,
-  other: <DollarSign className="h-5 w-5" />,
-};
-
-const PRIORITY_COLORS = {
-  essential: { bg: "bg-red-500/10", border: "border-red-500/20", text: "text-red-400", badge: "bg-red-500/20 text-red-400" },
-  important: { bg: "bg-amber-500/10", border: "border-amber-500/20", text: "text-amber-400", badge: "bg-amber-500/20 text-amber-400" },
-  aspirational: { bg: "bg-blue-500/10", border: "border-blue-500/20", text: "text-blue-400", badge: "bg-blue-500/20 text-blue-400" },
-};
-
-const FUNDING_SOURCES = [
-  "401(k)/IRA", "Roth IRA", "Brokerage Account", "IUL Policy Loans", "Savings Account",
-  "Annuity Income", "Social Security", "Rental Income", "Business Income", "Other",
-];
-
-const fmt = (n: number) => {
-  if (n >= 1000000) return `$${(n / 1000000).toFixed(1)}M`;
-  if (n >= 1000) return `$${(n / 1000).toFixed(0)}K`;
-  return `$${n.toLocaleString()}`;
-};
-
-const DEFAULT_GOALS: Goal[] = [
-  { id: "1", name: "Retirement Income", category: "retirement", targetAmount: 3000000, currentAmount: 1500000, monthlyContribution: 5000, targetDate: "2038-01-01", priority: "essential", fundingSource: "401(k)/IRA", icon: "retirement" },
-  { id: "2", name: "College Fund (Child 1)", category: "education", targetAmount: 250000, currentAmount: 85000, monthlyContribution: 1500, targetDate: "2032-09-01", priority: "essential", fundingSource: "Brokerage Account", icon: "education" },
-  { id: "3", name: "Vacation Home", category: "home", targetAmount: 800000, currentAmount: 200000, monthlyContribution: 3000, targetDate: "2030-06-01", priority: "important", fundingSource: "Savings Account", icon: "home" },
-  { id: "4", name: "Tax-Free Retirement Bridge", category: "insurance", targetAmount: 1500000, currentAmount: 350000, monthlyContribution: 4000, targetDate: "2040-01-01", priority: "essential", fundingSource: "IUL Policy Loans", icon: "insurance" },
-  { id: "5", name: "Estate Legacy", category: "legacy", targetAmount: 5000000, currentAmount: 2000000, monthlyContribution: 0, targetDate: "2055-01-01", priority: "important", fundingSource: "IUL Policy Loans", icon: "legacy" },
-  { id: "6", name: "European Vacation", category: "travel", targetAmount: 30000, currentAmount: 12000, monthlyContribution: 1000, targetDate: "2027-06-01", priority: "aspirational", fundingSource: "Savings Account", icon: "travel" },
-];
-
-export default function GoalsBasedPlanning() {
-  const { user } = useAuth();
-  const [goals, setGoals] = useState<Goal[]>(DEFAULT_GOALS);
-  const [showAddDialog, setShowAddDialog] = useState(false);
-  const [newGoal, setNewGoal] = useState<Partial<Goal>>({ priority: "important", fundingSource: "Savings Account", icon: "other", category: "other" });
-  const [annualReturn, setAnnualReturn] = useState(7);
-  const [inflationRate, setInflationRate] = useState(3);
-  const [taxRate, setTaxRate] = useState(24);
-  const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
-
-  const { data: clientData } = useClientData();
-  
-  const clientsData = trpc.clients.list.useQuery();
-  const notesData = trpc.notes.list.useQuery({ clientId: 0 });
-  const activityData = trpc.activity.list.useQuery();
-  const dashboardData = trpc.dashboard.stats.useQuery();
-  const pipelineData = trpc.pipeline.list.useQuery();
-
-  useEffect(() => {
-    if (!clientData) return;
-    if (clientData.annualIncome) setAnnualReturn(prev => prev);
-  }, [clientData]);
-
-  const goalAnalysis = useMemo(() => {
-    return goals.map((goal) => {
-      const now = new Date();
-      const target = new Date(goal.targetDate);
-      const monthsRemaining = Math.max(1, (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth()));
-      const yearsRemaining = monthsRemaining / 12;
-      
-      const realReturn = ((1 + annualReturn / 100) / (1 + inflationRate / 100) - 1) * 100;
-      const monthlyRate = realReturn / 100 / 12;
-
-      const fvCurrent = goal.currentAmount * Math.pow(1 + monthlyRate, monthsRemaining);
-      const fvContributions = goal.monthlyContribution * ((Math.pow(1 + monthlyRate, monthsRemaining) - 1) / monthlyRate);
-      const projectedValue = fvCurrent + fvContributions;
-
-      const probability = Math.min(100, Math.round((projectedValue / goal.targetAmount) * 100));
-      const gap = Math.max(0, goal.targetAmount - projectedValue);
-      const progress = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100));
-
-      const remainingNeeded = goal.targetAmount - fvCurrent;
-      const requiredMonthly = remainingNeeded > 0
-        ? Math.round(remainingNeeded / ((Math.pow(1 + monthlyRate, monthsRemaining) - 1) / monthlyRate))
-        : 0;
-
-      return {
-        ...goal,
-        monthsRemaining,
-        yearsRemaining: Math.round(yearsRemaining * 10) / 10,
-        projectedValue: Math.round(projectedValue),
-        probability,
-        gap: Math.round(gap),
-        progress,
-        requiredMonthly: Math.max(0, requiredMonthly),
-        onTrack: probability >= 90,
-        atRisk: probability >= 50 && probability < 90,
-        offTrack: probability < 50,
-      };
-    });
-  }, [goals, annualReturn, inflationRate]);
-
-  const summary = useMemo(() => {
-    const totalTarget = goals.reduce((s, g) => s + g.targetAmount, 0);
-    const totalCurrent = goals.reduce((s, g) => s + g.currentAmount, 0);
-    const totalMonthly = goals.reduce((s, g) => s + g.monthlyContribution, 0);
-    const onTrack = goalAnalysis.filter((g) => g.onTrack).length;
-    const atRisk = goalAnalysis.filter((g) => g.atRisk).length;
-    const offTrack = goalAnalysis.filter((g) => g.offTrack).length;
-    const avgProbability = goalAnalysis.length > 0 ? Math.round(goalAnalysis.reduce((s, g) => s + g.probability, 0) / goalAnalysis.length) : 0;
-    const essentialFunded = goalAnalysis.filter((g) => g.priority === "essential" && g.onTrack).length;
-    const essentialTotal = goalAnalysis.filter((g) => g.priority === "essential").length;
-    return { totalTarget, totalCurrent, totalMonthly, onTrack, atRisk, offTrack, avgProbability, essentialFunded, essentialTotal };
-  }, [goals, goalAnalysis]);
-
-  const addGoal = () => {
-    if (!newGoal.name || !newGoal.targetAmount) return;
-    const goal: Goal = {
-      id: Date.now().toString(),
-      name: newGoal.name || "",
-      category: newGoal.category || "other",
-      targetAmount: newGoal.targetAmount || 0,
-      currentAmount: newGoal.currentAmount || 0,
-      monthlyContribution: newGoal.monthlyContribution || 0,
-      targetDate: newGoal.targetDate || "2035-01-01",
-      priority: (newGoal.priority as Goal["priority"]) || "important",
-      fundingSource: newGoal.fundingSource || "Savings Account",
-      icon: newGoal.icon || "other",
-    };
-    setGoals([...goals, goal]);
-    setShowAddDialog(false);
-    setNewGoal({ priority: "important", fundingSource: "Savings Account", icon: "other", category: "other" });
-  };
-
-  const removeGoal = (id: string) => setGoals(goals.filter((g) => g.id !== id));
-
-  const projectionData = useMemo(() => {
-    const data = [];
-    const maxYears = Math.max(...goalAnalysis.map((g) => g.yearsRemaining));
-    for (let year = 0; year <= maxYears; year++) {
-      const point: any = { year: new Date().getFullYear() + year };
-      goalAnalysis.forEach((g) => {
-        if (year <= g.yearsRemaining) {
-          const monthlyRate = ((1 + annualReturn / 100) / (1 + inflationRate / 100) - 1) / 12;
-          const months = year * 12;
-          const fvCurrent = g.currentAmount * Math.pow(1 + monthlyRate, months);
-          const fvContributions = g.monthlyContribution * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
-          point[g.name] = Math.round(fvCurrent + fvContributions);
-        }
-      });
-      data.push(point);
-    }
-    return data;
-  }, [goalAnalysis, annualReturn, inflationRate]);
-
-  const priorityPieData = [
-    { name: "Essential", value: goalAnalysis.filter((g) => g.priority === "essential").reduce((s, g) => s + g.targetAmount, 0), color: "#ef4444" },
-    { name: "Important", value: goalAnalysis.filter((g) => g.priority === "important").reduce((s, g) => s + g.targetAmount, 0), color: "#f59e0b" },
-    { name: "Aspirational", value: goalAnalysis.filter((g) => g.priority === "aspirational").reduce((s, g) => s + g.targetAmount, 0), color: "#3b82f6" },
-  ].filter((d) => d.value > 0);
-
-  const fundingSourceData = useMemo(() => {
-    const sources: Record<string, number> = {};
-    goalAnalysis.forEach((g) => {
-      sources[g.fundingSource] = (sources[g.fundingSource] || 0) + g.targetAmount;
-    });
-    return Object.entries(sources).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
-  }, [goalAnalysis]);
-
-  const gapAnalysisData = goalAnalysis.map((g) => ({
-    name: g.name,
-    projected: g.projectedValue,
-    gap: g.gap,
-    target: g.targetAmount
-  }));
-
-  const radarData = goalAnalysis.map((g) => ({
-    subject: g.name,
-    A: g.probability,
-    fullMark: 100,
-  }));
-
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#8dd1e1', '#a4de6c', '#d0ed57'];
-
-  return (
-    <AppShell>
-      <div className="space-y-6 p-6">
-
-        {/* ═══ CONSUMER OUTCOME BLOCKS — Flagship Tier ═══ */}
-        {/* Related Calculators Toggle */}
-        <RelatedCalculators currentPage="GoalsBasedPlanning" />
-
-        <ExecutiveSummary
-          pageTitle="Goals Based Planning"
-          whatItDoes="This strategic planning tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex strategic planning concepts into clear, actionable insights with dollar-quantified recommendations."
-          opportunities="A coordinated strategy that interlocks your tax, insurance, investment, and estate plans can produce 2-3x better outcomes than optimizing each area independently."
-          intent="To give you the same caliber of strategic planning analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
-          takeaway="Understanding your strategic planning options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
-          callToAction="Enter your numbers and see exactly how strategic planning strategies can improve your financial outcome."
-          followUpQuestions={[
-            "How does this strategic planning strategy interact with my other financial plans?",
-            "What\'s the single biggest strategic planning opportunity I\'m currently missing?",
-            "How would my results change if I started this strategy 5 years earlier?",
-          ]}
-        />
-        <GoalsAccelerator pageName="Goals Based Planning" pageContext="Goals Based Planning — strategic planning modeling with projections and scenario analysis" />
-        <TaxBracketPanel grossIncome={clientData?.annualIncome || 150000} filingStatus={clientData?.filingStatus || "single"} stateCode={clientData?.state || "TX"} />
-        <RecommendationSummary
-          headline="This strategic planning strategy can significantly improve your financial outcome"
-          detail="Based on your profile, implementing the recommended strategic planning approach could generate substantial savings and growth over your planning horizon."
-          dollarBenefit={600000}
-          timeHorizon="20 years"
-          confidence="high"
-          nextStep="Review with your advisor"
-        />
-        <DoNothingBaseline
-          metrics={[
-            { label: "Strategy Coordination", doNothing: 30, recommended: 90, format: "percent" },
-            { label: "Goal Achievement Speed", doNothing: 25, recommended: 15, format: "years", higherIsBetter: false },
-            { label: "Lifetime Wealth Impact", doNothing: 0, recommended: 600000, format: "currency" },
-          ]}
-          summary="Without taking action on strategic planning, you leave significant value on the table that compounds into a major opportunity cost over time."
-        />
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Target className="h-6 w-6 text-primary" />
-              Goals-Based Planning Dashboard
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Priority-ranked goals with probability engine tying all calculators together
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <ExportToSlides
-              toolName="Goals-Based Planning"
-              getSections={() => [
-                {
-                  title: "Summary",
-                  items: [
-                    { label: "Overall Probability", value: `${summary.avgProbability}%` },
-                    { label: "Essential Goals Funded", value: `${summary.essentialFunded}/${summary.essentialTotal}` },
-                    { label: "Total Monthly Savings", value: fmt(summary.totalMonthly) },
-                    { label: "Total Goal Target", value: fmt(summary.totalTarget) }
-                  ]
-                }
-              ]}
-            />
-            <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-              <DialogTrigger asChild>
-                <Button><Plus className="h-4 w-4 mr-1" /> Add Goal</Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Add New Goal</DialogTitle>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <Label>Goal Name</Label>
-                    <Input value={newGoal.name || ""} onChange={(e) => setNewGoal({ ...newGoal, name: e.target.value })} placeholder="e.g. Dream Home" />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>Target Amount</Label>
-                    <NumberInput value={newGoal.targetAmount || 0} onChange={(e) => setNewGoal({ ...newGoal, targetAmount: val })} />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>Current Amount</Label>
-                    <NumberInput value={newGoal.currentAmount || 0} onChange={(e) => setNewGoal({ ...newGoal, currentAmount: val })} />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>Monthly Contribution</Label>
-                    <NumberInput value={newGoal.monthlyContribution || 0} onChange={(e) => setNewGoal({ ...newGoal, monthlyContribution: val })} />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>Target Date</Label>
-                    <Input type="date" value={newGoal.targetDate || ""} onChange={(e) => setNewGoal({ ...newGoal, targetDate: e.target.value })} />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>Priority</Label>
-                    <Select value={newGoal.priority} onValueChange={v => setNewGoal({ ...newGoal, priority: v as any })}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="essential">Essential</SelectItem>
-                        <SelectItem value="important">Important</SelectItem>
-                        <SelectItem value="aspirational">Aspirational</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button onClick={addGoal} className="w-full mt-4">Save Goal</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-6 flex flex-col items-center justify-center text-center">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <Target className="h-6 w-6 text-primary" />
-              </div>
-              <p className="text-sm font-medium text-muted-foreground">Overall Probability</p>
-              <h3 className="text-3xl font-bold mt-1">{summary.avgProbability}%</h3>
-              <p className="text-xs text-muted-foreground mt-2">Average across all goals</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6 flex flex-col items-center justify-center text-center">
-              <div className="h-12 w-12 rounded-full bg-green-500/10 flex items-center justify-center mb-4">
-                <CheckCircle2 className="h-6 w-6 text-green-500" />
-              </div>
-              <p className="text-sm font-medium text-muted-foreground">Essential Funded</p>
-              <h3 className="text-3xl font-bold mt-1">{summary.essentialFunded} / {summary.essentialTotal}</h3>
-              <p className="text-xs text-muted-foreground mt-2">Essential goals on track</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6 flex flex-col items-center justify-center text-center">
-              <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center mb-4">
-                <Wallet className="h-6 w-6 text-blue-500" />
-              </div>
-              <p className="text-sm font-medium text-muted-foreground">Total Monthly</p>
-              <h3 className="text-3xl font-bold mt-1">{fmt(summary.totalMonthly)}</h3>
-              <p className="text-xs text-muted-foreground mt-2">Current savings rate</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6 flex flex-col items-center justify-center text-center">
-              <div className="h-12 w-12 rounded-full bg-purple-500/10 flex items-center justify-center mb-4">
-                <TrendingUp className="h-6 w-6 text-purple-500" />
-              </div>
-              <p className="text-sm font-medium text-muted-foreground">Total Target</p>
-              <h3 className="text-3xl font-bold mt-1">{fmt(summary.totalTarget)}</h3>
-              <p className="text-xs text-muted-foreground mt-2">Across all {goals.length} goals</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="analysis">Analysis</TabsTrigger>
-            <TabsTrigger value="assumptions">Assumptions</TabsTrigger>
-            <TabsTrigger value="tables">Data Tables</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="dashboard" className="space-y-6 mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Goal Projections</CardTitle>
-                    <CardDescription>Projected value of all goals over time</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[400px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={projectionData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                          <defs>
-                            {goalAnalysis.map((g, i) => (
-                              <linearGradient key={g.id} id={`color${i}`} x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor={COLORS[i % COLORS.length]} stopOpacity={0.8}/>
-                                <stop offset="95%" stopColor={COLORS[i % COLORS.length]} stopOpacity={0}/>
-                              </linearGradient>
-                            ))}
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                          <XAxis dataKey="year" />
-                          <YAxis tickFormatter={(val) => `$${(val/1000).toFixed(0)}k`} />
-                          <Tooltip formatter={(val: number) => fmt(val)} />
-                          <Legend />
-                          {goalAnalysis.map((g, i) => (
-                            <Area key={g.id} type="monotone" dataKey={g.name} stackId="1" stroke={COLORS[i % COLORS.length]} fill={`url(#color${i})`} />
-                          ))}
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Gap Analysis</CardTitle>
-                    <CardDescription>Projected vs Target values</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[300px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={gapAnalysisData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                          <XAxis dataKey="name" />
-                          <YAxis tickFormatter={(val) => `$${(val/1000).toFixed(0)}k`} />
-                          <Tooltip formatter={(val: number) => fmt(val)} />
-                          <Legend />
-                          <Bar dataKey="projected" stackId="a" fill="#3b82f6" name="Projected Value" />
-                          <Bar dataKey="gap" stackId="a" fill="#ef4444" name="Shortfall" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Priority Distribution</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[250px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={priorityPieData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={60}
-                            outerRadius={80}
-                            paddingAngle={5}
-                            dataKey="value"
-                          >
-                            {priorityPieData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Pie>
-                          <Tooltip formatter={(val: number) => fmt(val)} />
-                          <Legend />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Funding Sources</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[250px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={fundingSourceData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                          <CartesianGrid strokeDasharray="3 3" horizontal={false} opacity={0.3} />
-                          <XAxis type="number" tickFormatter={(val) => `$${(val/1000).toFixed(0)}k`} />
-                          <YAxis dataKey="name" type="category" width={100} />
-                          <Tooltip formatter={(val: number) => fmt(val)} />
-                          <Bar dataKey="value" fill="#8884d8" radius={[0, 4, 4, 0]}>
-                            {fundingSourceData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Goal Probability Radar</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[250px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                          <PolarGrid />
-                          <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
-                          <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                          <Radar name="Probability" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-                          <Tooltip />
-                        </RadarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Goal Details</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {goalAnalysis.map((goal) => (
-                    <Card key={goal.id} className="overflow-hidden border-2 transition-all hover:border-primary/50">
-                      <div className={`h-2 ${goal.onTrack ? 'bg-green-500' : goal.atRisk ? 'bg-amber-500' : 'bg-red-500'}`} />
-                      <CardContent className="p-5">
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="flex items-center gap-2">
-                            <div className="p-2 rounded-lg bg-primary/10 text-primary">
-                              {GOAL_ICONS[goal.icon] || <Target className="h-5 w-5" />}
-                            </div>
-                            <div>
-                              <h4 className="font-semibold line-clamp-1">{goal.name}</h4>
-                              <p className="text-xs text-muted-foreground">{goal.yearsRemaining} years away</p>
-                            </div>
-                          </div>
-                          <Badge variant="outline" className={PRIORITY_COLORS[goal.priority].badge}>
-                            {goal.priority}
-                          </Badge>
-                        </div>
-                        
-                        <div className="space-y-4">
-                          <div>
-                            <div className="flex justify-between text-sm mb-1">
-                              <span className="text-muted-foreground">Probability of Success</span>
-                              <span className="font-bold">{goal.probability}%</span>
-                            </div>
-                            <Progress value={goal.probability} className="h-2" />
-                          </div>
-                          
-                          <div className="grid grid-cols-2 gap-4 pt-2 border-t">
-                            <div>
-                              <p className="text-xs text-muted-foreground">Target</p>
-                              <p className="font-semibold">{fmt(goal.targetAmount)}</p>
-                            </div>
-                            <div>
-                              <p className="text-xs text-muted-foreground">Projected</p>
-                              <p className="font-semibold">{fmt(goal.projectedValue)}</p>
-                            </div>
-                            <div>
-                              <p className="text-xs text-muted-foreground">Current</p>
-                              <p className="font-semibold">{fmt(goal.currentAmount)}</p>
-                            </div>
-                            <div>
-                              <p className="text-xs text-muted-foreground">Monthly</p>
-                              <p className="font-semibold">{fmt(goal.monthlyContribution)}</p>
-                            </div>
-                          </div>
-                          
-                          {goal.requiredMonthly > goal.monthlyContribution && (
-                            <div className="bg-amber-500/10 text-amber-600 p-2 rounded-md text-xs flex items-start gap-2">
-                              <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
-                              <p>Increase monthly savings by <strong>{fmt(goal.requiredMonthly - goal.monthlyContribution)}</strong> to reach target.</p>
-                            </div>
-                          )}
-                          
-                          <div className="pt-2 flex justify-end gap-2">
-                            <Button variant="ghost" size="sm" onClick={() => setSelectedGoalId(goal.id)}>
-                              <Settings className="h-4 w-4 mr-1" /> Edit
-                            </Button>
-                            <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => removeGoal(goal.id)}>
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="analysis" className="space-y-6 mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Detailed Analysis</CardTitle>
-                <CardDescription>In-depth breakdown of goal feasibility</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[500px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={goalAnalysis} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                      <CartesianGrid stroke="#f5f5f5" />
-                      <XAxis dataKey="name" scale="band" />
-                      <YAxis yAxisId="left" tickFormatter={(val) => `$${(val/1000).toFixed(0)}k`} />
-                      <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
-                      <Tooltip formatter={(val: number, name: string) => name === 'Probability' ? `${val}%` : fmt(val)} />
-                      <Legend />
-                      <Bar yAxisId="left" dataKey="targetAmount" barSize={20} fill="#413ea0" name="Target Amount" />
-                      <Bar yAxisId="left" dataKey="projectedValue" barSize={20} fill="#8884d8" name="Projected Value" />
-                      <Line yAxisId="right" type="monotone" dataKey="probability" stroke="#ff7300" name="Probability" strokeWidth={3} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="assumptions" className="space-y-6 mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Global Assumptions</CardTitle>
-                <CardDescription>Adjust the underlying economic assumptions for all projections</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <Label>Annual Return (%)</Label>
-                    <NumberInput value={annualReturn} onChange={setAnnualReturn} />
-                    <p className="text-xs text-muted-foreground">Expected gross portfolio return</p>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Inflation Rate (%)</Label>
-                    <NumberInput value={inflationRate} onChange={setInflationRate} />
-                    <p className="text-xs text-muted-foreground">Expected annual inflation</p>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Tax Rate (%)</Label>
-                    <NumberInput value={taxRate} onChange={setTaxRate} />
-                    <p className="text-xs text-muted-foreground">Estimated blended tax rate</p>
-                  </div>
-                </div>
-                
-                <div className="bg-muted p-4 rounded-lg">
-                  <h4 className="font-semibold mb-2">Impact Analysis</h4>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Based on your assumptions, the real rate of return (inflation-adjusted) is 
-                    <strong className="text-foreground ml-1">
-                      {(((1 + annualReturn / 100) / (1 + inflationRate / 100) - 1) * 100).toFixed(2)}%
-                    </strong>
-                  </p>
-                  <div className="h-[200px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={[
-                        { year: 0, nominal: 100000, real: 100000 },
-                        { year: 5, nominal: 100000 * Math.pow(1 + annualReturn/100, 5), real: 100000 * Math.pow(1 + (((1 + annualReturn / 100) / (1 + inflationRate / 100) - 1)), 5) },
-                        { year: 10, nominal: 100000 * Math.pow(1 + annualReturn/100, 10), real: 100000 * Math.pow(1 + (((1 + annualReturn / 100) / (1 + inflationRate / 100) - 1)), 10) },
-                        { year: 15, nominal: 100000 * Math.pow(1 + annualReturn/100, 15), real: 100000 * Math.pow(1 + (((1 + annualReturn / 100) / (1 + inflationRate / 100) - 1)), 15) },
-                        { year: 20, nominal: 100000 * Math.pow(1 + annualReturn/100, 20), real: 100000 * Math.pow(1 + (((1 + annualReturn / 100) / (1 + inflationRate / 100) - 1)), 20) },
-                      ]}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="year" />
-                        <YAxis tickFormatter={(val) => `$${(val/1000).toFixed(0)}k`} />
-                        <Tooltip formatter={(val: number) => fmt(val)} />
-                        <Legend />
-                        <Line type="monotone" dataKey="nominal" stroke="#8884d8" name="Nominal Value ($100k)" />
-                        <Line type="monotone" dataKey="real" stroke="#82ca9d" name="Purchasing Power" />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="tables" className="space-y-6 mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Goals Overview Table</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
-                      <tr>
-                        <th className="px-4 py-3 rounded-tl-lg">Goal Name</th>
-                        <th className="px-4 py-3">Priority</th>
-                        <th className="px-4 py-3 text-right">Target</th>
-                        <th className="px-4 py-3 text-right">Current</th>
-                        <th className="px-4 py-3 text-right">Monthly</th>
-                        <th className="px-4 py-3 text-right">Years</th>
-                        <th className="px-4 py-3 text-right rounded-tr-lg">Probability</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {goalAnalysis.map((g, i) => (
-                        <tr key={g.id} className="border-b last:border-0 hover:bg-muted/30">
-                          <td className="px-4 py-3 font-medium">{g.name}</td>
-                          <td className="px-4 py-3">
-                            <Badge variant="outline" className={PRIORITY_COLORS[g.priority].badge}>{g.priority}</Badge>
-                          </td>
-                          <td className="px-4 py-3 text-right">{fmt(g.targetAmount)}</td>
-                          <td className="px-4 py-3 text-right">{fmt(g.currentAmount)}</td>
-                          <td className="px-4 py-3 text-right">{fmt(g.monthlyContribution)}</td>
-                          <td className="px-4 py-3 text-right">{g.yearsRemaining}</td>
-                          <td className="px-4 py-3 text-right">
-                            <span className={`font-bold ${g.onTrack ? 'text-green-500' : g.atRisk ? 'text-amber-500' : 'text-red-500'}`}>
-                              {g.probability}%
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Required Savings Table</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                      <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
-                        <tr>
-                          <th className="px-4 py-3 rounded-tl-lg">Goal</th>
-                          <th className="px-4 py-3 text-right">Current Monthly</th>
-                          <th className="px-4 py-3 text-right">Required Monthly</th>
-                          <th className="px-4 py-3 text-right rounded-tr-lg">Monthly Gap</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {goalAnalysis.map((g, i) => (
-                          <tr key={g.id} className="border-b last:border-0 hover:bg-muted/30">
-                            <td className="px-4 py-3 font-medium">{g.name}</td>
-                            <td className="px-4 py-3 text-right">{fmt(g.monthlyContribution)}</td>
-                            <td className="px-4 py-3 text-right">{fmt(g.requiredMonthly)}</td>
-                            <td className="px-4 py-3 text-right text-red-500">
-                              {g.requiredMonthly > g.monthlyContribution ? fmt(g.requiredMonthly - g.monthlyContribution) : '-'}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Funding Source Distribution</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                      <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
-                        <tr>
-                          <th className="px-4 py-3 rounded-tl-lg">Source</th>
-                          <th className="px-4 py-3 text-right">Total Target</th>
-                          <th className="px-4 py-3 text-right rounded-tr-lg">% of Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {fundingSourceData.map((d, i) => (
-                          <tr key={i} className="border-b last:border-0 hover:bg-muted/30">
-                            <td className="px-4 py-3 font-medium">{d.name}</td>
-                            <td className="px-4 py-3 text-right">{fmt(d.value)}</td>
-                            <td className="px-4 py-3 text-right">{((d.value / summary.totalTarget) * 100).toFixed(1)}%</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Projection Timeline Table</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
-                      <tr>
-                        <th className="px-4 py-3 rounded-tl-lg">Year</th>
-                        {goalAnalysis.slice(0, 4).map((g) => (
-                          <th key={g.id} className="px-4 py-3 text-right">{g.name}</th>
-                        ))}
-                        <th className="px-4 py-3 text-right rounded-tr-lg">Total Projected</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {projectionData.filter((_, i) => i % 5 === 0 || i === projectionData.length - 1).map((d: any, i) => {
-                        const total = Object.keys(d).filter((k) => k !== 'year').reduce((s, k) => s + (d[k] || 0), 0);
-                        return (
-                          <tr key={i} className="border-b last:border-0 hover:bg-muted/30">
-                            <td className="px-4 py-3 font-medium">{d.year}</td>
-                            {goalAnalysis.slice(0, 4).map((g) => (
-                              <td key={g.id} className="px-4 py-3 text-right">{d[g.name] ? fmt(d[g.name]) : '-'}</td>
-                            ))}
-                            <td className="px-4 py-3 text-right font-bold">{fmt(total)}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Priority Breakdown Table</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
-                      <tr>
-                        <th className="px-4 py-3 rounded-tl-lg">Priority Level</th>
-                        <th className="px-4 py-3 text-right">Count</th>
-                        <th className="px-4 py-3 text-right">Total Target</th>
-                        <th className="px-4 py-3 text-right">Total Monthly</th>
-                        <th className="px-4 py-3 text-right rounded-tr-lg">Avg Probability</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {["essential", "important", "aspirational"].map((priority) => {
-                        const pGoals = goalAnalysis.filter((g) => g.priority === priority);
-                        if (pGoals.length === 0) return null;
-                        const target = pGoals.reduce((s, g) => s + g.targetAmount, 0);
-                        const monthly = pGoals.reduce((s, g) => s + g.monthlyContribution, 0);
-                        const prob = pGoals.reduce((s, g) => s + g.probability, 0) / pGoals.length;
-                        return (
-                          <tr key={priority} className="border-b last:border-0 hover:bg-muted/30">
-                            <td className="px-4 py-3 font-medium capitalize">{priority}</td>
-                            <td className="px-4 py-3 text-right">{pGoals.length}</td>
-                            <td className="px-4 py-3 text-right">{fmt(target)}</td>
-                            <td className="px-4 py-3 text-right">{fmt(monthly)}</td>
-                            <td className="px-4 py-3 text-right">{Math.round(prob)}%</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Gap Analysis Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
-                      <tr>
-                        <th className="px-4 py-3 rounded-tl-lg">Goal</th>
-                        <th className="px-4 py-3 text-right">Target</th>
-                        <th className="px-4 py-3 text-right">Projected</th>
-                        <th className="px-4 py-3 text-right">Shortfall (Gap)</th>
-                        <th className="px-4 py-3 text-right rounded-tr-lg">% Funded</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {gapAnalysisData.map((d, i) => (
-                        <tr key={i} className="border-b last:border-0 hover:bg-muted/30">
-                          <td className="px-4 py-3 font-medium">{d.name}</td>
-                          <td className="px-4 py-3 text-right">{fmt(d.target)}</td>
-                          <td className="px-4 py-3 text-right">{fmt(d.projected)}</td>
-                          <td className="px-4 py-3 text-right text-red-500">{d.gap > 0 ? fmt(d.gap) : '-'}</td>
-                          <td className="px-4 py-3 text-right">{Math.round((d.projected / d.target) * 100)}%</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-
-        <NAICDisclaimer variant="compact" showsProjections />
-      </div>
-    
-        <ComplianceFooter pageName="GoalsBasedPlanning" showsIUL showsAnnuity showsTax showsEstate showsProjections showsPolicyLoans />
-      </AppShell>
-  );
-}
-
-```
-
-## `client/src/pages/portal/GrowthAnnuities.tsx`
-
-```tsx
-// @ts-nocheck
-import { useState, useEffect, useMemo } from "react";
-import { AppShell } from "@/components/AppShell";
-import { PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer } from "recharts";
-import ExportPdfButton from "@/components/ExportPdfButton";
-import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { NumberInput } from "@/components/NumberInput";
-import {
-  TrendingUp, Shield, Gem, Calculator, FileText, BarChart3,
-  CheckCircle2, XCircle, ArrowRight, DollarSign, Zap, Globe,
-  AlertTriangle, ExternalLink, Coins, MapPin,
-} from "lucide-react";
-import { useClientData, FactFinderBadge } from "@/contexts/ClientDataContext";
-import {
-  US_STATES, getTopProductsForState, getStateGuaranty, getStateName,
-  getCarrierSplitRecommendation, type StateCode,
-} from "@shared/annuityData";
-import { NAICDisclaimer } from "@/components/NAICDisclaimer";
-import { ExportToSlides } from "@/components/ExportToSlides";
-import { PageInsights } from "@/components/PageInsights";
-import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
-import { RelatedCalculators } from "@/components/RelatedCalculators";
-import { ComplianceFooter } from "@/components/ComplianceFooter";
-
-export default function GrowthAnnuities() {
-  const productQuery = trpc.growthAnnuity.getProductData.useQuery();
-  const analyzeMut = trpc.growthAnnuity.analyze.useMutation();
-
-  const [stateCode, setStateCode] = useState<StateCode>("FL");
-
-  const [form, setForm] = useState({
-    initialPremium: 250000,
-    annualReturnRate: 22,
-    projectionYears: 20,
-    existingAnnuityValue: 300000,
-    existingAnnuityCompany: "",
-    yearsInForce: 5,
-    currentSurrenderValue: 255000,
-    accountType: "ira" as "ira" | "401k" | "403b" | "tsp" | "roth" | "nonqualified",
-    surrenderPenaltyPct: 15,
-    premiumBonusPct: 25,
-    doRothConversion: true,
-    currentTaxBracket: 28,
-  });
-
-  const { data: clientData } = useClientData();
-  useEffect(() => {
-    if (!clientData) return;
-    setForm(p => ({
-      ...p,
-      initialPremium: clientData.annualIncome ? Math.round(clientData.annualIncome * 1.5) : p.initialPremium,
-    }));
-    if (clientData.state) setStateCode(clientData.state as StateCode);
-  }, [clientData]);
-
-  const guaranty = useMemo(() => getStateGuaranty(stateCode), [stateCode]);
-  const growthProducts = useMemo(() => getTopProductsForState(stateCode, "growth", 10), [stateCode]);
-  const splitRec = useMemo(() => getCarrierSplitRecommendation(form.initialPremium, stateCode), [form.initialPremium, stateCode]);
-
-  const updateForm = (key: string, val: string | number | boolean) =>
-    setForm((p) => ({ ...p, [key]: val }));
-
-  const handleAnalyze = () => analyzeMut.mutate(form);
-
-  const product = productQuery.data;
-  const result = analyzeMut.data;
-
-  const fmt = (n: number) => {
-    if (Math.abs(n) >= 1_000_000) return `$${(n / 1_000_000).toFixed(2)}M`;
-    if (Math.abs(n) >= 1_000) return `$${(n / 1_000).toFixed(1)}K`;
-    return `$${n.toLocaleString()}`;
-  };
-
-  return (
-    <AppShell>
-      <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto">
-
-        {/* ═══ CONSUMER OUTCOME BLOCKS — Flagship Tier ═══ */}
-        {/* Related Calculators Toggle */}
-        <RelatedCalculators currentPage="GrowthAnnuities" />
-
-        <ExecutiveSummary
-          pageTitle="Growth Annuities"
-          whatItDoes="This financial analysis tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex financial analysis concepts into clear, actionable insights with dollar-quantified recommendations."
-          opportunities="This tool reveals insights that most clients never see because they don\'t have access to institutional-grade analysis. The data here can change how you think about your entire financial picture."
-          intent="To give you the same caliber of financial analysis analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
-          takeaway="Understanding your financial analysis options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
-          callToAction="Enter your numbers and see exactly how financial analysis strategies can improve your financial outcome."
-          followUpQuestions={[
-            "How does this financial analysis strategy interact with my other financial plans?",
-            "What\'s the single biggest financial analysis opportunity I\'m currently missing?",
-            "How would my results change if I started this strategy 5 years earlier?",
-          ]}
-        />
-        <GoalsAccelerator pageName="Growth Annuities" pageContext="Growth Annuities — financial analysis modeling with projections and scenario analysis" />
-        <TaxBracketPanel grossIncome={clientData?.annualIncome || 150000} filingStatus={clientData?.filingStatus || "single"} stateCode={clientData?.state || "TX"} />
-        <RecommendationSummary
-          headline="This financial analysis strategy can significantly improve your financial outcome"
-          detail="Based on your profile, implementing the recommended financial analysis approach could generate substantial savings and growth over your planning horizon."
-          dollarBenefit={200000}
-          timeHorizon="20 years"
-          confidence="high"
-          nextStep="Review with your advisor"
-        />
-        <DoNothingBaseline
-          metrics={[
-            { label: "Financial Clarity Score", doNothing: 40, recommended: 90, format: "percent" },
-            { label: "Optimization Potential", doNothing: 0, recommended: 200000, format: "currency" },
-            { label: "Decision Confidence", doNothing: 35, recommended: 92, format: "percent" },
-          ]}
-          summary="Without taking action on financial analysis, you leave significant value on the table that compounds into a major opportunity cost over time."
-        />
-        {/* Analytics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="rc-card bg-slate-900 border border-slate-800 rounded-xl p-4">
-            <div className="text-sm font-semibold text-white mb-3">Strategy Allocation</div>
-            <ResponsiveContainer width="100%" height={180}>
-              <PieChart>
-                <Pie
-                  data={product?.strategies?.length ? product.strategies.map((s) => ({ name: s.name, value: s.participationRate })) : [{ name: "No Data", value: 1 }]}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={70}
-                  paddingAngle={2}
-                  dataKey="value"
-                >
-                  {(product?.strategies || [{ name: "No Data" }]).map((_: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444"][index % 5]} />
-                  ))}
-                </Pie>
-                <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="rc-card bg-slate-900 border border-slate-800 rounded-xl p-4">
-            <div className="text-sm font-semibold text-white mb-3">Projected Growth</div>
-            <ResponsiveContainer width="100%" height={180}>
-              <AreaChart data={result?.projections || [{ year: 1, endValue: form.initialPremium }]}>
-                <defs>
-                  <linearGradient id="colorGrowth" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-                <XAxis dataKey="year" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`} />
-                <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} formatter={(value: number) => [`$${value.toLocaleString()}`, "Value"]} />
-                <Area type="monotone" dataKey="endValue" stroke="#22c55e" strokeWidth={2} fillOpacity={1} fill="url(#colorGrowth)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Header */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
-              <Gem className="w-3 h-3 mr-1" /> F&G + BlackRock
-            </Badge>
-            <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/30">
-              Managed ETF Technology
-            </Badge>
-          </div>
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <h1 className="text-2xl md:text-3xl font-bold">Growth Annuities</h1>
-            <div className="flex items-center gap-2">
-              <ExportToSlides
-                toolName="Growth Annuities"
-                getSections={() => [
-                  { title: "Product Overview", items: [
-                    { label: "Product", value: "F&G + BlackRock Fixed Index Annuity" },
-                    { label: "Strategy", value: "Benchmarks to BlackRock iShares ETFs" },
-                    { label: "Downside Protection", value: "0% floor — zero downside risk" },
-                    { label: "Return Potential", value: "Double-digit returns via managed ETF technology" },
-                  ]},
-                ]}
-                getBullets={() => [
-                  "Only FIA that benchmarks directly to BlackRock iShares ETFs",
-                  "Zero downside risk with managed, transparent return potential",
-                  "25% premium bonus on qualifying deposits",
-                ]}
-              />
-              <ExportPdfButton
-            pageTitle="Growth Annuities — F&G BlackRock FIA"
-            getSections={() => [
-              { title: "Product Overview", items: [
-                { label: "Product", value: "F&G + BlackRock Fixed Index Annuity" },
-                { label: "Strategy", value: "Benchmarks to BlackRock iShares ETFs" },
-                { label: "Downside Protection", value: "0% floor — zero downside risk" },
-                { label: "Return Potential", value: "Double-digit returns via managed ETF technology" },
-              ]},
-            ]}
-            getBullets={() => [
-              "Only FIA that benchmarks directly to BlackRock iShares ETFs",
-              "Zero downside risk with managed, transparent return potential",
-              "25% premium bonus on qualifying deposits",
-              ]}
-            />
-            </div>
-          </div>
-          <p className="text-muted-foreground max-w-3xl">
-            The only Fixed Index Annuity that benchmarks directly to BlackRock iShares ETFs —
-            delivering managed, transparent, double-digit return potential with zero downside risk.
-          </p>
-        </div>
-
-        {/* ─── STATE SELECTOR ─── */}
-        <Card className="border-emerald-500/20 bg-emerald-500/5">
-          <CardContent className="py-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <Label className="text-xs font-semibold flex items-center gap-1">
-                  <MapPin className="w-3 h-3 text-emerald-400" /> Client State of Residence
-                </Label>
-                <Select value={stateCode} onValueChange={v => setStateCode(v as StateCode)}>
-                  <SelectTrigger className="mt-1 border-emerald-500/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {US_STATES.map((s) => (
-                      <SelectItem key={s.code} value={s.code}>{s.name} ({s.code})</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded bg-muted/10">
-                  <p className="text-xs text-muted-foreground">Annuity Guaranty Limit</p>
-                  <p className="text-lg font-bold text-emerald-400">${(guaranty.annuityLimit / 1000).toFixed(0)}K</p>
-                </div>
-                <Badge variant="outline" className={`text-xs ${guaranty.tier === "Premium" ? "border-emerald-500/50 text-emerald-400" : guaranty.tier === "Enhanced" ? "border-blue-500/50 text-blue-400" : guaranty.tier === "Below Standard" ? "border-red-500/50 text-red-400" : "border-slate-500/50 text-slate-400"}`}>
-                  {guaranty.tier} Protection
-                </Badge>
-              </div>
-              <div className="flex items-center">
-                <p className="text-xs text-muted-foreground">
-                  <strong>{growthProducts.length}</strong> growth FIA products available in {getStateName(stateCode)}
-                  {splitRec.splitCount > 1 && (
-                    <span className="block mt-1 text-amber-400">
-                      <AlertTriangle className="w-3 h-3 inline mr-1" />
-                      Consider splitting across {splitRec.splitCount} carriers for full guaranty coverage
-                    </span>
-                  )}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="flex flex-wrap gap-1 h-auto p-1 bg-muted/50">
-            <TabsTrigger value="overview" className="text-xs sm:text-sm whitespace-nowrap">
-              <FileText className="w-3.5 h-3.5 mr-1" /> Product Overview
-            </TabsTrigger>
-            <TabsTrigger value="etf-vs-traditional" className="text-xs sm:text-sm whitespace-nowrap">
-              <Zap className="w-3.5 h-3.5 mr-1" /> ETF vs Traditional
-            </TabsTrigger>
-            <TabsTrigger value="precious-metals" className="text-xs sm:text-sm whitespace-nowrap">
-              <Coins className="w-3.5 h-3.5 mr-1" /> Precious Metals
-            </TabsTrigger>
-            <TabsTrigger value="fact-finder" className="text-xs sm:text-sm whitespace-nowrap">
-              <Calculator className="w-3.5 h-3.5 mr-1" /> Fact Finder
-            </TabsTrigger>
-            <TabsTrigger value="growth-calc" className="text-xs sm:text-sm whitespace-nowrap">
-              <BarChart3 className="w-3.5 h-3.5 mr-1" /> Growth Calculator
-            </TabsTrigger>
-            <TabsTrigger value="roth-conversion" className="text-xs sm:text-sm whitespace-nowrap">
-              <TrendingUp className="w-3.5 h-3.5 mr-1" /> Roth Conversion
-            </TabsTrigger>
-          </TabsList>
-
-          {/* ═══ TAB 1: Product Overview ═══ */}
-          <TabsContent value="overview" className="space-y-4">
-            {product && (
-              <>
-                {/* Product At-a-Glance */}
-                <Card className="border-emerald-500/20">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Shield className="w-5 h-5 text-emerald-400" />
-                      F&G Power Accumulator — At a Glance
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                      <div className="bg-muted/30 rounded-lg p-4 text-center">
-                        <p className="text-xs text-muted-foreground">Carrier</p>
-                        <p className="font-semibold text-sm mt-1">{product.product.carrier}</p>
-                      </div>
-                      <div className="bg-muted/30 rounded-lg p-4 text-center">
-                        <p className="text-xs text-muted-foreground">AM Best Rating</p>
-                        <p className="font-bold text-emerald-400 text-lg mt-1">{product.product.amBestRating}</p>
-                      </div>
-                      <div className="bg-muted/30 rounded-lg p-4 text-center">
-                        <p className="text-xs text-muted-foreground">10-Year Hypothetical</p>
-                        <p className="font-bold text-emerald-400 text-lg mt-1">8.28% avg</p>
-                        <p className="text-xs text-muted-foreground">$100K → $221,557</p>
-                      </div>
-                      <div className="bg-muted/30 rounded-lg p-4 text-center">
-                        <p className="text-xs text-muted-foreground">Downside Protection</p>
-                        <p className="font-bold text-emerald-400 text-lg mt-1">0% Floor</p>
-                        <p className="text-xs text-muted-foreground">Never lose principal</p>
-                      </div>
-                    </div>
-
-                    <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4">
-                      <p className="text-sm font-semibold text-emerald-400 mb-2">What Makes This Different</p>
-                      <p className="text-sm text-muted-foreground">
-                        {product.product.keyDifferentiator}. Unlike traditional FIAs that use opaque, custom-built indices,
-                        the F&G Power Accumulator benchmarks to real BlackRock iShares ETFs with decades of verifiable
-                        performance data. You can look up IVV, IAU, EFA, or IYR on any financial site and see exactly
-                        how these assets have performed historically.
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Index Strategies */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Globe className="w-5 h-5 text-blue-400" />
-                      BlackRock ETF Index Strategies
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="border-b border-border/50">
-                            <th className="text-left py-2 px-3 font-medium">Strategy</th>
-                            <th className="text-center py-2 px-3 font-medium">Participation</th>
-                            <th className="text-center py-2 px-3 font-medium">Cap</th>
-                            <th className="text-center py-2 px-3 font-medium">Vol Target</th>
-                            <th className="text-center py-2 px-3 font-medium">ETF-Based</th>
-                            <th className="text-left py-2 px-3 font-medium hidden lg:table-cell">Managed By</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {product.strategies.map((s: any, i: number) => (
-                            <tr key={i} className="border-b border-border/20 hover:bg-muted/20">
-                              <td className="py-2 px-3">
-                                <p className="font-medium text-xs sm:text-sm">{s.name}</p>
-                                <p className="text-xs text-muted-foreground hidden md:block">{s.assetClasses.join(", ")}</p>
-                              </td>
-                              <td className="text-center py-2 px-3">
-                                <span className="font-bold text-emerald-400">{s.participationRate}%</span>
-                              </td>
-                              <td className="text-center py-2 px-3">
-                                {s.capRate ? `${s.capRate}%` : "None"}
-                              </td>
-                              <td className="text-center py-2 px-3">
-                                {s.volatilityTarget ? `${s.volatilityTarget}%` : "—"}
-                              </td>
-                              <td className="text-center py-2 px-3">
-                                {s.isETFBased ? (
-                                  <CheckCircle2 className="w-4 h-4 text-emerald-400 mx-auto" />
-                                ) : (
-                                  <XCircle className="w-4 h-4 text-muted-foreground mx-auto" />
-                                )}
-                              </td>
-                              <td className="py-2 px-3 text-xs text-muted-foreground hidden lg:table-cell">{s.managedBy}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    <div className="mt-4 bg-amber-500/5 border border-amber-500/20 rounded-lg p-3">
-                      <p className="text-xs text-amber-400 font-semibold">Example: Balanced Asset 5 at 170% Participation</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        If the index gains 8% in a year, you are credited <strong className="text-emerald-400">13.6%</strong> (8% × 170%).
-                        In a strong year, you keep significantly more than the index return — with zero downside risk.
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Sources */}
-                <Card className="border-muted">
-                  <CardContent className="pt-4">
-                    <p className="text-xs font-semibold text-muted-foreground mb-2">Sources & References</p>
-                    <div className="flex flex-wrap gap-2">
-                      {product.product.sources.map((s: any, i: number) => (
-                        <a
-                          key={i}
-                          href={s.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 bg-blue-500/5 px-2 py-1 rounded"
-                        >
-                          <ExternalLink className="w-3 h-3" /> {s.name} ({s.date})
-                        </a>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </>
-            )}
-          </TabsContent>
-
-          {/* ═══ TAB 2: ETF vs Traditional ═══ */}
-          <TabsContent value="etf-vs-traditional" className="space-y-4">
-            <Card className="border-blue-500/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-blue-400" />
-                  Managed ETFs vs. Stale Insurance Company Indices
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
-                  <p className="text-sm font-semibold text-blue-400 mb-2">The Critical Difference</p>
-                  <p className="text-sm text-muted-foreground">
-                    Traditional fixed index annuities link your returns to custom indices created by investment banks —
-                    essentially <strong>black boxes</strong> with no transparency about how they work. These indices are
-                    <strong> not actively managed</strong>. Once created, they follow a static formula regardless of
-                    market conditions.
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    The F&G Power Accumulator is fundamentally different. It benchmarks to <strong>real BlackRock iShares ETFs</strong> —
-                    actual exchange-traded funds where billions of dollars are <strong>actively mobilized on an hourly and daily basis</strong>.
-                    BlackRock's algorithms continuously rebalance across 8+ asset classes, responding to market conditions in real-time.
-                    This active management creates a dramatically higher likelihood of producing <strong>double-digit earnings returns</strong>
-                    compared to a traditional FIA.
-                  </p>
-                </div>
-
-                {product && (
-                  <div className="space-y-3">
-                    {product.comparison.map((c: any, i: number) => (
-                      <div key={i} className="border border-border/30 rounded-lg overflow-hidden">
-                        <div className="bg-muted/30 px-4 py-2 flex items-center justify-between">
-                          <span className="font-semibold text-sm">{c.category}</span>
-                          {c.advantage === "etf" && (
-                            <Badge className="bg-emerald-500/20 text-emerald-400 text-xs">ETF Advantage</Badge>
-                          )}
-                          {c.advantage === "neutral" && (
-                            <Badge variant="outline" className="text-xs">Equal</Badge>
-                          )}
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border/20">
-                          <div className={`p-3 ${c.advantage === "etf" ? "bg-emerald-500/5" : ""}`}>
-                            <p className="text-xs font-semibold text-emerald-400 mb-1">Managed ETF (F&G + BlackRock)</p>
-                            <p className="text-xs text-muted-foreground">{c.managedETF}</p>
-                          </div>
-                          <div className={`p-3 ${c.advantage === "traditional" ? "bg-red-500/5" : ""}`}>
-                            <p className="text-xs font-semibold text-red-400 mb-1">Traditional Insurance Index</p>
-                            <p className="text-xs text-muted-foreground">{c.traditionalIndex}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4">
-                  <p className="text-sm font-bold text-emerald-400 mb-2">Bottom Line</p>
-                  <p className="text-sm text-muted-foreground">
-                    When your annuity is linked to actively managed ETFs that are rebalanced daily by the world's
-                    largest asset manager (BlackRock manages over $10 trillion), your money is working harder every
-                    single day. Traditional insurance indices sit idle — they don't adapt, they don't rebalance,
-                    and they don't mobilize capital. The F&G Power Accumulator offers a <strong>much greater
-                    likelihood of producing double-digit earnings returns</strong> than any traditional fixed index annuity.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* ═══ TAB 3: Precious Metals ═══ */}
-          <TabsContent value="precious-metals" className="space-y-4">
-            {product && (
-              <>
-                <Card className="border-amber-500/20">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Coins className="w-5 h-5 text-amber-400" />
-                      Precious Metals Index — 20-25% Annualized Returns
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div className="bg-amber-500/10 rounded-lg p-3 text-center">
-                        <p className="text-xs text-muted-foreground">Gold Price</p>
-                        <p className="text-lg font-bold text-amber-400">${product.preciousMetals.gold.currentPrice.toLocaleString()}/oz</p>
-                      </div>
-                      <div className="bg-gray-500/10 rounded-lg p-3 text-center">
-                        <p className="text-xs text-muted-foreground">Silver Price</p>
-                        <p className="text-lg font-bold text-gray-300">${product.preciousMetals.silver.currentPrice}/oz</p>
-                      </div>
-                      <div className="bg-emerald-500/10 rounded-lg p-3 text-center">
-                        <p className="text-xs text-muted-foreground">Gold 2025 Return</p>
-                        <p className="text-lg font-bold text-emerald-400">+64.6%</p>
-                      </div>
-                      <div className="bg-emerald-500/10 rounded-lg p-3 text-center">
-                        <p className="text-xs text-muted-foreground">Silver 2025 Return</p>
-                        <p className="text-lg font-bold text-emerald-400">+148%</p>
-                      </div>
-                    </div>
-
-                    {/* Performance Table */}
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="border-b border-border/50">
-                            <th className="text-left py-2 px-3">Year</th>
-                            <th className="text-center py-2 px-3">Gold Return</th>
-                            <th className="text-center py-2 px-3">Silver Return</th>
-                            <th className="text-left py-2 px-3 hidden md:table-cell">Source</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {product.preciousMetals.gold.performance.map((g: any, i: number) => {
-                            const s = product.preciousMetals.silver.performance[i];
-                            return (
-                              <tr key={i} className="border-b border-border/20">
-                                <td className="py-2 px-3 font-medium">{g.year}</td>
-                                <td className={`text-center py-2 px-3 font-bold ${g.returnPct >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-                                  {g.returnPct >= 0 ? "+" : ""}{g.returnPct}%
-                                </td>
-                                <td className={`text-center py-2 px-3 font-bold ${s?.returnPct >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-                                  {s ? `${s.returnPct >= 0 ? "+" : ""}${s.returnPct}%` : "—"}
-                                </td>
-                                <td className="py-2 px-3 text-xs text-muted-foreground hidden md:table-cell">{g.source}</td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* Why This Trend Continues */}
-                    <div className="bg-amber-500/5 border border-amber-500/20 rounded-lg p-4 space-y-3">
-                      <p className="text-sm font-bold text-amber-400">Why Precious Metals Will Continue to Outperform</p>
-                      <p className="text-sm text-muted-foreground">
-                        The precious metals index has delivered <strong>20-25% annualized returns</strong> over the last two years,
-                        and multiple structural forces suggest this trend is likely to continue and potentially accelerate:
-                      </p>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {product.fiatData.keyPoints.map((point: string, i: number) => (
-                          <div key={i} className="flex items-start gap-2 bg-muted/20 rounded p-2">
-                            <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
-                            <p className="text-xs text-muted-foreground">{point}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Fiat Currency Warning */}
-                    <Card className="border-red-500/20 bg-red-500/5">
-                      <CardContent className="pt-4 space-y-3">
-                        <p className="text-sm font-bold text-red-400 flex items-center gap-2">
-                          <AlertTriangle className="w-4 h-4" /> The Fiat Currency Crisis
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          <div className="bg-muted/30 rounded-lg p-3 text-center">
-                            <p className="text-xs text-muted-foreground">US National Debt</p>
-                            <p className="text-lg font-bold text-red-400">$36+ Trillion</p>
-                          </div>
-                          <div className="bg-muted/30 rounded-lg p-3 text-center">
-                            <p className="text-xs text-muted-foreground">M2 Money Supply Increase</p>
-                            <p className="text-lg font-bold text-red-400">+41% (2020-2025)</p>
-                          </div>
-                          <div className="bg-muted/30 rounded-lg p-3 text-center">
-                            <p className="text-xs text-muted-foreground">Dollar Purchasing Power Lost</p>
-                            <p className="text-lg font-bold text-red-400">-87% Since 1971</p>
-                          </div>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          Precious metals are the ultimate hedge against the fiat-based currency system. If the government's
-                          growing trend of money printing and debt creation continues — and there is no indication it will stop —
-                          this is <strong>one of the only recommendation chassis that will outperform inflation</strong> and create
-                          heavy double-digit returns <strong>without the possibility of loss</strong>. Gold cannot be printed,
-                          digitally expanded, or inflated away. Since 1971, gold has appreciated over <strong>13,500%</strong> while
-                          the US dollar has lost 87% of its purchasing power.
-                        </p>
-                        <p className="text-xs text-muted-foreground italic">
-                          Sources: J.P. Morgan Research (Dec 2025), BlackRock/iShares (Mar 2026), Sprott Insights (Jan 2026),
-                          LSEG/FTSE Russell (Sep 2025), Investing.com (Feb 2026)
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </CardContent>
-                </Card>
-              </>
-            )}
-          </TabsContent>
-
-          {/* ═══ TAB 4: Fact Finder ═══ */}
-          <TabsContent value="fact-finder" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-blue-400" />
-                  Financial Fact Finder
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* New Premium Section */}
-                <div className="space-y-3">
-                  <h3 className="font-semibold text-sm flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-emerald-400" /> New Premium Investment
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <Label className="text-xs">Initial Premium ($)</Label>
-                      <NumberInput value={form.initialPremium} onChange={(v) => updateForm("initialPremium", v)} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label className="text-xs whitespace-normal leading-tight">Expected Annual Return (%)</Label>
-                      <NumberInput value={form.annualReturnRate} onChange={(v) => updateForm("annualReturnRate", v)} className="mt-1" />
-                      <p className="text-xs text-muted-foreground mt-1">Precious metals index: 20-25% recent</p>
-                    </div>
-                    <div>
-                      <Label className="text-xs">Projection Years</Label>
-                      <NumberInput value={form.projectionYears} onChange={(v) => updateForm("projectionYears", v)} className="mt-1" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Existing Annuity Section */}
-                <div className="space-y-3 border-t border-border/30 pt-4">
-                  <h3 className="font-semibold text-sm flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-amber-400" /> Your Existing Annuity
-                  </h3>
-                  <div className="bg-amber-500/5 border border-amber-500/20 rounded-lg p-3 mb-3">
-                    <p className="text-xs text-amber-400 font-semibold">Important</p>
-                    <p className="text-xs text-muted-foreground">
-                      If your current annuity hasn't been Roth converted, it hasn't been maximized for full earning potential.
-                      All gains remain tax-deferred — meaning you'll owe taxes on every dollar you withdraw.
-                      By Roth converting first, all future gains become <strong>100% tax-free</strong>.
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div>
-                      <Label className="text-xs">Annuity Company Name</Label>
-                      <Input
-                        value={form.existingAnnuityCompany}
-                        onChange={(e) => updateForm("existingAnnuityCompany", e.target.value)}
-                        placeholder="e.g., Athene, Allianz, Pacific Life"
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs">Original Annuity Value ($)</Label>
-                      <NumberInput value={form.existingAnnuityValue} onChange={(v) => updateForm("existingAnnuityValue", v)} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label className="text-xs">Current Surrender Value ($)</Label>
-                      <NumberInput value={form.currentSurrenderValue} onChange={(v) => updateForm("currentSurrenderValue", v)} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label className="text-xs">Years In Force</Label>
-                      <NumberInput value={form.yearsInForce} onChange={(v) => updateForm("yearsInForce", v)} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label className="text-xs">Account Type</Label>
-                      <Select value={form.accountType} onValueChange={(v) => updateForm("accountType", v)}>
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="ira">Traditional IRA</SelectItem>
-                          <SelectItem value="401k">401(k)</SelectItem>
-                          <SelectItem value="403b">403(b)</SelectItem>
-                          <SelectItem value="tsp">TSP</SelectItem>
-                          <SelectItem value="roth">Already Roth</SelectItem>
-                          <SelectItem value="nonqualified">Non-Qualified</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label className="text-xs">Surrender Penalty (%)</Label>
-                      <NumberInput value={form.surrenderPenaltyPct} onChange={(v) => updateForm("surrenderPenaltyPct", v)} className="mt-1" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Roth Conversion Toggle */}
-                <div className="space-y-3 border-t border-border/30 pt-4">
-                  <h3 className="font-semibold text-sm flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-emerald-400" /> Roth Conversion & Premium Bonus
-                  </h3>
-                  <div className="flex items-center gap-3">
-                    <Switch
-                      checked={form.doRothConversion}
-                      onCheckedChange={(v) => updateForm("doRothConversion", v)}
-                    />
-                    <Label className="text-sm">Apply Roth Conversion + Premium Bonus Strategy</Label>
-                  </div>
-                  {form.doRothConversion && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label className="text-xs">Premium Bonus (%)</Label>
-                        <NumberInput value={form.premiumBonusPct} onChange={(v) => updateForm("premiumBonusPct", v)} className="mt-1" />
-                        <p className="text-xs text-muted-foreground mt-1">Typical range: 20-30% applied tax-free</p>
-                      </div>
-                      <div>
-                        <Label className="text-xs">Current Tax Bracket (%)</Label>
-                        <NumberInput value={form.currentTaxBracket} onChange={(v) => updateForm("currentTaxBracket", v)} className="mt-1" />
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <Button onClick={handleAnalyze} className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={analyzeMut.isPending}>
-                  {analyzeMut.isPending ? "Analyzing..." : "Run Growth Analysis"}
-                </Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* ═══ TAB 5: Growth Calculator ═══ */}
-          <TabsContent value="growth-calc" className="space-y-4">
-            {!result ? (
-              <Card className="border-dashed">
-                <CardContent className="pt-6 text-center space-y-3">
-                  <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto" />
-                  <p className="text-muted-foreground">Complete the Fact Finder and click "Run Growth Analysis" to see projections</p>
-                </CardContent>
-              </Card>
-            ) : (
-              <>
-                {/* Summary Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <Card className="bg-emerald-500/10 border-emerald-500/30">
-                    <CardContent className="pt-4 text-center">
-                      <p className="text-xs text-muted-foreground">Final Value</p>
-                      <p className="text-xl font-bold text-emerald-400">{fmt(result.finalValue)}</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-blue-500/10 border-blue-500/30">
-                    <CardContent className="pt-4 text-center">
-                      <p className="text-xs text-muted-foreground">Total Growth</p>
-                      <p className="text-xl font-bold text-blue-400">{fmt(result.totalGrowth)}</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-amber-500/10 border-amber-500/30">
-                    <CardContent className="pt-4 text-center">
-                      <p className="text-xs text-muted-foreground">Avg Annual Return</p>
-                      <p className="text-xl font-bold text-amber-400">{result.averageAnnualReturn}%</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-purple-500/10 border-purple-500/30">
-                    <CardContent className="pt-4 text-center">
-                      <p className="text-xs text-muted-foreground">Return Multiple</p>
-                      <p className="text-xl font-bold text-purple-400">{(result.finalValue / form.initialPremium).toFixed(1)}x</p>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Growth Comparison Chart */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Growth Comparison: F&G Power Accumulator vs Traditional FIA</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      {result.projections.filter((_: any, i: number) => i % Math.max(1, Math.floor(result.projections.length / 10)) === 0 || i === result.projections.length - 1).map((yr: any, i: number) => {
-                        const trad = result.traditionalProjections[yr.year - 1];
-                        const maxVal = result.projections[result.projections.length - 1]?.endValue || 1;
-                        const pctMain = (yr.endValue / maxVal) * 100;
-                        const pctTrad = (trad?.endValue / maxVal) * 100;
-                        return (
-                          <div key={i} className="space-y-1">
-                            <div className="flex justify-between text-xs">
-                              <span className="text-muted-foreground">Year {yr.year}</span>
-                              <span className="text-emerald-400 font-medium">{fmt(yr.endValue)}</span>
-                            </div>
-                            <div className="relative h-5 bg-muted/30 rounded-full overflow-hidden">
-                              <div
-                                className="absolute top-0 left-0 h-full bg-emerald-500/30 rounded-full"
-                                style={{ width: `${pctMain}%` }}
-                              />
-                              <div
-                                className="absolute top-0 left-0 h-full bg-red-500/20 rounded-full border-r-2 border-red-400"
-                                style={{ width: `${pctTrad}%` }}
-                              />
-                            </div>
-                            <div className="flex justify-between text-xs">
-                              <span className="text-red-400">Traditional: {fmt(trad?.endValue || 0)}</span>
-                              <span className="text-emerald-400">+{fmt(yr.endValue - (trad?.endValue || 0))} advantage</span>
-                            </div>
-</div>
-                        );
-                      })}
-                    </div>
-                    <div className="flex gap-4 mt-4 text-xs">
-                      <div className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-emerald-500/30" /> F&G Power Accumulator ({form.annualReturnRate}%)</div>
-                      <div className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-red-500/20 border border-red-400" /> Traditional FIA (5.5%)</div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Precious Metals Projection */}
-                <Card className="border-amber-500/20">
-                  <CardHeader>
-                    <CardTitle className="text-sm flex items-center gap-2">
-                      <Coins className="w-4 h-4 text-amber-400" />
-                      Precious Metals Index Projection (22.5% annualized)
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-xs">
-                        <thead>
-                          <tr className="border-b border-border/50">
-                            <th className="text-left py-2 px-2">Year</th>
-                            <th className="text-right py-2 px-2">Start Value</th>
-                            <th className="text-right py-2 px-2">Growth</th>
-                            <th className="text-right py-2 px-2">End Value</th>
-                            <th className="text-right py-2 px-2">Cumulative Return</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {result.preciousMetalsProjections.filter((_: any, i: number) => i < 5 || i === result.preciousMetalsProjections.length - 1).map((yr: any, i: number) => (
-                            <tr key={i} className="border-b border-border/20">
-                              <td className="py-1.5 px-2">{yr.year}</td>
-                              <td className="text-right py-1.5 px-2">{fmt(yr.startValue)}</td>
-                              <td className="text-right py-1.5 px-2 text-emerald-400">+{fmt(yr.growth)}</td>
-                              <td className="text-right py-1.5 px-2 font-medium">{fmt(yr.endValue)}</td>
-                              <td className="text-right py-1.5 px-2 text-amber-400">+{yr.cumulativeReturnPct}%</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Full Projection Table */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Year-by-Year Growth Projection</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto max-h-96 overflow-y-auto">
-                      <table className="w-full text-xs">
-                        <thead className="sticky top-0 bg-background">
-                          <tr className="border-b border-border/50">
-                            <th className="text-left py-2 px-2">Year</th>
-                            <th className="text-right py-2 px-2">Start Value</th>
-                            <th className="text-right py-2 px-2">Annual Growth</th>
-                            <th className="text-right py-2 px-2">End Value</th>
-                            <th className="text-right py-2 px-2">Cumulative Growth</th>
-                            <th className="text-right py-2 px-2">Total Return</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {result.projections.map((yr: any, i: number) => (
-                            <tr key={i} className="border-b border-border/20 hover:bg-muted/20">
-                              <td className="py-1.5 px-2">{yr.year}</td>
-                              <td className="text-right py-1.5 px-2">{fmt(yr.startValue)}</td>
-                              <td className="text-right py-1.5 px-2 text-emerald-400">+{fmt(yr.growth)}</td>
-                              <td className="text-right py-1.5 px-2 font-medium">{fmt(yr.endValue)}</td>
-                              <td className="text-right py-1.5 px-2">{fmt(yr.cumulativeGrowth)}</td>
-                              <td className="text-right py-1.5 px-2 text-amber-400">+{yr.cumulativeReturnPct}%</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
-              </>
-            )}
-          </TabsContent>
-
-          {/* ═══ TAB 6: Roth Conversion ═══ */}
-          <TabsContent value="roth-conversion" className="space-y-4">
-            {!result?.rothConversion ? (
-              <Card className="border-dashed">
-                <CardContent className="pt-6 text-center space-y-3">
-                  <TrendingUp className="w-12 h-12 text-muted-foreground mx-auto" />
-                  <p className="text-muted-foreground">
-                    Enable "Apply Roth Conversion + Premium Bonus Strategy" in the Fact Finder tab,
-                    then click "Run Growth Analysis" to see the conversion advantage.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <>
-                {/* Conversion Waterfall */}
-                <Card className="border-emerald-500/20">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-emerald-400" />
-                      Roth Conversion Advantage
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4">
-                      <p className="text-sm font-semibold text-emerald-400 mb-2">The Strategy</p>
-                      <p className="text-sm text-muted-foreground">
-                        By taking a {form.surrenderPenaltyPct}% early surrender penalty to Roth convert the funds at
-                        <strong> 0% tax liability</strong> (through proper tax planning), then receiving an additional
-                        tax-free bonus of <strong>{form.premiumBonusPct}%</strong> on top of the surrender value —
-                        the math more than makes up for any early penalties or surrender charges.
-                        All future gains are then <strong>100% tax-free, not tax-deferred</strong> like traditional annuities.
-                      </p>
-                    </div>
-
-                    {/* Waterfall Steps */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between bg-muted/30 rounded-lg p-3">
-                        <span className="text-sm">Original Surrender Value</span>
-                        <span className="font-bold">{fmt(result.rothConversion.originalValue)}</span>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <ArrowRight className="w-4 h-4 text-red-400 rotate-90" />
-                      </div>
-                      <div className="flex items-center justify-between bg-red-500/10 rounded-lg p-3">
-                        <span className="text-sm text-red-400">Surrender Penalty ({form.surrenderPenaltyPct}%)</span>
-                        <span className="font-bold text-red-400">-{fmt(result.rothConversion.surrenderPenalty)}</span>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <ArrowRight className="w-4 h-4 text-muted-foreground rotate-90" />
-                      </div>
-                      <div className="flex items-center justify-between bg-muted/30 rounded-lg p-3">
-                        <span className="text-sm">After Penalty Value</span>
-                        <span className="font-bold">{fmt(result.rothConversion.afterPenaltyValue)}</span>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <ArrowRight className="w-4 h-4 text-emerald-400 rotate-90" />
-                      </div>
-                      <div className="flex items-center justify-between bg-blue-500/10 rounded-lg p-3">
-                        <span className="text-sm text-blue-400">Roth Conversion Tax</span>
-                        <span className="font-bold text-blue-400">$0 (0% with proper planning)</span>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <ArrowRight className="w-4 h-4 text-emerald-400 rotate-90" />
-                      </div>
-                      <div className="flex items-center justify-between bg-emerald-500/10 rounded-lg p-3">
-                        <span className="text-sm text-emerald-400">Premium Bonus ({result.rothConversion.premiumBonusPct}%)</span>
-                        <span className="font-bold text-emerald-400">+{fmt(result.rothConversion.premiumBonus)}</span>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <ArrowRight className="w-4 h-4 text-emerald-400 rotate-90" />
-                      </div>
-                      <div className="flex items-center justify-between bg-emerald-500/20 border border-emerald-500/30 rounded-lg p-3">
-                        <span className="text-sm font-bold text-emerald-400">Enhanced Tax-Free Value</span>
-                        <span className="text-xl font-bold text-emerald-400">{fmt(result.rothConversion.enhancedValue)}</span>
-                      </div>
-                    </div>
-
-                    {/* Net Result */}
-                    <div className={`rounded-lg p-4 text-center ${result.rothConversion.netGainPct >= 0 ? "bg-emerald-500/10 border border-emerald-500/30" : "bg-amber-500/10 border border-amber-500/30"}`}>
-                      <p className="text-xs text-muted-foreground">Net Result vs. Original Surrender Value</p>
-                      <p className={`text-2xl font-bold ${result.rothConversion.netGainPct >= 0 ? "text-emerald-400" : "text-amber-400"}`}>
-                        {result.rothConversion.netGainPct >= 0 ? "+" : ""}{result.rothConversion.netGainPct}%
-                        ({result.rothConversion.netGainOverOriginal >= 0 ? "+" : ""}{fmt(result.rothConversion.netGainOverOriginal)})
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Plus ALL future gains are now 100% tax-free forever
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Roth vs Traditional Projection Comparison */}
-                {result.rothProjections && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm">Tax-Free (Roth) vs Tax-Deferred Growth Projection</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="overflow-x-auto max-h-80 overflow-y-auto">
-                        <table className="w-full text-xs">
-                          <thead className="sticky top-0 bg-background">
-                            <tr className="border-b border-border/50">
-                              <th className="text-left py-2 px-2">Year</th>
-                              <th className="text-right py-2 px-2 text-emerald-400">Roth (Tax-Free)</th>
-                              <th className="text-right py-2 px-2 text-red-400">Traditional (Taxable)</th>
-                              <th className="text-right py-2 px-2">Tax-Free Advantage</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {(result.rothProjections ?? []).filter((_: any, i: number) => i < 5 || i % 5 === 4 || i === (result.rothProjections ?? []).length - 1).map((yr: any, i: number) => {
-                              const tradYr = result.projections[yr.year - 1];
-                              const tradAfterTax = tradYr ? tradYr.endValue * (1 - form.currentTaxBracket / 100) + form.initialPremium * (form.currentTaxBracket / 100) : 0;
-                              const advantage = yr.endValue - tradAfterTax;
-                              return (
-                                <tr key={i} className="border-b border-border/20">
-                                  <td className="py-1.5 px-2">{yr.year}</td>
-                                  <td className="text-right py-1.5 px-2 font-medium text-emerald-400">{fmt(yr.endValue)}</td>
-                                  <td className="text-right py-1.5 px-2 text-red-400">{fmt(Math.round(tradAfterTax))}</td>
-                                  <td className="text-right py-1.5 px-2 font-medium text-blue-400">+{fmt(Math.round(advantage))}</td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-3 italic">
-                        Traditional column shows after-tax value assuming {form.currentTaxBracket}% tax rate on gains at withdrawal.
-                        Roth column is 100% tax-free — every dollar is yours to keep.
-                      </p>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* Tax-Free Advantage Explanation */}
-                <Card className="border-emerald-500/20 bg-emerald-500/5">
-                  <CardContent className="pt-4 space-y-3">
-                    <p className="text-sm font-bold text-emerald-400">Why Tax-Free Matters More Than You Think</p>
-                    <p className="text-sm text-muted-foreground">
-                      With traditional tax-deferred annuities, every dollar of growth is subject to ordinary income tax
-                      when you withdraw it. At a 28% federal rate (which could easily be 35-40% in the future),
-                      you're giving back nearly a third of your gains to the government.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      By Roth converting first and then placing funds into the F&G Power Accumulator with its
-                      managed ETF strategies and precious metals exposure, <strong>all the large gains earned on this
-                      annuity are tax-free — not tax-deferred like other traditional annuities</strong>. This is the
-                      difference between keeping 100% of a 22% annual return versus keeping only 72% of it.
-                    </p>
-                    <div className="grid grid-cols-2 gap-3 mt-3">
-                      <div className="bg-emerald-500/10 rounded-lg p-3 text-center">
-                        <p className="text-xs text-muted-foreground">Tax-Free (Roth)</p>
-                        <p className="text-lg font-bold text-emerald-400">Keep 100%</p>
-                        <p className="text-xs text-emerald-400">of every dollar earned</p>
-                      </div>
-                      <div className="bg-red-500/10 rounded-lg p-3 text-center">
-                        <p className="text-xs text-muted-foreground">Tax-Deferred (Traditional)</p>
-                        <p className="text-lg font-bold text-red-400">Keep ~72%</p>
-                        <p className="text-xs text-red-400">at current 28% tax rate</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </>
-            )}
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      <NAICDisclaimer variant="footer" showsProjections showsCashValues />
-          <PageInsights pageId="growth-annuities" />
-    
-        <ComplianceFooter pageName="GrowthAnnuities" showsAnnuity showsTax showsEstate showsProjections showsHistoricalData />
-      </AppShell>
   );
 }
 ```
