@@ -152,6 +152,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
       { path: "/portal/my-journey", label: "My Secret Journey", icon: Compass, color: "purple" },
       { path: "/portal/plan-ledger", label: "Plan Ledger", icon: BookOpenCheck, color: "purple" },
+      { path: "/portal/controls", label: "Controls", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/wealth-genome", label: "Wealth Genome Analysis", icon: Activity, color: "purple" },
       { path: "/portal/the-arrival", label: "1. The Arrival", icon: Sparkles, color: "purple" },
       { path: "/portal/the-mirror", label: "2. The Mirror", icon: Eye, color: "purple" },

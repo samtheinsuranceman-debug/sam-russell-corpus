@@ -18,6 +18,9 @@ async function safeAppend(events: LedgerEventInput[]): Promise<number> {
   // The outside world hears every event (Zapier, Make, n8n, Slack, any URL) —
   // fire-and-forget, so a slow receiver never slows the site.
   if (events.length) void fanOut(events).catch(() => undefined);
+  // The plan runtime reacts to what just happened (imported lazily: the
+  // runtime writes ledger events itself, so a static import would be a cycle).
+  if (written > 0) void import("./automations").then((m) => m.runAutomations(events)).catch(() => undefined);
   return written;
 }
 

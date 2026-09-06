@@ -1,10 +1,14 @@
 /**
  * Russell Capital Systems™ — Tax Bracket Engine
- * 2026 Federal & State tax bracket modeling with marginal/effective rate calculations.
+ * Federal & State tax bracket modeling with marginal/effective rate calculations.
  * Used across all financial calculators for Tax Alpha Visibility.
+ *
+ * The federal figures are read from the versioned rule set in taxRules.ts
+ * (tax year 2026, Rev. Proc. 2025-32), so a new revenue procedure is a
+ * one-file change and every calculator follows.
  */
+import { TAX_RULES_2026, type Bracket } from "./taxRules";
 
-// ── 2026 Federal Tax Brackets (projected from TCJA sunset provisions) ──
 export interface TaxBracket {
   min: number;
   max: number;
@@ -13,34 +17,15 @@ export interface TaxBracket {
 
 export type FilingStatus = "single" | "joint" | "hoh";
 
+function legacyBrackets(b: Bracket[]): TaxBracket[] {
+  let min = 0;
+  return b.map((x) => { const r = { min, max: x.upTo ?? Infinity, rate: x.rate }; min = x.upTo ?? Infinity; return r; });
+}
+
 const FEDERAL_BRACKETS_2026: Record<FilingStatus, TaxBracket[]> = {
-  single: [
-    { min: 0, max: 11925, rate: 0.10 },
-    { min: 11925, max: 48475, rate: 0.12 },
-    { min: 48475, max: 103350, rate: 0.22 },
-    { min: 103350, max: 197300, rate: 0.24 },
-    { min: 197300, max: 250525, rate: 0.32 },
-    { min: 250525, max: 626350, rate: 0.35 },
-    { min: 626350, max: Infinity, rate: 0.37 },
-  ],
-  joint: [
-    { min: 0, max: 23850, rate: 0.10 },
-    { min: 23850, max: 96950, rate: 0.12 },
-    { min: 96950, max: 206700, rate: 0.22 },
-    { min: 206700, max: 394600, rate: 0.24 },
-    { min: 394600, max: 501050, rate: 0.32 },
-    { min: 501050, max: 751600, rate: 0.35 },
-    { min: 751600, max: Infinity, rate: 0.37 },
-  ],
-  hoh: [
-    { min: 0, max: 17000, rate: 0.10 },
-    { min: 17000, max: 64850, rate: 0.12 },
-    { min: 64850, max: 103350, rate: 0.22 },
-    { min: 103350, max: 197300, rate: 0.24 },
-    { min: 197300, max: 250500, rate: 0.32 },
-    { min: 250500, max: 626350, rate: 0.35 },
-    { min: 626350, max: Infinity, rate: 0.37 },
-  ],
+  single: legacyBrackets(TAX_RULES_2026.brackets.single),
+  joint: legacyBrackets(TAX_RULES_2026.brackets.joint),
+  hoh: legacyBrackets(TAX_RULES_2026.brackets.hoh),
 };
 
 // ── State Income Tax Rates (simplified top marginal rates) ──
@@ -55,11 +40,11 @@ const STATE_TAX_RATES: Record<string, number> = {
   WA: 0, WV: 0.0512, WI: 0.0765, WY: 0, DC: 0.1075,
 };
 
-// ── Standard Deductions 2026 ──
+// ── Standard Deductions 2026 (Rev. Proc. 2025-32, via taxRules.ts) ──
 const STANDARD_DEDUCTIONS: Record<FilingStatus, number> = {
-  single: 15700,
-  joint: 31400,
-  hoh: 23550,
+  single: TAX_RULES_2026.standardDeduction.single,
+  joint: TAX_RULES_2026.standardDeduction.joint,
+  hoh: TAX_RULES_2026.standardDeduction.hoh,
 };
 
 export interface TaxResult {

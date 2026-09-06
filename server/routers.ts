@@ -13,6 +13,8 @@ import { librarianRouter } from "./librarianRouter";
 import { messagesRouter } from "./messagesRouter";
 import { ledgerRouter } from "./ledgerRouter";
 import { integrationsRouter } from "./integrationsRouter";
+import { controlsRouter } from "./controlsRouter";
+import { recordDocumentProvenance } from "./provenance";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -315,6 +317,7 @@ export const appRouter = router({
   messages: messagesRouter,
   ledger: ledgerRouter,
   integrations: integrationsRouter,
+  controls: controlsRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -2232,6 +2235,19 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       mimeType: z.string().optional(),
       sizeBytes: z.number().optional(),
       category: z.enum(["TAX_RETURN", "ESTATE_PLAN", "INSURANCE_POLICY", "INVESTMENT_STATEMENT", "TRUST_DOCUMENT", "LEGAL_AGREEMENT", "FINANCIAL_PLAN", "OTHER"]).optional(),
+      // Provenance: which document this one replaces, and (for estate papers) what it declares.
+      supersedesDocumentId: z.number().int().positive().optional(),
+      supersedesReason: z.string().max(500).optional(),
+      metadata: z.object({
+        documentType: z.enum(["will", "revocable_trust", "irrevocable_trust", "poa_financial", "healthcare_directive", "beneficiary_designation", "buy_sell", "other"]).optional(),
+        effectiveDate: z.string().max(10).optional(),
+        parties: z.array(z.string().max(200)).max(20).optional(),
+        beneficiaries: z.array(z.string().max(200)).max(50).optional(),
+        trustees: z.array(z.string().max(200)).max(20).optional(),
+        executor: z.string().max(200).optional(),
+        guardian: z.string().max(200).optional(),
+        notes: z.string().max(1000).optional(),
+      }).optional(),
     })).mutation(async ({ ctx, input }) => {
       const ws = await getWorkspaceForUser(ctx.user.id);
       if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
@@ -2252,6 +2268,15 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
         uploadedBy: ctx.user.id,
         uploadedByName: ctx.user.name ?? ctx.user.email ?? "Unknown",
       });
+      // Provenance: content hash, version lineage, signature, and (for estate
+      // papers) a consistency check against what the plan knows of the client.
+      const clientRow = await getClientById(input.clientId, ws.id);
+      const provenance = await recordDocumentProvenance({ clientId: input.clientId, workspaceId: ws.id }, {
+        documentId: doc.id, name: input.name, category: input.category ?? "OTHER", bytes: buffer, mimeType: input.mimeType ?? null,
+        uploadedByUserId: ctx.user.id, uploadedByName: ctx.user.name ?? ctx.user.email ?? "Unknown",
+        supersedesDocumentId: input.supersedesDocumentId ?? null, supersedesReason: input.supersedesReason ?? null, metadata: input.metadata ?? null,
+        facts: clientRow ? { spouseName: clientRow.spouseName ?? null, maritalStatus: clientRow.spouseName ? "Married" : null } : null,
+      }).catch((e) => { console.warn("[provenance] failed:", String(e).slice(0, 160)); return null; });
       await logClientActivity({
         clientId: input.clientId,
         workspaceId: ws.id,
@@ -2261,7 +2286,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
         summary: `Uploaded ${input.name} (${input.category ?? "OTHER"})`,
         metadata: { docId: doc.id, category: input.category ?? "OTHER" },
       });
-      return doc;
+      return { ...doc, provenance };
     }),
     list: protectedProcedure.input(z.object({ clientId: z.number() })).query(async ({ ctx, input }) => {
       const ws = await getWorkspaceForUser(ctx.user.id);

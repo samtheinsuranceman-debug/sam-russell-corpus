@@ -13,7 +13,7 @@
 // ============================================================
 import { FACT_FINDER_SECTIONS, emptyFactFinder, type ClientFactFinder, type FieldValue } from "./clientFactFinder";
 
-export const LEDGER_KINDS = ["fact", "assumption", "decision", "message", "document", "outcome", "scenario", "journey", "status", "note"] as const;
+export const LEDGER_KINDS = ["fact", "assumption", "decision", "message", "document", "outcome", "scenario", "journey", "status", "note", "consent", "mandate", "advice", "control", "automation", "rules"] as const;
 export type LedgerKind = (typeof LEDGER_KINDS)[number];
 export const LEDGER_SOURCES = ["client", "advisor", "automation", "aggregator", "ai", "system"] as const;
 export type LedgerSource = (typeof LEDGER_SOURCES)[number];

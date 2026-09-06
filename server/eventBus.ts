@@ -13,8 +13,8 @@ import type { LedgerEventInput, LedgerKind } from "@shared/planLedger";
 
 export type BusEnv = Partial<Record<"ZAPIER_HOOK_URL" | "MAKE_HOOK_URL" | "N8N_HOOK_URL" | "EVENT_WEBHOOK_URLS" | "EVENT_WEBHOOK_SECRET" | "EVENT_WEBHOOK_KINDS" | "EVENT_WEBHOOK_INCLUDE_FACTS" | "SLACK_WEBHOOK_URL" | "PUBLIC_BASE_URL", string>>;
 
-export const SLACK_KINDS: LedgerKind[] = ["status", "decision", "outcome", "note"];
-const DEFAULT_KINDS: LedgerKind[] = ["status", "journey", "message", "decision", "note", "outcome", "scenario", "document", "assumption"];
+export const SLACK_KINDS: LedgerKind[] = ["status", "decision", "outcome", "note", "control", "consent", "mandate"];
+const DEFAULT_KINDS: LedgerKind[] = ["status", "journey", "message", "decision", "note", "outcome", "scenario", "document", "assumption", "consent", "mandate", "control", "automation", "rules"];
 
 export function webhookTargets(env: BusEnv = process.env as BusEnv): Array<{ name: string; url: string }> {
   const out: Array<{ name: string; url: string }> = [];
