@@ -1,12 +1,13 @@
 // ============================================================
 // INFLATION LADDER — annualised price change by category over 1–40 years,
-// straight from the Bureau of Labor Statistics CPI series on FRED. Nothing
-// is typed in by hand: without FRED_API_KEY the ladder reports
-// "unavailable" and the page says so. Computed rates are snapshotted in
+// straight from the Bureau of Labor Statistics CPI series on FRED (keyed
+// API or the public CSV download; see _core/fred.ts). Nothing is typed in by
+// hand: when neither transport answers the ladder reports "unavailable" and
+// the page says so. Computed rates are snapshotted in
 // market_data_points (series "<id>:<n>Y") so a restart keeps the last-good
 // ladder with its as-of date.
 // ============================================================
-import { fetchFredObservationsSince, fredConfigured, type Observation } from "./_core/fred";
+import { fetchFredObservationsSince, type Observation } from "./_core/fred";
 import { getMarketPoints, upsertMarketPoint } from "./messagingDb";
 import { LADDER_YEARS, annualised, type CategoryRates } from "@shared/erosion";
 
@@ -57,7 +58,7 @@ export async function categoryLadder(cat: Category, env: NodeJS.ProcessEnv = pro
   const now = Date.now();
   const m = memo[cat.series];
   if (m && now - m.at < TTL) { const l = ladderFrom(m.obs); if (l) return { id: cat.id, label: cat.label, ...l, source: "cached" }; }
-  if (fredConfigured(env)) {
+  {
     try {
       const start = `${new Date().getFullYear() - 41}-01-01`;
       const obs = await fetchFredObservationsSince(cat.series, start, env);

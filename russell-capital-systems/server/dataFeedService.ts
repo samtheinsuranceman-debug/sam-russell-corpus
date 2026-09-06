@@ -1,5 +1,5 @@
 import { callDataApi } from "./_core/dataApi";
-import { fredConfigured, getBenchmarks, getCpiFromFred, type Benchmark } from "./_core/fred";
+import { getBenchmarks, getCpiFromFred, type Benchmark } from "./_core/fred";
 
 export interface DataFeedEntry {
   name: string;
@@ -117,8 +117,8 @@ const STATIC_COMMODITIES: CommodityData[] = [
 ];
 
 async function fetchLiveCPI(): Promise<CPIData | null> {
-  // FRED first when a key is set — it works on any host and dates every value.
-  if (fredConfigured()) {
+  // FRED first — keyed API or public CSV; it works on any host and dates every value.
+  {
     const f = await getCpiFromFred();
     if (f) return { name: "Consumer Price Index", value: f.index, unit: "index", annualRate: f.annualRate, monthlyRate: f.monthlyRate, coreRate: f.coreAnnualRate ?? f.annualRate, asOf: f.asOf, source: "live", lastUpdated: new Date().toISOString() };
   }
@@ -152,7 +152,7 @@ const TREASURY_FROM_FRED: Array<{ series: "DGS3MO" | "DGS2" | "DGS5" | "DGS10" |
 ];
 
 async function fetchLiveTreasury(): Promise<TreasuryData[] | null> {
-  if (fredConfigured()) {
+  {
     const bench = await getBenchmarks(TREASURY_FROM_FRED.map((t) => t.series));
     const rows = TREASURY_FROM_FRED.flatMap((t) => {
       const b = bench.find((x) => x.series === t.series);
