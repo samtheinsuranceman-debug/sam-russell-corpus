@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 115
+-- Tables: 117
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -250,6 +250,25 @@ CREATE TABLE `client_documents` (
 	`uploadedByName` varchar(200),
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `client_documents_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `client_fact_finders` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`data` json NOT NULL,
+	`completeness` int NOT NULL DEFAULT 0,
+	`completedAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `client_fact_finders_id` PRIMARY KEY(`id`),
+	CONSTRAINT `client_fact_finders_userId_unique` UNIQUE(`userId`)
+);
+CREATE TABLE `client_journeys` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`questions` json NOT NULL,
+	`journey` json NOT NULL,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `client_journeys_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `client_life_goals` (
 	`id` int AUTO_INCREMENT NOT NULL,

@@ -4,6 +4,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 
 ### Files in this part
 
+- `server/rothPdfReport.ts`
 - `server/routers.ts`
 - `server/seedReels.mjs`
 - `server/slackBot.ts`
@@ -91,6 +92,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/components/StreamdownLite.tsx`
 - `client/src/components/SubscriptionDisclaimer.tsx`
 - `client/src/components/SubscriptionGuard.tsx`
+- `client/src/components/TapeRecorderAdvisor.tsx`
 - `client/src/components/ThemePicker.tsx`
 - `client/src/components/TimeMachineInlineDisclaimer.tsx`
 - `client/src/components/TimeMachineToggle.tsx`
@@ -162,12 +164,755 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/pages/CompetePage.tsx`
 - `client/src/pages/ComplianceDisclosure.tsx`
 - `client/src/pages/ComplianceVaultPage.tsx`
-- `client/src/pages/ComponentShowcase.tsx`
-- `client/src/pages/CryptoCyclePage.tsx`
-- `client/src/pages/DealRoomPage.tsx`
-- `client/src/pages/DivorceCalculatorPage.tsx`
 
 ---
+
+## `server/rothPdfReport.ts`
+
+```ts
+import PDFDocument from "pdfkit";
+
+const GREEN = "#22c55e";
+const DARK = "#0a1628";
+const BLUE = "#3b82f6";
+const AMBER = "#f59e0b";
+const RED = "#ef4444";
+const GRAY = "#7a95b8";
+const WHITE = "#ffffff";
+const PURPLE = "#8b5cf6";
+const CYAN = "#06b6d4";
+
+function fmtFull(n: number): string {
+  return `$${Math.round(n).toLocaleString()}`;
+}
+
+function fmtCompact(n: number): string {
+  if (Math.abs(n) >= 1_000_000) return `$${(n / 1_000_000).toFixed(2)}M`;
+  if (Math.abs(n) >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${Math.round(n).toLocaleString()}`;
+}
+
+export async function generateRothReport(params: {
+  iraBalance: number; conversionPortion: number; homeEquity: number;
+  age: number; income: number; filingStatus: string; currentTaxBracket: number;
+  iulYears: number; strategyYears: number; solarEquity: boolean;
+  rentalGrossYield: number; realEstateAppreciation: number; helocRate: number;
+  clientName?: string;
+  carrierId?: string;
+  carrierAvgReturn?: number;
+}): Promise<Buffer> {
+  // A Mutual Life Accumulator III baseline rates (sample illustration)
+  const IUL_LOAD_FEE = 0.08;   // 8% Y1, 6% Y2-5, 0% after (using Y1 as default)
+  const IUL_LOAN_RATE = 0.05;  // 5% declared rate loan
+  const IUL_AVG_RETURN = params.carrierAvgReturn ?? 0.12; // 12% annual growth (user instruction)
+  const IUL_COI_RATE = 0.008;  // 0.8% age-based COI starting rate
+
+  const {
+    iraBalance, conversionPortion, homeEquity, age, income,
+    filingStatus, currentTaxBracket, iulYears, strategyYears,
+    solarEquity: isSolar, rentalGrossYield, realEstateAppreciation, helocRate,
+    clientName,
+  } = params;
+
+  const iraValue = iraBalance;
+  const conversionAmount = iraValue * conversionPortion;
+  const newRothValue = conversionAmount;
+  const taxSavings = iraValue * 0.50;
+  const halfTaxSavings = taxSavings / 2;
+  const solarEnhancement = isSolar ? iraValue * 0.22 : 0;
+  const targetPropertyPrice = iraValue / 0.4;
+  const totalPropertyCount = Math.max(1, strategyYears);
+  const perPropertyPrice = targetPropertyPrice / totalPropertyCount;
+  const downPayment = targetPropertyPrice * 0.30;
+  const mortgageAmount = targetPropertyPrice * 0.70;
+  const helocAmount = downPayment;
+  const mortgageRate = 0.065;
+  const monthlyInterestOnlyPayment = Math.round(mortgageAmount * (mortgageRate / 12));
+  const monthlyHelocPayment = Math.round(helocAmount * helocRate / 12);
+  const year1Premium = isSolar ? solarEnhancement : halfTaxSavings;
+  const year2Premium = isSolar ? halfTaxSavings : halfTaxSavings;
+
+  // ── Build IUL projection ──
+  const iulRows: any[] = [];
+  let accountValue = 0;
+  let cumulativeLoanBalance = 0;
+  let cumulativePremiums = 0;
+
+  for (let y = 1; y <= iulYears; y++) {
+    let premium = 0;
+    let premiumSource = "";
+    let policyLoanTaken = 0;
+    let strPrincipalPayment = 0;
+
+    if (y === 1) {
+      premium = year1Premium;
+      premiumSource = isSolar ? "Solar equity (22%)" : "Half tax savings";
+    } else if (y === 2) {
+      premium = year2Premium;
+      premiumSource = isSolar ? "Roth funds" : "Other half savings";
+      const month13Loan = iraValue * 0.25;
+      policyLoanTaken += month13Loan;
+      strPrincipalPayment += month13Loan;
+    } else if (y === 3) {
+      premium = isSolar ? 0 : halfTaxSavings;
+      premiumSource = isSolar ? "No new premium" : "IRA fund";
+      const surrenderValue = accountValue * 0.80;
+      policyLoanTaken += surrenderValue;
+      strPrincipalPayment += surrenderValue;
+    } else if (y >= 4) {
+      const borrowForPremium = accountValue * 0.80 * 0.5;
+      premium = borrowForPremium;
+      premiumSource = `Borrow cascade Y${y}`;
+      policyLoanTaken += borrowForPremium;
+    }
+
+    // A Mutual Life Accumulator III: 8% Y1, 6% Y2-5, 0% after
+    const yearLoadRate = y === 1 ? 0.08 : (y <= 5 ? 0.06 : 0);
+    const loadFee = premium * yearLoadRate;
+    const coiCost = premium * IUL_COI_RATE;
+    const netPremiumToAccount = premium - loadFee - coiCost;
+    cumulativePremiums += premium;
+    accountValue += netPremiumToAccount;
+    const interestEarned = accountValue * IUL_AVG_RETURN;
+    accountValue += interestEarned;
+    cumulativeLoanBalance = cumulativeLoanBalance * (1 + IUL_LOAN_RATE) + policyLoanTaken;
+    const netCashValue = accountValue - cumulativeLoanBalance;
+
+    iulRows.push({
+      year: y, premium: Math.round(premium), premiumSource,
+      loadFee: Math.round(loadFee), coiCost: Math.round(coiCost),
+      interestEarned: Math.round(interestEarned),
+      endingAccountValue: Math.round(accountValue),
+      cumulativeLoanBalance: Math.round(cumulativeLoanBalance),
+      netCashValue: Math.round(netCashValue),
+      strPrincipalPayment: Math.round(strPrincipalPayment),
+      cumulativePremiums: Math.round(cumulativePremiums),
+    });
+  }
+
+  // ── Build STR projection ──
+  const strRows: any[] = [];
+  let principalOwed = mortgageAmount;
+  let helocBalance = helocAmount;
+  let totalInterestPaid = 0;
+  let propertiesAcquired = 0;
+
+  for (let y = 1; y <= 20; y++) {
+    const newPropsThisYear = y <= strategyYears ? Math.ceil(totalPropertyCount / strategyYears) : 0;
+    propertiesAcquired = Math.min(propertiesAcquired + newPropsThisYear, totalPropertyCount);
+    const activePropertyValue = perPropertyPrice * propertiesAcquired;
+    const currentPropertyValue = activePropertyValue * Math.pow(1 + realEstateAppreciation, y);
+    const rentalIncome = Math.round(currentPropertyValue * rentalGrossYield);
+    const intOnlyPmt = Math.round(principalOwed * (mortgageRate / 12) * 12);
+    const helocPmt = Math.round(helocBalance * helocRate);
+    totalInterestPaid += intOnlyPmt + helocPmt;
+    const iulPrincipalApplied = iulRows[y - 1]?.strPrincipalPayment ?? 0;
+    principalOwed = Math.max(0, principalOwed - iulPrincipalApplied);
+    const netCashFlow = rentalIncome - intOnlyPmt - helocPmt;
+    const propertyEquity = Math.round(currentPropertyValue) - principalOwed;
+
+    strRows.push({
+      year: y, propertyValue: Math.round(currentPropertyValue), rentalIncome,
+      interestOnlyPayment: intOnlyPmt, helocPayment: helocPmt, netCashFlow,
+      principalOwed: Math.round(principalOwed), helocBalance: Math.round(helocBalance),
+      propertyEquity: Math.round(propertyEquity), totalInterestPaid: Math.round(totalInterestPaid),
+    });
+  }
+
+  // ── Build Roth projection ──
+  let rothBalance = newRothValue;
+  const rothRows: { year: number; balance: number }[] = [];
+  for (let y = 1; y <= iulYears; y++) {
+    rothBalance *= 1.05;
+    rothRows.push({ year: y, balance: Math.round(rothBalance) });
+  }
+
+  const strategyLabel = isSolar
+    ? "0% Year 1 Strategy - Solar Equity"
+    : `0% Year ${strategyYears} Strategy - Non Solar`;
+
+  const lastIul = iulRows[iulRows.length - 1];
+  const lastStr = strRows[strRows.length - 1];
+  const lastRoth = rothRows[rothRows.length - 1];
+  const totalRentalIncome = strRows.reduce((s: number, r: any) => s + r.rentalIncome, 0);
+  const totalWealth = (lastIul?.netCashValue ?? 0) + (lastStr?.propertyEquity ?? 0) + (lastRoth?.balance ?? 0);
+  const initialInvestment = iraBalance + homeEquity;
+  const wealthMultiplier = initialInvestment > 0 ? totalWealth / initialInvestment : 0;
+
+  // ── Rate Stress Test (8%, 10%, 12%, 14%) ──
+  const stressRates = [0.08, 0.10, 0.12, 0.14];
+  function runStressScenario(creditRate: number) {
+    let av = 0;
+    let lb = 0;
+    let cp = 0;
+    const yearly: { year: number; av: number; ncv: number }[] = [];
+    for (let y = 1; y <= iulYears; y++) {
+      let prem: number;
+      let loan = 0;
+      if (y === 1) { prem = year1Premium; }
+      else if (y === 2) { prem = year2Premium; loan = iraValue * 0.25; }
+      else if (y === 3) { prem = year2Premium; loan = av * 0.90 * 0.80; }
+      else { prem = year2Premium; loan = prem; }
+      cp += prem;
+      const lr = y === 1 ? 0.08 : (y <= 5 ? 0.06 : 0);
+      const net = prem - prem * lr - prem * IUL_COI_RATE;
+      av += net;
+      av += av * creditRate;
+      lb += loan;
+      lb += lb * IUL_LOAN_RATE;
+      yearly.push({ year: y, av: Math.round(av), ncv: Math.round(av - lb) });
+    }
+    return { yearly, finalAV: Math.round(av), finalNCV: Math.round(av - lb), totalPremiums: Math.round(cp) };
+  }
+  const stressResults = stressRates.map(r => ({ rate: r, label: `${(r * 100).toFixed(0)}%`, ...runStressScenario(r) }));
+
+  // ── Generate PDF ──
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({ size: "A4", margin: 40, bufferPages: true });
+    const chunks: Buffer[] = [];
+    doc.on("data", (c: Buffer) => chunks.push(c));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+
+    // ═══════════════════════════════════════════════════════════════
+    // PAGE 1: COVER & STRATEGY SUMMARY
+    // ═══════════════════════════════════════════════════════════════
+    doc.rect(0, 0, doc.page.width, 100).fill(DARK);
+    doc.fontSize(24).fillColor(GREEN).text("Russell Capital Systems™", 40, 22);
+    doc.fontSize(10).fillColor(WHITE).text("Turn Capital Into Income\u2122", 40, 50);
+    doc.fontSize(12).fillColor(WHITE).text(strategyLabel, 40, 70);
+    doc.fontSize(8).fillColor(GRAY).text(
+      `Prepared ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}` +
+      (clientName ? ` | Client: ${clientName}` : "") +
+      ` | Age ${age} | Income $${income.toLocaleString()} | ${filingStatus}`,
+      40, 86
+    );
+
+    doc.moveDown(3);
+
+    // Strategy Summary
+    doc.fontSize(14).fillColor(GREEN).text("Strategy Summary", 40);
+    doc.moveDown(0.5);
+
+    const summaryItems: [string, string][] = [
+      ["IRA Balance", fmtFull(iraBalance)],
+      ["Conversion Amount", fmtFull(conversionAmount)],
+      ["New Roth IRA Value", fmtFull(newRothValue)],
+      ["Tax Savings (50%)", fmtFull(taxSavings)],
+      ...(isSolar ? [["Solar Enhancement (+22%)", fmtFull(solarEnhancement)] as [string, string]] : []),
+      ["Target STR Total (IRA / 0.4)", fmtFull(targetPropertyPrice)],
+      ["Properties", `${totalPropertyCount} @ ${fmtFull(perPropertyPrice)} each`],
+      ["Down Payment (30%)", fmtFull(downPayment)],
+      ["Mortgage (70%)", fmtFull(mortgageAmount)],
+      ["Monthly Interest-Only", fmtFull(monthlyInterestOnlyPayment)],
+      ["Year 1 IUL Premium", fmtFull(year1Premium)],
+      ["Year 2 IUL Premium", fmtFull(year2Premium)],
+      ["IUL Illustrated Rate", `${(IUL_AVG_RETURN * 100).toFixed(0)}% (A Mutual Life Accumulator III)`],
+    ];
+
+    summaryItems.forEach(([label, value], i) => {
+      const rowY = doc.y;
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
+      doc.fontSize(9).fillColor(GRAY).text(label, 50, rowY, { width: 200 });
+      doc.fontSize(9).fillColor(WHITE).text(value, 260, rowY, { width: 250 });
+      doc.moveDown(0.3);
+    });
+
+    // 20-Year Wealth Summary Box
+    doc.moveDown(1);
+    doc.rect(40, doc.y - 4, 515, 80).fill("#052e16").lineWidth(1).stroke(GREEN);
+    const boxY = doc.y;
+    doc.fontSize(12).fillColor(GREEN).text("20-Year Total Wealth Projection", 60, boxY);
+    doc.fontSize(20).fillColor(WHITE).text(fmtFull(totalWealth), 60, boxY + 20);
+    doc.fontSize(9).fillColor(GRAY).text(`${wealthMultiplier.toFixed(1)}x wealth multiplier on ${fmtFull(initialInvestment)} initial investment`, 60, boxY + 48);
+    doc.fontSize(9).fillColor(GREEN).text(`IUL Net Cash: ${fmtFull(lastIul?.netCashValue ?? 0)}`, 320, boxY + 20);
+    doc.fontSize(9).fillColor(BLUE).text(`Property Equity: ${fmtFull(lastStr?.propertyEquity ?? 0)}`, 320, boxY + 34);
+    doc.fontSize(9).fillColor(AMBER).text(`Roth Balance: ${fmtFull(lastRoth?.balance ?? 0)}`, 320, boxY + 48);
+    doc.y = boxY + 80;
+
+    // ═══════════════════════════════════════════════════════════════
+    // PAGE 2: IUL PROJECTION TABLE
+    // ═══════════════════════════════════════════════════════════════
+    doc.addPage();
+    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
+    doc.fontSize(14).fillColor(GREEN).text(`${iulYears}-Year IUL Projection — A Mutual Life Accumulator III`, 40, 18);
+    doc.fontSize(8).fillColor(GRAY).text(`${(IUL_AVG_RETURN * 100).toFixed(0)}% illustrated rate | 8%/6%/0% premium loads | 5% policy loan rate`, 40, 36);
+    doc.moveDown(2);
+
+    const iulCols = ["Yr", "Premium", "Source", "Load", "COI", "Interest", "Acct Value", "Loan Bal", "Net Cash"];
+    const iulColX = [40, 65, 110, 195, 235, 275, 330, 400, 465];
+    const iulColW = [25, 45, 85, 40, 40, 55, 70, 65, 70];
+
+    const drawIulHeader = () => {
+      doc.rect(40, doc.y - 2, 515, 14).fill(DARK);
+      const headerY = doc.y;
+      iulCols.forEach((col, i) => {
+        doc.fontSize(7).fillColor(GREEN).text(col, iulColX[i], headerY - 12, { width: iulColW[i] });
+      });
+      doc.moveDown(0.3);
+    };
+
+    drawIulHeader();
+
+    iulRows.forEach((row: any, i: number) => {
+      if (doc.y > 740) {
+        doc.addPage();
+        drawIulHeader();
+      }
+      const rowY = doc.y;
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill("#0f1e35");
+      const vals = [
+        String(row.year), fmtFull(row.premium), row.premiumSource.substring(0, 18),
+        fmtFull(row.loadFee), fmtFull(row.coiCost), fmtFull(row.interestEarned),
+        fmtFull(row.endingAccountValue), fmtFull(row.cumulativeLoanBalance), fmtFull(row.netCashValue),
+      ];
+      vals.forEach((v, ci) => {
+        const color = ci === 5 ? GREEN : ci === 7 ? RED : ci === 8 ? (row.netCashValue >= 0 ? GREEN : RED) : WHITE;
+        doc.fontSize(7).fillColor(color).text(v, iulColX[ci], rowY, { width: iulColW[ci] });
+      });
+      doc.moveDown(0.2);
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PAGE 3: STR PROJECTION + ROTH
+    // ═══════════════════════════════════════════════════════════════
+    doc.addPage();
+    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
+    doc.fontSize(14).fillColor(GREEN).text("20-Year STR Property Projection", 40, 18);
+    doc.fontSize(8).fillColor(GRAY).text(`${totalPropertyCount} propert${totalPropertyCount > 1 ? "ies" : "y"} | ${(realEstateAppreciation * 100).toFixed(0)}% appreciation | ${(rentalGrossYield * 100).toFixed(0)}% gross yield`, 40, 36);
+    doc.moveDown(2);
+
+    const strCols = ["Yr", "Prop Value", "Rental Inc", "Int-Only", "HELOC", "Net Cash", "Princ Owed", "Equity"];
+    const strColX = [40, 65, 130, 205, 280, 345, 410, 475];
+    const strColW = [25, 65, 75, 75, 65, 65, 65, 60];
+
+    const drawStrHeader = () => {
+      doc.rect(40, doc.y - 2, 515, 14).fill(DARK);
+      const headerY = doc.y;
+      strCols.forEach((col, i) => {
+        doc.fontSize(7).fillColor(GREEN).text(col, strColX[i], headerY - 12, { width: strColW[i] });
+      });
+      doc.moveDown(0.3);
+    };
+
+    drawStrHeader();
+
+    strRows.forEach((row: any, i: number) => {
+      if (doc.y > 740) {
+        doc.addPage();
+        drawStrHeader();
+      }
+      const rowY = doc.y;
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill("#0f1e35");
+      const vals = [
+        String(row.year), fmtFull(row.propertyValue), fmtFull(row.rentalIncome),
+        fmtFull(row.interestOnlyPayment), fmtFull(row.helocPayment),
+        `${row.netCashFlow >= 0 ? "+" : ""}${fmtFull(row.netCashFlow)}`,
+        fmtFull(row.principalOwed), fmtFull(row.propertyEquity),
+      ];
+      vals.forEach((v, ci) => {
+        const color = ci === 2 ? GREEN : ci === 3 || ci === 4 ? RED : ci === 5 ? (row.netCashFlow >= 0 ? GREEN : RED) : ci === 7 ? BLUE : WHITE;
+        doc.fontSize(7).fillColor(color).text(v, strColX[ci], rowY, { width: strColW[ci] });
+      });
+      doc.moveDown(0.2);
+    });
+
+    // Roth projection mini-table
+    doc.moveDown(1);
+    doc.fontSize(12).fillColor(AMBER).text("Roth IRA Growth (5% Tax-Free)", 40, doc.y);
+    doc.moveDown(0.5);
+
+    const rothDisplay = rothRows.filter((_, i) => (i + 1) % 5 === 0 || i === 0);
+    rothDisplay.forEach((row, i) => {
+      const rowY = doc.y;
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
+      doc.fontSize(9).fillColor(GRAY).text(`Year ${row.year}`, 50, rowY, { width: 100 });
+      doc.fontSize(9).fillColor(AMBER).text(fmtFull(row.balance), 160, rowY, { width: 150 });
+      doc.moveDown(0.3);
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PAGE 4: COMBINED SUMMARY
+    // ═══════════════════════════════════════════════════════════════
+    doc.addPage();
+    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
+    doc.fontSize(14).fillColor(GREEN).text("Combined Strategy Summary", 40, 18);
+    doc.fontSize(8).fillColor(GRAY).text(`${iulYears}-year projection | ${strategyLabel}`, 40, 36);
+    doc.moveDown(2);
+
+    const grandItems: [string, string, string][] = [
+      ["IUL Account Value", fmtFull(lastIul?.endingAccountValue ?? 0), GREEN],
+      ["IUL Net Cash Value (after loan payoff)", fmtFull(lastIul?.netCashValue ?? 0), GREEN],
+      ["IUL Loan Balance", fmtFull(lastIul?.cumulativeLoanBalance ?? 0), RED],
+      ["Total IUL Premiums Paid", fmtFull(lastIul?.cumulativePremiums ?? 0), WHITE],
+      ["Total Rental Income (20yr)", fmtFull(totalRentalIncome), GREEN],
+      ["Property Appreciation", `+${fmtFull((lastStr?.propertyValue ?? 0) - targetPropertyPrice)}`, BLUE],
+      ["Final Property Value", fmtFull(lastStr?.propertyValue ?? 0), BLUE],
+      ["Final Property Equity", fmtFull(lastStr?.propertyEquity ?? 0), BLUE],
+      ["Final Roth Balance", fmtFull(lastRoth?.balance ?? 0), AMBER],
+      ["Total Wealth at Year 20", fmtFull(totalWealth), GREEN],
+      ["Initial Investment", fmtFull(initialInvestment), WHITE],
+      ["Wealth Multiplier", `${wealthMultiplier.toFixed(2)}x`, GREEN],
+    ];
+
+    grandItems.forEach(([label, value, color], i) => {
+      const rowY = doc.y;
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 16).fill("#0f1e35");
+      const isTotal = label.includes("Total Wealth") || label.includes("Multiplier");
+      doc.fontSize(isTotal ? 10 : 9).fillColor(GRAY).text(label, 50, rowY, { width: 280 });
+      doc.fontSize(isTotal ? 11 : 9).fillColor(color).text(value, 340, rowY, { width: 200 });
+      doc.moveDown(isTotal ? 0.5 : 0.3);
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PAGE 5: RATE STRESS TEST (8% / 10% / 12% / 14%)
+    // ═══════════════════════════════════════════════════════════════
+    doc.addPage();
+    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
+    doc.fontSize(14).fillColor(CYAN).text("Rate Sensitivity — IUL Performance at 8% / 10% / 12% / 14%", 40, 18);
+    doc.fontSize(8).fillColor(GRAY).text("Deterministic projections showing how different illustrated rates affect your IUL cash values", 40, 36);
+    doc.moveDown(2);
+
+    // Summary comparison table
+    doc.fontSize(11).fillColor(WHITE).text(`Year ${iulYears} Final Values by Illustrated Rate`, 40, doc.y);
+    doc.moveDown(0.5);
+
+    // Header
+    const stressColX = [40, 120, 230, 350, 460];
+    const stressColW = [80, 110, 120, 110, 80];
+    const stressHeaders = ["Rate", "Account Value", "Net Cash Value", "Total Premiums", "Multiplier"];
+    doc.rect(40, doc.y - 2, 515, 16).fill(DARK);
+    const shY = doc.y;
+    stressHeaders.forEach((h, i) => {
+      doc.fontSize(8).fillColor(CYAN).text(h, stressColX[i], shY, { width: stressColW[i] });
+    });
+    doc.moveDown(0.5);
+
+    stressResults.forEach((s, i) => {
+      const rowY = doc.y;
+      const isBase = s.rate === IUL_AVG_RETURN;
+      if (isBase) {
+        doc.rect(40, rowY - 2, 515, 16).fill("#164e63");
+      } else if (i % 2 === 0) {
+        doc.rect(40, rowY - 2, 515, 16).fill("#0f1e35");
+      }
+      const mult = s.totalPremiums > 0 ? (s.finalAV / s.totalPremiums).toFixed(1) + "x" : "N/A";
+      const color = isBase ? CYAN : s.rate >= 0.12 ? GREEN : s.rate >= 0.10 ? AMBER : RED;
+      doc.fontSize(9).fillColor(color).text(s.label + (isBase ? " (base)" : ""), stressColX[0], rowY, { width: stressColW[0] });
+      doc.fontSize(9).fillColor(WHITE).text(fmtFull(s.finalAV), stressColX[1], rowY, { width: stressColW[1] });
+      doc.fontSize(9).fillColor(s.finalNCV >= 0 ? GREEN : RED).text(fmtFull(s.finalNCV), stressColX[2], rowY, { width: stressColW[2] });
+      doc.fontSize(9).fillColor(GRAY).text(fmtFull(s.totalPremiums), stressColX[3], rowY, { width: stressColW[3] });
+      doc.fontSize(9).fillColor(color).text(mult, stressColX[4], rowY, { width: stressColW[4] });
+      doc.moveDown(0.4);
+    });
+
+    // Year-by-year comparison at key milestones
+    doc.moveDown(1);
+    doc.fontSize(11).fillColor(WHITE).text("Key Milestone Comparison", 40, doc.y);
+    doc.moveDown(0.5);
+
+    const milestones = [5, 10, 15, iulYears];
+    const mColX = [40, 120, 220, 320, 420];
+    const mColW = [80, 100, 100, 100, 100];
+
+    // Header
+    doc.rect(40, doc.y - 2, 515, 16).fill(DARK);
+    const mhY = doc.y;
+    doc.fontSize(8).fillColor(CYAN).text("Year", mColX[0], mhY, { width: mColW[0] });
+    stressResults.forEach((s, i) => {
+      doc.fontSize(8).fillColor(CYAN).text(`${s.label} Net Cash`, mColX[i + 1], mhY, { width: mColW[i + 1] });
+    });
+    doc.moveDown(0.5);
+
+    milestones.forEach((yr, mi) => {
+      const rowY = doc.y;
+      if (mi % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
+      doc.fontSize(9).fillColor(WHITE).text(`Year ${yr}`, mColX[0], rowY, { width: mColW[0] });
+      stressResults.forEach((s, i) => {
+        const val = s.yearly[yr - 1]?.ncv ?? 0;
+        const color = val >= 0 ? GREEN : RED;
+        doc.fontSize(8).fillColor(color).text(fmtCompact(val), mColX[i + 1], rowY, { width: mColW[i + 1] });
+      });
+      doc.moveDown(0.3);
+    });
+
+    // Explanation
+    doc.moveDown(0.5);
+    doc.fontSize(8).fillColor(GRAY).text(
+      "This analysis shows how different illustrated rates affect your IUL performance. " +
+      "The 12% base case uses the A Mutual Life Accumulator III illustrated rate per the sample illustration. " +
+      "The 8% scenario represents a conservative estimate, while 14% shows upside potential. " +
+      "All scenarios use identical charge structures (8%/6%/0% loads, 0.8% COI, 5% loan rate). " +
+      "The IUL floor of 0% means actual returns cannot go negative in any given year.",
+      40, doc.y, { width: 515, lineGap: 3 }
+    );
+
+    // ═══════════════════════════════════════════════════════════════
+    // PAGE 6: MONTE CARLO SIMULATION
+    // ═══════════════════════════════════════════════════════════════
+    doc.addPage();
+    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
+    doc.fontSize(14).fillColor(PURPLE).text("Monte Carlo Simulation — IUL Net Cash Value", 40, 18);
+    doc.fontSize(8).fillColor(GRAY).text("500 simulations | 15% S&P 500 volatility | 0% IUL floor", 40, 36);
+    doc.moveDown(2);
+
+    // Run Monte Carlo
+    const MC_SIMS = 500;
+    const MC_VOL = 0.15;
+    const mcPercentiles: { year: number; p10: number; p25: number; p50: number; p75: number; p90: number; actual: number }[] = [];
+    const allPaths: number[][] = [];
+    for (let s = 0; s < MC_SIMS; s++) {
+      const path: number[] = [];
+      let av = 0;
+      for (let y = 0; y < iulYears; y++) {
+        const premium = iulRows[y].premium;
+        const u1 = Math.random();
+        const u2 = Math.random();
+        const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        const randomReturn = Math.max(0, IUL_AVG_RETURN + MC_VOL * z);
+        av += premium * (1 - IUL_LOAD_FEE);
+        av += av * randomReturn;
+        av -= av * IUL_COI_RATE;
+        av = Math.max(0, av);
+        const loanBal = iulRows[y].cumulativeLoanBalance;
+        path.push(Math.max(0, av - loanBal));
+      }
+      allPaths.push(path);
+    }
+    for (let y = 0; y < iulYears; y++) {
+      const vals = allPaths.map(p => p[y]).sort((a, b) => a - b);
+      const pct = (p: number) => vals[Math.floor(vals.length * p)];
+      mcPercentiles.push({
+        year: y + 1,
+        p10: Math.round(pct(0.10)),
+        p25: Math.round(pct(0.25)),
+        p50: Math.round(pct(0.50)),
+        p75: Math.round(pct(0.75)),
+        p90: Math.round(pct(0.90)),
+        actual: iulRows[y].netCashValue,
+      });
+    }
+
+    // Monte Carlo percentile table
+    doc.fontSize(11).fillColor(WHITE).text("Percentile Outcomes by Year", 40, doc.y);
+    doc.moveDown(0.5);
+
+    const mcCols = ["Year", "10th %ile", "25th %ile", "Median", "75th %ile", "90th %ile", "Base Case"];
+    const mcColX = [40, 80, 145, 215, 285, 360, 435];
+    const mcColW = [40, 65, 70, 70, 75, 75, 75];
+
+    const drawMcHeader = () => {
+      doc.rect(40, doc.y - 2, 515, 14).fill(DARK);
+      const headerY = doc.y;
+      mcCols.forEach((col, i) => {
+        doc.fontSize(7).fillColor(PURPLE).text(col, mcColX[i], headerY - 12, { width: mcColW[i] });
+      });
+      doc.moveDown(0.3);
+    };
+    drawMcHeader();
+
+    // Show every other year + final year
+    const mcDisplayYears = mcPercentiles.filter((_, i) => i % 2 === 0 || i === mcPercentiles.length - 1);
+    mcDisplayYears.forEach((row, i) => {
+      if (doc.y > 700) { doc.addPage(); drawMcHeader(); }
+      const rowY = doc.y;
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill("#0f1e35");
+      const vals = [
+        String(row.year), fmtCompact(row.p10), fmtCompact(row.p25),
+        fmtCompact(row.p50), fmtCompact(row.p75), fmtCompact(row.p90), fmtCompact(row.actual),
+      ];
+      const colors = [WHITE, RED, AMBER, PURPLE, BLUE, GREEN, GREEN];
+      vals.forEach((v, ci) => {
+        doc.fontSize(7).fillColor(colors[ci]).text(v, mcColX[ci], rowY, { width: mcColW[ci] });
+      });
+      doc.moveDown(0.2);
+    });
+
+    // Final year summary
+    const lastMc = mcPercentiles[mcPercentiles.length - 1];
+    doc.moveDown(0.8);
+    doc.fontSize(11).fillColor(WHITE).text(`Year ${iulYears} Final Outcomes`, 40, doc.y);
+    doc.moveDown(0.5);
+
+    const mcSummaryItems: [string, string, string][] = [
+      ["Worst Case (10th %ile)", fmtFull(lastMc.p10), RED],
+      ["Below Average (25th %ile)", fmtFull(lastMc.p25), AMBER],
+      ["Median (50th %ile)", fmtFull(lastMc.p50), PURPLE],
+      ["Above Average (75th %ile)", fmtFull(lastMc.p75), BLUE],
+      ["Best Case (90th %ile)", fmtFull(lastMc.p90), GREEN],
+      [`Base Case (${(IUL_AVG_RETURN * 100).toFixed(0)}% fixed)`, fmtFull(lastMc.actual), GREEN],
+    ];
+    mcSummaryItems.forEach(([label, value, color], i) => {
+      const rowY = doc.y;
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
+      doc.fontSize(9).fillColor(GRAY).text(label, 50, rowY, { width: 250 });
+      doc.fontSize(9).fillColor(color).text(value, 310, rowY, { width: 200 });
+      doc.moveDown(0.3);
+    });
+
+    doc.moveDown(0.5);
+    doc.fontSize(8).fillColor(GRAY).text(
+      "Monte Carlo simulation runs 500 paths with 15% annual volatility (historical S&P 500 average). " +
+      "The IUL floor of 0% prevents negative returns from reducing account value. " +
+      "Wider spreads in later years reflect compounding uncertainty. " +
+      `The base case uses a fixed ${(IUL_AVG_RETURN * 100).toFixed(0)}% annual return for comparison.`,
+      40, doc.y, { width: 515, lineGap: 3 }
+    );
+
+    // ═══════════════════════════════════════════════════════════════
+    // PAGE 7: SENSITIVITY ANALYSIS
+    // ═══════════════════════════════════════════════════════════════
+    doc.addPage();
+    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
+    doc.fontSize(14).fillColor(CYAN).text("Sensitivity Analysis — IUL Net Cash Value", 40, 18);
+    doc.fontSize(8).fillColor(GRAY).text("Median of 200 simulations per cell | Return Rate vs. Volatility", 40, 36);
+    doc.moveDown(2);
+
+    const sensReturnRates = [0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12];
+    const sensVolatilities = [0.10, 0.12, 0.15, 0.18, 0.20];
+    const SENS_SIMS = 200;
+    const sensGrid: number[][] = [];
+    let sensMin = Infinity, sensMax = -Infinity;
+
+    for (const ret of sensReturnRates) {
+      const row: number[] = [];
+      for (const vol of sensVolatilities) {
+        const finals: number[] = [];
+        for (let s = 0; s < SENS_SIMS; s++) {
+          let av = 0;
+          for (let y = 0; y < iulYears; y++) {
+            const premium = iulRows[y].premium;
+            const u1 = Math.random();
+            const u2 = Math.random();
+            const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+            const randomReturn = Math.max(0, ret + vol * z);
+            av += premium * (1 - IUL_LOAD_FEE);
+            av += av * randomReturn;
+            av -= av * IUL_COI_RATE;
+            av = Math.max(0, av);
+          }
+          const loanBal = iulRows[iulYears - 1].cumulativeLoanBalance;
+          finals.push(Math.max(0, av - loanBal));
+        }
+        finals.sort((a, b) => a - b);
+        const median = Math.round(finals[Math.floor(finals.length / 2)]);
+        row.push(median);
+        if (median < sensMin) sensMin = median;
+        if (median > sensMax) sensMax = median;
+      }
+      sensGrid.push(row);
+    }
+
+    doc.fontSize(11).fillColor(WHITE).text(`Year ${iulYears} IUL Net Cash Value — Return Rate vs. Volatility`, 40, doc.y);
+    doc.moveDown(0.5);
+
+    const sensTableX = 40;
+    const sensCellW = 82;
+    const sensLabelW = 85;
+    const sensCellH = 18;
+
+    // Header row
+    const sensHeaderY = doc.y;
+    doc.rect(sensTableX, sensHeaderY - 2, sensLabelW + sensCellW * sensVolatilities.length, sensCellH).fill(DARK);
+    doc.fontSize(7).fillColor(CYAN).text("Return \\ Vol", sensTableX + 4, sensHeaderY + 2, { width: sensLabelW - 8 });
+    sensVolatilities.forEach((v, i) => {
+      const isBase = v === 0.15;
+      const x = sensTableX + sensLabelW + i * sensCellW;
+      if (isBase) doc.rect(x, sensHeaderY - 2, sensCellW, sensCellH).fill("#164e63");
+      doc.fontSize(7).fillColor(isBase ? CYAN : GRAY).text(`${(v * 100).toFixed(0)}%`, x + 4, sensHeaderY + 2, { width: sensCellW - 8, align: "center" });
+    });
+    doc.y = sensHeaderY + sensCellH;
+
+    // Data rows
+    sensReturnRates.forEach((ret, ri) => {
+      const rowY = doc.y;
+      const isBaseRow = ret === 0.10;
+      doc.rect(sensTableX, rowY - 2, sensLabelW, sensCellH).fill(isBaseRow ? "#164e63" : "#0f1e35");
+      doc.fontSize(7).fillColor(isBaseRow ? CYAN : GRAY).text(`${(ret * 100).toFixed(0)}%`, sensTableX + 4, rowY + 2, { width: sensLabelW - 8 });
+      sensGrid[ri].forEach((val, ci) => {
+        const x = sensTableX + sensLabelW + ci * sensCellW;
+        const isBase = ret === 0.10 && sensVolatilities[ci] === 0.15;
+        const ratio = sensMax === sensMin ? 1 : (val - sensMin) / (sensMax - sensMin);
+        let bgColor = "#1c1917";
+        let textColor = RED;
+        if (isBase) { bgColor = "#164e63"; textColor = CYAN; }
+        else if (ratio >= 0.8) { bgColor = "#052e16"; textColor = GREEN; }
+        else if (ratio >= 0.6) { bgColor = "#0a3622"; textColor = "#86efac"; }
+        else if (ratio >= 0.4) { bgColor = "#0c2d48"; textColor = BLUE; }
+        else if (ratio >= 0.2) { bgColor = "#2a1a00"; textColor = AMBER; }
+        else { bgColor = "#2a0a0a"; textColor = RED; }
+        doc.rect(x, rowY - 2, sensCellW, sensCellH).fill(bgColor);
+        doc.fontSize(7).fillColor(textColor).text(fmtCompact(val), x + 4, rowY + 2, { width: sensCellW - 8, align: "center" });
+      });
+      doc.y = rowY + sensCellH;
+    });
+
+    doc.moveDown(1);
+    doc.fontSize(8).fillColor(GRAY).text(
+      "Each cell shows the median IUL net cash value (account value minus cumulative loan balance) " +
+      `at year ${iulYears} across 200 simulated paths per scenario. ` +
+      "Higher returns and lower volatility produce better outcomes. " +
+      "The highlighted cell (10% return, 15% volatility) represents the base case assumptions.",
+      40, doc.y, { width: 515, lineGap: 3 }
+    );
+
+    // Legend
+    doc.moveDown(0.5);
+    const legendItems: [string, string][] = [
+      ["High (top 20%)", GREEN], ["Above Avg", "#86efac"],
+      ["Medium", BLUE], ["Below Avg", AMBER], ["Stress", RED],
+    ];
+    let legendX = 40;
+    legendItems.forEach(([label, color]) => {
+      doc.rect(legendX, doc.y, 8, 8).fill(color);
+      doc.fontSize(7).fillColor(GRAY).text(label, legendX + 12, doc.y, { width: 80 });
+      legendX += 90;
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PAGE 8: DISCLAIMERS
+    // ═══════════════════════════════════════════════════════════════
+    doc.addPage();
+    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
+    doc.fontSize(14).fillColor(WHITE).text("Important Disclosures", 40, 18);
+    doc.moveDown(2);
+
+    const disclaimers = [
+      "This report is for illustrative purposes only and does not constitute financial, tax, or legal advice.",
+      "The IUL projections use the A Mutual Life Indexed UL Accumulator III illustrated rate and charge structure derived from the sample illustration. Actual policy performance will vary based on market conditions, index performance, and policy-specific factors.",
+      `The ${(IUL_AVG_RETURN * 100).toFixed(0)}% illustrated rate is not guaranteed. The A Mutual Life Accumulator III has a 0% floor (preventing negative returns) and a 14.5% cap on the S&P 500 index strategy. Historical 25-year compound crediting rate is approximately 6.75%.`,
+      "Real estate projections assume consistent appreciation and rental yields. Actual property performance depends on location, market conditions, property management, and other factors.",
+      "Tax savings estimates are approximate and depend on individual tax situations, filing status, and applicable deductions. Consult a qualified tax professional before making any conversion decisions.",
+      "Policy loans accrue interest at the declared rate and reduce the death benefit and cash surrender value. Excessive policy loans may cause the policy to lapse.",
+      "Monte Carlo simulations use historical S&P 500 volatility (approximately 15%) and are not predictive of future performance. Past performance does not guarantee future results.",
+      "Russell Capital Systems™ and its advisors are not affiliated with A Mutual Life, and this report does not represent an official carrier illustration.",
+    ];
+
+    disclaimers.forEach((text, i) => {
+      doc.fontSize(8).fillColor(GRAY).text(`${i + 1}. ${text}`, 50, doc.y, { width: 500, lineGap: 2 });
+      doc.moveDown(0.5);
+    });
+
+    doc.moveDown(1);
+    doc.fontSize(9).fillColor(WHITE).text("Russell Capital Systems™", 40, doc.y);
+    doc.fontSize(8).fillColor(GREEN).text("Turn Capital Into Income\u2122", 40, doc.y + 14);
+    doc.fontSize(7).fillColor(GRAY).text("www.RussellCapitalSystems.com", 40, doc.y + 28);
+
+    // Footer on each page
+    const footerText = "Russell Capital Systems™ | Confidential | For illustrative purposes only | Not financial advice";
+    const pageCount = doc.bufferedPageRange().count;
+    for (let i = 0; i < pageCount; i++) {
+      doc.switchToPage(i);
+      doc.fontSize(7).fillColor(GRAY).text(
+        `${footerText}  |  Page ${i + 1} of ${pageCount}`,
+        40, doc.page.height - 30, { align: "center", width: 515 }
+      );
+    }
+
+    doc.end();
+  });
+}
+```
 
 ## `server/routers.ts`
 
@@ -182,6 +927,8 @@ import { invokeLLM } from "./_core/llm";
 import { invokePortalAI } from "./portalAI";
 import { ultraRouter } from "./ultraAI";
 import { leadsRouter } from "./leadsRouter";
+import { factFinderRouter } from "./factFinderRouter";
+import { librarianRouter } from "./librarianRouter";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -479,6 +1226,8 @@ export const appRouter = router({
   planningCases: planningCasesRouter,
   ultra: ultraRouter,
   leads: leadsRouter,
+  factFinder: factFinderRouter,
+  librarian: librarianRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -11091,7 +11840,7 @@ import { MODULE_CATALOG, type ModuleKey } from "@shared/ultraEngine";
 
 type ProviderId = "claude" | "chatgpt" | "grok" | "gemini" | "perplexity" | "openrouter" | "mistral" | "groq" | "manus";
 
-type Provider = {
+export type Provider = {
   id: ProviderId;
   label: string;
   envKey: string;
@@ -11195,11 +11944,11 @@ const PROVIDERS: Provider[] = [
   },
 ];
 
-function configuredProviders(): Provider[] {
+export function configuredProviders(): Provider[] {
   return PROVIDERS.filter((p) => Boolean(process.env[p.envKey]));
 }
 
-const ADVISOR_SYSTEM =
+export const ADVISOR_SYSTEM =
   "You are the AI planning advisor inside Russell Capital Systems' Ultra Calculator. " +
   "You explain financial projection scenarios in plain language. You NEVER guarantee returns, " +
   "never give individualized tax or legal advice (recommend licensed professionals for that), " +
@@ -11227,7 +11976,7 @@ const PUBLIC_TEASER_SYSTEM =
   "planning estimator and book a thorough evaluation. Under 180 words.";
 
 /** Lead-model call: Claude direct if keyed, else the built-in Forge LLM, else null. */
-async function leadModel(system: string, user: string): Promise<{ text: string; via: string } | null> {
+export async function leadModel(system: string, user: string): Promise<{ text: string; via: string } | null> {
   const claude = PROVIDERS[0];
   const key = process.env[claude.envKey];
   if (key) {
@@ -12208,6 +12957,9 @@ const TheStrategyTable = lazy(() => import("./pages/portal/TheStrategyTable"));
 const TheField = lazy(() => import("./pages/portal/TheField"));
 const TheMap = lazy(() => import("./pages/portal/TheMap"));
 const TheLegacy = lazy(() => import("./pages/portal/TheLegacy"));
+const WealthGenomePage = lazy(() => import("./pages/WealthGenomePage"));
+const FinancialAssessment = lazy(() => import("./pages/portal/FinancialAssessment"));
+const AIFinancialAdvisor = lazy(() => import("./pages/portal/AIFinancialAdvisor"));
 const TheBrotherhood = lazy(() => import("./pages/portal/TheBrotherhood"));
 const SecondaryInformation = lazy(() => import("./pages/portal/SecondaryInformation"));
 const PlanningCases = lazy(() => import("./pages/portal/PlanningCases"));
@@ -12510,6 +13262,10 @@ function Router() {
       <Route path="/portal/patent-showcase" component={gated(PatentShowcase, "/portal/patent-showcase")} />
 
       {/* Verified Grok client-journey additions — additive, no primary routes removed */}
+      {/* New Client Welcome List — assessment, the AI Financial Advisor (Financial Librarian), the Wealth Genome, then the seven journey pages */}
+      <Route path="/portal/financial-assessment" component={gated(FinancialAssessment, "/portal/financial-assessment")} />
+      <Route path="/portal/ai-advisor" component={gated(AIFinancialAdvisor, "/portal/ai-advisor")} />
+      <Route path="/portal/wealth-genome" component={gated(WealthGenomePage, "/portal/wealth-genome")} />
       <Route path="/portal/the-arrival" component={gated(TheArrival, "/portal/the-arrival")} />
       <Route path="/portal/the-mirror" component={gated(TheMirror, "/portal/the-mirror")} />
       <Route path="/portal/the-strategy-table" component={gated(TheStrategyTable, "/portal/the-strategy-table")} />
@@ -15450,20 +16206,23 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { path: "/portal/clients", label: "Client Directory", icon: Users, color: "blue" },
       { path: "/portal/leads", label: "Lead Inbox", icon: Inbox, color: "blue" },
+      { path: "/portal/planning-cases", label: "Planning Cases", icon: ClipboardList, color: "blue" },
       { path: "/portal/client-onboarding", label: "Onboarding", icon: Sparkles, color: "blue" },
       { path: "/portal/client-intake", label: "Smart Intake", icon: MessageCircle, color: "blue" },
       { path: "/portal/ai-meeting-notes", label: "Meeting Notes", icon: Brain, color: "blue" },
       { path: "/portal/client-snapshot", label: "Snapshot Map", icon: PieChart, color: "blue" },
     ],
   },
-  // ── 3. CLIENT JOURNEY — verified Grok addition ──────────────────
+  // ── 3. NEW CLIENT WELCOME LIST — assessment → AI advisor → genome → the seven journey pages
   {
-    label: "Client Journey",
+    label: "New Client Welcome List",
     icon: Compass,
     color: "purple",
     defaultOpen: true,
     items: [
-      { path: "/portal/planning-cases", label: "Planning Cases", icon: ClipboardList, color: "purple" },
+      { path: "/portal/financial-assessment", label: "Financial Assessment", icon: ClipboardList, color: "purple" },
+      { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
+      { path: "/portal/wealth-genome", label: "Wealth Genome Analysis", icon: Activity, color: "purple" },
       { path: "/portal/the-arrival", label: "1. The Arrival", icon: Sparkles, color: "purple" },
       { path: "/portal/the-mirror", label: "2. The Mirror", icon: Eye, color: "purple" },
       { path: "/portal/the-strategy-table", label: "3. Strategy Table", icon: Presentation, color: "purple" },
@@ -29385,6 +30144,282 @@ export default function SubscriptionGuard({ children }: SubscriptionGuardProps) 
 }
 ```
 
+## `client/src/components/TapeRecorderAdvisor.tsx`
+
+```tsx
+// ============================================================
+// THE TAPE RECORDER — the AI advisory team as one Financial Librarian.
+// Press REC and speak (or TYPE), the deck thinks, then answers aloud.
+// It only advises once the Financial Assessment is complete; before that it
+// says so and hands the client the assessment. "Build my journey" distils
+// everything asked into 3–5 core questions, the emergent question, and a
+// 10–15 page path through the site.
+// ============================================================
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
+import { BookOpen, Circle, Keyboard, Play, Square } from "lucide-react";
+
+type Mode = "idle" | "listening" | "thinking" | "speaking";
+type Line = { role: "user" | "librarian"; text: string; at: number; contributors?: string[] };
+export type JourneyView = { coreQuestions: string[]; emergentQuestion: string; steps: Array<{ id: string; path: string; title: string; why: string; kind: string }>; generatedBy: string };
+
+type SpeechRecognitionLike = {
+  lang: string; interimResults: boolean; continuous: boolean;
+  onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onend: (() => void) | null; onerror: (() => void) | null;
+  start: () => void; stop: () => void; abort: () => void;
+};
+function getRecognizer(): SpeechRecognitionLike | null {
+  const w = window as unknown as { SpeechRecognition?: new () => SpeechRecognitionLike; webkitSpeechRecognition?: new () => SpeechRecognitionLike };
+  const Ctor = w.SpeechRecognition ?? w.webkitSpeechRecognition;
+  if (!Ctor) return null;
+  const r = new Ctor();
+  r.lang = "en-US"; r.interimResults = false; r.continuous = false;
+  return r;
+}
+
+const QUESTIONS_KEY = "rcs_librarian_questions";
+
+export default function TapeRecorderAdvisor({ onJourney }: { onJourney?: (j: JourneyView) => void }) {
+  const status = trpc.librarian.status.useQuery(undefined, { refetchOnWindowFocus: false });
+  const ask = trpc.librarian.ask.useMutation();
+  const journey = trpc.librarian.journey.useMutation();
+  const speakMut = trpc.ultra.speak.useMutation();
+
+  const [mode, setMode] = useState<Mode>("idle");
+  const [lines, setLines] = useState<Line[]>([]);
+  const [typing, setTyping] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [asked, setAsked] = useState<string[]>(() => { try { return JSON.parse(localStorage.getItem(QUESTIONS_KEY) || "[]"); } catch { return []; } });
+  const recognizerRef = useRef<SpeechRecognitionLike | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const tapeRef = useRef<HTMLDivElement | null>(null);
+  const canListen = useMemo(() => typeof window !== "undefined" && Boolean((window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown }).SpeechRecognition ?? (window as unknown as { webkitSpeechRecognition?: unknown }).webkitSpeechRecognition), []);
+
+  useEffect(() => { if (!canListen) setTyping(true); }, [canListen]);
+  useEffect(() => { tapeRef.current?.scrollTo({ top: tapeRef.current.scrollHeight, behavior: "smooth" }); }, [lines]);
+  useEffect(() => { try { localStorage.setItem(QUESTIONS_KEY, JSON.stringify(asked.slice(-40))); } catch { /* ignore */ } }, [asked]);
+
+  const stopSpeaking = useCallback(() => {
+    audioRef.current?.pause(); audioRef.current = null;
+    try { window.speechSynthesis?.cancel(); } catch { /* ignore */ }
+  }, []);
+
+  const speak = useCallback(async (text: string) => {
+    stopSpeaking();
+    setMode("speaking");
+    const done = () => setMode("idle");
+    try {
+      const r = await speakMut.mutateAsync({ text: text.slice(0, 2000) });
+      if (r.ok) {
+        const a = new Audio(`data:${r.mimeType};base64,${r.audioBase64}`);
+        audioRef.current = a;
+        a.onended = done; a.onerror = done;
+        await a.play();
+        return;
+      }
+    } catch { /* fall through to the browser voice */ }
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.98; u.pitch = 1;
+      const calm = window.speechSynthesis.getVoices().find((v) => /en[-_]US/i.test(v.lang) && /female|samantha|aria|jenny|zira/i.test(v.name));
+      if (calm) u.voice = calm;
+      u.onend = done; u.onerror = done;
+      window.speechSynthesis.speak(u);
+    } else done();
+  }, [speakMut, stopSpeaking]);
+
+  const submit = useCallback(async (question: string) => {
+    const q = question.trim();
+    if (!q) return;
+    setDraft("");
+    setLines((l) => [...l, { role: "user", text: q, at: Date.now() }]);
+    setAsked((a) => [...a, q]);
+    setMode("thinking");
+    try {
+      const history = lines.slice(-8).map((l) => ({ role: l.role, text: l.text }));
+      const r = await ask.mutateAsync({ question: q, history });
+      const text = r.gated ? r.spoken : r.answer;
+      setLines((l) => [...l, { role: "librarian", text, at: Date.now(), contributors: r.contributors }]);
+      if (r.gated) void status.refetch();
+      await speak(text);
+    } catch (e) {
+      const text = "I couldn't reach the advisory team just now. Please try again in a moment.";
+      setLines((l) => [...l, { role: "librarian", text, at: Date.now() }]);
+      setMode("idle");
+    }
+  }, [ask, lines, speak, status]);
+
+  const startListening = useCallback(() => {
+    if (mode === "listening") { recognizerRef.current?.stop(); return; }
+    const r = getRecognizer();
+    if (!r) { setTyping(true); return; }
+    stopSpeaking();
+    recognizerRef.current = r;
+    r.onresult = (e) => { const t = e.results[0]?.[0]?.transcript ?? ""; if (t) void submit(t); };
+    r.onend = () => { setMode((m) => (m === "listening" ? "idle" : m)); };
+    r.onerror = () => setMode("idle");
+    setMode("listening");
+    try { r.start(); } catch { setMode("idle"); }
+  }, [mode, stopSpeaking, submit]);
+
+  const stopAll = useCallback(() => {
+    recognizerRef.current?.abort();
+    stopSpeaking();
+    setMode("idle");
+  }, [stopSpeaking]);
+
+  const replay = useCallback(() => {
+    const last = [...lines].reverse().find((l) => l.role === "librarian");
+    if (last) void speak(last.text);
+  }, [lines, speak]);
+
+  const buildJourney = useCallback(async () => {
+    const qs = asked.slice(-40);
+    if (qs.length === 0) { void submit("Where should I start?"); return; }
+    setMode("thinking");
+    try {
+      const r = await journey.mutateAsync({ questions: qs });
+      const text = r.gated ? r.spoken : r.spoken;
+      setLines((l) => [...l, { role: "librarian", text, at: Date.now() }]);
+      if (!r.gated && r.journey) onJourney?.(r.journey);
+      await speak(text);
+    } catch {
+      setLines((l) => [...l, { role: "librarian", text: "I couldn't build the journey just now. Please try again.", at: Date.now() }]);
+      setMode("idle");
+    }
+  }, [asked, journey, onJourney, speak, submit]);
+
+  const gated = status.data ? !status.data.complete : false;
+  const spinning = mode === "listening" || mode === "speaking";
+  const contributorLine = status.data
+    ? status.data.contributorCount > 0 ? `${status.data.contributorCount} advisors online · one voice` : "advisory team offline · one voice"
+    : "one voice";
+  const modeLabel = { idle: gated ? "ASSESSMENT REQUIRED" : "READY", listening: "LISTENING", thinking: "THINKING", speaking: "SPEAKING" }[mode];
+
+  return (
+    <div className="mx-auto w-full max-w-3xl">
+      <style>{`
+        @keyframes rcs-reel { to { transform: rotate(360deg); } }
+        @keyframes rcs-vu { 0%,100% { transform: scaleY(.25); } 50% { transform: scaleY(1); } }
+        .rcs-reel { animation: rcs-reel 2.4s linear infinite; }
+        .rcs-reel-paused { animation-play-state: paused; }
+        .rcs-vu-bar { transform-origin: bottom; animation: rcs-vu .9s ease-in-out infinite; }
+      `}</style>
+
+      {/* ── the deck ── */}
+      <div className="relative overflow-hidden rounded-[28px] border border-violet-400/25 bg-[linear-gradient(160deg,#1a1c26,#0c0e15_60%,#090b11)] p-5 shadow-[0_40px_120px_rgba(0,0,0,.6),inset_0_1px_0_rgba(255,255,255,.06)] sm:p-7">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-300/70 to-transparent" />
+        {/* label strip */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="rounded-md border border-white/10 bg-[#f5f0e6] px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.28em] text-[#2a2440] shadow-inner">RCS · AI Financial Advisor</div>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-violet-200/70">
+            <span className={`inline-block h-2.5 w-2.5 rounded-full ${gated ? "bg-red-500 shadow-[0_0_12px_rgba(239,68,68,.9)]" : mode === "listening" ? "bg-red-400 shadow-[0_0_12px_rgba(248,113,113,.9)] animate-pulse" : mode === "speaking" ? "bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.9)]" : mode === "thinking" ? "bg-amber-300 animate-pulse" : "bg-emerald-500/70"}`} />
+            {modeLabel}
+          </div>
+        </div>
+        <p className="mt-1 text-[11px] uppercase tracking-[0.22em] text-slate-400">The Financial Librarian · {contributorLine}</p>
+
+        {/* cassette window */}
+        <div className="mt-5 rounded-2xl border border-white/10 bg-[#05070b] p-4 shadow-[inset_0_10px_30px_rgba(0,0,0,.8)]">
+          <div className="flex items-center justify-between gap-4">
+            <Reel spinning={spinning} />
+            <div className="flex-1">
+              <div className="mx-auto h-1.5 w-full max-w-[220px] rounded-full bg-gradient-to-r from-[#3a2f1a] via-[#7a5c2c] to-[#3a2f1a]" />
+              <div className="mt-3 flex h-8 items-end justify-center gap-1" aria-hidden="true">
+                {Array.from({ length: 14 }).map((_, i) => (
+                  <span key={i} className={`w-1.5 rounded-sm ${i < 9 ? "bg-emerald-400" : i < 12 ? "bg-amber-300" : "bg-red-400"} ${mode === "speaking" ? "rcs-vu-bar" : "scale-y-[.15]"}`} style={{ height: "100%", animationDelay: `${(i % 7) * 80}ms` }} />
+                ))}
+              </div>
+              <div className="mt-2 text-center font-mono text-xs tracking-[0.3em] text-slate-400">{String(lines.filter((l) => l.role === "librarian").length).padStart(4, "0")}</div>
+            </div>
+            <Reel spinning={spinning} />
+          </div>
+        </div>
+
+        {/* transport */}
+        <div className="mt-5 grid grid-cols-5 gap-2">
+          <TransportButton label={mode === "listening" ? "Stop recording" : "Record your question"} onClick={startListening} disabled={!canListen || mode === "thinking"} active={mode === "listening"} tone="red">
+            <Circle size={14} fill="currentColor" /> REC
+          </TransportButton>
+          <TransportButton label="Replay the last answer" onClick={replay} disabled={mode === "thinking" || !lines.some((l) => l.role === "librarian")}>
+            <Play size={14} fill="currentColor" /> PLAY
+          </TransportButton>
+          <TransportButton label="Stop" onClick={stopAll} disabled={mode === "idle"}>
+            <Square size={14} fill="currentColor" /> STOP
+          </TransportButton>
+          <TransportButton label="Type a question" onClick={() => setTyping((t) => !t)} active={typing}>
+            <Keyboard size={14} /> TYPE
+          </TransportButton>
+          <TransportButton label="Build my journey" onClick={buildJourney} disabled={mode === "thinking" || gated} tone="violet">
+            <BookOpen size={14} /> JOURNEY
+          </TransportButton>
+        </div>
+        {!canListen && <p className="mt-2 text-center text-xs text-slate-500">Voice input isn't available in this browser — type your question instead.</p>}
+
+        {typing && (
+          <form className="mt-4 flex gap-2" onSubmit={(e) => { e.preventDefault(); void submit(draft); }}>
+            <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder={gated ? "Ask anything — the librarian will point you to the assessment first" : "Ask the librarian anything about your plan…"}
+              className="flex-1 rounded-xl border border-violet-400/25 bg-[#0b0f1a] px-4 py-3 text-white placeholder:text-slate-500 focus:border-violet-300 focus:outline-none" aria-label="Your question" />
+            <button type="submit" disabled={mode === "thinking" || !draft.trim()} className="rounded-xl bg-violet-500 px-5 py-3 font-semibold text-white hover:bg-violet-400 disabled:opacity-50">Ask</button>
+          </form>
+        )}
+
+        {gated && status.data && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3">
+            <p className="text-sm text-red-100">The librarian advises only on a complete picture. Your Financial Assessment is {status.data.percent}% complete{status.data.missingSections.length ? ` — still open: ${status.data.missingSections.join(", ")}` : ""}.</p>
+            <Link href="/portal/financial-assessment" className="rounded-lg bg-red-400 px-4 py-2 text-sm font-semibold text-black hover:bg-red-300">Complete my Financial Assessment ({status.data.percent}%)</Link>
+          </div>
+        )}
+      </div>
+
+      {/* ── the tape (transcript) ── */}
+      <div ref={tapeRef} className="mt-4 max-h-[22rem] space-y-3 overflow-y-auto rounded-2xl border border-violet-400/20 bg-white/[0.03] p-4" aria-live="polite" aria-label="Conversation">
+        {lines.length === 0 && <p className="text-sm text-slate-500">Press REC and ask anything — how to pay less tax, whether to pay off the mortgage, what happens if markets fall, how to protect your family. Ask as many questions as you like; when you're ready, press JOURNEY.</p>}
+        {lines.map((l, i) => (
+          <div key={i} className={`flex ${l.role === "user" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed ${l.role === "user" ? "bg-violet-500/25 text-white" : "bg-[#0b0f1a] text-slate-100 border border-white/10"}`}>
+              <div className="mb-0.5 text-[10px] uppercase tracking-[0.2em] text-slate-500">{l.role === "user" ? "You" : "Librarian"} · {new Date(l.at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}{l.contributors?.length ? ` · ${l.contributors.length} advisors` : ""}</div>
+              {l.text}
+            </div>
+          </div>
+        ))}
+        {mode === "thinking" && <p className="text-sm text-violet-200/70">The librarian is thinking…</p>}
+      </div>
+      <p className="mt-3 text-center text-xs text-slate-500">Education and projections only — not tax, legal, or investment advice. Every recommendation is reviewed by a licensed advisor and our tax professional team for suitability and IRS compliance before anything is implemented.</p>
+    </div>
+  );
+}
+
+function Reel({ spinning }: { spinning: boolean }) {
+  return (
+    <svg viewBox="0 0 100 100" className={`h-20 w-20 shrink-0 rcs-reel ${spinning ? "" : "rcs-reel-paused"}`} aria-hidden="true">
+      <circle cx="50" cy="50" r="46" fill="#15181f" stroke="#3b3f52" strokeWidth="2" />
+      <circle cx="50" cy="50" r="30" fill="#1f2230" stroke="#8b7bf0" strokeWidth="1.5" opacity=".9" />
+      {Array.from({ length: 6 }).map((_, i) => (
+        <rect key={i} x="47" y="6" width="6" height="18" rx="2" fill="#8b7bf0" opacity=".8" transform={`rotate(${i * 60} 50 50)`} />
+      ))}
+      <circle cx="50" cy="50" r="8" fill="#0b0f1a" stroke="#a78bfa" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function TransportButton({ children, label, onClick, disabled, active, tone }: { children: React.ReactNode; label: string; onClick: () => void; disabled?: boolean; active?: boolean; tone?: "red" | "violet" }) {
+  const base = "flex flex-col items-center justify-center gap-1 rounded-xl border px-2 py-3 text-[11px] font-bold tracking-[0.18em] transition active:translate-y-px disabled:cursor-not-allowed disabled:opacity-40";
+  const look = active
+    ? tone === "red" ? "border-red-400 bg-red-500 text-white shadow-[0_0_18px_rgba(239,68,68,.6)]" : "border-violet-300 bg-violet-500 text-white"
+    : tone === "violet" ? "border-violet-400/50 bg-violet-500/20 text-violet-100 hover:bg-violet-500/35"
+    : tone === "red" ? "border-white/15 bg-[#1b1e28] text-red-300 hover:bg-[#242836]"
+    : "border-white/15 bg-[#1b1e28] text-slate-200 hover:bg-[#242836]";
+  return (
+    <button type="button" aria-label={label} title={label} onClick={onClick} disabled={disabled} aria-pressed={active} className={`${base} ${look}`}>
+      {children}
+    </button>
+  );
+}
+```
+
 ## `client/src/components/ThemePicker.tsx`
 
 ```tsx
@@ -39704,1933 +40739,5 @@ const ComplianceVaultPage: React.FC = () => {
 }
 
 export default ComplianceVaultPage;
-```
-
-## `client/src/pages/ComponentShowcase.tsx`
-
-```tsx
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { Input } from "@/components/ui/input";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
-import { Label } from "@/components/ui/label";
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Progress } from "@/components/ui/progress";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Toggle } from "@/components/ui/toggle";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useTheme } from "@/contexts/ThemeContext";
-import { format } from "date-fns";
-import { zhCN } from "date-fns/locale";
-import {
-  AlertCircle,
-  CalendarIcon,
-  Check,
-  Clock,
-  Moon,
-  Sun,
-  X,
-} from "lucide-react";
-import { useState } from "react";
-import { toast as sonnerToast } from "sonner";
-import { AIChatBox, type Message } from "@/components/AIChatBox";
-
-export default function ComponentsShowcase() {
-  const { theme, toggleTheme } = useTheme();
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [datePickerDate, setDatePickerDate] = useState<Date>();
-  const [selectedFruits, setSelectedFruits] = useState<string[]>([]);
-  const [progress, setProgress] = useState(33);
-  const [currentPage, setCurrentPage] = useState(2);
-  const [openCombobox, setOpenCombobox] = useState(false);
-  const [selectedFramework, setSelectedFramework] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
-  const [dialogInput, setDialogInput] = useState("");
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  // Chat Box demo state
-  const [chatMessages, setChatMessages] = useState<Message[]>([
-    { role: "system", content: "You are a helpful assistant." },
-  ]);
-  const [isChatLoading, setIsChatLoading] = useState(false);
-
-  const handleDialogSubmit = () => {
-    console.log("Dialog submitted with value:", dialogInput);
-    sonnerToast.success("Submitted successfully", {
-      description: `Input: ${dialogInput}`,
-    });
-    setDialogInput("");
-    setDialogOpen(false);
-  };
-
-  const handleDialogKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-      e.preventDefault();
-      handleDialogSubmit();
-    }
-  };
-
-  const handleChatSend = (content: string) => {
-    // Add user message
-    const newMessages: Message[] = [...chatMessages, { role: "user", content }];
-    setChatMessages(newMessages);
-
-    // Simulate AI response with delay
-    setIsChatLoading(true);
-    setTimeout(() => {
-      const aiResponse: Message = {
-        role: "assistant",
-        content: `This is a **demo response**. In a real app, you would call a tRPC mutation here:\n\n\`\`\`typescript\nconst chatMutation = trpc.ai.chat.useMutation({\n  onSuccess: (response) => {\n    setChatMessages(prev => [...prev, {\n      role: "assistant",\n      content: response.choices[0].message.content\n    }]);\n  }\n});\n\nchatMutation.mutate({ messages: newMessages });\n\`\`\`\n\nYour message was: "${content}"`,
-      };
-      setChatMessages([...newMessages, aiResponse]);
-      setIsChatLoading(false);
-    }, 1500);
-  };
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <main className="container max-w-6xl mx-auto">
-        <div className="space-y-2 justify-between flex">
-          <h2 className="text-3xl font-bold tracking-tight mb-6">
-            Shadcn/ui Component Library
-          </h2>
-          <Button variant="outline" size="icon" onClick={toggleTheme}>
-            {theme === "light" ? (
-              <Moon className="h-5 w-5" />
-            ) : (
-              <Sun className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
-
-        <div className="space-y-12">
-          {/* Text Colors Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Text Colors</h3>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        Foreground (Default)
-                      </p>
-                      <p className="text-foreground text-lg">
-                        Default text color for main content
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        Muted Foreground
-                      </p>
-                      <p className="text-muted-foreground text-lg">
-                        Muted text for secondary information
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        Primary
-                      </p>
-                      <p className="text-primary text-lg font-medium">
-                        Primary brand color text
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        Secondary Foreground
-                      </p>
-                      <p className="text-secondary-foreground text-lg">
-                        Secondary action text color
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        Accent Foreground
-                      </p>
-                      <p className="text-accent-foreground text-lg">
-                        Accent text for emphasis
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        Destructive
-                      </p>
-                      <p className="text-destructive text-lg font-medium">
-                        Error or destructive action text
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        Card Foreground
-                      </p>
-                      <p className="text-card-foreground text-lg">
-                        Text color on card backgrounds
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        Popover Foreground
-                      </p>
-                      <p className="text-popover-foreground text-lg">
-                        Text color in popovers
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Color Combinations Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Color Combinations</h3>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="bg-primary text-primary-foreground rounded-lg p-4">
-                    <p className="font-medium mb-1">Primary</p>
-                    <p className="text-sm opacity-90">
-                      Primary background with foreground text
-                    </p>
-                  </div>
-                  <div className="bg-secondary text-secondary-foreground rounded-lg p-4">
-                    <p className="font-medium mb-1">Secondary</p>
-                    <p className="text-sm opacity-90">
-                      Secondary background with foreground text
-                    </p>
-                  </div>
-                  <div className="bg-muted text-muted-foreground rounded-lg p-4">
-                    <p className="font-medium mb-1">Muted</p>
-                    <p className="text-sm opacity-90">
-                      Muted background with foreground text
-                    </p>
-                  </div>
-                  <div className="bg-accent text-accent-foreground rounded-lg p-4">
-                    <p className="font-medium mb-1">Accent</p>
-                    <p className="text-sm opacity-90">
-                      Accent background with foreground text
-                    </p>
-                  </div>
-                  <div className="bg-destructive text-destructive-foreground rounded-lg p-4">
-                    <p className="font-medium mb-1">Destructive</p>
-                    <p className="text-sm opacity-90">
-                      Destructive background with foreground text
-                    </p>
-                  </div>
-                  <div className="bg-card text-card-foreground rounded-lg p-4 border">
-                    <p className="font-medium mb-1">Card</p>
-                    <p className="text-sm opacity-90">
-                      Card background with foreground text
-                    </p>
-                  </div>
-                  <div className="bg-popover text-popover-foreground rounded-lg p-4 border">
-                    <p className="font-medium mb-1">Popover</p>
-                    <p className="text-sm opacity-90">
-                      Popover background with foreground text
-                    </p>
-                  </div>
-                  <div className="bg-background text-foreground rounded-lg p-4 border">
-                    <p className="font-medium mb-1">Background</p>
-                    <p className="text-sm opacity-90">
-                      Default background with foreground text
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Buttons Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Buttons</h3>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex flex-wrap gap-4">
-                  <Button>Default</Button>
-                  <Button variant="secondary">Secondary</Button>
-                  <Button variant="destructive">Destructive</Button>
-                  <Button variant="outline">Outline</Button>
-                  <Button variant="ghost">Ghost</Button>
-                  <Button variant="link">Link</Button>
-                  <Button size="sm">Small</Button>
-                  <Button size="lg">Large</Button>
-                  <Button size="icon">
-                    <Check className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Form Inputs Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Form Inputs</h3>
-            <Card>
-              <CardContent className="pt-6 space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="Email" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea
-                    id="message"
-                    placeholder="Type your message here."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Select</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a fruit" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="apple">Apple</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="orange">Orange</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="terms" />
-                  <Label htmlFor="terms">Accept terms and conditions</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch id="airplane-mode" />
-                  <Label htmlFor="airplane-mode">Airplane Mode</Label>
-                </div>
-                <div className="space-y-2">
-                  <Label>Radio Group</Label>
-                  <RadioGroup defaultValue="option-one">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="option-one" id="option-one" />
-                      <Label htmlFor="option-one">Option One</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="option-two" id="option-two" />
-                      <Label htmlFor="option-two">Option Two</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-                <div className="space-y-2">
-                  <Label>Slider</Label>
-                  <Slider defaultValue={[50]} max={100} step={1} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Input OTP</Label>
-                  <InputOTP maxLength={6}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
-                </div>
-                <div className="space-y-2">
-                  <Label>Date Time Picker</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={`w-full justify-start text-left font-normal ${
-                          !datePickerDate && "text-muted-foreground"
-                        }`}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {datePickerDate ? (
-                          format(datePickerDate, "PPP HH:mm", { locale: zhCN })
-                        ) : (
-                          <span>Select date and time</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <div className="p-3 space-y-3">
-                        <Calendar
-                          mode="single"
-                          selected={datePickerDate}
-                          onSelect={setDatePickerDate}
-                        />
-                        <div className="border-t pt-3 space-y-2">
-                          <Label className="flex items-center gap-2">
-                            <Clock className="h-4 w-4" />
-                            Time
-                          </Label>
-                          <div className="flex gap-2">
-                            <Input
-                              type="time"
-                              value={
-                                datePickerDate
-                                  ? format(datePickerDate, "HH:mm")
-                                  : "00:00"
-                              }
-                              onChange={e => {
-                                const [hours, minutes] =
-                                  e.target.value.split(":");
-                                const newDate = datePickerDate
-                                  ? new Date(datePickerDate)
-                                  : new Date();
-                                newDate.setHours(parseInt(hours));
-                                newDate.setMinutes(parseInt(minutes));
-                                setDatePickerDate(newDate);
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                  {datePickerDate && (
-                    <p className="text-sm text-muted-foreground">
-                      Selected:{" "}
-                      {format(datePickerDate, "yyyy/MM/dd  HH:mm", {
-                        locale: zhCN,
-                      })}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label>Searchable Dropdown</Label>
-                  <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={openCombobox}
-                        className="w-full justify-between"
-                      >
-                        {selectedFramework
-                          ? [
-                              { value: "react", label: "React" },
-                              { value: "vue", label: "Vue" },
-                              { value: "angular", label: "Angular" },
-                              { value: "svelte", label: "Svelte" },
-                              { value: "nextjs", label: "Next.js" },
-                              { value: "nuxt", label: "Nuxt" },
-                              { value: "remix", label: "Remix" },
-                            ].find(fw => fw.value === selectedFramework)?.label
-                          : "Select framework..."}
-                        <CalendarIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <Command>
-                        <CommandInput placeholder="Search frameworks..." />
-                        <CommandList>
-                          <CommandEmpty>No framework found</CommandEmpty>
-                          <CommandGroup>
-                            {[
-                              { value: "react", label: "React" },
-                              { value: "vue", label: "Vue" },
-                              { value: "angular", label: "Angular" },
-                              { value: "svelte", label: "Svelte" },
-                              { value: "nextjs", label: "Next.js" },
-                              { value: "nuxt", label: "Nuxt" },
-                              { value: "remix", label: "Remix" },
-                            ].map(framework => (
-                              <CommandItem
-                                key={framework.value}
-                                value={framework.value}
-                                onSelect={currentValue => {
-                                  setSelectedFramework(
-                                    currentValue === selectedFramework
-                                      ? ""
-                                      : currentValue
-                                  );
-                                  setOpenCombobox(false);
-                                }}
-                              >
-                                <Check
-                                  className={`mr-2 h-4 w-4 ${
-                                    selectedFramework === framework.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  }`}
-                                />
-                                {framework.label}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  {selectedFramework && (
-                    <p className="text-sm text-muted-foreground">
-                      Selected:{" "}
-                      {
-                        [
-                          { value: "react", label: "React" },
-                          { value: "vue", label: "Vue" },
-                          { value: "angular", label: "Angular" },
-                          { value: "svelte", label: "Svelte" },
-                          { value: "nextjs", label: "Next.js" },
-                          { value: "nuxt", label: "Nuxt" },
-                          { value: "remix", label: "Remix" },
-                        ].find(fw => fw.value === selectedFramework)?.label
-                      }
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="month" className="text-sm font-medium">
-                        Month
-                      </Label>
-                      <Select
-                        value={selectedMonth}
-                        onValueChange={setSelectedMonth}
-                      >
-                        <SelectTrigger id="month">
-                          <SelectValue placeholder="MM" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Array.from({ length: 12 }, (_, i) => i + 1).map(
-                            month => (
-                              <SelectItem
-                                key={month}
-                                value={month.toString().padStart(2, "0")}
-                              >
-                                {month.toString().padStart(2, "0")}
-                              </SelectItem>
-                            )
-                          )}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="year" className="text-sm font-medium">
-                        Year
-                      </Label>
-                      <Select
-                        value={selectedYear}
-                        onValueChange={setSelectedYear}
-                      >
-                        <SelectTrigger id="year">
-                          <SelectValue placeholder="YYYY" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Array.from(
-                            { length: 10 },
-                            (_, i) => new Date().getFullYear() - 5 + i
-                          ).map(year => (
-                            <SelectItem key={year} value={year.toString()}>
-                              {year}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  {selectedMonth && selectedYear && (
-                    <p className="text-sm text-muted-foreground">
-                      Selected: {selectedYear}/{selectedMonth}/
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Data Display Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Data Display</h3>
-            <Card>
-              <CardContent className="pt-6 space-y-6">
-                <div className="space-y-2">
-                  <Label>Badges</Label>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge>Default</Badge>
-                    <Badge variant="secondary">Secondary</Badge>
-                    <Badge variant="destructive">Destructive</Badge>
-                    <Badge variant="outline">Outline</Badge>
-                  </div>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Avatar</Label>
-                  <div className="flex gap-4">
-                    <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <Avatar>
-                      <AvatarFallback>AB</AvatarFallback>
-                    </Avatar>
-                  </div>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Progress</Label>
-                  <Progress value={progress} />
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      onClick={() => setProgress(Math.max(0, progress - 10))}
-                    >
-                      -10
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={() => setProgress(Math.min(100, progress + 10))}
-                    >
-                      +10
-                    </Button>
-                  </div>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Skeleton</Label>
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Pagination</Label>
-                  <Pagination>
-                    <PaginationContent>
-                      <PaginationItem>
-                        <PaginationPrevious
-                          href="#"
-                          onClick={e => {
-                            e.preventDefault();
-                            setCurrentPage(Math.max(1, currentPage - 1));
-                          }}
-                        />
-                      </PaginationItem>
-                      {[1, 2, 3, 4, 5].map(page => (
-                        <PaginationItem key={page}>
-                          <PaginationLink
-                            href="#"
-                            isActive={currentPage === page}
-                            onClick={e => {
-                              e.preventDefault();
-                              setCurrentPage(page);
-                            }}
-                          >
-                            {page}
-                          </PaginationLink>
-                        </PaginationItem>
-                      ))}
-                      <PaginationItem>
-                        <PaginationNext
-                          href="#"
-                          onClick={e => {
-                            e.preventDefault();
-                            setCurrentPage(Math.min(5, currentPage + 1));
-                          }}
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
-                  <p className="text-sm text-muted-foreground text-center">
-                    Current page: {currentPage}
-                  </p>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Table</Label>
-                  <Table>
-                    <TableCaption>A list of your recent invoices.</TableCaption>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[100px]">Invoice</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Method</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">INV002</TableCell>
-                        <TableCell>Pending</TableCell>
-                        <TableCell>PayPal</TableCell>
-                        <TableCell className="text-right">$150.00</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">INV003</TableCell>
-                        <TableCell>Unpaid</TableCell>
-                        <TableCell>Bank Transfer</TableCell>
-                        <TableCell className="text-right">$350.00</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Menubar</Label>
-                  <Menubar>
-                    <MenubarMenu>
-                      <MenubarTrigger>File</MenubarTrigger>
-                      <MenubarContent>
-                        <MenubarItem>New Tab</MenubarItem>
-                        <MenubarItem>New Window</MenubarItem>
-                        <MenubarSeparator />
-                        <MenubarItem>Share</MenubarItem>
-                        <MenubarSeparator />
-                        <MenubarItem>Print</MenubarItem>
-                      </MenubarContent>
-                    </MenubarMenu>
-                    <MenubarMenu>
-                      <MenubarTrigger>Edit</MenubarTrigger>
-                      <MenubarContent>
-                        <MenubarItem>Undo</MenubarItem>
-                        <MenubarItem>Redo</MenubarItem>
-                      </MenubarContent>
-                    </MenubarMenu>
-                    <MenubarMenu>
-                      <MenubarTrigger>View</MenubarTrigger>
-                      <MenubarContent>
-                        <MenubarItem>Reload</MenubarItem>
-                        <MenubarItem>Force Reload</MenubarItem>
-                      </MenubarContent>
-                    </MenubarMenu>
-                  </Menubar>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Breadcrumb</Label>
-                  <Breadcrumb>
-                    <BreadcrumbList>
-                      <BreadcrumbItem>
-                        <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator />
-                      <BreadcrumbItem>
-                        <BreadcrumbLink href="/components">
-                          Components
-                        </BreadcrumbLink>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator />
-                      <BreadcrumbItem>
-                        <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-                      </BreadcrumbItem>
-                    </BreadcrumbList>
-                  </Breadcrumb>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Alerts Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Alerts</h3>
-            <div className="space-y-4">
-              <Alert>
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Heads up!</AlertTitle>
-                <AlertDescription>
-                  You can add components to your app using the cli.
-                </AlertDescription>
-              </Alert>
-              <Alert variant="destructive">
-                <X className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>
-                  Your session has expired. Please log in again.
-                </AlertDescription>
-              </Alert>
-            </div>
-          </section>
-
-          {/* Tabs Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Tabs</h3>
-            <Tabs defaultValue="account" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="account">Account</TabsTrigger>
-                <TabsTrigger value="password">Password</TabsTrigger>
-                <TabsTrigger value="settings">Settings</TabsTrigger>
-              </TabsList>
-              <TabsContent value="account">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Account</CardTitle>
-                    <CardDescription>
-                      Make changes to your account here.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="space-y-1">
-                      <Label htmlFor="name">Name</Label>
-                      <Input id="name" defaultValue="Pedro Duarte" />
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button>Save changes</Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
-              <TabsContent value="password">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Password</CardTitle>
-                    <CardDescription>
-                      Change your password here.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="space-y-1">
-                      <Label htmlFor="current">Current password</Label>
-                      <Input id="current" type="password" />
-                    </div>
-                    <div className="space-y-1">
-                      <Label htmlFor="new">New password</Label>
-                      <Input id="new" type="password" />
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button>Save password</Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
-              <TabsContent value="settings">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Settings</CardTitle>
-                    <CardDescription>
-                      Manage your settings here.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Settings content goes here.
-                    </p>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </section>
-
-          {/* Accordion Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Accordion</h3>
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>Is it accessible?</AccordionTrigger>
-                <AccordionContent>
-                  Yes. It adheres to the WAI-ARIA design pattern.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2">
-                <AccordionTrigger>Is it styled?</AccordionTrigger>
-                <AccordionContent>
-                  Yes. It comes with default styles that matches the other
-                  components' aesthetic.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-3">
-                <AccordionTrigger>Is it animated?</AccordionTrigger>
-                <AccordionContent>
-                  Yes. It's animated by default, but you can disable it if you
-                  prefer.
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </section>
-
-          {/* Collapsible Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Collapsible</h3>
-            <Collapsible>
-              <Card>
-                <CardHeader>
-                  <CollapsibleTrigger asChild>
-                    <Button variant="ghost" className="w-full justify-between">
-                      <CardTitle>@peduarte starred 3 repositories</CardTitle>
-                    </Button>
-                  </CollapsibleTrigger>
-                </CardHeader>
-                <CollapsibleContent>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="rounded-md border px-4 py-3 font-mono text-sm">
-                        @radix-ui/primitives
-                      </div>
-                      <div className="rounded-md border px-4 py-3 font-mono text-sm">
-                        @radix-ui/colors
-                      </div>
-                      <div className="rounded-md border px-4 py-3 font-mono text-sm">
-                        @stitches/react
-                      </div>
-                    </div>
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
-          </section>
-
-          {/* Dialog, Sheet, Drawer Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Overlays</h3>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex flex-wrap gap-4">
-                  <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button variant="outline">Open Dialog</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Test Input</DialogTitle>
-                        <DialogDescription>
-                          Enter some text below. Press Enter to submit (IME composition supported).
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4 py-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="dialog-input">Input</Label>
-                          <Input
-                            id="dialog-input"
-                            placeholder="Type something..."
-                            value={dialogInput}
-                            onChange={(e) => setDialogInput(e.target.value)}
-                            onKeyDown={handleDialogKeyDown}
-                            autoFocus
-                          />
-                        </div>
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          onClick={() => setDialogOpen(false)}
-                        >
-                          Cancel
-                        </Button>
-                        <Button onClick={handleDialogSubmit}>Submit</Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <Button variant="outline">Open Sheet</Button>
-                    </SheetTrigger>
-                    <SheetContent>
-                      <SheetHeader>
-                        <SheetTitle>Edit profile</SheetTitle>
-                        <SheetDescription>
-                          Make changes to your profile here. Click save when
-                          you're done.
-                        </SheetDescription>
-                      </SheetHeader>
-                    </SheetContent>
-                  </Sheet>
-
-                  <Drawer>
-                    <DrawerTrigger asChild>
-                      <Button variant="outline">Open Drawer</Button>
-                    </DrawerTrigger>
-                    <DrawerContent>
-                      <DrawerHeader>
-                        <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                        <DrawerDescription>
-                          This action cannot be undone.
-                        </DrawerDescription>
-                      </DrawerHeader>
-                      <DrawerFooter>
-                        <Button>Submit</Button>
-                        <DrawerClose asChild>
-                          <Button variant="outline">Cancel</Button>
-                        </DrawerClose>
-                      </DrawerFooter>
-                    </DrawerContent>
-                  </Drawer>
-
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline">Open Popover</Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <div className="space-y-2">
-                        <h4 className="font-medium leading-none">Dimensions</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Set the dimensions for the layer.
-                        </p>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline">Hover me</Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Add to library</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Menus Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Menus</h3>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex flex-wrap gap-4">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline">Dropdown Menu</Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Profile</DropdownMenuItem>
-                      <DropdownMenuItem>Billing</DropdownMenuItem>
-                      <DropdownMenuItem>Team</DropdownMenuItem>
-                      <DropdownMenuItem>Subscription</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  <ContextMenu>
-                    <ContextMenuTrigger asChild>
-                      <Button variant="outline">Right Click Me</Button>
-                    </ContextMenuTrigger>
-                    <ContextMenuContent>
-                      <ContextMenuItem>Profile</ContextMenuItem>
-                      <ContextMenuItem>Billing</ContextMenuItem>
-                      <ContextMenuItem>Team</ContextMenuItem>
-                      <ContextMenuItem>Subscription</ContextMenuItem>
-                    </ContextMenuContent>
-                  </ContextMenu>
-
-                  <HoverCard>
-                    <HoverCardTrigger asChild>
-                      <Button variant="outline">Hover Card</Button>
-                    </HoverCardTrigger>
-                    <HoverCardContent>
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold">@nextjs</h4>
-                        <p className="text-sm">
-                          The React Framework – created and maintained by
-                          @vercel.
-                        </p>
-                      </div>
-                    </HoverCardContent>
-                  </HoverCard>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Calendar Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Calendar</h3>
-            <Card>
-              <CardContent className="pt-6 flex justify-center">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  className="rounded-md border"
-                />
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Carousel Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Carousel</h3>
-            <Card>
-              <CardContent className="pt-6">
-                <Carousel className="w-full max-w-xs mx-auto">
-                  <CarouselContent>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <CarouselItem key={index}>
-                        <div className="p-1">
-                          <Card>
-                            <CardContent className="flex aspect-square items-center justify-center p-6">
-                              <span className="text-4xl font-semibold">
-                                {index + 1}
-                              </span>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </Carousel>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Toggle Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Toggle</h3>
-            <Card>
-              <CardContent className="pt-6 space-y-4">
-                <div className="space-y-2">
-                  <Label>Toggle</Label>
-                  <div className="flex gap-2">
-                    <Toggle aria-label="Toggle italic">
-                      <span className="font-bold">B</span>
-                    </Toggle>
-                    <Toggle aria-label="Toggle italic">
-                      <span className="italic">I</span>
-                    </Toggle>
-                    <Toggle aria-label="Toggle underline">
-                      <span className="underline">U</span>
-                    </Toggle>
-                  </div>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Toggle Group</Label>
-                  <ToggleGroup type="multiple">
-                    <ToggleGroupItem value="bold" aria-label="Toggle bold">
-                      <span className="font-bold">B</span>
-                    </ToggleGroupItem>
-                    <ToggleGroupItem value="italic" aria-label="Toggle italic">
-                      <span className="italic">I</span>
-                    </ToggleGroupItem>
-                    <ToggleGroupItem
-                      value="underline"
-                      aria-label="Toggle underline"
-                    >
-                      <span className="underline">U</span>
-                    </ToggleGroupItem>
-                  </ToggleGroup>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Aspect Ratio & Scroll Area Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Layout Components</h3>
-            <Card>
-              <CardContent className="pt-6 space-y-6">
-                <div className="space-y-2">
-                  <Label>Aspect Ratio (16/9)</Label>
-                  <AspectRatio ratio={16 / 9} className="bg-muted">
-                    <div className="flex h-full items-center justify-center">
-                      <p className="text-muted-foreground">16:9 Aspect Ratio</p>
-                    </div>
-                  </AspectRatio>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Scroll Area</Label>
-                  <ScrollArea className="h-[200px] w-full rounded-md border overflow-hidden">
-                    <div className="p-4">
-                      <div className="space-y-4">
-                        {Array.from({ length: 20 }).map((_, i) => (
-                          <div key={i} className="text-sm">
-                            Item {i + 1}: This is a scrollable content area
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </ScrollArea>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Resizable Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Resizable Panels</h3>
-            <Card>
-              <CardContent className="pt-6">
-                <ResizablePanelGroup
-                  direction="horizontal"
-                  className="min-h-[200px] rounded-lg border"
-                >
-                  <ResizablePanel defaultSize={50}>
-                    <div className="flex h-full items-center justify-center p-6">
-                      <span className="font-semibold">Panel One</span>
-                    </div>
-                  </ResizablePanel>
-                  <ResizableHandle />
-                  <ResizablePanel defaultSize={50}>
-                    <div className="flex h-full items-center justify-center p-6">
-                      <span className="font-semibold">Panel Two</span>
-                    </div>
-                  </ResizablePanel>
-                </ResizablePanelGroup>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Toast Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Toast</h3>
-            <Card>
-              <CardContent className="pt-6 space-y-4">
-                <div className="space-y-2">
-                  <Label>Sonner Toast</Label>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        sonnerToast.success("Operation successful", {
-                          description: "Your changes have been saved",
-                        });
-                      }}
-                    >
-                      Success
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        sonnerToast.error("Operation failed", {
-                          description:
-                            "Cannot complete operation, please try again",
-                        });
-                      }}
-                    >
-                      Error
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        sonnerToast.info("Information", {
-                          description: "This is an information message",
-                        });
-                      }}
-                    >
-                      Info
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        sonnerToast.warning("Warning", {
-                          description:
-                            "Please note the impact of this operation",
-                        });
-                      }}
-                    >
-                      Warning
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        sonnerToast.loading("Loading", {
-                          description: "Please wait",
-                        });
-                      }}
-                    >
-                      Loading
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        const promise = new Promise(resolve =>
-                          setTimeout(resolve, 2000)
-                        );
-                        sonnerToast.promise(promise, {
-                          loading: "Processing...",
-                          success: "Processing complete!",
-                          error: "Processing failed",
-                        });
-                      }}
-                    >
-                      Promise
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Chat Box Section */}
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Chat Box</h3>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="space-y-4">
-                  <div className="text-sm text-muted-foreground">
-                    <p>
-                      A ready-to-use chat interface component that integrates with the LLM system.
-                      Features markdown rendering, auto-scrolling, and loading states.
-                    </p>
-                    <p className="mt-2">
-                      This is a demo with simulated responses. In a real app, you'd connect it to a tRPC mutation.
-                    </p>
-                  </div>
-                  <AIChatBox
-                    messages={chatMessages}
-                    onSendMessage={handleChatSend}
-                    isLoading={isChatLoading}
-                    placeholder="Try sending a message..."
-                    height="500px"
-                    emptyStateMessage="How can I help you today?"
-                    suggestedPrompts={[
-                      "What is React?",
-                      "Explain TypeScript",
-                      "How to use tRPC?",
-                      "Best practices for web development",
-                    ]}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-        </div>
-      </main>
-
-      <footer className="border-t py-6 mt-12">
-        <div className="container text-center text-sm text-muted-foreground">
-          <p>Shadcn/ui Component Showcase</p>
-        </div>
-      </footer>
-    </div>
-  );
-}
-```
-
-## `client/src/pages/CryptoCyclePage.tsx`
-
-```tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const CryptoCyclePage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("cycle");
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <header className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Crypto Cycle Analysis Portal</h1>
-          <div className="bg-[#22c55e]/20 text-[#22c55e] px-4 py-2 rounded-lg text-sm">
-            Page Insights Score: 90/100
-          </div>
-        </header>
-
-        <Tabs defaultValue="cycle" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="bg-[#141925] border-[#22c55e]/30 w-full justify-start">
-            <TabsTrigger value="cycle" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Cycle Analysis</TabsTrigger>
-            <TabsTrigger value="skim" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Skim Strategy</TabsTrigger>
-            <TabsTrigger value="iul" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">IUL Funding</TabsTrigger>
-            <TabsTrigger value="tax" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Tax Impact</TabsTrigger>
-            <TabsTrigger value="outcome" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Generate Outcome</TabsTrigger>
-          </TabsList>
-          <TabsContent value="cycle" className="mt-0">
-            <Card className="bg-[#141925] border-[#22c55e]/30">
-              <CardHeader><CardTitle>Cycle Analysis</CardTitle></CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Portfolio Value ($)</Label><Input className="bg-[#0a0f1a] border-[#22c55e]/30" placeholder="50,000" /></div>
-                  <div><Label>Bull Run Threshold (%)</Label><Input className="bg-[#0a0f1a] border-[#22c55e]/30" placeholder="25" /></div>
-                </div>
-                <p className="text-gray-400 mt-4">Placeholder: Current Cycle - Bull Run Detected</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="skim" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Skim Strategy</CardTitle></CardHeader><CardContent><p className="text-gray-400">Profit skimming strategy will be shown here.</p></CardContent></Card></TabsContent>
-          <TabsContent value="iul" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>IUL Funding</CardTitle></CardHeader><CardContent><p className="text-gray-400">IUL overfunding plan will be displayed here.</p></CardContent></Card></TabsContent>
-          <TabsContent value="tax" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Tax Impact</CardTitle></CardHeader><CardContent><p className="text-gray-400">Tax implications will be calculated here.</p></CardContent></Card></TabsContent>
-          <TabsContent value="outcome" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Generate Outcome</CardTitle></CardHeader><CardContent><Button className="bg-[#22c55e] hover:bg-[#22c55e]/90">Generate Report</Button><p className="text-gray-400 mt-4">Outcome report will be generated here.</p></CardContent></Card></TabsContent>
-        </Tabs>
-
-        <Card className="bg-[#141925] border-[#22c55e]/30">
-          <CardHeader><CardTitle>Cross-Tool Integration</CardTitle></CardHeader>
-          <CardContent>
-            <p className="text-gray-400">Integrate with IUL Planner and Tax Impact Analyzer for comprehensive strategies.</p>
-            <Button variant="outline" className="mt-4 border-[#22c55e] text-[#22c55e] hover:bg-[#22c55e]/10">Connect Tools</Button>
-          </CardContent>
-        </Card>
-
-        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-          <div className="flex items-center gap-4 mb-6">
-            <label className="text-sm text-slate-400">Projection Horizon:</label>
-            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-              onChange={(e) => {
-                const val = e.target.value;
-                document.getElementById(`proj-year-crypto-cycle`)!.textContent = val;
-              }} />
-            <span id={`proj-year-crypto-cycle`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-            <span className="text-slate-500 text-sm">years</span>
-          </div>
-          <div className="flex gap-2 mb-6">
-            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-              }`}>{s}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-5 gap-4 text-center">
-            {[5, 10, 20, 30, 50].map(yr => (
-              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-                <div className="text-emerald-400 font-bold text-lg">[Crypto Portfolio]</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-purple-400">🧠</span> AI Brain Analysis
-            </h2>
-            <div className="flex gap-2">
-              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-                Send to AI Advisor →
-              </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-                View AI Brain Hub →
-              </a>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-            </div>
-          </div>
-        </div>
-
-        <footer className="text-gray-500 text-sm mt-6">
-          <p>Regulatory Disclaimer: Russell Capital Systems provides tools for life & annuity agents only. Not for use by series-licensed professionals. Crypto investments are highly speculative. Consult financial advisors before proceeding.</p>
-        </footer>
-      </div>
-    </div>
-  );
-}
-
-export default CryptoCyclePage;
-```
-
-## `client/src/pages/DealRoomPage.tsx`
-
-```tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Folder, MessageSquare, Clock } from "lucide-react";
-
-const DealRoomPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("deals");
-  const tabs = ["deals", "documents", "timeline", "communication", "outcome"];
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <h1 className="text-3xl font-bold mb-6">Deal Room</h1>
-        <p className="text-gray-400 mb-6">Virtual collaboration space for clients.</p>
-
-        {/* Tabs Navigation */}
-        <div className="flex gap-2 mb-6 overflow-x-auto">
-          {tabs.map((tab) => (
-            <Button
-              key={tab}
-              variant={activeTab === tab ? "default" : "outline"}
-              className={`${
-                activeTab === tab ? "bg-[#22c55e] hover:bg-[#1ea34e]" : "text-gray-300"
-              } capitalize`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab.replace("deals", "Active Deals").replace("outcome", "Generate Outcome")}
-            </Button>
-          ))}
-        </div>
-
-        {/* Tab Content */}
-        <div className="bg-[#141925] p-6 rounded-lg shadow-md">
-          {activeTab === "deals" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Active Deals</h2>
-              <div className="p-3 bg-[#0a0f1a] rounded-md">
-                <p>Client: Jane Smith | Product: Fixed Annuity | Status: In Progress</p>
-              </div>
-            </div>
-          )}
-          {activeTab === "documents" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Documents</h2>
-              <div className="flex items-center gap-2 p-3 bg-[#0a0f1a] rounded-md">
-                <Folder className="text-[#22c55e]" />
-                <p>Application_Form.pdf</p>
-              </div>
-            </div>
-          )}
-          {activeTab === "timeline" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Timeline</h2>
-              <div className="flex items-center gap-2 p-3 bg-[#0a0f1a] rounded-md">
-                <Clock className="text-[#22c55e]" />
-                <p>10/20/2023 - Initial Consultation</p>
-              </div>
-            </div>
-          )}
-          {activeTab === "communication" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Communication</h2>
-              <div className="flex items-center gap-2 p-3 bg-[#0a0f1a] rounded-md">
-                <MessageSquare className="text-[#22c55e]" />
-                <p>Latest: Client requested clarification on Solar Roth.</p>
-              </div>
-            </div>
-          )}
-          {activeTab === "outcome" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Generate Outcome</h2>
-              <p className="text-gray-400">Deal summary and next steps ready.</p>
-              <Button className="mt-4 bg-[#22c55e] hover:bg-[#1ea34e]">Generate</Button>
-            </div>
-          )}
-        </div>
-
-        {/* Page Insights Badge */}
-        <div className="mt-6 p-4 bg-[#141925] rounded-lg">
-          <h3 className="text-lg font-medium">Page Insights Score</h3>
-          <div className="flex items-center gap-2 mt-2">
-            <div className="w-16 h-2 bg-[#22c55e] rounded-full"></div>
-            <p className="text-gray-400">90/100 - Excellent</p>
-          </div>
-        </div>
-
-        {/* Cross-Tool Integration */}
-        <div className="mt-6 p-4 bg-[#141925] rounded-lg">
-          <h3 className="text-lg font-medium">Cross-Tool Integration</h3>
-          <p className="text-gray-400 mt-2">
-            Link to Auto-Closer or Compliance Vault for deal support.
-          </p>
-          <Button variant="outline" className="mt-4 text-[#22c55e]">
-            Connect Tools
-          </Button>
-        </div>
-
-        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-          <div className="flex items-center gap-4 mb-6">
-            <label className="text-sm text-slate-400">Projection Horizon:</label>
-            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-              onChange={(e) => {
-                const val = e.target.value;
-                document.getElementById(`proj-year-deal-room`)!.textContent = val;
-              }} />
-            <span id={`proj-year-deal-room`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-            <span className="text-slate-500 text-sm">years</span>
-          </div>
-          <div className="flex gap-2 mb-6">
-            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-              }`}>{s}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-5 gap-4 text-center">
-            {[5, 10, 20, 30, 50].map(yr => (
-              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-                <div className="text-emerald-400 font-bold text-lg">[Deal Value Growth]</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-purple-400">🧠</span> AI Brain Analysis
-            </h2>
-            <div className="flex gap-2">
-              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-                Send to AI Advisor →
-              </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-                View AI Brain Hub →
-              </a>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Regulatory Disclaimer */}
-        <p className="text-sm text-gray-500 mt-6 text-center">
-          Russell Capital Systems is not a licensed broker-dealer. Tools are for life & annuity
-          agents only. Ensure compliance with state and federal regulations.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-export default DealRoomPage;
-```
-
-## `client/src/pages/DivorceCalculatorPage.tsx`
-
-```tsx
-import React, { useState } from "react";
-import { StrategyContext } from "../context/StrategyContext"; // Placeholder import
-
-const DivorceCalculatorPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("asset-analysis");
-  const [years, setYears] = useState(10);
-  const [scenarios, setScenarios] = useState(1);
-  const [videoExpanded, setVideoExpanded] = useState(false);
-
-  const tabs = ["Asset Analysis", "Income Impact", "ILIT Protection", "Scenario Comparison", "Timeline Projections", "Generate Outcome"];
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
-      <h1 className="text-3xl font-bold mb-6">Divorce Asset Protection Calculator</h1>
-
-      {/* ━━━ EXPLAINER VIDEO SECTION ━━━ */}
-      <div className="mb-8 bg-gradient-to-br from-[#0c1425] to-[#111827] border border-emerald-500/20 rounded-xl overflow-hidden">
-        <button
-          onClick={() => setVideoExpanded(!videoExpanded)}
-          className="w-full flex items-center justify-between px-6 py-4 hover:bg-white/5 transition-all"
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🎬</span>
-            <div className="text-left">
-              <h2 className="text-lg font-bold text-white">Watch: Why This Calculator Matters</h2>
-              <p className="text-sm text-slate-400">2-minute explainer — how IUL, ILIT & fixed annuities protect assets in divorce</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full">2:29</span>
-            <svg
-              className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${videoExpanded ? "rotate-180" : ""}`}
-              fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </button>
-        {videoExpanded && (
-          <div className="px-6 pb-6">
-            <div className="relative w-full rounded-lg overflow-hidden bg-black" style={{ aspectRatio: "16/9" }}>
-              <video
-                controls
-                className="w-full h-full object-contain"
-                poster=""
-                preload="metadata"
-              >
-                <source src="/manus-storage/divorce_calculator_explainer_3a588ea7.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="bg-[#1e293b] rounded-lg p-3 border border-slate-700/50">
-                <div className="text-emerald-400 text-xs font-semibold mb-1">Scene 1-2</div>
-                <p className="text-slate-300 text-xs">The divorce wealth problem & how the calculator works</p>
-              </div>
-              <div className="bg-[#1e293b] rounded-lg p-3 border border-slate-700/50">
-                <div className="text-amber-400 text-xs font-semibold mb-1">Scene 3</div>
-                <p className="text-slate-300 text-xs">Protected vs. unprotected assets — IRS §72(e), §101(a), ILIT</p>
-              </div>
-              <div className="bg-[#1e293b] rounded-lg p-3 border border-slate-700/50">
-                <div className="text-purple-400 text-xs font-semibold mb-1">Scene 4-5</div>
-                <p className="text-slate-300 text-xs">50-year projection engine & call to action</p>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="flex overflow-x-auto border-b border-gray-700 mb-6">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            className={`px-4 py-2 ${activeTab === tab.toLowerCase().replace(" ", "-") ? "text-[#22c55e] border-b-2 border-[#22c55e]" : "text-gray-400"}`}
-            onClick={() => setActiveTab(tab.toLowerCase().replace(" ", "-"))}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-      <div className="bg-gray-900 p-6 rounded-lg shadow-md">
-        {activeTab === "asset-analysis" && (
-          <div>
-            <h2 className="text-xl mb-4">Asset Analysis</h2>
-            <input type="number" placeholder="Total Assets ($)" className="bg-gray-800 p-2 rounded-md w-full mb-4" />
-          </div>
-        )}
-        {activeTab === "timeline-projections" && (
-          <div>
-            <h2 className="text-xl mb-4">Timeline Projections (1-50 Years)</h2>
-            <input type="range" min="1" max="50" value={years} onChange={(e) => setYears(Number(e.target.value))} className="w-full" />
-            <p className="text-[#22c55e]">Projection: {years} Years</p>
-          </div>
-        )}
-        {activeTab === "scenario-comparison" && (
-          <div>
-            <h2 className="text-xl mb-4">Scenarios (1-5)</h2>
-            <input type="range" min="1" max="5" value={scenarios} onChange={(e) => setScenarios(Number(e.target.value))} className="w-full" />
-            <p className="text-[#22c55e]">Scenarios: {scenarios}</p>
-          </div>
-        )}
-        {activeTab === "generate-outcome" && <div className="h-64 bg-gray-800 rounded-md flex items-center justify-center text-gray-400">Placeholder: Outcome Chart</div>}
-      </div>
-      <div className="mt-6 bg-gray-900 p-4 rounded-lg">
-        <h3 className="text-lg font-semibold">Page Insights</h3>
-        <span className="inline-block bg-[#22c55e] text-black px-2 py-1 rounded-md text-sm">Score: 87/100</span>
-      </div>
-      <div className="mt-6 bg-gray-900 p-4 rounded-lg">
-        <h3 className="text-lg font-semibold">Cross-Tool Integration</h3>
-        <p className="text-gray-400">Connected: IUL Projection, Estate Planning</p>
-      </div>
-      
-      {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-      <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-        <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-        <div className="flex items-center gap-4 mb-6">
-          <label className="text-sm text-slate-400">Projection Horizon:</label>
-          <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-            onChange={(e) => {
-              const val = e.target.value;
-              document.getElementById(`proj-year-divorce-calculator`)!.textContent = val;
-            }} />
-          <span id={`proj-year-divorce-calculator`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-          <span className="text-slate-500 text-sm">years</span>
-        </div>
-        <div className="flex gap-2 mb-6">
-          {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-            <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-            }`}>{s}</button>
-          ))}
-        </div>
-        <div className="grid grid-cols-5 gap-4 text-center">
-          {[5, 10, 20, 30, 50].map(yr => (
-            <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-              <div className="text-emerald-400 font-bold text-lg">[Asset Protection]</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-      <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <span className="text-purple-400">🧠</span> AI Brain Analysis
-          </h2>
-          <div className="flex gap-2">
-            <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-              Send to AI Advisor →
-            </a>
-            <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-              View AI Brain Hub →
-            </a>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-[#1e293b] rounded-lg p-4">
-            <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-            <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-          </div>
-          <div className="bg-[#1e293b] rounded-lg p-4">
-            <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-            <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-          </div>
-          <div className="bg-[#1e293b] rounded-lg p-4">
-            <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-            <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-          </div>
-        </div>
-      </div>
-
-      <p className="text-xs text-gray-500 mt-4">Disclaimer: This tool is for informational purposes only and not intended as legal or financial advice. Consult a professional.</p>
-    </div>
-  );
-}
-
-export default DivorceCalculatorPage;
 ```
 

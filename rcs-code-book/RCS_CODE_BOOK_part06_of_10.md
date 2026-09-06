@@ -4,6 +4,8 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 
 ### Files in this part
 
+- `client/src/pages/portal/HiddenMaterial.tsx`
+- `client/src/pages/portal/HotIncome.tsx`
 - `client/src/pages/portal/HouseRecyclingStrategy.tsx`
 - `client/src/pages/portal/HouseholdWealth.tsx`
 - `client/src/pages/portal/HubSpotSync.tsx`
@@ -31,11 +33,2343 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/pages/portal/MarketDataDashboard.tsx`
 - `client/src/pages/portal/MarketScenarioStressTest.tsx`
 - `client/src/pages/portal/MedicareIRMAA.tsx`
-- `client/src/pages/portal/MeetingAgenda.tsx`
-- `client/src/pages/portal/Meetings.tsx`
-- `client/src/pages/portal/MorningRitual.tsx`
 
 ---
+
+## `client/src/pages/portal/HiddenMaterial.tsx`
+
+```tsx
+// @ts-nocheck
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { AppShell } from "@/components/AppShell";
+import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import {
+  Lock,
+  Unlock,
+  KeyRound,
+  Mail,
+  ArrowRight,
+  Shield,
+  Eye,
+  EyeOff,
+  Scale,
+  TrendingUp,
+  TrendingDown,
+  Coins,
+  PiggyBank,
+  BarChart3,
+  Calculator,
+  Brain,
+  Clock,
+  Wallet,
+  AlertTriangle,
+  Database,
+  Search,
+  FileText,
+  Download,
+  CheckCircle2,
+  XCircle,
+  RefreshCw,
+  Filter,
+  Calendar,
+  Activity,
+  Zap,
+  Server,
+  ShieldAlert,
+  Globe,
+  Layout,
+  PieChartIcon,
+  Folder,
+  Box,
+  LayoutDashboard,
+  Layers,
+  Monitor,
+  HardDrive,
+} from "lucide-react";
+import { toast } from "sonner";
+import { Link } from "wouter";
+import { NAICDisclaimer } from "@/components/NAICDisclaimer";
+import { ExportToSlides } from "@/components/ExportToSlides";
+import { PageInsights } from "@/components/PageInsights";
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell,
+  LineChart, Line, PieChart, Pie, AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+  ComposedChart, Legend
+} from "recharts";
+
+const HIDDEN_PAGES = [
+  {
+    category: "Strategy Calculators",
+    pages: [
+      { path: "/portal/iul-vs-roth", label: "IUL vs Roth (Original)", icon: Scale, description: "Original IUL vs Roth comparison calculator", views: 1250, status: "Archived", lastAccessed: "2026-03-15", size: "1.2MB" },
+      { path: "/portal/tax-waterfall", label: "Tax Waterfall (Original)", icon: TrendingDown, description: "Original tax waterfall analysis", views: 850, status: "Archived", lastAccessed: "2026-02-28", size: "0.8MB" },
+      { path: "/portal/crypto-corner", label: "Crypto Currency Corner (Original)", icon: Coins, description: "Original cryptocurrency analysis tools", views: 420, status: "Archived", lastAccessed: "2026-01-10", size: "2.1MB" },
+    ],
+  },
+  {
+    category: "Annuity Calculators",
+    pages: [
+      { path: "/portal/lifetime-income", label: "Lifetime Guaranteed Income (Original)", icon: Shield, description: "Original lifetime income calculator", views: 2100, status: "Archived", lastAccessed: "2026-04-01", size: "1.5MB" },
+      { path: "/portal/existing-annuities", label: "Your Existing Annuities (Original)", icon: PiggyBank, description: "Original existing annuity review", views: 1800, status: "Archived", lastAccessed: "2026-03-22", size: "1.1MB" },
+      { path: "/portal/growth-annuities", label: "Growth Annuities (Original)", icon: TrendingUp, description: "Original growth annuity calculator", views: 1650, status: "Archived", lastAccessed: "2026-03-18", size: "1.3MB" },
+    ],
+  },
+  {
+    category: "Other Calculators",
+    pages: [
+      { path: "/portal/income-timeline", label: "Income Timeline (Original)", icon: Clock, description: "Original income timeline projections", views: 920, status: "Archived", lastAccessed: "2026-02-15", size: "0.9MB" },
+      { path: "/portal/index-backtester", label: "Index Backtester (Original)", icon: BarChart3, description: "Original index backtesting tool", views: 1450, status: "Archived", lastAccessed: "2026-03-05", size: "3.2MB" },
+      { path: "/portal/policy-loans", label: "Policy Loans (Original)", icon: Wallet, description: "Original policy loan calculator", views: 780, status: "Archived", lastAccessed: "2026-01-20", size: "0.7MB" },
+      { path: "/portal/strategy", label: "Strategy Lab (Original)", icon: Brain, description: "Original strategy lab", views: 2200, status: "Archived", lastAccessed: "2026-04-10", size: "4.5MB" },
+    ],
+  },
+  {
+    category: "Annuity Data",
+    pages: [
+      { path: "/portal/annuity-memory", label: "Annuity Memory — 50-State Database", icon: Database, description: "Complete 50-state annuity data store with guaranty limits, product rankings, and availability", views: 3500, status: "Active", lastAccessed: "2026-04-12", size: "15.8MB" },
+    ],
+  },
+  {
+    category: "Internal Tools",
+    pages: [
+      { path: "/portal/commission-tracker", label: "Commission Tracker", icon: Wallet, description: "Commission tracking dashboard with deal-level breakdowns", views: 4200, status: "Active", lastAccessed: "2026-04-12", size: "5.2MB" },
+      { path: "/portal/commission-calculator", label: "Commission Calculator", icon: Calculator, description: "Multi-product commission tracking with team splits and projections", views: 3800, status: "Active", lastAccessed: "2026-04-11", size: "2.8MB" },
+      { path: "/portal/pipeline", label: "Deals Pipeline", icon: BarChart3, description: "Deal tracking kanban board with smart closing scripts and stage management", views: 5100, status: "Active", lastAccessed: "2026-04-12", size: "8.4MB" },
+    ],
+  },
+];
+
+const ACCESS_LOGS = [
+  { id: 1, user: "admin@russellcapital.com", action: "Viewed Tax Waterfall", ip: "192.168.1.105", date: "2026-04-12 10:23:45", status: "Success" },
+  { id: 2, user: "j.smith@russellcapital.com", action: "Exported Index Backtester Data", ip: "10.0.0.52", date: "2026-04-11 14:15:22", status: "Success" },
+  { id: 3, user: "unknown", action: "Failed Login Attempt", ip: "45.22.19.101", date: "2026-04-11 09:05:11", status: "Failed" },
+  { id: 4, user: "admin@russellcapital.com", action: "Unlocked Hidden Material", ip: "192.168.1.105", date: "2026-04-10 16:45:00", status: "Success" },
+  { id: 5, user: "m.johnson@russellcapital.com", action: "Viewed Strategy Lab", ip: "10.0.0.88", date: "2026-04-09 11:30:15", status: "Success" },
+  { id: 6, user: "admin@russellcapital.com", action: "Downloaded Annuity Database", ip: "192.168.1.105", date: "2026-04-08 15:20:10", status: "Success" },
+];
+
+const SYSTEM_HEALTH_DATA = [
+  { time: "00:00", cpu: 45, memory: 60, network: 25 },
+  { time: "04:00", cpu: 30, memory: 55, network: 15 },
+  { time: "08:00", cpu: 65, memory: 75, network: 55 },
+  { time: "12:00", cpu: 85, memory: 85, network: 80 },
+  { time: "16:00", cpu: 70, memory: 80, network: 65 },
+  { time: "20:00", cpu: 50, memory: 65, network: 35 },
+];
+
+const CATEGORY_DISTRIBUTION = [
+  { name: "Strategy", value: 3, color: "#3b82f6" },
+  { name: "Annuity", value: 3, color: "#10b981" },
+  { name: "Other", value: 4, color: "#f59e0b" },
+  { name: "Data", value: 1, color: "#8b5cf6" },
+  { name: "Internal", value: 3, color: "#ef4444" },
+];
+
+const VIEWS_BY_CATEGORY = [
+  { category: "Strategy", views: 2520 },
+  { category: "Annuity", views: 5550 },
+  { category: "Other", views: 5350 },
+  { category: "Data", views: 3500 },
+  { category: "Internal", views: 13100 },
+];
+
+const ARCHIVE_GROWTH = [
+  { month: "Jan", items: 5, size: 12 },
+  { month: "Feb", items: 8, size: 18 },
+  { month: "Mar", items: 12, size: 28 },
+  { month: "Apr", items: 14, size: 35 },
+];
+
+const SECURITY_METRICS = [
+  { subject: "Authentication", A: 95, B: 80, fullMark: 100 },
+  { subject: "Encryption", A: 100, B: 90, fullMark: 100 },
+  { subject: "Access Control", A: 85, B: 75, fullMark: 100 },
+  { subject: "Audit Logging", A: 90, B: 85, fullMark: 100 },
+  { subject: "Vulnerability", A: 80, B: 70, fullMark: 100 },
+  { subject: "Compliance", A: 95, B: 90, fullMark: 100 },
+];
+
+const formatBytes = (bytes: number, decimals = 2) => {
+  if (!+bytes) return '0 Bytes';
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+};
+
+const formatDate = (dateString: string) => {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+};
+
+function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [showReset, setShowReset] = useState(false);
+  const [resetStep, setResetStep] = useState<"request" | "verify">("request");
+  const [resetCode, setResetCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [isLockedOut, setIsLockedOut] = useState(false);
+  const [lockoutTimer, setLockoutTimer] = useState(0);
+
+  const verifyMut = trpc.hiddenMaterial.verifyPassword.useMutation();
+  const requestResetMut = trpc.hiddenMaterial.requestResetCode.useMutation();
+  const resetPasswordMut = trpc.hiddenMaterial.resetPassword.useMutation();
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isLockedOut && lockoutTimer > 0) {
+      interval = setInterval(() => {
+        setLockoutTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (isLockedOut && lockoutTimer === 0) {
+      setIsLockedOut(false);
+      setLoginAttempts(0);
+    }
+    return () => clearInterval(interval);
+  }, [isLockedOut, lockoutTimer]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isLockedOut) {
+      toast.error(`Account locked. Try again in ${lockoutTimer} seconds.`);
+      return;
+    }
+
+    setError("");
+    try {
+      const result = await verifyMut.mutateAsync({ password });
+      if (result.verified) {
+        toast.success("Access granted");
+        setLoginAttempts(0);
+        onUnlock();
+      }
+    } catch (err: any) {
+      const newAttempts = loginAttempts + 1;
+      setLoginAttempts(newAttempts);
+      
+      if (newAttempts >= 5) {
+        setIsLockedOut(true);
+        setLockoutTimer(300); // 5 minutes
+        toast.error("Too many failed attempts. Account locked for 5 minutes.");
+      } else {
+        const msg = err?.message ?? "Incorrect password";
+        setError(msg);
+        toast.error(`${msg}. ${5 - newAttempts} attempts remaining.`);
+      }
+    }
+  };
+
+  const handleRequestReset = async () => {
+    try {
+      const result = await requestResetMut.mutateAsync();
+      toast.success(result.message);
+      setResetStep("verify");
+    } catch (err: any) {
+      toast.error(err?.message ?? "Failed to send reset code");
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    if (newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+    try {
+      await resetPasswordMut.mutateAsync({ code: resetCode, newPassword });
+      toast.success("Password reset successfully! You can now log in with your new password.");
+      setShowReset(false);
+      setResetStep("request");
+      setResetCode("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err: any) {
+      toast.error(err?.message ?? "Failed to reset password");
+    }
+  };
+
+  if (showReset) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center p-4">
+        <div className="rc-card w-full max-w-md border-[#f0c040]/30 bg-gradient-to-b from-[#0d1a2e] to-[#060d19] shadow-2xl shadow-[#f0c040]/10">
+          <div className="text-center pb-6 border-b border-[#1a2e4c] mb-6">
+            <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-[#f0c040]/20 to-[#f0c040]/5 flex items-center justify-center mb-4 ring-4 ring-[#f0c040]/10">
+              <KeyRound className="w-10 h-10 text-[#f0c040]" />
+            </div>
+            <h2 className="text-2xl font-bold text-white tracking-tight">Reset Password</h2>
+            <p className="text-sm text-[#7a95b8] mt-2 max-w-[280px] mx-auto">
+              {resetStep === "request"
+                ? "A 6-digit verification code will be sent to the registered email address."
+                : "Enter the 6-digit code from your email and set a new secure password."}
+            </p>
+          </div>
+          <div className="pt-2">
+            {resetStep === "request" ? (
+              <div className="space-y-5">
+                <div className="flex items-center gap-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                  <div className="p-2 bg-blue-500/20 rounded-lg">
+                    <Mail className="w-6 h-6 text-blue-400 flex-shrink-0" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-blue-400 font-medium uppercase tracking-wider mb-1">Recovery Email</p>
+                    <p className="text-sm text-[#c8d8ec] font-mono">sam***@gmail.com</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleRequestReset}
+                  className="rc-btn rc-btn-primary w-full bg-gradient-to-r from-[#f0c040] to-[#d4a017] hover:from-[#f0c040]/90 hover:to-[#d4a017]/90 text-black border-none py-3 text-base font-semibold shadow-lg shadow-[#f0c040]/20 transition-all hover:scale-[1.02]"
+                  disabled={requestResetMut.isPending}
+                >
+                  {requestResetMut.isPending ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <RefreshCw className="w-5 h-5 animate-spin" /> Sending...
+                    </span>
+                  ) : "Send Verification Code"}
+                </button>
+                <button
+                  onClick={() => setShowReset(false)}
+                  className="rc-btn rc-btn-ghost w-full text-[#7a95b8] hover:text-white py-3 transition-colors"
+                >
+                  Back to Login
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleResetPassword} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-[#c8d8ec] mb-2 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-[#f0c040]" /> Verification Code
+                  </label>
+                  <input
+                    type="text"
+                    value={resetCode}
+                    onChange={(e) => setResetCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    placeholder="------"
+                    className="rc-input text-center text-3xl tracking-[0.5em] font-mono py-4 bg-[#0a1526] border-[#1a2e4c] focus:border-[#f0c040] focus:ring-[#f0c040]/20"
+                    maxLength={6}
+                  />
+                </div>
+                <div className="space-y-4 pt-2">
+                  <div>
+                    <label className="block text-sm font-medium text-[#c8d8ec] mb-2">New Password</label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="Enter new password"
+                        className="rc-input pr-10 bg-[#0a1526] border-[#1a2e4c]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7a95b8] hover:text-white"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#c8d8ec] mb-2">Confirm Password</label>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm new password"
+                      className="rc-input bg-[#0a1526] border-[#1a2e4c]"
+                    />
+                  </div>
+                </div>
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="rc-btn rc-btn-primary w-full bg-gradient-to-r from-[#f0c040] to-[#d4a017] hover:from-[#f0c040]/90 hover:to-[#d4a017]/90 text-black border-none py-3 text-base font-semibold shadow-lg shadow-[#f0c040]/20 transition-all hover:scale-[1.02]"
+                    disabled={resetPasswordMut.isPending || resetCode.length !== 6 || !newPassword || !confirmPassword}
+                  >
+                    {resetPasswordMut.isPending ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <RefreshCw className="w-5 h-5 animate-spin" /> Resetting...
+                      </span>
+                    ) : "Reset Password"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setResetStep("request"); setResetCode(""); }}
+                    className="rc-btn rc-btn-ghost w-full text-[#7a95b8] hover:text-white mt-2"
+                  >
+                    Resend Code
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center p-4">
+      <div className="rc-card w-full max-w-md border-red-500/30 bg-gradient-to-b from-[#0d1a2e] to-[#060d19] shadow-2xl shadow-red-500/10">
+        <div className="text-center pb-6 border-b border-[#1a2e4c] mb-6">
+          <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-red-500/20 to-red-500/5 flex items-center justify-center mb-4 ring-4 ring-red-500/10">
+            <Lock className="w-10 h-10 text-red-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-white tracking-tight">Restricted Area</h2>
+          <p className="text-sm text-[#7a95b8] mt-2 max-w-[280px] mx-auto">
+            This section contains archived and internal tools. Please enter the master password to continue.
+          </p>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-[#c8d8ec] mb-2 flex items-center justify-between">
+              <span>Master Password</span>
+              {isLockedOut && (
+                <span className="text-red-400 text-xs font-mono bg-red-400/10 px-2 py-1 rounded">
+                  Locked: {Math.floor(lockoutTimer / 60)}:{(lockoutTimer % 60).toString().padStart(2, '0')}
+                </span>
+              )}
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                }}
+                placeholder="Enter master password"
+                className={`rc-input pr-10 py-3 bg-[#0a1526] text-lg ${error ? "border-red-500 focus:ring-red-500/20" : "border-[#1a2e4c]"}`}
+                disabled={isLockedOut}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7a95b8] hover:text-white transition-colors"
+                disabled={isLockedOut}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+            {error && (
+              <p className="text-red-400 text-sm mt-2 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                <AlertTriangle className="w-4 h-4" /> {error}
+              </p>
+            )}
+          </div>
+          
+          <div className="pt-2">
+            <button
+              type="submit"
+              className={`rc-btn rc-btn-primary w-full py-3 text-base font-semibold transition-all ${
+                isLockedOut 
+                  ? "bg-[#1a2e4c] text-[#7a95b8] cursor-not-allowed border-none" 
+                  : "bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white border-none shadow-lg shadow-red-500/20 hover:scale-[1.02]"
+              }`}
+              disabled={verifyMut.isPending || !password || isLockedOut}
+            >
+              {verifyMut.isPending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <RefreshCw className="w-5 h-5 animate-spin" /> Verifying...
+                </span>
+              ) : isLockedOut ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Lock className="w-5 h-5" /> Account Locked
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  <Unlock className="w-5 h-5" /> Unlock Access
+                </span>
+              )}
+            </button>
+          </div>
+          
+          <div className="text-center pt-2">
+            <button
+              type="button"
+              onClick={() => setShowReset(true)}
+              className="text-sm text-[#7a95b8] hover:text-[#f0c040] transition-colors flex items-center justify-center gap-1.5 mx-auto"
+            >
+              <KeyRound className="w-4 h-4" /> Forgot master password?
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function UnlockedContent() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState<"directory" | "analytics" | "system" | "logs">("directory");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const { data: serverStatus, refetch: refetchStatus } = trpc.hiddenMaterial.getServerStatus.useQuery(undefined, {
+    enabled: activeTab === "system",
+  });
+  
+  const { data: analyticsData } = trpc.hiddenMaterial.getAnalytics.useQuery(undefined, {
+    enabled: activeTab === "analytics",
+  });
+
+  const { data: auditLogs } = trpc.hiddenMaterial.getAuditLogs.useQuery({ limit: 50 }, {
+    enabled: activeTab === "logs",
+  });
+
+  const handleRefresh = useCallback(() => {
+    setRefreshTrigger(prev => prev + 1);
+    refetchStatus();
+    toast.success("Data refreshed");
+  }, [refetchStatus]);
+
+  const filteredPages = useMemo(() => {
+    return HIDDEN_PAGES.map((section) => ({
+      ...section,
+      pages: section.pages.filter((page) => 
+        (page.label.toLowerCase().includes(searchTerm.toLowerCase()) || 
+         page.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        (!selectedCategory || section.category === selectedCategory)
+      )
+    })).filter((section) => section.pages.length > 0);
+  }, [searchTerm, selectedCategory]);
+
+  const totalPages = useMemo(() => {
+    return HIDDEN_PAGES.reduce((sum, section) => sum + section.pages.length, 0);
+  }, []);
+
+  const totalViews = useMemo(() => {
+    return HIDDEN_PAGES.reduce((sum, section) => 
+      sum + section.pages.reduce((pSum, page) => pSum + page.views, 0)
+    , 0);
+  }, []);
+
+  const activePages = useMemo(() => {
+    return HIDDEN_PAGES.reduce((sum, section) => 
+      sum + section.pages.filter((p) => p.status === "Active").length
+    , 0);
+  }, []);
+
+  return (
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* Top Stats Row */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="rc-card bg-gradient-to-br from-[#0d1a2e] to-[#0a1526] border-[#1a2e4c]">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-blue-500/10 rounded-lg">
+              <Folder className="w-5 h-5 text-blue-400" />
+            </div>
+            <h3 className="text-sm font-medium text-[#7a95b8]">Total Archives</h3>
+          </div>
+          <div className="text-2xl font-bold text-white">{totalPages}</div>
+          <div className="text-xs text-[#7a95b8] mt-1">Across {HIDDEN_PAGES.length} categories</div>
+        </div>
+        
+        <div className="rc-card bg-gradient-to-br from-[#0d1a2e] to-[#0a1526] border-[#1a2e4c]">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-green-500/10 rounded-lg">
+              <Eye className="w-5 h-5 text-green-400" />
+            </div>
+            <h3 className="text-sm font-medium text-[#7a95b8]">Total Views</h3>
+          </div>
+          <div className="text-2xl font-bold text-white">{totalViews.toLocaleString()}</div>
+          <div className="text-xs text-green-400 mt-1 flex items-center gap-1">
+            <TrendingUp className="w-3 h-3" /> +12% this month
+          </div>
+        </div>
+        
+        <div className="rc-card bg-gradient-to-br from-[#0d1a2e] to-[#0a1526] border-[#1a2e4c]">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-purple-500/10 rounded-lg">
+              <Activity className="w-5 h-5 text-purple-400" />
+            </div>
+            <h3 className="text-sm font-medium text-[#7a95b8]">Active Tools</h3>
+          </div>
+          <div className="text-2xl font-bold text-white">{activePages}</div>
+          <div className="text-xs text-[#7a95b8] mt-1">{totalPages - activePages} archived</div>
+        </div>
+        
+        <div className="rc-card bg-gradient-to-br from-[#0d1a2e] to-[#0a1526] border-[#1a2e4c]">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-red-500/10 rounded-lg">
+              <ShieldAlert className="w-5 h-5 text-red-400" />
+            </div>
+            <h3 className="text-sm font-medium text-[#7a95b8]">Security Status</h3>
+          </div>
+          <div className="text-2xl font-bold text-green-400 flex items-center gap-2">
+            Secure <CheckCircle2 className="w-5 h-5" />
+          </div>
+          <div className="text-xs text-[#7a95b8] mt-1">Last audit: Today</div>
+        </div>
+      </div>
+
+      {/* Navigation Tabs */}
+      <div className="flex flex-wrap gap-2 border-b border-[#1a2e4c] pb-px">
+        <button
+          onClick={() => setActiveTab("directory")}
+          className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === "directory" 
+              ? "border-red-500 text-white bg-red-500/5" 
+              : "border-transparent text-[#7a95b8] hover:text-white hover:bg-white/5"
+          }`}
+        >
+          <Folder className="w-4 h-4" /> Archive Directory
+        </button>
+        <button
+          onClick={() => setActiveTab("analytics")}
+          className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === "analytics" 
+              ? "border-red-500 text-white bg-red-500/5" 
+              : "border-transparent text-[#7a95b8] hover:text-white hover:bg-white/5"
+          }`}
+        >
+          <BarChart3 className="w-4 h-4" /> Analytics & Usage
+        </button>
+        <button
+          onClick={() => setActiveTab("system")}
+          className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === "system" 
+              ? "border-red-500 text-white bg-red-500/5" 
+              : "border-transparent text-[#7a95b8] hover:text-white hover:bg-white/5"
+          }`}
+        >
+          <Server className="w-4 h-4" /> System Health
+        </button>
+        <button
+          onClick={() => setActiveTab("logs")}
+          className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === "logs" 
+              ? "border-red-500 text-white bg-red-500/5" 
+              : "border-transparent text-[#7a95b8] hover:text-white hover:bg-white/5"
+          }`}
+        >
+          <FileText className="w-4 h-4" /> Audit Logs
+        </button>
+      </div>
+
+      {/* Tab Content: Directory */}
+      {activeTab === "directory" && (
+        <div className="space-y-6 animate-in fade-in">
+          {/* Controls */}
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-[#0d1a2e] p-4 rounded-xl border border-[#1a2e4c]">
+            <div className="relative w-full md:w-96">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7a95b8]" />
+              <input
+                type="text"
+                placeholder="Search archives..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="rc-input pl-9 w-full bg-[#0a1526] border-[#1a2e4c]"
+              />
+              {searchTerm && (
+                <button 
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7a95b8] hover:text-white"
+                >
+                  <XCircle className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+              <div className="flex items-center gap-1 bg-[#0a1526] p-1 rounded-lg border border-[#1a2e4c]">
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`p-1.5 rounded-md transition-colors ${viewMode === "grid" ? "bg-[#1a2e4c] text-white" : "text-[#7a95b8] hover:text-white"}`}
+                  title="Grid View"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`p-1.5 rounded-md transition-colors ${viewMode === "list" ? "bg-[#1a2e4c] text-white" : "text-[#7a95b8] hover:text-white"}`}
+                  title="List View"
+                >
+                  <Layout className="w-4 h-4" />
+                </button>
+              </div>
+              
+              <div className="h-6 w-px bg-[#1a2e4c]"></div>
+              
+              <select
+                value={selectedCategory || ""}
+                onChange={(e) => setSelectedCategory(e.target.value || null)}
+                className="rc-input bg-[#0a1526] border-[#1a2e4c] py-2 text-sm min-w-[150px]"
+              >
+                <option value="">All Categories</option>
+                {HIDDEN_PAGES.map((c) => (
+                  <option key={c.category} value={c.category}>{c.category}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {filteredPages.length === 0 ? (
+            <div className="text-center py-12 bg-[#0d1a2e] rounded-xl border border-[#1a2e4c] border-dashed">
+              <div className="w-16 h-16 rounded-full bg-[#1a2e4c] flex items-center justify-center mx-auto mb-4">
+                <Search className="w-8 h-8 text-[#7a95b8]" />
+              </div>
+              <h3 className="text-lg font-medium text-white">No archives found</h3>
+              <p className="text-[#7a95b8] mt-1">Try adjusting your search or category filter</p>
+              <button 
+                onClick={() => { setSearchTerm(""); setSelectedCategory(null); }}
+                className="mt-4 rc-btn rc-btn-ghost text-red-400 hover:text-red-300"
+              >
+                Clear all filters
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-8">
+              {filteredPages.map((section, idx) => (
+                <div key={idx} className="space-y-4">
+                  <div className="flex items-center gap-3 border-b border-[#1a2e4c] pb-2">
+                    <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                      <Layers className="w-5 h-5 text-red-500" />
+                      {section.category}
+                    </h2>
+                    <span className="rc-badge rc-badge-gray">{section.pages.length} items</span>
+                  </div>
+                  
+                  {viewMode === "grid" ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {section.pages.map((page, pIdx) => (
+                        <Link key={pIdx} href={page.path}>
+                          <div className="rc-card h-full group cursor-pointer hover:border-red-500/50 hover:shadow-lg hover:shadow-red-500/10 transition-all duration-300 bg-[#0d1a2e] border-[#1a2e4c]">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 rounded-xl bg-[#1a2e4c] group-hover:bg-red-500/20 transition-colors">
+                                <page.icon className="w-6 h-6 text-[#7a95b8] group-hover:text-red-400 transition-colors" />
+                              </div>
+                              <span className={`rc-badge text-xs ${page.status === 'Active' ? 'rc-badge-green' : 'rc-badge-gray'}`}>
+                                {page.status}
+                              </span>
+                            </div>
+                            <h3 className="text-base font-bold text-white mb-2 group-hover:text-red-400 transition-colors flex items-center gap-2">
+                              {page.label}
+                            </h3>
+                            <p className="text-sm text-[#7a95b8] mb-4 line-clamp-2 min-h-[40px]">
+                              {page.description}
+                            </p>
+                            <div className="flex items-center justify-between text-xs text-[#5c7394] pt-4 border-t border-[#1a2e4c]">
+                              <span className="flex items-center gap-1">
+                                <Eye className="w-3.5 h-3.5" /> {page.views.toLocaleString()}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <HardDrive className="w-3.5 h-3.5" /> {page.size}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Calendar className="w-3.5 h-3.5" /> {formatDate(page.lastAccessed)}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rc-table-container">
+                      <table className="rc-table">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th className="text-right">Views</th>
+                            <th className="text-right">Size</th>
+                            <th className="text-right">Last Accessed</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {section.pages.map((page, pIdx) => (
+                            <tr key={pIdx} className="group hover:bg-[#1a2e4c]/30">
+                              <td>
+                                <div className="flex items-center gap-3">
+                                  <div className="p-2 rounded-lg bg-[#1a2e4c] group-hover:bg-red-500/20 transition-colors">
+                                    <page.icon className="w-4 h-4 text-[#7a95b8] group-hover:text-red-400" />
+                                  </div>
+                                  <span className="font-medium text-white group-hover:text-red-400 transition-colors">{page.label}</span>
+                                </div>
+                              </td>
+                              <td className="text-[#7a95b8] max-w-xs truncate" title={page.description}>{page.description}</td>
+                              <td>
+                                <span className={`rc-badge text-xs ${page.status === 'Active' ? 'rc-badge-green' : 'rc-badge-gray'}`}>
+                                  {page.status}
+                                </span>
+                              </td>
+                              <td className="text-right text-[#c8d8ec]">{page.views.toLocaleString()}</td>
+                              <td className="text-right text-[#c8d8ec]">{page.size}</td>
+                              <td className="text-right text-[#c8d8ec]">{formatDate(page.lastAccessed)}</td>
+                              <td className="text-right">
+                                <Link href={page.path}>
+                                  <button className="rc-btn rc-btn-ghost text-red-400 hover:text-red-300 p-2">
+                                    <ArrowRight className="w-4 h-4" />
+                                  </button>
+                                </Link>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab Content: Analytics */}
+      {activeTab === "analytics" && (
+        <div className="space-y-6 animate-in fade-in">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Category Distribution Chart */}
+            <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c]">
+              <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <PieChartIcon className="w-5 h-5 text-blue-400" /> Archive Distribution
+              </h3>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={CATEGORY_DISTRIBUTION}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={80}
+                      outerRadius={110}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {CATEGORY_DISTRIBUTION.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <RechartsTooltip 
+                      contentStyle={{ backgroundColor: '#0a1526', borderColor: '#1a2e4c', color: '#fff' }}
+                      itemStyle={{ color: '#fff' }}
+                    />
+                    <Legend verticalAlign="bottom" height={36} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Views by Category Chart */}
+            <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c]">
+              <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-green-400" /> Views by Category
+              </h3>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={VIEWS_BY_CATEGORY} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1a2e4c" vertical={false} />
+                    <XAxis dataKey="category" stroke="#7a95b8" tick={{ fill: '#7a95b8' }} />
+                    <YAxis stroke="#7a95b8" tick={{ fill: '#7a95b8' }} />
+                    <RechartsTooltip 
+                      contentStyle={{ backgroundColor: '#0a1526', borderColor: '#1a2e4c', color: '#fff' }}
+                      cursor={{ fill: '#1a2e4c', opacity: 0.4 }}
+                    />
+                    <Bar dataKey="views" fill="#10b981" radius={[4, 4, 0, 0]}>
+                      {VIEWS_BY_CATEGORY.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444'][index % 5]} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Archive Growth Trend */}
+            <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c] lg:col-span-2">
+              <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-purple-400" /> Archive Growth Trend
+              </h3>
+              <div className="h-[350px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={ARCHIVE_GROWTH} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1a2e4c" vertical={false} />
+                    <XAxis dataKey="month" stroke="#7a95b8" />
+                    <YAxis yAxisId="left" stroke="#7a95b8" />
+                    <YAxis yAxisId="right" orientation="right" stroke="#7a95b8" />
+                    <RechartsTooltip 
+                      contentStyle={{ backgroundColor: '#0a1526', borderColor: '#1a2e4c', color: '#fff' }}
+                    />
+                    <Legend />
+                    <Bar yAxisId="left" dataKey="items" name="Total Items" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={40} />
+                    <Line yAxisId="right" type="monotone" dataKey="size" name="Storage Size (MB)" stroke="#f43f5e" strokeWidth={3} dot={{ r: 6, fill: '#0d1a2e', strokeWidth: 2 }} />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tab Content: System Health */}
+      {activeTab === "system" && (
+        <div className="space-y-6 animate-in fade-in">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold text-white">System Diagnostics</h2>
+            <button onClick={handleRefresh} className="rc-btn rc-btn-ghost text-[#7a95b8] hover:text-white flex items-center gap-2">
+              <RefreshCw className="w-4 h-4" /> Refresh Data
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c] p-6 text-center">
+              <Monitor className="w-8 h-8 text-blue-400 mx-auto mb-3" />
+              <div className="text-3xl font-bold text-white mb-1">99.9%</div>
+              <div className="text-sm text-[#7a95b8]">Server Uptime</div>
+              <div className="mt-4 pt-4 border-t border-[#1a2e4c] text-xs text-green-400">Operational</div>
+            </div>
+            <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c] p-6 text-center">
+              <Database className="w-8 h-8 text-purple-400 mx-auto mb-3" />
+              <div className="text-3xl font-bold text-white mb-1">45ms</div>
+              <div className="text-sm text-[#7a95b8]">Database Latency</div>
+              <div className="mt-4 pt-4 border-t border-[#1a2e4c] text-xs text-green-400">Optimal</div>
+            </div>
+            <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c] p-6 text-center">
+              <Globe className="w-8 h-8 text-green-400 mx-auto mb-3" />
+              <div className="text-3xl font-bold text-white mb-1">12.4k</div>
+              <div className="text-sm text-[#7a95b8]">Requests / Hour</div>
+              <div className="mt-4 pt-4 border-t border-[#1a2e4c] text-xs text-[#7a95b8]">Normal Load</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Resource Usage Chart */}
+            <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c]">
+              <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <Zap className="w-5 h-5 text-yellow-400" /> Resource Utilization (24h)
+              </h3>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={SYSTEM_HEALTH_DATA} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorMemory" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1a2e4c" vertical={false} />
+                    <XAxis dataKey="time" stroke="#7a95b8" />
+                    <YAxis stroke="#7a95b8" />
+                    <RechartsTooltip 
+                      contentStyle={{ backgroundColor: '#0a1526', borderColor: '#1a2e4c', color: '#fff' }}
+                    />
+                    <Legend />
+                    <Area type="monotone" dataKey="cpu" name="CPU %" stroke="#3b82f6" fillOpacity={1} fill="url(#colorCpu)" />
+                    <Area type="monotone" dataKey="memory" name="Memory %" stroke="#10b981" fillOpacity={1} fill="url(#colorMemory)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Security Radar Chart */}
+            <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c]">
+              <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-red-400" /> Security Posture
+              </h3>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart cx="50%" cy="50%" outerRadius="70%" data={SECURITY_METRICS}>
+                    <PolarGrid stroke="#1a2e4c" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 12 }} />
+                    <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#1a2e4c" tick={{ fill: '#7a95b8' }} />
+                    <Radar name="Current Posture" dataKey="A" stroke="#ef4444" fill="#ef4444" fillOpacity={0.4} />
+                    <Radar name="Industry Baseline" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.2} />
+                    <Legend />
+                    <RechartsTooltip 
+                      contentStyle={{ backgroundColor: '#0a1526', borderColor: '#1a2e4c', color: '#fff' }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tab Content: Audit Logs */}
+      {activeTab === "logs" && (
+        <div className="space-y-6 animate-in fade-in">
+          <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c] p-0 overflow-hidden">
+            <div className="p-4 border-b border-[#1a2e4c] flex justify-between items-center bg-[#0a1526]">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <FileText className="w-5 h-5 text-[#7a95b8]" /> Access Audit Trail
+              </h3>
+              <div className="flex items-center gap-2">
+                <button className="rc-btn rc-btn-ghost text-[#7a95b8] hover:text-white p-2">
+                  <Filter className="w-4 h-4" />
+                </button>
+                <button className="rc-btn rc-btn-ghost text-[#7a95b8] hover:text-white p-2">
+                  <Download className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="rc-table w-full">
+                <thead className="bg-[#0a1526]">
+                  <tr>
+                    <th className="py-3 px-4 text-left text-xs font-medium text-[#7a95b8] uppercase tracking-wider">Timestamp</th>
+                    <th className="py-3 px-4 text-left text-xs font-medium text-[#7a95b8] uppercase tracking-wider">User</th>
+                    <th className="py-3 px-4 text-left text-xs font-medium text-[#7a95b8] uppercase tracking-wider">Action</th>
+                    <th className="py-3 px-4 text-left text-xs font-medium text-[#7a95b8] uppercase tracking-wider">IP Address</th>
+                    <th className="py-3 px-4 text-left text-xs font-medium text-[#7a95b8] uppercase tracking-wider">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#1a2e4c]">
+                  {(auditLogs || ACCESS_LOGS).map((log, idx) => (
+                    <tr key={idx} className="hover:bg-[#1a2e4c]/30 transition-colors">
+                      <td className="py-3 px-4 whitespace-nowrap text-sm text-[#c8d8ec] font-mono">{log.date}</td>
+                      <td className="py-3 px-4 whitespace-nowrap text-sm text-white">{log.user}</td>
+                      <td className="py-3 px-4 whitespace-nowrap text-sm text-[#c8d8ec]">{log.action}</td>
+                      <td className="py-3 px-4 whitespace-nowrap text-sm text-[#7a95b8] font-mono">{log.ip}</td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          log.status === 'Success' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 
+                          'bg-red-500/10 text-red-400 border border-red-500/20'
+                        }`}>
+                          {log.status === 'Success' ? <CheckCircle2 className="w-3 h-3 mr-1" /> : <XCircle className="w-3 h-3 mr-1" />}
+                          {log.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="p-4 border-t border-[#1a2e4c] bg-[#0a1526] flex justify-between items-center text-sm text-[#7a95b8]">
+              <span>Showing {(auditLogs || ACCESS_LOGS).length} entries</span>
+              <div className="flex gap-2">
+                <button className="px-3 py-1 rounded bg-[#1a2e4c] text-white disabled:opacity-50" disabled>Previous</button>
+                <button className="px-3 py-1 rounded bg-[#1a2e4c] text-white">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer Info Box */}
+      <div className="mt-8 p-5 bg-gradient-to-br from-[#0d1a2e] to-[#0a1526] border border-[#1a2e4c] rounded-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
+        <h4 className="text-sm font-semibold text-white mb-2 flex items-center gap-2">
+          <Database className="w-4 h-4 text-red-500" />
+          About This Archive
+        </h4>
+        <p className="text-sm text-[#c8d8ec] leading-relaxed max-w-4xl relative z-10">
+          These tools and calculators were the original systems used on the Russell Capital platform prior to the 2026 compliance update.
+          They have been replaced with NAIC AG 49-A/B compliant versions that use proper "would have been" language, mandatory disclaimers, and educational framing.
+          The new compliant versions are accessible from the main sidebar navigation. These legacy versions are maintained strictly for historical reference, 
+          audit purposes, and internal analysis.
+        </p>
+      </div>
+      
+      <div className="mt-8">
+        <NAICDisclaimer variant="compact" showsProjections showsCashValues />
+      </div>
+    </div>
+  );
+}
+
+export default function HiddenMaterial() {
+  const [unlocked, setUnlocked] = useState(false);
+  const { user } = useAuth();
+
+  const trackViewMut = trpc.hiddenMaterial.trackPageView.useMutation();
+  
+  useEffect(() => {
+    if (unlocked && user) {
+      trackViewMut.mutate({ page: "HiddenMaterial_Dashboard", userId: user.id }).catch(console.error);
+    }
+  }, [unlocked, user]);
+
+  return (
+    <AppShell>
+      <div className="max-w-7xl mx-auto p-4 md:p-6 pb-24">
+        <div className="rc-page-header flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-8">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2.5 bg-gradient-to-br from-red-600 to-red-800 rounded-xl shadow-lg shadow-red-900/30 border border-red-500/20">
+                {unlocked ? <Unlock className="w-6 h-6 text-white" /> : <Lock className="w-6 h-6 text-white" />}
+              </div>
+              <h1 className="rc-page-title text-3xl font-bold text-white tracking-tight">Hidden Material</h1>
+              {unlocked && (
+                <span className="ml-3 px-2.5 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-xs font-medium text-green-400 flex items-center gap-1.5 animate-in fade-in">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div>
+                  Access Granted
+                </span>
+              )}
+            </div>
+            <p className="rc-page-subtitle text-base text-[#7a95b8] max-w-2xl">
+              Password-protected archive of original calculators, legacy tools, and system diagnostics.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            {unlocked && (
+              <button 
+                onClick={() => setUnlocked(false)}
+                className="rc-btn rc-btn-ghost text-[#7a95b8] hover:text-red-400 flex items-center gap-2"
+              >
+                <Lock className="w-4 h-4" /> Lock Session
+              </button>
+            )}
+            <ExportToSlides
+              toolName="Hidden Material"
+              getSections={() => [{
+                title: "Hidden Material Archive",
+                items: [
+                  { label: "Status", value: unlocked ? "Unlocked" : "Locked" },
+                  { label: "Description", value: "Password-protected archive of original calculators and tools." },
+                  { label: "Total Archived Items", value: HIDDEN_PAGES.reduce((sum, section) => sum + section.pages.length, 0).toString() },
+                  { label: "Categories", value: HIDDEN_PAGES.length.toString() }
+                ]
+              }]}
+            />
+          </div>
+        </div>
+
+        <div className="relative">
+          {/* Decorative background elements */}
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+            <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-red-500/5 rounded-full blur-[100px]"></div>
+            <div className="absolute bottom-[-10%] right-[-5%] w-[30%] h-[30%] bg-blue-500/5 rounded-full blur-[100px]"></div>
+          </div>
+          
+          <div className="relative z-10">
+            {unlocked ? <UnlockedContent /> : <PasswordGate onUnlock={() => setUnlocked(true)} />}
+          </div>
+        </div>
+      </div>
+      <PageInsights pageId="hidden-material" />
+    </AppShell>
+  );
+}
+```
+
+## `client/src/pages/portal/HotIncome.tsx`
+
+```tsx
+// @ts-nocheck
+import { useCalculatorIntegration } from "@/hooks/useCalculatorIntegration";
+import { ClientSelectorBar } from "@/components/ClientSelectorBar";
+import { NumberInput } from "@/components/NumberInput";
+import { GenerateOutcomeTab } from "@/components/GenerateOutcomeTab";
+import { CalculationSyncBar } from "@/components/CalculationSyncBar";
+import { useStrategy } from "@/contexts/StrategyContext";
+import { ExportToSlides } from "@/components/ExportToSlides";
+import { useState, useMemo } from "react";
+import { AppShell } from "@/components/AppShell";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { NAICDisclaimer } from "@/components/NAICDisclaimer";
+import { useClientData } from "@/contexts/ClientDataContext";
+import {
+  Flame,
+  DollarSign,
+  BarChart3,
+  TrendingUp,
+  Info,
+  CheckCircle2,
+  Star,
+  Clock,
+  Percent,
+  Calendar,
+  Wallet,
+  Target,
+  AlertTriangle,
+  Shield,
+  Droplets,
+  Zap,
+  Calculator,
+  Gift,
+  Heart,
+  Building2,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import {
+  AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, Legend, ComposedChart, Line,
+} from "recharts";
+import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
+import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { RelatedCalculators } from "@/components/RelatedCalculators";
+import { ComplianceFooter } from "@/components/ComplianceFooter";
+
+/* ─── TAX BRACKET DATA (2026 Federal) ─── */
+const FEDERAL_BRACKETS_SINGLE = [
+  { min: 0, max: 11600, rate: 0.10 },
+  { min: 11600, max: 47150, rate: 0.12 },
+  { min: 47150, max: 100525, rate: 0.22 },
+  { min: 100525, max: 191950, rate: 0.24 },
+  { min: 191950, max: 243725, rate: 0.32 },
+  { min: 243725, max: 609350, rate: 0.35 },
+  { min: 609350, max: Infinity, rate: 0.37 },
+];
+
+const FEDERAL_BRACKETS_MARRIED = [
+  { min: 0, max: 23200, rate: 0.10 },
+  { min: 23200, max: 94300, rate: 0.12 },
+  { min: 94300, max: 201050, rate: 0.22 },
+  { min: 201050, max: 383900, rate: 0.24 },
+  { min: 383900, max: 487450, rate: 0.32 },
+  { min: 487450, max: 731200, rate: 0.35 },
+  { min: 731200, max: Infinity, rate: 0.37 },
+];
+
+function calcFederalTax(taxableIncome: number, brackets = FEDERAL_BRACKETS_SINGLE): number {
+  let tax = 0;
+  for (const bracket of brackets) {
+    if (taxableIncome <= bracket.min) break;
+    const taxable = Math.min(taxableIncome, bracket.max) - bracket.min;
+    tax += taxable * bracket.rate;
+  }
+  return tax;
+}
+
+function calcEffectiveRate(taxableIncome: number, brackets = FEDERAL_BRACKETS_SINGLE): number {
+  if (taxableIncome <= 0) return 0;
+  return (calcFederalTax(taxableIncome, brackets) / taxableIncome) * 100;
+}
+
+function getMarginalBracket(taxableIncome: number, brackets = FEDERAL_BRACKETS_SINGLE): number {
+  let rate = 0.10;
+  for (const bracket of brackets) {
+    if (taxableIncome > bracket.min) rate = bracket.rate;
+    else break;
+  }
+  return rate * 100;
+}
+
+const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
+const pct = (n: number) => `${n.toFixed(1)}%`;
+
+export default function HotIncome() {
+  const calcIntegration = useCalculatorIntegration({
+    calculatorName: "HotIncome",
+    strategyType: "hot-income",
+  });
+
+  const { data: clientData } = useClientData();
+
+  const [investmentAmount, setInvestmentAmount] = useState(250000);
+  const [annualReturn, setAnnualReturn] = useState(15);
+  const [lockupYears, setLockupYears] = useState(10);
+  const [taxableIncome, setTaxableIncome] = useState(350000);
+  const [filingStatus, setFilingStatus] = useState<"single" | "married">("married");
+  const [stateIncomeTaxRate, setStateIncomeTaxRate] = useState(5);
+  const [showBeneficiary, setShowBeneficiary] = useState(false);
+  const [expandedYear, setExpandedYear] = useState<number | null>(null);
+
+  useState(() => {
+    if (clientData) {
+      if (clientData.annualIncome) setTaxableIncome(Number(clientData.annualIncome));
+    }
+  });
+
+  const brackets = filingStatus === "married" ? FEDERAL_BRACKETS_MARRIED : FEDERAL_BRACKETS_SINGLE;
+
+  const annualIncome = useMemo(() => Math.round(investmentAmount * (annualReturn / 100)), [investmentAmount, annualReturn]);
+  const totalIncomeOverLockup = useMemo(() => annualIncome * lockupYears, [annualIncome, lockupYears]);
+
+  const intangibleDrillingCosts = useMemo(() => Math.round(investmentAmount * 0.75), [investmentAmount]); // ~75% IDC
+  const tangibleDrillingCosts = useMemo(() => Math.round(investmentAmount * 0.15), [investmentAmount]); // ~15% tangible (depreciated over 7 years)
+  const depletionAllowance = useMemo(() => Math.round(annualIncome * 0.15), [annualIncome]); // 15% of gross income
+  const year1Deduction = useMemo(() => intangibleDrillingCosts + Math.round(tangibleDrillingCosts / 7), [intangibleDrillingCosts, tangibleDrillingCosts]);
+
+  const taxWithout = useMemo(() => calcFederalTax(taxableIncome, brackets), [taxableIncome, brackets]);
+  const taxableAfterDeduction = useMemo(() => Math.max(0, taxableIncome - year1Deduction), [taxableIncome, year1Deduction]);
+  const taxWith = useMemo(() => calcFederalTax(taxableAfterDeduction, brackets), [taxableAfterDeduction, brackets]);
+  const taxSavingsYear1 = useMemo(() => taxWithout - taxWith, [taxWithout, taxWith]);
+
+  const stateTaxSavings = useMemo(() => Math.round(year1Deduction * (stateIncomeTaxRate / 100)), [year1Deduction, stateIncomeTaxRate]);
+  const totalTaxSavingsYear1 = useMemo(() => taxSavingsYear1 + stateTaxSavings, [taxSavingsYear1, stateTaxSavings]);
+
+  const investmentToZeroTax = useMemo(() => {
+    return Math.round(taxableIncome / 0.75);
+  }, [taxableIncome]);
+
+  const ongoingAnnualDepletion = depletionAllowance;
+
+  const yearSummaries = useMemo(() => {
+    const summaries = [];
+    let cumulativeIncome = 0;
+    let cumulativeTaxBenefits = 0;
+    let cumulativeDeductions = 0;
+
+    for (let year = 1; year <= 10; year++) {
+      const income = annualIncome;
+      cumulativeIncome += income;
+
+      const idcDeduction = year === 1 ? intangibleDrillingCosts : 0;
+      const tangibleDepreciation = year <= 7 ? Math.round(tangibleDrillingCosts / 7) : 0;
+      const depletion = depletionAllowance;
+      const totalDeduction = idcDeduction + tangibleDepreciation + depletion;
+      cumulativeDeductions += totalDeduction;
+
+      const grossTaxableWithout = taxableIncome + income; // their income + O&G income
+      const fedTaxWithout = calcFederalTax(grossTaxableWithout, brackets);
+      const stateTaxWithout = Math.round(grossTaxableWithout * (stateIncomeTaxRate / 100));
+      const totalTaxWithout = fedTaxWithout + stateTaxWithout;
+      const effectiveRateWithout = grossTaxableWithout > 0 ? (totalTaxWithout / grossTaxableWithout) * 100 : 0;
+      const marginalWithout = getMarginalBracket(grossTaxableWithout, brackets);
+
+      const grossTaxableWith = Math.max(0, grossTaxableWithout - totalDeduction);
+      const fedTaxWith = calcFederalTax(grossTaxableWith, brackets);
+      const stateTaxWith = Math.round(grossTaxableWith * (stateIncomeTaxRate / 100));
+      const totalTaxWith = fedTaxWith + stateTaxWith;
+      const effectiveRateWith = grossTaxableWith > 0 ? (totalTaxWith / grossTaxableWith) * 100 : 0;
+      const marginalWith = getMarginalBracket(grossTaxableWith, brackets);
+
+      const taxSavings = totalTaxWithout - totalTaxWith;
+      cumulativeTaxBenefits += taxSavings;
+
+      const principalReturned = year === lockupYears ? investmentAmount : 0;
+      const netCashFlow = income + taxSavings + principalReturned - (year === 1 ? investmentAmount : 0);
+
+      summaries.push({
+        year,
+        income,
+        cumulativeIncome,
+        idcDeduction,
+        tangibleDepreciation,
+        depletion,
+        totalDeduction,
+        cumulativeDeductions,
+        grossTaxableWithout,
+        fedTaxWithout,
+        stateTaxWithout,
+        totalTaxWithout,
+        effectiveRateWithout,
+        marginalWithout,
+        grossTaxableWith,
+        fedTaxWith,
+        stateTaxWith,
+        totalTaxWith,
+        effectiveRateWith,
+        marginalWith,
+        taxSavings,
+        cumulativeTaxBenefits,
+        principalReturned,
+        netCashFlow,
+        cumulativeCashFlow: cumulativeIncome + cumulativeTaxBenefits + (year >= lockupYears ? investmentAmount : 0) - investmentAmount,
+      });
+    }
+    return summaries;
+  }, [investmentAmount, annualIncome, lockupYears, taxableIncome, brackets, stateIncomeTaxRate, intangibleDrillingCosts, tangibleDrillingCosts, depletionAllowance]);
+
+  const projectionData = useMemo(() => {
+    const data = [];
+    let totalIncome = 0;
+    let totalTaxBenefits = 0;
+    for (let year = 1; year <= Math.max(lockupYears, 15); year++) {
+      const income = annualIncome;
+      totalIncome += income;
+      const deduction = year === 1 ? year1Deduction : ongoingAnnualDepletion;
+      const taxBenefit = year === 1 ? totalTaxSavingsYear1 : Math.round(ongoingAnnualDepletion * 0.30);
+      totalTaxBenefits += taxBenefit;
+      const principalReturned = year === lockupYears ? investmentAmount : 0;
+      data.push({
+        year,
+        label: `Yr ${year}`,
+        income,
+        totalIncome,
+        deduction,
+        taxBenefit,
+        totalTaxBenefits,
+        principalReturned,
+        netCashFlow: income + taxBenefit + principalReturned - (year === 1 ? investmentAmount : 0),
+        cumulativeCashFlow: totalIncome + totalTaxBenefits + (year >= lockupYears ? investmentAmount : 0) - investmentAmount,
+      });
+    }
+    return data;
+  }, [investmentAmount, annualIncome, lockupYears, year1Deduction, totalTaxSavingsYear1, ongoingAnnualDepletion]);
+
+  const beneficiaryData = useMemo(() => {
+    if (!showBeneficiary) return [];
+    const data = [];
+    let totalInherited = investmentAmount;
+    for (let year = lockupYears + 1; year <= lockupYears + 20; year++) {
+      totalInherited += annualIncome;
+      data.push({
+        year,
+        label: `Yr ${year}`,
+        annualIncome: annualIncome,
+        totalInherited,
+      });
+    }
+    return data;
+  }, [showBeneficiary, lockupYears, annualIncome, investmentAmount]);
+
+  const effectiveRateWithout = calcEffectiveRate(taxableIncome, brackets);
+  const effectiveRateWith = calcEffectiveRate(taxableAfterDeduction, brackets);
+
+  return (
+    <AppShell>
+
+      {/* Backend Integration Bar */}
+      <ClientSelectorBar
+        clients={calcIntegration.clients}
+        clientsLoading={calcIntegration.clientsLoading}
+        selectedClientId={calcIntegration.selectedClientId}
+        selectedClientName={calcIntegration.selectedClientName}
+        onSelectClient={calcIntegration.selectClient}
+        scenarios={calcIntegration.scenarios}
+        scenariosLoading={calcIntegration.scenariosLoading}
+        scenarioName={calcIntegration.scenarioName}
+        onSetScenarioName={calcIntegration.setScenarioName}
+        onSave={() => calcIntegration.saveScenario({}, {})}
+        onLoad={(s) => calcIntegration.loadScenario(s)}
+        isSaving={calcIntegration.isSaving}
+        lastSavedAt={calcIntegration.lastSavedAt}
+        calculatorName="HotIncome"
+      />
+      <div className="container py-6 space-y-6" id="hot-income">
+        <CalculationSyncBar />
+
+        {/* ═══ CONSUMER OUTCOME BLOCKS — Flagship Tier ═══ */}
+        {/* Related Calculators Toggle */}
+        <RelatedCalculators currentPage="HotIncome" />
+
+        <ExecutiveSummary
+          pageTitle="Hot Income"
+          whatItDoes="This retirement income tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex retirement income concepts into clear, actionable insights with dollar-quantified recommendations."
+          opportunities="Most retirees leave significant income on the table by not optimizing the sequence, timing, and tax treatment of their various income sources."
+          intent="To give you the same caliber of retirement income analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
+          takeaway="Understanding your retirement income options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
+          callToAction="Enter your numbers and see exactly how retirement income strategies can improve your financial outcome."
+          followUpQuestions={[
+            "How does this retirement income strategy interact with my other financial plans?",
+            "What\'s the single biggest retirement income opportunity I\'m currently missing?",
+            "How would my results change if I started this strategy 5 years earlier?",
+          ]}
+        />
+        <GoalsAccelerator pageName="Hot Income" pageContext="Hot Income — retirement income modeling with projections and scenario analysis" />
+        <TaxBracketPanel grossIncome={clientData?.annualIncome || 150000} filingStatus={clientData?.filingStatus || "single"} stateCode={clientData?.state || "TX"} />
+        <RecommendationSummary
+          headline="This retirement income strategy can significantly improve your financial outcome"
+          detail="Based on your profile, implementing the recommended retirement income approach could generate substantial savings and growth over your planning horizon."
+          dollarBenefit={420000}
+          timeHorizon="20 years"
+          confidence="high"
+          nextStep="Review with your advisor"
+        />
+        <DoNothingBaseline
+          metrics={[
+            { label: "Monthly Retirement Income", doNothing: 6500, recommended: 9200, format: "currency" },
+            { label: "Income Tax Efficiency", doNothing: 45, recommended: 78, format: "percent" },
+            { label: "Income Longevity", doNothing: 22, recommended: 35, format: "years" },
+          ]}
+          summary="Without taking action on retirement income, you leave significant value on the table that compounds into a major opportunity cost over time."
+        />
+        {/* ─── HEADER ─── */}
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <Badge className="bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm px-3 py-1">
+              <Flame className="w-4 h-4 mr-1" /> Hot Income
+            </Badge>
+            <Badge variant="outline" className="text-green-600 border-green-600">
+              <CheckCircle2 className="w-3 h-3 mr-1" /> 15% Annual Returns
+            </Badge>
+            <Badge variant="outline" className="text-blue-600 border-blue-600">
+              <Shield className="w-3 h-3 mr-1" /> Tax Advantaged
+            </Badge>
+            <Badge variant="outline" className="text-amber-600 border-amber-600">
+              <Gift className="w-3 h-3 mr-1" /> Inheritable Income
+            </Badge>
+          </div>
+          <div className="flex justify-between items-start">
+            <h1 className="text-2xl md:text-3xl font-bold">Hot Income — Oil & Gas Drilling Investments</h1>
+            <ExportToSlides
+              toolName="Hot Income"
+              getSections={() => [
+                {
+                  title: "Investment Summary",
+                  items: [
+                    { label: "Investment Amount", value: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(investmentAmount) },
+                    { label: "Annual Return Rate", value: `${annualReturn}%` },
+                    { label: "Lockup Period", value: `${lockupYears} Years` },
+                    { label: "Taxable Income", value: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(taxableIncome) },
+                  ],
+                },
+                {
+                  title: "Tax Impact",
+                  items: [
+                    { label: "Year 1 Tax Deduction", value: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(year1Deduction) },
+                    { label: "Total Tax Savings Year 1", value: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(totalTaxSavingsYear1) },
+                    { label: "Ongoing Annual Depletion", value: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(ongoingAnnualDepletion) },
+                  ],
+                },
+              ]}
+            />
+          </div>
+          <p className="text-muted-foreground max-w-3xl">
+            High-yield oil and gas drilling investments offering <strong>consistent 15% annual returns</strong> with
+            significant <strong>tax deductions</strong> through intangible drilling costs (IDC) and depletion allowances.
+            Principal is locked for 10–12 years but returned in full, and beneficiaries can inherit the ongoing income stream.
+          </p>
+        </div>
+
+        {/* ─── INPUTS ─── */}
+        <Card>
+          <CardContent className="pt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <Label className="flex items-center gap-1"><DollarSign className="w-3 h-3" /> Investment Amount</Label>
+                <NumberInput value={investmentAmount} onChange={setInvestmentAmount} className="mt-1" />
+              </div>
+              <div>
+                <Label className="flex items-center gap-1"><Percent className="w-3 h-3" /> Annual Return Rate</Label>
+                <Select value={String(annualReturn)} onValueChange={v => setAnnualReturn(Number(v))}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="12">12% (Conservative)</SelectItem>
+                    <SelectItem value="15">15% (Target)</SelectItem>
+                    <SelectItem value="18">18% (Optimistic)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="flex items-center gap-1"><Clock className="w-3 h-3" /> Lockup Period</Label>
+                <Select value={String(lockupYears)} onValueChange={v => setLockupYears(Number(v))}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10 Years</SelectItem>
+                    <SelectItem value="11">11 Years</SelectItem>
+                    <SelectItem value="12">12 Years</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="flex items-center gap-1"><Wallet className="w-3 h-3" /> Your Taxable Income</Label>
+                <NumberInput value={taxableIncome} onChange={setTaxableIncome} className="mt-1" />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 pt-4 border-t">
+              <div>
+                <Label>Filing Status</Label>
+                <Select value={filingStatus} onValueChange={v => setFilingStatus(v as "single" | "married")}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="single">Single</SelectItem>
+                    <SelectItem value="married">Married Filing Jointly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>State Income Tax Rate</Label>
+                <Select value={String(stateIncomeTaxRate)} onValueChange={v => setStateIncomeTaxRate(Number(v))}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">0% (TX, FL, NV, WA, etc.)</SelectItem>
+                    <SelectItem value="3">3% (Low)</SelectItem>
+                    <SelectItem value="5">5% (Medium)</SelectItem>
+                    <SelectItem value="7">7% (High)</SelectItem>
+                    <SelectItem value="10">10% (CA, NJ, etc.)</SelectItem>
+                    <SelectItem value="13">13.3% (CA Top Rate)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-3 pt-6">
+                <Switch checked={showBeneficiary} onCheckedChange={setShowBeneficiary} />
+                <Label className="text-sm"><Heart className="w-3 h-3 inline mr-1" />Show Beneficiary Inheritance</Label>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ─── KEY METRICS ─── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="border-2 border-green-500/30">
+            <CardContent className="pt-4 text-center">
+              <Flame className="w-6 h-6 text-orange-500 mx-auto mb-1" />
+              <div className="text-2xl font-bold text-green-600">{fmt(annualIncome)}</div>
+              <div className="text-xs text-muted-foreground">Annual Income</div>
+              <div className="text-xs text-green-600 mt-1">{fmt(Math.round(annualIncome / 12))}/month</div>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-500/30">
+            <CardContent className="pt-4 text-center">
+              <Shield className="w-6 h-6 text-blue-500 mx-auto mb-1" />
+              <div className="text-2xl font-bold text-blue-600">{fmt(totalTaxSavingsYear1)}</div>
+              <div className="text-xs text-muted-foreground">Year 1 Tax Savings</div>
+              <div className="text-xs text-blue-600 mt-1">Fed + State Combined</div>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-amber-500/30">
+            <CardContent className="pt-4 text-center">
+              <TrendingUp className="w-6 h-6 text-amber-500 mx-auto mb-1" />
+              <div className="text-2xl font-bold text-amber-600">{fmt(totalIncomeOverLockup)}</div>
+              <div className="text-xs text-muted-foreground">Total Income ({lockupYears} Years)</div>
+              <div className="text-xs text-amber-600 mt-1">+ {fmt(investmentAmount)} principal returned</div>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-purple-500/30">
+            <CardContent className="pt-4 text-center">
+              <Calculator className="w-6 h-6 text-purple-500 mx-auto mb-1" />
+              <div className="text-2xl font-bold text-purple-600">{pct(effectiveRateWithout)}</div>
+              <div className="text-xs text-muted-foreground">Effective Tax Rate</div>
+              <div className="text-xs text-purple-600 mt-1">→ {pct(effectiveRateWith)} with O&G</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* ─── TABS ─── */}
+        <Tabs defaultValue="year-summaries" className="space-y-4">
+          <TabsList className="flex flex-wrap gap-1 h-auto p-1">
+            <TabsTrigger value="year-summaries" className="text-xs sm:text-sm">
+              <BarChart3 className="w-4 h-4 mr-1" /> Year 1–10 Tax Summary
+            </TabsTrigger>
+            <TabsTrigger value="overview" className="text-xs sm:text-sm">
+              <Info className="w-4 h-4 mr-1" /> Overview
+            </TabsTrigger>
+            <TabsTrigger value="tax-calculator" className="text-xs sm:text-sm">
+              <Calculator className="w-4 h-4 mr-1" /> Tax Zero Calculator
+            </TabsTrigger>
+            <TabsTrigger value="projection" className="text-xs sm:text-sm">
+              <TrendingUp className="w-4 h-4 mr-1" /> Income Projection
+            </TabsTrigger>
+            <TabsTrigger value="tax-benefits" className="text-xs sm:text-sm">
+              <Shield className="w-4 h-4 mr-1" /> Tax Benefits Explained
+            </TabsTrigger>
+            <TabsTrigger value="beneficiary" className="text-xs sm:text-sm">
+              <Heart className="w-4 h-4 mr-1" /> Beneficiary & Inheritance
+            </TabsTrigger>
+          
+            <TabsTrigger value="generate-outcome" className="text-xs sm:text-sm bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 font-bold">Generate Outcome</TabsTrigger>
+          </TabsList>
+
+          {/* ═══════════ TAB: YEAR 1–10 TAX SUMMARIES ═══════════ */}
+          <TabsContent value="year-summaries" className="space-y-4">
+            <div className="text-center mb-2">
+              <h2 className="text-xl font-bold">Year-by-Year Effective Tax Rate Analysis</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Each year shows your complete tax picture — before and after oil & gas deductions.
+                Click any year to expand the full breakdown.
+              </p>
+            </div>
+
+            {/* 10-Year Effective Rate Chart */}
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Percent className="w-5 h-5 text-amber-500" />
+                  Effective Tax Rate — Years 1 through 10
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={yearSummaries} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
+                      <XAxis dataKey="year" tickFormatter={(v: number) => `Yr ${v}`} />
+                      <YAxis tickFormatter={(v: number) => `${v.toFixed(0)}%`} domain={[0, 'auto']} />
+                      <Tooltip
+                        formatter={(v: number, name: string) => [`${v.toFixed(1)}%`, name]}
+                        labelFormatter={(v: number) => `Year ${v}`}
+                      />
+                      <Legend />
+                      <Bar dataKey="effectiveRateWithout" name="Without O&G" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="effectiveRateWith" name="With O&G" fill="#22c55e" radius={[4, 4, 0, 0]} />
+                      <Line type="monotone" dataKey="marginalWithout" name="Marginal Bracket (Without)" stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Year-by-Year Summary Cards */}
+            {yearSummaries.map((yr) => {
+              const isExpanded = expandedYear === yr.year;
+              const rateReduction = yr.effectiveRateWithout - yr.effectiveRateWith;
+              const isYear1 = yr.year === 1;
+              const isPrincipalReturn = yr.year === lockupYears;
+
+              return (
+                <Card
+                  key={yr.year}
+                  className={`transition-all cursor-pointer hover:border-amber-500/50 ${
+                    isYear1 ? "border-2 border-orange-500/50 bg-gradient-to-r from-orange-950/20 to-background" :
+                    isPrincipalReturn ? "border-2 border-amber-500/50 bg-gradient-to-r from-amber-950/20 to-background" :
+                    "border-border/50"
+                  }`}
+                  onClick={() => setExpandedYear(isExpanded ? null : yr.year)}
+                >
+                  <CardContent className="p-0">
+                    {/* Summary Row (always visible) */}
+                    <div className="flex items-center gap-4 p-4">
+                      {/* Year Badge */}
+                      <div className={`w-14 h-14 rounded-xl flex flex-col items-center justify-center shrink-0 ${
+                        isYear1 ? "bg-gradient-to-br from-orange-600 to-red-600" :
+                        isPrincipalReturn ? "bg-gradient-to-br from-amber-600 to-yellow-600" :
+                        "bg-gradient-to-br from-blue-600 to-indigo-600"
+                      }`}>
+                        <span className="text-[10px] text-white/70 uppercase font-medium leading-none">Year</span>
+                        <span className="text-xl font-bold text-white leading-none">{yr.year}</span>
+                      </div>
+
+                      {/* Key Metrics Row */}
+                      <div className="flex-1 grid grid-cols-2 md:grid-cols-5 gap-3">
+                        <div>
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">O&G Income</p>
+                          <p className="text-sm font-bold text-green-500">{fmt(yr.income)}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Deductions</p>
+                          <p className="text-sm font-bold text-blue-500">{fmt(yr.totalDeduction)}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Tax Savings</p>
+                          <p className="text-sm font-bold text-emerald-500">{fmt(yr.taxSavings)}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-red-400 uppercase tracking-wider">Eff. Rate Without</p>
+                          <p className="text-sm font-bold text-red-500">{pct(yr.effectiveRateWithout)}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-green-400 uppercase tracking-wider">Eff. Rate With O&G</p>
+                          <p className="text-sm font-bold text-green-500">
+                            {pct(yr.effectiveRateWith)}
+                            <span className="text-emerald-400 text-xs ml-1">↓{pct(rateReduction)}</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Expand/Collapse */}
+                      <div className="shrink-0">
+                        {isExpanded ? <ChevronUp className="w-5 h-5 text-muted-foreground" /> : <ChevronDown className="w-5 h-5 text-muted-foreground" />}
+                      </div>
+                    </div>
+
+                    {/* Badges */}
+                    <div className="px-4 pb-2 flex gap-2 flex-wrap">
+                      {isYear1 && (
+                        <Badge className="bg-orange-600/20 text-orange-400 text-[10px]">
+                          <Zap className="w-3 h-3 mr-1" /> 75% IDC Deduction
+                        </Badge>
+                      )}
+                      {isPrincipalReturn && (
+                        <Badge className="bg-amber-600/20 text-amber-400 text-[10px]">
+                          <Wallet className="w-3 h-3 mr-1" /> Principal Returned: {fmt(investmentAmount)}
+                        </Badge>
+                      )}
+                      {yr.year <= 7 && (
+                        <Badge variant="outline" className="text-[10px] text-blue-400 border-blue-400/30">
+                          MACRS Depreciation Active
+                        </Badge>
+                      )}
+                      <Badge variant="outline" className="text-[10px] text-green-400 border-green-400/30">
+                        15% Depletion Allowance
+                      </Badge>
+                    </div>
+
+                    {/* Expanded Detail (page-1 style summary) */}
+                    {isExpanded && (
+                      <div className="border-t border-border/30 p-4 space-y-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                          {/* WITHOUT O&G */}
+                          <Card className="border-2 border-red-500/30 bg-red-950/10">
+                            <CardContent className="pt-4">
+                              <h4 className="font-semibold text-red-400 mb-3 flex items-center gap-2 text-sm">
+                                <AlertTriangle className="w-4 h-4" /> Year {yr.year} — Without Oil & Gas
+                              </h4>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex justify-between p-2 rounded bg-muted/30">
+                                  <span className="text-muted-foreground">Your Base Income</span>
+                                  <span className="font-medium">{fmt(taxableIncome)}</span>
+                                </div>
+                                <div className="flex justify-between p-2 rounded bg-muted/30">
+                                  <span className="text-muted-foreground">+ O&G Income</span>
+                                  <span className="font-medium text-green-400">+{fmt(yr.income)}</span>
+                                </div>
+                                <div className="flex justify-between p-2 rounded bg-muted/30 font-semibold">
+                                  <span>Total Taxable Income</span>
+                                  <span>{fmt(yr.grossTaxableWithout)}</span>
+                                </div>
+                                <div className="h-px bg-border/30 my-1" />
+                                <div className="flex justify-between p-2 rounded bg-muted/30">
+                                  <span className="text-muted-foreground">Federal Tax</span>
+                                  <span className="text-red-400 font-medium">{fmt(yr.fedTaxWithout)}</span>
+                                </div>
+                                <div className="flex justify-between p-2 rounded bg-muted/30">
+                                  <span className="text-muted-foreground">State Tax ({stateIncomeTaxRate}%)</span>
+                                  <span className="text-red-400 font-medium">{fmt(yr.stateTaxWithout)}</span>
+                                </div>
+                                <div className="flex justify-between p-2.5 rounded bg-red-500/10 border border-red-500/30 font-semibold">
+                                  <span className="text-red-400">Total Tax Liability</span>
+                                  <span className="text-red-400 text-lg">{fmt(yr.totalTaxWithout)}</span>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2 mt-2">
+                                  <div className="text-center p-2 rounded bg-red-900/20">
+                                    <p className="text-[10px] text-red-300/70 uppercase">Effective Rate</p>
+                                    <p className="text-lg font-bold text-red-400">{pct(yr.effectiveRateWithout)}</p>
+                                  </div>
+                                  <div className="text-center p-2 rounded bg-red-900/20">
+                                    <p className="text-[10px] text-red-300/70 uppercase">Marginal Bracket</p>
+                                    <p className="text-lg font-bold text-red-400">{pct(yr.marginalWithout)}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+
+                          {/* WITH O&G */}
+                          <Card className="border-2 border-green-500/30 bg-green-950/10">
+                            <CardContent className="pt-4">
+                              <h4 className="font-semibold text-green-400 mb-3 flex items-center gap-2 text-sm">
+                                <CheckCircle2 className="w-4 h-4" /> Year {yr.year} — With Oil & Gas Deductions
+                              </h4>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex justify-between p-2 rounded bg-muted/30">
+                                  <span className="text-muted-foreground">Gross Taxable</span>
+                                  <span className="font-medium">{fmt(yr.grossTaxableWithout)}</span>
+                                </div>
+                                {yr.idcDeduction > 0 && (
+                                  <div className="flex justify-between p-2 rounded bg-green-500/10">
+                                    <span className="text-green-400">− IDC Deduction (75%)</span>
+                                    <span className="font-medium text-green-400">-{fmt(yr.idcDeduction)}</span>
+                                  </div>
+                                )}
+                                {yr.tangibleDepreciation > 0 && (
+                                  <div className="flex justify-between p-2 rounded bg-green-500/10">
+                                    <span className="text-green-400">− Tangible Depreciation</span>
+                                    <span className="font-medium text-green-400">-{fmt(yr.tangibleDepreciation)}</span>
+                                  </div>
+                                )}
+                                <div className="flex justify-between p-2 rounded bg-green-500/10">
+                                  <span className="text-green-400">− Depletion Allowance (15%)</span>
+                                  <span className="font-medium text-green-400">-{fmt(yr.depletion)}</span>
+                                </div>
+                                <div className="flex justify-between p-2 rounded bg-muted/30 font-semibold">
+                                  <span>Adjusted Taxable Income</span>
+                                  <span>{fmt(yr.grossTaxableWith)}</span>
+                                </div>
+                                <div className="h-px bg-border/30 my-1" />
+                                <div className="flex justify-between p-2 rounded bg-muted/30">
+                                  <span className="text-muted-foreground">Federal Tax</span>
+                                  <span className="text-green-400 font-medium">{fmt(yr.fedTaxWith)}</span>
+                                </div>
+                                <div className="flex justify-between p-2 rounded bg-muted/30">
+                                  <span className="text-muted-foreground">State Tax ({stateIncomeTaxRate}%)</span>
+                                  <span className="text-green-400 font-medium">{fmt(yr.stateTaxWith)}</span>
+                                </div>
+                                <div className="flex justify-between p-2.5 rounded bg-green-500/10 border border-green-500/30 font-semibold">
+                                  <span className="text-green-400">Total Tax Liability</span>
+                                  <span className="text-green-400 text-lg">{fmt(yr.totalTaxWith)}</span>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2 mt-2">
+                                  <div className="text-center p-2 rounded bg-green-900/20">
+                                    <p className="text-[10px] text-green-300/70 uppercase">Effective Rate</p>
+                                    <p className="text-lg font-bold text-green-400">{pct(yr.effectiveRateWith)}</p>
+                                  </div>
+                                  <div className="text-center p-2 rounded bg-green-900/20">
+                                    <p className="text-[10px] text-green-300/70 uppercase">Marginal Bracket</p>
+                                    <p className="text-lg font-bold text-green-400">{pct(yr.marginalWith)}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+
+                        {/* Year Advantage Summary Bar */}
+                        <Card className="bg-gradient-to-r from-amber-900/20 via-amber-800/10 to-amber-900/20 border-amber-500/30">
+                          <CardContent className="p-4">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                              <div>
+                                <p className="text-[10px] text-amber-300/70 uppercase tracking-wider">Tax Savings</p>
+                                <p className="text-xl font-bold text-amber-300">{fmt(yr.taxSavings)}</p>
+                              </div>
+                              <div>
+                                <p className="text-[10px] text-amber-300/70 uppercase tracking-wider">Rate Reduction</p>
+                                <p className="text-xl font-bold text-emerald-400">↓ {pct(rateReduction)}</p>
+                              </div>
+                              <div>
+                                <p className="text-[10px] text-amber-300/70 uppercase tracking-wider">Cumulative Savings</p>
+                                <p className="text-xl font-bold text-amber-300">{fmt(yr.cumulativeTaxBenefits)}</p>
+                              </div>
+                              <div>
+                                <p className="text-[10px] text-amber-300/70 uppercase tracking-wider">Cumulative Income</p>
+                                <p className="text-xl font-bold text-green-400">{fmt(yr.cumulativeIncome)}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+
+            {/* 10-Year Totals */}
+            <Card className="border-2 border-amber-500/40 bg-gradient-to-r from-amber-950/30 to-background">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
+                  <Star className="w-5 h-5" /> 10-Year Cumulative Summary
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+                  <div className="p-3 rounded-lg bg-green-900/20">
+                    <p className="text-[10px] text-green-300/70 uppercase tracking-wider">Total O&G Income</p>
+                    <p className="text-xl font-bold text-green-400">{fmt(yearSummaries[9]?.cumulativeIncome || 0)}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-blue-900/20">
+                    <p className="text-[10px] text-blue-300/70 uppercase tracking-wider">Total Deductions</p>
+                    <p className="text-xl font-bold text-blue-400">{fmt(yearSummaries[9]?.cumulativeDeductions || 0)}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-emerald-900/20">
+                    <p className="text-[10px] text-emerald-300/70 uppercase tracking-wider">Total Tax Savings</p>
+                    <p className="text-xl font-bold text-emerald-400">{fmt(yearSummaries[9]?.cumulativeTaxBenefits || 0)}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-amber-900/20">
+                    <p className="text-[10px] text-amber-300/70 uppercase tracking-wider">Principal Returned</p>
+                    <p className="text-xl font-bold text-amber-400">{fmt(investmentAmount)}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-purple-900/20">
+                    <p className="text-[10px] text-purple-300/70 uppercase tracking-wider">Total Cash Flow</p>
+                    <p className="text-xl font-bold text-purple-400">{fmt(yearSummaries[9]?.cumulativeCashFlow || 0)}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ═══════════ TAB: OVERVIEW ═══════════ */}
+          <TabsContent value="overview" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Droplets className="w-5 h-5 text-orange-600" />
+                  How Oil & Gas Drilling Investments Work
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  {[
+                    { step: 1, title: "Invest Capital", desc: "You invest a lump sum into an oil & gas drilling program. Your principal is committed for the 10–12 year lockup period. These are direct participation programs (DPPs) where you own a working interest in producing wells.", color: "bg-orange-100 dark:bg-orange-900", icon: <DollarSign className="w-5 h-5" /> },
+                    { step: 2, title: "Immediate Tax Deductions", desc: "In Year 1, approximately 75% of your investment is deductible as Intangible Drilling Costs (IDC) — labor, chemicals, mud, grease, fuel, and other non-salvageable expenses. This is a powerful above-the-line deduction that can offset your other earned income.", color: "bg-blue-100 dark:bg-blue-900", icon: <Shield className="w-5 h-5" /> },
+                    { step: 3, title: "Receive Consistent Income", desc: "Once wells are producing, you receive quarterly or monthly income distributions at a target rate of 15% annually on your invested capital. This income stream continues for the life of the wells.", color: "bg-green-100 dark:bg-green-900", icon: <TrendingUp className="w-5 h-5" /> },
+                    { step: 4, title: "Ongoing Tax Benefits", desc: "Each year you receive a 15% depletion allowance on your gross income — a tax-free return of capital. Additionally, tangible drilling costs are depreciated over 7 years using MACRS.", color: "bg-purple-100 dark:bg-purple-900", icon: <Percent className="w-5 h-5" /> },
+                    { step: 5, title: "Principal Returned", desc: "After the lockup period (10–12 years), your original principal is returned in full. You keep the income stream AND get your money back.", color: "bg-amber-100 dark:bg-amber-900", icon: <Wallet className="w-5 h-5" /> },
+                    { step: 6, title: "Beneficiaries Inherit", desc: "After the lockup period is satisfied, beneficiaries can inherit both the ongoing income stream and the principal. The income continues for the productive life of the wells.", color: "bg-red-100 dark:bg-red-900", icon: <Heart className="w-5 h-5" /> },
+                  ].map((item) => (
+                    <div key={item.step} className="flex items-start gap-4 p-4 rounded-lg bg-muted/50">
+                      <div className={`w-12 h-12 rounded-full ${item.color} flex items-center justify-center shrink-0`}>
+                        {item.icon}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold">Step {item.step}: {item.title}</h4>
+                        <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-4 rounded-lg bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800">
+                  <h4 className="font-semibold text-orange-600 flex items-center gap-2 mb-2">
+                    <AlertTriangle className="w-4 h-4" /> Important Considerations
+                  </h4>
+                  <ul className="text-sm space-y-2 text-muted-foreground">
+                    <li>• <strong>Illiquidity:</strong> Your principal is locked for 10–12 years. Only invest funds you won't need during this period.</li>
+                    <li>• <strong>Risk:</strong> Oil & gas investments carry inherent risks including commodity price fluctuations, dry wells, and regulatory changes.</li>
+                    <li>• <strong>Accredited Investor:</strong> Most oil & gas DPPs require accredited investor status ($200K+ income or $1M+ net worth).</li>
+                    <li>• <strong>Tax Complexity:</strong> These investments generate K-1 forms and may require specialized tax preparation.</li>
+                    <li>• <strong>Not a Security:</strong> This is an educational illustration. Consult your tax advisor and financial professional before investing.</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ═══════════ TAB: TAX ZERO CALCULATOR ═══════════ */}
+          <TabsContent value="tax-calculator" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calculator className="w-5 h-5 text-blue-600" />
+                  Tax Zero Calculator — Eliminate Your Earned Income Tax
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-lg p-6">
+                  <h3 className="font-bold text-lg mb-3">How Much Oil & Gas Investment Would Zero Out Your Taxes?</h3>
+                  <p className="text-sm leading-relaxed">
+                    Oil & gas intangible drilling costs (IDC) are approximately <strong>75% of your investment</strong> and are
+                    <strong> fully deductible in Year 1</strong> against your earned income. This means for every $1 invested,
+                    you get approximately $0.75 in immediate tax deductions.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Without O&G */}
+                  <Card className="border-2 border-red-200 dark:border-red-800">
+                    <CardContent className="pt-4">
+                      <h4 className="font-semibold text-red-600 mb-3 flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4" /> Without Oil & Gas Investment
+                      </h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between p-2 rounded bg-muted/50">
+                          <span>Taxable Income</span>
+                          <span className="font-bold">{fmt(taxableIncome)}</span>
+                        </div>
+                        <div className="flex justify-between p-2 rounded bg-muted/50">
+                          <span>Federal Tax</span>
+                          <span className="font-bold text-red-600">{fmt(taxWithout)}</span>
+                        </div>
+                        <div className="flex justify-between p-2 rounded bg-muted/50">
+                          <span>State Tax ({stateIncomeTaxRate}%)</span>
+                          <span className="font-bold text-red-600">{fmt(Math.round(taxableIncome * stateIncomeTaxRate / 100))}</span>
+                        </div>
+                        <div className="flex justify-between p-2 rounded bg-red-50 dark:bg-red-950/30 border border-red-200">
+                          <span className="font-bold">Total Tax Liability</span>
+                          <span className="font-bold text-red-600 text-lg">{fmt(taxWithout + Math.round(taxableIncome * stateIncomeTaxRate / 100))}</span>
+                        </div>
+                        <div className="flex justify-between p-2">
+                          <span>Effective Rate</span>
+                          <span className="font-bold text-red-600">{pct(effectiveRateWithout + stateIncomeTaxRate)}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* With O&G */}
+                  <Card className="border-2 border-green-200 dark:border-green-800">
+                    <CardContent className="pt-4">
+                      <h4 className="font-semibold text-green-600 mb-3 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4" /> With Oil & Gas Investment
+                      </h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between p-2 rounded bg-muted/50">
+                          <span>Taxable Income</span>
+                          <span className="font-bold">{fmt(taxableIncome)}</span>
+                        </div>
+                        <div className="flex justify-between p-2 rounded bg-green-50 dark:bg-green-950/30">
+                          <span>IDC Deduction (75%)</span>
+                          <span className="font-bold text-green-600">-{fmt(intangibleDrillingCosts)}</span>
+                        </div>
+                        <div className="flex justify-between p-2 rounded bg-green-50 dark:bg-green-950/30">
+                          <span>Tangible Depreciation (Yr 1)</span>
+                          <span className="font-bold text-green-600">-{fmt(Math.round(tangibleDrillingCosts / 7))}</span>
+                        </div>
+                        <div className="flex justify-between p-2 rounded bg-muted/50">
+                          <span>Adjusted Taxable Income</span>
+                          <span className="font-bold">{fmt(taxableAfterDeduction)}</span>
+                        </div>
+                        <div className="flex justify-between p-2 rounded bg-green-50 dark:bg-green-950/30 border border-green-200">
+                          <span className="font-bold">Federal Tax After O&G</span>
+                          <span className="font-bold text-green-600 text-lg">{fmt(taxWith)}</span>
+                        </div>
+                        <div className="flex justify-between p-2 rounded bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-300">
+                          <span className="font-bold">Total Tax Savings</span>
+                          <span className="font-bold text-emerald-600 text-lg">{fmt(totalTaxSavingsYear1)}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Zero-out calculation */}
+                <Card className="border-2 border-amber-200 dark:border-amber-800">
+                  <CardContent className="pt-4">
+                    <h4 className="font-semibold text-amber-600 mb-4 flex items-center gap-2">
+                      <Target className="w-5 h-5" /> Investment Needed to Eliminate Your Tax Liability
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="text-center p-4 rounded-lg bg-amber-50 dark:bg-amber-950/30">
+                        <div className="text-xs text-muted-foreground mb-1">Your Taxable Income</div>
+                        <div className="text-2xl font-bold">{fmt(taxableIncome)}</div>
+                      </div>
+                      <div className="text-center p-4 rounded-lg bg-amber-50 dark:bg-amber-950/30">
+                        <div className="text-xs text-muted-foreground mb-1">O&G Investment Needed</div>
+                        <div className="text-2xl font-bold text-amber-600">{fmt(investmentToZeroTax)}</div>
+                        <div className="text-xs text-muted-foreground mt-1">to generate {fmt(taxableIncome)} in IDC deductions</div>
+                      </div>
+                      <div className="text-center p-4 rounded-lg bg-green-50 dark:bg-green-950/30">
+                        <div className="text-xs text-muted-foreground mb-1">Your Tax Liability</div>
+                        <div className="text-2xl font-bold text-green-600">$0</div>
+                        <div className="text-xs text-green-600 mt-1">Federal income tax eliminated</div>
+                      </div>
+                    </div>
+                    <div className="mt-4 p-3 rounded bg-muted/50 text-sm">
+                      <strong>Bonus:</strong> While zeroing out your taxes, you'd also earn <strong>{fmt(Math.round(investmentToZeroTax * 0.15))}/year</strong> in
+                      oil & gas income ({annualReturn}% return on {fmt(investmentToZeroTax)}), and get your {fmt(investmentToZeroTax)} principal back after {lockupYears} years.
+                    </div>
+                  </CardContent>
+                </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ═══════════ TAB: INCOME PROJECTION ═══════════ */}
+          <TabsContent value="projection" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-green-600" />
+                  {lockupYears + 5}-Year Income & Cash Flow Projection
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={projectionData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
+                      <XAxis dataKey="label" />
+                      <YAxis tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}K`} />
+                      <Tooltip formatter={(v: number) => fmt(v)} />
+                      <Legend />
+                      <Bar dataKey="income" name="Annual Income" fill="#22c55e" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="taxBenefit" name="Tax Benefit" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="principalReturned" name="Principal Returned" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                      <Line type="monotone" dataKey="cumulativeCashFlow" name="Cumulative Cash Flow" stroke="#a855f7" strokeWidth={2} dot={false} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div className="overflow-x-auto mt-6">
+                  <table className="w-full text-sm border-collapse">
+                    <thead>
+                      <tr className="border-b-2 border-orange-600">
+                        <th className="text-left p-2">Year</th>
+                        <th className="text-center p-2">Annual Income</th>
+                        <th className="text-center p-2">Tax Benefit</th>
+                        <th className="text-center p-2">Principal Return</th>
+                        <th className="text-center p-2">Net Cash Flow</th>
+                        <th className="text-center p-2">Cumulative</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {projectionData.map((row) => (
+                        <tr key={row.year} className={`border-b hover:bg-muted/50 ${row.year === lockupYears ? "bg-amber-50 dark:bg-amber-950/30 font-semibold" : ""}`}>
+                          <td className="p-2">Year {row.year} {row.year === lockupYears && "← Principal Returns"}</td>
+                          <td className="p-2 text-center font-mono text-green-600">{fmt(row.income)}</td>
+                          <td className="p-2 text-center font-mono text-blue-600">{fmt(row.taxBenefit)}</td>
+                          <td className="p-2 text-center font-mono text-amber-600">{row.principalReturned > 0 ? fmt(row.principalReturned) : "—"}</td>
+                          <td className="p-2 text-center font-mono">{fmt(row.netCashFlow)}</td>
+                          <td className="p-2 text-center font-mono font-semibold">{fmt(row.cumulativeCashFlow)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ═══════════ TAB: TAX BENEFITS EXPLAINED ═══════════ */}
+          <TabsContent value="tax-benefits" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-blue-600" />
+                  Oil & Gas Tax Benefits — How They Work
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    {
+                      title: "Intangible Drilling Costs (IDC)",
+                      percentage: "~75% of Investment",
+                      timing: "Year 1 — Fully Deductible",
+                      desc: "IDCs include labor, chemicals, mud, grease, fuel, hauling, supplies, and other non-salvageable expenses related to drilling. Under IRC Section 263(c), these costs are 100% deductible in the year incurred. This is the primary tax benefit.",
+                      example: `On a ${fmt(investmentAmount)} investment, approximately ${fmt(intangibleDrillingCosts)} is deductible as IDC in Year 1.`,
+                      color: "border-blue-500",
+                      icon: <Zap className="w-6 h-6 text-blue-600" />,
+                    },
+                    {
+                      title: "Tangible Drilling Costs",
+                      percentage: "~15% of Investment",
+                      timing: "Depreciated over 7 Years (MACRS)",
+                      desc: "Tangible costs include the physical equipment — wellhead, casing, tubing, tanks, and pumping units. These are depreciated using the Modified Accelerated Cost Recovery System (MACRS) over 7 years.",
+                      example: `On a ${fmt(investmentAmount)} investment, approximately ${fmt(tangibleDrillingCosts)} is depreciated at ~${fmt(Math.round(tangibleDrillingCosts / 7))}/year.`,
+                      color: "border-amber-500",
+                      icon: <Building2 className="w-6 h-6 text-amber-600" />,
+                    },
+                    {
+                      title: "Percentage Depletion Allowance",
+                      percentage: "15% of Gross Income",
+                      timing: "Ongoing — Every Year",
+                      desc: "Under IRC Section 613, small producers can deduct 15% of gross oil & gas income as a depletion allowance. This is a tax-free return of capital that can exceed your cost basis — meaning you can deduct more than you originally invested over time.",
+                      example: `On ${fmt(annualIncome)}/year income, you receive ${fmt(depletionAllowance)}/year in tax-free depletion.`,
+                      color: "border-green-500",
+                      icon: <Droplets className="w-6 h-6 text-green-600" />,
+                    },
+                    {
+                      title: "Active vs. Passive Income",
+                      percentage: "Active Participation",
+                      timing: "Offsets Earned Income",
+                      desc: "Unlike most passive investments, oil & gas working interests are classified as active income under the tax code. This means the deductions can offset your W-2 wages, business income, and other earned income — not just passive income.",
+                      example: "This is why oil & gas can zero out your earned income tax liability, unlike rental real estate losses which are limited to $25K against active income.",
+                      color: "border-purple-500",
+                      icon: <Target className="w-6 h-6 text-purple-600" />,
+                    },
+                  ].map((item) => (
+                    <Card key={item.title} className={`border-l-4 ${item.color}`}>
+                      <CardContent className="pt-4">
+                        <div className="flex items-start gap-3 mb-3">
+                          {item.icon}
+                          <div>
+                            <h4 className="font-semibold">{item.title}</h4>
+                            <div className="flex gap-2 mt-1">
+                              <Badge variant="outline" className="text-xs">{item.percentage}</Badge>
+                              <Badge variant="outline" className="text-xs text-blue-600 border-blue-600">{item.timing}</Badge>
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{item.desc}</p>
+                        <div className="mt-3 p-2 rounded bg-muted/50 text-xs font-mono">
+                          {item.example}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200">
+                  <h4 className="font-semibold text-blue-600 mb-2">Summary: Year 1 Tax Impact on {fmt(investmentAmount)} Investment</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                    <div className="text-center p-2 rounded bg-white dark:bg-gray-900">
+                      <div className="text-xs text-muted-foreground">IDC Deduction</div>
+                      <div className="font-bold text-blue-600">{fmt(intangibleDrillingCosts)}</div>
+                    </div>
+                    <div className="text-center p-2 rounded bg-white dark:bg-gray-900">
+                      <div className="text-xs text-muted-foreground">Tangible Yr 1</div>
+                      <div className="font-bold text-amber-600">{fmt(Math.round(tangibleDrillingCosts / 7))}</div>
+                    </div>
+                    <div className="text-center p-2 rounded bg-white dark:bg-gray-900">
+                      <div className="text-xs text-muted-foreground">Total Yr 1 Deduction</div>
+                      <div className="font-bold text-green-600">{fmt(year1Deduction)}</div>
+                    </div>
+                    <div className="text-center p-2 rounded bg-white dark:bg-gray-900">
+                      <div className="text-xs text-muted-foreground">Tax Savings</div>
+                      <div className="font-bold text-emerald-600">{fmt(totalTaxSavingsYear1)}</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ═══════════ TAB: BENEFICIARY & INHERITANCE ═══════════ */}
+          <TabsContent value="beneficiary" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-red-600" />
+                  Beneficiary Inheritance — Legacy Income
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-950/30 dark:to-pink-950/30 rounded-lg p-6">
+                  <h3 className="font-bold text-lg mb-3">How Beneficiaries Inherit Oil & Gas Income</h3>
+                  <p className="text-sm leading-relaxed">
+                    Once the {lockupYears}-year lockup period has been satisfied, your beneficiaries can inherit both the
+                    <strong> ongoing income stream</strong> and the <strong>original principal</strong>. The income continues
+                    for the productive life of the wells, which can extend 20–30+ years beyond the initial lockup period.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card className="border-2 border-green-200 dark:border-green-800">
+                    <CardContent className="pt-4 text-center">
+                      <DollarSign className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-green-600">{fmt(investmentAmount)}</div>
+                      <div className="text-sm text-muted-foreground">Principal Inherited</div>
+                      <div className="text-xs text-green-600 mt-1">After {lockupYears}-year lockup</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-2 border-blue-200 dark:border-blue-800">
+                    <CardContent className="pt-4 text-center">
+                      <TrendingUp className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-blue-600">{fmt(annualIncome)}/yr</div>
+                      <div className="text-sm text-muted-foreground">Ongoing Income Inherited</div>
+                      <div className="text-xs text-blue-600 mt-1">{fmt(Math.round(annualIncome / 12))}/month</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-2 border-purple-200 dark:border-purple-800">
+                    <CardContent className="pt-4 text-center">
+                      <Calendar className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-purple-600">20–30+ yrs</div>
+                      <div className="text-sm text-muted-foreground">Potential Income Duration</div>
+                      <div className="text-xs text-purple-600 mt-1">Depends on well productivity</div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {showBeneficiary && beneficiaryData.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold mb-3">Beneficiary Income Projection (After Lockup)</h4>
+                    <div className="h-[300px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={beneficiaryData} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
+                          <XAxis dataKey="label" />
+                          <YAxis tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}K`} />
+                          <Tooltip formatter={(v: number) => fmt(v)} />
+                          <Area type="monotone" dataKey="totalInherited" name="Total Inherited Value" fill="#a855f7" fillOpacity={0.3} stroke="#a855f7" />
+                          <Area type="monotone" dataKey="annualIncome" name="Annual Income" fill="#22c55e" fillOpacity={0.3} stroke="#22c55e" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+
+                <div className="p-4 rounded-lg bg-amber-50 dark:bg-amber-950/30 flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+                  <div className="text-sm">
+                    <strong>Important:</strong> Beneficiaries can only inherit the income stream and principal after the
+                    {" "}{lockupYears}-year lockup period has been satisfied. If the investor passes away during the lockup period,
+                    the terms of the specific program will determine how the investment is handled. Always review the
+                    program's beneficiary provisions before investing.
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        
+          <TabsContent value="generate-outcome" className="space-y-6 mt-6">
+            <GenerateOutcomeTab
+              strategyType="hot-income"
+              hasResults={true}
+              resultData={{ totalAnnualIncome: 180000, taxFreeIncome: 100000, taxableIncome: 80000, incomeStreams: [], effectiveTaxRate: 0.18 }}
+              metrics={[{ label: "Total Income", value: 180000, highlight: true }, { label: "Tax-Free Income", value: 100000 }, { label: "Taxable Income", value: 80000 }, { label: "Effective Rate", value: 0.18, format: "percent" }]}
+            />
+          </TabsContent>
+        </Tabs>
+
+        {/* ─── DISCLAIMER ─── */}
+        <NAICDisclaimer
+          variant="full"
+          showsProjections
+          additionalText="Oil and gas investments involve significant risks including loss of principal, commodity price volatility, dry well risk, and regulatory changes. The 15% annual return is a target rate and is not guaranteed. Intangible drilling cost deductions and depletion allowances are subject to IRS rules and may be limited by alternative minimum tax (AMT) provisions. This is an educational illustration only and does not constitute investment advice, tax advice, or a solicitation to invest. Consult your tax advisor, financial professional, and legal counsel before making any investment decisions. Past performance does not guarantee future results."
+        />
+</div>
+    
+        <ComplianceFooter pageName="HotIncome" showsTax showsEstate showsProjections />
+      </AppShell>
+  );
+}
+```
 
 ## `client/src/pages/portal/HouseRecyclingStrategy.tsx`
 
@@ -30339,2579 +32673,6 @@ export default function MedicareIRMAA() {
     
         <ComplianceFooter pageName="MedicareIRMAA" showsIUL showsTax showsEstate showsProjections showsPolicyLoans />
       </AppShell>
-  );
-}
-```
-
-## `client/src/pages/portal/MeetingAgenda.tsx`
-
-```tsx
-// @ts-nocheck
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { AppShell } from "@/components/AppShell";
-import { ExportToSlides } from "@/components/ExportToSlides";
-import { PageInsights } from "@/components/PageInsights";
-import { trpc } from "@/lib/trpc";
-import { useAuth } from "@/_core/hooks/useAuth";
-import {
-  ClipboardList,
-  Clock,
-  MessageSquare,
-  CheckCircle,
-  Download,
-  Loader2,
-  Mail,
-  Send,
-  Calendar,
-  Users,
-  Search,
-  Filter,
-  BarChart2,
-  PieChart as PieChartIcon,
-  Plus,
-  Edit,
-  Save,
-  X,
-  ChevronDown,
-  ChevronUp,
-  Settings,
-  MoreVertical,
-  Activity,
-  Target,
-  TrendingUp,
-  Briefcase,
-  Video,
-  Phone,
-  MapPin,
-  List,
-  Grid,
-  Maximize2,
-  RefreshCw,
-  Share2,
-  Copy,
-  Archive,
-  Star,
-  Zap,
-  Tag as TagIcon,
-} from "lucide-react";
-import { toast } from "sonner";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  RadarChart,
-  Radar,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  ComposedChart,
-  Legend
-} from "recharts";
-
-const MEETING_STATS = [
-  { name: "Strategy", value: 45 },
-  { name: "Initial", value: 25 },
-  { name: "Annual", value: 20 },
-  { name: "Delivery", value: 10 },
-];
-
-const MONTHLY_TRENDS = [{ month: "Jan", meetings: 12, avgDuration: 45, satisfaction: 4.2 },
-,
-  { month: "Feb", meetings: 19, avgDuration: 50, satisfaction: 4.5 },
-,
-  { month: "Mar", meetings: 15, avgDuration: 55, satisfaction: 4.3 },
-,
-  { month: "Apr", meetings: 22, avgDuration: 60, satisfaction: 4.7 },
-,
-  { month: "May", meetings: 18, avgDuration: 58, satisfaction: 4.6 }
-];
-
-const TOPIC_DISTRIBUTION = [
-  { subject: "Retirement", A: 120, B: 110, fullMark: 150 },
-  { subject: "Tax", A: 98, B: 130, fullMark: 150 },
-  { subject: "Estate", A: 86, B: 130, fullMark: 150 },
-  { subject: "Investment", A: 99, B: 100, fullMark: 150 },
-  { subject: "Insurance", A: 85, B: 90, fullMark: 150 },
-  { subject: "Education", A: 65, B: 85, fullMark: 150 },
-];
-
-const CLIENT_ENGAGEMENT = [
-  { name: "Q1", high: 4000, medium: 2400, low: 2400 },
-  { name: "Q2", high: 3000, medium: 1398, low: 2210 },
-  { name: "Q3", high: 2000, medium: 9800, low: 2290 },
-  { name: "Q4", high: 2780, medium: 3908, low: 2000 },
-];
-
-const SUCCESS_METRICS = [
-  { name: "Week 1", rate: 85, target: 90 },
-  { name: "Week 2", rate: 88, target: 90 },
-  { name: "Week 3", rate: 92, target: 90 },
-  { name: "Week 4", rate: 95, target: 90 },
-  { name: "Week 5", rate: 91, target: 90 },
-];
-
-const COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#ef4444", "#a855f7", "#ec4899"];
-
-export default function MeetingAgenda() {
-  const { user } = useAuth();
-  
-  const [clientId, setClientId] = useState<number | null>(null);
-  const [meetingType, setMeetingType] = useState("strategy_review");
-  const [duration, setDuration] = useState<number>(60);
-  const [emailRecipient, setEmailRecipient] = useState("");
-  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"setup" | "stats" | "history" | "templates" | "settings">("setup");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [customTopic, setCustomTopic] = useState("");
-  const [customTopicsList, setCustomTopicsList] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [notes, setNotes] = useState("");
-  const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
-  const [includeFinancials, setIncludeFinancials] = useState(true);
-  const [includeActionItems, setIncludeActionItems] = useState(true);
-  const [meetingLocation, setMeetingLocation] = useState("virtual");
-  const [attendees, setAttendees] = useState<string[]>([]);
-  const [newAttendee, setNewAttendee] = useState("");
-  const [agendaTitle, setAgendaTitle] = useState("");
-  const [showPreview, setShowPreview] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedBlocks, setEditedBlocks] = useState<any[]>([]);
-  const [chartView, setChartView] = useState<"monthly" | "quarterly">("monthly");
-  const [dateRange, setDateRange] = useState("ytd");
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
-  const [filterType, setFilterType] = useState("all");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [hoveredData, setHoveredData] = useState<any>(null);
-
-  const { data: clients } = trpc.clients.list.useQuery();
-  const { data: recentMeetings, refetch: refetchMeetings } = trpc.meetings.list.useQuery({ limit: 10 });
-  const { data: templates } = trpc.docs.listTemplates.useQuery();
-  const { data: teamMembers } = trpc.team.members.useQuery();
-  const { data: userStats } = trpc.dashboard.stats.useQuery();
-  const { data: tags } = trpc.tags.list.useQuery();
-  
-  const generateMut = trpc.meetingAgenda.generate.useMutation();
-  const exportPdfMut = trpc.meetingAgenda.exportPdf.useMutation({
-    onSuccess: (data) => {
-      window.open(data.url, "_blank");
-      toast.success("Agenda PDF exported!");
-    },
-    onError: () => toast.error("Failed to export PDF"),
-  });
-
-  const emailAgendaMut = trpc.meetingAgenda.emailAgenda.useMutation({
-    onSuccess: () => {
-      toast.success("Agenda emailed successfully!");
-      setEmailDialogOpen(false);
-      setEmailRecipient("");
-    },
-    onError: () => toast.error("Failed to send email"),
-  });
-
-  const saveTemplateMut = trpc.docs.saveTemplate.useMutation({
-    onSuccess: () => toast.success("Template saved!"),
-  });
-
-  const updateMeetingMut = trpc.meetings.update.useMutation({
-    onSuccess: () => {
-      toast.success("Meeting updated!");
-      refetchMeetings();
-    }
-  });
-
-  useEffect(() => {
-    if (clientId && clients) {
-      const client = clients.find((c) => c.id === clientId);
-      if (client && client.email) {
-        setEmailRecipient(client.email);
-      }
-    }
-  }, [clientId, clients]);
-
-  useEffect(() => {
-    if (generateMut.data) {
-      setEditedBlocks(generateMut.data.blocks || []);
-      setAgendaTitle(generateMut.data.title || `${meetingType.replace(/_/g, " ")} Meeting`);
-    }
-  }, [generateMut.data, meetingType]);
-
-  const filteredClients = useMemo(() => {
-    if (!clients) return [];
-    if (!searchQuery) return clients;
-    return clients.filter((c) => 
-      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (c.email && c.email.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-  }, [clients, searchQuery]);
-
-  const filteredMeetings = useMemo(() => {
-    if (!recentMeetings) return [];
-    let result = [...recentMeetings];
-    if (filterType !== "all") {
-      result = result.filter((m) => m.type === filterType);
-    }
-    if (sortOrder === "asc") {
-      result.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    } else {
-      result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    }
-    return result;
-  }, [recentMeetings, filterType, sortOrder]);
-
-  const handleAddCustomTopic = useCallback(() => {
-    if (customTopic.trim() && !customTopicsList.includes(customTopic.trim())) {
-      setCustomTopicsList(prev => [...prev, customTopic.trim()]);
-      setCustomTopic("");
-    }
-  }, [customTopic, customTopicsList]);
-
-  const handleRemoveCustomTopic = useCallback((topic: string) => {
-    setCustomTopicsList(prev => prev.filter((t) => t !== topic));
-  }, []);
-
-  const handleAddAttendee = useCallback(() => {
-    if (newAttendee.trim() && !attendees.includes(newAttendee.trim())) {
-      setAttendees(prev => [...prev, newAttendee.trim()]);
-      setNewAttendee("");
-    }
-  }, [newAttendee, attendees]);
-
-  const handleRemoveAttendee = useCallback((attendee: string) => {
-    setAttendees(prev => prev.filter((a) => a !== attendee));
-  }, []);
-
-  const toggleSection = useCallback((section: string) => {
-    setExpandedSection(prev => prev === section ? null : section);
-  }, []);
-
-  const runGenerate = () => {
-    if (!clientId) { toast.error("Select a client"); return; }
-    setIsGenerating(true);
-    generateMut.mutate(
-      { 
-        clientId, 
-        meetingType, 
-        duration,
-        customTopics: customTopicsList,
-        priority,
-        includeFinancials
-      },
-      {
-        onSettled: () => setIsGenerating(false),
-        onSuccess: () => toast.success("Agenda generated successfully!")
-      }
-    );
-  };
-
-  const handleExportPdf = () => {
-    const agenda = generateMut.data;
-    if (!agenda) return;
-    exportPdfMut.mutate({
-      title: agendaTitle || agenda.title || `${meetingType.replace(/_/g, " ")} Meeting`,
-      clientName: agenda.clientName,
-      meetingType: agenda.meetingType,
-      duration: agenda.duration,
-      blocks: isEditing ? editedBlocks : (agenda.blocks ?? []),
-      keyQuestions: agenda.keyQuestions,
-      followUpActions: agenda.followUpActions,
-    });
-  };
-
-  const handleEmailAgenda = () => {
-    const agenda = generateMut.data;
-    if (!emailRecipient || !exportPdfMut.data?.url) {
-      toast.error("Please generate and export the agenda first");
-      return;
-    }
-    emailAgendaMut.mutate({
-      pdfUrl: exportPdfMut.data.url,
-      clientEmail: emailRecipient,
-      clientName: agenda?.clientName ?? "Client",
-      agendaTitle: agendaTitle || (agenda?.title ?? "Meeting Agenda"),
-    });
-  };
-
-  const saveAsTemplate = () => {
-    if (!generateMut.data) return;
-    saveTemplateMut.mutate({
-      name: `${meetingType} Template - ${new Date().toLocaleDateString()}`,
-      content: JSON.stringify(generateMut.data),
-      type: "agenda"
-    });
-  };
-
-  const renderSetupTab = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      {/* Left Column: Setup */}
-      <div className="lg:col-span-4 space-y-6">
-        <div className="rc-card">
-          <div className="mb-4 flex justify-between items-center">
-            <div>
-              <h2 className="text-lg font-semibold text-white">Meeting Details</h2>
-              <p className="text-sm text-[#7a95b8]">Configure your upcoming meeting</p>
-            </div>
-            <button 
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              className="text-xs text-[#3b82f6] hover:text-[#60a5fa] flex items-center gap-1"
-            >
-              {showAdvanced ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-              {showAdvanced ? "Basic" : "Advanced"}
-            </button>
-          </div>
-          
-          <div className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Client</label>
-              <div className="relative mb-2">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7a95b8]" />
-                <input 
-                  type="text" 
-                  placeholder="Search clients..." 
-                  className="rc-input pl-9 w-full"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              
-              {!clients ? (
-                <div className="flex items-center justify-center p-4 border border-[#12233e] rounded-lg bg-[#060d19]">
-                  <Loader2 className="w-5 h-5 text-[#22c55e] animate-spin" />
-                </div>
-              ) : (
-                <div className="max-h-48 overflow-y-auto border border-[#12233e] rounded-lg bg-[#060d19] p-1 custom-scrollbar">
-                  {filteredClients.length === 0 ? (
-                    <div className="p-3 text-center text-sm text-[#7a95b8]">No clients found</div>
-                  ) : (
-                    filteredClients.map((c) => (
-                      <button
-                        key={c.id}
-                        onClick={() => setClientId(c.id)}
-                        className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors flex items-center justify-between ${
-                          clientId === c.id 
-                            ? "bg-[#22c55e]/10 text-[#22c55e] font-medium" 
-                            : "text-[#c8d8ec] hover:bg-[#12233e]"
-                        }`}
-                      >
-                        <div className="flex flex-col">
-                          <span>{c.name}</span>
-                          <span className="text-xs opacity-70">{c.email || 'No email'}</span>
-                        </div>
-                        {clientId === c.id && <CheckCircle className="w-4 h-4" />}
-                      </button>
-                    ))
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Meeting Type</label>
-              <div className="relative">
-                <select 
-                  className="rc-input w-full appearance-none pr-10"
-                  value={meetingType}
-                  onChange={(e) => setMeetingType(e.target.value)}
-                >
-                  <option value="strategy_review">Strategy Review</option>
-                  <option value="initial_consultation">Initial Consultation</option>
-                  <option value="annual_review">Annual Review</option>
-                  <option value="policy_delivery">Policy Delivery</option>
-                  <option value="roth_conversion">Roth Conversion Planning</option>
-                  <option value="estate_planning">Estate Planning</option>
-                  <option value="tax_optimization">Tax Optimization</option>
-                  <option value="portfolio_rebalance">Portfolio Rebalance</option>
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7a95b8] pointer-events-none" />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Duration (Minutes)</label>
-              <div className="grid grid-cols-5 gap-2">
-                {[15, 30, 45, 60, 90].map((d) => (
-                  <button
-                    key={d}
-                    onClick={() => setDuration(d)}
-                    className={`py-2 text-sm rounded-lg border transition-all ${
-                      duration === d
-                        ? "border-[#22c55e] bg-[#22c55e]/10 text-[#22c55e]"
-                        : "border-[#12233e] bg-[#060d19] text-[#7a95b8] hover:border-[#7a95b8]"
-                    }`}
-                  >
-                    {d}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {showAdvanced && (
-              <div className="space-y-5 pt-4 border-t border-[#12233e] animate-in slide-in-from-top-2">
-                <div>
-                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Priority Level</label>
-                  <div className="flex gap-2">
-                    {(["low", "medium", "high"] as const).map((p) => (
-                      <button
-                        key={p}
-                        onClick={() => setPriority(p)}
-                        className={`flex-1 py-1.5 text-xs uppercase tracking-wider rounded border transition-all ${
-                          priority === p
-                            ? p === "high" ? "border-red-500 bg-red-500/10 text-red-500" 
-                              : p === "medium" ? "border-yellow-500 bg-yellow-500/10 text-yellow-500"
-                              : "border-blue-500 bg-blue-500/10 text-blue-500"
-                            : "border-[#12233e] bg-[#060d19] text-[#7a95b8]"
-                        }`}
-                      >
-                        {p}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Meeting Location</label>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setMeetingLocation("virtual")}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded border ${
-                        meetingLocation === "virtual" ? "border-[#3b82f6] bg-[#3b82f6]/10 text-[#3b82f6]" : "border-[#12233e] text-[#7a95b8]"
-                      }`}
-                    >
-                      <Video className="w-4 h-4" /> Virtual
-                    </button>
-                    <button
-                      onClick={() => setMeetingLocation("in_person")}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded border ${
-                        meetingLocation === "in_person" ? "border-[#3b82f6] bg-[#3b82f6]/10 text-[#3b82f6]" : "border-[#12233e] text-[#7a95b8]"
-                      }`}
-                    >
-                      <MapPin className="w-4 h-4" /> In Person
-                    </button>
-                    <button
-                      onClick={() => setMeetingLocation("phone")}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded border ${
-                        meetingLocation === "phone" ? "border-[#3b82f6] bg-[#3b82f6]/10 text-[#3b82f6]" : "border-[#12233e] text-[#7a95b8]"
-                      }`}
-                    >
-                      <Phone className="w-4 h-4" /> Phone
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Attendees</label>
-                  <div className="flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      value={newAttendee}
-                      onChange={(e) => setNewAttendee(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleAddAttendee()}
-                      placeholder="Add attendee name..."
-                      className="rc-input flex-1 text-sm py-1.5"
-                    />
-                    <button 
-                      onClick={handleAddAttendee}
-                      className="px-3 bg-[#12233e] text-white rounded hover:bg-[#1a365d] transition-colors"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </div>
-                  {attendees.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {attendees.map((a) => (
-                        <span key={a} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#0d1a2e] border border-[#12233e] text-xs text-[#c8d8ec]">
-                          {a}
-                          <button onClick={() => handleRemoveAttendee(a)} className="text-[#7a95b8] hover:text-red-400">
-                            <X className="w-3 h-3" />
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Custom Topics</label>
-                  <div className="flex gap-2 mb-2">
-                    <input 
-                      type="text" 
-                      value={customTopic}
-                      onChange={(e) => setCustomTopic(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleAddCustomTopic()}
-                      placeholder="Add a specific topic..." 
-                      className="rc-input flex-1 text-sm py-1.5"
-                    />
-                    <button 
-                      onClick={handleAddCustomTopic}
-                      className="px-3 bg-[#12233e] text-white rounded hover:bg-[#1a365d] transition-colors"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </div>
-                  
-                  {customTopicsList.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {customTopicsList.map((topic, i) => (
-                        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#3b82f6]/10 text-[#3b82f6] text-xs border border-[#3b82f6]/20">
-                          {topic}
-                          <button onClick={() => handleRemoveCustomTopic(topic)} className="hover:text-red-400">
-                            <X className="w-3 h-3" />
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <label className="flex items-center gap-2 text-sm text-[#c8d8ec] cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={includeFinancials}
-                      onChange={(e) => setIncludeFinancials(e.target.checked)}
-                      className="rounded border-[#12233e] bg-[#060d19] text-[#22c55e] focus:ring-[#22c55e]"
-                    />
-                    Include Financial Data
-                  </label>
-                  <label className="flex items-center gap-2 text-sm text-[#c8d8ec] cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={includeActionItems}
-                      onChange={(e) => setIncludeActionItems(e.target.checked)}
-                      className="rounded border-[#12233e] bg-[#060d19] text-[#22c55e] focus:ring-[#22c55e]"
-                    />
-                    Include Action Items
-                  </label>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Internal Notes</label>
-                  <textarea
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Private notes not visible on exported agenda..."
-                    className="rc-input w-full min-h-[80px] text-sm resize-y"
-                  />
-                </div>
-              </div>
-            )}
-
-            <button
-              onClick={runGenerate}
-              disabled={!clientId || isGenerating}
-              className="w-full rc-btn-primary py-3 flex items-center justify-center gap-2"
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Generating Agenda...
-                </>
-              ) : (
-                <>
-                  <Zap className="w-5 h-5" />
-                  Generate Smart Agenda
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Quick Stats Mini-card */}
-        <div className="rc-card bg-gradient-to-br from-[#0d1a2e] to-[#060d19]">
-          <h3 className="text-sm font-medium text-[#c8d8ec] mb-3 flex items-center gap-2">
-            <Activity className="w-4 h-4 text-[#3b82f6]" /> Your Activity
-          </h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-xs text-[#7a95b8]">Agendas This Week</p>
-              <p className="text-xl font-bold text-white">12</p>
-            </div>
-            <div>
-              <p className="text-xs text-[#7a95b8]">Avg Prep Time</p>
-              <p className="text-xl font-bold text-white">4m</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Right Column: Preview */}
-      <div className="lg:col-span-8">
-        {!generateMut.data ? (
-          <div className="rc-card h-full flex flex-col items-center justify-center text-center p-12 min-h-[500px]">
-            <div className="w-20 h-20 bg-[#12233e] rounded-full flex items-center justify-center mb-6">
-              <ClipboardList className="w-10 h-10 text-[#3b82f6]" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">No Agenda Generated</h3>
-            <p className="text-[#7a95b8] max-w-md mb-8">
-              Select a client and configure the meeting details on the left, then click generate to create an AI-powered meeting agenda.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-2xl text-left">
-              <div className="p-4 border border-[#12233e] rounded-lg bg-[#060d19]">
-                <Target className="w-5 h-5 text-[#22c55e] mb-2" />
-                <h4 className="font-medium text-[#c8d8ec] text-sm">Smart Topics</h4>
-                <p className="text-xs text-[#7a95b8] mt-1">AI analyzes client history to suggest relevant talking points.</p>
-              </div>
-              <div className="p-4 border border-[#12233e] rounded-lg bg-[#060d19]">
-                <Clock className="w-5 h-5 text-[#f0c040] mb-2" />
-                <h4 className="font-medium text-[#c8d8ec] text-sm">Time Management</h4>
-                <p className="text-xs text-[#7a95b8] mt-1">Automatically allocates appropriate time blocks for each topic.</p>
-              </div>
-              <div className="p-4 border border-[#12233e] rounded-lg bg-[#060d19]">
-                <Share2 className="w-5 h-5 text-[#a855f7] mb-2" />
-                <h4 className="font-medium text-[#c8d8ec] text-sm">Easy Sharing</h4>
-                <p className="text-xs text-[#7a95b8] mt-1">Export to PDF or email directly to clients with one click.</p>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="rc-card h-full flex flex-col">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-[#12233e]">
-              <div className="flex-1">
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={agendaTitle}
-                    onChange={(e) => setAgendaTitle(e.target.value)}
-                    className="rc-input text-xl font-bold w-full mb-2"
-                  />
-                ) : (
-                  <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-                    {agendaTitle}
-                    <button onClick={() => setIsEditing(true)} className="text-[#7a95b8] hover:text-white">
-                      <Edit className="w-4 h-4" />
-                    </button>
-                  </h2>
-                )}
-                <div className="flex flex-wrap items-center gap-4 text-sm text-[#7a95b8]">
-                  <span className="flex items-center gap-1.5"><Users className="w-4 h-4" /> {generateMut.data.clientName}</span>
-                  <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" /> {generateMut.data.duration} mins</span>
-                  <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> {new Date().toLocaleDateString()}</span>
-                  <span className="flex items-center gap-1.5 capitalize"><TagIcon className="w-4 h-4" /> {priority}</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap gap-2">
-                {isEditing ? (
-                  <button onClick={() => setIsEditing(false)} className="rc-btn-secondary flex items-center gap-2">
-                    <Save className="w-4 h-4" /> Save Edits
-                  </button>
-                ) : (
-                  <>
-                    <button onClick={saveAsTemplate} className="rc-btn-secondary flex items-center gap-2" title="Save as Template">
-                      <Archive className="w-4 h-4" />
-                    </button>
-                    <button onClick={handleExportPdf} className="rc-btn-secondary flex items-center gap-2">
-                      <Download className="w-4 h-4" /> PDF
-                    </button>
-                    <button onClick={() => setEmailDialogOpen(true)} className="rc-btn-primary flex items-center gap-2">
-                      <Mail className="w-4 h-4" /> Email
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto pr-2 space-y-8 custom-scrollbar">
-              {/* Agenda Blocks */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                  <List className="w-5 h-5 text-[#3b82f6]" /> Agenda Items
-                </h3>
-                
-                {(isEditing ? editedBlocks : generateMut.data.blocks)?.map((block: any, index: number) => (
-                  <div key={index} className="p-4 rounded-lg border border-[#12233e] bg-[#060d19] hover:border-[#3b82f6]/50 transition-colors">
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#12233e] flex items-center justify-center text-[#3b82f6] font-bold text-sm">
-                          {index + 1}
-                        </div>
-                        {isEditing ? (
-                          <input
-                            type="text"
-                            value={block.topic}
-                            onChange={(e) => {
-                              const newBlocks = [...editedBlocks];
-                              newBlocks[index].topic = e.target.value;
-                              setEditedBlocks(newBlocks);
-                            }}
-                            className="rc-input font-medium"
-                          />
-                        ) : (
-                          <h4 className="font-medium text-white text-lg">{block.topic}</h4>
-                        )}
-                      </div>
-                      <span className="text-sm font-medium text-[#22c55e] bg-[#22c55e]/10 px-2.5 py-1 rounded-full flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {block.time}
-                      </span>
-                    </div>
-                    
-                    <ul className="space-y-2 ml-11">
-                      {block.talkingPoints.map((point: string, ptIndex: number) => (
-                        <li key={ptIndex} className="flex items-start gap-2 text-[#c8d8ec] text-sm">
-                          <span className="text-[#3b82f6] mt-1">•</span>
-                          {isEditing ? (
-                            <input
-                              type="text"
-                              value={point}
-                              onChange={(e) => {
-                                const newBlocks = [...editedBlocks];
-                                newBlocks[index].talkingPoints[ptIndex] = e.target.value;
-                                setEditedBlocks(newBlocks);
-                              }}
-                              className="rc-input text-sm w-full py-1"
-                            />
-                          ) : (
-                            <span>{point}</span>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-
-              {/* Key Questions */}
-              {generateMut.data.keyQuestions && generateMut.data.keyQuestions.length > 0 && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-[#f0c040]" /> Key Questions to Ask
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {generateMut.data.keyQuestions.map((q: string, i: number) => (
-                      <div key={i} className="p-3 rounded-lg bg-[#0d1a2e] border border-[#12233e] text-sm text-[#c8d8ec] flex gap-3">
-                        <div className="mt-0.5 text-[#f0c040]">
-                          <MessageSquare className="w-4 h-4" />
-                        </div>
-                        <p>{q}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Follow Up Actions */}
-              {generateMut.data.followUpActions && generateMut.data.followUpActions.length > 0 && includeActionItems && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-[#22c55e]" /> Proposed Action Items
-                  </h3>
-                  <ul className="space-y-2">
-                    {generateMut.data.followUpActions.map((a: string, i: number) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-[#c8d8ec] p-3 rounded-lg bg-[#060d19] border border-[#12233e]">
-                        <div className="mt-0.5 shrink-0 w-4 h-4 rounded border border-[#7a95b8] flex items-center justify-center">
-                        </div>
-                        <span>{a}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
-  const renderStatsTab = () => (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Filters for Stats */}
-      <div className="flex flex-wrap justify-between items-center gap-4 bg-[#0d1a2e] p-4 rounded-lg border border-[#12233e]">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-[#7a95b8]" />
-            <span className="text-sm text-[#c8d8ec]">Timeframe:</span>
-            <select 
-              value={dateRange}
-              onChange={(e) => setDateRange(e.target.value)}
-              className="rc-input py-1 text-sm bg-[#060d19]"
-            >
-              <option value="mtd">Month to Date</option>
-              <option value="qtd">Quarter to Date</option>
-              <option value="ytd">Year to Date</option>
-              <option value="all">All Time</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-[#c8d8ec]">View:</span>
-            <div className="flex bg-[#060d19] rounded-md border border-[#12233e] p-0.5">
-              <button 
-                onClick={() => setChartView("monthly")}
-                className={`px-3 py-1 text-xs rounded-sm ${chartView === "monthly" ? "bg-[#12233e] text-white" : "text-[#7a95b8]"}`}
-              >
-                Monthly
-              </button>
-              <button 
-                onClick={() => setChartView("quarterly")}
-                className={`px-3 py-1 text-xs rounded-sm ${chartView === "quarterly" ? "bg-[#12233e] text-white" : "text-[#7a95b8]"}`}
-              >
-                Quarterly
-              </button>
-            </div>
-          </div>
-        </div>
-        <button onClick={() => toast.success("Analytics data refreshed")} className="rc-btn-secondary text-xs flex items-center gap-1 py-1.5">
-          <RefreshCw className="w-3 h-3" /> Refresh
-        </button>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="rc-card flex flex-col justify-between hover:border-[#3b82f6]/50 transition-colors">
-          <div className="flex items-center justify-between mb-2">
-            <span className="rc-stat-label">Total Agendas</span>
-            <ClipboardList className="w-5 h-5 text-[#3b82f6]" />
-          </div>
-          <div className="flex items-end justify-between">
-            <span className="rc-stat-value">284</span>
-            <span className="text-sm text-[#22c55e] flex items-center">+15%</span>
-          </div>
-        </div>
-        <div className="rc-card flex flex-col justify-between hover:border-[#f0c040]/50 transition-colors">
-          <div className="flex items-center justify-between mb-2">
-            <span className="rc-stat-label">Avg. Duration</span>
-            <Clock className="w-5 h-5 text-[#f0c040]" />
-          </div>
-          <div className="flex items-end justify-between">
-            <span className="rc-stat-value">58m</span>
-            <span className="text-sm text-[#22c55e] flex items-center">+3m</span>
-          </div>
-        </div>
-        <div className="rc-card flex flex-col justify-between hover:border-[#22c55e]/50 transition-colors">
-          <div className="flex items-center justify-between mb-2">
-            <span className="rc-stat-label">Emails Sent</span>
-            <Mail className="w-5 h-5 text-[#22c55e]" />
-          </div>
-          <div className="flex items-end justify-between">
-            <span className="rc-stat-value">192</span>
-            <span className="text-sm text-[#22c55e] flex items-center">+28%</span>
-          </div>
-        </div>
-        <div className="rc-card flex flex-col justify-between hover:border-[#ef4444]/50 transition-colors">
-          <div className="flex items-center justify-between mb-2">
-            <span className="rc-stat-label">Client Coverage</span>
-            <Users className="w-5 h-5 text-[#ef4444]" />
-          </div>
-          <div className="flex items-end justify-between">
-            <span className="rc-stat-value">78%</span>
-            <span className="text-sm text-[#22c55e] flex items-center">+12%</span>
-          </div>
-        </div>
-        <div className="rc-card flex flex-col justify-between hover:border-[#a855f7]/50 transition-colors">
-          <div className="flex items-center justify-between mb-2">
-            <span className="rc-stat-label">Satisfaction</span>
-            <Star className="w-5 h-5 text-[#a855f7]" />
-          </div>
-          <div className="flex items-end justify-between">
-            <span className="rc-stat-value">4.8</span>
-            <span className="text-sm text-[#22c55e] flex items-center">+0.2</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Chart 1: Bar Chart */}
-        <div className="rc-card">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <BarChart2 className="w-5 h-5 text-[#3b82f6]" /> Meetings Volume Trend
-            </h3>
-            <button className="text-[#7a95b8] hover:text-white"><Maximize2 className="w-4 h-4" /></button>
-          </div>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={MONTHLY_TRENDS} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                <XAxis dataKey="month" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }}
-                  itemStyle={{ color: '#3b82f6' }}
-                  cursor={{ fill: '#12233e', opacity: 0.4 }}
-                />
-                <Bar dataKey="meetings" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Total Meetings" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Chart 2: Pie Chart */}
-        <div className="rc-card">
-          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-            <PieChartIcon className="w-5 h-5 text-[#f0c040]" /> Meeting Types Distribution
-          </h3>
-          <div className="h-[300px] w-full flex items-center justify-center relative">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={MEETING_STATS}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={80}
-                  outerRadius={110}
-                  paddingAngle={5}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {MEETING_STATS.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }}
-                  itemStyle={{ color: '#fff' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-            
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-3xl font-bold text-white">100</span>
-              <span className="text-sm text-[#7a95b8]">Total</span>
-            </div>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-4 mt-4">
-            {MEETING_STATS.map((stat, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
-                <span className="text-sm text-[#c8d8ec]">{stat.name} ({stat.value}%)</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Chart 3: Line Chart */}
-        <div className="rc-card">
-          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-[#22c55e]" /> Average Duration & Satisfaction
-          </h3>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={MONTHLY_TRENDS} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                <XAxis dataKey="month" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis yAxisId="left" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis yAxisId="right" orientation="right" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} domain={[0, 5]} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }}
-                />
-                <Legend />
-                <Line yAxisId="left" type="monotone" dataKey="avgDuration" stroke="#22c55e" strokeWidth={3} dot={{ r: 4 }} name="Avg Duration (min)" />
-                <Line yAxisId="right" type="monotone" dataKey="satisfaction" stroke="#a855f7" strokeWidth={3} dot={{ r: 4 }} name="Satisfaction (1-5)" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Chart 4: Area Chart */}
-        <div className="rc-card">
-          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-[#ef4444]" /> Client Engagement by Quarter
-          </h3>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={CLIENT_ENGAGEMENT} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorHigh" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorMedium" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f0c040" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#f0c040" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="name" stroke="#7a95b8" />
-                <YAxis stroke="#7a95b8" />
-                <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }} />
-                <Legend />
-                <Area type="monotone" dataKey="high" stroke="#ef4444" fillOpacity={1} fill="url(#colorHigh)" name="High Net Worth" />
-                <Area type="monotone" dataKey="medium" stroke="#f0c040" fillOpacity={1} fill="url(#colorMedium)" name="Core Clients" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Chart 5: Radar Chart */}
-        <div className="rc-card lg:col-span-2">
-          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-            <Target className="w-5 h-5 text-[#a855f7]" /> Topic Coverage Analysis
-          </h3>
-          <div className="h-[400px] w-full flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={TOPIC_DISTRIBUTION}>
-                <PolarGrid stroke="#12233e" />
-                <PolarAngleAxis dataKey="subject" tick={{ fill: '#c8d8ec', fontSize: 12 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 150]} stroke="#7a95b8" />
-                <Radar name="This Quarter" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-                <Radar name="Last Quarter" dataKey="B" stroke="#22c55e" fill="#22c55e" fillOpacity={0.6} />
-                <Legend />
-                <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }} />
-              </RadarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        
-        {/* Data Table */}
-        <div className="rc-card lg:col-span-2">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <List className="w-5 h-5 text-[#c8d8ec]" /> Recent Meeting Performance
-            </h3>
-            <button className="text-sm text-[#3b82f6] hover:text-[#60a5fa]">View Full Report</button>
-          </div>
-          
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-[#12233e] text-sm text-[#7a95b8]">
-                  <th className="pb-3 font-medium">Metric Period</th>
-                  <th className="pb-3 font-medium">Success Rate</th>
-                  <th className="pb-3 font-medium">Target</th>
-                  <th className="pb-3 font-medium">Variance</th>
-                  <th className="pb-3 font-medium text-right">Status</th>
-                </tr>
-              </thead>
-              <tbody className="text-sm">
-                {SUCCESS_METRICS.map((metric, i) => (
-                  <tr key={i} className="border-b border-[#12233e]/50 hover:bg-[#12233e]/30 transition-colors">
-                    <td className="py-4 text-[#c8d8ec] font-medium">{metric.name}</td>
-                    <td className="py-4 text-white">{metric.rate}%</td>
-                    <td className="py-4 text-[#7a95b8]">{metric.target}%</td>
-                    <td className="py-4">
-                      <span className={`flex items-center gap-1 ${metric.rate >= metric.target ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>
-                        {metric.rate >= metric.target ? '+' : ''}{metric.rate - metric.target}%
-                      </span>
-                    </td>
-                    <td className="py-4 text-right">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        metric.rate >= metric.target 
-                          ? 'bg-[#22c55e]/10 text-[#22c55e]' 
-                          : 'bg-[#ef4444]/10 text-[#ef4444]'
-                      }`}>
-                        {metric.rate >= metric.target ? 'On Track' : 'Needs Review'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderHistoryTab = () => (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-wrap justify-between items-center gap-4 bg-[#0d1a2e] p-4 rounded-lg border border-[#12233e]">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7a95b8]" />
-            <input 
-              type="text" 
-              placeholder="Search history..." 
-              className="rc-input pl-9 w-64 text-sm py-1.5"
-            />
-          </div>
-          <select 
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="rc-input py-1.5 text-sm bg-[#060d19]"
-          >
-            <option value="all">All Types</option>
-            <option value="strategy_review">Strategy Review</option>
-            <option value="initial_consultation">Initial Consultation</option>
-            <option value="annual_review">Annual Review</option>
-          </select>
-        </div>
-        <div className="flex items-center gap-2">
-          <button 
-            onClick={() => setViewMode("list")}
-            className={`p-1.5 rounded ${viewMode === "list" ? "bg-[#12233e] text-white" : "text-[#7a95b8] hover:text-white"}`}
-          >
-            <List className="w-4 h-4" />
-          </button>
-          <button 
-            onClick={() => setViewMode("grid")}
-            className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[#12233e] text-white" : "text-[#7a95b8] hover:text-white"}`}
-          >
-            <Grid className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {!recentMeetings ? (
-        <div className="flex justify-center p-12">
-          <Loader2 className="w-8 h-8 text-[#3b82f6] animate-spin" />
-        </div>
-      ) : viewMode === "list" ? (
-        <div className="rc-card overflow-hidden p-0">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-[#0d1a2e] border-b border-[#12233e] text-sm text-[#7a95b8]">
-                <th className="p-4 font-medium">Client / Meeting</th>
-                <th className="p-4 font-medium">Date</th>
-                <th className="p-4 font-medium">Type</th>
-                <th className="p-4 font-medium">Duration</th>
-                <th className="p-4 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <tr key={i} className="border-b border-[#12233e]/50 hover:bg-[#12233e]/30 transition-colors">
-                  <td className="p-4">
-                    <div className="font-medium text-white">John Doe Family Trust</div>
-                    <div className="text-xs text-[#7a95b8]">Q3 Strategy Review</div>
-                  </td>
-                  <td className="p-4 text-[#c8d8ec]">Oct 15, 2023</td>
-                  <td className="p-4">
-                    <span className="px-2 py-1 rounded-full text-xs bg-[#3b82f6]/10 text-[#3b82f6] border border-[#3b82f6]/20">
-                      Strategy
-                    </span>
-                  </td>
-                  <td className="p-4 text-[#c8d8ec]">60 min</td>
-                  <td className="p-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button className="p-1.5 text-[#7a95b8] hover:text-white bg-[#0d1a2e] rounded border border-[#12233e]"><Download className="w-3.5 h-3.5" /></button>
-                      <button className="p-1.5 text-[#7a95b8] hover:text-white bg-[#0d1a2e] rounded border border-[#12233e]"><Mail className="w-3.5 h-3.5" /></button>
-                      <button className="p-1.5 text-[#7a95b8] hover:text-white bg-[#0d1a2e] rounded border border-[#12233e]"><Copy className="w-3.5 h-3.5" /></button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="rc-card hover:border-[#3b82f6]/50 transition-colors cursor-pointer group">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-2 bg-[#3b82f6]/10 rounded-lg">
-                  <Briefcase className="w-5 h-5 text-[#3b82f6]" />
-                </div>
-                <span className="text-xs text-[#7a95b8]">Oct 15, 2023</span>
-              </div>
-              <h4 className="font-medium text-white mb-1">John Doe Family Trust</h4>
-              <p className="text-sm text-[#7a95b8] mb-4">Q3 Strategy Review • 60 min</p>
-              
-              <div className="flex gap-2 mt-4 pt-4 border-t border-[#12233e] opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="flex-1 py-1.5 text-xs bg-[#0d1a2e] text-white rounded border border-[#12233e] hover:bg-[#12233e]">View</button>
-                <button className="flex-1 py-1.5 text-xs bg-[#0d1a2e] text-white rounded border border-[#12233e] hover:bg-[#12233e]">Export</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-
-  const renderTemplatesTab = () => (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-lg font-semibold text-white">Agenda Templates</h2>
-          <p className="text-sm text-[#7a95b8]">Manage and create reusable meeting structures</p>
-        </div>
-        <button className="rc-btn-primary flex items-center gap-2 text-sm py-2">
-          <Plus className="w-4 h-4" /> New Template
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[
-          { name: "Standard Annual Review", uses: 145, rating: 4.8, color: "#3b82f6" },
-          { name: "Initial Prospect Meeting", uses: 89, rating: 4.5, color: "#22c55e" },
-          { name: "Tax Strategy Session", uses: 56, rating: 4.9, color: "#f0c040" },
-          { name: "Estate Planning Deep Dive", uses: 34, rating: 4.7, color: "#a855f7" },
-          { name: "Quick Check-in (15m)", uses: 210, rating: 4.6, color: "#ef4444" },
-          { name: "Policy Delivery", uses: 78, rating: 4.4, color: "#ec4899" }
-        ].map((t, i) => (
-          <div key={i} className="rc-card flex flex-col h-full relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-1 h-full" style={{ backgroundColor: t.color }}></div>
-            
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="font-medium text-white text-lg">{t.name}</h3>
-              <button className="text-[#7a95b8] hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                <MoreVertical className="w-4 h-4" />
-              </button>
-            </div>
-            
-            <div className="flex-1">
-              <div className="flex items-center gap-4 text-sm text-[#7a95b8] mb-4">
-                <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" /> {t.uses} uses</span>
-                <span className="flex items-center gap-1 text-[#f0c040]"><Star className="w-3.5 h-3.5 fill-current" /> {t.rating}</span>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="h-1.5 w-full bg-[#12233e] rounded-full overflow-hidden">
-                  <div className="h-full bg-[#3b82f6]" style={{ width: '30%' }}></div>
-                </div>
-                <div className="h-1.5 w-full bg-[#12233e] rounded-full overflow-hidden">
-                  <div className="h-full bg-[#22c55e]" style={{ width: '50%' }}></div>
-                </div>
-                <div className="h-1.5 w-full bg-[#12233e] rounded-full overflow-hidden">
-                  <div className="h-full bg-[#f0c040]" style={{ width: '20%' }}></div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-6 pt-4 border-t border-[#12233e] flex gap-2">
-              <button className="flex-1 py-2 text-sm bg-[#3b82f6]/10 text-[#3b82f6] rounded font-medium hover:bg-[#3b82f6]/20 transition-colors">
-                Use Template
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  return (
-    <AppShell>
-      <div className="space-y-6 animate-in fade-in duration-500">
-        {/* Header */}
-        <div className="rc-page-header flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-[#0d1a2e] rounded-lg border border-[#12233e] relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#3b82f6]/20 to-transparent"></div>
-                <ClipboardList className="w-6 h-6 text-[#3b82f6] relative z-10" />
-              </div>
-              <div>
-                <h1 className="rc-page-title flex items-center gap-2">
-                  Smart Meeting Agenda
-                  <span className="px-2 py-0.5 text-[10px] uppercase tracking-wider bg-[#3b82f6]/10 text-[#3b82f6] rounded-full border border-[#3b82f6]/20">Pro</span>
-                </h1>
-                <p className="rc-page-subtitle">
-                  Generate structured meeting agendas with AI-powered talking points.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <button className="rc-btn-secondary flex items-center gap-2 text-sm">
-              <Settings className="w-4 h-4" /> Preferences
-            </button>
-            <ExportToSlides
-              toolName="Meeting Agenda"
-              getSections={() => [
-                {
-                  title: "Agenda Overview",
-                  items: [
-                    { label: "Client", value: generateMut.data?.clientName || "N/A" },
-                    { label: "Meeting Type", value: meetingType.replace(/_/g, " ") || "N/A" },
-                    { label: "Duration", value: `${generateMut.data?.duration || 0} min` },
-                    { label: "Priority", value: priority },
-                  ],
-                },
-                ...(generateMut.data?.blocks || []).map((block) => ({
-                  title: block.topic,
-                  items: [
-                    { label: "Time", value: block.time || "N/A" },
-                    { label: "Talking Points", value: (block.talkingPoints || []).join(" • ") },
-                  ],
-                })),
-              ]}
-            />
-          </div>
-        </div>
-
-        {/* Navigation Tabs */}
-        <div className="flex overflow-x-auto items-center gap-1 border-b border-[#12233e] pb-px custom-scrollbar hide-scrollbar">
-          {[
-            { id: "setup", label: "Agenda Setup", icon: Plus },
-            { id: "stats", label: "Analytics", icon: BarChart2 },
-            { id: "history", label: "History", icon: Clock },
-            { id: "templates", label: "Templates", icon: Copy },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap ${
-                activeTab === tab.id 
-                  ? "border-[#3b82f6] text-white bg-[#3b82f6]/5" 
-                  : "border-transparent text-[#7a95b8] hover:text-white hover:bg-[#12233e]/50"
-              }`}
-            >
-              <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? "text-[#3b82f6]" : ""}`} />
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Tab Content */}
-        <div className="min-h-[600px]">
-          {activeTab === "setup" && renderSetupTab()}
-          {activeTab === "stats" && renderStatsTab()}
-          {activeTab === "history" && renderHistoryTab()}
-          {activeTab === "templates" && renderTemplatesTab()}
-        </div>
-
-        {/* Email Dialog */}
-        {emailDialogOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-            <div className="bg-[#0d1a2e] border border-[#12233e] rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
-              <div className="p-4 border-b border-[#12233e] flex justify-between items-center bg-[#060d19]">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                  <Mail className="w-5 h-5 text-[#3b82f6]" /> Send Agenda
-                </h3>
-                <button 
-                  onClick={() => setEmailDialogOpen(false)}
-                  className="text-[#7a95b8] hover:text-white p-1 rounded-md hover:bg-[#12233e] transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              
-              <div className="p-6 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Recipient Email</label>
-                  <input
-                    type="email"
-                    value={emailRecipient}
-                    onChange={(e) => setEmailRecipient(e.target.value)}
-                    placeholder="client@example.com"
-                    className="rc-input w-full"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Subject</label>
-                  <input
-                    type="text"
-                    value={`Meeting Agenda: ${generateMut.data?.clientName || "Upcoming Meeting"}`}
-                    readOnly
-                    className="rc-input w-full bg-[#060d19] text-[#7a95b8]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Message (Optional)</label>
-                  <textarea
-                    placeholder="Add a personal note..."
-                    className="rc-input w-full min-h-[100px] resize-none"
-                    defaultValue={`Hi ${generateMut.data?.clientName?.split(' ')[0] || 'there'},\n\nPlease find attached the agenda for our upcoming meeting.\n\nBest regards,\nYour Advisor`}
-                  />
-                </div>
-                
-                <div className="pt-4 flex justify-end gap-3">
-                  <button 
-                    onClick={() => setEmailDialogOpen(false)}
-                    className="px-4 py-2 text-sm font-medium text-[#c8d8ec] hover:text-white transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    onClick={handleEmailAgenda}
-                    disabled={emailAgendaMut.isPending || !emailRecipient}
-                    className="rc-btn-primary flex items-center gap-2 py-2"
-                  >
-                    {emailAgendaMut.isPending ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Send className="w-4 h-4" />
-                    )}
-                    Email to Client
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <PageInsights pageId="meeting-agenda" />
-      </div>
-    </AppShell>
-  );
-}
-```
-
-## `client/src/pages/portal/Meetings.tsx`
-
-```tsx
-// @ts-nocheck
-import { NumberInput } from "@/components/NumberInput";
-import { AppShell } from "@/components/AppShell";
-import { ExportToSlides } from "@/components/ExportToSlides";
-import { trpc } from "@/lib/trpc";
-import { useState, useMemo } from "react";
-import { toast } from "sonner";
-import {
-  Calendar, Clock, MapPin, Phone, Plus, Video, Users, X,
-  ChevronLeft, ChevronRight, Edit2, Trash2, CheckCircle, XCircle,
-  Bell, Settings2, Sparkles, BarChart3,
-} from "lucide-react";
-import {
-  PieChart, Pie, Cell, BarChart, Bar,
-  XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer,
-} from "recharts";
-
-const MEETING_TYPE_ICONS: Record<string, typeof Video> = {
-  VIDEO: Video,
-  PHONE: Phone,
-  IN_PERSON: MapPin,
-  OTHER: Users,
-};
-
-const STATUS_COLORS: Record<string, string> = {
-  SCHEDULED: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  COMPLETED: "bg-green-500/20 text-green-400 border-green-500/30",
-  CANCELLED: "bg-red-500/20 text-red-400 border-red-500/30",
-  NO_SHOW: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-};
-
-function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate();
-}
-
-function getFirstDayOfMonth(year: number, month: number) {
-  return new Date(year, month, 1).getDay();
-}
-
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-export default function Meetings() {
-  const [showCreate, setShowCreate] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar");
-  const [currentDate, setCurrentDate] = useState(() => new Date());
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-
-  const utils = trpc.useUtils();
-  const { data: allMeetings, isLoading } = trpc.meetings.listAll.useQuery({ limit: 200 });
-  const { data: clients } = trpc.clients.list.useQuery();
-
-  const createMeeting = trpc.meetings.create.useMutation({
-    onSuccess: () => { utils.meetings.listAll.invalidate(); utils.meetings.listUpcoming.invalidate(); setShowCreate(false); toast.success("Meeting scheduled"); },
-    onError: (e) => toast.error(e.message),
-  });
-  const updateMeeting = trpc.meetings.update.useMutation({
-    onSuccess: () => { utils.meetings.listAll.invalidate(); utils.meetings.listUpcoming.invalidate(); setEditingId(null); toast.success("Meeting updated"); },
-    onError: (e) => toast.error(e.message),
-  });
-  const deleteMeeting = trpc.meetings.delete.useMutation({
-    onSuccess: () => { utils.meetings.listAll.invalidate(); utils.meetings.listUpcoming.invalidate(); toast.success("Meeting deleted"); },
-    onError: (e) => toast.error(e.message),
-  });
-
-  const meetingsByDate = useMemo(() => {
-    const map: Record<string, typeof allMeetings> = {};
-    allMeetings?.forEach((m) => {
-      const key = new Date(m.scheduledAt).toISOString().split("T")[0];
-      if (!map[key]) map[key] = [];
-      map[key]!.push(m);
-    });
-    return map;
-  }, [allMeetings]);
-
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-  const daysInMonth = getDaysInMonth(year, month);
-  const firstDay = getFirstDayOfMonth(year, month);
-  const today = new Date().toISOString().split("T")[0];
-
-  const calendarDays = useMemo(() => {
-    const days: (number | null)[] = [];
-    for (let i = 0; i < firstDay; i++) days.push(null);
-    for (let d = 1; d <= daysInMonth; d++) days.push(d);
-    return days;
-  }, [firstDay, daysInMonth]);
-
-  const selectedMeetings = selectedDate ? (meetingsByDate[selectedDate] || []) : [];
-
-  return (
-    <AppShell>
-      <div className="p-6 max-w-7xl mx-auto">
-        {/* Analytics Row */}
-        {(allMeetings?.length ?? 0) > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="rc-card">
-              <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                <BarChart3 size={14} className="text-[#22c55e]" /> Meetings by Type
-              </div>
-              <ResponsiveContainer width="100%" height={180}>
-                <PieChart>
-                  <Pie
-                    data={(() => {
-                      const counts: Record<string, number> = {};
-                      allMeetings?.forEach((m) => { counts[m.meetingType || "OTHER"] = (counts[m.meetingType || "OTHER"] || 0) + 1; });
-                      return Object.entries(counts).map(([name, value]) => ({ name, value }));
-                    })()}
-                    cx="50%" cy="50%" innerRadius={45} outerRadius={70}
-                    paddingAngle={3} dataKey="value"
-                    label={({ name, value }) => `${name}: ${value}`}
-                  >
-                    {["#3b82f6", "#22c55e", "#f0c040", "#a78bfa"].map((c, i) => (
-                      <Cell key={i} fill={c} />
-                    ))}
-                  </Pie>
-                  <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="rc-card">
-              <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                <Calendar size={14} className="text-[#3b82f6]" /> Monthly Meeting Volume
-              </div>
-              <ResponsiveContainer width="100%" height={180}>
-                <BarChart
-                  data={(() => {
-                    const months: Record<string, number> = {};
-                    allMeetings?.forEach((m) => {
-                      const mo = new Date(m.scheduledAt).toLocaleDateString("en-US", { month: "short", year: "2-digit" });
-                      months[mo] = (months[mo] || 0) + 1;
-                    });
-                    return Object.entries(months).slice(-8).map(([name, count]) => ({ name, count }));
-                  })()}
-                  margin={{ top: 5, right: 10, bottom: 5, left: -10 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#12233e" />
-                  <XAxis dataKey="name" tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                  <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} />
-                  <Bar dataKey="count" name="Meetings" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        )}
-
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-white">Meetings</h1>
-            <p className="text-sm text-[#7a95b8] mt-1">Schedule and track client meetings</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <ExportToSlides
-              toolName="Meetings"
-              getSections={() => {
-                const upcoming = allMeetings?.filter((m) => m.status === "SCHEDULED") || [];
-                return [
-                  {
-                    title: "Meetings Summary",
-                    items: [
-                      { label: "Total Meetings", value: String(allMeetings?.length || 0) },
-                      { label: "Upcoming Meetings", value: String(upcoming.length) },
-                    ]
-                  }
-                ];
-              }}
-            />
-            <div className="flex bg-[#0a1628] border border-[#12233e] rounded-lg overflow-hidden">
-              <button
-                onClick={() => setViewMode("calendar")}
-                className={`px-3 py-1.5 text-xs font-medium transition-colors ${viewMode === "calendar" ? "bg-[#22c55e]/20 text-[#22c55e]" : "text-[#7a95b8] hover:text-white"}`}
-              >
-                Calendar
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`px-3 py-1.5 text-xs font-medium transition-colors ${viewMode === "list" ? "bg-[#22c55e]/20 text-[#22c55e]" : "text-[#7a95b8] hover:text-white"}`}
-              >
-                List
-              </button>
-            </div>
-            <button onClick={() => setShowCreate(true)} className="rc-btn rc-btn-primary text-sm flex items-center gap-2">
-              <Plus size={14} /> Schedule Meeting
-            </button>
-          </div>
-        </div>
-
-        {viewMode === "calendar" ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Calendar Grid */}
-            <div className="lg:col-span-2 rc-card p-4">
-              <div className="flex items-center justify-between mb-4">
-                <button onClick={() => setCurrentDate(new Date(year, month - 1, 1))} className="rc-btn rc-btn-ghost p-2">
-                  <ChevronLeft size={16} />
-                </button>
-                <h2 className="text-lg font-semibold text-white">{MONTHS[month]} {year}</h2>
-                <button onClick={() => setCurrentDate(new Date(year, month + 1, 1))} className="rc-btn rc-btn-ghost p-2">
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-              <div className="grid grid-cols-7 gap-1">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-                  <div key={d} className="text-center text-[10px] text-[#7a95b8] font-medium py-1">{d}</div>
-                ))}
-                {calendarDays.map((day, i) => {
-                  if (day === null) return <div key={`e-${i}`} />;
-                  const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                  const meetings = meetingsByDate[dateStr] || [];
-                  const isToday = dateStr === today;
-                  const isSelected = dateStr === selectedDate;
-                  return (
-                    <button
-                      key={dateStr}
-                      onClick={() => setSelectedDate(dateStr)}
-                      className={`relative p-1 min-h-[60px] rounded-lg text-left transition-all ${
-                        isSelected ? "bg-[#22c55e]/10 border border-[#22c55e]/30" :
-                        isToday ? "bg-blue-500/10 border border-blue-500/30" :
-                        "hover:bg-[#12233e]/50 border border-transparent"
-                      }`}
-                    >
-                      <span className={`text-xs font-medium ${isToday ? "text-blue-400" : "text-[#7a95b8]"}`}>{day}</span>
-                      {meetings.length > 0 && (
-                        <div className="mt-0.5 space-y-0.5">
-                          {meetings.slice(0, 2).map((m) => (
-                            <div key={m.id} className="text-[9px] px-1 py-0.5 rounded bg-[#22c55e]/10 text-[#22c55e] truncate">
-                              {m.title}
-                            </div>
-                          ))}
-                          {meetings.length > 2 && (
-                            <div className="text-[9px] text-[#7a95b8]">+{meetings.length - 2} more</div>
-                          )}
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Selected Date Meetings */}
-            <div className="rc-card p-4">
-              <h3 className="text-sm font-semibold text-white mb-3">
-                {selectedDate ? new Date(selectedDate + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) : "Select a date"}
-              </h3>
-              {selectedDate && selectedMeetings.length === 0 && (
-                <p className="text-xs text-[#7a95b8]">No meetings on this date.</p>
-              )}
-              <div className="space-y-2">
-                {selectedMeetings.map((m) => {
-                  const TypeIcon = MEETING_TYPE_ICONS[m.meetingType] || Users;
-                  return (
-                    <div key={m.id} className="p-3 rounded-lg bg-[#0a1628] border border-[#12233e]">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-2">
-                          <TypeIcon size={14} className="text-[#22c55e]" />
-                          <span className="text-sm font-medium text-white">{m.title}</span>
-                        </div>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded border ${STATUS_COLORS[m.status]}`}>{m.status}</span>
-                      </div>
-                      <div className="mt-1 text-xs text-[#7a95b8] flex items-center gap-2">
-                        <Clock size={10} />
-                        {new Date(m.scheduledAt).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
-                        <span>({m.durationMin}m)</span>
-                      </div>
-                      {m.location && <div className="mt-1 text-xs text-[#7a95b8] flex items-center gap-2"><MapPin size={10} />{m.location}</div>}
-                      <div className="mt-2 flex gap-1">
-                        {m.status === "SCHEDULED" && (
-                          <>
-                            <button onClick={() => updateMeeting.mutate({ id: m.id, status: "COMPLETED" })} className="rc-btn rc-btn-ghost text-[10px] p-1 text-green-400"><CheckCircle size={12} /></button>
-                            <button onClick={() => updateMeeting.mutate({ id: m.id, status: "CANCELLED" })} className="rc-btn rc-btn-ghost text-[10px] p-1 text-red-400"><XCircle size={12} /></button>
-                          </>
-                        )}
-                        <button onClick={() => setEditingId(m.id)} className="rc-btn rc-btn-ghost text-[10px] p-1 text-[#7a95b8]"><Edit2 size={12} /></button>
-                        <button onClick={() => { if (confirm("Delete this meeting?")) deleteMeeting.mutate({ id: m.id }); }} className="rc-btn rc-btn-ghost text-[10px] p-1 text-red-400"><Trash2 size={12} /></button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* List View */
-          <div className="rc-card overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[#12233e]">
-                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Date & Time</th>
-                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Title</th>
-                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Type</th>
-                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Duration</th>
-                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Status</th>
-                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {isLoading ? (
-                  <tr><td colSpan={6} className="p-6 text-center text-[#7a95b8]">Loading...</td></tr>
-                ) : !allMeetings?.length ? (
-                  <tr><td colSpan={6} className="p-6 text-center text-[#7a95b8]">No meetings scheduled yet.</td></tr>
-                ) : (
-                  allMeetings.map((m) => {
-                    const TypeIcon = MEETING_TYPE_ICONS[m.meetingType] || Users;
-                    return (
-                      <tr key={m.id} className="border-b border-[#12233e]/50 hover:bg-[#12233e]/20">
-                        <td className="p-3 text-white text-xs">
-                          {new Date(m.scheduledAt).toLocaleDateString()}<br />
-                          <span className="text-[#7a95b8]">{new Date(m.scheduledAt).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}</span>
-                        </td>
-                        <td className="p-3 text-white text-xs font-medium">{m.title}</td>
-                        <td className="p-3"><TypeIcon size={14} className="text-[#22c55e]" /></td>
-                        <td className="p-3 text-[#7a95b8] text-xs">{m.durationMin}m</td>
-                        <td className="p-3"><span className={`text-[10px] px-1.5 py-0.5 rounded border ${STATUS_COLORS[m.status]}`}>{m.status}</span></td>
-                        <td className="p-3">
-                          <div className="flex gap-1">
-                            <button onClick={() => setEditingId(m.id)} className="rc-btn rc-btn-ghost p-1"><Edit2 size={12} className="text-[#7a95b8]" /></button>
-                            <button onClick={() => { if (confirm("Delete?")) deleteMeeting.mutate({ id: m.id }); }} className="rc-btn rc-btn-ghost p-1"><Trash2 size={12} className="text-red-400" /></button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* Reminder Preferences */}
-        <ReminderPrefsPanel />
-
-        {/* Create Meeting Modal */}
-        {showCreate && (
-          <CreateMeetingModal
-            clients={clients || []}
-            onClose={() => setShowCreate(false)}
-            onCreate={(data) => createMeeting.mutate(data)}
-            isLoading={createMeeting.isPending}
-          />
-        )}
-
-        {/* Edit Meeting Modal */}
-        {editingId && (
-          <EditMeetingModal
-            meeting={allMeetings?.find((m) => m.id === editingId)}
-            onClose={() => setEditingId(null)}
-            onSave={(data) => updateMeeting.mutate({ id: editingId, ...data })}
-            isLoading={updateMeeting.isPending}
-          />
-        )}
-      </div>
-    </AppShell>
-  );
-}
-
-function CreateMeetingModal({ clients, onClose, onCreate, isLoading }: {
-  clients: any[]; onClose: () => void;
-  onCreate: (data: any) => void; isLoading: boolean;
-}) {
-  const [form, setForm] = useState({
-    clientId: "", title: "", description: "", scheduledAt: "",
-    durationMin: "60", location: "", meetingType: "VIDEO" as const, notes: "",
-  });
-
-  return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-[#0a1628] border border-[#12233e] rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-4 border-b border-[#12233e]">
-          <h2 className="text-lg font-semibold text-white">Schedule Meeting</h2>
-          <button onClick={onClose} className="rc-btn rc-btn-ghost p-1"><X size={16} /></button>
-        </div>
-        <div className="p-4 space-y-4">
-          <div>
-            <label className="text-xs text-[#7a95b8] mb-1 block">Client *</label>
-            <select value={form.clientId} onChange={(e) => setForm(f => ({ ...f, clientId: e.target.value }))} className="rc-input w-full text-sm">
-              <option value="">Select client...</option>
-              {clients.map((c) => <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="text-xs text-[#7a95b8] mb-1 block">Title *</label>
-            <input value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} className="rc-input w-full text-sm" placeholder="Quarterly review" />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-[#7a95b8] mb-1 block">Date & Time *</label>
-              <input type="datetime-local" value={form.scheduledAt} onChange={(e) => setForm(f => ({ ...f, scheduledAt: e.target.value }))} className="rc-input w-full text-sm" />
-            </div>
-            <div>
-              <label className="text-xs text-[#7a95b8] mb-1 block">Duration (min)</label>
-              <NumberInput value={form.durationMin} onChange={(v) => setForm(f => ({ ...f, durationMin: v }))}  className="rc-input w-full text-sm" />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-[#7a95b8] mb-1 block">Type</label>
-              <select value={form.meetingType} onChange={(e) => setForm(f => ({ ...f, meetingType: e.target.value as any }))} className="rc-input w-full text-sm">
-                <option value="VIDEO">Video Call</option>
-                <option value="PHONE">Phone Call</option>
-                <option value="IN_PERSON">In Person</option>
-                <option value="OTHER">Other</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs text-[#7a95b8] mb-1 block">Location</label>
-              <input value={form.location} onChange={(e) => setForm(f => ({ ...f, location: e.target.value }))} className="rc-input w-full text-sm" placeholder="Zoom / Office" />
-            </div>
-          </div>
-          <div>
-            <label className="text-xs text-[#7a95b8] mb-1 block">Description</label>
-            <textarea value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} className="rc-input w-full text-sm" rows={2} placeholder="Meeting agenda..." />
-          </div>
-          <div>
-            <label className="text-xs text-[#7a95b8] mb-1 block">Notes</label>
-            <textarea value={form.notes} onChange={(e) => setForm(f => ({ ...f, notes: e.target.value }))} className="rc-input w-full text-sm" rows={2} placeholder="Internal notes..." />
-          </div>
-        </div>
-        <div className="flex justify-end gap-2 p-4 border-t border-[#12233e]">
-          <button onClick={onClose} className="rc-btn rc-btn-ghost text-sm">Cancel</button>
-          <button
-            onClick={() => {
-              if (!form.clientId || !form.title || !form.scheduledAt) { toast.error("Client, title, and date are required"); return; }
-              onCreate({
-                clientId: Number(form.clientId),
-                title: form.title,
-                description: form.description || undefined,
-                scheduledAt: new Date(form.scheduledAt),
-                durationMin: Number(form.durationMin) || 60,
-                location: form.location || undefined,
-                meetingType: form.meetingType,
-                notes: form.notes || undefined,
-              });
-            }}
-            disabled={isLoading}
-            className="rc-btn rc-btn-primary text-sm"
-          >
-            {isLoading ? "Scheduling..." : "Schedule Meeting"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function EditMeetingModal({ meeting, onClose, onSave, isLoading }: {
-  meeting: any; onClose: () => void;
-  onSave: (data: any) => void; isLoading: boolean;
-}) {
-  const [form, setForm] = useState({
-    title: meeting?.title || "",
-    description: meeting?.description || "",
-    durationMin: String(meeting?.durationMin || 60),
-    location: meeting?.location || "",
-    meetingType: meeting?.meetingType || "VIDEO",
-    status: meeting?.status || "SCHEDULED",
-    notes: meeting?.notes || "",
-  });
-
-  if (!meeting) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-[#0a1628] border border-[#12233e] rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-4 border-b border-[#12233e]">
-          <h2 className="text-lg font-semibold text-white">Edit Meeting</h2>
-          <button onClick={onClose} className="rc-btn rc-btn-ghost p-1"><X size={16} /></button>
-        </div>
-        <div className="p-4 space-y-4">
-          <div>
-            <label className="text-xs text-[#7a95b8] mb-1 block">Title</label>
-            <input value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} className="rc-input w-full text-sm" />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-[#7a95b8] mb-1 block">Duration (min)</label>
-              <NumberInput value={form.durationMin} onChange={(v) => setForm(f => ({ ...f, durationMin: v }))}  className="rc-input w-full text-sm" />
-            </div>
-            <div>
-              <label className="text-xs text-[#7a95b8] mb-1 block">Status</label>
-              <select value={form.status} onChange={(e) => setForm(f => ({ ...f, status: e.target.value }))} className="rc-input w-full text-sm">
-                <option value="SCHEDULED">Scheduled</option>
-                <option value="COMPLETED">Completed</option>
-                <option value="CANCELLED">Cancelled</option>
-                <option value="NO_SHOW">No Show</option>
-              </select>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-[#7a95b8] mb-1 block">Type</label>
-              <select value={form.meetingType} onChange={(e) => setForm(f => ({ ...f, meetingType: e.target.value }))} className="rc-input w-full text-sm">
-                <option value="VIDEO">Video Call</option>
-                <option value="PHONE">Phone Call</option>
-                <option value="IN_PERSON">In Person</option>
-                <option value="OTHER">Other</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs text-[#7a95b8] mb-1 block">Location</label>
-              <input value={form.location} onChange={(e) => setForm(f => ({ ...f, location: e.target.value }))} className="rc-input w-full text-sm" />
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="text-xs text-[#7a95b8]">Notes</label>
-              <button
-                type="button"
-                onClick={() => {
-                  const title = form.title || "Meeting";
-                  const type = form.meetingType || "VIDEO";
-                  const duration = form.durationMin || "60";
-                  const summary = `Meeting Summary: ${title}\n` +
-                    `Type: ${type} | Duration: ${duration} min\n` +
-                    `Status: ${form.status}\n\n` +
-                    `Key Discussion Points:\n- \n\nAction Items:\n- \n\nFollow-up Required:\n- `;
-                  setForm(f => ({ ...f, notes: summary }));
-                }}
-                className="text-[10px] text-[#22c55e] hover:text-[#22c55e]/80 flex items-center gap-1"
-              >
-                <Sparkles size={10} /> Generate Template
-              </button>
-            </div>
-            <textarea value={form.notes} onChange={(e) => setForm(f => ({ ...f, notes: e.target.value }))} className="rc-input w-full text-sm" rows={3} />
-          </div>
-        </div>
-        <div className="flex justify-end gap-2 p-4 border-t border-[#12233e]">
-          <button onClick={onClose} className="rc-btn rc-btn-ghost text-sm">Cancel</button>
-          <button
-            onClick={() => {
-              onSave({
-                title: form.title || undefined,
-                durationMin: Number(form.durationMin) || undefined,
-                location: form.location || undefined,
-                meetingType: form.meetingType as any,
-                status: form.status as any,
-                notes: form.notes || undefined,
-              });
-            }}
-            disabled={isLoading}
-            className="rc-btn rc-btn-primary text-sm"
-          >
-            {isLoading ? "Saving..." : "Save Changes"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const LEAD_TIME_OPTIONS = [{ value: 15, label: "15 min" },
-,
-  { value: 30, label: "30 min" },
-,
-  { value: 60, label: "1 hour" },
-,
-  { value: 120, label: "2 hours" },
-,
-  { value: 720, label: "12 hours" }
-];
-
-const MEETING_TYPE_LABELS: Record<string, { label: string; icon: typeof Video }> = {
-  VIDEO: { label: "Video Calls", icon: Video },
-  PHONE: { label: "Phone Calls", icon: Phone },
-  IN_PERSON: { label: "In-Person", icon: MapPin },
-  OTHER: { label: "Other", icon: Users },
-};
-
-function ReminderPrefsPanel() {
-  const [expanded, setExpanded] = useState(false);
-  const prefsQuery = trpc.reminderPrefs.get.useQuery(undefined, { staleTime: 60_000 });
-  const updatePrefs = trpc.reminderPrefs.update.useMutation({
-    onSuccess: () => {
-      prefsQuery.refetch();
-      toast.success("Reminder preferences saved");
-    },
-    onError: (e) => toast.error(e.message),
-  });
-
-  const prefs = prefsQuery.data ?? [];
-
-  const handleToggle = (meetingType: string, enabled: boolean) => {
-    const updated = prefs.map((p) =>
-      p.meetingType === meetingType ? { ...p, enabled } : p
-    );
-    updatePrefs.mutate({ prefs: updated.map((p) => ({ meetingType: p.meetingType as any, enabled: p.enabled, leadTimeMinutes: p.leadTimeMinutes })) });
-  };
-
-  const handleLeadTimeChange = (meetingType: string, leadTimeMinutes: number) => {
-    const updated = prefs.map((p) =>
-      p.meetingType === meetingType ? { ...p, leadTimeMinutes } : p
-    );
-    updatePrefs.mutate({ prefs: updated.map((p) => ({ meetingType: p.meetingType as any, enabled: p.enabled, leadTimeMinutes: p.leadTimeMinutes })) });
-  };
-
-  return (
-    <div className="rc-card">
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="flex items-center justify-between w-full"
-      >
-        <div className="flex items-center gap-2">
-          <Bell size={16} className="text-[#f59e0b]" />
-          <span className="text-white font-semibold">Reminder Preferences</span>
-          <span className="text-xs text-[#7a95b8]">Configure when you receive meeting reminders</span>
-        </div>
-        <Settings2
-          size={16}
-          className={`text-[#7a95b8] transition-transform ${expanded ? "rotate-90" : ""}`}
-        />
-      </button>
-
-      {expanded && (
-        <div className="mt-4 space-y-3">
-          {prefsQuery.isLoading ? (
-            <div className="animate-pulse space-y-2">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-12 bg-[#12233e] rounded-lg" />
-              ))}
-            </div>
-          ) : (
-            prefs.map((p) => {
-              const meta = MEETING_TYPE_LABELS[p.meetingType] ?? MEETING_TYPE_LABELS.OTHER;
-              const Icon = meta.icon;
-              return (
-                <div
-                  key={p.meetingType}
-                  className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
-                    p.enabled
-                      ? "bg-[#0f1e35] border-[#12233e]"
-                      : "bg-[#0b1628] border-[#0f1e35] opacity-60"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => handleToggle(p.meetingType, !p.enabled)}
-                      className={`w-10 h-5 rounded-full transition-colors relative ${
-                        p.enabled ? "bg-[#22c55e]" : "bg-[#1a2a42]"
-                      }`}
-                      title={p.enabled ? "Disable reminders" : "Enable reminders"}
-                    >
-                      <span
-                        className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
-                          p.enabled ? "left-5" : "left-0.5"
-                        }`}
-                      />
-                    </button>
-                    <Icon size={14} className="text-[#7a95b8]" />
-                    <span className="text-sm text-white font-medium">{meta.label}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-[#7a95b8]">Remind</span>
-                    <select
-                      value={p.leadTimeMinutes}
-                      onChange={(e) => handleLeadTimeChange(p.meetingType, Number(e.target.value))}
-                      disabled={!p.enabled}
-                      className="rc-input text-xs py-1 px-2 w-28"
-                    >
-                      {LEAD_TIME_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value}>{opt.label} before</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              );
-            })
-          )}
-          {updatePrefs.isPending && (
-            <div className="flex items-center gap-2 text-xs text-[#7a95b8]">
-              <span className="w-3 h-3 rounded-full border-2 border-[#7a95b8]/30 border-t-[#7a95b8] animate-spin" />
-              Saving...
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-```
-
-## `client/src/pages/portal/MorningRitual.tsx`
-
-```tsx
-// @ts-nocheck
-import { useState, useEffect } from "react";
-import { AppShell } from "@/components/AppShell";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Switch } from "@/components/ui/switch";
-import { trpc } from "@/lib/trpc";
-import { useAuth } from "@/_core/hooks/useAuth";
-import { toast } from "sonner";
-import {
-  Sun, Coffee, Flame, DollarSign, Zap,
-  Volume2, VolumeX, Clock, Target, CheckCircle, Sparkles,
-  ArrowRight, Heart, Shield, Bell, AlertTriangle
-} from "lucide-react";
-
-/* ═══════════════════════════════════════════════════════════════════
-   THE MORNING RITUAL — WIRED TO REAL BACKEND
-   ═══════════════════════════════════════════════════════════════════ */
-
-const SOUND_TIERS = [
-  { min: 0, max: 999, label: "Coin Drop", emoji: "🪙" },
-  { min: 1000, max: 9999, label: "Cash Register", emoji: "💵" },
-  { min: 10000, max: 99999, label: "Vault Opening", emoji: "🏦" },
-  { min: 100000, max: 999999, label: "Jackpot", emoji: "🎰" },
-  { min: 1000000, max: Infinity, label: "Wealth Explosion", emoji: "💎" },
-];
-
-const RITUAL_STEPS = [
-  { id: "breathe", title: "Breathe", subtitle: "Center yourself. Today is going to be profitable.", icon: Sun, iconColor: "text-amber-400", duration: 10, bgGradient: "from-amber-500/5 to-amber-900/10" },
-  { id: "wealth", title: "Wealth Discovered", subtitle: "While you slept, the numbers moved.", icon: DollarSign, iconColor: "text-emerald-400", duration: 15, bgGradient: "from-emerald-500/5 to-emerald-900/10" },
-  { id: "streak", title: "Streak Check", subtitle: "Another day. Another link in the chain.", icon: Flame, iconColor: "text-orange-400", duration: 10, bgGradient: "from-orange-500/5 to-orange-900/10" },
-  { id: "discovery", title: "Daily Discovery", subtitle: "Your AI found something while you were away.", icon: Sparkles, iconColor: "text-cyan-400", duration: 20, bgGradient: "from-cyan-500/5 to-cyan-900/10" },
-  { id: "quest", title: "Today's Quest", subtitle: "Your mission, should you choose to accept it.", icon: Target, iconColor: "text-violet-400", duration: 15, bgGradient: "from-violet-500/5 to-violet-900/10" },
-  { id: "launch", title: "Launch", subtitle: "Go make someone's financial life better.", icon: Zap, iconColor: "text-yellow-400", duration: 10, bgGradient: "from-yellow-500/5 to-yellow-900/10" },
-];
-
-function BreathingCircle({ active }: { active: boolean }) {
-  return (
-    <div className="relative flex items-center justify-center">
-      <div className={`w-32 h-32 rounded-full border-2 border-amber-400/30 transition-all duration-[4000ms] ease-in-out ${active ? "scale-150 opacity-20" : "scale-100 opacity-60"}`} />
-      <div className={`absolute w-24 h-24 rounded-full border border-amber-400/50 transition-all duration-[4000ms] ease-in-out delay-500 ${active ? "scale-150 opacity-10" : "scale-100 opacity-40"}`} />
-      <div className="absolute w-16 h-16 rounded-full bg-amber-400/20 flex items-center justify-center">
-        <Sun className="text-amber-400" size={24} />
-      </div>
-      <p className="absolute -bottom-8 text-xs text-amber-400/60 font-medium">
-        {active ? "Breathe out..." : "Breathe in..."}
-      </p>
-    </div>
-  );
-}
-
-function AnimatedCounter({ target, prefix = "$", duration = 2000 }: { target: number; prefix?: string; duration?: number }) {
-  const [current, setCurrent] = useState(0);
-  useEffect(() => {
-    const steps = 60;
-    const increment = target / steps;
-    let step = 0;
-    const timer = setInterval(() => {
-      step++;
-      setCurrent(Math.min(Math.round(increment * step), target));
-      if (step >= steps) clearInterval(timer);
-    }, duration / steps);
-    return () => clearInterval(timer);
-  }, [target, duration]);
-  return <span>{prefix}{current.toLocaleString()}</span>;
-}
-
-function ToiletDashboard() {
-  const quickWins = [
-    { title: "Call Mrs. Johnson", subtitle: "Policy renewal in 7 days", time: "30s", xp: 15, icon: "📞", urgency: "high" },
-    { title: "Send Birthday Card", subtitle: "Tom Anderson turns 65 today", time: "20s", xp: 10, icon: "🎂", urgency: "medium" },
-    { title: "Review MYGA Rate", subtitle: "Athene rate changed overnight", time: "15s", xp: 5, icon: "📊", urgency: "low" },
-    { title: "Approve Pending App", subtitle: "Chen family FIA application", time: "45s", xp: 20, icon: "✅", urgency: "high" },
-    { title: "Reply to Referral", subtitle: "New lead from Dr. Williams", time: "60s", xp: 25, icon: "🤝", urgency: "high" },
-  ];
-  const [completed, setCompleted] = useState<Set<number>>(new Set());
-  const totalXp = quickWins.filter((_, i) => completed.has(i)).reduce((sum, w) => sum + w.xp, 0);
-
-  return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-black text-white flex items-center gap-2">
-            <Clock size={18} className="text-cyan-400" /> Quick Wins
-          </h3>
-          <p className="text-xs text-slate-500">90-second tasks. One thumb. Big impact.</p>
-        </div>
-        <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">+{totalXp} XP</Badge>
-      </div>
-      {quickWins.map((win, i) => (
-        <Card key={i} className={`bg-slate-800/50 border-slate-700/50 cursor-pointer transition-all duration-200 ${completed.has(i) ? "opacity-50 border-emerald-500/30" : "hover:bg-slate-800/80"}`}
-          onClick={() => {
-            if (!completed.has(i)) {
-              setCompleted(prev => { const next = new Set(Array.from(prev)); next.add(i); return next; });
-              toast.success(`+${win.xp} XP`, { description: win.title });
-            }
-          }}>
-          <CardContent className="p-3 flex items-center gap-3">
-            <span className="text-2xl">{completed.has(i) ? "✅" : win.icon}</span>
-            <div className="flex-1 min-w-0">
-              <p className={`text-sm font-bold ${completed.has(i) ? "text-emerald-400 line-through" : "text-white"}`}>{win.title}</p>
-              <p className="text-xs text-slate-500 truncate">{win.subtitle}</p>
-            </div>
-            <div className="text-right shrink-0">
-              <p className="text-xs text-slate-400">{win.time}</p>
-              <p className="text-[10px] text-yellow-400">+{win.xp} XP</p>
-            </div>
-            <div className={`w-2 h-2 rounded-full ${win.urgency === "high" ? "bg-red-400" : win.urgency === "medium" ? "bg-amber-400" : "bg-blue-400"}`} />
-          </CardContent>
-        </Card>
-      ))}
-      <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-slate-400">Quick Win Progress</span>
-          <span className="text-xs text-emerald-400 font-bold">{completed.size}/{quickWins.length}</span>
-        </div>
-        <Progress value={(completed.size / quickWins.length) * 100} className="h-2" />
-      </div>
-    </div>
-  );
-}
-
-function WithdrawalSymptoms() {
-  const { data: triggers, isLoading } = trpc.withdrawal.getUnread.useQuery();
-  const markReadMut = trpc.withdrawal.markRead.useMutation();
-  const markClickedMut = trpc.withdrawal.markClicked.useMutation();
-  const generateMut = trpc.withdrawal.generate.useMutation({
-    onSuccess: () => toast.success("Re-engagement triggers generated!"),
-  });
-  const utils = trpc.useUtils();
-
-  const staticSymptoms = [
-    { level: 1, trigger: "12 hours away", message: "Your wealth feed has new insights waiting...", icon: Bell, color: "text-blue-400", bgColor: "bg-blue-500/10 border-blue-500/20" },
-    { level: 2, trigger: "24 hours away", message: "Your streak is at risk! Log in to save it.", icon: Flame, color: "text-orange-400", bgColor: "bg-orange-500/10 border-orange-500/20" },
-    { level: 3, trigger: "48 hours away", message: "Your pet is getting lonely. It hasn't been fed.", icon: Heart, color: "text-pink-400", bgColor: "bg-pink-500/10 border-pink-500/20" },
-    { level: 4, trigger: "72 hours away", message: "ALERT: Clients have been contacted by competitors.", icon: AlertTriangle, color: "text-red-400", bgColor: "bg-red-500/10 border-red-500/20" },
-    { level: 5, trigger: "7 days away", message: "EMERGENCY: Your Russell Number dropped significantly.", icon: Shield, color: "text-red-500", bgColor: "bg-red-500/15 border-red-500/30" },
-  ];
-
-  return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-black text-white flex items-center gap-2">
-            <AlertTriangle size={18} className="text-red-400" /> Re-Engagement Triggers
-          </h3>
-          <p className="text-xs text-slate-500">Escalating notifications that bring advisors back.</p>
-        </div>
-        <Button size="sm" variant="outline" className="text-xs" onClick={() => { generateMut.mutate(); setTimeout(() => utils.withdrawal.getUnread.invalidate(), 1000); }}>
-          Generate Test
-        </Button>
-      </div>
-
-      {triggers && triggers.length > 0 && (
-        <div className="space-y-2 mb-4">
-          <p className="text-xs text-yellow-400 font-bold">Active Triggers ({triggers.length})</p>
-          {triggers.map((t: any) => (
-            <Card key={t.id} className="bg-red-500/5 border-red-500/20 border">
-              <CardContent className="p-3 flex items-start gap-3">
-                <AlertTriangle size={14} className="text-red-400 mt-1 shrink-0" />
-                <div className="flex-1">
-                  <p className="text-xs text-white/80">{t.hookText}</p>
-                  <p className="text-[10px] text-slate-500 mt-1">Level {t.triggerLevel} — {t.triggerType}</p>
-                </div>
-                <Button size="sm" variant="ghost" className="text-[10px] text-slate-400 h-6" onClick={() => { markReadMut.mutate({ triggerId: t.id }); utils.withdrawal.getUnread.invalidate(); }}>
-                  Dismiss
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      <div className="space-y-2">
-        <p className="text-xs text-slate-400 font-medium">Trigger Escalation Levels</p>
-        {staticSymptoms.map((s) => {
-          const Icon = s.icon;
-          return (
-            <Card key={s.level} className={`${s.bgColor} border`}>
-              <CardContent className="p-3 flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <Icon size={14} className={s.color} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge className="bg-black/20 text-white/60 border-white/10 text-[10px]">Level {s.level}</Badge>
-                    <span className="text-[10px] text-slate-500">{s.trigger}</span>
-                  </div>
-                  <p className="text-xs text-white/80">{s.message}</p>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
-        <p className="text-xs text-slate-400">Current status: <span className="text-emerald-400 font-bold">Active</span></p>
-        <p className="text-[10px] text-slate-500 mt-1">
-          {triggers && triggers.length > 0 ? `${triggers.length} active trigger(s)` : "No withdrawal symptoms triggered. Keep it up!"}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function SoundSettings() {
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  return (
-    <div className="space-y-3">
-      <div>
-        <h3 className="text-lg font-black text-white flex items-center gap-2">
-          <Volume2 size={18} className="text-emerald-400" /> Sound of Money
-        </h3>
-        <p className="text-xs text-slate-500">Pavlovian conditioning. Every positive event has a sound.</p>
-      </div>
-      <Card className="bg-slate-800/50 border-slate-700/50">
-        <CardContent className="p-4 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {soundEnabled ? <Volume2 size={16} className="text-emerald-400" /> : <VolumeX size={16} className="text-slate-500" />}
-              <span className="text-sm text-white font-medium">Sound Effects</span>
-            </div>
-            <Switch checked={soundEnabled} onCheckedChange={setSoundEnabled} />
-          </div>
-          <div className="space-y-2">
-            <p className="text-xs text-slate-400 font-medium">Sound Tiers</p>
-            {SOUND_TIERS.map((tier) => (
-              <div key={tier.label} className="flex items-center justify-between py-1.5 px-2 rounded-lg bg-black/20">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">{tier.emoji}</span>
-                  <div>
-                    <p className="text-xs text-white font-medium">{tier.label}</p>
-                    <p className="text-[10px] text-slate-500">${tier.min.toLocaleString()} - {tier.max === Infinity ? "∞" : `$${tier.max.toLocaleString()}`}</p>
-                  </div>
-                </div>
-                <button className="text-[10px] text-emerald-400 hover:text-emerald-300 font-medium"
-                  onClick={() => toast.success(`${tier.emoji} ${tier.label}!`, { description: `Playing sound for $${tier.min.toLocaleString()}+ discoveries` })}>
-                  Preview
-                </button>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-export default function MorningRitualPage() {
-  const { user } = useAuth();
-  const utils = trpc.useUtils();
-  const [activeTab, setActiveTab] = useState<"ritual" | "toilet" | "sound" | "withdrawal">("ritual");
-  const [ritualStep, setRitualStep] = useState(0);
-  const [ritualStarted, setRitualStarted] = useState(false);
-  const [ritualComplete, setRitualComplete] = useState(false);
-  const [breatheIn, setBreatheIn] = useState(true);
-  const [stepProgress, setStepProgress] = useState(0);
-
-  const { data: todayRitual } = trpc.morningRitual.getToday.useQuery(undefined, { enabled: !!user });
-  const { data: streakData } = trpc.morningRitual.getStreak.useQuery(undefined, { enabled: !!user });
-  const startMutation = trpc.morningRitual.start.useMutation({
-    onSuccess: () => { utils.morningRitual.getToday.invalidate(); },
-  });
-  const completeStepMutation = trpc.morningRitual.completeStep.useMutation({
-    onSuccess: (data) => {
-      if (data.justCompleted) {
-        toast.success("Morning Ritual Complete!", { description: `+${data.xpGained} XP, +${data.coinsGained} RC` });
-      }
-      utils.morningRitual.getToday.invalidate();
-      utils.morningRitual.getStreak.invalidate();
-    },
-  });
-
-  useEffect(() => {
-    if (todayRitual?.isComplete) {
-      setRitualComplete(true);
-      setRitualStarted(true);
-    }
-  }, [todayRitual]);
-
-  useEffect(() => {
-    if (!ritualStarted || ritualStep !== 0) return;
-    const timer = setInterval(() => setBreatheIn(prev => !prev), 4000);
-    return () => clearInterval(timer);
-  }, [ritualStarted, ritualStep]);
-
-  useEffect(() => {
-    if (!ritualStarted || ritualComplete) return;
-    const step = RITUAL_STEPS[ritualStep];
-    if (!step) return;
-    const interval = 100;
-    const increment = (interval / (step.duration * 1000)) * 100;
-    const timer = setInterval(() => {
-      setStepProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(timer);
-          completeStepMutation.mutate({ stepIndex: ritualStep });
-          if (ritualStep < RITUAL_STEPS.length - 1) {
-            setTimeout(() => { setRitualStep(s => s + 1); setStepProgress(0); }, 500);
-          } else {
-            setRitualComplete(true);
-          }
-          return 100;
-        }
-        return prev + increment;
-      });
-    }, interval);
-    return () => clearInterval(timer);
-  }, [ritualStarted, ritualStep, ritualComplete]);
-
-  const tabs = [
-    { id: "ritual" as const, label: "Morning Ritual", icon: Sun, color: "text-amber-400" },
-    { id: "toilet" as const, label: "Quick Wins", icon: Clock, color: "text-cyan-400" },
-    { id: "sound" as const, label: "Sound of Money", icon: Volume2, color: "text-emerald-400" },
-    { id: "withdrawal" as const, label: "Re-Engage", icon: AlertTriangle, color: "text-red-400" },
-  ];
-
-  const currentStep = RITUAL_STEPS[ritualStep];
-
-  return (
-    <AppShell>
-      <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
-        <div>
-          <h1 className="text-2xl font-black text-white flex items-center gap-2">
-            <Sun className="text-amber-400" /> Daily Rituals
-          </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Own the first 90 seconds. Condition the brain. Build the habit.
-            {streakData && <span className="text-orange-400 ml-2">🔥 {streakData.currentStreak} day streak</span>}
-          </p>
-        </div>
-
-        <div className="flex gap-1 bg-slate-800/50 rounded-xl p-1 border border-slate-700/50">
-          {tabs.map(tab => {
-            const Icon = tab.icon;
-            return (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-bold transition-all ${activeTab === tab.id ? "bg-slate-700 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}>
-                <Icon size={14} className={activeTab === tab.id ? tab.color : ""} />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {activeTab === "ritual" && (
-          <div className="space-y-4">
-            {!ritualStarted ? (
-              <Card className="bg-gradient-to-br from-amber-500/5 to-amber-900/10 border-amber-500/20">
-                <CardContent className="p-8 text-center space-y-6">
-                  <div className="w-20 h-20 rounded-full bg-amber-400/10 border-2 border-amber-400/30 flex items-center justify-center mx-auto">
-                    <Coffee className="text-amber-400" size={32} />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black text-white">Good {new Date().getHours() < 12 ? "Morning" : new Date().getHours() < 17 ? "Afternoon" : "Evening"}, {user?.name?.split(" ")[0] || "Commander"}</h2>
-                    <p className="text-sm text-slate-400 mt-2">Your 90-second Morning Ritual is ready.</p>
-                    {streakData && <p className="text-xs text-orange-400 mt-1">🔥 Current streak: {streakData.currentStreak} days ({streakData.totalCompleted} total)</p>}
-                  </div>
-                  <div className="flex items-center justify-center gap-4 text-xs text-slate-500">
-                    {RITUAL_STEPS.map((step, i) => {
-                      const Icon = step.icon;
-                      return (
-                        <div key={i} className="flex flex-col items-center gap-1">
-                          <Icon size={14} className={step.iconColor} />
-                          <span>{step.duration}s</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <Button className="bg-amber-600 hover:bg-amber-500 text-white font-black px-8 h-12 rounded-xl text-lg"
-                    disabled={startMutation.isPending}
-                    onClick={() => { startMutation.mutate(); setRitualStarted(true); }}>
-                    Begin Ritual <ArrowRight className="ml-2" size={18} />
-                  </Button>
-                </CardContent>
-              </Card>
-            ) : ritualComplete ? (
-              <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-900/20 border-emerald-500/30">
-                <CardContent className="p-8 text-center space-y-6">
-                  <div className="w-20 h-20 rounded-full bg-emerald-400/20 border-2 border-emerald-400/40 flex items-center justify-center mx-auto animate-pulse">
-                    <CheckCircle className="text-emerald-400" size={36} />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black text-white">Ritual Complete</h2>
-                    <p className="text-sm text-slate-400 mt-2">You're centered, informed, and ready to dominate.</p>
-                  </div>
-                  <div className="flex items-center justify-center gap-6">
-                    <div className="text-center">
-                      <p className="text-2xl font-black text-yellow-400">+{todayRitual?.xpEarned ?? 100}</p>
-                      <p className="text-xs text-slate-500">XP Earned</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-black text-orange-400">🔥</p>
-                      <p className="text-xs text-slate-500">{streakData?.currentStreak ?? 1} Day Streak</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-black text-emerald-400">+{todayRitual?.coinsEarned ?? 50}</p>
-                      <p className="text-xs text-slate-500">RC Earned</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  {RITUAL_STEPS.map((_, i) => (
-                    <div key={i} className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${i < ritualStep ? "bg-emerald-400" : i === ritualStep ? "bg-amber-400" : "bg-slate-700"}`}>
-                      {i === ritualStep && <div className="h-full bg-amber-400 rounded-full transition-all duration-100" style={{ width: `${stepProgress}%` }} />}
-                    </div>
-                  ))}
-                </div>
-                <Card className={`bg-gradient-to-br ${currentStep?.bgGradient} border-slate-700/50 min-h-[300px]`}>
-                  <CardContent className="p-8 flex flex-col items-center justify-center text-center space-y-6">
-                    <Badge className="bg-black/20 text-white/60 border-white/10 text-[10px]">Step {ritualStep + 1} of {RITUAL_STEPS.length}</Badge>
-                    {ritualStep === 0 ? (
-                      <BreathingCircle active={breatheIn} />
-                    ) : (
-                      <div className="w-16 h-16 rounded-full bg-black/20 flex items-center justify-center">
-                        {currentStep && <currentStep.icon size={28} className={currentStep.iconColor} />}
-                      </div>
-                    )}
-                    <div className="mt-4">
-                      <h2 className="text-2xl font-black text-white">{currentStep?.title}</h2>
-                      <p className="text-sm text-slate-400 mt-2">{currentStep?.subtitle}</p>
-                    </div>
-                    {ritualStep === 1 && (
-                      <div className="text-center">
-                        <p className="text-3xl font-black text-emerald-400"><AnimatedCounter target={47200} /></p>
-                        <p className="text-xs text-slate-500 mt-1">Discovered while you slept</p>
-                      </div>
-                    )}
-                    {ritualStep === 2 && (
-                      <div className="flex items-center gap-3">
-                        <Flame className="text-orange-400" size={32} />
-                        <span className="text-4xl font-black text-orange-400">{streakData?.currentStreak ?? 1}</span>
-                        <span className="text-sm text-slate-400">day streak</span>
-                      </div>
-                    )}
-                    {ritualStep === 3 && (
-                      <div className="bg-black/20 rounded-xl p-4 border border-cyan-500/20 w-full max-w-xs">
-                        <p className="text-sm text-cyan-400 font-bold">AI Discovery</p>
-                        <p className="text-xs text-slate-400 mt-1">The Martinez family is overpaying $23,400/yr in taxes. A charitable remainder trust fixes this.</p>
-                      </div>
-                    )}
-                    {ritualStep === 4 && (
-                      <div className="bg-black/20 rounded-xl p-4 border border-violet-500/20 w-full max-w-xs">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Target size={14} className="text-violet-400" />
-                          <span className="text-xs text-violet-400 font-bold">Daily Quest</span>
-                        </div>
-                        <p className="text-sm text-white font-bold">Complete 3 client follow-ups</p>
-                        <p className="text-xs text-slate-500 mt-1">Reward: 75 XP + Rare Loot Drop</p>
-                      </div>
-                    )}
-                    <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs"
-                      onClick={() => {
-                        completeStepMutation.mutate({ stepIndex: ritualStep });
-                        if (ritualStep < RITUAL_STEPS.length - 1) {
-                          setRitualStep(s => s + 1);
-                          setStepProgress(0);
-                        } else {
-                          setRitualComplete(true);
-                        }
-                      }}>
-                      {ritualStep < RITUAL_STEPS.length - 1 ? "Skip →" : "Complete ✓"}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === "toilet" && <ToiletDashboard />}
-        {activeTab === "sound" && <SoundSettings />}
-        {activeTab === "withdrawal" && <WithdrawalSymptoms />}
-      </div>
-    </AppShell>
   );
 }
 ```

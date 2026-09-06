@@ -44,6 +44,24 @@ Every later `pnpm release` + merge to `master` updates the live page automatical
 The full app (portal, lead inbox, nine-AI panel, database) still deploys per the
 sections below.
 
+## 🎙 What a new client gets in the portal (New Client Welcome List)
+
+1. **Financial Assessment** (`/portal/financial-assessment`) — the 15-section,
+   ~190-question fact finder with autosave and a printable Financial Analysis
+   Document. Nothing is advised until it is complete.
+2. **AI Financial Advisor** (`/portal/ai-advisor`) — the tape recorder. The whole
+   AI team answers as one Financial Librarian, by voice or text, only once the
+   assessment is complete. Press **JOURNEY** and it distils everything asked into
+   3–5 core questions, names the question the client hasn't asked, and lays out
+   10–15 pages of this site — calculators included — in order.
+3. **Wealth Genome Analysis**, then **The Arrival → The Brotherhood** (the seven
+   journey pages).
+
+Voice output uses `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` when set; otherwise
+the browser's own voice. With no AI keys the librarian still answers from the
+assessment alone (no invented figures). Builder notes for the next engineer are in
+`docs/grok-handoff/`.
+
 ## ⚙ One command to regenerate everything
 
 From `russell-capital-systems/`:

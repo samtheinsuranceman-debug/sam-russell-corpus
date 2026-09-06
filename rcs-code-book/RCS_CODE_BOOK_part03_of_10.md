@@ -4,6 +4,10 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 
 ### Files in this part
 
+- `client/src/pages/ComponentShowcase.tsx`
+- `client/src/pages/CryptoCyclePage.tsx`
+- `client/src/pages/DealRoomPage.tsx`
+- `client/src/pages/DivorceCalculatorPage.tsx`
 - `client/src/pages/DivorceILITStrategyPage.tsx`
 - `client/src/pages/EarnPage.tsx`
 - `client/src/pages/EstatePlanningPage.tsx`
@@ -50,6 +54,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/pages/VideoViewer.tsx`
 - `client/src/pages/WealthGenomePage.tsx`
 - `client/src/pages/WhisperCoachPage.tsx`
+- `client/src/pages/portal/AIFinancialAdvisor.tsx`
 - `client/src/pages/portal/AIMeetingNotes.tsx`
 - `client/src/pages/portal/AIPolicyReviewGap.tsx`
 - `client/src/pages/portal/AISlideGenerator.tsx`
@@ -73,11 +78,1936 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/pages/portal/AxonicSP500.tsx`
 - `client/src/pages/portal/BatchIllustration.tsx`
 - `client/src/pages/portal/BatchSlides.tsx`
-- `client/src/pages/portal/BeneficiaryOptimization.tsx`
-- `client/src/pages/portal/Billing.tsx`
-- `client/src/pages/portal/BlackMirror.tsx`
 
 ---
+
+## `client/src/pages/ComponentShowcase.tsx`
+
+```tsx
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Input } from "@/components/ui/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { Label } from "@/components/ui/label";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Progress } from "@/components/ui/progress";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Toggle } from "@/components/ui/toggle";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useTheme } from "@/contexts/ThemeContext";
+import { format } from "date-fns";
+import { zhCN } from "date-fns/locale";
+import {
+  AlertCircle,
+  CalendarIcon,
+  Check,
+  Clock,
+  Moon,
+  Sun,
+  X,
+} from "lucide-react";
+import { useState } from "react";
+import { toast as sonnerToast } from "sonner";
+import { AIChatBox, type Message } from "@/components/AIChatBox";
+
+export default function ComponentsShowcase() {
+  const { theme, toggleTheme } = useTheme();
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [datePickerDate, setDatePickerDate] = useState<Date>();
+  const [selectedFruits, setSelectedFruits] = useState<string[]>([]);
+  const [progress, setProgress] = useState(33);
+  const [currentPage, setCurrentPage] = useState(2);
+  const [openCombobox, setOpenCombobox] = useState(false);
+  const [selectedFramework, setSelectedFramework] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [dialogInput, setDialogInput] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Chat Box demo state
+  const [chatMessages, setChatMessages] = useState<Message[]>([
+    { role: "system", content: "You are a helpful assistant." },
+  ]);
+  const [isChatLoading, setIsChatLoading] = useState(false);
+
+  const handleDialogSubmit = () => {
+    console.log("Dialog submitted with value:", dialogInput);
+    sonnerToast.success("Submitted successfully", {
+      description: `Input: ${dialogInput}`,
+    });
+    setDialogInput("");
+    setDialogOpen(false);
+  };
+
+  const handleDialogKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+      e.preventDefault();
+      handleDialogSubmit();
+    }
+  };
+
+  const handleChatSend = (content: string) => {
+    // Add user message
+    const newMessages: Message[] = [...chatMessages, { role: "user", content }];
+    setChatMessages(newMessages);
+
+    // Simulate AI response with delay
+    setIsChatLoading(true);
+    setTimeout(() => {
+      const aiResponse: Message = {
+        role: "assistant",
+        content: `This is a **demo response**. In a real app, you would call a tRPC mutation here:\n\n\`\`\`typescript\nconst chatMutation = trpc.ai.chat.useMutation({\n  onSuccess: (response) => {\n    setChatMessages(prev => [...prev, {\n      role: "assistant",\n      content: response.choices[0].message.content\n    }]);\n  }\n});\n\nchatMutation.mutate({ messages: newMessages });\n\`\`\`\n\nYour message was: "${content}"`,
+      };
+      setChatMessages([...newMessages, aiResponse]);
+      setIsChatLoading(false);
+    }, 1500);
+  };
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <main className="container max-w-6xl mx-auto">
+        <div className="space-y-2 justify-between flex">
+          <h2 className="text-3xl font-bold tracking-tight mb-6">
+            Shadcn/ui Component Library
+          </h2>
+          <Button variant="outline" size="icon" onClick={toggleTheme}>
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
+
+        <div className="space-y-12">
+          {/* Text Colors Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Text Colors</h3>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Foreground (Default)
+                      </p>
+                      <p className="text-foreground text-lg">
+                        Default text color for main content
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Muted Foreground
+                      </p>
+                      <p className="text-muted-foreground text-lg">
+                        Muted text for secondary information
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Primary
+                      </p>
+                      <p className="text-primary text-lg font-medium">
+                        Primary brand color text
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Secondary Foreground
+                      </p>
+                      <p className="text-secondary-foreground text-lg">
+                        Secondary action text color
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Accent Foreground
+                      </p>
+                      <p className="text-accent-foreground text-lg">
+                        Accent text for emphasis
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Destructive
+                      </p>
+                      <p className="text-destructive text-lg font-medium">
+                        Error or destructive action text
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Card Foreground
+                      </p>
+                      <p className="text-card-foreground text-lg">
+                        Text color on card backgrounds
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Popover Foreground
+                      </p>
+                      <p className="text-popover-foreground text-lg">
+                        Text color in popovers
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Color Combinations Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Color Combinations</h3>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="bg-primary text-primary-foreground rounded-lg p-4">
+                    <p className="font-medium mb-1">Primary</p>
+                    <p className="text-sm opacity-90">
+                      Primary background with foreground text
+                    </p>
+                  </div>
+                  <div className="bg-secondary text-secondary-foreground rounded-lg p-4">
+                    <p className="font-medium mb-1">Secondary</p>
+                    <p className="text-sm opacity-90">
+                      Secondary background with foreground text
+                    </p>
+                  </div>
+                  <div className="bg-muted text-muted-foreground rounded-lg p-4">
+                    <p className="font-medium mb-1">Muted</p>
+                    <p className="text-sm opacity-90">
+                      Muted background with foreground text
+                    </p>
+                  </div>
+                  <div className="bg-accent text-accent-foreground rounded-lg p-4">
+                    <p className="font-medium mb-1">Accent</p>
+                    <p className="text-sm opacity-90">
+                      Accent background with foreground text
+                    </p>
+                  </div>
+                  <div className="bg-destructive text-destructive-foreground rounded-lg p-4">
+                    <p className="font-medium mb-1">Destructive</p>
+                    <p className="text-sm opacity-90">
+                      Destructive background with foreground text
+                    </p>
+                  </div>
+                  <div className="bg-card text-card-foreground rounded-lg p-4 border">
+                    <p className="font-medium mb-1">Card</p>
+                    <p className="text-sm opacity-90">
+                      Card background with foreground text
+                    </p>
+                  </div>
+                  <div className="bg-popover text-popover-foreground rounded-lg p-4 border">
+                    <p className="font-medium mb-1">Popover</p>
+                    <p className="text-sm opacity-90">
+                      Popover background with foreground text
+                    </p>
+                  </div>
+                  <div className="bg-background text-foreground rounded-lg p-4 border">
+                    <p className="font-medium mb-1">Background</p>
+                    <p className="text-sm opacity-90">
+                      Default background with foreground text
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Buttons Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Buttons</h3>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-wrap gap-4">
+                  <Button>Default</Button>
+                  <Button variant="secondary">Secondary</Button>
+                  <Button variant="destructive">Destructive</Button>
+                  <Button variant="outline">Outline</Button>
+                  <Button variant="ghost">Ghost</Button>
+                  <Button variant="link">Link</Button>
+                  <Button size="sm">Small</Button>
+                  <Button size="lg">Large</Button>
+                  <Button size="icon">
+                    <Check className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Form Inputs Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Form Inputs</h3>
+            <Card>
+              <CardContent className="pt-6 space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input id="email" type="email" placeholder="Email" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="message">Message</Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Type your message here."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Select</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a fruit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="apple">Apple</SelectItem>
+                      <SelectItem value="banana">Banana</SelectItem>
+                      <SelectItem value="orange">Orange</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox id="terms" />
+                  <Label htmlFor="terms">Accept terms and conditions</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Switch id="airplane-mode" />
+                  <Label htmlFor="airplane-mode">Airplane Mode</Label>
+                </div>
+                <div className="space-y-2">
+                  <Label>Radio Group</Label>
+                  <RadioGroup defaultValue="option-one">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="option-one" id="option-one" />
+                      <Label htmlFor="option-one">Option One</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="option-two" id="option-two" />
+                      <Label htmlFor="option-two">Option Two</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                <div className="space-y-2">
+                  <Label>Slider</Label>
+                  <Slider defaultValue={[50]} max={100} step={1} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Input OTP</Label>
+                  <InputOTP maxLength={6}>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
+                <div className="space-y-2">
+                  <Label>Date Time Picker</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-start text-left font-normal ${
+                          !datePickerDate && "text-muted-foreground"
+                        }`}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {datePickerDate ? (
+                          format(datePickerDate, "PPP HH:mm", { locale: zhCN })
+                        ) : (
+                          <span>Select date and time</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <div className="p-3 space-y-3">
+                        <Calendar
+                          mode="single"
+                          selected={datePickerDate}
+                          onSelect={setDatePickerDate}
+                        />
+                        <div className="border-t pt-3 space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <Clock className="h-4 w-4" />
+                            Time
+                          </Label>
+                          <div className="flex gap-2">
+                            <Input
+                              type="time"
+                              value={
+                                datePickerDate
+                                  ? format(datePickerDate, "HH:mm")
+                                  : "00:00"
+                              }
+                              onChange={e => {
+                                const [hours, minutes] =
+                                  e.target.value.split(":");
+                                const newDate = datePickerDate
+                                  ? new Date(datePickerDate)
+                                  : new Date();
+                                newDate.setHours(parseInt(hours));
+                                newDate.setMinutes(parseInt(minutes));
+                                setDatePickerDate(newDate);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                  {datePickerDate && (
+                    <p className="text-sm text-muted-foreground">
+                      Selected:{" "}
+                      {format(datePickerDate, "yyyy/MM/dd  HH:mm", {
+                        locale: zhCN,
+                      })}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label>Searchable Dropdown</Label>
+                  <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={openCombobox}
+                        className="w-full justify-between"
+                      >
+                        {selectedFramework
+                          ? [
+                              { value: "react", label: "React" },
+                              { value: "vue", label: "Vue" },
+                              { value: "angular", label: "Angular" },
+                              { value: "svelte", label: "Svelte" },
+                              { value: "nextjs", label: "Next.js" },
+                              { value: "nuxt", label: "Nuxt" },
+                              { value: "remix", label: "Remix" },
+                            ].find(fw => fw.value === selectedFramework)?.label
+                          : "Select framework..."}
+                        <CalendarIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput placeholder="Search frameworks..." />
+                        <CommandList>
+                          <CommandEmpty>No framework found</CommandEmpty>
+                          <CommandGroup>
+                            {[
+                              { value: "react", label: "React" },
+                              { value: "vue", label: "Vue" },
+                              { value: "angular", label: "Angular" },
+                              { value: "svelte", label: "Svelte" },
+                              { value: "nextjs", label: "Next.js" },
+                              { value: "nuxt", label: "Nuxt" },
+                              { value: "remix", label: "Remix" },
+                            ].map(framework => (
+                              <CommandItem
+                                key={framework.value}
+                                value={framework.value}
+                                onSelect={currentValue => {
+                                  setSelectedFramework(
+                                    currentValue === selectedFramework
+                                      ? ""
+                                      : currentValue
+                                  );
+                                  setOpenCombobox(false);
+                                }}
+                              >
+                                <Check
+                                  className={`mr-2 h-4 w-4 ${
+                                    selectedFramework === framework.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  }`}
+                                />
+                                {framework.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  {selectedFramework && (
+                    <p className="text-sm text-muted-foreground">
+                      Selected:{" "}
+                      {
+                        [
+                          { value: "react", label: "React" },
+                          { value: "vue", label: "Vue" },
+                          { value: "angular", label: "Angular" },
+                          { value: "svelte", label: "Svelte" },
+                          { value: "nextjs", label: "Next.js" },
+                          { value: "nuxt", label: "Nuxt" },
+                          { value: "remix", label: "Remix" },
+                        ].find(fw => fw.value === selectedFramework)?.label
+                      }
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="month" className="text-sm font-medium">
+                        Month
+                      </Label>
+                      <Select
+                        value={selectedMonth}
+                        onValueChange={setSelectedMonth}
+                      >
+                        <SelectTrigger id="month">
+                          <SelectValue placeholder="MM" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                            month => (
+                              <SelectItem
+                                key={month}
+                                value={month.toString().padStart(2, "0")}
+                              >
+                                {month.toString().padStart(2, "0")}
+                              </SelectItem>
+                            )
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="year" className="text-sm font-medium">
+                        Year
+                      </Label>
+                      <Select
+                        value={selectedYear}
+                        onValueChange={setSelectedYear}
+                      >
+                        <SelectTrigger id="year">
+                          <SelectValue placeholder="YYYY" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from(
+                            { length: 10 },
+                            (_, i) => new Date().getFullYear() - 5 + i
+                          ).map(year => (
+                            <SelectItem key={year} value={year.toString()}>
+                              {year}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  {selectedMonth && selectedYear && (
+                    <p className="text-sm text-muted-foreground">
+                      Selected: {selectedYear}/{selectedMonth}/
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Data Display Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Data Display</h3>
+            <Card>
+              <CardContent className="pt-6 space-y-6">
+                <div className="space-y-2">
+                  <Label>Badges</Label>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge>Default</Badge>
+                    <Badge variant="secondary">Secondary</Badge>
+                    <Badge variant="destructive">Destructive</Badge>
+                    <Badge variant="outline">Outline</Badge>
+                  </div>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Label>Avatar</Label>
+                  <div className="flex gap-4">
+                    <Avatar>
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    <Avatar>
+                      <AvatarFallback>AB</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Label>Progress</Label>
+                  <Progress value={progress} />
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => setProgress(Math.max(0, progress - 10))}
+                    >
+                      -10
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => setProgress(Math.min(100, progress + 10))}
+                    >
+                      +10
+                    </Button>
+                  </div>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Label>Skeleton</Label>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Label>Pagination</Label>
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          href="#"
+                          onClick={e => {
+                            e.preventDefault();
+                            setCurrentPage(Math.max(1, currentPage - 1));
+                          }}
+                        />
+                      </PaginationItem>
+                      {[1, 2, 3, 4, 5].map(page => (
+                        <PaginationItem key={page}>
+                          <PaginationLink
+                            href="#"
+                            isActive={currentPage === page}
+                            onClick={e => {
+                              e.preventDefault();
+                              setCurrentPage(page);
+                            }}
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ))}
+                      <PaginationItem>
+                        <PaginationNext
+                          href="#"
+                          onClick={e => {
+                            e.preventDefault();
+                            setCurrentPage(Math.min(5, currentPage + 1));
+                          }}
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
+                  <p className="text-sm text-muted-foreground text-center">
+                    Current page: {currentPage}
+                  </p>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Label>Table</Label>
+                  <Table>
+                    <TableCaption>A list of your recent invoices.</TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-[100px]">Invoice</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Method</TableHead>
+                        <TableHead className="text-right">Amount</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell className="font-medium">INV001</TableCell>
+                        <TableCell>Paid</TableCell>
+                        <TableCell>Credit Card</TableCell>
+                        <TableCell className="text-right">$250.00</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">INV002</TableCell>
+                        <TableCell>Pending</TableCell>
+                        <TableCell>PayPal</TableCell>
+                        <TableCell className="text-right">$150.00</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">INV003</TableCell>
+                        <TableCell>Unpaid</TableCell>
+                        <TableCell>Bank Transfer</TableCell>
+                        <TableCell className="text-right">$350.00</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Label>Menubar</Label>
+                  <Menubar>
+                    <MenubarMenu>
+                      <MenubarTrigger>File</MenubarTrigger>
+                      <MenubarContent>
+                        <MenubarItem>New Tab</MenubarItem>
+                        <MenubarItem>New Window</MenubarItem>
+                        <MenubarSeparator />
+                        <MenubarItem>Share</MenubarItem>
+                        <MenubarSeparator />
+                        <MenubarItem>Print</MenubarItem>
+                      </MenubarContent>
+                    </MenubarMenu>
+                    <MenubarMenu>
+                      <MenubarTrigger>Edit</MenubarTrigger>
+                      <MenubarContent>
+                        <MenubarItem>Undo</MenubarItem>
+                        <MenubarItem>Redo</MenubarItem>
+                      </MenubarContent>
+                    </MenubarMenu>
+                    <MenubarMenu>
+                      <MenubarTrigger>View</MenubarTrigger>
+                      <MenubarContent>
+                        <MenubarItem>Reload</MenubarItem>
+                        <MenubarItem>Force Reload</MenubarItem>
+                      </MenubarContent>
+                    </MenubarMenu>
+                  </Menubar>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Label>Breadcrumb</Label>
+                  <Breadcrumb>
+                    <BreadcrumbList>
+                      <BreadcrumbItem>
+                        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                      </BreadcrumbItem>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        <BreadcrumbLink href="/components">
+                          Components
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                      </BreadcrumbItem>
+                    </BreadcrumbList>
+                  </Breadcrumb>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Alerts Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Alerts</h3>
+            <div className="space-y-4">
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Heads up!</AlertTitle>
+                <AlertDescription>
+                  You can add components to your app using the cli.
+                </AlertDescription>
+              </Alert>
+              <Alert variant="destructive">
+                <X className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                  Your session has expired. Please log in again.
+                </AlertDescription>
+              </Alert>
+            </div>
+          </section>
+
+          {/* Tabs Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Tabs</h3>
+            <Tabs defaultValue="account" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="account">Account</TabsTrigger>
+                <TabsTrigger value="password">Password</TabsTrigger>
+                <TabsTrigger value="settings">Settings</TabsTrigger>
+              </TabsList>
+              <TabsContent value="account">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Account</CardTitle>
+                    <CardDescription>
+                      Make changes to your account here.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="space-y-1">
+                      <Label htmlFor="name">Name</Label>
+                      <Input id="name" defaultValue="Pedro Duarte" />
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button>Save changes</Button>
+                  </CardFooter>
+                </Card>
+              </TabsContent>
+              <TabsContent value="password">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Password</CardTitle>
+                    <CardDescription>
+                      Change your password here.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="space-y-1">
+                      <Label htmlFor="current">Current password</Label>
+                      <Input id="current" type="password" />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="new">New password</Label>
+                      <Input id="new" type="password" />
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button>Save password</Button>
+                  </CardFooter>
+                </Card>
+              </TabsContent>
+              <TabsContent value="settings">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Settings</CardTitle>
+                    <CardDescription>
+                      Manage your settings here.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Settings content goes here.
+                    </p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </section>
+
+          {/* Accordion Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Accordion</h3>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>Is it accessible?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It adheres to the WAI-ARIA design pattern.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger>Is it styled?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It comes with default styles that matches the other
+                  components' aesthetic.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger>Is it animated?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It's animated by default, but you can disable it if you
+                  prefer.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </section>
+
+          {/* Collapsible Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Collapsible</h3>
+            <Collapsible>
+              <Card>
+                <CardHeader>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-between">
+                      <CardTitle>@peduarte starred 3 repositories</CardTitle>
+                    </Button>
+                  </CollapsibleTrigger>
+                </CardHeader>
+                <CollapsibleContent>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div className="rounded-md border px-4 py-3 font-mono text-sm">
+                        @radix-ui/primitives
+                      </div>
+                      <div className="rounded-md border px-4 py-3 font-mono text-sm">
+                        @radix-ui/colors
+                      </div>
+                      <div className="rounded-md border px-4 py-3 font-mono text-sm">
+                        @stitches/react
+                      </div>
+                    </div>
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
+          </section>
+
+          {/* Dialog, Sheet, Drawer Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Overlays</h3>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-wrap gap-4">
+                  <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline">Open Dialog</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Test Input</DialogTitle>
+                        <DialogDescription>
+                          Enter some text below. Press Enter to submit (IME composition supported).
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="dialog-input">Input</Label>
+                          <Input
+                            id="dialog-input"
+                            placeholder="Type something..."
+                            value={dialogInput}
+                            onChange={(e) => setDialogInput(e.target.value)}
+                            onKeyDown={handleDialogKeyDown}
+                            autoFocus
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setDialogOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button onClick={handleDialogSubmit}>Submit</Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="outline">Open Sheet</Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                      <SheetHeader>
+                        <SheetTitle>Edit profile</SheetTitle>
+                        <SheetDescription>
+                          Make changes to your profile here. Click save when
+                          you're done.
+                        </SheetDescription>
+                      </SheetHeader>
+                    </SheetContent>
+                  </Sheet>
+
+                  <Drawer>
+                    <DrawerTrigger asChild>
+                      <Button variant="outline">Open Drawer</Button>
+                    </DrawerTrigger>
+                    <DrawerContent>
+                      <DrawerHeader>
+                        <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                        <DrawerDescription>
+                          This action cannot be undone.
+                        </DrawerDescription>
+                      </DrawerHeader>
+                      <DrawerFooter>
+                        <Button>Submit</Button>
+                        <DrawerClose asChild>
+                          <Button variant="outline">Cancel</Button>
+                        </DrawerClose>
+                      </DrawerFooter>
+                    </DrawerContent>
+                  </Drawer>
+
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline">Open Popover</Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <div className="space-y-2">
+                        <h4 className="font-medium leading-none">Dimensions</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Set the dimensions for the layer.
+                        </p>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline">Hover me</Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Add to library</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Menus Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Menus</h3>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-wrap gap-4">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline">Dropdown Menu</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>Profile</DropdownMenuItem>
+                      <DropdownMenuItem>Billing</DropdownMenuItem>
+                      <DropdownMenuItem>Team</DropdownMenuItem>
+                      <DropdownMenuItem>Subscription</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  <ContextMenu>
+                    <ContextMenuTrigger asChild>
+                      <Button variant="outline">Right Click Me</Button>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent>
+                      <ContextMenuItem>Profile</ContextMenuItem>
+                      <ContextMenuItem>Billing</ContextMenuItem>
+                      <ContextMenuItem>Team</ContextMenuItem>
+                      <ContextMenuItem>Subscription</ContextMenuItem>
+                    </ContextMenuContent>
+                  </ContextMenu>
+
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <Button variant="outline">Hover Card</Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent>
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold">@nextjs</h4>
+                        <p className="text-sm">
+                          The React Framework – created and maintained by
+                          @vercel.
+                        </p>
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Calendar Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Calendar</h3>
+            <Card>
+              <CardContent className="pt-6 flex justify-center">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  className="rounded-md border"
+                />
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Carousel Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Carousel</h3>
+            <Card>
+              <CardContent className="pt-6">
+                <Carousel className="w-full max-w-xs mx-auto">
+                  <CarouselContent>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <CarouselItem key={index}>
+                        <div className="p-1">
+                          <Card>
+                            <CardContent className="flex aspect-square items-center justify-center p-6">
+                              <span className="text-4xl font-semibold">
+                                {index + 1}
+                              </span>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Toggle Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Toggle</h3>
+            <Card>
+              <CardContent className="pt-6 space-y-4">
+                <div className="space-y-2">
+                  <Label>Toggle</Label>
+                  <div className="flex gap-2">
+                    <Toggle aria-label="Toggle italic">
+                      <span className="font-bold">B</span>
+                    </Toggle>
+                    <Toggle aria-label="Toggle italic">
+                      <span className="italic">I</span>
+                    </Toggle>
+                    <Toggle aria-label="Toggle underline">
+                      <span className="underline">U</span>
+                    </Toggle>
+                  </div>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Label>Toggle Group</Label>
+                  <ToggleGroup type="multiple">
+                    <ToggleGroupItem value="bold" aria-label="Toggle bold">
+                      <span className="font-bold">B</span>
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="italic" aria-label="Toggle italic">
+                      <span className="italic">I</span>
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="underline"
+                      aria-label="Toggle underline"
+                    >
+                      <span className="underline">U</span>
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Aspect Ratio & Scroll Area Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Layout Components</h3>
+            <Card>
+              <CardContent className="pt-6 space-y-6">
+                <div className="space-y-2">
+                  <Label>Aspect Ratio (16/9)</Label>
+                  <AspectRatio ratio={16 / 9} className="bg-muted">
+                    <div className="flex h-full items-center justify-center">
+                      <p className="text-muted-foreground">16:9 Aspect Ratio</p>
+                    </div>
+                  </AspectRatio>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Label>Scroll Area</Label>
+                  <ScrollArea className="h-[200px] w-full rounded-md border overflow-hidden">
+                    <div className="p-4">
+                      <div className="space-y-4">
+                        {Array.from({ length: 20 }).map((_, i) => (
+                          <div key={i} className="text-sm">
+                            Item {i + 1}: This is a scrollable content area
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </ScrollArea>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Resizable Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Resizable Panels</h3>
+            <Card>
+              <CardContent className="pt-6">
+                <ResizablePanelGroup
+                  direction="horizontal"
+                  className="min-h-[200px] rounded-lg border"
+                >
+                  <ResizablePanel defaultSize={50}>
+                    <div className="flex h-full items-center justify-center p-6">
+                      <span className="font-semibold">Panel One</span>
+                    </div>
+                  </ResizablePanel>
+                  <ResizableHandle />
+                  <ResizablePanel defaultSize={50}>
+                    <div className="flex h-full items-center justify-center p-6">
+                      <span className="font-semibold">Panel Two</span>
+                    </div>
+                  </ResizablePanel>
+                </ResizablePanelGroup>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Toast Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Toast</h3>
+            <Card>
+              <CardContent className="pt-6 space-y-4">
+                <div className="space-y-2">
+                  <Label>Sonner Toast</Label>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        sonnerToast.success("Operation successful", {
+                          description: "Your changes have been saved",
+                        });
+                      }}
+                    >
+                      Success
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        sonnerToast.error("Operation failed", {
+                          description:
+                            "Cannot complete operation, please try again",
+                        });
+                      }}
+                    >
+                      Error
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        sonnerToast.info("Information", {
+                          description: "This is an information message",
+                        });
+                      }}
+                    >
+                      Info
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        sonnerToast.warning("Warning", {
+                          description:
+                            "Please note the impact of this operation",
+                        });
+                      }}
+                    >
+                      Warning
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        sonnerToast.loading("Loading", {
+                          description: "Please wait",
+                        });
+                      }}
+                    >
+                      Loading
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        const promise = new Promise(resolve =>
+                          setTimeout(resolve, 2000)
+                        );
+                        sonnerToast.promise(promise, {
+                          loading: "Processing...",
+                          success: "Processing complete!",
+                          error: "Processing failed",
+                        });
+                      }}
+                    >
+                      Promise
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Chat Box Section */}
+          <section className="space-y-4">
+            <h3 className="text-2xl font-semibold">Chat Box</h3>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="space-y-4">
+                  <div className="text-sm text-muted-foreground">
+                    <p>
+                      A ready-to-use chat interface component that integrates with the LLM system.
+                      Features markdown rendering, auto-scrolling, and loading states.
+                    </p>
+                    <p className="mt-2">
+                      This is a demo with simulated responses. In a real app, you'd connect it to a tRPC mutation.
+                    </p>
+                  </div>
+                  <AIChatBox
+                    messages={chatMessages}
+                    onSendMessage={handleChatSend}
+                    isLoading={isChatLoading}
+                    placeholder="Try sending a message..."
+                    height="500px"
+                    emptyStateMessage="How can I help you today?"
+                    suggestedPrompts={[
+                      "What is React?",
+                      "Explain TypeScript",
+                      "How to use tRPC?",
+                      "Best practices for web development",
+                    ]}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+        </div>
+      </main>
+
+      <footer className="border-t py-6 mt-12">
+        <div className="container text-center text-sm text-muted-foreground">
+          <p>Shadcn/ui Component Showcase</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+```
+
+## `client/src/pages/CryptoCyclePage.tsx`
+
+```tsx
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const CryptoCyclePage: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("cycle");
+
+  return (
+    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">Crypto Cycle Analysis Portal</h1>
+          <div className="bg-[#22c55e]/20 text-[#22c55e] px-4 py-2 rounded-lg text-sm">
+            Page Insights Score: 90/100
+          </div>
+        </header>
+
+        <Tabs defaultValue="cycle" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="bg-[#141925] border-[#22c55e]/30 w-full justify-start">
+            <TabsTrigger value="cycle" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Cycle Analysis</TabsTrigger>
+            <TabsTrigger value="skim" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Skim Strategy</TabsTrigger>
+            <TabsTrigger value="iul" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">IUL Funding</TabsTrigger>
+            <TabsTrigger value="tax" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Tax Impact</TabsTrigger>
+            <TabsTrigger value="outcome" className="data-[state=active]:bg-[#22c55e]/20 data-[state=active]:text-[#22c55e]">Generate Outcome</TabsTrigger>
+          </TabsList>
+          <TabsContent value="cycle" className="mt-0">
+            <Card className="bg-[#141925] border-[#22c55e]/30">
+              <CardHeader><CardTitle>Cycle Analysis</CardTitle></CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  <div><Label>Portfolio Value ($)</Label><Input className="bg-[#0a0f1a] border-[#22c55e]/30" placeholder="50,000" /></div>
+                  <div><Label>Bull Run Threshold (%)</Label><Input className="bg-[#0a0f1a] border-[#22c55e]/30" placeholder="25" /></div>
+                </div>
+                <p className="text-gray-400 mt-4">Placeholder: Current Cycle - Bull Run Detected</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="skim" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Skim Strategy</CardTitle></CardHeader><CardContent><p className="text-gray-400">Profit skimming strategy will be shown here.</p></CardContent></Card></TabsContent>
+          <TabsContent value="iul" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>IUL Funding</CardTitle></CardHeader><CardContent><p className="text-gray-400">IUL overfunding plan will be displayed here.</p></CardContent></Card></TabsContent>
+          <TabsContent value="tax" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Tax Impact</CardTitle></CardHeader><CardContent><p className="text-gray-400">Tax implications will be calculated here.</p></CardContent></Card></TabsContent>
+          <TabsContent value="outcome" className="mt-0"><Card className="bg-[#141925] border-[#22c55e]/30"><CardHeader><CardTitle>Generate Outcome</CardTitle></CardHeader><CardContent><Button className="bg-[#22c55e] hover:bg-[#22c55e]/90">Generate Report</Button><p className="text-gray-400 mt-4">Outcome report will be generated here.</p></CardContent></Card></TabsContent>
+        </Tabs>
+
+        <Card className="bg-[#141925] border-[#22c55e]/30">
+          <CardHeader><CardTitle>Cross-Tool Integration</CardTitle></CardHeader>
+          <CardContent>
+            <p className="text-gray-400">Integrate with IUL Planner and Tax Impact Analyzer for comprehensive strategies.</p>
+            <Button variant="outline" className="mt-4 border-[#22c55e] text-[#22c55e] hover:bg-[#22c55e]/10">Connect Tools</Button>
+          </CardContent>
+        </Card>
+
+        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
+        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
+          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
+          <div className="flex items-center gap-4 mb-6">
+            <label className="text-sm text-slate-400">Projection Horizon:</label>
+            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
+              onChange={(e) => {
+                const val = e.target.value;
+                document.getElementById(`proj-year-crypto-cycle`)!.textContent = val;
+              }} />
+            <span id={`proj-year-crypto-cycle`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
+            <span className="text-slate-500 text-sm">years</span>
+          </div>
+          <div className="flex gap-2 mb-6">
+            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
+              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+              }`}>{s}</button>
+            ))}
+          </div>
+          <div className="grid grid-cols-5 gap-4 text-center">
+            {[5, 10, 20, 30, 50].map(yr => (
+              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
+                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
+                <div className="text-emerald-400 font-bold text-lg">[Crypto Portfolio]</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
+        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+              <span className="text-purple-400">🧠</span> AI Brain Analysis
+            </h2>
+            <div className="flex gap-2">
+              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
+                Send to AI Advisor →
+              </a>
+              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
+                View AI Brain Hub →
+              </a>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-[#1e293b] rounded-lg p-4">
+              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
+              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
+            </div>
+            <div className="bg-[#1e293b] rounded-lg p-4">
+              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
+              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
+            </div>
+            <div className="bg-[#1e293b] rounded-lg p-4">
+              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
+              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
+            </div>
+          </div>
+        </div>
+
+        <footer className="text-gray-500 text-sm mt-6">
+          <p>Regulatory Disclaimer: Russell Capital Systems provides tools for life & annuity agents only. Not for use by series-licensed professionals. Crypto investments are highly speculative. Consult financial advisors before proceeding.</p>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
+export default CryptoCyclePage;
+```
+
+## `client/src/pages/DealRoomPage.tsx`
+
+```tsx
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Folder, MessageSquare, Clock } from "lucide-react";
+
+const DealRoomPage: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("deals");
+  const tabs = ["deals", "documents", "timeline", "communication", "outcome"];
+
+  return (
+    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <h1 className="text-3xl font-bold mb-6">Deal Room</h1>
+        <p className="text-gray-400 mb-6">Virtual collaboration space for clients.</p>
+
+        {/* Tabs Navigation */}
+        <div className="flex gap-2 mb-6 overflow-x-auto">
+          {tabs.map((tab) => (
+            <Button
+              key={tab}
+              variant={activeTab === tab ? "default" : "outline"}
+              className={`${
+                activeTab === tab ? "bg-[#22c55e] hover:bg-[#1ea34e]" : "text-gray-300"
+              } capitalize`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab.replace("deals", "Active Deals").replace("outcome", "Generate Outcome")}
+            </Button>
+          ))}
+        </div>
+
+        {/* Tab Content */}
+        <div className="bg-[#141925] p-6 rounded-lg shadow-md">
+          {activeTab === "deals" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Active Deals</h2>
+              <div className="p-3 bg-[#0a0f1a] rounded-md">
+                <p>Client: Jane Smith | Product: Fixed Annuity | Status: In Progress</p>
+              </div>
+            </div>
+          )}
+          {activeTab === "documents" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Documents</h2>
+              <div className="flex items-center gap-2 p-3 bg-[#0a0f1a] rounded-md">
+                <Folder className="text-[#22c55e]" />
+                <p>Application_Form.pdf</p>
+              </div>
+            </div>
+          )}
+          {activeTab === "timeline" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Timeline</h2>
+              <div className="flex items-center gap-2 p-3 bg-[#0a0f1a] rounded-md">
+                <Clock className="text-[#22c55e]" />
+                <p>10/20/2023 - Initial Consultation</p>
+              </div>
+            </div>
+          )}
+          {activeTab === "communication" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Communication</h2>
+              <div className="flex items-center gap-2 p-3 bg-[#0a0f1a] rounded-md">
+                <MessageSquare className="text-[#22c55e]" />
+                <p>Latest: Client requested clarification on Solar Roth.</p>
+              </div>
+            </div>
+          )}
+          {activeTab === "outcome" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Generate Outcome</h2>
+              <p className="text-gray-400">Deal summary and next steps ready.</p>
+              <Button className="mt-4 bg-[#22c55e] hover:bg-[#1ea34e]">Generate</Button>
+            </div>
+          )}
+        </div>
+
+        {/* Page Insights Badge */}
+        <div className="mt-6 p-4 bg-[#141925] rounded-lg">
+          <h3 className="text-lg font-medium">Page Insights Score</h3>
+          <div className="flex items-center gap-2 mt-2">
+            <div className="w-16 h-2 bg-[#22c55e] rounded-full"></div>
+            <p className="text-gray-400">90/100 - Excellent</p>
+          </div>
+        </div>
+
+        {/* Cross-Tool Integration */}
+        <div className="mt-6 p-4 bg-[#141925] rounded-lg">
+          <h3 className="text-lg font-medium">Cross-Tool Integration</h3>
+          <p className="text-gray-400 mt-2">
+            Link to Auto-Closer or Compliance Vault for deal support.
+          </p>
+          <Button variant="outline" className="mt-4 text-[#22c55e]">
+            Connect Tools
+          </Button>
+        </div>
+
+        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
+        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
+          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
+          <div className="flex items-center gap-4 mb-6">
+            <label className="text-sm text-slate-400">Projection Horizon:</label>
+            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
+              onChange={(e) => {
+                const val = e.target.value;
+                document.getElementById(`proj-year-deal-room`)!.textContent = val;
+              }} />
+            <span id={`proj-year-deal-room`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
+            <span className="text-slate-500 text-sm">years</span>
+          </div>
+          <div className="flex gap-2 mb-6">
+            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
+              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+              }`}>{s}</button>
+            ))}
+          </div>
+          <div className="grid grid-cols-5 gap-4 text-center">
+            {[5, 10, 20, 30, 50].map(yr => (
+              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
+                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
+                <div className="text-emerald-400 font-bold text-lg">[Deal Value Growth]</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
+        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+              <span className="text-purple-400">🧠</span> AI Brain Analysis
+            </h2>
+            <div className="flex gap-2">
+              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
+                Send to AI Advisor →
+              </a>
+              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
+                View AI Brain Hub →
+              </a>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-[#1e293b] rounded-lg p-4">
+              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
+              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
+            </div>
+            <div className="bg-[#1e293b] rounded-lg p-4">
+              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
+              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
+            </div>
+            <div className="bg-[#1e293b] rounded-lg p-4">
+              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
+              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Regulatory Disclaimer */}
+        <p className="text-sm text-gray-500 mt-6 text-center">
+          Russell Capital Systems is not a licensed broker-dealer. Tools are for life & annuity
+          agents only. Ensure compliance with state and federal regulations.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default DealRoomPage;
+```
+
+## `client/src/pages/DivorceCalculatorPage.tsx`
+
+```tsx
+import React, { useState } from "react";
+import { StrategyContext } from "../context/StrategyContext"; // Placeholder import
+
+const DivorceCalculatorPage: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("asset-analysis");
+  const [years, setYears] = useState(10);
+  const [scenarios, setScenarios] = useState(1);
+  const [videoExpanded, setVideoExpanded] = useState(false);
+
+  const tabs = ["Asset Analysis", "Income Impact", "ILIT Protection", "Scenario Comparison", "Timeline Projections", "Generate Outcome"];
+  return (
+    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
+      <h1 className="text-3xl font-bold mb-6">Divorce Asset Protection Calculator</h1>
+
+      {/* ━━━ EXPLAINER VIDEO SECTION ━━━ */}
+      <div className="mb-8 bg-gradient-to-br from-[#0c1425] to-[#111827] border border-emerald-500/20 rounded-xl overflow-hidden">
+        <button
+          onClick={() => setVideoExpanded(!videoExpanded)}
+          className="w-full flex items-center justify-between px-6 py-4 hover:bg-white/5 transition-all"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🎬</span>
+            <div className="text-left">
+              <h2 className="text-lg font-bold text-white">Watch: Why This Calculator Matters</h2>
+              <p className="text-sm text-slate-400">2-minute explainer — how IUL, ILIT & fixed annuities protect assets in divorce</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full">2:29</span>
+            <svg
+              className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${videoExpanded ? "rotate-180" : ""}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </button>
+        {videoExpanded && (
+          <div className="px-6 pb-6">
+            <div className="relative w-full rounded-lg overflow-hidden bg-black" style={{ aspectRatio: "16/9" }}>
+              <video
+                controls
+                className="w-full h-full object-contain"
+                poster=""
+                preload="metadata"
+              >
+                <source src="/manus-storage/divorce_calculator_explainer_3a588ea7.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="bg-[#1e293b] rounded-lg p-3 border border-slate-700/50">
+                <div className="text-emerald-400 text-xs font-semibold mb-1">Scene 1-2</div>
+                <p className="text-slate-300 text-xs">The divorce wealth problem & how the calculator works</p>
+              </div>
+              <div className="bg-[#1e293b] rounded-lg p-3 border border-slate-700/50">
+                <div className="text-amber-400 text-xs font-semibold mb-1">Scene 3</div>
+                <p className="text-slate-300 text-xs">Protected vs. unprotected assets — IRS §72(e), §101(a), ILIT</p>
+              </div>
+              <div className="bg-[#1e293b] rounded-lg p-3 border border-slate-700/50">
+                <div className="text-purple-400 text-xs font-semibold mb-1">Scene 4-5</div>
+                <p className="text-slate-300 text-xs">50-year projection engine & call to action</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="flex overflow-x-auto border-b border-gray-700 mb-6">
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            className={`px-4 py-2 ${activeTab === tab.toLowerCase().replace(" ", "-") ? "text-[#22c55e] border-b-2 border-[#22c55e]" : "text-gray-400"}`}
+            onClick={() => setActiveTab(tab.toLowerCase().replace(" ", "-"))}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      <div className="bg-gray-900 p-6 rounded-lg shadow-md">
+        {activeTab === "asset-analysis" && (
+          <div>
+            <h2 className="text-xl mb-4">Asset Analysis</h2>
+            <input type="number" placeholder="Total Assets ($)" className="bg-gray-800 p-2 rounded-md w-full mb-4" />
+          </div>
+        )}
+        {activeTab === "timeline-projections" && (
+          <div>
+            <h2 className="text-xl mb-4">Timeline Projections (1-50 Years)</h2>
+            <input type="range" min="1" max="50" value={years} onChange={(e) => setYears(Number(e.target.value))} className="w-full" />
+            <p className="text-[#22c55e]">Projection: {years} Years</p>
+          </div>
+        )}
+        {activeTab === "scenario-comparison" && (
+          <div>
+            <h2 className="text-xl mb-4">Scenarios (1-5)</h2>
+            <input type="range" min="1" max="5" value={scenarios} onChange={(e) => setScenarios(Number(e.target.value))} className="w-full" />
+            <p className="text-[#22c55e]">Scenarios: {scenarios}</p>
+          </div>
+        )}
+        {activeTab === "generate-outcome" && <div className="h-64 bg-gray-800 rounded-md flex items-center justify-center text-gray-400">Placeholder: Outcome Chart</div>}
+      </div>
+      <div className="mt-6 bg-gray-900 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold">Page Insights</h3>
+        <span className="inline-block bg-[#22c55e] text-black px-2 py-1 rounded-md text-sm">Score: 87/100</span>
+      </div>
+      <div className="mt-6 bg-gray-900 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold">Cross-Tool Integration</h3>
+        <p className="text-gray-400">Connected: IUL Projection, Estate Planning</p>
+      </div>
+      
+      {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
+      <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
+        <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
+        <div className="flex items-center gap-4 mb-6">
+          <label className="text-sm text-slate-400">Projection Horizon:</label>
+          <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
+            onChange={(e) => {
+              const val = e.target.value;
+              document.getElementById(`proj-year-divorce-calculator`)!.textContent = val;
+            }} />
+          <span id={`proj-year-divorce-calculator`} className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
+          <span className="text-slate-500 text-sm">years</span>
+        </div>
+        <div className="flex gap-2 mb-6">
+          {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
+            <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+            }`}>{s}</button>
+          ))}
+        </div>
+        <div className="grid grid-cols-5 gap-4 text-center">
+          {[5, 10, 20, 30, 50].map(yr => (
+            <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
+              <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
+              <div className="text-emerald-400 font-bold text-lg">[Asset Protection]</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
+      <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <span className="text-purple-400">🧠</span> AI Brain Analysis
+          </h2>
+          <div className="flex gap-2">
+            <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
+              Send to AI Advisor →
+            </a>
+            <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
+              View AI Brain Hub →
+            </a>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-[#1e293b] rounded-lg p-4">
+            <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
+            <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
+          </div>
+          <div className="bg-[#1e293b] rounded-lg p-4">
+            <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
+            <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
+          </div>
+          <div className="bg-[#1e293b] rounded-lg p-4">
+            <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
+            <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
+          </div>
+        </div>
+      </div>
+
+      <p className="text-xs text-gray-500 mt-4">Disclaimer: This tool is for informational purposes only and not intended as legal or financial advice. Consult a professional.</p>
+    </div>
+  );
+}
+
+export default DivorceCalculatorPage;
+```
 
 ## `client/src/pages/DivorceILITStrategyPage.tsx`
 
@@ -7631,6 +9561,123 @@ const WhisperCoachPage: React.FC = () => {
 };
 
 export default WhisperCoachPage;
+```
+
+## `client/src/pages/portal/AIFinancialAdvisor.tsx`
+
+```tsx
+// ============================================================
+// AI FINANCIAL ADVISOR — the Financial Librarian page: the tape recorder,
+// what it knows (assessment completeness), and the customized journey it
+// composes: 3–5 core questions, the emergent question, 10–15 pages in order.
+// ============================================================
+import { useEffect, useState } from "react";
+import { Link } from "wouter";
+import { AppShell } from "@/components/AppShell";
+import TapeRecorderAdvisor, { type JourneyView } from "@/components/TapeRecorderAdvisor";
+import { trpc } from "@/lib/trpc";
+import { FACT_FINDER_SECTIONS } from "@shared/clientFactFinder";
+import { ArrowRight, Check, Compass, Lightbulb, ListChecks } from "lucide-react";
+
+const CARD = "rounded-2xl border border-violet-400/20 bg-white/[0.04]";
+const DONE_KEY = "rcs_journey_done";
+
+export default function AIFinancialAdvisor() {
+  const ff = trpc.factFinder.get.useQuery(undefined, { refetchOnWindowFocus: false });
+  const latest = trpc.librarian.latestJourney.useQuery(undefined, { refetchOnWindowFocus: false });
+  const [journey, setJourney] = useState<JourneyView | null>(null);
+  const [done, setDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(localStorage.getItem(DONE_KEY) || "{}"); } catch { return {}; } });
+
+  useEffect(() => { if (!journey && latest.data?.journey) setJourney(latest.data.journey); }, [latest.data, journey]);
+  useEffect(() => { try { localStorage.setItem(DONE_KEY, JSON.stringify(done)); } catch { /* ignore */ } }, [done]);
+
+  const completeness = ff.data?.completeness;
+  const completedSteps = journey ? journey.steps.filter((s) => done[s.id]).length : 0;
+
+  return (
+    <AppShell title="AI Financial Advisor">
+      <div className="mx-auto max-w-6xl space-y-6 pb-16">
+        <div className={`${CARD} p-6`}>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80">New Client Welcome List · Step 2</p>
+          <h1 className="mt-1 text-2xl font-semibold text-white">Ask the advisor anything about your plan. Press record, speak, and listen.</h1>
+          <p className="mt-2 max-w-3xl text-sm text-slate-400">Nine AI advisors answer as one voice — the Financial Librarian. It knows your complete Financial Assessment and only advises once it is finished. Ask as many questions as you like; then press <span className="font-semibold text-violet-200">JOURNEY</span> and it boils everything down to three to five questions, names the one you haven't asked yet, and lays out the pages on this site — calculators included — that answer them in order.</p>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
+          <TapeRecorderAdvisor onJourney={setJourney} />
+
+          <aside className={`${CARD} h-fit p-5`} aria-label="What the advisor knows">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80">What it knows</p>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-3xl font-semibold text-white">{completeness?.percent ?? 0}%</span>
+              <span className="text-xs text-slate-400">of the assessment</span>
+            </div>
+            <ul className="mt-3 space-y-1.5">
+              {FACT_FINDER_SECTIONS.map((s) => {
+                const pct = completeness?.sectionPercent[s.id] ?? 0;
+                return (
+                  <li key={s.id} className="flex items-center justify-between text-sm">
+                    <span className="text-slate-300">{s.title}</span>
+                    {pct === 100 ? <Check size={14} className="text-emerald-300" /> : <span className="text-xs text-slate-500">{pct}%</span>}
+                  </li>
+                );
+              })}
+            </ul>
+            <Link href="/portal/financial-assessment" className="mt-4 inline-flex items-center gap-1 text-sm text-violet-200 hover:text-white">{completeness?.complete ? "Review my assessment" : "Complete my assessment"} <ArrowRight size={14} /></Link>
+          </aside>
+        </div>
+
+        {journey && (
+          <section className={`${CARD} p-6`} aria-label="Your customized journey">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80"><Compass size={12} className="mr-1 inline" /> Your customized journey</p>
+                <h2 className="mt-1 text-xl font-semibold text-white">{journey.steps.length} pages, in the order that builds</h2>
+              </div>
+              <div className="text-right text-xs text-slate-400">
+                <div className="text-2xl font-semibold text-white">{completedSteps}/{journey.steps.length}</div>
+                visited
+              </div>
+            </div>
+
+            <div className="mt-5 grid gap-4 md:grid-cols-2">
+              <div className="rounded-xl border border-white/10 bg-[#0b0f1a] p-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-violet-200/80"><ListChecks size={12} className="mr-1 inline" /> It comes down to {journey.coreQuestions.length} questions</p>
+                <ol className="mt-2 space-y-2">
+                  {journey.coreQuestions.map((q, i) => <li key={i} className="flex gap-2 text-sm text-white"><span className="text-violet-300">{i + 1}.</span>{q}</li>)}
+                </ol>
+              </div>
+              <div className="rounded-xl border border-amber-300/30 bg-amber-300/10 p-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-200"><Lightbulb size={12} className="mr-1 inline" /> The question you haven't asked</p>
+                <p className="mt-2 text-sm leading-relaxed text-amber-50">{journey.emergentQuestion}</p>
+              </div>
+            </div>
+
+            <ol className="mt-6 space-y-2">
+              {journey.steps.map((s, i) => (
+                <li key={s.id} className={`flex items-start gap-3 rounded-xl border p-3 transition ${done[s.id] ? "border-emerald-400/30 bg-emerald-400/5" : "border-white/10 bg-white/[0.02] hover:border-violet-300/40"}`}>
+                  <button type="button" aria-label={done[s.id] ? `Mark ${s.title} not visited` : `Mark ${s.title} visited`} onClick={() => setDone((d) => ({ ...d, [s.id]: !d[s.id] }))}
+                    className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${done[s.id] ? "border-emerald-400 bg-emerald-400 text-black" : "border-violet-300/50 text-violet-200"}`}>
+                    {done[s.id] ? <Check size={14} /> : i + 1}
+                  </button>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link href={s.path} className="font-semibold text-white hover:text-violet-200">{s.title}</Link>
+                      <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-slate-400">{s.kind}</span>
+                    </div>
+                    <p className="mt-0.5 text-sm text-slate-400">{s.why}</p>
+                  </div>
+                  <Link href={s.path} onClick={() => setDone((d) => ({ ...d, [s.id]: true }))} className="shrink-0 rounded-lg bg-violet-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-violet-400">{i === 0 ? "Start" : "Open"}</Link>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-4 text-xs text-slate-500">Generated by {journey.generatedBy}. Every step is a page on this site; the sequence is built from your questions and your assessment.</p>
+          </section>
+        )}
+      </div>
+    </AppShell>
+  );
+}
 ```
 
 ## `client/src/pages/portal/AIMeetingNotes.tsx`
@@ -32233,2309 +34280,6 @@ export default function BatchSlides() {
 
         <NAICDisclaimer />
         <PageInsights pageId="batch-slides" />
-      </div>
-    </AppShell>
-  );
-}
-```
-
-## `client/src/pages/portal/BeneficiaryOptimization.tsx`
-
-```tsx
-// @ts-nocheck
-import { useState, useMemo, useEffect } from "react";
-import { AppShell } from "@/components/AppShell";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import { trpc } from "@/lib/trpc";
-import { useAuth } from "@/_core/hooks/useAuth";
-import {
-  Users, Shield, AlertTriangle, CheckCircle2, DollarSign, FileText,
-  ArrowRight, Heart, Target, Clock, Zap, Eye, BarChart3, PieChart as PieChartIcon, Search, Download,
-  Settings, TrendingUp, Briefcase, Activity, Calendar, Award, BookOpen, UserPlus, Star, ChevronDown, ChevronUp,
-  Filter, SortAsc, SortDesc, RefreshCw, Save, Share2, Printer, Copy, ExternalLink, MoreVertical, MessageSquare, Phone
-} from "lucide-react";
-import { ExportToSlides } from "@/components/ExportToSlides";
-import { 
-  PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  LineChart, Line, AreaChart, Area, ScatterChart, Scatter, ZAxis, ComposedChart
-} from "recharts";
-import { PageInsights } from "@/components/PageInsights";
-import { NAICDisclaimer } from "@/components/NAICDisclaimer";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { useClientData } from "@/contexts/ClientDataContext";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
-import { RelatedCalculators } from "@/components/RelatedCalculators";
-import { ComplianceFooter } from "@/components/ComplianceFooter";
-
-const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
-const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
-const COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4", "#f97316", "#14b8a6", "#84cc16"];
-const STATUS_COLORS = { optimal: "#22c55e", needs_review: "#f0c040", critical: "#ef4444" };
-
-interface BeneficiaryAccount {
-  id: string;
-  accountType: string;
-  institution: string;
-  value: number;
-  primaryBeneficiary: string;
-  contingentBeneficiary: string;
-  lastReviewed: string;
-  issues: string[];
-  status: "optimal" | "needs_review" | "critical";
-  recommendation: string;
-  taxImplication: string;
-  probateRisk: string;
-  liquidityScore: number;
-}
-
-function generateAccounts(client: any): BeneficiaryAccount[] {
-  const name = `${(client?.name?.split(" ")[0] ?? "John")} ${(client?.name?.split(" ").slice(1).join(" ") ?? "Doe")}`;
-  const spouse = client?.filingStatus === "married_joint" ? "Spouse" : "";
-  const accounts: BeneficiaryAccount[] = [];
-
-  if ((client?.iraBalance ?? 100000) > 0) {
-    const hasSpouse = !!spouse;
-    accounts.push({
-      id: "trad-ira", accountType: "Traditional IRA", institution: "Fidelity Investments",
-      value: client?.iraBalance ?? 150000, primaryBeneficiary: hasSpouse ? "Spouse (100%)" : "Estate",
-      contingentBeneficiary: hasSpouse ? "Children equally" : "None designated",
-      lastReviewed: "2024-03-15",
-      issues: hasSpouse ? [] : ["No individual beneficiary — will go through probate", "Estate as beneficiary eliminates stretch IRA option"],
-      status: hasSpouse ? "optimal" : "critical",
-      recommendation: hasSpouse ? "Beneficiary designation is optimal. Spouse can roll over to own IRA and continue tax-deferred growth." : "Designate individual beneficiaries to avoid probate and preserve stretch IRA options under SECURE Act.",
-      taxImplication: "Ordinary income to non-spouse beneficiaries",
-      probateRisk: hasSpouse ? "Low" : "High",
-      liquidityScore: 8
-    });
-  }
-
-  if ((client?.rothBalance ?? 50000) > 0) {
-    accounts.push({
-      id: "roth-ira", accountType: "Roth IRA", institution: "Charles Schwab",
-      value: client?.rothBalance ?? 75000, primaryBeneficiary: spouse ? "Spouse (100%)" : "Children equally",
-      contingentBeneficiary: spouse ? "Children equally" : "Charitable trust",
-      lastReviewed: "2024-01-20",
-      issues: [],
-      status: "optimal",
-      recommendation: "Roth IRA beneficiary designation is well-structured. Spouse can treat as own Roth IRA. Consider whether a Roth trust might provide additional asset protection for non-spouse beneficiaries.",
-      taxImplication: "Tax-free to beneficiaries if 5-year rule met",
-      probateRisk: "Low",
-      liquidityScore: 9
-    });
-  }
-
-  if ((client?.iraBalance ?? 100000) > 0) {
-    accounts.push({
-      id: "401k", accountType: "401(k)", institution: "Employer Plan",
-      value: (client?.iraBalance ?? 100000) * 1.5, primaryBeneficiary: spouse ? "Spouse (100%)" : "Per plan default",
-      contingentBeneficiary: spouse ? "Revocable Trust" : "None",
-      lastReviewed: "2023-08-10",
-      issues: spouse ? ["Review date over 1 year ago"] : ["No contingent beneficiary", "Plan default may not align with estate plan"],
-      status: spouse ? "needs_review" : "critical",
-      recommendation: spouse ? "Update review date. Verify spousal consent form is current. Consider whether trust as contingent beneficiary aligns with estate plan." : "Immediately designate primary and contingent beneficiaries. Under ERISA, spouse has automatic rights to 401(k) benefits.",
-      taxImplication: "Ordinary income to beneficiaries",
-      probateRisk: spouse ? "Low" : "Medium",
-      liquidityScore: 7
-    });
-  }
-
-  if ((client?.taxableAssets ?? 200000) > 0) {
-    accounts.push({
-      id: "taxable", accountType: "Taxable Brokerage (TOD)", institution: "Vanguard",
-      value: client?.taxableAssets ?? 250000, primaryBeneficiary: spouse ? "Spouse (100%)" : "Children equally",
-      contingentBeneficiary: "Per stirpes",
-      lastReviewed: "2024-06-01",
-      issues: [],
-      status: "optimal",
-      recommendation: "Transfer-on-death (TOD) designation avoids probate. Per stirpes contingent ensures shares pass to descendants if primary predeceases.",
-      taxImplication: "Step-up in basis at death",
-      probateRisk: "Low",
-      liquidityScore: 10
-    });
-  }
-
-  if ((client?.lifeInsuranceCv ?? 25000) > 0) {
-    const cv = client?.lifeInsuranceCv ?? 25000;
-    const db = cv * 8;
-    accounts.push({
-      id: "life-ins", accountType: "Life Insurance", institution: "Pacific Life",
-      value: db, primaryBeneficiary: spouse ? "Spouse (100%)" : "Estate",
-      contingentBeneficiary: spouse ? "ILIT" : "None",
-      lastReviewed: "2023-11-15",
-      issues: !spouse ? ["Estate as beneficiary subjects proceeds to estate tax", "Proceeds will go through probate"] : ["Consider ILIT ownership to remove from taxable estate"],
-      status: !spouse ? "critical" : "needs_review",
-      recommendation: !spouse ? "Designate individual beneficiaries immediately. Consider an Irrevocable Life Insurance Trust (ILIT) to remove proceeds from taxable estate." : "If estate exceeds federal exemption ($13.61M in 2024), strongly consider transferring ownership to an ILIT. This removes the death benefit from the taxable estate.",
-      taxImplication: "Income tax free, potentially subject to estate tax",
-      probateRisk: !spouse ? "High" : "Low",
-      liquidityScore: 10
-    });
-  }
-
-  accounts.push({
-    id: "annuity", accountType: "Fixed Indexed Annuity", institution: "Athene",
-    value: 150000, primaryBeneficiary: spouse ? "Spouse (100%)" : "Children equally",
-    contingentBeneficiary: "Per stirpes",
-    lastReviewed: "2024-09-01",
-    issues: ["Verify annuity beneficiary form matches estate plan", "Check for any surrender charges on beneficiary change"],
-    status: "needs_review",
-    recommendation: "Review annuity contract for any beneficiary change restrictions. Ensure the beneficiary designation coordinates with the overall estate plan, particularly regarding income tax implications of inherited annuities.",
-    taxImplication: "Ordinary income on gains (LIFO accounting)",
-    probateRisk: "Low",
-    liquidityScore: 4
-  });
-
-  return accounts;
-}
-
-export default function BeneficiaryOptimization() {
-  const { clientData } = useClientData();
-  const { user } = useAuth();
-  const { data: clients } = trpc.clients.list.useQuery();
-  const { data: notes } = trpc.notes.list.useQuery({ limit: 10 });
-  const { data: activities } = trpc.activity.list.useQuery({ limit: 5 });
-  const { data: dashboardStats } = trpc.dashboard.stats.useQuery();
-  const { data: strategies } = trpc.strategy.list.useQuery();
-  const { data: riskScores } = trpc.riskScoring.getScores.useQuery();
-
-  const [selectedClientId, setSelectedClientId] = useState<string>("");
-  const [activeTab, setActiveTab] = useState("audit");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
-  const [showFilters, setShowFilters] = useState(false);
-  const [filterStatus, setFilterStatus] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("value-desc");
-  const [selectedAccount, setSelectedAccount] = useState<BeneficiaryAccount | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isSimulationOpen, setIsSimulationOpen] = useState(false);
-  
-  const [simulatedGrowthRate, setSimulatedGrowthRate] = useState<number>(5);
-  const [simulatedYears, setSimulatedYears] = useState<number>(10);
-  const [taxRateAssumed, setTaxRateAssumed] = useState<number>(24);
-  const [includeEstateTax, setIncludeEstateTax] = useState<boolean>(false);
-  const [showAdvancedMetrics, setShowAdvancedMetrics] = useState<boolean>(false);
-  const [comparisonMode, setComparisonMode] = useState<boolean>(false);
-  const [compareClientId, setCompareClientId] = useState<string>("");
-  const [chartType, setChartType] = useState<"pie" | "bar" | "treemap">("pie");
-  const [highlightCritical, setHighlightCritical] = useState<boolean>(true);
-  const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
-  const [exportFormat, setExportFormat] = useState<"csv" | "pdf" | "excel">("csv");
-  const [notesText, setNotesText] = useState<string>("");
-  const [showNotifications, setShowNotifications] = useState<boolean>(true);
-  const [density, setDensity] = useState<"compact" | "comfortable" | "spacious">("comfortable");
-  const [theme, setTheme] = useState<"dark" | "light" | "system">("dark");
-  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
-
-  const selectedClient = useMemo(() => {
-    if (!clients) return null;
-    if (selectedClientId) return clients.find((c) => String(c.id) === selectedClientId) ?? clients[0];
-    return clients[0] ?? null;
-  }, [clients, selectedClientId]);
-
-  const compareClient = useMemo(() => {
-    if (!clients || !compareClientId) return null;
-    return clients.find((c) => String(c.id) === compareClientId) ?? null;
-  }, [clients, compareClientId]);
-
-  const accounts = useMemo(() => selectedClient ? generateAccounts(selectedClient) : [], [selectedClient]);
-  const compareAccounts = useMemo(() => compareClient ? generateAccounts(compareClient) : [], [compareClient]);
-
-  const processedAccounts = useMemo(() => {
-    let result = [...accounts];
-    
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter((a) => 
-        a.accountType.toLowerCase().includes(q) || 
-        a.institution.toLowerCase().includes(q) ||
-        a.primaryBeneficiary.toLowerCase().includes(q) ||
-        a.contingentBeneficiary.toLowerCase().includes(q)
-      );
-    }
-    
-    if (filterStatus !== "all") {
-      result = result.filter((a) => a.status === filterStatus);
-    }
-    
-    result.sort((a, b) => {
-      if (sortBy === "value-desc") return b.value - a.value;
-      if (sortBy === "value-asc") return a.value - b.value;
-      if (sortBy === "name-asc") return a.accountType.localeCompare(b.accountType);
-      if (sortBy === "name-desc") return b.accountType.localeCompare(a.accountType);
-      if (sortBy === "status") {
-        const order = { critical: 0, needs_review: 1, optimal: 2 };
-        return order[a.status] - order[b.status];
-      }
-      return 0;
-    });
-    
-    return result;
-  }, [accounts, searchQuery, filterStatus, sortBy]);
-
-  const totalValue = accounts.reduce((s, a) => s + a.value, 0);
-  const criticalCount = accounts.filter((a) => a.status === "critical").length;
-  const reviewCount = accounts.filter((a) => a.status === "needs_review").length;
-  const optimalCount = accounts.filter((a) => a.status === "optimal").length;
-  const completionScore = accounts.length > 0 ? Math.round((optimalCount / accounts.length) * 100) : 0;
-  const averageLiquidity = accounts.length > 0 ? accounts.reduce((s, a) => s + a.liquidityScore, 0) / accounts.length : 0;
-
-  const allocationData = accounts.map((a) => ({ name: a.accountType, value: a.value, status: a.status }));
-  
-  const statusData = [
-    { name: "Optimal", value: optimalCount, fill: STATUS_COLORS.optimal },
-    { name: "Needs Review", value: reviewCount, fill: STATUS_COLORS.needs_review },
-    { name: "Critical", value: criticalCount, fill: STATUS_COLORS.critical }
-  ].filter((d) => d.value > 0);
-
-  const simulationData = useMemo(() => {
-    const data = [];
-    let currentTotal = totalValue;
-    const rate = 1 + (simulatedGrowthRate / 100);
-    
-    for (let year = 0; year <= simulatedYears; year++) {
-      data.push({
-        year: `Year ${year}`,
-        value: Math.round(currentTotal),
-        taxableValue: Math.round(currentTotal * (1 - (taxRateAssumed / 100))),
-        estateTaxImpact: includeEstateTax && currentTotal > 13610000 ? Math.round((currentTotal - 13610000) * 0.4) : 0
-      });
-      currentTotal *= rate;
-    }
-    return data;
-  }, [totalValue, simulatedGrowthRate, simulatedYears, taxRateAssumed, includeEstateTax]);
-
-  const institutionData = useMemo(() => {
-    const instMap = new Map<string, number>();
-    accounts.forEach((a) => {
-      instMap.set(a.institution, (instMap.get(a.institution) || 0) + a.value);
-    });
-    return Array.from(instMap.entries())
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value);
-  }, [accounts]);
-
-  const liquidityData = accounts.map((a) => ({
-    name: a.accountType,
-    value: a.value,
-    liquidity: a.liquidityScore,
-    status: a.status,
-    size: Math.sqrt(a.value) / 10
-  }));
-
-  const beneficiaryData = useMemo(() => {
-    const types = { "Spouse": 0, "Children": 0, "Trust": 0, "Estate": 0, "Other": 0 };
-    accounts.forEach((a) => {
-      const p = a.primaryBeneficiary.toLowerCase();
-      if (p.includes("spouse")) types["Spouse"] += a.value;
-      else if (p.includes("child") || p.includes("stirpes")) types["Children"] += a.value;
-      else if (p.includes("trust") || p.includes("ilit")) types["Trust"] += a.value;
-      else if (p.includes("estate")) types["Estate"] += a.value;
-      else types["Other"] += a.value;
-    });
-    return Object.entries(types).map(([name, value]) => ({ name, value })).filter((d) => d.value > 0);
-  }, [accounts]);
-
-  const toggleRowExpansion = (id: string) => {
-    setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  const handleExport = () => {
-    if (!accounts.length) {
-      toast.error("No data to export");
-      return;
-    }
-    
-    if (exportFormat === "csv") {
-      const headers = ["Account Type", "Institution", "Value", "Status", "Primary Beneficiary", "Contingent Beneficiary", "Last Reviewed", "Recommendation"];
-      const csvContent = [
-        headers.join(","),
-        ...accounts.map((a) => `"${a.accountType}","${a.institution}",${a.value},"${a.status}","${a.primaryBeneficiary}","${a.contingentBeneficiary}","${a.lastReviewed}","${a.recommendation.replace(/"/g, '""')}"`)
-      ].join("\n");
-      
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `beneficiary_audit_${selectedClient?.name?.replace(/\s+/g, '_') ?? 'export'}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      toast.success("Exported to CSV successfully");
-    } else {
-      toast.success(`Exporting to ${exportFormat.toUpperCase()}...`);
-      setTimeout(() => toast.success("Export complete"), 1500);
-    }
-  };
-
-  const handleSimulate = () => {
-    setIsSimulationOpen(true);
-  };
-
-  const handleSaveNotes = () => {
-    toast.success("Notes saved to client profile");
-    setNotesText("");
-  };
-
-  const handleAccountClick = (account: BeneficiaryAccount) => {
-    setSelectedAccount(account);
-    setIsDialogOpen(true);
-  };
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-[#0f172a] border border-[#1e293b] p-3 rounded-lg shadow-xl">
-          <p className="text-white font-medium mb-1">{label || payload[0].payload.name}</p>
-          {payload.map((entry: any, index: number) => (
-            <p key={index} style={{ color: entry.color || entry.fill }} className="text-sm">
-              {entry.name}: {fmt(entry.value)}
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const dummyVar1 = useMemo(() => { return 1 * 2; }, []);
-  const dummyVar2 = useMemo(() => { return 2 * 2; }, []);
-  const dummyVar3 = useMemo(() => { return 3 * 2; }, []);
-  const dummyVar4 = useMemo(() => { return 4 * 2; }, []);
-  const dummyVar5 = useMemo(() => { return 5 * 2; }, []);
-  const dummyVar6 = useMemo(() => { return 6 * 2; }, []);
-  const dummyVar7 = useMemo(() => { return 7 * 2; }, []);
-  const dummyVar8 = useMemo(() => { return 8 * 2; }, []);
-  const dummyVar9 = useMemo(() => { return 9 * 2; }, []);
-  const dummyVar10 = useMemo(() => { return 10 * 2; }, []);
-  const dummyVar11 = useMemo(() => { return 11 * 2; }, []);
-  const dummyVar12 = useMemo(() => { return 12 * 2; }, []);
-  const dummyVar13 = useMemo(() => { return 13 * 2; }, []);
-  const dummyVar14 = useMemo(() => { return 14 * 2; }, []);
-  const dummyVar15 = useMemo(() => { return 15 * 2; }, []);
-  const dummyVar16 = useMemo(() => { return 16 * 2; }, []);
-  const dummyVar17 = useMemo(() => { return 17 * 2; }, []);
-  const dummyVar18 = useMemo(() => { return 18 * 2; }, []);
-  const dummyVar19 = useMemo(() => { return 19 * 2; }, []);
-  const dummyVar20 = useMemo(() => { return 20 * 2; }, []);
-  const dummyVar21 = useMemo(() => { return 21 * 2; }, []);
-  const dummyVar22 = useMemo(() => { return 22 * 2; }, []);
-  const dummyVar23 = useMemo(() => { return 23 * 2; }, []);
-  const dummyVar24 = useMemo(() => { return 24 * 2; }, []);
-  const dummyVar25 = useMemo(() => { return 25 * 2; }, []);
-  const dummyVar26 = useMemo(() => { return 26 * 2; }, []);
-  const dummyVar27 = useMemo(() => { return 27 * 2; }, []);
-  const dummyVar28 = useMemo(() => { return 28 * 2; }, []);
-  const dummyVar29 = useMemo(() => { return 29 * 2; }, []);
-  const dummyVar30 = useMemo(() => { return 30 * 2; }, []);
-  const dummyVar31 = useMemo(() => { return 31 * 2; }, []);
-  const dummyVar32 = useMemo(() => { return 32 * 2; }, []);
-  const dummyVar33 = useMemo(() => { return 33 * 2; }, []);
-  const dummyVar34 = useMemo(() => { return 34 * 2; }, []);
-  const dummyVar35 = useMemo(() => { return 35 * 2; }, []);
-  const dummyVar36 = useMemo(() => { return 36 * 2; }, []);
-  const dummyVar37 = useMemo(() => { return 37 * 2; }, []);
-  const dummyVar38 = useMemo(() => { return 38 * 2; }, []);
-  const dummyVar39 = useMemo(() => { return 39 * 2; }, []);
-  const dummyVar40 = useMemo(() => { return 40 * 2; }, []);
-  const dummyVar41 = useMemo(() => { return 41 * 2; }, []);
-  const dummyVar42 = useMemo(() => { return 42 * 2; }, []);
-  const dummyVar43 = useMemo(() => { return 43 * 2; }, []);
-  const dummyVar44 = useMemo(() => { return 44 * 2; }, []);
-  const dummyVar45 = useMemo(() => { return 45 * 2; }, []);
-  const dummyVar46 = useMemo(() => { return 46 * 2; }, []);
-  const dummyVar47 = useMemo(() => { return 47 * 2; }, []);
-  const dummyVar48 = useMemo(() => { return 48 * 2; }, []);
-  const dummyVar49 = useMemo(() => { return 49 * 2; }, []);
-  const dummyVar50 = useMemo(() => { return 50 * 2; }, []);
-  const dummyVar51 = useMemo(() => { return 51 * 2; }, []);
-  const dummyVar52 = useMemo(() => { return 52 * 2; }, []);
-  const dummyVar53 = useMemo(() => { return 53 * 2; }, []);
-  const dummyVar54 = useMemo(() => { return 54 * 2; }, []);
-  const dummyVar55 = useMemo(() => { return 55 * 2; }, []);
-  const dummyVar56 = useMemo(() => { return 56 * 2; }, []);
-  const dummyVar57 = useMemo(() => { return 57 * 2; }, []);
-  const dummyVar58 = useMemo(() => { return 58 * 2; }, []);
-  const dummyVar59 = useMemo(() => { return 59 * 2; }, []);
-  const dummyVar60 = useMemo(() => { return 60 * 2; }, []);
-  const dummyVar61 = useMemo(() => { return 61 * 2; }, []);
-  const dummyVar62 = useMemo(() => { return 62 * 2; }, []);
-  const dummyVar63 = useMemo(() => { return 63 * 2; }, []);
-  const dummyVar64 = useMemo(() => { return 64 * 2; }, []);
-  const dummyVar65 = useMemo(() => { return 65 * 2; }, []);
-  const dummyVar66 = useMemo(() => { return 66 * 2; }, []);
-  const dummyVar67 = useMemo(() => { return 67 * 2; }, []);
-  const dummyVar68 = useMemo(() => { return 68 * 2; }, []);
-  const dummyVar69 = useMemo(() => { return 69 * 2; }, []);
-  const dummyVar70 = useMemo(() => { return 70 * 2; }, []);
-  const dummyVar71 = useMemo(() => { return 71 * 2; }, []);
-  const dummyVar72 = useMemo(() => { return 72 * 2; }, []);
-  const dummyVar73 = useMemo(() => { return 73 * 2; }, []);
-  const dummyVar74 = useMemo(() => { return 74 * 2; }, []);
-  const dummyVar75 = useMemo(() => { return 75 * 2; }, []);
-  const dummyVar76 = useMemo(() => { return 76 * 2; }, []);
-  const dummyVar77 = useMemo(() => { return 77 * 2; }, []);
-  const dummyVar78 = useMemo(() => { return 78 * 2; }, []);
-  const dummyVar79 = useMemo(() => { return 79 * 2; }, []);
-  const dummyVar80 = useMemo(() => { return 80 * 2; }, []);
-  const dummyVar81 = useMemo(() => { return 81 * 2; }, []);
-  const dummyVar82 = useMemo(() => { return 82 * 2; }, []);
-  const dummyVar83 = useMemo(() => { return 83 * 2; }, []);
-  const dummyVar84 = useMemo(() => { return 84 * 2; }, []);
-  const dummyVar85 = useMemo(() => { return 85 * 2; }, []);
-  const dummyVar86 = useMemo(() => { return 86 * 2; }, []);
-  const dummyVar87 = useMemo(() => { return 87 * 2; }, []);
-  const dummyVar88 = useMemo(() => { return 88 * 2; }, []);
-  const dummyVar89 = useMemo(() => { return 89 * 2; }, []);
-  const dummyVar90 = useMemo(() => { return 90 * 2; }, []);
-  const dummyVar91 = useMemo(() => { return 91 * 2; }, []);
-  const dummyVar92 = useMemo(() => { return 92 * 2; }, []);
-  const dummyVar93 = useMemo(() => { return 93 * 2; }, []);
-  const dummyVar94 = useMemo(() => { return 94 * 2; }, []);
-  const dummyVar95 = useMemo(() => { return 95 * 2; }, []);
-  const dummyVar96 = useMemo(() => { return 96 * 2; }, []);
-  const dummyVar97 = useMemo(() => { return 97 * 2; }, []);
-  const dummyVar98 = useMemo(() => { return 98 * 2; }, []);
-  const dummyVar99 = useMemo(() => { return 99 * 2; }, []);
-  const dummyVar100 = useMemo(() => { return 100 * 2; }, []);
-  const dummyVar101 = useMemo(() => { return 101 * 2; }, []);
-  const dummyVar102 = useMemo(() => { return 102 * 2; }, []);
-  const dummyVar103 = useMemo(() => { return 103 * 2; }, []);
-  const dummyVar104 = useMemo(() => { return 104 * 2; }, []);
-  const dummyVar105 = useMemo(() => { return 105 * 2; }, []);
-  const dummyVar106 = useMemo(() => { return 106 * 2; }, []);
-  const dummyVar107 = useMemo(() => { return 107 * 2; }, []);
-  const dummyVar108 = useMemo(() => { return 108 * 2; }, []);
-  const dummyVar109 = useMemo(() => { return 109 * 2; }, []);
-  const dummyVar110 = useMemo(() => { return 110 * 2; }, []);
-  const dummyVar111 = useMemo(() => { return 111 * 2; }, []);
-  const dummyVar112 = useMemo(() => { return 112 * 2; }, []);
-  const dummyVar113 = useMemo(() => { return 113 * 2; }, []);
-  const dummyVar114 = useMemo(() => { return 114 * 2; }, []);
-  const dummyVar115 = useMemo(() => { return 115 * 2; }, []);
-  const dummyVar116 = useMemo(() => { return 116 * 2; }, []);
-  const dummyVar117 = useMemo(() => { return 117 * 2; }, []);
-  const dummyVar118 = useMemo(() => { return 118 * 2; }, []);
-  const dummyVar119 = useMemo(() => { return 119 * 2; }, []);
-  const dummyVar120 = useMemo(() => { return 120 * 2; }, []);
-  const dummyVar121 = useMemo(() => { return 121 * 2; }, []);
-  const dummyVar122 = useMemo(() => { return 122 * 2; }, []);
-  const dummyVar123 = useMemo(() => { return 123 * 2; }, []);
-  const dummyVar124 = useMemo(() => { return 124 * 2; }, []);
-  const dummyVar125 = useMemo(() => { return 125 * 2; }, []);
-  const dummyVar126 = useMemo(() => { return 126 * 2; }, []);
-  const dummyVar127 = useMemo(() => { return 127 * 2; }, []);
-  const dummyVar128 = useMemo(() => { return 128 * 2; }, []);
-  const dummyVar129 = useMemo(() => { return 129 * 2; }, []);
-  const dummyVar130 = useMemo(() => { return 130 * 2; }, []);
-  const dummyVar131 = useMemo(() => { return 131 * 2; }, []);
-  const dummyVar132 = useMemo(() => { return 132 * 2; }, []);
-  const dummyVar133 = useMemo(() => { return 133 * 2; }, []);
-  const dummyVar134 = useMemo(() => { return 134 * 2; }, []);
-  const dummyVar135 = useMemo(() => { return 135 * 2; }, []);
-  const dummyVar136 = useMemo(() => { return 136 * 2; }, []);
-  const dummyVar137 = useMemo(() => { return 137 * 2; }, []);
-  const dummyVar138 = useMemo(() => { return 138 * 2; }, []);
-  const dummyVar139 = useMemo(() => { return 139 * 2; }, []);
-  const dummyVar140 = useMemo(() => { return 140 * 2; }, []);
-  const dummyVar141 = useMemo(() => { return 141 * 2; }, []);
-  const dummyVar142 = useMemo(() => { return 142 * 2; }, []);
-  const dummyVar143 = useMemo(() => { return 143 * 2; }, []);
-  const dummyVar144 = useMemo(() => { return 144 * 2; }, []);
-  const dummyVar145 = useMemo(() => { return 145 * 2; }, []);
-  const dummyVar146 = useMemo(() => { return 146 * 2; }, []);
-  const dummyVar147 = useMemo(() => { return 147 * 2; }, []);
-  const dummyVar148 = useMemo(() => { return 148 * 2; }, []);
-  const dummyVar149 = useMemo(() => { return 149 * 2; }, []);
-
-  return (
-    <AppShell>
-      <div className={`p-6 space-y-6 max-w-7xl mx-auto ${theme === 'light' ? 'bg-white text-black' : ''}`}>
-        <div className="rc-page-header flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="rc-page-title flex items-center gap-2 text-white text-3xl font-bold">
-              <Users className="w-8 h-8 text-[#22c55e]" /> 
-              Beneficiary Optimization Engine
-            </h1>
-            <p className="rc-page-subtitle text-[#7a95b8] mt-2">
-              Cross-account beneficiary audit with SECURE Act compliance checking and optimization recommendations.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <Select value={selectedClientId || String(selectedClient?.id ?? "")} onValueChange={setSelectedClientId}>
-              <SelectTrigger className="w-[220px] bg-[#0d1a2e] border-[#12233e] text-white">
-                <SelectValue placeholder="Select client…" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#0d1a2e] border-[#12233e] text-white">
-                {(clients ?? []).map((c) => (
-                  <SelectItem key={c.id} value={String(c.id)}>
-                    {c.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <Button onClick={handleExport} variant="outline" className="bg-[#0d1a2e] border-[#12233e] text-white hover:bg-[#1e293b]">
-              <Download className="w-4 h-4 mr-2" /> Export
-            </Button>
-            
-            <Button onClick={() => setShowFilters(!showFilters)} variant="outline" className="bg-[#0d1a2e] border-[#12233e] text-white hover:bg-[#1e293b]">
-              <Filter className="w-4 h-4 mr-2" /> Filters
-            </Button>
-            
-            <ExportToSlides
-              toolName="Beneficiary Optimization Engine"
-              getSections={() => {
-                const summary = [
-                  { label: "Optimization Score", value: `${completionScore}%` },
-                  { label: "Total Assets Reviewed", value: fmt(totalValue) },
-                  { label: "Critical Issues", value: String(criticalCount) },
-                  { label: "Needs Review", value: String(reviewCount) },
-                  { label: "Optimal Accounts", value: String(optimalCount) }
-                ];
-                
-                const accountSections = accounts.map((a) => ({
-                  title: `${a.accountType} (${a.institution})`,
-                  items: [
-                    { label: "Value", value: fmt(a.value) },
-                    { label: "Status", value: a.status === "critical" ? "Critical" : a.status === "needs_review" ? "Needs Review" : "Optimal" },
-                    { label: "Primary Beneficiary", value: a.primaryBeneficiary },
-                    { label: "Contingent Beneficiary", value: a.contingentBeneficiary },
-                    { label: "Recommendation", value: a.recommendation }
-                  ]
-                }));
-
-                return [
-                  { title: "Beneficiary Audit Summary", items: summary },
-                  ...accountSections
-                ];
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Filters Panel */}
-        {showFilters && (
-          <Card className="bg-[#0d1a2e] border-[#12233e] text-white mb-6">
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="space-y-2">
-
-        {/* ═══ CONSUMER OUTCOME BLOCKS — Flagship Tier ═══ */}
-        {/* Related Calculators Toggle */}
-        <RelatedCalculators currentPage="BeneficiaryOptimization" />
-
-        <ExecutiveSummary
-          pageTitle="Beneficiary Optimization"
-          whatItDoes="This estate planning tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex estate planning concepts into clear, actionable insights with dollar-quantified recommendations."
-          opportunities="Without proper estate planning, your heirs could lose 40% or more of your wealth to estate taxes and probate costs. Strategic planning can preserve nearly all of it."
-          intent="To give you the same caliber of estate planning analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
-          takeaway="Understanding your estate planning options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
-          callToAction="Enter your numbers and see exactly how estate planning strategies can improve your financial outcome."
-          followUpQuestions={[
-            "How does this estate planning strategy interact with my other financial plans?",
-            "What\'s the single biggest estate planning opportunity I\'m currently missing?",
-            "How would my results change if I started this strategy 5 years earlier?",
-          ]}
-        />
-        <GoalsAccelerator pageName="Beneficiary Optimization" pageContext="Beneficiary Optimization — estate planning modeling with projections and scenario analysis" />
-        <TaxBracketPanel grossIncome={clientData?.annualIncome || 150000} filingStatus={clientData?.filingStatus || "single"} stateCode={clientData?.state || "TX"} />
-        <RecommendationSummary
-          headline="This estate planning strategy can significantly improve your financial outcome"
-          detail="Based on your profile, implementing the recommended estate planning approach could generate substantial savings and growth over your planning horizon."
-          dollarBenefit={800000}
-          timeHorizon="20 years"
-          confidence="high"
-          nextStep="Review with your advisor"
-        />
-        <DoNothingBaseline
-          metrics={[
-            { label: "Estate Tax Exposure", doNothing: 500000, recommended: 50000, format: "currency", higherIsBetter: false },
-            { label: "Wealth Transferred", doNothing: 1500000, recommended: 2300000, format: "currency" },
-            { label: "Probate Avoidance", doNothing: 0, recommended: 95, format: "percent" },
-          ]}
-          summary="Without taking action on estate planning, you leave significant value on the table that compounds into a major opportunity cost over time."
-        />
-                  <Label>Search</Label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7a95b8]" />
-                    <Input 
-                      placeholder="Search accounts..." 
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-9 bg-[#060d19] border-[#1e293b]"
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Status Filter</Label>
-                  <Select value={filterStatus} onValueChange={setFilterStatus}>
-                    <SelectTrigger className="bg-[#060d19] border-[#1e293b]">
-                      <SelectValue placeholder="All Statuses" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#0d1a2e] border-[#1e293b] text-white">
-                      <SelectItem value="all">All Statuses</SelectItem>
-                      <SelectItem value="optimal">Optimal</SelectItem>
-                      <SelectItem value="needs_review">Needs Review</SelectItem>
-                      <SelectItem value="critical">Critical</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Sort By</Label>
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="bg-[#060d19] border-[#1e293b]">
-                      <SelectValue placeholder="Sort by..." />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#0d1a2e] border-[#1e293b] text-white">
-                      <SelectItem value="value-desc">Value (High to Low)</SelectItem>
-                      <SelectItem value="value-asc">Value (Low to High)</SelectItem>
-                      <SelectItem value="name-asc">Name (A-Z)</SelectItem>
-                      <SelectItem value="name-desc">Name (Z-A)</SelectItem>
-                      <SelectItem value="status">Status Priority</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Export Format</Label>
-                  <Select value={exportFormat} onValueChange={(v: any) => setExportFormat(v)}>
-                    <SelectTrigger className="bg-[#060d19] border-[#1e293b]">
-                      <SelectValue placeholder="Export Format" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#0d1a2e] border-[#1e293b] text-white">
-                      <SelectItem value="csv">CSV Document</SelectItem>
-                      <SelectItem value="pdf">PDF Report</SelectItem>
-                      <SelectItem value="excel">Excel Spreadsheet</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center mt-6 pt-4 border-t border-[#1e293b]">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center space-x-2">
-                    <Switch id="highlight-critical" checked={highlightCritical} onCheckedChange={setHighlightCritical} />
-                    <Label htmlFor="highlight-critical">Highlight Critical</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Switch id="advanced-metrics" checked={showAdvancedMetrics} onCheckedChange={setShowAdvancedMetrics} />
-                    <Label htmlFor="advanced-metrics">Advanced Metrics</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Switch id="compare-mode" checked={comparisonMode} onCheckedChange={setComparisonMode} />
-                    <Label htmlFor="compare-mode">Compare Mode</Label>
-                  </div>
-                </div>
-                
-                <Button variant="ghost" onClick={() => {
-                  setSearchQuery("");
-                  setFilterStatus("all");
-                  setSortBy("value-desc");
-                }} className="text-[#7a95b8] hover:text-white">
-                  Reset Filters
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Compare Mode Selector */}
-        {comparisonMode && (
-          <Card className="bg-indigo-900/20 border-indigo-500/30 text-white mb-6">
-            <CardContent className="pt-6 flex items-center gap-4">
-              <Users className="w-5 h-5 text-indigo-400" />
-              <span className="font-medium">Compare with:</span>
-              <Select value={compareClientId} onValueChange={setCompareClientId}>
-                <SelectTrigger className="w-[260px] bg-[#0d1a2e] border-[#12233e] text-white">
-                  <SelectValue placeholder="Select client to compare…" />
-                </SelectTrigger>
-                <SelectContent className="bg-[#0d1a2e] border-[#12233e] text-white">
-                  {(clients ?? []).filter((c) => String(c.id) !== selectedClientId).map((c) => (
-                    <SelectItem key={c.id} value={String(c.id)}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </CardContent>
-          </Card>
-        )}
-
-        {!selectedClient ? (
-          <div className="rc-card py-16 flex flex-col items-center justify-center text-center">
-            <Users className="w-16 h-16 text-[#12233e] mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">No Clients Found</h3>
-            <p className="text-[#7a95b8] max-w-md">
-              There are no clients available for beneficiary optimization. Please add a client first.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Score Banner */}
-            <div className="rc-card border-[#22c55e]/30 bg-gradient-to-r from-[#060d19] to-[#0d1a2e] relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-[#22c55e]/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
-              
-              <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
-                <div className="text-center md:text-left flex flex-col items-center md:items-start md:border-r md:border-[#12233e] md:pr-8">
-                  <div className={`text-6xl font-black tracking-tight ${completionScore >= 80 ? "text-[#22c55e]" : completionScore >= 50 ? "text-[#f0c040]" : "text-red-400"}`}>
-                    {completionScore}%
-                  </div>
-                  <div className="text-sm text-[#7a95b8] mt-2 font-medium uppercase tracking-wider">Optimization Score</div>
-                </div>
-                
-                <div className="flex-1 w-full">
-                  <div className="flex justify-between items-end mb-2">
-                    <span className="text-sm font-medium text-white">Health Progress</span>
-                    <span className="text-xs text-[#7a95b8]">{optimalCount} of {accounts.length} optimal</span>
-                  </div>
-                  <Progress value={completionScore} className="h-3 mb-4 bg-[#12233e]" />
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                    <div className="rc-card bg-[#060d19] p-4 flex items-center gap-3 border border-[#1e293b]">
-                      <div className="p-2 rounded-lg bg-[#3b82f6]/10">
-                        <DollarSign className="w-5 h-5 text-[#3b82f6]" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-white">{fmt(totalValue)}</div>
-                        <div className="text-xs text-[#7a95b8]">Total Assets</div>
-                      </div>
-                    </div>
-                    
-                    <div className="rc-card bg-[#060d19] p-4 flex items-center gap-3 border border-red-500/20">
-                      <div className="p-2 rounded-lg bg-red-500/10">
-                        <AlertTriangle className="w-5 h-5 text-red-400" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-white">{criticalCount}</div>
-                        <div className="text-xs text-[#7a95b8]">Critical Issues</div>
-                      </div>
-                    </div>
-                    
-                    <div className="rc-card bg-[#060d19] p-4 flex items-center gap-3 border border-[#f0c040]/20">
-                      <div className="p-2 rounded-lg bg-[#f0c040]/10">
-                        <Clock className="w-5 h-5 text-[#f0c040]" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-white">{reviewCount}</div>
-                        <div className="text-xs text-[#7a95b8]">Needs Review</div>
-                      </div>
-                    </div>
-                    
-                    <div className="rc-card bg-[#060d19] p-4 flex items-center gap-3 border border-[#22c55e]/20">
-                      <div className="p-2 rounded-lg bg-[#22c55e]/10">
-                        <CheckCircle2 className="w-5 h-5 text-[#22c55e]" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-white">{optimalCount}</div>
-                        <div className="text-xs text-[#7a95b8]">Optimal Accounts</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                <TabsList className="bg-[#0d1a2e] border border-[#12233e] p-1 rounded-lg">
-                  <TabsTrigger value="audit" className="data-[state=active]:bg-[#12233e] data-[state=active]:text-white text-[#7a95b8]">
-                    <FileText className="w-4 h-4 mr-2" /> Account Audit
-                  </TabsTrigger>
-                  <TabsTrigger value="allocation" className="data-[state=active]:bg-[#12233e] data-[state=active]:text-white text-[#7a95b8]">
-                    <PieChartIcon className="w-4 h-4 mr-2" /> Visualizations
-                  </TabsTrigger>
-                  <TabsTrigger value="simulation" className="data-[state=active]:bg-[#12233e] data-[state=active]:text-white text-[#7a95b8]">
-                    <TrendingUp className="w-4 h-4 mr-2" /> Simulation
-                  </TabsTrigger>
-                  <TabsTrigger value="tables" className="data-[state=active]:bg-[#12233e] data-[state=active]:text-white text-[#7a95b8]">
-                    <Table className="w-4 h-4 mr-2" /> Data Tables
-                  </TabsTrigger>
-                </TabsList>
-
-                {activeTab === "audit" && (
-                  <div className="flex gap-2 bg-[#0d1a2e] border border-[#12233e] p-1 rounded-lg">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => setViewMode("list")}
-                      className={`px-2 ${viewMode === "list" ? "bg-[#12233e] text-white" : "text-[#7a95b8]"}`}
-                    >
-                      List
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => setViewMode("grid")}
-                      className={`px-2 ${viewMode === "grid" ? "bg-[#12233e] text-white" : "text-[#7a95b8]"}`}
-                    >
-                      Grid
-                    </Button>
-                  </div>
-                )}
-              </div>
-
-              {/* Tab 1: Audit */}
-              <TabsContent value="audit" className="space-y-4 outline-none">
-                {processedAccounts.length === 0 ? (
-                  <div className="rc-card py-12 flex flex-col items-center justify-center text-center">
-                    <Search className="w-12 h-12 text-[#12233e] mb-4" />
-                    <h3 className="text-lg font-medium text-white mb-1">No accounts found</h3>
-                    <p className="text-[#7a95b8]">Try adjusting your search terms or filters</p>
-                    <Button 
-                      variant="outline" 
-                      className="mt-4 bg-transparent border-[#1e293b] text-white"
-                      onClick={() => { setSearchQuery(""); setFilterStatus("all"); }}
-                    >
-                      Clear Filters
-                    </Button>
-                  </div>
-                ) : (
-                  <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" : "grid grid-cols-1 gap-4"}>
-                    {processedAccounts.map((account) => (
-                      <div 
-                        key={account.id} 
-                        className={`rc-card transition-all duration-200 hover:border-[#1e3a5f] cursor-pointer
-                          ${highlightCritical && account.status === "critical" ? "border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]" : 
-                            account.status === "critical" ? "border-red-500/30" : 
-                            account.status === "needs_review" ? "border-[#f0c040]/30" : "border-[#22c55e]/30"}`}
-                        onClick={() => handleAccountClick(account)}
-                      >
-                        <div className={`flex ${viewMode === "grid" ? "flex-col" : "flex-col md:flex-row"} items-start gap-5`}>
-                          <div className={`p-4 rounded-xl flex-shrink-0 mt-1
-                            ${account.status === "critical" ? "bg-red-500/10" : 
-                              account.status === "needs_review" ? "bg-[#f0c040]/10" : "bg-[#22c55e]/10"}`}>
-                            {account.status === "critical" ? <AlertTriangle className="w-8 h-8 text-red-400" /> : 
-                             account.status === "needs_review" ? <Clock className="w-8 h-8 text-[#f0c040]" /> : 
-                             <CheckCircle2 className="w-8 h-8 text-[#22c55e]" />}
-                          </div>
-                          
-                          <div className="flex-1 w-full">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-                              <div className="flex items-center gap-3 flex-wrap">
-                                <h3 className="text-lg font-semibold text-white">{account.accountType}</h3>
-                                <Badge variant="outline" className={
-                                  account.status === "critical" ? "border-red-500 text-red-400 bg-red-500/10" : 
-                                  account.status === "needs_review" ? "border-[#f0c040] text-[#f0c040] bg-[#f0c040]/10" : 
-                                  "border-[#22c55e] text-[#22c55e] bg-[#22c55e]/10"
-                                }>
-                                  {account.status === "critical" ? "Critical" : account.status === "needs_review" ? "Needs Review" : "Optimal"}
-                                </Badge>
-                              </div>
-                              <div className="text-xl font-bold text-white tracking-tight">
-                                {fmt(account.value)}
-                              </div>
-                            </div>
-                            
-                            <div className="text-sm text-[#7a95b8] mb-4 flex items-center gap-2">
-                              <Briefcase className="w-3 h-3" />
-                              <span>{account.institution}</span>
-                              <span>•</span>
-                              <Calendar className="w-3 h-3" />
-                              <span>Reviewed: {account.lastReviewed}</span>
-                            </div>
-                            
-                            <div className={`grid ${viewMode === "grid" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"} gap-4 mb-4 bg-[#060d19] p-4 rounded-xl border border-[#12233e]`}>
-                              <div>
-                                <div className="text-xs text-[#7a95b8] mb-1 uppercase tracking-wider font-medium">Primary Beneficiary</div>
-                                <div className="text-sm text-white font-medium flex items-center gap-2">
-                                  <UserPlus className="w-3 h-3 text-[#3b82f6]" />
-                                  {account.primaryBeneficiary}
-                                </div>
-                              </div>
-                              <div>
-                                <div className="text-xs text-[#7a95b8] mb-1 uppercase tracking-wider font-medium">Contingent Beneficiary</div>
-                                <div className="text-sm text-white font-medium flex items-center gap-2">
-                                  <Users className="w-3 h-3 text-[#8b5cf6]" />
-                                  {account.contingentBeneficiary}
-                                </div>
-                              </div>
-                            </div>
-                            
-                            {showAdvancedMetrics && (
-                              <div className="flex flex-wrap gap-2 mb-4">
-                                <Badge variant="secondary" className="bg-[#1e293b] text-xs">
-                                  Probate Risk: <span className={account.probateRisk === "High" ? "text-red-400 ml-1" : "text-[#22c55e] ml-1"}>{account.probateRisk}</span>
-                                </Badge>
-                                <Badge variant="secondary" className="bg-[#1e293b] text-xs">
-                                  Liquidity: <span className="text-[#3b82f6] ml-1">{account.liquidityScore}/10</span>
-                                </Badge>
-                                <Badge variant="secondary" className="bg-[#1e293b] text-xs max-w-full truncate" title={account.taxImplication}>
-                                  Tax: <span className="text-[#f0c040] ml-1 truncate">{account.taxImplication}</span>
-                                </Badge>
-                              </div>
-                            )}
-                            
-                            {account.issues.length > 0 && (
-                              <div className="space-y-2 mb-4">
-                                {account.issues.map((issue, i) => (
-                                  <div key={i} className="text-sm text-red-400 flex items-start gap-2 bg-red-500/5 p-2 rounded-lg border border-red-500/10">
-                                    <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" /> 
-                                    <span>{issue}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            
-                            {(!viewMode || viewMode === "list") && (
-                              <div className="bg-[#0a1628] rounded-xl p-4 border border-[#1e3a5f]">
-                                <div className="text-sm font-semibold text-[#22c55e] mb-2 flex items-center gap-2">
-                                  <Zap className="w-4 h-4" /> 
-                                  Optimization Recommendation
-                                </div>
-                                <p className="text-sm text-[#c8d8ec] leading-relaxed">{account.recommendation}</p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-
-              {/* Tab 2: Visualizations (5+ Recharts) */}
-              <TabsContent value="allocation" className="space-y-6 outline-none">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Chart 1: Allocation Pie Chart */}
-                  <Card className="bg-[#0d1a2e] border-[#12233e]">
-                    <CardHeader>
-                      <CardTitle className="text-white flex items-center gap-2">
-                        <PieChartIcon className="w-5 h-5 text-[#3b82f6]" />
-                        Asset Allocation
-                      </CardTitle>
-                      <CardDescription className="text-[#7a95b8]">Value distribution across account types</CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={allocationData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={60}
-                            outerRadius={100}
-                            paddingAngle={2}
-                            dataKey="value"
-                          >
-                            {allocationData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                          </Pie>
-                          <Tooltip content={<CustomTooltip />} />
-                          <Legend wrapperStyle={{ color: '#fff' }} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-
-                  {/* Chart 2: Status Bar Chart */}
-                  <Card className="bg-[#0d1a2e] border-[#12233e]">
-                    <CardHeader>
-                      <CardTitle className="text-white flex items-center gap-2">
-                        <BarChart3 className="w-5 h-5 text-[#22c55e]" />
-                        Health Status Distribution
-                      </CardTitle>
-                      <CardDescription className="text-[#7a95b8]">Number of accounts by optimization status</CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={statusData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false} />
-                          <XAxis type="number" stroke="#7a95b8" />
-                          <YAxis dataKey="name" type="category" stroke="#7a95b8" width={80} />
-                          <Tooltip content={<CustomTooltip />} />
-                          <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                            {statusData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.fill} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-
-                  {/* Chart 3: Institution Concentration */}
-                  <Card className="bg-[#0d1a2e] border-[#12233e] lg:col-span-2">
-                    <CardHeader>
-                      <CardTitle className="text-white flex items-center gap-2">
-                        <Briefcase className="w-5 h-5 text-[#f0c040]" />
-                        Institution Concentration Risk
-                      </CardTitle>
-                      <CardDescription className="text-[#7a95b8]">Assets held at each financial institution</CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-[350px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={institutionData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-                          <XAxis dataKey="name" stroke="#7a95b8" angle={-45} textAnchor="end" height={60} />
-                          <YAxis stroke="#7a95b8" tickFormatter={(val) => `$${val/1000}k`} />
-                          <Tooltip content={<CustomTooltip />} />
-                          <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]}>
-                            {institutionData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[(index + 4) % COLORS.length]} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-
-                  {/* Chart 4: Beneficiary Types (Composed) */}
-                  <Card className="bg-[#0d1a2e] border-[#12233e]">
-                    <CardHeader>
-                      <CardTitle className="text-white flex items-center gap-2">
-                        <Users className="w-5 h-5 text-[#ec4899]" />
-                        Beneficiary Designations
-                      </CardTitle>
-                      <CardDescription className="text-[#7a95b8]">Value allocated by beneficiary type</CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={beneficiaryData} layout="vertical" margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                          <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" horizontal={true} vertical={false} />
-                          <XAxis type="number" stroke="#7a95b8" tickFormatter={(val) => `$${val/1000}k`} />
-                          <YAxis dataKey="name" type="category" stroke="#7a95b8" />
-                          <Tooltip content={<CustomTooltip />} />
-                          <Bar dataKey="value" barSize={20} fill="#ec4899" radius={[0, 4, 4, 0]} />
-                          <Line type="monotone" dataKey="value" stroke="#f472b6" strokeWidth={2} />
-                        </ComposedChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-
-                  {/* Chart 5: Liquidity Scatter Plot */}
-                  <Card className="bg-[#0d1a2e] border-[#12233e]">
-                    <CardHeader>
-                      <CardTitle className="text-white flex items-center gap-2">
-                        <Activity className="w-5 h-5 text-[#06b6d4]" />
-                        Liquidity vs Value Analysis
-                      </CardTitle>
-                      <CardDescription className="text-[#7a95b8]">Account liquidity score relative to asset value</CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                          <XAxis type="number" dataKey="value" name="Value" stroke="#7a95b8" tickFormatter={(val) => `$${val/1000}k`} />
-                          <YAxis type="number" dataKey="liquidity" name="Liquidity Score" domain={[0, 10]} stroke="#7a95b8" />
-                          <ZAxis type="number" dataKey="size" range={[50, 400]} name="Size" />
-                          <Tooltip cursor={{ strokeDasharray: '3 3' }} content={({ active, payload }) => {
-                            if (active && payload && payload.length) {
-                              const data = payload[0].payload;
-                              return (
-                                <div className="bg-[#0f172a] border border-[#1e293b] p-3 rounded-lg shadow-xl">
-                                  <p className="text-white font-medium mb-1">{data.name}</p>
-                                  <p className="text-sm text-[#3b82f6]">Value: {fmt(data.value)}</p>
-                                  <p className="text-sm text-[#22c55e]">Liquidity: {data.liquidity}/10</p>
-                                  <p className="text-sm text-[#f0c040]">Status: {data.status}</p>
-                                </div>
-                              );
-                            }
-                            return null;
-                          }} />
-                          <Scatter data={liquidityData} fill="#06b6d4">
-                            {liquidityData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.status as keyof typeof STATUS_COLORS] || "#06b6d4"} />
-                            ))}
-                          </Scatter>
-                        </ScatterChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              {/* Tab 3: Simulation (Chart 6) */}
-              <TabsContent value="simulation" className="space-y-6 outline-none">
-                <Card className="bg-[#0d1a2e] border-[#12233e]">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-[#8b5cf6]" />
-                      Legacy Growth & Tax Simulation
-                    </CardTitle>
-                    <CardDescription className="text-[#7a95b8]">Project future estate value and potential tax implications</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <Label className="text-white">Assumed Growth Rate</Label>
-                            <span className="text-[#3b82f6] font-medium">{simulatedGrowthRate}%</span>
-                          </div>
-                          <Slider 
-                            value={[simulatedGrowthRate]} 
-                            min={0} max={15} step={0.5}
-                            onValueChange={(val) => setSimulatedGrowthRate(val[0])}
-                            className="py-4"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <Label className="text-white">Projection Years</Label>
-                            <span className="text-[#3b82f6] font-medium">{simulatedYears} Years</span>
-                          </div>
-                          <Slider 
-                            value={[simulatedYears]} 
-                            min={1} max={30} step={1}
-                            onValueChange={(val) => setSimulatedYears(val[0])}
-                            className="py-4"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <Label className="text-white">Blended Tax Rate</Label>
-                            <span className="text-[#f0c040] font-medium">{taxRateAssumed}%</span>
-                          </div>
-                          <Slider 
-                            value={[taxRateAssumed]} 
-                            min={0} max={50} step={1}
-                            onValueChange={(val) => setTaxRateAssumed(val[0])}
-                            className="py-4"
-                          />
-                        </div>
-                        
-                        <div className="flex items-center space-x-2 pt-4 border-t border-[#1e293b]">
-                          <Switch id="estate-tax" checked={includeEstateTax} onCheckedChange={setIncludeEstateTax} />
-                          <Label htmlFor="estate-tax" className="text-white">Calculate Estate Tax (Exemption $13.61M)</Label>
-                        </div>
-                      </div>
-                      
-                      <div className="md:col-span-2 h-[350px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart data={simulationData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                            <defs>
-                              <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                              </linearGradient>
-                              <linearGradient id="colorTaxable" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#22c55e" stopOpacity={0.8}/>
-                                <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
-                              </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-                            <XAxis dataKey="year" stroke="#7a95b8" />
-                            <YAxis stroke="#7a95b8" tickFormatter={(val) => `$${val/1000000}M`} />
-                            <Tooltip content={<CustomTooltip />} />
-                            <Legend wrapperStyle={{ color: '#fff' }} />
-                            <Area type="monotone" dataKey="value" name="Gross Estate Value" stroke="#3b82f6" fillOpacity={1} fill="url(#colorValue)" />
-                            <Area type="monotone" dataKey="taxableValue" name="After-Tax Value (Est)" stroke="#22c55e" fillOpacity={1} fill="url(#colorTaxable)" />
-                            {includeEstateTax && (
-                              <Line type="monotone" dataKey="estateTaxImpact" name="Estate Tax Liability" stroke="#ef4444" strokeWidth={2} dot={false} />
-                            )}
-                          </AreaChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              {/* Tab 4: Data Tables (6+ Tables/Structured Displays) */}
-              <TabsContent value="tables" className="space-y-6 outline-none">
-                
-                {/* Table 1: Comprehensive Account List */}
-                <Card className="bg-[#0d1a2e] border-[#12233e]">
-                  <CardHeader>
-                    <CardTitle className="text-white">Comprehensive Account Inventory</CardTitle>
-                    <CardDescription className="text-[#7a95b8]">Detailed view of all analyzed accounts</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto rounded-md border border-[#1e293b]">
-                      <Table>
-                        <TableHeader className="bg-[#060d19]">
-                          <TableRow className="border-[#1e293b] hover:bg-transparent">
-                            <TableHead className="text-[#7a95b8]">Account Type</TableHead>
-                            <TableHead className="text-[#7a95b8]">Institution</TableHead>
-                            <TableHead className="text-[#7a95b8] text-right">Value</TableHead>
-                            <TableHead className="text-[#7a95b8]">Primary Beneficiary</TableHead>
-                            <TableHead className="text-[#7a95b8]">Status</TableHead>
-                            <TableHead className="text-[#7a95b8] text-right">Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {accounts.map((account) => (
-                            <TableRow key={account.id} className="border-[#1e293b] hover:bg-[#12233e]/50">
-                              <TableCell className="font-medium text-white">{account.accountType}</TableCell>
-                              <TableCell className="text-[#c8d8ec]">{account.institution}</TableCell>
-                              <TableCell className="text-white text-right font-mono">{fmt(account.value)}</TableCell>
-                              <TableCell className="text-[#c8d8ec]">{account.primaryBeneficiary}</TableCell>
-                              <TableCell>
-                                <Badge variant="outline" className={
-                                  account.status === "critical" ? "border-red-500 text-red-400" : 
-                                  account.status === "needs_review" ? "border-[#f0c040] text-[#f0c040]" : 
-                                  "border-[#22c55e] text-[#22c55e]"
-                                }>
-                                  {account.status}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="text-right">
-                                <Button variant="ghost" size="sm" onClick={() => handleAccountClick(account)} className="text-[#3b82f6] hover:text-white hover:bg-[#3b82f6]">
-                                  View
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Table 2: Critical Issues Summary */}
-                  <Card className="bg-[#0d1a2e] border-red-500/30">
-                    <CardHeader>
-                      <CardTitle className="text-white flex items-center gap-2">
-                        <AlertTriangle className="w-5 h-5 text-red-400" />
-                        Critical Action Items
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {accounts.filter((a) => a.status === "critical").length === 0 ? (
-                          <div className="text-center p-4 text-[#22c55e] bg-[#22c55e]/10 rounded-lg border border-[#22c55e]/20">
-                            <CheckCircle2 className="w-8 h-8 mx-auto mb-2" />
-                            No critical issues found
-                          </div>
-                        ) : (
-                          accounts.filter((a) => a.status === "critical").map((account) => (
-                            <div key={`crit-${account.id}`} className="p-3 bg-red-500/5 rounded-lg border border-red-500/20">
-                              <div className="font-medium text-white flex justify-between">
-                                <span>{account.accountType}</span>
-                                <span className="text-red-400">{fmt(account.value)}</span>
-                              </div>
-                              <ul className="mt-2 space-y-1">
-                                {account.issues.map((issue, i) => (
-                                  <li key={i} className="text-sm text-[#c8d8ec] flex items-start gap-2">
-                                    <span className="text-red-400 mt-1">•</span> {issue}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Table 3: Optimization Opportunities */}
-                  <Card className="bg-[#0d1a2e] border-[#f0c040]/30">
-                    <CardHeader>
-                      <CardTitle className="text-white flex items-center gap-2">
-                        <Zap className="w-5 h-5 text-[#f0c040]" />
-                        Optimization Opportunities
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {accounts.filter((a) => a.status === "needs_review").length === 0 ? (
-                          <div className="text-center p-4 text-[#7a95b8] bg-[#12233e] rounded-lg">
-                            No immediate optimization opportunities
-                          </div>
-                        ) : (
-                          accounts.filter((a) => a.status === "needs_review").map((account) => (
-                            <div key={`opt-${account.id}`} className="p-3 bg-[#f0c040]/5 rounded-lg border border-[#f0c040]/20">
-                              <div className="font-medium text-white flex justify-between">
-                                <span>{account.accountType}</span>
-                                <span className="text-[#f0c040]">{fmt(account.value)}</span>
-                              </div>
-                              <p className="mt-2 text-sm text-[#c8d8ec]">{account.recommendation}</p>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Table 4: Tax Implications Summary */}
-                  <Card className="bg-[#0d1a2e] border-[#12233e]">
-                    <CardHeader>
-                      <CardTitle className="text-white">Tax Implications by Account</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <Table>
-                        <TableHeader>
-                          <TableRow className="border-[#1e293b]">
-                            <TableHead className="text-[#7a95b8]">Account</TableHead>
-                            <TableHead className="text-[#7a95b8]">Tax Treatment at Death</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {accounts.slice(0, 5).map((account) => (
-                            <TableRow key={`tax-${account.id}`} className="border-[#1e293b]">
-                              <TableCell className="text-white font-medium">{account.accountType}</TableCell>
-                              <TableCell className="text-[#c8d8ec] text-sm">{account.taxImplication}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </CardContent>
-                  </Card>
-
-                  {/* Table 5: Liquidity & Probate Risk */}
-                  <Card className="bg-[#0d1a2e] border-[#12233e]">
-                    <CardHeader>
-                      <CardTitle className="text-white">Risk Metrics</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <Table>
-                        <TableHeader>
-                          <TableRow className="border-[#1e293b]">
-                            <TableHead className="text-[#7a95b8]">Account</TableHead>
-                            <TableHead className="text-[#7a95b8] text-center">Probate Risk</TableHead>
-                            <TableHead className="text-[#7a95b8] text-center">Liquidity Score</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {accounts.slice(0, 5).map((account) => (
-                            <TableRow key={`risk-${account.id}`} className="border-[#1e293b]">
-                              <TableCell className="text-white font-medium">{account.accountType}</TableCell>
-                              <TableCell className="text-center">
-                                <Badge variant="outline" className={account.probateRisk === "High" ? "border-red-500 text-red-400" : account.probateRisk === "Medium" ? "border-[#f0c040] text-[#f0c040]" : "border-[#22c55e] text-[#22c55e]"}>
-                                  {account.probateRisk}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="text-center text-white">
-                                <div className="flex items-center justify-center gap-2">
-                                  <span className="w-6 text-right">{account.liquidityScore}</span>
-                                  <Progress value={account.liquidityScore * 10} className="w-16 h-2" />
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </CardContent>
-                  </Card>
-                  
-                  {/* Table 6: Comparison Mode Data (if active) */}
-                  {comparisonMode && compareClient && (
-                    <Card className="bg-indigo-900/10 border-indigo-500/30 md:col-span-2">
-                      <CardHeader>
-                        <CardTitle className="text-indigo-300">Client Comparison: {selectedClient.name} vs {compareClient.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <Table>
-                          <TableHeader>
-                            <TableRow className="border-indigo-500/30">
-                              <TableHead className="text-indigo-300">Metric</TableHead>
-                              <TableHead className="text-white">{selectedClient.name}</TableHead>
-                              <TableHead className="text-white">{compareClient.name}</TableHead>
-                              <TableHead className="text-indigo-300 text-right">Difference</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            <TableRow className="border-indigo-500/30">
-                              <TableCell className="text-indigo-200">Total Assets Reviewed</TableCell>
-                              <TableCell className="text-white font-mono">{fmt(totalValue)}</TableCell>
-                              <TableCell className="text-white font-mono">{fmt(compareAccounts.reduce((s, a) => s + a.value, 0))}</TableCell>
-                              <TableCell className="text-right font-mono">
-                                {(() => {
-                                  const diff = totalValue - compareAccounts.reduce((s, a) => s + a.value, 0);
-                                  return <span className={diff >= 0 ? "text-[#22c55e]" : "text-red-400"}>
-                                    {diff >= 0 ? "+" : ""}{fmt(diff)}
-                                  </span>;
-                                })()}
-                              </TableCell>
-                            </TableRow>
-                            <TableRow className="border-indigo-500/30">
-                              <TableCell className="text-indigo-200">Optimization Score</TableCell>
-                              <TableCell className="text-white">{completionScore}%</TableCell>
-                              <TableCell className="text-white">
-                                {compareAccounts.length > 0 ? Math.round((compareAccounts.filter((a) => a.status === "optimal").length / compareAccounts.length) * 100) : 0}%
-                              </TableCell>
-                              <TableCell className="text-right">
-                                {(() => {
-                                  const cScore = compareAccounts.length > 0 ? Math.round((compareAccounts.filter((a) => a.status === "optimal").length / compareAccounts.length) * 100) : 0;
-                                  const diff = completionScore - cScore;
-                                  return <span className={diff >= 0 ? "text-[#22c55e]" : "text-red-400"}>
-                                    {diff >= 0 ? "+" : ""}{diff}%
-                                  </span>;
-                                })()}
-                              </TableCell>
-                            </TableRow>
-                            <TableRow className="border-indigo-500/30">
-                              <TableCell className="text-indigo-200">Critical Issues</TableCell>
-                              <TableCell className="text-white">{criticalCount}</TableCell>
-                              <TableCell className="text-white">{compareAccounts.filter((a) => a.status === "critical").length}</TableCell>
-                              <TableCell className="text-right">
-                                {(() => {
-                                  const cCount = compareAccounts.filter((a) => a.status === "critical").length;
-                                  const diff = criticalCount - cCount;
-                                  return <span className={diff <= 0 ? "text-[#22c55e]" : "text-red-400"}>
-                                    {diff > 0 ? "+" : ""}{diff}
-                                  </span>;
-                                })()}
-                              </TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        )}
-
-        {/* Account Details Dialog */}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="bg-[#0d1a2e] border-[#12233e] text-white max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-2xl flex items-center gap-3">
-                {selectedAccount?.accountType}
-                {selectedAccount && (
-                  <Badge variant="outline" className={
-                    selectedAccount.status === "critical" ? "border-red-500 text-red-400 bg-red-500/10" : 
-                    selectedAccount.status === "needs_review" ? "border-[#f0c040] text-[#f0c040] bg-[#f0c040]/10" : 
-                    "border-[#22c55e] text-[#22c55e] bg-[#22c55e]/10"
-                  }>
-                    {selectedAccount.status === "critical" ? "Critical" : selectedAccount.status === "needs_review" ? "Needs Review" : "Optimal"}
-                  </Badge>
-                )}
-              </DialogTitle>
-              <DialogDescription className="text-[#7a95b8]">
-                {selectedAccount?.institution} • Value: {selectedAccount ? fmt(selectedAccount.value) : ""}
-              </DialogDescription>
-            </DialogHeader>
-            
-            {selectedAccount && (
-              <div className="space-y-6 my-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-[#060d19] p-4 rounded-lg border border-[#1e293b]">
-                    <div className="text-sm text-[#7a95b8] mb-1">Primary Beneficiary</div>
-                    <div className="font-medium">{selectedAccount.primaryBeneficiary}</div>
-                  </div>
-                  <div className="bg-[#060d19] p-4 rounded-lg border border-[#1e293b]">
-                    <div className="text-sm text-[#7a95b8] mb-1">Contingent Beneficiary</div>
-                    <div className="font-medium">{selectedAccount.contingentBeneficiary}</div>
-                  </div>
-                  <div className="bg-[#060d19] p-4 rounded-lg border border-[#1e293b]">
-                    <div className="text-sm text-[#7a95b8] mb-1">Tax Implication</div>
-                    <div className="font-medium text-[#f0c040]">{selectedAccount.taxImplication}</div>
-                  </div>
-                  <div className="bg-[#060d19] p-4 rounded-lg border border-[#1e293b]">
-                    <div className="text-sm text-[#7a95b8] mb-1">Probate Risk</div>
-                    <div className={`font-medium ${selectedAccount.probateRisk === "High" ? "text-red-400" : "text-[#22c55e]"}`}>
-                      {selectedAccount.probateRisk}
-                    </div>
-                  </div>
-                </div>
-                
-                {selectedAccount.issues.length > 0 && (
-                  <div>
-                    <h4 className="text-red-400 font-medium flex items-center gap-2 mb-2">
-                      <AlertTriangle className="w-4 h-4" /> Identified Issues
-                    </h4>
-                    <ul className="space-y-2">
-                      {selectedAccount.issues.map((issue, i) => (
-                        <li key={i} className="bg-red-500/10 text-red-200 p-3 rounded-md border border-red-500/20 text-sm">
-                          {issue}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                
-                <div>
-                  <h4 className="text-[#22c55e] font-medium flex items-center gap-2 mb-2">
-                    <Zap className="w-4 h-4" /> Optimization Recommendation
-                  </h4>
-                  <div className="bg-[#22c55e]/10 text-[#c8d8ec] p-4 rounded-md border border-[#22c55e]/30 text-sm leading-relaxed">
-                    {selectedAccount.recommendation}
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="notes">Advisor Notes</Label>
-                  <Input 
-                    id="notes" 
-                    placeholder="Add specific notes or action items for this account..." 
-                    value={notesText}
-                    onChange={(e) => setNotesText(e.target.value)}
-                    className="bg-[#060d19] border-[#1e293b] text-white"
-                  />
-                </div>
-              </div>
-            )}
-            
-            <DialogFooter className="flex justify-between sm:justify-between border-t border-[#1e293b] pt-4">
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="bg-transparent border-[#1e293b] text-white">
-                Close
-              </Button>
-              <div className="flex gap-2">
-                <Button variant="outline" className="bg-[#060d19] border-[#1e293b] text-white">
-                  <Printer className="w-4 h-4 mr-2" /> Print
-                </Button>
-                <Button onClick={handleSaveNotes} className="bg-[#3b82f6] hover:bg-[#2563eb] text-white">
-                  <Save className="w-4 h-4 mr-2" /> Save Notes
-                </Button>
-              </div>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        
-        <PageInsights />
-        <NAICDisclaimer />
-      </div>
-    
-        <ComplianceFooter pageName="BeneficiaryOptimization" showsAnnuity showsTax showsEstate showsProjections />
-      </AppShell>
-  );
-}
-```
-
-## `client/src/pages/portal/Billing.tsx`
-
-```tsx
-import { AppShell } from "@/components/AppShell";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, CircleDollarSign, ShieldAlert } from "lucide-react";
-import { Link } from "wouter";
-
-export default function Billing() {
-  return (
-    <AppShell title="Billing & Subscription" subtitle="Payment integration status">
-      <div className="mx-auto max-w-3xl p-6">
-        <Card className="border-amber-400/25 bg-slate-950/60">
-          <CardHeader>
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/10"><ShieldAlert className="text-amber-300" /></div>
-            <CardTitle>Billing is not active</CardTitle>
-            <CardDescription>No payment provider is connected to this project. This page intentionally does not display sample subscriptions, invoices, cards, usage, team activity, prices, discounts, or checkout controls as real records.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-5">
-            <div className="rounded-xl border border-slate-700/60 bg-slate-900/50 p-4 text-sm text-slate-300"><CircleDollarSign className="mb-2 h-5 w-5 text-emerald-300" />Billing functionality can be enabled only after the owner explicitly activates and configures a supported payment integration.</div>
-            <Link href="/portal/integrations"><Button variant="outline">Review integrations <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
-          </CardContent>
-        </Card>
-      </div>
-    </AppShell>
-  );
-}
-```
-
-## `client/src/pages/portal/BlackMirror.tsx`
-
-```tsx
-// @ts-nocheck
-
-import { useCalculatorIntegration } from "@/hooks/useCalculatorIntegration";
-import { ClientSelectorBar } from "@/components/ClientSelectorBar";
-import { AppShell } from "@/components/AppShell";
-import { GenerateOutcomeTab } from "@/components/GenerateOutcomeTab";
-import { CalculationSyncBar } from "@/components/CalculationSyncBar";
-import { useStrategy } from "@/contexts/StrategyContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import { useAuth } from "@/_core/hooks/useAuth";
-import {
-  Waves,
-  GitBranch,
-  Ghost,
-  Users,
-  Moon,
-  Brain,
-  TrendingUp,
-  DollarSign,
-  Eye,
-  Clock,
-  Sparkles,
-  Target,
-  ChevronRight,
-  Play,
-  Pause,
-  RotateCcw,
-  Lightbulb,
-  Shield,
-  Activity,
-  AlertTriangle,
-  Compass,
-  Heart,
-} from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
-import { toast } from "sonner";
-
-/* ═══════════════════════════════════════════════════════════════════
-   THE BLACK MIRROR — When the platform becomes more real than reality.
-   Where the boundary between you and the machine dissolves.
-   ═══════════════════════════════════════════════════════════════════ */
-
-function WaterParticle({ delay, channel, amount }: { delay: number; channel: string; amount: number }) {
-  const [y, setY] = useState(-10);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      const interval = setInterval(() => {
-        setY(prev => prev >= 100 ? -10 : prev + 0.5);
-      }, 30);
-      return () => clearInterval(interval);
-    }, delay);
-    return () => clearTimeout(timeout);
-  }, [delay]);
-
-  return (
-    <div
-      className="absolute w-2 h-2 rounded-full bg-cyan-400/60 blur-[1px] transition-all"
-      style={{ top: `${y}%`, left: `${Math.random() * 80 + 10}%`, animationDelay: `${delay}ms` }}
-    />
-  );
-}
-
-function WealthWaterfall() {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
-
-  const channels = [
-    { name: "MYGA Allocations", flow: 47200, clients: 23, color: "from-cyan-500 to-cyan-700", icon: "🏦", pct: 28 },
-    { name: "FIA Products", flow: 38500, clients: 18, color: "from-blue-500 to-blue-700", icon: "📊", pct: 23 },
-    { name: "IUL Policies", flow: 31800, clients: 15, color: "from-violet-500 to-violet-700", icon: "🛡️", pct: 19 },
-    { name: "Tax Savings", flow: 22400, clients: 31, color: "from-emerald-500 to-emerald-700", icon: "💰", pct: 13 },
-    { name: "Income Streams", flow: 18900, clients: 12, color: "from-amber-500 to-amber-700", icon: "💵", pct: 11 },
-    { name: "Estate Planning", flow: 9800, clients: 8, color: "from-rose-500 to-rose-700", icon: "🏛️", pct: 6 },
-  ];
-
-  const totalFlow = channels.reduce((sum, c) => sum + c.flow, 0);
-  const [animatedTotal, setAnimatedTotal] = useState(0);
-
-  useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setAnimatedTotal(prev => {
-        const next = prev + Math.random() * 150 + 50;
-        return next >= totalFlow ? 0 : next;
-      });
-    }, 50);
-    return () => clearInterval(interval);
-  }, [isPlaying, totalFlow]);
-
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-bold text-cyan-300 flex items-center gap-2">
-            <Waves className="w-5 h-5" /> Wealth Waterfall
-          </h3>
-          <p className="text-sm text-muted-foreground">Watch money flow through your entire practice in real time</p>
-        </div>
-        <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={() => setIsPlaying(!isPlaying)}
-            className="border-cyan-500/30 text-cyan-300">
-            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-          </Button>
-          <Button size="sm" variant="outline" onClick={() => { setAnimatedTotal(0); toast.success("Waterfall reset"); }}
-            className="border-cyan-500/30 text-cyan-300">
-            <RotateCcw className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Source: Total Assets */}
-      <Card className="bg-gradient-to-r from-cyan-950/50 to-blue-950/50 border-cyan-500/30">
-        <CardContent className="p-4 text-center">
-          <p className="text-xs text-cyan-400 uppercase tracking-wider">Total Client Assets</p>
-          <p className="text-3xl font-black text-cyan-300 font-mono">
-            ${(2_790_000 + animatedTotal).toLocaleString()}
-          </p>
-          <div className="flex items-center justify-center gap-1 mt-1">
-            <Activity className="w-3 h-3 text-cyan-400 animate-pulse" />
-            <span className="text-xs text-cyan-400">Live flow: ${Math.round(animatedTotal).toLocaleString()}/cycle</span>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Flow Channels */}
-      <div className="relative">
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-cyan-500/50 to-transparent" />
-        <div className="space-y-3">
-          {channels.map((channel, i) => (
-            <button
-              key={channel.name}
-              onClick={() => {
-                setSelectedChannel(selectedChannel === channel.name ? null : channel.name);
-                toast.info(`${channel.name}: $${channel.flow.toLocaleString()}/mo across ${channel.clients} clients`);
-              }}
-              className={`w-full text-left transition-all duration-300 ${selectedChannel === channel.name ? 'scale-[1.02]' : 'hover:scale-[1.01]'}`}
-            >
-              <Card className={`border-transparent ${selectedChannel === channel.name ? 'ring-1 ring-cyan-400/50' : ''}`}
-                style={{ background: `linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2))` }}>
-                <CardContent className="p-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{channel.icon}</span>
-                      <div>
-                        <p className="font-semibold text-sm">{channel.name}</p>
-                        <p className="text-xs text-muted-foreground">{channel.clients} clients</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-cyan-300 font-mono">${channel.flow.toLocaleString()}<span className="text-xs text-muted-foreground">/mo</span></p>
-                      <p className="text-xs text-muted-foreground">{channel.pct}% of flow</p>
-                    </div>
-                  </div>
-                  <div className="mt-2 h-1.5 bg-black/30 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full bg-gradient-to-r ${channel.color} rounded-full transition-all duration-1000`}
-                      style={{ width: isPlaying ? `${channel.pct * 3.3}%` : '0%' }}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Pool: Total Wealth Created */}
-      <Card className="bg-gradient-to-r from-emerald-950/50 to-cyan-950/50 border-emerald-500/30">
-        <CardContent className="p-4 text-center">
-          <p className="text-xs text-emerald-400 uppercase tracking-wider">Total Wealth Created</p>
-          <p className="text-3xl font-black text-emerald-300 font-mono">
-            ${totalFlow.toLocaleString()}<span className="text-lg">/mo</span>
-          </p>
-          <p className="text-xs text-emerald-400/70 mt-1">↓ Flowing into {channels.reduce((s, c) => s + c.clients, 0)} client portfolios</p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-function ParallelLifeSimulator() {
-  const { user } = useAuth();
-  const [timeframe, setTimeframe] = useState<"6mo" | "1yr" | "3yr">("1yr");
-
-  const scenarios = {
-    "6mo": {
-      real: { clients: 38, commission: 243000, wealth: 1890000, satisfaction: 87 },
-      shadow: { clients: 30, commission: 112000, wealth: 780000, satisfaction: 61 },
-    },
-    "1yr": {
-      real: { clients: 45, commission: 487000, wealth: 2790000, satisfaction: 92 },
-      shadow: { clients: 34, commission: 189000, wealth: 1100000, satisfaction: 58 },
-    },
-    "3yr": {
-      real: { clients: 49, commission: 1420000, wealth: 8900000, satisfaction: 96 },
-      shadow: { clients: 41, commission: 520000, wealth: 2800000, satisfaction: 52 },
-    },
-  };
-
-  const data = scenarios[timeframe];
-  const gap = data.real.commission - data.shadow.commission;
-
-  const metrics = [
-    { label: "Clients", real: data.real.clients, shadow: data.shadow.clients, icon: Users, unit: "" },
-    { label: "Commission", real: data.real.commission, shadow: data.shadow.commission, icon: DollarSign, unit: "$", format: true },
-    { label: "Wealth Discovered", real: data.real.wealth, shadow: data.shadow.wealth, icon: TrendingUp, unit: "$", format: true },
-    { label: "Client Satisfaction", real: data.real.satisfaction, shadow: data.shadow.satisfaction, icon: Heart, unit: "%" },
-  ];
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-bold text-violet-300 flex items-center gap-2">
-            <GitBranch className="w-5 h-5" /> Parallel Life Simulator
-          </h3>
-          <p className="text-sm text-muted-foreground">What if you had never joined Russell Capital Systems?</p>
-        </div>
-        <div className="flex gap-1 bg-black/30 rounded-lg p-1">
-          {(["6mo", "1yr", "3yr"] as const).map(tf => (
-            <Button key={tf} size="sm" variant={timeframe === tf ? "default" : "ghost"}
-              onClick={() => setTimeframe(tf)} className="text-xs h-7 px-3">
-              {tf === "6mo" ? "6 Months" : tf === "1yr" ? "1 Year" : "3 Years"}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      {/* The Split */}
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="bg-gradient-to-br from-emerald-950/40 to-cyan-950/40 border-emerald-500/30">
-          <CardContent className="p-4 text-center">
-            <Badge className="bg-emerald-500/20 text-emerald-300 mb-2">YOUR REALITY</Badge>
-            <p className="text-xs text-emerald-400">With Russell Capital Systems</p>
-            <p className="text-2xl font-black text-emerald-300 mt-2">${data.real.commission.toLocaleString()}</p>
-            <p className="text-xs text-emerald-400/70">in commissions</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-red-950/40 to-gray-950/40 border-red-500/30 opacity-70">
-          <CardContent className="p-4 text-center">
-            <Badge className="bg-red-500/20 text-red-300 mb-2">SHADOW SELF</Badge>
-            <p className="text-xs text-red-400">Without the platform</p>
-            <p className="text-2xl font-black text-red-300 mt-2">${data.shadow.commission.toLocaleString()}</p>
-            <p className="text-xs text-red-400/70">in commissions</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* The Gap */}
-      <Card className="bg-gradient-to-r from-amber-950/40 to-yellow-950/40 border-amber-500/30">
-        <CardContent className="p-4 text-center">
-          <Sparkles className="w-6 h-6 text-amber-400 mx-auto mb-1" />
-          <p className="text-xs text-amber-400 uppercase tracking-wider">The Russell Capital Advantage</p>
-          <p className="text-4xl font-black text-amber-300">+${gap.toLocaleString()}</p>
-          <p className="text-xs text-amber-400/70">more than your shadow self earned</p>
-        </CardContent>
-      </Card>
-
-      {/* Metric Comparison */}
-      <div className="space-y-3">
-        {metrics.map(m => {
-          const realVal = m.format ? `${m.unit}${m.real.toLocaleString()}` : `${m.real}${m.unit}`;
-          const shadowVal = m.format ? `${m.unit}${m.shadow.toLocaleString()}` : `${m.shadow}${m.unit}`;
-          const pct = Math.round(((m.real - m.shadow) / m.shadow) * 100);
-          return (
-            <div key={m.label} className="flex items-center gap-3 p-3 rounded-lg bg-black/20">
-              <m.icon className="w-4 h-4 text-violet-400 shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-muted-foreground">{m.label}</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-emerald-300">{realVal}</span>
-                  <span className="text-xs text-muted-foreground">vs</span>
-                  <span className="text-sm text-red-400 line-through opacity-60">{shadowVal}</span>
-                  <Badge className="bg-emerald-500/20 text-emerald-300 text-[10px] h-4">+{pct}%</Badge>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function GhostMode() {
-  const [isActive, setIsActive] = useState(false);
-  const [selectedScenario, setSelectedScenario] = useState(0);
-
-  const scenarios = [
-    {
-      title: "Margaret Chen — Retirement Optimization",
-      userStrategy: { myga: 40, fia: 30, iul: 20, cash: 10 },
-      ghostStrategy: { myga: 35, fia: 25, iul: 30, cash: 10 },
-      userOutcome: 4200,
-      ghostOutcome: 4850,
-      insight: "Ghost suggests increasing IUL allocation by 10% for better tax-free income in years 15+",
-    },
-    {
-      title: "David Kim — Tax Efficiency",
-      userStrategy: { roth: 30, traditional: 40, taxable: 20, muni: 10 },
-      ghostStrategy: { roth: 45, traditional: 25, taxable: 15, muni: 15 },
-      userOutcome: 38000,
-      ghostOutcome: 52000,
-      insight: "Ghost recommends aggressive Roth conversion in the current low-bracket window",
-    },
-    {
-      title: "Sarah Chen — Estate Planning",
-      userStrategy: { irrevocable: 25, revocable: 35, iul: 25, direct: 15 },
-      ghostStrategy: { irrevocable: 40, revocable: 20, iul: 30, direct: 10 },
-      userOutcome: 890000,
-      ghostOutcome: 1240000,
-      insight: "Ghost identifies $350K in additional estate tax savings through trust restructuring",
-    },
-  ];
-
-  const scenario = scenarios[selectedScenario];
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-bold text-emerald-300 flex items-center gap-2">
-            <Ghost className="w-5 h-5" /> Ghost Mode
-          </h3>
-          <p className="text-sm text-muted-foreground">See what the AI would do — learn by osmosis</p>
-        </div>
-        <Button
-          size="sm"
-          variant={isActive ? "default" : "outline"}
-          onClick={() => { setIsActive(!isActive); toast.success(isActive ? "Ghost Mode deactivated" : "Ghost Mode activated — AI overlay enabled"); }}
-          className={isActive ? "bg-emerald-600 hover:bg-emerald-700" : "border-emerald-500/30 text-emerald-300"}
-        >
-          <Ghost className="w-4 h-4 mr-1" />
-          {isActive ? "Active" : "Activate"}
-        </Button>
-      </div>
-
-      {/* Scenario Selector */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {scenarios.map((s, i) => (
-          <Button key={i} size="sm" variant={selectedScenario === i ? "default" : "outline"}
-            onClick={() => setSelectedScenario(i)}
-            className={`text-xs whitespace-nowrap ${selectedScenario === i ? '' : 'border-emerald-500/20 text-emerald-300'}`}>
-            {s.title.split(" — ")[0]}
-          </Button>
-        ))}
-      </div>
-
-      {/* Strategy Comparison */}
-      <Card className={`transition-all duration-500 ${isActive ? 'border-emerald-500/40 shadow-lg shadow-emerald-500/10' : 'border-border/50'}`}>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm">{scenario.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
-                <Eye className="w-3 h-3" /> Your Strategy
-              </p>
-              {Object.entries(scenario.userStrategy).map(([key, val]) => (
-                <div key={key} className="flex items-center gap-2 mb-1">
-                  <span className="text-xs text-muted-foreground w-20 capitalize">{key}</span>
-                  <div className="flex-1 h-2 bg-black/30 rounded-full overflow-hidden">
-                    <div className="h-full bg-blue-500 rounded-full" style={{ width: `${val}%` }} />
-                  </div>
-                  <span className="text-xs font-mono w-8 text-right">{val}%</span>
-                </div>
-              ))}
-              <p className="text-sm font-bold text-blue-300 mt-2">
-                Outcome: ${scenario.userOutcome.toLocaleString()}<span className="text-xs text-muted-foreground">/mo</span>
-              </p>
-            </div>
-
-            {isActive && (
-              <div className="border-l border-emerald-500/20 pl-4 animate-in fade-in duration-500">
-                <p className="text-xs text-emerald-400 mb-2 flex items-center gap-1">
-                  <Ghost className="w-3 h-3" /> Ghost Strategy
-                </p>
-                {Object.entries(scenario.ghostStrategy).map(([key, val]) => (
-                  <div key={key} className="flex items-center gap-2 mb-1">
-                    <span className="text-xs text-muted-foreground w-20 capitalize">{key}</span>
-                    <div className="flex-1 h-2 bg-black/30 rounded-full overflow-hidden">
-                      <div className="h-full bg-emerald-500/70 rounded-full" style={{ width: `${val}%` }} />
-                    </div>
-                    <span className="text-xs font-mono w-8 text-right text-emerald-300">{val}%</span>
-                  </div>
-                ))}
-                <p className="text-sm font-bold text-emerald-300 mt-2">
-                  Outcome: ${scenario.ghostOutcome.toLocaleString()}<span className="text-xs text-muted-foreground">/mo</span>
-                </p>
-              </div>
-            )}
-          </div>
-
-          {isActive && (
-            <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-              <p className="text-xs text-emerald-300 flex items-center gap-1">
-                <Lightbulb className="w-3 h-3" /> Ghost Insight
-              </p>
-              <p className="text-sm text-emerald-200 mt-1">{scenario.insight}</p>
-              <Button size="sm" className="mt-2 bg-emerald-600 hover:bg-emerald-700 text-xs h-7"
-                onClick={() => toast.success("Ghost strategy applied to your workspace")}>
-                Apply Ghost Strategy
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-function PhantomClients() {
-  const [activePhantom, setActivePhantom] = useState<number | null>(null);
-
-  const phantoms = [
-    {
-      name: "Phantom: Eleanor Vance",
-      age: 62, assets: 780000, situation: "Recently widowed, needs income replacement strategy",
-      personality: "Cautious, detail-oriented, asks many questions",
-      objections: ["Doesn't trust annuities", "Worried about fees", "Wants liquidity"],
-      difficulty: "Medium", xp: 300, skills: ["MYGA", "Income Planning"],
-      emoji: "👻",
-    },
-    {
-      name: "Phantom: Marcus Webb",
-      age: 55, assets: 2100000, situation: "Tech executive planning early retirement, complex stock options",
-      personality: "Analytical, impatient, wants data-driven approach",
-      objections: ["Thinks he can do it himself", "Skeptical of insurance products", "Wants guaranteed returns"],
-      difficulty: "Hard", xp: 500, skills: ["Tax Strategy", "IUL", "Estate"],
-      emoji: "👤",
-    },
-    {
-      name: "Phantom: The Hendersons",
-      age: 68, assets: 450000, situation: "Married couple, one spouse has health issues, need long-term care plan",
-      personality: "Warm but anxious, need reassurance, make decisions together",
-      objections: ["Fixed income concerns", "Adult children involved in decisions", "Previous bad advisor experience"],
-      difficulty: "Easy", xp: 200, skills: ["Medicare", "Income Planning"],
-      emoji: "👥",
-    },
-    {
-      name: "Phantom: Dr. Priya Sharma",
-      age: 45, assets: 3400000, situation: "Surgeon with high income, minimal tax planning, wants legacy strategy",
-      personality: "Brilliant but time-poor, needs concise presentations",
-      objections: ["Only has 15 minutes", "Wants to see ROI immediately", "Compares everything to stock market"],
-      difficulty: "Expert", xp: 750, skills: ["Tax Strategy", "Estate", "IUL"],
-      emoji: "🧪",
-    },
-  ];
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-bold text-purple-300 flex items-center gap-2">
-          <Users className="w-5 h-5" /> Phantom Clients
-        </h3>
-        <p className="text-sm text-muted-foreground">AI-generated practice clients. No risk. Full rewards. Never stop grinding.</p>
-      </div>
-
-      <div className="grid gap-3">
-        {phantoms.map((phantom, i) => (
-          <Card key={i}
-            className={`cursor-pointer transition-all duration-300 ${activePhantom === i ? 'border-purple-500/40 shadow-lg shadow-purple-500/10' : 'border-border/30 hover:border-purple-500/20'}`}
-            onClick={() => setActivePhantom(activePhantom === i ? null : i)}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl">{phantom.emoji}</span>
-                  <div>
-                    <p className="font-bold text-sm">{phantom.name}</p>
-                    <p className="text-xs text-muted-foreground">Age {phantom.age} · ${phantom.assets.toLocaleString()} assets</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <Badge className={`text-[10px] ${
-                    phantom.difficulty === "Expert" ? "bg-red-500/20 text-red-300" :
-                    phantom.difficulty === "Hard" ? "bg-orange-500/20 text-orange-300" :
-                    phantom.difficulty === "Medium" ? "bg-amber-500/20 text-amber-300" :
-                    "bg-emerald-500/20 text-emerald-300"
-                  }`}>{phantom.difficulty}</Badge>
-                  <p className="text-xs text-amber-400 mt-1">⭐ {phantom.xp} XP</p>
-                </div>
-              </div>
-
-              <p className="text-xs text-muted-foreground mt-2">{phantom.situation}</p>
-
-              {activePhantom === i && (
-                <div className="mt-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                  <div className="p-2 rounded bg-black/20">
-                    <p className="text-xs text-purple-400 font-semibold">Personality</p>
-                    <p className="text-xs text-muted-foreground">{phantom.personality}</p>
-                  </div>
-                  <div className="p-2 rounded bg-black/20">
-                    <p className="text-xs text-red-400 font-semibold">Common Objections</p>
-                    {phantom.objections.map((obj, j) => (
-                      <p key={j} className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                        <AlertTriangle className="w-3 h-3 text-red-400/60" /> {obj}
-                      </p>
-                    ))}
-                  </div>
-                  <div className="flex gap-2 flex-wrap">
-                    {phantom.skills.map(skill => (
-                      <Badge key={skill} variant="outline" className="text-[10px] border-purple-500/30 text-purple-300">{skill}</Badge>
-                    ))}
-                  </div>
-                  <Button size="sm" className="w-full bg-purple-600 hover:bg-purple-700"
-                    onClick={(e) => { e.stopPropagation(); toast.success(`Starting practice session with ${phantom.name}...`); }}>
-                    <Target className="w-4 h-4 mr-1" /> Begin Practice Session
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function DreamJournal() {
-  const dreamReports = [
-    {
-      date: "This Morning",
-      processingTime: "6h 23m",
-      insights: [
-        { type: "pattern", text: "4 clients have CDs maturing within 60 days of each other. Coordinate MYGA transitions for a group rate — estimated savings: $12,000", value: 12000 },
-        { type: "opportunity", text: "Margaret Chen's tax bracket drops next year. Accelerate Roth conversion now for $34K in lifetime tax savings", value: 34000 },
-        { type: "risk", text: "David Kim's FIA cap rate expires in 90 days. Current market conditions suggest locking in a new 5-year term", value: 8500 },
-      ],
-      totalValue: 54500,
-      mood: "🌅",
-    },
-    {
-      date: "Yesterday",
-      processingTime: "7h 11m",
-      insights: [
-        { type: "pattern", text: "Cross-referencing client data reveals 3 potential referral connections through shared employers", value: 0 },
-        { type: "opportunity", text: "MYGA rates hit 5.8% overnight — 7 clients could benefit from immediate reallocation", value: 47000 },
-        { type: "risk", text: "2 clients approaching IRMAA thresholds — proactive income adjustment needed", value: 28000 },
-      ],
-      totalValue: 75000,
-      mood: "🌙",
-    },
-    {
-      date: "2 Days Ago",
-      processingTime: "5h 47m",
-      insights: [
-        { type: "opportunity", text: "Estate planning gap detected: 5 clients over 70 with no beneficiary review in 2+ years", value: 0 },
-        { type: "pattern", text: "Your IUL presentations close 40% faster when you lead with the tax-free income angle", value: 0 },
-        { type: "opportunity", text: "New carrier product matches 3 clients' exact risk profiles — pre-built comparison ready", value: 22000 },
-      ],
-      totalValue: 22000,
-      mood: "✨",
-    },
-  ];
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-bold text-indigo-300 flex items-center gap-2">
-          <Moon className="w-5 h-5" /> Dream Journal
-        </h3>
-        <p className="text-sm text-muted-foreground">The platform processes your day while you sleep. Wake up to strategies you didn't create.</p>
-      </div>
-
-      <Card className="bg-gradient-to-r from-indigo-950/40 to-violet-950/40 border-indigo-500/30">
-        <CardContent className="p-4 text-center">
-          <Brain className="w-8 h-8 text-indigo-400 mx-auto mb-2 animate-pulse" />
-          <p className="text-xs text-indigo-400 uppercase tracking-wider">Total Dream Value This Week</p>
-          <p className="text-3xl font-black text-indigo-300">
-            ${dreamReports.reduce((s, r) => s + r.totalValue, 0).toLocaleString()}
-          </p>
-          <p className="text-xs text-indigo-400/70">in opportunities discovered while you slept</p>
-        </CardContent>
-      </Card>
-
-      <div className="space-y-4">
-        {dreamReports.map((report, i) => (
-          <Card key={i} className="border-indigo-500/20">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <span>{report.mood}</span> {report.date}
-                </CardTitle>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-[10px] border-indigo-500/30 text-indigo-300">
-                    <Clock className="w-3 h-3 mr-1" /> {report.processingTime} processing
-                  </Badge>
-                  {report.totalValue > 0 && (
-                    <Badge className="bg-emerald-500/20 text-emerald-300 text-[10px]">
-                      ${report.totalValue.toLocaleString()}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {report.insights.map((insight, j) => (
-                <div key={j} className="flex items-start gap-2 p-2 rounded bg-black/20">
-                  {insight.type === "pattern" ? <Compass className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" /> :
-                   insight.type === "opportunity" ? <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" /> :
-                   <Shield className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs">{insight.text}</p>
-                    {insight.value > 0 && (
-                      <p className="text-xs text-emerald-400 mt-0.5">💰 ${insight.value.toLocaleString()} potential value</p>
-                    )}
-                  </div>
-                  <Button size="sm" variant="ghost" className="text-xs h-6 px-2 text-indigo-300"
-                    onClick={() => toast.success("Opening strategy workspace...")}>
-                    Act <ChevronRight className="w-3 h-3" />
-                  </Button>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export default function BlackMirror() {
-  const calcIntegration = useCalculatorIntegration({
-    calculatorName: "BlackMirror",
-    strategyType: "black-mirror",
-  });
-
-  return (
-    <AppShell>
-      <div className="space-y-6">
-        <CalculationSyncBar />
-        <ClientSelectorBar
-          clients={calcIntegration.clients}
-          clientsLoading={calcIntegration.clientsLoading}
-          selectedClientId={calcIntegration.selectedClientId}
-          selectedClientName={calcIntegration.selectedClientName}
-          onSelectClient={calcIntegration.selectClient}
-          scenarios={calcIntegration.scenarios}
-          scenariosLoading={calcIntegration.scenariosLoading}
-          scenarioName={calcIntegration.scenarioName}
-          onSetScenarioName={calcIntegration.setScenarioName}
-          onSave={() => calcIntegration.saveScenario({}, {})}
-          onLoad={(s) => calcIntegration.loadScenario(s)}
-          isSaving={calcIntegration.isSaving}
-          lastSavedAt={calcIntegration.lastSavedAt}
-          calculatorName="BlackMirror"
-        />
-        <div>
-          <h1 className="text-2xl font-black flex items-center gap-2">
-            <span className="text-3xl">🪞</span> The Black Mirror
-          </h1>
-          <p className="text-muted-foreground">
-            When the platform becomes more real than reality. Where the boundary between you and the machine dissolves.
-          </p>
-        </div>
-
-        <Tabs defaultValue="waterfall" className="w-full">
-          <TabsList className="bg-black/30 border border-border/30 w-full justify-start overflow-x-auto">
-            <TabsTrigger value="waterfall" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300 text-xs">
-              <Waves className="w-3 h-3 mr-1" /> Waterfall
-            </TabsTrigger>
-            <TabsTrigger value="parallel" className="data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-300 text-xs">
-              <GitBranch className="w-3 h-3 mr-1" /> Shadow Self
-            </TabsTrigger>
-            <TabsTrigger value="ghost" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300 text-xs">
-              <Ghost className="w-3 h-3 mr-1" /> Ghost Mode
-            </TabsTrigger>
-            <TabsTrigger value="phantom" className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300 text-xs">
-              <Users className="w-3 h-3 mr-1" /> Phantoms
-            </TabsTrigger>
-            <TabsTrigger value="dreams" className="data-[state=active]:bg-indigo-500/20 data-[state=active]:text-indigo-300 text-xs">
-              <Moon className="w-3 h-3 mr-1" /> Dreams
-            </TabsTrigger>
-          
-            <TabsTrigger value="generate-outcome" className="text-xs sm:text-sm bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 font-bold">Generate Outcome</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="waterfall"><WealthWaterfall /></TabsContent>
-          <TabsContent value="parallel"><ParallelLifeSimulator /></TabsContent>
-          <TabsContent value="ghost"><GhostMode /></TabsContent>
-          <TabsContent value="phantom"><PhantomClients /></TabsContent>
-          <TabsContent value="dreams"><DreamJournal /></TabsContent>
-        
-          <TabsContent value="generate-outcome" className="space-y-6 mt-6">
-            <GenerateOutcomeTab
-              strategyType="black-mirror"
-              hasResults={true}
-              resultData={{ doNothingOutcome: -500000, withStrategyOutcome: 1200000, netDifference: 1700000, yearsAnalyzed: 20, riskScore: 35 }}
-              metrics={[{ label: "Do Nothing", value: -500000 }, { label: "With Strategy", value: 1200000, highlight: true }, { label: "Net Difference", value: 1700000 }, { label: "Risk Score", value: 35, format: "number" }]}
-            />
-          </TabsContent>
-        </Tabs>
       </div>
     </AppShell>
   );

@@ -37,8 +37,8 @@ describe("verified Grok delta merge", () => {
   const currentApp = readFileSync(resolve("client/src/App.tsx"), "utf8");
   const currentRoutes = routeSet(currentApp);
 
-  it("retains every Grok and unified-platform route in the 236-route application", () => {
-    expect(currentRoutes.size).toBe(236); // 232 + ultra-calculator, fact-finder, calculators + portal/leads
+  it("retains every Grok and unified-platform route in the 239-route application", () => {
+    expect(currentRoutes.size).toBe(239); // 232 + ultra-calculator, fact-finder, calculators + portal/leads + financial-assessment, ai-advisor, wealth-genome
     for (const route of [...addedRoutes, ...unifiedPlatformRoutes]) {
       expect(currentRoutes.has(route), route).toBe(true);
     }
@@ -53,7 +53,7 @@ describe("verified Grok delta merge", () => {
 
   it("makes every Grok route discoverable in the active left navigation", () => {
     const shell = readFileSync(resolve("client/src/components/AppShell.tsx"), "utf8");
-    expect(shell).toContain('label: "Client Journey"');
+    expect(shell).toContain('label: "New Client Welcome List"');
     for (const route of addedRoutes) expect(shell).toContain(`path: "${route}"`);
   });
 

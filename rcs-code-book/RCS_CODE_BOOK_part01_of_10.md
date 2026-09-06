@@ -105,6 +105,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `shared/branding.ts`
 - `shared/carrierRatings.ts`
 - `shared/carrierRecommendation.ts`
+- `shared/clientFactFinder.ts`
 - `shared/const.ts`
 - `shared/cryptoCycleEngine.ts`
 - `shared/estateTaxEngine.ts`
@@ -115,6 +116,8 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `shared/ibbotsonModel.ts`
 - `shared/indexCreditingData.ts`
 - `shared/iulCarriers.ts`
+- `shared/journeyCatalog.ts`
+- `shared/journeyEngine.ts`
 - `shared/leadTypes.ts`
 - `shared/lifetimeIncomeEngine.ts`
 - `shared/livingRiskProfile.ts`
@@ -142,6 +145,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/_core/heartbeat.ts`
 - `server/_core/imageGeneration.ts`
 - `server/_core/index.ts`
+- `server/_core/jsonColumn.ts`
 - `server/_core/llm.ts`
 - `server/_core/mailer.ts`
 - `server/_core/map.ts`
@@ -167,18 +171,20 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/emailPinService.ts`
 - `server/experienceDb.ts`
 - `server/experienceRouter.ts`
+- `server/factFinderDb.ts`
+- `server/factFinderRouter.ts`
 - `server/generate1035Pdf.ts`
 - `server/heygenService.ts`
 - `server/index.ts`
 - `server/leadStrategy.ts`
 - `server/leadsDb.ts`
 - `server/leadsRouter.ts`
+- `server/librarianRouter.ts`
 - `server/mortgageKillerPdf.ts`
 - `server/pdfExportService.ts`
 - `server/pdfReport.ts`
 - `server/planningCasesRouter.ts`
 - `server/portalAI.ts`
-- `server/rothPdfReport.ts`
 
 ---
 
@@ -230,6 +236,24 @@ admin do that, which is step 2.
 Every later `pnpm release` + merge to `master` updates the live page automatically.
 The full app (portal, lead inbox, nine-AI panel, database) still deploys per the
 sections below.
+
+## 🎙 What a new client gets in the portal (New Client Welcome List)
+
+1. **Financial Assessment** (`/portal/financial-assessment`) — the 15-section,
+   ~190-question fact finder with autosave and a printable Financial Analysis
+   Document. Nothing is advised until it is complete.
+2. **AI Financial Advisor** (`/portal/ai-advisor`) — the tape recorder. The whole
+   AI team answers as one Financial Librarian, by voice or text, only once the
+   assessment is complete. Press **JOURNEY** and it distils everything asked into
+   3–5 core questions, names the question the client hasn't asked, and lays out
+   10–15 pages of this site — calculators included — in order.
+3. **Wealth Genome Analysis**, then **The Arrival → The Brotherhood** (the seven
+   journey pages).
+
+Voice output uses `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` when set; otherwise
+the browser's own voice. With no AI keys the librarian still answers from the
+assessment alone (no invented figures). Builder notes for the next engineer are in
+`docs/grok-handoff/`.
 
 ## ⚙ One command to regenerate everything
 
@@ -2079,7 +2103,7 @@ step "3/7 database schema SQL";  bash scripts/export_schema_sql.sh
 # with no database. (`pnpm test` runs the whole suite, parts of which need a live DB.)
 step "4/7 tests";               npx vitest run server/concept16Homepage.test.ts server/livePageParity.test.ts server/databaseSchemaFile.test.ts \
                                   server/homepage-typography-scale.test.ts server/leadStrategy.test.ts \
-                                  server/leadsRouter.test.ts server/ownerLogin.test.ts server/mailer.test.ts server/ultraAI-providers.test.ts
+                                  server/leadsRouter.test.ts server/ownerLogin.test.ts server/mailer.test.ts server/journeyEngine.test.ts server/librarian.test.ts server/jsonColumn.test.ts server/ultraAI-providers.test.ts
 step "5/7 production build";    pnpm build && node scripts/check_production_bundle.mjs
 step "6/7 deploy bundle";       bash scripts/build_deploy_bundle.sh
 step "7/7 code book";           python3 scripts/build_code_book.py | tail -1
@@ -5725,6 +5749,46 @@ export const userPortalPreferences = mysqlTable("user_portal_preferences", {
 });
 export type UserPortalPreference = typeof userPortalPreferences.$inferSelect;
 export type InsertUserPortalPreference = typeof userPortalPreferences.$inferInsert;
+
+// ─── CLIENT FACT FINDER (Financial Assessment) + FINANCIAL LIBRARIAN JOURNEYS ─
+// One row per signed-in user: the comprehensive 15-section assessment as JSON
+// (shape: shared/clientFactFinder.ts), its completeness %, and when it was
+// first completed. The AI Financial Advisor refuses to answer until complete.
+export const clientFactFinders = mysqlTable("client_fact_finders", {
+  id:           int("id").autoincrement().primaryKey(),
+  userId:       int("userId").notNull().unique(),
+  data:         json("data").$type<ClientFactFinderJson>().notNull(),
+  completeness: int("completeness").notNull().default(0),
+  completedAt:  timestamp("completedAt"),
+  createdAt:    timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ClientFactFinderRow = typeof clientFactFinders.$inferSelect;
+export type InsertClientFactFinderRow = typeof clientFactFinders.$inferInsert;
+
+// The Financial Librarian's answer to a client's questions: the 3–5 distilled
+// core questions, the emergent question, and the 10–15 page journey.
+export const clientJourneys = mysqlTable("client_journeys", {
+  id:         int("id").autoincrement().primaryKey(),
+  userId:     int("userId").notNull(),
+  questions:  json("questions").$type<string[]>().notNull(),
+  journey:    json("journey").$type<ClientJourneyJson>().notNull(),
+  createdAt:  timestamp("createdAt").defaultNow().notNull(),
+});
+export type ClientJourneyRow = typeof clientJourneys.$inferSelect;
+
+// Mirrors of the shared types (schema.ts avoids importing client-shared modules).
+export interface ClientFactFinderJson {
+  version: 1;
+  sections: Record<string, Record<string, string | number | boolean | null>>;
+  lists: Record<string, Array<Record<string, string | number | boolean | null>>>;
+}
+export interface ClientJourneyJson {
+  coreQuestions: string[];
+  emergentQuestion: string;
+  steps: Array<{ id: string; path: string; title: string; why: string; kind: string }>;
+  generatedBy: string;
+}
 ```
 
 ## `shared/_core/errors.ts`
@@ -9803,6 +9867,479 @@ export function getTopRecommendations(
   topN = 3,
 ): CarrierScore[] {
   return recommendCarriers(carriers, profile).slice(0, topN);
+}
+```
+
+## `shared/clientFactFinder.ts`
+
+```ts
+// ============================================================
+// CLIENT FACT FINDER — the comprehensive financial assessment.
+//
+// Fifteen sections, ~190 fields: household, every income source, the full
+// tax picture, real estate and each mortgage, every debt, every investment
+// account, cash and liquidity, monthly cash flow, insurance and risk, the
+// practice/business, estate and legacy, asset-protection priorities,
+// retirement targets, goals and priorities, and a document checklist.
+//
+// This one schema drives the questionnaire UI, the stored record, the
+// completeness gate the AI Financial Advisor enforces, and the plain-text
+// context the advisor is given. Shared by client and server.
+// ============================================================
+
+export type FieldType = "money" | "number" | "percent" | "text" | "textarea" | "select" | "boolean" | "date";
+
+export type FieldSpec = {
+  key: string;
+  label: string;
+  type: FieldType;
+  required?: boolean;
+  options?: string[];
+  hint?: string;
+  /** Only ask when this other field in the same section has one of these values. */
+  showIf?: { key: string; equals: Array<string | boolean> };
+};
+
+export type ListSpec = {
+  key: string;
+  label: string;
+  addLabel: string;
+  fields: FieldSpec[];
+};
+
+export type SectionSpec = {
+  id: string;
+  title: string;
+  intro: string;
+  fields: FieldSpec[];
+  list?: ListSpec;
+};
+
+export type FieldValue = string | number | boolean | null;
+export type SectionData = Record<string, FieldValue>;
+export type ListRow = Record<string, FieldValue>;
+
+export type ClientFactFinder = {
+  version: 1;
+  sections: Record<string, SectionData>;
+  lists: Record<string, ListRow[]>;
+};
+
+export const FACT_FINDER_VERSION = 1 as const;
+
+const YES_NO = ["Yes", "No"];
+const PRIORITY = ["1 — Not important", "2", "3 — Important", "4", "5 — Essential"];
+
+export const FACT_FINDER_SECTIONS: SectionSpec[] = [
+  {
+    id: "household",
+    title: "Household",
+    intro: "Who the plan is for. Ages and family structure shape every tax, insurance, and legacy decision.",
+    fields: [
+      { key: "firstName", label: "First name", type: "text", required: true },
+      { key: "lastName", label: "Last name", type: "text", required: true },
+      { key: "dateOfBirth", label: "Date of birth", type: "date", required: true },
+      { key: "maritalStatus", label: "Marital status", type: "select", required: true, options: ["Single", "Married", "Domestic partnership", "Divorced", "Widowed"] },
+      { key: "spouseFirstName", label: "Spouse / partner first name", type: "text", showIf: { key: "maritalStatus", equals: ["Married", "Domestic partnership"] } },
+      { key: "spouseDateOfBirth", label: "Spouse / partner date of birth", type: "date", showIf: { key: "maritalStatus", equals: ["Married", "Domestic partnership"] } },
+      { key: "stateOfResidence", label: "State of residence", type: "text", required: true, hint: "Determines state tax, community-property rules, and asset-protection statutes." },
+      { key: "citizenship", label: "Citizenship / residency status", type: "select", options: ["U.S. citizen", "Permanent resident", "Visa holder", "Other"] },
+      { key: "dependents", label: "Number of dependents", type: "number", required: true },
+      { key: "dependentsDetail", label: "Dependents — names, ages, special needs", type: "textarea" },
+      { key: "occupation", label: "Occupation / role", type: "text", required: true },
+      { key: "specialty", label: "Medical specialty (if applicable)", type: "text" },
+      { key: "employerOrPractice", label: "Employer or practice name", type: "text" },
+      { key: "phone", label: "Best phone", type: "text", required: true },
+      { key: "email", label: "Email", type: "text", required: true },
+      { key: "preferredContact", label: "Preferred way to reach you", type: "select", options: ["Phone", "Text", "Email", "Video call"] },
+    ],
+  },
+  {
+    id: "income",
+    title: "Income",
+    intro: "Every dollar coming in, by source, so nothing is planned around the wrong number.",
+    fields: [
+      { key: "employmentType", label: "How you are paid", type: "select", required: true, options: ["W-2 employee", "1099 / independent contractor", "Practice owner / partner", "Mixed W-2 and 1099", "Other"] },
+      { key: "w2Income", label: "W-2 salary (annual)", type: "money", required: true },
+      { key: "bonusIncome", label: "Bonus / incentive comp (annual)", type: "money" },
+      { key: "contractorIncome", label: "1099 / self-employment income (annual)", type: "money" },
+      { key: "practiceDistributions", label: "K-1 / practice distributions (annual)", type: "money" },
+      { key: "rsuOrEquityComp", label: "RSU / equity compensation (annual value)", type: "money" },
+      { key: "spouseEmploymentType", label: "Spouse / partner — how paid", type: "select", options: ["Not employed", "W-2 employee", "1099 / self-employed", "Business owner", "Retired"] },
+      { key: "spouseIncome", label: "Spouse / partner income (annual)", type: "money", required: true, hint: "Enter 0 if none." },
+      { key: "rentalIncome", label: "Net rental income (annual)", type: "money" },
+      { key: "investmentIncome", label: "Dividends, interest, capital gains distributions (annual)", type: "money" },
+      { key: "otherIncome", label: "Other income (annual)", type: "money" },
+      { key: "otherIncomeDetail", label: "Other income — describe", type: "text" },
+      { key: "incomeTrajectory", label: "Expected income change in the next 3–5 years", type: "select", required: true, options: ["Rising significantly", "Rising modestly", "Flat", "Declining", "Uncertain"] },
+      { key: "incomeTrajectoryDetail", label: "Why? (partnership track, new practice, cutting back…)", type: "textarea" },
+    ],
+  },
+  {
+    id: "taxes",
+    title: "Taxes",
+    intro: "The tax picture is the largest lever in the plan. Last year's return is the best source.",
+    fields: [
+      { key: "filingStatus", label: "Filing status", type: "select", required: true, options: ["Single", "Married filing jointly", "Married filing separately", "Head of household", "Qualifying surviving spouse"] },
+      { key: "adjustedGrossIncome", label: "Adjusted gross income (last return)", type: "money", required: true },
+      { key: "federalTaxPaid", label: "Federal income tax paid (last return)", type: "money", required: true },
+      { key: "stateTaxPaid", label: "State income tax paid (last return)", type: "money" },
+      { key: "marginalBracket", label: "Marginal federal bracket", type: "select", options: ["10%", "12%", "22%", "24%", "32%", "35%", "37%", "Not sure"] },
+      { key: "deductionMethod", label: "Standard or itemized deductions", type: "select", options: ["Standard", "Itemized", "Not sure"] },
+      { key: "mortgageInterestDeduction", label: "Mortgage interest deducted (annual)", type: "money" },
+      { key: "charitableGiving", label: "Charitable giving (annual)", type: "money" },
+      { key: "quarterlyEstimates", label: "Quarterly estimated payments (annual total)", type: "money" },
+      { key: "capitalGainsRealized", label: "Capital gains realized last year", type: "money" },
+      { key: "capitalLossCarryforward", label: "Capital-loss carryforward", type: "money" },
+      { key: "retirementContributionsPretax", label: "Pre-tax retirement contributions (annual)", type: "money" },
+      { key: "niitExposure", label: "Subject to the 3.8% net investment income tax?", type: "select", options: ["Yes", "No", "Not sure"] },
+      { key: "amtExposure", label: "Paid alternative minimum tax?", type: "select", options: ["Yes", "No", "Not sure"] },
+      { key: "taxPreparer", label: "Who prepares your return", type: "select", options: ["CPA", "Enrolled agent", "Software / self", "Other"] },
+      { key: "priorReturnsAvailable", label: "Can you share the last two returns?", type: "boolean", required: true },
+      { key: "taxPain", label: "Your biggest tax frustration", type: "textarea", required: true },
+    ],
+  },
+  {
+    id: "realEstate",
+    title: "Real Estate & Mortgages",
+    intro: "Home equity and mortgage structure are central to the war-chest strategy.",
+    fields: [
+      { key: "ownsPrimaryHome", label: "Own your primary home?", type: "boolean", required: true },
+      { key: "primaryHomeValue", label: "Primary home — current value", type: "money", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "primaryMortgageBalance", label: "Primary mortgage — balance", type: "money", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "primaryMortgageRate", label: "Primary mortgage — interest rate", type: "percent", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "primaryMortgageTermYears", label: "Original term (years)", type: "number", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "primaryMortgageYearsRemaining", label: "Years remaining", type: "number", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "primaryMonthlyPayment", label: "Monthly payment (principal + interest)", type: "money", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "primaryInterestOnly", label: "Interest-only mortgage?", type: "boolean", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "primaryInterestOnlyMonthly", label: "Interest-only monthly payment", type: "money", showIf: { key: "primaryInterestOnly", equals: [true] } },
+      { key: "homeEquity", label: "Home equity (value minus all liens)", type: "money", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "helocLimit", label: "HELOC — credit limit", type: "money", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "helocBalance", label: "HELOC — balance", type: "money", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "helocRate", label: "HELOC — rate", type: "percent", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "propertyTaxAnnual", label: "Property tax (annual)", type: "money", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "rentMonthly", label: "Rent (monthly)", type: "money", showIf: { key: "ownsPrimaryHome", equals: [false] } },
+      { key: "housingPlans", label: "Plans to move, refinance, buy, or add a property", type: "textarea" },
+    ],
+    list: {
+      key: "properties",
+      label: "Additional properties (rental, vacation, land, office)",
+      addLabel: "Add a property",
+      fields: [
+        { key: "type", label: "Type", type: "select", options: ["Rental", "Vacation", "Land", "Practice / office", "Other"] },
+        { key: "value", label: "Value", type: "money" },
+        { key: "mortgageBalance", label: "Mortgage balance", type: "money" },
+        { key: "rate", label: "Rate", type: "percent" },
+        { key: "netRentMonthly", label: "Net rent (monthly)", type: "money" },
+      ],
+    },
+  },
+  {
+    id: "debts",
+    title: "Debts",
+    intro: "Every liability, with its rate, so payoff can be sequenced deliberately.",
+    fields: [
+      { key: "studentLoanBalance", label: "Student loans — balance", type: "money", required: true, hint: "Enter 0 if none." },
+      { key: "studentLoanRate", label: "Student loans — weighted rate", type: "percent" },
+      { key: "studentLoanPayment", label: "Student loans — monthly payment", type: "money" },
+      { key: "studentLoanType", label: "Student loans — type", type: "select", options: ["Federal", "Private", "Mixed", "None"] },
+      { key: "studentLoanForgiveness", label: "Pursuing PSLF or another forgiveness track?", type: "select", options: ["Yes", "No", "Not sure"] },
+      { key: "practiceLoanBalance", label: "Practice / business loans — balance", type: "money" },
+      { key: "practiceLoanRate", label: "Practice / business loans — rate", type: "percent" },
+      { key: "autoLoans", label: "Auto loans / leases — balance", type: "money" },
+      { key: "creditCardBalance", label: "Credit cards — balance carried", type: "money" },
+      { key: "personalLoans", label: "Personal / family loans", type: "money" },
+      { key: "otherDebt", label: "Other debt", type: "money" },
+      { key: "otherDebtDetail", label: "Other debt — describe", type: "text" },
+      { key: "debtStress", label: "Which debt bothers you most, and why?", type: "textarea" },
+    ],
+  },
+  {
+    id: "investments",
+    title: "Investments & Retirement Accounts",
+    intro: "Every account by tax character — taxable, tax-deferred, tax-free — plus how it is invested.",
+    fields: [
+      { key: "taxableBrokerage", label: "Taxable brokerage — total", type: "money", required: true, hint: "Enter 0 if none." },
+      { key: "taxableCostBasis", label: "Taxable brokerage — cost basis (if known)", type: "money" },
+      { key: "employerPlanBalance", label: "401(k) / 403(b) / TSP — your balance", type: "money", required: true },
+      { key: "employerPlanContributionPct", label: "Your contribution rate", type: "percent" },
+      { key: "employerMatchPct", label: "Employer match", type: "percent" },
+      { key: "spouseEmployerPlanBalance", label: "Spouse / partner employer plan balance", type: "money" },
+      { key: "traditionalIra", label: "Traditional IRA / SEP / SIMPLE", type: "money" },
+      { key: "rothIra", label: "Roth IRA", type: "money", required: true },
+      { key: "roth401k", label: "Roth 401(k)", type: "money" },
+      { key: "backdoorRoth", label: "Doing backdoor / mega-backdoor Roth?", type: "select", options: ["Yes", "No", "Not sure"] },
+      { key: "cashBalancePlan", label: "Cash-balance / defined-benefit plan", type: "money" },
+      { key: "hsaBalance", label: "HSA balance", type: "money" },
+      { key: "plan529", label: "529 / education accounts", type: "money" },
+      { key: "annuities", label: "Annuities — total value", type: "money" },
+      { key: "annuityDetail", label: "Annuities — type, carrier, guarantees", type: "text" },
+      { key: "cryptoAlternatives", label: "Crypto / alternatives", type: "money" },
+      { key: "privateInvestments", label: "Private investments (real estate syndications, private equity, oil & gas)", type: "money" },
+      { key: "concentratedPosition", label: "Any single holding over 10% of investable assets?", type: "boolean", required: true },
+      { key: "concentratedPositionDetail", label: "Concentrated holding — what and how much", type: "text", showIf: { key: "concentratedPosition", equals: [true] } },
+      { key: "allocationStocks", label: "Approximate allocation — stocks", type: "percent" },
+      { key: "allocationBonds", label: "Approximate allocation — bonds", type: "percent" },
+      { key: "allocationCash", label: "Approximate allocation — cash", type: "percent" },
+      { key: "riskTolerance", label: "Risk tolerance", type: "select", required: true, options: ["Conservative", "Moderately conservative", "Moderate", "Moderately aggressive", "Aggressive"] },
+      { key: "worstYearReaction", label: "If your portfolio fell 30% in a year, you would…", type: "select", required: true, options: ["Sell to stop the losses", "Hold and wait", "Buy more", "Not sure"] },
+      { key: "currentAdvisor", label: "Current advisor / custodian", type: "text" },
+      { key: "advisoryFees", label: "Advisory fees paid (annual, if known)", type: "money" },
+    ],
+  },
+  {
+    id: "cash",
+    title: "Cash & Liquidity",
+    intro: "What is available on demand — the difference between a plan and a scramble.",
+    fields: [
+      { key: "checking", label: "Checking", type: "money", required: true },
+      { key: "savings", label: "Savings / high-yield", type: "money", required: true },
+      { key: "moneyMarketCds", label: "Money market / CDs / T-bills", type: "money" },
+      { key: "emergencyFundMonths", label: "Months of expenses covered by cash", type: "number", required: true },
+      { key: "liquidityNeeds12mo", label: "Large cash needs in the next 12 months", type: "money" },
+      { key: "liquidityNeedsDetail", label: "What for? (tax bill, tuition, buy-in, renovation…)", type: "text" },
+      { key: "lineOfCreditAvailable", label: "Unused lines of credit available", type: "money" },
+    ],
+  },
+  {
+    id: "cashFlow",
+    title: "Cash Flow",
+    intro: "What comes in and goes out each month. Savings rate drives everything downstream.",
+    fields: [
+      { key: "monthlyTakeHome", label: "Household take-home pay (monthly)", type: "money", required: true },
+      { key: "monthlyFixedExpenses", label: "Fixed expenses — housing, debt, insurance, childcare (monthly)", type: "money", required: true },
+      { key: "monthlyDiscretionary", label: "Discretionary spending (monthly)", type: "money", required: true },
+      { key: "monthlySavings", label: "Saved / invested (monthly)", type: "money", required: true },
+      { key: "childcareEducation", label: "Childcare + private school (annual)", type: "money" },
+      { key: "supportForFamily", label: "Support for parents or other family (annual)", type: "money" },
+      { key: "expenseChange5yr", label: "How expenses change in the next 5 years", type: "textarea" },
+      { key: "retirementLifestyle", label: "Retirement lifestyle in one sentence", type: "text", required: true },
+    ],
+  },
+  {
+    id: "insurance",
+    title: "Insurance & Risk",
+    intro: "Coverage in force today — life, disability, liability, malpractice, and health.",
+    fields: [
+      { key: "termLifeDeathBenefit", label: "Term life — death benefit", type: "money", required: true, hint: "Enter 0 if none." },
+      { key: "termLifeYearsRemaining", label: "Term life — years remaining", type: "number" },
+      { key: "permanentLifeDeathBenefit", label: "Permanent life (whole / IUL / VUL) — death benefit", type: "money" },
+      { key: "permanentLifeCashValue", label: "Permanent life — cash value", type: "money" },
+      { key: "permanentLifeType", label: "Permanent life — type", type: "select", options: ["None", "Whole life", "Indexed universal life", "Variable universal life", "Guaranteed universal life", "Not sure"] },
+      { key: "lifePremiumAnnual", label: "Life premiums (annual, all policies)", type: "money" },
+      { key: "spouseLifeDeathBenefit", label: "Spouse / partner life — death benefit", type: "money" },
+      { key: "disabilityMonthlyBenefit", label: "Disability — monthly benefit", type: "money", required: true, hint: "Enter 0 if none." },
+      { key: "disabilityOwnOccupation", label: "Disability — true own-occupation definition?", type: "select", options: ["Yes", "No", "Not sure"] },
+      { key: "disabilitySource", label: "Disability — individual, group, or both", type: "select", options: ["Individual", "Group / employer", "Both", "None"] },
+      { key: "malpracticeLimits", label: "Malpractice limits (per claim / aggregate)", type: "text", required: true },
+      { key: "malpracticeType", label: "Malpractice — occurrence or claims-made", type: "select", options: ["Occurrence", "Claims-made", "Not sure", "Not applicable"] },
+      { key: "tailCoverage", label: "Tail coverage arranged?", type: "select", options: ["Yes", "No", "Not sure", "Not applicable"] },
+      { key: "umbrellaLimit", label: "Umbrella liability limit", type: "money" },
+      { key: "ltcCoverage", label: "Long-term-care coverage", type: "select", options: ["None", "Traditional LTC", "Hybrid life/LTC", "Not sure"] },
+      { key: "healthPlanType", label: "Health plan type", type: "select", options: ["Employer PPO/HMO", "High-deductible (HSA-eligible)", "Marketplace", "Other"] },
+      { key: "coverageGapsConcern", label: "Any coverage you suspect is missing or inadequate?", type: "textarea" },
+    ],
+  },
+  {
+    id: "practice",
+    title: "Practice & Business",
+    intro: "For owners and partners: how the practice is structured and where it is headed.",
+    fields: [
+      { key: "ownsPractice", label: "Own or partner in a practice / business?", type: "boolean", required: true },
+      { key: "entityType", label: "Entity type", type: "select", options: ["Sole proprietor", "LLC", "S-corp", "C-corp", "Partnership / group", "Professional corporation"], showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "ownershipPct", label: "Your ownership", type: "percent", showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "annualRevenue", label: "Annual revenue", type: "money", showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "netIncome", label: "Net income to you", type: "money", showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "employeeCount", label: "Employees", type: "number", showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "practiceRetirementPlan", label: "Practice retirement plan", type: "select", options: ["None", "401(k)", "401(k) + profit sharing", "Cash-balance / defined benefit", "SEP / SIMPLE", "Not sure"], showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "buySellAgreement", label: "Buy-sell agreement in place (and funded)?", type: "select", options: ["Yes, funded", "Yes, unfunded", "No", "Not sure"], showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "practiceValuation", label: "Estimated practice value", type: "money", showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "practiceDebt", label: "Practice debt", type: "money", showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "exitTimeline", label: "Sale / succession / exit timeline", type: "select", options: ["Under 3 years", "3–7 years", "7–15 years", "No plans", "Not sure"], showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "successionPlan", label: "Succession plan — describe", type: "textarea", showIf: { key: "ownsPractice", equals: [true] } },
+      { key: "partnershipTrack", label: "On a partnership / buy-in track?", type: "select", options: ["Yes", "No", "Not applicable"], showIf: { key: "ownsPractice", equals: [false] } },
+    ],
+  },
+  {
+    id: "estate",
+    title: "Estate & Legacy",
+    intro: "What is in place today, and what you want to happen with everything you build.",
+    fields: [
+      { key: "hasWill", label: "Current will?", type: "boolean", required: true },
+      { key: "hasRevocableTrust", label: "Revocable living trust?", type: "boolean", required: true },
+      { key: "hasIrrevocableTrust", label: "Irrevocable trust (ILIT, asset-protection, etc.)?", type: "boolean" },
+      { key: "trustDetail", label: "Trusts — describe", type: "text" },
+      { key: "poaFinancial", label: "Durable financial power of attorney?", type: "boolean" },
+      { key: "healthcareDirective", label: "Healthcare directive / medical POA?", type: "boolean" },
+      { key: "beneficiariesReviewed", label: "Beneficiary designations reviewed in the last 2 years?", type: "select", options: ["Yes", "No", "Not sure"] },
+      { key: "guardianNamed", label: "Guardian named for minor children?", type: "select", options: ["Yes", "No", "Not applicable"] },
+      { key: "charitableIntent", label: "Charitable / philanthropic intent", type: "select", options: ["None", "Some", "Significant", "Central to my plan"] },
+      { key: "plannedGifting", label: "Planned gifting to family (annual)", type: "money" },
+      { key: "inheritanceExpected", label: "Inheritance you expect to receive", type: "money" },
+      { key: "heirs", label: "Who should inherit, and how (outright, in trust, staged)", type: "textarea", required: true },
+      { key: "legacyGoals", label: "What you want your money to do after you", type: "textarea", required: true },
+    ],
+  },
+  {
+    id: "protection",
+    title: "Asset Protection Priorities",
+    intro: "How much the plan should be built to survive divorce, lawsuits, and creditors.",
+    fields: [
+      { key: "divorceProtectionPriority", label: "Divorce protection", type: "select", required: true, options: PRIORITY },
+      { key: "creditorProtectionPriority", label: "Creditor / lawsuit protection", type: "select", required: true, options: PRIORITY },
+      { key: "taxFreeIncomePriority", label: "Tax-free future income", type: "select", required: true, options: PRIORITY },
+      { key: "prenup", label: "Prenuptial / postnuptial agreement?", type: "select", options: ["Yes", "No", "Not applicable"] },
+      { key: "litigationExposure", label: "Litigation exposure you worry about", type: "textarea" },
+      { key: "existingStructures", label: "Asset-protection structures already in place", type: "textarea" },
+    ],
+  },
+  {
+    id: "retirement",
+    title: "Retirement",
+    intro: "When, on how much, and from where.",
+    fields: [
+      { key: "targetRetirementAge", label: "Target retirement age", type: "number", required: true },
+      { key: "spouseTargetRetirementAge", label: "Spouse / partner target retirement age", type: "number" },
+      { key: "desiredRetirementIncomeMonthly", label: "Desired retirement income (monthly, today's dollars)", type: "money", required: true },
+      { key: "socialSecuritySelf", label: "Social Security estimate — you (monthly at full retirement age)", type: "money" },
+      { key: "socialSecuritySpouse", label: "Social Security estimate — spouse (monthly)", type: "money" },
+      { key: "pensionIncome", label: "Pension income (monthly)", type: "money" },
+      { key: "longevityAssumption", label: "Plan to age", type: "number", hint: "Many physician plans run to 95." },
+      { key: "workOptional", label: "Work-optional or part-time phase planned?", type: "select", options: ["Yes", "No", "Not sure"] },
+      { key: "relocationPlans", label: "Relocation in retirement (state / country)", type: "text" },
+      { key: "retirementConcern", label: "Biggest retirement worry", type: "textarea", required: true },
+    ],
+  },
+  {
+    id: "goals",
+    title: "Goals & Priorities",
+    intro: "The questions that tell us what 'made it' means to you.",
+    fields: [
+      { key: "topGoals", label: "Your top three financial goals, in order", type: "textarea", required: true },
+      { key: "fiveYearGoals", label: "5-year goals", type: "textarea" },
+      { key: "tenYearGoals", label: "10-year goals", type: "textarea" },
+      { key: "biggestConcern", label: "What worries you most about money?", type: "textarea", required: true },
+      { key: "advisorFailures", label: "What have past advisors failed to do for you?", type: "textarea" },
+      { key: "moreMoneyScenario", label: "With 2–3× the money and three more years, what would you do differently?", type: "textarea" },
+      { key: "healthFamilyConsiderations", label: "Health or family considerations the plan must survive", type: "textarea" },
+      { key: "decisionMakers", label: "Who else is part of financial decisions?", type: "text" },
+      { key: "timelineToAct", label: "How soon do you want to act?", type: "select", required: true, options: ["Immediately", "Within 3 months", "This year", "Exploring"] },
+    ],
+  },
+  {
+    id: "documents",
+    title: "Documents",
+    intro: "What you can share so the analysis rests on facts, not estimates.",
+    fields: [
+      { key: "taxReturns", label: "Last two tax returns", type: "select", required: true, options: ["Will provide", "Provided", "Not available"] },
+      { key: "payStubs", label: "Recent pay stubs / K-1s", type: "select", options: ["Will provide", "Provided", "Not available"] },
+      { key: "accountStatements", label: "Investment and retirement statements", type: "select", options: ["Will provide", "Provided", "Not available"] },
+      { key: "mortgageStatements", label: "Mortgage / HELOC statements", type: "select", options: ["Will provide", "Provided", "Not available", "Not applicable"] },
+      { key: "insurancePolicies", label: "Insurance policies (life, disability, malpractice)", type: "select", options: ["Will provide", "Provided", "Not available"] },
+      { key: "estateDocuments", label: "Will / trust documents", type: "select", options: ["Will provide", "Provided", "Not available", "Not applicable"] },
+      { key: "notes", label: "Anything else we should know", type: "textarea" },
+    ],
+  },
+];
+
+// ─── helpers ────────────────────────────────────────────────────────────────
+
+export function emptyFactFinder(): ClientFactFinder {
+  const sections: Record<string, SectionData> = {};
+  const lists: Record<string, ListRow[]> = {};
+  for (const s of FACT_FINDER_SECTIONS) {
+    sections[s.id] = {};
+    if (s.list) lists[s.list.key] = [];
+  }
+  return { version: FACT_FINDER_VERSION, sections, lists };
+}
+
+export function isBlank(v: FieldValue | undefined): boolean {
+  return v === undefined || v === null || (typeof v === "string" && v.trim() === "");
+}
+
+/** Whether a field is currently asked, given its section's answers. */
+export function fieldVisible(field: FieldSpec, data: SectionData): boolean {
+  if (!field.showIf) return true;
+  const v = data[field.showIf.key];
+  return field.showIf.equals.some((e) => e === v);
+}
+
+export type Completeness = {
+  percent: number;
+  answered: number;
+  required: number;
+  complete: boolean;
+  missing: Array<{ section: string; sectionId: string; field: string; key: string }>;
+  sectionPercent: Record<string, number>;
+};
+
+/**
+ * Completeness over REQUIRED, currently-visible fields. `complete` is what the
+ * AI Financial Advisor checks before it will answer a planning question.
+ */
+export function factFinderCompleteness(ff: ClientFactFinder | null | undefined): Completeness {
+  const missing: Completeness["missing"] = [];
+  const sectionPercent: Record<string, number> = {};
+  let answered = 0;
+  let required = 0;
+  for (const s of FACT_FINDER_SECTIONS) {
+    const data = ff?.sections?.[s.id] ?? {};
+    let sReq = 0;
+    let sAns = 0;
+    for (const f of s.fields) {
+      if (!f.required || !fieldVisible(f, data)) continue;
+      sReq += 1;
+      required += 1;
+      if (!isBlank(data[f.key])) { sAns += 1; answered += 1; }
+      else missing.push({ section: s.title, sectionId: s.id, field: f.label, key: f.key });
+    }
+    sectionPercent[s.id] = sReq === 0 ? 100 : Math.round((sAns / sReq) * 100);
+  }
+  const percent = required === 0 ? 100 : Math.round((answered / required) * 100);
+  return { percent, answered, required, complete: missing.length === 0 && required > 0, missing, sectionPercent };
+}
+
+function fmt(field: FieldSpec, v: FieldValue): string {
+  if (isBlank(v)) return "—";
+  if (typeof v === "boolean") return v ? "Yes" : "No";
+  if (field.type === "money" && typeof v === "number") return v.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  if (field.type === "percent" && typeof v === "number") return `${v}%`;
+  return String(v);
+}
+
+/**
+ * Plain-text rendering of every answered field, section by section — the
+ * context handed to the AI Financial Advisor, and the body of the printable
+ * Financial Analysis Document.
+ */
+export function factFinderSummary(ff: ClientFactFinder | null | undefined, opts: { includeBlank?: boolean } = {}): string {
+  if (!ff) return "";
+  const out: string[] = [];
+  for (const s of FACT_FINDER_SECTIONS) {
+    const data = ff.sections?.[s.id] ?? {};
+    const lines: string[] = [];
+    for (const f of s.fields) {
+      if (!fieldVisible(f, data)) continue;
+      const v = data[f.key];
+      if (isBlank(v) && !opts.includeBlank) continue;
+      lines.push(`- ${f.label}: ${fmt(f, v ?? null)}`);
+    }
+    if (s.list) {
+      const rows = ff.lists?.[s.list.key] ?? [];
+      rows.forEach((row, i) => {
+        const parts = s.list!.fields.filter((f) => !isBlank(row[f.key])).map((f) => `${f.label} ${fmt(f, row[f.key] ?? null)}`);
+        if (parts.length) lines.push(`- ${s.list!.label} #${i + 1}: ${parts.join(", ")}`);
+      });
+    }
+    if (lines.length) out.push(`## ${s.title}\n${lines.join("\n")}`);
+  }
+  return out.join("\n\n");
+}
+
+/** Total questions asked when every conditional branch is open. */
+export function factFinderFieldCount(): number {
+  return FACT_FINDER_SECTIONS.reduce((n, s) => n + s.fields.length + (s.list?.fields.length ?? 0), 0);
 }
 ```
 
@@ -15030,6 +15567,499 @@ export const ILLUSTRATION_TOOLS = [
     description: "Industry-standard life insurance illustration software used by many carriers and agencies.",
   },
 ];
+```
+
+## `shared/journeyCatalog.ts`
+
+```ts
+// ============================================================
+// JOURNEY CATALOG — the pages the Financial Librarian can send a client to.
+//
+// Every entry is a real route in the app. `tags` are the topics a client's
+// questions and fact-finder signals are matched against; `kind` tells the
+// librarian whether a page teaches, calculates, compares, or protects, so a
+// journey can be sequenced (understand → measure → compare → decide → protect).
+// `builds` is a soft ordering weight: lower numbers belong earlier in a journey.
+// ============================================================
+
+export type PageKind = "orientation" | "education" | "calculator" | "comparison" | "protection" | "legacy" | "review";
+
+export type JourneyPage = {
+  id: string;
+  path: string;
+  title: string;
+  purpose: string;
+  kind: PageKind;
+  tags: string[];
+  builds: number; // 0 = start of any journey … 9 = closing/review
+};
+
+export const JOURNEY_CATALOG: JourneyPage[] = [
+  // ── orientation ──────────────────────────────────────────────────────────
+  { id: "assessment", path: "/portal/financial-assessment", title: "Financial Assessment", purpose: "Your complete financial picture — the foundation every answer rests on.", kind: "orientation", tags: ["start", "assessment", "everything"], builds: 0 },
+  { id: "arrival", path: "/portal/the-arrival", title: "The Arrival", purpose: "Orientation and calibration: what the plan will do and in what order.", kind: "orientation", tags: ["start", "orientation", "goals"], builds: 0 },
+  { id: "mirror", path: "/portal/the-mirror", title: "The Mirror", purpose: "Your personal dashboard — where you stand today, in one view.", kind: "orientation", tags: ["start", "dashboard", "net-worth", "goals"], builds: 0 },
+  { id: "wealth-genome", path: "/portal/wealth-genome", title: "Wealth Genome Analysis", purpose: "Eight-dimension financial health score: where you are strong and where the plan must work hardest.", kind: "orientation", tags: ["start", "score", "risk", "tax", "insurance", "estate", "debt", "retirement"], builds: 1 },
+  { id: "russell-number", path: "/portal/russell-number", title: "Russell Number", purpose: "A single number that tracks whether the coordinated plan is on course.", kind: "review", tags: ["score", "progress", "review"], builds: 8 },
+
+  // ── taxes ────────────────────────────────────────────────────────────────
+  { id: "tax-waterfall", path: "/portal/tax-waterfall", title: "Tax Waterfall", purpose: "How income flows through brackets today, and what changes the order of the buckets.", kind: "education", tags: ["tax", "income", "brackets", "waterfall"], builds: 2 },
+  { id: "roth-conversion", path: "/portal/roth-conversion", title: "Roth Strategies", purpose: "Six ways to convert tax-deferred money into tax-free money, and when each fits.", kind: "calculator", tags: ["tax", "roth", "conversion", "retirement", "tax-free"], builds: 4 },
+  { id: "tax-advantaged-growth", path: "/portal/tax-advantaged-growth", title: "Tax-Advantaged Growth", purpose: "Taxable vs tax-deferred vs tax-free growth over decades, side by side.", kind: "comparison", tags: ["tax", "investments", "growth", "tax-free"], builds: 3 },
+  { id: "hot-income", path: "/portal/hot-income", title: "Hot Income (Oil & Gas)", purpose: "How intangible drilling deductions can offset high W-2 income — and the risks that come with them.", kind: "education", tags: ["tax", "deduction", "oil-gas", "high-income"], builds: 5 },
+  { id: "str-strategy", path: "/portal/str-strategy", title: "STR Tax Strategy", purpose: "Short-term-rental real estate as an active-income tax lever.", kind: "education", tags: ["tax", "real-estate", "deduction"], builds: 5 },
+  { id: "tax-combos", path: "/portal/tax-combos", title: "100 Tax-Free Combos", purpose: "How the individual strategies combine — the coordinated plan is the product.", kind: "education", tags: ["tax", "tax-free", "combination", "strategy"], builds: 6 },
+
+  // ── debt, mortgage, home equity ──────────────────────────────────────────
+  { id: "mortgage-killer", path: "/portal/mortgage-killer", title: "Mortgage Killer", purpose: "Accelerated payoff: how the same payments retire the mortgage years sooner and what that interest is worth.", kind: "calculator", tags: ["mortgage", "debt", "interest", "home", "payoff"], builds: 3 },
+  { id: "house-recycling", path: "/portal/house-recycling", title: "House Recycling", purpose: "Cycling home equity into a liquid, tax-advantaged war chest and back again.", kind: "calculator", tags: ["mortgage", "equity", "heloc", "war-chest", "iul", "liquidity"], builds: 4 },
+  { id: "reverse-heloc", path: "/portal/reverse-heloc", title: "Reverse HELOC", purpose: "Using a credit line deliberately instead of accidentally.", kind: "education", tags: ["heloc", "equity", "liquidity", "debt"], builds: 4 },
+  { id: "household-wealth", path: "/portal/household-wealth", title: "Household Wealth", purpose: "The whole household balance sheet in motion — income, debt, equity, and savings together.", kind: "calculator", tags: ["net-worth", "debt", "student-loans", "cash-flow", "household"], builds: 2 },
+  { id: "real-estate-mogul", path: "/portal/real-estate-mogul", title: "Real Estate Mogul", purpose: "Rental and investment property modelled with leverage, tax, and cash flow.", kind: "calculator", tags: ["real-estate", "rental", "leverage"], builds: 5 },
+
+  // ── retirement and income ────────────────────────────────────────────────
+  { id: "retirement-drivers", path: "/portal/ecological-drivers", title: "Retirement Drivers", purpose: "The handful of variables that decide retirement outcomes — and which you control.", kind: "education", tags: ["retirement", "variables", "control", "volatility"], builds: 2 },
+  { id: "income-gap", path: "/portal/income-gap", title: "Income Gap Analyzer", purpose: "Desired retirement income versus what today's assets will produce.", kind: "calculator", tags: ["retirement", "income", "gap", "goals"], builds: 3 },
+  { id: "withdrawal-sequencing", path: "/portal/withdrawal-sequencing", title: "Withdrawal Sequencing", purpose: "Which bucket to draw first — the order changes lifetime taxes.", kind: "calculator", tags: ["retirement", "tax", "withdrawal", "sequence"], builds: 5 },
+  { id: "lifetime-income", path: "/portal/lifetime-income", title: "Lifetime Income", purpose: "Income that cannot be outlived, and what it costs to guarantee it.", kind: "education", tags: ["retirement", "income", "guarantee", "annuity", "longevity"], builds: 5 },
+  { id: "income-timeline", path: "/portal/income-timeline", title: "Income Timeline", purpose: "Every income source laid out year by year to retirement and beyond.", kind: "calculator", tags: ["retirement", "income", "timeline", "social-security"], builds: 4 },
+  { id: "social-security", path: "/portal/social-security", title: "Social Security", purpose: "Claiming age, spousal strategy, and taxation of benefits.", kind: "calculator", tags: ["retirement", "social-security", "claiming"], builds: 4 },
+
+  // ── volatility, risk, and protection ─────────────────────────────────────
+  { id: "risk-tolerance", path: "/portal/risk-tolerance", title: "Risk Tolerance", purpose: "How much volatility you can actually live with — measured, not guessed.", kind: "education", tags: ["risk", "volatility", "behavior", "investments"], builds: 2 },
+  { id: "market-stress-test", path: "/portal/market-stress-test", title: "Market Stress Test", purpose: "Your plan run through the worst historical markets: what breaks and what holds.", kind: "calculator", tags: ["risk", "volatility", "stress", "investments", "sequence-risk"], builds: 4 },
+  { id: "ibbotson-charts", path: "/portal/ibbotson-charts", title: "Ibbotson Charts", purpose: "A century of returns by asset class — the evidence behind every projection.", kind: "education", tags: ["investments", "evidence", "history", "volatility"], builds: 3 },
+  { id: "iul-vs-roth", path: "/portal/iul-vs-roth", title: "IUL vs Roth", purpose: "Two tax-free vehicles compared honestly: costs, floors, caps, access, and legacy.", kind: "comparison", tags: ["iul", "roth", "tax-free", "insurance", "comparison"], builds: 5 },
+  { id: "iul-historical", path: "/portal/iul-historical", title: "IUL Historical", purpose: "How indexed life would have credited through real market history — floors and caps in action.", kind: "education", tags: ["iul", "volatility", "floor", "insurance"], builds: 4 },
+  { id: "policy-loans", path: "/portal/policy-loans", title: "Policy Loans", purpose: "Tax-free access to cash value — how loans, wash loans, and repayment really work.", kind: "education", tags: ["iul", "liquidity", "war-chest", "tax-free", "loans"], builds: 6 },
+  { id: "ai-policy-review", path: "/portal/ai-policy-review", title: "Policy Gap Analysis", purpose: "Existing life, disability, and liability coverage checked for gaps.", kind: "review", tags: ["insurance", "disability", "malpractice", "gaps", "protection"], builds: 6 },
+  { id: "divorce-calculator", path: "/portal/divorce-calculator", title: "Divorce Devastation Engine", purpose: "What a divorce does to an unprotected plan — and what a protected one keeps.", kind: "protection", tags: ["divorce", "protection", "asset-protection"], builds: 6 },
+  { id: "trusts", path: "/portal/trusts", title: "Trust Structures", purpose: "Revocable, irrevocable, ILIT, asset-protection trusts: which does what.", kind: "protection", tags: ["trust", "estate", "asset-protection", "creditor", "legacy"], builds: 7 },
+
+  // ── strategy, comparison, decision ───────────────────────────────────────
+  { id: "strategy-lab", path: "/portal/strategy", title: "Strategy Lab", purpose: "Your numbers inside the coordinated strategy engine.", kind: "calculator", tags: ["strategy", "plan", "coordination"], builds: 5 },
+  { id: "strategy-compare", path: "/portal/strategy-compare", title: "Strategy Compare", purpose: "Two or more strategies side by side on the same assumptions.", kind: "comparison", tags: ["strategy", "comparison", "decision"], builds: 6 },
+  { id: "scenarios", path: "/portal/scenarios", title: "Scenario Builder", purpose: "Change one variable at a time and watch the plan respond.", kind: "calculator", tags: ["variables", "control", "scenario", "sensitivity"], builds: 6 },
+  { id: "time-machine", path: "/portal/time-machine-calculator", title: "Time Machine", purpose: "The plan viewed from the future: what each year of delay costs.", kind: "calculator", tags: ["time", "delay", "compounding", "urgency"], builds: 7 },
+  { id: "business-owner", path: "/portal/business-owner", title: "Business Owner", purpose: "Entity, retirement plan design, and exit planning for practice owners.", kind: "calculator", tags: ["practice", "business", "entity", "succession", "cash-balance"], builds: 4 },
+  { id: "physicians-edge", path: "/portal/physicians-edge", title: "Physician's Edge", purpose: "The strategies that matter most for physician income and liability.", kind: "education", tags: ["physician", "high-income", "malpractice", "student-loans"], builds: 2 },
+  { id: "combo-recommender", path: "/portal/combo-recommender", title: "AI Combo Recommender", purpose: "Which strategy combination fits your facts — ranked.", kind: "review", tags: ["strategy", "combination", "recommendation"], builds: 7 },
+
+  // ── legacy and closing ───────────────────────────────────────────────────
+  { id: "estate-flow", path: "/portal/estate-flow", title: "Estate Flow Chart", purpose: "Where everything goes at death today, drawn as a flow — and where it should go.", kind: "legacy", tags: ["estate", "legacy", "heirs", "beneficiaries"], builds: 7 },
+  { id: "beneficiary-optimization", path: "/portal/beneficiary-optimization", title: "Beneficiary Optimizer", purpose: "Beneficiary designations checked against the plan and the tax code.", kind: "legacy", tags: ["estate", "beneficiaries", "legacy"], builds: 7 },
+  { id: "estate-tax", path: "/portal/estate-tax", title: "Estate Tax", purpose: "Whether the estate tax touches you, and the levers if it will.", kind: "calculator", tags: ["estate", "tax", "legacy"], builds: 7 },
+  { id: "will-writer", path: "/portal/will-writer", title: "Will Writer", purpose: "Draft the documents that are missing.", kind: "legacy", tags: ["estate", "will", "documents"], builds: 8 },
+  { id: "the-legacy", path: "/portal/the-legacy", title: "The Legacy", purpose: "What the money is for after you.", kind: "legacy", tags: ["legacy", "estate", "meaning"], builds: 8 },
+  { id: "the-map", path: "/portal/the-map", title: "The Map", purpose: "Portfolio and allocation: the whole plan on one map.", kind: "review", tags: ["review", "allocation", "plan"], builds: 8 },
+  { id: "the-brotherhood", path: "/portal/the-brotherhood", title: "The Brotherhood", purpose: "Community and accountability so the plan survives real life.", kind: "review", tags: ["review", "community", "behavior"], builds: 9 },
+];
+
+export const CATALOG_BY_ID: Record<string, JourneyPage> = Object.fromEntries(JOURNEY_CATALOG.map((p) => [p.id, p]));
+```
+
+## `shared/journeyEngine.ts`
+
+```ts
+// ============================================================
+// JOURNEY ENGINE — the deterministic core of the Financial Librarian.
+//
+// Given everything a client asked (any number of questions) and their
+// completed Financial Assessment, it:
+//   1. distils the questions into 3–5 core questions,
+//   2. surfaces the EMERGENT question — the pattern underneath their questions
+//      and their facts that they have not asked yet,
+//   3. composes a 10–15 page journey through the site, each page building on
+//      the last (orient → understand → measure → compare → decide → protect →
+//      review), including calculators where measuring matters.
+//
+// The AI advisory team (when configured) polishes the wording; it never
+// changes which pages exist, and every step is validated against the catalog.
+// ============================================================
+import { FACT_FINDER_SECTIONS, isBlank, type ClientFactFinder } from "./clientFactFinder";
+import { CATALOG_BY_ID, JOURNEY_CATALOG, type JourneyPage } from "./journeyCatalog";
+
+export const JOURNEY_MIN = 10;
+export const JOURNEY_MAX = 15;
+export const CORE_QUESTIONS_MIN = 3;
+export const CORE_QUESTIONS_MAX = 5;
+
+// ─── topic detection ────────────────────────────────────────────────────────
+const TOPIC_KEYWORDS: Array<{ tag: string; words: RegExp }> = [
+  { tag: "tax", words: /\b(tax|taxes|irs|bracket|deduct|write[- ]?off|1099|w-?2|agi|capital gains?)\b/i },
+  { tag: "roth", words: /\broth|conversion|backdoor\b/i },
+  { tag: "mortgage", words: /\b(mortgage|refinanc|payoff|pay off|interest[- ]only|principal)\b/i },
+  { tag: "equity", words: /\b(home equity|equity|heloc|line of credit|war[- ]chest)\b/i },
+  { tag: "debt", words: /\b(debt|loan|loans|credit card|owe)\b/i },
+  { tag: "student-loans", words: /\b(student|pslf|forgiveness)\b/i },
+  { tag: "retirement", words: /\b(retire|retirement|401\(?k\)?|403\(?b\)?|ira|pension|social security|when can i)\b/i },
+  { tag: "income", words: /\b(income|cash ?flow|paycheck|salary|earn)\b/i },
+  { tag: "investments", words: /\b(invest|portfolio|stocks?|bonds?|market|allocation|brokerage|index|etf)\b/i },
+  { tag: "volatility", words: /\b(volatil\w*|crash\w*|downturn\w*|recession\w*|lose|losses|risk\w*|safe\w*|guarantee\w*|floor\w*|protect(?:ed)? (?:my|from) (?:market|loss)\w*)\b/i },
+  { tag: "iul", words: /\b(iul|indexed universal|life insurance|cash value|policy loan|permanent life|whole life)\b/i },
+  { tag: "insurance", words: /\b(insurance|disability|malpractice|umbrella|coverage|term life)\b/i },
+  { tag: "estate", words: /\b(estate|will|trust|inherit|heirs?|legacy|beneficiar|probate|kids|children)\b/i },
+  { tag: "divorce", words: /\b(divorce|prenup|spouse leaves|separation|marital)\b/i },
+  { tag: "asset-protection", words: /\b(lawsuit|sued|creditor|asset protection|liability|shield)\b/i },
+  { tag: "practice", words: /\b(practice|business|partner(?:ship)?|buy[- ]in|entity|s[- ]?corp|llc|cash balance|exit|sell the practice)\b/i },
+  { tag: "liquidity", words: /\b(liquid|emergency|cash on hand|access|tap into|reserve)\b/i },
+  { tag: "real-estate", words: /\b(rental|real estate|property|properties|airbnb|str)\b/i },
+  { tag: "oil-gas", words: /\b(oil|gas|drilling|intangible)\b/i },
+  { tag: "strategy", words: /\b(strategy|strategies|plan|combine|best way|what should i do|priorit)\b/i },
+  { tag: "time", words: /\b(how long|how soon|years|timeline|when should|delay|wait)\b/i },
+];
+
+export function detectTags(text: string): string[] {
+  const tags = TOPIC_KEYWORDS.filter((t) => t.words.test(text)).map((t) => t.tag);
+  if (/\bmortgage\b/i.test(text)) tags.push("home");
+  return Array.from(new Set(tags));
+}
+
+// ─── fact-finder signals ────────────────────────────────────────────────────
+export type Signal = { tag: string; weight: number; reason: string };
+
+const num = (v: unknown): number => (typeof v === "number" && Number.isFinite(v) ? v : 0);
+const pri = (v: unknown): number => (typeof v === "string" ? Number.parseInt(v, 10) || 0 : 0);
+const yes = (v: unknown): boolean => v === true || v === "Yes";
+
+/** Reads the completed assessment and returns weighted topic signals. */
+export function factFinderSignals(ff: ClientFactFinder | null | undefined): Signal[] {
+  if (!ff) return [];
+  const s = (id: string) => ff.sections?.[id] ?? {};
+  const inc = s("income"), tax = s("taxes"), re = s("realEstate"), debt = s("debts"), inv = s("investments");
+  const cash = s("cash"), ins = s("insurance"), prac = s("practice"), est = s("estate"), prot = s("protection"), ret = s("retirement"), hh = s("household");
+  const out: Signal[] = [];
+  const push = (tag: string, weight: number, reason: string) => { if (weight > 0) out.push({ tag, weight, reason }); };
+
+  const totalIncome = num(inc.w2Income) + num(inc.bonusIncome) + num(inc.contractorIncome) + num(inc.practiceDistributions) + num(inc.spouseIncome);
+  const agi = num(tax.adjustedGrossIncome) || totalIncome;
+  const fedTax = num(tax.federalTaxPaid);
+  const effRate = agi > 0 ? fedTax / agi : 0;
+  if (effRate >= 0.28) push("tax", 5, `federal tax is about ${Math.round(effRate * 100)}% of income`);
+  else if (effRate >= 0.2) push("tax", 3, `federal tax is about ${Math.round(effRate * 100)}% of income`);
+  if (agi >= 400_000) push("high-income", 3, "income is in the top brackets");
+  if (agi >= 400_000 && effRate >= 0.2) push("oil-gas", 2, "high W-2 income with limited deductions");
+  if (yes(tax.niitExposure)) push("tax-free", 2, "net investment income tax applies");
+
+  if (yes(re.ownsPrimaryHome) && num(re.primaryMortgageBalance) > 0) {
+    push("mortgage", 4, `mortgage balance of ${fmtMoney(num(re.primaryMortgageBalance))}`);
+    if (num(re.primaryMortgageYearsRemaining) >= 15) push("payoff", 3, `${num(re.primaryMortgageYearsRemaining)} years remaining on the mortgage`);
+    if (yes(re.primaryInterestOnly)) push("interest", 3, "the mortgage is interest-only");
+  }
+  if (num(re.homeEquity) >= 200_000) push("equity", 4, `${fmtMoney(num(re.homeEquity))} of home equity`);
+  if (num(re.homeEquity) >= 200_000 || num(re.helocLimit) > 0) push("war-chest", 3, "substantial equity available to cycle");
+  if ((ff.lists?.properties?.length ?? 0) > 0) push("real-estate", 2, "additional properties owned");
+
+  if (num(debt.studentLoanBalance) > 0) push("student-loans", 3, `student loans of ${fmtMoney(num(debt.studentLoanBalance))}`);
+  if (num(debt.creditCardBalance) > 0 || num(debt.personalLoans) > 0) push("debt", 3, "consumer debt carried");
+  if (num(debt.practiceLoanBalance) > 0) push("practice", 2, "practice debt outstanding");
+
+  const taxDeferred = num(inv.employerPlanBalance) + num(inv.spouseEmployerPlanBalance) + num(inv.traditionalIra) + num(inv.cashBalancePlan);
+  if (taxDeferred >= 250_000) push("roth", 4, `${fmtMoney(taxDeferred)} in tax-deferred accounts`);
+  if (taxDeferred >= 250_000) push("withdrawal", 2, "large tax-deferred balances will face required distributions");
+  if (yes(inv.concentratedPosition)) push("risk", 3, "a single holding exceeds 10% of investable assets");
+  const rt = String(inv.riskTolerance ?? "");
+  if (/conservative/i.test(rt) || /sell/i.test(String(inv.worstYearReaction ?? ""))) push("volatility", 4, "you would sell in a 30% drop or describe yourself as conservative");
+  if (num(inv.taxableBrokerage) >= 250_000) push("tax-free", 2, "large taxable brokerage balance");
+
+  if (num(cash.emergencyFundMonths) < 3) push("liquidity", 3, `only ${num(cash.emergencyFundMonths)} months of expenses in cash`);
+  if (num(cash.liquidityNeeds12mo) > 0) push("liquidity", 2, "large cash need within 12 months");
+
+  if (num(ins.disabilityMonthlyBenefit) <= 0) push("disability", 3, "no disability income coverage recorded");
+  if (num(ins.termLifeDeathBenefit) + num(ins.permanentLifeDeathBenefit) <= 0 && num(hh.dependents) > 0) push("insurance", 3, "dependents but no life insurance recorded");
+  if (num(ins.permanentLifeCashValue) > 0) push("iul", 2, "permanent life cash value in force");
+  if (!isBlank(ins.coverageGapsConcern)) push("gaps", 2, "you suspect a coverage gap");
+
+  if (yes(prac.ownsPractice)) push("practice", 4, "you own or partner in a practice");
+  if (yes(prac.ownsPractice) && /Under 3|3–7/.test(String(prac.exitTimeline ?? ""))) push("succession", 3, "practice exit within seven years");
+
+  if (est.hasWill === false) push("estate", 4, "no current will");
+  if (est.hasRevocableTrust === false && agi >= 300_000) push("trust", 3, "no revocable trust at this income level");
+  if (/Significant|Central/.test(String(est.charitableIntent ?? ""))) push("legacy", 2, "significant charitable intent");
+  if (num(est.inheritanceExpected) > 0) push("legacy", 1, "an inheritance is expected");
+
+  if (pri(prot.divorceProtectionPriority) >= 4) push("divorce", 4, "divorce protection rated essential");
+  if (pri(prot.creditorProtectionPriority) >= 4) push("asset-protection", 4, "creditor protection rated essential");
+  if (pri(prot.taxFreeIncomePriority) >= 4) push("tax-free", 3, "tax-free future income rated essential");
+  if (/malpractice|surgeon|physician|psychiat/i.test(`${hh.occupation ?? ""} ${hh.specialty ?? ""}`)) push("malpractice", 2, "a liability-exposed profession");
+
+  const age = ageFrom(hh.dateOfBirth);
+  const target = num(ret.targetRetirementAge);
+  if (age && target && target - age <= 10) push("retirement", 4, `retirement targeted within ${Math.max(0, target - age)} years`);
+  else if (target) push("retirement", 2, `retirement targeted at ${target}`);
+  if (num(ret.desiredRetirementIncomeMonthly) > 0) push("income", 2, "a retirement income target is set");
+  if (num(ret.desiredRetirementIncomeMonthly) * 12 > 0.6 * totalIncome && totalIncome > 0) push("gap", 3, "the retirement income target is a large share of today's income");
+  if (!isBlank(ret.retirementConcern) && /market|crash|run out|outliv/i.test(String(ret.retirementConcern))) push("volatility", 3, "your retirement worry is about markets or running out");
+
+  return mergeSignals(out);
+}
+
+function mergeSignals(list: Signal[]): Signal[] {
+  const by = new Map<string, Signal>();
+  for (const s of list) {
+    const cur = by.get(s.tag);
+    if (!cur) by.set(s.tag, { ...s });
+    else { cur.weight += s.weight; if (s.weight > cur.weight / 2) cur.reason = s.reason; }
+  }
+  return Array.from(by.values()).sort((a, b) => b.weight - a.weight);
+}
+
+function ageFrom(dob: unknown): number | null {
+  if (typeof dob !== "string" || !dob) return null;
+  const d = new Date(dob);
+  if (Number.isNaN(d.getTime())) return null;
+  return Math.floor((Date.now() - d.getTime()) / (365.25 * 24 * 3600 * 1000));
+}
+
+export function fmtMoney(n: number): string {
+  return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+}
+
+// ─── distilling the questions ───────────────────────────────────────────────
+const CORE_TEMPLATES: Record<string, string> = {
+  tax: "How do I pay less tax on the income I already earn — this year and every year after?",
+  roth: "When and how should tax-deferred money become tax-free money?",
+  mortgage: "What is the fastest sensible way to be free of my mortgage, and what is that interest worth to me?",
+  equity: "How can my home equity work for me without giving up liquidity or safety?",
+  debt: "In what order should my debts be paid, and what should be paid off at all?",
+  "student-loans": "What is the right plan for my student loans given my income and career track?",
+  retirement: "When can I retire, on what income, and from which accounts first?",
+  income: "How much income will my plan produce, and how reliable is it?",
+  investments: "Is my money invested in a way that fits my goals and my nerves?",
+  volatility: "How do I keep growing while controlling volatility and the variables I can actually control?",
+  iul: "Where does permanent life insurance fit — as a tax-free reserve, a legacy, or not at all?",
+  insurance: "Is my income and family protected if something goes wrong?",
+  estate: "What happens to everything if I'm gone — and is that what I want?",
+  divorce: "How do I keep what I've built if my marriage doesn't last?",
+  "asset-protection": "How do I make my assets hard to reach for lawsuits and creditors?",
+  practice: "How should my practice be structured for taxes, retirement, and an eventual exit?",
+  liquidity: "How much should I keep liquid, and where, without idling money?",
+  "real-estate": "Does real estate belong in my plan, and on what terms?",
+  "oil-gas": "Do the large energy deductions fit my situation, and what are the risks?",
+  strategy: "Which strategies belong in my plan, and in what order?",
+  time: "What does waiting cost me, and what should happen first?",
+};
+
+const TAG_PRIORITY = ["tax", "mortgage", "retirement", "volatility", "roth", "equity", "estate", "divorce", "asset-protection", "practice", "student-loans", "debt", "iul", "insurance", "investments", "liquidity", "income", "real-estate", "oil-gas", "strategy", "time"];
+
+export type Distilled = { question: string; tag: string; from: string[] };
+
+/** Groups any number of client questions into 3–5 core questions. */
+export function distillQuestions(questions: string[], signals: Signal[] = []): Distilled[] {
+  const clean = questions.map((q) => q.trim()).filter((q) => q.length > 2);
+  const groups = new Map<string, string[]>();
+  const untagged: string[] = [];
+  for (const q of clean) {
+    const tags = detectTags(q).filter((t) => CORE_TEMPLATES[t]);
+    if (tags.length === 0) { untagged.push(q); continue; }
+    const primary = TAG_PRIORITY.find((t) => tags.includes(t)) ?? tags[0]!;
+    groups.set(primary, [...(groups.get(primary) ?? []), q]);
+  }
+  let ordered = Array.from(groups.entries()).sort((a, b) => b[1].length - a[1].length || TAG_PRIORITY.indexOf(a[0]) - TAG_PRIORITY.indexOf(b[0]));
+  if (untagged.length) ordered.push(["strategy", untagged]);
+  const result: Distilled[] = ordered.slice(0, CORE_QUESTIONS_MAX).map(([tag, from]) => ({ question: CORE_TEMPLATES[tag] ?? from[0]!, tag, from }));
+  // Too few? Let the strongest assessment signals supply the rest.
+  for (const s of signals) {
+    if (result.length >= CORE_QUESTIONS_MIN) break;
+    if (result.some((r) => r.tag === s.tag) || !CORE_TEMPLATES[s.tag]) continue;
+    result.push({ question: CORE_TEMPLATES[s.tag]!, tag: s.tag, from: [`from your assessment: ${s.reason}`] });
+  }
+  if (result.length === 0) result.push({ question: CORE_TEMPLATES.strategy!, tag: "strategy", from: [] });
+  return result;
+}
+
+// ─── the emergent question ──────────────────────────────────────────────────
+const EMERGENT_TEMPLATES: Record<string, (reason: string) => string> = {
+  volatility: (r) => `Underneath your questions is a volatility question you haven't asked: with ${r}, how do you keep the plan from depending on markets you can't control?`,
+  tax: (r) => `The pattern beneath your questions is a tax question: ${r} — every strategy you asked about changes in value once that is addressed first.`,
+  equity: (r) => `You haven't asked about the largest asset on your balance sheet: ${r}. How it is deployed decides how fast everything else moves.`,
+  "war-chest": (r) => `The unasked question is liquidity: ${r}. A plan that can't be reached on demand fails the moment life needs it.`,
+  roth: (r) => `The question you haven't asked is about the tax-deferred balances: ${r}. Left alone, they become a tax problem in retirement — sequenced deliberately, they become tax-free income.`,
+  estate: (r) => `Every question you asked assumes you're here to see the results. The emergent question is what happens if you're not — ${r}.`,
+  divorce: (r) => `You rated protection as essential (${r}) but haven't asked how the plan survives a divorce. That is the question the structure has to answer first.`,
+  "asset-protection": (r) => `The pattern beneath your questions is exposure: ${r}. Growth without protection is growth someone else can claim.`,
+  disability: (r) => `The question missing from your list is what happens to the whole plan if you can't work: ${r}.`,
+  liquidity: (r) => `Behind your questions sits a liquidity question: ${r}. Any strategy that locks money away needs that answered first.`,
+  retirement: (r) => `Your questions point somewhere you haven't asked about directly: ${r}. The timeline sets the pace of every other decision.`,
+  practice: (r) => `You haven't asked about the business itself: ${r}. Its structure decides your taxes, your retirement plan, and your exit.`,
+  "student-loans": (r) => `The unasked question is the loans: ${r}. Their treatment changes how much cash the rest of the plan has to work with.`,
+  mortgage: (r) => `You asked around the mortgage but not about it: ${r}. Interest recovered there funds much of what you asked for.`,
+  insurance: (r) => `The emergent question is protection of the people the plan is for: ${r}.`,
+  gap: (r) => `The pattern underneath is an income gap: ${r}. Everything you asked about is really about closing it.`,
+};
+
+export function emergentQuestion(distilled: Distilled[], signals: Signal[]): { question: string; tag: string; reason: string } {
+  const asked = new Set(distilled.map((d) => d.tag));
+  const related: Record<string, string[]> = { mortgage: ["payoff", "interest", "home"], equity: ["war-chest", "heloc"], retirement: ["gap", "withdrawal", "income"], volatility: ["risk"], insurance: ["disability", "gaps", "malpractice"], "asset-protection": ["trust", "malpractice"], estate: ["trust", "legacy"] };
+  const covered = new Set<string>();
+  for (const a of Array.from(asked)) { covered.add(a); for (const r of related[a] ?? []) covered.add(r); }
+  const candidate = signals.find((s) => !covered.has(s.tag) && EMERGENT_TEMPLATES[s.tag]) ?? signals.find((s) => EMERGENT_TEMPLATES[s.tag]);
+  if (!candidate) {
+    return { question: "The question underneath all of yours: in what order should these moves happen so each one funds the next?", tag: "strategy", reason: "sequencing" };
+  }
+  return { question: EMERGENT_TEMPLATES[candidate.tag]!(candidate.reason), tag: candidate.tag, reason: candidate.reason };
+}
+
+// ─── composing the journey ──────────────────────────────────────────────────
+export type JourneyStep = { id: string; path: string; title: string; why: string; kind: string; serves: string[] };
+export type Journey = {
+  coreQuestions: string[];
+  emergentQuestion: string;
+  steps: JourneyStep[];
+  generatedBy: string;
+};
+
+const TAG_ALIASES: Record<string, string[]> = {
+  mortgage: ["mortgage", "payoff", "interest", "home", "debt"],
+  equity: ["equity", "heloc", "war-chest", "liquidity", "iul"],
+  debt: ["debt", "student-loans", "household", "payoff"],
+  "student-loans": ["student-loans", "debt", "physician", "household"],
+  retirement: ["retirement", "income", "gap", "withdrawal", "social-security", "longevity"],
+  income: ["income", "retirement", "gap", "timeline"],
+  investments: ["investments", "growth", "allocation", "evidence", "risk"],
+  volatility: ["volatility", "risk", "floor", "stress", "sequence-risk", "guarantee", "control", "variables"],
+  tax: ["tax", "brackets", "waterfall", "deduction", "tax-free", "combination"],
+  roth: ["roth", "conversion", "tax-free", "withdrawal"],
+  iul: ["iul", "tax-free", "loans", "insurance", "floor"],
+  insurance: ["insurance", "disability", "gaps", "protection", "malpractice"],
+  estate: ["estate", "legacy", "heirs", "beneficiaries", "trust", "will"],
+  divorce: ["divorce", "protection", "asset-protection", "trust"],
+  "asset-protection": ["asset-protection", "creditor", "trust", "protection", "malpractice"],
+  practice: ["practice", "business", "entity", "succession", "cash-balance"],
+  liquidity: ["liquidity", "war-chest", "loans", "heloc"],
+  "real-estate": ["real-estate", "rental", "leverage"],
+  "oil-gas": ["oil-gas", "deduction", "high-income"],
+  strategy: ["strategy", "combination", "coordination", "recommendation", "decision"],
+  time: ["time", "delay", "compounding", "urgency"],
+  gap: ["gap", "income", "retirement"],
+  disability: ["disability", "insurance", "gaps"],
+  "war-chest": ["war-chest", "equity", "liquidity", "loans"],
+  "high-income": ["high-income", "tax", "physician"],
+  "tax-free": ["tax-free", "roth", "iul", "combination"],
+  malpractice: ["malpractice", "protection", "asset-protection"],
+  succession: ["succession", "business", "practice"],
+  trust: ["trust", "estate", "asset-protection"],
+  legacy: ["legacy", "estate"],
+  risk: ["risk", "volatility", "stress"],
+  withdrawal: ["withdrawal", "sequence", "retirement"],
+  payoff: ["payoff", "mortgage", "interest"],
+  interest: ["interest", "mortgage"],
+};
+
+function expand(tag: string): string[] { return TAG_ALIASES[tag] ?? [tag]; }
+
+export function buildJourney(questions: string[], ff: ClientFactFinder | null | undefined): Journey {
+  const signals = factFinderSignals(ff);
+  const distilled = distillQuestions(questions, signals);
+  const emergent = emergentQuestion(distilled, signals);
+
+  // Score every catalog page.
+  const scores = new Map<string, { score: number; serves: Set<string> }>();
+  for (const page of JOURNEY_CATALOG) {
+    let score = 0;
+    const serves = new Set<string>();
+    distilled.forEach((d, i) => {
+      const hits = expand(d.tag).filter((t) => page.tags.includes(t)).length;
+      if (hits) { score += hits * 3 + (CORE_QUESTIONS_MAX - i); serves.add(`Q${i + 1}`); }
+    });
+    const eh = expand(emergent.tag).filter((t) => page.tags.includes(t)).length;
+    if (eh) { score += eh * 3 + 2; serves.add("emergent"); }
+    for (const s of signals) {
+      if (page.tags.includes(s.tag)) score += Math.min(s.weight, 5);
+    }
+    scores.set(page.id, { score, serves });
+  }
+
+  const chosen: JourneyPage[] = [];
+  const take = (id: string) => { const p = CATALOG_BY_ID[id]; if (p && !chosen.some((c) => c.id === id)) chosen.push(p); };
+
+  // 1. Always orient first: the mirror (where you stand) and the genome score.
+  take("mirror");
+  take("wealth-genome");
+  // 2. Two best pages per core question, in question order, then the emergent pages.
+  const byScore = [...JOURNEY_CATALOG].sort((a, b) => (scores.get(b.id)!.score - scores.get(a.id)!.score) || a.builds - b.builds);
+  distilled.forEach((_, i) => {
+    let n = 0;
+    for (const p of byScore) {
+      if (n >= 2) break;
+      if (scores.get(p.id)!.serves.has(`Q${i + 1}`) && !chosen.some((c) => c.id === p.id)) { chosen.push(p); n += 1; }
+    }
+  });
+  let e = 0;
+  for (const p of byScore) {
+    if (e >= 2) break;
+    if (scores.get(p.id)!.serves.has("emergent") && !chosen.some((c) => c.id === p.id)) { chosen.push(p); e += 1; }
+  }
+  // 3. Guarantee coverage of the arc: at least one calculator, one comparison,
+  //    one variables/volatility control page, and protection when it matters.
+  const ensureKind = (pred: (p: JourneyPage) => boolean) => {
+    if (chosen.some(pred)) return;
+    const best = byScore.find((p) => pred(p) && !chosen.some((c) => c.id === p.id));
+    if (best) chosen.push(best);
+  };
+  ensureKind((p) => p.kind === "calculator");
+  ensureKind((p) => p.kind === "comparison");
+  ensureKind((p) => p.tags.includes("control") || p.tags.includes("variables") || p.tags.includes("volatility"));
+  if (signals.some((s) => ["divorce", "asset-protection", "malpractice"].includes(s.tag))) ensureKind((p) => p.kind === "protection");
+  if (signals.some((s) => ["estate", "trust", "legacy"].includes(s.tag))) ensureKind((p) => p.kind === "legacy");
+  // 4. Fill to the minimum with the next best pages, then close with a review.
+  for (const p of byScore) {
+    if (chosen.length >= JOURNEY_MAX - 1) break;
+    if (chosen.length >= JOURNEY_MIN - 1 && scores.get(p.id)!.score === 0) break;
+    if (!chosen.some((c) => c.id === p.id) && p.kind !== "review") chosen.push(p);
+  }
+  take("russell-number");
+  while (chosen.length < JOURNEY_MIN) { const p = byScore.find((x) => !chosen.some((c) => c.id === x.id)); if (!p) break; chosen.splice(chosen.length - 1, 0, p); }
+
+  // 5. Sequence: orientation first, then by build order, then by score; review last.
+  const ordered = chosen
+    .map((p, idx) => ({ p, idx }))
+    .sort((a, b) => (a.p.builds - b.p.builds) || (scores.get(b.p.id)!.score - scores.get(a.p.id)!.score) || (a.idx - b.idx))
+    .map((x) => x.p)
+    .slice(0, JOURNEY_MAX);
+
+  const steps: JourneyStep[] = ordered.map((p, i) => {
+    const sv = Array.from(scores.get(p.id)?.serves ?? []);
+    const servesText = sv.length
+      ? ` It serves ${sv.map((s) => (s === "emergent" ? "the emergent question" : `question ${s.slice(1)}`)).join(" and ")}.`
+      : "";
+    const bridge = i === 0 ? "Start here." : i === ordered.length - 1 ? "Close the loop." : `Builds on “${ordered[i - 1]!.title}”.`;
+    return { id: p.id, path: p.path, title: p.title, kind: p.kind, serves: sv, why: `${bridge} ${p.purpose}${servesText}` };
+  });
+
+  return {
+    coreQuestions: distilled.map((d) => d.question),
+    emergentQuestion: emergent.question,
+    steps,
+    generatedBy: "journey-engine",
+  };
+}
+
+/** Validates a journey (e.g. one an AI polished) against the catalog and size rules. */
+export function validateJourney(j: Journey): { ok: boolean; problems: string[] } {
+  const problems: string[] = [];
+  if (j.coreQuestions.length < CORE_QUESTIONS_MIN || j.coreQuestions.length > CORE_QUESTIONS_MAX) problems.push(`core questions: ${j.coreQuestions.length} (need ${CORE_QUESTIONS_MIN}–${CORE_QUESTIONS_MAX})`);
+  if (!j.emergentQuestion || j.emergentQuestion.length < 20) problems.push("emergent question missing");
+  if (j.steps.length < JOURNEY_MIN || j.steps.length > JOURNEY_MAX) problems.push(`steps: ${j.steps.length} (need ${JOURNEY_MIN}–${JOURNEY_MAX})`);
+  const seen = new Set<string>();
+  for (const s of j.steps) {
+    const p = CATALOG_BY_ID[s.id];
+    if (!p) problems.push(`unknown page ${s.id}`);
+    else if (p.path !== s.path) problems.push(`path mismatch for ${s.id}`);
+    if (seen.has(s.id)) problems.push(`duplicate ${s.id}`);
+    seen.add(s.id);
+  }
+  return { ok: problems.length === 0, problems };
+}
+
+/** Short summary of the assessment for the librarian's own reasoning. */
+export function assessmentHeadline(ff: ClientFactFinder | null | undefined): string {
+  if (!ff) return "";
+  const hh = ff.sections?.household ?? {};
+  const name = [hh.firstName, hh.lastName].filter((v) => !isBlank(v as never)).join(" ");
+  const sections = FACT_FINDER_SECTIONS.length;
+  return `${name || "Client"} · ${sections}-section assessment complete`;
+}
 ```
 
 ## `shared/leadTypes.ts`
@@ -25160,6 +26190,21 @@ async function startServer() {
 }
 
 startServer().catch(console.error);
+```
+
+## `server/_core/jsonColumn.ts`
+
+```ts
+// MySQL 8 returns JSON columns already parsed; MariaDB (where JSON is an alias
+// for LONGTEXT) returns the raw string, and drizzle's mysql `json()` column
+// does not parse on read. Normalise both so the app behaves the same on either.
+export function jsonColumn<T>(value: unknown, fallback: T): T {
+  if (value === null || value === undefined) return fallback;
+  if (typeof value === "string") {
+    try { return JSON.parse(value) as T; } catch { return fallback; }
+  }
+  return value as T;
+}
 ```
 
 ## `server/_core/llm.ts`
@@ -38018,6 +39063,124 @@ export const errorLogRouter = router({
 });
 ```
 
+## `server/factFinderDb.ts`
+
+```ts
+// ============================================================
+// CLIENT FACT FINDER + JOURNEYS — data access. Graceful when the database is
+// not configured (returns null / no-ops), like leadsDb.ts.
+// ============================================================
+import { desc, eq } from "drizzle-orm";
+import { getDb } from "./db";
+import { jsonColumn } from "./_core/jsonColumn";
+import { clientFactFinders, clientJourneys, type ClientJourneyJson } from "../drizzle/schema";
+import { factFinderCompleteness, type ClientFactFinder, type Completeness } from "@shared/clientFactFinder";
+
+export type StoredFactFinder = { data: ClientFactFinder; completeness: number; completedAt: Date | null; updatedAt: Date };
+
+export async function getFactFinderForUser(userId: number): Promise<StoredFactFinder | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(clientFactFinders).where(eq(clientFactFinders.userId, userId)).limit(1);
+  const row = rows[0];
+  if (!row) return null;
+  return { data: jsonColumn<ClientFactFinder>(row.data, { version: 1, sections: {}, lists: {} }), completeness: row.completeness, completedAt: row.completedAt ?? null, updatedAt: row.updatedAt };
+}
+
+export async function saveFactFinderForUser(userId: number, data: ClientFactFinder): Promise<{ completeness: Completeness; completedAt: Date | null } | null> {
+  const db = await getDb();
+  if (!db) return null;
+  if (data.version !== 1) throw new Error("Unsupported fact finder version");
+  const completeness = factFinderCompleteness(data);
+  const existing = await getFactFinderForUser(userId);
+  const completedAt = completeness.complete ? (existing?.completedAt ?? new Date()) : null;
+  await db
+    .insert(clientFactFinders)
+    .values({ userId, data, completeness: completeness.percent, completedAt })
+    .onDuplicateKeyUpdate({ set: { data, completeness: completeness.percent, completedAt } });
+  return { completeness, completedAt };
+}
+
+export async function deleteFactFinderForUser(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(clientFactFinders).where(eq(clientFactFinders.userId, userId));
+}
+
+export async function saveJourneyForUser(userId: number, questions: string[], journey: ClientJourneyJson): Promise<number | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const res = await db.insert(clientJourneys).values({ userId, questions, journey });
+  const insertId = (res as unknown as Array<{ insertId?: number }>)[0]?.insertId;
+  return typeof insertId === "number" ? insertId : null;
+}
+
+export async function getLatestJourneyForUser(userId: number): Promise<{ id: number; questions: string[]; journey: ClientJourneyJson; createdAt: Date } | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(clientJourneys).where(eq(clientJourneys.userId, userId)).orderBy(desc(clientJourneys.id)).limit(1);
+  const row = rows[0];
+  if (!row) return null;
+  return { id: row.id, questions: jsonColumn<string[]>(row.questions, []), journey: jsonColumn<ClientJourneyJson>(row.journey, { coreQuestions: [], emergentQuestion: "", steps: [], generatedBy: "" }), createdAt: row.createdAt };
+}
+```
+
+## `server/factFinderRouter.ts`
+
+```ts
+// ============================================================
+// FINANCIAL ASSESSMENT (client fact finder) — tRPC router.
+// Each signed-in user owns exactly one assessment. Nothing here computes or
+// shows results; it collects, stores, and reports completeness.
+// ============================================================
+import { z } from "zod";
+import { protectedProcedure, router } from "./_core/trpc";
+import { deleteFactFinderForUser, getFactFinderForUser, saveFactFinderForUser } from "./factFinderDb";
+import { emptyFactFinder, factFinderCompleteness, factFinderSummary, type ClientFactFinder } from "@shared/clientFactFinder";
+
+const value = z.union([z.string().max(4000), z.number().finite(), z.boolean(), z.null()]);
+const sectionData = z.record(z.string().max(64), value);
+export const factFinderSchema = z.object({
+  version: z.literal(1),
+  sections: z.record(z.string().max(64), sectionData),
+  lists: z.record(z.string().max(64), z.array(sectionData).max(50)),
+});
+
+export const factFinderRouter = router({
+  get: protectedProcedure.query(async ({ ctx }) => {
+    const stored = await getFactFinderForUser(ctx.user.id);
+    const data = stored?.data ?? emptyFactFinder();
+    return {
+      data,
+      completeness: factFinderCompleteness(data),
+      completedAt: stored?.completedAt ?? null,
+      updatedAt: stored?.updatedAt ?? null,
+      persisted: Boolean(stored),
+    };
+  }),
+
+  save: protectedProcedure
+    .input(z.object({ data: factFinderSchema }))
+    .mutation(async ({ ctx, input }) => {
+      const data = input.data as ClientFactFinder;
+      const saved = await saveFactFinderForUser(ctx.user.id, data);
+      if (!saved) return { saved: false as const, completeness: factFinderCompleteness(data), completedAt: null };
+      return { saved: true as const, completeness: saved.completeness, completedAt: saved.completedAt };
+    }),
+
+  summary: protectedProcedure.query(async ({ ctx }) => {
+    const stored = await getFactFinderForUser(ctx.user.id);
+    const c = factFinderCompleteness(stored?.data);
+    return { text: factFinderSummary(stored?.data), complete: c.complete, percent: c.percent };
+  }),
+
+  reset: protectedProcedure.mutation(async ({ ctx }) => {
+    await deleteFactFinderForUser(ctx.user.id);
+    return { ok: true as const };
+  }),
+});
+```
+
 ## `server/generate1035Pdf.ts`
 
 ```ts
@@ -38843,15 +40006,26 @@ export function computeLeadAnalysis(ff: LeadFactFinder): LeadAnalysis {
 // ============================================================
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "./db";
+import { jsonColumn } from "./_core/jsonColumn";
 import { publicLeads, type InsertPublicLead, type PublicLead } from "../drizzle/schema";
 
 export type LeadStatusValue = PublicLead["status"];
+
+/** JSON columns come back as strings on MariaDB; parse them so callers see objects everywhere. */
+function normalizeLead(row: PublicLead): PublicLead {
+  return {
+    ...row,
+    factFinder: jsonColumn(row.factFinder, null),
+    analysis: jsonColumn(row.analysis, null),
+    ipHistory: jsonColumn<string[] | null>(row.ipHistory, null),
+  };
+}
 
 export async function getLeadByPublicId(publicId: string): Promise<PublicLead | null> {
   const db = await getDb();
   if (!db) return null;
   const rows = await db.select().from(publicLeads).where(eq(publicLeads.publicId, publicId)).limit(1);
-  return rows[0] ?? null;
+  return rows[0] ? normalizeLead(rows[0]) : null;
 }
 
 /**
@@ -38900,14 +40074,15 @@ export async function upsertLead(publicId: string, patch: Partial<InsertPublicLe
 export async function listLeads(limit = 200): Promise<PublicLead[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(publicLeads).orderBy(desc(publicLeads.lastSeenAt)).limit(Math.min(500, Math.max(1, limit)));
+  const rows = await db.select().from(publicLeads).orderBy(desc(publicLeads.lastSeenAt)).limit(Math.min(500, Math.max(1, limit)));
+  return rows.map(normalizeLead);
 }
 
 export async function getLeadById(id: number): Promise<PublicLead | null> {
   const db = await getDb();
   if (!db) return null;
   const rows = await db.select().from(publicLeads).where(eq(publicLeads.id, id)).limit(1);
-  return rows[0] ?? null;
+  return rows[0] ? normalizeLead(rows[0]) : null;
 }
 
 export async function updateLeadStatus(id: number, status: LeadStatusValue): Promise<PublicLead | null> {
@@ -39114,6 +40289,198 @@ export const leadsRouter = router({
       if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
       return lead;
     }),
+});
+```
+
+## `server/librarianRouter.ts`
+
+```ts
+// ============================================================
+// THE FINANCIAL LIBRARIAN — the AI advisory team as ONE voice.
+//
+// Gate: it will not answer a planning question until the signed-in user's
+// Financial Assessment is complete. Once it is, the client may ask as many
+// questions as they like; the librarian answers each one, and on request
+// distils everything asked into 3–5 core questions, names the emergent
+// question they have not asked, and composes a 10–15 page journey through
+// the site (calculators included) that answers them in a logical sequence.
+//
+// The deterministic journey engine (shared/journeyEngine.ts) always produces
+// the journey; the AI team only polishes wording and is validated against the
+// catalog. No figures are ever invented: every number the librarian cites
+// comes from the client's own assessment.
+// ============================================================
+import { z } from "zod";
+import { protectedProcedure, router } from "./_core/trpc";
+import { ADVISOR_SYSTEM, configuredProviders, leadModel } from "./ultraAI";
+import { getFactFinderForUser, getLatestJourneyForUser, saveJourneyForUser } from "./factFinderDb";
+import { factFinderCompleteness, factFinderSummary, type ClientFactFinder } from "@shared/clientFactFinder";
+import { JOURNEY_CATALOG } from "@shared/journeyCatalog";
+import { buildJourney, factFinderSignals, fmtMoney, validateJourney, type Journey } from "@shared/journeyEngine";
+
+const LIBRARIAN_RULES =
+  " You are the Financial Librarian of Russell Capital Systems: one calm, warm voice that speaks for a team of AI models. " +
+  "You are talking to a client (or their advisor) inside a private portal, and you have their complete Financial Assessment, " +
+  "so you may refer to their own figures. Everything you say is education and projection under stated assumptions — never a " +
+  "guarantee, never a product solicitation, never individualized tax or legal advice; the licensed Russell Capital Systems " +
+  "advisor and the tax professional team review every strategy for suitability and IRS compliance before anything is implemented. " +
+  "Do not invent facts that are not in the assessment. Speak plainly, as if reading aloud, in under 200 words. " +
+  "When a page on the site answers part of the question, name it (the catalog is provided) so the client can click through.";
+
+function catalogText(): string {
+  return JOURNEY_CATALOG.map((p) => `- ${p.title} (${p.path}): ${p.purpose}`).join("\n");
+}
+
+async function loadAssessment(userId: number) {
+  const stored = await getFactFinderForUser(userId);
+  const completeness = factFinderCompleteness(stored?.data);
+  const missingSections = Array.from(new Set(completeness.missing.map((m) => m.section))).slice(0, 6);
+  return { stored, completeness, missingSections };
+}
+
+function gateMessage(percent: number, missingSections: string[]): string {
+  const where = missingSections.length ? ` The sections still open are ${missingSections.join(", ")}.` : "";
+  return `Before I can advise you I need the full picture — that is what makes the advice worth having. Your Financial Assessment is ${percent}% complete.${where} Finish it and ask me again; I'll be here.`;
+}
+
+/** Deterministic answer when no AI provider is configured: restate the relevant facts, point to the pages. */
+function offlineAnswer(question: string, data: ClientFactFinder, journeyHint: Journey): string {
+  const s = (id: string) => data.sections?.[id] ?? {};
+  const inc = s("income"), tax = s("taxes"), re = s("realEstate"), debt = s("debts"), inv = s("investments"), goals = s("goals");
+  const n = (v: unknown) => (typeof v === "number" ? v : 0);
+  const income = n(inc.w2Income) + n(inc.bonusIncome) + n(inc.contractorIncome) + n(inc.practiceDistributions) + n(inc.spouseIncome);
+  const facts: string[] = [];
+  if (income) facts.push(`household income of about ${fmtMoney(income)}`);
+  if (n(tax.federalTaxPaid)) facts.push(`federal tax of ${fmtMoney(n(tax.federalTaxPaid))} last year`);
+  if (n(re.primaryMortgageBalance)) facts.push(`a mortgage balance of ${fmtMoney(n(re.primaryMortgageBalance))}`);
+  if (n(re.homeEquity)) facts.push(`${fmtMoney(n(re.homeEquity))} of home equity`);
+  if (n(debt.studentLoanBalance)) facts.push(`student loans of ${fmtMoney(n(debt.studentLoanBalance))}`);
+  const investable = n(inv.taxableBrokerage) + n(inv.employerPlanBalance) + n(inv.traditionalIra) + n(inv.rothIra) + n(inv.roth401k);
+  if (investable) facts.push(`about ${fmtMoney(investable)} in investment and retirement accounts`);
+  const top = typeof goals.topGoals === "string" ? goals.topGoals.split(/\n|;/)[0]?.trim() : "";
+  const pages = journeyHint.steps.slice(0, 3).map((st) => `${st.title} (${st.path})`).join(", ");
+  return (
+    `The AI advisory team is not switched on for this installation yet, so here is what I can say from your assessment alone. ` +
+    `You asked: "${question}". Your file shows ${facts.length ? facts.join(", ") : "the details you entered"}` +
+    `${top ? `, and your first stated goal is "${top}"` : ""}. ` +
+    `The pages that answer this best, in order, are ${pages}. ` +
+    `Everything here is education, not advice; your Russell Capital Systems advisor and the tax professional team confirm suitability before anything is implemented.`
+  );
+}
+
+export const librarianRouter = router({
+  status: protectedProcedure.query(async ({ ctx }) => {
+    const { stored, completeness, missingSections } = await loadAssessment(ctx.user.id);
+    const team = configuredProviders();
+    return {
+      complete: completeness.complete,
+      percent: completeness.percent,
+      missingCount: completeness.missing.length,
+      missingSections,
+      completedAt: stored?.completedAt ?? null,
+      configured: team.length > 0,
+      contributorCount: team.length,
+      contributors: team.map((p) => p.label),
+      voiceConfigured: Boolean(process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_VOICE_ID),
+    };
+  }),
+
+  /** Answer one question. Unlimited questions are welcome once the assessment is complete. */
+  ask: protectedProcedure
+    .input(z.object({
+      question: z.string().min(1).max(2000),
+      history: z.array(z.object({ role: z.enum(["user", "librarian"]), text: z.string().max(2000) })).max(12).default([]),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const { stored, completeness, missingSections } = await loadAssessment(ctx.user.id);
+      if (!stored || !completeness.complete) {
+        return { gated: true as const, percent: completeness.percent, missingSections, spoken: gateMessage(completeness.percent, missingSections), answer: null, contributors: [] as string[], contributorCount: 0 };
+      }
+      const data = stored.data;
+      const team = configuredProviders();
+      const hint = buildJourney([...input.history.filter((h) => h.role === "user").map((h) => h.text), input.question], data);
+      if (team.length === 0) {
+        const answer = offlineAnswer(input.question, data, hint);
+        return { gated: false as const, answer, spoken: answer, contributors: [] as string[], contributorCount: 0, percent: 100, missingSections: [] as string[] };
+      }
+      const system = ADVISOR_SYSTEM + LIBRARIAN_RULES;
+      const history = input.history.slice(-6).map((h) => `${h.role === "user" ? "Client" : "Librarian"}: ${h.text}`).join("\n");
+      const userMsg =
+        `CLIENT FACT FINDER (complete):\n${factFinderSummary(data)}\n\n` +
+        `SITE PAGES YOU MAY POINT TO:\n${catalogText()}\n\n` +
+        (history ? `RECENT CONVERSATION:\n${history}\n\n` : "") +
+        `The client asks: "${input.question}"\n\nAnswer per your rules, for speech, under 200 words.`;
+      const results = await Promise.all(team.map(async (p) => {
+        try { return { label: p.label, ok: true as const, text: await p.call(process.env[p.envKey]!, system, userMsg) }; }
+        catch (e) { return { label: p.label, ok: false as const, text: String(e).slice(0, 80) }; }
+      }));
+      const ok = results.filter((r) => r.ok);
+      let answer: string | null = null;
+      if (ok.length > 1) {
+        const lead = await leadModel(system, `${ok.length} advisors answered the same client question. Synthesize ONE answer in the librarian's voice, under 200 words, keeping only claims supported by the fact finder.\n\nQuestion: "${input.question}"\n\n${ok.map((r) => `--- ${r.label} ---\n${r.text}`).join("\n\n")}`);
+        answer = lead?.text ?? null;
+      }
+      answer = answer ?? ok[0]?.text ?? offlineAnswer(input.question, data, hint);
+      return { gated: false as const, answer, spoken: answer, contributors: ok.map((r) => r.label), contributorCount: ok.length, percent: 100, missingSections: [] as string[] };
+    }),
+
+  /** Distil everything asked into 3–5 core questions + the emergent question, and compose the journey. */
+  journey: protectedProcedure
+    .input(z.object({ questions: z.array(z.string().min(1).max(2000)).min(1).max(40) }))
+    .mutation(async ({ ctx, input }) => {
+      const { stored, completeness, missingSections } = await loadAssessment(ctx.user.id);
+      if (!stored || !completeness.complete) {
+        return { gated: true as const, percent: completeness.percent, missingSections, spoken: gateMessage(completeness.percent, missingSections), journey: null };
+      }
+      const data = stored.data;
+      let journey = buildJourney(input.questions, data);
+      const signals = factFinderSignals(data);
+
+      // Let the AI team polish the wording of the questions and the "why" of
+      // each step — never the pages themselves.
+      const team = configuredProviders();
+      if (team.length > 0) {
+        try {
+          const polished = await leadModel(
+            ADVISOR_SYSTEM + LIBRARIAN_RULES + " Reply with JSON only.",
+            `The client asked these questions:\n${input.questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}\n\n` +
+            `Their assessment signals: ${signals.slice(0, 8).map((s) => `${s.tag} (${s.reason})`).join("; ")}\n\n` +
+            `The journey engine proposes:\n${JSON.stringify({ coreQuestions: journey.coreQuestions, emergentQuestion: journey.emergentQuestion, steps: journey.steps.map((s) => ({ id: s.id, title: s.title, why: s.why })) }, null, 1)}\n\n` +
+            `Rewrite ONLY the wording: make each core question sound like this client (keep 3–5 of them, same order, same meaning), ` +
+            `make the emergent question land (one or two sentences, referencing their actual facts), and make each step's "why" one warm sentence that connects it to the previous step. ` +
+            `Keep every step id exactly as given, same order. Return JSON: {"coreQuestions":[...],"emergentQuestion":"...","steps":[{"id":"...","why":"..."}]}`,
+          );
+          const raw = polished?.text?.match(/\{[\s\S]*\}/)?.[0];
+          if (raw) {
+            const p = JSON.parse(raw) as { coreQuestions?: string[]; emergentQuestion?: string; steps?: Array<{ id: string; why: string }> };
+            const candidate: Journey = {
+              coreQuestions: Array.isArray(p.coreQuestions) && p.coreQuestions.length ? p.coreQuestions.map(String).slice(0, 5) : journey.coreQuestions,
+              emergentQuestion: typeof p.emergentQuestion === "string" && p.emergentQuestion.length > 20 ? p.emergentQuestion : journey.emergentQuestion,
+              steps: journey.steps.map((s) => ({ ...s, why: p.steps?.find((x) => x.id === s.id)?.why?.slice(0, 400) || s.why })),
+              generatedBy: `journey-engine + ${polished?.via ?? "ai"}`,
+            };
+            if (validateJourney(candidate).ok) journey = candidate;
+          }
+        } catch { /* keep the deterministic journey */ }
+      }
+
+      const check = validateJourney(journey);
+      if (!check.ok) throw new Error(`journey failed validation: ${check.problems.join("; ")}`);
+      const id = await saveJourneyForUser(ctx.user.id, input.questions, {
+        coreQuestions: journey.coreQuestions,
+        emergentQuestion: journey.emergentQuestion,
+        steps: journey.steps.map((s) => ({ id: s.id, path: s.path, title: s.title, why: s.why, kind: s.kind })),
+        generatedBy: journey.generatedBy,
+      });
+      const spoken =
+        `I've read everything you asked and everything in your assessment. It comes down to ${journey.coreQuestions.length} questions. ` +
+        journey.coreQuestions.map((q, i) => `${i + 1}: ${q}`).join(" ") +
+        ` And one you haven't asked yet: ${journey.emergentQuestion} ` +
+        `I've laid out ${journey.steps.length} pages in order — start with ${journey.steps[0]!.title} and each one builds on the last.`;
+      return { gated: false as const, journey, journeyId: id, spoken };
+    }),
+
+  latestJourney: protectedProcedure.query(async ({ ctx }) => getLatestJourneyForUser(ctx.user.id)),
 });
 ```
 
@@ -40551,753 +41918,6 @@ export async function invokePortalAI(
   } finally {
     if (timer) clearTimeout(timer);
   }
-}
-```
-
-## `server/rothPdfReport.ts`
-
-```ts
-import PDFDocument from "pdfkit";
-
-const GREEN = "#22c55e";
-const DARK = "#0a1628";
-const BLUE = "#3b82f6";
-const AMBER = "#f59e0b";
-const RED = "#ef4444";
-const GRAY = "#7a95b8";
-const WHITE = "#ffffff";
-const PURPLE = "#8b5cf6";
-const CYAN = "#06b6d4";
-
-function fmtFull(n: number): string {
-  return `$${Math.round(n).toLocaleString()}`;
-}
-
-function fmtCompact(n: number): string {
-  if (Math.abs(n) >= 1_000_000) return `$${(n / 1_000_000).toFixed(2)}M`;
-  if (Math.abs(n) >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${Math.round(n).toLocaleString()}`;
-}
-
-export async function generateRothReport(params: {
-  iraBalance: number; conversionPortion: number; homeEquity: number;
-  age: number; income: number; filingStatus: string; currentTaxBracket: number;
-  iulYears: number; strategyYears: number; solarEquity: boolean;
-  rentalGrossYield: number; realEstateAppreciation: number; helocRate: number;
-  clientName?: string;
-  carrierId?: string;
-  carrierAvgReturn?: number;
-}): Promise<Buffer> {
-  // A Mutual Life Accumulator III baseline rates (sample illustration)
-  const IUL_LOAD_FEE = 0.08;   // 8% Y1, 6% Y2-5, 0% after (using Y1 as default)
-  const IUL_LOAN_RATE = 0.05;  // 5% declared rate loan
-  const IUL_AVG_RETURN = params.carrierAvgReturn ?? 0.12; // 12% annual growth (user instruction)
-  const IUL_COI_RATE = 0.008;  // 0.8% age-based COI starting rate
-
-  const {
-    iraBalance, conversionPortion, homeEquity, age, income,
-    filingStatus, currentTaxBracket, iulYears, strategyYears,
-    solarEquity: isSolar, rentalGrossYield, realEstateAppreciation, helocRate,
-    clientName,
-  } = params;
-
-  const iraValue = iraBalance;
-  const conversionAmount = iraValue * conversionPortion;
-  const newRothValue = conversionAmount;
-  const taxSavings = iraValue * 0.50;
-  const halfTaxSavings = taxSavings / 2;
-  const solarEnhancement = isSolar ? iraValue * 0.22 : 0;
-  const targetPropertyPrice = iraValue / 0.4;
-  const totalPropertyCount = Math.max(1, strategyYears);
-  const perPropertyPrice = targetPropertyPrice / totalPropertyCount;
-  const downPayment = targetPropertyPrice * 0.30;
-  const mortgageAmount = targetPropertyPrice * 0.70;
-  const helocAmount = downPayment;
-  const mortgageRate = 0.065;
-  const monthlyInterestOnlyPayment = Math.round(mortgageAmount * (mortgageRate / 12));
-  const monthlyHelocPayment = Math.round(helocAmount * helocRate / 12);
-  const year1Premium = isSolar ? solarEnhancement : halfTaxSavings;
-  const year2Premium = isSolar ? halfTaxSavings : halfTaxSavings;
-
-  // ── Build IUL projection ──
-  const iulRows: any[] = [];
-  let accountValue = 0;
-  let cumulativeLoanBalance = 0;
-  let cumulativePremiums = 0;
-
-  for (let y = 1; y <= iulYears; y++) {
-    let premium = 0;
-    let premiumSource = "";
-    let policyLoanTaken = 0;
-    let strPrincipalPayment = 0;
-
-    if (y === 1) {
-      premium = year1Premium;
-      premiumSource = isSolar ? "Solar equity (22%)" : "Half tax savings";
-    } else if (y === 2) {
-      premium = year2Premium;
-      premiumSource = isSolar ? "Roth funds" : "Other half savings";
-      const month13Loan = iraValue * 0.25;
-      policyLoanTaken += month13Loan;
-      strPrincipalPayment += month13Loan;
-    } else if (y === 3) {
-      premium = isSolar ? 0 : halfTaxSavings;
-      premiumSource = isSolar ? "No new premium" : "IRA fund";
-      const surrenderValue = accountValue * 0.80;
-      policyLoanTaken += surrenderValue;
-      strPrincipalPayment += surrenderValue;
-    } else if (y >= 4) {
-      const borrowForPremium = accountValue * 0.80 * 0.5;
-      premium = borrowForPremium;
-      premiumSource = `Borrow cascade Y${y}`;
-      policyLoanTaken += borrowForPremium;
-    }
-
-    // A Mutual Life Accumulator III: 8% Y1, 6% Y2-5, 0% after
-    const yearLoadRate = y === 1 ? 0.08 : (y <= 5 ? 0.06 : 0);
-    const loadFee = premium * yearLoadRate;
-    const coiCost = premium * IUL_COI_RATE;
-    const netPremiumToAccount = premium - loadFee - coiCost;
-    cumulativePremiums += premium;
-    accountValue += netPremiumToAccount;
-    const interestEarned = accountValue * IUL_AVG_RETURN;
-    accountValue += interestEarned;
-    cumulativeLoanBalance = cumulativeLoanBalance * (1 + IUL_LOAN_RATE) + policyLoanTaken;
-    const netCashValue = accountValue - cumulativeLoanBalance;
-
-    iulRows.push({
-      year: y, premium: Math.round(premium), premiumSource,
-      loadFee: Math.round(loadFee), coiCost: Math.round(coiCost),
-      interestEarned: Math.round(interestEarned),
-      endingAccountValue: Math.round(accountValue),
-      cumulativeLoanBalance: Math.round(cumulativeLoanBalance),
-      netCashValue: Math.round(netCashValue),
-      strPrincipalPayment: Math.round(strPrincipalPayment),
-      cumulativePremiums: Math.round(cumulativePremiums),
-    });
-  }
-
-  // ── Build STR projection ──
-  const strRows: any[] = [];
-  let principalOwed = mortgageAmount;
-  let helocBalance = helocAmount;
-  let totalInterestPaid = 0;
-  let propertiesAcquired = 0;
-
-  for (let y = 1; y <= 20; y++) {
-    const newPropsThisYear = y <= strategyYears ? Math.ceil(totalPropertyCount / strategyYears) : 0;
-    propertiesAcquired = Math.min(propertiesAcquired + newPropsThisYear, totalPropertyCount);
-    const activePropertyValue = perPropertyPrice * propertiesAcquired;
-    const currentPropertyValue = activePropertyValue * Math.pow(1 + realEstateAppreciation, y);
-    const rentalIncome = Math.round(currentPropertyValue * rentalGrossYield);
-    const intOnlyPmt = Math.round(principalOwed * (mortgageRate / 12) * 12);
-    const helocPmt = Math.round(helocBalance * helocRate);
-    totalInterestPaid += intOnlyPmt + helocPmt;
-    const iulPrincipalApplied = iulRows[y - 1]?.strPrincipalPayment ?? 0;
-    principalOwed = Math.max(0, principalOwed - iulPrincipalApplied);
-    const netCashFlow = rentalIncome - intOnlyPmt - helocPmt;
-    const propertyEquity = Math.round(currentPropertyValue) - principalOwed;
-
-    strRows.push({
-      year: y, propertyValue: Math.round(currentPropertyValue), rentalIncome,
-      interestOnlyPayment: intOnlyPmt, helocPayment: helocPmt, netCashFlow,
-      principalOwed: Math.round(principalOwed), helocBalance: Math.round(helocBalance),
-      propertyEquity: Math.round(propertyEquity), totalInterestPaid: Math.round(totalInterestPaid),
-    });
-  }
-
-  // ── Build Roth projection ──
-  let rothBalance = newRothValue;
-  const rothRows: { year: number; balance: number }[] = [];
-  for (let y = 1; y <= iulYears; y++) {
-    rothBalance *= 1.05;
-    rothRows.push({ year: y, balance: Math.round(rothBalance) });
-  }
-
-  const strategyLabel = isSolar
-    ? "0% Year 1 Strategy - Solar Equity"
-    : `0% Year ${strategyYears} Strategy - Non Solar`;
-
-  const lastIul = iulRows[iulRows.length - 1];
-  const lastStr = strRows[strRows.length - 1];
-  const lastRoth = rothRows[rothRows.length - 1];
-  const totalRentalIncome = strRows.reduce((s: number, r: any) => s + r.rentalIncome, 0);
-  const totalWealth = (lastIul?.netCashValue ?? 0) + (lastStr?.propertyEquity ?? 0) + (lastRoth?.balance ?? 0);
-  const initialInvestment = iraBalance + homeEquity;
-  const wealthMultiplier = initialInvestment > 0 ? totalWealth / initialInvestment : 0;
-
-  // ── Rate Stress Test (8%, 10%, 12%, 14%) ──
-  const stressRates = [0.08, 0.10, 0.12, 0.14];
-  function runStressScenario(creditRate: number) {
-    let av = 0;
-    let lb = 0;
-    let cp = 0;
-    const yearly: { year: number; av: number; ncv: number }[] = [];
-    for (let y = 1; y <= iulYears; y++) {
-      let prem: number;
-      let loan = 0;
-      if (y === 1) { prem = year1Premium; }
-      else if (y === 2) { prem = year2Premium; loan = iraValue * 0.25; }
-      else if (y === 3) { prem = year2Premium; loan = av * 0.90 * 0.80; }
-      else { prem = year2Premium; loan = prem; }
-      cp += prem;
-      const lr = y === 1 ? 0.08 : (y <= 5 ? 0.06 : 0);
-      const net = prem - prem * lr - prem * IUL_COI_RATE;
-      av += net;
-      av += av * creditRate;
-      lb += loan;
-      lb += lb * IUL_LOAN_RATE;
-      yearly.push({ year: y, av: Math.round(av), ncv: Math.round(av - lb) });
-    }
-    return { yearly, finalAV: Math.round(av), finalNCV: Math.round(av - lb), totalPremiums: Math.round(cp) };
-  }
-  const stressResults = stressRates.map(r => ({ rate: r, label: `${(r * 100).toFixed(0)}%`, ...runStressScenario(r) }));
-
-  // ── Generate PDF ──
-  return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ size: "A4", margin: 40, bufferPages: true });
-    const chunks: Buffer[] = [];
-    doc.on("data", (c: Buffer) => chunks.push(c));
-    doc.on("end", () => resolve(Buffer.concat(chunks)));
-    doc.on("error", reject);
-
-    // ═══════════════════════════════════════════════════════════════
-    // PAGE 1: COVER & STRATEGY SUMMARY
-    // ═══════════════════════════════════════════════════════════════
-    doc.rect(0, 0, doc.page.width, 100).fill(DARK);
-    doc.fontSize(24).fillColor(GREEN).text("Russell Capital Systems™", 40, 22);
-    doc.fontSize(10).fillColor(WHITE).text("Turn Capital Into Income\u2122", 40, 50);
-    doc.fontSize(12).fillColor(WHITE).text(strategyLabel, 40, 70);
-    doc.fontSize(8).fillColor(GRAY).text(
-      `Prepared ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}` +
-      (clientName ? ` | Client: ${clientName}` : "") +
-      ` | Age ${age} | Income $${income.toLocaleString()} | ${filingStatus}`,
-      40, 86
-    );
-
-    doc.moveDown(3);
-
-    // Strategy Summary
-    doc.fontSize(14).fillColor(GREEN).text("Strategy Summary", 40);
-    doc.moveDown(0.5);
-
-    const summaryItems: [string, string][] = [
-      ["IRA Balance", fmtFull(iraBalance)],
-      ["Conversion Amount", fmtFull(conversionAmount)],
-      ["New Roth IRA Value", fmtFull(newRothValue)],
-      ["Tax Savings (50%)", fmtFull(taxSavings)],
-      ...(isSolar ? [["Solar Enhancement (+22%)", fmtFull(solarEnhancement)] as [string, string]] : []),
-      ["Target STR Total (IRA / 0.4)", fmtFull(targetPropertyPrice)],
-      ["Properties", `${totalPropertyCount} @ ${fmtFull(perPropertyPrice)} each`],
-      ["Down Payment (30%)", fmtFull(downPayment)],
-      ["Mortgage (70%)", fmtFull(mortgageAmount)],
-      ["Monthly Interest-Only", fmtFull(monthlyInterestOnlyPayment)],
-      ["Year 1 IUL Premium", fmtFull(year1Premium)],
-      ["Year 2 IUL Premium", fmtFull(year2Premium)],
-      ["IUL Illustrated Rate", `${(IUL_AVG_RETURN * 100).toFixed(0)}% (A Mutual Life Accumulator III)`],
-    ];
-
-    summaryItems.forEach(([label, value], i) => {
-      const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
-      doc.fontSize(9).fillColor(GRAY).text(label, 50, rowY, { width: 200 });
-      doc.fontSize(9).fillColor(WHITE).text(value, 260, rowY, { width: 250 });
-      doc.moveDown(0.3);
-    });
-
-    // 20-Year Wealth Summary Box
-    doc.moveDown(1);
-    doc.rect(40, doc.y - 4, 515, 80).fill("#052e16").lineWidth(1).stroke(GREEN);
-    const boxY = doc.y;
-    doc.fontSize(12).fillColor(GREEN).text("20-Year Total Wealth Projection", 60, boxY);
-    doc.fontSize(20).fillColor(WHITE).text(fmtFull(totalWealth), 60, boxY + 20);
-    doc.fontSize(9).fillColor(GRAY).text(`${wealthMultiplier.toFixed(1)}x wealth multiplier on ${fmtFull(initialInvestment)} initial investment`, 60, boxY + 48);
-    doc.fontSize(9).fillColor(GREEN).text(`IUL Net Cash: ${fmtFull(lastIul?.netCashValue ?? 0)}`, 320, boxY + 20);
-    doc.fontSize(9).fillColor(BLUE).text(`Property Equity: ${fmtFull(lastStr?.propertyEquity ?? 0)}`, 320, boxY + 34);
-    doc.fontSize(9).fillColor(AMBER).text(`Roth Balance: ${fmtFull(lastRoth?.balance ?? 0)}`, 320, boxY + 48);
-    doc.y = boxY + 80;
-
-    // ═══════════════════════════════════════════════════════════════
-    // PAGE 2: IUL PROJECTION TABLE
-    // ═══════════════════════════════════════════════════════════════
-    doc.addPage();
-    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(GREEN).text(`${iulYears}-Year IUL Projection — A Mutual Life Accumulator III`, 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text(`${(IUL_AVG_RETURN * 100).toFixed(0)}% illustrated rate | 8%/6%/0% premium loads | 5% policy loan rate`, 40, 36);
-    doc.moveDown(2);
-
-    const iulCols = ["Yr", "Premium", "Source", "Load", "COI", "Interest", "Acct Value", "Loan Bal", "Net Cash"];
-    const iulColX = [40, 65, 110, 195, 235, 275, 330, 400, 465];
-    const iulColW = [25, 45, 85, 40, 40, 55, 70, 65, 70];
-
-    const drawIulHeader = () => {
-      doc.rect(40, doc.y - 2, 515, 14).fill(DARK);
-      const headerY = doc.y;
-      iulCols.forEach((col, i) => {
-        doc.fontSize(7).fillColor(GREEN).text(col, iulColX[i], headerY - 12, { width: iulColW[i] });
-      });
-      doc.moveDown(0.3);
-    };
-
-    drawIulHeader();
-
-    iulRows.forEach((row: any, i: number) => {
-      if (doc.y > 740) {
-        doc.addPage();
-        drawIulHeader();
-      }
-      const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill("#0f1e35");
-      const vals = [
-        String(row.year), fmtFull(row.premium), row.premiumSource.substring(0, 18),
-        fmtFull(row.loadFee), fmtFull(row.coiCost), fmtFull(row.interestEarned),
-        fmtFull(row.endingAccountValue), fmtFull(row.cumulativeLoanBalance), fmtFull(row.netCashValue),
-      ];
-      vals.forEach((v, ci) => {
-        const color = ci === 5 ? GREEN : ci === 7 ? RED : ci === 8 ? (row.netCashValue >= 0 ? GREEN : RED) : WHITE;
-        doc.fontSize(7).fillColor(color).text(v, iulColX[ci], rowY, { width: iulColW[ci] });
-      });
-      doc.moveDown(0.2);
-    });
-
-    // ═══════════════════════════════════════════════════════════════
-    // PAGE 3: STR PROJECTION + ROTH
-    // ═══════════════════════════════════════════════════════════════
-    doc.addPage();
-    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(GREEN).text("20-Year STR Property Projection", 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text(`${totalPropertyCount} propert${totalPropertyCount > 1 ? "ies" : "y"} | ${(realEstateAppreciation * 100).toFixed(0)}% appreciation | ${(rentalGrossYield * 100).toFixed(0)}% gross yield`, 40, 36);
-    doc.moveDown(2);
-
-    const strCols = ["Yr", "Prop Value", "Rental Inc", "Int-Only", "HELOC", "Net Cash", "Princ Owed", "Equity"];
-    const strColX = [40, 65, 130, 205, 280, 345, 410, 475];
-    const strColW = [25, 65, 75, 75, 65, 65, 65, 60];
-
-    const drawStrHeader = () => {
-      doc.rect(40, doc.y - 2, 515, 14).fill(DARK);
-      const headerY = doc.y;
-      strCols.forEach((col, i) => {
-        doc.fontSize(7).fillColor(GREEN).text(col, strColX[i], headerY - 12, { width: strColW[i] });
-      });
-      doc.moveDown(0.3);
-    };
-
-    drawStrHeader();
-
-    strRows.forEach((row: any, i: number) => {
-      if (doc.y > 740) {
-        doc.addPage();
-        drawStrHeader();
-      }
-      const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill("#0f1e35");
-      const vals = [
-        String(row.year), fmtFull(row.propertyValue), fmtFull(row.rentalIncome),
-        fmtFull(row.interestOnlyPayment), fmtFull(row.helocPayment),
-        `${row.netCashFlow >= 0 ? "+" : ""}${fmtFull(row.netCashFlow)}`,
-        fmtFull(row.principalOwed), fmtFull(row.propertyEquity),
-      ];
-      vals.forEach((v, ci) => {
-        const color = ci === 2 ? GREEN : ci === 3 || ci === 4 ? RED : ci === 5 ? (row.netCashFlow >= 0 ? GREEN : RED) : ci === 7 ? BLUE : WHITE;
-        doc.fontSize(7).fillColor(color).text(v, strColX[ci], rowY, { width: strColW[ci] });
-      });
-      doc.moveDown(0.2);
-    });
-
-    // Roth projection mini-table
-    doc.moveDown(1);
-    doc.fontSize(12).fillColor(AMBER).text("Roth IRA Growth (5% Tax-Free)", 40, doc.y);
-    doc.moveDown(0.5);
-
-    const rothDisplay = rothRows.filter((_, i) => (i + 1) % 5 === 0 || i === 0);
-    rothDisplay.forEach((row, i) => {
-      const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
-      doc.fontSize(9).fillColor(GRAY).text(`Year ${row.year}`, 50, rowY, { width: 100 });
-      doc.fontSize(9).fillColor(AMBER).text(fmtFull(row.balance), 160, rowY, { width: 150 });
-      doc.moveDown(0.3);
-    });
-
-    // ═══════════════════════════════════════════════════════════════
-    // PAGE 4: COMBINED SUMMARY
-    // ═══════════════════════════════════════════════════════════════
-    doc.addPage();
-    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(GREEN).text("Combined Strategy Summary", 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text(`${iulYears}-year projection | ${strategyLabel}`, 40, 36);
-    doc.moveDown(2);
-
-    const grandItems: [string, string, string][] = [
-      ["IUL Account Value", fmtFull(lastIul?.endingAccountValue ?? 0), GREEN],
-      ["IUL Net Cash Value (after loan payoff)", fmtFull(lastIul?.netCashValue ?? 0), GREEN],
-      ["IUL Loan Balance", fmtFull(lastIul?.cumulativeLoanBalance ?? 0), RED],
-      ["Total IUL Premiums Paid", fmtFull(lastIul?.cumulativePremiums ?? 0), WHITE],
-      ["Total Rental Income (20yr)", fmtFull(totalRentalIncome), GREEN],
-      ["Property Appreciation", `+${fmtFull((lastStr?.propertyValue ?? 0) - targetPropertyPrice)}`, BLUE],
-      ["Final Property Value", fmtFull(lastStr?.propertyValue ?? 0), BLUE],
-      ["Final Property Equity", fmtFull(lastStr?.propertyEquity ?? 0), BLUE],
-      ["Final Roth Balance", fmtFull(lastRoth?.balance ?? 0), AMBER],
-      ["Total Wealth at Year 20", fmtFull(totalWealth), GREEN],
-      ["Initial Investment", fmtFull(initialInvestment), WHITE],
-      ["Wealth Multiplier", `${wealthMultiplier.toFixed(2)}x`, GREEN],
-    ];
-
-    grandItems.forEach(([label, value, color], i) => {
-      const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 16).fill("#0f1e35");
-      const isTotal = label.includes("Total Wealth") || label.includes("Multiplier");
-      doc.fontSize(isTotal ? 10 : 9).fillColor(GRAY).text(label, 50, rowY, { width: 280 });
-      doc.fontSize(isTotal ? 11 : 9).fillColor(color).text(value, 340, rowY, { width: 200 });
-      doc.moveDown(isTotal ? 0.5 : 0.3);
-    });
-
-    // ═══════════════════════════════════════════════════════════════
-    // PAGE 5: RATE STRESS TEST (8% / 10% / 12% / 14%)
-    // ═══════════════════════════════════════════════════════════════
-    doc.addPage();
-    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(CYAN).text("Rate Sensitivity — IUL Performance at 8% / 10% / 12% / 14%", 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text("Deterministic projections showing how different illustrated rates affect your IUL cash values", 40, 36);
-    doc.moveDown(2);
-
-    // Summary comparison table
-    doc.fontSize(11).fillColor(WHITE).text(`Year ${iulYears} Final Values by Illustrated Rate`, 40, doc.y);
-    doc.moveDown(0.5);
-
-    // Header
-    const stressColX = [40, 120, 230, 350, 460];
-    const stressColW = [80, 110, 120, 110, 80];
-    const stressHeaders = ["Rate", "Account Value", "Net Cash Value", "Total Premiums", "Multiplier"];
-    doc.rect(40, doc.y - 2, 515, 16).fill(DARK);
-    const shY = doc.y;
-    stressHeaders.forEach((h, i) => {
-      doc.fontSize(8).fillColor(CYAN).text(h, stressColX[i], shY, { width: stressColW[i] });
-    });
-    doc.moveDown(0.5);
-
-    stressResults.forEach((s, i) => {
-      const rowY = doc.y;
-      const isBase = s.rate === IUL_AVG_RETURN;
-      if (isBase) {
-        doc.rect(40, rowY - 2, 515, 16).fill("#164e63");
-      } else if (i % 2 === 0) {
-        doc.rect(40, rowY - 2, 515, 16).fill("#0f1e35");
-      }
-      const mult = s.totalPremiums > 0 ? (s.finalAV / s.totalPremiums).toFixed(1) + "x" : "N/A";
-      const color = isBase ? CYAN : s.rate >= 0.12 ? GREEN : s.rate >= 0.10 ? AMBER : RED;
-      doc.fontSize(9).fillColor(color).text(s.label + (isBase ? " (base)" : ""), stressColX[0], rowY, { width: stressColW[0] });
-      doc.fontSize(9).fillColor(WHITE).text(fmtFull(s.finalAV), stressColX[1], rowY, { width: stressColW[1] });
-      doc.fontSize(9).fillColor(s.finalNCV >= 0 ? GREEN : RED).text(fmtFull(s.finalNCV), stressColX[2], rowY, { width: stressColW[2] });
-      doc.fontSize(9).fillColor(GRAY).text(fmtFull(s.totalPremiums), stressColX[3], rowY, { width: stressColW[3] });
-      doc.fontSize(9).fillColor(color).text(mult, stressColX[4], rowY, { width: stressColW[4] });
-      doc.moveDown(0.4);
-    });
-
-    // Year-by-year comparison at key milestones
-    doc.moveDown(1);
-    doc.fontSize(11).fillColor(WHITE).text("Key Milestone Comparison", 40, doc.y);
-    doc.moveDown(0.5);
-
-    const milestones = [5, 10, 15, iulYears];
-    const mColX = [40, 120, 220, 320, 420];
-    const mColW = [80, 100, 100, 100, 100];
-
-    // Header
-    doc.rect(40, doc.y - 2, 515, 16).fill(DARK);
-    const mhY = doc.y;
-    doc.fontSize(8).fillColor(CYAN).text("Year", mColX[0], mhY, { width: mColW[0] });
-    stressResults.forEach((s, i) => {
-      doc.fontSize(8).fillColor(CYAN).text(`${s.label} Net Cash`, mColX[i + 1], mhY, { width: mColW[i + 1] });
-    });
-    doc.moveDown(0.5);
-
-    milestones.forEach((yr, mi) => {
-      const rowY = doc.y;
-      if (mi % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
-      doc.fontSize(9).fillColor(WHITE).text(`Year ${yr}`, mColX[0], rowY, { width: mColW[0] });
-      stressResults.forEach((s, i) => {
-        const val = s.yearly[yr - 1]?.ncv ?? 0;
-        const color = val >= 0 ? GREEN : RED;
-        doc.fontSize(8).fillColor(color).text(fmtCompact(val), mColX[i + 1], rowY, { width: mColW[i + 1] });
-      });
-      doc.moveDown(0.3);
-    });
-
-    // Explanation
-    doc.moveDown(0.5);
-    doc.fontSize(8).fillColor(GRAY).text(
-      "This analysis shows how different illustrated rates affect your IUL performance. " +
-      "The 12% base case uses the A Mutual Life Accumulator III illustrated rate per the sample illustration. " +
-      "The 8% scenario represents a conservative estimate, while 14% shows upside potential. " +
-      "All scenarios use identical charge structures (8%/6%/0% loads, 0.8% COI, 5% loan rate). " +
-      "The IUL floor of 0% means actual returns cannot go negative in any given year.",
-      40, doc.y, { width: 515, lineGap: 3 }
-    );
-
-    // ═══════════════════════════════════════════════════════════════
-    // PAGE 6: MONTE CARLO SIMULATION
-    // ═══════════════════════════════════════════════════════════════
-    doc.addPage();
-    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(PURPLE).text("Monte Carlo Simulation — IUL Net Cash Value", 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text("500 simulations | 15% S&P 500 volatility | 0% IUL floor", 40, 36);
-    doc.moveDown(2);
-
-    // Run Monte Carlo
-    const MC_SIMS = 500;
-    const MC_VOL = 0.15;
-    const mcPercentiles: { year: number; p10: number; p25: number; p50: number; p75: number; p90: number; actual: number }[] = [];
-    const allPaths: number[][] = [];
-    for (let s = 0; s < MC_SIMS; s++) {
-      const path: number[] = [];
-      let av = 0;
-      for (let y = 0; y < iulYears; y++) {
-        const premium = iulRows[y].premium;
-        const u1 = Math.random();
-        const u2 = Math.random();
-        const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-        const randomReturn = Math.max(0, IUL_AVG_RETURN + MC_VOL * z);
-        av += premium * (1 - IUL_LOAD_FEE);
-        av += av * randomReturn;
-        av -= av * IUL_COI_RATE;
-        av = Math.max(0, av);
-        const loanBal = iulRows[y].cumulativeLoanBalance;
-        path.push(Math.max(0, av - loanBal));
-      }
-      allPaths.push(path);
-    }
-    for (let y = 0; y < iulYears; y++) {
-      const vals = allPaths.map(p => p[y]).sort((a, b) => a - b);
-      const pct = (p: number) => vals[Math.floor(vals.length * p)];
-      mcPercentiles.push({
-        year: y + 1,
-        p10: Math.round(pct(0.10)),
-        p25: Math.round(pct(0.25)),
-        p50: Math.round(pct(0.50)),
-        p75: Math.round(pct(0.75)),
-        p90: Math.round(pct(0.90)),
-        actual: iulRows[y].netCashValue,
-      });
-    }
-
-    // Monte Carlo percentile table
-    doc.fontSize(11).fillColor(WHITE).text("Percentile Outcomes by Year", 40, doc.y);
-    doc.moveDown(0.5);
-
-    const mcCols = ["Year", "10th %ile", "25th %ile", "Median", "75th %ile", "90th %ile", "Base Case"];
-    const mcColX = [40, 80, 145, 215, 285, 360, 435];
-    const mcColW = [40, 65, 70, 70, 75, 75, 75];
-
-    const drawMcHeader = () => {
-      doc.rect(40, doc.y - 2, 515, 14).fill(DARK);
-      const headerY = doc.y;
-      mcCols.forEach((col, i) => {
-        doc.fontSize(7).fillColor(PURPLE).text(col, mcColX[i], headerY - 12, { width: mcColW[i] });
-      });
-      doc.moveDown(0.3);
-    };
-    drawMcHeader();
-
-    // Show every other year + final year
-    const mcDisplayYears = mcPercentiles.filter((_, i) => i % 2 === 0 || i === mcPercentiles.length - 1);
-    mcDisplayYears.forEach((row, i) => {
-      if (doc.y > 700) { doc.addPage(); drawMcHeader(); }
-      const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill("#0f1e35");
-      const vals = [
-        String(row.year), fmtCompact(row.p10), fmtCompact(row.p25),
-        fmtCompact(row.p50), fmtCompact(row.p75), fmtCompact(row.p90), fmtCompact(row.actual),
-      ];
-      const colors = [WHITE, RED, AMBER, PURPLE, BLUE, GREEN, GREEN];
-      vals.forEach((v, ci) => {
-        doc.fontSize(7).fillColor(colors[ci]).text(v, mcColX[ci], rowY, { width: mcColW[ci] });
-      });
-      doc.moveDown(0.2);
-    });
-
-    // Final year summary
-    const lastMc = mcPercentiles[mcPercentiles.length - 1];
-    doc.moveDown(0.8);
-    doc.fontSize(11).fillColor(WHITE).text(`Year ${iulYears} Final Outcomes`, 40, doc.y);
-    doc.moveDown(0.5);
-
-    const mcSummaryItems: [string, string, string][] = [
-      ["Worst Case (10th %ile)", fmtFull(lastMc.p10), RED],
-      ["Below Average (25th %ile)", fmtFull(lastMc.p25), AMBER],
-      ["Median (50th %ile)", fmtFull(lastMc.p50), PURPLE],
-      ["Above Average (75th %ile)", fmtFull(lastMc.p75), BLUE],
-      ["Best Case (90th %ile)", fmtFull(lastMc.p90), GREEN],
-      [`Base Case (${(IUL_AVG_RETURN * 100).toFixed(0)}% fixed)`, fmtFull(lastMc.actual), GREEN],
-    ];
-    mcSummaryItems.forEach(([label, value, color], i) => {
-      const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
-      doc.fontSize(9).fillColor(GRAY).text(label, 50, rowY, { width: 250 });
-      doc.fontSize(9).fillColor(color).text(value, 310, rowY, { width: 200 });
-      doc.moveDown(0.3);
-    });
-
-    doc.moveDown(0.5);
-    doc.fontSize(8).fillColor(GRAY).text(
-      "Monte Carlo simulation runs 500 paths with 15% annual volatility (historical S&P 500 average). " +
-      "The IUL floor of 0% prevents negative returns from reducing account value. " +
-      "Wider spreads in later years reflect compounding uncertainty. " +
-      `The base case uses a fixed ${(IUL_AVG_RETURN * 100).toFixed(0)}% annual return for comparison.`,
-      40, doc.y, { width: 515, lineGap: 3 }
-    );
-
-    // ═══════════════════════════════════════════════════════════════
-    // PAGE 7: SENSITIVITY ANALYSIS
-    // ═══════════════════════════════════════════════════════════════
-    doc.addPage();
-    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(CYAN).text("Sensitivity Analysis — IUL Net Cash Value", 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text("Median of 200 simulations per cell | Return Rate vs. Volatility", 40, 36);
-    doc.moveDown(2);
-
-    const sensReturnRates = [0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12];
-    const sensVolatilities = [0.10, 0.12, 0.15, 0.18, 0.20];
-    const SENS_SIMS = 200;
-    const sensGrid: number[][] = [];
-    let sensMin = Infinity, sensMax = -Infinity;
-
-    for (const ret of sensReturnRates) {
-      const row: number[] = [];
-      for (const vol of sensVolatilities) {
-        const finals: number[] = [];
-        for (let s = 0; s < SENS_SIMS; s++) {
-          let av = 0;
-          for (let y = 0; y < iulYears; y++) {
-            const premium = iulRows[y].premium;
-            const u1 = Math.random();
-            const u2 = Math.random();
-            const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-            const randomReturn = Math.max(0, ret + vol * z);
-            av += premium * (1 - IUL_LOAD_FEE);
-            av += av * randomReturn;
-            av -= av * IUL_COI_RATE;
-            av = Math.max(0, av);
-          }
-          const loanBal = iulRows[iulYears - 1].cumulativeLoanBalance;
-          finals.push(Math.max(0, av - loanBal));
-        }
-        finals.sort((a, b) => a - b);
-        const median = Math.round(finals[Math.floor(finals.length / 2)]);
-        row.push(median);
-        if (median < sensMin) sensMin = median;
-        if (median > sensMax) sensMax = median;
-      }
-      sensGrid.push(row);
-    }
-
-    doc.fontSize(11).fillColor(WHITE).text(`Year ${iulYears} IUL Net Cash Value — Return Rate vs. Volatility`, 40, doc.y);
-    doc.moveDown(0.5);
-
-    const sensTableX = 40;
-    const sensCellW = 82;
-    const sensLabelW = 85;
-    const sensCellH = 18;
-
-    // Header row
-    const sensHeaderY = doc.y;
-    doc.rect(sensTableX, sensHeaderY - 2, sensLabelW + sensCellW * sensVolatilities.length, sensCellH).fill(DARK);
-    doc.fontSize(7).fillColor(CYAN).text("Return \\ Vol", sensTableX + 4, sensHeaderY + 2, { width: sensLabelW - 8 });
-    sensVolatilities.forEach((v, i) => {
-      const isBase = v === 0.15;
-      const x = sensTableX + sensLabelW + i * sensCellW;
-      if (isBase) doc.rect(x, sensHeaderY - 2, sensCellW, sensCellH).fill("#164e63");
-      doc.fontSize(7).fillColor(isBase ? CYAN : GRAY).text(`${(v * 100).toFixed(0)}%`, x + 4, sensHeaderY + 2, { width: sensCellW - 8, align: "center" });
-    });
-    doc.y = sensHeaderY + sensCellH;
-
-    // Data rows
-    sensReturnRates.forEach((ret, ri) => {
-      const rowY = doc.y;
-      const isBaseRow = ret === 0.10;
-      doc.rect(sensTableX, rowY - 2, sensLabelW, sensCellH).fill(isBaseRow ? "#164e63" : "#0f1e35");
-      doc.fontSize(7).fillColor(isBaseRow ? CYAN : GRAY).text(`${(ret * 100).toFixed(0)}%`, sensTableX + 4, rowY + 2, { width: sensLabelW - 8 });
-      sensGrid[ri].forEach((val, ci) => {
-        const x = sensTableX + sensLabelW + ci * sensCellW;
-        const isBase = ret === 0.10 && sensVolatilities[ci] === 0.15;
-        const ratio = sensMax === sensMin ? 1 : (val - sensMin) / (sensMax - sensMin);
-        let bgColor = "#1c1917";
-        let textColor = RED;
-        if (isBase) { bgColor = "#164e63"; textColor = CYAN; }
-        else if (ratio >= 0.8) { bgColor = "#052e16"; textColor = GREEN; }
-        else if (ratio >= 0.6) { bgColor = "#0a3622"; textColor = "#86efac"; }
-        else if (ratio >= 0.4) { bgColor = "#0c2d48"; textColor = BLUE; }
-        else if (ratio >= 0.2) { bgColor = "#2a1a00"; textColor = AMBER; }
-        else { bgColor = "#2a0a0a"; textColor = RED; }
-        doc.rect(x, rowY - 2, sensCellW, sensCellH).fill(bgColor);
-        doc.fontSize(7).fillColor(textColor).text(fmtCompact(val), x + 4, rowY + 2, { width: sensCellW - 8, align: "center" });
-      });
-      doc.y = rowY + sensCellH;
-    });
-
-    doc.moveDown(1);
-    doc.fontSize(8).fillColor(GRAY).text(
-      "Each cell shows the median IUL net cash value (account value minus cumulative loan balance) " +
-      `at year ${iulYears} across 200 simulated paths per scenario. ` +
-      "Higher returns and lower volatility produce better outcomes. " +
-      "The highlighted cell (10% return, 15% volatility) represents the base case assumptions.",
-      40, doc.y, { width: 515, lineGap: 3 }
-    );
-
-    // Legend
-    doc.moveDown(0.5);
-    const legendItems: [string, string][] = [
-      ["High (top 20%)", GREEN], ["Above Avg", "#86efac"],
-      ["Medium", BLUE], ["Below Avg", AMBER], ["Stress", RED],
-    ];
-    let legendX = 40;
-    legendItems.forEach(([label, color]) => {
-      doc.rect(legendX, doc.y, 8, 8).fill(color);
-      doc.fontSize(7).fillColor(GRAY).text(label, legendX + 12, doc.y, { width: 80 });
-      legendX += 90;
-    });
-
-    // ═══════════════════════════════════════════════════════════════
-    // PAGE 8: DISCLAIMERS
-    // ═══════════════════════════════════════════════════════════════
-    doc.addPage();
-    doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(WHITE).text("Important Disclosures", 40, 18);
-    doc.moveDown(2);
-
-    const disclaimers = [
-      "This report is for illustrative purposes only and does not constitute financial, tax, or legal advice.",
-      "The IUL projections use the A Mutual Life Indexed UL Accumulator III illustrated rate and charge structure derived from the sample illustration. Actual policy performance will vary based on market conditions, index performance, and policy-specific factors.",
-      `The ${(IUL_AVG_RETURN * 100).toFixed(0)}% illustrated rate is not guaranteed. The A Mutual Life Accumulator III has a 0% floor (preventing negative returns) and a 14.5% cap on the S&P 500 index strategy. Historical 25-year compound crediting rate is approximately 6.75%.`,
-      "Real estate projections assume consistent appreciation and rental yields. Actual property performance depends on location, market conditions, property management, and other factors.",
-      "Tax savings estimates are approximate and depend on individual tax situations, filing status, and applicable deductions. Consult a qualified tax professional before making any conversion decisions.",
-      "Policy loans accrue interest at the declared rate and reduce the death benefit and cash surrender value. Excessive policy loans may cause the policy to lapse.",
-      "Monte Carlo simulations use historical S&P 500 volatility (approximately 15%) and are not predictive of future performance. Past performance does not guarantee future results.",
-      "Russell Capital Systems™ and its advisors are not affiliated with A Mutual Life, and this report does not represent an official carrier illustration.",
-    ];
-
-    disclaimers.forEach((text, i) => {
-      doc.fontSize(8).fillColor(GRAY).text(`${i + 1}. ${text}`, 50, doc.y, { width: 500, lineGap: 2 });
-      doc.moveDown(0.5);
-    });
-
-    doc.moveDown(1);
-    doc.fontSize(9).fillColor(WHITE).text("Russell Capital Systems™", 40, doc.y);
-    doc.fontSize(8).fillColor(GREEN).text("Turn Capital Into Income\u2122", 40, doc.y + 14);
-    doc.fontSize(7).fillColor(GRAY).text("www.RussellCapitalSystems.com", 40, doc.y + 28);
-
-    // Footer on each page
-    const footerText = "Russell Capital Systems™ | Confidential | For illustrative purposes only | Not financial advice";
-    const pageCount = doc.bufferedPageRange().count;
-    for (let i = 0; i < pageCount; i++) {
-      doc.switchToPage(i);
-      doc.fontSize(7).fillColor(GRAY).text(
-        `${footerText}  |  Page ${i + 1} of ${pageCount}`,
-        40, doc.page.height - 30, { align: "center", width: 515 }
-      );
-    }
-
-    doc.end();
-  });
 }
 ```
 

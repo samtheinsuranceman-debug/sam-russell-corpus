@@ -4,6 +4,9 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 
 ### Files in this part
 
+- `client/src/pages/portal/MeetingAgenda.tsx`
+- `client/src/pages/portal/Meetings.tsx`
+- `client/src/pages/portal/MorningRitual.tsx`
 - `client/src/pages/portal/MortgageKiller.tsx`
 - `client/src/pages/portal/MortgageKillerV3.tsx`
 - `client/src/pages/portal/MultiGenWealthTransfer.tsx`
@@ -30,9 +33,2581 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/pages/portal/PremiumFinancing.tsx`
 - `client/src/pages/portal/PresentationBuilder.tsx`
 - `client/src/pages/portal/QuickQuote.tsx`
-- `client/src/pages/portal/RealEstateMogul.tsx`
 
 ---
+
+## `client/src/pages/portal/MeetingAgenda.tsx`
+
+```tsx
+// @ts-nocheck
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { AppShell } from "@/components/AppShell";
+import { ExportToSlides } from "@/components/ExportToSlides";
+import { PageInsights } from "@/components/PageInsights";
+import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import {
+  ClipboardList,
+  Clock,
+  MessageSquare,
+  CheckCircle,
+  Download,
+  Loader2,
+  Mail,
+  Send,
+  Calendar,
+  Users,
+  Search,
+  Filter,
+  BarChart2,
+  PieChart as PieChartIcon,
+  Plus,
+  Edit,
+  Save,
+  X,
+  ChevronDown,
+  ChevronUp,
+  Settings,
+  MoreVertical,
+  Activity,
+  Target,
+  TrendingUp,
+  Briefcase,
+  Video,
+  Phone,
+  MapPin,
+  List,
+  Grid,
+  Maximize2,
+  RefreshCw,
+  Share2,
+  Copy,
+  Archive,
+  Star,
+  Zap,
+  Tag as TagIcon,
+} from "lucide-react";
+import { toast } from "sonner";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ComposedChart,
+  Legend
+} from "recharts";
+
+const MEETING_STATS = [
+  { name: "Strategy", value: 45 },
+  { name: "Initial", value: 25 },
+  { name: "Annual", value: 20 },
+  { name: "Delivery", value: 10 },
+];
+
+const MONTHLY_TRENDS = [{ month: "Jan", meetings: 12, avgDuration: 45, satisfaction: 4.2 },
+,
+  { month: "Feb", meetings: 19, avgDuration: 50, satisfaction: 4.5 },
+,
+  { month: "Mar", meetings: 15, avgDuration: 55, satisfaction: 4.3 },
+,
+  { month: "Apr", meetings: 22, avgDuration: 60, satisfaction: 4.7 },
+,
+  { month: "May", meetings: 18, avgDuration: 58, satisfaction: 4.6 }
+];
+
+const TOPIC_DISTRIBUTION = [
+  { subject: "Retirement", A: 120, B: 110, fullMark: 150 },
+  { subject: "Tax", A: 98, B: 130, fullMark: 150 },
+  { subject: "Estate", A: 86, B: 130, fullMark: 150 },
+  { subject: "Investment", A: 99, B: 100, fullMark: 150 },
+  { subject: "Insurance", A: 85, B: 90, fullMark: 150 },
+  { subject: "Education", A: 65, B: 85, fullMark: 150 },
+];
+
+const CLIENT_ENGAGEMENT = [
+  { name: "Q1", high: 4000, medium: 2400, low: 2400 },
+  { name: "Q2", high: 3000, medium: 1398, low: 2210 },
+  { name: "Q3", high: 2000, medium: 9800, low: 2290 },
+  { name: "Q4", high: 2780, medium: 3908, low: 2000 },
+];
+
+const SUCCESS_METRICS = [
+  { name: "Week 1", rate: 85, target: 90 },
+  { name: "Week 2", rate: 88, target: 90 },
+  { name: "Week 3", rate: 92, target: 90 },
+  { name: "Week 4", rate: 95, target: 90 },
+  { name: "Week 5", rate: 91, target: 90 },
+];
+
+const COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#ef4444", "#a855f7", "#ec4899"];
+
+export default function MeetingAgenda() {
+  const { user } = useAuth();
+  
+  const [clientId, setClientId] = useState<number | null>(null);
+  const [meetingType, setMeetingType] = useState("strategy_review");
+  const [duration, setDuration] = useState<number>(60);
+  const [emailRecipient, setEmailRecipient] = useState("");
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState<"setup" | "stats" | "history" | "templates" | "settings">("setup");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [customTopic, setCustomTopic] = useState("");
+  const [customTopicsList, setCustomTopicsList] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [notes, setNotes] = useState("");
+  const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
+  const [includeFinancials, setIncludeFinancials] = useState(true);
+  const [includeActionItems, setIncludeActionItems] = useState(true);
+  const [meetingLocation, setMeetingLocation] = useState("virtual");
+  const [attendees, setAttendees] = useState<string[]>([]);
+  const [newAttendee, setNewAttendee] = useState("");
+  const [agendaTitle, setAgendaTitle] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedBlocks, setEditedBlocks] = useState<any[]>([]);
+  const [chartView, setChartView] = useState<"monthly" | "quarterly">("monthly");
+  const [dateRange, setDateRange] = useState("ytd");
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [filterType, setFilterType] = useState("all");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [hoveredData, setHoveredData] = useState<any>(null);
+
+  const { data: clients } = trpc.clients.list.useQuery();
+  const { data: recentMeetings, refetch: refetchMeetings } = trpc.meetings.list.useQuery({ limit: 10 });
+  const { data: templates } = trpc.docs.listTemplates.useQuery();
+  const { data: teamMembers } = trpc.team.members.useQuery();
+  const { data: userStats } = trpc.dashboard.stats.useQuery();
+  const { data: tags } = trpc.tags.list.useQuery();
+  
+  const generateMut = trpc.meetingAgenda.generate.useMutation();
+  const exportPdfMut = trpc.meetingAgenda.exportPdf.useMutation({
+    onSuccess: (data) => {
+      window.open(data.url, "_blank");
+      toast.success("Agenda PDF exported!");
+    },
+    onError: () => toast.error("Failed to export PDF"),
+  });
+
+  const emailAgendaMut = trpc.meetingAgenda.emailAgenda.useMutation({
+    onSuccess: () => {
+      toast.success("Agenda emailed successfully!");
+      setEmailDialogOpen(false);
+      setEmailRecipient("");
+    },
+    onError: () => toast.error("Failed to send email"),
+  });
+
+  const saveTemplateMut = trpc.docs.saveTemplate.useMutation({
+    onSuccess: () => toast.success("Template saved!"),
+  });
+
+  const updateMeetingMut = trpc.meetings.update.useMutation({
+    onSuccess: () => {
+      toast.success("Meeting updated!");
+      refetchMeetings();
+    }
+  });
+
+  useEffect(() => {
+    if (clientId && clients) {
+      const client = clients.find((c) => c.id === clientId);
+      if (client && client.email) {
+        setEmailRecipient(client.email);
+      }
+    }
+  }, [clientId, clients]);
+
+  useEffect(() => {
+    if (generateMut.data) {
+      setEditedBlocks(generateMut.data.blocks || []);
+      setAgendaTitle(generateMut.data.title || `${meetingType.replace(/_/g, " ")} Meeting`);
+    }
+  }, [generateMut.data, meetingType]);
+
+  const filteredClients = useMemo(() => {
+    if (!clients) return [];
+    if (!searchQuery) return clients;
+    return clients.filter((c) => 
+      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (c.email && c.email.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+  }, [clients, searchQuery]);
+
+  const filteredMeetings = useMemo(() => {
+    if (!recentMeetings) return [];
+    let result = [...recentMeetings];
+    if (filterType !== "all") {
+      result = result.filter((m) => m.type === filterType);
+    }
+    if (sortOrder === "asc") {
+      result.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    } else {
+      result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+    return result;
+  }, [recentMeetings, filterType, sortOrder]);
+
+  const handleAddCustomTopic = useCallback(() => {
+    if (customTopic.trim() && !customTopicsList.includes(customTopic.trim())) {
+      setCustomTopicsList(prev => [...prev, customTopic.trim()]);
+      setCustomTopic("");
+    }
+  }, [customTopic, customTopicsList]);
+
+  const handleRemoveCustomTopic = useCallback((topic: string) => {
+    setCustomTopicsList(prev => prev.filter((t) => t !== topic));
+  }, []);
+
+  const handleAddAttendee = useCallback(() => {
+    if (newAttendee.trim() && !attendees.includes(newAttendee.trim())) {
+      setAttendees(prev => [...prev, newAttendee.trim()]);
+      setNewAttendee("");
+    }
+  }, [newAttendee, attendees]);
+
+  const handleRemoveAttendee = useCallback((attendee: string) => {
+    setAttendees(prev => prev.filter((a) => a !== attendee));
+  }, []);
+
+  const toggleSection = useCallback((section: string) => {
+    setExpandedSection(prev => prev === section ? null : section);
+  }, []);
+
+  const runGenerate = () => {
+    if (!clientId) { toast.error("Select a client"); return; }
+    setIsGenerating(true);
+    generateMut.mutate(
+      { 
+        clientId, 
+        meetingType, 
+        duration,
+        customTopics: customTopicsList,
+        priority,
+        includeFinancials
+      },
+      {
+        onSettled: () => setIsGenerating(false),
+        onSuccess: () => toast.success("Agenda generated successfully!")
+      }
+    );
+  };
+
+  const handleExportPdf = () => {
+    const agenda = generateMut.data;
+    if (!agenda) return;
+    exportPdfMut.mutate({
+      title: agendaTitle || agenda.title || `${meetingType.replace(/_/g, " ")} Meeting`,
+      clientName: agenda.clientName,
+      meetingType: agenda.meetingType,
+      duration: agenda.duration,
+      blocks: isEditing ? editedBlocks : (agenda.blocks ?? []),
+      keyQuestions: agenda.keyQuestions,
+      followUpActions: agenda.followUpActions,
+    });
+  };
+
+  const handleEmailAgenda = () => {
+    const agenda = generateMut.data;
+    if (!emailRecipient || !exportPdfMut.data?.url) {
+      toast.error("Please generate and export the agenda first");
+      return;
+    }
+    emailAgendaMut.mutate({
+      pdfUrl: exportPdfMut.data.url,
+      clientEmail: emailRecipient,
+      clientName: agenda?.clientName ?? "Client",
+      agendaTitle: agendaTitle || (agenda?.title ?? "Meeting Agenda"),
+    });
+  };
+
+  const saveAsTemplate = () => {
+    if (!generateMut.data) return;
+    saveTemplateMut.mutate({
+      name: `${meetingType} Template - ${new Date().toLocaleDateString()}`,
+      content: JSON.stringify(generateMut.data),
+      type: "agenda"
+    });
+  };
+
+  const renderSetupTab = () => (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Left Column: Setup */}
+      <div className="lg:col-span-4 space-y-6">
+        <div className="rc-card">
+          <div className="mb-4 flex justify-between items-center">
+            <div>
+              <h2 className="text-lg font-semibold text-white">Meeting Details</h2>
+              <p className="text-sm text-[#7a95b8]">Configure your upcoming meeting</p>
+            </div>
+            <button 
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="text-xs text-[#3b82f6] hover:text-[#60a5fa] flex items-center gap-1"
+            >
+              {showAdvanced ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              {showAdvanced ? "Basic" : "Advanced"}
+            </button>
+          </div>
+          
+          <div className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Client</label>
+              <div className="relative mb-2">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7a95b8]" />
+                <input 
+                  type="text" 
+                  placeholder="Search clients..." 
+                  className="rc-input pl-9 w-full"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              
+              {!clients ? (
+                <div className="flex items-center justify-center p-4 border border-[#12233e] rounded-lg bg-[#060d19]">
+                  <Loader2 className="w-5 h-5 text-[#22c55e] animate-spin" />
+                </div>
+              ) : (
+                <div className="max-h-48 overflow-y-auto border border-[#12233e] rounded-lg bg-[#060d19] p-1 custom-scrollbar">
+                  {filteredClients.length === 0 ? (
+                    <div className="p-3 text-center text-sm text-[#7a95b8]">No clients found</div>
+                  ) : (
+                    filteredClients.map((c) => (
+                      <button
+                        key={c.id}
+                        onClick={() => setClientId(c.id)}
+                        className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors flex items-center justify-between ${
+                          clientId === c.id 
+                            ? "bg-[#22c55e]/10 text-[#22c55e] font-medium" 
+                            : "text-[#c8d8ec] hover:bg-[#12233e]"
+                        }`}
+                      >
+                        <div className="flex flex-col">
+                          <span>{c.name}</span>
+                          <span className="text-xs opacity-70">{c.email || 'No email'}</span>
+                        </div>
+                        {clientId === c.id && <CheckCircle className="w-4 h-4" />}
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Meeting Type</label>
+              <div className="relative">
+                <select 
+                  className="rc-input w-full appearance-none pr-10"
+                  value={meetingType}
+                  onChange={(e) => setMeetingType(e.target.value)}
+                >
+                  <option value="strategy_review">Strategy Review</option>
+                  <option value="initial_consultation">Initial Consultation</option>
+                  <option value="annual_review">Annual Review</option>
+                  <option value="policy_delivery">Policy Delivery</option>
+                  <option value="roth_conversion">Roth Conversion Planning</option>
+                  <option value="estate_planning">Estate Planning</option>
+                  <option value="tax_optimization">Tax Optimization</option>
+                  <option value="portfolio_rebalance">Portfolio Rebalance</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7a95b8] pointer-events-none" />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Duration (Minutes)</label>
+              <div className="grid grid-cols-5 gap-2">
+                {[15, 30, 45, 60, 90].map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setDuration(d)}
+                    className={`py-2 text-sm rounded-lg border transition-all ${
+                      duration === d
+                        ? "border-[#22c55e] bg-[#22c55e]/10 text-[#22c55e]"
+                        : "border-[#12233e] bg-[#060d19] text-[#7a95b8] hover:border-[#7a95b8]"
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {showAdvanced && (
+              <div className="space-y-5 pt-4 border-t border-[#12233e] animate-in slide-in-from-top-2">
+                <div>
+                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Priority Level</label>
+                  <div className="flex gap-2">
+                    {(["low", "medium", "high"] as const).map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => setPriority(p)}
+                        className={`flex-1 py-1.5 text-xs uppercase tracking-wider rounded border transition-all ${
+                          priority === p
+                            ? p === "high" ? "border-red-500 bg-red-500/10 text-red-500" 
+                              : p === "medium" ? "border-yellow-500 bg-yellow-500/10 text-yellow-500"
+                              : "border-blue-500 bg-blue-500/10 text-blue-500"
+                            : "border-[#12233e] bg-[#060d19] text-[#7a95b8]"
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Meeting Location</label>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setMeetingLocation("virtual")}
+                      className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded border ${
+                        meetingLocation === "virtual" ? "border-[#3b82f6] bg-[#3b82f6]/10 text-[#3b82f6]" : "border-[#12233e] text-[#7a95b8]"
+                      }`}
+                    >
+                      <Video className="w-4 h-4" /> Virtual
+                    </button>
+                    <button
+                      onClick={() => setMeetingLocation("in_person")}
+                      className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded border ${
+                        meetingLocation === "in_person" ? "border-[#3b82f6] bg-[#3b82f6]/10 text-[#3b82f6]" : "border-[#12233e] text-[#7a95b8]"
+                      }`}
+                    >
+                      <MapPin className="w-4 h-4" /> In Person
+                    </button>
+                    <button
+                      onClick={() => setMeetingLocation("phone")}
+                      className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded border ${
+                        meetingLocation === "phone" ? "border-[#3b82f6] bg-[#3b82f6]/10 text-[#3b82f6]" : "border-[#12233e] text-[#7a95b8]"
+                      }`}
+                    >
+                      <Phone className="w-4 h-4" /> Phone
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Attendees</label>
+                  <div className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={newAttendee}
+                      onChange={(e) => setNewAttendee(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleAddAttendee()}
+                      placeholder="Add attendee name..."
+                      className="rc-input flex-1 text-sm py-1.5"
+                    />
+                    <button 
+                      onClick={handleAddAttendee}
+                      className="px-3 bg-[#12233e] text-white rounded hover:bg-[#1a365d] transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {attendees.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {attendees.map((a) => (
+                        <span key={a} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#0d1a2e] border border-[#12233e] text-xs text-[#c8d8ec]">
+                          {a}
+                          <button onClick={() => handleRemoveAttendee(a)} className="text-[#7a95b8] hover:text-red-400">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Custom Topics</label>
+                  <div className="flex gap-2 mb-2">
+                    <input 
+                      type="text" 
+                      value={customTopic}
+                      onChange={(e) => setCustomTopic(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleAddCustomTopic()}
+                      placeholder="Add a specific topic..." 
+                      className="rc-input flex-1 text-sm py-1.5"
+                    />
+                    <button 
+                      onClick={handleAddCustomTopic}
+                      className="px-3 bg-[#12233e] text-white rounded hover:bg-[#1a365d] transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                  
+                  {customTopicsList.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {customTopicsList.map((topic, i) => (
+                        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#3b82f6]/10 text-[#3b82f6] text-xs border border-[#3b82f6]/20">
+                          {topic}
+                          <button onClick={() => handleRemoveCustomTopic(topic)} className="hover:text-red-400">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 text-sm text-[#c8d8ec] cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      checked={includeFinancials}
+                      onChange={(e) => setIncludeFinancials(e.target.checked)}
+                      className="rounded border-[#12233e] bg-[#060d19] text-[#22c55e] focus:ring-[#22c55e]"
+                    />
+                    Include Financial Data
+                  </label>
+                  <label className="flex items-center gap-2 text-sm text-[#c8d8ec] cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      checked={includeActionItems}
+                      onChange={(e) => setIncludeActionItems(e.target.checked)}
+                      className="rounded border-[#12233e] bg-[#060d19] text-[#22c55e] focus:ring-[#22c55e]"
+                    />
+                    Include Action Items
+                  </label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Internal Notes</label>
+                  <textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    placeholder="Private notes not visible on exported agenda..."
+                    className="rc-input w-full min-h-[80px] text-sm resize-y"
+                  />
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={runGenerate}
+              disabled={!clientId || isGenerating}
+              className="w-full rc-btn-primary py-3 flex items-center justify-center gap-2"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Generating Agenda...
+                </>
+              ) : (
+                <>
+                  <Zap className="w-5 h-5" />
+                  Generate Smart Agenda
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Quick Stats Mini-card */}
+        <div className="rc-card bg-gradient-to-br from-[#0d1a2e] to-[#060d19]">
+          <h3 className="text-sm font-medium text-[#c8d8ec] mb-3 flex items-center gap-2">
+            <Activity className="w-4 h-4 text-[#3b82f6]" /> Your Activity
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-xs text-[#7a95b8]">Agendas This Week</p>
+              <p className="text-xl font-bold text-white">12</p>
+            </div>
+            <div>
+              <p className="text-xs text-[#7a95b8]">Avg Prep Time</p>
+              <p className="text-xl font-bold text-white">4m</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column: Preview */}
+      <div className="lg:col-span-8">
+        {!generateMut.data ? (
+          <div className="rc-card h-full flex flex-col items-center justify-center text-center p-12 min-h-[500px]">
+            <div className="w-20 h-20 bg-[#12233e] rounded-full flex items-center justify-center mb-6">
+              <ClipboardList className="w-10 h-10 text-[#3b82f6]" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">No Agenda Generated</h3>
+            <p className="text-[#7a95b8] max-w-md mb-8">
+              Select a client and configure the meeting details on the left, then click generate to create an AI-powered meeting agenda.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-2xl text-left">
+              <div className="p-4 border border-[#12233e] rounded-lg bg-[#060d19]">
+                <Target className="w-5 h-5 text-[#22c55e] mb-2" />
+                <h4 className="font-medium text-[#c8d8ec] text-sm">Smart Topics</h4>
+                <p className="text-xs text-[#7a95b8] mt-1">AI analyzes client history to suggest relevant talking points.</p>
+              </div>
+              <div className="p-4 border border-[#12233e] rounded-lg bg-[#060d19]">
+                <Clock className="w-5 h-5 text-[#f0c040] mb-2" />
+                <h4 className="font-medium text-[#c8d8ec] text-sm">Time Management</h4>
+                <p className="text-xs text-[#7a95b8] mt-1">Automatically allocates appropriate time blocks for each topic.</p>
+              </div>
+              <div className="p-4 border border-[#12233e] rounded-lg bg-[#060d19]">
+                <Share2 className="w-5 h-5 text-[#a855f7] mb-2" />
+                <h4 className="font-medium text-[#c8d8ec] text-sm">Easy Sharing</h4>
+                <p className="text-xs text-[#7a95b8] mt-1">Export to PDF or email directly to clients with one click.</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="rc-card h-full flex flex-col">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-[#12233e]">
+              <div className="flex-1">
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={agendaTitle}
+                    onChange={(e) => setAgendaTitle(e.target.value)}
+                    className="rc-input text-xl font-bold w-full mb-2"
+                  />
+                ) : (
+                  <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                    {agendaTitle}
+                    <button onClick={() => setIsEditing(true)} className="text-[#7a95b8] hover:text-white">
+                      <Edit className="w-4 h-4" />
+                    </button>
+                  </h2>
+                )}
+                <div className="flex flex-wrap items-center gap-4 text-sm text-[#7a95b8]">
+                  <span className="flex items-center gap-1.5"><Users className="w-4 h-4" /> {generateMut.data.clientName}</span>
+                  <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" /> {generateMut.data.duration} mins</span>
+                  <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> {new Date().toLocaleDateString()}</span>
+                  <span className="flex items-center gap-1.5 capitalize"><TagIcon className="w-4 h-4" /> {priority}</span>
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {isEditing ? (
+                  <button onClick={() => setIsEditing(false)} className="rc-btn-secondary flex items-center gap-2">
+                    <Save className="w-4 h-4" /> Save Edits
+                  </button>
+                ) : (
+                  <>
+                    <button onClick={saveAsTemplate} className="rc-btn-secondary flex items-center gap-2" title="Save as Template">
+                      <Archive className="w-4 h-4" />
+                    </button>
+                    <button onClick={handleExportPdf} className="rc-btn-secondary flex items-center gap-2">
+                      <Download className="w-4 h-4" /> PDF
+                    </button>
+                    <button onClick={() => setEmailDialogOpen(true)} className="rc-btn-primary flex items-center gap-2">
+                      <Mail className="w-4 h-4" /> Email
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto pr-2 space-y-8 custom-scrollbar">
+              {/* Agenda Blocks */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <List className="w-5 h-5 text-[#3b82f6]" /> Agenda Items
+                </h3>
+                
+                {(isEditing ? editedBlocks : generateMut.data.blocks)?.map((block: any, index: number) => (
+                  <div key={index} className="p-4 rounded-lg border border-[#12233e] bg-[#060d19] hover:border-[#3b82f6]/50 transition-colors">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-[#12233e] flex items-center justify-center text-[#3b82f6] font-bold text-sm">
+                          {index + 1}
+                        </div>
+                        {isEditing ? (
+                          <input
+                            type="text"
+                            value={block.topic}
+                            onChange={(e) => {
+                              const newBlocks = [...editedBlocks];
+                              newBlocks[index].topic = e.target.value;
+                              setEditedBlocks(newBlocks);
+                            }}
+                            className="rc-input font-medium"
+                          />
+                        ) : (
+                          <h4 className="font-medium text-white text-lg">{block.topic}</h4>
+                        )}
+                      </div>
+                      <span className="text-sm font-medium text-[#22c55e] bg-[#22c55e]/10 px-2.5 py-1 rounded-full flex items-center gap-1">
+                        <Clock className="w-3 h-3" /> {block.time}
+                      </span>
+                    </div>
+                    
+                    <ul className="space-y-2 ml-11">
+                      {block.talkingPoints.map((point: string, ptIndex: number) => (
+                        <li key={ptIndex} className="flex items-start gap-2 text-[#c8d8ec] text-sm">
+                          <span className="text-[#3b82f6] mt-1">•</span>
+                          {isEditing ? (
+                            <input
+                              type="text"
+                              value={point}
+                              onChange={(e) => {
+                                const newBlocks = [...editedBlocks];
+                                newBlocks[index].talkingPoints[ptIndex] = e.target.value;
+                                setEditedBlocks(newBlocks);
+                              }}
+                              className="rc-input text-sm w-full py-1"
+                            />
+                          ) : (
+                            <span>{point}</span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+
+              {/* Key Questions */}
+              {generateMut.data.keyQuestions && generateMut.data.keyQuestions.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-[#f0c040]" /> Key Questions to Ask
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {generateMut.data.keyQuestions.map((q: string, i: number) => (
+                      <div key={i} className="p-3 rounded-lg bg-[#0d1a2e] border border-[#12233e] text-sm text-[#c8d8ec] flex gap-3">
+                        <div className="mt-0.5 text-[#f0c040]">
+                          <MessageSquare className="w-4 h-4" />
+                        </div>
+                        <p>{q}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Follow Up Actions */}
+              {generateMut.data.followUpActions && generateMut.data.followUpActions.length > 0 && includeActionItems && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-[#22c55e]" /> Proposed Action Items
+                  </h3>
+                  <ul className="space-y-2">
+                    {generateMut.data.followUpActions.map((a: string, i: number) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-[#c8d8ec] p-3 rounded-lg bg-[#060d19] border border-[#12233e]">
+                        <div className="mt-0.5 shrink-0 w-4 h-4 rounded border border-[#7a95b8] flex items-center justify-center">
+                        </div>
+                        <span>{a}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderStatsTab = () => (
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Filters for Stats */}
+      <div className="flex flex-wrap justify-between items-center gap-4 bg-[#0d1a2e] p-4 rounded-lg border border-[#12233e]">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-[#7a95b8]" />
+            <span className="text-sm text-[#c8d8ec]">Timeframe:</span>
+            <select 
+              value={dateRange}
+              onChange={(e) => setDateRange(e.target.value)}
+              className="rc-input py-1 text-sm bg-[#060d19]"
+            >
+              <option value="mtd">Month to Date</option>
+              <option value="qtd">Quarter to Date</option>
+              <option value="ytd">Year to Date</option>
+              <option value="all">All Time</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-[#c8d8ec]">View:</span>
+            <div className="flex bg-[#060d19] rounded-md border border-[#12233e] p-0.5">
+              <button 
+                onClick={() => setChartView("monthly")}
+                className={`px-3 py-1 text-xs rounded-sm ${chartView === "monthly" ? "bg-[#12233e] text-white" : "text-[#7a95b8]"}`}
+              >
+                Monthly
+              </button>
+              <button 
+                onClick={() => setChartView("quarterly")}
+                className={`px-3 py-1 text-xs rounded-sm ${chartView === "quarterly" ? "bg-[#12233e] text-white" : "text-[#7a95b8]"}`}
+              >
+                Quarterly
+              </button>
+            </div>
+          </div>
+        </div>
+        <button onClick={() => toast.success("Analytics data refreshed")} className="rc-btn-secondary text-xs flex items-center gap-1 py-1.5">
+          <RefreshCw className="w-3 h-3" /> Refresh
+        </button>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="rc-card flex flex-col justify-between hover:border-[#3b82f6]/50 transition-colors">
+          <div className="flex items-center justify-between mb-2">
+            <span className="rc-stat-label">Total Agendas</span>
+            <ClipboardList className="w-5 h-5 text-[#3b82f6]" />
+          </div>
+          <div className="flex items-end justify-between">
+            <span className="rc-stat-value">284</span>
+            <span className="text-sm text-[#22c55e] flex items-center">+15%</span>
+          </div>
+        </div>
+        <div className="rc-card flex flex-col justify-between hover:border-[#f0c040]/50 transition-colors">
+          <div className="flex items-center justify-between mb-2">
+            <span className="rc-stat-label">Avg. Duration</span>
+            <Clock className="w-5 h-5 text-[#f0c040]" />
+          </div>
+          <div className="flex items-end justify-between">
+            <span className="rc-stat-value">58m</span>
+            <span className="text-sm text-[#22c55e] flex items-center">+3m</span>
+          </div>
+        </div>
+        <div className="rc-card flex flex-col justify-between hover:border-[#22c55e]/50 transition-colors">
+          <div className="flex items-center justify-between mb-2">
+            <span className="rc-stat-label">Emails Sent</span>
+            <Mail className="w-5 h-5 text-[#22c55e]" />
+          </div>
+          <div className="flex items-end justify-between">
+            <span className="rc-stat-value">192</span>
+            <span className="text-sm text-[#22c55e] flex items-center">+28%</span>
+          </div>
+        </div>
+        <div className="rc-card flex flex-col justify-between hover:border-[#ef4444]/50 transition-colors">
+          <div className="flex items-center justify-between mb-2">
+            <span className="rc-stat-label">Client Coverage</span>
+            <Users className="w-5 h-5 text-[#ef4444]" />
+          </div>
+          <div className="flex items-end justify-between">
+            <span className="rc-stat-value">78%</span>
+            <span className="text-sm text-[#22c55e] flex items-center">+12%</span>
+          </div>
+        </div>
+        <div className="rc-card flex flex-col justify-between hover:border-[#a855f7]/50 transition-colors">
+          <div className="flex items-center justify-between mb-2">
+            <span className="rc-stat-label">Satisfaction</span>
+            <Star className="w-5 h-5 text-[#a855f7]" />
+          </div>
+          <div className="flex items-end justify-between">
+            <span className="rc-stat-value">4.8</span>
+            <span className="text-sm text-[#22c55e] flex items-center">+0.2</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Chart 1: Bar Chart */}
+        <div className="rc-card">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+              <BarChart2 className="w-5 h-5 text-[#3b82f6]" /> Meetings Volume Trend
+            </h3>
+            <button className="text-[#7a95b8] hover:text-white"><Maximize2 className="w-4 h-4" /></button>
+          </div>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={MONTHLY_TRENDS} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
+                <XAxis dataKey="month" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }}
+                  itemStyle={{ color: '#3b82f6' }}
+                  cursor={{ fill: '#12233e', opacity: 0.4 }}
+                />
+                <Bar dataKey="meetings" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Total Meetings" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Chart 2: Pie Chart */}
+        <div className="rc-card">
+          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+            <PieChartIcon className="w-5 h-5 text-[#f0c040]" /> Meeting Types Distribution
+          </h3>
+          <div className="h-[300px] w-full flex items-center justify-center relative">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={MEETING_STATS}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={80}
+                  outerRadius={110}
+                  paddingAngle={5}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {MEETING_STATS.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }}
+                  itemStyle={{ color: '#fff' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span className="text-3xl font-bold text-white">100</span>
+              <span className="text-sm text-[#7a95b8]">Total</span>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-4 mt-4">
+            {MEETING_STATS.map((stat, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                <span className="text-sm text-[#c8d8ec]">{stat.name} ({stat.value}%)</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Chart 3: Line Chart */}
+        <div className="rc-card">
+          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-[#22c55e]" /> Average Duration & Satisfaction
+          </h3>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={MONTHLY_TRENDS} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
+                <XAxis dataKey="month" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis yAxisId="left" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis yAxisId="right" orientation="right" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} domain={[0, 5]} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }}
+                />
+                <Legend />
+                <Line yAxisId="left" type="monotone" dataKey="avgDuration" stroke="#22c55e" strokeWidth={3} dot={{ r: 4 }} name="Avg Duration (min)" />
+                <Line yAxisId="right" type="monotone" dataKey="satisfaction" stroke="#a855f7" strokeWidth={3} dot={{ r: 4 }} name="Satisfaction (1-5)" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Chart 4: Area Chart */}
+        <div className="rc-card">
+          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+            <Activity className="w-5 h-5 text-[#ef4444]" /> Client Engagement by Quarter
+          </h3>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={CLIENT_ENGAGEMENT} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorHigh" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorMedium" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#f0c040" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#f0c040" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="name" stroke="#7a95b8" />
+                <YAxis stroke="#7a95b8" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
+                <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }} />
+                <Legend />
+                <Area type="monotone" dataKey="high" stroke="#ef4444" fillOpacity={1} fill="url(#colorHigh)" name="High Net Worth" />
+                <Area type="monotone" dataKey="medium" stroke="#f0c040" fillOpacity={1} fill="url(#colorMedium)" name="Core Clients" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Chart 5: Radar Chart */}
+        <div className="rc-card lg:col-span-2">
+          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+            <Target className="w-5 h-5 text-[#a855f7]" /> Topic Coverage Analysis
+          </h3>
+          <div className="h-[400px] w-full flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={TOPIC_DISTRIBUTION}>
+                <PolarGrid stroke="#12233e" />
+                <PolarAngleAxis dataKey="subject" tick={{ fill: '#c8d8ec', fontSize: 12 }} />
+                <PolarRadiusAxis angle={30} domain={[0, 150]} stroke="#7a95b8" />
+                <Radar name="This Quarter" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
+                <Radar name="Last Quarter" dataKey="B" stroke="#22c55e" fill="#22c55e" fillOpacity={0.6} />
+                <Legend />
+                <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }} />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        
+        {/* Data Table */}
+        <div className="rc-card lg:col-span-2">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+              <List className="w-5 h-5 text-[#c8d8ec]" /> Recent Meeting Performance
+            </h3>
+            <button className="text-sm text-[#3b82f6] hover:text-[#60a5fa]">View Full Report</button>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-[#12233e] text-sm text-[#7a95b8]">
+                  <th className="pb-3 font-medium">Metric Period</th>
+                  <th className="pb-3 font-medium">Success Rate</th>
+                  <th className="pb-3 font-medium">Target</th>
+                  <th className="pb-3 font-medium">Variance</th>
+                  <th className="pb-3 font-medium text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm">
+                {SUCCESS_METRICS.map((metric, i) => (
+                  <tr key={i} className="border-b border-[#12233e]/50 hover:bg-[#12233e]/30 transition-colors">
+                    <td className="py-4 text-[#c8d8ec] font-medium">{metric.name}</td>
+                    <td className="py-4 text-white">{metric.rate}%</td>
+                    <td className="py-4 text-[#7a95b8]">{metric.target}%</td>
+                    <td className="py-4">
+                      <span className={`flex items-center gap-1 ${metric.rate >= metric.target ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>
+                        {metric.rate >= metric.target ? '+' : ''}{metric.rate - metric.target}%
+                      </span>
+                    </td>
+                    <td className="py-4 text-right">
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        metric.rate >= metric.target 
+                          ? 'bg-[#22c55e]/10 text-[#22c55e]' 
+                          : 'bg-[#ef4444]/10 text-[#ef4444]'
+                      }`}>
+                        {metric.rate >= metric.target ? 'On Track' : 'Needs Review'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderHistoryTab = () => (
+    <div className="space-y-6 animate-in fade-in duration-500">
+      <div className="flex flex-wrap justify-between items-center gap-4 bg-[#0d1a2e] p-4 rounded-lg border border-[#12233e]">
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7a95b8]" />
+            <input 
+              type="text" 
+              placeholder="Search history..." 
+              className="rc-input pl-9 w-64 text-sm py-1.5"
+            />
+          </div>
+          <select 
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            className="rc-input py-1.5 text-sm bg-[#060d19]"
+          >
+            <option value="all">All Types</option>
+            <option value="strategy_review">Strategy Review</option>
+            <option value="initial_consultation">Initial Consultation</option>
+            <option value="annual_review">Annual Review</option>
+          </select>
+        </div>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setViewMode("list")}
+            className={`p-1.5 rounded ${viewMode === "list" ? "bg-[#12233e] text-white" : "text-[#7a95b8] hover:text-white"}`}
+          >
+            <List className="w-4 h-4" />
+          </button>
+          <button 
+            onClick={() => setViewMode("grid")}
+            className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[#12233e] text-white" : "text-[#7a95b8] hover:text-white"}`}
+          >
+            <Grid className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {!recentMeetings ? (
+        <div className="flex justify-center p-12">
+          <Loader2 className="w-8 h-8 text-[#3b82f6] animate-spin" />
+        </div>
+      ) : viewMode === "list" ? (
+        <div className="rc-card overflow-hidden p-0">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-[#0d1a2e] border-b border-[#12233e] text-sm text-[#7a95b8]">
+                <th className="p-4 font-medium">Client / Meeting</th>
+                <th className="p-4 font-medium">Date</th>
+                <th className="p-4 font-medium">Type</th>
+                <th className="p-4 font-medium">Duration</th>
+                <th className="p-4 font-medium text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <tr key={i} className="border-b border-[#12233e]/50 hover:bg-[#12233e]/30 transition-colors">
+                  <td className="p-4">
+                    <div className="font-medium text-white">John Doe Family Trust</div>
+                    <div className="text-xs text-[#7a95b8]">Q3 Strategy Review</div>
+                  </td>
+                  <td className="p-4 text-[#c8d8ec]">Oct 15, 2023</td>
+                  <td className="p-4">
+                    <span className="px-2 py-1 rounded-full text-xs bg-[#3b82f6]/10 text-[#3b82f6] border border-[#3b82f6]/20">
+                      Strategy
+                    </span>
+                  </td>
+                  <td className="p-4 text-[#c8d8ec]">60 min</td>
+                  <td className="p-4 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button className="p-1.5 text-[#7a95b8] hover:text-white bg-[#0d1a2e] rounded border border-[#12233e]"><Download className="w-3.5 h-3.5" /></button>
+                      <button className="p-1.5 text-[#7a95b8] hover:text-white bg-[#0d1a2e] rounded border border-[#12233e]"><Mail className="w-3.5 h-3.5" /></button>
+                      <button className="p-1.5 text-[#7a95b8] hover:text-white bg-[#0d1a2e] rounded border border-[#12233e]"><Copy className="w-3.5 h-3.5" /></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="rc-card hover:border-[#3b82f6]/50 transition-colors cursor-pointer group">
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-2 bg-[#3b82f6]/10 rounded-lg">
+                  <Briefcase className="w-5 h-5 text-[#3b82f6]" />
+                </div>
+                <span className="text-xs text-[#7a95b8]">Oct 15, 2023</span>
+              </div>
+              <h4 className="font-medium text-white mb-1">John Doe Family Trust</h4>
+              <p className="text-sm text-[#7a95b8] mb-4">Q3 Strategy Review • 60 min</p>
+              
+              <div className="flex gap-2 mt-4 pt-4 border-t border-[#12233e] opacity-0 group-hover:opacity-100 transition-opacity">
+                <button className="flex-1 py-1.5 text-xs bg-[#0d1a2e] text-white rounded border border-[#12233e] hover:bg-[#12233e]">View</button>
+                <button className="flex-1 py-1.5 text-xs bg-[#0d1a2e] text-white rounded border border-[#12233e] hover:bg-[#12233e]">Export</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  const renderTemplatesTab = () => (
+    <div className="space-y-6 animate-in fade-in duration-500">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-lg font-semibold text-white">Agenda Templates</h2>
+          <p className="text-sm text-[#7a95b8]">Manage and create reusable meeting structures</p>
+        </div>
+        <button className="rc-btn-primary flex items-center gap-2 text-sm py-2">
+          <Plus className="w-4 h-4" /> New Template
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { name: "Standard Annual Review", uses: 145, rating: 4.8, color: "#3b82f6" },
+          { name: "Initial Prospect Meeting", uses: 89, rating: 4.5, color: "#22c55e" },
+          { name: "Tax Strategy Session", uses: 56, rating: 4.9, color: "#f0c040" },
+          { name: "Estate Planning Deep Dive", uses: 34, rating: 4.7, color: "#a855f7" },
+          { name: "Quick Check-in (15m)", uses: 210, rating: 4.6, color: "#ef4444" },
+          { name: "Policy Delivery", uses: 78, rating: 4.4, color: "#ec4899" }
+        ].map((t, i) => (
+          <div key={i} className="rc-card flex flex-col h-full relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-1 h-full" style={{ backgroundColor: t.color }}></div>
+            
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="font-medium text-white text-lg">{t.name}</h3>
+              <button className="text-[#7a95b8] hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <MoreVertical className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="flex-1">
+              <div className="flex items-center gap-4 text-sm text-[#7a95b8] mb-4">
+                <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" /> {t.uses} uses</span>
+                <span className="flex items-center gap-1 text-[#f0c040]"><Star className="w-3.5 h-3.5 fill-current" /> {t.rating}</span>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="h-1.5 w-full bg-[#12233e] rounded-full overflow-hidden">
+                  <div className="h-full bg-[#3b82f6]" style={{ width: '30%' }}></div>
+                </div>
+                <div className="h-1.5 w-full bg-[#12233e] rounded-full overflow-hidden">
+                  <div className="h-full bg-[#22c55e]" style={{ width: '50%' }}></div>
+                </div>
+                <div className="h-1.5 w-full bg-[#12233e] rounded-full overflow-hidden">
+                  <div className="h-full bg-[#f0c040]" style={{ width: '20%' }}></div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 pt-4 border-t border-[#12233e] flex gap-2">
+              <button className="flex-1 py-2 text-sm bg-[#3b82f6]/10 text-[#3b82f6] rounded font-medium hover:bg-[#3b82f6]/20 transition-colors">
+                Use Template
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <AppShell>
+      <div className="space-y-6 animate-in fade-in duration-500">
+        {/* Header */}
+        <div className="rc-page-header flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-[#0d1a2e] rounded-lg border border-[#12233e] relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#3b82f6]/20 to-transparent"></div>
+                <ClipboardList className="w-6 h-6 text-[#3b82f6] relative z-10" />
+              </div>
+              <div>
+                <h1 className="rc-page-title flex items-center gap-2">
+                  Smart Meeting Agenda
+                  <span className="px-2 py-0.5 text-[10px] uppercase tracking-wider bg-[#3b82f6]/10 text-[#3b82f6] rounded-full border border-[#3b82f6]/20">Pro</span>
+                </h1>
+                <p className="rc-page-subtitle">
+                  Generate structured meeting agendas with AI-powered talking points.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <button className="rc-btn-secondary flex items-center gap-2 text-sm">
+              <Settings className="w-4 h-4" /> Preferences
+            </button>
+            <ExportToSlides
+              toolName="Meeting Agenda"
+              getSections={() => [
+                {
+                  title: "Agenda Overview",
+                  items: [
+                    { label: "Client", value: generateMut.data?.clientName || "N/A" },
+                    { label: "Meeting Type", value: meetingType.replace(/_/g, " ") || "N/A" },
+                    { label: "Duration", value: `${generateMut.data?.duration || 0} min` },
+                    { label: "Priority", value: priority },
+                  ],
+                },
+                ...(generateMut.data?.blocks || []).map((block) => ({
+                  title: block.topic,
+                  items: [
+                    { label: "Time", value: block.time || "N/A" },
+                    { label: "Talking Points", value: (block.talkingPoints || []).join(" • ") },
+                  ],
+                })),
+              ]}
+            />
+          </div>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="flex overflow-x-auto items-center gap-1 border-b border-[#12233e] pb-px custom-scrollbar hide-scrollbar">
+          {[
+            { id: "setup", label: "Agenda Setup", icon: Plus },
+            { id: "stats", label: "Analytics", icon: BarChart2 },
+            { id: "history", label: "History", icon: Clock },
+            { id: "templates", label: "Templates", icon: Copy },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap ${
+                activeTab === tab.id 
+                  ? "border-[#3b82f6] text-white bg-[#3b82f6]/5" 
+                  : "border-transparent text-[#7a95b8] hover:text-white hover:bg-[#12233e]/50"
+              }`}
+            >
+              <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? "text-[#3b82f6]" : ""}`} />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab Content */}
+        <div className="min-h-[600px]">
+          {activeTab === "setup" && renderSetupTab()}
+          {activeTab === "stats" && renderStatsTab()}
+          {activeTab === "history" && renderHistoryTab()}
+          {activeTab === "templates" && renderTemplatesTab()}
+        </div>
+
+        {/* Email Dialog */}
+        {emailDialogOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+            <div className="bg-[#0d1a2e] border border-[#12233e] rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+              <div className="p-4 border-b border-[#12233e] flex justify-between items-center bg-[#060d19]">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-[#3b82f6]" /> Send Agenda
+                </h3>
+                <button 
+                  onClick={() => setEmailDialogOpen(false)}
+                  className="text-[#7a95b8] hover:text-white p-1 rounded-md hover:bg-[#12233e] transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Recipient Email</label>
+                  <input
+                    type="email"
+                    value={emailRecipient}
+                    onChange={(e) => setEmailRecipient(e.target.value)}
+                    placeholder="client@example.com"
+                    className="rc-input w-full"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Subject</label>
+                  <input
+                    type="text"
+                    value={`Meeting Agenda: ${generateMut.data?.clientName || "Upcoming Meeting"}`}
+                    readOnly
+                    className="rc-input w-full bg-[#060d19] text-[#7a95b8]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#c8d8ec] mb-1.5">Message (Optional)</label>
+                  <textarea
+                    placeholder="Add a personal note..."
+                    className="rc-input w-full min-h-[100px] resize-none"
+                    defaultValue={`Hi ${generateMut.data?.clientName?.split(' ')[0] || 'there'},\n\nPlease find attached the agenda for our upcoming meeting.\n\nBest regards,\nYour Advisor`}
+                  />
+                </div>
+                
+                <div className="pt-4 flex justify-end gap-3">
+                  <button 
+                    onClick={() => setEmailDialogOpen(false)}
+                    className="px-4 py-2 text-sm font-medium text-[#c8d8ec] hover:text-white transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={handleEmailAgenda}
+                    disabled={emailAgendaMut.isPending || !emailRecipient}
+                    className="rc-btn-primary flex items-center gap-2 py-2"
+                  >
+                    {emailAgendaMut.isPending ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
+                    Email to Client
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <PageInsights pageId="meeting-agenda" />
+      </div>
+    </AppShell>
+  );
+}
+```
+
+## `client/src/pages/portal/Meetings.tsx`
+
+```tsx
+// @ts-nocheck
+import { NumberInput } from "@/components/NumberInput";
+import { AppShell } from "@/components/AppShell";
+import { ExportToSlides } from "@/components/ExportToSlides";
+import { trpc } from "@/lib/trpc";
+import { useState, useMemo } from "react";
+import { toast } from "sonner";
+import {
+  Calendar, Clock, MapPin, Phone, Plus, Video, Users, X,
+  ChevronLeft, ChevronRight, Edit2, Trash2, CheckCircle, XCircle,
+  Bell, Settings2, Sparkles, BarChart3,
+} from "lucide-react";
+import {
+  PieChart, Pie, Cell, BarChart, Bar,
+  XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer,
+} from "recharts";
+
+const MEETING_TYPE_ICONS: Record<string, typeof Video> = {
+  VIDEO: Video,
+  PHONE: Phone,
+  IN_PERSON: MapPin,
+  OTHER: Users,
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  SCHEDULED: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  COMPLETED: "bg-green-500/20 text-green-400 border-green-500/30",
+  CANCELLED: "bg-red-500/20 text-red-400 border-red-500/30",
+  NO_SHOW: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+};
+
+function getDaysInMonth(year: number, month: number) {
+  return new Date(year, month + 1, 0).getDate();
+}
+
+function getFirstDayOfMonth(year: number, month: number) {
+  return new Date(year, month, 1).getDay();
+}
+
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+export default function Meetings() {
+  const [showCreate, setShowCreate] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar");
+  const [currentDate, setCurrentDate] = useState(() => new Date());
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  const utils = trpc.useUtils();
+  const { data: allMeetings, isLoading } = trpc.meetings.listAll.useQuery({ limit: 200 });
+  const { data: clients } = trpc.clients.list.useQuery();
+
+  const createMeeting = trpc.meetings.create.useMutation({
+    onSuccess: () => { utils.meetings.listAll.invalidate(); utils.meetings.listUpcoming.invalidate(); setShowCreate(false); toast.success("Meeting scheduled"); },
+    onError: (e) => toast.error(e.message),
+  });
+  const updateMeeting = trpc.meetings.update.useMutation({
+    onSuccess: () => { utils.meetings.listAll.invalidate(); utils.meetings.listUpcoming.invalidate(); setEditingId(null); toast.success("Meeting updated"); },
+    onError: (e) => toast.error(e.message),
+  });
+  const deleteMeeting = trpc.meetings.delete.useMutation({
+    onSuccess: () => { utils.meetings.listAll.invalidate(); utils.meetings.listUpcoming.invalidate(); toast.success("Meeting deleted"); },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const meetingsByDate = useMemo(() => {
+    const map: Record<string, typeof allMeetings> = {};
+    allMeetings?.forEach((m) => {
+      const key = new Date(m.scheduledAt).toISOString().split("T")[0];
+      if (!map[key]) map[key] = [];
+      map[key]!.push(m);
+    });
+    return map;
+  }, [allMeetings]);
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const daysInMonth = getDaysInMonth(year, month);
+  const firstDay = getFirstDayOfMonth(year, month);
+  const today = new Date().toISOString().split("T")[0];
+
+  const calendarDays = useMemo(() => {
+    const days: (number | null)[] = [];
+    for (let i = 0; i < firstDay; i++) days.push(null);
+    for (let d = 1; d <= daysInMonth; d++) days.push(d);
+    return days;
+  }, [firstDay, daysInMonth]);
+
+  const selectedMeetings = selectedDate ? (meetingsByDate[selectedDate] || []) : [];
+
+  return (
+    <AppShell>
+      <div className="p-6 max-w-7xl mx-auto">
+        {/* Analytics Row */}
+        {(allMeetings?.length ?? 0) > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="rc-card">
+              <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                <BarChart3 size={14} className="text-[#22c55e]" /> Meetings by Type
+              </div>
+              <ResponsiveContainer width="100%" height={180}>
+                <PieChart>
+                  <Pie
+                    data={(() => {
+                      const counts: Record<string, number> = {};
+                      allMeetings?.forEach((m) => { counts[m.meetingType || "OTHER"] = (counts[m.meetingType || "OTHER"] || 0) + 1; });
+                      return Object.entries(counts).map(([name, value]) => ({ name, value }));
+                    })()}
+                    cx="50%" cy="50%" innerRadius={45} outerRadius={70}
+                    paddingAngle={3} dataKey="value"
+                    label={({ name, value }) => `${name}: ${value}`}
+                  >
+                    {["#3b82f6", "#22c55e", "#f0c040", "#a78bfa"].map((c, i) => (
+                      <Cell key={i} fill={c} />
+                    ))}
+                  </Pie>
+                  <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="rc-card">
+              <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                <Calendar size={14} className="text-[#3b82f6]" /> Monthly Meeting Volume
+              </div>
+              <ResponsiveContainer width="100%" height={180}>
+                <BarChart
+                  data={(() => {
+                    const months: Record<string, number> = {};
+                    allMeetings?.forEach((m) => {
+                      const mo = new Date(m.scheduledAt).toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+                      months[mo] = (months[mo] || 0) + 1;
+                    });
+                    return Object.entries(months).slice(-8).map(([name, count]) => ({ name, count }));
+                  })()}
+                  margin={{ top: 5, right: 10, bottom: 5, left: -10 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#12233e" />
+                  <XAxis dataKey="name" tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                  <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} />
+                  <Bar dataKey="count" name="Meetings" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Meetings</h1>
+            <p className="text-sm text-[#7a95b8] mt-1">Schedule and track client meetings</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <ExportToSlides
+              toolName="Meetings"
+              getSections={() => {
+                const upcoming = allMeetings?.filter((m) => m.status === "SCHEDULED") || [];
+                return [
+                  {
+                    title: "Meetings Summary",
+                    items: [
+                      { label: "Total Meetings", value: String(allMeetings?.length || 0) },
+                      { label: "Upcoming Meetings", value: String(upcoming.length) },
+                    ]
+                  }
+                ];
+              }}
+            />
+            <div className="flex bg-[#0a1628] border border-[#12233e] rounded-lg overflow-hidden">
+              <button
+                onClick={() => setViewMode("calendar")}
+                className={`px-3 py-1.5 text-xs font-medium transition-colors ${viewMode === "calendar" ? "bg-[#22c55e]/20 text-[#22c55e]" : "text-[#7a95b8] hover:text-white"}`}
+              >
+                Calendar
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`px-3 py-1.5 text-xs font-medium transition-colors ${viewMode === "list" ? "bg-[#22c55e]/20 text-[#22c55e]" : "text-[#7a95b8] hover:text-white"}`}
+              >
+                List
+              </button>
+            </div>
+            <button onClick={() => setShowCreate(true)} className="rc-btn rc-btn-primary text-sm flex items-center gap-2">
+              <Plus size={14} /> Schedule Meeting
+            </button>
+          </div>
+        </div>
+
+        {viewMode === "calendar" ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Calendar Grid */}
+            <div className="lg:col-span-2 rc-card p-4">
+              <div className="flex items-center justify-between mb-4">
+                <button onClick={() => setCurrentDate(new Date(year, month - 1, 1))} className="rc-btn rc-btn-ghost p-2">
+                  <ChevronLeft size={16} />
+                </button>
+                <h2 className="text-lg font-semibold text-white">{MONTHS[month]} {year}</h2>
+                <button onClick={() => setCurrentDate(new Date(year, month + 1, 1))} className="rc-btn rc-btn-ghost p-2">
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+              <div className="grid grid-cols-7 gap-1">
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                  <div key={d} className="text-center text-[10px] text-[#7a95b8] font-medium py-1">{d}</div>
+                ))}
+                {calendarDays.map((day, i) => {
+                  if (day === null) return <div key={`e-${i}`} />;
+                  const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                  const meetings = meetingsByDate[dateStr] || [];
+                  const isToday = dateStr === today;
+                  const isSelected = dateStr === selectedDate;
+                  return (
+                    <button
+                      key={dateStr}
+                      onClick={() => setSelectedDate(dateStr)}
+                      className={`relative p-1 min-h-[60px] rounded-lg text-left transition-all ${
+                        isSelected ? "bg-[#22c55e]/10 border border-[#22c55e]/30" :
+                        isToday ? "bg-blue-500/10 border border-blue-500/30" :
+                        "hover:bg-[#12233e]/50 border border-transparent"
+                      }`}
+                    >
+                      <span className={`text-xs font-medium ${isToday ? "text-blue-400" : "text-[#7a95b8]"}`}>{day}</span>
+                      {meetings.length > 0 && (
+                        <div className="mt-0.5 space-y-0.5">
+                          {meetings.slice(0, 2).map((m) => (
+                            <div key={m.id} className="text-[9px] px-1 py-0.5 rounded bg-[#22c55e]/10 text-[#22c55e] truncate">
+                              {m.title}
+                            </div>
+                          ))}
+                          {meetings.length > 2 && (
+                            <div className="text-[9px] text-[#7a95b8]">+{meetings.length - 2} more</div>
+                          )}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Selected Date Meetings */}
+            <div className="rc-card p-4">
+              <h3 className="text-sm font-semibold text-white mb-3">
+                {selectedDate ? new Date(selectedDate + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) : "Select a date"}
+              </h3>
+              {selectedDate && selectedMeetings.length === 0 && (
+                <p className="text-xs text-[#7a95b8]">No meetings on this date.</p>
+              )}
+              <div className="space-y-2">
+                {selectedMeetings.map((m) => {
+                  const TypeIcon = MEETING_TYPE_ICONS[m.meetingType] || Users;
+                  return (
+                    <div key={m.id} className="p-3 rounded-lg bg-[#0a1628] border border-[#12233e]">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-2">
+                          <TypeIcon size={14} className="text-[#22c55e]" />
+                          <span className="text-sm font-medium text-white">{m.title}</span>
+                        </div>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded border ${STATUS_COLORS[m.status]}`}>{m.status}</span>
+                      </div>
+                      <div className="mt-1 text-xs text-[#7a95b8] flex items-center gap-2">
+                        <Clock size={10} />
+                        {new Date(m.scheduledAt).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+                        <span>({m.durationMin}m)</span>
+                      </div>
+                      {m.location && <div className="mt-1 text-xs text-[#7a95b8] flex items-center gap-2"><MapPin size={10} />{m.location}</div>}
+                      <div className="mt-2 flex gap-1">
+                        {m.status === "SCHEDULED" && (
+                          <>
+                            <button onClick={() => updateMeeting.mutate({ id: m.id, status: "COMPLETED" })} className="rc-btn rc-btn-ghost text-[10px] p-1 text-green-400"><CheckCircle size={12} /></button>
+                            <button onClick={() => updateMeeting.mutate({ id: m.id, status: "CANCELLED" })} className="rc-btn rc-btn-ghost text-[10px] p-1 text-red-400"><XCircle size={12} /></button>
+                          </>
+                        )}
+                        <button onClick={() => setEditingId(m.id)} className="rc-btn rc-btn-ghost text-[10px] p-1 text-[#7a95b8]"><Edit2 size={12} /></button>
+                        <button onClick={() => { if (confirm("Delete this meeting?")) deleteMeeting.mutate({ id: m.id }); }} className="rc-btn rc-btn-ghost text-[10px] p-1 text-red-400"><Trash2 size={12} /></button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* List View */
+          <div className="rc-card overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[#12233e]">
+                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Date & Time</th>
+                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Title</th>
+                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Type</th>
+                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Duration</th>
+                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Status</th>
+                  <th className="text-left p-3 text-[#7a95b8] font-medium text-xs">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {isLoading ? (
+                  <tr><td colSpan={6} className="p-6 text-center text-[#7a95b8]">Loading...</td></tr>
+                ) : !allMeetings?.length ? (
+                  <tr><td colSpan={6} className="p-6 text-center text-[#7a95b8]">No meetings scheduled yet.</td></tr>
+                ) : (
+                  allMeetings.map((m) => {
+                    const TypeIcon = MEETING_TYPE_ICONS[m.meetingType] || Users;
+                    return (
+                      <tr key={m.id} className="border-b border-[#12233e]/50 hover:bg-[#12233e]/20">
+                        <td className="p-3 text-white text-xs">
+                          {new Date(m.scheduledAt).toLocaleDateString()}<br />
+                          <span className="text-[#7a95b8]">{new Date(m.scheduledAt).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}</span>
+                        </td>
+                        <td className="p-3 text-white text-xs font-medium">{m.title}</td>
+                        <td className="p-3"><TypeIcon size={14} className="text-[#22c55e]" /></td>
+                        <td className="p-3 text-[#7a95b8] text-xs">{m.durationMin}m</td>
+                        <td className="p-3"><span className={`text-[10px] px-1.5 py-0.5 rounded border ${STATUS_COLORS[m.status]}`}>{m.status}</span></td>
+                        <td className="p-3">
+                          <div className="flex gap-1">
+                            <button onClick={() => setEditingId(m.id)} className="rc-btn rc-btn-ghost p-1"><Edit2 size={12} className="text-[#7a95b8]" /></button>
+                            <button onClick={() => { if (confirm("Delete?")) deleteMeeting.mutate({ id: m.id }); }} className="rc-btn rc-btn-ghost p-1"><Trash2 size={12} className="text-red-400" /></button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Reminder Preferences */}
+        <ReminderPrefsPanel />
+
+        {/* Create Meeting Modal */}
+        {showCreate && (
+          <CreateMeetingModal
+            clients={clients || []}
+            onClose={() => setShowCreate(false)}
+            onCreate={(data) => createMeeting.mutate(data)}
+            isLoading={createMeeting.isPending}
+          />
+        )}
+
+        {/* Edit Meeting Modal */}
+        {editingId && (
+          <EditMeetingModal
+            meeting={allMeetings?.find((m) => m.id === editingId)}
+            onClose={() => setEditingId(null)}
+            onSave={(data) => updateMeeting.mutate({ id: editingId, ...data })}
+            isLoading={updateMeeting.isPending}
+          />
+        )}
+      </div>
+    </AppShell>
+  );
+}
+
+function CreateMeetingModal({ clients, onClose, onCreate, isLoading }: {
+  clients: any[]; onClose: () => void;
+  onCreate: (data: any) => void; isLoading: boolean;
+}) {
+  const [form, setForm] = useState({
+    clientId: "", title: "", description: "", scheduledAt: "",
+    durationMin: "60", location: "", meetingType: "VIDEO" as const, notes: "",
+  });
+
+  return (
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+      <div className="bg-[#0a1628] border border-[#12233e] rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-4 border-b border-[#12233e]">
+          <h2 className="text-lg font-semibold text-white">Schedule Meeting</h2>
+          <button onClick={onClose} className="rc-btn rc-btn-ghost p-1"><X size={16} /></button>
+        </div>
+        <div className="p-4 space-y-4">
+          <div>
+            <label className="text-xs text-[#7a95b8] mb-1 block">Client *</label>
+            <select value={form.clientId} onChange={(e) => setForm(f => ({ ...f, clientId: e.target.value }))} className="rc-input w-full text-sm">
+              <option value="">Select client...</option>
+              {clients.map((c) => <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="text-xs text-[#7a95b8] mb-1 block">Title *</label>
+            <input value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} className="rc-input w-full text-sm" placeholder="Quarterly review" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-[#7a95b8] mb-1 block">Date & Time *</label>
+              <input type="datetime-local" value={form.scheduledAt} onChange={(e) => setForm(f => ({ ...f, scheduledAt: e.target.value }))} className="rc-input w-full text-sm" />
+            </div>
+            <div>
+              <label className="text-xs text-[#7a95b8] mb-1 block">Duration (min)</label>
+              <NumberInput value={form.durationMin} onChange={(v) => setForm(f => ({ ...f, durationMin: v }))}  className="rc-input w-full text-sm" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-[#7a95b8] mb-1 block">Type</label>
+              <select value={form.meetingType} onChange={(e) => setForm(f => ({ ...f, meetingType: e.target.value as any }))} className="rc-input w-full text-sm">
+                <option value="VIDEO">Video Call</option>
+                <option value="PHONE">Phone Call</option>
+                <option value="IN_PERSON">In Person</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-xs text-[#7a95b8] mb-1 block">Location</label>
+              <input value={form.location} onChange={(e) => setForm(f => ({ ...f, location: e.target.value }))} className="rc-input w-full text-sm" placeholder="Zoom / Office" />
+            </div>
+          </div>
+          <div>
+            <label className="text-xs text-[#7a95b8] mb-1 block">Description</label>
+            <textarea value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} className="rc-input w-full text-sm" rows={2} placeholder="Meeting agenda..." />
+          </div>
+          <div>
+            <label className="text-xs text-[#7a95b8] mb-1 block">Notes</label>
+            <textarea value={form.notes} onChange={(e) => setForm(f => ({ ...f, notes: e.target.value }))} className="rc-input w-full text-sm" rows={2} placeholder="Internal notes..." />
+          </div>
+        </div>
+        <div className="flex justify-end gap-2 p-4 border-t border-[#12233e]">
+          <button onClick={onClose} className="rc-btn rc-btn-ghost text-sm">Cancel</button>
+          <button
+            onClick={() => {
+              if (!form.clientId || !form.title || !form.scheduledAt) { toast.error("Client, title, and date are required"); return; }
+              onCreate({
+                clientId: Number(form.clientId),
+                title: form.title,
+                description: form.description || undefined,
+                scheduledAt: new Date(form.scheduledAt),
+                durationMin: Number(form.durationMin) || 60,
+                location: form.location || undefined,
+                meetingType: form.meetingType,
+                notes: form.notes || undefined,
+              });
+            }}
+            disabled={isLoading}
+            className="rc-btn rc-btn-primary text-sm"
+          >
+            {isLoading ? "Scheduling..." : "Schedule Meeting"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EditMeetingModal({ meeting, onClose, onSave, isLoading }: {
+  meeting: any; onClose: () => void;
+  onSave: (data: any) => void; isLoading: boolean;
+}) {
+  const [form, setForm] = useState({
+    title: meeting?.title || "",
+    description: meeting?.description || "",
+    durationMin: String(meeting?.durationMin || 60),
+    location: meeting?.location || "",
+    meetingType: meeting?.meetingType || "VIDEO",
+    status: meeting?.status || "SCHEDULED",
+    notes: meeting?.notes || "",
+  });
+
+  if (!meeting) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+      <div className="bg-[#0a1628] border border-[#12233e] rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-4 border-b border-[#12233e]">
+          <h2 className="text-lg font-semibold text-white">Edit Meeting</h2>
+          <button onClick={onClose} className="rc-btn rc-btn-ghost p-1"><X size={16} /></button>
+        </div>
+        <div className="p-4 space-y-4">
+          <div>
+            <label className="text-xs text-[#7a95b8] mb-1 block">Title</label>
+            <input value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} className="rc-input w-full text-sm" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-[#7a95b8] mb-1 block">Duration (min)</label>
+              <NumberInput value={form.durationMin} onChange={(v) => setForm(f => ({ ...f, durationMin: v }))}  className="rc-input w-full text-sm" />
+            </div>
+            <div>
+              <label className="text-xs text-[#7a95b8] mb-1 block">Status</label>
+              <select value={form.status} onChange={(e) => setForm(f => ({ ...f, status: e.target.value }))} className="rc-input w-full text-sm">
+                <option value="SCHEDULED">Scheduled</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
+                <option value="NO_SHOW">No Show</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-[#7a95b8] mb-1 block">Type</label>
+              <select value={form.meetingType} onChange={(e) => setForm(f => ({ ...f, meetingType: e.target.value }))} className="rc-input w-full text-sm">
+                <option value="VIDEO">Video Call</option>
+                <option value="PHONE">Phone Call</option>
+                <option value="IN_PERSON">In Person</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-xs text-[#7a95b8] mb-1 block">Location</label>
+              <input value={form.location} onChange={(e) => setForm(f => ({ ...f, location: e.target.value }))} className="rc-input w-full text-sm" />
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs text-[#7a95b8]">Notes</label>
+              <button
+                type="button"
+                onClick={() => {
+                  const title = form.title || "Meeting";
+                  const type = form.meetingType || "VIDEO";
+                  const duration = form.durationMin || "60";
+                  const summary = `Meeting Summary: ${title}\n` +
+                    `Type: ${type} | Duration: ${duration} min\n` +
+                    `Status: ${form.status}\n\n` +
+                    `Key Discussion Points:\n- \n\nAction Items:\n- \n\nFollow-up Required:\n- `;
+                  setForm(f => ({ ...f, notes: summary }));
+                }}
+                className="text-[10px] text-[#22c55e] hover:text-[#22c55e]/80 flex items-center gap-1"
+              >
+                <Sparkles size={10} /> Generate Template
+              </button>
+            </div>
+            <textarea value={form.notes} onChange={(e) => setForm(f => ({ ...f, notes: e.target.value }))} className="rc-input w-full text-sm" rows={3} />
+          </div>
+        </div>
+        <div className="flex justify-end gap-2 p-4 border-t border-[#12233e]">
+          <button onClick={onClose} className="rc-btn rc-btn-ghost text-sm">Cancel</button>
+          <button
+            onClick={() => {
+              onSave({
+                title: form.title || undefined,
+                durationMin: Number(form.durationMin) || undefined,
+                location: form.location || undefined,
+                meetingType: form.meetingType as any,
+                status: form.status as any,
+                notes: form.notes || undefined,
+              });
+            }}
+            disabled={isLoading}
+            className="rc-btn rc-btn-primary text-sm"
+          >
+            {isLoading ? "Saving..." : "Save Changes"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const LEAD_TIME_OPTIONS = [{ value: 15, label: "15 min" },
+,
+  { value: 30, label: "30 min" },
+,
+  { value: 60, label: "1 hour" },
+,
+  { value: 120, label: "2 hours" },
+,
+  { value: 720, label: "12 hours" }
+];
+
+const MEETING_TYPE_LABELS: Record<string, { label: string; icon: typeof Video }> = {
+  VIDEO: { label: "Video Calls", icon: Video },
+  PHONE: { label: "Phone Calls", icon: Phone },
+  IN_PERSON: { label: "In-Person", icon: MapPin },
+  OTHER: { label: "Other", icon: Users },
+};
+
+function ReminderPrefsPanel() {
+  const [expanded, setExpanded] = useState(false);
+  const prefsQuery = trpc.reminderPrefs.get.useQuery(undefined, { staleTime: 60_000 });
+  const updatePrefs = trpc.reminderPrefs.update.useMutation({
+    onSuccess: () => {
+      prefsQuery.refetch();
+      toast.success("Reminder preferences saved");
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const prefs = prefsQuery.data ?? [];
+
+  const handleToggle = (meetingType: string, enabled: boolean) => {
+    const updated = prefs.map((p) =>
+      p.meetingType === meetingType ? { ...p, enabled } : p
+    );
+    updatePrefs.mutate({ prefs: updated.map((p) => ({ meetingType: p.meetingType as any, enabled: p.enabled, leadTimeMinutes: p.leadTimeMinutes })) });
+  };
+
+  const handleLeadTimeChange = (meetingType: string, leadTimeMinutes: number) => {
+    const updated = prefs.map((p) =>
+      p.meetingType === meetingType ? { ...p, leadTimeMinutes } : p
+    );
+    updatePrefs.mutate({ prefs: updated.map((p) => ({ meetingType: p.meetingType as any, enabled: p.enabled, leadTimeMinutes: p.leadTimeMinutes })) });
+  };
+
+  return (
+    <div className="rc-card">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="flex items-center justify-between w-full"
+      >
+        <div className="flex items-center gap-2">
+          <Bell size={16} className="text-[#f59e0b]" />
+          <span className="text-white font-semibold">Reminder Preferences</span>
+          <span className="text-xs text-[#7a95b8]">Configure when you receive meeting reminders</span>
+        </div>
+        <Settings2
+          size={16}
+          className={`text-[#7a95b8] transition-transform ${expanded ? "rotate-90" : ""}`}
+        />
+      </button>
+
+      {expanded && (
+        <div className="mt-4 space-y-3">
+          {prefsQuery.isLoading ? (
+            <div className="animate-pulse space-y-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-12 bg-[#12233e] rounded-lg" />
+              ))}
+            </div>
+          ) : (
+            prefs.map((p) => {
+              const meta = MEETING_TYPE_LABELS[p.meetingType] ?? MEETING_TYPE_LABELS.OTHER;
+              const Icon = meta.icon;
+              return (
+                <div
+                  key={p.meetingType}
+                  className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
+                    p.enabled
+                      ? "bg-[#0f1e35] border-[#12233e]"
+                      : "bg-[#0b1628] border-[#0f1e35] opacity-60"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => handleToggle(p.meetingType, !p.enabled)}
+                      className={`w-10 h-5 rounded-full transition-colors relative ${
+                        p.enabled ? "bg-[#22c55e]" : "bg-[#1a2a42]"
+                      }`}
+                      title={p.enabled ? "Disable reminders" : "Enable reminders"}
+                    >
+                      <span
+                        className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
+                          p.enabled ? "left-5" : "left-0.5"
+                        }`}
+                      />
+                    </button>
+                    <Icon size={14} className="text-[#7a95b8]" />
+                    <span className="text-sm text-white font-medium">{meta.label}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-[#7a95b8]">Remind</span>
+                    <select
+                      value={p.leadTimeMinutes}
+                      onChange={(e) => handleLeadTimeChange(p.meetingType, Number(e.target.value))}
+                      disabled={!p.enabled}
+                      className="rc-input text-xs py-1 px-2 w-28"
+                    >
+                      {LEAD_TIME_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label} before</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              );
+            })
+          )}
+          {updatePrefs.isPending && (
+            <div className="flex items-center gap-2 text-xs text-[#7a95b8]">
+              <span className="w-3 h-3 rounded-full border-2 border-[#7a95b8]/30 border-t-[#7a95b8] animate-spin" />
+              Saving...
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## `client/src/pages/portal/MorningRitual.tsx`
+
+```tsx
+// @ts-nocheck
+import { useState, useEffect } from "react";
+import { AppShell } from "@/components/AppShell";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Switch } from "@/components/ui/switch";
+import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { toast } from "sonner";
+import {
+  Sun, Coffee, Flame, DollarSign, Zap,
+  Volume2, VolumeX, Clock, Target, CheckCircle, Sparkles,
+  ArrowRight, Heart, Shield, Bell, AlertTriangle
+} from "lucide-react";
+
+/* ═══════════════════════════════════════════════════════════════════
+   THE MORNING RITUAL — WIRED TO REAL BACKEND
+   ═══════════════════════════════════════════════════════════════════ */
+
+const SOUND_TIERS = [
+  { min: 0, max: 999, label: "Coin Drop", emoji: "🪙" },
+  { min: 1000, max: 9999, label: "Cash Register", emoji: "💵" },
+  { min: 10000, max: 99999, label: "Vault Opening", emoji: "🏦" },
+  { min: 100000, max: 999999, label: "Jackpot", emoji: "🎰" },
+  { min: 1000000, max: Infinity, label: "Wealth Explosion", emoji: "💎" },
+];
+
+const RITUAL_STEPS = [
+  { id: "breathe", title: "Breathe", subtitle: "Center yourself. Today is going to be profitable.", icon: Sun, iconColor: "text-amber-400", duration: 10, bgGradient: "from-amber-500/5 to-amber-900/10" },
+  { id: "wealth", title: "Wealth Discovered", subtitle: "While you slept, the numbers moved.", icon: DollarSign, iconColor: "text-emerald-400", duration: 15, bgGradient: "from-emerald-500/5 to-emerald-900/10" },
+  { id: "streak", title: "Streak Check", subtitle: "Another day. Another link in the chain.", icon: Flame, iconColor: "text-orange-400", duration: 10, bgGradient: "from-orange-500/5 to-orange-900/10" },
+  { id: "discovery", title: "Daily Discovery", subtitle: "Your AI found something while you were away.", icon: Sparkles, iconColor: "text-cyan-400", duration: 20, bgGradient: "from-cyan-500/5 to-cyan-900/10" },
+  { id: "quest", title: "Today's Quest", subtitle: "Your mission, should you choose to accept it.", icon: Target, iconColor: "text-violet-400", duration: 15, bgGradient: "from-violet-500/5 to-violet-900/10" },
+  { id: "launch", title: "Launch", subtitle: "Go make someone's financial life better.", icon: Zap, iconColor: "text-yellow-400", duration: 10, bgGradient: "from-yellow-500/5 to-yellow-900/10" },
+];
+
+function BreathingCircle({ active }: { active: boolean }) {
+  return (
+    <div className="relative flex items-center justify-center">
+      <div className={`w-32 h-32 rounded-full border-2 border-amber-400/30 transition-all duration-[4000ms] ease-in-out ${active ? "scale-150 opacity-20" : "scale-100 opacity-60"}`} />
+      <div className={`absolute w-24 h-24 rounded-full border border-amber-400/50 transition-all duration-[4000ms] ease-in-out delay-500 ${active ? "scale-150 opacity-10" : "scale-100 opacity-40"}`} />
+      <div className="absolute w-16 h-16 rounded-full bg-amber-400/20 flex items-center justify-center">
+        <Sun className="text-amber-400" size={24} />
+      </div>
+      <p className="absolute -bottom-8 text-xs text-amber-400/60 font-medium">
+        {active ? "Breathe out..." : "Breathe in..."}
+      </p>
+    </div>
+  );
+}
+
+function AnimatedCounter({ target, prefix = "$", duration = 2000 }: { target: number; prefix?: string; duration?: number }) {
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    const steps = 60;
+    const increment = target / steps;
+    let step = 0;
+    const timer = setInterval(() => {
+      step++;
+      setCurrent(Math.min(Math.round(increment * step), target));
+      if (step >= steps) clearInterval(timer);
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [target, duration]);
+  return <span>{prefix}{current.toLocaleString()}</span>;
+}
+
+function ToiletDashboard() {
+  const quickWins = [
+    { title: "Call Mrs. Johnson", subtitle: "Policy renewal in 7 days", time: "30s", xp: 15, icon: "📞", urgency: "high" },
+    { title: "Send Birthday Card", subtitle: "Tom Anderson turns 65 today", time: "20s", xp: 10, icon: "🎂", urgency: "medium" },
+    { title: "Review MYGA Rate", subtitle: "Athene rate changed overnight", time: "15s", xp: 5, icon: "📊", urgency: "low" },
+    { title: "Approve Pending App", subtitle: "Chen family FIA application", time: "45s", xp: 20, icon: "✅", urgency: "high" },
+    { title: "Reply to Referral", subtitle: "New lead from Dr. Williams", time: "60s", xp: 25, icon: "🤝", urgency: "high" },
+  ];
+  const [completed, setCompleted] = useState<Set<number>>(new Set());
+  const totalXp = quickWins.filter((_, i) => completed.has(i)).reduce((sum, w) => sum + w.xp, 0);
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-black text-white flex items-center gap-2">
+            <Clock size={18} className="text-cyan-400" /> Quick Wins
+          </h3>
+          <p className="text-xs text-slate-500">90-second tasks. One thumb. Big impact.</p>
+        </div>
+        <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">+{totalXp} XP</Badge>
+      </div>
+      {quickWins.map((win, i) => (
+        <Card key={i} className={`bg-slate-800/50 border-slate-700/50 cursor-pointer transition-all duration-200 ${completed.has(i) ? "opacity-50 border-emerald-500/30" : "hover:bg-slate-800/80"}`}
+          onClick={() => {
+            if (!completed.has(i)) {
+              setCompleted(prev => { const next = new Set(Array.from(prev)); next.add(i); return next; });
+              toast.success(`+${win.xp} XP`, { description: win.title });
+            }
+          }}>
+          <CardContent className="p-3 flex items-center gap-3">
+            <span className="text-2xl">{completed.has(i) ? "✅" : win.icon}</span>
+            <div className="flex-1 min-w-0">
+              <p className={`text-sm font-bold ${completed.has(i) ? "text-emerald-400 line-through" : "text-white"}`}>{win.title}</p>
+              <p className="text-xs text-slate-500 truncate">{win.subtitle}</p>
+            </div>
+            <div className="text-right shrink-0">
+              <p className="text-xs text-slate-400">{win.time}</p>
+              <p className="text-[10px] text-yellow-400">+{win.xp} XP</p>
+            </div>
+            <div className={`w-2 h-2 rounded-full ${win.urgency === "high" ? "bg-red-400" : win.urgency === "medium" ? "bg-amber-400" : "bg-blue-400"}`} />
+          </CardContent>
+        </Card>
+      ))}
+      <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs text-slate-400">Quick Win Progress</span>
+          <span className="text-xs text-emerald-400 font-bold">{completed.size}/{quickWins.length}</span>
+        </div>
+        <Progress value={(completed.size / quickWins.length) * 100} className="h-2" />
+      </div>
+    </div>
+  );
+}
+
+function WithdrawalSymptoms() {
+  const { data: triggers, isLoading } = trpc.withdrawal.getUnread.useQuery();
+  const markReadMut = trpc.withdrawal.markRead.useMutation();
+  const markClickedMut = trpc.withdrawal.markClicked.useMutation();
+  const generateMut = trpc.withdrawal.generate.useMutation({
+    onSuccess: () => toast.success("Re-engagement triggers generated!"),
+  });
+  const utils = trpc.useUtils();
+
+  const staticSymptoms = [
+    { level: 1, trigger: "12 hours away", message: "Your wealth feed has new insights waiting...", icon: Bell, color: "text-blue-400", bgColor: "bg-blue-500/10 border-blue-500/20" },
+    { level: 2, trigger: "24 hours away", message: "Your streak is at risk! Log in to save it.", icon: Flame, color: "text-orange-400", bgColor: "bg-orange-500/10 border-orange-500/20" },
+    { level: 3, trigger: "48 hours away", message: "Your pet is getting lonely. It hasn't been fed.", icon: Heart, color: "text-pink-400", bgColor: "bg-pink-500/10 border-pink-500/20" },
+    { level: 4, trigger: "72 hours away", message: "ALERT: Clients have been contacted by competitors.", icon: AlertTriangle, color: "text-red-400", bgColor: "bg-red-500/10 border-red-500/20" },
+    { level: 5, trigger: "7 days away", message: "EMERGENCY: Your Russell Number dropped significantly.", icon: Shield, color: "text-red-500", bgColor: "bg-red-500/15 border-red-500/30" },
+  ];
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-black text-white flex items-center gap-2">
+            <AlertTriangle size={18} className="text-red-400" /> Re-Engagement Triggers
+          </h3>
+          <p className="text-xs text-slate-500">Escalating notifications that bring advisors back.</p>
+        </div>
+        <Button size="sm" variant="outline" className="text-xs" onClick={() => { generateMut.mutate(); setTimeout(() => utils.withdrawal.getUnread.invalidate(), 1000); }}>
+          Generate Test
+        </Button>
+      </div>
+
+      {triggers && triggers.length > 0 && (
+        <div className="space-y-2 mb-4">
+          <p className="text-xs text-yellow-400 font-bold">Active Triggers ({triggers.length})</p>
+          {triggers.map((t: any) => (
+            <Card key={t.id} className="bg-red-500/5 border-red-500/20 border">
+              <CardContent className="p-3 flex items-start gap-3">
+                <AlertTriangle size={14} className="text-red-400 mt-1 shrink-0" />
+                <div className="flex-1">
+                  <p className="text-xs text-white/80">{t.hookText}</p>
+                  <p className="text-[10px] text-slate-500 mt-1">Level {t.triggerLevel} — {t.triggerType}</p>
+                </div>
+                <Button size="sm" variant="ghost" className="text-[10px] text-slate-400 h-6" onClick={() => { markReadMut.mutate({ triggerId: t.id }); utils.withdrawal.getUnread.invalidate(); }}>
+                  Dismiss
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <p className="text-xs text-slate-400 font-medium">Trigger Escalation Levels</p>
+        {staticSymptoms.map((s) => {
+          const Icon = s.icon;
+          return (
+            <Card key={s.level} className={`${s.bgColor} border`}>
+              <CardContent className="p-3 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <Icon size={14} className={s.color} />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge className="bg-black/20 text-white/60 border-white/10 text-[10px]">Level {s.level}</Badge>
+                    <span className="text-[10px] text-slate-500">{s.trigger}</span>
+                  </div>
+                  <p className="text-xs text-white/80">{s.message}</p>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
+        <p className="text-xs text-slate-400">Current status: <span className="text-emerald-400 font-bold">Active</span></p>
+        <p className="text-[10px] text-slate-500 mt-1">
+          {triggers && triggers.length > 0 ? `${triggers.length} active trigger(s)` : "No withdrawal symptoms triggered. Keep it up!"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function SoundSettings() {
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  return (
+    <div className="space-y-3">
+      <div>
+        <h3 className="text-lg font-black text-white flex items-center gap-2">
+          <Volume2 size={18} className="text-emerald-400" /> Sound of Money
+        </h3>
+        <p className="text-xs text-slate-500">Pavlovian conditioning. Every positive event has a sound.</p>
+      </div>
+      <Card className="bg-slate-800/50 border-slate-700/50">
+        <CardContent className="p-4 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {soundEnabled ? <Volume2 size={16} className="text-emerald-400" /> : <VolumeX size={16} className="text-slate-500" />}
+              <span className="text-sm text-white font-medium">Sound Effects</span>
+            </div>
+            <Switch checked={soundEnabled} onCheckedChange={setSoundEnabled} />
+          </div>
+          <div className="space-y-2">
+            <p className="text-xs text-slate-400 font-medium">Sound Tiers</p>
+            {SOUND_TIERS.map((tier) => (
+              <div key={tier.label} className="flex items-center justify-between py-1.5 px-2 rounded-lg bg-black/20">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{tier.emoji}</span>
+                  <div>
+                    <p className="text-xs text-white font-medium">{tier.label}</p>
+                    <p className="text-[10px] text-slate-500">${tier.min.toLocaleString()} - {tier.max === Infinity ? "∞" : `$${tier.max.toLocaleString()}`}</p>
+                  </div>
+                </div>
+                <button className="text-[10px] text-emerald-400 hover:text-emerald-300 font-medium"
+                  onClick={() => toast.success(`${tier.emoji} ${tier.label}!`, { description: `Playing sound for $${tier.min.toLocaleString()}+ discoveries` })}>
+                  Preview
+                </button>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function MorningRitualPage() {
+  const { user } = useAuth();
+  const utils = trpc.useUtils();
+  const [activeTab, setActiveTab] = useState<"ritual" | "toilet" | "sound" | "withdrawal">("ritual");
+  const [ritualStep, setRitualStep] = useState(0);
+  const [ritualStarted, setRitualStarted] = useState(false);
+  const [ritualComplete, setRitualComplete] = useState(false);
+  const [breatheIn, setBreatheIn] = useState(true);
+  const [stepProgress, setStepProgress] = useState(0);
+
+  const { data: todayRitual } = trpc.morningRitual.getToday.useQuery(undefined, { enabled: !!user });
+  const { data: streakData } = trpc.morningRitual.getStreak.useQuery(undefined, { enabled: !!user });
+  const startMutation = trpc.morningRitual.start.useMutation({
+    onSuccess: () => { utils.morningRitual.getToday.invalidate(); },
+  });
+  const completeStepMutation = trpc.morningRitual.completeStep.useMutation({
+    onSuccess: (data) => {
+      if (data.justCompleted) {
+        toast.success("Morning Ritual Complete!", { description: `+${data.xpGained} XP, +${data.coinsGained} RC` });
+      }
+      utils.morningRitual.getToday.invalidate();
+      utils.morningRitual.getStreak.invalidate();
+    },
+  });
+
+  useEffect(() => {
+    if (todayRitual?.isComplete) {
+      setRitualComplete(true);
+      setRitualStarted(true);
+    }
+  }, [todayRitual]);
+
+  useEffect(() => {
+    if (!ritualStarted || ritualStep !== 0) return;
+    const timer = setInterval(() => setBreatheIn(prev => !prev), 4000);
+    return () => clearInterval(timer);
+  }, [ritualStarted, ritualStep]);
+
+  useEffect(() => {
+    if (!ritualStarted || ritualComplete) return;
+    const step = RITUAL_STEPS[ritualStep];
+    if (!step) return;
+    const interval = 100;
+    const increment = (interval / (step.duration * 1000)) * 100;
+    const timer = setInterval(() => {
+      setStepProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(timer);
+          completeStepMutation.mutate({ stepIndex: ritualStep });
+          if (ritualStep < RITUAL_STEPS.length - 1) {
+            setTimeout(() => { setRitualStep(s => s + 1); setStepProgress(0); }, 500);
+          } else {
+            setRitualComplete(true);
+          }
+          return 100;
+        }
+        return prev + increment;
+      });
+    }, interval);
+    return () => clearInterval(timer);
+  }, [ritualStarted, ritualStep, ritualComplete]);
+
+  const tabs = [
+    { id: "ritual" as const, label: "Morning Ritual", icon: Sun, color: "text-amber-400" },
+    { id: "toilet" as const, label: "Quick Wins", icon: Clock, color: "text-cyan-400" },
+    { id: "sound" as const, label: "Sound of Money", icon: Volume2, color: "text-emerald-400" },
+    { id: "withdrawal" as const, label: "Re-Engage", icon: AlertTriangle, color: "text-red-400" },
+  ];
+
+  const currentStep = RITUAL_STEPS[ritualStep];
+
+  return (
+    <AppShell>
+      <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+        <div>
+          <h1 className="text-2xl font-black text-white flex items-center gap-2">
+            <Sun className="text-amber-400" /> Daily Rituals
+          </h1>
+          <p className="text-sm text-slate-400 mt-1">
+            Own the first 90 seconds. Condition the brain. Build the habit.
+            {streakData && <span className="text-orange-400 ml-2">🔥 {streakData.currentStreak} day streak</span>}
+          </p>
+        </div>
+
+        <div className="flex gap-1 bg-slate-800/50 rounded-xl p-1 border border-slate-700/50">
+          {tabs.map(tab => {
+            const Icon = tab.icon;
+            return (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-bold transition-all ${activeTab === tab.id ? "bg-slate-700 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}>
+                <Icon size={14} className={activeTab === tab.id ? tab.color : ""} />
+                <span className="hidden sm:inline">{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {activeTab === "ritual" && (
+          <div className="space-y-4">
+            {!ritualStarted ? (
+              <Card className="bg-gradient-to-br from-amber-500/5 to-amber-900/10 border-amber-500/20">
+                <CardContent className="p-8 text-center space-y-6">
+                  <div className="w-20 h-20 rounded-full bg-amber-400/10 border-2 border-amber-400/30 flex items-center justify-center mx-auto">
+                    <Coffee className="text-amber-400" size={32} />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-black text-white">Good {new Date().getHours() < 12 ? "Morning" : new Date().getHours() < 17 ? "Afternoon" : "Evening"}, {user?.name?.split(" ")[0] || "Commander"}</h2>
+                    <p className="text-sm text-slate-400 mt-2">Your 90-second Morning Ritual is ready.</p>
+                    {streakData && <p className="text-xs text-orange-400 mt-1">🔥 Current streak: {streakData.currentStreak} days ({streakData.totalCompleted} total)</p>}
+                  </div>
+                  <div className="flex items-center justify-center gap-4 text-xs text-slate-500">
+                    {RITUAL_STEPS.map((step, i) => {
+                      const Icon = step.icon;
+                      return (
+                        <div key={i} className="flex flex-col items-center gap-1">
+                          <Icon size={14} className={step.iconColor} />
+                          <span>{step.duration}s</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <Button className="bg-amber-600 hover:bg-amber-500 text-white font-black px-8 h-12 rounded-xl text-lg"
+                    disabled={startMutation.isPending}
+                    onClick={() => { startMutation.mutate(); setRitualStarted(true); }}>
+                    Begin Ritual <ArrowRight className="ml-2" size={18} />
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : ritualComplete ? (
+              <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-900/20 border-emerald-500/30">
+                <CardContent className="p-8 text-center space-y-6">
+                  <div className="w-20 h-20 rounded-full bg-emerald-400/20 border-2 border-emerald-400/40 flex items-center justify-center mx-auto animate-pulse">
+                    <CheckCircle className="text-emerald-400" size={36} />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-black text-white">Ritual Complete</h2>
+                    <p className="text-sm text-slate-400 mt-2">You're centered, informed, and ready to dominate.</p>
+                  </div>
+                  <div className="flex items-center justify-center gap-6">
+                    <div className="text-center">
+                      <p className="text-2xl font-black text-yellow-400">+{todayRitual?.xpEarned ?? 100}</p>
+                      <p className="text-xs text-slate-500">XP Earned</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-black text-orange-400">🔥</p>
+                      <p className="text-xs text-slate-500">{streakData?.currentStreak ?? 1} Day Streak</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-black text-emerald-400">+{todayRitual?.coinsEarned ?? 50}</p>
+                      <p className="text-xs text-slate-500">RC Earned</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  {RITUAL_STEPS.map((_, i) => (
+                    <div key={i} className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${i < ritualStep ? "bg-emerald-400" : i === ritualStep ? "bg-amber-400" : "bg-slate-700"}`}>
+                      {i === ritualStep && <div className="h-full bg-amber-400 rounded-full transition-all duration-100" style={{ width: `${stepProgress}%` }} />}
+                    </div>
+                  ))}
+                </div>
+                <Card className={`bg-gradient-to-br ${currentStep?.bgGradient} border-slate-700/50 min-h-[300px]`}>
+                  <CardContent className="p-8 flex flex-col items-center justify-center text-center space-y-6">
+                    <Badge className="bg-black/20 text-white/60 border-white/10 text-[10px]">Step {ritualStep + 1} of {RITUAL_STEPS.length}</Badge>
+                    {ritualStep === 0 ? (
+                      <BreathingCircle active={breatheIn} />
+                    ) : (
+                      <div className="w-16 h-16 rounded-full bg-black/20 flex items-center justify-center">
+                        {currentStep && <currentStep.icon size={28} className={currentStep.iconColor} />}
+                      </div>
+                    )}
+                    <div className="mt-4">
+                      <h2 className="text-2xl font-black text-white">{currentStep?.title}</h2>
+                      <p className="text-sm text-slate-400 mt-2">{currentStep?.subtitle}</p>
+                    </div>
+                    {ritualStep === 1 && (
+                      <div className="text-center">
+                        <p className="text-3xl font-black text-emerald-400"><AnimatedCounter target={47200} /></p>
+                        <p className="text-xs text-slate-500 mt-1">Discovered while you slept</p>
+                      </div>
+                    )}
+                    {ritualStep === 2 && (
+                      <div className="flex items-center gap-3">
+                        <Flame className="text-orange-400" size={32} />
+                        <span className="text-4xl font-black text-orange-400">{streakData?.currentStreak ?? 1}</span>
+                        <span className="text-sm text-slate-400">day streak</span>
+                      </div>
+                    )}
+                    {ritualStep === 3 && (
+                      <div className="bg-black/20 rounded-xl p-4 border border-cyan-500/20 w-full max-w-xs">
+                        <p className="text-sm text-cyan-400 font-bold">AI Discovery</p>
+                        <p className="text-xs text-slate-400 mt-1">The Martinez family is overpaying $23,400/yr in taxes. A charitable remainder trust fixes this.</p>
+                      </div>
+                    )}
+                    {ritualStep === 4 && (
+                      <div className="bg-black/20 rounded-xl p-4 border border-violet-500/20 w-full max-w-xs">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Target size={14} className="text-violet-400" />
+                          <span className="text-xs text-violet-400 font-bold">Daily Quest</span>
+                        </div>
+                        <p className="text-sm text-white font-bold">Complete 3 client follow-ups</p>
+                        <p className="text-xs text-slate-500 mt-1">Reward: 75 XP + Rare Loot Drop</p>
+                      </div>
+                    )}
+                    <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs"
+                      onClick={() => {
+                        completeStepMutation.mutate({ stepIndex: ritualStep });
+                        if (ritualStep < RITUAL_STEPS.length - 1) {
+                          setRitualStep(s => s + 1);
+                          setStepProgress(0);
+                        } else {
+                          setRitualComplete(true);
+                        }
+                      }}>
+                      {ritualStep < RITUAL_STEPS.length - 1 ? "Skip →" : "Complete ✓"}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "toilet" && <ToiletDashboard />}
+        {activeTab === "sound" && <SoundSettings />}
+        {activeTab === "withdrawal" && <WithdrawalSymptoms />}
+      </div>
+    </AppShell>
+  );
+}
+```
 
 ## `client/src/pages/portal/MortgageKiller.tsx`
 
@@ -30912,1726 +33487,5 @@ const MonitorPlay = ({ className, ...props }: any) => (
     <path d="m10 10 5 3-5 3z" />
   </svg>
 );
-```
-
-## `client/src/pages/portal/RealEstateMogul.tsx`
-
-```tsx
-// @ts-nocheck
-import { AppShell } from "@/components/AppShell";
-import { GenerateOutcomeTab } from "@/components/GenerateOutcomeTab";
-import { CalculationSyncBar } from "@/components/CalculationSyncBar";
-import { useStrategy } from "@/contexts/StrategyContext";
-import { 
-  PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area, 
-  LineChart, Line, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ComposedChart,
-  XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer, Legend
-} from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
-import { useClientData } from "@/contexts/ClientDataContext";
-import { OilGasToggle, type OilGasResult } from "@/components/OilGasToggle";
-import { useState, useMemo, useEffect, useCallback } from "react";
-import {
-  Home,
-  Plus,
-  Trash2,
-  TrendingUp,
-  DollarSign,
-  Building2,
-  BarChart3,
-  Target,
-  Shield,
-  Wallet,
-  MapPin,
-  Sparkles,
-  PiggyBank,
-  ArrowUpRight,
-  AlertCircle,
-  RefreshCw,
-  Settings,
-  Save,
-  FileText,
-  Briefcase,
-  Percent,
-  Activity,
-  Calendar,
-  PieChart as PieChartIcon,
-  LineChart as LineChartIcon,
-} from "lucide-react";
-import { NAICDisclaimer } from "@/components/NAICDisclaimer";
-import { IbbotsonYearSelector } from "@/components/IbbotsonYearSelector";
-import { Switch } from "@/components/ui/switch";
-import { SP500_ANNUAL_RETURNS, calculateCreditedRate, IBBOTSON_DEFAULT_START_YEAR, IBBOTSON_SHORT_DISCLAIMER } from "@shared/ibbotsonModel";
-import { PageInsights } from "@/components/PageInsights";
-import { ExportToSlides } from "@/components/ExportToSlides";
-import { trpc } from "@/lib/trpc";
-import { useAuth } from "@/_core/hooks/useAuth";
-import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
-import { RelatedCalculators } from "@/components/RelatedCalculators";
-import { ComplianceFooter } from "@/components/ComplianceFooter";
-
-interface Property {
-  id: number;
-  name: string;
-  purchasePrice: number;
-  downPayment: number;
-  mortgageRate: number;
-  mortgageTerm: number;
-  monthlyRent: number;
-  monthlyExpenses: number;
-  appreciation: number;
-  vacancy: number;
-  propertyType: string;
-  state: string;
-  yearBuilt: number;
-  sqft: number;
-  propertyTaxRate: number;
-  insuranceRate: number;
-  maintenanceRate: number;
-  managementFeeRate: number;
-  renovationBudget: number;
-  expectedRentIncrease: number;
-}
-
-const DEFAULT_PROPERTY: Omit<Property, "id"> = {
-  name: "Rental Property 1",
-  purchasePrice: 300000,
-  downPayment: 20,
-  mortgageRate: 6.5,
-  mortgageTerm: 30,
-  monthlyRent: 2200,
-  monthlyExpenses: 400,
-  appreciation: 3.5,
-  vacancy: 5,
-  propertyType: "single_family",
-  state: "TX",
-  yearBuilt: 2010,
-  sqft: 1500,
-  propertyTaxRate: 1.2,
-  insuranceRate: 0.5,
-  maintenanceRate: 1.0,
-  managementFeeRate: 8.0,
-  renovationBudget: 5000,
-  expectedRentIncrease: 3.0,
-};
-
-const PROPERTY_TYPES = [{ value: "single_family", label: "Single Family" },
-,
-  { value: "duplex", label: "Duplex" },
-,
-  { value: "triplex", label: "Triplex" },
-,
-  { value: "fourplex", label: "Fourplex" },
-,
-  { value: "condo", label: "Condo" }
-];
-
-const STATES = [
-  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", 
-  "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
-  "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
-  "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
-  "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
-];
-
-const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
-
-const fmt = (n: number) => "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
-const pct = (n: number) => n.toFixed(2) + "%";
-const fmtDec = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 2 });
-
-function NumberInput({ value, onChange, ...props }: { value: number; onChange: (v: number) => void; className?: string; min?: number; max?: number; step?: number; disabled?: boolean }) {
-  return (
-    <Input
-      type="number"
-      value={value || ""}
-      onChange={(e) => onChange(Number(e.target.value) || 0)}
-      {...props}
-    />
-  );
-}
-
-function calcProperty(p: Property, years: number) {
-  const loanAmount = p.purchasePrice * (1 - p.downPayment / 100);
-  const monthlyRate = p.mortgageRate / 100 / 12;
-  const numPayments = p.mortgageTerm * 12;
-  const monthlyPayment = monthlyRate > 0
-    ? loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1)
-    : loanAmount / numPayments;
-
-  const effectiveRent = p.monthlyRent * (1 - p.vacancy / 100);
-  
-  const propertyTaxMonthly = (p.purchasePrice * (p.propertyTaxRate / 100)) / 12;
-  const insuranceMonthly = (p.purchasePrice * (p.insuranceRate / 100)) / 12;
-  const maintenanceMonthly = (p.purchasePrice * (p.maintenanceRate / 100)) / 12;
-  const managementMonthly = p.monthlyRent * (p.managementFeeRate / 100);
-  
-  const totalMonthlyExpenses = p.monthlyExpenses + propertyTaxMonthly + insuranceMonthly + maintenanceMonthly + managementMonthly;
-  
-  const monthlyCashFlow = effectiveRent - monthlyPayment - totalMonthlyExpenses;
-  const annualCashFlow = monthlyCashFlow * 12;
-  const downPaymentAmount = p.purchasePrice * (p.downPayment / 100);
-  const initialInvestment = downPaymentAmount + p.renovationBudget;
-  const cashOnCash = initialInvestment > 0 ? (annualCashFlow / initialInvestment) * 100 : 0;
-
-  const noi = (effectiveRent - totalMonthlyExpenses) * 12;
-  const capRate = p.purchasePrice > 0 ? (noi / p.purchasePrice) * 100 : 0;
-  
-  const grm = p.monthlyRent > 0 ? p.purchasePrice / (p.monthlyRent * 12) : 0;
-
-  const projection: Array<{
-    year: number;
-    propertyValue: number;
-    loanBalance: number;
-    equity: number;
-    annualRent: number;
-    annualExpenses: number;
-    annualCashFlow: number;
-    totalReturn: number;
-    noi: number;
-    capRate: number;
-    roi: number;
-  }> = [];
-
-  let currentValue = p.purchasePrice;
-  let remainingLoan = loanAmount;
-  let totalCashFlow = 0;
-
-  for (let y = 0; y <= years; y++) {
-    const equity = currentValue - remainingLoan;
-    
-    const currentRent = effectiveRent * Math.pow(1 + p.expectedRentIncrease / 100, y);
-    const currentExpenses = totalMonthlyExpenses * Math.pow(1.02, y); // Assume 2% inflation on expenses
-    
-    const yearlyRent = currentRent * 12;
-    const yearlyExpenses = currentExpenses * 12;
-    const yearlyNOI = yearlyRent - yearlyExpenses;
-    const yearlyCashFlow = yearlyNOI - (monthlyPayment * 12);
-    
-    projection.push({
-      year: y,
-      propertyValue: currentValue,
-      loanBalance: remainingLoan,
-      equity,
-      annualRent: yearlyRent,
-      annualExpenses: yearlyExpenses,
-      annualCashFlow: yearlyCashFlow,
-      totalReturn: equity - initialInvestment + totalCashFlow,
-      noi: yearlyNOI,
-      capRate: currentValue > 0 ? (yearlyNOI / currentValue) * 100 : 0,
-      roi: initialInvestment > 0 ? ((equity - initialInvestment + totalCashFlow) / initialInvestment) * 100 : 0,
-    });
-
-    currentValue *= (1 + p.appreciation / 100);
-    
-    if (y < p.mortgageTerm) {
-      const yearlyInterest = remainingLoan * (p.mortgageRate / 100);
-      const yearlyPrincipal = (monthlyPayment * 12) - yearlyInterest;
-      remainingLoan = Math.max(0, remainingLoan - yearlyPrincipal);
-    } else {
-      remainingLoan = 0;
-    }
-    
-    totalCashFlow += yearlyCashFlow;
-  }
-
-  return {
-    monthlyPayment,
-    monthlyCashFlow,
-    annualCashFlow,
-    cashOnCash,
-    downPaymentAmount,
-    loanAmount,
-    initialInvestment,
-    capRate,
-    noi,
-    grm,
-    totalMonthlyExpenses,
-    projection,
-    totalEquityAtEnd: projection[projection.length - 1]?.equity ?? 0,
-    totalValueAtEnd: projection[projection.length - 1]?.propertyValue ?? 0,
-    totalCashFlowGenerated: totalCashFlow,
-  };
-}
-
-export default function RealEstateMogul() {
-  const { user } = useAuth();
-  const { data: clientData } = useClientData();
-  
-  const [properties, setProperties] = useState<Property[]>([
-    { ...DEFAULT_PROPERTY, id: 1 },
-  ]);
-  const [projectionYears, setProjectionYears] = useState(30);
-  const [expandedProperty, setExpandedProperty] = useState<number | null>(1);
-  const [iulPremium, setIulPremium] = useState(24000);
-  const [iulRate, setIulRate] = useState(7.0);
-  const [oilGasEnabled, setOilGasEnabled] = useState(false);
-  const [oilGasAmount, setOilGasAmount] = useState(100000);
-  const [activeTab, setActiveTab] = useState("portfolio");
-  const [ibbotsonStartYear, setIbbotsonStartYear] = useState(IBBOTSON_DEFAULT_START_YEAR);
-  const [useIbbotsonModel, setUseIbbotsonModel] = useState(true);
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [globalInflation, setGlobalInflation] = useState(2.5);
-  const [taxBracket, setTaxBracket] = useState(32);
-  const [capitalGainsTax, setCapitalGainsTax] = useState(15);
-  const [depreciationYears, setDepreciationYears] = useState(27.5);
-  const [selectedPropertyId, setSelectedPropertyId] = useState<number>(1);
-  const [isSimulating, setIsSimulating] = useState(false);
-  const [simulationProgress, setSimulationProgress] = useState(0);
-  const [scenarioName, setScenarioName] = useState("Base Scenario");
-  
-  const { data: marketData } = trpc.marketData.getRealEstateMetrics.useQuery(
-    { state: properties[0]?.state || "TX" },
-    { enabled: !!properties[0]?.state }
-  );
-  
-  const { data: strategyData } = trpc.strategy.getRecommendations.useQuery(
-    { clientId: clientData?.id || "default", strategyType: "real_estate" },
-    { enabled: !!clientData?.id }
-  );
-  
-  const { data: savedScenarios } = trpc.scenarios.list.useQuery(
-    { type: "real_estate" }
-  );
-  
-  const saveScenarioMutation = trpc.scenarios.save.useMutation();
-  const analyzePortfolioMutation = trpc.ai.analyzeRealEstatePortfolio.useMutation();
-  
-  const portfolioCalcs = useMemo(() => {
-    return properties.map((p) => ({ property: p, calc: calcProperty(p, projectionYears) }));
-  }, [properties, projectionYears]);
-
-  const totalMonthlyRent = properties.reduce((s, p) => s + p.monthlyRent * (1 - p.vacancy / 100), 0);
-  const totalMonthlyCashFlow = portfolioCalcs.reduce((s, pc) => s + pc.calc.monthlyCashFlow, 0);
-  const totalDownPayment = portfolioCalcs.reduce((s, pc) => s + pc.calc.downPaymentAmount, 0);
-  const totalInitialInvestment = portfolioCalcs.reduce((s, pc) => s + pc.calc.initialInvestment, 0);
-  const totalPropertyValue = properties.reduce((s, p) => s + p.purchasePrice, 0);
-  const totalEquity = portfolioCalcs.reduce((s, pc) => s + pc.calc.totalEquityAtEnd, 0);
-  const totalFutureValue = portfolioCalcs.reduce((s, pc) => s + pc.calc.totalValueAtEnd, 0);
-  const totalNOI = portfolioCalcs.reduce((s, pc) => s + pc.calc.noi, 0);
-  
-  const avgCashOnCash = portfolioCalcs.length > 0
-    ? portfolioCalcs.reduce((s, pc) => s + pc.calc.cashOnCash, 0) / portfolioCalcs.length
-    : 0;
-    
-  const portfolioCapRate = totalPropertyValue > 0 ? (totalNOI / totalPropertyValue) * 100 : 0;
-
-  const iulProjection = useMemo(() => {
-    let cashValue = 0;
-    const data: Array<{ year: number; premium: number; cashValue: number; deathBenefit: number; creditedRate: number; calendarYear?: number }> = [];
-    const capRate = iulRate / 100;
-    for (let y = 0; y <= projectionYears; y++) {
-      let yearCreditRate = iulRate / 100;
-      let calendarYear: number | undefined;
-      if (useIbbotsonModel && y > 0) {
-        calendarYear = ibbotsonStartYear + y - 1;
-        const sp500 = SP500_ANNUAL_RETURNS[calendarYear];
-        if (sp500 !== undefined) {
-          yearCreditRate = calculateCreditedRate(sp500, capRate, 0, 1.0);
-        }
-      }
-      data.push({
-        year: y,
-        premium: y > 0 ? iulPremium : 0,
-        cashValue,
-        deathBenefit: Math.max(cashValue * 1.5, iulPremium * 10),
-        creditedRate: y > 0 ? yearCreditRate : 0,
-        calendarYear,
-      });
-      if (y > 0) {
-        cashValue = (cashValue + iulPremium) * (1 + yearCreditRate);
-      }
-    }
-    return data;
-  }, [iulPremium, iulRate, projectionYears, useIbbotsonModel, ibbotsonStartYear]);
-
-  const iulFinalValue = iulProjection[iulProjection.length - 1]?.cashValue ?? 0;
-
-  const oilGasProjection = useMemo(() => {
-    if (!oilGasEnabled) return { totalIncome: 0, taxSavings: 0, principalReturn: 0, yearlyData: [] };
-    const annualIncome = oilGasAmount * 0.15;
-    const totalIncome = annualIncome * projectionYears;
-    const year1Deduction = oilGasAmount * 0.85;
-    const taxSavings = year1Deduction * (taxBracket / 100);
-    const principalReturn = projectionYears >= 10 ? oilGasAmount : 0;
-    
-    const yearlyData = Array.from({ length: projectionYears + 1 }, (_, i) => ({
-      year: i,
-      income: i > 0 ? annualIncome : 0,
-      cumulativeIncome: i > 0 ? annualIncome * i : 0,
-      taxSavings: i === 1 ? taxSavings : 0,
-      principal: i === projectionYears ? principalReturn : 0
-    }));
-    
-    return { totalIncome, taxSavings, principalReturn, yearlyData };
-  }, [oilGasEnabled, oilGasAmount, projectionYears, taxBracket]);
-
-  const grandTotalWealth = totalFutureValue + iulFinalValue +
-    (oilGasEnabled ? oilGasProjection.totalIncome + oilGasProjection.principalReturn : 0);
-
-  const wealthCompositionData = [
-    { name: 'Real Estate Equity', value: totalEquity, color: COLORS[0] },
-    { name: 'IUL Cash Value', value: iulFinalValue, color: COLORS[1] },
-  ];
-  if (oilGasEnabled) {
-    wealthCompositionData.push({ 
-      name: 'Oil & Gas Returns', 
-      value: oilGasProjection.totalIncome + oilGasProjection.principalReturn, 
-      color: COLORS[2] 
-    });
-  }
-
-  const timelineData = useMemo(() => {
-    return Array.from({ length: projectionYears + 1 }, (_, year) => {
-      const reValue = portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[year]?.propertyValue ?? 0), 0);
-      const reEquity = portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[year]?.equity ?? 0), 0);
-      const reCashFlow = portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[year]?.annualCashFlow ?? 0), 0);
-      const iulValue = iulProjection[year]?.cashValue ?? 0;
-      const ogIncome = oilGasEnabled && year > 0 ? oilGasProjection.yearlyData[year]?.cumulativeIncome ?? 0 : 0;
-      
-      return {
-        year,
-        reValue,
-        reEquity,
-        reCashFlow,
-        iulValue,
-        ogIncome,
-        totalWealth: reEquity + iulValue + ogIncome,
-        totalCashFlow: reCashFlow + (oilGasEnabled && year > 0 ? oilGasAmount * 0.15 : 0) + (year >= 10 ? iulValue * 0.05 : 0)
-      };
-    });
-  }, [portfolioCalcs, iulProjection, oilGasProjection, oilGasEnabled, projectionYears, oilGasAmount]);
-
-  const propertyTypeDistribution = useMemo(() => {
-    const dist: Record<string, number> = {};
-    properties.forEach((p) => {
-      dist[p.propertyType] = (dist[p.propertyType] || 0) + p.purchasePrice;
-    });
-    return Object.entries(dist).map(([type, value], index) => ({
-      name: PROPERTY_TYPES.find((pt) => pt.value === type)?.label || type,
-      value,
-      color: COLORS[index % COLORS.length]
-    }));
-  }, [properties]);
-
-  const stateDistribution = useMemo(() => {
-    const dist: Record<string, number> = {};
-    properties.forEach((p) => {
-      dist[p.state] = (dist[p.state] || 0) + 1;
-    });
-    return Object.entries(dist).map(([state, count], index) => ({
-      name: state,
-      count,
-      color: COLORS[(index + 4) % COLORS.length]
-    }));
-  }, [properties]);
-
-  const cashFlowAnalysisData = useMemo(() => {
-    return properties.map((p) => {
-      const calc = portfolioCalcs.find((pc) => pc.property.id === p.id)?.calc;
-      return {
-        name: p.name,
-        rent: p.monthlyRent * 12,
-        mortgage: (calc?.monthlyPayment || 0) * 12,
-        expenses: (calc?.totalMonthlyExpenses || 0) * 12,
-        cashFlow: (calc?.annualCashFlow || 0)
-      };
-    });
-  }, [properties, portfolioCalcs]);
-
-  const addProperty = useCallback(() => {
-    if (properties.length >= 150) return;
-    const nextId = Math.max(...properties.map((p) => p.id), 0) + 1;
-    setProperties(prev => [...prev, {
-      ...DEFAULT_PROPERTY,
-      id: nextId,
-      name: `Rental Property ${nextId}`,
-    }]);
-    setExpandedProperty(nextId);
-    setSelectedPropertyId(nextId);
-  }, [properties]);
-
-  const removeProperty = useCallback((id: number) => {
-    setProperties(prev => prev.filter((p) => p.id !== id));
-    if (expandedProperty === id) setExpandedProperty(null);
-    if (selectedPropertyId === id && properties.length > 1) {
-      setSelectedPropertyId(properties.find((p) => p.id !== id)?.id || 1);
-    }
-  }, [expandedProperty, selectedPropertyId, properties]);
-
-  const updateProperty = useCallback((id: number, field: keyof Property, value: any) => {
-    setProperties(prev => prev.map((p) => p.id === id ? { ...p, [field]: value } : p));
-  }, []);
-
-  const addBulk = useCallback((count: number) => {
-    const startId = Math.max(...properties.map((p) => p.id), 0) + 1;
-    const newProps = Array.from({ length: Math.min(count, 150 - properties.length) }, (_, i) => ({
-      ...DEFAULT_PROPERTY,
-      id: startId + i,
-      name: `Rental Property ${startId + i}`,
-      purchasePrice: 250000 + Math.round(Math.random() * 200000),
-      monthlyRent: 1800 + Math.round(Math.random() * 1200),
-      state: STATES[Math.floor(Math.random() * STATES.length)],
-      propertyType: PROPERTY_TYPES[Math.floor(Math.random() * PROPERTY_TYPES.length)].value,
-    }));
-    setProperties(prev => [...prev, ...newProps]);
-  }, [properties]);
-
-  const handleSimulate = () => {
-    setIsSimulating(true);
-    setSimulationProgress(0);
-    
-    const interval = setInterval(() => {
-      setSimulationProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setIsSimulating(false);
-          return 100;
-        }
-        return prev + 10;
-      });
-    }, 200);
-  };
-
-  const handleSaveScenario = async () => {
-    try {
-      await saveScenarioMutation.mutateAsync({
-        name: scenarioName,
-        type: "real_estate",
-        data: {
-          properties,
-          projectionYears,
-          iulPremium,
-          iulRate,
-          oilGasEnabled,
-          oilGasAmount,
-          globalInflation,
-          taxBracket
-        }
-      });
-    } catch (error) {
-      console.error("Failed to save scenario", error);
-    }
-  };
-
-  const handleAnalyzePortfolio = async () => {
-    try {
-      await analyzePortfolioMutation.mutateAsync({
-        portfolio: properties,
-        metrics: {
-          totalValue: totalPropertyValue,
-          totalCashFlow: totalMonthlyCashFlow * 12,
-          capRate: portfolioCapRate
-        }
-      });
-    } catch (error) {
-      console.error("Analysis failed", error);
-    }
-  };
-
-  useEffect(() => {
-    if (iulPremium === 0 && totalMonthlyCashFlow > 0) {
-      setIulPremium(Math.round(totalMonthlyCashFlow * 12 * 0.5));
-    }
-  }, [totalMonthlyCashFlow, iulPremium]);
-
-  const renderPropertyForm = (p: Property) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-      <div className="space-y-2">
-        <Label className="text-xs">Property Name</Label>
-        <Input value={p.name} onChange={(e) => updateProperty(p.id, "name", e.target.value)} />
-      </div>
-      <div className="space-y-2">
-        <Label className="text-xs">Property Type</Label>
-        <Select value={p.propertyType} onValueChange={v => updateProperty(p.id, "propertyType", v)}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
-            {PROPERTY_TYPES.map((pt) => (
-              <SelectItem key={pt.value} value={pt.value}>{pt.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="space-y-2">
-        <Label className="text-xs">State</Label>
-        <Select value={p.state} onValueChange={v => updateProperty(p.id, "state", v)}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
-            {STATES.map((s) => (
-              <SelectItem key={s} value={s}>{s}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="space-y-2">
-        <Label className="text-xs">Purchase Price ($)</Label>
-        <NumberInput value={p.purchasePrice} onChange={(v) => updateProperty(p.id, "purchasePrice", v)} />
-      </div>
-      <div className="space-y-2">
-        <Label className="text-xs">Down Payment (%)</Label>
-        <NumberInput value={p.downPayment} onChange={(v) => updateProperty(p.id, "downPayment", v)} />
-      </div>
-      <div className="space-y-2">
-        <Label className="text-xs">Mortgage Rate (%)</Label>
-        <NumberInput value={p.mortgageRate} onChange={(v) => updateProperty(p.id, "mortgageRate", v)} step={0.1} />
-      </div>
-      <div className="space-y-2">
-        <Label className="text-xs">Mortgage Term (Yrs)</Label>
-        <NumberInput value={p.mortgageTerm} onChange={(v) => updateProperty(p.id, "mortgageTerm", v)} />
-      </div>
-      <div className="space-y-2">
-        <Label className="text-xs">Monthly Rent ($)</Label>
-        <NumberInput value={p.monthlyRent} onChange={(v) => updateProperty(p.id, "monthlyRent", v)} />
-      </div>
-      
-      {showAdvanced && (
-        <>
-          <div className="space-y-2">
-            <Label className="text-xs">Vacancy Rate (%)</Label>
-            <NumberInput value={p.vacancy} onChange={(v) => updateProperty(p.id, "vacancy", v)} step={0.1} />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-xs">Appreciation (%)</Label>
-            <NumberInput value={p.appreciation} onChange={(v) => updateProperty(p.id, "appreciation", v)} step={0.1} />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-xs">Property Tax Rate (%)</Label>
-            <NumberInput value={p.propertyTaxRate} onChange={(v) => updateProperty(p.id, "propertyTaxRate", v)} step={0.1} />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-xs">Insurance Rate (%)</Label>
-            <NumberInput value={p.insuranceRate} onChange={(v) => updateProperty(p.id, "insuranceRate", v)} step={0.1} />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-xs">Maintenance Rate (%)</Label>
-            <NumberInput value={p.maintenanceRate} onChange={(v) => updateProperty(p.id, "maintenanceRate", v)} step={0.1} />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-xs">Management Fee (%)</Label>
-            <NumberInput value={p.managementFeeRate} onChange={(v) => updateProperty(p.id, "managementFeeRate", v)} step={0.1} />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-xs">Other Monthly Exp. ($)</Label>
-            <NumberInput value={p.monthlyExpenses} onChange={(v) => updateProperty(p.id, "monthlyExpenses", v)} />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-xs">Renovation Budget ($)</Label>
-            <NumberInput value={p.renovationBudget} onChange={(v) => updateProperty(p.id, "renovationBudget", v)} />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-xs">Expected Rent Inc. (%)</Label>
-            <NumberInput value={p.expectedRentIncrease} onChange={(v) => updateProperty(p.id, "expectedRentIncrease", v)} step={0.1} />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-xs">Year Built</Label>
-            <NumberInput value={p.yearBuilt} onChange={(v) => updateProperty(p.id, "yearBuilt", v)} />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-xs">Square Footage</Label>
-            <NumberInput value={p.sqft} onChange={(v) => updateProperty(p.id, "sqft", v)} />
-          </div>
-        </>
-      )}
-    </div>
-  );
-
-  return (
-    <AppShell>
-      <div className="space-y-6 max-w-7xl mx-auto pb-20">
-        <CalculationSyncBar />
-
-        {/* ═══ CONSUMER OUTCOME BLOCKS — Flagship Tier ═══ */}
-        {/* Related Calculators Toggle */}
-        <RelatedCalculators currentPage="RealEstateMogul" />
-
-        {/* ─── Rabbu.com Market Data Integration ─── */}
-        <div className="bg-gradient-to-r from-emerald-900/40 to-teal-900/40 border border-emerald-500/30 rounded-xl p-5">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white mb-1">Validate Your Numbers with Real Market Data — <a href="https://www.rabbu.com" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline">Rabbu.com</a></h3>
-              <p className="text-sm text-gray-300 mb-3"><a href="https://www.rabbu.com" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300">Rabbu.com</a> is the leading Airbnb marketplace and analytics platform used by over 650,000 real estate investors. Before committing to any property acquisition, validate your rental income assumptions with real market data.</p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <a href="https://www.rabbu.com/airbnb-calculator" target="_blank" rel="noopener noreferrer" className="bg-black/30 rounded-lg p-3 hover:bg-black/50 transition-colors">
-                  <div className="text-emerald-400 font-semibold text-sm">Airbnb Calculator</div>
-                  <div className="text-xs text-gray-400">Enter any address → get revenue estimates</div>
-                </a>
-                <a href="https://www.rabbu.com/market-data" target="_blank" rel="noopener noreferrer" className="bg-black/30 rounded-lg p-3 hover:bg-black/50 transition-colors">
-                  <div className="text-emerald-400 font-semibold text-sm">Market Data</div>
-                  <div className="text-xs text-gray-400">Occupancy, ADR & revenue by ZIP code</div>
-                </a>
-                <a href="https://www.rabbu.com/str-spreadsheet" target="_blank" rel="noopener noreferrer" className="bg-black/30 rounded-lg p-3 hover:bg-black/50 transition-colors">
-                  <div className="text-emerald-400 font-semibold text-sm">STR Spreadsheet</div>
-                  <div className="text-xs text-gray-400">Free analysis template for STR investments</div>
-                </a>
-              </div>
-              <p className="text-xs text-gray-400 mt-3"><strong className="text-emerald-400">Pro Tip:</strong> Use Rabbu's Airbnb Calculator to verify the rental income projections in this model. Monthly revenue typically ranges from $1,300/mo (studios) to $10,000+/mo (6+ bedrooms) depending on market and property type.</p>
-            </div>
-          </div>
-        </div>
-
-        <ExecutiveSummary
-          pageTitle="Real Estate Mogul"
-          whatItDoes="This estate planning tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex estate planning concepts into clear, actionable insights with dollar-quantified recommendations."
-          opportunities="Without proper estate planning, your heirs could lose 40% or more of your wealth to estate taxes and probate costs. Strategic planning can preserve nearly all of it."
-          intent="To give you the same caliber of estate planning analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
-          takeaway="Understanding your estate planning options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
-          callToAction="Enter your numbers and see exactly how estate planning strategies can improve your financial outcome."
-          followUpQuestions={[
-            "How does this estate planning strategy interact with my other financial plans?",
-            "What\'s the single biggest estate planning opportunity I\'m currently missing?",
-            "How would my results change if I started this strategy 5 years earlier?",
-          ]}
-        />
-        <GoalsAccelerator pageName="Real Estate Mogul" pageContext="Real Estate Mogul — estate planning modeling with projections and scenario analysis" />
-        <TaxBracketPanel grossIncome={clientData?.annualIncome || 150000} filingStatus={clientData?.filingStatus || "single"} stateCode={clientData?.state || "TX"} />
-        <RecommendationSummary
-          headline="This estate planning strategy can significantly improve your financial outcome"
-          detail="Based on your profile, implementing the recommended estate planning approach could generate substantial savings and growth over your planning horizon."
-          dollarBenefit={800000}
-          timeHorizon="20 years"
-          confidence="high"
-          nextStep="Review with your advisor"
-        />
-        <DoNothingBaseline
-          metrics={[
-            { label: "Estate Tax Exposure", doNothing: 500000, recommended: 50000, format: "currency", higherIsBetter: false },
-            { label: "Wealth Transferred", doNothing: 1500000, recommended: 2300000, format: "currency" },
-            { label: "Probate Avoidance", doNothing: 0, recommended: 95, format: "percent" },
-          ]}
-          summary="Without taking action on estate planning, you leave significant value on the table that compounds into a major opportunity cost over time."
-        />
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card p-6 rounded-xl border shadow-sm">
-          <div>
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-emerald-500/10 rounded-lg">
-                <Building2 className="w-8 h-8 text-emerald-500" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold tracking-tight">Real Estate Mogul</h1>
-                <p className="text-muted-foreground mt-1 flex items-center gap-2">
-                  <span>Build your rental empire — up to 150 properties</span>
-                  <Badge variant="outline" className="text-xs bg-emerald-500/5 text-emerald-500 border-emerald-500/20">
-                    Pro Tier
-                  </Badge>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <ExportToSlides toolName="Report" getSections={() => [{ title: "Overview", content: "Report data" }]} />
-            <Button variant="outline" onClick={handleAnalyzePortfolio} disabled={analyzePortfolioMutation.isPending}>
-              {analyzePortfolioMutation.isPending ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2 text-amber-500" />}
-              AI Analyze
-            </Button>
-            <Button onClick={handleSaveScenario} disabled={saveScenarioMutation.isPending}>
-              <Save className="w-4 h-4 mr-2" /> Save Scenario
-            </Button>
-          </div>
-        </div>
-
-        {/* Global Settings & Market Data Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="md:col-span-3 bg-gradient-to-r from-slate-900 to-slate-800 text-white border-none">
-            <CardContent className="p-4 flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="flex flex-col">
-                  <span className="text-xs text-slate-400">Total Portfolio Value</span>
-                  <span className="text-xl font-bold text-emerald-400">{fmt(totalPropertyValue)}</span>
-                </div>
-                <div className="h-8 w-px bg-slate-700"></div>
-                <div className="flex flex-col">
-                  <span className="text-xs text-slate-400">Monthly Cash Flow</span>
-                  <span className="text-xl font-bold text-amber-400">{fmt(totalMonthlyCashFlow)}</span>
-                </div>
-                <div className="h-8 w-px bg-slate-700"></div>
-                <div className="flex flex-col">
-                  <span className="text-xs text-slate-400">Avg Cash on Cash</span>
-                  <span className="text-xl font-bold text-blue-400">{pct(avgCashOnCash)}</span>
-                </div>
-                <div className="h-8 w-px bg-slate-700"></div>
-                <div className="flex flex-col">
-                  <span className="text-xs text-slate-400">Portfolio Cap Rate</span>
-                  <span className="text-xl font-bold text-purple-400">{pct(portfolioCapRate)}</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Label className="text-xs text-slate-300">Projection:</Label>
-                <Select value={String(projectionYears)} onValueChange={v => setProjectionYears(Number(v))}>
-                  <SelectTrigger className="w-24 h-8 bg-slate-800 border-slate-700 text-white"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {[5, 10, 15, 20, 25, 30, 40, 50].map((y) => <SelectItem key={y} value={String(y)}>{y} years</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-slate-50 border-slate-200 dark:bg-slate-900 dark:border-slate-800">
-            <CardContent className="p-4 flex items-center justify-between h-full">
-              <div>
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  <MapPin className="w-3 h-3" /> Market Data ({properties[0]?.state || "TX"})
-                </span>
-                {marketData ? (
-                  <div className="mt-1">
-                    <div className="text-sm font-medium">Avg Rent: {fmt(marketData.averageRent || 2000)}</div>
-                    <div className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3" /> +{marketData.yoyGrowth || 4.2}% YoY
-                    </div>
-                  </div>
-                ) : (
-                  <div className="mt-1 text-sm text-muted-foreground animate-pulse">Loading market data...</div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 mb-8 h-auto p-1">
-            <TabsTrigger value="portfolio" className="py-2.5"><Building2 className="w-4 h-4 mr-2" /> Portfolio</TabsTrigger>
-            <TabsTrigger value="analysis" className="py-2.5"><BarChart3 className="w-4 h-4 mr-2" /> Analysis</TabsTrigger>
-            <TabsTrigger value="projection" className="py-2.5"><TrendingUp className="w-4 h-4 mr-2" /> Projection</TabsTrigger>
-            <TabsTrigger value="iul" className="py-2.5"><Shield className="w-4 h-4 mr-2" /> IUL Strategy</TabsTrigger>
-            <TabsTrigger value="tax" className="py-2.5"><Percent className="w-4 h-4 mr-2" /> Tax Strategy</TabsTrigger>
-            <TabsTrigger value="wealth" className="py-2.5"><Sparkles className="w-4 h-4 mr-2" /> Total Wealth</TabsTrigger>
-          
-            <TabsTrigger value="generate-outcome" className="text-xs sm:text-sm bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 font-bold">Generate Outcome</TabsTrigger>
-          </TabsList>
-
-          {/* Portfolio Tab */}
-          <TabsContent value="portfolio" className="space-y-6 animate-in fade-in-50 duration-500">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-              <div>
-                <h2 className="text-xl font-semibold">Property Roster</h2>
-                <p className="text-sm text-muted-foreground">{properties.length} properties in your portfolio</p>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="flex items-center space-x-2 mr-4 bg-muted/50 p-1.5 rounded-lg border">
-                  <Switch id="advanced-mode" checked={showAdvanced} onCheckedChange={setShowAdvanced} />
-                  <Label htmlFor="advanced-mode" className="text-xs cursor-pointer">Advanced Mode</Label>
-                </div>
-                <Button onClick={addProperty} size="sm" variant="default" className="bg-emerald-600 hover:bg-emerald-700">
-                  <Plus className="w-4 h-4 mr-1" /> Add Property
-                </Button>
-                <Button onClick={() => addBulk(5)} size="sm" variant="outline">
-                  <Plus className="w-4 h-4 mr-1" /> Add 5
-                </Button>
-                <Button onClick={() => addBulk(20)} size="sm" variant="outline">
-                  <Plus className="w-4 h-4 mr-1" /> Add 20
-                </Button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Property List Sidebar */}
-              <div className="lg:col-span-1 space-y-2 max-h-[800px] overflow-y-auto pr-2 custom-scrollbar">
-                {properties.map((p) => {
-                  const calc = portfolioCalcs.find((pc) => pc.property.id === p.id)?.calc;
-                  const isSelected = selectedPropertyId === p.id;
-                  
-                  return (
-                    <div 
-                      key={p.id}
-                      onClick={() => setSelectedPropertyId(p.id)}
-                      className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
-                        isSelected 
-                          ? 'border-emerald-500 bg-emerald-500/10 shadow-sm' 
-                          : 'border-border hover:border-emerald-500/50 hover:bg-muted/50'
-                      }`}
-                    >
-                      <div className="flex justify-between items-start mb-1">
-                        <h4 className="font-medium text-sm truncate pr-2">{p.name}</h4>
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
-                          {p.state}
-                        </Badge>
-                      </div>
-                      <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                        <span>{fmt(p.purchasePrice)}</span>
-                        <span className={calc && calc.monthlyCashFlow > 0 ? "text-emerald-500 font-medium" : "text-red-500 font-medium"}>
-                          {fmt(calc?.monthlyCashFlow || 0)}/mo
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              
-              {/* Selected Property Details */}
-              <div className="lg:col-span-3">
-                {properties.filter((p) => p.id === selectedPropertyId).map((p) => {
-                  const calc = portfolioCalcs.find((pc) => pc.property.id === p.id)?.calc;
-                  
-                  return (
-                    <Card key={`detail-${p.id}`} className="border-emerald-500/20 shadow-md">
-                      <CardHeader className="bg-muted/30 pb-4 border-b">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <CardTitle className="text-xl flex items-center gap-2">
-                              {p.name}
-                              <Badge variant="secondary">{PROPERTY_TYPES.find((pt) => pt.value === p.propertyType)?.label}</Badge>
-                            </CardTitle>
-                            <CardDescription className="mt-1">
-                              Detailed property metrics and assumptions
-                            </CardDescription>
-                          </div>
-                          <Button variant="ghost" size="icon" onClick={() => removeProperty(p.id)} className="text-destructive hover:bg-destructive/10 hover:text-destructive">
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-6">
-                        {renderPropertyForm(p)}
-                        
-                        {calc && (
-                          <div className="mt-8 pt-6 border-t grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border">
-                              <div className="text-xs text-muted-foreground mb-1">Monthly Cash Flow</div>
-                              <div className={`text-lg font-bold ${calc.monthlyCashFlow >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
-                                {fmt(calc.monthlyCashFlow)}
-                              </div>
-                            </div>
-                            <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border">
-                              <div className="text-xs text-muted-foreground mb-1">Cash on Cash</div>
-                              <div className="text-lg font-bold text-blue-500">{pct(calc.cashOnCash)}</div>
-                            </div>
-                            <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border">
-                              <div className="text-xs text-muted-foreground mb-1">Cap Rate</div>
-                              <div className="text-lg font-bold text-purple-500">{pct(calc.capRate)}</div>
-                            </div>
-                            <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border">
-                              <div className="text-xs text-muted-foreground mb-1">Initial Investment</div>
-                              <div className="text-lg font-bold">{fmt(calc.initialInvestment)}</div>
-                            </div>
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Portfolio Summary Table */}
-            <Card className="mt-8">
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Briefcase className="w-5 h-5" /> Portfolio Summary
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
-                      <tr>
-                        <th className="px-4 py-3 rounded-tl-lg">Property</th>
-                        <th className="px-4 py-3">Type</th>
-                        <th className="px-4 py-3">Value</th>
-                        <th className="px-4 py-3">Investment</th>
-                        <th className="px-4 py-3">Rent/mo</th>
-                        <th className="px-4 py-3">NOI/yr</th>
-                        <th className="px-4 py-3">Cash Flow/mo</th>
-                        <th className="px-4 py-3">Cap Rate</th>
-                        <th className="px-4 py-3 rounded-tr-lg">CoC Return</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {portfolioCalcs.map((pc, i) => (
-                        <tr key={pc.property.id} className="border-b last:border-0 hover:bg-muted/20 transition-colors">
-                          <td className="px-4 py-3 font-medium">{pc.property.name}</td>
-                          <td className="px-4 py-3 text-xs">
-                            <Badge variant="outline">{PROPERTY_TYPES.find((pt) => pt.value === pc.property.propertyType)?.label || pc.property.propertyType}</Badge>
-                          </td>
-                          <td className="px-4 py-3">{fmt(pc.property.purchasePrice)}</td>
-                          <td className="px-4 py-3">{fmt(pc.calc.initialInvestment)}</td>
-                          <td className="px-4 py-3">{fmt(pc.property.monthlyRent)}</td>
-                          <td className="px-4 py-3">{fmt(pc.calc.noi)}</td>
-                          <td className={`px-4 py-3 font-medium ${pc.calc.monthlyCashFlow >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
-                            {fmt(pc.calc.monthlyCashFlow)}
-                          </td>
-                          <td className="px-4 py-3">{pct(pc.calc.capRate)}</td>
-                          <td className="px-4 py-3 font-medium text-blue-500">{pct(pc.calc.cashOnCash)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot className="font-bold bg-muted/30">
-                      <tr>
-                        <td className="px-4 py-3 rounded-bl-lg" colSpan={2}>TOTALS ({properties.length})</td>
-                        <td className="px-4 py-3">{fmt(totalPropertyValue)}</td>
-                        <td className="px-4 py-3">{fmt(totalInitialInvestment)}</td>
-                        <td className="px-4 py-3">{fmt(totalMonthlyRent)}</td>
-                        <td className="px-4 py-3">{fmt(totalNOI)}</td>
-                        <td className={`px-4 py-3 ${totalMonthlyCashFlow >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
-                          {fmt(totalMonthlyCashFlow)}
-                        </td>
-                        <td className="px-4 py-3">{pct(portfolioCapRate)}</td>
-                        <td className="px-4 py-3 rounded-br-lg text-blue-500">{pct(avgCashOnCash)}</td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Analysis Tab */}
-          <TabsContent value="analysis" className="space-y-6 animate-in fade-in-50 duration-500">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Chart 1: Cash Flow Breakdown */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <BarChart3 className="w-4 h-4 text-emerald-500" /> Monthly Cash Flow Breakdown
-                  </CardTitle>
-                  <CardDescription>Rent vs Mortgage vs Expenses</CardDescription>
-                </CardHeader>
-                <CardContent className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={cashFlowAnalysisData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.2} />
-                      <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                      <YAxis tickFormatter={(val) => `$${val/1000}k`} tick={{ fontSize: 12 }} />
-                      <RTooltip 
-                        formatter={(value: number) => [fmt(value), undefined]}
-                        contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', border: 'none', borderRadius: '8px', color: '#fff' }}
-                      />
-                      <Legend />
-                      <Bar dataKey="rent" name="Gross Rent" fill={COLORS[0]} stackId="a" />
-                      <Bar dataKey="mortgage" name="Mortgage" fill={COLORS[3]} stackId="b" />
-                      <Bar dataKey="expenses" name="Expenses" fill={COLORS[2]} stackId="b" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-
-              {/* Chart 2: Property Type Distribution */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <PieChartIcon className="w-4 h-4 text-blue-500" /> Portfolio Composition
-                  </CardTitle>
-                  <CardDescription>By property type value</CardDescription>
-                </CardHeader>
-                <CardContent className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={propertyTypeDistribution}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={100}
-                        paddingAngle={5}
-                        dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                        labelLine={false}
-                      >
-                        {propertyTypeDistribution.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <RTooltip formatter={(value: number) => [fmt(value), "Value"]} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-
-              {/* Chart 3: Geographic Distribution */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-amber-500" /> Geographic Diversification
-                  </CardTitle>
-                  <CardDescription>Number of properties by state</CardDescription>
-                </CardHeader>
-                <CardContent className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={stateDistribution} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} opacity={0.2} />
-                      <XAxis type="number" />
-                      <YAxis dataKey="name" type="category" width={50} />
-                      <RTooltip />
-                      <Bar dataKey="count" name="Properties" fill={COLORS[1]} radius={[0, 4, 4, 0]}>
-                        {stateDistribution.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-
-              {/* Chart 4: Risk Analysis Radar */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 text-purple-500" /> Portfolio Risk Metrics
-                  </CardTitle>
-                  <CardDescription>Normalized risk factors (0-100, lower is better)</CardDescription>
-                </CardHeader>
-                <CardContent className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={[
-                      { subject: 'Leverage', A: Math.min(100, (totalPropertyValue - totalInitialInvestment) / totalPropertyValue * 100), fullMark: 100 },
-                      { subject: 'Vacancy Risk', A: properties.reduce((s, p) => s + p.vacancy, 0) / properties.length * 5, fullMark: 100 }, // Scaled
-                      { subject: 'Concentration', A: Math.max(...propertyTypeDistribution.map((d) => d.value)) / totalPropertyValue * 100, fullMark: 100 },
-                      { subject: 'Cash Flow Buffer', A: Math.max(0, 100 - (totalMonthlyCashFlow / totalMonthlyRent * 100)), fullMark: 100 },
-                      { subject: 'Age Risk', A: Math.min(100, (2025 - (properties.reduce((s, p) => s + p.yearBuilt, 0) / properties.length)) * 2), fullMark: 100 },
-                    ]}>
-                      <PolarGrid strokeOpacity={0.2} />
-                      <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11 }} />
-                      <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                      <Radar name="Portfolio Risk" dataKey="A" stroke={COLORS[4]} fill={COLORS[4]} fillOpacity={0.4} />
-                      <RTooltip />
-                    </RadarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Projection Tab */}
-          <TabsContent value="projection" className="space-y-6 animate-in fade-in-50 duration-500">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="border-emerald-500/20 bg-emerald-500/5">
-                <CardContent className="py-6 text-center">
-                  <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400 mb-1">Future Portfolio Value</p>
-                  <p className="text-4xl font-black text-emerald-500">{fmt(totalFutureValue)}</p>
-                  <p className="text-xs text-muted-foreground mt-2">After {projectionYears} years of appreciation</p>
-                </CardContent>
-              </Card>
-              <Card className="border-blue-500/20 bg-blue-500/5">
-                <CardContent className="py-6 text-center">
-                  <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1">Total Equity Built</p>
-                  <p className="text-4xl font-black text-blue-500">{fmt(totalEquity)}</p>
-                  <p className="text-xs text-muted-foreground mt-2">Appreciation + mortgage paydown</p>
-                </CardContent>
-              </Card>
-              <Card className="border-amber-500/20 bg-amber-500/5">
-                <CardContent className="py-6 text-center">
-                  <p className="text-sm font-medium text-amber-600 dark:text-amber-400 mb-1">Annual Cash Flow (Year {projectionYears})</p>
-                  <p className="text-4xl font-black text-amber-500">
-                    {fmt(portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[projectionYears]?.annualCashFlow ?? 0), 0))}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-2">Passive income stream</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Chart 5: Equity Growth Timeline */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <LineChartIcon className="w-4 h-4 text-blue-500" /> Wealth Accumulation Timeline
-                </CardTitle>
-                <CardDescription>Property Value vs Loan Balance vs Equity over {projectionYears} years</CardDescription>
-              </CardHeader>
-              <CardContent className="h-[400px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={timelineData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.2} />
-                    <XAxis dataKey="year" tickFormatter={(val) => `Yr ${val}`} />
-                    <YAxis yAxisId="left" tickFormatter={(val) => `$${val/1000000}M`} />
-                    <YAxis yAxisId="right" orientation="right" tickFormatter={(val) => `$${val/1000}k`} />
-                    <RTooltip 
-                      formatter={(value: number, name: string) => [fmt(value), name === 'reCashFlow' ? 'Annual Cash Flow' : name === 'reValue' ? 'Property Value' : 'Total Equity']}
-                      labelFormatter={(label) => `Year ${label}`}
-                      contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', border: 'none', borderRadius: '8px', color: '#fff' }}
-                    />
-                    <Legend />
-                    <Area yAxisId="left" type="monotone" dataKey="reValue" name="Property Value" fill={COLORS[0]} stroke={COLORS[0]} fillOpacity={0.1} />
-                    <Area yAxisId="left" type="monotone" dataKey="reEquity" name="Total Equity" fill={COLORS[1]} stroke={COLORS[1]} fillOpacity={0.3} />
-                    <Line yAxisId="right" type="monotone" dataKey="reCashFlow" name="Annual Cash Flow" stroke={COLORS[2]} strokeWidth={3} dot={false} />
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            {/* Year-by-year table */}
-            {portfolioCalcs.length > 0 && (
-              <Card className="border-muted/30">
-                <CardHeader>
-                  <CardTitle className="text-sm">Portfolio Growth Timeline (Data Table)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead className="bg-muted/50">
-                        <tr>
-                          <th className="text-left py-3 px-4 rounded-tl-lg">Year</th>
-                          <th className="text-right py-3 px-4">Portfolio Value</th>
-                          <th className="text-right py-3 px-4">Loan Balance</th>
-                          <th className="text-right py-3 px-4">Total Equity</th>
-                          <th className="text-right py-3 px-4">Annual Rent</th>
-                          <th className="text-right py-3 px-4">Annual Expenses</th>
-                          <th className="text-right py-3 px-4 rounded-tr-lg">Annual Cash Flow</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {[0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 40, 50].filter((y) => y <= projectionYears).map((year) => {
-                          const totalVal = portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[year]?.propertyValue ?? 0), 0);
-                          const totalLoan = portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[year]?.loanBalance ?? 0), 0);
-                          const totalEq = portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[year]?.equity ?? 0), 0);
-                          const totalRent = portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[year]?.annualRent ?? 0), 0);
-                          const totalExp = portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[year]?.annualExpenses ?? 0), 0);
-                          const totalCf = portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[year]?.annualCashFlow ?? 0), 0);
-                          return (
-                            <tr key={year} className="border-b border-muted/20 hover:bg-muted/10">
-                              <td className="py-3 px-4 font-medium">Year {year}</td>
-                              <td className="py-3 px-4 text-right text-emerald-500">{fmt(totalVal)}</td>
-                              <td className="py-3 px-4 text-right text-red-400">{fmt(totalLoan)}</td>
-                              <td className="py-3 px-4 text-right text-blue-500 font-medium">{fmt(totalEq)}</td>
-                              <td className="py-3 px-4 text-right">{fmt(totalRent)}</td>
-                              <td className="py-3 px-4 text-right">{fmt(totalExp)}</td>
-                              <td className={`py-3 px-4 text-right font-bold ${totalCf >= 0 ? "text-emerald-500" : "text-red-500"}`}>{fmt(totalCf)}</td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-
-          {/* IUL Integration Tab */}
-          <TabsContent value="iul" className="space-y-6 animate-in fade-in-50 duration-500">
-            <Card className="border-blue-500/20 overflow-hidden">
-              <div className="bg-blue-500/10 p-6 border-b border-blue-500/20">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-blue-500/20 rounded-lg">
-                    <Shield className="w-6 h-6 text-blue-500" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl">IUL Policy Integration</CardTitle>
-                    <CardDescription className="text-blue-600/70 dark:text-blue-400/70">
-                      Redirect rental cash flow into an IUL policy for tax-free retirement income + death benefit protection
-                    </CardDescription>
-                  </div>
-                </div>
-              </div>
-              <CardContent className="p-6 space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-3 p-4 rounded-xl bg-muted/30 border">
-                    <Label className="text-sm font-semibold flex items-center gap-2">
-                      <Wallet className="w-4 h-4 text-blue-500" /> Annual IUL Premium
-                    </Label>
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg text-muted-foreground">$</span>
-                      <NumberInput value={iulPremium} onChange={setIulPremium} className="text-lg font-medium" />
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">Suggested (50% of cash flow):</span>
-                      <span className="font-medium text-blue-500">{fmt(Math.max(0, totalMonthlyCashFlow * 12 * 0.5))}/yr</span>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="w-full mt-2 text-xs h-8"
-                      onClick={() => setIulPremium(Math.round(totalMonthlyCashFlow * 12 * 0.5))}
-                    >
-                      Apply Suggested
-                    </Button>
-                  </div>
-                  
-                  <div className="space-y-3 p-4 rounded-xl bg-muted/30 border">
-                    <Label className="text-sm font-semibold flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-emerald-500" /> Assumed Crediting Rate
-                    </Label>
-                    <div className="flex items-center gap-2">
-                      <NumberInput value={iulRate} onChange={setIulRate} className="text-lg font-medium" step={0.1} />
-                      <span className="text-lg text-muted-foreground">%</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Historical average is typically 6-8% depending on caps and participation rates.
-                    </p>
-                  </div>
-                  
-                  <div className="space-y-3 p-4 rounded-xl bg-blue-500/5 border border-blue-500/20">
-                    <Label className="text-sm font-semibold flex items-center gap-2 text-blue-600 dark:text-blue-400">
-                      <Calendar className="w-4 h-4" /> Projection Period
-                    </Label>
-                    <div className="text-3xl font-black text-blue-500 mt-2">{projectionYears} years</div>
-                    <p className="text-xs text-blue-600/70 dark:text-blue-400/70">
-                      Matches real estate projection timeline
-                    </p>
-                  </div>
-                </div>
-
-                {/* ─── Ibbotson Model Toggle ─── */}
-                <div className="p-4 rounded-xl border bg-card">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <Label className="text-base font-semibold flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-purple-500" /> Use Ibbotson Historical Model
-                      </Label>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Simulate returns using actual historical S&P 500 data sequences
-                      </p>
-                    </div>
-                    <Switch checked={useIbbotsonModel} onCheckedChange={setUseIbbotsonModel} />
-                  </div>
-                  {useIbbotsonModel && (
-                    <div className="pt-4 border-t">
-                      <IbbotsonYearSelector
-                        startYear={ibbotsonStartYear}
-                        onStartYearChange={setIbbotsonStartYear}
-                        capRate={iulRate / 100}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card className="border-emerald-500/30 shadow-sm">
-                    <CardContent className="py-6 text-center">
-                      <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-3">
-                        <PiggyBank className="w-5 h-5 text-emerald-500" />
-                      </div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">IUL Cash Value</p>
-                      <p className="text-3xl font-black text-emerald-500">{fmt(iulFinalValue)}</p>
-                      <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70 mt-2 font-medium">Tax-free growth after {projectionYears} years</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-blue-500/30 shadow-sm">
-                    <CardContent className="py-6 text-center">
-                      <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-3">
-                        <Wallet className="w-5 h-5 text-blue-500" />
-                      </div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Total Premiums Paid</p>
-                      <p className="text-3xl font-black text-blue-500">{fmt(iulPremium * projectionYears)}</p>
-                      <p className="text-xs text-blue-600/70 dark:text-blue-400/70 mt-2 font-medium">Funded by real estate cash flow</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-purple-500/30 shadow-sm">
-                    <CardContent className="py-6 text-center">
-                      <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center mx-auto mb-3">
-                        <ArrowUpRight className="w-5 h-5 text-purple-500" />
-                      </div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Tax-Free Income Potential</p>
-                      <p className="text-3xl font-black text-purple-500">{fmt(iulFinalValue * 0.05)}<span className="text-lg font-normal">/yr</span></p>
-                      <p className="text-xs text-purple-600/70 dark:text-purple-400/70 mt-2 font-medium">Based on 5% policy loan rate</p>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Chart 6: IUL Growth */}
-                <div className="mt-8">
-                  <h3 className="text-lg font-semibold mb-4">IUL Cash Value vs Premiums Paid</h3>
-                  <div className="h-[300px] border rounded-xl p-4 bg-card">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={iulProjection} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.2} />
-                        <XAxis dataKey="year" tickFormatter={(val) => `Yr ${val}`} />
-                        <YAxis tickFormatter={(val) => `$${val/1000}k`} />
-                        <RTooltip 
-                          formatter={(value: number, name: string) => [fmt(value), name === 'cashValue' ? 'Cash Value' : 'Cumulative Premiums']}
-                          labelFormatter={(label) => `Year ${label}`}
-                        />
-                        <Legend />
-                        <Area type="monotone" dataKey="cashValue" name="Cash Value" fill={COLORS[1]} stroke={COLORS[1]} fillOpacity={0.3} />
-                        <Area type="monotone" dataKey={(d) => d.premium * d.year} name="Premiums Paid" fill={COLORS[3]} stroke={COLORS[3]} fillOpacity={0.1} />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20">
-                  <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-blue-700 dark:text-blue-300">
-                    <Sparkles className="w-5 h-5" /> The Infinite Banking Pipeline Strategy
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <ol className="space-y-3 text-sm list-decimal list-inside">
-                      <li className="pl-2"><span className="font-semibold">Generate:</span> Rental properties produce <span className="text-emerald-500 font-bold">{fmt(totalMonthlyCashFlow * 12)}/yr</span> in passive cash flow.</li>
-                      <li className="pl-2"><span className="font-semibold">Redirect:</span> Funnel <span className="text-blue-500 font-bold">{fmt(iulPremium)}/yr</span> of that cash flow into an IUL policy.</li>
-                      <li className="pl-2"><span className="font-semibold">Compound:</span> Cash value grows tax-free, protected from market downturns via a 0% floor.</li>
-                      <li className="pl-2"><span className="font-semibold">Harvest:</span> After {projectionYears} years, access <span className="text-purple-500 font-bold">{fmt(iulFinalValue * 0.05)}/yr</span> via tax-free policy loans.</li>
-                      <li className="pl-2"><span className="font-semibold">Protect:</span> A death benefit of <span className="font-bold">~{fmt(iulFinalValue * 1.5)}</span> transfers wealth tax-free to heirs.</li>
-                    </ol>
-                    <div className="bg-white/50 dark:bg-black/20 p-4 rounded-lg flex flex-col justify-center">
-                      <div className="text-center mb-4">
-                        <span className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Synergy Effect</span>
-                      </div>
-                      <div className="flex items-center justify-between px-4">
-                        <div className="text-center">
-                          <Building2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
-                          <div className="text-xs font-medium">Real Estate</div>
-                          <div className="text-[10px] text-muted-foreground">Cash Flow Engine</div>
-                        </div>
-                        <div className="flex-1 flex items-center justify-center">
-                          <div className="h-0.5 w-full bg-gradient-to-r from-emerald-500 to-blue-500 relative">
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background p-1 rounded-full border">
-                              <ArrowUpRight className="w-3 h-3 text-muted-foreground" />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <Shield className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-                          <div className="text-xs font-medium">IUL Policy</div>
-                          <div className="text-[10px] text-muted-foreground">Tax-Free Vault</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Tax Strategy Tab */}
-          <TabsContent value="tax" className="space-y-6 animate-in fade-in-50 duration-500">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Percent className="w-5 h-5 text-amber-500" /> Tax Mitigation Strategy
-                    </CardTitle>
-                    <CardDescription>Leverage depreciation and energy investments to offset income</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label>Marginal Tax Bracket (%)</Label>
-                        <Select value={String(taxBracket)} onValueChange={v => setTaxBracket(Number(v))}>
-                          <SelectTrigger><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="22">22%</SelectItem>
-                            <SelectItem value="24">24%</SelectItem>
-                            <SelectItem value="32">32%</SelectItem>
-                            <SelectItem value="35">35%</SelectItem>
-                            <SelectItem value="37">37% (Highest)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Depreciation Schedule</Label>
-                        <Select value={String(depreciationYears)} onValueChange={v => setDepreciationYears(Number(v))}>
-                          <SelectTrigger><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="27.5">27.5 Years (Residential)</SelectItem>
-                            <SelectItem value="39">39 Years (Commercial)</SelectItem>
-                            <SelectItem value="15">15 Years (Cost Segregation Avg)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl bg-muted/30 border">
-                      <h4 className="font-semibold mb-3 flex items-center gap-2">
-                        <Building2 className="w-4 h-4 text-emerald-500" /> Real Estate Depreciation Shield
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div>
-                          <p className="text-xs text-muted-foreground">Est. Building Value (80%)</p>
-                          <p className="text-lg font-bold">{fmt(totalPropertyValue * 0.8)}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Annual Depreciation</p>
-                          <p className="text-lg font-bold text-emerald-500">{fmt((totalPropertyValue * 0.8) / depreciationYears)}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Annual Tax Savings</p>
-                          <p className="text-lg font-bold text-blue-500">{fmt(((totalPropertyValue * 0.8) / depreciationYears) * (taxBracket / 100))}</p>
-                        </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-4 italic">
-                        *Assuming 80% of purchase price is depreciable building value. Land cannot be depreciated.
-                      </p>
-                    </div>
-
-                    <div className="mt-6">
-                      <OilGasToggle
-                        taxableIncome={clientData?.annualIncome ?? 250000}
-                        onChange={(result) => {
-                          setOilGasEnabled(result.enabled);
-                          if (result.enabled) setOilGasAmount(result.investmentAmount);
-                        }}
-                        defaultInvestment={oilGasAmount}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {oilGasEnabled && (
-                  <Card className="border-amber-500/20">
-                    <CardHeader>
-                      <CardTitle className="text-sm">Oil & Gas Projection Timeline</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                          <thead className="bg-muted/50">
-                            <tr>
-                              <th className="text-left py-2 px-3 rounded-tl-lg">Year</th>
-                              <th className="text-right py-2 px-3">Annual Income</th>
-                              <th className="text-right py-2 px-3">Cumulative Income</th>
-                              <th className="text-right py-2 px-3">Tax Savings</th>
-                              <th className="text-right py-2 px-3 rounded-tr-lg">Principal Return</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {[1, 2, 3, 5, 10].filter((y) => y <= projectionYears).map((year) => {
-                              const data = oilGasProjection.yearlyData[year];
-                              if (!data) return null;
-                              return (
-                                <tr key={`og-${year}`} className="border-b border-muted/20">
-                                  <td className="py-2 px-3 font-medium">Year {year}</td>
-                                  <td className="py-2 px-3 text-right text-amber-500">{fmt(data.income)}</td>
-                                  <td className="py-2 px-3 text-right">{fmt(data.cumulativeIncome)}</td>
-                                  <td className="py-2 px-3 text-right text-blue-500">{fmt(data.taxSavings)}</td>
-                                  <td className="py-2 px-3 text-right">{fmt(data.principal)}</td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                          <tfoot className="font-bold bg-muted/30">
-                            <tr>
-                              <td className="py-2 px-3 rounded-bl-lg">TOTALS</td>
-                              <td className="py-2 px-3 text-right text-amber-500">-</td>
-                              <td className="py-2 px-3 text-right">{fmt(oilGasProjection.totalIncome)}</td>
-                              <td className="py-2 px-3 text-right text-blue-500">{fmt(oilGasProjection.taxSavings)}</td>
-                              <td className="py-2 px-3 text-right rounded-br-lg">{fmt(oilGasProjection.principalReturn)}</td>
-                            </tr>
-                          </tfoot>
-                        </table>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-
-              <div className="space-y-6">
-                <Card className="bg-slate-900 text-white border-none shadow-lg">
-                  <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-emerald-400" /> Year 1 Tax Impact
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between items-center pb-2 border-b border-slate-700">
-                      <span className="text-slate-300 text-sm">Real Estate Cash Flow</span>
-                      <span className="font-medium">{fmt(totalMonthlyCashFlow * 12)}</span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b border-slate-700">
-                      <span className="text-slate-300 text-sm">Real Estate Depreciation</span>
-                      <span className="font-medium text-red-400">-{fmt((totalPropertyValue * 0.8) / depreciationYears)}</span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b border-slate-700">
-                      <span className="text-slate-300 text-sm">Taxable RE Income</span>
-                      <span className="font-medium text-amber-400">
-                        {fmt(Math.max(0, (totalMonthlyCashFlow * 12) - ((totalPropertyValue * 0.8) / depreciationYears)))}
-                      </span>
-                    </div>
-                    
-                    {oilGasEnabled && (
-                      <>
-                        <div className="pt-2 flex justify-between items-center pb-2 border-b border-slate-700">
-                          <span className="text-slate-300 text-sm">O&G Investment</span>
-                          <span className="font-medium">{fmt(oilGasAmount)}</span>
-                        </div>
-                        <div className="flex justify-between items-center pb-2 border-b border-slate-700">
-                          <span className="text-slate-300 text-sm">Intangible Drilling Costs (85%)</span>
-                          <span className="font-medium text-red-400">-{fmt(oilGasAmount * 0.85)}</span>
-                        </div>
-                        <div className="flex justify-between items-center pb-2 border-b border-slate-700">
-                          <span className="text-slate-300 text-sm">Tax Savings ({taxBracket}%)</span>
-                          <span className="font-bold text-emerald-400">+{fmt((oilGasAmount * 0.85) * (taxBracket / 100))}</span>
-                        </div>
-                      </>
-                    )}
-                    
-                    <div className="pt-4 mt-4 border-t-2 border-slate-600 flex justify-between items-center">
-                      <span className="font-bold">Total Year 1 Tax Savings</span>
-                      <span className="text-2xl font-black text-emerald-400">
-                        {fmt(
-                          (((totalPropertyValue * 0.8) / depreciationYears) * (taxBracket / 100)) + 
-                          (oilGasEnabled ? (oilGasAmount * 0.85) * (taxBracket / 100) : 0)
-                        )}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </TabsContent>
-
-          {/* Total Wealth Tab */}
-          <TabsContent value="wealth" className="space-y-6 animate-in fade-in-50 duration-500">
-            <Card className="border-amber-500/30 bg-gradient-to-br from-amber-500/5 via-background to-emerald-500/5 shadow-xl overflow-hidden relative">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -ml-20 -mb-20 pointer-events-none"></div>
-              
-              <CardHeader className="text-center relative z-10">
-                <CardTitle className="text-3xl flex items-center justify-center gap-2">
-                  <Sparkles className="w-8 h-8 text-amber-500" /> Total Wealth Projection
-                </CardTitle>
-                <CardDescription className="text-base mt-2">Combined real estate + IUL + oil & gas after {projectionYears} years</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-10 relative z-10">
-                <div className="text-center">
-                  <p className="text-7xl font-black bg-clip-text text-transparent bg-gradient-to-r from-amber-500 via-emerald-500 to-blue-500 drop-shadow-sm">
-                    {fmt(grandTotalWealth)}
-                  </p>
-                  <p className="text-sm font-medium text-muted-foreground mt-4 uppercase tracking-widest">Grand Total Projected Wealth</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                  <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-center transform transition-transform hover:scale-105">
-                    <Home className="w-8 h-8 text-emerald-500 mx-auto mb-3" />
-                    <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 mb-1">Real Estate Equity</p>
-                    <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-500">{fmt(totalEquity)}</p>
-                    <p className="text-xs text-muted-foreground mt-2">{properties.length} properties, net of debt</p>
-                    <div className="mt-4 flex items-center gap-2 text-xs">
-                      <Progress value={(totalEquity / grandTotalWealth) * 100} className="h-2 flex-1 [&>div]:bg-emerald-500" />
-                      <span className="font-medium">{pct((totalEquity / grandTotalWealth) * 100)}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-center transform transition-transform hover:scale-105">
-                    <Shield className="w-8 h-8 text-blue-500 mx-auto mb-3" />
-                    <p className="text-sm font-semibold text-blue-700 dark:text-blue-400 mb-1">IUL Cash Value</p>
-                    <p className="text-3xl font-bold text-blue-600 dark:text-blue-500">{fmt(iulFinalValue)}</p>
-                    <p className="text-xs text-muted-foreground mt-2">Tax-free accessible capital</p>
-                    <div className="mt-4 flex items-center gap-2 text-xs">
-                      <Progress value={(iulFinalValue / grandTotalWealth) * 100} className="h-2 flex-1 [&>div]:bg-blue-500" />
-                      <span className="font-medium">{pct((iulFinalValue / grandTotalWealth) * 100)}</span>
-                    </div>
-                  </div>
-                  
-                  <div className={`p-6 rounded-2xl border text-center transform transition-transform hover:scale-105 ${oilGasEnabled ? 'bg-amber-500/10 border-amber-500/20' : 'bg-muted/30 border-muted opacity-50 grayscale'}`}>
-                    <DollarSign className={`w-8 h-8 mx-auto mb-3 ${oilGasEnabled ? 'text-amber-500' : 'text-muted-foreground'}`} />
-                    <p className={`text-sm font-semibold mb-1 ${oilGasEnabled ? 'text-amber-700 dark:text-amber-400' : 'text-muted-foreground'}`}>Oil & Gas Returns</p>
-                    <p className={`text-3xl font-bold ${oilGasEnabled ? 'text-amber-600 dark:text-amber-500' : 'text-muted-foreground'}`}>
-                      {fmt(oilGasEnabled ? oilGasProjection.totalIncome + oilGasProjection.principalReturn : 0)}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-2">Income + principal return</p>
-                    <div className="mt-4 flex items-center gap-2 text-xs">
-                      <Progress 
-                        value={oilGasEnabled ? ((oilGasProjection.totalIncome + oilGasProjection.principalReturn) / grandTotalWealth) * 100 : 0} 
-                        className="h-2 flex-1 [&>div]:bg-amber-500" 
-                      />
-                      <span className="font-medium">
-                        {oilGasEnabled ? pct(((oilGasProjection.totalIncome + oilGasProjection.principalReturn) / grandTotalWealth) * 100) : '0.00%'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto mt-8">
-                  {/* Chart 7: Wealth Composition Pie */}
-                  <Card className="bg-background/50 backdrop-blur-sm border-muted/50">
-                    <CardHeader>
-                      <CardTitle className="text-base text-center">Wealth Composition at Year {projectionYears}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-[250px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={wealthCompositionData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={60}
-                            outerRadius={90}
-                            paddingAngle={5}
-                            dataKey="value"
-                            label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
-                            labelLine={false}
-                          >
-                            {wealthCompositionData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Pie>
-                          <RTooltip formatter={(value: number) => [fmt(value), "Value"]} />
-                          <Legend verticalAlign="bottom" height={36} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-
-                  {/* Income Streams Summary */}
-                  <Card className="bg-slate-900 text-white border-none shadow-lg">
-                    <CardHeader>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <Activity className="w-5 h-5 text-emerald-400" /> Target Passive Income
-                      </CardTitle>
-                      <CardDescription className="text-slate-400">Annual streams at Year {projectionYears}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50">
-                          <span className="text-sm flex items-center gap-2 font-medium">
-                            <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                            Real Estate Cash Flow
-                          </span>
-                          <span className="font-bold text-emerald-400 text-lg">
-                            {fmt(portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[projectionYears]?.annualCashFlow ?? 0), 0))}/yr
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50">
-                          <span className="text-sm flex items-center gap-2 font-medium">
-                            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                            IUL Tax-Free Loans (5%)
-                          </span>
-                          <span className="font-bold text-blue-400 text-lg">{fmt(iulFinalValue * 0.05)}/yr</span>
-                        </div>
-                        {oilGasEnabled && (
-                          <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50">
-                            <span className="text-sm flex items-center gap-2 font-medium">
-                              <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-                              Oil & Gas Distributions
-                            </span>
-                            <span className="font-bold text-amber-400 text-lg">{fmt(oilGasAmount * 0.15)}/yr</span>
-                          </div>
-                        )}
-                        <div className="mt-6 pt-4 border-t border-slate-700 flex items-center justify-between">
-                          <span className="text-base font-bold uppercase tracking-wider text-slate-300">Total Annual Income</span>
-                          <span className="text-3xl font-black text-white">
-                            {fmt(
-                              portfolioCalcs.reduce((s, pc) => s + (pc.calc.projection[projectionYears]?.annualCashFlow ?? 0), 0) + 
-                              iulFinalValue * 0.05 + 
-                              (oilGasEnabled ? oilGasAmount * 0.15 : 0)
-                            )}<span className="text-lg text-slate-400 font-normal">/yr</span>
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        
-          <TabsContent value="generate-outcome" className="space-y-6 mt-6">
-            <GenerateOutcomeTab
-              strategyType="real-estate-mogul"
-              hasResults={true}
-              resultData={{ totalEquity: 2000000, cashFlow: 120000, appreciation: 150000, properties: 5, leverageRatio: 3.5, projectionData: [] }}
-              metrics={[{ label: "Total Equity", value: 2000000, highlight: true }, { label: "Annual Cash Flow", value: 120000 }, { label: "Appreciation", value: 150000 }, { label: "Properties", value: 5, format: "number" }]}
-            />
-          </TabsContent>
-        </Tabs>
-
-        <NAICDisclaimer variant="footer" showsProjections showsCashValues showsPolicyLoans />
-      </div>
-      <PageInsights pageId="real-estate-mogul" />
-    
-        <ComplianceFooter pageName="RealEstateMogul" showsIUL showsTax showsEstate showsProjections showsHistoricalData showsPolicyLoans />
-      </AppShell>
-  );
-}
 ```
 
