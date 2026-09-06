@@ -74,10 +74,10 @@ export function sourceWeight(evidence: number, trackRecord: number, consistency:
   return Math.round(evidence * (0.5 + 0.5 * trackRecord) * (0.5 + 0.5 * consistency) * 1000) / 1000;
 }
 
-export async function listSources(): Promise<SourceView[]> {
+export async function listSources(defs: SourceDef[] = SOURCES): Promise<SourceView[]> {
   const db = await getDb();
   const rows: ForecastSourceRow[] = db ? await db.select().from(forecastSources) : [];
-  return SOURCES.map((s) => {
+  return defs.map((s) => {
     const r = rows.find((x) => x.id === s.id);
     const evidence = num(r?.evidence) ?? num(r?.aiEvidence) ?? s.defaults.evidence;
     const trackRecord = num(r?.trackRecord) ?? s.defaults.trackRecord;
@@ -87,9 +87,14 @@ export async function listSources(): Promise<SourceView[]> {
   });
 }
 
+/** Every source definition the platform knows, across panels (tax forecasters and, when registered, other panels). */
+const PANELS: SourceDef[][] = [SOURCES];
+export function registerPanel(defs: SourceDef[]) { if (!PANELS.includes(defs)) PANELS.push(defs); }
+export function findSource(id: string): SourceDef | undefined { for (const p of PANELS) { const s = p.find((x) => x.id === id); if (s) return s; } return undefined; }
+
 export async function updateSource(id: string, patch: { enabled?: boolean; evidence?: number | null; trackRecord?: number | null; consistency?: number | null; aiEvidence?: number | null; aiRationale?: string | null; reviewedAt?: Date | null }): Promise<boolean> {
   const db = await getDb();
-  if (!db || !SOURCES.some((s) => s.id === id)) return false;
+  if (!db || !findSource(id)) return false;
   const [existing] = await db.select().from(forecastSources).where(eq(forecastSources.id, id)).limit(1);
   const dec = (v: number | null | undefined) => (v == null ? null : String(Math.max(0, Math.min(1, v))));
   const values = { enabled: patch.enabled ?? existing?.enabled ?? true, evidence: patch.evidence !== undefined ? dec(patch.evidence) : existing?.evidence ?? null, trackRecord: patch.trackRecord !== undefined ? dec(patch.trackRecord) : existing?.trackRecord ?? null, consistency: patch.consistency !== undefined ? dec(patch.consistency) : existing?.consistency ?? null, aiEvidence: patch.aiEvidence !== undefined ? dec(patch.aiEvidence) : existing?.aiEvidence ?? null, aiRationale: patch.aiRationale !== undefined ? patch.aiRationale : existing?.aiRationale ?? null, reviewedAt: patch.reviewedAt !== undefined ? patch.reviewedAt : existing?.reviewedAt ?? null, updatedAt: new Date() };
@@ -104,15 +109,16 @@ function claimView(r: ForecastClaimRow): ClaimView {
   return { id: r.id, sourceId: r.sourceId, metric: r.metric, horizonYear: r.horizonYear, value: num(r.value), unit: r.unit, baseValue: num(r.baseValue), direction: (Math.sign(r.direction) as Direction), burdenMultiplier: num(r.burdenMultiplier), asOf: r.asOf, citation: r.citation, note: r.note, actualValue: num(r.actualValue), actualAsOf: r.actualAsOf };
 }
 
-/** Seeds the verified claims on first use; never duplicates. */
-export async function listClaims(): Promise<ClaimView[]> {
+/** Seeds the verified claims on first use; never duplicates. Scoped to a panel's sources. */
+export async function listClaims(defs: SourceDef[] = SOURCES, seeds: ClaimSeed[] = CLAIM_SEEDS): Promise<ClaimView[]> {
+  const ids = new Set(defs.map((s) => s.id));
   const db = await getDb();
-  if (!db) return CLAIM_SEEDS.map((s, i) => claimView({ id: -(i + 1), createdAt: new Date(), actualValue: null, actualAsOf: null, ...s } as ForecastClaimRow));
-  let rows = await db.select().from(forecastClaims);
-  if (!rows.length) {
+  if (!db) return seeds.map((s, i) => claimView({ id: -(i + 1), createdAt: new Date(), actualValue: null, actualAsOf: null, ...s } as ForecastClaimRow));
+  let rows = (await db.select().from(forecastClaims)).filter((r) => ids.has(r.sourceId));
+  if (!rows.length && seeds.length) {
     // Two requests can race here; the unique index makes the second a no-op.
-    for (const seed of CLAIM_SEEDS) { try { await db.insert(forecastClaims).values(seed); } catch (e) { if (!String((e as { code?: string })?.code ?? e).includes("ER_DUP_ENTRY")) throw e; } }
-    rows = await db.select().from(forecastClaims);
+    for (const seed of seeds) { try { await db.insert(forecastClaims).values(seed); } catch (e) { if (!String((e as { code?: string })?.code ?? e).includes("ER_DUP_ENTRY")) throw e; } }
+    rows = (await db.select().from(forecastClaims)).filter((r) => ids.has(r.sourceId));
   }
   return rows.map(claimView);
 }
@@ -140,8 +146,8 @@ export async function recordActual(claimId: number, actualValue: number, actualA
 }
 
 /** Claims weighted by their source, ready for the trajectory model. */
-export async function weightedClaims(): Promise<{ claims: WeightedClaim[]; totalPanelWeight: number; allPanelWeight: number; sources: SourceView[] }> {
-  const [sources, claims] = await Promise.all([listSources(), listClaims()]);
+export async function weightedClaims(defs: SourceDef[] = SOURCES, seeds: ClaimSeed[] = CLAIM_SEEDS): Promise<{ claims: WeightedClaim[]; totalPanelWeight: number; allPanelWeight: number; sources: SourceView[] }> {
+  const [sources, claims] = await Promise.all([listSources(defs), listClaims(defs, seeds)]);
   const w = new Map(sources.map((s) => [s.id, s.weight]));
   const usable = claims.filter((c) => c.direction !== 0 || c.burdenMultiplier != null);
   // Coverage is measured against the sources that have published something
@@ -317,21 +323,21 @@ export async function reviewHarvest(id: number, approve: boolean): Promise<Harve
   if (!row || row.status !== "pending") return row ? harvestView(row) : null;
   let claimId: number | null = null;
   if (approve) {
-    const src = SOURCES.find((s) => s.id === row.sourceId);
+    const src = findSource(row.sourceId);
     const citation = `${src?.name ?? row.sourceId}${src ? ` (${src.org})` : ""}, ${row.url} — harvested ${row.createdAt.toISOString().slice(0, 10)}, read by ${jsonColumn<string[]>(row.voices, []).join(", ")}`.slice(0, 500);
     try {
       claimId = await addClaim({ sourceId: row.sourceId, metric: row.metric, horizonYear: row.horizonYear, value: row.value, unit: row.unit, baseValue: row.baseValue, direction: row.direction, burdenMultiplier: row.burdenMultiplier, asOf: row.asOf, citation, note: `“${row.quote}”`.slice(0, 500) });
     } catch (e) { if (!String((e as { code?: string })?.code ?? e).includes("ER_DUP_ENTRY")) throw e; }
   }
   await db.update(forecastHarvests).set({ status: approve ? "approved" : "rejected", claimId, reviewedAt: new Date() }).where(eq(forecastHarvests.id, id));
-  if (approve) { const c = consistencyFor(row.sourceId, await listClaims()); if (c) await updateSource(row.sourceId, { consistency: c.consistency }); }
+  if (approve) { const c = consistencyFor(row.sourceId, await listClaims(PANELS.flat(), CLAIM_SEEDS)); if (c) await updateSource(row.sourceId, { consistency: c.consistency }); }
   const [after] = await db.select().from(forecastHarvests).where(eq(forecastHarvests.id, id)).limit(1);
   return after ? harvestView(after) : null;
 }
 
 /** Sweep every enabled source, one at a time. */
-export async function harvestAll(): Promise<Array<{ sourceId: string } & HarvestResult>> {
-  const sources = await listSources();
+export async function harvestAll(defs: SourceDef[] = PANELS.flat()): Promise<Array<{ sourceId: string } & HarvestResult>> {
+  const sources = await listSources(defs);
   const out: Array<{ sourceId: string } & HarvestResult> = [];
   for (const s of sources.filter((x) => x.enabled)) out.push({ sourceId: s.id, ...(await harvestSource(s)) });
   return out;
@@ -419,12 +425,12 @@ export function consistencyFor(sourceId: string, claims: ClaimView[]): { consist
 /** Score every claim whose year has closed, then regrade every source's consistency. Keyless (FRED CSV). */
 export async function scorePanel(opts: { fetchSeries?: SeriesFetcher; today?: Date } = {}): Promise<{ scored: ActualMatch[]; skipped: number; trackRecords: Record<string, number>; consistency: Record<string, number> }> {
   const fetchSeries = opts.fetchSeries ?? ((id, start) => fetchFredObservationsSince(id, start));
-  const claims = await listClaims();
+  const claims = await listClaims(PANELS.flat(), CLAIM_SEEDS);
   const { matched, skipped } = await matchActuals(claims, fetchSeries, opts.today);
   const trackRecords: Record<string, number> = {};
   for (const m of matched) { const r = await recordActual(m.claimId, m.actualValue, m.actualAsOf); if (r) trackRecords[r.sourceId] = r.trackRecord; }
   const consistency: Record<string, number> = {};
-  const fresh = matched.length ? await listClaims() : claims;
-  for (const s of SOURCES) { const c = consistencyFor(s.id, fresh); if (c) { consistency[s.id] = c.consistency; await updateSource(s.id, { consistency: c.consistency }); } }
+  const fresh = matched.length ? await listClaims(PANELS.flat(), CLAIM_SEEDS) : claims;
+  for (const s of PANELS.flat()) { const c = consistencyFor(s.id, fresh); if (c) { consistency[s.id] = c.consistency; await updateSource(s.id, { consistency: c.consistency }); } }
   return { scored: matched, skipped: skipped.length, trackRecords, consistency };
 }

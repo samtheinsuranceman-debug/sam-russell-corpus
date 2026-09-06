@@ -202,6 +202,14 @@ is read against who is expected to hold the levers. The pulse itself is free
 and runs weekly on its own (`POWER_PULSE_DAYS`, default 7; 0 turns it off),
 with a first reading half a minute after boot.
 
+### Loan forgiveness engine
+`/portal/forgiveness`: the record of every federal forgiveness and
+repayment program since 1987 with its statute, the computed political
+correlation, an eleven-authority panel, and the client's own outlook (PSLF,
+IDR, NHSC, IHS, VA, NIH) with the date, the amount, the tax, the odds, the
+references, and what the freed payment becomes if invested. No switches;
+any AI key lets the owner harvest new figures into its panel.
+
 ### Connections (every outside platform, switched on by variables)
 The portal page **Connections** (`/portal/connections`) shows every platform the
 site can use and whether it is on. The Plan Ledger is the spine: every event it
