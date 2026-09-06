@@ -6,8 +6,11 @@ export default function NotFound() {
   const [, setLocation] = useLocation();
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#0a0f1a]">
-      <div className="w-full max-w-lg mx-4 text-center">
+    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#0a0f1a]">
+      {/* The tall green-lit tower from the owner's Concept 20 master: a right-hand column on wide screens, full bleed on phones. */}
+      <img src="/rcs-city-pinnacle.webp" alt="A tall green-lit tower rising over the night skyline and its reflection in the water" className="absolute inset-y-0 right-0 h-full w-full object-cover object-top brightness-[.7] saturate-[1.15] md:w-[62%]" loading="lazy" decoding="async" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,15,26,.55),rgba(10,15,26,.85))] md:bg-[linear-gradient(90deg,#0a0f1a_42%,rgba(10,15,26,.7)_58%,rgba(10,15,26,0)_80%)]" />
+      <div className="relative z-10 w-full max-w-lg mx-4 text-center md:mr-[42%]">
         {/* Animated glow ring */}
         <div className="flex justify-center mb-8">
           <div className="relative">
