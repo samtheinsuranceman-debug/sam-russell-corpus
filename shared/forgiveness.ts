@@ -194,6 +194,22 @@ export const PROGRAMS: Program[] = [
     citations: ["VA Careers, EDRP flyer (2024)", "VA News, Nov. 13, 2020"],
   },
   {
+    id: "wv-slrp", name: "West Virginia State Loan Repayment Program (HRSA-matched)", kind: "service_repayment",
+    authority: "Public Health Service Act §338I (42 U.S.C. §254q-1) state loan repayment grants; administered by the West Virginia Department of Health, State Office of Rural Health",
+    enacted: "1987-11-04", open: "1987-11-04", closed: null, status: "open",
+    who: "Physicians and other primary care clinicians practising full time at an eligible site in a West Virginia Health Professional Shortage Area", degrees: "MD/DO and other primary care disciplines", institutions: "Inpatient and outpatient HPSA sites including federally qualified health centers and look-alikes", loans: "Qualifying educational loans",
+    award: "$40,000 for the initial two-year commitment, then up to $25,000 a year for two further years — $90,000 maximum", obligation: "Two years full time, extendable two more", cadence: "Annual application; renewal each added year", tax: "Excluded from gross income under 26 U.S.C. §108(f)(4) (state programs under PHSA §338I)",
+    outcomes: [], citations: ["HRSA, State Loan Repayment Program contacts (West Virginia entry), nhsc.hrsa.gov/loan-repayment/state-loan-repayment-program/contacts", "HRSA, State Loan Repayment Program, nhsc.hrsa.gov/loan-repayment/state-loan-repayment-program"],
+  },
+  {
+    id: "wv-mslp", name: "West Virginia Medical Student Loan Program and Health Sciences Service Program", kind: "forgiveness",
+    authority: "West Virginia Higher Education Policy Commission (Health Sciences Program Administrator); state program document at bbh.wv.gov",
+    enacted: "1995-01-01", open: "1995-01-01", closed: null, status: "open",
+    who: "West Virginia medical students and residents who practise in a qualifying medically underserved area of the state", degrees: "Family medicine, general obstetrics and gynecology, general internal medicine, general pediatrics, adult or child psychiatry (MSLP); primary care or emergency medicine residency in West Virginia (HSSP)", institutions: "Underserved areas of West Virginia; outpatient settings (primary care) or hospital emergency rooms (emergency medicine)", loans: "Medical education loans",
+    award: "MSLP: up to $10,000 a year of forgiveness for up to four years ($40,000). HSSP: $30,000 toward loan repayment", obligation: "MSLP: one year of practice in a qualifying underserved area for each year forgiven. HSSP: two years full time or four years half time", cadence: "Annual", tax: "State programs under PHSA §338I or otherwise meeting §108(f)(4) are excluded; confirm the program's status with the Commission",
+    outcomes: [], citations: ["West Virginia program document, bbh.wv.gov/media/22576/download"],
+  },
+  {
     id: "nih-lrp", name: "NIH Loan Repayment Programs", kind: "service_repayment",
     authority: "Public Health Service Act §487A–487F (42 U.S.C. §288 et seq.)",
     enacted: "1988-11-04", open: "1988-11-04", closed: null, status: "open",
@@ -304,6 +320,8 @@ export type BorrowerProfile = {
   plan: PlanId;
   /** flags for the service programs */
   primaryCare?: boolean; willingHPSA?: boolean; willingIHS?: boolean; willingVA?: boolean; research?: boolean;
+  /** two-letter state of practice; state programs switch on where verified (WV) */
+  state?: string;
   /** compliance: certifies annually, keeps Direct Loans and an eligible plan, has an advisor watching it */
   disciplined?: boolean;
 };
@@ -313,7 +331,7 @@ export type PathOutcome = {
   monthsToForgiveness: number | null; forgivenessDate: string | null;
   totalPaidBefore: number; forgivenAmount: number; forgivenPrincipal: number; forgivenInterest: number;
   taxOnForgiveness: number; netBenefit: number;
-  probability: number | null; confidence: number; probabilityParts: { programSurvives: number; borrowerExecutes: number; award?: number } | null;
+  probability: number | null; confidence: number; probabilityParts: { programSurvives: number; borrowerExecutes: number; staysEligible?: number; award?: number } | null;
   citations: string[]; notes: string[];
   schedule: Array<{ month: number; payment: number; balance: number }>;
 };
@@ -321,18 +339,36 @@ export type PathOutcome = {
 export type ProbabilityInputs = {
   /** expected Democratic lever share over the pursuit period (from the power layer); 0.5 when unknown */
   expectedLeverShare: number;
-  /** base annual hazard that a statutory change removes forgiveness from existing borrowers: no such event in 19 years of PSLF (2007–2026); Laplace estimate 1/(19+2) */
+  /** override of the statutory base hazard (see DEFAULT_BASE_HAZARD) */
   baseHazard?: number;
+  /** annual probability the borrower stays in qualifying employment (physicians at nonprofit systems: assumption 0.97) */
+  persistence?: number;
 };
 export const PSLF_YEARS_ON_RECORD = 2026 - 2007;
-export const DEFAULT_BASE_HAZARD = 1 / (PSLF_YEARS_ON_RECORD + 2); // ≈ 0.048 a year, a deliberately conservative reading of a clean record
+/**
+ * Statutory hazard: the Jeffreys estimate for a zero-event record, 0.5 ÷ (n + 1) with n = 19 years of PSLF
+ * and no statutory change removing forgiveness from existing borrowers (≈ 2.5 % a year). Chosen over the
+ * Laplace 1 ÷ (n + 2) on the council's review (Gemini 2.5 Pro, Sept. 6, 2026): less informative and
+ * invariant to reparameterisation. An assumption, stated.
+ */
+export const DEFAULT_BASE_HAZARD = 0.5 / (PSLF_YEARS_ON_RECORD + 1);
+/** Regulatory hazard: rule changes that cost existing borrowers credit or eligibility. No such change has stuck since the 2007 statute (the 2025 employer rule is under a court order); Jeffreys on the same record, scaled ×2 because rules move faster than statutes. Assumption. */
+export const DEFAULT_REGULATORY_HAZARD = 2 * 0.5 / (PSLF_YEARS_ON_RECORD + 1);
+export const DEFAULT_PERSISTENCE = 0.97;
 
-/** The odds a program's forgiveness survives `years` more, given who is expected to hold the levers. The 2025 contraction came under a right-held government; the record's expansions are split. We tilt the hazard by the expected share: ×0.5 fully left, ×1.5 fully right. Stated as an assumption. */
+/** Political tilt of the statutory hazard by the expected lever share: ×0.5 fully left, ×1.5 fully right. On the record the elected branches' contractions of forgiveness (2025) came under a right-held government and none under a left-held one; the magnitude is an assumption, stated. */
+export function politicalTilt(expectedLeverShare: number): number { return 1.5 - Math.max(0, Math.min(1, expectedLeverShare)); }
+
+/** The odds a program's forgiveness survives `years` more: statutory survival × regulatory survival. `hazardScale` raises both for plans whose terms are partly regulatory. */
 export function programSurvival(years: number, inputs: ProbabilityInputs, hazardScale = 1): number {
-  const base = (inputs.baseHazard ?? DEFAULT_BASE_HAZARD) * hazardScale;
-  const tilt = 1.5 - inputs.expectedLeverShare; // 1.5 at share 0 (right), 0.5 at share 1 (left)
-  const h = Math.min(0.5, Math.max(0, base * tilt));
-  return Math.round((1 - h) ** Math.max(0, years) * 1000) / 1000;
+  const hs = Math.min(0.5, Math.max(0, (inputs.baseHazard ?? DEFAULT_BASE_HAZARD) * hazardScale * politicalTilt(inputs.expectedLeverShare)));
+  const hr = Math.min(0.5, Math.max(0, DEFAULT_REGULATORY_HAZARD * hazardScale));
+  return Math.round(((1 - hs) * (1 - hr)) ** Math.max(0, years) * 1000) / 1000;
+}
+
+/** The odds the borrower is still in qualifying employment after `years` (per-year persistence compounded). */
+export function persistenceOver(years: number, inputs: ProbabilityInputs): number {
+  return Math.round((inputs.persistence ?? DEFAULT_PERSISTENCE) ** Math.max(0, years) * 1000) / 1000;
 }
 
 function addMonths(from: Date, months: number): string { const d = new Date(from.getFullYear(), from.getMonth() + months, 1); return d.toISOString().slice(0, 10); }
@@ -395,15 +431,16 @@ export function pslfPath(p: BorrowerProfile, prob: ProbabilityInputs, now = new 
   const forgiven = eligible ? sim.endBalance : 0;
   const years = monthsLeft / 12;
   const survives = programSurvival(years, prob, 1);
+  const stays = persistenceOver(years, prob);
   const executes = p.disciplined ? 0.9 : 0.6;
-  notes.push("Odds = P(the statute still forgives existing borrowers when you arrive) × P(you execute: Direct Loans, an eligible plan, full-time qualifying employment certified every year). Before the 2021 fixes, GAO found 99% of early applications denied, almost all for the wrong loans or plans (GAO-18-547); after the 2022 rules and StudentAid.gov management, execution risk is a matter of discipline, which is why an advisor's annual check changes the number.");
-  notes.push(`Survival: no statutory change has removed PSLF from existing borrowers in ${PSLF_YEARS_ON_RECORD} years; two presidential budgets (FY2018, FY2019) proposed ending it for new borrowers only and Congress did not enact them; the 2025 law kept PSLF and named health care practitioners in the statute. The base hazard is the Laplace estimate 1/(${PSLF_YEARS_ON_RECORD}+2) a year, tilted by who is expected to hold the levers (×0.5 fully left, ×1.5 fully right) — an assumption, stated.`);
+  notes.push("Odds = P(the statute and the rules still forgive existing borrowers when you arrive) × P(you are still in qualifying employment) × P(you execute: Direct Loans, an eligible plan, full-time qualifying employment certified every year). Before the 2021 fixes, GAO found 99% of early applications denied, almost all for the wrong loans or plans (GAO-18-547); after the 2022 rules and StudentAid.gov management, execution risk is a matter of discipline, which is why an advisor's annual check changes the number.");
+  notes.push(`Survival: no statutory change has removed PSLF from existing borrowers in ${PSLF_YEARS_ON_RECORD} years; two presidential budgets (FY2018, FY2019) proposed ending it for new borrowers only and Congress did not enact them; the 2025 law kept PSLF and named health care practitioners in the statute. The statutory hazard is the Jeffreys estimate 0.5/(${PSLF_YEARS_ON_RECORD}+1) a year (about 2.5%), tilted by who is expected to hold the levers (×0.5 fully left, ×1.5 fully right); a separate regulatory hazard of twice that covers rule changes that cost existing borrowers credit (none has stuck; the 2025 employer rule is under a court order). Staying in qualifying employment is taken as ${Math.round((prob.persistence ?? DEFAULT_PERSISTENCE) * 100)}% a year. All three are assumptions, stated; the council's review (Sept. 2026) shaped the separation of statutory, regulatory and persistence risk.`);
   return {
     programId: "pslf", eligible, reasons, monthsToForgiveness: eligible ? monthsLeft : null, forgivenessDate: eligible ? addMonths(now, monthsLeft) : null,
     totalPaidBefore: sim.totalPaid, forgivenAmount: forgiven, forgivenPrincipal: eligible ? sim.principalLeft : 0, forgivenInterest: eligible ? sim.interestLeft : 0,
     taxOnForgiveness: 0, netBenefit: forgiven,
-    probability: eligible ? r3(survives * executes) : 0, confidence: eligible ? r3(0.7 * (p.disciplined ? 1 : 0.85)) : 1,
-    probabilityParts: eligible ? { programSurvives: survives, borrowerExecutes: executes } : null,
+    probability: eligible ? r3(survives * stays * executes) : 0, confidence: eligible ? r3(0.7 * (p.disciplined ? 1 : 0.85)) : 1,
+    probabilityParts: eligible ? { programSurvives: survives, staysEligible: stays, borrowerExecutes: executes } : null,
     citations: ["20 U.S.C. §1087e(m)", "26 U.S.C. §108(f)(1)", "studentaid.gov PSLF (accessed Sept. 6, 2026)", "GAO-18-547"], notes, schedule: sim.schedule,
   };
 }
@@ -445,6 +482,7 @@ export function servicePaths(p: BorrowerProfile, now = new Date()): PathOutcome[
     ["2026 award: up to $75,000 for full-time primary care in a primary care HPSA, $50,000 otherwise, for a two-year commitment; continuation contracts can retire most or all of the debt over further years. Excluded from income under §108(f)(4). The odds shown are conditional on receiving an award; NHSC funds by site score and does not publish an approval rate here, so the figure is the odds of completing the two years once awarded, not the odds of being selected."], ["nhsc.hrsa.gov (2026 cycle)", "26 U.S.C. §108(f)(4)"]));
   out.push(mk("ihs-lrp", Boolean(p.willingIHS), p.willingIHS ? [] : ["Requires two years at an IHS, tribal or urban Indian health facility"], 50_000, 24, 0, 0.92, ["Up to $50,000 for an initial two-year commitment, extendable annually until the debt is paid."], ["ihs.gov/loanrepayment"]));
   out.push(mk("va-edrp", Boolean(p.willingVA), p.willingVA ? [] : ["Requires VA employment in an EDRP-eligible position"], 200_000, 60, 0, 0.9, ["Up to $40,000 a year, $200,000 over five years, reimbursing loan payments; tax-free per VA; no clawback if you leave in good standing."], ["VA Careers EDRP flyer (2024)", "VA News (2020)"]));
+  out.push(mk("wv-slrp", Boolean(p.willingHPSA && p.state === "WV"), p.willingHPSA && p.state === "WV" ? [] : ["Requires full-time practice at a West Virginia HPSA site"], 90_000, 48, 0, 0.9, ["$40,000 for the first two years, then up to $25,000 a year for two more — $90,000 over four years; tax-free under §108(f)(4) as a PHSA §338I state program. Stackable with PSLF when the site is a qualifying employer."], ["HRSA State Loan Repayment Program contacts (West Virginia)"]));
   out.push(mk("nih-lrp", Boolean(p.research), p.research ? [] : ["Requires a two-year commitment to NIH-mission research"], 100_000, 24, 0, 0.85, ["Up to $50,000 a year for two years, renewable; competitive award."], ["NIH Grants & Funding, Loan Repayment Programs"]));
   return out;
 }

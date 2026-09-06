@@ -134,6 +134,40 @@ export async function readJudiciary(): Promise<Reading[]> {
   return rows;
 }
 
+// ─── Governors (Wikidata, keyless) ──────────────────────────────────────────
+export const WIKIDATA_SPARQL = "https://query.wikidata.org/sparql";
+/** Current head of government (P6) of each U.S. state (P31 = Q35657) with the person's party (P102). Best-rank statements only. */
+export const GOVERNORS_QUERY = `SELECT ?state ?stateLabel ?governor ?governorLabel ?party ?partyLabel WHERE { ?state wdt:P31 wd:Q35657 ; wdt:P6 ?governor . OPTIONAL { ?governor wdt:P102 ?party . } SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . } }`;
+const DEM_PARTY = "http://www.wikidata.org/entity/Q29552", REP_PARTY = "http://www.wikidata.org/entity/Q29468";
+
+/** Pure: governors by party from a SPARQL JSON result; one row per state (first party listed wins; independents and unknowns counted as other). */
+export function parseGovernors(data: unknown): { D: number; R: number; other: number; states: number; byState: Array<{ state: string; governor: string; party: "D" | "R" | "other" }> } {
+  const rows = ((data as { results?: { bindings?: Array<Record<string, { value?: string }>> } })?.results?.bindings ?? []);
+  const seen = new Map<string, { state: string; governor: string; party: "D" | "R" | "other" }>();
+  for (const b of rows) {
+    const key = b.state?.value ?? ""; if (!key || seen.has(key)) continue;
+    const p = b.party?.value ?? "", label = (b.partyLabel?.value ?? "").toLowerCase();
+    const party: "D" | "R" | "other" = p === DEM_PARTY || label === "democratic party" ? "D" : p === REP_PARTY || label === "republican party" ? "R" : "other";
+    seen.set(key, { state: b.stateLabel?.value ?? key, governor: b.governorLabel?.value ?? "", party });
+  }
+  const byState = Array.from(seen.values()).sort((a, b) => a.state.localeCompare(b.state));
+  return { D: byState.filter((x) => x.party === "D").length, R: byState.filter((x) => x.party === "R").length, other: byState.filter((x) => x.party === "other").length, states: byState.length, byState };
+}
+
+export async function readGovernors(): Promise<Reading[]> {
+  const res = await _fetch(`${WIKIDATA_SPARQL}?format=json&query=${encodeURIComponent(GOVERNORS_QUERY)}`, { headers: { accept: "application/sparql-results+json" } });
+  if (!res.ok) throw new Error(`wikidata ${res.status}`);
+  const g = parseGovernors(await res.json());
+  if (g.states < 45) throw new Error(`wikidata returned ${g.states} states`);
+  const d = today();
+  const detail = `${g.D} Democratic, ${g.R} Republican, ${g.other} other of ${g.states} states (Wikidata P6/P102, best rank)`;
+  return [
+    { lever: "governors", measure: "dem_count", value: g.D, asOf: d, source: "wikidata", detail },
+    { lever: "governors", measure: "rep_count", value: g.R, asOf: d, source: "wikidata", detail },
+    { lever: "governors", measure: "dem_share", value: r4(g.D / Math.max(1, g.states)), asOf: d, source: "wikidata", detail: `${detail}; ${g.byState.map((x) => `${x.state}: ${x.party}`).join(", ")}`.slice(0, 500) },
+  ];
+}
+
 // ─── Markets ────────────────────────────────────────────────────────────────
 export type MarketRead = { venue: "polymarket" | "kalshi"; question: string; pDem: number; asOf: string; url?: string };
 const CONTROL_QUERIES: Array<{ lever: Lever; terms: string[] }> = [
@@ -193,18 +227,48 @@ export function parseKalshi(data: unknown, lever: Lever): MarketRead | null {
   return null;
 }
 
+/** Known Polymarket event slugs for the control markets (verified Sept. 2026); the search terms are the fallback for the next cycle. */
+export const POLYMARKET_SLUGS: Record<"president" | "senate" | "house", string[]> = {
+  president: ["which-party-wins-2028-us-presidential-election"],
+  senate: ["which-party-will-win-the-senate-in-2026"],
+  house: ["which-party-will-win-the-house-in-2026"],
+};
+
+/** Kalshi: discover the control series by title from the public series list, then read its markets. No tickers are hard-coded. */
+export async function kalshiControlMarkets(lever: Lever): Promise<MarketRead | null> {
+  const res = await _fetch("https://api.elections.kalshi.com/trade-api/v2/series?category=Politics&limit=200");
+  if (!res.ok) throw new Error(`kalshi series ${res.status}`);
+  const data = (await res.json()) as { series?: Array<{ ticker?: string; title?: string; category?: string }> };
+  const candidates = (data.series ?? []).filter((s) => s.ticker && s.title && mentions(s.title, lever) && /control|win|winner|party/i.test(s.title));
+  for (const s of candidates.slice(0, 4)) {
+    const r = await _fetch(`https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=${encodeURIComponent(s.ticker!)}&status=open&limit=50`);
+    if (!r.ok) continue;
+    const m = parseKalshi(await r.json(), lever);
+    if (m) return m;
+  }
+  return null;
+}
+
 export async function readMarkets(): Promise<Reading[]> {
   const rows: Reading[] = [];
   for (const q of CONTROL_QUERIES) {
-    for (const term of q.terms) {
+    let got = false;
+    // Polymarket: the known event slug first, then the search terms.
+    for (const slug of POLYMARKET_SLUGS[q.lever as "president" | "senate" | "house"] ?? []) {
+      try {
+        const res = await _fetch(`https://gamma-api.polymarket.com/events?slug=${encodeURIComponent(slug)}`);
+        if (res.ok) { const data = await res.json(); const m = parsePolymarket({ events: Array.isArray(data) ? data : [data] }, q.lever); if (m) { rows.push({ lever: q.lever, measure: "p_dem_next", value: m.pDem, asOf: m.asOf, source: "polymarket", detail: `${m.question}${m.url ? ` — ${m.url}` : ""}`.slice(0, 500) }); got = true; break; } }
+      } catch (e) { console.warn("[power] polymarket slug", slug, String(e).slice(0, 100)); }
+    }
+    if (!got) for (const term of q.terms) {
       try {
         const res = await _fetch(`https://gamma-api.polymarket.com/public-search?q=${encodeURIComponent(term)}&limit_per_type=10`);
         if (res.ok) { const m = parsePolymarket(await res.json(), q.lever); if (m) { rows.push({ lever: q.lever, measure: "p_dem_next", value: m.pDem, asOf: m.asOf, source: "polymarket", detail: `${m.question}${m.url ? ` — ${m.url}` : ""}`.slice(0, 500) }); break; } }
       } catch (e) { console.warn("[power] polymarket", q.lever, String(e).slice(0, 100)); }
     }
     try {
-      const res = await _fetch(`https://api.elections.kalshi.com/trade-api/v2/markets?status=open&limit=200`);
-      if (res.ok) { const m = parseKalshi(await res.json(), q.lever); if (m) rows.push({ lever: q.lever, measure: "p_dem_next", value: m.pDem, asOf: m.asOf, source: "kalshi", detail: `${m.question}${m.url ? ` — ${m.url}` : ""}`.slice(0, 500) }); }
+      const m = await kalshiControlMarkets(q.lever);
+      if (m) rows.push({ lever: q.lever, measure: "p_dem_next", value: m.pDem, asOf: m.asOf, source: "kalshi", detail: `${m.question}${m.url ? ` — ${m.url}` : ""}`.slice(0, 500) });
     } catch (e) { console.warn("[power] kalshi", q.lever, String(e).slice(0, 100)); }
   }
   return rows;
@@ -254,6 +318,7 @@ export type PowerNow = {
   today: { president: Party; senate: Party; house: Party; trifecta: Party | null; leverShare: number; source: string };
   seats: { senate?: { dem: number; rep: number; asOf: string }; house?: { dem: number; rep: number; asOf: string } };
   judiciary?: { all: number; supreme?: number; appeals?: number; district?: number; asOf: string };
+  governors?: { dem: number; rep: number; share: number; asOf: string; detail: string | null };
   markets: Partial<Record<"president" | "senate" | "house", { pDem: number; asOf: string; sources: string[]; detail: string | null }>>;
   /** Expected Democratic lever share after the next elections, from the markets where they have spoken and today's holder elsewhere. */
   expectedShareNext: number;
@@ -281,16 +346,18 @@ export async function powerNow(): Promise<PowerNow> {
   for (const ch of ["senate", "house"] as const) { const d = seatDem(ch), r = seatRep(ch); if (d && r) seats[ch] = { dem: d.value, rep: r.value, asOf: d.asOf }; }
   const j = latest["judiciary.dem_share_all"];
   const judiciary = j ? { all: j.value, supreme: latest["judiciary.dem_share_supreme"]?.value, appeals: latest["judiciary.dem_share_appeals"]?.value, district: latest["judiciary.dem_share_district"]?.value, asOf: j.asOf } : undefined;
+  const gd = latest["governors.dem_count"], gr = latest["governors.rep_count"], gs = latest["governors.dem_share"];
+  const governors = gd && gr && gs ? { dem: gd.value, rep: gr.value, share: gs.value, asOf: gs.asOf, detail: gs.detail } : undefined;
   const dates = Object.values(latest).map((x) => x.asOf).sort();
-  return { asOf: dates[dates.length - 1] ?? `${year}-01-01`, today: { ...t, trifecta, leverShare, source: seats.senate || seats.house ? "live seat counts + the record" : "the record (powerHistory.ts)" }, seats, judiciary, markets, expectedShareNext: r4(expected), marketsSpoke: spoke };
+  return { asOf: dates[dates.length - 1] ?? `${year}-01-01`, today: { ...t, trifecta, leverShare, source: seats.senate || seats.house ? "live seat counts + the record" : "the record (powerHistory.ts)" }, seats, judiciary, governors, markets, expectedShareNext: r4(expected), marketsSpoke: spoke };
 }
 
-export type SweepResult = { congress: number | string; judiciary: number | string; markets: number | string; stored: number };
+export type SweepResult = { congress: number | string; judiciary: number | string; governors: number | string; markets: number | string; stored: number };
 /** Read every machine feed and store the readings. Each feed fails alone. */
 export async function powerSweep(): Promise<SweepResult> {
   const all: Reading[] = [];
-  const out: SweepResult = { congress: 0, judiciary: 0, markets: 0, stored: 0 };
-  for (const [key, fn] of [["congress", readCongress], ["judiciary", readJudiciary], ["markets", readMarkets]] as const) {
+  const out: SweepResult = { congress: 0, judiciary: 0, governors: 0, markets: 0, stored: 0 };
+  for (const [key, fn] of [["congress", readCongress], ["judiciary", readJudiciary], ["governors", readGovernors], ["markets", readMarkets]] as const) {
     try { const rows = await fn(); all.push(...rows); out[key] = rows.length; }
     catch (e) { out[key] = `failed: ${String(e).slice(0, 80)}`; }
   }

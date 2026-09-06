@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 import { CONTROL, DEM_LEVER_SHARE, MIN_WINDOWS, baseRateFor, bucketOf, conditionalWindowStats, controlAt, demLeverShare } from "@shared/powerHistory";
 import { TOP_MARGINAL_RATE, windowStats } from "@shared/taxHistory";
 import { HORIZONS, conditionalOddsTable, expectedShareOver, longRunLeverShare, taxTrajectory } from "@shared/erosion";
-import { parseCsv, parseJudges, parseKalshi, parseLegislators, parsePolymarket, inflationByControl } from "./power";
+import { parseCsv, parseGovernors, parseJudges, parseKalshi, parseLegislators, parsePolymarket, inflationByControl } from "./power";
 
 describe("the control record", () => {
   it("is continuous from 1945 to 2026 and matches the official record at the anchor years", () => {
@@ -106,6 +106,19 @@ describe("feed parsers", () => {
     expect(c.supreme).toEqual({ D: 0, R: 1, other: 0 });
     expect(c.appeals).toEqual({ D: 1, R: 0, other: 0 });
     expect(c.all).toEqual({ D: 2, R: 1, other: 0 });
+  });
+  it("counts governors by party from a Wikidata SPARQL result, one row per state", () => {
+    const b = (state: string, label: string, gov: string, party: string | null, partyLabel = "") => ({ state: { value: state }, stateLabel: { value: label }, governor: { value: gov }, governorLabel: { value: gov }, ...(party ? { party: { value: party }, partyLabel: { value: partyLabel } } : {}) });
+    const data = { results: { bindings: [
+      b("http://www.wikidata.org/entity/Q1371", "West Virginia", "Gov A", "http://www.wikidata.org/entity/Q29468", "Republican Party"),
+      b("http://www.wikidata.org/entity/Q99", "California", "Gov B", "http://www.wikidata.org/entity/Q29552", "Democratic Party"),
+      b("http://www.wikidata.org/entity/Q99", "California", "Gov B", "http://www.wikidata.org/entity/Q1", "Some other affiliation"), // duplicate row: first party wins
+      b("http://www.wikidata.org/entity/Q797", "Alaska", "Gov C", null),
+    ] } };
+    const g = parseGovernors(data);
+    expect(g).toMatchObject({ D: 1, R: 1, other: 1, states: 3 });
+    expect(g.byState.map((x) => x.state)).toEqual(["Alaska", "California", "West Virginia"]);
+    expect(parseGovernors({})).toMatchObject({ states: 0 });
   });
   it("reads the market-implied chance of Democratic control from both venues and flips Republican-framed questions", () => {
     const poly = { events: [{ title: "House control after the 2026 election", slug: "house-2026", markets: [
