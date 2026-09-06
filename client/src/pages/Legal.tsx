@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import PageBackdrop from "@/components/PageBackdrop";
 
 const PHOTOS = {
-  river: { src: "/rcs-city-river.webp", phoneSrc: "/rcs-city-spire.webp", alt: "Emerald-lit skyline at dusk with a river curving through the city" },
+  river: { src: "/rcs-city-river.webp", phoneSrc: "/rcs-city-glass.webp", alt: "Emerald-lit skyline at dusk with a river curving through the city" },
   harbor: { src: "/rcs-city-harbor.webp", phoneSrc: "/rcs-city-towers.webp", alt: "Green-lit harbour city at night, towers reflected in the water" },
   emerald: { src: "/rcs-city-emerald.webp", phoneSrc: "/rcs-city-spire.webp", alt: "Emerald-lit city skyline at dawn with a river winding through it" },
 } as const;
