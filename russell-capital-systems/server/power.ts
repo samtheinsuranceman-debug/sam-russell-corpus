@@ -279,11 +279,20 @@ export async function storeReadings(readings: Reading[]): Promise<number> {
   const db = await getDb();
   if (!db) return 0;
   let n = 0;
+  // A reading that cannot be stored is logged and skipped; it must never cost the other levers their reading.
+  const clean = (s: string | null | undefined) => (s == null ? null : s.replace(/[\uD800-\uDFFF]/g, "").replace(/\s+/g, " ").trim().slice(0, 480) || null);
   for (const r of readings) {
-    try { await db.insert(powerSnapshots).values({ lever: r.lever, measure: r.measure, value: String(r.value), asOf: r.asOf, source: r.source, detail: r.detail ?? null }); n += 1; }
+    const row = { lever: r.lever, measure: r.measure, value: String(Math.round(r.value * 10_000) / 10_000), asOf: r.asOf, source: r.source.slice(0, 120), detail: clean(r.detail) };
+    try { await db.insert(powerSnapshots).values(row); n += 1; }
     catch (e) {
-      if (!String((e as { code?: string })?.code ?? e).includes("ER_DUP_ENTRY")) throw e;
-      await db.update(powerSnapshots).set({ value: String(r.value), detail: r.detail ?? null, fetchedAt: new Date() }).where(and(eq(powerSnapshots.lever, r.lever), eq(powerSnapshots.measure, r.measure), eq(powerSnapshots.asOf, r.asOf), eq(powerSnapshots.source, r.source)));
+      const err = e as { code?: string; sqlMessage?: string; cause?: { code?: string; sqlMessage?: string } };
+      const code = err.code ?? err.cause?.code ?? "";
+      if (String(code).includes("ER_DUP_ENTRY") || /Duplicate entry/i.test(err.sqlMessage ?? err.cause?.sqlMessage ?? String(e))) {
+        try { await db.update(powerSnapshots).set({ value: row.value, detail: row.detail, fetchedAt: new Date() }).where(and(eq(powerSnapshots.lever, r.lever), eq(powerSnapshots.measure, r.measure), eq(powerSnapshots.asOf, r.asOf), eq(powerSnapshots.source, row.source))); }
+        catch (e2) { console.warn("[power] update failed", r.lever, r.measure, String((e2 as { cause?: { sqlMessage?: string } })?.cause?.sqlMessage ?? e2).slice(0, 200)); }
+      } else {
+        console.warn("[power] store failed", r.lever, r.measure, code, String(err.sqlMessage ?? err.cause?.sqlMessage ?? e).slice(0, 200));
+      }
     }
   }
   return n;
