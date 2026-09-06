@@ -250,6 +250,9 @@ const TheStrategyTable = lazy(() => import("./pages/portal/TheStrategyTable"));
 const TheField = lazy(() => import("./pages/portal/TheField"));
 const TheMap = lazy(() => import("./pages/portal/TheMap"));
 const TheLegacy = lazy(() => import("./pages/portal/TheLegacy"));
+const WealthGenomePage = lazy(() => import("./pages/WealthGenomePage"));
+const FinancialAssessment = lazy(() => import("./pages/portal/FinancialAssessment"));
+const AIFinancialAdvisor = lazy(() => import("./pages/portal/AIFinancialAdvisor"));
 const TheBrotherhood = lazy(() => import("./pages/portal/TheBrotherhood"));
 const SecondaryInformation = lazy(() => import("./pages/portal/SecondaryInformation"));
 const PlanningCases = lazy(() => import("./pages/portal/PlanningCases"));
@@ -552,6 +555,10 @@ function Router() {
       <Route path="/portal/patent-showcase" component={gated(PatentShowcase, "/portal/patent-showcase")} />
 
       {/* Verified Grok client-journey additions — additive, no primary routes removed */}
+      {/* New Client Welcome List — assessment, the AI Financial Advisor (Financial Librarian), the Wealth Genome, then the seven journey pages */}
+      <Route path="/portal/financial-assessment" component={gated(FinancialAssessment, "/portal/financial-assessment")} />
+      <Route path="/portal/ai-advisor" component={gated(AIFinancialAdvisor, "/portal/ai-advisor")} />
+      <Route path="/portal/wealth-genome" component={gated(WealthGenomePage, "/portal/wealth-genome")} />
       <Route path="/portal/the-arrival" component={gated(TheArrival, "/portal/the-arrival")} />
       <Route path="/portal/the-mirror" component={gated(TheMirror, "/portal/the-mirror")} />
       <Route path="/portal/the-strategy-table" component={gated(TheStrategyTable, "/portal/the-strategy-table")} />

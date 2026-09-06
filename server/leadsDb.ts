@@ -5,15 +5,26 @@
 // ============================================================
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "./db";
+import { jsonColumn } from "./_core/jsonColumn";
 import { publicLeads, type InsertPublicLead, type PublicLead } from "../drizzle/schema";
 
 export type LeadStatusValue = PublicLead["status"];
+
+/** JSON columns come back as strings on MariaDB; parse them so callers see objects everywhere. */
+function normalizeLead(row: PublicLead): PublicLead {
+  return {
+    ...row,
+    factFinder: jsonColumn(row.factFinder, null),
+    analysis: jsonColumn(row.analysis, null),
+    ipHistory: jsonColumn<string[] | null>(row.ipHistory, null),
+  };
+}
 
 export async function getLeadByPublicId(publicId: string): Promise<PublicLead | null> {
   const db = await getDb();
   if (!db) return null;
   const rows = await db.select().from(publicLeads).where(eq(publicLeads.publicId, publicId)).limit(1);
-  return rows[0] ?? null;
+  return rows[0] ? normalizeLead(rows[0]) : null;
 }
 
 /**
@@ -62,14 +73,15 @@ export async function upsertLead(publicId: string, patch: Partial<InsertPublicLe
 export async function listLeads(limit = 200): Promise<PublicLead[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(publicLeads).orderBy(desc(publicLeads.lastSeenAt)).limit(Math.min(500, Math.max(1, limit)));
+  const rows = await db.select().from(publicLeads).orderBy(desc(publicLeads.lastSeenAt)).limit(Math.min(500, Math.max(1, limit)));
+  return rows.map(normalizeLead);
 }
 
 export async function getLeadById(id: number): Promise<PublicLead | null> {
   const db = await getDb();
   if (!db) return null;
   const rows = await db.select().from(publicLeads).where(eq(publicLeads.id, id)).limit(1);
-  return rows[0] ?? null;
+  return rows[0] ? normalizeLead(rows[0]) : null;
 }
 
 export async function updateLeadStatus(id: number, status: LeadStatusValue): Promise<PublicLead | null> {
