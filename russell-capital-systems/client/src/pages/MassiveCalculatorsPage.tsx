@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'wouter';
+import PageBackdrop from '../components/PageBackdrop';
 
 const categories = {
   'RETIREMENT & INCOME': [
@@ -57,8 +58,9 @@ const MassiveCalculatorsPage: React.FC = () => {
   const [search, setSearch] = useState('');
 
   return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
-      <div className="max-w-7xl mx-auto">
+    <div className="relative min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
+      <PageBackdrop src="/rcs-city-river.webp" phoneSrc="/rcs-city-spire.webp" alt="Emerald-lit skyline at dusk with a river curving through the city" fade="#0a0f1a" />
+      <div className="relative z-10 max-w-7xl mx-auto">
         <div className="flex items-center mb-4">
           <span className="text-4xl mr-4">🧮</span>
           <h1 className="text-4xl font-bold">Massive Calculators</h1>

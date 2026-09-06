@@ -1,10 +1,18 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+import PageBackdrop from "@/components/PageBackdrop";
 
-function LegalShell({ title, children }: { title: string; children: React.ReactNode }) {
+const PHOTOS = {
+  river: { src: "/rcs-city-river.webp", phoneSrc: "/rcs-city-spire.webp", alt: "Emerald-lit skyline at dusk with a river curving through the city" },
+  harbor: { src: "/rcs-city-harbor.webp", phoneSrc: "/rcs-city-towers.webp", alt: "Green-lit harbour city at night, towers reflected in the water" },
+  emerald: { src: "/rcs-city-emerald.webp", phoneSrc: "/rcs-city-spire.webp", alt: "Emerald-lit city skyline at dawn with a river winding through it" },
+} as const;
+
+function LegalShell({ title, photo, position, children }: { title: string; photo: keyof typeof PHOTOS; position?: string; children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#060f20] text-[#c8d8ec]">
-      <div className="container max-w-3xl py-12">
+    <div className="relative min-h-screen bg-[#060f20] text-[#c8d8ec]">
+      <PageBackdrop {...PHOTOS[photo]} fade="#060f20" position={position} />
+      <div className="container relative z-10 max-w-3xl py-12">
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#7a95b8] hover:text-white mb-8 transition-colors">
           <ArrowLeft size={14} /> Back to Home
         </Link>
@@ -19,7 +27,7 @@ function LegalShell({ title, children }: { title: string; children: React.ReactN
 
 export function Privacy() {
   return (
-    <LegalShell title="Privacy Policy">
+    <LegalShell title="Privacy Policy" photo="harbor" position="center 20%">
       <p><strong className="text-white">Effective Date:</strong> January 1, 2026</p>
       <p>Russell Capital Systems™ ("we", "our", "us") operates the Russell Capital Systems™ Wealth OS platform. www.RussellCapitalSystems.com is owned and operated by Russell Holdings Management LLC. This Privacy Policy explains how we collect, use, and protect your information.</p>
       <h2 className="text-white font-bold text-lg">Information We Collect</h2>
@@ -38,7 +46,7 @@ export function Privacy() {
 
 export function Terms() {
   return (
-    <LegalShell title="Terms of Service">
+    <LegalShell title="Terms of Service" photo="emerald" position="center 70%">
       <p><strong className="text-white">Effective Date:</strong> January 1, 2026</p>
       <p>By accessing or using the Russell Capital Systems™ Wealth OS platform, you agree to these Terms of Service.</p>
       <h2 className="text-white font-bold text-lg">Platform Use</h2>
@@ -57,7 +65,7 @@ export function Terms() {
 
 export function Support() {
   return (
-    <LegalShell title="Support">
+    <LegalShell title="Support" photo="river" position="center 60%">
       <p>Our support team is available to help you get the most out of Russell Capital Systems™ Wealth OS.</p>
       <h2 className="text-white font-bold text-lg">Getting Started</h2>
       <p>After signing in, you'll land on your advisor dashboard. Use the Strategy Lab to run Roth conversion ladders and IUL projections. Add clients via the Clients section, then track deals in the Pipeline.</p>
