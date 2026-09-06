@@ -869,11 +869,14 @@ th {
    The 0.25% brightness oscillation is far below the ~1% JND threshold,
    making it invisible to conscious perception while the autonomic nervous
    system entrains to the coherent rhythm. */
+/* The body itself must NOT carry a transform or filter: either one turns
+   <body> into the containing block for every position:fixed element, so the
+   navigation bar, the phone's sticky call-to-action and the every-page mic
+   button would scroll away with the page. The rhythm lives in the ambient
+   orbs (.rc-breathe-layer) and the opt-in .rc-breathe-* classes instead. */
 @layer base {
   body {
-    animation: bodyBreathe var(--breath-duration) var(--breath-ease) infinite;
-    will-change: filter, transform;
-    transform-origin: 50% 50%;
+    animation: none;
   }
 }
 
@@ -1461,4 +1464,13 @@ th {
     flex-wrap: wrap;
     gap: 1.5rem;
   }
+}
+
+/* Every image and embed fits the screen it is on — iPhone, Android, tablet — never wider than its container. */
+img, video, canvas, iframe { max-width: 100%; }
+img { height: auto; }
+img.object-cover, img[class*="h-full"] { height: 100%; }
+@media (max-width: 767px) {
+  /* Text-bearing artwork is shown whole on phones; decorative fills still cover. */
+  img[data-fit="contain-mobile"] { object-fit: contain; }
 }

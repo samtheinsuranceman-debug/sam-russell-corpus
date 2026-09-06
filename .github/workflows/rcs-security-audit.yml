@@ -1,0 +1,42 @@
+# Weekly dependency and type audit for the Russell Capital Systems app:
+# known-vulnerable packages (high or critical) fail the run, and the
+# typecheck proves the tree still compiles after Dependabot-style bumps.
+# The run also fires on every pull request that touches the app.
+name: RCS security audit
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  pull_request:
+    paths: ["russell-capital-systems/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: russell-capital-systems
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: Known vulnerabilities (high/critical fail)
+        run: pnpm audit --audit-level=high
+      - name: Typecheck
+        run: pnpm check
+      - name: Unit tests
+        run: pnpm test

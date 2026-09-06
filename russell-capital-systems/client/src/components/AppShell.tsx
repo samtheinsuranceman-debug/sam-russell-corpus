@@ -425,6 +425,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/bulk-generation", label: "Bulk Generation", icon: Lock, color: "slate" },
       { path: "/portal/command-center", label: "Command Center", icon: Activity, color: "slate" },
       { path: "/portal/system-health", label: "System Health", icon: Activity, color: "purple" },
+      { path: "/portal/site-health", label: "Site Health (SEO & Security)", icon: Activity, color: "purple" },
       { path: "/portal/leaderboard", label: "Leaderboard", icon: Trophy, color: "slate" },
     ],
   },

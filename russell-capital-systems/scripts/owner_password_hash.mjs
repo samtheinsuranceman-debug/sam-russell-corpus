@@ -27,8 +27,8 @@ async function prompt() {
 }
 
 const password = process.argv[2] ?? (await prompt());
-if (!password || password.length < 12) {
-  console.error("Use at least 12 characters.");
+if (!password || password.length < 12 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+  console.error("Use at least 12 characters with a letter and a number.");
   process.exit(1);
 }
 const hash = await bcrypt.hash(password, COST);

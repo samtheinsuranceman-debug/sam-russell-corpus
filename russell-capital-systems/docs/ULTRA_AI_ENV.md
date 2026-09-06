@@ -35,3 +35,13 @@ Notes:
   is sent to the server.
 - If any key is ever pasted into a chat, an email, or a commit, treat it as
   burned: rotate it at the provider immediately.
+
+
+## The every-page advisor answers six ways
+The blue microphone on every page asks `ultra.ask` with a `mode`: `surface`,
+`deeper`, `integrated`, `wiifm` (what's in it for you, told through the NFL
+frame), `legal` (citations and reference sources; never invents a citation),
+or `all` (the five, headed). `ultra.emailAnswer` mails the five answers as a
+PDF after the person confirms the address and ticks consent — it needs the
+mail transport (`RESEND_API_KEY` or `SMTP_*`) as well as an AI key. See
+docs/grok-handoff/17_EVERY_PAGE_ADVISOR.md.

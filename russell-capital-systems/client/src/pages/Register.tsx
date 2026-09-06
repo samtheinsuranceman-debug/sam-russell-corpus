@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { isStrongPassword, PASSWORD_MIN, PASSWORD_RULE } from "@shared/passwordPolicy";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,7 @@ export default function Register() {
   });
 
   const passwordChecks = {
-    length: password.length >= 8,
+    length: password.length >= PASSWORD_MIN,
     upper: /[A-Z]/.test(password),
     lower: /[a-z]/.test(password),
     number: /[0-9]/.test(password),
@@ -40,7 +41,7 @@ export default function Register() {
     setError("");
     if (!firstName || !lastName || !email || !password) { setError("Please fill in all fields"); return; }
     if (password !== confirmPassword) { setError("Passwords do not match"); return; }
-    if (!passwordChecks.length) { setError("Password must be at least 8 characters"); return; }
+    if (!isStrongPassword(password)) { setError(PASSWORD_RULE); return; }
     registerMutation.mutate({ email, password, firstName, lastName });
   };
 
@@ -140,7 +141,7 @@ export default function Register() {
                 {password.length > 0 && (
                   <div className="grid grid-cols-2 gap-1 mt-2">
                     {[
-                      { check: passwordChecks.length, label: "8+ characters" },
+                      { check: passwordChecks.length, label: "10+ characters" },
                       { check: passwordChecks.upper, label: "Uppercase" },
                       { check: passwordChecks.lower, label: "Lowercase" },
                       { check: passwordChecks.number, label: "Number" },

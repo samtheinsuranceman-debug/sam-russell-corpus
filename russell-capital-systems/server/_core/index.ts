@@ -15,6 +15,10 @@ import { startPulseSchedule } from "../power";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { registerSiteHardening, registerSiteRoutes } from "./siteHardening";
+import { registerVitalsRoutes } from "../vitals";
+import { startBackupSchedule } from "../backups";
+import { pingDatabase } from "../db";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -38,13 +42,11 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   app.disable("x-powered-by");
-  app.use((req, res, next) => {
-    res.setHeader("X-Content-Type-Options", "nosniff");
-    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-    if (req.path.startsWith("/api/")) res.setHeader("Cache-Control", "no-store");
-    next();
-  });
+  app.set("trust proxy", true);
+  // Canonical-host redirects, security headers (HSTS, CSP, frame, sniff,
+  // referrer, permissions) and gzip/brotli — see _core/siteHardening.ts.
+  await registerSiteHardening(app);
+  registerSiteRoutes(app, { dbPing: pingDatabase });
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
@@ -58,6 +60,8 @@ async function startServer() {
   registerScheduledRoutes(app);
   // Verified inbound events (signed) feed the plan runtime
   registerEventRoutes(app);
+  // Core Web Vitals beacons from real visitors (LCP, CLS, INP, FCP, TTFB)
+  registerVitalsRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",
@@ -81,6 +85,7 @@ async function startServer() {
   }
 
   server.listen(port, () => {
+    process.env.RCS_LISTEN_PORT = String(port); // the site-health page probes itself here
     console.log(`Server running on http://localhost:${port}/`);
     // Lead follow-up automation ticks every minute (FOLLOWUPS_DISABLED=1 turns it off).
     startFollowupScheduler();
@@ -88,6 +93,8 @@ async function startServer() {
     if (startHarvestSchedule()) console.log("[erosion] harvest sweep scheduled every", process.env.EROSION_HARVEST_DAYS, "days");
     // The political pulse (seats, bench, market odds) is keyless and free: weekly by default, POWER_PULSE_DAYS=0 turns it off.
     if (startPulseSchedule()) console.log("[power] pulse scheduled every", process.env.POWER_PULSE_DAYS ?? 7, "days");
+    // Daily database backup to S3-compatible storage or a local folder (BACKUP_DISABLED=1 turns it off).
+    if (startBackupSchedule()) console.log("[backup] daily backup scheduled at", process.env.BACKUP_HOUR_UTC ?? 4, ":00 UTC");
   });
 }
 
