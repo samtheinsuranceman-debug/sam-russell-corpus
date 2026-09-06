@@ -2250,6 +2250,6 @@ export interface ClientFactFinderJson {
 export interface ClientJourneyJson {
   coreQuestions: string[];
   emergentQuestion: string;
-  steps: Array<{ id: string; path: string; title: string; why: string; kind: string }>;
+  steps: Array<{ id: string; path: string; title: string; why: string; kind: string; visitedAt?: string | null }>;
   generatedBy: string;
 }

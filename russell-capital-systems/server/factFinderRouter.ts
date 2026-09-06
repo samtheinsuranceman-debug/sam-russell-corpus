@@ -7,6 +7,7 @@ import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
 import { deleteFactFinderForUser, getFactFinderForUser, saveFactFinderForUser } from "./factFinderDb";
 import { emptyFactFinder, factFinderCompleteness, factFinderSummary, type ClientFactFinder } from "@shared/clientFactFinder";
+import { computeWealthGenome } from "@shared/wealthGenome";
 
 const value = z.union([z.string().max(4000), z.number().finite(), z.boolean(), z.null()]);
 const sectionData = z.record(z.string().max(64), value);
@@ -42,6 +43,12 @@ export const factFinderRouter = router({
     const stored = await getFactFinderForUser(ctx.user.id);
     const c = factFinderCompleteness(stored?.data);
     return { text: factFinderSummary(stored?.data), complete: c.complete, percent: c.percent };
+  }),
+
+  /** The eight-dimension Wealth Genome, computed from this user's assessment. */
+  genome: protectedProcedure.query(async ({ ctx }) => {
+    const stored = await getFactFinderForUser(ctx.user.id);
+    return computeWealthGenome(stored?.data ?? null);
   }),
 
   reset: protectedProcedure.mutation(async ({ ctx }) => {

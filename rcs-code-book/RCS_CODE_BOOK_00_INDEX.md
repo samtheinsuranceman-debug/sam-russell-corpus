@@ -20,18 +20,18 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 
 ## Parts (10)
 
-- `RCS_CODE_BOOK_part01_of_10.md` — 181 files, 1,820,859 bytes
-- `RCS_CODE_BOOK_part02_of_10.md` — 160 files, 1,801,877 bytes
-- `RCS_CODE_BOOK_part03_of_10.md` — 74 files, 1,788,418 bytes
+- `RCS_CODE_BOOK_part01_of_10.md` — 182 files, 1,845,188 bytes
+- `RCS_CODE_BOOK_part02_of_10.md` — 161 files, 1,805,794 bytes
+- `RCS_CODE_BOOK_part03_of_10.md` — 74 files, 1,793,264 bytes
 - `RCS_CODE_BOOK_part04_of_10.md` — 33 files, 1,838,678 bytes
 - `RCS_CODE_BOOK_part05_of_10.md` — 31 files, 1,838,522 bytes
 - `RCS_CODE_BOOK_part06_of_10.md` — 29 files, 1,826,443 bytes
 - `RCS_CODE_BOOK_part07_of_10.md` — 29 files, 1,801,874 bytes
 - `RCS_CODE_BOOK_part08_of_10.md` — 30 files, 1,824,210 bytes
 - `RCS_CODE_BOOK_part09_of_10.md` — 50 files, 1,838,063 bytes
-- `RCS_CODE_BOOK_part10_of_10.md` — 40 files, 415,093 bytes
+- `RCS_CODE_BOOK_part10_of_10.md` — 40 files, 414,846 bytes
 
-**Total: 657 files across 10 parts.**
+**Total: 659 files across 10 parts.**
 
 ## File → part map
 
@@ -168,6 +168,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `shared/timeMachineEngine.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `shared/types.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `shared/ultraEngine.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `shared/wealthGenome.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `shared/weaponizeEngines.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/context.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/cookies.ts` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -270,6 +271,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/components/HomeTrustSections.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/IbbotsonCredibilityOverlay.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/IbbotsonYearSelector.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
+- `client/src/components/JourneyProgressBar.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/ManagedAuthGuard.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/ManusDialog.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/Map.tsx` → `RCS_CODE_BOOK_part02_of_10.md`

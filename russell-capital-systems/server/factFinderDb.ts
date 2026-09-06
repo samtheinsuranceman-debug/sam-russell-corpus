@@ -55,3 +55,17 @@ export async function getLatestJourneyForUser(userId: number): Promise<{ id: num
   if (!row) return null;
   return { id: row.id, questions: jsonColumn<string[]>(row.questions, []), journey: jsonColumn<ClientJourneyJson>(row.journey, { coreQuestions: [], emergentQuestion: "", steps: [], generatedBy: "" }), createdAt: row.createdAt };
 }
+
+/** Stamps visitedAt on one step of a stored journey (the client opened that page). */
+export async function markJourneyStepVisited(userId: number, journeyId: number, stepId: string): Promise<ClientJourneyJson | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(clientJourneys).where(eq(clientJourneys.id, journeyId)).limit(1);
+  const row = rows[0];
+  if (!row || row.userId !== userId) return null;
+  const journey = jsonColumn<ClientJourneyJson>(row.journey, { coreQuestions: [], emergentQuestion: "", steps: [], generatedBy: "" });
+  let changed = false;
+  journey.steps = journey.steps.map((st) => (st.id === stepId && !st.visitedAt ? ((changed = true), { ...st, visitedAt: new Date().toISOString() }) : st));
+  if (changed) await db.update(clientJourneys).set({ journey }).where(eq(clientJourneys.id, journeyId));
+  return journey;
+}
