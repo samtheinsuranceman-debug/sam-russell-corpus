@@ -45,7 +45,7 @@ export const forgivenessRouter = router({
     attendingIncome: z.number().nonnegative().optional(), incomeGrowth: z.number().min(-0.1).max(0.2).default(0.03),
     householdSize: z.number().int().min(1).max(12).default(1), dependents: z.number().int().min(0).max(10).default(0), filing: z.enum(["single", "joint", "hoh", "separate"]).optional(),
     plan: z.enum(["ibr", "ibr_old", "paye", "rap", "standard"]).default("ibr"),
-    primaryCare: z.boolean().default(false), willingHPSA: z.boolean().default(false), willingIHS: z.boolean().default(false), willingVA: z.boolean().default(false), research: z.boolean().default(false), disciplined: z.boolean().default(true),
+    primaryCare: z.boolean().default(false), willingHPSA: z.boolean().default(false), willingIHS: z.boolean().default(false), willingVA: z.boolean().default(false), research: z.boolean().default(false), disciplined: z.boolean().default(true), state: z.string().length(2).toUpperCase().optional(),
     nominalReturn: z.number().min(-0.2).max(0.3).default(0.07), taxDrag: z.number().min(0).max(0.6).default(0.25), wrapperCost: z.number().min(0).max(0.1).default(0.01),
     seal: z.boolean().default(false),
   })).mutation(async ({ ctx, input }) => {

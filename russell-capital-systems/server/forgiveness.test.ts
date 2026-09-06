@@ -74,7 +74,8 @@ describe("the paths", () => {
     expect(p.forgivenAmount).toBeLessThan(320_000);
     expect(p.taxOnForgiveness).toBe(0);
     expect(p.probabilityParts!.programSurvives).toBeCloseTo(programSurvival(10, prob), 3);
-    expect(p.probability).toBeCloseTo(p.probabilityParts!.programSurvives * 0.9, 3);
+    expect(p.probabilityParts!.staysEligible).toBeCloseTo(0.97 ** 10, 3);
+    expect(p.probability).toBeCloseTo(p.probabilityParts!.programSurvives * p.probabilityParts!.staysEligible! * 0.9, 2);
     expect(p.citations).toContain("26 U.S.C. §108(f)(1)");
     const forProfit = pslfPath({ ...md, employer: "for_profit" }, prob);
     expect(forProfit.eligible).toBe(false); expect(forProfit.probability).toBe(0);
@@ -84,11 +85,11 @@ describe("the paths", () => {
     expect(late.monthsToForgiveness).toBe(36);
     expect(pslfPath({ ...md, disciplined: false }, prob).probabilityParts!.borrowerExecutes).toBe(0.6);
   });
-  it("survival tilts with who is expected to hold the levers, from a clean 19-year record", () => {
-    expect(DEFAULT_BASE_HAZARD).toBeCloseTo(1 / 21, 4);
+  it("survival tilts with who is expected to hold the levers, from a clean 19-year record (Jeffreys base, regulatory term)", () => {
+    expect(DEFAULT_BASE_HAZARD).toBeCloseTo(0.5 / 20, 4);
     const left = programSurvival(10, { expectedLeverShare: 1 }), mid = programSurvival(10, { expectedLeverShare: 0.5 }), right = programSurvival(10, { expectedLeverShare: 0 });
     expect(left).toBeGreaterThan(mid); expect(mid).toBeGreaterThan(right);
-    expect(mid).toBeCloseTo((1 - 1 / 21) ** 10, 3);
+    expect(mid).toBeCloseTo(((1 - 0.025) * (1 - 0.05)) ** 10, 3);
     expect(programSurvival(0, { expectedLeverShare: 0.5 })).toBe(1);
   });
   it("IDR forgiveness is later, taxable after 2025, and often zero at attending income", () => {

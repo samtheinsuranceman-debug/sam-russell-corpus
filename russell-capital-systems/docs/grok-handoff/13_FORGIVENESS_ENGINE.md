@@ -83,12 +83,18 @@ thinking") and the references.
   tax-free (§108(f)(1)). Odds = program survival × borrower execution.
   Survival: no statutory change has removed PSLF from existing borrowers in
   19 years; the FY2018 and FY2019 budgets proposed ending it for new
-  borrowers and Congress did not act; the 2025 law kept it. Base hazard is the
-  Laplace estimate 1/(19+2) a year, tilted ×0.5 (fully left) to ×1.5 (fully
-  right) by the expected lever share from the power layer over the pursuit
-  period — an assumption, named on the page. Execution 0.9 with annual
+  borrowers and Congress did not act; the 2025 law kept it. Three terms,
+  after the council's review (Gemini 2.5 Pro and GPT-5 via OpenRouter, Sept.
+  6, 2026): a statutory hazard on the Jeffreys estimate 0.5/(19+1) ≈ 2.5 % a
+  year, tilted ×0.5 (fully left) to ×1.5 (fully right) by the expected lever
+  share from the power layer; a regulatory hazard of twice that for rule
+  changes that cost existing borrowers credit; and persistence, 97 % a year
+  of staying in qualifying employment. Execution 0.9 with annual
   certification and an advisor watching, else 0.6 (GAO's 99 % early denial
-  rate was execution, not program, failure).
+  rate was execution, not program, failure). Every one is an assumption,
+  named on the page. The council's 0.9 %-odds counter-example assumed a 25 %
+  annual regulatory hazard, which the record does not support; it is noted
+  here as the bear case, not adopted.
 - **IDR**: 20 / 25 / 30 years by plan; taxable at the federal level after
   2025; hazard 1.5× PSLF's because plan terms are partly regulatory and the
   8th Circuit narrowed regulatory forgiveness. At attending income the loan
