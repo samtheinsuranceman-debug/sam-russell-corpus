@@ -1,61 +1,49 @@
-# DNS + mail records for russellcapitalsystems.com (state on 2026-09-06)
+# DNS + mail records for russellcapitalsystems.com (applied 2026-09-06)
 
-Authoritative DNS is at GoDaddy (`ns43/ns44.domaincontrol.com`). Nothing connected
-to the build session can *write* GoDaddy DNS today; this file is the exact record
-set so whoever gets write access applies it once and never guesses.
+Authoritative DNS is at GoDaddy (`ns43/ns44.domaincontrol.com`). DNS is now
+written **through Make.com**, never through GoDaddy's panel: the Make team
+"My Team" holds a GoDaddy connection (`GoDaddy — russellcapitalsystems.com`,
+API key + secret, created once by the owner) and two scenarios:
 
-## What is already correct (verified from outside)
+| Scenario | What it does |
+|---|---|
+| `RCS DNS — read zone (russellcapitalsystems.com)` | lists every record and writes them to the data store `RCS DNS zone snapshot` as `TYPE\|name\|data` keys |
+| `RCS DNS — apply records (russellcapitalsystems.com)` | raw GoDaddy v1 API calls (DELETE / PUT / PATCH) for the change set below; stores `apply\|<codes>` on success |
 
-| Host | Type | Value | Result |
+Edit the apply scenario's blueprint for the next change set and run it. The
+GoDaddy DNS API is open to any account with one registered domain (policy
+relaxed April 2026).
+
+## The zone as it stands
+
+| Host | Type | Value | Purpose |
 |---|---|---|---|
-| `@` | A ×4 | 185.199.108–111.153 | `https://russellcapitalsystems.com/` → 200, GitHub Pages, HTTPS enforced |
-| `www` | A ×4 | 185.199.108–111.153 | `https://www.russellcapitalsystems.com/` → 200, redirects to apex |
-| `@` | MX | Google | mail receives |
-| `@` | TXT | SPF (Google) | passes `pnpm mail:check` |
-| `_dmarc` | TXT | `p=quarantine` | passes `pnpm mail:check` |
+| `@` | A ×4 | 185.199.108–111.153 | GitHub Pages (apex) |
+| `www` | **CNAME** | `samtheinsuranceman-debug.github.io` | GitHub Pages (was 4 A records; replaced 2026-09-06) |
+| `@` | MX ×5 | Google (`aspmx.l.google.com` …) | inbound mail |
+| `@` | TXT | `v=spf1 include:dc-aa8e722993._spfm.russellcapitalsystems.com ~all` | SPF (Google, via GoDaddy's flattening host) |
+| `dc-aa8e722993._spfm` | TXT | `v=spf1 include:_spf.google.com ~all` | SPF include target |
+| `_dmarc` | TXT | `v=DMARC1; p=quarantine; adkim=r; aspf=r; rua=…` | DMARC |
+| `resend._domainkey` | **TXT** | `p=MIGf…AQAB` (Resend key) | **DKIM (added 2026-09-06)** |
+| `send` | **MX 10** | `feedback-smtp.us-east-1.amazonses.com` | Resend return-path (added) |
+| `send` | **TXT** | `v=spf1 include:amazonses.com ~all` | Resend return-path SPF (added) |
+| `pay` | CNAME | `paylinks.commerce.godaddy.com` | GoDaddy pay links (pre-existing) |
+| `_domainconnect` | CNAME | `_domainconnect.gd.domaincontrol.com` | GoDaddy Domain Connect (pre-existing) |
+| `@` | TXT | Google site/recovery verifications, `2048` | pre-existing |
 
-The site works on both hosts. The remaining items are a cosmetic GitHub warning and
-mail deliverability.
+Verified after the change from public DNS: `www` resolves to the CNAME, the DKIM
+key, `send` MX and `send` TXT all resolve, and `pnpm mail:check
+russellcapitalsystems.com` reports MX ✔ SPF ✔ DKIM ✔ DMARC ✔.
 
-## Records to add / change
+## Resend
 
-| # | Host | Type | Value | Why |
-|---|---|---|---|---|
-| 1 | `www` | **CNAME** (replace the 4 A records) | `samtheinsuranceman-debug.github.io` | clears GitHub's `InvalidARecordError` warning on the custom domain |
-| 2 | `resend._domainkey` | TXT | `p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+ano7QMpNpZRbwElndAaI7D6KmJAkYOfZyCLP2TTBXdP2pFHVjPV2OQsEtKTVgtR/X9rlz9+fTWs3DMz1bjgQUJpUF+L4fSnOiXigTyLM0WVAaeDHOr2/kU42T2On8D2YxRUF6bKjBmSZWAOyWm9XnaxjN9bM7F3gGpMNZewMyQIDAQAB` | DKIM — the missing piece behind mail landing in spam |
-| 3 | `send` | MX priority 10 | `feedback-smtp.us-east-1.amazonses.com` | Resend return-path (bounces) |
-| 4 | `send` | TXT | `v=spf1 include:amazonses.com ~all` | SPF for the return-path subdomain |
+Domain `russellcapitalsystems.com` (id `4d58f44c-1349-4b02-aa3e-95e88ebd72b1`,
+us-east-1) was added and verification triggered once the records resolved.
+When it shows *verified*, set `RESEND_API_KEY` and `MAIL_FROM` (an address on
+this domain) on the host and marketing + transactional mail goes out signed.
 
-Records 2–4 came from adding `russellcapitalsystems.com` to the Resend account
-(domain id `4d58f44c-1349-4b02-aa3e-95e88ebd72b1`, region us-east-1, status
-`not_started`). Once they resolve, run Resend → verify domain, then
-`pnpm mail:check russellcapitalsystems.com` should show DKIM ✔.
+## GitHub Pages
 
-Leave the existing apex SPF, MX and DMARC alone — they are correct.
-
-## How to apply them without opening GoDaddy's DNS panel
-
-Make.com has a native **GoDaddy** app (modules: Search DNS Records, Update DNS
-Records, Delete DNS Records, Get/Update a Domain, Make an API Call). It needs one
-GoDaddy **API key + secret** (a Make "basic" connection). That key is the single
-thing only the account holder can create, at `developer.godaddy.com` → API Keys →
-Production.
-
-A credential request is already waiting in Make so the key never passes through
-chat or code:
-
-`https://us2.make.com/2886173/credentials-requests/inbox?requestId=aa0d7760-5695-4c21-9126-b91a7016b756`
-
-After the connection exists, a one-shot scenario applies rows 1–4 with the
-GoDaddy modules (`updateADNSRecords` for `www` CNAME and the two `send` records,
-`updateADNSRecords` for the `resend._domainkey` TXT) and every future DNS change
-runs the same way. Alternatives that avoid GoDaddy entirely do not exist: moving
-DNS to Cloudflare still requires a nameserver change at the registrar.
-
-## What was tried and cannot write GoDaddy DNS
-
-- GoDaddy MCP connector: availability/suggest only.
-- Zapier: no GoDaddy DNS app (only a "GoDaddy CRM" app).
-- Cloudflare: token lacks `Zone:Create`; and NS change would still be at GoDaddy.
-- Direct API from the build session: `api.godaddy.com` is blocked by the proxy.
-- Perplexity Computer, Vercel, Netlify: no GoDaddy DNS access.
+`www` now points at GitHub by CNAME, which is what Pages asks for; the
+`InvalidARecordError` warning on the custom-domain panel clears on its next
+DNS check.
