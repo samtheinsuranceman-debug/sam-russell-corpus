@@ -7,6 +7,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ULTRA_PROFILE_KEY } from "@/components/VoiceAdvisor";
+import PageBackdrop from "@/components/PageBackdrop";
 
 const QUESTIONS: Array<{ id: string; q: string; hint?: string }> = [
   { id: "background", q: "Tell us your background — family, work, how you got to where you are financially." },
@@ -55,8 +56,9 @@ export default function FactFinderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100">
-      <div className="mx-auto max-w-3xl">
+    <div className="relative min-h-screen bg-slate-950 px-4 py-10 text-slate-100">
+      <PageBackdrop src="/rcs-city-emerald.webp" phoneSrc="/rcs-city-spire.webp" alt="Emerald-lit city skyline at dawn with a river winding through it" fade="#020617" position="center 30%" />
+      <div className="relative z-10 mx-auto max-w-3xl">
         <p className="text-xs uppercase tracking-widest text-amber-500">Russell Capital Systems</p>
         <h1 className="mt-1 text-3xl font-bold">Fact Finder</h1>
         <p className="mt-2 text-sm text-slate-400">

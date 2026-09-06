@@ -9,6 +9,7 @@ import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ULTRA_PROFILE_KEY } from "@/components/VoiceAdvisor";
+import PageBackdrop from "@/components/PageBackdrop";
 import {
   defaultModules, runUltraScenario, MODULE_CATALOG, ULTRA_DISCLOSURE,
   type ClientProfile, type UltraModules, type WindowPlan, type ModuleKey, type UltraResult,
@@ -127,8 +128,9 @@ export default function UltraCalculatorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100">
-      <div className="mx-auto max-w-6xl">
+    <div className="relative min-h-screen bg-slate-950 px-4 py-10 text-slate-100">
+      <PageBackdrop src="/rcs-city-harbor.webp" phoneSrc="/rcs-city-towers.webp" alt="Green-lit harbour city at night, towers reflected in the water" fade="#020617" />
+      <div className="relative z-10 mx-auto max-w-6xl">
         <p className="text-xs uppercase tracking-widest text-amber-500">Russell Capital Systems</p>
         <h1 className="mt-1 text-3xl font-bold">The Decade Machine</h1>
         <p className="text-sm font-medium text-amber-300/80">The Ultra Calculator — every calculator, one machine, decade after decade.</p>
