@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 133
+-- Tables: 134
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -1295,6 +1295,18 @@ CREATE TABLE `planning_cases` (
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `planning_cases_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `power_snapshots` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`lever` varchar(40) NOT NULL,
+	`measure` varchar(60) NOT NULL,
+	`value` decimal(12,4) NOT NULL,
+	`asOf` varchar(10) NOT NULL,
+	`source` varchar(120) NOT NULL,
+	`detail` varchar(500),
+	`fetchedAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `power_snapshots_id` PRIMARY KEY(`id`),
+	CONSTRAINT `power_snapshots_once` UNIQUE(`lever`,`measure`,`asOf`,`source`)
+);
 CREATE TABLE `prediction_bets` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`userId` int NOT NULL,
@@ -2048,6 +2060,6 @@ CREATE TABLE `xp_transactions` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `xp_transactions_id` PRIMARY KEY(`id`)
 );
-CREATE INDEX `plan_events_lead` ON `plan_events` (`leadId`);
+CREATE INDEX `power_snapshots_lever` ON `power_snapshots` (`lever`,`measure`,`asOf`);
 
 SET FOREIGN_KEY_CHECKS = 1;

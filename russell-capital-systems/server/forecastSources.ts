@@ -342,7 +342,7 @@ let sweepTimer: NodeJS.Timeout | null = null;
 export function startHarvestSchedule(env: NodeJS.ProcessEnv = process.env): boolean {
   const days = Number(env.EROSION_HARVEST_DAYS ?? 0);
   if (!Number.isFinite(days) || days <= 0 || sweepTimer) return false;
-  const run = () => harvestAll().then((r) => console.log("[erosion] harvest sweep:", r.map((x) => `${x.sourceId}:${x.harvested ? `${x.stored} stored` : "skipped"}`).join(" "))).then(() => scorePanel()).then((sc) => console.log("[erosion] scored", sc.scored.length, "claims; consistency regraded for", Object.keys(sc.consistency).length, "sources")).catch((e) => console.warn("[erosion] sweep failed", String(e).slice(0, 160)));
+  const run = () => import("./power").then(({ powerSweep }) => powerSweep()).then((p) => console.log("[erosion] pulse:", JSON.stringify(p))).then(() => harvestAll()).then((r) => console.log("[erosion] harvest sweep:", r.map((x) => `${x.sourceId}:${x.harvested ? `${x.stored} stored` : "skipped"}`).join(" "))).then(() => scorePanel()).then((sc) => console.log("[erosion] scored", sc.scored.length, "claims; consistency regraded for", Object.keys(sc.consistency).length, "sources")).catch((e) => console.warn("[erosion] sweep failed", String(e).slice(0, 160)));
   setTimeout(run, 60_000).unref?.();
   sweepTimer = setInterval(run, days * 86_400_000);
   sweepTimer.unref?.();

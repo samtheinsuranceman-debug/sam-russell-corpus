@@ -13,7 +13,7 @@ import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { TrendingDown, Scale, Flame, Target, BookOpen } from "lucide-react";
+import { TrendingDown, Scale, Flame, Target, BookOpen, Landmark } from "lucide-react";
 
 const CARD = "rounded-2xl border border-amber-400/20 bg-white/[0.04]";
 const INPUT = "rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white w-full";
@@ -27,6 +27,7 @@ export default function Erosion() {
   const traj = trpc.erosion.trajectory.useQuery(undefined, { refetchOnWindowFocus: false });
   const infl = trpc.erosion.inflation.useQuery(undefined, { refetchOnWindowFocus: false });
   const panel = trpc.erosion.panel.useQuery(undefined, { refetchOnWindowFocus: false });
+  const power = trpc.erosion.power.useQuery(undefined, { refetchOnWindowFocus: false });
   const utils = trpc.useUtils();
   const [income, setIncome] = useState<string>("");
   const [growth, setGrowth] = useState(3);
@@ -43,6 +44,7 @@ export default function Erosion() {
   const harvest = trpc.erosion.harvestSource.useMutation({ onSuccess: (r) => { toast[r.harvested ? "success" : "warning"](r.harvested ? `${r.voices.join(", ")} read ${r.pageChars.toLocaleString()} characters: ${r.reported} reported, ${r.verified} quote-verified, ${r.stored} queued${r.duplicates ? `, ${r.duplicates} already queued` : ""}` : r.reason); utils.erosion.harvests.invalidate(); }, onError: (e) => toast.error(e.message) });
   const harvestEverything = trpc.erosion.harvestAll.useMutation({ onSuccess: (rs) => { const stored = rs.reduce((s, r) => s + (r.harvested ? r.stored : 0), 0); toast.success(`${rs.length} sources read, ${stored} figures queued for review`); utils.erosion.harvests.invalidate(); }, onError: (e) => toast.error(e.message) });
   const score = trpc.erosion.scorePanel.useMutation({ onSuccess: (r) => { toast.success(`${r.scored.length} claims scored against published outcomes (${r.skipped} not yet closed or without a series); consistency regraded for ${Object.keys(r.consistency).length} sources`); utils.erosion.panel.invalidate(); utils.erosion.trajectory.invalidate(); }, onError: (e) => toast.error(e.message) });
+  const pulse = trpc.erosion.powerPulse.useMutation({ onSuccess: (r) => { toast.success(`Pulse taken: Congress ${r.congress}, judiciary ${r.judiciary}, markets ${r.markets} readings; ${r.stored} new`); utils.erosion.power.invalidate(); utils.erosion.trajectory.invalidate(); }, onError: (e) => toast.error(e.message) });
   const decide = trpc.erosion.reviewHarvest.useMutation({ onSuccess: (r) => { toast.success(r.status === "approved" ? "Added to the panel" : "Rejected"); utils.erosion.harvests.invalidate(); utils.erosion.panel.invalidate(); utils.erosion.trajectory.invalidate(); }, onError: (e) => toast.error(e.message) });
   const review = trpc.erosion.reviewSource.useMutation({ onSuccess: (r) => { toast[r.reviewed ? "success" : "warning"](r.reviewed ? `Council graded evidence ${r.evidence} (${r.voices.join(", ")})` : r.reason); utils.erosion.panel.invalidate(); utils.erosion.trajectory.invalidate(); }, onError: (e) => toast.error(e.message) });
   const basket = Object.entries(weights).map(([categoryId, weight]) => ({ categoryId, weight }));
@@ -59,19 +61,65 @@ export default function Erosion() {
           <p className="mt-2 max-w-3xl text-sm text-slate-300">Taxes and prices both erode what your money buys. The tax path here is not one person's guess: it is the published record of every rate change since 1946 blended with a weighted panel of long-horizon forecasters, with a probability and a confidence score at every five-year mark. The price path is the Bureau of Labor Statistics' own category data. Then both run against your plan.</p>
         </div>
 
+        {/* 0. Who holds the levers */}
+        <div className={`${CARD} p-5`} aria-label="Who holds the levers">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-semibold text-white"><Landmark size={14} className="mr-1 inline text-amber-300" /> Who holds the levers · and the odds they change hands</p>
+            {isOwner && <button type="button" className={BTN} disabled={pulse.isPending} onClick={() => pulse.mutate()} title="Reads Congress, the federal bench and the prediction markets now and stores the readings">{pulse.isPending ? "Reading…" : "Take the pulse now"}</button>}
+          </div>
+          <p className="mt-1 text-xs text-slate-400">The tax path is not read in a vacuum. Every {`{5…40}`}-year window since 1946 is sorted by who held the president, Senate and House during it, so the base rate the trajectory uses is the record of windows like the one ahead. Today's holders come from live seat counts; the odds of a change come from the prediction markets, week by week.</p>
+          {power.data && (() => {
+            const n = power.data.now; const P = (p: "D" | "R") => (p === "D" ? "Democratic" : "Republican");
+            const lever = (k: "president" | "senate" | "house") => { const m = n.markets[k]; return <div key={k} className="rounded-xl border border-white/10 p-3 text-xs"><p className="text-slate-400">{k === "president" ? "President" : k === "senate" ? "Senate" : "House"} · weight {Math.round(power.data!.leverWeights[k] * 100)}%</p><p className="text-base font-semibold text-white">{P(n.today[k])}</p>{n.seats[k as "senate" | "house"] && <p className="text-slate-500">{n.seats[k as "senate" | "house"]!.dem} D · {n.seats[k as "senate" | "house"]!.rep} R · as of {n.seats[k as "senate" | "house"]!.asOf}</p>}<p className="mt-1 text-slate-300">Next election: {m ? <><span className="font-semibold text-amber-200">{pct(m.pDem, 0)}</span> Democratic · {m.sources.join(" + ")} · {m.asOf}</> : <span className="text-slate-500">no market read yet</span>}</p>{m?.detail && <p className="text-[10px] text-slate-600">{m.detail}</p>}</div>; };
+            return (
+              <div className="mt-3 space-y-3">
+                <div className="grid gap-2 md:grid-cols-4">
+                  {(["president", "senate", "house"] as const).map(lever)}
+                  <div className="rounded-xl border border-white/10 p-3 text-xs"><p className="text-slate-400">Federal bench · sitting judges appointed by Democratic presidents</p>{n.judiciary ? <><p className="text-base font-semibold text-white">{pct(n.judiciary.all, 0)}</p><p className="text-slate-500">Supreme {pct(n.judiciary.supreme, 0)} · appeals {pct(n.judiciary.appeals, 0)} · district {pct(n.judiciary.district, 0)} · {n.judiciary.asOf}</p></> : <p className="text-slate-500">no reading yet (Federal Judicial Center export)</p>}</div>
+                </div>
+                <div className="grid gap-2 md:grid-cols-3 text-xs">
+                  <div className="rounded-xl border border-white/10 p-3"><p className="text-slate-400">Democratic share of the levers today</p><p className="text-lg font-semibold text-white">{pct(n.today.leverShare, 0)}</p><p className="text-slate-500">{n.today.trifecta ? `${P(n.today.trifecta)} trifecta` : "divided government"} · {n.today.source}</p></div>
+                  <div className="rounded-xl border border-amber-400/30 p-3"><p className="text-slate-400">Expected share once the {power.data.seatedYear} government is seated</p><p className="text-lg font-semibold text-amber-200">{pct(n.expectedShareNext, 0)}</p><p className="text-slate-500">{n.marketsSpoke} of 3 levers priced by the markets; the rest assume today's holder. Settles toward the long-run {pct(power.data.longRunShare, 0)} after one term.</p></div>
+                  <div className="rounded-xl border border-white/10 p-3"><p className="text-slate-400">Governors, legislatures, mayors</p><p className="text-slate-300">Read by the AI council from the National Governors Association, NCSL and city records through the harvest path, quote-verified, approved by the owner. Not machine feeds.</p></div>
+                </div>
+                <div className="overflow-x-auto">
+                  <p className="text-xs font-semibold text-white">The record: odds the top rate is higher after N years, by who held the levers during them</p>
+                  <table className="mt-1 w-full text-xs">
+                    <thead><tr className="text-left text-slate-500"><th className="py-1 pr-3">Horizon</th><th className="pr-3">All windows</th><th className="pr-3">Left held ≥ ⅔</th><th className="pr-3">Divided</th><th className="pr-3">Right held ≥ ⅔</th><th>Used for the trajectory</th></tr></thead>
+                    <tbody>{power.data.odds.map((o) => { const tp = traj.data?.points.find((p) => p.horizonYears === o.horizonYears)?.power; const cell = (x: { pUp: number; windows: number; minWindows?: number }) => <>{x.windows ? pct(x.pUp, 0) : "—"} <span className="text-slate-600">({x.windows} windows{x.windows && x.windows < o.minWindows ? ", thin" : ""})</span></>; return <tr key={o.horizonYears} className="border-t border-white/5 text-slate-200"><td className="py-1 pr-3">{o.horizonYears}y</td><td className="pr-3">{cell(o.all)}</td><td className="pr-3">{cell(o.left)}</td><td className="pr-3">{cell(o.divided)}</td><td className="pr-3">{cell(o.right)}</td><td className="text-slate-400">{tp ? `${tp.bucket} (expected share ${pct(tp.leverShareExpected, 0)})${tp.fellBack ? " → thin, unconditional used" : ""} · swing ${tp.powerSwing >= 0 ? "+" : ""}${Math.round(tp.powerSwing * 100)} pts` : "—"}</td></tr>; })}</tbody>
+                  </table>
+                  <p className="mt-1 text-[11px] text-slate-500">"Swing" is how much the blended odds at that horizon move between a left-held and a right-held window, everything else equal. Buckets under {power.data.odds[0]?.minWindows} windows are too thin to lean on and fall back to all windows. Sources: {power.data.recordSources.join("; ")}.</p>
+                </div>
+                {power.data.inflationByControl && (
+                  <div className="text-xs">
+                    <p className="font-semibold text-white">Inflation under each configuration, {power.data.inflationByControl.from}–{power.data.inflationByControl.to} (history, not a forecast)</p>
+                    <p className="mt-1 text-slate-300">Left held ≥ ⅔: {pct(power.data.inflationByControl.byBucket.left.meanInflation)} a year over {power.data.inflationByControl.byBucket.left.years} years · divided: {pct(power.data.inflationByControl.byBucket.divided.meanInflation)} over {power.data.inflationByControl.byBucket.divided.years} · right held ≥ ⅔: {pct(power.data.inflationByControl.byBucket.right.meanInflation)} over {power.data.inflationByControl.byBucket.right.years}. Democratic trifecta {pct(power.data.inflationByControl.byTrifecta.D.meanInflation)} ({power.data.inflationByControl.byTrifecta.D.years} yrs) · Republican trifecta {pct(power.data.inflationByControl.byTrifecta.R.meanInflation)} ({power.data.inflationByControl.byTrifecta.R.years} yrs) · divided {pct(power.data.inflationByControl.byTrifecta.none.meanInflation)} ({power.data.inflationByControl.byTrifecta.none.years} yrs).</p>
+                    <p className="text-[11px] text-slate-500">{power.data.inflationByControl.caveat} Source: {power.data.inflationByControl.source}.</p>
+                  </div>
+                )}
+                {(() => {
+                  const keys = ["president.p_dem_next", "senate.p_dem_next", "house.p_dem_next", "judiciary.dem_share_all", "senate.dem_share", "house.dem_share"].filter((k) => (power.data!.series[k]?.length ?? 0) > 1);
+                  if (!keys.length) return <p className="text-[11px] text-slate-500">The pulse over time appears here once there are two or more readings; the weekly sweep (EROSION_HARVEST_DAYS) takes one every run.</p>;
+                  return <div className="grid gap-2 md:grid-cols-3">{keys.map((k) => { const pts = power.data!.series[k]!; const xs = pts.map((_, i) => (i / (pts.length - 1)) * 200), ys = pts.map((p) => 40 - p.value * 36); return <div key={k} className="rounded-xl border border-white/10 p-2 text-[11px] text-slate-400"><p className="text-slate-300">{k.replace(".", " · ").replace(/_/g, " ")}</p><svg viewBox="0 0 200 44" className="mt-1 h-11 w-full"><polyline fill="none" stroke="#fbbf24" strokeWidth="1.5" points={xs.map((x, i) => `${x},${ys[i]}`).join(" ")} /></svg><p>{pts[0]!.asOf} → {pts[pts.length - 1]!.asOf}: {pct(pts[0]!.value, 0)} → {pct(pts[pts.length - 1]!.value, 0)}</p></div>; })}</div>;
+                })()}
+              </div>
+            );
+          })()}
+        </div>
+
         {/* 1. Tax trajectory */}
         <div className={`${CARD} p-5`} aria-label="Tax trajectory">
           <p className="text-sm font-semibold text-white"><Scale size={14} className="mr-1 inline text-amber-300" /> The tax trajectory · top federal rate today {history.data?.topMarginal.at(-1)?.value}%</p>
-          <p className="mt-1 text-xs text-slate-400">History: every {`{5…40}`}-year window since 1946. Panel: {traj.data?.panel.length ?? 0} forecasters, {traj.data?.claimsUsed ?? 0} published claims. The blend leans on the panel only where it has actually spoken.</p>
+          <p className="mt-1 text-xs text-slate-400">History: every {`{5…40}`}-year window since 1946. Panel: {traj.data?.panel.length ?? 0} forecasters, {traj.data?.claimsUsed ?? 0} published claims. The blend leans on the panel only where it has actually spoken. The history term is the record of windows held the way the levers are expected to be held (see above).</p>
           <div className="mt-3 overflow-x-auto">
             <table className="w-full text-xs">
-              <thead><tr className="text-left text-slate-500"><th className="py-1 pr-3">Horizon</th><th className="pr-3">Year</th><th className="pr-3">History: P(higher)</th><th className="pr-3">Typical move</th><th className="pr-3">Panel direction</th><th className="pr-3">Panel coverage</th><th className="pr-3">P(higher)</th><th className="pr-3">Expected top rate</th><th className="pr-3">Burden ×</th><th>Confidence</th></tr></thead>
+              <thead><tr className="text-left text-slate-500"><th className="py-1 pr-3">Horizon</th><th className="pr-3">Year</th><th className="pr-3">History: P(higher)</th><th className="pr-3">Typical move</th><th className="pr-3">Panel direction</th><th className="pr-3">Panel coverage</th><th className="pr-3">P(higher)</th><th className="pr-3">Expected top rate</th><th className="pr-3">Burden ×</th><th className="pr-3">Confidence</th><th>Power swing</th></tr></thead>
               <tbody>
                 {(traj.data?.points ?? []).map((p) => (
                   <tr key={p.horizonYears} className="border-t border-white/5 text-slate-200">
                     <td className="py-1 pr-3">{p.horizonYears}y</td><td className="pr-3">{p.year}</td><td className="pr-3">{pct(p.history.pUp, 0)}</td><td className="pr-3">±{p.history.meanAbsChange.toFixed(1)} pts</td>
                     <td className="pr-3">{p.consensus.claims ? (p.consensus.direction > 0 ? "up" : p.consensus.direction < 0 ? "down" : "flat") : "—"}</td><td className="pr-3">{pct(p.consensus.coverage, 0)}</td>
-                    <td className="pr-3 font-semibold text-white">{pct(p.pHigher, 0)}</td><td className="pr-3">{p.expectedTopRate.toFixed(1)}%</td><td className="pr-3">{p.burdenMultiplier.toFixed(3)}</td><td>{pct(p.confidence, 0)}</td>
+                    <td className="pr-3 font-semibold text-white">{pct(p.pHigher, 0)}</td><td className="pr-3">{p.expectedTopRate.toFixed(1)}%</td><td className="pr-3">{p.burdenMultiplier.toFixed(3)}</td><td className="pr-3">{pct(p.confidence, 0)}</td><td className={p.power ? (p.power.powerSwing > 0 ? "text-rose-300" : p.power.powerSwing < 0 ? "text-emerald-300" : "text-slate-400") : "text-slate-600"}>{p.power ? `${p.power.powerSwing >= 0 ? "+" : ""}${Math.round(p.power.powerSwing * 100)} pts` : "—"}</td>
                   </tr>
                 ))}
               </tbody>
