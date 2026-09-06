@@ -16,7 +16,7 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
 import { ADVISOR_SYSTEM, configuredProviders, leadModel } from "./ultraAI";
-import { getFactFinderForUser, getLatestJourneyForUser, saveJourneyForUser } from "./factFinderDb";
+import { getFactFinderForUser, getLatestJourneyForUser, markJourneyStepVisited, saveJourneyForUser } from "./factFinderDb";
 import { factFinderCompleteness, factFinderSummary, type ClientFactFinder } from "@shared/clientFactFinder";
 import { JOURNEY_CATALOG } from "@shared/journeyCatalog";
 import { buildJourney, factFinderSignals, fmtMoney, validateJourney, type Journey } from "@shared/journeyEngine";
@@ -184,4 +184,12 @@ export const librarianRouter = router({
     }),
 
   latestJourney: protectedProcedure.query(async ({ ctx }) => getLatestJourneyForUser(ctx.user.id)),
+
+  /** The client opened a journey page: record it so progress carries across devices. */
+  markVisited: protectedProcedure
+    .input(z.object({ journeyId: z.number().int().positive(), stepId: z.string().min(1).max(64) }))
+    .mutation(async ({ ctx, input }) => {
+      const journey = await markJourneyStepVisited(ctx.user.id, input.journeyId, input.stepId);
+      return { ok: Boolean(journey), visited: journey ? journey.steps.filter((s) => s.visitedAt).length : 0, total: journey?.steps.length ?? 0 };
+    }),
 });
