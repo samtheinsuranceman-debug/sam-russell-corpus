@@ -1,6 +1,7 @@
 import { getLoginUrl } from "@/const";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import PageBackdrop from "@/components/PageBackdrop";
 import { useState, useCallback } from "react";
 import { ArrowLeft, CheckCircle, X, Shield, Zap, Crown, CreditCard, Building2, Users, Brain, BarChart3, FileText, Headphones, Lock, Star, ArrowRight, AlertTriangle, Scale, Clock, TrendingUp, DollarSign, Percent } from "lucide-react";
 import { Link, useLocation } from "wouter";
@@ -167,9 +168,10 @@ export default function Pricing() {
   }, [pendingCheckout, plans, recordDisclosureMut, checkoutMut]);
 
   return (
-    <div className="min-h-screen bg-[#060f20] text-[#c8d8ec]">
+    <div className="relative min-h-screen bg-[#060f20] text-[#c8d8ec]">
+      <PageBackdrop src="/rcs-city-harbor.webp" phoneSrc="/rcs-city-towers.webp" alt="Green-lit harbour city at night, towers reflected in the water" fade="#060f20" position="center 35%" brightness=".5" />
       {/* Header */}
-      <div className="border-b border-[#12233e]">
+      <div className="relative z-10 border-b border-white/10">
         <div className="container py-4 flex items-center justify-between">
           <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#7a95b8] hover:text-white transition-colors">
             <ArrowLeft size={14} /> Back to Home
@@ -183,7 +185,7 @@ export default function Pricing() {
       </div>
 
       {/* Hero */}
-      <div className="container pt-16 pb-12">
+      <div className="container relative z-10 pt-16 pb-12">
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#22c55e]/10 border border-[#22c55e]/20 text-[#22c55e] text-sm font-medium mb-6">
             <Star size={14} /> 14-Day Free Trial on All Plans
