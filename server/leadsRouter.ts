@@ -21,6 +21,10 @@ import { notifyOwner } from "./_core/notification";
 import { sendLeadAcknowledgement, sendNewLeadAlert } from "./email";
 import { computeLeadAnalysis } from "./leadStrategy";
 import { getLeadById, getLeadByPublicId, listLeads, updateLeadStatus, upsertLead } from "./leadsDb";
+import { scheduleLeadFollowups } from "./followups";
+import { deliver } from "./messaging";
+import { cancelFollowupsForLead, listFollowupsForLead, listMessagesForLead } from "./messagingDb";
+import { normalizePhone, sendSms } from "./_core/sms";
 import type { LeadFactFinder } from "@shared/leadTypes";
 
 function assertOwner(user: { openId: string; role: string }): void {
@@ -156,6 +160,23 @@ export const leadsRouter = router({
         catch { /* acknowledgement is best-effort */ }
       }
 
+      // Text the owner too when a mobile alert number is set — a lead is
+      // worth interrupting for. Never includes figures.
+      if (ENV.leadNotifyPhone) {
+        try {
+          const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
+          const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
+          await sendSms({ to: ENV.leadNotifyPhone, body: `New RCS lead: ${who} (${contact})${input.bestTimeToContact ? ` — best time: ${input.bestTimeToContact}` : ""}. Open the lead inbox to review.` });
+        } catch { /* alert is best-effort */ }
+      }
+
+      // Schedule the automated follow-up sequence (text in an hour, emails on
+      // days 1/3/7, text on day 5). Stops when the lead is marked contacted.
+      if (lead) {
+        try { await scheduleLeadFollowups(lead); }
+        catch { /* automation is best-effort */ }
+      }
+
       // The visitor only ever sees the qualitative teaser — never the figures.
       return {
         saved: Boolean(lead) as boolean,
@@ -189,6 +210,31 @@ export const leadsRouter = router({
       assertOwner(ctx.user);
       const lead = await updateLeadStatus(input.id, input.status);
       if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
+      // A human has taken over: the automated sequence stops here.
+      if (input.status !== "new") await cancelFollowupsForLead(lead.id, `lead marked ${input.status}`);
       return lead;
+    }),
+
+  // ─── Messaging a lead from the inbox (owner-gated) ────────────────────────
+  followups: protectedProcedure
+    .input(z.object({ id: z.number().int().positive() }))
+    .query(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      const [followups, messages] = await Promise.all([listFollowupsForLead(input.id), listMessagesForLead(input.id)]);
+      return { followups, messages };
+    }),
+
+  message: protectedProcedure
+    .input(z.object({ id: z.number().int().positive(), channel: z.enum(["email", "sms"]), subject: z.string().max(300).optional(), body: z.string().min(1).max(4000) }))
+    .mutation(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      const lead = await getLeadById(input.id);
+      if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
+      const to = input.channel === "email" ? lead.email : normalizePhone(lead.phone);
+      if (!to) throw new TRPCError({ code: "BAD_REQUEST", message: input.channel === "email" ? "This lead gave no email address." : "This lead gave no valid mobile number." });
+      const r = await deliver({ channel: input.channel, to, subject: input.subject, body: input.body, category: "transactional", leadId: lead.id, userId: ctx.user.id, actorName: ctx.user.name ?? "Advisor" });
+      // The advisor has reached out by hand — the sequence is no longer needed.
+      if (r.sent) await cancelFollowupsForLead(lead.id, "advisor messaged the lead");
+      return { sent: r.sent, via: r.via ?? null, reason: r.reason ?? null, suppressed: Boolean(r.suppressed) };
     }),
 });

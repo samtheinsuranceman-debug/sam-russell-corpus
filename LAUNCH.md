@@ -154,6 +154,37 @@ and a link to the inbox — never the figures) and sends the prospect a warm
 acknowledgement. With no mail configured, leads are still saved to the inbox;
 you just won't be emailed.
 
+**Keep mail out of spam.** Set `MAIL_FROM="Russell Capital Systems <hello@russellcapitalsystems.com>"`
+and `MAIL_REPLY_TO=<your inbox>`, then run `pnpm mail:check` — it reads the real
+SPF, DKIM and DMARC records for the sending domain and prints what is missing.
+(On 2026‑09‑06 the domain had SPF and DMARC but **no DKIM key**; with DMARC at
+`p=quarantine` that alone sends mail to spam. Publish the DKIM record from
+Resend or Google Workspace, re‑run the check.) Follow‑up mail carries one‑click
+unsubscribe headers automatically; set `PUBLIC_BASE_URL=https://russellcapitalsystems.com`
+so the links point at the live site.
+
+### Text messages (optional — leads and clients by SMS)
+- **Twilio:** `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_FROM`
+  (your number, E.164) or `TWILIO_MESSAGING_SERVICE_SID`. Register the 10DLC
+  brand + campaign in the Twilio console before sending. Point the number's
+  inbound webhook at `https://<your-domain>/api/sms/inbound` so STOP/START/HELP
+  are honoured.
+- **Or any relay:** `SMS_WEBHOOK_URL` (+ `SMS_WEBHOOK_TOKEN`) — the app POSTs
+  `{to, body}` JSON (Inkbox, Speko, Zapier, Make).
+- `LEAD_NOTIFY_PHONE` — your mobile; you get a text for every new lead.
+
+### Automated lead follow‑up (on by default once mail or SMS is configured)
+Text an hour after capture, emails on days 1, 3 and 7, text on day 5 — no
+figures, unsubscribe/STOP built in, and it stops the moment you mark the lead
+contacted or message them yourself. `FOLLOWUPS_DISABLED=1` switches it off.
+On a host that sleeps the process, add a cron that runs `pnpm followups:run`
+(set `SCHEDULER_TOKEN` first) every 5 minutes.
+
+### Live benchmark rates (optional)
+`FRED_API_KEY` (free at fred.stlouisfed.org) → Treasury curve, CPI, 30‑year
+mortgage and Fed funds rates, dated and cached. Without it, dated reference
+values are shown and labelled as such.
+
 ### Voice (optional)
 `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` (spoken answers).
 
@@ -287,7 +318,13 @@ confirm the lead is visible in the inbox.
 - **Concierge says "not configured":** no AI keys set → add at least one AI key
   (e.g. `ANTHROPIC_API_KEY`) in the env and restart.
 - **No acknowledgement emails:** `RESEND_API_KEY` missing or sender domain not
-  verified in Resend.
+  verified in Resend (or no `SMTP_*`).
+- **Emails land in spam:** run `pnpm mail:check` — fix whatever it marks ✘
+  (usually DKIM), and make sure `MAIL_FROM` is on that domain.
+- **Texts not sending:** `TWILIO_*` or `SMS_WEBHOOK_URL` unset, the number
+  replied STOP (see `sms_opt_outs`), or 10DLC registration is incomplete.
+- **Follow‑ups not going out:** the process is asleep between requests — set
+  `SCHEDULER_TOKEN` and cron `pnpm followups:run`; or `FOLLOWUPS_DISABLED` is set.
 - **Owner inbox 403:** `OWNER_OPEN_ID` doesn't match your logged-in user, or the
   user's role isn't `admin`.
 

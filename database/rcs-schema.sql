@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 117
+-- Tables: 122
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -586,6 +586,14 @@ CREATE TABLE `email_campaigns` (
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `email_campaigns_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `email_opt_outs` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`email` varchar(320) NOT NULL,
+	`source` varchar(40) NOT NULL DEFAULT 'link',
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `email_opt_outs_id` PRIMARY KEY(`id`),
+	CONSTRAINT `email_opt_outs_email_unique` UNIQUE(`email`)
+);
 CREATE TABLE `email_templates` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`workspaceId` int NOT NULL,
@@ -827,6 +835,18 @@ CREATE TABLE `knowledge_documents` (
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `knowledge_documents_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `lead_followups` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`leadId` int NOT NULL,
+	`step` varchar(60) NOT NULL,
+	`channel` enum('email','sms') NOT NULL,
+	`scheduledFor` timestamp NOT NULL,
+	`status` enum('pending','sent','skipped','failed','cancelled') NOT NULL DEFAULT 'pending',
+	`sentAt` timestamp,
+	`reason` varchar(300),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `lead_followups_id` PRIMARY KEY(`id`)
+);
 CREATE TABLE `leaderboard_consents` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`userId` int NOT NULL,
@@ -870,6 +890,16 @@ CREATE TABLE `legal_documents` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `legal_documents_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `market_data_points` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`series` varchar(40) NOT NULL,
+	`value` decimal(14,4) NOT NULL,
+	`asOf` varchar(10) NOT NULL,
+	`source` varchar(40) NOT NULL DEFAULT 'fred',
+	`fetchedAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `market_data_points_id` PRIMARY KEY(`id`),
+	CONSTRAINT `market_data_points_series_unique` UNIQUE(`series`)
+);
 CREATE TABLE `meeting_reminder_prefs` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`workspaceId` int NOT NULL,
@@ -905,6 +935,24 @@ CREATE TABLE `morning_rituals` (
 	`coinsEarned` int NOT NULL DEFAULT 0,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `morning_rituals_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `outbound_messages` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`workspaceId` int,
+	`clientId` int,
+	`leadId` int,
+	`userId` int,
+	`channel` enum('email','sms') NOT NULL,
+	`category` enum('transactional','marketing') NOT NULL DEFAULT 'transactional',
+	`toAddress` varchar(320) NOT NULL,
+	`subject` varchar(300),
+	`body` text NOT NULL,
+	`template` varchar(60),
+	`status` enum('sent','failed','suppressed') NOT NULL,
+	`via` varchar(20),
+	`reason` varchar(300),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `outbound_messages_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `owner_trusted_ips` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -1375,6 +1423,14 @@ CREATE TABLE `slide_usage` (
 	`action` enum('generate','export_pptx','save') NOT NULL DEFAULT 'generate',
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `slide_usage_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `sms_opt_outs` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`phone` varchar(24) NOT NULL,
+	`source` varchar(40) NOT NULL DEFAULT 'reply',
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `sms_opt_outs_id` PRIMARY KEY(`id`),
+	CONSTRAINT `sms_opt_outs_phone_unique` UNIQUE(`phone`)
 );
 CREATE TABLE `sms_verification_codes` (
 	`id` int AUTO_INCREMENT NOT NULL,

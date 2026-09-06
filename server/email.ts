@@ -4,15 +4,35 @@
  * so the app works in dev without an API key configured.
  */
 import { Resend } from "resend";
-import { sendMail } from "./_core/mailer";
+import { fromAddress, mailMode, sendMail, type MailAttachment } from "./_core/mailer";
 
 let _resend: Resend | null = null;
 
-function getResend(): Resend | null {
+type SendShape = { from: string; to: string; subject: string; text?: string; html?: string; attachments?: Array<{ filename: string; content: Buffer | string }> };
+/** Minimal Resend-shaped client that delivers through the app's mail transport (SMTP when Resend is not configured). */
+type ResendShape = { emails: { send: (m: SendShape) => Promise<{ error?: unknown }> } };
+
+function getResend(): ResendShape | null {
   const key = process.env.RESEND_API_KEY;
-  if (!key) return null;
-  if (!_resend) _resend = new Resend(key);
-  return _resend;
+  if (key) {
+    if (!_resend) _resend = new Resend(key);
+    return _resend as unknown as ResendShape;
+  }
+  // No Resend key: every template below still works over plain SMTP. The
+  // From header is replaced by the SMTP account's address, which providers
+  // require, and the message goes through sendMail() with all its
+  // deliverability headers.
+  if (mailMode() === "smtp") {
+    return {
+      emails: {
+        send: async (m) => {
+          const r = await sendMail({ to: m.to, subject: m.subject, text: m.text ?? m.html?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() ?? "", html: m.html, from: fromAddress(), attachments: m.attachments as MailAttachment[] | undefined });
+          return r.sent ? {} : { error: r.reason ?? "Email delivery failed" };
+        },
+      },
+    };
+  }
+  return null;
 }
 
 function sanitizeEmailHtml(html: string) {

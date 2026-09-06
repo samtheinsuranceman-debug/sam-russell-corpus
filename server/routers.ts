@@ -10,6 +10,7 @@ import { ultraRouter } from "./ultraAI";
 import { leadsRouter } from "./leadsRouter";
 import { factFinderRouter } from "./factFinderRouter";
 import { librarianRouter } from "./librarianRouter";
+import { messagesRouter } from "./messagesRouter";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -309,6 +310,7 @@ export const appRouter = router({
   leads: leadsRouter,
   factFinder: factFinderRouter,
   librarian: librarianRouter,
+  messages: messagesRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -8632,6 +8634,12 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
     mygaRates: publicProcedure.input(z.object({ state: z.string().optional() }).optional()).query(async ({ input }) => {
       const { getMYGARates } = await import("./dataFeedService");
       return getMYGARates(input?.state);
+    }),
+    /** FRED benchmarks: 30-yr mortgage, Fed funds, 10-yr Treasury — dated, sourced, never invented. */
+    benchmarks: publicProcedure.query(async () => {
+      const { getRateBenchmarks } = await import("./dataFeedService");
+      const { fredConfigured } = await import("./_core/fred");
+      return { configured: fredConfigured(), benchmarks: await getRateBenchmarks() };
     }),
     refresh: protectedProcedure.mutation(async () => {
       const { invalidateAllFeeds } = await import("./dataFeedService");

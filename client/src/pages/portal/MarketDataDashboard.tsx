@@ -237,6 +237,7 @@ export default function MarketDataDashboard() {
       for (const item of feedData.treasuryRates) rows.push(["Treasury", item.name, item.value, item.unit, item.asOf, item.source]);
       for (const item of feedData.commodities) rows.push(["Commodity", item.name, item.value, item.unit, item.asOf, item.source]);
       for (const item of feedData.mygaRates) rows.push(["MYGA", `${item.term}-year ${item.carrier}`, item.bestRate, "%", item.asOf, item.source]);
+      for (const item of feedData.benchmarks ?? []) rows.push(["Benchmark (FRED)", item.name, item.value, item.unit, item.asOf, item.source]);
       const csv = rows.map(row => row.map(value => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\n");
       const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
       const anchor = document.createElement("a");
@@ -637,6 +638,25 @@ export default function MarketDataDashboard() {
                 </div>
               </div>
             </div>
+
+            {/* 0. FRED benchmarks — the reference rates the calculators use */}
+            {feedData && feedData.benchmarks && feedData.benchmarks.length > 0 && (
+              <div className="bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5" aria-label="Benchmark rates">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                  <h3 className="text-lg font-semibold text-white">Benchmark rates (Federal Reserve data)</h3>
+                  <span className="text-xs text-[#7a95b8]">Source: FRED, St. Louis Fed · each value carries its own as-of date</span>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {feedData.benchmarks.map((b) => (
+                    <div key={b.series} className="rounded-xl border border-[#12233e] bg-[#0a1526] p-4">
+                      <div className="text-xs text-[#7a95b8]">{b.name}</div>
+                      <div className="mt-1 text-2xl font-bold text-white">{Number.isFinite(b.value) ? `${b.value.toFixed(2)}${b.unit}` : "—"}</div>
+                      <div className="mt-1 text-[11px] text-[#7a95b8]">as of {b.asOf} · {b.source}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* 1. Data Table: Treasury Rates */}
             <div className="bg-[#0d1a2e] border border-[#12233e] rounded-2xl overflow-hidden">
