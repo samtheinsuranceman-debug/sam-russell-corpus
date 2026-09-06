@@ -1,3 +1,4 @@
+import { AnalyticsLoader } from "@/components/AnalyticsLoader";
 import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -255,6 +256,7 @@ const FinancialAssessment = lazy(() => import("./pages/portal/FinancialAssessmen
 const AIFinancialAdvisor = lazy(() => import("./pages/portal/AIFinancialAdvisor"));
 const MyJourney = lazy(() => import("./pages/portal/MyJourney"));
 const PlanLedger = lazy(() => import("./pages/portal/PlanLedger"));
+const Connections = lazy(() => import("./pages/portal/Connections"));
 const TheBrotherhood = lazy(() => import("./pages/portal/TheBrotherhood"));
 const SecondaryInformation = lazy(() => import("./pages/portal/SecondaryInformation"));
 const PlanningCases = lazy(() => import("./pages/portal/PlanningCases"));
@@ -562,6 +564,7 @@ function Router() {
       <Route path="/portal/ai-advisor" component={gated(AIFinancialAdvisor, "/portal/ai-advisor")} />
       <Route path="/portal/my-journey" component={gated(MyJourney, "/portal/my-journey")} />
       <Route path="/portal/plan-ledger" component={gated(PlanLedger, "/portal/plan-ledger")} />
+      <Route path="/portal/connections" component={gated(Connections, "/portal/connections")} />
       <Route path="/portal/wealth-genome" component={gated(WealthGenomePage, "/portal/wealth-genome")} />
       <Route path="/portal/the-arrival" component={gated(TheArrival, "/portal/the-arrival")} />
       <Route path="/portal/the-mirror" component={gated(TheMirror, "/portal/the-mirror")} />
@@ -602,6 +605,8 @@ function App() {
           <FocusRingStyles />
           <TooltipProvider>
             <Toaster richColors position="top-right" />
+            {/* Browser-side platforms the host switched on (PostHog, GA4, Sentry, Intercom) */}
+            <AnalyticsLoader />
             <Router />
             {/* The every-page AI voice advisor — speak on any page, the AI
                 answers in context of that page and the saved profile. */}

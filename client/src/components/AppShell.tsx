@@ -414,6 +414,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { path: "/portal/billing", label: "Billing & Plans", icon: CircleDollarSign, color: "slate" },
       { path: "/portal/agent-tutorial", label: "Platform Training", icon: GraduationCap, color: "slate" },
+      { path: "/portal/connections", label: "Connections", icon: Link2, color: "slate" },
       { path: "/portal/integrations", label: "Integrations", icon: Link2, color: "slate" },
       { path: "/portal/bulk-generation", label: "Bulk Generation", icon: Lock, color: "slate" },
       { path: "/portal/command-center", label: "Command Center", icon: Activity, color: "slate" },
