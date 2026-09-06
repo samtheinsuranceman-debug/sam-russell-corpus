@@ -25,6 +25,7 @@ import { scheduleLeadFollowups } from "./followups";
 import { deliver } from "./messaging";
 import { cancelFollowupsForLead, listFollowupsForLead, listMessagesForLead } from "./messagingDb";
 import { normalizePhone, sendSms } from "./_core/sms";
+import { recordEvent } from "./ledger";
 import type { LeadFactFinder } from "@shared/leadTypes";
 
 function assertOwner(user: { openId: string; role: string }): void {
@@ -175,6 +176,12 @@ export const leadsRouter = router({
       if (lead) {
         try { await scheduleLeadFollowups(lead); }
         catch { /* automation is best-effort */ }
+        await recordEvent({
+          kind: "status", source: "client", key: "lead.captured", label: "Homepage estimate",
+          value: { consentVersion: CONSENT_VERSION, fields: Object.keys(input.factFinder).length, hasEmail: Boolean(input.email), hasPhone: Boolean(input.phone) },
+          summary: `Lead captured from the homepage estimate with consent (${Object.keys(input.factFinder).length} fact-finder fields)${input.question ? ` — asked: ${input.question.slice(0, 120)}` : ""}`,
+          leadId: lead.id,
+        });
       }
 
       // The visitor only ever sees the qualitative teaser — never the figures.
@@ -212,6 +219,7 @@ export const leadsRouter = router({
       if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
       // A human has taken over: the automated sequence stops here.
       if (input.status !== "new") await cancelFollowupsForLead(lead.id, `lead marked ${input.status}`);
+      await recordEvent({ kind: "status", source: "advisor", key: "lead.status", label: "Lead status", value: input.status, summary: `Lead marked ${input.status}`, actorName: ctx.user.name ?? null, leadId: lead.id });
       return lead;
     }),
 

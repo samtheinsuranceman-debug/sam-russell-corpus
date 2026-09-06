@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 122
+-- Tables: 123
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -1038,6 +1038,29 @@ CREATE TABLE `payment_disclosures` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `payment_disclosures_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `plan_events` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`subject` varchar(40) NOT NULL,
+	`seq` int NOT NULL,
+	`userId` int,
+	`clientId` int,
+	`leadId` int,
+	`workspaceId` int,
+	`kind` enum('fact','assumption','decision','message','document','outcome','scenario','journey','status','note') NOT NULL,
+	`source` varchar(20) NOT NULL,
+	`key` varchar(120),
+	`label` varchar(200),
+	`value` json,
+	`prevValue` json,
+	`summary` text NOT NULL,
+	`actorName` varchar(200),
+	`occurredAt` timestamp NOT NULL,
+	`prevHash` varchar(64) NOT NULL,
+	`hash` varchar(64) NOT NULL,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `plan_events_id` PRIMARY KEY(`id`),
+	CONSTRAINT `plan_events_subject_seq` UNIQUE(`subject`,`seq`)
+);
 CREATE TABLE `planning_case_notes` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`planningCaseId` int NOT NULL,
@@ -1819,5 +1842,6 @@ CREATE TABLE `xp_transactions` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `xp_transactions_id` PRIMARY KEY(`id`)
 );
+CREATE INDEX `plan_events_lead` ON `plan_events` (`leadId`);
 
 SET FOREIGN_KEY_CHECKS = 1;
