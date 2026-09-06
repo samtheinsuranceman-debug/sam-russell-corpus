@@ -17,6 +17,7 @@ import { controlsRouter } from "./controlsRouter";
 import { erosionRouter } from "./erosionRouter";
 import { forgivenessRouter } from "./forgivenessRouter";
 import { taxScheduleRouter } from "./taxScheduleRouter";
+import { unaskedRouter } from "./unaskedRouter";
 import { recordDocumentProvenance } from "./provenance";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
@@ -324,6 +325,7 @@ export const appRouter = router({
   erosion: erosionRouter,
   forgiveness: forgivenessRouter,
   taxSchedule: taxScheduleRouter,
+  unasked: unaskedRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

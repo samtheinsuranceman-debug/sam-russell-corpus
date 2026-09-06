@@ -8,11 +8,77 @@ import { Link } from "wouter";
 import { AppShell } from "@/components/AppShell";
 import TapeRecorderAdvisor, { type JourneyView } from "@/components/TapeRecorderAdvisor";
 import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 import { FACT_FINDER_SECTIONS } from "@shared/clientFactFinder";
 import { ArrowRight, Check, Compass, Lightbulb, ListChecks, SlidersHorizontal, Wind } from "lucide-react";
 
 const CARD = "rounded-2xl border border-violet-400/20 bg-white/[0.04]";
 const DONE_KEY = "rcs_journey_done";
+const BTN = "rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-40";
+const PRIMARY = "rounded-lg bg-violet-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-400 disabled:opacity-40";
+const usd = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+
+/**
+ * The questions you haven't asked. Consent first at every step, nothing shown
+ * before yes, and a place to add to the profile before the answers.
+ */
+function UnaskedQuestions() {
+  const status = trpc.unasked.status.useQuery(undefined, { refetchOnWindowFocus: false });
+  const utils = trpc.useUtils();
+  const [count, setCount] = useState<"3-5" | "5-7" | "5-10">("3-5");
+  const [stage, setStage] = useState<"offer" | "shown" | "answered" | "declined">("offer");
+  const [questions, setQuestions] = useState<Array<{ id: string; question: string; why: string; scale: number; scaleNote: string; horizonYears: number; path: string; needs?: string[] }>>([]);
+  const [spoken, setSpoken] = useState<string>("");
+  const [more, setMore] = useState("");
+  const [answers, setAnswers] = useState<Array<{ id: string; answer: string; via: string }>>([]);
+  const propose = trpc.unasked.propose.useMutation({ onSuccess: (r) => { setSpoken(r.spoken); if (r.shown) { setQuestions(r.questions); setStage("shown"); } else setStage("declined"); utils.unasked.status.invalidate(); }, onError: (e) => toast.error(e.message) });
+  const disclose = trpc.unasked.disclose.useMutation({ onSuccess: (r) => { toast.success(r.spoken); setMore(""); utils.factFinder.get.invalidate(); utils.unasked.status.invalidate(); }, onError: (e) => toast.error(e.message) });
+  const answer = trpc.unasked.answer.useMutation({ onSuccess: (r) => { setSpoken(r.spoken); if (r.answered) { setAnswers(r.answers); setStage("answered"); } else setStage("declined"); }, onError: (e) => toast.error(e.message) });
+  const s = status.data;
+  if (!s || !s.assessmentPresent || (!s.offer && stage === "offer")) return null;
+  return (
+    <section className="rounded-2xl border border-amber-300/30 bg-amber-300/5 p-5" aria-label="The questions you haven't asked">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-200"><Lightbulb size={12} className="mr-1 inline" /> The questions you haven't asked · one voice for the whole team</p>
+      {stage === "offer" && (
+        <div className="mt-2 space-y-3 text-sm">
+          <p className="text-amber-50">{s.script}</p>
+          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300">
+            <span>How many?</span>
+            {s.counts.map((c) => <button key={c.id} type="button" onClick={() => setCount(c.id as "3-5")} className={`rounded-full border px-3 py-1 ${count === c.id ? "border-amber-300 bg-amber-300/20 text-amber-100" : "border-white/15"}`}>{c.label}</button>)}
+            <button type="button" className={PRIMARY} disabled={propose.isPending} onClick={() => propose.mutate({ count, permission: true })}>Yes, show me</button>
+            <button type="button" className={BTN} disabled={propose.isPending} onClick={() => propose.mutate({ count, permission: false })}>Not now</button>
+          </div>
+          <p className="text-[11px] text-slate-500">{s.available} questions are waiting; the reason it is offered now: {s.reason}. Your answer is recorded on your Plan Ledger either way.</p>
+        </div>
+      )}
+      {stage === "declined" && <p className="mt-2 text-sm text-slate-300">{spoken}</p>}
+      {(stage === "shown" || stage === "answered") && (
+        <div className="mt-2 space-y-3 text-sm">
+          <ol className="space-y-2">{questions.map((q, i) => (
+            <li key={q.id} className="rounded-xl border border-white/10 bg-[#0b0f1a] p-3">
+              <p className="text-white"><span className="text-amber-300">{i + 1}.</span> {q.question}</p>
+              <p className="mt-1 text-xs text-slate-400">{q.why}</p>
+              <p className="mt-1 text-[11px] text-slate-500">{q.scale > 0 ? `About ${usd(q.scale)} — ${q.scaleNote}.` : q.scaleNote} You would otherwise meet this in about {q.horizonYears} years. <Link href={q.path} className="text-violet-200 underline decoration-dotted">The page that works it through</Link>{q.needs?.length ? ` · sharper with: ${q.needs.join(", ")}` : ""}</p>
+              {stage === "answered" && answers.find((a) => a.id === q.id) && <p className="mt-2 rounded-lg border border-amber-300/20 bg-amber-300/10 p-2 text-xs text-amber-50"><span className="font-semibold text-amber-200">Librarian ({answers.find((a) => a.id === q.id)!.via}):</span> {answers.find((a) => a.id === q.id)!.answer}</p>}
+            </li>
+          ))}</ol>
+          {stage === "shown" && (
+            <div className="space-y-2">
+              <p className="text-amber-50">May I answer them from everything I know about you? And is there anything else you want me to know first? Anything you add goes into your profile and improves every answer on this site.</p>
+              <textarea value={more} onChange={(e) => setMore(e.target.value)} className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white" rows={3} placeholder="Anything else — a plan to sell, a health matter, a family change, an account we do not know about…" />
+              <div className="flex flex-wrap gap-2">
+                <button type="button" className={BTN} disabled={disclose.isPending || !more.trim()} onClick={() => disclose.mutate({ text: more })}>Add this to my profile</button>
+                <button type="button" className={PRIMARY} disabled={answer.isPending} onClick={() => answer.mutate({ questionIds: questions.map((q) => q.id), permission: true })}>{answer.isPending ? "Answering…" : "Yes, answer them"}</button>
+                <button type="button" className={BTN} disabled={answer.isPending} onClick={() => answer.mutate({ questionIds: questions.map((q) => q.id), permission: false })}>Not yet</button>
+              </div>
+            </div>
+          )}
+          {stage === "answered" && <p className="text-[11px] text-slate-500">Every answer is sealed on your Plan Ledger as signed advice with the facts it used. Directional education, not advice; your Russell Capital Systems advisor confirms every specific.</p>}
+        </div>
+      )}
+    </section>
+  );
+}
 
 export default function AIFinancialAdvisor() {
   const ff = trpc.factFinder.get.useQuery(undefined, { refetchOnWindowFocus: false });
@@ -34,6 +100,8 @@ export default function AIFinancialAdvisor() {
           <h1 className="mt-1 text-2xl font-semibold text-white">Ask the advisor anything about your plan. Press record, speak, and listen.</h1>
           <p className="mt-2 max-w-3xl text-sm text-slate-400">Nine AI advisors answer as one voice — the Financial Librarian. It knows your complete Financial Assessment and only advises once it is finished. Ask as many questions as you like; then press <span className="font-semibold text-violet-200">JOURNEY</span> and it boils everything down to three to five questions, names the one you haven't asked yet, and lays out the pages on this site — calculators included — that answer them in order.</p>
         </div>
+
+        <UnaskedQuestions />
 
         <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
           <TapeRecorderAdvisor onJourney={setJourney} />
