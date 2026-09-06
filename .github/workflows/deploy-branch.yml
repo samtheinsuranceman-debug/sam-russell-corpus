@@ -1,0 +1,33 @@
+# Keeps `deploy/rcs` equal to the russell-capital-systems/ subtree of master.
+# Railway deploys that slim branch (root "/") instead of snapshotting the whole
+# corpus (~800 MB of PDFs and audio) on every build.
+name: Publish deploy/rcs
+
+on:
+  push:
+    branches: [master]
+    paths: ["russell-capital-systems/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-rcs
+  cancel-in-progress: true
+
+jobs:
+  split:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false
+      - name: Split subtree
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git subtree split --prefix=russell-capital-systems -b deploy/rcs
+      - name: Push
+        run: git push --force origin deploy/rcs

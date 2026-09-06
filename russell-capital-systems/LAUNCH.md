@@ -203,13 +203,17 @@ route leads, decisions and messages anywhere.
 
 ### Railway (the full app, one click)
 The project **russell-capital-systems** on Railway runs the whole site (Express +
-React + MySQL). Root directory `/russell-capital-systems`; build
-`pnpm install --frozen-lockfile --prod=false && pnpm build`; start
+React + MySQL). Source: branch **`deploy/rcs`**, root `/`. That branch is only
+this folder, rebuilt from `master` by the `Publish deploy/rcs` GitHub Action on
+every push that touches `russell-capital-systems/` (Railway snapshots the whole
+repo per build, and the corpus is ~800 MB, so the full repo cannot be its source).
+Build `pnpm install --frozen-lockfile --prod=false && pnpm build`; start
 `bash scripts/build_database.sh && node dist/index.js` (creates any missing
 tables on every boot). Variables set: `DATABASE_URL` (from the MySQL service),
 `JWT_SECRET`, `SCHEDULER_TOKEN`, `OWNER_EMAIL`, `PUBLIC_BASE_URL`, mail From/Reply-To.
 Add `OWNER_PASSWORD_HASH` (run `pnpm owner:password` locally) and the AI /
-mail / SMS keys in the Railway Variables panel; every push to `master` redeploys.
+mail / SMS keys in the Railway Variables panel. DNS records to publish are in
+`docs/grok-handoff/09_DNS_AND_MAIL_RECORDS.md`.
 
 ### Voice (optional)
 `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` (spoken answers).
