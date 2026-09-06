@@ -132,20 +132,23 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { path: "/portal/clients", label: "Client Directory", icon: Users, color: "blue" },
       { path: "/portal/leads", label: "Lead Inbox", icon: Inbox, color: "blue" },
+      { path: "/portal/planning-cases", label: "Planning Cases", icon: ClipboardList, color: "blue" },
       { path: "/portal/client-onboarding", label: "Onboarding", icon: Sparkles, color: "blue" },
       { path: "/portal/client-intake", label: "Smart Intake", icon: MessageCircle, color: "blue" },
       { path: "/portal/ai-meeting-notes", label: "Meeting Notes", icon: Brain, color: "blue" },
       { path: "/portal/client-snapshot", label: "Snapshot Map", icon: PieChart, color: "blue" },
     ],
   },
-  // ── 3. CLIENT JOURNEY — verified Grok addition ──────────────────
+  // ── 3. NEW CLIENT WELCOME LIST — assessment → AI advisor → genome → the seven journey pages
   {
-    label: "Client Journey",
+    label: "New Client Welcome List",
     icon: Compass,
     color: "purple",
     defaultOpen: true,
     items: [
-      { path: "/portal/planning-cases", label: "Planning Cases", icon: ClipboardList, color: "purple" },
+      { path: "/portal/financial-assessment", label: "Financial Assessment", icon: ClipboardList, color: "purple" },
+      { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
+      { path: "/portal/wealth-genome", label: "Wealth Genome Analysis", icon: Activity, color: "purple" },
       { path: "/portal/the-arrival", label: "1. The Arrival", icon: Sparkles, color: "purple" },
       { path: "/portal/the-mirror", label: "2. The Mirror", icon: Eye, color: "purple" },
       { path: "/portal/the-strategy-table", label: "3. Strategy Table", icon: Presentation, color: "purple" },

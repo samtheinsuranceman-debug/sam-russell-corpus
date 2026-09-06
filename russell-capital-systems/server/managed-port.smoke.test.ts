@@ -35,7 +35,7 @@ describe("managed primary-port safeguards", () => {
     const auditedRoutes = new Set(auditedRecords.map((record: { route: string }) => record.route));
     expect(auditedRoutes.size).toBeGreaterThanOrEqual(231);
     for (const route of auditedRoutes) expect(currentRoutes.has(String(route)), String(route)).toBe(true);
-    expect(currentRoutes.size).toBe(236); // 232 + ultra-calculator, fact-finder, calculators + portal/leads
+    expect(currentRoutes.size).toBe(239); // 232 + ultra-calculator, fact-finder, calculators + portal/leads + financial-assessment, ai-advisor, wealth-genome
   });
 
   it("keeps managed analytics and runtime public assets", () => {

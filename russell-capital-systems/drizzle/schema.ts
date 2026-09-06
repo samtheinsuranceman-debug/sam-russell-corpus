@@ -2213,3 +2213,43 @@ export const userPortalPreferences = mysqlTable("user_portal_preferences", {
 });
 export type UserPortalPreference = typeof userPortalPreferences.$inferSelect;
 export type InsertUserPortalPreference = typeof userPortalPreferences.$inferInsert;
+
+// ─── CLIENT FACT FINDER (Financial Assessment) + FINANCIAL LIBRARIAN JOURNEYS ─
+// One row per signed-in user: the comprehensive 15-section assessment as JSON
+// (shape: shared/clientFactFinder.ts), its completeness %, and when it was
+// first completed. The AI Financial Advisor refuses to answer until complete.
+export const clientFactFinders = mysqlTable("client_fact_finders", {
+  id:           int("id").autoincrement().primaryKey(),
+  userId:       int("userId").notNull().unique(),
+  data:         json("data").$type<ClientFactFinderJson>().notNull(),
+  completeness: int("completeness").notNull().default(0),
+  completedAt:  timestamp("completedAt"),
+  createdAt:    timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ClientFactFinderRow = typeof clientFactFinders.$inferSelect;
+export type InsertClientFactFinderRow = typeof clientFactFinders.$inferInsert;
+
+// The Financial Librarian's answer to a client's questions: the 3–5 distilled
+// core questions, the emergent question, and the 10–15 page journey.
+export const clientJourneys = mysqlTable("client_journeys", {
+  id:         int("id").autoincrement().primaryKey(),
+  userId:     int("userId").notNull(),
+  questions:  json("questions").$type<string[]>().notNull(),
+  journey:    json("journey").$type<ClientJourneyJson>().notNull(),
+  createdAt:  timestamp("createdAt").defaultNow().notNull(),
+});
+export type ClientJourneyRow = typeof clientJourneys.$inferSelect;
+
+// Mirrors of the shared types (schema.ts avoids importing client-shared modules).
+export interface ClientFactFinderJson {
+  version: 1;
+  sections: Record<string, Record<string, string | number | boolean | null>>;
+  lists: Record<string, Array<Record<string, string | number | boolean | null>>>;
+}
+export interface ClientJourneyJson {
+  coreQuestions: string[];
+  emergentQuestion: string;
+  steps: Array<{ id: string; path: string; title: string; why: string; kind: string }>;
+  generatedBy: string;
+}

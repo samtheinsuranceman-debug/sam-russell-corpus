@@ -4,6 +4,8 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 
 ### Files in this part
 
+- `client/src/data/onboardingQuestions.ts`
+- `client/src/data/pageAuditSummary.ts`
 - `client/src/data/riskToleranceQuestions.ts`
 - `client/src/hooks/useCalculatorIntegration.ts`
 - `client/src/hooks/useComposition.ts`
@@ -24,6 +26,9 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `docs/core-workflow-verification.md`
 - `docs/database-persistence-verification.md`
 - `docs/grok-delta-manifest.md`
+- `docs/grok-handoff/01_FINANCIAL_LIBRARIAN_SPEC.md`
+- `docs/grok-handoff/02_ASSESSMENT_AND_JOURNEY_DATA.md`
+- `docs/grok-handoff/03_BUILD_STATUS_AND_NEXT.md`
 - `docs/grok-merge-verification.md`
 - `docs/homepage-hero-asset-review.md`
 - `docs/homepage-typography-validation.md`
@@ -41,6 +46,210 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `live/rcs-live-homepage.template.html`
 
 ---
+
+## `client/src/data/onboardingQuestions.ts`
+
+```ts
+/**
+ * Russell Capital Systems™ — 100-Question Client Onboarding Assessment
+ * 10 Categories × 10 Questions = 100 Total
+ * Priority 1-5 (20 questions each level, 2 per category per level)
+ * Depth selector: level N shows all questions with priority ≤ N
+ *   Level 1 = 20 questions (essentials)
+ *   Level 2 = 40 questions
+ *   Level 3 = 60 questions
+ *   Level 4 = 80 questions
+ *   Level 5 = 100 questions (full deep-dive)
+ */
+
+export interface OnboardingQuestion {
+  id: number;
+  text: string;
+  category: string;
+  priority: number; // 1-5
+  type: "text" | "number" | "select" | "slider" | "boolean";
+  options?: { label: string; value: string }[];
+  placeholder?: string;
+  helperText?: string;
+}
+
+export interface OnboardingCategory {
+  key: string;
+  label: string;
+  description: string;
+  icon: string;
+}
+
+export const ONBOARDING_CATEGORIES: OnboardingCategory[] = [
+  { key: "personal", label: "Personal & Family", description: "Your household, dependents, and life stage", icon: "User" },
+  { key: "income", label: "Income & Employment", description: "Earnings, job stability, and income sources", icon: "Briefcase" },
+  { key: "assets", label: "Assets & Net Worth", description: "Savings, investments, and property", icon: "Wallet" },
+  { key: "debt", label: "Debt & Obligations", description: "Mortgages, loans, and recurring liabilities", icon: "CreditCard" },
+  { key: "insurance", label: "Insurance Coverage", description: "Life, health, disability, and long-term care", icon: "Shield" },
+  { key: "retirement", label: "Retirement Planning", description: "401(k), IRA, pension, and Social Security", icon: "Clock" },
+  { key: "tax", label: "Tax Situation", description: "Filing status, bracket, and tax planning", icon: "FileText" },
+  { key: "estate", label: "Estate & Legacy", description: "Wills, trusts, and wealth transfer", icon: "Building" },
+  { key: "goals", label: "Goals & Priorities", description: "Short-term and long-term financial objectives", icon: "Target" },
+  { key: "risk", label: "Risk & Behavioral", description: "Investment temperament and decision-making style", icon: "Brain" },
+];
+
+export const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
+  // ═══════════════════════════════════════════════════════════════
+  // PERSONAL & FAMILY — 10 questions (2 per priority level)
+  // ═══════════════════════════════════════════════════════════════
+  { id: 1, category: "personal", priority: 1, type: "text", text: "What is your full legal name?", placeholder: "First and last name" },
+  { id: 2, category: "personal", priority: 1, type: "number", text: "What is your current age?", placeholder: "e.g. 45" },
+  { id: 3, category: "personal", priority: 2, type: "select", text: "What is your marital status?", options: [{ label: "Single", value: "single" }, { label: "Married", value: "married" }, { label: "Divorced", value: "divorced" }, { label: "Widowed", value: "widowed" }, { label: "Domestic Partner", value: "partner" }] },
+  { id: 4, category: "personal", priority: 2, type: "number", text: "How many dependents do you currently support?", placeholder: "0" },
+  { id: 5, category: "personal", priority: 3, type: "text", text: "What is your spouse or partner's name and age?", placeholder: "Name, age" },
+  { id: 6, category: "personal", priority: 3, type: "select", text: "What is your primary state of residence?", options: [{ label: "Select state", value: "" }], helperText: "Used for state-specific tax and insurance analysis" },
+  { id: 7, category: "personal", priority: 4, type: "text", text: "List the ages and relationships of all dependents (children, parents, etc.)", placeholder: "e.g. Son 12, Daughter 8, Mother 72" },
+  { id: 8, category: "personal", priority: 4, type: "select", text: "Do you anticipate any major life changes in the next 3 years?", options: [{ label: "No major changes expected", value: "none" }, { label: "Marriage or divorce", value: "marriage_change" }, { label: "New child or adoption", value: "child" }, { label: "Career change", value: "career" }, { label: "Relocation", value: "relocation" }, { label: "Retirement", value: "retirement" }] },
+  { id: 9, category: "personal", priority: 5, type: "text", text: "Describe your family's health history and any chronic conditions that may affect financial planning.", placeholder: "Health considerations..." },
+  { id: 10, category: "personal", priority: 5, type: "boolean", text: "Are you a U.S. citizen or permanent resident for tax purposes?" },
+
+  // ═══════════════════════════════════════════════════════════════
+  // INCOME & EMPLOYMENT — 10 questions
+  // ═══════════════════════════════════════════════════════════════
+  { id: 11, category: "income", priority: 1, type: "number", text: "What is your annual gross household income?", placeholder: "$0", helperText: "Include all sources: salary, business, rental, etc." },
+  { id: 12, category: "income", priority: 1, type: "select", text: "What is your primary employment type?", options: [{ label: "W-2 Employee", value: "w2" }, { label: "Self-Employed / 1099", value: "self_employed" }, { label: "Business Owner", value: "business_owner" }, { label: "Retired", value: "retired" }, { label: "Not Currently Employed", value: "unemployed" }] },
+  { id: 13, category: "income", priority: 2, type: "number", text: "What is your spouse's annual income (if applicable)?", placeholder: "$0" },
+  { id: 14, category: "income", priority: 2, type: "select", text: "How stable do you consider your primary income source?", options: [{ label: "Very stable (government, tenured)", value: "very_stable" }, { label: "Stable (established employer)", value: "stable" }, { label: "Moderate (commission-based, contract)", value: "moderate" }, { label: "Variable (seasonal, gig economy)", value: "variable" }, { label: "Uncertain", value: "uncertain" }] },
+  { id: 15, category: "income", priority: 3, type: "number", text: "What percentage of your income is variable (bonuses, commissions, etc.)?", placeholder: "0%", helperText: "Approximate percentage" },
+  { id: 16, category: "income", priority: 3, type: "boolean", text: "Do you have any passive income streams (rental, royalties, dividends)?" },
+  { id: 17, category: "income", priority: 4, type: "number", text: "What is your annual passive income amount?", placeholder: "$0" },
+  { id: 18, category: "income", priority: 4, type: "text", text: "Describe any side businesses or additional income sources.", placeholder: "Business details..." },
+  { id: 19, category: "income", priority: 5, type: "select", text: "Do you expect your income to increase, stay flat, or decrease over the next 5 years?", options: [{ label: "Significant increase (>15%)", value: "sig_increase" }, { label: "Moderate increase (5-15%)", value: "mod_increase" }, { label: "Stay roughly the same", value: "flat" }, { label: "Moderate decrease", value: "mod_decrease" }, { label: "Significant decrease (retirement, etc.)", value: "sig_decrease" }] },
+  { id: 20, category: "income", priority: 5, type: "boolean", text: "Does your employer offer equity compensation (stock options, RSUs, ESPP)?" },
+
+  // ═══════════════════════════════════════════════════════════════
+  // ASSETS & NET WORTH — 10 questions
+  // ═══════════════════════════════════════════════════════════════
+  { id: 21, category: "assets", priority: 1, type: "number", text: "What is the total value of your liquid savings (checking, savings, money market)?", placeholder: "$0" },
+  { id: 22, category: "assets", priority: 1, type: "number", text: "What is the approximate total value of your investment accounts (brokerage, mutual funds)?", placeholder: "$0" },
+  { id: 23, category: "assets", priority: 2, type: "number", text: "What is the estimated market value of all real estate you own?", placeholder: "$0" },
+  { id: 24, category: "assets", priority: 2, type: "number", text: "What is the total equity in your primary residence?", placeholder: "$0" },
+  { id: 25, category: "assets", priority: 3, type: "number", text: "Do you own any investment or rental properties? If so, what is their combined value?", placeholder: "$0" },
+  { id: 26, category: "assets", priority: 3, type: "boolean", text: "Do you have any collectibles, precious metals, or alternative assets worth over $50,000?" },
+  { id: 27, category: "assets", priority: 4, type: "number", text: "What is the total cash value of any life insurance policies you own?", placeholder: "$0" },
+  { id: 28, category: "assets", priority: 4, type: "number", text: "What is the current value of any annuity contracts you hold?", placeholder: "$0" },
+  { id: 29, category: "assets", priority: 5, type: "text", text: "List any business interests, partnerships, or private equity holdings and their estimated value.", placeholder: "Business interests..." },
+  { id: 30, category: "assets", priority: 5, type: "number", text: "What is the total value of any cryptocurrency or digital asset holdings?", placeholder: "$0" },
+
+  // ═══════════════════════════════════════════════════════════════
+  // DEBT & OBLIGATIONS — 10 questions
+  // ═══════════════════════════════════════════════════════════════
+  { id: 31, category: "debt", priority: 1, type: "number", text: "What is your total outstanding mortgage balance?", placeholder: "$0" },
+  { id: 32, category: "debt", priority: 1, type: "number", text: "What are your total monthly debt payments (mortgage, car, student loans, credit cards)?", placeholder: "$0" },
+  { id: 33, category: "debt", priority: 2, type: "number", text: "What is your current mortgage interest rate?", placeholder: "0.00%", helperText: "If multiple properties, use primary residence rate" },
+  { id: 34, category: "debt", priority: 2, type: "number", text: "What is your total credit card balance?", placeholder: "$0" },
+  { id: 35, category: "debt", priority: 3, type: "number", text: "What is your total student loan balance?", placeholder: "$0" },
+  { id: 36, category: "debt", priority: 3, type: "number", text: "What is your total auto loan balance?", placeholder: "$0" },
+  { id: 37, category: "debt", priority: 4, type: "boolean", text: "Do you have any outstanding HELOC or home equity loan balances?" },
+  { id: 38, category: "debt", priority: 4, type: "number", text: "What is your debt-to-income ratio (total monthly debt / gross monthly income)?", placeholder: "0%", helperText: "We can calculate this for you if unsure" },
+  { id: 39, category: "debt", priority: 5, type: "text", text: "Describe any co-signed loans, business debts, or contingent liabilities.", placeholder: "Details..." },
+  { id: 40, category: "debt", priority: 5, type: "select", text: "What is your primary debt elimination strategy?", options: [{ label: "Minimum payments only", value: "minimum" }, { label: "Avalanche (highest rate first)", value: "avalanche" }, { label: "Snowball (smallest balance first)", value: "snowball" }, { label: "Consolidation", value: "consolidation" }, { label: "No specific strategy", value: "none" }] },
+
+  // ═══════════════════════════════════════════════════════════════
+  // INSURANCE COVERAGE — 10 questions
+  // ═══════════════════════════════════════════════════════════════
+  { id: 41, category: "insurance", priority: 1, type: "boolean", text: "Do you currently have life insurance?" },
+  { id: 42, category: "insurance", priority: 1, type: "select", text: "What type of life insurance do you have?", options: [{ label: "None", value: "none" }, { label: "Term Life", value: "term" }, { label: "Whole Life", value: "whole" }, { label: "Universal Life (UL/IUL/VUL)", value: "universal" }, { label: "Multiple types", value: "multiple" }] },
+  { id: 43, category: "insurance", priority: 2, type: "number", text: "What is your total life insurance death benefit?", placeholder: "$0" },
+  { id: 44, category: "insurance", priority: 2, type: "boolean", text: "Do you have disability insurance (short-term or long-term)?" },
+  { id: 45, category: "insurance", priority: 3, type: "boolean", text: "Do you have long-term care insurance?" },
+  { id: 46, category: "insurance", priority: 3, type: "number", text: "What is your annual total insurance premium (all policies combined)?", placeholder: "$0" },
+  { id: 47, category: "insurance", priority: 4, type: "select", text: "How would you rate your current insurance coverage?", options: [{ label: "Excellent — well protected", value: "excellent" }, { label: "Good — most bases covered", value: "good" }, { label: "Fair — some gaps", value: "fair" }, { label: "Poor — significant gaps", value: "poor" }, { label: "Unsure", value: "unsure" }] },
+  { id: 48, category: "insurance", priority: 4, type: "boolean", text: "Does your employer provide group life, disability, or supplemental insurance?" },
+  { id: 49, category: "insurance", priority: 5, type: "text", text: "List all insurance policies with carrier names, policy types, and coverage amounts.", placeholder: "Policy details..." },
+  { id: 50, category: "insurance", priority: 5, type: "boolean", text: "Have you ever been declined for life or disability insurance?" },
+
+  // ═══════════════════════════════════════════════════════════════
+  // RETIREMENT PLANNING — 10 questions
+  // ═══════════════════════════════════════════════════════════════
+  { id: 51, category: "retirement", priority: 1, type: "number", text: "At what age do you plan to retire?", placeholder: "65" },
+  { id: 52, category: "retirement", priority: 1, type: "number", text: "What is the total balance of all your retirement accounts (401k, IRA, Roth, etc.)?", placeholder: "$0" },
+  { id: 53, category: "retirement", priority: 2, type: "number", text: "How much do you contribute monthly to retirement accounts?", placeholder: "$0" },
+  { id: 54, category: "retirement", priority: 2, type: "boolean", text: "Does your employer offer a 401(k) match? If so, are you maximizing it?" },
+  { id: 55, category: "retirement", priority: 3, type: "number", text: "What is your estimated Social Security benefit at full retirement age?", placeholder: "$0/month" },
+  { id: 56, category: "retirement", priority: 3, type: "boolean", text: "Do you have a pension from any current or previous employer?" },
+  { id: 57, category: "retirement", priority: 4, type: "number", text: "How much annual income do you need in retirement (in today's dollars)?", placeholder: "$0" },
+  { id: 58, category: "retirement", priority: 4, type: "select", text: "Have you considered a Roth conversion strategy?", options: [{ label: "Already doing Roth conversions", value: "active" }, { label: "Interested but haven't started", value: "interested" }, { label: "Not sure what it is", value: "unsure" }, { label: "Not interested", value: "not_interested" }] },
+  { id: 59, category: "retirement", priority: 5, type: "text", text: "Describe your ideal retirement lifestyle and any specific plans (travel, relocation, part-time work).", placeholder: "Retirement vision..." },
+  { id: 60, category: "retirement", priority: 5, type: "boolean", text: "Are you concerned about outliving your retirement savings?" },
+
+  // ═══════════════════════════════════════════════════════════════
+  // TAX SITUATION — 10 questions
+  // ═══════════════════════════════════════════════════════════════
+  { id: 61, category: "tax", priority: 1, type: "select", text: "What is your federal tax filing status?", options: [{ label: "Single", value: "single" }, { label: "Married Filing Jointly", value: "mfj" }, { label: "Married Filing Separately", value: "mfs" }, { label: "Head of Household", value: "hoh" }, { label: "Qualifying Widow(er)", value: "qw" }] },
+  { id: 62, category: "tax", priority: 1, type: "select", text: "What is your approximate federal tax bracket?", options: [{ label: "10% ($0-$11,600)", value: "10" }, { label: "12% ($11,601-$47,150)", value: "12" }, { label: "22% ($47,151-$100,525)", value: "22" }, { label: "24% ($100,526-$191,950)", value: "24" }, { label: "32% ($191,951-$243,725)", value: "32" }, { label: "35% ($243,726-$609,350)", value: "35" }, { label: "37% ($609,351+)", value: "37" }, { label: "Not sure", value: "unsure" }] },
+  { id: 63, category: "tax", priority: 2, type: "number", text: "What was your total federal tax liability last year?", placeholder: "$0" },
+  { id: 64, category: "tax", priority: 2, type: "select", text: "Do you itemize deductions or take the standard deduction?", options: [{ label: "Standard deduction", value: "standard" }, { label: "Itemize deductions", value: "itemize" }, { label: "Not sure", value: "unsure" }] },
+  { id: 65, category: "tax", priority: 3, type: "number", text: "What is your state income tax rate?", placeholder: "0%", helperText: "Enter 0 if your state has no income tax" },
+  { id: 66, category: "tax", priority: 3, type: "boolean", text: "Do you have any capital gains or losses to report this year?" },
+  { id: 67, category: "tax", priority: 4, type: "boolean", text: "Are you subject to the Alternative Minimum Tax (AMT)?" },
+  { id: 68, category: "tax", priority: 4, type: "boolean", text: "Do you have any tax-loss harvesting strategies in place?" },
+  { id: 69, category: "tax", priority: 5, type: "text", text: "Describe any complex tax situations (foreign income, K-1 partnerships, real estate depreciation, etc.).", placeholder: "Tax details..." },
+  { id: 70, category: "tax", priority: 5, type: "boolean", text: "Are you currently working with a CPA or tax advisor?" },
+
+  // ═══════════════════════════════════════════════════════════════
+  // ESTATE & LEGACY — 10 questions
+  // ═══════════════════════════════════════════════════════════════
+  { id: 71, category: "estate", priority: 1, type: "boolean", text: "Do you have a current will or living trust?" },
+  { id: 72, category: "estate", priority: 1, type: "boolean", text: "Have you designated beneficiaries on all your financial accounts?" },
+  { id: 73, category: "estate", priority: 2, type: "boolean", text: "Do you have a power of attorney (financial and healthcare)?" },
+  { id: 74, category: "estate", priority: 2, type: "boolean", text: "Do you have an advance healthcare directive or living will?" },
+  { id: 75, category: "estate", priority: 3, type: "select", text: "How important is leaving a financial legacy to your heirs?", options: [{ label: "Extremely important — top priority", value: "top" }, { label: "Important — but not at expense of my lifestyle", value: "important" }, { label: "Somewhat important", value: "somewhat" }, { label: "Not a priority", value: "not_priority" }] },
+  { id: 76, category: "estate", priority: 3, type: "number", text: "What is the total estimated value of your estate?", placeholder: "$0" },
+  { id: 77, category: "estate", priority: 4, type: "boolean", text: "Have you considered or established an irrevocable life insurance trust (ILIT)?" },
+  { id: 78, category: "estate", priority: 4, type: "boolean", text: "Are you making annual gifts to family members or charities for estate tax planning?" },
+  { id: 79, category: "estate", priority: 5, type: "text", text: "Describe your estate planning goals and any specific wishes for wealth transfer.", placeholder: "Estate goals..." },
+  { id: 80, category: "estate", priority: 5, type: "boolean", text: "Do you have any charitable giving strategies (donor-advised fund, charitable remainder trust, etc.)?" },
+
+  // ═══════════════════════════════════════════════════════════════
+  // GOALS & PRIORITIES — 10 questions
+  // ═══════════════════════════════════════════════════════════════
+  { id: 81, category: "goals", priority: 1, type: "select", text: "What is your single most important financial goal right now?", options: [{ label: "Retirement security", value: "retirement" }, { label: "Wealth accumulation", value: "wealth" }, { label: "Debt elimination", value: "debt" }, { label: "Tax optimization", value: "tax" }, { label: "Income protection", value: "protection" }, { label: "Legacy/estate planning", value: "legacy" }, { label: "Education funding", value: "education" }, { label: "Home purchase", value: "home" }] },
+  { id: 82, category: "goals", priority: 1, type: "number", text: "What is your target net worth goal?", placeholder: "$0", helperText: "Where do you want to be financially?" },
+  { id: 83, category: "goals", priority: 2, type: "number", text: "By what age do you want to achieve financial independence?", placeholder: "55" },
+  { id: 84, category: "goals", priority: 2, type: "select", text: "How would you describe your current financial confidence level?", options: [{ label: "Very confident — on track", value: "very_confident" }, { label: "Somewhat confident", value: "somewhat" }, { label: "Neutral — could go either way", value: "neutral" }, { label: "Concerned — falling behind", value: "concerned" }, { label: "Anxious — need help urgently", value: "anxious" }] },
+  { id: 85, category: "goals", priority: 3, type: "boolean", text: "Do you have children's education funding needs (529 plans, etc.)?" },
+  { id: 86, category: "goals", priority: 3, type: "number", text: "How much do you need for upcoming major purchases in the next 5 years?", placeholder: "$0" },
+  { id: 87, category: "goals", priority: 4, type: "text", text: "What keeps you up at night financially? Describe your biggest financial worry.", placeholder: "Financial concerns..." },
+  { id: 88, category: "goals", priority: 4, type: "select", text: "How do you prefer to work with a financial advisor?", options: [{ label: "Hands-off — you manage everything", value: "hands_off" }, { label: "Collaborative — we decide together", value: "collaborative" }, { label: "Educational — teach me to manage my own", value: "educational" }, { label: "Periodic check-ins only", value: "periodic" }] },
+  { id: 89, category: "goals", priority: 5, type: "text", text: "If money were no object, what would your ideal life look like in 10 years?", placeholder: "Dream scenario..." },
+  { id: 90, category: "goals", priority: 5, type: "text", text: "What financial mistakes have you made in the past that you want to avoid repeating?", placeholder: "Past lessons..." },
+
+  // ═══════════════════════════════════════════════════════════════
+  // RISK & BEHAVIORAL — 10 questions
+  // ═══════════════════════════════════════════════════════════════
+  { id: 91, category: "risk", priority: 1, type: "slider", text: "On a scale of 1-10, how comfortable are you with investment risk?", helperText: "1 = avoid all risk, 10 = embrace maximum risk" },
+  { id: 92, category: "risk", priority: 1, type: "select", text: "If your portfolio dropped 25% in one month, what would you do?", options: [{ label: "Sell everything immediately", value: "sell_all" }, { label: "Sell some to reduce exposure", value: "sell_some" }, { label: "Hold and wait for recovery", value: "hold" }, { label: "Buy more at lower prices", value: "buy_more" }] },
+  { id: 93, category: "risk", priority: 2, type: "select", text: "What is your investment time horizon for your largest account?", options: [{ label: "Less than 3 years", value: "short" }, { label: "3-7 years", value: "medium" }, { label: "7-15 years", value: "long" }, { label: "15+ years", value: "very_long" }] },
+  { id: 94, category: "risk", priority: 2, type: "select", text: "How much investment experience do you have?", options: [{ label: "None — complete beginner", value: "none" }, { label: "Limited — basic stocks/bonds", value: "limited" }, { label: "Moderate — diversified portfolio", value: "moderate" }, { label: "Extensive — options, alternatives, etc.", value: "extensive" }] },
+  { id: 95, category: "risk", priority: 3, type: "select", text: "Which best describes your investment philosophy?", options: [{ label: "Capital preservation above all", value: "preservation" }, { label: "Steady income with minimal risk", value: "income" }, { label: "Balanced growth and income", value: "balanced" }, { label: "Aggressive growth, accept volatility", value: "growth" }, { label: "Maximum growth, high risk tolerance", value: "aggressive" }] },
+  { id: 96, category: "risk", priority: 3, type: "boolean", text: "Have you ever panic-sold investments during a market downturn?" },
+  { id: 97, category: "risk", priority: 4, type: "select", text: "How do you typically make financial decisions?", options: [{ label: "Quickly — trust my gut", value: "quick" }, { label: "Research thoroughly then decide", value: "research" }, { label: "Consult advisors before any decision", value: "consult" }, { label: "Procrastinate — avoid decisions", value: "procrastinate" }] },
+  { id: 98, category: "risk", priority: 4, type: "boolean", text: "Are you comfortable with illiquid investments (real estate, private equity) that lock up capital for years?" },
+  { id: 99, category: "risk", priority: 5, type: "text", text: "Describe the worst financial loss you've experienced and how it affected your decision-making.", placeholder: "Past experience..." },
+  { id: 100, category: "risk", priority: 5, type: "select", text: "Would you prefer a guaranteed 5% return or a 50/50 chance of 0% or 12%?", options: [{ label: "Guaranteed 5% — certainty is king", value: "guaranteed" }, { label: "The 50/50 gamble — higher expected value", value: "gamble" }, { label: "Depends on the amount at stake", value: "depends" }] },
+];
+```
+
+## `client/src/data/pageAuditSummary.ts`
+
+```ts
+export const PAGE_AUDIT_SUMMARY = {
+  methodologyVersion: "1.0-source-evidence",
+  routeCount: 231,
+  averageScore: 5.99,
+  fiveOrHigherCount: 153,
+  belowFiveCount: 78,
+  renderHealth: { healthy: 225, atRisk: 6, broken: 0 },
+  recommendations: { keep: 83, improve: 68, merge: 5, secondary: 68, retire: 7 },
+  generatedAt: "2026-08-26T20:00:00.000Z",
+} as const;
+```
 
 ## `client/src/data/riskToleranceQuestions.ts`
 
@@ -2468,7 +2677,7 @@ nav.rc-sidebar-nav::-webkit-scrollbar-thumb:hover {
 ```sql
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 115
+-- Tables: 117
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -2718,6 +2927,25 @@ CREATE TABLE `client_documents` (
 	`uploadedByName` varchar(200),
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `client_documents_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `client_fact_finders` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`data` json NOT NULL,
+	`completeness` int NOT NULL DEFAULT 0,
+	`completedAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `client_fact_finders_id` PRIMARY KEY(`id`),
+	CONSTRAINT `client_fact_finders_userId_unique` UNIQUE(`userId`)
+);
+CREATE TABLE `client_journeys` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`questions` json NOT NULL,
+	`journey` json NOT NULL,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `client_journeys_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `client_life_goals` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -4527,6 +4755,277 @@ The canonical Grok import is restricted to seven routed pages plus one shared vi
 All seven pages import `client/src/pages/portal/_genome/GenomeKit.tsx`. The canonical files are stored under `/home/ubuntu/russell-capital-unified-sources/release/addition`; their SHA-256 hashes are recorded in `docs/grok-delta-sha256.txt`.
 
 The primary application remains `/home/ubuntu/russell-capital-unified-sources/release/primary`, which contains the 222-route platform selected from the 39.8 MB archive. The separate 12-route marketing application remains reference-only and is not allowed to replace the platform router, server, or database layer.
+```
+
+## `docs/grok-handoff/01_FINANCIAL_LIBRARIAN_SPEC.md`
+
+```md
+# Financial Librarian — build specification (handoff for Grok)
+
+**Status:** built and merged. This document describes what exists so the next
+builder can extend it without re-deriving it. Source of truth is the code; paths
+below are relative to `russell-capital-systems/`.
+
+## What it is
+
+One AI Financial Advisor, presented as a **tape recorder**, that speaks for the
+whole AI API team (Claude, ChatGPT, Grok, Gemini, Perplexity, OpenRouter,
+Mistral, Groq, Manus — whichever have keys in the host environment). It answers
+spoken or typed questions from a client or their advisor, **but only after the
+client has completed the full Financial Assessment**. Before that it explains
+what is missing and hands them the assessment.
+
+It is a *librarian*, not an oracle: once the assessment is complete the client
+may ask unlimited questions; the librarian answers each, and on request boils
+everything asked down to **3–5 core questions**, names the **emergent
+question** they have not asked (the pattern underneath their questions and
+their facts), and lays out a **10–15 page journey** through the site — real
+URLs, calculators included — in a logical, building sequence.
+
+## The pieces
+
+| Piece | File | Notes |
+|---|---|---|
+| Assessment schema (15 sections, ~190 fields) | `shared/clientFactFinder.ts` | `FACT_FINDER_SECTIONS`, `factFinderCompleteness()`, `factFinderSummary()`. Required fields gate the advisor. `showIf` hides fields that don't apply. |
+| Assessment storage | `drizzle/schema.ts` → `client_fact_finders` (one row per user, JSON + completeness + completedAt) | Also `client_journeys` (each generated journey). Both in `database/rcs-schema.sql`. |
+| Assessment API | `server/factFinderRouter.ts` (`factFinder.get/save/summary/reset`), `server/factFinderDb.ts` | Zod-validated; graceful when no DB. |
+| Assessment page | `client/src/pages/portal/FinancialAssessment.tsx` → `/portal/financial-assessment` | Section rail, autosave (900 ms), completeness, printable **Financial Analysis Document**. |
+| Page catalog | `shared/journeyCatalog.ts` | 45 real portal pages with `kind`, `tags`, `builds` (ordering weight). Add pages here to make them eligible for journeys. |
+| Journey engine | `shared/journeyEngine.ts` | Deterministic: `detectTags`, `factFinderSignals`, `distillQuestions`, `emergentQuestion`, `buildJourney`, `validateJourney`. |
+| Librarian API | `server/librarianRouter.ts` (`librarian.status/ask/journey/latestJourney`) | Gate → fan-out to providers → synthesis by the lead model; AI may only polish wording of a journey, never its pages. Offline fallback answers from the assessment alone. |
+| Tape recorder | `client/src/components/TapeRecorderAdvisor.tsx` | REC (Web Speech), PLAY, STOP, TYPE, JOURNEY; ElevenLabs voice via `ultra.speak` when configured, else browser speech. |
+| Advisor page | `client/src/pages/portal/AIFinancialAdvisor.tsx` → `/portal/ai-advisor` | Deck + "what it knows" + the journey (core questions, emergent question, ordered steps with visited state). |
+| Navigation | `client/src/components/AppShell.tsx` → group **New Client Welcome List** | Assessment → AI Financial Advisor → Wealth Genome → The Arrival … The Brotherhood. |
+
+## Rules the librarian obeys (do not loosen)
+
+1. **Gate.** No planning answer of any kind until `factFinderCompleteness().complete` is true. Not even partial.
+2. **No invented facts.** Every figure comes from the client's own assessment. The offline answer and the tests assert this.
+3. **Education, not advice.** Projections under stated assumptions, no guarantees, no product solicitation; the licensed advisor and the tax professional team review suitability and IRS compliance before anything is implemented. The compliance line is on the deck.
+4. **Pages are real.** Every journey step must exist in `JOURNEY_CATALOG` (validated) and every catalog path must be a route in `App.tsx`.
+5. **Sizes.** 3–5 core questions, one emergent question, 10–15 steps, first step is orientation, last step is a review page, steps are sorted by `builds` so each page builds on the previous one.
+
+## How a journey is composed (engine)
+
+1. `detectTags(question)` — keyword topics per question (tax, mortgage, equity, debt, student-loans, retirement, income, investments, volatility, iul, insurance, estate, divorce, asset-protection, practice, liquidity, real-estate, oil-gas, strategy, time).
+2. `factFinderSignals(assessment)` — weighted topics from the facts (effective tax rate, mortgage size/years, equity, student loans, tax-deferred balances, risk answers, cash months, disability gap, practice ownership, no will, protection priorities, retirement horizon, stated worries).
+3. `distillQuestions(questions, signals)` — group by primary topic → 3–5 core questions using per-topic templates; if the client asked fewer topics, the strongest signals supply the rest ("from your assessment: …").
+4. `emergentQuestion(distilled, signals)` — strongest signal **not covered** by what they asked, rendered with a per-topic template that quotes the reason (e.g. "you would sell in a 30% drop").
+5. `buildJourney` — score every catalog page (question tags ×3, emergent ×3, signal weights), always open with The Mirror + Wealth Genome, take the two best pages per core question, two for the emergent question, guarantee a calculator, a comparison, a volatility/variables page, protection/legacy pages when signals say so, fill to 10, close with Russell Number, then order by `builds`. Each step's `why` names the previous page it builds on and which question it serves.
+6. When AI providers are configured, `librarian.journey` asks the lead model to **reword** the questions, the emergent question, and each step's `why` in the client's own terms; the result is validated and discarded if it changes ids, order, or sizes.
+
+## Extending it
+
+- **Add a page to journeys:** append to `JOURNEY_CATALOG` (id, path that exists in `App.tsx`, title, purpose, kind, tags, builds). The tests check uniqueness and `/portal/` paths.
+- **Add a topic:** add a keyword regex in `TOPIC_KEYWORDS`, a template in `CORE_TEMPLATES`, aliases in `TAG_ALIASES`, optionally an `EMERGENT_TEMPLATES` entry and a signal in `factFinderSignals`.
+- **Add an assessment field:** append to the section in `FACT_FINDER_SECTIONS`; mark `required` only if the advisor genuinely cannot advise without it (required fields gate the advisor). The UI, storage, summary, document, and completeness all follow automatically.
+- **Voice:** set `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` on the host; the deck then speaks in the cloned voice. Without them it uses the browser's voice.
+
+## Tests
+
+`server/journeyEngine.test.ts` (engine + assessment), `server/librarian.test.ts`
+(gate, offline answer, fan-out, journey persistence, invalid AI polish
+rejected). Run: `npx vitest run server/journeyEngine.test.ts server/librarian.test.ts`.
+```
+
+## `docs/grok-handoff/02_ASSESSMENT_AND_JOURNEY_DATA.md`
+
+````md
+# Assessment + journey data — shapes, tables, endpoints, examples (handoff for Grok)
+
+Everything the Financial Librarian stores and exchanges, so another builder can
+read, seed, or extend it. Paths relative to `russell-capital-systems/`.
+
+## 1. The Financial Assessment (client fact finder)
+
+**Shape** (`shared/clientFactFinder.ts` → `ClientFactFinder`):
+
+```json
+{
+  "version": 1,
+  "sections": {
+    "household":   { "firstName": "…", "lastName": "…", "dateOfBirth": "1981-04-02", "maritalStatus": "Married", "stateOfResidence": "Texas", "dependents": 2, "occupation": "Surgeon", "phone": "…", "email": "…" },
+    "income":      { "employmentType": "W-2 employee", "w2Income": 650000, "spouseIncome": 0, "incomeTrajectory": "Rising modestly" },
+    "taxes":       { "filingStatus": "Married filing jointly", "adjustedGrossIncome": 640000, "federalTaxPaid": 205000, "priorReturnsAvailable": true, "taxPain": "…" },
+    "realEstate":  { "ownsPrimaryHome": true, "primaryHomeValue": 1400000, "primaryMortgageBalance": 900000, "primaryMortgageRate": 6.5, "primaryMortgageYearsRemaining": 26, "homeEquity": 500000 },
+    "debts":       { "studentLoanBalance": 180000 },
+    "investments": { "taxableBrokerage": 150000, "employerPlanBalance": 700000, "rothIra": 40000, "concentratedPosition": false, "riskTolerance": "Moderate", "worstYearReaction": "Hold and wait" },
+    "cash":        { "checking": 20000, "savings": 15000, "emergencyFundMonths": 2 },
+    "cashFlow":    { "monthlyTakeHome": 30000, "monthlyFixedExpenses": 18000, "monthlyDiscretionary": 6000, "monthlySavings": 6000, "retirementLifestyle": "…" },
+    "insurance":   { "termLifeDeathBenefit": 2000000, "disabilityMonthlyBenefit": 0, "malpracticeLimits": "1M/3M" },
+    "practice":    { "ownsPractice": false },
+    "estate":      { "hasWill": false, "hasRevocableTrust": false, "heirs": "…", "legacyGoals": "…" },
+    "protection":  { "divorceProtectionPriority": "5 — Essential", "creditorProtectionPriority": "4", "taxFreeIncomePriority": "5 — Essential" },
+    "retirement":  { "targetRetirementAge": 58, "desiredRetirementIncomeMonthly": 25000, "retirementConcern": "…" },
+    "goals":       { "topGoals": "…", "biggestConcern": "…", "timelineToAct": "Immediately" },
+    "documents":   { "taxReturns": "Will provide" }
+  },
+  "lists": { "properties": [ { "type": "Rental", "value": 450000, "mortgageBalance": 300000, "rate": 6.1, "netRentMonthly": 900 } ] }
+}
+```
+
+- Section ids, field keys, types, options, `required`, and `showIf` all live in `FACT_FINDER_SECTIONS`; the UI is generated from it.
+- `factFinderCompleteness(ff)` → `{ percent, answered, required, complete, missing[{section, sectionId, field, key}], sectionPercent }`. **52 required, currently-visible answers** make it complete (more if conditional sections open, e.g. owning a home or a practice).
+- `factFinderSummary(ff)` → the plain-text document the librarian is given (and the printable Financial Analysis Document).
+
+**Table** `client_fact_finders` (`drizzle/schema.ts`, `database/rcs-schema.sql`):
+`id, userId (unique), data JSON, completeness INT, completedAt, createdAt, updatedAt`.
+
+**Endpoints** (tRPC, signed-in user only; superjson envelope `{ "json": … }`):
+- `factFinder.get` → `{ data, completeness, completedAt, updatedAt, persisted }`
+- `factFinder.save` `{ data }` → `{ saved, completeness, completedAt }` (zod-validated; strings ≤ 4000 chars; lists ≤ 50 rows)
+- `factFinder.summary` → `{ text, complete, percent }`
+- `factFinder.reset`
+
+## 2. The librarian
+
+**Endpoints**
+- `librarian.status` → `{ complete, percent, missingCount, missingSections[], completedAt, configured, contributorCount, contributors[], voiceConfigured }`
+- `librarian.ask` `{ question, history?: [{role:"user"|"librarian", text}] }` →
+  gated: `{ gated: true, percent, missingSections, spoken }` · answered: `{ gated: false, answer, spoken, contributors[], contributorCount }`
+- `librarian.journey` `{ questions: string[] (1–40) }` → gated as above, or `{ gated: false, journey, journeyId, spoken }`
+- `librarian.latestJourney` → the last stored journey for the user, or null
+- `ultra.speak` `{ text }` → `{ ok: true, audioBase64, mimeType }` when ElevenLabs is configured
+
+**Journey shape** (`shared/journeyEngine.ts` → `Journey`; stored in `client_journeys.journey`):
+
+```json
+{
+  "coreQuestions": [
+    "How do I pay less tax on the income I already earn — this year and every year after?",
+    "What is the fastest sensible way to be free of my mortgage, and what is that interest worth to me?",
+    "How do I keep growing while controlling volatility and the variables I can actually control?"
+  ],
+  "emergentQuestion": "Underneath your questions is a volatility question you haven't asked: with you would sell in a 30% drop, how do you keep the plan from depending on markets you can't control?",
+  "steps": [
+    { "id": "mirror",          "path": "/portal/the-mirror",          "title": "The Mirror",          "kind": "orientation", "why": "Start here. Your personal dashboard — where you stand today, in one view." },
+    { "id": "wealth-genome",   "path": "/portal/wealth-genome",       "title": "Wealth Genome Analysis", "kind": "orientation", "why": "Builds on “The Mirror”. …" },
+    { "id": "tax-waterfall",   "path": "/portal/tax-waterfall",       "title": "Tax Waterfall",       "kind": "education",   "why": "Builds on “Wealth Genome Analysis”. … It serves question 1." },
+    { "id": "mortgage-killer", "path": "/portal/mortgage-killer",     "title": "Mortgage Killer",     "kind": "calculator",  "why": "… It serves question 2." },
+    { "id": "market-stress-test", "path": "/portal/market-stress-test", "title": "Market Stress Test", "kind": "calculator", "why": "… It serves question 3 and the emergent question." },
+    { "id": "russell-number",  "path": "/portal/russell-number",      "title": "Russell Number",      "kind": "review",      "why": "Close the loop. …" }
+  ],
+  "generatedBy": "journey-engine"
+}
+```
+(10–15 steps in practice; the example is abbreviated.) `generatedBy` becomes
+`journey-engine + claude` when the AI team polished the wording.
+
+**Table** `client_journeys`: `id, userId, questions JSON, journey JSON, createdAt`.
+
+## 3. The page catalog (`shared/journeyCatalog.ts`)
+
+45 pages. Each: `{ id, path, title, purpose, kind, tags[], builds }`.
+`kind` ∈ orientation · education · calculator · comparison · protection · legacy · review.
+`builds` 0–9 orders a journey (0 = orientation, 8–9 = review/closing).
+Tags in use: start, tax, roth, tax-free, mortgage, payoff, interest, equity, heloc,
+war-chest, liquidity, debt, student-loans, retirement, income, gap, withdrawal,
+social-security, investments, volatility, risk, stress, floor, iul, insurance,
+disability, malpractice, gaps, estate, trust, legacy, heirs, beneficiaries, divorce,
+asset-protection, creditor, practice, business, succession, real-estate, oil-gas,
+strategy, combination, comparison, decision, variables, control, time, review …
+
+## 4. Seeding for tests or demos
+
+`server/journeyEngine.test.ts` exports `completeFactFinder(overrides)` which fills
+every required, visible field with a placeholder and applies overrides — use it
+to build a complete assessment in tests. For a running server, sign in as the
+owner, POST `factFinder.save` with a complete document, then call `librarian.status`
+to confirm `complete: true`.
+
+## 5. Notes on the database drivers
+
+MySQL 8 returns JSON columns parsed; MariaDB returns them as text. All readers go
+through `server/_core/jsonColumn.ts` so both behave the same. Keep using it for any
+new JSON column.
+````
+
+## `docs/grok-handoff/03_BUILD_STATUS_AND_NEXT.md`
+
+```md
+# Build status and what to build next (handoff for Grok)
+
+Read `01_FINANCIAL_LIBRARIAN_SPEC.md` and `02_ASSESSMENT_AND_JOURNEY_DATA.md`
+first. This file is the running ledger: what is done, what was verified, and the
+next work in priority order. Do not undo the rules in the spec.
+
+## Done and merged to `master`
+
+- Public homepage rebuilt around the six crisp images; published as a single
+  file (`docs/index.html`, GitHub Pages workflow) and mirrored in the React app;
+  parity test keeps the two in step.
+- Lead pipeline: homepage estimator → `public_leads` (IP, consent, fact finder,
+  advisor-only analysis) → owner alert email → prospect acknowledgement →
+  owner lead inbox with CSV export. Live smoke test: `scripts/smoke_lead_capture.mjs`.
+- Owner sign-in for self-hosted installs (bcrypt hash in env; rate-limited), so
+  `/portal/*` works on cPanel/VPS without the managed OAuth server.
+- Database: 117-table schema as `database/rcs-schema.sql`; `pnpm db:build`
+  applies and verifies it. Deploy bundle installs and runs from a clean unzip
+  with plain npm. Mail via Resend or plain SMTP.
+- **Financial Assessment** (15 sections, ~190 questions) with autosave,
+  completeness, and the printable Financial Analysis Document.
+- **Financial Librarian / tape recorder** with the assessment gate, unlimited
+  Q&A, and the journey composer (3–5 core questions, emergent question,
+  10–15 real pages in building order).
+- Navigation group **New Client Welcome List**: Financial Assessment → AI
+  Financial Advisor → Wealth Genome Analysis → The Arrival … The Brotherhood.
+- One-command release: `pnpm release` (typecheck → docs/index.html → schema SQL
+  → public-surface tests → build + bundle guard → deploy zip → code book).
+
+## Verified how
+
+- Full vitest suite against a real MariaDB: all passing (see the latest PR).
+- Browser (headless Chromium) against the production build: sign in → compliance
+  signature → assessment complete → advisor answers → JOURNEY renders the core
+  questions, emergent question and ordered steps.
+
+## About the "Grok checkpoint" zip
+
+`GrokRussell_Capital_Systems_Checkpoint_bcfe0624.zip` was compared file-by-file
+with the repository: it contains **no page that is not already in the repo**
+(it is an older snapshot). The seven journey pages it refers to (The Arrival …
+The Brotherhood, with `_genome/GenomeKit.tsx`) and the Fact Finder / Wealth
+Genome pages were already merged; they are now grouped under New Client Welcome
+List, with the Wealth Genome page given a portal route (`/portal/wealth-genome`).
+One caveat for the owner: those pages are visually from the purple "genome"
+design and the public homepage is emerald/neon; the portal shell is purple, so
+inside the portal they match. `WealthGenomePage` still shows placeholder scores
+(it is not yet driven by the assessment) — see next steps.
+
+## Next steps, in order
+
+1. **Drive the Wealth Genome from the assessment.** Replace the placeholder
+   dimension scores in `client/src/pages/WealthGenomePage.tsx` with scores
+   computed from `factFinderSignals()` / the assessment (income stability, tax
+   efficiency, insurance coverage, retirement readiness, estate planning, debt
+   management, diversification, risk mitigation). Keep it explanatory, no
+   guarantees.
+2. **Journey progress on the pages themselves.** When a client opens a journey
+   step, show a small "Step N of M — next: …" bar (read `librarian.latestJourney`)
+   so the journey carries them page to page. Mark steps visited server-side
+   (add `visitedAt` per step to `client_journeys.journey`).
+3. **Calculators pre-filled from the assessment.** Mortgage Killer, Income Gap,
+   Roth Strategies, Market Stress Test: read the relevant assessment fields on
+   load so the client does not retype. Keep the assessment the single source.
+4. **Advisor view of a client's assessment and journey.** In the client
+   directory, show the client's completeness, the Financial Analysis Document,
+   and their latest journey; let the advisor ask the librarian *about* a client
+   (same gate, client's data).
+5. **Voice.** With `ELEVENLABS_API_KEY`/`ELEVENLABS_VOICE_ID` set the deck speaks
+   in the cloned voice. Consider streaming for long answers.
+6. **More catalog coverage.** Any planning page not yet in
+   `shared/journeyCatalog.ts` cannot be recommended; add it with honest tags.
+7. **Owner tasks (not code):** GitHub Pages → Source: GitHub Actions; set
+   `OWNER_EMAIL`/`OWNER_PASSWORD_HASH`, `DATABASE_URL`, mail (`SMTP_*` or
+   `RESEND_API_KEY`), AI keys; rotate the published credentials (see PR #10).
+
+## Working agreements for Grok on this repo
+
+- Build on a branch and open a PR to `master`; never force-push or delete files
+  you did not create. (PR #3 destroyed content and had to be restored.)
+- No secrets in code, tests, docs or commit messages. No fabricated numbers,
+  results, or patent statuses ("patent-pending / in process" only).
+- Run `pnpm check` and `pnpm release` before pushing; the tests encode the rules.
 ```
 
 ## `docs/grok-merge-verification.md`

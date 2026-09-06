@@ -28,7 +28,7 @@ import { MODULE_CATALOG, type ModuleKey } from "@shared/ultraEngine";
 
 type ProviderId = "claude" | "chatgpt" | "grok" | "gemini" | "perplexity" | "openrouter" | "mistral" | "groq" | "manus";
 
-type Provider = {
+export type Provider = {
   id: ProviderId;
   label: string;
   envKey: string;
@@ -132,11 +132,11 @@ const PROVIDERS: Provider[] = [
   },
 ];
 
-function configuredProviders(): Provider[] {
+export function configuredProviders(): Provider[] {
   return PROVIDERS.filter((p) => Boolean(process.env[p.envKey]));
 }
 
-const ADVISOR_SYSTEM =
+export const ADVISOR_SYSTEM =
   "You are the AI planning advisor inside Russell Capital Systems' Ultra Calculator. " +
   "You explain financial projection scenarios in plain language. You NEVER guarantee returns, " +
   "never give individualized tax or legal advice (recommend licensed professionals for that), " +
@@ -164,7 +164,7 @@ const PUBLIC_TEASER_SYSTEM =
   "planning estimator and book a thorough evaluation. Under 180 words.";
 
 /** Lead-model call: Claude direct if keyed, else the built-in Forge LLM, else null. */
-async function leadModel(system: string, user: string): Promise<{ text: string; via: string } | null> {
+export async function leadModel(system: string, user: string): Promise<{ text: string; via: string } | null> {
   const claude = PROVIDERS[0];
   const key = process.env[claude.envKey];
   if (key) {

@@ -140,6 +140,8 @@ Self-contained; run tooling from inside the directory. Supersedes the older
 - `LAUNCH.md` — launch runbook (fastest path: GitHub Pages; full app: cPanel/Node host).
 - `pnpm release` — one command regenerating every shippable artifact below.
 - `live/` — template + builder for the single-file public homepage.
+- `docs/grok-handoff/` — build spec, data shapes, and next steps for the Financial Librarian
+  (tape-recorder AI advisor), the Financial Assessment, and the journey engine.
 - `database/rcs-schema.sql` — the complete 115-table schema as plain SQL (phpMyAdmin import);
   `pnpm db:build` builds/verifies a database from it; `scripts/smoke_lead_capture.mjs`
   proves the lead pipeline on a running site.

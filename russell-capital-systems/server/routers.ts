@@ -8,6 +8,8 @@ import { invokeLLM } from "./_core/llm";
 import { invokePortalAI } from "./portalAI";
 import { ultraRouter } from "./ultraAI";
 import { leadsRouter } from "./leadsRouter";
+import { factFinderRouter } from "./factFinderRouter";
+import { librarianRouter } from "./librarianRouter";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -305,6 +307,8 @@ export const appRouter = router({
   planningCases: planningCasesRouter,
   ultra: ultraRouter,
   leads: leadsRouter,
+  factFinder: factFinderRouter,
+  librarian: librarianRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
