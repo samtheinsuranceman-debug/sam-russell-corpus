@@ -1471,6 +1471,13 @@ img, video, canvas, iframe { max-width: 100%; }
 img { height: auto; }
 img.object-cover, img[class*="h-full"] { height: 100%; }
 @media (max-width: 767px) {
+  /* The owner's 1.6× homepage type scale is a desktop measure; on a phone it
+     pushes the hero copy up over the sign. The hero copy and its button keep
+     phone-sized type; the rest of the homepage scale is untouched. */
+  .rc-homepage-type-scale .rc-hero-copy { font-size: 1rem !important; line-height: 1.45 !important; }
+  .rc-homepage-type-scale .rc-hero-cta { font-size: 1.05rem !important; line-height: 1.3 !important; padding-top: .9rem !important; padding-bottom: .9rem !important; }
+}
+@media (max-width: 767px) {
   /* Text-bearing artwork is shown whole on phones; decorative fills still cover. */
   img[data-fit="contain-mobile"] { object-fit: contain; }
 }
