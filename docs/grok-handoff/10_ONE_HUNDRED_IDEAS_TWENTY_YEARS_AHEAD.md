@@ -16,9 +16,9 @@ brief in parallel and their proposals were merged, de-duplicated, and ranked her
 | Perplexity (web-grounded) | the evidence for what is already moving: agentic-AI supervision (FINRA 2026), CFPB 1033 data rights, verifiable credentials, GENIUS Act stablecoins, atomic settlement, FHIR health data, IRS IRIS, SECURE 2.0, climate insurability, Reg S-P |
 | Claude | synthesis, ranking, and the preconditions |
 
-DeepSeek was asked twice and timed out both times. Nothing here carries a made-up
-statistic; where a claim rests on a source it is the Perplexity citation set in
-the session log.
+Nothing here carries a made-up statistic; where a claim rests on a source it is
+the Perplexity citation set in the session log. By the owner's standing rule,
+DeepSeek is not on this panel and is not to be invited to future ones.
 
 ## Part 1: what has to happen for this future to arrive
 

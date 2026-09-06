@@ -38,7 +38,6 @@ export const INTEGRATIONS: Integration[] = [
   { id: "mistral", name: "Mistral", category: "ai", mode: "runtime", purpose: "Additional voice", envKeys: ["MISTRAL_API_KEY"], wiredTo: "ultraAI fan-out" },
   { id: "groq", name: "Groq", category: "ai", mode: "runtime", purpose: "Fast additional voice", envKeys: ["GROQ_API_KEY"], wiredTo: "ultraAI fan-out" },
   { id: "cohere", name: "Cohere", category: "ai", mode: "runtime", purpose: "Additional voice", envKeys: ["COHERE_API_KEY"], wiredTo: "ultraAI fan-out" },
-  { id: "deepseek", name: "DeepSeek", category: "ai", mode: "runtime", purpose: "Additional voice", envKeys: ["DEEPSEEK_API_KEY"], wiredTo: "ultraAI fan-out" },
   { id: "together", name: "Together AI", category: "ai", mode: "runtime", purpose: "Additional voice", envKeys: ["TOGETHER_API_KEY"], wiredTo: "ultraAI fan-out" },
   { id: "manus", name: "Manus / built-in gateway", category: "ai", mode: "runtime", purpose: "Managed-host model, notifications, heartbeat cron", envKeys: ["BUILT_IN_FORGE_API_KEY", "BUILT_IN_FORGE_API_URL"], wiredTo: "portalAI, notifyOwner, heartbeat" },
   // ── Voice / video ──
