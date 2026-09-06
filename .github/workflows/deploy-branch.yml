@@ -31,3 +31,16 @@ jobs:
           git subtree split --prefix=russell-capital-systems -b deploy/rcs
       - name: Push
         run: git push --force origin deploy/rcs
+      # Railway's GitHub app has not been delivering push events for this repo,
+      # so ask Railway to deploy directly. Needs a RAILWAY_TOKEN repository secret
+      # (Railway → Account → Tokens); the step is a no-op until it exists.
+      - name: Trigger Railway deploy
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          SERVICE_ID: e8d1eb7b-21e6-41ca-a567-aa2dc0e20f28
+          ENVIRONMENT_ID: fe806289-faed-4850-b030-b47f8dc4c70f
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then echo "RAILWAY_TOKEN not set; skipping"; exit 0; fi
+          curl -fsS https://backboard.railway.com/graphql/v2 \
+            -H "Authorization: Bearer $RAILWAY_TOKEN" -H "Content-Type: application/json" \
+            -d "{\"query\":\"mutation { serviceInstanceDeployV2(serviceId: \\\"$SERVICE_ID\\\", environmentId: \\\"$ENVIRONMENT_ID\\\") }\"}"
