@@ -1,4 +1,21 @@
-<title>Russell Capital Systems</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Russell Capital Systems — Financial &amp; Tax Relief and Recovery for Physicians, Psychiatrists, &amp; Surgeons</title>
+<meta name="description" content="Coordinated tax, practice, risk, retirement and legacy planning for physicians and medical practice owners. Every strategy sequenced, every figure sourced.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://russellcapitalsystems.com/">
+<meta name="theme-color" content="#03090a">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Russell Capital Systems">
+<meta property="og:title" content="Russell Capital Systems — Financial &amp; Tax Relief and Recovery for Physicians, Psychiatrists, &amp; Surgeons">
+<meta property="og:description" content="Coordinated tax, practice, risk, retirement and legacy planning for physicians and medical practice owners.">
+<meta property="og:url" content="https://russellcapitalsystems.com/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2303110c'/%3E%3Cpath d='M32 8l20 8v16c0 12-8.5 21-20 24C20.5 53 12 44 12 32V16l20-8z' fill='none' stroke='%2322c55e' stroke-width='3.5'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='28' fill='%23e8f5ee'%3ER%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://russellcapitalsystems.com/#organization","name":"Russell Capital Systems","url":"https://russellcapitalsystems.com/","description":"Coordinated tax, practice, risk, retirement and legacy planning for physicians and medical practice owners."},{"@type":"WebSite","@id":"https://russellcapitalsystems.com/#website","url":"https://russellcapitalsystems.com/","name":"Russell Capital Systems","publisher":{"@id":"https://russellcapitalsystems.com/#organization"}}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&family=Cormorant+Garamond:wght@600;700&display=swap">
 <style>
@@ -83,13 +100,18 @@
   .scroll-hint span{width:1px;height:2.2rem;background:linear-gradient(180deg,rgba(52,211,153,.9),transparent)}
   /* phones & tablets: keep the neon words in frame and give the copy a darker floor */
   @media(max-width:1023px){.hero .pic{object-position:25% center}}
-  @media(max-width:640px){
-    .hero .pic{object-position:18% center}
-    .hero .shade-b{background:linear-gradient(180deg,rgba(3,9,10,.2) 0%,rgba(3,9,10,.05) 28%,rgba(3,9,10,.78) 62%,#03090a 100%)}
-    .hero .wrap{padding-bottom:3.25rem}
+  /* phones: the WHOLE sign, in flow and full width, then the headline as real text — nothing cropped, nothing zoomed */
+  @media(max-width:767px){
+    .hero{min-height:0;flex-direction:column;align-items:stretch;padding-top:4.4rem}
+    .hero .pic{position:relative;inset:auto;height:auto;width:100%;object-fit:contain;object-position:center;aspect-ratio:16/9}
+    .hero .shade-b{display:none}
+    .hero .h1-phone{position:static;width:auto;height:auto;overflow:visible;clip:auto;white-space:normal;margin:1.4rem auto 0;max-width:24rem;padding:0 1.25rem;text-align:center;font:900 1.75rem/1.08 Georgia,"Times New Roman",serif;letter-spacing:-.01em;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.95),0 0 28px rgba(16,185,129,.5)}
+    .hero .h1-phone b{color:var(--em-300);font-weight:900}
+    .hero .wrap{min-height:0;padding:1.25rem 0 2.5rem}
     .scroll-hint{display:none}
     .band{margin:0 .25rem}
   }
+  @media(min-width:768px){.hero .h1-phone b{font-weight:inherit;color:inherit}}
 
   /* war chest */
   .war{max-width:62rem}
@@ -221,6 +243,8 @@
   @media(min-width:640px){.sticky-cta{display:none}}@media(max-width:639px){body{padding-bottom:4.6rem}}
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
+</head>
+<body>
 
 <!-- ───────── NAV ───────── -->
 <nav class="nav" aria-label="Public navigation">
@@ -241,7 +265,7 @@
 <header id="top" class="page hero" aria-label="Financial and Tax Relief and Recovery for Physicians, Psychiatrists, and Surgeons">
   <img class="pic" src="__IMG_NEON_A__" alt="Neon sign reading Financial &amp; Tax Relief and Recovery for Physicians, Psychiatrists, &amp; Surgeons, over a glowing green city skyline">
   <div class="shade shade-b"></div>
-  <h1 class="sr">Financial &amp; Tax Relief and Recovery for Physicians, Psychiatrists, &amp; Surgeons</h1>
+  <h1 class="sr h1-phone">Financial &amp; Tax Relief and Recovery <b>for Physicians, Psychiatrists, &amp; Surgeons</b></h1>
   <div class="wrap">
     <div class="hero-foot">
       <p class="hero-tag">Coordinated <b>tax reduction</b>, <b>interest recovery</b>, practice, risk, retirement, and legacy planning — built for the finances of physicians, psychiatrists, and surgeons.</p>
@@ -683,3 +707,5 @@
   });
 })();
 </script>
+</body>
+</html>
