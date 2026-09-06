@@ -14,7 +14,7 @@ own, and what only the owner can switch on. Paths relative to
 | Gemini | `GEMINI_API_KEY` | second opinion |
 | Perplexity | `PERPLEXITY_API_KEY` | web-grounded research voice |
 | OpenRouter | `OPENROUTER_API_KEY` | gateway to models without their own key |
-| Mistral · Groq · Cohere · DeepSeek · Together | `MISTRAL_API_KEY` … `TOGETHER_API_KEY` | additional voices, skip-if-absent |
+| Mistral · Groq · Cohere · Together | `MISTRAL_API_KEY` … `TOGETHER_API_KEY` | additional voices, skip-if-absent. **DeepSeek is excluded by owner decision; never add it.** |
 | Manus / built-in gateway | `BUILT_IN_FORGE_API_KEY` | managed-host model + notifications + heartbeat cron |
 | ElevenLabs | `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` | the tape recorder's cloned voice (`ultra.speak`) |
 
