@@ -169,7 +169,7 @@ export default function Pricing() {
 
   return (
     <div className="relative min-h-screen bg-[#060f20] text-[#c8d8ec]">
-      <PageBackdrop src="/rcs-city-harbor.webp" phoneSrc="/rcs-city-towers.webp" alt="Green-lit harbour city at night, towers reflected in the water" fade="#060f20" position="center 35%" brightness=".5" />
+      <PageBackdrop src="/rcs-city-harbor.webp" phoneSrc="/rcs-city-glass.webp" alt="Green-lit harbour city at night, towers reflected in the water" fade="#060f20" position="center 35%" brightness=".5" />
       {/* Header */}
       <div className="relative z-10 border-b border-white/10">
         <div className="container py-4 flex items-center justify-between">
