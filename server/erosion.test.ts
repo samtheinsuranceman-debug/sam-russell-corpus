@@ -149,3 +149,69 @@ describe("the sphere", () => {
     expect(Math.hypot(rim.x, rim.y)).toBeGreaterThan(0.8);
   });
 });
+
+describe("keyless FRED and the harvest guards", () => {
+  it("parses FRED's CSV download and serves it when no key is set", async () => {
+    const { parseFredCsv, fetchFredObservations, fetchFredObservationsSince, _setFetchForTests, fredMode } = await import("./_core/fred");
+    const csv = "observation_date,CPIAUCSL\n2024-06-01,313.049\n2024-07-01,.\n2025-06-01,321.5\nbad,line\n";
+    const rows = parseFredCsv(csv);
+    expect(rows).toEqual([{ date: "2024-06-01", value: 313.049 }, { date: "2025-06-01", value: 321.5 }]);
+    const seen: string[] = [];
+    _setFetchForTests(async (url) => { seen.push(url); return { ok: true, status: 200, json: async () => ({}), text: async () => csv }; });
+    try {
+      const env = {} as NodeJS.ProcessEnv;
+      expect(fredMode(env)).toBe("csv");
+      const since = await fetchFredObservationsSince("CPIAUCSL", "1985-01-01", env);
+      expect(since.map((o) => o.date)).toEqual(["2024-06-01", "2025-06-01"]);
+      const latest = await fetchFredObservations("CPIAUCSL", 1, env);
+      expect(latest).toEqual([{ date: "2025-06-01", value: 321.5 }]);
+      expect(seen.every((u) => u.startsWith("https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCSL&cosd="))).toBe(true);
+      expect(seen.some((u) => u.includes("api_key"))).toBe(false);
+    } finally { _setFetchForTests(null); }
+  });
+
+  it("reads each metric deterministically and admits a figure only with its verbatim sentence", async () => {
+    const { readingFor, quoteVerified, parseHarvestReply } = await import("./forecastSources");
+    expect(readingFor("revenue_pct_gdp", 19.3, 17.1)).toEqual({ direction: 1, burdenMultiplier: 1.1287 });
+    expect(readingFor("revenue_pct_gdp", 16, 17.1)).toEqual({ direction: -1, burdenMultiplier: 0.9357 });
+    expect(readingFor("debt_pct_gdp", 156, 100)).toEqual({ direction: 1, burdenMultiplier: null });
+    expect(readingFor("debt_pct_gdp", 156, null)).toEqual({ direction: 0, burdenMultiplier: null }); // no base, no reading
+    expect(readingFor("ss_oasi_depletion_year", 2033, null)).toEqual({ direction: 1, burdenMultiplier: null });
+    expect(readingFor("gdp_effect_pct_30y", 0.7, null)).toEqual({ direction: 0, burdenMultiplier: null });
+    expect(readingFor("made_up_metric", 1, 2)).toBeNull();
+    const page = "In CBO’s projections, federal debt held by the public rises from 100 percent of GDP in 2025 to 156 percent in 2055.  Revenues total 19.3 percent of GDP in 2055.";
+    expect(quoteVerified(page, { metric: "debt_pct_gdp", horizonYear: 2055, value: 156, unit: "% GDP", baseValue: 100, asOf: null, quote: "federal debt held by the public rises from 100 percent of GDP in 2025 to 156 percent in 2055" })).toBe(true);
+    expect(quoteVerified(page, { metric: "debt_pct_gdp", horizonYear: 2055, value: 156, unit: "% GDP", baseValue: 100, asOf: null, quote: "In CBO's projections, federal debt held by the public rises from 100 percent of GDP in 2025 to 156 percent in 2055." })).toBe(true); // curly vs straight quote, whitespace
+    expect(quoteVerified(page, { metric: "debt_pct_gdp", horizonYear: 2055, value: 166, unit: "% GDP", baseValue: 100, asOf: null, quote: "federal debt held by the public rises from 100 percent of GDP in 2025 to 156 percent in 2055" })).toBe(false); // number not in the sentence
+    expect(quoteVerified(page, { metric: "debt_pct_gdp", horizonYear: 2055, value: 156, unit: "% GDP", baseValue: 100, asOf: null, quote: "debt reaches 156 percent of GDP by 2055 under current law" })).toBe(false); // sentence not on the page
+    expect(parseHarvestReply('Sure. {"claims":[{"metric":"revenue_pct_gdp","horizonYear":2055,"value":"19.3","unit":"% GDP","baseValue":null,"asOf":"2025-03-27","quote":"Revenues total 19.3 percent of GDP in 2055."},{"metric":"x","horizonYear":1999,"quote":"no"}]}')).toEqual([{ metric: "revenue_pct_gdp", horizonYear: 2055, value: 19.3, unit: "% GDP", baseValue: null, asOf: "2025-03-27", quote: "Revenues total 19.3 percent of GDP in 2055." }]);
+    expect(parseHarvestReply("no json here")).toEqual([]);
+  });
+
+  it("harvests with the council, keeps only verified readable figures, and corroborates across voices", async () => {
+    const { harvestSource, SOURCES } = await import("./forecastSources");
+    const cbo = SOURCES.find((s) => s.id === "cbo")!;
+    const text = "The Long-Term Budget Outlook: 2025 to 2055. In CBO’s projections, federal debt held by the public rises from 100 percent of GDP in 2025 to 156 percent in 2055. Revenues total 19.3 percent of GDP in 2055, up from 17.1 percent in 2025. Outlays reach 26.6 percent of GDP in 2055. ".repeat(3);
+    const replies: Record<string, string> = {
+      A: JSON.stringify({ claims: [
+        { metric: "revenue_pct_gdp", horizonYear: 2055, value: 19.3, unit: "% GDP", baseValue: 17.1, asOf: null, quote: "Revenues total 19.3 percent of GDP in 2055, up from 17.1 percent in 2025." },
+        { metric: "debt_pct_gdp", horizonYear: 2055, value: 156, unit: "% GDP", baseValue: 100, asOf: null, quote: "federal debt held by the public rises from 100 percent of GDP in 2025 to 156 percent in 2055" },
+        { metric: "deficit_pct_gdp", horizonYear: 2055, value: 7.3, unit: "% GDP", baseValue: 6.2, asOf: null, quote: "Deficits reach 7.3 percent of GDP in 2055" }, // not on the page: hallucinated
+      ] }),
+      B: JSON.stringify({ claims: [
+        { metric: "revenue_pct_gdp", horizonYear: 2055, value: 19.3, unit: "percent of GDP", baseValue: null, asOf: null, quote: "Revenues total 19.3 percent of GDP in 2055" },
+        { metric: "outlays_pct_gdp", horizonYear: 2055, value: 26.6, unit: "% GDP", baseValue: null, asOf: null, quote: "Outlays reach 26.6 percent of GDP in 2055." }, // no base: reads flat, kept for the record
+      ] }),
+      C: "I could not find projections.",
+    };
+    const r = await harvestSource(cbo, { text, voices: [{ label: "A" }, { label: "B" }, { label: "C" }], ask: async (v) => replies[v.label]!, today: "2026-09-06" });
+    expect(r.harvested).toBe(true);
+    if (!r.harvested) return;
+    expect(r.voices).toEqual(["A", "B", "C"]);
+    expect(r.reported).toBe(5);
+    expect(r.verified).toBe(4);   // the deficit sentence is not on the page
+    expect(r.stored).toBe(3);     // revenue (A+B corroborated), debt, outlays — no database in tests, so "stored" is what would be queued
+    const none = await harvestSource(cbo, { text, voices: [], ask: async () => "" });
+    expect(none.harvested).toBe(false);
+  });
+});
