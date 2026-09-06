@@ -59,7 +59,7 @@ const MassiveCalculatorsPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
-      <PageBackdrop src="/rcs-city-river.webp" phoneSrc="/rcs-city-spire.webp" alt="Emerald-lit skyline at dusk with a river curving through the city" fade="#0a0f1a" />
+      <PageBackdrop src="/rcs-city-river.webp" phoneSrc="/rcs-city-lattice.webp" alt="Emerald-lit skyline at dusk with a river curving through the city" fade="#0a0f1a" />
       <div className="relative z-10 max-w-7xl mx-auto">
         <div className="flex items-center mb-4">
           <span className="text-4xl mr-4">🧮</span>
