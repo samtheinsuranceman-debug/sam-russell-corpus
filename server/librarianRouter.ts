@@ -14,6 +14,7 @@
 // comes from the client's own assessment.
 // ============================================================
 import { z } from "zod";
+import { recordEvent } from "./ledger";
 import { protectedProcedure, router } from "./_core/trpc";
 import { ADVISOR_SYSTEM, configuredProviders, leadModel } from "./ultraAI";
 import { getFactFinderForUser, getLatestJourneyForUser, markJourneyStepVisited, saveJourneyForUser } from "./factFinderDb";
@@ -177,6 +178,12 @@ export const librarianRouter = router({
         controls: journey.controls,
         generatedBy: journey.generatedBy,
       });
+      await recordEvent({
+        kind: "journey", source: "ai", key: id ? `journey.${id}` : "journey", label: "Secret journey built",
+        value: { journeyId: id, questions: input.questions, coreQuestions: journey.coreQuestions, emergentQuestion: journey.emergentQuestion, steps: journey.steps.map((s) => s.id), generatedBy: journey.generatedBy },
+        summary: `Journey built from ${input.questions.length} question${input.questions.length === 1 ? "" : "s"}: ${journey.coreQuestions.length} core questions, ${journey.steps.length} pages, first ${journey.steps[0]!.title}`,
+        userId: ctx.user.id,
+      });
       const spoken =
         `I've read everything you asked and everything in your assessment. It comes down to ${journey.coreQuestions.length} questions. ` +
         journey.coreQuestions.map((q, i) => `${i + 1}: ${q}`).join(" ") +
@@ -193,6 +200,10 @@ export const librarianRouter = router({
     .input(z.object({ journeyId: z.number().int().positive(), stepId: z.string().min(1).max(64) }))
     .mutation(async ({ ctx, input }) => {
       const journey = await markJourneyStepVisited(ctx.user.id, input.journeyId, input.stepId);
+      const step = journey?.steps.find((s) => s.id === input.stepId);
+      if (step && step.visitedAt && new Date(step.visitedAt).getTime() > Date.now() - 5000) {
+        await recordEvent({ kind: "journey", source: "client", key: `journey.${input.journeyId}.${input.stepId}`, label: step.title, value: { path: step.path }, summary: `Opened journey page: ${step.title}`, userId: ctx.user.id });
+      }
       return { ok: Boolean(journey), visited: journey ? journey.steps.filter((s) => s.visitedAt).length : 0, total: journey?.steps.length ?? 0 };
     }),
 });

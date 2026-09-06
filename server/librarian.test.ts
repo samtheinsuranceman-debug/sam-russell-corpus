@@ -16,6 +16,7 @@ vi.mock("./factFinderDb", () => ({
 }));
 const providers: Array<{ id: string; label: string; envKey: string; call: (k: string, s: string, u: string) => Promise<string> }> = [];
 const leadModelMock = vi.fn(async (_s: string, _u: string) => null as { text: string; via: string } | null);
+vi.mock("./ledger", () => ({ recordEvent: vi.fn(async () => 1), recordAssessmentChange: vi.fn(async () => 0), assessmentResetEvent: vi.fn(() => ({ kind: "status", source: "client", summary: "reset" })) }));
 vi.mock("./ultraAI", () => ({
   ADVISOR_SYSTEM: "BASE RULES.",
   configuredProviders: () => providers,

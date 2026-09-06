@@ -73,6 +73,13 @@ human contact), messaging from the client page and lead inbox with a delivery
 log, one-click unsubscribe + STOP handling, `pnpm mail:check` for real DNS
 deliverability, and FRED benchmark rates cached in the database.
 
+## Added since: the Plan Ledger (see `08_PLAN_LEDGER.md`)
+
+Append-only, hash-chained record per client/user/lead: every assessment
+field change, journey, message, lead status and advisor decision, with a
+client page that replays the assessment at any moment and an advisor panel
+on the client record. Idea 1 of doc 06 is live; ideas 2–5 build on it.
+
 ## Next steps, in order
 
 0. **Financial gathering from live sources** — aggregator import (Era Context /

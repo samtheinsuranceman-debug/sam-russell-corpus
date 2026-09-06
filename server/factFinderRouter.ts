@@ -8,6 +8,7 @@ import { protectedProcedure, router } from "./_core/trpc";
 import { deleteFactFinderForUser, getFactFinderForUser, saveFactFinderForUser } from "./factFinderDb";
 import { emptyFactFinder, factFinderCompleteness, factFinderSummary, type ClientFactFinder } from "@shared/clientFactFinder";
 import { computeWealthGenome } from "@shared/wealthGenome";
+import { assessmentResetEvent, recordAssessmentChange, recordEvent } from "./ledger";
 
 const value = z.union([z.string().max(4000), z.number().finite(), z.boolean(), z.null()]);
 const sectionData = z.record(z.string().max(64), value);
@@ -34,8 +35,14 @@ export const factFinderRouter = router({
     .input(z.object({ data: factFinderSchema }))
     .mutation(async ({ ctx, input }) => {
       const data = input.data as ClientFactFinder;
+      // The ledger records every changed field: read the previous state first.
+      const previous = await getFactFinderForUser(ctx.user.id);
       const saved = await saveFactFinderForUser(ctx.user.id, data);
       if (!saved) return { saved: false as const, completeness: factFinderCompleteness(data), completedAt: null };
+      await recordAssessmentChange({ userId: ctx.user.id }, previous?.data, data, "client", ctx.user.name ?? null);
+      if (saved.completedAt && !previous?.completedAt) {
+        await recordEvent({ kind: "status", source: "system", key: "assessment.completed", label: "Financial Assessment", summary: "Financial Assessment completed — the AI Financial Advisor is unlocked", userId: ctx.user.id });
+      }
       return { saved: true as const, completeness: saved.completeness, completedAt: saved.completedAt };
     }),
 
@@ -53,6 +60,7 @@ export const factFinderRouter = router({
 
   reset: protectedProcedure.mutation(async ({ ctx }) => {
     await deleteFactFinderForUser(ctx.user.id);
+    await recordEvent(assessmentResetEvent({ userId: ctx.user.id }, ctx.user.name ?? null));
     return { ok: true as const };
   }),
 });
