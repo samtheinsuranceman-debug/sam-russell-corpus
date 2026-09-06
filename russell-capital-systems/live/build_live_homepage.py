@@ -19,6 +19,8 @@ DEFAULT_OUT = REPO / "docs" / "index.html"
 IMAGES = {
     "__IMG_NEON_A__": "rcs-neon-a.webp",
     "__IMG_NEON_B__": "rcs-neon-b.webp",
+    "__IMG_NEON_A_TALL__": "rcs-neon-a-tall.webp",
+    "__IMG_NEON_B_TALL__": "rcs-neon-b-tall.webp",
     "__IMG_EMERALD__": "rcs-city-emerald.webp",
     "__IMG_BRIDGE__": "rcs-city-bridge.webp",
     "__IMG_CANYON__": "rcs-city-canyon.webp",
