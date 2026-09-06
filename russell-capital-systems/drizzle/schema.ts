@@ -2564,3 +2564,30 @@ export const forecastClaims = mysqlTable("forecast_claims", {
   createdAt:        timestamp("createdAt").defaultNow().notNull(),
 }, (t) => ({ bySource: index("forecast_claims_source").on(t.sourceId), byMetric: index("forecast_claims_metric").on(t.metric, t.horizonYear), once: uniqueIndex("forecast_claims_once").on(t.sourceId, t.metric, t.horizonYear, t.asOf) }));
 export type ForecastClaimRow = typeof forecastClaims.$inferSelect;
+
+// Harvested claims: figures the AI council read off a source's own page,
+// each with the verbatim sentence it came from (verified against the fetched
+// text before it is stored). Nothing here enters the panel until the owner
+// approves it, at which point it becomes a forecast_claims row with the
+// quote as its note.
+export const forecastHarvests = mysqlTable("forecast_harvests", {
+  id:               int("id").autoincrement().primaryKey(),
+  sourceId:         varchar("sourceId", { length: 40 }).notNull(),
+  url:              varchar("url", { length: 500 }).notNull(),
+  metric:           varchar("metric", { length: 80 }).notNull(),
+  horizonYear:      int("horizonYear").notNull(),
+  value:            decimal("value", { precision: 14, scale: 4 }),
+  unit:             varchar("unit", { length: 20 }),
+  baseValue:        decimal("baseValue", { precision: 14, scale: 4 }),
+  direction:        int("direction").notNull(),
+  burdenMultiplier: decimal("burdenMultiplier", { precision: 8, scale: 4 }),
+  asOf:             varchar("asOf", { length: 10 }).notNull(),
+  quote:            varchar("quote", { length: 600 }).notNull(),      // verbatim from the page
+  voices:           json("voices").notNull(),                          // which AI voices read it
+  corroborated:     int("corroborated").default(1).notNull(),          // how many voices agreed
+  status:           mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  claimId:          int("claimId"),                                    // the forecast_claims row once approved
+  reviewedAt:       timestamp("reviewedAt"),
+  createdAt:        timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ bySource: index("forecast_harvests_source").on(t.sourceId, t.status), once: uniqueIndex("forecast_harvests_once").on(t.sourceId, t.metric, t.horizonYear, t.asOf) }));
+export type ForecastHarvestRow = typeof forecastHarvests.$inferSelect;

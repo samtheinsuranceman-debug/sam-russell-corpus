@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 132
+-- Tables: 133
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -820,6 +820,28 @@ CREATE TABLE `forecast_claims` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `forecast_claims_id` PRIMARY KEY(`id`),
 	CONSTRAINT `forecast_claims_once` UNIQUE(`sourceId`,`metric`,`horizonYear`,`asOf`)
+);
+CREATE TABLE `forecast_harvests` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`sourceId` varchar(40) NOT NULL,
+	`url` varchar(500) NOT NULL,
+	`metric` varchar(80) NOT NULL,
+	`horizonYear` int NOT NULL,
+	`value` decimal(14,4),
+	`unit` varchar(20),
+	`baseValue` decimal(14,4),
+	`direction` int NOT NULL,
+	`burdenMultiplier` decimal(8,4),
+	`asOf` varchar(10) NOT NULL,
+	`quote` varchar(600) NOT NULL,
+	`voices` json NOT NULL,
+	`corroborated` int NOT NULL DEFAULT 1,
+	`status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+	`claimId` int,
+	`reviewedAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `forecast_harvests_id` PRIMARY KEY(`id`),
+	CONSTRAINT `forecast_harvests_once` UNIQUE(`sourceId`,`metric`,`horizonYear`,`asOf`)
 );
 CREATE TABLE `forecast_sources` (
 	`id` varchar(40) NOT NULL,

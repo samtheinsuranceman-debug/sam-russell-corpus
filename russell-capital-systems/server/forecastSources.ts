@@ -10,11 +10,15 @@
 // citation, plus the platform's reading of what each implies for a client's
 // future tax burden (direction and, where the metric allows, a multiplier).
 // The seed set below is what was verified on 2026-09-06; new claims are
-// added as the sources publish, by hand or by the fetch + council path.
+// added as the sources publish: by hand (addClaim), or harvested — the AI
+// council reads the source's own page and reports figures with the verbatim
+// sentence each came from; the sentence is checked against the fetched text
+// before anything is stored, and the owner approves each one into the panel.
 // ============================================================
 import { and, eq } from "drizzle-orm";
 import { getDb } from "./db";
-import { forecastClaims, forecastSources, type ForecastClaimRow, type ForecastSourceRow } from "../drizzle/schema";
+import { forecastClaims, forecastHarvests, forecastSources, type ForecastClaimRow, type ForecastHarvestRow, type ForecastSourceRow } from "../drizzle/schema";
+import { jsonColumn } from "./_core/jsonColumn";
 import type { Direction, WeightedClaim } from "@shared/erosion";
 import { configuredProviders, leadModel } from "./ultraAI";
 
@@ -178,4 +182,160 @@ export async function councilReview(source: SourceDef, excerpt: string | null): 
     if (lead?.text) rationale = lead.text.slice(0, 1000);
   }
   return { evidence, rationale, voices: parsed.map((x) => x.label) };
+}
+
+// ─── Harvest: the council reads the sources' own pages ──────────────────────
+/** Metrics the platform knows how to read. Anything else the council reports is discarded. */
+export const HARVEST_METRICS = ["revenue_pct_gdp", "outlays_pct_gdp", "deficit_pct_gdp", "debt_pct_gdp", "net_interest_pct_gdp", "ss_oasi_depletion_year", "ss_oasdi_depletion_year", "medicare_hi_depletion_year", "ss_actuarial_deficit_pct_payroll", "top_rate_pct", "gdp_effect_pct_10y", "gdp_effect_pct_30y", "debt_change_pct_10y", "debt_change_pct_30y", "fiscal_gap_pct_gdp"] as const;
+export type HarvestMetric = (typeof HARVEST_METRICS)[number];
+
+/** The platform's deterministic reading of a metric: what it implies for a client's future tax burden. The council never sets direction. */
+export function readingFor(metric: string, value: number | null, baseValue: number | null): { direction: Direction; burdenMultiplier: number | null } | null {
+  if (!(HARVEST_METRICS as readonly string[]).includes(metric)) return null;
+  const vs = (v: number | null): Direction => (v == null || baseValue == null ? 0 : v > baseValue ? 1 : v < baseValue ? -1 : 0);
+  switch (metric as HarvestMetric) {
+    case "revenue_pct_gdp":
+    case "top_rate_pct": {
+      const mult = value != null && baseValue != null && baseValue > 0 ? Math.round((value / baseValue) * 10_000) / 10_000 : null;
+      return { direction: vs(value), burdenMultiplier: mult };
+    }
+    case "outlays_pct_gdp": case "deficit_pct_gdp": case "debt_pct_gdp": case "net_interest_pct_gdp": case "fiscal_gap_pct_gdp":
+      // Rising spending, deficits, debt or interest are pressure toward higher taxes; no rate figure is implied.
+      return { direction: vs(value), burdenMultiplier: null };
+    case "ss_oasi_depletion_year": case "ss_oasdi_depletion_year": case "medicare_hi_depletion_year": case "ss_actuarial_deficit_pct_payroll":
+      return { direction: 1, burdenMultiplier: null };
+    case "debt_change_pct_10y": case "debt_change_pct_30y":
+      return { direction: value != null && value > 0 ? 1 : value != null && value < 0 ? -1 : 0, burdenMultiplier: null };
+    case "gdp_effect_pct_10y": case "gdp_effect_pct_30y":
+      return { direction: 0, burdenMultiplier: null };
+  }
+}
+
+export const HARVEST_SYSTEM = `You extract published long-horizon fiscal and tax projections from the text of a forecaster's own web page, for a financial-planning platform. Report only figures that appear in the text. Reply with JSON only: {"claims":[{"metric": string, "horizonYear": integer, "value": number, "unit": string, "baseValue": number or null, "asOf": "YYYY-MM-DD" or null, "quote": string}]}. metric must be one of: ${HARVEST_METRICS.join(", ")}. horizonYear is the year the figure refers to. baseValue is the same metric's current or starting value if the text states it, else null. asOf is the publication date if the text states it, else null. quote is the exact sentence from the text that contains the figure, copied verbatim — a claim without a verbatim quote is discarded. Never invent, round, convert, or infer figures. If the text has no such projections, reply {"claims":[]}.`;
+
+export type HarvestCandidate = { metric: string; horizonYear: number; value: number | null; unit: string | null; baseValue: number | null; asOf: string | null; quote: string };
+const norm = (t: string) => t.replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"').replace(/\u2212/g, "-").replace(/\s+/g, " ").trim().toLowerCase();
+
+/** A figure is admissible only if its sentence is really in the page and the number really is in that sentence. */
+export function quoteVerified(pageText: string, c: HarvestCandidate): boolean {
+  const page = norm(pageText), q = norm(c.quote);
+  if (q.length < 12 || !page.includes(q)) return false;
+  if (c.value == null) return true;
+  const forms = new Set<string>();
+  const v = c.value;
+  forms.add(String(v)); forms.add(v.toFixed(1)); forms.add(v.toFixed(0)); forms.add(v.toLocaleString("en-US")); forms.add(v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }));
+  if (Number.isInteger(v)) forms.add(`${v}`);
+  return Array.from(forms).some((f) => q.includes(f.toLowerCase()));
+}
+
+export function parseHarvestReply(text: string): HarvestCandidate[] {
+  const m = text.match(/\{[\s\S]*\}/);
+  if (!m) return [];
+  try {
+    const j = JSON.parse(m[0]) as { claims?: unknown };
+    if (!Array.isArray(j.claims)) return [];
+    return j.claims.flatMap((raw) => {
+      const c = raw as Record<string, unknown>;
+      const metric = String(c.metric ?? ""), horizonYear = Number(c.horizonYear), quote = String(c.quote ?? "");
+      if (!metric || !Number.isInteger(horizonYear) || horizonYear < 2000 || horizonYear > 2125 || !quote) return [];
+      const value = c.value == null ? null : Number(c.value), baseValue = c.baseValue == null ? null : Number(c.baseValue);
+      const asOf = typeof c.asOf === "string" && /^\d{4}-\d{2}-\d{2}$/.test(c.asOf) ? c.asOf : null;
+      return [{ metric, horizonYear, value: value != null && Number.isFinite(value) ? value : null, unit: c.unit == null ? null : String(c.unit).slice(0, 20), baseValue: baseValue != null && Number.isFinite(baseValue) ? baseValue : null, asOf, quote: quote.slice(0, 600) }];
+    });
+  } catch { return []; }
+}
+
+export type Ask = (voice: { label: string }, system: string, user: string) => Promise<string>;
+const defaultAsk: Ask = async (voice, system, user) => {
+  const p = configuredProviders().find((x) => x.label === voice.label);
+  if (!p) throw new Error("voice not configured");
+  return p.call(process.env[p.envKey]!, system, user);
+};
+
+export type HarvestResult = { harvested: true; url: string; pageChars: number; voices: string[]; reported: number; verified: number; stored: number; duplicates: number } | { harvested: false; reason: string };
+
+/** Fetch the page, have every configured voice read it, keep only quote-verified figures the platform can read, and queue them for the owner. */
+export async function harvestSource(source: SourceDef, opts: { url?: string; text?: string; voices?: Array<{ label: string }>; ask?: Ask; today?: string } = {}): Promise<HarvestResult> {
+  const voices = opts.voices ?? configuredProviders().map((p) => ({ label: p.label }));
+  if (!voices.length) return { harvested: false, reason: "No AI provider is configured on the host" };
+  const url = opts.url ?? source.url;
+  let text = opts.text ?? null;
+  if (text == null) { try { text = await fetchSourceText({ ...source, url }); } catch (e) { return { harvested: false, reason: `Could not read ${url}: ${String(e).slice(0, 120)}` }; } }
+  if (!text || text.length < 200) return { harvested: false, reason: `Nothing readable at ${url}` };
+  const ask = opts.ask ?? defaultAsk;
+  const user = `Source: ${source.name} (${source.org}), ${url}\nPublishes: ${source.publishes}\n\nText of the page:\n${text.slice(0, 11_000)}\n\nExtract every long-horizon projection in the text.`;
+  const replies = await Promise.all(voices.map(async (v) => { try { return { label: v.label, cands: parseHarvestReply(await ask(v, HARVEST_SYSTEM, user)) }; } catch { return { label: v.label, cands: [] as HarvestCandidate[] }; } }));
+  const reported = replies.reduce((s, r) => s + r.cands.length, 0);
+  // Verify, read, and corroborate across voices (same metric + year, values within 1%).
+  type Kept = HarvestCandidate & { direction: Direction; burdenMultiplier: number | null; voices: string[] };
+  const kept: Kept[] = [];
+  let verified = 0;
+  for (const r of replies) for (const c of r.cands) {
+    if (!quoteVerified(text, c)) continue;
+    const reading = readingFor(c.metric, c.value, c.baseValue);
+    if (!reading) continue;
+    verified += 1;
+    const same = kept.find((k) => k.metric === c.metric && k.horizonYear === c.horizonYear && ((k.value == null && c.value == null) || (k.value != null && c.value != null && Math.abs(k.value - c.value) <= Math.abs(k.value) * 0.01)));
+    if (same) { if (!same.voices.includes(r.label)) same.voices.push(r.label); if (same.baseValue == null && c.baseValue != null) { same.baseValue = c.baseValue; const rr = readingFor(c.metric, same.value, c.baseValue); if (rr) { same.direction = rr.direction; same.burdenMultiplier = rr.burdenMultiplier; } } continue; }
+    kept.push({ ...c, ...reading, voices: [r.label] });
+  }
+  const today = opts.today ?? new Date().toISOString().slice(0, 10);
+  const db = await getDb();
+  let stored = 0, duplicates = 0;
+  if (db) for (const k of kept) {
+    try {
+      await db.insert(forecastHarvests).values({ sourceId: source.id, url: url.slice(0, 500), metric: k.metric, horizonYear: k.horizonYear, value: k.value == null ? null : String(k.value), unit: k.unit, baseValue: k.baseValue == null ? null : String(k.baseValue), direction: k.direction, burdenMultiplier: k.burdenMultiplier == null ? null : String(k.burdenMultiplier), asOf: k.asOf ?? today, quote: k.quote, voices: k.voices, corroborated: k.voices.length });
+      stored += 1;
+    } catch (e) { if (String((e as { code?: string })?.code ?? e).includes("ER_DUP_ENTRY")) duplicates += 1; else throw e; }
+  }
+  return { harvested: true, url, pageChars: text.length, voices: voices.map((v) => v.label), reported, verified, stored: db ? stored : kept.length, duplicates };
+}
+
+export type HarvestView = { id: number; sourceId: string; url: string; metric: string; horizonYear: number; value: number | null; unit: string | null; baseValue: number | null; direction: Direction; burdenMultiplier: number | null; asOf: string; quote: string; voices: string[]; corroborated: number; status: "pending" | "approved" | "rejected"; claimId: number | null; reviewedAt: Date | null; createdAt: Date };
+const harvestView = (r: ForecastHarvestRow): HarvestView => ({ id: r.id, sourceId: r.sourceId, url: r.url, metric: r.metric, horizonYear: r.horizonYear, value: num(r.value), unit: r.unit, baseValue: num(r.baseValue), direction: Math.sign(r.direction) as Direction, burdenMultiplier: num(r.burdenMultiplier), asOf: r.asOf, quote: r.quote, voices: jsonColumn<string[]>(r.voices, []), corroborated: r.corroborated, status: r.status, claimId: r.claimId, reviewedAt: r.reviewedAt, createdAt: r.createdAt });
+
+export async function listHarvests(status?: "pending" | "approved" | "rejected"): Promise<HarvestView[]> {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = status ? await db.select().from(forecastHarvests).where(eq(forecastHarvests.status, status)) : await db.select().from(forecastHarvests);
+  return rows.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).map(harvestView);
+}
+
+/** Approve a harvested figure into the panel (with its quote as the note) or reject it. */
+export async function reviewHarvest(id: number, approve: boolean): Promise<HarvestView | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [row] = await db.select().from(forecastHarvests).where(eq(forecastHarvests.id, id)).limit(1);
+  if (!row || row.status !== "pending") return row ? harvestView(row) : null;
+  let claimId: number | null = null;
+  if (approve) {
+    const src = SOURCES.find((s) => s.id === row.sourceId);
+    const citation = `${src?.name ?? row.sourceId}${src ? ` (${src.org})` : ""}, ${row.url} — harvested ${row.createdAt.toISOString().slice(0, 10)}, read by ${jsonColumn<string[]>(row.voices, []).join(", ")}`.slice(0, 500);
+    try {
+      claimId = await addClaim({ sourceId: row.sourceId, metric: row.metric, horizonYear: row.horizonYear, value: row.value, unit: row.unit, baseValue: row.baseValue, direction: row.direction, burdenMultiplier: row.burdenMultiplier, asOf: row.asOf, citation, note: `“${row.quote}”`.slice(0, 500) });
+    } catch (e) { if (!String((e as { code?: string })?.code ?? e).includes("ER_DUP_ENTRY")) throw e; }
+  }
+  await db.update(forecastHarvests).set({ status: approve ? "approved" : "rejected", claimId, reviewedAt: new Date() }).where(eq(forecastHarvests.id, id));
+  const [after] = await db.select().from(forecastHarvests).where(eq(forecastHarvests.id, id)).limit(1);
+  return after ? harvestView(after) : null;
+}
+
+/** Sweep every enabled source, one at a time. */
+export async function harvestAll(): Promise<Array<{ sourceId: string } & HarvestResult>> {
+  const sources = await listSources();
+  const out: Array<{ sourceId: string } & HarvestResult> = [];
+  for (const s of sources.filter((x) => x.enabled)) out.push({ sourceId: s.id, ...(await harvestSource(s)) });
+  return out;
+}
+
+let sweepTimer: NodeJS.Timeout | null = null;
+/** Opt-in scheduled sweep: EROSION_HARVEST_DAYS=7 reads every source weekly (first pass a minute after boot). */
+export function startHarvestSchedule(env: NodeJS.ProcessEnv = process.env): boolean {
+  const days = Number(env.EROSION_HARVEST_DAYS ?? 0);
+  if (!Number.isFinite(days) || days <= 0 || sweepTimer) return false;
+  const run = () => harvestAll().then((r) => console.log("[erosion] harvest sweep:", r.map((x) => `${x.sourceId}:${x.harvested ? `${x.stored} stored` : "skipped"}`).join(" "))).catch((e) => console.warn("[erosion] harvest sweep failed", String(e).slice(0, 160)));
+  setTimeout(run, 60_000).unref?.();
+  sweepTimer = setInterval(run, days * 86_400_000);
+  sweepTimer.unref?.();
+  return true;
 }

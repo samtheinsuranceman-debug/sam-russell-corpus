@@ -38,6 +38,11 @@ export default function Erosion() {
   const [realTarget, setRealTarget] = useState(3);
   const [weights, setWeights] = useState<Record<string, number>>({ shelter: 35, food_home: 15, medical: 15, tuition: 10, gasoline: 10, energy: 5, auto_insurance: 5, all: 5 });
   const run = trpc.erosion.projection.useMutation({ onError: (e) => toast.error(e.message), onSuccess: (r, v) => { if (v.seal) { toast.success("Sealed on your Plan Ledger"); } } });
+  const harvests = trpc.erosion.harvests.useQuery({ status: "pending" }, { refetchOnWindowFocus: false, retry: false });
+  const isOwner = harvests.isSuccess;
+  const harvest = trpc.erosion.harvestSource.useMutation({ onSuccess: (r) => { toast[r.harvested ? "success" : "warning"](r.harvested ? `${r.voices.join(", ")} read ${r.pageChars.toLocaleString()} characters: ${r.reported} reported, ${r.verified} quote-verified, ${r.stored} queued${r.duplicates ? `, ${r.duplicates} already queued` : ""}` : r.reason); utils.erosion.harvests.invalidate(); }, onError: (e) => toast.error(e.message) });
+  const harvestEverything = trpc.erosion.harvestAll.useMutation({ onSuccess: (rs) => { const stored = rs.reduce((s, r) => s + (r.harvested ? r.stored : 0), 0); toast.success(`${rs.length} sources read, ${stored} figures queued for review`); utils.erosion.harvests.invalidate(); }, onError: (e) => toast.error(e.message) });
+  const decide = trpc.erosion.reviewHarvest.useMutation({ onSuccess: (r) => { toast.success(r.status === "approved" ? "Added to the panel" : "Rejected"); utils.erosion.harvests.invalidate(); utils.erosion.panel.invalidate(); utils.erosion.trajectory.invalidate(); }, onError: (e) => toast.error(e.message) });
   const review = trpc.erosion.reviewSource.useMutation({ onSuccess: (r) => { toast[r.reviewed ? "success" : "warning"](r.reviewed ? `Council graded evidence ${r.evidence} (${r.voices.join(", ")})` : r.reason); utils.erosion.panel.invalidate(); utils.erosion.trajectory.invalidate(); }, onError: (e) => toast.error(e.message) });
   const basket = Object.entries(weights).map(([categoryId, weight]) => ({ categoryId, weight }));
   const go = (seal: boolean) => run.mutate({ income: income ? Number(income) : undefined, incomeGrowth: growth / 100, savingsRate: saveRate / 100, savings: savings ? Number(savings) : 0, nominalReturn: ret / 100, taxOnGrowth: taxG / 100, inflation: inflation ? Number(inflation) / 100 : undefined, basket, realTarget: realTarget / 100, seal });
@@ -89,10 +94,39 @@ export default function Erosion() {
                   <p className="text-slate-500">evidence {s.evidence.toFixed(2)}{s.aiEvidence != null ? ` (council ${s.aiEvidence.toFixed(2)})` : ""} · track {s.trackRecord.toFixed(2)} · consistency {s.consistency.toFixed(2)} · {panel.data?.claims.filter((c) => c.sourceId === s.id).length ?? 0} claims</p>
                   {s.aiRationale && <p className="text-slate-500">{s.aiRationale}</p>}
                 </div>
-                <button type="button" className={BTN} disabled={review.isPending} onClick={() => review.mutate({ id: s.id })}>Ask the council</button>
+                <div className="flex gap-2">
+                  <button type="button" className={BTN} disabled={review.isPending} onClick={() => review.mutate({ id: s.id })}>Ask the council</button>
+                  {isOwner && <button type="button" className={BTN} disabled={harvest.isPending} onClick={() => harvest.mutate({ id: s.id })} title="The council reads this source's page and reports figures with the sentence each came from">Harvest</button>}
+                </div>
               </li>
             ))}
           </ul>
+          {isOwner && (
+            <div className="mt-3 rounded-xl border border-white/10 p-3" aria-label="Harvested figures awaiting review">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-xs font-semibold text-white">Harvested figures awaiting your review · {harvests.data?.length ?? 0}</p>
+                <button type="button" className={BTN} disabled={harvestEverything.isPending} onClick={() => harvestEverything.mutate()}>{harvestEverything.isPending ? "Reading every source…" : "Harvest every source"}</button>
+              </div>
+              <p className="mt-1 text-[11px] text-slate-500">Each figure was read off the source's own page by the AI voices named, and its sentence was checked against the fetched text before it could appear here. Direction and burden multiplier are the platform's fixed reading of the metric, never the AI's. Approving adds it to the panel with the quote as its note.</p>
+              {harvests.data?.length ? (
+                <ul className="mt-2 divide-y divide-white/5">
+                  {harvests.data.map((h) => (
+                    <li key={h.id} className="flex flex-wrap items-start justify-between gap-2 py-2 text-xs">
+                      <div className="max-w-3xl">
+                        <p className="text-slate-200"><span className="font-medium text-white">{h.sourceId}</span> · {h.metric.replace(/_/g, " ")} {h.horizonYear}: <span className="font-semibold text-white">{h.value ?? "—"} {h.unit ?? ""}</span>{h.baseValue != null ? ` (from ${h.baseValue})` : ""} · reading {h.direction > 0 ? "up" : h.direction < 0 ? "down" : "flat"}{h.burdenMultiplier != null ? ` ×${h.burdenMultiplier.toFixed(3)}` : ""} · as of {h.asOf} · {h.voices.join(", ")}{h.corroborated > 1 ? ` (${h.corroborated} agree)` : ""}</p>
+                        <p className="mt-0.5 text-slate-400">“{h.quote}”</p>
+                        <p className="text-slate-600">{h.url}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button type="button" className={PRIMARY} disabled={decide.isPending} onClick={() => decide.mutate({ id: h.id, approve: true })}>Approve</button>
+                        <button type="button" className={BTN} disabled={decide.isPending} onClick={() => decide.mutate({ id: h.id, approve: false })}>Reject</button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : <p className="mt-2 text-xs text-slate-500">Nothing waiting. Harvest a source above, or set EROSION_HARVEST_DAYS on the host for a scheduled sweep.</p>}
+            </div>
+          )}
           <details className="mt-3 text-xs text-slate-400"><summary className="cursor-pointer text-slate-300">Every claim, with its citation</summary>
             <ul className="mt-2 space-y-1">{(panel.data?.claims ?? []).map((c) => <li key={c.id}><span className="text-slate-200">{c.sourceId}</span> · {c.metric.replace(/_/g, " ")} {c.horizonYear}: {c.value ?? "—"} {c.unit ?? ""}{c.baseValue != null ? ` (from ${c.baseValue})` : ""} · as of {c.asOf} · <span className="text-slate-500">{c.citation}</span>{c.note ? <span className="text-slate-600"> — {c.note}</span> : null}</li>)}</ul>
           </details>
@@ -101,7 +135,7 @@ export default function Erosion() {
         {/* 2. Inflation ladder */}
         <div className={`${CARD} p-5`} aria-label="Inflation ladder">
           <p className="text-sm font-semibold text-white"><Flame size={14} className="mr-1 inline text-amber-300" /> The inflation ladder · annualised price change by category</p>
-          <p className="mt-1 text-xs text-slate-400">{infl.data?.configured ? "Live from the Bureau of Labor Statistics via FRED, same month each year." : "Not configured on the host: set FRED_API_KEY (free) and this table fills with BLS data. Nothing is typed in by hand."}</p>
+          <p className="mt-1 text-xs text-slate-400">Live from the Bureau of Labor Statistics via FRED{infl.data?.mode === "csv" ? " (public download; a free FRED_API_KEY on the host switches to the keyed API)" : ""}, same month each year. Nothing is typed in by hand{infl.data?.categories.some((c) => c.source === "unavailable") ? "; a row marked unavailable has not answered yet and shows no number rather than a guess" : ""}.</p>
           <div className="mt-3 overflow-x-auto">
             <table className="w-full text-xs">
               <thead><tr className="text-left text-slate-500"><th className="py-1 pr-3">Category</th>{ladderYears.map((y) => <th key={y} className="pr-2">{y}y</th>)}<th>as of</th><th>weight</th></tr></thead>

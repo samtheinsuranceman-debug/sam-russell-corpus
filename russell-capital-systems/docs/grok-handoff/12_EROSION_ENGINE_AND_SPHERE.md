@@ -61,13 +61,47 @@ real wealth at every horizon, the gap between the paths, cumulative extra tax,
 the hurdle rate and the 40-year dollar. "Seal on my ledger" appends a
 `scenario` event with every input and result.
 
+### 4. Harvest — the council reads the sources' own pages
+`harvestSource()` (server/forecastSources.ts) fetches a source's page (or a
+URL the owner supplies), has every configured AI voice read it, and asks
+each for figures in a fixed JSON shape: metric (one of `HARVEST_METRICS`),
+horizon year, value, unit, base value, publication date, and **the verbatim
+sentence the figure came from**. Three guards stand between a reply and the
+queue:
+
+1. `quoteVerified()`: the sentence must actually appear in the fetched text
+   (whitespace and curly quotes normalised) *and* the number must appear in
+   that sentence. A hallucinated sentence or a rounded number is dropped.
+2. `readingFor()`: the platform's fixed reading of each metric supplies the
+   direction and burden multiplier (revenue/GDP and top-rate figures give a
+   multiplier; spending, deficit, debt and interest give direction only when
+   a base value is present; trust-fund dates are always pressure; GDP
+   effects are neutral). The AI never sets direction. Unknown metrics are
+   discarded.
+3. Corroboration: the same metric + year from several voices (values within
+   1 %) collapses to one row that records every voice that agreed.
+
+Survivors land in `forecast_harvests` (status `pending`). On the Purchasing
+Power page the owner sees each one with its quote, the voices, and the
+reading, and approves it into `forecast_claims` (citation = source, URL,
+harvest date, voices; note = the quote) or rejects it. The trajectory
+recomputes on approval. `erosion.harvestAll` sweeps every enabled source;
+`EROSION_HARVEST_DAYS=7` on the host runs that sweep weekly, a minute after
+boot and then on the interval. Nothing enters the panel without the owner.
+
 ### Environment
-`FRED_API_KEY` (ladder), any AI key (council). No other secrets.
+`FRED_API_KEY` is now optional: without it the ladder and the Treasury
+benchmarks use FRED's public CSV download (`fredgraph.csv`) for the same
+series, same numbers, same as-of dates; with it the keyed JSON API is used.
+`erosion.inflationStatus` (public, no client data) reports which transport
+is live and the headline 20-year CPI rate, so a deploy can be checked from
+outside. Any AI key enables the council and the harvest. `EROSION_HARVEST_DAYS`
+turns on the scheduled sweep. No other secrets.
 
 ### What is deliberately not done
-- The fetch-and-parse of new claims from the sources' pages is a manual step
-  (`erosion.addClaim`) or the council path; automatic extraction of figures
-  from PDFs is the next piece.
+- Pages only: the harvest reads HTML text. PDF reports (the Trustees, the
+  Financial Report) are not parsed yet; the owner can point a harvest at
+  the HTML summary page for those.
 - State income tax paths are not modelled; the record and the panel are
   federal.
 
@@ -82,7 +116,11 @@ point, never adding a menu. The next step is to let the Sphere replace the
 sidebar for clients, with the sidebar kept for the advisor's operations.
 
 ## Tested
-`server/erosion.test.ts` (10 tests): the record's anchor values and
+`server/erosion.test.ts` (13 tests): FRED's CSV parsing and the keyless
+transport (no api_key in any URL), the deterministic metric readings, the
+verbatim-quote guard (curly quotes, whitespace, wrong number, sentence not
+on the page), the harvest reply parser, and a three-voice harvest where a
+hallucinated sentence is dropped and two voices corroborate one figure; plus the record's anchor values and
 continuity, window statistics and change events, consensus weighting,
 coverage and agreement, the trajectory's behaviour with and without panel
 coverage, the seeds' citations and the CBO multiplier, annualisation, the

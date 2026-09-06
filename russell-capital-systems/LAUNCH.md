@@ -182,10 +182,18 @@ contacted or message them yourself. `FOLLOWUPS_DISABLED=1` switches it off.
 On a host that sleeps the process, add a cron that runs `pnpm followups:run`
 (set `SCHEDULER_TOKEN` first) every 5 minutes.
 
-### Live benchmark rates (optional)
-`FRED_API_KEY` (free at fred.stlouisfed.org) → Treasury curve, CPI, 30‑year
-mortgage and Fed funds rates, dated and cached. Without it, dated reference
-values are shown and labelled as such.
+### Live benchmark rates
+The Treasury curve, CPI, the inflation ladder, the 30‑year mortgage and Fed
+funds rates come from FRED on any host with no key, through FRED's public
+CSV download, dated and cached. `FRED_API_KEY` (free at fred.stlouisfed.org)
+is optional and switches the same series to the keyed API. If neither
+answers, dated reference values are shown and labelled as such.
+
+### Erosion engine harvest (optional)
+With any AI key set, the owner can have the council read each forecaster's
+page from the Purchasing Power page ("Harvest"); figures arrive with their
+verbatim sentence and wait for approval. `EROSION_HARVEST_DAYS=7` runs that
+sweep weekly on its own. Nothing enters the panel without the owner.
 
 ### Connections (every outside platform, switched on by variables)
 The portal page **Connections** (`/portal/connections`) shows every platform the

@@ -10,6 +10,7 @@ import { registerMailRoutes } from "./mailer";
 import { registerSmsRoutes } from "./sms";
 import { registerScheduledRoutes, startFollowupScheduler } from "../followups";
 import { registerEventRoutes } from "../automations";
+import { startHarvestSchedule } from "../forecastSources";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -82,6 +83,8 @@ async function startServer() {
     console.log(`Server running on http://localhost:${port}/`);
     // Lead follow-up automation ticks every minute (FOLLOWUPS_DISABLED=1 turns it off).
     startFollowupScheduler();
+    // Erosion engine: EROSION_HARVEST_DAYS=7 has the AI council re-read every forecaster weekly (off unless set).
+    if (startHarvestSchedule()) console.log("[erosion] harvest sweep scheduled every", process.env.EROSION_HARVEST_DAYS, "days");
   });
 }
 

@@ -1,8 +1,10 @@
 // ============================================================
-// FRED — the Federal Reserve Bank of St. Louis economic data API. Free key
-// (FRED_API_KEY). This is where the platform's benchmark rates come from on
-// any host: Treasury yields, the 30-year mortgage rate, the Fed funds rate,
-// and the Consumer Price Index. Every value carries its own as-of date and
+// FRED — the Federal Reserve Bank of St. Louis economic data. This is where
+// the platform's benchmark rates come from on any host: Treasury yields, the
+// 30-year mortgage rate, the Fed funds rate, and the Consumer Price Index.
+// Two transports, same numbers: the JSON API when FRED_API_KEY is set (free
+// key, higher limits), otherwise FRED's public CSV download for the series
+// (fredgraph.csv, no key). Every value carries its own as-of date and
 // source; nothing here is invented. Last-good values persist in
 // market_data_points so a restart or an outage never blanks the numbers.
 // ============================================================
@@ -24,18 +26,45 @@ export const FRED_SERIES: Record<FredSeries, { name: string; unit: string }> = {
 export type Observation = { date: string; value: number };
 export type Benchmark = { series: FredSeries; name: string; unit: string; value: number; asOf: string; source: "live" | "cached" | "unavailable"; fetchedAt: string };
 
+/** True when the keyed JSON API is in use; the CSV transport needs no key. */
 export function fredConfigured(env: NodeJS.ProcessEnv = process.env): boolean {
   return Boolean(env.FRED_API_KEY);
 }
+export type FredMode = "api" | "csv";
+export function fredMode(env: NodeJS.ProcessEnv = process.env): FredMode { return fredConfigured(env) ? "api" : "csv"; }
 
-type Fetcher = (url: string) => Promise<{ ok: boolean; status: number; json: () => Promise<unknown> }>;
-let _fetch: Fetcher = (url) => fetch(url, { signal: AbortSignal.timeout(8000) });
-export function _setFetchForTests(f: Fetcher | null) { _fetch = f ?? ((url) => fetch(url, { signal: AbortSignal.timeout(8000) })); }
+type Fetcher = (url: string) => Promise<{ ok: boolean; status: number; json: () => Promise<unknown>; text: () => Promise<string> }>;
+const realFetch: Fetcher = (url) => fetch(url, { signal: AbortSignal.timeout(12_000), headers: { accept: "text/csv, application/json" } });
+let _fetch: Fetcher = realFetch;
+export function _setFetchForTests(f: Fetcher | null) { _fetch = f ?? realFetch; }
+
+/** Parse FRED's CSV download (header `observation_date,<ID>`; blanks are "."), oldest first. */
+export function parseFredCsv(csv: string): Observation[] {
+  const out: Observation[] = [];
+  for (const line of csv.split(/\r?\n/)) {
+    const [date, raw] = line.split(",");
+    if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+    const v = Number(raw);
+    if (raw === undefined || raw === "." || !Number.isFinite(v)) continue;
+    out.push({ date, value: v });
+  }
+  return out.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+/** The keyless transport: every observation from `start`, oldest first. */
+export async function fetchFredCsvSince(seriesId: string, start: string): Promise<Observation[]> {
+  const url = `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${encodeURIComponent(seriesId)}&cosd=${start}`;
+  const res = await _fetch(url);
+  if (!res.ok) throw new Error(`FRED csv ${seriesId} responded ${res.status}`);
+  return parseFredCsv(await res.text());
+}
+
+function daysAgo(n: number): string { return new Date(Date.now() - n * 86_400_000).toISOString().slice(0, 10); }
 
 /** Every observation from `observationStart` (YYYY-MM-DD), oldest first, blanks dropped. Any FRED series id. */
 export async function fetchFredObservationsSince(seriesId: string, observationStart: string, env: NodeJS.ProcessEnv = process.env): Promise<Observation[]> {
   const key = env.FRED_API_KEY;
-  if (!key) return [];
+  if (!key) return fetchFredCsvSince(seriesId, observationStart);
   const url = `https://api.stlouisfed.org/fred/series/observations?series_id=${encodeURIComponent(seriesId)}&api_key=${encodeURIComponent(key)}&file_type=json&sort_order=asc&observation_start=${observationStart}`;
   const res = await _fetch(url);
   if (!res.ok) throw new Error(`FRED ${seriesId} responded ${res.status}`);
@@ -49,7 +78,11 @@ export async function fetchFredObservationsSince(seriesId: string, observationSt
 /** Latest `limit` observations, newest first, blanks ("." on FRED) dropped. */
 export async function fetchFredObservations(series: FredSeries, limit = 1, env: NodeJS.ProcessEnv = process.env): Promise<Observation[]> {
   const key = env.FRED_API_KEY;
-  if (!key) return [];
+  if (!key) {
+    // Monthly series need ~limit months of history; daily ones a few weeks. Ask for enough of either.
+    const rows = await fetchFredCsvSince(series, daysAgo(Math.max(45, limit * 32 + 14)));
+    return rows.reverse().slice(0, limit);
+  }
   const url = `https://api.stlouisfed.org/fred/series/observations?series_id=${series}&api_key=${encodeURIComponent(key)}&file_type=json&sort_order=desc&limit=${Math.max(1, Math.min(120, limit + 5))}`;
   const res = await _fetch(url);
   if (!res.ok) throw new Error(`FRED ${series} responded ${res.status}`);
@@ -70,7 +103,7 @@ export async function getBenchmark(series: FredSeries, env: NodeJS.ProcessEnv = 
   const now = Date.now();
   const m = memo[series];
   if (m && now - m.at < MEMO_TTL && m.obs[0]) return { series, ...meta, value: m.obs[0].value, asOf: m.obs[0].date, source: "cached", fetchedAt: new Date(m.at).toISOString() };
-  if (fredConfigured(env)) {
+  {
     try {
       const obs = await fetchFredObservations(series, 1, env);
       if (obs[0]) {
@@ -93,7 +126,6 @@ export async function getBenchmarks(series: FredSeries[] = ["DGS3MO", "DGS2", "D
 
 /** CPI index plus the inflation rates the calculators actually use, from 13 months of observations. */
 export async function getCpiFromFred(env: NodeJS.ProcessEnv = process.env): Promise<{ index: number; annualRate: number; monthlyRate: number; coreAnnualRate: number | null; asOf: string } | null> {
-  if (!fredConfigured(env)) return null;
   try {
     const [all, core] = await Promise.all([fetchFredObservations("CPIAUCSL", 13, env), fetchFredObservations("CPILFESL", 13, env).catch(() => [] as Observation[])]);
     const latest = all[0];

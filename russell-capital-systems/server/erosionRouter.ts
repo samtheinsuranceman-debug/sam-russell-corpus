@@ -13,8 +13,8 @@ import { HORIZONS, LADDER_YEARS, basketRate, erosionSummary, hurdleRate, purchas
 import { ESTATE_EXCLUSION, MAX_LTCG_RATE, TAX_HISTORY_SOURCES, TOP_CORPORATE_RATE, TOP_MARGINAL_RATE, changeEvents, windowStats } from "@shared/taxHistory";
 import { filingKeyFromLabel } from "@shared/taxRules";
 import { CATEGORIES, inflationLadder } from "./inflation";
-import { fredConfigured } from "./_core/fred";
-import { SOURCES, addClaim, councilReview, fetchSourceText, listClaims, listSources, recordActual, updateSource, weightedClaims } from "./forecastSources";
+import { fredMode } from "./_core/fred";
+import { SOURCES, addClaim, councilReview, fetchSourceText, harvestAll, harvestSource, listClaims, listHarvests, listSources, recordActual, reviewHarvest, updateSource, weightedClaims } from "./forecastSources";
 
 const isOwner = (ctx: { user: { openId: string; role: string } }) => ctx.user.openId === ENV.ownerOpenId || ctx.user.role === "admin";
 
@@ -71,7 +71,35 @@ export const erosionRouter = router({
     return { startYear, points: taxTrajectory({ startYear, claims, totalPanelWeight, allPanelWeight }), panel: sources.filter((s) => s.weight > 0).map((s) => ({ id: s.id, name: s.name, weight: s.weight })), claimsUsed: claims.length };
   }),
 
-  inflation: protectedProcedure.query(async () => ({ configured: fredConfigured(), ladderYears: LADDER_YEARS, categories: await inflationLadder() })),
+  /** Read one source's page with the AI council; verified figures queue for review. Owner only. */
+  harvestSource: protectedProcedure.input(z.object({ id: z.string().max(40), url: z.string().url().max(500).optional() })).mutation(async ({ ctx, input }) => {
+    if (!isOwner(ctx)) throw new TRPCError({ code: "FORBIDDEN" });
+    const src = SOURCES.find((s) => s.id === input.id);
+    if (!src) throw new TRPCError({ code: "NOT_FOUND" });
+    return harvestSource(src, { url: input.url });
+  }),
+  harvestAll: protectedProcedure.mutation(async ({ ctx }) => {
+    if (!isOwner(ctx)) throw new TRPCError({ code: "FORBIDDEN" });
+    return harvestAll();
+  }),
+  harvests: protectedProcedure.input(z.object({ status: z.enum(["pending", "approved", "rejected"]).optional() }).optional()).query(async ({ ctx, input }) => {
+    if (!isOwner(ctx)) throw new TRPCError({ code: "FORBIDDEN" });
+    return listHarvests(input?.status);
+  }),
+  reviewHarvest: protectedProcedure.input(z.object({ id: z.number().int().positive(), approve: z.boolean() })).mutation(async ({ ctx, input }) => {
+    if (!isOwner(ctx)) throw new TRPCError({ code: "FORBIDDEN" });
+    const r = await reviewHarvest(input.id, input.approve);
+    if (!r) throw new TRPCError({ code: "NOT_FOUND" });
+    return r;
+  }),
+
+  inflation: protectedProcedure.query(async () => ({ configured: true, mode: fredMode(), ladderYears: LADDER_YEARS, categories: await inflationLadder() })),
+
+  /** Public, no client data: which FRED transport is in use and whether the headline CPI ladder is live. */
+  inflationStatus: publicProcedure.query(async () => {
+    const all = (await inflationLadder()).find((c) => c.id === "all");
+    return { mode: fredMode(), source: all?.source ?? "unavailable", asOf: all?.asOf ?? "", rate20y: all?.rates[20] ?? null };
+  }),
 
   /** Both projections for the signed-in client, in today's dollars, plus the hurdle rate; sealed as a scenario. */
   projection: protectedProcedure.input(z.object({
