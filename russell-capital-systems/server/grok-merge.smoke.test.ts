@@ -38,7 +38,7 @@ describe("verified Grok delta merge", () => {
   const currentRoutes = routeSet(currentApp);
 
   it("retains every Grok and unified-platform route in the 239-route application", () => {
-    expect(currentRoutes.size).toBe(239); // 232 + ultra-calculator, fact-finder, calculators + portal/leads + financial-assessment, ai-advisor, wealth-genome
+    expect(currentRoutes.size).toBe(240); // 232 + ultra-calculator, fact-finder, calculators + portal/leads + financial-assessment, ai-advisor, wealth-genome, my-journey
     for (const route of [...addedRoutes, ...unifiedPlatformRoutes]) {
       expect(currentRoutes.has(route), route).toBe(true);
     }

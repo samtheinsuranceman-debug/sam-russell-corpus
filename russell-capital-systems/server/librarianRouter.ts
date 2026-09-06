@@ -160,6 +160,7 @@ export const librarianRouter = router({
               coreQuestions: Array.isArray(p.coreQuestions) && p.coreQuestions.length ? p.coreQuestions.map(String).slice(0, 5) : journey.coreQuestions,
               emergentQuestion: typeof p.emergentQuestion === "string" && p.emergentQuestion.length > 20 ? p.emergentQuestion : journey.emergentQuestion,
               steps: journey.steps.map((s) => ({ ...s, why: p.steps?.find((x) => x.id === s.id)?.why?.slice(0, 400) || s.why })),
+              controls: journey.controls,
               generatedBy: `journey-engine + ${polished?.via ?? "ai"}`,
             };
             if (validateJourney(candidate).ok) journey = candidate;
@@ -172,14 +173,16 @@ export const librarianRouter = router({
       const id = await saveJourneyForUser(ctx.user.id, input.questions, {
         coreQuestions: journey.coreQuestions,
         emergentQuestion: journey.emergentQuestion,
-        steps: journey.steps.map((s) => ({ id: s.id, path: s.path, title: s.title, why: s.why, kind: s.kind })),
+        steps: journey.steps.map((s) => ({ id: s.id, path: s.path, title: s.title, why: s.why, guide: s.guide, kind: s.kind })),
+        controls: journey.controls,
         generatedBy: journey.generatedBy,
       });
       const spoken =
         `I've read everything you asked and everything in your assessment. It comes down to ${journey.coreQuestions.length} questions. ` +
         journey.coreQuestions.map((q, i) => `${i + 1}: ${q}`).join(" ") +
         ` And one you haven't asked yet: ${journey.emergentQuestion} ` +
-        `I've laid out ${journey.steps.length} pages in order — start with ${journey.steps[0]!.title} and each one builds on the last.`;
+        `I've laid out ${journey.steps.length} pages in order — start with ${journey.steps[0]!.title} and each one builds on the last. ` +
+        `Along the way you control ${journey.controls.youControl.length} variables; the rest the plan is built to survive.`;
       return { gated: false as const, journey, journeyId: id, spoken };
     }),
 

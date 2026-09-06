@@ -207,7 +207,7 @@ export function distillQuestions(questions: string[], signals: Signal[] = []): D
 
 // ─── the emergent question ──────────────────────────────────────────────────
 const EMERGENT_TEMPLATES: Record<string, (reason: string) => string> = {
-  volatility: (r) => `Underneath your questions is a volatility question you haven't asked: with ${r}, how do you keep the plan from depending on markets you can't control?`,
+  volatility: (r) => `Underneath your questions is a volatility question you haven't asked: given that ${r}, how do you keep the plan from depending on markets you can't control?`,
   tax: (r) => `The pattern beneath your questions is a tax question: ${r} — every strategy you asked about changes in value once that is addressed first.`,
   equity: (r) => `You haven't asked about the largest asset on your balance sheet: ${r}. How it is deployed decides how fast everything else moves.`,
   "war-chest": (r) => `The unasked question is liquidity: ${r}. A plan that can't be reached on demand fails the moment life needs it.`,
@@ -238,11 +238,14 @@ export function emergentQuestion(distilled: Distilled[], signals: Signal[]): { q
 }
 
 // ─── composing the journey ──────────────────────────────────────────────────
-export type JourneyStep = { id: string; path: string; title: string; why: string; kind: string; serves: string[] };
+export type JourneyStep = { id: string; path: string; title: string; why: string; guide: string; kind: string; serves: string[] };
+export type JourneyControls = { youControl: string[]; youDont: string[] };
 export type Journey = {
   coreQuestions: string[];
   emergentQuestion: string;
   steps: JourneyStep[];
+  /** The variables the client can actually move, and the ones the plan must survive instead. */
+  controls: JourneyControls;
   generatedBy: string;
 };
 
@@ -361,15 +364,68 @@ export function buildJourney(questions: string[], ff: ClientFactFinder | null | 
       ? ` It serves ${sv.map((s) => (s === "emergent" ? "the emergent question" : `question ${s.slice(1)}`)).join(" and ")}.`
       : "";
     const bridge = i === 0 ? "Start here." : i === ordered.length - 1 ? "Close the loop." : `Builds on “${ordered[i - 1]!.title}”.`;
-    return { id: p.id, path: p.path, title: p.title, kind: p.kind, serves: sv, why: `${bridge} ${p.purpose}${servesText}` };
+    const answers = sv.map((s) => (s === "emergent" ? `the question you hadn't asked` : distilled[Number(s.slice(1)) - 1]?.question)).filter(Boolean);
+    const guide = (answers.length ? `This page works on: ${answers.map((a) => `“${a}”`).join(" and ")}. ` : "") + p.walkthrough;
+    return { id: p.id, path: p.path, title: p.title, kind: p.kind, serves: sv, why: `${bridge} ${p.purpose}${servesText}`, guide };
   });
 
   return {
     coreQuestions: distilled.map((d) => d.question),
     emergentQuestion: emergent.question,
     steps,
+    controls: journeyControls(distilled, signals),
     generatedBy: "journey-engine",
   };
+}
+
+// ─── the variables the client controls ──────────────────────────────────────
+const CONTROL_TEMPLATES: Record<string, string> = {
+  tax: "How much of your income is taxed — through deductions, plan design, and conversion timing",
+  roth: "The pace of converting tax-deferred money to tax-free money",
+  mortgage: "How fast the mortgage is retired, and how much interest you recover",
+  payoff: "Extra principal each month",
+  equity: "Whether home equity sits idle or is cycled into a liquid reserve",
+  "war-chest": "The size of the liquid, tax-advantaged reserve you keep on demand",
+  debt: "The order and speed of paying each debt",
+  "student-loans": "The repayment or forgiveness track for the student loans",
+  retirement: "Your retirement date and the income target",
+  income: "How much of today's income you save",
+  investments: "Your allocation and how diversified it is",
+  volatility: "Floors, guarantees, and reserves that decide whether a downturn ever forces a sale",
+  risk: "The concentration you hold in any single position",
+  iul: "Whether a permanent policy is used as a tax-free reserve",
+  insurance: "Life, disability, and liability coverage in force",
+  disability: "Disability coverage and its definition of occupation",
+  estate: "Whether a will, trust, and powers of attorney exist and are current",
+  divorce: "The structures that keep assets separate if a marriage ends",
+  "asset-protection": "Which assets sit inside protected structures",
+  practice: "Entity, retirement-plan design, and exit timing for the practice",
+  liquidity: "Months of expenses held in cash",
+  time: "When the first move happens — every year of delay is a variable you control",
+};
+const UNCONTROLLED = [
+  "Market returns in any given year",
+  "Interest rates set by the Federal Reserve",
+  "Changes to the tax code",
+  "How long you and your spouse live",
+  "Health events and the timing of a claim",
+  "Inflation",
+];
+
+/** What the client can move (from their questions and facts) versus what the plan must simply survive. */
+export function journeyControls(distilled: Distilled[], signals: Signal[]): JourneyControls {
+  const tags: string[] = [];
+  for (const d of distilled) tags.push(d.tag, ...expand(d.tag));
+  for (const s of signals.slice(0, 8)) tags.push(s.tag);
+  const seen = new Set<string>();
+  const youControl: string[] = [];
+  for (const t of tags) {
+    const line = CONTROL_TEMPLATES[t];
+    if (line && !seen.has(line)) { seen.add(line); youControl.push(line); }
+    if (youControl.length >= 7) break;
+  }
+  if (!seen.has(CONTROL_TEMPLATES.time!)) youControl.push(CONTROL_TEMPLATES.time!);
+  return { youControl, youDont: UNCONTROLLED };
 }
 
 /** Validates a journey (e.g. one an AI polished) against the catalog and size rules. */
@@ -378,8 +434,10 @@ export function validateJourney(j: Journey): { ok: boolean; problems: string[] }
   if (j.coreQuestions.length < CORE_QUESTIONS_MIN || j.coreQuestions.length > CORE_QUESTIONS_MAX) problems.push(`core questions: ${j.coreQuestions.length} (need ${CORE_QUESTIONS_MIN}–${CORE_QUESTIONS_MAX})`);
   if (!j.emergentQuestion || j.emergentQuestion.length < 20) problems.push("emergent question missing");
   if (j.steps.length < JOURNEY_MIN || j.steps.length > JOURNEY_MAX) problems.push(`steps: ${j.steps.length} (need ${JOURNEY_MIN}–${JOURNEY_MAX})`);
+  if (!j.controls || j.controls.youControl.length === 0 || j.controls.youDont.length === 0) problems.push("controls missing");
   const seen = new Set<string>();
   for (const s of j.steps) {
+    if (!s.guide || s.guide.length < 20) problems.push(`guide missing for ${s.id}`);
     const p = CATALOG_BY_ID[s.id];
     if (!p) problems.push(`unknown page ${s.id}`);
     else if (p.path !== s.path) problems.push(`path mismatch for ${s.id}`);

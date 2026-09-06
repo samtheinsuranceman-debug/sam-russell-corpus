@@ -3,10 +3,10 @@
 // in the client's latest librarian journey: "Step N of M · next: …". Opening
 // a step marks it visited (server-side, so progress follows the client).
 // ============================================================
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowLeft, ArrowRight, Check, Compass } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Check, Compass, Volume2 } from "lucide-react";
 
 export function JourneyProgressBar() {
   const [location] = useLocation();
@@ -14,6 +14,8 @@ export function JourneyProgressBar() {
   const utils = trpc.useUtils();
   const mark = trpc.librarian.markVisited.useMutation({ onSuccess: () => { void utils.librarian.latestJourney.invalidate(); } });
 
+  const [open, setOpen] = useState(false);
+  const speakMut = trpc.ultra.speak.useMutation();
   const journey = latest.data?.journey ?? null;
   const journeyId = latest.data?.id ?? null;
   const index = useMemo(() => (journey ? journey.steps.findIndex((s) => s.path === location) : -1), [journey, location]);
@@ -25,6 +27,13 @@ export function JourneyProgressBar() {
   }, [step?.id, journeyId]);
 
   if (!journey || !step) return null;
+  const readAloud = async (text: string) => {
+    try {
+      const r = await speakMut.mutateAsync({ text: text.slice(0, 2000) });
+      if (r.ok) { await new Audio(`data:${r.mimeType};base64,${r.audioBase64}`).play(); return; }
+    } catch { /* fall back */ }
+    if (window.speechSynthesis) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 0.98; window.speechSynthesis.speak(u); }
+  };
   const total = journey.steps.length;
   const visited = journey.steps.filter((s) => s.visitedAt).length;
   const prev = index > 0 ? journey.steps[index - 1] : null;
@@ -49,6 +58,13 @@ export function JourneyProgressBar() {
           )}
         </div>
       </div>
+      {step.guide && (
+        <div className="mt-2 flex flex-wrap items-start gap-2">
+          <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="inline-flex items-center gap-1 rounded-lg border border-violet-300/30 px-2.5 py-1 text-xs text-violet-100 hover:bg-violet-500/20"><BookOpen size={12} /> {open ? "Hide" : "What to do on this page"}</button>
+          <button type="button" onClick={() => void readAloud(`${step.title}. ${step.guide}`)} className="inline-flex items-center gap-1 rounded-lg border border-white/15 px-2.5 py-1 text-xs text-slate-200 hover:bg-white/5"><Volume2 size={12} /> Read aloud</button>
+          {open && <p className="w-full rounded-lg border border-violet-400/15 bg-violet-500/10 px-3 py-2 text-sm text-violet-50"><span className="font-semibold text-violet-200">Librarian: </span>{step.guide}</p>}
+        </div>
+      )}
       <div className="mt-2 flex gap-1" aria-hidden="true">
         {journey.steps.map((s, i) => (
           <span key={s.id} className={`h-1 flex-1 rounded-full ${i === index ? "bg-cyan-300" : s.visitedAt ? "bg-violet-400" : "bg-white/10"}`} />

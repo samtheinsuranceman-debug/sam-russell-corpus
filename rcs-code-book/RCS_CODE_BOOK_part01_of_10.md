@@ -183,8 +183,6 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/leadsRouter.ts`
 - `server/librarianRouter.ts`
 - `server/mortgageKillerPdf.ts`
-- `server/pdfExportService.ts`
-- `server/pdfReport.ts`
 
 ---
 
@@ -5788,7 +5786,8 @@ export interface ClientFactFinderJson {
 export interface ClientJourneyJson {
   coreQuestions: string[];
   emergentQuestion: string;
-  steps: Array<{ id: string; path: string; title: string; why: string; kind: string; visitedAt?: string | null }>;
+  steps: Array<{ id: string; path: string; title: string; why: string; kind: string; guide?: string; visitedAt?: string | null }>;
+  controls?: { youControl: string[]; youDont: string[] };
   generatedBy: string;
 }
 ```
@@ -15753,67 +15752,69 @@ export type JourneyPage = {
   kind: PageKind;
   tags: string[];
   builds: number; // 0 = start of any journey … 9 = closing/review
+  /** What to do on this page and what to carry to the next — the librarian's walkthrough. */
+  walkthrough: string;
 };
 
 export const JOURNEY_CATALOG: JourneyPage[] = [
   // ── orientation ──────────────────────────────────────────────────────────
-  { id: "assessment", path: "/portal/financial-assessment", title: "Financial Assessment", purpose: "Your complete financial picture — the foundation every answer rests on.", kind: "orientation", tags: ["start", "assessment", "everything"], builds: 0 },
-  { id: "arrival", path: "/portal/the-arrival", title: "The Arrival", purpose: "Orientation and calibration: what the plan will do and in what order.", kind: "orientation", tags: ["start", "orientation", "goals"], builds: 0 },
-  { id: "mirror", path: "/portal/the-mirror", title: "The Mirror", purpose: "Your personal dashboard — where you stand today, in one view.", kind: "orientation", tags: ["start", "dashboard", "net-worth", "goals"], builds: 0 },
-  { id: "wealth-genome", path: "/portal/wealth-genome", title: "Wealth Genome Analysis", purpose: "Eight-dimension financial health score: where you are strong and where the plan must work hardest.", kind: "orientation", tags: ["start", "score", "risk", "tax", "insurance", "estate", "debt", "retirement"], builds: 1 },
-  { id: "russell-number", path: "/portal/russell-number", title: "Russell Number", purpose: "A single number that tracks whether the coordinated plan is on course.", kind: "review", tags: ["score", "progress", "review"], builds: 8 },
+  { id: "assessment", path: "/portal/financial-assessment", title: "Financial Assessment", purpose: "Your complete financial picture — the foundation every answer rests on.", kind: "orientation", tags: ["start", "assessment", "everything"], builds: 0, walkthrough: "Answer every section; the librarian will not advise on gaps. Carry forward: a complete picture." },
+  { id: "arrival", path: "/portal/the-arrival", title: "The Arrival", purpose: "Orientation and calibration: what the plan will do and in what order.", kind: "orientation", tags: ["start", "orientation", "goals"], builds: 0, walkthrough: "Read the seven-step arc once so you know where each later page fits. Carry forward: the order of operations." },
+  { id: "mirror", path: "/portal/the-mirror", title: "The Mirror", purpose: "Your personal dashboard — where you stand today, in one view.", kind: "orientation", tags: ["start", "dashboard", "net-worth", "goals"], builds: 0, walkthrough: "Look at the balance sheet as a whole — what you own, what you owe, what it earns. Note the two numbers that surprise you. Carry forward: your starting point." },
+  { id: "wealth-genome", path: "/portal/wealth-genome", title: "Wealth Genome Analysis", purpose: "Eight-dimension financial health score: where you are strong and where the plan must work hardest.", kind: "orientation", tags: ["start", "score", "risk", "tax", "insurance", "estate", "debt", "retirement"], builds: 1, walkthrough: "Open each of the eight dimensions and read why it scored that way. Note the two weakest — those set the journey's priorities. Carry forward: your weakest dimensions." },
+  { id: "russell-number", path: "/portal/russell-number", title: "Russell Number", purpose: "A single number that tracks whether the coordinated plan is on course.", kind: "review", tags: ["score", "progress", "review"], builds: 8, walkthrough: "Read your Russell Number and what moves it. This is the one figure to re-check after every change. Carry forward: your baseline." },
 
   // ── taxes ────────────────────────────────────────────────────────────────
-  { id: "tax-waterfall", path: "/portal/tax-waterfall", title: "Tax Waterfall", purpose: "How income flows through brackets today, and what changes the order of the buckets.", kind: "education", tags: ["tax", "income", "brackets", "waterfall"], builds: 2 },
-  { id: "roth-conversion", path: "/portal/roth-conversion", title: "Roth Strategies", purpose: "Six ways to convert tax-deferred money into tax-free money, and when each fits.", kind: "calculator", tags: ["tax", "roth", "conversion", "retirement", "tax-free"], builds: 4 },
-  { id: "tax-advantaged-growth", path: "/portal/tax-advantaged-growth", title: "Tax-Advantaged Growth", purpose: "Taxable vs tax-deferred vs tax-free growth over decades, side by side.", kind: "comparison", tags: ["tax", "investments", "growth", "tax-free"], builds: 3 },
-  { id: "hot-income", path: "/portal/hot-income", title: "Hot Income (Oil & Gas)", purpose: "How intangible drilling deductions can offset high W-2 income — and the risks that come with them.", kind: "education", tags: ["tax", "deduction", "oil-gas", "high-income"], builds: 5 },
-  { id: "str-strategy", path: "/portal/str-strategy", title: "STR Tax Strategy", purpose: "Short-term-rental real estate as an active-income tax lever.", kind: "education", tags: ["tax", "real-estate", "deduction"], builds: 5 },
-  { id: "tax-combos", path: "/portal/tax-combos", title: "100 Tax-Free Combos", purpose: "How the individual strategies combine — the coordinated plan is the product.", kind: "education", tags: ["tax", "tax-free", "combination", "strategy"], builds: 6 },
+  { id: "tax-waterfall", path: "/portal/tax-waterfall", title: "Tax Waterfall", purpose: "How income flows through brackets today, and what changes the order of the buckets.", kind: "education", tags: ["tax", "income", "brackets", "waterfall"], builds: 2, walkthrough: "Follow your income down through the brackets. Find the bracket where your last dollar lands — that is the rate every later strategy is measured against. Carry forward: your marginal rate." },
+  { id: "roth-conversion", path: "/portal/roth-conversion", title: "Roth Strategies", purpose: "Six ways to convert tax-deferred money into tax-free money, and when each fits.", kind: "calculator", tags: ["tax", "roth", "conversion", "retirement", "tax-free"], builds: 4, walkthrough: "Use the pre-filled tax-deferred balance. Compare the six conversion paces and watch lifetime tax, not this year's bill. Carry forward: the conversion pace that keeps you below the bracket line." },
+  { id: "tax-advantaged-growth", path: "/portal/tax-advantaged-growth", title: "Tax-Advantaged Growth", purpose: "Taxable vs tax-deferred vs tax-free growth over decades, side by side.", kind: "comparison", tags: ["tax", "investments", "growth", "tax-free"], builds: 3, walkthrough: "Put the same dollar in taxable, tax-deferred, and tax-free and watch thirty years. Carry forward: why the tax-free bucket matters most for you." },
+  { id: "hot-income", path: "/portal/hot-income", title: "Hot Income (Oil & Gas)", purpose: "How intangible drilling deductions can offset high W-2 income — and the risks that come with them.", kind: "education", tags: ["tax", "deduction", "oil-gas", "high-income"], builds: 5, walkthrough: "Read the deduction mechanics and the risk section with equal attention. Decide whether the income offset is worth the illiquidity for you. Carry forward: a yes, no, or 'ask the advisor'." },
+  { id: "str-strategy", path: "/portal/str-strategy", title: "STR Tax Strategy", purpose: "Short-term-rental real estate as an active-income tax lever.", kind: "education", tags: ["tax", "real-estate", "deduction"], builds: 5, walkthrough: "Check whether the material-participation rules fit your schedule before the numbers. Carry forward: whether real estate can be an active tax lever for you." },
+  { id: "tax-combos", path: "/portal/tax-combos", title: "100 Tax-Free Combos", purpose: "How the individual strategies combine — the coordinated plan is the product.", kind: "education", tags: ["tax", "tax-free", "combination", "strategy"], builds: 6, walkthrough: "Find the combination that names the strategies you have already met. Read how they compound. Carry forward: your combination." },
 
   // ── debt, mortgage, home equity ──────────────────────────────────────────
-  { id: "mortgage-killer", path: "/portal/mortgage-killer", title: "Mortgage Killer", purpose: "Accelerated payoff: how the same payments retire the mortgage years sooner and what that interest is worth.", kind: "calculator", tags: ["mortgage", "debt", "interest", "home", "payoff"], builds: 3 },
-  { id: "house-recycling", path: "/portal/house-recycling", title: "House Recycling", purpose: "Cycling home equity into a liquid, tax-advantaged war chest and back again.", kind: "calculator", tags: ["mortgage", "equity", "heloc", "war-chest", "iul", "liquidity"], builds: 4 },
-  { id: "reverse-heloc", path: "/portal/reverse-heloc", title: "Reverse HELOC", purpose: "Using a credit line deliberately instead of accidentally.", kind: "education", tags: ["heloc", "equity", "liquidity", "debt"], builds: 4 },
-  { id: "household-wealth", path: "/portal/household-wealth", title: "Household Wealth", purpose: "The whole household balance sheet in motion — income, debt, equity, and savings together.", kind: "calculator", tags: ["net-worth", "debt", "student-loans", "cash-flow", "household"], builds: 2 },
-  { id: "real-estate-mogul", path: "/portal/real-estate-mogul", title: "Real Estate Mogul", purpose: "Rental and investment property modelled with leverage, tax, and cash flow.", kind: "calculator", tags: ["real-estate", "rental", "leverage"], builds: 5 },
+  { id: "mortgage-killer", path: "/portal/mortgage-killer", title: "Mortgage Killer", purpose: "Accelerated payoff: how the same payments retire the mortgage years sooner and what that interest is worth.", kind: "calculator", tags: ["mortgage", "debt", "interest", "home", "payoff"], builds: 3, walkthrough: "Your balance, rate and term are pre-filled. Try the accelerated schedule and read total interest recovered, then the years saved. Carry forward: the interest you can recover." },
+  { id: "house-recycling", path: "/portal/house-recycling", title: "House Recycling", purpose: "Cycling home equity into a liquid, tax-advantaged war chest and back again.", kind: "calculator", tags: ["mortgage", "equity", "heloc", "war-chest", "iul", "liquidity"], builds: 4, walkthrough: "Start from the equity figure in your assessment. Trace one full cycle: equity out, war chest funded, equity back. Carry forward: how liquidity and payoff can happen together." },
+  { id: "reverse-heloc", path: "/portal/reverse-heloc", title: "Reverse HELOC", purpose: "Using a credit line deliberately instead of accidentally.", kind: "education", tags: ["heloc", "equity", "liquidity", "debt"], builds: 4, walkthrough: "Read how a credit line becomes a deliberate tool rather than an emergency one. Carry forward: the rule for when to draw and when to repay." },
+  { id: "household-wealth", path: "/portal/household-wealth", title: "Household Wealth", purpose: "The whole household balance sheet in motion — income, debt, equity, and savings together.", kind: "calculator", tags: ["net-worth", "debt", "student-loans", "cash-flow", "household"], builds: 2, walkthrough: "Watch income, debt, and savings move together over ten years. Change the savings rate once and watch everything else respond. Carry forward: the savings rate the plan needs." },
+  { id: "real-estate-mogul", path: "/portal/real-estate-mogul", title: "Real Estate Mogul", purpose: "Rental and investment property modelled with leverage, tax, and cash flow.", kind: "calculator", tags: ["real-estate", "rental", "leverage"], builds: 5, walkthrough: "Model one property with your real leverage and tax rate. Carry forward: the cash-on-cash figure a property must clear to belong in your plan." },
 
   // ── retirement and income ────────────────────────────────────────────────
-  { id: "retirement-drivers", path: "/portal/ecological-drivers", title: "Retirement Drivers", purpose: "The handful of variables that decide retirement outcomes — and which you control.", kind: "education", tags: ["retirement", "variables", "control", "volatility"], builds: 2 },
-  { id: "income-gap", path: "/portal/income-gap", title: "Income Gap Analyzer", purpose: "Desired retirement income versus what today's assets will produce.", kind: "calculator", tags: ["retirement", "income", "gap", "goals"], builds: 3 },
-  { id: "withdrawal-sequencing", path: "/portal/withdrawal-sequencing", title: "Withdrawal Sequencing", purpose: "Which bucket to draw first — the order changes lifetime taxes.", kind: "calculator", tags: ["retirement", "tax", "withdrawal", "sequence"], builds: 5 },
-  { id: "lifetime-income", path: "/portal/lifetime-income", title: "Lifetime Income", purpose: "Income that cannot be outlived, and what it costs to guarantee it.", kind: "education", tags: ["retirement", "income", "guarantee", "annuity", "longevity"], builds: 5 },
-  { id: "income-timeline", path: "/portal/income-timeline", title: "Income Timeline", purpose: "Every income source laid out year by year to retirement and beyond.", kind: "calculator", tags: ["retirement", "income", "timeline", "social-security"], builds: 4 },
-  { id: "social-security", path: "/portal/social-security", title: "Social Security", purpose: "Claiming age, spousal strategy, and taxation of benefits.", kind: "calculator", tags: ["retirement", "social-security", "claiming"], builds: 4 },
+  { id: "retirement-drivers", path: "/portal/ecological-drivers", title: "Retirement Drivers", purpose: "The handful of variables that decide retirement outcomes — and which you control.", kind: "education", tags: ["retirement", "variables", "control", "volatility"], builds: 2, walkthrough: "Sort the drivers into two lists: the ones you control (savings, timing, taxes, protection) and the ones you don't (markets, law, longevity). Carry forward: your two lists." },
+  { id: "income-gap", path: "/portal/income-gap", title: "Income Gap Analyzer", purpose: "Desired retirement income versus what today's assets will produce.", kind: "calculator", tags: ["retirement", "income", "gap", "goals"], builds: 3, walkthrough: "Age and target are pre-filled. Read the gap in today's dollars, then the three ways to close it. Carry forward: the size of the gap." },
+  { id: "withdrawal-sequencing", path: "/portal/withdrawal-sequencing", title: "Withdrawal Sequencing", purpose: "Which bucket to draw first — the order changes lifetime taxes.", kind: "calculator", tags: ["retirement", "tax", "withdrawal", "sequence"], builds: 5, walkthrough: "Compare drawing from taxable, tax-deferred, and tax-free in different orders. Watch lifetime tax, not year one. Carry forward: your draw order." },
+  { id: "lifetime-income", path: "/portal/lifetime-income", title: "Lifetime Income", purpose: "Income that cannot be outlived, and what it costs to guarantee it.", kind: "education", tags: ["retirement", "income", "guarantee", "annuity", "longevity"], builds: 5, walkthrough: "Read what a guaranteed income floor costs and what it removes from the plan: the fear of outliving money. Carry forward: the floor you would want." },
+  { id: "income-timeline", path: "/portal/income-timeline", title: "Income Timeline", purpose: "Every income source laid out year by year to retirement and beyond.", kind: "calculator", tags: ["retirement", "income", "timeline", "social-security"], builds: 4, walkthrough: "Lay every income source on the timeline to age 95. Find the years with a hole. Carry forward: the years the plan must cover." },
+  { id: "social-security", path: "/portal/social-security", title: "Social Security", purpose: "Claiming age, spousal strategy, and taxation of benefits.", kind: "calculator", tags: ["retirement", "social-security", "claiming"], builds: 4, walkthrough: "Compare claiming ages for you and your spouse. Note the difference in lifetime benefit. Carry forward: your claiming age." },
 
   // ── volatility, risk, and protection ─────────────────────────────────────
-  { id: "risk-tolerance", path: "/portal/risk-tolerance", title: "Risk Tolerance", purpose: "How much volatility you can actually live with — measured, not guessed.", kind: "education", tags: ["risk", "volatility", "behavior", "investments"], builds: 2 },
-  { id: "market-stress-test", path: "/portal/market-stress-test", title: "Market Stress Test", purpose: "Your plan run through the worst historical markets: what breaks and what holds.", kind: "calculator", tags: ["risk", "volatility", "stress", "investments", "sequence-risk"], builds: 4 },
-  { id: "ibbotson-charts", path: "/portal/ibbotson-charts", title: "Ibbotson Charts", purpose: "A century of returns by asset class — the evidence behind every projection.", kind: "education", tags: ["investments", "evidence", "history", "volatility"], builds: 3 },
-  { id: "iul-vs-roth", path: "/portal/iul-vs-roth", title: "IUL vs Roth", purpose: "Two tax-free vehicles compared honestly: costs, floors, caps, access, and legacy.", kind: "comparison", tags: ["iul", "roth", "tax-free", "insurance", "comparison"], builds: 5 },
-  { id: "iul-historical", path: "/portal/iul-historical", title: "IUL Historical", purpose: "How indexed life would have credited through real market history — floors and caps in action.", kind: "education", tags: ["iul", "volatility", "floor", "insurance"], builds: 4 },
-  { id: "policy-loans", path: "/portal/policy-loans", title: "Policy Loans", purpose: "Tax-free access to cash value — how loans, wash loans, and repayment really work.", kind: "education", tags: ["iul", "liquidity", "war-chest", "tax-free", "loans"], builds: 6 },
-  { id: "ai-policy-review", path: "/portal/ai-policy-review", title: "Policy Gap Analysis", purpose: "Existing life, disability, and liability coverage checked for gaps.", kind: "review", tags: ["insurance", "disability", "malpractice", "gaps", "protection"], builds: 6 },
-  { id: "divorce-calculator", path: "/portal/divorce-calculator", title: "Divorce Devastation Engine", purpose: "What a divorce does to an unprotected plan — and what a protected one keeps.", kind: "protection", tags: ["divorce", "protection", "asset-protection"], builds: 6 },
-  { id: "trusts", path: "/portal/trusts", title: "Trust Structures", purpose: "Revocable, irrevocable, ILIT, asset-protection trusts: which does what.", kind: "protection", tags: ["trust", "estate", "asset-protection", "creditor", "legacy"], builds: 7 },
+  { id: "risk-tolerance", path: "/portal/risk-tolerance", title: "Risk Tolerance", purpose: "How much volatility you can actually live with — measured, not guessed.", kind: "education", tags: ["risk", "volatility", "behavior", "investments"], builds: 2, walkthrough: "Answer honestly — the questions measure how you would behave in a fall, not how you'd like to. Carry forward: your real tolerance." },
+  { id: "market-stress-test", path: "/portal/market-stress-test", title: "Market Stress Test", purpose: "Your plan run through the worst historical markets: what breaks and what holds.", kind: "calculator", tags: ["risk", "volatility", "stress", "investments", "sequence-risk"], builds: 4, walkthrough: "Run your plan through the worst historical periods. Note where it breaks and which protection stops the break. Carry forward: the protection that held." },
+  { id: "ibbotson-charts", path: "/portal/ibbotson-charts", title: "Ibbotson Charts", purpose: "A century of returns by asset class — the evidence behind every projection.", kind: "education", tags: ["investments", "evidence", "history", "volatility"], builds: 3, walkthrough: "Read a century of returns by asset class. Note how often a ten-year window was negative for stocks alone versus a mix. Carry forward: why floors and mixes exist." },
+  { id: "iul-vs-roth", path: "/portal/iul-vs-roth", title: "IUL vs Roth", purpose: "Two tax-free vehicles compared honestly: costs, floors, caps, access, and legacy.", kind: "comparison", tags: ["iul", "roth", "tax-free", "insurance", "comparison"], builds: 5, walkthrough: "Compare the two tax-free vehicles on cost, floor, cap, access, and legacy — not on returns alone. Carry forward: which fits which job in your plan." },
+  { id: "iul-historical", path: "/portal/iul-historical", title: "IUL Historical", purpose: "How indexed life would have credited through real market history — floors and caps in action.", kind: "education", tags: ["iul", "volatility", "floor", "insurance"], builds: 4, walkthrough: "Watch how an indexed policy would have credited through real crashes. Note the floor years. Carry forward: what a zero floor is worth to you." },
+  { id: "policy-loans", path: "/portal/policy-loans", title: "Policy Loans", purpose: "Tax-free access to cash value — how loans, wash loans, and repayment really work.", kind: "education", tags: ["iul", "liquidity", "war-chest", "tax-free", "loans"], builds: 6, walkthrough: "Read how tax-free access to cash value works and where wash loans can go wrong. Carry forward: the rules for reaching the war chest." },
+  { id: "ai-policy-review", path: "/portal/ai-policy-review", title: "Policy Gap Analysis", purpose: "Existing life, disability, and liability coverage checked for gaps.", kind: "review", tags: ["insurance", "disability", "malpractice", "gaps", "protection"], builds: 6, walkthrough: "Read your existing coverage against the gaps flagged from your assessment. Carry forward: the coverage to fix first." },
+  { id: "divorce-calculator", path: "/portal/divorce-calculator", title: "Divorce Devastation Engine", purpose: "What a divorce does to an unprotected plan — and what a protected one keeps.", kind: "protection", tags: ["divorce", "protection", "asset-protection"], builds: 6, walkthrough: "Run the unprotected and protected versions of your balance sheet. Carry forward: what structure would have kept." },
+  { id: "trusts", path: "/portal/trusts", title: "Trust Structures", purpose: "Revocable, irrevocable, ILIT, asset-protection trusts: which does what.", kind: "protection", tags: ["trust", "estate", "asset-protection", "creditor", "legacy"], builds: 7, walkthrough: "Match each trust type to a job: probate, protection, legacy, insurance ownership. Carry forward: the one or two you likely need." },
 
   // ── strategy, comparison, decision ───────────────────────────────────────
-  { id: "strategy-lab", path: "/portal/strategy", title: "Strategy Lab", purpose: "Your numbers inside the coordinated strategy engine.", kind: "calculator", tags: ["strategy", "plan", "coordination"], builds: 5 },
-  { id: "strategy-compare", path: "/portal/strategy-compare", title: "Strategy Compare", purpose: "Two or more strategies side by side on the same assumptions.", kind: "comparison", tags: ["strategy", "comparison", "decision"], builds: 6 },
-  { id: "scenarios", path: "/portal/scenarios", title: "Scenario Builder", purpose: "Change one variable at a time and watch the plan respond.", kind: "calculator", tags: ["variables", "control", "scenario", "sensitivity"], builds: 6 },
-  { id: "time-machine", path: "/portal/time-machine-calculator", title: "Time Machine", purpose: "The plan viewed from the future: what each year of delay costs.", kind: "calculator", tags: ["time", "delay", "compounding", "urgency"], builds: 7 },
-  { id: "business-owner", path: "/portal/business-owner", title: "Business Owner", purpose: "Entity, retirement plan design, and exit planning for practice owners.", kind: "calculator", tags: ["practice", "business", "entity", "succession", "cash-balance"], builds: 4 },
-  { id: "physicians-edge", path: "/portal/physicians-edge", title: "Physician's Edge", purpose: "The strategies that matter most for physician income and liability.", kind: "education", tags: ["physician", "high-income", "malpractice", "student-loans"], builds: 2 },
-  { id: "combo-recommender", path: "/portal/combo-recommender", title: "AI Combo Recommender", purpose: "Which strategy combination fits your facts — ranked.", kind: "review", tags: ["strategy", "combination", "recommendation"], builds: 7 },
+  { id: "strategy-lab", path: "/portal/strategy", title: "Strategy Lab", purpose: "Your numbers inside the coordinated strategy engine.", kind: "calculator", tags: ["strategy", "plan", "coordination"], builds: 5, walkthrough: "Your numbers are already loaded. Toggle each strategy on and off and watch the combined result. Carry forward: the strategies that earn their place." },
+  { id: "strategy-compare", path: "/portal/strategy-compare", title: "Strategy Compare", purpose: "Two or more strategies side by side on the same assumptions.", kind: "comparison", tags: ["strategy", "comparison", "decision"], builds: 6, walkthrough: "Put your two leading strategies side by side on identical assumptions. Carry forward: the winner and the margin." },
+  { id: "scenarios", path: "/portal/scenarios", title: "Scenario Builder", purpose: "Change one variable at a time and watch the plan respond.", kind: "calculator", tags: ["variables", "control", "scenario", "sensitivity"], builds: 6, walkthrough: "Change one variable at a time — savings rate, payoff speed, conversion pace, coverage — and watch the plan. Carry forward: the variables that move the outcome most." },
+  { id: "time-machine", path: "/portal/time-machine-calculator", title: "Time Machine", purpose: "The plan viewed from the future: what each year of delay costs.", kind: "calculator", tags: ["time", "delay", "compounding", "urgency"], builds: 7, walkthrough: "Look at the plan from the future and read what each year of delay costs. Carry forward: why the first move happens now." },
+  { id: "business-owner", path: "/portal/business-owner", title: "Business Owner", purpose: "Entity, retirement plan design, and exit planning for practice owners.", kind: "calculator", tags: ["practice", "business", "entity", "succession", "cash-balance"], builds: 4, walkthrough: "Model the entity, the retirement plan design, and the exit. Carry forward: the structure that pays you best after tax." },
+  { id: "physicians-edge", path: "/portal/physicians-edge", title: "Physician's Edge", purpose: "The strategies that matter most for physician income and liability.", kind: "education", tags: ["physician", "high-income", "malpractice", "student-loans"], builds: 2, walkthrough: "Read the strategies built around physician income and liability. Carry forward: the two that apply to you." },
+  { id: "combo-recommender", path: "/portal/combo-recommender", title: "AI Combo Recommender", purpose: "Which strategy combination fits your facts — ranked.", kind: "review", tags: ["strategy", "combination", "recommendation"], builds: 7, walkthrough: "Let the recommender rank combinations against your facts. Compare its top pick to your own. Carry forward: the ranked list." },
 
   // ── legacy and closing ───────────────────────────────────────────────────
-  { id: "estate-flow", path: "/portal/estate-flow", title: "Estate Flow Chart", purpose: "Where everything goes at death today, drawn as a flow — and where it should go.", kind: "legacy", tags: ["estate", "legacy", "heirs", "beneficiaries"], builds: 7 },
-  { id: "beneficiary-optimization", path: "/portal/beneficiary-optimization", title: "Beneficiary Optimizer", purpose: "Beneficiary designations checked against the plan and the tax code.", kind: "legacy", tags: ["estate", "beneficiaries", "legacy"], builds: 7 },
-  { id: "estate-tax", path: "/portal/estate-tax", title: "Estate Tax", purpose: "Whether the estate tax touches you, and the levers if it will.", kind: "calculator", tags: ["estate", "tax", "legacy"], builds: 7 },
-  { id: "will-writer", path: "/portal/will-writer", title: "Will Writer", purpose: "Draft the documents that are missing.", kind: "legacy", tags: ["estate", "will", "documents"], builds: 8 },
-  { id: "the-legacy", path: "/portal/the-legacy", title: "The Legacy", purpose: "What the money is for after you.", kind: "legacy", tags: ["legacy", "estate", "meaning"], builds: 8 },
-  { id: "the-map", path: "/portal/the-map", title: "The Map", purpose: "Portfolio and allocation: the whole plan on one map.", kind: "review", tags: ["review", "allocation", "plan"], builds: 8 },
-  { id: "the-brotherhood", path: "/portal/the-brotherhood", title: "The Brotherhood", purpose: "Community and accountability so the plan survives real life.", kind: "review", tags: ["review", "community", "behavior"], builds: 9 },
+  { id: "estate-flow", path: "/portal/estate-flow", title: "Estate Flow Chart", purpose: "Where everything goes at death today, drawn as a flow — and where it should go.", kind: "legacy", tags: ["estate", "legacy", "heirs", "beneficiaries"], builds: 7, walkthrough: "Trace where each asset goes at death today. Mark every arrow you don't like. Carry forward: the arrows to redraw." },
+  { id: "beneficiary-optimization", path: "/portal/beneficiary-optimization", title: "Beneficiary Optimizer", purpose: "Beneficiary designations checked against the plan and the tax code.", kind: "legacy", tags: ["estate", "beneficiaries", "legacy"], builds: 7, walkthrough: "Check each beneficiary designation against the estate flow — designations override the will. Carry forward: the forms to update." },
+  { id: "estate-tax", path: "/portal/estate-tax", title: "Estate Tax", purpose: "Whether the estate tax touches you, and the levers if it will.", kind: "calculator", tags: ["estate", "tax", "legacy"], builds: 7, walkthrough: "See whether the estate tax touches you and, if it will, which levers reduce it. Carry forward: exposed or not." },
+  { id: "will-writer", path: "/portal/will-writer", title: "Will Writer", purpose: "Draft the documents that are missing.", kind: "legacy", tags: ["estate", "will", "documents"], builds: 8, walkthrough: "Draft the documents your estate dimension showed missing. Carry forward: a draft for the attorney." },
+  { id: "the-legacy", path: "/portal/the-legacy", title: "The Legacy", purpose: "What the money is for after you.", kind: "legacy", tags: ["legacy", "estate", "meaning"], builds: 8, walkthrough: "Write, in a sentence, what the money is for after you. Carry forward: the sentence." },
+  { id: "the-map", path: "/portal/the-map", title: "The Map", purpose: "Portfolio and allocation: the whole plan on one map.", kind: "review", tags: ["review", "allocation", "plan"], builds: 8, walkthrough: "See the whole plan on one map. Confirm every earlier carry-forward has a place on it. Carry forward: the map." },
+  { id: "the-brotherhood", path: "/portal/the-brotherhood", title: "The Brotherhood", purpose: "Community and accountability so the plan survives real life.", kind: "review", tags: ["review", "community", "behavior"], builds: 9, walkthrough: "Join the community and set the review cadence. Plans survive because someone checks. Carry forward: your review date." },
 ];
 
 export const CATALOG_BY_ID: Record<string, JourneyPage> = Object.fromEntries(JOURNEY_CATALOG.map((p) => [p.id, p]));
@@ -16031,7 +16032,7 @@ export function distillQuestions(questions: string[], signals: Signal[] = []): D
 
 // ─── the emergent question ──────────────────────────────────────────────────
 const EMERGENT_TEMPLATES: Record<string, (reason: string) => string> = {
-  volatility: (r) => `Underneath your questions is a volatility question you haven't asked: with ${r}, how do you keep the plan from depending on markets you can't control?`,
+  volatility: (r) => `Underneath your questions is a volatility question you haven't asked: given that ${r}, how do you keep the plan from depending on markets you can't control?`,
   tax: (r) => `The pattern beneath your questions is a tax question: ${r} — every strategy you asked about changes in value once that is addressed first.`,
   equity: (r) => `You haven't asked about the largest asset on your balance sheet: ${r}. How it is deployed decides how fast everything else moves.`,
   "war-chest": (r) => `The unasked question is liquidity: ${r}. A plan that can't be reached on demand fails the moment life needs it.`,
@@ -16062,11 +16063,14 @@ export function emergentQuestion(distilled: Distilled[], signals: Signal[]): { q
 }
 
 // ─── composing the journey ──────────────────────────────────────────────────
-export type JourneyStep = { id: string; path: string; title: string; why: string; kind: string; serves: string[] };
+export type JourneyStep = { id: string; path: string; title: string; why: string; guide: string; kind: string; serves: string[] };
+export type JourneyControls = { youControl: string[]; youDont: string[] };
 export type Journey = {
   coreQuestions: string[];
   emergentQuestion: string;
   steps: JourneyStep[];
+  /** The variables the client can actually move, and the ones the plan must survive instead. */
+  controls: JourneyControls;
   generatedBy: string;
 };
 
@@ -16185,15 +16189,68 @@ export function buildJourney(questions: string[], ff: ClientFactFinder | null | 
       ? ` It serves ${sv.map((s) => (s === "emergent" ? "the emergent question" : `question ${s.slice(1)}`)).join(" and ")}.`
       : "";
     const bridge = i === 0 ? "Start here." : i === ordered.length - 1 ? "Close the loop." : `Builds on “${ordered[i - 1]!.title}”.`;
-    return { id: p.id, path: p.path, title: p.title, kind: p.kind, serves: sv, why: `${bridge} ${p.purpose}${servesText}` };
+    const answers = sv.map((s) => (s === "emergent" ? `the question you hadn't asked` : distilled[Number(s.slice(1)) - 1]?.question)).filter(Boolean);
+    const guide = (answers.length ? `This page works on: ${answers.map((a) => `“${a}”`).join(" and ")}. ` : "") + p.walkthrough;
+    return { id: p.id, path: p.path, title: p.title, kind: p.kind, serves: sv, why: `${bridge} ${p.purpose}${servesText}`, guide };
   });
 
   return {
     coreQuestions: distilled.map((d) => d.question),
     emergentQuestion: emergent.question,
     steps,
+    controls: journeyControls(distilled, signals),
     generatedBy: "journey-engine",
   };
+}
+
+// ─── the variables the client controls ──────────────────────────────────────
+const CONTROL_TEMPLATES: Record<string, string> = {
+  tax: "How much of your income is taxed — through deductions, plan design, and conversion timing",
+  roth: "The pace of converting tax-deferred money to tax-free money",
+  mortgage: "How fast the mortgage is retired, and how much interest you recover",
+  payoff: "Extra principal each month",
+  equity: "Whether home equity sits idle or is cycled into a liquid reserve",
+  "war-chest": "The size of the liquid, tax-advantaged reserve you keep on demand",
+  debt: "The order and speed of paying each debt",
+  "student-loans": "The repayment or forgiveness track for the student loans",
+  retirement: "Your retirement date and the income target",
+  income: "How much of today's income you save",
+  investments: "Your allocation and how diversified it is",
+  volatility: "Floors, guarantees, and reserves that decide whether a downturn ever forces a sale",
+  risk: "The concentration you hold in any single position",
+  iul: "Whether a permanent policy is used as a tax-free reserve",
+  insurance: "Life, disability, and liability coverage in force",
+  disability: "Disability coverage and its definition of occupation",
+  estate: "Whether a will, trust, and powers of attorney exist and are current",
+  divorce: "The structures that keep assets separate if a marriage ends",
+  "asset-protection": "Which assets sit inside protected structures",
+  practice: "Entity, retirement-plan design, and exit timing for the practice",
+  liquidity: "Months of expenses held in cash",
+  time: "When the first move happens — every year of delay is a variable you control",
+};
+const UNCONTROLLED = [
+  "Market returns in any given year",
+  "Interest rates set by the Federal Reserve",
+  "Changes to the tax code",
+  "How long you and your spouse live",
+  "Health events and the timing of a claim",
+  "Inflation",
+];
+
+/** What the client can move (from their questions and facts) versus what the plan must simply survive. */
+export function journeyControls(distilled: Distilled[], signals: Signal[]): JourneyControls {
+  const tags: string[] = [];
+  for (const d of distilled) tags.push(d.tag, ...expand(d.tag));
+  for (const s of signals.slice(0, 8)) tags.push(s.tag);
+  const seen = new Set<string>();
+  const youControl: string[] = [];
+  for (const t of tags) {
+    const line = CONTROL_TEMPLATES[t];
+    if (line && !seen.has(line)) { seen.add(line); youControl.push(line); }
+    if (youControl.length >= 7) break;
+  }
+  if (!seen.has(CONTROL_TEMPLATES.time!)) youControl.push(CONTROL_TEMPLATES.time!);
+  return { youControl, youDont: UNCONTROLLED };
 }
 
 /** Validates a journey (e.g. one an AI polished) against the catalog and size rules. */
@@ -16202,8 +16259,10 @@ export function validateJourney(j: Journey): { ok: boolean; problems: string[] }
   if (j.coreQuestions.length < CORE_QUESTIONS_MIN || j.coreQuestions.length > CORE_QUESTIONS_MAX) problems.push(`core questions: ${j.coreQuestions.length} (need ${CORE_QUESTIONS_MIN}–${CORE_QUESTIONS_MAX})`);
   if (!j.emergentQuestion || j.emergentQuestion.length < 20) problems.push("emergent question missing");
   if (j.steps.length < JOURNEY_MIN || j.steps.length > JOURNEY_MAX) problems.push(`steps: ${j.steps.length} (need ${JOURNEY_MIN}–${JOURNEY_MAX})`);
+  if (!j.controls || j.controls.youControl.length === 0 || j.controls.youDont.length === 0) problems.push("controls missing");
   const seen = new Set<string>();
   for (const s of j.steps) {
+    if (!s.guide || s.guide.length < 20) problems.push(`guide missing for ${s.id}`);
     const p = CATALOG_BY_ID[s.id];
     if (!p) problems.push(`unknown page ${s.id}`);
     else if (p.path !== s.path) problems.push(`path mismatch for ${s.id}`);
@@ -40886,6 +40945,7 @@ export const librarianRouter = router({
               coreQuestions: Array.isArray(p.coreQuestions) && p.coreQuestions.length ? p.coreQuestions.map(String).slice(0, 5) : journey.coreQuestions,
               emergentQuestion: typeof p.emergentQuestion === "string" && p.emergentQuestion.length > 20 ? p.emergentQuestion : journey.emergentQuestion,
               steps: journey.steps.map((s) => ({ ...s, why: p.steps?.find((x) => x.id === s.id)?.why?.slice(0, 400) || s.why })),
+              controls: journey.controls,
               generatedBy: `journey-engine + ${polished?.via ?? "ai"}`,
             };
             if (validateJourney(candidate).ok) journey = candidate;
@@ -40898,14 +40958,16 @@ export const librarianRouter = router({
       const id = await saveJourneyForUser(ctx.user.id, input.questions, {
         coreQuestions: journey.coreQuestions,
         emergentQuestion: journey.emergentQuestion,
-        steps: journey.steps.map((s) => ({ id: s.id, path: s.path, title: s.title, why: s.why, kind: s.kind })),
+        steps: journey.steps.map((s) => ({ id: s.id, path: s.path, title: s.title, why: s.why, guide: s.guide, kind: s.kind })),
+        controls: journey.controls,
         generatedBy: journey.generatedBy,
       });
       const spoken =
         `I've read everything you asked and everything in your assessment. It comes down to ${journey.coreQuestions.length} questions. ` +
         journey.coreQuestions.map((q, i) => `${i + 1}: ${q}`).join(" ") +
         ` And one you haven't asked yet: ${journey.emergentQuestion} ` +
-        `I've laid out ${journey.steps.length} pages in order — start with ${journey.steps[0]!.title} and each one builds on the last.`;
+        `I've laid out ${journey.steps.length} pages in order — start with ${journey.steps[0]!.title} and each one builds on the last. ` +
+        `Along the way you control ${journey.controls.youControl.length} variables; the rest the plan is built to survive.`;
       return { gated: false as const, journey, journeyId: id, spoken };
     }),
 
@@ -41479,689 +41541,6 @@ export function generateMortgageKillerPdf(input: MortgageKillerPdfInput): Promis
     });
 
     addPageNumbers(doc);
-    doc.end();
-  });
-}
-```
-
-## `server/pdfExportService.ts`
-
-```ts
-/**
- * PDF Export Service
- * Server-side PDF generation for Report Builder and Meeting Agenda
- * Uses PDFKit for high-quality document rendering
- */
-
-import PDFDocument from "pdfkit";
-
-// ─── Color Palette ──────────────────────────────────────────────────────────
-const COLORS = {
-  bg: "#0f1117",
-  card: "#1a1d27",
-  border: "#2a2d3a",
-  text: "#e4e4e7",
-  muted: "#a1a1aa",
-  blue: "#3b82f6",
-  emerald: "#22c55e",
-  amber: "#f59e0b",
-  purple: "#8b5cf6",
-  white: "#ffffff",
-};
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-function drawHeader(doc: PDFKit.PDFDocument, title: string, subtitle: string) {
-  doc.rect(0, 0, doc.page.width, 100).fill(COLORS.card);
-  doc.fillColor(COLORS.blue).fontSize(24).font("Helvetica-Bold").text(title, 40, 30);
-  doc.fillColor(COLORS.muted).fontSize(11).font("Helvetica").text(subtitle, 40, 62);
-  doc.moveDown(3);
-}
-
-function drawSectionTitle(doc: PDFKit.PDFDocument, title: string, y?: number) {
-  const currentY = y ?? doc.y;
-  if (currentY > doc.page.height - 120) doc.addPage();
-  doc.fillColor(COLORS.blue).fontSize(14).font("Helvetica-Bold").text(title, 40, doc.y);
-  doc.moveDown(0.5);
-  doc.strokeColor(COLORS.border).lineWidth(1).moveTo(40, doc.y).lineTo(doc.page.width - 40, doc.y).stroke();
-  doc.moveDown(0.8);
-}
-
-function drawText(doc: PDFKit.PDFDocument, text: string, opts?: { bold?: boolean; color?: string; indent?: number }) {
-  const color = opts?.color ?? COLORS.text;
-  const font = opts?.bold ? "Helvetica-Bold" : "Helvetica";
-  const indent = opts?.indent ?? 40;
-  doc.fillColor(color).fontSize(10).font(font).text(text, indent, doc.y, { width: doc.page.width - 80 });
-}
-
-function drawBullet(doc: PDFKit.PDFDocument, text: string, bulletColor?: string) {
-  const y = doc.y;
-  doc.fillColor(bulletColor ?? COLORS.blue).fontSize(8).text("●", 50, y + 1);
-  doc.fillColor(COLORS.text).fontSize(10).font("Helvetica").text(text, 65, y, { width: doc.page.width - 110 });
-  doc.moveDown(0.3);
-}
-
-function addPageNumbers(doc: PDFKit.PDFDocument) {
-  const range = doc.bufferedPageRange();
-  for (let i = range.start; i < range.start + range.count; i++) {
-    doc.switchToPage(i);
-    doc.fillColor(COLORS.muted).fontSize(8).font("Helvetica")
-      .text(`Page ${i + 1} of ${range.count}`, 0, doc.page.height - 30, { align: "center", width: doc.page.width });
-  }
-}
-
-// ─── Report Builder PDF ─────────────────────────────────────────────────────
-export interface ReportPdfInput {
-  title: string;
-  clientName: string;
-  advisorName: string;
-  reportId: string;
-  generatedAt: string;
-  sections: Array<{ id: string; order: number; content?: string }>;
-  firmName?: string;
-}
-
-export function generateReportPdf(input: ReportPdfInput): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({
-      size: "LETTER",
-      margins: { top: 40, bottom: 40, left: 40, right: 40 },
-      bufferPages: true,
-      info: {
-        Title: input.title,
-        Author: input.advisorName,
-        Subject: `Financial Report for ${input.clientName}`,
-      },
-    });
-
-    const chunks: Buffer[] = [];
-    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
-    doc.on("end", () => resolve(Buffer.concat(chunks)));
-    doc.on("error", reject);
-
-    // Cover page
-    doc.rect(0, 0, doc.page.width, doc.page.height).fill(COLORS.bg);
-    doc.fillColor(COLORS.blue).fontSize(32).font("Helvetica-Bold").text(input.title, 60, 200, { width: doc.page.width - 120 });
-    doc.moveDown(1);
-    doc.fillColor(COLORS.text).fontSize(16).font("Helvetica").text(`Prepared for: ${input.clientName}`, 60);
-    doc.moveDown(0.5);
-    doc.fillColor(COLORS.muted).fontSize(12).text(`Advisor: ${input.advisorName}`, 60);
-    if (input.firmName) {
-      doc.moveDown(0.3);
-      doc.text(`Firm: ${input.firmName}`, 60);
-    }
-    doc.moveDown(1);
-    doc.fillColor(COLORS.muted).fontSize(10).text(`Report ID: ${input.reportId}`, 60);
-    doc.text(`Generated: ${new Date(input.generatedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, 60);
-
-    // Disclaimer footer on cover
-    doc.fillColor(COLORS.muted).fontSize(8).font("Helvetica")
-      .text("This report is for informational purposes only and does not constitute financial advice.", 60, doc.page.height - 80, { width: doc.page.width - 120 });
-
-    // Section pages
-    for (const section of input.sections) {
-      doc.addPage();
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill(COLORS.bg);
-
-      const sectionName = section.id.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase());
-      drawHeader(doc, sectionName, `Section ${section.order} of ${input.sections.length}`);
-
-      if (section.content) {
-        drawText(doc, section.content);
-      } else {
-        // Generate placeholder content based on section type
-        const content = getSectionContent(section.id, input.clientName);
-        for (const line of content) {
-          if (line.startsWith("##")) {
-            drawSectionTitle(doc, line.replace("## ", ""));
-          } else if (line.startsWith("- ")) {
-            drawBullet(doc, line.replace("- ", ""));
-          } else {
-            drawText(doc, line);
-            doc.moveDown(0.3);
-          }
-        }
-      }
-    }
-
-    // Final disclaimer page
-    doc.addPage();
-    doc.rect(0, 0, doc.page.width, doc.page.height).fill(COLORS.bg);
-    drawHeader(doc, "Important Disclosures", "Please read carefully");
-    const disclaimers = [
-      "The values shown in this report are based on non-guaranteed illustrated rates. Actual policy performance may vary significantly.",
-      "Past performance of any index does not guarantee future results. Index-linked insurance products are not direct investments in any index.",
-      "Roth conversions are taxable events. Consult with a qualified tax professional before implementing any conversion strategy.",
-      "This material is for informational purposes only and should not be construed as legal, tax, or financial advice.",
-      "Insurance products are subject to the claims-paying ability of the issuing insurance company.",
-      "Monte Carlo simulations use random sampling to model possible outcomes. Results represent probability distributions, not predictions.",
-    ];
-    for (const d of disclaimers) {
-      drawBullet(doc, d, COLORS.amber);
-      doc.moveDown(0.3);
-    }
-
-    addPageNumbers(doc);
-    doc.end();
-  });
-}
-
-// ─── Meeting Agenda PDF ─────────────────────────────────────────────────────
-export interface AgendaPdfInput {
-  title: string;
-  clientName: string;
-  meetingType: string;
-  duration: number;
-  blocks: Array<{
-    time: string;
-    topic: string;
-    talkingPoints: string[];
-    resources?: string[];
-  }>;
-  keyQuestions?: string[];
-  followUpActions?: string[];
-  advisorName?: string;
-  firmName?: string;
-}
-
-export function generateAgendaPdf(input: AgendaPdfInput): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({
-      size: "LETTER",
-      margins: { top: 40, bottom: 40, left: 40, right: 40 },
-      bufferPages: true,
-      info: {
-        Title: input.title,
-        Author: input.advisorName ?? "Advisor",
-        Subject: `Meeting Agenda for ${input.clientName}`,
-      },
-    });
-
-    const chunks: Buffer[] = [];
-    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
-    doc.on("end", () => resolve(Buffer.concat(chunks)));
-    doc.on("error", reject);
-
-    // Page background
-    doc.rect(0, 0, doc.page.width, doc.page.height).fill(COLORS.bg);
-
-    // Header
-    drawHeader(doc, input.title, `Client: ${input.clientName} | ${input.meetingType.replace(/_/g, " ")} | ${input.duration} minutes`);
-
-    if (input.advisorName) {
-      drawText(doc, `Advisor: ${input.advisorName}${input.firmName ? ` — ${input.firmName}` : ""}`, { color: COLORS.muted });
-      doc.moveDown(0.3);
-    }
-    drawText(doc, `Date: ${new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`, { color: COLORS.muted });
-    doc.moveDown(1.5);
-
-    // Agenda Blocks
-    drawSectionTitle(doc, "Agenda");
-    for (const block of input.blocks) {
-      if (doc.y > doc.page.height - 150) {
-        doc.addPage();
-        doc.rect(0, 0, doc.page.width, doc.page.height).fill(COLORS.bg);
-      }
-
-      // Time badge + topic
-      doc.fillColor(COLORS.blue).fontSize(10).font("Helvetica-Bold").text(`[${block.time}]`, 40, doc.y);
-      doc.fillColor(COLORS.white).fontSize(12).font("Helvetica-Bold").text(block.topic, 40, doc.y);
-      doc.moveDown(0.4);
-
-      // Talking points
-      for (const tp of block.talkingPoints) {
-        drawBullet(doc, tp);
-      }
-
-      // Resources
-      if (block.resources?.length) {
-        doc.moveDown(0.2);
-        drawText(doc, `Resources: ${block.resources.join(", ")}`, { color: COLORS.muted, indent: 65 });
-      }
-      doc.moveDown(0.8);
-    }
-
-    // Key Questions
-    if (input.keyQuestions?.length) {
-      if (doc.y > doc.page.height - 150) {
-        doc.addPage();
-        doc.rect(0, 0, doc.page.width, doc.page.height).fill(COLORS.bg);
-      }
-      drawSectionTitle(doc, "Key Questions to Ask");
-      input.keyQuestions.forEach((q, i) => {
-        drawText(doc, `${i + 1}. ${q}`);
-        doc.moveDown(0.3);
-      });
-    }
-
-    // Follow-Up Actions
-    if (input.followUpActions?.length) {
-      if (doc.y > doc.page.height - 150) {
-        doc.addPage();
-        doc.rect(0, 0, doc.page.width, doc.page.height).fill(COLORS.bg);
-      }
-      doc.moveDown(0.5);
-      drawSectionTitle(doc, "Follow-Up Actions");
-      for (const action of input.followUpActions) {
-        drawBullet(doc, action, COLORS.emerald);
-      }
-    }
-
-    addPageNumbers(doc);
-    doc.end();
-  });
-}
-
-// ─── Section Content Generator ──────────────────────────────────────────────
-function getSectionContent(sectionId: string, clientName: string): string[] {
-  const sections: Record<string, string[]> = {
-    "portfolio_overview": [
-      `## Portfolio Overview for ${clientName}`,
-      `This section provides a comprehensive view of ${clientName}'s current asset allocation and investment positions.`,
-      "- Traditional IRA holdings and contribution history",
-      "- Roth IRA positions and conversion opportunities",
-      "- Taxable investment accounts",
-      "- Real estate equity positions",
-      "- Life insurance cash value accumulation",
-      "",
-      "Asset allocation targets should be reviewed annually to ensure alignment with risk tolerance and retirement timeline.",
-    ],
-    "key_metrics": [
-      "## Key Performance Metrics",
-      "This section highlights the most important financial metrics for monitoring progress toward retirement goals.",
-      "- Net worth trajectory and growth rate",
-      "- Savings rate as percentage of gross income",
-      "- Tax efficiency ratio across all accounts",
-      "- Insurance coverage adequacy score",
-      "- Estate planning readiness index",
-    ],
-    "recommendations": [
-      "## Strategic Recommendations",
-      "Based on the analysis of current positions and market conditions, the following recommendations are provided:",
-      "- Review and potentially increase Roth conversion amounts given current tax bracket",
-      "- Consider additional IUL funding to maximize tax-free retirement income",
-      "- Evaluate premium financing options for high-net-worth strategies",
-      "- Update beneficiary designations across all accounts",
-      "- Schedule annual policy review with carrier representatives",
-    ],
-    "iul_summary": [
-      "## IUL Policy Summary",
-      "This section details the current indexed universal life insurance policy positions and projected performance.",
-      "- Current cash value and death benefit amounts",
-      "- Premium payment schedule and status",
-      "- Index crediting strategy allocation",
-      "- Historical crediting rate performance",
-      "- Projected cash value at key milestones (years 10, 20, 30)",
-    ],
-    "index_performance": [
-      "## Index Crediting Performance",
-      "Analysis of index performance across selected crediting strategies.",
-      "- S&P 500 annual point-to-point results",
-      "- Uncapped index participation rates",
-      "- Floor protection activation frequency",
-      "- Comparison to fixed account alternatives",
-    ],
-    "cash_value_projection": [
-      "## Cash Value Projection",
-      "Year-by-year projection of policy cash value under illustrated and guaranteed scenarios.",
-      "- Illustrated rate scenario (current non-guaranteed rates)",
-      "- Mid-point scenario (50% of illustrated rate)",
-      "- Guaranteed minimum scenario",
-      "- Breakeven analysis for premium recovery",
-    ],
-    "roth_summary": [
-      "## Roth Conversion Strategy Summary",
-      "Overview of the multi-year Roth conversion ladder strategy.",
-      "- Optimal annual conversion amounts based on tax bracket analysis",
-      "- Projected tax savings over the conversion period",
-      "- Impact on required minimum distributions (RMDs)",
-      "- Medicare IRMAA surcharge considerations",
-    ],
-    "tax_impact": [
-      "## Tax Impact Analysis",
-      "Detailed analysis of the tax implications of the recommended strategy.",
-      "- Current vs. projected effective tax rates",
-      "- Tax bracket waterfall visualization",
-      "- State tax considerations",
-      "- Capital gains tax optimization opportunities",
-    ],
-    "conversion_schedule": [
-      "## Conversion Schedule",
-      "Recommended year-by-year Roth conversion amounts and timing.",
-      "- Annual conversion targets aligned with tax bracket boundaries",
-      "- Estimated tax liability per conversion year",
-      "- Cumulative tax savings projection",
-      "- Flexibility adjustments for income changes",
-    ],
-    "estate_overview": [
-      "## Estate Planning Overview",
-      "Comprehensive review of estate planning positions and strategies.",
-      "- Current estate value and projected growth",
-      "- Federal estate tax exposure analysis",
-      "- State estate/inheritance tax considerations",
-      "- Trust structure recommendations",
-    ],
-    "tax_projections": [
-      "## Estate Tax Projections",
-      "Multi-year projection of estate tax liability under current and proposed tax laws.",
-      "- Current exemption utilization",
-      "- Projected estate value at various time horizons",
-      "- ILIT strategy impact on estate tax reduction",
-      "- Gifting strategy recommendations",
-    ],
-    "trust_analysis": [
-      "## Trust Structure Analysis",
-      "Review of existing and recommended trust arrangements.",
-      "- Irrevocable Life Insurance Trust (ILIT) benefits",
-      "- Spousal Lifetime Access Trust (SLAT) considerations",
-      "- Grantor Retained Annuity Trust (GRAT) opportunities",
-      "- Dynasty trust for multi-generational wealth transfer",
-    ],
-    "compliance_summary": [
-      "## Compliance Summary",
-      "Overview of regulatory compliance status and documentation.",
-      "- Suitability documentation status",
-      "- Best interest standard compliance",
-      "- Disclosure requirements met",
-      "- Annual review completion status",
-    ],
-    "suitability_checks": [
-      "## Suitability Assessment",
-      "Detailed suitability analysis for all recommended products and strategies.",
-      "- Risk tolerance alignment verification",
-      "- Time horizon appropriateness",
-      "- Liquidity needs assessment",
-      "- Product suitability scoring",
-    ],
-    "disclosure_log": [
-      "## Disclosure Log",
-      "Record of all required disclosures provided to the client.",
-      "- Product disclosure documents delivered",
-      "- Fee transparency documentation",
-      "- Conflict of interest disclosures",
-      "- Privacy policy acknowledgments",
-    ],
-    "practice_overview": [
-      "## Practice Overview",
-      "High-level summary of practice performance metrics.",
-      "- Total clients under management",
-      "- Assets under management (AUM) growth",
-      "- Revenue trends and projections",
-      "- Client retention rate",
-    ],
-    "growth_metrics": [
-      "## Growth Metrics",
-      "Key growth indicators for the practice.",
-      "- New client acquisition rate",
-      "- Average revenue per client",
-      "- Referral conversion rate",
-      "- Product mix diversification",
-    ],
-    "revenue_analysis": [
-      "## Revenue Analysis",
-      "Detailed breakdown of practice revenue streams.",
-      "- Commission income by product type",
-      "- Fee-based advisory revenue",
-      "- Renewal commission trends",
-      "- Revenue per advisor metrics",
-    ],
-    "executive": [
-      `## Executive Summary`,
-      `This section provides a high-level overview of ${clientName}'s complete financial picture and the key strategies recommended by Russell Capital Systems™, owned by Russell Holdings Management LLC.`,
-      "",
-      "## What This Report Does For You",
-      "This report consolidates your entire financial landscape — income, assets, debts, insurance, tax position, and retirement projections — into a single, actionable document with dollar-quantified recommendations.",
-      "",
-      "## Opportunities You May Have Overlooked",
-      "- Tax bracket optimization through strategic Roth conversions and income shifting",
-      "- Unlocking trapped home equity through HELOC strategies that fund tax-advantaged growth",
-      "- Insurance policy repositioning to maximize cash value access and tax-free income",
-      "- Estate planning structures that can reduce estate tax exposure by 60-80%",
-      "",
-      "## Key Takeaway",
-      "A coordinated, interlocking financial strategy across tax, insurance, investments, and estate planning can produce 2-3x better outcomes than optimizing each area independently.",
-      "",
-      "## Recommended Next Steps",
-      "- Review the Goals Accelerator analysis to see how these strategies achieve your goals faster",
-      "- Compare the Do Nothing baseline against the recommended approach",
-      "- Schedule a follow-up meeting to discuss implementation timeline",
-    ],
-    "goals_accelerator": [
-      `## Your Stated Goals Accelerator`,
-      `This section analyzes how the recommended strategies accelerate ${clientName}'s achievement of their stated financial goals — faster, sooner, with less risk, and more effective use of time and capital.`,
-      "",
-      "## How These Strategies Accelerate Your Goals",
-      "- Each recommended strategy interlocks with others to compound benefits across your financial picture",
-      "- Tax savings from one strategy fund growth in another, creating a self-reinforcing cycle",
-      "- Risk is reduced through diversification across asset classes, tax treatments, and time horizons",
-      "",
-      "## Accelerated Timeline Analysis",
-      "- Without these strategies: Goals achieved on standard timeline with standard risk",
-      "- With these strategies: Goals achieved significantly faster with reduced risk exposure",
-      "- Capital efficiency improves as each dollar works harder across multiple strategies",
-      "",
-      "## Should Your Goals Be Bigger?",
-      "Given the power of interlocking strategies, consider whether your original goals were set too conservatively. The strategies in this report may enable you to:",
-      "- Retire earlier than planned while maintaining or increasing your lifestyle",
-      "- Leave a larger legacy while spending more during retirement",
-      "- Build wealth faster by keeping all assets on the move and interlocked for maximum optimization",
-      "",
-      "## Action: Revisit Your Goal Setting",
-      "We recommend returning to the Goals-Based Planning page to set bigger, better goals that fully leverage the strategies available to you.",
-    ],
-    "tax_bracket_analysis": [
-      `## Federal & State Tax Bracket Analysis`,
-      `Detailed tax bracket modeling for ${clientName} using 2026 federal and state tax schedules.`,
-      "",
-      "## Current Tax Position",
-      "- Federal marginal tax rate and effective rate",
-      "- State income tax rate and bracket position",
-      "- Combined total tax burden as percentage of gross income",
-      "- Distance to next federal bracket boundary",
-      "",
-      "## Tax Optimization Opportunities",
-      "- Income shifting strategies to reduce marginal rate",
-      "- Roth conversion amounts that stay within current bracket",
-      "- Tax-loss harvesting opportunities across investment accounts",
-      "- Oil & gas investment tax credits and deductions",
-      "",
-      "## Projected Tax Savings",
-      "- Annual federal tax savings from recommended strategies",
-      "- Annual state tax savings from recommended strategies",
-      "- 20-year cumulative tax savings projection",
-      "- Tax savings redirected to HELOC principal paydown and wealth building",
-    ],
-    "do_nothing_baseline": [
-      `## Do Nothing Baseline — What Happens If You Take No Action`,
-      `This section compares ${clientName}'s current trajectory (no changes) against the recommended strategy to quantify the cost of inaction.`,
-      "",
-      "## The Cost of Inaction",
-      "Every year without implementing these strategies represents a compounding opportunity cost. The gap between 'do nothing' and 'take action' widens exponentially over time.",
-      "",
-      "## Key Comparison Metrics",
-      "- Net worth at retirement: Do Nothing vs. Recommended",
-      "- Monthly retirement income: Do Nothing vs. Recommended",
-      "- Total taxes paid over planning horizon: Do Nothing vs. Recommended",
-      "- Estate value transferred to heirs: Do Nothing vs. Recommended",
-      "- Years to achieve financial independence: Do Nothing vs. Recommended",
-      "",
-      "## The Compounding Effect of Delay",
-      "- Each year of delay reduces the total benefit by an increasing amount",
-      "- Tax savings not captured this year cannot be recovered",
-      "- Insurance costs increase with age, making delay more expensive",
-      "- Market opportunity cost compounds against you",
-    ],
-    "recommendation_summary": [
-      `## Recommendation Summary — Dollar-Quantified Action Plan`,
-      `Clear, specific recommendations for ${clientName} with projected dollar benefits and implementation timeline.`,
-      "",
-      "## Primary Recommendation",
-      "Implement the coordinated strategy outlined in this report to maximize wealth accumulation, minimize tax burden, and accelerate goal achievement.",
-      "",
-      "## Projected Benefits",
-      "- Total projected tax savings over planning horizon",
-      "- Additional retirement income generated",
-      "- Estate value preservation and growth",
-      "- Risk reduction through diversification and guarantees",
-      "",
-      "## Implementation Timeline",
-      "- Month 1-2: Tax bracket optimization and Roth conversion planning",
-      "- Month 2-3: Insurance portfolio review and repositioning",
-      "- Month 3-6: Real estate strategy implementation (HELOC, MYGA ladder)",
-      "- Ongoing: Annual review and strategy adjustment",
-      "",
-      "## Confidence Level: High",
-      "These recommendations are based on proven strategies, current tax law, and your specific financial profile. Results may vary based on market conditions and tax law changes.",
-    ],
-  };
-
-  return sections[sectionId] ?? [
-    `## ${sectionId.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase())}`,
-    `Detailed analysis for the ${sectionId.replace(/[-_]/g, " ")} section.`,
-    "- Key findings and observations",
-    "- Data-driven recommendations",
-    "- Action items and next steps",
-  ];
-}
-```
-
-## `server/pdfReport.ts`
-
-```ts
-import PDFDocument from "pdfkit";
-import { getClientById, getStrategiesByClient, getClientNotes } from "./db";
-
-const GREEN = "#22c55e";
-const DARK = "#0a1628";
-const GRAY = "#7a95b8";
-const WHITE = "#ffffff";
-
-function fmt(n: number): string {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n}`;
-}
-
-export async function generateClientReport(clientId: number, workspaceId: number): Promise<Buffer> {
-  const client = await getClientById(clientId, workspaceId);
-  if (!client) throw new Error("Client not found");
-
-  const strategies = await getStrategiesByClient(clientId);
-  const notes = await getClientNotes(clientId, workspaceId);
-
-  return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ size: "LETTER", margin: 50 });
-    const chunks: Buffer[] = [];
-    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
-    doc.on("end", () => resolve(Buffer.concat(chunks)));
-    doc.on("error", reject);
-
-    // ─── Header ──────────────────────────────────────────────────────────
-    doc.rect(0, 0, doc.page.width, 80).fill(DARK);
-    doc.fontSize(22).fillColor(GREEN).text("Russell Capital Systems™", 50, 25, { continued: false });
-    doc.fontSize(9).fillColor(GRAY).text("Turn Capital Into Income™", 50, 52);
-    doc.fontSize(9).fillColor(GRAY).text(`Report generated ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, 50, 65);
-
-    doc.moveDown(2);
-
-    // ─── Client Profile ──────────────────────────────────────────────────
-    doc.fontSize(16).fillColor("#1a3055").text("Client Profile", 50);
-    doc.moveDown(0.5);
-
-    const netWorth = Number(client.iraBalance ?? 0) + Number(client.rothBalance ?? 0) +
-      Number(client.taxableAssets ?? 0) + Number(client.realEstateEquity ?? 0) +
-      Number(client.lifeInsuranceCv ?? 0);
-
-    const profileRows: [string, string][] = [
-      ["Name", client.name],
-      ["Age", client.age ? String(client.age) : "N/A"],
-      ["Filing Status", client.filingStatus ?? "N/A"],
-      ["Annual Income", client.income ? fmt(Number(client.income)) : "N/A"],
-      ["Total Net Worth", fmt(netWorth)],
-      ["IRA Balance", client.iraBalance ? fmt(Number(client.iraBalance)) : "N/A"],
-      ["Roth Balance", client.rothBalance ? fmt(Number(client.rothBalance)) : "N/A"],
-      ["Real Estate Equity", client.realEstateEquity ? fmt(Number(client.realEstateEquity)) : "N/A"],
-      ["Life Insurance CV", client.lifeInsuranceCv ? fmt(Number(client.lifeInsuranceCv)) : "N/A"],
-    ];
-
-    for (const [label, value] of profileRows) {
-      doc.fontSize(10).fillColor(GRAY).text(label, 60, undefined, { continued: true, width: 200 });
-      doc.fillColor("#1a3055").text(value, { align: "left" });
-    }
-
-    doc.moveDown(1.5);
-
-    // ─── Metric Projections ──────────────────────────────────────────────
-    doc.fontSize(16).fillColor("#1a3055").text("Financial Projections", 50);
-    doc.moveDown(0.5);
-
-    const age = client.age ?? 45;
-    const income = Number(client.income ?? 0);
-    const ira = Number(client.iraBalance ?? 0);
-    const roth = Number(client.rothBalance ?? 0);
-    const re = Number(client.realEstateEquity ?? 0);
-    const lifeIns = Number(client.lifeInsuranceCv ?? 0);
-
-    const projections: [string, string, string][] = [
-      ["Net Worth Projection", fmt(netWorth * Math.pow(1.07, Math.max(0, 85 - age))), `by ${new Date().getFullYear() + Math.max(0, 85 - age)}`],
-      ["Debt Destruction", fmt(re * 0.4), `Mortgage paid off by ${new Date().getFullYear() + Math.min(15, Math.max(5, Math.round(re * 0.4 / (income * 0.15))))}`],
-      ["Income Engine", fmt(income * 0.8), `Tax-free income in ${Math.max(3, Math.round((65 - age) / 2))} years`],
-      ["Policy Values", lifeIns > 0 ? fmt(lifeIns * 1.5) : fmt(income * 0.8 * 8), "Projected cash value"],
-    ];
-
-    for (const [label, value, note] of projections) {
-      doc.fontSize(11).fillColor(GREEN).text(`● ${label}`, 60);
-      doc.fontSize(10).fillColor("#1a3055").text(`  ${value} — ${note}`, 75);
-      doc.moveDown(0.3);
-    }
-
-    doc.moveDown(1.5);
-
-    // ─── Strategy History ────────────────────────────────────────────────
-    doc.fontSize(16).fillColor("#1a3055").text("Strategy History", 50);
-    doc.moveDown(0.5);
-
-    if (strategies.length === 0) {
-      doc.fontSize(10).fillColor(GRAY).text("No strategies generated yet.", 60);
-    } else {
-      for (const s of strategies.slice(0, 5)) {
-        const date = new Date(s.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-        doc.fontSize(11).fillColor("#1a3055").text(`${date} — ${s.generatedBy ?? "AI"}`, 60);
-        if (s.summary) {
-          doc.fontSize(9).fillColor(GRAY).text(s.summary.slice(0, 300), 75, undefined, { width: 450 });
-        }
-        if (s.taxPlan) {
-          doc.fontSize(9).fillColor(GRAY).text(`Tax: ${s.taxPlan.slice(0, 200)}`, 75, undefined, { width: 450 });
-        }
-        doc.moveDown(0.5);
-      }
-    }
-
-    // ─── Recent Notes ────────────────────────────────────────────────────
-    if (doc.y > 600) doc.addPage();
-    doc.moveDown(1);
-    doc.fontSize(16).fillColor("#1a3055").text("Recent Activity Notes", 50);
-    doc.moveDown(0.5);
-
-    if (notes.length === 0) {
-      doc.fontSize(10).fillColor(GRAY).text("No notes logged yet.", 60);
-    } else {
-      for (const n of notes.slice(0, 10)) {
-        const date = new Date(n.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-        const typeColors: Record<string, string> = { call: "#22c55e", meeting: "#3b82f6", email: "#a78bfa", task: "#f0c040" };
-        const color = typeColors[n.noteType ?? "general"] ?? GRAY;
-        doc.fontSize(9).fillColor(color).text(`[${(n.noteType ?? "note").toUpperCase()}] ${date}`, 60, undefined, { continued: true });
-        doc.fillColor("#1a3055").text(` — ${n.content.slice(0, 200)}`);
-        doc.moveDown(0.3);
-      }
-    }
-
-    // ─── Footer ──────────────────────────────────────────────────────────
-    doc.moveDown(2);
-    doc.fontSize(8).fillColor(GRAY).text(
-      "This report is generated by Russell Capital Systems™ for informational purposes only. It does not constitute financial advice.",
-      50, undefined, { width: 500, align: "center" }
-    );
-
     doc.end();
   });
 }

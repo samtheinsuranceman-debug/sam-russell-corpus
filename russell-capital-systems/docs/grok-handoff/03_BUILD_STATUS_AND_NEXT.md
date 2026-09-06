@@ -36,6 +36,11 @@ next work in priority order. Do not undo the rules in the spec.
   "Pre-filled from your Financial Assessment" and names any blank inputs.
 - **Twelve AI providers**: Cohere, DeepSeek and Together AI join the nine
   (all keyed by host env variables; skip-if-absent).
+- **The journey walks the client through**: every step has a librarian `guide`
+  (which question it works on + what to do on the page + what to carry forward),
+  every journey names the variables the client controls vs. what the plan must
+  survive, and `/portal/my-journey` (My Secret Journey) holds the latest journey
+  with resume.
 - **Journey carried page to page**: `JourneyProgressBar` in the portal shell
   shows "Step N of M · next" on any page that is a journey step and stamps
   `visitedAt` server-side (`librarian.markVisited`).

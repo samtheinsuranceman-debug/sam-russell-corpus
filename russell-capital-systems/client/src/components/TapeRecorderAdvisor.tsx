@@ -13,7 +13,7 @@ import { BookOpen, Circle, Keyboard, Play, Square } from "lucide-react";
 
 type Mode = "idle" | "listening" | "thinking" | "speaking";
 type Line = { role: "user" | "librarian"; text: string; at: number; contributors?: string[] };
-export type JourneyView = { coreQuestions: string[]; emergentQuestion: string; steps: Array<{ id: string; path: string; title: string; why: string; kind: string }>; generatedBy: string };
+export type JourneyView = { coreQuestions: string[]; emergentQuestion: string; steps: Array<{ id: string; path: string; title: string; why: string; kind: string; guide?: string; visitedAt?: string | null }>; controls?: { youControl: string[]; youDont: string[] }; generatedBy: string };
 
 type SpeechRecognitionLike = {
   lang: string; interimResults: boolean; continuous: boolean;

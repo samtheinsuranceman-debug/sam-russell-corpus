@@ -4794,8 +4794,9 @@ URLs, calculators included — in a logical, building sequence.
 | Journey engine | `shared/journeyEngine.ts` | Deterministic: `detectTags`, `factFinderSignals`, `distillQuestions`, `emergentQuestion`, `buildJourney`, `validateJourney`. |
 | Librarian API | `server/librarianRouter.ts` (`librarian.status/ask/journey/latestJourney`) | Gate → fan-out to providers → synthesis by the lead model; AI may only polish wording of a journey, never its pages. Offline fallback answers from the assessment alone. |
 | Tape recorder | `client/src/components/TapeRecorderAdvisor.tsx` | REC (Web Speech), PLAY, STOP, TYPE, JOURNEY; ElevenLabs voice via `ultra.speak` when configured, else browser speech. |
-| Advisor page | `client/src/pages/portal/AIFinancialAdvisor.tsx` → `/portal/ai-advisor` | Deck + "what it knows" + the journey (core questions, emergent question, ordered steps with visited state). |
-| Navigation | `client/src/components/AppShell.tsx` → group **New Client Welcome List** | Assessment → AI Financial Advisor → Wealth Genome → The Arrival … The Brotherhood. |
+| Advisor page | `client/src/pages/portal/AIFinancialAdvisor.tsx` → `/portal/ai-advisor` | Deck + "what it knows" + the journey (core questions, emergent question, controls, ordered steps with guides and visited state). |
+| My Secret Journey | `client/src/pages/portal/MyJourney.tsx` → `/portal/my-journey` | The latest journey as its own page: resume where you left off, guides per step, controls. |
+| Navigation | `client/src/components/AppShell.tsx` → group **New Client Welcome List** | Assessment → AI Financial Advisor → My Secret Journey → Wealth Genome → The Arrival … The Brotherhood. `JourneyProgressBar` shows step N of M + the guide on every journey page. |
 
 ## Rules the librarian obeys (do not loosen)
 
@@ -4804,6 +4805,8 @@ URLs, calculators included — in a logical, building sequence.
 3. **Education, not advice.** Projections under stated assumptions, no guarantees, no product solicitation; the licensed advisor and the tax professional team review suitability and IRS compliance before anything is implemented. The compliance line is on the deck.
 4. **Pages are real.** Every journey step must exist in `JOURNEY_CATALOG` (validated) and every catalog path must be a route in `App.tsx`.
 5. **Sizes.** 3–5 core questions, one emergent question, 10–15 steps, first step is orientation, last step is a review page, steps are sorted by `builds` so each page builds on the previous one.
+6. **Every step walks the client through.** Each step carries a `guide`: which core question it works on plus the page's `walkthrough` from the catalog ("do this, then carry forward that"). The progress bar shows it on the page and can read it aloud.
+7. **Variables are named.** Every journey carries `controls`: `youControl` (from the client's questions and signals — savings rate, payoff speed, conversion pace, coverage, structures, and always "when the first move happens") and `youDont` (markets, rates, tax law, longevity, health, inflation). This is how the journey "controls the volatility": by fixing the first list, not predicting the second.
 
 ## How a journey is composed (engine)
 
@@ -4816,7 +4819,7 @@ URLs, calculators included — in a logical, building sequence.
 
 ## Extending it
 
-- **Add a page to journeys:** append to `JOURNEY_CATALOG` (id, path that exists in `App.tsx`, title, purpose, kind, tags, builds). The tests check uniqueness and `/portal/` paths.
+- **Add a page to journeys:** append to `JOURNEY_CATALOG` (id, path that exists in `App.tsx`, title, purpose, kind, tags, builds, and a `walkthrough` ending in "Carry forward: …"). The tests check uniqueness, `/portal/` paths, and the walkthrough.
 - **Add a topic:** add a keyword regex in `TOPIC_KEYWORDS`, a template in `CORE_TEMPLATES`, aliases in `TAG_ALIASES`, optionally an `EMERGENT_TEMPLATES` entry and a signal in `factFinderSignals`.
 - **Add an assessment field:** append to the section in `FACT_FINDER_SECTIONS`; mark `required` only if the advisor genuinely cannot advise without it (required fields gate the advisor). The UI, storage, summary, document, and completeness all follow automatically.
 - **Voice:** set `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` on the host; the deck then speaks in the cloned voice. Without them it uses the browser's voice.
@@ -4885,6 +4888,7 @@ read, seed, or extend it. Paths relative to `russell-capital-systems/`.
   gated: `{ gated: true, percent, missingSections, spoken }` · answered: `{ gated: false, answer, spoken, contributors[], contributorCount }`
 - `librarian.journey` `{ questions: string[] (1–40) }` → gated as above, or `{ gated: false, journey, journeyId, spoken }`
 - `librarian.latestJourney` → the last stored journey for the user, or null
+- `librarian.markVisited` `{ journeyId, stepId }` → stamps `visitedAt` on that step
 - `ultra.speak` `{ text }` → `{ ok: true, audioBase64, mimeType }` when ElevenLabs is configured
 
 **Journey shape** (`shared/journeyEngine.ts` → `Journey`; stored in `client_journeys.journey`):
@@ -4896,7 +4900,7 @@ read, seed, or extend it. Paths relative to `russell-capital-systems/`.
     "What is the fastest sensible way to be free of my mortgage, and what is that interest worth to me?",
     "How do I keep growing while controlling volatility and the variables I can actually control?"
   ],
-  "emergentQuestion": "Underneath your questions is a volatility question you haven't asked: with you would sell in a 30% drop, how do you keep the plan from depending on markets you can't control?",
+  "emergentQuestion": "Underneath your questions is a volatility question you haven't asked: given that you would sell in a 30% drop, how do you keep the plan from depending on markets you can't control?",
   "steps": [
     { "id": "mirror",          "path": "/portal/the-mirror",          "title": "The Mirror",          "kind": "orientation", "why": "Start here. Your personal dashboard — where you stand today, in one view." },
     { "id": "wealth-genome",   "path": "/portal/wealth-genome",       "title": "Wealth Genome Analysis", "kind": "orientation", "why": "Builds on “The Mirror”. …" },
@@ -4905,17 +4909,21 @@ read, seed, or extend it. Paths relative to `russell-capital-systems/`.
     { "id": "market-stress-test", "path": "/portal/market-stress-test", "title": "Market Stress Test", "kind": "calculator", "why": "… It serves question 3 and the emergent question." },
     { "id": "russell-number",  "path": "/portal/russell-number",      "title": "Russell Number",      "kind": "review",      "why": "Close the loop. …" }
   ],
+  "controls": {
+    "youControl": ["How much of your income is taxed — through deductions, plan design, and conversion timing", "How fast the mortgage is retired, and how much interest you recover", "…", "When the first move happens — every year of delay is a variable you control"],
+    "youDont": ["Market returns in any given year", "Interest rates set by the Federal Reserve", "Changes to the tax code", "How long you and your spouse live", "Health events and the timing of a claim", "Inflation"]
+  },
   "generatedBy": "journey-engine"
 }
 ```
-(10–15 steps in practice; the example is abbreviated.) `generatedBy` becomes
+(10–15 steps in practice; the example is abbreviated. Each stored step also carries `guide` — "This page works on: “…”. <walkthrough> Carry forward: …" — and `visitedAt` once opened.) `generatedBy` becomes
 `journey-engine + claude` when the AI team polished the wording.
 
 **Table** `client_journeys`: `id, userId, questions JSON, journey JSON, createdAt`.
 
 ## 3. The page catalog (`shared/journeyCatalog.ts`)
 
-45 pages. Each: `{ id, path, title, purpose, kind, tags[], builds }`.
+45 pages. Each: `{ id, path, title, purpose, kind, tags[], builds, walkthrough }`.
 `kind` ∈ orientation · education · calculator · comparison · protection · legacy · review.
 `builds` 0–9 orders a journey (0 = orientation, 8–9 = review/closing).
 Tags in use: start, tax, roth, tax-free, mortgage, payoff, interest, equity, heloc,
@@ -4981,6 +4989,11 @@ next work in priority order. Do not undo the rules in the spec.
   "Pre-filled from your Financial Assessment" and names any blank inputs.
 - **Twelve AI providers**: Cohere, DeepSeek and Together AI join the nine
   (all keyed by host env variables; skip-if-absent).
+- **The journey walks the client through**: every step has a librarian `guide`
+  (which question it works on + what to do on the page + what to carry forward),
+  every journey names the variables the client controls vs. what the plan must
+  survive, and `/portal/my-journey` (My Secret Journey) holds the latest journey
+  with resume.
 - **Journey carried page to page**: `JourneyProgressBar` in the portal shell
   shows "Step N of M · next" on any page that is a journey step and stamps
   `visitedAt` server-side (`librarian.markVisited`).
