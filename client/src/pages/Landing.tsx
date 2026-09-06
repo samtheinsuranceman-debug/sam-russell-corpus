@@ -223,21 +223,26 @@ export default function Landing() {
       </nav>
 
       {/* ── PAGE 1 · HERO: the neon sign, full and crisp. Its words are the headline. ── */}
-      <header id="top" className={`${PAGE} max-md:min-h-0 max-md:flex-col max-md:items-stretch max-md:pt-[4.6rem]`} aria-label="Financial and Tax Relief and Recovery for Physicians, Psychiatrists, and Surgeons">
-        {/* Phones: the WHOLE sign, in flow, full width, then the headline as real text. Wide screens: the sign fills the viewport and its words are the headline. */}
-        <img src="/rcs-neon-a.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons, over a glowing green city skyline" width={1920} height={1080} className={`${PIC} max-md:relative max-md:inset-auto max-md:h-auto max-md:w-full max-md:object-contain lg:object-[25%_center] xl:object-center`} fetchPriority="high" decoding="async" />
-        <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(3,9,10,.15)_0%,rgba(3,9,10,0)_35%,rgba(3,9,10,.55)_78%,#03090a_100%)] max-md:hidden" />
-        <h1 className="md:sr-only relative z-10 mx-auto mt-6 max-w-[24rem] px-5 text-center text-[1.75rem] font-black leading-[1.08] tracking-tight text-white [text-shadow:_0_4px_18px_rgba(0,0,0,.95),_0_0_28px_rgba(16,185,129,.5)]" style={{ fontFamily: "Georgia,'Times New Roman',serif" }}>
-          Financial &amp; Tax Relief and Recovery <span className="text-emerald-300">For Physicians, Psychiatrists, &amp; Surgeons</span>
-        </h1>
-        <div className="container relative z-10 flex min-h-[100svh] flex-col justify-end pb-14 pt-28 max-md:min-h-0 max-md:pb-10 max-md:pt-6 sm:pb-16">
+      <header id="top" className={PAGE} aria-label="Financial and Tax Relief and Recovery for Physicians, Psychiatrists, and Surgeons">
+        {/* One full-bleed picture on every screen. Phones get the tall cut (the whole sign and the purple city at full width, the scene continued above and below); wide screens get the 16:9 original. */}
+        <picture>
+          <source media="(max-width: 767px)" srcSet="/rcs-neon-a-tall.webp" width={1080} height={2160} />
+          <img src="/rcs-neon-a.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons, over a glowing green city skyline" width={1920} height={1080} className={`${PIC} max-md:object-[center_12%] lg:object-[25%_center] xl:object-center`} fetchPriority="high" decoding="async" />
+        </picture>
+        <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(3,9,10,.15)_0%,rgba(3,9,10,0)_35%,rgba(3,9,10,.55)_78%,#03090a_100%)] max-md:bg-[linear-gradient(180deg,rgba(3,9,10,.25)_0%,rgba(3,9,10,0)_25%,rgba(3,9,10,0)_58%,rgba(3,9,10,.72)_78%,#03090a_100%)]" />
+        <h1 className="sr-only">Financial &amp; Tax Relief and Recovery For Physicians, Psychiatrists, &amp; Surgeons</h1>
+        <div className="container relative z-10 flex min-h-[100svh] flex-col justify-end pb-14 pt-28 sm:pb-16 max-md:pb-24">
           <div className="flex flex-col items-start gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <p className="max-w-[34rem] text-lg text-white/90 [text-shadow:_0_4px_18px_rgba(0,0,0,.95)]">
+            <p className="rc-hero-copy max-w-[34rem] text-lg text-white/90 [text-shadow:_0_4px_18px_rgba(0,0,0,.95)] max-md:hidden">
               Coordinated <span className="font-semibold text-emerald-300">tax reduction</span>, <span className="font-semibold text-emerald-300">interest recovery</span>, practice, risk, retirement, and legacy planning — built for the finances of physicians, psychiatrists, and surgeons.
             </p>
+            <p className="rc-hero-copy text-white/90 [text-shadow:_0_4px_18px_rgba(0,0,0,.95)] md:hidden">
+              <span className="font-semibold text-emerald-300">Tax reduction</span>, <span className="font-semibold text-emerald-300">interest recovery</span>, practice, risk, retirement and legacy planning — built for physicians.
+            </p>
             <div className="flex flex-wrap gap-3">
-              <a href="#consultation" className="rc-btn rc-btn-primary rounded-xl px-7 py-3.5 text-base shadow-[0_18px_48px_rgba(16,185,129,.35)]"><Calendar size={18} /> Plan Beyond the Practice</a>
-              <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className={BTN_GHOST}><Calendar size={18} /> Book a Physician Planning Review</a>
+              <a href="#consultation" className="rc-hero-cta rc-btn rc-btn-primary rounded-xl px-7 py-3.5 text-base shadow-[0_18px_48px_rgba(16,185,129,.35)] max-md:w-full max-md:justify-center"><Calendar size={18} /> Plan Beyond the Practice</a>
+              {/* On phones the sticky bar already carries "Book a Review"; one button keeps the copy under the sign. */}
+              <div className="max-md:hidden"><a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className={BTN_GHOST}><Calendar size={18} /> Book a Physician Planning Review</a></div>
             </div>
           </div>
         </div>
@@ -431,7 +436,7 @@ export default function Landing() {
 
       {/* ── NEON CLOSE: Relief today · Recovery for life ── */}
       <section aria-label="Relief today, recovery for life" className={PAGE}>
-        <img src="/rcs-neon-a.webp" alt="" aria-hidden="true" className={`${PIC} object-[center_70%] max-md:object-contain`} loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 767px)" srcSet="/rcs-neon-a-tall.webp" /><img src="/rcs-neon-a.webp" alt="" aria-hidden="true" className={`${PIC} object-[center_70%] max-md:object-center`} loading="lazy" decoding="async" /></picture>
         <div aria-hidden="true" className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_50%_55%,rgba(3,9,10,.72)_0%,rgba(3,9,10,.35)_45%,rgba(3,9,10,.1)_75%)]" />
         <div className="container relative z-10 py-28 text-center">
           <div className={`${GLASS} mx-auto max-w-[46rem] px-6 py-12`}>
