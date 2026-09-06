@@ -121,8 +121,12 @@ No follow-up ever contains a figure. Content: `followupContent()`.
 - `client/src/components/AnalyticsLoader.tsx` — PostHog, GA4, Sentry loader,
   Intercom from `integrations.public`.
 - `/portal/connections` — the live on/off board with a "Send test event" button.
-- Hosting: Railway project `russell-capital-systems` (web + MySQL), deploys from
-  `master`, root `/russell-capital-systems`.
+- Hosting: Railway project `russell-capital-systems` (web + MySQL). It deploys the
+  `deploy/rcs` branch (root `/`), which the `Publish deploy/rcs` GitHub Action
+  rebuilds from the `russell-capital-systems/` subtree on every push to `master`.
+  Railway snapshots the whole repo per build, and the corpus is ~800 MB, so the
+  full repo cannot be its source.
+- DNS + mail records to publish: `09_DNS_AND_MAIL_RECORDS.md`.
 
 ## 4. Tables added (`drizzle/schema.ts`, `database/rcs-schema.sql`)
 
