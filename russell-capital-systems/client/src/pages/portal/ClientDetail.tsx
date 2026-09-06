@@ -19,6 +19,7 @@ import { Streamdown } from "@/components/StreamdownLite";
 import { NumberInput } from "@/components/NumberInput";
 import { ExportToSlides } from "@/components/ExportToSlides";
 import { PageInsights } from "@/components/PageInsights";
+import { MessageClientPanel } from "@/components/MessageClientPanel";
 
 const NOTE_TYPE_META: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
   CALL:    { icon: <Phone size={12} />,         label: "Call",    color: "text-green-400 bg-green-400/10" },
@@ -1486,6 +1487,9 @@ export default function ClientDetail() {
 
         {/* Report Schedule */}
         <ReportScheduleToggle clientId={clientId} clientEmail={client.email} />
+
+        {/* Email / text the client from here (logged, opt-outs honoured) */}
+        <MessageClientPanel clientId={clientId} clientEmail={client.email} clientPhone={client.phone} />
 
         {/* Client Portal Link */}
         <ClientPortalLinks clientId={clientId} />

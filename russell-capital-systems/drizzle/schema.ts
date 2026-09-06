@@ -2254,3 +2254,70 @@ export interface ClientJourneyJson {
   controls?: { youControl: string[]; youDont: string[] };
   generatedBy: string;
 }
+
+// ─── MESSAGING + AUTOMATION (email/SMS to leads and clients) ─────────────────
+// Numbers that replied STOP (or were opted out by the advisor). Checked before
+// every text is sent. Source: "reply" (inbound STOP), "advisor", "import".
+export const smsOptOuts = mysqlTable("sms_opt_outs", {
+  id:        int("id").autoincrement().primaryKey(),
+  phone:     varchar("phone", { length: 24 }).notNull().unique(), // E.164
+  source:    varchar("source", { length: 40 }).notNull().default("reply"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+// Addresses that clicked unsubscribe. Marketing mail is never sent to them;
+// transactional mail (their own report, their own sign-in) still is.
+export const emailOptOuts = mysqlTable("email_opt_outs", {
+  id:        int("id").autoincrement().primaryKey(),
+  email:     varchar("email", { length: 320 }).notNull().unique(),
+  source:    varchar("source", { length: 40 }).notNull().default("link"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+// The automated follow-up sequence for a homepage lead: one row per step.
+// Rows are created at capture, sent by the scheduler when due, and cancelled
+// when the advisor marks the lead contacted/qualified/client.
+export const leadFollowups = mysqlTable("lead_followups", {
+  id:           int("id").autoincrement().primaryKey(),
+  leadId:       int("leadId").notNull(),
+  step:         varchar("step", { length: 60 }).notNull(),      // e.g. "email_day1"
+  channel:      mysqlEnum("channel", ["email", "sms"]).notNull(),
+  scheduledFor: timestamp("scheduledFor").notNull(),
+  status:       mysqlEnum("status", ["pending", "sent", "skipped", "failed", "cancelled"]).default("pending").notNull(),
+  sentAt:       timestamp("sentAt"),
+  reason:       varchar("reason", { length: 300 }),
+  createdAt:    timestamp("createdAt").defaultNow().notNull(),
+});
+export type LeadFollowup = typeof leadFollowups.$inferSelect;
+
+// Every email/text the advisor (or the automation) sends to a lead or client,
+// with the delivery outcome. This is the audit trail and the "Messages" tab.
+export const outboundMessages = mysqlTable("outbound_messages", {
+  id:          int("id").autoincrement().primaryKey(),
+  workspaceId: int("workspaceId"),
+  clientId:    int("clientId"),
+  leadId:      int("leadId"),
+  userId:      int("userId"),                                     // sender; null = automation
+  channel:     mysqlEnum("channel", ["email", "sms"]).notNull(),
+  category:    mysqlEnum("category", ["transactional", "marketing"]).default("transactional").notNull(),
+  toAddress:   varchar("toAddress", { length: 320 }).notNull(),
+  subject:     varchar("subject", { length: 300 }),
+  body:        text("body").notNull(),
+  template:    varchar("template", { length: 60 }),
+  status:      mysqlEnum("status", ["sent", "failed", "suppressed"]).notNull(),
+  via:         varchar("via", { length: 20 }),
+  reason:      varchar("reason", { length: 300 }),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+});
+export type OutboundMessage = typeof outboundMessages.$inferSelect;
+
+// Last-known market benchmarks (FRED series) so calculators keep real,
+// dated reference values across restarts even when the feed is unreachable.
+export const marketDataPoints = mysqlTable("market_data_points", {
+  id:        int("id").autoincrement().primaryKey(),
+  series:    varchar("series", { length: 40 }).notNull().unique(), // e.g. DGS10
+  value:     decimal("value", { precision: 14, scale: 4 }).notNull(),
+  asOf:      varchar("asOf", { length: 10 }).notNull(),             // YYYY-MM-DD
+  source:    varchar("source", { length: 40 }).notNull().default("fred"),
+  fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
+});

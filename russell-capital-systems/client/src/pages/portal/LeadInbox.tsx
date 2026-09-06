@@ -6,7 +6,8 @@
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
-import { Mail, Phone, Clock, AlertTriangle, User, Inbox, Download, Search } from "lucide-react";
+import { Mail, Phone, Clock, AlertTriangle, User, Inbox, Download, Search, Send, MessageSquare, CheckCircle2, XCircle, Ban, CalendarClock } from "lucide-react";
+import { toast } from "sonner";
 import type { LeadStatus } from "@shared/leadTypes";
 
 const STATUSES: LeadStatus[] = ["new", "contacted", "qualified", "client"];
@@ -258,6 +259,8 @@ export default function LeadInbox() {
                 <p className="mt-3 text-[11px] leading-relaxed text-slate-500">{selected.analysis.disclaimer}</p>
               )}
               {selected.lastIp && <p className="mt-3 text-[10px] text-slate-600">Last IP: {selected.lastIp}</p>}
+
+              <LeadMessaging leadId={selected.id} email={selected.email} phone={selected.phone} status={selected.status} />
             </div>
           )}
         </div>
@@ -265,6 +268,103 @@ export default function LeadInbox() {
         </>
       )}
     </AppShell>
+  );
+}
+
+const STEP_LABEL: Record<string, string> = {
+  sms_1h: "Text · 1 hour after capture", email_day1: "Email · day 1 (what happens next)", email_day3: "Email · day 3 (three questions)",
+  sms_day5: "Text · day 5 (ready when you are)", email_day7: "Email · day 7 (still here)",
+};
+const FOLLOWUP_COLOR: Record<string, string> = { pending: "text-sky-300", sent: "text-emerald-400", skipped: "text-slate-500", failed: "text-rose-400", cancelled: "text-slate-500" };
+
+/** Email/text the lead by hand, and see the automated sequence's state. */
+function LeadMessaging({ leadId, email, phone, status }: { leadId: number; email?: string | null; phone?: string | null; status: LeadStatus }) {
+  const utils = trpc.useUtils();
+  const info = trpc.leads.followups.useQuery({ id: leadId });
+  const transport = trpc.messages.status.useQuery();
+  const [channel, setChannel] = useState<"email" | "sms">(email ? "email" : "sms");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const send = trpc.leads.message.useMutation({
+    onSuccess: (r) => {
+      if (r.sent) { toast.success(`${channel === "email" ? "Email" : "Text"} sent via ${r.via}`); setBody(""); setSubject(""); }
+      else toast.error(r.reason ?? "Not sent");
+      void utils.leads.followups.invalidate({ id: leadId });
+    },
+    onError: (e) => toast.error(e.message),
+  });
+  const configured = channel === "email" ? transport.data?.emailConfigured : transport.data?.smsConfigured;
+  const hasAddress = channel === "email" ? Boolean(email) : Boolean(phone);
+  const followups = info.data?.followups ?? [];
+  const messages = info.data?.messages ?? [];
+  const pending = followups.filter((f) => f.status === "pending").length;
+
+  return (
+    <div className="mt-6 border-t border-slate-800 pt-5" aria-label="Lead messaging">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-sky-300"><MessageSquare size={14} /> Reach out</p>
+        <div className="flex rounded-lg border border-slate-700 bg-slate-800 p-0.5 text-xs">
+          {(["email", "sms"] as const).map((c) => (
+            <button key={c} type="button" onClick={() => setChannel(c)} aria-pressed={channel === c}
+              className={`rounded-md px-3 py-1.5 font-medium transition ${channel === c ? "bg-sky-400/20 text-white" : "text-slate-400"}`}>
+              {c === "email" ? "Email" : "Text"}
+            </button>
+          ))}
+        </div>
+      </div>
+      <p className="mt-1 text-xs text-slate-400">
+        {channel === "email" ? (email ? `To ${email}` : "No email given") : (phone ? `To ${phone}` : "No mobile number given")}
+        {transport.data && !configured && <span className="ml-2 text-amber-300">· {channel === "email" ? "mail" : "SMS"} transport not configured on the host</span>}
+      </p>
+      {channel === "email" && (
+        <input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Subject" aria-label="Subject"
+          className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-2 text-sm text-white outline-none focus:border-sky-400" />
+      )}
+      <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={channel === "email" ? 5 : 3} aria-label="Message to lead"
+        placeholder={channel === "email" ? "Your message — no figures; invite them to a call." : "Short text — STOP handling is automatic."}
+        className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-2 text-sm text-white outline-none focus:border-sky-400" />
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <span className="text-[11px] text-slate-500">Sending by hand stops the automated sequence.</span>
+        <button type="button" disabled={!configured || !hasAddress || !body.trim() || send.isPending}
+          onClick={() => send.mutate({ id: leadId, channel, subject: channel === "email" ? subject || undefined : undefined, body })}
+          className="flex items-center gap-1.5 rounded-lg bg-sky-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-400 disabled:opacity-40">
+          <Send size={14} /> {send.isPending ? "Sending…" : channel === "email" ? "Send email" : "Send text"}
+        </button>
+      </div>
+
+      <p className="mt-5 mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <CalendarClock size={14} /> Automated follow-up sequence
+        {pending > 0 && <span className="rounded-full border border-sky-400/40 px-2 py-0.5 text-[10px] normal-case text-sky-300">{pending} pending</span>}
+      </p>
+      {followups.length === 0 ? (
+        <p className="text-xs text-slate-500">{status === "new" ? "No sequence scheduled (captured before automation was enabled, or no contact details)." : "Sequence not needed — a human has taken over."}</p>
+      ) : (
+        <ul className="space-y-1 text-xs">
+          {followups.map((f) => (
+            <li key={f.id} className="flex items-center justify-between border-b border-slate-800 py-1">
+              <span className="text-slate-300">{STEP_LABEL[f.step] ?? f.step}</span>
+              <span className={FOLLOWUP_COLOR[f.status] ?? "text-slate-400"}>
+                {f.status}{f.status === "pending" ? ` · ${new Date(f.scheduledFor).toLocaleString()}` : f.sentAt ? ` · ${new Date(f.sentAt).toLocaleString()}` : f.reason ? ` · ${f.reason}` : ""}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {messages.length > 0 && (
+        <>
+          <p className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Messages sent</p>
+          <ul className="space-y-1.5 text-xs">
+            {messages.map((m) => (
+              <li key={m.id} className="flex items-start gap-2">
+                {m.status === "sent" ? <CheckCircle2 size={13} className="mt-0.5 shrink-0 text-emerald-400" /> : m.status === "suppressed" ? <Ban size={13} className="mt-0.5 shrink-0 text-amber-300" /> : <XCircle size={13} className="mt-0.5 shrink-0 text-rose-400" />}
+                <span className="text-slate-300"><span className="uppercase text-slate-500">{m.channel}</span> · {new Date(m.createdAt).toLocaleString()} · {m.subject || m.body.slice(0, 70)}{m.status !== "sent" && m.reason ? <span className="text-slate-500"> — {m.reason}</span> : null}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
   );
 }
 

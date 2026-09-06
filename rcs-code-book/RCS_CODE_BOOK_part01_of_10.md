@@ -22,6 +22,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `scripts/build_database.sh`
 - `scripts/build_deploy_bundle.sh`
 - `scripts/check-concept16-browser.mjs`
+- `scripts/check_mail_dns.mjs`
 - `scripts/check_production_bundle.mjs`
 - `scripts/export_schema_sql.sh`
 - `scripts/owner_password_hash.mjs`
@@ -144,6 +145,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/_core/cookies.ts`
 - `server/_core/dataApi.ts`
 - `server/_core/env.ts`
+- `server/_core/fred.ts`
 - `server/_core/heartbeat.ts`
 - `server/_core/imageGeneration.ts`
 - `server/_core/index.ts`
@@ -155,6 +157,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/_core/oauth.ts`
 - `server/_core/ownerLogin.ts`
 - `server/_core/sdk.ts`
+- `server/_core/sms.ts`
 - `server/_core/storageProxy.ts`
 - `server/_core/systemRouter.ts`
 - `server/_core/trpc.ts`
@@ -175,6 +178,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/experienceRouter.ts`
 - `server/factFinderDb.ts`
 - `server/factFinderRouter.ts`
+- `server/followups.ts`
 - `server/generate1035Pdf.ts`
 - `server/heygenService.ts`
 - `server/index.ts`
@@ -182,7 +186,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/leadsDb.ts`
 - `server/leadsRouter.ts`
 - `server/librarianRouter.ts`
-- `server/mortgageKillerPdf.ts`
+- `server/messagesRouter.ts`
 
 ---
 
@@ -345,6 +349,37 @@ and a link to the inbox — never the figures) and sends the prospect a warm
 acknowledgement. With no mail configured, leads are still saved to the inbox;
 you just won't be emailed.
 
+**Keep mail out of spam.** Set `MAIL_FROM="Russell Capital Systems <hello@russellcapitalsystems.com>"`
+and `MAIL_REPLY_TO=<your inbox>`, then run `pnpm mail:check` — it reads the real
+SPF, DKIM and DMARC records for the sending domain and prints what is missing.
+(On 2026‑09‑06 the domain had SPF and DMARC but **no DKIM key**; with DMARC at
+`p=quarantine` that alone sends mail to spam. Publish the DKIM record from
+Resend or Google Workspace, re‑run the check.) Follow‑up mail carries one‑click
+unsubscribe headers automatically; set `PUBLIC_BASE_URL=https://russellcapitalsystems.com`
+so the links point at the live site.
+
+### Text messages (optional — leads and clients by SMS)
+- **Twilio:** `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_FROM`
+  (your number, E.164) or `TWILIO_MESSAGING_SERVICE_SID`. Register the 10DLC
+  brand + campaign in the Twilio console before sending. Point the number's
+  inbound webhook at `https://<your-domain>/api/sms/inbound` so STOP/START/HELP
+  are honoured.
+- **Or any relay:** `SMS_WEBHOOK_URL` (+ `SMS_WEBHOOK_TOKEN`) — the app POSTs
+  `{to, body}` JSON (Inkbox, Speko, Zapier, Make).
+- `LEAD_NOTIFY_PHONE` — your mobile; you get a text for every new lead.
+
+### Automated lead follow‑up (on by default once mail or SMS is configured)
+Text an hour after capture, emails on days 1, 3 and 7, text on day 5 — no
+figures, unsubscribe/STOP built in, and it stops the moment you mark the lead
+contacted or message them yourself. `FOLLOWUPS_DISABLED=1` switches it off.
+On a host that sleeps the process, add a cron that runs `pnpm followups:run`
+(set `SCHEDULER_TOKEN` first) every 5 minutes.
+
+### Live benchmark rates (optional)
+`FRED_API_KEY` (free at fred.stlouisfed.org) → Treasury curve, CPI, 30‑year
+mortgage and Fed funds rates, dated and cached. Without it, dated reference
+values are shown and labelled as such.
+
 ### Voice (optional)
 `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` (spoken answers).
 
@@ -478,7 +513,13 @@ confirm the lead is visible in the inbox.
 - **Concierge says "not configured":** no AI keys set → add at least one AI key
   (e.g. `ANTHROPIC_API_KEY`) in the env and restart.
 - **No acknowledgement emails:** `RESEND_API_KEY` missing or sender domain not
-  verified in Resend.
+  verified in Resend (or no `SMTP_*`).
+- **Emails land in spam:** run `pnpm mail:check` — fix whatever it marks ✘
+  (usually DKIM), and make sure `MAIL_FROM` is on that domain.
+- **Texts not sending:** `TWILIO_*` or `SMS_WEBHOOK_URL` unset, the number
+  replied STOP (see `sms_opt_outs`), or 10DLC registration is incomplete.
+- **Follow‑ups not going out:** the process is asleep between requests — set
+  `SCHEDULER_TOKEN` and cron `pnpm followups:run`; or `FOLLOWUPS_DISABLED` is set.
 - **Owner inbox 403:** `OWNER_OPEN_ID` doesn't match your logged-in user, or the
   user's role isn't `admin`.
 
@@ -509,7 +550,9 @@ magic beyond the scripts named here (`build`, `start`, `check`, `db:push`).*
     "release": "bash scripts/release.sh",
     "db:build": "bash scripts/build_database.sh",
     "db:schema": "bash scripts/export_schema_sql.sh",
-    "owner:password": "node scripts/owner_password_hash.mjs"
+    "owner:password": "node scripts/owner_password_hash.mjs",
+    "mail:check": "node scripts/check_mail_dns.mjs",
+    "followups:run": "curl -s -X POST -H \"x-scheduler-token: $SCHEDULER_TOKEN\" \"${PUBLIC_BASE_URL:-http://localhost:3000}/api/scheduled/followups\""
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1120.0",
@@ -1315,6 +1358,14 @@ Email — how you hear about new leads (pick one):
   SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS [SMTP_FROM]   (Gmail app password or a cPanel mailbox; nothing to verify)
   or RESEND_API_KEY                                    (needs the sender domain verified in Resend)
   LEAD_NOTIFY_EMAIL                                    (optional; defaults to OWNER_EMAIL)
+  MAIL_FROM MAIL_REPLY_TO PUBLIC_BASE_URL              (deliverability; run `npm run mail:check`)
+Text messages (optional):
+  TWILIO_ACCOUNT_SID TWILIO_AUTH_TOKEN TWILIO_FROM     (or TWILIO_MESSAGING_SERVICE_SID)
+  or SMS_WEBHOOK_URL [SMS_WEBHOOK_TOKEN]               (any relay that accepts {to, body})
+  LEAD_NOTIFY_PHONE                                    (text you on every lead)
+Automation: FOLLOWUPS_DISABLED=1 to turn the lead sequence off; SCHEDULER_TOKEN + cron
+  `npm run followups:run` every 5 min on hosts that sleep the process.
+Market data (optional): FRED_API_KEY
 Voice (optional): ELEVENLABS_API_KEY ELEVENLABS_VOICE_ID
 > Owner sign-in: set OWNER_EMAIL and OWNER_PASSWORD_HASH (make the hash with
 > `npm run owner:password` on your own computer; never store the password).
@@ -1924,6 +1975,98 @@ const results = [
 
 console.log(JSON.stringify({ ok: true, results }, null, 2));
 socket.close();
+```
+
+## `scripts/check_mail_dns.mjs`
+
+```js
+#!/usr/bin/env node
+// ============================================================
+// pnpm mail:check — is the sending domain set up so mail lands in the inbox?
+// Looks up the real DNS records for SPF, DKIM and DMARC on the domain of
+// MAIL_FROM / SMTP_FROM / SMTP_USER (or a domain passed as the first arg)
+// and prints exactly what is missing. Nothing is sent; nothing is invented.
+//   node scripts/check_mail_dns.mjs [domain] [--dkim-selector resend]
+// ============================================================
+import dns from "node:dns/promises";
+
+const args = process.argv.slice(2);
+const selectorFlag = args.indexOf("--dkim-selector");
+const selectorArg = selectorFlag >= 0 ? args[selectorFlag + 1] : undefined;
+const positional = args.filter((a, i) => !a.startsWith("--") && i !== selectorFlag + 1);
+
+function fromEnv() {
+  const from = process.env.MAIL_FROM || process.env.SMTP_FROM || process.env.SMTP_USER || "";
+  const m = from.match(/<([^>]+)>/);
+  const addr = (m ? m[1] : from).trim();
+  return addr.includes("@") ? addr.split("@")[1] : "";
+}
+
+const domain = (positional[0] || fromEnv() || "russellcapitalsystems.com").toLowerCase();
+const selectors = selectorArg ? [selectorArg] : [process.env.MAIL_DKIM_SELECTOR, "resend", "google", "default", "selector1", "selector2", "k1", "mail"].filter(Boolean);
+
+async function txt(name) {
+  try { return (await dns.resolveTxt(name)).map((parts) => parts.join("")); }
+  catch (e) { return e && (e.code === "ENOTFOUND" || e.code === "ENODATA") ? [] : null; }
+}
+async function mx(name) {
+  try { return await dns.resolveMx(name); } catch { return []; }
+}
+
+const results = [];
+const ok = (label, detail) => results.push({ ok: true, label, detail });
+const bad = (label, detail, fix) => results.push({ ok: false, label, detail, fix });
+
+console.log(`\nChecking mail DNS for ${domain}\n`);
+
+const mxRows = await mx(domain);
+if (mxRows.length) ok("MX", mxRows.map((r) => r.exchange).join(", ")); else bad("MX", "no MX record", "Add MX records for your mailbox provider so replies and bounces reach you.");
+
+const root = await txt(domain);
+if (root === null) bad("SPF", "DNS lookup failed", "Check the domain's nameservers.");
+else {
+  const spf = root.filter((r) => r.toLowerCase().startsWith("v=spf1"));
+  if (spf.length === 0) bad("SPF", "no v=spf1 record", `Add TXT @ "v=spf1 include:<your-mail-provider> ~all" (Resend: include:amazonses.com; Google Workspace: include:_spf.google.com; cPanel mail: include the host's SPF).`);
+  else if (spf.length > 1) bad("SPF", `${spf.length} SPF records (only one is allowed)`, "Merge them into a single v=spf1 record.");
+  else {
+    const rec = spf[0];
+    const mode = process.env.RESEND_API_KEY ? "resend" : process.env.SMTP_HOST ? "smtp" : "none";
+    if (mode === "resend" && !/amazonses\.com/i.test(rec)) bad("SPF", rec, "Resend sends through Amazon SES: add include:amazonses.com to the SPF record.");
+    else if (/\+all/.test(rec)) bad("SPF", rec, "+all lets anyone send as you; use ~all or -all.");
+    else ok("SPF", rec);
+  }
+}
+
+let dkimFound = null;
+for (const s of selectors) {
+  const rows = await txt(`${s}._domainkey.${domain}`);
+  if (rows && rows.some((r) => /v=DKIM1|k=rsa|p=/i.test(r))) { dkimFound = s; break; }
+}
+if (dkimFound) ok("DKIM", `selector "${dkimFound}" publishes a key`);
+else bad("DKIM", `no key found for selectors: ${selectors.join(", ")}`, "Publish the DKIM TXT record your mail provider gives you (Resend: Domains → Add domain → copy the resend._domainkey record). If your selector has another name, re-run with --dkim-selector <name>.");
+
+const dmarc = await txt(`_dmarc.${domain}`);
+if (dmarc === null) bad("DMARC", "DNS lookup failed", "Check the domain's nameservers.");
+else {
+  const rec = dmarc.find((r) => r.toLowerCase().startsWith("v=dmarc1"));
+  if (!rec) bad("DMARC", "no _dmarc record", `Add TXT _dmarc "v=DMARC1; p=none; rua=mailto:dmarc@${domain}" now; move to p=quarantine once reports show only your own mail.`);
+  else {
+    const p = (rec.match(/p=([a-z]+)/i) || [])[1] || "";
+    if (!p) bad("DMARC", rec, "The record needs a policy: p=none, p=quarantine or p=reject.");
+    else if (p === "none") ok("DMARC", `${rec} (p=none passes the bulk-sender rule; tighten to quarantine later)`);
+    else ok("DMARC", rec);
+  }
+}
+
+for (const r of results) {
+  console.log(`${r.ok ? "✔" : "✘"} ${r.label.padEnd(6)} ${r.detail}`);
+  if (!r.ok && r.fix) console.log(`         → ${r.fix}`);
+}
+const failures = results.filter((r) => !r.ok).length;
+console.log(failures === 0
+  ? `\nAll checks pass. Keep the spam-complaint rate under 0.1% and mail from ${domain} will stay in the inbox.\n`
+  : `\n${failures} item(s) to fix. Mail from ${domain} is likely to be filtered until SPF, DKIM and DMARC all pass.\n`);
+process.exit(failures === 0 ? 0 : 1);
 ```
 
 ## `scripts/check_production_bundle.mjs`
@@ -5790,6 +5933,73 @@ export interface ClientJourneyJson {
   controls?: { youControl: string[]; youDont: string[] };
   generatedBy: string;
 }
+
+// ─── MESSAGING + AUTOMATION (email/SMS to leads and clients) ─────────────────
+// Numbers that replied STOP (or were opted out by the advisor). Checked before
+// every text is sent. Source: "reply" (inbound STOP), "advisor", "import".
+export const smsOptOuts = mysqlTable("sms_opt_outs", {
+  id:        int("id").autoincrement().primaryKey(),
+  phone:     varchar("phone", { length: 24 }).notNull().unique(), // E.164
+  source:    varchar("source", { length: 40 }).notNull().default("reply"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+// Addresses that clicked unsubscribe. Marketing mail is never sent to them;
+// transactional mail (their own report, their own sign-in) still is.
+export const emailOptOuts = mysqlTable("email_opt_outs", {
+  id:        int("id").autoincrement().primaryKey(),
+  email:     varchar("email", { length: 320 }).notNull().unique(),
+  source:    varchar("source", { length: 40 }).notNull().default("link"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+// The automated follow-up sequence for a homepage lead: one row per step.
+// Rows are created at capture, sent by the scheduler when due, and cancelled
+// when the advisor marks the lead contacted/qualified/client.
+export const leadFollowups = mysqlTable("lead_followups", {
+  id:           int("id").autoincrement().primaryKey(),
+  leadId:       int("leadId").notNull(),
+  step:         varchar("step", { length: 60 }).notNull(),      // e.g. "email_day1"
+  channel:      mysqlEnum("channel", ["email", "sms"]).notNull(),
+  scheduledFor: timestamp("scheduledFor").notNull(),
+  status:       mysqlEnum("status", ["pending", "sent", "skipped", "failed", "cancelled"]).default("pending").notNull(),
+  sentAt:       timestamp("sentAt"),
+  reason:       varchar("reason", { length: 300 }),
+  createdAt:    timestamp("createdAt").defaultNow().notNull(),
+});
+export type LeadFollowup = typeof leadFollowups.$inferSelect;
+
+// Every email/text the advisor (or the automation) sends to a lead or client,
+// with the delivery outcome. This is the audit trail and the "Messages" tab.
+export const outboundMessages = mysqlTable("outbound_messages", {
+  id:          int("id").autoincrement().primaryKey(),
+  workspaceId: int("workspaceId"),
+  clientId:    int("clientId"),
+  leadId:      int("leadId"),
+  userId:      int("userId"),                                     // sender; null = automation
+  channel:     mysqlEnum("channel", ["email", "sms"]).notNull(),
+  category:    mysqlEnum("category", ["transactional", "marketing"]).default("transactional").notNull(),
+  toAddress:   varchar("toAddress", { length: 320 }).notNull(),
+  subject:     varchar("subject", { length: 300 }),
+  body:        text("body").notNull(),
+  template:    varchar("template", { length: 60 }),
+  status:      mysqlEnum("status", ["sent", "failed", "suppressed"]).notNull(),
+  via:         varchar("via", { length: 20 }),
+  reason:      varchar("reason", { length: 300 }),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+});
+export type OutboundMessage = typeof outboundMessages.$inferSelect;
+
+// Last-known market benchmarks (FRED series) so calculators keep real,
+// dated reference values across restarts even when the feed is unreachable.
+export const marketDataPoints = mysqlTable("market_data_points", {
+  id:        int("id").autoincrement().primaryKey(),
+  series:    varchar("series", { length: 40 }).notNull().unique(), // e.g. DGS10
+  value:     decimal("value", { precision: 14, scale: 4 }).notNull(),
+  asOf:      varchar("asOf", { length: 10 }).notNull(),             // YYYY-MM-DD
+  source:    varchar("source", { length: 40 }).notNull().default("fred"),
+  fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
+});
 ```
 
 ## `shared/_core/errors.ts`
@@ -26189,10 +26399,117 @@ export const ENV = {
   ownerName: process.env.OWNER_NAME ?? "",
   // Where "new lead" alerts go (falls back to OWNER_EMAIL).
   leadNotifyEmail: process.env.LEAD_NOTIFY_EMAIL ?? "",
+  // Optional mobile number (E.164 or 10 digits) that gets a text per new lead.
+  leadNotifyPhone: process.env.LEAD_NOTIFY_PHONE ?? "",
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
 };
+```
+
+## `server/_core/fred.ts`
+
+```ts
+// ============================================================
+// FRED — the Federal Reserve Bank of St. Louis economic data API. Free key
+// (FRED_API_KEY). This is where the platform's benchmark rates come from on
+// any host: Treasury yields, the 30-year mortgage rate, the Fed funds rate,
+// and the Consumer Price Index. Every value carries its own as-of date and
+// source; nothing here is invented. Last-good values persist in
+// market_data_points so a restart or an outage never blanks the numbers.
+// ============================================================
+import { getMarketPoints, upsertMarketPoint } from "../messagingDb";
+
+export type FredSeries = "DGS3MO" | "DGS2" | "DGS5" | "DGS10" | "DGS30" | "MORTGAGE30US" | "FEDFUNDS" | "CPIAUCSL" | "CPILFESL";
+export const FRED_SERIES: Record<FredSeries, { name: string; unit: string }> = {
+  DGS3MO: { name: "3-Month Treasury", unit: "%" },
+  DGS2: { name: "2-Year Treasury", unit: "%" },
+  DGS5: { name: "5-Year Treasury", unit: "%" },
+  DGS10: { name: "10-Year Treasury", unit: "%" },
+  DGS30: { name: "30-Year Treasury", unit: "%" },
+  MORTGAGE30US: { name: "30-Year Fixed Mortgage (Freddie Mac PMMS)", unit: "%" },
+  FEDFUNDS: { name: "Effective Federal Funds Rate", unit: "%" },
+  CPIAUCSL: { name: "CPI, All Urban Consumers", unit: "index" },
+  CPILFESL: { name: "Core CPI (less food and energy)", unit: "index" },
+};
+
+export type Observation = { date: string; value: number };
+export type Benchmark = { series: FredSeries; name: string; unit: string; value: number; asOf: string; source: "live" | "cached" | "unavailable"; fetchedAt: string };
+
+export function fredConfigured(env: NodeJS.ProcessEnv = process.env): boolean {
+  return Boolean(env.FRED_API_KEY);
+}
+
+type Fetcher = (url: string) => Promise<{ ok: boolean; status: number; json: () => Promise<unknown> }>;
+let _fetch: Fetcher = (url) => fetch(url, { signal: AbortSignal.timeout(8000) });
+export function _setFetchForTests(f: Fetcher | null) { _fetch = f ?? ((url) => fetch(url, { signal: AbortSignal.timeout(8000) })); }
+
+/** Latest `limit` observations, newest first, blanks ("." on FRED) dropped. */
+export async function fetchFredObservations(series: FredSeries, limit = 1, env: NodeJS.ProcessEnv = process.env): Promise<Observation[]> {
+  const key = env.FRED_API_KEY;
+  if (!key) return [];
+  const url = `https://api.stlouisfed.org/fred/series/observations?series_id=${series}&api_key=${encodeURIComponent(key)}&file_type=json&sort_order=desc&limit=${Math.max(1, Math.min(120, limit + 5))}`;
+  const res = await _fetch(url);
+  if (!res.ok) throw new Error(`FRED ${series} responded ${res.status}`);
+  const data = (await res.json()) as { observations?: Array<{ date?: string; value?: string }> };
+  const rows = (data.observations ?? []).flatMap((o) => {
+    const v = Number(o.value);
+    return o.date && Number.isFinite(v) && o.value !== "." ? [{ date: o.date, value: v }] : [];
+  });
+  return rows.slice(0, limit);
+}
+
+const memo: Partial<Record<FredSeries, { at: number; obs: Observation[] }>> = {};
+const MEMO_TTL = 4 * 60 * 60 * 1000;
+
+/** Live → memo → database last-good → unavailable. Never a made-up number. */
+export async function getBenchmark(series: FredSeries, env: NodeJS.ProcessEnv = process.env): Promise<Benchmark> {
+  const meta = FRED_SERIES[series];
+  const now = Date.now();
+  const m = memo[series];
+  if (m && now - m.at < MEMO_TTL && m.obs[0]) return { series, ...meta, value: m.obs[0].value, asOf: m.obs[0].date, source: "cached", fetchedAt: new Date(m.at).toISOString() };
+  if (fredConfigured(env)) {
+    try {
+      const obs = await fetchFredObservations(series, 1, env);
+      if (obs[0]) {
+        memo[series] = { at: now, obs };
+        await upsertMarketPoint({ series, value: obs[0].value, asOf: obs[0].date, source: "fred" }).catch(() => undefined);
+        return { series, ...meta, value: obs[0].value, asOf: obs[0].date, source: "live", fetchedAt: new Date(now).toISOString() };
+      }
+    } catch (error) {
+      console.warn("[FRED]", series, "unavailable:", String(error).slice(0, 120));
+    }
+  }
+  const stored = (await getMarketPoints([series]).catch(() => []))[0];
+  if (stored) return { series, ...meta, value: stored.value, asOf: stored.asOf, source: "cached", fetchedAt: stored.fetchedAt.toISOString() };
+  return { series, ...meta, value: NaN, asOf: "", source: "unavailable", fetchedAt: new Date(now).toISOString() };
+}
+
+export async function getBenchmarks(series: FredSeries[] = ["DGS3MO", "DGS2", "DGS5", "DGS10", "DGS30", "MORTGAGE30US", "FEDFUNDS"], env: NodeJS.ProcessEnv = process.env): Promise<Benchmark[]> {
+  return Promise.all(series.map((s) => getBenchmark(s, env)));
+}
+
+/** CPI index plus the inflation rates the calculators actually use, from 13 months of observations. */
+export async function getCpiFromFred(env: NodeJS.ProcessEnv = process.env): Promise<{ index: number; annualRate: number; monthlyRate: number; coreAnnualRate: number | null; asOf: string } | null> {
+  if (!fredConfigured(env)) return null;
+  try {
+    const [all, core] = await Promise.all([fetchFredObservations("CPIAUCSL", 13, env), fetchFredObservations("CPILFESL", 13, env).catch(() => [] as Observation[])]);
+    const latest = all[0];
+    const prev = all[1];
+    const yearAgo = all[12];
+    if (!latest || !prev || !yearAgo) return null;
+    const annualRate = ((latest.value / yearAgo.value) - 1) * 100;
+    const monthlyRate = ((latest.value / prev.value) - 1) * 100;
+    const coreAnnualRate = core[0] && core[12] ? ((core[0].value / core[12].value) - 1) * 100 : null;
+    await upsertMarketPoint({ series: "CPIAUCSL", value: latest.value, asOf: latest.date, source: "fred" }).catch(() => undefined);
+    return { index: latest.value, annualRate: Number(annualRate.toFixed(2)), monthlyRate: Number(monthlyRate.toFixed(2)), coreAnnualRate: coreAnnualRate == null ? null : Number(coreAnnualRate.toFixed(2)), asOf: latest.date };
+  } catch (error) {
+    console.warn("[FRED] CPI unavailable:", String(error).slice(0, 120));
+    return null;
+  }
+}
+
+export function _clearFredMemoForTests() { for (const k of Object.keys(memo)) delete memo[k as FredSeries]; }
 ```
 
 ## `server/_core/heartbeat.ts`
@@ -26589,6 +26906,9 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { registerOwnerLoginRoutes } from "./ownerLogin";
 import { registerStorageProxy } from "./storageProxy";
+import { registerMailRoutes } from "./mailer";
+import { registerSmsRoutes } from "./sms";
+import { registerScheduledRoutes, startFollowupScheduler } from "../followups";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -26629,6 +26949,10 @@ async function startServer() {
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   registerOwnerLoginRoutes(app);
+  // Unsubscribe link, inbound SMS (STOP/START/HELP), external-cron follow-ups
+  registerMailRoutes(app);
+  registerSmsRoutes(app);
+  registerScheduledRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",
@@ -26653,6 +26977,8 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+    // Lead follow-up automation ticks every minute (FOLLOWUPS_DISABLED=1 turns it off).
+    startFollowupScheduler();
   });
 }
 
@@ -27140,13 +27466,35 @@ export async function listLLMModels(): Promise<ModelsResponse> {
 //                        (Gmail with an app password, the host's own mail
 //                        server, or any provider — nothing to verify first)
 // With neither configured the message is not sent and the caller is told so.
+//
+// Deliverability is built in so mail lands in the inbox, not spam:
+//   - every message has a plain-text part and a Reply-To (MAIL_REPLY_TO)
+//   - marketing mail carries RFC 8058 one-click List-Unsubscribe headers and
+//     an unsubscribe link; addresses that opted out are never sent marketing
+//   - the From address is MAIL_FROM when set (must be on a domain whose SPF,
+//     DKIM and DMARC records pass — check with `pnpm mail:check`)
 // Secrets are read from the environment only.
 // ============================================================
+import { createHmac, timingSafeEqual } from "node:crypto";
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
+import type { Express, Request, Response } from "express";
+import { isEmailOptedOut, recordEmailOptOut } from "../messagingDb";
 
-export type MailMessage = { to: string; subject: string; text: string; html?: string; from?: string };
-export type MailResult = { sent: boolean; via?: "resend" | "smtp"; reason?: string };
+export type MailAttachment = { filename: string; content: Buffer | string; contentType?: string };
+export type MailMessage = {
+  to: string;
+  subject: string;
+  text: string;
+  html?: string;
+  from?: string;
+  replyTo?: string;
+  attachments?: MailAttachment[];
+  headers?: Record<string, string>;
+  /** marketing mail gets unsubscribe headers and honours opt-outs; default transactional */
+  category?: "transactional" | "marketing";
+};
+export type MailResult = { sent: boolean; via?: "resend" | "smtp"; reason?: string; suppressed?: boolean };
 
 export const DEFAULT_FROM = "Russell Capital Systems™ <hello@russellcapitalsystems.com>";
 
@@ -27158,6 +27506,10 @@ export type MailEnv = {
   SMTP_PASS?: string;
   SMTP_FROM?: string;
   SMTP_SECURE?: string;
+  MAIL_FROM?: string;
+  MAIL_REPLY_TO?: string;
+  PUBLIC_BASE_URL?: string;
+  JWT_SECRET?: string;
 };
 
 export function mailMode(env: MailEnv = process.env as MailEnv): "resend" | "smtp" | "none" {
@@ -27172,10 +27524,62 @@ export function smtpOptions(env: MailEnv = process.env as MailEnv) {
   return { host: env.SMTP_HOST, port, secure, auth: { user: env.SMTP_USER!, pass: env.SMTP_PASS! } };
 }
 
-/** The From header: SMTP providers usually require it to match the account. */
+/** The From header: MAIL_FROM wins; SMTP providers usually require it to match the account. */
 export function fromAddress(env: MailEnv = process.env as MailEnv): string {
+  if (env.MAIL_FROM) return env.MAIL_FROM;
   if (mailMode(env) === "smtp") return env.SMTP_FROM || env.SMTP_USER!;
   return DEFAULT_FROM;
+}
+
+export function replyToAddress(env: MailEnv = process.env as MailEnv): string | undefined {
+  return env.MAIL_REPLY_TO || undefined;
+}
+
+/** The bare address inside "Name <addr>" (or the string itself). */
+export function bareAddress(from: string): string {
+  const m = from.match(/<([^>]+)>/);
+  return (m ? m[1] : from).trim();
+}
+
+export function senderDomain(env: MailEnv = process.env as MailEnv): string {
+  return bareAddress(fromAddress(env)).split("@")[1] ?? "";
+}
+
+// ─── Unsubscribe tokens + headers ────────────────────────────────────────────
+function secret(env: MailEnv): string {
+  return env.JWT_SECRET || "rcs-unsubscribe";
+}
+export function unsubscribeToken(email: string, env: MailEnv = process.env as MailEnv): string {
+  return createHmac("sha256", secret(env)).update(email.trim().toLowerCase()).digest("hex").slice(0, 32);
+}
+export function verifyUnsubscribeToken(email: string, token: string, env: MailEnv = process.env as MailEnv): boolean {
+  const expected = Buffer.from(unsubscribeToken(email, env));
+  const given = Buffer.from(String(token ?? ""));
+  return expected.length === given.length && timingSafeEqual(expected, given);
+}
+export function publicBaseUrl(env: MailEnv = process.env as MailEnv): string {
+  return (env.PUBLIC_BASE_URL || "https://russellcapitalsystems.com").replace(/\/+$/, "");
+}
+export function unsubscribeUrl(email: string, env: MailEnv = process.env as MailEnv): string {
+  const e = email.trim().toLowerCase();
+  return `${publicBaseUrl(env)}/api/mail/unsubscribe?e=${encodeURIComponent(e)}&t=${unsubscribeToken(e, env)}`;
+}
+/** RFC 8058 one-click headers (Gmail/Yahoo bulk-sender requirement). */
+export function unsubscribeHeaders(email: string, env: MailEnv = process.env as MailEnv): Record<string, string> {
+  const url = unsubscribeUrl(email, env);
+  const mailto = replyToAddress(env) ?? bareAddress(fromAddress(env));
+  return {
+    "List-Unsubscribe": `<${url}>, <mailto:${mailto}?subject=unsubscribe>`,
+    "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+  };
+}
+/** Footer appended to marketing mail (text + html variants). */
+export function unsubscribeFooter(email: string, env: MailEnv = process.env as MailEnv): { text: string; html: string } {
+  const url = unsubscribeUrl(email, env);
+  return {
+    text: `\n\nYou are receiving this because you asked Russell Capital Systems for a planning estimate. Unsubscribe: ${url}`,
+    html: `<p style="font-size:12px;color:#5b6b82;margin-top:24px;">You are receiving this because you asked Russell Capital Systems for a planning estimate. <a href="${url}" style="color:#5b6b82;">Unsubscribe</a></p>`,
+  };
 }
 
 let _transport: Transporter | null = null;
@@ -27185,7 +27589,8 @@ function smtpTransport(): Transporter {
 }
 export function _resetTransportForTests(t: Transporter | null = null) { _transport = t; }
 
-type ResendLike = { emails: { send: (m: { from: string; to: string; subject: string; text: string; html?: string }) => Promise<{ error?: unknown }> } };
+type ResendSendInput = { from: string; to: string; subject: string; text: string; html?: string; replyTo?: string; headers?: Record<string, string>; attachments?: Array<{ filename: string; content: Buffer | string; contentType?: string }> };
+type ResendLike = { emails: { send: (m: ResendSendInput) => Promise<{ error?: unknown }> } };
 let _resend: ResendLike | null = null;
 async function resendClient(): Promise<ResendLike> {
   if (!_resend) {
@@ -27199,19 +27604,55 @@ export function _resetResendForTests(r: ResendLike | null = null) { _resend = r;
 export async function sendMail(msg: MailMessage): Promise<MailResult> {
   const mode = mailMode();
   if (mode === "none") return { sent: false, reason: "No mail transport configured (set RESEND_API_KEY or SMTP_*)" };
+  const category = msg.category ?? "transactional";
+  const to = msg.to.trim();
+  if (category === "marketing" && (await isEmailOptedOut(to))) return { sent: false, reason: "This address has unsubscribed", suppressed: true };
+
   const from = msg.from ?? fromAddress();
+  const replyTo = msg.replyTo ?? replyToAddress();
+  const headers = { ...(msg.headers ?? {}) };
+  let text = msg.text;
+  let html = msg.html;
+  if (category === "marketing") {
+    Object.assign(headers, unsubscribeHeaders(to));
+    const footer = unsubscribeFooter(to);
+    text += footer.text;
+    if (html) html = html.includes("</body>") ? html.replace("</body>", `${footer.html}</body>`) : html + footer.html;
+  }
   try {
     if (mode === "resend") {
-      const { error } = await (await resendClient()).emails.send({ from, to: msg.to, subject: msg.subject, text: msg.text, html: msg.html });
+      const { error } = await (await resendClient()).emails.send({ from, to, subject: msg.subject, text, html, replyTo, headers, attachments: msg.attachments });
       if (error) return { sent: false, via: "resend", reason: "Email delivery failed" };
       return { sent: true, via: "resend" };
     }
-    await smtpTransport().sendMail({ from, to: msg.to, subject: msg.subject, text: msg.text, html: msg.html });
+    await smtpTransport().sendMail({ from, to, subject: msg.subject, text, html, replyTo, headers, attachments: msg.attachments });
     return { sent: true, via: "smtp" };
   } catch (error) {
     console.warn("[Mail] delivery failed via", mode, String(error).slice(0, 200));
     return { sent: false, via: mode, reason: "Email delivery failed" };
   }
+}
+
+// ─── Unsubscribe endpoint (GET confirms; POST is the one-click path) ─────────
+function unsubscribePage(title: string, body: string): string {
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title></head>
+<body style="margin:0;background:#060f1e;color:#c8d8ec;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;"><div style="max-width:520px;margin:64px auto;padding:32px;background:#0b1628;border:1px solid #12233e;border-radius:16px;">
+<div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:16px;">Russell<span style="color:#4f8cff">Capital</span></div><h1 style="font-size:20px;color:#fff;margin:0 0 12px;">${title}</h1>${body}</div></body></html>`;
+}
+export function registerMailRoutes(app: Express): void {
+  const handle = async (req: Request, res: Response, confirmOnly: boolean) => {
+    const e = String((req.query.e ?? (req.body as Record<string, unknown> | undefined)?.e ?? "")).trim().toLowerCase();
+    const t = String(req.query.t ?? (req.body as Record<string, unknown> | undefined)?.t ?? "");
+    if (!e || !verifyUnsubscribeToken(e, t)) { res.status(400).send(unsubscribePage("Link not valid", "<p>This unsubscribe link is not valid. Reply to any of our emails with the word <strong>unsubscribe</strong> and we will remove you by hand.</p>")); return; }
+    if (confirmOnly) {
+      res.send(unsubscribePage("Unsubscribe?", `<p>Stop receiving follow-up emails at <strong style="color:#fff">${e.replace(/[<>&]/g, "")}</strong>? Reports and messages you ask for directly will still arrive.</p><form method="post" action="/api/mail/unsubscribe"><input type="hidden" name="e" value="${e.replace(/"/g, "&quot;")}"><input type="hidden" name="t" value="${t.replace(/"/g, "&quot;")}"><button type="submit" style="background:#4f8cff;color:#fff;border:0;border-radius:10px;padding:12px 24px;font-weight:700;cursor:pointer;">Yes, unsubscribe</button></form>`));
+      return;
+    }
+    await recordEmailOptOut(e, "link");
+    res.send(unsubscribePage("You're unsubscribed", "<p>No more follow-up emails will be sent to this address.</p>"));
+  };
+  app.get("/api/mail/unsubscribe", (req, res) => void handle(req, res, true));
+  app.post("/api/mail/unsubscribe", (req, res) => void handle(req, res, false));
 }
 ```
 
@@ -28220,6 +28661,147 @@ function buildCronUser(
 }
 
 export const sdk = new SDKServer();
+```
+
+## `server/_core/sms.ts`
+
+```ts
+// ============================================================
+// SMS TRANSPORT — one sendSms() for the app, three ways to deliver:
+//   1. Twilio           TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and either
+//                       TWILIO_FROM (E.164 number) or TWILIO_MESSAGING_SERVICE_SID
+//   2. Relay webhook    SMS_WEBHOOK_URL (+ optional SMS_WEBHOOK_TOKEN): the app
+//                       POSTs {to, body} as JSON — bridges any provider that can
+//                       accept a webhook (Inkbox, Speko, Zapier, Make, a phone app)
+//   3. None             the message is not sent and the caller is told so
+//
+// Compliance is built in, not optional:
+//   - numbers are normalised to E.164 (US default) before anything is sent
+//   - a number that replied STOP is never messaged again (sms_opt_outs)
+//   - marketing texts carry "Reply STOP to opt out" and consent is required
+//   - inbound STOP/HELP is handled by the /api/sms/inbound webhook
+// Secrets are read from the environment only.
+// ============================================================
+import type { Express, Request, Response } from "express";
+import { isSmsOptedOut, recordSmsOptOut, clearSmsOptOut } from "../messagingDb";
+
+export type SmsMessage = { to: string; body: string; category?: "transactional" | "marketing" };
+export type SmsResult = { sent: boolean; via?: "twilio" | "webhook"; reason?: string; to?: string };
+
+export type SmsEnv = {
+  TWILIO_ACCOUNT_SID?: string;
+  TWILIO_AUTH_TOKEN?: string;
+  TWILIO_FROM?: string;
+  TWILIO_MESSAGING_SERVICE_SID?: string;
+  SMS_WEBHOOK_URL?: string;
+  SMS_WEBHOOK_TOKEN?: string;
+};
+
+export const SMS_MAX_LENGTH = 1200;
+export const STOP_WORDS = ["stop", "stopall", "unsubscribe", "cancel", "end", "quit"];
+export const START_WORDS = ["start", "unstop", "yes"];
+const OPT_OUT_FOOTER = "Reply STOP to opt out.";
+
+export function smsMode(env: SmsEnv = process.env as SmsEnv): "twilio" | "webhook" | "none" {
+  if (env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN && (env.TWILIO_FROM || env.TWILIO_MESSAGING_SERVICE_SID)) return "twilio";
+  if (env.SMS_WEBHOOK_URL) return "webhook";
+  return "none";
+}
+
+/**
+ * Normalise a phone number to E.164. US numbers are the default: 10 digits get
+ * +1, 11 digits starting with 1 get +. Anything else must already carry a
+ * country code. Returns null when the input cannot be a phone number.
+ */
+export function normalizePhone(raw: string | null | undefined): string | null {
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  const hasPlus = trimmed.startsWith("+");
+  const digits = trimmed.replace(/\D/g, "");
+  if (digits.length < 10 || digits.length > 15) return null;
+  if (hasPlus) return `+${digits}`;
+  if (digits.length === 10) return `+1${digits}`;
+  if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
+  return `+${digits}`;
+}
+
+export function smsBody(body: string, category: SmsMessage["category"] = "transactional"): string {
+  const clean = body.replace(/\s+\n/g, "\n").trim().slice(0, SMS_MAX_LENGTH);
+  if (category === "marketing" && !/reply stop/i.test(clean)) return `${clean}\n${OPT_OUT_FOOTER}`;
+  return clean;
+}
+
+async function sendViaTwilio(to: string, body: string, env: SmsEnv): Promise<SmsResult> {
+  const sid = env.TWILIO_ACCOUNT_SID!;
+  const form = new URLSearchParams({ To: to, Body: body });
+  if (env.TWILIO_MESSAGING_SERVICE_SID) form.set("MessagingServiceSid", env.TWILIO_MESSAGING_SERVICE_SID);
+  else form.set("From", env.TWILIO_FROM!);
+  const auth = Buffer.from(`${sid}:${env.TWILIO_AUTH_TOKEN}`).toString("base64");
+  const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${encodeURIComponent(sid)}/Messages.json`, {
+    method: "POST",
+    headers: { authorization: `Basic ${auth}`, "content-type": "application/x-www-form-urlencoded" },
+    body: form.toString(),
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!res.ok) return { sent: false, via: "twilio", reason: `SMS provider rejected the message (${res.status})`, to };
+  return { sent: true, via: "twilio", to };
+}
+
+async function sendViaWebhook(to: string, body: string, env: SmsEnv): Promise<SmsResult> {
+  const headers: Record<string, string> = { "content-type": "application/json" };
+  if (env.SMS_WEBHOOK_TOKEN) headers.authorization = `Bearer ${env.SMS_WEBHOOK_TOKEN}`;
+  const res = await fetch(env.SMS_WEBHOOK_URL!, { method: "POST", headers, body: JSON.stringify({ to, body }), signal: AbortSignal.timeout(15000) });
+  if (!res.ok) return { sent: false, via: "webhook", reason: `SMS relay rejected the message (${res.status})`, to };
+  return { sent: true, via: "webhook", to };
+}
+
+/**
+ * Send one text. Refuses silently-but-honestly when: no transport, the number
+ * is not a phone number, or the number has opted out.
+ */
+export async function sendSms(msg: SmsMessage, env: SmsEnv = process.env as SmsEnv): Promise<SmsResult> {
+  const mode = smsMode(env);
+  if (mode === "none") return { sent: false, reason: "No SMS transport configured (set TWILIO_* or SMS_WEBHOOK_URL)" };
+  const to = normalizePhone(msg.to);
+  if (!to) return { sent: false, reason: "Not a valid phone number" };
+  if (await isSmsOptedOut(to)) return { sent: false, reason: "This number has opted out of texts", to };
+  const body = smsBody(msg.body, msg.category);
+  if (!body) return { sent: false, reason: "Empty message", to };
+  try {
+    return mode === "twilio" ? await sendViaTwilio(to, body, env) : await sendViaWebhook(to, body, env);
+  } catch (error) {
+    console.warn("[SMS] delivery failed via", mode, String(error).slice(0, 200));
+    return { sent: false, via: mode, reason: "SMS delivery failed", to };
+  }
+}
+
+/** Classify an inbound text: opt-out, opt-in, help, or an ordinary reply. */
+export function classifyInbound(body: string | undefined): "stop" | "start" | "help" | "message" {
+  const word = (body ?? "").trim().toLowerCase().replace(/[^a-z]/g, "");
+  if (STOP_WORDS.includes(word)) return "stop";
+  if (START_WORDS.includes(word)) return "start";
+  if (word === "help" || word === "info") return "help";
+  return "message";
+}
+
+/**
+ * Inbound webhook (Twilio-compatible form fields `From` and `Body`; JSON with
+ * `from`/`body` also accepted). STOP records an opt-out, START clears it,
+ * HELP answers with contact details. Replies are TwiML so Twilio sends them.
+ */
+export function registerSmsRoutes(app: Express): void {
+  app.post("/api/sms/inbound", async (req: Request, res: Response) => {
+    const src = (req.body ?? {}) as Record<string, unknown>;
+    const from = normalizePhone(String(src.From ?? src.from ?? ""));
+    const body = String(src.Body ?? src.body ?? "");
+    const kind = classifyInbound(body);
+    let reply = "";
+    if (from && kind === "stop") { await recordSmsOptOut(from, "reply"); reply = "You are unsubscribed from Russell Capital Systems texts. No more messages will be sent. Reply START to resubscribe."; }
+    else if (from && kind === "start") { await clearSmsOptOut(from); reply = "You are resubscribed to Russell Capital Systems texts. Reply STOP to opt out at any time."; }
+    else if (kind === "help") reply = "Russell Capital Systems: reply STOP to opt out. For help email support@russellcapitalsystems.com.";
+    res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response>${reply ? `<Message>${reply.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c] as string))}</Message>` : ""}</Response>`);
+  });
+}
 ```
 
 ## `server/_core/storageProxy.ts`
@@ -29868,6 +30450,7 @@ export function generateProtocolDoc(): object {
 
 ```ts
 import { callDataApi } from "./_core/dataApi";
+import { fredConfigured, getBenchmarks, getCpiFromFred, type Benchmark } from "./_core/fred";
 
 export interface DataFeedEntry {
   name: string;
@@ -29912,6 +30495,8 @@ export interface DataFeedSnapshot {
   treasuryRates: TreasuryData[];
   commodities: CommodityData[];
   mygaRates: MYGARateData[];
+  /** FRED benchmarks (mortgage rate, Fed funds, Treasury curve) — present when FRED_API_KEY is set or last-good values exist. */
+  benchmarks: Benchmark[];
   fetchedAt: string;
   overallSource: "live" | "cached" | "static";
 }
@@ -29983,6 +30568,11 @@ const STATIC_COMMODITIES: CommodityData[] = [
 ];
 
 async function fetchLiveCPI(): Promise<CPIData | null> {
+  // FRED first when a key is set — it works on any host and dates every value.
+  if (fredConfigured()) {
+    const f = await getCpiFromFred();
+    if (f) return { name: "Consumer Price Index", value: f.index, unit: "index", annualRate: f.annualRate, monthlyRate: f.monthlyRate, coreRate: f.coreAnnualRate ?? f.annualRate, asOf: f.asOf, source: "live", lastUpdated: new Date().toISOString() };
+  }
   try {
     const result = await callDataApi("EconomicIndicators/cpi", {}) as { data?: Record<string, unknown> };
     const d = result?.data;
@@ -30004,7 +30594,24 @@ async function fetchLiveCPI(): Promise<CPIData | null> {
   }
 }
 
+const TREASURY_FROM_FRED: Array<{ series: "DGS3MO" | "DGS2" | "DGS5" | "DGS10" | "DGS30"; term: string; name: string }> = [
+  { series: "DGS3MO", term: "3m", name: "3-Month Treasury" },
+  { series: "DGS2", term: "2y", name: "2-Year Treasury" },
+  { series: "DGS5", term: "5y", name: "5-Year Treasury" },
+  { series: "DGS10", term: "10y", name: "10-Year Treasury" },
+  { series: "DGS30", term: "30y", name: "30-Year Treasury" },
+];
+
 async function fetchLiveTreasury(): Promise<TreasuryData[] | null> {
+  if (fredConfigured()) {
+    const bench = await getBenchmarks(TREASURY_FROM_FRED.map((t) => t.series));
+    const rows = TREASURY_FROM_FRED.flatMap((t) => {
+      const b = bench.find((x) => x.series === t.series);
+      if (!b || b.source === "unavailable") return [];
+      return [{ name: t.name, value: b.value, unit: "%", term: t.term, yield: b.value, asOf: b.asOf, source: "live" as const, lastUpdated: b.fetchedAt }];
+    });
+    if (rows.length === TREASURY_FROM_FRED.length) return rows;
+  }
   try {
     const result = await callDataApi("TreasuryRates/yields", {}) as { data?: unknown[] };
     if (!Array.isArray(result?.data)) return null;
@@ -30077,13 +30684,19 @@ export async function getMYGARates(state?: string): Promise<MYGARateData[]> {
   return [];
 }
 
+/** Mortgage + Fed funds benchmarks (the calculators' reference rates). Empty when nothing real is available. */
+export async function getRateBenchmarks(): Promise<Benchmark[]> {
+  const rows = await getBenchmarks(["MORTGAGE30US", "FEDFUNDS", "DGS10"]);
+  return rows.filter((b) => b.source !== "unavailable");
+}
+
 export async function getDataFeedSnapshot(state?: string): Promise<DataFeedSnapshot> {
-  const [cpi, treasuryRates, commodities, mygaRates] = await Promise.all([
-    getCPIData(), getTreasuryRates(), getCommodityPrices(), getMYGARates(state),
+  const [cpi, treasuryRates, commodities, mygaRates, benchmarks] = await Promise.all([
+    getCPIData(), getTreasuryRates(), getCommodityPrices(), getMYGARates(state), getRateBenchmarks().catch(() => [] as Benchmark[]),
   ]);
   const sources = [cpi.source, ...treasuryRates.map((row) => row.source), ...commodities.map((row) => row.source)];
   const overallSource = sources.every((source) => source === "live") ? "live" : sources.some((source) => source === "live" || source === "cached") ? "cached" : "static";
-  return { cpi, treasuryRates, commodities, mygaRates, fetchedAt: new Date().toISOString(), overallSource };
+  return { cpi, treasuryRates, commodities, mygaRates, benchmarks, fetchedAt: new Date().toISOString(), overallSource };
 }
 
 export function invalidateAllFeeds() {
@@ -34983,15 +35596,35 @@ export async function upsertUserPortalPreferences(userId: number, workspaceId: n
  * so the app works in dev without an API key configured.
  */
 import { Resend } from "resend";
-import { sendMail } from "./_core/mailer";
+import { fromAddress, mailMode, sendMail, type MailAttachment } from "./_core/mailer";
 
 let _resend: Resend | null = null;
 
-function getResend(): Resend | null {
+type SendShape = { from: string; to: string; subject: string; text?: string; html?: string; attachments?: Array<{ filename: string; content: Buffer | string }> };
+/** Minimal Resend-shaped client that delivers through the app's mail transport (SMTP when Resend is not configured). */
+type ResendShape = { emails: { send: (m: SendShape) => Promise<{ error?: unknown }> } };
+
+function getResend(): ResendShape | null {
   const key = process.env.RESEND_API_KEY;
-  if (!key) return null;
-  if (!_resend) _resend = new Resend(key);
-  return _resend;
+  if (key) {
+    if (!_resend) _resend = new Resend(key);
+    return _resend as unknown as ResendShape;
+  }
+  // No Resend key: every template below still works over plain SMTP. The
+  // From header is replaced by the SMTP account's address, which providers
+  // require, and the message goes through sendMail() with all its
+  // deliverability headers.
+  if (mailMode() === "smtp") {
+    return {
+      emails: {
+        send: async (m) => {
+          const r = await sendMail({ to: m.to, subject: m.subject, text: m.text ?? m.html?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() ?? "", html: m.html, from: fromAddress(), attachments: m.attachments as MailAttachment[] | undefined });
+          return r.sent ? {} : { error: r.reason ?? "Email delivery failed" };
+        },
+      },
+    };
+  }
+  return null;
 }
 
 function sanitizeEmailHtml(html: string) {
@@ -39669,6 +40302,148 @@ export const factFinderRouter = router({
 });
 ```
 
+## `server/followups.ts`
+
+```ts
+// ============================================================
+// LEAD FOLLOW-UP SEQUENCE — automated, consent-based, figure-free.
+//
+// When a homepage lead is captured, a short sequence is scheduled (text an
+// hour later, emails on days 1, 3 and 7, a text on day 5). The scheduler
+// sends each step when due. The sequence stops the moment the advisor marks
+// the lead contacted/qualified/client, or the person unsubscribes/STOPs.
+//
+// Runs two ways so it works on any host:
+//   - in-process: startFollowupScheduler() ticks every minute while the
+//     server is up (set FOLLOWUPS_DISABLED=1 to turn the automation off)
+//   - external cron: POST /api/scheduled/followups with header
+//     x-scheduler-token: $SCHEDULER_TOKEN (for hosts that sleep the process)
+// ============================================================
+import type { Express, Request, Response } from "express";
+import type { PublicLead } from "../drizzle/schema";
+import { publicBaseUrl } from "./_core/mailer";
+import { deliver } from "./messaging";
+import { getLeadById } from "./leadsDb";
+import { dueFollowups, scheduleFollowups, settleFollowup, type FollowupPlanStep } from "./messagingDb";
+
+const HOUR = 60 * 60 * 1000;
+const DAY = 24 * HOUR;
+
+export type FollowupStepDef = { step: string; channel: "email" | "sms"; afterMs: number };
+export const FOLLOWUP_SEQUENCE: FollowupStepDef[] = [
+  { step: "sms_1h", channel: "sms", afterMs: 1 * HOUR },
+  { step: "email_day1", channel: "email", afterMs: 1 * DAY },
+  { step: "email_day3", channel: "email", afterMs: 3 * DAY },
+  { step: "sms_day5", channel: "sms", afterMs: 5 * DAY },
+  { step: "email_day7", channel: "email", afterMs: 7 * DAY },
+];
+
+export function followupsEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.FOLLOWUPS_DISABLED !== "1" && env.FOLLOWUPS_DISABLED !== "true";
+}
+
+/** The steps this lead can actually receive: texts need a phone, emails need an address. */
+export function planFollowupsFor(lead: Pick<PublicLead, "email" | "phone" | "consentedAt">, now = new Date()): FollowupPlanStep[] {
+  if (!lead.consentedAt) return [];
+  return FOLLOWUP_SEQUENCE
+    .filter((s) => (s.channel === "sms" ? Boolean(lead.phone) : Boolean(lead.email)))
+    .map((s) => ({ step: s.step, channel: s.channel, scheduledFor: new Date(now.getTime() + s.afterMs) }));
+}
+
+export async function scheduleLeadFollowups(lead: Pick<PublicLead, "id" | "email" | "phone" | "consentedAt">, now = new Date()): Promise<number> {
+  if (!followupsEnabled()) return 0;
+  return scheduleFollowups(lead.id, planFollowupsFor(lead, now));
+}
+
+// ─── Content (no figures, ever) ──────────────────────────────────────────────
+export function followupContent(step: string, lead: Pick<PublicLead, "firstName">, baseUrl = publicBaseUrl()): { subject: string; body: string } {
+  const name = (lead.firstName ?? "").trim() || "there";
+  switch (step) {
+    case "sms_1h":
+      return { subject: "", body: `Hi ${name}, this is Russell Capital Systems. Thanks for requesting your planning estimate — an advisor will reach out to schedule your evaluation. Questions in the meantime? Reply here.` };
+    case "email_day1":
+      return {
+        subject: "What happens next with your planning estimate",
+        body: `Hi ${name},\n\nThank you again for requesting a planning estimate. Here is what happens next:\n\n1. An advisor reviews what you entered and prepares a thorough evaluation — not a sales pitch.\n2. We schedule a short call to walk through it and answer your questions.\n3. If it makes sense, we build the plan together, one variable at a time.\n\nIf you would rather pick a time now, reply to this email with a couple of windows that work.\n\nRussell Capital Systems`,
+      };
+    case "email_day3":
+      return {
+        subject: "Three questions worth asking before any strategy",
+        body: `Hi ${name},\n\nBefore anyone recommends a strategy, three questions decide whether it fits:\n\n1. How much of your income is taxed, and which of that is optional?\n2. What is the interest on your debts actually worth over their life?\n3. Which variables do you control — and which does the plan need to survive?\n\nThe evaluation we prepare answers all three from your own numbers. Reply with a time that works and we will walk through it together.\n\nRussell Capital Systems`,
+      };
+    case "sms_day5":
+      return { subject: "", body: `Hi ${name}, Russell Capital Systems here. Your evaluation is ready to walk through whenever you are — reply with a day and time that works and we will set it up.` };
+    case "email_day7":
+      return {
+        subject: "Still here when you are ready",
+        body: `Hi ${name},\n\nNo pressure — your evaluation stays ready. When you would like to go through it, reply to this email or visit ${baseUrl} and use the contact form.\n\nIf now is not the time, that is completely fine; you will not hear from this sequence again.\n\nRussell Capital Systems`,
+      };
+    default:
+      return { subject: "A note from Russell Capital Systems", body: `Hi ${name},\n\nAn advisor will be in touch shortly.\n\nRussell Capital Systems` };
+  }
+}
+
+// ─── Runner ──────────────────────────────────────────────────────────────────
+export type RunSummary = { checked: number; sent: number; skipped: number; failed: number };
+
+export async function runDueFollowups(now = new Date()): Promise<RunSummary> {
+  const summary: RunSummary = { checked: 0, sent: 0, skipped: 0, failed: 0 };
+  if (!followupsEnabled()) return summary;
+  const due = await dueFollowups(now);
+  for (const row of due) {
+    summary.checked++;
+    const lead = await getLeadById(row.leadId);
+    if (!lead) { if (await settleFollowup(row.id, "skipped", "lead no longer exists")) summary.skipped++; continue; }
+    if (lead.status !== "new") { if (await settleFollowup(row.id, "skipped", `lead is ${lead.status}`)) summary.skipped++; continue; }
+    const to = row.channel === "sms" ? lead.phone : lead.email;
+    if (!to) { if (await settleFollowup(row.id, "skipped", `no ${row.channel} on file`)) summary.skipped++; continue; }
+    const content = followupContent(row.step, lead);
+    const r = await deliver({ channel: row.channel, to, subject: content.subject || undefined, body: content.body, category: "marketing", template: row.step, leadId: lead.id, actorName: "Follow-up sequence" });
+    if (r.sent) { if (await settleFollowup(row.id, "sent")) summary.sent++; }
+    else if (r.suppressed) { if (await settleFollowup(row.id, "skipped", r.reason ?? "opted out")) summary.skipped++; }
+    else { if (await settleFollowup(row.id, "failed", r.reason ?? "delivery failed")) summary.failed++; }
+  }
+  return summary;
+}
+
+let _timer: NodeJS.Timeout | null = null;
+let _running = false;
+export function startFollowupScheduler(intervalMs = 60_000): void {
+  if (_timer || !followupsEnabled()) return;
+  const tick = async () => {
+    if (_running) return;
+    _running = true;
+    try {
+      const s = await runDueFollowups();
+      if (s.checked > 0) console.info(`[Followups] checked ${s.checked}: sent ${s.sent}, skipped ${s.skipped}, failed ${s.failed}`);
+    } catch (error) {
+      console.warn("[Followups] tick failed:", String(error).slice(0, 200));
+    } finally {
+      _running = false;
+    }
+  };
+  _timer = setInterval(() => void tick(), intervalMs);
+  _timer.unref?.();
+  setTimeout(() => void tick(), 5_000).unref?.();
+}
+export function stopFollowupScheduler(): void {
+  if (_timer) clearInterval(_timer);
+  _timer = null;
+}
+
+/** External-cron entry point. Requires SCHEDULER_TOKEN so nobody else can trigger sends. */
+export function registerScheduledRoutes(app: Express): void {
+  app.post("/api/scheduled/followups", async (req: Request, res: Response) => {
+    const token = process.env.SCHEDULER_TOKEN;
+    if (!token) { res.status(404).json({ error: "Scheduled endpoint not enabled (set SCHEDULER_TOKEN)" }); return; }
+    const given = req.get("x-scheduler-token") ?? (req.query.token as string | undefined);
+    if (given !== token) { res.status(401).json({ error: "Bad scheduler token" }); return; }
+    const summary = await runDueFollowups();
+    res.json(summary);
+  });
+}
+```
+
 ## `server/generate1035Pdf.ts`
 
 ```ts
@@ -40607,6 +41382,10 @@ import { notifyOwner } from "./_core/notification";
 import { sendLeadAcknowledgement, sendNewLeadAlert } from "./email";
 import { computeLeadAnalysis } from "./leadStrategy";
 import { getLeadById, getLeadByPublicId, listLeads, updateLeadStatus, upsertLead } from "./leadsDb";
+import { scheduleLeadFollowups } from "./followups";
+import { deliver } from "./messaging";
+import { cancelFollowupsForLead, listFollowupsForLead, listMessagesForLead } from "./messagingDb";
+import { normalizePhone, sendSms } from "./_core/sms";
 import type { LeadFactFinder } from "@shared/leadTypes";
 
 function assertOwner(user: { openId: string; role: string }): void {
@@ -40742,6 +41521,23 @@ export const leadsRouter = router({
         catch { /* acknowledgement is best-effort */ }
       }
 
+      // Text the owner too when a mobile alert number is set — a lead is
+      // worth interrupting for. Never includes figures.
+      if (ENV.leadNotifyPhone) {
+        try {
+          const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
+          const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
+          await sendSms({ to: ENV.leadNotifyPhone, body: `New RCS lead: ${who} (${contact})${input.bestTimeToContact ? ` — best time: ${input.bestTimeToContact}` : ""}. Open the lead inbox to review.` });
+        } catch { /* alert is best-effort */ }
+      }
+
+      // Schedule the automated follow-up sequence (text in an hour, emails on
+      // days 1/3/7, text on day 5). Stops when the lead is marked contacted.
+      if (lead) {
+        try { await scheduleLeadFollowups(lead); }
+        catch { /* automation is best-effort */ }
+      }
+
       // The visitor only ever sees the qualitative teaser — never the figures.
       return {
         saved: Boolean(lead) as boolean,
@@ -40775,7 +41571,32 @@ export const leadsRouter = router({
       assertOwner(ctx.user);
       const lead = await updateLeadStatus(input.id, input.status);
       if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
+      // A human has taken over: the automated sequence stops here.
+      if (input.status !== "new") await cancelFollowupsForLead(lead.id, `lead marked ${input.status}`);
       return lead;
+    }),
+
+  // ─── Messaging a lead from the inbox (owner-gated) ────────────────────────
+  followups: protectedProcedure
+    .input(z.object({ id: z.number().int().positive() }))
+    .query(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      const [followups, messages] = await Promise.all([listFollowupsForLead(input.id), listMessagesForLead(input.id)]);
+      return { followups, messages };
+    }),
+
+  message: protectedProcedure
+    .input(z.object({ id: z.number().int().positive(), channel: z.enum(["email", "sms"]), subject: z.string().max(300).optional(), body: z.string().min(1).max(4000) }))
+    .mutation(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      const lead = await getLeadById(input.id);
+      if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
+      const to = input.channel === "email" ? lead.email : normalizePhone(lead.phone);
+      if (!to) throw new TRPCError({ code: "BAD_REQUEST", message: input.channel === "email" ? "This lead gave no email address." : "This lead gave no valid mobile number." });
+      const r = await deliver({ channel: input.channel, to, subject: input.subject, body: input.body, category: "transactional", leadId: lead.id, userId: ctx.user.id, actorName: ctx.user.name ?? "Advisor" });
+      // The advisor has reached out by hand — the sequence is no longer needed.
+      if (r.sent) await cancelFollowupsForLead(lead.id, "advisor messaged the lead");
+      return { sent: r.sent, via: r.via ?? null, reason: r.reason ?? null, suppressed: Boolean(r.suppressed) };
     }),
 });
 ```
@@ -40983,566 +41804,74 @@ export const librarianRouter = router({
 });
 ```
 
-## `server/mortgageKillerPdf.ts`
+## `server/messagesRouter.ts`
 
 ```ts
-/**
- * Mortgage Killer Strategy — PDF Export Service
- * Branded client-facing PDF with dual amortization schedules,
- * HELOC cycle diagram, IUL policy summary, and total wealth created.
- */
-
-import PDFDocument from "pdfkit";
-import type { MortgageKillerResult } from "../shared/mortgageKiller";
-
-// ─── Brand Colors ───────────────────────────────────────────────────────────
-const C = {
-  bg: "#0f1117",
-  card: "#1a1d27",
-  cardAlt: "#141720",
-  border: "#2a2d3a",
-  text: "#e4e4e7",
-  muted: "#a1a1aa",
-  blue: "#3b82f6",
-  emerald: "#22c55e",
-  amber: "#f59e0b",
-  red: "#ef4444",
-  purple: "#8b5cf6",
-  cyan: "#06b6d4",
-  white: "#ffffff",
-  orange: "#f97316",
-};
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-function fmt(n: number): string {
-  return "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
-}
-
-function fmtPct(n: number): string {
-  return (n * 100).toFixed(1) + "%";
-}
-
-function newPage(doc: PDFKit.PDFDocument) {
-  doc.addPage();
-  doc.rect(0, 0, doc.page.width, doc.page.height).fill(C.bg);
-}
-
-function drawPageHeader(doc: PDFKit.PDFDocument, title: string, subtitle?: string) {
-  doc.rect(0, 0, doc.page.width, 80).fill(C.card);
-  doc.rect(0, 78, doc.page.width, 2).fill(C.blue);
-  doc.fillColor(C.blue).fontSize(20).font("Helvetica-Bold").text(title, 40, 22);
-  if (subtitle) {
-    doc.fillColor(C.muted).fontSize(10).font("Helvetica").text(subtitle, 40, 50);
-  }
-  doc.y = 100;
-}
-
-function drawSectionTitle(doc: PDFKit.PDFDocument, title: string) {
-  if (doc.y > doc.page.height - 100) newPage(doc);
-  doc.fillColor(C.blue).fontSize(13).font("Helvetica-Bold").text(title, 40, doc.y);
-  doc.moveDown(0.3);
-  doc.strokeColor(C.border).lineWidth(0.5).moveTo(40, doc.y).lineTo(doc.page.width - 40, doc.y).stroke();
-  doc.moveDown(0.6);
-}
-
-function drawText(doc: PDFKit.PDFDocument, text: string, opts?: { bold?: boolean; color?: string; size?: number }) {
-  doc.fillColor(opts?.color ?? C.text)
-    .fontSize(opts?.size ?? 9.5)
-    .font(opts?.bold ? "Helvetica-Bold" : "Helvetica")
-    .text(text, 40, doc.y, { width: doc.page.width - 80 });
-}
-
-function drawKpiRow(doc: PDFKit.PDFDocument, items: { label: string; value: string; color?: string }[]) {
-  const y = doc.y;
-  const colW = (doc.page.width - 80) / items.length;
-  items.forEach((item, i) => {
-    const x = 40 + i * colW;
-    doc.fillColor(item.color ?? C.emerald).fontSize(18).font("Helvetica-Bold").text(item.value, x, y, { width: colW });
-    doc.fillColor(C.muted).fontSize(8).font("Helvetica").text(item.label, x, y + 22, { width: colW });
-  });
-  doc.y = y + 45;
-}
-
-function drawTableHeader(doc: PDFKit.PDFDocument, cols: { label: string; x: number; w: number }[]) {
-  const y = doc.y;
-  doc.rect(40, y, doc.page.width - 80, 18).fill(C.card);
-  cols.forEach(col => {
-    doc.fillColor(C.muted).fontSize(7.5).font("Helvetica-Bold").text(col.label, col.x, y + 4, { width: col.w, align: "right" });
-  });
-  doc.y = y + 20;
-}
-
-function drawTableRow(doc: PDFKit.PDFDocument, cols: { value: string; x: number; w: number; color?: string }[], highlight?: boolean) {
-  const y = doc.y;
-  if (highlight) {
-    doc.rect(40, y, doc.page.width - 80, 14).fill("#1e2a1e");
-  }
-  cols.forEach(col => {
-    doc.fillColor(col.color ?? C.text).fontSize(7.5).font("Helvetica").text(col.value, col.x, y + 2, { width: col.w, align: "right" });
-  });
-  doc.y = y + 14;
-}
-
-function addPageNumbers(doc: PDFKit.PDFDocument) {
-  const range = doc.bufferedPageRange();
-  for (let i = range.start; i < range.start + range.count; i++) {
-    doc.switchToPage(i);
-    doc.fillColor(C.muted).fontSize(7).font("Helvetica")
-      .text(`Russell Capital Systems™  •  Mortgage Killer Strategy  •  Page ${i + 1} of ${range.count}`, 0, doc.page.height - 25, { align: "center", width: doc.page.width });
-  }
-}
-
-// ─── Main PDF Generator ─────────────────────────────────────────────────────
-
-export interface MortgageKillerPdfInput {
-  result: MortgageKillerResult;
-  clientName: string;
-  advisorName: string;
-  firmName?: string;
-  mortgageRate: number;
-  annualIncome: number;
-  mortgageBalance: number;
-  homeMarketValue: number;
-  homeEquityValue: number;
-  incomeAllocationPct: number;
-}
-
-export function generateMortgageKillerPdf(input: MortgageKillerPdfInput): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const { result, clientName, advisorName } = input;
-    const doc = new PDFDocument({
-      size: "LETTER",
-      margins: { top: 40, bottom: 40, left: 40, right: 40 },
-      bufferPages: true,
-      info: {
-        Title: `Mortgage Killer Strategy — ${clientName}`,
-        Author: advisorName,
-        Subject: "Mortgage Acceleration Analysis",
-      },
-    });
-
-    const chunks: Buffer[] = [];
-    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
-    doc.on("end", () => resolve(Buffer.concat(chunks)));
-    doc.on("error", reject);
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // PAGE 1: COVER
-    // ═══════════════════════════════════════════════════════════════════════
-    doc.rect(0, 0, doc.page.width, doc.page.height).fill(C.bg);
-
-    // Accent bar
-    doc.rect(0, 0, doc.page.width, 6).fill(C.blue);
-
-    // Title block
-    doc.fillColor(C.blue).fontSize(36).font("Helvetica-Bold").text("MORTGAGE", 60, 160);
-    doc.fillColor(C.emerald).fontSize(36).font("Helvetica-Bold").text("KILLER", 60, 200);
-    doc.fillColor(C.text).fontSize(14).font("Helvetica").text("STRATEGY", 60, 244);
-
-    doc.moveDown(3);
-    doc.fillColor(C.text).fontSize(14).font("Helvetica").text(`Prepared for: ${clientName}`, 60);
-    doc.moveDown(0.5);
-    doc.fillColor(C.muted).fontSize(11).text(`Advisor: ${advisorName}`, 60);
-    if (input.firmName) {
-      doc.moveDown(0.3);
-      doc.text(`Firm: ${input.firmName}`, 60);
-    }
-    doc.moveDown(1);
-    doc.fillColor(C.muted).fontSize(10).text(`Generated: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, 60);
-
-    // Summary KPIs on cover
-    doc.y = 420;
-    doc.rect(50, doc.y, doc.page.width - 100, 120).lineWidth(1).strokeColor(C.border).stroke();
-    doc.y += 15;
-    doc.fillColor(C.white).fontSize(11).font("Helvetica-Bold").text("Strategy Highlights", 70, doc.y);
-    doc.y += 25;
-
-    const highlights = [
-      { label: "Years Saved", value: `${result.summary.yearsSaved} yrs ${result.summary.monthsSaved % 12} mo`, color: C.emerald },
-      { label: "Interest Saved", value: fmt(result.summary.totalInterestSaved), color: C.emerald },
-      { label: "Total Wealth Created", value: fmt(result.summary.totalWealthCreated), color: C.blue },
-    ];
-    drawKpiRow(doc, highlights);
-
-    const highlights2 = [
-      { label: "Mortgage-Free Date", value: result.summary.mortgageFreeDate, color: C.cyan },
-      { label: "Original Payoff Date", value: result.summary.originalPayoffDate, color: C.amber },
-      { label: "Final IUL Cash Value", value: fmt(result.summary.finalPolicyCashValue), color: C.purple },
-    ];
-    drawKpiRow(doc, highlights2);
-
-    // Disclaimer
-    doc.fillColor(C.muted).fontSize(7).font("Helvetica")
-      .text("This analysis is for illustrative purposes only and does not constitute financial advice. Actual results may vary. IUL projections use non-guaranteed illustrated rates.", 60, doc.page.height - 60, { width: doc.page.width - 120 });
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // PAGE 2: CLIENT FACT FINDER SUMMARY
-    // ═══════════════════════════════════════════════════════════════════════
-    newPage(doc);
-    drawPageHeader(doc, "Client Financial Snapshot", `${clientName} — Current Position`);
-
-    drawSectionTitle(doc, "Mortgage Details");
-    const mortgageDetails = [
-      ["Current Balance", fmt(input.mortgageBalance)],
-      ["Interest Rate", fmtPct(input.mortgageRate)],
-      ["Monthly Payment", fmt(result.currentPlan.monthlyPayment)],
-      ["Remaining Term", `${Math.ceil(result.currentPlan.payoffMonths / 12)} years (${result.currentPlan.payoffMonths} months)`],
-      ["Total Interest (Current Plan)", fmt(result.currentPlan.totalInterest)],
-    ];
-    mortgageDetails.forEach(([label, value]) => {
-      doc.fillColor(C.muted).fontSize(9).font("Helvetica").text(label, 50, doc.y, { continued: true, width: 200 });
-      doc.fillColor(C.white).font("Helvetica-Bold").text(`  ${value}`, { width: 300 });
-      doc.moveDown(0.2);
-    });
-
-    doc.moveDown(0.8);
-    drawSectionTitle(doc, "Property & Assets");
-    const assetDetails = [
-      ["Home Market Value", fmt(input.homeMarketValue)],
-      ["Home Equity", fmt(input.homeEquityValue)],
-      ["Annual Income", fmt(input.annualIncome)],
-      ["IUL Premium (20% of Income)", fmt(result.summary.annualIulPremium)],
-    ];
-    assetDetails.forEach(([label, value]) => {
-      doc.fillColor(C.muted).fontSize(9).font("Helvetica").text(label, 50, doc.y, { continued: true, width: 200 });
-      doc.fillColor(C.white).font("Helvetica-Bold").text(`  ${value}`, { width: 300 });
-      doc.moveDown(0.2);
-    });
-
-    doc.moveDown(0.8);
-    drawSectionTitle(doc, "Strategy Parameters");
-    const stratParams = [
-      ["Income Allocation", fmtPct(input.incomeAllocationPct)],
-      ["HELOC Funding (Years 1-2)", fmt(result.summary.totalHelocDrawn)],
-      ["Total IUL Premiums", fmt(result.summary.totalIulPremiums)],
-      ["Total Policy Loans Applied", fmt(result.summary.totalPolicyLoans)],
-    ];
-    stratParams.forEach(([label, value]) => {
-      doc.fillColor(C.muted).fontSize(9).font("Helvetica").text(label, 50, doc.y, { continued: true, width: 200 });
-      doc.fillColor(C.white).font("Helvetica-Bold").text(`  ${value}`, { width: 300 });
-      doc.moveDown(0.2);
-    });
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // PAGE 3: CURRENT PLAN — AMORTIZATION SCHEDULE
-    // ═══════════════════════════════════════════════════════════════════════
-    newPage(doc);
-    drawPageHeader(doc, "Current Plan — Standard Amortization", `Total Interest: ${fmt(result.currentPlan.totalInterest)} over ${Math.ceil(result.currentPlan.payoffMonths / 12)} years`);
-
-    drawSectionTitle(doc, "Annual Amortization Summary");
-
-    const amortCols = [
-      { label: "Year", x: 40, w: 45 },
-      { label: "Beg. Balance", x: 85, w: 80 },
-      { label: "Annual Payment", x: 165, w: 80 },
-      { label: "Principal", x: 245, w: 75 },
-      { label: "Interest", x: 320, w: 75 },
-      { label: "End Balance", x: 395, w: 80 },
-      { label: "Cum. Interest", x: 475, w: 80 },
-    ];
-    drawTableHeader(doc, amortCols);
-
-    // Aggregate by year for current plan
-    const currentByYear = new Map<number, { begBal: number; payment: number; principal: number; interest: number; endBal: number; cumInt: number }>();
-    for (const row of result.currentPlan.schedule) {
-      if (!currentByYear.has(row.year)) {
-        currentByYear.set(row.year, { begBal: row.beginningBalance, payment: 0, principal: 0, interest: 0, endBal: 0, cumInt: 0 });
-      }
-      const yr = currentByYear.get(row.year)!;
-      yr.payment += row.payment;
-      yr.principal += row.principal;
-      yr.interest += row.interest;
-      yr.endBal = row.endingBalance;
-      yr.cumInt = row.cumulativeInterest;
-    }
-
-    let rowCount = 0;
-    for (const [year, data] of Array.from(currentByYear)) {
-      if (doc.y > doc.page.height - 50) {
-        newPage(doc);
-        drawPageHeader(doc, "Current Plan — Continued", "Standard Amortization Schedule");
-        drawTableHeader(doc, amortCols);
-      }
-      const highlight = year % 5 === 0;
-      drawTableRow(doc, [
-        { value: `${year}`, x: 40, w: 45 },
-        { value: fmt(data.begBal), x: 85, w: 80 },
-        { value: fmt(data.payment), x: 165, w: 80 },
-        { value: fmt(data.principal), x: 245, w: 75 },
-        { value: fmt(data.interest), x: 320, w: 75, color: C.red },
-        { value: fmt(data.endBal), x: 395, w: 80 },
-        { value: fmt(data.cumInt), x: 475, w: 80, color: C.amber },
-      ], highlight);
-      rowCount++;
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // PAGE 4+: RECOMMENDED PLAN — ACCELERATED AMORTIZATION
-    // ═══════════════════════════════════════════════════════════════════════
-    newPage(doc);
-    drawPageHeader(doc, "Recommended Plan — Accelerated Payoff", `Total Interest: ${fmt(result.recommendedPlan.totalInterest)} | Payoff in ${Math.ceil(result.recommendedPlan.payoffMonths / 12)} years`);
-
-    drawSectionTitle(doc, "Accelerated Amortization with IUL Policy Loan Payments");
-
-    const accelCols = [
-      { label: "Year", x: 40, w: 40 },
-      { label: "Beg. Balance", x: 80, w: 70 },
-      { label: "Regular Pmt", x: 150, w: 70 },
-      { label: "Extra Principal", x: 220, w: 70 },
-      { label: "Total Principal", x: 290, w: 70 },
-      { label: "Interest", x: 360, w: 60 },
-      { label: "End Balance", x: 420, w: 70 },
-      { label: "Source", x: 490, w: 65 },
-    ];
-    drawTableHeader(doc, accelCols);
-
-    // Aggregate recommended by year
-    const accelByYear = new Map<number, { begBal: number; payment: number; principal: number; interest: number; endBal: number; extraPrincipal: number; source: string }>();
-    for (const row of result.recommendedPlan.schedule) {
-      if (!accelByYear.has(row.year)) {
-        accelByYear.set(row.year, { begBal: row.beginningBalance, payment: 0, principal: 0, interest: 0, endBal: 0, extraPrincipal: 0, source: "regular" });
-      }
-      const yr = accelByYear.get(row.year)!;
-      yr.payment += row.payment;
-      yr.principal += row.principal;
-      yr.interest += row.interest;
-      yr.endBal = row.endingBalance;
-      yr.extraPrincipal += (row.extraPrincipal ?? 0);
-      if (row.source === "iul_loan") yr.source = "IUL Loan";
-      else if (row.source === "heloc") yr.source = "HELOC";
-    }
-
-    for (const [year, data] of Array.from(accelByYear)) {
-      if (doc.y > doc.page.height - 50) {
-        newPage(doc);
-        drawPageHeader(doc, "Recommended Plan — Continued", "Accelerated Amortization Schedule");
-        drawTableHeader(doc, accelCols);
-      }
-      const hasExtra = data.extraPrincipal > 0;
-      drawTableRow(doc, [
-        { value: `${year}`, x: 40, w: 40 },
-        { value: fmt(data.begBal), x: 80, w: 70 },
-        { value: fmt(data.payment - data.extraPrincipal), x: 150, w: 70 },
-        { value: hasExtra ? fmt(data.extraPrincipal) : "—", x: 220, w: 70, color: hasExtra ? C.emerald : C.muted },
-        { value: fmt(data.principal), x: 290, w: 70 },
-        { value: fmt(data.interest), x: 360, w: 60, color: C.red },
-        { value: fmt(data.endBal), x: 420, w: 70 },
-        { value: data.source !== "regular" ? data.source : "—", x: 490, w: 65, color: data.source === "IUL Loan" ? C.emerald : data.source === "HELOC" ? C.cyan : C.muted },
-      ], hasExtra);
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // PAGE: IUL POLICY SUMMARY
-    // ═══════════════════════════════════════════════════════════════════════
-    newPage(doc);
-    drawPageHeader(doc, "IUL Policy Projection", `Annual Premium: ${fmt(result.summary.annualIulPremium)} | Total Premiums: ${fmt(result.summary.totalIulPremiums)}`);
-
-    drawSectionTitle(doc, "Year-by-Year IUL Cash Value & Policy Loans");
-
-    const iulCols = [
-      { label: "Year", x: 40, w: 40 },
-      { label: "Premium", x: 80, w: 65 },
-      { label: "Source", x: 145, w: 55 },
-      { label: "Cash Value", x: 200, w: 75 },
-      { label: "Surrender Value", x: 275, w: 75 },
-      { label: "Policy Loan", x: 350, w: 75 },
-      { label: "Applied To", x: 425, w: 75 },
-      { label: "Net CV", x: 500, w: 55 },
-    ];
-    drawTableHeader(doc, iulCols);
-
-    for (const py of result.iulPolicy) {
-      if (doc.y > doc.page.height - 50) {
-        newPage(doc);
-        drawPageHeader(doc, "IUL Policy — Continued", "Policy Projection");
-        drawTableHeader(doc, iulCols);
-      }
-      const hasLoan = py.policyLoan > 0;
-      drawTableRow(doc, [
-        { value: `${py.year}`, x: 40, w: 40 },
-        { value: py.premium > 0 ? fmt(py.premium) : "—", x: 80, w: 65 },
-        { value: py.premiumSource === "heloc" ? "HELOC" : py.premiumSource === "income" ? "Income" : "—", x: 145, w: 55, color: py.premiumSource === "heloc" ? C.cyan : C.muted },
-        { value: fmt(py.cashValue), x: 200, w: 75, color: C.blue },
-        { value: fmt(py.surrenderValue), x: 275, w: 75 },
-        { value: hasLoan ? fmt(py.policyLoan) : "—", x: 350, w: 75, color: hasLoan ? C.emerald : C.muted },
-        { value: hasLoan ? "Mortgage" : "—", x: 425, w: 75, color: hasLoan ? C.emerald : C.muted },
-        { value: fmt(py.netCashValue), x: 500, w: 55, color: C.purple },
-      ], hasLoan);
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // PAGE: HELOC CYCLE DIAGRAM
-    // ═══════════════════════════════════════════════════════════════════════
-    newPage(doc);
-    drawPageHeader(doc, "HELOC Funding Cycle", `Total HELOC Drawn: ${fmt(result.summary.totalHelocDrawn)}`);
-
-    drawSectionTitle(doc, "How the HELOC-to-IUL Cycle Works");
-
-    const steps = [
-      { num: "1", text: "Take 60% HELOC against home equity to fund Year 1 IUL premium", color: C.cyan },
-      { num: "2", text: "IUL policy earns 12% annual compound return on cash value", color: C.blue },
-      { num: "3", text: "Month 13: Take 80% policy loan against surrender value", color: C.emerald },
-      { num: "4", text: "Apply policy loan as principal-only payment to mortgage", color: C.emerald },
-      { num: "5", text: "Repeat HELOC draw for Year 2 IUL premium", color: C.cyan },
-      { num: "6", text: "Years 3-9: Continue cycle — HELOC supplements IUL funding", color: C.purple },
-      { num: "7", text: "Each year's policy loan accelerates mortgage payoff", color: C.emerald },
-      { num: "8", text: "Mortgage paid off years early — all saved interest compounds at 7%", color: C.amber },
-    ];
-
-    steps.forEach(step => {
-      const y = doc.y;
-      doc.circle(55, y + 6, 10).fill(step.color);
-      doc.fillColor(C.white).fontSize(9).font("Helvetica-Bold").text(step.num, 50, y + 1);
-      doc.fillColor(C.text).fontSize(9.5).font("Helvetica").text(step.text, 75, y, { width: doc.page.width - 120 });
-      doc.moveDown(0.8);
-    });
-
-    doc.moveDown(1);
-    drawSectionTitle(doc, "HELOC Draw Schedule");
-
-    const helocCols = [
-      { label: "Year", x: 40, w: 50 },
-      { label: "Draw Amount", x: 90, w: 90 },
-      { label: "Purpose", x: 180, w: 180 },
-      { label: "Balance", x: 360, w: 80 },
-      { label: "Interest Paid", x: 440, w: 80 },
-    ];
-    drawTableHeader(doc, helocCols);
-
-    for (const h of result.helocSchedule) {
-      drawTableRow(doc, [
-        { value: `${h.year}`, x: 40, w: 50 },
-        { value: h.drawAmount > 0 ? fmt(h.drawAmount) : "—", x: 90, w: 90, color: h.drawAmount > 0 ? C.cyan : C.muted },
-        { value: h.purpose, x: 180, w: 180 },
-        { value: fmt(h.balance), x: 360, w: 80 },
-        { value: fmt(h.interestPaid), x: 440, w: 80, color: C.amber },
-      ], h.drawAmount > 0);
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // PAGE: INTEREST SAVINGS & COMPOUND GROWTH
-    // ═══════════════════════════════════════════════════════════════════════
-    newPage(doc);
-    drawPageHeader(doc, "Interest Savings & Wealth Accumulation", `${fmt(result.interestSavings.totalInterestSaved)} saved → ${fmt(result.interestSavings.compoundedValue20yr)} at 7% over 20 years`);
-
-    drawSectionTitle(doc, "Year-by-Year Interest Savings Compounding at 7%");
-
-    const savCols = [
-      { label: "Year", x: 40, w: 50 },
-      { label: "Interest Saved", x: 90, w: 100 },
-      { label: "Cumulative Saved", x: 190, w: 100 },
-      { label: "Compounded Value (7%)", x: 290, w: 120 },
-    ];
-    drawTableHeader(doc, savCols);
-
-    for (const s of result.interestSavings.yearByYear) {
-      if (doc.y > doc.page.height - 50) {
-        newPage(doc);
-        drawPageHeader(doc, "Interest Savings — Continued", "Compound Growth at 7%");
-        drawTableHeader(doc, savCols);
-      }
-      drawTableRow(doc, [
-        { value: `${s.year}`, x: 40, w: 50 },
-        { value: s.interestSaved > 0 ? fmt(s.interestSaved) : "—", x: 90, w: 100, color: s.interestSaved > 0 ? C.emerald : C.muted },
-        { value: fmt(s.cumulativeSaved), x: 190, w: 100 },
-        { value: fmt(s.compoundedValue), x: 290, w: 120, color: C.blue },
-      ], s.year % 5 === 0);
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // PAGE: EXECUTIVE SUMMARY
-    // ═══════════════════════════════════════════════════════════════════════
-    newPage(doc);
-    drawPageHeader(doc, "Executive Summary", "Side-by-Side Comparison");
-
-    drawSectionTitle(doc, "Current Plan vs. Recommended Plan");
-
-    const comparisonRows = [
-      { label: "Total Interest Paid", current: fmt(result.currentPlan.totalInterest), recommended: fmt(result.recommendedPlan.totalInterest), diff: fmt(result.summary.totalInterestSaved), diffColor: C.emerald },
-      { label: "Total Payments", current: fmt(result.currentPlan.totalPayments), recommended: fmt(result.recommendedPlan.totalPayments), diff: fmt(result.currentPlan.totalPayments - result.recommendedPlan.totalPayments), diffColor: C.emerald },
-      { label: "Payoff Timeline", current: `${Math.ceil(result.currentPlan.payoffMonths / 12)} years`, recommended: `${Math.ceil(result.recommendedPlan.payoffMonths / 12)} years`, diff: `${result.summary.yearsSaved} years saved`, diffColor: C.emerald },
-      { label: "Mortgage-Free Date", current: result.summary.originalPayoffDate, recommended: result.summary.mortgageFreeDate, diff: "Earlier!", diffColor: C.emerald },
-    ];
-
-    const compCols = [
-      { label: "Metric", x: 40, w: 120 },
-      { label: "Current Plan", x: 160, w: 110 },
-      { label: "Recommended Plan", x: 270, w: 110 },
-      { label: "Savings", x: 380, w: 110 },
-    ];
-    drawTableHeader(doc, compCols);
-
-    comparisonRows.forEach(row => {
-      drawTableRow(doc, [
-        { value: row.label, x: 40, w: 120, color: C.muted },
-        { value: row.current, x: 160, w: 110, color: C.red },
-        { value: row.recommended, x: 270, w: 110, color: C.emerald },
-        { value: row.diff, x: 380, w: 110, color: row.diffColor },
-      ]);
-    });
-
-    doc.moveDown(2);
-    drawSectionTitle(doc, "Wealth Created Through This Strategy");
-
-    const wealthItems = [
-      { label: "Interest Saved (Compounded at 7% for 20 years)", value: fmt(result.interestSavings.compoundedValue20yr), color: C.blue },
-      { label: "Final IUL Cash Value", value: fmt(result.summary.finalPolicyCashValue), color: C.purple },
-      { label: "Total Wealth Created", value: fmt(result.summary.totalWealthCreated), color: C.emerald },
-    ];
-
-    wealthItems.forEach(item => {
-      doc.fillColor(C.muted).fontSize(10).font("Helvetica").text(item.label, 50, doc.y, { continued: true, width: 300 });
-      doc.fillColor(item.color).font("Helvetica-Bold").text(`  ${item.value}`, { width: 200 });
-      doc.moveDown(0.4);
-    });
-
-    doc.moveDown(2);
-    drawSectionTitle(doc, "Strategy Costs");
-
-    const costItems = [
-      { label: "Total IUL Premiums Paid", value: fmt(result.summary.totalIulPremiums) },
-      { label: "Total HELOC Interest", value: fmt(result.helocSchedule.reduce((s, h) => s + h.interestPaid, 0)) },
-      { label: "Net Benefit", value: fmt(result.summary.totalWealthCreated - result.summary.totalIulPremiums - result.helocSchedule.reduce((s, h) => s + h.interestPaid, 0)) },
-    ];
-
-    costItems.forEach(item => {
-      doc.fillColor(C.muted).fontSize(10).font("Helvetica").text(item.label, 50, doc.y, { continued: true, width: 300 });
-      doc.fillColor(C.white).font("Helvetica-Bold").text(`  ${item.value}`, { width: 200 });
-      doc.moveDown(0.4);
-    });
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // FINAL PAGE: DISCLAIMERS
-    // ═══════════════════════════════════════════════════════════════════════
-    newPage(doc);
-    drawPageHeader(doc, "Important Disclosures", "Please read carefully");
-
-    const disclaimers = [
-      "The values shown in this report are based on non-guaranteed illustrated rates. Actual policy performance may vary significantly from the projections shown.",
-      "IUL projections assume a 12% annual crediting rate, which represents a non-guaranteed illustrated rate. The actual crediting rate will depend on index performance and policy caps/floors.",
-      "HELOC rates are variable and may change over the life of the loan. The rate used in this analysis may not reflect your actual HELOC terms.",
-      "Policy loans reduce the death benefit and cash value of the policy. Excessive policy loans may cause the policy to lapse.",
-      "This analysis does not account for potential changes in tax law, interest rates, or personal financial circumstances.",
-      "Past performance of any index does not guarantee future results. Index-linked insurance products are not direct investments in any index.",
-      "Consult with a qualified financial advisor, tax professional, and insurance specialist before implementing this strategy.",
-      "This material is for informational purposes only and should not be construed as legal, tax, or financial advice.",
-    ];
-
-    disclaimers.forEach(d => {
-      if (doc.y > doc.page.height - 60) {
-        newPage(doc);
-        drawPageHeader(doc, "Disclosures — Continued", "");
-      }
-      const y = doc.y;
-      doc.fillColor(C.amber).fontSize(7).text("●", 50, y + 1);
-      doc.fillColor(C.text).fontSize(8.5).font("Helvetica").text(d, 65, y, { width: doc.page.width - 110 });
-      doc.moveDown(0.5);
-    });
-
-    addPageNumbers(doc);
-    doc.end();
-  });
-}
+// ============================================================
+// MESSAGES ROUTER — the advisor sends email or text to a client from the
+// website, picks a template or writes freehand, and sees the delivery log.
+// Every send goes through deliver(): opt-outs honoured, outcome recorded,
+// activity logged. Figures never travel by message.
+// ============================================================
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+import { protectedProcedure, router } from "./_core/trpc";
+import { getClientById, getWorkspaceByOwnerId } from "./db";
+import { deliver, MESSAGE_TEMPLATES, messagingStatus, renderTemplate } from "./messaging";
+import { listMessagesForClient } from "./messagingDb";
+import { normalizePhone } from "./_core/sms";
+
+const bodySchema = z.string().min(1).max(4000);
+
+export const messagesRouter = router({
+  status: protectedProcedure.query(() => messagingStatus()),
+
+  templates: protectedProcedure.query(() => MESSAGE_TEMPLATES.map((t) => ({ id: t.id, label: t.label, subject: t.subject }))),
+
+  /** Fill a template for a client so the advisor can edit before sending. */
+  preview: protectedProcedure
+    .input(z.object({ clientId: z.number().int().positive(), channel: z.enum(["email", "sms"]), template: z.string().max(60) }))
+    .query(async ({ ctx, input }) => {
+      const ws = await getWorkspaceByOwnerId(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "NOT_FOUND" });
+      const client = await getClientById(input.clientId, ws.id);
+      if (!client) throw new TRPCError({ code: "NOT_FOUND" });
+      const firstName = client.firstName || client.name.split(" ")[0] || "";
+      const rendered = renderTemplate(input.template, input.channel, { firstName, advisorName: ctx.user.name ?? undefined });
+      if (!rendered) throw new TRPCError({ code: "BAD_REQUEST", message: "Unknown template" });
+      return rendered;
+    }),
+
+  send: protectedProcedure
+    .input(z.object({
+      clientId: z.number().int().positive(),
+      channel: z.enum(["email", "sms"]),
+      subject: z.string().max(300).optional(),
+      body: bodySchema,
+      template: z.string().max(60).optional(),
+      category: z.enum(["transactional", "marketing"]).default("transactional"),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceByOwnerId(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "NOT_FOUND" });
+      const client = await getClientById(input.clientId, ws.id);
+      if (!client) throw new TRPCError({ code: "NOT_FOUND" });
+      const to = input.channel === "email" ? client.email : normalizePhone(client.phone);
+      if (!to) throw new TRPCError({ code: "BAD_REQUEST", message: input.channel === "email" ? "This client has no email address on file." : "This client has no valid mobile number on file." });
+      const r = await deliver({
+        channel: input.channel, to, subject: input.subject, body: input.body, category: input.category, template: input.template,
+        clientId: client.id, workspaceId: ws.id, userId: ctx.user.id, actorName: ctx.user.name ?? "Advisor",
+      });
+      return { sent: r.sent, via: r.via ?? null, reason: r.reason ?? null, suppressed: Boolean(r.suppressed), logId: r.logId };
+    }),
+
+  list: protectedProcedure
+    .input(z.object({ clientId: z.number().int().positive(), limit: z.number().int().min(1).max(200).default(50) }))
+    .query(async ({ ctx, input }) => {
+      const ws = await getWorkspaceByOwnerId(ctx.user.id);
+      if (!ws) return [];
+      return listMessagesForClient(input.clientId, ws.id, input.limit);
+    }),
+});
 ```
 

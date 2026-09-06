@@ -20,18 +20,18 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 
 ## Parts (10)
 
-- `RCS_CODE_BOOK_part01_of_10.md` — 179 files, 1,824,066 bytes
-- `RCS_CODE_BOOK_part02_of_10.md` — 165 files, 1,847,499 bytes
-- `RCS_CODE_BOOK_part03_of_10.md` — 74 files, 1,794,704 bytes
-- `RCS_CODE_BOOK_part04_of_10.md` — 33 files, 1,838,678 bytes
-- `RCS_CODE_BOOK_part05_of_10.md` — 31 files, 1,838,522 bytes
-- `RCS_CODE_BOOK_part06_of_10.md` — 29 files, 1,826,443 bytes
-- `RCS_CODE_BOOK_part07_of_10.md` — 30 files, 1,808,961 bytes
-- `RCS_CODE_BOOK_part08_of_10.md` — 30 files, 1,824,210 bytes
-- `RCS_CODE_BOOK_part09_of_10.md` — 50 files, 1,840,031 bytes
-- `RCS_CODE_BOOK_part10_of_10.md` — 40 files, 417,235 bytes
+- `RCS_CODE_BOOK_part01_of_10.md` — 183 files, 1,846,636 bytes
+- `RCS_CODE_BOOK_part02_of_10.md` — 166 files, 1,843,268 bytes
+- `RCS_CODE_BOOK_part03_of_10.md` — 76 files, 1,785,954 bytes
+- `RCS_CODE_BOOK_part04_of_10.md` — 32 files, 1,814,615 bytes
+- `RCS_CODE_BOOK_part05_of_10.md` — 31 files, 1,814,377 bytes
+- `RCS_CODE_BOOK_part06_of_10.md` — 29 files, 1,787,562 bytes
+- `RCS_CODE_BOOK_part07_of_10.md` — 30 files, 1,833,304 bytes
+- `RCS_CODE_BOOK_part08_of_10.md` — 29 files, 1,783,561 bytes
+- `RCS_CODE_BOOK_part09_of_10.md` — 40 files, 1,797,955 bytes
+- `RCS_CODE_BOOK_part10_of_10.md` — 54 files, 649,661 bytes
 
-**Total: 661 files across 10 parts.**
+**Total: 670 files across 10 parts.**
 
 ## File → part map
 
@@ -53,6 +53,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `scripts/build_database.sh` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/build_deploy_bundle.sh` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/check-concept16-browser.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
+- `scripts/check_mail_dns.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/check_production_bundle.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/export_schema_sql.sh` → `RCS_CODE_BOOK_part01_of_10.md`
 - `scripts/owner_password_hash.mjs` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -175,6 +176,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/_core/cookies.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/dataApi.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/env.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/_core/fred.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/heartbeat.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/imageGeneration.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/index.ts` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -186,6 +188,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/_core/oauth.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/ownerLogin.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/sdk.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/_core/sms.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/storageProxy.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/systemRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/trpc.ts` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -206,6 +209,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/experienceRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/factFinderDb.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/factFinderRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/followups.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/generate1035Pdf.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/heygenService.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/index.ts` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -213,7 +217,10 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/leadsDb.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/leadsRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/librarianRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
-- `server/mortgageKillerPdf.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/messagesRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/messaging.ts` → `RCS_CODE_BOOK_part02_of_10.md`
+- `server/messagingDb.ts` → `RCS_CODE_BOOK_part02_of_10.md`
+- `server/mortgageKillerPdf.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/pdfExportService.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/pdfReport.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/planningCasesRouter.ts` → `RCS_CODE_BOOK_part02_of_10.md`
@@ -277,6 +284,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/components/ManusDialog.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/Map.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/MarketDataWidget.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
+- `client/src/components/MessageClientPanel.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/MonteCarloChart.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/MultiPropertyTab.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/MusicPlayerMiniBar.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
@@ -376,9 +384,9 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/CertificationsPage.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/pages/ClientPortalView.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/pages/CommandPage.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
-- `client/src/pages/CompetePage.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
-- `client/src/pages/ComplianceDisclosure.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
-- `client/src/pages/ComplianceVaultPage.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
+- `client/src/pages/CompetePage.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
+- `client/src/pages/ComplianceDisclosure.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
+- `client/src/pages/ComplianceVaultPage.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
 - `client/src/pages/ComponentShowcase.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
 - `client/src/pages/CryptoCyclePage.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
 - `client/src/pages/DealRoomPage.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
@@ -452,7 +460,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/portal/AvatarTwins.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
 - `client/src/pages/portal/AxonicSP500.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
 - `client/src/pages/portal/BatchIllustration.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
-- `client/src/pages/portal/BatchSlides.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
+- `client/src/pages/portal/BatchSlides.tsx` → `RCS_CODE_BOOK_part04_of_10.md`
 - `client/src/pages/portal/BeneficiaryOptimization.tsx` → `RCS_CODE_BOOK_part04_of_10.md`
 - `client/src/pages/portal/Billing.tsx` → `RCS_CODE_BOOK_part04_of_10.md`
 - `client/src/pages/portal/BlackMirror.tsx` → `RCS_CODE_BOOK_part04_of_10.md`
@@ -484,8 +492,8 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/portal/ComboDetail.tsx` → `RCS_CODE_BOOK_part04_of_10.md`
 - `client/src/pages/portal/ComboRecommender.tsx` → `RCS_CODE_BOOK_part04_of_10.md`
 - `client/src/pages/portal/CommissionCalculator.tsx` → `RCS_CODE_BOOK_part04_of_10.md`
-- `client/src/pages/portal/CommissionTracker.tsx` → `RCS_CODE_BOOK_part04_of_10.md`
-- `client/src/pages/portal/ComparisonDashboard.tsx` → `RCS_CODE_BOOK_part04_of_10.md`
+- `client/src/pages/portal/CommissionTracker.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
+- `client/src/pages/portal/ComparisonDashboard.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
 - `client/src/pages/portal/CompetitiveAnalysis.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
 - `client/src/pages/portal/ComplianceAlerts.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
 - `client/src/pages/portal/ComplianceAuditCenter.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
@@ -515,8 +523,8 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/portal/FeeTransparencyDashboard.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
 - `client/src/pages/portal/FinancialAssessment.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
 - `client/src/pages/portal/FinancialVitalsScorecard.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
-- `client/src/pages/portal/GoalsBasedPlanning.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
-- `client/src/pages/portal/GrowthAnnuities.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
+- `client/src/pages/portal/GoalsBasedPlanning.tsx` → `RCS_CODE_BOOK_part06_of_10.md`
+- `client/src/pages/portal/GrowthAnnuities.tsx` → `RCS_CODE_BOOK_part06_of_10.md`
 - `client/src/pages/portal/HiddenMaterial.tsx` → `RCS_CODE_BOOK_part06_of_10.md`
 - `client/src/pages/portal/HotIncome.tsx` → `RCS_CODE_BOOK_part06_of_10.md`
 - `client/src/pages/portal/HouseRecyclingStrategy.tsx` → `RCS_CODE_BOOK_part06_of_10.md`
@@ -544,8 +552,8 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/portal/LiveCoPilot.tsx` → `RCS_CODE_BOOK_part06_of_10.md`
 - `client/src/pages/portal/MYGAFixedRate.tsx` → `RCS_CODE_BOOK_part06_of_10.md`
 - `client/src/pages/portal/MarketDataDashboard.tsx` → `RCS_CODE_BOOK_part06_of_10.md`
-- `client/src/pages/portal/MarketScenarioStressTest.tsx` → `RCS_CODE_BOOK_part06_of_10.md`
-- `client/src/pages/portal/MedicareIRMAA.tsx` → `RCS_CODE_BOOK_part06_of_10.md`
+- `client/src/pages/portal/MarketScenarioStressTest.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
+- `client/src/pages/portal/MedicareIRMAA.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
 - `client/src/pages/portal/MeetingAgenda.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
 - `client/src/pages/portal/Meetings.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
 - `client/src/pages/portal/MorningRitual.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
@@ -574,8 +582,8 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/portal/PortfolioDriftMonitor.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
 - `client/src/pages/portal/PredictiveAnalytics.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
 - `client/src/pages/portal/PremiumFinancing.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
-- `client/src/pages/portal/PresentationBuilder.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
-- `client/src/pages/portal/QuickQuote.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
+- `client/src/pages/portal/PresentationBuilder.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
+- `client/src/pages/portal/QuickQuote.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
 - `client/src/pages/portal/RealEstateMogul.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
 - `client/src/pages/portal/RebalanceAlerts.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
 - `client/src/pages/portal/Recommendations.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
@@ -603,9 +611,9 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/portal/SmartRebalancingAlerts.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
 - `client/src/pages/portal/SocialNarcotic.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
 - `client/src/pages/portal/SocialSecurityOptimizer.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
-- `client/src/pages/portal/StaleDigest.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
-- `client/src/pages/portal/StrategyCompare.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
-- `client/src/pages/portal/StrategyCompareTool.tsx` → `RCS_CODE_BOOK_part08_of_10.md`
+- `client/src/pages/portal/StaleDigest.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
+- `client/src/pages/portal/StrategyCompare.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
+- `client/src/pages/portal/StrategyCompareTool.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
 - `client/src/pages/portal/StrategyLab.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
 - `client/src/pages/portal/SuccessionPlanningWizard.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
 - `client/src/pages/portal/SupervisorMonitoringAgreement.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
@@ -643,19 +651,19 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/portal/WillWriter.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
 - `client/src/pages/portal/WithdrawalSequencing.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
 - `client/src/pages/portal/WorkflowAutomations.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/pages/portal/WorkspaceBranding.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/pages/portal/_genome/GenomeKit.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/public/__manus__/debug-collector.js` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/const.ts` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/context/StrategyContext.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/contexts/AIBrainContext.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/contexts/AccessContext.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/contexts/ClientDataContext.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/contexts/DisclaimerContext.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/contexts/EntrainmentEngine.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/contexts/StrategyContext.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/contexts/ThemeContext.tsx` → `RCS_CODE_BOOK_part09_of_10.md`
-- `client/src/data/intakeInterviewQuestions.ts` → `RCS_CODE_BOOK_part09_of_10.md`
+- `client/src/pages/portal/WorkspaceBranding.tsx` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/pages/portal/_genome/GenomeKit.tsx` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/public/__manus__/debug-collector.js` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/const.ts` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/context/StrategyContext.tsx` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/contexts/AIBrainContext.tsx` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/contexts/AccessContext.tsx` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/contexts/ClientDataContext.tsx` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/contexts/DisclaimerContext.tsx` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/contexts/EntrainmentEngine.tsx` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/contexts/StrategyContext.tsx` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/contexts/ThemeContext.tsx` → `RCS_CODE_BOOK_part10_of_10.md`
+- `client/src/data/intakeInterviewQuestions.ts` → `RCS_CODE_BOOK_part10_of_10.md`
 - `client/src/data/onboardingQuestions.ts` → `RCS_CODE_BOOK_part10_of_10.md`
 - `client/src/data/pageAuditSummary.ts` → `RCS_CODE_BOOK_part10_of_10.md`
 - `client/src/data/riskToleranceQuestions.ts` → `RCS_CODE_BOOK_part10_of_10.md`
@@ -681,6 +689,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `docs/grok-handoff/01_FINANCIAL_LIBRARIAN_SPEC.md` → `RCS_CODE_BOOK_part10_of_10.md`
 - `docs/grok-handoff/02_ASSESSMENT_AND_JOURNEY_DATA.md` → `RCS_CODE_BOOK_part10_of_10.md`
 - `docs/grok-handoff/03_BUILD_STATUS_AND_NEXT.md` → `RCS_CODE_BOOK_part10_of_10.md`
+- `docs/grok-handoff/04_AI_PLATFORM_ROSTER_AND_AUTOMATION.md` → `RCS_CODE_BOOK_part10_of_10.md`
 - `docs/grok-merge-verification.md` → `RCS_CODE_BOOK_part10_of_10.md`
 - `docs/homepage-hero-asset-review.md` → `RCS_CODE_BOOK_part10_of_10.md`
 - `docs/homepage-typography-validation.md` → `RCS_CODE_BOOK_part10_of_10.md`

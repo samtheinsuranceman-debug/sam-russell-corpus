@@ -6,6 +6,9 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { registerOwnerLoginRoutes } from "./ownerLogin";
 import { registerStorageProxy } from "./storageProxy";
+import { registerMailRoutes } from "./mailer";
+import { registerSmsRoutes } from "./sms";
+import { registerScheduledRoutes, startFollowupScheduler } from "../followups";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -46,6 +49,10 @@ async function startServer() {
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   registerOwnerLoginRoutes(app);
+  // Unsubscribe link, inbound SMS (STOP/START/HELP), external-cron follow-ups
+  registerMailRoutes(app);
+  registerSmsRoutes(app);
+  registerScheduledRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",
@@ -70,6 +77,8 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+    // Lead follow-up automation ticks every minute (FOLLOWUPS_DISABLED=1 turns it off).
+    startFollowupScheduler();
   });
 }
 

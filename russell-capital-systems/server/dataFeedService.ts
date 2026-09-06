@@ -1,4 +1,5 @@
 import { callDataApi } from "./_core/dataApi";
+import { fredConfigured, getBenchmarks, getCpiFromFred, type Benchmark } from "./_core/fred";
 
 export interface DataFeedEntry {
   name: string;
@@ -43,6 +44,8 @@ export interface DataFeedSnapshot {
   treasuryRates: TreasuryData[];
   commodities: CommodityData[];
   mygaRates: MYGARateData[];
+  /** FRED benchmarks (mortgage rate, Fed funds, Treasury curve) — present when FRED_API_KEY is set or last-good values exist. */
+  benchmarks: Benchmark[];
   fetchedAt: string;
   overallSource: "live" | "cached" | "static";
 }
@@ -114,6 +117,11 @@ const STATIC_COMMODITIES: CommodityData[] = [
 ];
 
 async function fetchLiveCPI(): Promise<CPIData | null> {
+  // FRED first when a key is set — it works on any host and dates every value.
+  if (fredConfigured()) {
+    const f = await getCpiFromFred();
+    if (f) return { name: "Consumer Price Index", value: f.index, unit: "index", annualRate: f.annualRate, monthlyRate: f.monthlyRate, coreRate: f.coreAnnualRate ?? f.annualRate, asOf: f.asOf, source: "live", lastUpdated: new Date().toISOString() };
+  }
   try {
     const result = await callDataApi("EconomicIndicators/cpi", {}) as { data?: Record<string, unknown> };
     const d = result?.data;
@@ -135,7 +143,24 @@ async function fetchLiveCPI(): Promise<CPIData | null> {
   }
 }
 
+const TREASURY_FROM_FRED: Array<{ series: "DGS3MO" | "DGS2" | "DGS5" | "DGS10" | "DGS30"; term: string; name: string }> = [
+  { series: "DGS3MO", term: "3m", name: "3-Month Treasury" },
+  { series: "DGS2", term: "2y", name: "2-Year Treasury" },
+  { series: "DGS5", term: "5y", name: "5-Year Treasury" },
+  { series: "DGS10", term: "10y", name: "10-Year Treasury" },
+  { series: "DGS30", term: "30y", name: "30-Year Treasury" },
+];
+
 async function fetchLiveTreasury(): Promise<TreasuryData[] | null> {
+  if (fredConfigured()) {
+    const bench = await getBenchmarks(TREASURY_FROM_FRED.map((t) => t.series));
+    const rows = TREASURY_FROM_FRED.flatMap((t) => {
+      const b = bench.find((x) => x.series === t.series);
+      if (!b || b.source === "unavailable") return [];
+      return [{ name: t.name, value: b.value, unit: "%", term: t.term, yield: b.value, asOf: b.asOf, source: "live" as const, lastUpdated: b.fetchedAt }];
+    });
+    if (rows.length === TREASURY_FROM_FRED.length) return rows;
+  }
   try {
     const result = await callDataApi("TreasuryRates/yields", {}) as { data?: unknown[] };
     if (!Array.isArray(result?.data)) return null;
@@ -208,13 +233,19 @@ export async function getMYGARates(state?: string): Promise<MYGARateData[]> {
   return [];
 }
 
+/** Mortgage + Fed funds benchmarks (the calculators' reference rates). Empty when nothing real is available. */
+export async function getRateBenchmarks(): Promise<Benchmark[]> {
+  const rows = await getBenchmarks(["MORTGAGE30US", "FEDFUNDS", "DGS10"]);
+  return rows.filter((b) => b.source !== "unavailable");
+}
+
 export async function getDataFeedSnapshot(state?: string): Promise<DataFeedSnapshot> {
-  const [cpi, treasuryRates, commodities, mygaRates] = await Promise.all([
-    getCPIData(), getTreasuryRates(), getCommodityPrices(), getMYGARates(state),
+  const [cpi, treasuryRates, commodities, mygaRates, benchmarks] = await Promise.all([
+    getCPIData(), getTreasuryRates(), getCommodityPrices(), getMYGARates(state), getRateBenchmarks().catch(() => [] as Benchmark[]),
   ]);
   const sources = [cpi.source, ...treasuryRates.map((row) => row.source), ...commodities.map((row) => row.source)];
   const overallSource = sources.every((source) => source === "live") ? "live" : sources.some((source) => source === "live" || source === "cached") ? "cached" : "static";
-  return { cpi, treasuryRates, commodities, mygaRates, fetchedAt: new Date().toISOString(), overallSource };
+  return { cpi, treasuryRates, commodities, mygaRates, benchmarks, fetchedAt: new Date().toISOString(), overallSource };
 }
 
 export function invalidateAllFeeds() {

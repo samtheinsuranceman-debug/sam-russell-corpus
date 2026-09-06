@@ -66,8 +66,18 @@ inside the portal they match. `WealthGenomePage` is now driven by the
 assessment (`shared/wealthGenome.ts`), with reasons and "what would raise it"
 per dimension.
 
+## Added since: the automation layer (see `04_AI_PLATFORM_ROSTER_AND_AUTOMATION.md`)
+
+Lead follow-up sequence (email + SMS, consent-based, figure-free, stops on
+human contact), messaging from the client page and lead inbox with a delivery
+log, one-click unsubscribe + STOP handling, `pnpm mail:check` for real DNS
+deliverability, and FRED benchmark rates cached in the database.
+
 ## Next steps, in order
 
+0. **Financial gathering from live sources** — aggregator import (Era Context /
+   PocketSmith), document extraction, benchmark-fed calculator defaults, and
+   cross-field validation; the plan is in doc 04 §6.
 1. **Advisor view of a client's assessment and journey.** In the client
    directory, show the client's completeness, the Financial Analysis Document,
    and their latest journey; let the advisor ask the librarian *about* a client
