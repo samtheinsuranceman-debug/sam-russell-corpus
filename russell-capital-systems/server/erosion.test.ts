@@ -215,3 +215,52 @@ describe("keyless FRED and the harvest guards", () => {
     expect(none.harvested).toBe(false);
   });
 });
+
+describe("scoring the panel against published outcomes, consistency, PDF reading", () => {
+  it("pairs closed-year claims with the outcome series and leaves open years alone", async () => {
+    const { matchActuals, ACTUAL_SERIES, consistencyFor } = await import("./forecastSources");
+    const claim = (id: number, sourceId: string, metric: string, horizonYear: number, value: number, asOf: string, actualValue: number | null = null) => ({ id, sourceId, metric, horizonYear, value, unit: "% GDP", baseValue: null, direction: 1 as const, burdenMultiplier: null, asOf, citation: "t", note: null, actualValue, actualAsOf: null });
+    const asked: string[] = [];
+    const fetchSeries = async (series: string, start: string) => {
+      asked.push(`${series}@${start}`);
+      if (series === ACTUAL_SERIES.revenue_pct_gdp!.series) return [{ date: "2023-01-01", value: 16.2 }, { date: "2024-01-01", value: 17.1 }];
+      if (series === ACTUAL_SERIES.deficit_pct_gdp!.series) return [{ date: "2024-01-01", value: -6.4 }];
+      if (series === ACTUAL_SERIES.debt_pct_gdp!.series) return [{ date: "2024-01-01", value: 96 }, { date: "2024-04-01", value: 97 }, { date: "2024-10-01", value: 98.5 }];
+      throw new Error("no such series");
+    };
+    const { matched, skipped } = await matchActuals([
+      claim(1, "cbo", "revenue_pct_gdp", 2024, 17.4, "2020-01-01"),
+      claim(2, "cbo", "deficit_pct_gdp", 2024, 5.9, "2020-01-01"),
+      claim(3, "gao", "debt_pct_gdp", 2024, 99, "2020-01-01"),
+      claim(4, "cbo", "revenue_pct_gdp", 2035, 18.3, "2025-03-27"),          // not closed
+      claim(5, "cbo", "ss_oasi_depletion_year", 2024, 2033, "2020-01-01"),  // no outcome series
+      claim(6, "cbo", "revenue_pct_gdp", 2023, 16.0, "2019-01-01", 16.2),    // already scored
+      claim(7, "cbo", "net_interest_pct_gdp", 2024, 3.0, "2020-01-01"),     // series fails → skipped, not guessed
+    ], fetchSeries, new Date("2026-09-06"));
+    expect(matched.map((m) => [m.claimId, m.actualValue, m.actualAsOf])).toEqual([[1, 17.1, "2024-01-01"], [2, 6.4, "2024-01-01"], [3, 98.5, "2024-10-01"]]);
+    expect(skipped.map((s) => s.claimId)).toEqual([4, 5, 7]);
+    expect(asked.filter((a) => a.startsWith(ACTUAL_SERIES.revenue_pct_gdp!.series)).length).toBe(1); // one fetch per series
+    // consistency: the same projection published twice, 18.3 then 19.1, is a 4.3 % swing → 0.854; a single publication grades nothing
+    const c = consistencyFor("cbo", [claim(10, "cbo", "revenue_pct_gdp", 2035, 18.3, "2025-03-27"), claim(11, "cbo", "revenue_pct_gdp", 2035, 19.1, "2026-03-27"), claim(12, "cbo", "debt_pct_gdp", 2055, 156, "2025-03-27")]);
+    expect(c).toEqual({ consistency: 0.854, groups: 1 });
+    expect(consistencyFor("pwbm", [claim(12, "pwbm", "debt_pct_gdp", 2055, 156, "2025-03-27")])).toBeNull();
+    expect(consistencyFor("cbo", [claim(10, "cbo", "revenue_pct_gdp", 2035, 18.3, "2025-03-27"), claim(11, "cbo", "revenue_pct_gdp", 2035, 18.3, "2026-03-27")])).toEqual({ consistency: 1, groups: 1 });
+  });
+
+  it("reads a PDF source through the extractor and an HTML source through the tag stripper", async () => {
+    const { fetchSourceText, _setFetchForTests, _setPdfExtractorForTests } = await import("./forecastSources");
+    const PDFDocument = (await import("pdfkit")).default;
+    const pdfBytes = await new Promise<Buffer>((resolve) => { const doc = new PDFDocument(); const chunks: Buffer[] = []; doc.on("data", (c: Buffer) => chunks.push(c)); doc.on("end", () => resolve(Buffer.concat(chunks))); doc.text("Revenues total 19.3 percent of GDP in 2055."); doc.end(); });
+    _setFetchForTests((async (url: string) => {
+      const pdf = String(url).endsWith(".pdf");
+      return { ok: true, status: 200, headers: new Headers({ "content-type": pdf ? "application/pdf" : "text/html" }), text: async () => "<html><style>p{}</style><body><p>Debt   reaches <b>156</b> percent.</p><script>x()</script></body></html>", arrayBuffer: async () => pdfBytes.buffer.slice(pdfBytes.byteOffset, pdfBytes.byteOffset + pdfBytes.byteLength) } as unknown as Response;
+    }) as unknown as typeof fetch);
+    try {
+      expect(await fetchSourceText({ id: "x", url: "https://example.test/page" })).toBe("Debt reaches 156 percent.");
+      const fromPdf = await fetchSourceText({ id: "x", url: "https://example.test/report.pdf" });
+      expect(fromPdf).toContain("19.3 percent of GDP in 2055");
+      _setPdfExtractorForTests(async () => "stubbed   pdf text");
+      expect(await fetchSourceText({ id: "x", url: "https://example.test/report.pdf" })).toBe("stubbed pdf text");
+    } finally { _setFetchForTests(null); _setPdfExtractorForTests(null); }
+  });
+});

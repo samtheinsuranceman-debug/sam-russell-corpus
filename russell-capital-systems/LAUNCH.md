@@ -193,7 +193,9 @@ answers, dated reference values are shown and labelled as such.
 With any AI key set, the owner can have the council read each forecaster's
 page from the Purchasing Power page ("Harvest"); figures arrive with their
 verbatim sentence and wait for approval. `EROSION_HARVEST_DAYS=7` runs that
-sweep weekly on its own. Nothing enters the panel without the owner.
+sweep weekly on its own, then scores every closed-year claim against the
+published outcome on FRED and regrades each source. Nothing enters the panel
+without the owner. Harvests read PDFs as well as pages.
 
 ### Connections (every outside platform, switched on by variables)
 The portal page **Connections** (`/portal/connections`) shows every platform the

@@ -21,6 +21,7 @@ import { forecastClaims, forecastHarvests, forecastSources, type ForecastClaimRo
 import { jsonColumn } from "./_core/jsonColumn";
 import type { Direction, WeightedClaim } from "@shared/erosion";
 import { configuredProviders, leadModel } from "./ultraAI";
+import { fetchFredObservationsSince, type Observation } from "./_core/fred";
 
 export type SourceDef = {
   id: string; name: string; org: string; url: string; horizonYears: number;
@@ -156,12 +157,19 @@ type Fetcher = typeof fetch;
 let _fetch: Fetcher = (...a) => fetch(...a);
 export function _setFetchForTests(f: Fetcher | null) { _fetch = f ?? ((...a) => fetch(...a)); }
 
-/** Pull the source's page as plain text (first ~12k chars) — the evidence the council reads. */
-export async function fetchSourceText(source: SourceDef): Promise<string> {
-  const res = await _fetch(source.url, { headers: { accept: "text/html,application/xhtml+xml" }, signal: AbortSignal.timeout(15_000) });
+type PdfExtractor = (bytes: Uint8Array) => Promise<string>;
+const defaultPdf: PdfExtractor = async (bytes) => { const { extractText } = await import("unpdf"); const r = await extractText(bytes, { mergePages: true }); return Array.isArray(r.text) ? r.text.join(" ") : String(r.text); };
+let _pdf: PdfExtractor = defaultPdf;
+export function _setPdfExtractorForTests(f: PdfExtractor | null) { _pdf = f ?? defaultPdf; }
+
+/** Pull the source's page — HTML or PDF — as plain text: the evidence the council reads and the text every quote is checked against. */
+export async function fetchSourceText(source: Pick<SourceDef, "id" | "url">, maxChars = 40_000): Promise<string> {
+  const res = await _fetch(source.url, { headers: { accept: "text/html,application/xhtml+xml,application/pdf" }, signal: AbortSignal.timeout(20_000) });
   if (!res.ok) throw new Error(`${source.id} → HTTP ${res.status}`);
-  const html = await res.text();
-  return html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 12_000);
+  const type = (res.headers?.get?.("content-type") ?? "").toLowerCase();
+  const isPdf = type.includes("application/pdf") || /\.pdf($|[?#])/i.test(source.url);
+  const raw = isPdf ? await _pdf(new Uint8Array(await res.arrayBuffer())) : (await res.text()).replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ");
+  return raw.replace(/\s+/g, " ").trim().slice(0, maxChars);
 }
 
 export const COUNCIL_SYSTEM = "You grade the evidence quality of a public fiscal or tax forecaster for a financial-planning platform. Judge only methodology transparency, data quality, independence, and horizon discipline. Reply with JSON only: {\"evidence\": 0..1, \"rationale\": \"two sentences\"}. Never invent figures.";
@@ -263,7 +271,7 @@ export async function harvestSource(source: SourceDef, opts: { url?: string; tex
   if (text == null) { try { text = await fetchSourceText({ ...source, url }); } catch (e) { return { harvested: false, reason: `Could not read ${url}: ${String(e).slice(0, 120)}` }; } }
   if (!text || text.length < 200) return { harvested: false, reason: `Nothing readable at ${url}` };
   const ask = opts.ask ?? defaultAsk;
-  const user = `Source: ${source.name} (${source.org}), ${url}\nPublishes: ${source.publishes}\n\nText of the page:\n${text.slice(0, 11_000)}\n\nExtract every long-horizon projection in the text.`;
+  const user = `Source: ${source.name} (${source.org}), ${url}\nPublishes: ${source.publishes}\n\nText of the page:\n${text.slice(0, 14_000)}\n\nExtract every long-horizon projection in the text.`;
   const replies = await Promise.all(voices.map(async (v) => { try { return { label: v.label, cands: parseHarvestReply(await ask(v, HARVEST_SYSTEM, user)) }; } catch { return { label: v.label, cands: [] as HarvestCandidate[] }; } }));
   const reported = replies.reduce((s, r) => s + r.cands.length, 0);
   // Verify, read, and corroborate across voices (same metric + year, values within 1%).
@@ -316,6 +324,7 @@ export async function reviewHarvest(id: number, approve: boolean): Promise<Harve
     } catch (e) { if (!String((e as { code?: string })?.code ?? e).includes("ER_DUP_ENTRY")) throw e; }
   }
   await db.update(forecastHarvests).set({ status: approve ? "approved" : "rejected", claimId, reviewedAt: new Date() }).where(eq(forecastHarvests.id, id));
+  if (approve) { const c = consistencyFor(row.sourceId, await listClaims()); if (c) await updateSource(row.sourceId, { consistency: c.consistency }); }
   const [after] = await db.select().from(forecastHarvests).where(eq(forecastHarvests.id, id)).limit(1);
   return after ? harvestView(after) : null;
 }
@@ -333,9 +342,89 @@ let sweepTimer: NodeJS.Timeout | null = null;
 export function startHarvestSchedule(env: NodeJS.ProcessEnv = process.env): boolean {
   const days = Number(env.EROSION_HARVEST_DAYS ?? 0);
   if (!Number.isFinite(days) || days <= 0 || sweepTimer) return false;
-  const run = () => harvestAll().then((r) => console.log("[erosion] harvest sweep:", r.map((x) => `${x.sourceId}:${x.harvested ? `${x.stored} stored` : "skipped"}`).join(" "))).catch((e) => console.warn("[erosion] harvest sweep failed", String(e).slice(0, 160)));
+  const run = () => harvestAll().then((r) => console.log("[erosion] harvest sweep:", r.map((x) => `${x.sourceId}:${x.harvested ? `${x.stored} stored` : "skipped"}`).join(" "))).then(() => scorePanel()).then((sc) => console.log("[erosion] scored", sc.scored.length, "claims; consistency regraded for", Object.keys(sc.consistency).length, "sources")).catch((e) => console.warn("[erosion] sweep failed", String(e).slice(0, 160)));
   setTimeout(run, 60_000).unref?.();
   sweepTimer = setInterval(run, days * 86_400_000);
   sweepTimer.unref?.();
   return true;
+}
+
+// ─── Scoring: what actually happened, from the published record ─────────────
+// Each metric the panel forecasts maps to the series that records the outcome
+// (OMB/Treasury figures as published on FRED, fiscal-year basis). Once a
+// claim's year has closed and the figure is published, the actual is recorded
+// against the claim and the source's track record recomputes. Nothing is
+// typed in; a series that does not answer leaves the claim unscored.
+export const ACTUAL_SERIES: Record<string, { series: string; label: string; sign?: 1 | -1; frequency: "annual" | "quarterly" }> = {
+  revenue_pct_gdp:      { series: "FYFRGDA188S", label: "Federal receipts as percent of GDP (OMB, fiscal year)", frequency: "annual" },
+  outlays_pct_gdp:      { series: "FYONGDA188S", label: "Federal net outlays as percent of GDP (OMB, fiscal year)", frequency: "annual" },
+  deficit_pct_gdp:      { series: "FYFSGDA188S", label: "Federal surplus or deficit as percent of GDP (OMB, fiscal year; sign flipped so a deficit is positive)", sign: -1, frequency: "annual" },
+  net_interest_pct_gdp: { series: "FYOIGDA188S", label: "Federal outlays: interest as percent of GDP (OMB, fiscal year)", frequency: "annual" },
+  debt_pct_gdp:         { series: "FYGFGDQ188S", label: "Federal debt held by the public as percent of GDP (Treasury/OMB, quarterly; last quarter of the year)", frequency: "quarterly" },
+};
+
+export type SeriesFetcher = (seriesId: string, start: string) => Promise<Observation[]>;
+export type ActualMatch = { claimId: number; sourceId: string; metric: string; horizonYear: number; claimed: number | null; actualValue: number; actualAsOf: string; series: string };
+
+/** Pure: pair every unscored, closed-year claim with the published outcome for its year. */
+export async function matchActuals(claims: ClaimView[], fetchSeries: SeriesFetcher, today = new Date()): Promise<{ matched: ActualMatch[]; skipped: Array<{ claimId: number; reason: string }> }> {
+  // A fiscal year's figures are published the following autumn; score only years fully behind us.
+  const lastClosed = today.getFullYear() - 1;
+  const matched: ActualMatch[] = [], skipped: Array<{ claimId: number; reason: string }> = [];
+  const cache = new Map<string, Observation[] | null>();
+  for (const c of claims) {
+    if (c.actualValue != null) continue;
+    const def = ACTUAL_SERIES[c.metric];
+    if (!def) { skipped.push({ claimId: c.id, reason: `no outcome series for ${c.metric}` }); continue; }
+    if (c.horizonYear > lastClosed) { skipped.push({ claimId: c.id, reason: `${c.horizonYear} has not closed` }); continue; }
+    if (!cache.has(def.series)) { try { cache.set(def.series, await fetchSeries(def.series, `${c.horizonYear - 1}-01-01`)); } catch { cache.set(def.series, null); } }
+    const obs = cache.get(def.series);
+    if (!obs) { skipped.push({ claimId: c.id, reason: `${def.series} unavailable` }); continue; }
+    const inYear = obs.filter((o) => o.date.startsWith(`${c.horizonYear}-`));
+    const pick = inYear.length ? inYear[inYear.length - 1]! : null;
+    if (!pick) { skipped.push({ claimId: c.id, reason: `${def.series} has no ${c.horizonYear} observation yet` }); continue; }
+    matched.push({ claimId: c.id, sourceId: c.sourceId, metric: c.metric, horizonYear: c.horizonYear, claimed: c.value, actualValue: Math.round(pick.value * (def.sign ?? 1) * 10_000) / 10_000, actualAsOf: pick.date, series: def.series });
+  }
+  return { matched, skipped };
+}
+
+/**
+ * Pure: how stable a source's successive projections are. For every metric +
+ * year it has published more than once (different as-of dates), the relative
+ * spread (max − min) ÷ mean; consistency = 1 ÷ (1 + 4 × mean spread), so no
+ * movement scores 1, a 12.5 % swing 0.67, a 25 % swing 0.5. Null when the
+ * source has never repeated a projection.
+ */
+export function consistencyFor(sourceId: string, claims: ClaimView[]): { consistency: number; groups: number } | null {
+  const groups = new Map<string, Map<string, number>>();
+  for (const c of claims) {
+    if (c.sourceId !== sourceId || c.value == null) continue;
+    const k = `${c.metric}:${c.horizonYear}`;
+    if (!groups.has(k)) groups.set(k, new Map());
+    groups.get(k)!.set(c.asOf, c.value);
+  }
+  const spreads: number[] = [];
+  for (const g of Array.from(groups.values())) {
+    if (g.size < 2) continue;
+    const vals: number[] = Array.from(g.values());
+    const mean = vals.reduce((s, v) => s + Math.abs(v), 0) / vals.length;
+    if (mean <= 0) continue;
+    spreads.push((Math.max(...vals) - Math.min(...vals)) / mean);
+  }
+  if (!spreads.length) return null;
+  const spread = spreads.reduce((s, v) => s + v, 0) / spreads.length;
+  return { consistency: Math.round((1 / (1 + 4 * spread)) * 1000) / 1000, groups: spreads.length };
+}
+
+/** Score every claim whose year has closed, then regrade every source's consistency. Keyless (FRED CSV). */
+export async function scorePanel(opts: { fetchSeries?: SeriesFetcher; today?: Date } = {}): Promise<{ scored: ActualMatch[]; skipped: number; trackRecords: Record<string, number>; consistency: Record<string, number> }> {
+  const fetchSeries = opts.fetchSeries ?? ((id, start) => fetchFredObservationsSince(id, start));
+  const claims = await listClaims();
+  const { matched, skipped } = await matchActuals(claims, fetchSeries, opts.today);
+  const trackRecords: Record<string, number> = {};
+  for (const m of matched) { const r = await recordActual(m.claimId, m.actualValue, m.actualAsOf); if (r) trackRecords[r.sourceId] = r.trackRecord; }
+  const consistency: Record<string, number> = {};
+  const fresh = matched.length ? await listClaims() : claims;
+  for (const s of SOURCES) { const c = consistencyFor(s.id, fresh); if (c) { consistency[s.id] = c.consistency; await updateSource(s.id, { consistency: c.consistency }); } }
+  return { scored: matched, skipped: skipped.length, trackRecords, consistency };
 }

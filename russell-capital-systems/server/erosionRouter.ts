@@ -14,7 +14,7 @@ import { ESTATE_EXCLUSION, MAX_LTCG_RATE, TAX_HISTORY_SOURCES, TOP_CORPORATE_RAT
 import { filingKeyFromLabel } from "@shared/taxRules";
 import { CATEGORIES, inflationLadder } from "./inflation";
 import { fredMode } from "./_core/fred";
-import { SOURCES, addClaim, councilReview, fetchSourceText, harvestAll, harvestSource, listClaims, listHarvests, listSources, recordActual, reviewHarvest, updateSource, weightedClaims } from "./forecastSources";
+import { ACTUAL_SERIES, SOURCES, addClaim, councilReview, fetchSourceText, harvestAll, harvestSource, listClaims, listHarvests, listSources, recordActual, reviewHarvest, scorePanel, updateSource, weightedClaims } from "./forecastSources";
 
 const isOwner = (ctx: { user: { openId: string; role: string } }) => ctx.user.openId === ENV.ownerOpenId || ctx.user.role === "admin";
 
@@ -91,6 +91,12 @@ export const erosionRouter = router({
     const r = await reviewHarvest(input.id, input.approve);
     if (!r) throw new TRPCError({ code: "NOT_FOUND" });
     return r;
+  }),
+
+  /** Record published outcomes against every closed-year claim and regrade consistency. Owner only; keyless. */
+  scorePanel: protectedProcedure.mutation(async ({ ctx }) => {
+    if (!isOwner(ctx)) throw new TRPCError({ code: "FORBIDDEN" });
+    return { ...(await scorePanel()), outcomeSeries: Object.entries(ACTUAL_SERIES).map(([metric, d]) => ({ metric, series: d.series, label: d.label })) };
   }),
 
   inflation: protectedProcedure.query(async () => ({ configured: true, mode: fredMode(), ladderYears: LADDER_YEARS, categories: await inflationLadder() })),
