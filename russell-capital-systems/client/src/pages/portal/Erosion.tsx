@@ -42,6 +42,7 @@ export default function Erosion() {
   const isOwner = harvests.isSuccess;
   const harvest = trpc.erosion.harvestSource.useMutation({ onSuccess: (r) => { toast[r.harvested ? "success" : "warning"](r.harvested ? `${r.voices.join(", ")} read ${r.pageChars.toLocaleString()} characters: ${r.reported} reported, ${r.verified} quote-verified, ${r.stored} queued${r.duplicates ? `, ${r.duplicates} already queued` : ""}` : r.reason); utils.erosion.harvests.invalidate(); }, onError: (e) => toast.error(e.message) });
   const harvestEverything = trpc.erosion.harvestAll.useMutation({ onSuccess: (rs) => { const stored = rs.reduce((s, r) => s + (r.harvested ? r.stored : 0), 0); toast.success(`${rs.length} sources read, ${stored} figures queued for review`); utils.erosion.harvests.invalidate(); }, onError: (e) => toast.error(e.message) });
+  const score = trpc.erosion.scorePanel.useMutation({ onSuccess: (r) => { toast.success(`${r.scored.length} claims scored against published outcomes (${r.skipped} not yet closed or without a series); consistency regraded for ${Object.keys(r.consistency).length} sources`); utils.erosion.panel.invalidate(); utils.erosion.trajectory.invalidate(); }, onError: (e) => toast.error(e.message) });
   const decide = trpc.erosion.reviewHarvest.useMutation({ onSuccess: (r) => { toast.success(r.status === "approved" ? "Added to the panel" : "Rejected"); utils.erosion.harvests.invalidate(); utils.erosion.panel.invalidate(); utils.erosion.trajectory.invalidate(); }, onError: (e) => toast.error(e.message) });
   const review = trpc.erosion.reviewSource.useMutation({ onSuccess: (r) => { toast[r.reviewed ? "success" : "warning"](r.reviewed ? `Council graded evidence ${r.evidence} (${r.voices.join(", ")})` : r.reason); utils.erosion.panel.invalidate(); utils.erosion.trajectory.invalidate(); }, onError: (e) => toast.error(e.message) });
   const basket = Object.entries(weights).map(([categoryId, weight]) => ({ categoryId, weight }));
@@ -85,7 +86,7 @@ export default function Erosion() {
         {/* Panel */}
         <div className={`${CARD} p-5`} aria-label="Forecaster panel">
           <p className="text-sm font-semibold text-white"><BookOpen size={14} className="mr-1 inline text-amber-300" /> The forecaster panel</p>
-          <p className="mt-1 text-xs text-slate-400">Weight = evidence × track record × consistency. Track record accrues as each claim's actual outcome is recorded. "Ask the council" has every configured AI voice grade a source's evidence and reconciles them.</p>
+          <p className="mt-1 text-xs text-slate-400">Weight = evidence × track record × consistency. Track record accrues as each claim's published outcome is recorded ("Score the panel" does this from OMB and Treasury figures on FRED once a year has closed); consistency is graded from how much a source's own successive projections move. "Ask the council" has every configured AI voice grade a source's evidence and reconciles them.</p>
           <ul className="mt-2 divide-y divide-white/5">
             {(panel.data?.sources ?? []).map((s) => (
               <li key={s.id} className="flex flex-wrap items-center justify-between gap-2 py-2 text-xs">
@@ -105,7 +106,10 @@ export default function Erosion() {
             <div className="mt-3 rounded-xl border border-white/10 p-3" aria-label="Harvested figures awaiting review">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-xs font-semibold text-white">Harvested figures awaiting your review · {harvests.data?.length ?? 0}</p>
-                <button type="button" className={BTN} disabled={harvestEverything.isPending} onClick={() => harvestEverything.mutate()}>{harvestEverything.isPending ? "Reading every source…" : "Harvest every source"}</button>
+                <div className="flex gap-2">
+                  <button type="button" className={BTN} disabled={score.isPending} onClick={() => score.mutate()} title="Records the published outcome (OMB/Treasury figures on FRED) against every claim whose year has closed, recomputes track records, and regrades each source's consistency from its own successive projections">{score.isPending ? "Scoring…" : "Score the panel"}</button>
+                  <button type="button" className={BTN} disabled={harvestEverything.isPending} onClick={() => harvestEverything.mutate()}>{harvestEverything.isPending ? "Reading every source…" : "Harvest every source"}</button>
+                </div>
               </div>
               <p className="mt-1 text-[11px] text-slate-500">Each figure was read off the source's own page by the AI voices named, and its sentence was checked against the fetched text before it could appear here. Direction and burden multiplier are the platform's fixed reading of the metric, never the AI's. Approving adds it to the panel with the quote as its note.</p>
               {harvests.data?.length ? (
