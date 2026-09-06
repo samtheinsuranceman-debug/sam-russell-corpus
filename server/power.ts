@@ -394,7 +394,9 @@ export function startPulseSchedule(env: NodeJS.ProcessEnv = process.env): boolea
   const days = env.POWER_PULSE_DAYS === undefined ? 7 : Number(env.POWER_PULSE_DAYS);
   if (!Number.isFinite(days) || days <= 0 || pulseTimer) return false;
   const run = () => powerSweep().then((r) => console.log("[power] pulse:", JSON.stringify(r))).catch((e) => console.warn("[power] pulse failed", String(e).slice(0, 160)));
-  setTimeout(async () => { try { const latest = await latestReadings(); const fresh = Object.values(latest).some((x) => x.asOf === today()); if (!fresh) await run(); } catch { await run(); } }, 30_000).unref?.();
+  // At boot: read again unless every lever already has a reading from today (a new feed or market added since the last pulse gets read at once).
+  const LEVER_KEYS = ["senate.dem_seats", "house.dem_seats", "judiciary.dem_share_all", "governors.dem_share", "president.p_dem_next", "senate.p_dem_next", "house.p_dem_next"];
+  setTimeout(async () => { try { const latest = await latestReadings(); const fresh = LEVER_KEYS.every((k) => latest[k]?.asOf === today()); if (!fresh) await run(); } catch { await run(); } }, 30_000).unref?.();
   pulseTimer = setInterval(run, days * 86_400_000);
   pulseTimer.unref?.();
   return true;
