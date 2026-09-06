@@ -123,6 +123,21 @@ describe("journey composition", () => {
     expect([...builds].sort((a, b) => a - b)).toEqual(builds);
     expect(j.steps[1]!.why).toContain("Builds on");
   });
+  it("walks the client through every step and names the variables they control", () => {
+    for (const s of j.steps) {
+      expect(s.guide.length).toBeGreaterThan(40);
+      expect(s.guide).toMatch(/Carry forward:/);
+    }
+    // a step serving a core question says which question it works on
+    const serving = j.steps.find((s) => s.serves.some((x) => x.startsWith("Q")))!;
+    expect(serving.guide).toMatch(/This page works on: “/);
+    expect(j.controls.youControl.length).toBeGreaterThanOrEqual(3);
+    expect(j.controls.youControl.length).toBeLessThanOrEqual(8);
+    expect(j.controls.youControl.join(" ")).toMatch(/mortgage|tax/i);
+    expect(j.controls.youControl.join(" ")).toMatch(/every year of delay/);
+    expect(j.controls.youDont).toEqual(expect.arrayContaining([expect.stringMatching(/Market returns/), expect.stringMatching(/tax code/)]));
+    expect(new Set(j.controls.youControl).size).toBe(j.controls.youControl.length);
+  });
   it("covers every core question with at least one page and includes a calculator", () => {
     j.coreQuestions.forEach((_, i) => expect(j.steps.some((s) => s.serves.includes(`Q${i + 1}`))).toBe(true));
     expect(j.steps.some((s) => s.kind === "calculator")).toBe(true);
@@ -136,10 +151,13 @@ describe("journey composition", () => {
     expect(validateJourney({ ...j, steps: [...j.steps, { id: "nope", path: "/x", title: "x", why: "", kind: "education", serves: [] }] }).ok).toBe(false);
     expect(validateJourney({ ...j, steps: j.steps.slice(0, 4) }).ok).toBe(false);
     expect(validateJourney({ ...j, coreQuestions: [] }).ok).toBe(false);
+    expect(validateJourney({ ...j, steps: j.steps.map((s) => ({ ...s, guide: "" })) }).ok).toBe(false);
+    expect(validateJourney({ ...j, controls: { youControl: [], youDont: [] } }).ok).toBe(false);
   });
   it("every catalog page is unique and lives under the portal", () => {
     expect(new Set(JOURNEY_CATALOG.map((p) => p.id)).size).toBe(JOURNEY_CATALOG.length);
     expect(new Set(JOURNEY_CATALOG.map((p) => p.path)).size).toBe(JOURNEY_CATALOG.length);
     for (const p of JOURNEY_CATALOG) expect(p.path.startsWith("/portal/")).toBe(true);
+    for (const p of JOURNEY_CATALOG) expect(p.walkthrough, p.id).toMatch(/Carry forward:/);
   });
 });

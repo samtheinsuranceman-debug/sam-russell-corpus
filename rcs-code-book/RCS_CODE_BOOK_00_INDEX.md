@@ -20,18 +20,18 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 
 ## Parts (10)
 
-- `RCS_CODE_BOOK_part01_of_10.md` — 181 files, 1,844,595 bytes
-- `RCS_CODE_BOOK_part02_of_10.md` — 163 files, 1,814,290 bytes
-- `RCS_CODE_BOOK_part03_of_10.md` — 74 files, 1,793,264 bytes
+- `RCS_CODE_BOOK_part01_of_10.md` — 179 files, 1,824,066 bytes
+- `RCS_CODE_BOOK_part02_of_10.md` — 165 files, 1,847,499 bytes
+- `RCS_CODE_BOOK_part03_of_10.md` — 74 files, 1,794,704 bytes
 - `RCS_CODE_BOOK_part04_of_10.md` — 33 files, 1,838,678 bytes
 - `RCS_CODE_BOOK_part05_of_10.md` — 31 files, 1,838,522 bytes
 - `RCS_CODE_BOOK_part06_of_10.md` — 29 files, 1,826,443 bytes
-- `RCS_CODE_BOOK_part07_of_10.md` — 29 files, 1,801,874 bytes
+- `RCS_CODE_BOOK_part07_of_10.md` — 30 files, 1,808,961 bytes
 - `RCS_CODE_BOOK_part08_of_10.md` — 30 files, 1,824,210 bytes
 - `RCS_CODE_BOOK_part09_of_10.md` — 50 files, 1,840,031 bytes
-- `RCS_CODE_BOOK_part10_of_10.md` — 40 files, 415,119 bytes
+- `RCS_CODE_BOOK_part10_of_10.md` — 40 files, 417,235 bytes
 
-**Total: 660 files across 10 parts.**
+**Total: 661 files across 10 parts.**
 
 ## File → part map
 
@@ -214,8 +214,8 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/leadsRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/librarianRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/mortgageKillerPdf.ts` → `RCS_CODE_BOOK_part01_of_10.md`
-- `server/pdfExportService.ts` → `RCS_CODE_BOOK_part01_of_10.md`
-- `server/pdfReport.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/pdfExportService.ts` → `RCS_CODE_BOOK_part02_of_10.md`
+- `server/pdfReport.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/planningCasesRouter.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/portalAI.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/rothPdfReport.ts` → `RCS_CODE_BOOK_part02_of_10.md`
@@ -553,6 +553,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/portal/MortgageKillerV3.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
 - `client/src/pages/portal/MultiGenWealthTransfer.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
 - `client/src/pages/portal/MultiScenarioPlayZone.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
+- `client/src/pages/portal/MyJourney.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
 - `client/src/pages/portal/MySlides.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
 - `client/src/pages/portal/MyWorld.tsx` → `RCS_CODE_BOOK_part07_of_10.md`
 - `client/src/pages/portal/NaturalLanguageQuery.tsx` → `RCS_CODE_BOOK_part07_of_10.md`

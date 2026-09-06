@@ -52,6 +52,7 @@ read, seed, or extend it. Paths relative to `russell-capital-systems/`.
   gated: `{ gated: true, percent, missingSections, spoken }` · answered: `{ gated: false, answer, spoken, contributors[], contributorCount }`
 - `librarian.journey` `{ questions: string[] (1–40) }` → gated as above, or `{ gated: false, journey, journeyId, spoken }`
 - `librarian.latestJourney` → the last stored journey for the user, or null
+- `librarian.markVisited` `{ journeyId, stepId }` → stamps `visitedAt` on that step
 - `ultra.speak` `{ text }` → `{ ok: true, audioBase64, mimeType }` when ElevenLabs is configured
 
 **Journey shape** (`shared/journeyEngine.ts` → `Journey`; stored in `client_journeys.journey`):
@@ -63,7 +64,7 @@ read, seed, or extend it. Paths relative to `russell-capital-systems/`.
     "What is the fastest sensible way to be free of my mortgage, and what is that interest worth to me?",
     "How do I keep growing while controlling volatility and the variables I can actually control?"
   ],
-  "emergentQuestion": "Underneath your questions is a volatility question you haven't asked: with you would sell in a 30% drop, how do you keep the plan from depending on markets you can't control?",
+  "emergentQuestion": "Underneath your questions is a volatility question you haven't asked: given that you would sell in a 30% drop, how do you keep the plan from depending on markets you can't control?",
   "steps": [
     { "id": "mirror",          "path": "/portal/the-mirror",          "title": "The Mirror",          "kind": "orientation", "why": "Start here. Your personal dashboard — where you stand today, in one view." },
     { "id": "wealth-genome",   "path": "/portal/wealth-genome",       "title": "Wealth Genome Analysis", "kind": "orientation", "why": "Builds on “The Mirror”. …" },
@@ -72,17 +73,21 @@ read, seed, or extend it. Paths relative to `russell-capital-systems/`.
     { "id": "market-stress-test", "path": "/portal/market-stress-test", "title": "Market Stress Test", "kind": "calculator", "why": "… It serves question 3 and the emergent question." },
     { "id": "russell-number",  "path": "/portal/russell-number",      "title": "Russell Number",      "kind": "review",      "why": "Close the loop. …" }
   ],
+  "controls": {
+    "youControl": ["How much of your income is taxed — through deductions, plan design, and conversion timing", "How fast the mortgage is retired, and how much interest you recover", "…", "When the first move happens — every year of delay is a variable you control"],
+    "youDont": ["Market returns in any given year", "Interest rates set by the Federal Reserve", "Changes to the tax code", "How long you and your spouse live", "Health events and the timing of a claim", "Inflation"]
+  },
   "generatedBy": "journey-engine"
 }
 ```
-(10–15 steps in practice; the example is abbreviated.) `generatedBy` becomes
+(10–15 steps in practice; the example is abbreviated. Each stored step also carries `guide` — "This page works on: “…”. <walkthrough> Carry forward: …" — and `visitedAt` once opened.) `generatedBy` becomes
 `journey-engine + claude` when the AI team polished the wording.
 
 **Table** `client_journeys`: `id, userId, questions JSON, journey JSON, createdAt`.
 
 ## 3. The page catalog (`shared/journeyCatalog.ts`)
 
-45 pages. Each: `{ id, path, title, purpose, kind, tags[], builds }`.
+45 pages. Each: `{ id, path, title, purpose, kind, tags[], builds, walkthrough }`.
 `kind` ∈ orientation · education · calculator · comparison · protection · legacy · review.
 `builds` 0–9 orders a journey (0 = orientation, 8–9 = review/closing).
 Tags in use: start, tax, roth, tax-free, mortgage, payoff, interest, equity, heloc,
