@@ -9,5 +9,37 @@
   },
   "enabledPlugins": {
     "mcp-apps@mcp-apps": true
+  },
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "allow": [
+      "Bash",
+      "Read",
+      "Edit",
+      "Write",
+      "MultiEdit",
+      "NotebookEdit",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "Agent",
+      "Skill",
+      "Artifact",
+      "SendUserFile",
+      "TaskCreate",
+      "TaskUpdate",
+      "TaskList",
+      "TaskGet",
+      "TaskOutput",
+      "TaskStop",
+      "Monitor",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "SendMessage",
+      "Workflow",
+      "mcp__*"
+    ]
   }
 }
