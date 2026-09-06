@@ -5,7 +5,7 @@ import PageBackdrop from "@/components/PageBackdrop";
 const PHOTOS = {
   river: { src: "/rcs-city-river.webp", phoneSrc: "/rcs-city-glass.webp", alt: "Emerald-lit skyline at dusk with a river curving through the city" },
   harbor: { src: "/rcs-city-harbor.webp", phoneSrc: "/rcs-city-towers.webp", alt: "Green-lit harbour city at night, towers reflected in the water" },
-  emerald: { src: "/rcs-city-emerald.webp", phoneSrc: "/rcs-city-spire.webp", alt: "Emerald-lit city skyline at dawn with a river winding through it" },
+  emerald: { src: "/rcs-city-emerald.webp", phoneSrc: "/rcs-city-pinnacle.webp", alt: "Emerald-lit city skyline at dawn with a river winding through it" },
 } as const;
 
 function LegalShell({ title, photo, position, children }: { title: string; photo: keyof typeof PHOTOS; position?: string; children: React.ReactNode }) {
