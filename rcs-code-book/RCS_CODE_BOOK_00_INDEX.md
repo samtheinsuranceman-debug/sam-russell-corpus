@@ -20,18 +20,18 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 
 ## Parts (10)
 
-- `RCS_CODE_BOOK_part01_of_10.md` — 183 files, 1,843,071 bytes
-- `RCS_CODE_BOOK_part02_of_10.md` — 169 files, 1,837,207 bytes
-- `RCS_CODE_BOOK_part03_of_10.md` — 78 files, 1,826,821 bytes
+- `RCS_CODE_BOOK_part01_of_10.md` — 184 files, 1,846,837 bytes
+- `RCS_CODE_BOOK_part02_of_10.md` — 171 files, 1,842,616 bytes
+- `RCS_CODE_BOOK_part03_of_10.md` — 80 files, 1,844,051 bytes
 - `RCS_CODE_BOOK_part04_of_10.md` — 32 files, 1,814,814 bytes
-- `RCS_CODE_BOOK_part05_of_10.md` — 31 files, 1,814,377 bytes
+- `RCS_CODE_BOOK_part05_of_10.md` — 32 files, 1,821,107 bytes
 - `RCS_CODE_BOOK_part06_of_10.md` — 29 files, 1,787,562 bytes
 - `RCS_CODE_BOOK_part07_of_10.md` — 30 files, 1,769,138 bytes
 - `RCS_CODE_BOOK_part08_of_10.md` — 29 files, 1,768,592 bytes
 - `RCS_CODE_BOOK_part09_of_10.md` — 40 files, 1,829,451 bytes
-- `RCS_CODE_BOOK_part10_of_10.md` — 59 files, 757,143 bytes
+- `RCS_CODE_BOOK_part10_of_10.md` — 59 files, 758,059 bytes
 
-**Total: 680 files across 10 parts.**
+**Total: 686 files across 10 parts.**
 
 ## File → part map
 
@@ -179,6 +179,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/_core/env.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/fred.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/heartbeat.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/_core/hubspot.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/imageGeneration.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/index.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/_core/jsonColumn.ts` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -206,6 +207,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/db.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/email.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/emailPinService.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/eventBus.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/experienceDb.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/experienceRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/factFinderDb.ts` → `RCS_CODE_BOOK_part01_of_10.md`
@@ -214,10 +216,12 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `server/generate1035Pdf.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/heygenService.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/index.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/integrations.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/integrationsRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
 - `server/leadStrategy.ts` → `RCS_CODE_BOOK_part01_of_10.md`
-- `server/leadsDb.ts` → `RCS_CODE_BOOK_part01_of_10.md`
-- `server/leadsRouter.ts` → `RCS_CODE_BOOK_part01_of_10.md`
-- `server/ledger.ts` → `RCS_CODE_BOOK_part01_of_10.md`
+- `server/leadsDb.ts` → `RCS_CODE_BOOK_part02_of_10.md`
+- `server/leadsRouter.ts` → `RCS_CODE_BOOK_part02_of_10.md`
+- `server/ledger.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/ledgerDb.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/ledgerRouter.ts` → `RCS_CODE_BOOK_part02_of_10.md`
 - `server/librarianRouter.ts` → `RCS_CODE_BOOK_part02_of_10.md`
@@ -256,6 +260,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/components/AccessibilityHelpers.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/AchievementUnlockOverlay.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/ActivityHeatmap.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
+- `client/src/components/AnalyticsLoader.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/AppShell.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/AuthDialog.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/components/Breadcrumbs.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
@@ -385,8 +390,8 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/AdministratorPortal.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/pages/AnnuityExplorerPage.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
 - `client/src/pages/AutoCloserPage.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
-- `client/src/pages/CareerPathPage.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
-- `client/src/pages/CertificationsPage.tsx` → `RCS_CODE_BOOK_part02_of_10.md`
+- `client/src/pages/CareerPathPage.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
+- `client/src/pages/CertificationsPage.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
 - `client/src/pages/ClientPortalView.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
 - `client/src/pages/CommandPage.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
 - `client/src/pages/CompetePage.tsx` → `RCS_CODE_BOOK_part03_of_10.md`
@@ -506,6 +511,7 @@ Read **`LAUNCH.md`** (the first file in Part 1). It is the complete runbook: pre
 - `client/src/pages/portal/ComplianceExport.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
 - `client/src/pages/portal/ComplianceMonitoringDashboard.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
 - `client/src/pages/portal/ComplianceReportGenerator.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
+- `client/src/pages/portal/Connections.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
 - `client/src/pages/portal/CouplesMode.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
 - `client/src/pages/portal/CryptoCurrencyCorner.tsx` → `RCS_CODE_BOOK_part05_of_10.md`
 - `client/src/pages/portal/DailyBriefing.tsx` → `RCS_CODE_BOOK_part05_of_10.md`

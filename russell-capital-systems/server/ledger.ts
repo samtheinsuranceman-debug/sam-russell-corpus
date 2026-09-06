@@ -7,12 +7,18 @@
 import type { ClientFactFinder } from "@shared/clientFactFinder";
 import { diffFactFinder, type LedgerEventInput, type LedgerSource } from "@shared/planLedger";
 import { appendEvents } from "./ledgerDb";
+import { fanOut } from "./eventBus";
 
 type Ids = { userId?: number | null; clientId?: number | null; leadId?: number | null; workspaceId?: number | null };
 
 async function safeAppend(events: LedgerEventInput[]): Promise<number> {
-  try { return await appendEvents(events); }
-  catch (error) { console.warn("[Ledger] append failed:", String(error).slice(0, 200)); return 0; }
+  let written = 0;
+  try { written = await appendEvents(events); }
+  catch (error) { console.warn("[Ledger] append failed:", String(error).slice(0, 200)); }
+  // The outside world hears every event (Zapier, Make, n8n, Slack, any URL) —
+  // fire-and-forget, so a slow receiver never slows the site.
+  if (events.length) void fanOut(events).catch(() => undefined);
+  return written;
 }
 
 /** Facts: the diff between the previous and the new assessment, one event per changed field. */

@@ -185,6 +185,32 @@ On a host that sleeps the process, add a cron that runs `pnpm followups:run`
 mortgage and Fed funds rates, dated and cached. Without it, dated reference
 values are shown and labelled as such.
 
+### Connections (every outside platform, switched on by variables)
+The portal page **Connections** (`/portal/connections`) shows every platform the
+site can use and whether it is on. The Plan Ledger is the spine: every event it
+records is sent to the automation receivers below, so Zapier / Make / n8n can
+route leads, decisions and messages anywhere.
+
+- `ZAPIER_HOOK_URL`, `MAKE_HOOK_URL`, `N8N_HOOK_URL`, `EVENT_WEBHOOK_URLS` (comma list)
+  — JSON `plan.ledger` events; `EVENT_WEBHOOK_SECRET` signs them (X-RCS-Signature,
+  HMAC-SHA256); `EVENT_WEBHOOK_KINDS` narrows the kinds; facts (financial values)
+  are only sent with `EVENT_WEBHOOK_INCLUDE_FACTS=1`.
+- `SLACK_WEBHOOK_URL` — status, decision, outcome and note events as a Slack message.
+- `HUBSPOT_ACCESS_TOKEN` (private app) — every lead with an email becomes a contact.
+- `CALENDLY_URL` — booking link in follow-ups and templates.
+- Browser: `POSTHOG_KEY` (+`POSTHOG_HOST`), `GA_MEASUREMENT_ID`, `SENTRY_LOADER_URL`,
+  `INTERCOM_APP_ID` — loaded only when set; only public ids ever reach the browser.
+
+### Railway (the full app, one click)
+The project **russell-capital-systems** on Railway runs the whole site (Express +
+React + MySQL). Root directory `/russell-capital-systems`; build
+`pnpm install --frozen-lockfile --prod=false && pnpm build`; start
+`bash scripts/build_database.sh && node dist/index.js` (creates any missing
+tables on every boot). Variables set: `DATABASE_URL` (from the MySQL service),
+`JWT_SECRET`, `SCHEDULER_TOKEN`, `OWNER_EMAIL`, `PUBLIC_BASE_URL`, mail From/Reply-To.
+Add `OWNER_PASSWORD_HASH` (run `pnpm owner:password` locally) and the AI /
+mail / SMS keys in the Railway Variables panel; every push to `master` redeploys.
+
 ### Voice (optional)
 `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` (spoken answers).
 

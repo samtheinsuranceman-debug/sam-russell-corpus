@@ -11169,6 +11169,22 @@ No follow-up ever contains a figure. Content: `followupContent()`.
 - Without the key the previous managed-API path and dated reference values
   remain, labelled `static`. Nothing is ever invented.
 
+## 3b. Strung into the code (this pass)
+
+- `server/integrations.ts` — the registry: 35 platforms, their env keys, what each
+  is wired to; `integrationStatus()` (booleans only) and `publicSiteConfig()`.
+- `server/eventBus.ts` — every Plan Ledger event fans out to `ZAPIER_HOOK_URL`,
+  `MAKE_HOOK_URL`, `N8N_HOOK_URL`, `EVENT_WEBHOOK_URLS` (signed JSON) and
+  `SLACK_WEBHOOK_URL` (human line). Facts excluded unless opted in.
+- `server/_core/hubspot.ts` — `upsertContact()`; `leads.capture` syncs every lead
+  with an email.
+- `CALENDLY_URL` in the follow-up sequence and templates.
+- `client/src/components/AnalyticsLoader.tsx` — PostHog, GA4, Sentry loader,
+  Intercom from `integrations.public`.
+- `/portal/connections` — the live on/off board with a "Send test event" button.
+- Hosting: Railway project `russell-capital-systems` (web + MySQL), deploys from
+  `master`, root `/russell-capital-systems`.
+
 ## 4. Tables added (`drizzle/schema.ts`, `database/rcs-schema.sql`)
 
 `sms_opt_outs`, `email_opt_outs`, `lead_followups`, `outbound_messages`,

@@ -4,6 +4,9 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 
 ### Files in this part
 
+- `server/leadsDb.ts`
+- `server/leadsRouter.ts`
+- `server/ledger.ts`
 - `server/ledgerDb.ts`
 - `server/ledgerRouter.ts`
 - `server/librarianRouter.ts`
@@ -42,6 +45,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/components/AccessibilityHelpers.tsx`
 - `client/src/components/AchievementUnlockOverlay.tsx`
 - `client/src/components/ActivityHeatmap.tsx`
+- `client/src/components/AnalyticsLoader.tsx`
 - `client/src/components/AppShell.tsx`
 - `client/src/components/AuthDialog.tsx`
 - `client/src/components/Breadcrumbs.tsx`
@@ -171,10 +175,405 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `client/src/pages/AdministratorPortal.tsx`
 - `client/src/pages/AnnuityExplorerPage.tsx`
 - `client/src/pages/AutoCloserPage.tsx`
-- `client/src/pages/CareerPathPage.tsx`
-- `client/src/pages/CertificationsPage.tsx`
 
 ---
+
+## `server/leadsDb.ts`
+
+```ts
+// ============================================================
+// PUBLIC LEADS — data access for homepage fact-finder prospects.
+// Graceful when the DB is not configured (returns null / no-ops) so the
+// homepage still works before `pnpm db:push` has been run.
+// ============================================================
+import { desc, eq } from "drizzle-orm";
+import { getDb } from "./db";
+import { jsonColumn } from "./_core/jsonColumn";
+import { publicLeads, type InsertPublicLead, type PublicLead } from "../drizzle/schema";
+
+export type LeadStatusValue = PublicLead["status"];
+
+/** JSON columns come back as strings on MariaDB; parse them so callers see objects everywhere. */
+function normalizeLead(row: PublicLead): PublicLead {
+  return {
+    ...row,
+    factFinder: jsonColumn(row.factFinder, null),
+    analysis: jsonColumn(row.analysis, null),
+    ipHistory: jsonColumn<string[] | null>(row.ipHistory, null),
+  };
+}
+
+export async function getLeadByPublicId(publicId: string): Promise<PublicLead | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(publicLeads).where(eq(publicLeads.publicId, publicId)).limit(1);
+  return rows[0] ? normalizeLead(rows[0]) : null;
+}
+
+/**
+ * Upsert by first-party publicId. Merges IP history and never overwrites a
+ * stored non-empty field with an empty one (so a returning visitor who only
+ * asks a question doesn't wipe the financials they entered earlier).
+ */
+export async function upsertLead(publicId: string, patch: Partial<InsertPublicLead>, ip: string | null): Promise<PublicLead | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const existing = await getLeadByPublicId(publicId);
+
+  const ipHistory = new Set<string>(existing?.ipHistory ?? []);
+  if (ip) ipHistory.add(ip);
+
+  if (existing) {
+    const merged: Partial<InsertPublicLead> = {
+      firstName: patch.firstName || existing.firstName,
+      lastName: patch.lastName || existing.lastName,
+      email: patch.email || existing.email,
+      phone: patch.phone || existing.phone,
+      bestTimeToContact: patch.bestTimeToContact || existing.bestTimeToContact,
+      consentedAt: patch.consentedAt ?? existing.consentedAt,
+      consentVersion: patch.consentVersion || existing.consentVersion,
+      question: patch.question || existing.question,
+      factFinder: patch.factFinder ?? existing.factFinder,
+      analysis: patch.analysis ?? existing.analysis,
+      lastIp: ip || existing.lastIp,
+      ipHistory: Array.from(ipHistory),
+      lastSeenAt: new Date(),
+    };
+    await db.update(publicLeads).set(merged).where(eq(publicLeads.id, existing.id));
+    return getLeadByPublicId(publicId);
+  }
+
+  await db.insert(publicLeads).values({
+    publicId,
+    ...patch,
+    lastIp: ip ?? undefined,
+    ipHistory: Array.from(ipHistory),
+  });
+  return getLeadByPublicId(publicId);
+}
+
+// ─── Advisor-side reads / triage ────────────────────────────────────────────
+export async function listLeads(limit = 200): Promise<PublicLead[]> {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db.select().from(publicLeads).orderBy(desc(publicLeads.lastSeenAt)).limit(Math.min(500, Math.max(1, limit)));
+  return rows.map(normalizeLead);
+}
+
+export async function getLeadById(id: number): Promise<PublicLead | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(publicLeads).where(eq(publicLeads.id, id)).limit(1);
+  return rows[0] ? normalizeLead(rows[0]) : null;
+}
+
+export async function updateLeadStatus(id: number, status: LeadStatusValue): Promise<PublicLead | null> {
+  const db = await getDb();
+  if (!db) return null;
+  await db.update(publicLeads).set({ status }).where(eq(publicLeads.id, id));
+  return getLeadById(id);
+}
+```
+
+## `server/leadsRouter.ts`
+
+```ts
+// ============================================================
+// PUBLIC LEADS ROUTER — powers the homepage fact-finder / AI concierge
+// lead capture and returning-visitor recognition.
+//
+// PRIVACY / HONESTY CONTRACT:
+// - Recognition uses a first-party cookie (rcs_lead_id), not IP. IP is
+//   stored only as a data point, behind explicit consent.
+// - The illustrative, assumption-based figures are computed and stored in
+//   the advisor's lead file ONLY. The visitor-facing response returns just
+//   the qualitative teaser (pillars, no dollar amounts).
+// - Works gracefully with no DB configured: it still returns the teaser,
+//   it just can't persist (saved:false) until `pnpm db:push` has run.
+// ============================================================
+import { randomUUID } from "node:crypto";
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { getSessionCookieOptions } from "./_core/cookies";
+import { ENV } from "./_core/env";
+import { notifyOwner } from "./_core/notification";
+import { sendLeadAcknowledgement, sendNewLeadAlert } from "./email";
+import { computeLeadAnalysis } from "./leadStrategy";
+import { getLeadById, getLeadByPublicId, listLeads, updateLeadStatus, upsertLead } from "./leadsDb";
+import { scheduleLeadFollowups } from "./followups";
+import { deliver } from "./messaging";
+import { cancelFollowupsForLead, listFollowupsForLead, listMessagesForLead } from "./messagingDb";
+import { normalizePhone, sendSms } from "./_core/sms";
+import { recordEvent } from "./ledger";
+import { hubspotConfigured, upsertContact } from "./_core/hubspot";
+import type { LeadFactFinder } from "@shared/leadTypes";
+
+function assertOwner(user: { openId: string; role: string }): void {
+  const isOwner = user.openId === ENV.ownerOpenId || user.role === "admin";
+  if (!isOwner) throw new TRPCError({ code: "FORBIDDEN", message: "Owner access required." });
+}
+
+const COOKIE = "rcs_lead_id";
+const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+const CONSENT_VERSION = "2026-09-05";
+
+function readCookie(cookieHeader: string | undefined, name: string): string | null {
+  if (!cookieHeader) return null;
+  for (const part of cookieHeader.split(";")) {
+    const [k, ...rest] = part.trim().split("=");
+    if (k === name) return decodeURIComponent(rest.join("="));
+  }
+  return null;
+}
+
+function clientIp(req: { headers: Record<string, unknown>; socket?: { remoteAddress?: string } }): string | null {
+  const fwd = req.headers["x-forwarded-for"];
+  if (typeof fwd === "string" && fwd.length > 0) return fwd.split(",")[0]?.trim() ?? null;
+  return req.socket?.remoteAddress ?? null;
+}
+
+/** Ensure a first-party lead id, minting + setting the cookie if absent. */
+function ensureLeadId(ctx: { req: { headers: Record<string, unknown> }; res: { cookie: (n: string, v: string, o: Record<string, unknown>) => void } }): string {
+  const existing = readCookie(ctx.req.headers.cookie as string | undefined, COOKIE);
+  if (existing) return existing;
+  const id = randomUUID();
+  ctx.res.cookie(COOKIE, id, {
+    ...getSessionCookieOptions(ctx.req as never),
+    httpOnly: true,
+    maxAge: ONE_YEAR_MS,
+  });
+  return id;
+}
+
+const factFinderSchema = z.object({
+  w2Income: z.number().nonnegative().max(1e9).optional(),
+  estimatedTaxes: z.number().nonnegative().max(1e9).optional(),
+  spouseIncome: z.number().nonnegative().max(1e9).optional(),
+  spouseTaxes: z.number().nonnegative().max(1e9).optional(),
+  studentDebt: z.number().nonnegative().max(1e9).optional(),
+  studentDebtRate: z.number().nonnegative().max(100).optional(),
+  homeEquity: z.number().nonnegative().max(1e9).optional(),
+  mortgageBalance: z.number().nonnegative().max(1e9).optional(),
+  mortgageRate: z.number().nonnegative().max(100).optional(),
+  mortgageInterestOnlyMonthly: z.number().nonnegative().max(1e7).optional(),
+  mortgageYearsRemaining: z.number().nonnegative().max(60).optional(),
+  taxDeferredSelf: z.number().nonnegative().max(1e9).optional(),
+  taxDeferredSpouse: z.number().nonnegative().max(1e9).optional(),
+  liquidInvestments: z.number().nonnegative().max(1e9).optional(),
+  liquidTaxability: z.enum(["taxable", "nontaxable", "mixed", "unknown"]).optional(),
+  goals: z.string().max(4000).optional(),
+}) satisfies z.ZodType<LeadFactFinder>;
+
+export const leadsRouter = router({
+  // Greet a returning visitor by name (cookie-based). Returns only the first
+  // name — never the stored financials.
+  recognize: publicProcedure.query(async ({ ctx }) => {
+    const id = readCookie(ctx.req.headers.cookie as string | undefined, COOKIE);
+    if (!id) return { known: false as const };
+    const lead = await getLeadByPublicId(id);
+    if (!lead) return { known: false as const };
+    return { known: true as const, firstName: lead.firstName ?? null, hasEstimate: Boolean(lead.analysis) };
+  }),
+
+  // Capture / update a lead from the homepage estimator. Computes the
+  // illustrative analysis for the advisor file and returns ONLY the teaser.
+  capture: publicProcedure
+    .input(z.object({
+      firstName: z.string().max(120).optional(),
+      lastName: z.string().max(120).optional(),
+      email: z.string().email().max(320).optional(),
+      phone: z.string().max(40).optional(),
+      bestTimeToContact: z.string().max(200).optional(),
+      question: z.string().max(4000).optional(),
+      consent: z.boolean(),
+      factFinder: factFinderSchema.default({}),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      if (!input.consent) {
+        return { saved: false as const, reason: "consent_required", teaser: null };
+      }
+      const publicId = ensureLeadId(ctx as never);
+      const ip = clientIp(ctx.req as never);
+      const analysis = computeLeadAnalysis(input.factFinder);
+
+      const lead = await upsertLead(publicId, {
+        firstName: input.firstName,
+        lastName: input.lastName,
+        email: input.email,
+        phone: input.phone,
+        bestTimeToContact: input.bestTimeToContact,
+        question: input.question,
+        consentedAt: new Date(),
+        consentVersion: CONSENT_VERSION,
+        factFinder: input.factFinder,
+        analysis,
+      }, ip);
+
+      // Ping the owner about the new lead — best-effort, never blocks capture
+      // and never includes the illustrative figures.
+      try {
+        const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
+        const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
+        await notifyOwner({
+          title: "New homepage lead captured",
+          content: `${who} (${contact})` + (input.bestTimeToContact ? ` — best time: ${input.bestTimeToContact}` : "") +
+            (input.question ? `\nQuestion: ${input.question.slice(0, 300)}` : "") +
+            `\nOpen the lead inbox to review the full fact-finder and advisor figures.`,
+        });
+      } catch { /* notification is best-effort */ }
+
+      // Email the owner too — the managed notification above only exists on the
+      // managed host; on a plain host this is how the owner hears about a lead.
+      const alertTo = ENV.leadNotifyEmail || ENV.ownerEmail;
+      if (alertTo) {
+        try {
+          const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
+          const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
+          const host = typeof ctx.req.headers.host === "string" ? ctx.req.headers.host : "";
+          const proto = ctx.req.headers["x-forwarded-proto"] === "https" || host.endsWith(".com") ? "https" : "http";
+          await sendNewLeadAlert({ toEmail: alertTo, who, contact, bestTime: input.bestTimeToContact, question: input.question, inboxUrl: host ? `${proto}://${host}/portal/leads` : undefined });
+        } catch { /* alert is best-effort */ }
+      }
+
+      // Send the prospect a warm acknowledgement — best-effort, no figures.
+      if (input.email) {
+        try { await sendLeadAcknowledgement({ toEmail: input.email, firstName: input.firstName }); }
+        catch { /* acknowledgement is best-effort */ }
+      }
+
+      // Text the owner too when a mobile alert number is set — a lead is
+      // worth interrupting for. Never includes figures.
+      if (ENV.leadNotifyPhone) {
+        try {
+          const who = [input.firstName, input.lastName].filter(Boolean).join(" ") || "Anonymous visitor";
+          const contact = [input.email, input.phone].filter(Boolean).join(" · ") || "no contact given";
+          await sendSms({ to: ENV.leadNotifyPhone, body: `New RCS lead: ${who} (${contact})${input.bestTimeToContact ? ` — best time: ${input.bestTimeToContact}` : ""}. Open the lead inbox to review.` });
+        } catch { /* alert is best-effort */ }
+      }
+
+      // Schedule the automated follow-up sequence (text in an hour, emails on
+      // days 1/3/7, text on day 5). Stops when the lead is marked contacted.
+      if (lead) {
+        try { await scheduleLeadFollowups(lead); }
+        catch { /* automation is best-effort */ }
+        // CRM: the lead becomes a HubSpot contact (best-effort, email required).
+        if (input.email && hubspotConfigured()) {
+          const hs = await upsertContact({ email: input.email, firstname: input.firstName ?? null, lastname: input.lastName ?? null, phone: input.phone ?? null, lifecyclestage: "lead" });
+          if (!hs.ok) console.warn("[HubSpot] lead not synced:", hs.reason);
+        }
+        await recordEvent({
+          kind: "status", source: "client", key: "lead.captured", label: "Homepage estimate",
+          value: { consentVersion: CONSENT_VERSION, fields: Object.keys(input.factFinder).length, hasEmail: Boolean(input.email), hasPhone: Boolean(input.phone) },
+          summary: `Lead captured from the homepage estimate with consent (${Object.keys(input.factFinder).length} fact-finder fields)${input.question ? ` — asked: ${input.question.slice(0, 120)}` : ""}`,
+          leadId: lead.id,
+        });
+      }
+
+      // The visitor only ever sees the qualitative teaser — never the figures.
+      return {
+        saved: Boolean(lead) as boolean,
+        reason: lead ? ("ok" as const) : ("db_unconfigured" as const),
+        teaser: analysis.teaser,
+      };
+    }),
+
+  // ─── Advisor lead inbox (owner-gated) ────────────────────────────────────
+  // These DO return the illustrative advisor figures — for the licensed
+  // advisor's internal review only.
+  list: protectedProcedure
+    .input(z.object({ limit: z.number().int().min(1).max(500).default(200) }).default({ limit: 200 }))
+    .query(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      return listLeads(input.limit);
+    }),
+
+  get: protectedProcedure
+    .input(z.object({ id: z.number().int().positive() }))
+    .query(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      const lead = await getLeadById(input.id);
+      if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
+      return lead;
+    }),
+
+  updateStatus: protectedProcedure
+    .input(z.object({ id: z.number().int().positive(), status: z.enum(["new", "contacted", "qualified", "client"]) }))
+    .mutation(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      const lead = await updateLeadStatus(input.id, input.status);
+      if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
+      // A human has taken over: the automated sequence stops here.
+      if (input.status !== "new") await cancelFollowupsForLead(lead.id, `lead marked ${input.status}`);
+      await recordEvent({ kind: "status", source: "advisor", key: "lead.status", label: "Lead status", value: input.status, summary: `Lead marked ${input.status}`, actorName: ctx.user.name ?? null, leadId: lead.id });
+      return lead;
+    }),
+
+  // ─── Messaging a lead from the inbox (owner-gated) ────────────────────────
+  followups: protectedProcedure
+    .input(z.object({ id: z.number().int().positive() }))
+    .query(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      const [followups, messages] = await Promise.all([listFollowupsForLead(input.id), listMessagesForLead(input.id)]);
+      return { followups, messages };
+    }),
+
+  message: protectedProcedure
+    .input(z.object({ id: z.number().int().positive(), channel: z.enum(["email", "sms"]), subject: z.string().max(300).optional(), body: z.string().min(1).max(4000) }))
+    .mutation(async ({ ctx, input }) => {
+      assertOwner(ctx.user);
+      const lead = await getLeadById(input.id);
+      if (!lead) throw new TRPCError({ code: "NOT_FOUND" });
+      const to = input.channel === "email" ? lead.email : normalizePhone(lead.phone);
+      if (!to) throw new TRPCError({ code: "BAD_REQUEST", message: input.channel === "email" ? "This lead gave no email address." : "This lead gave no valid mobile number." });
+      const r = await deliver({ channel: input.channel, to, subject: input.subject, body: input.body, category: "transactional", leadId: lead.id, userId: ctx.user.id, actorName: ctx.user.name ?? "Advisor" });
+      // The advisor has reached out by hand — the sequence is no longer needed.
+      if (r.sent) await cancelFollowupsForLead(lead.id, "advisor messaged the lead");
+      return { sent: r.sent, via: r.via ?? null, reason: r.reason ?? null, suppressed: Boolean(r.suppressed) };
+    }),
+});
+```
+
+## `server/ledger.ts`
+
+```ts
+// ============================================================
+// THE PLAN LEDGER — writers. Every place the platform learns a fact, makes
+// a decision, sends a message, builds a journey or changes a status calls
+// one of these. They never throw: a ledger write must not break the action
+// it records.
+// ============================================================
+import type { ClientFactFinder } from "@shared/clientFactFinder";
+import { diffFactFinder, type LedgerEventInput, type LedgerSource } from "@shared/planLedger";
+import { appendEvents } from "./ledgerDb";
+import { fanOut } from "./eventBus";
+
+type Ids = { userId?: number | null; clientId?: number | null; leadId?: number | null; workspaceId?: number | null };
+
+async function safeAppend(events: LedgerEventInput[]): Promise<number> {
+  let written = 0;
+  try { written = await appendEvents(events); }
+  catch (error) { console.warn("[Ledger] append failed:", String(error).slice(0, 200)); }
+  // The outside world hears every event (Zapier, Make, n8n, Slack, any URL) —
+  // fire-and-forget, so a slow receiver never slows the site.
+  if (events.length) void fanOut(events).catch(() => undefined);
+  return written;
+}
+
+/** Facts: the diff between the previous and the new assessment, one event per changed field. */
+export async function recordAssessmentChange(ids: Ids, prev: ClientFactFinder | null | undefined, next: ClientFactFinder, source: LedgerSource = "client", actorName?: string | null): Promise<number> {
+  const facts = diffFactFinder(prev, next, source).map((e) => ({ ...e, ...ids, actorName: actorName ?? null }));
+  return safeAppend(facts);
+}
+
+export async function recordEvent(e: LedgerEventInput): Promise<number> {
+  return safeAppend([e]);
+}
+
+export function assessmentResetEvent(ids: Ids, actorName?: string | null): LedgerEventInput {
+  return { kind: "status", source: "client", key: "assessment.reset", label: "Financial Assessment", summary: "Financial Assessment reset — all answers cleared", actorName: actorName ?? null, ...ids };
+}
+```
 
 ## `server/ledgerDb.ts`
 
@@ -3128,6 +3527,7 @@ import { factFinderRouter } from "./factFinderRouter";
 import { librarianRouter } from "./librarianRouter";
 import { messagesRouter } from "./messagesRouter";
 import { ledgerRouter } from "./ledgerRouter";
+import { integrationsRouter } from "./integrationsRouter";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -3429,6 +3829,7 @@ export const appRouter = router({
   librarian: librarianRouter,
   messages: messagesRouter,
   ledger: ledgerRouter,
+  integrations: integrationsRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -14919,6 +15320,7 @@ createRoot(document.getElementById("root")!).render(
 ## `client/src/App.tsx`
 
 ```tsx
+import { AnalyticsLoader } from "@/components/AnalyticsLoader";
 import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15176,6 +15578,7 @@ const FinancialAssessment = lazy(() => import("./pages/portal/FinancialAssessmen
 const AIFinancialAdvisor = lazy(() => import("./pages/portal/AIFinancialAdvisor"));
 const MyJourney = lazy(() => import("./pages/portal/MyJourney"));
 const PlanLedger = lazy(() => import("./pages/portal/PlanLedger"));
+const Connections = lazy(() => import("./pages/portal/Connections"));
 const TheBrotherhood = lazy(() => import("./pages/portal/TheBrotherhood"));
 const SecondaryInformation = lazy(() => import("./pages/portal/SecondaryInformation"));
 const PlanningCases = lazy(() => import("./pages/portal/PlanningCases"));
@@ -15483,6 +15886,7 @@ function Router() {
       <Route path="/portal/ai-advisor" component={gated(AIFinancialAdvisor, "/portal/ai-advisor")} />
       <Route path="/portal/my-journey" component={gated(MyJourney, "/portal/my-journey")} />
       <Route path="/portal/plan-ledger" component={gated(PlanLedger, "/portal/plan-ledger")} />
+      <Route path="/portal/connections" component={gated(Connections, "/portal/connections")} />
       <Route path="/portal/wealth-genome" component={gated(WealthGenomePage, "/portal/wealth-genome")} />
       <Route path="/portal/the-arrival" component={gated(TheArrival, "/portal/the-arrival")} />
       <Route path="/portal/the-mirror" component={gated(TheMirror, "/portal/the-mirror")} />
@@ -15523,6 +15927,8 @@ function App() {
           <FocusRingStyles />
           <TooltipProvider>
             <Toaster richColors position="top-right" />
+            {/* Browser-side platforms the host switched on (PostHog, GA4, Sentry, Intercom) */}
+            <AnalyticsLoader />
             <Router />
             {/* The every-page AI voice advisor — speak on any page, the AI
                 answers in context of that page and the saved profile. */}
@@ -18287,6 +18693,58 @@ export function ActivityHeatmap({ data, title = "Activity" }: ActivityHeatmapPro
 }
 ```
 
+## `client/src/components/AnalyticsLoader.tsx`
+
+```tsx
+// ============================================================
+// ANALYTICS LOADER — loads the browser-side platforms the host has switched
+// on (PostHog, Google Analytics, Sentry loader, Intercom). Keys come from
+// `integrations.public`, which only ever returns public ids. Nothing loads
+// when nothing is configured.
+// ============================================================
+import { useEffect } from "react";
+import { trpc } from "@/lib/trpc";
+
+declare global {
+  interface Window { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void; posthog?: { init: (k: string, o: Record<string, unknown>) => void }; Intercom?: (...args: unknown[]) => void; intercomSettings?: Record<string, unknown> }
+}
+
+function addScript(src: string, attrs: Record<string, string> = {}): HTMLScriptElement | null {
+  if (typeof document === "undefined" || document.querySelector(`script[src="${src}"]`)) return null;
+  const s = document.createElement("script");
+  s.src = src; s.async = true;
+  for (const [k, v] of Object.entries(attrs)) s.setAttribute(k, v);
+  document.head.appendChild(s);
+  return s;
+}
+
+export function AnalyticsLoader() {
+  const cfg = trpc.integrations.public.useQuery(undefined, { staleTime: 10 * 60_000, refetchOnWindowFocus: false });
+  useEffect(() => {
+    const c = cfg.data;
+    if (!c) return;
+    if (c.gaMeasurementId) {
+      addScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(c.gaMeasurementId)}`);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function gtag() { window.dataLayer!.push(arguments); };
+      window.gtag("js", new Date());
+      window.gtag("config", c.gaMeasurementId, { anonymize_ip: true });
+    }
+    if (c.posthogKey) {
+      const s = addScript(`${c.posthogHost.replace(/\/$/, "")}/static/array.js`);
+      const init = () => { try { window.posthog?.init(c.posthogKey!, { api_host: c.posthogHost, person_profiles: "identified_only", capture_pageview: true }); } catch { /* optional */ } };
+      if (s) s.onload = init; else init();
+    }
+    if (c.sentryLoaderUrl) addScript(c.sentryLoaderUrl, { crossorigin: "anonymous" });
+    if (c.intercomAppId) {
+      window.intercomSettings = { api_base: "https://api-iam.intercom.io", app_id: c.intercomAppId };
+      addScript(`https://widget.intercom.io/widget/${encodeURIComponent(c.intercomAppId)}`);
+    }
+  }, [cfg.data]);
+  return null;
+}
+```
+
 ## `client/src/components/AppShell.tsx`
 
 ```tsx
@@ -18706,6 +19164,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { path: "/portal/billing", label: "Billing & Plans", icon: CircleDollarSign, color: "slate" },
       { path: "/portal/agent-tutorial", label: "Platform Training", icon: GraduationCap, color: "slate" },
+      { path: "/portal/connections", label: "Connections", icon: Link2, color: "slate" },
       { path: "/portal/integrations", label: "Integrations", icon: Link2, color: "slate" },
       { path: "/portal/bulk-generation", label: "Bulk Generation", icon: Lock, color: "slate" },
       { path: "/portal/command-center", label: "Command Center", icon: Activity, color: "slate" },
@@ -40884,368 +41343,5 @@ const AutoCloserPage: React.FC = () => {
 }
 
 export default AutoCloserPage;
-```
-
-## `client/src/pages/CareerPathPage.tsx`
-
-```tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { TrendingUp, Target, BookOpen, Zap } from "lucide-react";
-
-const CareerPathPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("current");
-
-  const tabs = [
-    { id: "current", label: "Current Level" },
-    { id: "milestones", label: "Milestones" },
-    { id: "skills", label: "Skills Gap" },
-    { id: "mentorship", label: "Mentorship" },
-    { id: "outcome", label: "Generate Outcome" },
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Career Path Planner</h1>
-
-        {/* Tab Navigation */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {tabs.map((tab) => (
-            <Button
-              key={tab.id}
-              variant={activeTab === tab.id ? "default" : "outline"}
-              className={`${
-                activeTab === tab.id ? "bg-[#22c55e] hover:bg-[#1ea34d]" : "border-gray-600 text-gray-300"
-              } transition-colors`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-            </Button>
-          ))}
-        </div>
-
-        {/* Tab Content */}
-        <div className="bg-[#141925] p-6 rounded-lg shadow-md">
-          {activeTab === "current" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Current Level</h2>
-              <div className="flex items-center gap-3 mb-4">
-                <TrendingUp className="text-[#22c55e]" size={24} />
-                <p>Associate Advisor | 2 Years Experience</p>
-              </div>
-              <p className="text-gray-400">Progress to Senior Advisor: 65%</p>
-            </div>
-          )}
-          {activeTab === "milestones" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Milestones</h2>
-              <div className="space-y-2">
-                <div className="bg-[#1a202c] p-3 rounded-md">Q1 2024: $500K Production - Completed</div>
-                <div className="bg-[#1a202c] p-3 rounded-md">Q2 2024: $750K Production - Pending</div>
-              </div>
-            </div>
-          )}
-          {activeTab === "skills" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Skills Gap</h2>
-              <p className="text-gray-400">Needed: Advanced IUL Strategies, Client Retention</p>
-            </div>
-          )}
-          {activeTab === "mentorship" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Mentorship</h2>
-              <p className="text-gray-400">Assigned Mentor: Sarah Johnson | Next Session: 11/5/23</p>
-            </div>
-          )}
-          {activeTab === "outcome" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Generate Outcome</h2>
-              <form className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Career Goal"
-                  className="w-full bg-[#1a202c] p-3 rounded-md border border-gray-600"
-                />
-                <select className="w-full bg-[#1a202c] p-3 rounded-md border border-gray-600">
-                  <option>Focus Area</option>
-                  <option>IUL Sales</option>
-                  <option>Client Acquisition</option>
-                </select>
-                <Button className="bg-[#22c55e] hover:bg-[#1ea34d]">Generate Plan</Button>
-              </form>
-            </div>
-          )}
-        </div>
-
-        {/* Cross-Tool Integration */}
-        <div className="mt-6 bg-[#141925] p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Zap className="text-[#22c55e]" size={24} /> Cross-Tool Integration
-          </h2>
-          <p className="text-gray-400">Connect career goals to Training and Certifications.</p>
-          <Button variant="outline" className="mt-2 border-[#22c55e] text-[#22c55e]">
-            Sync Tools
-          </Button>
-        </div>
-
-        {/* Page Insights Badge */}
-        <div className="mt-6 text-center">
-          <div className="inline-block bg-[#1a202c] px-4 py-2 rounded-md text-sm">
-            Page Insights Score: <span className="text-[#22c55e]">88/100</span>
-          </div>
-        </div>
-
-        {/* Regulatory Disclaimer */}
-        <p className="mt-4 text-gray-500 text-sm text-center">
-          Career planning tools are for informational purposes. Russell Capital Systems does not guarantee advancement.
-        </p>
-
-        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-          <div className="flex items-center gap-4 mb-6">
-            <label className="text-sm text-slate-400">Projection Horizon:</label>
-            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-              onChange={(e) => {
-                const val = e.target.value;
-                document.getElementById('proj-year-career-path')!.textContent = val;
-              }} />
-            <span id="proj-year-career-path" className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-            <span className="text-slate-500 text-sm">years</span>
-          </div>
-          <div className="flex gap-2 mb-6">
-            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-              }`}>{s}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-5 gap-4 text-center">
-            {[5, 10, 20, 30, 50].map(yr => (
-              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-                <div className="text-emerald-400 font-bold text-lg">[Career Growth]</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-purple-400">🧠</span> AI Brain Analysis
-            </h2>
-            <div className="flex gap-2">
-              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-                Send to AI Advisor →
-              </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-                View AI Brain Hub →
-              </a>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default CareerPathPage;
-```
-
-## `client/src/pages/CertificationsPage.tsx`
-
-```tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Award, Calendar, BookOpenCheck, Zap } from "lucide-react";
-
-const CertificationsPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("active");
-
-  const tabs = [
-    { id: "active", label: "Active Certs" },
-    { id: "renewals", label: "Upcoming Renewals" },
-    { id: "credits", label: "CE Credits" },
-    { id: "materials", label: "Study Materials" },
-    { id: "outcome", label: "Generate Outcome" },
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-6">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Certifications Manager</h1>
-
-        {/* Tab Navigation */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {tabs.map((tab) => (
-            <Button
-              key={tab.id}
-              variant={activeTab === tab.id ? "default" : "outline"}
-              className={`${
-                activeTab === tab.id ? "bg-[#22c55e] hover:bg-[#1ea34d]" : "border-gray-600 text-gray-300"
-              } transition-colors`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-            </Button>
-          ))}
-        </div>
-
-        {/* Tab Content */}
-        <div className="bg-[#141925] p-6 rounded-lg shadow-md">
-          {activeTab === "active" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Active Certifications</h2>
-              <div className="space-y-2">
-                <div className="bg-[#1a202c] p-3 rounded-md">Life & Annuity Cert - Exp. 12/2024</div>
-                <div className="bg-[#1a202c] p-3 rounded-md">IUL Specialist - Exp. 6/2025</div>
-              </div>
-            </div>
-          )}
-          {activeTab === "renewals" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Upcoming Renewals</h2>
-              <p className="text-gray-400">Life & Annuity Cert - Due: 12/2024</p>
-            </div>
-          )}
-          {activeTab === "credits" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">CE Credits</h2>
-              <p className="text-gray-400">Total Earned: 24 | Required for Renewal: 30</p>
-            </div>
-          )}
-          {activeTab === "materials" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Study Materials</h2>
-              <p className="text-gray-400">Available: IUL Advanced Guide, FIA Exam Prep</p>
-              <Button className="mt-2 bg-[#22c55e] hover:bg-[#1ea34d]">Download</Button>
-            </div>
-          )}
-          {activeTab === "outcome" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Generate Outcome</h2>
-              <form className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Certification Goal"
-                  className="w-full bg-[#1a202c] p-3 rounded-md border border-gray-600"
-                />
-                <select className="w-full bg-[#1a202c] p-3 rounded-md border border-gray-600">
-                  <option>Focus Area</option>
-                  <option>IUL Specialist</option>
-                  <option>FIA Expert</option>
-                </select>
-                <Button className="bg-[#22c55e] hover:bg-[#1ea34d]">Generate Study Plan</Button>
-              </form>
-            </div>
-          )}
-        </div>
-
-        {/* Cross-Tool Integration */}
-        <div className="mt-6 bg-[#141925] p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Zap className="text-[#22c55e]" size={24} /> Cross-Tool Integration
-          </h2>
-          <p className="text-gray-400">Sync certifications with Training and Career Path.</p>
-          <Button variant="outline" className="mt-2 border-[#22c55e] text-[#22c55e]">
-            Link Tools
-          </Button>
-        </div>
-
-        {/* Page Insights Badge */}
-        <div className="mt-6 text-center">
-          <div className="inline-block bg-[#1a202c] px-4 py-2 rounded-md text-sm">
-            Page Insights Score: <span className="text-[#22c55e]">90/100</span>
-          </div>
-        </div>
-
-        {/* Regulatory Disclaimer */}
-        <p className="mt-4 text-gray-500 text-sm text-center">
-          Certification tracking is for reference only. Verify status with regulatory bodies. Russell Capital Systems is not a certifying entity.
-        </p>
-
-        {/* ━━━ 50-YEAR PROJECTION ENGINE ━━━ */}
-        <div className="mt-12 bg-[#0c1425] border border-emerald-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">50-Year Projection Engine</h2>
-          <div className="flex items-center gap-4 mb-6">
-            <label className="text-sm text-slate-400">Projection Horizon:</label>
-            <input type="range" min="1" max="50" defaultValue="30" className="flex-1 accent-emerald-500"
-              onChange={(e) => {
-                const val = e.target.value;
-                document.getElementById('proj-year-certifications')!.textContent = val;
-              }} />
-            <span id="proj-year-certifications" className="text-emerald-400 font-bold text-lg w-12 text-center">30</span>
-            <span className="text-slate-500 text-sm">years</span>
-          </div>
-          <div className="flex gap-2 mb-6">
-            {['Conservative', 'Moderate', 'Aggressive'].map((s, i) => (
-              <button key={s} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                i === 1 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-              }`}>{s}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-5 gap-4 text-center">
-            {[5, 10, 20, 30, 50].map(yr => (
-              <div key={yr} className="bg-[#1e293b] rounded-lg p-4">
-                <div className="text-slate-500 text-xs mb-1">Year {yr}</div>
-                <div className="text-emerald-400 font-bold text-lg">[Certification Impact]</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-        <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-purple-400">🧠</span> AI Brain Analysis
-            </h2>
-            <div className="flex gap-2">
-              <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
-                Send to AI Advisor →
-              </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
-                View AI Brain Hub →
-              </a>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-amber-400 text-sm font-semibold mb-2">⚡ Immediate Action</div>
-              <p className="text-slate-300 text-sm">Run this calculator with client data, then let the AI Advisor generate a personalized recommendation based on the 50-year projection.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-emerald-400 text-sm font-semibold mb-2">📊 Cross-Calculator Insight</div>
-              <p className="text-slate-300 text-sm">This tool syncs with all 248+ calculators via StrategyContext. Changes here automatically cascade to related projections across the platform.</p>
-            </div>
-            <div className="bg-[#1e293b] rounded-lg p-4">
-              <div className="text-rose-400 text-sm font-semibold mb-2">🛡️ Risk Assessment</div>
-              <p className="text-slate-300 text-sm">The AI Brain continuously monitors market conditions and adjusts risk scores. Connect to the AI Advisor for real-time mitigation strategies.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default CertificationsPage;
 ```
 
