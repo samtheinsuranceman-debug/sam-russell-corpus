@@ -135,6 +135,7 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 ### AI advisors (optional — each is skip‑if‑absent; add the ones you use)
 `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `GEMINI_API_KEY`,
 `PERPLEXITY_API_KEY`, `OPENROUTER_API_KEY`, `MISTRAL_API_KEY`, `GROQ_API_KEY`,
+`COHERE_API_KEY`, `DEEPSEEK_API_KEY`, `TOGETHER_API_KEY`,
 `BUILT_IN_FORGE_API_KEY` (Manus / built‑in gateway; also powers `BUILT_IN_FORGE_API_URL` if self‑hosted).
 > With zero AI keys the homepage concierge degrades gracefully to a written teaser.
 

@@ -102,6 +102,7 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `shared/advancedAnalytics.ts`
 - `shared/advisorySummaryData.ts`
 - `shared/annuityData.ts`
+- `shared/assessmentBridge.ts`
 - `shared/branding.ts`
 - `shared/carrierRatings.ts`
 - `shared/carrierRecommendation.ts`
@@ -184,8 +185,6 @@ This is one part of the complete, plain-Markdown source of the Russell Capital S
 - `server/mortgageKillerPdf.ts`
 - `server/pdfExportService.ts`
 - `server/pdfReport.ts`
-- `server/planningCasesRouter.ts`
-- `server/portalAI.ts`
 
 ---
 
@@ -329,6 +328,7 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 ### AI advisors (optional — each is skip‑if‑absent; add the ones you use)
 `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `GEMINI_API_KEY`,
 `PERPLEXITY_API_KEY`, `OPENROUTER_API_KEY`, `MISTRAL_API_KEY`, `GROQ_API_KEY`,
+`COHERE_API_KEY`, `DEEPSEEK_API_KEY`, `TOGETHER_API_KEY`,
 `BUILT_IN_FORGE_API_KEY` (Manus / built‑in gateway; also powers `BUILT_IN_FORGE_API_URL` if self‑hosted).
 > With zero AI keys the homepage concierge degrades gracefully to a written teaser.
 
@@ -1311,6 +1311,7 @@ Required:
 AI (any you use; skip-if-absent):
   ANTHROPIC_API_KEY  OPENAI_API_KEY  XAI_API_KEY  GEMINI_API_KEY
   PERPLEXITY_API_KEY  OPENROUTER_API_KEY  MISTRAL_API_KEY  GROQ_API_KEY
+  COHERE_API_KEY  DEEPSEEK_API_KEY  TOGETHER_API_KEY
   BUILT_IN_FORGE_API_KEY   (Manus / built-in gateway)
 Email — how you hear about new leads (pick one):
   SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS [SMTP_FROM]   (Gmail app password or a cPanel mailbox; nothing to verify)
@@ -2104,7 +2105,7 @@ step "3/7 database schema SQL";  bash scripts/export_schema_sql.sh
 # with no database. (`pnpm test` runs the whole suite, parts of which need a live DB.)
 step "4/7 tests";               npx vitest run server/concept16Homepage.test.ts server/livePageParity.test.ts server/databaseSchemaFile.test.ts \
                                   server/homepage-typography-scale.test.ts server/leadStrategy.test.ts \
-                                  server/leadsRouter.test.ts server/ownerLogin.test.ts server/mailer.test.ts server/journeyEngine.test.ts server/librarian.test.ts server/wealthGenome.test.ts server/jsonColumn.test.ts server/ultraAI-providers.test.ts
+                                  server/leadsRouter.test.ts server/ownerLogin.test.ts server/mailer.test.ts server/journeyEngine.test.ts server/librarian.test.ts server/wealthGenome.test.ts server/assessmentBridge.test.ts server/jsonColumn.test.ts server/ultraAI-providers.test.ts
 step "5/7 production build";    pnpm build && node scripts/check_production_bundle.mjs
 step "6/7 deploy bundle";       bash scripts/build_deploy_bundle.sh
 step "7/7 code book";           python3 scripts/build_code_book.py | tail -1
@@ -9453,6 +9454,165 @@ export function getFullStateReport(stateCode: StateCode) {
     mygaProducts,
     totalProducts: incomeProducts.length + growthProducts.length + mygaProducts.length,
   };
+}
+```
+
+## `shared/assessmentBridge.ts`
+
+```ts
+// ============================================================
+// ASSESSMENT → CALCULATOR BRIDGE
+// Maps the client's completed Financial Assessment onto the flat data shape
+// every portal calculator already consumes (ClientFactFinderData in
+// client/src/contexts/ClientDataContext.tsx), so Mortgage Killer, Income Gap,
+// Roth Strategies, Market Stress Test and the rest start pre-filled from the
+// assessment instead of asking the client to retype. The assessment stays the
+// single source of truth; nothing here invents a number — missing inputs stay
+// at zero and are reported in `missing` so a page can say so.
+// ============================================================
+import { isBlank, type ClientFactFinder } from "./clientFactFinder";
+
+export type AssessmentClientData = {
+  clientId: number;
+  clientName: string;
+  email: string;
+  phone: string;
+  age: number;
+  state: string;
+  filingStatus: "single" | "joint" | "hoh";
+  spouseName: string;
+  spouseAge: number;
+  dependents: number;
+  annualIncome: number;
+  spouseIncome: number;
+  monthlyExpenses: number;
+  cashSavings: number;
+  taxableInvestments: number;
+  realEstateEquity: number;
+  homeValue: number;
+  iraBalance: number;
+  rothBalance: number;
+  k401Balance: number;
+  pensionIncome: number;
+  socialSecurityEstimate: number;
+  lifeInsuranceCv: number;
+  lifeInsuranceDb: number;
+  annualPremium: number;
+  annuityValue: number;
+  hasLTC: boolean;
+  mortgageBalance: number;
+  mortgageRate: number;
+  mortgageYearsLeft: number;
+  totalMortgageInterest: number;
+  otherDebt: number;
+  helocRate: number;
+  helocMaxLtv: number;
+  retirementAge: number;
+  annualIncomeNeeded: number;
+  legacyGoal: number;
+  riskTolerance: number;
+  children: never[];
+  grandchildren: never[];
+};
+
+const num = (v: unknown): number => (typeof v === "number" && Number.isFinite(v) ? v : 0);
+const str = (v: unknown): string => (typeof v === "string" ? v : "");
+
+export function ageFromDob(dob: unknown, now = new Date()): number {
+  if (typeof dob !== "string" || !dob) return 0;
+  const d = new Date(dob);
+  if (Number.isNaN(d.getTime())) return 0;
+  return Math.max(0, Math.floor((now.getTime() - d.getTime()) / (365.25 * 24 * 3600 * 1000)));
+}
+
+/** Total interest still to be paid on a level-payment loan (0 when inputs are missing). */
+export function remainingMortgageInterest(balance: number, annualRatePct: number, yearsLeft: number): number {
+  if (balance <= 0 || yearsLeft <= 0) return 0;
+  const n = Math.round(yearsLeft * 12);
+  const r = annualRatePct / 100 / 12;
+  if (r <= 0) return 0;
+  const payment = (balance * r) / (1 - Math.pow(1 + r, -n));
+  return Math.max(0, Math.round(payment * n - balance));
+}
+
+export function riskToleranceScore(label: unknown): number {
+  const s = str(label);
+  if (/^Conservative/.test(s)) return 2;
+  if (/Moderately conservative/.test(s)) return 4;
+  if (/^Moderate$/.test(s)) return 5;
+  if (/Moderately aggressive/.test(s)) return 7;
+  if (/^Aggressive/.test(s)) return 9;
+  return 5;
+}
+
+export type BridgeResult = { data: AssessmentClientData; missing: string[] };
+
+/**
+ * Build calculator inputs from the assessment. `missing` names the calculator
+ * inputs the assessment could not supply (left at 0), so pages can flag them
+ * instead of silently using a default.
+ */
+export function assessmentToClientData(ff: ClientFactFinder, opts: { fallbackName?: string; now?: Date } = {}): BridgeResult {
+  const s = (id: string) => ff.sections?.[id] ?? {};
+  const hh = s("household"), inc = s("income"), tax = s("taxes"), re = s("realEstate"), debt = s("debts"), inv = s("investments");
+  const cash = s("cash"), flow = s("cashFlow"), ins = s("insurance"), ret = s("retirement");
+  const missing: string[] = [];
+  const need = (label: string, v: number) => { if (v <= 0) missing.push(label); return v; };
+
+  const name = [hh.firstName, hh.lastName].filter((v) => !isBlank(v as never)).join(" ") || opts.fallbackName || "Client";
+  const filing: AssessmentClientData["filingStatus"] = /jointly|surviving/i.test(str(tax.filingStatus)) ? "joint" : /head of household/i.test(str(tax.filingStatus)) ? "hoh" : "single";
+  const annualIncome = need("Annual income", num(inc.w2Income) + num(inc.bonusIncome) + num(inc.contractorIncome) + num(inc.practiceDistributions) + num(inc.rsuOrEquityComp));
+  const mortgageBalance = num(re.primaryMortgageBalance);
+  const mortgageRate = num(re.primaryMortgageRate);
+  const mortgageYearsLeft = num(re.primaryMortgageYearsRemaining);
+  const monthlyExpenses = need("Monthly expenses", num(flow.monthlyFixedExpenses) + num(flow.monthlyDiscretionary));
+  const retirementAge = need("Target retirement age", num(ret.targetRetirementAge));
+  const annualIncomeNeeded = need("Retirement income target", num(ret.desiredRetirementIncomeMonthly) * 12);
+  const age = need("Age (date of birth)", ageFromDob(hh.dateOfBirth, opts.now));
+
+  const data: AssessmentClientData = {
+    clientId: -1,
+    clientName: name,
+    email: str(hh.email),
+    phone: str(hh.phone),
+    age,
+    state: str(hh.stateOfResidence) || "",
+    filingStatus: filing,
+    spouseName: str(hh.spouseFirstName),
+    spouseAge: ageFromDob(hh.spouseDateOfBirth, opts.now),
+    dependents: num(hh.dependents),
+    annualIncome,
+    spouseIncome: num(inc.spouseIncome),
+    monthlyExpenses,
+    cashSavings: num(cash.checking) + num(cash.savings) + num(cash.moneyMarketCds),
+    taxableInvestments: num(inv.taxableBrokerage),
+    realEstateEquity: num(re.homeEquity),
+    homeValue: num(re.primaryHomeValue),
+    iraBalance: num(inv.traditionalIra),
+    rothBalance: num(inv.rothIra) + num(inv.roth401k),
+    k401Balance: num(inv.employerPlanBalance),
+    pensionIncome: num(ret.pensionIncome) * 12,
+    socialSecurityEstimate: num(ret.socialSecuritySelf),
+    lifeInsuranceCv: num(ins.permanentLifeCashValue),
+    lifeInsuranceDb: num(ins.termLifeDeathBenefit) + num(ins.permanentLifeDeathBenefit),
+    annualPremium: num(ins.lifePremiumAnnual),
+    annuityValue: num(inv.annuities),
+    hasLTC: Boolean(str(ins.ltcCoverage)) && !/None/.test(str(ins.ltcCoverage)),
+    mortgageBalance,
+    mortgageRate,
+    mortgageYearsLeft,
+    totalMortgageInterest: remainingMortgageInterest(mortgageBalance, mortgageRate, mortgageYearsLeft),
+    otherDebt: num(debt.studentLoanBalance) + num(debt.practiceLoanBalance) + num(debt.autoLoans) + num(debt.creditCardBalance) + num(debt.personalLoans) + num(debt.otherDebt),
+    helocRate: num(re.helocRate),
+    helocMaxLtv: 80,
+    retirementAge,
+    annualIncomeNeeded,
+    legacyGoal: 0,
+    riskTolerance: riskToleranceScore(inv.riskTolerance),
+    children: [],
+    grandchildren: [],
+  };
+  return { data, missing };
 }
 ```
 
@@ -42004,197 +42164,6 @@ export async function generateClientReport(clientId: number, workspaceId: number
 
     doc.end();
   });
-}
-```
-
-## `server/planningCasesRouter.ts`
-
-```ts
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-import {
-  createPlanningCase,
-  createPlanningCaseNote,
-  ensureMembership,
-  getClientById,
-  getOrCreateWorkspace,
-  getPlanningCaseById,
-  getUserPortalPreferences,
-  getWorkspaceByOwnerId,
-  listPlanningCaseNotes,
-  listPlanningCases,
-  resolvePlanningCaseNote,
-  updatePlanningCase,
-  upsertUserPortalPreferences,
-} from "./db";
-import { protectedProcedure, router } from "./_core/trpc";
-
-async function workspaceForUser(userId: number) {
-  const existing = await getWorkspaceByOwnerId(userId);
-  if (existing) {
-    await ensureMembership(userId, existing.id);
-    return existing;
-  }
-  const workspace = await getOrCreateWorkspace(userId, "My Workspace", `workspace-${userId}-${Date.now()}`);
-  if (!workspace) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Unable to create workspace" });
-  await ensureMembership(userId, workspace.id);
-  return workspace;
-}
-
-const recordSchema = z.record(z.string(), z.unknown());
-
-export const planningCasesRouter = router({
-  list: protectedProcedure.query(async ({ ctx }) => {
-    const workspace = await workspaceForUser(ctx.user.id);
-    return listPlanningCases(workspace.id);
-  }),
-
-  get: protectedProcedure.input(z.object({ id: z.number().int().positive() })).query(async ({ ctx, input }) => {
-    const workspace = await workspaceForUser(ctx.user.id);
-    const planningCase = await getPlanningCaseById(input.id, workspace.id);
-    if (!planningCase) throw new TRPCError({ code: "NOT_FOUND", message: "Planning case not found" });
-    return planningCase;
-  }),
-
-  create: protectedProcedure.input(z.object({
-    title: z.string().trim().min(2).max(300),
-    clientId: z.number().int().positive().nullable().optional(),
-    caseType: z.string().trim().min(2).max(100).default("comprehensive"),
-  })).mutation(async ({ ctx, input }) => {
-    const workspace = await workspaceForUser(ctx.user.id);
-    if (input.clientId) {
-      const client = await getClientById(input.clientId, workspace.id);
-      if (!client) throw new TRPCError({ code: "BAD_REQUEST", message: "Client does not belong to this workspace" });
-    }
-    return createPlanningCase({
-      workspaceId: workspace.id,
-      userId: ctx.user.id,
-      clientId: input.clientId ?? null,
-      title: input.title,
-      caseType: input.caseType,
-      status: "draft",
-      currentStage: "discovery",
-      assumptions: {},
-      results: {},
-      workflowState: { completedSteps: [] },
-    });
-  }),
-
-  update: protectedProcedure.input(z.object({
-    id: z.number().int().positive(),
-    title: z.string().trim().min(2).max(300).optional(),
-    status: z.enum(["draft", "active", "review", "completed", "archived"]).optional(),
-    currentStage: z.string().trim().min(2).max(100).optional(),
-    assumptions: recordSchema.optional(),
-    results: recordSchema.optional(),
-    workflowState: recordSchema.optional(),
-  })).mutation(async ({ ctx, input }) => {
-    const workspace = await workspaceForUser(ctx.user.id);
-    const existing = await getPlanningCaseById(input.id, workspace.id);
-    if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Planning case not found" });
-    const { id, ...changes } = input;
-    return updatePlanningCase(id, workspace.id, changes);
-  }),
-
-  notes: protectedProcedure.input(z.object({ planningCaseId: z.number().int().positive() })).query(async ({ ctx, input }) => {
-    const workspace = await workspaceForUser(ctx.user.id);
-    const planningCase = await getPlanningCaseById(input.planningCaseId, workspace.id);
-    if (!planningCase) throw new TRPCError({ code: "NOT_FOUND", message: "Planning case not found" });
-    return listPlanningCaseNotes(input.planningCaseId);
-  }),
-
-  addNote: protectedProcedure.input(z.object({
-    planningCaseId: z.number().int().positive(),
-    noteType: z.enum(["advisor", "client", "compliance", "system"]).default("advisor"),
-    content: z.string().trim().min(1).max(10_000),
-  })).mutation(async ({ ctx, input }) => {
-    const workspace = await workspaceForUser(ctx.user.id);
-    const planningCase = await getPlanningCaseById(input.planningCaseId, workspace.id);
-    if (!planningCase) throw new TRPCError({ code: "NOT_FOUND", message: "Planning case not found" });
-    return createPlanningCaseNote({ ...input, userId: ctx.user.id });
-  }),
-
-  resolveNote: protectedProcedure.input(z.object({
-    planningCaseId: z.number().int().positive(),
-    noteId: z.number().int().positive(),
-    resolved: z.boolean(),
-  })).mutation(async ({ ctx, input }) => {
-    const workspace = await workspaceForUser(ctx.user.id);
-    const planningCase = await getPlanningCaseById(input.planningCaseId, workspace.id);
-    if (!planningCase) throw new TRPCError({ code: "NOT_FOUND", message: "Planning case not found" });
-    await resolvePlanningCaseNote(input.noteId, input.planningCaseId, input.resolved);
-    return { success: true } as const;
-  }),
-
-  preferences: protectedProcedure.query(async ({ ctx }) => {
-    const workspace = await workspaceForUser(ctx.user.id);
-    return getUserPortalPreferences(ctx.user.id, workspace.id);
-  }),
-
-  savePreferences: protectedProcedure.input(z.object({
-    defaultLandingPath: z.string().max(500).optional(),
-    openNavGroups: z.array(z.string().max(200)).max(50).optional(),
-    secondaryCategories: z.array(z.string().max(200)).max(20).optional(),
-    compactSidebar: z.boolean().optional(),
-    reduceMotion: z.boolean().optional(),
-    lastVisitedPath: z.string().max(500).optional(),
-  })).mutation(async ({ ctx, input }) => {
-    const workspace = await workspaceForUser(ctx.user.id);
-    return upsertUserPortalPreferences(ctx.user.id, workspace.id, input);
-  }),
-});
-```
-
-## `server/portalAI.ts`
-
-```ts
-import { invokeLLM, type InvokeParams } from "./_core/llm";
-
-export type PortalAIOptions = {
-  operation: string;
-  timeoutMs?: number;
-};
-
-export type PortalAIResult = {
-  content: string;
-  model: string;
-};
-
-const DEFAULT_TIMEOUT_MS = 45_000;
-
-export async function invokePortalAI(
-  params: InvokeParams,
-  options: PortalAIOptions,
-): Promise<PortalAIResult> {
-  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  let timer: ReturnType<typeof setTimeout> | undefined;
-
-  try {
-    const timeout = new Promise<never>((_, reject) => {
-      timer = setTimeout(() => reject(new Error("PORTAL_AI_TIMEOUT")), timeoutMs);
-    });
-    const response = await Promise.race([invokeLLM(params), timeout]);
-    const raw = response.choices[0]?.message?.content;
-    const content = typeof raw === "string"
-      ? raw.trim()
-      : Array.isArray(raw)
-        ? raw.filter(part => part.type === "text").map(part => part.text).join("\n").trim()
-        : "";
-
-    if (!content) throw new Error("PORTAL_AI_EMPTY_RESPONSE");
-    return { content, model: response.model };
-  } catch (error) {
-    const reason = error instanceof Error ? error.message : "unknown";
-    console.error(`[PortalAI] ${options.operation} failed`, {
-      reason: reason.startsWith("LLM invoke failed") ? "upstream_request_failed" : reason,
-    });
-    if (reason === "PORTAL_AI_TIMEOUT") {
-      throw new Error("The AI service timed out. Your saved data was not changed; please retry.");
-    }
-    throw new Error("The AI service is temporarily unavailable. Your saved data was not changed; please retry.");
-  } finally {
-    if (timer) clearTimeout(timer);
-  }
 }
 ```
 

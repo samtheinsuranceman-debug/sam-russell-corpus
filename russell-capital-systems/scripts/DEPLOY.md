@@ -24,6 +24,7 @@ Required:
 AI (any you use; skip-if-absent):
   ANTHROPIC_API_KEY  OPENAI_API_KEY  XAI_API_KEY  GEMINI_API_KEY
   PERPLEXITY_API_KEY  OPENROUTER_API_KEY  MISTRAL_API_KEY  GROQ_API_KEY
+  COHERE_API_KEY  DEEPSEEK_API_KEY  TOGETHER_API_KEY
   BUILT_IN_FORGE_API_KEY   (Manus / built-in gateway)
 Email — how you hear about new leads (pick one):
   SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS [SMTP_FROM]   (Gmail app password or a cPanel mailbox; nothing to verify)
