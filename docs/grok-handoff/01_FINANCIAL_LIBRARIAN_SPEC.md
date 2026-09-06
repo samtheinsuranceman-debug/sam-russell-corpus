@@ -32,8 +32,9 @@ URLs, calculators included — in a logical, building sequence.
 | Journey engine | `shared/journeyEngine.ts` | Deterministic: `detectTags`, `factFinderSignals`, `distillQuestions`, `emergentQuestion`, `buildJourney`, `validateJourney`. |
 | Librarian API | `server/librarianRouter.ts` (`librarian.status/ask/journey/latestJourney`) | Gate → fan-out to providers → synthesis by the lead model; AI may only polish wording of a journey, never its pages. Offline fallback answers from the assessment alone. |
 | Tape recorder | `client/src/components/TapeRecorderAdvisor.tsx` | REC (Web Speech), PLAY, STOP, TYPE, JOURNEY; ElevenLabs voice via `ultra.speak` when configured, else browser speech. |
-| Advisor page | `client/src/pages/portal/AIFinancialAdvisor.tsx` → `/portal/ai-advisor` | Deck + "what it knows" + the journey (core questions, emergent question, ordered steps with visited state). |
-| Navigation | `client/src/components/AppShell.tsx` → group **New Client Welcome List** | Assessment → AI Financial Advisor → Wealth Genome → The Arrival … The Brotherhood. |
+| Advisor page | `client/src/pages/portal/AIFinancialAdvisor.tsx` → `/portal/ai-advisor` | Deck + "what it knows" + the journey (core questions, emergent question, controls, ordered steps with guides and visited state). |
+| My Secret Journey | `client/src/pages/portal/MyJourney.tsx` → `/portal/my-journey` | The latest journey as its own page: resume where you left off, guides per step, controls. |
+| Navigation | `client/src/components/AppShell.tsx` → group **New Client Welcome List** | Assessment → AI Financial Advisor → My Secret Journey → Wealth Genome → The Arrival … The Brotherhood. `JourneyProgressBar` shows step N of M + the guide on every journey page. |
 
 ## Rules the librarian obeys (do not loosen)
 
@@ -42,6 +43,8 @@ URLs, calculators included — in a logical, building sequence.
 3. **Education, not advice.** Projections under stated assumptions, no guarantees, no product solicitation; the licensed advisor and the tax professional team review suitability and IRS compliance before anything is implemented. The compliance line is on the deck.
 4. **Pages are real.** Every journey step must exist in `JOURNEY_CATALOG` (validated) and every catalog path must be a route in `App.tsx`.
 5. **Sizes.** 3–5 core questions, one emergent question, 10–15 steps, first step is orientation, last step is a review page, steps are sorted by `builds` so each page builds on the previous one.
+6. **Every step walks the client through.** Each step carries a `guide`: which core question it works on plus the page's `walkthrough` from the catalog ("do this, then carry forward that"). The progress bar shows it on the page and can read it aloud.
+7. **Variables are named.** Every journey carries `controls`: `youControl` (from the client's questions and signals — savings rate, payoff speed, conversion pace, coverage, structures, and always "when the first move happens") and `youDont` (markets, rates, tax law, longevity, health, inflation). This is how the journey "controls the volatility": by fixing the first list, not predicting the second.
 
 ## How a journey is composed (engine)
 
@@ -54,7 +57,7 @@ URLs, calculators included — in a logical, building sequence.
 
 ## Extending it
 
-- **Add a page to journeys:** append to `JOURNEY_CATALOG` (id, path that exists in `App.tsx`, title, purpose, kind, tags, builds). The tests check uniqueness and `/portal/` paths.
+- **Add a page to journeys:** append to `JOURNEY_CATALOG` (id, path that exists in `App.tsx`, title, purpose, kind, tags, builds, and a `walkthrough` ending in "Carry forward: …"). The tests check uniqueness, `/portal/` paths, and the walkthrough.
 - **Add a topic:** add a keyword regex in `TOPIC_KEYWORDS`, a template in `CORE_TEMPLATES`, aliases in `TAG_ALIASES`, optionally an `EMERGENT_TEMPLATES` entry and a signal in `factFinderSignals`.
 - **Add an assessment field:** append to the section in `FACT_FINDER_SECTIONS`; mark `required` only if the advisor genuinely cannot advise without it (required fields gate the advisor). The UI, storage, summary, document, and completeness all follow automatically.
 - **Voice:** set `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` on the host; the deck then speaks in the cloned voice. Without them it uses the browser's voice.

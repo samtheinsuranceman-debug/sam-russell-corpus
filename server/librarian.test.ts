@@ -95,6 +95,12 @@ describe("answering once complete", () => {
     expect(r.journeyId).toBe(7);
     expect(state.journeys).toHaveLength(1);
     expect(r.spoken).toContain("you haven't asked yet");
+    expect(r.spoken).toMatch(/you control \d+ variables/);
+    expect(j.controls.youControl.length).toBeGreaterThan(0);
+    expect(j.steps.every((s) => s.guide.length > 40)).toBe(true);
+    const stored = state.journeys[0] as { steps: Array<{ guide?: string }>; controls?: unknown };
+    expect(stored.steps[0]!.guide).toBeTruthy();
+    expect(stored.controls).toBeTruthy();
   });
 
   it("keeps the engine's pages even when the AI polish returns something invalid", async () => {
