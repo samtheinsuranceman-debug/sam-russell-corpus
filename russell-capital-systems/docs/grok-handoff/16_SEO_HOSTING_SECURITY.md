@@ -43,6 +43,7 @@ The browser measures LCP, CLS, INP, FCP and TTFB with `PerformanceObserver` and 
 
 ## Also in this pass
 - **Phones.** The body-level "breathing" animation applied a transform and filter to `<body>`, which made every `position:fixed` element (navigation, the sticky call-to-action, the mic button) scroll away — removed; the ambient orbs still breathe. The hero shows the whole neon sign on phones (in flow, `object-contain`) with the headline as real text; `maximum-scale=1` dropped so pinch-zoom works; every image is capped at its container. Favicon set added (`favicon.svg`, `.ico`, `apple-touch-icon.png`, `site.webmanifest`).
+- **The static homepage on GitHub Pages** (`docs/index.html`, built from `live/rcs-live-homepage.template.html`) had no document head at all — no doctype, charset or viewport meta — so phones laid it out at desktop width and the cover-fit sign was cropped to a third. It now carries a full head (viewport, title, description, canonical, Open Graph, favicon, Organization/WebSite JSON-LD) and the same phone hero treatment.
 - **Every-page advisor** — see `17_EVERY_PAGE_ADVISOR.md`.
 
 ## Not done (the owner's steps)
