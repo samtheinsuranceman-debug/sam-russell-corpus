@@ -19,6 +19,7 @@
 //   both in today's dollars. Every assumption is an input, printed back.
 // ============================================================
 import { TOP_MARGINAL_RATE, windowStats, type WindowStats, type YearValue } from "./taxHistory";
+import { DEM_LEVER_SHARE, MIN_WINDOWS, baseRateFor, conditionalWindowStats, type PowerBucket } from "./powerHistory";
 import { computeTaxPicture, currentRules, type FilingKey, type TaxRuleSet } from "./taxRules";
 
 export const HORIZONS = [5, 10, 15, 20, 25, 30, 35, 40] as const;
@@ -84,7 +85,47 @@ export type TrajectoryPoint = {
   /** 0..1: how much the history and the panel agree, and how much of the panel spoke */
   confidence: number;
   weightOnHistory: number;
+  /** the power layer: which base rate the history term used, and how much control alone moves the odds */
+  power: PowerPoint | null;
 };
+
+export type PowerInput = {
+  /** Democratic share of the federal levers today (president ½, Senate ¼, House ¼) */
+  shareToday: number;
+  /** expected share once the next elections seat, from the markets where they have spoken */
+  expectedShareNext: number;
+  /** the year the next elected government is seated */
+  seatedYear: number;
+  /** the long-run mean share since 1946; the path settles back to it after one full term */
+  longRunShare: number;
+};
+
+export type PowerPoint = {
+  leverShareExpected: number;   // mean expected share over the window
+  bucket: PowerBucket;          // which bucket that share lands in
+  pUpConditional: number;       // P(rate higher) in that bucket's windows
+  windows: number;              // how many windows the bucket has
+  fellBack: boolean;            // true when the bucket was thin and the unconditional rate was used
+  pHigherIfLeft: number;        // the blended P(higher) had the left held ≥ ⅔ of the levers
+  pHigherIfRight: number;       // … had the right held ≥ ⅔
+  powerSwing: number;           // pHigherIfLeft − pHigherIfRight
+};
+
+/** Mean of the DEM lever share since 1946: where the path settles after one term. */
+export function longRunLeverShare(from = 1946): number {
+  const xs = DEM_LEVER_SHARE.filter((p) => p.year >= from && p.value != null).map((p) => p.value as number);
+  return xs.length ? Math.round((xs.reduce((s, v) => s + v, 0) / xs.length) * 1000) / 1000 : 0.5;
+}
+
+/** Expected Democratic lever share averaged over the h years after startYear. */
+export function expectedShareOver(power: PowerInput, startYear: number, h: number): number {
+  let sum = 0;
+  for (let k = 0; k < h; k += 1) {
+    const y = startYear + k;
+    sum += y < power.seatedYear ? power.shareToday : y < power.seatedYear + 4 ? power.expectedShareNext : power.longRunShare;
+  }
+  return h > 0 ? sum / h : power.shareToday;
+}
 
 export type TrajectoryInput = {
   startYear: number;
@@ -95,6 +136,8 @@ export type TrajectoryInput = {
   totalPanelWeight: number;
   /** weight of the whole panel, speaking or not; tempers confidence */
   allPanelWeight?: number;
+  /** the power layer; when absent the unconditional history is used */
+  power?: PowerInput | null;
 };
 
 export function taxTrajectory(input: TrajectoryInput): TrajectoryPoint[] {
@@ -106,13 +149,26 @@ export function taxTrajectory(input: TrajectoryInput): TrajectoryPoint[] {
     // History carries the base rate; the panel moves it in proportion to how
     // much of the speaking panel addressed this horizon (up to 80%).
     const wHist = 1 - 0.8 * cons.coverage;
+    // The power layer: the history term becomes the base rate of the windows
+    // during which the expected holders of the levers held them, when the
+    // record has enough such windows; otherwise the unconditional rate.
+    const from = input.historyFrom ?? 1946;
+    let pUp = hist.pUp, relMove = hist.meanAbsRelChange, power: PowerPoint | null = null;
+    if (input.power) {
+      const share = expectedShareOver(input.power, input.startYear, h);
+      const br = baseRateFor(series, h, share, from);
+      if (!br.fellBack) { pUp = br.used.pUp; relMove = br.used.meanAbsRelChange; }
+      const blend = (p: number) => wHist * p + (1 - wHist) * ((cons.direction + 1) / 2);
+      const leftP = br.left.windows >= MIN_WINDOWS ? br.left.pUp : hist.pUp, rightP = br.right.windows >= MIN_WINDOWS ? br.right.pUp : hist.pUp;
+      power = { leverShareExpected: r3(share), bucket: br.bucket, pUpConditional: br.used.pUp, windows: br.used.windows, fellBack: br.fellBack, pHigherIfLeft: r3(blend(leftP)), pHigherIfRight: r3(blend(rightP)), powerSwing: r3(blend(leftP) - blend(rightP)) };
+    }
     // History gives the odds a rate is higher after h years and the typical
     // size of a move relative to where the rate stood; the panel shifts the
     // odds where it has spoken and, where it offers a burden multiplier,
     // supplies it directly. The expected rate follows the burden, so the
     // number a client reads is the same one the projection charges them.
-    const pHigher = wHist * hist.pUp + (1 - wHist) * ((cons.direction + 1) / 2);
-    const histMultiplier = Math.max(0.25, 1 + (2 * pHigher - 1) * hist.meanAbsRelChange);
+    const pHigher = wHist * pUp + (1 - wHist) * ((cons.direction + 1) / 2);
+    const histMultiplier = Math.max(0.25, 1 + (2 * pHigher - 1) * relMove);
     const burden = cons.burdenMultiplier != null ? wHist * histMultiplier + (1 - wHist) * cons.burdenMultiplier : histMultiplier;
     const topRate = clamp(current * burden, 10, 94);
     const expected = topRate - current;
@@ -122,7 +178,7 @@ export function taxTrajectory(input: TrajectoryInput): TrajectoryPoint[] {
     // A panel where most members have not spoken yet cannot be fully confident.
     const completeness = input.allPanelWeight && input.allPanelWeight > 0 ? Math.min(1, input.totalPanelWeight / input.allPanelWeight) : 1;
     const confidence = clamp((wHist * histConf + (1 - wHist) * panelConf) * (0.5 + 0.5 * completeness), 0, 1);
-    return { horizonYears: h, year: input.startYear + h, history: hist, consensus: cons, pHigher: r3(pHigher), expectedChangePoints: r3(expected), expectedTopRate: r3(topRate), burdenMultiplier: r3(burden), confidence: r3(confidence), weightOnHistory: r3(wHist) };
+    return { horizonYears: h, year: input.startYear + h, history: hist, consensus: cons, pHigher: r3(pHigher), expectedChangePoints: r3(expected), expectedTopRate: r3(topRate), burdenMultiplier: r3(burden), confidence: r3(confidence), weightOnHistory: r3(wHist), power };
   });
 }
 
@@ -252,3 +308,8 @@ function clamp(n: number, lo: number, hi: number): number { return Math.min(hi, 
 function r0(n: number): number { return Math.round(n); }
 function r3(n: number): number { return Math.round(n * 1000) / 1000; }
 function r4(n: number): number { return Math.round(n * 10_000) / 10_000; }
+
+/** The conditional odds table for the page: P(higher) at every horizon under left / divided / right control, with sample sizes. */
+export function conditionalOddsTable(series: YearValue[] = TOP_MARGINAL_RATE, from = 1946) {
+  return HORIZONS.map((h) => ({ horizonYears: h, all: windowStats(series, h, from), left: conditionalWindowStats(series, h, "left", from), divided: conditionalWindowStats(series, h, "divided", from), right: conditionalWindowStats(series, h, "right", from), minWindows: MIN_WINDOWS }));
+}
