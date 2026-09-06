@@ -210,6 +210,31 @@ IDR, NHSC, IHS, VA, NIH) with the date, the amount, the tax, the odds, the
 references, and what the freed payment becomes if invested. No switches;
 any AI key lets the owner harvest new figures into its panel.
 
+### SEO, hosting, security and backups (see docs/grok-handoff/16_SEO_HOSTING_SECURITY.md)
+```bash
+CANONICAL_HOST=www.russellcapitalsystems.com   # http and the apex/www sibling 301 here; HSTS on
+PUBLIC_BASE_URL=https://www.russellcapitalsystems.com
+# CSP_MODE=report-only        # enforce (default) | report-only | off
+# CSP_EXTRA_SRC=https://cdn.example.com
+GOOGLE_SITE_VERIFICATION=…    # Search Console → HTML tag content
+GA_MEASUREMENT_ID=G-…         # GA4 (loads only when set)
+# Local SEO — the same name/address/phone in the footer and the schema:
+BUSINESS_PHONE="+1 304 555 0100"
+BUSINESS_STREET="1 Main Street"  BUSINESS_CITY=Charleston  BUSINESS_STATE=WV  BUSINESS_POSTAL_CODE=25301
+BUSINESS_HOURS="Mo-Fr 09:00-17:00"  BUSINESS_AREA_SERVED="West Virginia"
+GOOGLE_BUSINESS_PROFILE_URL=https://g.page/…
+# Backups — daily at 04:00 UTC; off-site when a bucket is set (any S3-compatible store):
+BACKUP_S3_BUCKET=rcs-backups   BACKUP_S3_PREFIX=rcs-backups/
+S3_ENDPOINT=…  S3_REGION=…  S3_ACCESS_KEY_ID=…  S3_SECRET_ACCESS_KEY=…
+# BACKUP_HOUR_UTC=4  BACKUP_DIR=./backups  BACKUP_KEEP=14  BACKUP_DISABLED=1
+# Owner sign-in second factor:
+OWNER_TOTP_SECRET=…           # pnpm owner:totp prints it and the authenticator URI
+```
+`/portal/site-health` (administrator) runs the whole checklist against the
+live server and names the next step for anything not green. `/healthz` is
+the probe for an uptime monitor. `pnpm db:restore <file|s3://…>` restores a
+backup (docs/RECOVERY_PLAN.md).
+
 ### Connections (every outside platform, switched on by variables)
 The portal page **Connections** (`/portal/connections`) shows every platform the
 site can use and whether it is on. The Plan Ledger is the spine: every event it

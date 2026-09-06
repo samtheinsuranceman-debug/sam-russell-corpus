@@ -25,6 +25,10 @@ import { z } from "zod";
 import { publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { MODULE_CATALOG, type ModuleKey } from "@shared/ultraEngine";
+import { ADVISOR_MODES, MODE_IDS, SINGLE_MODES, modeDef, type AdvisorMode } from "@shared/advisorModes";
+import { buildAnswerPdf } from "./answerPdf";
+import { mailMode, sendMail } from "./_core/mailer";
+import { recordEvent } from "./ledger";
 
 // Owner's standing rule (2026-09-06): DeepSeek is not part of this platform and
 // must not be added back as a provider, a panel voice, or an OpenRouter route.
@@ -246,12 +250,38 @@ const profileSummarySchema = z.object({
   goals: z.string().max(5_000).default(""),
 });
 
+const UNCONFIGURED = "The AI advisor is not configured yet — the site owner needs to add an AI key in the server's environment panel (see docs/ULTRA_AI_ENV.md).";
+type AnswerSectionOut = { id: AdvisorMode; title: string; text: string; via?: string };
+type AskInput = { question: string; pagePath: string; profileSummary: string };
+
+/** One answer in one mode: the shared system prompt plus the mode's instruction and word budget. */
+async function answerInMode(input: AskInput, mode: AdvisorMode): Promise<{ text: string; via: string } | null> {
+  const def = modeDef(mode);
+  return leadModel(
+    ADVISOR_SYSTEM,
+    `The user is on page "${input.pagePath}" of Russell Capital Systems.\n` +
+    (input.profileSummary ? `Their stated profile:\n${input.profileSummary}\n\n` : "No profile has been shared yet.\n\n") +
+    `They asked: "${input.question}"\n\n` +
+    `Answer mode — ${def.label}. ${def.instruction}\n` +
+    `Speak to them directly and concretely. Under ${def.maxWords} words. If the profile is missing facts you need, say which.`,
+  );
+}
+
+/** All five single modes, in parallel, in the order the PDF prints them. */
+async function answerAllModes(input: AskInput): Promise<AnswerSectionOut[] | null> {
+  const answers = await Promise.all(SINGLE_MODES.map((m) => answerInMode(input, m)));
+  if (answers.every((a) => a === null)) return null;
+  return SINGLE_MODES.map((m, i) => ({ id: m, title: modeDef(m).label, text: answers[i]?.text ?? "This mode did not answer; try again in a moment.", via: answers[i]?.via }));
+}
+
 export const ultraRouter = router({
   // Which AI teammates are configured — names only, never key material.
   providers: publicProcedure.query(() => ({
     lead: "claude",
     team: PROVIDERS.map((p) => ({ id: p.id, label: p.label, configured: Boolean(process.env[p.envKey]) })),
     voiceOut: Boolean(process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_VOICE_ID),
+    mailOut: mailMode() !== "none",
+    modes: ADVISOR_MODES.map((m) => ({ id: m.id, label: m.label, short: m.short, blurb: m.blurb })),
     note: "Keys are set in the server's environment panel only.",
   })),
 
@@ -290,27 +320,60 @@ export const ultraRouter = router({
     }),
 
   // Every-page advisor: "what does this page mean for me, given my profile?"
+  // Six ways to answer — direct, deeper, integrated, what's-in-it-for-you,
+  // legal with citations, or all five — chosen by the person asking.
   ask: publicProcedure
     .input(z.object({
       question: z.string().min(1).max(4_000),
       pagePath: z.string().max(200).default("/"),
       profileSummary: z.string().max(20_000).default(""),
+      mode: z.enum(MODE_IDS).default("surface"),
     }))
     .mutation(async ({ input }) => {
-      const lead = await leadModel(
-        ADVISOR_SYSTEM,
-        `The user is on page "${input.pagePath}" of Russell Capital Systems.\n` +
-        (input.profileSummary ? `Their stated profile:\n${input.profileSummary}\n\n` : "No profile has been shared yet.\n\n") +
-        `They asked: "${input.question}"\n\n` +
-        `Answer personally and concretely in under 200 words. If the profile is missing facts you need, say which.`,
-      );
-      if (!lead) {
-        return {
-          answer: "The AI advisor is not configured yet — the site owner needs to add an AI key in the server's environment panel (see docs/ULTRA_AI_ENV.md).",
-          via: "unconfigured",
-        };
+      if (input.mode === "all") {
+        const sections = await answerAllModes(input);
+        if (!sections) return { answer: UNCONFIGURED, via: "unconfigured", mode: input.mode, sections: [] as AnswerSectionOut[] };
+        return { answer: sections.map((s) => `${s.title.toUpperCase()}\n${s.text}`).join("\n\n"), via: sections[0]?.via ?? "lead", mode: input.mode, sections };
       }
-      return { answer: lead.text, via: lead.via };
+      const lead = await answerInMode(input, input.mode);
+      if (!lead) return { answer: UNCONFIGURED, via: "unconfigured", mode: input.mode, sections: [] as AnswerSectionOut[] };
+      return { answer: lead.text, via: lead.via, mode: input.mode, sections: [{ id: input.mode, title: modeDef(input.mode).label, text: lead.text, via: lead.via }] };
+    }),
+
+  // The whole answering process as a PDF, emailed on request. Consent is
+  // explicit (the person confirms the address and ticks the box), sealed on
+  // the ledger when the asker is signed in, and nothing is sent without mail
+  // being configured on the host.
+  emailAnswer: publicProcedure
+    .input(z.object({
+      question: z.string().min(1).max(4_000),
+      pagePath: z.string().max(200).default("/"),
+      profileSummary: z.string().max(20_000).default(""),
+      email: z.string().email().max(200),
+      confirmEmail: z.string().max(200),
+      consent: z.literal(true),
+      sections: z.array(z.object({ id: z.enum(MODE_IDS), title: z.string().max(80), text: z.string().max(12_000), via: z.string().max(60).optional() })).max(6).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const email = input.email.trim().toLowerCase();
+      if (email !== input.confirmEmail.trim().toLowerCase()) return { sent: false as const, reason: "The two email addresses do not match." };
+      if (mailMode() === "none") return { sent: false as const, reason: "Email is not switched on for this site yet (the owner sets RESEND_API_KEY or SMTP_* on the host)." };
+      const sections = input.sections?.length ? input.sections : await answerAllModes(input);
+      if (!sections) return { sent: false as const, reason: UNCONFIGURED };
+      const generatedAt = new Date();
+      const pdf = await buildAnswerPdf({ question: input.question, pagePath: input.pagePath, sections, generatedAt, recipient: email });
+      const stamp = generatedAt.toISOString().slice(0, 10);
+      const result = await sendMail({
+        to: email,
+        subject: `Your question, answered six ways — ${stamp}`,
+        text: `You asked: "${input.question.trim()}"\n\nThe full answering process — direct, deeper, integrated, what's in it for you, and the legal view with citations — is attached as a PDF so you can review it at your own pace.\n\nEducation and projections only, not tax, legal or investment advice.\n\nRussell Capital Systems`,
+        attachments: [{ filename: `rcs-answer-${stamp}.pdf`, content: pdf, contentType: "application/pdf" }],
+        category: "transactional",
+      });
+      if (ctx.user?.id) {
+        void recordEvent({ kind: "consent", source: "client", key: "advisor.emailAnswer", label: "Client asked for the answer by email", value: { email, pagePath: input.pagePath, sections: sections.map((s) => s.id), sent: result.sent }, summary: `${result.sent ? "Emailed" : "Could not email"} the six-way answer to ${email}`, actorName: ctx.user.name ?? null, userId: ctx.user.id }).catch(() => undefined);
+      }
+      return result.sent ? { sent: true as const, to: email, sections: sections.length } : { sent: false as const, reason: result.reason ?? "The mail service refused the message." };
     }),
 
   // Multi-AI panel: fan the same question out to every configured provider,

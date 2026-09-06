@@ -10,6 +10,8 @@ export const ENV = {
   ownerEmail: process.env.OWNER_EMAIL ?? "",
   ownerPasswordHash: process.env.OWNER_PASSWORD_HASH ?? "",
   ownerName: process.env.OWNER_NAME ?? "",
+  // Optional second factor for owner sign-in (base32; see scripts/owner_totp_secret.mjs).
+  ownerTotpSecret: process.env.OWNER_TOTP_SECRET ?? "",
   // Where "new lead" alerts go (falls back to OWNER_EMAIL).
   leadNotifyEmail: process.env.LEAD_NOTIFY_EMAIL ?? "",
   // Optional mobile number (E.164 or 10 digits) that gets a text per new lead.
