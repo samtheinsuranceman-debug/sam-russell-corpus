@@ -48,11 +48,11 @@ beforeEach(() => {
 
 describe("authMode", () => {
   it("reports owner sign-in only when both variables are set", () => {
-    expect(mod.authMode()).toEqual({ managedOAuth: false, ownerLogin: true });
+    expect(mod.authMode()).toEqual({ managedOAuth: false, ownerLogin: true, ownerTotp: false });
     envState.ownerPasswordHash = "";
-    expect(mod.authMode()).toEqual({ managedOAuth: false, ownerLogin: false });
+    expect(mod.authMode()).toEqual({ managedOAuth: false, ownerLogin: false, ownerTotp: false });
     envState.oAuthServerUrl = "https://oauth.example.test";
-    expect(mod.authMode()).toEqual({ managedOAuth: true, ownerLogin: false });
+    expect(mod.authMode()).toEqual({ managedOAuth: true, ownerLogin: false, ownerTotp: false });
   });
 });
 
@@ -101,7 +101,7 @@ describe("HTTP routes", () => {
 
   it("GET /api/auth/mode tells the login page what to show", async () => {
     const res = await fetch(`${base}${mod.AUTH_MODE_PATH}`);
-    expect(await res.json()).toEqual({ managedOAuth: false, ownerLogin: true });
+    expect(await res.json()).toEqual({ managedOAuth: false, ownerLogin: true, ownerTotp: false });
   });
 
   it("signs the owner in with a session cookie the SDK verifies, as admin", async () => {

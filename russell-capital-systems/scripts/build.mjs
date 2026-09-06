@@ -85,4 +85,11 @@ if (analyticsEndpoint && analyticsWebsiteId) {
 }
 
 writeFileSync(path.join(outDir, "index.html"), html);
+
+// Every route the app declares, so the server can answer a real 404 for the
+// paths it does not know instead of serving the shell with status 200.
+const appSource = readFileSync(path.join(clientDir, "src", "App.tsx"), "utf8");
+const routes = Array.from(new Set(Array.from(appSource.matchAll(/<Route\s+path="([^"]+)"/g), (m) => m[1])));
+writeFileSync(path.join(outDir, "routes.json"), JSON.stringify({ generatedAt: new Date().toISOString(), routes }, null, 0));
+console.log(`[build] ${routes.length} route patterns written to dist/public/routes.json`);
 console.log("[build] Frontend emitted to dist/public with esbuild code splitting and compiled Tailwind CSS.");

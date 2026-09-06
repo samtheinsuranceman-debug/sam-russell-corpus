@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 134
+-- Tables: 136
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -133,6 +133,18 @@ CREATE TABLE `automation_runs` (
 	`reversedAt` timestamp,
 	CONSTRAINT `automation_runs_id` PRIMARY KEY(`id`),
 	CONSTRAINT `automation_runs_once` UNIQUE(`automationId`,`eventHash`)
+);
+CREATE TABLE `backup_runs` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`startedAt` timestamp NOT NULL DEFAULT (now()),
+	`finishedAt` timestamp,
+	`destination` varchar(400) NOT NULL,
+	`status` enum('running','ok','failed') NOT NULL DEFAULT 'running',
+	`tables` int NOT NULL DEFAULT 0,
+	`rows` int NOT NULL DEFAULT 0,
+	`bytes` int NOT NULL DEFAULT 0,
+	`error` varchar(500),
+	CONSTRAINT `backup_runs_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `batch_schedules` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -1953,6 +1965,17 @@ CREATE TABLE `war_stories` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `war_stories_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `web_vitals` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`route` varchar(200) NOT NULL,
+	`metric` varchar(8) NOT NULL,
+	`value` decimal(12,4) NOT NULL,
+	`rating` enum('good','needs-improvement','poor') NOT NULL,
+	`device` varchar(12) NOT NULL,
+	`navType` varchar(20),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `web_vitals_id` PRIMARY KEY(`id`)
+);
 CREATE TABLE `webhook_endpoints` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`workspaceId` int NOT NULL,
@@ -2060,6 +2083,6 @@ CREATE TABLE `xp_transactions` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `xp_transactions_id` PRIMARY KEY(`id`)
 );
-CREATE INDEX `power_snapshots_lever` ON `power_snapshots` (`lever`,`measure`,`asOf`);
+CREATE INDEX `web_vitals_route` ON `web_vitals` (`route`,`metric`,`createdAt`);
 
 SET FOREIGN_KEY_CHECKS = 1;

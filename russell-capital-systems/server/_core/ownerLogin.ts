@@ -11,6 +11,8 @@
 //   OWNER_PASSWORD_HASH  bcrypt hash — generate with `pnpm owner:password`
 //   OWNER_NAME           display name (optional)
 //   OWNER_OPEN_ID        the owner's user id (optional; defaults to "owner")
+//   OWNER_TOTP_SECRET    base32 authenticator secret — `pnpm owner:totp`. When
+//                        set, sign-in also needs the six-digit code (MFA).
 //
 // Nothing here is a bypass: with the two variables unset the routes refuse
 // every request, and there are no built-in passwords anywhere in the code.
@@ -22,6 +24,7 @@ import * as db from "../db";
 import { getSessionCookieOptions } from "./cookies";
 import { ENV } from "./env";
 import { sdk } from "./sdk";
+import { verifyTotp } from "./totp";
 
 export const OWNER_LOGIN_PATH = "/api/auth/owner-login";
 export const AUTH_MODE_PATH = "/api/auth/mode";
@@ -37,10 +40,15 @@ export function isOwnerLoginConfigured(env = ENV): boolean {
   return Boolean(env.ownerEmail && env.ownerPasswordHash);
 }
 
+export function ownerTotpEnabled(env = ENV): boolean {
+  return Boolean(env.ownerTotpSecret);
+}
+
 export function authMode(env = ENV) {
   return {
     managedOAuth: Boolean(env.oAuthServerUrl),
     ownerLogin: isOwnerLoginConfigured(env),
+    ownerTotp: ownerTotpEnabled(env),
   };
 }
 
@@ -107,6 +115,16 @@ export function registerOwnerLoginRoutes(app: Express) {
       console.warn("[OwnerLogin] rejected sign-in attempt from", key);
       res.status(401).json({ error: "Incorrect email or password." });
       return;
+    }
+    // Second factor: the authenticator code, checked only after the password
+    // so a wrong password never reveals whether MFA is on.
+    if (ownerTotpEnabled()) {
+      const code = typeof req.body?.code === "string" ? req.body.code : "";
+      if (!verifyTotp(ENV.ownerTotpSecret, code)) {
+        console.warn("[OwnerLogin] rejected authenticator code from", key);
+        res.status(401).json({ error: code ? "That authenticator code is not valid." : "Enter the six-digit code from your authenticator app.", needsCode: true });
+        return;
+      }
     }
 
     try {

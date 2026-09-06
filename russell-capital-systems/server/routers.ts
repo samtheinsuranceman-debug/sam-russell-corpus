@@ -18,6 +18,8 @@ import { erosionRouter } from "./erosionRouter";
 import { forgivenessRouter } from "./forgivenessRouter";
 import { taxScheduleRouter } from "./taxScheduleRouter";
 import { unaskedRouter } from "./unaskedRouter";
+import { siteHealthRouter } from "./siteHealthRouter";
+import { isStrongPassword, PASSWORD_RULE } from "@shared/passwordPolicy";
 import { recordDocumentProvenance } from "./provenance";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
@@ -326,6 +328,7 @@ export const appRouter = router({
   forgiveness: forgivenessRouter,
   taxSchedule: taxScheduleRouter,
   unasked: unaskedRouter,
+  siteHealth: siteHealthRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -336,7 +339,7 @@ export const appRouter = router({
     register: publicProcedure
       .input(z.object({
         email: z.string().email(),
-        password: z.string().min(8),
+        password: z.string().min(10).max(1024).refine(isStrongPassword, { message: PASSWORD_RULE }),
         firstName: z.string().min(1),
         lastName: z.string().min(1),
       }))
@@ -357,7 +360,7 @@ export const appRouter = router({
       }),
 
     resetPassword: publicProcedure
-      .input(z.object({ token: z.string(), password: z.string().min(8) }))
+      .input(z.object({ token: z.string(), password: z.string().min(10).max(1024).refine(isStrongPassword, { message: PASSWORD_RULE }) }))
       .mutation(() => {
         throw new TRPCError({ code: "FORBIDDEN", message: "Password reset is retired. Continue with secure sign in." });
       }),

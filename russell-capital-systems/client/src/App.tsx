@@ -1,4 +1,6 @@
 import { AnalyticsLoader } from "@/components/AnalyticsLoader";
+import { WebVitalsReporter } from "@/components/WebVitalsReporter";
+import { SeoSync } from "@/hooks/useSeo";
 import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -266,6 +268,7 @@ const TheBrotherhood = lazy(() => import("./pages/portal/TheBrotherhood"));
 const SecondaryInformation = lazy(() => import("./pages/portal/SecondaryInformation"));
 const PlanningCases = lazy(() => import("./pages/portal/PlanningCases"));
 const SystemHealth = lazy(() => import("./pages/portal/SystemHealth"));
+const SiteHealth = lazy(() => import("./pages/portal/SiteHealth"));
 
 /**
  * Sleek loading spinner shown while lazy-loaded pages are being fetched.
@@ -586,6 +589,7 @@ function Router() {
       <Route path="/portal/secondary-information" component={gated(SecondaryInformation, "/portal/secondary-information")} />
       <Route path="/portal/planning-cases" component={gated(PlanningCases, "/portal/planning-cases")} />
       <Route path="/portal/system-health" component={gated(SystemHealth, "/portal/system-health")} />
+      <Route path="/portal/site-health" component={gated(SiteHealth, "/portal/site-health")} />
 
       {/* Fallback */}
       <Route path="/404" component={NotFound} />
@@ -617,6 +621,9 @@ function App() {
             <Toaster richColors position="top-right" />
             {/* Browser-side platforms the host switched on (PostHog, GA4, Sentry, Intercom) */}
             <AnalyticsLoader />
+            {/* Per-route title/description/canonical and real-visitor Core Web Vitals */}
+            <SeoSync />
+            <WebVitalsReporter />
             <Router />
             {/* The every-page AI voice advisor — speak on any page, the AI
                 answers in context of that page and the saved profile. */}

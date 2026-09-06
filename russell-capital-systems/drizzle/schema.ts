@@ -2606,3 +2606,33 @@ export const powerSnapshots = mysqlTable("power_snapshots", {
   fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
 }, (t) => ({ byLever: index("power_snapshots_lever").on(t.lever, t.measure, t.asOf), once: uniqueIndex("power_snapshots_once").on(t.lever, t.measure, t.asOf, t.source) }));
 export type PowerSnapshotRow = typeof powerSnapshots.$inferSelect;
+
+// Core Web Vitals as real visitors experience them: one row per metric per
+// page view, so the site-health page can show p75 by route (the threshold
+// Google grades against) instead of a lab number from one machine.
+export const webVitals = mysqlTable("web_vitals", {
+  id:        int("id").autoincrement().primaryKey(),
+  route:     varchar("route", { length: 200 }).notNull(),           // pathname, query stripped
+  metric:    varchar("metric", { length: 8 }).notNull(),            // LCP | CLS | INP | FCP | TTFB
+  value:     decimal("value", { precision: 12, scale: 4 }).notNull(),
+  rating:    mysqlEnum("rating", ["good", "needs-improvement", "poor"]).notNull(),
+  device:    varchar("device", { length: 12 }).notNull(),           // mobile | desktop
+  navType:   varchar("navType", { length: 20 }),                    // navigate | reload | back_forward | prerender
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ byRoute: index("web_vitals_route").on(t.route, t.metric, t.createdAt) }));
+export type WebVitalRow = typeof webVitals.$inferSelect;
+
+// Every backup run, so "when was the last good backup and where is it" is a
+// query the site-health page answers, never a guess.
+export const backupRuns = mysqlTable("backup_runs", {
+  id:          int("id").autoincrement().primaryKey(),
+  startedAt:   timestamp("startedAt").defaultNow().notNull(),
+  finishedAt:  timestamp("finishedAt"),
+  destination: varchar("destination", { length: 400 }).notNull(),  // s3://bucket/key or a file path
+  status:      mysqlEnum("status", ["running", "ok", "failed"]).default("running").notNull(),
+  tables:      int("tables").default(0).notNull(),
+  rows:        int("rows").default(0).notNull(),
+  bytes:       int("bytes").default(0).notNull(),
+  error:       varchar("error", { length: 500 }),
+}, (t) => ({ byTime: index("backup_runs_time").on(t.startedAt) }));
+export type BackupRunRow = typeof backupRuns.$inferSelect;

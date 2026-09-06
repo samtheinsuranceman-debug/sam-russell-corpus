@@ -8,13 +8,15 @@ function requestedReturnPath() {
   return value.startsWith("/") && !value.startsWith("//") ? value : "/portal/dashboard";
 }
 
-type AuthMode = { managedOAuth: boolean; ownerLogin: boolean };
+type AuthMode = { managedOAuth: boolean; ownerLogin: boolean; ownerTotp?: boolean };
 
 export default function Login() {
   const returnPath = requestedReturnPath();
   const [mode, setMode] = useState<AuthMode | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
+  const [needsCode, setNeedsCode] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -34,10 +36,10 @@ export default function Login() {
       const res = await fetch("/api/auth/owner-login", {
         method: "POST", credentials: "same-origin",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, code: code || undefined }),
       });
       const body = await res.json().catch(() => ({}));
-      if (!res.ok) { setError(body.error ?? "Sign-in failed."); return; }
+      if (!res.ok) { if (body.needsCode) setNeedsCode(true); setError(body.error ?? "Sign-in failed."); return; }
       window.location.href = returnPath;
     } catch {
       setError("Could not reach the server.");
@@ -80,6 +82,11 @@ export default function Login() {
               <label className="mt-3 block text-sm text-violet-100/70">Password
                 <input className={input} type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
               </label>
+              {(mode.ownerTotp || needsCode) && (
+                <label className="mt-3 block text-sm text-violet-100/70">Authenticator code
+                  <input className={input} inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code" placeholder="6-digit code" required value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} />
+                </label>
+              )}
               {error && <p role="alert" className="mt-3 text-sm text-red-300">{error}</p>}
               <button type="submit" disabled={busy}
                 className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-violet-500 px-5 py-3 font-semibold text-white shadow-lg shadow-violet-950/40 transition duration-200 hover:bg-violet-400 active:scale-[0.97] disabled:opacity-60">
