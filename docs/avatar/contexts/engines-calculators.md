@@ -1,6 +1,6 @@
 # Calculator catalogue — room: Engines — path: `/calculators`
 
-Mode: static poster + the pre-rendered three-minute MP4
+Mode: LIVE embed
 
 ## Opening line
 
