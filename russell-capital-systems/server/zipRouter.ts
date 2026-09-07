@@ -11,6 +11,8 @@ import { ENV } from "./_core/env";
 import { getFactFinderForUser } from "./factFinderDb";
 import { COHORT_THRESHOLDS, DEFAULT_THRESHOLD, ZIP_SOURCES, interestSheet } from "@shared/zipEngine";
 import { cohortFor, pmms, reportFor, yearRange, zipStatus, zipSweep } from "./zipData";
+import { STR_PROTOCOL, STR_SOURCES, configuredStrApis } from "@shared/strSources";
+import { readStrPage, suggestStr } from "./strSources";
 
 const isOwner = (ctx: { user: { openId: string; role: string } }) => ctx.user.openId === ENV.ownerOpenId || ctx.user.role === "admin";
 const zipList = z.array(z.string().regex(/^\d{5}$/)).min(1).max(12);
@@ -53,4 +55,18 @@ export const zipRouter = router({
     if (!isOwner(ctx)) throw new TRPCError({ code: "FORBIDDEN" });
     return zipSweep();
   }),
+
+  // ─── Short-term rental sources: the registry, the suggestion, the read ───
+  /** The registry the AI works from, and which of its APIs have a key on this host (names only). Public: no client data. */
+  strSources: publicProcedure.query(() => ({ sources: STR_SOURCES, apisConfigured: configuredStrApis(process.env), protocol: STR_PROTOCOL })),
+
+  /** Places from the client's own words (Fact Finder goals, relocation plans, and anything just said), the cash-limited price, and every registry site's link for each place. */
+  strSuggest: protectedProcedure.input(z.object({ notes: z.string().max(4_000).default(""), downPct: z.number().min(0).max(100).default(20), closingPct: z.number().min(0).max(15).default(3) })).query(async ({ ctx, input }) => {
+    const ff = await getFactFinderForUser(ctx.user.id).catch(() => null);
+    const data = ff?.data as Parameters<typeof zipsFromFactFinder>[0];
+    return suggestStr(data, { notes: input.notes, zips: zipsFromFactFinder(data), downPct: input.downPct, closingPct: input.closingPct });
+  }),
+
+  /** The AI opens one registry site's page for the place and reports only quote-verified figures, dated. Nothing is stored. */
+  strReadPage: protectedProcedure.input(z.object({ sourceId: z.string().max(40), place: z.string().max(120).optional(), zip: z.string().regex(/^\d{5}$/).optional(), address: z.string().max(200).optional() })).mutation(async ({ input }) => readStrPage(input)),
 });

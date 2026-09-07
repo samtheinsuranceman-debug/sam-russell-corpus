@@ -213,6 +213,21 @@ keyless. The owner reads them with "Read the files now" on the page;
 The Zillow files are large (tens of MB); a read takes a few minutes and stores
 about fifty thousand compact rows in `zip_series`.
 
+### Short-term rental sources (optional keys)
+`/portal/short-term-rentals` carries a registry of ten short-term-rental data
+sites (`shared/strSources.ts`, each verified on a dated page): Rabbu first,
+then AirDNA, Mashvisor, AirROI, PriceLabs, Awning, Airbnb and Vrbo search,
+Inside Airbnb's public files, Beyond Pricing. The advisor follows the same
+registry as a protocol whenever a plan touches a rental (`STR_PROTOCOL`, in
+its system prompt). Every site works as a button with no key. Optional keys,
+names only, each in the host env panel: `AIRROI_API_KEY` (self-serve,
+pay-as-you-go), `MASHVISOR_API_KEY` (self-serve, credits),
+`PRICELABS_API_KEY`, `AIRDNA_API_KEY` (contract), `EXPEDIA_RAPID_API_KEY`
+(contract), `BEYOND_API_TOKEN` (own listings). The page shows which are set
+by name. "Read this page with the AI" fetches the registry page on the
+server and reports only figures whose sentence is on the page, dated;
+nothing read is stored.
+
 ### Loan forgiveness engine
 `/portal/forgiveness`: the record of every federal forgiveness and
 repayment program since 1987 with its statute, the computed political
