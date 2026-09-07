@@ -115,7 +115,7 @@ function ObjectionEliminator() {
   const objections = [
     { objection: "It's too expensive", response: "At $297/month, you need just ONE extra client every 8.5 months to break even. Our average advisor closes 2 extra clients per MONTH. That's a 24x return.", icon: DollarSign, color: "text-emerald-400", stat: "24x ROI" },
     { objection: "I don't have time to learn a new platform", response: "The Morning Ritual takes 90 seconds. The Toilet Dashboard works while you're in the bathroom. Our AI does the heavy lifting — you just approve and send.", icon: Clock, color: "text-blue-400", stat: "90 sec/day" },
-    { objection: "I already have a CRM", response: "This isn't a CRM. This is a wealth-building game that happens to manage clients. Your CRM doesn't have AI strategy recommendations, gamified quests, or a pet that grows with your business.", icon: Sparkles, color: "text-purple-400", stat: "69+ tools" },
+    { objection: "I already have a CRM", response: "This isn't a CRM. This is a wealth-building game that happens to manage clients. Your CRM doesn't have AI strategy recommendations, gamified quests, or a pet that grows with your business.", icon: Sparkles, color: "text-emerald-400", stat: "69+ tools" },
     { objection: "What if it doesn't work for me?", response: "Our Revenue Guarantee: If you don't close at least ONE additional client in your first 90 days using our tools, we refund every penny. No questions asked.", icon: Shield, color: "text-yellow-400", stat: "90-day guarantee" },
     { objection: "I'm not tech-savvy", response: "If you can scroll TikTok, you can use Russell Capital. Our interface is designed for one-thumb operation. The AI handles the complexity.", icon: Heart, color: "text-pink-400", stat: "1-thumb UX" },
     { objection: "My clients won't use it", response: "Your clients don't need to use it. YOU use it to serve them better. But when they see their Client Portal with real-time projections, they'll never leave you.", icon: Users, color: "text-cyan-400", stat: "98% retention" },
@@ -165,7 +165,7 @@ function GuaranteeTiers() {
   const tiers = [
     { name: "The Starter Guarantee", period: "30 Days", promise: "If you don't find at least 3 actionable insights for your clients in the first 30 days, full refund.", icon: "🛡️", color: "border-blue-500/30 bg-blue-500/5" },
     { name: "The Revenue Guarantee", period: "90 Days", promise: "If you don't close at least ONE additional client using our tools in 90 days, full refund. No questions asked.", icon: "⚔️", color: "border-yellow-500/30 bg-yellow-500/5" },
-    { name: "The ROI Guarantee", period: "6 Months", promise: "If your subscription hasn't paid for itself 3x over in 6 months, we'll refund the difference.", icon: "👑", color: "border-purple-500/30 bg-purple-500/5" },
+    { name: "The ROI Guarantee", period: "6 Months", promise: "If your subscription hasn't paid for itself 3x over in 6 months, we'll refund the difference.", icon: "👑", color: "border-emerald-500/30 bg-emerald-500/5" },
     { name: "The Lifetime Promise", period: "Forever", promise: "If at any point you feel the platform isn't making you money, talk to Sam directly. He'll make it right.", icon: "💎", color: "border-emerald-500/30 bg-emerald-500/5" },
   ];
 

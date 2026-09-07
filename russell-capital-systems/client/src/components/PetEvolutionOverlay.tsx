@@ -30,7 +30,7 @@ const STAGE_COLORS: Record<Stage, string> = {
   hatchling: "from-gray-400/20 to-gray-500/20",
   juvenile: "from-green-400/20 to-emerald-500/20",
   adolescent: "from-blue-400/20 to-indigo-500/20",
-  adult: "from-purple-400/20 to-pink-500/20",
+  adult: "from-emerald-400/20 to-pink-500/20",
   elder: "from-red-400/20 to-rose-500/20",
   legendary: "from-amber-400/20 to-orange-500/20",
 };

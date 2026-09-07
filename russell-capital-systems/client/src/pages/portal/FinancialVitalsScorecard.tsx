@@ -217,7 +217,7 @@ const STATUS_COLORS = {
 const CATEGORY_COLORS = {
   liquidity: "#3b82f6",
   growth: "#22c55e",
-  protection: "#8b5cf6",
+  protection: "#10b981",
   debt: "#f43f5e"
 };
 
@@ -697,7 +697,7 @@ export default function FinancialVitalsScorecard() {
           <div className="text-2xl font-bold text-white">72/100</div>
           <div className="text-xs text-[#22c55e] mt-1 flex items-center"><TrendingUp className="w-3 h-3 mr-1" /> +5 from last review</div>
         </div>
-        <div className="rc-card bg-gradient-to-br from-[#0d1a2e] to-[#060d19] border-l-4 border-l-[#8b5cf6] p-4">
+        <div className="rc-card bg-gradient-to-br from-[#0d1a2e] to-[#060d19] border-l-4 border-l-[#10b981] p-4">
           <div className="flex items-center gap-2 text-[#7a95b8] mb-2"><Shield className="w-4 h-4" /> Protection Score</div>
           <div className="text-2xl font-bold text-white">40/100</div>
           <div className="text-xs text-[#7a95b8] mt-1 flex items-center"><TrendingDown className="w-3 h-3 mr-1" /> No change</div>
@@ -854,7 +854,7 @@ export default function FinancialVitalsScorecard() {
         {/* Chart 3: Area (Trend) */}
         <div className="rc-card flex flex-col h-[300px]">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-sm font-semibold text-white flex items-center gap-2"><LineChartIcon className="w-4 h-4 text-[#8b5cf6]" /> Overall Health Trend</h3>
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2"><LineChartIcon className="w-4 h-4 text-[#10b981]" /> Overall Health Trend</h3>
             <Select value={comparisonMode} onValueChange={setComparisonMode}>
               <SelectTrigger className="w-[130px] h-7 text-[10px] bg-[#0d1a2e] border-[#12233e] text-white">
                 <SelectValue placeholder="Compare to" />
@@ -1107,7 +1107,7 @@ export default function FinancialVitalsScorecard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="rc-card">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><History className="w-5 h-5 text-[#8b5cf6]" /> Recent Progress</h3>
+          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><History className="w-5 h-5 text-[#10b981]" /> Recent Progress</h3>
           <div className="space-y-4">
             <div className="flex gap-4 relative">
               <div className="w-px h-full bg-[#12233e] absolute left-[11px] top-6"></div>
@@ -1156,11 +1156,11 @@ export default function FinancialVitalsScorecard() {
               </div>
             </li>
             <li className="flex items-start gap-3 bg-[#060d19] p-3 rounded-lg border border-[#12233e]">
-              <div className="mt-0.5"><Shield className="w-4 h-4 text-[#8b5cf6]" /></div>
+              <div className="mt-0.5"><Shield className="w-4 h-4 text-[#10b981]" /></div>
               <div>
                 <p className="text-sm font-medium text-white">Eliminate Critical Vitals</p>
                 <p className="text-xs text-[#7a95b8] mt-1">{criticalCount} critical areas remaining to resolve.</p>
-                <Progress value={criticalCount === 0 ? 100 : 33} className="h-1.5 mt-2 bg-[#12233e] [&>div]:bg-[#8b5cf6]" />
+                <Progress value={criticalCount === 0 ? 100 : 33} className="h-1.5 mt-2 bg-[#12233e] [&>div]:bg-[#10b981]" />
               </div>
             </li>
           </ul>

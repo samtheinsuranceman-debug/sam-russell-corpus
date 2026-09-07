@@ -58,7 +58,7 @@ import {
 const STAGES = [
   { key: "LEAD", label: "Lead", color: "#7a95b8", probability: 0.10 },
   { key: "QUALIFIED", label: "Qualified", color: "#3b82f6", probability: 0.25 },
-  { key: "STRATEGY", label: "Strategy", color: "#a78bfa", probability: 0.50 },
+  { key: "STRATEGY", label: "Strategy", color: "#34d399", probability: 0.50 },
   { key: "PROPOSAL", label: "Proposal", color: "#f0c040", probability: 0.75 },
   { key: "CLOSED_WON", label: "Closed Won", color: "#22c55e", probability: 1.0 },
   { key: "CLOSED_LOST", label: "Closed Lost", color: "#ef4444", probability: 0 },
@@ -453,7 +453,7 @@ function BulkActionsBar({ count, onMove, onClear }: {
   );
 }
 
-const CHART_COLORS = ["#7a95b8", "#3b82f6", "#a78bfa", "#f0c040", "#22c55e", "#ef4444"];
+const CHART_COLORS = ["#7a95b8", "#3b82f6", "#34d399", "#f0c040", "#22c55e", "#ef4444"];
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MAIN PIPELINE COMPONENT
@@ -653,7 +653,7 @@ export default function Pipeline() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
           {[
             { label: "Active Pipeline", value: fmt(totalPipeline), icon: DollarSign, color: "#3b82f6" },
-            { label: "Weighted Forecast", value: fmt(weightedForecast), icon: Target, color: "#a78bfa" },
+            { label: "Weighted Forecast", value: fmt(weightedForecast), icon: Target, color: "#34d399" },
             { label: "Closed Won", value: fmt(closedWon), icon: TrendingUp, color: "#22c55e" },
             { label: "Win Rate", value: `${winRate}%`, icon: Award, color: winRate >= 50 ? "#22c55e" : winRate >= 25 ? "#f0c040" : "#ef4444" },
             { label: "Avg Deal Size", value: fmt(avgDealSize), icon: BarChart3, color: "#f0c040" },
@@ -740,7 +740,7 @@ export default function Pipeline() {
           {/* Weighted Forecast Chart */}
           <div className="rc-card md:col-span-2">
             <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Target size={14} className="text-[#a78bfa]" /> Weighted Pipeline Forecast ($K)
+              <Target size={14} className="text-[#34d399]" /> Weighted Pipeline Forecast ($K)
             </div>
             <ResponsiveContainer width="100%" height={200}>
               <ComposedChart data={forecastData} margin={{ top: 5, right: 10, bottom: 5, left: -10 }}>
@@ -1019,7 +1019,7 @@ export default function Pipeline() {
             {/* Large Forecast Chart */}
             <div className="rc-card">
               <div className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-                <Target size={14} className="text-[#a78bfa]" /> Pipeline Forecast — Raw vs Weighted ($K)
+                <Target size={14} className="text-[#34d399]" /> Pipeline Forecast — Raw vs Weighted ($K)
               </div>
               <ResponsiveContainer width="100%" height={300}>
                 <ComposedChart data={forecastData} margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>

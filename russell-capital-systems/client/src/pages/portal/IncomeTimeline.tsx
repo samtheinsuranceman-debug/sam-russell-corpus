@@ -58,8 +58,8 @@ const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
 
 /* ── Taxable = red/crimson tones, Tax-free = cool tones ── */
 const TAXABLE_COLORS = ["#ef4444", "#dc2626", "#f87171", "#b91c1c", "#fca5a5"];
-const TAXFREE_COLORS = ["#22c55e", "#3b82f6", "#a855f7", "#06b6d4", "#8b5cf6", "#14b8a6"];
-const PIE_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4"];
+const TAXFREE_COLORS = ["#22c55e", "#3b82f6", "#a855f7", "#06b6d4", "#10b981", "#14b8a6"];
+const PIE_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#10b981", "#ec4899", "#06b6d4"];
 
 function getSourceColor(src: { taxable: boolean }, taxIdx: number, freeIdx: number) {
   if (src.taxable) return TAXABLE_COLORS[taxIdx % TAXABLE_COLORS.length];
@@ -196,7 +196,7 @@ export default function IncomeTimeline() {
     setSources(s => [...s, {
       id: Math.random().toString(36).substring(7),
       name: "New Source", startAge: retirementAge, endAge: endAge,
-      annualAmount: 10000, growthRate: 0, taxable: false, color: "#8b5cf6", category: "Other"
+      annualAmount: 10000, growthRate: 0, taxable: false, color: "#10b981", category: "Other"
     }]);
   };
 
@@ -281,7 +281,7 @@ export default function IncomeTimeline() {
         <FactFinderBadge className="mb-4" />
         
         {/* ── Header ── */}
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-900/40 via-indigo-900/30 to-purple-900/40 border border-blue-500/20 p-6 shadow-lg">
+        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-900/40 via-indigo-900/30 to-emerald-900/40 border border-blue-500/20 p-6 shadow-lg">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(59,130,246,0.15),transparent_60%)]" />
           <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl" />
           <div className="relative">

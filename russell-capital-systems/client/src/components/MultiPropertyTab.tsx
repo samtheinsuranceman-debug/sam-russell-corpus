@@ -25,7 +25,7 @@ import { ExportToSlides } from "@/components/ExportToSlides";
 
 const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 const PROPERTY_COLORS = [
-  "#8b5cf6","#06b6d4","#f59e0b","#ec4899","#14b8a6",
+  "#10b981","#06b6d4","#f59e0b","#ec4899","#14b8a6",
   "#f97316","#6366f1","#84cc16","#e11d48","#0ea5e9",
   "#a855f7","#22d3ee","#fbbf24","#f472b6","#2dd4bf",
 ];
@@ -122,12 +122,12 @@ export function MultiPropertyTab() {
   return (
     <div className="space-y-6">
       {/* HEADER */}
-      <Card className="border-purple-500/30 bg-gradient-to-r from-purple-950/40 to-pink-950/40">
+      <Card className="border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 to-pink-950/40">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
               <CardTitle className="text-xl flex items-center gap-2">
-                <Home className="w-6 h-6 text-purple-400" />
+                <Home className="w-6 h-6 text-emerald-400" />
                 Multi-Property HELOC {">"} MYGA {">"} O&G Engine
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-1">
@@ -140,8 +140,8 @@ export function MultiPropertyTab() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="text-center p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
-              <p className="text-2xl font-bold text-purple-400">{activeCount}</p>
+            <div className="text-center p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+              <p className="text-2xl font-bold text-emerald-400">{activeCount}</p>
               <p className="text-xs text-muted-foreground">Active Properties</p>
             </div>
             <div className="text-center p-3 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
@@ -239,10 +239,10 @@ export function MultiPropertyTab() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <CardTitle className="text-lg flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-purple-400" /> Properties ({input.properties.length} / {MAX_PROPERTIES})
+              <Building2 className="w-5 h-5 text-emerald-400" /> Properties ({input.properties.length} / {MAX_PROPERTIES})
             </CardTitle>
             <div className="flex gap-2 flex-wrap">
-              <Button size="sm" onClick={addProperty} className="bg-purple-600 hover:bg-purple-700"><Plus className="w-4 h-4 mr-1" /> Add Property</Button>
+              <Button size="sm" onClick={addProperty} className="bg-emerald-600 hover:bg-emerald-700"><Plus className="w-4 h-4 mr-1" /> Add Property</Button>
               <Button size="sm" variant="outline" onClick={() => addBulkProperties(5)}>+5</Button>
               <Button size="sm" variant="outline" onClick={() => addBulkProperties(10)}>+10</Button>
               <Button size="sm" variant="outline" onClick={() => addBulkProperties(25)}>+25</Button>
@@ -257,7 +257,7 @@ export function MultiPropertyTab() {
               const isExpanded = expandedProperties.has(prop.id);
               const color = PROPERTY_COLORS[idx % PROPERTY_COLORS.length];
               return (
-                <div key={prop.id} className={"border rounded-lg p-3 transition-all " + (prop.active ? "border-purple-500/30 bg-purple-500/5" : "border-muted/30 bg-muted/5 opacity-60")}>
+                <div key={prop.id} className={"border rounded-lg p-3 transition-all " + (prop.active ? "border-emerald-500/30 bg-emerald-500/5" : "border-muted/30 bg-muted/5 opacity-60")}>
                   <div className="flex items-center justify-between gap-3 cursor-pointer" onClick={() => toggleExpand(prop.id)}>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
@@ -291,7 +291,7 @@ export function MultiPropertyTab() {
       {result && (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-            <Card className="border-purple-500/20"><CardContent className="p-3 text-center"><p className="text-lg font-bold text-purple-400">{result.summary.totalProperties}</p><p className="text-[10px] text-muted-foreground">Properties</p></CardContent></Card>
+            <Card className="border-emerald-500/20"><CardContent className="p-3 text-center"><p className="text-lg font-bold text-emerald-400">{result.summary.totalProperties}</p><p className="text-[10px] text-muted-foreground">Properties</p></CardContent></Card>
             <Card className="border-cyan-500/20"><CardContent className="p-3 text-center"><p className="text-lg font-bold text-cyan-400">{fmt(result.summary.totalHelocOriginal)}</p><p className="text-[10px] text-muted-foreground">Total HELOC</p></CardContent></Card>
             <Card className="border-emerald-500/20"><CardContent className="p-3 text-center"><p className="text-lg font-bold text-emerald-400">{fmt(result.summary.totalTaxSaved)}</p><p className="text-[10px] text-muted-foreground">Tax Saved</p></CardContent></Card>
             <Card className="border-amber-500/20"><CardContent className="p-3 text-center"><p className="text-lg font-bold text-amber-400">{fmt(result.summary.totalHelocPrincipalPaid)}</p><p className="text-[10px] text-muted-foreground">HELOC Paid Down</p></CardContent></Card>
@@ -312,7 +312,7 @@ export function MultiPropertyTab() {
                   <YAxis tickFormatter={(v) => "$" + (v / 1000).toFixed(0) + "k"} tick={{ fontSize: 11 }} />
                   <Tooltip formatter={(v) => fmt(Number(v))} />
                   <Legend />
-                  <Area type="monotone" dataKey="helocBalance" name="HELOC Balance" fill="#8b5cf6" fillOpacity={0.3} stroke="#8b5cf6" />
+                  <Area type="monotone" dataKey="helocBalance" name="HELOC Balance" fill="#10b981" fillOpacity={0.3} stroke="#10b981" />
                   <Bar dataKey="principalPaid" name="Principal Paid" fill="#10b981" />
                   <Bar dataKey="taxSavingsApplied" name="Tax Savings Applied" fill="#f59e0b" />
                   <Line type="monotone" dataKey="cumulativePaid" name="Cumulative Paid" stroke="#06b6d4" strokeWidth={2} dot={false} />
@@ -333,7 +333,7 @@ export function MultiPropertyTab() {
                   <Tooltip formatter={(v) => fmt(Number(v))} />
                   <Legend />
                   <Bar dataKey="federalSaved" name="Federal Tax Saved" stackId="tax" fill="#3b82f6" />
-                  <Bar dataKey="stateSaved" name="State Tax Saved" stackId="tax" fill="#8b5cf6" />
+                  <Bar dataKey="stateSaved" name="State Tax Saved" stackId="tax" fill="#10b981" />
                   <Line type="monotone" dataKey="cumulative" name="Cumulative Saved" stroke="#f59e0b" strokeWidth={2} dot={false} />
                   <Line type="monotone" dataKey="carryforward" name="Credit Carryforward" stroke="#ef4444" strokeWidth={1} strokeDasharray="5 5" dot={false} />
                 </ComposedChart>
@@ -444,7 +444,7 @@ export function MultiPropertyTab() {
                         <td className="py-2 px-2 text-right text-cyan-400">{fmt(row.totalOGIncome)}</td>
                         <td className="py-2 px-2 text-right">{fmt(row.ogDeductionApplied)}</td>
                         <td className="py-2 px-2 text-right text-amber-400">{fmt(row.totalTaxSaved)}</td>
-                        <td className="py-2 px-2 text-right text-purple-400">{fmt(row.taxSavingsToHelocPrincipal)}</td>
+                        <td className="py-2 px-2 text-right text-emerald-400">{fmt(row.taxSavingsToHelocPrincipal)}</td>
                         <td className="py-2 px-2 text-right text-red-300">{fmt(row.creditCarryforwardOut)}</td>
                         <td className="py-2 px-2 text-right font-bold text-emerald-400">{fmt(row.totalNetCashFlow)}</td>
                       </tr>
@@ -460,7 +460,7 @@ export function MultiPropertyTab() {
                     <td className="py-2 px-2 text-right text-cyan-400">{fmt(result.summary.totalOGIncome)}</td>
                     <td className="py-2 px-2 text-right">-</td>
                     <td className="py-2 px-2 text-right text-amber-400">{fmt(result.summary.totalTaxSaved)}</td>
-                    <td className="py-2 px-2 text-right text-purple-400">-</td>
+                    <td className="py-2 px-2 text-right text-emerald-400">-</td>
                     <td className="py-2 px-2 text-right">-</td>
                     <td className="py-2 px-2 text-right text-emerald-400">{fmt(result.summary.totalNetBenefit)}</td>
                   </tr></tfoot>
@@ -480,7 +480,7 @@ export function MultiPropertyTab() {
             <CardContent className="space-y-3 text-sm">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-purple-400">Step 1: HELOC from Each Property</h4>
+                  <h4 className="font-semibold text-emerald-400">Step 1: HELOC from Each Property</h4>
                   <p className="text-muted-foreground text-xs">Take a HELOC against each property. Amount = (Home Value x Max LTV) - Mortgage Balance. Provides capital without selling.</p>
                 </div>
                 <div className="space-y-2">

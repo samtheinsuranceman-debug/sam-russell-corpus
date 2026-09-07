@@ -111,7 +111,7 @@ const DEFAULT_STRATEGIES: Strategy[] = [
     floorRate: 2.0,
     spread: 0,
     index: "S&P 500",
-    color: "#8b5cf6",
+    color: "#10b981",
     description: "Guaranteed 2% minimum return, but upside is limited to 6%. Best for highly risk-averse clients.",
   },
   {

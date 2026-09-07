@@ -28,7 +28,7 @@ export default function Sphere() {
               {LATITUDES.map((l, i) => { const r = R * (1 - i / LATITUDES.length); return <circle key={l.id} cx={c} cy={c} r={r} fill="none" stroke="rgba(148,163,184,0.25)" />; })}
               {MERIDIANS.map((m) => { const a = (m.degree - 90) * (Math.PI / 180); return <g key={m.id}><line x1={c} y1={c} x2={c + Math.cos(a) * R} y2={c + Math.sin(a) * R} stroke="rgba(148,163,184,0.18)" /><text x={c + Math.cos(a) * (R + 14)} y={c + Math.sin(a) * (R + 14)} fontSize="10" fill="#cbd5e1" textAnchor="middle" dominantBaseline="middle">{m.label}</text></g>; })}
               {LATITUDES.map((l, i) => { const r = R * (1 - (i + 0.5) / LATITUDES.length); return <text key={l.id} x={c + 4} y={c - r} fontSize="9" fill="#64748b">{l.label}</text>; })}
-              <circle cx={c} cy={c} r={10} fill="#a78bfa" /><text x={c} y={c + 24} fontSize="9" fill="#c4b5fd" textAnchor="middle">Plan Ledger</text>
+              <circle cx={c} cy={c} r={10} fill="#34d399" /><text x={c} y={c + 24} fontSize="9" fill="#a7f3d0" textAnchor="middle">Plan Ledger</text>
               {SPHERE_POINTS.map((p) => { const xy = projectPoint(p); const x = c + xy.x * R, y = c + xy.y * R; return <Link key={p.path} href={p.path}><circle cx={x} cy={y} r={p.core ? 6 : 4} fill={p.core ? "#fbbf24" : "#38bdf8"} stroke="#0f172a" strokeWidth={1} className="cursor-pointer"><title>{p.title}</title></circle></Link>; })}
             </svg>
           </div>

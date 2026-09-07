@@ -62,7 +62,7 @@ const fmtMo = (m: number) => {
 const SCENARIO_PRESETS = [
   { label: "Conservative (15%)", allocationPct: 0.15, helocRate: 0.09, color: "#3b82f6", bg: "bg-blue-50", border: "border-blue-200", text: "text-blue-700" },
   { label: "Moderate (20%)", allocationPct: 0.20, helocRate: 0.085, color: "#10b981", bg: "bg-green-50", border: "border-green-200", text: "text-green-700" },
-  { label: "Aggressive (25%)", allocationPct: 0.25, helocRate: 0.08, color: "#8b5cf6", bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-700" },
+  { label: "Aggressive (25%)", allocationPct: 0.25, helocRate: 0.08, color: "#10b981", bg: "bg-emerald-50", border: "border-emerald-200", text: "text-emerald-700" },
   { label: "Max Acceleration (30%)", allocationPct: 0.30, helocRate: 0.075, color: "#f59e0b", bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-700" },
 ];
 
@@ -877,7 +877,7 @@ export default function MortgageKiller() {
                 variant="outline"
                 size="sm"
                 onClick={() => setShowMonteCarlo(!showMonteCarlo)}
-                className={showMonteCarlo ? "border-purple-500/40 text-purple-400" : ""}
+                className={showMonteCarlo ? "border-emerald-500/40 text-emerald-400" : ""}
               >
                 <Activity className="h-4 w-4 mr-1" />
                 {showMonteCarlo ? "Hide" : "Show"} Monte Carlo
@@ -989,7 +989,7 @@ export default function MortgageKiller() {
                 {selectedClientId && savedScenarios.length > 0 && (
                   <div className="mt-4 pt-4 border-t">
                     <Label className="text-sm font-semibold mb-2 flex items-center gap-2">
-                      <FolderOpen className="h-4 w-4 text-purple-500" /> Saved Scenarios for {clientName}
+                      <FolderOpen className="h-4 w-4 text-emerald-500" /> Saved Scenarios for {clientName}
                     </Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
                       {savedScenarios
@@ -1138,7 +1138,7 @@ export default function MortgageKiller() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <Calculator className="h-5 w-5 text-purple-500" /> Strategy Parameters
+                  <Calculator className="h-5 w-5 text-emerald-500" /> Strategy Parameters
                 </CardTitle>
                 <CardDescription>Adjust the Mortgage Killer strategy assumptions</CardDescription>
               </CardHeader>
@@ -1288,13 +1288,13 @@ export default function MortgageKiller() {
               <Button
                 size="lg"
                 variant="outline"
-                className="h-14 text-lg border-purple-300 text-purple-700 hover:bg-purple-50"
+                className="h-14 text-lg border-emerald-300 text-emerald-700 hover:bg-emerald-50"
                 onClick={runScenarioComparison}
                 disabled={scenarioLoading}
               >
                 {scenarioLoading ? (
                   <>
-                    <div className="h-5 w-5 border-2 border-purple-400 border-t-transparent rounded-full animate-spin mr-2" />
+                    <div className="h-5 w-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mr-2" />
                     Running 4 Scenarios...
                   </>
                 ) : (
@@ -1417,11 +1417,11 @@ export default function MortgageKiller() {
                       </p>
                     </CardContent>
                   </Card>
-                  <Card className="bg-purple-50 border-purple-200">
+                  <Card className="bg-emerald-50 border-emerald-200">
                     <CardContent className="p-4 text-center">
-                      <p className="text-xs text-purple-600 font-medium">Annual IUL Premium</p>
-                      <p className="text-2xl font-bold text-purple-700">{fmt(result.summary.annualIulPremium)}</p>
-                      <p className="text-xs text-purple-500 mt-1">{fmtPct(strategyParams.incomeAllocationPct)} of income</p>
+                      <p className="text-xs text-emerald-600 font-medium">Annual IUL Premium</p>
+                      <p className="text-2xl font-bold text-emerald-700">{fmt(result.summary.annualIulPremium)}</p>
+                      <p className="text-xs text-emerald-500 mt-1">{fmtPct(strategyParams.incomeAllocationPct)} of income</p>
                     </CardContent>
                   </Card>
                   <Card className="bg-blue-50 border-blue-200">
@@ -1663,7 +1663,7 @@ export default function MortgageKiller() {
                           <YAxis tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
                           <Tooltip formatter={(v: number) => fmt(v)} />
                           <Legend />
-                          <Area type="monotone" dataKey="homeValue" stroke="#8b5cf6" fill="#ede9fe" fillOpacity={0.3} strokeWidth={2} name="Home Value (5% Appreciation)" />
+                          <Area type="monotone" dataKey="homeValue" stroke="#10b981" fill="#ecfdf5" fillOpacity={0.3} strokeWidth={2} name="Home Value (5% Appreciation)" />
                           <Line type="monotone" dataKey="iulCashValue" stroke="#3b82f6" strokeWidth={2} dot={false} name="IUL Cash Value" />
                           <Line type="monotone" dataKey="netWorth" stroke="#10b981" strokeWidth={3} dot={false} name="Net Worth" />
                           <Area type="monotone" dataKey="mortgageBalance" stroke="#ef4444" fill="#fecaca" fillOpacity={0.2} strokeWidth={1} strokeDasharray="5 5" name="Mortgage Balance" />
@@ -1689,7 +1689,7 @@ export default function MortgageKiller() {
                         <thead className="sticky top-0 z-10">
                           <tr className="bg-slate-100 dark:bg-slate-800">
                             <th rowSpan={2} className="p-1 border text-center font-bold bg-slate-200 dark:bg-slate-700">Yr</th>
-                            <th colSpan={3} className="p-1 border text-center font-bold bg-purple-50 dark:bg-purple-900/30 text-purple-700">Home</th>
+                            <th colSpan={3} className="p-1 border text-center font-bold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700">Home</th>
                             <th colSpan={3} className="p-1 border text-center font-bold bg-amber-50 dark:bg-amber-900/30 text-amber-700">HELOC</th>
                             <th colSpan={4} className="p-1 border text-center font-bold bg-blue-50 dark:bg-blue-900/30 text-blue-700">IUL Policy</th>
                             <th colSpan={2} className="p-1 border text-center font-bold bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700">Life Loan</th>
@@ -1697,9 +1697,9 @@ export default function MortgageKiller() {
                             <th className="p-1 border text-center font-bold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700">Net</th>
                           </tr>
                           <tr className="bg-slate-50 dark:bg-slate-800 text-[7px] sm:text-[8px]">
-                            <th className="p-0.5 border text-right text-purple-600">Value</th>
-                            <th className="p-0.5 border text-right text-purple-600">Equity</th>
-                            <th className="p-0.5 border text-right text-purple-600">Apprec.</th>
+                            <th className="p-0.5 border text-right text-emerald-600">Value</th>
+                            <th className="p-0.5 border text-right text-emerald-600">Equity</th>
+                            <th className="p-0.5 border text-right text-emerald-600">Apprec.</th>
                             <th className="p-0.5 border text-right text-amber-600">Balance</th>
                             <th className="p-0.5 border text-right text-amber-600">Int. Paid</th>
                             <th className="p-0.5 border text-right text-amber-600">IO Pmt</th>
@@ -1734,9 +1734,9 @@ export default function MortgageKiller() {
                                 } hover:bg-green-50/50 dark:hover:bg-green-900/20`}
                               >
                                 <td className="p-1 border text-center font-bold">{row.year}</td>
-                                <td className="p-1 border text-right text-purple-600">{fmt(row.homeValue)}</td>
-                                <td className="p-1 border text-right text-purple-500">{fmt(row.homeEquity)}</td>
-                                <td className="p-1 border text-right text-purple-400">{fmt(row.homeAppreciation)}</td>
+                                <td className="p-1 border text-right text-emerald-600">{fmt(row.homeValue)}</td>
+                                <td className="p-1 border text-right text-emerald-500">{fmt(row.homeEquity)}</td>
+                                <td className="p-1 border text-right text-emerald-400">{fmt(row.homeAppreciation)}</td>
                                 <td className="p-1 border text-right text-amber-600">{row.helocBalance > 0 ? fmt(row.helocBalance) : "\u2014"}</td>
                                 <td className="p-1 border text-right text-amber-500">{row.helocInterestPaid > 0 ? fmt(row.helocInterestPaid) : "\u2014"}</td>
                                 <td className="p-1 border text-right text-amber-400">{row.helocInterestOnlyPayment > 0 ? fmt(row.helocInterestOnlyPayment) : "\u2014"}</td>
@@ -1785,7 +1785,7 @@ export default function MortgageKiller() {
                       <p className="text-3xl font-bold mt-1">{fmt(result.interestSavings.compoundedValue20yr)}</p>
                     </CardContent>
                   </Card>
-                  <Card className="bg-gradient-to-br from-purple-500 to-pink-600 text-white">
+                  <Card className="bg-gradient-to-br from-emerald-500 to-pink-600 text-white">
                     <CardContent className="p-6 text-center">
                       <p className="text-sm opacity-90">Total Wealth Created</p>
                       <p className="text-3xl font-bold mt-1">{fmt(result.summary.totalWealthCreated)}</p>
@@ -1906,7 +1906,7 @@ export default function MortgageKiller() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <GitCompare className="h-5 w-5 text-purple-500" />
+                      <GitCompare className="h-5 w-5 text-emerald-500" />
                       Mortgage Balance Comparison — All Scenarios
                     </CardTitle>
                     <CardDescription>
@@ -2443,7 +2443,7 @@ export default function MortgageKiller() {
                                   <th colSpan={4} className="p-1 border text-center font-bold bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300">Mortgage</th>
                                   <th colSpan={5} className="p-1 border text-center font-bold bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">IUL Policy</th>
                                   <th colSpan={3} className="p-1 border text-center font-bold bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">HELOC</th>
-                                  <th className="p-1 border text-center font-bold bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">Total</th>
+                                  <th className="p-1 border text-center font-bold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Total</th>
                                   {tm.toggleProps.enabled && (
                                     <th colSpan={3} className="p-1 border text-center font-bold bg-amber-100 dark:bg-amber-800/30 text-amber-800 dark:text-amber-200" title={TM_TOOLTIP}>✨ Time Machine</th>
                                   )}
@@ -2461,7 +2461,7 @@ export default function MortgageKiller() {
                                   <th className="p-0.5 border text-right text-amber-600">Draw</th>
                                   <th className="p-0.5 border text-right text-amber-600">Bal.</th>
                                   <th className="p-0.5 border text-right text-amber-600">Int.</th>
-                                  <th className="p-0.5 border text-right text-purple-600">Debt</th>
+                                  <th className="p-0.5 border text-right text-emerald-600">Debt</th>
                                   {tm.toggleProps.enabled && (
                                     <>
                                       <th className="p-0.5 border text-right text-amber-700" title={TM_TOOLTIP}>TM Acct</th>
@@ -2505,7 +2505,7 @@ export default function MortgageKiller() {
                                       <td className="p-1 border text-right text-amber-600">{row.helocDraw > 0 ? fmt(row.helocDraw) : "\u2014"}</td>
                                       <td className="p-1 border text-right text-amber-500">{row.helocBalance > 0 ? fmt(row.helocBalance) : "\u2014"}</td>
                                       <td className="p-1 border text-right text-amber-700">{row.helocInterest > 0 ? fmt(row.helocInterest) : "\u2014"}</td>
-                                      <td className={`p-1 border text-right font-medium ${isDebtFree ? "text-emerald-600 font-bold" : "text-purple-600"}`}>
+                                      <td className={`p-1 border text-right font-medium ${isDebtFree ? "text-emerald-600 font-bold" : "text-emerald-600"}`}>
                                         {isDebtFree ? "DEBT FREE" : fmt(row.totalDebt)}
                                       </td>
                                       {tm.toggleProps.enabled && (() => {
@@ -2652,7 +2652,7 @@ export default function MortgageKiller() {
                           </div>
                           <div className="text-center">
                             <p className="text-xs text-muted-foreground mb-1">Total Wealth Created</p>
-                            <p className="text-3xl font-bold text-purple-600">{fmt(result.summary.totalWealthCreated)}</p>
+                            <p className="text-3xl font-bold text-emerald-600">{fmt(result.summary.totalWealthCreated)}</p>
                           </div>
                         </div>
                         <div className="text-center mt-4">
@@ -2715,7 +2715,7 @@ export default function MortgageKiller() {
                             <Legend />
                             <Bar dataKey="curInterest" name="Do Nothing Interest" fill="#ef4444" opacity={0.7} />
                             <Bar dataKey="recInterest" name="Strategy Interest" fill="#10b981" opacity={0.7} />
-                            <Line type="monotone" dataKey="interestSaved" name="Cumulative Saved" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+                            <Line type="monotone" dataKey="interestSaved" name="Cumulative Saved" stroke="#10b981" strokeWidth={2} dot={false} />
                           </ComposedChart>
                         </ResponsiveContainer>
                       </CardContent>
@@ -2737,7 +2737,7 @@ export default function MortgageKiller() {
                                 <th className="p-1.5 border text-right font-bold text-red-600"><span className="hidden sm:inline">Do Nothing </span>Int.</th>
                                 <th className="p-1.5 border text-right font-bold text-green-600"><span className="hidden sm:inline">Strategy </span>Int.</th>
                                 <th className="p-1.5 border text-right font-bold text-amber-600"><span className="hidden sm:inline">Annual </span>Saved</th>
-                                <th className="p-1.5 border text-right font-bold text-purple-600">Cum. Saved</th>
+                                <th className="p-1.5 border text-right font-bold text-emerald-600">Cum. Saved</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -2747,7 +2747,7 @@ export default function MortgageKiller() {
                                   <td className="p-1.5 border text-right text-red-500">{fmt(row.curInterest)}</td>
                                   <td className="p-1.5 border text-right text-green-600">{fmt(row.recInterest)}</td>
                                   <td className="p-1.5 border text-right text-amber-600 font-semibold">{fmt(row.curInterest - row.recInterest)}</td>
-                                  <td className="p-1.5 border text-right text-purple-600 font-semibold">{fmt(row.interestSaved)}</td>
+                                  <td className="p-1.5 border text-right text-emerald-600 font-semibold">{fmt(row.interestSaved)}</td>
                                 </tr>
                               ))}
                             </tbody>
@@ -2757,7 +2757,7 @@ export default function MortgageKiller() {
                                 <td className="p-2 border text-right text-red-600">{fmt(result.currentPlan.totalInterest)}</td>
                                 <td className="p-2 border text-right text-green-600">{fmt(result.recommendedPlan.totalInterest)}</td>
                                 <td className="p-2 border text-right text-amber-600">{fmt(result.interestSavings.totalInterestSaved)}</td>
-                                <td className="p-2 border text-right text-purple-600">{fmt(result.interestSavings.totalInterestSaved)}</td>
+                                <td className="p-2 border text-right text-emerald-600">{fmt(result.interestSavings.totalInterestSaved)}</td>
                               </tr>
                             </tfoot>
                           </table>
@@ -2766,7 +2766,7 @@ export default function MortgageKiller() {
                     </Card>
 
                     <div className="text-center">
-                      <Button onClick={() => setAmortSubTab("opportunityCost")} className="bg-purple-600 hover:bg-purple-700">
+                      <Button onClick={() => setAmortSubTab("opportunityCost")} className="bg-emerald-600 hover:bg-emerald-700">
                         See Total Opportunity Cost Accomplished →
                       </Button>
                     </div>
@@ -2779,29 +2779,29 @@ export default function MortgageKiller() {
                     ════════════════════════════════════════════════════════════════ */}
                 {amortSubTab === "opportunityCost" && (
                   <div className="space-y-6">
-                    <Card className="bg-gradient-to-r from-purple-900 to-indigo-900 text-white">
+                    <Card className="bg-gradient-to-r from-emerald-900 to-indigo-900 text-white">
                       <CardContent className="p-6">
                         <h2 className="text-2xl font-bold flex items-center gap-2">
                           <TrendingUp className="h-6 w-6" /> Total Opportunity Cost Accomplished
                         </h2>
-                        <p className="text-purple-200 text-sm mt-1">
+                        <p className="text-emerald-200 text-sm mt-1">
                           Mortgage interest saved, invested in a Multi Guaranteed Annuity (MGA) at 6.25% compounding annually for 30 years
                         </p>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                           <div className="bg-white/10 rounded-lg p-3">
-                            <p className="text-purple-200 text-xs">Interest Saved (Principal)</p>
+                            <p className="text-emerald-200 text-xs">Interest Saved (Principal)</p>
                             <p className="text-2xl font-bold text-amber-300">{fmt(result.interestSavings.totalInterestSaved)}</p>
                           </div>
                           <div className="bg-white/10 rounded-lg p-3">
-                            <p className="text-purple-200 text-xs">MGA Rate</p>
+                            <p className="text-emerald-200 text-xs">MGA Rate</p>
                             <p className="text-2xl font-bold text-green-300">6.25%</p>
                           </div>
                           <div className="bg-white/10 rounded-lg p-3">
-                            <p className="text-purple-200 text-xs">Compounding Period</p>
+                            <p className="text-emerald-200 text-xs">Compounding Period</p>
                             <p className="text-2xl font-bold text-blue-300">30 Years</p>
                           </div>
-                          <div className="bg-white/10 rounded-lg p-3 border-2 border-purple-400">
-                            <p className="text-purple-200 text-xs">MGA Value at Year 30</p>
+                          <div className="bg-white/10 rounded-lg p-3 border-2 border-emerald-400">
+                            <p className="text-emerald-200 text-xs">MGA Value at Year 30</p>
                             <p className="text-2xl font-bold text-white">{fmt(result.interestSavings.mgaAnnuityValue30yr)}</p>
                           </div>
                         </div>
@@ -2812,7 +2812,7 @@ export default function MortgageKiller() {
                     <Card>
                       <CardHeader>
                         <CardTitle className="text-xl font-bold flex items-center gap-2">
-                          <TrendingUp className="h-5 w-5 text-purple-500" /> Total Opportunity Cost Accomplished
+                          <TrendingUp className="h-5 w-5 text-emerald-500" /> Total Opportunity Cost Accomplished
                         </CardTitle>
                         <CardDescription>
                           Your mortgage interest savings growing at 6.25% annually in a Multi Guaranteed Annuity over 30 years
@@ -2823,8 +2823,8 @@ export default function MortgageKiller() {
                           <ComposedChart data={mgaChartData}>
                             <defs>
                               <linearGradient id="mgaGradient" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.1} />
+                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+                                <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
                               </linearGradient>
                               <linearGradient id="savedGradient" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.6} />
@@ -2837,7 +2837,7 @@ export default function MortgageKiller() {
                             <Tooltip formatter={(v: number) => fmt(v)} />
                             <Legend />
                             <Area type="monotone" dataKey="cumulativeSaved" name="Cumulative Interest Saved" stroke="#f59e0b" fill="url(#savedGradient)" />
-                            <Area type="monotone" dataKey="mgaAnnuityValue" name="MGA Annuity Value (6.25%)" stroke="#8b5cf6" fill="url(#mgaGradient)" strokeWidth={3} />
+                            <Area type="monotone" dataKey="mgaAnnuityValue" name="MGA Annuity Value (6.25%)" stroke="#10b981" fill="url(#mgaGradient)" strokeWidth={3} />
                             <Line type="monotone" dataKey="interestSaved" name="Annual Interest Saved" stroke="#10b981" strokeWidth={1} dot={false} strokeDasharray="5 5" />
                           </ComposedChart>
                         </ResponsiveContainer>
@@ -2848,7 +2848,7 @@ export default function MortgageKiller() {
                     <Card>
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                          <Calculator className="h-5 w-5 text-purple-500" /> MGA Compounding Schedule — 30 Years at 6.25%
+                          <Calculator className="h-5 w-5 text-emerald-500" /> MGA Compounding Schedule — 30 Years at 6.25%
                         </CardTitle>
                         <CardDescription>
                           Each year's interest savings deposited into the annuity, compounding at the guaranteed 6.25% rate
@@ -2858,11 +2858,11 @@ export default function MortgageKiller() {
                         <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
                           <table className="w-full text-[10px] sm:text-xs border-collapse">
                             <thead className="sticky top-0 z-10">
-                              <tr className="bg-purple-50 dark:bg-purple-900/30">
+                              <tr className="bg-emerald-50 dark:bg-emerald-900/30">
                                 <th className="p-1.5 border text-center font-bold">Yr</th>
                                 <th className="p-1.5 border text-right font-bold text-amber-600"><span className="hidden sm:inline">Int. </span>Saved</th>
                                 <th className="p-1.5 border text-right font-bold text-amber-700">Cum. Saved</th>
-                                <th className="p-1.5 border text-right font-bold text-purple-600">MGA Val.</th>
+                                <th className="p-1.5 border text-right font-bold text-emerald-600">MGA Val.</th>
                                 <th className="p-1.5 border text-right font-bold text-green-600">Growth</th>
                                 <th className="p-1.5 border text-right font-bold text-indigo-600"><span className="hidden sm:inline">Total </span>Gain</th>
                               </tr>
@@ -2878,31 +2878,31 @@ export default function MortgageKiller() {
                                     key={row.year}
                                     className={`border-b transition-colors ${
                                       isMilestone
-                                        ? "bg-purple-100 dark:bg-purple-900/40 font-bold"
+                                        ? "bg-emerald-100 dark:bg-emerald-900/40 font-bold"
                                         : idx % 2 === 0
                                           ? "bg-white dark:bg-slate-900"
-                                          : "bg-purple-50/30 dark:bg-purple-900/10"
+                                          : "bg-emerald-50/30 dark:bg-emerald-900/10"
                                     }`}
                                   >
                                     <td className="p-1.5 border text-center font-bold">
                                       {row.year}
-                                      {isMilestone && <span className="ml-1 text-[9px] text-purple-500">★</span>}
+                                      {isMilestone && <span className="ml-1 text-[9px] text-emerald-500">★</span>}
                                     </td>
                                     <td className="p-1.5 border text-right text-amber-600">{row.interestSaved > 0 ? fmt(row.interestSaved) : "\u2014"}</td>
                                     <td className="p-1.5 border text-right text-amber-700">{fmt(row.cumulativeSaved)}</td>
-                                    <td className="p-1.5 border text-right text-purple-600 font-semibold">{fmt(row.mgaAnnuityValue)}</td>
+                                    <td className="p-1.5 border text-right text-emerald-600 font-semibold">{fmt(row.mgaAnnuityValue)}</td>
                                     <td className="p-1.5 border text-right text-green-600">{growthThisYear > 0 ? fmt(growthThisYear) : "\u2014"}</td>
                                     <td className="p-1.5 border text-right text-indigo-600 font-semibold">{totalGain > 0 ? fmt(totalGain) : "\u2014"}</td>
                                   </tr>
                                 );
                               })}
                             </tbody>
-                            <tfoot className="sticky bottom-0 bg-purple-200 dark:bg-purple-900/60 font-bold">
+                            <tfoot className="sticky bottom-0 bg-emerald-200 dark:bg-emerald-900/60 font-bold">
                               <tr>
                                 <td className="p-2 border text-center">30-Year Total</td>
                                 <td className="p-2 border text-right text-amber-600">{fmt(result.interestSavings.totalInterestSaved)}</td>
                                 <td className="p-2 border text-right text-amber-700">{fmt(result.interestSavings.totalInterestSaved)}</td>
-                                <td className="p-2 border text-right text-purple-700 text-base">{fmt(result.interestSavings.mgaAnnuityValue30yr)}</td>
+                                <td className="p-2 border text-right text-emerald-700 text-base">{fmt(result.interestSavings.mgaAnnuityValue30yr)}</td>
                                 <td className="p-2 border text-right text-green-600">\u2014</td>
                                 <td className="p-2 border text-right text-indigo-700 text-base">{fmt(result.interestSavings.mgaAnnuityValue30yr - result.interestSavings.totalInterestSaved)}</td>
                               </tr>
@@ -2913,9 +2913,9 @@ export default function MortgageKiller() {
                     </Card>
 
                     {/* Final Impact Summary */}
-                    <Card className="border-2 border-purple-400 dark:border-purple-600 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/30 dark:to-indigo-900/30">
+                    <Card className="border-2 border-emerald-400 dark:border-emerald-600 bg-gradient-to-r from-emerald-50 to-indigo-50 dark:from-emerald-900/30 dark:to-indigo-900/30">
                       <CardContent className="p-8 text-center">
-                        <h3 className="text-2xl font-bold text-purple-700 dark:text-purple-300 mb-6">
+                        <h3 className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 mb-6">
                           Total Opportunity Cost Accomplished
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -2926,7 +2926,7 @@ export default function MortgageKiller() {
                           </div>
                           <div className="p-4 rounded-xl bg-white dark:bg-slate-800 shadow-lg">
                             <p className="text-xs text-muted-foreground mb-1">MGA Annuity (30yr @ 6.25%)</p>
-                            <p className="text-3xl font-bold text-purple-600">{fmt(result.interestSavings.mgaAnnuityValue30yr)}</p>
+                            <p className="text-3xl font-bold text-emerald-600">{fmt(result.interestSavings.mgaAnnuityValue30yr)}</p>
                             <p className="text-[10px] text-muted-foreground mt-1">Guaranteed compounding growth</p>
                           </div>
                           <div className="p-4 rounded-xl bg-white dark:bg-slate-800 shadow-lg border-2 border-emerald-400">
@@ -3133,7 +3133,7 @@ export default function MortgageKiller() {
               strategyType="mortgage-killer"
               hasResults={!!result}
               resultData={result ? { interestSaved: result.summary.totalInterestSaved, yearsReduced: result.summary.yearsSaved, iulCashValue: result.summary.finalPolicyCashValue, iulDeathBenefit: result.summary.finalPolicyCashValue * 3, totalOpportunityCost: result.interestSavings.compoundedValue20yr, monthlyPayment: form.monthlyMortgagePayment, originalBalance: form.mortgageBalance, helocUsed: true, helocAmount: result.summary.totalHelocDrawn } : null}
-              metrics={result ? [{ label: "Total Interest Saved", value: result.summary.totalInterestSaved, highlight: true, icon: PiggyBank, color: "text-emerald-400" }, { label: "Years Reduced", value: result.summary.yearsSaved, format: "years", icon: Clock }, { label: "IUL Cash Value", value: result.summary.finalPolicyCashValue, icon: Banknote, color: "text-blue-400" }, { label: "Death Benefit", value: result.summary.finalPolicyCashValue * 3, icon: Shield, color: "text-purple-400" }, { label: "Total Wealth Created", value: result.summary.totalWealthCreated, icon: TrendingUp, color: "text-emerald-400" }, { label: "20yr Compounded", value: result.interestSavings.compoundedValue20yr, icon: BarChart3 }, { label: "HELOC Drawn", value: result.summary.totalHelocDrawn, icon: Landmark }, { label: "Monthly Payment", value: form.monthlyMortgagePayment, icon: DollarSign }] : []}
+              metrics={result ? [{ label: "Total Interest Saved", value: result.summary.totalInterestSaved, highlight: true, icon: PiggyBank, color: "text-emerald-400" }, { label: "Years Reduced", value: result.summary.yearsSaved, format: "years", icon: Clock }, { label: "IUL Cash Value", value: result.summary.finalPolicyCashValue, icon: Banknote, color: "text-blue-400" }, { label: "Death Benefit", value: result.summary.finalPolicyCashValue * 3, icon: Shield, color: "text-emerald-400" }, { label: "Total Wealth Created", value: result.summary.totalWealthCreated, icon: TrendingUp, color: "text-emerald-400" }, { label: "20yr Compounded", value: result.interestSavings.compoundedValue20yr, icon: BarChart3 }, { label: "HELOC Drawn", value: result.summary.totalHelocDrawn, icon: Landmark }, { label: "Monthly Payment", value: form.monthlyMortgagePayment, icon: DollarSign }] : []}
               projectionData={result ? Array.from({ length: 20 }, (_, i) => ({ year: i + 1, interestSaved: result.summary.totalInterestSaved * ((i + 1) / 20), cashValue: result.summary.finalPolicyCashValue * ((i + 1) / 20) * (1 + (i + 1) * 0.015), wealthCreated: result.summary.totalWealthCreated * ((i + 1) / 20) })) : undefined}
               projectionLines={[{ dataKey: "interestSaved", name: "Interest Saved", color: "#22c55e" }, { dataKey: "cashValue", name: "IUL Cash Value", color: "#3b82f6" }, { dataKey: "wealthCreated", name: "Wealth Created", color: "#a855f7" }]}
               onRecalculate={() => setActiveTab("factfinder")}

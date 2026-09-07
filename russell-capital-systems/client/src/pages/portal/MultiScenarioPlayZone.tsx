@@ -749,7 +749,7 @@ export default function MultiScenarioPlayZone() {
                     <div className="space-y-4 border rounded-lg p-4 bg-muted/20">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Target className="h-4 w-4 text-purple-500" />
+                          <Target className="h-4 w-4 text-emerald-500" />
                           <Label className="font-semibold">
                             Annuity Strategy
                           </Label>

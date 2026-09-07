@@ -53,7 +53,7 @@ export default function TheMirror() {
               <SectionLabel icon={Sparkles}>Field State · Unified</SectionLabel>
               <h2 className="mt-2 text-2xl font-semibold text-white">Welcome back, Dr. Russell</h2>
               <p className="mt-1 max-w-lg text-sm text-slate-300">
-                You're on a <span className="text-violet-200 font-medium">9-day</span> somatic streak.
+                You're on a <span className="text-emerald-200 font-medium">9-day</span> somatic streak.
                 Your reputation score is climbing. Take one breath, then choose your work.
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
@@ -120,7 +120,7 @@ export default function TheMirror() {
                   <span className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ background: GENOME.accent }} />
                   <div className="min-w-0">
                     <p className="text-sm text-slate-200">{m.note}</p>
-                    <p className="mt-0.5 text-[11px] text-slate-500"><code className="text-violet-300/70">{m.source}</code> · {m.t}</p>
+                    <p className="mt-0.5 text-[11px] text-slate-500"><code className="text-emerald-300/70">{m.source}</code> · {m.t}</p>
                   </div>
                 </li>
               ))}
@@ -166,8 +166,8 @@ export default function TheMirror() {
 function QuickLink({ href, icon: Icon, label }) {
   return (
     <Link href={href}>
-      <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-3 text-sm text-slate-200 transition-colors hover:border-violet-400/40 hover:bg-violet-500/10">
-        <Icon className="h-4 w-4 text-violet-300" /> {label}
+      <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-3 text-sm text-slate-200 transition-colors hover:border-emerald-400/40 hover:bg-emerald-500/10">
+        <Icon className="h-4 w-4 text-emerald-300" /> {label}
       </div>
     </Link>
   );

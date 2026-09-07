@@ -79,26 +79,26 @@ export default function TheStrategyTable() {
         <GlowCard className="mb-6 p-6">
           <div className="mb-4 flex items-center justify-between">
             <SectionLabel icon={Gauge}>Policy assumptions</SectionLabel>
-            <Badge variant="outline" className="border-violet-400/30 text-violet-200"><ShieldCheck className="mr-1 h-3 w-3" /> Audited & reproducible</Badge>
+            <Badge variant="outline" className="border-emerald-400/30 text-emerald-200"><ShieldCheck className="mr-1 h-3 w-3" /> Audited & reproducible</Badge>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <Control label={`Target premium · ${fmt$(premium)}`}>
-              <input type="range" min={500000} max={750000} step={25000} value={premium} onChange={(e) => setPremium(+e.target.value)} className="w-full accent-violet-500" />
+              <input type="range" min={500000} max={750000} step={25000} value={premium} onChange={(e) => setPremium(+e.target.value)} className="w-full accent-emerald-500" />
             </Control>
             <Control label={`Horizon · ${years} yrs`}>
-              <input type="range" min={10} max={40} value={years} onChange={(e) => setYears(+e.target.value)} className="w-full accent-violet-500" />
+              <input type="range" min={10} max={40} value={years} onChange={(e) => setYears(+e.target.value)} className="w-full accent-emerald-500" />
             </Control>
             <Control label={`Loan rate · ${(loanRate * 100).toFixed(1)}%`}>
-              <input type="range" min={0.02} max={0.08} step={0.005} value={loanRate} onChange={(e) => setLoanRate(+e.target.value)} className="w-full accent-violet-500" />
+              <input type="range" min={0.02} max={0.08} step={0.005} value={loanRate} onChange={(e) => setLoanRate(+e.target.value)} className="w-full accent-emerald-500" />
             </Control>
             <Control label={`Distribute from year ${distributeFrom}`}>
-              <input type="range" min={10} max={Math.max(11, years - 1)} value={distributeFrom} onChange={(e) => setDistributeFrom(+e.target.value)} className="w-full accent-violet-500" />
+              <input type="range" min={10} max={Math.max(11, years - 1)} value={distributeFrom} onChange={(e) => setDistributeFrom(+e.target.value)} className="w-full accent-emerald-500" />
             </Control>
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <button
               onClick={() => setOverfund((v) => !v)}
-              className={`rounded-full px-4 py-1.5 text-sm transition-colors ${overfund ? "bg-violet-500/30 text-violet-100" : "bg-white/5 text-slate-400"}`}
+              className={`rounded-full px-4 py-1.5 text-sm transition-colors ${overfund ? "bg-emerald-500/30 text-emerald-100" : "bg-white/5 text-slate-400"}`}
             >
               Overfunding {overfund ? "ON" : "OFF"}
             </button>
@@ -109,10 +109,10 @@ export default function TheStrategyTable() {
         {/* Comparison cards */}
         <div className="mb-6 grid gap-4 md:grid-cols-3">
           {results.map((r) => (
-            <GlowCard key={r.c.id} className={`p-5 ${best?.c.id === r.c.id ? "ring-1 ring-violet-400/50" : ""}`}>
+            <GlowCard key={r.c.id} className={`p-5 ${best?.c.id === r.c.id ? "ring-1 ring-emerald-400/50" : ""}`}>
               <div className="flex items-center justify-between">
                 <span className="h-2.5 w-2.5 rounded-full" style={{ background: r.c.color }} />
-                {best?.c.id === r.c.id && <Badge className="bg-violet-500/20 text-violet-200">Best income</Badge>}
+                {best?.c.id === r.c.id && <Badge className="bg-emerald-500/20 text-emerald-200">Best income</Badge>}
               </div>
               <h3 className="mt-2 text-sm font-semibold text-white">{r.c.name}</h3>
               <div className="mt-4 grid grid-cols-2 gap-2">
@@ -164,7 +164,7 @@ export default function TheStrategyTable() {
             <GlowCard className="p-6">
               <SectionLabel icon={Gauge}>Your risk / reward signature</SectionLabel>
               <p className="mt-2 text-sm text-slate-300">
-                <span className="font-medium text-violet-200">Balanced Calibrator.</span> Recommended overfunding:
+                <span className="font-medium text-emerald-200">Balanced Calibrator.</span> Recommended overfunding:
                 moderate-aggressive. Loan strategy: begin distributions later for compounding headroom.
               </p>
               <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/5">
@@ -176,9 +176,9 @@ export default function TheStrategyTable() {
             <GlowCard className="p-6">
               <SectionLabel icon={Save}>Save scenario</SectionLabel>
               <p className="mt-2 text-xs text-slate-500">
-                Persists inputs + outputs + summary to <code className="text-violet-300/80">calculation_audit_logs</code> and awards XP.
+                Persists inputs + outputs + summary to <code className="text-emerald-300/80">calculation_audit_logs</code> and awards XP.
               </p>
-              <Button onClick={() => setSaved(true)} className="mt-3 w-full bg-violet-500 hover:bg-violet-400">
+              <Button onClick={() => setSaved(true)} className="mt-3 w-full bg-emerald-500 hover:bg-emerald-400">
                 {saved ? "Scenario logged ✓" : "Save & log scenario"}
               </Button>
             </GlowCard>

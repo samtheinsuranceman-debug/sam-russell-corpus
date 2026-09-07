@@ -501,7 +501,7 @@ export default function ClientEngagementScore() {
       {/* Charts Row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="rc-card p-5 lg:col-span-2">
-          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2"><Activity className="h-5 w-5 text-purple-400" /> Engagement Trends (6 Months)</h3>
+          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2"><Activity className="h-5 w-5 text-emerald-400" /> Engagement Trends (6 Months)</h3>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -511,7 +511,7 @@ export default function ClientEngagementScore() {
                 <YAxis yAxisId="right" orientation="right" stroke="#7a95b8" fontSize={12} />
                 <Tooltip contentStyle={{ backgroundColor: '#060d19', borderColor: '#12233e', borderRadius: '8px' }} />
                 <Legend />
-                <Bar yAxisId="left" dataKey="logins" name="Portal Logins" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={20} />
+                <Bar yAxisId="left" dataKey="logins" name="Portal Logins" fill="#10b981" radius={[4, 4, 0, 0]} barSize={20} />
                 <Bar yAxisId="left" dataKey="emails" name="Email Opens" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={20} />
                 <Line yAxisId="right" type="monotone" dataKey="avgScore" name="Avg Score" stroke="#22c55e" strokeWidth={3} dot={{ r: 4 }} />
               </ComposedChart>

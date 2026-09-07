@@ -511,7 +511,7 @@ export default function FIACollateralStrategy() {
                         <td className="p-2 text-right text-blue-400">{fmt(r.incomeRiderValue)}</td>
                         <td className="p-2 text-right text-red-400">{fmt(r.bankLoanBalance)}</td>
                         <td className="p-2 text-right text-orange-400">{fmt(r.oilGasIncome)}</td>
-                        <td className="p-2 text-right text-purple-400">{fmt(r.taxSavings)}</td>
+                        <td className="p-2 text-right text-emerald-400">{fmt(r.taxSavings)}</td>
                         <td className="p-2 text-right">{fmt(r.helocBalance)}</td>
                         <td className="p-2 text-right font-medium">{fmt(r.totalBenefit)}</td>
                       </tr>

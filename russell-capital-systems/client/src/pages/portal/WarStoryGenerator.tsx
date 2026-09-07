@@ -124,7 +124,7 @@ function GeneratedStory({ story, templateId }: { story: string; templateId: stri
           onClick={() => toast.success("Shared to Brag Board!", { description: "+50 XP" })}>
           <Share2 size={14} className="mr-1" /> Share
         </Button>
-        <Button className="flex-1 bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-500/20"
+        <Button className="flex-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20"
           onClick={() => toast.success("Saved to War Stories!")}>
           <BookOpen size={14} className="mr-1" /> Save
         </Button>

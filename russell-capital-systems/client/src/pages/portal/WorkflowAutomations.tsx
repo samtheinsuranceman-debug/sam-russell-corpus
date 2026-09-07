@@ -119,7 +119,7 @@ const ACTION_TYPES = [
   { value: "generate_report", label: "Generate Portfolio Report" },
 ];
 
-const CHART_COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#ec4899', '#8b5cf6', '#06b6d4', '#f97316', '#64748b'];
+const CHART_COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#ec4899', '#10b981', '#06b6d4', '#f97316', '#64748b'];
 
 export default function WorkflowAutomations() {
   const { user } = useAuth();

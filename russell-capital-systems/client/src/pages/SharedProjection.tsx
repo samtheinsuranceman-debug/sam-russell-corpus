@@ -125,7 +125,7 @@ export default function SharedProjection() {
             </div>
             <div className="bg-[#0f2035] rounded-xl border border-[#1e3a5f] p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Shield size={16} className="text-purple-400" />
+                <Shield size={16} className="text-emerald-400" />
                 <div className="text-[#7a95b8] text-xs">IUL Account Value</div>
               </div>
               <div className="text-white text-xl font-bold">{fmt(result.summary.iulAccountValue)}</div>

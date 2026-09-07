@@ -486,7 +486,7 @@ export default function ClientOnboardingWizard() {
                       data={assetDistributionData.length > 0 ? assetDistributionData : [{ name: "No Assets", value: 1 }]}
                       cx="50%" cy="50%" innerRadius={20} outerRadius={40} dataKey="value"
                     >
-                      {["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444"].map((color, index) => (
+                      {["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444"].map((color, index) => (
                         <Cell key={`cell-${index}`} fill={color} />
                       ))}
                     </Pie>
@@ -679,12 +679,12 @@ export default function ClientOnboardingWizard() {
           {step === 2 && (
             <Card className="rc-card rc-card">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Briefcase className="w-5 h-5 text-purple-400" /> Insurance & Retirement</CardTitle>
+                <CardTitle className="flex items-center gap-2"><Briefcase className="w-5 h-5 text-emerald-400" /> Insurance & Retirement</CardTitle>
                 <CardDescription>Existing policies, retirement accounts, and benefits</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-semibold mb-3 text-purple-400">Retirement Accounts</h3>
+                  <h3 className="text-sm font-semibold mb-3 text-emerald-400">Retirement Accounts</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div><Label>Traditional IRA</Label><NumberInput value={form.iraBalance} onChange={(v) => u("iraBalance", v)} className="mt-1" /></div>
                     <div><Label>Roth IRA</Label><NumberInput value={form.rothBalance} onChange={(v) => u("rothBalance", v)} className="mt-1" /></div>
@@ -748,7 +748,7 @@ export default function ClientOnboardingWizard() {
                       <XAxis dataKey="name" stroke="#7a95b8" fontSize={12} />
                       <YAxis stroke="#7a95b8" fontSize={12} tickFormatter={(v) => `$${v/1000}k`} />
                       <RTooltip contentStyle={{ background: "#0b162c", border: "1px solid #1e293b" }} formatter={(val: number) => fmt(val)} />
-                      <Bar dataKey="value" fill="#a78bfa" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="value" fill="#34d399" radius={[4, 4, 0, 0]} />
                       <Line type="monotone" dataKey="value" stroke="#f0c040" strokeWidth={2} />
                     </ComposedChart>
                   </ResponsiveContainer>
@@ -999,7 +999,7 @@ export default function ClientOnboardingWizard() {
                 </div>
                 <CardContent className="pt-6 relative z-10">
                   <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30 mb-4">
+                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-emerald-500/20 border border-blue-500/30 mb-4">
                       <span className="text-4xl">{LEVEL_EMOJIS[level - 1]}</span>
                     </div>
                     <h2 className="text-3xl font-bold mb-2">Level {level}: {LEVEL_NAMES[level - 1]}</h2>
@@ -1032,9 +1032,9 @@ export default function ClientOnboardingWizard() {
                       <div>
                         <div className="flex justify-between text-sm mb-1">
                           <span className="text-[#7a95b8]">Diversification</span>
-                          <span className="font-bold text-purple-400">{scores.diversification}/100</span>
+                          <span className="font-bold text-emerald-400">{scores.diversification}/100</span>
                         </div>
-                        <Progress value={scores.diversification} className="h-2 bg-[#0f172a] [&>div]:bg-purple-500" />
+                        <Progress value={scores.diversification} className="h-2 bg-[#0f172a] [&>div]:bg-emerald-500" />
                       </div>
                     </div>
 
@@ -1043,7 +1043,7 @@ export default function ClientOnboardingWizard() {
                       <ul className="space-y-3 text-sm text-[#7a95b8]">
                         {scores.health < 80 && <li className="flex items-start gap-2"><ArrowRight className="w-4 h-4 mt-0.5 text-emerald-400 shrink-0" /> Focus on increasing your savings rate to build net worth faster.</li>}
                         {scores.goalAlignment < 80 && <li className="flex items-start gap-2"><ArrowRight className="w-4 h-4 mt-0.5 text-[#f0c040] shrink-0" /> Add more specific life goals to align your money with your values.</li>}
-                        {scores.diversification < 80 && <li className="flex items-start gap-2"><ArrowRight className="w-4 h-4 mt-0.5 text-purple-400 shrink-0" /> Consider diversifying into other asset classes like real estate or tax-free vehicles.</li>}
+                        {scores.diversification < 80 && <li className="flex items-start gap-2"><ArrowRight className="w-4 h-4 mt-0.5 text-emerald-400 shrink-0" /> Consider diversifying into other asset classes like real estate or tax-free vehicles.</li>}
                         {scores.behavior < 80 && <li className="flex items-start gap-2"><ArrowRight className="w-4 h-4 mt-0.5 text-blue-400 shrink-0" /> Reduce monthly expenses to improve your cash flow margin.</li>}
                         <li className="flex items-start gap-2"><ArrowRight className="w-4 h-4 mt-0.5 text-indigo-400 shrink-0" /> Complete this onboarding to get your personalized action plan!</li>
                       </ul>

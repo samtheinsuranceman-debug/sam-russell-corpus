@@ -78,8 +78,8 @@ const STRATEGY_PRESETS: Record<string, Partial<Scenario>> = {
   conservative_bond: { name: "Conservative Bond Ladder", growthRate: 3.5, taxRate: 20, annualContribution: 10000, inflationRate: 2.5, managementFee: 0.5, riskTolerance: 1 },
 };
 
-const COLORS = ["from-blue-500 to-blue-600", "from-emerald-500 to-emerald-600", "from-amber-500 to-amber-600", "from-purple-500 to-purple-600", "from-rose-500 to-rose-600"];
-const TEXT_COLORS = ["text-blue-400", "text-emerald-400", "text-amber-400", "text-purple-400", "text-rose-400"];
+const COLORS = ["from-blue-500 to-blue-600", "from-emerald-500 to-emerald-600", "from-amber-500 to-amber-600", "from-emerald-500 to-emerald-600", "from-rose-500 to-rose-600"];
+const TEXT_COLORS = ["text-blue-400", "text-emerald-400", "text-amber-400", "text-emerald-400", "text-rose-400"];
 const CHART_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#a855f7", "#f43f5e"];
 const RADAR_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#a855f7", "#f43f5e"];
 

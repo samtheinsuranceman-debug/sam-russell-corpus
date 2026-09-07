@@ -17,6 +17,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { registerSiteHardening, registerSiteRoutes } from "./siteHardening";
 import { registerVitalsRoutes } from "../vitals";
+import { registerFounderVoice } from "../founderVoice";
 import { startBackupSchedule } from "../backups";
 import { pingDatabase } from "../db";
 
@@ -62,6 +63,7 @@ async function startServer() {
   registerEventRoutes(app);
   // Core Web Vitals beacons from real visitors (LCP, CLS, INP, FCP, TTFB)
   registerVitalsRoutes(app);
+  registerFounderVoice(app);
   // tRPC API
   app.use(
     "/api/trpc",

@@ -343,7 +343,7 @@ export default function AuditTimeline() {
       strategy: "text-blue-400 bg-blue-400/10 border-blue-400/20",
       communication: "text-green-400 bg-green-400/10 border-green-400/20",
       document: "text-yellow-400 bg-yellow-400/10 border-yellow-400/20",
-      compliance: "text-purple-400 bg-purple-400/10 border-purple-400/20",
+      compliance: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
       meeting: "text-pink-400 bg-pink-400/10 border-pink-400/20",
       system: "text-gray-400 bg-gray-400/10 border-gray-400/20",
       auth: "text-orange-400 bg-orange-400/10 border-orange-400/20",
@@ -468,7 +468,7 @@ export default function AuditTimeline() {
             {[
               { id: 'errors', label: 'Show Errors Only', icon: AlertTriangle, color: 'text-red-400 bg-red-400/10 border-red-400/20 hover:bg-red-400/20' },
               { id: 'security', label: 'Security Events', icon: ShieldAlert, color: 'text-orange-400 bg-orange-400/10 border-orange-400/20 hover:bg-orange-400/20' },
-              { id: 'compliance', label: 'Compliance Audit', icon: ShieldCheck, color: 'text-purple-400 bg-purple-400/10 border-purple-400/20 hover:bg-purple-400/20' },
+              { id: 'compliance', label: 'Compliance Audit', icon: ShieldCheck, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20 hover:bg-emerald-400/20' },
               { id: 'high_impact', label: 'High Impact (over 80)', icon: Zap, color: 'text-blue-400 bg-blue-400/10 border-blue-400/20 hover:bg-blue-400/20' },
               { id: 'slow', label: 'Slow Execution (over 3s)', icon: Clock, color: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20 hover:bg-yellow-400/20' },
             ].map((qf) => (
@@ -1023,7 +1023,7 @@ export default function AuditTimeline() {
                 />
                 <Bar dataKey="value" fill="#6366f1" radius={[0, 4, 4, 0]} barSize={24}>
                   {eventsByActor.slice(0, 7).map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={index === 0 ? '#8b5cf6' : index === 1 ? '#6366f1' : '#4f46e5'} />
+                    <Cell key={`cell-${index}`} fill={index === 0 ? '#10b981' : index === 1 ? '#6366f1' : '#4f46e5'} />
                   ))}
                 </Bar>
               </BarChart>
@@ -1159,8 +1159,8 @@ export default function AuditTimeline() {
         {/* Table 3: Compliance Alerts */}
         <div className="bg-[#0d1a2e] border border-[#12233e] rounded-xl overflow-hidden flex flex-col h-full">
           <div className="p-4 border-b border-[#12233e] bg-[#060d19]/50 flex justify-between items-center">
-            <h4 className="text-white font-medium flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-purple-400" /> Compliance Audits</h4>
-            <span className="flex items-center gap-1 text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded border border-purple-400/20"><Activity className="w-3 h-3" /> Live</span>
+            <h4 className="text-white font-medium flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-emerald-400" /> Compliance Audits</h4>
+            <span className="flex items-center gap-1 text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20"><Activity className="w-3 h-3" /> Live</span>
           </div>
           <div className="p-0 flex-1 overflow-auto">
             <table className="w-full text-sm text-left">
@@ -1478,7 +1478,7 @@ export default function AuditTimeline() {
             <div className="flex flex-col items-center justify-center py-32 bg-[#0d1a2e] border border-[#12233e] rounded-xl border-dashed">
               <div className="w-20 h-20 bg-[#12233e] rounded-full flex items-center justify-center mb-6">
                 {activeTab === "security" ? <Shield className="w-10 h-10 text-orange-400" /> : 
-                 activeTab === "compliance" ? <FileText className="w-10 h-10 text-purple-400" /> : 
+                 activeTab === "compliance" ? <FileText className="w-10 h-10 text-emerald-400" /> : 
                  <Settings className="w-10 h-10 text-gray-400" />}
               </div>
               <h3 className="text-2xl font-medium text-white mb-3 capitalize">{activeTab} Module</h3>

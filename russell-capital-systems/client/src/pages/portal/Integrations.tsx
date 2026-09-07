@@ -1007,7 +1007,7 @@ export default function Integrations() {
     fullMark: 100,
   })), [integrations]);
 
-  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444", "#ec4899"];
+  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#ec4899"];
   const syncLogs = useMemo(() => generateSyncLogs(50), []);
 
   return (

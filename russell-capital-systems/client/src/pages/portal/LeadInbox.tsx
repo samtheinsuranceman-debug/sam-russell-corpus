@@ -12,7 +12,7 @@ import type { LeadStatus } from "@shared/leadTypes";
 
 const STATUSES: LeadStatus[] = ["new", "contacted", "qualified", "client"];
 const STATUS_COLOR: Record<LeadStatus, string> = {
-  new: "#22c55e", contacted: "#f59e0b", qualified: "#38bdf8", client: "#a78bfa",
+  new: "#22c55e", contacted: "#f59e0b", qualified: "#38bdf8", client: "#34d399",
 };
 
 const usd = (n?: number | null) =>

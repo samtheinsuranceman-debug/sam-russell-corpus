@@ -245,15 +245,15 @@ Include sections for: Retirement Income, Tax Optimization, Life Insurance/IUL, A
     { year: 2050, withoutPlan: 1200000, withPlan: 4000000 },
   ];
 
-  const COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+  const COLORS = ['#10b981', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
 
   return (
     <AppShell title="Voice-to-Plan Builder" subtitle="Speak client details, get a structured financial plan">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/30">
-              <Brain className="h-5 w-5 text-violet-400" />
+            <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/20 border border-emerald-500/30">
+              <Brain className="h-5 w-5 text-emerald-400" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-white">Voice-to-Plan</h2>
@@ -295,19 +295,19 @@ Include sections for: Retirement Income, Tax Optimization, Life Insurance/IUL, A
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="bg-slate-800/50 border border-slate-700/50 w-full justify-start overflow-x-auto">
-            <TabsTrigger value="record" className="data-[state=active]:bg-violet-600/30">
+            <TabsTrigger value="record" className="data-[state=active]:bg-emerald-600/30">
               <Mic className="h-4 w-4 mr-1.5" /> Record & Input
             </TabsTrigger>
-            <TabsTrigger value="analysis" className="data-[state=active]:bg-violet-600/30" disabled={!transcript}>
+            <TabsTrigger value="analysis" className="data-[state=active]:bg-emerald-600/30" disabled={!transcript}>
               <Activity className="h-4 w-4 mr-1.5" /> Speech Analysis
             </TabsTrigger>
-            <TabsTrigger value="plan" className="data-[state=active]:bg-violet-600/30" disabled={!plan}>
+            <TabsTrigger value="plan" className="data-[state=active]:bg-emerald-600/30" disabled={!plan}>
               <FileText className="h-4 w-4 mr-1.5" /> Generated Plan
             </TabsTrigger>
-            <TabsTrigger value="projections" className="data-[state=active]:bg-violet-600/30" disabled={!plan}>
+            <TabsTrigger value="projections" className="data-[state=active]:bg-emerald-600/30" disabled={!plan}>
               <TrendingUp className="h-4 w-4 mr-1.5" /> Plan Projections
             </TabsTrigger>
-            <TabsTrigger value="settings" className="data-[state=active]:bg-violet-600/30">
+            <TabsTrigger value="settings" className="data-[state=active]:bg-emerald-600/30">
               <Settings className="h-4 w-4 mr-1.5" /> Preferences
             </TabsTrigger>
           </TabsList>
@@ -319,7 +319,7 @@ Include sections for: Retirement Income, Tax Optimization, Life Insurance/IUL, A
                   <CardHeader className="pb-3 flex flex-row items-center justify-between">
                     <div>
                       <CardTitle className="text-base text-white flex items-center gap-2">
-                        <Volume2 className="h-4 w-4 text-violet-400" /> Voice Dictation
+                        <Volume2 className="h-4 w-4 text-emerald-400" /> Voice Dictation
                       </CardTitle>
                       <CardDescription>Click the microphone and describe your client's situation</CardDescription>
                     </div>
@@ -338,7 +338,7 @@ Include sections for: Retirement Income, Tax Optimization, Life Insurance/IUL, A
                         onClick={isRecording ? stopRecording : startRecording}
                         variant={isRecording ? "destructive" : "default"}
                         size="lg"
-                        className={isRecording ? "animate-pulse" : "bg-violet-600 hover:bg-violet-700"}
+                        className={isRecording ? "animate-pulse" : "bg-emerald-600 hover:bg-emerald-700"}
                       >
                         {isRecording ? <MicOff className="h-5 w-5 mr-2" /> : <Mic className="h-5 w-5 mr-2" />}
                         {isRecording ? "Stop Recording" : "Start Recording"}
@@ -368,7 +368,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                       <Button
                         onClick={handleGeneratePlan}
                         disabled={!transcript.trim() || generatePlanMut.isPending || isProcessing}
-                        className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 flex-1"
+                        className="bg-gradient-to-r from-emerald-600 to-emerald-600 hover:from-emerald-700 hover:to-emerald-700 flex-1"
                         size="lg"
                       >
                         {generatePlanMut.isPending || isProcessing ? (
@@ -428,19 +428,19 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                   <CardContent>
                     <div className="space-y-2 text-sm text-slate-400">
                       <div className="flex items-start gap-2">
-                        <span className="text-violet-400 font-bold">•</span>
+                        <span className="text-emerald-400 font-bold">•</span>
                         <span>Be specific with dollar amounts and timelines</span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-violet-400 font-bold">•</span>
+                        <span className="text-emerald-400 font-bold">•</span>
                         <span>Mention existing policies and their cash values</span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-violet-400 font-bold">•</span>
+                        <span className="text-emerald-400 font-bold">•</span>
                         <span>Include health status for life insurance context</span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-violet-400 font-bold">•</span>
+                        <span className="text-emerald-400 font-bold">•</span>
                         <span>Note legacy or charitable intentions</span>
                       </div>
                     </div>
@@ -455,7 +455,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
               <Card className="bg-slate-800/40 border-slate-700/50">
                 <CardHeader>
                   <CardTitle className="text-base text-white flex items-center gap-2">
-                    <PieChartIcon className="h-4 w-4 text-violet-400" /> Topic Distribution
+                    <PieChartIcon className="h-4 w-4 text-emerald-400" /> Topic Distribution
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -489,7 +489,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
               <Card className="bg-slate-800/40 border-slate-700/50">
                 <CardHeader>
                   <CardTitle className="text-base text-white flex items-center gap-2">
-                    <Activity className="h-4 w-4 text-violet-400" /> Conversation Sentiment
+                    <Activity className="h-4 w-4 text-emerald-400" /> Conversation Sentiment
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -498,8 +498,8 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                       <AreaChart data={sentimentData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                         <defs>
                           <linearGradient id="colorSentiment" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                           </linearGradient>
                         </defs>
                         <XAxis dataKey="time" stroke="#64748b" />
@@ -508,7 +508,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                         <Tooltip
                           contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc' }}
                         />
-                        <Area type="monotone" dataKey="sentiment" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorSentiment)" />
+                        <Area type="monotone" dataKey="sentiment" stroke="#10b981" fillOpacity={1} fill="url(#colorSentiment)" />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
@@ -518,7 +518,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
               <Card className="bg-slate-800/40 border-slate-700/50 lg:col-span-2">
                 <CardHeader>
                   <CardTitle className="text-base text-white flex items-center gap-2">
-                    <BarChart3 className="h-4 w-4 text-violet-400" /> Entity Extraction
+                    <BarChart3 className="h-4 w-4 text-emerald-400" /> Entity Extraction
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -551,7 +551,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                         <TableCell className="text-slate-400 text-sm">"owes on mortgage"</TableCell>
                       </TableRow>
                       <TableRow className="border-slate-700 hover:bg-slate-800/50">
-                        <TableCell className="font-medium text-slate-300"><Badge variant="outline" className="bg-purple-500/10 text-purple-400 border-purple-500/20">Goal</Badge></TableCell>
+                        <TableCell className="font-medium text-slate-300"><Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">Goal</Badge></TableCell>
                         <TableCell className="text-white">Age 62</TableCell>
                         <TableCell><Progress value={98} className="h-2 w-24 bg-slate-700" /></TableCell>
                         <TableCell className="text-slate-400 text-sm">"retire at 62"</TableCell>
@@ -568,11 +568,11 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 <div className="xl:col-span-2 space-y-4">
                   {/* Client Summary */}
-                  <Card className="bg-gradient-to-br from-violet-500/10 to-purple-500/10 border-violet-500/30">
+                  <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/10 border-emerald-500/30">
                     <CardHeader className="pb-2">
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-base text-white flex items-center gap-2">
-                          <User className="h-4 w-4 text-violet-400" /> Client Summary
+                          <User className="h-4 w-4 text-emerald-400" /> Client Summary
                         </CardTitle>
                         <div className="flex gap-2">
                           <Button variant="outline" size="sm" onClick={copyPlan} className="border-slate-600 bg-slate-800/50">
@@ -600,7 +600,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                   {/* Plan Sections */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium text-white flex items-center gap-2">
-                      <Briefcase className="h-5 w-5 text-violet-400" /> Strategic Recommendations
+                      <Briefcase className="h-5 w-5 text-emerald-400" /> Strategic Recommendations
                     </h3>
                     
                     <Accordion type="multiple" defaultValue={plan.sections.map((_, i) => `item-${i}`)} className="space-y-3">
@@ -623,7 +623,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                                   <h4 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Recommended Products</h4>
                                   <div className="flex flex-wrap gap-2">
                                     {section.products.map((p, j) => (
-                                      <Badge key={j} className="bg-violet-500/20 text-violet-300 border-violet-500/30 hover:bg-violet-500/30 cursor-pointer transition-colors">
+                                      <Badge key={j} className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/30 cursor-pointer transition-colors">
                                         {p}
                                       </Badge>
                                     ))}
@@ -643,14 +643,14 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                   <Card className="bg-slate-800/40 border-slate-700/50">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base text-white flex items-center gap-2">
-                        <ArrowRight className="h-4 w-4 text-violet-400" /> Next Steps
+                        <ArrowRight className="h-4 w-4 text-emerald-400" /> Next Steps
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ol className="space-y-3">
                         {plan.nextSteps.map((step, i) => (
                           <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
-                            <span className="flex items-center justify-center h-6 w-6 rounded-full bg-violet-500/20 text-violet-400 text-xs font-bold shrink-0 mt-0.5 border border-violet-500/30">
+                            <span className="flex items-center justify-center h-6 w-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5 border border-emerald-500/30">
                               {i + 1}
                             </span>
                             <span className="pt-0.5">{step}</span>
@@ -685,7 +685,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                   <Card className="bg-slate-800/40 border-slate-700/50">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base text-white flex items-center gap-2">
-                        <Shield className="h-4 w-4 text-violet-400" /> Product Suitability
+                        <Shield className="h-4 w-4 text-emerald-400" /> Product Suitability
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -695,7 +695,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                             <PolarGrid stroke="#334155" />
                             <PolarAngleAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 12 }} />
                             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                            <Radar name="Suitability" dataKey="score" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.5} />
+                            <Radar name="Suitability" dataKey="score" stroke="#10b981" fill="#10b981" fillOpacity={0.5} />
                             <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc' }} />
                           </RadarChart>
                         </ResponsiveContainer>
@@ -713,7 +713,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                   <h3 className="text-lg font-medium text-white">No Plan Generated Yet</h3>
                   <p className="text-slate-400 max-w-md mt-1">Record your client details in the previous tab to generate a comprehensive financial plan.</p>
                 </div>
-                <Button onClick={() => setActiveTab("record")} className="bg-violet-600 hover:bg-violet-700 mt-4">
+                <Button onClick={() => setActiveTab("record")} className="bg-emerald-600 hover:bg-emerald-700 mt-4">
                   Go to Recording
                 </Button>
               </div>
@@ -725,7 +725,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
               <Card className="bg-slate-800/40 border-slate-700/50 lg:col-span-2">
                 <CardHeader>
                   <CardTitle className="text-base text-white flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-violet-400" /> Wealth Projection: With vs Without Plan
+                    <TrendingUp className="h-4 w-4 text-emerald-400" /> Wealth Projection: With vs Without Plan
                   </CardTitle>
                   <CardDescription>Estimated trajectory based on recommended strategies</CardDescription>
                 </CardHeader>
@@ -753,7 +753,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
               <Card className="bg-slate-800/40 border-slate-700/50">
                 <CardHeader>
                   <CardTitle className="text-base text-white flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-violet-400" /> Risk Mitigation
+                    <Shield className="h-4 w-4 text-emerald-400" /> Risk Mitigation
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -776,7 +776,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
               <Card className="bg-slate-800/40 border-slate-700/50">
                 <CardHeader>
                   <CardTitle className="text-base text-white flex items-center gap-2">
-                    <PieChartIcon className="h-4 w-4 text-violet-400" /> Proposed Asset Allocation
+                    <PieChartIcon className="h-4 w-4 text-emerald-400" /> Proposed Asset Allocation
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -794,7 +794,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                         <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc' }} />
                         <Legend />
                         <Bar dataKey="current" name="Current %" fill="#64748b" radius={[0, 4, 4, 0]} />
-                        <Bar dataKey="proposed" name="Proposed %" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
+                        <Bar dataKey="proposed" name="Proposed %" fill="#10b981" radius={[0, 4, 4, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -807,7 +807,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
             <Card className="bg-slate-800/40 border-slate-700/50 max-w-2xl mx-auto">
               <CardHeader>
                 <CardTitle className="text-lg text-white flex items-center gap-2">
-                  <Settings className="h-5 w-5 text-violet-400" /> AI Generation Preferences
+                  <Settings className="h-5 w-5 text-emerald-400" /> AI Generation Preferences
                 </CardTitle>
                 <CardDescription>Customize how the AI analyzes speech and generates plans</CardDescription>
               </CardHeader>
@@ -830,7 +830,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <label className="text-sm font-medium text-slate-300">Speech Recognition Confidence Threshold</label>
-                    <span className="text-sm text-violet-400">{confidenceThreshold}%</span>
+                    <span className="text-sm text-emerald-400">{confidenceThreshold}%</span>
                   </div>
                   <Slider
                     value={[confidenceThreshold]}
@@ -859,7 +859,7 @@ Example: 'John Smith, age 55, married, household income $180K. Has $400K in trad
                 </div>
 
                 <div className="pt-4 flex justify-end">
-                  <Button className="bg-violet-600 hover:bg-violet-700">
+                  <Button className="bg-emerald-600 hover:bg-emerald-700">
                     <Save className="h-4 w-4 mr-2" /> Save Preferences
                   </Button>
                 </div>
@@ -925,7 +925,7 @@ const AdditionalComponent2 = () => {
       <h3 className="text-lg font-medium text-white mb-2">Implementation Timeline</h3>
       <div className="relative border-l border-slate-700 ml-3 mt-4 space-y-6 pb-2">
         <div className="relative">
-          <div className="absolute -left-[17px] top-1 h-3 w-3 rounded-full bg-violet-500 border-2 border-slate-800"></div>
+          <div className="absolute -left-[17px] top-1 h-3 w-3 rounded-full bg-emerald-500 border-2 border-slate-800"></div>
           <div className="pl-4">
             <h4 className="text-sm font-medium text-white">Month 1: Foundation</h4>
             <p className="text-xs text-slate-400 mt-1">Establish new accounts, initiate transfers, finalize life insurance applications.</p>
@@ -1007,7 +1007,7 @@ const AdditionalComponent4 = () => {
       <div className="h-[250px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={generateHistoricalData()} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-            <Line type="monotone" dataKey="value" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3 }} />
+            <Line type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} />
             <CartesianGrid stroke="#334155" strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="month" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
             <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v/1000}k`} />

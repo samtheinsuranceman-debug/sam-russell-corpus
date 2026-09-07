@@ -457,7 +457,7 @@ export default function Leaderboard() {
     utils.competitionBoard.fastestClimbers.invalidate();
   };
 
-  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444"];
+  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444"];
   const tooltipStyle = { background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 };
 
   const producersData = trpc.competitionBoard.topProducers.useQuery(undefined, { staleTime: 60_000 }).data || [];

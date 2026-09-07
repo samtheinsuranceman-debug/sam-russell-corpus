@@ -534,12 +534,12 @@ export default function ClientOnboardingWizard() {
         {step === 2 && (
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><Briefcase className="w-5 h-5 text-purple-400" /> Insurance & Retirement</CardTitle>
+              <CardTitle className="flex items-center gap-2"><Briefcase className="w-5 h-5 text-emerald-400" /> Insurance & Retirement</CardTitle>
               <CardDescription>Existing policies, retirement accounts, and benefits</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <h3 className="text-sm font-semibold mb-3 text-purple-400">Retirement Accounts</h3>
+                <h3 className="text-sm font-semibold mb-3 text-emerald-400">Retirement Accounts</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div><Label>Traditional IRA</Label><NumberInput value={form.iraBalance} onChange={(v) => u("iraBalance", v)} className="mt-1" /></div>
                   <div><Label>Roth IRA</Label><NumberInput value={form.rothBalance} onChange={(v) => u("rothBalance", v)} className="mt-1" /></div>
@@ -622,7 +622,7 @@ export default function ClientOnboardingWizard() {
               ))}
 
               {/* Live Risk Score */}
-              <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-blue-500/20 text-center space-y-3">
+              <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/10 via-emerald-500/10 to-pink-500/10 border border-blue-500/20 text-center space-y-3">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">Your Risk Profile</p>
                 <div className="text-5xl font-black">
                   <span className={getRiskColor(riskScore)}>{riskScore}</span>
@@ -716,7 +716,7 @@ export default function ClientOnboardingWizard() {
                             <p className="text-sm font-medium truncate">{goal.title}</p>
                             <p className="text-xs text-muted-foreground">
                               Age {goal.targetAge} · {fmt(goal.estimatedCost)} ·{" "}
-                              <span className={goal.priority === "must_have" ? "text-red-400" : goal.priority === "dream" ? "text-purple-400" : "text-amber-400"}>
+                              <span className={goal.priority === "must_have" ? "text-red-400" : goal.priority === "dream" ? "text-emerald-400" : "text-amber-400"}>
                                 {goal.priority.replace("_", " ")}
                               </span>
                             </p>
@@ -826,7 +826,7 @@ export default function ClientOnboardingWizard() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Layers className="w-5 h-5 text-purple-400" /> Deep-Dive Assessment
+                  <Layers className="w-5 h-5 text-emerald-400" /> Deep-Dive Assessment
                   <Badge variant="secondary" className="ml-auto">{Object.keys(depthAnswers).length}/{depthQuestions.length}</Badge>
                 </CardTitle>
                 <CardDescription>
@@ -937,7 +937,7 @@ export default function ClientOnboardingWizard() {
                   {[
                     { label: "Financial Health", score: scores.health, color: "text-emerald-400", bg: "bg-emerald-500/10" },
                     { label: "Goal Alignment", score: scores.goalAlignment, color: "text-blue-400", bg: "bg-blue-500/10" },
-                    { label: "Behavior", score: scores.behavior, color: "text-purple-400", bg: "bg-purple-500/10" },
+                    { label: "Behavior", score: scores.behavior, color: "text-emerald-400", bg: "bg-emerald-500/10" },
                     { label: "Diversification", score: scores.diversification, color: "text-amber-400", bg: "bg-amber-500/10" },
                   ].map((item) => (
                     <div key={item.label} className={`p-4 rounded-xl ${item.bg} text-center`}>
@@ -1044,7 +1044,7 @@ export default function ClientOnboardingWizard() {
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <h3 className="text-sm font-semibold text-purple-400">Risk & Score</h3>
+                    <h3 className="text-sm font-semibold text-emerald-400">Risk & Score</h3>
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between"><span className="text-muted-foreground">Risk Profile</span><span className={getRiskColor(riskScore)}>{getRiskLabel(riskScore)} ({riskScore})</span></div>
                       <div className="flex justify-between"><span className="text-muted-foreground">Financial Score</span><span className="text-amber-400 font-bold">{scores.overall}/100</span></div>

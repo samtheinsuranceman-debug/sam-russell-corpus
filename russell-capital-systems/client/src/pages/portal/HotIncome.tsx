@@ -457,12 +457,12 @@ export default function HotIncome() {
               <div className="text-xs text-amber-600 mt-1">+ {fmt(investmentAmount)} principal returned</div>
             </CardContent>
           </Card>
-          <Card className="border-2 border-purple-500/30">
+          <Card className="border-2 border-emerald-500/30">
             <CardContent className="pt-4 text-center">
-              <Calculator className="w-6 h-6 text-purple-500 mx-auto mb-1" />
-              <div className="text-2xl font-bold text-purple-600">{pct(effectiveRateWithout)}</div>
+              <Calculator className="w-6 h-6 text-emerald-500 mx-auto mb-1" />
+              <div className="text-2xl font-bold text-emerald-600">{pct(effectiveRateWithout)}</div>
               <div className="text-xs text-muted-foreground">Effective Tax Rate</div>
-              <div className="text-xs text-purple-600 mt-1">→ {pct(effectiveRateWith)} with O&G</div>
+              <div className="text-xs text-emerald-600 mt-1">→ {pct(effectiveRateWith)} with O&G</div>
             </CardContent>
           </Card>
         </div>
@@ -778,9 +778,9 @@ export default function HotIncome() {
                     <p className="text-[10px] text-amber-300/70 uppercase tracking-wider">Principal Returned</p>
                     <p className="text-xl font-bold text-amber-400">{fmt(investmentAmount)}</p>
                   </div>
-                  <div className="p-3 rounded-lg bg-purple-900/20">
-                    <p className="text-[10px] text-purple-300/70 uppercase tracking-wider">Total Cash Flow</p>
-                    <p className="text-xl font-bold text-purple-400">{fmt(yearSummaries[9]?.cumulativeCashFlow || 0)}</p>
+                  <div className="p-3 rounded-lg bg-emerald-900/20">
+                    <p className="text-[10px] text-emerald-300/70 uppercase tracking-wider">Total Cash Flow</p>
+                    <p className="text-xl font-bold text-emerald-400">{fmt(yearSummaries[9]?.cumulativeCashFlow || 0)}</p>
                   </div>
                 </div>
               </CardContent>
@@ -802,7 +802,7 @@ export default function HotIncome() {
                     { step: 1, title: "Invest Capital", desc: "You invest a lump sum into an oil & gas drilling program. Your principal is committed for the 10–12 year lockup period. These are direct participation programs (DPPs) where you own a working interest in producing wells.", color: "bg-orange-100 dark:bg-orange-900", icon: <DollarSign className="w-5 h-5" /> },
                     { step: 2, title: "Immediate Tax Deductions", desc: "In Year 1, approximately 75% of your investment is deductible as Intangible Drilling Costs (IDC) — labor, chemicals, mud, grease, fuel, and other non-salvageable expenses. This is a powerful above-the-line deduction that can offset your other earned income.", color: "bg-blue-100 dark:bg-blue-900", icon: <Shield className="w-5 h-5" /> },
                     { step: 3, title: "Receive Consistent Income", desc: "Once wells are producing, you receive quarterly or monthly income distributions at a target rate of 15% annually on your invested capital. This income stream continues for the life of the wells.", color: "bg-green-100 dark:bg-green-900", icon: <TrendingUp className="w-5 h-5" /> },
-                    { step: 4, title: "Ongoing Tax Benefits", desc: "Each year you receive a 15% depletion allowance on your gross income — a tax-free return of capital. Additionally, tangible drilling costs are depreciated over 7 years using MACRS.", color: "bg-purple-100 dark:bg-purple-900", icon: <Percent className="w-5 h-5" /> },
+                    { step: 4, title: "Ongoing Tax Benefits", desc: "Each year you receive a 15% depletion allowance on your gross income — a tax-free return of capital. Additionally, tangible drilling costs are depreciated over 7 years using MACRS.", color: "bg-emerald-100 dark:bg-emerald-900", icon: <Percent className="w-5 h-5" /> },
                     { step: 5, title: "Principal Returned", desc: "After the lockup period (10–12 years), your original principal is returned in full. You keep the income stream AND get your money back.", color: "bg-amber-100 dark:bg-amber-900", icon: <Wallet className="w-5 h-5" /> },
                     { step: 6, title: "Beneficiaries Inherit", desc: "After the lockup period is satisfied, beneficiaries can inherit both the ongoing income stream and the principal. The income continues for the productive life of the wells.", color: "bg-red-100 dark:bg-red-900", icon: <Heart className="w-5 h-5" /> },
                   ].map((item) => (
@@ -1054,8 +1054,8 @@ export default function HotIncome() {
                       timing: "Offsets Earned Income",
                       desc: "Unlike most passive investments, oil & gas working interests are classified as active income under the tax code. This means the deductions can offset your W-2 wages, business income, and other earned income — not just passive income.",
                       example: "This is why oil & gas can zero out your earned income tax liability, unlike rental real estate losses which are limited to $25K against active income.",
-                      color: "border-purple-500",
-                      icon: <Target className="w-6 h-6 text-purple-600" />,
+                      color: "border-emerald-500",
+                      icon: <Target className="w-6 h-6 text-emerald-600" />,
                     },
                   ].map((item) => (
                     <Card key={item.title} className={`border-l-4 ${item.color}`}>
@@ -1140,12 +1140,12 @@ export default function HotIncome() {
                       <div className="text-xs text-blue-600 mt-1">{fmt(Math.round(annualIncome / 12))}/month</div>
                     </CardContent>
                   </Card>
-                  <Card className="border-2 border-purple-200 dark:border-purple-800">
+                  <Card className="border-2 border-emerald-200 dark:border-emerald-800">
                     <CardContent className="pt-4 text-center">
-                      <Calendar className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-purple-600">20–30+ yrs</div>
+                      <Calendar className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-emerald-600">20–30+ yrs</div>
                       <div className="text-sm text-muted-foreground">Potential Income Duration</div>
-                      <div className="text-xs text-purple-600 mt-1">Depends on well productivity</div>
+                      <div className="text-xs text-emerald-600 mt-1">Depends on well productivity</div>
                     </CardContent>
                   </Card>
                 </div>

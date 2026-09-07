@@ -19,7 +19,7 @@ const STORY_TEMPLATES = [
   { id: "retirement-rescue", label: "Retirement Rescue", description: "How you saved their retirement from disaster", icon: Shield, color: "text-blue-400" },
   { id: "tax-savings", label: "Tax Savings Hero", description: "The strategy that saved them thousands in taxes", icon: DollarSign, color: "text-green-400" },
   { id: "family-protection", label: "Family Protection", description: "How their family is now protected forever", icon: Heart, color: "text-red-400" },
-  { id: "wealth-growth", label: "Wealth Growth", description: "The journey from worried to wealthy", icon: TrendingUp, color: "text-purple-400" },
+  { id: "wealth-growth", label: "Wealth Growth", description: "The journey from worried to wealthy", icon: TrendingUp, color: "text-emerald-400" },
   { id: "legacy-builder", label: "Legacy Builder", description: "Building generational wealth that lasts", icon: Users, color: "text-amber-400" },
 ];
 
@@ -82,10 +82,10 @@ export default function ClientStoryGenerator() {
   return (
     <AppShell>
       <div className="min-h-screen bg-background">
-        <div className="border-b border-border/30 bg-gradient-to-r from-rose-500/5 via-background to-purple-500/5">
+        <div className="border-b border-border/30 bg-gradient-to-r from-rose-500/5 via-background to-emerald-500/5">
           <div className="container py-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-rose-500 to-purple-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-rose-500 to-emerald-600 flex items-center justify-center">
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -125,7 +125,7 @@ export default function ClientStoryGenerator() {
 
               {/* Story Template */}
               <Card className="border-border/30">
-                <CardHeader><CardTitle className="text-base flex items-center gap-2"><FileText className="w-4 h-4 text-purple-400" /> Story Template</CardTitle></CardHeader>
+                <CardHeader><CardTitle className="text-base flex items-center gap-2"><FileText className="w-4 h-4 text-emerald-400" /> Story Template</CardTitle></CardHeader>
                 <CardContent className="space-y-2">
                   {STORY_TEMPLATES.map((t) => {
                     const Icon = t.icon;
@@ -179,7 +179,7 @@ export default function ClientStoryGenerator() {
               <Button
                 onClick={generateStory}
                 disabled={isGenerating || !selectedClient || !selectedTemplate}
-                className="w-full bg-gradient-to-r from-rose-600 to-purple-600 hover:from-rose-700 hover:to-purple-700 h-12 text-lg"
+                className="w-full bg-gradient-to-r from-rose-600 to-emerald-600 hover:from-rose-700 hover:to-emerald-700 h-12 text-lg"
               >
                 {isGenerating ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Crafting Your Story...</> : <><Sparkles className="w-5 h-5 mr-2" /> Generate Story</>}
               </Button>

@@ -186,7 +186,7 @@ function MonteCarloSummary({ iulProjection, primaryColor }: { iulProjection: any
   const items = [
     { label: "Worst Case (10th %ile)", value: mcData.p10, color: "#ef4444" },
     { label: "Below Avg (25th %ile)", value: mcData.p25, color: "#f59e0b" },
-    { label: "Median (50th %ile)", value: mcData.p50, color: "#8b5cf6" },
+    { label: "Median (50th %ile)", value: mcData.p50, color: "#10b981" },
     { label: "Above Avg (75th %ile)", value: mcData.p75, color: "#3b82f6" },
     { label: "Best Case (90th %ile)", value: mcData.p90, color: primaryColor },
   ];
@@ -194,7 +194,7 @@ function MonteCarloSummary({ iulProjection, primaryColor }: { iulProjection: any
   return (
     <div>
       <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-        <BarChart3 className="h-4 w-4 text-purple-400" /> Monte Carlo Analysis
+        <BarChart3 className="h-4 w-4 text-emerald-400" /> Monte Carlo Analysis
         <span className="text-xs text-muted-foreground font-normal">(300 simulations, 15% volatility)</span>
       </h4>
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
@@ -390,7 +390,7 @@ function IncomeTimelineTab({ incomeTimeline, primaryColor, accentColor }: any) {
                     <div className="h-full bg-green-500" style={{ width: `${(row.rothDistributions / maxTotal) * 100}%` }} title={`Roth: ${formatCurrency(row.rothDistributions)}`} />
                   )}
                   {row.iulLoans > 0 && (
-                    <div className="h-full bg-purple-500" style={{ width: `${(row.iulLoans / maxTotal) * 100}%` }} title={`IUL: ${formatCurrency(row.iulLoans)}`} />
+                    <div className="h-full bg-emerald-500" style={{ width: `${(row.iulLoans / maxTotal) * 100}%` }} title={`IUL: ${formatCurrency(row.iulLoans)}`} />
                   )}
                   {row.iraRmd > 0 && (
                     <div className="h-full bg-amber-500" style={{ width: `${(row.iraRmd / maxTotal) * 100}%` }} title={`IRA: ${formatCurrency(row.iraRmd)}`} />
@@ -407,7 +407,7 @@ function IncomeTimelineTab({ incomeTimeline, primaryColor, accentColor }: any) {
           <div className="flex flex-wrap gap-4 mb-4 text-xs">
             <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-blue-500" /> Social Security</span>
             <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-green-500" /> Roth Distributions</span>
-            <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-purple-500" /> IUL Policy Loans</span>
+            <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-emerald-500" /> IUL Policy Loans</span>
             <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-amber-500" /> IRA RMDs</span>
           </div>
 
@@ -514,7 +514,7 @@ function StrategiesTab({ strategies, savedStrategies, notes, primaryColor, accen
       <Card className="border-border/50">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Brain className="h-5 w-5 text-purple-400" />
+            <Brain className="h-5 w-5 text-emerald-400" />
             Strategy Summaries ({strategies.length})
           </CardTitle>
         </CardHeader>

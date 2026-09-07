@@ -609,8 +609,8 @@ export default function SalesStoryBuilder() {
                   <div className="text-sm text-amber-300">Current Tax Bracket</div>
                   <div className="text-3xl font-bold">{taxRate}%</div>
                 </div>
-                <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/20">
-                  <div className="text-sm text-purple-300">Retirement Savings</div>
+                <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/20">
+                  <div className="text-sm text-emerald-300">Retirement Savings</div>
                   <div className="text-3xl font-bold">{fmt(retirement401k)}</div>
                 </div>
                 <div className="p-4 rounded-xl bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/20">
@@ -811,7 +811,7 @@ export default function SalesStoryBuilder() {
                 { source: "Social Security (combined)", amount: 72000, taxable: true, color: "bg-blue-500" },
                 { source: "401(k)/IRA Distributions", amount: Math.round(retirement401k * 0.04 * Math.pow(1.07, 67 - clientAge)), taxable: true, color: "bg-amber-500" },
                 { source: "IUL Tax-Free Loans", amount: taxFreeIncome, taxable: false, color: "bg-green-500" },
-                { source: "Annuity Income", amount: 36000, taxable: false, color: "bg-purple-500" },
+                { source: "Annuity Income", amount: 36000, taxable: false, color: "bg-emerald-500" },
               ].map((src, i) => (
                 <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-card border">
                   <div className={`w-3 h-3 rounded-full shrink-0 ${src.color}`} />
@@ -990,14 +990,14 @@ export default function SalesStoryBuilder() {
   const typeColors: Record<string, string> = {
     intro: "bg-blue-500/20 text-blue-400",
     problem: "bg-red-500/20 text-red-400",
-    data: "bg-purple-500/20 text-purple-400",
+    data: "bg-emerald-500/20 text-emerald-400",
     solution: "bg-green-500/20 text-green-400",
     comparison: "bg-amber-500/20 text-amber-400",
     action: "bg-primary/20 text-primary",
     summary: "bg-blue-500/20 text-blue-400",
   };
 
-  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444"];
+  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444"];
   const tooltipStyle = { background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 };
 
   const radarData = [

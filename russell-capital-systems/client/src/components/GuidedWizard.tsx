@@ -162,7 +162,7 @@ export function GuidedWizard({
         })}
         {/* Results indicator */}
         {completed && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-purple-500/15 border border-purple-500/40 text-purple-400 text-xs font-medium shrink-0">
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-xs font-medium shrink-0">
             <Sparkles className="w-3.5 h-3.5" />
             Results
           </div>

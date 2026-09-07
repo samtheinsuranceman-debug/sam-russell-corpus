@@ -212,7 +212,7 @@ function WarStories() {
                       <MessageCircle size={13} /> <span className="text-[10px]">Reply</span>
                     </button>
                     <button
-                      className="flex items-center gap-1 text-slate-500 hover:text-violet-400 transition-colors"
+                      className="flex items-center gap-1 text-slate-500 hover:text-emerald-400 transition-colors"
                       onClick={() => toast.success("+25 XP — Story Shared!", { icon: "🔗" })}
                     >
                       <Share2 size={13} /> <span className="text-[10px]">Share</span>
@@ -381,7 +381,7 @@ function PredictionMarket() {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <p className="text-[10px] text-slate-400">Predict the future. Earn XP. Prove you're the oracle.</p>
-        <Badge variant="outline" className="text-[10px] border-violet-500/30 text-violet-400">
+        <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-400">
           +100 XP per correct prediction
         </Badge>
       </div>
@@ -390,13 +390,13 @@ function PredictionMarket() {
       {!showForm ? (
         <Button
           onClick={() => setShowForm(true)}
-          className="w-full bg-violet-500/10 border border-violet-500/30 text-violet-400 hover:bg-violet-500/20"
+          className="w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20"
         >
           <Plus size={16} className="mr-2" /> Create Prediction Question (+50 XP)
         </Button>
       ) : (
-        <div className="rounded-xl bg-[#0b1628] border border-violet-500/30 p-4 space-y-3">
-          <h4 className="text-sm font-bold text-violet-400 flex items-center gap-2">
+        <div className="rounded-xl bg-[#0b1628] border border-emerald-500/30 p-4 space-y-3">
+          <h4 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
             <TrendingUp size={16} /> New Prediction
           </h4>
           <Textarea
@@ -428,7 +428,7 @@ function PredictionMarket() {
               <Button size="sm" variant="ghost" className="text-xs text-slate-400" onClick={() => setShowForm(false)}>Cancel</Button>
               <Button
                 size="sm"
-                className="bg-violet-500/20 border border-violet-500/30 text-violet-400 hover:bg-violet-500/30 text-xs"
+                className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 text-xs"
                 onClick={handleCreateQuestion}
                 disabled={createQuestion.isPending}
               >
@@ -449,7 +449,7 @@ function PredictionMarket() {
             onClick={() => setWagerAmount(w)}
             className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
               wagerAmount === w
-                ? "bg-violet-500/20 border-violet-500/40 text-violet-400"
+                ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400"
                 : "border-[#1a3055] text-slate-500 hover:text-slate-300"
             }`}
           >
@@ -484,7 +484,7 @@ function PredictionMarket() {
                 </div>
                 <div className="text-right flex-shrink-0 ml-3">
                   <div className="text-[10px] text-slate-500">{totalVotes} votes</div>
-                  <div className="text-[10px] text-violet-400">{p.totalWager || 0} RC wagered</div>
+                  <div className="text-[10px] text-emerald-400">{p.totalWager || 0} RC wagered</div>
                 </div>
               </div>
 
@@ -668,7 +668,7 @@ export default function WarRoom() {
             <TabsTrigger value="challenges" className="text-xs data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400">
               <SwordsIcon size={14} className="mr-1" /> Challenges
             </TabsTrigger>
-            <TabsTrigger value="predictions" className="text-xs data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-400">
+            <TabsTrigger value="predictions" className="text-xs data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
               <TrendingUp size={14} className="mr-1" /> Predictions
             </TabsTrigger>
             <TabsTrigger value="whispers" className="text-xs data-[state=active]:bg-slate-500/20 data-[state=active]:text-slate-300">

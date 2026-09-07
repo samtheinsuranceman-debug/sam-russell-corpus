@@ -1,13 +1,14 @@
 // ============================================================
 // LIVE PAGE ↔ REACT HOMEPAGE PARITY
 // The published single-file homepage (live/ template → docs/index.html) and the
-// React homepage are two renderings of the same content. This test fails the
-// moment they drift: engine list/order, FAQ, headline copy, proof numbers —
-// and it fails if docs/index.html is stale relative to the template.
+// React homepage are two renderings of the same content. Both read their words
+// from shared/homeManifesto.json; this test fails the moment they drift — and
+// it fails if docs/index.html is stale relative to the template.
 // ============================================================
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import manifesto from "../shared/homeManifesto.json";
 
 const APP = path.resolve(__dirname, "..");
 const REPO = path.resolve(APP, "..");
@@ -15,74 +16,58 @@ const read = (p: string) => readFileSync(p, "utf8");
 
 const template = read(path.join(APP, "live/rcs-live-homepage.template.html"));
 const landing = read(path.join(APP, "client/src/pages/Landing.tsx"));
-const tech = read(path.join(APP, "client/src/components/ProprietaryTech.tsx"));
-const trust = read(path.join(APP, "client/src/components/HomeTrustSections.tsx"));
-const proof = read(path.join(APP, "client/src/components/SeniorPartnerBand.tsx"));
-const react = landing + tech + trust + proof;
-
-const block = (src: string, name: string) => {
-  const start = src.indexOf(`const ${name} = [`);
-  expect(start, `${name} array present`).toBeGreaterThan(-1);
-  return src.slice(start, src.indexOf("\n  ];", start));
-};
-const decode = (s: string) => s.replace(/&amp;/g, "&").replace(/&trade;/g, "™");
+const builder = read(path.join(APP, "live/build_live_homepage.py"));
 
 describe("live page ↔ React homepage parity", () => {
-  it("lists the same 14 engines in the same building order", () => {
-    const live = [...block(template, "ENGINES").matchAll(/\["[a-z0-9]+","([^"]+)","/g)].map((m) => m[1]);
-    const app = [...tech.matchAll(/name: "([^"]+)"/g)].map((m) => m[1]);
-    expect(live).toHaveLength(14);
-    expect(live).toEqual(app);
+  it("both read the same manifesto", () => {
+    expect(landing).toContain('from "@shared/homeManifesto.json"');
+    expect(template).toContain("__MANIFESTO_JSON__");
+    expect(builder).toContain('"shared" / "homeManifesto.json"');
+    // The static page renders every list the React page renders.
+    for (const key of ["M.slogan", "M.declarations", "M.claims", "M.expect", "M.status", "M.disclaimer"]) expect(template).toContain(key);
+    for (const key of ["manifesto.slogan", "manifesto.declarations", "manifesto.claims", "manifesto.expect", "manifesto.status", "manifesto.disclaimer"]) expect(landing).toContain(key);
   });
 
-  it("asks the same FAQ questions, in the same order", () => {
-    const live = [...block(template, "FAQ").matchAll(/\["((?:[^"\\]|\\.)*)","/g)].map((m) => m[1].replace(/\\"/g, '"'));
-    const app = [...trust.matchAll(/q: "((?:[^"\\]|\\.)*)"/g)].map((m) => m[1].replace(/\\"/g, '"'));
-    expect(live.length).toBeGreaterThanOrEqual(7);
-    expect(live).toEqual(app);
-  });
-
-  it("carries the same headline promises and proof numbers", () => {
-    const phrases = [
-      "Financial & Tax Relief and Recovery",
-      "Tax-Free Liquid War Chest",
-      "On Demand™",
-      "We build the tailored",
-      "Systems",
-      "We Build the System Around It.",
-      "High-Earning Physicians",
-      "Turn Medical Income Into Lasting Wealth™",
-      "Clients who stay for decades.",
-      "60%",
-      "69 years old",
-      "medical malpractice",
-      "20 years or longer",
-      "15 patents in process",
-      "45 more",
-      "anywhere else",
-    ];
-    const liveText = decode(template);
-    const appText = decode(react);
-    for (const p of phrases) {
-      expect(liveText, `live page has “${p}”`).toContain(p);
-      expect(appText, `React homepage has “${p}”`).toContain(p);
+  it("keeps the same nine-screen order and the same section ids", () => {
+    const order = (src: string, marks: string[]) => marks.map((m) => src.indexOf(m));
+    const liveOrder = order(template, ['id="top"', 'id="horizon"', 'id="manifesto"', "The skyway", 'id="claims"', "The expressway", 'id="expect"', "The sign at night", 'id="estimate"']);
+    const appOrder = order(landing, ['id="top"', 'id="horizon"', 'id="manifesto"', "The skyway", 'id="claims"', "The expressway", 'id="expect"', "The sign at night", "<HomeLeadFactFinder />"]);
+    for (const list of [liveOrder, appOrder]) {
+      expect(list.every((i) => i > -1)).toBe(true);
+      expect(list).toEqual(list.slice().sort((a, b) => a - b));
     }
+  });
+
+  it("carries the one slogan on two pictures, and the same headline promises", () => {
+    expect((template.match(/class="slogan-line"/g) ?? []).length).toBe(2);
+    expect((landing.match(/ slogan label=/g) ?? []).length).toBe(2);
+    for (const p of ["Financial &amp; Tax Relief and Recovery", "Read them top to bottom", "Each one makes the next possible", "Only at RCS", "Hear it from Sam Russell"]) {
+      expect(template, `live page has “${p}”`).toContain(p);
+      expect(landing, `React homepage has “${p}”`).toContain(p);
+    }
+    expect(manifesto.claims).toHaveLength(15);
   });
 
   it("never shows figures to visitors on either rendering", () => {
-    // Visitor-facing copy must not carry the advisor-only methodology numbers.
-    for (const forbidden of ["47%", "$150k", "$150,000", "95% deduction", "5–7 year", "5-7 year"]) {
+    for (const forbidden of ["47%", "$150k", "$150,000", "95% deduction", "5–7 year", "5-7 year", "$2.8B", "98%", "27+"]) {
       expect(template).not.toContain(forbidden);
-      expect(react).not.toContain(forbidden);
+      expect(landing).not.toContain(forbidden);
+      expect(JSON.stringify(manifesto)).not.toContain(forbidden);
     }
   });
 
-  it("uses every one of the six crisp images, and never blurs them", () => {
-    for (const key of ["NEON_A", "NEON_B", "EMERALD", "BRIDGE", "CANYON", "INTERCHANGE"]) {
-      expect(template).toContain(`__IMG_${key}__`);
-    }
-    for (const file of ["rcs-neon-a", "rcs-neon-b", "rcs-city-emerald", "rcs-city-bridge", "rcs-city-canyon", "rcs-city-interchange"]) {
-      expect(react).toContain(`/${file}.webp`);
+  it("uses the same pictures on both, crisp, never blurred", () => {
+    const pairs: Array<[string, string]> = [
+      ["__IMG_NEON_A__", "/rcs-neon-a.webp"], ["__IMG_NEON_A_TALL__", "/rcs-neon-a-tall.webp"],
+      ["__IMG_HORIZON__", "/rcs-city-horizon.webp"], ["__IMG_SKYWAY__", "/rcs-city-skyway.webp"], ["__IMG_FLAGSHIP__", "/rcs-city-flagship.webp"],
+      ["__IMG_EXPRESSWAY__", "/rcs-city-expressway.webp"], ["__IMG_GLASS__", "/rcs-city-glass.webp"],
+      ["__IMG_NEON_B__", "/rcs-neon-b.webp"], ["__IMG_NEON_B_TALL__", "/rcs-neon-b-tall.webp"],
+    ];
+    for (const [key, file] of pairs) {
+      expect(template, key).toContain(key);
+      expect(builder, key).toContain(key);
+      expect(landing, file).toContain(file);
+      expect(existsSync(path.join(APP, "client/public", file.slice(1))), file).toBe(true);
     }
     expect(template).not.toMatch(/\.pic\{[^}]*filter:[^}]*blur/);
     expect(landing).not.toMatch(/blur-\[/);
@@ -92,10 +77,15 @@ describe("live page ↔ React homepage parity", () => {
     const built = path.join(REPO, "docs/index.html");
     expect(existsSync(built), "docs/index.html exists — run `pnpm live:build`").toBe(true);
     const normalize = (s: string) =>
-      s.replace(/data:image\/webp;base64,[A-Za-z0-9+/=]+/g, "__IMG__").replace(/__IMG_[A-Z_]+__/g, "__IMG__");
+      s.replace(/data:image\/webp;base64,[A-Za-z0-9+/=]+/g, "__IMG__").replace(/__IMG_[A-Z_]+__/g, "__IMG__")
+        .replace(/<script id="manifesto-json" type="application\/json">[\s\S]*?<\/script>/, "__MANIFESTO__");
     const expected = normalize(template)
       .replace(/__CALENDLY__/g, "https://calendly.com/samtheinsuranceman-1/30min")
-      .replace(/__ADVISOR_EMAIL__/g, "samtheinsuranceman@gmail.com");
+      .replace(/__ADVISOR_EMAIL__/g, "samtheinsuranceman@gmail.com")
+      .replace(/__APP_ORIGIN__/g, "https://web-production-4b215.up.railway.app");
     expect(normalize(read(built))).toBe(expected);
+    // and the embedded manifesto is the current one
+    expect(read(built)).toContain(manifesto.claims[14].name);
+    expect(read(built)).toContain(manifesto.slogan.slice(0, 40));
   });
 });

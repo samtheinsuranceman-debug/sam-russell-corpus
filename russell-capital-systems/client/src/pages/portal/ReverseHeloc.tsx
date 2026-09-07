@@ -259,7 +259,7 @@ export default function ReverseHeloc() {
               <Home className="w-3.5 h-3.5 mr-1" /> HELOC (70% LTV)
             </Badge>
             <ArrowRight className="w-4 h-4 text-muted-foreground" />
-            <Badge variant="outline" className="border-violet-400/50 text-violet-400 px-3 py-1.5">
+            <Badge variant="outline" className="border-emerald-400/50 text-emerald-400 px-3 py-1.5">
               <Shield className="w-3.5 h-3.5 mr-1" /> IUL Premium Yr 1-2
             </Badge>
             <ArrowRight className="w-4 h-4 text-muted-foreground" />
@@ -318,10 +318,10 @@ export default function ReverseHeloc() {
             </Card>
 
             {/* IUL Inputs */}
-            <Card className="border-violet-500/20">
+            <Card className="border-emerald-500/20">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-violet-400" /> IUL Policy
+                  <Shield className="w-4 h-4 text-emerald-400" /> IUL Policy
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -445,10 +445,10 @@ export default function ReverseHeloc() {
                 <p className="text-lg font-bold text-blue-400">{fmt(summary.helocAmount)}</p>
               </CardContent>
             </Card>
-            <Card className="border-violet-500/20">
+            <Card className="border-emerald-500/20">
               <CardContent className="pt-4 text-center">
                 <p className="text-xs text-muted-foreground">IUL Cash Value</p>
-                <p className="text-lg font-bold text-violet-400">{fmt(summary.finalIulCashValue)}</p>
+                <p className="text-lg font-bold text-emerald-400">{fmt(summary.finalIulCashValue)}</p>
               </CardContent>
             </Card>
             <Card className="border-emerald-500/20">
@@ -510,7 +510,7 @@ export default function ReverseHeloc() {
                 <strong className="text-amber-400">Amber</strong> = O&G income.
                 <strong className="text-blue-400"> Blue</strong> = HELOC interest.
                 <strong className="text-red-400"> Red</strong> = bank loan interest.
-                <strong className="text-violet-400"> Violet</strong> = IUL loan interest.
+                <strong className="text-emerald-400"> Violet</strong> = IUL loan interest.
                 Watch O&G income grow to cover and exceed all three interest payments.
               </p>
             </CardHeader>
@@ -530,7 +530,7 @@ export default function ReverseHeloc() {
                     <Bar dataKey="ogIncome" name="O&G Income" fill="#f59e0b" radius={[4, 4, 0, 0]} />
                     <Bar dataKey="helocInterest" name="HELOC Interest" fill="#3b82f6" stackId="interest" opacity={0.8} />
                     <Bar dataKey="bankInterest" name="Bank Loan Interest" fill="#ef4444" stackId="interest" opacity={0.8} />
-                    <Bar dataKey="iulLoanInterest" name="IUL Loan Interest" fill="#8b5cf6" stackId="interest" opacity={0.8} />
+                    <Bar dataKey="iulLoanInterest" name="IUL Loan Interest" fill="#10b981" stackId="interest" opacity={0.8} />
                     <Line type="monotone" dataKey="netCashFlow" name="Net Cash Flow" stroke="#22c55e" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                     <ReferenceLine y={0} stroke="#666" strokeWidth={2} />
                     {summary.loanWipeoutYear && (
@@ -544,10 +544,10 @@ export default function ReverseHeloc() {
           </Card>
 
           {/* CHART 2: Stacked O&G Tranches */}
-          <Card className="border-violet-500/20">
+          <Card className="border-emerald-500/20">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center gap-2">
-                <Droplets className="w-5 h-5 text-violet-400" /> O&G Tranches: Overlapping & Compounding
+                <Droplets className="w-5 h-5 text-emerald-400" /> O&G Tranches: Overlapping & Compounding
               </CardTitle>
               <p className="text-sm text-muted-foreground">
                 Each MYGA cycle launches a new O&G tranche ({oilGasTerm}-year term).
@@ -617,7 +617,7 @@ export default function ReverseHeloc() {
                     <Legend />
                     <Area type="monotone" dataKey="helocBalance" name="HELOC Balance" fill="#3b82f6" fillOpacity={0.3} stroke="#3b82f6" strokeWidth={2} stackId="loans" />
                     <Area type="monotone" dataKey="bankLoanBalance" name="Bank Loan Balance" fill="#ef4444" fillOpacity={0.3} stroke="#ef4444" strokeWidth={2} stackId="loans" />
-                    <Area type="monotone" dataKey="iulLoanBalance" name="IUL Loan Balance" fill="#8b5cf6" fillOpacity={0.2} stroke="#8b5cf6" strokeWidth={2} stackId="loans" />
+                    <Area type="monotone" dataKey="iulLoanBalance" name="IUL Loan Balance" fill="#10b981" fillOpacity={0.2} stroke="#10b981" strokeWidth={2} stackId="loans" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -647,7 +647,7 @@ export default function ReverseHeloc() {
                       labelFormatter={(l: number) => `Year ${l}`}
                     />
                     <Legend />
-                    <Area type="monotone" dataKey="iulCashValue" name="IUL Cash Value" fill="#8b5cf6" fillOpacity={0.2} stroke="#8b5cf6" strokeWidth={2} />
+                    <Area type="monotone" dataKey="iulCashValue" name="IUL Cash Value" fill="#10b981" fillOpacity={0.2} stroke="#10b981" strokeWidth={2} />
                     <Area type="monotone" dataKey="mygaValue" name="MYGA Value" fill="#10b981" fillOpacity={0.2} stroke="#10b981" strokeWidth={2} />
                     <Area type="monotone" dataKey="cumOGIncome" name="Cumulative O&G Income" fill="#f59e0b" fillOpacity={0.2} stroke="#f59e0b" strokeWidth={2} />
                     <Line type="monotone" dataKey="totalLoans" name="Total Loan Balances" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
@@ -674,7 +674,7 @@ export default function ReverseHeloc() {
                     <tr className="border-b border-slate-700">
                       <th className="px-2 py-2 text-left font-semibold">Year</th>
                       <th className="px-2 py-2 text-right font-semibold text-blue-400">HELOC Bal</th>
-                      <th className="px-2 py-2 text-right font-semibold text-violet-400">IUL CV</th>
+                      <th className="px-2 py-2 text-right font-semibold text-emerald-400">IUL CV</th>
                       <th className="px-2 py-2 text-right font-semibold text-emerald-400">MYGA Val</th>
                       <th className="px-2 py-2 text-right font-semibold text-red-400">Bank Loan</th>
                       <th className="px-2 py-2 text-right font-semibold text-amber-400">O&G Income</th>
@@ -695,7 +695,7 @@ export default function ReverseHeloc() {
                       >
                         <td className="px-2 py-1.5 font-mono font-semibold">{row.year}</td>
                         <td className="px-2 py-1.5 text-right font-mono text-blue-400">{fmt(row.helocEndBalance)}</td>
-                        <td className="px-2 py-1.5 text-right font-mono text-violet-400">{fmt(row.iulCashValue)}</td>
+                        <td className="px-2 py-1.5 text-right font-mono text-emerald-400">{fmt(row.iulCashValue)}</td>
                         <td className="px-2 py-1.5 text-right font-mono text-emerald-400">{fmt(row.mygaEndValue)}</td>
                         <td className="px-2 py-1.5 text-right font-mono text-red-400">{fmt(row.bankLoanEndBalance)}</td>
                         <td className="px-2 py-1.5 text-right font-mono text-amber-400">{fmt(row.ogIncome)}</td>
@@ -736,7 +736,7 @@ export default function ReverseHeloc() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between"><span className="text-muted-foreground">HELOC Drawn (IUL Premiums)</span><span className="font-mono font-semibold text-blue-400">{fmt(summary.helocAmount)}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">IUL Loan Amount (Month 13)</span><span className="font-mono font-semibold text-violet-400">{fmt(summary.iulLoanAmount)}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">IUL Loan Amount (Month 13)</span><span className="font-mono font-semibold text-emerald-400">{fmt(summary.iulLoanAmount)}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">MYGA Initial Investment</span><span className="font-mono font-semibold text-emerald-400">{fmt(summary.mygaInitialInvestment)}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Total O&G Invested</span><span className="font-mono font-semibold text-amber-400">{fmt(summary.totalOGInvested)}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Number of MYGA Cycles</span><span className="font-mono font-semibold">{summary.numberOfCycles}</span></div>
@@ -752,7 +752,7 @@ export default function ReverseHeloc() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between"><span className="text-muted-foreground">Total O&G Income</span><span className="font-mono font-semibold text-amber-400">{fmt(summary.totalOGIncome)}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Final IUL Cash Value</span><span className="font-mono font-semibold text-violet-400">{fmt(summary.finalIulCashValue)}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Final IUL Cash Value</span><span className="font-mono font-semibold text-emerald-400">{fmt(summary.finalIulCashValue)}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Final MYGA Value</span><span className="font-mono font-semibold text-emerald-400">{fmt(summary.finalMygaValue)}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Total Depreciation Credits</span><span className="font-mono font-semibold text-cyan-400">{fmt(summary.totalDepreciation)}</span></div>
               </CardContent>
@@ -768,7 +768,7 @@ export default function ReverseHeloc() {
               <CardContent className="space-y-3">
                 <div className="flex justify-between"><span className="text-muted-foreground">HELOC Interest</span><span className="font-mono font-semibold text-blue-400">{fmt(summary.totalHelocInterestPaid)}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Bank Loan Interest</span><span className="font-mono font-semibold text-red-400">{fmt(summary.totalBankInterestPaid)}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">IUL Loan Interest</span><span className="font-mono font-semibold text-violet-400">{fmt(summary.totalIulLoanInterestPaid)}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">IUL Loan Interest</span><span className="font-mono font-semibold text-emerald-400">{fmt(summary.totalIulLoanInterestPaid)}</span></div>
                 <div className="border-t border-slate-700 pt-2 flex justify-between"><span className="font-semibold">Total Interest</span><span className="font-mono font-bold text-red-400">{fmt(summary.totalAllInterestPaid)}</span></div>
               </CardContent>
             </Card>

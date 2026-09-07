@@ -283,7 +283,7 @@ export function FactFinderBadge({ className = "" }: { className?: string }) {
   if (!data) return null;
   const fromAssessment = source === "assessment";
   return (
-    <div className={`inline-flex flex-wrap items-center gap-1.5 px-2.5 py-1 rounded-full ${fromAssessment ? "bg-violet-500/15 border border-violet-400/30 text-violet-200" : "bg-emerald-500/15 border border-emerald-500/30 text-emerald-400"} text-xs font-medium ${className}`}>
+    <div className={`inline-flex flex-wrap items-center gap-1.5 px-2.5 py-1 rounded-full ${fromAssessment ? "bg-emerald-500/15 border border-emerald-400/30 text-emerald-200" : "bg-emerald-500/15 border border-emerald-500/30 text-emerald-400"} text-xs font-medium ${className}`}>
       <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
       {fromAssessment ? "Pre-filled from your Financial Assessment" : `Auto-filled from ${data.clientName}'s Fact Finder`}
       {fromAssessment && missingInputs.length > 0 && (

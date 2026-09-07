@@ -111,7 +111,7 @@ const fmtPct = (n: number) => `${n.toFixed(1)}%`;
 function FlowNode({ node, selected, onClick }: { node: AssetNode; selected: boolean; onClick: () => void }) {
   const bgColors: Record<string, string> = {
     asset: "from-blue-500/20 to-blue-600/10 border-blue-500/30",
-    entity: "from-purple-500/20 to-purple-600/10 border-purple-500/30",
+    entity: "from-emerald-500/20 to-emerald-600/10 border-emerald-500/30",
     beneficiary: "from-green-500/20 to-green-600/10 border-green-500/30",
     tax: "from-red-500/20 to-red-600/10 border-red-500/30",
     trust: "from-amber-500/20 to-amber-600/10 border-amber-500/30",
@@ -375,7 +375,7 @@ export default function EstateFlowChart() {
 
   const assetCompositionData = [{ name: "Primary Home", value: primaryHome, fill: "#3b82f6" },
 ,
-    { name: "Investments", value: investmentAccounts, fill: "#8b5cf6" },
+    { name: "Investments", value: investmentAccounts, fill: "#10b981" },
 ,
     { name: "Retirement", value: retirementAccounts, fill: "#10b981" },
 ,
@@ -581,19 +581,19 @@ export default function EstateFlowChart() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20">
+              <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/20">
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="text-sm font-medium text-purple-600/80 dark:text-purple-400/80 mb-1">Protected Assets</p>
-                      <h3 className="text-3xl font-bold text-purple-700 dark:text-purple-300">{fmt(analysis.totalReductions)}</h3>
+                      <p className="text-sm font-medium text-emerald-600/80 dark:text-emerald-400/80 mb-1">Protected Assets</p>
+                      <h3 className="text-3xl font-bold text-emerald-700 dark:text-emerald-300">{fmt(analysis.totalReductions)}</h3>
                     </div>
-                    <div className="p-2 bg-purple-500/20 rounded-lg">
-                      <Shield className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                    <div className="p-2 bg-emerald-500/20 rounded-lg">
+                      <Shield className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                     </div>
                   </div>
                   <div className="mt-4 flex items-center text-sm">
-                    <span className="text-purple-600 dark:text-purple-400 font-medium">{fmtPct((analysis.totalReductions / analysis.totalEstate) * 100)} of gross estate</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-medium">{fmtPct((analysis.totalReductions / analysis.totalEstate) * 100)} of gross estate</span>
                   </div>
                 </CardContent>
               </Card>
@@ -1319,7 +1319,7 @@ export default function EstateFlowChart() {
                       <Progress value={hasILIT ? (lifeInsurance / analysis.totalEstate) * 100 : 0} className="h-2" />
                       
                       <div className="flex justify-between items-center">
-                        <span className="text-sm flex items-center gap-2"><Home className="w-4 h-4 text-purple-500" /> QPRT Discount</span>
+                        <span className="text-sm flex items-center gap-2"><Home className="w-4 h-4 text-emerald-500" /> QPRT Discount</span>
                         <span className="font-medium">{fmt(hasQPRT ? analysis.qprtReduction : 0)}</span>
                       </div>
                       <Progress value={hasQPRT ? (analysis.qprtReduction / analysis.totalEstate) * 100 : 0} className="h-2" />
@@ -1619,7 +1619,7 @@ export default function EstateFlowChart() {
                         type="monotone" 
                         dataKey={(d) => (d.toHeirs / d.estateValue) * 100} 
                         name="Transfer Efficiency (%)" 
-                        stroke="#8b5cf6" 
+                        stroke="#10b981" 
                         strokeWidth={3}
                         dot={{ r: 4 }}
                         activeDot={{ r: 6 }}

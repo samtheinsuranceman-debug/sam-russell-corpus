@@ -71,7 +71,7 @@ const cashFlowData = [
   { category: 'Income', amount: 15000, color: '#22c55e' },
   { category: 'Expenses', amount: -8000, color: '#ef4444' },
   { category: 'Savings', amount: 4000, color: '#3b82f6' },
-  { category: 'Investments', amount: 3000, color: '#a78bfa' },
+  { category: 'Investments', amount: 3000, color: '#34d399' },
 ];
 
 const mockTables = {
@@ -178,7 +178,7 @@ export default function ClientIntakeInterview() {
     }
   }, [clientData]);
 
-  const chartColors = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444"];
+  const chartColors = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444"];
   const tooltipStyle = { background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 };
 
   const sectionProgressData = useMemo(() => {
@@ -555,22 +555,22 @@ export default function ClientIntakeInterview() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="rc-card">
             <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Activity className="h-4 w-4 text-purple-400" />
+              <Activity className="h-4 w-4 text-emerald-400" />
               Wealth Projection
             </div>
             <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={wealthProjectionData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorProjected" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#a78bfa" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#34d399" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#34d399" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
                 <XAxis dataKey="year" stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} />
                 <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => `${val / 1000}k`} />
                 <RTooltip contentStyle={tooltipStyle} />
-                <Area type="monotone" dataKey="projected" stroke="#a78bfa" fillOpacity={1} fill="url(#colorProjected)" />
+                <Area type="monotone" dataKey="projected" stroke="#34d399" fillOpacity={1} fill="url(#colorProjected)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -1028,8 +1028,8 @@ export default function ClientIntakeInterview() {
           <div className="space-y-6">
             <div className="rc-card bg-gradient-to-br from-[#0d1a2e] to-[#0a1424] border-[#12233e]">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-purple-500/20 rounded-lg border border-purple-500/30">
-                  <Bot className="h-5 w-5 text-purple-400" />
+                <div className="p-2 bg-emerald-500/20 rounded-lg border border-emerald-500/30">
+                  <Bot className="h-5 w-5 text-emerald-400" />
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-white">AI Profile Analysis</h2>
@@ -1150,10 +1150,10 @@ export default function ClientIntakeInterview() {
                     </div>
                     <ChevronRight className="h-4 w-4 text-[#7a95b8]" />
                   </div>
-                  <div className="p-3 bg-[#0d1a2e] border border-[#12233e] rounded-lg flex items-center justify-between hover:border-purple-500/50 transition-colors cursor-pointer" onClick={() => handleActionClick("Generate Proposal")}>
+                  <div className="p-3 bg-[#0d1a2e] border border-[#12233e] rounded-lg flex items-center justify-between hover:border-emerald-500/50 transition-colors cursor-pointer" onClick={() => handleActionClick("Generate Proposal")}>
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-purple-500/20 flex items-center justify-center">
-                        <BookOpen className="h-4 w-4 text-purple-400" />
+                      <div className="h-8 w-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                        <BookOpen className="h-4 w-4 text-emerald-400" />
                       </div>
                       <div>
                         <p className="text-sm font-medium text-white">Generate Initial Proposal</p>
@@ -1250,7 +1250,7 @@ export default function ClientIntakeInterview() {
               <div className="rc-card p-0 overflow-hidden">
                 <div className="p-4 border-b border-[#12233e]">
                   <h3 className="text-sm font-medium text-white flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-purple-400" />
+                    <Shield className="h-4 w-4 text-emerald-400" />
                     Insurance Policies
                   </h3>
                 </div>

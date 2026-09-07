@@ -289,7 +289,7 @@ export default function IllustrationCompare() {
               <p className="text-sm font-medium text-muted-foreground">Data Points</p>
               <h3 className="text-2xl font-bold">{comparison.years.length * 3}</h3>
             </div>
-            <div className="p-3 rounded-full bg-purple-100 text-purple-600">
+            <div className="p-3 rounded-full bg-emerald-100 text-emerald-600">
               <Database className="h-5 w-5" />
             </div>
           </CardContent>

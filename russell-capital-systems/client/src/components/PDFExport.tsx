@@ -81,7 +81,7 @@ function generatePDFHTML(data: StrategyData, type: "strategy" | "combo"): string
     .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-right: 6px; margin-bottom: 4px; }
     .badge-green { background: #dcfce7; color: #166534; }
     .badge-blue { background: #dbeafe; color: #1e40af; }
-    .badge-purple { background: #f3e8ff; color: #6b21a8; }
+    .badge-purple { background: #ecfdf5; color: #065f46; }
     .badge-amber { background: #fef3c7; color: #92400e; }
     .section { margin-bottom: 28px; }
     .section-title { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0; }
@@ -92,7 +92,7 @@ function generatePDFHTML(data: StrategyData, type: "strategy" | "combo"): string
     .stat-value { font-size: 20px; font-weight: 800; color: #0f172a; }
     .stat-value.green { color: #16a34a; }
     .stat-value.blue { color: #2563eb; }
-    .stat-value.purple { color: #7c3aed; }
+    .stat-value.purple { color: #059669; }
     .profile-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
     .profile-item { font-size: 12px; }
     .profile-item .label { color: #64748b; font-weight: 500; }

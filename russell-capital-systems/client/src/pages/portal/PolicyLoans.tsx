@@ -789,8 +789,8 @@ export default function PolicyLoans() {
                             </div>
                           ))}
                         </div>
-                        <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-purple-500/10 to-emerald-500/10 border border-purple-500/20">
-                          <p className="text-sm font-semibold mb-2 flex items-center gap-2"><Zap className="w-4 h-4 text-purple-400" /> The IUL Policy Loan Advantage</p>
+                        <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-emerald-500/10 border border-emerald-500/20">
+                          <p className="text-sm font-semibold mb-2 flex items-center gap-2"><Zap className="w-4 h-4 text-emerald-400" /> The IUL Policy Loan Advantage</p>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-muted-foreground">
                             <div className="space-y-1.5">
                               <p className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> Policy loans are not taxable income events</p>

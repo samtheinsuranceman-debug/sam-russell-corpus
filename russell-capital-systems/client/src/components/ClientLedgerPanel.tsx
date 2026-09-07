@@ -31,7 +31,7 @@ export function ClientLedgerPanel({ clientId }: { clientId: number }) {
     <div className="rc-card" aria-label="Plan ledger">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <BookOpenCheck size={16} className="text-[#a78bfa]" />
+          <BookOpenCheck size={16} className="text-[#34d399]" />
           <span className="font-semibold text-white">Plan Ledger</span>
           <span className="text-xs text-[#7a95b8]">{timeline.data?.total ?? 0} sealed entries</span>
         </div>
@@ -47,7 +47,7 @@ export function ClientLedgerPanel({ clientId }: { clientId: number }) {
           onKeyDown={(e) => { if (e.key === "Enter" && text.trim()) append.mutate({ clientId, kind, summary: text.trim() }); }}
           className="flex-1 rounded-lg border border-[#12233e] bg-[#0f1e35] px-3 py-2 text-sm text-[#c8d8ec]" />
         <button type="button" disabled={!text.trim() || append.isPending} onClick={() => append.mutate({ clientId, kind, summary: text.trim() })}
-          className="flex items-center justify-center gap-1 rounded-lg bg-[#a78bfa] px-4 py-2 text-sm font-semibold text-black transition hover:bg-[#c4b5fd] disabled:opacity-40"><Plus size={14} /> Record</button>
+          className="flex items-center justify-center gap-1 rounded-lg bg-[#34d399] px-4 py-2 text-sm font-semibold text-black transition hover:bg-[#a7f3d0] disabled:opacity-40"><Plus size={14} /> Record</button>
       </div>
       {events.length > 0 && (
         <ol className="mt-4 space-y-1.5 text-xs">

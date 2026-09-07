@@ -113,7 +113,7 @@ const CHART_COLORS = {
   optimal: "#f59e0b",
   taxed: "#ef4444",
   taxFree: "#22c55e",
-  bridge: "#8b5cf6",
+  bridge: "#10b981",
 };
 
 export default function SocialSecurityOptimizer() {
@@ -592,10 +592,10 @@ export default function SocialSecurityOptimizer() {
               <div className="text-xs">higher of two</div>
             </CardContent>
           </Card>
-          <Card className="bg-purple-50 dark:bg-purple-950/30">
+          <Card className="bg-emerald-50 dark:bg-emerald-950/30">
             <CardContent className="pt-3 pb-3 text-center">
               <div className="text-xs text-muted-foreground">Best Strategy</div>
-              <div className="text-sm font-bold text-purple-600">{analysis.bestScenario.label}</div>
+              <div className="text-sm font-bold text-emerald-600">{analysis.bestScenario.label}</div>
               <div className="text-xs">{fmt(analysis.bestScenario.totalLifetime)} lifetime</div>
             </CardContent>
           </Card>
@@ -938,10 +938,10 @@ export default function SocialSecurityOptimizer() {
                       <p className="text-sm">Combined income above <strong>{fmt(filingStatus === "joint" ? SS_TAX_JOINT_THRESHOLD_2 : SS_TAX_SINGLE_THRESHOLD_2)}</strong></p>
                     </div>
 
-                    <div className="p-3 rounded-lg bg-purple-50 dark:bg-purple-950/30 border border-purple-200 mt-4">
+                    <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 mt-4">
                       <div className="flex items-center gap-2 mb-1">
-                        <Shield className="w-4 h-4 text-purple-600" />
-                        <span className="font-semibold text-purple-700">IUL Tax-Free Advantage</span>
+                        <Shield className="w-4 h-4 text-emerald-600" />
+                        <span className="font-semibold text-emerald-700">IUL Tax-Free Advantage</span>
                       </div>
                       <p className="text-sm">
                         Policy loans from an IUL are <strong>not included in combined income</strong> for SS taxation purposes.
@@ -1057,7 +1057,7 @@ export default function SocialSecurityOptimizer() {
                           <td className="p-1.5 text-right font-mono">{y.hSS > 0 ? fmt(y.hSS) : "—"}</td>
                           <td className="p-1.5 text-right font-mono">{y.wSS > 0 ? fmt(y.wSS) : "—"}</td>
                           <td className="p-1.5 text-right font-mono">{fmt(y.otherIncome)}</td>
-                          <td className="p-1.5 text-right font-mono text-purple-600">{y.iulBridge > 0 ? fmt(y.iulBridge) : "—"}</td>
+                          <td className="p-1.5 text-right font-mono text-emerald-600">{y.iulBridge > 0 ? fmt(y.iulBridge) : "—"}</td>
                           <td className="p-1.5 text-right font-mono font-bold">{fmt(y.totalIncome)}</td>
                           <td className="p-1.5 text-center">
                             <Badge variant="outline" className={`text-xs ${y.ssTaxable === 0 ? "text-green-600 border-green-600" : y.ssTaxable === 50 ? "text-amber-600 border-amber-600" : "text-red-600 border-red-600"}`}>
@@ -1218,7 +1218,7 @@ export default function SocialSecurityOptimizer() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <ArrowRight className="w-5 h-5 text-purple-600" />
+                  <ArrowRight className="w-5 h-5 text-emerald-600" />
                   IUL Bridge Strategy — Delay SS & Maximize Benefits
                 </CardTitle>
                 <CardDescription>
@@ -1238,7 +1238,7 @@ export default function SocialSecurityOptimizer() {
                         { step: 4, title: "Collect Enhanced SS + IUL", desc: `Receive ${fmt(analysis.hSelectedBenefit.monthly * 12)}/year SS + continue IUL income` },
                       ].map((s) => (
                         <div key={s.step} className="flex items-start gap-3 p-2 rounded bg-muted/50">
-                          <div className="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold shrink-0">{s.step}</div>
+                          <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shrink-0">{s.step}</div>
                           <div>
                             <div className="font-medium text-sm">{s.title}</div>
                             <div className="text-xs text-muted-foreground">{s.desc}</div>
@@ -1258,8 +1258,8 @@ export default function SocialSecurityOptimizer() {
                         { icon: <Heart className="w-4 h-4" />, title: "Higher Survivor Benefit", desc: `Survivor receives ${fmt(analysis.hSelectedBenefit.monthly)}/mo vs ${fmt(Math.round(hPIA * getBenefitMultiplier(62, hFRA)))}/mo` },
                         { icon: <TrendingUp className="w-4 h-4" />, title: "COLA Compounding", desc: "Higher base benefit means larger COLA increases each year" },
                       ].map((a, i) => (
-                        <div key={i} className="flex items-start gap-2 p-2 rounded bg-purple-50 dark:bg-purple-950/30">
-                          <span className="text-purple-600 mt-0.5">{a.icon}</span>
+                        <div key={i} className="flex items-start gap-2 p-2 rounded bg-emerald-50 dark:bg-emerald-950/30">
+                          <span className="text-emerald-600 mt-0.5">{a.icon}</span>
                           <div>
                             <div className="font-medium text-sm">{a.title}</div>
                             <div className="text-xs text-muted-foreground">{a.desc}</div>
@@ -1271,7 +1271,7 @@ export default function SocialSecurityOptimizer() {
                 </div>
 
                 {/* Bridge vs No Bridge comparison */}
-                <Card className="border-2 border-purple-200">
+                <Card className="border-2 border-emerald-200">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-base">Bridge Strategy vs Early Claiming — Side by Side</CardTitle>
                   </CardHeader>
@@ -1305,7 +1305,7 @@ export default function SocialSecurityOptimizer() {
                                 <td className="p-2 font-medium">{r.metric}</td>
                                 <td className="p-2 text-right font-mono">{r.early}</td>
                                 <td className="p-2 text-right font-mono font-semibold text-green-600">{r.delayed}</td>
-                                <td className="p-2 text-right font-mono text-purple-600">{r.adv}</td>
+                                <td className="p-2 text-right font-mono text-emerald-600">{r.adv}</td>
                               </tr>
                             ));
                           })()}

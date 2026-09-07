@@ -791,7 +791,7 @@ export default function IncomeGapAnalyzer() {
                             stroke="none"
                           >
                             {expenses.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"][index % 6]} />
+                              <Cell key={`cell-${index}`} fill={["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#10b981", "#ec4899"][index % 6]} />
                             ))}
                           </Pie>
                           <RTooltip 
@@ -826,7 +826,7 @@ export default function IncomeGapAnalyzer() {
                           <span className="font-medium">{fmt(expenses.filter((e) => !e.essential).reduce((s, e) => s + e.amount, 0))}</span>
                         </div>
                         <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-purple-500 rounded-full" style={{ width: `${(expenses.filter((e) => !e.essential).reduce((s, e) => s + e.amount, 0) / Math.max(1, expenses.reduce((s, e) => s + e.amount, 0))) * 100}%` }}></div>
+                          <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${(expenses.filter((e) => !e.essential).reduce((s, e) => s + e.amount, 0) / Math.max(1, expenses.reduce((s, e) => s + e.amount, 0))) * 100}%` }}></div>
                         </div>
                       </div>
                     </div>
@@ -975,7 +975,7 @@ export default function IncomeGapAnalyzer() {
                             }} 
                             name={source.name} 
                             stackId="a" 
-                            fill={["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899"][index % 5]} 
+                            fill={["#3b82f6", "#10b981", "#f59e0b", "#10b981", "#ec4899"][index % 5]} 
                           />
                         ))}
                       </BarChart>
@@ -1123,7 +1123,7 @@ export default function IncomeGapAnalyzer() {
                   {[
                     { title: "Tax-Free Income", desc: "Policy loans are not taxable income", icon: <DollarSign className="h-5 w-5 text-green-500" /> },
                     { title: "Zero Floor Protection", desc: "Never lose money due to market declines", icon: <Shield className="h-5 w-5 text-blue-500" /> },
-                    { title: "No RMDs", desc: "No forced withdrawals at age 73+", icon: <Calendar className="h-5 w-5 text-purple-500" /> },
+                    { title: "No RMDs", desc: "No forced withdrawals at age 73+", icon: <Calendar className="h-5 w-5 text-emerald-500" /> },
                     { title: "Social Security Optimization", desc: "Doesn't increase taxation of SS benefits", icon: <Activity className="h-5 w-5 text-orange-500" /> },
                     { title: "IRMAA Protection", desc: "Doesn't increase Medicare premiums", icon: <Zap className="h-5 w-5 text-yellow-500" /> },
                     { title: "Living Benefits", desc: "Access funds for chronic/terminal illness", icon: <User className="h-5 w-5 text-red-500" /> },

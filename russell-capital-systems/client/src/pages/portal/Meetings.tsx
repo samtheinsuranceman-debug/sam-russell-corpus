@@ -110,7 +110,7 @@ export default function Meetings() {
                     paddingAngle={3} dataKey="value"
                     label={({ name, value }) => `${name}: ${value}`}
                   >
-                    {["#3b82f6", "#22c55e", "#f0c040", "#a78bfa"].map((c, i) => (
+                    {["#3b82f6", "#22c55e", "#f0c040", "#34d399"].map((c, i) => (
                       <Cell key={i} fill={c} />
                     ))}
                   </Pie>

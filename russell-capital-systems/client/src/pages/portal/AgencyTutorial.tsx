@@ -84,7 +84,7 @@ const WELCOME_SLIDES = [
     subtitle: "Agency Management, Not Just Sales Tools",
     content: "This isn't the individual agent tutorial. This is specifically designed for agency leaders and team managers. We'll cover database uploads, lead management, team performance tracking, advisor onboarding, compliance oversight, and the management dashboards that let you run your agency like a Fortune 500 operation. Earn badges and points as you go!",
     icon: GraduationCap,
-    gradient: "from-violet-500 to-purple-500",
+    gradient: "from-emerald-500 to-emerald-500",
   },
 ];
 
@@ -610,7 +610,7 @@ export default function AgencyTutorial() {
                     feature.difficulty === "First Priority" ? "border-red-500/30 text-red-400" :
                     feature.difficulty === "Essential" ? "border-amber-500/30 text-amber-400" :
                     feature.difficulty === "Beginner" ? "border-green-500/30 text-green-400" :
-                    feature.difficulty === "Intermediate" ? "border-cyan-500/30 text-cyan-400" : "border-violet-500/30 text-violet-400")}>
+                    feature.difficulty === "Intermediate" ? "border-cyan-500/30 text-cyan-400" : "border-emerald-500/30 text-emerald-400")}>
                     {feature.difficulty}
                   </Badge>
                   {isCompleted && <Badge className="bg-amber-600 text-xs">Completed</Badge>}
@@ -642,7 +642,7 @@ export default function AgencyTutorial() {
                 { label: "Monthly Impact", value: feature.monthlyImpact, color: "text-emerald-400" },
                 { label: "Annual Impact", value: feature.annualImpact, color: "text-cyan-400" },
                 { label: "Retail Build Cost", value: feature.retailBuildCost, color: "text-amber-400" },
-                { label: "Time to Learn", value: feature.timeToLearn, color: "text-violet-400" },
+                { label: "Time to Learn", value: feature.timeToLearn, color: "text-emerald-400" },
               ].map((s, i) => (
                 <div key={i} className="bg-[#0d1a2e] rounded-xl p-4 text-center border border-[#12233e]">
                   <div className={cn("text-xl font-bold", s.color)}>{s.value}</div>
@@ -651,7 +651,7 @@ export default function AgencyTutorial() {
               ))}
             </div>
             <div>
-              <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2"><Layers className="w-5 h-5 text-violet-400" /> Deep Dive</h4>
+              <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2"><Layers className="w-5 h-5 text-emerald-400" /> Deep Dive</h4>
               <div className="space-y-2">
                 {feature.drillDowns.map((dd) => {
                   const isExpanded = expandedDrillDown[feature.id] === dd.id;

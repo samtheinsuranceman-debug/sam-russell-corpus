@@ -190,7 +190,7 @@ const NOTE_ICONS = {
   decision: <CheckCircle2 className="h-4 w-4 text-green-400" />,
   "action-item": <ArrowRight className="h-4 w-4 text-blue-400" />,
   question: <AlertCircle className="h-4 w-4 text-amber-400" />,
-  milestone: <Target className="h-4 w-4 text-purple-400" />,
+  milestone: <Target className="h-4 w-4 text-emerald-400" />,
 };
 
 export default function CollaborativePlanning() {
@@ -554,7 +554,7 @@ export default function CollaborativePlanning() {
                         <PolarGrid stroke="#e5e7eb" />
                         <PolarAngleAxis dataKey="subject" tick={{ fill: '#888888', fontSize: 11 }} />
                         <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#888888', fontSize: 10 }} />
-                        <Radar name="Client Exposure" dataKey="A" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.5} />
+                        <Radar name="Client Exposure" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.5} />
                         <Tooltip />
                       </RadarChart>
                     </ResponsiveContainer>
@@ -772,7 +772,7 @@ export default function CollaborativePlanning() {
                           <SelectItem value="decision"><div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Decision</div></SelectItem>
                           <SelectItem value="action-item"><div className="flex items-center gap-2"><ArrowRight className="h-4 w-4 text-blue-500" /> Action Item</div></SelectItem>
                           <SelectItem value="question"><div className="flex items-center gap-2"><AlertCircle className="h-4 w-4 text-amber-500" /> Question</div></SelectItem>
-                          <SelectItem value="milestone"><div className="flex items-center gap-2"><Target className="h-4 w-4 text-purple-500" /> Milestone</div></SelectItem>
+                          <SelectItem value="milestone"><div className="flex items-center gap-2"><Target className="h-4 w-4 text-emerald-500" /> Milestone</div></SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -811,7 +811,7 @@ export default function CollaborativePlanning() {
                       note.type === "decision" ? "border-l-green-500" : 
                       note.type === "question" ? "border-l-amber-500" : 
                       note.type === "action-item" ? "border-l-blue-500" : 
-                      note.type === "milestone" ? "border-l-purple-500" : 
+                      note.type === "milestone" ? "border-l-emerald-500" : 
                       "border-l-muted"
                     }`}>
                       <CardContent className="p-5">
@@ -827,7 +827,7 @@ export default function CollaborativePlanning() {
                                   note.type === "decision" ? "text-green-600 border-green-200" : 
                                   note.type === "question" ? "text-amber-600 border-amber-200" : 
                                   note.type === "action-item" ? "text-blue-600 border-blue-200" : 
-                                  note.type === "milestone" ? "text-purple-600 border-purple-200" : ""
+                                  note.type === "milestone" ? "text-emerald-600 border-emerald-200" : ""
                                 }`}>
                                   {NOTE_ICONS[note.type]}
                                   {note.type}

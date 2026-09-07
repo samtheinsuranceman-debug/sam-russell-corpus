@@ -72,9 +72,9 @@ export const CALCULATOR_CLUSTERS: CalculatorCluster[] = [
   {
     id: "iul-life",
     name: "IUL & Life Insurance",
-    color: "bg-purple-50",
-    textColor: "text-purple-800",
-    borderColor: "border-purple-300",
+    color: "bg-emerald-50",
+    textColor: "text-emerald-800",
+    borderColor: "border-emerald-300",
     icon: "\u{1F6E1}\uFE0F",
     description: "IUL performance, Ibbotson-based modeling, policy loans, and premium financing",
     members: [
@@ -132,9 +132,9 @@ export const CALCULATOR_CLUSTERS: CalculatorCluster[] = [
   {
     id: "ai-automation",
     name: "AI & Automation",
-    color: "bg-violet-50",
-    textColor: "text-violet-800",
-    borderColor: "border-violet-300",
+    color: "bg-emerald-50",
+    textColor: "text-emerald-800",
+    borderColor: "border-emerald-300",
     icon: "\u{1F916}",
     description: "AI-powered recommendations, strategy analysis, and predictive modeling",
     members: [
@@ -467,7 +467,7 @@ export function RelatedCalculators({ currentPage }: RelatedCalculatorsProps) {
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Fact Finder Synced</span>
                     <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Client Data Shared</span>
-                    <span className="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">Disclosures Unified</span>
+                    <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">Disclosures Unified</span>
                   </div>
                 </div>
               </div>

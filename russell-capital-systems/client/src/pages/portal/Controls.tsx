@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { ShieldCheck, ShieldAlert, KeyRound, Bot, Landmark, Workflow, FileSignature, Inbox, Scale } from "lucide-react";
 import { CONSENT_SCOPES } from "@shared/consent";
 
-const CARD = "rounded-2xl border border-violet-400/20 bg-white/[0.04]";
+const CARD = "rounded-2xl border border-emerald-400/20 bg-white/[0.04]";
 const BTN = "rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-40";
 const PRIMARY = "rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-black hover:bg-emerald-400 disabled:opacity-40";
 const INPUT = "rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white";
@@ -37,12 +37,12 @@ export default function Controls() {
     <AppShell title="Controls">
       <div className="mx-auto max-w-6xl space-y-6 pb-16">
         <div className={`${CARD} p-6`}>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80"><ShieldCheck size={12} className="mr-1 inline" /> The plan's authority layer</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80"><ShieldCheck size={12} className="mr-1 inline" /> The plan's authority layer</p>
           <h1 className="mt-1 text-2xl font-semibold text-white">Controls</h1>
           <p className="mt-2 max-w-3xl text-sm text-slate-300">Who may see your data, what agents may do with your money, every movement and the firewall's verdict, the automations that react to your ledger, the signed record of every piece of advice, values suggested by outside sources, and the tax rules in force. Every change here is sealed on your Plan Ledger.</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {TABS.map((t) => (
-              <button key={t.id} type="button" onClick={() => setTab(t.id)} className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${tab === t.id ? "border-violet-400/60 bg-violet-500/20 text-white" : "border-white/10 text-slate-300 hover:bg-white/5"}`}><t.icon size={12} /> {t.label}</button>
+              <button key={t.id} type="button" onClick={() => setTab(t.id)} className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${tab === t.id ? "border-emerald-400/60 bg-emerald-500/20 text-white" : "border-white/10 text-slate-300 hover:bg-white/5"}`}><t.icon size={12} /> {t.label}</button>
             ))}
           </div>
         </div>

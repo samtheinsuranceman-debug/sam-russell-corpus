@@ -99,10 +99,10 @@ export default function TimeLapse() {
   return (
     <AppShell>
       <div className="min-h-screen bg-background">
-        <div className="border-b border-border/30 bg-gradient-to-r from-indigo-500/5 via-background to-purple-500/5">
+        <div className="border-b border-border/30 bg-gradient-to-r from-indigo-500/5 via-background to-emerald-500/5">
           <div className="container py-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-600 flex items-center justify-center">
                 <Play className="w-5 h-5 text-white" />
               </div>
               <div>

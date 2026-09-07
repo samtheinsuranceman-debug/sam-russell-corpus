@@ -354,9 +354,9 @@ export default function WillWriter() {
           )}
 
           {/* Tone Selection */}
-          <Card className="border-purple-500/20 bg-purple-500/5 md:col-span-2">
+          <Card className="border-emerald-500/20 bg-emerald-500/5 md:col-span-2">
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2"><Feather className="w-5 h-5 text-purple-400" /> Choose the Voice</CardTitle>
+              <CardTitle className="text-lg flex items-center gap-2"><Feather className="w-5 h-5 text-emerald-400" /> Choose the Voice</CardTitle>
               <CardDescription>How should this will feel when read aloud at the kitchen table?</CardDescription>
             </CardHeader>
             <CardContent>
@@ -365,7 +365,7 @@ export default function WillWriter() {
                   <div
                     key={t.value}
                     onClick={() => setTone(t.value as any)}
-                    className={`p-4 rounded-lg border cursor-pointer transition-all hover:border-purple-500/50 ${tone === t.value ? "border-purple-500 bg-purple-500/10" : "border-border/30"}`}
+                    className={`p-4 rounded-lg border cursor-pointer transition-all hover:border-emerald-500/50 ${tone === t.value ? "border-emerald-500 bg-emerald-500/10" : "border-border/30"}`}
                   >
                     <p className="font-semibold text-white mb-1">{t.emoji} {t.label}</p>
                     <p className="text-xs text-muted-foreground">{t.description}</p>
@@ -596,8 +596,8 @@ export default function WillWriter() {
   const renderFinalWishes = () => (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border border-purple-500/30 mb-4">
-          <Star className="w-8 h-8 text-purple-400" />
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500/20 to-indigo-500/20 border border-emerald-500/30 mb-4">
+          <Star className="w-8 h-8 text-emerald-400" />
         </div>
         <h2 className="text-2xl font-bold text-white mb-2">Final Wishes</h2>
         <p className="text-muted-foreground">
@@ -606,7 +606,7 @@ export default function WillWriter() {
         </p>
       </div>
 
-      <Card className="border-purple-500/20">
+      <Card className="border-emerald-500/20">
         <CardContent className="p-6">
           <Textarea
             value={finalWishes}

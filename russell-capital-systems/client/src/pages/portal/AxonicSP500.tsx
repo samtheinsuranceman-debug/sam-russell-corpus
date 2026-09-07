@@ -604,8 +604,8 @@ export default function AxonicSP500() {
                   </div>
                   
                   <div className="p-6 rounded-2xl bg-[#0f1d33] border border-[#1a2c4b]">
-                    <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4">
-                      <TrendingUp className="w-6 h-6 text-purple-400" />
+                    <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4">
+                      <TrendingUp className="w-6 h-6 text-emerald-400" />
                     </div>
                     <h4 className="text-white font-medium mb-2">Participation Rate</h4>
                     <p className="text-sm text-[#7a95b8] mb-4">
@@ -614,7 +614,7 @@ export default function AxonicSP500() {
                     </p>
                     <div className="p-3 rounded-xl bg-[#0d1a2e] border border-[#12233e] text-center">
                       <div className="text-xs text-[#7a95b8] mb-1">Current Participation</div>
-                      <div className="font-bold text-purple-400">40%</div>
+                      <div className="font-bold text-emerald-400">40%</div>
                     </div>
                   </div>
                   
@@ -640,7 +640,7 @@ export default function AxonicSP500() {
                     {[
                       { icon: CheckCircle2, color: "text-[#22c55e]", bg: "bg-[#22c55e]/10", text: "16% first-year premium bonus applied immediately to your contract value" },
                       { icon: Shield, color: "text-[#3b82f6]", bg: "bg-[#3b82f6]/10", text: "0% floor protection — your principal is never reduced by negative index performance" },
-                      { icon: DollarSign, color: "text-purple-400", bg: "bg-purple-500/10", text: "No income rider fees — 100% of your premium works for accumulation growth" },
+                      { icon: DollarSign, color: "text-emerald-400", bg: "bg-emerald-500/10", text: "No income rider fees — 100% of your premium works for accumulation growth" },
                       { icon: Star, color: "text-[#f0c040]", bg: "bg-[#f0c040]/10", text: "10-year surrender period with declining charges (10% down to 1%)" },
                       { icon: Globe, color: "text-cyan-400", bg: "bg-cyan-500/10", text: "Multiple index options: S&P 500, Nasdaq 100, DB Foresight, and more" },
                       { icon: ArrowRight, color: "text-[#22c55e]", bg: "bg-[#22c55e]/10", text: "1-year and 2-year crediting periods available for different growth strategies" },

@@ -51,7 +51,7 @@ const AVATAR_STYLES = [
     icon: Wand2,
     description: "Mystical wizard of wealth and prosperity",
     prompt: "Fantasy portrait, wealth mage, golden robes, magical aura, floating coins and gems, mystical background, epic fantasy art style, dramatic lighting",
-    color: "from-purple-500 to-indigo-600",
+    color: "from-emerald-500 to-indigo-600",
   },
   {
     id: "warrior",
@@ -556,7 +556,7 @@ export default function AvatarTwins() {
               <p className="text-xs text-muted-foreground">RussellCoin</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-purple-400">1</p>
+              <p className="text-2xl font-bold text-emerald-400">1</p>
               <p className="text-xs text-muted-foreground">Achievement Unlocked</p>
             </div>
           </div>

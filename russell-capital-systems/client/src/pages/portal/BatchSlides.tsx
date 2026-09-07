@@ -1313,7 +1313,7 @@ export default function BatchSlides() {
               <Card className="rc-card">
                 <CardHeader className="border-b border-[#12233e] pb-4">
                   <CardTitle className="text-base font-semibold text-white flex items-center gap-2">
-                    <LineChartIcon className="h-4 w-4 text-[#8b5cf6]" />
+                    <LineChartIcon className="h-4 w-4 text-[#10b981]" />
                     Generation Time Distribution
                   </CardTitle>
                 </CardHeader>
@@ -1326,7 +1326,7 @@ export default function BatchSlides() {
                       <RechartsTooltip 
                         contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff' }}
                       />
-                      <Line type="monotone" dataKey="count" stroke="#8b5cf6" strokeWidth={3} dot={{ r: 4, fill: '#8b5cf6' }} activeDot={{ r: 6 }} />
+                      <Line type="monotone" dataKey="count" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981' }} activeDot={{ r: 6 }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </CardContent>

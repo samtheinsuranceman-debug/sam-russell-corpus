@@ -55,14 +55,14 @@ import {
 } from "recharts";
 
 
-const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444", "#06b6d4", "#6366f1", "#ec4899", "#14b8a6", "#f97316"];
+const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#06b6d4", "#6366f1", "#ec4899", "#14b8a6", "#f97316"];
 
 function StatCard({ icon: Icon, label, value, sub, color = "emerald", trend }: { icon: any; label: string; value: string | number; sub?: string; color?: string, trend?: number }) {
   const colors: Record<string, string> = {
     emerald: "from-[#22c55e]/20 to-[#22c55e]/5 text-[#22c55e] border-[#22c55e]/30",
     blue: "from-[#3b82f6]/20 to-[#3b82f6]/5 text-[#3b82f6] border-[#3b82f6]/30",
     amber: "from-[#f0c040]/20 to-[#f0c040]/5 text-[#f0c040] border-[#f0c040]/30",
-    purple: "from-[#a78bfa]/20 to-[#a78bfa]/5 text-[#a78bfa] border-[#a78bfa]/30",
+    purple: "from-[#34d399]/20 to-[#34d399]/5 text-[#34d399] border-[#34d399]/30",
     rose: "from-[#ef4444]/20 to-[#ef4444]/5 text-[#ef4444] border-[#ef4444]/30",
     cyan: "from-[#06b6d4]/20 to-[#06b6d4]/5 text-[#06b6d4] border-[#06b6d4]/30",
     indigo: "from-[#6366f1]/20 to-[#6366f1]/5 text-[#6366f1] border-[#6366f1]/30",
@@ -363,7 +363,7 @@ export default function OwnerWarRoom() {
     { name: 'Memory', usage: 72, max: 100, color: '#f0c040' },
     { name: 'Storage', usage: 88, max: 100, color: '#ef4444' },
     { name: 'Network', usage: 30, max: 100, color: '#22c55e' },
-    { name: 'DB Load', usage: 65, max: 100, color: '#a78bfa' },
+    { name: 'DB Load', usage: 65, max: 100, color: '#34d399' },
   ];
 
   const renderTabContent = () => {
@@ -396,7 +396,7 @@ export default function OwnerWarRoom() {
                       { label: "Visitors", value: funnel.visitors || 15420, color: "bg-[#3b82f6]", dropoff: "0%" },
                       { label: "Signups", value: (funnel.visitors || 15420) * 0.4, color: "bg-[#06b6d4]", dropoff: "60%" },
                       { label: "Trial Users", value: funnel.trialUsers || 2150, color: "bg-[#f0c040]", dropoff: "65%" },
-                      { label: "Active Trials", value: (funnel.trialUsers || 2150) * 0.7, color: "bg-[#a78bfa]", dropoff: "30%" },
+                      { label: "Active Trials", value: (funnel.trialUsers || 2150) * 0.7, color: "bg-[#34d399]", dropoff: "30%" },
                       { label: "Subscribers", value: funnel.subscribers || 850, color: "bg-[#22c55e]", dropoff: "43%" },
                     ].map((step, i) => (
                       <div key={i} className="flex-1 w-full group cursor-pointer" onClick={() => toast.info(`Detailed view for ${step.label}`)}>
@@ -447,7 +447,7 @@ export default function OwnerWarRoom() {
               <div className="rc-card">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-[#a78bfa]" />
+                    <TrendingUp className="w-5 h-5 text-[#34d399]" />
                     Growth Trends
                   </h2>
                   <select 
@@ -694,7 +694,7 @@ export default function OwnerWarRoom() {
                               <td className="py-4 px-5">
                                 <div className="flex items-center gap-3">
                                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                                    l.accessTier === 'admin' ? 'bg-[#a78bfa]/20 text-[#a78bfa]' : 
+                                    l.accessTier === 'admin' ? 'bg-[#34d399]/20 text-[#34d399]' : 
                                     l.accessTier === 'advisor' ? 'bg-[#3b82f6]/20 text-[#3b82f6]' : 
                                     'bg-[#22c55e]/20 text-[#22c55e]'
                                   }`}>
@@ -718,7 +718,7 @@ export default function OwnerWarRoom() {
                               </td>
                               <td className="py-4 px-5">
                                 <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${
-                                  l.accessTier === "admin" ? "bg-[#a78bfa]/10 text-[#a78bfa] border-[#a78bfa]/30" : 
+                                  l.accessTier === "admin" ? "bg-[#34d399]/10 text-[#34d399] border-[#34d399]/30" : 
                                   l.accessTier === "advisor" ? "bg-[#3b82f6]/10 text-[#3b82f6] border-[#3b82f6]/30" : 
                                   "bg-[#22c55e]/10 text-[#22c55e] border-[#22c55e]/30"
                                 }`}>
@@ -969,7 +969,7 @@ export default function OwnerWarRoom() {
               <div className="space-y-6">
                 <div className="rc-card">
                   <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                    <Database className="w-5 h-5 text-[#a78bfa]" />
+                    <Database className="w-5 h-5 text-[#34d399]" />
                     Infrastructure
                   </h2>
                   <div className="space-y-4">
@@ -985,7 +985,7 @@ export default function OwnerWarRoom() {
                     </div>
                     <div className="flex items-center justify-between p-3 rounded-lg bg-[#060d19] border border-[#12233e]">
                       <div className="flex items-center gap-3">
-                        <Database className="w-5 h-5 text-[#a78bfa]" />
+                        <Database className="w-5 h-5 text-[#34d399]" />
                         <div>
                           <p className="text-sm text-white font-medium">Primary DB</p>
                           <p className="text-xs text-[#7a95b8]">Replication Active</p>

@@ -153,7 +153,7 @@ export default function QuickQuote() {
       { name: "Premium Load", value: 3500, fill: "#3b82f6" },
       { name: "Cost of Insurance", value: 1200, fill: "#ef4444" },
       { name: "Admin Fees", value: 600, fill: "#f59e0b" },
-      { name: "Rider Charges", value: includeRiders ? 800 : 0, fill: "#8b5cf6" },
+      { name: "Rider Charges", value: includeRiders ? 800 : 0, fill: "#10b981" },
       { name: "To Cash Value", value: annualPremium - 3500 - 1200 - 600 - (includeRiders ? 800 : 0), fill: "#10b981" },
     ].filter((d) => d.value > 0);
   }, [annualPremium, includeRiders]);

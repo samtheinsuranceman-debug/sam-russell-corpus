@@ -76,7 +76,7 @@ function WealthGarden() {
           { label: "Water All Plants", emoji: "💧", desc: "Review all strategies", color: "border-blue-500/30 bg-blue-500/5" },
           { label: "Plant New Seed", emoji: "🌱", desc: "Start a new strategy", color: "border-emerald-500/30 bg-emerald-500/5" },
           { label: "Harvest Rewards", emoji: "🌾", desc: "Collect earned gains", color: "border-amber-500/30 bg-amber-500/5" },
-          { label: "Garden Report", emoji: "📊", desc: "Full growth analysis", color: "border-violet-500/30 bg-violet-500/5" },
+          { label: "Garden Report", emoji: "📊", desc: "Full growth analysis", color: "border-emerald-500/30 bg-emerald-500/5" },
         ].map((action, i) => (
           <button
             key={i}
@@ -117,7 +117,7 @@ function ClientConstellation() {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
-            <Star size={16} className="text-violet-400" /> Client Constellation
+            <Star size={16} className="text-emerald-400" /> Client Constellation
           </h3>
           <p className="text-[10px] text-slate-400">Your universe of relationships. Brighter stars = bigger portfolios.</p>
         </div>
@@ -146,7 +146,7 @@ function ClientConstellation() {
                 key={`${i}-${j}`}
                 x1={`${client.x}%`} y1={`${client.y}%`}
                 x2={`${clients[j].x}%`} y2={`${clients[j].y}%`}
-                stroke="rgba(139,92,246,0.15)" strokeWidth="1" strokeDasharray="4,4"
+                stroke="rgba(52,211,153,0.15)" strokeWidth="1" strokeDasharray="4,4"
               />
             ))
           )}
@@ -173,7 +173,7 @@ function ClientConstellation() {
 
         {/* Nebula effects */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: "radial-gradient(ellipse at 40% 40%, rgba(139,92,246,0.05) 0%, transparent 50%), radial-gradient(ellipse at 70% 60%, rgba(34,197,94,0.04) 0%, transparent 40%)",
+          background: "radial-gradient(ellipse at 40% 40%, rgba(52,211,153,0.05) 0%, transparent 50%), radial-gradient(ellipse at 70% 60%, rgba(34,197,94,0.04) 0%, transparent 40%)",
         }} />
       </div>
     </div>
@@ -203,7 +203,7 @@ function AvatarSystem() {
 
   const stats = [
     { label: "Total XP", value: "47,500", icon: <Star size={14} className="text-amber-400" /> },
-    { label: "Level", value: "5", icon: <Crown size={14} className="text-violet-400" /> },
+    { label: "Level", value: "5", icon: <Crown size={14} className="text-emerald-400" /> },
     { label: "Streak", value: "18 days", icon: <Zap size={14} className="text-orange-400" /> },
     { label: "Quests Done", value: "142", icon: <Shield size={14} className="text-blue-400" /> },
     { label: "Badges", value: "23", icon: <Gem size={14} className="text-emerald-400" /> },
@@ -213,11 +213,11 @@ function AvatarSystem() {
   return (
     <div className="space-y-4">
       {/* Avatar Card */}
-      <div className="rounded-xl bg-gradient-to-br from-violet-900/20 via-[#0f1e35] to-blue-900/20 border border-violet-500/20 p-6">
+      <div className="rounded-xl bg-gradient-to-br from-emerald-900/20 via-[#0f1e35] to-blue-900/20 border border-emerald-500/20 p-6">
         <div className="flex items-center gap-6">
           {/* Avatar */}
           <div className="relative">
-            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-violet-500/30 to-blue-500/30 border-2 border-violet-500/50 flex items-center justify-center text-4xl shadow-lg shadow-violet-500/20">
+            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-emerald-500/30 to-blue-500/30 border-2 border-emerald-500/50 flex items-center justify-center text-4xl shadow-lg shadow-emerald-500/20">
               👤
             </div>
             <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-amber-500 border-2 border-[#0f1e35] flex items-center justify-center text-xs font-black text-white">
@@ -228,7 +228,7 @@ function AvatarSystem() {
           <div className="flex-1">
             <div className="text-lg font-black text-white">{user?.name || "Commander"}</div>
             <div className="flex items-center gap-2 mt-1">
-              <Badge variant="outline" className="text-[10px] border-violet-500/30 text-violet-400">
+              <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-400">
                 {selectedTitle}
               </Badge>
               <Badge variant="outline" className="text-[10px] border-amber-500/30 text-amber-400">
@@ -279,8 +279,8 @@ function AvatarSystem() {
                 className={`rounded-lg border p-2.5 text-center transition-all ${
                   t.unlocked
                     ? selectedTitle === t.name
-                      ? "border-violet-500/50 bg-violet-500/10"
-                      : "border-[#1a3055] bg-[#0a1628] hover:border-violet-500/30"
+                      ? "border-emerald-500/50 bg-emerald-500/10"
+                      : "border-[#1a3055] bg-[#0a1628] hover:border-emerald-500/30"
                     : "border-[#1a3055] bg-[#0a1628] opacity-50"
                 }`}
               >
@@ -304,12 +304,12 @@ function DreamMode() {
     { title: "What if I double my savings?", emoji: "🚀", desc: "See the compound effect of aggressive saving", color: "from-emerald-500/10 to-emerald-600/5 border-emerald-500/30" },
     { title: "What if inflation hits 8%?", emoji: "🔥", desc: "Test your strategies against persistent inflation", color: "from-orange-500/10 to-orange-600/5 border-orange-500/30" },
     { title: "What if I start a business?", emoji: "💼", desc: "Model the financial impact of entrepreneurship", color: "from-blue-500/10 to-blue-600/5 border-blue-500/30" },
-    { title: "What if I live to 100?", emoji: "🎂", desc: "Longevity risk analysis for your income streams", color: "from-violet-500/10 to-violet-600/5 border-violet-500/30" },
+    { title: "What if I live to 100?", emoji: "🎂", desc: "Longevity risk analysis for your income streams", color: "from-emerald-500/10 to-emerald-600/5 border-emerald-500/30" },
   ];
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl bg-gradient-to-br from-indigo-900/30 via-[#0f1e35] to-violet-900/20 border border-indigo-500/20 p-5">
+      <div className="rounded-xl bg-gradient-to-br from-indigo-900/30 via-[#0f1e35] to-emerald-900/20 border border-indigo-500/20 p-5">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
             <Moon size={20} className="text-indigo-400" />
@@ -368,7 +368,7 @@ export default function MyWorld() {
         {/* Header */}
         <div>
           <h1 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-            <Sparkles className="text-violet-400" size={24} /> My World
+            <Sparkles className="text-emerald-400" size={24} /> My World
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">Your personal financial universe. A place you live inside that happens to make you rich.</p>
         </div>
@@ -378,7 +378,7 @@ export default function MyWorld() {
             <TabsTrigger value="garden" className="text-xs data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
               <TreePine size={14} className="mr-1" /> Wealth Garden
             </TabsTrigger>
-            <TabsTrigger value="constellation" className="text-xs data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-400">
+            <TabsTrigger value="constellation" className="text-xs data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
               <Star size={14} className="mr-1" /> Constellation
             </TabsTrigger>
             <TabsTrigger value="avatar" className="text-xs data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400">

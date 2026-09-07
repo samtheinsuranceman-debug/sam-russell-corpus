@@ -233,7 +233,7 @@ export default function AffiliateLinkManager() {
           <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 flex flex-col hover:border-[#22c55e]/30 transition-colors">
             <div className="flex items-center gap-3 mb-3">
               <div className="p-2 bg-[#060d19] rounded-lg">
-                <TrendingUp className="w-5 h-5 text-[#8b5cf6]" />
+                <TrendingUp className="w-5 h-5 text-[#10b981]" />
               </div>
               <p className="rc-stat-label text-[#7a95b8] text-sm font-medium">Conversions</p>
             </div>

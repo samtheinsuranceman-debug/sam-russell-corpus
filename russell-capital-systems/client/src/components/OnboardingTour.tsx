@@ -42,8 +42,8 @@ const TOUR_STEPS = [
     title: "Quest Arena",
     description: "Complete daily and weekly quests to earn XP and RussellCoin. Open loot crates, compete on leaderboards, and unlock achievements.",
     icon: Swords,
-    color: "text-purple-400",
-    bgColor: "from-purple-500/20 to-pink-500/20",
+    color: "text-emerald-400",
+    bgColor: "from-emerald-500/20 to-pink-500/20",
     path: "/portal/arena",
   },
   {

@@ -406,7 +406,7 @@ export default function AdvisorDirectory() {
           </select>
           <input type="range" min="0" max="100" value={sliderValue} onChange={(e) => setSliderValue(parseInt(e.target.value))} className="w-32" />
           <button onClick={() => setToggleState(!toggleState)} className={`p-2 rounded ${toggleState ? 'bg-green-500' : 'bg-red-500'}`}>{toggleState ? 'On' : 'Off'}</button>
-          <button onClick={() => setShowModal(true)} className="p-2 bg-purple-500 rounded text-white">Open Modal</button>
+          <button onClick={() => setShowModal(true)} className="p-2 bg-emerald-500 rounded text-white">Open Modal</button>
           <div className="relative">
             <button onClick={() => setDropdownOpen(!dropdownOpen)} className="p-2 bg-gray-700 rounded flex items-center gap-1">Dropdown <ChevronDown className="w-4 h-4" /></button>
             {dropdownOpen && (
@@ -765,7 +765,7 @@ export default function AdvisorDirectory() {
         {step === "clients" && (
           <div className="max-w-2xl mx-auto space-y-6">
             <div className="text-center">
-              <Users className="w-10 h-10 text-purple-400 mx-auto mb-3" />
+              <Users className="w-10 h-10 text-emerald-400 mx-auto mb-3" />
               <h2 className="text-lg font-semibold text-white">Who are your ideal clients?</h2>
               <p className="text-sm text-[#7a95b8] mt-1">Select the client types you work with most.</p>
             </div>

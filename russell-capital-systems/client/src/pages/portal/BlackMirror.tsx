@@ -71,7 +71,7 @@ function WealthWaterfall() {
   const channels = [
     { name: "MYGA Allocations", flow: 47200, clients: 23, color: "from-cyan-500 to-cyan-700", icon: "🏦", pct: 28 },
     { name: "FIA Products", flow: 38500, clients: 18, color: "from-blue-500 to-blue-700", icon: "📊", pct: 23 },
-    { name: "IUL Policies", flow: 31800, clients: 15, color: "from-violet-500 to-violet-700", icon: "🛡️", pct: 19 },
+    { name: "IUL Policies", flow: 31800, clients: 15, color: "from-emerald-500 to-emerald-700", icon: "🛡️", pct: 19 },
     { name: "Tax Savings", flow: 22400, clients: 31, color: "from-emerald-500 to-emerald-700", icon: "💰", pct: 13 },
     { name: "Income Streams", flow: 18900, clients: 12, color: "from-amber-500 to-amber-700", icon: "💵", pct: 11 },
     { name: "Estate Planning", flow: 9800, clients: 8, color: "from-rose-500 to-rose-700", icon: "🏛️", pct: 6 },
@@ -216,7 +216,7 @@ function ParallelLifeSimulator() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-bold text-violet-300 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-emerald-300 flex items-center gap-2">
             <GitBranch className="w-5 h-5" /> Parallel Life Simulator
           </h3>
           <p className="text-sm text-muted-foreground">What if you had never joined Russell Capital Systems?</p>
@@ -269,7 +269,7 @@ function ParallelLifeSimulator() {
           const pct = Math.round(((m.real - m.shadow) / m.shadow) * 100);
           return (
             <div key={m.label} className="flex items-center gap-3 p-3 rounded-lg bg-black/20">
-              <m.icon className="w-4 h-4 text-violet-400 shrink-0" />
+              <m.icon className="w-4 h-4 text-emerald-400 shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-muted-foreground">{m.label}</p>
                 <div className="flex items-center gap-2">
@@ -456,7 +456,7 @@ function PhantomClients() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-bold text-purple-300 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-emerald-300 flex items-center gap-2">
           <Users className="w-5 h-5" /> Phantom Clients
         </h3>
         <p className="text-sm text-muted-foreground">AI-generated practice clients. No risk. Full rewards. Never stop grinding.</p>
@@ -465,7 +465,7 @@ function PhantomClients() {
       <div className="grid gap-3">
         {phantoms.map((phantom, i) => (
           <Card key={i}
-            className={`cursor-pointer transition-all duration-300 ${activePhantom === i ? 'border-purple-500/40 shadow-lg shadow-purple-500/10' : 'border-border/30 hover:border-purple-500/20'}`}
+            className={`cursor-pointer transition-all duration-300 ${activePhantom === i ? 'border-emerald-500/40 shadow-lg shadow-emerald-500/10' : 'border-border/30 hover:border-emerald-500/20'}`}
             onClick={() => setActivePhantom(activePhantom === i ? null : i)}
           >
             <CardContent className="p-4">
@@ -493,7 +493,7 @@ function PhantomClients() {
               {activePhantom === i && (
                 <div className="mt-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
                   <div className="p-2 rounded bg-black/20">
-                    <p className="text-xs text-purple-400 font-semibold">Personality</p>
+                    <p className="text-xs text-emerald-400 font-semibold">Personality</p>
                     <p className="text-xs text-muted-foreground">{phantom.personality}</p>
                   </div>
                   <div className="p-2 rounded bg-black/20">
@@ -506,10 +506,10 @@ function PhantomClients() {
                   </div>
                   <div className="flex gap-2 flex-wrap">
                     {phantom.skills.map(skill => (
-                      <Badge key={skill} variant="outline" className="text-[10px] border-purple-500/30 text-purple-300">{skill}</Badge>
+                      <Badge key={skill} variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-300">{skill}</Badge>
                     ))}
                   </div>
-                  <Button size="sm" className="w-full bg-purple-600 hover:bg-purple-700"
+                  <Button size="sm" className="w-full bg-emerald-600 hover:bg-emerald-700"
                     onClick={(e) => { e.stopPropagation(); toast.success(`Starting practice session with ${phantom.name}...`); }}>
                     <Target className="w-4 h-4 mr-1" /> Begin Practice Session
                   </Button>
@@ -569,7 +569,7 @@ function DreamJournal() {
         <p className="text-sm text-muted-foreground">The platform processes your day while you sleep. Wake up to strategies you didn't create.</p>
       </div>
 
-      <Card className="bg-gradient-to-r from-indigo-950/40 to-violet-950/40 border-indigo-500/30">
+      <Card className="bg-gradient-to-r from-indigo-950/40 to-emerald-950/40 border-indigo-500/30">
         <CardContent className="p-4 text-center">
           <Brain className="w-8 h-8 text-indigo-400 mx-auto mb-2 animate-pulse" />
           <p className="text-xs text-indigo-400 uppercase tracking-wider">Total Dream Value This Week</p>
@@ -666,13 +666,13 @@ export default function BlackMirror() {
             <TabsTrigger value="waterfall" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300 text-xs">
               <Waves className="w-3 h-3 mr-1" /> Waterfall
             </TabsTrigger>
-            <TabsTrigger value="parallel" className="data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-300 text-xs">
+            <TabsTrigger value="parallel" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300 text-xs">
               <GitBranch className="w-3 h-3 mr-1" /> Shadow Self
             </TabsTrigger>
             <TabsTrigger value="ghost" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300 text-xs">
               <Ghost className="w-3 h-3 mr-1" /> Ghost Mode
             </TabsTrigger>
-            <TabsTrigger value="phantom" className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300 text-xs">
+            <TabsTrigger value="phantom" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300 text-xs">
               <Users className="w-3 h-3 mr-1" /> Phantoms
             </TabsTrigger>
             <TabsTrigger value="dreams" className="data-[state=active]:bg-indigo-500/20 data-[state=active]:text-indigo-300 text-xs">

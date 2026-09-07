@@ -183,7 +183,7 @@ const SOURCE_DATA = [
   { name: 'Referrals', value: 45, color: '#3b82f6' },
   { name: 'Website', value: 25, color: '#10b981' },
   { name: 'Events', value: 20, color: '#f59e0b' },
-  { name: 'Social', value: 10, color: '#8b5cf6' },
+  { name: 'Social', value: 10, color: '#10b981' },
 ];
 
 const RISK_DISTRIBUTION = [
@@ -1106,7 +1106,7 @@ export default function ClientOnboardingAutomation() {
                         </tr>
                         <tr className="hover:bg-[#12233e]/20 transition-colors">
                           <td className="py-3 px-4 text-sm text-white flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-[#8b5cf6]"></div> Social Media
+                            <div className="w-2 h-2 rounded-full bg-[#10b981]"></div> Social Media
                           </td>
                           <td className="py-3 px-4 text-sm text-[#c8d8ec] text-right">10</td>
                           <td className="py-3 px-4 text-sm text-[#ef4444] text-right">15%</td>

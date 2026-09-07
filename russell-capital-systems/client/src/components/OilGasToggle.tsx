@@ -271,9 +271,9 @@ export function OilGasToggle({ taxableIncome = 250000, onChange, compact = false
                   <div className="text-lg font-bold text-amber-600">{fmt(result.year1TaxDeduction)}</div>
                   <div className="text-[10px] text-muted-foreground">Year 1 Deduction</div>
                 </div>
-                <div className="text-center p-3 rounded-lg bg-purple-50 dark:bg-purple-950/30">
-                  <Clock className="w-4 h-4 text-purple-600 mx-auto mb-1" />
-                  <div className="text-lg font-bold text-purple-600">Year {lockupYears}</div>
+                <div className="text-center p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30">
+                  <Clock className="w-4 h-4 text-emerald-600 mx-auto mb-1" />
+                  <div className="text-lg font-bold text-emerald-600">Year {lockupYears}</div>
                   <div className="text-[10px] text-muted-foreground">Principal Returns</div>
                 </div>
               </div>

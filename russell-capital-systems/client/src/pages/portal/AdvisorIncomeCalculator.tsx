@@ -202,7 +202,7 @@ const COLORS = [
   "#2563eb",
   "#f59e0b",
   "#ef4444",
-  "#8b5cf6",
+  "#10b981",
   "#ec4899",
   "#14b8a6",
   "#f97316",
@@ -215,7 +215,7 @@ const COLORS = [
   "#3b82f6",
   "#eab308",
   "#dc2626",
-  "#7c3aed",
+  "#059669",
 ];
 
 function getAgeBracket(age: number): string {
@@ -621,7 +621,7 @@ export default function AdvisorIncomeCalculator() {
                 <Search className="w-3 h-3 mr-1" /> 18 Carriers Compared
               </Badge>
               {complianceData && (
-                <Badge variant="outline" className="border-purple-500 text-purple-400">
+                <Badge variant="outline" className="border-emerald-500 text-emerald-400">
                   <Shield className="w-3 h-3 mr-1" /> Compliance Checked
                 </Badge>
               )}
@@ -1252,7 +1252,7 @@ export default function AdvisorIncomeCalculator() {
             <Card className="bg-slate-900 border-slate-800">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Layers className="w-5 h-5 text-purple-500" />
+                  <Layers className="w-5 h-5 text-emerald-500" />
                   Income Base Breakdown — How Your Income Is Built
                 </CardTitle>
                 <p className="text-sm text-slate-400">
@@ -1376,7 +1376,7 @@ export default function AdvisorIncomeCalculator() {
               <Card className="bg-slate-900 border-slate-800">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-white text-lg">
-                    <PieChartIcon className="w-5 h-5 text-purple-500" />
+                    <PieChartIcon className="w-5 h-5 text-emerald-500" />
                     Income Base Composition
                   </CardTitle>
                   <CardDescription className="text-slate-400">

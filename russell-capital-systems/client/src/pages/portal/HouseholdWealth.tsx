@@ -79,7 +79,7 @@ const COLORS = {
   grandchild: "#ec4899",
   heloc: "#ef4444",
   savings: "#22c55e",
-  deathBenefit: "#8b5cf6",
+  deathBenefit: "#10b981",
   accountValue: "#3b82f6",
   surrenderValue: "#14b8a6",
   realEstate: "#f97316",
@@ -812,7 +812,7 @@ export default function HouseholdWealth() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-purple-500" />
+                    <Shield className="h-5 w-5 text-emerald-500" />
                     Tax-Free Death Benefit & Long-Term Care Rider
                   </CardTitle>
                   <CardDescription>
@@ -896,7 +896,7 @@ export default function HouseholdWealth() {
                                 <td className="text-right p-1 font-semibold">{formatFullCurrency(yr.accountValue)}</td>
                                 <td className="text-right p-1 text-teal-400">{formatFullCurrency(yr.surrenderValue)}</td>
                                 <td className="text-right p-1 text-blue-400">{formatFullCurrency(yr.loanableValue)}</td>
-                                <td className="text-right p-1 text-purple-400">{formatFullCurrency(yr.deathBenefit)}</td>
+                                <td className="text-right p-1 text-emerald-400">{formatFullCurrency(yr.deathBenefit)}</td>
                                 <td className="text-right p-1">{formatFullCurrency(yr.ltcMonthlyBenefit)}</td>
                               </tr>
                             ))}
@@ -1164,7 +1164,7 @@ export default function HouseholdWealth() {
                             <td className="text-right p-2">{formatFullCurrency(row.totalInterestSaved)}</td>
                             <td className="text-right p-2 text-yellow-400">{formatFullCurrency(row.compoundedValue)}</td>
                             <td className="text-right p-2 text-blue-400">{formatFullCurrency(row.totalPolicyCashValue)}</td>
-                            <td className="text-right p-2 text-purple-400">{formatFullCurrency(row.totalDeathBenefit)}</td>
+                            <td className="text-right p-2 text-emerald-400">{formatFullCurrency(row.totalDeathBenefit)}</td>
                             <td className="text-right p-2 font-bold text-emerald-400">{formatFullCurrency(row.totalFamilyWealth)}</td>
                           </tr>
                         ))}
@@ -1175,7 +1175,7 @@ export default function HouseholdWealth() {
               </Card>
 
               {/* The Circle Visualization */}
-              <Card className="bg-gradient-to-br from-emerald-500/10 via-yellow-500/5 to-purple-500/10 border-emerald-500/30">
+              <Card className="bg-gradient-to-br from-emerald-500/10 via-yellow-500/5 to-emerald-500/10 border-emerald-500/30">
                 <CardHeader>
                   <CardTitle className="text-center text-xl">The Multigenerational Wealth Circle</CardTitle>
                 </CardHeader>
@@ -1199,11 +1199,11 @@ export default function HouseholdWealth() {
                       <p className="font-bold text-blue-400">Next Gen Policies</p>
                       <ArrowRight className="h-4 w-4 mx-auto mt-2 text-blue-500" />
                     </div>
-                    <div className="text-center p-4 bg-purple-500/10 rounded-xl border border-purple-500/20">
-                      <RefreshCw className="h-8 w-8 mx-auto text-purple-500 mb-2" />
+                    <div className="text-center p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
+                      <RefreshCw className="h-8 w-8 mx-auto text-emerald-500 mb-2" />
                       <p className="text-xs text-muted-foreground">Mortgage Payoff</p>
-                      <p className="font-bold text-purple-400">Wealth Recapture</p>
-                      <ArrowRight className="h-4 w-4 mx-auto mt-2 text-purple-500 rotate-[135deg]" />
+                      <p className="font-bold text-emerald-400">Wealth Recapture</p>
+                      <ArrowRight className="h-4 w-4 mx-auto mt-2 text-emerald-500 rotate-[135deg]" />
                     </div>
                   </div>
                   <div className="text-center space-y-2 border-t border-border/30 pt-4">
@@ -1348,10 +1348,10 @@ export default function HouseholdWealth() {
                     <p className="text-2xl font-bold text-blue-400">{formatFullCurrency(result.generationalCascade[Math.min(19, result.generationalCascade.length - 1)]?.totalFamilyNetWorth ?? 0)}</p>
                   </CardContent>
                 </Card>
-                <Card className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border-purple-500/30">
+                <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border-emerald-500/30">
                   <CardContent className="pt-6 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Mortgages Accelerated</p>
-                    <p className="text-2xl font-bold text-purple-400">{result.mortgageKillerResults.length}</p>
+                    <p className="text-2xl font-bold text-emerald-400">{result.mortgageKillerResults.length}</p>
                     <p className="text-xs text-muted-foreground mt-1">{payChildrenSimultaneously ? "Paying simultaneously" : "Paying one at a time"}</p>
                   </CardContent>
                 </Card>
@@ -1374,10 +1374,10 @@ export default function HouseholdWealth() {
                     <p className="text-xs text-muted-foreground">Total Illustrated Policy Value</p>
                   </CardContent>
                 </Card>
-                <Card className="bg-gradient-to-br from-purple-500/10 to-purple-500/5">
+                <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5">
                   <CardContent className="pt-6 text-center">
-                    <Shield className="h-8 w-8 mx-auto text-purple-500 mb-2" />
-                    <p className="text-2xl font-bold text-purple-400">{formatCurrency(result.summary.totalDeathBenefit)}</p>
+                    <Shield className="h-8 w-8 mx-auto text-emerald-500 mb-2" />
+                    <p className="text-2xl font-bold text-emerald-400">{formatCurrency(result.summary.totalDeathBenefit)}</p>
                     <p className="text-xs text-muted-foreground">Total Death Benefit</p>
                   </CardContent>
                 </Card>
@@ -1409,7 +1409,7 @@ export default function HouseholdWealth() {
                         <div className="flex justify-between"><span className="text-muted-foreground">Total Premiums Paid</span><span className="font-mono">{formatFullCurrency(result.summary.totalPremiumsPaid)}</span></div>
                         <div className="flex justify-between"><span className="text-muted-foreground">Total Illustrated Policy Value</span><span className="font-mono text-emerald-400">{formatFullCurrency(result.summary.totalAccountValue)}</span></div>
                         <div className="flex justify-between"><span className="text-muted-foreground">Total Surrender Value (illustrated, non-guaranteed) (illustrated, non-guaranteed)</span><span className="font-mono text-teal-400">{formatFullCurrency(result.summary.totalSurrenderValue)}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Total Death Benefit</span><span className="font-mono text-purple-400">{formatFullCurrency(result.summary.totalDeathBenefit)}</span></div>
+                        <div className="flex justify-between"><span className="text-muted-foreground">Total Death Benefit</span><span className="font-mono text-emerald-400">{formatFullCurrency(result.summary.totalDeathBenefit)}</span></div>
                         <div className="flex justify-between"><span className="text-muted-foreground">Total LTC Protection</span><span className="font-mono">{formatFullCurrency(result.summary.totalLtcProtection)}</span></div>
                       </div>
                     </div>

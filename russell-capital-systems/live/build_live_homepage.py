@@ -25,19 +25,31 @@ IMAGES = {
     "__IMG_BRIDGE__": "rcs-city-bridge.webp",
     "__IMG_CANYON__": "rcs-city-canyon.webp",
     "__IMG_INTERCHANGE__": "rcs-city-interchange.webp",
+    "__IMG_HORIZON__": "rcs-city-horizon.webp",
+    "__IMG_SKYWAY__": "rcs-city-skyway.webp",
+    "__IMG_FLAGSHIP__": "rcs-city-flagship.webp",
+    "__IMG_EXPRESSWAY__": "rcs-city-expressway.webp",
+    "__IMG_GLASS__": "rcs-city-glass.webp",
 }
 CONSTS = {
     "__CALENDLY__": "https://calendly.com/samtheinsuranceman-1/30min",
     "__ADVISOR_EMAIL__": "samtheinsuranceman@gmail.com",
+    # The app host serves the founder's message in the owner's cloned voice; the static page embeds the player.
+    "__APP_ORIGIN__": "https://web-production-4b215.up.railway.app",
 }
+MANIFESTO = APP / "shared" / "homeManifesto.json"
 
 
 def build() -> str:
     html = (HERE / "rcs-live-homepage.template.html").read_text()
+    manifesto = MANIFESTO.read_text().strip()
+    assert "__MANIFESTO_JSON__" in html, "placeholder missing: __MANIFESTO_JSON__"
+    html = html.replace("__MANIFESTO_JSON__", manifesto.replace("</", "<\\/"))
     for key, name in IMAGES.items():
+        if key not in html:
+            continue  # not every picture is on the page any more; embed only what the template uses
         data = (PUB / name).read_bytes()
         uri = "data:image/webp;base64," + base64.b64encode(data).decode()
-        assert key in html, f"placeholder missing: {key}"
         html = html.replace(key, uri)
     for key, val in CONSTS.items():
         html = html.replace(key, val)

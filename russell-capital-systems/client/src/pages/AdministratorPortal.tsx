@@ -10,8 +10,8 @@ export default function AdministratorPortal() {
   const isAdmin = user?.role === "admin";
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#060f20] p-6 text-white">
-      <Card className="w-full max-w-xl border-violet-400/20 bg-slate-950/80">
-        <CardHeader><ShieldCheck className="mb-4 h-10 w-10 text-violet-300" /><CardTitle>Administrator Access</CardTitle></CardHeader>
+      <Card className="w-full max-w-xl border-emerald-400/20 bg-slate-950/80">
+        <CardHeader><ShieldCheck className="mb-4 h-10 w-10 text-emerald-300" /><CardTitle>Administrator Access</CardTitle></CardHeader>
         <CardContent className="space-y-5 text-slate-300">
           <p>Administrator tools use managed sign-in and server-enforced roles. Email PINs and local administrator passwords are retired.</p>
           {loading ? <p>Checking managed session…</p> : !isAuthenticated ? (

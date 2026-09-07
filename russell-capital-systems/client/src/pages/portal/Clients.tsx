@@ -218,7 +218,7 @@ function CSVImportModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
   );
 }
 
-const CHART_COLORS = ["#22c55e", "#a78bfa", "#f0c040", "#ef4444", "#3b82f6", "#ec4899"];
+const CHART_COLORS = ["#22c55e", "#34d399", "#f0c040", "#ef4444", "#3b82f6", "#ec4899"];
 
 export default function Clients() {
   const [search, setSearch] = useState("");
@@ -404,14 +404,14 @@ export default function Clients() {
 
                   {/* Age Distribution */}
                   <div className="rc-card">
-                    <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2"><Users size={14} className="text-[#a78bfa]" /> Age Distribution</div>
+                    <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2"><Users size={14} className="text-[#34d399]" /> Age Distribution</div>
                     <ResponsiveContainer width="100%" height={180}>
                       <BarChart data={analytics.ageData} margin={{ top: 5, right: 5, bottom: 5, left: -10 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#12233e" />
                         <XAxis dataKey="name" tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} />
                         <YAxis tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} allowDecimals={false} />
                         <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} />
-                        <Bar dataKey="count" fill="#a78bfa" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="count" fill="#34d399" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -502,7 +502,7 @@ export default function Clients() {
               </thead>
               <tbody>
                 {clientsQuery.isLoading ? (
-                  <tr><td colSpan={9} className="py-14"><div className="flex items-center justify-center gap-2 text-sm text-violet-200"><Loader2 size={18} className="animate-spin" /> Loading saved clients…</div></td></tr>
+                  <tr><td colSpan={9} className="py-14"><div className="flex items-center justify-center gap-2 text-sm text-emerald-200"><Loader2 size={18} className="animate-spin" /> Loading saved clients…</div></td></tr>
                 ) : filtered.length === 0 ? (
                   <tr><td colSpan={9} className="text-center py-12 text-[#7a95b8]">{search ? "No clients match your search." : "No clients yet. Add your first client or import a CSV to get started."}</td></tr>
                 ) : (

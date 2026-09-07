@@ -42,7 +42,7 @@ import { ExportToSlides } from "@/components/ExportToSlides";
 import { PageInsights } from "@/components/PageInsights";
 import { toast } from "sonner";
 
-const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444", "#ec4899", "#06b6d4", "#f97316"];
+const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#ec4899", "#06b6d4", "#f97316"];
 
 
 const MetricCard = ({ title, value, subtitle, icon: Icon, color, trend }: any) => {
@@ -829,7 +829,7 @@ export default function StaleDigest() {
                           </td>
                           <td className="py-3 px-4">
                             <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                              fullClient?.wealthTier === 'Platinum' ? 'bg-purple-500/10 text-purple-400' :
+                              fullClient?.wealthTier === 'Platinum' ? 'bg-emerald-500/10 text-emerald-400' :
                               fullClient?.wealthTier === 'Gold' ? 'bg-amber-500/10 text-amber-400' :
                               'bg-slate-500/10 text-slate-400'
                             }`}>
@@ -1089,7 +1089,7 @@ export default function StaleDigest() {
                               </td>
                               <td className="px-4 py-4">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                                  c.wealthTier === 'Platinum' ? 'bg-purple-500/10 text-purple-400' :
+                                  c.wealthTier === 'Platinum' ? 'bg-emerald-500/10 text-emerald-400' :
                                   c.wealthTier === 'Gold' ? 'bg-amber-500/10 text-amber-400' :
                                   'bg-slate-500/10 text-slate-400'
                                 }`}>
@@ -1170,7 +1170,7 @@ export default function StaleDigest() {
                                     </div>
                                     <div>
                                       <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
-                                        <Clock size={14} className="text-[#a78bfa]" /> Recent History
+                                        <Clock size={14} className="text-[#34d399]" /> Recent History
                                       </h4>
                                       <div className="space-y-3">
                                         <div className="flex gap-3">
@@ -1272,7 +1272,7 @@ export default function StaleDigest() {
                       <YAxis yAxisId="right" orientation="right" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Client Count', angle: 90, position: 'insideRight', fill: '#7a95b8' }} />
                       <RTooltip content={<CustomTooltip />} />
                       <Legend />
-                      <Bar yAxisId="left" dataKey="aum" name="Total AUM ($M)" barSize={40} fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                      <Bar yAxisId="left" dataKey="aum" name="Total AUM ($M)" barSize={40} fill="#10b981" radius={[4, 4, 0, 0]} />
                       <Line yAxisId="right" type="monotone" dataKey="clients" name="Number of Clients" stroke="#facc15" strokeWidth={3} dot={{ r: 6, fill: '#0a1424', strokeWidth: 2 }} />
                     </ComposedChart>
                   </ResponsiveContainer>
