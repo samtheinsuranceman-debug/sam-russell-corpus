@@ -6,6 +6,7 @@ const PHOTOS = {
   river: { src: "/rcs-city-river.webp", phoneSrc: "/rcs-city-glass.webp", alt: "Emerald-lit skyline at dusk with a river curving through the city" },
   harbor: { src: "/rcs-city-harbor.webp", phoneSrc: "/rcs-city-towers.webp", alt: "Green-lit harbour city at night, towers reflected in the water" },
   summit: { src: "/rcs-city-summit.webp", phoneSrc: "/rcs-city-towers.webp", alt: "Green-lit skyscrapers at night under a dark sky, a spire rising above them" },
+  expressway: { src: "/rcs-city-expressway.webp", phoneSrc: "/rcs-city-glass.webp", alt: "Light trails on a curving expressway beneath green-lit towers at night" },
   emerald: { src: "/rcs-city-emerald.webp", phoneSrc: "/rcs-city-pinnacle.webp", alt: "Emerald-lit city skyline at dawn with a river winding through it" },
 } as const;
 
@@ -66,7 +67,7 @@ export function Terms() {
 
 export function Support() {
   return (
-    <LegalShell title="Support" photo="river" position="center 60%">
+    <LegalShell title="Support" photo="expressway" position="center 45%">
       <p>Our support team is available to help you get the most out of Russell Capital Systems™ Wealth OS.</p>
       <h2 className="text-white font-bold text-lg">Getting Started</h2>
       <p>After signing in, you'll land on your advisor dashboard. Use the Strategy Lab to run Roth conversion ladders and IUL projections. Add clients via the Clients section, then track deals in the Pipeline.</p>
