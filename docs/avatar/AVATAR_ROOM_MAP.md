@@ -112,10 +112,9 @@ public page built from content the portal already holds, indexable, and a
 better landing for search than anything behind sign-in. Until they exist the
 anonymous funnel is the seven pages above.
 
-**One inconsistency to fix before any avatar says "book a call":** the site
-links to `calendly.com/samtheinsuranceman-1/30min` (homepage and support) while
-the email signature uses `calendly.com/sam-RussellCapitalSystems/60min`. Pick
-one and set `CALENDLY_URL` on the host to it.
+**The booking link** is `calendly.com/sam-RussellCapitalSystems/60min`
+everywhere: homepage, support page, the static site, the follow-up emails
+(`CALENDLY_URL` on the host). The older 30-minute link is retired.
 
 ## Things found on the way that the avatar must not repeat
 
