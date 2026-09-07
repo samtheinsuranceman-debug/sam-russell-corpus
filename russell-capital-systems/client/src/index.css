@@ -1535,7 +1535,7 @@ img.object-cover, img[class*="h-full"] { height: 100%; }
   stroke-dasharray: 140 260; filter: drop-shadow(0 0 4px #6ee7b7) drop-shadow(0 0 10px rgba(52,211,153,.8));
   animation: rc-filament-loop 10s linear infinite, rc-filament-breathe 10s ease-in-out infinite; }
 @keyframes rc-filament-loop { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -800; } }
-@keyframes rc-filament-breathe { 0%, 100% { opacity: .35; } 50% { opacity: .7; } }
+@keyframes rc-filament-breathe { 0%, 100% { opacity: .4; } 50% { opacity: .7; } }
 .rc-patent-body { font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif; color: #fbf9f1; text-shadow: 0 0 12px rgba(255,255,255,.35), 0 1px 0 rgba(255,255,255,.22), 0 -1px 0 rgba(0,0,0,.55), 0 2px 12px rgba(0,0,0,.7); }
 .rc-patent-lead { font-weight: 700; }
 .rc-patent-detail { font-weight: 600; }
