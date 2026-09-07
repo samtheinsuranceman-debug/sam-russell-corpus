@@ -45,6 +45,10 @@ const PLATES: Array<{ src: string; tall?: string; position?: string; label: stri
   { src: "/rcs-city-grid.webp", label: "The grid from above", from: 12, to: 13 },
   { src: "/rcs-city-marina.webp", label: "The marina", from: 13, to: 14 },
   { src: "/rcs-city-river.webp", label: "The river", from: 14, to: 15 },
+  { src: "/rcs-city-rail.webp", label: "The railway", from: 15, to: 16 },
+  { src: "/rcs-city-lake.webp", label: "The park lake", from: 16, to: 17 },
+  { src: "/rcs-city-tunnel.webp", label: "The tunnel", from: 17, to: 18 },
+  { src: "/rcs-city-overlook.webp", label: "The overlook", from: 18, to: 19 },
 ];
 
 function ManagedPortalAction({ href, children, className }: { href: string; children: React.ReactNode; className: string }) {
@@ -107,7 +111,7 @@ export default function Landing() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const NAV = [
-    { href: "#claims", label: "The 15 technologies" },
+    { href: "#claims", label: "The technologies" },
     { href: "#planning-estimator", label: "Start" },
   ];
 
@@ -149,7 +153,7 @@ export default function Landing() {
 
       {/* ── 2 to 5 · THE FIFTEEN, starting on the very next screen. Four city plates, one after another, each
           carrying a run of the plaques; no picture is left empty and nothing sits between the sign and the patents. ── */}
-      <div id="claims" aria-label="Fifteen patent-pending technologies">
+      <div id="claims" aria-label="Patent-pending technologies">
         {PLATES.map((plate, i) => {
           const last = i === PLATES.length - 1;
           return (
@@ -160,7 +164,7 @@ export default function Landing() {
               </picture>
               <div className="rc-plate-shade" aria-hidden="true" />
               <div className="container relative z-10 max-w-5xl">
-                {i === 0 && <p className="mb-8 text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Fifteen patent-pending technologies</p>}
+                {i === 0 && <p className="mb-8 text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Patent-pending technologies</p>}
                 <ol className="grid gap-8">
                   {manifesto.claims.slice(plate.from, plate.to).map(({ ref, name, lead, detail }) => (
                     <li key={ref} id={`claim-${ref}`} className="rc-plaque">

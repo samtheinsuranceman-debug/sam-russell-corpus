@@ -47,7 +47,7 @@ describe("live page ↔ React homepage parity", () => {
       expect(template, `live page has “${p}”`).toContain(p);
       expect(landing, `React homepage has “${p}”`).toContain(p);
     }
-    expect(manifesto.claims).toHaveLength(15);
+    expect(manifesto.claims.length).toBeGreaterThanOrEqual(15);
   });
 
   it("never shows figures to visitors on either rendering", () => {
@@ -87,7 +87,7 @@ describe("live page ↔ React homepage parity", () => {
       .replace(/__APP_ORIGIN__/g, "https://web-production-4b215.up.railway.app");
     expect(normalize(read(built))).toBe(expected);
     // and the embedded manifesto is the current one
-    expect(read(built)).toContain(manifesto.claims[14].name);
+    expect(read(built)).toContain(manifesto.claims[manifesto.claims.length - 1].name);
     expect(read(built)).toContain(manifesto.slogan.slice(0, 40));
   });
 });
