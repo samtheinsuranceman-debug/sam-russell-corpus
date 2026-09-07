@@ -34,6 +34,10 @@ microphone is on every page and the advisor already knows which page it is on.
 
 ## Where the avatar goes
 
+The full map is `docs/avatar/AVATAR_ROOM_MAP.md`: twenty pages, ten rooms,
+which six get a live embed and which fourteen get the poster and the MP4, and a
+context file per page with the eight to twelve things the twin may say there.
+
 One avatar, next to the microphone, on every page, with a page-aware opening
 line from the table above. Not ten avatars. The `HEYGEN_API_KEY` variable
 already exists for video proposals; the same key drives an interactive
