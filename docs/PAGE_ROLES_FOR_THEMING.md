@@ -1,6 +1,6 @@
 # Russell Capital Systems — page inventory for theming
 
-250 declared routes (client/src/App.tsx) in 8 functional roles, and the 12 sections a visitor moves through. Counts first, every path after.
+252 declared routes (client/src/App.tsx) in 8 functional roles, and the 12 sections a visitor moves through. Counts first, every path after.
 
 ## The 8 roles
 - **1. Public front door — marketing, pricing, legal, sign-in** — 14 pages

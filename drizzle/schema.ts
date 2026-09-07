@@ -2655,3 +2655,57 @@ export const zipSeries = mysqlTable("zip_series", {
   fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
 }, (t) => ({ once: uniqueIndex("zip_series_once").on(t.zip, t.series), bySeries: index("zip_series_series").on(t.series) }));
 export type ZipSeriesRow = typeof zipSeries.$inferSelect;
+
+// ─── The Career Ledger: what the record says a specialty costs, pays and forgoes; what peers entered; how visitors rate their odds ───
+export const careerStats = mysqlTable("career_stats", {
+  id:         int("id").autoincrement().primaryKey(),
+  year:       int("year").notNull(),                              // BLS OEWS reference year (May)
+  area:       varchar("area", { length: 8 }).notNull(),           // "US" or the state's two letters
+  areaTitle:  varchar("areaTitle", { length: 60 }).notNull(),
+  occCode:    varchar("occCode", { length: 10 }).notNull(),       // SOC code as printed in the file
+  occTitle:   varchar("occTitle", { length: 140 }).notNull(),
+  employment: int("employment"),
+  hourlyMean: decimal("hourlyMean", { precision: 8, scale: 2 }),
+  annualMean: int("annualMean"),
+  p10:        int("p10"), p25: int("p25"), p50: int("p50"), p75: int("p75"), p90: int("p90"),
+  topCoded:   boolean("topCoded").default(false).notNull(),        // a percentile at or above BLS's top code is suppressed in the file
+  rankInArea: int("rankInArea"),                                   // 1..15 when the row is one of the area's top-paid occupations that year
+  source:     varchar("source", { length: 200 }).notNull(),
+  fetchedAt:  timestamp("fetchedAt").defaultNow().notNull(),
+}, (t) => ({ once: uniqueIndex("career_stats_once").on(t.year, t.area, t.occCode), byOcc: index("career_stats_occ").on(t.occCode), byArea: index("career_stats_area").on(t.area, t.year) }));
+export type CareerStatRow = typeof careerStats.$inferSelect;
+
+export const careerSeries = mysqlTable("career_series", {
+  id:        int("id").autoincrement().primaryKey(),
+  series:    varchar("series", { length: 32 }).notNull(),          // nces_pub_total4, nces_priv_tuit4, …
+  area:      varchar("area", { length: 8 }).notNull(),             // "US" or a state's two letters
+  startYear: int("startYear").notNull(),                           // first year of the academic year (1990 = 1990-91)
+  values:    json("values").$type<Array<number | null>>().notNull(),
+  asOf:      varchar("asOf", { length: 10 }).notNull(),
+  source:    varchar("source", { length: 200 }).notNull(),
+  fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
+}, (t) => ({ once: uniqueIndex("career_series_once").on(t.series, t.area) }));
+export type CareerSeriesRow = typeof careerSeries.$inferSelect;
+
+export const peerSubmissions = mysqlTable("peer_submissions", {
+  id:        int("id").autoincrement().primaryKey(),
+  specialty: varchar("specialty", { length: 48 }).notNull(),       // CAREER_PATHS slug
+  state:     varchar("state", { length: 2 }),
+  fields:    json("fields").$type<Record<string, number>>().notNull(),
+  computed:  json("computed").$type<Record<string, number | null>>(),
+  vision:    json("vision").$type<Record<string, string | number>>(),
+  userId:    int("userId"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ bySpecialty: index("peer_submissions_specialty").on(t.specialty, t.state) }));
+export type PeerSubmissionRow = typeof peerSubmissions.$inferSelect;
+
+export const exitRatings = mysqlTable("exit_ratings", {
+  id:        int("id").autoincrement().primaryKey(),
+  path:      varchar("path", { length: 200 }).notNull(),
+  score:     int("score").notNull(),                               // 1..10: how likely they are to reach their goals after what they learned
+  before:    int("before"),                                        // 1..10: the same question about the path they were on
+  note:      text("note"),
+  userId:    int("userId"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type ExitRatingRow = typeof exitRatings.$inferSelect;

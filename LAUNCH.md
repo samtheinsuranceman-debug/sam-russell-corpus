@@ -213,6 +213,19 @@ keyless. The owner reads them with "Read the files now" on the page;
 The Zillow files are large (tens of MB); a read takes a few minutes and stores
 about fifty thousand compact rows in `zip_series`.
 
+### The Career Ledger (optional data sweep)
+`/for` and `/for/<specialty>`: one public landing page per kind of doctor
+(38 in pass 1: physicians, surgeons, psychiatry, dentists, dental
+specialists, veterinarians, attorneys) with the training length beside its
+accreditor's page, BLS wages nationally and by state year by year since May
+2014, NCES tuition since 1963-64, the cost of the degree at each year's
+federal rate, what the residency years forgo, a peer comparison, the vision
+questions, and an exit rating on every page. All sources are public and
+keyless. `CAREER_DATA_DAYS=90` re-reads BLS and NCES quarterly (first pass
+four minutes after boot); the owner can also call `career.refresh`. The BLS
+state files are tens of MB each and a full first read takes several minutes.
+Spec: `docs/engines/CAREER_LEDGER_ENGINE.md`.
+
 ### Short-term rental sources (optional keys)
 `/portal/short-term-rentals` carries a registry of ten short-term-rental data
 sites (`shared/strSources.ts`, each verified on a dated page): Rabbu first,

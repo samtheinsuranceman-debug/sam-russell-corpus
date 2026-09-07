@@ -54,14 +54,23 @@ const decodeXml = (s: string) => s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").r
 
 /** The first worksheet of an XLSX as rows of strings/numbers (shared strings resolved, inline strings read). */
 export function xlsxRows(buf: Buffer): Array<Array<string | number | null>> {
+  const rows: Array<Array<string | number | null>> = [];
+  forEachXlsxRow(buf, (r) => { rows.push(r); });
+  return rows;
+}
+
+/** Walks the first worksheet row by row without keeping the rows; the caller keeps what it needs (large BLS files). */
+export function forEachXlsxRow(buf: Buffer, onRow: (cells: Array<string | number | null>, index: number) => void): void {
   const entries = unzipEntries(buf, (n) => n === "xl/sharedStrings.xml" || /^xl\/worksheets\/sheet1\.xml$/.test(n));
   const sharedXml = entries.get("xl/sharedStrings.xml")?.toString("utf8") ?? "";
   const shared: string[] = [];
   for (const m of Array.from(sharedXml.matchAll(/<si>([\s\S]*?)<\/si>/g))) shared.push(decodeXml(Array.from(m[1]!.matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)).map((t) => t[1]).join("")));
   const sheet = entries.get("xl/worksheets/sheet1.xml")?.toString("utf8");
   if (!sheet) throw new Error("xlsx has no sheet1");
-  const rows: Array<Array<string | number | null>> = [];
-  for (const row of Array.from(sheet.matchAll(/<row[^>]*>([\s\S]*?)<\/row>/g))) {
+  let index = 0;
+  const rowRe = /<row[^>]*>([\s\S]*?)<\/row>/g;
+  let row: RegExpExecArray | null;
+  while ((row = rowRe.exec(sheet)) !== null) {
     const cells: Array<string | number | null> = [];
     for (const c of Array.from(row[1]!.matchAll(/<c r="([A-Z]+)\d+"([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g))) {
       const col = c[1]!.split("").reduce((n: number, ch: string) => n * 26 + (ch.charCodeAt(0) - 64), 0) - 1;
@@ -75,9 +84,8 @@ export function xlsxRows(buf: Buffer): Array<Array<string | number | null>> {
       while (cells.length < col) cells.push(null);
       cells[col] = v;
     }
-    rows.push(cells);
+    onRow(cells, index++);
   }
-  return rows;
 }
 
 // ─── Parsers ────────────────────────────────────────────────────────────────
