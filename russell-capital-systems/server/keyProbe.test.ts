@@ -11,7 +11,7 @@ describe("the key probe", () => {
     _setFetchForTests(async (url, init) => {
       const auth = init.headers.authorization ?? init.headers["x-api-key"] ?? "";
       if (url.includes("anthropic")) return { ok: auth.includes("good"), status: auth.includes("good") ? 200 : 401 };
-      if (url.includes("openai")) return { ok: false, status: 401 };
+      if (url.includes("openai")) return { ok: false, status: 401, text: async () => JSON.stringify({ error: { type: "invalid_api_key", message: "Incorrect API key provided: bad-key. You can find your key at platform." } }) };
       return { ok: true, status: 200 };
     });
     _setFredFetch(fredOk);
@@ -20,6 +20,7 @@ describe("the key probe", () => {
     const by = Object.fromEntries(results.map((r) => [r.id, r]));
     expect(by.anthropic).toMatchObject({ configured: true, status: "ok", httpStatus: 200 });
     expect(by.openai).toMatchObject({ configured: true, status: "rejected", httpStatus: 401 });
+    expect(by.openai!.note).toMatch(/The provider said: invalid_api_key: Incorrect API key provided: \[key\]/);
     expect(by.heygen).toMatchObject({ configured: false, status: "missing" });
     expect(by.resend).toMatchObject({ status: "ok" });
     expect(by.fred).toMatchObject({ configured: true, status: "ok" });

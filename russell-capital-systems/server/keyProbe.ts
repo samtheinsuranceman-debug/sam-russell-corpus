@@ -11,8 +11,17 @@ import { fetchFredObservations, fredMode } from "./_core/fred";
 export type ProbeStatus = "ok" | "rejected" | "missing" | "error";
 export type ProbeResult = { id: string; label: string; envKey: string; configured: boolean; status: ProbeStatus; httpStatus: number | null; note: string };
 
-type Fetcher = (url: string, init: { headers: Record<string, string> }) => Promise<{ ok: boolean; status: number }>;
+type Fetcher = (url: string, init: { headers: Record<string, string> }) => Promise<{ ok: boolean; status: number; text?: () => Promise<string> }>;
 const realFetch: Fetcher = (url, init) => fetch(url, { ...init, signal: AbortSignal.timeout(12_000) });
+
+/** The provider's own explanation of a refusal, trimmed and stripped of anything key-shaped, so the note says why without saying what. */
+export function safeReason(body: string, key: string): string {
+  let s = body.replace(/\s+/g, " ").trim();
+  try { const j = JSON.parse(body) as { error?: { type?: string; message?: string } }; if (j.error?.type || j.error?.message) s = `${j.error.type ?? ""}: ${j.error.message ?? ""}`.replace(/^: /, ""); } catch { /* not JSON */ }
+  if (key) s = s.split(key).join("[key]");
+  s = s.replace(/sk-[A-Za-z0-9_-]{8,}/g, "[key]").replace(/re_[A-Za-z0-9_-]{8,}/g, "[key]");
+  return s.slice(0, 200);
+}
 let _fetch: Fetcher = realFetch;
 export function _setFetchForTests(f: Fetcher | null) { _fetch = f ?? realFetch; }
 
@@ -36,7 +45,12 @@ export async function probeOne(p: (typeof PROBES)[number], env: NodeJS.ProcessEn
   if (!key) return { ...base, configured: false, status: "missing", httpStatus: null, note: `No variable named ${p.envKey} on this host. Add it in the environment panel with the key in the Value box.` };
   try {
     const res = await _fetch(p.url, { headers: p.headers(key) });
-    return { ...base, configured: true, httpStatus: res.status, ...classify(res.status) };
+    const c = classify(res.status);
+    if (c.status !== "ok" && res.text) {
+      const reason = safeReason(await res.text().catch(() => ""), key);
+      if (reason) c.note = `${c.note} The provider said: ${reason}`;
+    }
+    return { ...base, configured: true, httpStatus: res.status, ...c };
   } catch (e) {
     return { ...base, configured: true, status: "error", httpStatus: null, note: `Could not reach the provider: ${(e as Error).message}` };
   }
