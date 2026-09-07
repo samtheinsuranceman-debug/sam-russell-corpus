@@ -1504,13 +1504,28 @@ img.object-cover, img[class*="h-full"] { height: 100%; }
   .rc-homepage-type-scale .text-sm { font-size: .9rem !important; line-height: 1.5 !important; }
 }
 
-/* ─── Homepage patent cards, the pair chosen from Grok's boards: Title 01 "filament wrap" + Body 02 plaque white ───
-   Title: heavy serif, mint-to-white fill, glow stack, and a thin filament that loops along the baseline
-   on one slow animation. Body: ivory, soft white shadow, slight bevel, no green in the paragraph. */
+/* ─── Homepage patent cards, Grok's master card: Title 01 "filament wrap" + Body 02 plaque white ───
+   Dark glass plaque with a mint hairline on the wet night city. Eyebrow in small mint tracking.
+   Title: heavy serif, mint-to-white fill, glow stack, one thin filament looping the baseline (10s).
+   Body: ivory serif, soft white halo, no green in the paragraph. Link in copper, not mint. */
+.rc-plate { background: #03090a; overflow: hidden; }
+.rc-plate-pic { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+.rc-plate-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(3,9,10,.92) 0%, rgba(3,9,10,.2) 18%, rgba(3,9,10,.2) 82%, rgba(3,9,10,.94) 100%); }
+.rc-plaque {
+  position: relative; padding: 2rem 1.5rem 2.25rem; border-radius: 20px;
+  border: 1px solid rgba(110,231,183,.55); background: rgba(3,12,10,.66);
+  -webkit-backdrop-filter: blur(16px) saturate(120%); backdrop-filter: blur(16px) saturate(120%);
+  box-shadow: 0 0 0 1px rgba(110,231,183,.12) inset, 0 30px 80px rgba(0,0,0,.55), 0 0 40px rgba(16,185,129,.12);
+}
+@media (min-width: 640px) { .rc-plaque { padding: 2.5rem 2.75rem 2.75rem; } }
+.rc-plaque-eyebrow { font-size: .68rem; font-weight: 800; letter-spacing: .24em; text-transform: uppercase; color: rgba(110,231,183,.85); text-shadow: 0 0 10px rgba(52,211,153,.5); }
+.rc-plaque-eyebrow span { margin: 0 .35em; color: rgba(110,231,183,.5); }
+.rc-plaque-link { display: inline-block; font-size: 1rem; font-weight: 700; letter-spacing: .02em; color: #d98b4a; text-decoration: none; text-shadow: 0 0 12px rgba(217,139,74,.45); border-bottom: 1px solid rgba(217,139,74,.5); padding-bottom: .1rem; }
+.rc-plaque-link:hover { color: #f0a866; border-bottom-color: rgba(240,168,102,.9); }
 .rc-patent-title-wrap { position: relative; display: inline-block; max-width: 100%; padding-bottom: .55rem; }
 .rc-patent-title {
-  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  font-weight: 900; letter-spacing: -.025em; line-height: 1.02;
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-weight: 700; letter-spacing: -.01em; line-height: 1.02;
   background: linear-gradient(180deg, #ffffff 0%, #eafff5 38%, #a7f3d0 72%, #6ee7b7 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 0 2px rgba(255,255,255,.9)) drop-shadow(0 0 10px rgba(110,231,183,.85)) drop-shadow(0 0 26px rgba(52,211,153,.7)) drop-shadow(0 0 60px rgba(16,185,129,.45));
@@ -1521,5 +1536,7 @@ img.object-cover, img[class*="h-full"] { height: 100%; }
   animation: rc-filament-loop 10s linear infinite, rc-filament-breathe 10s ease-in-out infinite; }
 @keyframes rc-filament-loop { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -800; } }
 @keyframes rc-filament-breathe { 0%, 100% { opacity: .35; } 50% { opacity: .7; } }
-.rc-patent-body { color: #fbf9f1; text-shadow: 0 0 12px rgba(255,255,255,.35), 0 1px 0 rgba(255,255,255,.22), 0 -1px 0 rgba(0,0,0,.55), 0 2px 12px rgba(0,0,0,.7); }
+.rc-patent-body { font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif; color: #fbf9f1; text-shadow: 0 0 12px rgba(255,255,255,.35), 0 1px 0 rgba(255,255,255,.22), 0 -1px 0 rgba(0,0,0,.55), 0 2px 12px rgba(0,0,0,.7); }
+.rc-patent-lead { font-weight: 700; }
+.rc-patent-detail { font-weight: 600; }
 @media (prefers-reduced-motion: reduce) { .rc-filament path { animation: none; opacity: .5; } }
