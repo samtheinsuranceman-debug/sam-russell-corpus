@@ -11,7 +11,7 @@ describe("taxReturnOcr router", () => {
     const procedures = Object.keys((appRouter as any)._def.procedures);
     expect(procedures).toContain("taxReturnOcr.uploadAndExtract");
     expect(procedures).toContain("taxReturnOcr.extractFromUrl");
-  });
+  }, 30_000); // the first import of the full router tree can take longer than the 5s default on a cold run
 
   it("uploadAndExtract should require authentication", async () => {
     const { appRouter } = await import("./routers");
