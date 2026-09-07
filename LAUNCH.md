@@ -226,6 +226,16 @@ four minutes after boot); the owner can also call `career.refresh`. The BLS
 state files are tens of MB each and a full first read takes several minutes.
 Spec: `docs/engines/CAREER_LEDGER_ENGINE.md`.
 
+### The Inheritance Engine (no switch)
+`/portal/inheritance` reads the Fact Finder's new `inheritances` list (Estate
+section), taxes each item the way the Code taxes that kind on arrival with
+the section linked, multiplies by the erosion trajectory's burden for the
+year expected, discounts with the CPI-U ladder, checks the benefactor's
+estate against the IRS filing threshold, and offers the remarriage and
+step-family follow-up only when the client asks. The partner's saving
+figure stays off the page until `PARTNER_COPY.quote.approved` is set true
+in `shared/inheritanceEngine.ts`. Spec: `docs/engines/INHERITANCE_ENGINE.md`.
+
 ### The Rental Enterprise (optional switch)
 `/portal/rental-enterprise` sizes the client's purchasing power from the
 Fact Finder under Fannie Mae's published investment-property rules, ranks
