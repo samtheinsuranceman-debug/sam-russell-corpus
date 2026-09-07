@@ -260,8 +260,13 @@ describe("FRED benchmarks", () => {
     const cpi = await getCpiFromFred();
     expect(cpi).toMatchObject({ index: 320, annualRate: Number((((320 / 308) - 1) * 100).toFixed(2)), monthlyRate: Number((((320 / 319) - 1) * 100).toFixed(2)), coreAnnualRate: null });
   });
-  it("returns nothing without a key", async () => {
-    expect(await fetchFredObservations("DGS10")).toEqual([]);
+  it("falls back to the keyless CSV transport without a key, and reports unavailable when that is down too", async () => {
+    // No key: the CSV download is used. A dead feed is an error to the caller, null CPI, and
+    // an "unavailable" benchmark, never a made-up number.
+    const urls: string[] = [];
+    _setFetchForTests(async (url) => { urls.push(url); return { ok: false, status: 500, json: async () => ({}), text: async () => "" }; });
+    await expect(fetchFredObservations("DGS10")).rejects.toThrow(/FRED csv DGS10/);
+    expect(urls[0]).toContain("fredgraph.csv?id=DGS10");
     expect(await getCpiFromFred()).toBeNull();
     expect((await getBenchmark("DGS10")).source).toBe("unavailable");
   });
