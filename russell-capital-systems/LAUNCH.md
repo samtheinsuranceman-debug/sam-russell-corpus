@@ -202,6 +202,17 @@ is read against who is expected to hold the levers. The pulse itself is free
 and runs weekly on its own (`POWER_PULSE_DAYS`, default 7; 0 turns it off),
 with a first reading half a minute after boot.
 
+### The Zip Engine (optional data sweep)
+`/portal/zip-engine`: home values since the record began for the client's own
+zip codes (FHFA five-digit-zip index back-cast onto Zillow's dollar levels),
+rents where Zillow publishes them, the cohort of zips worth at least a chosen
+threshold at the start of the chosen window, and the loan's true 30-year
+interest at each year's Freddie Mac rate. All four sources are public and
+keyless. The owner reads them with "Read the files now" on the page;
+`ZIP_DATA_DAYS=30` re-reads them monthly (first pass two minutes after boot).
+The Zillow files are large (tens of MB); a read takes a few minutes and stores
+about fifty thousand compact rows in `zip_series`.
+
 ### Loan forgiveness engine
 `/portal/forgiveness`: the record of every federal forgiveness and
 repayment program since 1987 with its statute, the computed political

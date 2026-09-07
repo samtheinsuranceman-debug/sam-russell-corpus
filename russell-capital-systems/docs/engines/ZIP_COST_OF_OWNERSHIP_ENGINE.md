@@ -74,6 +74,8 @@ entries; nothing is pre-filled.
 
 ## Build order
 
+Pass 1 built 7 September 2026: `shared/zipEngine.ts`, `server/zipData.ts`, `server/zipRouter.ts`, `/portal/zip-engine`, zip fields in the Fact Finder, hand-off to the Ultra Calculator.
+
 1. FHFA + Zillow ingestion, cohort filter, slider, client-zip lookup; feed the
    sourced rate into Mortgage Killer, House Recycling, Ultra Calculator with the
    flat rate as fallback. (One pass.)

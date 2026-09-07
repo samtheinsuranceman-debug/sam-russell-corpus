@@ -55,6 +55,7 @@ export const SPHERE_POINTS: SpherePoint[] = [
   // Erosion
   { path: "/portal/erosion", title: "Purchasing power: taxes and prices over 40 years", meridian: "taxes", latitude: "erosion", core: true },
   { path: "/portal/forgiveness", title: "Student loan forgiveness: the record, the odds, the asset it could fund", meridian: "debt", latitude: "moves" },
+  { path: "/portal/zip-engine", title: "The Zip Engine: what owning a home in your zip has really cost since the record began", meridian: "home", latitude: "erosion", core: true },
   { path: "/portal/tax-schedule", title: "Tax optimisation schedule: year by year, strategy by strategy", meridian: "taxes", latitude: "moves" },
   { path: "/portal/site-health", title: "Site health: hosting, security, SEO and speed checklist", meridian: "protect", latitude: "facts" },
   { path: "/portal/tax-brackets", title: "Tax bracket visualizer", meridian: "taxes", latitude: "erosion" },
