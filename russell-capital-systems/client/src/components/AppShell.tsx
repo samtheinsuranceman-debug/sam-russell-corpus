@@ -127,6 +127,20 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/client-portfolio", label: "Client Portfolio", icon: Briefcase, color: "green" },
     ],
   },
+  // ── 1b. RENTAL PROPERTIES ────────────────────────────────────────
+  {
+    label: "Rental Properties",
+    icon: Home,
+    color: "green",
+    defaultOpen: true,
+    items: [
+      { path: "/portal/short-term-rentals", label: "Short-Term Rentals", icon: Home, color: "green" },
+      { path: "/portal/str-strategy", label: "STR Tax Strategy", icon: Home, color: "green" },
+      { path: "/portal/zip-engine", label: "The Zip Engine", icon: Home, color: "green" },
+      { path: "/portal/house-recycling", label: "House Recycling", icon: Home, color: "green" },
+      { path: "/portal/real-estate-mogul", label: "Real Estate Mogul", icon: Home, color: "green" },
+    ],
+  },
   // ── 2. CLIENTS ───────────────────────────────────────────────────
   {
     label: "Clients",
@@ -155,7 +169,6 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/plan-ledger", label: "Plan Ledger", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/controls", label: "Controls", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/erosion", label: "Purchasing Power", icon: BookOpenCheck, color: "purple" },
-      { path: "/portal/zip-engine", label: "The Zip Engine", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/forgiveness", label: "Loan Forgiveness", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/tax-schedule", label: "Tax Schedule", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/sphere", label: "The Sphere", icon: BookOpenCheck, color: "purple" },
@@ -258,9 +271,7 @@ const NAV_SECTIONS: NavSection[] = [
         color: "teal",
         items: [
           { path: "/portal/mortgage-killer", label: "Mortgage Killer", icon: Home, color: "teal" },
-          { path: "/portal/house-recycling", label: "House Recycling", icon: Recycle, color: "teal" },
           { path: "/portal/household-wealth", label: "Household Wealth", icon: HomeIcon, color: "teal" },
-          { path: "/portal/real-estate-mogul", label: "Real Estate Mogul", icon: Building2, color: "teal" },
           { path: "/portal/reverse-heloc", label: "Reverse HELOC", icon: Landmark, color: "teal" },
         ],
       },
@@ -396,7 +407,6 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/divorce-calculator", label: "Divorce Devastation Engine", icon: Scissors, color: "red" },
       { path: "/portal/trusts", label: "Trust Structures", icon: Landmark, color: "orange" },
       { path: "/portal/mortgage-killer-v3", label: "Mortgage Killer V3", icon: Home, color: "teal" },
-      { path: "/portal/str-strategy", label: "STR Tax Strategy", icon: Building2, color: "amber" },
       { path: "/portal/physicians-edge", label: "Physician's Edge", icon: HeartPulse, color: "emerald" },
     ],
   },
