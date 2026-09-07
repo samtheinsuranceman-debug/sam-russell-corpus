@@ -1,8 +1,8 @@
 # Russell Capital Systems — All 90 Patents Explained Like You’re in 5th Grade
 
 **Prepared for:** Samuel Russell, Russell Holdings Management, LLC  
-5700 Kirkwood Highway, Suite 202, Wilmington, Delaware 19809  
-www.russellcapitalsystems.com · www.drasswealthmanagement.com · www.joinaqal.com · www.elitetaxstrategists.com · www.mytaxesmadeeasy.com  
+5700 Kirkwood Hwy Suite 202, Wilmington, DE 19809  
+www.russellcapitalsystems.com · www.DrassWealthManagement.com · www.joinaqal.com · www.elitetaxstrategists.com · www.mytaxesmadeeasy.com  
 **Partner:** strategicpatentlaw.com
 
 ## Part I: The 54 Core Patents
