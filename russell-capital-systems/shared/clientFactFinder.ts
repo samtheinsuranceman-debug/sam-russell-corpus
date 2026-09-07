@@ -306,7 +306,23 @@ export const FACT_FINDER_SECTIONS: SectionSpec[] = [
       { key: "inheritanceExpected", label: "Inheritance you expect to receive", type: "money" },
       { key: "heirs", label: "Who should inherit, and how (outright, in trust, staged)", type: "textarea", required: true },
       { key: "legacyGoals", label: "What you want your money to do after you", type: "textarea", required: true },
+      { key: "benefactorEstateEstimate", label: "If you know it: the whole estate you expect to inherit from (for the federal exclusion check)", type: "money" },
     ],
+    list: {
+      key: "inheritances",
+      label: "Inheritances you expect, item by item (the Inheritance Engine reads these)",
+      addLabel: "Add an expected inheritance",
+      fields: [
+        { key: "label", label: "What it is", type: "text" },
+        { key: "assetClass", label: "Kind of asset", type: "select", options: ["cash", "brokerage", "traditional_ira", "roth_ira", "life_insurance", "annuity", "real_estate", "business", "collectibles", "hsa", "plan529", "trust"] },
+        { key: "amount", label: "Amount today", type: "money" },
+        { key: "expectedYear", label: "Year you expect it", type: "number" },
+        { key: "from", label: "From", type: "select", options: ["Parent", "Grandparent", "Spouse's parent", "Other relative", "Other"] },
+        { key: "likelihood", label: "How sure (1 unlikely … 5 certain)", type: "number" },
+        { key: "taxableSharePct", label: "Gain or income share % (annuity or trust, from the statement)", type: "percent" },
+        { key: "notes", label: "Notes", type: "text" },
+      ],
+    },
   },
   {
     id: "protection",

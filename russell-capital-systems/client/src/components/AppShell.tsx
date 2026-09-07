@@ -211,6 +211,7 @@ const NAV_SECTIONS: NavSection[] = [
           { path: "/portal/hot-income", label: "Hot Income (Oil & Gas)", icon: Flame, color: "orange" },
           { path: "/portal/estate-tax", label: "Estate Tax", icon: Landmark, color: "orange" },
           { path: "/portal/estate-flow", label: "Estate Flow Chart", icon: Landmark, color: "orange" },
+          { path: "/portal/inheritance", label: "The Inheritance Engine", icon: Landmark, color: "orange" },
           { path: "/portal/beneficiary-optimization", label: "Beneficiary Optimizer", icon: Users, color: "orange" },
         ],
       },
