@@ -150,6 +150,12 @@
       "name": "The Inheritance Timing Dial",
       "lead": "The system treats an inheritance as uncertain in three ways: when it arrives, how much remains after tax, and whether it arrives at all.",
       "detail": "The benefactor's survival curve from the Social Security life table sets the timing spread, and the Inheritance Arrival Meter sets the after-tax amount for each possible year. The forecaster panel's confidence sets the width of the band, and the likelihood weighs it. The output is one dated range with a stated reason for its width. The system refuses to produce a result when the gain share is missing."
+    },
+    {
+      "ref": "23",
+      "name": "The Black Box Advice Packet",
+      "lead": "Like a flight recorder, a black box helps explain what happened during a flight. The Black Box Advice Packet does something similar for recommendations.",
+      "detail": "It creates one replayable packet containing the exact facts as fingerprints, the source quotations, the calculations, the signer, and every later change. If a regulator or a client's lawyer asks, \"What happened here?\", the packet can show the trail. It is not just a final answer in a folder. It is more like a puzzle built with a picture of every piece, the instructions, the person who approved it, and the changes made afterward. The packet separates a recommendation's ingredients from its result: what information was used, how the calculations worked, who signed it, and what changed later."
     }
   ],
   "disclaimer": "Patent-pending methods developed by Russell Capital Systems, described at a high level. Not tax, legal or investment advice. Results are not guaranteed and every specific is reviewed by our tax professional team for suitability and IRS compliance before implementation. Comparative statements are the owner's opinion."
