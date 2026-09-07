@@ -157,7 +157,7 @@ export default function Landing() {
                         <svg className="rc-filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7" /></svg>
                       </div>
                       <p className="rc-patent-body rc-patent-lead mt-4 text-[clamp(2rem,3.6vw,3.1rem)] leading-[1.22]">{lead}</p>
-                      <p className="rc-patent-body rc-patent-detail mt-4 max-w-4xl text-[clamp(1.6rem,2.6vw,2.2rem)] leading-[1.4]">{detail}</p>
+                      <p className="rc-patent-body rc-patent-detail mt-4 max-w-4xl text-[clamp(1.8rem,2.95vw,2.5rem)] leading-[1.36]">{detail}</p>
                       <a href="#planning-estimator" className="rc-plaque-link mt-6">See the mechanism <span aria-hidden="true">→</span></a>
                     </li>
                   ))}
