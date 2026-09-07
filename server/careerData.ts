@@ -17,6 +17,7 @@ import { and, desc, eq, sql } from "drizzle-orm";
 import { getDb } from "./db";
 import { careerSeries, careerStats, type CareerSeriesRow, type CareerStatRow } from "../drizzle/schema";
 import { forEachXlsxRow, unzipEntries } from "./zipData";
+import { sweepAllowed } from "./_core/memory";
 import { CAREER_PATHS, SOURCES } from "@shared/careerEngine";
 
 // ─── Transport ──────────────────────────────────────────────────────────────
@@ -243,6 +244,8 @@ export function careerSweep(opts: { years?: number[]; now?: Date } = {}): Promis
 export function startCareerSchedule(env: NodeJS.ProcessEnv = process.env): boolean {
   const days = Number(env.CAREER_DATA_DAYS ?? 0);
   if (!Number.isFinite(days) || days <= 0) return false;
+  const mem = sweepAllowed(env);
+  if (!mem.ok) { console.warn(`[career] automatic sweep skipped: this box allows ${mem.haveMb} MB and the sweep asks for ${mem.needMb} MB (SWEEP_MIN_MEMORY_MB); the owner's refresh still works`); return false; }
   setTimeout(() => { careerSweep().catch(() => undefined); }, 240_000).unref();
   setInterval(() => { careerSweep().catch(() => undefined); }, days * 86_400_000).unref();
   return true;

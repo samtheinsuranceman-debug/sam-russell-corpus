@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseFhfaZip5, parseZillowWide, splitCsvLine, unzipEntries, xlsxRows } from "./zipData";
+import { parseFhfaZip5, parseZillowStream, parseZillowWide, splitCsvLine, unzipEntries, xlsxRows } from "./zipData";
 import { zipsFromFactFinder } from "./zipRouter";
 
 // A stored (uncompressed) zip container built by hand, so the XLSX reader is tested without any library.
@@ -65,6 +65,15 @@ describe("zillow wide csv", () => {
     expect(parsed[0]!.asOf).toBe("2021-06-30");
     expect(parsed[0]!.meta).toEqual({ state: "NC", city: "Wilmington", county: "New Hanover County", metro: "Wilmington, NC" });
     expect(parsed[1]!.data).toEqual({ startYear: 2020, values: [600000, 650000] });
+  });
+  it("streams a body in chunks that split lines anywhere and reaches the same answer", async () => {
+    const csv = "RegionID,SizeRank,RegionName,RegionType,StateName,State,City,Metro,CountyName,2019-12-31,2020-12-31\n1,10,28401,zip,North Carolina,NC,Wilmington,\"Wilmington, NC\",New Hanover County,305000,340000\n2,20,2134,zip,MA,MA,Boston,Boston,Suffolk,600000,650000";
+    const bytes = new TextEncoder().encode(csv);
+    const chunks = [bytes.slice(0, 57), bytes.slice(57, 130), bytes.slice(130)];
+    const body = new ReadableStream<Uint8Array>({ start(c) { chunks.forEach((x) => c.enqueue(x)); c.close(); } });
+    const streamed = await parseZillowStream({ text: async () => csv, body }, "zori");
+    expect(streamed).toEqual(parseZillowWide(csv, "zori"));
+    expect(streamed.map((p) => p.zip)).toEqual(["28401", "02134"]);
   });
 });
 
