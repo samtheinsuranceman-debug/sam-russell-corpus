@@ -11,6 +11,7 @@ import { Link } from "wouter";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
 import { Home, Landmark, BookOpen, Calculator, Compass, Scale, ShieldCheck, FileText, Clock, ExternalLink, RefreshCw } from "lucide-react";
+import { INSURED_NOTE } from "@shared/mutualIulCarriers";
 
 const CARD = "rounded-2xl border border-emerald-400/20 bg-white/[0.04]";
 const INPUT = "rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white w-full";
@@ -265,6 +266,11 @@ export default function RentalEnterprise() {
             <div><div className="font-semibold uppercase tracking-wider text-white/50">Before a policy is chosen</div><ol className="mt-1 list-decimal pl-5 space-y-0.5">{(carriers.data?.protocol ?? []).map((p, i) => <li key={i}>{p}</li>)}</ol></div>
             <div><div className="font-semibold uppercase tracking-wider text-white/50">The scales</div><ul className="mt-1 space-y-0.5">{(carriers.data?.scales ?? []).map((s) => <li key={s.agency}><a className="underline" href={s.url} target="_blank" rel="noreferrer">{s.agency}</a>: {s.top}</li>)}</ul>
               <div className="mt-2">Backtester index accounts ({carriers.data?.years.from}–{carriers.data?.years.to}) carry anonymised carrier keys; the crediting history is arithmetic on the index's past under each account's cap, floor and participation.</div></div>
+          </div>
+          <div className="mt-4 rounded-xl border border-emerald-300/30 bg-emerald-400/5 p-4 text-xs text-white/75">
+            <div className="font-semibold text-white">{INSURED_NOTE.title}</div>
+            <ul className="mt-1 list-disc space-y-1 pl-5">{INSURED_NOTE.lines.map((l, i) => <li key={i}>{l}</li>)}</ul>
+            <div className="mt-1 text-[11px] text-white/45">{INSURED_NOTE.caveat}</div>
           </div>
           {shown?.crediting && (
             <details className="mt-2 text-[11px] text-white/60"><summary className="cursor-pointer">Crediting history used in the loop: {shown.crediting.name}</summary>
