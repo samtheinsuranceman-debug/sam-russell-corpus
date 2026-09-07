@@ -11,7 +11,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ADVISOR_MODES, type AdvisorMode } from "@shared/advisorModes";
+import { ADVISOR_MODES, HORIZON_FACTS, horizonQuestion, type AdvisorMode } from "@shared/advisorModes";
+
+// The chips a person picks from; "The next twenty years" is offered after an answer, with permission, not picked cold.
+const PICKABLE_MODES = ADVISOR_MODES.filter((m) => m.id !== "horizon");
 
 export const ULTRA_PROFILE_KEY = "rcs_ultra_profile_v1";
 
@@ -60,6 +63,9 @@ export default function VoiceAdvisor() {
   const [confirmEmail, setConfirmEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [mailStatus, setMailStatus] = useState("");
+  const [horizonOpen, setHorizonOpen] = useState(false);
+  const [facts, setFacts] = useState<Record<string, string>>({});
+  const [answeredMode, setAnsweredMode] = useState<AdvisorMode>("surface");
   const recognizerRef = useRef<SpeechRecognitionLike | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -70,17 +76,20 @@ export default function VoiceAdvisor() {
 
   useEffect(() => () => { recognizerRef.current?.stop(); audioRef.current?.pause(); }, []);
 
-  const submit = async (text: string, chosen: AdvisorMode = mode) => {
+  const submit = async (text: string, chosen: AdvisorMode = mode, extraProfile = "") => {
     const q = text.trim();
     if (!q) return;
-    setStatus(chosen === "all" ? "Answering six ways — this takes a little longer…" : "Thinking…");
+    setStatus(chosen === "all" ? "Answering six ways — this takes a little longer…" : chosen === "horizon" ? "Looking twenty years ahead…" : "Thinking…");
     setSections([]);
     setMailStatus("");
-    setAsked(q);
+    if (chosen !== "horizon") setAsked(q);
     try {
-      const res = await ask.mutateAsync({ question: q, pagePath: location, profileSummary: readSavedProfileSummary(), mode: chosen });
+      const profile = [readSavedProfileSummary(), extraProfile].filter(Boolean).join("\n");
+      const res = await ask.mutateAsync({ question: q, pagePath: location, profileSummary: profile, mode: chosen });
       const got: Section[] = res.sections?.length ? res.sections : [{ id: chosen, title: ADVISOR_MODES.find((m) => m.id === chosen)?.label ?? "Answer", text: res.answer, via: res.via }];
       setSections(got);
+      setAnsweredMode(chosen);
+      setHorizonOpen(false);
       setStatus("");
       if (voiceOut && providers.data?.voiceOut && got[0]) {
         try {
@@ -154,7 +163,7 @@ export default function VoiceAdvisor() {
           </div>
           <p className="mb-2 text-xs text-slate-400">The advisor knows this page and your saved profile. Pick how you want the answer, then speak or type.</p>
           <div className="mb-2 flex flex-wrap gap-1.5" role="radiogroup" aria-label="How to answer">
-            {ADVISOR_MODES.map((m) => (
+            {PICKABLE_MODES.map((m) => (
               <button key={m.id} role="radio" aria-checked={mode === m.id} title={m.blurb} onClick={() => { setMode(m.id); if (asked) void submit(asked, m.id); }}
                 className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${mode === m.id ? "border-sky-400 bg-sky-500 text-slate-950" : "border-slate-700 bg-slate-800 text-slate-200 hover:border-sky-400/60"}`}>
                 {m.short}
@@ -181,6 +190,34 @@ export default function VoiceAdvisor() {
                   <p className="whitespace-pre-wrap">{s.text}</p>
                 </section>
               ))}
+            </div>
+          )}
+          {sections.length > 0 && answeredMode !== "horizon" && (
+            <div className="mt-3 rounded-lg border border-emerald-400/40 bg-emerald-500/5 p-3 text-xs" data-testid="horizon-offer">
+              {!horizonOpen ? (
+                <>
+                  <p className="text-slate-200">If you are willing to take two to five more minutes, I can ask for a little about you that I do not have, then tell you the <b className="text-emerald-300">three to five questions you should be asking in fifteen or twenty years</b>, when it would be too late, and answer them now.</p>
+                  <div className="mt-2 flex gap-2">
+                    <button onClick={() => setHorizonOpen(true)} className="flex-1 rounded-lg bg-emerald-500 px-3 py-2 font-semibold text-slate-950">Yes, ask me</button>
+                    <button onClick={() => setAnsweredMode("horizon")} className="rounded-lg border border-slate-700 px-3 py-2 text-slate-300">Not now</button>
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-slate-200">Five short answers. Nothing is stored unless you save a profile.</p>
+                  {HORIZON_FACTS.map((f) => (
+                    <label key={f.id} className="block text-slate-300">{f.label}
+                      <input value={facts[f.id] ?? ""} onChange={(e) => setFacts((cur) => ({ ...cur, [f.id]: e.target.value }))} placeholder={f.placeholder} aria-label={f.label} className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-800 p-2 text-slate-100" />
+                    </label>
+                  ))}
+                  <div className="flex gap-2">
+                    <button onClick={() => void submit(horizonQuestion(facts), "horizon", `Extra facts given with permission for the twenty-year questions:\n${HORIZON_FACTS.map((f) => `${f.label}: ${facts[f.id]?.trim() || "not given"}`).join("\n")}`)} disabled={ask.isPending || !Object.values(facts).some((v) => v.trim())} className="flex-1 rounded-lg bg-emerald-500 px-3 py-2 font-semibold text-slate-950 disabled:opacity-50">
+                      {ask.isPending ? "Looking ahead…" : "Show me the questions"}
+                    </button>
+                    <button onClick={() => setHorizonOpen(false)} className="rounded-lg border border-slate-700 px-3 py-2 text-slate-300">Not now</button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
           {sections.length > 0 && (
