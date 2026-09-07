@@ -262,6 +262,7 @@ const NAV_SECTIONS: NavSection[] = [
           { path: "/portal/growth-annuities", label: "Growth Annuities", icon: TrendingUp, color: "emerald" },
           { path: "/portal/myga-fixed-rate", label: "MYGA Waterfall", icon: Lock, color: "emerald" },
           { path: "/portal/existing-annuities", label: "Existing Annuities", icon: PiggyBank, color: "emerald" },
+          { path: "/portal/income-for-life", label: "Income for Life", icon: PiggyBank, color: "emerald" },
           { path: "/portal/income-annuity-top10", label: "Top 10 Income", icon: Award, color: "emerald" },
           { path: "/portal/fia-top10", label: "Top 10 FIA", icon: TrendingUp, color: "emerald" },
           { path: "/portal/annuity-accumulation-db", label: "Accumulation DB", icon: Database, color: "emerald" },

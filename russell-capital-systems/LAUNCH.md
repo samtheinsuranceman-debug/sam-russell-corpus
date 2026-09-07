@@ -235,6 +235,19 @@ from the form), and a standalone quote beside it. Standalone premium
 increases are an owner-entered registry (`ltc.addFiling`, filing URL
 required). Spec: `docs/engines/LONG_TERM_CARE_ENGINE.md`.
 
+### Tax-Free Income for Life + the Longevity Engine (no switch)
+`/portal/income-for-life` shows the studies on guaranteed income and
+wellbeing first (RAND/HRS, a peer-reviewed mixed result, an industry
+survey, each cited with its caveat), then survival odds for one life or
+two from the SSA 2023 period life table (either / both at 80–100), then
+the plan: the pre-tax account through the conversion pass, the sheet's
+bonus and payout, expected years and total, and what tax would take. It
+refuses taxable money. Payouts are an owner-entered registry
+(`incomeLife.addRateSheet`, rate-sheet URL and date required); the exit
+provision is described without a company name; the flow-through policy is
+shown as four questions with authorities. Spec:
+`docs/engines/INCOME_FOR_LIFE_ENGINE.md`.
+
 ### The IUL Engine's links (no switch)
 `/portal/iul-engine` reads the backtester's credited history for a chosen
 index account beside CPI-U and M2 from FRED (December over December), prints
