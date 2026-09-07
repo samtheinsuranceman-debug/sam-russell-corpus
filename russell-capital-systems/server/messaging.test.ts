@@ -260,9 +260,58 @@ describe("FRED benchmarks", () => {
     const cpi = await getCpiFromFred();
     expect(cpi).toMatchObject({ index: 320, annualRate: Number((((320 / 308) - 1) * 100).toFixed(2)), monthlyRate: Number((((320 / 319) - 1) * 100).toFixed(2)), coreAnnualRate: null });
   });
-  it("returns nothing without a key", async () => {
-    expect(await fetchFredObservations("DGS10")).toEqual([]);
-    expect(await getCpiFromFred()).toBeNull();
-    expect((await getBenchmark("DGS10")).source).toBe("unavailable");
+  it("uses the CSV fallback without a key", async () => {
+    const cpiCsv = [
+      "observation_date,CPI",
+      "2025-09-01,308",
+      "2025-10-01,309",
+      "2025-11-01,310",
+      "2025-12-01,311",
+      "2026-01-01,312",
+      "2026-02-01,313",
+      "2026-03-01,314",
+      "2026-04-01,315",
+      "2026-05-01,316",
+      "2026-06-01,317",
+      "2026-07-01,318",
+      "2026-08-01,319",
+      "2026-09-01,320",
+    ].join("\n");
+    const coreCpiCsv = [
+      "observation_date,CPILFESL",
+      "2025-09-01,300",
+      "2025-10-01,301",
+      "2025-11-01,302",
+      "2025-12-01,303",
+      "2026-01-01,304",
+      "2026-02-01,305",
+      "2026-03-01,306",
+      "2026-04-01,307",
+      "2026-05-01,308",
+      "2026-06-01,309",
+      "2026-07-01,310",
+      "2026-08-01,312",
+      "2026-09-01,313",
+    ].join("\n");
+    _setFetchForTests(async (url) => ({
+      ok: true,
+      status: 200,
+      text: async () =>
+        url.includes("CPILFESL")
+          ? coreCpiCsv
+          : url.includes("CPIAUCSL")
+            ? cpiCsv
+            : "observation_date,series\n2026-09-02,4.10\n2026-09-03,4.12\n",
+      json: async () => ({}),
+    }));
+    expect(await fetchFredObservations("DGS10")).toEqual([{ date: "2026-09-03", value: 4.12 }]);
+    expect(await getCpiFromFred()).toMatchObject({
+      index: 320,
+      annualRate: Number((((320 / 308) - 1) * 100).toFixed(2)),
+      monthlyRate: Number((((320 / 319) - 1) * 100).toFixed(2)),
+      coreAnnualRate: Number((((313 / 300) - 1) * 100).toFixed(2)),
+      asOf: "2026-09-01",
+    });
+    expect((await getBenchmark("DGS10")).source).toBe("live");
   });
 });

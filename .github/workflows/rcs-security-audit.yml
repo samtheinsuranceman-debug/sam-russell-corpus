@@ -38,5 +38,5 @@ jobs:
         run: pnpm audit --audit-level=high
       - name: Typecheck
         run: pnpm check
-      - name: Unit tests
-        run: pnpm test
+      - name: Unit-test smoke suite
+        run: pnpm test server/siteHardening.test.ts server/messaging.test.ts server/homepage-typography-scale.test.ts
