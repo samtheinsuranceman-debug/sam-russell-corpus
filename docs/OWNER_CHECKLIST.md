@@ -206,3 +206,5 @@ every call. Two fixes; either one works:
 2. Or make the key inside the workspace: in the Console pick the workspace
    at the top left first, then API Keys → Create Key, and replace the
    `ANTHROPIC_API_KEY` value in Railway with that key.
+
+Autodeploy test: 7 September 2026, 14:35 UTC. If Railway built this commit on its own, the GitHub App is installed correctly.
