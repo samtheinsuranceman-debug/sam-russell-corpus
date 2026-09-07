@@ -226,6 +226,14 @@ four minutes after boot); the owner can also call `career.refresh`. The BLS
 state files are tens of MB each and a full first read takes several minutes.
 Spec: `docs/engines/CAREER_LEDGER_ENGINE.md`.
 
+### The IUL Engine's links (no switch)
+`/portal/iul-engine` reads the backtester's credited history for a chosen
+index account beside CPI-U and M2 from FRED (December over December), prints
+the median split and the correlation under a caveat that it is the record
+and not a mechanism, gives the tax-equivalent yield at the client's marginal
+rate, the liquidity contrast with §72 cited, and the direct versus
+non-direct-recognition loan note. Spec: `docs/engines/IUL_ENGINE_LINKS.md`.
+
 ### The Inheritance Engine (no switch)
 `/portal/inheritance` reads the Fact Finder's new `inheritances` list (Estate
 section), taxes each item the way the Code taxes that kind on arrival with
