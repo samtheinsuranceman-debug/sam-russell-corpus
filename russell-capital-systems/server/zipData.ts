@@ -20,9 +20,11 @@ export type SeriesId = "hpi" | "zhvi" | "zori" | "pmms";
 export type Parsed = { zip: string; series: SeriesId; data: AnnualSeries; asOf: string; meta?: { state?: string; city?: string; county?: string; metro?: string } };
 
 // ─── Transport ──────────────────────────────────────────────────────────────
-type Fetcher = (url: string) => Promise<{ ok: boolean; status: number; text: () => Promise<string>; arrayBuffer: () => Promise<ArrayBuffer> }>;
+type Fetcher = (url: string) => Promise<{ ok: boolean; status: number; text: () => Promise<string>; arrayBuffer: () => Promise<ArrayBuffer>; body?: ReadableStream<Uint8Array> | null }>;
 const UA = "RussellCapitalSystems/1.0 (+https://www.russellcapitalsystems.com; public-data reader)";
 const realFetch: Fetcher = (url) => fetch(url, { signal: AbortSignal.timeout(120_000), headers: { "user-agent": UA, accept: "text/csv, application/octet-stream, */*" } });
+import { sweepAllowed } from "./_core/memory";
+import { DAY_MS, longInterval } from "./_core/schedule";
 let _fetch: Fetcher = realFetch;
 export function _setZipFetchForTests(f: Fetcher | null) { _fetch = f ?? realFetch; }
 
@@ -131,27 +133,58 @@ export function splitCsvLine(line: string): string[] {
   return out;
 }
 
-export function parseZillowWide(text: string, series: "zhvi" | "zori"): Parsed[] {
-  const lines = text.split(/\r?\n/);
-  const header = splitCsvLine(lines[0] ?? "");
-  const iName = header.indexOf("RegionName"), iType = header.indexOf("RegionType"), iState = header.indexOf("State"), iCity = header.indexOf("City"), iMetro = header.indexOf("Metro"), iCounty = header.indexOf("CountyName");
-  if (iName < 0) throw new Error(`Zillow ${series}: RegionName column not found`);
-  const dateCols = header.map((c, i) => (/^\d{4}-\d{2}(-\d{2})?$/.test(c) ? i : -1)).filter((i) => i >= 0);
-  if (!dateCols.length) throw new Error(`Zillow ${series}: no month columns`);
-  const asOf = header[dateCols[dateCols.length - 1]!]!;
+/** One line at a time, so a 30 MB file never has to sit in memory whole. Feed the header first; `done()` returns what was kept. */
+export function zillowLineFolder(series: "zhvi" | "zori"): { push: (line: string) => void; done: () => Parsed[] } {
+  let header: string[] | null = null, iName = -1, iType = -1, iState = -1, iCity = -1, iMetro = -1, iCounty = -1, dateCols: number[] = [], asOf = "";
   const out: Parsed[] = [];
-  for (let li = 1; li < lines.length; li++) {
-    const line = lines[li]; if (!line) continue;
-    const cells = splitCsvLine(line);
-    if (iType >= 0 && cells[iType] && cells[iType] !== "zip") continue;
-    const z = zip5(cells[iName]); if (!z) continue;
-    const monthly: Record<string, number | null> = {};
-    for (const i of dateCols) { const v = cells[i]; if (v && v !== "") { const n = Number(v); if (Number.isFinite(n)) monthly[header[i]!] = n; } }
-    const data = annualFromMonthly(monthly);
-    if (!data) continue;
-    out.push({ zip: z, series, data, asOf, meta: { state: cells[iState] || undefined, city: cells[iCity] || undefined, county: cells[iCounty] || undefined, metro: cells[iMetro] || undefined } });
+  return {
+    push(line) {
+      if (!header) {
+        header = splitCsvLine(line.replace(/^﻿/, ""));
+        iName = header.indexOf("RegionName"); iType = header.indexOf("RegionType"); iState = header.indexOf("State"); iCity = header.indexOf("City"); iMetro = header.indexOf("Metro"); iCounty = header.indexOf("CountyName");
+        if (iName < 0) throw new Error(`Zillow ${series}: RegionName column not found`);
+        dateCols = header.map((c, i) => (/^\d{4}-\d{2}(-\d{2})?$/.test(c) ? i : -1)).filter((i) => i >= 0);
+        if (!dateCols.length) throw new Error(`Zillow ${series}: no month columns`);
+        asOf = header[dateCols[dateCols.length - 1]!]!;
+        return;
+      }
+      if (!line) return;
+      const cells = splitCsvLine(line);
+      if (iType >= 0 && cells[iType] && cells[iType] !== "zip") return;
+      const z = zip5(cells[iName]); if (!z) return;
+      const monthly: Record<string, number | null> = {};
+      for (const i of dateCols) { const v = cells[i]; if (v && v !== "") { const n = Number(v); if (Number.isFinite(n)) monthly[header[i]!] = n; } }
+      const data = annualFromMonthly(monthly);
+      if (!data) return;
+      out.push({ zip: z, series, data, asOf, meta: { state: cells[iState] || undefined, city: cells[iCity] || undefined, county: cells[iCounty] || undefined, metro: cells[iMetro] || undefined } });
+    },
+    done() { if (!header) throw new Error(`Zillow ${series}: empty file`); return out; },
+  };
+}
+
+export function parseZillowWide(text: string, series: "zhvi" | "zori"): Parsed[] {
+  const f = zillowLineFolder(series);
+  for (const line of text.split(/\r?\n/)) f.push(line);
+  return f.done();
+}
+
+/** Streams a response body through the folder, line by line; falls back to the whole text when the transport has no stream (tests). */
+export async function parseZillowStream(res: { text: () => Promise<string>; body?: ReadableStream<Uint8Array> | null }, series: "zhvi" | "zori"): Promise<Parsed[]> {
+  if (!res.body) return parseZillowWide(await res.text(), series);
+  const f = zillowLineFolder(series);
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let rest = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    rest += dec.decode(value ?? new Uint8Array(), { stream: !done });
+    const parts = rest.split(/\r?\n/);
+    rest = parts.pop() ?? "";
+    for (const line of parts) f.push(line);
+    if (done) break;
   }
-  return out;
+  if (rest) f.push(rest);
+  return f.done();
 }
 
 // ─── Fetch each source ──────────────────────────────────────────────────────
@@ -165,7 +198,7 @@ export async function readFhfa(): Promise<Parsed[]> {
 export async function readZillow(series: "zhvi" | "zori"): Promise<Parsed[]> {
   const res = await _fetch(SRC[series].url);
   if (!res.ok) throw new Error(`Zillow ${series} responded ${res.status}`);
-  return parseZillowWide(await res.text(), series);
+  return parseZillowStream(res, series);
 }
 export async function readPmms(env: NodeJS.ProcessEnv = process.env): Promise<Parsed[]> {
   const obs = await fetchFredObservationsSince("MORTGAGE30US", "1971-01-01", env);
@@ -215,8 +248,10 @@ export function zipSweep(env: NodeJS.ProcessEnv = process.env): Promise<SweepRes
 export function startZipSchedule(env: NodeJS.ProcessEnv = process.env): boolean {
   const days = Number(env.ZIP_DATA_DAYS ?? 0);
   if (!Number.isFinite(days) || days <= 0) return false;
+  const mem = sweepAllowed(env);
+  if (!mem.ok) { console.warn(`[zip] automatic sweep skipped: this box allows ${mem.haveMb} MB and the sweep asks for ${mem.needMb} MB (SWEEP_MIN_MEMORY_MB); the owner's "Read the files now" still works`); return false; }
   setTimeout(() => { zipSweep(env).catch(() => undefined); }, 120_000).unref();
-  setInterval(() => { zipSweep(env).catch(() => undefined); }, days * 86_400_000).unref();
+  longInterval(() => { zipSweep(env).catch(() => undefined); }, days * DAY_MS);
   return true;
 }
 
