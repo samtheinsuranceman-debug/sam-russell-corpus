@@ -49,6 +49,7 @@ const PLATES: Array<{ src: string; tall?: string; position?: string; label: stri
   { src: "/rcs-city-lake.webp", label: "The park lake", from: 16, to: 17 },
   { src: "/rcs-city-tunnel.webp", label: "The tunnel", from: 17, to: 18 },
   { src: "/rcs-city-overlook.webp", label: "The overlook", from: 18, to: 19 },
+  { src: "/rcs-city-skybridge.webp", label: "The skybridge", from: 19, to: 20 },
 ];
 
 function ManagedPortalAction({ href, children, className }: { href: string; children: React.ReactNode; className: string }) {
