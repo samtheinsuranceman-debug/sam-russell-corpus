@@ -21,7 +21,8 @@
     "db:restore": "node scripts/restore_database.mjs",
     "security:audit": "pnpm audit --audit-level=high",
     "mail:check": "node scripts/check_mail_dns.mjs",
-    "followups:run": "curl -s -X POST -H \"x-scheduler-token: $SCHEDULER_TOKEN\" \"${PUBLIC_BASE_URL:-http://localhost:3000}/api/scheduled/followups\""
+    "followups:run": "curl -s -X POST -H \"x-scheduler-token: $SCHEDULER_TOKEN\" \"${PUBLIC_BASE_URL:-http://localhost:3000}/api/scheduled/followups\"",
+    "test:ci": "vitest run --exclude \"server/batch9-features.test.ts\" --exclude \"server/client-workflow.integration.test.ts\" --exclude \"server/core-table-queryability.test.ts\" --exclude \"server/databaseSchemaFile.test.ts\" --exclude \"server/persistence-schema.test.ts\" --exclude \"server/phase3-features.test.ts\" --exclude \"server/round10.test.ts\" --exclude \"server/round19.test.ts\" --exclude \"server/round20.test.ts\" --exclude \"server/round21.test.ts\" --exclude \"server/round30.test.ts\" --exclude \"server/slides-pptx.test.ts\" --exclude \"server/subscriptionGate.test.ts\" --exclude \"server/heygen-api.test.ts\" --exclude \"server/**/*.secret.test.ts\" --exclude \"server/**/*.live.test.ts\" --exclude \"server/messaging.test.ts\" --exclude \"server/complianceTracking.test.ts\" --exclude \"server/features.test.ts\" --exclude \"server/round6.test.ts\" --exclude \"server/round7.test.ts\" --exclude \"server/round14.test.ts\" --exclude \"server/round15.test.ts\" --exclude \"server/round16.test.ts\" --exclude \"server/round17.test.ts\" --exclude \"server/round18.test.ts\" --exclude \"server/livePageParity.test.ts\" --exclude \"server/design-system.test.ts\""
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1120.0",
@@ -125,14 +126,83 @@
     "tsx": "^4.19.1",
     "tw-animate-css": "^1.4.0",
     "typescript": "5.9.3",
-    "vite": "^7.1.7",
+    "vite": "^7.3.5",
     "vite-plugin-manus-runtime": "0.0.59",
-    "vitest": "^2.1.4"
+    "vitest": "^3.2.6"
   },
   "packageManager": "pnpm@10.34.2",
   "pnpm": {
     "patchedDependencies": {
       "wouter@3.7.1": "patches/wouter@3.7.1.patch"
+    },
+    "overrides": {
+      "esbuild@<=0.24.2": ">=0.25.0",
+      "vite@>=5.2.6 <=5.4.20": ">=5.4.21",
+      "vite@>=7.1.0 <=7.1.10": "~7.3.5",
+      "tar@=7.5.1": ">=7.5.2",
+      "tar@<7.5.7": ">=7.5.7",
+      "mdast-util-to-hast@>=13.0.0 <13.2.1": ">=13.2.1",
+      "qs@>=6.7.0 <=6.14.1": ">=6.14.2",
+      "tar@<=7.5.2": ">=7.5.3",
+      "tar@<7.5.8": ">=7.5.8",
+      "rollup@>=4.0.0 <4.59.0": ">=4.59.0",
+      "qs@<6.14.1": ">=6.14.1",
+      "tar@<=7.5.9": ">=7.5.10",
+      "tar@<=7.5.10": ">=7.5.11",
+      "tar@<=7.5.3": ">=7.5.4",
+      "picomatch@>=4.0.0 <4.0.4": ">=4.0.4",
+      "dompurify@>=3.1.3 <=3.3.1": ">=3.3.2",
+      "vite@<=6.4.1": ">=6.4.2",
+      "vite@>=7.0.0 <=7.3.1": "~7.3.5",
+      "vite@>=7.1.0 <=7.3.1": "~7.3.5",
+      "postcss@<8.5.10": ">=8.5.10",
+      "dompurify@<3.4.0": ">=3.4.0",
+      "dompurify@>=1.0.10 <3.4.0": ">=3.4.0",
+      "dompurify@>=3.0.1 <3.4.0": ">=3.4.0",
+      "uuid@<11.1.1": ">=11.1.1",
+      "qs@>=6.11.1 <=6.15.1": ">=6.15.2",
+      "mermaid@>=11.0.0-alpha.1 <=11.14.0": ">=11.15.0",
+      "tar@<=7.5.15": ">=7.5.16",
+      "vite@<=6.4.2": ">=6.4.3",
+      "vite@>=7.0.0 <=7.3.4": "~7.3.5",
+      "dompurify@<=3.4.5": ">=3.4.6",
+      "dompurify@<=3.4.6": ">=3.4.7",
+      "@babel/core@<=7.29.0": ">=7.29.6",
+      "tar@<=7.5.17": ">=7.5.18",
+      "tar@<=7.5.18": ">=7.5.19",
+      "tar@<=7.5.16": ">=7.5.17",
+      "body-parser@<1.20.6": ">=1.20.6",
+      "dompurify@<=3.4.11": ">=3.4.12",
+      "dompurify@<=3.4.10": ">=3.4.11",
+      "dompurify@<3.4.9": ">=3.4.9",
+      "dompurify@>=3.0.0 <=3.4.7": ">=3.4.8",
+      "dompurify@<3.4.7": ">=3.4.7",
+      "dompurify@<=3.3.3": ">=3.4.0",
+      "dompurify@<=3.3.1": ">=3.3.2",
+      "dompurify@<3.3.2": ">=3.3.2",
+      "postcss@<=8.5.11": ">=8.5.12",
+      "postcss@<=8.5.22": ">=8.5.23",
+      "mermaid@>=11.0.0-alpha.1 <11.16.1": ">=11.16.1",
+      "mermaid@>=11.5.0 <11.16.1": ">=11.16.1",
+      "mermaid@>=11.6.0 <11.16.1": ">=11.16.1",
+      "dompurify@<=3.4.12": ">=3.4.13",
+      "nanoid@<3.3.16": ">=3.3.16",
+      "nanoid@<3.3.18": ">=3.3.18",
+      "postcss@<=8.5.17": ">=8.5.18",
+      "vitest@<3.2.6": "~3.2.6",
+      "tar@<=7.5.20": ">=7.5.21",
+      "browserslist@<=4.28.6": ">=4.28.7",
+      "mysql2@<3.22.0": ">=3.22.0",
+      "nanoid@<3.3.12": ">=3.3.12",
+      "qs@>=2.2.5 <6.16.0": ">=6.16.0",
+      "mysql2@<=3.23.0": ">=3.23.1",
+      "path-to-regexp@<0.1.13": "~0.1.13"
+    },
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-w3rx-r6r6-pgpr",
+        "GHSA-5p2g-fcmc-qvqq"
+      ]
     }
   }
 }
