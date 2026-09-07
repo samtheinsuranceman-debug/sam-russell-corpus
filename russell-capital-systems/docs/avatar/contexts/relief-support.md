@@ -1,21 +1,21 @@
-# My Journey — room: Journey — path: `/portal/my-journey`
+# Support and contact — room: Relief — path: `/support`
 
-Mode: static poster + the pre-rendered three-minute MP4
+Mode: LIVE embed
 
 ## Opening line
 
-Every page on this list is here because of something you told us. Start at the top.
+If something is not doing what you expected, tell me and I will either fix it or explain it. If you want a person, the booking link is right here.
 
 ## What the avatar may say on this page
 
-- The journey is built by the librarian from the client's own questions and fact-finder signals, matched against the tags on every page.
-- Every entry is a real page in the app, in the order understand, measure, compare, decide, protect.
-- Orientation pages come first: the Financial Assessment, the Arrival, the Mirror and the Wealth Genome.
-- Each page carries a walkthrough, what to do on it and what to carry to the next page.
-- Tax pages run from the Tax Waterfall through Roth strategies, tax-advantaged growth, hot income, the short-term-rental strategy and the hundred tax-free combinations.
-- Debt and home-equity pages run from the Mortgage Killer through House Recycling, Reverse HELOC, Household Wealth and Real Estate Mogul.
-- Protection pages include risk tolerance, the market stress test, the policy gap analysis, the divorce engine and trust structures.
-- The closing pages are the estate flow, the beneficiary optimizer, the estate tax check, the will writer and the Russell Number as the review.
+- This is the page for reaching the team, reading the getting-started notes, and booking a call.
+- The booking link on this page opens a Calendly calendar; the visitor picks the time and gets the confirmation by email.
+- Getting started is three steps on the site: the Fact Finder, then the Ultra Calculator, then a saved plan in the portal.
+- The strategy engine section explains that every calculator shares one base, so one change updates everything connected to it.
+- Team management covers seats: Beginner has three advisor seats, Professional ten, Enterprise twenty-five or more.
+- Password resets and sign-in problems are handled from the sign-in page; the reset link arrives by email.
+- Questions the page does not answer go to the microphone, which answers in six modes, or to the contact address on the page.
+- Nothing on this page is advice. It is the door to a person.
 
 ## Never, on any page
 
