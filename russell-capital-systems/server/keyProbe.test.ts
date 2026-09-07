@@ -26,6 +26,17 @@ describe("the key probe", () => {
     expect(by.fred).toMatchObject({ configured: true, status: "ok" });
     expect(JSON.stringify(results)).not.toMatch(/good-key|bad-key/);
   });
+  it("sends the Anthropic workspace header only when ANTHROPIC_WORKSPACE_ID is set", async () => {
+    const seen: Array<Record<string, string>> = [];
+    _setFetchForTests(async (url, init) => { if (url.includes("anthropic")) seen.push(init.headers); return { ok: true, status: 200 }; });
+    _setFredFetch(fredOk);
+    await probeKeys({ ANTHROPIC_API_KEY: "k" } as NodeJS.ProcessEnv, 1_000);
+    _resetProbeCacheForTests();
+    await probeKeys({ ANTHROPIC_API_KEY: "k", ANTHROPIC_WORKSPACE_ID: " wrksp_abc " } as NodeJS.ProcessEnv, 1_000);
+    expect(seen[0]!["anthropic-workspace-id"]).toBeUndefined();
+    expect(seen[1]!["anthropic-workspace-id"]).toBe("wrksp_abc");
+    expect(seen[1]!["anthropic-version"]).toBe("2023-06-01");
+  });
   it("uses keyless CSV mode for FRED when no key is set, and caches for ten minutes", async () => {
     let calls = 0;
     _setFetchForTests(async () => { calls++; return { ok: true, status: 200 }; });

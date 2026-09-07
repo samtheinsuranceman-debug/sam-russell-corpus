@@ -7,6 +7,7 @@
 // accepted it.
 // ============================================================
 import { fetchFredObservations, fredMode } from "./_core/fred";
+import { anthropicHeaders } from "./_core/anthropic";
 
 export type ProbeStatus = "ok" | "rejected" | "missing" | "error";
 export type ProbeResult = { id: string; label: string; envKey: string; configured: boolean; status: ProbeStatus; httpStatus: number | null; note: string };
@@ -25,8 +26,8 @@ export function safeReason(body: string, key: string): string {
 let _fetch: Fetcher = realFetch;
 export function _setFetchForTests(f: Fetcher | null) { _fetch = f ?? realFetch; }
 
-const PROBES: Array<{ id: string; label: string; envKey: string; url: string; headers: (k: string) => Record<string, string> }> = [
-  { id: "anthropic", label: "Claude (Anthropic)", envKey: "ANTHROPIC_API_KEY", url: "https://api.anthropic.com/v1/models", headers: (k) => ({ "x-api-key": k, "anthropic-version": "2023-06-01" }) },
+const PROBES: Array<{ id: string; label: string; envKey: string; url: string; headers: (k: string, env: NodeJS.ProcessEnv) => Record<string, string> }> = [
+  { id: "anthropic", label: "Claude (Anthropic)", envKey: "ANTHROPIC_API_KEY", url: "https://api.anthropic.com/v1/models", headers: (k, env) => anthropicHeaders(k, env) },
   { id: "openai", label: "ChatGPT (OpenAI)", envKey: "OPENAI_API_KEY", url: "https://api.openai.com/v1/models", headers: (k) => ({ authorization: `Bearer ${k}` }) },
   { id: "heygen", label: "HeyGen", envKey: "HEYGEN_API_KEY", url: "https://api.heygen.com/v2/user/remaining_quota", headers: (k) => ({ "x-api-key": k }) },
   { id: "resend", label: "Resend (email)", envKey: "RESEND_API_KEY", url: "https://api.resend.com/domains", headers: (k) => ({ authorization: `Bearer ${k}` }) },
@@ -44,7 +45,7 @@ export async function probeOne(p: (typeof PROBES)[number], env: NodeJS.ProcessEn
   const base = { id: p.id, label: p.label, envKey: p.envKey };
   if (!key) return { ...base, configured: false, status: "missing", httpStatus: null, note: `No variable named ${p.envKey} on this host. Add it in the environment panel with the key in the Value box.` };
   try {
-    const res = await _fetch(p.url, { headers: p.headers(key) });
+    const res = await _fetch(p.url, { headers: p.headers(key, env) });
     const c = classify(res.status);
     if (c.status !== "ok" && res.text) {
       const reason = safeReason(await res.text().catch(() => ""), key);
