@@ -131,6 +131,7 @@ export const FACT_FINDER_SECTIONS: SectionSpec[] = [
     fields: [
       { key: "ownsPrimaryHome", label: "Own your primary home?", type: "boolean", required: true },
       { key: "primaryHomeValue", label: "Primary home — current value", type: "money", showIf: { key: "ownsPrimaryHome", equals: [true] } },
+      { key: "primaryHomeZip", label: "Primary home — ZIP code", type: "text", showIf: { key: "ownsPrimaryHome", equals: ["Yes"] }, hint: "Five digits. The Zip Engine reads this home's price, rent and cost history from the public record." },
       { key: "primaryMortgageBalance", label: "Primary mortgage — balance", type: "money", showIf: { key: "ownsPrimaryHome", equals: [true] } },
       { key: "primaryMortgageRate", label: "Primary mortgage — interest rate", type: "percent", showIf: { key: "ownsPrimaryHome", equals: [true] } },
       { key: "primaryMortgageTermYears", label: "Original term (years)", type: "number", showIf: { key: "ownsPrimaryHome", equals: [true] } },
@@ -152,6 +153,7 @@ export const FACT_FINDER_SECTIONS: SectionSpec[] = [
       addLabel: "Add a property",
       fields: [
         { key: "type", label: "Type", type: "select", options: ["Rental", "Vacation", "Land", "Practice / office", "Other"] },
+        { key: "zip", label: "ZIP code", type: "text" },
         { key: "value", label: "Value", type: "money" },
         { key: "mortgageBalance", label: "Mortgage balance", type: "money" },
         { key: "rate", label: "Rate", type: "percent" },

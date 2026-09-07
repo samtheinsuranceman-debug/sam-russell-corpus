@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 136
+-- Tables: 137
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -2083,6 +2083,19 @@ CREATE TABLE `xp_transactions` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `xp_transactions_id` PRIMARY KEY(`id`)
 );
-CREATE INDEX `web_vitals_route` ON `web_vitals` (`route`,`metric`,`createdAt`);
+CREATE TABLE `zip_series` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`zip` varchar(5) NOT NULL,
+	`series` varchar(12) NOT NULL,
+	`startYear` int NOT NULL,
+	`values` json NOT NULL,
+	`asOf` varchar(10) NOT NULL,
+	`source` varchar(200) NOT NULL,
+	`meta` json,
+	`fetchedAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `zip_series_id` PRIMARY KEY(`id`),
+	CONSTRAINT `zip_series_once` UNIQUE(`zip`,`series`)
+);
+CREATE INDEX `zip_series_series` ON `zip_series` (`series`);
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -2636,3 +2636,22 @@ export const backupRuns = mysqlTable("backup_runs", {
   error:       varchar("error", { length: 500 }),
 }, (t) => ({ byTime: index("backup_runs_time").on(t.startedAt) }));
 export type BackupRunRow = typeof backupRuns.$inferSelect;
+
+// The Zip Engine: one row per zip per published series, the whole annual
+// history as a compact JSON array so 50,000 rows hold what would otherwise
+// be two million. Sources: FHFA five-digit-zip HPI (index), Zillow ZHVI
+// (dollars) and ZORI (rent dollars) by zip, and the national Freddie Mac
+// 30-year rate (zip "US", series "pmms"). Every row carries its as-of date
+// and the file it came from.
+export const zipSeries = mysqlTable("zip_series", {
+  id:        int("id").autoincrement().primaryKey(),
+  zip:       varchar("zip", { length: 5 }).notNull(),           // five-digit zip, or "US" for national series
+  series:    varchar("series", { length: 12 }).notNull(),       // hpi | zhvi | zori | pmms
+  startYear: int("startYear").notNull(),
+  values:    json("values").$type<Array<number | null>>().notNull(), // one entry per year from startYear
+  asOf:      varchar("asOf", { length: 10 }).notNull(),         // last period in the source (YYYY-MM-DD or YYYY)
+  source:    varchar("source", { length: 200 }).notNull(),      // file or series URL
+  meta:      json("meta").$type<{ state?: string; city?: string; county?: string; metro?: string }>(),
+  fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
+}, (t) => ({ once: uniqueIndex("zip_series_once").on(t.zip, t.series), bySeries: index("zip_series_series").on(t.series) }));
+export type ZipSeriesRow = typeof zipSeries.$inferSelect;

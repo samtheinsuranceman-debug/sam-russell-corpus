@@ -57,6 +57,12 @@ export default function UltraCalculatorPage() {
     m.mortgageKiller.enabled = true;
     m.realEstate.enabled = true;
     m.trustIUL.enabled = true;
+    // The Zip Engine hands over a sourced appreciation rate (?appreciation=3.85&zip=28401) in place of the flat default.
+    try {
+      const q = new URLSearchParams(window.location.search);
+      const a = Number(q.get("appreciation"));
+      if (q.has("appreciation") && Number.isFinite(a) && a > -50 && a < 50) m.realEstate.appreciationPctDefault = Math.round(a * 100) / 100;
+    } catch { /* server render or no window */ }
     return m;
   });
   const [windowLen, setWindowLen] = useState(10);
