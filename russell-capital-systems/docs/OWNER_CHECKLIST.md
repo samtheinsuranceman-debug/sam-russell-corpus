@@ -188,3 +188,11 @@ the FRED readers (inflation, Fed rate, money supply, Treasury yields):
 
 ## Not for you
 Manus's DNS push, the code, the tests, the deploys, the docs. Those are mine.
+
+## Key check: does each key actually work?
+Open https://russellcapitalsystems.com/api/trpc/ultra.keyProbe in any browser.
+The live server makes one read-only call per provider (Anthropic, OpenAI,
+HeyGen, Resend, FRED) and prints a status word for each: `ok` means the
+provider accepted the key, `rejected` means it refused it (wrong, revoked,
+or pasted with a stray character), `missing` means no variable of that
+name exists on the host. It never prints a key. Cached ten minutes.
