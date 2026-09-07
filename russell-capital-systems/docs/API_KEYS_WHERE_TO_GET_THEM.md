@@ -9,6 +9,17 @@ On that page: click **+ New Variable**, type the variable NAME exactly as
 written below, paste the VALUE, click **Add**. After the last one, click
 **Deploy** (top right, "Apply changes") so the app restarts with the keys.
 
+**The NAME is the left box, and it must be typed exactly as printed here:
+capital letters, digits and underscores only.** A name with a dot, a slash
+or a space (`Resend.com/apikey`, `Www.russellcapitalsystems.com`) stops
+every build on the service with "secret … not found" until it is deleted.
+The name never contains the website address or the key itself. The VALUE
+is the right box, and that is where the key goes.
+
+Never delete `PUBLIC_BASE_URL`, `VITE_APP_ID`, `DATABASE_URL`, `JWT_SECRET`
+or any variable that starts with `RAILWAY_`; the app does not start without
+them.
+
 Never paste a key into chat, a file, or the repo. A key that has been seen
 anywhere but that Variables page is burned: go back to the provider and
 rotate it.
