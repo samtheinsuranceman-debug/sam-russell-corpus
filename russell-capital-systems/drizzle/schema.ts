@@ -2755,3 +2755,25 @@ export const ltcRateFilings = mysqlTable("ltc_rate_filings", {
   createdAt:   timestamp("createdAt").defaultNow().notNull(),
 }, (t) => ({ byCarrier: index("ltc_rate_filings_carrier").on(t.carrier), byState: index("ltc_rate_filings_state").on(t.stateAbbr) }));
 export type LtcRateFilingRow = typeof ltcRateFilings.$inferSelect;
+
+// ─── Income for life: payout rows the owner types from a carrier's published rate sheet, each with the sheet's URL and date ───
+export const incomeRateSheets = mysqlTable("income_rate_sheets", {
+  id:            int("id").autoincrement().primaryKey(),
+  carrier:       varchar("carrier", { length: 120 }).notNull(),
+  product:       varchar("product", { length: 160 }).notNull(),
+  ageFrom:       int("ageFrom").notNull(),                              // age band the payout applies to (income start age)
+  ageTo:         int("ageTo").notNull(),
+  single:        boolean("single").default(true).notNull(),            // single life (true) or joint life (false)
+  payoutPct:     decimal("payoutPct", { precision: 6, scale: 3 }).notNull(),   // percent of the income base paid per year
+  bonusPct:      decimal("bonusPct", { precision: 6, scale: 2 }),      // income-base bonus at issue, percent, if the sheet prints one
+  deferralYears: int("deferralYears").default(0).notNull(),            // years deferred before the payout applies
+  principalContinuesToGrow: boolean("principalContinuesToGrow"),       // as the contract states it, or null when not typed
+  exitAfterYears: int("exitAfterYears"),                               // year after which the owner may leave without surrender charge, if the contract has such a provision
+  surrenderYears: int("surrenderYears"),                               // length of the surrender-charge schedule
+  rateSheetUrl:  varchar("rateSheetUrl", { length: 400 }).notNull(),   // the carrier's published rate sheet
+  asOf:          varchar("asOf", { length: 20 }).notNull(),            // the sheet's date
+  note:          text("note"),
+  addedBy:       int("addedBy"),
+  createdAt:     timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ byCarrier: index("income_rate_sheets_carrier").on(t.carrier), byAge: index("income_rate_sheets_age").on(t.ageFrom) }));
+export type IncomeRateSheetRow = typeof incomeRateSheets.$inferSelect;

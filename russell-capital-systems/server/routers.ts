@@ -21,6 +21,7 @@ import { enterpriseRouter } from "./enterpriseRouter";
 import { inheritanceRouter } from "./inheritanceRouter";
 import { iulLinksRouter } from "./iulLinksRouter";
 import { ltcRouter } from "./ltcRouter";
+import { incomeForLifeRouter } from "./incomeForLifeRouter";
 import { forgivenessRouter } from "./forgivenessRouter";
 import { taxScheduleRouter } from "./taxScheduleRouter";
 import { unaskedRouter } from "./unaskedRouter";
@@ -337,6 +338,7 @@ export const appRouter = router({
   inheritance: inheritanceRouter,
   iulLinks: iulLinksRouter,
   ltc: ltcRouter,
+  incomeLife: incomeForLifeRouter,
   forgiveness: forgivenessRouter,
   taxSchedule: taxScheduleRouter,
   unasked: unaskedRouter,
