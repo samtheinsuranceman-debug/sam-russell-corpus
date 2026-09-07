@@ -29,7 +29,8 @@ const GLOW_EM = "text-emerald-300 [text-shadow:_0_0_18px_rgba(52,211,153,.9),_0_
 // Grok's pair for the fifteen claims: title 01 "filament wrap" (the green plasma of the
 // Relief and Recovery plaque) and a glowing-white body. Same pair on every patent.
 const PLASMA = "text-[#eafff5] [text-shadow:_0_0_1px_#ffffff,_0_0_6px_#a7f3d0,_0_0_14px_#6ee7b7,_0_0_28px_#34d399,_0_0_56px_rgba(16,185,129,.85),_0_0_110px_rgba(16,185,129,.5)]";
-const WHITE_GLOW = "text-white [text-shadow:_0_0_8px_rgba(255,255,255,.6),_0_0_22px_rgba(255,255,255,.28),_0_0_36px_rgba(52,211,153,.22)]";
+// Body 02 on Grok's board: the white glow of the top and bottom plaques, subtle on purpose.
+const WHITE_GLOW = "text-[#f4f8f6] [text-shadow:_0_0_6px_rgba(255,255,255,.5),_0_0_18px_rgba(255,255,255,.22),_0_2px_12px_rgba(0,0,0,.8)]";
 
 function ManagedPortalAction({ href, children, className }: { href: string; children: React.ReactNode; className: string }) {
   const { isAuthenticated } = useAuth();
