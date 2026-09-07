@@ -50,12 +50,15 @@ describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the 
     expect(refs).toEqual(refs.slice().sort());
     for (const claim of manifesto.claims) {
       const sentences = (s: string) => (s.match(/[.!?](\s|$)/g) ?? []).length;
-      expect(sentences(claim.lead) + sentences(claim.detail), claim.name).toBeLessThanOrEqual(3);
+      // The owner's brief (September 2026): each claim explained in the fifth-grade
+      // voice of the patent workbook, at least two sentences, printed twice as big.
+      expect(sentences(claim.lead) + sentences(claim.detail), claim.name).toBeLessThanOrEqual(9);
       expect(sentences(claim.lead) + sentences(claim.detail), claim.name).toBeGreaterThanOrEqual(2);
-      expect(claim.lead.length, claim.name).toBeLessThan(260);
+      expect(claim.lead.length, claim.name).toBeLessThan(400);
     }
-    expect(manifesto.claims.map((c) => c.name)).toContain("Optimized Tax Waterfall Engine");
-    expect(manifesto.claims.map((c) => c.name)).toContain("Mortgage Killer");
+    expect(manifesto.claims.map((c) => c.name)).toContain("Tax-Free Retirement Income Waterfall Engine");
+    expect(manifesto.claims.map((c) => c.name)).toContain("Mortgage Elimination Through Real Estate Recycling and IUL Arbitrage");
+    expect(JSON.stringify(manifesto)).not.toMatch(/Russell Number/);
     expect(landing).toContain('id="claims"');
     expect(landing).toContain("manifesto.claims.map");
     expect(landing).toContain("Only at RCS");

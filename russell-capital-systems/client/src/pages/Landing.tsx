@@ -168,9 +168,9 @@ export default function Landing() {
                   <span className="text-[10px] font-extrabold uppercase tracking-[.2em] text-emerald-300/70 sm:mt-2 sm:block">Only at RCS</span>
                 </div>
                 <div>
-                  <h3 className="text-[11px] font-extrabold uppercase tracking-[.22em] text-emerald-300" style={{ fontFamily: "DM Sans, sans-serif" }}>{name}</h3>
-                  <p className={`mt-2 text-[clamp(1.2rem,2.2vw,1.85rem)] font-bold leading-[1.3] ${GLOW}`} style={{ fontFamily: "DM Sans, sans-serif" }}>{lead}</p>
-                  <p className="mt-3 max-w-3xl text-[1.02rem] leading-relaxed text-white/72">{detail}</p>
+                  <h3 className={`text-[clamp(2rem,4.4vw,3.8rem)] font-black leading-[1.05] tracking-[-.02em] ${GLOW_EM}`} style={{ fontFamily: "DM Sans, sans-serif" }}>{name}</h3>
+                  <p className={`mt-4 text-[clamp(1.9rem,3.4vw,2.9rem)] font-bold leading-[1.28] ${GLOW}`} style={{ fontFamily: "DM Sans, sans-serif" }}>{lead}</p>
+                  <p className="mt-4 max-w-4xl text-[clamp(1.5rem,2.4vw,2rem)] leading-[1.45] text-white/80">{detail}</p>
                 </div>
               </li>
             ))}
