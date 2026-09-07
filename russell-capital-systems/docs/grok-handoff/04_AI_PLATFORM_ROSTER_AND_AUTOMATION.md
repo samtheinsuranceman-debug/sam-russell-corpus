@@ -121,11 +121,14 @@ No follow-up ever contains a figure. Content: `followupContent()`.
 - `client/src/components/AnalyticsLoader.tsx` — PostHog, GA4, Sentry loader,
   Intercom from `integrations.public`.
 - `/portal/connections` — the live on/off board with a "Send test event" button.
-- Hosting: Railway project `russell-capital-systems` (web + MySQL). It deploys the
-  `deploy/rcs` branch (root `/`), which the `Publish deploy/rcs` GitHub Action
-  rebuilds from the `russell-capital-systems/` subtree on every push to `master`.
-  Railway snapshots the whole repo per build, and the corpus is ~800 MB, so the
-  full repo cannot be its source.
+- Hosting: Railway project `russell-capital-systems` (web + MySQL). Since
+  September 2026 it deploys `master` with the service Root Directory set to
+  `/russell-capital-systems` (watch pattern `/russell-capital-systems/**`, so
+  corpus-only commits do not trigger builds). Railway still snapshots the whole
+  repo (~1.2 GB) per build, which costs about a minute of unpacking; the
+  `deploy/rcs` branch (the subtree alone, rebuilt by the `Publish deploy/rcs`
+  Action on every push to `master`) remains available as a lighter source with
+  root `/`.
 - DNS + mail records to publish: `09_DNS_AND_MAIL_RECORDS.md`.
 
 ## 4. Tables added (`drizzle/schema.ts`, `database/rcs-schema.sql`)
