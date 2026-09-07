@@ -288,6 +288,28 @@ export async function allLevels(): Promise<Map<string, AnnualSeries>> {
   });
 }
 
+/** Every zip's rent series (Zillow ZORI), for the enterprise's candidate search. */
+export async function allRents(): Promise<Map<string, AnnualSeries>> {
+  return memoised("rents", async () => {
+    const db = await getDb();
+    const out = new Map<string, AnnualSeries>();
+    if (!db) return out;
+    for (const r of await db.select().from(zipSeries).where(eq(zipSeries.series, "zori"))) out.set(r.zip, toSeries(r));
+    return out;
+  });
+}
+
+/** Every zip's state, city, county and metro as Zillow prints them. */
+export async function allMeta(): Promise<Map<string, NonNullable<ZipSeriesRow["meta"]>>> {
+  return memoised("meta", async () => {
+    const db = await getDb();
+    const out = new Map<string, NonNullable<ZipSeriesRow["meta"]>>();
+    if (!db) return out;
+    for (const r of await db.select({ zip: zipSeries.zip, meta: zipSeries.meta }).from(zipSeries).where(eq(zipSeries.series, "zhvi"))) if (r.meta) out.set(r.zip, r.meta);
+    return out;
+  });
+}
+
 export async function pmms(): Promise<{ data: AnnualSeries; asOf: string } | null> {
   return memoised("pmms", async () => { const s = await seriesFor("US", "pmms"); return s ? { data: s.data, asOf: s.asOf } : null; });
 }

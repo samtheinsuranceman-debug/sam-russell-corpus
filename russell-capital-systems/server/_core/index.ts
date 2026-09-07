@@ -14,6 +14,7 @@ import { startHarvestSchedule } from "../forecastSources";
 import { startPulseSchedule } from "../power";
 import { startZipSchedule } from "../zipData";
 import { startCareerSchedule } from "../careerData";
+import { startHazardSchedule } from "../rentalEnterprise";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -101,6 +102,7 @@ async function startServer() {
     if (startZipSchedule()) console.log("[zip] data sweep scheduled every", process.env.ZIP_DATA_DAYS, "days");
     // Career ledger: CAREER_DATA_DAYS=90 re-reads BLS OEWS and NCES quarterly (off unless set; the owner can also press "Read the files now").
     if (startCareerSchedule()) console.log("[career] data sweep scheduled every", process.env.CAREER_DATA_DAYS, "days");
+    if (startHazardSchedule()) console.log("[hazards] FEMA county file scheduled every", process.env.HAZARD_DATA_DAYS, "days");
     // Daily database backup to S3-compatible storage or a local folder (BACKUP_DISABLED=1 turns it off).
     if (startBackupSchedule()) console.log("[backup] daily backup scheduled at", process.env.BACKUP_HOUR_UTC ?? 4, ":00 UTC");
   });

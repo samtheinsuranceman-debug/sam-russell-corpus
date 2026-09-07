@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 141
+-- Tables: 143
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -630,6 +630,20 @@ CREATE TABLE `consent_grants` (
 	`grantedByName` varchar(200),
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `consent_grants_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `county_hazards` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`fips` varchar(5) NOT NULL,
+	`stateAbbr` varchar(2) NOT NULL,
+	`county` varchar(80) NOT NULL,
+	`rating` varchar(24),
+	`ealBuilding` bigint,
+	`hazards` json NOT NULL,
+	`source` varchar(200) NOT NULL,
+	`asOf` varchar(20) NOT NULL,
+	`fetchedAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `county_hazards_id` PRIMARY KEY(`id`),
+	CONSTRAINT `county_hazards_once` UNIQUE(`fips`)
 );
 CREATE TABLE `daily_reward_claims` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -1957,6 +1971,21 @@ CREATE TABLE `users` (
 	`loginCount` int NOT NULL DEFAULT 0,
 	CONSTRAINT `users_id` PRIMARY KEY(`id`),
 	CONSTRAINT `users_openId_unique` UNIQUE(`openId`)
+);
+CREATE TABLE `vetted_attorneys` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`name` varchar(120) NOT NULL,
+	`firm` varchar(160),
+	`city` varchar(80),
+	`stateAbbr` varchar(2) NOT NULL,
+	`credentials` varchar(200),
+	`website` varchar(300),
+	`phone` varchar(40),
+	`email` varchar(160),
+	`note` text,
+	`addedBy` int,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `vetted_attorneys_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `video_engagement_events` (
 	`id` int AUTO_INCREMENT NOT NULL,

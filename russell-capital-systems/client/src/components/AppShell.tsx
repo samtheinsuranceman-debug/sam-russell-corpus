@@ -135,6 +135,7 @@ const NAV_SECTIONS: NavSection[] = [
     defaultOpen: true,
     items: [
       { path: "/portal/short-term-rentals", label: "Short-Term Rentals", icon: Home, color: "green" },
+      { path: "/portal/rental-enterprise", label: "The Rental Enterprise", icon: Home, color: "green" },
       { path: "/portal/str-strategy", label: "STR Tax Strategy", icon: Home, color: "green" },
       { path: "/portal/zip-engine", label: "The Zip Engine", icon: Home, color: "green" },
       { path: "/portal/house-recycling", label: "House Recycling", icon: Home, color: "green" },
