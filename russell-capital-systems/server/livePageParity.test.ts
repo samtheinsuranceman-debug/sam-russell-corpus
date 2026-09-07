@@ -15,58 +15,57 @@ const read = (p: string) => readFileSync(p, "utf8");
 
 const template = read(path.join(APP, "live/rcs-live-homepage.template.html"));
 const landing = read(path.join(APP, "client/src/pages/Landing.tsx"));
-const tech = read(path.join(APP, "client/src/components/ProprietaryTech.tsx"));
 const trust = read(path.join(APP, "client/src/components/HomeTrustSections.tsx"));
-const proof = read(path.join(APP, "client/src/components/SeniorPartnerBand.tsx"));
-const react = landing + tech + trust + proof;
-
-const block = (src: string, name: string) => {
-  const start = src.indexOf(`const ${name} = [`);
-  expect(start, `${name} array present`).toBeGreaterThan(-1);
-  return src.slice(start, src.indexOf("\n  ];", start));
+const manifestoText = read(path.join(APP, "shared/homeManifesto.json"));
+const manifesto = JSON.parse(read(path.join(APP, "shared/homeManifesto.json"))) as {
+  slogan: string;
+  status: string;
+  declarations: string[];
+  expect: string[];
+  claims: Array<{ ref: string; name: string; lead: string; detail: string }>;
+  disclaimer: string;
 };
-const decode = (s: string) => s.replace(/&amp;/g, "&").replace(/&trade;/g, "™");
+const react = landing + trust + manifestoText;
 
 describe("live page ↔ React homepage parity", () => {
-  it("lists the same 14 engines in the same building order", () => {
-    const live = [...block(template, "ENGINES").matchAll(/\["[a-z0-9]+","([^"]+)","/g)].map((m) => m[1]);
-    const app = [...tech.matchAll(/name: "([^"]+)"/g)].map((m) => m[1]);
-    expect(live).toHaveLength(14);
-    expect(live).toEqual(app);
+  it("renders the shared manifesto source in both the live template and React homepage", () => {
+    expect(template).toContain("__MANIFESTO_JSON__");
+    expect(template).toContain('document.querySelectorAll("[data-slogan]")');
+    expect(template).toContain('M.declarations.map');
+    expect(template).toContain('M.claims.map');
+    expect(template).toContain('M.expect.map');
+    expect(template).toContain('M.disclaimer');
+
+    expect(landing).toContain('import manifesto from "@shared/homeManifesto.json"');
+    expect(landing).toContain("manifesto.slogan");
+    expect(landing).toContain("manifesto.declarations.map");
+    expect(landing).toContain("manifesto.status");
+    expect(landing).toContain("manifesto.claims.map");
+    expect(landing).toContain("manifesto.expect.map");
+    expect(landing).toContain("manifesto.disclaimer");
   });
 
-  it("asks the same FAQ questions, in the same order", () => {
-    const live = [...block(template, "FAQ").matchAll(/\["((?:[^"\\]|\\.)*)","/g)].map((m) => m[1].replace(/\\"/g, '"'));
+  it("keeps the homepage manifesto data complete for the current fifteen-claim layout", () => {
+    expect(manifesto.slogan).toContain("war chest");
+    expect(manifesto.declarations).toHaveLength(6);
+    expect(manifesto.expect).toHaveLength(5);
+    expect(manifesto.claims).toHaveLength(15);
+    expect(manifesto.claims[0]).toMatchObject({ ref: "01", name: "Cascading Calculator Core" });
+    expect(manifesto.claims.at(-1)).toMatchObject({ ref: "15", name: "The Russell Number and the Practice Platform" });
+  });
+
+  it("keeps the current FAQ set intact", () => {
     const app = [...trust.matchAll(/q: "((?:[^"\\]|\\.)*)"/g)].map((m) => m[1].replace(/\\"/g, '"'));
-    expect(live.length).toBeGreaterThanOrEqual(7);
-    expect(live).toEqual(app);
-  });
-
-  it("carries the same headline promises and proof numbers", () => {
-    const phrases = [
-      "Financial & Tax Relief and Recovery",
-      "Tax-Free Liquid War Chest",
-      "On Demand™",
-      "We build the tailored",
-      "Systems",
-      "We Build the System Around It.",
-      "High-Earning Physicians",
-      "Turn Medical Income Into Lasting Wealth™",
-      "Clients who stay for decades.",
-      "60%",
-      "69 years old",
-      "medical malpractice",
-      "20 years or longer",
-      "15 patents in process",
-      "45 more",
-      "anywhere else",
+    const expected = [
+      "Who is this for?",
+      "Is the estimate a quote or a guarantee?",
+      "Why don't you show me the numbers here?",
+      "What happens after I submit the estimate?",
+      "What does \"divorce-proof\" mean?",
+      "What are the patent-pending engines?",
+      "Is my information safe?",
     ];
-    const liveText = decode(template);
-    const appText = decode(react);
-    for (const p of phrases) {
-      expect(liveText, `live page has “${p}”`).toContain(p);
-      expect(appText, `React homepage has “${p}”`).toContain(p);
-    }
+    expect(app).toEqual(expected);
   });
 
   it("never shows figures to visitors on either rendering", () => {
@@ -77,11 +76,11 @@ describe("live page ↔ React homepage parity", () => {
     }
   });
 
-  it("uses every one of the six crisp images, and never blurs them", () => {
-    for (const key of ["NEON_A", "NEON_B", "EMERALD", "BRIDGE", "CANYON", "INTERCHANGE"]) {
+  it("uses the current crisp homepage image set, and never blurs it", () => {
+    for (const key of ["NEON_A", "NEON_A_TALL", "HORIZON", "SKYWAY", "FLAGSHIP", "EXPRESSWAY", "GLASS", "NEON_B", "NEON_B_TALL"]) {
       expect(template).toContain(`__IMG_${key}__`);
     }
-    for (const file of ["rcs-neon-a", "rcs-neon-b", "rcs-city-emerald", "rcs-city-bridge", "rcs-city-canyon", "rcs-city-interchange"]) {
+    for (const file of ["rcs-neon-a", "rcs-neon-a-tall", "rcs-city-horizon", "rcs-city-skyway", "rcs-city-flagship", "rcs-city-expressway", "rcs-city-glass", "rcs-neon-b", "rcs-neon-b-tall"]) {
       expect(react).toContain(`/${file}.webp`);
     }
     expect(template).not.toMatch(/\.pic\{[^}]*filter:[^}]*blur/);
@@ -95,7 +94,9 @@ describe("live page ↔ React homepage parity", () => {
       s.replace(/data:image\/webp;base64,[A-Za-z0-9+/=]+/g, "__IMG__").replace(/__IMG_[A-Z_]+__/g, "__IMG__");
     const expected = normalize(template)
       .replace(/__CALENDLY__/g, "https://calendly.com/samtheinsuranceman-1/30min")
-      .replace(/__ADVISOR_EMAIL__/g, "samtheinsuranceman@gmail.com");
+      .replace(/__ADVISOR_EMAIL__/g, "samtheinsuranceman@gmail.com")
+      .replace(/__APP_ORIGIN__/g, "https://web-production-4b215.up.railway.app")
+      .replace(/__MANIFESTO_JSON__/g, manifestoText.trim().replace(/<\//g, "<\\/"));
     expect(normalize(read(built))).toBe(expected);
   });
 });

@@ -17,6 +17,21 @@ permissions:
 jobs:
   audit:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: rcs_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+    env:
+      DATABASE_URL: mysql://root@127.0.0.1:3306/rcs_test
     defaults:
       run:
         working-directory: russell-capital-systems
@@ -34,6 +49,8 @@ jobs:
           cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
       - name: Install
         run: pnpm install --frozen-lockfile
+      - name: Build test database schema
+        run: pnpm db:build
       - name: Known vulnerabilities (high/critical fail)
         run: pnpm audit --audit-level=high
       - name: Typecheck

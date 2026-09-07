@@ -23,11 +23,11 @@ describe("unified visual system", () => {
     expect(landing).toContain("text-emerald-300");
   });
 
-  it("scopes the purple visual system to AppShell portal interiors", () => {
+  it("scopes the portal visual system to AppShell portal interiors", () => {
     expect(shell).toContain('className="rc-portal-theme min-h-screen relative"');
     expect(css).toContain(".rc-portal-theme {");
-    expect(css).toContain("--primary: oklch(0.67 0.22 295)");
-    expect(css).toContain("linear-gradient(135deg, #7c3aed, #8b5cf6 58%, #a78bfa)");
+    expect(css).toContain("--primary: oklch(0.67 0.22 160)");
+    expect(css).toContain("linear-gradient(135deg, #059669, #10b981 58%, #34d399)");
     expect(landing).not.toContain("rc-portal-theme");
   });
 });

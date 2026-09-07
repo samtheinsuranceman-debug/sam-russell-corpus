@@ -80,8 +80,13 @@ export async function fetchFredObservations(series: FredSeries, limit = 1, env: 
   const key = env.FRED_API_KEY;
   if (!key) {
     // Monthly series need ~limit months of history; daily ones a few weeks. Ask for enough of either.
-    const rows = await fetchFredCsvSince(series, daysAgo(Math.max(45, limit * 32 + 14)));
-    return rows.reverse().slice(0, limit);
+    try {
+      const rows = await fetchFredCsvSince(series, daysAgo(Math.max(45, limit * 32 + 14)));
+      return rows.reverse().slice(0, limit);
+    } catch (error) {
+      console.warn("[FRED]", series, "csv unavailable:", String(error).slice(0, 120));
+      return [];
+    }
   }
   const url = `https://api.stlouisfed.org/fred/series/observations?series_id=${series}&api_key=${encodeURIComponent(key)}&file_type=json&sort_order=desc&limit=${Math.max(1, Math.min(120, limit + 5))}`;
   const res = await _fetch(url);
