@@ -189,8 +189,8 @@ export default function PatentShowcase() {
           Patent Applications & Proprietary Technology
         </h1>
         <p className="text-[#7a95b8] max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
-          Russell Capital Systems has filed {PATENTS.length} patent applications with the United States Patent and Trademark Office (USPTO),
-          covering {totalClaims} unique claims across our proprietary financial planning technology stack.
+          Russell Capital Systems has {PATENTS.length} patent applications in preparation for the United States Patent and Trademark Office (USPTO),
+          covering {totalClaims} unique claims across our proprietary financial planning technology stack. None has been filed yet.
         </p>
       </div>
 
@@ -199,8 +199,8 @@ export default function PatentShowcase() {
         <Card className="bg-gradient-to-br from-[#22c55e]/10 to-[#22c55e]/5 border-[#22c55e]/20">
           <CardContent className="pt-5 text-center">
             <div className="text-3xl font-bold text-[#22c55e]">{PATENTS.length}</div>
-            <div className="text-xs text-[#7a95b8] mt-1">Patent Applications Filed</div>
-            <div className="text-[10px] text-[#22c55e]/70 mt-2">USPTO Patent Pending</div>
+            <div className="text-xs text-[#7a95b8] mt-1">Patent Applications in Preparation</div>
+            <div className="text-[10px] text-[#22c55e]/70 mt-2">Patent pending, not yet filed</div>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20">
@@ -223,7 +223,7 @@ export default function PatentShowcase() {
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-white flex items-center gap-2">
           <FileText size={18} className="text-[#22c55e]" />
-          Filed Patent Applications
+          Patent Applications in Preparation
         </h2>
 
         {PATENTS.map((patent, idx) => {
@@ -252,7 +252,7 @@ export default function PatentShowcase() {
                     </span>
                   </div>
                   <h3 className="text-sm md:text-base font-bold text-white mt-1">{patent.title}</h3>
-                  <p className="text-xs text-[#7a95b8]">Filed {patent.filingDate} | USPTO</p>
+                  <p className="text-xs text-[#7a95b8]">Drafted {patent.filingDate} | Not yet filed with the USPTO</p>
                 </div>
                 <div className="flex-shrink-0">
                   {isExpanded ? <ChevronUp size={18} className="text-[#7a95b8]" /> : <ChevronDown size={18} className="text-[#7a95b8]" />}
@@ -295,8 +295,8 @@ export default function PatentShowcase() {
       {/* Legal Notice */}
       <div className="bg-[#0a1628] border border-[#12233e] rounded-xl p-5 text-center space-y-2">
         <p className="text-xs text-[#7a95b8]">
-          All patent applications are filed with the United States Patent and Trademark Office (USPTO).
-          "Patent Pending" status indicates applications have been submitted and are under review.
+          These patent applications are in preparation and have not yet been filed with the United States Patent and Trademark Office (USPTO).
+          "Patent Pending" here means the invention is documented and awaiting filing by counsel; it does not mean an application has been submitted or reviewed.
           The intellectual property described herein is owned by Russell Holdings Management LLC.
         </p>
         <p className="text-[10px] text-[#4a6a8e]">
