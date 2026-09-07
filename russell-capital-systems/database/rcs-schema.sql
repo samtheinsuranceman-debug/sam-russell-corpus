@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 137
+-- Tables: 141
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -208,6 +208,40 @@ CREATE TABLE `campaign_enrollments` (
 	`lastSentAt` timestamp,
 	`nextSendAt` timestamp,
 	CONSTRAINT `campaign_enrollments_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `career_series` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`series` varchar(32) NOT NULL,
+	`area` varchar(8) NOT NULL,
+	`startYear` int NOT NULL,
+	`values` json NOT NULL,
+	`asOf` varchar(10) NOT NULL,
+	`source` varchar(200) NOT NULL,
+	`fetchedAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `career_series_id` PRIMARY KEY(`id`),
+	CONSTRAINT `career_series_once` UNIQUE(`series`,`area`)
+);
+CREATE TABLE `career_stats` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`year` int NOT NULL,
+	`area` varchar(8) NOT NULL,
+	`areaTitle` varchar(60) NOT NULL,
+	`occCode` varchar(10) NOT NULL,
+	`occTitle` varchar(140) NOT NULL,
+	`employment` int,
+	`hourlyMean` decimal(8,2),
+	`annualMean` int,
+	`p10` int,
+	`p25` int,
+	`p50` int,
+	`p75` int,
+	`p90` int,
+	`topCoded` boolean NOT NULL DEFAULT false,
+	`rankInArea` int,
+	`source` varchar(200) NOT NULL,
+	`fetchedAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `career_stats_id` PRIMARY KEY(`id`),
+	CONSTRAINT `career_stats_once` UNIQUE(`year`,`area`,`occCode`)
 );
 CREATE TABLE `carrier_overrides` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -736,6 +770,16 @@ CREATE TABLE `error_logs` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `error_logs_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `exit_ratings` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`path` varchar(200) NOT NULL,
+	`score` int NOT NULL,
+	`before` int,
+	`note` text,
+	`userId` int,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `exit_ratings_id` PRIMARY KEY(`id`)
+);
 CREATE TABLE `fact_suggestions` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`subject` varchar(40) NOT NULL,
@@ -1237,6 +1281,17 @@ CREATE TABLE `payment_disclosures` (
 	`agreedAt` timestamp NOT NULL,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `payment_disclosures_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `peer_submissions` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`specialty` varchar(48) NOT NULL,
+	`state` varchar(2),
+	`fields` json NOT NULL,
+	`computed` json,
+	`vision` json,
+	`userId` int,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `peer_submissions_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `plan_automations` (
 	`id` int AUTO_INCREMENT NOT NULL,
