@@ -29,7 +29,7 @@ const generateMockTimeSeriesData = (days: number) => {
   });
 };
 
-const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'];
+const COLORS = ['#10b981', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'];
 
 export default function TeamManagement() {
   const { user } = useAuth();
@@ -698,8 +698,8 @@ export default function TeamManagement() {
                               ${(activitySummary.reduce((s, a) => s + (a.aum || 0), 0) / 1000000).toFixed(1)}M
                             </h3>
                           </div>
-                          <div className="p-3 bg-purple-500/10 rounded-lg">
-                            <TrendingUp className="w-5 h-5 text-purple-500" />
+                          <div className="p-3 bg-emerald-500/10 rounded-lg">
+                            <TrendingUp className="w-5 h-5 text-emerald-500" />
                           </div>
                         </div>
                         <div className="mt-4 flex items-center text-sm">
@@ -776,7 +776,7 @@ export default function TeamManagement() {
                     <Card className="col-span-1">
                       <CardHeader>
                         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                          <BarChart3 className="w-5 h-5 text-purple-500" />
+                          <BarChart3 className="w-5 h-5 text-emerald-500" />
                           Revenue & AUM Growth
                         </CardTitle>
                         <CardDescription>Monthly financial performance metrics</CardDescription>
@@ -793,7 +793,7 @@ export default function TeamManagement() {
                                 contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: '8px', border: '1px solid #e5e7eb' }}
                               />
                               <Legend />
-                              <Bar yAxisId="left" dataKey="revenue" name="Revenue ($K)" barSize={20} fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                              <Bar yAxisId="left" dataKey="revenue" name="Revenue ($K)" barSize={20} fill="#10b981" radius={[4, 4, 0, 0]} />
                               <Line yAxisId="right" type="monotone" dataKey="aum" name="AUM ($M)" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} />
                             </ComposedChart>
                           </ResponsiveContainer>
@@ -1311,7 +1311,7 @@ export default function TeamManagement() {
                                 <p className="text-xs text-muted-foreground">Time Spent</p>
                               </div>
                               <div className="p-3 rounded-lg bg-muted/30 border border-border/50 flex flex-col items-center justify-center text-center">
-                                <Layers className="w-5 h-5 text-purple-500 mb-1" />
+                                <Layers className="w-5 h-5 text-emerald-500 mb-1" />
                                 <p className="text-2xl font-bold">{agent.totalPageViews}</p>
                                 <p className="text-xs text-muted-foreground">Page Views</p>
                               </div>
@@ -1726,7 +1726,7 @@ export default function TeamManagement() {
                   </div>
                   <div className="p-4 bg-muted/30 rounded-lg border text-center">
                     <p className="text-sm text-muted-foreground mb-1">Clients</p>
-                    <p className="text-2xl font-bold text-purple-600">{selectedMemberDetails.activity?.clientsManaged || 0}</p>
+                    <p className="text-2xl font-bold text-emerald-600">{selectedMemberDetails.activity?.clientsManaged || 0}</p>
                   </div>
                   <div className="p-4 bg-muted/30 rounded-lg border text-center">
                     <p className="text-sm text-muted-foreground mb-1">Sessions</p>

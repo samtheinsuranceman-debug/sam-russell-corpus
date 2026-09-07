@@ -39,7 +39,7 @@ import { FactFinderBadge } from "@/contexts/ClientDataContext";
    🟢 green    → Dashboard & Home (core hub)
    🔵 blue     → Client Management & CRM
    🔷 cyan     → Calculators & Number Crunchers
-   🟣 purple   → Intelligence Tools
+   🟢 emerald   → Intelligence Tools
    🟡 amber    → Retirement & Income Planning
    🟠 orange   → Tax & Estate Strategy
    💚 emerald  → Annuities & Insurance Products
@@ -68,7 +68,7 @@ const COLOR_MAP: Record<ColorCategory, string> = {
   green:   "text-emerald-300",
   blue:    "text-blue-300",
   cyan:    "text-cyan-300",
-  purple:  "text-violet-300",
+  purple:  "text-emerald-300",
   amber:   "text-amber-300",
   orange:  "text-orange-300",
   emerald: "text-emerald-200",
@@ -84,7 +84,7 @@ const COLOR_DOT_MAP: Record<ColorCategory, string> = {
   green:   "bg-emerald-300",
   blue:    "bg-blue-300",
   cyan:    "bg-cyan-300",
-  purple:  "bg-violet-300",
+  purple:  "bg-emerald-300",
   amber:   "bg-amber-300",
   orange:  "bg-orange-300",
   emerald: "bg-emerald-200",
@@ -100,7 +100,7 @@ const COLOR_BORDER_MAP: Record<ColorCategory, string> = {
   green:   "border-emerald-400/20",
   blue:    "border-blue-400/20",
   cyan:    "border-cyan-400/20",
-  purple:  "border-violet-400/20",
+  purple:  "border-emerald-400/20",
   amber:   "border-amber-400/20",
   orange:  "border-orange-400/20",
   emerald: "border-emerald-300/20",

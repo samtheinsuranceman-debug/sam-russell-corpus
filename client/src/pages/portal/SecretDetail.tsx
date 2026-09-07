@@ -30,7 +30,7 @@ function getImpactColor(score: number) {
   if (score >= 11) return { text: "text-yellow-400", bg: "bg-yellow-500/10", border: "border-yellow-500/20", hex: "#f59e0b" };
   if (score >= 10) return { text: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20", hex: "#22c55e" };
   if (score >= 9) return { text: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20", hex: "#3b82f6" };
-  return { text: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/20", hex: "#a855f7" };
+  return { text: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20", hex: "#a855f7" };
 }
 
 /* ─── ROI Calculator ─── */
@@ -66,13 +66,13 @@ function ROICalculator({ strategy }: { strategy: any }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
       <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-        <Calculator className="w-4 h-4 text-purple-400" /> ROI Projection Calculator
+        <Calculator className="w-4 h-4 text-emerald-400" /> ROI Projection Calculator
       </h3>
       <div className="grid grid-cols-3 gap-3 mb-4">
         <div>
           <label className="text-[10px] text-gray-500 block mb-1">Years to Project</label>
-          <input type="range" min={5} max={50} value={years} onChange={(e) => setYears(Number(e.target.value))} className="w-full accent-purple-500" />
-          <span className="text-xs text-purple-400">{years} years</span>
+          <input type="range" min={5} max={50} value={years} onChange={(e) => setYears(Number(e.target.value))} className="w-full accent-emerald-500" />
+          <span className="text-xs text-emerald-400">{years} years</span>
         </div>
         <div>
           <label className="text-[10px] text-gray-500 block mb-1">Annual Return %</label>
@@ -81,7 +81,7 @@ function ROICalculator({ strategy }: { strategy: any }) {
         </div>
         <div className="text-center">
           <p className="text-[10px] text-gray-500 mb-1">Strategy ROI Advantage</p>
-          <p className="text-2xl font-bold text-purple-400">+{roiPct}%</p>
+          <p className="text-2xl font-bold text-emerald-400">+{roiPct}%</p>
         </div>
       </div>
       <ResponsiveContainer width="100%" height={250}>
@@ -95,9 +95,9 @@ function ROICalculator({ strategy }: { strategy: any }) {
         </AreaChart>
       </ResponsiveContainer>
       <div className="grid grid-cols-3 gap-3 mt-3">
-        <div className="rounded-lg bg-purple-500/10 border border-purple-500/20 p-2 text-center">
+        <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-2 text-center">
           <p className="text-[10px] text-gray-500">With Strategy ({years}yr)</p>
-          <p className="text-sm font-bold text-purple-400">{formatMoney(finalDiff.withStrategy)}</p>
+          <p className="text-sm font-bold text-emerald-400">{formatMoney(finalDiff.withStrategy)}</p>
         </div>
         <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-2 text-center">
           <p className="text-[10px] text-gray-500">Without Strategy</p>
@@ -195,15 +195,15 @@ function FactFinder({ strategy }: { strategy: any }) {
   const taxEfficiency = totalDeployed > 0 ? ((totalTaxSaved / totalDeployed) * 100).toFixed(1) : "0";
 
   return (
-    <div className="rounded-xl border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-5">
+    <div className="rounded-xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 to-transparent p-5">
       <button onClick={() => setExpanded(!expanded)} className="w-full flex items-center justify-between text-sm font-semibold text-white">
-        <span className="flex items-center gap-2"><FileText className="w-4 h-4 text-purple-400" /> Client Fact Finder</span>
+        <span className="flex items-center gap-2"><FileText className="w-4 h-4 text-emerald-400" /> Client Fact Finder</span>
         {expanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
       </button>
       {expanded && (
         <div className="mt-4 space-y-4">
           <div>
-            <h4 className="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-2">Client Demographics</h4>
+            <h4 className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">Client Demographics</h4>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {[
                 { label: "Client Name", value: cp?.name },
@@ -221,7 +221,7 @@ function FactFinder({ strategy }: { strategy: any }) {
             </div>
           </div>
           <div>
-            <h4 className="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-2">Financial Snapshot</h4>
+            <h4 className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">Financial Snapshot</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="rounded-lg bg-white/5 border border-white/10 p-3">
                 <p className="text-[10px] text-gray-500">Annual Income</p>
@@ -242,7 +242,7 @@ function FactFinder({ strategy }: { strategy: any }) {
             </div>
           </div>
           <div>
-            <h4 className="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-2">Strategy Performance</h4>
+            <h4 className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">Strategy Performance</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="rounded-lg bg-white/5 border border-white/10 p-3">
                 <p className="text-[10px] text-gray-500">Net Growth</p>
@@ -254,7 +254,7 @@ function FactFinder({ strategy }: { strategy: any }) {
               </div>
               <div className="rounded-lg bg-white/5 border border-white/10 p-3">
                 <p className="text-[10px] text-gray-500">Tax Efficiency</p>
-                <p className="text-sm text-purple-400 font-bold">{taxEfficiency}%</p>
+                <p className="text-sm text-emerald-400 font-bold">{taxEfficiency}%</p>
               </div>
               <div className="rounded-lg bg-white/5 border border-white/10 p-3">
                 <p className="text-[10px] text-gray-500">Total Deployed</p>
@@ -263,7 +263,7 @@ function FactFinder({ strategy }: { strategy: any }) {
             </div>
           </div>
           <div>
-            <h4 className="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-2">Goals & Objectives</h4>
+            <h4 className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">Goals & Objectives</h4>
             <div className="space-y-2">
               {[
                 { goal: "Minimize federal & state income tax liability", status: "achieved" },
@@ -297,7 +297,7 @@ export default function SecretDetail() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
         <p className="text-gray-400">Strategy not found</p>
-        <Link href="/portal/secret-secrets" className="text-purple-400 hover:underline text-sm">Back to all secrets</Link>
+        <Link href="/portal/secret-secrets" className="text-emerald-400 hover:underline text-sm">Back to all secrets</Link>
       </div>
     );
   }
@@ -369,16 +369,16 @@ export default function SecretDetail() {
     <div className="space-y-8 max-w-6xl mx-auto">
       {/* Back nav */}
       <div className="flex items-center justify-between">
-        <Link href="/portal/secret-secrets" className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-purple-400 transition-colors">
+        <Link href="/portal/secret-secrets" className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-emerald-400 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to Secret Strategies
         </Link>
         <PDFExportButton data={strategy} type="strategy" />
       </div>
 
       {/* Header */}
-      <div className="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-[#1a0d2e] via-[#0a1628] to-[#1a0d2e] p-6 md:p-8">
+      <div className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-[#1a0d2e] via-[#0a1628] to-[#1a0d2e] p-6 md:p-8">
         <div className="flex items-center gap-3 mb-3">
-          <span className="text-xs font-bold text-purple-400">Secret #{strategy.id}</span>
+          <span className="text-xs font-bold text-emerald-400">Secret #{strategy.id}</span>
           <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${impact.text} ${impact.bg} ${impact.border}`}>
             <Zap className="w-3 h-3" /> Impact: {strategy.impactScore}/12
           </span>
@@ -398,7 +398,7 @@ export default function SecretDetail() {
         {cp && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-purple-400 flex-shrink-0" />
+              <User className="w-4 h-4 text-emerald-400 flex-shrink-0" />
               <div><p className="text-[10px] text-gray-500">Client</p><p className="text-sm text-white">{cp.name}</p></div>
             </div>
             <div className="flex items-center gap-2">
@@ -463,8 +463,8 @@ export default function SecretDetail() {
             </div>
           )}
           {strategy.netWorthMultiplier && (
-            <div className="rounded-xl border border-purple-500/20 bg-purple-500/5 p-3 text-center">
-              <p className="text-lg font-bold text-purple-400">{strategy.netWorthMultiplier}x</p>
+            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
+              <p className="text-lg font-bold text-emerald-400">{strategy.netWorthMultiplier}x</p>
               <p className="text-[10px] text-gray-500">Net Worth Multiplier</p>
             </div>
           )}
@@ -477,7 +477,7 @@ export default function SecretDetail() {
       {/* Strategy Description */}
       <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
         <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-purple-400" /> Strategy Deep Dive
+          <BookOpen className="w-4 h-4 text-emerald-400" /> Strategy Deep Dive
         </h3>
         <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{strategy.description}</p>
         {strategy.ircCodes && strategy.ircCodes.length > 0 && (
@@ -485,7 +485,7 @@ export default function SecretDetail() {
             <Scale className="w-4 h-4 text-gray-500" />
             <span className="text-xs text-gray-500">IRC References:</span>
             {strategy.ircCodes.map((code: string, i: number) => (
-              <span key={i} className="text-xs px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">
+              <span key={i} className="text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 §{code}
               </span>
             ))}
@@ -537,7 +537,7 @@ export default function SecretDetail() {
           {/* Cumulative Tax Savings vs Net Worth Growth */}
           <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <Activity className="w-4 h-4 text-purple-400" /> Cumulative Tax Savings vs. Net Worth Growth
+              <Activity className="w-4 h-4 text-emerald-400" /> Cumulative Tax Savings vs. Net Worth Growth
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <ComposedChart data={cumulativeData}>
@@ -663,21 +663,21 @@ export default function SecretDetail() {
 
       {/* Time Horizon */}
       {strategy.timeHorizon && (
-        <div className="rounded-xl border border-purple-500/10 bg-purple-500/5 p-4 text-center">
-          <p className="text-sm text-purple-400 font-semibold">Estimated Time Horizon: {strategy.timeHorizon}</p>
+        <div className="rounded-xl border border-emerald-500/10 bg-emerald-500/5 p-4 text-center">
+          <p className="text-sm text-emerald-400 font-semibold">Estimated Time Horizon: {strategy.timeHorizon}</p>
         </div>
       )}
 
       {/* Navigation */}
       <div className="flex items-center justify-between">
         {strategy.id > 1 && (
-          <Link href={`/portal/secret-secrets/${strategy.id - 1}`} className="text-sm text-gray-400 hover:text-purple-400 transition-colors">
+          <Link href={`/portal/secret-secrets/${strategy.id - 1}`} className="text-sm text-gray-400 hover:text-emerald-400 transition-colors">
             ← Secret #{strategy.id - 1}
           </Link>
         )}
         <div className="flex-1" />
         {strategy.id < 100 && (
-          <Link href={`/portal/secret-secrets/${strategy.id + 1}`} className="text-sm text-gray-400 hover:text-purple-400 transition-colors">
+          <Link href={`/portal/secret-secrets/${strategy.id + 1}`} className="text-sm text-gray-400 hover:text-emerald-400 transition-colors">
             Secret #{strategy.id + 1} →
           </Link>
         )}

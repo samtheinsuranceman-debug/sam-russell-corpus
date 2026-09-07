@@ -330,7 +330,7 @@ export default function EstateTax() {
             <TabsTrigger value="deductions" className="text-xs sm:text-sm px-3 py-2 flex-none whitespace-nowrap rounded-lg font-semibold data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-slate-200 data-[state=inactive]:hover:bg-slate-700/60 transition-all">
               <Scale className="h-3.5 w-3.5 mr-1.5 hidden sm:inline" />Deductions
             </TabsTrigger>
-            <TabsTrigger value="ilit" className="text-xs sm:text-sm px-3 py-2 flex-none whitespace-nowrap rounded-lg font-semibold data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-slate-200 data-[state=inactive]:hover:bg-slate-700/60 transition-all">
+            <TabsTrigger value="ilit" className="text-xs sm:text-sm px-3 py-2 flex-none whitespace-nowrap rounded-lg font-semibold data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-slate-200 data-[state=inactive]:hover:bg-slate-700/60 transition-all">
               <Shield className="h-3.5 w-3.5 mr-1.5 hidden sm:inline" />ILIT
             </TabsTrigger>
             <TabsTrigger value="gifting" className="text-xs sm:text-sm px-3 py-2 flex-none whitespace-nowrap rounded-lg font-semibold data-[state=active]:bg-pink-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-slate-200 data-[state=inactive]:hover:bg-slate-700/60 transition-all">
@@ -585,7 +585,7 @@ export default function EstateTax() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <AssetWidget label="Real Estate" icon={Home} value={realEstate} onChange={setRealEstate} color="#3b82f6" description="Primary home, vacation, rental properties" />
-                  <AssetWidget label="Investments" icon={TrendingUp} value={investments} onChange={setInvestments} color="#8b5cf6" description="Stocks, bonds, mutual funds, ETFs" />
+                  <AssetWidget label="Investments" icon={TrendingUp} value={investments} onChange={setInvestments} color="#10b981" description="Stocks, bonds, mutual funds, ETFs" />
                   <AssetWidget label="Retirement Accounts" icon={DollarSign} value={retirementAccounts} onChange={setRetirementAccounts} color="#f59e0b" description="IRA, 401(k), 403(b) — fully taxable" />
                   <AssetWidget label="Business Interests" icon={Briefcase} value={businessInterests} onChange={setBusinessInterests} color="#06b6d4" description="LLC, S-Corp, partnership interests" />
                   <AssetWidget label="Life Insurance" icon={Heart} value={lifeInsurance} onChange={setLifeInsurance} color="#ef4444" description={useILIT ? "Excluded via ILIT" : "Included in estate"} />
@@ -737,7 +737,7 @@ export default function EstateTax() {
             <Card className="bg-slate-800/50 border-slate-700/50">
               <CardHeader>
                 <CardTitle className="text-lg text-slate-100 flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-purple-400" /> Irrevocable Life Insurance Trust (ILIT)
+                  <Shield className="h-5 w-5 text-emerald-400" /> Irrevocable Life Insurance Trust (ILIT)
                 </CardTitle>
                 <CardDescription>
                   An ILIT removes life insurance death benefits from your taxable estate, potentially saving hundreds of thousands in estate taxes
@@ -757,10 +757,10 @@ export default function EstateTax() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 p-4 rounded-xl border border-purple-500/30 bg-purple-500/5">
+                <div className="flex items-center gap-3 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5">
                   <Switch checked={useILIT} onCheckedChange={setUseILIT} />
                   <div>
-                    <Label className="text-sm font-medium text-purple-300 cursor-pointer">Place life insurance in ILIT</Label>
+                    <Label className="text-sm font-medium text-emerald-300 cursor-pointer">Place life insurance in ILIT</Label>
                     <p className="text-xs text-slate-400 mt-0.5">
                       {useILIT
                         ? `${fmt(lifeInsurance + iulDeathBenefit)} excluded from taxable estate`
@@ -814,7 +814,7 @@ export default function EstateTax() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {[
                     { step: "1", title: "Create the Trust", desc: "Establish an irrevocable trust and name a trustee. You transfer ownership of life insurance policies to the trust.", color: "#3b82f6" },
-                    { step: "2", title: "Fund Premiums", desc: "Make annual gifts to the trust to cover premiums. Crummey notices give beneficiaries withdrawal rights, qualifying for annual gift exclusion.", color: "#8b5cf6" },
+                    { step: "2", title: "Fund Premiums", desc: "Make annual gifts to the trust to cover premiums. Crummey notices give beneficiaries withdrawal rights, qualifying for annual gift exclusion.", color: "#10b981" },
                     { step: "3", title: "Tax-Free Distribution", desc: "Upon death, the death benefit passes to the trust — outside your taxable estate. The trustee distributes to beneficiaries tax-free.", color: "#22c55e" },
                   ].map((item) => (
                     <div key={item.step} className="p-4 rounded-xl border border-slate-700/40 bg-slate-900/40">
@@ -1033,7 +1033,7 @@ export default function EstateTax() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {[
                         { title: "Maximize Annual Gifts", desc: "Gift $18,000 per recipient per year to reduce estate size without using lifetime exemption.", icon: Gift, color: "#ec4899" },
-                        { title: "Establish an ILIT", desc: "Move life insurance out of your estate before the exemption drops. This is especially critical for large policies.", icon: Shield, color: "#8b5cf6" },
+                        { title: "Establish an ILIT", desc: "Move life insurance out of your estate before the exemption drops. This is especially critical for large policies.", icon: Shield, color: "#10b981" },
                         { title: "Use Lifetime Exemption", desc: "Consider making large gifts now while the $13.61M exemption is available. The IRS has confirmed gifts made under current law won't be clawed back.", icon: DollarSign, color: "#22c55e" },
                         { title: "Roth Conversions", desc: "Convert traditional IRA to Roth to reduce estate size (pay tax now at known rates) and provide tax-free inheritance.", icon: TrendingUp, color: "#3b82f6" },
                       ].map((item, i) => (
@@ -1061,7 +1061,7 @@ export default function EstateTax() {
                 {/* Key Milestones */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   <StatCard label="Estate at Age 70" value={fmtShort(result.wealthProjections.find((p) => p.age === 70)?.grossEstate ?? 0)} color="#3b82f6" icon={TrendingUp} />
-                  <StatCard label="Estate at Age 80" value={fmtShort(result.wealthProjections.find((p) => p.age === 80)?.grossEstate ?? 0)} color="#8b5cf6" icon={TrendingUp} />
+                  <StatCard label="Estate at Age 80" value={fmtShort(result.wealthProjections.find((p) => p.age === 80)?.grossEstate ?? 0)} color="#10b981" icon={TrendingUp} />
                   <StatCard label="Estate at Age 90" value={fmtShort(result.wealthProjections.find((p) => p.age === 90)?.grossEstate ?? 0)} color="#f59e0b" icon={TrendingUp} />
                   <StatCard label="Estate at Age 100" value={fmtShort(result.wealthProjections[result.wealthProjections.length - 1]?.grossEstate ?? 0)} color="#ef4444" icon={TrendingUp} />
                 </div>
@@ -1174,7 +1174,7 @@ export default function EstateTax() {
                   <StatCard label="Needed at Peak" value={fmtShort(result.insuranceAnalysis.coverageNeededAtPeak)} color="#ef4444" icon={AlertTriangle} subtitle={`Age ${result.insuranceAnalysis.peakTaxAge}`} />
                   <StatCard label="Coverage Gap" value={fmtShort(Math.max(0, result.insuranceAnalysis.coverageGap))} color={result.insuranceAnalysis.coverageGap > 0 ? "#ef4444" : "#22c55e"} icon={result.insuranceAnalysis.coverageGap > 0 ? AlertTriangle : Shield} />
                   <StatCard label="Peak Tax" value={fmtShort(result.insuranceAnalysis.peakTaxAmount)} color="#f59e0b" icon={Calculator} subtitle={`Estate: ${fmtShort(result.insuranceAnalysis.peakEstateValue)}`} />
-                  <StatCard label="Taxable at Age" value={result.insuranceAnalysis.yearsUntilTaxable >= 0 ? String(result.insuranceAnalysis.ageWhenTaxable) : "Never"} color="#8b5cf6" icon={TrendingUp} subtitle={result.insuranceAnalysis.yearsUntilTaxable >= 0 ? `In ${result.insuranceAnalysis.yearsUntilTaxable} years` : "Under exemption"} />
+                  <StatCard label="Taxable at Age" value={result.insuranceAnalysis.yearsUntilTaxable >= 0 ? String(result.insuranceAnalysis.ageWhenTaxable) : "Never"} color="#10b981" icon={TrendingUp} subtitle={result.insuranceAnalysis.yearsUntilTaxable >= 0 ? `In ${result.insuranceAnalysis.yearsUntilTaxable} years` : "Under exemption"} />
                 </div>
 
                 {/* Coverage Gap Alert */}
@@ -1265,7 +1265,7 @@ export default function EstateTax() {
                 </Card>
 
                 {/* Recommendations */}
-                <Card className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border-indigo-500/30">
+                <Card className="bg-gradient-to-br from-indigo-500/10 to-emerald-500/10 border-indigo-500/30">
                   <CardHeader>
                     <CardTitle className="text-lg text-slate-100 flex items-center gap-2">
                       <Lightbulb className="h-5 w-5 text-amber-400" /> Insurance Recommendations
@@ -1278,7 +1278,7 @@ export default function EstateTax() {
                         { condition: true, text: `Consider a second-to-die policy for ${fmt(result.insuranceAnalysis.coverageNeededAtPeak)} — premiums are lower since it pays on the second spouse's death.`, color: "#3b82f6" },
                         { condition: result.insuranceAnalysis.yearsUntilTaxable >= 0, text: `Your estate becomes taxable at age ${result.insuranceAnalysis.ageWhenTaxable}. Lock in coverage now while premiums are lower.`, color: "#f59e0b" },
                         { condition: true, text: "Place all life insurance in an Irrevocable Life Insurance Trust (ILIT) to exclude death benefits from your taxable estate.", color: "#22c55e" },
-                        { condition: numberOfBeneficiaries > 2, text: `With ${numberOfBeneficiaries} beneficiaries, a properly structured ILIT ensures equal, tax-free distribution.`, color: "#8b5cf6" },
+                        { condition: numberOfBeneficiaries > 2, text: `With ${numberOfBeneficiaries} beneficiaries, a properly structured ILIT ensures equal, tax-free distribution.`, color: "#10b981" },
                       ].filter((r) => r.condition).map((rec, i) => (
                         <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/40">
                           <ArrowRight className="h-4 w-4 mt-0.5 shrink-0" style={{ color: rec.color }} />

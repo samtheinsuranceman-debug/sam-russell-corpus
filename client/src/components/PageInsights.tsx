@@ -83,7 +83,7 @@ export function PageInsights({ pageId, activeSubTab, className = "" }: PageInsig
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all hover:scale-105 ${className}`}
+          className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-indigo-600 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all hover:scale-105 ${className}`}
         >
           <Lightbulb className="w-4 h-4" />
           <span className="text-sm font-medium">Page Insights</span>
@@ -99,8 +99,8 @@ export function PageInsights({ pageId, activeSubTab, className = "" }: PageInsig
           {/* Header */}
           <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-3 bg-zinc-900/95 backdrop-blur-xl border-b border-zinc-700/50">
             <div className="flex items-center gap-3">
-              <div className="p-1.5 rounded-lg bg-purple-500/20">
-                <Lightbulb className="w-4 h-4 text-purple-400" />
+              <div className="p-1.5 rounded-lg bg-emerald-500/20">
+                <Lightbulb className="w-4 h-4 text-emerald-400" />
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-white">{tab.name}</h3>
@@ -256,7 +256,7 @@ export function PageInsights({ pageId, activeSubTab, className = "" }: PageInsig
                         key={st.name}
                         className={`flex items-center justify-between px-3 py-1.5 rounded-lg border ${
                           activeSubTab === st.name
-                            ? "bg-purple-500/10 border-purple-500/30"
+                            ? "bg-emerald-500/10 border-emerald-500/30"
                             : "bg-zinc-800/50 border-zinc-700/30"
                         }`}
                       >

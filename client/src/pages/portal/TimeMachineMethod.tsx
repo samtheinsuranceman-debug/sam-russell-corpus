@@ -658,7 +658,7 @@ export default function TimeMachineMethod() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <Scale className="w-5 h-5 text-violet-500" /> Loan Arbitrage Analysis
+                <Scale className="w-5 h-5 text-emerald-500" /> Loan Arbitrage Analysis
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -1133,10 +1133,10 @@ export default function TimeMachineMethod() {
         <TabsContent value="loanArbitrage" className="space-y-6">
           {result && (
             <>
-              <Card className="border-violet-800/30">
+              <Card className="border-emerald-800/30">
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <Scale className="w-5 h-5 text-violet-400" /> The Loan Arbitrage Reality
+                    <Scale className="w-5 h-5 text-emerald-400" /> The Loan Arbitrage Reality
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -1259,7 +1259,7 @@ export default function TimeMachineMethod() {
                   )}
 
                   {!showLoanAnalysis && (
-                    <div className="p-4 rounded-lg border border-dashed border-violet-800/30 text-center">
+                    <div className="p-4 rounded-lg border border-dashed border-emerald-800/30 text-center">
                       <p className="text-sm text-muted-foreground">
                         Enable "Loan Arbitrage Analysis" in the Setup tab to see detailed loan cost comparisons.
                       </p>

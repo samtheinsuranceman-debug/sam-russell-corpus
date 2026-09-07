@@ -52,7 +52,7 @@ function WealthDNA() {
   const dnaSegments = useMemo(() => [
     { trait: "MYGA Mastery", code: "ATCG-GCTA", strength: 92, color: "text-cyan-400" },
     { trait: "Tax Strategy", code: "GCTA-ATCG", strength: 87, color: "text-emerald-400" },
-    { trait: "Client Psychology", code: "TAGC-CGAT", strength: 78, color: "text-violet-400" },
+    { trait: "Client Psychology", code: "TAGC-CGAT", strength: 78, color: "text-emerald-400" },
     { trait: "IUL Architecture", code: "CGAT-TAGC", strength: 71, color: "text-blue-400" },
     { trait: "Estate Planning", code: "ATGC-GCAT", strength: 65, color: "text-amber-400" },
     { trait: "Risk Management", code: "GCAT-ATGC", strength: 83, color: "text-rose-400" },
@@ -76,7 +76,7 @@ function WealthDNA() {
       </div>
 
       {/* DNA Helix Visualization */}
-      <Card className="bg-gradient-to-br from-cyan-950/40 to-violet-950/40 border-cyan-500/30 overflow-hidden">
+      <Card className="bg-gradient-to-br from-cyan-950/40 to-emerald-950/40 border-cyan-500/30 overflow-hidden">
         <CardContent className="p-6">
           <div className="relative h-48 flex items-center justify-center">
             {/* Animated Double Helix */}
@@ -85,7 +85,7 @@ function WealthDNA() {
                 const x = (i / 20) * 300;
                 const y1 = 75 + Math.sin((i / 20) * Math.PI * 4 + animatedHelix * 0.02) * 40;
                 const y2 = 75 - Math.sin((i / 20) * Math.PI * 4 + animatedHelix * 0.02) * 40;
-                const colors = ["#22d3ee", "#a78bfa", "#34d399", "#f472b6", "#fbbf24"];
+                const colors = ["#22d3ee", "#34d399", "#34d399", "#f472b6", "#fbbf24"];
                 const color = colors[i % colors.length];
                 return (
                   <g key={i}>
@@ -117,7 +117,7 @@ function WealthDNA() {
                 <span className={`text-xs font-bold ${seg.color}`}>{seg.strength}%</span>
               </div>
               <div className="h-1.5 bg-black/30 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-cyan-500 to-violet-500 rounded-full transition-all duration-1000"
+                <div className="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full transition-all duration-1000"
                   style={{ width: `${seg.strength}%` }} />
               </div>
             </div>
@@ -267,22 +267,22 @@ function ReputationScore() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-bold text-violet-300 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-emerald-300 flex items-center gap-2">
           <Star className="w-5 h-5" /> Reputation Score
         </h3>
         <p className="text-sm text-muted-foreground">Your professional currency. Public. Permanent. Only exists here.</p>
       </div>
 
       {/* Score Display */}
-      <Card className="bg-gradient-to-r from-violet-950/40 to-indigo-950/40 border-violet-500/30">
+      <Card className="bg-gradient-to-r from-emerald-950/40 to-indigo-950/40 border-emerald-500/30">
         <CardContent className="p-6 text-center">
           <div className="relative inline-block">
-            <p className="text-7xl font-black text-violet-300">{score}</p>
+            <p className="text-7xl font-black text-emerald-300">{score}</p>
             <Crown className="w-6 h-6 text-amber-400 absolute -top-2 -right-4" />
           </div>
-          <p className="text-sm text-violet-400">out of 1,000</p>
+          <p className="text-sm text-emerald-400">out of 1,000</p>
           <div className="flex items-center justify-center gap-3 mt-3">
-            <Badge className="bg-violet-500/20 text-violet-300">ELITE</Badge>
+            <Badge className="bg-emerald-500/20 text-emerald-300">ELITE</Badge>
             <Badge className="bg-amber-500/20 text-amber-300">Rank #{rank}</Badge>
             <Badge className="bg-emerald-500/20 text-emerald-300">Top 2%</Badge>
           </div>
@@ -293,11 +293,11 @@ function ReputationScore() {
       <div className="space-y-2">
         {components.map((comp, i) => (
           <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-black/20">
-            <comp.icon className="w-4 h-4 text-violet-400 shrink-0" />
+            <comp.icon className="w-4 h-4 text-emerald-400 shrink-0" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs">{comp.label} <span className="text-muted-foreground">({comp.weight}%)</span></span>
-                <span className="text-xs font-bold text-violet-300">{comp.score}/100</span>
+                <span className="text-xs font-bold text-emerald-300">{comp.score}/100</span>
               </div>
               <Progress value={comp.score} className="h-1" />
             </div>
@@ -307,15 +307,15 @@ function ReputationScore() {
 
       {/* Milestones */}
       <div>
-        <h4 className="text-sm font-bold text-violet-300 mb-3">Reputation Tiers</h4>
+        <h4 className="text-sm font-bold text-emerald-300 mb-3">Reputation Tiers</h4>
         <div className="space-y-2">
           {milestones.map((m, i) => (
-            <div key={i} className={`flex items-center gap-3 p-3 rounded-lg ${m.unlocked ? 'bg-violet-500/10' : 'bg-black/20 opacity-60'}`}>
+            <div key={i} className={`flex items-center gap-3 p-3 rounded-lg ${m.unlocked ? 'bg-emerald-500/10' : 'bg-black/20 opacity-60'}`}>
               {m.unlocked ? <Unlock className="w-4 h-4 text-emerald-400" /> : <Lock className="w-4 h-4 text-muted-foreground" />}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold">{m.threshold}+</span>
-                  <Badge variant="outline" className={`text-[10px] ${m.unlocked ? 'border-violet-500/30 text-violet-300' : 'border-border/30'}`}>
+                  <Badge variant="outline" className={`text-[10px] ${m.unlocked ? 'border-emerald-500/30 text-emerald-300' : 'border-border/30'}`}>
                     {m.label}
                   </Badge>
                 </div>
@@ -571,7 +571,7 @@ export default function Endgame() {
             <TabsTrigger value="vault" className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300 text-xs">
               <Archive className="w-3 h-3 mr-1" /> Legacy Vault
             </TabsTrigger>
-            <TabsTrigger value="reputation" className="data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-300 text-xs">
+            <TabsTrigger value="reputation" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300 text-xs">
               <Star className="w-3 h-3 mr-1" /> Reputation
             </TabsTrigger>
             <TabsTrigger value="anniversary" className="data-[state=active]:bg-rose-500/20 data-[state=active]:text-rose-300 text-xs">

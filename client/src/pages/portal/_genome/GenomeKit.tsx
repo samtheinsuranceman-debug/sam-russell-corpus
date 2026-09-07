@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 export const GENOME = {
   accent: "#8b7bf0",
-  accentSoft: "#a78bfa",
+  accentSoft: "#34d399",
   cyan: "#38bdf8",
   glow: "rgba(139,123,240,0.35)",
   gradient: "linear-gradient(135deg, rgba(139,123,240,0.18), rgba(56,189,248,0.10))",
@@ -28,7 +28,7 @@ export const SACRED_SEVEN = [
 
 export function SectionLabel({ children, icon: Icon, className }) {
   return (
-    <div className={cn("flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80", className)}>
+    <div className={cn("flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80", className)}>
       {Icon ? <Icon className="h-3.5 w-3.5" /> : null}
       {children}
     </div>
@@ -70,10 +70,10 @@ export function GenomeOrb({ size = 132, label, pulsing = true, onClick, active =
         height: size,
         background: active
           ? "radial-gradient(circle at 35% 30%, rgba(186,162,255,1), rgba(91,33,182,0.5) 60%, rgba(2,6,23,0.2))"
-          : "radial-gradient(circle at 35% 30%, rgba(167,139,250,0.9), rgba(76,29,149,0.35) 60%, rgba(2,6,23,0.2))",
+          : "radial-gradient(circle at 35% 30%, rgba(110,231,183,0.9), rgba(6,95,70,0.35) 60%, rgba(2,6,23,0.2))",
       }}
     >
-      <span className="absolute inset-0 rounded-full border border-violet-300/30" />
+      <span className="absolute inset-0 rounded-full border border-emerald-300/30" />
       <span className="absolute inset-2 rounded-full border border-white/5" />
       <span className="px-3 text-center text-xs font-medium tracking-wide text-white/90">{label}</span>
     </motion.button>
@@ -100,7 +100,7 @@ export function Stat({ label, value, hint }) {
     <div className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
       <p className="text-[11px] uppercase tracking-wider text-slate-400">{label}</p>
       <p className="mt-1 text-2xl font-semibold text-white">{value}</p>
-      {hint ? <p className="mt-0.5 text-xs text-violet-300/70">{hint}</p> : null}
+      {hint ? <p className="mt-0.5 text-xs text-emerald-300/70">{hint}</p> : null}
     </div>
   );
 }

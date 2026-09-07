@@ -738,7 +738,7 @@ export default function RothConversionSTR() {
               <History size={14} /> History ({savedQuery.data?.length ?? 0})
             </button>
             <button onClick={() => setShowMonteCarlo(!showMonteCarlo)}
-              className={`rc-btn rc-btn-outline flex items-center gap-2 text-sm ${showMonteCarlo ? 'border-purple-500/50 text-purple-400' : ''}`}>
+              className={`rc-btn rc-btn-outline flex items-center gap-2 text-sm ${showMonteCarlo ? 'border-emerald-500/50 text-emerald-400' : ''}`}>
               <Shuffle size={14} /> Monte Carlo
             </button>
             <button onClick={() => setShowSensitivity(!showSensitivity)}
@@ -754,7 +754,7 @@ export default function RothConversionSTR() {
               <Award size={14} /> Benchmark
             </button>
             <button onClick={() => setShowCompareCarriers(!showCompareCarriers)}
-              className={`rc-btn rc-btn-outline flex items-center gap-2 text-sm ${showCompareCarriers ? 'border-purple-500/50 text-purple-400' : ''}`}>
+              className={`rc-btn rc-btn-outline flex items-center gap-2 text-sm ${showCompareCarriers ? 'border-emerald-500/50 text-emerald-400' : ''}`}>
               <Shuffle size={14} /> Compare Carriers
             </button>
             <button onClick={() => setShowBacktest(!showBacktest)}
@@ -970,15 +970,15 @@ export default function RothConversionSTR() {
 
         {/* ── Strategy History Panel ── */}
         {showHistory && (
-          <div className="rc-card border-l-4 border-l-purple-500">
+          <div className="rc-card border-l-4 border-l-emerald-500">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-white font-semibold flex items-center gap-2">
-                <History size={16} className="text-purple-400" /> Saved Strategy History
+                <History size={16} className="text-emerald-400" /> Saved Strategy History
               </h3>
               <div className="flex items-center gap-2">
                 <label className="flex items-center gap-1.5 text-[10px] text-[#7a95b8] cursor-pointer select-none">
                   <input type="checkbox" checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)}
-                    className="w-3 h-3 rounded border-[#22334a] bg-[#0b1628] accent-purple-500" />
+                    className="w-3 h-3 rounded border-[#22334a] bg-[#0b1628] accent-emerald-500" />
                   Show Archived
                 </label>
                 {savedQuery.data && savedQuery.data.length > 0 && (
@@ -1014,7 +1014,7 @@ export default function RothConversionSTR() {
                           <div>
                             <div className="flex items-center gap-2">
                               <span className={`font-medium text-sm ${saved.isArchived ? 'text-[#7a95b8]' : 'text-white'}`}>{saved.strategyLabel}</span>
-                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                                 v{latestVersion.version ?? 1}
                               </span>
                               {saved.isArchived && (
@@ -1107,10 +1107,10 @@ export default function RothConversionSTR() {
 
         {/* ── Monte Carlo Simulation ── */}
         {showMonteCarlo && monteCarloData && (
-          <div className="rc-card border-l-4 border-l-purple-500">
+          <div className="rc-card border-l-4 border-l-emerald-500">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-white font-semibold flex items-center gap-2">
-                <Shuffle size={16} className="text-purple-400" /> Monte Carlo Simulation
+                <Shuffle size={16} className="text-emerald-400" /> Monte Carlo Simulation
                 <span className="text-[#7a95b8] text-xs font-normal">(500 simulations, 15% S&P 500 volatility, 0% IUL floor)</span>
               </h3>
               <button onClick={() => setShowMonteCarlo(false)} className="text-[#7a95b8] hover:text-white text-xs">✕ Close</button>
@@ -1123,11 +1123,11 @@ export default function RothConversionSTR() {
                   <YAxis stroke="#7a95b8" fontSize={11} tickFormatter={(v: number) => v >= 1e6 ? `$${(v/1e6).toFixed(1)}M` : `$${(v/1e3).toFixed(0)}K`} />
                   <Tooltip formatter={(v: number) => [`$${Math.round(v).toLocaleString()}`, ""]} contentStyle={{ background: "#0f1e35", border: "1px solid #12233e", borderRadius: "12px", color: "white" }} />
                   <Area type="monotone" dataKey="p10" stackId="band" fill="transparent" stroke="transparent" />
-                  <Area type="monotone" dataKey="p90" stackId="" fill="#8b5cf6" fillOpacity={0.08} stroke="#8b5cf6" strokeOpacity={0.2} name="90th %ile" />
-                  <Area type="monotone" dataKey="p75" stackId="" fill="#8b5cf6" fillOpacity={0.12} stroke="#8b5cf6" strokeOpacity={0.3} name="75th %ile" />
-                  <Area type="monotone" dataKey="p50" stackId="" fill="#8b5cf6" fillOpacity={0.18} stroke="#8b5cf6" strokeOpacity={0.5} name="Median" />
-                  <Area type="monotone" dataKey="p25" stackId="" fill="#8b5cf6" fillOpacity={0.08} stroke="#8b5cf6" strokeOpacity={0.2} name="25th %ile" />
-                  <Area type="monotone" dataKey="p10" stackId="" fill="transparent" stroke="#8b5cf6" strokeOpacity={0.15} name="10th %ile" />
+                  <Area type="monotone" dataKey="p90" stackId="" fill="#10b981" fillOpacity={0.08} stroke="#10b981" strokeOpacity={0.2} name="90th %ile" />
+                  <Area type="monotone" dataKey="p75" stackId="" fill="#10b981" fillOpacity={0.12} stroke="#10b981" strokeOpacity={0.3} name="75th %ile" />
+                  <Area type="monotone" dataKey="p50" stackId="" fill="#10b981" fillOpacity={0.18} stroke="#10b981" strokeOpacity={0.5} name="Median" />
+                  <Area type="monotone" dataKey="p25" stackId="" fill="#10b981" fillOpacity={0.08} stroke="#10b981" strokeOpacity={0.2} name="25th %ile" />
+                  <Area type="monotone" dataKey="p10" stackId="" fill="transparent" stroke="#10b981" strokeOpacity={0.15} name="10th %ile" />
                   <Line type="monotone" dataKey="actual" stroke="#22c55e" strokeWidth={2.5} dot={false} name="Base Case (10%)" />
                   <Legend />
                 </AreaChart>
@@ -1144,9 +1144,9 @@ export default function RothConversionSTR() {
                 <div className="text-orange-400 font-bold text-sm">{fmt(monteCarloData[monteCarloData.length - 1]?.p25 ?? 0)}</div>
                 <div className="text-[#7a95b8] text-[10px]">Below Avg</div>
               </div>
-              <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20 text-center">
+              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-center">
                 <div className="text-[#7a95b8] text-[10px]">50th Percentile</div>
-                <div className="text-purple-400 font-bold text-sm">{fmt(monteCarloData[monteCarloData.length - 1]?.p50 ?? 0)}</div>
+                <div className="text-emerald-400 font-bold text-sm">{fmt(monteCarloData[monteCarloData.length - 1]?.p50 ?? 0)}</div>
                 <div className="text-[#7a95b8] text-[10px]">Median</div>
               </div>
               <div className="p-3 rounded-lg bg-[#0f1e35] border border-[#12233e] text-center">
@@ -1160,8 +1160,8 @@ export default function RothConversionSTR() {
                 <div className="text-[#7a95b8] text-[10px]">Best Case</div>
               </div>
             </div>
-            <div className="mt-3 p-3 rounded-lg bg-purple-500/5 border border-purple-500/15 text-xs text-[#7a95b8]">
-              <strong className="text-purple-400">How to read:</strong> The green line shows the base case (fixed 10% return). The purple bands show the probability distribution across 500 simulated paths using 15% annual volatility (historical S&P 500). The IUL floor of 0% prevents negative returns. Wider bands = more uncertainty in later years.
+            <div className="mt-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/15 text-xs text-[#7a95b8]">
+              <strong className="text-emerald-400">How to read:</strong> The green line shows the base case (fixed 10% return). The purple bands show the probability distribution across 500 simulated paths using 15% annual volatility (historical S&P 500). The IUL floor of 0% prevents negative returns. Wider bands = more uncertainty in later years.
             </div>
           </div>
         )}
@@ -1386,10 +1386,10 @@ export default function RothConversionSTR() {
 
         {/* ── Compare Carriers Panel ── */}
         {showCompareCarriers && result && (
-          <div className="rc-card border border-purple-500/20">
+          <div className="rc-card border border-emerald-500/20">
             <div className="flex items-center justify-between mb-4">
               <div className="text-white font-semibold flex items-center gap-2">
-                <Shuffle size={16} className="text-purple-400" /> Compare Carriers — Side by Side
+                <Shuffle size={16} className="text-emerald-400" /> Compare Carriers — Side by Side
               </div>
               <button onClick={() => setShowCompareCarriers(false)} className="text-[#7a95b8] hover:text-white text-xs">✕ Close</button>
             </div>
@@ -1398,8 +1398,8 @@ export default function RothConversionSTR() {
             ) : compareData ? (
               <>
                 {/* Winner Banner */}
-                <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-4 mb-4">
-                  <div className="text-purple-300 text-sm font-medium">Recommended Carrier</div>
+                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 mb-4">
+                  <div className="text-emerald-300 text-sm font-medium">Recommended Carrier</div>
                   <div className="text-white text-lg font-bold">{compareData.winner.carrierName}</div>
                   <div className="text-[#7a95b8] text-sm">Highest illustrated policy value by {fmt(compareData.winner.margin)}</div>
                 </div>
@@ -1420,7 +1420,7 @@ export default function RothConversionSTR() {
                     </thead>
                     <tbody>
                       {compareData.carriers.map((c) => (
-                        <tr key={c.carrierId} className={`border-b border-[#1e3a5f]/50 ${c.carrierId === compareData.winner.carrierId ? 'bg-purple-500/5' : ''}`}>
+                        <tr key={c.carrierId} className={`border-b border-[#1e3a5f]/50 ${c.carrierId === compareData.winner.carrierId ? 'bg-emerald-500/5' : ''}`}>
                           <td className="py-2">
                             <div className="text-white font-medium">{c.carrierName}</div>
                             <div className="text-[#7a95b8] text-xs">{c.product}</div>
@@ -1428,7 +1428,7 @@ export default function RothConversionSTR() {
                           <td className="text-right text-white">{(c.avgReturn * 100).toFixed(1)}%</td>
                           <td className="text-right text-white">{(c.capRate * 100).toFixed(1)}%</td>
                           <td className="text-right text-white font-medium">{fmt(c.finalAccountValue)}</td>
-                          <td className={`text-right font-bold ${c.carrierId === compareData.winner.carrierId ? 'text-purple-400' : 'text-white'}`}>{fmt(c.finalNetCash)}</td>
+                          <td className={`text-right font-bold ${c.carrierId === compareData.winner.carrierId ? 'text-emerald-400' : 'text-white'}`}>{fmt(c.finalNetCash)}</td>
                           <td className="text-right text-amber-400">{fmt(c.cumulativeCharges)}</td>
                           <td className="text-right text-[#22c55e]">{c.totalReturn}%</td>
                         </tr>
@@ -1463,7 +1463,7 @@ export default function RothConversionSTR() {
                     </div>
                     <button
                       onClick={() => setShowQuoteDialog(true)}
-                      className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
                     >
                       <FileText size={14} /> Request Formal Quote
                     </button>
@@ -1865,16 +1865,16 @@ export default function RothConversionSTR() {
 
         {/* ── Quote Request Dialog ── */}
         {showQuoteDialog && compareData && (
-          <div className="rc-card border border-purple-500/30">
+          <div className="rc-card border border-emerald-500/30">
             <div className="flex items-center justify-between mb-4">
               <div className="text-white font-semibold flex items-center gap-2">
-                <FileText size={16} className="text-purple-400" /> Request Formal Quote
+                <FileText size={16} className="text-emerald-400" /> Request Formal Quote
               </div>
               <button onClick={() => setShowQuoteDialog(false)} className="text-[#7a95b8] hover:text-white text-xs">✕ Close</button>
             </div>
 
-            <div className="bg-purple-500/5 border border-purple-500/20 rounded-lg p-4 mb-4">
-              <div className="text-purple-300 text-sm font-medium mb-2">Requesting quote from:</div>
+            <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4 mb-4">
+              <div className="text-emerald-300 text-sm font-medium mb-2">Requesting quote from:</div>
               <div className="text-white text-lg font-bold">{compareData.winner.carrierName}</div>
               <div className="text-[#7a95b8] text-sm">Based on carrier comparison analysis</div>
             </div>
@@ -1942,7 +1942,7 @@ export default function RothConversionSTR() {
                   });
                 }}
                 disabled={quoteMut.isPending}
-                className="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-500 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-1 px-4 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <Send size={14} /> {quoteMut.isPending ? 'Submitting...' : 'Submit Quote Request'}
               </button>
@@ -2249,17 +2249,17 @@ export default function RothConversionSTR() {
               </div>
 
               {/* Smart Carrier Recommendation */}
-              <div className="p-4 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/20">
                 <button onClick={() => setShowRecommendation(!showRecommendation)}
                   className="flex items-center gap-2 w-full text-left">
-                  <Sparkles size={16} className="text-purple-400" />
+                  <Sparkles size={16} className="text-emerald-400" />
                   <span className="text-white font-semibold text-sm">Smart Carrier Recommendation</span>
                   <span className="ml-auto text-[#7a95b8]">{showRecommendation ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</span>
                 </button>
                 <p className="text-xs text-[#7a95b8] mt-1">Get a data-driven carrier recommendation based on client age, risk tolerance, and premium budget</p>
 
                 {showRecommendation && (
-                  <div className="mt-4 pt-4 border-t border-purple-500/20 space-y-4">
+                  <div className="mt-4 pt-4 border-t border-emerald-500/20 space-y-4">
                     {/* Risk tolerance selector */}
                     <div>
                       <label className="rc-label">Risk Tolerance</label>
@@ -2284,7 +2284,7 @@ export default function RothConversionSTR() {
                     </div>
 
                     <button onClick={handleRunRecommendation} disabled={recommendMut.isPending}
-                      className="w-full px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-300 text-sm font-medium hover:bg-purple-500/30 transition-colors disabled:opacity-50">
+                      className="w-full px-4 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-sm font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-50">
                       {recommendMut.isPending ? "Analyzing..." : "Run Recommendation"}
                     </button>
 
@@ -2296,20 +2296,20 @@ export default function RothConversionSTR() {
                       <div className="space-y-3">
                         {recommendations.slice(0, 5).map((rec: any, idx: number) => (
                           <div key={rec.carrierId}
-                            className={`p-3 rounded-lg border transition-all cursor-pointer hover:border-purple-500/40 ${
-                              idx === 0 ? "bg-purple-500/10 border-purple-500/30" : "bg-[#0b1628] border-[#12233e]"
+                            className={`p-3 rounded-lg border transition-all cursor-pointer hover:border-emerald-500/40 ${
+                              idx === 0 ? "bg-emerald-500/10 border-emerald-500/30" : "bg-[#0b1628] border-[#12233e]"
                             }`}
                             onClick={() => { setCarrierId(rec.carrierId); toast.success(`Selected ${rec.carrierName}`); }}>
                             <div className="flex items-center gap-3">
                               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                                idx === 0 ? "bg-purple-500/30 text-purple-300" : idx === 1 ? "bg-blue-500/30 text-blue-300" : "bg-[#0f1e35] text-[#7a95b8]"
+                                idx === 0 ? "bg-emerald-500/30 text-emerald-300" : idx === 1 ? "bg-blue-500/30 text-blue-300" : "bg-[#0f1e35] text-[#7a95b8]"
                               }`}>
                                 #{rec.rank}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
                                   <span className="text-white font-semibold text-sm">{rec.carrierName}</span>
-                                  {idx === 0 && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">Best Match</span>}
+                                  {idx === 0 && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Best Match</span>}
                                 </div>
                                 <div className="text-xs text-[#7a95b8] mt-0.5 truncate">{rec.reasoning}</div>
                               </div>
@@ -2324,7 +2324,7 @@ export default function RothConversionSTR() {
                                 { label: "Growth", value: rec.growthScore, color: "bg-emerald-500" },
                                 { label: "Protection", value: rec.protectionScore, color: "bg-blue-500" },
                                 { label: "Cost", value: rec.costScore, color: "bg-amber-500" },
-                                { label: "Loan", value: rec.loanScore, color: "bg-purple-500" },
+                                { label: "Loan", value: rec.loanScore, color: "bg-emerald-500" },
                               ].map((s) => (
                                 <div key={s.label}>
                                   <div className="text-[10px] text-[#7a95b8] mb-1">{s.label}</div>
@@ -2342,7 +2342,7 @@ export default function RothConversionSTR() {
 
                     {/* Recommendation History with Trend Chart */}
                     {recHistory.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-purple-500/20">
+                      <div className="mt-4 pt-4 border-t border-emerald-500/20">
                         <div className="text-xs font-semibold text-[#7a95b8] mb-2 flex items-center gap-1">
                           <Clock size={12} /> Past Recommendations
                         </div>
@@ -2393,7 +2393,7 @@ export default function RothConversionSTR() {
                                 </div>
                               </div>
                               <div className="text-right">
-                                <div className="text-purple-300 font-bold">{Number(h.totalScore).toFixed(0)}</div>
+                                <div className="text-emerald-300 font-bold">{Number(h.totalScore).toFixed(0)}</div>
                                 <div className="text-[#7a95b8] text-[10px]">{new Date(h.createdAt).toLocaleDateString()}</div>
                               </div>
                             </div>

@@ -304,8 +304,8 @@ export default function AnnuityMemory() {
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-gradient-to-br from-purple-500/20 to-indigo-600/20 border border-purple-500/30 rounded-xl">
-                <Database className="w-6 h-6 text-purple-400" />
+              <div className="p-2 bg-gradient-to-br from-emerald-500/20 to-indigo-600/20 border border-emerald-500/30 rounded-xl">
+                <Database className="w-6 h-6 text-emerald-400" />
               </div>
               <div>
                 <h1 className="rc-page-title">Annuity Memory</h1>
@@ -525,16 +525,16 @@ export default function AnnuityMemory() {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="bg-[#0d1a2e] border border-[#12233e] p-1 h-auto grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
-            <TabsTrigger value="state-lookup" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white py-2">
+            <TabsTrigger value="state-lookup" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white py-2">
               <MapPin className="w-4 h-4 mr-2" /> State Lookup
             </TabsTrigger>
-            <TabsTrigger value="product-database" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white py-2">
+            <TabsTrigger value="product-database" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white py-2">
               <Database className="w-4 h-4 mr-2" /> Products
             </TabsTrigger>
-            <TabsTrigger value="tables-1" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white py-2">
+            <TabsTrigger value="tables-1" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white py-2">
               <FileSpreadsheet className="w-4 h-4 mr-2" /> Tables 1-3
             </TabsTrigger>
-            <TabsTrigger value="tables-2" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white py-2">
+            <TabsTrigger value="tables-2" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white py-2">
               <FileSpreadsheet className="w-4 h-4 mr-2" /> Tables 4-6
             </TabsTrigger>
           </TabsList>
@@ -546,7 +546,7 @@ export default function AnnuityMemory() {
                 <CardHeader className="pb-4 border-b border-[#12233e]">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <CardTitle className="text-xl text-white flex items-center gap-2">
-                      <MapPin className="w-5 h-5 text-purple-400" />
+                      <MapPin className="w-5 h-5 text-emerald-400" />
                       {getStateName(selectedState)} Guaranty & Products
                     </CardTitle>
                     <Select value={selectedState} onValueChange={(v) => setSelectedState(v as StateCode)}>

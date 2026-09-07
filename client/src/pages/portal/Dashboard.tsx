@@ -75,7 +75,7 @@ function formatTime(d: Date | string): string {
 function actionIcon(action: string) {
   if (action.includes("CREATED")) return <Plus className="h-3.5 w-3.5 text-emerald-400" />;
   if (action.includes("UPDATED")) return <ArrowUpRight className="h-3.5 w-3.5 text-blue-400" />;
-  if (action.includes("NOTE")) return <FileText className="h-3.5 w-3.5 text-violet-400" />;
+  if (action.includes("NOTE")) return <FileText className="h-3.5 w-3.5 text-emerald-400" />;
   if (action.includes("DEAL") || action.includes("STAGE")) return <Briefcase className="h-3.5 w-3.5 text-amber-400" />;
   if (action.includes("STRATEGY")) return <Target className="h-3.5 w-3.5 text-emerald-400" />;
   if (action.includes("MEETING")) return <Calendar className="h-3.5 w-3.5 text-blue-400" />;
@@ -90,7 +90,7 @@ function meetingIcon(type?: string) {
 }
 
 /* ─── Chart colors ───────────────────────────────────────────────────────── */
-const ALLOC_COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4"];
+const ALLOC_COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#10b981", "#ec4899", "#06b6d4"];
 const ALLOC_LABELS: Record<string, string> = {
   ira: "Traditional IRA",
   roth: "Roth IRA",
@@ -102,7 +102,7 @@ const ALLOC_LABELS: Record<string, string> = {
 const FUNNEL_COLORS: Record<string, string> = {
   LEAD: "#64748b",
   QUALIFIED: "#3b82f6",
-  STRATEGY: "#8b5cf6",
+  STRATEGY: "#10b981",
   PROPOSAL: "#f59e0b",
   CLOSED_WON: "#22c55e",
   CLOSED_LOST: "#ef4444",
@@ -227,8 +227,8 @@ export default function Dashboard() {
       icon: Briefcase,
       change: `${stats?.dealCount ?? 0} active deals · ${conversionRate.toFixed(0)}% win rate`,
       changePositive: true,
-      color: "from-violet-500/20 to-violet-600/10 border-violet-500/30",
-      iconColor: "text-violet-400",
+      color: "from-emerald-500/20 to-emerald-600/10 border-emerald-500/30",
+      iconColor: "text-emerald-400",
       href: "/portal/pipeline",
     },
     {
@@ -237,8 +237,8 @@ export default function Dashboard() {
       icon: ClipboardList,
       change: `${(planningCasesQuery.data ?? []).filter(item => item.status === "review").length} awaiting review`,
       changePositive: true,
-      color: "from-fuchsia-500/20 to-violet-600/10 border-violet-500/30",
-      iconColor: "text-violet-300",
+      color: "from-emerald-500/20 to-emerald-600/10 border-emerald-500/30",
+      iconColor: "text-emerald-300",
       href: "/portal/planning-cases",
     },
   ];
@@ -262,7 +262,7 @@ export default function Dashboard() {
         )}
 
         {loadingSources.length > 0 && failedSources.length === 0 && (
-          <div className="rounded-xl border border-violet-400/15 bg-violet-950/20 px-4 py-3 text-xs text-violet-100">
+          <div className="rounded-xl border border-emerald-400/15 bg-emerald-950/20 px-4 py-3 text-xs text-emerald-100">
             Loading {loadingSources.map(source => source.name).join(", ")}…
           </div>
         )}
@@ -274,7 +274,7 @@ export default function Dashboard() {
         )}
 
         {!statsLoading && !planningCasesQuery.isLoading && !statsError && !planningCasesQuery.error && (stats?.clientCount ?? 0) === 0 && (planningCasesQuery.data ?? []).length === 0 && (
-          <div className="rounded-2xl border border-violet-400/20 bg-violet-950/25 p-5">
+          <div className="rounded-2xl border border-emerald-400/20 bg-emerald-950/25 p-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="font-semibold text-white">Start with a client or planning case</p>
@@ -490,7 +490,7 @@ export default function Dashboard() {
           <Card className="bg-slate-800/40 border-slate-700/50">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-white flex items-center gap-2">
-                <PieChartIcon className="h-4 w-4 text-violet-400" /> Asset Allocation
+                <PieChartIcon className="h-4 w-4 text-emerald-400" /> Asset Allocation
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -738,7 +738,7 @@ export default function Dashboard() {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-white flex items-center gap-2">
-                  <Activity className="h-4 w-4 text-violet-400" /> Activity Feed
+                  <Activity className="h-4 w-4 text-emerald-400" /> Activity Feed
                 </CardTitle>
                 <div className="flex gap-1">
                   {(["all", "clients", "deals", "strategies"] as const).map((f) => (
@@ -747,7 +747,7 @@ export default function Dashboard() {
                       onClick={() => setActivityFilter(f)}
                       className={`text-[9px] px-2 py-0.5 rounded-full transition-colors ${
                         activityFilter === f
-                          ? "bg-violet-500/20 text-violet-400 border border-violet-500/30"
+                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                           : "text-slate-500 hover:text-slate-300"
                       }`}
                     >
@@ -805,8 +805,8 @@ export default function Dashboard() {
                 </Button>
               </Link>
               <Link href="/portal/roth-conversion">
-                <Button variant="outline" className="w-full justify-start gap-2 border-slate-700 hover:border-violet-500/50 hover:bg-violet-500/5 text-sm h-10">
-                  <Shield className="h-4 w-4 text-violet-400" /> Roth Ladder
+                <Button variant="outline" className="w-full justify-start gap-2 border-slate-700 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-sm h-10">
+                  <Shield className="h-4 w-4 text-emerald-400" /> Roth Ladder
                 </Button>
               </Link>
               <Link href="/portal/iul-vs-roth">

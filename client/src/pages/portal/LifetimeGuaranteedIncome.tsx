@@ -331,12 +331,12 @@ export default function LifetimeGuaranteedIncome() {
                   <p className="text-xs text-amber-400 mt-1">{incomeStartAge - currentAge} Years Deferral</p>
                 </CardContent>
               </Card>
-              <Card className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 border-purple-700/30">
+              <Card className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/20 border-emerald-700/30">
                 <CardContent className="p-4 text-center">
-                  <Shield className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-                  <p className="text-xs text-purple-300/70 uppercase tracking-wider">Guaranteed Annual</p>
-                  <p className="text-2xl font-bold text-purple-200">{result ? fmt(result.taxableScenario.annualIncome) : "..."}</p>
-                  <p className="text-xs text-purple-400 mt-1">For Life — Never Runs Out</p>
+                  <Shield className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                  <p className="text-xs text-emerald-300/70 uppercase tracking-wider">Guaranteed Annual</p>
+                  <p className="text-2xl font-bold text-emerald-200">{result ? fmt(result.taxableScenario.annualIncome) : "..."}</p>
+                  <p className="text-xs text-emerald-400 mt-1">For Life — Never Runs Out</p>
                 </CardContent>
               </Card>
             </div>

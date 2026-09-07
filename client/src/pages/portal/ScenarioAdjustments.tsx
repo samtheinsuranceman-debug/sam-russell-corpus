@@ -97,7 +97,7 @@ const ProjectionTable = ({ data }: { data: any[] }) => (
           <TableHead className="text-right text-slate-400 font-medium">Age</TableHead>
           <TableHead className="text-right text-emerald-400 font-medium">Projected</TableHead>
           <TableHead className="text-right text-blue-400 font-medium">Conservative</TableHead>
-          <TableHead className="text-right text-purple-400 font-medium">Aggressive</TableHead>
+          <TableHead className="text-right text-emerald-400 font-medium">Aggressive</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -107,7 +107,7 @@ const ProjectionTable = ({ data }: { data: any[] }) => (
             <TableCell className="text-right text-slate-400">{row.age}</TableCell>
             <TableCell className="text-right text-emerald-400 font-medium">{formatCurrency(row.projected)}</TableCell>
             <TableCell className="text-right text-blue-400">{formatCurrency(row.conservative)}</TableCell>
-            <TableCell className="text-right text-purple-400">{formatCurrency(row.aggressive)}</TableCell>
+            <TableCell className="text-right text-emerald-400">{formatCurrency(row.aggressive)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -245,7 +245,7 @@ const ScenarioComparisonTable = ({ scenarios }: { scenarios: any[] }) => (
             <TableCell className="font-medium text-slate-300">{row.name}</TableCell>
             <TableCell className="text-right text-emerald-400 font-medium">{formatCurrency(row.finalNW)}</TableCell>
             <TableCell className="text-right text-blue-400">{row.prob}%</TableCell>
-            <TableCell className="text-right text-purple-400">{formatCurrency(row.legacy)}</TableCell>
+            <TableCell className="text-right text-emerald-400">{formatCurrency(row.legacy)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -394,7 +394,7 @@ function computeProjection(params: {
 ,
     { name: 'Crypto/Digital', value: baseNetWorth * (cryptoAlloc/100), color: '#f59e0b', current: cryptoAlloc - 2, target: cryptoAlloc },
 ,
-    { name: 'Alternatives', value: baseNetWorth * (alternativeAlloc/100), color: '#8b5cf6', current: alternativeAlloc + 2, target: alternativeAlloc },
+    { name: 'Alternatives', value: baseNetWorth * (alternativeAlloc/100), color: '#10b981', current: alternativeAlloc + 2, target: alternativeAlloc },
 ,
   ].filter((d) => d.value > 0);
 
@@ -784,8 +784,8 @@ export default function ScenarioAdjustments() {
                     {result.probSuccess}%
                   </h3>
                 </div>
-                <div className="p-2 bg-purple-500/10 rounded-lg">
-                  <Activity size={20} className="text-purple-400" />
+                <div className="p-2 bg-emerald-500/10 rounded-lg">
+                  <Activity size={20} className="text-emerald-400" />
                 </div>
               </div>
               <div className="mt-4 flex items-center text-xs text-slate-500">
@@ -851,7 +851,7 @@ export default function ScenarioAdjustments() {
                     />
                     
                     <ParamSlider 
-                      label="Retirement Age" value={retirementAge} min={50} max={80} step={1} unit="" color="#8b5cf6" 
+                      label="Retirement Age" value={retirementAge} min={50} max={80} step={1} unit="" color="#10b981" 
                       onChange={setRetirementAge}
                       description="Target age to stop working"
                     />
@@ -930,7 +930,7 @@ export default function ScenarioAdjustments() {
               <Card className="bg-slate-900/80 border-slate-800">
                 <CardHeader className="py-4">
                   <CardTitle className="text-sm flex items-center gap-2 text-white">
-                    <Clock size={16} className="text-purple-400" />
+                    <Clock size={16} className="text-emerald-400" />
                     Saved Scenarios
                   </CardTitle>
                 </CardHeader>
@@ -1009,7 +1009,7 @@ export default function ScenarioAdjustments() {
                           <span className="text-xs text-slate-300">Conservative</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded bg-purple-500/80" />
+                          <div className="w-3 h-3 rounded bg-emerald-500/80" />
                           <span className="text-xs text-slate-300">Aggressive</span>
                         </div>
                       </div>
@@ -1029,8 +1029,8 @@ export default function ScenarioAdjustments() {
                               <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                             </linearGradient>
                             <linearGradient id="colorAgg" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.2}/>
-                              <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                              <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
+                              <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                             </linearGradient>
                           </defs>
                           <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
@@ -1052,7 +1052,7 @@ export default function ScenarioAdjustments() {
                           
                           {chartType === 'area' && (
                             <>
-                              <Area type="monotone" dataKey="aggressive" stroke="#8b5cf6" strokeWidth={2} fill="url(#colorAgg)" name="Aggressive Market" />
+                              <Area type="monotone" dataKey="aggressive" stroke="#10b981" strokeWidth={2} fill="url(#colorAgg)" name="Aggressive Market" />
                               <Area type="monotone" dataKey="projected" stroke="#10b981" strokeWidth={3} fill="url(#colorProj)" name="Base Projection" activeDot={{ r: 6, strokeWidth: 0 }} />
                               <Area type="monotone" dataKey="conservative" stroke="#3b82f6" strokeWidth={2} fill="url(#colorCons)" name="Conservative Market" />
                             </>
@@ -1060,7 +1060,7 @@ export default function ScenarioAdjustments() {
                           
                           {chartType === 'line' && (
                             <>
-                              <Line type="monotone" dataKey="aggressive" stroke="#8b5cf6" strokeWidth={2} dot={false} name="Aggressive Market" />
+                              <Line type="monotone" dataKey="aggressive" stroke="#10b981" strokeWidth={2} dot={false} name="Aggressive Market" />
                               <Line type="monotone" dataKey="projected" stroke="#10b981" strokeWidth={3} dot={false} name="Base Projection" activeDot={{ r: 6 }} />
                               <Line type="monotone" dataKey="conservative" stroke="#3b82f6" strokeWidth={2} dot={false} name="Conservative Market" />
                             </>

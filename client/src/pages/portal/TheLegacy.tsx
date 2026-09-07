@@ -56,9 +56,9 @@ export default function TheLegacy() {
                 {TONES.map((t) => (
                   <button key={t.id} onClick={() => setTone(t.id)}
                     className={`rounded-xl border p-3 text-left transition-colors ${
-                      tone === t.id ? "border-violet-400/60 bg-violet-500/15" : "border-white/10 bg-white/[0.02] hover:border-white/20"
+                      tone === t.id ? "border-emerald-400/60 bg-emerald-500/15" : "border-white/10 bg-white/[0.02] hover:border-white/20"
                     }`}>
-                    <t.icon className={`h-4 w-4 ${tone === t.id ? "text-violet-200" : "text-slate-400"}`} />
+                    <t.icon className={`h-4 w-4 ${tone === t.id ? "text-emerald-200" : "text-slate-400"}`} />
                     <p className="mt-1.5 text-sm font-medium text-white">{t.label}</p>
                     <p className="text-[11px] text-slate-500">{t.blurb}</p>
                   </button>
@@ -132,7 +132,7 @@ export default function TheLegacy() {
             <div className="max-h-[420px] space-y-4 overflow-y-auto px-6 py-5 text-sm leading-relaxed text-slate-300">
               <h3 className="text-center text-lg font-semibold text-white">{title || "Untitled"}</h3>
               {executor.name && <p className="text-center text-xs text-slate-500">Executor: {executor.name}{executor.relation ? ` (${executor.relation})` : ""}</p>}
-              {letter && <p className="whitespace-pre-wrap border-l-2 border-violet-400/40 pl-3 italic">{letter}</p>}
+              {letter && <p className="whitespace-pre-wrap border-l-2 border-emerald-400/40 pl-3 italic">{letter}</p>}
               {assets.some((a) => a.asset) && (
                 <div><p className="mb-1 font-medium text-white">Asset distribution</p>
                   <ul className="space-y-0.5">{assets.filter((a) => a.asset).map((a, i) => <li key={i}>• {a.asset} → {a.to || "—"} ({a.pct}%)</li>)}</ul></div>
@@ -148,7 +148,7 @@ export default function TheLegacy() {
               {finalWishes && <div><p className="mb-1 font-medium text-white">Final wishes</p><p className="whitespace-pre-wrap">{finalWishes}</p></div>}
             </div>
             <div className="border-t border-white/8 p-4">
-              <Button disabled={!reflected} className="w-full bg-violet-500 hover:bg-violet-400">
+              <Button disabled={!reflected} className="w-full bg-emerald-500 hover:bg-emerald-400">
                 <FileDown className="mr-2 h-4 w-4" /> {reflected ? "Generate & save will_drafts" : "Reflect first to finalize"}
               </Button>
             </div>
@@ -164,7 +164,7 @@ function ListEditor({ title, rows, render, onAdd, onRemove }) {
     <GlowCard className="p-6">
       <div className="mb-3 flex items-center justify-between">
         <SectionLabel>{title}</SectionLabel>
-        <Button size="sm" variant="ghost" onClick={onAdd} className="h-7 text-xs text-violet-300"><Plus className="mr-1 h-3.5 w-3.5" /> Add</Button>
+        <Button size="sm" variant="ghost" onClick={onAdd} className="h-7 text-xs text-emerald-300"><Plus className="mr-1 h-3.5 w-3.5" /> Add</Button>
       </div>
       <div className="space-y-2">
         {rows.map((r, i) => (

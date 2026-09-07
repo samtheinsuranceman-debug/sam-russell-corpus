@@ -65,7 +65,7 @@ const STATUS_LABELS: Record<string, string> = {
   lost: "Lost",
 };
 
-const CHART_COLORS = ["#7a95b8", "#3b82f6", "#f0c040", "#22c55e", "#ef4444", "#8b5cf6", "#ec4899", "#14b8a6"];
+const CHART_COLORS = ["#7a95b8", "#3b82f6", "#f0c040", "#22c55e", "#ef4444", "#10b981", "#ec4899", "#14b8a6"];
 const SOURCES = ["Client", "Professional", "Event", "Online", "Partner", "Social Media", "Other"] as const;
 
 const formatCurrency = (value: number) => {
@@ -369,7 +369,7 @@ export default function ReferralTracker() {
 
     return [
       { stage: "Total Referrals", count: total, fill: "#3b82f6" },
-      { stage: "Contacted", count: contacted, fill: "#8b5cf6" },
+      { stage: "Contacted", count: contacted, fill: "#10b981" },
       { stage: "Meetings", count: meeting, fill: "#f0c040" },
       { stage: "Converted", count: converted, fill: "#22c55e" }
     ];
@@ -701,15 +701,15 @@ export default function ReferralTracker() {
             </CardContent>
           </Card>
           
-          <Card className="bg-gradient-to-br from-[#0d1a2e] to-[#0a1424] border-[#12233e] shadow-md hover:border-[#8b5cf6]/50 transition-colors">
+          <Card className="bg-gradient-to-br from-[#0d1a2e] to-[#0a1424] border-[#12233e] shadow-md hover:border-[#10b981]/50 transition-colors">
             <CardContent className="p-6">
               <div className="flex justify-between items-start">
                 <div>
                   <p className="text-sm font-medium text-[#7a95b8] mb-1">Total Value Won</p>
                   <h3 className="text-3xl font-bold text-white">${(stats.totalValue / 1000).toFixed(1)}K</h3>
                 </div>
-                <div className="p-3 bg-[#8b5cf6]/10 rounded-lg">
-                  <Award className="w-5 h-5 text-[#8b5cf6]" />
+                <div className="p-3 bg-[#10b981]/10 rounded-lg">
+                  <Award className="w-5 h-5 text-[#10b981]" />
                 </div>
               </div>
               <div className="mt-4 flex items-center text-sm">
@@ -787,7 +787,7 @@ export default function ReferralTracker() {
                   <Card className="bg-[#0d1a2e] border-[#12233e]">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
-                        <PieChartIcon className="w-5 h-5 text-[#8b5cf6]" /> 
+                        <PieChartIcon className="w-5 h-5 text-[#10b981]" /> 
                         Status Distribution
                       </CardTitle>
                     </CardHeader>

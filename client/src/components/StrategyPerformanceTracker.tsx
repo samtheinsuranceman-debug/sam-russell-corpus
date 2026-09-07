@@ -60,7 +60,7 @@ export function StrategyPerformanceTracker({ strategies }: StrategyPerformancePr
   return (
     <div className="rc-card">
       <div className="flex items-center gap-2 mb-4">
-        <Target size={18} className="text-[#a78bfa]" />
+        <Target size={18} className="text-[#34d399]" />
         <h3 className="text-white font-bold">Strategy Performance Tracker</h3>
       </div>
 
@@ -76,7 +76,7 @@ export function StrategyPerformanceTracker({ strategies }: StrategyPerformancePr
         </div>
         <div className="p-3 rounded-xl bg-[#0f1e35] border border-[#12233e]">
           <div className="text-[10px] text-[#7a95b8] uppercase tracking-wider">Roth Growth</div>
-          <div className="text-xl font-bold text-[#a78bfa] mt-1">{fmt(totals.totalGrowth)}</div>
+          <div className="text-xl font-bold text-[#34d399] mt-1">{fmt(totals.totalGrowth)}</div>
         </div>
         <div className="p-3 rounded-xl bg-[#0f1e35] border border-[#12233e]">
           <div className="text-[10px] text-[#7a95b8] uppercase tracking-wider">IUL Cash Value</div>
@@ -96,7 +96,7 @@ export function StrategyPerformanceTracker({ strategies }: StrategyPerformancePr
               contentStyle={{ backgroundColor: "#0b1628", border: "1px solid #1a3055", borderRadius: "8px" }}
               labelStyle={{ color: "#7a95b8" }}
             />
-            <Bar dataKey="strategies" fill="#a78bfa" radius={[4, 4, 0, 0]} name="Strategies" />
+            <Bar dataKey="strategies" fill="#34d399" radius={[4, 4, 0, 0]} name="Strategies" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -115,7 +115,7 @@ export function StrategyPerformanceTracker({ strategies }: StrategyPerformancePr
               formatter={(v: number) => [fmt(v), ""]}
             />
             <Line type="monotone" dataKey="taxSaved" stroke="#22c55e" strokeWidth={2} dot={{ fill: "#22c55e", r: 3 }} name="Tax Saved" />
-            <Line type="monotone" dataKey="growth" stroke="#a78bfa" strokeWidth={2} dot={{ fill: "#a78bfa", r: 3 }} name="Growth" />
+            <Line type="monotone" dataKey="growth" stroke="#34d399" strokeWidth={2} dot={{ fill: "#34d399", r: 3 }} name="Growth" />
             <Legend wrapperStyle={{ fontSize: "10px", color: "#7a95b8" }} />
           </LineChart>
         </ResponsiveContainer>

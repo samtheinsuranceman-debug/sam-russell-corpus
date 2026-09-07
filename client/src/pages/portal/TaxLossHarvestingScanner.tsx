@@ -91,7 +91,7 @@ const SAMPLE_HOLDINGS: HoldingData[] = [{ id: "1", ticker: "AAPL", name: "Apple 
 ];
 
 const TAX_RATES = { short: 0.37, long: 0.23, state: 0.05 };
-const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4", "#84cc16", "#14b8a6", "#f43f5e"];
+const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#10b981", "#ec4899", "#06b6d4", "#84cc16", "#14b8a6", "#f43f5e"];
 
 export default function TaxLossHarvestingScanner() {
   const { clientData } = useClientData();
@@ -1027,7 +1027,7 @@ export default function TaxLossHarvestingScanner() {
               {/* Recharts 4: AreaChart */}
               <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-6">
                 <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-purple-400" /> Historical Harvesting Activity
+                  <Activity className="w-5 h-5 text-emerald-400" /> Historical Harvesting Activity
                 </h3>
                 <div className="h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">

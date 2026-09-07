@@ -520,7 +520,7 @@ export default function PredictiveAnalytics() {
           <Card className="border-primary/20">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm flex items-center gap-2">
-                <Target className="w-4 h-4 text-purple-400" /> Financial Health Radar
+                <Target className="w-4 h-4 text-emerald-400" /> Financial Health Radar
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -529,7 +529,7 @@ export default function PredictiveAnalytics() {
                   <PolarGrid stroke="#1e3a5f" />
                   <PolarAngleAxis dataKey="metric" tick={{ fill: "#94a3b8", fontSize: 9 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: "#94a3b8", fontSize: 9 }} />
-                  <Radar name="Confidence" dataKey="score" stroke="#a78bfa" fill="#a78bfa" fillOpacity={0.3} />
+                  <Radar name="Confidence" dataKey="score" stroke="#34d399" fill="#34d399" fillOpacity={0.3} />
                   <Tooltip contentStyle={{ background: "#0d1f3c", border: "1px solid #1e3a5f", borderRadius: 8, color: "#fff", fontSize: 12 }} />
                 </RadarChart>
               </ResponsiveContainer>
@@ -876,7 +876,7 @@ export default function PredictiveAnalytics() {
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     Monte Carlo Simulation
-                    <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 hover:bg-purple-500/30">{simulationRuns.toLocaleString()} runs</Badge>
+                    <Badge variant="secondary" className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30">{simulationRuns.toLocaleString()} runs</Badge>
                   </CardTitle>
                   <CardDescription>Probability-weighted outcomes across randomized market scenarios</CardDescription>
                 </div>

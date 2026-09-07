@@ -641,7 +641,7 @@ export default function AdvisorTraining() {
                                     <XAxis dataKey="month" stroke="#7a95b8" tick={{ fill: '#7a95b8', fontSize: 12 }} />
                                     <YAxis stroke="#7a95b8" tick={{ fill: '#7a95b8', fontSize: 12 }} />
                                     <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }} />
-                                    <Area type="monotone" dataKey="hours" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.3} />
+                                    <Area type="monotone" dataKey="hours" stroke="#10b981" fill="#10b981" fillOpacity={0.3} />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </CardContent>
@@ -739,7 +739,7 @@ export default function AdvisorTraining() {
                         {[
                           { module: "IUL Fundamentals", required: 4, icon: BookOpen, color: "text-blue-400" },
                           { module: "Tax Strategy", required: 3, icon: Target, color: "text-[#22c55e]" },
-                          { module: "Estate Planning", required: 3, icon: Brain, color: "text-purple-400" },
+                          { module: "Estate Planning", required: 3, icon: Brain, color: "text-emerald-400" },
                           { module: "Sales Skills", required: 3, icon: Zap, color: "text-[#f0c040]" },
                           { module: "Compliance", required: 3, icon: CheckCircle2, color: "text-red-400" },
                         ].map((mod, i) => {

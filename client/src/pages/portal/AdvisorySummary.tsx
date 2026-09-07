@@ -49,7 +49,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 const RATING_LABELS: { key: keyof TabRating; label: string; icon: React.ReactNode; color: string }[] = [
   { key: "functionality", label: "Functionality", icon: <Zap className="w-3.5 h-3.5" />, color: "text-blue-400" },
   { key: "efficiency", label: "Efficiency", icon: <Target className="w-3.5 h-3.5" />, color: "text-green-400" },
-  { key: "predictability", label: "Predictability", icon: <Eye className="w-3.5 h-3.5" />, color: "text-purple-400" },
+  { key: "predictability", label: "Predictability", icon: <Eye className="w-3.5 h-3.5" />, color: "text-emerald-400" },
   { key: "complexity", label: "Complexity", icon: <Layers className="w-3.5 h-3.5" />, color: "text-amber-400" },
   { key: "comprehension", label: "Comprehension", icon: <BookOpen className="w-3.5 h-3.5" />, color: "text-cyan-400" },
   { key: "importance", label: "Importance", icon: <AlertTriangle className="w-3.5 h-3.5" />, color: "text-rose-400" },
@@ -72,7 +72,7 @@ function RatingBar({ value, color }: { value: number; color: string }) {
 const BAR_COLORS: Record<string, string> = {
   "text-blue-400": "bg-blue-400",
   "text-green-400": "bg-green-400",
-  "text-purple-400": "bg-purple-400",
+  "text-emerald-400": "bg-emerald-400",
   "text-amber-400": "bg-amber-400",
   "text-cyan-400": "bg-cyan-400",
   "text-rose-400": "bg-rose-400",
@@ -179,8 +179,8 @@ function TabDetailCard({ tab }: { tab: TabSummary }) {
               <p className="text-sm text-[#c8d8ec]">{tab.useCase}</p>
               <p className="text-sm text-[#7a95b8] mt-2">{tab.utility}</p>
             </div>
-            <div className="p-4 rounded-lg bg-purple-500/5 border border-purple-500/10">
-              <h4 className="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-2">Unique Problem Solved</h4>
+            <div className="p-4 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
+              <h4 className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">Unique Problem Solved</h4>
               <p className="text-sm text-[#c8d8ec]">{tab.uniqueProblem}</p>
             </div>
           </div>
@@ -401,7 +401,7 @@ export default function AdvisorySummary() {
     }).filter((c) => c.predictability > 0);
   }, []);
 
-  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444", "#ec4899", "#06b6d4"];
+  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#ec4899", "#06b6d4"];
 
   const exportCSV = () => {
     const headers = ["Name", "Category", "Avg Score", "Use Case", "Unique Problem"];
@@ -488,7 +488,7 @@ export default function AdvisorySummary() {
             </button>
             <button 
               onClick={() => setActiveChart("scatter")}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeChart === "scatter" ? "bg-purple-500/20 text-purple-400 border border-purple-500/30" : "bg-[#0d1a2e] text-[#7a95b8] border border-[#12233e] hover:bg-[#12233e]"}`}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeChart === "scatter" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-[#0d1a2e] text-[#7a95b8] border border-[#12233e] hover:bg-[#12233e]"}`}
             >
               <Target className="w-4 h-4 inline-block mr-1.5" />
               Complexity
@@ -577,7 +577,7 @@ export default function AdvisorySummary() {
                     cursor={{ strokeDasharray: '3 3' }} 
                     contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff" }}
                   />
-                  <Scatter name="Tools" data={complexityVsImportance} fill="#a78bfa">
+                  <Scatter name="Tools" data={complexityVsImportance} fill="#34d399">
                     {complexityVsImportance.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.score > 8 ? "#22c55e" : entry.score > 6 ? "#f0c040" : "#ef4444"} />
                     ))}
@@ -645,7 +645,7 @@ export default function AdvisorySummary() {
           <div className="rc-stat-label">Platform Avg Score</div>
         </div>
         <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 cursor-pointer hover:bg-[#12233e]/30 transition-colors" onClick={() => setSelectedCategory(null)}>
-          <div className="rc-stat-value text-purple-400">{CATEGORIES.length}</div>
+          <div className="rc-stat-value text-emerald-400">{CATEGORIES.length}</div>
           <div className="rc-stat-label">Categories</div>
         </div>
         <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 cursor-pointer hover:bg-[#12233e]/30 transition-colors">
@@ -723,7 +723,7 @@ export default function AdvisorySummary() {
                   <td className="py-3 text-[#7a95b8]">1h ago</td>
                 </tr>
                 <tr className="hover:bg-[#12233e]/30 cursor-pointer">
-                  <td className="py-3 text-[#c8d8ec] flex items-center gap-2"><Users className="w-3.5 h-3.5 text-purple-400"/> Added Client</td>
+                  <td className="py-3 text-[#c8d8ec] flex items-center gap-2"><Users className="w-3.5 h-3.5 text-emerald-400"/> Added Client</td>
                   <td className="py-3 text-[#7a95b8]">Mike Johnson</td>
                   <td className="py-3 text-[#7a95b8]">3h ago</td>
                 </tr>
@@ -781,7 +781,7 @@ export default function AdvisorySummary() {
         {/* Table 3: Team Performance */}
         <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5">
           <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-4">
-            <Users className="w-4 h-4 text-purple-400" />
+            <Users className="w-4 h-4 text-emerald-400" />
             Team Utilization
           </h3>
           <div className="overflow-x-auto">
@@ -819,8 +819,8 @@ export default function AdvisorySummary() {
                   <td className="py-3 text-[#7a95b8]">22</td>
                   <td className="py-3">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-1.5 bg-[#12233e] rounded-full"><div className="h-full bg-purple-400 rounded-full" style={{width: '98%'}}></div></div>
-                      <span className="text-xs text-purple-400">98%</span>
+                      <div className="flex-1 h-1.5 bg-[#12233e] rounded-full"><div className="h-full bg-emerald-400 rounded-full" style={{width: '98%'}}></div></div>
+                      <span className="text-xs text-emerald-400">98%</span>
                     </div>
                   </td>
                 </tr>

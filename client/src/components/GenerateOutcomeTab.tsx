@@ -237,11 +237,11 @@ export function GenerateOutcomeTab({
           variant="outline"
           onClick={handleAddToComparison}
           disabled={addedToComparison || !nextSlot}
-          className="text-xs border-zinc-700/50 hover:border-purple-500/40"
+          className="text-xs border-zinc-700/50 hover:border-emerald-500/40"
         >
           {addedToComparison ? (
             <>
-              <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-purple-400" />
+              <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
               In Comparison
             </>
           ) : (
@@ -380,10 +380,10 @@ export function GenerateOutcomeTab({
 
       {/* Navigation to comparison */}
       {addedToComparison && (
-        <Card className="bg-gradient-to-r from-purple-500/10 to-cyan-500/10 border-purple-500/30">
+        <Card className="bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border-emerald-500/30">
           <CardContent className="py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <GitCompare className="w-4 h-4 text-purple-400" />
+              <GitCompare className="w-4 h-4 text-emerald-400" />
               <span className="text-xs text-zinc-300">
                 Added to comparison dashboard — run other calculators to compare side-by-side.
               </span>
@@ -391,7 +391,7 @@ export function GenerateOutcomeTab({
             <Button
               size="sm"
               variant="outline"
-              className="text-xs border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
+              className="text-xs border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
               onClick={() => navigate("/portal/comparison")}
             >
               <ArrowUpRight className="w-3 h-3 mr-1" />

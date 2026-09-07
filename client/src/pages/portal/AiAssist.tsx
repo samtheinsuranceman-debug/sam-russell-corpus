@@ -55,7 +55,7 @@ type StrategyForm = {
   iraBalance: string; rothBalance: string; realEstateEquity: string; notes: string;
 };
 
-const CHART_COLORS = ["#22c55e", "#a78bfa", "#f0c040", "#3b82f6", "#ef4444", "#ec4899", "#14b8a6", "#f97316"];
+const CHART_COLORS = ["#22c55e", "#34d399", "#f0c040", "#3b82f6", "#ef4444", "#ec4899", "#14b8a6", "#f97316"];
 
 export default function AiAssist() {
   const { user } = useAuth();
@@ -504,7 +504,7 @@ export default function AiAssist() {
                     {activities.length > 0 ? activities.map((act: any, i: number) => (
                       <tr key={i} className="hover:bg-[#12233e]/50 transition-colors">
                         <td className="px-4 py-2 text-white flex items-center gap-2">
-                          {act.type === 'strategy' ? <Brain size={14} className="text-[#a78bfa]" /> : <Search size={14} className="text-[#3b82f6]" />}
+                          {act.type === 'strategy' ? <Brain size={14} className="text-[#34d399]" /> : <Search size={14} className="text-[#3b82f6]" />}
                           {act.type === 'strategy' ? 'Strategy Gen' : 'Knowledge Search'}
                         </td>
                         <td className="px-4 py-2 text-[#c8d8ec]">{act.clientName || 'N/A'}</td>
@@ -637,7 +637,7 @@ export default function AiAssist() {
             
             {/* Data Table 3: Knowledge Base Categories */}
             <div className="rc-card mt-4">
-              <h3 className="text-white font-medium mb-3 flex items-center gap-2"><Library size={16} className="text-[#a78bfa]" /> Knowledge Base Overview</h3>
+              <h3 className="text-white font-medium mb-3 flex items-center gap-2"><Library size={16} className="text-[#34d399]" /> Knowledge Base Overview</h3>
               <div className="overflow-x-auto border border-[#12233e] rounded-lg">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-[#0f1e35] text-[#7a95b8]">
@@ -697,9 +697,9 @@ export default function AiAssist() {
                 <div className="rc-stat-value text-[#3b82f6]">{fmt(clientAnalytics.avgIra)}</div>
                 <div className="text-xs text-[#7a95b8] mt-1 flex items-center gap-1"><ArrowUp size={10} className="text-[#22c55e]" /> 5.2% vs last year</div>
               </div>
-              <div className="rc-card hover:border-[#a78bfa]/30 transition-colors cursor-pointer" onClick={() => toast.info("Viewing Income details")}>
+              <div className="rc-card hover:border-[#34d399]/30 transition-colors cursor-pointer" onClick={() => toast.info("Viewing Income details")}>
                 <div className="rc-stat-label flex items-center gap-1"><TrendingUp size={12} /> Avg Income</div>
-                <div className="rc-stat-value text-[#a78bfa]">{fmt(clientAnalytics.avgIncome)}</div>
+                <div className="rc-stat-value text-[#34d399]">{fmt(clientAnalytics.avgIncome)}</div>
                 <div className="text-xs text-[#7a95b8] mt-1 flex items-center gap-1"><ArrowUp size={10} className="text-[#22c55e]" /> 2.1% vs last year</div>
               </div>
               <div className="rc-card hover:border-[#f0c040]/30 transition-colors cursor-pointer" onClick={() => toast.info("Viewing Client list")}>
@@ -735,7 +735,7 @@ export default function AiAssist() {
               {/* Recharts 3: Pie Chart */}
               <div className="rc-card">
                 <div className="flex justify-between items-center mb-3">
-                  <div className="text-sm font-semibold text-white flex items-center gap-2"><PieChartIcon size={14} className="text-[#a78bfa]" /> IRA Balance Distribution</div>
+                  <div className="text-sm font-semibold text-white flex items-center gap-2"><PieChartIcon size={14} className="text-[#34d399]" /> IRA Balance Distribution</div>
                   <button onClick={() => toast.success("Chart exported")} className="text-[#7a95b8] hover:text-white"><Download size={12} /></button>
                 </div>
                 <ResponsiveContainer width="100%" height={220}>
@@ -784,8 +784,8 @@ export default function AiAssist() {
                         <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                       </linearGradient>
                       <linearGradient id="colorConservative" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#a78bfa" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#34d399" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#34d399" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
@@ -794,7 +794,7 @@ export default function AiAssist() {
                     <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} formatter={(v: number) => [`$${v.toFixed(0)}`, ""]} />
                     <Area type="monotone" dataKey="aggressive" name="Aggressive (10%)" stroke="#22c55e" fillOpacity={1} fill="url(#colorAggressive)" />
                     <Area type="monotone" dataKey="moderate" name="Moderate (7%)" stroke="#3b82f6" fillOpacity={1} fill="url(#colorModerate)" />
-                    <Area type="monotone" dataKey="conservative" name="Conservative (4%)" stroke="#a78bfa" fillOpacity={1} fill="url(#colorConservative)" />
+                    <Area type="monotone" dataKey="conservative" name="Conservative (4%)" stroke="#34d399" fillOpacity={1} fill="url(#colorConservative)" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -938,7 +938,7 @@ export default function AiAssist() {
                       { id: "tax-summary", name: "Annual Tax Summary", icon: FileText, color: "text-[#3b82f6]" },
                       { id: "roth-opportunities", name: "Roth Conversion Opps", icon: Target, color: "text-[#22c55e]" },
                       { id: "rmd-schedule", name: "RMD Schedule (2025)", icon: Calendar, color: "text-[#f0c040]" },
-                      { id: "client-growth", name: "Client Growth Metrics", icon: TrendingUp, color: "text-[#a78bfa]" },
+                      { id: "client-growth", name: "Client Growth Metrics", icon: TrendingUp, color: "text-[#34d399]" },
                       { id: "compliance", name: "Compliance Audit", icon: Shield, color: "text-[#ef4444]" }
                     ].map((report) => (
                       <button 
@@ -1046,7 +1046,7 @@ export default function AiAssist() {
         {tab === "settings" && (
           <div className="space-y-5">
             <div className="rc-card max-w-3xl mx-auto">
-              <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2"><Settings size={18} className="text-[#a78bfa]" /> AI Assist Preferences</h2>
+              <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2"><Settings size={18} className="text-[#34d399]" /> AI Assist Preferences</h2>
               
               <div className="space-y-6">
                 <div className="space-y-3">

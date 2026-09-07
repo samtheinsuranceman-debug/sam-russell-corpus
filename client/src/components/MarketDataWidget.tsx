@@ -90,7 +90,7 @@ export default function MarketDataWidget({ compact = false }: { compact?: boolea
                   </div>}
                 </> : <p className="py-1 text-sm font-semibold text-amber-300">Unavailable</p>}
                 <p className="text-[10px] text-muted-foreground mt-0.5">{q.name}</p>
-                <p className="mt-1 text-[9px] uppercase tracking-wide text-violet-300">{q.source === "static" ? "Reference" : q.source}</p>
+                <p className="mt-1 text-[9px] uppercase tracking-wide text-emerald-300">{q.source === "static" ? "Reference" : q.source}</p>
                 {q.message && <p className="mt-1 text-[9px] leading-3 text-muted-foreground">{q.message}</p>}
               </CardContent>
             </Card>

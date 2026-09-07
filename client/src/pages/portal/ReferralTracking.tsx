@@ -100,14 +100,14 @@ const SAMPLE_PARTNERS: Partner[] = [
 
 const STATUS_CONFIG: Record<string, { label: string; colorClass: string; icon: React.ReactNode }> = {
   "new": { label: "New", colorClass: "rc-badge-blue", icon: <UserPlus className="h-3 w-3 mr-1" /> },
-  "contacted": { label: "Contacted", colorClass: "bg-[#8b5cf6]/20 text-[#c4b5fd] border-[#8b5cf6]/30", icon: <Phone className="h-3 w-3 mr-1" /> },
+  "contacted": { label: "Contacted", colorClass: "bg-[#10b981]/20 text-[#a7f3d0] border-[#10b981]/30", icon: <Phone className="h-3 w-3 mr-1" /> },
   "meeting-scheduled": { label: "Meeting Set", colorClass: "rc-badge-gold", icon: <Calendar className="h-3 w-3 mr-1" /> },
   "proposal": { label: "Proposal", colorClass: "bg-[#0ea5e9]/20 text-[#7dd3fc] border-[#0ea5e9]/30", icon: <TrendingUp className="h-3 w-3 mr-1" /> },
   "closed": { label: "Closed", colorClass: "rc-badge-green", icon: <CheckCircle2 className="h-3 w-3 mr-1" /> },
   "declined": { label: "Declined", colorClass: "rc-badge-red", icon: <Clock className="h-3 w-3 mr-1" /> },
 };
 
-const COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#8b5cf6', '#ef4444', '#0ea5e9', '#ec4899', '#14b8a6', '#f97316', '#84cc16'];
+const COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#10b981', '#ef4444', '#0ea5e9', '#ec4899', '#14b8a6', '#f97316', '#84cc16'];
 
 const fmt = (n: number) => `$${n.toLocaleString()}`;
 const fmtNum = (n: number) => n.toLocaleString();
@@ -681,11 +681,11 @@ export default function ReferralTracking() {
             </div>
           </div>
           
-          <div className="rc-card flex flex-col hover:border-[#8b5cf6]/50 transition-colors cursor-pointer" onClick={() => setActiveTab('partners')}>
+          <div className="rc-card flex flex-col hover:border-[#10b981]/50 transition-colors cursor-pointer" onClick={() => setActiveTab('partners')}>
             <div className="flex items-center justify-between mb-2">
               <span className="rc-stat-label">Top Referrer</span>
-              <div className="w-8 h-8 rounded-full bg-[#8b5cf6]/10 flex items-center justify-center">
-                <Star className="h-4 w-4 text-[#8b5cf6]" />
+              <div className="w-8 h-8 rounded-full bg-[#10b981]/10 flex items-center justify-center">
+                <Star className="h-4 w-4 text-[#10b981]" />
               </div>
             </div>
             <div className="rc-stat-value truncate mb-1 text-lg">{stats.topReferrer}</div>
@@ -854,8 +854,8 @@ export default function ReferralTracking() {
                     <AreaChart data={trendData} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
                       <defs>
                         <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
@@ -871,7 +871,7 @@ export default function ReferralTracking() {
                         contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#c8d8ec', borderRadius: '8px' }}
                         formatter={(value: number) => [fmt(value), 'Revenue']}
                       />
-                      <Area type="monotone" dataKey="revenue" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={2} />
+                      <Area type="monotone" dataKey="revenue" stroke="#10b981" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={2} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -1514,7 +1514,7 @@ export default function ReferralTracking() {
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <Network className="h-5 w-5 text-[#8b5cf6]" />
+                <Network className="h-5 w-5 text-[#10b981]" />
                 Partner Network
               </h2>
               <div className="flex gap-2">
@@ -1554,7 +1554,7 @@ export default function ReferralTracking() {
                         {partners.map((p) => (
                           <tr key={p.id} className="hover:bg-[#12233e]/30 transition-colors cursor-pointer group">
                             <td className="px-4 py-4">
-                              <div className="font-medium text-[#c8d8ec] group-hover:text-[#8b5cf6] transition-colors">{p.name}</div>
+                              <div className="font-medium text-[#c8d8ec] group-hover:text-[#10b981] transition-colors">{p.name}</div>
                               <div className="text-xs text-[#7a95b8] capitalize">{p.type}</div>
                             </td>
                             <td className="px-4 py-4">
@@ -1573,7 +1573,7 @@ export default function ReferralTracking() {
                             <td className="px-4 py-4 text-right">
                               <div className="text-[#c8d8ec]">{p.conversionRate}%</div>
                               <div className="w-16 h-1 bg-[#12233e] rounded-full overflow-hidden ml-auto mt-1">
-                                <div className="h-full bg-[#8b5cf6]" style={{ width: `${p.conversionRate}%` }}></div>
+                                <div className="h-full bg-[#10b981]" style={{ width: `${p.conversionRate}%` }}></div>
                               </div>
                             </td>
                             <td className="px-4 py-4 text-right font-medium text-[#22c55e]">{fmt(p.lifetimeValue)}</td>
@@ -1612,15 +1612,15 @@ export default function ReferralTracking() {
                   </div>
                 </div>
                 
-                <div className="rc-card bg-gradient-to-br from-[#8b5cf6]/10 to-[#0d1a2e] border-[#8b5cf6]/30">
+                <div className="rc-card bg-gradient-to-br from-[#10b981]/10 to-[#0d1a2e] border-[#10b981]/30">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 bg-[#8b5cf6]/20 rounded-lg">
-                      <Zap className="h-5 w-5 text-[#c4b5fd]" />
+                    <div className="p-2 bg-[#10b981]/20 rounded-lg">
+                      <Zap className="h-5 w-5 text-[#a7f3d0]" />
                     </div>
                     <div>
                       <h4 className="font-medium text-white mb-1">Partner Insight</h4>
                       <p className="text-sm text-[#c8d8ec] mb-3">Smith & Associates CPA has a 65% conversion rate but hasn't sent a referral in 14 days. Consider scheduling a check-in.</p>
-                      <button className="text-xs bg-[#8b5cf6] text-white px-3 py-1.5 rounded hover:bg-[#7c3aed] transition-colors">
+                      <button className="text-xs bg-[#10b981] text-white px-3 py-1.5 rounded hover:bg-[#059669] transition-colors">
                         Schedule Meeting
                       </button>
                     </div>

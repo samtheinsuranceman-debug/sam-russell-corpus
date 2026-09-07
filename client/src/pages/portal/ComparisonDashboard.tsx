@@ -163,8 +163,8 @@ export default function ComparisonDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500/20 to-cyan-500/20 border border-purple-500/30">
-                <GitCompare className="w-6 h-6 text-purple-400" />
+              <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30">
+                <GitCompare className="w-6 h-6 text-emerald-400" />
               </div>
               Strategy Comparison Dashboard
             </h1>
@@ -269,8 +269,8 @@ export default function ComparisonDashboard() {
         {filledSlots.length === 0 && (
           <Card className="bg-zinc-900/40 border-zinc-700/30">
             <CardContent className="py-12 text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500/10 to-cyan-500/10 border border-purple-500/20 flex items-center justify-center">
-                <GitCompare className="w-8 h-8 text-purple-400/60" />
+              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 flex items-center justify-center">
+                <GitCompare className="w-8 h-8 text-emerald-400/60" />
               </div>
               <h3 className="text-lg font-semibold text-zinc-300 mb-2">No Strategies to Compare</h3>
               <p className="text-sm text-zinc-500 max-w-lg mx-auto mb-4">

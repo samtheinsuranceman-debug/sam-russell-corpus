@@ -53,11 +53,11 @@ const DEPTH_LEVELS = [
     tagline: "Where most competitors stop — we're just warming up",
     description: "Thorough analysis with scenario-based questions. Uncovers blind spots that surface-level assessments miss.",
     icon: Brain,
-    gradient: "from-violet-500 to-purple-600",
-    glowColor: "shadow-violet-500/30",
-    ringColor: "ring-violet-500/40",
-    textColor: "text-violet-400",
-    bgAccent: "bg-violet-500/5",
+    gradient: "from-emerald-500 to-emerald-600",
+    glowColor: "shadow-emerald-500/30",
+    ringColor: "ring-emerald-500/40",
+    textColor: "text-emerald-400",
+    bgAccent: "bg-emerald-500/5",
     barWidth: "60%",
     timeEstimate: "~20 min",
   },
@@ -124,7 +124,7 @@ export default function DepthSelector({
       {/* Depth gauge visualization */}
       <div className="relative">
         {/* Vertical connecting line */}
-        <div className="absolute left-[29px] top-8 bottom-8 w-px bg-gradient-to-b from-emerald-500/40 via-violet-500/40 to-amber-400/40" />
+        <div className="absolute left-[29px] top-8 bottom-8 w-px bg-gradient-to-b from-emerald-500/40 via-emerald-500/40 to-amber-400/40" />
 
         <div className="space-y-3">
           {DEPTH_LEVELS.map((d) => {

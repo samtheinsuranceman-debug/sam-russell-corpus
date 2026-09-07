@@ -123,7 +123,7 @@ export default function TrialLogin() {
               { icon: Clock, color: "text-amber-400", bg: "bg-amber-500/10", title: "3-Hour Free Trial", desc: "Explore all 50+ tools, strategy engines, and calculators during your trial period" },
               { icon: Zap, color: "text-cyan-400", bg: "bg-cyan-500/10", title: "Full Enterprise Access", desc: "Every tool unlocked — no feature restrictions during your trial" },
               { icon: Shield, color: "text-emerald-400", bg: "bg-emerald-500/10", title: "No Credit Card Required", desc: "Just your email and the access password. Instant access." },
-              { icon: CreditCard, color: "text-purple-400", bg: "bg-purple-500/10", title: "$99/mo After Trial", desc: "Continue with a monthly subscription after your 3-hour trial" },
+              { icon: CreditCard, color: "text-emerald-400", bg: "bg-emerald-500/10", title: "$99/mo After Trial", desc: "Continue with a monthly subscription after your 3-hour trial" },
             ].map((item, i) => (
               <div key={i} className="flex gap-4 items-start">
                 <div className={`w-10 h-10 rounded-lg ${item.bg} flex items-center justify-center flex-shrink-0`}>

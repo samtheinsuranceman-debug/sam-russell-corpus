@@ -34,7 +34,7 @@ const CARRIER_COLORS: Record<string, string> = {
   "Allianz": "#22c55e",
   "Athene": "#3b82f6",
   "Nationwide": "#f0c040",
-  "Fidelity & Guaranty": "#8b5cf6",
+  "Fidelity & Guaranty": "#10b981",
   "Corebridge": "#f43f5e",
   "North American": "#06b6d4",
   "Sammons": "#f97316",
@@ -45,7 +45,7 @@ const CARRIER_COLORS: Record<string, string> = {
   "Lincoln Financial": "#84cc16"
 };
 
-const COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#f43f5e", "#8b5cf6", "#06b6d4", "#f97316", "#10b981"];
+const COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#f43f5e", "#10b981", "#06b6d4", "#f97316", "#10b981"];
 
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
@@ -326,7 +326,7 @@ export default function CarrierQuotes() {
         { label: "Submitted", value: analyticsData.statusDist.find((s) => s.originalName === "submitted")?.value || 0, color: "text-blue-400", icon: Send, trend: "+5%" },
         { label: "Pending Review", value: analyticsData.statusDist.find((s) => s.originalName === "pending_review")?.value || 0, color: "text-[#f0c040]", icon: Clock, trend: "-2%" },
         { label: "Approved", value: analyticsData.statusDist.find((s) => s.originalName === "approved")?.value || 0, color: "text-[#22c55e]", icon: CheckCircle2, trend: "+15%" },
-        { label: "Avg Turnaround", value: `${analyticsData.stats.avgTurnaroundDays.toFixed(1)}d`, color: "text-[#8b5cf6]", icon: Zap, trend: "-1.2d" },
+        { label: "Avg Turnaround", value: `${analyticsData.stats.avgTurnaroundDays.toFixed(1)}d`, color: "text-[#10b981]", icon: Zap, trend: "-1.2d" },
       ].map((s) => (
         <div key={s.label} className="rc-card flex flex-col justify-between hover:border-[#22c55e]/30 transition-all duration-300 group hover:-translate-y-1">
           <div className="flex justify-between items-start mb-2">
@@ -962,7 +962,7 @@ export default function CarrierQuotes() {
         <div className="rc-card flex flex-col h-[400px]">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-white font-semibold flex items-center gap-2">
-              <Layers size={18} className="text-[#8b5cf6]" /> Product Mix Analysis
+              <Layers size={18} className="text-[#10b981]" /> Product Mix Analysis
             </h3>
           </div>
           <div className="flex-1 min-h-0">
@@ -972,7 +972,7 @@ export default function CarrierQuotes() {
                   <PolarGrid stroke="#12233e" />
                   <PolarAngleAxis dataKey="name" tick={{ fill: '#c8d8ec', fontSize: 12 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={{ fill: '#7a95b8' }} />
-                  <Radar name="Products" dataKey="value" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.5} />
+                  <Radar name="Products" dataKey="value" stroke="#10b981" fill="#10b981" fillOpacity={0.5} />
                   <Tooltip 
                     contentStyle={{ backgroundColor: '#0a1526', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }}
                   />

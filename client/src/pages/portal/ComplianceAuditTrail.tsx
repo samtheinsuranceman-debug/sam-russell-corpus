@@ -122,9 +122,9 @@ const typeConfig: Record<string, { label: string; icon: any; color: string }> = 
   meeting: { label: "Meeting", icon: Calendar, color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
   email: { label: "Email", icon: Mail, color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
   phone: { label: "Phone", icon: Phone, color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-  document: { label: "Document", icon: FileText, color: "bg-violet-500/20 text-violet-400 border-violet-500/30" },
+  document: { label: "Document", icon: FileText, color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
   trade: { label: "Trade", icon: Activity, color: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30" },
-  disclosure: { label: "Disclosure", icon: CheckCircle2, color: "bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30" },
+  disclosure: { label: "Disclosure", icon: CheckCircle2, color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
   login: { label: "Login", icon: User, color: "bg-slate-500/20 text-slate-400 border-slate-500/30" },
   plan_change: { label: "Plan Change", icon: Settings, color: "bg-orange-500/20 text-orange-400 border-orange-500/30" },
   system: { label: "System", icon: Server, color: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30" },
@@ -356,7 +356,7 @@ export default function ComplianceAuditTrail() {
     ];
   }, []);
 
-  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444", "#ec4899", "#14b8a6", "#f97316", "#6366f1", "#8b5cf6"];
+  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#ec4899", "#14b8a6", "#f97316", "#6366f1", "#10b981"];
 
   const toggleSelection = (id: string) => {
     const newSelection = new Set(selectedEntries);
@@ -506,10 +506,10 @@ export default function ComplianceAuditTrail() {
             <p className="text-xs text-[#7a95b8] mt-2">Require compliance review</p>
           </div>
 
-          <div className={`rc-card rounded-2xl p-5 flex flex-col justify-center transition-all ${avgRiskScore > 50 ? "bg-[#ef4444]/5 border-[#ef4444]/30 hover:border-[#ef4444]/50" : "bg-[#0d1a2e] border-[#12233e] hover:border-[#a78bfa]/50"}`}>
+          <div className={`rc-card rounded-2xl p-5 flex flex-col justify-center transition-all ${avgRiskScore > 50 ? "bg-[#ef4444]/5 border-[#ef4444]/30 hover:border-[#ef4444]/50" : "bg-[#0d1a2e] border-[#12233e] hover:border-[#34d399]/50"}`}>
             <div className="flex items-center justify-between mb-2">
               <p className={`rc-stat-label text-xs font-medium uppercase tracking-wider ${avgRiskScore > 50 ? "text-[#ef4444]" : "text-[#7a95b8]"}`}>Avg Risk Score</p>
-              <div className={`p-1.5 rounded-md ${avgRiskScore > 50 ? "bg-[#ef4444]/10 text-[#ef4444]" : "bg-[#a78bfa]/10 text-[#a78bfa]"}`}>
+              <div className={`p-1.5 rounded-md ${avgRiskScore > 50 ? "bg-[#ef4444]/10 text-[#ef4444]" : "bg-[#34d399]/10 text-[#34d399]"}`}>
                 <ShieldAlert className="h-4 w-4" />
               </div>
             </div>
@@ -671,7 +671,7 @@ export default function ComplianceAuditTrail() {
                     />
                     <Bar dataKey="clean" stackId="a" name="Clean" fill="#3b82f6" />
                     <Bar dataKey="reviewed" stackId="a" name="Reviewed" fill="#22c55e" />
-                    <Bar dataKey="pending" stackId="a" name="Pending" fill="#a78bfa" />
+                    <Bar dataKey="pending" stackId="a" name="Pending" fill="#34d399" />
                     <Bar dataKey="flagged" stackId="a" name="Flagged" fill="#f0c040" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
@@ -691,15 +691,15 @@ export default function ComplianceAuditTrail() {
                   <AreaChart data={timeOfDayDist} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
                     <XAxis dataKey="time" stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} />
                     <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} />
                     <RTooltip contentStyle={{ background: "#0d1a2e", border: "1px solid #12233e", borderRadius: "8px", color: "#fff", fontSize: "12px" }} />
-                    <Area type="monotone" dataKey="count" name="Total Events" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorCount)" />
+                    <Area type="monotone" dataKey="count" name="Total Events" stroke="#10b981" fillOpacity={1} fill="url(#colorCount)" />
                     <Area type="monotone" dataKey="highRisk" name="High Risk" stroke="#ef4444" fill="none" strokeDasharray="3 3" />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -904,7 +904,7 @@ export default function ComplianceAuditTrail() {
                                   </div>
                                   <div>
                                     <p className="text-[10px] text-[#7a95b8] uppercase mb-1">IP Address</p>
-                                    <div className="flex items-center text-xs text-[#c8d8ec]"><Server className="h-3 w-3 mr-1 text-[#8b5cf6]" /> {entry.ipAddress}</div>
+                                    <div className="flex items-center text-xs text-[#c8d8ec]"><Server className="h-3 w-3 mr-1 text-[#10b981]" /> {entry.ipAddress}</div>
                                   </div>
                                   <div>
                                     <p className="text-[10px] text-[#7a95b8] uppercase mb-1">Device</p>

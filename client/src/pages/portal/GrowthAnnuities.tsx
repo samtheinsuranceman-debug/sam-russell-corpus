@@ -135,7 +135,7 @@ export default function GrowthAnnuities() {
                   dataKey="value"
                 >
                   {(product?.strategies || [{ name: "No Data" }]).map((_: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444"][index % 5]} />
+                    <Cell key={`cell-${index}`} fill={["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444"][index % 5]} />
                   ))}
                 </Pie>
                 <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} />
@@ -753,10 +753,10 @@ export default function GrowthAnnuities() {
                       <p className="text-xl font-bold text-amber-400">{result.averageAnnualReturn}%</p>
                     </CardContent>
                   </Card>
-                  <Card className="bg-purple-500/10 border-purple-500/30">
+                  <Card className="bg-emerald-500/10 border-emerald-500/30">
                     <CardContent className="pt-4 text-center">
                       <p className="text-xs text-muted-foreground">Return Multiple</p>
-                      <p className="text-xl font-bold text-purple-400">{(result.finalValue / form.initialPremium).toFixed(1)}x</p>
+                      <p className="text-xl font-bold text-emerald-400">{(result.finalValue / form.initialPremium).toFixed(1)}x</p>
                     </CardContent>
                   </Card>
                 </div>

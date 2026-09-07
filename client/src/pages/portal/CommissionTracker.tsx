@@ -170,7 +170,7 @@ function fmtFull(n: number): string {
   return `$${n.toLocaleString()}`;
 }
 
-const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#ef4444', '#f59e0b', '#06b6d4', '#ec4899', '#84cc16'];
+const COLORS = ['#10b981', '#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#06b6d4', '#ec4899', '#84cc16'];
 
 export default function CommissionTracker() {
   const { user } = useAuth();
@@ -304,7 +304,7 @@ export default function CommissionTracker() {
 
   const typeColor = (type: CommissionType) => {
     if (type === "life") return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-    if (type === "annuity") return "bg-purple-500/20 text-purple-400 border-purple-500/30";
+    if (type === "annuity") return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
     return "bg-amber-500/20 text-amber-400 border-amber-500/30";
   };
 
@@ -317,7 +317,7 @@ export default function CommissionTracker() {
   const categoryColor = (cat: string) => {
     if (cat === "core") return "text-emerald-400";
     if (cat === "advanced") return "text-amber-400";
-    return "text-purple-400";
+    return "text-emerald-400";
   };
 
   useEffect(() => {
@@ -399,14 +399,14 @@ export default function CommissionTracker() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/30">
+        <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/30">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-purple-400 text-xs font-semibold uppercase tracking-wider">Annuity Commissions</span>
-              <PiggyBank className="w-4 h-4 text-purple-400" />
+              <span className="text-emerald-400 text-xs font-semibold uppercase tracking-wider">Annuity Commissions</span>
+              <PiggyBank className="w-4 h-4 text-emerald-400" />
             </div>
             <p className="text-3xl font-bold text-white">{fmt(stats.annuityTotal)}</p>
-            <p className="text-purple-400/70 text-xs mt-1">FIA + MYGA + SPIA</p>
+            <p className="text-emerald-400/70 text-xs mt-1">FIA + MYGA + SPIA</p>
           </CardContent>
         </Card>
 
@@ -560,7 +560,7 @@ export default function CommissionTracker() {
             <Card className="bg-[#111c32] border-slate-700/50">
               <CardHeader>
                 <CardTitle className="text-white text-base flex items-center gap-2">
-                  <PieChartIcon className="w-4 h-4 text-purple-400" /> Revenue by Category
+                  <PieChartIcon className="w-4 h-4 text-emerald-400" /> Revenue by Category
                 </CardTitle>
                 <CardDescription>Active tools commission distribution</CardDescription>
               </CardHeader>
@@ -628,7 +628,7 @@ export default function CommissionTracker() {
                           <Badge variant="outline" className={`text-[10px] capitalize ${
                             tool.category === 'core' ? 'text-emerald-400 border-emerald-400/30' : 
                             tool.category === 'advanced' ? 'text-amber-400 border-amber-400/30' : 
-                            'text-purple-400 border-purple-400/30'
+                            'text-emerald-400 border-emerald-400/30'
                           }`}>
                             {tool.category}
                           </Badge>
@@ -994,7 +994,7 @@ export default function CommissionTracker() {
                       </div>
                       <div className="flex justify-between items-center mt-1">
                         <span className="text-slate-400 text-xs">Annuity Contribution</span>
-                        <span className="text-purple-400 text-sm">{Math.round((stats.annuityTotal / stats.grandTotal) * 100 || 0)}%</span>
+                        <span className="text-emerald-400 text-sm">{Math.round((stats.annuityTotal / stats.grandTotal) * 100 || 0)}%</span>
                       </div>
                     </div>
                   </div>

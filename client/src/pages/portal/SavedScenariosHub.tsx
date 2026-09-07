@@ -47,7 +47,7 @@ const fmt = (n: number) =>
 
 const fmtPct = (n: number) => `${n.toFixed(1)}%`;
 
-const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#a855f7", "#ef4444", "#14b8a6", "#8b5cf6", "#f97316"];
+const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#a855f7", "#ef4444", "#14b8a6", "#10b981", "#f97316"];
 
 function computeProjection(params: {
   aggression: number; loanUtil: number; cryptoAlloc: number; incomeStartYear: number;
@@ -374,7 +374,7 @@ export default function SavedScenariosHub() {
       { name: 'Equities', value: equities, color: '#3b82f6' },
       { name: 'Fixed Income', value: fixedIncome, color: '#10b981' },
       { name: 'Crypto', value: crypto, color: '#f59e0b' },
-      { name: 'Alternatives', value: alternatives, color: '#8b5cf6' }
+      { name: 'Alternatives', value: alternatives, color: '#10b981' }
     ];
   }, [compareScenarios]);
 
@@ -1345,7 +1345,7 @@ export default function SavedScenariosHub() {
             {/* Data Table 5: Market Context */}
             <div className="rc-card">
               <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-[#8b5cf6]" />
+                <TrendingUp className="w-5 h-5 text-[#10b981]" />
                 Current Market Context
               </h3>
               <div className="overflow-x-auto">

@@ -519,7 +519,7 @@ export default function TaxWaterfall() {
           {/* Strategy */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2"><Zap className="w-4 h-4 text-purple-400" /> Strategy Inputs</CardTitle>
+              <CardTitle className="text-base flex items-center gap-2"><Zap className="w-4 h-4 text-emerald-400" /> Strategy Inputs</CardTitle>
               <CardDescription className="text-xs">Model Roth conversions and IUL tax-free income</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -528,8 +528,8 @@ export default function TaxWaterfall() {
                 <NumberInput value={rothConversion} onChange={setRothConversion} className="h-8 text-sm" min={0} step={5000} />
                 <p className="text-[10px] text-muted-foreground">Taxable now, but grows tax-free forever.</p>
               </div>
-              <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20 space-y-2">
-                <Label className="text-xs font-semibold text-purple-400 flex items-center gap-1"><PiggyBank className="w-3 h-3" /> IUL Tax-Free Income</Label>
+              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 space-y-2">
+                <Label className="text-xs font-semibold text-emerald-400 flex items-center gap-1"><PiggyBank className="w-3 h-3" /> IUL Tax-Free Income</Label>
                 <NumberInput value={iulTaxFreeIncome} onChange={setIulTaxFreeIncome} className="h-8 text-sm" min={0} step={5000} />
                 <p className="text-[10px] text-muted-foreground">Policy loans are not taxable income. This amount adds to take-home without increasing your tax bill.</p>
               </div>
@@ -554,7 +554,7 @@ export default function TaxWaterfall() {
               <StatCard label="Total Tax" value={fmt(result.totalTax)} color="text-red-400" sub={`Fed: ${fmt(result.federalTax)} | State: ${fmt(result.stateTax)}`} />
               <StatCard label="Effective Rate" value={pct(result.effectiveRate)} color="text-amber-400" sub={`Marginal: ${pct(result.marginalRate)}`} />
               <StatCard label="Take-Home Pay" value={fmt(result.takeHomePay)} color="text-blue-400" />
-              <StatCard label="With IUL Income" value={fmt(result.takeHomeWithIUL)} color="text-purple-400" sub={`+${fmt(result.iulComparison.taxSaved)} tax saved`} />
+              <StatCard label="With IUL Income" value={fmt(result.takeHomeWithIUL)} color="text-emerald-400" sub={`+${fmt(result.iulComparison.taxSaved)} tax saved`} />
             </div>
 
             <Tabs defaultValue="waterfall" className="space-y-4">
@@ -698,8 +698,8 @@ export default function TaxWaterfall() {
                         <p className="text-lg font-bold">{fmt(result.scenarioComparison.withRothConversion.takeHome)}</p>
                         <p className="text-xs text-muted-foreground">Future savings: {fmt(result.scenarioComparison.withRothConversion.futureTaxSavings)}</p>
                       </div>
-                      <div className="p-3 rounded-lg bg-purple-500/10 text-center">
-                        <p className="text-xs text-purple-400">With IUL Income</p>
+                      <div className="p-3 rounded-lg bg-emerald-500/10 text-center">
+                        <p className="text-xs text-emerald-400">With IUL Income</p>
                         <p className="text-lg font-bold">{fmt(result.scenarioComparison.withIULIncome.takeHome)}</p>
                         <p className="text-xs text-muted-foreground">Tax-free bonus: {fmt(result.scenarioComparison.withIULIncome.taxFreeBonus)}</p>
                       </div>
@@ -838,9 +838,9 @@ export default function TaxWaterfall() {
                     </CardHeader>
                     <CardContent className="space-y-3">
                       <div className="grid grid-cols-2 gap-3">
-                        <div className="p-3 rounded-lg bg-purple-500/10">
-                          <p className="text-xs text-purple-400">IUL Tax-Free Income</p>
-                          <p className="text-lg font-bold text-purple-400">{fmt(result.iulComparison.iulTaxFreeAmount)}</p>
+                        <div className="p-3 rounded-lg bg-emerald-500/10">
+                          <p className="text-xs text-emerald-400">IUL Tax-Free Income</p>
+                          <p className="text-lg font-bold text-emerald-400">{fmt(result.iulComparison.iulTaxFreeAmount)}</p>
                         </div>
                         <div className="p-3 rounded-lg bg-muted/50">
                           <p className="text-xs text-muted-foreground">Taxable Equivalent</p>
@@ -855,14 +855,14 @@ export default function TaxWaterfall() {
                           <p className="text-lg font-bold">{pct(result.iulComparison.effectiveBenefit)}</p>
                         </div>
                       </div>
-                      <div className="p-4 rounded-lg bg-gradient-to-r from-purple-500/10 to-emerald-500/10 border border-purple-500/20">
+                      <div className="p-4 rounded-lg bg-gradient-to-r from-emerald-500/10 to-emerald-500/10 border border-emerald-500/20">
                         <p className="text-sm font-semibold mb-2">Why IUL Policy Loans Win</p>
                         <ul className="text-xs text-muted-foreground space-y-1.5">
-                          <li className="flex items-start gap-1.5"><span className="text-purple-400 mt-0.5">&#x2713;</span> To receive {fmt(result.iulComparison.iulTaxFreeAmount)} tax-free, you would need to earn {fmt(result.iulComparison.taxableEquivalent)} in taxable income</li>
-                          <li className="flex items-start gap-1.5"><span className="text-purple-400 mt-0.5">&#x2713;</span> That is {fmt(result.iulComparison.taxSaved)} per year in taxes you never pay</li>
-                          <li className="flex items-start gap-1.5"><span className="text-purple-400 mt-0.5">&#x2713;</span> Over 20 years of retirement: {fmt(result.iulComparison.taxSaved * 20)} in total tax savings</li>
-                          <li className="flex items-start gap-1.5"><span className="text-purple-400 mt-0.5">&#x2713;</span> No contribution limits, no early withdrawal penalties, no income restrictions</li>
-                          <li className="flex items-start gap-1.5"><span className="text-purple-400 mt-0.5">&#x2713;</span> Death benefit passes to heirs income-tax-free</li>
+                          <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> To receive {fmt(result.iulComparison.iulTaxFreeAmount)} tax-free, you would need to earn {fmt(result.iulComparison.taxableEquivalent)} in taxable income</li>
+                          <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> That is {fmt(result.iulComparison.taxSaved)} per year in taxes you never pay</li>
+                          <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> Over 20 years of retirement: {fmt(result.iulComparison.taxSaved * 20)} in total tax savings</li>
+                          <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> No contribution limits, no early withdrawal penalties, no income restrictions</li>
+                          <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> Death benefit passes to heirs income-tax-free</li>
                         </ul>
                       </div>
                     </CardContent>
@@ -901,7 +901,7 @@ export default function TaxWaterfall() {
                           ))}
                         </Bar>
                         <Bar yAxisId="left" dataKey="taxOnRmd" name="Tax on RMD" fill="#dc2626" opacity={0.6} radius={[4, 4, 0, 0]} />
-                        <Line yAxisId="right" type="monotone" dataKey="balance" name="IRA Balance" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+                        <Line yAxisId="right" type="monotone" dataKey="balance" name="IRA Balance" stroke="#10b981" strokeWidth={2} dot={false} />
                       </ComposedChart>
                     </ResponsiveContainer>
                     <div className="mt-4 overflow-x-auto">
@@ -1068,7 +1068,7 @@ export default function TaxWaterfall() {
                         <Tooltip formatter={(value: number, name: string) => [name === 'Effective CG Rate' ? pct(value) : fmt(value), name]} />
                         <Legend />
                         <Bar yAxisId="left" dataKey="cgTax" name="Capital Gains Tax" fill="#3b82f6" stackId="a" radius={[0, 0, 0, 0]} />
-                        <Bar yAxisId="left" dataKey="niit" name="NIIT (3.8%)" fill="#8b5cf6" stackId="a" radius={[4, 4, 0, 0]} />
+                        <Bar yAxisId="left" dataKey="niit" name="NIIT (3.8%)" fill="#10b981" stackId="a" radius={[4, 4, 0, 0]} />
                         <Line yAxisId="right" type="monotone" dataKey="effectiveRate" name="Effective CG Rate" stroke="#f59e0b" strokeWidth={2} dot={false} />
                       </ComposedChart>
                     </ResponsiveContainer>
@@ -1078,8 +1078,8 @@ export default function TaxWaterfall() {
                         <p className="text-lg font-bold">{fmt(Math.max(0, (filingStatus === 'married' ? 89250 : 44625) - (result?.taxableIncome || 0) + (income.capitalGains || 0)))}</p>
                         <p className="text-xs text-muted-foreground">Gains taxed at 0%</p>
                       </div>
-                      <div className="p-3 rounded-lg bg-purple-500/10">
-                        <p className="text-xs text-purple-400">NIIT Threshold</p>
+                      <div className="p-3 rounded-lg bg-emerald-500/10">
+                        <p className="text-xs text-emerald-400">NIIT Threshold</p>
                         <p className="text-lg font-bold">{fmt(filingStatus === 'married' ? 250000 : 200000)}</p>
                         <p className="text-xs text-muted-foreground">3.8% surtax on investment income</p>
                       </div>

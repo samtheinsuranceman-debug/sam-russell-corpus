@@ -101,8 +101,8 @@ interface Trophy {
 const TROPHIES: Trophy[] = [
   { id: "first_lead", name: "First Contact", description: "Generated your first lead", icon: Star, threshold: 1, color: "text-yellow-400" },
   { id: "ten_leads", name: "Prospector", description: "Generated 10 leads", icon: Medal, threshold: 10, color: "text-blue-400" },
-  { id: "fifty_leads", name: "Lead Hunter", description: "Generated 50 leads", icon: Trophy, threshold: 50, color: "text-purple-400" },
-  { id: "hundred_leads", name: "Pipeline Master", description: "Generated 100 leads", icon: Award, threshold: 100, color: "text-fuchsia-400" },
+  { id: "fifty_leads", name: "Lead Hunter", description: "Generated 50 leads", icon: Trophy, threshold: 50, color: "text-emerald-400" },
+  { id: "hundred_leads", name: "Pipeline Master", description: "Generated 100 leads", icon: Award, threshold: 100, color: "text-emerald-400" },
   { id: "five_hundred", name: "Lead Machine", description: "Generated 500 leads", icon: Crown, threshold: 500, color: "text-amber-400" },
   { id: "thousand", name: "Legendary Closer", description: "Generated 1,000 leads", icon: Gem, threshold: 1000, color: "text-emerald-400" },
   { id: "first_purchase", name: "Investor", description: "Made your first credit purchase", icon: CreditCard, threshold: 1, color: "text-green-400" },
@@ -492,7 +492,7 @@ export default function LeadGenerator() {
           </Card>
           <Card className="bg-slate-800/40 border-slate-700/50">
             <CardContent className="p-4 flex items-center gap-4">
-              <div className="p-3 bg-fuchsia-500/20 rounded-xl"><Target className="h-6 w-6 text-fuchsia-400" /></div>
+              <div className="p-3 bg-emerald-500/20 rounded-xl"><Target className="h-6 w-6 text-emerald-400" /></div>
               <div>
                 <p className="text-sm text-slate-400">Conversion Rate</p>
                 <p className="text-2xl font-bold text-white">4.2%</p>
@@ -901,7 +901,7 @@ export default function LeadGenerator() {
               <Card className="bg-slate-800/40 border-slate-700/50">
                 <CardHeader>
                   <CardTitle className="text-base text-white flex items-center gap-2">
-                    <BarChart2 className="h-4 w-4 text-fuchsia-400" /> Leads by Category
+                    <BarChart2 className="h-4 w-4 text-emerald-400" /> Leads by Category
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="h-[300px]">
@@ -911,7 +911,7 @@ export default function LeadGenerator() {
                       <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} />
                       <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
                       <Tooltip cursor={{fill: '#334155', opacity: 0.4}} contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155' }} />
-                      <Bar dataKey="count" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -1148,8 +1148,8 @@ export default function LeadGenerator() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {CREDIT_PACKAGES.map((pkg) => (
-                    <div key={pkg.id} className={`p-6 rounded-xl border text-center flex flex-col transition-all ${pkg.popular ? "bg-gradient-to-b from-slate-800 to-slate-900 border-fuchsia-500/50 ring-1 ring-fuchsia-500/20 transform md:-translate-y-2 shadow-xl shadow-fuchsia-900/20" : "bg-slate-900/50 border-slate-700/50 hover:border-slate-500"}`}>
-                      {pkg.popular && <div className="mx-auto bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider">Most Popular</div>}
+                    <div key={pkg.id} className={`p-6 rounded-xl border text-center flex flex-col transition-all ${pkg.popular ? "bg-gradient-to-b from-slate-800 to-slate-900 border-emerald-500/50 ring-1 ring-emerald-500/20 transform md:-translate-y-2 shadow-xl shadow-emerald-900/20" : "bg-slate-900/50 border-slate-700/50 hover:border-slate-500"}`}>
+                      {pkg.popular && <div className="mx-auto bg-gradient-to-r from-emerald-600 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider">Most Popular</div>}
                       <p className={`text-lg font-bold ${pkg.popular ? 'text-white' : 'text-slate-300'}`}>{pkg.name}</p>
                       <div className="my-4">
                         <span className="text-4xl font-bold text-white">${pkg.price}</span>
@@ -1162,7 +1162,7 @@ export default function LeadGenerator() {
                           ${(pkg.price / pkg.credits * 100).toFixed(1)}¢ per credit
                         </div>
                       </div>
-                      <Button onClick={() => purchaseCredits(pkg)} className={`w-full mt-auto ${pkg.popular ? "bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-700 hover:to-pink-700" : "bg-slate-700 hover:bg-slate-600"}`}>
+                      <Button onClick={() => purchaseCredits(pkg)} className={`w-full mt-auto ${pkg.popular ? "bg-gradient-to-r from-emerald-600 to-pink-600 hover:from-emerald-700 hover:to-pink-700" : "bg-slate-700 hover:bg-slate-600"}`}>
                         Select Package
                       </Button>
                     </div>

@@ -98,7 +98,7 @@ export default function ToiletDashboard() {
           label="Clients"
           value={String(clientCount)}
           icon={Users}
-          color="from-violet-600/80 to-violet-800/80"
+          color="from-emerald-600/80 to-emerald-800/80"
           sub={`${dealCount} active deals`}
         />
         <BigStat
@@ -127,7 +127,7 @@ export default function ToiletDashboard() {
               </Badge>
             )}
             {activeQuests > 0 && (
-              <Badge className="bg-violet-500/20 text-violet-400 border-violet-500/30">
+              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
                 ⚔️ {activeQuests} quests
               </Badge>
             )}

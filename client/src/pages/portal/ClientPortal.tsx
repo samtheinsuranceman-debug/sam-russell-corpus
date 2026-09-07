@@ -82,7 +82,7 @@ const ASSET_ALLOCATION = [
   { name: "Equities", value: 60, color: "#22c55e" },
   { name: "Fixed Income", value: 25, color: "#3b82f6" },
   { name: "Cash", value: 5, color: "#f0c040" },
-  { name: "Alternatives", value: 10, color: "#8b5cf6" },
+  { name: "Alternatives", value: 10, color: "#10b981" },
 ];
 
 const PROJECTED_WEALTH = [
@@ -324,9 +324,9 @@ export default function ClientPortal() {
             <div className="text-sm text-[#7a95b8]">Plan Presentation</div>
           </div>
           
-          <div className="rc-card hover:border-[#8b5cf6]/50 transition-colors group cursor-pointer" onClick={() => setActiveTab("overview")}>
+          <div className="rc-card hover:border-[#10b981]/50 transition-colors group cursor-pointer" onClick={() => setActiveTab("overview")}>
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-lg bg-[#8b5cf6]/10 text-[#8b5cf6] group-hover:scale-110 transition-transform">
+              <div className="p-2 rounded-lg bg-[#10b981]/10 text-[#10b981] group-hover:scale-110 transition-transform">
                 <DollarSign className="h-5 w-5" />
               </div>
               <span className="rc-stat-label text-[#7a95b8] font-medium">Total Wealth</span>
@@ -474,7 +474,7 @@ export default function ClientPortal() {
                     {[
                       { title: "Retire by 62", progress: 75, color: "bg-[#22c55e]" },
                       { title: "Fund Grandchildren's College", progress: 40, color: "bg-[#3b82f6]" },
-                      { title: "Pay off Mortgage", progress: 90, color: "bg-[#8b5cf6]" },
+                      { title: "Pay off Mortgage", progress: 90, color: "bg-[#10b981]" },
                       { title: "Leave Legacy to Charity", progress: 20, color: "bg-[#f0c040]" }
                     ].map((goal, i) => (
                       <div key={i}>
@@ -581,7 +581,7 @@ export default function ClientPortal() {
                       <Legend wrapperStyle={{ fontSize: '12px', color: '#c8d8ec' }} />
                       <Area type="monotone" dataKey="pension" stackId="1" stroke="#22c55e" fill="#22c55e" fillOpacity={0.6} name="Pension" />
                       <Area type="monotone" dataKey="socialSecurity" stackId="1" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} name="Social Security" />
-                      <Area type="monotone" dataKey="investments" stackId="1" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} name="Investments" />
+                      <Area type="monotone" dataKey="investments" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} name="Investments" />
                       <Area type="monotone" dataKey="annuity" stackId="1" stroke="#f0c040" fill="#f0c040" fillOpacity={0.6} name="Annuity" />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -666,7 +666,7 @@ export default function ClientPortal() {
                   {[
                     { name: "Michael Russell", role: "Lead Advisor", email: "michael@russellcapital.com", color: "bg-[#22c55e]/20 text-[#22c55e]" },
                     { name: "Sarah Jenkins", role: "Tax Strategist", email: "sarah@russellcapital.com", color: "bg-[#3b82f6]/20 text-[#3b82f6]" },
-                    { name: "David Chen", role: "Estate Attorney", email: "david@russellcapital.com", color: "bg-[#8b5cf6]/20 text-[#8b5cf6]" },
+                    { name: "David Chen", role: "Estate Attorney", email: "david@russellcapital.com", color: "bg-[#10b981]/20 text-[#10b981]" },
                     { name: "Elena Rodriguez", role: "Client Success", email: "elena@russellcapital.com", color: "bg-[#f0c040]/20 text-[#f0c040]" },
                   ].map((member) => (
                     <div key={member.name} className="bg-[#060d19] border border-[#12233e] rounded-xl p-4 text-center hover:border-[#3b82f6]/30 transition-colors">

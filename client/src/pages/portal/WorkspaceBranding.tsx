@@ -519,9 +519,9 @@ export default function WorkspaceBranding() {
           <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 hover:border-[#1e3a5f] transition-colors group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-2 bg-[#12233e] rounded-lg group-hover:bg-[#1e3a5f] transition-colors">
-                <Users className="h-5 w-5 text-purple-500" />
+                <Users className="h-5 w-5 text-emerald-500" />
               </div>
-              <span className="px-2 py-1 bg-purple-500/10 text-purple-500 text-xs font-medium rounded-full border border-purple-500/20 flex items-center gap-1">
+              <span className="px-2 py-1 bg-emerald-500/10 text-emerald-500 text-xs font-medium rounded-full border border-emerald-500/20 flex items-center gap-1">
                 <ArrowUpRight className="h-3 w-3" />
                 8.1%
               </span>
@@ -974,7 +974,7 @@ export default function WorkspaceBranding() {
                   <div className="flex items-center justify-between pb-4 border-b border-[#12233e]">
                     <div>
                       <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-                        <Zap className="h-5 w-5 text-purple-500" />
+                        <Zap className="h-5 w-5 text-emerald-500" />
                         Performance Metrics
                       </h2>
                       <p className="text-sm text-[#7a95b8] mt-1">Detailed analysis of portal performance and user experience.</p>
@@ -994,7 +994,7 @@ export default function WorkspaceBranding() {
                             <RechartsTooltip 
                               contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#1e3a5f', borderRadius: '8px', color: '#fff' }}
                             />
-                            <Area type="monotone" dataKey="uv" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.2} />
+                            <Area type="monotone" dataKey="uv" stroke="#10b981" fill="#10b981" fillOpacity={0.2} />
                           </AreaChart>
                         </ResponsiveContainer>
                       </div>

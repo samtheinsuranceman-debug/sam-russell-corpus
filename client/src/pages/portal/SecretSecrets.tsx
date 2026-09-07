@@ -8,7 +8,7 @@ function getImpactColor(score: number) {
   if (score >= 11) return "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
   if (score >= 10) return "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
   if (score >= 9) return "text-blue-400 bg-blue-500/10 border-blue-500/20";
-  return "text-purple-400 bg-purple-500/10 border-purple-500/20";
+  return "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
 }
 
 function formatMoney(n: number) {
@@ -44,10 +44,10 @@ export default function SecretSecrets() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-gradient-to-br from-[#1a0d2e] via-[#0a1628] to-[#1a0d2e] p-8">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-transparent" />
+      <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-[#1a0d2e] via-[#0a1628] to-[#1a0d2e] p-8">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent" />
         <div className="relative z-10">
-          <p className="text-xs font-semibold tracking-[0.3em] text-purple-400 uppercase mb-2">The 0.1% Playbook</p>
+          <p className="text-xs font-semibold tracking-[0.3em] text-emerald-400 uppercase mb-2">The 0.1% Playbook</p>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">100 Secret Strategies</h1>
           <p className="text-gray-400 max-w-2xl text-sm leading-relaxed">
             Each strategy features a unique high-net-worth family with aggressive capital deployments ($750K–$15M per step),
@@ -55,7 +55,7 @@ export default function SecretSecrets() {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
             <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-              <p className="text-2xl font-bold text-purple-400">100</p>
+              <p className="text-2xl font-bold text-emerald-400">100</p>
               <p className="text-xs text-gray-500">Secret Strategies</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
@@ -83,13 +83,13 @@ export default function SecretSecrets() {
             placeholder="Search strategies or family names..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
           />
         </div>
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="px-4 py-2.5 rounded-lg border border-white/10 bg-white/5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+          className="px-4 py-2.5 rounded-lg border border-white/10 bg-white/5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
         >
           {allCategories.map((c) => (
             <option key={c} value={c} className="bg-gray-900">{c}</option>
@@ -108,12 +108,12 @@ export default function SecretSecrets() {
             <Link
               key={strategy.id}
               href={`/portal/secret-secrets/${strategy.id}`}
-              className="block rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] hover:border-purple-500/30 transition-all duration-200 p-4 group"
+              className="block rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] hover:border-emerald-500/30 transition-all duration-200 p-4 group"
             >
               <div className="flex items-center gap-4">
-                <span className="text-xs font-bold text-purple-400 w-8 flex-shrink-0">#{strategy.id}</span>
+                <span className="text-xs font-bold text-emerald-400 w-8 flex-shrink-0">#{strategy.id}</span>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-semibold text-white truncate group-hover:text-purple-300 transition-colors">
+                  <h3 className="text-sm font-semibold text-white truncate group-hover:text-emerald-300 transition-colors">
                     {strategy.title}
                   </h3>
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -142,7 +142,7 @@ export default function SecretSecrets() {
                     ))}
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-purple-400 transition-colors flex-shrink-0" />
+                <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
               </div>
             </Link>
           );

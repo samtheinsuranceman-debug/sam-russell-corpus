@@ -65,12 +65,12 @@ export default function TheBrotherhood() {
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map((c) => (
                 <button key={c.id} onClick={() => setCat(c.id)}
-                  className={`rounded-full px-3.5 py-1.5 text-xs transition-colors ${cat === c.id ? "bg-violet-500/30 text-white" : "bg-white/5 text-slate-400 hover:text-slate-200"}`}>
+                  className={`rounded-full px-3.5 py-1.5 text-xs transition-colors ${cat === c.id ? "bg-emerald-500/30 text-white" : "bg-white/5 text-slate-400 hover:text-slate-200"}`}>
                   {c.label}
                 </button>
               ))}
             </div>
-            <Button size="sm" onClick={() => setComposing((v) => !v)} className="bg-violet-500 hover:bg-violet-400"><Plus className="mr-1.5 h-4 w-4" /> Share</Button>
+            <Button size="sm" onClick={() => setComposing((v) => !v)} className="bg-emerald-500 hover:bg-emerald-400"><Plus className="mr-1.5 h-4 w-4" /> Share</Button>
           </div>
 
           {composing && (
@@ -82,10 +82,10 @@ export default function TheBrotherhood() {
                 <select value={draft.cat} onChange={(e) => setDraft({ ...draft, cat: e.target.value })} className="h-9 rounded-md border border-white/10 bg-white/[0.03] px-3 text-sm text-white">
                   {CATEGORIES.filter((c) => c.id !== "all").map((c) => <option key={c.id} value={c.id} className="bg-slate-900">{c.label}</option>)}
                 </select>
-                <button onClick={() => setDraft({ ...draft, anon: !draft.anon })} className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs ${draft.anon ? "bg-violet-500/30 text-violet-100" : "bg-white/5 text-slate-400"}`}>
+                <button onClick={() => setDraft({ ...draft, anon: !draft.anon })} className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs ${draft.anon ? "bg-emerald-500/30 text-emerald-100" : "bg-white/5 text-slate-400"}`}>
                   <EyeOff className="h-3.5 w-3.5" /> {draft.anon ? "Anonymous" : "Named"}
                 </button>
-                <Button size="sm" onClick={post} className="ml-auto bg-violet-500 hover:bg-violet-400">Post</Button>
+                <Button size="sm" onClick={post} className="ml-auto bg-emerald-500 hover:bg-emerald-400">Post</Button>
               </div>
             </GlowCard>
           )}
@@ -94,7 +94,7 @@ export default function TheBrotherhood() {
             <GlowCard key={s.id} className="p-5">
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-2 text-sm text-slate-300">
-                  {s.anon ? <EyeOff className="h-3.5 w-3.5 text-slate-500" /> : <Users className="h-3.5 w-3.5 text-violet-300" />}
+                  {s.anon ? <EyeOff className="h-3.5 w-3.5 text-slate-500" /> : <Users className="h-3.5 w-3.5 text-emerald-300" />}
                   {s.author}
                 </span>
                 <Badge variant="outline" style={{ borderColor: `${CAT_COLOR[s.cat]}55`, color: CAT_COLOR[s.cat] }}>
@@ -120,7 +120,7 @@ export default function TheBrotherhood() {
             <SectionLabel icon={Trophy}>XP leaderboard</SectionLabel>
             <ul className="mt-4 space-y-2">
               {LEADERS.map((l, i) => (
-                <li key={l.name} className={`flex items-center gap-3 rounded-xl border p-3 ${l.me ? "border-violet-400/50 bg-violet-500/10" : "border-white/8 bg-white/[0.02]"}`}>
+                <li key={l.name} className={`flex items-center gap-3 rounded-xl border p-3 ${l.me ? "border-emerald-400/50 bg-emerald-500/10" : "border-white/8 bg-white/[0.02]"}`}>
                   <span className="w-5 text-sm font-semibold text-slate-500">{i + 1}</span>
                   <div className="min-w-0 flex-1">
                     <p className="flex items-center gap-1.5 text-sm font-medium text-white">

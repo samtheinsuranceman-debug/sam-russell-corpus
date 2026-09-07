@@ -38,7 +38,7 @@ import { ComplianceFooter } from "@/components/ComplianceFooter";
 
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
-const COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4", "#f97316", "#14b8a6", "#84cc16"];
+const COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#ef4444", "#10b981", "#ec4899", "#06b6d4", "#f97316", "#14b8a6", "#84cc16"];
 const STATUS_COLORS = { optimal: "#22c55e", needs_review: "#f0c040", critical: "#ef4444" };
 
 interface BeneficiaryAccount {
@@ -915,7 +915,7 @@ export default function BeneficiaryOptimization() {
                               <div>
                                 <div className="text-xs text-[#7a95b8] mb-1 uppercase tracking-wider font-medium">Contingent Beneficiary</div>
                                 <div className="text-sm text-white font-medium flex items-center gap-2">
-                                  <Users className="w-3 h-3 text-[#8b5cf6]" />
+                                  <Users className="w-3 h-3 text-[#10b981]" />
                                   {account.contingentBeneficiary}
                                 </div>
                               </div>
@@ -1040,7 +1040,7 @@ export default function BeneficiaryOptimization() {
                           <XAxis dataKey="name" stroke="#7a95b8" angle={-45} textAnchor="end" height={60} />
                           <YAxis stroke="#7a95b8" tickFormatter={(val) => `$${val/1000}k`} />
                           <Tooltip content={<CustomTooltip />} />
-                          <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]}>
+                          <Bar dataKey="value" fill="#10b981" radius={[4, 4, 0, 0]}>
                             {institutionData.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={COLORS[(index + 4) % COLORS.length]} />
                             ))}
@@ -1120,7 +1120,7 @@ export default function BeneficiaryOptimization() {
                 <Card className="bg-[#0d1a2e] border-[#12233e]">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-[#8b5cf6]" />
+                      <TrendingUp className="w-5 h-5 text-[#10b981]" />
                       Legacy Growth & Tax Simulation
                     </CardTitle>
                     <CardDescription className="text-[#7a95b8]">Project future estate value and potential tax implications</CardDescription>

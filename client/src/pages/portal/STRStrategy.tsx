@@ -26,7 +26,7 @@ const fmtFull = (n: number) => `$${Math.round(n).toLocaleString()}`;
 // ─── COST SEGREGATION BREAKDOWN ────────────────────────────────────
 const COST_SEG_CATEGORIES = [
   { name: "5-Year Property", pct: 0.15, years: 5, desc: "Carpeting, appliances, furniture, decorative fixtures", color: "#3b82f6" },
-  { name: "7-Year Property", pct: 0.10, years: 7, desc: "Office furniture, security systems, landscaping", color: "#8b5cf6" },
+  { name: "7-Year Property", pct: 0.10, years: 7, desc: "Office furniture, security systems, landscaping", color: "#10b981" },
   { name: "15-Year Property", pct: 0.10, years: 15, desc: "Land improvements, sidewalks, parking, fencing", color: "#14b8a6" },
   { name: "27.5-Year Property", pct: 0.55, years: 27.5, desc: "Building structure (standard residential depreciation)", color: "#64748b" },
   { name: "Land (Non-Depreciable)", pct: 0.10, years: 0, desc: "Land value — cannot be depreciated", color: "#374151" },
@@ -35,7 +35,7 @@ const COST_SEG_CATEGORIES = [
 // ─── RABBU SECTION ─────────────────────────────────────────────────
 function RabbuSection() {
   return (
-    <div className="bg-gradient-to-r from-blue-900/30 via-indigo-900/30 to-purple-900/30 border border-blue-500/30 rounded-2xl p-6">
+    <div className="bg-gradient-to-r from-blue-900/30 via-indigo-900/30 to-emerald-900/30 border border-blue-500/30 rounded-2xl p-6">
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center flex-shrink-0">
           <MapPin className="w-6 h-6 text-blue-400" />
@@ -385,7 +385,7 @@ export default function STRStrategy() {
   const COLORS = {
     property: "#10b981", iul: "#3b82f6", equity: "#f59e0b",
     debt: "#ef4444", tax: "#f97316", rental: "#22c55e",
-    deduction: "#8b5cf6", savings: "#14b8a6",
+    deduction: "#10b981", savings: "#14b8a6",
   };
 
   return (
@@ -834,7 +834,7 @@ export default function STRStrategy() {
                     <th className="px-2 py-2 text-right text-gray-400">#Props</th>
                     <th className="px-2 py-2 text-right text-green-400">Gross Rent</th>
                     <th className="px-2 py-2 text-right text-red-300">Op Costs</th>
-                    <th className="px-2 py-2 text-right text-purple-400">Net Rent</th>
+                    <th className="px-2 py-2 text-right text-emerald-400">Net Rent</th>
                     <th className="px-2 py-2 text-right text-orange-400">Depreciation</th>
                     <th className="px-2 py-2 text-right text-orange-300">Bonus Depr</th>
                     <th className="px-2 py-2 text-right text-amber-400">Total Deductions</th>
@@ -857,7 +857,7 @@ export default function STRStrategy() {
                       </td>
                       <td className="px-2 py-1.5 text-right text-green-300">{fmt(y.yearGrossRent)}</td>
                       <td className="px-2 py-1.5 text-right text-red-200">{fmt(y.yearOperatingCosts)}</td>
-                      <td className="px-2 py-1.5 text-right" style={{ color: y.yearNetRent >= 0 ? "#a78bfa" : "#f87171" }}>{fmt(y.yearNetRent)}</td>
+                      <td className="px-2 py-1.5 text-right" style={{ color: y.yearNetRent >= 0 ? "#34d399" : "#f87171" }}>{fmt(y.yearNetRent)}</td>
                       <td className="px-2 py-1.5 text-right text-orange-300">{fmt(y.yearDepreciation)}</td>
                       <td className="px-2 py-1.5 text-right text-orange-200">{fmt(y.yearBonusDepreciation)}</td>
                       <td className="px-2 py-1.5 text-right text-amber-300">{fmt(y.yearTotalDeductions)}</td>

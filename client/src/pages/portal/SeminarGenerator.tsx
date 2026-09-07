@@ -82,7 +82,7 @@ interface SeminarTemplate {
   conversionRate: number;
 }
 
-const COLORS = ['#22c55e', '#3b82f6', '#f0c040', '#a855f7', '#ec4899', '#14b8a6', '#f97316', '#8b5cf6'];
+const COLORS = ['#22c55e', '#3b82f6', '#f0c040', '#a855f7', '#ec4899', '#14b8a6', '#f97316', '#10b981'];
 
 const MOCK_PERFORMANCE_DATA = [
   { month: 'Jan', attendees: 120, conversions: 24, revenue: 120000, satisfaction: 4.2 },
@@ -765,7 +765,7 @@ export default function SeminarGenerator() {
                         <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full ${
                           slide.type === 'title' ? 'bg-blue-500/10 text-blue-400' :
                           slide.type === 'content' ? 'bg-gray-500/10 text-gray-400' :
-                          slide.type === 'chart' ? 'bg-purple-500/10 text-purple-400' :
+                          slide.type === 'chart' ? 'bg-emerald-500/10 text-emerald-400' :
                           slide.type === 'case-study' ? 'bg-amber-500/10 text-amber-400' :
                           slide.type === 'interactive' ? 'bg-pink-500/10 text-pink-400' :
                           'bg-green-500/10 text-green-400'
@@ -817,7 +817,7 @@ export default function SeminarGenerator() {
                     <span className={`text-xs uppercase tracking-wider px-2.5 py-1 rounded-full font-medium ${
                       slides[activeSlide]?.type === 'title' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
                       slides[activeSlide]?.type === 'content' ? 'bg-gray-500/10 text-gray-400 border border-gray-500/20' :
-                      slides[activeSlide]?.type === 'chart' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' :
+                      slides[activeSlide]?.type === 'chart' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
                       slides[activeSlide]?.type === 'case-study' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
                       slides[activeSlide]?.type === 'interactive' ? 'bg-pink-500/10 text-pink-400 border border-pink-500/20' :
                       'bg-green-500/10 text-green-400 border border-green-500/20'
@@ -1160,7 +1160,7 @@ export default function SeminarGenerator() {
                   <div className={`absolute top-0 left-0 w-full h-1.5 ${
                     slide.type === 'title' ? 'bg-blue-500' :
                     slide.type === 'content' ? 'bg-gray-500' :
-                    slide.type === 'chart' ? 'bg-purple-500' :
+                    slide.type === 'chart' ? 'bg-emerald-500' :
                     slide.type === 'case-study' ? 'bg-amber-500' :
                     slide.type === 'interactive' ? 'bg-pink-500' :
                     'bg-green-500'

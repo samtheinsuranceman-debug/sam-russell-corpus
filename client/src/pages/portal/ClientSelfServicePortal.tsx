@@ -666,7 +666,7 @@ export default function ClientSelfServicePortal() {
                 <YAxis dataKey="device" type="category" stroke="#7a95b8" width={80} />
                 <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e' }} />
                 <Legend />
-                <Bar dataKey="users" fill="#8b5cf6" name="Active Users" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="users" fill="#10b981" name="Active Users" radius={[0, 4, 4, 0]} />
                 <Bar dataKey="avgSession" fill="#14b8a6" name="Avg Session (mins)" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>

@@ -316,7 +316,7 @@ export default function AiStrategyRecommender() {
     ].filter((d) => d.value > 0);
   }, [selectedClient]);
 
-  const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4"];
+  const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#10b981", "#ec4899", "#06b6d4"];
 
   const barData = useMemo(() => {
     return clients.slice(0, 8).map((c) => ({
@@ -471,12 +471,12 @@ export default function AiStrategyRecommender() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2 bg-[#0b1628] p-6 rounded-2xl border border-[#12233e] shadow-lg">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 bg-purple-500/20 rounded-xl">
-                <Brain className="w-8 h-8 text-purple-400" />
+              <div className="p-3 bg-emerald-500/20 rounded-xl">
+                <Brain className="w-8 h-8 text-emerald-400" />
               </div>
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
-                  AI Strategy Recommender <span className="text-purple-400 text-sm align-top font-normal bg-purple-500/10 px-2 py-0.5 rounded-full ml-2 border border-purple-500/20">PRO</span>
+                  AI Strategy Recommender <span className="text-emerald-400 text-sm align-top font-normal bg-emerald-500/10 px-2 py-0.5 rounded-full ml-2 border border-emerald-500/20">PRO</span>
                 </h1>
                 <p className="text-[#7a95b8] mt-1 text-sm md:text-base max-w-2xl">
                   Advanced financial modeling engine powered by institutional algorithms and firm-specific knowledge graph.
@@ -697,7 +697,7 @@ export default function AiStrategyRecommender() {
                         <input 
                           type="range" min="1" max="100" 
                           value={riskTolerance} onChange={(e) => setRiskTolerance(Number(e.target.value))}
-                          className="w-full accent-purple-500"
+                          className="w-full accent-emerald-500"
                         />
                         <div className="flex justify-between text-[10px] text-[#7a95b8] mt-1">
                           <span>Conservative</span>
@@ -730,7 +730,7 @@ export default function AiStrategyRecommender() {
                           id="compare" 
                           checked={isComparing} 
                           onChange={(e) => setIsComparing(e.target.checked)}
-                          className="rounded border-[#2a3f5f] bg-[#0d1a2e] text-purple-500 focus:ring-purple-500/20"
+                          className="rounded border-[#2a3f5f] bg-[#0d1a2e] text-emerald-500 focus:ring-emerald-500/20"
                         />
                         <label htmlFor="compare" className="text-sm text-[#c8d8ec] cursor-pointer">
                           Generate Comparison Baseline
@@ -779,7 +779,7 @@ export default function AiStrategyRecommender() {
 
             {/* Generate Button */}
             <button
-              className="rc-btn rc-btn-primary w-full py-4 text-lg font-semibold shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] transition-all bg-gradient-to-r from-purple-600 to-blue-600 border-none"
+              className="rc-btn rc-btn-primary w-full py-4 text-lg font-semibold shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] transition-all bg-gradient-to-r from-emerald-600 to-blue-600 border-none"
               onClick={handleGenerate}
               disabled={!selectedClient || generateMut.isPending}
             >
@@ -865,9 +865,9 @@ export default function AiStrategyRecommender() {
 
                 <Card className="flex-1 flex flex-col items-center justify-center py-20 text-center border-dashed border-2 bg-[#0b1628]/50">
                   <div className="relative mb-6">
-                    <div className="absolute inset-0 bg-purple-500/20 blur-xl rounded-full"></div>
+                    <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full"></div>
                     <div className="w-20 h-20 rounded-2xl bg-[#0d1a2e] border border-[#12233e] flex items-center justify-center relative z-10 shadow-xl">
-                      <Brain className="w-10 h-10 text-purple-400" />
+                      <Brain className="w-10 h-10 text-emerald-400" />
                     </div>
                   </div>
                   <h3 className="text-2xl font-semibold text-white mb-3">Awaiting Configuration</h3>
@@ -899,12 +899,12 @@ export default function AiStrategyRecommender() {
             {generateMut.isPending && (
               <Card className="h-full min-h-[600px] flex flex-col items-center justify-center py-24 text-center relative overflow-hidden">
                 {/* Animated background elements */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-[pulse_2s_ease-in-out_infinite]"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent animate-[pulse_2s_ease-in-out_infinite]"></div>
                 
                 <div className="relative mb-8">
-                  <div className="absolute inset-0 border-4 border-purple-500/30 rounded-full animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
-                  <div className="w-24 h-24 rounded-full bg-[#0d1a2e] border border-purple-500/50 flex items-center justify-center relative z-10">
-                    <Brain className="w-12 h-12 text-purple-400 animate-pulse" />
+                  <div className="absolute inset-0 border-4 border-emerald-500/30 rounded-full animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
+                  <div className="w-24 h-24 rounded-full bg-[#0d1a2e] border border-emerald-500/50 flex items-center justify-center relative z-10">
+                    <Brain className="w-12 h-12 text-emerald-400 animate-pulse" />
                   </div>
                 </div>
                 
@@ -920,7 +920,7 @@ export default function AiStrategyRecommender() {
                     <CheckCircle className="w-4 h-4 text-green-400" /> Projecting tax liabilities
                   </div>
                   <div className="flex items-center gap-3 text-sm text-white font-medium">
-                    <RefreshCw className="w-4 h-4 text-purple-400 animate-spin" /> Querying firm knowledge base
+                    <RefreshCw className="w-4 h-4 text-emerald-400 animate-spin" /> Querying firm knowledge base
                   </div>
                   <div className="flex items-center gap-3 text-sm text-[#7a95b8]">
                     <Clock className="w-4 h-4" /> Generating recommendations
@@ -967,11 +967,11 @@ export default function AiStrategyRecommender() {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-gradient-to-br from-[#0b1628] to-[#1a1025] border-purple-500/30">
+                  <Card className="bg-gradient-to-br from-[#0b1628] to-[#1a1025] border-emerald-500/30">
                     <CardContent className="flex flex-col items-center justify-center py-5 text-center">
                       <button 
                         onClick={handleSaveStrategy}
-                        className="w-full h-full flex flex-col items-center justify-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
+                        className="w-full h-full flex flex-col items-center justify-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors"
                       >
                         <Star className="w-8 h-8" />
                         <span className="text-sm font-medium">Save Strategy</span>
@@ -993,7 +993,7 @@ export default function AiStrategyRecommender() {
                       onClick={() => setActiveTab(tab.id as any)}
                       className={`flex items-center gap-2 px-6 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
                         activeTab === tab.id 
-                          ? "border-purple-500 text-white bg-purple-500/5" 
+                          ? "border-emerald-500 text-white bg-emerald-500/5" 
                           : "border-transparent text-[#7a95b8] hover:text-[#c8d8ec] hover:bg-[#12233e]/30"
                       }`}
                     >
@@ -1014,7 +1014,7 @@ export default function AiStrategyRecommender() {
                           action={<Badge variant="success">Client Ready</Badge>}
                         />
                         <CardContent className="p-6">
-                          <div className="prose prose-invert max-w-none prose-headings:text-white prose-headings:font-semibold prose-h3:text-lg prose-p:text-[#c8d8ec] prose-p:leading-relaxed prose-a:text-purple-400 prose-strong:text-white prose-ul:text-[#c8d8ec] prose-li:marker:text-purple-500">
+                          <div className="prose prose-invert max-w-none prose-headings:text-white prose-headings:font-semibold prose-h3:text-lg prose-p:text-[#c8d8ec] prose-p:leading-relaxed prose-a:text-emerald-400 prose-strong:text-white prose-ul:text-[#c8d8ec] prose-li:marker:text-emerald-500">
                             <Streamdown>{result.content}</Streamdown>
                           </div>
                         </CardContent>
@@ -1052,7 +1052,7 @@ export default function AiStrategyRecommender() {
                               "Verify current cost basis on non-qualified brokerage accounts"
                             ].map((step, i) => (
                               <li key={i} className="flex items-start gap-3 p-3 rounded-lg bg-[#0d1a2e] border border-[#12233e]">
-                                <div className="mt-0.5 bg-purple-500/20 text-purple-400 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0">
+                                <div className="mt-0.5 bg-emerald-500/20 text-emerald-400 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0">
                                   {i + 1}
                                 </div>
                                 <span className="text-sm text-[#c8d8ec]">{step}</span>
@@ -1188,7 +1188,7 @@ export default function AiStrategyRecommender() {
                                 (row, i) => (
                                   <tr key={i} className="border-b border-[#12233e]/50 hover:bg-[#12233e]/30 transition-colors">
                                     <td className="p-3 font-medium text-white">{row.year}</td>
-                                    <td className="p-3 text-right font-medium text-purple-400">{fmt(row.conversion)}</td>
+                                    <td className="p-3 text-right font-medium text-emerald-400">{fmt(row.conversion)}</td>
                                     <td className="p-3 text-right text-red-400">{fmt(row.taxEstimate)}</td>
                                     <td className="p-3 text-right text-[#7a95b8]">{fmt(row.cumulativeTax)}</td>
                                     <td className="p-3 text-right font-medium text-green-400">{fmt(row.newRothBalance)}</td>

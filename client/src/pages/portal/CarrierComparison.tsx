@@ -311,7 +311,7 @@ export default function CarrierComparison() {
                   dataKey="value"
                 >
                   {(productTypeData.length > 0 ? productTypeData : [{ name: "Empty", value: 1 }]).map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444"][index % 5]} />
+                    <Cell key={`cell-${index}`} fill={["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444"][index % 5]} />
                   ))}
                 </Pie>
                 <RTooltip contentStyle={{ background: "#0d1a2e", border: "1px solid #12233e", borderRadius: 8, color: "#c8d8ec", fontSize: 12 }} />
@@ -380,7 +380,7 @@ export default function CarrierComparison() {
                 <XAxis dataKey="carrier" stroke="#7a95b8" fontSize={10} />
                 <YAxis stroke="#7a95b8" fontSize={10} />
                 <RTooltip contentStyle={{ background: "#0d1a2e", border: "1px solid #12233e", borderRadius: 8 }} />
-                <Area type="monotone" dataKey="surrenderYears" stroke="#a78bfa" fill="#a78bfa" fillOpacity={0.3} />
+                <Area type="monotone" dataKey="surrenderYears" stroke="#34d399" fill="#34d399" fillOpacity={0.3} />
               </AreaChart>
             </ResponsiveContainer>
           </div>

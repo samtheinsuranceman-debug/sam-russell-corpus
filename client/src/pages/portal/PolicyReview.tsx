@@ -956,7 +956,7 @@ export default function AIPolicyReviewGap() {
             
             <div className="rc-card">
               <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-[#8b5cf6]" /> Quick Actions
+                <Briefcase className="w-5 h-5 text-[#10b981]" /> Quick Actions
               </h3>
               <div className="space-y-2">
                 <button onClick={handleExportCSV} className="w-full flex items-center justify-between p-3 rounded-lg bg-[#060d19] border border-[#12233e] text-[#c8d8ec] hover:bg-[#12233e] transition-colors">
@@ -1281,22 +1281,22 @@ export default function AIPolicyReviewGap() {
 
                       <div className="rc-card">
                         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                          <Shield className="w-5 h-5 text-[#8b5cf6]" /> Risk Score Profile (Chart 4)
+                          <Shield className="w-5 h-5 text-[#10b981]" /> Risk Score Profile (Chart 4)
                         </h3>
                         <div className="h-[300px]">
                           <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={riskScoreData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                               <defs>
                                 <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
-                                  <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                                  <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                                 </linearGradient>
                               </defs>
                               <XAxis dataKey="name" tick={{ fill: "#7a95b8", fontSize: 12 }} stroke="#12233e" />
                               <YAxis domain={[0, 100]} tick={{ fill: "#7a95b8", fontSize: 12 }} stroke="#12233e" />
                               <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
                               <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff' }} />
-                              <Area type="monotone" dataKey="score" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorScore)" />
+                              <Area type="monotone" dataKey="score" stroke="#10b981" fillOpacity={1} fill="url(#colorScore)" />
                             </AreaChart>
                           </ResponsiveContainer>
                         </div>
@@ -1470,7 +1470,7 @@ export default function AIPolicyReviewGap() {
                     {/* Data Table 6: Action Plan */}
                     <div className="rc-card overflow-hidden">
                       <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                        <Calendar className="w-5 h-5 text-[#8b5cf6]" /> Recommended Action Plan (Table 6)
+                        <Calendar className="w-5 h-5 text-[#10b981]" /> Recommended Action Plan (Table 6)
                       </h3>
                       <table className="w-full text-left text-sm">
                         <thead className="text-[#7a95b8] border-b border-[#12233e] bg-[#060d19]">

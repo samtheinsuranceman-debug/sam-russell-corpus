@@ -586,14 +586,14 @@ function MYGAvsSP500Section({ premium, mygaRate }: { premium: number; mygaRate: 
       <Card>
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
-            <Scale className="w-5 h-5 text-purple-600" /> Head-to-Head: MYGA vs S&P 500
+            <Scale className="w-5 h-5 text-emerald-600" /> Head-to-Head: MYGA vs S&P 500
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
-                <tr className="border-b-2 border-purple-600">
+                <tr className="border-b-2 border-emerald-600">
                   <th className="text-left p-2 font-semibold">Factor</th>
                   <th className="text-center p-2 font-semibold text-amber-600">MYGA Fixed Rate</th>
                   <th className="text-center p-2 font-semibold text-blue-600">S&P 500 Index</th>
@@ -690,9 +690,9 @@ function MYGAvsSP500Section({ premium, mygaRate }: { premium: number; mygaRate: 
       </div>
 
       {/* ─── THE HYBRID APPROACH ─── */}
-      <Card className="border-2 border-purple-200 dark:border-purple-800">
-        <CardHeader className="bg-purple-50 dark:bg-purple-950/30">
-          <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-400">
+      <Card className="border-2 border-emerald-200 dark:border-emerald-800">
+        <CardHeader className="bg-emerald-50 dark:bg-emerald-950/30">
+          <CardTitle className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
             <Star className="w-5 h-5" /> The Smart Approach: Use Both
           </CardTitle>
         </CardHeader>
@@ -722,8 +722,8 @@ function MYGAvsSP500Section({ premium, mygaRate }: { premium: number; mygaRate: 
               <p className="text-xs text-green-600 mt-1">Guaranteed lifetime income</p>
             </div>
           </div>
-          <div className="bg-purple-50 dark:bg-purple-950/20 rounded-lg p-4 flex items-start gap-3">
-            <Info className="w-5 h-5 text-purple-600 mt-0.5 shrink-0" />
+          <div className="bg-emerald-50 dark:bg-emerald-950/20 rounded-lg p-4 flex items-start gap-3">
+            <Info className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
             <p className="text-sm text-muted-foreground">
               <strong>Example:</strong> A client with {fmt(premium)} could place {fmt(premium * 0.5)} in a 5-year MYGA at {fmtPct(mygaRate)}
               (earning {fmt(premium * 0.5 * (Math.pow(1 + mygaRate / 100, 5) - 1))} guaranteed over 5 years) and invest {fmt(premium * 0.5)} in
@@ -1175,8 +1175,8 @@ export default function MYGAFixedRate() {
             <TabsTrigger value="waterfall" className="text-xs sm:text-sm bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border border-amber-500/30 font-bold">
               <Zap className="w-4 h-4 mr-1 text-amber-400" /> Amazing MYGA Waterfall
             </TabsTrigger>
-            <TabsTrigger value="multi-property" className="text-xs sm:text-sm bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 font-bold">
-              <Home className="w-4 h-4 mr-1 text-purple-400" /> Multi-Property Engine
+            <TabsTrigger value="multi-property" className="text-xs sm:text-sm bg-gradient-to-r from-emerald-500/20 to-pink-500/20 border border-emerald-500/30 font-bold">
+              <Home className="w-4 h-4 mr-1 text-emerald-400" /> Multi-Property Engine
             </TabsTrigger>
           
             <TabsTrigger value="generate-outcome" className="text-xs sm:text-sm bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 font-bold">Generate Outcome</TabsTrigger>
@@ -2159,11 +2159,11 @@ export default function MYGAFixedRate() {
 
             {/* Tax Savings Deployment Option */}
             {wfAnnualIncome > 0 && (
-              <Card className="border-purple-500/20 bg-purple-500/5">
+              <Card className="border-emerald-500/20 bg-emerald-500/5">
                 <CardContent className="py-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <TrendingUp className="w-5 h-5 text-purple-400" />
-                    <h4 className="font-semibold text-purple-400">Tax Savings Deployment Strategy</h4>
+                    <TrendingUp className="w-5 h-5 text-emerald-400" />
+                    <h4 className="font-semibold text-emerald-400">Tax Savings Deployment Strategy</h4>
                   </div>
                   <p className="text-xs text-muted-foreground mb-3">Choose where to invest your O&G depreciation tax savings each year:</p>
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
@@ -2179,8 +2179,8 @@ export default function MYGAFixedRate() {
                         onClick={() => setWfTaxDeployment(opt.value)}
                         className={`p-3 rounded-lg border text-left transition-all ${
                           wfTaxDeployment === opt.value
-                            ? "border-purple-500 bg-purple-500/20 ring-1 ring-purple-500/50"
-                            : "border-border hover:border-purple-500/40 hover:bg-purple-500/5"
+                            ? "border-emerald-500 bg-emerald-500/20 ring-1 ring-emerald-500/50"
+                            : "border-border hover:border-emerald-500/40 hover:bg-emerald-500/5"
                         }`}
                       >
                         <div className="text-lg mb-1">{opt.icon}</div>
@@ -2196,8 +2196,8 @@ export default function MYGAFixedRate() {
                       onClick={() => setShowScenarioComparison(!showScenarioComparison)}
                       className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
                         showScenarioComparison
-                          ? "bg-purple-600 text-white shadow-lg shadow-purple-500/25"
-                          : "bg-purple-500/10 text-purple-400 border border-purple-500/30 hover:bg-purple-500/20"
+                          ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/25"
+                          : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20"
                       }`}
                     >
                       {showScenarioComparison ? "\u2713 Comparing All 5 Scenarios" : "\u26A1 Compare All Scenarios"}
@@ -2214,9 +2214,9 @@ export default function MYGAFixedRate() {
 
             {/* Scenario Comparison Results */}
             {showScenarioComparison && scenarioComparison && (
-              <Card className="border-purple-500/20">
+              <Card className="border-emerald-500/20">
                 <CardContent className="py-4">
-                  <h4 className="font-semibold text-purple-400 mb-3">Scenario Comparison — All 5 Deployment Strategies</h4>
+                  <h4 className="font-semibold text-emerald-400 mb-3">Scenario Comparison — All 5 Deployment Strategies</h4>
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
@@ -2239,7 +2239,7 @@ export default function MYGAFixedRate() {
                             key={s.option}
                             className={`border-b border-border/50 ${
                               i === 0 ? "bg-emerald-500/10" : ""
-                            } ${s.option === wfTaxDeployment ? "ring-1 ring-purple-500/30" : ""}`}
+                            } ${s.option === wfTaxDeployment ? "ring-1 ring-emerald-500/30" : ""}`}
                           >
                             <td className="py-2 px-2">
                               {i === 0 ? (
@@ -2284,7 +2284,7 @@ export default function MYGAFixedRate() {
                             type="monotone"
                             dataKey={s.option}
                             name={s.label}
-                            stroke={["#10b981", "#f59e0b", "#8b5cf6", "#06b6d4", "#ec4899"][i]}
+                            stroke={["#10b981", "#f59e0b", "#10b981", "#06b6d4", "#ec4899"][i]}
                             strokeWidth={s.option === scenarioComparison.optimal ? 3 : 1.5}
                             strokeDasharray={s.option === scenarioComparison.optimal ? undefined : "4 2"}
                             dot={false}
@@ -2317,10 +2317,10 @@ export default function MYGAFixedRate() {
                   <p className="text-lg font-bold text-amber-400">{fmt(waterfallResult.summary.totalOilGasIncomeReceived)}</p>
                 </CardContent>
               </Card>
-              <Card className="border-purple-500/20">
+              <Card className="border-emerald-500/20">
                 <CardContent className="py-3 text-center">
                   <p className="text-xs text-muted-foreground">Depreciation Credits</p>
-                  <p className="text-lg font-bold text-purple-400">{fmt(waterfallResult.summary.totalDepreciationCredits)}</p>
+                  <p className="text-lg font-bold text-emerald-400">{fmt(waterfallResult.summary.totalDepreciationCredits)}</p>
                 </CardContent>
               </Card>
               {waterfallResult.summary.totalTaxSavingsReinvested > 0 && (
@@ -2413,15 +2413,15 @@ export default function MYGAFixedRate() {
             </Card>
 
             {/* ═══════ CHART 2: Stacked O&G Tranches — Overlapping Every 5 Years ═══════ */}
-            <Card className="border-violet-500/20">
+            <Card className="border-emerald-500/20">
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Droplets className="w-5 h-5 text-violet-400" /> O&G Tranches: Compounding & Overlapping Every 5 Years
+                  <Droplets className="w-5 h-5 text-emerald-400" /> O&G Tranches: Compounding & Overlapping Every 5 Years
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
                   Each 5-year cycle launches a <strong className="text-amber-400">new O&G tranche</strong> (12-year term).
-                  Tranches overlap — by year 6, you have <strong className="text-violet-400">2 tranches producing simultaneously</strong>.
-                  By year 11, <strong className="text-violet-400">3 tranches</strong> are stacking income. The bank loan (red line) gets dwarfed.
+                  Tranches overlap — by year 6, you have <strong className="text-emerald-400">2 tranches producing simultaneously</strong>.
+                  By year 11, <strong className="text-emerald-400">3 tranches</strong> are stacking income. The bank loan (red line) gets dwarfed.
                 </p>
               </CardHeader>
               <CardContent>
@@ -2635,7 +2635,7 @@ export default function MYGAFixedRate() {
                           <div><span className="text-muted-foreground">Bank Interest:</span> <span className="font-semibold text-red-400">{fmt(c.bankInterestPaid)}</span></div>
                           <div><span className="text-muted-foreground">O&G Investment:</span> <span className="font-semibold text-amber-400">{fmt(c.oilGasInvestment)}</span></div>
                           <div><span className="text-muted-foreground">O&G Income:</span> <span className="font-semibold text-amber-400">{fmt(c.oilGasIncomeTotal)}</span></div>
-                          <div><span className="text-muted-foreground">Depreciation:</span> <span className="font-semibold text-purple-400">{fmt(c.oilGasDepreciationTotal)}</span></div>
+                          <div><span className="text-muted-foreground">Depreciation:</span> <span className="font-semibold text-emerald-400">{fmt(c.oilGasDepreciationTotal)}</span></div>
                         </div>
                       </CardContent>
                     </Card>
@@ -2671,7 +2671,7 @@ export default function MYGAFixedRate() {
                         <th className="p-2 text-right text-amber-400">O&G Investment</th>
                         <th className="p-2 text-right text-amber-400">O&G Income</th>
                         <th className="p-2 text-right text-amber-400">Quarterly Pmt</th>
-                        <th className="p-2 text-right text-purple-400">Depreciation</th>
+                        <th className="p-2 text-right text-emerald-400">Depreciation</th>
                         <th className="p-2 text-right text-green-400">Tax Savings</th>
                         <th className="p-2 text-right text-green-400 font-semibold">Cum. Tax Reinvested</th>
                         <th className="p-2 text-right text-green-400">Net Cash Flow</th>
@@ -2696,7 +2696,7 @@ export default function MYGAFixedRate() {
                           <td className="p-2 text-right text-amber-400">{row.oilGasInvestment > 0 ? fmt(row.oilGasInvestment) : "—"}</td>
                           <td className="p-2 text-right text-amber-400">{row.oilGasIncome > 0 ? fmt(row.oilGasIncome) : "—"}</td>
                           <td className="p-2 text-right text-amber-400">{row.oilGasQuarterlyPayment > 0 ? fmt(row.oilGasQuarterlyPayment) : "—"}</td>
-                          <td className="p-2 text-right text-purple-400">{row.oilGasDepreciation > 0 ? fmt(row.oilGasDepreciation) : "—"}</td>
+                          <td className="p-2 text-right text-emerald-400">{row.oilGasDepreciation > 0 ? fmt(row.oilGasDepreciation) : "—"}</td>
                           <td className="p-2 text-right text-green-400">{row.taxSavings > 0 ? fmt(row.taxSavings) : "—"}</td>
                           <td className="p-2 text-right text-green-400 font-semibold">{row.cumulativeTaxSavingsReinvested > 0 ? fmt(row.cumulativeTaxSavingsReinvested) : "—"}</td>
                           <td className={`p-2 text-right font-semibold ${row.netCashFlow >= 0 ? "text-green-400" : "text-red-400"}`}>{fmt(row.netCashFlow)}</td>
@@ -2715,7 +2715,7 @@ export default function MYGAFixedRate() {
                         <td className="p-2 text-right"></td>
                         <td className="p-2 text-right text-amber-400">{fmt(waterfallResult.summary.totalOilGasIncomeReceived)}</td>
                         <td className="p-2 text-right"></td>
-                        <td className="p-2 text-right text-purple-400">{fmt(waterfallResult.summary.totalDepreciationCredits)}</td>
+                        <td className="p-2 text-right text-emerald-400">{fmt(waterfallResult.summary.totalDepreciationCredits)}</td>
                         <td className="p-2 text-right text-green-400">{fmt(waterfallResult.summary.totalTaxSavings)}</td>
                         <td className="p-2 text-right text-green-400 font-semibold">{fmt(waterfallResult.summary.totalTaxSavingsReinvested)}</td>
                         <td className="p-2 text-right"></td>
@@ -2752,7 +2752,7 @@ export default function MYGAFixedRate() {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Tax Credits (Depreciation)</p>
-                      <p className="text-lg font-bold text-purple-400">+{fmt(waterfallResult.summary.totalDepreciationCredits)}</p>
+                      <p className="text-lg font-bold text-emerald-400">+{fmt(waterfallResult.summary.totalDepreciationCredits)}</p>
                     </div>
                     {waterfallResult.summary.totalTaxSavingsReinvested > 0 && (
                       <div className="bg-green-500/10 rounded-lg p-2 border border-green-500/20">

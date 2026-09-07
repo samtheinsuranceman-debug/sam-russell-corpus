@@ -57,8 +57,8 @@ export default function TheArrival() {
               <span
                 key={s.id}
                 className={`rounded-full px-2.5 py-1 text-[10px] tracking-wide transition-colors ${
-                  i < step ? "bg-violet-500/20 text-violet-200"
-                  : i === step ? "bg-violet-500/40 text-white"
+                  i < step ? "bg-emerald-500/20 text-emerald-200"
+                  : i === step ? "bg-emerald-500/40 text-white"
                   : "bg-white/5 text-slate-500"
                 }`}
               >
@@ -88,7 +88,7 @@ export default function TheArrival() {
                     we'll map your starting point, anchor your body, and set your first goals. You can
                     pause and resume from anywhere — your progress is saved at every step.
                   </p>
-                  <Button onClick={next} className="mt-8 bg-violet-500 hover:bg-violet-400">
+                  <Button onClick={next} className="mt-8 bg-emerald-500 hover:bg-emerald-400">
                     Enter the calibration <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -122,10 +122,10 @@ export default function TheArrival() {
                   <input
                     type="range" min={0} max={10} value={risk}
                     onChange={(e) => setRisk(Number(e.target.value))}
-                    className="mt-3 w-full accent-violet-500"
+                    className="mt-3 w-full accent-emerald-500"
                   />
-                  <div className="mt-4 rounded-xl border border-violet-400/20 bg-violet-500/5 p-4 text-sm text-slate-300">
-                    Your risk/reward signature: <span className="font-semibold text-violet-200">{riskLabel(risk)}</span>.
+                  <div className="mt-4 rounded-xl border border-emerald-400/20 bg-emerald-500/5 p-4 text-sm text-slate-300">
+                    Your risk/reward signature: <span className="font-semibold text-emerald-200">{riskLabel(risk)}</span>.
                     This travels with you across The Strategy Table and The Map.
                   </div>
                 </div>
@@ -144,7 +144,7 @@ export default function TheArrival() {
                   <GenomeOrb size={150} active={anchored} pulsing label={anchored ? "I AM a unified field" : "Tap & breathe"} onClick={() => setAnchored(true)} />
                 </div>
                 {anchored && (
-                  <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-violet-200">
+                  <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-emerald-200">
                     Anchor set · cool · sharp · light
                   </motion.p>
                 )}
@@ -163,11 +163,11 @@ export default function TheArrival() {
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   {["Internal Senses / Body Mapping","Time & Temporality","Agency & Decision Ownership","Honesty / Humility Limits"].map((d) => (
                     <div key={d} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-slate-200">
-                      {d}<span className="text-[10px] uppercase tracking-wider text-violet-300/70">50 q</span>
+                      {d}<span className="text-[10px] uppercase tracking-wider text-emerald-300/70">50 q</span>
                     </div>
                   ))}
                 </div>
-                <p className="mt-4 text-xs text-slate-500">On completion this writes to <code className="text-violet-300/80">tutorial_progress</code> and appends an <code className="text-violet-300/80">ai_memory_notes</code> entry (source: NLP_Calibration_Block_1).</p>
+                <p className="mt-4 text-xs text-slate-500">On completion this writes to <code className="text-emerald-300/80">tutorial_progress</code> and appends an <code className="text-emerald-300/80">ai_memory_notes</code> entry (source: NLP_Calibration_Block_1).</p>
                 <NavRow onBack={back} onNext={next} nextLabel="Log Foundation block" />
               </GlowCard>
             )}
@@ -189,7 +189,7 @@ export default function TheArrival() {
                   <Field label="Target"><Input value={goal.amount} onChange={(e) => setGoal({ ...goal, amount: e.target.value })} placeholder="$5,000,000" /></Field>
                   <Field label="Period"><Input value={goal.period} onChange={(e) => setGoal({ ...goal, period: e.target.value })} /></Field>
                 </div>
-                <p className="mt-4 text-xs text-slate-500">Creates 1–3 <code className="text-violet-300/80">advisor_goals</code> with period + dates.</p>
+                <p className="mt-4 text-xs text-slate-500">Creates 1–3 <code className="text-emerald-300/80">advisor_goals</code> with period + dates.</p>
                 <NavRow onBack={back} onNext={next} nextLabel="Declare goal" />
               </GlowCard>
             )}
@@ -197,7 +197,7 @@ export default function TheArrival() {
             {step === 6 && (
               <GlowCard className="overflow-hidden">
                 <div className="relative px-8 py-12 text-center" style={{ background: GENOME.gradient }}>
-                  <Award className="mx-auto h-12 w-12 text-violet-300" />
+                  <Award className="mx-auto h-12 w-12 text-emerald-300" />
                   <h3 className="mt-4 text-2xl font-semibold text-white">Calibration complete{ctx.name ? `, ${ctx.name.split(" ")[0]}` : ""}</h3>
                   <div className="mx-auto mt-6 grid max-w-md grid-cols-3 gap-3">
                     <RitualStat label="Calibration" value="72" />
@@ -209,7 +209,7 @@ export default function TheArrival() {
                     The Mirror — and return to The Field 3–5× a day to keep your field unified.
                   </p>
                   <div className="mt-7 flex flex-wrap justify-center gap-3">
-                    <Link href="/portal/the-mirror"><Button className="bg-violet-500 hover:bg-violet-400">Enter The Mirror <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
+                    <Link href="/portal/the-mirror"><Button className="bg-emerald-500 hover:bg-emerald-400">Enter The Mirror <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
                     <Link href="/portal/the-field"><Button variant="outline" className="border-white/15">Daily check-in</Button></Link>
                   </div>
                 </div>
@@ -234,7 +234,7 @@ function NavRow({ onBack, onNext, nextDisabled, nextLabel = "Continue" }) {
   return (
     <div className="mt-8 flex items-center justify-between">
       <Button variant="ghost" onClick={onBack} className="text-slate-400 hover:text-white"><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-      <Button onClick={onNext} disabled={nextDisabled} className="bg-violet-500 hover:bg-violet-400">{nextLabel} <ArrowRight className="ml-2 h-4 w-4" /></Button>
+      <Button onClick={onNext} disabled={nextDisabled} className="bg-emerald-500 hover:bg-emerald-400">{nextLabel} <ArrowRight className="ml-2 h-4 w-4" /></Button>
     </div>
   );
 }
@@ -242,7 +242,7 @@ function RitualStat({ label, value }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3">
       <p className="text-2xl font-semibold text-white">{value}</p>
-      <p className="text-[11px] uppercase tracking-wider text-violet-200/70">{label}</p>
+      <p className="text-[11px] uppercase tracking-wider text-emerald-200/70">{label}</p>
     </div>
   );
 }

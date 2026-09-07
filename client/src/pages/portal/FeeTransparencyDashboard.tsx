@@ -35,7 +35,7 @@ import { Label } from "@/components/ui/label";
 import React from "react";
 
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
-const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#14b8a6", "#f97316", "#06b6d4", "#6366f1"];
+const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#10b981", "#ec4899", "#14b8a6", "#f97316", "#06b6d4", "#6366f1"];
 
 interface FeeItem {
   id: string;
@@ -722,7 +722,7 @@ export default function FeeTransparencyDashboard() {
                             <MessageSquare className="w-4 h-4 mr-2 text-[#f59e0b]" /> Send to Client Portal
                           </Button>
                           <Button className="w-full justify-start bg-[#12233e] hover:bg-[#1e3a5f] text-white border border-[#2a4365]">
-                            <Settings className="w-4 h-4 mr-2 text-[#8b5cf6]" /> Adjust Fee Assumptions
+                            <Settings className="w-4 h-4 mr-2 text-[#10b981]" /> Adjust Fee Assumptions
                           </Button>
 
                           <div className="mt-6 pt-6 border-t border-[#12233e]">
@@ -1013,7 +1013,7 @@ export default function FeeTransparencyDashboard() {
                                 />
                                 <Legend wrapperStyle={{ paddingTop: "20px" }} />
                                 <Bar dataKey="yours" fill="#22c55e" name={`${selectedClient?.name?.split(' ')[0] || 'Client'} (bps)`} radius={[0, 4, 4, 0]} barSize={compareMode ? 12 : 24} />
-                                {compareMode && <Bar dataKey="compare" fill="#8b5cf6" name={`${compareClient?.name?.split(' ')[0] || 'Compare'} (bps)`} radius={[0, 4, 4, 0]} barSize={12} />}
+                                {compareMode && <Bar dataKey="compare" fill="#10b981" name={`${compareClient?.name?.split(' ')[0] || 'Compare'} (bps)`} radius={[0, 4, 4, 0]} barSize={12} />}
                                 <Bar dataKey="benchmark" fill="#3b82f6" name="Industry Avg (bps)" radius={[0, 4, 4, 0]} opacity={0.6} barSize={compareMode ? 12 : 24} />
                               </BarChart>
                             </ResponsiveContainer>
@@ -1104,7 +1104,7 @@ export default function FeeTransparencyDashboard() {
                         <Card className="bg-[#0d1a2e] border-[#12233e]">
                           <CardHeader>
                             <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
-                              <Settings className="w-5 h-5 text-[#8b5cf6]" /> Assumptions
+                              <Settings className="w-5 h-5 text-[#10b981]" /> Assumptions
                             </CardTitle>
                           </CardHeader>
                           <CardContent className="space-y-6">
@@ -1191,8 +1191,8 @@ export default function FeeTransparencyDashboard() {
                                     </linearGradient>
                                     {compareMode && (
                                       <linearGradient id="colorCompare" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                                       </linearGradient>
                                     )}
                                   </defs>
@@ -1209,7 +1209,7 @@ export default function FeeTransparencyDashboard() {
                                   <Area type="monotone" dataKey="withoutFees" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#colorWithoutFees)" name="Gross Returns (No Fees)" />
                                   <Area type="monotone" dataKey="withFees" stroke="#22c55e" strokeWidth={2} fillOpacity={1} fill="url(#colorWithFees)" name={`Net Returns (${selectedClient?.name?.split(' ')[0] || 'Client'})`} />
                                   {compareMode && (
-                                    <Area type="monotone" dataKey="compareWithFees" stroke="#8b5cf6" strokeWidth={2} fillOpacity={1} fill="url(#colorCompare)" name={`Net Returns (${compareClient?.name?.split(' ')[0] || 'Compare'})`} />
+                                    <Area type="monotone" dataKey="compareWithFees" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorCompare)" name={`Net Returns (${compareClient?.name?.split(' ')[0] || 'Compare'})`} />
                                   )}
                                 </AreaChart>
                               </ResponsiveContainer>
@@ -1426,7 +1426,7 @@ export default function FeeTransparencyDashboard() {
 
                         <section>
                           <h3 className="text-lg text-white font-semibold mb-3 flex items-center gap-2">
-                            <Award className="w-5 h-5 text-[#8b5cf6]" /> Value Proposition
+                            <Award className="w-5 h-5 text-[#10b981]" /> Value Proposition
                           </h3>
                           <div className="space-y-4">
                             <p className="text-sm leading-relaxed">

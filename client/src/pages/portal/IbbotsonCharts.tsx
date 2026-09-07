@@ -1102,7 +1102,7 @@ export default function IbbotsonCharts() {
               value={stats.sharpeCapped} 
               subtitle={`vs ${stats.sharpeRaw} S&P 500`}
               icon={Target} 
-              colorClass="text-purple-400" 
+              colorClass="text-emerald-400" 
             />
           </div>
 

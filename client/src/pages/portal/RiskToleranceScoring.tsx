@@ -556,7 +556,7 @@ export default function RiskToleranceScoring() {
                       paddingAngle={2}
                       dataKey="value"
                     >
-                      {["#22c55e", "#3b82f6", "#f0c040", "#a78bfa"].map((color, index) => (
+                      {["#22c55e", "#3b82f6", "#f0c040", "#34d399"].map((color, index) => (
                         <Cell key={`cell-${index}`} fill={color} />
                       ))}
                     </Pie>
@@ -701,7 +701,7 @@ export default function RiskToleranceScoring() {
                         { label: "IUL / Cash Value Life Insurance", value: profile.iulAllocation, color: "bg-green-500" },
                         { label: "Annuities (MYGA, FIA, SPIA)", value: profile.annuityAllocation, color: "bg-blue-500" },
                         { label: "Equities (Stocks, ETFs, Funds)", value: profile.equityAllocation, color: "bg-amber-500" },
-                        { label: "Fixed Income (Bonds, Treasuries)", value: profile.bondAllocation, color: "bg-purple-500" },
+                        { label: "Fixed Income (Bonds, Treasuries)", value: profile.bondAllocation, color: "bg-emerald-500" },
                       ].map((item) => (
                         <div key={item.label}>
                           <div className="flex justify-between text-sm mb-1">

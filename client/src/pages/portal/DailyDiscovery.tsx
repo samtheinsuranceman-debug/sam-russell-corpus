@@ -34,7 +34,7 @@ const DAILY_INSIGHTS = [
   { type: "opportunity", title: "Roth Conversion Window", description: "3 clients have IRA balances that could benefit from partial Roth conversions before year-end. Estimated tax savings: $47,000 combined.", impact: "$47K", icon: DollarSign, color: "text-green-400" },
   { type: "alert", title: "Policy Anniversary Alert", description: "2 clients have IUL policies approaching their annual review date. This is the perfect time to run updated illustrations.", impact: "2 clients", icon: Calendar, color: "text-blue-400" },
   { type: "strategy", title: "MYGA Rate Spike", description: "5-year MYGA rates just hit 5.2% — highest in 18 months. 5 clients with maturing CDs could benefit from a rollover conversation.", impact: "5.2% rate", icon: TrendingUp, color: "text-amber-400" },
-  { type: "insight", title: "Tax Bracket Optimization", description: "Based on current projections, 4 clients are within $15K of the next tax bracket. Strategic Roth conversions could save them $12K+ each.", impact: "$48K+", icon: Brain, color: "text-purple-400" },
+  { type: "insight", title: "Tax Bracket Optimization", description: "Based on current projections, 4 clients are within $15K of the next tax bracket. Strategic Roth conversions could save them $12K+ each.", impact: "$48K+", icon: Brain, color: "text-emerald-400" },
   { type: "opportunity", title: "Estate Planning Gap", description: "7 clients have estate values exceeding $5M but no trust structure in place. Each conversation could unlock $200K+ in estate tax savings.", impact: "$1.4M", icon: Target, color: "text-teal-400" },
   { type: "alert", title: "Market Opportunity", description: "S&P 500 pulled back 3% this week. 6 clients with cash positions over $100K could benefit from dollar-cost averaging into indexed products.", impact: "6 clients", icon: Lightbulb, color: "text-orange-400" },
 ];
@@ -232,7 +232,7 @@ export default function DailyDiscovery() {
                 </Card>
                 <Card className="border-border/30">
                   <CardContent className="p-4 text-center">
-                    <Star className="w-6 h-6 text-purple-400 mx-auto mb-2" />
+                    <Star className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
                     <p className="text-2xl font-bold text-white">{(profile?.russellCoin ?? 0).toLocaleString()}</p>
                     <p className="text-xs text-muted-foreground">RussellCoin</p>
                   </CardContent>
@@ -356,7 +356,7 @@ export default function DailyDiscovery() {
                 {[
                   { label: "IRA Balances", value: clients?.reduce((s: number, c: any) => s + Number(c.iraBalance ?? 0), 0) ?? 0, color: "text-blue-400" },
                   { label: "Roth Balances", value: clients?.reduce((s: number, c: any) => s + Number(c.rothBalance ?? 0), 0) ?? 0, color: "text-green-400" },
-                  { label: "401(k) Balances", value: clients?.reduce((s: number, c: any) => s + Number(c.k401Balance ?? 0), 0) ?? 0, color: "text-purple-400" },
+                  { label: "401(k) Balances", value: clients?.reduce((s: number, c: any) => s + Number(c.k401Balance ?? 0), 0) ?? 0, color: "text-emerald-400" },
                   { label: "Life Insurance DB", value: clients?.reduce((s: number, c: any) => s + Number(c.lifeInsuranceDb ?? 0), 0) ?? 0, color: "text-amber-400" },
                 ].map((item) => (
                   <Card key={item.label} className="border-border/30">

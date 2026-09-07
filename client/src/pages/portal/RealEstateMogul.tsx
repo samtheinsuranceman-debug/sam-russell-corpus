@@ -123,7 +123,7 @@ const STATES = [
   "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
 ];
 
-const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#10b981', '#ec4899', '#14b8a6', '#f97316'];
 
 const fmt = (n: number) => "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
 const pct = (n: number) => n.toFixed(2) + "%";
@@ -744,7 +744,7 @@ export default function RealEstateMogul() {
                 <div className="h-8 w-px bg-slate-700"></div>
                 <div className="flex flex-col">
                   <span className="text-xs text-slate-400">Portfolio Cap Rate</span>
-                  <span className="text-xl font-bold text-purple-400">{pct(portfolioCapRate)}</span>
+                  <span className="text-xl font-bold text-emerald-400">{pct(portfolioCapRate)}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -890,7 +890,7 @@ export default function RealEstateMogul() {
                             </div>
                             <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border">
                               <div className="text-xs text-muted-foreground mb-1">Cap Rate</div>
-                              <div className="text-lg font-bold text-purple-500">{pct(calc.capRate)}</div>
+                              <div className="text-lg font-bold text-emerald-500">{pct(calc.capRate)}</div>
                             </div>
                             <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border">
                               <div className="text-xs text-muted-foreground mb-1">Initial Investment</div>
@@ -1058,7 +1058,7 @@ export default function RealEstateMogul() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 text-purple-500" /> Portfolio Risk Metrics
+                    <AlertCircle className="w-4 h-4 text-emerald-500" /> Portfolio Risk Metrics
                   </CardTitle>
                   <CardDescription>Normalized risk factors (0-100, lower is better)</CardDescription>
                 </CardHeader>
@@ -1257,7 +1257,7 @@ export default function RealEstateMogul() {
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <Label className="text-base font-semibold flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-purple-500" /> Use Ibbotson Historical Model
+                        <Activity className="w-4 h-4 text-emerald-500" /> Use Ibbotson Historical Model
                       </Label>
                       <p className="text-xs text-muted-foreground mt-1">
                         Simulate returns using actual historical S&P 500 data sequences
@@ -1297,14 +1297,14 @@ export default function RealEstateMogul() {
                       <p className="text-xs text-blue-600/70 dark:text-blue-400/70 mt-2 font-medium">Funded by real estate cash flow</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-purple-500/30 shadow-sm">
+                  <Card className="border-emerald-500/30 shadow-sm">
                     <CardContent className="py-6 text-center">
-                      <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center mx-auto mb-3">
-                        <ArrowUpRight className="w-5 h-5 text-purple-500" />
+                      <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-3">
+                        <ArrowUpRight className="w-5 h-5 text-emerald-500" />
                       </div>
                       <p className="text-sm font-medium text-muted-foreground mb-1">Tax-Free Income Potential</p>
-                      <p className="text-3xl font-black text-purple-500">{fmt(iulFinalValue * 0.05)}<span className="text-lg font-normal">/yr</span></p>
-                      <p className="text-xs text-purple-600/70 dark:text-purple-400/70 mt-2 font-medium">Based on 5% policy loan rate</p>
+                      <p className="text-3xl font-black text-emerald-500">{fmt(iulFinalValue * 0.05)}<span className="text-lg font-normal">/yr</span></p>
+                      <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70 mt-2 font-medium">Based on 5% policy loan rate</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -1330,7 +1330,7 @@ export default function RealEstateMogul() {
                   </div>
                 </div>
 
-                <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20">
+                <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/10 to-emerald-500/10 border border-blue-500/20">
                   <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-blue-700 dark:text-blue-300">
                     <Sparkles className="w-5 h-5" /> The Infinite Banking Pipeline Strategy
                   </h3>
@@ -1339,7 +1339,7 @@ export default function RealEstateMogul() {
                       <li className="pl-2"><span className="font-semibold">Generate:</span> Rental properties produce <span className="text-emerald-500 font-bold">{fmt(totalMonthlyCashFlow * 12)}/yr</span> in passive cash flow.</li>
                       <li className="pl-2"><span className="font-semibold">Redirect:</span> Funnel <span className="text-blue-500 font-bold">{fmt(iulPremium)}/yr</span> of that cash flow into an IUL policy.</li>
                       <li className="pl-2"><span className="font-semibold">Compound:</span> Cash value grows tax-free, protected from market downturns via a 0% floor.</li>
-                      <li className="pl-2"><span className="font-semibold">Harvest:</span> After {projectionYears} years, access <span className="text-purple-500 font-bold">{fmt(iulFinalValue * 0.05)}/yr</span> via tax-free policy loans.</li>
+                      <li className="pl-2"><span className="font-semibold">Harvest:</span> After {projectionYears} years, access <span className="text-emerald-500 font-bold">{fmt(iulFinalValue * 0.05)}/yr</span> via tax-free policy loans.</li>
                       <li className="pl-2"><span className="font-semibold">Protect:</span> A death benefit of <span className="font-bold">~{fmt(iulFinalValue * 1.5)}</span> transfers wealth tax-free to heirs.</li>
                     </ol>
                     <div className="bg-white/50 dark:bg-black/20 p-4 rounded-lg flex flex-col justify-center">

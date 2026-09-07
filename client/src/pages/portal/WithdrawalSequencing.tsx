@@ -580,10 +580,10 @@ export default function WithdrawalSequencing() {
               <div className="text-2xl font-bold text-green-400">{fmt(finalLegacy)}</div>
             </CardContent>
           </Card>
-          <Card className="bg-card/50 backdrop-blur border-purple-500/20">
+          <Card className="bg-card/50 backdrop-blur border-emerald-500/20">
             <CardContent className="p-4 flex flex-col justify-center items-center text-center h-full">
               <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">IRMAA Years</div>
-              <div className="text-2xl font-bold text-purple-400">{irmaaYears} / {projectionYears}</div>
+              <div className="text-2xl font-bold text-emerald-400">{irmaaYears} / {projectionYears}</div>
             </CardContent>
           </Card>
         </div>
@@ -951,7 +951,7 @@ export default function WithdrawalSequencing() {
                                   <Badge key={i} variant="outline" className={`text-[10px] py-0 h-5 ${
                                     s.category === 'Tax-Free' ? "text-green-400 border-green-400/30 bg-green-400/5" : 
                                     s.category === 'Taxable' ? "text-blue-400 border-blue-400/30 bg-blue-400/5" :
-                                    s.category === 'Income' ? "text-purple-400 border-purple-400/30 bg-purple-400/5" :
+                                    s.category === 'Income' ? "text-emerald-400 border-emerald-400/30 bg-emerald-400/5" :
                                     "text-red-400 border-red-400/30 bg-red-400/5"
                                   }`}>
                                     {s.name.replace("Traditional IRA ", "Trad ").replace("Account", "Acct")}: {fmt(s.amount)}
@@ -1006,7 +1006,7 @@ export default function WithdrawalSequencing() {
                               <td className="p-3 text-right text-blue-400 font-mono">
                                 {fmt(r.remainingBalances.iulCashValue + r.remainingBalances.annuityValue)}
                               </td>
-                              <td className="p-3 text-right text-purple-400 font-mono">{fmt(otherAssets)}</td>
+                              <td className="p-3 text-right text-emerald-400 font-mono">{fmt(otherAssets)}</td>
                               <td className="p-3 text-right font-bold text-primary font-mono">{fmt(total)}</td>
                             </tr>
                           );

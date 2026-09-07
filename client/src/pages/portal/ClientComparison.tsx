@@ -43,7 +43,7 @@ const fmt = (n: number) => n >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : 
 const fmtPct = (n: number) => `${n.toFixed(1)}%`;
 
 const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#ef4444", "#a855f7", "#ec4899", "#14b8a6", "#f97316"];
-const PIE_COLORS = ["#3b82f6", "#8b5cf6", "#22c55e", "#f0c040", "#ef4444", "#06b6d4", "#f43f5e", "#84cc16"];
+const PIE_COLORS = ["#3b82f6", "#10b981", "#22c55e", "#f0c040", "#ef4444", "#06b6d4", "#f43f5e", "#84cc16"];
 
 function ComparisonMetric({ label, values, format = "currency", description, highlightMax = false, highlightMin = false }: { label: string; values: (number | string)[]; format?: "currency" | "number" | "text" | "percentage"; description?: string; highlightMax?: boolean; highlightMin?: boolean }) {
   const numericValues = values.filter((v) => typeof v === 'number') as number[];
@@ -476,7 +476,7 @@ export default function ClientComparison() {
                     variant="ghost" 
                     size="sm" 
                     onClick={() => setComparisonMode("absolute")}
-                    className={`h-8 px-3 ${comparisonMode === "absolute" ? "bg-[#8b5cf6] text-white" : "text-[#7a95b8] hover:text-white"}`}
+                    className={`h-8 px-3 ${comparisonMode === "absolute" ? "bg-[#10b981] text-white" : "text-[#7a95b8] hover:text-white"}`}
                   >
                     <DollarSign className="w-4 h-4 mr-1.5" />
                     Absolute ($)
@@ -485,7 +485,7 @@ export default function ClientComparison() {
                     variant="ghost" 
                     size="sm" 
                     onClick={() => setComparisonMode("relative")}
-                    className={`h-8 px-3 ${comparisonMode === "relative" ? "bg-[#8b5cf6] text-white" : "text-[#7a95b8] hover:text-white"}`}
+                    className={`h-8 px-3 ${comparisonMode === "relative" ? "bg-[#10b981] text-white" : "text-[#7a95b8] hover:text-white"}`}
                   >
                     <PieChartIcon className="w-4 h-4 mr-1.5" />
                     Relative (%)
@@ -693,7 +693,7 @@ export default function ClientComparison() {
                       <Card className="bg-[#0b1628] border-[#1a3055]">
                         <CardHeader className="pb-2">
                           <CardTitle className="text-sm font-medium text-[#7a95b8] flex items-center gap-2">
-                            <PieChartIcon className="w-4 h-4 text-[#8b5cf6]" />
+                            <PieChartIcon className="w-4 h-4 text-[#10b981]" />
                             Avg Liquidity Ratio
                           </CardTitle>
                         </CardHeader>
@@ -780,7 +780,7 @@ export default function ClientComparison() {
                     <div className="rc-card p-6 flex flex-col h-[400px]">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                          <PieChartIcon className="w-5 h-5 text-[#8b5cf6]" />
+                          <PieChartIcon className="w-5 h-5 text-[#10b981]" />
                           Asset Allocation Breakdown
                         </h3>
                         <Badge variant="outline" className="bg-[#12233e] border-[#1a3055] text-[#c8d8ec]">
@@ -803,7 +803,7 @@ export default function ClientComparison() {
                             <Tooltip content={<CustomTooltip />} cursor={{ fill: '#12233e', opacity: 0.4 }} />
                             <Legend wrapperStyle={{ paddingTop: "10px" }} iconType="circle" />
                             <Bar dataKey="IRA" stackId="a" fill="#3b82f6" name="IRA (Tax-Deferred)" />
-                            <Bar dataKey="Roth" stackId="a" fill="#8b5cf6" name="Roth (Tax-Free)" />
+                            <Bar dataKey="Roth" stackId="a" fill="#10b981" name="Roth (Tax-Free)" />
                             <Bar dataKey="Taxable" stackId="a" fill="#22c55e" name="Taxable Accounts" />
                             <Bar dataKey="RealEstate" stackId="a" fill="#f0c040" name="Real Estate Equity" radius={[0, 4, 4, 0]} />
                           </BarChart>
@@ -833,7 +833,7 @@ export default function ClientComparison() {
                             />
                             <Tooltip content={<CustomTooltip />} cursor={{ fill: '#12233e', opacity: 0.4 }} />
                             <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" />
-                            <Bar dataKey="Tax-Free" fill="#8b5cf6" radius={[4, 4, 0, 0]} maxBarSize={60} />
+                            <Bar dataKey="Tax-Free" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={60} />
                             <Bar dataKey="Tax-Deferred" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={60} />
                             <Bar dataKey="Taxable" fill="#22c55e" radius={[4, 4, 0, 0]} maxBarSize={60} />
                           </BarChart>

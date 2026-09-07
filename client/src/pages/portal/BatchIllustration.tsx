@@ -77,7 +77,7 @@ const COLORS = {
   error: "#ef4444",
   info: "#3b82f6",
   warning: "#f59e0b",
-  purple: "#8b5cf6",
+  purple: "#10b981",
   pink: "#ec4899",
   teal: "#14b8a6",
   orange: "#f97316",
@@ -85,7 +85,7 @@ const COLORS = {
 };
 
 const CHART_COLORS = [
-  "#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", 
+  "#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#10b981", 
   "#ec4899", "#14b8a6", "#f97316", "#06b6d4", "#84cc16"
 ];
 
@@ -874,7 +874,7 @@ export default function BatchIllustration() {
                           <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 10 }} />
                           <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
                           <Radar name="Client Count" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.5} />
-                          <Radar name="Premium Vol" dataKey="B" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.5} />
+                          <Radar name="Premium Vol" dataKey="B" stroke="#10b981" fill="#10b981" fillOpacity={0.5} />
                           <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
                           <Tooltip contentStyle={{ backgroundColor: '#060d19', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }} />
                         </RadarChart>

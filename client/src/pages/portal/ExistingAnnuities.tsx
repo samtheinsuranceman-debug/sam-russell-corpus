@@ -862,10 +862,10 @@ export default function ExistingAnnuities() {
             </Card>
 
             {/* Annual Expenses Editor */}
-            <Card className="border-purple-500/30">
+            <Card className="border-emerald-500/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <TreePine className="w-5 h-5 text-purple-400" />
+                  <TreePine className="w-5 h-5 text-emerald-400" />
                   Your Annual Expenses
                 </CardTitle>
               </CardHeader>
@@ -1013,7 +1013,7 @@ export default function ExistingAnnuities() {
             )}
 
             {/* Calm Planning Message */}
-            <Card className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/30">
+            <Card className="bg-gradient-to-r from-blue-500/10 to-emerald-500/10 border-blue-500/30">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
                   <Shield className="w-8 h-8 text-blue-400 shrink-0 mt-1" />
@@ -1038,10 +1038,10 @@ export default function ExistingAnnuities() {
         {activeTab === "longevity" && result && (
           <div className="space-y-6">
             {/* Hero */}
-            <Card className="bg-gradient-to-br from-rose-500/10 via-pink-500/10 to-purple-500/10 border-rose-500/30">
+            <Card className="bg-gradient-to-br from-rose-500/10 via-pink-500/10 to-emerald-500/10 border-rose-500/30">
               <CardContent className="p-8 text-center">
                 <Heart className="w-12 h-12 text-rose-400 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-rose-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-rose-400 to-emerald-400 bg-clip-text text-transparent mb-3">
                   {result.longevityBenefits.headline}
                 </h2>
                 <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -1068,7 +1068,7 @@ export default function ExistingAnnuities() {
                   "text-rose-400 bg-rose-500/10 border-rose-500/30",
                   "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
                   "text-amber-400 bg-amber-500/10 border-amber-500/30",
-                  "text-purple-400 bg-purple-500/10 border-purple-500/30",
+                  "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
                   "text-pink-400 bg-pink-500/10 border-pink-500/30",
                 ];
                 return (
@@ -1087,10 +1087,10 @@ export default function ExistingAnnuities() {
             </div>
 
             {/* The Science */}
-            <Card className="border-purple-500/30">
+            <Card className="border-emerald-500/30">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Stethoscope className="w-5 h-5 text-purple-400" />
+                  <Stethoscope className="w-5 h-5 text-emerald-400" />
                   The Science Behind Income Security & Longevity
                 </CardTitle>
               </CardHeader>
@@ -1148,8 +1148,8 @@ export default function ExistingAnnuities() {
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0">
-                        <span className="text-sm font-bold text-purple-400">5</span>
+                      <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+                        <span className="text-sm font-bold text-emerald-400">5</span>
                       </div>
                       <div>
                         <h4 className="font-semibold text-sm">Purpose & Generosity</h4>
@@ -1177,7 +1177,7 @@ export default function ExistingAnnuities() {
             </Card>
 
             {/* The Message */}
-            <Card className="bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-purple-500/10 border-emerald-500/30">
+            <Card className="bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-emerald-500/10 border-emerald-500/30">
               <CardContent className="p-8 text-center">
                 <div className="max-w-3xl mx-auto">
                   <h3 className="text-xl font-bold text-emerald-400 mb-4">

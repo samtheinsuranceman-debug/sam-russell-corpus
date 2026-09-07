@@ -262,10 +262,10 @@ export default function CryptoCurrencyCorner() {
                 <div className="text-[10px] md:text-xs text-muted-foreground mt-1">Peak cycle 4</div>
               </CardContent>
             </Card>
-            <Card className="border-purple-500/30 bg-gradient-to-br from-purple-500/5 to-transparent">
+            <Card className="border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 to-transparent">
               <CardContent className="pt-4 pb-3">
                 <div className="text-[10px] md:text-xs text-muted-foreground leading-tight">Next Halving</div>
-                <div className="text-lg md:text-2xl font-bold text-purple-400">2028</div>
+                <div className="text-lg md:text-2xl font-bold text-emerald-400">2028</div>
                 <div className="text-[10px] md:text-xs text-muted-foreground mt-1 truncate">Reward → 1.5625 BTC</div>
               </CardContent>
             </Card>
@@ -376,7 +376,7 @@ export default function CryptoCurrencyCorner() {
         <TabsContent value="simulator" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base md:text-lg flex items-center gap-2"><Zap className="h-5 w-5 text-purple-400 shrink-0" />Next 10 Cycles — Predicted</CardTitle>
+              <CardTitle className="text-base md:text-lg flex items-center gap-2"><Zap className="h-5 w-5 text-emerald-400 shrink-0" />Next 10 Cycles — Predicted</CardTitle>
               <CardDescription className="text-xs">Diminishing returns model based on historical drawdown decay (0.88x) and gain decay (0.38x) per cycle</CardDescription>
             </CardHeader>
             <CardContent>
@@ -400,7 +400,7 @@ export default function CryptoCurrencyCorner() {
                     {simulated?.map((c: any, i: number) => (
                       <tr key={i} className={`border-b border-border/20 ${i % 2 === 0 ? "bg-muted/20" : ""}`}>
                         <td className="py-2 px-2 font-medium">Cycle {c.cycle}</td>
-                        <td className="py-2 px-2 text-right text-purple-400">{c.halvingYear}</td>
+                        <td className="py-2 px-2 text-right text-emerald-400">{c.halvingYear}</td>
                         <td className="py-2 px-2 text-right">{fmt(c.halvingPrice)}</td>
                         <td className="py-2 px-2 text-right text-emerald-400 font-bold">{fmt(c.bullATH)}</td>
                         <td className="py-2 px-2 text-right">{c.athYear}</td>
@@ -631,10 +631,10 @@ export default function CryptoCurrencyCorner() {
                     <div className="text-lg md:text-xl font-bold text-blue-400 truncate">{fmt(result.summary.totalPropertyEquity)}</div>
                   </CardContent>
                 </Card>
-                <Card className="border-purple-500/30">
+                <Card className="border-emerald-500/30">
                   <CardContent className="pt-4 pb-3">
                     <div className="text-[10px] md:text-xs text-muted-foreground leading-tight">Tax Saved</div>
-                    <div className="text-lg md:text-xl font-bold text-purple-400 truncate">{fmt(result.summary.netTaxSaved)}</div>
+                    <div className="text-lg md:text-xl font-bold text-emerald-400 truncate">{fmt(result.summary.netTaxSaved)}</div>
                   </CardContent>
                 </Card>
               </div>
@@ -742,7 +742,7 @@ export default function CryptoCurrencyCorner() {
                             <td className="py-1 px-1 text-right text-yellow-400">{fmt(snap.goldValue)}</td>
                             <td className="py-1 px-1 text-right text-gray-300">{fmt(snap.silverValue)}</td>
                             <td className="py-1 px-1 text-right text-blue-400">{fmt(snap.totalPropertyEquity)}</td>
-                            <td className="py-1 px-1 text-right font-bold text-purple-400">{fmt(snap.totalNetWorth)}</td>
+                            <td className="py-1 px-1 text-right font-bold text-emerald-400">{fmt(snap.totalNetWorth)}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -779,10 +779,10 @@ export default function CryptoCurrencyCorner() {
                     <div className="text-xl font-bold text-emerald-400">{fmt(result.summary.totalRentalIncome)}</div>
                   </CardContent>
                 </Card>
-                <Card className="border-purple-500/30">
+                <Card className="border-emerald-500/30">
                   <CardContent className="pt-4">
                     <div className="text-xs text-muted-foreground">Total Depreciation Used</div>
-                    <div className="text-xl font-bold text-purple-400">{fmt(result.summary.totalDepreciationUsed)}</div>
+                    <div className="text-xl font-bold text-emerald-400">{fmt(result.summary.totalDepreciationUsed)}</div>
                   </CardContent>
                 </Card>
               </div>
@@ -823,7 +823,7 @@ export default function CryptoCurrencyCorner() {
                               <td className="py-1 px-1 text-right text-emerald-400 font-semibold">{fmt(yr.equity)}</td>
                               <td className="py-1 px-1 text-right">{fmt(yr.rentalIncome)}</td>
                               <td className="py-1 px-1 text-right text-muted-foreground">{fmt(yr.interestPayment)}</td>
-                              <td className="py-1 px-1 text-right text-purple-400">{fmt(yr.depreciation)}</td>
+                              <td className="py-1 px-1 text-right text-emerald-400">{fmt(yr.depreciation)}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -834,9 +834,9 @@ export default function CryptoCurrencyCorner() {
               ))}
 
               {/* Tax Offset Summary */}
-              <Card className="border-purple-500/30">
+              <Card className="border-emerald-500/30">
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2"><Landmark className="h-5 w-5 text-purple-400" />Capital Gains vs Depreciation Offset</CardTitle>
+                  <CardTitle className="text-lg flex items-center gap-2"><Landmark className="h-5 w-5 text-emerald-400" />Capital Gains vs Depreciation Offset</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={250}>
@@ -860,9 +860,9 @@ export default function CryptoCurrencyCorner() {
         {/* ═══ TAB 6: 30-YEAR SYNTHESIS ═══ */}
         <TabsContent value="synthesis" className="space-y-4">
           {!result ? (
-            <Card className="border-dashed border-purple-500/30">
+            <Card className="border-dashed border-emerald-500/30">
               <CardContent className="py-12 text-center">
-                <LineChartIcon className="h-12 w-12 text-purple-400/50 mx-auto mb-3" />
+                <LineChartIcon className="h-12 w-12 text-emerald-400/50 mx-auto mb-3" />
                 <p className="text-muted-foreground">Run the simulation to see the 30-year wealth synthesis</p>
                 <Button variant="outline" className="mt-4" onClick={() => setActiveTab("factfinder")}>Go to Fact Finder</Button>
               </CardContent>
@@ -873,7 +873,7 @@ export default function CryptoCurrencyCorner() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <LineChartIcon className="h-5 w-5 text-purple-400" />
+                    <LineChartIcon className="h-5 w-5 text-emerald-400" />
                     30-Year Real Estate Portfolio Synthesis
                   </CardTitle>
                   <CardDescription>All properties tracked over 30 years — value, equity, rental income, and loan balances</CardDescription>
@@ -942,7 +942,7 @@ export default function CryptoCurrencyCorner() {
                     </div>
                     <div className="space-y-2">
                       <p><span className="font-semibold text-blue-400">Real Estate:</span> Purchase a ${fmt(form.strPurchasePrice)} STR every {form.strPurchaseEveryYears} years with 30% down. Use 40% first-year depreciation to offset crypto capital gains.</p>
-                      <p><span className="font-semibold text-purple-400">Funding Stack:</span> Crypto profits → IUL 90% loan → HELOC for remaining down payment.</p>
+                      <p><span className="font-semibold text-emerald-400">Funding Stack:</span> Crypto profits → IUL 90% loan → HELOC for remaining down payment.</p>
                       <p><span className="font-semibold text-red-400">Rental Income:</span> 20% gross annual income reinvested into next bear cycle DCA and mortgage paydown ({form.pctToMortgagePaydown}%).</p>
                     </div>
                   </div>

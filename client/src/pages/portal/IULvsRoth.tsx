@@ -790,7 +790,7 @@ export default function IULvsRoth() {
                   </div>
                   <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 text-center">
                     <p className="text-sm text-zinc-400">Total Excess Funded</p>
-                    <p className="text-2xl font-black text-purple-400 mt-1">{fmtM(megaRothAdvantage.totalExcess)}</p>
+                    <p className="text-2xl font-black text-emerald-400 mt-1">{fmtM(megaRothAdvantage.totalExcess)}</p>
                     <p className="text-xs text-zinc-500 mt-1">Capital deployed to work</p>
                   </div>
                 </div>

@@ -407,7 +407,7 @@ export default function CommissionCalculator() {
       }));
   }, [calculations]);
 
-  const COLORS = ['#22c55e', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#10b981', '#f43f5e'];
+  const COLORS = ['#22c55e', '#3b82f6', '#f59e0b', '#ec4899', '#10b981', '#06b6d4', '#10b981', '#f43f5e'];
 
   const getStatusColor = (status: string) => {
     switch(status) {
@@ -512,13 +512,13 @@ export default function CommissionCalculator() {
             </div>
           </div>
           
-          <div className="rc-card border-t-4 border-t-[#8b5cf6] relative overflow-hidden group">
+          <div className="rc-card border-t-4 border-t-[#10b981] relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Award className="h-16 w-16 text-[#8b5cf6]" />
+              <Award className="h-16 w-16 text-[#10b981]" />
             </div>
             <div className="flex items-center gap-2 mb-3">
-              <div className="h-8 w-8 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center">
-                <Award className="h-4 w-4 text-[#8b5cf6]" />
+              <div className="h-8 w-8 rounded-lg bg-[#10b981]/10 flex items-center justify-center">
+                <Award className="h-4 w-4 text-[#10b981]" />
               </div>
               <div className="rc-stat-label">Lifetime Value</div>
             </div>
@@ -1147,7 +1147,7 @@ export default function CommissionCalculator() {
                     <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
                     <XAxis dataKey="name" stroke="#7a95b8" tick={{ fill: '#7a95b8' }} axisLine={{ stroke: '#12233e' }} />
                     <YAxis yAxisId="left" stroke="#7a95b8" tick={{ fill: '#7a95b8' }} axisLine={{ stroke: '#12233e' }} tickFormatter={(val) => `$${val / 1000}k`} />
-                    <YAxis yAxisId="right" orientation="right" stroke="#8b5cf6" tick={{ fill: '#8b5cf6' }} axisLine={{ stroke: '#12233e' }} tickFormatter={(val) => `$${val / 1000}k`} />
+                    <YAxis yAxisId="right" orientation="right" stroke="#10b981" tick={{ fill: '#10b981' }} axisLine={{ stroke: '#12233e' }} tickFormatter={(val) => `$${val / 1000}k`} />
                     <Tooltip 
                       contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', color: '#fff' }}
                       itemStyle={{ color: '#c8d8ec' }}
@@ -1156,7 +1156,7 @@ export default function CommissionCalculator() {
                     <Legend wrapperStyle={{ paddingTop: '20px' }} />
                     <Bar yAxisId="left" dataKey="FirstYear" name="First Year" stackId="a" fill="#22c55e" radius={[0, 0, 4, 4]} />
                     <Bar yAxisId="left" dataKey="Renewal" name="Renewals" stackId="a" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                    <Line yAxisId="right" type="monotone" dataKey="Cumulative" name="Cumulative Total" stroke="#8b5cf6" strokeWidth={3} dot={{ r: 4, fill: '#8b5cf6', strokeWidth: 2, stroke: '#060d19' }} activeDot={{ r: 6 }} />
+                    <Line yAxisId="right" type="monotone" dataKey="Cumulative" name="Cumulative Total" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981', strokeWidth: 2, stroke: '#060d19' }} activeDot={{ r: 6 }} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
@@ -1204,7 +1204,7 @@ export default function CommissionCalculator() {
                   </div>
                   <div className="bg-[#0a1424] p-4 rounded-xl border border-[#12233e]">
                     <div className="text-sm text-[#7a95b8] mb-1">Year 10 Cumulative</div>
-                    <div className="text-2xl font-bold text-[#8b5cf6]">{fmt(cumulativeData[9]?.Cumulative || 0)}</div>
+                    <div className="text-2xl font-bold text-[#10b981]">{fmt(cumulativeData[9]?.Cumulative || 0)}</div>
                   </div>
                   <div className="text-xs text-[#7a95b8] p-2">
                     * Projections assume 100% persistency and no policy lapses. Actual renewal income will be lower based on client retention.

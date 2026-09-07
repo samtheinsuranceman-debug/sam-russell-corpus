@@ -494,7 +494,7 @@ export default function DivorceCalculator() {
                   <p className="text-slate-300 text-[10px]">Protected vs. unprotected — IRS §72(e), §101(a), ILIT</p>
                 </div>
                 <div className="bg-[#1e293b] rounded-lg p-2 border border-slate-700/50">
-                  <div className="text-purple-400 text-[10px] font-semibold mb-1">Scene 4-5</div>
+                  <div className="text-emerald-400 text-[10px] font-semibold mb-1">Scene 4-5</div>
                   <p className="text-slate-300 text-[10px]">50-year projection engine & call to action</p>
                 </div>
               </div>
@@ -723,28 +723,28 @@ export default function DivorceCalculator() {
           </div>
 
           {/* Divorce 3 — Toggle */}
-          <div className={`rounded-xl border p-4 transition-all ${showDivorce3 ? "bg-gradient-to-br from-purple-950/40 to-purple-900/20 border-purple-500/30" : "bg-[#111827] border-white/10 opacity-60"}`}>
+          <div className={`rounded-xl border p-4 transition-all ${showDivorce3 ? "bg-gradient-to-br from-emerald-950/40 to-emerald-900/20 border-emerald-500/30" : "bg-[#111827] border-white/10 opacity-60"}`}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <HeartCrack className={`w-5 h-5 ${showDivorce3 ? "text-purple-400" : "text-gray-600"}`} />
-                <h3 className={`text-sm font-bold ${showDivorce3 ? "text-purple-400" : "text-gray-600"}`}>DIVORCE #3</h3>
+                <HeartCrack className={`w-5 h-5 ${showDivorce3 ? "text-emerald-400" : "text-gray-600"}`} />
+                <h3 className={`text-sm font-bold ${showDivorce3 ? "text-emerald-400" : "text-gray-600"}`}>DIVORCE #3</h3>
               </div>
               <button onClick={() => { if (showDivorce2) setShowDivorce3(!showDivorce3); }} className={`p-1 rounded-lg hover:bg-white/10 transition-colors ${!showDivorce2 ? "cursor-not-allowed" : ""}`}>
-                {showDivorce3 ? <ToggleRight className="w-6 h-6 text-purple-400" /> : <ToggleLeft className="w-6 h-6 text-gray-600" />}
+                {showDivorce3 ? <ToggleRight className="w-6 h-6 text-emerald-400" /> : <ToggleLeft className="w-6 h-6 text-gray-600" />}
               </button>
             </div>
             {showDivorce3 && showDivorce2 ? (
               <div className="space-y-2">
                 <div>
-                  <label className="text-[10px] text-purple-400 uppercase">Years after 2nd divorce: {divorce3Delay}</label>
-                  <input type="range" min={1} max={20} value={divorce3Delay} onChange={e => setDivorce3Delay(+e.target.value)} className="w-full accent-purple-500" />
+                  <label className="text-[10px] text-emerald-400 uppercase">Years after 2nd divorce: {divorce3Delay}</label>
+                  <input type="range" min={1} max={20} value={divorce3Delay} onChange={e => setDivorce3Delay(+e.target.value)} className="w-full accent-emerald-500" />
                 </div>
                 <div className="text-xs space-y-1">
                   <div className="flex justify-between"><span className="text-gray-400">Additional Unprotected Loss</span><span className="text-red-400 font-bold">{fmt(divorce3?.totalUnprotectedLoss || 0)}</span></div>
                   <div className="flex justify-between"><span className="text-gray-400">Additional Protected Loss</span><span className="text-emerald-400 font-bold">{fmt(divorce3?.totalProtectedLoss || 0)}</span></div>
                   <div className="flex justify-between border-t border-white/10 pt-1"><span className="text-gray-400">Additional Saved</span><span className="text-yellow-400 font-bold">{fmt(divorce3?.assetsSaved || 0)}</span></div>
                 </div>
-                <p className="text-[9px] text-purple-300/60 mt-2">73% of third marriages end in divorce. The devastation compounds exponentially.</p>
+                <p className="text-[9px] text-emerald-300/60 mt-2">73% of third marriages end in divorce. The devastation compounds exponentially.</p>
               </div>
             ) : (
               <p className="text-xs text-gray-500">{showDivorce2 ? "Toggle to model a 3rd divorce. 73% of third marriages fail." : "Enable Divorce #2 first."}</p>
@@ -832,7 +832,7 @@ export default function DivorceCalculator() {
           <div className="flex flex-wrap gap-3 mt-3 text-[10px]">
             <span className="px-2 py-1 bg-red-500/20 text-red-300 rounded-full">Divorce #1: Year 1</span>
             {showDivorce2 && <span className="px-2 py-1 bg-orange-500/20 text-orange-300 rounded-full">Divorce #2: Year {divorce2Delay}</span>}
-            {showDivorce3 && showDivorce2 && <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full">Divorce #3: Year {divorce2Delay + divorce3Delay}</span>}
+            {showDivorce3 && showDivorce2 && <span className="px-2 py-1 bg-emerald-500/20 text-emerald-300 rounded-full">Divorce #3: Year {divorce2Delay + divorce3Delay}</span>}
           </div>
         </div>
 
@@ -1074,8 +1074,8 @@ export default function DivorceCalculator() {
                 { code: "IRC §2036", title: "Retained Life Estate", desc: "If the grantor retains the right to income or use of transferred property, it's included in the estate. Properly structured ILITs avoid this by ensuring the grantor has no incidents of ownership.", bg: "rgba(245,158,11,0.05)", border: "rgba(245,158,11,0.2)", badge: "rgba(245,158,11,0.2)", text: "#f59e0b" },
                 { code: "IRC §72", title: "Annuities; Certain Proceeds", desc: "Governs the taxation of annuity contracts. Fixed annuities in irrevocable trusts grow tax-deferred. When held in a protected state, they're beyond the reach of divorce proceedings.", bg: "rgba(59,130,246,0.05)", border: "rgba(59,130,246,0.2)", badge: "rgba(59,130,246,0.2)", text: "#3b82f6" },
                 { code: "IRC §101(a)", title: "Death Benefits Exclusion", desc: "Life insurance death benefits paid to beneficiaries are generally income tax-free. Combined with ILIT ownership (§2042), this creates a completely tax-free wealth transfer to children.", bg: "rgba(59,130,246,0.05)", border: "rgba(59,130,246,0.2)", badge: "rgba(59,130,246,0.2)", text: "#3b82f6" },
-                { code: "IRC §677", title: "Grantor Trust Income", desc: "Income of a trust is taxable to the grantor if it may be used to pay premiums on the grantor's life insurance. Crummey powers in ILITs navigate this by making beneficiaries the technical premium payers.", bg: "rgba(139,92,246,0.05)", border: "rgba(139,92,246,0.2)", badge: "rgba(139,92,246,0.2)", text: "#8b5cf6" },
-                { code: "IRC §2503(b)", title: "Annual Gift Tax Exclusion", desc: "Allows annual gifts up to $18,000 per beneficiary ($36,000 for married couples) without gift tax. ILIT premium payments use Crummey notices to qualify for this exclusion.", bg: "rgba(139,92,246,0.05)", border: "rgba(139,92,246,0.2)", badge: "rgba(139,92,246,0.2)", text: "#8b5cf6" },
+                { code: "IRC §677", title: "Grantor Trust Income", desc: "Income of a trust is taxable to the grantor if it may be used to pay premiums on the grantor's life insurance. Crummey powers in ILITs navigate this by making beneficiaries the technical premium payers.", bg: "rgba(52,211,153,0.05)", border: "rgba(52,211,153,0.2)", badge: "rgba(52,211,153,0.2)", text: "#10b981" },
+                { code: "IRC §2503(b)", title: "Annual Gift Tax Exclusion", desc: "Allows annual gifts up to $18,000 per beneficiary ($36,000 for married couples) without gift tax. ILIT premium payments use Crummey notices to qualify for this exclusion.", bg: "rgba(52,211,153,0.05)", border: "rgba(52,211,153,0.2)", badge: "rgba(52,211,153,0.2)", text: "#10b981" },
                 { code: "IRC §2611", title: "Generation-Skipping Transfer", desc: "Defines generation-skipping transfers. Dynasty trusts holding IUL policies can pass wealth across multiple generations, compounding the divorce protection for children and grandchildren.", bg: "rgba(6,182,212,0.05)", border: "rgba(6,182,212,0.2)", badge: "rgba(6,182,212,0.2)", text: "#06b6d4" },
               ].map((item, i) => (
                 <div key={i} className="p-4 rounded-lg" style={{ backgroundColor: item.bg, border: `1px solid ${item.border}` }}>

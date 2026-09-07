@@ -41,7 +41,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 
-const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4"];
+const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#10b981", "#ec4899", "#06b6d4"];
 
 const usageData = [
   { month: "Jan", uses: 45, shares: 12, views: 150 },
@@ -259,7 +259,7 @@ export default function DocumentTemplates() {
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case "Client Letters": return <Mail className="h-5 w-5 text-blue-400" />;
-      case "Strategy Memos": return <FileText className="h-5 w-5 text-purple-400" />;
+      case "Strategy Memos": return <FileText className="h-5 w-5 text-emerald-400" />;
       case "Meeting Templates": return <ClipboardList className="h-5 w-5 text-emerald-400" />;
       case "Client Forms": return <FileCheck className="h-5 w-5 text-amber-400" />;
       case "Compliance": return <Shield className="h-5 w-5 text-red-400" />;
@@ -1039,7 +1039,7 @@ export default function DocumentTemplates() {
             <Card className="bg-slate-900 border-slate-800">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-purple-400" />
+                  <TrendingUp className="h-4 w-4 text-emerald-400" />
                   Template Performance
                 </CardTitle>
               </CardHeader>
@@ -1051,7 +1051,7 @@ export default function DocumentTemplates() {
                       <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
                       <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
                       <RTooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b' }} cursor={{ fill: '#1e293b' }} />
-                      <Bar dataKey="views" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="views" fill="#10b981" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -1103,7 +1103,7 @@ export default function DocumentTemplates() {
                         <Legend />
                         <Bar dataKey="views" barSize={20} fill="#06b6d4" />
                         <Line type="monotone" dataKey="uses" stroke="#ef4444" strokeWidth={2} />
-                        <Area type="monotone" dataKey="shares" fill="#8b5cf6" stroke="#8b5cf6" fillOpacity={0.3} />
+                        <Area type="monotone" dataKey="shares" fill="#10b981" stroke="#10b981" fillOpacity={0.3} />
                       </ComposedChart>
                     </ResponsiveContainer>
                   </div>

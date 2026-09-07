@@ -92,8 +92,8 @@ const SUGGESTED_PROMPTS = [
   "Review estate planning documents"
 ];
 
-const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#14b8a6"];
-const STEP_COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#a78bfa", "#ef4444"];
+const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#10b981", "#ec4899", "#14b8a6"];
+const STEP_COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#34d399", "#ef4444"];
 
 export default function AdvisorChat() {
   const { user } = useAuth();
@@ -1231,7 +1231,7 @@ export default function AdvisorChat() {
             <div className="space-y-6 animate-in fade-in duration-300">
               <div className="rc-card bg-gradient-to-br from-[#0a1428] to-[#060d19] border-[#1e3a63]/50 shadow-lg">
                 <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                  <TrendingUp size={18} className="text-[#8b5cf6]" />
+                  <TrendingUp size={18} className="text-[#10b981]" />
                   10-Year Growth Projection
                 </h3>
                 <div className="h-64">

@@ -12,10 +12,10 @@ import { toast } from "sonner";
 import { FACT_FINDER_SECTIONS } from "@shared/clientFactFinder";
 import { ArrowRight, Check, Compass, Lightbulb, ListChecks, SlidersHorizontal, Wind } from "lucide-react";
 
-const CARD = "rounded-2xl border border-violet-400/20 bg-white/[0.04]";
+const CARD = "rounded-2xl border border-emerald-400/20 bg-white/[0.04]";
 const DONE_KEY = "rcs_journey_done";
 const BTN = "rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-40";
-const PRIMARY = "rounded-lg bg-violet-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-400 disabled:opacity-40";
+const PRIMARY = "rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-400 disabled:opacity-40";
 const usd = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
 /**
@@ -58,7 +58,7 @@ function UnaskedQuestions() {
             <li key={q.id} className="rounded-xl border border-white/10 bg-[#0b0f1a] p-3">
               <p className="text-white"><span className="text-amber-300">{i + 1}.</span> {q.question}</p>
               <p className="mt-1 text-xs text-slate-400">{q.why}</p>
-              <p className="mt-1 text-[11px] text-slate-500">{q.scale > 0 ? `About ${usd(q.scale)} — ${q.scaleNote}.` : q.scaleNote} You would otherwise meet this in about {q.horizonYears} years. <Link href={q.path} className="text-violet-200 underline decoration-dotted">The page that works it through</Link>{q.needs?.length ? ` · sharper with: ${q.needs.join(", ")}` : ""}</p>
+              <p className="mt-1 text-[11px] text-slate-500">{q.scale > 0 ? `About ${usd(q.scale)} — ${q.scaleNote}.` : q.scaleNote} You would otherwise meet this in about {q.horizonYears} years. <Link href={q.path} className="text-emerald-200 underline decoration-dotted">The page that works it through</Link>{q.needs?.length ? ` · sharper with: ${q.needs.join(", ")}` : ""}</p>
               {stage === "answered" && answers.find((a) => a.id === q.id) && <p className="mt-2 rounded-lg border border-amber-300/20 bg-amber-300/10 p-2 text-xs text-amber-50"><span className="font-semibold text-amber-200">Librarian ({answers.find((a) => a.id === q.id)!.via}):</span> {answers.find((a) => a.id === q.id)!.answer}</p>}
             </li>
           ))}</ol>
@@ -96,9 +96,9 @@ export default function AIFinancialAdvisor() {
     <AppShell title="AI Financial Advisor">
       <div className="mx-auto max-w-6xl space-y-6 pb-16">
         <div className={`${CARD} p-6`}>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80">New Client Welcome List · Step 2</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80">New Client Welcome List · Step 2</p>
           <h1 className="mt-1 text-2xl font-semibold text-white">Ask the advisor anything about your plan. Press record, speak, and listen.</h1>
-          <p className="mt-2 max-w-3xl text-sm text-slate-400">Nine AI advisors answer as one voice — the Financial Librarian. It knows your complete Financial Assessment and only advises once it is finished. Ask as many questions as you like; then press <span className="font-semibold text-violet-200">JOURNEY</span> and it boils everything down to three to five questions, names the one you haven't asked yet, and lays out the pages on this site — calculators included — that answer them in order.</p>
+          <p className="mt-2 max-w-3xl text-sm text-slate-400">Nine AI advisors answer as one voice — the Financial Librarian. It knows your complete Financial Assessment and only advises once it is finished. Ask as many questions as you like; then press <span className="font-semibold text-emerald-200">JOURNEY</span> and it boils everything down to three to five questions, names the one you haven't asked yet, and lays out the pages on this site — calculators included — that answer them in order.</p>
         </div>
 
         <UnaskedQuestions />
@@ -107,7 +107,7 @@ export default function AIFinancialAdvisor() {
           <TapeRecorderAdvisor onJourney={setJourney} />
 
           <aside className={`${CARD} h-fit p-5`} aria-label="What the advisor knows">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80">What it knows</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80">What it knows</p>
             <div className="mt-2 flex items-baseline gap-2">
               <span className="text-3xl font-semibold text-white">{completeness?.percent ?? 0}%</span>
               <span className="text-xs text-slate-400">of the assessment</span>
@@ -123,7 +123,7 @@ export default function AIFinancialAdvisor() {
                 );
               })}
             </ul>
-            <Link href="/portal/financial-assessment" className="mt-4 inline-flex items-center gap-1 text-sm text-violet-200 hover:text-white">{completeness?.complete ? "Review my assessment" : "Complete my assessment"} <ArrowRight size={14} /></Link>
+            <Link href="/portal/financial-assessment" className="mt-4 inline-flex items-center gap-1 text-sm text-emerald-200 hover:text-white">{completeness?.complete ? "Review my assessment" : "Complete my assessment"} <ArrowRight size={14} /></Link>
           </aside>
         </div>
 
@@ -131,7 +131,7 @@ export default function AIFinancialAdvisor() {
           <section className={`${CARD} p-6`} aria-label="Your customized journey">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80"><Compass size={12} className="mr-1 inline" /> Your customized journey</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80"><Compass size={12} className="mr-1 inline" /> Your customized journey</p>
                 <h2 className="mt-1 text-xl font-semibold text-white">{journey.steps.length} pages, in the order that builds</h2>
               </div>
               <div className="text-right text-xs text-slate-400">
@@ -142,9 +142,9 @@ export default function AIFinancialAdvisor() {
 
             <div className="mt-5 grid gap-4 md:grid-cols-2">
               <div className="rounded-xl border border-white/10 bg-[#0b0f1a] p-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-violet-200/80"><ListChecks size={12} className="mr-1 inline" /> It comes down to {journey.coreQuestions.length} questions</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-200/80"><ListChecks size={12} className="mr-1 inline" /> It comes down to {journey.coreQuestions.length} questions</p>
                 <ol className="mt-2 space-y-2">
-                  {journey.coreQuestions.map((q, i) => <li key={i} className="flex gap-2 text-sm text-white"><span className="text-violet-300">{i + 1}.</span>{q}</li>)}
+                  {journey.coreQuestions.map((q, i) => <li key={i} className="flex gap-2 text-sm text-white"><span className="text-emerald-300">{i + 1}.</span>{q}</li>)}
                 </ol>
               </div>
               <div className="rounded-xl border border-amber-300/30 bg-amber-300/10 p-4">
@@ -168,24 +168,24 @@ export default function AIFinancialAdvisor() {
 
             <ol className="mt-6 space-y-2">
               {journey.steps.map((s, i) => (
-                <li key={s.id} className={`flex items-start gap-3 rounded-xl border p-3 transition ${done[s.id] ? "border-emerald-400/30 bg-emerald-400/5" : "border-white/10 bg-white/[0.02] hover:border-violet-300/40"}`}>
+                <li key={s.id} className={`flex items-start gap-3 rounded-xl border p-3 transition ${done[s.id] ? "border-emerald-400/30 bg-emerald-400/5" : "border-white/10 bg-white/[0.02] hover:border-emerald-300/40"}`}>
                   <button type="button" aria-label={done[s.id] ? `Mark ${s.title} not visited` : `Mark ${s.title} visited`} onClick={() => setDone((d) => ({ ...d, [s.id]: !d[s.id] }))}
-                    className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${done[s.id] ? "border-emerald-400 bg-emerald-400 text-black" : "border-violet-300/50 text-violet-200"}`}>
+                    className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${done[s.id] ? "border-emerald-400 bg-emerald-400 text-black" : "border-emerald-300/50 text-emerald-200"}`}>
                     {done[s.id] ? <Check size={14} /> : i + 1}
                   </button>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <Link href={s.path} className="font-semibold text-white hover:text-violet-200">{s.title}</Link>
+                      <Link href={s.path} className="font-semibold text-white hover:text-emerald-200">{s.title}</Link>
                       <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-slate-400">{s.kind}</span>
                     </div>
                     <p className="mt-0.5 text-sm text-slate-400">{s.why}</p>
-                    {s.guide && <p className="mt-1.5 text-xs text-violet-100/80"><span className="font-semibold text-violet-200">Librarian:</span> {s.guide}</p>}
+                    {s.guide && <p className="mt-1.5 text-xs text-emerald-100/80"><span className="font-semibold text-emerald-200">Librarian:</span> {s.guide}</p>}
                   </div>
-                  <Link href={s.path} onClick={() => setDone((d) => ({ ...d, [s.id]: true }))} className="shrink-0 rounded-lg bg-violet-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-violet-400">{i === 0 ? "Start" : "Open"}</Link>
+                  <Link href={s.path} onClick={() => setDone((d) => ({ ...d, [s.id]: true }))} className="shrink-0 rounded-lg bg-emerald-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-400">{i === 0 ? "Start" : "Open"}</Link>
                 </li>
               ))}
             </ol>
-            <p className="mt-4 text-xs text-slate-500">Generated by {journey.generatedBy}. Every step is a page on this site; the sequence is built from your questions and your assessment. Find it again any time under <Link href="/portal/my-journey" className="text-violet-200 underline decoration-dotted">My Secret Journey</Link>.</p>
+            <p className="mt-4 text-xs text-slate-500">Generated by {journey.generatedBy}. Every step is a page on this site; the sequence is built from your questions and your assessment. Find it again any time under <Link href="/portal/my-journey" className="text-emerald-200 underline decoration-dotted">My Secret Journey</Link>.</p>
           </section>
         )}
       </div>

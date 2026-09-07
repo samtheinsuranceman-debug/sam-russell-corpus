@@ -82,7 +82,7 @@ export default function TheField() {
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
-                  m.from === "me" ? "bg-violet-500/30 text-white" : "border border-white/10 bg-white/[0.03] text-slate-200"
+                  m.from === "me" ? "bg-emerald-500/30 text-white" : "border border-white/10 bg-white/[0.03] text-slate-200"
                 }`}>
                   {m.text}
                 </div>
@@ -93,7 +93,7 @@ export default function TheField() {
           <div className="border-t border-white/8 p-3">
             <div className="mb-2 flex flex-wrap gap-1.5">
               {PROMPTS.slice(0, 2).map((p) => (
-                <button key={p} onClick={() => send(p)} className="rounded-full border border-white/10 bg-white/[0.02] px-3 py-1 text-[11px] text-slate-400 hover:border-violet-400/40 hover:text-violet-200">
+                <button key={p} onClick={() => send(p)} className="rounded-full border border-white/10 bg-white/[0.02] px-3 py-1 text-[11px] text-slate-400 hover:border-emerald-400/40 hover:text-emerald-200">
                   {p.length > 42 ? p.slice(0, 42) + "…" : p}
                 </button>
               ))}
@@ -113,7 +113,7 @@ export default function TheField() {
                 onKeyDown={(e) => e.key === "Enter" && send()}
                 placeholder="Speak to Buddy from the unified field…"
               />
-              <Button size="icon" onClick={() => send()} className="shrink-0 bg-violet-500 hover:bg-violet-400"><Send className="h-4 w-4" /></Button>
+              <Button size="icon" onClick={() => send()} className="shrink-0 bg-emerald-500 hover:bg-emerald-400"><Send className="h-4 w-4" /></Button>
             </div>
           </div>
         </GlowCard>
@@ -148,7 +148,7 @@ export default function TheField() {
             <p className="mt-2 text-sm text-slate-300">{doneToday} of 5 check-ins complete</p>
             <div className="mt-3 flex gap-1.5">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className={`h-1.5 flex-1 rounded-full ${i < doneToday ? "bg-violet-500" : "bg-white/8"}`} />
+                <div key={i} className={`h-1.5 flex-1 rounded-full ${i < doneToday ? "bg-emerald-500" : "bg-white/8"}`} />
               ))}
             </div>
             <div className="mt-4 space-y-2">

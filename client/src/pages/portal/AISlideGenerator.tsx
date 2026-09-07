@@ -32,7 +32,7 @@ const LAYOUT_ICONS: Record<string, any> = {
 };
 
 const LAYOUT_COLORS: Record<string, string> = {
-  title: "text-violet-400 bg-violet-500/10 border-violet-500/20",
+  title: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
   content: "text-blue-400 bg-blue-500/10 border-blue-500/20",
   comparison: "text-amber-400 bg-amber-500/10 border-amber-500/20",
   metrics: "text-[#22c55e] bg-[#22c55e]/10 border-[#22c55e]/20",
@@ -273,7 +273,7 @@ li::before{content:'▸';position:absolute;left:0;color:#22c55e;font-weight:700}
 
   const activeSlide = slides[activeSlideIndex];
 
-  const chartColors = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444"];
+  const chartColors = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444"];
   const tooltipStyle = { background: "#0d1a2e", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 };
 
   const layoutDistribution = useMemo(() => {

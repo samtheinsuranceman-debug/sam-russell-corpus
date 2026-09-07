@@ -28,26 +28,26 @@ export default function ManagedAuthLegacy() {
   const copy = routeCopy[window.location.pathname] ?? routeCopy["/register"];
 
   return (
-    <main className="relative min-h-screen grid place-items-center bg-[#07060d] px-6 py-16 text-violet-50">
+    <main className="relative min-h-screen grid place-items-center bg-[#04100c] px-6 py-16 text-emerald-50">
       {/* The boulevard's two text-free edges, one per side on wide screens; the seam sits behind the card. */}
       <img src="/rcs-city-boulevard.webp" alt="Rain-washed boulevard at night lined with lamps, trees and green banners" className="absolute inset-y-0 left-0 h-full w-full object-cover object-center brightness-[.6] saturate-[1.1] md:w-1/2" loading="lazy" decoding="async" />
       <img src="/rcs-city-boulevard-r.webp" alt="" aria-hidden="true" className="absolute inset-y-0 right-0 hidden h-full w-1/2 object-cover object-center brightness-[.6] saturate-[1.1] md:block" loading="lazy" decoding="async" />
-      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(124,58,237,.28),transparent_32%),linear-gradient(145deg,rgba(7,6,13,.55),rgba(16,11,28,.45)_55%,rgba(9,7,16,.7))]" />
-      <section className="relative z-10 w-full max-w-xl rounded-3xl border border-violet-400/20 bg-black/35 p-8 shadow-[0_30px_100px_rgba(76,29,149,.3)] backdrop-blur-xl sm:p-10">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/15 ring-1 ring-violet-400/30">
-          <ShieldCheck className="h-6 w-6 text-violet-300" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(16,185,129,.28),transparent_32%),linear-gradient(145deg,rgba(7,6,13,.55),rgba(16,11,28,.45)_55%,rgba(9,7,16,.7))]" />
+      <section className="relative z-10 w-full max-w-xl rounded-3xl border border-emerald-400/20 bg-black/35 p-8 shadow-[0_30px_100px_rgba(6,95,70,.3)] backdrop-blur-xl sm:p-10">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/15 ring-1 ring-emerald-400/30">
+          <ShieldCheck className="h-6 w-6 text-emerald-300" />
         </div>
-        <p className="mt-7 text-xs font-semibold uppercase tracking-[0.24em] text-violet-300">{copy.label}</p>
+        <p className="mt-7 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300">{copy.label}</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{copy.title}</h1>
-        <p className="mt-4 text-base leading-7 text-violet-100/65">{copy.body}</p>
+        <p className="mt-4 text-base leading-7 text-emerald-100/65">{copy.body}</p>
         <button
           type="button"
           onClick={() => startLogin("/portal/dashboard")}
-          className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-violet-500 px-5 py-3 font-semibold text-white shadow-lg shadow-violet-950/40 transition duration-200 hover:bg-violet-400 active:scale-[0.97]"
+          className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-white shadow-lg shadow-emerald-950/40 transition duration-200 hover:bg-emerald-400 active:scale-[0.97]"
         >
           Continue to secure sign in <ArrowRight className="h-5 w-5" />
         </button>
-        <a href="/" className="mt-5 flex items-center justify-center gap-2 text-sm text-violet-200/55 hover:text-violet-100">
+        <a href="/" className="mt-5 flex items-center justify-center gap-2 text-sm text-emerald-200/55 hover:text-emerald-100">
           <ArrowLeft className="h-4 w-4" /> Return to homepage
         </a>
       </section>

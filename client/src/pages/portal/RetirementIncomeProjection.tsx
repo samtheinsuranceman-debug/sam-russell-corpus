@@ -114,7 +114,7 @@ export default function RetirementIncomeProjection() {
     conservative: { label: "Conservative (5.5%)", rate: 5.5, color: "#f59e0b" },
     moderate: { label: "Moderate (7.2%)", rate: 7.2, color: "#22c55e" },
     aggressive: { label: "Aggressive (8.5%)", rate: 8.5, color: "#3b82f6" },
-    custom: { label: "Custom", rate: 6.0, color: "#8b5cf6" }
+    custom: { label: "Custom", rate: 6.0, color: "#10b981" }
   };
 
   const selectedRate = RATE_MAP[creditingRate] ?? RATE_MAP.conservative;
@@ -896,7 +896,7 @@ export default function RetirementIncomeProjection() {
                   <div className="flex items-center justify-between border-b border-slate-700 pb-1">
                     <h4 className="text-sm font-medium text-slate-300">Pension Income</h4>
                     {/* Interactive Element 15 */}
-                    <Switch checked={includePension} onCheckedChange={setIncludePension} className="scale-75 data-[state=checked]:bg-purple-500" />
+                    <Switch checked={includePension} onCheckedChange={setIncludePension} className="scale-75 data-[state=checked]:bg-emerald-500" />
                   </div>
                   <div className={`space-y-3 ${!includePension ? 'opacity-50 pointer-events-none' : ''}`}>
                     {/* Interactive Element 16-17 */}
@@ -990,11 +990,11 @@ export default function RetirementIncomeProjection() {
           </Card>
           <Card className="border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 transition-colors hidden lg:block">
             <CardContent className="p-4 text-center">
-              <div className="mx-auto w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center mb-2">
-                <Shield className="w-4 h-4 text-purple-400" />
+              <div className="mx-auto w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center mb-2">
+                <Shield className="w-4 h-4 text-emerald-400" />
               </div>
               <p className="text-xs text-slate-400 mb-1">Est. Tax Savings*</p>
-              <p className="text-xl font-bold text-purple-400">${Math.round(projectionData.annualIncome * incomeYears * (taxRate/100)).toLocaleString()}</p>
+              <p className="text-xl font-bold text-emerald-400">${Math.round(projectionData.annualIncome * incomeYears * (taxRate/100)).toLocaleString()}</p>
               <p className="text-[10px] text-slate-500 mt-1">Over {incomeYears} years</p>
             </CardContent>
           </Card>
@@ -1094,7 +1094,7 @@ export default function RetirementIncomeProjection() {
                       )}
                       
                       <Line yAxisId="left" type="stepAfter" dataKey="premiumPaid" name="Total Premiums Paid" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
-                      <Line yAxisId="left" type="monotone" dataKey="deathBenefit" name="Est. Death Benefit" stroke="#8b5cf6" strokeWidth={1} strokeDasharray="3 3" dot={false} />
+                      <Line yAxisId="left" type="monotone" dataKey="deathBenefit" name="Est. Death Benefit" stroke="#10b981" strokeWidth={1} strokeDasharray="3 3" dot={false} />
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
@@ -1208,7 +1208,7 @@ export default function RetirementIncomeProjection() {
               <Card className="border-slate-700/50 bg-slate-800/30 lg:col-span-2">
                 <CardHeader>
                   <CardTitle className="text-base text-white flex items-center gap-2">
-                    <Calculator className="w-4 h-4 text-purple-400" />
+                    <Calculator className="w-4 h-4 text-emerald-400" />
                     Income Source & Tax Analysis
                   </CardTitle>
                   <p className="text-xs text-slate-400">Comparing taxable vs tax-free income sources during distribution phase</p>
@@ -1240,9 +1240,9 @@ export default function RetirementIncomeProjection() {
                   <CardTitle className="text-base text-white">Tax Savings Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="p-4 bg-purple-500/10 border border-purple-500/20 rounded-xl text-center">
-                    <p className="text-xs text-purple-300 mb-1">Estimated Lifetime Tax Savings</p>
-                    <p className="text-3xl font-bold text-purple-400">
+                  <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-center">
+                    <p className="text-xs text-emerald-300 mb-1">Estimated Lifetime Tax Savings</p>
+                    <p className="text-3xl font-bold text-emerald-400">
                       ${Math.round(projectionData.annualIncome * incomeYears * (taxRate/100)).toLocaleString()}
                     </p>
                     <p className="text-[10px] text-slate-400 mt-2">By utilizing tax-free policy loans instead of taxable withdrawals</p>
@@ -1260,7 +1260,7 @@ export default function RetirementIncomeProjection() {
                     </div>
                     <div className="flex justify-between items-center text-sm font-medium pt-2 border-t border-slate-700/50">
                       <span className="text-slate-300">Annual Tax Saved</span>
-                      <span className="text-purple-400">${Math.round(projectionData.annualIncome * (taxRate/100)).toLocaleString()}</span>
+                      <span className="text-emerald-400">${Math.round(projectionData.annualIncome * (taxRate/100)).toLocaleString()}</span>
                     </div>
                   </div>
 
@@ -1406,7 +1406,7 @@ export default function RetirementIncomeProjection() {
                             <td className="p-2.5 text-right text-slate-400">${row.premiumPaid.toLocaleString()}</td>
                             <td className="p-2.5 text-right text-white font-medium">${row.accumulationValue.toLocaleString()}</td>
                             <td className="p-2.5 text-right text-slate-400">${row.surrenderValue.toLocaleString()}</td>
-                            <td className="p-2.5 text-right text-purple-400">${row.deathBenefit.toLocaleString()}</td>
+                            <td className="p-2.5 text-right text-emerald-400">${row.deathBenefit.toLocaleString()}</td>
                           </tr>
                         ))}
                       </tbody>

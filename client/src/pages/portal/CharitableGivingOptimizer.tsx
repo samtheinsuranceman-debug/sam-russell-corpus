@@ -28,7 +28,7 @@ import { ComplianceFooter } from "@/components/ComplianceFooter";
 
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
-const COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#8b5cf6", "#ec4899", "#06b6d4", "#f97316", "#14b8a6"];
+const COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#10b981", "#ec4899", "#06b6d4", "#f97316", "#14b8a6"];
 
 interface GivingStrategy {
   id: string;
@@ -580,7 +580,7 @@ export default function CharitableGivingOptimizer() {
                               <div className="text-xs text-[#7a95b8] mb-1 flex items-center gap-1">
                                 <Target className="w-3 h-3" /> Tax Efficiency
                               </div>
-                              <div className="text-xl font-bold text-purple-400">{selectedStrategyDetails.efficiency}%</div>
+                              <div className="text-xl font-bold text-emerald-400">{selectedStrategyDetails.efficiency}%</div>
                             </div>
                           </div>
 
@@ -619,7 +619,7 @@ export default function CharitableGivingOptimizer() {
                             {/* Complexity Radar */}
                             <div className="bg-[#0d1a2e] p-5 rounded-xl border border-[#12233e]">
                               <h4 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-                                <Activity className="w-4 h-4 text-purple-400" /> Strategy Profile
+                                <Activity className="w-4 h-4 text-emerald-400" /> Strategy Profile
                               </h4>
                               <div className="h-48">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -627,7 +627,7 @@ export default function CharitableGivingOptimizer() {
                                     <PolarGrid stroke="#12233e" />
                                     <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 10 }} />
                                     <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
-                                    <Radar name="Profile" dataKey="A" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.4} />
+                                    <Radar name="Profile" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.4} />
                                     <Tooltip contentStyle={{ backgroundColor: '#0a1120', borderColor: '#12233e', color: '#fff' }} />
                                   </RadarChart>
                                 </ResponsiveContainer>
@@ -719,9 +719,9 @@ export default function CharitableGivingOptimizer() {
                           <YAxis 
                             yAxisId="right" 
                             orientation="right" 
-                            stroke="#8b5cf6" 
+                            stroke="#10b981" 
                             tickFormatter={(val) => `${val}%`} 
-                            tick={{ fill: '#8b5cf6', fontSize: 11 }} 
+                            tick={{ fill: '#10b981', fontSize: 11 }} 
                           />
                           <Tooltip 
                             formatter={(value: number, name: string) => {
@@ -733,7 +733,7 @@ export default function CharitableGivingOptimizer() {
                           <Legend wrapperStyle={{ paddingTop: '20px' }} />
                           <Bar yAxisId="left" dataKey="netCost" name="Net Cost to Donor" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                           <Bar yAxisId="left" dataKey="charityReceives" name="Charity Receives" fill="#22c55e" radius={[4, 4, 0, 0]} />
-                          <Line yAxisId="right" type="monotone" dataKey="efficiency" name="Efficiency Score" stroke="#8b5cf6" strokeWidth={3} dot={{ r: 4, fill: '#8b5cf6' }} />
+                          <Line yAxisId="right" type="monotone" dataKey="efficiency" name="Efficiency Score" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981' }} />
                         </ComposedChart>
                       </ResponsiveContainer>
                     </div>
@@ -742,7 +742,7 @@ export default function CharitableGivingOptimizer() {
                   {/* Efficiency Trends */}
                   <div className="bg-[#0a1120] border border-[#12233e] rounded-xl p-6">
                     <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-purple-400" /> Efficiency by Income Level
+                      <TrendingUp className="w-5 h-5 text-emerald-400" /> Efficiency by Income Level
                     </h3>
                     <div className="h-[300px]">
                       <ResponsiveContainer width="100%" height="100%">
@@ -754,7 +754,7 @@ export default function CharitableGivingOptimizer() {
                           <Legend />
                           <Line type="monotone" dataKey="directCash" name="Direct Cash" stroke="#3b82f6" strokeWidth={2} />
                           <Line type="monotone" dataKey="appreciated" name="Appreciated Assets" stroke="#22c55e" strokeWidth={2} />
-                          <Line type="monotone" dataKey="daf" name="DAF Bunching" stroke="#8b5cf6" strokeWidth={2} />
+                          <Line type="monotone" dataKey="daf" name="DAF Bunching" stroke="#10b981" strokeWidth={2} />
                         </LineChart>
                       </ResponsiveContainer>
                     </div>

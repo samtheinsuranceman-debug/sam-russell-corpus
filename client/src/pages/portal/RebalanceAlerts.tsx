@@ -73,7 +73,7 @@ const STATUS_STYLES: Record<string, { bg: string; label: string; text: string }>
   RESOLVED: { bg: "bg-emerald-500/20", text: "text-emerald-400", label: "Resolved" },
 };
 
-const COLORS = ["#f87171", "#fbbf24", "#34d399", "#60a5fa", "#a78bfa", "#f472b6", "#38bdf8", "#4ade80", "#facc15", "#f87171"];
+const COLORS = ["#f87171", "#fbbf24", "#34d399", "#60a5fa", "#34d399", "#f472b6", "#38bdf8", "#4ade80", "#facc15", "#f87171"];
 
 const generateTrendData = () => {
   return Array.from({ length: 12 }).map((_, i) => ({
@@ -669,7 +669,7 @@ export default function RebalanceAlerts() {
               {/* Chart 2: Asset Class Distribution */}
               <div className="bg-[#0a1526] p-5 rounded-xl border border-[#12233e] flex flex-col h-[400px]">
                 <h3 className="text-lg font-semibold text-white mb-1 flex items-center gap-2">
-                  <PieChartIcon className="h-5 w-5 text-purple-400" />
+                  <PieChartIcon className="h-5 w-5 text-emerald-400" />
                   Drift by Asset Class
                 </h3>
                 <p className="text-xs text-[#7a95b8] mb-4">Distribution of open alerts</p>
@@ -1183,7 +1183,7 @@ export default function RebalanceAlerts() {
                                       
                                       <div className="space-y-3">
                                         <h4 className="text-xs font-semibold text-white uppercase tracking-wider flex items-center gap-2">
-                                          <Clock className="h-3 w-3 text-purple-400" /> Timeline
+                                          <Clock className="h-3 w-3 text-emerald-400" /> Timeline
                                         </h4>
                                         <div className="bg-[#0a1526] p-3 rounded-lg border border-[#12233e] space-y-3 relative">
                                           <div className="absolute left-[21px] top-4 bottom-4 w-px bg-[#12233e]"></div>
@@ -1522,7 +1522,7 @@ export default function RebalanceAlerts() {
             <div className="space-y-6">
               <div className="bg-[#0a1526] p-6 rounded-xl border border-[#12233e] shadow-lg">
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Settings className="h-5 w-5 text-purple-400" /> 
+                  <Settings className="h-5 w-5 text-emerald-400" /> 
                   Automated Rebalancing Rules
                 </h3>
                 <div className="space-y-4">

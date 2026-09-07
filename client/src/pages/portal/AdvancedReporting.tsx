@@ -46,7 +46,7 @@ import { PageInsights } from "@/components/PageInsights";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/_core/hooks/useAuth";
 
-const CHART_COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4", "#ec4899", "#14b8a6"];
+const CHART_COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#10b981", "#06b6d4", "#ec4899", "#14b8a6"];
 
 const REPORT_TEMPLATES = [
   { id: "executive_summary", name: "Executive Summary", description: "High-level overview of all client strategies and outcomes", sections: ["portfolio_overview", "key_metrics", "recommendations"] },
@@ -612,7 +612,7 @@ export default function AdvancedReporting() {
               <div className="rc-card">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-sm font-medium text-[#c8d8ec] flex items-center gap-2">
-                    <PieChartIcon className="w-4 h-4 text-[#8b5cf6]" /> Client Distribution
+                    <PieChartIcon className="w-4 h-4 text-[#10b981]" /> Client Distribution
                   </h3>
                   <span className="rc-badge rc-badge-purple text-xs">By Strategy</span>
                 </div>

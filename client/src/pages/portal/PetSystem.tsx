@@ -64,7 +64,7 @@ const ACCESSORIES = [
 const RARITY_COLORS: Record<string, string> = {
   common: "text-slate-400 border-slate-500/30 bg-slate-500/10",
   rare: "text-blue-400 border-blue-500/30 bg-blue-500/10",
-  epic: "text-purple-400 border-purple-500/30 bg-purple-500/10",
+  epic: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
   legendary: "text-yellow-400 border-yellow-500/30 bg-yellow-500/10",
 };
 
@@ -95,7 +95,7 @@ function PetDisplay({ pet }: { pet: any }) {
   return (
     <div className="relative flex flex-col items-center">
       <div className={`absolute inset-0 rounded-full blur-3xl transition-all duration-1000 ${
-        pet.level >= 35 ? "bg-yellow-500/10" : pet.level >= 20 ? "bg-purple-500/10" : "bg-emerald-500/5"
+        pet.level >= 35 ? "bg-yellow-500/10" : pet.level >= 20 ? "bg-emerald-500/10" : "bg-emerald-500/5"
       }`} />
       <div className={`text-8xl transition-transform duration-300 ${bounce ? "-translate-y-3" : ""}`}>
         {species.emoji}

@@ -40,19 +40,19 @@ export function JourneyProgressBar() {
   const next = index < total - 1 ? journey.steps[index + 1] : null;
 
   return (
-    <div className="mb-4 rounded-2xl border border-violet-400/25 bg-[linear-gradient(120deg,rgba(139,123,240,.16),rgba(56,189,248,.08))] px-4 py-3" role="navigation" aria-label="Your journey">
+    <div className="mb-4 rounded-2xl border border-emerald-400/25 bg-[linear-gradient(120deg,rgba(139,123,240,.16),rgba(56,189,248,.08))] px-4 py-3" role="navigation" aria-label="Your journey">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-500 text-xs font-bold text-white"><Compass size={14} /></span>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-xs font-bold text-white"><Compass size={14} /></span>
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-violet-200/80">Your journey · step {index + 1} of {total} · {visited} visited</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-200/80">Your journey · step {index + 1} of {total} · {visited} visited</p>
             <p className="truncate text-sm text-white"><span className="font-semibold">{step.title}</span><span className="text-slate-400"> — {step.why}</span></p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {prev && <Link href={prev.path} className="inline-flex items-center gap-1 rounded-lg border border-white/15 px-3 py-1.5 text-xs text-slate-200 hover:bg-white/5"><ArrowLeft size={13} /> {prev.title}</Link>}
           {next ? (
-            <Link href={next.path} className="inline-flex items-center gap-1 rounded-lg bg-violet-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-400">Next: {next.title} <ArrowRight size={13} /></Link>
+            <Link href={next.path} className="inline-flex items-center gap-1 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-400">Next: {next.title} <ArrowRight size={13} /></Link>
           ) : (
             <Link href="/portal/ai-advisor" className="inline-flex items-center gap-1 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-black hover:bg-emerald-400"><Check size={13} /> Journey complete — back to the advisor</Link>
           )}
@@ -60,14 +60,14 @@ export function JourneyProgressBar() {
       </div>
       {step.guide && (
         <div className="mt-2 flex flex-wrap items-start gap-2">
-          <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="inline-flex items-center gap-1 rounded-lg border border-violet-300/30 px-2.5 py-1 text-xs text-violet-100 hover:bg-violet-500/20"><BookOpen size={12} /> {open ? "Hide" : "What to do on this page"}</button>
+          <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="inline-flex items-center gap-1 rounded-lg border border-emerald-300/30 px-2.5 py-1 text-xs text-emerald-100 hover:bg-emerald-500/20"><BookOpen size={12} /> {open ? "Hide" : "What to do on this page"}</button>
           <button type="button" onClick={() => void readAloud(`${step.title}. ${step.guide}`)} className="inline-flex items-center gap-1 rounded-lg border border-white/15 px-2.5 py-1 text-xs text-slate-200 hover:bg-white/5"><Volume2 size={12} /> Read aloud</button>
-          {open && <p className="w-full rounded-lg border border-violet-400/15 bg-violet-500/10 px-3 py-2 text-sm text-violet-50"><span className="font-semibold text-violet-200">Librarian: </span>{step.guide}</p>}
+          {open && <p className="w-full rounded-lg border border-emerald-400/15 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-50"><span className="font-semibold text-emerald-200">Librarian: </span>{step.guide}</p>}
         </div>
       )}
       <div className="mt-2 flex gap-1" aria-hidden="true">
         {journey.steps.map((s, i) => (
-          <span key={s.id} className={`h-1 flex-1 rounded-full ${i === index ? "bg-cyan-300" : s.visitedAt ? "bg-violet-400" : "bg-white/10"}`} />
+          <span key={s.id} className={`h-1 flex-1 rounded-full ${i === index ? "bg-cyan-300" : s.visitedAt ? "bg-emerald-400" : "bg-white/10"}`} />
         ))}
       </div>
     </div>

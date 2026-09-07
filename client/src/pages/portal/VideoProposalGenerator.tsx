@@ -48,7 +48,7 @@ const CHAPTER_TYPES = [
   { value: "introduction", label: "Introduction", icon: User, color: "bg-blue-500/10 text-blue-400", description: "Warm welcome, preview what's covered" },
   { value: "current_situation", label: "Current Situation", icon: BarChart3, color: "bg-amber-500/10 text-amber-400", description: "Client's financial picture & opportunities" },
   { value: "recommended_strategy", label: "Recommended Strategy", icon: Sparkles, color: "bg-emerald-500/10 text-emerald-400", description: "Strategy explanation with actual numbers" },
-  { value: "twenty_year_projection", label: "20-Year Projection", icon: ChevronRight, color: "bg-purple-500/10 text-purple-400", description: "Projected outcomes & milestones" },
+  { value: "twenty_year_projection", label: "20-Year Projection", icon: ChevronRight, color: "bg-emerald-500/10 text-emerald-400", description: "Projected outcomes & milestones" },
   { value: "next_steps", label: "Next Steps", icon: Send, color: "bg-rose-500/10 text-rose-400", description: "Clear call to action & next steps" },
 ];
 
@@ -113,7 +113,7 @@ export default function VideoProposalGenerator() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-500 flex items-center justify-center">
                 <Video className="w-5 h-5 text-white" />
               </div>
               <h1 className="text-3xl font-bold tracking-tight">Video Proposal Generator</h1>
@@ -140,8 +140,8 @@ export default function VideoProposalGenerator() {
             {proposals.length === 0 ? (
               <Card className="border-dashed">
                 <CardContent className="flex flex-col items-center justify-center py-16">
-                  <div className="w-16 h-16 rounded-2xl bg-violet-500/10 flex items-center justify-center mb-4">
-                    <Video className="w-8 h-8 text-violet-400" />
+                  <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-4">
+                    <Video className="w-8 h-8 text-emerald-400" />
                   </div>
                   <h3 className="text-lg font-semibold mb-2">No Video Proposals Yet</h3>
                   <p className="text-muted-foreground text-center max-w-md mb-6">
@@ -159,13 +159,13 @@ export default function VideoProposalGenerator() {
                   const StatusIcon = statusInfo.icon;
                   const clientName = clients.find(c => c.id === proposal.clientId)?.name;
                   return (
-                    <Card key={proposal.id} className="hover:border-violet-500/30 transition-colors cursor-pointer" onClick={() => { setSelectedProposalId(proposal.id); setActiveTab("editor"); }}>
+                    <Card key={proposal.id} className="hover:border-emerald-500/30 transition-colors cursor-pointer" onClick={() => { setSelectedProposalId(proposal.id); setActiveTab("editor"); }}>
                       <CardContent className="flex items-center gap-4 py-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 flex items-center justify-center shrink-0">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/20 flex items-center justify-center shrink-0">
                           {proposal.status === "completed" && proposal.thumbnailUrl ? (
                             <img src={proposal.thumbnailUrl} alt="" className="w-full h-full object-cover rounded-xl" />
                           ) : (
-                            <Video className="w-6 h-6 text-violet-400" />
+                            <Video className="w-6 h-6 text-emerald-400" />
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -222,7 +222,7 @@ export default function VideoProposalGenerator() {
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-2"><Video className="w-5 h-5 text-violet-400" /> New Video Proposal</DialogTitle>
+              <DialogTitle className="flex items-center gap-2"><Video className="w-5 h-5 text-emerald-400" /> New Video Proposal</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-2">
               <div>
@@ -324,7 +324,7 @@ function ScriptEditor({ proposalId, clients, onGenerate }: { proposalId: number;
       {/* Strategy Data Input */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2"><FileText className="w-4 h-4 text-violet-400" /> Strategy Data (Optional)</CardTitle>
+          <CardTitle className="text-base flex items-center gap-2"><FileText className="w-4 h-4 text-emerald-400" /> Strategy Data (Optional)</CardTitle>
           <CardDescription>Paste strategy data JSON to personalize the scripts with actual numbers</CardDescription>
         </CardHeader>
         <CardContent>
@@ -453,7 +453,7 @@ function ScriptEditor({ proposalId, clients, onGenerate }: { proposalId: number;
       ) : (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <Wand2 className="w-10 h-10 text-violet-400 mb-3" />
+            <Wand2 className="w-10 h-10 text-emerald-400 mb-3" />
             <h3 className="font-semibold mb-1">No Scripts Yet</h3>
             <p className="text-sm text-muted-foreground text-center max-w-md">
               Click "Generate AI Scripts" above to create personalized chapter scripts based on your client's data.
@@ -549,10 +549,10 @@ function VideoPreview({ proposalId }: { proposalId: number }) {
 
       {/* Processing Status */}
       {isProcessing && (
-        <Card className="border-violet-500/30 bg-violet-500/5">
+        <Card className="border-emerald-500/30 bg-emerald-500/5">
           <CardContent className="flex items-center gap-4 py-6">
-            <div className="w-12 h-12 rounded-xl bg-violet-500/20 flex items-center justify-center">
-              <Loader2 className="w-6 h-6 text-violet-400 animate-spin" />
+            <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+              <Loader2 className="w-6 h-6 text-emerald-400 animate-spin" />
             </div>
             <div>
               <h3 className="font-semibold">Video is being generated...</h3>
@@ -567,7 +567,7 @@ function VideoPreview({ proposalId }: { proposalId: number }) {
         <div className="grid md:grid-cols-2 gap-6">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2"><User className="w-4 h-4 text-violet-400" /> Select Avatar</CardTitle>
+              <CardTitle className="text-base flex items-center gap-2"><User className="w-4 h-4 text-emerald-400" /> Select Avatar</CardTitle>
               <CardDescription>Choose the AI presenter for your video</CardDescription>
             </CardHeader>
             <CardContent>
@@ -581,7 +581,7 @@ function VideoPreview({ proposalId }: { proposalId: number }) {
                   {avatars.slice(0, 18).map(avatar => (
                     <div
                       key={avatar.avatar_id}
-                      className={`relative rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${selectedAvatarId === avatar.avatar_id ? "border-violet-500 ring-2 ring-violet-500/30" : "border-transparent hover:border-muted-foreground/30"}`}
+                      className={`relative rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${selectedAvatarId === avatar.avatar_id ? "border-emerald-500 ring-2 ring-emerald-500/30" : "border-transparent hover:border-muted-foreground/30"}`}
                       onClick={() => {
                         setSelectedAvatarId(avatar.avatar_id);
                         updateMutation.mutate({ proposalId, avatarId: avatar.avatar_id });
@@ -604,7 +604,7 @@ function VideoPreview({ proposalId }: { proposalId: number }) {
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2"><Mic className="w-4 h-4 text-violet-400" /> Select Voice</CardTitle>
+              <CardTitle className="text-base flex items-center gap-2"><Mic className="w-4 h-4 text-emerald-400" /> Select Voice</CardTitle>
               <CardDescription>Choose the voice for the AI presenter</CardDescription>
             </CardHeader>
             <CardContent>
@@ -618,7 +618,7 @@ function VideoPreview({ proposalId }: { proposalId: number }) {
                   {voices.filter(v => v.language?.startsWith("en")).slice(0, 20).map(voice => (
                     <div
                       key={voice.voice_id}
-                      className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer border transition-all ${selectedVoiceId === voice.voice_id ? "border-violet-500 bg-violet-500/10" : "border-transparent hover:bg-muted/50"}`}
+                      className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer border transition-all ${selectedVoiceId === voice.voice_id ? "border-emerald-500 bg-emerald-500/10" : "border-transparent hover:bg-muted/50"}`}
                       onClick={() => {
                         setSelectedVoiceId(voice.voice_id);
                         updateMutation.mutate({ proposalId, voiceId: voice.voice_id });
@@ -719,7 +719,7 @@ function EngagementAnalytics({ proposalId }: { proposalId: number }) {
           { label: "Total Views", value: engagement.totalViews, icon: Eye, color: "text-blue-400" },
           { label: "Unique Viewers", value: engagement.uniqueViewers, icon: Users, color: "text-emerald-400" },
           { label: "Avg Watch %", value: `${engagement.avgWatchPercent}%`, icon: BarChart3, color: "text-amber-400" },
-          { label: "Completion Rate", value: `${engagement.completionRate}%`, icon: CheckCircle2, color: "text-violet-400" },
+          { label: "Completion Rate", value: `${engagement.completionRate}%`, icon: CheckCircle2, color: "text-emerald-400" },
         ].map((stat, i) => (
           <Card key={i}>
             <CardContent className="py-4">
@@ -788,7 +788,7 @@ function EngagementAnalytics({ proposalId }: { proposalId: number }) {
         <Card>
           <CardContent className="py-4">
             <div className="flex items-center gap-3">
-              <Share2 className="w-5 h-5 text-violet-400" />
+              <Share2 className="w-5 h-5 text-emerald-400" />
               <div className="flex-1">
                 <p className="text-sm font-medium">Client Share Link</p>
                 <p className="text-xs text-muted-foreground font-mono truncate">{window.location.origin}/video/{proposal.shareToken}</p>

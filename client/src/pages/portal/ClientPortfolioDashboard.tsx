@@ -76,7 +76,7 @@ const STRATEGIES: StrategyDef[] = [
   },
   {
     id: "str", name: "Short-Term Rental Strategy", shortName: "STR",
-    icon: Building2, color: "text-violet-400", bgColor: "bg-violet-500/10", borderColor: "border-violet-500/30",
+    icon: Building2, color: "text-emerald-400", bgColor: "bg-emerald-500/10", borderColor: "border-emerald-500/30",
     description: "Cost segregation + bonus depreciation on STR properties → massive Year 1 deductions → offset W-2 income → acquire new properties annually",
     ircCodes: ["§168(k)", "§179", "§469(c)(7)"],
     category: "Tax Elimination",
@@ -375,14 +375,14 @@ const COLORS = {
   miga: "#f59e0b",
   iul: "#10b981",
   heloc: "#3b82f6",
-  str: "#8b5cf6",
+  str: "#10b981",
   trusts: "#f43f5e",
   roth: "#06b6d4",
   premium_finance: "#f97316",
   aggregate: "#22d3ee",
 };
 
-const PIE_COLORS = ["#f59e0b", "#10b981", "#3b82f6", "#8b5cf6", "#f43f5e", "#06b6d4", "#f97316"];
+const PIE_COLORS = ["#f59e0b", "#10b981", "#3b82f6", "#10b981", "#f43f5e", "#06b6d4", "#f97316"];
 
 /* ═══════════════════════════════════════════════════════════════════════════
    COMPONENT
@@ -575,7 +575,7 @@ export default function ClientPortfolioDashboard() {
       items.push({ year: 10, event: "IUL cash value accessible tax-free via policy loans", icon: Shield, color: "text-emerald-400" });
     }
     if (activeStrategies.str) {
-      items.push({ year: 1, event: "STR: Cost segregation + bonus depreciation → Year 1 tax elimination", icon: Building2, color: "text-violet-400" });
+      items.push({ year: 1, event: "STR: Cost segregation + bonus depreciation → Year 1 tax elimination", icon: Building2, color: "text-emerald-400" });
     }
     if (activeStrategies.heloc) {
       items.push({ year: 5, event: "First HELOC cycle complete → equity extracted for property #2", icon: Home, color: "text-blue-400" });
@@ -635,9 +635,9 @@ export default function ClientPortfolioDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-violet-900/40 to-violet-800/20 border-violet-500/30">
+          <Card className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/20 border-emerald-500/30">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 text-violet-400 text-xs font-semibold mb-1">
+              <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold mb-1">
                 <Target className="w-3.5 h-3.5" /> PORTFOLIO ROI
               </div>
               <div className="text-2xl font-black text-white">{summary ? `${summary.roi.toFixed(0)}%` : "—"}</div>
@@ -689,7 +689,7 @@ export default function ClientPortfolioDashboard() {
                   <NumberInput value={iulPremium} onChange={setIulPremium} prefix="$" />
                 </div>
                 <div>
-                  <Label className="text-xs text-violet-400">STR Property Value</Label>
+                  <Label className="text-xs text-emerald-400">STR Property Value</Label>
                   <NumberInput value={strPropertyValue} onChange={setStrPropertyValue} prefix="$" />
                 </div>
                 <div>
@@ -821,7 +821,7 @@ export default function ClientPortfolioDashboard() {
               <Card className="border-gray-700/50">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm flex items-center gap-2">
-                    <PieChartIcon className="w-4 h-4 text-violet-400" />
+                    <PieChartIcon className="w-4 h-4 text-emerald-400" />
                     Strategy Allocation (Year {projectionYears})
                   </CardTitle>
                 </CardHeader>
@@ -895,7 +895,7 @@ export default function ClientPortfolioDashboard() {
                     { step: "3", title: "Invest in O&G", desc: `${fmt$(mygaPremium * 0.7)} → 15% returns/yr`, color: "bg-orange-500/20 border-orange-500/40", icon: "🛢️" },
                     { step: "4", title: "90% Tax Deduction", desc: `${fmt$(mygaPremium * 0.7 * 0.9)} deduction Year 1`, color: "bg-green-500/20 border-green-500/40", icon: "📋" },
                     { step: "5", title: "Pay Down LOC", desc: `Tax savings → principal only`, color: "bg-emerald-500/20 border-emerald-500/40", icon: "✅" },
-                    { step: "6", title: "Repeat @ Year 5", desc: "MYGA matures → new cycle", color: "bg-purple-500/20 border-purple-500/40", icon: "🔄" },
+                    { step: "6", title: "Repeat @ Year 5", desc: "MYGA matures → new cycle", color: "bg-emerald-500/20 border-emerald-500/40", icon: "🔄" },
                   ].map((s) => (
                     <div key={s.step} className={`rounded-lg border p-3 ${s.color} text-center`}>
                       <div className="text-2xl mb-1">{s.icon}</div>
@@ -983,7 +983,7 @@ export default function ClientPortfolioDashboard() {
                     <Bar yAxisId="left" dataKey="taxSavings" name="Tax Savings Generated" fill="#22d3ee" fillOpacity={0.5} />
                     <Line yAxisId="left" type="monotone" dataKey="ogIncome" name="O&G Income" stroke="#f59e0b" strokeWidth={2} dot={false} />
                     <Line yAxisId="left" type="monotone" dataKey="bankInterest" name="Bank Interest" stroke="#f87171" strokeWidth={1} strokeDasharray="4 4" dot={false} />
-                    <Line yAxisId="right" type="stepAfter" dataKey="streams" name="Active O&G Streams" stroke="#a78bfa" strokeWidth={2} dot={false} />
+                    <Line yAxisId="right" type="stepAfter" dataKey="streams" name="Active O&G Streams" stroke="#34d399" strokeWidth={2} dot={false} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -1243,7 +1243,7 @@ export default function ClientPortfolioDashboard() {
                         <th className="text-left p-2 text-gray-400">Year</th>
                         <th className="text-right p-2 text-amber-400">MYGA NW</th>
                         <th className="text-right p-2 text-emerald-400">IUL NW</th>
-                        <th className="text-right p-2 text-violet-400">STR NW</th>
+                        <th className="text-right p-2 text-emerald-400">STR NW</th>
                         <th className="text-right p-2 text-blue-400">HELOC NW</th>
                         <th className="text-right p-2 text-cyan-400 font-bold">Total NW</th>
                         <th className="text-right p-2 text-gray-400">Do Nothing</th>
@@ -1258,7 +1258,7 @@ export default function ClientPortfolioDashboard() {
                           <td className="p-2 font-bold text-white">{row.year}</td>
                           <td className="p-2 text-right text-amber-300">{fmt$(row.migaNW)}</td>
                           <td className="p-2 text-right text-emerald-300">{fmt$(row.iulNW)}</td>
-                          <td className="p-2 text-right text-violet-300">{fmt$(row.strNW)}</td>
+                          <td className="p-2 text-right text-emerald-300">{fmt$(row.strNW)}</td>
                           <td className="p-2 text-right text-blue-300">{fmt$(row.helocNW)}</td>
                           <td className="p-2 text-right text-cyan-300 font-bold">{fmt$(row.totalNW)}</td>
                           <td className="p-2 text-right text-gray-400">{fmt$(row.doNothing)}</td>

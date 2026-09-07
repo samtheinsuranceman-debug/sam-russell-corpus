@@ -229,7 +229,7 @@ export default function ClientFiles() {
 
   const CATEGORY_COLORS: Record<string, string> = {
     onboarding: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-    assessment: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+    assessment: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
     planning: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
     insurance: "bg-amber-500/20 text-amber-400 border-amber-500/30",
     tax: "bg-red-500/20 text-red-400 border-red-500/30",
@@ -313,7 +313,7 @@ export default function ClientFiles() {
   }, [files]);
 
   const colorMap: Record<string, string> = {
-    "blue-400": "#60a5fa", "purple-400": "#c084fc", "emerald-400": "#34d399",
+    "blue-400": "#60a5fa", "emerald-400": "#c084fc", "emerald-400": "#34d399",
     "amber-400": "#fbbf24", "red-400": "#f87171", "cyan-400": "#22d3ee",
     "pink-400": "#f472b6", "gray-400": "#9ca3af"
   };
@@ -399,7 +399,7 @@ export default function ClientFiles() {
                   <span>Access Monitored</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-[#7a95b8]">
-                  <HardDrive className="w-4 h-4 text-purple-400" />
+                  <HardDrive className="w-4 h-4 text-emerald-400" />
                   <span>Encrypted at Rest</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-[#7a95b8]">
@@ -514,12 +514,12 @@ export default function ClientFiles() {
             <p className="text-3xl font-bold text-white">{files.filter((f) => f.status === "pending").length}</p>
           </div>
           
-          <div className="rc-card flex flex-col justify-center p-5 hover:border-purple-500/30 transition-all group">
+          <div className="rc-card flex flex-col justify-center p-5 hover:border-emerald-500/30 transition-all group">
             <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center border border-purple-500/20 group-hover:scale-110 transition-transform">
-                <HardDrive className="w-5 h-5 text-purple-400" />
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform">
+                <HardDrive className="w-5 h-5 text-emerald-400" />
               </div>
-              <span className="text-xs font-medium px-2 py-1 rounded-full bg-purple-500/10 text-purple-400">56% of quota</span>
+              <span className="text-xs font-medium px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">56% of quota</span>
             </div>
             <p className="text-[#7a95b8] text-sm font-medium mb-1">Storage Utilized</p>
             <p className="text-3xl font-bold text-white">{formattedTotalSize} MB</p>
@@ -576,7 +576,7 @@ export default function ClientFiles() {
           <div className="rc-card xl:col-span-1 flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-white font-semibold flex items-center gap-2 text-sm">
-                <TrendingUp className="w-4 h-4 text-purple-400" /> Storage Trend
+                <TrendingUp className="w-4 h-4 text-emerald-400" /> Storage Trend
               </h3>
             </div>
             <div className="h-[180px] w-full flex-1">
@@ -808,7 +808,7 @@ export default function ClientFiles() {
                 {[
                   { id: 1, action: "Downloaded", file: "Tax Return 2025.pdf", time: "2 hours ago", icon: Download, color: "text-blue-400" },
                   { id: 2, action: "Uploaded", file: "Mortgage Statement.pdf", time: "Yesterday", icon: Upload, color: "text-[#22c55e]" },
-                  { id: 3, action: "Shared", file: "Estate Plan.docx", time: "2 days ago", icon: Share2, color: "text-purple-400" },
+                  { id: 3, action: "Shared", file: "Estate Plan.docx", time: "2 days ago", icon: Share2, color: "text-emerald-400" },
                 ].map((act) => (
                   <div key={act.id} className="flex gap-3">
                     <div className={`mt-0.5 ${act.color}`}>

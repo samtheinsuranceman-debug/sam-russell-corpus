@@ -112,7 +112,7 @@ function LootShop() {
     common: { border: "border-slate-500/30", bg: "bg-slate-500/5", text: "text-slate-400" },
     uncommon: { border: "border-emerald-500/30", bg: "bg-emerald-500/5", text: "text-emerald-400" },
     rare: { border: "border-blue-500/30", bg: "bg-blue-500/5", text: "text-blue-400" },
-    epic: { border: "border-violet-500/30", bg: "bg-violet-500/5", text: "text-violet-400" },
+    epic: { border: "border-emerald-500/30", bg: "bg-emerald-500/5", text: "text-emerald-400" },
     legendary: { border: "border-amber-500/30", bg: "bg-amber-500/5", text: "text-amber-400" },
   };
 
@@ -319,7 +319,7 @@ export default function RewardsVault() {
             <TabsTrigger value="shop" className="text-xs data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400">
               <Gem size={14} className="mr-1" /> Loot Shop
             </TabsTrigger>
-            <TabsTrigger value="collections" className="text-xs data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-400">
+            <TabsTrigger value="collections" className="text-xs data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
               <Trophy size={14} className="mr-1" /> Collections
             </TabsTrigger>
             <TabsTrigger value="prestige" className="text-xs data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">

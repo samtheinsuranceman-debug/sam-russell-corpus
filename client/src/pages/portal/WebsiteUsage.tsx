@@ -691,7 +691,7 @@ export default function WebsiteUsage() {
                   <Card className="bg-slate-900/50 border-slate-800">
                     <CardHeader>
                       <CardTitle className="text-lg font-medium text-white flex items-center gap-2">
-                        <MonitorSmartphone className="h-5 w-5 text-purple-400" />
+                        <MonitorSmartphone className="h-5 w-5 text-emerald-400" />
                         Device Breakdown
                       </CardTitle>
                       <CardDescription className="text-slate-400">Sessions by device type</CardDescription>
@@ -1405,7 +1405,7 @@ function KPICard({ title, value, icon, trend, trendUp, color, pulse = false }: a
     blue: "text-blue-400 bg-blue-400/10 border-blue-400/20",
     green: "text-green-400 bg-green-400/10 border-green-400/20",
     emerald: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
-    purple: "text-purple-400 bg-purple-400/10 border-purple-400/20",
+    purple: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
     amber: "text-amber-400 bg-amber-400/10 border-amber-400/20",
     rose: "text-rose-400 bg-rose-400/10 border-rose-400/20",
   };
@@ -1539,7 +1539,7 @@ function UserDetailView({ password, userId, userName, userEmail, onBack }: {
         </Card>
         <Card className="bg-slate-900/50 border-slate-800">
           <CardContent className="p-4 flex items-center gap-4">
-            <div className="p-3 bg-purple-500/10 rounded-lg text-purple-400">
+            <div className="p-3 bg-emerald-500/10 rounded-lg text-emerald-400">
               <Timer className="h-6 w-6" />
             </div>
             <div>

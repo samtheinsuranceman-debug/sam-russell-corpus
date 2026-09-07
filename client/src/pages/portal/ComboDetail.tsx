@@ -286,7 +286,7 @@ function FactFinder({ combo }: { combo: any }) {
               </div>
               <div className="rounded-lg bg-white/5 border border-white/10 p-3">
                 <p className="text-[10px] text-gray-500">Tax Efficiency</p>
-                <p className="text-sm text-purple-400 font-bold">{taxEfficiency}%</p>
+                <p className="text-sm text-emerald-400 font-bold">{taxEfficiency}%</p>
               </div>
               <div className="rounded-lg bg-white/5 border border-white/10 p-3">
                 <p className="text-[10px] text-gray-500">Avg Step Size</p>
@@ -444,7 +444,7 @@ export default function ComboDetail() {
             <div><p className="text-[10px] text-gray-500">Profession</p><p className="text-sm text-white">{cp.profession}</p></div>
           </div>
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-purple-400 flex-shrink-0" />
+            <Calendar className="w-4 h-4 text-emerald-400 flex-shrink-0" />
             <div><p className="text-[10px] text-gray-500">Age</p><p className="text-sm text-white">{cp.age}</p></div>
           </div>
           <div className="flex items-center gap-2">
@@ -466,8 +466,8 @@ export default function ComboDetail() {
             <p className="text-lg font-bold text-yellow-400">{formatMoney(combo.totalTaxSaved)}</p>
             <p className="text-[10px] text-gray-500">Total Tax Saved</p>
           </div>
-          <div className="rounded-xl border border-purple-500/20 bg-purple-500/5 p-3 text-center">
-            <p className="text-lg font-bold text-purple-400">{combo.netWorthMultiplier}x</p>
+          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
+            <p className="text-lg font-bold text-emerald-400">{combo.netWorthMultiplier}x</p>
             <p className="text-[10px] text-gray-500">Net Worth Multiplier</p>
           </div>
         </div>
@@ -525,7 +525,7 @@ export default function ComboDetail() {
       {/* Cumulative Tax Savings + Net Worth Growth (Composed Chart) */}
       <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
         <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-          <Activity className="w-4 h-4 text-purple-400" /> Cumulative Tax Savings vs. Net Worth Growth
+          <Activity className="w-4 h-4 text-emerald-400" /> Cumulative Tax Savings vs. Net Worth Growth
         </h3>
         <ResponsiveContainer width="100%" height={300}>
           <ComposedChart data={cumulativeData}>
@@ -596,7 +596,7 @@ export default function ComboDetail() {
         {/* Wealth Allocation */}
         <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
           <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-purple-400" /> Post-Strategy Wealth Allocation
+            <BarChart3 className="w-4 h-4 text-emerald-400" /> Post-Strategy Wealth Allocation
           </h3>
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>

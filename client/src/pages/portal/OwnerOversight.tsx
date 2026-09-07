@@ -404,10 +404,10 @@ export default function OwnerOversight() {
           </CardContent>
         </Card>
         
-        <Card className="hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-purple-500" onClick={() => setActiveTab("documents")}>
+        <Card className="hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-emerald-500" onClick={() => setActiveTab("documents")}>
           <CardContent className="p-5 flex flex-col items-center justify-center text-center h-full">
-            <div className="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center mb-3">
-              <FileText className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center mb-3">
+              <FileText className="w-6 h-6 text-emerald-600" />
             </div>
             <p className="text-3xl font-bold tracking-tight">{stats?.totalLegalDocs ?? 0}</p>
             <p className="text-sm font-medium text-muted-foreground mt-1">Legal Documents</p>
@@ -1290,8 +1290,8 @@ export default function OwnerOversight() {
                         >
                           <TableCell>
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center border border-purple-500/20 group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                                <FileText className="w-5 h-5 text-purple-600 group-hover:text-white" />
+                              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                                <FileText className="w-5 h-5 text-emerald-600 group-hover:text-white" />
                               </div>
                               <div>
                                 <p className="font-semibold text-foreground group-hover:text-primary transition-colors">{doc.title}</p>

@@ -386,8 +386,8 @@ export default function GoalsBasedPlanning() {
           </Card>
           <Card>
             <CardContent className="p-6 flex flex-col items-center justify-center text-center">
-              <div className="h-12 w-12 rounded-full bg-purple-500/10 flex items-center justify-center mb-4">
-                <TrendingUp className="h-6 w-6 text-purple-500" />
+              <div className="h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
+                <TrendingUp className="h-6 w-6 text-emerald-500" />
               </div>
               <p className="text-sm font-medium text-muted-foreground">Total Target</p>
               <h3 className="text-3xl font-bold mt-1">{fmt(summary.totalTarget)}</h3>

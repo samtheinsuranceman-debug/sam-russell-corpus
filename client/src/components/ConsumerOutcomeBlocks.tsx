@@ -509,16 +509,16 @@ export function TaxBracketPanel({
 
   return (
     <Card className={`border-0 shadow-lg ${className}`}
-      style={{ background: "linear-gradient(135deg, rgba(139, 92, 246, 0.06), rgba(30, 30, 30, 0.95))" }}>
+      style={{ background: "linear-gradient(135deg, rgba(52,211,153, 0.06), rgba(30, 30, 30, 0.95))" }}>
       <CardHeader className="pb-2">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl" style={{ background: "rgba(139, 92, 246, 0.1)" }}>
-            <BarChart3 className="w-5 h-5" style={{ color: "#a78bfa" }} />
+          <div className="p-2 rounded-xl" style={{ background: "rgba(52,211,153, 0.1)" }}>
+            <BarChart3 className="w-5 h-5" style={{ color: "#34d399" }} />
           </div>
-          <h3 className="text-base font-bold" style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#a78bfa" }}>
+          <h3 className="text-base font-bold" style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#34d399" }}>
             Tax Bracket Analysis
           </h3>
-          <Badge className="text-[10px] border-0" style={{ background: "rgba(139, 92, 246, 0.1)", color: "#a78bfa" }}>
+          <Badge className="text-[10px] border-0" style={{ background: "rgba(52,211,153, 0.1)", color: "#34d399" }}>
             2026 Brackets
           </Badge>
         </div>
@@ -526,7 +526,7 @@ export function TaxBracketPanel({
       <CardContent className="space-y-3 pt-0">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {[
-            { label: "Marginal Rate", value: formatTaxRate(taxResult.federalMarginalRate), color: "#a78bfa" },
+            { label: "Marginal Rate", value: formatTaxRate(taxResult.federalMarginalRate), color: "#34d399" },
             { label: "Effective Rate", value: formatTaxRate(taxResult.totalEffectiveRate), color: "#67e8f9" },
             { label: "Federal Tax", value: formatTaxCurrency(taxResult.federalTax), color: "#f87171" },
             { label: `State Tax (${stateCode})`, value: formatTaxCurrency(taxResult.stateTax), color: "#fb923c" },
@@ -544,8 +544,8 @@ export function TaxBracketPanel({
             return (
               <div key={i} className="flex items-center gap-2 text-[10px]">
                 <span className="w-10 text-right text-zinc-500 font-mono">{(b.bracket.rate * 100).toFixed(0)}%</span>
-                <div className="flex-1 h-5 rounded-md overflow-hidden" style={{ background: "rgba(139, 92, 246, 0.08)" }}>
-                  <div className="h-full rounded-md" style={{ width: `${Math.max(width, 2)}%`, background: "linear-gradient(90deg, #8b5cf6, #a78bfa)" }} />
+                <div className="flex-1 h-5 rounded-md overflow-hidden" style={{ background: "rgba(52,211,153, 0.08)" }}>
+                  <div className="h-full rounded-md" style={{ width: `${Math.max(width, 2)}%`, background: "linear-gradient(90deg, #10b981, #34d399)" }} />
                 </div>
                 <span className="w-16 text-right text-zinc-500 font-mono">{formatTaxCurrency(b.taxInBracket)}</span>
               </div>

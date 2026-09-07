@@ -156,7 +156,7 @@ export default function ComboRecommender() {
       {step >= 1 && (
         <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Target className="w-5 h-5 text-purple-400" /> Client Goals
+            <Target className="w-5 h-5 text-emerald-400" /> Client Goals
           </h2>
           <div className="flex flex-wrap gap-2">
             {GOALS.map(g => (
@@ -199,7 +199,7 @@ export default function ComboRecommender() {
                 <div className="flex items-center gap-4 text-xs">
                   <div className="text-center"><p className="text-emerald-400 font-bold">{formatMoney(c.finalNetWorth)}</p><p className="text-gray-500">Final NW</p></div>
                   <div className="text-center"><p className="text-yellow-400 font-bold">{formatMoney(c.totalTaxSaved)}</p><p className="text-gray-500">Tax Saved</p></div>
-                  <div className="text-center"><p className="text-purple-400 font-bold">{c.netWorthMultiplier}x</p><p className="text-gray-500">Multiplier</p></div>
+                  <div className="text-center"><p className="text-emerald-400 font-bold">{c.netWorthMultiplier}x</p><p className="text-gray-500">Multiplier</p></div>
                   <ArrowRight className="w-4 h-4 text-gray-600" />
                 </div>
               </div>

@@ -121,7 +121,7 @@ const CATEGORY_DISTRIBUTION = [
   { name: "Strategy", value: 3, color: "#3b82f6" },
   { name: "Annuity", value: 3, color: "#10b981" },
   { name: "Other", value: 4, color: "#f59e0b" },
-  { name: "Data", value: 1, color: "#8b5cf6" },
+  { name: "Data", value: 1, color: "#10b981" },
   { name: "Internal", value: 3, color: "#ef4444" },
 ];
 
@@ -550,8 +550,8 @@ function UnlockedContent() {
         
         <div className="rc-card bg-gradient-to-br from-[#0d1a2e] to-[#0a1526] border-[#1a2e4c]">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-purple-500/10 rounded-lg">
-              <Activity className="w-5 h-5 text-purple-400" />
+            <div className="p-2 bg-emerald-500/10 rounded-lg">
+              <Activity className="w-5 h-5 text-emerald-400" />
             </div>
             <h3 className="text-sm font-medium text-[#7a95b8]">Active Tools</h3>
           </div>
@@ -840,7 +840,7 @@ function UnlockedContent() {
                     />
                     <Bar dataKey="views" fill="#10b981" radius={[4, 4, 0, 0]}>
                       {VIEWS_BY_CATEGORY.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444'][index % 5]} />
+                        <Cell key={`cell-${index}`} fill={['#3b82f6', '#10b981', '#f59e0b', '#10b981', '#ef4444'][index % 5]} />
                       ))}
                     </Bar>
                   </BarChart>
@@ -851,7 +851,7 @@ function UnlockedContent() {
             {/* Archive Growth Trend */}
             <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c] lg:col-span-2">
               <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-purple-400" /> Archive Growth Trend
+                <TrendingUp className="w-5 h-5 text-emerald-400" /> Archive Growth Trend
               </h3>
               <div className="h-[350px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -864,7 +864,7 @@ function UnlockedContent() {
                       contentStyle={{ backgroundColor: '#0a1526', borderColor: '#1a2e4c', color: '#fff' }}
                     />
                     <Legend />
-                    <Bar yAxisId="left" dataKey="items" name="Total Items" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={40} />
+                    <Bar yAxisId="left" dataKey="items" name="Total Items" fill="#10b981" radius={[4, 4, 0, 0]} barSize={40} />
                     <Line yAxisId="right" type="monotone" dataKey="size" name="Storage Size (MB)" stroke="#f43f5e" strokeWidth={3} dot={{ r: 6, fill: '#0d1a2e', strokeWidth: 2 }} />
                   </ComposedChart>
                 </ResponsiveContainer>
@@ -892,7 +892,7 @@ function UnlockedContent() {
               <div className="mt-4 pt-4 border-t border-[#1a2e4c] text-xs text-green-400">Operational</div>
             </div>
             <div className="rc-card bg-[#0d1a2e] border-[#1a2e4c] p-6 text-center">
-              <Database className="w-8 h-8 text-purple-400 mx-auto mb-3" />
+              <Database className="w-8 h-8 text-emerald-400 mx-auto mb-3" />
               <div className="text-3xl font-bold text-white mb-1">45ms</div>
               <div className="text-sm text-[#7a95b8]">Database Latency</div>
               <div className="mt-4 pt-4 border-t border-[#1a2e4c] text-xs text-green-400">Optimal</div>

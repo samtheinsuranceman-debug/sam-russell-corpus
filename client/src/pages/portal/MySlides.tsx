@@ -57,7 +57,7 @@ const fmt = (d: Date | string) =>
 const audienceLabel: Record<string, string> = { client: "Client-Facing", advisor: "Advisor", team: "Internal Team" };
 const audienceIcon: Record<string, typeof Users> = { client: Users, advisor: Briefcase, team: User };
 
-const CHART_COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444", "#ec4899", "#06b6d4"];
+const CHART_COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#ec4899", "#06b6d4"];
 
 export default function MySlides() {
   const { tier } = useAccess();
@@ -676,7 +676,7 @@ export default function MySlides() {
               <Card className="bg-zinc-900/50 border-zinc-800">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-semibold text-zinc-200 flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-purple-400" />
+                    <TrendingUp className="h-4 w-4 text-emerald-400" />
                     Generation Trend
                   </CardTitle>
                 </CardHeader>
@@ -687,7 +687,7 @@ export default function MySlides() {
                       <XAxis dataKey="date" stroke="#888" fontSize={10} tickLine={false} axisLine={false} />
                       <YAxis stroke="#888" fontSize={10} tickLine={false} axisLine={false} allowDecimals={false} />
                       <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} />
-                      <Line type="monotone" dataKey="count" stroke="#a78bfa" strokeWidth={3} dot={{ r: 4, fill: "#a78bfa", strokeWidth: 0 }} activeDot={{ r: 6 }} />
+                      <Line type="monotone" dataKey="count" stroke="#34d399" strokeWidth={3} dot={{ r: 4, fill: "#34d399", strokeWidth: 0 }} activeDot={{ r: 6 }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -773,7 +773,7 @@ export default function MySlides() {
             </Card>
             <Card className="border-[#1e3a5f] bg-[#0a1428]/80">
               <CardContent className="py-4 text-center">
-                <Clock className="w-5 h-5 text-purple-400 mx-auto mb-1" />
+                <Clock className="w-5 h-5 text-emerald-400 mx-auto mb-1" />
                 <div className="text-lg font-bold mt-1">{decks.length > 0 ? fmt(decks[0].createdAt) : "—"}</div>
                 <div className="text-xs text-muted-foreground">Latest Generation</div>
               </CardContent>
@@ -992,7 +992,7 @@ export default function MySlides() {
               {/* Table 3: Tool Usage Breakdown */}
               <Card className="bg-zinc-900/50 border-zinc-800">
                 <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2"><FolderOpen className="h-4 w-4 text-purple-400" /> Tool Usage Breakdown</CardTitle>
+                  <CardTitle className="text-base flex items-center gap-2"><FolderOpen className="h-4 w-4 text-emerald-400" /> Tool Usage Breakdown</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">

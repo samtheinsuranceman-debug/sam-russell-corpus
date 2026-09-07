@@ -134,10 +134,10 @@ export default function ClientSnapshotMap() {
     if (client.iraBalance) nodes.push({ label: "401(k)", value: Number(client.iraBalance), icon: Building2, color: "from-indigo-500 to-indigo-600", category: "asset", details: "Employer-sponsored, tax-deferred" });
     if (client.taxableAssets) nodes.push({ label: "Taxable Accounts", value: Number(client.taxableAssets), icon: TrendingUp, color: "from-cyan-500 to-cyan-600", category: "asset", details: "Capital gains tax applies" });
     if (client.realEstateEquity) nodes.push({ label: "Real Estate Equity", value: Number(client.realEstateEquity), icon: Home, color: "from-amber-500 to-amber-600", category: "asset", details: "Primary + investment properties" });
-    if (client.taxableAssets) nodes.push({ label: "Other Assets", value: Number(client.taxableAssets), icon: Briefcase, color: "from-purple-500 to-purple-600", category: "asset" });
+    if (client.taxableAssets) nodes.push({ label: "Other Assets", value: Number(client.taxableAssets), icon: Briefcase, color: "from-emerald-500 to-emerald-600", category: "asset" });
 
     if (cdBalance > 0) nodes.push({ label: "Certificates of Deposit", value: cdBalance, icon: Lock, color: "from-teal-500 to-teal-600", category: "asset", details: `${cdRate}% APY · ${cdMaturityMonths}mo maturity · Locked` });
-    if (annuityBalance > 0) nodes.push({ label: "Annuity", value: annuityBalance, icon: Shield, color: "from-violet-500 to-violet-600", category: "asset", details: `${annuityRate}% guaranteed · ${annuitySurrenderYears}yr surrender` });
+    if (annuityBalance > 0) nodes.push({ label: "Annuity", value: annuityBalance, icon: Shield, color: "from-emerald-500 to-emerald-600", category: "asset", details: `${annuityRate}% guaranteed · ${annuitySurrenderYears}yr surrender` });
 
     if (client.realEstateEquity) nodes.push({ label: "Mortgage", value: Number(client.realEstateEquity), icon: Home, color: "from-red-500 to-red-600", category: "liability", details: "Variable rate" });
     if (0) nodes.push({ label: "Other Debt", value: 0, icon: CreditCard, color: "from-red-400 to-red-500", category: "liability" });
@@ -148,7 +148,7 @@ export default function ClientSnapshotMap() {
     if (spouseSsMonthly > 0) nodes.push({ label: "Spouse Social Security", value: spouseSsMonthly * 12, icon: Landmark, color: "from-green-300 to-green-400", category: "income", details: `$${spouseSsMonthly.toLocaleString()}/mo` });
     if (pensionMonthly > 0) nodes.push({ label: "Pension", value: pensionMonthly * 12, icon: Wallet, color: "from-green-600 to-green-700", category: "income", details: `$${pensionMonthly.toLocaleString()}/mo at age ${pensionStartAge} · ${pensionSurvivor}% survivor` });
 
-    if (client.lifeInsuranceCv) nodes.push({ label: "Life Insurance", value: Number(client.lifeInsuranceCv), icon: Shield, color: "from-violet-500 to-violet-600", category: "insurance" });
+    if (client.lifeInsuranceCv) nodes.push({ label: "Life Insurance", value: Number(client.lifeInsuranceCv), icon: Shield, color: "from-emerald-500 to-emerald-600", category: "insurance" });
 
     if (totalCreditLimit > 0) nodes.push({ label: "Available Credit", value: totalCreditLimit - creditCardBalance, icon: Key, color: "from-sky-500 to-sky-600", category: "credit", details: `${totalCreditLimit > 0 ? ((creditCardBalance / totalCreditLimit) * 100).toFixed(0) : 0}% utilization of ${fmt(totalCreditLimit)}` });
 
@@ -172,7 +172,7 @@ export default function ClientSnapshotMap() {
   const categories = [
     { key: "asset", label: "Assets & Investments", color: "text-blue-400", bgColor: "bg-blue-500/10 border-blue-500/30", total: totalAssets, icon: TrendingUp },
     { key: "income", label: "Income Streams", color: "text-green-400", bgColor: "bg-green-500/10 border-green-500/30", total: totalIncome, icon: DollarSign },
-    { key: "insurance", label: "Protection & Insurance", color: "text-violet-400", bgColor: "bg-violet-500/10 border-violet-500/30", total: totalProtection, icon: Shield },
+    { key: "insurance", label: "Protection & Insurance", color: "text-emerald-400", bgColor: "bg-emerald-500/10 border-emerald-500/30", total: totalProtection, icon: Shield },
     { key: "credit", label: "Credit Access (Asset Class)", color: "text-sky-400", bgColor: "bg-sky-500/10 border-sky-500/30", total: totalCredit, icon: Key },
     { key: "inheritance", label: "Expected Inheritance", color: "text-amber-400", bgColor: "bg-amber-500/10 border-amber-500/30", total: inheritanceEstimate, icon: Gift },
     { key: "liability", label: "Liabilities & Debt", color: "text-red-400", bgColor: "bg-red-500/10 border-red-500/30", total: totalLiabilities, icon: CreditCard },
@@ -373,7 +373,7 @@ export default function ClientSnapshotMap() {
                         stroke="none"
                       >
                         {(assetNodes.filter((n) => n.category === "asset").length > 0 ? assetNodes.filter((n) => n.category === "asset") : [{ label: "Empty", value: 1 }]).map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444"][index % 5]} />
+                          <Cell key={`cell-${index}`} fill={["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444"][index % 5]} />
                         ))}
                       </Pie>
                       <RTooltip
@@ -731,7 +731,7 @@ export default function ClientSnapshotMap() {
                 <div className="rc-card">
                   <div className="pb-2">
                     <h3 className="text-base text-white flex items-center gap-2">
-                      <Shield className="h-4 w-4 text-violet-400" /> Annuity Holdings
+                      <Shield className="h-4 w-4 text-emerald-400" /> Annuity Holdings
                     </h3>
                     <p className="text-sm text-[#7a95b8]">Guaranteed rates with surrender period restrictions</p>
                   </div>
@@ -751,7 +751,7 @@ export default function ClientSnapshotMap() {
                       </div>
                     </div>
                     {annuityBalance > 0 && (
-                      <div className="p-3 rounded-lg bg-violet-500/5 border border-violet-500/20">
+                      <div className="p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20">
                         <div className="grid grid-cols-3 gap-2 text-center">
                           <div>
                             <p className="text-lg font-bold text-white">{fmt(annuityBalance * (annuityRate / 100))}</p>
@@ -999,7 +999,7 @@ export default function ClientSnapshotMap() {
                     {/* HELOC */}
                     <div className="p-4 rounded-lg bg-[#0d1a2e] border border-[#12233e]">
                       <div className="flex items-center gap-2 mb-3">
-                        <Banknote className="h-4 w-4 text-purple-400" />
+                        <Banknote className="h-4 w-4 text-emerald-400" />
                         <span className="text-sm font-medium text-white">HELOC / Cash-Out Refi</span>
                       </div>
                       <div className="space-y-2 text-sm">
