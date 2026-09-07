@@ -138,6 +138,18 @@
       "name": "The Financial Suitcase Saver",
       "lead": "Think of tax strategies like items packed into a suitcase. If you tossed everything in randomly, the suitcase would not close.",
       "detail": "This system packs twenty-nine strategy families in a fixed order every year, so each item gets placed only when there is room and when its rules are ready. First come the basic items, then the structure-free reducers sorted by certainty and cost, then the deduction engines, carefully sized to fit under the target tax bracket while respecting special limits. Roth conversion goes in last, like the final shirt placed on top after everything else has made room. And best of all, there are some strategies to fit the entire IRA Roth conversion inside the suitcase within a one-year time frame, so the whole tax-free amount can go with you. No guarantees, and you must speak to a tax adviser."
+    },
+    {
+      "ref": "21",
+      "name": "The Inheritance Arrival Meter",
+      "lead": "This invention helps a family see an expected inheritance the way a tax system sees it, not just as \"money coming later.\" Think of it like a package sorting station: every future gift gets a different label before it arrives.",
+      "detail": "Some packages are tax-free. Some bring ordinary income tax. Some have special gains rules. The meter also does not pretend every future inheritance is certain; it weighs each item by how likely it is to arrive. It also offers gentle, casual, unsolicited advice for you to consider, showing you how to eliminate as much tax liability as legally possible, hopefully all of it, if legal. Talk to your tax adviser."
+    },
+    {
+      "ref": "22",
+      "name": "The Inheritance Timing Dial",
+      "lead": "The system treats an inheritance as uncertain in three ways: when it arrives, how much remains after tax, and whether it arrives at all.",
+      "detail": "The benefactor's survival curve from the Social Security life table sets the timing spread, and the Inheritance Arrival Meter sets the after-tax amount for each possible year. The forecaster panel's confidence sets the width of the band, and the likelihood weighs it. The output is one dated range with a stated reason for its width. The system refuses to produce a result when the gain share is missing."
     }
   ],
   "disclaimer": "Patent-pending methods developed by Russell Capital Systems, described at a high level. Not tax, legal or investment advice. Results are not guaranteed and every specific is reviewed by our tax professional team for suitability and IRS compliance before implementation. Comparative statements are the owner's opinion."

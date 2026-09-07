@@ -50,6 +50,7 @@ IMAGES = {
     "__IMG_TUNNEL__": "rcs-city-tunnel.webp",
     "__IMG_OVERLOOK__": "rcs-city-overlook.webp",
     "__IMG_SKYBRIDGE__": "rcs-city-skybridge.webp",
+    "__IMG_STATION__": "rcs-city-station.webp",
 }
 CONSTS = {
     "__CALENDLY__": "https://calendly.com/sam-RussellCapitalSystems/60min",
