@@ -56,6 +56,7 @@ export const SPHERE_POINTS: SpherePoint[] = [
   { path: "/portal/erosion", title: "Purchasing power: taxes and prices over 40 years", meridian: "taxes", latitude: "erosion", core: true },
   { path: "/portal/forgiveness", title: "Student loan forgiveness: the record, the odds, the asset it could fund", meridian: "debt", latitude: "moves" },
   { path: "/portal/short-term-rentals", title: "Short-term rentals: the property as a system, year by year", meridian: "home", latitude: "moves", core: true },
+  { path: "/portal/rental-enterprise", title: "The Rental Enterprise: one house or four, every loan written, the trust loop on the tax saved", meridian: "home", latitude: "moves", core: true },
   { path: "/portal/zip-engine", title: "The Zip Engine: what owning a home in your zip has really cost since the record began", meridian: "home", latitude: "erosion", core: true },
   { path: "/portal/tax-schedule", title: "Tax optimisation schedule: year by year, strategy by strategy", meridian: "taxes", latitude: "moves" },
   { path: "/portal/site-health", title: "Site health: hosting, security, SEO and speed checklist", meridian: "protect", latitude: "facts" },

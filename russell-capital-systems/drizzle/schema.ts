@@ -2709,3 +2709,34 @@ export const exitRatings = mysqlTable("exit_ratings", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 export type ExitRatingRow = typeof exitRatings.$inferSelect;
+
+// ─── The Rental Enterprise: each county's hazard record (FEMA National Risk Index) and the owner's vetted attorneys ───
+export const countyHazards = mysqlTable("county_hazards", {
+  id:          int("id").autoincrement().primaryKey(),
+  fips:        varchar("fips", { length: 5 }).notNull(),              // state + county FIPS as FEMA prints it
+  stateAbbr:   varchar("stateAbbr", { length: 2 }).notNull(),
+  county:      varchar("county", { length: 80 }).notNull(),           // FEMA's county name without the "County" suffix
+  rating:      varchar("rating", { length: 24 }),                     // overall risk rating as published
+  ealBuilding: bigint("ealBuilding", { mode: "number" }),             // expected annual loss to buildings, dollars
+  hazards:     json("hazards").$type<Record<string, string | null>>().notNull(), // hazard → rating as published
+  source:      varchar("source", { length: 200 }).notNull(),
+  asOf:        varchar("asOf", { length: 20 }).notNull(),             // the index version
+  fetchedAt:   timestamp("fetchedAt").defaultNow().notNull(),
+}, (t) => ({ once: uniqueIndex("county_hazards_once").on(t.fips), byState: index("county_hazards_state").on(t.stateAbbr) }));
+export type CountyHazardRow = typeof countyHazards.$inferSelect;
+
+export const vettedAttorneys = mysqlTable("vetted_attorneys", {
+  id:          int("id").autoincrement().primaryKey(),
+  name:        varchar("name", { length: 120 }).notNull(),
+  firm:        varchar("firm", { length: 160 }),
+  city:        varchar("city", { length: 80 }),
+  stateAbbr:   varchar("stateAbbr", { length: 2 }).notNull(),
+  credentials: varchar("credentials", { length: 200 }),               // e.g. ACTEC Fellow; state bar certified specialist
+  website:     varchar("website", { length: 300 }),
+  phone:       varchar("phone", { length: 40 }),
+  email:       varchar("email", { length: 160 }),
+  note:        text("note"),
+  addedBy:     int("addedBy"),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ byState: index("vetted_attorneys_state").on(t.stateAbbr) }));
+export type VettedAttorneyRow = typeof vettedAttorneys.$inferSelect;

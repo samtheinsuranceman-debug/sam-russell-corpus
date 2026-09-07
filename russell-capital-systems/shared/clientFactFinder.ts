@@ -178,6 +178,7 @@ export const FACT_FINDER_SECTIONS: SectionSpec[] = [
       { key: "personalLoans", label: "Personal / family loans", type: "money" },
       { key: "otherDebt", label: "Other debt", type: "money" },
       { key: "otherDebtDetail", label: "Other debt — describe", type: "text" },
+      { key: "creditScore", label: "Credit score (most recent, if known)", type: "number", hint: "Used only to size a rental loan on the Rental Enterprise page; lenders publish their own minimums." },
       { key: "debtStress", label: "Which debt bothers you most, and why?", type: "textarea" },
     ],
   },
