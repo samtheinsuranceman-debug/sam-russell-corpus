@@ -226,6 +226,15 @@ four minutes after boot); the owner can also call `career.refresh`. The BLS
 state files are tens of MB each and a full first read takes several minutes.
 Spec: `docs/engines/CAREER_LEDGER_ENGINE.md`.
 
+### Long-Term Care (no switch)
+`/portal/long-term-care` carries the 2025 national medians for six care
+settings (CareScout survey), the federal figures on how much care people
+need, §7702B and §101(g), the CPI medical-care escalation, each family
+member's shortfall against the policy's chronic-illness rider (terms typed
+from the form), and a standalone quote beside it. Standalone premium
+increases are an owner-entered registry (`ltc.addFiling`, filing URL
+required). Spec: `docs/engines/LONG_TERM_CARE_ENGINE.md`.
+
 ### The IUL Engine's links (no switch)
 `/portal/iul-engine` reads the backtester's credited history for a chosen
 index account beside CPI-U and M2 from FRED (December over December), prints

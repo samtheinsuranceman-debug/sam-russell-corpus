@@ -2740,3 +2740,18 @@ export const vettedAttorneys = mysqlTable("vetted_attorneys", {
   createdAt:   timestamp("createdAt").defaultNow().notNull(),
 }, (t) => ({ byState: index("vetted_attorneys_state").on(t.stateAbbr) }));
 export type VettedAttorneyRow = typeof vettedAttorneys.$inferSelect;
+
+// ─── Long-term care: standalone premium-increase filings the owner has read, each with its filing URL ───
+export const ltcRateFilings = mysqlTable("ltc_rate_filings", {
+  id:          int("id").autoincrement().primaryKey(),
+  carrier:     varchar("carrier", { length: 120 }).notNull(),
+  product:     varchar("product", { length: 160 }),
+  stateAbbr:   varchar("stateAbbr", { length: 2 }).notNull(),
+  year:        int("year").notNull(),                                 // year the increase took effect or was approved
+  increasePct: decimal("increasePct", { precision: 6, scale: 2 }).notNull(), // approved increase, percent
+  filingUrl:   varchar("filingUrl", { length: 400 }).notNull(),       // the state's filing page (SERFF or the department's own)
+  note:        text("note"),
+  addedBy:     int("addedBy"),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ byCarrier: index("ltc_rate_filings_carrier").on(t.carrier), byState: index("ltc_rate_filings_state").on(t.stateAbbr) }));
+export type LtcRateFilingRow = typeof ltcRateFilings.$inferSelect;

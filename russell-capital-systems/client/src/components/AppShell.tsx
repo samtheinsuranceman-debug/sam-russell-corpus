@@ -245,6 +245,7 @@ const NAV_SECTIONS: NavSection[] = [
           { path: "/portal/ibbotson-charts", label: "Ibbotson Charts", icon: BarChart3, color: "cyan" },
           { path: "/portal/iul-historical", label: "IUL Historical", icon: History, color: "cyan" },
           { path: "/portal/iul-engine", label: "The IUL Engine", icon: History, color: "cyan" },
+          { path: "/portal/long-term-care", label: "Long-Term Care", icon: History, color: "cyan" },
           { path: "/portal/index-strategies", label: "Index Strategies", icon: Layers, color: "cyan" },
           { path: "/portal/policy-loans", label: "Policy Loans", icon: Wallet, color: "cyan" },
           { path: "/portal/premium-financing", label: "Premium Financing", icon: DollarSign, color: "cyan" },
