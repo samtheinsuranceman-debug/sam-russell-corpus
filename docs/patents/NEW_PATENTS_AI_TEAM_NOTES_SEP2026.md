@@ -31,3 +31,36 @@ GPT's twelve combinations became SI-051 to SI-060 (ten), with "Career Escape Sol
 - Every-page advisor: US20250225587A1, US20230074406A1 describe multi-model advisors; the six shapes, permissioned horizon, honest disclosure and audience split are the workflow.
 - Two-audience council: audience-specific prompting is common; truthful runtime disclosure of contributing and skipped models is the extra.
 - Tax schedule: RetireSmartIRA models Roth and bracket position; the ordering rule with Roth last as cost, verified gates and sealed delta are the delta.
+
+## Renumbering for the single 97-patent document (7 September 2026)
+
+`RCS_97_PATENTS_5TH_GRADE_EXPLAINED.md` renumbers the 22 new core patents in importance order and gives them their short names. Old number = the first draft above and the inventory; new number = the 97-patent document.
+
+| New | Name | Old |
+|---|---|---|
+| PAT-016 | The Truth Box | PAT-016 |
+| PAT-017 | The Witness Rule | PAT-017 |
+| PAT-018 | The Report Card Machine | PAT-018 |
+| PAT-019 | The Guardian Ledger | PAT-029 |
+| PAT-020 | The Political Weather Radar | PAT-019 |
+| PAT-021 | The Power Pulse | PAT-020 |
+| PAT-022 | The Everywhere Advisor | PAT-032 |
+| PAT-023 | The Money That Says No | PAT-027 |
+| PAT-024 | The Double-Run Trust Loop | PAT-024 |
+| PAT-025 | The Zip Time Machine | PAT-022 |
+| PAT-026 | The House Budget Referee | PAT-023 |
+| PAT-027 | The Suitcase Packer | PAT-028 |
+| PAT-028 | The Inheritance Arrival Meter | PAT-026 |
+| PAT-029 | The Question Finder | PAT-034 |
+| PAT-030 | The Program Survival Odds | PAT-021 |
+| PAT-031 | The Career Price Tag | PAT-025 |
+| PAT-032 | The Money Globe | PAT-031 |
+| PAT-033 | The Locked Library Card | PAT-033 |
+| PAT-034 | The Estate Paper Detective | PAT-030 |
+| PAT-035 | The Political Repricer | PAT-036 |
+| PAT-036 | The Inheritance Timing Dial | PAT-037 |
+| PAT-037 | The Confidence Thermometer | PAT-035 |
+
+Sister patents SI-043 to SI-060 keep their numbers; their Parent lines in the 97-patent document use the new core numbers. Non-patent parents named in the first draft (site health, the IUL links engine, the credibility overlay) are not counted as parents there.
+
+The 97-patent document's text: PAT-001 to PAT-006 are Sam's original words from the April 57-patent PDF. Every other entry was rewritten in the high-energy voice by GPT-5.6 Terra (OpenRouter) and Perplexity from the original text, under rules that forbid new figures, names, studies or laws and forbid any filed/granted language. Working Components were dropped and How It Works was reduced to one or two non-mechanical sentences to protect the IP. Ordering inside each part is by excitement, chosen by Claude.
