@@ -23,7 +23,7 @@ const isOwner = (ctx: { user: { openId: string; role: string } }) => ctx.user.op
 /** The year the next elected federal government is seated (January after an even-year November election). */
 export function nextSeatedYear(now = new Date()): number { const y = now.getFullYear(); return y % 2 === 0 ? y + 1 : y + 2; }
 
-async function powerInput(now = new Date()): Promise<{ input: PowerInput; now: Awaited<ReturnType<typeof powerNow>> }> {
+export async function powerInput(now = new Date()): Promise<{ input: PowerInput; now: Awaited<ReturnType<typeof powerNow>> }> {
   const p = await powerNow();
   return { now: p, input: { shareToday: p.today.leverShare, expectedShareNext: p.expectedShareNext, seatedYear: nextSeatedYear(now), longRunShare: longRunLeverShare() } };
 }

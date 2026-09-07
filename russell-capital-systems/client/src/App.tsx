@@ -267,6 +267,7 @@ const Erosion = lazy(() => import("./pages/portal/Erosion"));
 const ZipEngine = lazy(() => import("./pages/portal/ZipEngine"));
 const ShortTermRentals = lazy(() => import("./pages/portal/ShortTermRentals"));
 const RentalEnterprise = lazy(() => import("./pages/portal/RentalEnterprise"));
+const Inheritance = lazy(() => import("./pages/portal/Inheritance"));
 const Forgiveness = lazy(() => import("./pages/portal/Forgiveness"));
 const TaxSchedule = lazy(() => import("./pages/portal/TaxSchedule"));
 const Sphere = lazy(() => import("./pages/portal/Sphere"));
@@ -588,6 +589,7 @@ function Router() {
       <Route path="/portal/zip-engine" component={gated(ZipEngine, "/portal/zip-engine")} />
       <Route path="/portal/short-term-rentals" component={gated(ShortTermRentals, "/portal/short-term-rentals")} />
       <Route path="/portal/rental-enterprise" component={gated(RentalEnterprise, "/portal/rental-enterprise")} />
+      <Route path="/portal/inheritance" component={gated(Inheritance, "/portal/inheritance")} />
       <Route path="/portal/forgiveness" component={gated(Forgiveness, "/portal/forgiveness")} />
       <Route path="/portal/tax-schedule" component={gated(TaxSchedule, "/portal/tax-schedule")} />
       <Route path="/portal/sphere" component={gated(Sphere, "/portal/sphere")} />
