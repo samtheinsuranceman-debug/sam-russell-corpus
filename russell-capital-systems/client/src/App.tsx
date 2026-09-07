@@ -22,6 +22,9 @@ import VoiceAdvisor from "./components/VoiceAdvisor";
 // Public pages — lazy-loaded to reduce initial bundle
 const Landing = lazy(() => import("./pages/Landing"));
 const Pricing = lazy(() => import("./pages/Pricing"));
+const SpecialtyIndexPage = lazy(() => import("./pages/SpecialtyIndexPage"));
+const SpecialtyPage = lazy(() => import("./pages/SpecialtyPage"));
+const ExitRating = lazy(() => import("./components/ExitRating"));
 const Privacy = lazy(() => import("./pages/Legal").then(m => ({ default: m.Privacy })));
 const Terms = lazy(() => import("./pages/Legal").then(m => ({ default: m.Terms })));
 const Support = lazy(() => import("./pages/Legal").then(m => ({ default: m.Support })));
@@ -332,6 +335,10 @@ function Router() {
       <Route path="/fact-finder" component={FactFinderPage} />
       <Route path="/calculators" component={MassiveCalculatorsPage} />
 
+      {/* The Career Ledger — public landing pages, one per specialty */}
+      <Route path="/for" component={SpecialtyIndexPage} />
+      <Route path="/for/:slug" component={SpecialtyPage} />
+
       {/* Onboarding — accessible without auth or compliance */}
       <Route path="/onboarding" component={Onboarding} />
       <Route path="/portal/onboarding" component={gated(Onboarding, "/portal/onboarding")} />
@@ -632,6 +639,7 @@ function App() {
             {/* The every-page AI voice advisor — speak on any page, the AI
                 answers in context of that page and the saved profile. */}
             <VoiceAdvisor />
+            <Suspense fallback={null}><ExitRating /></Suspense>
             <TrialTimer />
           </TooltipProvider>
         </EntrainmentProvider>

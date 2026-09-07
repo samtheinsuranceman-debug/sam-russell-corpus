@@ -16,6 +16,7 @@ import { integrationsRouter } from "./integrationsRouter";
 import { controlsRouter } from "./controlsRouter";
 import { erosionRouter } from "./erosionRouter";
 import { zipRouter } from "./zipRouter";
+import { careerRouter } from "./careerRouter";
 import { forgivenessRouter } from "./forgivenessRouter";
 import { taxScheduleRouter } from "./taxScheduleRouter";
 import { unaskedRouter } from "./unaskedRouter";
@@ -327,6 +328,7 @@ export const appRouter = router({
   controls: controlsRouter,
   erosion: erosionRouter,
   zip: zipRouter,
+  career: careerRouter,
   forgiveness: forgivenessRouter,
   taxSchedule: taxScheduleRouter,
   unasked: unaskedRouter,

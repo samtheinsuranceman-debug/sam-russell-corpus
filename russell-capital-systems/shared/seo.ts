@@ -5,6 +5,7 @@
 // them without JavaScript) and the client applies the same values as the
 // visitor navigates. Shared so the two can never disagree.
 // ============================================================
+import { CAREER_PATHS } from "./careerEngine";
 
 export const SITE_NAME = "Russell Capital Systems";
 export const SITE_TAGLINE = "Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons";
@@ -34,6 +35,14 @@ export const PUBLIC_PAGES: PublicPage[] = [
   { path: "/fact-finder", title: "Physician Fact Finder — start your plan", description: "A guided discovery form for physicians: income, practice, debt, family and goals. Everything you enter stays in your own profile.", priority: 0.8, changefreq: "monthly", crumbs: [{ name: "Fact Finder", path: "/fact-finder" }] },
   { path: "/pricing", title: "Pricing", description: "Plans for physicians, practice owners and the advisors who serve them. See what every tier includes.", priority: 0.7, changefreq: "monthly", crumbs: [{ name: "Pricing", path: "/pricing" }] },
   { path: "/support", title: "Support", description: "Reach the Russell Capital Systems team, read the help articles, and see how to get started.", priority: 0.5, changefreq: "monthly", crumbs: [{ name: "Support", path: "/support" }] },
+  // The Career Ledger: one landing page per specialty, generated from the registry so the sitemap and the pages never disagree.
+  { path: "/for", title: "For every kind of doctor: the Career Ledger", description: "Physicians, surgeons, psychiatrists, dentists, veterinarians, attorneys: what the training costs, what the record pays by state, and where you stand beside peers.", priority: 0.8, changefreq: "monthly", crumbs: [{ name: "For your specialty", path: "/for" }] },
+  ...CAREER_PATHS.map((p) => ({
+    path: `/for/${p.slug}`,
+    title: `${p.plural.charAt(0).toUpperCase()}${p.plural.slice(1)}: training, income by state, the cost of the degree`,
+    description: `${p.plural.charAt(0).toUpperCase()}${p.plural.slice(1)}: training years with the accreditor's page, BLS pay by state, the true cost of the degree and loan, and where you stand beside peers.`,
+    priority: 0.7, changefreq: "monthly" as const, crumbs: [{ name: "For your specialty", path: "/for" }, { name: p.title, path: `/for/${p.slug}` }],
+  })),
   { path: "/privacy", title: "Privacy Policy", description: "How Russell Capital Systems collects, stores, protects and uses your information.", priority: 0.3, changefreq: "yearly", crumbs: [{ name: "Privacy", path: "/privacy" }] },
   { path: "/terms", title: "Terms of Service", description: "The terms that govern use of the Russell Capital Systems platform.", priority: 0.3, changefreq: "yearly", crumbs: [{ name: "Terms", path: "/terms" }] },
   // Reachable, never indexed.
