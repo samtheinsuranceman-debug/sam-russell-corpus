@@ -34,7 +34,7 @@ GPT's twelve combinations became SI-051 to SI-060 (ten), with "Career Escape Sol
 
 ## Renumbering for the single 97-patent document (7 September 2026)
 
-`RCS_97_PATENTS_5TH_GRADE_EXPLAINED.md` renumbers the 22 new core patents in importance order and gives them their short names. Old number = the first draft above and the inventory; new number = the 97-patent document.
+`RCS_PATENTS_5TH_GRADE_EXPLAINED.md` renumbers the 22 new core patents in importance order and gives them their short names. Old number = the first draft above and the inventory; new number = the 97-patent document.
 
 | New | Name | Old |
 |---|---|---|
