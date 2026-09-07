@@ -65,6 +65,7 @@ export const SPHERE_POINTS: SpherePoint[] = [
   { path: "/portal/medicare-irmaa", title: "Medicare IRMAA", meridian: "retire", latitude: "erosion" },
   { path: "/portal/estate-tax", title: "Estate tax", meridian: "estate", latitude: "erosion" },
   { path: "/portal/inheritance", title: "The Inheritance Engine: what you expect to receive, after tax, in that year's dollars", meridian: "estate", latitude: "moves", core: true },
+  { path: "/portal/iul-engine", title: "The IUL Engine: the policy's crediting read against tax, inflation and the money supply", meridian: "protect", latitude: "moves", core: true },
   { path: "/portal/market-stress-test", title: "Market stress test", meridian: "invest", latitude: "erosion" },
   { path: "/portal/risk-tolerance", title: "Risk tolerance", meridian: "protect", latitude: "erosion" },
   { path: "/portal/income-gap", title: "Income gap analyzer", meridian: "income", latitude: "erosion" },
