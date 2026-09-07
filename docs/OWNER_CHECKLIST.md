@@ -13,35 +13,14 @@ The NAME is a fixed word I give you, typed exactly. The VALUE is the key you
 copied. Never paste a key anywhere else: not in chat, not in a file, not in
 email.
 
-## 1. Railway: let merges deploy themselves again (5 minutes, GitHub side)
+## 1. Railway autodeploy: DONE (7 September 2026, 14:47 UTC)
 
-Since 7 September GitHub has not been telling Railway about new merges
-(the "GitHub Repo not found" panel you saw). I can force one build at a
-time by re-attaching the repo (that is how #86 went green at 08:33 UTC),
-but the automatic trigger is off until the Railway app on GitHub is given
-the repository again. Railway's own troubleshooting page says the same:
-https://docs.railway.com/deployments/github-autodeploys#cant-enable-autodeploy
-
-1. Open https://github.com/settings/installations and sign in to GitHub as
-   `samtheinsuranceman-debug`.
-2. Find the row **Railway** → tap **Configure**.
-3. If a yellow banner says the app has permission updates waiting, tap
-   **Accept new permissions**.
-4. Under **Repository access**, choose **Only select repositories** and make
-   sure `sam-russell-corpus` is in the list (tap **Select repositories** to
-   add it). Tap **Save**.
-5. Open https://railway.com/project/a16ef4bb-3aea-4147-a751-20661ae76eb8 →
-   tap the **web** card → **Settings** → the **Source** section. If it shows
-   **Autodeploy: Disabled**, tap **Enable**. If it shows the repo with a
-   red mark, tap **Disconnect**, then **Connect Repo** →
-   `samtheinsuranceman-debug/sam-russell-corpus`, branch `master`.
-6. Wait five minutes. Type to me "test the deploy" and I merge a one-line
-   change and confirm it builds by itself.
-
-Until you do this: after every merge I re-attach the repo to force the
-build, or you can press **Cmd/Ctrl + K** on the Railway project page and
-choose **Deploy Latest Commit**. The watch path stays as it is; do not
-edit it.
+The Railway GitHub App is installed on `sam-russell-corpus`. Proof: pull
+request #97 was merged at 14:37 with no forced build, and Railway started
+building it on its own at 14:47. From here on every merge to `master`
+builds itself; nobody has to press anything. If it ever stops, the fix is
+https://github.com/apps/railway-app/installations/new → your account →
+Only select repositories → `sam-russell-corpus` → Install.
 
 ## 2. Railway: three keys (15 minutes)
 
@@ -192,7 +171,7 @@ Manus's DNS push, the code, the tests, the deploys, the docs. Those are mine.
 ## Key check: does each key actually work?
 Open https://russellcapitalsystems.com/api/trpc/ultra.keyProbe in any browser.
 The live server makes one read-only call per provider (Anthropic, OpenAI,
-HeyGen, Resend, FRED) and prints a status word for each: `ok` means the
+HeyGen, Resend, Perplexity, FRED) and prints a status word for each: `ok` means the
 provider accepted the key, `rejected` means it refused it (wrong, revoked,
 or pasted with a stray character), `missing` means no variable of that
 name exists on the host. It never prints a key. Cached ten minutes.
