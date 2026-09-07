@@ -132,6 +132,12 @@
       "name": "Career-to-Home Engine",
       "lead": "First, the system determines what becoming a doctor really costs. It compares that cost with peers only when five or more peers exist.",
       "detail": "The career cost is then handed to the question of what the doctor can afford in their ZIP code. The system names the reason for the affordability result instead of giving an unexplained answer. The result is passed into a chained calculator, where each part feeds the next, creating a continuous path. At the end, the exit confidence score checks whether the path helped the person understand the journey. The system therefore connects training, comparison, location, affordability, calculation and confidence."
+    },
+    {
+      "ref": "20",
+      "name": "The Financial Suitcase Saver",
+      "lead": "Think of tax strategies like items packed into a suitcase. If you tossed everything in randomly, the suitcase would not close.",
+      "detail": "This system packs twenty-nine strategy families in a fixed order every year, so each item gets placed only when there is room and when its rules are ready. First come the basic items, then the structure-free reducers sorted by certainty and cost, then the deduction engines, carefully sized to fit under the target tax bracket while respecting special limits. Roth conversion goes in last, like the final shirt placed on top after everything else has made room. And best of all, there are some strategies to fit the entire IRA Roth conversion inside the suitcase within a one-year time frame, so the whole tax-free amount can go with you. No guarantees, and you must speak to a tax adviser."
     }
   ],
   "disclaimer": "Patent-pending methods developed by Russell Capital Systems, described at a high level. Not tax, legal or investment advice. Results are not guaranteed and every specific is reviewed by our tax professional team for suitability and IRS compliance before implementation. Comparative statements are the owner's opinion."
