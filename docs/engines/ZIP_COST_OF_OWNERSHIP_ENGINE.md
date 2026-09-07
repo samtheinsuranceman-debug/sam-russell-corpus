@@ -83,3 +83,72 @@ Pass 1 built 7 September 2026: `shared/zipEngine.ts`, `server/zipData.ts`, `serv
 3. NOAA hail, NAIC insurance, wildfire availability and rebuild records. (One pass.)
 4. Vehicles, motorcycles, owner-entered luxury lines with the cost-per-hour and
    cost-per-round calculators. (One pass.)
+
+---
+
+## Additions dictated 7 September 2026, sorted the same way
+
+### Short-term rentals (built: `/portal/short-term-rentals`, pass 1)
+- **What exists publicly by zip:** the value, appreciation, long-term rent trend
+  and the year's mortgage rate (the Zip Engine). Property tax and HOA arrive in
+  Zip Engine pass 2 (Census ACS).
+- **What does not exist publicly:** a thirty-year history of short-term-rental
+  income by zip. Airbnb began in 2008; its listing data is private. Rabbu
+  (rabbu.com) publishes a current estimate for any address (nightly rate,
+  occupancy, monthly revenue, refreshed weekly, gross of fees) and market pages
+  by city and zip, but no historical series and no public API. It cannot be
+  "coded into the database" as a record; it is linked from the page and its
+  figures are taken as the client's dated inputs, labelled as Rabbu's.
+- **The page:** the zip's record prefills price, appreciation, rent growth and
+  mortgage rate; the client types or pastes nightly rate and occupancy; the
+  engine (`shared/strEngine.ts`) shows every year: gross, operating costs,
+  NOI, interest, principal, cash flow, straight-line depreciation, taxable
+  income, the tax effect at the client's marginal rate, after-tax cash, value,
+  loan balance, equity; cap rate, cash-on-cash, equity multiple, annualised
+  return on cash. The accelerated tax mechanics stay on `/portal/str-strategy`
+  with their statutes. A "Rental Properties" group now sits at the top of the
+  portal navigation: Short-Term Rentals, STR Tax Strategy, the Zip Engine,
+  House Recycling, Real Estate Mogul.
+
+### Oil and gas programmes, 36 years
+- **Public:** the tax treatment is statute, citable year by year: intangible
+  drilling costs deductible in year one (IRC §263(c)), percentage depletion
+  at 15% (§613A), the working-interest exception to the passive rules
+  (§469(c)(3)). SEC Form D data sets (2008 → present, quarterly, public bulk
+  download) list every Regulation D private offering with issuer, industry
+  group ("Oil & Gas"), amount offered and amount sold: the sponsor league table
+  by dollars raised, 2008 onward, can be built from the record.
+- **Not public:** returns of private drilling programmes, year-by-year
+  depreciation actually taken, and anything before 2008 at sponsor level.
+  Programme returns are in private K-1s; no authority aggregates them. The
+  engine will show the tax schedule (statute) and the Form D league table
+  (record) and say plainly that performance is not on the public record.
+
+### Fixed indexed annuities and indexed universal life, by state, 36 years
+- **Public:** state insurance departments and the NAIC publish annual premium
+  by company by line by state (market-share reports); LIMRA and Wink publish
+  headline totals in press releases. Product filings (rates, caps, bonuses,
+  surrender schedules) are public through SERFF but not aggregated.
+- **Not public:** product-level top-ten by state, average premium bonus,
+  qualified vs non-qualified mix, average surrender year, income-rider payouts
+  by state, maximum premium accepted by household income and net worth,
+  realised returns on in-force policies. Those live in LIMRA, Wink and carrier
+  data that is licensed, not published. Carrier product pages can be cited for
+  today's caps and limits, one product at a time, each with its date.
+- **What the engine can build honestly:** a company league table by state and
+  year from the NAIC filings (life and annuity premium), with consistency
+  scored by how many years and states a carrier appears in the top ten, and a
+  hand-curated product sheet (Pacific Life, Securian and others) with each
+  cap, bonus, surrender schedule and premium limit cited to the carrier's own
+  page and dated. Not a thirty-six-year product history; that record does not
+  exist in public.
+
+### Trusts by state, 36 years
+- **Public:** IRS Statistics of Income publishes fiduciary income-tax return
+  (Form 1041) counts and amounts annually, with some state tables in some
+  years, to be verified year by year; state court probate filings are public
+  in some states.
+- **Not public:** there is no registry of trusts. Marital status of grantors,
+  purpose, and funding amounts at signing are not collected by any authority.
+  The engine will show the Form 1041 record where it exists and state that the
+  rest is not knowable from public sources.
