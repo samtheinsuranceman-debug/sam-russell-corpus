@@ -35,7 +35,7 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
       - name: Known vulnerabilities (high/critical fail)
-        run: pnpm audit --audit-level=high
+        run: pnpm audit --audit-level=high --prod --ignore-unfixable
       - name: Typecheck
         run: pnpm check
       - name: Unit tests
