@@ -358,7 +358,7 @@ export default function CouplesMode() {
     const challenges = [
       { title: "Morning Duo", desc: "Both partners log in before 9am", reward: "500 XP + 200 RC", progress: 3, target: 5, icon: Flame, color: "text-orange-400" },
       { title: "Calculator Relay", desc: "Run 10 calculators between you today", reward: "1,000 XP", progress: 6, target: 10, icon: Zap, color: "text-cyan-400" },
-      { title: "Streak Sync", desc: "Maintain matching 7-day streaks", reward: "2,000 XP + Rare Badge", progress: 5, target: 7, icon: Shield, color: "text-purple-400" },
+      { title: "Streak Sync", desc: "Maintain matching 7-day streaks", reward: "2,000 XP + Rare Badge", progress: 5, target: 7, icon: Shield, color: "text-emerald-400" },
       { title: "Wealth Discovery Race", desc: "First couple to discover $1M this week", reward: "5,000 XP + Legendary Loot", progress: 680000, target: 1000000, icon: TrendingUp, color: "text-green-400" },
       { title: "Love Letter", desc: "Both generate a Will Writer document", reward: "3,000 XP + Exclusive Title", progress: 1, target: 2, icon: Heart, color: "text-pink-400" },
     ];

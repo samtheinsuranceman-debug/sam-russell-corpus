@@ -160,12 +160,12 @@ export default function TapeRecorderAdvisor({ onJourney }: { onJourney?: (j: Jou
       `}</style>
 
       {/* ── the deck ── */}
-      <div className="relative overflow-hidden rounded-[28px] border border-violet-400/25 bg-[linear-gradient(160deg,#1a1c26,#0c0e15_60%,#090b11)] p-5 shadow-[0_40px_120px_rgba(0,0,0,.6),inset_0_1px_0_rgba(255,255,255,.06)] sm:p-7">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-300/70 to-transparent" />
+      <div className="relative overflow-hidden rounded-[28px] border border-emerald-400/25 bg-[linear-gradient(160deg,#1a1c26,#0c0e15_60%,#090b11)] p-5 shadow-[0_40px_120px_rgba(0,0,0,.6),inset_0_1px_0_rgba(255,255,255,.06)] sm:p-7">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/70 to-transparent" />
         {/* label strip */}
         <div className="flex items-center justify-between gap-3">
           <div className="rounded-md border border-white/10 bg-[#f5f0e6] px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.28em] text-[#2a2440] shadow-inner">RCS · AI Financial Advisor</div>
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-violet-200/70">
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-emerald-200/70">
             <span className={`inline-block h-2.5 w-2.5 rounded-full ${gated ? "bg-red-500 shadow-[0_0_12px_rgba(239,68,68,.9)]" : mode === "listening" ? "bg-red-400 shadow-[0_0_12px_rgba(248,113,113,.9)] animate-pulse" : mode === "speaking" ? "bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.9)]" : mode === "thinking" ? "bg-amber-300 animate-pulse" : "bg-emerald-500/70"}`} />
             {modeLabel}
           </div>
@@ -212,8 +212,8 @@ export default function TapeRecorderAdvisor({ onJourney }: { onJourney?: (j: Jou
         {typing && (
           <form className="mt-4 flex gap-2" onSubmit={(e) => { e.preventDefault(); void submit(draft); }}>
             <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder={gated ? "Ask anything — the librarian will point you to the assessment first" : "Ask the librarian anything about your plan…"}
-              className="flex-1 rounded-xl border border-violet-400/25 bg-[#0b0f1a] px-4 py-3 text-white placeholder:text-slate-500 focus:border-violet-300 focus:outline-none" aria-label="Your question" />
-            <button type="submit" disabled={mode === "thinking" || !draft.trim()} className="rounded-xl bg-violet-500 px-5 py-3 font-semibold text-white hover:bg-violet-400 disabled:opacity-50">Ask</button>
+              className="flex-1 rounded-xl border border-emerald-400/25 bg-[#0b0f1a] px-4 py-3 text-white placeholder:text-slate-500 focus:border-emerald-300 focus:outline-none" aria-label="Your question" />
+            <button type="submit" disabled={mode === "thinking" || !draft.trim()} className="rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-white hover:bg-emerald-400 disabled:opacity-50">Ask</button>
           </form>
         )}
 
@@ -226,17 +226,17 @@ export default function TapeRecorderAdvisor({ onJourney }: { onJourney?: (j: Jou
       </div>
 
       {/* ── the tape (transcript) ── */}
-      <div ref={tapeRef} className="mt-4 max-h-[22rem] space-y-3 overflow-y-auto rounded-2xl border border-violet-400/20 bg-white/[0.03] p-4" aria-live="polite" aria-label="Conversation">
+      <div ref={tapeRef} className="mt-4 max-h-[22rem] space-y-3 overflow-y-auto rounded-2xl border border-emerald-400/20 bg-white/[0.03] p-4" aria-live="polite" aria-label="Conversation">
         {lines.length === 0 && <p className="text-sm text-slate-500">Press REC and ask anything — how to pay less tax, whether to pay off the mortgage, what happens if markets fall, how to protect your family. Ask as many questions as you like; when you're ready, press JOURNEY.</p>}
         {lines.map((l, i) => (
           <div key={i} className={`flex ${l.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed ${l.role === "user" ? "bg-violet-500/25 text-white" : "bg-[#0b0f1a] text-slate-100 border border-white/10"}`}>
+            <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed ${l.role === "user" ? "bg-emerald-500/25 text-white" : "bg-[#0b0f1a] text-slate-100 border border-white/10"}`}>
               <div className="mb-0.5 text-[10px] uppercase tracking-[0.2em] text-slate-500">{l.role === "user" ? "You" : "Librarian"} · {new Date(l.at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}{l.contributors?.length ? ` · ${l.contributors.length} advisors` : ""}</div>
               {l.text}
             </div>
           </div>
         ))}
-        {mode === "thinking" && <p className="text-sm text-violet-200/70">The librarian is thinking…</p>}
+        {mode === "thinking" && <p className="text-sm text-emerald-200/70">The librarian is thinking…</p>}
       </div>
       <p className="mt-3 text-center text-xs text-slate-500">Education and projections only — not tax, legal, or investment advice. Every recommendation is reviewed by a licensed advisor and our tax professional team for suitability and IRS compliance before anything is implemented.</p>
     </div>
@@ -251,7 +251,7 @@ function Reel({ spinning }: { spinning: boolean }) {
       {Array.from({ length: 6 }).map((_, i) => (
         <rect key={i} x="47" y="6" width="6" height="18" rx="2" fill="#8b7bf0" opacity=".8" transform={`rotate(${i * 60} 50 50)`} />
       ))}
-      <circle cx="50" cy="50" r="8" fill="#0b0f1a" stroke="#a78bfa" strokeWidth="2" />
+      <circle cx="50" cy="50" r="8" fill="#0b0f1a" stroke="#34d399" strokeWidth="2" />
     </svg>
   );
 }
@@ -259,8 +259,8 @@ function Reel({ spinning }: { spinning: boolean }) {
 function TransportButton({ children, label, onClick, disabled, active, tone }: { children: React.ReactNode; label: string; onClick: () => void; disabled?: boolean; active?: boolean; tone?: "red" | "violet" }) {
   const base = "flex flex-col items-center justify-center gap-1 rounded-xl border px-2 py-3 text-[11px] font-bold tracking-[0.18em] transition active:translate-y-px disabled:cursor-not-allowed disabled:opacity-40";
   const look = active
-    ? tone === "red" ? "border-red-400 bg-red-500 text-white shadow-[0_0_18px_rgba(239,68,68,.6)]" : "border-violet-300 bg-violet-500 text-white"
-    : tone === "violet" ? "border-violet-400/50 bg-violet-500/20 text-violet-100 hover:bg-violet-500/35"
+    ? tone === "red" ? "border-red-400 bg-red-500 text-white shadow-[0_0_18px_rgba(239,68,68,.6)]" : "border-emerald-300 bg-emerald-500 text-white"
+    : tone === "violet" ? "border-emerald-400/50 bg-emerald-500/20 text-emerald-100 hover:bg-emerald-500/35"
     : tone === "red" ? "border-white/15 bg-[#1b1e28] text-red-300 hover:bg-[#242836]"
     : "border-white/15 bg-[#1b1e28] text-slate-200 hover:bg-[#242836]";
   return (

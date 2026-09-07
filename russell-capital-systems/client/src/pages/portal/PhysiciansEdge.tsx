@@ -33,9 +33,9 @@ const CALCULATOR_MODULES: CalculatorModule[] = [
     tagline: "Convert $2M+ to Roth — Pay $0 in Tax",
     description: "The 248-calculator brain sequences IUL cash value loans against Roth conversion income, creating a zero-tax corridor that traditional advisors say is impossible. For physicians with $500K–$2M in traditional IRAs, this module shows the exact year-by-year conversion schedule.",
     icon: Landmark,
-    color: "text-violet-400",
-    bgColor: "bg-violet-500/10",
-    borderColor: "border-violet-500/20",
+    color: "text-emerald-400",
+    bgColor: "bg-emerald-500/10",
+    borderColor: "border-emerald-500/20",
     portalLink: "/portal/roth-conversion",
     highlights: [
       "Year-by-year conversion schedule with zero tax liability",
@@ -133,7 +133,7 @@ const CALCULATOR_MODULES: CalculatorModule[] = [
 
 const INCOME_TIERS = [
   { range: "$350K – $500K", label: "Early Career Specialist", strategies: 4, savings: "$1.2M – $3.5M", color: "bg-cyan-500" },
-  { range: "$500K – $750K", label: "Mid-Career Surgeon/Specialist", strategies: 6, savings: "$3.5M – $8M", color: "bg-violet-500" },
+  { range: "$500K – $750K", label: "Mid-Career Surgeon/Specialist", strategies: 6, savings: "$3.5M – $8M", color: "bg-emerald-500" },
   { range: "$750K – $1.5M", label: "Practice Owner / Partner", strategies: 8, savings: "$8M – $18M", color: "bg-amber-500" },
   { range: "$1.5M – $2M+", label: "Multi-Practice / Executive", strategies: 10, savings: "$18M – $40M+", color: "bg-emerald-500" },
 ];
@@ -157,8 +157,8 @@ export default function PhysiciansEdge() {
       {/* ── Hero Section ──────────────────────────────────────── */}
       <div className="rc-page-header mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/20 border border-violet-500/30">
-            <Stethoscope className="w-7 h-7 text-violet-400" />
+          <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30">
+            <Stethoscope className="w-7 h-7 text-emerald-400" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-white">The Physician's Edge</h1>
@@ -169,7 +169,7 @@ export default function PhysiciansEdge() {
           You didn't spend 12+ years in training to hand 37% of every dollar to the IRS. The Russell Capital Systems™ 
           248-calculator brain was engineered specifically for physicians — the highest-taxed, most divorce-vulnerable, 
           most financially underserved professionals in America. This isn't a generic financial plan. This is a 
-          <span className="text-violet-400 font-semibold"> weaponized tax elimination system</span>.
+          <span className="text-emerald-400 font-semibold"> weaponized tax elimination system</span>.
         </p>
       </div>
 
@@ -185,9 +185,9 @@ export default function PhysiciansEdge() {
       </div>
 
       {/* ── Income Tier Selector ─────────────────────────────── */}
-      <div className="rc-card p-6 mb-8 border border-violet-500/20">
+      <div className="rc-card p-6 mb-8 border border-emerald-500/20">
         <h2 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
-          <Target className="w-5 h-5 text-violet-400" />
+          <Target className="w-5 h-5 text-emerald-400" />
           Select Your Income Tier
         </h2>
         <p className="text-sm text-muted-foreground mb-4">
@@ -200,8 +200,8 @@ export default function PhysiciansEdge() {
               onClick={() => setSelectedTier(selectedTier === i ? null : i)}
               className={`p-4 rounded-xl border text-left transition-all ${
                 selectedTier === i
-                  ? "border-violet-500/50 bg-violet-500/10 ring-1 ring-violet-500/30"
-                  : "border-border/50 bg-card/50 hover:border-violet-500/30"
+                  ? "border-emerald-500/50 bg-emerald-500/10 ring-1 ring-emerald-500/30"
+                  : "border-border/50 bg-card/50 hover:border-emerald-500/30"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
@@ -210,7 +210,7 @@ export default function PhysiciansEdge() {
               </div>
               <div className="text-xs text-muted-foreground mb-2">{tier.label}</div>
               <div className="flex justify-between text-xs">
-                <span className="text-violet-400">{tier.strategies} strategies</span>
+                <span className="text-emerald-400">{tier.strategies} strategies</span>
                 <span className="text-emerald-400">{tier.savings} saved</span>
               </div>
             </button>
@@ -260,7 +260,7 @@ export default function PhysiciansEdge() {
                   </div>
                   {mod.portalLink && (
                     <Link href={mod.portalLink}>
-                      <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-600 text-white text-sm font-medium hover:opacity-90 transition-opacity">
+                      <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-cyan-600 text-white text-sm font-medium hover:opacity-90 transition-opacity">
                         Launch Calculator <ArrowRight className="w-4 h-4" />
                       </button>
                     </Link>
@@ -273,7 +273,7 @@ export default function PhysiciansEdge() {
       </div>
 
       {/* ── The 248-Calculator Brain ─────────────────────────── */}
-      <div className="rc-card p-6 mb-8 border border-cyan-500/20 bg-gradient-to-br from-cyan-500/5 to-violet-500/5">
+      <div className="rc-card p-6 mb-8 border border-cyan-500/20 bg-gradient-to-br from-cyan-500/5 to-emerald-500/5">
         <h2 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-cyan-400" />
           The 248-Calculator Brain
@@ -291,7 +291,7 @@ export default function PhysiciansEdge() {
             <div className="text-xs text-muted-foreground mt-1">Every variable change cascades across the entire engine</div>
           </div>
           <div className="p-4 rounded-xl bg-card/50 border border-border/30">
-            <div className="text-2xl font-bold text-violet-400 mb-1">50 Years</div>
+            <div className="text-2xl font-bold text-emerald-400 mb-1">50 Years</div>
             <div className="text-xs font-semibold text-white">Projection Horizon</div>
             <div className="text-xs text-muted-foreground mt-1">Conservative, moderate, and aggressive scenarios</div>
           </div>
@@ -304,7 +304,7 @@ export default function PhysiciansEdge() {
       </div>
 
       {/* ── CTA ──────────────────────────────────────────────── */}
-      <div className="rc-card p-6 mb-8 border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 to-violet-500/10 text-center">
+      <div className="rc-card p-6 mb-8 border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 to-emerald-500/10 text-center">
         <h2 className="text-xl font-bold text-white mb-2">Ready to See Your Numbers?</h2>
         <p className="text-sm text-muted-foreground mb-4 max-w-xl mx-auto">
           Select any calculator module above to run your personalized projections. The 248-calculator brain 
@@ -312,12 +312,12 @@ export default function PhysiciansEdge() {
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link href="/portal/roth-conversion">
-            <button className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-600 text-white text-sm font-medium hover:opacity-90 transition-opacity">
+            <button className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-600 to-cyan-600 text-white text-sm font-medium hover:opacity-90 transition-opacity">
               Start with Roth Conversion
             </button>
           </Link>
           <Link href="/portal/divorce-calculator">
-            <button className="px-5 py-2.5 rounded-lg border border-violet-500/30 text-violet-400 text-sm font-medium hover:bg-violet-500/10 transition-colors">
+            <button className="px-5 py-2.5 rounded-lg border border-emerald-500/30 text-emerald-400 text-sm font-medium hover:bg-emerald-500/10 transition-colors">
               Divorce Protection Analysis
             </button>
           </Link>

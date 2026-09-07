@@ -155,7 +155,7 @@ export default function VideoViewer() {
     return (
       <div className="min-h-screen bg-[#0a0a1a] flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-violet-400 mx-auto mb-4" />
+          <Loader2 className="w-8 h-8 animate-spin text-emerald-400 mx-auto mb-4" />
           <p className="text-white/60">Loading your personalized video...</p>
         </div>
       </div>
@@ -180,7 +180,7 @@ export default function VideoViewer() {
       <div className="border-b border-white/10 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-500 flex items-center justify-center">
               <Video className="w-4 h-4 text-white" />
             </div>
             <div>
@@ -222,7 +222,7 @@ export default function VideoViewer() {
                   const pct = (e.clientX - rect.left) / rect.width;
                   videoRef.current.currentTime = pct * duration;
                 }}>
-                  <div className="absolute h-full bg-violet-500 rounded-full" style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }} />
+                  <div className="absolute h-full bg-emerald-500 rounded-full" style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }} />
                   {/* Chapter markers */}
                   {chapters.length > 0 && (() => {
                     const totalEst = chapters.reduce((s, c) => s + (c.durationEstimate || 30), 0);
@@ -236,21 +236,21 @@ export default function VideoViewer() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <button onClick={togglePlay} className="hover:text-violet-400 transition-colors">
+                    <button onClick={togglePlay} className="hover:text-emerald-400 transition-colors">
                       {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
                     </button>
-                    <button onClick={() => seekToChapter(Math.max(0, activeChapterIdx - 1))} className="hover:text-violet-400 transition-colors">
+                    <button onClick={() => seekToChapter(Math.max(0, activeChapterIdx - 1))} className="hover:text-emerald-400 transition-colors">
                       <SkipBack className="w-4 h-4" />
                     </button>
-                    <button onClick={() => seekToChapter(Math.min(chapters.length - 1, activeChapterIdx + 1))} className="hover:text-violet-400 transition-colors">
+                    <button onClick={() => seekToChapter(Math.min(chapters.length - 1, activeChapterIdx + 1))} className="hover:text-emerald-400 transition-colors">
                       <SkipForward className="w-4 h-4" />
                     </button>
-                    <button onClick={toggleMute} className="hover:text-violet-400 transition-colors">
+                    <button onClick={toggleMute} className="hover:text-emerald-400 transition-colors">
                       {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                     </button>
                     <span className="text-xs text-white/60">{formatTime(currentTime)} / {formatTime(duration)}</span>
                   </div>
-                  <button onClick={toggleFullscreen} className="hover:text-violet-400 transition-colors">
+                  <button onClick={toggleFullscreen} className="hover:text-emerald-400 transition-colors">
                     <Maximize className="w-4 h-4" />
                   </button>
                 </div>
@@ -259,7 +259,7 @@ export default function VideoViewer() {
               {/* Play button overlay when paused */}
               {!isPlaying && (
                 <div className="absolute inset-0 flex items-center justify-center cursor-pointer" onClick={togglePlay}>
-                  <div className="w-16 h-16 rounded-full bg-violet-500/80 flex items-center justify-center backdrop-blur-sm hover:bg-violet-500 transition-colors">
+                  <div className="w-16 h-16 rounded-full bg-emerald-500/80 flex items-center justify-center backdrop-blur-sm hover:bg-emerald-500 transition-colors">
                     <Play className="w-8 h-8 text-white ml-1" />
                   </div>
                 </div>
@@ -270,7 +270,7 @@ export default function VideoViewer() {
             {chapters.length > 0 && chapters[activeChapterIdx] && (
               <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <div className="flex items-center gap-2 mb-1">
-                  <Badge variant="outline" className="border-violet-500/30 text-violet-400 text-[10px]">
+                  <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 text-[10px]">
                     Chapter {activeChapterIdx + 1} of {chapters.length}
                   </Badge>
                 </div>
@@ -289,12 +289,12 @@ export default function VideoViewer() {
                 <div
                   key={idx}
                   className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
-                    isActive ? "bg-violet-500/20 border border-violet-500/30" : "bg-white/5 border border-transparent hover:bg-white/10"
+                    isActive ? "bg-emerald-500/20 border border-emerald-500/30" : "bg-white/5 border border-transparent hover:bg-white/10"
                   }`}
                   onClick={() => seekToChapter(idx)}
                 >
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                    isActive ? "bg-violet-500 text-white" : isPast ? "bg-emerald-500/20 text-emerald-400" : "bg-white/10 text-white/40"
+                    isActive ? "bg-emerald-500 text-white" : isPast ? "bg-emerald-500/20 text-emerald-400" : "bg-white/10 text-white/40"
                   }`}>
                     {isPast ? <CheckCircle2 className="w-4 h-4" /> : <span className="text-xs font-bold">{idx + 1}</span>}
                   </div>
@@ -302,7 +302,7 @@ export default function VideoViewer() {
                     <p className={`text-sm font-medium truncate ${isActive ? "text-white" : "text-white/70"}`}>{ch.title}</p>
                     <p className="text-[10px] text-white/40">~{ch.durationEstimate || 30}s</p>
                   </div>
-                  {isActive && <ChevronRight className="w-4 h-4 text-violet-400 shrink-0" />}
+                  {isActive && <ChevronRight className="w-4 h-4 text-emerald-400 shrink-0" />}
                 </div>
               );
             })}

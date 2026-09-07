@@ -105,7 +105,7 @@ const RARITY_COLORS = {
   common: { border: "border-slate-500/30", bg: "from-slate-500/10 to-slate-600/5", text: "text-slate-400", label: "Common", glow: "" },
   uncommon: { border: "border-emerald-500/30", bg: "from-emerald-500/10 to-emerald-600/5", text: "text-emerald-400", label: "Uncommon", glow: "" },
   rare: { border: "border-blue-500/30", bg: "from-blue-500/10 to-blue-600/5", text: "text-blue-400", label: "Rare", glow: "shadow-[0_0_15px_rgba(59,130,246,0.15)]" },
-  epic: { border: "border-violet-500/30", bg: "from-violet-500/10 to-violet-600/5", text: "text-violet-400", label: "Epic", glow: "shadow-[0_0_20px_rgba(139,92,246,0.2)]" },
+  epic: { border: "border-emerald-500/30", bg: "from-emerald-500/10 to-emerald-600/5", text: "text-emerald-400", label: "Epic", glow: "shadow-[0_0_20px_rgba(52,211,153,0.2)]" },
   legendary: { border: "border-amber-500/30", bg: "from-amber-500/10 to-amber-600/5", text: "text-amber-400", label: "Legendary", glow: "shadow-[0_0_25px_rgba(245,158,11,0.25)]" },
 };
 
@@ -134,9 +134,9 @@ function QuestCard({ quest }: { quest: any }) {
                 <div key={i} className="flex items-center flex-1">
                   <div className={`flex-1 h-6 rounded text-[8px] font-medium flex items-center justify-center ${
                     i < quest.chainProgress
-                      ? "bg-violet-500/20 text-violet-300 border border-violet-500/30"
+                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                       : i === quest.chainProgress
-                      ? "bg-violet-500/10 text-violet-400 border border-dashed border-violet-500/30 animate-pulse"
+                      ? "bg-emerald-500/10 text-emerald-400 border border-dashed border-emerald-500/30 animate-pulse"
                       : "bg-[#0a1628] text-slate-600 border border-[#1a3055]"
                   }`}>
                     {i < quest.chainProgress ? "✓" : step}
@@ -149,7 +149,7 @@ function QuestCard({ quest }: { quest: any }) {
           <div className="flex items-center gap-3">
             <div className="flex-1">
               <div className="h-1.5 rounded-full bg-[#0a1628] overflow-hidden">
-                <div className={`h-full rounded-full transition-all duration-500 ${isComplete ? "bg-emerald-500" : "bg-gradient-to-r from-blue-500 to-violet-500"}`} style={{ width: `${pct}%` }} />
+                <div className={`h-full rounded-full transition-all duration-500 ${isComplete ? "bg-emerald-500" : "bg-gradient-to-r from-blue-500 to-emerald-500"}`} style={{ width: `${pct}%` }} />
               </div>
             </div>
             <span className="text-[10px] text-slate-400 flex-shrink-0">
@@ -182,7 +182,7 @@ const SKILL_BRANCHES = [{ name: "MYGA Master", emoji: "🏦", color: "emerald", 
 
 const SKILL_COLOR_MAP: Record<string, string> = {
   emerald: "border-emerald-500/30 bg-emerald-500/10", cyan: "border-cyan-500/30 bg-cyan-500/10",
-  violet: "border-violet-500/30 bg-violet-500/10", orange: "border-orange-500/30 bg-orange-500/10",
+  violet: "border-emerald-500/30 bg-emerald-500/10", orange: "border-orange-500/30 bg-orange-500/10",
   amber: "border-amber-500/30 bg-amber-500/10", teal: "border-teal-500/30 bg-teal-500/10",
   rose: "border-rose-500/30 bg-rose-500/10", blue: "border-blue-500/30 bg-blue-500/10",
   red: "border-red-500/30 bg-red-500/10",
@@ -300,7 +300,7 @@ function SlotMachineLoot() {
           {revealed && (
             <div className={`absolute inset-0 animate-loot-glow ${
               revealed.rarity === "legendary" ? "bg-amber-500/10" :
-              revealed.rarity === "epic" ? "bg-violet-500/10" :
+              revealed.rarity === "epic" ? "bg-emerald-500/10" :
               revealed.rarity === "rare" ? "bg-blue-500/10" : "bg-emerald-500/5"
             }`} />
           )}
@@ -373,10 +373,10 @@ function ComboTracker() {
     <div className="space-y-2">
       <h3 className="text-xs font-bold text-white uppercase tracking-wider">Active Combos</h3>
       {combos.map((combo, i) => (
-        <div key={i} className={`rounded-lg border p-3 ${combo.active ? "border-violet-500/30 bg-violet-500/5" : "border-[#1a3055] bg-[#0a1628]"}`}>
+        <div key={i} className={`rounded-lg border p-3 ${combo.active ? "border-emerald-500/30 bg-emerald-500/5" : "border-[#1a3055] bg-[#0a1628]"}`}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-white">{combo.name}</span>
-            <Badge variant="outline" className={`text-[10px] ${combo.active ? "text-violet-400 border-violet-500/30" : "text-slate-500 border-slate-500/30"}`}>
+            <Badge variant="outline" className={`text-[10px] ${combo.active ? "text-emerald-400 border-emerald-500/30" : "text-slate-500 border-slate-500/30"}`}>
               {combo.multiplier} XP
             </Badge>
           </div>
@@ -384,7 +384,7 @@ function ComboTracker() {
             {combo.chain.map((step, j) => (
               <div key={j} className="flex items-center flex-1">
                 <div className={`flex-1 h-6 rounded text-[9px] font-medium flex items-center justify-center ${
-                  j < combo.completed ? "bg-violet-500/20 text-violet-300 border border-violet-500/30" : "bg-[#0a1628] text-slate-600 border border-[#1a3055]"
+                  j < combo.completed ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" : "bg-[#0a1628] text-slate-600 border border-[#1a3055]"
                 }`}>{step}</div>
                 {j < combo.chain.length - 1 && <ChevronRight size={10} className="text-slate-600 mx-0.5 flex-shrink-0" />}
               </div>
@@ -479,8 +479,8 @@ export default function Arena() {
             <div className="px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30">
               <span className="text-xs font-bold text-amber-400">{xpDisplay} XP</span>
             </div>
-            <div className="px-3 py-1.5 rounded-lg bg-violet-500/10 border border-violet-500/30">
-              <span className="text-xs font-bold text-violet-400">Level {levelDisplay}</span>
+            <div className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+              <span className="text-xs font-bold text-emerald-400">Level {levelDisplay}</span>
             </div>
           </div>
         </div>
@@ -491,7 +491,7 @@ export default function Arena() {
             <TabsTrigger value="quests" className="text-xs data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400">
               <Target size={14} className="mr-1" /> Quests
             </TabsTrigger>
-            <TabsTrigger value="skills" className="text-xs data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-400">
+            <TabsTrigger value="skills" className="text-xs data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
               <Brain size={14} className="mr-1" /> Skill Tree
             </TabsTrigger>
             <TabsTrigger value="loot" className="text-xs data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
@@ -526,8 +526,8 @@ export default function Arena() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
-                <span className="text-violet-400">💎</span> Epic & Legendary Quest Chains
-                <Badge variant="outline" className="text-[10px] border-violet-500/30 text-violet-400">Permanent</Badge>
+                <span className="text-emerald-400">💎</span> Epic & Legendary Quest Chains
+                <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-400">Permanent</Badge>
               </h3>
               <div className="space-y-2">
                 {EPIC_QUEST_CHAINS.map(q => <QuestCard key={q.id} quest={q} />)}
@@ -587,7 +587,7 @@ export default function Arena() {
                       { chain: 5, mult: "5x", desc: "Complete a full spectrum" },
                     ].map((c, i) => (
                       <div key={i} className="flex items-center gap-3 p-2 rounded-lg bg-[#0a1628] border border-[#1a3055]">
-                        <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/30 flex items-center justify-center text-xs font-black text-violet-400">{c.chain}</div>
+                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-xs font-black text-emerald-400">{c.chain}</div>
                         <div className="flex-1">
                           <div className="text-xs font-bold text-white">{c.mult} XP Multiplier</div>
                           <div className="text-[10px] text-slate-400">{c.desc}</div>

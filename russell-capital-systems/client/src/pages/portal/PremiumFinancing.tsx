@@ -412,7 +412,7 @@ export default function PremiumFinancing() {
           <div className="flex items-center gap-2">
             {result && (
               <Button variant="outline" size="sm" onClick={() => setShowMonteCarlo(!showMonteCarlo)}
-                className={showMonteCarlo ? "border-purple-500/40 text-purple-400 bg-purple-500/10" : ""}>
+                className={showMonteCarlo ? "border-emerald-500/40 text-emerald-400 bg-emerald-500/10" : ""}>
                 <Activity className="h-4 w-4 mr-2" />
                 {showMonteCarlo ? "Hide" : "Show"} Monte Carlo
               </Button>
@@ -890,7 +890,7 @@ export default function PremiumFinancing() {
                                   type="stepAfter" 
                                   dataKey="collateral" 
                                   name="Required Collateral" 
-                                  stroke={highlightCollateral ? "#ef4444" : "#8b5cf6"} 
+                                  stroke={highlightCollateral ? "#ef4444" : "#10b981"} 
                                   strokeWidth={highlightCollateral ? 4 : 2} 
                                   dot={{ r: highlightCollateral ? 4 : 2 }} 
                                 />

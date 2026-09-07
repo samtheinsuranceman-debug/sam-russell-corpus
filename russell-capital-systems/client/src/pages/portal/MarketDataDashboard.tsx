@@ -133,7 +133,7 @@ const SECTOR_PERFORMANCE = [
   { name: "Healthcare", value: 8.4, color: "#10b981" },
   { name: "Financials", value: 6.7, color: "#f59e0b" },
   { name: "Energy", value: 4.2, color: "#ef4444" },
-  { name: "Consumer", value: -2.1, color: "#8b5cf6" },
+  { name: "Consumer", value: -2.1, color: "#10b981" },
 ];
 
 const VOLATILITY_DATA = [
@@ -399,7 +399,7 @@ export default function MarketDataDashboard() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-[#7a95b8]">Dark Mode</span>
-                    <button onClick={() => setDarkMode(!darkMode)} className={`w-10 h-5 rounded-full transition-colors ${darkMode ? 'bg-purple-500' : 'bg-gray-600'} relative`}>
+                    <button onClick={() => setDarkMode(!darkMode)} className={`w-10 h-5 rounded-full transition-colors ${darkMode ? 'bg-emerald-500' : 'bg-gray-600'} relative`}>
                       <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${darkMode ? 'translate-x-5' : 'translate-x-0'}`} />
                     </button>
                   </div>
@@ -429,12 +429,12 @@ export default function MarketDataDashboard() {
                   <span className="font-medium">Live</span>
                 </div>
               ) : feedSource === "cached" ? (
-                <div className="flex items-center gap-1.5 text-violet-300">
+                <div className="flex items-center gap-1.5 text-emerald-300">
                   <Database className="h-4 w-4" />
                   <span className="font-medium">Cached live data</span>
                 </div>
               ) : feedSource === "loading" ? (
-                <div className="flex items-center gap-1.5 text-violet-300">
+                <div className="flex items-center gap-1.5 text-emerald-300">
                   <RefreshCw className="h-4 w-4 animate-spin" />
                   <span className="font-medium">Loading sources</span>
                 </div>
@@ -489,8 +489,8 @@ export default function MarketDataDashboard() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-8 mt-0 outline-none">
-            <div className="rounded-xl border border-violet-400/20 bg-violet-950/20 p-4 text-xs leading-5 text-slate-300">
-              <strong className="text-violet-200">Source transparency:</strong> CPI, Treasury, commodity, and MYGA sections use the received feed snapshot and retain a live, cached, or reference label. Equity-index tiles and historical charts are curated reference scenarios, not live quotes.
+            <div className="rounded-xl border border-emerald-400/20 bg-emerald-950/20 p-4 text-xs leading-5 text-slate-300">
+              <strong className="text-emerald-200">Source transparency:</strong> CPI, Treasury, commodity, and MYGA sections use the received feed snapshot and retain a live, cached, or reference label. Equity-index tiles and historical charts are curated reference scenarios, not live quotes.
             </div>
             {/* Market Indices Grid */}
             <div>
@@ -559,7 +559,7 @@ export default function MarketDataDashboard() {
                     <button onClick={() => setShowGrid(!showGrid)} className="p-1.5 bg-[#12233e] rounded hover:bg-[#1e3a5f] text-[#7a95b8]">
                       <Database className="h-4 w-4" />
                     </button>
-                    <button onClick={() => setShowVolatility(!showVolatility)} className={`px-3 py-1.5 text-xs rounded-md transition-colors ${showVolatility ? 'bg-purple-600 text-white' : 'bg-[#12233e] text-[#7a95b8]'}`}>
+                    <button onClick={() => setShowVolatility(!showVolatility)} className={`px-3 py-1.5 text-xs rounded-md transition-colors ${showVolatility ? 'bg-emerald-600 text-white' : 'bg-[#12233e] text-[#7a95b8]'}`}>
                       Volatility Overlay
                     </button>
                   </div>
@@ -588,7 +588,7 @@ export default function MarketDataDashboard() {
               <div className="bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <PieChart className="h-5 w-5 text-purple-400" />
+                    <PieChart className="h-5 w-5 text-emerald-400" />
                     Sector Performance
                   </h3>
                   <button onClick={() => setSelectedSector(null)} className="text-xs text-blue-400 hover:text-blue-300">Reset</button>
@@ -846,7 +846,7 @@ export default function MarketDataDashboard() {
               <div className="bg-[#0d1a2e] border border-[#12233e] rounded-2xl overflow-hidden flex flex-col">
                 <div className="p-5 border-b border-[#12233e] flex items-center justify-between bg-[#0a1526]">
                   <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-purple-400" />
+                    <Shield className="h-5 w-5 text-emerald-400" />
                     IUL Crediting Rates
                   </h3>
                   <span className="text-xs text-[#7a95b8] bg-[#12233e] px-2 py-1 rounded">Showing {filteredIulRates.length} products</span>

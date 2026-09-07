@@ -22,14 +22,14 @@ import { PageInsights } from "@/components/PageInsights";
 
 const ACTION_LABELS: Record<string, { label: string; color: string; icon: any }> = {
   DEMO_SEED:         { label: "Demo Seeded",        color: "#22c55e", icon: Database },
-  INVITE_SENT:       { label: "Invite Sent",         color: "#a78bfa", icon: Mail },
+  INVITE_SENT:       { label: "Invite Sent",         color: "#34d399", icon: Mail },
   INVITE_ACCEPTED:   { label: "Invite Accepted",     color: "#22c55e", icon: UserCheck },
   STRATEGY_RUN:      { label: "Strategy Run",        color: "#f0c040", icon: Zap },
   CLIENT_CREATED:    { label: "Client Created",      color: "#22c55e", icon: UserPlus },
   CLIENT_UPDATED:    { label: "Client Updated",      color: "#3b82f6", icon: User2 },
   DEAL_CREATED:      { label: "Deal Created",        color: "#22c55e", icon: DollarSign },
   DEAL_STAGE_CHANGE: { label: "Stage Changed",       color: "#f0c040", icon: ArrowUpRight },
-  SUBSCRIPTION_UPDATED: { label: "Subscription",    color: "#a78bfa", icon: CreditCard },
+  SUBSCRIPTION_UPDATED: { label: "Subscription",    color: "#34d399", icon: CreditCard },
   KNOWLEDGE_ADDED:   { label: "Doc Added",           color: "#22c55e", icon: FileText },
   LOGIN:             { label: "Login",               color: "#3b82f6", icon: Lock },
   LOGOUT:            { label: "Logout",              color: "#7a95b8", icon: Unlock },
@@ -46,7 +46,7 @@ function ActionBadge({ action }: { action: string }) {
   );
 }
 
-const CHART_COLORS = ["#22c55e", "#a78bfa", "#f0c040", "#3b82f6", "#ef4444", "#ec4899", "#06b6d4", "#f97316"];
+const CHART_COLORS = ["#22c55e", "#34d399", "#f0c040", "#3b82f6", "#ef4444", "#ec4899", "#06b6d4", "#f97316"];
 
 type TabKey = "overview" | "users" | "health" | "audit" | "flags";
 
@@ -513,10 +513,10 @@ export default function EnterpriseAdmin() {
               </div>
 
               <div className="rc-card bg-gradient-to-br from-[#0f1e35] to-[#0a1424] border-[#12233e] relative overflow-hidden group">
-                <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#a78bfa]/10 rounded-full blur-xl group-hover:bg-[#a78bfa]/20 transition-all" />
+                <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#34d399]/10 rounded-full blur-xl group-hover:bg-[#34d399]/20 transition-all" />
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#a78bfa]/10 flex items-center justify-center">
-                    <Activity size={16} className="text-[#a78bfa]" />
+                  <div className="w-8 h-8 rounded-lg bg-[#34d399]/10 flex items-center justify-center">
+                    <Activity size={16} className="text-[#34d399]" />
                   </div>
                   <div className="text-sm font-medium text-[#7a95b8]">API Requests</div>
                 </div>
@@ -579,7 +579,7 @@ export default function EnterpriseAdmin() {
               <div className="rc-card flex flex-col">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
-                    <Layers size={16} className="text-[#a78bfa]" />
+                    <Layers size={16} className="text-[#34d399]" />
                     <h3 className="text-white font-semibold">Feature Adoption</h3>
                   </div>
                   <button className="rc-btn rc-btn-ghost text-xs">
@@ -592,7 +592,7 @@ export default function EnterpriseAdmin() {
                       <PolarGrid stroke="#12233e" />
                       <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 12 }} />
                       <PolarRadiusAxis angle={30} domain={[0, 150]} tick={{ fill: '#7a95b8', fontSize: 10 }} />
-                      <Radar name="Current Month" dataKey="A" stroke="#a78bfa" fill="#a78bfa" fillOpacity={0.5} />
+                      <Radar name="Current Month" dataKey="A" stroke="#34d399" fill="#34d399" fillOpacity={0.5} />
                       <Radar name="Previous Month" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
                       <Legend />
                       <RTooltip contentStyle={{ backgroundColor: '#0f1e35', borderColor: '#12233e', color: '#fff' }} />
@@ -773,7 +773,7 @@ export default function EnterpriseAdmin() {
                       <tr key={u.id} className="hover:bg-white/[0.02] transition-colors group">
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3b82f6]/20 to-[#a78bfa]/20 border border-[#3b82f6]/30 flex items-center justify-center text-white font-medium">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3b82f6]/20 to-[#34d399]/20 border border-[#3b82f6]/30 flex items-center justify-center text-white font-medium">
                               {u.name.substring(0, 2).toUpperCase()}
                             </div>
                             <div>
@@ -867,7 +867,7 @@ export default function EnterpriseAdmin() {
                   </div>
                   <div className="flex gap-2">
                     <span className="flex items-center gap-1 text-xs text-[#7a95b8]"><span className="w-2 h-2 rounded-full bg-[#3b82f6]"></span> CPU</span>
-                    <span className="flex items-center gap-1 text-xs text-[#7a95b8]"><span className="w-2 h-2 rounded-full bg-[#a78bfa]"></span> Memory</span>
+                    <span className="flex items-center gap-1 text-xs text-[#7a95b8]"><span className="w-2 h-2 rounded-full bg-[#34d399]"></span> Memory</span>
                   </div>
                 </div>
                 <div className="flex-1 min-h-[300px]">
@@ -878,7 +878,7 @@ export default function EnterpriseAdmin() {
                       <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} domain={[0, 100]} tickFormatter={(val) => `${val}%`} />
                       <RTooltip contentStyle={{ backgroundColor: '#0f1e35', borderColor: '#12233e', color: '#fff' }} />
                       <Line type="monotone" dataKey="cpu" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
-                      <Line type="monotone" dataKey="memory" stroke="#a78bfa" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                      <Line type="monotone" dataKey="memory" stroke="#34d399" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -914,7 +914,7 @@ export default function EnterpriseAdmin() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {[
                 { label: "Server Region", value: "US-East-1 (Virginia)", icon: Globe, color: "#3b82f6" },
-                { label: "Database", value: "TiDB Serverless", icon: Database, color: "#a78bfa" },
+                { label: "Database", value: "TiDB Serverless", icon: Database, color: "#34d399" },
                 { label: "Storage", value: "AWS S3 (Standard)", icon: HardDrive, color: "#f0c040" },
                 { label: "CDN Provider", value: "Cloudflare Edge", icon: Wifi, color: "#22c55e" },
               ].map((item) => (
@@ -1050,7 +1050,7 @@ export default function EnterpriseAdmin() {
                             </div>
                             <div>
                               <div className="text-[#7a95b8] text-xs mb-1">Metadata JSON</div>
-                              <pre className="bg-[#050a12] p-3 rounded-lg border border-[#12233e] text-[10px] text-[#a78bfa] overflow-x-auto font-mono">
+                              <pre className="bg-[#050a12] p-3 rounded-lg border border-[#12233e] text-[10px] text-[#34d399] overflow-x-auto font-mono">
                                 {JSON.stringify(log.metadata || { status: "success", processingTime: "42ms" }, null, 2)}
                               </pre>
                             </div>
@@ -1090,11 +1090,11 @@ export default function EnterpriseAdmin() {
         {/* FEATURE FLAGS TAB */}
         {tab === "flags" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="rc-card bg-gradient-to-r from-[#0f1e35] to-[#1a153a] border-[#a78bfa]/30">
+            <div className="rc-card bg-gradient-to-r from-[#0f1e35] to-[#1a153a] border-[#34d399]/30">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <ToggleRight size={20} className="text-[#a78bfa]" />
+                    <ToggleRight size={20} className="text-[#34d399]" />
                     <h2 className="text-lg font-bold text-white">Feature Management</h2>
                   </div>
                   <p className="text-sm text-[#7a95b8] max-w-2xl">
@@ -1123,7 +1123,7 @@ export default function EnterpriseAdmin() {
               {Array.from(new Set(flags.map((f) => f.category))).map((category) => (
                 <div key={category} className="rc-card flex flex-col h-full">
                   <div className="text-sm font-semibold text-white mb-4 flex items-center gap-2 pb-3 border-b border-[#12233e]">
-                    {category === 'AI' ? <Zap size={16} className="text-[#a78bfa]" /> :
+                    {category === 'AI' ? <Zap size={16} className="text-[#34d399]" /> :
                      category === 'Growth' ? <TrendingUp size={16} className="text-[#22c55e]" /> :
                      category === 'Integrations' ? <Globe size={16} className="text-[#3b82f6]" /> :
                      <Layers size={16} className="text-[#f0c040]" />}

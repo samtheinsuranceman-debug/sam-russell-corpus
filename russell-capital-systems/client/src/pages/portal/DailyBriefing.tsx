@@ -199,7 +199,7 @@ export default function DailyBriefing() {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Swords size={18} className="text-purple-400" />
+                  <Swords size={18} className="text-emerald-400" />
                   <span className="text-base">Active Quests</span>
                 </div>
                 <Link href="/portal/arena">
@@ -230,7 +230,7 @@ export default function DailyBriefing() {
                             <span className="text-xs font-semibold text-white truncate">{quest.title}</span>
                             <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
                               quest.questType === "daily" ? "bg-blue-500/10 text-blue-400" :
-                              quest.questType === "weekly" ? "bg-purple-500/10 text-purple-400" :
+                              quest.questType === "weekly" ? "bg-emerald-500/10 text-emerald-400" :
                               "bg-amber-500/10 text-amber-400"
                             }`}>{quest.questType}</span>
                           </div>
@@ -251,7 +251,7 @@ export default function DailyBriefing() {
                   <Swords size={32} className="text-[#2a3f5a] mx-auto mb-2" />
                   <p className="text-sm text-[#4a6585] mb-3">No active quests</p>
                   <Link href="/portal/arena">
-                    <Button size="sm" className="bg-purple-500 hover:bg-purple-600 text-white">
+                    <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600 text-white">
                       Visit Arena
                     </Button>
                   </Link>
@@ -279,7 +279,7 @@ export default function DailyBriefing() {
               {pet ? (
                 <div>
                   <div className="flex items-center gap-4 mb-3">
-                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-500/20 flex items-center justify-center text-3xl">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-pink-500/20 to-emerald-500/20 border border-pink-500/20 flex items-center justify-center text-3xl">
                       {pet.speciesId === "phoenix" ? "🔥" :
                        pet.speciesId === "dragon" ? "🐉" :
                        pet.speciesId === "wolf" ? "🐺" :
@@ -357,7 +357,7 @@ export default function DailyBriefing() {
                       </div>
                       <div className="bg-[#060f1e] rounded-lg p-3">
                       <div className="text-[10px] text-[#4a6585] mb-1">Pipeline Value</div>
-                      <div className="text-xl font-bold text-purple-400">${((dashboard.pipelineValue ?? 0) / 1000000).toFixed(1)}M</div>
+                      <div className="text-xl font-bold text-emerald-400">${((dashboard.pipelineValue ?? 0) / 1000000).toFixed(1)}M</div>
                       </div>
                     </div>
                   </>
@@ -430,8 +430,8 @@ export default function DailyBriefing() {
               </Button>
             </Link>
             <Link href="/portal/arena">
-              <Button variant="outline" className="w-full text-xs h-9 border-[#1a3050] text-[#7a95b8] hover:text-white hover:border-purple-500/30 hover:bg-purple-500/5">
-                <Swords size={14} className="mr-1.5 text-purple-400" /> Quest Arena
+              <Button variant="outline" className="w-full text-xs h-9 border-[#1a3050] text-[#7a95b8] hover:text-white hover:border-emerald-500/30 hover:bg-emerald-500/5">
+                <Swords size={14} className="mr-1.5 text-emerald-400" /> Quest Arena
               </Button>
             </Link>
             <Link href="/portal/pet">

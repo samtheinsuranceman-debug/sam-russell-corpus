@@ -39,17 +39,17 @@ const EMOTION_GRADIENTS: Record<string, string> = {
   educational: "from-blue-900 via-indigo-950 to-black",
   heartwarming: "from-pink-900 via-rose-950 to-black",
   cautionary: "from-orange-900 via-amber-950 to-black",
-  exciting: "from-violet-900 via-purple-950 to-black",
+  exciting: "from-emerald-900 via-emerald-950 to-black",
   devastating: "from-gray-900 via-slate-950 to-black",
   funny: "from-cyan-900 via-sky-950 to-black",
-  mysterious: "from-indigo-900 via-violet-950 to-black",
+  mysterious: "from-indigo-900 via-emerald-950 to-black",
 };
 
 const EMOTION_ACCENTS: Record<string, string> = {
   triumphant: "text-amber-400", inspiring: "text-emerald-400",
   shocking: "text-red-400", educational: "text-blue-400",
   heartwarming: "text-pink-400", cautionary: "text-orange-400",
-  exciting: "text-violet-400", devastating: "text-gray-400",
+  exciting: "text-emerald-400", devastating: "text-gray-400",
   funny: "text-cyan-400", mysterious: "text-indigo-400",
 };
 

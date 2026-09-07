@@ -25,7 +25,7 @@ import { ClientLedgerPanel } from "@/components/ClientLedgerPanel";
 const NOTE_TYPE_META: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
   CALL:    { icon: <Phone size={12} />,         label: "Call",    color: "text-green-400 bg-green-400/10" },
   MEETING: { icon: <Users size={12} />,         label: "Meeting", color: "text-blue-400 bg-blue-400/10" },
-  EMAIL:   { icon: <Mail size={12} />,          label: "Email",   color: "text-purple-400 bg-purple-400/10" },
+  EMAIL:   { icon: <Mail size={12} />,          label: "Email",   color: "text-emerald-400 bg-emerald-400/10" },
   TASK:    { icon: <CheckSquare size={12} />,   label: "Task",    color: "text-yellow-400 bg-yellow-400/10" },
   GENERAL: { icon: <MessageSquare size={12} />, label: "Note",    color: "text-[#7a95b8] bg-[#7a95b8]/10" },
 };
@@ -41,7 +41,7 @@ const RISK_LEVEL_STYLES: Record<string, { bg: string; text: string; border: stri
 
 const FACTOR_COLORS: Record<string, string> = {
   aumConcentration: "#3b82f6",
-  filingComplexity: "#a78bfa",
+  filingComplexity: "#34d399",
   strategyDiversity: "#f97316",
   engagementRecency: "#ef4444",
   portfolioSize: "#22c55e",
@@ -609,7 +609,7 @@ function ClientNotesSection({ clientId, clientName }: { clientId: number; client
 const ACTION_META: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
   CLIENT_CREATED:      { icon: <UserPlus size={14} />,      label: "Client Created",      color: "text-green-400 bg-green-400/10" },
   CLIENT_UPDATED:      { icon: <Edit2 size={14} />,         label: "Client Updated",      color: "text-blue-400 bg-blue-400/10" },
-  NOTE_ADDED:          { icon: <MessageSquare size={14} />, label: "Note Added",          color: "text-purple-400 bg-purple-400/10" },
+  NOTE_ADDED:          { icon: <MessageSquare size={14} />, label: "Note Added",          color: "text-emerald-400 bg-emerald-400/10" },
   DEAL_STAGE_CHANGED:  { icon: <TrendingUp size={14} />,    label: "Deal Stage Changed",  color: "text-yellow-400 bg-yellow-400/10" },
   STRATEGY_GENERATED:  { icon: <Brain size={14} />,         label: "Strategy Generated",  color: "text-emerald-400 bg-emerald-400/10" },
   STRATEGY_SAVED:      { icon: <FileText size={14} />,      label: "Strategy Saved",      color: "text-cyan-400 bg-cyan-400/10" },
@@ -707,7 +707,7 @@ function ClientTagBadges({ clientId }: { clientId: number }) {
 /* ─── Document Vault ──────────────────────────────────────────────────────── */
 const DOC_CATEGORIES: Record<string, { label: string; color: string }> = {
   TAX_RETURN: { label: "Tax Return", color: "#ef4444" },
-  ESTATE_PLAN: { label: "Estate Plan", color: "#a78bfa" },
+  ESTATE_PLAN: { label: "Estate Plan", color: "#34d399" },
   INSURANCE_POLICY: { label: "Insurance", color: "#3b82f6" },
   INVESTMENT_STATEMENT: { label: "Investment", color: "#22c55e" },
   TRUST_DOCUMENT: { label: "Trust", color: "#f59e0b" },
@@ -1106,7 +1106,7 @@ export default function ClientDetail() {
   const strategies = strategiesQuery.data ?? [];
 
   if (!Number.isInteger(clientId) || clientId <= 0) return <AppShell><div className="p-8 text-red-300">Invalid client identifier.</div></AppShell>;
-  if (clientQuery.isLoading) return <AppShell><div className="flex min-h-[420px] items-center justify-center gap-3 p-8 text-violet-200"><RefreshCw className="h-5 w-5 animate-spin" /> Loading saved client profile…</div></AppShell>;
+  if (clientQuery.isLoading) return <AppShell><div className="flex min-h-[420px] items-center justify-center gap-3 p-8 text-emerald-200"><RefreshCw className="h-5 w-5 animate-spin" /> Loading saved client profile…</div></AppShell>;
   if (clientQuery.isError) return <AppShell><div className="mx-auto mt-8 max-w-xl rounded-2xl border border-red-400/25 bg-red-950/35 p-6 text-red-100"><p className="font-semibold">Client profile could not be loaded.</p><p className="mt-2 text-sm text-red-200/75">{clientQuery.error.message}</p><button onClick={() => clientQuery.refetch()} className="rc-btn rc-btn-ghost mt-4"><RefreshCw size={14} /> Retry</button></div></AppShell>;
   if (!client) return <AppShell><div className="p-8 text-[#7a95b8]">Client not found in this workspace.</div></AppShell>;
 
@@ -1200,7 +1200,7 @@ export default function ClientDetail() {
                   <a
                     href={`mailto:${client.email}`}
                     onClick={handleEmailClick}
-                    className="flex items-center gap-1.5 text-xs text-[#a78bfa] hover:text-white transition-colors"
+                    className="flex items-center gap-1.5 text-xs text-[#34d399] hover:text-white transition-colors"
                     title={`Email ${client.name}`}
                   >
                     <Mail size={12} />
@@ -1345,7 +1345,7 @@ export default function ClientDetail() {
                 label: "Policy Values",
                 value: fmtBig(lifeVal || rothVal + iraVal),
                 sub: lifeVal ? "Cash Value" : "Roth + IRA",
-                color: "#a78bfa",
+                color: "#34d399",
                 spark: [(lifeVal || rothVal + iraVal) * 0.4, (lifeVal || rothVal + iraVal) * 0.55, (lifeVal || rothVal + iraVal) * 0.7, (lifeVal || rothVal + iraVal) * 0.85, lifeVal || rothVal + iraVal],
               },
             ];

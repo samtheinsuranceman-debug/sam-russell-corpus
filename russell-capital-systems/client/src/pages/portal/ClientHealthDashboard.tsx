@@ -674,7 +674,7 @@ export default function ClientHealthDashboard() {
                     cursor={{ fill: "#12233e", opacity: 0.4 }}
                   />
                   <Legend />
-                  <Bar yAxisId="left" dataKey="aum" name="Total AUM ($M)" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                  <Bar yAxisId="left" dataKey="aum" name="Total AUM ($M)" fill="#10b981" radius={[4, 4, 0, 0]} />
                   <Line yAxisId="right" type="monotone" dataKey="clients" name="Client Count" stroke="#10b981" strokeWidth={3} dot={{ r: 5 }} />
                 </BarChart>
               </ResponsiveContainer>

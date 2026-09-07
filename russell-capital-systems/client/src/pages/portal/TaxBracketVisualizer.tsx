@@ -79,7 +79,7 @@ const STANDARD_DEDUCTION_2025 = {
 
 const COLORS = [
   "#22c55e", "#10b981", "#14b8a6", "#06b6d4",
-  "#3b82f6", "#6366f1", "#8b5cf6"
+  "#3b82f6", "#6366f1", "#10b981"
 ];
 
 const PIE_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#ffc658'];

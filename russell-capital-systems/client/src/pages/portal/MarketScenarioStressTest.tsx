@@ -277,7 +277,7 @@ export default function MarketScenarioStressTest() {
     })).filter((b) => b.value > 0) ?? [];
   }, [impact]);
 
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#64748b'];
+  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#10b981', '#64748b'];
 
   const recoveryData = useMemo(() => {
     if (!impact) return [];
@@ -564,7 +564,7 @@ export default function MarketScenarioStressTest() {
                 {showAdvanced && (
                   <div className="p-4 bg-[#0d1a2e] border border-[#12233e] rounded-lg space-y-4 animate-in fade-in slide-in-from-top-2">
                     <h4 className="text-sm font-medium text-white flex items-center gap-2">
-                      <Sliders className="w-4 h-4 text-[#8b5cf6]" />
+                      <Sliders className="w-4 h-4 text-[#10b981]" />
                       Advanced Parameters
                     </h4>
                     <div className="space-y-3">
@@ -1317,7 +1317,7 @@ export default function MarketScenarioStressTest() {
                                 {[
                                   { title: "Asset Allocation", desc: "Consider increasing bond allocation for clients nearing or in retirement to reduce sequence of returns risk.", icon: <PieChartIcon className="w-4 h-4 text-[#3b82f6]" /> },
                                   { title: "Liquidity Buffer", desc: "Maintain a cash reserve equal to 6-12 months of living expenses to avoid selling assets during drawdowns.", icon: <Coins className="w-4 h-4 text-[#10b981]" /> },
-                                  { title: "Diversification", desc: "Ensure broad diversification across uncorrelated asset classes, including alternatives and real estate.", icon: <Briefcase className="w-4 h-4 text-[#8b5cf6]" /> },
+                                  { title: "Diversification", desc: "Ensure broad diversification across uncorrelated asset classes, including alternatives and real estate.", icon: <Briefcase className="w-4 h-4 text-[#10b981]" /> },
                                   { title: "Systematic Rebalancing", desc: "Implement rules-based rebalancing to automatically buy low and sell high during market dislocations.", icon: <RefreshCw className="w-4 h-4 text-[#f59e0b]" /> }
                                 ].map((item, idx) => (
                                   <tr key={idx} className="border-b border-[#12233e] last:border-0 hover:bg-[#1e3a8a]/10">

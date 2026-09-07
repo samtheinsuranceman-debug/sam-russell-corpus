@@ -253,9 +253,9 @@ const FACTORS: RetirementFactor[] = [{
     subtitle: "Smooth returns beat high returns in retirement",
     threatScore: 87,
     icon: Activity,
-    color: "#8b5cf6",
-    bgColor: "bg-purple-500/10",
-    borderColor: "border-purple-500/30",
+    color: "#10b981",
+    bgColor: "bg-emerald-500/10",
+    borderColor: "border-emerald-500/30",
     description: "Volatility drag is the mathematical reality that a portfolio averaging 8% with high volatility produces less wealth than one averaging 7% with low volatility. A portfolio that goes +20%, -15%, +20%, -15% has an arithmetic average of 2.5% but a geometric (real) return of only 0.5%. For retirees taking withdrawals, volatility is even more destructive because it forces selling shares at depressed prices. Research shows that reducing volatility by just 5% can extend portfolio longevity by 7-10 years.",
     realWorldExample: "David and Patricia Morgan had $1.1M in an aggressive growth portfolio averaging 9.2% annually — but with 18% standard deviation. Their neighbor, the Andersons, had $1.1M in a balanced strategy averaging 7.8% with only 8% standard deviation. After 20 years of $55K annual withdrawals, the Morgans had $380K left. The Andersons had $620K. Lower average return, but dramatically better outcome due to reduced volatility.",
     exampleClient: "David & Patricia Morgan",
@@ -1584,7 +1584,7 @@ export default function EcologicalDrivers() {
                   </div>
 
                   {/* Engagement Question */}
-                  <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg p-4">
+                  <div className="bg-gradient-to-r from-blue-500/10 to-emerald-500/10 border border-blue-500/20 rounded-lg p-4">
                     <div className="flex items-start gap-2">
                       <MessageCircle size={16} className="text-blue-400 flex-shrink-0 mt-0.5" />
                       <div>

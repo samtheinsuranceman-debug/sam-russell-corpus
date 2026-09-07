@@ -80,8 +80,8 @@ export default function RussellWrapped() {
       funFact: (profile?.longestStreak ?? 0) > 30 ? "Only 3% of users maintain a 30+ day streak." : undefined,
     },
     {
-      id: "xp", bg: "from-purple-600 via-purple-800 to-black",
-      icon: Zap, iconColor: "text-purple-300",
+      id: "xp", bg: "from-emerald-600 via-emerald-800 to-black",
+      icon: Zap, iconColor: "text-emerald-300",
       title: "Experience Earned", subtitle: "Every action made you stronger.",
       bigNumber: (profile?.totalXp ?? 0).toLocaleString(), bigLabel: "Total XP Earned",
       detail: `You reached Level ${profile?.level ?? 1} — ${profile?.levelName ?? "Optimizer"}. That's not luck. That's work.`,

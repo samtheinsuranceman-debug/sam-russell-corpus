@@ -28,7 +28,7 @@ export default function AIBrainHubPage() {
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === tab
-                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
+                ? 'bg-gradient-to-r from-indigo-500 to-emerald-600 text-white shadow-lg'
                 : 'bg-[#1e293b] text-gray-400 hover:bg-[#2d3748]'
             }`}
           >
@@ -75,7 +75,7 @@ export default function AIBrainHubPage() {
             <div className="bg-[#1e293b] p-6 rounded-lg shadow-lg border border-indigo-500/30">
               <h2 className="text-white text-2xl font-bold mb-2">AI Brain Confidence Score: 97.3%</h2>
               <div className="w-full bg-gray-700 rounded-full h-3">
-                <div className="bg-gradient-to-r from-indigo-400 to-purple-500 h-3 rounded-full animate-progress" style={{ width: '97.3%' }}></div>
+                <div className="bg-gradient-to-r from-indigo-400 to-emerald-500 h-3 rounded-full animate-progress" style={{ width: '97.3%' }}></div>
               </div>
             </div>
             {/* Placeholder for other tab contents */}
@@ -116,13 +116,13 @@ export default function AIBrainHubPage() {
       </div>
 
       {/* ━━━ AI BRAIN → AI ADVISOR CONNECTOR ━━━ */}
-      <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-purple-500/20 rounded-xl p-6">
+      <div className="mt-8 bg-gradient-to-r from-[#0c1425] to-[#1a1040] border border-emerald-500/20 rounded-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <span className="text-purple-400">🧠</span> AI Brain Analysis
+            <span className="text-emerald-400">🧠</span> AI Brain Analysis
           </h2>
           <div className="flex gap-2">
-            <a href="/portal/ai-assist" className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg text-sm hover:bg-purple-500/30 transition-all">
+            <a href="/portal/ai-assist" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
               Send to AI Advisor →
             </a>
             <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">

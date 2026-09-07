@@ -60,7 +60,7 @@ import { ComplianceFooter } from "@/components/ComplianceFooter";
 const CARRIER_COLORS: Record<string, string> = {
   nationwide: "#1e40af",
   securian: "#059669",
-  symetra: "#7c3aed",
+  symetra: "#059669",
   allianz: "#ea580c",
   pacific_life: "#0284c7",
   global_atlantic: "#be123c",
@@ -69,7 +69,7 @@ const CARRIER_COLORS: Record<string, string> = {
 const CARRIER_BG: Record<string, string> = {
   nationwide: "bg-blue-50 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800",
   securian: "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800",
-  symetra: "bg-violet-50 border-violet-200 dark:bg-violet-950/30 dark:border-violet-800",
+  symetra: "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800",
   allianz: "bg-orange-50 border-orange-200 dark:bg-orange-950/30 dark:border-orange-800",
   pacific_life: "bg-sky-50 border-sky-200 dark:bg-sky-950/30 dark:border-sky-800",
   global_atlantic: "bg-rose-50 border-rose-200 dark:bg-rose-950/30 dark:border-rose-800",
@@ -684,8 +684,8 @@ export default function IndexBacktester() {
                     </Button>
                     <Button variant="outline" className="justify-start h-auto py-3 px-4" onClick={() => applyPreset("balanced")}>
                       <div className="flex items-center gap-3">
-                        <div className="bg-purple-100 dark:bg-purple-900/50 p-2 rounded-full">
-                          <Layers className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                        <div className="bg-emerald-100 dark:bg-emerald-900/50 p-2 rounded-full">
+                          <Layers className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                         </div>
                         <div className="text-left">
                           <div className="font-semibold text-sm">Balanced</div>

@@ -18,7 +18,7 @@ const TIERS = [
   { min: 0, max: 299, label: "Apprentice", color: "text-gray-400", bg: "from-gray-500/20 to-gray-600/20", border: "border-gray-500/30", icon: Shield },
   { min: 300, max: 499, label: "Advisor", color: "text-blue-400", bg: "from-blue-500/20 to-blue-600/20", border: "border-blue-500/30", icon: Target },
   { min: 500, max: 699, label: "Strategist", color: "text-green-400", bg: "from-green-500/20 to-emerald-600/20", border: "border-green-500/30", icon: Activity },
-  { min: 700, max: 849, label: "Elite", color: "text-purple-400", bg: "from-purple-500/20 to-violet-600/20", border: "border-purple-500/30", icon: Star },
+  { min: 700, max: 849, label: "Elite", color: "text-emerald-400", bg: "from-emerald-500/20 to-emerald-600/20", border: "border-emerald-500/30", icon: Star },
   { min: 850, max: 949, label: "Master", color: "text-amber-400", bg: "from-amber-500/20 to-yellow-600/20", border: "border-amber-500/30", icon: Crown },
   { min: 950, max: 1000, label: "Legend", color: "text-red-400", bg: "from-red-500/20 to-orange-600/20", border: "border-red-500/30", icon: Zap },
 ];
@@ -65,7 +65,7 @@ export default function RussellNumber() {
     const dimensions = [
       { name: "Client Portfolio", score: Math.min(100, Math.round((totalClients / 50) * 100)), maxScore: 100, weight: 0.20, icon: Users, color: "text-blue-400", trend: (totalClients > 10 ? "up" : "flat") as "up"|"down"|"flat", trendValue: totalClients > 10 ? 5 : 0, description: `${totalClients} active clients` },
       { name: "Wealth Discovered", score: Math.min(100, Math.round((totalWealth / 10_000_000) * 100)), maxScore: 100, weight: 0.25, icon: DollarSign, color: "text-green-400", trend: (totalWealth > 1_000_000 ? "up" : "flat") as "up"|"down"|"flat", trendValue: totalWealth > 1_000_000 ? 8 : 0, description: `$${(totalWealth / 1_000_000).toFixed(1)}M total AUM` },
-      { name: "Engagement Level", score: Math.min(100, Math.round((level / 20) * 100)), maxScore: 100, weight: 0.15, icon: Activity, color: "text-purple-400", trend: (level > 3 ? "up" : "flat") as "up"|"down"|"flat", trendValue: level > 3 ? 3 : 0, description: `Level ${level} \u2022 ${xp.toLocaleString()} XP` },
+      { name: "Engagement Level", score: Math.min(100, Math.round((level / 20) * 100)), maxScore: 100, weight: 0.15, icon: Activity, color: "text-emerald-400", trend: (level > 3 ? "up" : "flat") as "up"|"down"|"flat", trendValue: level > 3 ? 3 : 0, description: `Level ${level} \u2022 ${xp.toLocaleString()} XP` },
       { name: "Consistency", score: Math.min(100, Math.round((streak / 30) * 100)), maxScore: 100, weight: 0.15, icon: Zap, color: "text-amber-400", trend: (streak > 7 ? "up" : streak > 0 ? "flat" : "down") as "up"|"down"|"flat", trendValue: streak > 7 ? 12 : 0, description: `${streak}-day streak` },
       { name: "Strategy Depth", score: Math.min(100, Math.round((avgWealth / 200_000) * 100)), maxScore: 100, weight: 0.15, icon: Target, color: "text-teal-400", trend: (avgWealth > 100_000 ? "up" : "flat") as "up"|"down"|"flat", trendValue: avgWealth > 100_000 ? 6 : 0, description: `$${(avgWealth / 1000).toFixed(0)}K avg per client` },
       { name: "Community Impact", score: Math.min(100, Math.round((coins / 5000) * 100)), maxScore: 100, weight: 0.10, icon: Share2, color: "text-pink-400", trend: (coins > 1000 ? "up" : "flat") as "up"|"down"|"flat", trendValue: coins > 1000 ? 4 : 0, description: `${coins.toLocaleString()} RussellCoin` },

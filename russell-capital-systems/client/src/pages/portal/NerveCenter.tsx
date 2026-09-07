@@ -52,7 +52,7 @@ function useBreathingPulse(bpm: number = 6) {
 
 function StreakFlame({ days }: { days: number }) {
   const flameSize = Math.min(days, 30);
-  const flameColor = days >= 30 ? "text-violet-400" : days >= 14 ? "text-amber-400" : days >= 7 ? "text-orange-400" : "text-red-400";
+  const flameColor = days >= 30 ? "text-emerald-400" : days >= 14 ? "text-amber-400" : days >= 7 ? "text-orange-400" : "text-red-400";
   const label = days >= 100 ? "INFERNO" : days >= 30 ? "BLAZING" : days >= 14 ? "ON FIRE" : days >= 7 ? "HEATING UP" : days >= 3 ? "WARMING UP" : "SPARK";
 
   return (
@@ -76,11 +76,11 @@ function XPBar({ current, max, level, levelName }: { current: number; max: numbe
     "from-slate-500 to-slate-400",
     "from-emerald-600 to-emerald-400",
     "from-blue-600 to-blue-400",
-    "from-violet-600 to-violet-400",
+    "from-emerald-600 to-emerald-400",
     "from-amber-600 to-amber-400",
     "from-orange-600 to-orange-400",
     "from-rose-600 to-rose-400",
-    "from-fuchsia-600 to-fuchsia-400",
+    "from-emerald-600 to-emerald-400",
     "from-cyan-600 to-cyan-400",
     "from-yellow-500 to-yellow-300",
   ];
@@ -163,7 +163,7 @@ function MorningRitual({ onComplete }: { onComplete: () => void }) {
   const ritualSteps = [
     { title: `${greeting}, Commander`, subtitle: "Your empire awaits. Let's see what happened overnight.", icon: icon, color: "text-amber-400" },
     { title: "3 New Opportunities Found", subtitle: "Your AI discovered $847K in potential wealth while you slept.", icon: <DollarSign size={20} />, color: "text-emerald-400" },
-    { title: "Daily Discovery Card", subtitle: "\"The best time to plant a tree was 20 years ago. The second best time is now.\"", icon: <Lightbulb size={20} />, color: "text-violet-400" },
+    { title: "Daily Discovery Card", subtitle: "\"The best time to plant a tree was 20 years ago. The second best time is now.\"", icon: <Lightbulb size={20} />, color: "text-emerald-400" },
   ];
 
   if (!visible) return null;
@@ -260,7 +260,7 @@ function FortuneCookie() {
 
 function QuickWinCards() {
   const wins = [
-    { title: "Roth Conversion Window", desc: "3 clients in the 22% bracket could save $47K by converting before Dec 31", icon: <Zap size={16} />, color: "text-violet-400", bgColor: "from-violet-500/10 to-violet-600/5", xp: 100 },
+    { title: "Roth Conversion Window", desc: "3 clients in the 22% bracket could save $47K by converting before Dec 31", icon: <Zap size={16} />, color: "text-emerald-400", bgColor: "from-emerald-500/10 to-emerald-600/5", xp: 100 },
     { title: "Stale Client Alert", desc: "Michael Torres hasn't been contacted in 45 days — he has a $320K IRA rollover pending", icon: <Clock size={16} />, color: "text-amber-400", bgColor: "from-amber-500/10 to-amber-600/5", xp: 50 },
     { title: "Market Opportunity", desc: "MYGA rates just hit 5.8% — 7 clients with expiring CDs could benefit", icon: <TrendingUp size={16} />, color: "text-emerald-400", bgColor: "from-emerald-500/10 to-emerald-600/5", xp: 75 },
     { title: "Cross-Sell Detected", desc: "Lauren Hall has life insurance but no annuity — her risk profile suggests a FIA", icon: <Target size={16} />, color: "text-blue-400", bgColor: "from-blue-500/10 to-blue-600/5", xp: 60 },
@@ -373,7 +373,7 @@ function DailyDungeonPreview() {
   const [todayDungeon] = useState(() => dungeons[Math.floor(Math.random() * dungeons.length)]);
 
   return (
-    <div className="rounded-xl bg-gradient-to-br from-red-900/20 via-[#0f1e35] to-violet-900/20 border border-red-500/20 p-4">
+    <div className="rounded-xl bg-gradient-to-br from-red-900/20 via-[#0f1e35] to-emerald-900/20 border border-red-500/20 p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-red-500/20 border border-red-500/30 flex items-center justify-center">
@@ -599,7 +599,7 @@ export default function NerveCenter() {
               <CardContent className="p-4 space-y-3">
                 <h3 className="text-xs font-bold text-white uppercase tracking-wider">Today's Stats</h3>
                 {[
-                  { label: "Actions Taken", value: "23", icon: <Zap size={14} className="text-violet-400" />, change: "+8" },
+                  { label: "Actions Taken", value: "23", icon: <Zap size={14} className="text-emerald-400" />, change: "+8" },
                   { label: "Clients Touched", value: "7", icon: <Users size={14} className="text-blue-400" />, change: "+3" },
                   { label: "Scenarios Run", value: "12", icon: <BarChart3 size={14} className="text-emerald-400" />, change: "+5" },
                   { label: "XP Earned", value: "450", icon: <Star size={14} className="text-amber-400" />, change: "+450" },
@@ -624,7 +624,7 @@ export default function NerveCenter() {
                 <h3 className="text-xs font-bold text-white uppercase tracking-wider">Explore</h3>
                 {[
                   { label: "The Arena", path: "/portal/arena", icon: <Trophy size={14} />, color: "text-amber-400" },
-                  { label: "My World", path: "/portal/my-world", icon: <Sparkles size={14} />, color: "text-violet-400" },
+                  { label: "My World", path: "/portal/my-world", icon: <Sparkles size={14} />, color: "text-emerald-400" },
                   { label: "War Room", path: "/portal/war-room", icon: <Target size={14} />, color: "text-red-400" },
                   { label: "Rewards Vault", path: "/portal/rewards", icon: <Gift size={14} />, color: "text-emerald-400" },
                 ].map((link, i) => (

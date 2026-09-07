@@ -503,7 +503,7 @@ export default function ComplianceAuditCenter() {
           </div>
           <div className="rc-card flex items-center gap-4 hover:border-[#1e3a66] transition-colors cursor-pointer" onClick={() => setActiveTab("security")}>
             <div className="p-3 bg-[#060d19] rounded-xl border border-[#12233e]">
-              <ShieldCheck className="w-6 h-6 text-[#8b5cf6]" />
+              <ShieldCheck className="w-6 h-6 text-[#10b981]" />
             </div>
             <div>
               <p className="rc-stat-label">Security Events</p>
@@ -587,7 +587,7 @@ export default function ComplianceAuditCenter() {
                         {chartData.map((entry: any, index: number) => (
                           <Cell 
                             key={`cell-${index}`} 
-                            fill={['#3b82f6', '#22c55e', '#f0c040', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#84cc16', '#14b8a6'][index % 10]} 
+                            fill={['#3b82f6', '#22c55e', '#f0c040', '#ef4444', '#10b981', '#ec4899', '#06b6d4', '#f97316', '#84cc16', '#14b8a6'][index % 10]} 
                             className="cursor-pointer transition-all hover:opacity-80"
                             onClick={() => {
                               setCalcType(calcType === entry.originalType ? "" : entry.originalType);
@@ -650,7 +650,7 @@ export default function ComplianceAuditCenter() {
           {/* Chart 3: Radar Chart */}
           <div className="rc-card col-span-1">
             <div className="flex items-center gap-2 mb-6">
-              <Shield className="w-5 h-5 text-[#8b5cf6]" />
+              <Shield className="w-5 h-5 text-[#10b981]" />
               <h2 className="text-lg font-semibold text-white">Security Posture</h2>
             </div>
             <div className="h-64 w-full">
@@ -659,7 +659,7 @@ export default function ComplianceAuditCenter() {
                   <PolarGrid stroke="#12233e" />
                   <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 10 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 150]} tick={{ fill: '#7a95b8', fontSize: 10 }} />
-                  <Radar name="Current Month" dataKey="A" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} />
+                  <Radar name="Current Month" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
                   <Radar name="Previous Month" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
                   <Legend />
                   <RechartsTooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }} />
@@ -1140,7 +1140,7 @@ export default function ComplianceAuditCenter() {
             <div className="rc-card animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex items-center justify-between mb-4 pb-4 border-b border-[#12233e]">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-[#8b5cf6]" />
+                  <ShieldCheck className="w-5 h-5 text-[#10b981]" />
                   <h2 className="text-lg font-semibold text-white">Security & Authentication Events</h2>
                 </div>
                 <div className="flex gap-2">

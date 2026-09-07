@@ -114,7 +114,7 @@ const ACTION_COLORS: Record<string, string> = {
   CLIENT_CREATED: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30",
   CLIENT_UPDATED: "bg-blue-500/20 text-blue-400 border border-blue-500/30",
   NOTE_ADDED: "bg-amber-500/20 text-amber-400 border border-amber-500/30",
-  DEAL_STAGE_CHANGED: "bg-purple-500/20 text-purple-400 border border-purple-500/30",
+  DEAL_STAGE_CHANGED: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30",
   STRATEGY_GENERATED: "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30",
   LOGIN: "bg-green-500/20 text-green-400 border border-green-500/30",
   LOGOUT: "bg-gray-500/20 text-gray-400 border border-gray-500/30",
@@ -311,7 +311,7 @@ export default function ComplianceExport() {
     );
   }, [complianceData.data, searchQuery]);
 
-  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444", "#06b6d4", "#f43f5e", "#10b981", "#8b5cf6", "#ec4899"];
+  const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#06b6d4", "#f43f5e", "#10b981", "#10b981", "#ec4899"];
 
   const handleExportCsv = async () => {
     try {
@@ -811,7 +811,7 @@ export default function ComplianceExport() {
         <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 flex flex-col h-[350px]">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <Server className="h-4 w-4 text-[#a78bfa]" />
+              <Server className="h-4 w-4 text-[#34d399]" />
               System Resource Usage
             </h3>
           </div>
@@ -821,7 +821,7 @@ export default function ComplianceExport() {
                 <PolarGrid stroke="#12233e" />
                 <PolarAngleAxis dataKey="name" tick={{ fill: '#7a95b8', fontSize: 10 }} />
                 <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#7a95b8', fontSize: 10 }} />
-                <Radar name="Usage %" dataKey="value" stroke="#a78bfa" fill="#a78bfa" fillOpacity={0.4} />
+                <Radar name="Usage %" dataKey="value" stroke="#34d399" fill="#34d399" fillOpacity={0.4} />
                 <RTooltip contentStyle={{ background: "#060d19", border: "1px solid #12233e", borderRadius: 8 }} />
               </RadarChart>
             </ResponsiveContainer>
@@ -1100,9 +1100,9 @@ export default function ComplianceExport() {
             </div>
           </div>
           <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 flex items-center gap-4 transition-transform hover:-translate-y-1 duration-200 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-[#a78bfa]/5 rounded-full -mr-12 -mt-12 blur-xl"></div>
+            <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-12 -mt-12 blur-xl"></div>
             <div className="p-3 bg-[#060d19] rounded-xl border border-[#12233e] relative z-10">
-              <ShieldCheck className="h-5 w-5 text-[#a78bfa]" />
+              <ShieldCheck className="h-5 w-5 text-[#34d399]" />
             </div>
             <div className="relative z-10">
               <div className="rc-stat-label text-xs text-[#7a95b8] font-medium uppercase tracking-wider mb-1">Compliance Score</div>

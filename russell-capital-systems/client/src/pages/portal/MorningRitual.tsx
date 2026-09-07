@@ -32,7 +32,7 @@ const RITUAL_STEPS = [
   { id: "wealth", title: "Wealth Discovered", subtitle: "While you slept, the numbers moved.", icon: DollarSign, iconColor: "text-emerald-400", duration: 15, bgGradient: "from-emerald-500/5 to-emerald-900/10" },
   { id: "streak", title: "Streak Check", subtitle: "Another day. Another link in the chain.", icon: Flame, iconColor: "text-orange-400", duration: 10, bgGradient: "from-orange-500/5 to-orange-900/10" },
   { id: "discovery", title: "Daily Discovery", subtitle: "Your AI found something while you were away.", icon: Sparkles, iconColor: "text-cyan-400", duration: 20, bgGradient: "from-cyan-500/5 to-cyan-900/10" },
-  { id: "quest", title: "Today's Quest", subtitle: "Your mission, should you choose to accept it.", icon: Target, iconColor: "text-violet-400", duration: 15, bgGradient: "from-violet-500/5 to-violet-900/10" },
+  { id: "quest", title: "Today's Quest", subtitle: "Your mission, should you choose to accept it.", icon: Target, iconColor: "text-emerald-400", duration: 15, bgGradient: "from-emerald-500/5 to-emerald-900/10" },
   { id: "launch", title: "Launch", subtitle: "Go make someone's financial life better.", icon: Zap, iconColor: "text-yellow-400", duration: 10, bgGradient: "from-yellow-500/5 to-yellow-900/10" },
 ];
 
@@ -446,10 +446,10 @@ export default function MorningRitualPage() {
                       </div>
                     )}
                     {ritualStep === 4 && (
-                      <div className="bg-black/20 rounded-xl p-4 border border-violet-500/20 w-full max-w-xs">
+                      <div className="bg-black/20 rounded-xl p-4 border border-emerald-500/20 w-full max-w-xs">
                         <div className="flex items-center gap-2 mb-2">
-                          <Target size={14} className="text-violet-400" />
-                          <span className="text-xs text-violet-400 font-bold">Daily Quest</span>
+                          <Target size={14} className="text-emerald-400" />
+                          <span className="text-xs text-emerald-400 font-bold">Daily Quest</span>
                         </div>
                         <p className="text-sm text-white font-bold">Complete 3 client follow-ups</p>
                         <p className="text-xs text-slate-500 mt-1">Reward: 75 XP + Rare Loot Drop</p>

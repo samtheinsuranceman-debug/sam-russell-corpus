@@ -154,7 +154,7 @@ export default function TaxFreeWealthCombos() {
                   {combo.timeHorizon}
                 </span>
                 {combo.netWorthMultiplier && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 text-[10px] font-medium">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-medium">
                     <Sparkles className="w-3 h-3" /> {combo.netWorthMultiplier}x
                   </span>
                 )}

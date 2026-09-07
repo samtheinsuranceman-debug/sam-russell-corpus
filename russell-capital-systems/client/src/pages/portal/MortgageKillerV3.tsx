@@ -604,7 +604,7 @@ export default function MortgageKillerV3() {
     iul: "#3b82f6",
     equity: "#f59e0b",
     debt: "#ef4444",
-    noi: "#8b5cf6",
+    noi: "#10b981",
     cash: "#06b6d4",
     tax: "#f97316",
     rental: "#22c55e",
@@ -656,7 +656,7 @@ export default function MortgageKillerV3() {
         <RabbuSection />
 
         {/* TIME MACHINE TOGGLE */}
-        <div className="bg-gradient-to-r from-pink-900/20 via-purple-900/20 to-indigo-900/20 border border-pink-500/20 rounded-2xl p-4">
+        <div className="bg-gradient-to-r from-pink-900/20 via-emerald-900/20 to-indigo-900/20 border border-pink-500/20 rounded-2xl p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Rewind className="w-5 h-5 text-pink-400" />
@@ -754,7 +754,7 @@ export default function MortgageKillerV3() {
                 {[
                   { step: "1", label: "Extract Equity", desc: "HELOC up to 40% of home equity (Year 1)", icon: Unlock, color: "#f59e0b" },
                   { step: "2", label: "Fund IUL", desc: "Premium payment builds cash value", icon: Shield, color: "#3b82f6" },
-                  { step: "3", label: "Policy Loan", desc: "Borrow 80% of IUL cash value", icon: Wallet, color: "#8b5cf6" },
+                  { step: "3", label: "Policy Loan", desc: "Borrow 80% of IUL cash value", icon: Wallet, color: "#10b981" },
                   { step: "4", label: "Buy Property", desc: "Down payment on next property", icon: Home, color: "#10b981" },
                   { step: "5", label: "Appreciate", desc: "5% annual property appreciation", icon: TrendingUp, color: "#14b8a6" },
                   { step: "6", label: "Repeat", desc: "Extract new equity → cycle again", icon: RefreshCw, color: "#f97316" },
@@ -1182,7 +1182,7 @@ export default function MortgageKillerV3() {
                     <Tooltip formatter={(v: number) => fmtFull(v)} contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #334155", borderRadius: "8px" }} />
                     <Legend />
                     <Bar dataKey="yearHelocDrawn" name="HELOC Draw" fill="#f59e0b" />
-                    <Bar dataKey="yearPolicyLoan" name="Policy Loan" fill="#8b5cf6" />
+                    <Bar dataKey="yearPolicyLoan" name="Policy Loan" fill="#10b981" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -1262,10 +1262,10 @@ export default function MortgageKillerV3() {
                     <th className="px-2 py-2 text-right text-red-300 font-medium">Op Costs</th>
                     <th className="px-2 py-2 text-right text-red-300 font-medium">Mtg Interest</th>
                     <th className="px-2 py-2 text-right text-amber-300 font-medium">HELOC Int</th>
-                    <th className="px-2 py-2 text-right text-purple-400 font-medium">NOI</th>
+                    <th className="px-2 py-2 text-right text-emerald-400 font-medium">NOI</th>
                     <th className="px-2 py-2 text-right text-blue-400 font-medium">IUL CV</th>
                     <th className="px-2 py-2 text-right text-red-200 font-medium">Surrender</th>
-                    <th className="px-2 py-2 text-right text-purple-300 font-medium">Death Benefit</th>
+                    <th className="px-2 py-2 text-right text-emerald-300 font-medium">Death Benefit</th>
                     <th className="px-2 py-2 text-right text-orange-400 font-medium">Tax Saved</th>
                     <th className="px-2 py-2 text-right text-yellow-400 font-medium">MYGA</th>
                     <th className="px-2 py-2 text-right text-emerald-400 font-medium font-bold">Net Worth</th>
@@ -1288,10 +1288,10 @@ export default function MortgageKillerV3() {
                       <td className="px-2 py-1.5 text-right text-red-200">{fmt(y.yearOperatingCosts)}</td>
                       <td className="px-2 py-1.5 text-right text-red-200">{fmt(y.yearMortgageInterest)}</td>
                       <td className="px-2 py-1.5 text-right text-amber-200">{fmt(y.yearHelocInterest)}</td>
-                      <td className="px-2 py-1.5 text-right" style={{ color: y.yearNOI >= 0 ? "#a78bfa" : "#f87171" }}>{fmt(y.yearNOI)}</td>
+                      <td className="px-2 py-1.5 text-right" style={{ color: y.yearNOI >= 0 ? "#34d399" : "#f87171" }}>{fmt(y.yearNOI)}</td>
                       <td className="px-2 py-1.5 text-right text-blue-300">{fmt(y.iulCashValue)}</td>
                       <td className="px-2 py-1.5 text-right text-red-200">{fmt(y.iulSurrenderValue)}</td>
-                      <td className="px-2 py-1.5 text-right text-purple-300">{fmt(y.iulDeathBenefit)}</td>
+                      <td className="px-2 py-1.5 text-right text-emerald-300">{fmt(y.iulDeathBenefit)}</td>
                       <td className="px-2 py-1.5 text-right text-orange-300">{fmt(y.taxSaved)}</td>
                       <td className="px-2 py-1.5 text-right text-yellow-300">{fmt(y.mygaAccumulation)}</td>
                       <td className="px-2 py-1.5 text-right text-emerald-300 font-bold">{fmt(y.netWorth)}</td>
@@ -1341,7 +1341,7 @@ export default function MortgageKillerV3() {
                         { label: "HELOC Balance", value: fmtFull(prop.helocBalance), color: "text-amber-300" },
                         { label: "Net Equity", value: fmtFull(equity), color: "text-emerald-400 font-bold" },
                         { label: "Annual Rent", value: fmtFull(annualRent), color: "text-green-300" },
-                        { label: "Annual NOI", value: fmtFull(noi), color: noi >= 0 ? "text-purple-300" : "text-red-300" },
+                        { label: "Annual NOI", value: fmtFull(noi), color: noi >= 0 ? "text-emerald-300" : "text-red-300" },
                         { label: "Cap Rate", value: `${capRate.toFixed(2)}%`, color: "text-blue-300" },
                         { label: "Monthly Payment", value: fmtFull(prop.monthlyPayment), color: "text-gray-300" },
                       ].map((row) => (
@@ -1382,8 +1382,8 @@ export default function MortgageKillerV3() {
         {/* ─── GENERATIONAL TRANSFER TAB ─────────────────────────── */}
         {activeTab === "transfer" && (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-purple-900/20 via-indigo-900/20 to-blue-900/20 border border-purple-500/20 rounded-2xl p-6">
-              <h2 className="text-lg font-bold text-purple-300 mb-4 flex items-center gap-2">
+            <div className="bg-gradient-to-r from-emerald-900/20 via-indigo-900/20 to-blue-900/20 border border-emerald-500/20 rounded-2xl p-6">
+              <h2 className="text-lg font-bold text-emerald-300 mb-4 flex items-center gap-2">
                 <Gift className="w-5 h-5" /> Tax-Efficient Generational Transfer Analysis
               </h2>
               <p className="text-sm text-gray-300 mb-4">
@@ -1422,8 +1422,8 @@ export default function MortgageKillerV3() {
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                        style={{ backgroundColor: `${strategy.color === 'amber' ? '#f59e0b' : strategy.color === 'blue' ? '#3b82f6' : strategy.color === 'purple' ? '#a855f7' : strategy.color === 'teal' ? '#14b8a6' : '#10b981'}15` }}>
-                        <Icon className="w-5 h-5" style={{ color: strategy.color === 'amber' ? '#f59e0b' : strategy.color === 'blue' ? '#3b82f6' : strategy.color === 'purple' ? '#a855f7' : strategy.color === 'teal' ? '#14b8a6' : '#10b981' }} />
+                        style={{ backgroundColor: `${strategy.color === 'amber' ? '#f59e0b' : strategy.color === 'blue' ? '#3b82f6' : strategy.color === 'purple' ? '#10b981' : strategy.color === 'teal' ? '#14b8a6' : '#10b981'}15` }}>
+                        <Icon className="w-5 h-5" style={{ color: strategy.color === 'amber' ? '#f59e0b' : strategy.color === 'blue' ? '#3b82f6' : strategy.color === 'purple' ? '#10b981' : strategy.color === 'teal' ? '#14b8a6' : '#10b981' }} />
                       </div>
                       <div className="text-left">
                         <div className="text-sm font-bold text-white">{strategy.name}</div>

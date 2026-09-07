@@ -519,7 +519,7 @@ export default function FIATop10() {
           <Card className="bg-slate-900/50 border-slate-800">
             <CardHeader>
               <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <PieChartIcon className="w-4 h-4 text-purple-400" /> Top Carriers Market Share
+                <PieChartIcon className="w-4 h-4 text-emerald-400" /> Top Carriers Market Share
               </CardTitle>
             </CardHeader>
             <CardContent>

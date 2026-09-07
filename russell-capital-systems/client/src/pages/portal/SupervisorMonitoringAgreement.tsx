@@ -55,7 +55,7 @@ const generateActivityData = () => {
   }));
 };
 
-const COLORS = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+const COLORS = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#10b981', '#ec4899'];
 
 export default function SupervisorMonitoringAgreement() {
   const { user } = useAuth();
@@ -403,7 +403,7 @@ export default function SupervisorMonitoringAgreement() {
                           contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }}
                         />
                         <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
-                        <Bar dataKey="logins" name="Logins" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="logins" name="Logins" fill="#10b981" radius={[4, 4, 0, 0]} />
                         <Bar dataKey="views" name="Page Views" fill="#f59e0b" radius={[4, 4, 0, 0]} />
                         <Bar dataKey="actions" name="Updates" fill="#ec4899" radius={[4, 4, 0, 0]} />
                       </BarChart>
@@ -466,7 +466,7 @@ export default function SupervisorMonitoringAgreement() {
                 {/* Chart 3: Radar Chart */}
                 <div className="rc-card lg:col-span-1 flex flex-col items-center">
                   <h3 className="text-lg font-semibold text-white flex items-center gap-2 w-full mb-2">
-                    <RadarIcon className="w-5 h-5 text-[#8b5cf6]" />
+                    <RadarIcon className="w-5 h-5 text-[#10b981]" />
                     Compliance Score
                   </h3>
                   <p className="text-sm text-[#7a95b8] w-full mb-4">Your current compliance metrics vs team average</p>
@@ -476,7 +476,7 @@ export default function SupervisorMonitoringAgreement() {
                         <PolarGrid stroke="#12233e" />
                         <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 11 }} />
                         <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
-                        <Radar name="You" dataKey="A" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.5} />
+                        <Radar name="You" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.5} />
                         <Radar name="Team Avg" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
                         <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
                         <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }} />
@@ -626,7 +626,7 @@ export default function SupervisorMonitoringAgreement() {
                 {/* Table 3: Supervisor Logs */}
                 <div className="rc-card">
                   <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-6">
-                    <Eye className="w-5 h-5 text-[#8b5cf6]" />
+                    <Eye className="w-5 h-5 text-[#10b981]" />
                     Supervisor Access Logs
                   </h3>
                   <div className="overflow-x-auto">

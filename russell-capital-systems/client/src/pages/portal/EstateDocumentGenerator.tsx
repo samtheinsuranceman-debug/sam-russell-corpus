@@ -68,7 +68,7 @@ const DOCUMENT_TYPES = [{ id: "will", name: "Last Will & Testament", icon: FileT
 ];
 
 const CATEGORIES = ["All", "Core", "Advanced", "Review", "Supplemental", "Business"];
-const COLORS = ['#22c55e', '#3b82f6', '#f0c040', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+const COLORS = ['#22c55e', '#3b82f6', '#f0c040', '#ef4444', '#10b981', '#ec4899', '#14b8a6', '#f97316'];
 
 interface GeneratedDoc {
   id: string;
@@ -357,7 +357,7 @@ export default function EstateDocumentGenerator() {
               <td className="px-4 py-3 text-[#22c55e]">Tax-Free to Heirs</td>
             </tr>
             <tr className="border-b border-[#12233e]">
-              <td className="px-4 py-3 font-medium text-white flex items-center gap-2"><Briefcase className="w-4 h-4 text-[#8b5cf6]" /> Taxable Investments</td>
+              <td className="px-4 py-3 font-medium text-white flex items-center gap-2"><Briefcase className="w-4 h-4 text-[#10b981]" /> Taxable Investments</td>
               <td className="px-4 py-3 text-right">${taxable.toLocaleString()}</td>
               <td className="px-4 py-3 text-right">{total > 0 ? ((taxable/total)*100).toFixed(1) : 0}%</td>
               <td className="px-4 py-3 text-[#3b82f6]">Step-up in Basis</td>
@@ -750,7 +750,7 @@ export default function EstateDocumentGenerator() {
             <Card className="bg-[#0d1a2e] border-[#12233e] shadow-md col-span-1 lg:col-span-2">
               <CardHeader className="pb-2">
                 <CardTitle className="text-white text-sm font-medium flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-[#8b5cf6]" /> Recent System Activity
+                  <Activity className="w-4 h-4 text-[#10b981]" /> Recent System Activity
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
@@ -947,7 +947,7 @@ export default function EstateDocumentGenerator() {
                                 <div className="pr-6">
                                   <Badge className={`mb-2 text-[10px] uppercase tracking-wider font-semibold ${
                                     doc.category === 'Core' ? 'bg-[#22c55e]/20 text-[#22c55e]' :
-                                    doc.category === 'Advanced' ? 'bg-[#8b5cf6]/20 text-[#8b5cf6]' :
+                                    doc.category === 'Advanced' ? 'bg-[#10b981]/20 text-[#10b981]' :
                                     doc.category === 'Business' ? 'bg-[#f0c040]/20 text-[#f0c040]' :
                                     'bg-[#3b82f6]/20 text-[#3b82f6]'
                                   }`}>
@@ -1009,7 +1009,7 @@ export default function EstateDocumentGenerator() {
                                   </h4>
                                   <Badge className={`text-[10px] uppercase tracking-wider font-semibold ${
                                     doc.category === 'Core' ? 'bg-[#22c55e]/20 text-[#22c55e]' :
-                                    doc.category === 'Advanced' ? 'bg-[#8b5cf6]/20 text-[#8b5cf6]' :
+                                    doc.category === 'Advanced' ? 'bg-[#10b981]/20 text-[#10b981]' :
                                     doc.category === 'Business' ? 'bg-[#f0c040]/20 text-[#f0c040]' :
                                     'bg-[#3b82f6]/20 text-[#3b82f6]'
                                   }`}>
@@ -1136,7 +1136,7 @@ export default function EstateDocumentGenerator() {
                         <Card className="bg-[#0d1a2e] border-[#12233e] shadow-lg">
                           <CardHeader>
                             <CardTitle className="text-white text-lg font-medium flex items-center gap-2">
-                              <PieChartIcon className="w-5 h-5 text-[#8b5cf6]" /> Draft Composition
+                              <PieChartIcon className="w-5 h-5 text-[#10b981]" /> Draft Composition
                             </CardTitle>
                           </CardHeader>
                           <CardContent>

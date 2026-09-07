@@ -74,7 +74,7 @@ const PATENTS: Patent[] = [
     claimCount: 7,
     status: "Patent Pending",
     icon: MessageCircle,
-    color: "#8b5cf6",
+    color: "#10b981",
     summary: "An artificial intelligence system that provides real-time conversational coaching to financial advisors during client meetings. The system analyzes client responses, financial data, and conversation context to suggest optimal talking points, objection handlers, and next-best-action recommendations through a private advisor-only interface.",
     keyClaims: [
       "Real-time AI analysis of client conversation context to generate advisor coaching prompts",
@@ -210,11 +210,11 @@ export default function PatentShowcase() {
             <div className="text-[10px] text-blue-400/70 mt-2">Unique intellectual property claims</div>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border-purple-500/20">
+        <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border-emerald-500/20">
           <CardContent className="pt-5 text-center">
-            <div className="text-3xl font-bold text-purple-400">100%</div>
+            <div className="text-3xl font-bold text-emerald-400">100%</div>
             <div className="text-xs text-[#7a95b8] mt-1">Proprietary Technology</div>
-            <div className="text-[10px] text-purple-400/70 mt-2">All technology developed in-house</div>
+            <div className="text-[10px] text-emerald-400/70 mt-2">All technology developed in-house</div>
           </CardContent>
         </Card>
       </div>

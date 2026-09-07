@@ -15,7 +15,7 @@ import {
 import { Map as MapIcon, RefreshCw, Save, Sun, Home } from "lucide-react";
 import { GENOME, GlowCard, GenomeBackdrop, SectionLabel, Stat, fmt$ } from "./_genome/GenomeKit";
 
-const PALETTE = [GENOME.accent, GENOME.cyan, "#f5b14c", "#34d399", "#fb7185", "#a78bfa"];
+const PALETTE = [GENOME.accent, GENOME.cyan, "#f5b14c", "#34d399", "#fb7185", "#34d399"];
 const INITIAL = [
   { cls: "IUL Cash Value", current: 18, target: 30 },
   { cls: "Equities", current: 34, target: 24 },
@@ -83,15 +83,15 @@ export default function TheMap() {
                     <span className="flex items-center gap-2 text-slate-200">
                       <span className="h-2.5 w-2.5 rounded-full" style={{ background: PALETTE[i] }} />{a.cls}
                     </span>
-                    <span className="text-slate-400">{a.current}% → <span className="text-violet-200">{a.target}%</span></span>
+                    <span className="text-slate-400">{a.current}% → <span className="text-emerald-200">{a.target}%</span></span>
                   </div>
-                  <input type="range" min={0} max={50} value={a.target} onChange={(e) => setTarget(i, +e.target.value)} className="w-full accent-violet-500" />
+                  <input type="range" min={0} max={50} value={a.target} onChange={(e) => setTarget(i, +e.target.value)} className="w-full accent-emerald-500" />
                 </div>
               ))}
             </div>
             <div className="mt-5">
               <p className="mb-2 text-xs font-medium text-slate-300">HELOC cycling · {helocCycles} cycles / 30 yrs</p>
-              <input type="range" min={0} max={8} value={helocCycles} onChange={(e) => setHelocCycles(+e.target.value)} className="w-full accent-violet-500" />
+              <input type="range" min={0} max={8} value={helocCycles} onChange={(e) => setHelocCycles(+e.target.value)} className="w-full accent-emerald-500" />
             </div>
           </GlowCard>
 
@@ -140,12 +140,12 @@ export default function TheMap() {
                 <div>
                   <SectionLabel icon={Sun}>Strategy levers active</SectionLabel>
                   <ul className="mt-3 space-y-2 text-sm text-slate-300">
-                    <li className="flex items-center gap-2"><RefreshCw className="h-3.5 w-3.5 text-violet-300" /> {helocCycles}× HELOC cycling into IUL</li>
+                    <li className="flex items-center gap-2"><RefreshCw className="h-3.5 w-3.5 text-emerald-300" /> {helocCycles}× HELOC cycling into IUL</li>
                     <li className="flex items-center gap-2"><Sun className="h-3.5 w-3.5 text-amber-300" /> Solar equity tax credits</li>
                     <li className="flex items-center gap-2"><Home className="h-3.5 w-3.5 text-rose-300" /> Accelerated mortgage payoff</li>
                   </ul>
                 </div>
-                <Button onClick={() => setSaved(true)} className="mt-4 w-full bg-violet-500 hover:bg-violet-400">
+                <Button onClick={() => setSaved(true)} className="mt-4 w-full bg-emerald-500 hover:bg-emerald-400">
                   <Save className="mr-2 h-4 w-4" /> {saved ? "Targets saved ✓" : "Save allocation_targets"}
                 </Button>
               </GlowCard>

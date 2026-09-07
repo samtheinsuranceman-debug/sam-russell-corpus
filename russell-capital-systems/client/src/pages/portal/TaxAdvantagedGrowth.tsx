@@ -346,7 +346,7 @@ export default function TaxAdvantagedGrowth() {
               <td className="p-3 text-slate-300">Scenario {i+1}</td>
               <td className="p-3 text-center text-green-300">-</td>
               <td className="p-3 text-center text-blue-300">-</td>
-              <td className="p-3 text-center text-purple-300">-</td>
+              <td className="p-3 text-center text-emerald-300">-</td>
               <td className="p-3 text-center text-amber-300">-</td>
           </tr>
       ));
@@ -747,7 +747,7 @@ export default function TaxAdvantagedGrowth() {
                                             <PolarGrid stroke="#334155" />
                                             <PolarAngleAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 12 }} />
                                             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                                            <Radar name="Efficiency" dataKey="efficiency" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} />
+                                            <Radar name="Efficiency" dataKey="efficiency" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
                                             <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid #334155", borderRadius: 8 }} />
                                         </RadarChart>
                                     </ResponsiveContainer>
@@ -800,7 +800,7 @@ export default function TaxAdvantagedGrowth() {
                                         <th className="text-left p-2 text-slate-400">Age</th>
                                         <th className="text-right p-2 text-green-400">IUL</th>
                                         <th className="text-right p-2 text-blue-400">Taxable</th>
-                                        <th className="text-right p-2 text-purple-400">Roth IRA</th>
+                                        <th className="text-right p-2 text-emerald-400">Roth IRA</th>
                                         <th className="text-right p-2 text-amber-400">401(k)</th>
                                     </tr>
                                 </thead>
@@ -810,7 +810,7 @@ export default function TaxAdvantagedGrowth() {
                                             <td className="p-2 text-slate-300">{row.age}</td>
                                             <td className="p-2 text-right text-green-300">${(row.iulRaw || row.iul).toLocaleString()}</td>
                                             <td className="p-2 text-right text-blue-300">${(row.taxableRaw || row.taxable).toLocaleString()}</td>
-                                            <td className="p-2 text-right text-purple-300">${(row.rothRaw || row.roth).toLocaleString()}</td>
+                                            <td className="p-2 text-right text-emerald-300">${(row.rothRaw || row.roth).toLocaleString()}</td>
                                             <td className="p-2 text-right text-amber-300">${(row._401kRaw || row._401k).toLocaleString()}</td>
                                         </tr>
                                     ))}
@@ -848,10 +848,10 @@ export default function TaxAdvantagedGrowth() {
                                         <td className="p-2 text-right text-blue-300 font-bold">${comparisonData.final.taxable.afterTax.toLocaleString()}</td>
                                     </tr>
                                     <tr className="border-b border-slate-800">
-                                        <td className="p-2 text-purple-400 font-medium">Roth IRA</td>
+                                        <td className="p-2 text-emerald-400 font-medium">Roth IRA</td>
                                         <td className="p-2 text-right text-slate-300">${comparisonData.final.roth.gross.toLocaleString()}</td>
                                         <td className="p-2 text-right text-red-400">${comparisonData.final.roth.taxPaid.toLocaleString()}</td>
-                                        <td className="p-2 text-right text-purple-300 font-bold">${comparisonData.final.roth.afterTax.toLocaleString()}</td>
+                                        <td className="p-2 text-right text-emerald-300 font-bold">${comparisonData.final.roth.afterTax.toLocaleString()}</td>
                                     </tr>
                                     <tr className="border-b border-slate-800">
                                         <td className="p-2 text-amber-400 font-medium">401(k)</td>
@@ -893,9 +893,9 @@ export default function TaxAdvantagedGrowth() {
                                         <td className="p-2 text-right text-slate-300">{(comparisonData.final.taxable.afterTax / comparisonData.totalContributed.taxable || 0).toFixed(2)}x</td>
                                     </tr>
                                     <tr className="border-b border-slate-800">
-                                        <td className="p-2 text-purple-400">Roth IRA</td>
+                                        <td className="p-2 text-emerald-400">Roth IRA</td>
                                         <td className="p-2 text-right text-slate-300">${comparisonData.totalContributed.roth.toLocaleString()}</td>
-                                        <td className="p-2 text-right text-purple-300">${(comparisonData.final.roth.afterTax - comparisonData.totalContributed.roth).toLocaleString()}</td>
+                                        <td className="p-2 text-right text-emerald-300">${(comparisonData.final.roth.afterTax - comparisonData.totalContributed.roth).toLocaleString()}</td>
                                         <td className="p-2 text-right text-slate-300">{(comparisonData.final.roth.afterTax / comparisonData.totalContributed.roth || 0).toFixed(2)}x</td>
                                     </tr>
                                     <tr className="border-b border-slate-800">
@@ -951,7 +951,7 @@ export default function TaxAdvantagedGrowth() {
                                         <th className="text-right p-2 text-slate-400">Withdrawal</th>
                                         <th className="text-right p-2 text-green-400">IUL Bal</th>
                                         <th className="text-right p-2 text-blue-400">Taxable Bal</th>
-                                        <th className="text-right p-2 text-purple-400">Roth Bal</th>
+                                        <th className="text-right p-2 text-emerald-400">Roth Bal</th>
                                         <th className="text-right p-2 text-amber-400">401(k) Bal</th>
                                     </tr>
                                 </thead>
@@ -962,7 +962,7 @@ export default function TaxAdvantagedGrowth() {
                                             <td className="p-2 text-right text-slate-300">${row.withdrawal.toLocaleString()}</td>
                                             <td className="p-2 text-right text-green-300">${row.iul.toLocaleString()}</td>
                                             <td className="p-2 text-right text-blue-300">${row.taxable.toLocaleString()}</td>
-                                            <td className="p-2 text-right text-purple-300">${row.roth.toLocaleString()}</td>
+                                            <td className="p-2 text-right text-emerald-300">${row.roth.toLocaleString()}</td>
                                             <td className="p-2 text-right text-amber-300">${row._401k.toLocaleString()}</td>
                                         </tr>
                                     ))}
@@ -983,7 +983,7 @@ export default function TaxAdvantagedGrowth() {
                                         <th className="text-left p-3 text-slate-400">Scenario</th>
                                         <th className="text-center p-3 text-green-400">IUL</th>
                                         <th className="text-center p-3 text-blue-400">Taxable</th>
-                                        <th className="text-center p-3 text-purple-400">Roth IRA</th>
+                                        <th className="text-center p-3 text-emerald-400">Roth IRA</th>
                                         <th className="text-center p-3 text-amber-400">401(k)</th>
                                     </tr>
                                 </thead>
@@ -992,7 +992,7 @@ export default function TaxAdvantagedGrowth() {
                                         <td className="p-3 text-slate-300 font-medium">Base Case</td>
                                         <td className="p-3 text-center text-green-300">${comparisonData.final.iul.afterTax.toLocaleString()}</td>
                                         <td className="p-3 text-center text-blue-300">${comparisonData.final.taxable.afterTax.toLocaleString()}</td>
-                                        <td className="p-3 text-center text-purple-300">${comparisonData.final.roth.afterTax.toLocaleString()}</td>
+                                        <td className="p-3 text-center text-emerald-300">${comparisonData.final.roth.afterTax.toLocaleString()}</td>
                                         <td className="p-3 text-center text-amber-300">${comparisonData.final._401k.afterTax.toLocaleString()}</td>
                                     </tr>
                                     {renderDummyRows(4)}
@@ -1020,7 +1020,7 @@ export default function TaxAdvantagedGrowth() {
                             <th className="text-left p-3 text-slate-400">Feature</th>
                             <th className="text-center p-3 text-green-400">IUL</th>
                             <th className="text-center p-3 text-blue-400">Taxable</th>
-                            <th className="text-center p-3 text-purple-400">Roth IRA</th>
+                            <th className="text-center p-3 text-emerald-400">Roth IRA</th>
                             <th className="text-center p-3 text-amber-400">401(k)</th>
                             </tr>
                         </thead>
@@ -1039,7 +1039,7 @@ export default function TaxAdvantagedGrowth() {
                                 <td className="p-3 text-slate-300 font-medium">{row.feature}</td>
                                 <td className="p-3 text-center text-green-300">{row.iul}</td>
                                 <td className="p-3 text-center text-blue-300">{row.taxable}</td>
-                                <td className="p-3 text-center text-purple-300">{row.roth}</td>
+                                <td className="p-3 text-center text-emerald-300">{row.roth}</td>
                                 <td className="p-3 text-center text-amber-300">{row._401k}</td>
                             </tr>
                             ))}

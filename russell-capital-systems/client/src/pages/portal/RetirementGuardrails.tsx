@@ -576,7 +576,7 @@ export default function RetirementGuardrails() {
             <Card className="border-slate-800 bg-slate-900/40 shadow-xl">
               <CardHeader className="border-b border-slate-800 pb-4 cursor-pointer hover:bg-slate-800/50 transition-colors" onClick={() => setShowAdvanced(!showAdvanced)}>
                 <CardTitle className="text-lg flex items-center justify-between">
-                  <span className="flex items-center gap-2"><Settings className="w-5 h-5 text-purple-400" /> Advanced Settings</span>
+                  <span className="flex items-center gap-2"><Settings className="w-5 h-5 text-emerald-400" /> Advanced Settings</span>
                   {showAdvanced ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />}
                 </CardTitle>
               </CardHeader>
@@ -732,10 +732,10 @@ export default function RetirementGuardrails() {
               <Card className="border-slate-800 bg-slate-900/40 shadow-lg">
                 <CardContent className="p-4 flex flex-col items-center justify-center text-center h-full">
                   <div className="flex items-center gap-2 mb-2">
-                    <TrendingUp className="w-5 h-5 text-purple-500" />
+                    <TrendingUp className="w-5 h-5 text-emerald-500" />
                     <span className="text-sm font-medium text-slate-300">Income Range</span>
                   </div>
-                  <div className="text-lg font-bold font-mono text-purple-400">
+                  <div className="text-lg font-bold font-mono text-emerald-400">
                     {fmt(minWithdrawal)}
                   </div>
                   <div className="text-xs text-slate-400">to {fmt(maxWithdrawal)}</div>
@@ -846,7 +846,7 @@ export default function RetirementGuardrails() {
                       <Card className="border-slate-800 bg-slate-900/40 shadow-xl">
                         <CardHeader className="border-b border-slate-800 pb-4">
                           <CardTitle className="text-base flex items-center gap-2">
-                            <BarChart3 className="w-5 h-5 text-purple-500" /> Annual Income Profile
+                            <BarChart3 className="w-5 h-5 text-emerald-500" /> Annual Income Profile
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="pt-6">
@@ -1036,7 +1036,7 @@ export default function RetirementGuardrails() {
                               {r.action === "decrease" && <Badge className="bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20"><ArrowDown className="w-3 h-3 mr-1" />Cut</Badge>}
                               {r.action === "maintain" && <span className="text-slate-500 text-xs flex items-center justify-center"><Minus className="w-3 h-3 mr-1" />Hold</span>}
                             </td>
-                            <td className="px-4 py-2.5 text-right font-mono text-purple-300">{fmt(r.netIncome)}</td>
+                            <td className="px-4 py-2.5 text-right font-mono text-emerald-300">{fmt(r.netIncome)}</td>
                             <td className="px-4 py-2.5 text-right font-mono text-amber-300/80">{fmt(r.purchasingPower)}</td>
                           </tr>
                         ))}
@@ -1098,7 +1098,7 @@ export default function RetirementGuardrails() {
                   <Card className="border-slate-800 bg-slate-900/40 shadow-xl">
                     <CardHeader className="border-b border-slate-800 pb-4">
                       <CardTitle className="text-base flex items-center gap-2">
-                        <BarChart3 className="w-5 h-5 text-purple-500" /> Decadal Summary
+                        <BarChart3 className="w-5 h-5 text-emerald-500" /> Decadal Summary
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-0 overflow-hidden">

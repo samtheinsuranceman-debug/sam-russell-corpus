@@ -37,7 +37,7 @@ const EVENT_LABELS: Record<string, string> = {
   "*": "All Events",
 };
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
+const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#10b981', '#ec4899', '#06b6d4'];
 
 export default function Webhooks() {
   const { user } = useAuth();
@@ -565,7 +565,7 @@ export default function Webhooks() {
                       {format(new Date(log.timestamp), 'MMM dd, yyyy HH:mm:ss')}
                     </td>
                     <td className="p-4">
-                      <span className="text-xs font-mono bg-[#1a3050] px-2 py-1 rounded text-[#a78bfa]">
+                      <span className="text-xs font-mono bg-[#1a3050] px-2 py-1 rounded text-[#34d399]">
                         {log.event}
                       </span>
                     </td>
@@ -656,7 +656,7 @@ export default function Webhooks() {
             {Object.entries(EVENT_LABELS).filter(([k]) => k !== '*').map(([key, label]) => (
               <tr key={key} className="hover:bg-[#0f1e35]/50 transition-colors">
                 <td className="p-3 align-top">
-                  <span className="text-xs font-mono bg-[#1a3050] px-2 py-1 rounded text-[#a78bfa]">
+                  <span className="text-xs font-mono bg-[#1a3050] px-2 py-1 rounded text-[#34d399]">
                     {key}
                   </span>
                 </td>
@@ -928,7 +928,7 @@ export default function Webhooks() {
             </div>
           </div>
           <div className="rc-card flex items-center gap-4 hover:border-[#1a3050] transition-colors group">
-            <div className="h-12 w-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="h-12 w-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Zap size={24} />
             </div>
             <div>
@@ -1268,7 +1268,7 @@ export default function Webhooks() {
                   {/* Chart 2: Event Distribution (PieChart) */}
                   <div className="bg-[#0a1628] border border-[#1a3050] rounded-xl p-5 shadow-lg">
                     <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                      <PieChart className="text-[#a78bfa]" size={16} /> Event Distribution
+                      <PieChart className="text-[#34d399]" size={16} /> Event Distribution
                     </h3>
                     <div className="h-64 flex items-center justify-center">
                       <ResponsiveContainer width="100%" height="100%">
@@ -1486,7 +1486,7 @@ function verifyWebhookSignature(payload, signatureHeader, secret) {
                         </div>
                         <div>
                           <strong className="text-white block mb-1">Always verify signatures</strong>
-                          Don't process webhooks without validating the <code className="text-[#a78bfa] bg-[#0f1e35] px-1 py-0.5 rounded">X-Webhook-Signature</code> header against your workspace secret.
+                          Don't process webhooks without validating the <code className="text-[#34d399] bg-[#0f1e35] px-1 py-0.5 rounded">X-Webhook-Signature</code> header against your workspace secret.
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
@@ -1495,7 +1495,7 @@ function verifyWebhookSignature(payload, signatureHeader, secret) {
                         </div>
                         <div>
                           <strong className="text-white block mb-1">Check the timestamp</strong>
-                          Verify that the <code className="text-[#a78bfa] bg-[#0f1e35] px-1 py-0.5 rounded">X-Webhook-Timestamp</code> is within 5 minutes of your current system time to prevent replay attacks.
+                          Verify that the <code className="text-[#34d399] bg-[#0f1e35] px-1 py-0.5 rounded">X-Webhook-Timestamp</code> is within 5 minutes of your current system time to prevent replay attacks.
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
@@ -1530,7 +1530,7 @@ function verifyWebhookSignature(payload, signatureHeader, secret) {
                     <div className="bg-[#0a1628] border border-[#1a3050] rounded-xl overflow-hidden shadow-lg">
                       <div className="bg-[#0f1e35] px-4 py-3 border-b border-[#1a3050] flex items-center justify-between">
                         <div className="text-white font-medium text-sm flex items-center gap-2">
-                          <FileJson size={16} className="text-[#a78bfa]" /> Standard Payload Format
+                          <FileJson size={16} className="text-[#34d399]" /> Standard Payload Format
                         </div>
                         <button onClick={() => copyToClipboard(`{
   "id": "evt_123456789",

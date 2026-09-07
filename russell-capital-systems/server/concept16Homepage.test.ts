@@ -1,185 +1,141 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import manifesto from "../shared/homeManifesto.json";
 
 const landing = readFileSync(resolve("client/src/pages/Landing.tsx"), "utf8");
-const app = readFileSync(resolve("client/src/App.tsx"), "utf8");
 const css = readFileSync(resolve("client/src/index.css"), "utf8");
+const template = readFileSync(resolve("live/rcs-live-homepage.template.html"), "utf8");
+const builder = readFileSync(resolve("live/build_live_homepage.py"), "utf8");
 
-describe("Concept 16 physician homepage", () => {
-  it("uses the clean persistent background and selected command-center hierarchy", () => {
-    // All six owner images shown CRISP, one per screen — never blurred.
-    // The neon sign is the hero (its words are the headline); the Green City
-    // carries the War Chest; bridge / canyon / interchange each get a page.
-    for (const img of ["/rcs-neon-a.webp", "/rcs-city-emerald.webp", "/rcs-city-bridge.webp", "/rcs-city-canyon.webp", "/rcs-city-interchange.webp"]) {
-      expect(landing, img).toContain(img);
-    }
-    expect(readFileSync(resolve("client/src/components/SeniorPartnerBand.tsx"), "utf8")).toContain("/rcs-neon-b.webp");
-    expect(landing).not.toMatch(/blur-\[/);
+describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the lead card last", () => {
+  it("shows the neon sign as the hero with its words as the only headline", () => {
+    expect(landing).toContain("/rcs-neon-a.webp");
+    expect(landing).toContain("/rcs-neon-a-tall.webp");
     expect(landing).toContain("Financial &amp; Tax Relief and Recovery");
     expect(landing).toContain("For Physicians, Psychiatrists, &amp; Surgeons");
-    expect(landing).toContain("Your Practice Builds Income.");
-    expect(landing).toContain("We Build the System Around It.");
-    // Additional slogans
-    expect(landing).toContain("Keep More of What You Earn.");
-    expect(landing).toContain("Protect What You Built.");
-    expect(landing).toContain("Relief today · Recovery for life");
-    expect(landing).toContain("High-Income Medicine.");
-    expect(landing).toContain("One Coordinated System.");
-    // Image pages (Concepts 06 / 23 / 25 / 10 as crisp crops)
-    expect(landing).toContain("Tax Strategy for");
-    expect(landing).toContain("Turn Capital Into Income");
-    // Senior-partner credibility band (its own component, mounted before the estimator)
-    expect(landing).toContain("SeniorPartnerBand");
-    const band = readFileSync(resolve("client/src/components/SeniorPartnerBand.tsx"), "utf8");
-    expect(band).toContain("Clients who stay for decades");
-    expect(band).toContain("medical malpractice");
-    expect(band).toContain("20 years or longer");
-    // War-chest phrase leads Chapter 2; the highlight word is wrapped in a span.
-    expect(landing).toContain("Transform Debt Into a");
-    expect(landing).toContain("Tax-Free Liquid War Chest");
-    expect(landing).toContain("The Physician War-Chest Strategy");
-    expect(landing).toContain("We build the tailored");
-    expect(landing).toContain("around that.");
-    expect(landing).toContain("Design Your Physician Financial System");
-    expect(landing).toContain("Plan Beyond the Practice");
-    expect(landing).toContain("Book a Physician Planning Review");
-    expect(landing).toContain("Tax &amp; Interest Savings Calculator");
-    // Concept 10 five-pillar strip
-    for (const pillar of ["Practice Economics", "Physician Tax Strategy", "Risk & Protection", "Retirement Income", "Succession & Legacy"]) {
-      expect(landing).toContain(pillar);
-    }
-    // Retained command-center panel labels
-    for (const label of ["Tax", "Practice", "Retirement", "Legacy", "Review", "Coordinate", "Implement", "Monitor"]) {
-      expect(landing).toContain(label);
+    expect(landing).not.toMatch(/blur-\[/);
+  });
+
+  it("keeps the image pages clean: no headings, buttons, forms or selects on top of a picture", () => {
+    // Every <ImagePage> renders only the picture and, optionally, the slogan line.
+    const imagePage = landing.slice(landing.indexOf("function ImagePage"), landing.indexOf("function FounderVoice"));
+    for (const forbidden of ["<h2", "<h3", "<button", "<form", "<select", "<input", "rc-btn"]) expect(imagePage).not.toContain(forbidden);
+    // The hero carries the sign, the sr-only h1 and a scroll hint only.
+    const hero = landing.slice(landing.indexOf('<header id="top"'), landing.indexOf("</header>"));
+    for (const forbidden of ["<button", "<form", "<select", "rc-btn", "<h2"]) expect(hero).not.toContain(forbidden);
+    // The old feature boxes, selectors, calculator and pillar strips are gone.
+    for (const gone of ["COMMAND_PILLARS", "PLANNING_AREAS", "FEATURES", "Design Your Physician Financial System", "Tax &amp; Interest Savings Calculator", "Physician Tax-Planning Review", "ClientLoginSection", "ConsultationSection", "HomeHowWeWork", "HomeFaq", "SeniorPartnerBand", "HomeAIConcierge", "ProprietaryTech"]) {
+      expect(landing, gone).not.toContain(gone);
     }
   });
 
-  it("keeps every public navigation anchor resolvable", () => {
-    // Anchor targets may live in components the page mounts (e.g. the AI
-    // concierge section), so resolve ids against the page plus those.
-    const concierge = readFileSync(resolve("client/src/components/HomeAIConcierge.tsx"), "utf8");
-    const factFinder = readFileSync(resolve("client/src/components/HomeLeadFactFinder.tsx"), "utf8");
-    const tech = readFileSync(resolve("client/src/components/ProprietaryTech.tsx"), "utf8");
-    const idSources = landing + concierge + factFinder + tech;
-    // Catch both JSX attributes (href="#x") and the nav array (href: "#x").
-    const anchors = Array.from(landing.matchAll(/href(?:=|: )"#([a-z0-9-]+)"/g), match => match[1]);
-    expect(anchors.length).toBeGreaterThan(0);
-    for (const id of new Set(anchors)) expect(idSources, id).toMatch(new RegExp(`id=["']${id}["']`));
+  it("carries the one slogan, on one line, on exactly two image pages", () => {
+    expect(manifesto.slogan).toMatch(/war chest/i);
+    expect(manifesto.slogan).toMatch(/deploy/i);
+    expect(landing).toContain("manifesto.slogan");
+    expect((landing.match(/ slogan label=/g) ?? []).length).toBe(2);
+    expect(landing).toContain("whitespace-nowrap");
+    expect(css).toContain("rc-slogan-drift");
+    expect(css).toContain("prefers-reduced-motion");
+    // No other slogans survive.
+    for (const gone of ["Turn Capital Into Income", "Turn Medical Income Into Lasting Wealth", "Keep More of What You Earn", "Relief today", "We Build the System Around It", "Tax-Free Liquid War Chest"]) {
+      expect(landing, gone).not.toContain(gone);
+    }
   });
 
-  it("mounts the homepage lead fact-finder wired to public lead capture", () => {
-    expect(landing).toContain("HomeLeadFactFinder");
+  it("stacks fifteen patent-pending claims in building order, each a bold lead and a short detail", () => {
+    expect(manifesto.claims.length).toBe(15);
+    const refs = manifesto.claims.map((c) => c.ref);
+    expect(refs).toEqual(refs.slice().sort());
+    for (const claim of manifesto.claims) {
+      const sentences = (s: string) => (s.match(/[.!?](\s|$)/g) ?? []).length;
+      expect(sentences(claim.lead) + sentences(claim.detail), claim.name).toBeLessThanOrEqual(3);
+      expect(sentences(claim.lead) + sentences(claim.detail), claim.name).toBeGreaterThanOrEqual(2);
+      expect(claim.lead.length, claim.name).toBeLessThan(260);
+    }
+    expect(manifesto.claims.map((c) => c.name)).toContain("Optimized Tax Waterfall Engine");
+    expect(manifesto.claims.map((c) => c.name)).toContain("Mortgage Killer");
+    expect(landing).toContain('id="claims"');
+    expect(landing).toContain("manifesto.claims.map");
+    expect(landing).toContain("Only at RCS");
+    // Patent honesty: pending, never granted.
+    expect(manifesto.status).toMatch(/Patent-pending/);
+    expect(manifesto.status).toMatch(/15 core applications/);
+    expect(JSON.stringify(manifesto)).not.toMatch(/patent(ed| granted)/i);
+    expect(manifesto.disclaimer).toContain("Not tax, legal or investment advice");
+  });
+
+  it("makes the declarations: nowhere else, the competitors, no clinical trials, speed of thought", () => {
+    const all = manifesto.declarations.join(" ");
+    expect(all).toMatch(/Nowhere else/);
+    expect(all).toMatch(/MoneyGuidePro/);
+    expect(all).toMatch(/eMoney/);
+    expect(all).toMatch(/clinical trials/);
+    expect(all).toMatch(/speed of thought/);
+    expect(all).toMatch(/attorneys and the consultants/);
+    expect(manifesto.expect.length).toBe(5);
+    expect(landing).toContain('id="manifesto"');
+    expect(landing).toContain('id="expect"');
+    expect(manifesto.disclaimer).toMatch(/owner's opinion/);
+  });
+
+  it("offers the founder's voice only when the server can synthesise it", () => {
+    expect(landing).toContain("/api/founder-message.mp3");
+    expect(landing).toContain("loadedmetadata");
+    const server = readFileSync(resolve("server/founderVoice.ts"), "utf8");
+    expect(server).toContain("ELEVENLABS_API_KEY");
+    expect(server).toContain("ELEVENLABS_VOICE_ID");
+    expect(server).toContain("res.status(404)");
+    expect(readFileSync(resolve("server/_core/index.ts"), "utf8")).toContain("registerFounderVoice(app)");
+    expect(manifesto.founderMessage.length).toBeGreaterThan(200);
+  });
+
+  it("ends with the lead card wired to public lead capture, and nothing after it but the footer", () => {
+    expect(landing).toContain("<HomeLeadFactFinder />");
+    expect(landing.indexOf("<HomeLeadFactFinder />")).toBeLessThan(landing.indexOf("<footer"));
+    expect(landing.slice(landing.indexOf("<HomeLeadFactFinder />"), landing.indexOf("<footer"))).not.toContain("<section");
     const ff = readFileSync(resolve("client/src/components/HomeLeadFactFinder.tsx"), "utf8");
     expect(ff).toContain('id="planning-estimator"');
     expect(ff).toContain("trpc.leads.capture");
-    expect(ff).toContain("trpc.leads.recognize");
-    // Consent is required and no figures are shown to the visitor.
     expect(ff).toContain("consent");
     expect(ff).toContain("not tax, legal, or investment advice");
-    // Collects the household picture (a representative field is present).
-    expect(ff).toContain("Interest-only payment / month");
-    expect(ff).toContain("tax-deferred (IRA/401k/403b/TSP)");
   });
 
-  it("fills the long scroll with the proprietary technology showcase", () => {
-    expect(landing).toContain("ProprietaryTech");
-    expect(landing).toContain('"#technology"');
-    const tech = readFileSync(resolve("client/src/components/ProprietaryTech.tsx"), "utf8");
-    expect(tech).toContain('id="technology"');
-    // The two engines the owner named must be present.
-    expect(tech).toContain("Optimized Tax Waterfall Engine");
-    expect(tech).toContain("Mortgage Killer");
-    // 14 engines shown (all core patents except the AI advisor-coaching one).
-    expect((tech.match(/ref: "/g) ?? []).length).toBe(14);
-    expect(tech).not.toContain("Whisper");
-    // Each engine explained in depth (five to six sentences) in building order,
-    // with a bold closing line — and the crisp Emerald Dawn image behind them.
-    expect((tech.match(/punch: "/g) ?? []).length).toBe(14);
-    for (const body of tech.match(/body: "([^"]+)"/g) ?? []) {
-      expect((body.match(/[.!?](\s|"|$)/g) ?? []).length, body.slice(0, 60)).toBeGreaterThanOrEqual(4);
-    }
-    expect(tech).toContain("Engine {ref} of 14");
-    expect(tech).toContain("/rcs-city-emerald.webp");
-    expect(tech).not.toMatch(/blur-\[/);
-    // Patent-pending status + the 45-more / stay-tuned message.
-    expect(tech).toContain("Patent-pending");
-    expect(tech).toContain("15 patents in process");
-    expect(tech).toContain("45 more unique patent-pending technologies");
-    expect(tech).toContain("Stay tuned");
-    // Not offered anywhere else.
-    expect(tech).toMatch(/anywhere else/);
-    expect(tech).toContain("tax, legal, or investment advice");
-  });
-
-  it("mounts the AI Brain Trust concierge wired to the nine-AI panel", () => {
-    expect(landing).toContain("HomeAIConcierge");
-    expect(landing).toContain('"#ai-brain-trust"');
-    const concierge = readFileSync(resolve("client/src/components/HomeAIConcierge.tsx"), "utf8");
-    expect(concierge).toContain("trpc.ultra.homepagePanel");
-    expect(concierge).toContain('id="ai-brain-trust"');
-    // No specific figures promised in the public concierge UI copy.
-    expect(concierge).toContain("not tax, legal, or investment advice");
-  });
-
-  it("exposes accessible mobile navigation and keyboard-capable command controls", () => {
+  it("keeps every public navigation anchor resolvable", () => {
+    const factFinder = readFileSync(resolve("client/src/components/HomeLeadFactFinder.tsx"), "utf8");
+    const idSources = landing + factFinder;
+    const anchors = Array.from(landing.matchAll(/href(?:=|: )"#([a-z0-9-]+)"/g), (m) => m[1]);
+    expect(anchors.length).toBeGreaterThan(0);
+    for (const id of new Set(anchors)) expect(idSources, id).toMatch(new RegExp(`id=["']${id}["']`));
     expect(landing).toContain('aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}');
-    expect(landing).toContain("aria-expanded={menuOpen}");
-    expect(landing).toContain('role="tablist"');
-    expect(landing).toContain('role="tab"');
-    expect(landing).toContain("aria-selected={activePillar === id}");
-    expect(landing).toContain('aria-label="Annual income"');
-    expect(landing).toContain('aria-label="Filing status"');
-    expect(landing).toContain('aria-label="State"');
   });
 
-  it("keeps all lower physician options linked to registered protected routes", () => {
-    const expected = [
-      "/portal/tax-opportunities",
-      "/portal/business-owner",
-      "/portal/policy-review",
-      "/portal/retirement-projection",
-      "/portal/estate-flow",
-      "/portal/portfolio-drift",
-      "/portal/planning-cases",
-      "/portal/document-vault",
-    ];
-    for (const route of expected) {
-      expect(landing).toContain(`href: "${route}"`);
-      expect(app).toContain(`path="${route}"`);
-    }
-    expect(landing).toContain("Every planning area remains within reach");
-    expect(landing).toContain("Client Portal Access");
-    expect(landing).toContain("Book a Free Consultation");
-  });
-
-  it("retains bounded responsive component typography under the 1.6 homepage scale", () => {
-    expect(css).toContain(".rc-homepage-type-scale .rc-command-center .text-sm");
-    expect(css).toContain(".rc-homepage-type-scale .rc-command-center input");
-    expect(css).toContain(".rc-homepage-type-scale .rc-command-center select");
-    expect(landing).toContain("sm:grid-cols-4");
-    expect(landing).toContain("lg:grid-cols-5");
+  it("shows no purple anywhere in the client", () => {
+    const { execSync } = require("node:child_process") as typeof import("node:child_process");
+    const hits = execSync("grep -rlE 'violet-|purple-|#a78bfa|#8b5cf6|#7c3aed|rgba\\(124, ?58, ?237' client/src || true", { encoding: "utf8" }).trim();
+    expect(hits, hits).toBe("");
   });
 
   it("does not restore public AUM, demo, fake phone, or inactive pricing claims", () => {
-    for (const prohibited of ["Assets Under Management", "Investor Demo Mode", "Seeded scenarios", "tel:+1", "Professional Plan", "Enterprise Plan"]) {
+    for (const prohibited of ["Assets Under Management", "Investor Demo Mode", "Seeded scenarios", "tel:+1", "Professional Plan", "Enterprise Plan", "$2.8B", "98%"]) {
       expect(landing).not.toContain(prohibited);
     }
   });
 
-  it("mounts the trust sections (how we work, who we serve, FAQ) and the mobile CTA", () => {
-    for (const c of ["HomeHowWeWork", "HomeFaq", "MobileStickyCta"]) expect(landing).toContain(`<${c}`);
-    const trust = readFileSync(resolve("client/src/components/HomeTrustSections.tsx"), "utf8");
-    for (const step of ["Review", "Coordinate", "Implement", "Monitor"]) expect(trust).toContain(`title: "${step}"`);
-    expect(trust).toContain("Who we serve");
-    expect(trust).toContain("Straight answers");
-    expect((trust.match(/\{ q: "/g) ?? []).length).toBe(7);
-    // FAQ stays compliance-safe: no guarantees, no figures on the public page.
-    expect(trust).toContain("Neither.");
-    expect(trust).toContain("prepared for your licensed advisor");
-    // Copy-my-summary fallback on the estimator result.
-    const ff = readFileSync(resolve("client/src/components/HomeLeadFactFinder.tsx"), "utf8");
-    expect(ff).toContain("Copy my summary");
-    expect(ff).toContain("navigator.clipboard");
+  it("mirrors the same words and structure on the static homepage template", () => {
+    expect(builder).toContain("__MANIFESTO_JSON__");
+    expect(template).toContain("__MANIFESTO_JSON__");
+    for (const key of ["__IMG_NEON_A__", "__IMG_NEON_A_TALL__", "__IMG_NEON_B__", "__IMG_NEON_B_TALL__", "__IMG_HORIZON__", "__IMG_SKYWAY__", "__IMG_EXPRESSWAY__"]) {
+      expect(template, key).toContain(key);
+      expect(builder, key).toContain(key);
+    }
+    expect(template).toContain('id="claims"');
+    expect(template).toContain('id="manifesto"');
+    expect(template).toContain('id="estimate"');
+    expect((template.match(/class="slogan-line"/g) ?? []).length).toBe(2);
+    for (const gone of ["Turn Capital Into Income", "Design Your Physician Financial System", "Clients who stay for decades", "$2.8B", "Physician Tax-Planning Review"]) {
+      expect(template, gone).not.toContain(gone);
+    }
   });
 });

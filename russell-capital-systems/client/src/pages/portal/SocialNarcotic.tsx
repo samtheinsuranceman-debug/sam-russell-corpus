@@ -92,7 +92,7 @@ function SpectatorMode() {
                       <div className="flex items-center gap-2">
                         <p className="font-bold text-sm">{advisor.name}</p>
                         <Badge className="bg-amber-500/20 text-amber-300 text-[10px]">Rank #{advisor.rank}</Badge>
-                        <Badge variant="outline" className="text-[10px] border-violet-500/30 text-violet-300">Lv.{advisor.level}</Badge>
+                        <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-300">Lv.{advisor.level}</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground">{advisor.specialty}</p>
                     </div>

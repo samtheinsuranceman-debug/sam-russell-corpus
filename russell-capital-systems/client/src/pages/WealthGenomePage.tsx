@@ -9,13 +9,13 @@ import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
 import { Activity, ArrowRight, ChevronRight, Dna, Lightbulb, ListChecks } from "lucide-react";
 
-const CARD = "rounded-2xl border border-violet-400/20 bg-white/[0.04]";
+const CARD = "rounded-2xl border border-emerald-400/20 bg-white/[0.04]";
 const TABS = ["Genome Overview", "Dimension Detail", "What Moves It"] as const;
 
 function tone(score: number) {
   if (score >= 70) return { bar: "from-emerald-400 to-cyan-300", text: "text-emerald-300" };
-  if (score >= 50) return { bar: "from-violet-400 to-cyan-300", text: "text-violet-200" };
-  if (score >= 35) return { bar: "from-amber-400 to-violet-400", text: "text-amber-200" };
+  if (score >= 50) return { bar: "from-emerald-400 to-cyan-300", text: "text-emerald-200" };
+  if (score >= 35) return { bar: "from-amber-400 to-emerald-400", text: "text-amber-200" };
   return { bar: "from-red-400 to-amber-400", text: "text-red-300" };
 }
 
@@ -32,7 +32,7 @@ export default function WealthGenomePage() {
         <div className={`${CARD} p-6`}>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80"><Dna size={12} className="mr-1 inline" /> New Client Welcome List · Step 3</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80"><Dna size={12} className="mr-1 inline" /> New Client Welcome List · Step 3</p>
               <h1 className="mt-1 text-2xl font-semibold text-white">Wealth Genome Analysis</h1>
               <p className="mt-1 max-w-2xl text-sm text-slate-400">Eight-dimension financial health score, computed from your Financial Assessment. Every point has a reason drawn from your own facts, and every dimension lists what would raise it.</p>
             </div>
@@ -54,7 +54,7 @@ export default function WealthGenomePage() {
         <div className="flex flex-wrap gap-2">
           {TABS.map((t) => (
             <button key={t} type="button" onClick={() => setTab(t)} aria-pressed={tab === t}
-              className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${tab === t ? "border-violet-300 bg-violet-500 text-white" : "border-white/15 text-slate-300 hover:bg-white/5"}`}>{t}</button>
+              className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${tab === t ? "border-emerald-300 bg-emerald-500 text-white" : "border-white/15 text-slate-300 hover:bg-white/5"}`}>{t}</button>
           ))}
         </div>
 
@@ -62,11 +62,11 @@ export default function WealthGenomePage() {
 
         {g && tab === "Genome Overview" && (
           <div className={`${CARD} p-6`}>
-            <h2 className="text-lg font-semibold text-white"><Activity size={16} className="mr-1 inline text-violet-300" /> Overall financial health</h2>
+            <h2 className="text-lg font-semibold text-white"><Activity size={16} className="mr-1 inline text-emerald-300" /> Overall financial health</h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {g.dimensions.map((d) => (
                 <button key={d.key} type="button" onClick={() => { setSelected(d.key); setTab("Dimension Detail"); }}
-                  className="rounded-xl border border-white/10 bg-[#0b0f1a] p-4 text-left transition hover:border-violet-300/40">
+                  className="rounded-xl border border-white/10 bg-[#0b0f1a] p-4 text-left transition hover:border-emerald-300/40">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium text-white">{d.name}</p>
                     <span className={`text-lg font-semibold ${tone(d.score).text}`}>{d.score}</span>
@@ -86,7 +86,7 @@ export default function WealthGenomePage() {
             <nav className={`${CARD} p-3`} aria-label="Dimensions">
               {g.dimensions.map((d) => (
                 <button key={d.key} type="button" onClick={() => setSelected(d.key)} aria-current={dim.key === d.key ? "true" : undefined}
-                  className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm ${dim.key === d.key ? "bg-violet-500/20 text-white" : "text-slate-300 hover:bg-white/5"}`}>
+                  className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm ${dim.key === d.key ? "bg-emerald-500/20 text-white" : "text-slate-300 hover:bg-white/5"}`}>
                   <span>{d.name}</span><span className={tone(d.score).text}>{d.score}</span>
                 </button>
               ))}
@@ -97,8 +97,8 @@ export default function WealthGenomePage() {
                 <span className={`text-3xl font-semibold ${tone(dim.score).text}`}>{dim.score}<span className="text-sm text-slate-500">/100</span></span>
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10"><div className={`h-full rounded-full bg-gradient-to-r ${tone(dim.score).bar}`} style={{ width: `${dim.score}%` }} /></div>
-              <h3 className="mt-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-violet-200/80"><ListChecks size={12} className="mr-1 inline" /> Why it scored this way</h3>
-              <ul className="mt-2 space-y-1.5">{dim.rationale.map((r, i) => <li key={i} className="flex gap-2 text-sm text-slate-200"><ChevronRight size={14} className="mt-0.5 shrink-0 text-violet-300" />{r}</li>)}</ul>
+              <h3 className="mt-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-200/80"><ListChecks size={12} className="mr-1 inline" /> Why it scored this way</h3>
+              <ul className="mt-2 space-y-1.5">{dim.rationale.map((r, i) => <li key={i} className="flex gap-2 text-sm text-slate-200"><ChevronRight size={14} className="mt-0.5 shrink-0 text-emerald-300" />{r}</li>)}</ul>
               {dim.raise.length > 0 && (
                 <>
                   <h3 className="mt-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-200"><Lightbulb size={12} className="mr-1 inline" /> What would raise it</h3>
@@ -121,7 +121,7 @@ export default function WealthGenomePage() {
                 </li>
               ))}
             </ol>
-            <Link href="/portal/ai-advisor" className="mt-5 inline-flex items-center gap-1 rounded-lg bg-violet-500 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-400">Ask the advisor how to sequence these <ArrowRight size={14} /></Link>
+            <Link href="/portal/ai-advisor" className="mt-5 inline-flex items-center gap-1 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400">Ask the advisor how to sequence these <ArrowRight size={14} /></Link>
           </div>
         )}
 

@@ -533,7 +533,7 @@ export default function ClientIntakeRecommender() {
             {categoryBreakdown.length > 0 && (
               <div className="rounded-xl border border-gray-700/50 bg-slate-900/50 p-5">
                 <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-                  <Target className="w-4 h-4 text-purple-400" /> Recommended Category Mix
+                  <Target className="w-4 h-4 text-emerald-400" /> Recommended Category Mix
                 </h3>
                 <ResponsiveContainer width="100%" height={250}>
                   <PieChart>
@@ -596,7 +596,7 @@ export default function ClientIntakeRecommender() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                          rec.type === "strategy" ? "bg-purple-500/20 text-purple-400" : "bg-emerald-500/20 text-emerald-400"
+                          rec.type === "strategy" ? "bg-emerald-500/20 text-emerald-400" : "bg-emerald-500/20 text-emerald-400"
                         }`}>
                           {rec.type === "strategy" ? `Strategy #${rec.id}` : `Combo #${rec.id}`}
                         </span>
@@ -659,7 +659,7 @@ export default function ClientIntakeRecommender() {
                         </div>
                         <div className="bg-slate-800/30 rounded-lg p-2">
                           <p className="text-[10px] text-gray-500">Steps</p>
-                          <p className="text-sm font-bold text-purple-400">{rec.steps}</p>
+                          <p className="text-sm font-bold text-emerald-400">{rec.steps}</p>
                         </div>
                         <div className="bg-slate-800/30 rounded-lg p-2">
                           <p className="text-[10px] text-gray-500">Categories</p>

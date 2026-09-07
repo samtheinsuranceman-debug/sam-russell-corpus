@@ -97,7 +97,7 @@ export function MonteCarloChart({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="text-base font-semibold text-white flex items-center gap-2">
-              <Activity className="w-4 h-4 text-purple-400" />
+              <Activity className="w-4 h-4 text-emerald-400" />
               {title}
             </CardTitle>
             {subtitle && (
@@ -106,7 +106,7 @@ export function MonteCarloChart({
           </div>
           <Badge
             variant="outline"
-            className="text-xs border-purple-500/40 text-purple-400 bg-purple-500/10"
+            className="text-xs border-emerald-500/40 text-emerald-400 bg-emerald-500/10"
           >
             {result.config.simulations?.toLocaleString() || "1,000"} simulations
           </Badge>
@@ -127,7 +127,7 @@ export function MonteCarloChart({
                       ? "bg-red-600 hover:bg-red-700"
                       : s === "expected"
                         ? "bg-blue-600 hover:bg-blue-700"
-                        : "bg-purple-600 hover:bg-purple-700"
+                        : "bg-emerald-600 hover:bg-emerald-700"
                   : "border-zinc-700/50"
               }`}
               onClick={() => setActiveScenario(s)}
@@ -162,12 +162,12 @@ export function MonteCarloChart({
             </div>
             <span className="text-sm font-bold text-red-400">{fmt(summary.p10)}</span>
           </div>
-          <div className="px-3 py-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
+          <div className="px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
             <div className="flex items-center gap-1 mb-0.5">
-              <Activity className="w-3 h-3 text-purple-400" />
+              <Activity className="w-3 h-3 text-emerald-400" />
               <span className="text-[10px] text-zinc-400 uppercase">Success</span>
             </div>
-            <span className="text-sm font-bold text-purple-400">{summary.probabilityOfSuccess}%</span>
+            <span className="text-sm font-bold text-emerald-400">{summary.probabilityOfSuccess}%</span>
           </div>
         </div>
 
@@ -181,8 +181,8 @@ export function MonteCarloChart({
                   <stop offset="100%" stopColor="#a855f7" stopOpacity={0.03} />
                 </linearGradient>
                 <linearGradient id="mcInnerBand" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.25} />
-                  <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.08} />
+                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.25} />
+                  <stop offset="100%" stopColor="#10b981" stopOpacity={0.08} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
@@ -260,7 +260,7 @@ export function MonteCarloChart({
               <Area
                 type="monotone"
                 dataKey="median"
-                stroke="#8b5cf6"
+                stroke="#10b981"
                 strokeWidth={2}
                 fill="none"
                 name="Median (50th)"
@@ -405,9 +405,9 @@ interface MonteCarloInlineProps {
 export function MonteCarloInline({ result, className = "" }: MonteCarloInlineProps) {
   const { summary } = result;
   return (
-    <div className={`inline-flex items-center gap-3 px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/20 ${className}`}>
+    <div className={`inline-flex items-center gap-3 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 ${className}`}>
       <div className="flex items-center gap-1">
-        <Activity className="w-3 h-3 text-purple-400" />
+        <Activity className="w-3 h-3 text-emerald-400" />
         <span className="text-[10px] text-zinc-400 uppercase">Monte Carlo</span>
       </div>
       <div className="h-3 w-px bg-zinc-700" />

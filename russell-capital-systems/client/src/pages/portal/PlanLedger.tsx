@@ -12,16 +12,16 @@ import { BookOpenCheck, ShieldCheck, ShieldAlert, History, Filter, Clock, ArrowR
 import { groupByDay, formatFactValue, LEDGER_KINDS, type LedgerKind } from "@shared/planLedger";
 import { FACT_FINDER_SECTIONS } from "@shared/clientFactFinder";
 
-const CARD = "rounded-2xl border border-violet-400/20 bg-white/[0.04]";
+const CARD = "rounded-2xl border border-emerald-400/20 bg-white/[0.04]";
 const KIND_STYLE: Record<LedgerKind, { label: string; color: string }> = {
   fact: { label: "Fact", color: "text-sky-300 border-sky-400/40" },
   assumption: { label: "Assumption", color: "text-amber-200 border-amber-300/40" },
   decision: { label: "Decision", color: "text-emerald-300 border-emerald-400/40" },
-  message: { label: "Message", color: "text-fuchsia-300 border-fuchsia-400/40" },
+  message: { label: "Message", color: "text-emerald-300 border-emerald-400/40" },
   document: { label: "Document", color: "text-slate-200 border-slate-400/40" },
   outcome: { label: "Outcome", color: "text-lime-300 border-lime-400/40" },
   scenario: { label: "Scenario", color: "text-cyan-300 border-cyan-400/40" },
-  journey: { label: "Journey", color: "text-violet-300 border-violet-400/40" },
+  journey: { label: "Journey", color: "text-emerald-300 border-emerald-400/40" },
   status: { label: "Status", color: "text-orange-300 border-orange-400/40" },
   note: { label: "Note", color: "text-slate-300 border-slate-500/40" },
   consent: { label: "Consent", color: "text-teal-300 border-teal-400/40" },
@@ -48,7 +48,7 @@ export default function PlanLedger() {
     <AppShell title="Plan Ledger">
       <div className="mx-auto max-w-5xl space-y-6 pb-16">
         <div className={`${CARD} p-6`}>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80"><BookOpenCheck size={12} className="mr-1 inline" /> New Client Welcome List · your record</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80"><BookOpenCheck size={12} className="mr-1 inline" /> New Client Welcome List · your record</p>
           <h1 className="mt-1 text-2xl font-semibold text-white">Plan Ledger</h1>
           <p className="mt-2 max-w-3xl text-sm text-slate-300">Every fact you gave, every journey built, every message and decision, in the order it happened. Nothing here is ever edited or deleted; each entry is sealed to the one before it.</p>
           <div className="mt-3 flex flex-wrap items-center gap-3 text-xs">
@@ -63,11 +63,11 @@ export default function PlanLedger() {
         {facts.length > 0 && (
           <div className={`${CARD} p-5`} aria-label="Assessment as of">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-violet-200/80"><History size={12} className="mr-1 inline" /> Your assessment as it stood</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-200/80"><History size={12} className="mr-1 inline" /> Your assessment as it stood</p>
               <span className="text-xs text-slate-400">{asOf ? asOf.toLocaleString() : "now"}</span>
             </div>
             <input type="range" min={0} max={facts.length - 1} value={asOfIdx ?? facts.length - 1} onChange={(e) => setAsOfIdx(Number(e.target.value))} aria-label="Scrub through time"
-              className="mt-3 w-full accent-violet-400" />
+              className="mt-3 w-full accent-emerald-400" />
             <div className="mt-1 flex justify-between text-[11px] text-slate-500"><span>{facts[0]!.occurredAt.toLocaleDateString()}</span><span>{facts[facts.length - 1]!.occurredAt.toLocaleDateString()}</span></div>
             {asOf && replay.data && (
               <div className="mt-4">
@@ -77,7 +77,7 @@ export default function PlanLedger() {
                     <div key={`${s.id}.${f.key}`} className="flex items-center justify-between border-b border-white/5 py-1"><span className="text-slate-400">{f.label}</span><span className="font-medium text-white">{formatFactValue(replay.data!.data.sections[s.id]![f.key])}</span></div>
                   )))}
                 </div>
-                {asOfIdx != null && asOfIdx < facts.length - 1 && <button type="button" onClick={() => setAsOfIdx(null)} className="mt-3 text-xs text-violet-300 hover:underline">Back to now</button>}
+                {asOfIdx != null && asOfIdx < facts.length - 1 && <button type="button" onClick={() => setAsOfIdx(null)} className="mt-3 text-xs text-emerald-300 hover:underline">Back to now</button>}
               </div>
             )}
           </div>
@@ -97,7 +97,7 @@ export default function PlanLedger() {
         {timeline.isLoading ? <p className="text-sm text-slate-400">Loading your record…</p> : events.length === 0 ? (
           <div className={`${CARD} p-6`}>
             <p className="text-sm text-slate-300">Nothing recorded yet. The ledger starts writing the moment you answer the first question of your Financial Assessment.</p>
-            <Link href="/portal/financial-assessment" className="mt-3 inline-flex items-center gap-1 rounded-lg bg-violet-500 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-400">Open the assessment <ArrowRight size={14} /></Link>
+            <Link href="/portal/financial-assessment" className="mt-3 inline-flex items-center gap-1 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400">Open the assessment <ArrowRight size={14} /></Link>
           </div>
         ) : (
           <div className="space-y-6">

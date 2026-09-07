@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 const RARITY_STYLES: Record<string, { border: string; glow: string; bg: string; text: string }> = {
   common: { border: "border-gray-400", glow: "shadow-gray-400/30", bg: "from-gray-500/20 to-gray-600/20", text: "text-gray-300" },
   rare: { border: "border-blue-400", glow: "shadow-blue-400/40", bg: "from-blue-500/20 to-indigo-500/20", text: "text-blue-400" },
-  epic: { border: "border-purple-400", glow: "shadow-purple-400/50", bg: "from-purple-500/20 to-pink-500/20", text: "text-purple-400" },
+  epic: { border: "border-emerald-400", glow: "shadow-emerald-400/50", bg: "from-emerald-500/20 to-pink-500/20", text: "text-emerald-400" },
   legendary: { border: "border-amber-400", glow: "shadow-amber-400/60", bg: "from-amber-500/20 to-orange-500/20", text: "text-amber-400" },
 };
 

@@ -46,9 +46,9 @@ const VIDEOS: VideoEntry[] = [
     category: "Strategy Walkthroughs",
     duration: "10 min",
     icon: TrendingUp,
-    color: "text-violet-400",
-    bgColor: "bg-violet-500/10",
-    borderColor: "border-violet-500/20",
+    color: "text-emerald-400",
+    bgColor: "bg-emerald-500/10",
+    borderColor: "border-emerald-500/20",
     driveEmbedId: "1ob1UHlvIzQV9AFC5xig1-a9nBfVirwRq",
     featured: true,
     tags: ["roth conversion", "tax-free", "IRA", "family planning"],
@@ -118,7 +118,7 @@ export default function VideoLibrary() {
       {/* ── Header ────────────────────────────────────────────── */}
       <div className="rc-page-header mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-rose-500/20 to-violet-500/20 border border-rose-500/30">
+          <div className="p-2.5 rounded-xl bg-gradient-to-br from-rose-500/20 to-emerald-500/20 border border-rose-500/30">
             <Video className="w-7 h-7 text-rose-400" />
           </div>
           <div>
@@ -135,7 +135,7 @@ export default function VideoLibrary() {
           <div className="text-xs text-muted-foreground">Videos</div>
         </div>
         <div className="rc-card p-4 text-center">
-          <div className="text-2xl font-bold text-violet-400">{CATEGORIES.length - 1}</div>
+          <div className="text-2xl font-bold text-emerald-400">{CATEGORIES.length - 1}</div>
           <div className="text-xs text-muted-foreground">Categories</div>
         </div>
         <div className="rc-card p-4 text-center">
@@ -153,7 +153,7 @@ export default function VideoLibrary() {
             placeholder="Search videos..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-card border border-border/50 text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-violet-500/50"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-card border border-border/50 text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-emerald-500/50"
           />
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -163,7 +163,7 @@ export default function VideoLibrary() {
               onClick={() => setActiveCategory(cat)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 activeCategory === cat
-                  ? "bg-violet-500/20 text-violet-300 border border-violet-500/30"
+                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                   : "bg-card/50 text-muted-foreground border border-border/30 hover:text-white"
               }`}
             >

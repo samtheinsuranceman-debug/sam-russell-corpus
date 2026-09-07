@@ -149,9 +149,9 @@ export default function StrategyCompareTool() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-[#1a0d2e] via-[#0a1628] to-[#0d1a2e] p-6 md:p-8">
+      <div className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-[#1a0d2e] via-[#0a1628] to-[#0d1a2e] p-6 md:p-8">
         <div className="flex items-center gap-3 mb-2">
-          <Scale className="w-6 h-6 text-purple-400" />
+          <Scale className="w-6 h-6 text-emerald-400" />
           <h1 className="text-2xl md:text-3xl font-bold text-white">Strategy Comparison Tool</h1>
         </div>
         <p className="text-gray-400 text-sm max-w-2xl">
@@ -166,7 +166,7 @@ export default function StrategyCompareTool() {
           <div key={idx} className="relative">
             {selected[idx] ? (
               <div className={`rounded-xl border-2 p-4 bg-slate-900/50 ${
-                idx === 0 ? "border-purple-500/40" : idx === 1 ? "border-blue-500/40" : "border-emerald-500/40"
+                idx === 0 ? "border-emerald-500/40" : idx === 1 ? "border-blue-500/40" : "border-emerald-500/40"
               }`}>
                 <button onClick={() => removeItem(idx)} className="absolute top-2 right-2 p-1 rounded-full bg-red-500/20 hover:bg-red-500/40 text-red-400 transition-colors">
                   <X className="w-3 h-3" />
@@ -194,7 +194,7 @@ export default function StrategyCompareTool() {
             ) : (
               <button
                 onClick={() => setShowPicker(true)}
-                className="w-full h-full min-h-[160px] rounded-xl border-2 border-dashed border-gray-700 hover:border-purple-500/40 bg-slate-900/30 hover:bg-slate-900/50 flex flex-col items-center justify-center gap-2 transition-all"
+                className="w-full h-full min-h-[160px] rounded-xl border-2 border-dashed border-gray-700 hover:border-emerald-500/40 bg-slate-900/30 hover:bg-slate-900/50 flex flex-col items-center justify-center gap-2 transition-all"
               >
                 <Plus className="w-6 h-6 text-gray-500" />
                 <span className="text-sm text-gray-500">Add {idx === 0 ? "first" : idx === 1 ? "second" : "third"} strategy</span>
@@ -229,7 +229,7 @@ export default function StrategyCompareTool() {
                     key={t}
                     onClick={() => setFilterType(t)}
                     className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
-                      filterType === t ? "bg-purple-500/20 text-purple-400 border border-purple-500/30" : "bg-gray-800 text-gray-400 border border-gray-700 hover:border-gray-600"
+                      filterType === t ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-gray-800 text-gray-400 border border-gray-700 hover:border-gray-600"
                     }`}
                   >
                     {t === "all" ? "All" : t === "strategy" ? "Strategies" : "Combos"}
@@ -253,7 +253,7 @@ export default function StrategyCompareTool() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                            item.type === "strategy" ? "bg-purple-500/20 text-purple-400" : "bg-emerald-500/20 text-emerald-400"
+                            item.type === "strategy" ? "bg-emerald-500/20 text-emerald-400" : "bg-emerald-500/20 text-emerald-400"
                           }`}>
                             {item.type === "strategy" ? `S#${item.id}` : `C#${item.id}`}
                           </span>
@@ -291,7 +291,7 @@ export default function StrategyCompareTool() {
           <div className="rounded-xl border border-gray-700/50 bg-slate-900/50 overflow-hidden">
             <div className="p-4 border-b border-gray-700/50">
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-purple-400" /> Head-to-Head Metrics
+                <BarChart3 className="w-5 h-5 text-emerald-400" /> Head-to-Head Metrics
               </h2>
             </div>
             <div className="overflow-x-auto">
@@ -368,7 +368,7 @@ export default function StrategyCompareTool() {
             {/* Radar Chart */}
             <div className="rounded-xl border border-gray-700/50 bg-slate-900/50 p-5">
               <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-                <Target className="w-4 h-4 text-purple-400" /> Strategy Profile Radar
+                <Target className="w-4 h-4 text-emerald-400" /> Strategy Profile Radar
               </h3>
               <ResponsiveContainer width="100%" height={300}>
                 <RadarChart data={radarData}>
@@ -462,7 +462,7 @@ export default function StrategyCompareTool() {
           </div>
 
           {/* Summary Cards */}
-          <div className="rounded-xl border border-amber-500/20 bg-gradient-to-r from-amber-500/5 to-purple-500/5 p-6">
+          <div className="rounded-xl border border-amber-500/20 bg-gradient-to-r from-amber-500/5 to-emerald-500/5 p-6">
             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
               <Shield className="w-5 h-5 text-amber-400" /> Comparison Summary
             </h3>
@@ -483,7 +483,7 @@ export default function StrategyCompareTool() {
                       <div className="flex justify-between"><span className="text-gray-400">Growth</span><span className="text-emerald-400 font-bold">+{growth}%</span></div>
                       <div className="flex justify-between"><span className="text-gray-400">Tax Saved</span><span className="text-emerald-400 font-bold">{formatMoney(s.totalTaxSaved)}</span></div>
                       <div className="flex justify-between"><span className="text-gray-400">Efficiency</span><span className="text-blue-400 font-bold">{efficiency}%</span></div>
-                      <div className="flex justify-between"><span className="text-gray-400">Steps</span><span className="text-purple-400 font-bold">{s.steps.length}</span></div>
+                      <div className="flex justify-between"><span className="text-gray-400">Steps</span><span className="text-emerald-400 font-bold">{s.steps.length}</span></div>
                     </div>
                     <Link
                       href={s.type === "strategy" ? `/portal/secret-secrets/${s.id}` : `/portal/tax-combos/${s.id}`}

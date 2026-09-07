@@ -70,7 +70,7 @@ const CAP_RATE_HISTORY = [{ year: 2001, capRate: 14.00 },
 
 const MOCK_ALLOCATIONS = [
   { name: "S&P 500 1-Year PtP", value: 60, color: "#3b82f6" },
-  { name: "Nasdaq 100 1-Year PtP", value: 20, color: "#8b5cf6" },
+  { name: "Nasdaq 100 1-Year PtP", value: 20, color: "#10b981" },
   { name: "Euro Stoxx 50 1-Year PtP", value: 10, color: "#ec4899" },
   { name: "Fixed Account", value: 10, color: "#10b981" },
 ];
@@ -486,7 +486,7 @@ export default function IULHistoricalPerformance() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <Label className="text-slate-300">Index Multiplier</Label>
-                    <span className="text-xs font-mono text-purple-400">{indexMultiplier.toFixed(2)}x</span>
+                    <span className="text-xs font-mono text-emerald-400">{indexMultiplier.toFixed(2)}x</span>
                   </div>
                   <Slider
                     value={[indexMultiplier]}
@@ -556,7 +556,7 @@ export default function IULHistoricalPerformance() {
           <Card className="border-slate-700/50 bg-slate-800/50">
             <CardContent className="p-4 flex flex-col items-center justify-center text-center">
               <p className="text-xs text-slate-400 mb-1">Years Capped</p>
-              <p className="text-2xl font-bold text-purple-400">{stats.yearsCapped}</p>
+              <p className="text-2xl font-bold text-emerald-400">{stats.yearsCapped}</p>
               <p className="text-[10px] text-slate-500">Hit max return</p>
             </CardContent>
           </Card>
@@ -589,7 +589,7 @@ export default function IULHistoricalPerformance() {
               <TrendingUp className="w-4 h-4 mr-2" />
               Accumulation
             </TabsTrigger>
-            <TabsTrigger value="allocation" className="px-4 py-3 data-[state=active]:bg-slate-800 data-[state=active]:border-b-2 data-[state=active]:border-purple-500 rounded-none">
+            <TabsTrigger value="allocation" className="px-4 py-3 data-[state=active]:bg-slate-800 data-[state=active]:border-b-2 data-[state=active]:border-emerald-500 rounded-none">
               <PieChartIcon className="w-4 h-4 mr-2" />
               Allocations
             </TabsTrigger>
@@ -707,7 +707,7 @@ export default function IULHistoricalPerformance() {
                                 Protected
                               </Badge>
                             ) : row.rawReturn > row.effectiveCap ? (
-                              <Badge variant="outline" className="bg-purple-500/10 text-purple-400 border-purple-500/20">
+                              <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
                                 Capped
                               </Badge>
                             ) : (
@@ -1046,7 +1046,7 @@ export default function IULHistoricalPerformance() {
               <EducationCard
                 title="Participation Rate"
                 description="The percentage of the index return that is used in the crediting calculation. At 100% participation, the full index return (up to the cap) is credited. At 50% participation, only half the return is used."
-                icon={<Percent className="w-5 h-5 text-purple-400" />}
+                icon={<Percent className="w-5 h-5 text-emerald-400" />}
               />
             </div>
             

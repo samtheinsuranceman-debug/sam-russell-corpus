@@ -136,7 +136,7 @@ export default function HubSpotSync() {
     if (analytics.objectStats?.length > 0) return analytics.objectStats;
     return [
       { name: "Contacts", value: 4500, color: "#3b82f6" },
-      { name: "Companies", value: 1200, color: "#8b5cf6" },
+      { name: "Companies", value: 1200, color: "#10b981" },
       { name: "Deals", value: 850, color: "#f59e0b" },
       { name: "Tickets", value: 320, color: "#10b981" },
       { name: "Notes", value: 5600, color: "#6366f1" }
@@ -266,10 +266,10 @@ export default function HubSpotSync() {
 
         <div className="rc-card flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-              <Briefcase className="text-purple-400" size={20} />
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+              <Briefcase className="text-emerald-400" size={20} />
             </div>
-            <span className="rc-badge bg-purple-500/10 text-purple-400 border-purple-500/20">Deals</span>
+            <span className="rc-badge bg-emerald-500/10 text-emerald-400 border-emerald-500/20">Deals</span>
           </div>
           <div>
             <p className="rc-stat-label">Total Synced</p>
@@ -277,7 +277,7 @@ export default function HubSpotSync() {
               {((settings?.lastSyncDealsPushed || 0) + (settings?.lastSyncDealsPulled || 0)).toLocaleString()}
             </p>
           </div>
-          <div className="mt-4 flex items-center text-xs text-purple-400">
+          <div className="mt-4 flex items-center text-xs text-emerald-400">
             <ArrowRight size={12} className="mr-1" />
             <span>+38 this week</span>
           </div>
@@ -422,7 +422,7 @@ export default function HubSpotSync() {
 
         <div className="rc-card">
           <h3 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
-            <Zap size={18} className="text-[#8b5cf6]" />
+            <Zap size={18} className="text-[#10b981]" />
             Sync Performance
           </h3>
           <div className="h-[250px]">
@@ -431,7 +431,7 @@ export default function HubSpotSync() {
                 <PolarGrid stroke="#12233e" />
                 <PolarAngleAxis dataKey="subject" stroke="#4b6282" fontSize={12} />
                 <PolarRadiusAxis angle={30} domain={[0, 150]} stroke="#4b6282" tick={false} axisLine={false} />
-                <Radar name="Current" dataKey="A" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.5} />
+                <Radar name="Current" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.5} />
                 <Radar name="Target" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.2} />
                 <Tooltip contentStyle={{ backgroundColor: '#060d18', borderColor: '#12233e' }} />
                 <Legend />
@@ -537,7 +537,7 @@ export default function HubSpotSync() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           {item.direction === "PUSH" ? <ArrowRight size={14} className="text-blue-400" /> : 
-                           item.direction === "PULL" ? <ArrowLeft size={14} className="text-purple-400" /> : 
+                           item.direction === "PULL" ? <ArrowLeft size={14} className="text-emerald-400" /> : 
                            <ArrowLeftRight size={14} className="text-emerald-400" />}
                           <span className="text-sm text-[#c8d8ec]">{item.direction}</span>
                         </div>
@@ -683,8 +683,8 @@ export default function HubSpotSync() {
                   
                   <div className="p-4 rounded-xl bg-[#0d1a2e] border border-[#12233e] flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                        <Briefcase size={16} className="text-purple-400" />
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                        <Briefcase size={16} className="text-emerald-400" />
                       </div>
                       <div>
                         <p className="text-white font-medium">Deals</p>
@@ -694,7 +694,7 @@ export default function HubSpotSync() {
                     <button
                       onClick={() => updateMutation.mutate({ syncDeals: !settings?.syncDeals })}
                       className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${
-                        settings?.syncDeals ? 'bg-purple-500' : 'bg-[#4b6282]'
+                        settings?.syncDeals ? 'bg-emerald-500' : 'bg-[#4b6282]'
                       }`}
                     >
                       <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${

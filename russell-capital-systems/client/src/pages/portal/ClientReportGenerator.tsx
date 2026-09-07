@@ -53,7 +53,7 @@ const REPORT_THEMES = [
   { id: "wealth", label: "Wealth Management", primary: "#1c1c1c", accent: "#d4af37", description: "Black and gold luxury" },
 ];
 
-const COLORS = ['#1e3a5f', '#c9a84c', '#22c55e', '#3b82f6', '#d4af37', '#f43f5e', '#8b5cf6'];
+const COLORS = ['#1e3a5f', '#c9a84c', '#22c55e', '#3b82f6', '#d4af37', '#f43f5e', '#10b981'];
 
 export default function ClientReportGenerator() {
   const { user } = useAuth();
@@ -1157,7 +1157,7 @@ export default function ClientReportGenerator() {
                                 ${item.status === 'Pending' ? 'bg-amber-500/20 text-amber-500' : ''}
                                 ${item.status === 'In Progress' ? 'bg-blue-500/20 text-blue-500' : ''}
                                 ${item.status === 'Not Started' ? 'bg-slate-500/20 text-slate-400' : ''}
-                                ${item.status === 'Future' ? 'bg-purple-500/20 text-purple-400' : ''}
+                                ${item.status === 'Future' ? 'bg-emerald-500/20 text-emerald-400' : ''}
                                 ${item.status === 'Ongoing' ? 'bg-green-500/20 text-green-500' : ''}
                               `}>
                                 {item.status}

@@ -495,7 +495,7 @@ export default function PortfolioDriftMonitor() {
           {renderMetricCard(
             "Assets Out of Tolerance", 
             driftAlerts.length, 
-            <Target className="h-5 w-5 text-[#8b5cf6]" />,
+            <Target className="h-5 w-5 text-[#10b981]" />,
             undefined,
             driftAlerts.length > 0 ? "text-[#f59e0b]" : "text-[#22c55e]"
           )}
@@ -1100,7 +1100,7 @@ export default function PortfolioDriftMonitor() {
                   {/* Historical Drift Trend */}
                   <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 flex flex-col h-[400px]">
                     <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                      <LineChartIcon className="h-5 w-5 text-[#8b5cf6]" /> Historical Drift Trend
+                      <LineChartIcon className="h-5 w-5 text-[#10b981]" /> Historical Drift Trend
                     </h2>
                     <div className="flex-1 min-h-0">
                       <ResponsiveContainer width="100%" height="100%">
@@ -1115,7 +1115,7 @@ export default function PortfolioDriftMonitor() {
                           <Line yAxisId="left" type="step" dataKey={() => driftThreshold} stroke="#ef4444" strokeDasharray="5 5" strokeWidth={1} dot={false} activeDot={false} name="Threshold" />
                           
                           <Area yAxisId="right" type="monotone" dataKey="portfolioValue" fill="#3b82f6" fillOpacity={0.1} stroke="none" name="Portfolio Value" />
-                          <Line yAxisId="left" type="monotone" dataKey="drift" stroke="#8b5cf6" strokeWidth={3} dot={{ r: 4, fill: '#8b5cf6', strokeWidth: 2, stroke: '#0d1a2e' }} activeDot={{ r: 6 }} name="Max Drift %" />
+                          <Line yAxisId="left" type="monotone" dataKey="drift" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981', strokeWidth: 2, stroke: '#0d1a2e' }} activeDot={{ r: 6 }} name="Max Drift %" />
                           
                           {/* Rebalance Events */}
                           <Scatter yAxisId="left" data={HISTORICAL_DRIFT_DATA.filter((d) => d.rebalanced)} dataKey="drift" fill="#10b981" shape="star" name="Rebalance Event" />

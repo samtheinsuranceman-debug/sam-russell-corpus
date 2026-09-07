@@ -115,7 +115,7 @@ const BATTLE_CARDS = [
     objection: "I already max out my 401(k) and Roth IRA",
     response: "Perfect! That means you're already tax-diversified with pre-tax (401k) and post-tax (Roth). The IUL adds a THIRD bucket — tax-FREE income with no contribution limits, no RMDs, and a death benefit. It's the missing piece of the retirement puzzle.",
     killer: "Ask: 'What's your plan for income above the Roth limit? The IUL has NO income limits and NO contribution caps.'",
-    icon: Crown, color: "text-purple-400",
+    icon: Crown, color: "text-emerald-400",
   },
   {
     objection: "I can get better returns in real estate",
@@ -421,7 +421,7 @@ export default function CompetitiveAnalysis() {
             <TabsTrigger value="battlecards" className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-zinc-300 text-sm px-4 py-2">
               <Flame className="w-4 h-4 mr-1.5" /> Battle Cards
             </TabsTrigger>
-            <TabsTrigger value="matrix" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white text-zinc-300 text-sm px-4 py-2">
+            <TabsTrigger value="matrix" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white text-zinc-300 text-sm px-4 py-2">
               <Award className="w-4 h-4 mr-1.5" /> Feature Matrix
             </TabsTrigger>
             <TabsTrigger value="charts" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-zinc-300 text-sm px-4 py-2">
@@ -716,7 +716,7 @@ export default function CompetitiveAnalysis() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Award className="w-5 h-5 text-purple-400" /> Product Feature Comparison Matrix
+                  <Award className="w-5 h-5 text-emerald-400" /> Product Feature Comparison Matrix
                 </CardTitle>
                 <CardDescription>IUL vs every major retirement vehicle — feature by feature</CardDescription>
               </CardHeader>
@@ -729,7 +729,7 @@ export default function CompetitiveAnalysis() {
                         <th className="text-center py-3 px-3 text-emerald-400 font-bold">IUL</th>
                         <th className="text-center py-3 px-3 text-amber-400">BTID</th>
                         <th className="text-center py-3 px-3 text-blue-400">Roth IRA</th>
-                        <th className="text-center py-3 px-3 text-purple-400">401(k)</th>
+                        <th className="text-center py-3 px-3 text-emerald-400">401(k)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -749,7 +749,7 @@ export default function CompetitiveAnalysis() {
                         <td className="py-3 px-3 text-center text-emerald-400">{featureMatrix.filter((r) => r.iul === true).length}/{featureMatrix.length}</td>
                         <td className="py-3 px-3 text-center text-amber-400">{featureMatrix.filter((r) => r.btid === true).length}/{featureMatrix.length}</td>
                         <td className="py-3 px-3 text-center text-blue-400">{featureMatrix.filter((r) => r.roth === true).length}/{featureMatrix.length}</td>
-                        <td className="py-3 px-3 text-center text-purple-400">{featureMatrix.filter((r) => r.k401 === true).length}/{featureMatrix.length}</td>
+                        <td className="py-3 px-3 text-center text-emerald-400">{featureMatrix.filter((r) => r.k401 === true).length}/{featureMatrix.length}</td>
                       </tr>
                     </tfoot>
                   </table>
@@ -847,7 +847,7 @@ export default function CompetitiveAnalysis() {
                       <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} />
                       <Tooltip />
                       <Legend />
-                      <Line type="monotone" dataKey="trendA" name="Trend A" stroke="#8b5cf6" strokeWidth={2} />
+                      <Line type="monotone" dataKey="trendA" name="Trend A" stroke="#10b981" strokeWidth={2} />
                       <Line type="monotone" dataKey="trendB" name="Trend B" stroke="#f43f5e" strokeWidth={2} />
                     </LineChart>
                   </ResponsiveContainer>

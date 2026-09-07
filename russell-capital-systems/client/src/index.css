@@ -1052,48 +1052,48 @@ th {
   }
 }
 
-/* ─── Unified Portal Theme: Grok-inspired purple interiors ──────────────── */
+/* ─── Unified Portal Theme: emerald interiors ──────────────── */
 /* Scoped to AppShell so the public homepage retains its emerald city identity. */
 .rc-portal-theme {
-  --navy-950: #05030a;
-  --navy-900: #080611;
-  --navy-800: #0d0918;
-  --navy-700: #130d22;
-  --navy-600: #1c1230;
-  --navy-500: #2a1b46;
-  --navy-400: #3c2861;
-  --blue-accent: #8b5cf6;
-  --blue-accent-hover: #a78bfa;
-  --muted-text: #9b8fb5;
-  --body-text: #ddd6ec;
-  --heading-text: #faf7ff;
-  --border-subtle: rgba(167, 139, 250, 0.14);
-  --border-medium: rgba(167, 139, 250, 0.25);
-  --card-bg: rgba(13, 9, 24, 0.92);
-  --card-bg-hover: rgba(20, 13, 35, 0.96);
-  --background: oklch(0.075 0.025 300);
-  --foreground: oklch(0.93 0.018 300);
-  --card: oklch(0.105 0.035 300);
-  --card-foreground: oklch(0.93 0.018 300);
-  --popover: oklch(0.095 0.035 300);
-  --popover-foreground: oklch(0.93 0.018 300);
-  --primary: oklch(0.67 0.22 295);
-  --primary-foreground: oklch(0.99 0.005 300);
-  --secondary: oklch(0.15 0.045 300);
-  --secondary-foreground: oklch(0.90 0.02 300);
-  --muted: oklch(0.14 0.04 300);
-  --muted-foreground: oklch(0.64 0.04 300);
-  --accent: oklch(0.17 0.06 300);
-  --accent-foreground: oklch(0.94 0.02 300);
-  --border: oklch(0.24 0.06 300);
-  --input: oklch(0.16 0.05 300);
-  --ring: oklch(0.67 0.22 295);
+  --navy-950: #03090a;
+  --navy-900: #050f0c;
+  --navy-800: #08140f;
+  --navy-700: #0c1a15;
+  --navy-600: #12261e;
+  --navy-500: #1a3a2c;
+  --navy-400: #25523d;
+  --blue-accent: #10b981;
+  --blue-accent-hover: #34d399;
+  --muted-text: #8fb5a5;
+  --body-text: #d6ece2;
+  --heading-text: #f7fffb;
+  --border-subtle: rgba(110,231,183, 0.14);
+  --border-medium: rgba(110,231,183, 0.25);
+  --card-bg: rgba(6,18,13, 0.92);
+  --card-bg-hover: rgba(9,27,20, 0.96);
+  --background: oklch(0.075 0.025 165);
+  --foreground: oklch(0.93 0.018 165);
+  --card: oklch(0.105 0.035 165);
+  --card-foreground: oklch(0.93 0.018 165);
+  --popover: oklch(0.095 0.035 165);
+  --popover-foreground: oklch(0.93 0.018 165);
+  --primary: oklch(0.67 0.22 160);
+  --primary-foreground: oklch(0.99 0.005 165);
+  --secondary: oklch(0.15 0.045 165);
+  --secondary-foreground: oklch(0.90 0.02 165);
+  --muted: oklch(0.14 0.04 165);
+  --muted-foreground: oklch(0.64 0.04 165);
+  --accent: oklch(0.17 0.06 165);
+  --accent-foreground: oklch(0.94 0.02 165);
+  --border: oklch(0.24 0.06 165);
+  --input: oklch(0.16 0.05 165);
+  --ring: oklch(0.67 0.22 160);
   min-height: 100vh;
-  color: #ddd6ec;
+  color: #d6ece2;
   background:
-    radial-gradient(circle at 12% 0%, rgba(124, 58, 237, 0.18), transparent 30rem),
-    radial-gradient(circle at 90% 28%, rgba(76, 29, 149, 0.12), transparent 34rem),
-    #07050d;
+    radial-gradient(circle at 12% 0%, rgba(16,185,129, 0.18), transparent 30rem),
+    radial-gradient(circle at 90% 28%, rgba(6,95,70, 0.12), transparent 34rem),
+    #04100c;
   font-family: "Inter", "DM Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -1105,8 +1105,8 @@ th {
   pointer-events: none;
   opacity: 0.26;
   background-image:
-    linear-gradient(rgba(167, 139, 250, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(167, 139, 250, 0.025) 1px, transparent 1px);
+    linear-gradient(rgba(110,231,183, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(110,231,183, 0.025) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: linear-gradient(to bottom, black, transparent 78%);
 }
@@ -1115,90 +1115,90 @@ th {
   position: relative;
   z-index: 1;
   background:
-    radial-gradient(circle at 78% 4%, rgba(124, 58, 237, 0.12), transparent 28rem),
-    linear-gradient(145deg, #080611 0%, #0b0714 58%, #07050d 100%);
+    radial-gradient(circle at 78% 4%, rgba(16,185,129, 0.12), transparent 28rem),
+    linear-gradient(145deg, #050f0c 0%, #071410 58%, #04100c 100%);
 }
 
 .rc-portal-theme .rc-sidebar {
-  background: linear-gradient(180deg, rgba(8, 5, 15, 0.99), rgba(11, 7, 20, 0.99));
-  border-right-color: rgba(167, 139, 250, 0.18);
-  box-shadow: 18px 0 60px rgba(5, 2, 12, 0.38);
+  background: linear-gradient(180deg, rgba(4,12,9, 0.99), rgba(6,16,12, 0.99));
+  border-right-color: rgba(110,231,183, 0.18);
+  box-shadow: 18px 0 60px rgba(2,10,8, 0.38);
 }
 
 .rc-portal-theme .rc-sidebar-logo,
 .rc-portal-theme .rc-sidebar > div,
 .rc-portal-theme .rc-topbar {
-  border-color: rgba(167, 139, 250, 0.14);
+  border-color: rgba(110,231,183, 0.14);
 }
 
 .rc-portal-theme .rc-topbar {
-  background: rgba(8, 5, 15, 0.84);
+  background: rgba(4,12,9, 0.84);
   backdrop-filter: blur(18px);
 }
 
 .rc-portal-theme .rc-card {
-  border-color: rgba(167, 139, 250, 0.14);
-  background: linear-gradient(145deg, rgba(18, 11, 32, 0.94), rgba(10, 7, 18, 0.94));
-  box-shadow: 0 20px 55px rgba(5, 2, 12, 0.2);
+  border-color: rgba(110,231,183, 0.14);
+  background: linear-gradient(145deg, rgba(8,24,18, 0.94), rgba(5,14,10, 0.94));
+  box-shadow: 0 20px 55px rgba(2,10,8, 0.2);
 }
 
 .rc-portal-theme .rc-card:hover {
-  border-color: rgba(167, 139, 250, 0.26);
-  background: linear-gradient(145deg, rgba(24, 15, 42, 0.96), rgba(12, 8, 22, 0.96));
+  border-color: rgba(110,231,183, 0.26);
+  background: linear-gradient(145deg, rgba(10,32,24, 0.96), rgba(6,18,13, 0.96));
 }
 
 .rc-portal-theme .rc-sidebar-item:hover {
-  color: #f5f0ff;
-  background: rgba(139, 92, 246, 0.09);
-  text-shadow: 0 0 10px rgba(167, 139, 250, 0.24);
+  color: #f0fff7;
+  background: rgba(52,211,153, 0.09);
+  text-shadow: 0 0 10px rgba(110,231,183, 0.24);
 }
 
 .rc-portal-theme .rc-sidebar-item.active {
-  color: #ddd6fe;
-  background: linear-gradient(90deg, rgba(124, 58, 237, 0.24), rgba(139, 92, 246, 0.08));
-  box-shadow: inset 2px 0 #a78bfa;
-  text-shadow: 0 0 10px rgba(167, 139, 250, 0.36);
+  color: #d1fae5;
+  background: linear-gradient(90deg, rgba(16,185,129, 0.24), rgba(52,211,153, 0.08));
+  box-shadow: inset 2px 0 #34d399;
+  text-shadow: 0 0 10px rgba(110,231,183, 0.36);
 }
 
 .rc-portal-theme .rc-sidebar-item.active svg,
 .rc-portal-theme .rc-tab-item.active {
-  color: #c4b5fd;
-  filter: drop-shadow(0 0 5px rgba(167, 139, 250, 0.5));
+  color: #a7f3d0;
+  filter: drop-shadow(0 0 5px rgba(110,231,183, 0.5));
 }
 
 .rc-portal-theme .rc-bottom-tabs {
-  background: rgba(8, 5, 15, 0.96);
-  border-color: rgba(167, 139, 250, 0.18);
+  background: rgba(4,12,9, 0.96);
+  border-color: rgba(110,231,183, 0.18);
   backdrop-filter: blur(18px);
 }
 
 .rc-portal-theme .rc-btn-primary {
   color: white;
-  background: linear-gradient(135deg, #7c3aed, #8b5cf6 58%, #a78bfa);
-  box-shadow: 0 10px 30px rgba(76, 29, 149, 0.34);
+  background: linear-gradient(135deg, #059669, #10b981 58%, #34d399);
+  box-shadow: 0 10px 30px rgba(6,95,70, 0.34);
 }
 
 .rc-portal-theme .rc-btn-primary:hover {
-  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  background: linear-gradient(135deg, #10b981, #34d399);
   transform: translateY(-1px);
 }
 
 .rc-portal-theme .rc-btn-secondary {
-  color: #c4b5fd;
-  background: rgba(124, 58, 237, 0.12);
-  border-color: rgba(167, 139, 250, 0.28);
+  color: #a7f3d0;
+  background: rgba(16,185,129, 0.12);
+  border-color: rgba(110,231,183, 0.28);
 }
 
 .rc-portal-theme input:focus,
 .rc-portal-theme select:focus,
 .rc-portal-theme textarea:focus,
 .rc-portal-theme .rc-input:focus {
-  border-color: #8b5cf6 !important;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.16);
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(52,211,153, 0.16);
 }
 
 .rc-portal-theme ::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.34);
+  background: rgba(52,211,153, 0.34);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1480,4 +1480,26 @@ img.object-cover, img[class*="h-full"] { height: 100%; }
 @media (max-width: 767px) {
   /* Text-bearing artwork is shown whole on phones; decorative fills still cover. */
   img[data-fit="contain-mobile"] { object-fit: contain; }
+}
+
+/* ─── Homepage slogan: one line, drifting slowly left to right along the bottom of a picture ─── */
+.rc-slogan-track { display: inline-flex; gap: 6rem; padding-left: 0; will-change: transform; animation: rc-slogan-drift 48s linear infinite; }
+.rc-slogan-copy { display: inline-block; padding-right: 6rem; }
+@keyframes rc-slogan-drift { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.rc-slogan-line:hover .rc-slogan-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .rc-slogan-track { animation: none; white-space: normal; display: block; }
+  .rc-slogan-copy[aria-hidden="true"] { display: none; }
+}
+/* The owner's 1.6× homepage type scale must not blow the slogan past one line. */
+.rc-homepage-type-scale .rc-slogan-track { font-size: clamp(1.05rem, 1.85vw, 1.7rem) !important; line-height: 1.3 !important; }
+
+/* Phones: the 1.6× homepage scale must not blow the lead card and text screens past a readable size. */
+@media (max-width: 767px) {
+  .rc-homepage-type-scale .text-lg { font-size: 1.05rem !important; line-height: 1.5 !important; }
+  .rc-homepage-type-scale .text-xl { font-size: 1.15rem !important; line-height: 1.4 !important; }
+  .rc-homepage-type-scale .text-2xl { font-size: 1.35rem !important; line-height: 1.3 !important; }
+  .rc-homepage-type-scale .text-3xl { font-size: 1.6rem !important; line-height: 1.2 !important; }
+  .rc-homepage-type-scale .text-base { font-size: 1rem !important; line-height: 1.55 !important; }
+  .rc-homepage-type-scale .text-sm { font-size: .9rem !important; line-height: 1.5 !important; }
 }

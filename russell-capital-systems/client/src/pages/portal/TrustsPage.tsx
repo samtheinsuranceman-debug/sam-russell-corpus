@@ -271,7 +271,7 @@ const TRUST_TYPES: TrustType[] = [
     fullName: "Partner Limited Access Trust",
     icon: Users,
     color: "violet",
-    colorHex: "#8b5cf6",
+    colorHex: "#10b981",
     tagline: "The Modern Shield — Asset protection for unmarried partners and blended families",
     purpose: "A specialized ILIT designed for unmarried partners, providing limited access to trust distributions while maintaining estate exclusion and creditor protection. Essential for non-traditional family structures where standard marital trusts don't apply.",
     howItWorks: [
@@ -463,7 +463,7 @@ export default function TrustsPage() {
             <div>
               <div className="flex items-center gap-2">
                 <Landmark className="w-5 h-5 text-emerald-400" />
-                <h1 className="text-lg font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <h1 className="text-lg font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-emerald-400 bg-clip-text text-transparent">
                   TRUST STRUCTURES
                 </h1>
               </div>
@@ -705,7 +705,7 @@ export default function TrustsPage() {
         <div className="rounded-xl bg-[#111827] border border-white/10 p-6">
           <button onClick={() => toggleSection("funding")} className="w-full flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Gem className="w-5 h-5 text-purple-400" />
+              <Gem className="w-5 h-5 text-emerald-400" />
               <h3 className="text-sm font-bold text-white">FUNDING METHODS</h3>
             </div>
             {expandedSections.funding ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
@@ -714,8 +714,8 @@ export default function TrustsPage() {
           {expandedSections.funding && (
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2">
               {trust.fundingMethods.map((method, i) => (
-                <div key={i} className="flex items-start gap-2 p-3 rounded-lg bg-purple-500/5 border border-purple-500/10">
-                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-purple-500/20 text-purple-400 shrink-0">{i + 1}</span>
+                <div key={i} className="flex items-start gap-2 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
+                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-emerald-500/20 text-emerald-400 shrink-0">{i + 1}</span>
                   <p className="text-xs text-gray-300">{method}</p>
                 </div>
               ))}
@@ -796,7 +796,7 @@ export default function TrustsPage() {
                 <Bar dataKey="creditorShield" name="Creditor" fill="#3b82f6" stackId="a" />
                 <Bar dataKey="divorceProof" name="Divorce" fill="#ef4444" stackId="a" />
                 <Bar dataKey="taxEfficiency" name="Tax" fill="#f59e0b" stackId="a" />
-                <Bar dataKey="flexibility" name="Flexibility" fill="#8b5cf6" stackId="a" />
+                <Bar dataKey="flexibility" name="Flexibility" fill="#10b981" stackId="a" />
                 <Bar dataKey="generationalWealth" name="Generational" fill="#ec4899" stackId="a" />
               </BarChart>
             </ResponsiveContainer>
@@ -849,7 +849,7 @@ export default function TrustsPage() {
         )}
 
         {/* ─── BOTTOM CTA ──────────────────────────────────────────── */}
-        <div className="rounded-2xl bg-gradient-to-r from-emerald-950/60 via-blue-950/40 to-purple-950/60 border border-emerald-500/30 p-8 text-center">
+        <div className="rounded-2xl bg-gradient-to-r from-emerald-950/60 via-blue-950/40 to-emerald-950/60 border border-emerald-500/30 p-8 text-center">
           <Landmark className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-white mb-2">Every Trust Starts with a Conversation</h2>
           <p className="text-sm text-gray-300 max-w-2xl mx-auto mb-4">

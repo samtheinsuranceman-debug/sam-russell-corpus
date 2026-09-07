@@ -55,7 +55,7 @@ const ALL_STRATEGIES = [
 
 type StrategyKey = (typeof ALL_STRATEGIES)[number]["key"];
 
-const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#a855f7", "#06b6d4", "#ec4899", "#14b8a6", "#f97316", "#8b5cf6"];
+const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#a855f7", "#06b6d4", "#ec4899", "#14b8a6", "#f97316", "#10b981"];
 const RADIAN = Math.PI / 180;
 
 /* ── Monte Carlo helper (same as main page) ── */
@@ -438,10 +438,10 @@ export default function StrategyCompare() {
   };
 
   const renderMetricCard = (title: string, value: string, icon: any, trend?: string, isPositive?: boolean) => (
-    <div className="bg-[#0b1628] border border-[#12233e] rounded-xl p-4 flex flex-col hover:border-purple-500/30 transition-colors">
+    <div className="bg-[#0b1628] border border-[#12233e] rounded-xl p-4 flex flex-col hover:border-emerald-500/30 transition-colors">
       <div className="flex justify-between items-start mb-2">
         <span className="text-[#7a95b8] text-sm font-medium">{title}</span>
-        <div className="p-2 bg-[#0f1e35] rounded-lg text-purple-400">
+        <div className="p-2 bg-[#0f1e35] rounded-lg text-emerald-400">
           {icon}
         </div>
       </div>
@@ -518,7 +518,7 @@ export default function StrategyCompare() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-              <Columns className="text-purple-500" />
+              <Columns className="text-emerald-500" />
               Strategy Comparison
             </h1>
             <p className="text-[#7a95b8] mt-1 text-sm">
@@ -547,13 +547,13 @@ export default function StrategyCompare() {
         <div className="flex bg-[#0b1628] p-1 rounded-xl w-max border border-[#12233e]">
           <button onClick={() => { setMode("live"); setResults({}); }}
             className={`px-6 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
-              mode === "live" ? "bg-purple-600 text-white shadow-lg" : "text-[#7a95b8] hover:text-white"
+              mode === "live" ? "bg-emerald-600 text-white shadow-lg" : "text-[#7a95b8] hover:text-white"
             }`}>
             <Calculator size={16} /> Live Calculation
           </button>
           <button onClick={() => { setMode("saved"); setResults({}); }}
             className={`px-6 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
-              mode === "saved" ? "bg-purple-600 text-white shadow-lg" : "text-[#7a95b8] hover:text-white"
+              mode === "saved" ? "bg-emerald-600 text-white shadow-lg" : "text-[#7a95b8] hover:text-white"
             }`}>
             <History size={16} /> Saved Strategies
           </button>
@@ -564,7 +564,7 @@ export default function StrategyCompare() {
           <div className="rc-card">
             <div className="flex justify-between items-center mb-4">
               <div className="text-white font-semibold flex items-center gap-2">
-                <History size={18} className="text-purple-400" /> Select Saved Strategies
+                <History size={18} className="text-emerald-400" /> Select Saved Strategies
               </div>
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7a95b8]" />
@@ -573,7 +573,7 @@ export default function StrategyCompare() {
                   placeholder="Search saved..." 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-[#0b1628] border border-[#12233e] rounded-lg pl-8 pr-3 py-1.5 text-sm text-white focus:outline-none focus:border-purple-500"
+                  className="bg-[#0b1628] border border-[#12233e] rounded-lg pl-8 pr-3 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
             </div>
@@ -590,12 +590,12 @@ export default function StrategyCompare() {
                   return (
                     <div key={s.id} onClick={() => toggleSaved(s.id)}
                       className={`p-3 rounded-xl border cursor-pointer transition-all ${
-                        isSelected ? "bg-purple-500/10 border-purple-500" : "bg-[#0b1628] border-[#12233e] hover:border-[#1e3a66]"
+                        isSelected ? "bg-emerald-500/10 border-emerald-500" : "bg-[#0b1628] border-[#12233e] hover:border-[#1e3a66]"
                       }`}>
                       <div className="flex justify-between items-start mb-2">
                         <div className="font-medium text-white text-sm truncate pr-2">{s.strategyLabel || `Strategy #${s.id}`}</div>
                         <div className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                          isSelected ? "bg-purple-500 border-purple-500 text-white" : "border-[#334155]"
+                          isSelected ? "bg-emerald-500 border-emerald-500 text-white" : "border-[#334155]"
                         }`}>
                           {isSelected && <CheckSquare size={10} />}
                         </div>
@@ -613,7 +613,7 @@ export default function StrategyCompare() {
             {selectedSavedIds.length > 0 && (
               <div className="mt-4 pt-4 border-t border-[#12233e] flex justify-between items-center">
                 <span className="text-sm text-[#7a95b8]">{selectedSavedIds.length} strategies selected (max 4)</span>
-                <button onClick={() => setSelectedSavedIds([])} className="text-sm text-purple-400 hover:text-purple-300">
+                <button onClick={() => setSelectedSavedIds([])} className="text-sm text-emerald-400 hover:text-emerald-300">
                   Clear Selection
                 </button>
               </div>
@@ -624,7 +624,7 @@ export default function StrategyCompare() {
             {/* Strategy Selection */}
             <div className="rc-card">
               <div className="text-white font-semibold mb-4 flex items-center gap-2">
-                <Target size={18} className="text-purple-400" /> Select Strategies to Compare
+                <Target size={18} className="text-emerald-400" /> Select Strategies to Compare
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                 {ALL_STRATEGIES.map((s) => {
@@ -632,14 +632,14 @@ export default function StrategyCompare() {
                   return (
                     <button key={s.key} onClick={() => toggleStrategy(s.key)}
                       className={`p-3 rounded-xl border text-left transition-all flex flex-col gap-2 ${
-                        isSelected ? "bg-purple-500/10 border-purple-500" : "bg-[#0b1628] border-[#12233e] hover:border-[#1e3a66]"
+                        isSelected ? "bg-emerald-500/10 border-emerald-500" : "bg-[#0b1628] border-[#12233e] hover:border-[#1e3a66]"
                       }`}>
                       <div className="flex justify-between items-center w-full">
-                        <span className={`text-xs font-medium ${isSelected ? "text-purple-300" : "text-[#7a95b8]"}`}>
+                        <span className={`text-xs font-medium ${isSelected ? "text-emerald-300" : "text-[#7a95b8]"}`}>
                           {s.shortLabel}
                         </span>
                         <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                          isSelected ? "bg-purple-500 border-purple-500 text-white" : "border-[#334155]"
+                          isSelected ? "bg-emerald-500 border-emerald-500 text-white" : "border-[#334155]"
                         }`}>
                           {isSelected && <CheckSquare size={10} />}
                         </div>
@@ -656,7 +656,7 @@ export default function StrategyCompare() {
             <div className="rc-card">
               <div className="flex justify-between items-center mb-4">
                 <div className="text-white font-semibold flex items-center gap-2">
-                  <SlidersHorizontal size={18} className="text-purple-400" /> Client Parameters
+                  <SlidersHorizontal size={18} className="text-emerald-400" /> Client Parameters
                 </div>
                 <button onClick={() => setShowAdvanced(!showAdvanced)}
                   className="text-xs text-[#7a95b8] hover:text-white flex items-center gap-1">
@@ -838,7 +838,7 @@ export default function StrategyCompare() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
                     activeTab === tab.id 
-                      ? "border-purple-500 text-purple-400 bg-purple-500/5" 
+                      ? "border-emerald-500 text-emerald-400 bg-emerald-500/5" 
                       : "border-transparent text-[#7a95b8] hover:text-white hover:bg-[#0b1628]"
                   }`}
                 >
@@ -851,7 +851,7 @@ export default function StrategyCompare() {
             {activeTab === "overview" && (
               <div className="rc-card">
                 <div className="text-white font-semibold mb-4 flex items-center gap-2">
-                  <TrendingUp size={16} className="text-purple-400" /> 20-Year Outcome Comparison
+                  <TrendingUp size={16} className="text-emerald-400" /> 20-Year Outcome Comparison
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
@@ -928,7 +928,7 @@ export default function StrategyCompare() {
                 {/* Bar Chart 1 */}
                 <div className="rc-card">
                   <div className="text-white font-semibold mb-4 flex items-center gap-2">
-                    <BarChart2 size={16} className="text-purple-400" /> Key Metrics Comparison
+                    <BarChart2 size={16} className="text-emerald-400" /> Key Metrics Comparison
                   </div>
                   <div className="h-[300px]">
                     <ResponsiveContainer width="100%" height="100%">
@@ -951,7 +951,7 @@ export default function StrategyCompare() {
                 {/* Pie Chart 2 */}
                 <div className="rc-card">
                   <div className="text-white font-semibold mb-4 flex items-center gap-2">
-                    <PieChartIcon size={16} className="text-purple-400" /> Total Value Distribution
+                    <PieChartIcon size={16} className="text-emerald-400" /> Total Value Distribution
                   </div>
                   <div className="h-[300px] flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
@@ -984,9 +984,9 @@ export default function StrategyCompare() {
 
             {/* TAB CONTENT: MONTE CARLO */}
             {activeTab === "montecarlo" && Object.keys(mcDataMap).length > 0 && (
-              <div className="rc-card border-l-4 border-l-purple-500">
+              <div className="rc-card border-l-4 border-l-emerald-500">
                 <div className="text-white font-semibold mb-4 flex items-center gap-2">
-                  <Shuffle size={16} className="text-purple-400" /> Monte Carlo Comparison
+                  <Shuffle size={16} className="text-emerald-400" /> Monte Carlo Comparison
                   <span className="text-[#7a95b8] text-xs font-normal">(300 sims each, P10–P90)</span>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1008,7 +1008,7 @@ export default function StrategyCompare() {
                           {[
                             { label: "P10 (Worst)", val: last?.p10, color: "text-red-400" },
                             { label: "P25", val: last?.p25, color: "text-orange-400" },
-                            { label: "P50 (Median)", val: last?.p50, color: "text-purple-400" },
+                            { label: "P50 (Median)", val: last?.p50, color: "text-emerald-400" },
                             { label: "P75", val: last?.p75, color: "text-blue-400" },
                             { label: "P90 (Best)", val: last?.p90, color: "text-emerald-400" },
                           ].map((p) => (
@@ -1049,7 +1049,7 @@ export default function StrategyCompare() {
                 {/* Radar Chart 4 */}
                 <div className="rc-card lg:col-span-1">
                   <div className="text-white font-semibold mb-4 flex items-center gap-2">
-                    <AlertTriangle size={16} className="text-purple-400" /> Strategy Profiles
+                    <AlertTriangle size={16} className="text-emerald-400" /> Strategy Profiles
                   </div>
                   <div className="h-[300px]">
                     <ResponsiveContainer width="100%" height="100%">
@@ -1069,7 +1069,7 @@ export default function StrategyCompare() {
                 
                 <div className="rc-card lg:col-span-2">
                   <div className="text-white font-semibold mb-4 flex items-center gap-2">
-                    <Shield size={16} className="text-purple-400" /> Risk & Opportunity Matrix
+                    <Shield size={16} className="text-emerald-400" /> Risk & Opportunity Matrix
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
@@ -1124,7 +1124,7 @@ export default function StrategyCompare() {
             {activeTab === "cashflow" && (
               <div className="rc-card">
                 <div className="text-white font-semibold mb-4 flex items-center gap-2">
-                  <Activity size={16} className="text-purple-400" /> Cash Flow Projection
+                  <Activity size={16} className="text-emerald-400" /> Cash Flow Projection
                 </div>
                 {/* Line Chart 5 */}
                 <div className="h-[400px]">

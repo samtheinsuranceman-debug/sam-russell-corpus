@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 const ACTIONS = [
   { label: "New Client", icon: UserPlus, path: "/portal/clients", color: "#22c55e" },
-  { label: "New Deal", icon: Briefcase, path: "/portal/pipeline", color: "#a78bfa" },
+  { label: "New Deal", icon: Briefcase, path: "/portal/pipeline", color: "#34d399" },
   { label: "Quick Quote", icon: Calculator, path: "/portal/quick-quote", color: "#f0c040" },
   { label: "Schedule Meeting", icon: Calendar, path: "/portal/meetings", color: "#3b82f6" },
 ];

@@ -59,7 +59,7 @@ const channelData = [
   { name: "deals", count: 300 },
   { name: "support", count: 200 },
 ];
-const COLORS = ['#4f8cff', '#22c55e', '#f59e0b', '#e11d48', '#8b5cf6'];
+const COLORS = ['#4f8cff', '#22c55e', '#f59e0b', '#e11d48', '#10b981'];
 
 const eventTypeData = [
   { subject: 'New Clients', A: 120, B: 110, fullMark: 150 },
@@ -480,7 +480,7 @@ export default function SlackIntegration() {
             </div>
             <div className="mt-2 flex -space-x-2">
               {isConnected && Array.from({ length: Math.min(5, 24) }).map((_, i) => (
-                <div key={i} className="w-6 h-6 rounded-full bg-gradient-to-br from-[#4f8cff] to-[#8b5cf6] border-2 border-[#0d1a2e] flex items-center justify-center text-[10px] font-bold text-white z-10" style={{ zIndex: 5 - i }}>
+                <div key={i} className="w-6 h-6 rounded-full bg-gradient-to-br from-[#4f8cff] to-[#10b981] border-2 border-[#0d1a2e] flex items-center justify-center text-[10px] font-bold text-white z-10" style={{ zIndex: 5 - i }}>
                   {String.fromCharCode(65 + i)}
                 </div>
               ))}
@@ -510,11 +510,11 @@ export default function SlackIntegration() {
             </div>
           </div>
           
-          <div className="rc-card flex flex-col justify-between hover:border-[#8b5cf6]/50 transition-colors group cursor-pointer hidden xl:flex" onClick={() => setActiveTab("commands")}>
+          <div className="rc-card flex flex-col justify-between hover:border-[#10b981]/50 transition-colors group cursor-pointer hidden xl:flex" onClick={() => setActiveTab("commands")}>
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-[#7a95b8] font-medium">Commands Executed</span>
-              <div className="p-2 rounded-lg bg-[#8b5cf6]/10 group-hover:scale-110 transition-transform">
-                <Terminal size={16} className="text-[#8b5cf6]" />
+              <div className="p-2 rounded-lg bg-[#10b981]/10 group-hover:scale-110 transition-transform">
+                <Terminal size={16} className="text-[#10b981]" />
               </div>
             </div>
             <div className="flex items-end gap-2 mt-4">

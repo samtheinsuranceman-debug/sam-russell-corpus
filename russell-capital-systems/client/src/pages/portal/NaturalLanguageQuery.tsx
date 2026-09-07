@@ -77,7 +77,7 @@ const EXAMPLE_QUERIES = [
   "List clients with mortgage rates above 6%",
 ];
 
-const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444", "#ec4899", "#14b8a6", "#f97316"];
+const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#ec4899", "#14b8a6", "#f97316"];
 
 export default function NaturalLanguageQuery() {
   const { user } = useAuth();
@@ -972,13 +972,13 @@ Try asking more specific questions like "Which clients are over age 60?" or "Wha
           <TabsContent value="query" className="space-y-6 mt-0">
             {/* Search Bar */}
             <Card className="bg-slate-800/60 border-slate-700/60 shadow-lg overflow-hidden relative">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-rose-500"></div>
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-emerald-500 to-rose-500"></div>
               <CardContent className="pt-6 pb-6">
                 <div className="flex flex-col gap-4">
                   <Label htmlFor="nlq-input" className="text-slate-300 font-medium text-sm ml-1">What would you like to know about your practice?</Label>
                   <div className="flex gap-3">
                     <div className="relative flex-1 group">
-                      <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-emerald-500/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       <Sparkles className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-pink-400 z-10" />
                       <Input 
                         id="nlq-input"
@@ -1293,7 +1293,7 @@ Try asking more specific questions like "Which clients are over age 60?" or "Wha
               <Card className="bg-slate-800/60 border-slate-700/50 col-span-1">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base font-medium text-white flex items-center gap-2">
-                    <Target className="h-4 w-4 text-purple-400" /> Product Mix Analysis
+                    <Target className="h-4 w-4 text-emerald-400" /> Product Mix Analysis
                   </CardTitle>
                   <CardDescription>Asset allocation across book</CardDescription>
                 </CardHeader>

@@ -47,7 +47,7 @@ import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const fmtPct = (n: number) => `${n.toFixed(2)}%`;
-const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4", "#10b981", "#6366f1", "#f43f5e"];
+const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#10b981", "#ec4899", "#06b6d4", "#10b981", "#6366f1", "#f43f5e"];
 
 interface AssetClass {
   name: string;
@@ -424,7 +424,7 @@ export default function SmartRebalancingAlerts() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-full bg-[#12233e] flex items-center justify-center">
-                <Zap className="w-6 h-6 text-[#8b5cf6]" />
+                <Zap className="w-6 h-6 text-[#10b981]" />
               </div>
             </CardContent>
           </Card>

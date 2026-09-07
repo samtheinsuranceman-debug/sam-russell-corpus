@@ -69,7 +69,7 @@ const WELCOME_SLIDES = [
     subtitle: "What Top Advisors Achieve With These Tools",
     content: "The advisors who master these tools don't just improve — they transform. We're talking about going from 3 cases/month to 5+, from $8K average premium to $14K+, and from 60-hour weeks to 40-hour weeks with higher income.",
     icon: Trophy,
-    gradient: "from-violet-500 to-purple-500",
+    gradient: "from-emerald-500 to-emerald-500",
     stats: [
       { label: "Monthly Cases", value: "3→5+" },
       { label: "Avg Premium", value: "$8K→$14K" },
@@ -642,7 +642,7 @@ export default function IndividualAgentTutorial() {
                 { label: "Monthly Impact", value: feature.monthlyImpact, color: "text-emerald-400" },
                 { label: "Annual Impact", value: feature.annualImpact, color: "text-cyan-400" },
                 { label: "Retail Build Cost", value: feature.retailBuildCost, color: "text-amber-400" },
-                { label: "Time to Learn", value: feature.timeToLearn, color: "text-violet-400" },
+                { label: "Time to Learn", value: feature.timeToLearn, color: "text-emerald-400" },
               ].map((s, i) => (
                 <div key={i} className="bg-zinc-900/50 rounded-xl p-4 text-center border border-zinc-700">
                   <div className={cn("text-xl font-bold", s.color)}>{s.value}</div>
@@ -651,7 +651,7 @@ export default function IndividualAgentTutorial() {
               ))}
             </div>
             <div>
-              <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2"><Layers className="w-5 h-5 text-violet-400" /> Deep Dive</h4>
+              <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2"><Layers className="w-5 h-5 text-emerald-400" /> Deep Dive</h4>
               <div className="space-y-2">
                 {feature.drillDowns.map((dd) => {
                   const isExpanded = expandedDrillDown[feature.id] === dd.id;
@@ -790,7 +790,7 @@ export default function IndividualAgentTutorial() {
     if (score >= 100 && !badges.some(b => b.id === "b10")) awardBadge("b10");
     return (
       <div className="space-y-8">
-        <div className="text-center bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-violet-500/10 rounded-2xl border border-emerald-500/20 p-12">
+        <div className="text-center bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-emerald-500/10 rounded-2xl border border-emerald-500/20 p-12">
           <div className="text-6xl mb-4">🎓</div>
           <h2 className="text-4xl font-bold text-white mb-2">You're Ready to Dominate!</h2>
           <p className="text-xl text-zinc-300">Individual Agent Tutorial Complete</p>
@@ -970,7 +970,7 @@ export default function IndividualAgentTutorial() {
                 <XAxis dataKey="name" stroke="#888" fontSize={10} tickLine={false} axisLine={false} />
                 <YAxis stroke="#888" fontSize={10} tickLine={false} axisLine={false} />
                 <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} />
-                <Area type="monotone" dataKey="progress" stroke="#a78bfa" fill="#a78bfa" fillOpacity={0.2} />
+                <Area type="monotone" dataKey="progress" stroke="#34d399" fill="#34d399" fillOpacity={0.2} />
               </AreaChart>
             </ResponsiveContainer>
           </div>

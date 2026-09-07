@@ -14,8 +14,8 @@ import {
   type ClientFactFinder, type FieldSpec, type FieldValue, type ListRow, type SectionData,
 } from "@shared/clientFactFinder";
 
-const CARD = "rounded-2xl border border-violet-400/20 bg-white/[0.04] backdrop-blur-sm";
-const INPUT = "w-full rounded-xl border border-violet-400/25 bg-[#0b0f1a] px-3.5 py-2.5 text-[15px] text-white placeholder:text-slate-500 focus:border-violet-300 focus:outline-none";
+const CARD = "rounded-2xl border border-emerald-400/20 bg-white/[0.04] backdrop-blur-sm";
+const INPUT = "w-full rounded-xl border border-emerald-400/25 bg-[#0b0f1a] px-3.5 py-2.5 text-[15px] text-white placeholder:text-slate-500 focus:border-emerald-300 focus:outline-none";
 const LABEL = "block text-sm text-slate-300";
 
 function formatMoney(n: number | null | undefined) {
@@ -28,16 +28,16 @@ function parseMoney(s: string): number | null {
 
 function Field({ spec, value, onChange }: { spec: FieldSpec; value: FieldValue | undefined; onChange: (v: FieldValue) => void }) {
   const id = `f-${spec.key}`;
-  const req = spec.required ? <span className="ml-1 text-violet-300">*</span> : null;
+  const req = spec.required ? <span className="ml-1 text-emerald-300">*</span> : null;
   const hint = spec.hint ? <p className="mt-1 text-xs text-slate-500">{spec.hint}</p> : null;
   if (spec.type === "boolean") {
     return (
       <div>
         <span className={LABEL}>{spec.label}{req}</span>
-        <div className="mt-1.5 inline-flex overflow-hidden rounded-xl border border-violet-400/25" role="group" aria-label={spec.label}>
+        <div className="mt-1.5 inline-flex overflow-hidden rounded-xl border border-emerald-400/25" role="group" aria-label={spec.label}>
           {[true, false].map((b) => (
             <button key={String(b)} type="button" onClick={() => onChange(b)} aria-pressed={value === b}
-              className={`px-5 py-2 text-sm font-medium transition ${value === b ? "bg-violet-500 text-white" : "bg-[#0b0f1a] text-slate-300 hover:bg-white/5"}`}>
+              className={`px-5 py-2 text-sm font-medium transition ${value === b ? "bg-emerald-500 text-white" : "bg-[#0b0f1a] text-slate-300 hover:bg-white/5"}`}>
               {b ? "Yes" : "No"}
             </button>
           ))}
@@ -153,7 +153,7 @@ export default function FinancialAssessment() {
         <div className={`${CARD} p-6`}>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80">New Client Welcome List · Step 1</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80">New Client Welcome List · Step 1</p>
               <h1 className="mt-1 text-2xl font-semibold text-white">Financial Assessment</h1>
               <p className="mt-1 max-w-2xl text-sm text-slate-400">Fifteen sections. Everything — income, taxes, mortgages, debts, investments, insurance, practice, estate, protection, retirement, goals. This is the foundation every answer rests on; the AI Financial Advisor will not advise until it is complete.</p>
             </div>
@@ -164,7 +164,7 @@ export default function FinancialAssessment() {
             </div>
           </div>
           <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
-            <div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 transition-all" style={{ width: `${completeness.percent}%` }} />
+            <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all" style={{ width: `${completeness.percent}%` }} />
           </div>
           {completeness.complete ? (
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3">
@@ -172,9 +172,9 @@ export default function FinancialAssessment() {
               <Link href="/portal/ai-advisor" className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-black hover:bg-emerald-400"><Sparkles size={14} className="mr-1 inline" /> Ask the advisor</Link>
             </div>
           ) : (
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-violet-400/25 bg-violet-400/10 px-4 py-3">
-              <p className="text-sm text-violet-100">{completeness.missing.length} required answer{completeness.missing.length === 1 ? "" : "s"} remaining.</p>
-              {firstIncomplete >= 0 && <button type="button" onClick={() => setSectionIdx(firstIncomplete)} className="rounded-lg border border-violet-300/40 px-3 py-1.5 text-sm text-violet-100 hover:bg-violet-500/20">Jump to next open section</button>}
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-400/25 bg-emerald-400/10 px-4 py-3">
+              <p className="text-sm text-emerald-100">{completeness.missing.length} required answer{completeness.missing.length === 1 ? "" : "s"} remaining.</p>
+              {firstIncomplete >= 0 && <button type="button" onClick={() => setSectionIdx(firstIncomplete)} className="rounded-lg border border-emerald-300/40 px-3 py-1.5 text-sm text-emerald-100 hover:bg-emerald-500/20">Jump to next open section</button>}
             </div>
           )}
         </div>
@@ -189,7 +189,7 @@ export default function FinancialAssessment() {
                 return (
                   <li key={s.id}>
                     <button type="button" onClick={() => setSectionIdx(i)} aria-current={active ? "step" : undefined}
-                      className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition ${active ? "bg-violet-500/20 text-white" : "text-slate-300 hover:bg-white/5"}`}>
+                      className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition ${active ? "bg-emerald-500/20 text-white" : "text-slate-300 hover:bg-white/5"}`}>
                       <span className="flex items-center gap-2"><span className="w-5 text-xs text-slate-500">{i + 1}</span>{s.title}</span>
                       {pct === 100 ? <Check size={14} className="text-emerald-300" /> : <span className="text-xs text-slate-500">{pct}%</span>}
                     </button>
@@ -201,7 +201,7 @@ export default function FinancialAssessment() {
 
           {/* section form */}
           <div className={`${CARD} p-6`}>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80">Section {sectionIdx + 1} of {FACT_FINDER_SECTIONS.length}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80">Section {sectionIdx + 1} of {FACT_FINDER_SECTIONS.length}</p>
             <h2 className="mt-1 text-xl font-semibold text-white">{section.title}</h2>
             <p className="mt-1 text-sm text-slate-400">{section.intro}</p>
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
@@ -214,7 +214,7 @@ export default function FinancialAssessment() {
               <div className="mt-8">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-white">{section.list.label}</h3>
-                  <button type="button" onClick={() => updateList([...(data.lists[section.list!.key] ?? []), {}])} className="inline-flex items-center gap-1 rounded-lg border border-violet-300/40 px-3 py-1.5 text-sm text-violet-100 hover:bg-violet-500/20"><Plus size={14} /> {section.list.addLabel}</button>
+                  <button type="button" onClick={() => updateList([...(data.lists[section.list!.key] ?? []), {}])} className="inline-flex items-center gap-1 rounded-lg border border-emerald-300/40 px-3 py-1.5 text-sm text-emerald-100 hover:bg-emerald-500/20"><Plus size={14} /> {section.list.addLabel}</button>
                 </div>
                 {(data.lists[section.list.key] ?? []).map((row, ri) => (
                   <div key={ri} className="mt-3 rounded-xl border border-white/10 p-4">
@@ -231,8 +231,8 @@ export default function FinancialAssessment() {
 
             <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-5">
               <button type="button" disabled={sectionIdx === 0} onClick={() => setSectionIdx((i) => Math.max(0, i - 1))} className="inline-flex items-center gap-1 rounded-lg border border-white/15 px-4 py-2 text-sm text-slate-200 disabled:opacity-40"><ChevronLeft size={16} /> Previous</button>
-              <button type="button" onClick={() => setShowDoc((v) => !v)} className="inline-flex items-center gap-1 rounded-lg border border-violet-300/40 px-4 py-2 text-sm text-violet-100 hover:bg-violet-500/20"><FileText size={16} /> {showDoc ? "Hide" : "View"} my Financial Analysis Document</button>
-              <button type="button" disabled={sectionIdx === FACT_FINDER_SECTIONS.length - 1} onClick={() => setSectionIdx((i) => Math.min(FACT_FINDER_SECTIONS.length - 1, i + 1))} className="inline-flex items-center gap-1 rounded-lg bg-violet-500 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-400 disabled:opacity-40">Next <ChevronRight size={16} /></button>
+              <button type="button" onClick={() => setShowDoc((v) => !v)} className="inline-flex items-center gap-1 rounded-lg border border-emerald-300/40 px-4 py-2 text-sm text-emerald-100 hover:bg-emerald-500/20"><FileText size={16} /> {showDoc ? "Hide" : "View"} my Financial Analysis Document</button>
+              <button type="button" disabled={sectionIdx === FACT_FINDER_SECTIONS.length - 1} onClick={() => setSectionIdx((i) => Math.min(FACT_FINDER_SECTIONS.length - 1, i + 1))} className="inline-flex items-center gap-1 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400 disabled:opacity-40">Next <ChevronRight size={16} /></button>
             </div>
           </div>
         </div>
@@ -242,12 +242,12 @@ export default function FinancialAssessment() {
           <section className={`${CARD} p-6 print:border-0 print:bg-white print:text-black`} aria-label="Financial Analysis Document">
             <div className="flex flex-wrap items-start justify-between gap-3 print:hidden">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-300/80">Financial Analysis Document</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80">Financial Analysis Document</p>
                 <h2 className="mt-1 text-xl font-semibold text-white">{clientName} · {new Date().toLocaleDateString()}</h2>
               </div>
               <div className="flex gap-2">
                 <button type="button" onClick={() => void navigator.clipboard?.writeText(`FINANCIAL ANALYSIS DOCUMENT — ${clientName} — ${new Date().toLocaleDateString()}\n\n${doc}`)} className="inline-flex items-center gap-1 rounded-lg border border-white/15 px-3 py-1.5 text-sm text-slate-200 hover:bg-white/5"><Copy size={14} /> Copy as text</button>
-                <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-1 rounded-lg bg-violet-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-violet-400"><Printer size={14} /> Print</button>
+                <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-1 rounded-lg bg-emerald-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-400"><Printer size={14} /> Print</button>
               </div>
             </div>
             <div className="mt-6 space-y-6">
@@ -255,7 +255,7 @@ export default function FinancialAssessment() {
                 const sd = data.sections[s.id] ?? {};
                 return (
                   <div key={s.id}>
-                    <h3 className="border-b border-violet-400/20 pb-1 text-sm font-semibold uppercase tracking-wider text-violet-200 print:text-black">{s.title}</h3>
+                    <h3 className="border-b border-emerald-400/20 pb-1 text-sm font-semibold uppercase tracking-wider text-emerald-200 print:text-black">{s.title}</h3>
                     <dl className="mt-2 grid gap-x-6 gap-y-1 sm:grid-cols-2">
                       {s.fields.filter((f) => fieldVisible(f, sd)).map((f) => {
                         const v = sd[f.key];

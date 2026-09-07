@@ -954,7 +954,7 @@ export default function TimeMachineCalculator() {
           <Card className="bg-[#0a1628]/80 border-[#1e3a5f]">
             <CardHeader className="pb-3">
               <CardTitle className="text-base text-white flex items-center gap-2">
-                <Users className="h-4 w-4 text-purple-400" />
+                <Users className="h-4 w-4 text-emerald-400" />
                 Generational Ownership Transfer
               </CardTitle>
               <CardDescription>
@@ -994,9 +994,9 @@ export default function TimeMachineCalculator() {
                         <ReferenceLine
                           key={i}
                           x={gen.startYear}
-                          stroke={["#8b5cf6", "#ec4899", "#f59e0b", "#10b981"][i]}
+                          stroke={["#10b981", "#ec4899", "#f59e0b", "#10b981"][i]}
                           strokeDasharray="6 3"
-                          label={{ value: gen.label, position: "top", fill: ["#8b5cf6", "#ec4899", "#f59e0b", "#10b981"][i], fontSize: 9 }}
+                          label={{ value: gen.label, position: "top", fill: ["#10b981", "#ec4899", "#f59e0b", "#10b981"][i], fontSize: 9 }}
                         />
                       ))}
                     </AreaChart>
@@ -1004,9 +1004,9 @@ export default function TimeMachineCalculator() {
                 </div>
               )}
 
-              <div className="mt-4 p-3 rounded-lg bg-purple-950/20 border border-purple-600/30">
-                <p className="text-xs text-purple-200/80 leading-relaxed">
-                  <strong className="text-purple-300">Key Insight:</strong> Unlike most financial products, a properly structured IUL policy
+              <div className="mt-4 p-3 rounded-lg bg-emerald-950/20 border border-emerald-600/30">
+                <p className="text-xs text-emerald-200/80 leading-relaxed">
+                  <strong className="text-emerald-300">Key Insight:</strong> Unlike most financial products, a properly structured IUL policy
                   does not terminate at the insured's death. Through ownership transfer, the cash value continues compounding
                   tax-deferred across generations. A policy started at age 45 with {fmt(totalPremiums)} in premiums could be
                   serving grandchildren 80+ years later with account values in the tens of millions — all from the same original policy.
@@ -1096,7 +1096,7 @@ export default function TimeMachineCalculator() {
           <Card className="bg-[#0a1628]/80 border-[#1e3a5f]">
             <CardHeader className="pb-3">
               <CardTitle className="text-base text-white flex items-center gap-2">
-                <Layers className="h-4 w-4 text-purple-400" />
+                <Layers className="h-4 w-4 text-emerald-400" />
                 The Time Machine Formula
               </CardTitle>
             </CardHeader>
@@ -1118,7 +1118,7 @@ export default function TimeMachineCalculator() {
                 <p className="text-white">Find first year Y where effectiveReturn[Y] ≥ target</p>
                 <p className="text-muted-foreground mb-3">// target = 28%, 50%, or 80%</p>
 
-                <p className="text-purple-300 mb-2">// TIME MACHINE REVERSE-ENGINEERING:</p>
+                <p className="text-emerald-300 mb-2">// TIME MACHINE REVERSE-ENGINEERING:</p>
                 <p className="text-white">tmRequiredAV = historicalCreditDollars / ag49MaxRate</p>
                 <p className="text-muted-foreground">// How large must the account be so that 7.5% produces the same dollars as the historical return?</p>
               </div>

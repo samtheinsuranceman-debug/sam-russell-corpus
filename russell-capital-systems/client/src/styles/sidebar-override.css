@@ -25,9 +25,9 @@ nav.rc-sidebar-nav button:nth-of-type(2) .flex-1.text-left {
   color: #22d3ee !important;  /* cyan-400 */
 }
 
-/* PLANNING section — bright violet */
+/* PLANNING section — bright emerald */
 nav.rc-sidebar-nav button:nth-of-type(3) .flex-1.text-left {
-  color: #a78bfa !important;  /* violet-400 */
+  color: #34d399 !important;  /* emerald-400 */
 }
 
 /* PRODUCTS section — bright amber */
@@ -52,7 +52,7 @@ nav.rc-sidebar-nav button:nth-of-type(7) .flex-1.text-left {
 
 /* THE EXPERIENCE — bright fuchsia */
 nav.rc-sidebar-nav button:nth-of-type(8) .flex-1.text-left {
-  color: #e879f9 !important;  /* fuchsia-400 */
+  color: #e879f9 !important;  /* emerald-400 */
 }
 
 /* COMMAND — bright orange */

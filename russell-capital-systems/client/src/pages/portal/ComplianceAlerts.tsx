@@ -61,7 +61,7 @@ const ALERT_TYPE_LABELS: Record<string, string> = {
   UNUSUAL_ACTIVITY: "Unusual Activity"
 };
 
-const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#a78bfa", "#ef4444", "#ec4899", "#14b8a6", "#f97316"];
+const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#ec4899", "#14b8a6", "#f97316"];
 
 export default function ComplianceAlerts() {
   const { user } = useAuth();
@@ -337,7 +337,7 @@ export default function ComplianceAlerts() {
 
               <div className="rc-card bg-[#0d1a2e] border-[#12233e] p-5">
                 <h3 className="text-sm font-medium text-white mb-6 flex items-center gap-2">
-                  <PieChartIcon size={16} className="text-[#a78bfa]" />
+                  <PieChartIcon size={16} className="text-[#34d399]" />
                   Alert Distribution by Type
                 </h3>
                 <div className="h-[300px]">
@@ -830,7 +830,7 @@ export default function ComplianceAlerts() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="rc-card bg-[#0d1a2e] border-[#12233e] p-6 max-w-3xl">
               <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-                <Settings size={20} className="text-[#a78bfa]" />
+                <Settings size={20} className="text-[#34d399]" />
                 Alert Configuration
               </h3>
               

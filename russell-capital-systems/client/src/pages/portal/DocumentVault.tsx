@@ -259,7 +259,7 @@ export default function DocumentVault() {
     ];
   }, []);
 
-  const COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+  const COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#ef4444', '#10b981', '#ec4899', '#14b8a6', '#f97316'];
 
   const handleExportCSV = useCallback(() => {
     setIsExporting(true);
@@ -575,10 +575,10 @@ export default function DocumentVault() {
             <h3 className="text-3xl font-bold text-white">AES-256</h3>
           </div>
 
-          <div className="bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 hover:border-purple-500/50 transition-colors">
+          <div className="bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 hover:border-emerald-500/50 transition-colors">
             <div className="flex justify-between items-start mb-4">
-              <div className="p-3 bg-purple-500/20 rounded-xl">
-                <HardDrive className="w-6 h-6 text-purple-400" />
+              <div className="p-3 bg-emerald-500/20 rounded-xl">
+                <HardDrive className="w-6 h-6 text-emerald-400" />
               </div>
             </div>
             <p className="text-[#7a95b8] text-sm font-medium mb-1">Storage Used</p>
@@ -978,7 +978,7 @@ export default function DocumentVault() {
                         <PolarGrid stroke="#12233e" />
                         <PolarAngleAxis dataKey="subject" stroke="#c8d8ec" />
                         <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#7a95b8" />
-                        <Radar name="Score" dataKey="A" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} />
+                        <Radar name="Score" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
                         <Tooltip contentStyle={{ backgroundColor: '#060d19', borderColor: '#12233e', color: '#fff' }} />
                       </RadarChart>
                     </ResponsiveContainer>

@@ -366,11 +366,11 @@ function AIKnowledgeQuerySection() {
   const SUGGESTED = ["What are our top messaging points?", "Summarize compliance rules", "How to handle rate objections?"];
   return (
     <div className="px-6 pt-4">
-      <div className="rc-card border-purple-500/20 bg-purple-500/5">
+      <div className="rc-card border-emerald-500/20 bg-emerald-500/5">
         <div className="flex items-center gap-2 mb-3">
-          <BookOpen size={18} className="text-purple-400" />
+          <BookOpen size={18} className="text-emerald-400" />
           <span className="text-white font-semibold">Ask Your Knowledge Base</span>
-          <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">AI</span>
+          <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">AI</span>
         </div>
         <p className="text-xs text-[#7a95b8] mb-3">Ask questions in plain English and get answers sourced from your uploaded documents.</p>
         <div className="flex gap-2">
@@ -381,13 +381,13 @@ function AIKnowledgeQuerySection() {
         </div>
         <div className="flex gap-2 mt-2 flex-wrap">
           {SUGGESTED.map((q, i) => (
-            <button key={i} className="text-xs px-2 py-1 rounded-full border border-purple-500/20 text-purple-300 hover:bg-purple-500/10 transition-colors" onClick={() => { setQuery(q); ask(q); }}>{q}</button>
+            <button key={i} className="text-xs px-2 py-1 rounded-full border border-emerald-500/20 text-emerald-300 hover:bg-emerald-500/10 transition-colors" onClick={() => { setQuery(q); ask(q); }}>{q}</button>
           ))}
         </div>
         {answer && (
-          <div className="mt-4 p-4 rounded-lg bg-[#0a1628] border border-purple-500/20">
+          <div className="mt-4 p-4 rounded-lg bg-[#0a1628] border border-emerald-500/20">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-purple-400 font-medium">AI Answer</span>
+              <span className="text-xs text-emerald-400 font-medium">AI Answer</span>
               <button className="text-xs text-muted-foreground hover:text-white" onClick={clearAnswer}><X size={14} /></button>
             </div>
             <div className="text-sm text-[#c8d6e5] leading-relaxed"><Streamdown>{answer}</Streamdown></div>
@@ -426,8 +426,8 @@ export default function Knowledge() {
       <div className="rc-page-header">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/12 border border-purple-500/20 flex items-center justify-center">
-              <BookOpen size={18} className="text-[#a78bfa]" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/12 border border-emerald-500/20 flex items-center justify-center">
+              <BookOpen size={18} className="text-[#34d399]" />
             </div>
             <div>
               <h1 className="rc-page-title">Knowledge Library</h1>
@@ -480,7 +480,7 @@ export default function Knowledge() {
                     paddingAngle={3} dataKey="value"
                     label={({ name, value }) => `${name}: ${value}`}
                   >
-                    {["#22c55e", "#a78bfa", "#f0c040", "#3b82f6", "#ef4444", "#ec4899", "#06b6d4"].map((c, i) => (
+                    {["#22c55e", "#34d399", "#f0c040", "#3b82f6", "#ef4444", "#ec4899", "#06b6d4"].map((c, i) => (
                       <Cell key={i} fill={c} />
                     ))}
                   </Pie>
@@ -490,7 +490,7 @@ export default function Knowledge() {
             </div>
             <div className="rc-card">
               <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                <BookOpen size={14} className="text-[#a78bfa]" /> Documents Added Over Time
+                <BookOpen size={14} className="text-[#34d399]" /> Documents Added Over Time
               </div>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart
@@ -508,7 +508,7 @@ export default function Knowledge() {
                   <XAxis dataKey="name" tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} allowDecimals={false} />
                   <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }} />
-                  <Bar dataKey="count" name="Documents" fill="#a78bfa" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="count" name="Documents" fill="#34d399" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

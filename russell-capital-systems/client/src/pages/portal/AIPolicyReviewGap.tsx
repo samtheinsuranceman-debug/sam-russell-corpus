@@ -106,7 +106,7 @@ const SEVERITY_STYLES = {
   severe: { bg: "bg-red-500/10", text: "text-red-400", border: "border-red-500/30", label: "Severe Gap", badgeClass: "rc-badge rc-badge-red" },
 };
 
-const COLORS = ['#22c55e', '#3b82f6', '#f0c040', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+const COLORS = ['#22c55e', '#3b82f6', '#f0c040', '#ef4444', '#10b981', '#ec4899', '#14b8a6', '#f97316'];
 
 function analyzeGapsDetailed(client: any, historicalContext: any): AnalysisResult {
   const income = client?.income ?? 100000;
@@ -837,7 +837,7 @@ export default function AIPolicyReviewGap() {
               {/* Chart 3: Pie */}
               <div className="rc-card flex flex-col h-[350px]">
                 <h3 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-                  <PieChartIcon className="w-5 h-5 text-[#8b5cf6]" /> Severity Distribution
+                  <PieChartIcon className="w-5 h-5 text-[#10b981]" /> Severity Distribution
                 </h3>
                 <div className="flex-1 min-h-0 relative">
                   <ResponsiveContainer width="100%" height="100%">

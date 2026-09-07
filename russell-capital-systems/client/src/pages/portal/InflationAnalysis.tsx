@@ -798,7 +798,7 @@ export default function InflationAnalysis() {
               />
             </div>
             <div className="flex items-center gap-2 mt-5">
-              <button onClick={() => setCompareMode(!compareMode)} className={`px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${compareMode ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/50 text-[#a78bfa]' : 'bg-transparent border-[#12233e] text-[#7a95b8] hover:text-white'}`}>
+              <button onClick={() => setCompareMode(!compareMode)} className={`px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${compareMode ? 'bg-[#10b981]/20 border-[#10b981]/50 text-[#34d399]' : 'bg-transparent border-[#12233e] text-[#7a95b8] hover:text-white'}`}>
                 Compare Mode
               </button>
               <button onClick={() => setIsExpanded(!isExpanded)} className="p-2 rounded-lg bg-[#12233e] text-[#c8d8ec] hover:text-white transition-colors">

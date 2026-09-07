@@ -42,7 +42,7 @@ const QUICK_PROMPTS = [
   { label: "Roth Conversion Pitch", prompt: "Help me pitch a Roth conversion to a 62-year-old client with $800K in a traditional IRA.", icon: DollarSign, color: "text-green-400" },
   { label: "Overcome Objection", prompt: "My client says 'I'll think about it.' How do I respond?", icon: Shield, color: "text-blue-400" },
   { label: "IUL Explanation", prompt: "Explain IUL benefits in simple terms for a skeptical client.", icon: Lightbulb, color: "text-amber-400" },
-  { label: "Estate Planning Opener", prompt: "What's the best way to start an estate planning conversation?", icon: Target, color: "text-purple-400" },
+  { label: "Estate Planning Opener", prompt: "What's the best way to start an estate planning conversation?", icon: Target, color: "text-emerald-400" },
   { label: "Tax Strategy", prompt: "Client has $2M in pre-tax accounts. What's the optimal tax strategy?", icon: TrendingUp, color: "text-teal-400" },
   { label: "Close the Deal", prompt: "I've presented the numbers. Client is interested but hesitant. How do I close?", icon: Zap, color: "text-orange-400" },
 ];
@@ -134,11 +134,11 @@ export default function LiveCoPilot() {
           />
         </div>
         {/* Header */}
-        <div className="border-b border-border/30 bg-gradient-to-r from-violet-500/5 via-background to-blue-500/5">
+        <div className="border-b border-border/30 bg-gradient-to-r from-emerald-500/5 via-background to-blue-500/5">
           <div className="container py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center">
                   <Brain className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -154,7 +154,7 @@ export default function LiveCoPilot() {
                   variant={activeTab === "chat" ? "default" : "outline"}
                   size="sm"
                   onClick={() => setActiveTab("chat")}
-                  className={activeTab === "chat" ? "bg-violet-600 hover:bg-violet-700" : ""}
+                  className={activeTab === "chat" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
                 >
                   <Bot className="w-4 h-4 mr-1" /> Co-Pilot
                 </Button>
@@ -199,7 +199,7 @@ export default function LiveCoPilot() {
             {messages.map((msg) => (
               <div key={msg.id} className={`flex gap-3 ${msg.role === "user" ? "justify-end" : ""}`}>
                 {msg.role === "assistant" && (
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shrink-0 mt-1">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center shrink-0 mt-1">
                     {activeTab === "wwsd" ? <Crown className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-white" />}
                   </div>
                 )}
@@ -234,15 +234,15 @@ export default function LiveCoPilot() {
             ))}
             {isTyping && (
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center shrink-0">
                   <Bot className="w-4 h-4 text-white" />
                 </div>
                 <div className="bg-white/5 border border-border/30 rounded-xl p-4">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1">
-                      <span className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                      <span className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                      <span className="w-2 h-2 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                      <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                     </div>
                     <span className="text-xs text-muted-foreground ml-2">
                       {activeTab === "wwsd" ? "Sam is thinking..." : "Co-Pilot is analyzing..."}
@@ -266,7 +266,7 @@ export default function LiveCoPilot() {
                 className="flex-1"
                 disabled={isTyping}
               />
-              <Button type="submit" disabled={!input.trim() || isTyping} className="bg-violet-600 hover:bg-violet-700">
+              <Button type="submit" disabled={!input.trim() || isTyping} className="bg-emerald-600 hover:bg-emerald-700">
                 {isTyping ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               </Button>
             </form>

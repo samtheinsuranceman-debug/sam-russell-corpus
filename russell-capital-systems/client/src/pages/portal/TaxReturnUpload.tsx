@@ -67,7 +67,7 @@ const fmt = (n: number) => n.toLocaleString("en-US", { style: "currency", curren
 const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
 const num = (n: number) => n.toLocaleString("en-US");
 
-const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4', '#f97316', '#ec4899'];
+const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#10b981', '#ef4444', '#06b6d4', '#f97316', '#ec4899'];
 
 export default function TaxReturnUpload() {
   const { user } = useAuth();
@@ -497,12 +497,12 @@ export default function TaxReturnUpload() {
               )}
             </CardContent>
           </Card>
-          <Card className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 border-purple-700/50">
+          <Card className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/20 border-emerald-700/50">
             <CardContent className="p-4 text-center">
-              <p className="text-purple-400 text-xs uppercase tracking-wider font-semibold">Effective Rate</p>
+              <p className="text-emerald-400 text-xs uppercase tracking-wider font-semibold">Effective Rate</p>
               <p className="text-2xl font-bold text-white mt-1">{pct(extraction.effectiveTaxRate)}</p>
               {viewMode !== "standard" && (
-                <p className="text-purple-500/70 text-xs mt-1">Liability / AGI</p>
+                <p className="text-emerald-500/70 text-xs mt-1">Liability / AGI</p>
               )}
             </CardContent>
           </Card>
@@ -655,7 +655,7 @@ export default function TaxReturnUpload() {
             <Card className="bg-gray-900/60 border-gray-700">
               <CardHeader className="pb-2 border-b border-gray-800">
                 <CardTitle className="text-white text-lg flex items-center gap-2">
-                  <PieChartIcon className="h-5 w-5 text-purple-400" />
+                  <PieChartIcon className="h-5 w-5 text-emerald-400" />
                   Income Composition
                 </CardTitle>
               </CardHeader>
@@ -784,17 +784,17 @@ export default function TaxReturnUpload() {
               )}
               
               {extraction.wagesAndSalaries > 150000 && (
-                <div className="flex flex-col p-4 rounded-xl bg-purple-900/20 border border-purple-500/20 hover:bg-purple-900/40 transition-colors cursor-pointer group">
+                <div className="flex flex-col p-4 rounded-xl bg-emerald-900/20 border border-emerald-500/20 hover:bg-emerald-900/40 transition-colors cursor-pointer group">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="p-2 bg-purple-500/20 rounded-lg text-purple-400 group-hover:bg-purple-500/30 transition-colors">
+                    <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-400 group-hover:bg-emerald-500/30 transition-colors">
                       <ShieldAlert className="h-4 w-4" />
                     </div>
-                    <h4 className="text-purple-300 font-semibold">IUL Structuring</h4>
+                    <h4 className="text-emerald-300 font-semibold">IUL Structuring</h4>
                   </div>
                   <p className="text-gray-400 text-sm mb-3 flex-grow">
                     High earned income ({fmt(extraction.wagesAndSalaries)}). Maximize tax-free accumulation outside standard retirement vehicles.
                   </p>
-                  <Button variant="ghost" size="sm" className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/20 self-start p-0 h-auto">
+                  <Button variant="ghost" size="sm" className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/20 self-start p-0 h-auto">
                     Model IUL <ArrowRight className="h-3 w-3 ml-1" />
                   </Button>
                 </div>
@@ -1001,7 +1001,7 @@ export default function TaxReturnUpload() {
                       formatter={(value: number) => fmt(value)}
                       contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#f3f4f6' }}
                     />
-                    <Bar yAxisId="left" dataKey="liability" fill="#8b5cf6" radius={[4, 4, 0, 0]} maxBarSize={60} />
+                    <Bar yAxisId="left" dataKey="liability" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={60} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -1066,7 +1066,7 @@ export default function TaxReturnUpload() {
                         contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#f3f4f6' }}
                       />
                       <Legend />
-                      <Line type="monotone" dataKey="effectiveRate" name="Effective Tax Rate (%)" stroke="#8b5cf6" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} />
+                      <Line type="monotone" dataKey="effectiveRate" name="Effective Tax Rate (%)" stroke="#10b981" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1087,7 +1087,7 @@ export default function TaxReturnUpload() {
                         <TableCell className="font-medium text-white">{row.year}</TableCell>
                         <TableCell className="text-right text-emerald-400">{fmt(row.agi)}</TableCell>
                         <TableCell className="text-right text-red-400">{fmt(row.tax)}</TableCell>
-                        <TableCell className="text-right text-purple-400">{row.effectiveRate.toFixed(1)}%</TableCell>
+                        <TableCell className="text-right text-emerald-400">{row.effectiveRate.toFixed(1)}%</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

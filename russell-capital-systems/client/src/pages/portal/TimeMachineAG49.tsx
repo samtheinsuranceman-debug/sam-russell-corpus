@@ -330,7 +330,7 @@ export default function TimeMachineAG49() {
 
   const genColors: Record<string, string> = {
     "Original Owner": "#3b82f6",
-    "Surviving Spouse": "#8b5cf6",
+    "Surviving Spouse": "#10b981",
     "Child (Gen 2)": "#10b981",
     "Grandchild (Gen 3)": "#f59e0b",
   };
@@ -570,7 +570,7 @@ export default function TimeMachineAG49() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <Users className="w-5 h-5 text-purple-500" /> Generational Ownership Transfer
+                <Users className="w-5 h-5 text-emerald-500" /> Generational Ownership Transfer
               </CardTitle>
               <CardDescription>
                 The policy doesn't lapse at death. Ownership can be reassigned to a surviving spouse,
@@ -595,10 +595,10 @@ export default function TimeMachineAG49() {
               </div>
               {enableGenerational && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card className="border-purple-200 dark:border-purple-800">
+                  <Card className="border-emerald-200 dark:border-emerald-800">
                     <CardContent className="pt-4 space-y-2">
                       <div className="flex items-center gap-2 mb-2">
-                        <Heart className="w-4 h-4 text-purple-500" />
+                        <Heart className="w-4 h-4 text-emerald-500" />
                         <span className="font-medium text-sm">Surviving Spouse</span>
                       </div>
                       <div>
@@ -675,7 +675,7 @@ export default function TimeMachineAG49() {
             {simulation.benchmarks.map((bm, i) => {
               const colors = [
                 { border: "border-blue-200 dark:border-blue-800", bg: "bg-blue-50 dark:bg-blue-950/30", text: "text-blue-600" },
-                { border: "border-purple-200 dark:border-purple-800", bg: "bg-purple-50 dark:bg-purple-950/30", text: "text-purple-600" },
+                { border: "border-emerald-200 dark:border-emerald-800", bg: "bg-emerald-50 dark:bg-emerald-950/30", text: "text-emerald-600" },
                 { border: "border-amber-200 dark:border-amber-800", bg: "bg-amber-50 dark:bg-amber-950/30", text: "text-amber-600" },
               ][i];
               return (
@@ -780,10 +780,10 @@ export default function TimeMachineAG49() {
                     <ReferenceLine
                       key={bm.target}
                       x={bm.yearReached}
-                      stroke={["#3b82f6", "#8b5cf6", "#f59e0b"][i]}
+                      stroke={["#3b82f6", "#10b981", "#f59e0b"][i]}
                       strokeDasharray="5 5"
                       strokeWidth={2}
-                      label={{ value: `${bm.target}%`, position: "top", fontSize: 11, fill: ["#3b82f6", "#8b5cf6", "#f59e0b"][i] }}
+                      label={{ value: `${bm.target}%`, position: "top", fontSize: 11, fill: ["#3b82f6", "#10b981", "#f59e0b"][i] }}
                     />
                   ) : null)}
                   {/* Generation transfer lines */}
@@ -832,7 +832,7 @@ export default function TimeMachineAG49() {
                   <Bar dataKey="interestCredit" fill="#10b981" opacity={0.3} name="Interest Credit" yAxisId="right" />
                   <Line type="monotone" dataKey="effectiveReturn" stroke="#f59e0b" strokeWidth={3} dot={false} name="Effective Return on Premium" />
                   <ReferenceLine y={28} stroke="#3b82f6" strokeDasharray="5 5" label={{ value: "28%", position: "right", fontSize: 11 }} />
-                  <ReferenceLine y={50} stroke="#8b5cf6" strokeDasharray="5 5" label={{ value: "50%", position: "right", fontSize: 11 }} />
+                  <ReferenceLine y={50} stroke="#10b981" strokeDasharray="5 5" label={{ value: "50%", position: "right", fontSize: 11 }} />
                   <ReferenceLine y={80} stroke="#ef4444" strokeDasharray="5 5" label={{ value: "80%", position: "right", fontSize: 11 }} />
                   <YAxis yAxisId="right" orientation="right" tickFormatter={(v: number) => fmtM(v)} tick={{ fontSize: 10 }} />
                 </ComposedChart>
@@ -872,7 +872,7 @@ export default function TimeMachineAG49() {
                       const bgClass = isBenchmark
                         ? "bg-amber-50 dark:bg-amber-950/30"
                         : isTransfer
-                        ? "bg-purple-50 dark:bg-purple-950/30"
+                        ? "bg-emerald-50 dark:bg-emerald-950/30"
                         : i % 2 === 0
                         ? "bg-muted/30"
                         : "";
@@ -894,7 +894,7 @@ export default function TimeMachineAG49() {
                           <td className="py-1.5 px-2 text-right font-medium">{fmtM(r.endingValue)}</td>
                           <td className="py-1.5 px-2 text-right">
                             <span className={r.effectiveReturnOnPremium >= 80 ? "text-amber-600 font-bold" :
-                              r.effectiveReturnOnPremium >= 50 ? "text-purple-600 font-semibold" :
+                              r.effectiveReturnOnPremium >= 50 ? "text-emerald-600 font-semibold" :
                               r.effectiveReturnOnPremium >= 28 ? "text-blue-600 font-semibold" : ""}>
                               {fmtPct(r.effectiveReturnOnPremium)}
                             </span>
@@ -936,7 +936,7 @@ export default function TimeMachineAG49() {
                           Credit = {fmt(totalPremiums * 0.28)}/yr
                         </span>
                       </th>
-                      <th className="text-center py-2 px-3 font-semibold text-purple-600">
+                      <th className="text-center py-2 px-3 font-semibold text-emerald-600">
                         Years to 50%
                         <span className="block text-xs font-normal text-muted-foreground">
                           Credit = {fmt(totalPremiums * 0.50)}/yr
@@ -962,7 +962,7 @@ export default function TimeMachineAG49() {
                           {rc.benchmarks.map((yrs, j) => (
                             <td key={j} className="py-2 px-3 text-center">
                               {yrs !== null ? (
-                                <span className={`font-medium ${["text-blue-600", "text-purple-600", "text-amber-600"][j]}`}>
+                                <span className={`font-medium ${["text-blue-600", "text-emerald-600", "text-amber-600"][j]}`}>
                                   {yrs} years
                                 </span>
                               ) : (
@@ -996,7 +996,7 @@ export default function TimeMachineAG49() {
                   <RTooltip formatter={(value: any, name: string) => [value != null ? `${value} years` : "Not reached", name]} />
                   <Legend />
                   <Bar dataKey="yearsTo28" name="28% Target" fill="#3b82f6" radius={[0, 2, 2, 0]} />
-                  <Bar dataKey="yearsTo50" name="50% Target" fill="#8b5cf6" radius={[0, 2, 2, 0]} />
+                  <Bar dataKey="yearsTo50" name="50% Target" fill="#10b981" radius={[0, 2, 2, 0]} />
                   <Bar dataKey="yearsTo80" name="80% Target" fill="#f59e0b" radius={[0, 2, 2, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -1031,7 +1031,7 @@ export default function TimeMachineAG49() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <Users className="w-5 h-5 text-purple-500" /> Multigenerational Wealth Engine
+                <Users className="w-5 h-5 text-emerald-500" /> Multigenerational Wealth Engine
               </CardTitle>
               <CardDescription>
                 Unlike most financial vehicles, a properly structured IUL policy does not terminate at the
@@ -1043,7 +1043,7 @@ export default function TimeMachineAG49() {
             <CardContent className="space-y-6">
               {/* Generation Timeline */}
               <div className="relative">
-                <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 via-green-500 to-amber-500" />
+                <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-emerald-500 via-green-500 to-amber-500" />
                 {[
                   {
                     icon: <DollarSign className="w-5 h-5" />,
@@ -1056,7 +1056,7 @@ export default function TimeMachineAG49() {
                   ...(enableGenerational ? [
                     {
                       icon: <Heart className="w-5 h-5" />,
-                      color: "bg-purple-500",
+                      color: "bg-emerald-500",
                       label: "Surviving Spouse",
                       period: `Years ${spouseTransferYear}-${childTransferYear - 1}`,
                       desc: `Policy ownership transfers to spouse (age ${spouseAge}). No new premiums needed. Account value continues compounding at ${creditingRate}% on the full balance. No reset, no restart.`,
@@ -1147,12 +1147,12 @@ export default function TimeMachineAG49() {
               )}
 
               {/* Key Point */}
-              <Card className="border-purple-200 dark:border-purple-800">
+              <Card className="border-emerald-200 dark:border-emerald-800">
                 <CardContent className="pt-4">
                   <div className="flex gap-3">
-                    <Shield className="w-6 h-6 text-purple-500 flex-shrink-0 mt-1" />
+                    <Shield className="w-6 h-6 text-emerald-500 flex-shrink-0 mt-1" />
                     <div>
-                      <p className="font-semibold text-purple-700 dark:text-purple-300 mb-1">
+                      <p className="font-semibold text-emerald-700 dark:text-emerald-300 mb-1">
                         The Policy Never Dies
                       </p>
                       <p className="text-sm text-muted-foreground">

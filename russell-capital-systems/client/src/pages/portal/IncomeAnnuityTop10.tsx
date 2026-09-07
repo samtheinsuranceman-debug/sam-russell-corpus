@@ -258,7 +258,7 @@ export default function IncomeAnnuityTop10() {
                 <Star className="w-3 h-3 mr-1" /> Updated Q2 2026
               </Badge>
               {clientData && (
-                <Badge variant="outline" className="text-purple-600 border-purple-600">
+                <Badge variant="outline" className="text-emerald-600 border-emerald-600">
                   <Users className="w-3 h-3 mr-1" /> Client: {clientData.firstName} {clientData.lastName}
                 </Badge>
               )}
@@ -670,7 +670,7 @@ export default function IncomeAnnuityTop10() {
               <Card className="lg:col-span-2">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Activity className="w-5 h-5 text-purple-600" />
+                    <Activity className="w-5 h-5 text-emerald-600" />
                     Income Base & Annual Income Projection (Top Product)
                   </CardTitle>
                 </CardHeader>
@@ -719,10 +719,10 @@ export default function IncomeAnnuityTop10() {
                       <div className="text-sm text-muted-foreground">Life Death Benefit</div>
                     </CardContent>
                   </Card>
-                  <Card className="border-2 border-purple-200 dark:border-purple-800">
+                  <Card className="border-2 border-emerald-200 dark:border-emerald-800">
                     <CardContent className="pt-4 text-center">
-                      <Wallet className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-purple-600">{fmt(stateGuaranty.lifeCashValue)}</div>
+                      <Wallet className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-emerald-600">{fmt(stateGuaranty.lifeCashValue)}</div>
                       <div className="text-sm text-muted-foreground">Life Cash Value</div>
                     </CardContent>
                   </Card>
@@ -786,7 +786,7 @@ export default function IncomeAnnuityTop10() {
                     { step: 1, title: "Deposit Premium", desc: "You make a single premium payment. If the product includes a premium bonus (e.g., 20%), that amount is added to your income base immediately, giving you a head start on income growth.", color: "bg-blue-100 dark:bg-blue-900", icon: <DollarSign className="w-5 h-5" /> },
                     { step: 2, title: "Income Base Grows via Rollup", desc: "During the deferral period, your income base grows by the guaranteed rollup rate (6.5%–10% per year depending on the product) regardless of market performance. This is the number your income is calculated from.", color: "bg-green-100 dark:bg-green-900", icon: <TrendingUp className="w-5 h-5" /> },
                     { step: 3, title: "Activate Lifetime Income", desc: "When you're ready, you activate the income rider. Your annual income = Income Base × Benefit Rate (based on your age at activation). This income is guaranteed for life — both spouses on joint policies.", color: "bg-amber-100 dark:bg-amber-900", icon: <Wallet className="w-5 h-5" /> },
-                    { step: 4, title: "Income Continues for Life", desc: "Even if the contract value (actual account balance) drops to $0, the insurance company is contractually obligated to continue paying your guaranteed income for as long as you live. This is the power of the GLWB rider.", color: "bg-purple-100 dark:bg-purple-900", icon: <Heart className="w-5 h-5" /> },
+                    { step: 4, title: "Income Continues for Life", desc: "Even if the contract value (actual account balance) drops to $0, the insurance company is contractually obligated to continue paying your guaranteed income for as long as you live. This is the power of the GLWB rider.", color: "bg-emerald-100 dark:bg-emerald-900", icon: <Heart className="w-5 h-5" /> },
                   ].map((item) => (
                     <div key={item.step} className="flex items-start gap-4 p-4 rounded-lg bg-muted/50">
                       <div className={`w-12 h-12 rounded-full ${item.color} flex items-center justify-center shrink-0`}>
