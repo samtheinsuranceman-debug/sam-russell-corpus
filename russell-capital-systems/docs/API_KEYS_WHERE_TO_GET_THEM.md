@@ -110,6 +110,19 @@ After Search Console verifies, go to **Sitemaps** in its left menu and submit `h
 | Zapier | https://zapier.com/app/zaps → new Zap → trigger **Webhooks by Zapier → Catch Hook** → copy the URL | `ZAPIER_HOOK_URL` |
 | Make | https://us2.make.com/ → new scenario → **Webhooks → Custom webhook** → **Add** → copy the URL | `MAKE_HOOK_URL` |
 
+## Short-term rental data (optional; every site works as a button without a key)
+
+| NAME | Where the key comes from | What it unlocks |
+|---|---|---|
+| `AIRROI_API_KEY` | https://www.airroi.com/api → Get API Key (pay-as-you-go from $0.01 a call, no contract) | Market metrics, revenue estimates, listing search by radius |
+| `MASHVISOR_API_KEY` | https://www.mashvisor.com/explore/profile/developers (free account has a few requests; paid plans are credits) | Occupancy, nightly rate, historical Airbnb performance by zip or city |
+| `PRICELABS_API_KEY` | https://developers.pricelabs.co/ (from a PriceLabs account) | Revenue Estimator API |
+| `AIRDNA_API_KEY` | https://apidocs.airdna.co/ → "Contact us" (private token, enterprise pricing) | AirDNA market and listing data |
+| `EXPEDIA_RAPID_API_KEY` | https://developers.expediagroup.com/rapid (partner agreement) | Vrbo supply through Rapid |
+| `BEYOND_API_TOKEN` | https://developers.beyondpricing.com/ (personal access token) | Pricing and comp sets for listings you already run |
+
+Rabbu, Awning, Airbnb, Vrbo search and Inside Airbnb have no key to set.
+
 ## Hosting, backups, domain
 
 | What | Where | NAME |

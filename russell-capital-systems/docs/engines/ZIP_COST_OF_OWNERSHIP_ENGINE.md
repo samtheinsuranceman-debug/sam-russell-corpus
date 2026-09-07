@@ -109,6 +109,38 @@ Pass 1 built 7 September 2026: `shared/zipEngine.ts`, `server/zipData.ts`, `serv
   with their statutes. A "Rental Properties" group now sits at the top of the
   portal navigation: Short-Term Rentals, STR Tax Strategy, the Zip Engine,
   House Recycling, Real Estate Mogul.
+- **Pass 2, the sources protocol (`shared/strSources.ts`, `server/strSources.ts`):**
+  ten sites, each checked on 7 September 2026 against its own page, with what
+  it publishes, its lookup link, and its API in plain terms:
+
+  | Site | Lookup | Developer API |
+  |---|---|---|
+  | Rabbu | address calculator; market pages by city, county, zip | none published |
+  | AirDNA | Rentalizer by address | yes, private token by contract (api.airdna.co) |
+  | Mashvisor | calculator by address, city, zip | yes, self-serve key, credits (`MASHVISOR_API_KEY`) |
+  | AirROI | free revenue calculator by address | yes, self-serve, pay-as-you-go (`AIRROI_API_KEY`) |
+  | PriceLabs | — | Revenue Estimator API (`PRICELABS_API_KEY`) |
+  | Awning | free calculator by address, no sign-up | none published |
+  | Airbnb | search by place | closed partner programme; no market data |
+  | Vrbo | search by place | Expedia Rapid under partner agreement |
+  | Inside Airbnb | quarterly CSV per city | direct download, no key |
+  | Beyond Pricing | — | Partners API for listings the account runs |
+
+  The AI's protocol (`STR_PROTOCOL`, in the advisor's system prompt): take
+  the places from the client's own words (Fact Finder goals, relocation
+  plans, what was just said); size the purchase from cash on hand at the
+  stated down payment and closing costs (cash-limited price, with the
+  lender's test named as separate); for each place name the registry sites
+  and which have a key on the host; never state a rate, occupancy or revenue
+  unless it was read from one of them on a stated date; hand the inputs to
+  the Short-Term Rentals page and the depreciation to STR Tax Strategy. The
+  page's "Where you like to go" card runs the same steps: places found,
+  cash-limited price with the arithmetic, one row per site with **Open** (the
+  button) and **Read with the AI** (the server fetches the registry page and
+  keeps only figures whose sentence is on the page, shown as "read on <date>
+  from <url>", never stored). Sites that draw their numbers in the browser
+  (Rabbu, AirDNA, Mashvisor, AirROI, Airbnb, Vrbo) say so and stay buttons
+  until a key is set.
 
 ### Oil and gas programmes, 36 years
 - **Public:** the tax treatment is statute, citable year by year: intangible

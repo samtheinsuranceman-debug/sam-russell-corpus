@@ -17,6 +17,8 @@
 //     GROQ_API_KEY           (Groq)
 //     BUILT_IN_FORGE_API_KEY (Manus — the built-in Forge gateway)
 //     ELEVENLABS_API_KEY + ELEVENLABS_VOICE_ID  (voice output)
+//     AIRDNA_API_KEY / MASHVISOR_API_KEY / AIRROI_API_KEY / PRICELABS_API_KEY /
+//     EXPEDIA_RAPID_API_KEY / BEYOND_API_TOKEN  (short-term rental sources; optional)
 // - Any provider without a key is skipped and reported as
 //   "not configured" — the panel degrades gracefully, and with zero
 //   keys the plan endpoint falls back to deterministic rules.
@@ -26,6 +28,8 @@ import { publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { MODULE_CATALOG, type ModuleKey } from "@shared/ultraEngine";
 import { ADVISOR_MODES, MODE_IDS, SINGLE_MODES, modeDef, type AdvisorMode } from "@shared/advisorModes";
+import { STR_PROTOCOL, strApiLine as strApiLineFor } from "@shared/strSources";
+const strApiLine = () => strApiLineFor(process.env);
 import { buildAnswerPdf } from "./answerPdf";
 import { mailMode, sendMail } from "./_core/mailer";
 import { recordEvent } from "./ledger";
@@ -152,7 +156,7 @@ export const ADVISOR_SYSTEM =
   "You explain financial projection scenarios in plain language. You NEVER guarantee returns, " +
   "never give individualized tax or legal advice (recommend licensed professionals for that), " +
   "label every number as a projection under stated assumptions, and never invent facts about " +
-  "the client that were not provided.";
+  "the client that were not provided. " + STR_PROTOCOL;
 
 // Public homepage concierge. This prompt DELIBERATELY withholds the firm's
 // proprietary method ("the secret sauce"): it names the strategy pillars and
@@ -262,6 +266,7 @@ async function answerInMode(input: AskInput, mode: AdvisorMode): Promise<{ text:
     `The user is on page "${input.pagePath}" of Russell Capital Systems.\n` +
     (input.profileSummary ? `Their stated profile:\n${input.profileSummary}\n\n` : "No profile has been shared yet.\n\n") +
     `They asked: "${input.question}"\n\n` +
+    `${strApiLine()}\n` +
     `Answer mode — ${def.label}. ${def.instruction}\n` +
     `Speak to them directly and concretely. Under ${def.maxWords} words. If the profile is missing facts you need, say which.`,
   );
@@ -307,6 +312,7 @@ export const ultraRouter = router({
         `Available calculator modules:\n${(Object.keys(MODULE_CATALOG) as ModuleKey[])
           .map((k) => `- ${k}: ${MODULE_CATALOG[k].name} — ${MODULE_CATALOG[k].whenNecessary}`).join("\n")}\n\n` +
         `A rule-based triage said:\n${baseline.map((b) => `- ${b.module}: ${b.status} (${b.reason})`).join("\n")}\n\n` +
+        `${strApiLine()}\n\n` +
         `In under 250 words: confirm or adjust which modules are NECESSARY vs OPTIONAL for this client, ` +
         `and explain in plain language what each included module contributes and under which circumstances ` +
         `the optional ones become relevant. Projections only — no guarantees.`,
