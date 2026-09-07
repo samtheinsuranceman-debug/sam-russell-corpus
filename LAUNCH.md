@@ -226,6 +226,21 @@ four minutes after boot); the owner can also call `career.refresh`. The BLS
 state files are tens of MB each and a full first read takes several minutes.
 Spec: `docs/engines/CAREER_LEDGER_ENGINE.md`.
 
+### The Rental Enterprise (optional switch)
+`/portal/rental-enterprise` sizes the client's purchasing power from the
+Fact Finder under Fannie Mae's published investment-property rules, ranks
+every zip the Zip Engine stores (yield + appreciation over the chosen window
+− the county's FEMA hazard rating − drawdown), proposes one property or
+three to four with the same money, writes each loan at Freddie Mac's rate
+plus the typed investor add-on, runs the 20- or 30-year pro-forma, and
+recycles the tax saved through an irrevocable trust holding indexed
+universal life (mutual carriers only, `shared/mutualIulCarriers.ts`, every
+unverified item flagged). `HAZARD_DATA_DAYS=180` re-reads FEMA's National
+Risk Index county file twice a year (first pass three minutes after boot;
+the owner can also call `rental.refreshHazards`). Attorneys shown are
+the owner's vetted rows only (`rental.addAttorney`); ACTEC's directory
+is linked otherwise. Spec: `docs/engines/RENTAL_ENTERPRISE_ENGINE.md`.
+
 ### Short-term rental sources (optional keys)
 `/portal/short-term-rentals` carries a registry of ten short-term-rental data
 sites (`shared/strSources.ts`, each verified on a dated page): Rabbu first,
