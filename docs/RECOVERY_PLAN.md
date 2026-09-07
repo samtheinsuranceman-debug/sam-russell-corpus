@@ -8,7 +8,7 @@ uses only what is in this repository plus the host's environment panel.
   - Off-site when `BACKUP_S3_BUCKET` and the `S3_*` credentials are set: `s3://<bucket>/<BACKUP_S3_PREFIX>rcs-backup-<timestamp>.sql.gz` (any S3-compatible store: AWS S3, Cloudflare R2, Backblaze B2, MinIO).
   - On the host otherwise: `BACKUP_DIR` (default `./backups`), last `BACKUP_KEEP` (14) copies. On Railway this folder is ephemeral unless a volume is mounted — set the bucket.
   - Every run is recorded in `backup_runs` (status, destination, size, rows).
-- **The code** — GitHub `master`; the deploy branch `deploy/rcs` is a subtree of it.
+- **The code** — GitHub `master`, folder `russell-capital-systems/`. Railway builds `master` with the service's **Root Directory** set to `/russell-capital-systems`. The `deploy/rcs` branch (that folder as its own branch, rebuilt by the `Publish deploy/rcs` Action) still exists as a lighter alternative source.
 - **Secrets** — only in the host's environment panel. Keep a copy of the *names* (`docs/ULTRA_AI_ENV.md`, `LAUNCH.md` §4); never the values, in any file.
 - **Files uploaded by clients** — the storage provider configured for uploads (S3 / Forge); not part of the SQL dump.
 
@@ -25,7 +25,7 @@ uses only what is in this repository plus the host's environment panel.
 4. Point the app at the new `DATABASE_URL` and open `/healthz` (expects `"db":"ok"`), then `/portal/site-health`.
 
 ## Rebuild the host (about 20 minutes)
-1. Railway → New service from GitHub, repo `samtheinsuranceman-debug/sam-russell-corpus`, branch `deploy/rcs`, root `/`.
+1. Railway → New service from GitHub, repo `samtheinsuranceman-debug/sam-russell-corpus`, branch `master`, and in Settings → Source set **Root Directory** to `/russell-capital-systems` (without it the build fails with "pnpm: not found" because the repo root has no `package.json`). Build command `pnpm install --frozen-lockfile --prod=false && pnpm build`; start command `bash scripts/build_database.sh && node dist/index.js`. Alternative: branch `deploy/rcs` with root `/`.
 2. Set the variables from `LAUNCH.md` §4 (at minimum `DATABASE_URL`, `JWT_SECRET`, `OWNER_EMAIL`, `OWNER_PASSWORD_HASH`; then `CANONICAL_HOST`, `PUBLIC_BASE_URL`, mail, AI, backup and business variables). Rotate any key that ever appeared outside the panel.
 3. Boot runs `scripts/build_database.sh` and creates missing tables; restore the dump per the section above if the database is new.
 4. Attach the domain in Railway and update DNS per `docs/grok-handoff/09_DNS_AND_MAIL_RECORDS.md`; set `CANONICAL_HOST` so http and the apex/www sibling 301 to the canonical host.
