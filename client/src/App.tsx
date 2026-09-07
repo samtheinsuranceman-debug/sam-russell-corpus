@@ -270,6 +270,7 @@ const RentalEnterprise = lazy(() => import("./pages/portal/RentalEnterprise"));
 const Inheritance = lazy(() => import("./pages/portal/Inheritance"));
 const IulEngine = lazy(() => import("./pages/portal/IulEngine"));
 const LongTermCare = lazy(() => import("./pages/portal/LongTermCare"));
+const IncomeForLife = lazy(() => import("./pages/portal/IncomeForLife"));
 const Forgiveness = lazy(() => import("./pages/portal/Forgiveness"));
 const TaxSchedule = lazy(() => import("./pages/portal/TaxSchedule"));
 const Sphere = lazy(() => import("./pages/portal/Sphere"));
@@ -594,6 +595,7 @@ function Router() {
       <Route path="/portal/inheritance" component={gated(Inheritance, "/portal/inheritance")} />
       <Route path="/portal/iul-engine" component={gated(IulEngine, "/portal/iul-engine")} />
       <Route path="/portal/long-term-care" component={gated(LongTermCare, "/portal/long-term-care")} />
+      <Route path="/portal/income-for-life" component={gated(IncomeForLife, "/portal/income-for-life")} />
       <Route path="/portal/forgiveness" component={gated(Forgiveness, "/portal/forgiveness")} />
       <Route path="/portal/tax-schedule" component={gated(TaxSchedule, "/portal/tax-schedule")} />
       <Route path="/portal/sphere" component={gated(Sphere, "/portal/sphere")} />

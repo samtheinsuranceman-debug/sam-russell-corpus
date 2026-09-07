@@ -183,6 +183,7 @@ the FRED readers (inflation, Fed rate, money supply, Treasury yields):
 | Career Ledger pass 2 (malpractice, tuition by school) | AMA policy research, NPDB public use file, AAMC tuition tables, CODA, ABA 509 reports | No | Nothing. Practice-sale records come from your own closed deals: type them on the page when it exists. |
 | Zip Engine passes 2–4 (property tax, HOA, flood/fire/hail, oil & gas, FIA/IUL by state, trusts by state) | Census ACS property tax, FEMA (already read), NOAA storm events, EIA, state statutes | No | HOA dues have no public source: clients type them. |
 | Long-Term Care engine | Genworth/CareScout cost survey, state insurance department rate filings, each carrier's rider form | No | Nothing. |
+| Income for Life + Longevity engine | SSA 2023 period life table (in the code), the cited studies, the carriers' published rate sheets you type in with URL and date | No | Add rate-sheet rows at `/portal/income-for-life` (owner button); tell me privately which carrier has the four-year exit so the row's "exit after" field is right. The page never prints the name. |
 | Tax-Free Income for Life + Longevity | Carriers' published income rate sheets, SSA and SOA life tables, the Actuaries Longevity Illustrator, cited studies | No | Nothing. Later: tell me which carriers you place income plans with so I read their rate sheets first. |
 
 ## Not for you

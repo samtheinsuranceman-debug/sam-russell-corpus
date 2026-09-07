@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 144
+-- Tables: 145
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -1037,6 +1037,26 @@ CREATE TABLE `in_app_notifications` (
 	`read` boolean NOT NULL DEFAULT false,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `in_app_notifications_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `income_rate_sheets` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`carrier` varchar(120) NOT NULL,
+	`product` varchar(160) NOT NULL,
+	`ageFrom` int NOT NULL,
+	`ageTo` int NOT NULL,
+	`single` boolean NOT NULL DEFAULT true,
+	`payoutPct` decimal(6,3) NOT NULL,
+	`bonusPct` decimal(6,2),
+	`deferralYears` int NOT NULL DEFAULT 0,
+	`principalContinuesToGrow` boolean,
+	`exitAfterYears` int,
+	`surrenderYears` int,
+	`rateSheetUrl` varchar(400) NOT NULL,
+	`asOf` varchar(20) NOT NULL,
+	`note` text,
+	`addedBy` int,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `income_rate_sheets_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `knowledge_documents` (
 	`id` int AUTO_INCREMENT NOT NULL,
