@@ -25,6 +25,7 @@
 // ============================================================
 import { z } from "zod";
 import { publicProcedure, router } from "./_core/trpc";
+import { probeKeys } from "./keyProbe";
 import { invokeLLM } from "./_core/llm";
 import { MODULE_CATALOG, type ModuleKey } from "@shared/ultraEngine";
 import { ADVISOR_MODES, MODE_IDS, SINGLE_MODES, modeDef, type AdvisorMode } from "@shared/advisorModes";
@@ -280,6 +281,9 @@ async function answerAllModes(input: AskInput): Promise<AnswerSectionOut[] | nul
 }
 
 export const ultraRouter = router({
+  /** Does each key in the host's panel actually work? One read-only call per provider, cached ten minutes; statuses only, never a key. */
+  keyProbe: publicProcedure.query(() => probeKeys()),
+
   // Which AI teammates are configured — names only, never key material.
   providers: publicProcedure.query(() => ({
     lead: "claude",
