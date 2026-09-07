@@ -1538,5 +1538,11 @@ img.object-cover, img[class*="h-full"] { height: 100%; }
 @keyframes rc-filament-breathe { 0%, 100% { opacity: .4; } 50% { opacity: .7; } }
 .rc-patent-body { font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif; color: #fbf9f1; text-shadow: 0 0 12px rgba(255,255,255,.35), 0 1px 0 rgba(255,255,255,.22), 0 -1px 0 rgba(0,0,0,.55), 0 2px 12px rgba(0,0,0,.7); }
 .rc-patent-lead { font-weight: 700; }
-.rc-patent-detail { font-weight: 600; }
+/* The description: the title's treatment in rich white instead of mint, one size up, and a brighter glow than the title. */
+.rc-patent-detail {
+  font-weight: 700; letter-spacing: -.005em;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 45%, #fff8ea 75%, #f6efdd 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none;
+  filter: drop-shadow(0 0 2px rgba(255,255,255,1)) drop-shadow(0 0 12px rgba(255,255,255,.95)) drop-shadow(0 0 30px rgba(255,255,255,.8)) drop-shadow(0 0 70px rgba(255,250,232,.55)) drop-shadow(0 3px 14px rgba(0,0,0,.7));
+}
 @media (prefers-reduced-motion: reduce) { .rc-filament path { animation: none; opacity: .5; } }

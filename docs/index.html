@@ -277,7 +277,8 @@
   @keyframes filament-breathe{0%,100%{opacity:.4}50%{opacity:.7}}
   .claims .lead-line,.claims .detail{font-family:var(--serif);color:#fbf9f1;text-shadow:0 0 12px rgba(255,255,255,.35),0 1px 0 rgba(255,255,255,.22),0 -1px 0 rgba(0,0,0,.55),0 2px 12px rgba(0,0,0,.7)}
   .claims .lead-line{margin-top:1rem;font-size:clamp(2rem,3.6vw,3.1rem);font-weight:700;line-height:1.22}
-  .claims .detail{margin-top:1rem;max-width:60rem;font-size:clamp(1.6rem,2.6vw,2.2rem);font-weight:600;line-height:1.4}
+  /* The description: the title's treatment in rich white instead of mint, one size up, and a brighter glow than the title. */
+  .claims .detail{margin-top:1rem;max-width:60rem;font-size:clamp(1.8rem,2.95vw,2.5rem);font-weight:700;letter-spacing:-.005em;line-height:1.36;background:linear-gradient(180deg,#fff 0%,#fff 45%,#fff8ea 75%,#f6efdd 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 0 2px rgba(255,255,255,1)) drop-shadow(0 0 12px rgba(255,255,255,.95)) drop-shadow(0 0 30px rgba(255,255,255,.8)) drop-shadow(0 0 70px rgba(255,250,232,.55)) drop-shadow(0 3px 14px rgba(0,0,0,.7))}
   @media(prefers-reduced-motion:reduce){.claims .filament path{animation:none;opacity:.5}}
   .expect{list-style:none;margin:2rem 0 0;padding:0;display:grid;gap:2rem}
   .expect li{border-left:2px solid rgba(110,231,183,.6);padding-left:1.25rem}@media(min-width:640px){.expect li{padding-left:1.75rem}}
