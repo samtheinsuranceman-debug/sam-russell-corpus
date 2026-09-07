@@ -12,7 +12,7 @@ import { anthropicHeaders } from "./_core/anthropic";
 export type ProbeStatus = "ok" | "rejected" | "missing" | "error";
 export type ProbeResult = { id: string; label: string; envKey: string; configured: boolean; status: ProbeStatus; httpStatus: number | null; note: string };
 
-type Fetcher = (url: string, init: { headers: Record<string, string> }) => Promise<{ ok: boolean; status: number; text?: () => Promise<string> }>;
+type Fetcher = (url: string, init: { method?: string; headers: Record<string, string>; body?: string }) => Promise<{ ok: boolean; status: number; text?: () => Promise<string> }>;
 const realFetch: Fetcher = (url, init) => fetch(url, { ...init, signal: AbortSignal.timeout(12_000) });
 
 /** The provider's own explanation of a refusal, trimmed and stripped of anything key-shaped, so the note says why without saying what. */
@@ -26,9 +26,13 @@ export function safeReason(body: string, key: string): string {
 let _fetch: Fetcher = realFetch;
 export function _setFetchForTests(f: Fetcher | null) { _fetch = f ?? realFetch; }
 
-const PROBES: Array<{ id: string; label: string; envKey: string; url: string; headers: (k: string, env: NodeJS.ProcessEnv) => Record<string, string> }> = [
+/** Perplexity has no models list, so the probe sends the smallest possible chat request (one token) and reads only the status. */
+const PING_BODY = JSON.stringify({ model: "sonar", max_tokens: 1, messages: [{ role: "user", content: "ping" }] });
+
+const PROBES: Array<{ id: string; label: string; envKey: string; url: string; method?: "POST"; body?: string; headers: (k: string, env: NodeJS.ProcessEnv) => Record<string, string> }> = [
   { id: "anthropic", label: "Claude (Anthropic)", envKey: "ANTHROPIC_API_KEY", url: "https://api.anthropic.com/v1/models", headers: (k, env) => anthropicHeaders(k, env) },
   { id: "openai", label: "ChatGPT (OpenAI)", envKey: "OPENAI_API_KEY", url: "https://api.openai.com/v1/models", headers: (k) => ({ authorization: `Bearer ${k}` }) },
+  { id: "perplexity", label: "Perplexity", envKey: "PERPLEXITY_API_KEY", url: "https://api.perplexity.ai/chat/completions", method: "POST", body: PING_BODY, headers: (k) => ({ authorization: `Bearer ${k}`, "content-type": "application/json" }) },
   { id: "heygen", label: "HeyGen", envKey: "HEYGEN_API_KEY", url: "https://api.heygen.com/v2/user/remaining_quota", headers: (k) => ({ "x-api-key": k }) },
   { id: "resend", label: "Resend (email)", envKey: "RESEND_API_KEY", url: "https://api.resend.com/domains", headers: (k) => ({ authorization: `Bearer ${k}` }) },
 ];
@@ -45,7 +49,7 @@ export async function probeOne(p: (typeof PROBES)[number], env: NodeJS.ProcessEn
   const base = { id: p.id, label: p.label, envKey: p.envKey };
   if (!key) return { ...base, configured: false, status: "missing", httpStatus: null, note: `No variable named ${p.envKey} on this host. Add it in the environment panel with the key in the Value box.` };
   try {
-    const res = await _fetch(p.url, { headers: p.headers(key, env) });
+    const res = await _fetch(p.url, { method: p.method ?? "GET", headers: p.headers(key, env), body: p.body });
     const c = classify(res.status);
     if (c.status !== "ok" && res.text) {
       const reason = safeReason(await res.text().catch(() => ""), key);
