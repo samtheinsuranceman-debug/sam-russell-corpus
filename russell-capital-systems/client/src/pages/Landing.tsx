@@ -27,11 +27,19 @@ const GLOW = "text-white [text-shadow:_0_0_14px_rgba(52,211,153,.55),_0_0_36px_r
 // The fifteen claims wear the pair chosen from Grok's boards, Title 01 "filament wrap" and
 // Body 02 plaque white; the styles live in index.css as rc-patent-title / rc-filament / rc-patent-body.
 // They run straight down from the sign over four city plates, so no picture is left empty.
+// Ten plates, ten different cities (four of them cut from the designer's concept frames with every word
+// removed), one or two technologies each. Add a plate, or widen a range, as more patents arrive.
 const PLATES: Array<{ src: string; tall?: string; position?: string; label: string; from: number; to: number }> = [
-  { src: "/rcs-city-horizon.webp", position: "center 58%", label: "The horizon", from: 0, to: 4 },
-  { src: "/rcs-city-skyway.webp", tall: "/rcs-city-flagship.webp", label: "The skyway", from: 4, to: 8 },
-  { src: "/rcs-city-expressway.webp", tall: "/rcs-city-glass.webp", position: "center 45%", label: "The expressway", from: 8, to: 12 },
-  { src: "/rcs-city-river.webp", label: "The river", from: 12, to: 15 },
+  { src: "/rcs-city-horizon.webp", tall: "/rcs-city-canyon.webp", position: "center 58%", label: "The horizon", from: 0, to: 1 },
+  { src: "/rcs-city-dusk.webp", tall: "/rcs-city-spire.webp", label: "The dusk skyline", from: 1, to: 2 },
+  { src: "/rcs-city-skyway.webp", tall: "/rcs-city-flagship.webp", label: "The skyway", from: 2, to: 3 },
+  { src: "/rcs-city-trails.webp", tall: "/rcs-city-interchange.webp", label: "The light trails", from: 3, to: 5 },
+  { src: "/rcs-city-emerald.webp", tall: "/rcs-city-lattice.webp", label: "The emerald towers", from: 5, to: 6 },
+  { src: "/rcs-city-expressway.webp", tall: "/rcs-city-glass.webp", position: "center 45%", label: "The expressway", from: 6, to: 8 },
+  { src: "/rcs-city-loops.webp", tall: "/rcs-city-pinnacle.webp", label: "The river loops", from: 8, to: 9 },
+  { src: "/rcs-city-harbor.webp", label: "The harbor", from: 9, to: 11 },
+  { src: "/rcs-city-grid.webp", label: "The grid from above", from: 11, to: 13 },
+  { src: "/rcs-city-river.webp", label: "The river", from: 13, to: 15 },
 ];
 
 function ManagedPortalAction({ href, children, className }: { href: string; children: React.ReactNode; className: string }) {

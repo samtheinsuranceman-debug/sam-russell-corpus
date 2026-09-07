@@ -31,6 +31,15 @@ IMAGES = {
     "__IMG_EXPRESSWAY__": "rcs-city-expressway.webp",
     "__IMG_GLASS__": "rcs-city-glass.webp",
     "__IMG_RIVER__": "rcs-city-river.webp",  # the wet night city under the patent plaques
+    "__IMG_HARBOR__": "rcs-city-harbor.webp",
+    "__IMG_SPIRE__": "rcs-city-spire.webp",
+    "__IMG_LATTICE__": "rcs-city-lattice.webp",
+    "__IMG_PINNACLE__": "rcs-city-pinnacle.webp",
+    # The four cities cut from the designer's concept frames, every word removed.
+    "__IMG_TRAILS__": "rcs-city-trails.webp",
+    "__IMG_LOOPS__": "rcs-city-loops.webp",
+    "__IMG_GRID__": "rcs-city-grid.webp",
+    "__IMG_DUSK__": "rcs-city-dusk.webp",
 }
 CONSTS = {
     "__CALENDLY__": "https://calendly.com/sam-RussellCapitalSystems/60min",

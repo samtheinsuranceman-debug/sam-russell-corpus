@@ -52,7 +52,7 @@ describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the 
     expect(landing.slice(landing.indexOf("</header>") + "</header>".length, claims).trim()).toMatch(/^\{\/\*[\s\S]*\*\/\}\s*<div$/);
     expect(landing).toContain("PLATES.map");
     const ranges = Array.from(landing.matchAll(/from: (\d+), to: (\d+)/g), (m) => [Number(m[1]), Number(m[2])]);
-    expect(ranges.length).toBe(4);
+    expect(ranges.length).toBeGreaterThanOrEqual(4);
     expect(ranges[0][0]).toBe(0);
     expect(ranges[ranges.length - 1][1]).toBe(15);
     for (let i = 1; i < ranges.length; i++) expect(ranges[i][0]).toBe(ranges[i - 1][1]);
