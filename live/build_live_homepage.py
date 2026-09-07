@@ -30,6 +30,7 @@ IMAGES = {
     "__IMG_FLAGSHIP__": "rcs-city-flagship.webp",
     "__IMG_EXPRESSWAY__": "rcs-city-expressway.webp",
     "__IMG_GLASS__": "rcs-city-glass.webp",
+    "__IMG_RIVER__": "rcs-city-river.webp",  # the wet night city under the patent plaques
 }
 CONSTS = {
     "__CALENDLY__": "https://calendly.com/sam-RussellCapitalSystems/60min",

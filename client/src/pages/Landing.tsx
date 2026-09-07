@@ -155,28 +155,27 @@ export default function Landing() {
       <ImagePage src="/rcs-city-skyway.webp" tall="/rcs-city-flagship.webp" alt="Green-lit skyline at night with a lit highway sweeping through the city" label="The skyway" />
 
       {/* ── 5 · THE FIFTEEN. Stacked in the order they build on one another. ── */}
-      <section id="claims" className="relative bg-[#03090a] py-24 sm:py-32" aria-label="Fifteen patent-pending technologies">
+      <section id="claims" className="rc-plate relative py-24 sm:py-32" aria-label="Fifteen patent-pending technologies">
+        {/* The wet night city sits under the plaques; the plaques are dark glass with a mint hairline. */}
+        <img src="/rcs-city-river.webp" alt="" aria-hidden="true" className="rc-plate-pic" loading="lazy" decoding="async" />
+        <div className="rc-plate-shade" aria-hidden="true" />
         <div className="container relative z-10 max-w-5xl">
           <p className="text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Fifteen technologies that exist only here</p>
           <h2 className={`mt-4 text-[clamp(2rem,4.6vw,3.6rem)] font-black leading-[1.05] tracking-[-.02em] ${GLOW}`} style={{ fontFamily: "DM Sans, sans-serif" }}>
             Read them top to bottom. <span className={GLOW_EM}>Each one makes the next possible.</span>
           </h2>
           <p className="mt-4 max-w-2xl text-[1.05rem] leading-relaxed text-white/70">Ten minutes. Fifteen claims. The bold line is the idea; the line under it is what it does for you. Every specific is confirmed by a licensed professional before anything moves.</p>
-          <ol className="mt-14 divide-y divide-emerald-300/15 border-y border-emerald-300/15">
+          <ol className="mt-14 grid gap-8">
             {manifesto.claims.map(({ ref, name, lead, detail }) => (
-              <li key={ref} id={`claim-${ref}`} className="grid gap-3 py-9 sm:grid-cols-[4.5rem_1fr] sm:gap-6">
-                <div className="flex items-baseline gap-3 sm:block">
-                  <span aria-hidden="true" className={`text-2xl font-black tabular-nums ${GLOW_EM}`}>{ref}</span>
-                  <span className="text-[10px] font-extrabold uppercase tracking-[.2em] text-emerald-300/70 sm:mt-2 sm:block">Only at RCS</span>
+              <li key={ref} id={`claim-${ref}`} className="rc-plaque">
+                <p className="rc-plaque-eyebrow">Technology {ref} <span aria-hidden="true">·</span> Pending <span aria-hidden="true">·</span> Only at RCS</p>
+                <div className="rc-patent-title-wrap mt-3">
+                  <h3 className="rc-patent-title text-[clamp(2.2rem,4.8vw,4.2rem)]">{name}</h3>
+                  <svg className="rc-filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7" /></svg>
                 </div>
-                <div>
-                  <div className="rc-patent-title-wrap">
-                    <h3 className="rc-patent-title text-[clamp(2.2rem,4.8vw,4.2rem)]">{name}</h3>
-                    <svg className="rc-filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7" /></svg>
-                  </div>
-                  <p className="rc-patent-body mt-4 text-[clamp(1.9rem,3.4vw,2.9rem)] font-bold leading-[1.28]" style={{ fontFamily: "DM Sans, sans-serif" }}>{lead}</p>
-                  <p className="rc-patent-body mt-4 max-w-4xl text-[clamp(1.5rem,2.4vw,2rem)] font-medium leading-[1.45]" style={{ fontFamily: "DM Sans, sans-serif" }}>{detail}</p>
-                </div>
+                <p className="rc-patent-body rc-patent-lead mt-4 text-[clamp(2rem,3.6vw,3.1rem)] leading-[1.22]">{lead}</p>
+                <p className="rc-patent-body rc-patent-detail mt-4 max-w-4xl text-[clamp(1.6rem,2.6vw,2.2rem)] leading-[1.4]">{detail}</p>
+                <a href="#planning-estimator" className="rc-plaque-link mt-6">See the mechanism <span aria-hidden="true">→</span></a>
               </li>
             ))}
           </ol>
