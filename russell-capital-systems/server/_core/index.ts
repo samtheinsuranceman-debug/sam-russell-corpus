@@ -12,6 +12,7 @@ import { registerScheduledRoutes, startFollowupScheduler } from "../followups";
 import { registerEventRoutes } from "../automations";
 import { startHarvestSchedule } from "../forecastSources";
 import { startPulseSchedule } from "../power";
+import { startZipSchedule } from "../zipData";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -95,6 +96,8 @@ async function startServer() {
     if (startHarvestSchedule()) console.log("[erosion] harvest sweep scheduled every", process.env.EROSION_HARVEST_DAYS, "days");
     // The political pulse (seats, bench, market odds) is keyless and free: weekly by default, POWER_PULSE_DAYS=0 turns it off.
     if (startPulseSchedule()) console.log("[power] pulse scheduled every", process.env.POWER_PULSE_DAYS ?? 7, "days");
+    // Zip engine: ZIP_DATA_DAYS=30 re-reads FHFA, Zillow and Freddie Mac monthly (off unless set; the owner can also press "Read the files now").
+    if (startZipSchedule()) console.log("[zip] data sweep scheduled every", process.env.ZIP_DATA_DAYS, "days");
     // Daily database backup to S3-compatible storage or a local folder (BACKUP_DISABLED=1 turns it off).
     if (startBackupSchedule()) console.log("[backup] daily backup scheduled at", process.env.BACKUP_HOUR_UTC ?? 4, ":00 UTC");
   });

@@ -15,6 +15,7 @@ import { ledgerRouter } from "./ledgerRouter";
 import { integrationsRouter } from "./integrationsRouter";
 import { controlsRouter } from "./controlsRouter";
 import { erosionRouter } from "./erosionRouter";
+import { zipRouter } from "./zipRouter";
 import { forgivenessRouter } from "./forgivenessRouter";
 import { taxScheduleRouter } from "./taxScheduleRouter";
 import { unaskedRouter } from "./unaskedRouter";
@@ -325,6 +326,7 @@ export const appRouter = router({
   integrations: integrationsRouter,
   controls: controlsRouter,
   erosion: erosionRouter,
+  zip: zipRouter,
   forgiveness: forgivenessRouter,
   taxSchedule: taxScheduleRouter,
   unasked: unaskedRouter,
