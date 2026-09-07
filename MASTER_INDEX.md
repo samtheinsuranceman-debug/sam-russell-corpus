@@ -82,6 +82,9 @@ This is the single source of truth. All brothers (Peter, Matthew, Paul, Luke, Jo
 - `ignition-sequence/` — Ignition sequence experiments
 - `v2-questions/` & `v3-questions/` — Question iterations
 
+### `/stories/` — Sam's fiction, idea banks and outlines
+- `THE_THREE_PATHS_IDEA_BANK.md` — one hundred ideas for the three-travellers story (dictated 7 Sep 2026)
+
 ### `/quantum/` — Quantum Research
 
 ### `/marketing/` — Marketing Materials
