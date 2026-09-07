@@ -13,18 +13,35 @@ The NAME is a fixed word I give you, typed exactly. The VALUE is the key you
 copied. Never paste a key anywhere else: not in chat, not in a file, not in
 email.
 
-## 1. Railway: remove one slash so the site can deploy again (5 minutes)
+## 1. Railway: let merges deploy themselves again (5 minutes, GitHub side)
 
-1. Open https://railway.com/project/a16ef4bb-3aea-4147-a751-20661ae76eb8
-2. Tap the card that says **web** (GitHub logo, `web-production-4b215.up.railway.app`). Not MySQL. Not Project Settings.
-3. In the panel that opens, tap the **Settings** tab.
-4. Scroll to the section titled **Build**. Find the field **Watch Paths**. It says `/russell-capital-systems/**`.
-5. Delete the very first character, the `/`. It must now say exactly: `russell-capital-systems/**`
-6. Tap outside the field so it saves.
-7. Scroll to the top of the panel. Tap **Deploy** (it may say "Apply changes").
-8. Wait four minutes. The web card turns green with a new time stamp.
+Since 7 September GitHub has not been telling Railway about new merges
+(the "GitHub Repo not found" panel you saw). I can force one build at a
+time by re-attaching the repo (that is how #86 went green at 08:33 UTC),
+but the automatic trigger is off until the Railway app on GitHub is given
+the repository again. Railway's own troubleshooting page says the same:
+https://docs.railway.com/deployments/github-autodeploys#cant-enable-autodeploy
 
-Or type to me "change the watch path" and I do steps 4 to 7.
+1. Open https://github.com/settings/installations and sign in to GitHub as
+   `samtheinsuranceman-debug`.
+2. Find the row **Railway** → tap **Configure**.
+3. If a yellow banner says the app has permission updates waiting, tap
+   **Accept new permissions**.
+4. Under **Repository access**, choose **Only select repositories** and make
+   sure `sam-russell-corpus` is in the list (tap **Select repositories** to
+   add it). Tap **Save**.
+5. Open https://railway.com/project/a16ef4bb-3aea-4147-a751-20661ae76eb8 →
+   tap the **web** card → **Settings** → the **Source** section. If it shows
+   **Autodeploy: Disabled**, tap **Enable**. If it shows the repo with a
+   red mark, tap **Disconnect**, then **Connect Repo** →
+   `samtheinsuranceman-debug/sam-russell-corpus`, branch `master`.
+6. Wait five minutes. Type to me "test the deploy" and I merge a one-line
+   change and confirm it builds by itself.
+
+Until you do this: after every merge I re-attach the repo to force the
+build, or you can press **Cmd/Ctrl + K** on the Railway project page and
+choose **Deploy Latest Commit**. The watch path stays as it is; do not
+edit it.
 
 ## 2. Railway: three keys (15 minutes)
 
@@ -109,16 +126,64 @@ Manus never published the DNS record, so use the tag method instead.
 
 russellcapitalsystems.com and drasswealthmanagement.com are already done.
 
-## 7. After the Railway build is green (3 minutes)
+## 7. The build is green. Three switches and one form (10 minutes)
 
-1. Open https://web-production-4b215.up.railway.app/login and sign in.
-2. Left menu → **Rental Properties** → **The Zip Engine** → tap **Read the files now**. It takes a few minutes and repeats monthly by itself.
-3. Railway variables page → + New Variable → NAME `CAREER_DATA_DAYS` → VALUE `90` → Add → Deploy. This fills the new doctor pages (the /for pages) with BLS pay and NCES tuition and re-reads them quarterly.
+The switches are variables with NO key: the VALUE is just a number I give
+you. They turn on the readers that fill the pages with public data.
+
+1. Open the Railway variables page:
+   **https://railway.com/project/a16ef4bb-3aea-4147-a751-20661ae76eb8/service/e8d1eb7b-21e6-41ca-a567-aa2dc0e20f28/variables**
+2. Tap **+ New Variable** → NAME `CAREER_DATA_DAYS` → VALUE `90` → **Add**.
+   (Fills the doctor pages, the /for pages, with BLS pay by state and NCES
+   tuition; re-reads quarterly.)
+3. Tap **+ New Variable** → NAME `HAZARD_DATA_DAYS` → VALUE `180` → **Add**.
+   (Reads FEMA's county hazard file so the Rental Enterprise can dock a zip
+   for hurricane, flood, wildfire, hail and tornado risk; re-reads twice a year.)
+4. Tap **Deploy** at the top. Wait three minutes for green.
+5. Open https://web-production-4b215.up.railway.app/login and sign in.
+6. Left menu → **Rental Properties** → **The Zip Engine** → tap **Read the
+   files now**. It takes a few minutes. (The monthly automatic read is
+   skipped on this box size on purpose; the button always works.)
+7. Left menu → **Rental Properties** → **The Rental Enterprise**. Scroll to
+   **8. The trust, and who draws it**. Add each attorney you vouch for:
+   name, firm, city, two-letter state, credentials (for example "ACTEC
+   Fellow"), website, phone, email. Only rows you add appear to clients;
+   the page never invents a name. Find candidates at
+   https://www.actec.org/find-a-lawyer/ (choose the state, tick the
+   **Asset Protection** practice area).
 
 ## 8. Optional: let merges deploy themselves from GitHub
 
 1. Open https://railway.com/account/tokens → **Create token** → name `github-deploy` → Copy.
 2. Open https://github.com/samtheinsuranceman-debug/sam-russell-corpus/settings/secrets/actions → **New repository secret** → Name `RAILWAY_TOKEN` → Secret: paste → **Add secret**.
+
+## 9. The engines still to build: which need a key from you (none), and which need a number typed once
+
+Every engine below reads PUBLIC files that need no password. Nothing to
+copy from any company's website. The one optional key that speeds up all
+the FRED readers (inflation, Fed rate, money supply, Treasury yields):
+
+- FRED (the St. Louis Fed's data service). Optional; without it the site
+  reads the public CSV files instead, which works but is slower.
+  Get it: https://fredaccount.stlouisfed.org/apikeys → sign in (free) →
+  **Request API Key** → copy the 32-character string.
+  Put it: Railway variables page → + New Variable → NAME `FRED_API_KEY` →
+  VALUE paste → Add → Deploy.
+
+| Engine | Where its numbers come from | Key? | What you do |
+|---|---|---|---|
+| Inheritance Engine | Your Fact Finder entries; CPI from FRED; the tax trajectory already on /portal/erosion | No | Nothing. When it is live, fill the new Inheritance section of your own Fact Finder so you can see it work. |
+| Design documents (themes, five voices, integral line, reveal stack, HeyGen tiles) | The three documents you uploaded | No | Later: record the HeyGen clips per the shot list; I place them. |
+| 40-year inflation panel, 12 sources | FRED CPI series, BLS CPI, Cleveland Fed expectations, Michigan survey, SPF, TIPS breakevens, CBO, Fed SEP, OECD, IMF WEO, World Bank, Treasury (all public pages) | No (FRED key optional) | Nothing. |
+| Young-worker home-ownership odds | Census HVS, FHFA, Zillow, BLS wages, FRED mortgage rate | No | Nothing. |
+| Credit availability vs the Fed | Fed SLOOS, Fed H.8, FEDFUNDS, NY Fed household credit | No | Nothing. |
+| Money printing, debt-to-GDP, foreign Treasury holdings | FRED M2 and WALCL, Treasury FiscalData, TIC (treasury.gov), CBO | No | Nothing. |
+| National car sales | BEA / FRED (TOTALSA), 36 years | No | Nothing. |
+| Travel frequency | BTS T-100, NTTO, TSA throughput | No | Nothing. |
+| Career Ledger pass 2 (malpractice, tuition by school) | AMA policy research, NPDB public use file, AAMC tuition tables, CODA, ABA 509 reports | No | Nothing. Practice-sale records come from your own closed deals: type them on the page when it exists. |
+| Zip Engine passes 2–4 (property tax, HOA, flood/fire/hail, oil & gas, FIA/IUL by state, trusts by state) | Census ACS property tax, FEMA (already read), NOAA storm events, EIA, state statutes | No | HOA dues have no public source: clients type them. |
+| Long-Term Care engine | Genworth/CareScout cost survey, state insurance department rate filings, each carrier's rider form | No | Nothing. |
+| Tax-Free Income for Life + Longevity | Carriers' published income rate sheets, SSA and SOA life tables, the Actuaries Longevity Illustrator, cited studies | No | Nothing. Later: tell me which carriers you place income plans with so I read their rate sheets first. |
 
 ## Not for you
 Manus's DNS push, the code, the tests, the deploys, the docs. Those are mine.
