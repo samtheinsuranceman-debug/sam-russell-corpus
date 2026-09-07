@@ -7,13 +7,18 @@
 // material-participation rule) live on the STR Tax Strategy page and are
 // linked, not repeated.
 // ============================================================
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
-import { Home, ExternalLink, Landmark, BookOpen, Calculator } from "lucide-react";
+import { Home, ExternalLink, Landmark, BookOpen, Calculator, Compass, KeyRound, ScanSearch } from "lucide-react";
 import { RABBU, STR_DEFAULTS, STR_INPUT_SOURCES, runStr, type StrInputs } from "@shared/strEngine";
+import { STR_SOURCES, depreciableBasis } from "@shared/strSources";
 import { lastYear, valueAt } from "@shared/zipEngine";
+
+/** The market-figure sources the page offers: the client's own, then every site in the registry. */
+const MARKET_SOURCES: Array<{ id: string; label: string }> = [{ id: "own", label: STR_INPUT_SOURCES[0].label }, ...STR_SOURCES.map((s) => ({ id: s.id, label: `${s.name}: ${s.publishes}` }))];
+const API_LABEL: Record<string, string> = { "self-serve": "API: self-serve key", contract: "API: by contract", "own-listings": "API: your own listings", download: "Public files", none: "No API: button only" };
 
 const CARD = "rounded-2xl border border-emerald-400/20 bg-white/[0.04]";
 const INPUT = "rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white w-full";
@@ -85,7 +90,7 @@ export default function ShortTermRentals() {
             </div>
             <div className="text-xs text-white/70">
               <div>The market's figures</div>
-              <select className={`${INPUT} mt-1`} value={marketSource} onChange={(e) => setMarketSource(e.target.value)}>{STR_INPUT_SOURCES.map((s) => <option key={s.id} value={s.id}>{s.label.split(":")[0]}</option>)}</select>
+              <select className={`${INPUT} mt-1`} value={marketSource} onChange={(e) => setMarketSource(e.target.value)}>{MARKET_SOURCES.map((s) => <option key={s.id} value={s.id}>{s.label.split(":")[0]}</option>)}</select>
               <div className="mt-1 flex flex-wrap gap-2">
                 <a className={BTN} href={rabbuUrl} target="_blank" rel="noreferrer"><ExternalLink size={11} className="mr-1 inline" />Rabbu calculator for the address</a>
                 <a className={BTN} href={RABBU.markets} target="_blank" rel="noreferrer"><ExternalLink size={11} className="mr-1 inline" />Rabbu market data</a>
@@ -95,6 +100,14 @@ export default function ShortTermRentals() {
           </div>
           {prefilled.length > 0 && <p className="mt-3 text-[11px] text-emerald-200/80">Filled from the record: {prefilled.join(" · ")}.</p>}
         </div>
+
+        <StrSourcesCard
+          zip={zip}
+          downPct={x.downPct}
+          closingPct={x.closingPct}
+          purchasePrice={x.purchasePrice}
+          onUse={(patch, sourceId, readAt) => { setX((s) => ({ ...s, ...patch })); setMarketSource(sourceId); setAsOf(readAt); setPrefilled((p) => [...p, ...Object.keys(patch).map((k) => `${k} = ${sourceId} read ${readAt}`)]); }}
+        />
 
         <div className={`${CARD} p-6`}>
           <div className="grid gap-5 md:grid-cols-5">
@@ -138,13 +151,113 @@ export default function ShortTermRentals() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80"><BookOpen size={12} className="mr-1 inline" /> Where the numbers come from</p>
           <ul className="mt-3 space-y-2 text-xs text-white/70">
             <li><Landmark size={11} className="mr-1 inline" /> Value, appreciation, rent trend and mortgage rate: the Zip Engine's published record for the zip (FHFA, Zillow, Freddie Mac), each with its as-of date on that page.</li>
-            <li><ExternalLink size={11} className="mr-1 inline" /> Nightly rate and occupancy: {STR_INPUT_SOURCES.find((s) => s.id === marketSource)?.label}. Entered {asOf}. {RABBU.note}</li>
+            <li><ExternalLink size={11} className="mr-1 inline" /> Nightly rate and occupancy: {MARKET_SOURCES.find((s) => s.id === marketSource)?.label}. Entered {asOf}. {marketSource === "rabbu" ? RABBU.note : "A site's figure is that site's estimate on that date; the engine takes it as a typed input and never stores it as the record."}</li>
             <li>Cleaning, utilities, insurance, tax and maintenance rates: your figures. Defaults are placeholders to be replaced, not market data.</li>
             <li>Not on this page because no authority publishes it by zip: a thirty-year history of short-term-rental income. Airbnb began in 2008 and its listing data is private; the longest public rent series by zip is Zillow's, from 2015, and it is long-term rent.</li>
           </ul>
         </div>
       </div>
     </AppShell>
+  );
+}
+
+// ─── Where you like to go: the sources protocol, run by the client ──────────
+type ReadOut = { sourceId: string; ok: boolean; url: string; readAt: string; source: string; figures?: Array<{ metric: string; value: number; unit: string; place: string | null; quote: string }>; note?: string; reason?: string; via?: string | null };
+const METRIC_LABEL: Record<string, string> = { nightly_rate: "Nightly rate", occupancy_pct: "Occupancy", monthly_revenue: "Monthly revenue", annual_revenue: "Annual revenue", revpar: "RevPAR", listings_count: "Listings", median_price: "Median price" };
+const METRIC_TO_INPUT: Partial<Record<string, NumKey>> = { nightly_rate: "nightlyRate", occupancy_pct: "occupancyPct", median_price: "purchasePrice" };
+
+function StrSourcesCard({ zip, downPct, closingPct, purchasePrice, onUse }: { zip: string; downPct: number; closingPct: number; purchasePrice: number; onUse: (patch: Partial<StrInputs>, sourceId: string, readAt: string) => void }) {
+  const [notes, setNotes] = useState("");
+  const [asked, setAsked] = useState("");
+  const [place, setPlace] = useState("");
+  const [reads, setReads] = useState<Record<string, ReadOut>>({});
+  const suggest = trpc.zip.strSuggest.useQuery({ notes: asked, downPct, closingPct }, { refetchOnWindowFocus: false, retry: false });
+  const read = trpc.zip.strReadPage.useMutation({ onSuccess: (r) => setReads((m) => ({ ...m, [r.sourceId]: r as ReadOut })) });
+  const s = suggest.data;
+  useEffect(() => { if (!place && s?.places[0]) setPlace(s.places[0]); }, [s, place]);
+  const target = place.trim() || zip;
+  const isZip = /^\d{5}$/.test(target);
+  const linkFor = (id: string) => { const src = s?.sources.find((x) => x.id === id); const hit = src?.links.find((l) => l.place === target) ?? src?.links[0]; return hit?.url ?? STR_SOURCES.find((x) => x.id === id)?.home ?? "#"; };
+  const overCash = s && s.affordability.cashLimitedPrice > 0 && purchasePrice > s.affordability.cashLimitedPrice;
+
+  return (
+    <div className={`${CARD} p-6`}>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80"><Compass size={12} className="mr-1 inline" /> Where you like to go</p>
+      <h2 className="mt-1 text-lg font-semibold text-white">The places in your own words, the price your cash carries, and the ten sites the AI touches before it says a number</h2>
+      <p className="mt-1 text-xs text-white/60">The advisor follows this same list as a protocol whenever a plan touches a rental. Every site is a button; the ones with a key on the host answer directly; "Read with the AI" opens the page on the server and reports only figures whose sentence is on it, dated. Nothing read here is stored.</p>
+
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <div>
+          <label className="block text-xs text-white/70">Anything else about where you go, or want to go
+            <textarea className={`${INPUT} mt-1 h-20`} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="We spend every August in the Outer Banks; my wife wants Sedona…" />
+          </label>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <button className={PRIMARY} onClick={() => setAsked(notes)} disabled={suggest.isFetching}>{suggest.isFetching ? "Reading…" : "Read my Fact Finder and this for places"}</button>
+            <input className={`${INPUT} !w-56`} value={place} onChange={(e) => setPlace(e.target.value)} placeholder="or type a place: Destin, FL" />
+          </div>
+          {s && (
+            <div className="mt-3 text-xs text-white/70">
+              {s.readFrom.length ? <div className="text-[11px] text-white/50">Read from: {s.readFrom.join(", ")}.</div> : <div className="text-[11px] text-white/50">Nothing about places on your Fact Finder yet; type where you go above.</div>}
+              {s.places.length > 0 && <div className="mt-1 flex flex-wrap gap-1">{s.places.map((p) => <button key={p} className={`${BTN} ${p === place ? "border-emerald-300 bg-emerald-400/20" : ""}`} onClick={() => setPlace(p)}>{p}</button>)}</div>}
+              {s.zips.length > 0 && <div className="mt-1 flex flex-wrap gap-1">{s.zips.map((z) => <button key={z.zip} className={`${BTN} ${z.zip === place ? "border-emerald-300 bg-emerald-400/20" : ""}`} onClick={() => setPlace(z.zip)}>{z.label} {z.zip}</button>)}</div>}
+            </div>
+          )}
+        </div>
+        <div className="text-xs text-white/70">
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-white/50">What your cash carries</div>
+          {s ? (
+            <ul className="mt-1 space-y-1">
+              {s.affordability.lines.map((l, i) => <li key={i}>{l}</li>)}
+              <li className={overCash ? "text-amber-300" : "text-emerald-200/80"}>{s.affordability.cashLimitedPrice > 0 ? `The purchase price above (${usd(purchasePrice)}) is ${overCash ? "above" : "within"} the cash-limited price (${usd(s.affordability.cashLimitedPrice)}).` : "Fill in the cash section of the Fact Finder to size the purchase."}</li>
+              <li>Depreciable basis at an 80% building share: {usd(depreciableBasis(purchasePrice, 80))}; the <Link href="/portal/str-strategy" className="text-emerald-300 underline">STR Tax Strategy</Link> page accelerates it.</li>
+            </ul>
+          ) : <div className="mt-1 text-white/50">{suggest.isFetching ? "reading…" : "Sign in with a Fact Finder to size the purchase."}</div>}
+          <div className="mt-3 text-[11px] text-white/50"><KeyRound size={11} className="mr-1 inline" />{s?.apisConfigured.length ? `API keys on this host: ${s.apisConfigured.map((a) => a.name).join(", ")}.` : "No rental-data API key is set on this host yet; every site below is a button. Names for the owner's env panel are in the docs."}</div>
+        </div>
+      </div>
+
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead><tr className="text-white/50"><th className="py-1 text-left">Site</th><th className="text-left">Publishes</th><th className="text-left">Access</th><th className="text-right">For {target || "your place"}</th></tr></thead>
+          <tbody>
+            {STR_SOURCES.map((src) => {
+              const r = reads[src.id];
+              const cfg = s?.sources.find((x) => x.id === src.id)?.apiConfigured;
+              return (
+                <Fragment key={src.id}>
+                  <tr className="border-t border-white/5 text-white/80 align-top">
+                    <td className="py-2 pr-2 font-semibold text-white">{src.name}<div className="text-[10px] font-normal text-white/40">{src.kind}</div></td>
+                    <td className="py-2 pr-2 max-w-md text-white/70">{src.publishes}</td>
+                    <td className="py-2 pr-2 whitespace-nowrap">{cfg ? <span className="text-emerald-300">API key set</span> : API_LABEL[src.api.status]}</td>
+                    <td className="py-2 text-right whitespace-nowrap">
+                      <a className={BTN} href={linkFor(src.id)} target="_blank" rel="noreferrer"><ExternalLink size={11} className="mr-1 inline" />Open</a>
+                      <button className={`${BTN} ml-1`} disabled={read.isPending} onClick={() => read.mutate(isZip ? { sourceId: src.id, zip: target } : target ? { sourceId: src.id, place: target } : { sourceId: src.id })}><ScanSearch size={11} className="mr-1 inline" />{read.isPending && read.variables?.sourceId === src.id ? "Reading…" : "Read with the AI"}</button>
+                    </td>
+                  </tr>
+                  {r && (
+                    <tr className="border-t border-white/5"><td colSpan={4} className="py-2 pl-3 text-[11px]">
+                      {r.ok ? (
+                        <div className="text-white/70">
+                          <div className="text-white/50">Read on {r.readAt} from <a className="underline" href={r.url} target="_blank" rel="noreferrer">{r.url}</a>{r.via ? ` by ${r.via}` : ""}. {r.note}</div>
+                          {(r.figures ?? []).map((f, i) => (
+                            <div key={i} className="mt-1 flex flex-wrap items-center gap-2">
+                              <span className="font-semibold text-white">{METRIC_LABEL[f.metric] ?? f.metric}: {f.value.toLocaleString("en-US")} {f.unit}{f.place ? ` (${f.place})` : ""}</span>
+                              <span className="text-white/50">“{f.quote}”</span>
+                              {METRIC_TO_INPUT[f.metric] && <button className={PRIMARY} onClick={() => onUse({ [METRIC_TO_INPUT[f.metric]!]: f.value } as Partial<StrInputs>, src.id, r.readAt)}>Use as {METRIC_LABEL[f.metric]}</button>}
+                            </div>
+                          ))}
+                        </div>
+                      ) : <div className="text-amber-200/80">{r.reason}</div>}
+                    </td></tr>
+                  )}
+                </Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-2 text-[11px] text-white/50">Each row was checked against the site's own page on {STR_SOURCES[0]!.verifiedAt.date}. Airbnb's official API is a closed partner programme with no market data; Rabbu and Awning publish no API; AirDNA and Vrbo (through Expedia) need a contract; Mashvisor, AirROI and PriceLabs sell self-serve keys. A key never goes anywhere but the host's env panel.</p>
+    </div>
   );
 }
 
