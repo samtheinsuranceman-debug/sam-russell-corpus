@@ -20,6 +20,7 @@ import { careerRouter } from "./careerRouter";
 import { enterpriseRouter } from "./enterpriseRouter";
 import { inheritanceRouter } from "./inheritanceRouter";
 import { iulLinksRouter } from "./iulLinksRouter";
+import { ltcRouter } from "./ltcRouter";
 import { forgivenessRouter } from "./forgivenessRouter";
 import { taxScheduleRouter } from "./taxScheduleRouter";
 import { unaskedRouter } from "./unaskedRouter";
@@ -335,6 +336,7 @@ export const appRouter = router({
   rental: enterpriseRouter,
   inheritance: inheritanceRouter,
   iulLinks: iulLinksRouter,
+  ltc: ltcRouter,
   forgiveness: forgivenessRouter,
   taxSchedule: taxScheduleRouter,
   unasked: unaskedRouter,
