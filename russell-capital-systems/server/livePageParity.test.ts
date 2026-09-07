@@ -30,7 +30,7 @@ describe("live page ↔ React homepage parity", () => {
 
   it("keeps the same screen order: the sign, four plates of technologies, the sign at night, the lead card", () => {
     const order = (src: string, marks: string[]) => marks.map((m) => src.indexOf(m));
-    const liveOrder = order(template, ['id="top"', 'id="claims"', "The horizon", "The skyway", "The expressway", "The river", "The sign at night", 'id="estimate"']);
+    const liveOrder = order(template, ['id="top"', 'id="claims"', "The horizon", "The skyway", "The expressway", 'aria-label="The river"', "The sign at night", 'id="estimate"']);
     // The React page names its plates in a constant above the markup, so the order check reads the map itself.
     const appOrder = order(landing, ['id="top"', 'id="claims"', "PLATES.map", "The sign at night", "<HomeLeadFactFinder />"]);
     for (const label of ["The horizon", "The skyway", "The expressway", "The river"]) expect(landing).toContain(`label: "${label}"`);
