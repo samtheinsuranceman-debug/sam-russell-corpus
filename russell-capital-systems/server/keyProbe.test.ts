@@ -22,9 +22,19 @@ describe("the key probe", () => {
     expect(by.openai).toMatchObject({ configured: true, status: "rejected", httpStatus: 401 });
     expect(by.openai!.note).toMatch(/The provider said: invalid_api_key: Incorrect API key provided: \[key\]/);
     expect(by.heygen).toMatchObject({ configured: false, status: "missing" });
+    expect(by.perplexity).toMatchObject({ configured: false, status: "missing", envKey: "PERPLEXITY_API_KEY" });
     expect(by.resend).toMatchObject({ status: "ok" });
     expect(by.fred).toMatchObject({ configured: true, status: "ok" });
     expect(JSON.stringify(results)).not.toMatch(/good-key|bad-key/);
+  });
+  it("probes Perplexity with a one-token POST and never a GET", async () => {
+    let seen: { url: string; method?: string; body?: string } | null = null;
+    _setFetchForTests(async (url, init) => { if (url.includes("perplexity")) seen = { url, method: init.method, body: init.body }; return { ok: true, status: 200 }; });
+    _setFredFetch(fredOk);
+    await probeKeys({ PERPLEXITY_API_KEY: "p" } as NodeJS.ProcessEnv, 1_000);
+    expect(seen).not.toBeNull();
+    expect(seen!.method).toBe("POST");
+    expect(JSON.parse(seen!.body!)).toMatchObject({ model: "sonar", max_tokens: 1 });
   });
   it("sends the Anthropic workspace header only when ANTHROPIC_WORKSPACE_ID is set", async () => {
     const seen: Array<Record<string, string>> = [];
