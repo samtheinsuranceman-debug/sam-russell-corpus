@@ -222,6 +222,18 @@ export const RATING_SCALES = [
   { agency: "Fitch", url: "https://www.fitchratings.com/", top: "AAA Exceptionally Strong; AA Very Strong; A Strong." },
 ];
 
+/** Common sense the page states before underwriting is even discussed: the person insured and the person who owns the policy need not be the same person. */
+export const INSURED_NOTE = {
+  title: "If your health will not pass underwriting, insure your spouse and keep the policy",
+  lines: [
+    "The insured and the owner are two different roles on a life policy. If you are not healthy enough to be the insured, the policy can be written on your spouse (or, with their consent, an adult child) while you remain the owner and the payer.",
+    "The owner holds every right in the contract: the cash value, withdrawals and policy loans, the choice of index accounts, the beneficiary, and the decision to keep or surrender it. The insured's health sets the cost of insurance; it does not decide who controls the money.",
+    "Once the irrevocable trust owns the policy, the trust is the owner and the trustee exercises those rights under the trust's terms; the protection from a divorce or a lawsuit follows the trust and the state's law, which is why the attorney below draws it before anything is transferred.",
+    "Built this way it is a fortress for the family: the tax-free cash the properties throw off keeps compounding inside a policy the family controls, whichever spouse the carrier insured.",
+  ],
+  caveat: "Insurable interest, the insured's written consent, and the carrier's ownership rules are contract terms; the attorney and the carrier's application confirm them for your state.",
+};
+
 /** The reading the client does before any policy is chosen: the carrier's current rate sheet and the policy form's loan provision. */
 export const CARRIER_READ_PROTOCOL = [
   "Open the carrier's own financial-strength page and copy each agency's rating with its date.",
