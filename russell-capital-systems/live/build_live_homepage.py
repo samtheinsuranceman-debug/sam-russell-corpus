@@ -32,7 +32,7 @@ IMAGES = {
     "__IMG_GLASS__": "rcs-city-glass.webp",
 }
 CONSTS = {
-    "__CALENDLY__": "https://calendly.com/samtheinsuranceman-1/30min",
+    "__CALENDLY__": "https://calendly.com/sam-RussellCapitalSystems/60min",
     "__ADVISOR_EMAIL__": "samtheinsuranceman@gmail.com",
     # The app host serves the founder's message in the owner's cloned voice; the static page embeds the player.
     "__APP_ORIGIN__": "https://web-production-4b215.up.railway.app",
