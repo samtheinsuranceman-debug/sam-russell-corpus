@@ -256,7 +256,9 @@
   .decl p{font-size:clamp(1.25rem,2.4vw,2rem);font-weight:700;line-height:1.28}
   /* Grok's master card: dark glass plaque with a mint hairline on the wet night city; eyebrow in mint tracking;
      Title 01 filament wrap (heavy serif, mint-to-white fill, one looping filament); Body 02 plaque white (ivory serif, soft halo); copper link */
-  .plate{position:relative;overflow:hidden}
+  .plate{position:relative;overflow:hidden;min-height:100svh;display:flex;align-items:center}
+  .plate .wrap{width:min(64rem,100% - 2.5rem)}
+  .plate .claims{margin-top:0}
   .plate .plate-pic{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%}
   .plate .plate-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,9,10,.92) 0%,rgba(3,9,10,.2) 18%,rgba(3,9,10,.2) 82%,rgba(3,9,10,.94) 100%)}
   .plate .wrap{position:relative;z-index:1}
@@ -298,13 +300,13 @@
   <div class="wrap" style="padding:0">
     <div class="nav-bar">
       <a href="#top" class="brand" aria-label="Russell Capital Systems homepage"><span class="brand-mark">R</span><span class="brand-name">Russell Capital Systems™</span></a>
-      <div class="nav-links"><a href="#manifesto">Why here</a><a href="#claims">The 15 technologies</a><a href="#expect">What to expect</a><a href="#estimate">Start</a></div>
+      <div class="nav-links"><a href="#claims">The 15 technologies</a><a href="#estimate">Start</a></div>
       <div class="nav-cta">
         <a class="btn btn-ghost" style="padding:.6rem 1rem;font-size:.9rem" href="__CALENDLY__" target="_blank" rel="noopener noreferrer">Book a Review</a>
         <button class="menu-btn" id="menuBtn" aria-label="Open navigation menu" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       </div>
     </div>
-    <div class="mobile-menu" id="mobileMenu" hidden><a href="#manifesto">Why here</a><a href="#claims">The 15 technologies</a><a href="#expect">What to expect</a><a href="#estimate">Start</a></div>
+    <div class="mobile-menu" id="mobileMenu" hidden><a href="#claims">The 15 technologies</a><a href="#estimate">Start</a></div>
   </div>
 </nav>
 
@@ -315,58 +317,43 @@
   <div class="scroll-hint" aria-hidden="true">Scroll<span></span></div>
 </header>
 
-<!-- ───────── 2 · THE HORIZON. Black water in front, the city far away and low. The slogan, one line. ───────── -->
-<section id="horizon" class="page clean" aria-label="The horizon: the slogan">
-  <img class="pic" src="__IMG_HORIZON__" alt="A dark harbour at night, black water in the foreground and a green-lit skyline far away and low on the horizon" style="object-position:center 58%">
-  <div class="slogan-line" aria-label="Slogan"><p class="slogan-track glow"><span data-slogan></span><span data-slogan aria-hidden="true"></span></p></div>
-</section>
-
-<!-- ───────── 3 · WHY HERE ───────── -->
-<section id="manifesto" class="words" aria-label="Why here and nowhere else">
-  <div class="wrap">
-    <p class="kicker">Only here</p>
-    <ol class="decl" id="declarations"></ol>
-    <p class="fine-l" id="status"></p>
-  </div>
-</section>
-
-<!-- ───────── 4 · THE SKYWAY. Clean. ───────── -->
-<section class="page clean" aria-label="The skyway">
-  <picture><source media="(max-width:767px)" srcset="__IMG_FLAGSHIP__"><img class="pic" src="__IMG_SKYWAY__" alt="Green-lit skyline at night with a lit highway sweeping through the city"></picture>
-</section>
-
-<!-- ───────── 5 · THE FIFTEEN ───────── -->
-<section id="claims" class="words plate" aria-label="Fifteen patent-pending technologies">
-  <img class="plate-pic" src="__IMG_RIVER__" alt="" aria-hidden="true" loading="lazy" decoding="async">
-  <div class="plate-shade" aria-hidden="true"></div>
-  <div class="wrap">
-    <p class="kicker">Fifteen technologies that exist only here</p>
-    <h2 class="h2 glow" style="margin-top:1rem">Read them top to bottom. <span class="glow-em">Each one makes the next possible.</span></h2>
-    <p style="margin-top:1rem;max-width:42rem;color:rgba(255,255,255,.7)">Ten minutes. Fifteen claims. The bold line is the idea; the line under it is what it does for you. Every specific is confirmed by a licensed professional before anything moves.</p>
-    <ol class="claims" id="claimList"></ol>
-    <p class="fine-l" id="disclaimer"></p>
-  </div>
-</section>
-
-<!-- ───────── 6 · THE EXPRESSWAY. Clean. ───────── -->
-<section class="page clean" aria-label="The expressway">
-  <picture><source media="(max-width:767px)" srcset="__IMG_GLASS__"><img class="pic" src="__IMG_EXPRESSWAY__" alt="Light trails on a curving expressway beneath green-lit towers at night" style="object-position:center 45%"></picture>
-</section>
-
-<!-- ───────── 7 · WHAT TO EXPECT ───────── -->
-<section id="expect" class="words" aria-label="What to expect here">
-  <div class="wrap">
-    <p class="kicker">What you can expect here that you will never find anywhere else</p>
-    <ul class="expect" id="expectList"></ul>
-    <div class="voice" id="voice" hidden>
-      <p class="kicker">Hear it from Sam Russell</p>
-      <p style="margin-top:.25rem;font-size:.9rem;color:rgba(255,255,255,.75)">One minute, in his own voice, on why this exists.</p>
-      <audio id="founderAudio" controls preload="metadata" src="__APP_ORIGIN__/api/founder-message.mp3" aria-label="A message from Sam Russell"></audio>
+<!-- ───────── 2 to 5 · THE FIFTEEN, starting on the very next screen. Four city plates carrying the plaques; no picture left empty. ───────── -->
+<div id="claims" aria-label="Fifteen patent-pending technologies">
+  <section class="words plate" aria-label="The horizon">
+    <img class="plate-pic" src="__IMG_HORIZON__" alt="" aria-hidden="true" style="object-position:center 58%" loading="lazy" decoding="async">
+    <div class="plate-shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <p class="kicker" style="margin-bottom:2rem">Fifteen patent-pending technologies</p>
+      <ol class="claims" data-claims="0-4"></ol>
     </div>
-  </div>
-</section>
+  </section>
+  <section class="words plate" aria-label="The skyway">
+    <picture><source media="(max-width:767px)" srcset="__IMG_FLAGSHIP__"><img class="plate-pic" src="__IMG_SKYWAY__" alt="" aria-hidden="true" loading="lazy" decoding="async"></picture>
+    <div class="plate-shade" aria-hidden="true"></div>
+    <div class="wrap"><ol class="claims" data-claims="4-8"></ol></div>
+  </section>
+  <section class="words plate" aria-label="The expressway">
+    <picture><source media="(max-width:767px)" srcset="__IMG_GLASS__"><img class="plate-pic" src="__IMG_EXPRESSWAY__" alt="" aria-hidden="true" style="object-position:center 45%" loading="lazy" decoding="async"></picture>
+    <div class="plate-shade" aria-hidden="true"></div>
+    <div class="wrap"><ol class="claims" data-claims="8-12"></ol></div>
+  </section>
+  <section class="words plate" aria-label="The river">
+    <img class="plate-pic" src="__IMG_RIVER__" alt="" aria-hidden="true" loading="lazy" decoding="async">
+    <div class="plate-shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <ol class="claims" data-claims="12-15"></ol>
+      <p class="fine-l" id="status" style="font-size:.92rem;color:rgba(255,255,255,.55)"></p>
+      <p class="fine-l" id="disclaimer" style="margin-top:1.5rem"></p>
+      <div class="voice" id="voice" hidden>
+        <p class="kicker">Hear it from Sam Russell</p>
+        <p style="margin-top:.25rem;font-size:.9rem;color:rgba(255,255,255,.75)">One minute, in his own voice, on why this exists.</p>
+        <audio id="founderAudio" controls preload="metadata" src="__APP_ORIGIN__/api/founder-message.mp3" aria-label="A message from Sam Russell"></audio>
+      </div>
+    </div>
+  </section>
+</div>
 
-<!-- ───────── 8 · THE SIGN AT NIGHT. The slogan a second time. ───────── -->
+<!-- ───────── 6 · THE SIGN AT NIGHT. The slogan, one line. ───────── -->
 <section id="sign" class="page clean" aria-label="The sign at night: the slogan">
   <picture><source media="(max-width:767px)" srcset="__IMG_NEON_B_TALL__"><img class="pic" src="__IMG_NEON_B__" alt="Neon sign reading Financial &amp; Tax Relief and Recovery for Physicians, Psychiatrists, &amp; Surgeons over a green city at night"></picture>
   <div class="slogan-line" aria-label="Slogan"><p class="slogan-track glow"><span data-slogan></span><span data-slogan aria-hidden="true"></span></p></div>
@@ -437,11 +424,10 @@
   const M = JSON.parse($("manifesto-json").textContent);
   const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   document.querySelectorAll("[data-slogan]").forEach(el => el.textContent = M.slogan);
-  $("declarations").innerHTML = M.declarations.map((d, i) => `<li><span class="n glow-em" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span><p class="glow">${esc(d)}</p></li>`).join("");
   $("status").textContent = M.status;
-  $("claimList").innerHTML = M.claims.map(c => `<li id="claim-${c.ref}"><p class="tech">Technology ${c.ref} <span aria-hidden="true">·</span> Pending <span aria-hidden="true">·</span> Only at RCS</p><div class="title-wrap"><h3>${esc(c.name)}</h3><svg class="filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7"/></svg></div><p class="lead-line">${esc(c.lead)}</p><p class="detail">${esc(c.detail)}</p><a class="mech" href="#estimate">See the mechanism <span aria-hidden="true">→</span></a></li>`).join("");
+  const plaque = (c) => `<li id="claim-${c.ref}"><p class="tech">Technology ${c.ref} <span aria-hidden="true">·</span> Pending <span aria-hidden="true">·</span> Only at RCS</p><div class="title-wrap"><h3>${esc(c.name)}</h3><svg class="filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7"/></svg></div><p class="lead-line">${esc(c.lead)}</p><p class="detail">${esc(c.detail)}</p><a class="mech" href="#estimate">See the mechanism <span aria-hidden="true">→</span></a></li>`;
+  document.querySelectorAll("ol[data-claims]").forEach(ol => { const [a, b] = ol.dataset.claims.split("-").map(Number); ol.innerHTML = M.claims.slice(a, b).map(plaque).join(""); });
   $("disclaimer").textContent = M.disclaimer;
-  $("expectList").innerHTML = M.expect.map(e => `<li><p class="glow">${esc(e)}</p></li>`).join("");
   const audio = $("founderAudio"); audio.addEventListener("loadedmetadata", () => { $("voice").hidden = false; });
 
   $("pills").innerHTML = ["Accelerated mortgage payoff","Lower tax liability","Roth-conversion sequencing","Oil &amp; gas drilling deduction","Trust-owned Index Universal Life"].map(p => `<div class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>${p}</div>`).join("");
