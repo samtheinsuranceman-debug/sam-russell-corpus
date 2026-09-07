@@ -34,9 +34,14 @@ jobs:
           cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
       - name: Install
         run: pnpm install --frozen-lockfile
+      # Patched versions are pinned through pnpm.overrides in package.json;
+      # the two image-size advisories (reached only through pptxgenjs, no
+      # patched release exists) are listed in pnpm.auditConfig.ignoreGhsas.
       - name: Known vulnerabilities (high/critical fail)
         run: pnpm audit --audit-level=high
       - name: Typecheck
         run: pnpm check
+      # The hermetic suites only: the database-backed and live-provider
+      # suites need a MariaDB and real keys and are run locally before merge.
       - name: Unit tests
-        run: pnpm test
+        run: pnpm test:ci
