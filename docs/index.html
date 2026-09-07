@@ -259,9 +259,17 @@
   @media(min-width:640px){.claims li{grid-template-columns:4.5rem 1fr;gap:1.5rem}}
   .claims .ref{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
   .claims .tag{display:block;margin-top:.5rem;font-size:.62rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(110,231,183,.7)}
-  .claims h3{font-size:clamp(2rem,4.4vw,3.8rem);font-weight:900;letter-spacing:-.02em;line-height:1.05;color:#eafff5;text-shadow:0 0 1px #fff,0 0 6px #a7f3d0,0 0 14px #6ee7b7,0 0 28px #34d399,0 0 56px rgba(16,185,129,.85),0 0 110px rgba(16,185,129,.5)}
+  /* Grok's pair: Title 01 filament wrap (heavy serif, mint-to-white fill, looping filament) + Body 02 plaque white (ivory, soft shadow, slight bevel) */
+  .claims .title-wrap{position:relative;display:inline-block;max-width:100%;padding-bottom:.55rem}
+  .claims h3{font-family:var(--serif);font-size:clamp(2.2rem,4.8vw,4.2rem);font-weight:700;letter-spacing:-.01em;line-height:1.02;background:linear-gradient(180deg,#fff 0%,#eafff5 38%,#a7f3d0 72%,#6ee7b7 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 2px rgba(255,255,255,.9)) drop-shadow(0 0 10px rgba(110,231,183,.85)) drop-shadow(0 0 26px rgba(52,211,153,.7)) drop-shadow(0 0 60px rgba(16,185,129,.45))}
+  .claims .filament{position:absolute;left:-2%;right:-2%;bottom:0;width:104%;height:14px;overflow:visible;pointer-events:none}
+  .claims .filament path{fill:none;stroke:#6ee7b7;stroke-width:1.4;stroke-linecap:round;stroke-dasharray:140 260;filter:drop-shadow(0 0 4px #6ee7b7) drop-shadow(0 0 10px rgba(52,211,153,.8));animation:filament-loop 10s linear infinite,filament-breathe 10s ease-in-out infinite}
+  @keyframes filament-loop{from{stroke-dashoffset:0}to{stroke-dashoffset:-800}}
+  @keyframes filament-breathe{0%,100%{opacity:.35}50%{opacity:.7}}
+  .claims .lead-line,.claims .detail{color:#fbf9f1;text-shadow:0 0 12px rgba(255,255,255,.35),0 1px 0 rgba(255,255,255,.22),0 -1px 0 rgba(0,0,0,.55),0 2px 12px rgba(0,0,0,.7)}
   .claims .lead-line{margin-top:1rem;font-size:clamp(1.9rem,3.4vw,2.9rem);font-weight:700;line-height:1.28}
-  .claims .detail{margin-top:1rem;max-width:60rem;font-size:clamp(1.5rem,2.4vw,2rem);line-height:1.45;color:#f4f8f6;text-shadow:0 0 6px rgba(255,255,255,.5),0 0 18px rgba(255,255,255,.22),0 2px 12px rgba(0,0,0,.8)}
+  .claims .detail{margin-top:1rem;max-width:60rem;font-size:clamp(1.5rem,2.4vw,2rem);line-height:1.45}
+  @media(prefers-reduced-motion:reduce){.claims .filament path{animation:none;opacity:.5}}
   .expect{list-style:none;margin:2rem 0 0;padding:0;display:grid;gap:2rem}
   .expect li{border-left:2px solid rgba(110,231,183,.6);padding-left:1.25rem}@media(min-width:640px){.expect li{padding-left:1.75rem}}
   .expect p{font-size:clamp(1.2rem,2.2vw,1.85rem);font-weight:700;line-height:1.3}
@@ -535,7 +543,7 @@
   document.querySelectorAll("[data-slogan]").forEach(el => el.textContent = M.slogan);
   $("declarations").innerHTML = M.declarations.map((d, i) => `<li><span class="n glow-em" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span><p class="glow">${esc(d)}</p></li>`).join("");
   $("status").textContent = M.status;
-  $("claimList").innerHTML = M.claims.map(c => `<li id="claim-${c.ref}"><div><span class="ref glow-em" aria-hidden="true">${c.ref}</span><span class="tag">Only at RCS</span></div><div><h3>${esc(c.name)}</h3><p class="lead-line glow">${esc(c.lead)}</p><p class="detail">${esc(c.detail)}</p></div></li>`).join("");
+  $("claimList").innerHTML = M.claims.map(c => `<li id="claim-${c.ref}"><div><span class="ref glow-em" aria-hidden="true">${c.ref}</span><span class="tag">Only at RCS</span></div><div><div class="title-wrap"><h3>${esc(c.name)}</h3><svg class="filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7"/></svg></div><p class="lead-line">${esc(c.lead)}</p><p class="detail">${esc(c.detail)}</p></div></li>`).join("");
   $("disclaimer").textContent = M.disclaimer;
   $("expectList").innerHTML = M.expect.map(e => `<li><p class="glow">${esc(e)}</p></li>`).join("");
   const audio = $("founderAudio"); audio.addEventListener("loadedmetadata", () => { $("voice").hidden = false; });
