@@ -1,3 +1,5 @@
+> **Superseded on 7 September 2026** by `RCS_97_PATENTS_5TH_GRADE_EXPLAINED.md`, the single document that holds all 97 patents (the original 57 plus the 40 new ones) in the fifth-grade voice, ordered by excitement, with no Working Components and a deliberately vague How It Works. The new core patents were renumbered there; see the map in `NEW_PATENTS_AI_TEAM_NOTES_SEP2026.md`.
+
 # Russell Capital Systems — The New Patents, Explained Like You're in 5th Grade
 
 **Prepared for:** Samuel Russell, Russell Holdings Management, LLC
