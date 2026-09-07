@@ -21,6 +21,7 @@ import { getDb } from "./db";
 import { powerSnapshots, type PowerSnapshotRow } from "../drizzle/schema";
 import { CONTROL, LEVER_WEIGHTS, controlAt, type Party } from "@shared/powerHistory";
 import { fetchFredObservationsSince } from "./_core/fred";
+import { DAY_MS, longInterval } from "./_core/schedule";
 
 export type Lever = "president" | "senate" | "house" | "judiciary" | "governors" | "legislatures" | "mayors";
 export type Reading = { lever: Lever; measure: string; value: number; asOf: string; source: string; detail?: string | null };
@@ -397,7 +398,7 @@ export async function inflationByControl(fetchSeries: (id: string, start: string
   return { from, to, source: "BLS CPI-U (CPIAUCSL) via FRED, December over December; control per powerHistory.ts", byBucket: { left: mean(acc.left), divided: mean(acc.divided), right: mean(acc.right) }, byTrifecta: { D: mean(tri.D), R: mean(tri.R), none: mean(tri.none) }, caveat: "History, not a forecast: the Federal Reserve, oil, wars and supply shocks have moved prices far more than which party held Congress. Shown so the client can see the record; it does not feed the ladder." };
 }
 
-let pulseTimer: NodeJS.Timeout | null = null;
+let pulseTimer: { clear: () => void } | null = null;
 /** The pulse is free (no AI): weekly by default, first reading half a minute after boot when none exists for today. POWER_PULSE_DAYS=0 turns it off. */
 export function startPulseSchedule(env: NodeJS.ProcessEnv = process.env): boolean {
   const days = env.POWER_PULSE_DAYS === undefined ? 7 : Number(env.POWER_PULSE_DAYS);
@@ -406,7 +407,6 @@ export function startPulseSchedule(env: NodeJS.ProcessEnv = process.env): boolea
   // At boot: read again unless every lever already has a reading from today (a new feed or market added since the last pulse gets read at once).
   const LEVER_KEYS = ["senate.dem_seats", "house.dem_seats", "judiciary.dem_share_all", "governors.dem_share", "president.p_dem_next", "senate.p_dem_next", "house.p_dem_next"];
   setTimeout(async () => { try { const latest = await latestReadings(); const fresh = LEVER_KEYS.every((k) => latest[k]?.asOf === today()); if (!fresh) await run(); } catch { await run(); } }, 30_000).unref?.();
-  pulseTimer = setInterval(run, days * 86_400_000);
-  pulseTimer.unref?.();
+  pulseTimer = longInterval(run, days * DAY_MS);
   return true;
 }

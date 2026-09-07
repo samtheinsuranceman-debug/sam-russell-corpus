@@ -22,6 +22,7 @@ import { jsonColumn } from "./_core/jsonColumn";
 import type { Direction, WeightedClaim } from "@shared/erosion";
 import { configuredProviders, leadModel } from "./ultraAI";
 import { fetchFredObservationsSince, type Observation } from "./_core/fred";
+import { DAY_MS, longInterval } from "./_core/schedule";
 
 export type SourceDef = {
   id: string; name: string; org: string; url: string; horizonYears: number;
@@ -343,15 +344,14 @@ export async function harvestAll(defs: SourceDef[] = PANELS.flat()): Promise<Arr
   return out;
 }
 
-let sweepTimer: NodeJS.Timeout | null = null;
+let sweepTimer: { clear: () => void } | null = null;
 /** Opt-in scheduled sweep: EROSION_HARVEST_DAYS=7 reads every source weekly (first pass a minute after boot). */
 export function startHarvestSchedule(env: NodeJS.ProcessEnv = process.env): boolean {
   const days = Number(env.EROSION_HARVEST_DAYS ?? 0);
   if (!Number.isFinite(days) || days <= 0 || sweepTimer) return false;
   const run = () => import("./power").then(({ powerSweep }) => powerSweep()).then((p) => console.log("[erosion] pulse:", JSON.stringify(p))).then(() => harvestAll()).then((r) => console.log("[erosion] harvest sweep:", r.map((x) => `${x.sourceId}:${x.harvested ? `${x.stored} stored` : "skipped"}`).join(" "))).then(() => scorePanel()).then((sc) => console.log("[erosion] scored", sc.scored.length, "claims; consistency regraded for", Object.keys(sc.consistency).length, "sources")).catch((e) => console.warn("[erosion] sweep failed", String(e).slice(0, 160)));
   setTimeout(run, 60_000).unref?.();
-  sweepTimer = setInterval(run, days * 86_400_000);
-  sweepTimer.unref?.();
+  sweepTimer = longInterval(run, days * DAY_MS);
   return true;
 }
 

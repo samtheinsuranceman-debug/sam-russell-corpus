@@ -24,6 +24,7 @@ type Fetcher = (url: string) => Promise<{ ok: boolean; status: number; text: () 
 const UA = "RussellCapitalSystems/1.0 (+https://www.russellcapitalsystems.com; public-data reader)";
 const realFetch: Fetcher = (url) => fetch(url, { signal: AbortSignal.timeout(120_000), headers: { "user-agent": UA, accept: "text/csv, application/octet-stream, */*" } });
 import { sweepAllowed } from "./_core/memory";
+import { DAY_MS, longInterval } from "./_core/schedule";
 let _fetch: Fetcher = realFetch;
 export function _setZipFetchForTests(f: Fetcher | null) { _fetch = f ?? realFetch; }
 
@@ -250,7 +251,7 @@ export function startZipSchedule(env: NodeJS.ProcessEnv = process.env): boolean 
   const mem = sweepAllowed(env);
   if (!mem.ok) { console.warn(`[zip] automatic sweep skipped: this box allows ${mem.haveMb} MB and the sweep asks for ${mem.needMb} MB (SWEEP_MIN_MEMORY_MB); the owner's "Read the files now" still works`); return false; }
   setTimeout(() => { zipSweep(env).catch(() => undefined); }, 120_000).unref();
-  setInterval(() => { zipSweep(env).catch(() => undefined); }, days * 86_400_000).unref();
+  longInterval(() => { zipSweep(env).catch(() => undefined); }, days * DAY_MS);
   return true;
 }
 
