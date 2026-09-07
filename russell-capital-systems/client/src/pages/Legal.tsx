@@ -5,6 +5,7 @@ import PageBackdrop from "@/components/PageBackdrop";
 const PHOTOS = {
   river: { src: "/rcs-city-river.webp", phoneSrc: "/rcs-city-glass.webp", alt: "Emerald-lit skyline at dusk with a river curving through the city" },
   harbor: { src: "/rcs-city-harbor.webp", phoneSrc: "/rcs-city-towers.webp", alt: "Green-lit harbour city at night, towers reflected in the water" },
+  summit: { src: "/rcs-city-summit.webp", phoneSrc: "/rcs-city-towers.webp", alt: "Green-lit skyscrapers at night under a dark sky, a spire rising above them" },
   emerald: { src: "/rcs-city-emerald.webp", phoneSrc: "/rcs-city-pinnacle.webp", alt: "Emerald-lit city skyline at dawn with a river winding through it" },
 } as const;
 
@@ -27,7 +28,7 @@ function LegalShell({ title, photo, position, children }: { title: string; photo
 
 export function Privacy() {
   return (
-    <LegalShell title="Privacy Policy" photo="harbor" position="center 20%">
+    <LegalShell title="Privacy Policy" photo="summit" position="center 40%">
       <p><strong className="text-white">Effective Date:</strong> January 1, 2026</p>
       <p>Russell Capital Systems™ ("we", "our", "us") operates the Russell Capital Systems™ Wealth OS platform. www.RussellCapitalSystems.com is owned and operated by Russell Holdings Management LLC. This Privacy Policy explains how we collect, use, and protect your information.</p>
       <h2 className="text-white font-bold text-lg">Information We Collect</h2>
