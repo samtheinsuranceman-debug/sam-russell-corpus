@@ -8,15 +8,14 @@ import { SiteIdentity } from "@/components/SiteIdentity";
 import manifesto from "@shared/homeManifesto.json";
 
 // ============================================================
-// THE HOMEPAGE — nine screens, most of them a single clean photograph.
+// THE HOMEPAGE — the sign, then the fifteen technologies straight away.
 //
-// The owner's brief: strip the pages down so the patent-pending technology
-// is what stands out; keep the pictures clean of titles, buttons and forms;
-// one slogan, one line, at the bottom of one or two image pages; fifteen
-// technology claims stacked in the order they build on one another, each a
-// bold glowing summary a physician can read in ten minutes; the lead card
-// is the last screen. All copy lives in shared/homeManifesto.json so the
-// static homepage (docs/index.html) reads the same words.
+// The owner's brief (September 2026): the patents start on the very next
+// screen after the sign and run all the way down over the city pictures;
+// no picture is left empty; the declarations and "what to expect" pages are
+// gone; the slogan rides the sign at night; the lead card is the last screen.
+// All copy lives in shared/homeManifesto.json so the static homepage
+// (docs/index.html) reads the same words.
 // ============================================================
 
 const CALENDLY_URL = "https://calendly.com/sam-RussellCapitalSystems/60min";
@@ -25,9 +24,15 @@ const CALENDLY_URL = "https://calendly.com/sam-RussellCapitalSystems/60min";
 const PAGE = "relative isolate flex min-h-[100svh] items-end overflow-hidden bg-[#03090a]";
 const PIC = "absolute inset-0 z-0 h-full w-full object-cover";
 const GLOW = "text-white [text-shadow:_0_0_14px_rgba(52,211,153,.55),_0_0_36px_rgba(16,185,129,.35),_0_4px_18px_rgba(0,0,0,.9)]";
-const GLOW_EM = "text-emerald-300 [text-shadow:_0_0_18px_rgba(52,211,153,.9),_0_0_44px_rgba(16,185,129,.55)]";
 // The fifteen claims wear the pair chosen from Grok's boards, Title 01 "filament wrap" and
 // Body 02 plaque white; the styles live in index.css as rc-patent-title / rc-filament / rc-patent-body.
+// They run straight down from the sign over four city plates, so no picture is left empty.
+const PLATES: Array<{ src: string; tall?: string; position?: string; label: string; from: number; to: number }> = [
+  { src: "/rcs-city-horizon.webp", position: "center 58%", label: "The horizon", from: 0, to: 4 },
+  { src: "/rcs-city-skyway.webp", tall: "/rcs-city-flagship.webp", label: "The skyway", from: 4, to: 8 },
+  { src: "/rcs-city-expressway.webp", tall: "/rcs-city-glass.webp", position: "center 45%", label: "The expressway", from: 8, to: 12 },
+  { src: "/rcs-city-river.webp", label: "The river", from: 12, to: 15 },
+];
 
 function ManagedPortalAction({ href, children, className }: { href: string; children: React.ReactNode; className: string }) {
   const { isAuthenticated } = useAuth();
@@ -89,9 +94,7 @@ export default function Landing() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const NAV = [
-    { href: "#manifesto", label: "Why here" },
     { href: "#claims", label: "The 15 technologies" },
-    { href: "#expect", label: "What to expect" },
     { href: "#planning-estimator", label: "Start" },
   ];
 
@@ -131,80 +134,51 @@ export default function Landing() {
         <div aria-hidden="true" className="absolute inset-x-0 bottom-6 z-10 flex justify-center text-[10px] font-bold uppercase tracking-[.3em] text-emerald-300/70">Scroll</div>
       </header>
 
-      {/* ── 2 · THE HORIZON. Black water in the foreground, the city far away and low. The slogan, one line, along the bottom. ── */}
-      <ImagePage id="horizon" src="/rcs-city-horizon.webp" alt="A dark harbour at night, black water in the foreground and a green-lit skyline far away and low on the horizon" position="center 58%" slogan label="The horizon: the slogan" />
+      {/* ── 2 to 5 · THE FIFTEEN, starting on the very next screen. Four city plates, one after another, each
+          carrying a run of the plaques; no picture is left empty and nothing sits between the sign and the patents. ── */}
+      <div id="claims" aria-label="Fifteen patent-pending technologies">
+        {PLATES.map((plate, i) => {
+          const last = i === PLATES.length - 1;
+          return (
+            <section key={plate.src} className="rc-plate relative flex min-h-[100svh] items-center py-24 sm:py-32" aria-label={plate.label}>
+              <picture>
+                {plate.tall && <source media="(max-width: 767px)" srcSet={plate.tall} />}
+                <img src={plate.src} alt="" aria-hidden="true" className="rc-plate-pic" style={{ objectPosition: plate.position ?? "center" }} loading="lazy" decoding="async" />
+              </picture>
+              <div className="rc-plate-shade" aria-hidden="true" />
+              <div className="container relative z-10 max-w-5xl">
+                {i === 0 && <p className="mb-8 text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Fifteen patent-pending technologies</p>}
+                <ol className="grid gap-8">
+                  {manifesto.claims.slice(plate.from, plate.to).map(({ ref, name, lead, detail }) => (
+                    <li key={ref} id={`claim-${ref}`} className="rc-plaque">
+                      <p className="rc-plaque-eyebrow">Technology {ref} <span aria-hidden="true">·</span> Pending <span aria-hidden="true">·</span> Only at RCS</p>
+                      <div className="rc-patent-title-wrap mt-3">
+                        <h3 className="rc-patent-title text-[clamp(2.2rem,4.8vw,4.2rem)]">{name}</h3>
+                        <svg className="rc-filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7" /></svg>
+                      </div>
+                      <p className="rc-patent-body rc-patent-lead mt-4 text-[clamp(2rem,3.6vw,3.1rem)] leading-[1.22]">{lead}</p>
+                      <p className="rc-patent-body rc-patent-detail mt-4 max-w-4xl text-[clamp(1.6rem,2.6vw,2.2rem)] leading-[1.4]">{detail}</p>
+                      <a href="#planning-estimator" className="rc-plaque-link mt-6">See the mechanism <span aria-hidden="true">→</span></a>
+                    </li>
+                  ))}
+                </ol>
+                {last && (
+                  <>
+                    <p className="mt-12 text-[.92rem] text-white/55">{manifesto.status}</p>
+                    <p className="mx-auto mt-6 max-w-3xl text-[11px] leading-relaxed text-white/50">{manifesto.disclaimer}</p>
+                    <FounderVoice />
+                  </>
+                )}
+              </div>
+            </section>
+          );
+        })}
+      </div>
 
-      {/* ── 3 · WHY HERE. Declarations, nothing to click. ── */}
-      <section id="manifesto" className="relative bg-[#03090a] py-24 sm:py-32" aria-label="Why here and nowhere else">
-        <div aria-hidden="true" className="absolute inset-0 opacity-[.07] [background-image:linear-gradient(rgba(52,211,153,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.55)_1px,transparent_1px)] [background-size:44px_44px]" />
-        <div className="container relative z-10 max-w-5xl">
-          <p className="text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Only here</p>
-          <ol className="mt-8 space-y-9">
-            {manifesto.declarations.map((line, i) => (
-              <li key={i} className="grid grid-cols-[2.6rem_1fr] gap-4 sm:grid-cols-[3.4rem_1fr]">
-                <span aria-hidden="true" className={`pt-1 text-sm font-black tabular-nums ${GLOW_EM}`}>{String(i + 1).padStart(2, "0")}</span>
-                <p className={`text-[clamp(1.25rem,2.4vw,2rem)] font-bold leading-[1.28] ${GLOW}`} style={{ fontFamily: "DM Sans, sans-serif" }}>{line}</p>
-              </li>
-            ))}
-          </ol>
-          <p className="mt-12 text-[.92rem] text-white/55">{manifesto.status}</p>
-        </div>
-      </section>
-
-      {/* ── 4 · THE SKYWAY. Clean. ── */}
-      <ImagePage src="/rcs-city-skyway.webp" tall="/rcs-city-flagship.webp" alt="Green-lit skyline at night with a lit highway sweeping through the city" label="The skyway" />
-
-      {/* ── 5 · THE FIFTEEN. Stacked in the order they build on one another. ── */}
-      <section id="claims" className="rc-plate relative py-24 sm:py-32" aria-label="Fifteen patent-pending technologies">
-        {/* The wet night city sits under the plaques; the plaques are dark glass with a mint hairline. */}
-        <img src="/rcs-city-river.webp" alt="" aria-hidden="true" className="rc-plate-pic" loading="lazy" decoding="async" />
-        <div className="rc-plate-shade" aria-hidden="true" />
-        <div className="container relative z-10 max-w-5xl">
-          <p className="text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Fifteen technologies that exist only here</p>
-          <h2 className={`mt-4 text-[clamp(2rem,4.6vw,3.6rem)] font-black leading-[1.05] tracking-[-.02em] ${GLOW}`} style={{ fontFamily: "DM Sans, sans-serif" }}>
-            Read them top to bottom. <span className={GLOW_EM}>Each one makes the next possible.</span>
-          </h2>
-          <p className="mt-4 max-w-2xl text-[1.05rem] leading-relaxed text-white/70">Ten minutes. Fifteen claims. The bold line is the idea; the line under it is what it does for you. Every specific is confirmed by a licensed professional before anything moves.</p>
-          <ol className="mt-14 grid gap-8">
-            {manifesto.claims.map(({ ref, name, lead, detail }) => (
-              <li key={ref} id={`claim-${ref}`} className="rc-plaque">
-                <p className="rc-plaque-eyebrow">Technology {ref} <span aria-hidden="true">·</span> Pending <span aria-hidden="true">·</span> Only at RCS</p>
-                <div className="rc-patent-title-wrap mt-3">
-                  <h3 className="rc-patent-title text-[clamp(2.2rem,4.8vw,4.2rem)]">{name}</h3>
-                  <svg className="rc-filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7" /></svg>
-                </div>
-                <p className="rc-patent-body rc-patent-lead mt-4 text-[clamp(2rem,3.6vw,3.1rem)] leading-[1.22]">{lead}</p>
-                <p className="rc-patent-body rc-patent-detail mt-4 max-w-4xl text-[clamp(1.6rem,2.6vw,2.2rem)] leading-[1.4]">{detail}</p>
-                <a href="#planning-estimator" className="rc-plaque-link mt-6">See the mechanism <span aria-hidden="true">→</span></a>
-              </li>
-            ))}
-          </ol>
-          <p className="mx-auto mt-10 max-w-3xl text-[11px] leading-relaxed text-white/50">{manifesto.disclaimer}</p>
-        </div>
-      </section>
-
-      {/* ── 6 · THE EXPRESSWAY. Clean. ── */}
-      <ImagePage src="/rcs-city-expressway.webp" tall="/rcs-city-glass.webp" alt="Light trails on a curving expressway beneath green-lit towers at night" position="center 45%" label="The expressway" />
-
-      {/* ── 7 · WHAT TO EXPECT. Declarations, and the founder's voice when it is configured. ── */}
-      <section id="expect" className="relative bg-[#03090a] py-24 sm:py-32" aria-label="What to expect here">
-        <div className="container relative z-10 max-w-5xl">
-          <p className="text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">What you can expect here that you will never find anywhere else</p>
-          <ul className="mt-8 space-y-8">
-            {manifesto.expect.map((line, i) => (
-              <li key={i} className="border-l-2 border-emerald-300/60 pl-5 sm:pl-7">
-                <p className={`text-[clamp(1.2rem,2.2vw,1.85rem)] font-bold leading-[1.3] ${GLOW}`} style={{ fontFamily: "DM Sans, sans-serif" }}>{line}</p>
-              </li>
-            ))}
-          </ul>
-          <FounderVoice />
-        </div>
-      </section>
-
-      {/* ── 8 · THE SIGN AGAIN, at night. The slogan a second time. ── */}
+      {/* ── 6 · THE SIGN AGAIN, at night. The slogan, one line. ── */}
       <ImagePage src="/rcs-neon-b.webp" tall="/rcs-neon-b-tall.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons over a green city at night" slogan label="The sign at night: the slogan" />
 
-      {/* ── 9 · THE LEAD CARD. The only form on the page, and the last thing on it. ── */}
+      {/* ── 7 · THE LEAD CARD. The only form on the page, and the last thing on it. ── */}
       <HomeLeadFactFinder />
 
       <footer className="border-t border-emerald-300/15 py-8">

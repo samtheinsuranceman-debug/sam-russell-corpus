@@ -30,11 +30,11 @@ describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the 
     }
   });
 
-  it("carries the one slogan, on one line, on exactly two image pages", () => {
+  it("carries the one slogan, on one line, on the sign at night", () => {
     expect(manifesto.slogan).toMatch(/war chest/i);
     expect(manifesto.slogan).toMatch(/deploy/i);
     expect(landing).toContain("manifesto.slogan");
-    expect((landing.match(/ slogan label=/g) ?? []).length).toBe(2);
+    expect((landing.match(/ slogan label=/g) ?? []).length).toBe(1);
     expect(landing).toContain("whitespace-nowrap");
     expect(css).toContain("rc-slogan-drift");
     expect(css).toContain("prefers-reduced-motion");
@@ -42,6 +42,25 @@ describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the 
     for (const gone of ["Turn Capital Into Income", "Turn Medical Income Into Lasting Wealth", "Keep More of What You Earn", "Relief today", "We Build the System Around It", "Tax-Free Liquid War Chest"]) {
       expect(landing, gone).not.toContain(gone);
     }
+  });
+
+  it("starts the fifteen technologies on the screen right after the sign and runs them down four city plates, none empty", () => {
+    // The owner's order (September 2026): no page of declarations between the sign and the patents,
+    // the patents start on the first city picture, every picture carries some of them.
+    const claims = landing.indexOf('id="claims"');
+    expect(claims).toBeGreaterThan(landing.indexOf("</header>"));
+    expect(landing.slice(landing.indexOf("</header>") + "</header>".length, claims).trim()).toMatch(/^\{\/\*[\s\S]*\*\/\}\s*<div$/);
+    expect(landing).toContain("PLATES.map");
+    const ranges = Array.from(landing.matchAll(/from: (\d+), to: (\d+)/g), (m) => [Number(m[1]), Number(m[2])]);
+    expect(ranges.length).toBe(4);
+    expect(ranges[0][0]).toBe(0);
+    expect(ranges[ranges.length - 1][1]).toBe(15);
+    for (let i = 1; i < ranges.length; i++) expect(ranges[i][0]).toBe(ranges[i - 1][1]);
+    for (const [a, b] of ranges) expect(b - a).toBeGreaterThan(0);
+    for (const gone of ['id="manifesto"', 'id="expect"', "manifesto.declarations", "manifesto.expect", "Read them top to bottom", "What you can expect here"]) expect(landing, gone).not.toContain(gone);
+    for (const gone of ['id="manifesto"', 'id="expect"', "M.declarations", "M.expect", "Read them top to bottom", "What you can expect here"]) expect(template, gone).not.toContain(gone);
+    const liveRanges = Array.from(template.matchAll(/data-claims="(\d+)-(\d+)"/g), (m) => [Number(m[1]), Number(m[2])]);
+    expect(liveRanges).toEqual(ranges);
   });
 
   it("stacks fifteen patent-pending claims in building order, each a bold lead and a short detail", () => {
@@ -60,7 +79,7 @@ describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the 
     expect(manifesto.claims.map((c) => c.name)).toContain("Mortgage Elimination Through Real Estate Recycling and IUL Arbitrage");
     expect(JSON.stringify(manifesto)).not.toMatch(/Russell Number/);
     expect(landing).toContain('id="claims"');
-    expect(landing).toContain("manifesto.claims.map");
+    expect(landing).toContain("manifesto.claims.slice(plate.from, plate.to).map");
     expect(landing).toContain("Only at RCS");
     // Patent honesty: pending, never granted.
     expect(manifesto.status).toMatch(/Patent-pending/);
@@ -69,17 +88,9 @@ describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the 
     expect(manifesto.disclaimer).toContain("Not tax, legal or investment advice");
   });
 
-  it("makes the declarations: nowhere else, the competitors, no clinical trials, speed of thought", () => {
-    const all = manifesto.declarations.join(" ");
-    expect(all).toMatch(/Nowhere else/);
-    expect(all).toMatch(/MoneyGuidePro/);
-    expect(all).toMatch(/eMoney/);
-    expect(all).toMatch(/clinical trials/);
-    expect(all).toMatch(/speed of thought/);
-    expect(all).toMatch(/attorneys and the consultants/);
-    expect(manifesto.expect.length).toBe(5);
-    expect(landing).toContain('id="manifesto"');
-    expect(landing).toContain('id="expect"');
+  it("keeps the status line and the disclaimer under the last plate", () => {
+    expect(landing).toContain("manifesto.status");
+    expect(landing).toContain("manifesto.disclaimer");
     expect(manifesto.disclaimer).toMatch(/owner's opinion/);
   });
 
@@ -134,9 +145,8 @@ describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the 
       expect(builder, key).toContain(key);
     }
     expect(template).toContain('id="claims"');
-    expect(template).toContain('id="manifesto"');
     expect(template).toContain('id="estimate"');
-    expect((template.match(/class="slogan-line"/g) ?? []).length).toBe(2);
+    expect((template.match(/class="slogan-line"/g) ?? []).length).toBe(1);
     for (const gone of ["Turn Capital Into Income", "Design Your Physician Financial System", "Clients who stay for decades", "$2.8B", "Physician Tax-Planning Review"]) {
       expect(template, gone).not.toContain(gone);
     }

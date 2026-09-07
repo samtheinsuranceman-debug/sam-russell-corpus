@@ -24,24 +24,26 @@ describe("live page ↔ React homepage parity", () => {
     expect(template).toContain("__MANIFESTO_JSON__");
     expect(builder).toContain('"shared" / "homeManifesto.json"');
     // The static page renders every list the React page renders.
-    for (const key of ["M.slogan", "M.declarations", "M.claims", "M.expect", "M.status", "M.disclaimer"]) expect(template).toContain(key);
-    for (const key of ["manifesto.slogan", "manifesto.declarations", "manifesto.claims", "manifesto.expect", "manifesto.status", "manifesto.disclaimer"]) expect(landing).toContain(key);
+    for (const key of ["M.slogan", "M.claims", "M.status", "M.disclaimer"]) expect(template).toContain(key);
+    for (const key of ["manifesto.slogan", "manifesto.claims", "manifesto.status", "manifesto.disclaimer"]) expect(landing).toContain(key);
   });
 
-  it("keeps the same nine-screen order and the same section ids", () => {
+  it("keeps the same screen order: the sign, four plates of technologies, the sign at night, the lead card", () => {
     const order = (src: string, marks: string[]) => marks.map((m) => src.indexOf(m));
-    const liveOrder = order(template, ['id="top"', 'id="horizon"', 'id="manifesto"', "The skyway", 'id="claims"', "The expressway", 'id="expect"', "The sign at night", 'id="estimate"']);
-    const appOrder = order(landing, ['id="top"', 'id="horizon"', 'id="manifesto"', "The skyway", 'id="claims"', "The expressway", 'id="expect"', "The sign at night", "<HomeLeadFactFinder />"]);
+    const liveOrder = order(template, ['id="top"', 'id="claims"', "The horizon", "The skyway", "The expressway", "The river", "The sign at night", 'id="estimate"']);
+    // The React page names its plates in a constant above the markup, so the order check reads the map itself.
+    const appOrder = order(landing, ['id="top"', 'id="claims"', "PLATES.map", "The sign at night", "<HomeLeadFactFinder />"]);
+    for (const label of ["The horizon", "The skyway", "The expressway", "The river"]) expect(landing).toContain(`label: "${label}"`);
     for (const list of [liveOrder, appOrder]) {
       expect(list.every((i) => i > -1)).toBe(true);
       expect(list).toEqual(list.slice().sort((a, b) => a - b));
     }
   });
 
-  it("carries the one slogan on two pictures, and the same headline promises", () => {
-    expect((template.match(/class="slogan-line"/g) ?? []).length).toBe(2);
-    expect((landing.match(/ slogan label=/g) ?? []).length).toBe(2);
-    for (const p of ["Financial &amp; Tax Relief and Recovery", "Read them top to bottom", "Each one makes the next possible", "Only at RCS", "Hear it from Sam Russell"]) {
+  it("carries the one slogan on the sign at night, and the same headline promises", () => {
+    expect((template.match(/class="slogan-line"/g) ?? []).length).toBe(1);
+    expect((landing.match(/ slogan label=/g) ?? []).length).toBe(1);
+    for (const p of ["Financial &amp; Tax Relief and Recovery", "Only at RCS", "Hear it from Sam Russell"]) {
       expect(template, `live page has “${p}”`).toContain(p);
       expect(landing, `React homepage has “${p}”`).toContain(p);
     }
