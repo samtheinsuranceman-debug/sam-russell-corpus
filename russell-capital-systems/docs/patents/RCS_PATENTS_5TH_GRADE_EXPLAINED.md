@@ -3,7 +3,7 @@
 **Prepared for:** Samuel Russell, Russell Holdings Management, LLC  
 5700 Kirkwood Highway, Suite 202, Wilmington, Delaware 19809  
 www.russellcapitalsystems.com · www.drasswealthmanagement.com · www.joinaqal.com · www.elitetaxstrategists.com · www.mytaxesmadeeasy.com  
-**Partner:** www.strategicpatentlaw.com
+**Partner:** strategicpatentlaw.com
 
 ## Part I: The 54 Core Patents
 
