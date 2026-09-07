@@ -1,6 +1,6 @@
 # Publishes docs/ (the built Russell Capital Systems homepage) to GitHub Pages
-# on every push to master. Pages must already be enabled in repository settings;
-# GitHub Actions cannot switch it on with the default GITHUB_TOKEN.
+# on every push to master. `enablement: true` switches Pages on for the repo the
+# first time this runs, so no manual settings step is needed.
 name: Publish homepage to GitHub Pages
 
 on:
@@ -29,6 +29,8 @@ jobs:
         with:
           sparse-checkout: docs
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
