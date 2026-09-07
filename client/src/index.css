@@ -1509,8 +1509,8 @@ img.object-cover, img[class*="h-full"] { height: 100%; }
    on one slow animation. Body: ivory, soft white shadow, slight bevel, no green in the paragraph. */
 .rc-patent-title-wrap { position: relative; display: inline-block; max-width: 100%; padding-bottom: .55rem; }
 .rc-patent-title {
-  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  font-weight: 700; letter-spacing: -.01em; line-height: 1.02;
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 900; letter-spacing: -.025em; line-height: 1.02;
   background: linear-gradient(180deg, #ffffff 0%, #eafff5 38%, #a7f3d0 72%, #6ee7b7 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 0 2px rgba(255,255,255,.9)) drop-shadow(0 0 10px rgba(110,231,183,.85)) drop-shadow(0 0 26px rgba(52,211,153,.7)) drop-shadow(0 0 60px rgba(16,185,129,.45));

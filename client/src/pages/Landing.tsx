@@ -175,7 +175,7 @@ export default function Landing() {
                     <svg className="rc-filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7" /></svg>
                   </div>
                   <p className="rc-patent-body mt-4 text-[clamp(1.9rem,3.4vw,2.9rem)] font-bold leading-[1.28]" style={{ fontFamily: "DM Sans, sans-serif" }}>{lead}</p>
-                  <p className="rc-patent-body mt-4 max-w-4xl text-[clamp(1.5rem,2.4vw,2rem)] leading-[1.45]">{detail}</p>
+                  <p className="rc-patent-body mt-4 max-w-4xl text-[clamp(1.5rem,2.4vw,2rem)] font-medium leading-[1.45]" style={{ fontFamily: "DM Sans, sans-serif" }}>{detail}</p>
                 </div>
               </li>
             ))}
