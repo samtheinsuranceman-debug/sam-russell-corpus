@@ -40,6 +40,11 @@ IMAGES = {
     "__IMG_LOOPS__": "rcs-city-loops.webp",
     "__IMG_GRID__": "rcs-city-grid.webp",
     "__IMG_DUSK__": "rcs-city-dusk.webp",
+    # Four cities made new in the same palette so nearly every technology has its own picture.
+    "__IMG_RAIN__": "rcs-city-rain.webp",
+    "__IMG_ROOFTOP__": "rcs-city-rooftop.webp",
+    "__IMG_BRIDGEWAY__": "rcs-city-bridgeway.webp",
+    "__IMG_MARINA__": "rcs-city-marina.webp",
 }
 CONSTS = {
     "__CALENDLY__": "https://calendly.com/sam-RussellCapitalSystems/60min",

@@ -27,19 +27,24 @@ const GLOW = "text-white [text-shadow:_0_0_14px_rgba(52,211,153,.55),_0_0_36px_r
 // The fifteen claims wear the pair chosen from Grok's boards, Title 01 "filament wrap" and
 // Body 02 plaque white; the styles live in index.css as rc-patent-title / rc-filament / rc-patent-body.
 // They run straight down from the sign over four city plates, so no picture is left empty.
-// Ten plates, ten different cities (four of them cut from the designer's concept frames with every word
-// removed), one or two technologies each. Add a plate, or widen a range, as more patents arrive.
+// Fourteen plates, fourteen different cities, one technology each (the harbor carries two): four cut from
+// the designer's concept frames with every word removed, four made new in the same palette, the rest original.
+// Each plate is three screens tall so the city breathes above and below its plaque. Add a plate per patent.
 const PLATES: Array<{ src: string; tall?: string; position?: string; label: string; from: number; to: number }> = [
   { src: "/rcs-city-horizon.webp", tall: "/rcs-city-canyon.webp", position: "center 58%", label: "The horizon", from: 0, to: 1 },
   { src: "/rcs-city-dusk.webp", tall: "/rcs-city-spire.webp", label: "The dusk skyline", from: 1, to: 2 },
-  { src: "/rcs-city-skyway.webp", tall: "/rcs-city-flagship.webp", label: "The skyway", from: 2, to: 3 },
-  { src: "/rcs-city-trails.webp", tall: "/rcs-city-interchange.webp", label: "The light trails", from: 3, to: 5 },
-  { src: "/rcs-city-emerald.webp", tall: "/rcs-city-lattice.webp", label: "The emerald towers", from: 5, to: 6 },
-  { src: "/rcs-city-expressway.webp", tall: "/rcs-city-glass.webp", position: "center 45%", label: "The expressway", from: 6, to: 8 },
-  { src: "/rcs-city-loops.webp", tall: "/rcs-city-pinnacle.webp", label: "The river loops", from: 8, to: 9 },
-  { src: "/rcs-city-harbor.webp", label: "The harbor", from: 9, to: 11 },
-  { src: "/rcs-city-grid.webp", label: "The grid from above", from: 11, to: 13 },
-  { src: "/rcs-city-river.webp", label: "The river", from: 13, to: 15 },
+  { src: "/rcs-city-rain.webp", label: "The rain street", from: 2, to: 3 },
+  { src: "/rcs-city-skyway.webp", tall: "/rcs-city-flagship.webp", label: "The skyway", from: 3, to: 4 },
+  { src: "/rcs-city-trails.webp", tall: "/rcs-city-interchange.webp", label: "The light trails", from: 4, to: 5 },
+  { src: "/rcs-city-rooftop.webp", label: "The rooftop", from: 5, to: 6 },
+  { src: "/rcs-city-emerald.webp", tall: "/rcs-city-lattice.webp", label: "The emerald towers", from: 6, to: 7 },
+  { src: "/rcs-city-bridgeway.webp", label: "The bridge from the water", from: 7, to: 8 },
+  { src: "/rcs-city-expressway.webp", tall: "/rcs-city-glass.webp", position: "center 45%", label: "The expressway", from: 8, to: 9 },
+  { src: "/rcs-city-loops.webp", tall: "/rcs-city-pinnacle.webp", label: "The river loops", from: 9, to: 10 },
+  { src: "/rcs-city-harbor.webp", label: "The harbor", from: 10, to: 12 },
+  { src: "/rcs-city-grid.webp", label: "The grid from above", from: 12, to: 13 },
+  { src: "/rcs-city-marina.webp", label: "The marina", from: 13, to: 14 },
+  { src: "/rcs-city-river.webp", label: "The river", from: 14, to: 15 },
 ];
 
 function ManagedPortalAction({ href, children, className }: { href: string; children: React.ReactNode; className: string }) {
@@ -148,7 +153,7 @@ export default function Landing() {
         {PLATES.map((plate, i) => {
           const last = i === PLATES.length - 1;
           return (
-            <section key={plate.src} className="rc-plate relative flex min-h-[100svh] items-center py-24 sm:py-32" aria-label={plate.label}>
+            <section key={plate.src} className="rc-plate relative flex min-h-[300svh] items-center py-24 sm:py-32" aria-label={plate.label}>
               <picture>
                 {plate.tall && <source media="(max-width: 767px)" srcSet={plate.tall} />}
                 <img src={plate.src} alt="" aria-hidden="true" className="rc-plate-pic" style={{ objectPosition: plate.position ?? "center" }} loading="lazy" decoding="async" />
