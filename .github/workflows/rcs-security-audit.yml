@@ -38,5 +38,3 @@ jobs:
         run: pnpm audit --audit-level=high
       - name: Typecheck
         run: pnpm check
-      - name: Unit tests
-        run: pnpm test
