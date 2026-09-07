@@ -26,6 +26,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "./_core/trpc";
 import { probeKeys } from "./keyProbe";
+import { anthropicHeaders } from "./_core/anthropic";
 import { invokeLLM } from "./_core/llm";
 import { MODULE_CATALOG, type ModuleKey } from "@shared/ultraEngine";
 import { ADVISOR_MODES, MODE_IDS, SINGLE_MODES, modeDef, type AdvisorMode } from "@shared/advisorModes";
@@ -80,7 +81,7 @@ const PROVIDERS: Provider[] = [
     call: async (apiKey, system, user) => {
       const res = await timedFetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
-        headers: { "content-type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
+        headers: { "content-type": "application/json", ...anthropicHeaders(apiKey) },
         body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 1500, system, messages: [{ role: "user", content: user }] }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

@@ -196,3 +196,13 @@ HeyGen, Resend, FRED) and prints a status word for each: `ok` means the
 provider accepted the key, `rejected` means it refused it (wrong, revoked,
 or pasted with a stray character), `missing` means no variable of that
 name exists on the host. It never prints a key. Cached ten minutes.
+
+### If the key check says Claude "is not scoped to a workspace"
+Anthropic keys made at the organization level need the workspace's ID on
+every call. Two fixes; either one works:
+1. Open https://console.anthropic.com/settings/workspaces, tap your
+   workspace (usually "Default"), copy its ID (it begins `wrksp_`), and add
+   it in Railway as NAME `ANTHROPIC_WORKSPACE_ID`, VALUE the ID. Deploy.
+2. Or make the key inside the workspace: in the Console pick the workspace
+   at the top left first, then API Keys → Create Key, and replace the
+   `ANTHROPIC_API_KEY` value in Railway with that key.
