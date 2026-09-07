@@ -26,6 +26,10 @@ const PAGE = "relative isolate flex min-h-[100svh] items-end overflow-hidden bg-
 const PIC = "absolute inset-0 z-0 h-full w-full object-cover";
 const GLOW = "text-white [text-shadow:_0_0_14px_rgba(52,211,153,.55),_0_0_36px_rgba(16,185,129,.35),_0_4px_18px_rgba(0,0,0,.9)]";
 const GLOW_EM = "text-emerald-300 [text-shadow:_0_0_18px_rgba(52,211,153,.9),_0_0_44px_rgba(16,185,129,.55)]";
+// Grok's pair for the fifteen claims: title 01 "filament wrap" (the green plasma of the
+// Relief and Recovery plaque) and a glowing-white body. Same pair on every patent.
+const PLASMA = "text-[#eafff5] [text-shadow:_0_0_1px_#ffffff,_0_0_6px_#a7f3d0,_0_0_14px_#6ee7b7,_0_0_28px_#34d399,_0_0_56px_rgba(16,185,129,.85),_0_0_110px_rgba(16,185,129,.5)]";
+const WHITE_GLOW = "text-white [text-shadow:_0_0_8px_rgba(255,255,255,.6),_0_0_22px_rgba(255,255,255,.28),_0_0_36px_rgba(52,211,153,.22)]";
 
 function ManagedPortalAction({ href, children, className }: { href: string; children: React.ReactNode; className: string }) {
   const { isAuthenticated } = useAuth();
@@ -168,9 +172,9 @@ export default function Landing() {
                   <span className="text-[10px] font-extrabold uppercase tracking-[.2em] text-emerald-300/70 sm:mt-2 sm:block">Only at RCS</span>
                 </div>
                 <div>
-                  <h3 className={`text-[clamp(2rem,4.4vw,3.8rem)] font-black leading-[1.05] tracking-[-.02em] ${GLOW_EM}`} style={{ fontFamily: "DM Sans, sans-serif" }}>{name}</h3>
+                  <h3 className={`text-[clamp(2rem,4.4vw,3.8rem)] font-black leading-[1.05] tracking-[-.02em] ${PLASMA}`} style={{ fontFamily: "DM Sans, sans-serif" }}>{name}</h3>
                   <p className={`mt-4 text-[clamp(1.9rem,3.4vw,2.9rem)] font-bold leading-[1.28] ${GLOW}`} style={{ fontFamily: "DM Sans, sans-serif" }}>{lead}</p>
-                  <p className="mt-4 max-w-4xl text-[clamp(1.5rem,2.4vw,2rem)] leading-[1.45] text-white/80">{detail}</p>
+                  <p className={`mt-4 max-w-4xl text-[clamp(1.5rem,2.4vw,2rem)] leading-[1.45] ${WHITE_GLOW}`}>{detail}</p>
                 </div>
               </li>
             ))}
