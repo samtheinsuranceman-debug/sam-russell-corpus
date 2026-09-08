@@ -29,7 +29,8 @@ const GLOW = "text-white [text-shadow:_0_0_14px_rgba(52,211,153,.55),_0_0_36px_r
 // They run straight down from the sign over four city plates, so no picture is left empty.
 // Fourteen plates, fourteen different cities, one technology each (the harbor carries two): four cut from
 // the designer's concept frames with every word removed, four made new in the same palette, the rest original.
-// Each plate is three screens tall so the city breathes above and below its plaque. Add a plate per patent.
+// Each plate's city is one screen tall and pinned while the plaque scrolls over it, so nothing is stretched and no
+// black band ever sits between two cities (rc-plate-bg in index.css). Add a plate per patent.
 const PLATES: Array<{ src: string; tall?: string; position?: string; label: string; from: number; to: number }> = [
   { src: "/rcs-city-horizon.webp", tall: "/rcs-city-canyon.webp", position: "center 58%", label: "The horizon", from: 0, to: 1 },
   { src: "/rcs-city-dusk.webp", tall: "/rcs-city-spire.webp", label: "The dusk skyline", from: 1, to: 2 },
@@ -161,13 +162,15 @@ export default function Landing() {
         {PLATES.map((plate, i) => {
           const last = i === PLATES.length - 1;
           return (
-            <section key={plate.src} className="rc-plate relative flex min-h-[300svh] items-center py-24 sm:py-32" aria-label={plate.label}>
-              <picture>
-                {plate.tall && <source media="(max-width: 767px)" srcSet={plate.tall} />}
-                <img src={plate.src} alt="" aria-hidden="true" className="rc-plate-pic" style={{ objectPosition: plate.position ?? "center" }} loading="lazy" decoding="async" />
-              </picture>
-              <div className="rc-plate-shade" aria-hidden="true" />
-              <div className="container relative z-10 max-w-5xl">
+            <section key={plate.src} className="rc-plate" aria-label={plate.label}>
+              <div className="rc-plate-bg" aria-hidden="true">
+                <picture>
+                  {plate.tall && <source media="(max-width: 767px)" srcSet={plate.tall} />}
+                  <img src={plate.src} alt="" aria-hidden="true" className="rc-plate-pic" style={{ objectPosition: plate.position ?? "center" }} loading={i < 2 ? "eager" : "lazy"} decoding="async" />
+                </picture>
+                <div className="rc-plate-shade" />
+              </div>
+              <div className="rc-plate-body container max-w-5xl">
                 {i === 0 && <p className="mb-8 text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Patent-pending technologies</p>}
                 <ol className="grid gap-8">
                   {manifesto.claims.slice(plate.from, plate.to).map(({ ref, name, lead, detail }) => (

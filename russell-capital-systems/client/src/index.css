@@ -1508,9 +1508,17 @@ img.object-cover, img[class*="h-full"] { height: 100%; }
    Dark glass plaque with a mint hairline on the wet night city. Eyebrow in small mint tracking.
    Title: heavy serif, mint-to-white fill, glow stack, one thin filament looping the baseline (10s).
    Body: ivory serif, soft white halo, no green in the paragraph. Link in copper, not mint. */
-.rc-plate { background: #03090a; overflow: hidden; }
+/* A plate is one city photograph pinned to the screen while its plaque scrolls over it.
+   The backdrop is exactly one viewport tall and sticky, so the picture is never stretched
+   three screens high and never fades to black: the next plate's picture takes over at the
+   very pixel where this one ends. No overflow:hidden on the plate — that would unpin the
+   backdrop — the backdrop clips itself instead. 100vh first for older browsers, 100svh after. */
+.rc-plate { position: relative; background: #03090a; }
+.rc-plate-bg { position: sticky; top: 0; z-index: 0; height: 100vh; height: 100svh; margin-bottom: -100vh; margin-bottom: -100svh; overflow: hidden; }
 .rc-plate-pic { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
-.rc-plate-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(3,9,10,.92) 0%, rgba(3,9,10,.2) 18%, rgba(3,9,10,.2) 82%, rgba(3,9,10,.94) 100%); }
+.rc-plate-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(3,9,10,.5) 0%, rgba(3,9,10,.26) 14%, rgba(3,9,10,.26) 100%); }
+.rc-plate-body { position: relative; z-index: 1; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-top: 7rem; padding-bottom: 5rem; }
+@media (min-width: 640px) { .rc-plate-body { padding-top: 8rem; padding-bottom: 6rem; } }
 .rc-plaque {
   position: relative; padding: 2rem 1.5rem 2.25rem; border-radius: 20px;
   border: 1px solid rgba(110,231,183,.55); background: rgba(3,12,10,.66);
