@@ -1,12 +1,11 @@
 // ============================================================
-// SELF-HOSTED OWNER SIGN-IN
-// The portal's normal sign-in is the managed OAuth server (Manus). On a plain
-// host (cPanel, VPS) there is no such server, so nobody could reach
-// /portal/leads. This adds one narrowly-scoped alternative: the OWNER signs in
-// with an email + password whose bcrypt HASH lives only in the host's
-// environment. It issues the same signed session cookie the OAuth flow does,
-// so every downstream permission check is unchanged.
+// SELF-HOSTED SIGN-IN: OWNER AND ENTRANCE PASSCODE
+// The portal's managed sign-in is the OAuth server (Manus). On a plain host
+// there is no such server, so this file provides two alternatives that issue
+// the same signed session cookie the OAuth flow does, so every downstream
+// permission check is unchanged.
 //
+//   Owner sign-in (role admin):
 //   OWNER_EMAIL          the owner's sign-in email
 //   OWNER_PASSWORD_HASH  bcrypt hash — generate with `pnpm owner:password`
 //   OWNER_NAME           display name (optional)
@@ -14,12 +13,23 @@
 //   OWNER_TOTP_SECRET    base32 authenticator secret — `pnpm owner:totp`. When
 //                        set, sign-in also needs the six-digit code (MFA).
 //
-// Nothing here is a bypass: with the two variables unset the routes refuse
-// every request, and there are no built-in passwords anywhere in the code.
+//   Entrance passcode (role user):
+//   GUEST_PASSCODE_HASH  bcrypt hash of the passcode the owner hands to invited
+//                        visitors. Any email plus that passcode signs in as a
+//                        regular user whose id is derived from the email.
+//
+// Every sign-in must carry every id in shared/loginDisclaimers.ts; the server
+// refuses the request otherwise and records the acknowledgement as a
+// compliance signature when the database is reachable.
+//
+// Nothing here is a bypass: with the variables unset the routes refuse every
+// request, and there are no built-in passwords anywhere in the code.
 // ============================================================
 import bcrypt from "bcryptjs";
+import { createHash } from "node:crypto";
 import type { Express, Request, Response } from "express";
 import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { missingAcknowledgements } from "@shared/loginDisclaimers";
 import * as db from "../db";
 import { getSessionCookieOptions } from "./cookies";
 import { ENV } from "./env";
@@ -27,8 +37,10 @@ import { sdk } from "./sdk";
 import { verifyTotp } from "./totp";
 
 export const OWNER_LOGIN_PATH = "/api/auth/owner-login";
+export const GUEST_LOGIN_PATH = "/api/auth/guest-login";
 export const AUTH_MODE_PATH = "/api/auth/mode";
 const DEFAULT_OWNER_OPEN_ID = "owner";
+const GUEST_OPEN_ID_PREFIX = "guest:";
 
 // Sign-in attempts per client IP: 5 per 15 minutes, then a cool-off.
 const WINDOW_MS = 15 * 60 * 1000;
@@ -40,6 +52,10 @@ export function isOwnerLoginConfigured(env = ENV): boolean {
   return Boolean(env.ownerEmail && env.ownerPasswordHash);
 }
 
+export function isGuestLoginConfigured(env = ENV): boolean {
+  return Boolean(env.guestPasscodeHash);
+}
+
 export function ownerTotpEnabled(env = ENV): boolean {
   return Boolean(env.ownerTotpSecret);
 }
@@ -49,6 +65,7 @@ export function authMode(env = ENV) {
     managedOAuth: Boolean(env.oAuthServerUrl),
     ownerLogin: isOwnerLoginConfigured(env),
     ownerTotp: ownerTotpEnabled(env),
+    guestLogin: isGuestLoginConfigured(env),
   };
 }
 
@@ -77,14 +94,65 @@ export async function verifyOwnerCredentials(email: string, password: string, en
   return emailMatches && passwordMatches;
 }
 
+/** The entrance passcode: any well-formed email, one shared passcode. */
+export async function verifyGuestPasscode(email: string, passcode: string, env = ENV): Promise<boolean> {
+  if (!isGuestLoginConfigured(env)) return false;
+  const emailOk = isPlausibleEmail(email);
+  const passcodeOk = await bcrypt.compare(passcode, env.guestPasscodeHash);
+  return emailOk && passcodeOk;
+}
+
+export function isPlausibleEmail(email: string): boolean {
+  const e = email.trim();
+  return e.length >= 6 && e.length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
+}
+
 export function ownerOpenId(env = ENV): string {
   return env.ownerOpenId || DEFAULT_OWNER_OPEN_ID;
+}
+
+/** Stable, non-reversible user id for a visitor email (fits the 64-char openId column). */
+export function guestOpenId(email: string): string {
+  const digest = createHash("sha256").update(email.trim().toLowerCase()).digest("hex");
+  return GUEST_OPEN_ID_PREFIX + digest.slice(0, 40);
 }
 
 function clientKey(req: Request): string {
   const fwd = req.headers["x-forwarded-for"];
   if (typeof fwd === "string" && fwd.length > 0) return fwd.split(",")[0]!.trim();
   return req.socket?.remoteAddress ?? "unknown";
+}
+
+/** 400 unless every entrance disclaimer id is in the body. */
+function acknowledgementsOk(req: Request, res: Response): boolean {
+  const missing = missingAcknowledgements(req.body?.acknowledgements);
+  if (missing.length === 0) return true;
+  res.status(400).json({ error: "Every acknowledgement must be checked before signing in.", missing });
+  return false;
+}
+
+/** Best-effort audit row; the sign-in succeeds even when the database is away. */
+async function recordAcknowledgement(req: Request, openId: string, fallbackName: string, email: string) {
+  try {
+    const user = await db.getUserByOpenId(openId);
+    if (!user?.id) return;
+    await db.saveComplianceSignatureDb({
+      userId: user.id,
+      userName: user.name ?? fallbackName,
+      userEmail: email,
+      signedName: fallbackName,
+      signedDate: new Date().toISOString().slice(0, 10),
+      ipAddress: clientKey(req).slice(0, 45),
+      userAgent: typeof req.headers["user-agent"] === "string" ? req.headers["user-agent"].slice(0, 2000) : undefined,
+    });
+  } catch (error) {
+    console.warn("[Login] acknowledgement not recorded:", (error as Error)?.message ?? error);
+  }
+}
+
+async function issueSession(req: Request, res: Response, openId: string, name: string) {
+  const sessionToken = await sdk.createSessionToken(openId, { name, expiresInMs: ONE_YEAR_MS });
+  res.cookie(COOKIE_NAME, sessionToken, { ...getSessionCookieOptions(req), maxAge: ONE_YEAR_MS });
 }
 
 export function registerOwnerLoginRoutes(app: Express) {
@@ -109,6 +177,7 @@ export function registerOwnerLoginRoutes(app: Express) {
       res.status(400).json({ error: "Email and password are required." });
       return;
     }
+    if (!acknowledgementsOk(req, res)) return;
 
     const ok = await verifyOwnerCredentials(email, password);
     if (!ok) {
@@ -138,12 +207,63 @@ export function registerOwnerLoginRoutes(app: Express) {
         role: "admin",
         lastSignedIn: new Date(),
       });
-      const sessionToken = await sdk.createSessionToken(openId, { name, expiresInMs: ONE_YEAR_MS });
-      res.cookie(COOKIE_NAME, sessionToken, { ...getSessionCookieOptions(req), maxAge: ONE_YEAR_MS });
+      await recordAcknowledgement(req, openId, name, ENV.ownerEmail);
+      await issueSession(req, res, openId, name);
       clearRateLimit(key);
       res.json({ ok: true, name });
     } catch (error) {
       console.error("[OwnerLogin] failed to establish session", error);
+      res.status(500).json({ error: "Could not establish a session." });
+    }
+  });
+
+  app.post(GUEST_LOGIN_PATH, async (req: Request, res: Response) => {
+    if (!isGuestLoginConfigured()) {
+      res.status(404).json({ error: "The entrance passcode is not configured on this host." });
+      return;
+    }
+    const key = clientKey(req);
+    const wait = checkRateLimit(key);
+    if (wait > 0) {
+      res.status(429).json({ error: `Too many attempts. Try again in ${Math.ceil(wait / 60)} minute(s).` });
+      return;
+    }
+    const email = typeof req.body?.email === "string" ? req.body.email.trim() : "";
+    const passcode = typeof req.body?.password === "string" ? req.body.password : "";
+    if (!email || !passcode || passcode.length > 1024) {
+      res.status(400).json({ error: "Email and passcode are required." });
+      return;
+    }
+    if (!isPlausibleEmail(email)) {
+      res.status(400).json({ error: "Enter a valid email address." });
+      return;
+    }
+    if (!acknowledgementsOk(req, res)) return;
+
+    const ok = await verifyGuestPasscode(email, passcode);
+    if (!ok) {
+      console.warn("[GuestLogin] rejected passcode from", key);
+      res.status(401).json({ error: "That passcode is not correct." });
+      return;
+    }
+
+    try {
+      const openId = guestOpenId(email);
+      const name = email.split("@")[0]!.slice(0, 80) || "Guest";
+      await db.upsertUser({
+        openId,
+        name,
+        email: email.toLowerCase(),
+        loginMethod: "guest-passcode",
+        role: "user",
+        lastSignedIn: new Date(),
+      });
+      await recordAcknowledgement(req, openId, name, email.toLowerCase());
+      await issueSession(req, res, openId, name);
+      clearRateLimit(key);
+      res.json({ ok: true, name });
+    } catch (error) {
+      console.error("[GuestLogin] failed to establish session", error);
       res.status(500).json({ error: "Could not establish a session." });
     }
   });
