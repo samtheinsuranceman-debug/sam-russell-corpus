@@ -128,6 +128,7 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 | `OWNER_PASSWORD_HASH` | bcrypt hash of the owner password; generate with `pnpm owner:password` (never store the password itself) |
 | `OWNER_NAME` | display name for the owner account (optional) |
 | `OWNER_OPEN_ID` | the owner's user id (optional; defaults to `owner`). Also gates the inbox for a managed‑OAuth user |
+| `PUBLIC_HOMEPAGE` | leave unset: the homepage sits behind the entrance and an unsigned visitor to `/` is sent to `/login` first. Set to `1` to open the homepage to the public without signing in |
 | `GUEST_PASSCODE_HASH` | bcrypt hash of the **entrance passcode**: any email plus this passcode signs in as a regular user (never admin). Generate with `pnpm owner:password`; the passcode itself is never stored. Unset = no passcode entrance |
 | `OAUTH_SERVER_URL` | **managed host only** (Manus). Leave unset on cPanel/VPS — the owner sign‑in above replaces it |
 | `NODE_ENV` | `production` |
