@@ -13,7 +13,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import fs from "fs";
 import path from "path";
-import { businessIdentityFrom, seoFor, sitemapPages, structuredData, SITE_NAME, type BusinessIdentity } from "../../shared/seo";
+import { businessIdentityFrom, seoFor, sitemapPages, structuredData, DEFAULT_IMAGE_ALT, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH, SITE_NAME, type BusinessIdentity } from "../../shared/seo";
 
 type Env = Record<string, string | undefined>;
 
@@ -202,10 +202,16 @@ export function renderHtml({ template, path: p, origin: o, env = process.env, kn
     `<meta property="og:description" content="${esc(seo.description)}" />`,
     `<meta property="og:url" content="${esc(canonical)}" />`,
     `<meta property="og:image" content="${esc(image)}" />`,
+    `<meta property="og:image:secure_url" content="${esc(image)}" />`,
+    `<meta property="og:image:type" content="image/jpeg" />`,
+    `<meta property="og:image:width" content="${DEFAULT_IMAGE_WIDTH}" />`,
+    `<meta property="og:image:height" content="${DEFAULT_IMAGE_HEIGHT}" />`,
+    `<meta property="og:image:alt" content="${esc(DEFAULT_IMAGE_ALT)}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${esc(title)}" />`,
     `<meta name="twitter:description" content="${esc(seo.description)}" />`,
     `<meta name="twitter:image" content="${esc(image)}" />`,
+    `<meta name="twitter:image:alt" content="${esc(DEFAULT_IMAGE_ALT)}" />`,
   ];
   if (env.GOOGLE_SITE_VERIFICATION) tags.push(`<meta name="google-site-verification" content="${esc(env.GOOGLE_SITE_VERIFICATION)}" />`);
   if (env.BING_SITE_VERIFICATION) tags.push(`<meta name="msvalidate.01" content="${esc(env.BING_SITE_VERIFICATION)}" />`);
