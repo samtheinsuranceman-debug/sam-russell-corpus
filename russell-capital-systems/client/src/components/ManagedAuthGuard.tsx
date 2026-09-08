@@ -1,7 +1,12 @@
 import { useAuth } from "@/_core/hooks/useAuth";
-import { startLogin } from "@/const";
 import { Loader2, LockKeyhole, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
+
+/** Where an unauthenticated visitor is sent: the entrance page, which returns them here afterwards. */
+export function entranceHref(returnPath: string): string {
+  const safe = returnPath.startsWith("/") && !returnPath.startsWith("//") ? returnPath : "/portal/dashboard";
+  return `/login?returnTo=${encodeURIComponent(safe)}`;
+}
 
 export default function ManagedAuthGuard({ children, returnPath }: { children: ReactNode; returnPath: string }) {
   const { loading, isAuthenticated } = useAuth();
@@ -25,16 +30,15 @@ export default function ManagedAuthGuard({ children, returnPath }: { children: R
             <LockKeyhole className="h-6 w-6 text-emerald-300" />
           </div>
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300">Russell Capital Systems</p>
-          <h1 className="text-3xl font-semibold tracking-tight">Secure portal access</h1>
-          <p className="mt-3 leading-7 text-emerald-100/65">Sign in through the managed identity service. Legacy trial passwords, backdoors, and email bypasses are disabled.</p>
-          <button
-            type="button"
-            onClick={() => startLogin(returnPath)}
+          <h1 className="text-3xl font-semibold tracking-tight">Sign in to continue</h1>
+          <p className="mt-3 leading-7 text-emerald-100/65">This page is inside the site. Enter with your email and passcode, read the acknowledgements, and you will be brought straight back here.</p>
+          <a
+            href={entranceHref(returnPath)}
             className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-white shadow-lg shadow-emerald-950/40 transition duration-200 hover:bg-emerald-400 active:scale-[0.97]"
           >
             <ShieldCheck className="h-5 w-5" />
-            Continue to secure sign in
-          </button>
+            Go to the entrance
+          </a>
         </section>
       </div>
     );

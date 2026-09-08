@@ -12,6 +12,10 @@ export const ENV = {
   ownerName: process.env.OWNER_NAME ?? "",
   // Optional second factor for owner sign-in (base32; see scripts/owner_totp_secret.mjs).
   ownerTotpSecret: process.env.OWNER_TOTP_SECRET ?? "",
+  // Entrance passcode shared with invited visitors: any email plus this
+  // passcode signs in as a regular user (see _core/ownerLogin.ts). bcrypt hash
+  // only, generated with `pnpm owner:password`; the passcode itself is never stored.
+  guestPasscodeHash: process.env.GUEST_PASSCODE_HASH ?? "",
   // Where "new lead" alerts go (falls back to OWNER_EMAIL).
   leadNotifyEmail: process.env.LEAD_NOTIFY_EMAIL ?? "",
   // Optional mobile number (E.164 or 10 digits) that gets a text per new lead.
