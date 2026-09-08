@@ -11,8 +11,13 @@ export const SITE_NAME = "Russell Capital Systems";
 export const SITE_TAGLINE = "Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons";
 export const DEFAULT_DESCRIPTION =
   "Coordinated tax, practice, risk, retirement and legacy planning for physicians and medical practice owners. Every strategy sequenced, every figure sourced.";
-/** The image crawlers and social cards show when a page has no better one. */
-export const DEFAULT_IMAGE = "/rcs-neon-banner.webp";
+/** The image crawlers and social cards show when a page has no better one.
+ *  A 1200x630 JPEG: iMessage, RCS, WhatsApp, Slack and LinkedIn all render JPEG/PNG cards;
+ *  several of them silently skip WebP, which is why the link used to arrive as a bare URL. */
+export const DEFAULT_IMAGE = "/og-card.jpg";
+export const DEFAULT_IMAGE_WIDTH = 1200;
+export const DEFAULT_IMAGE_HEIGHT = 630;
+export const DEFAULT_IMAGE_ALT = "Russell Capital Systems: Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons";
 
 export type PublicPage = {
   path: string;
