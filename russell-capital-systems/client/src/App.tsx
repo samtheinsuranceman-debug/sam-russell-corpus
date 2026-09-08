@@ -11,6 +11,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { EntrainmentProvider } from "./contexts/EntrainmentEngine";
 import ComplianceGate from "./components/ComplianceGate";
 import ManagedAuthGuard from "./components/ManagedAuthGuard";
+import EntranceGate from "./components/EntranceGate";
 import { SkipToContent, FocusRingStyles } from "@/components/AccessibilityHelpers";
 import TrialTimer from "./components/TrialTimer";
 import { GlobalHooks } from "./components/GlobalHooks";
@@ -312,6 +313,15 @@ function gated(Component: React.ComponentType<any>, returnPath: string) {
   };
 }
 
+/** The homepage behind the entrance: sign in (or the owner opens it with PUBLIC_HOMEPAGE=1), then the website. */
+function FrontDoor() {
+  return (
+    <EntranceGate returnPath="/">
+      <Landing />
+    </EntranceGate>
+  );
+}
+
 function Router() {
   const [location] = useLocation();
   const fallbackRoute = location.startsWith("/portal") ? "/portal/dashboard" : "/";
@@ -320,7 +330,7 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
     <Switch>
       {/* Public routes — NO compliance gate */}
-      <Route path="/" component={Landing} />
+      <Route path="/" component={FrontDoor} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
