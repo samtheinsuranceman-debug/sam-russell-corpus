@@ -113,6 +113,25 @@ describe("HTML rendering", () => {
     expect(pricing.html).toContain("<title>Pricing | Russell Capital Systems</title>");
     expect(pricing.html).toContain('"@type":"BreadcrumbList"');
   });
+  it("gives every page a JPEG share card with dimensions, so iMessage, RCS and WhatsApp render a rich link", () => {
+    const home = renderHtml({ template, path: "/", origin: "https://russellcapitalsystems.com" });
+    expect(home.html).toContain('<meta property="og:image" content="https://russellcapitalsystems.com/og-card.jpg" />');
+    expect(home.html).toContain('<meta property="og:image:type" content="image/jpeg" />');
+    expect(home.html).toContain('<meta property="og:image:width" content="1200" />');
+    expect(home.html).toContain('<meta property="og:image:height" content="630" />');
+    expect(home.html).toContain('<meta name="twitter:image" content="https://russellcapitalsystems.com/og-card.jpg" />');
+    expect(home.html).not.toMatch(/og:image" content="[^"]+\.webp"/);
+    // the card itself ships with the client and is a real 1200x630 JPEG (SOF0 marker carries the size)
+    const card = readFileSync(resolve("client/public/og-card.jpg"));
+    expect(card.subarray(0, 3)).toEqual(Buffer.from([0xff, 0xd8, 0xff]));
+    const sof = card.indexOf(Buffer.from([0xff, 0xc0]));
+    expect(sof).toBeGreaterThan(0);
+    expect(card.readUInt16BE(sof + 5)).toBe(630);
+    expect(card.readUInt16BE(sof + 7)).toBe(1200);
+    // the static mirror carries the same card
+    const mirror = readFileSync(resolve("live/rcs-live-homepage.template.html"), "utf8");
+    expect(mirror).toContain('<meta property="og:image" content="https://russellcapitalsystems.com/og-card.jpg">');
+  });
   it("marks sign-in and portal pages noindex and answers 404 for unknown routes", () => {
     expect(renderHtml({ template, path: "/login", origin: "https://x" }).html).toContain('name="robots" content="noindex,nofollow"');
     expect(renderHtml({ template, path: "/portal/dashboard", origin: "https://x" }).html).toContain("noindex,nofollow");
@@ -172,10 +191,10 @@ describe("on-page and media rules enforced at source", () => {
     }
     expect(offenders).toEqual([]);
   });
-  it("ships no raster image over 400 KB and only WebP/AVIF rasters", () => {
+  it("ships no raster image over 400 KB and only WebP/AVIF rasters (the share card is the one JPEG, because link previews skip WebP)", () => {
     const dir = resolve("client/public");
     for (const n of readdirSync(dir)) {
-      if (!/\.(webp|avif|png|jpe?g|gif)$/i.test(n) || /^(favicon|apple-touch-icon)/.test(n)) continue;
+      if (!/\.(webp|avif|png|jpe?g|gif)$/i.test(n) || /^(favicon|apple-touch-icon|og-card\.jpg$)/.test(n)) continue;
       expect(/\.(webp|avif)$/i.test(n), n).toBe(true);
       expect(statSync(join(dir, n)).size, n).toBeLessThanOrEqual(400 * 1024);
     }
