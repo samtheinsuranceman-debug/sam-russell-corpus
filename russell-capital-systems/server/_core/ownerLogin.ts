@@ -66,6 +66,8 @@ export function authMode(env = ENV) {
     ownerLogin: isOwnerLoginConfigured(env),
     ownerTotp: ownerTotpEnabled(env),
     guestLogin: isGuestLoginConfigured(env),
+    // The homepage sits behind the entrance unless the owner opens it with PUBLIC_HOMEPAGE=1.
+    gateHomepage: !env.publicHomepage,
   };
 }
 

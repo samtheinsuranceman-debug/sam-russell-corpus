@@ -1,3 +1,4 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
 import { LOGIN_DISCLAIMERS } from "@shared/loginDisclaimers";
 import { ArrowRight, LockKeyhole, ShieldCheck } from "lucide-react";
@@ -14,7 +15,13 @@ const NO_MODE: AuthMode = { managedOAuth: false, ownerLogin: false, guestLogin: 
 
 export default function Login() {
   const returnPath = requestedReturnPath();
+  const { loading: authLoading, isAuthenticated } = useAuth();
   const [mode, setMode] = useState<AuthMode | null>(null);
+
+  // Already inside: the door does not need to be opened twice.
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) window.location.replace(returnPath);
+  }, [authLoading, isAuthenticated, returnPath]);
   const [tab, setTab] = useState<"guest" | "owner">("guest");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

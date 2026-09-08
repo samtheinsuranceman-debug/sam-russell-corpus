@@ -27,6 +27,7 @@ const envState = {
   ownerName: "",
   ownerTotpSecret: "",
   guestPasscodeHash: "",
+  publicHomepage: false,
   isProduction: false,
   forgeApiUrl: "",
   forgeApiKey: "",
@@ -78,13 +79,19 @@ describe("entrance disclaimers", () => {
 });
 
 describe("authMode", () => {
-  it("reports each sign-in only when its variables are set", () => {
-    expect(mod.authMode()).toEqual({ managedOAuth: false, ownerLogin: true, ownerTotp: false, guestLogin: true });
+  it("reports each sign-in only when its variables are set, and the closed front door", () => {
+    expect(mod.authMode()).toEqual({ managedOAuth: false, ownerLogin: true, ownerTotp: false, guestLogin: true, gateHomepage: true });
     envState.ownerPasswordHash = "";
     envState.guestPasscodeHash = "";
-    expect(mod.authMode()).toEqual({ managedOAuth: false, ownerLogin: false, ownerTotp: false, guestLogin: false });
+    expect(mod.authMode()).toEqual({ managedOAuth: false, ownerLogin: false, ownerTotp: false, guestLogin: false, gateHomepage: true });
     envState.oAuthServerUrl = "https://oauth.example.test";
-    expect(mod.authMode()).toEqual({ managedOAuth: true, ownerLogin: false, ownerTotp: false, guestLogin: false });
+    expect(mod.authMode()).toEqual({ managedOAuth: true, ownerLogin: false, ownerTotp: false, guestLogin: false, gateHomepage: true });
+  });
+  it("opens the homepage to the public only with PUBLIC_HOMEPAGE=1", () => {
+    envState.publicHomepage = true;
+    expect(mod.authMode().gateHomepage).toBe(false);
+    envState.publicHomepage = false;
+    expect(mod.authMode().gateHomepage).toBe(true);
   });
 });
 
@@ -156,7 +163,7 @@ describe("HTTP routes", () => {
 
   it("GET /api/auth/mode tells the login page what to show", async () => {
     const res = await fetch(`${base}${mod.AUTH_MODE_PATH}`);
-    expect(await res.json()).toEqual({ managedOAuth: false, ownerLogin: true, ownerTotp: false, guestLogin: true });
+    expect(await res.json()).toEqual({ managedOAuth: false, ownerLogin: true, ownerTotp: false, guestLogin: true, gateHomepage: true });
   });
 
   it("signs the owner in with a session cookie the SDK verifies, as admin", async () => {

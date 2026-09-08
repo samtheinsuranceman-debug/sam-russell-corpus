@@ -16,6 +16,9 @@ export const ENV = {
   // passcode signs in as a regular user (see _core/ownerLogin.ts). bcrypt hash
   // only, generated with `pnpm owner:password`; the passcode itself is never stored.
   guestPasscodeHash: process.env.GUEST_PASSCODE_HASH ?? "",
+  // The entrance is the front door: an unsigned visitor to "/" is sent to /login
+  // first. Set PUBLIC_HOMEPAGE=1 to let the homepage show without signing in.
+  publicHomepage: process.env.PUBLIC_HOMEPAGE === "1",
   // Where "new lead" alerts go (falls back to OWNER_EMAIL).
   leadNotifyEmail: process.env.LEAD_NOTIFY_EMAIL ?? "",
   // Optional mobile number (E.164 or 10 digits) that gets a text per new lead.
