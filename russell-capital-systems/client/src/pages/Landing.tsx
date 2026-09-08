@@ -116,6 +116,7 @@ export default function Landing() {
   const NAV = [
     { href: "#claims", label: "The technologies" },
     { href: "#planning-estimator", label: "Start" },
+    { href: isAuthenticated ? "/portal/dashboard" : "/login", label: isAuthenticated ? "Enter" : "Sign in" },
   ];
 
   return (

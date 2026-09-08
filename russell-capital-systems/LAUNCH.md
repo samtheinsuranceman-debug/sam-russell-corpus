@@ -128,6 +128,7 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 | `OWNER_PASSWORD_HASH` | bcrypt hash of the owner password; generate with `pnpm owner:password` (never store the password itself) |
 | `OWNER_NAME` | display name for the owner account (optional) |
 | `OWNER_OPEN_ID` | the owner's user id (optional; defaults to `owner`). Also gates the inbox for a managed‑OAuth user |
+| `GUEST_PASSCODE_HASH` | bcrypt hash of the **entrance passcode**: any email plus this passcode signs in as a regular user (never admin). Generate with `pnpm owner:password`; the passcode itself is never stored. Unset = no passcode entrance |
 | `OAUTH_SERVER_URL` | **managed host only** (Manus). Leave unset on cPanel/VPS — the owner sign‑in above replaces it |
 | `NODE_ENV` | `production` |
 | `PORT` | port to listen on (default `3000`) |
@@ -477,9 +478,13 @@ confirm the lead is visible in the inbox.
 
 **Manual check:**
 - Homepage loads at the domain over HTTPS.
-- **Sign in**: `/login` shows the owner email + password form (it appears only when
-  `OWNER_EMAIL` and `OWNER_PASSWORD_HASH` are set). Five wrong attempts lock that
-  client out for 15 minutes.
+- **Sign in**: `/login` is the entrance. With `GUEST_PASSCODE_HASH` set it shows the
+  passcode form (any email + the passcode); with `OWNER_EMAIL` and
+  `OWNER_PASSWORD_HASH` set it also shows the owner tab. Five acknowledgements
+  (`shared/loginDisclaimers.ts`) must be checked before the button enables, and the
+  server refuses a sign-in that does not carry all five; each accepted sign-in is
+  written to `compliance_signatures` with date, address and browser. Five wrong
+  attempts lock that client out for 15 minutes.
 - **Ask AI Brain Trust**: press the mic / type a question → an answer returns
   (or the graceful teaser if no AI keys are set).
 - **Tax & Savings Estimate**: submit a test lead with consent → you see the
