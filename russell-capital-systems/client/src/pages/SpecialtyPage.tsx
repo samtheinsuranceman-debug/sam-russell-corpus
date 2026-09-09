@@ -50,7 +50,7 @@ export default function SpecialtyPage() {
           <div className="mt-4 flex flex-wrap items-center gap-3 text-xs">
             <label>Your state <select className={`${INPUT} !mt-0 !w-auto`} value={state} onChange={(e) => setState(e.target.value)}><option value="">United States</option>{Object.entries(d?.states ?? {}).map(([a, n]) => <option key={a} value={a}>{n}</option>)}</select></label>
             <Link href="/for" className={BTN}>All specialties</Link>
-            <a className={BTN} href="https://calendly.com/sam-RussellCapitalSystems/60min" target="_blank" rel="noreferrer">Book the sixty-minute review</a>
+            <a className={BTN} href="https://calendly.com/sam-russellcapitalsystems/30min" target="_blank" rel="noreferrer">Book the sixty-minute review</a>
           </div>
         </div>
 
