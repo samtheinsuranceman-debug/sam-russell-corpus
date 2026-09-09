@@ -144,7 +144,7 @@ function FreeFoundingAccess() {
           Claim your free assessment
         </h2>
         <p style={{ color: CREAM2, fontSize: 'clamp(15px,1.6vw,17px)', lineHeight: 1.6, maxWidth: '34em', margin: '0 auto 8px' }}>
-          The first {cap ? cap.toLocaleString() : '10,000'} founding members get the full experience free — the voice
+          The first {cap ? cap.toLocaleString() : '1,000'} founding members get the full experience free — the voice
           assessment, the fully-underwritten multi-AI result, <b style={{ color: CREAM }}>and</b> the membership, no
           card ever. No invite code: just your email and a password you choose.
         </p>
@@ -161,7 +161,7 @@ function FreeFoundingAccess() {
           <div style={{ margin: '4px 0 20px' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: "'JetBrains Mono', monospace", fontSize: '13px', color: CREAM, border: `1px solid ${CHAMPAGNE}55`, borderRadius: '999px', padding: '5px 12px', background: 'rgba(224,198,140,0.06)' }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '999px', background: CHAMPAGNE, boxShadow: `0 0 7px ${CHAMPAGNE}` }} />
-              <b style={{ color: CHAMPAGNE }}>{remaining.toLocaleString()}</b> of {cap.toLocaleString()} free spots left{(info.data as any)?.claimedThisWeek >= 3 ? <span style={{ color: CREAM2 }}> · {(info.data as any).claimedThisWeek} claimed this week</span> : null}
+              <b style={{ color: CHAMPAGNE }}>{Number((info.data as any)?.used ?? 0).toLocaleString()}</b> already claimed · <b style={{ color: CHAMPAGNE }}>{remaining.toLocaleString()}</b> of {cap.toLocaleString()} free spots left{(info.data as any)?.claimedThisWeek >= 3 ? <span style={{ color: CREAM2 }}> · {(info.data as any).claimedThisWeek} claimed this week</span> : null}
             </span>
           </div>
         )}
@@ -494,11 +494,11 @@ const TEN_PROMISES: { arc: string; title: string; text: string; accent: string }
   { arc: "The Promise", title: "The Direct Hit", accent: "#E0C68C",
     text: "Tell us your 10 biggest life goals. We'll put an honest clock on every one — how long at your pace, what's standing in your way, and which ones to walk away from before they waste another decade of your life. Then we'll engineer the fastest path to the ones worth keeping — using more data about your actual capabilities than any therapist, coach, or mentor has ever had. This is outcome engineering. You're the first generation to have it." },
   { arc: "The Stakes", title: "The Uninsured Mind", accent: "#E2604A",
-    text: "You insure your car, your house, and your phone. Your mind — the machine that produces your marriage, your money, your health, and every outcome you'll ever have — runs uninsured, unmeasured, and unmaintained. Isn't that odd? Fix it in 30 days, one fun question at a time. The first 10,000 do it free, for life." },
+    text: "You insure your car, your house, and your phone. Your mind — the machine that produces your marriage, your money, your health, and every outcome you'll ever have — runs uninsured, unmeasured, and unmaintained. Isn't that odd? Fix it in 30 days, one fun question at a time. The first 1,000 do it free, for life." },
   { arc: "The Honesty", title: "What You'll Never Be Good At", accent: "#E0C68C",
     text: "Every other platform tells you you can be anything. We're the only one honest enough to tell you what you'd be fighting your own wiring to become — and what to build instead. Low persuasion, low volitional, low financial self-management? Business ownership will eat you alive. But consulting might fit you like a glove — same authority, same expertise, none of the parts you're missing." },
   { arc: "The Whole Machine", title: "In One Breath", accent: "#E0C68C",
-    text: "We measure everything your life runs on, tell you the truth about it, prescribe what the research proves works, track you every 30 days, and surround you with the people your mind has been looking for. First 10,000: free for life." },
+    text: "We measure everything your life runs on, tell you the truth about it, prescribe what the research proves works, track you every 30 days, and surround you with the people your mind has been looking for. First 1,000: free for life." },
   { arc: "The Experience", title: "The Test You'll Miss When It's Over", accent: "#9BC0B2",
     text: "IQ tests ask if you know what seven plus three is. Dating sites give you multiple choice. We hand you a private island, $80 million, and 180 days — and listen to what you build. Thirty questions, one a day for a month, each engineered to be the most fun conversation you've had with yourself in years." },
   { arc: "The Proof of Teeth", title: "The Clock Doesn't Lie", accent: "#E2604A",
@@ -508,7 +508,7 @@ const TEN_PROMISES: { arc: string; title: string; text: string; accent: string }
   { arc: "The Science", title: "The Second Village", accent: "#9BC0B2",
     text: "Then there's the second village — the people whose strengths are your weaknesses, and whose weaknesses are your strengths. The research is real: sustained proximity to someone strong where you're weak measurably grows that line in you. Every friendship in this village upgrades both of you, automatically, just by existing." },
   { arc: "The Offer", title: "Free For Life, In Writing", accent: "#E0C68C",
-    text: "The first 10,000 members get the entire platform free — lifetime. It's written into the user agreement; there is no going back on it. We're not discounting; we're choosing our founders. One condition: membership is earned by finishing your assessment." },
+    text: "The first 1,000 members get the entire platform free — lifetime. It's written into the user agreement; there is no going back on it. We're not discounting; we're choosing our founders. One condition: membership is earned by finishing your assessment." },
   { arc: "The Warning", title: "Blind Spots Bankrupt", accent: "#E2604A",
     text: "Nobody loses their marriage, their savings, and their health because their strengths failed. They lose it all to a weakness they were blind to — firing at the worst moment, unmanaged, unwatched. We find yours before it finds you." },
 ];

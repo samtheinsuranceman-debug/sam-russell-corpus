@@ -97,15 +97,15 @@ day with margin.
 - **Personal coaching calls / 1-on-1 strategy: a SEPARATE fee, NEVER discounted** (on the page).
 
 **Founding giveaway ladder — LIFETIME.** Implemented + tested
-(`shared/giveawayLadder.ts`, `GIVEAWAY_IS_LIFETIME = true`):
+(`shared/giveawayLadder.ts`, `FREE_COHORT_SIZE = 1_000`, `GIVEAWAY_IS_LIFETIME = true`):
 
 | Cohort | Signups | Founding rate (for life*) |
 |---|---|---|
-| 1 | 1 – 10,000 | **Free — audio assessment + membership waived for life** |
-| 2 | 10,001 – 20,000 | 75% off |
-| 3 | 20,001 – 30,000 | 50% off |
-| 4 | 30,001 – 40,000 | 25% off |
-| 5 | 40,001+ | standard |
+| 1 | 1 – 1,000 (523 already claimed) | **Free — audio assessment + membership waived for life** |
+| 2 | 1,001 – 11,000 | 75% off |
+| 3 | 11,001 – 21,000 | 50% off |
+| 4 | 21,001 – 31,000 | 25% off |
+| 5 | 31,001+ | standard |
 
 \* Lifetime = lifetime of the service, contingent on continuous good standing (cancel /
 chargeback / ToS violation → standard pricing). Get an attorney to paper it as
@@ -113,13 +113,13 @@ lifetime-of-service + good-standing + a fair-use re-assessment cap — **not** a
 revenue-recapture escape clause (that would break the trust the offer is built on).
 
 ### ⚠️ Advertising rule (implemented)
-**Only the first-10,000-FREE tranche is advertised publicly.** The 75/50/25 tranches live in
+**Only the first-1,000-FREE tranche is advertised publicly.** The 75/50/25 tranches live in
 the backend ladder for enforcement but are **NOT shown** on the pricing page. The page
 itemizes what founding members are having **waived for life** ($500 assessment + $79/mo
 membership) and states **why** (building the network aggressively; founding members are its
 foundation; "you effectively keep $79/month for the rest of your life").
 
-The free-cap infra (`FREE_ASSESSMENT_CAP=10000`) drives the "N of 10,000 free spots left"
+The free-cap infra (`FREE_ASSESSMENT_CAP=1000`, with 523 counted as already claimed) drives the "N of 1,000 free spots left"
 scarcity counter.
 
 ### Economics — lifetime is solvent because of the STT fix (now DONE)

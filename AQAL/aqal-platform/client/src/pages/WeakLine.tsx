@@ -112,7 +112,7 @@ export default function WeakLine() {
           <p style={{ fontSize: "14px", lineHeight: 1.65, color: CREAM2, margin: "0 0 16px" }}>
             Self-diagnosis from a web page is how people spend a year fixing the wrong thing. The 32-line assessment
             locates your real master weakness — this line or another — and prescribes in order. Free for the first
-            10,000 founding members.
+            1,000 founding members.
           </p>
           <Link href="/assessment" className="inline-block rounded-lg"
             style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, padding: "15px 28px", background: CHAMPAGNE, color: INK }}>

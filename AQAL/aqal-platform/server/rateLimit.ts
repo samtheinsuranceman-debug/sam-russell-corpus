@@ -2,7 +2,7 @@
 // RATE LIMITING — protecting the founding-spot pool
 // ============================================================
 // Since founding access is email + any member-chosen password, nothing else
-// stops a script from burning the 10,000 founding spots with garbage signups.
+// stops a script from burning the 1,000 founding spots with garbage signups.
 // In-memory sliding-window limiter (per instance) + disposable-email blocklist.
 
 type Window = { count: number; resetAt: number };

@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { playClick } from "@/lib/audio";
 import { PublicHeader, PublicFooter } from "@/components/PublicLayout";
 import PanelTrust from "@/components/PanelTrust";
-import { COHORT_SIZE, MEMBERSHIP_TRIAL_DAYS, UNDERWRITTEN_TRIAL_DAYS } from "@shared/giveawayLadder";
+import { FREE_COHORT_SIZE, MEMBERSHIP_TRIAL_DAYS, UNDERWRITTEN_TRIAL_DAYS } from "@shared/giveawayLadder";
 import { useHeroVariant, currentHeroId } from "@/lib/heroExperiment";
 
 // ============================================================
@@ -132,7 +132,7 @@ export default function Pricing() {
     setShowHipaaModal(true);
   };
 
-  // Founding members (first 10,000) pay nothing — after consent, go straight to
+  // Founding members (first 1,000) pay nothing — after consent, go straight to
   // the free assessment; no Stripe.
   const confirmCheckout = () => {
     if (!hipaaConsent) return;
@@ -173,7 +173,7 @@ export default function Pricing() {
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           >
             <p className="section-label mb-4">
-              Founding Access — First {COHORT_SIZE.toLocaleString()} Free For Life
+              Founding Access — First {FREE_COHORT_SIZE.toLocaleString()} Free For Life
             </p>
             <h1
               className="text-4xl sm:text-5xl md:text-6xl text-foreground mb-5"
@@ -207,7 +207,7 @@ export default function Pricing() {
             <div className="relative glass-card rounded-2xl p-10 sm:p-12 border border-primary/20" style={{ boxShadow: "0 0 40px oklch(0.68 0.08 165 / 0.08), inset 0 1px 0 oklch(0.78 0.12 85 / 0.1)" }}>
               {/* Badge */}
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[0.65rem] font-bold px-5 py-1.5 rounded-full tracking-wider uppercase">
-                Founding 10,000 — Free
+                Founding 1,000 — Free
               </div>
 
               {/* Price */}
@@ -221,7 +221,7 @@ export default function Pricing() {
                   Free
                 </motion.span>
                 <p className="text-foreground/80 text-base mt-2 font-medium">
-                  for the first {COHORT_SIZE.toLocaleString()} members — <span className="text-accent">for life</span>
+                  for the first {FREE_COHORT_SIZE.toLocaleString()} members — <span className="text-accent">for life</span>
                 </p>
               </div>
 
@@ -255,7 +255,7 @@ export default function Pricing() {
               <p className="text-sm text-muted-foreground/70 leading-relaxed mb-6 text-center">
                 Why free for life? Because the value of this platform is the <span className="text-foreground/85">network</span> —
                 and a network is only as strong as the people in it. We are building it aggressively, and the first
-                {" "}{COHORT_SIZE.toLocaleString()} members are its foundation. You get the audio assessment and your membership
+                {" "}{FREE_COHORT_SIZE.toLocaleString()} members are its foundation. You get the audio assessment and your membership
                 free for life; in return, you make the network worth joining.
               </p>
 
@@ -300,7 +300,7 @@ export default function Pricing() {
             transition={{ delay: 0.4, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
           >
             <div className="text-center mb-8">
-              <p className="section-label mb-3">After the founding {COHORT_SIZE.toLocaleString()}</p>
+              <p className="section-label mb-3">After the founding {FREE_COHORT_SIZE.toLocaleString()}</p>
               <h2 className="text-2xl sm:text-3xl text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
                 What it&rsquo;s worth — and what you&rsquo;re getting free.
               </h2>

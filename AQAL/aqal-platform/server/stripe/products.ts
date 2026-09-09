@@ -3,7 +3,7 @@
 // 7-day free trial is enforced in-app, then this charge unlocks & keeps the
 // certified report) · Membership $449/mo or $4,499/yr (15-day Stripe free trial).
 //
-// Founding members (first 10,000) pay nothing — that path never hits Stripe.
+// Founding members (first 1,000) pay nothing — that path never hits Stripe.
 
 export const PRODUCTS = {
   audio: {

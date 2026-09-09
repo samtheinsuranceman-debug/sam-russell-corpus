@@ -33,8 +33,8 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/pricing": {
     title: "Pricing & Founding Membership — AQAL Intelligence",
     description:
-      "The first 10,000 founding members get the 32-line assessment and membership free for life. After that: $449/month or $4,499/year with a free trial.",
-    short: "First 10,000 founders: free for life. In writing.",
+      "The first 1,000 founding members get the 32-line assessment and membership free for life. After that: $449/month or $4,499/year with a free trial.",
+    short: "First 1,000 founders: free for life. In writing.",
   },
   "/sample-report": {
     title: "Sample Intelligence Report — See the Deliverable — AQAL",

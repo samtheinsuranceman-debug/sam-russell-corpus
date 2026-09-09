@@ -43,9 +43,9 @@ S3_SECRET_ACCESS_KEY=...
 STRIPE_SECRET_KEY=sk_live_...        # use sk_test_... to rehearse first
 STRIPE_WEBHOOK_SECRET=whsec_...
 
-# Free giveaway (already defaults to first 10,000)
+# Free giveaway (capped at the first 1,000 in code; 523 claimed before the counter went live)
 FREE_ACCESS_CODE=<the passcode you hand out>   # default "Welcome1"
-FREE_ASSESSMENT_CAP=10000
+FREE_ASSESSMENT_CAP=1000   # may lower the cap, can never raise it above 1,000
 ```
 
 **Add the rest of the AI panel** (each key lights up one more independent scorer;
@@ -169,7 +169,7 @@ URL into a draft X post). Without the PNG, shared links render a bare card.
 - [ ] Finish a quick assessment → `/results` shows the radar, rarity, and the
       **10-lowest-lines on-ramp** (voice-hard lines tagged amber).
 - [ ] `/archetypes` loads with the evidence grade + jump-nav.
-- [ ] `/pricing` shows "Founding 10,000 — Free for life", the $500/$1,500/$79 cards,
+- [ ] `/pricing` shows "Founding 1,000 — Free for life", the $500/$1,500/$79 cards,
       "Scientifically Proven Method" in the trust bar.
 - [ ] Free founding claim → routes into the assessment (no charge).
 - [ ] `/evidence` shows the underwritten trial banner; an upload starts the 7-day clock.
@@ -181,7 +181,7 @@ URL into a draft X post). Without the PNG, shared links render a bare card.
 - **OpenAI + Groq balances** — top up before they hit zero (assessments fail closed to a mock, which is honestly labeled but not what you want live).
 - **`score_llm` / `score_consensus` / `score_stt` events** — confirm real scoring, not mock.
 - **`checkout_start` by `meta.variant`** — the hero A/B signal (needs a few days for signal).
-- **Free-cap counter** — when it nears 10,000, decide whether to open cohort 2.
+- **Free-cap counter** — when it nears 1,000, decide whether to open cohort 2.
 
 ---
 

@@ -157,7 +157,7 @@ export default function SampleReport() {
             Jordan is invented. Your map won&rsquo;t be.
           </p>
           <Link href="/assessment" className="inline-block px-7 py-4 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", background: CHAMPAGNE, color: INK }}>
-            Claim yours — free for the first 10,000
+            Claim yours — free for the first 1,000
           </Link>
         </div>
       </div>

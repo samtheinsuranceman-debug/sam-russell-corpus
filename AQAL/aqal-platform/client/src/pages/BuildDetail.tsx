@@ -144,7 +144,7 @@ export default function BuildDetail() {
           </p>
           <p style={{ fontSize: "14px", lineHeight: 1.65, color: CREAM2, margin: "0 0 16px" }}>
             The 32-line assessment finds your actual gating weakness before you invest months in the wrong repair.
-            Free for the first 10,000 founding members.
+            Free for the first 1,000 founding members.
           </p>
           <Link href="/assessment" className="inline-block rounded-lg"
             style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, padding: "15px 28px", background: CHAMPAGNE, color: INK }}>

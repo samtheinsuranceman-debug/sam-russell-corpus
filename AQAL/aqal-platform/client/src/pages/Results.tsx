@@ -1621,7 +1621,7 @@ function drawShareCard(canvas: HTMLCanvasElement, scores: number[], foundingNumb
     ctx.fillText(`FOUNDING MEMBER #${foundingNumber.toLocaleString()} OF 10,000`, 240, 560);
   }
   ctx.fillStyle = "#9C8F79"; ctx.font = "15px 'Courier New', monospace";
-  ctx.fillText("32-line assessment · scored by an 8-AI panel · first 10,000 free for life", 70, 588);
+  ctx.fillText("32-line assessment · scored by an 8-AI panel · first 1,000 free for life", 70, 588);
 }
 
 function ShareCard({ scores }: { scores: number[] }) {
@@ -1635,7 +1635,7 @@ function ShareCard({ scores }: { scores: number[] }) {
       const blob: Blob = await new Promise((res) => canvas.toBlob((b) => res(b!), "image/png"));
       const file = new File([blob], "my-32-line-map.png", { type: "image/png" });
       if (share && navigator.share && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: "My 32-line map", text: "All 32 lines of my mind, measured. joinaqal.com — first 10,000 free for life." });
+        await navigator.share({ files: [file], title: "My 32-line map", text: "All 32 lines of my mind, measured. joinaqal.com — first 1,000 free for life." });
       } else {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob); a.download = "my-32-line-map.png"; a.click();

@@ -139,7 +139,7 @@ export function foundingWelcomeEmailHtml(opts: { name?: string; appUrl?: string;
   return `<!doctype html><html><body style="margin:0;background:#161310;font-family:Georgia,serif;color:#efe9dc;">
   <div style="max-width:520px;margin:0 auto;padding:40px 28px;">
     <div style="font-family:monospace;font-size:11px;letter-spacing:.24em;color:#c9a24b;text-transform:uppercase;margin-bottom:18px;">AQAL · Founding Member</div>
-    <h1 style="font-size:24px;font-weight:600;margin:0 0 14px;">${hi} You&rsquo;re one of the first 10,000.</h1>
+    <h1 style="font-size:24px;font-weight:600;margin:0 0 14px;">${hi} You&rsquo;re one of the first 1,000.</h1>
     <p style="color:#b9b2a6;font-size:15px;line-height:1.65;margin:0 0 16px;">
       Your assessment and your membership are <b style="color:#e0c68c;">free, for life</b> — the founding rate, locked
       in. In return, you help build the network that makes this worth joining.

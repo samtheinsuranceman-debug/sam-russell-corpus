@@ -32,7 +32,7 @@ export const HERO_VARIANTS: HeroVariant[] = [
     id: "commitment",
     lead: "Most people won't finish this. The ones who do get ",
     emph: "the only real map of their mind.",
-    sub: "It takes real honesty and about 90 minutes. That is the filter. The first 10,000 who finish join free — for life.",
+    sub: "It takes real honesty and about 90 minutes. That is the filter. The first 1,000 who finish join free — for life.",
   },
   {
     // Revealed rarity: the product literally computes 1-in-X.

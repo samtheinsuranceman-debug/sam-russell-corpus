@@ -12,7 +12,7 @@ Last updated by Claude: this build.
 ## ✅ ALREADY BUILT & TESTED (context — do not rebuild)
 - Multi-AI consensus scoring (up to 8 models), agreement→confidence, tier-scaled panel.
 - Free tier (email + `Welcome1` passcode) on BOTH the home page (`#claim`) and `/login`,
-  with the `FREE_ASSESSMENT_CAP` counter (default 10,000). Founders granted full experience.
+  with the `FREE_ASSESSMENT_CAP` counter (capped at 1,000 in code, 523 counted as already claimed). Founders granted full experience.
 - Effective Performance Potential, named bottleneck mechanism, cohort rarity.
 - Citation cross-examination (Perplexity + adversarial review + DOI resolution).
 - Research Library sections 0–21 (interoception, exercise, sleep, breathwork, nature,

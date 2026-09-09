@@ -166,10 +166,19 @@ export const BETA_MAX_REDEMPTIONS = parseInt(env("BETA_MAX_REDEMPTIONS") || "50"
 // result, which is emailed to that address.
 export const FREE_ACCESS_CODE = env("FREE_ACCESS_CODE") || "Welcome1";
 
-// Giveaway cap: how many free spots exist before the free door closes and pricing
-// shows instead. Powers the "N of 1,000 free spots left" scarcity counter. Set to
-// 0 for UNLIMITED (no cap). Existing free users can always sign back in.
-export const FREE_ASSESSMENT_CAP = parseInt(env("FREE_ASSESSMENT_CAP") || "10000", 10) || 0;
+// Giveaway cap: how many free founding spots exist before the free door closes and
+// pricing shows instead. Powers the "N of 1,000 free spots left" scarcity counter.
+// The owner set the cap to 1,000 (down from 10,000). The environment may lower it
+// but can never raise it above that, so a stale panel value cannot reopen 10,000.
+// Existing free users can always sign back in.
+export const FREE_ASSESSMENT_CAP_MAX = 1000;
+const envCap = parseInt(env("FREE_ASSESSMENT_CAP") || "", 10);
+export const FREE_ASSESSMENT_CAP = envCap > 0 ? Math.min(envCap, FREE_ASSESSMENT_CAP_MAX) : FREE_ASSESSMENT_CAP_MAX;
+
+// Founding members who claimed their spot before this counter went live. They count
+// against the cap, show as "already claimed" on every counter, and the live founding
+// numbers continue after them: the first live claim is member #524.
+export const FOUNDING_CLAIMED_OFFSET = 523;
 
 // ---- Email (optional) ---------------------------------------
 // Resend (https://resend.com) by default — set RESEND_API_KEY to send for real.
