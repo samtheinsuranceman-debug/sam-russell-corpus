@@ -1,13 +1,14 @@
 import PDFDocument from "pdfkit";
+import { IVORY, IVORY_COMPANY, ivoryPage } from "./_core/ivory";
 
-const GREEN = "#22c55e";
-const DARK = "#0a1628";
-const BLUE = "#3b82f6";
-const AMBER = "#f59e0b";
-const GRAY = "#7a95b8";
-const WHITE = "#ffffff";
-const PURPLE = "#a855f7";
-const CYAN = "#06b6d4";
+const GREEN = IVORY.positive;
+const DARK = IVORY.canvas;
+const BLUE = IVORY.navy;
+const AMBER = IVORY.money;
+const GRAY = IVORY.muted;
+const WHITE = IVORY.heading;
+const PURPLE = IVORY.money;
+const CYAN = IVORY.steel;
 
 function fmtFull(n: number): string {
   return `$${Math.round(n).toLocaleString()}`;
@@ -74,7 +75,9 @@ export async function generateBulkComparisonPdf(params: {
 
   // ── Cover Page ──
   doc.rect(0, 0, 612, 792).fill(DARK);
-  doc.fontSize(10).fillColor(GREEN).text("RUSSELL CAPITAL SYSTEMS", 50, 80, { align: "center" });
+  doc.rect(0, 0, 612, 72).fill(IVORY.band);
+  doc.fontSize(12).fillColor(IVORY.bandText).font("Helvetica-Bold").text(IVORY_COMPANY, 50, 28);
+  doc.font("Helvetica");
   doc.moveDown(2);
   doc.fontSize(28).fillColor(WHITE).text("Bulk Strategy", 50, 150, { align: "center" });
   doc.fontSize(28).fillColor(WHITE).text("Comparison Report", 50, 185, { align: "center" });
@@ -96,7 +99,7 @@ export async function generateBulkComparisonPdf(params: {
   ];
   coverStats.forEach((s, i) => {
     const bx = 50 + i * (statBoxW + 10);
-    doc.roundedRect(bx, coverY, statBoxW, 55, 4).fillAndStroke("#0f1e35", "#12233e");
+    doc.roundedRect(bx, coverY, statBoxW, 55, 4).fillAndStroke(IVORY.rowAlt, IVORY.hairline);
     doc.fontSize(7).fillColor(GRAY).text(s.label, bx + 8, coverY + 8, { width: statBoxW - 16, align: "center" });
     doc.fontSize(14).fillColor(s.color).text(s.value, bx + 8, coverY + 26, { width: statBoxW - 16, align: "center" });
   });
@@ -131,7 +134,7 @@ export async function generateBulkComparisonPdf(params: {
     xPos += compWidths[ci];
   });
   y += 14;
-  doc.moveTo(50, y).lineTo(562, y).strokeColor("#12233e").lineWidth(0.5).stroke();
+  doc.moveTo(50, y).lineTo(562, y).strokeColor(IVORY.hairline).lineWidth(0.5).stroke();
   y += 6;
 
   // Rows
@@ -147,13 +150,13 @@ export async function generateBulkComparisonPdf(params: {
         xPos += compWidths[ci];
       });
       y += 14;
-      doc.moveTo(50, y).lineTo(562, y).strokeColor("#12233e").lineWidth(0.5).stroke();
+      doc.moveTo(50, y).lineTo(562, y).strokeColor(IVORY.hairline).lineWidth(0.5).stroke();
       y += 6;
     }
 
     const isTop = r.clientName === summary.topClient;
     if (isTop) {
-      doc.roundedRect(48, y - 2, W + 4, 16, 2).fill("#22c55e10");
+      doc.roundedRect(48, y - 2, W + 4, 16, 2).fill("#3D6B4F18");
     }
 
     xPos = 50;
@@ -197,7 +200,7 @@ export async function generateBulkComparisonPdf(params: {
       doc.rect(0, 0, 612, 792).fill(DARK);
       y = 50;
     }
-    doc.roundedRect(50, y, W, 40, 6).fillAndStroke("#22c55e10", GREEN);
+    doc.roundedRect(50, y, W, 40, 6).fillAndStroke("#DDE8DF", GREEN);
     doc.fontSize(10).fillColor(GREEN).text(
       `★ Top Performer: ${best.clientName} — Projected net worth of ${fmtFull(best.netWorth)} with ${best.carrierName}`,
       60, y + 12, { width: W - 20 }
@@ -252,7 +255,7 @@ export async function generateBulkComparisonPdf(params: {
       const col = mi % 3;
       if (col === 0 && mi > 0) cy += 55;
       const bx = 50 + col * (boxW + 20);
-      doc.roundedRect(bx, cy, boxW, 45, 4).fillAndStroke("#0f1e35", "#12233e");
+      doc.roundedRect(bx, cy, boxW, 45, 4).fillAndStroke(IVORY.rowAlt, IVORY.hairline);
       doc.fontSize(7).fillColor(GRAY).text(m.label, bx + 8, cy + 8, { width: boxW - 16 });
       doc.fontSize(13).fillColor(m.color).text(m.value, bx + 8, cy + 24, { width: boxW - 16 });
     });
