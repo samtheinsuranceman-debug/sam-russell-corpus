@@ -5,6 +5,7 @@
 // at their own pace.
 // ============================================================
 import PDFDocument from "pdfkit";
+import { IVORY, IVORY_COMPANY, ivoryPage } from "./_core/ivory";
 
 export type AnswerSection = { title: string; text: string; via?: string };
 
@@ -17,9 +18,9 @@ export type AnswerPdfInput = {
   siteName?: string;
 };
 
-const GREEN = "#15803d";
-const INK = "#0f172a";
-const MUTED = "#475569";
+const GREEN = IVORY.positive;
+const INK = IVORY.ink;
+const MUTED = IVORY.muted;
 
 export function buildAnswerPdf(input: AnswerPdfInput): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -30,6 +31,8 @@ export function buildAnswerPdf(input: AnswerPdfInput): Promise<Buffer> {
     doc.on("error", reject);
 
     const site = input.siteName ?? "Russell Capital Systems";
+    ivoryPage(doc);
+    doc.on("pageAdded", () => ivoryPage(doc));
     doc.fillColor(GREEN).font("Helvetica-Bold").fontSize(11).text(site.toUpperCase(), { characterSpacing: 2 });
     doc.moveDown(0.4);
     doc.fillColor(INK).fontSize(22).text("Your question, answered six ways");

@@ -37,15 +37,15 @@ const esc = (v: string) => v.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 /** Wrap plain text in the site's email frame. Paragraphs split on blank lines; URLs become links. */
 export function textToHtml(text: string, title = "Russell Capital Systems"): string {
   const paras = text.trim().split(/\n\s*\n/).map((p) => {
-    const withLinks = esc(p).replace(/(https?:\/\/[^\s<]+)/g, (u) => `<a href="${u}" style="color:#34d399;">${u}</a>`).replace(/\n/g, "<br/>");
+    const withLinks = esc(p).replace(/(https?:\/\/[^\s<]+)/g, (u) => `<a href="${u}" style="color:#3D6B4F;">${u}</a>`).replace(/\n/g, "<br/>");
     return `<p style="line-height:1.6;margin:0 0 14px;">${withLinks}</p>`;
   }).join("");
   return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${esc(title)}</title></head>
-<body style="margin:0;padding:0;background:#060f1e;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;color:#c8d8ec;">
+<body style="margin:0;padding:0;background:#F7F4EE;font-family:-apple-system,BlinkMacSystemFont,'IBM Plex Sans','Inter',sans-serif;color:#1C2230;">
   <div style="max-width:560px;margin:0 auto;padding:32px 24px;">
-    <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:20px;">Russell<span style="color:#4f8cff">Capital</span></div>
+    <div style="font-size:18px;font-weight:800;color:#0B1220;margin-bottom:20px;">Russell<span style="color:#8A6A1F">Capital</span></div>
     ${paras}
-    <p style="line-height:1.6;color:#8fa6c4;font-size:12px;border-top:1px solid #1b2a44;padding-top:14px;margin-top:20px;">${esc(COMPLIANCE_LINE)}</p>
+    <p style="line-height:1.6;color:#6A7383;font-size:12px;border-top:1px solid #D9D4C8;padding-top:14px;margin-top:20px;">${esc(COMPLIANCE_LINE)}</p>
   </div>
 </body></html>`;
 }

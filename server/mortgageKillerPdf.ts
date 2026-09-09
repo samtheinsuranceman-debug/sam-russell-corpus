@@ -5,24 +5,25 @@
  */
 
 import PDFDocument from "pdfkit";
+import { IVORY, IVORY_COMPANY, ivoryPage } from "./_core/ivory";
 import type { MortgageKillerResult } from "../shared/mortgageKiller";
 
 // ─── Brand Colors ───────────────────────────────────────────────────────────
 const C = {
-  bg: "#0f1117",
-  card: "#1a1d27",
-  cardAlt: "#141720",
-  border: "#2a2d3a",
-  text: "#e4e4e7",
-  muted: "#a1a1aa",
-  blue: "#3b82f6",
-  emerald: "#22c55e",
-  amber: "#f59e0b",
-  red: "#ef4444",
-  purple: "#8b5cf6",
-  cyan: "#06b6d4",
-  white: "#ffffff",
-  orange: "#f97316",
+  bg: IVORY.canvas,
+  card: IVORY.surface,
+  cardAlt: IVORY.rowAlt,
+  border: IVORY.hairline,
+  text: IVORY.ink,
+  muted: IVORY.muted,
+  blue: IVORY.navy,
+  emerald: IVORY.positive,
+  amber: IVORY.money,
+  red: IVORY.negative,
+  purple: IVORY.money,
+  cyan: IVORY.steel,
+  white: IVORY.heading,
+  orange: IVORY.money,
 };
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -41,11 +42,12 @@ function newPage(doc: PDFKit.PDFDocument) {
 }
 
 function drawPageHeader(doc: PDFKit.PDFDocument, title: string, subtitle?: string) {
-  doc.rect(0, 0, doc.page.width, 80).fill(C.card);
-  doc.rect(0, 78, doc.page.width, 2).fill(C.blue);
-  doc.fillColor(C.blue).fontSize(20).font("Helvetica-Bold").text(title, 40, 22);
+  doc.rect(0, 0, doc.page.width, 80).fill(IVORY.band);
+  doc.rect(0, 78, doc.page.width, 2).fill(C.amber);
+  doc.fillColor(IVORY.bandText).fontSize(9).font("Helvetica-Bold").text(IVORY_COMPANY, 40, 12);
+  doc.fillColor(IVORY.bandText).fontSize(20).font("Helvetica-Bold").text(title, 40, 28);
   if (subtitle) {
-    doc.fillColor(C.muted).fontSize(10).font("Helvetica").text(subtitle, 40, 50);
+    doc.fillColor(IVORY.bandMuted).fontSize(10).font("Helvetica").text(subtitle, 40, 54);
   }
   doc.y = 100;
 }
@@ -88,7 +90,7 @@ function drawTableHeader(doc: PDFKit.PDFDocument, cols: { label: string; x: numb
 function drawTableRow(doc: PDFKit.PDFDocument, cols: { value: string; x: number; w: number; color?: string }[], highlight?: boolean) {
   const y = doc.y;
   if (highlight) {
-    doc.rect(40, y, doc.page.width - 80, 14).fill("#1e2a1e");
+    doc.rect(40, y, doc.page.width - 80, 14).fill(C.cardAlt);
   }
   cols.forEach(col => {
     doc.fillColor(col.color ?? C.text).fontSize(7.5).font("Helvetica").text(col.value, col.x, y + 2, { width: col.w, align: "right" });

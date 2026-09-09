@@ -5,25 +5,27 @@
  */
 
 import PDFDocument from "pdfkit";
+import { IVORY, IVORY_COMPANY, ivoryPage } from "./_core/ivory";
 
 const COLORS = {
-  bg: "#0f1117",
-  card: "#1a1d27",
-  border: "#2a2d3a",
-  text: "#e4e4e7",
-  muted: "#a1a1aa",
-  blue: "#3b82f6",
-  emerald: "#22c55e",
-  amber: "#f59e0b",
-  purple: "#8b5cf6",
-  red: "#ef4444",
-  white: "#ffffff",
+  bg: IVORY.canvas,
+  card: IVORY.surface,
+  border: IVORY.hairline,
+  text: IVORY.ink,
+  muted: IVORY.muted,
+  blue: IVORY.navy,
+  emerald: IVORY.positive,
+  amber: IVORY.money,
+  purple: IVORY.money,
+  red: IVORY.negative,
+  white: IVORY.heading,
 };
 
 function drawHeader(doc: PDFKit.PDFDocument, title: string, subtitle: string) {
-  doc.rect(0, 0, doc.page.width, 100).fill(COLORS.card);
-  doc.fillColor(COLORS.blue).fontSize(24).font("Helvetica-Bold").text(title, 40, 30);
-  doc.fillColor(COLORS.muted).fontSize(11).font("Helvetica").text(subtitle, 40, 62);
+  doc.rect(0, 0, doc.page.width, 100).fill(IVORY.band);
+  doc.fillColor(IVORY.bandText).fontSize(11).font("Helvetica-Bold").text(IVORY_COMPANY, 40, 18);
+  doc.fillColor(IVORY.bandText).fontSize(22).font("Helvetica-Bold").text(title, 40, 38);
+  doc.fillColor(IVORY.bandMuted).fontSize(10).font("Helvetica").text(subtitle, 40, 70);
   doc.moveDown(3);
 }
 

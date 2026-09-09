@@ -1754,42 +1754,47 @@ html[data-quiet] [role="tab"][data-state="active"], html[data-quiet] [role="tab"
 html[data-room] .rc-portal-theme :is(h1, h2, h3, h4) { color: var(--room-heading); text-wrap: balance; }
 html[data-room] .rc-portal-theme .rc-page-title { color: var(--room-heading); }
 html[data-room] .rc-portal-theme p { text-wrap: pretty; }
-html[data-room] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-family: var(--font-ui); font-weight: 600; letter-spacing: -.02em; line-height: 1.12; }
+html[data-room] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1, .rc-page-title) { font-family: var(--font-ui); font-weight: 600; letter-spacing: -.02em; line-height: 1.12; color: var(--room-heading); }
+/* Pages that draw their own frame instead of the shell: same canvas, same voices */
+html[data-room] .rc-room-frame { background-color: var(--room-canvas); color: var(--room-text); font-family: var(--font-ui); font-variant-numeric: tabular-nums lining-nums; }
+html[data-room="theme9"] .rc-room-frame::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .5; background-image: linear-gradient(var(--room-grid) 1px, transparent 1px), linear-gradient(90deg, var(--room-grid) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(to bottom, black, transparent 70%); }
+html[data-room] .rc-room-frame :is(.rc-stat-value, .rc-money) { font-family: var(--font-ui); color: var(--room-money); font-variant-numeric: tabular-nums lining-nums; }
+html[data-room] .rc-room-frame :is(h2, h3) { color: var(--room-heading); }
 
 /* Navy cockpit: sans, gold 48px hairline under, no serif, no city */
-html[data-room="theme2"] .rc-portal-theme .rc-main :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 48px; height: 1px; background: var(--room-hairline); margin-top: 10px; }
+html[data-room="theme2"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 48px; height: 1px; background: var(--room-hairline); margin-top: 10px; }
 
 /* Quiet Luxury and education: serif, warm ivory */
-html[data-room="theme3"] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-family: var(--font-display); font-weight: 500; letter-spacing: -.015em; font-optical-sizing: auto; }
+html[data-room="theme3"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1, .rc-page-title) { font-family: var(--font-display); font-weight: 500; letter-spacing: -.015em; font-optical-sizing: auto; }
 html[data-room="theme3"] .rc-portal-theme .rc-main { font-size: 18px; line-height: 1.75; }
 
 /* Tax Sanctuary: serif H1, forest 64px rule, ink on paper, no glow */
-html[data-room="theme5"] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-family: var(--font-display); font-weight: 500; letter-spacing: -.015em; font-optical-sizing: auto; text-shadow: none; }
-html[data-room="theme5"] .rc-portal-theme .rc-main :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 64px; height: 2px; background: var(--room-line); margin-top: 12px; }
+html[data-room="theme5"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1, .rc-page-title) { font-family: var(--font-display); font-weight: 500; letter-spacing: -.015em; font-optical-sizing: auto; text-shadow: none; }
+html[data-room="theme5"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 64px; height: 2px; background: var(--room-line); margin-top: 12px; }
 html[data-room="theme5"] .rc-portal-theme .rc-main { font-size: 18px; line-height: 1.8; }
 html[data-room="theme5"] .rc-portal-theme code, html[data-room="theme5"] .rc-portal-theme .rc-mono { font-family: var(--font-mono); }
 
 /* Calculus: sans, a 2px cyan tick left of the first glyph, faint grid behind */
-html[data-room="theme6"] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { position: relative; padding-left: 18px; font-weight: 550; }
-html[data-room="theme6"] .rc-portal-theme .rc-main :is(h1, .rc-page-title)::before { content: ""; position: absolute; left: 0; top: .18em; width: 2px; height: 1em; background: var(--room-line); }
+html[data-room="theme6"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1, .rc-page-title) { position: relative; padding-left: 18px; font-weight: 550; }
+html[data-room="theme6"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1, .rc-page-title)::before { content: ""; position: absolute; left: 0; top: .18em; width: 2px; height: 1em; background: var(--room-line); }
 
 /* Estate: serif, small gold hairline, no cyan */
-html[data-room="theme7"] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-family: var(--font-display); font-weight: 500; letter-spacing: -.01em; font-optical-sizing: auto; }
-html[data-room="theme7"] .rc-portal-theme .rc-main :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 32px; height: 1px; background: var(--room-hairline); margin-top: 10px; }
+html[data-room="theme7"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1, .rc-page-title) { font-family: var(--font-display); font-weight: 500; letter-spacing: -.01em; font-optical-sizing: auto; }
+html[data-room="theme7"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 32px; height: 1px; background: var(--room-hairline); margin-top: 10px; }
 
 /* Journey: italic serif eyebrow + sans H1, horizon wash */
 html[data-room="theme8"] .rc-portal-theme .rc-main { font-size: 18px; line-height: 1.75; }
 html[data-room="theme8"] .rc-portal-theme .rc-eyebrow { font-family: var(--font-display); font-style: italic; font-size: 14px; letter-spacing: 0; text-transform: none; color: var(--room-muted); }
 
 /* Carbon calculator: uppercase eyebrow, a pip in the needle colour, the output number is the real title */
-html[data-room="theme9"] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-size: 30px; }
-html[data-room="theme9"] .rc-portal-theme .rc-main :is(h1, .rc-page-title)::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--needle); box-shadow: 0 0 8px color-mix(in srgb, var(--needle) 60%, transparent); margin-right: 12px; vertical-align: middle; }
+html[data-room="theme9"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1, .rc-page-title) { font-size: 30px; }
+html[data-room="theme9"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1, .rc-page-title)::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--needle); box-shadow: 0 0 8px color-mix(in srgb, var(--needle) 60%, transparent); margin-right: 12px; vertical-align: middle; }
 html[data-room="theme9"] .rc-portal-theme .rc-eyebrow,
 html[data-room="theme9"] .rc-portal-theme label { font-family: var(--font-ui); text-transform: uppercase; letter-spacing: .12em; font-size: 11px; color: var(--room-muted); }
 html[data-room="theme9"] .rc-portal-theme .rc-stat-value { font-size: 40px; background: linear-gradient(180deg, #F2E3A6, var(--room-money)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* Indigo: frames and headings carry the colour, dollars stay gold */
-html[data-room="theme11"] .rc-portal-theme .rc-main :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 48px; height: 1px; background: var(--room-line); margin-top: 10px; }
+html[data-room="theme11"] :is(.rc-portal-theme .rc-main, .rc-room-frame) :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 48px; height: 1px; background: var(--room-line); margin-top: 10px; }
 
 /* Quiet legal, auth, compliance, vault, health: sans 24, nothing else */
 html[data-quiet] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-family: var(--font-ui); font-size: 24px; font-weight: 600; letter-spacing: -.01em; }
@@ -1859,6 +1864,8 @@ html[data-quiet] .rc-integral { display: none; }
 /* ─── The reveal layer and the energy line ───────────────────────────────── */
 .rc-reveal-micro { margin-top: 12px; max-width: 62ch; font-family: var(--font-ui); font-size: 14px; font-weight: 450; font-style: italic; line-height: 1.45; color: var(--room-muted, #7F8797); }
 .rc-reveal-macro { margin-top: 16px; max-width: 70ch; }
+.rc-engine-whisper { padding: 0 28px; }
+.rc-engine-whisper .rc-reveal-micro { margin-top: 8px; }
 .rc-reveal-macro p { font-family: var(--font-ui); font-size: 15px; line-height: 1.6; color: var(--room-text, #D8DDE6); margin-top: 8px; }
 .rc-engine-footer { margin: 40px 28px 28px; padding-top: 18px; border-top: 1px solid var(--room-hairline-soft, rgba(201,162,39,.18)); }
 .rc-engine-footer-toggle { background: none; border: 0; padding: 0; cursor: pointer; font-family: var(--font-ui); font-size: 13px; font-weight: 500; letter-spacing: .04em; color: var(--room-line, #C9A227); text-underline-offset: 6px; }
