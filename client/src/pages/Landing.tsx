@@ -18,7 +18,7 @@ import manifesto from "@shared/homeManifesto.json";
 // (docs/index.html) reads the same words.
 // ============================================================
 
-const CALENDLY_URL = "https://calendly.com/sam-RussellCapitalSystems/60min";
+const CALENDLY_URL = "https://calendly.com/sam-russellcapitalsystems/30min";
 
 // Every image page: one full-bleed picture, crisp, nothing on top of it.
 const PAGE = "relative isolate flex min-h-[100svh] items-end overflow-hidden bg-[#03090a]";
