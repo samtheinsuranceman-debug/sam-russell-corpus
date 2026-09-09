@@ -1554,3 +1554,321 @@ img.object-cover, img[class*="h-full"] { height: 100%; }
   filter: drop-shadow(0 0 2px rgba(255,255,255,1)) drop-shadow(0 0 12px rgba(255,255,255,.95)) drop-shadow(0 0 30px rgba(255,255,255,.8)) drop-shadow(0 0 70px rgba(255,250,232,.55)) drop-shadow(0 3px 14px rgba(0,0,0,.7));
 }
 @media (prefers-reduced-motion: reduce) { .rc-filament path { animation: none; opacity: .5; } }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE ROOMS — Grok's 12 sections on 8 roles, one house
+   shared/themes.ts decides the room from the route and stamps <html> with
+   data-room / data-needle / data-quiet / data-light / data-cast. Everything
+   below reads those attributes. Token roles keep Grok's names with a `room-`
+   prefix so they never collide with the component library's --muted.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── The house type rack: four files, vary the settings ─────────────────── */
+:root {
+  --font-display: "Fraunces", "Source Serif 4", "Cormorant Garamond", Georgia, serif;
+  --font-ui: "IBM Plex Sans", "Inter", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --copper: #C45C26;
+  --copper-hover: #D4682E;
+  --seal-brown: #8B5A2B;
+  --ivory-ink: #F7F4EE;
+  --energy-line: #3EE0A2;
+  --needle-gold: #C9A227;
+  --needle-horizon: #E6C36A;
+  --needle-forest: #3D6B4F;
+  --needle-steel: #5B8FB9;
+  --needle-cyan: #7EC8E3;
+  --needle-oxblood: #8E1E2A;
+  --needle-champagne: #E8D5A3;
+  --needle: var(--needle-gold);
+}
+html[data-needle="gold"]      { --needle: var(--needle-gold); }
+html[data-needle="horizon"]   { --needle: var(--needle-horizon); }
+html[data-needle="forest"]    { --needle: var(--needle-forest); }
+html[data-needle="steel"]     { --needle: var(--needle-steel); }
+html[data-needle="cyan"]      { --needle: var(--needle-cyan); }
+html[data-needle="oxblood"]   { --needle: var(--needle-oxblood); }
+html[data-needle="champagne"] { --needle: var(--needle-champagne); }
+
+/* ─── Room tokens (values from shared/themes.ts — keep the two in step) ──── */
+html[data-room="theme1"] { /* Surgical Midnight — the cover */
+  --room-canvas:#07080C; --room-surface:#0E1016; --room-surface-hover:#131622; --room-tab:#9AA0AD; --room-tab-active:#F4F1E8;
+  --room-text:#E6E8EE; --room-heading:#F4F1E8; --room-money:#E6C36A; --room-line:#3EE0A2; --room-fill:rgba(62,224,162,.12);
+  --room-calculate:#C45C26; --room-calculate-hover:#D4682E; --room-grid:transparent; --room-muted:#8A8F9C; --room-danger:#E5484D; --room-hairline:#C9A227;
+}
+html[data-room="theme2"] { /* Private Banking Navy */
+  --room-canvas:#0B1220; --room-surface:#111A2C; --room-surface-hover:#16213A; --room-tab:#8FA1BD; --room-tab-active:#F2EBDD;
+  --room-text:#D5DCE8; --room-heading:#F2EBDD; --room-money:#E6C36A; --room-line:#C9A227; --room-fill:rgba(201,162,39,.10);
+  --room-calculate:#C45C26; --room-calculate-hover:#D4682E; --room-grid:transparent; --room-muted:#7C8BA5; --room-danger:#E5484D; --room-hairline:#C9A227;
+}
+html[data-room="theme3"] { /* Quiet Luxury — charcoal + champagne */
+  --room-canvas:#16171A; --room-surface:#1E1F23; --room-surface-hover:#25262B; --room-tab:#9C978C; --room-tab-active:#F1E9DA;
+  --room-text:#E4DDD0; --room-heading:#F1E9DA; --room-money:#E8D5A3; --room-line:#E8D5A3; --room-fill:rgba(232,213,163,.10);
+  --room-calculate:#C45C26; --room-calculate-hover:#D4682E; --room-grid:transparent; --room-muted:#8C877C; --room-danger:#E5484D; --room-hairline:#E8D5A3;
+}
+html[data-room="theme5"] { /* Tax Sanctuary — parchment + forest */
+  --room-canvas:#F3EDE0; --room-surface:#FBF7EE; --room-surface-hover:#FFFCF5; --room-tab:#5D655F; --room-tab-active:#1F2A24;
+  --room-text:#2A2F2C; --room-heading:#1F2A24; --room-money:#8A6A1F; --room-line:#3D6B4F; --room-fill:rgba(61,107,79,.12);
+  --room-calculate:#8B5A2B; --room-calculate-hover:#9E6A38; --room-grid:transparent; --room-muted:#6B716C; --room-danger:#A3322D; --room-hairline:#3D6B4F;
+}
+html[data-room="theme6"] { /* Integration / Calculus */
+  --room-canvas:#0A0F14; --room-surface:#10171F; --room-surface-hover:#151E28; --room-tab:#7F93A6; --room-tab-active:#EEF3F7;
+  --room-text:#D7DEE6; --room-heading:#EEF3F7; --room-money:#E6C36A; --room-line:#7EC8E3; --room-fill:rgba(126,200,227,.12);
+  --room-calculate:#C45C26; --room-calculate-hover:#D4682E; --room-grid:rgba(126,200,227,.06); --room-muted:#7A8A9A; --room-danger:#E5484D; --room-hairline:#7EC8E3;
+}
+html[data-room="theme7"] { /* Legacy Oxblood */
+  --room-canvas:#1A0C0E; --room-surface:#251316; --room-surface-hover:#2E181C; --room-tab:#A48A8C; --room-tab-active:#F3E8DF;
+  --room-text:#E8DAD6; --room-heading:#F3E8DF; --room-money:#E6C36A; --room-line:#C9A227; --room-fill:rgba(201,162,39,.10);
+  --room-calculate:#C45C26; --room-calculate-hover:#D4682E; --room-grid:transparent; --room-muted:#9A8486; --room-danger:#C0392B; --room-hairline:#C9A227;
+}
+html[data-room="theme8"] { /* Horizon Pacific */
+  --room-canvas:#0B141B; --room-surface:#12202A; --room-surface-hover:#172833; --room-tab:#86A0AC; --room-tab-active:#F0F5F5;
+  --room-text:#D9E2E6; --room-heading:#F0F5F5; --room-money:#E6C36A; --room-line:#E6C36A; --room-fill:rgba(230,195,106,.10);
+  --room-calculate:#C45C26; --room-calculate-hover:#D4682E; --room-grid:transparent; --room-muted:#7C949F; --room-danger:#E5484D; --room-hairline:#E6C36A;
+}
+html[data-room="theme9"] { /* Carbon Instrument — the needle is the only colour that changes */
+  --room-canvas:#0C0D0F; --room-surface:#141619; --room-surface-hover:#1A1D21; --room-tab:#8E939B; --room-tab-active:#F2F2F0;
+  --room-text:#D9DBDF; --room-heading:#F2F2F0; --room-money:#C9A227; --room-line:var(--needle); --room-fill:color-mix(in srgb, var(--needle) 12%, transparent);
+  --room-calculate:#C45C26; --room-calculate-hover:#D4682E; --room-grid:rgba(255,255,255,.04); --room-muted:#7E848D; --room-danger:#E5484D; --room-hairline:var(--needle);
+}
+html[data-room="theme10"] { /* Ivory Clinic — what the client's CPA sees */
+  --room-canvas:#F7F4EE; --room-surface:#FFFFFF; --room-surface-hover:#FBF9F4; --room-tab:#5A6577; --room-tab-active:#0B1220;
+  --room-text:#1C2230; --room-heading:#0B1220; --room-money:#8A6A1F; --room-line:#0B1220; --room-fill:rgba(11,18,32,.08);
+  --room-calculate:#0B1220; --room-calculate-hover:#16213A; --room-grid:transparent; --room-muted:#6A7383; --room-danger:#A3322D; --room-hairline:#0B1220;
+}
+html[data-room="theme11"] { /* Observatory Indigo — ideas are indigo, dollars stay gold */
+  --room-canvas:#0E0F1F; --room-surface:#171935; --room-surface-hover:#1D2042; --room-tab:#8F92B8; --room-tab-active:#F1F0FA;
+  --room-text:#DCDCEA; --room-heading:#F1F0FA; --room-money:#E6C36A; --room-line:#6F74C9; --room-fill:rgba(111,116,201,.12);
+  --room-calculate:#C45C26; --room-calculate-hover:#D4682E; --room-grid:transparent; --room-muted:#8286A8; --room-danger:#E5484D; --room-hairline:#6F74C9;
+}
+html[data-room] {
+  --room-hairline-soft: color-mix(in srgb, var(--room-hairline) 18%, transparent);
+  --room-hairline-mid: color-mix(in srgb, var(--room-hairline) 32%, transparent);
+}
+
+/* ─── Rooms outside the shell: the public house, the entrance, shared links ─ */
+html[data-room]:not([data-room="theme1"]) body { font-family: var(--font-ui); }
+html[data-room="theme10"] body { background: var(--room-canvas); color: var(--room-text); }
+
+/* ─── The shell obeys the room ───────────────────────────────────────────── */
+html[data-room] .rc-portal-theme {
+  --navy-950: var(--room-canvas); --navy-900: var(--room-canvas); --navy-800: var(--room-surface); --navy-700: var(--room-surface-hover);
+  --navy-600: var(--room-surface-hover); --navy-500: var(--room-hairline-mid); --navy-400: var(--room-hairline-mid);
+  --blue-accent: var(--room-line); --blue-accent-hover: var(--room-line);
+  --muted-text: var(--room-muted); --body-text: var(--room-text); --heading-text: var(--room-heading);
+  --border-subtle: var(--room-hairline-soft); --border-medium: var(--room-hairline-mid);
+  --card-bg: var(--room-surface); --card-bg-hover: var(--room-surface-hover);
+  --gold: var(--room-money); --gold-muted: var(--room-money);
+  --background: var(--room-canvas); --foreground: var(--room-text);
+  --card: var(--room-surface); --card-foreground: var(--room-text);
+  --popover: var(--room-surface); --popover-foreground: var(--room-text);
+  --primary: var(--room-calculate); --primary-foreground: #F7F4EE;
+  --secondary: var(--room-surface-hover); --secondary-foreground: var(--room-text);
+  --muted: var(--room-surface-hover); --muted-foreground: var(--room-muted);
+  --accent: var(--room-fill); --accent-foreground: var(--room-heading);
+  --border: var(--room-hairline-soft); --input: var(--room-surface-hover); --ring: var(--room-line);
+  --sidebar: var(--room-canvas); --sidebar-foreground: var(--room-text); --sidebar-primary: var(--room-line);
+  --sidebar-accent: var(--room-surface-hover); --sidebar-border: var(--room-hairline-soft); --sidebar-ring: var(--room-line);
+  color: var(--room-text);
+  background: var(--room-canvas);
+  font-family: var(--font-ui);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+html[data-room] .rc-portal-theme .rc-main { background: var(--room-canvas); font-size: 17px; line-height: 1.65; }
+html[data-room] .rc-portal-theme .rc-sidebar {
+  background: color-mix(in srgb, var(--room-canvas) 92%, black);
+  border-right-color: var(--room-hairline-soft);
+  box-shadow: none;
+}
+html[data-light] .rc-portal-theme .rc-sidebar { background: color-mix(in srgb, var(--room-surface) 70%, var(--room-canvas)); }
+html[data-room] .rc-portal-theme .rc-sidebar-logo,
+html[data-room] .rc-portal-theme .rc-sidebar > div,
+html[data-room] .rc-portal-theme .rc-topbar,
+html[data-room] .rc-portal-theme .rc-bottom-tabs { border-color: var(--room-hairline-soft); }
+html[data-room] .rc-portal-theme .rc-topbar { background: color-mix(in srgb, var(--room-canvas) 84%, transparent); backdrop-filter: blur(18px); }
+html[data-room] .rc-portal-theme .rc-bottom-tabs { background: color-mix(in srgb, var(--room-canvas) 96%, black); }
+html[data-room] .rc-portal-theme .rc-sidebar-item { color: var(--room-tab); font-family: var(--font-ui); font-weight: 450; letter-spacing: .02em; }
+html[data-room] .rc-portal-theme .rc-sidebar-item:hover { color: var(--room-tab-active); background: var(--room-fill); text-shadow: none; }
+html[data-room] .rc-portal-theme .rc-sidebar-item.active { color: var(--room-tab-active); background: var(--room-fill); box-shadow: inset 2px 0 var(--room-line); text-shadow: none; font-weight: 600; }
+html[data-room] .rc-portal-theme .rc-sidebar-item.active svg,
+html[data-room] .rc-portal-theme .rc-tab-item.active { color: var(--room-line); filter: none; }
+html[data-room] .rc-portal-theme .rc-sidebar-section { color: var(--room-muted); border-top-color: var(--room-hairline-soft); }
+html[data-room] .rc-portal-theme .rc-card { background: var(--room-surface); border-color: var(--room-hairline-soft); box-shadow: none; }
+html[data-room] .rc-portal-theme .rc-card:hover { background: var(--room-surface-hover); border-color: var(--room-hairline-mid); }
+html[data-room] .rc-portal-theme .rc-table th { color: var(--room-muted); border-bottom-color: var(--room-hairline-soft); font-family: var(--font-ui); }
+html[data-room] .rc-portal-theme .rc-table td { color: var(--room-text); border-bottom-color: var(--room-hairline-soft); }
+html[data-room] .rc-portal-theme .rc-table tr:hover td { background: var(--room-fill); }
+html[data-room] .rc-portal-theme .rc-page-subtitle { color: var(--room-muted); }
+
+/* Textures: paper grain in the study rooms, a coordinate grid in the math wing, a far horizon on the journey */
+html[data-room] .rc-portal-theme::before { opacity: 0; background-image: none; mask-image: none; }
+html[data-room="theme6"] .rc-portal-theme::before,
+html[data-room="theme9"] .rc-portal-theme::before {
+  opacity: 1;
+  background-image: linear-gradient(var(--room-grid) 1px, transparent 1px), linear-gradient(90deg, var(--room-grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: linear-gradient(to bottom, black, transparent 70%);
+}
+html[data-room="theme9"] .rc-portal-theme::before { background-size: 48px 48px; opacity: .5; }
+html[data-room="theme3"] .rc-portal-theme::before,
+html[data-room="theme5"] .rc-portal-theme::before,
+html[data-room="theme10"] .rc-portal-theme::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+html[data-room="theme3"] .rc-portal-theme::before { opacity: .04; }
+html[data-room="theme5"] .rc-portal-theme::before { opacity: .08; }
+html[data-room="theme10"] .rc-portal-theme::before { opacity: .03; }
+html[data-room="theme8"] .rc-portal-theme::before { opacity: 1; background-image: linear-gradient(180deg, transparent 55%, rgba(230,195,106,.08) 100%); }
+html[data-room="theme11"] .rc-portal-theme .rc-card { border-color: color-mix(in srgb, var(--room-line) 32%, transparent); }
+html[data-room="theme7"] .rc-portal-theme .rc-card { border-color: color-mix(in srgb, #8E1E2A 55%, transparent); }
+html[data-room] .rc-portal-theme .rc-breathe-layer::before,
+html[data-room] .rc-portal-theme .rc-breathe-layer::after { display: none; }
+
+/* No city, no photograph, inside the rooms that forbid it */
+html[data-room="theme5"] [data-testid="page-backdrop"],
+html[data-room="theme10"] [data-testid="page-backdrop"],
+html[data-room="theme7"] [data-testid="page-backdrop"],
+html[data-room="theme3"] [data-testid="page-backdrop"],
+html[data-room="theme2"] .rc-portal-theme [data-testid="page-backdrop"] { display: none; }
+
+/* ─── The five voices ─────────────────────────────────────────────────────── */
+
+/* Tabs: always UI sans, never serif, never metallic */
+html[data-room] [role="tab"] {
+  font-family: var(--font-ui); font-size: 13px; font-weight: 450; letter-spacing: .04em; color: var(--room-tab);
+  text-underline-offset: 6px; transition: color .12s, font-weight .12s;
+}
+html[data-room] [role="tab"]:hover { font-weight: 500; color: var(--room-tab-active); }
+html[data-room] [role="tab"][data-state="active"], html[data-room] [role="tab"][aria-selected="true"] {
+  font-weight: 600; letter-spacing: .02em; color: var(--room-tab-active); box-shadow: inset 0 -2px 0 var(--room-line); background: transparent;
+}
+html[data-room="theme9"] [role="tab"] { font-size: 11px; text-transform: uppercase; letter-spacing: .14em; }
+html[data-room="theme9"] [role="tab"][data-state="active"]::before,
+html[data-room="theme9"] [role="tab"][aria-selected="true"]::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--needle); margin-right: 8px; vertical-align: middle; }
+html[data-room="theme8"] [role="tab"] { font-size: 14px; letter-spacing: 0; text-transform: none; }
+html[data-room="theme5"] [role="tab"] { letter-spacing: .06em; }
+html[data-quiet] [role="tab"][data-state="active"], html[data-quiet] [role="tab"][aria-selected="true"] { box-shadow: none; }
+
+/* Titles: the personality switch */
+html[data-room] .rc-portal-theme :is(h1, h2, h3, h4) { color: var(--room-heading); text-wrap: balance; }
+html[data-room] .rc-portal-theme .rc-page-title { color: var(--room-heading); }
+html[data-room] .rc-portal-theme p { text-wrap: pretty; }
+html[data-room] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-family: var(--font-ui); font-weight: 600; letter-spacing: -.02em; line-height: 1.12; }
+
+/* Navy cockpit: sans, gold 48px hairline under, no serif, no city */
+html[data-room="theme2"] .rc-portal-theme .rc-main :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 48px; height: 1px; background: var(--room-hairline); margin-top: 10px; }
+
+/* Quiet Luxury and education: serif, warm ivory */
+html[data-room="theme3"] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-family: var(--font-display); font-weight: 500; letter-spacing: -.015em; font-optical-sizing: auto; }
+html[data-room="theme3"] .rc-portal-theme .rc-main { font-size: 18px; line-height: 1.75; }
+
+/* Tax Sanctuary: serif H1, forest 64px rule, ink on paper, no glow */
+html[data-room="theme5"] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-family: var(--font-display); font-weight: 500; letter-spacing: -.015em; font-optical-sizing: auto; text-shadow: none; }
+html[data-room="theme5"] .rc-portal-theme .rc-main :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 64px; height: 2px; background: var(--room-line); margin-top: 12px; }
+html[data-room="theme5"] .rc-portal-theme .rc-main { font-size: 18px; line-height: 1.8; }
+html[data-room="theme5"] .rc-portal-theme code, html[data-room="theme5"] .rc-portal-theme .rc-mono { font-family: var(--font-mono); }
+
+/* Calculus: sans, a 2px cyan tick left of the first glyph, faint grid behind */
+html[data-room="theme6"] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { position: relative; padding-left: 18px; font-weight: 550; }
+html[data-room="theme6"] .rc-portal-theme .rc-main :is(h1, .rc-page-title)::before { content: ""; position: absolute; left: 0; top: .18em; width: 2px; height: 1em; background: var(--room-line); }
+
+/* Estate: serif, small gold hairline, no cyan */
+html[data-room="theme7"] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-family: var(--font-display); font-weight: 500; letter-spacing: -.01em; font-optical-sizing: auto; }
+html[data-room="theme7"] .rc-portal-theme .rc-main :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 32px; height: 1px; background: var(--room-hairline); margin-top: 10px; }
+
+/* Journey: italic serif eyebrow + sans H1, horizon wash */
+html[data-room="theme8"] .rc-portal-theme .rc-main { font-size: 18px; line-height: 1.75; }
+html[data-room="theme8"] .rc-portal-theme .rc-eyebrow { font-family: var(--font-display); font-style: italic; font-size: 14px; letter-spacing: 0; text-transform: none; color: var(--room-muted); }
+
+/* Carbon calculator: uppercase eyebrow, a pip in the needle colour, the output number is the real title */
+html[data-room="theme9"] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-size: 30px; }
+html[data-room="theme9"] .rc-portal-theme .rc-main :is(h1, .rc-page-title)::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--needle); box-shadow: 0 0 8px color-mix(in srgb, var(--needle) 60%, transparent); margin-right: 12px; vertical-align: middle; }
+html[data-room="theme9"] .rc-portal-theme .rc-eyebrow,
+html[data-room="theme9"] .rc-portal-theme label { font-family: var(--font-ui); text-transform: uppercase; letter-spacing: .12em; font-size: 11px; color: var(--room-muted); }
+html[data-room="theme9"] .rc-portal-theme .rc-stat-value { font-size: 40px; background: linear-gradient(180deg, #F2E3A6, var(--room-money)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Indigo: frames and headings carry the colour, dollars stay gold */
+html[data-room="theme11"] .rc-portal-theme .rc-main :is(h1:not(.flex), .rc-page-title)::after { content: ""; display: block; width: 48px; height: 1px; background: var(--room-line); margin-top: 10px; }
+
+/* Quiet legal, auth, compliance, vault, health: sans 24, nothing else */
+html[data-quiet] .rc-portal-theme .rc-main :is(h1, .rc-page-title) { font-family: var(--font-ui); font-size: 24px; font-weight: 600; letter-spacing: -.01em; }
+html[data-quiet] .rc-portal-theme .rc-main :is(h1, .rc-page-title)::before,
+html[data-quiet] .rc-portal-theme .rc-main :is(h1, .rc-page-title)::after { display: none; }
+
+/* One metallic word — gold to ivory, clipped to a single span, never a paragraph */
+.rc-metal { background: linear-gradient(100deg, #C9A227 0%, #F2E3A6 45%, #FBF7EE 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+html[data-quiet] .rc-metal { background: none; color: var(--room-heading); }
+
+/* Money: always tabular, always the room's money colour */
+html[data-room] .rc-portal-theme :is(.rc-stat-value, .rc-money) {
+  font-family: var(--font-ui); color: var(--room-money);
+  font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum", "lnum";
+}
+.rc-money-cents { font-size: .6em; font-weight: 400; }
+
+/* Calculate: same geometry everywhere so the hand learns it */
+html[data-room] .rc-portal-theme .rc-btn-primary,
+html[data-room] .rc-calculate {
+  font-family: var(--font-ui); font-size: 15px; font-weight: 600; letter-spacing: .04em; color: #F7F4EE;
+  background: var(--room-calculate); min-height: 48px; border-radius: 10px; padding: 0 28px;
+  transition: transform .12s, background .12s, box-shadow .12s;
+}
+html[data-room] .rc-portal-theme .rc-btn-primary:hover,
+html[data-room] .rc-calculate:hover { background: var(--room-calculate-hover); transform: translateY(-1px); box-shadow: 0 0 8px color-mix(in srgb, var(--room-calculate-hover) 20%, transparent); }
+html[data-room] .rc-portal-theme .rc-btn-secondary { background: var(--room-fill); color: var(--room-heading); border-color: var(--room-hairline-mid); }
+html[data-room] .rc-portal-theme .rc-btn-ghost { color: var(--room-muted); }
+html[data-room] .rc-portal-theme .rc-btn-ghost:hover { background: var(--room-surface-hover); color: var(--room-text); }
+@media (max-width: 640px) { html[data-room] .rc-portal-theme .rc-btn-primary, html[data-room] .rc-calculate { width: 100%; justify-content: center; } }
+
+/* ─── Light rooms: the dark-room utilities the pages were written in become ink on paper ─── */
+html[data-light] #root :is([class*="text-white"], [class*="text-slate-1"], [class*="text-slate-2"], [class*="text-slate-3"], [class*="text-slate-4"],
+  [class*="text-gray-1"], [class*="text-gray-2"], [class*="text-gray-3"], [class*="text-gray-4"], [class*="text-zinc-"], [class*="text-neutral-"],
+  [class*="text-[#c"], [class*="text-[#d"], [class*="text-[#e"], [class*="text-[#f"]):not([class*="bg-emerald-5"]):not([class*="bg-emerald-6"]):not([class*="bg-green-5"]):not(.rc-btn-primary) { color: var(--room-text); }
+html[data-light] #root :is([class*="text-emerald-"], [class*="text-green-"], [class*="text-teal-"], [class*="text-lime-"]) { color: var(--room-line); }
+html[data-light] #root :is([class*="text-amber-"], [class*="text-yellow-"], [class*="text-orange-"]) { color: var(--room-money); }
+html[data-light] #root :is([class*="text-cyan-"], [class*="text-sky-"], [class*="text-blue-"], [class*="text-indigo-"]) { color: #3E5F8A; }
+html[data-light] #root :is([class*="text-rose-"], [class*="text-red-"], [class*="text-pink-"]) { color: var(--room-danger); }
+html[data-light] #root :is([class*="bg-slate-9"], [class*="bg-slate-8"], [class*="bg-slate-7"], [class*="bg-gray-9"], [class*="bg-gray-8"], [class*="bg-zinc-9"],
+  [class*="bg-neutral-9"], [class*="bg-black"], [class*="bg-[#0"], [class*="bg-[#1"], [class*="bg-white/"], [class*="bg-emerald-9"], [class*="bg-green-9"],
+  [class*="bg-emerald-950"], [class*="bg-teal-9"]) { background-color: var(--room-surface); border-color: var(--room-hairline-soft); }
+html[data-light] #root :is([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-green-5"], [class*="bg-green-6"]) { background-color: var(--room-calculate); color: #F7F4EE; }
+html[data-light] #root :is([class*="bg-emerald-500/"], [class*="bg-emerald-400/"], [class*="bg-emerald-600/"], [class*="bg-green-500/"], [class*="bg-emerald-300/"],
+  [class*="bg-amber-500/"], [class*="bg-amber-400/"], [class*="bg-cyan-500/"], [class*="bg-blue-500/"]) { background-color: var(--room-fill); color: inherit; }
+html[data-light] #root :is([class*="border-slate-"], [class*="border-gray-"], [class*="border-white/"], [class*="border-emerald-"], [class*="border-zinc-"], [class*="border-amber-"], [class*="border-cyan-"]) { border-color: var(--room-hairline-soft); }
+html[data-light] #root :is([class*="from-slate-9"], [class*="to-slate-9"], [class*="via-slate-9"], [class*="from-black"], [class*="to-black"], [class*="from-emerald-9"], [class*="to-emerald-9"], [class*="from-[#0"], [class*="to-[#0"]):not([class*="text-transparent"]) { background-image: none; }
+html[data-light] #root [class*="text-transparent"] { background-image: none; color: var(--room-heading); -webkit-text-fill-color: var(--room-heading); }
+html[data-light] #root :is(input, select, textarea) { background-color: var(--room-surface); color: var(--room-text); border-color: var(--room-hairline-mid); }
+html[data-light] #root :is([class*="shadow-emerald"], [class*="shadow-green"], [class*="shadow-cyan"]) { box-shadow: none; }
+html[data-light] #root :is([class*="drop-shadow"], [class*="text-shadow"]) { filter: none; text-shadow: none; }
+
+/* ─── Quiet pass: identity only, no glow, no metallic, no animated fill ───── */
+html[data-quiet] .rc-portal-theme { --room-line: color-mix(in srgb, var(--room-hairline) 60%, transparent); }
+html[data-quiet] .rc-portal-theme::before { display: none; }
+html[data-quiet] :is(.rc-breathe-layer, .rc-breathe-ambient, .rc-breathe-border, .rc-breathe-text),
+html[data-quiet] :is(.rc-breathe-layer::before, .rc-breathe-layer::after) { animation: none !important; }
+html[data-quiet] .rc-portal-theme .rc-stat-value { background: none; color: var(--room-money); }
+html[data-quiet] .rc-integral { display: none; }
+
+/* ─── The specialist cast: 20px pip + word, an eyebrow, never the homepage tile ─ */
+.rc-cast-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-ui); font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--room-muted, #7F8797); }
+.rc-cast-pip { width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 6px color-mix(in srgb, var(--room-canvas, #0B1220) 70%, transparent); }
+.rc-cast-eyebrow { padding: 20px 28px 0; }
+.rc-cast-eyebrow + main, .rc-cast-eyebrow + * .rc-page-header { padding-top: 12px; }
+
+/* ─── The reveal layer and the energy line ───────────────────────────────── */
+.rc-reveal-micro { margin-top: 12px; max-width: 62ch; font-family: var(--font-ui); font-size: 14px; font-weight: 450; font-style: italic; line-height: 1.45; color: var(--room-muted, #7F8797); }
+.rc-reveal-macro { margin-top: 16px; max-width: 70ch; }
+.rc-reveal-macro p { font-family: var(--font-ui); font-size: 15px; line-height: 1.6; color: var(--room-text, #D8DDE6); margin-top: 8px; }
+.rc-engine-footer { margin: 40px 28px 28px; padding-top: 18px; border-top: 1px solid var(--room-hairline-soft, rgba(201,162,39,.18)); }
+.rc-engine-footer-toggle { background: none; border: 0; padding: 0; cursor: pointer; font-family: var(--font-ui); font-size: 13px; font-weight: 500; letter-spacing: .04em; color: var(--room-line, #C9A227); text-underline-offset: 6px; }
+.rc-engine-footer-toggle:hover { text-decoration: underline; }
+.rc-engine-footer-body { margin-top: 12px; max-width: 70ch; }
+.rc-engine-footer-body p { font-family: var(--font-ui); font-size: 15px; line-height: 1.6; color: var(--room-text, #D8DDE6); }
+.rc-integral { display: block; overflow: visible; }
+.rc-integral-stroke { animation: rc-integral-breathe 8s ease-in-out 1.2s infinite; }
+@keyframes rc-integral-breathe { 0%, 100% { opacity: 1; } 50% { opacity: .96; } }
+@media (prefers-reduced-motion: reduce) { .rc-integral-stroke { transition: none !important; animation: none !important; stroke-dashoffset: 0 !important; } }
+
+/* Mono for formulas, citations, raw rates */
+.rc-mono { font-family: var(--font-mono); font-size: .92em; }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'wouter';
 import PageBackdrop from '../components/PageBackdrop';
+import { EngineWhyFooter } from '@/components/rooms/Reveal';
 
 const categories = {
   'RETIREMENT & INCOME': [
@@ -108,6 +109,7 @@ const MassiveCalculatorsPage: React.FC = () => {
             </div>
           );
         })}
+        <EngineWhyFooter />
       </div>
     </div>
   );

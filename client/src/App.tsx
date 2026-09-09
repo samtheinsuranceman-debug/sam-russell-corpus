@@ -1,6 +1,7 @@
 import { AnalyticsLoader } from "@/components/AnalyticsLoader";
 import { WebVitalsReporter } from "@/components/WebVitalsReporter";
 import { SeoSync } from "@/hooks/useSeo";
+import { RoomSync } from "@/components/rooms/RoomTheme";
 import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -654,6 +655,7 @@ function App() {
             <AnalyticsLoader />
             {/* Per-route title/description/canonical and real-visitor Core Web Vitals */}
             <SeoSync />
+            <RoomSync />
             <WebVitalsReporter />
             <Router />
             {/* The every-page AI voice advisor — speak on any page, the AI
