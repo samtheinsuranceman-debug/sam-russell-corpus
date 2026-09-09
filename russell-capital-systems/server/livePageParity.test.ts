@@ -82,7 +82,7 @@ describe("live page ↔ React homepage parity", () => {
       s.replace(/data:image\/webp;base64,[A-Za-z0-9+/=]+/g, "__IMG__").replace(/__IMG_[A-Z_]+__/g, "__IMG__")
         .replace(/<script id="manifesto-json" type="application\/json">[\s\S]*?<\/script>/, "__MANIFESTO__");
     const expected = normalize(template)
-      .replace(/__CALENDLY__/g, "https://calendly.com/sam-RussellCapitalSystems/60min")
+      .replace(/__CALENDLY__/g, "https://calendly.com/sam-russellcapitalsystems/30min")
       .replace(/__ADVISOR_EMAIL__/g, "samtheinsuranceman@gmail.com")
       .replace(/__APP_ORIGIN__/g, "https://web-production-4b215.up.railway.app");
     expect(normalize(read(built))).toBe(expected);

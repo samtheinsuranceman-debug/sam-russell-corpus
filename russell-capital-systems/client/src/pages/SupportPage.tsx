@@ -7,7 +7,7 @@ const SupportPage: React.FC = () => (
       <h2 className="text-xl font-semibold text-[#22c55e] mb-4">Contact Us</h2>
       <p className="mb-2">Phone: <a href="tel:+17035090594" className="text-[#22c55e]">+1 (703) 509-0594</a></p>
       <p className="mb-2">Email: <a href="mailto:support@russellcap.com" className="text-[#22c55e]">support@russellcap.com</a></p>
-      <p>Schedule a Call: <a href="https://calendly.com/sam-RussellCapitalSystems/60min" target="_blank" className="text-[#22c55e]">Book on Calendly</a></p>
+      <p>Schedule a Call: <a href="https://calendly.com/sam-russellcapitalsystems/30min" target="_blank" className="text-[#22c55e]">Book on Calendly</a></p>
     </section>
 
     {/* FAQ */}
