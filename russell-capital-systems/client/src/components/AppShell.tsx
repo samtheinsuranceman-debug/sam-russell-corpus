@@ -31,6 +31,8 @@ import { Sun, Moon, Inbox } from "lucide-react";
 import { MusicPlayerMiniBar } from "@/components/MusicPlayerMiniBar";
 import { JourneyProgressBar } from "@/components/JourneyProgressBar";
 import { FactFinderBadge } from "@/contexts/ClientDataContext";
+import { CastBadge, useRoom } from "@/components/rooms/RoomTheme";
+import { EngineWhyFooter } from "@/components/rooms/Reveal";
 
 /* ═══════════════════════════════════════════════════════════════════
    COLOR-CODED NAVIGATION — Intuitive categories with visual coding
@@ -1274,6 +1276,7 @@ function AssessmentPrefillNotice() {
 export function AppShell({ children, title: _title, subtitle: _subtitle }: { children: React.ReactNode; title?: string; subtitle?: string }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [location] = useLocation();
+  const room = useRoom();
 
   return (
     <div className="rc-portal-theme min-h-screen relative">
@@ -1303,11 +1306,20 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
         {/* Sub-tab awareness disclaimer */}
         <SubTabDisclaimer />
 
+        {/* The room's specialist eyebrow: a badge, never the homepage tile */}
+        {room.cast && (
+          <div className="rc-cast-eyebrow">
+            <CastBadge cast={room.cast} />
+          </div>
+        )}
+
         {/* Page content — ambient breathing micro-shift */}
         <main id="main-content" className="rc-fade-in page-enter rc-breathe-ambient">
           <JourneyProgressBar />
           <AssessmentPrefillNotice />
           {children}
+          {/* Every engine carries the reveal footer: the same idea, not a new one */}
+          {room.theme === "theme9" && <EngineWhyFooter />}
         </main>
       </div>
 
