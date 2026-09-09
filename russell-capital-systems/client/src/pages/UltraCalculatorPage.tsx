@@ -10,6 +10,7 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ULTRA_PROFILE_KEY } from "@/components/VoiceAdvisor";
 import PageBackdrop from "@/components/PageBackdrop";
+import { EngineWhyFooter, OutputWhy, QuestionWhy } from "@/components/rooms/Reveal";
 import {
   defaultModules, runUltraScenario, MODULE_CATALOG, ULTRA_DISCLOSURE,
   type ClientProfile, type UltraModules, type WindowPlan, type ModuleKey, type UltraResult,
@@ -140,6 +141,7 @@ export default function UltraCalculatorPage() {
         <p className="text-xs uppercase tracking-widest text-amber-500">Russell Capital Systems</p>
         <h1 className="mt-1 text-3xl font-bold">The Decade Machine</h1>
         <p className="text-sm font-medium text-amber-300/80">The Ultra Calculator — every calculator, one machine, decade after decade.</p>
+        <QuestionWhy />
         <p className="mt-2 max-w-3xl text-sm text-slate-400">
           Every calculator on this site as one machine. Enter the household once, toggle the strategy modules,
           set your planning windows — each window's goals in your words — and every window starts from the previous
@@ -413,6 +415,7 @@ export default function UltraCalculatorPage() {
         {result && (
           <section className="mt-6 rounded-2xl border border-amber-500/40 bg-slate-900/70 p-6">
             <h2 className="text-lg font-semibold text-amber-400">4 · The chained projection</h2>
+            <OutputWhy runKey={result.windows?.length ?? 1} />
             <div className="mt-4 grid gap-4 md:grid-cols-3">
               {result.windows.map((w) => (
                 <div key={w.windowIndex} className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
@@ -487,6 +490,7 @@ export default function UltraCalculatorPage() {
             Voice out: {providers.data.voiceOut ? "configured ✓" : "not configured"} — keys live only in the server's environment panel.
           </p>
         )}
+        <EngineWhyFooter />
       </div>
     </div>
   );

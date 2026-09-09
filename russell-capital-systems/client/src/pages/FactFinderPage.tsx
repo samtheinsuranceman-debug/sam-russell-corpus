@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ULTRA_PROFILE_KEY } from "@/components/VoiceAdvisor";
 import PageBackdrop from "@/components/PageBackdrop";
+import { QuestionWhy } from "@/components/rooms/Reveal";
 
 const QUESTIONS: Array<{ id: string; q: string; hint?: string }> = [
   { id: "background", q: "Tell us your background — family, work, how you got to where you are financially." },
@@ -61,6 +62,7 @@ export default function FactFinderPage() {
       <div className="relative z-10 mx-auto max-w-3xl">
         <p className="text-xs uppercase tracking-widest text-amber-500">Russell Capital Systems</p>
         <h1 className="mt-1 text-3xl font-bold">Fact Finder</h1>
+        <QuestionWhy />
         <p className="mt-2 text-sm text-slate-400">
           Answer in your own words — type, or use the 🎙 advisor button (bottom-right) to dictate and paste.
           Your answers stay in this browser and become the profile the AI advisor and the{" "}
