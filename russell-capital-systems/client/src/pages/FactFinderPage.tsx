@@ -57,7 +57,7 @@ export default function FactFinderPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-slate-950 px-4 py-10 text-slate-100">
+    <div className="rc-room-frame relative min-h-screen bg-slate-950 px-4 py-10 text-slate-100">
       <PageBackdrop src="/rcs-city-emerald.webp" phoneSrc="/rcs-city-spire.webp" alt="Emerald-lit city skyline at dawn with a river winding through it" fade="#020617" position="center 30%" />
       <div className="relative z-10 mx-auto max-w-3xl">
         <p className="text-xs uppercase tracking-widest text-amber-500">Russell Capital Systems</p>

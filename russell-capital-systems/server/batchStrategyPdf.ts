@@ -1,12 +1,13 @@
 import PDFDocument from "pdfkit";
+import { IVORY, IVORY_COMPANY, ivoryPage } from "./_core/ivory";
 
-const GREEN = "#22c55e";
-const DARK = "#0a1628";
-const BLUE = "#3b82f6";
-const AMBER = "#f59e0b";
-const GRAY = "#7a95b8";
-const WHITE = "#ffffff";
-const PURPLE = "#a855f7";
+const GREEN = IVORY.positive;
+const DARK = IVORY.canvas;
+const BLUE = IVORY.navy;
+const AMBER = IVORY.money;
+const GRAY = IVORY.muted;
+const WHITE = IVORY.heading;
+const PURPLE = IVORY.money;
 
 function fmtFull(n: number): string {
   return `$${Math.round(n).toLocaleString()}`;
@@ -50,7 +51,9 @@ export async function generateBatchStrategyPdf(params: {
 
   // ── Cover Page ──
   doc.rect(0, 0, 612, 792).fill(DARK);
-  doc.fontSize(10).fillColor(GREEN).text("RUSSELL CAPITAL SYSTEMS", 50, 80, { align: "center" });
+  doc.rect(0, 0, 612, 72).fill(IVORY.band);
+  doc.fontSize(12).fillColor(IVORY.bandText).font("Helvetica-Bold").text(IVORY_COMPANY, 50, 28);
+  doc.font("Helvetica");
   doc.moveDown(2);
   doc.fontSize(28).fillColor(WHITE).text("Strategy Portfolio Report", 50, 150, { align: "center" });
   doc.moveDown(0.5);
@@ -176,7 +179,7 @@ export async function generateBatchStrategyPdf(params: {
         const col = mi % 3;
         if (col === 0 && mi > 0) y += 50;
         const bx = 50 + col * (boxW + 20);
-        doc.roundedRect(bx, y, boxW, 42, 4).fillAndStroke("#0f1e35", "#12233e");
+        doc.roundedRect(bx, y, boxW, 42, 4).fillAndStroke(IVORY.rowAlt, IVORY.hairline);
         doc.fontSize(7).fillColor(GRAY).text(m.label, bx + 8, y + 6, { width: boxW - 16 });
         doc.fontSize(12).fillColor(m.color).text(m.value, bx + 8, y + 20, { width: boxW - 16 });
       });
@@ -198,7 +201,7 @@ export async function generateBatchStrategyPdf(params: {
         xPos += colWidths[ci];
       });
       y += 14;
-      doc.moveTo(50, y).lineTo(562, y).strokeColor("#12233e").lineWidth(0.5).stroke();
+      doc.moveTo(50, y).lineTo(562, y).strokeColor(IVORY.hairline).lineWidth(0.5).stroke();
       y += 4;
 
       // Show key years: 1, 5, 10, 15, 20 (or last)
@@ -240,7 +243,7 @@ export async function generateBatchStrategyPdf(params: {
       xPos += compWidths[ci];
     });
     y += 14;
-    doc.moveTo(50, y).lineTo(562, y).strokeColor("#12233e").lineWidth(0.5).stroke();
+    doc.moveTo(50, y).lineTo(562, y).strokeColor(IVORY.hairline).lineWidth(0.5).stroke();
     y += 6;
 
     for (const s of strategies) {
@@ -270,7 +273,7 @@ export async function generateBatchStrategyPdf(params: {
         return aNet >= bNet ? a : b;
       });
       y += 20;
-      doc.roundedRect(50, y, W, 40, 6).fillAndStroke("#22c55e15", GREEN);
+      doc.roundedRect(50, y, W, 40, 6).fillAndStroke("#DDE8DF", GREEN);
       doc.fontSize(10).fillColor(GREEN).text(
         `★ Recommended: ${best.strategyLabel} — Highest projected net worth of ${fmtFull((best.summaryJson as any)?.estimatedNetWorth ?? 0)}`,
         60, y + 12, { width: W - 20 }

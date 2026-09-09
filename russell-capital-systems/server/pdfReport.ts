@@ -1,10 +1,11 @@
 import PDFDocument from "pdfkit";
+import { IVORY, IVORY_COMPANY, ivoryPage } from "./_core/ivory";
 import { getClientById, getStrategiesByClient, getClientNotes } from "./db";
 
-const GREEN = "#22c55e";
-const DARK = "#0a1628";
-const GRAY = "#7a95b8";
-const WHITE = "#ffffff";
+const GREEN = IVORY.positive;
+const DARK = IVORY.band;
+const GRAY = IVORY.muted;
+const WHITE = IVORY.heading;
 
 function fmt(n: number): string {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -27,15 +28,17 @@ export async function generateClientReport(clientId: number, workspaceId: number
     doc.on("error", reject);
 
     // ─── Header ──────────────────────────────────────────────────────────
+    ivoryPage(doc);
     doc.rect(0, 0, doc.page.width, 80).fill(DARK);
-    doc.fontSize(22).fillColor(GREEN).text("Russell Capital Systems™", 50, 25, { continued: false });
-    doc.fontSize(9).fillColor(GRAY).text("Turn Capital Into Income™", 50, 52);
-    doc.fontSize(9).fillColor(GRAY).text(`Report generated ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, 50, 65);
+    doc.fontSize(22).fillColor(IVORY.bandText).font("Helvetica-Bold").text("Russell Capital Systems™", 50, 25, { continued: false });
+    doc.font("Helvetica");
+    doc.fontSize(9).fillColor(IVORY.bandMuted).text("Turn Capital Into Income™", 50, 52);
+    doc.fontSize(9).fillColor(IVORY.bandMuted).text(`Report generated ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, 50, 65);
 
     doc.moveDown(2);
 
     // ─── Client Profile ──────────────────────────────────────────────────
-    doc.fontSize(16).fillColor("#1a3055").text("Client Profile", 50);
+    doc.fontSize(16).fillColor(IVORY.heading).text("Client Profile", 50);
     doc.moveDown(0.5);
 
     const netWorth = Number(client.iraBalance ?? 0) + Number(client.rothBalance ?? 0) +
@@ -56,13 +59,13 @@ export async function generateClientReport(clientId: number, workspaceId: number
 
     for (const [label, value] of profileRows) {
       doc.fontSize(10).fillColor(GRAY).text(label, 60, undefined, { continued: true, width: 200 });
-      doc.fillColor("#1a3055").text(value, { align: "left" });
+      doc.fillColor(IVORY.heading).text(value, { align: "left" });
     }
 
     doc.moveDown(1.5);
 
     // ─── Metric Projections ──────────────────────────────────────────────
-    doc.fontSize(16).fillColor("#1a3055").text("Financial Projections", 50);
+    doc.fontSize(16).fillColor(IVORY.heading).text("Financial Projections", 50);
     doc.moveDown(0.5);
 
     const age = client.age ?? 45;
@@ -81,14 +84,14 @@ export async function generateClientReport(clientId: number, workspaceId: number
 
     for (const [label, value, note] of projections) {
       doc.fontSize(11).fillColor(GREEN).text(`● ${label}`, 60);
-      doc.fontSize(10).fillColor("#1a3055").text(`  ${value} — ${note}`, 75);
+      doc.fontSize(10).fillColor(IVORY.heading).text(`  ${value} — ${note}`, 75);
       doc.moveDown(0.3);
     }
 
     doc.moveDown(1.5);
 
     // ─── Strategy History ────────────────────────────────────────────────
-    doc.fontSize(16).fillColor("#1a3055").text("Strategy History", 50);
+    doc.fontSize(16).fillColor(IVORY.heading).text("Strategy History", 50);
     doc.moveDown(0.5);
 
     if (strategies.length === 0) {
@@ -96,7 +99,7 @@ export async function generateClientReport(clientId: number, workspaceId: number
     } else {
       for (const s of strategies.slice(0, 5)) {
         const date = new Date(s.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-        doc.fontSize(11).fillColor("#1a3055").text(`${date} — ${s.generatedBy ?? "AI"}`, 60);
+        doc.fontSize(11).fillColor(IVORY.heading).text(`${date} — ${s.generatedBy ?? "AI"}`, 60);
         if (s.summary) {
           doc.fontSize(9).fillColor(GRAY).text(s.summary.slice(0, 300), 75, undefined, { width: 450 });
         }
@@ -108,9 +111,9 @@ export async function generateClientReport(clientId: number, workspaceId: number
     }
 
     // ─── Recent Notes ────────────────────────────────────────────────────
-    if (doc.y > 600) doc.addPage();
+    if (doc.y > 600) doc.addPage(), ivoryPage(doc);
     doc.moveDown(1);
-    doc.fontSize(16).fillColor("#1a3055").text("Recent Activity Notes", 50);
+    doc.fontSize(16).fillColor(IVORY.heading).text("Recent Activity Notes", 50);
     doc.moveDown(0.5);
 
     if (notes.length === 0) {
@@ -118,10 +121,10 @@ export async function generateClientReport(clientId: number, workspaceId: number
     } else {
       for (const n of notes.slice(0, 10)) {
         const date = new Date(n.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-        const typeColors: Record<string, string> = { call: "#22c55e", meeting: "#3b82f6", email: "#a78bfa", task: "#f0c040" };
+        const typeColors: Record<string, string> = { call: IVORY.positive, meeting: IVORY.navy, email: IVORY.steel, task: IVORY.money };
         const color = typeColors[n.noteType ?? "general"] ?? GRAY;
         doc.fontSize(9).fillColor(color).text(`[${(n.noteType ?? "note").toUpperCase()}] ${date}`, 60, undefined, { continued: true });
-        doc.fillColor("#1a3055").text(` — ${n.content.slice(0, 200)}`);
+        doc.fillColor(IVORY.heading).text(` — ${n.content.slice(0, 200)}`);
         doc.moveDown(0.3);
       }
     }

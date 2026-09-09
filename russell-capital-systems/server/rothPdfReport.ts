@@ -1,14 +1,15 @@
 import PDFDocument from "pdfkit";
+import { IVORY, IVORY_COMPANY, ivoryPage } from "./_core/ivory";
 
-const GREEN = "#22c55e";
-const DARK = "#0a1628";
-const BLUE = "#3b82f6";
-const AMBER = "#f59e0b";
-const RED = "#ef4444";
-const GRAY = "#7a95b8";
-const WHITE = "#ffffff";
-const PURPLE = "#8b5cf6";
-const CYAN = "#06b6d4";
+const GREEN = IVORY.positive;
+const DARK = IVORY.band;
+const BLUE = IVORY.navy;
+const AMBER = IVORY.money;
+const RED = IVORY.negative;
+const GRAY = IVORY.muted;
+const WHITE = IVORY.heading;
+const PURPLE = IVORY.money;
+const CYAN = IVORY.steel;
 
 function fmtFull(n: number): string {
   return `$${Math.round(n).toLocaleString()}`;
@@ -205,11 +206,13 @@ export async function generateRothReport(params: {
     // ═══════════════════════════════════════════════════════════════
     // PAGE 1: COVER & STRATEGY SUMMARY
     // ═══════════════════════════════════════════════════════════════
+    ivoryPage(doc);
     doc.rect(0, 0, doc.page.width, 100).fill(DARK);
-    doc.fontSize(24).fillColor(GREEN).text("Russell Capital Systems™", 40, 22);
-    doc.fontSize(10).fillColor(WHITE).text("Turn Capital Into Income\u2122", 40, 50);
-    doc.fontSize(12).fillColor(WHITE).text(strategyLabel, 40, 70);
-    doc.fontSize(8).fillColor(GRAY).text(
+    doc.fontSize(24).fillColor(IVORY.bandText).font("Helvetica-Bold").text("Russell Capital Systems™", 40, 22);
+    doc.font("Helvetica");
+    doc.fontSize(10).fillColor(IVORY.bandText).text("Turn Capital Into Income\u2122", 40, 50);
+    doc.fontSize(12).fillColor(IVORY.bandText).text(strategyLabel, 40, 70);
+    doc.fontSize(8).fillColor(IVORY.bandMuted).text(
       `Prepared ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}` +
       (clientName ? ` | Client: ${clientName}` : "") +
       ` | Age ${age} | Income $${income.toLocaleString()} | ${filingStatus}`,
@@ -240,7 +243,7 @@ export async function generateRothReport(params: {
 
     summaryItems.forEach(([label, value], i) => {
       const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill(IVORY.rowAlt);
       doc.fontSize(9).fillColor(GRAY).text(label, 50, rowY, { width: 200 });
       doc.fontSize(9).fillColor(WHITE).text(value, 260, rowY, { width: 250 });
       doc.moveDown(0.3);
@@ -248,7 +251,7 @@ export async function generateRothReport(params: {
 
     // 20-Year Wealth Summary Box
     doc.moveDown(1);
-    doc.rect(40, doc.y - 4, 515, 80).fill("#052e16").lineWidth(1).stroke(GREEN);
+    doc.rect(40, doc.y - 4, 515, 80).fill(IVORY.fill).lineWidth(1).stroke(GREEN);
     const boxY = doc.y;
     doc.fontSize(12).fillColor(GREEN).text("20-Year Total Wealth Projection", 60, boxY);
     doc.fontSize(20).fillColor(WHITE).text(fmtFull(totalWealth), 60, boxY + 20);
@@ -262,9 +265,10 @@ export async function generateRothReport(params: {
     // PAGE 2: IUL PROJECTION TABLE
     // ═══════════════════════════════════════════════════════════════
     doc.addPage();
+    ivoryPage(doc);
     doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(GREEN).text(`${iulYears}-Year IUL Projection — A Mutual Life Accumulator III`, 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text(`${(IUL_AVG_RETURN * 100).toFixed(0)}% illustrated rate | 8%/6%/0% premium loads | 5% policy loan rate`, 40, 36);
+    doc.fontSize(14).fillColor(IVORY.bandText).text(`${iulYears}-Year IUL Projection — A Mutual Life Accumulator III`, 40, 18);
+    doc.fontSize(8).fillColor(IVORY.bandMuted).text(`${(IUL_AVG_RETURN * 100).toFixed(0)}% illustrated rate | 8%/6%/0% premium loads | 5% policy loan rate`, 40, 36);
     doc.moveDown(2);
 
     const iulCols = ["Yr", "Premium", "Source", "Load", "COI", "Interest", "Acct Value", "Loan Bal", "Net Cash"];
@@ -272,7 +276,7 @@ export async function generateRothReport(params: {
     const iulColW = [25, 45, 85, 40, 40, 55, 70, 65, 70];
 
     const drawIulHeader = () => {
-      doc.rect(40, doc.y - 2, 515, 14).fill(DARK);
+      doc.rect(40, doc.y - 2, 515, 14).fill(IVORY.fill);
       const headerY = doc.y;
       iulCols.forEach((col, i) => {
         doc.fontSize(7).fillColor(GREEN).text(col, iulColX[i], headerY - 12, { width: iulColW[i] });
@@ -285,10 +289,11 @@ export async function generateRothReport(params: {
     iulRows.forEach((row: any, i: number) => {
       if (doc.y > 740) {
         doc.addPage();
+    ivoryPage(doc);
         drawIulHeader();
       }
       const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill("#0f1e35");
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill(IVORY.rowAlt);
       const vals = [
         String(row.year), fmtFull(row.premium), row.premiumSource.substring(0, 18),
         fmtFull(row.loadFee), fmtFull(row.coiCost), fmtFull(row.interestEarned),
@@ -305,9 +310,10 @@ export async function generateRothReport(params: {
     // PAGE 3: STR PROJECTION + ROTH
     // ═══════════════════════════════════════════════════════════════
     doc.addPage();
+    ivoryPage(doc);
     doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(GREEN).text("20-Year STR Property Projection", 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text(`${totalPropertyCount} propert${totalPropertyCount > 1 ? "ies" : "y"} | ${(realEstateAppreciation * 100).toFixed(0)}% appreciation | ${(rentalGrossYield * 100).toFixed(0)}% gross yield`, 40, 36);
+    doc.fontSize(14).fillColor(IVORY.bandText).text("20-Year STR Property Projection", 40, 18);
+    doc.fontSize(8).fillColor(IVORY.bandMuted).text(`${totalPropertyCount} propert${totalPropertyCount > 1 ? "ies" : "y"} | ${(realEstateAppreciation * 100).toFixed(0)}% appreciation | ${(rentalGrossYield * 100).toFixed(0)}% gross yield`, 40, 36);
     doc.moveDown(2);
 
     const strCols = ["Yr", "Prop Value", "Rental Inc", "Int-Only", "HELOC", "Net Cash", "Princ Owed", "Equity"];
@@ -315,7 +321,7 @@ export async function generateRothReport(params: {
     const strColW = [25, 65, 75, 75, 65, 65, 65, 60];
 
     const drawStrHeader = () => {
-      doc.rect(40, doc.y - 2, 515, 14).fill(DARK);
+      doc.rect(40, doc.y - 2, 515, 14).fill(IVORY.fill);
       const headerY = doc.y;
       strCols.forEach((col, i) => {
         doc.fontSize(7).fillColor(GREEN).text(col, strColX[i], headerY - 12, { width: strColW[i] });
@@ -328,10 +334,11 @@ export async function generateRothReport(params: {
     strRows.forEach((row: any, i: number) => {
       if (doc.y > 740) {
         doc.addPage();
+    ivoryPage(doc);
         drawStrHeader();
       }
       const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill("#0f1e35");
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill(IVORY.rowAlt);
       const vals = [
         String(row.year), fmtFull(row.propertyValue), fmtFull(row.rentalIncome),
         fmtFull(row.interestOnlyPayment), fmtFull(row.helocPayment),
@@ -353,7 +360,7 @@ export async function generateRothReport(params: {
     const rothDisplay = rothRows.filter((_, i) => (i + 1) % 5 === 0 || i === 0);
     rothDisplay.forEach((row, i) => {
       const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill(IVORY.rowAlt);
       doc.fontSize(9).fillColor(GRAY).text(`Year ${row.year}`, 50, rowY, { width: 100 });
       doc.fontSize(9).fillColor(AMBER).text(fmtFull(row.balance), 160, rowY, { width: 150 });
       doc.moveDown(0.3);
@@ -363,9 +370,10 @@ export async function generateRothReport(params: {
     // PAGE 4: COMBINED SUMMARY
     // ═══════════════════════════════════════════════════════════════
     doc.addPage();
+    ivoryPage(doc);
     doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(GREEN).text("Combined Strategy Summary", 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text(`${iulYears}-year projection | ${strategyLabel}`, 40, 36);
+    doc.fontSize(14).fillColor(IVORY.bandText).text("Combined Strategy Summary", 40, 18);
+    doc.fontSize(8).fillColor(IVORY.bandMuted).text(`${iulYears}-year projection | ${strategyLabel}`, 40, 36);
     doc.moveDown(2);
 
     const grandItems: [string, string, string][] = [
@@ -385,7 +393,7 @@ export async function generateRothReport(params: {
 
     grandItems.forEach(([label, value, color], i) => {
       const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 16).fill("#0f1e35");
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 16).fill(IVORY.rowAlt);
       const isTotal = label.includes("Total Wealth") || label.includes("Multiplier");
       doc.fontSize(isTotal ? 10 : 9).fillColor(GRAY).text(label, 50, rowY, { width: 280 });
       doc.fontSize(isTotal ? 11 : 9).fillColor(color).text(value, 340, rowY, { width: 200 });
@@ -396,9 +404,10 @@ export async function generateRothReport(params: {
     // PAGE 5: RATE STRESS TEST (8% / 10% / 12% / 14%)
     // ═══════════════════════════════════════════════════════════════
     doc.addPage();
+    ivoryPage(doc);
     doc.rect(0, 0, doc.page.width, 50).fill(DARK);
     doc.fontSize(14).fillColor(CYAN).text("Rate Sensitivity — IUL Performance at 8% / 10% / 12% / 14%", 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text("Deterministic projections showing how different illustrated rates affect your IUL cash values", 40, 36);
+    doc.fontSize(8).fillColor(IVORY.bandMuted).text("Deterministic projections showing how different illustrated rates affect your IUL cash values", 40, 36);
     doc.moveDown(2);
 
     // Summary comparison table
@@ -409,7 +418,7 @@ export async function generateRothReport(params: {
     const stressColX = [40, 120, 230, 350, 460];
     const stressColW = [80, 110, 120, 110, 80];
     const stressHeaders = ["Rate", "Account Value", "Net Cash Value", "Total Premiums", "Multiplier"];
-    doc.rect(40, doc.y - 2, 515, 16).fill(DARK);
+    doc.rect(40, doc.y - 2, 515, 16).fill(IVORY.fill);
     const shY = doc.y;
     stressHeaders.forEach((h, i) => {
       doc.fontSize(8).fillColor(CYAN).text(h, stressColX[i], shY, { width: stressColW[i] });
@@ -420,9 +429,9 @@ export async function generateRothReport(params: {
       const rowY = doc.y;
       const isBase = s.rate === IUL_AVG_RETURN;
       if (isBase) {
-        doc.rect(40, rowY - 2, 515, 16).fill("#164e63");
+        doc.rect(40, rowY - 2, 515, 16).fill("#DCE6F0");
       } else if (i % 2 === 0) {
-        doc.rect(40, rowY - 2, 515, 16).fill("#0f1e35");
+        doc.rect(40, rowY - 2, 515, 16).fill(IVORY.rowAlt);
       }
       const mult = s.totalPremiums > 0 ? (s.finalAV / s.totalPremiums).toFixed(1) + "x" : "N/A";
       const color = isBase ? CYAN : s.rate >= 0.12 ? GREEN : s.rate >= 0.10 ? AMBER : RED;
@@ -444,7 +453,7 @@ export async function generateRothReport(params: {
     const mColW = [80, 100, 100, 100, 100];
 
     // Header
-    doc.rect(40, doc.y - 2, 515, 16).fill(DARK);
+    doc.rect(40, doc.y - 2, 515, 16).fill(IVORY.fill);
     const mhY = doc.y;
     doc.fontSize(8).fillColor(CYAN).text("Year", mColX[0], mhY, { width: mColW[0] });
     stressResults.forEach((s, i) => {
@@ -454,7 +463,7 @@ export async function generateRothReport(params: {
 
     milestones.forEach((yr, mi) => {
       const rowY = doc.y;
-      if (mi % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
+      if (mi % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill(IVORY.rowAlt);
       doc.fontSize(9).fillColor(WHITE).text(`Year ${yr}`, mColX[0], rowY, { width: mColW[0] });
       stressResults.forEach((s, i) => {
         const val = s.yearly[yr - 1]?.ncv ?? 0;
@@ -479,9 +488,10 @@ export async function generateRothReport(params: {
     // PAGE 6: MONTE CARLO SIMULATION
     // ═══════════════════════════════════════════════════════════════
     doc.addPage();
+    ivoryPage(doc);
     doc.rect(0, 0, doc.page.width, 50).fill(DARK);
     doc.fontSize(14).fillColor(PURPLE).text("Monte Carlo Simulation — IUL Net Cash Value", 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text("500 simulations | 15% S&P 500 volatility | 0% IUL floor", 40, 36);
+    doc.fontSize(8).fillColor(IVORY.bandMuted).text("500 simulations | 15% S&P 500 volatility | 0% IUL floor", 40, 36);
     doc.moveDown(2);
 
     // Run Monte Carlo
@@ -530,7 +540,7 @@ export async function generateRothReport(params: {
     const mcColW = [40, 65, 70, 70, 75, 75, 75];
 
     const drawMcHeader = () => {
-      doc.rect(40, doc.y - 2, 515, 14).fill(DARK);
+      doc.rect(40, doc.y - 2, 515, 14).fill(IVORY.fill);
       const headerY = doc.y;
       mcCols.forEach((col, i) => {
         doc.fontSize(7).fillColor(PURPLE).text(col, mcColX[i], headerY - 12, { width: mcColW[i] });
@@ -542,9 +552,10 @@ export async function generateRothReport(params: {
     // Show every other year + final year
     const mcDisplayYears = mcPercentiles.filter((_, i) => i % 2 === 0 || i === mcPercentiles.length - 1);
     mcDisplayYears.forEach((row, i) => {
-      if (doc.y > 700) { doc.addPage(); drawMcHeader(); }
+      if (doc.y > 700) { doc.addPage();
+    ivoryPage(doc); drawMcHeader(); }
       const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill("#0f1e35");
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 12).fill(IVORY.rowAlt);
       const vals = [
         String(row.year), fmtCompact(row.p10), fmtCompact(row.p25),
         fmtCompact(row.p50), fmtCompact(row.p75), fmtCompact(row.p90), fmtCompact(row.actual),
@@ -572,7 +583,7 @@ export async function generateRothReport(params: {
     ];
     mcSummaryItems.forEach(([label, value, color], i) => {
       const rowY = doc.y;
-      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill("#0f1e35");
+      if (i % 2 === 0) doc.rect(40, rowY - 2, 515, 14).fill(IVORY.rowAlt);
       doc.fontSize(9).fillColor(GRAY).text(label, 50, rowY, { width: 250 });
       doc.fontSize(9).fillColor(color).text(value, 310, rowY, { width: 200 });
       doc.moveDown(0.3);
@@ -591,9 +602,10 @@ export async function generateRothReport(params: {
     // PAGE 7: SENSITIVITY ANALYSIS
     // ═══════════════════════════════════════════════════════════════
     doc.addPage();
+    ivoryPage(doc);
     doc.rect(0, 0, doc.page.width, 50).fill(DARK);
     doc.fontSize(14).fillColor(CYAN).text("Sensitivity Analysis — IUL Net Cash Value", 40, 18);
-    doc.fontSize(8).fillColor(GRAY).text("Median of 200 simulations per cell | Return Rate vs. Volatility", 40, 36);
+    doc.fontSize(8).fillColor(IVORY.bandMuted).text("Median of 200 simulations per cell | Return Rate vs. Volatility", 40, 36);
     doc.moveDown(2);
 
     const sensReturnRates = [0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12];
@@ -646,7 +658,7 @@ export async function generateRothReport(params: {
     sensVolatilities.forEach((v, i) => {
       const isBase = v === 0.15;
       const x = sensTableX + sensLabelW + i * sensCellW;
-      if (isBase) doc.rect(x, sensHeaderY - 2, sensCellW, sensCellH).fill("#164e63");
+      if (isBase) doc.rect(x, sensHeaderY - 2, sensCellW, sensCellH).fill("#DCE6F0");
       doc.fontSize(7).fillColor(isBase ? CYAN : GRAY).text(`${(v * 100).toFixed(0)}%`, x + 4, sensHeaderY + 2, { width: sensCellW - 8, align: "center" });
     });
     doc.y = sensHeaderY + sensCellH;
@@ -655,20 +667,20 @@ export async function generateRothReport(params: {
     sensReturnRates.forEach((ret, ri) => {
       const rowY = doc.y;
       const isBaseRow = ret === 0.10;
-      doc.rect(sensTableX, rowY - 2, sensLabelW, sensCellH).fill(isBaseRow ? "#164e63" : "#0f1e35");
+      doc.rect(sensTableX, rowY - 2, sensLabelW, sensCellH).fill(isBaseRow ? "#DCE6F0" : IVORY.rowAlt);
       doc.fontSize(7).fillColor(isBaseRow ? CYAN : GRAY).text(`${(ret * 100).toFixed(0)}%`, sensTableX + 4, rowY + 2, { width: sensLabelW - 8 });
       sensGrid[ri].forEach((val, ci) => {
         const x = sensTableX + sensLabelW + ci * sensCellW;
         const isBase = ret === 0.10 && sensVolatilities[ci] === 0.15;
         const ratio = sensMax === sensMin ? 1 : (val - sensMin) / (sensMax - sensMin);
-        let bgColor = "#1c1917";
+        let bgColor = IVORY.surface;
         let textColor = RED;
-        if (isBase) { bgColor = "#164e63"; textColor = CYAN; }
-        else if (ratio >= 0.8) { bgColor = "#052e16"; textColor = GREEN; }
-        else if (ratio >= 0.6) { bgColor = "#0a3622"; textColor = "#86efac"; }
-        else if (ratio >= 0.4) { bgColor = "#0c2d48"; textColor = BLUE; }
-        else if (ratio >= 0.2) { bgColor = "#2a1a00"; textColor = AMBER; }
-        else { bgColor = "#2a0a0a"; textColor = RED; }
+        if (isBase) { bgColor = "#DCE6F0"; textColor = CYAN; }
+        else if (ratio >= 0.8) { bgColor = "#DDE8DF"; textColor = GREEN; }
+        else if (ratio >= 0.6) { bgColor = "#E6EFE7"; textColor = IVORY.positive; }
+        else if (ratio >= 0.4) { bgColor = "#E1E8F0"; textColor = BLUE; }
+        else if (ratio >= 0.2) { bgColor = "#F1E9D6"; textColor = AMBER; }
+        else { bgColor = "#F1DFDD"; textColor = RED; }
         doc.rect(x, rowY - 2, sensCellW, sensCellH).fill(bgColor);
         doc.fontSize(7).fillColor(textColor).text(fmtCompact(val), x + 4, rowY + 2, { width: sensCellW - 8, align: "center" });
       });
@@ -687,7 +699,7 @@ export async function generateRothReport(params: {
     // Legend
     doc.moveDown(0.5);
     const legendItems: [string, string][] = [
-      ["High (top 20%)", GREEN], ["Above Avg", "#86efac"],
+      ["High (top 20%)", GREEN], ["Above Avg", IVORY.positive],
       ["Medium", BLUE], ["Below Avg", AMBER], ["Stress", RED],
     ];
     let legendX = 40;
@@ -701,8 +713,9 @@ export async function generateRothReport(params: {
     // PAGE 8: DISCLAIMERS
     // ═══════════════════════════════════════════════════════════════
     doc.addPage();
+    ivoryPage(doc);
     doc.rect(0, 0, doc.page.width, 50).fill(DARK);
-    doc.fontSize(14).fillColor(WHITE).text("Important Disclosures", 40, 18);
+    doc.fontSize(14).fillColor(IVORY.bandText).text("Important Disclosures", 40, 18);
     doc.moveDown(2);
 
     const disclaimers = [

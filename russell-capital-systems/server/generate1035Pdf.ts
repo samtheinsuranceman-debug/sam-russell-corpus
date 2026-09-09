@@ -4,6 +4,7 @@
  * candidate comparison, and Solar Strategy pathway.
  */
 import PDFDocument from "pdfkit";
+import { IVORY, IVORY_COMPANY, ivoryPage } from "./_core/ivory";
 import type { Request, Response } from "express";
 import {
   scoreReplacementOpportunity,
@@ -14,29 +15,31 @@ import {
 } from "@shared/replacementScoring";
 import type { StateCode } from "@shared/annuityData";
 
-const BRAND_GREEN = "#22c55e";
-const BRAND_DARK = "#0a1628";
-const GRAY = "#64748b";
-const RED = "#ef4444";
-const AMBER = "#eab308";
-const BLUE = "#3b82f6";
+const BRAND_GREEN = IVORY.positive;
+const BRAND_DARK = IVORY.band;
+const GRAY = IVORY.muted;
+const RED = IVORY.negative;
+const AMBER = IVORY.money;
+const BLUE = IVORY.navy;
 
 const fmt = (n: number) => `$${n.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 const fmtPct = (n: number) => `${n.toFixed(1)}%`;
 
 function verdictColor(verdict: string): string {
   if (verdict === "REPLACE_NOW") return RED;
-  if (verdict === "STRONG_CANDIDATE") return "#f97316";
+  if (verdict === "STRONG_CANDIDATE") return IVORY.money;
   if (verdict === "MONITOR") return AMBER;
   if (verdict === "LIKELY_KEEP") return BLUE;
   return BRAND_GREEN;
 }
 
 function drawHeader(doc: PDFKit.PDFDocument) {
-  doc.rect(0, 0, doc.page.width, 80).fill("#0f172a");
-  doc.fontSize(22).fillColor(BRAND_GREEN).text("Russell Capital Systems™", 50, 20, { width: 400 });
-  doc.fontSize(10).fillColor("#94a3b8").text("1035 Exchange Analysis Report", 50, 48, { width: 400 });
-  doc.fontSize(9).fillColor("#64748b").text(new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }), 400, 30, { width: 160, align: "right" });
+  ivoryPage(doc);
+  doc.rect(0, 0, doc.page.width, 80).fill(IVORY.band);
+  doc.fontSize(22).fillColor(IVORY.bandText).font("Helvetica-Bold").text("Russell Capital Systems™", 50, 20, { width: 400 });
+  doc.font("Helvetica");
+  doc.fontSize(10).fillColor(IVORY.bandMuted).text("1035 Exchange Analysis Report", 50, 48, { width: 400 });
+  doc.fontSize(9).fillColor(IVORY.bandMuted).text(new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }), 400, 30, { width: 160, align: "right" });
   doc.moveDown(2);
   doc.y = 100;
 }
@@ -45,13 +48,13 @@ function drawSectionTitle(doc: PDFKit.PDFDocument, title: string) {
   doc.moveDown(0.5);
   const y = doc.y;
   doc.rect(50, y, 3, 16).fill(BRAND_GREEN);
-  doc.fontSize(13).fillColor("#1e293b").text(title, 60, y, { width: 480 });
+  doc.fontSize(13).fillColor(IVORY.ink).text(title, 60, y, { width: 480 });
   doc.moveDown(0.8);
 }
 
 function drawKeyValue(doc: PDFKit.PDFDocument, label: string, value: string, x = 50) {
   doc.fontSize(9).fillColor(GRAY).text(label, x, doc.y, { continued: true, width: 200 });
-  doc.fillColor("#1e293b").text(`  ${value}`, { width: 280 });
+  doc.fillColor(IVORY.ink).text(`  ${value}`, { width: 280 });
 }
 
 function drawFactorRow(doc: PDFKit.PDFDocument, name: string, points: number, maxPoints: number, explanation: string) {
@@ -59,11 +62,11 @@ function drawFactorRow(doc: PDFKit.PDFDocument, name: string, points: number, ma
   const pct = Math.max(0, Math.min(1, points / maxPoints));
   const barColor = pct >= 0.7 ? RED : pct >= 0.4 ? AMBER : BRAND_GREEN;
 
-  doc.fontSize(9).fillColor("#1e293b").text(name, 50, y, { width: 140 });
+  doc.fontSize(9).fillColor(IVORY.ink).text(name, 50, y, { width: 140 });
   doc.fontSize(8).fillColor(GRAY).text(`${points}/${maxPoints}`, 195, y, { width: 40 });
 
   // Bar background
-  doc.rect(240, y + 2, 120, 8).fill("#e2e8f0");
+  doc.rect(240, y + 2, 120, 8).fill(IVORY.hairline);
   // Bar fill
   doc.rect(240, y + 2, 120 * pct, 8).fill(barColor);
 
@@ -75,7 +78,7 @@ function drawCandidateRow(doc: PDFKit.PDFDocument, c: ReplacementCandidate, rank
   const y = doc.y;
   if (y > 700) { doc.addPage(); drawHeader(doc); }
 
-  doc.fontSize(10).fillColor("#1e293b").text(`#${rank + 1}  ${c.product.carrier} — ${c.product.product}`, 50, doc.y, { width: 350 });
+  doc.fontSize(10).fillColor(IVORY.ink).text(`#${rank + 1}  ${c.product.carrier} — ${c.product.product}`, 50, doc.y, { width: 350 });
   doc.fontSize(9).fillColor(BRAND_GREEN).text(`+${fmt(c.monthlyIncomeImprovement)}/mo`, 420, y, { width: 130, align: "right" });
   doc.moveDown(0.3);
 
@@ -90,7 +93,7 @@ function drawCandidateRow(doc: PDFKit.PDFDocument, c: ReplacementCandidate, rank
 
   if (isSolar && c.solarUplift > 0) {
     doc.moveDown(0.2);
-    doc.fontSize(8).fillColor("#d97706").text(`☀ Solar ITC: +${fmt(c.solarUplift)}  →  Annuity Bonus: +${fmt(c.bonusUplift)}  →  Combined: +${fmt(c.combinedBonusTotal)}`, 60, doc.y, { width: 490 });
+    doc.fontSize(8).fillColor(IVORY.money).text(`☀ Solar ITC: +${fmt(c.solarUplift)}  →  Annuity Bonus: +${fmt(c.bonusUplift)}  →  Combined: +${fmt(c.combinedBonusTotal)}`, 60, doc.y, { width: 490 });
   }
 
   c.reasons.forEach(r => {
@@ -131,13 +134,13 @@ function drawSolarPathway(doc: PDFKit.PDFDocument, sp: SolarStrategyPathway) {
   });
 
   doc.moveDown(0.5);
-  doc.fontSize(8).fillColor("#1e293b").text(sp.summary, 50, doc.y, { width: 500 });
+  doc.fontSize(8).fillColor(IVORY.ink).text(sp.summary, 50, doc.y, { width: 500 });
 }
 
 function drawDisclaimer(doc: PDFKit.PDFDocument) {
   if (doc.y > 680) { doc.addPage(); drawHeader(doc); }
   doc.moveDown(1.5);
-  doc.rect(50, doc.y, 500, 1).fill("#e2e8f0");
+  doc.rect(50, doc.y, 500, 1).fill(IVORY.hairline);
   doc.moveDown(0.5);
   doc.fontSize(7).fillColor(GRAY).text(
     "IMPORTANT DISCLOSURE: This 1035 Exchange Analysis is provided for informational and educational purposes only and does not constitute financial, tax, or legal advice. " +
@@ -170,7 +173,7 @@ export function generate1035PdfBuffer(contract: ExistingContract, stateCode: Sta
   const vc = verdictColor(result.verdict);
   doc.fontSize(11).fillColor(vc).text(`${result.verdictLabel}  —  Score: ${result.score}/100`, 50, doc.y, { width: 500 });
   doc.moveDown(0.3);
-  doc.fontSize(9).fillColor("#1e293b").text(result.summary, 50, doc.y, { width: 500 });
+  doc.fontSize(9).fillColor(IVORY.ink).text(result.summary, 50, doc.y, { width: 500 });
   doc.moveDown(0.5);
 
   // Contract details
@@ -210,7 +213,7 @@ export function generate1035PdfBuffer(contract: ExistingContract, stateCode: Sta
   // Solar-enhanced candidates (if applicable)
   if (result.solarPathway?.eligible) {
     drawSectionTitle(doc, "Solar Strategy Enhanced Candidates");
-    doc.fontSize(9).fillColor("#d97706").text(
+    doc.fontSize(9).fillColor(IVORY.money).text(
       `Solar-Enhanced Score: ${result.solarEnhancedScore}/100 — ${result.solarEnhancedVerdictLabel}`,
       50, doc.y, { width: 500 }
     );
@@ -263,7 +266,7 @@ export async function handle1035PdfRequest(req: Request, res: Response) {
     const vc = verdictColor(result.verdict);
     doc.fontSize(11).fillColor(vc).text(`${result.verdictLabel}  —  Score: ${result.score}/100`, 50, doc.y, { width: 500 });
     doc.moveDown(0.3);
-    doc.fontSize(9).fillColor("#1e293b").text(result.summary, 50, doc.y, { width: 500 });
+    doc.fontSize(9).fillColor(IVORY.ink).text(result.summary, 50, doc.y, { width: 500 });
     doc.moveDown(0.5);
 
     drawSectionTitle(doc, "Existing Contract Details");
@@ -299,7 +302,7 @@ export async function handle1035PdfRequest(req: Request, res: Response) {
 
     if (result.solarPathway?.eligible) {
       drawSectionTitle(doc, "Solar Strategy Enhanced Candidates");
-      doc.fontSize(9).fillColor("#d97706").text(
+      doc.fontSize(9).fillColor(IVORY.money).text(
         `Solar-Enhanced Score: ${result.solarEnhancedScore}/100 — ${result.solarEnhancedVerdictLabel}`,
         50, doc.y, { width: 500 }
       );
@@ -335,12 +338,13 @@ export function generateBulk1035PdfBuffer(
   doc.on("error", reject);
 
   // Cover page
-  doc.rect(0, 0, doc.page.width, doc.page.height).fill("#0f172a");
-  doc.fontSize(28).fillColor(BRAND_GREEN).text("Russell Capital Systems™", 50, 200, { width: 500, align: "center" });
-  doc.fontSize(14).fillColor("#94a3b8").text("Bulk 1035 Exchange Analysis Report", 50, 245, { width: 500, align: "center" });
+  doc.rect(0, 0, doc.page.width, doc.page.height).fill(IVORY.band);
+  doc.fontSize(28).fillColor(IVORY.bandText).font("Helvetica-Bold").text("Russell Capital Systems™", 50, 200, { width: 500, align: "center" });
+  doc.font("Helvetica");
+  doc.fontSize(14).fillColor(IVORY.bandMuted).text("Bulk 1035 Exchange Analysis Report", 50, 245, { width: 500, align: "center" });
   doc.moveDown(2);
-  doc.fontSize(11).fillColor("#64748b").text(`${entries.length} Contracts Analyzed`, 50, doc.y, { width: 500, align: "center" });
-  doc.fontSize(10).fillColor("#475569").text(new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }), 50, doc.y + 20, { width: 500, align: "center" });
+  doc.fontSize(11).fillColor(IVORY.bandMuted).text(`${entries.length} Contracts Analyzed`, 50, doc.y, { width: 500, align: "center" });
+  doc.fontSize(10).fillColor(IVORY.bandMuted).text(new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }), 50, doc.y + 20, { width: 500, align: "center" });
 
   // Summary table page
   doc.addPage();
@@ -361,15 +365,15 @@ export function generateBulk1035PdfBuffer(
   doc.text("Verdict", colX[3], doc.y - 10, { width: 70 });
   doc.text("Revenue Opp.", colX[4], doc.y - 10, { width: 80 });
   doc.moveDown(0.5);
-  doc.moveTo(50, doc.y).lineTo(550, doc.y).strokeColor("#e2e8f0").stroke();
+  doc.moveTo(50, doc.y).lineTo(550, doc.y).strokeColor(IVORY.hairline).stroke();
   doc.moveDown(0.3);
 
   summaryResults.forEach(({ name, result }, i) => {
     const y = doc.y;
     if (y > 680) { doc.addPage(); drawHeader(doc); }
     const contract = entries[i].contract;
-    doc.fontSize(8).fillColor("#1e293b").text(name, colX[0], doc.y, { width: 120 });
-    doc.fillColor("#475569").text(`${contract.carrierName}`, colX[1], doc.y - 10, { width: 120 });
+    doc.fontSize(8).fillColor(IVORY.ink).text(name, colX[0], doc.y, { width: 120 });
+    doc.fillColor(IVORY.muted).text(`${contract.carrierName}`, colX[1], doc.y - 10, { width: 120 });
     doc.fillColor(verdictColor(result.verdict)).text(`${result.score}`, colX[2], doc.y - 10, { width: 70 });
     doc.text(result.verdictLabel, colX[3], doc.y - 10, { width: 70 });
     doc.fillColor(BRAND_GREEN).text(fmt(result.estimatedAdvisorRevenue), colX[4], doc.y - 10, { width: 80 });
@@ -381,13 +385,13 @@ export function generateBulk1035PdfBuffer(
   const replaceCount = summaryResults.filter(s => s.result.verdict === "REPLACE_NOW" || s.result.verdict === "STRONG_CANDIDATE").length;
   doc.moveDown(1);
   doc.fontSize(10).fillColor(BRAND_GREEN).text(`Total Revenue Opportunity: ${fmt(totalRevenue)}`, 50, doc.y, { width: 500 });
-  doc.fontSize(9).fillColor("#1e293b").text(`${replaceCount} of ${entries.length} contracts recommended for replacement`, 50, doc.y + 2, { width: 500 });
+  doc.fontSize(9).fillColor(IVORY.ink).text(`${replaceCount} of ${entries.length} contracts recommended for replacement`, 50, doc.y + 2, { width: 500 });
 
   // Individual analysis pages
   entries.forEach((entry, idx) => {
     doc.addPage();
     drawHeader(doc);
-    doc.fontSize(11).fillColor("#1e293b").text(`Client: ${entry.clientName}`, 50, doc.y, { width: 500 });
+    doc.fontSize(11).fillColor(IVORY.ink).text(`Client: ${entry.clientName}`, 50, doc.y, { width: 500 });
     doc.moveDown(0.3);
 
     const result = summaryResults[idx].result;
@@ -396,7 +400,7 @@ export function generateBulk1035PdfBuffer(
     drawSectionTitle(doc, "Verdict");
     doc.fontSize(11).fillColor(vc).text(`${result.verdictLabel}  —  Score: ${result.score}/100`, 50, doc.y, { width: 500 });
     doc.moveDown(0.3);
-    doc.fontSize(9).fillColor("#1e293b").text(result.summary, 50, doc.y, { width: 500 });
+    doc.fontSize(9).fillColor(IVORY.ink).text(result.summary, 50, doc.y, { width: 500 });
     doc.moveDown(0.5);
 
     drawSectionTitle(doc, "Contract Details");
