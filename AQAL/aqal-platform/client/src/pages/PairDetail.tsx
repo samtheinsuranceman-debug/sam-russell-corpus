@@ -176,7 +176,7 @@ export default function PairDetail() {
           </p>
           <p style={{ fontSize: "14px", lineHeight: 1.65, color: CREAM2, margin: "0 0 16px" }}>
             The assessment measures both lines — and all 30 others — then hunts your Power Combinations for you.
-            Free for the first 10,000 founding members.
+            Free for the first 1,000 founding members.
           </p>
           <Link href="/assessment" className="inline-block rounded-lg"
             style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, padding: "15px 28px", background: CHAMPAGNE, color: INK }}>

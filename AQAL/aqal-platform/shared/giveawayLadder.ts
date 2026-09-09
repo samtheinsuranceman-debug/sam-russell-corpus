@@ -20,7 +20,10 @@ export type GiveawayTier = {
   to: number | null;
 };
 
-// Each cohort is COHORT_SIZE members. Tune here if the cohorts change size.
+// The FREE cohort is the first FREE_COHORT_SIZE members (the owner set it to
+// 1,000, down from 10,000). Each paid founding cohort after it is COHORT_SIZE
+// members. Tune here if the cohorts change size.
+export const FREE_COHORT_SIZE = 1_000;
 export const COHORT_SIZE = 10_000;
 
 // The founding rate is LOCKED FOR LIFE (as long as the member stays in
@@ -47,11 +50,11 @@ export const MEMBERSHIP_TRIAL_DAYS = 15; // membership monthly
 export const UNDERWRITTEN_TRIAL_DAYS = 7; // the fully-underwritten assessment.
 
 export const GIVEAWAY_TIERS: GiveawayTier[] = [
-  { index: 0, label: "Founding — Free", discount: 1.0, from: 1, to: COHORT_SIZE },
-  { index: 1, label: "Founding — 75% off", discount: 0.75, from: COHORT_SIZE + 1, to: COHORT_SIZE * 2 },
-  { index: 2, label: "Founding — 50% off", discount: 0.5, from: COHORT_SIZE * 2 + 1, to: COHORT_SIZE * 3 },
-  { index: 3, label: "Founding — 25% off", discount: 0.25, from: COHORT_SIZE * 3 + 1, to: COHORT_SIZE * 4 },
-  { index: 4, label: "Full price", discount: 0.0, from: COHORT_SIZE * 4 + 1, to: null },
+  { index: 0, label: "Founding — Free", discount: 1.0, from: 1, to: FREE_COHORT_SIZE },
+  { index: 1, label: "Founding — 75% off", discount: 0.75, from: FREE_COHORT_SIZE + 1, to: FREE_COHORT_SIZE + COHORT_SIZE },
+  { index: 2, label: "Founding — 50% off", discount: 0.5, from: FREE_COHORT_SIZE + COHORT_SIZE + 1, to: FREE_COHORT_SIZE + COHORT_SIZE * 2 },
+  { index: 3, label: "Founding — 25% off", discount: 0.25, from: FREE_COHORT_SIZE + COHORT_SIZE * 2 + 1, to: FREE_COHORT_SIZE + COHORT_SIZE * 3 },
+  { index: 4, label: "Full price", discount: 0.0, from: FREE_COHORT_SIZE + COHORT_SIZE * 3 + 1, to: null },
 ];
 
 /** The tier a given 1-based signup number falls into. */

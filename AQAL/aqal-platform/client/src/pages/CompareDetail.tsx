@@ -150,7 +150,7 @@ export default function CompareDetail() {
           </p>
           <p style={{ fontSize: "14px", lineHeight: 1.65, color: CREAM2, margin: "0 0 16px" }}>
             The 32-line assessment finds whether this line is your master weakness, a minor gap, or already a strength —
-            before you spend months on either road. Free for the first 10,000 founding members.
+            before you spend months on either road. Free for the first 1,000 founding members.
           </p>
           <Link href="/assessment" className="inline-block rounded-lg"
             style={{ ...mono, fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, padding: "15px 28px", background: CHAMPAGNE, color: INK }}>

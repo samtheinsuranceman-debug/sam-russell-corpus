@@ -103,7 +103,7 @@ export default function WhichArchetype() {
   };
 
   const shareResult = async () => {
-    const text = `The 2-minute teaser says I might be near "${result?.best?.name}" — the real measurement is 32 lines, scored by an 8-AI panel. First 10,000 free for life: https://www.joinaqal.com/which-archetype`;
+    const text = `The 2-minute teaser says I might be near "${result?.best?.name}" — the real measurement is 32 lines, scored by an 8-AI panel. First 1,000 free for life: https://www.joinaqal.com/which-archetype`;
     try {
       if (navigator.share) await navigator.share({ text });
       else { await navigator.clipboard.writeText(text); toast.success("Copied — paste it anywhere."); }
@@ -177,7 +177,7 @@ export default function WhichArchetype() {
 
             <div className="flex gap-3 flex-wrap">
               <Link href="/assessment" className="px-5 py-3.5 rounded-lg font-bold" style={{ ...mono, fontSize: "12px", letterSpacing: "0.1em", textTransform: "uppercase", background: CHAMPAGNE, color: INK }}>
-                  Take the real assessment — free for the first 10,000
+                  Take the real assessment — free for the first 1,000
                 </Link>
               <Link href="/sample-report" className="px-5 py-3.5 rounded-lg" style={{ ...mono, fontSize: "12px", letterSpacing: "0.1em", textTransform: "uppercase", background: "transparent", color: CREAM2, border: `1px solid ${LINE_C}` }}>
                   See a full sample report

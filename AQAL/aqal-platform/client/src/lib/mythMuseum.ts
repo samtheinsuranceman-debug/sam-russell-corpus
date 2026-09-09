@@ -476,7 +476,7 @@ export const MYTHS: Myth[] = [
     why: "As a testable claim about donation-to-outcome mechanics it has none; as pastoral care it inverts care's direction — extracting most from those hurting most.",
     source: "Analysis, offered as analysis: the claim structure is unfalsifiable by design.",
     appeal: "It fuses the deepest American creed — abundance rewards belief — with the deepest human hope, and passes the plate.",
-    instead: "Free for the first 10,000 was our answer to this one." },
+    instead: "Free for the first 1,000 was our answer to this one." },
 
   // ── WING II: The bleeding edge — historical medical overreach ──
   { id: "bloodletting", name: "Therapeutic Bloodletting (routine)", verdict: "HARMFUL",

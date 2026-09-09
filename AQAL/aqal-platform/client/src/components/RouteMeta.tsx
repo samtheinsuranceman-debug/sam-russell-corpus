@@ -51,7 +51,7 @@ const HELP_FAQ_LD = {
     { q: "How long does scoring take?",
       a: "Scoring starts when your 27th answer lands. The eight-model AI panel usually finishes within minutes." },
     { q: "Is the assessment really free?",
-      a: "The first 10,000 founding members get the assessment and membership free for life — no card required. After that, membership is $449/month or $4,499/year." },
+      a: "The first 1,000 founding members get the assessment and membership free for life — no card required. After that, membership is $449/month or $4,499/year." },
     { q: "Is my data private?",
       a: "Raw audio is deleted 72 hours after scoring; private messages are never read; there are no ad trackers; and every member can export or delete their data." },
   ].map(({ q, a }) => ({

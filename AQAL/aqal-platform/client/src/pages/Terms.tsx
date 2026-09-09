@@ -165,7 +165,7 @@ export default function Terms() {
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">8C. Founding Access &amp; Data Rights</h2>
               <p className="mb-3">
-                <strong>Free for life, in writing.</strong> For founding members (the first 10,000 who complete the
+                <strong>Free for life, in writing.</strong> For founding members (the first 1,000 who complete the
                 assessment), the complimentary core access described in these Terms is lifetime. It will not be revoked,
                 converted to a paid requirement, or materially degraded for the life of the Service.
               </p>

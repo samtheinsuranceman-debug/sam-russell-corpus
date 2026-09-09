@@ -55,7 +55,7 @@ import { ALL_AXES, RARITY_AXES, axisFeedsRarity, axisIndep, axisMode, MODE_META 
 import { multiplicativeRarity, geometricMeanRarityFallback } from "./scoring/multiplicativeRarity";
 import { cohortAdjustedScore, generationForBirthYear, type Generation } from "@shared/cohort";
 import { scoreToRarity as normingScoreToRarity, ACTIVE_NORMING_VERSION } from "./scoring/norming";
-import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, FREE_ASSESSMENT_CAP, voiceConsensus, freePanelMax, sttProvider } from "./platform/config";
+import { platformStatus, BETA_ACCESS_CODE, BETA_MAX_REDEMPTIONS, FREE_ACCESS_CODE, FREE_ASSESSMENT_CAP, FOUNDING_CLAIMED_OFFSET, voiceConsensus, freePanelMax, sttProvider } from "./platform/config";
 import {
   recordEvent, getAnalyticsEventsSince, getSubscriptionEvents, getHeroExperimentStats, getRecentIntroRequests,
   addMarketingSpend, getMarketingSpendSince,
@@ -1362,7 +1362,9 @@ Return ONLY valid JSON.` },
       if (!me?.betaAccess) return { number: null as number | null, cap: FREE_ASSESSMENT_CAP, verified: !!me?.emailVerifiedAt };
       const [row] = await db.select({ n: sql<number>`count(*)` }).from(users)
         .where(and(eq(users.betaAccess, true), lte(users.id, ctx.user.id)));
-      return { number: Number(row?.n ?? 0) || null, cap: FREE_ASSESSMENT_CAP, verified: !!me.emailVerifiedAt };
+      // Live claims are numbered after the members who claimed before the counter existed.
+      const rank = Number(row?.n ?? 0);
+      return { number: rank > 0 ? rank + FOUNDING_CLAIMED_OFFSET : null, cap: FREE_ASSESSMENT_CAP, verified: !!me.emailVerifiedAt };
     }),
     // Password reset, step 1: request the emailed link. Always answers the same
     // way whether or not the email exists (no account enumeration).
@@ -1426,10 +1428,11 @@ Return ONLY valid JSON.` },
     info: publicProcedure.query(async () => {
       const cap = FREE_ASSESSMENT_CAP;
       let remaining: number | null = null;
-      let used = 0;
+      // The members who claimed before the counter went live are always counted.
+      let used = FOUNDING_CLAIMED_OFFSET;
       if (cap > 0) {
         const count = await countFreeUsers();
-        if (count !== null) { used = count; remaining = Math.max(0, cap - count); }
+        if (count !== null) { used = count + FOUNDING_CLAIMED_OFFSET; remaining = Math.max(0, cap - used); }
       }
       // Living pace: real claims in the trailing 7 days (0 hides the line).
       let claimedThisWeek = 0;
@@ -1461,7 +1464,7 @@ Return ONLY valid JSON.` },
       }))
       .mutation(async ({ ctx, input }) => {
         // Founding-pool protection: throttle per IP and reject disposable
-        // domains — the 10,000 lifetime spots are the scarcest asset we have.
+        // domains — the 1,000 lifetime spots are the scarcest asset we have.
         const { checkLimit, isDisposableEmail, clientIp } = await import("./rateLimit");
         const ip = clientIp(ctx.req as never);
         if (!checkLimit(`claim:${ip}`, 6, 60 * 60 * 1000) || !checkLimit(`claim-day:${ip}`, 20, 24 * 60 * 60 * 1000)) {
@@ -1490,7 +1493,7 @@ Return ONLY valid JSON.` },
           const existing = await getUserByOpenId(openId);
           if (!existing) {
             const count = await countFreeUsers();
-            if (count !== null && count >= FREE_ASSESSMENT_CAP) {
+            if (count !== null && count + FOUNDING_CLAIMED_OFFSET >= FREE_ASSESSMENT_CAP) {
               return { success: false, full: true, error: "All free spots have been claimed. Paid access is available." };
             }
           }
@@ -1537,7 +1540,7 @@ Return ONLY valid JSON.` },
               verifyUrl = `${appUrl}/verify-email?token=${vtoken}`;
             }
           } catch (e) { console.warn("[freeAccess] verify token skipped:", e); }
-          sendEmail(email, "Welcome — you're one of the first 10,000", foundingWelcomeEmailHtml({ name, appUrl, verifyUrl }))
+          sendEmail(email, "Welcome — you're one of the first 1,000", foundingWelcomeEmailHtml({ name, appUrl, verifyUrl }))
             .catch((e) => console.warn("[freeAccess] welcome email skipped:", e));
         }
         return { success: true };

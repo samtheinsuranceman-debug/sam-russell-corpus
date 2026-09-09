@@ -1,5 +1,5 @@
 // ============================================================
-// LLM COST MONITOR — know the bill before 10,000 free members do.
+// LLM COST MONITOR — know the bill before 1,000 free members do.
 // ============================================================
 // Every panel/core LLM call records its token usage (from the API's
 // own usage block when present, estimated from characters when not).
