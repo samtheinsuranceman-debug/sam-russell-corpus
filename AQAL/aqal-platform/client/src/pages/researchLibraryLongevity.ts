@@ -18,6 +18,10 @@
 //   • Nothing on this shelf is medical advice. Drugs and hormones are described
 //     with the trial that tested them; the decision belongs to a clinician.
 //
+// Wave 2 (sections 7039+) came from a multi-AI sweep — Perplexity, a second
+// model via OpenRouter, the Amass biomedical index, Exa — whose candidate
+// citations were then verified one by one; unverifiable DOIs were dropped.
+//
 // The shelf is merged into PRACTICE_EVIDENCE by researchLibraryData.ts, so it
 // appears in the same page, filters, ledger counts and catalog as the rest.
 import type { PracticeCluster } from "./ResearchLibrary";
@@ -65,6 +69,30 @@ export const LONGEVITY_SECTIONS: Record<string, string> = {
   "7036": "7036 · Longevity — Smoking & Alcohol",
   "7037": "7037 · Longevity — Frailty & the Lifestyle Bundle",
   "7038": "7038 · Longevity — Collagen for Skin Aging",
+  "7039": "7039 · Longevity — Magnesium",
+  "7040": "7040 · Longevity — Berberine",
+  "7041": "7041 · Longevity — Vitamin K2",
+  "7042": "7042 · Longevity — Alpha-Ketoglutarate",
+  "7043": "7043 · Longevity — Melatonin",
+  "7044": "7044 · Longevity — Curcumin, Green Tea & Trace Lithium",
+  "7045": "7045 · Longevity — SGLT2 Inhibitors in People",
+  "7046": "7046 · Longevity — Statins After 75",
+  "7047": "7047 · Longevity — Zoledronic Acid After Hip Fracture",
+  "7048": "7048 · Longevity — Cold Exposure",
+  "7049": "7049 · Longevity — Interval Training After 70",
+  "7050": "7050 · Longevity — Tai Ji Quan & Falls",
+  "7051": "7051 · Longevity — Sleep Apnea & CPAP",
+  "7052": "7052 · Longevity — Cataract Surgery & Dementia",
+  "7053": "7053 · Longevity — Remnant Cholesterol & the HDL Failures",
+  "7054": "7054 · Longevity — Nuts, Whole Grains, Fiber, Salt Substitute & Ultra-Processed Food",
+  "7055": "7055 · Longevity — FINGER Multidomain Trial",
+  "7056": "7056 · Longevity — Purpose, Optimism & Meditation",
+  "7057": "7057 · Longevity — Volunteering & Education",
+  "7058": "7058 · Longevity — Air Pollution & Temperature",
+  "7059": "7059 · Longevity — Coronary Calcium & Polygenic Risk",
+  "7060": "7060 · Longevity — DO-HEALTH & the Aging Clocks",
+  "7061": "7061 · Longevity — Hearing Aids & Mortality",
+  "7062": "7062 · Longevity — What Changed in 2024–2026",
 };
 
 export const LONGEVITY_SECTION_SHORT: Record<string, string> = {
@@ -107,6 +135,30 @@ export const LONGEVITY_SECTION_SHORT: Record<string, string> = {
   "7036": "Longevity: Smoking & Alcohol",
   "7037": "Longevity: Frailty",
   "7038": "Longevity: Collagen",
+  "7039": "Longevity: Magnesium",
+  "7040": "Longevity: Berberine",
+  "7041": "Longevity: Vitamin K2",
+  "7042": "Longevity: AKG",
+  "7043": "Longevity: Melatonin",
+  "7044": "Longevity: Curcumin, Tea, Lithium",
+  "7045": "Longevity: SGLT2 in People",
+  "7046": "Longevity: Statins After 75",
+  "7047": "Longevity: Zoledronic Acid",
+  "7048": "Longevity: Cold Exposure",
+  "7049": "Longevity: HIIT After 70",
+  "7050": "Longevity: Tai Chi & Falls",
+  "7051": "Longevity: Sleep Apnea",
+  "7052": "Longevity: Cataract Surgery",
+  "7053": "Longevity: Remnant & HDL",
+  "7054": "Longevity: Food Levers",
+  "7055": "Longevity: FINGER",
+  "7056": "Longevity: Purpose & Optimism",
+  "7057": "Longevity: Volunteering & Education",
+  "7058": "Longevity: Air & Temperature",
+  "7059": "Longevity: Calcium Score & Genes",
+  "7060": "Longevity: DO-HEALTH",
+  "7061": "Longevity: Hearing Aids & Mortality",
+  "7062": "Longevity: 2024–2026 Updates",
 };
 
 export const LONGEVITY_SECTION_ORDER: string[] = Object.keys(LONGEVITY_SECTIONS);
@@ -632,6 +684,7 @@ export const LONGEVITY_EVIDENCE: PracticeCluster[] = [
     sources: [
       { cite: "Horvath, S. (2013). DNA methylation age of human tissues and cell types. Genome Biology, 14(10), R115.", note: "The multi-tissue clock: 353 CpG sites predict chronological age with a median error of 3.6 years.", link: doi("10.1186/gb-2013-14-10-r115"), kind: "doi" },
       { cite: "Levine, M. E., Lu, A. T., Quach, A., et al. (2018). An epigenetic biomarker of aging for lifespan and healthspan. Aging, 10(4), 573–591.", note: "DNAm PhenoAge: trained on clinical measures, it outperforms first-generation clocks for mortality, cancer, healthspan and Alzheimer's prediction.", link: doi("10.18632/aging.101414"), kind: "doi" },
+      { cite: "Belsky, D. W., Caspi, A., Arseneault, L., et al. (2020). Quantification of the pace of biological aging in humans through a blood test, the DunedinPoAm DNA methylation algorithm. eLife, 9, e54870.", note: "The first pace-of-aging clock, trained on 12 years of change in 18 biomarkers in the Dunedin cohort and validated in independent cohorts and the CALERIE trial.", link: doi("10.7554/eLife.54870"), kind: "doi" },
       { cite: "Belsky, D. W., Caspi, A., Corcoran, D. L., et al. (2022). DunedinPACE, a DNA methylation biomarker of the pace of aging. eLife, 11, e73420.", note: "A blood-test measure of the current rate of aging, validated against decline, disease and death in independent cohorts.", link: doi("10.7554/eLife.73420"), kind: "doi" },
       { cite: "Fahy, G. M., Brooke, R. T., Watson, J. P., et al. (2019). Reversal of epigenetic aging and immunosenescent trends in humans. Aging Cell, 18(6), e13028.", note: "TRIIM: nine men, one year of growth hormone + DHEA + metformin; thymic regeneration and ~2.5-year epigenetic age reversal; uncontrolled pilot.", link: doi("10.1111/acel.13028"), kind: "doi" },
     ],
@@ -806,6 +859,418 @@ export const LONGEVITY_EVIDENCE: PracticeCluster[] = [
     impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
     sources: [
       { cite: "Bolke, L., Schlippe, G., Gerß, J., & Voss, W. (2019). A collagen supplement improves skin hydration, elasticity, roughness, and density: Results of a randomized, placebo-controlled, blind study. Nutrients, 11(10), 2494.", note: "72 women, 12 weeks: improved skin hydration, elasticity, roughness and density versus placebo, persisting at follow-up.", link: doi("10.3390/nu11102494"), kind: "doi" },
+    ],
+  },
+
+  // ═══════════════ WAVE 2 — the multi-AI sweep (2026-09-10) ═══════════════
+  // Gap topics surfaced by fanning the same question out to Perplexity, a
+  // second model through OpenRouter, the Amass biomedical index and Exa, then
+  // verifying every DOI against the publisher page or the PubMed record before
+  // it was written down. Where the other AIs offered a DOI that did not resolve
+  // or pointed at the wrong paper, it was dropped, not corrected from memory.
+
+  // ─── 7039 · magnesium ───────────────────────────────────────────────────────
+  {
+    id: "lv-magnesium",
+    section: "7039",
+    title: "Magnesium — A Dose-Response Signal From Cohorts, Not a Trial",
+    subtitle: "Dietary magnesium and cardiovascular disease, diabetes and mortality",
+    evidenceTag: "Moderate",
+    description:
+      "Across 40 prospective cohorts and more than a million people, each 100 mg/day more dietary magnesium was associated with 22% lower heart-failure risk, 7% lower stroke, 19% lower type 2 diabetes and 10% lower all-cause mortality. Magnesium comes with the foods that carry other protective things — nuts, legumes, whole grains, leafy greens — so the association cannot separate the mineral from the diet, and no trial has tested supplementation against mortality. Correcting a low intake through food is the evidence-consistent move; a capsule for longevity is not yet supported.",
+    feeds: ["a cheap dietary lever", "calibration on a popular supplement"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    sources: [
+      { cite: "Fang, X., Wang, K., Han, D., et al. (2016). Dietary magnesium intake and the risk of cardiovascular disease, type 2 diabetes, and all-cause mortality: A dose–response meta-analysis of prospective cohort studies. BMC Medicine, 14, 210.", note: "40 cohorts, >1 million participants: per 100 mg/day, 22% lower heart failure, 7% lower stroke, 19% lower diabetes, 10% lower all-cause mortality; observational.", link: doi("10.1186/s12916-016-0742-z"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7040 · berberine ───────────────────────────────────────────────────────
+  {
+    id: "lv-berberine",
+    section: "7040",
+    title: "Berberine — Moves Glucose and Lipids in Short Trials; No Outcome Data",
+    subtitle: "The plant alkaloid sold as 'natural metformin'",
+    evidenceTag: "Moderate",
+    description:
+      "A meta-analysis of 27 randomized trials in 2,569 patients found berberine lowered fasting glucose, HbA1c, LDL and triglycerides in type 2 diabetes and dyslipidaemia, roughly on par with oral hypoglycaemics in the trials that compared them. Almost all of the trials were short, small and published in Chinese journals, and none measured heart attacks, cancer or death. It earns a Moderate tag for surrogate markers and nothing for lifespan, and it interacts with several drugs through the liver.",
+    feeds: ["glucose and lipid surrogates", "an honest label on a marketing claim"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "low" },
+    sources: [
+      { cite: "Lan, J., Zhao, Y., Dong, F., et al. (2015). Meta-analysis of the effect and safety of berberine in the treatment of type 2 diabetes mellitus, hyperlipemia and hypertension. Journal of Ethnopharmacology, 161, 69–81.", note: "27 trials, 2,569 patients: improvements in glucose, HbA1c, LDL and triglycerides; short trials, surrogate endpoints only.", link: doi("10.1016/j.jep.2014.09.049"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7041 · vitamin K2 ──────────────────────────────────────────────────────
+  {
+    id: "lv-vitamin-k2",
+    section: "7041",
+    title: "Vitamin K2 (Menaquinone) — The Rotterdam Signal on Calcified Arteries",
+    subtitle: "Dietary menaquinone, coronary calcification and coronary death",
+    evidenceTag: "Emerging",
+    description:
+      "In 4,807 Rotterdam residents followed for seven to ten years, the highest tertile of dietary menaquinone (vitamin K2) intake was associated with 57% lower coronary heart disease mortality, 26% lower all-cause mortality and less severe aortic calcification; vitamin K1 showed no such association. The mechanism — K2 activates matrix Gla protein, which keeps calcium out of artery walls — is real, but the finding is one cohort and the K2 came from cheese and fermented foods. Supplement trials have moved biomarkers, not events.",
+    feeds: ["arterial calcification biology", "a lead worth watching"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    sources: [
+      { cite: "Geleijnse, J. M., Vermeer, C., Grobbee, D. E., et al. (2004). Dietary intake of menaquinone is associated with a reduced risk of coronary heart disease: The Rotterdam Study. Journal of Nutrition, 134(11), 3100–3105.", note: "4,807 adults: highest menaquinone tertile, 57% lower coronary death and 26% lower all-cause mortality; no association for vitamin K1.", link: doi("10.1093/jn/134.11.3100"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7042 · alpha-ketoglutarate ─────────────────────────────────────────────
+  {
+    id: "lv-alpha-ketoglutarate",
+    section: "7042",
+    title: "Alpha-Ketoglutarate — An Uncontrolled Clock Result and a Trial Now Recruiting",
+    subtitle: "Rejuvant and the ABLE randomized trial",
+    evidenceTag: "Emerging",
+    description:
+      "Alpha-ketoglutarate extended lifespan in worms and mice, and a company-run study reported that 42 people taking a calcium-AKG formulation for an average of seven months showed an eight-year reduction on a commercial methylation-age test. There was no placebo group, the test was the company's own, and the participants were self-selected — so it is a hypothesis, not a result. The ABLE trial in Singapore is the first proper test: 120 adults aged 40–60 with a biological age older than their birthdays, randomized to 1 g/day sustained-release calcium-AKG or placebo for six months; recruitment was completed in 2025 and the outcome paper is pending.",
+    feeds: ["the difference between a company study and a trial"],
+    impact: { magnitude: 2, latency: "months", durability: "transient", effort: "low" },
+    sources: [
+      { cite: "Demidenko, O., Barardo, D., Budovskii, V., et al. (2021). Rejuvant®, a potential life-extending compound formulation with alpha-ketoglutarate and vitamins, conferred an average 8 year reduction in biological aging, after an average of 7 months of use, in the TruAge DNA methylation test. Aging, 13(22), 24485–24499.", note: "42 self-selected users, no control group, company-run methylation test: an 8-year reduction in estimated biological age.", link: doi("10.18632/aging.203736"), kind: "doi" },
+      { cite: "Lim, Z. M., Chew, Y. E., Guan, L., et al. (2025). Recruitment evaluation of a gerotherapeutic randomized controlled trial testing alpha-ketoglutarate in biologically older, middle-aged adults (ABLE). Experimental Gerontology, 209, 112867.", note: "ABLE: 120 adults aged 40–60 randomized to 1 g/day calcium-AKG or placebo for six months; this paper reports feasibility of recruitment, not efficacy.", link: doi("10.1016/j.exger.2025.112867"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7043 · melatonin ───────────────────────────────────────────────────────
+  {
+    id: "lv-melatonin-sleep",
+    section: "7043",
+    title: "Melatonin — Modest, Real Effects on Sleep; Nothing on Aging",
+    subtitle: "Meta-analysis of 19 randomized trials",
+    evidenceTag: "Moderate",
+    description:
+      "Across 19 placebo-controlled trials and 1,683 people with primary sleep disorders, melatonin shortened the time to fall asleep by about seven minutes, lengthened total sleep by about eight minutes and modestly improved sleep quality, with the effects holding over longer use and a benign side-effect profile. That is a sleep aid, and a mild one. The antioxidant and anti-aging claims made for it rest on animal and cell work; no human trial has tested melatonin against any aging outcome.",
+    feeds: ["a small, safe sleep lever", "a clear line between sleep and anti-aging claims"],
+    impact: { magnitude: 2, latency: "days", durability: "transient", effort: "low" },
+    sources: [
+      { cite: "Ferracioli-Oda, E., Qawasmi, A., & Bloch, M. H. (2013). Meta-analysis: Melatonin for the treatment of primary sleep disorders. PLoS ONE, 8(5), e63773.", note: "19 trials, 1,683 subjects: sleep latency −7.1 min, total sleep +8.3 min, small improvement in sleep quality.", link: doi("10.1371/journal.pone.0063773"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7044 · curcumin, green tea, lithium ────────────────────────────────────
+  {
+    id: "lv-curcumin-green-tea-lithium",
+    section: "7044",
+    title: "Curcumin, Green Tea and Trace Lithium — Three Popular Claims, Three Different Verdicts",
+    subtitle: "A chemistry critique, a large Japanese cohort, and a municipal-water study",
+    evidenceTag: "Mixed",
+    description:
+      "Curcumin is the most-published 'anti-aging' compound with the least to show for it: a medicinal-chemistry review concluded it is unstable, poorly absorbed, and a pan-assay interference compound that lights up screening assays without doing anything specific — which is why its thousands of positive lab papers have not produced a clinical drug. Green tea has better human evidence: in 40,530 Japanese adults followed for 11 years, drinking five or more cups a day was associated with 16% lower all-cause mortality (23% in women), driven by cardiovascular deaths, with no effect on cancer. Lithium at trace doses was associated with lower mortality across 18 Japanese municipalities according to their tap-water lithium levels, and extended lifespan in worms at comparable concentrations; it is a fascinating correlation with no trial behind it.",
+    feeds: ["how to read a lab-only literature", "one dietary habit with a mortality signal"],
+    impact: { magnitude: 2, latency: "months", durability: "sustained", effort: "low" },
+    sources: [
+      { cite: "Nelson, K. M., Dahlin, J. L., Bisson, J., Graham, J., Pauli, G. F., & Walters, M. A. (2017). The essential medicinal chemistry of curcumin. Journal of Medicinal Chemistry, 60(5), 1620–1637.", note: "Curcumin is chemically unstable, poorly bioavailable and a promiscuous assay interferer; no double-blind placebo-controlled trial has shown a clinical benefit.", link: doi("10.1021/acs.jmedchem.6b00975"), kind: "doi" },
+      { cite: "Kuriyama, S., Shimazu, T., Ohmori, K., et al. (2006). Green tea consumption and mortality due to cardiovascular disease, cancer, and all causes in Japan: The Ohsaki study. JAMA, 296(10), 1255–1265.", note: "40,530 adults, 11 years: ≥5 cups/day associated with 16% lower all-cause and 26% lower cardiovascular mortality; no cancer association.", link: doi("10.1001/jama.296.10.1255"), kind: "doi" },
+      { cite: "Zarse, K., Terao, T., Tian, J., Iwata, N., Ishii, N., & Ristow, M. (2011). Low-dose lithium uptake promotes longevity in humans and metazoans. European Journal of Nutrition, 50(5), 387–389.", note: "Tap-water lithium across 18 Japanese municipalities inversely associated with all-cause mortality; comparable doses extended lifespan in C. elegans. Ecological correlation.", link: doi("10.1007/s00394-011-0171-x"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7045 · SGLT2 inhibitors ────────────────────────────────────────────────
+  {
+    id: "lv-sglt2-inhibitors-human",
+    section: "7045",
+    title: "SGLT2 Inhibitors in People — Fewer Deaths in Diabetes and Heart Failure",
+    subtitle: "EMPA-REG OUTCOME and DAPA-HF; the human side of the canagliflozin mouse result",
+    evidenceTag: "Strong",
+    description:
+      "The class that extended male mouse lifespan in the Interventions Testing Program (section 7013) already has human mortality data in patients. In EMPA-REG OUTCOME, 7,020 people with type 2 diabetes and cardiovascular disease on empagliflozin had 38% lower cardiovascular death, 35% fewer heart-failure hospitalizations and 32% lower all-cause mortality over 3.1 years. In DAPA-HF, dapagliflozin cut the composite of worsening heart failure or cardiovascular death by 26% in 4,744 patients with reduced ejection fraction, with or without diabetes. Whether the drugs slow aging in healthy people is untested; whether they save lives in the conditions they treat is settled.",
+    feeds: ["cardiovascular and kidney survival in diabetes and heart failure"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "low" },
+    sources: [
+      { cite: "Zinman, B., Wanner, C., Lachin, J. M., et al. (2015). Empagliflozin, cardiovascular outcomes, and mortality in type 2 diabetes. New England Journal of Medicine, 373(22), 2117–2128.", note: "EMPA-REG OUTCOME, 7,020 patients: 38% lower cardiovascular death and 32% lower all-cause mortality.", link: doi("10.1056/NEJMoa1504720"), kind: "doi" },
+      { cite: "McMurray, J. J. V., Solomon, S. D., Inzucchi, S. E., et al. (2019). Dapagliflozin in patients with heart failure and reduced ejection fraction. New England Journal of Medicine, 381(21), 1995–2008.", note: "DAPA-HF, 4,744 patients: 26% reduction in worsening heart failure or cardiovascular death, independent of diabetes status.", link: doi("10.1056/NEJMoa1911303"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7046 · statins after 75 ────────────────────────────────────────────────
+  {
+    id: "lv-statins-after-75",
+    section: "7046",
+    title: "Statins After 75 — What the Trials Show, and the Trial That Will Answer the Rest",
+    subtitle: "The CTT individual-patient meta-analysis and PREVENTABLE",
+    evidenceTag: "Strong",
+    description:
+      "Across 28 trials and 186,854 participants, statins reduced major vascular events by about 21% per 1 mmol/L of LDL lowering at every age, including the 14,483 people over 75 — though in that oldest group the benefit for primary prevention (no prior vascular disease) was less certain because few such people had been enrolled. PREVENTABLE is closing that gap: 20,000 community-dwelling adults aged 75 and over with no cardiovascular disease, dementia or disability, randomized to atorvastatin 40 mg or placebo, with survival free of dementia and disability as the primary outcome. Until it reports, starting a statin late in life for prevention alone is a judgment call the trials do not yet settle.",
+    feeds: ["an honest age-specific read on the most-prescribed drug class"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "low" },
+    sources: [
+      { cite: "Cholesterol Treatment Trialists' Collaboration. (2019). Efficacy and safety of statin therapy in older people: A meta-analysis of individual participant data from 28 randomised controlled trials. The Lancet, 393(10170), 407–415.", note: "186,854 participants: ~21% fewer major vascular events per mmol/L LDL reduction in every age band; less direct evidence for primary prevention over 75.", link: doi("10.1016/S0140-6736(18)31942-1"), kind: "doi" },
+      { cite: "Joseph, J., Pajewski, N. M., Dolor, R. J., et al. (2023). Pragmatic evaluation of events and benefits of lipid lowering in older adults (PREVENTABLE): Trial design and rationale. Journal of the American Geriatrics Society, 71(6), 1701–1713.", note: "The design of the 20,000-person trial of high-intensity statin versus placebo in adults ≥75 without cardiovascular disease; primary outcome is survival free of dementia and disability.", link: doi("10.1111/jgs.18312"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7047 · bisphosphonates ─────────────────────────────────────────────────
+  {
+    id: "lv-zoledronic-acid-mortality",
+    section: "7047",
+    title: "Zoledronic Acid After Hip Fracture — Fewer Fractures and Fewer Deaths",
+    subtitle: "HORIZON Recurrent Fracture Trial",
+    evidenceTag: "Strong",
+    description:
+      "A hip fracture is one of the deadliest events in old age. In 2,127 patients given a yearly infusion of zoledronic acid or placebo within 90 days of hip-fracture repair, new clinical fractures fell by 35% and — unexpectedly — all-cause mortality fell by 28% over a median 1.9 years. The mortality benefit was larger than fracture prevention alone would explain and has been studied since; it stands as the clearest example on this shelf of a bone drug that extended life in a high-risk group.",
+    feeds: ["survival after hip fracture", "why bone density belongs on a longevity checklist"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "low" },
+    sources: [
+      { cite: "Lyles, K. W., Colón-Emeric, C. S., Magaziner, J. S., et al. (2007). Zoledronic acid and clinical fractures and mortality after hip fracture. New England Journal of Medicine, 357(18), 1799–1809.", note: "2,127 patients: 35% fewer clinical fractures and 28% lower all-cause mortality with yearly zoledronic acid after hip-fracture repair.", link: doi("10.1056/NEJMoa074941"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7048 · cold exposure ───────────────────────────────────────────────────
+  {
+    id: "lv-cold-exposure",
+    section: "7048",
+    title: "Cold Exposure — Brown Fat and Thermoregulation in Winter Swimmers",
+    subtitle: "What the physiology shows; what the longevity claims do not",
+    evidenceTag: "Emerging",
+    description:
+      "Young men who winter-swim and sauna regularly had altered brown-fat thermoregulation: a lower core temperature at rest, no brown-fat activation at comfortable temperatures, and a stronger cold-induced rise in energy expenditure than matched controls. That is a real adaptation of metabolism to repeated cold, in eight men. It is not evidence about lifespan, disease or mortality, none of which has been measured for cold plunges in any cohort or trial. Section 17 of the main library covers the mood evidence, which is better.",
+    feeds: ["metabolic physiology of cold adaptation", "separating a practice's evidence from its marketing"],
+    impact: { magnitude: 2, latency: "weeks", durability: "transient", effort: "moderate" },
+    sources: [
+      { cite: "Søberg, S., Löfgren, J., Philipsen, F. E., et al. (2021). Altered brown fat thermoregulation and enhanced cold-induced thermogenesis in young, healthy, winter-swimming men. Cell Reports Medicine, 2(10), 100408.", note: "Eight winter-swimming men versus eight controls: lower resting core temperature, larger cold-induced thermogenesis; no clinical outcomes.", link: doi("10.1016/j.xcrm.2021.100408"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7049 · HIIT in older adults ────────────────────────────────────────────
+  {
+    id: "lv-hiit-older-adults",
+    section: "7049",
+    title: "High-Intensity Interval Training After 70 — The Five-Year Randomized Trial",
+    subtitle: "Generation 100, and the mitochondrial biology that explains it",
+    evidenceTag: "Strong",
+    description:
+      "Generation 100 randomized 1,567 Norwegians aged 70–77 to five years of supervised high-intensity intervals, moderate continuous training, or the national activity guidelines. All-cause mortality over five years was 4.5% overall and did not differ significantly between arms, but the interval group had the lowest mortality (3.0%) and the largest gains in fitness and quality of life, and the control group exercised far more than a typical population, blunting the contrast. The biology behind the fitness gain was shown separately: 12 weeks of interval training in adults aged 65–80 raised mitochondrial respiration by 69% and reversed age-related decline in the muscle proteome — a bigger effect in the old than in the young.",
+    feeds: ["fitness and quality of life after 70", "proof the machinery still responds late"],
+    impact: { magnitude: 4, latency: "weeks", durability: "sustained", effort: "high" },
+    sources: [
+      { cite: "Stensvold, D., Viken, H., Steinshamn, S. L., et al. (2020). Effect of exercise training for five years on all cause mortality in older adults — the Generation 100 study: Randomised controlled trial. BMJ, 371, m3485.", note: "1,567 adults aged 70–77, five years: mortality 3.0% (HIIT), 5.9% (moderate), 4.7% (control); not statistically different, with the largest fitness and quality-of-life gains in the interval arm.", link: doi("10.1136/bmj.m3485"), kind: "doi" },
+      { cite: "Robinson, M. M., Dasari, S., Konopka, A. R., et al. (2017). Enhanced protein translation underlies improved metabolic and physical adaptations to different exercise training modes in young and old humans. Cell Metabolism, 25(3), 581–592.", note: "12 weeks of interval training raised mitochondrial respiration 69% in adults aged 65–80 and reversed age-related proteome changes; a larger response in the old than the young.", link: doi("10.1016/j.cmet.2017.02.009"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7050 · tai chi and falls ───────────────────────────────────────────────
+  {
+    id: "lv-tai-chi-falls",
+    section: "7050",
+    title: "Tai Ji Quan for Falls — Better Than Standard Exercise in a Head-to-Head Trial",
+    subtitle: "Falls are the injury that ends independence; this is the practice that prevents them",
+    evidenceTag: "Strong",
+    description:
+      "In 670 adults aged 70 and over with a history of falls or impaired mobility, a therapeutic tai ji quan programme twice a week for six months reduced falls by 58% compared with stretching and by 31% compared with a multimodal exercise programme (aerobic, strength, balance and flexibility), with the advantage holding at 12 months. Falls cause the hip fractures of section 7047; tai chi is the cheapest, most durable way to cut them. Section 59 of the main library carries the cognitive and mood evidence.",
+    feeds: ["fall prevention", "balance and independence"],
+    impact: { magnitude: 4, latency: "months", durability: "sustained", effort: "moderate" },
+    sources: [
+      { cite: "Li, F., Harmer, P., Fitzgerald, K., et al. (2018). Effectiveness of a therapeutic Tai Ji Quan intervention vs a multimodal exercise intervention to prevent falls among older adults at high risk of falling: A randomized clinical trial. JAMA Internal Medicine, 178(10), 1301–1310.", note: "670 adults ≥70 at high fall risk: 58% fewer falls than stretching and 31% fewer than multimodal exercise over six months.", link: doi("10.1001/jamainternmed.2018.3915"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7051 · sleep apnea & CPAP ──────────────────────────────────────────────
+  {
+    id: "lv-sleep-apnea-cpap",
+    section: "7051",
+    title: "Sleep Apnea and CPAP — Treat It for Sleep and Blood Pressure; The Heart Trial Was Null",
+    subtitle: "SAVE: 2,717 patients with cardiovascular disease",
+    evidenceTag: "Strong",
+    description:
+      "Obstructive sleep apnea is common, under-diagnosed and tied to hypertension, atrial fibrillation and stroke, so treating it looked like an obvious longevity lever. SAVE tested that in 2,717 adults with moderate-to-severe apnea and existing cardiovascular disease: CPAP plus usual care versus usual care alone over 3.7 years did not reduce cardiovascular events, though it improved daytime sleepiness, mood and quality of life. Average use was 3.3 hours a night, which may be too little. The honest reading: get tested if you snore and are sleepy, use the machine for the symptoms it clearly treats, and do not expect it to be a heart drug.",
+    feeds: ["daytime function and mood", "a realistic expectation for a common diagnosis"],
+    impact: { magnitude: 3, latency: "weeks", durability: "sustained", effort: "moderate" },
+    sources: [
+      { cite: "McEvoy, R. D., Antic, N. A., Heeley, E., et al. (2016). CPAP for prevention of cardiovascular events in obstructive sleep apnea. New England Journal of Medicine, 375(10), 919–931.", note: "SAVE, 2,717 patients, 3.7 years: no reduction in cardiovascular events; less sleepiness, better mood and quality of life; mean CPAP use 3.3 h/night.", link: doi("10.1056/NEJMoa1606599"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7052 · cataract surgery ────────────────────────────────────────────────
+  {
+    id: "lv-cataract-surgery-dementia",
+    section: "7052",
+    title: "Cataract Surgery and Dementia — A Third Lower Risk in a Well-Controlled Cohort",
+    subtitle: "Vision as the second sense that keeps the brain fed",
+    evidenceTag: "Moderate",
+    description:
+      "Among 3,038 adults aged 65 and over with cataract in the Adult Changes in Thought study, those who had cataract extraction had a 29% lower risk of developing dementia over the following years, after adjusting for education, health and the healthy-patient bias that surgery selects for. Glaucoma surgery, which does not restore vision, showed no such association — a useful internal control that points to sight itself as the mechanism. Alongside hearing (section 7029), correcting vision is one of the few dementia levers that is also a routine, low-risk procedure.",
+    feeds: ["dementia risk", "a routine procedure with an outsized upside"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "low" },
+    sources: [
+      { cite: "Lee, C. S., Gibbons, L. E., Lee, A. Y., et al. (2022). Association between cataract extraction and development of dementia. JAMA Internal Medicine, 182(2), 134–141.", note: "3,038 adults ≥65 with cataract: 29% lower dementia risk after extraction; no association for glaucoma surgery.", link: doi("10.1001/jamainternmed.2021.6990"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7053 · remnant cholesterol & HDL failures ──────────────────────────────
+  {
+    id: "lv-remnant-cholesterol-hdl-failures",
+    section: "7053",
+    title: "Remnant Cholesterol Is Causal; Raising HDL Is Not — Three Drug Trials That Proved It",
+    subtitle: "Why ApoB, not HDL, is the number to move",
+    evidenceTag: "Strong",
+    description:
+      "Remnant cholesterol — the cholesterol carried in triglyceride-rich particles — turned out to be a causal risk factor: in 73,513 Copenhagen residents, a genetic 1 mmol/L increase in non-fasting remnant cholesterol tripled the risk of ischemic heart disease, independent of HDL. HDL went the other way. Three large trials raised HDL substantially and changed nothing: extended-release niacin on top of statins (AIM-HIGH, 3,414 patients; HPS2-THRIVE, 25,673 patients, with more serious adverse events), and the CETP inhibitor anacetrapib (REVEAL, 30,449 patients), whose small 9% event reduction tracked its LDL and ApoB lowering rather than its doubling of HDL. The lesson unifies sections 7005–7008: count the atherogenic particles, ignore the 'good cholesterol' number.",
+    feeds: ["reading a lipid panel correctly", "avoiding a discredited drug strategy"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "low" },
+    sources: [
+      { cite: "Varbo, A., Benn, M., Tybjærg-Hansen, A., Jørgensen, A. B., Frikke-Schmidt, R., & Nordestgaard, B. G. (2013). Remnant cholesterol as a causal risk factor for ischemic heart disease. Journal of the American College of Cardiology, 61(4), 427–436.", note: "73,513 individuals: a genetic 1 mmol/L increase in remnant cholesterol associated with a 2.8-fold risk of ischemic heart disease; HDL not causal.", link: doi("10.1016/j.jacc.2012.08.1026"), kind: "doi" },
+      { cite: "AIM-HIGH Investigators. (2011). Niacin in patients with low HDL cholesterol levels receiving intensive statin therapy. New England Journal of Medicine, 365(24), 2255–2267.", note: "3,414 patients: niacin raised HDL from 35 to 42 mg/dL with no reduction in events; trial stopped for futility.", link: doi("10.1056/NEJMoa1107579"), kind: "doi" },
+      { cite: "HPS2-THRIVE Collaborative Group. (2014). Effects of extended-release niacin with laropiprant in high-risk patients. New England Journal of Medicine, 371(3), 203–212.", note: "25,673 patients: no reduction in major vascular events; more diabetes, infections and bleeding.", link: doi("10.1056/NEJMoa1300955"), kind: "doi" },
+      { cite: "HPS3/TIMI55–REVEAL Collaborative Group. (2017). Effects of anacetrapib in patients with atherosclerotic vascular disease. New England Journal of Medicine, 377(13), 1217–1227.", note: "30,449 patients: 9% fewer major coronary events, consistent with the non-HDL/ApoB reduction rather than the HDL increase.", link: doi("10.1056/NEJMoa1706444"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7054 · food pattern levers ─────────────────────────────────────────────
+  {
+    id: "lv-nuts-grains-fiber-salt-upf",
+    section: "7054",
+    title: "Nuts, Whole Grains, Fiber, a Salt Substitute, and Less Ultra-Processed Food",
+    subtitle: "The food-level evidence with the largest and best-tested effects",
+    evidenceTag: "Strong",
+    description:
+      "Five dietary levers with outcome data. Nuts: in 118,962 health professionals followed up to 30 years, eating nuts seven or more times a week was associated with 20% lower all-cause mortality. Whole grains: 90 g/day versus none was associated with 17% lower all-cause mortality across 45 cohorts. Fiber: across 185 prospective studies and 58 trials commissioned by the WHO, the highest fiber intakes carried 15–30% lower all-cause and cardiovascular mortality, with benefits rising up to 25–29 g/day. Salt substitute: in the cluster-randomized SSaSS trial across 600 Chinese villages (20,995 people with stroke or high blood pressure), replacing table salt with a potassium-enriched substitute cut stroke by 14% and all-cause death by 12% — a randomized mortality result from a change of salt. Ultra-processed food: a 10% higher share of ultra-processed food was associated with 12% higher cardiovascular disease in 105,159 French adults, and in the only tightly controlled feeding trial, people ate about 500 extra calories a day on an ultra-processed diet and gained weight in two weeks.",
+    feeds: ["cardiovascular survival", "weight control", "the food half of the frailty bundle"],
+    impact: { magnitude: 4, latency: "months", durability: "lasting", effort: "moderate" },
+    sources: [
+      { cite: "Bao, Y., Han, J., Hu, F. B., et al. (2013). Association of nut consumption with total and cause-specific mortality. New England Journal of Medicine, 369(21), 2001–2011.", note: "118,962 adults, up to 30 years: nuts ≥7 times/week associated with 20% lower all-cause mortality.", link: doi("10.1056/NEJMoa1307352"), kind: "doi" },
+      { cite: "Aune, D., Keum, N., Giovannucci, E., et al. (2016). Whole grain consumption and risk of cardiovascular disease, cancer, and all cause and cause specific mortality: Systematic review and dose-response meta-analysis of prospective studies. BMJ, 353, i2716.", note: "45 studies: 90 g/day whole grains associated with 17% lower all-cause and 22% lower cardiovascular mortality.", link: doi("10.1136/bmj.i2716"), kind: "doi" },
+      { cite: "Reynolds, A., Mann, J., Cummings, J., Winter, N., Mete, E., & Te Morenga, L. (2019). Carbohydrate quality and human health: A series of systematic reviews and meta-analyses. The Lancet, 393(10170), 434–445.", note: "185 prospective studies and 58 trials: 15–30% lower all-cause and cardiovascular mortality at the highest fiber intakes; dose-response to 25–29 g/day.", link: doi("10.1016/S0140-6736(18)31809-9"), kind: "doi" },
+      { cite: "Neal, B., Wu, Y., Feng, X., et al. (2021). Effect of salt substitution on cardiovascular events and death. New England Journal of Medicine, 385(12), 1067–1077.", note: "SSaSS, 20,995 adults in 600 villages, 4.7 years: potassium-enriched salt substitute cut stroke 14%, major cardiovascular events 13% and all-cause death 12%.", link: doi("10.1056/NEJMoa2105675"), kind: "doi" },
+      { cite: "Srour, B., Fezeu, L. K., Kesse-Guyot, E., et al. (2019). Ultra-processed food intake and risk of cardiovascular disease: Prospective cohort study (NutriNet-Santé). BMJ, 365, l1451.", note: "105,159 adults: each 10% higher share of ultra-processed food associated with 12% higher cardiovascular disease.", link: doi("10.1136/bmj.l1451"), kind: "doi" },
+      { cite: "Hall, K. D., Ayuketah, A., Brychta, R., et al. (2019). Ultra-processed diets cause excess calorie intake and weight gain: An inpatient randomized controlled trial of ad libitum food intake. Cell Metabolism, 30(1), 67–77.e3.", note: "20 adults in a metabolic ward: ~500 kcal/day more eaten on the ultra-processed diet, with weight gain in two weeks; the reverse on the unprocessed diet.", link: doi("10.1016/j.cmet.2019.05.008"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7055 · FINGER ──────────────────────────────────────────────────────────
+  {
+    id: "lv-finger-multidomain",
+    section: "7055",
+    title: "FINGER — The Multidomain Trial That Slowed Cognitive Decline",
+    subtitle: "Diet, exercise, cognitive training and vascular monitoring together",
+    evidenceTag: "Strong",
+    description:
+      "FINGER randomized 1,260 Finnish adults aged 60–77 at elevated dementia risk to two years of a combined programme — nutritional counselling, supervised exercise, computer-based cognitive training and management of vascular risk factors — or general health advice. Overall cognition improved 25% more in the intervention group, with executive function and processing speed improving 83% and 150% more respectively. It is the first large randomized evidence that a bundle of ordinary levers, applied together, changes the trajectory of an aging brain, and it is the model the World-Wide FINGERS network is now replicating across 60 countries.",
+    feeds: ["cognitive aging", "the case for doing several things at once"],
+    impact: { magnitude: 4, latency: "months", durability: "sustained", effort: "high" },
+    sources: [
+      { cite: "Ngandu, T., Lehtisalo, J., Solomon, A., et al. (2015). A 2 year multidomain intervention of diet, exercise, cognitive training, and vascular risk monitoring versus control to prevent cognitive decline in at-risk elderly people (FINGER): A randomised controlled trial. The Lancet, 385(9984), 2255–2263.", note: "1,260 adults aged 60–77, two years: 25% greater improvement in overall cognition, 83% in executive function and 150% in processing speed versus control.", link: doi("10.1016/S0140-6736(15)60461-5"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7056 · purpose, optimism, meditation ───────────────────────────────────
+  {
+    id: "lv-purpose-optimism-meditation",
+    section: "7056",
+    title: "Purpose, Optimism and Meditation — The Psychological Levers With Survival Data",
+    subtitle: "Two cohorts, one telomerase trial",
+    evidenceTag: "Moderate",
+    description:
+      "In 6,985 US adults over 50, those in the lowest purpose-in-life category had 2.4 times the mortality of those in the highest over four years, with the strongest link to heart and circulatory deaths. Optimism, measured in 69,744 women and 1,429 men, was associated with an 11–15% longer lifespan and 50–70% greater odds of surviving to 85, after adjusting for health conditions and behaviours. Both are correlations in which health can drive outlook as easily as the reverse; both are also modifiable, which is why they belong here. The mechanism has one experimental foothold: 30 people who meditated about six hours a day for a three-month retreat had higher immune-cell telomerase activity than matched wait-list controls, and the effect ran through increased sense of purpose and perceived control. Sections 32, 66 and 71 of the main library carry the practice.",
+    feeds: ["survival-linked psychology", "why the coach asks about purpose"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "moderate" },
+    sources: [
+      { cite: "Alimujiang, A., Wiensch, A., Boss, J., et al. (2019). Association between life purpose and mortality among US adults older than 50 years. JAMA Network Open, 2(5), e194270.", note: "6,985 adults: lowest versus highest purpose, hazard ratio 2.43 for all-cause mortality and 2.66 for heart and circulatory deaths.", link: doi("10.1001/jamanetworkopen.2019.4270"), kind: "doi" },
+      { cite: "Lee, L. O., James, P., Zevon, E. S., et al. (2019). Optimism is associated with exceptional longevity in 2 epidemiologic cohorts of men and women. Proceedings of the National Academy of Sciences, 116(37), 18357–18362.", note: "Highest versus lowest optimism quartile: 14.9% longer lifespan in women, similar in men; 1.5–1.7 times the odds of reaching 85.", link: doi("10.1073/pnas.1900712116"), kind: "doi" },
+      { cite: "Jacobs, T. L., Epel, E. S., Lin, J., et al. (2011). Intensive meditation training, immune cell telomerase activity, and psychological mediators. Psychoneuroendocrinology, 36(5), 664–681.", note: "Three-month retreat, 30 meditators versus 30 wait-list controls: higher telomerase activity, mediated by increased purpose in life and perceived control.", link: doi("10.1016/j.psyneuen.2010.09.010"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7057 · volunteering & education ────────────────────────────────────────
+  {
+    id: "lv-volunteering-education",
+    section: "7057",
+    title: "Volunteering and Education — Two Social Levers Measured in Years",
+    subtitle: "A meta-analysis of older volunteers and a global review of schooling",
+    evidenceTag: "Moderate",
+    description:
+      "Across 14 studies of older adults, volunteering was associated with 24% lower mortality after adjusting for health, wealth and social ties — with the benefit concentrated in people who volunteered regularly rather than occasionally. Education is the deepest lever of all: pooling 603 studies from 59 countries, each additional year of schooling was associated with a 1.9% lower risk of adult death, so 18 years of education carried a 34% lower mortality than none — an effect the authors compared to the gap between smoking and not smoking. Neither can be randomized in adults, but both point at the same mechanism sections 7035 and 7056 describe: engagement, agency and a reason to get up.",
+    feeds: ["late-life engagement", "the strongest social determinant, quantified"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "moderate" },
+    sources: [
+      { cite: "Okun, M. A., Yeung, E. W., & Brown, S. (2013). Volunteering by older adults and risk of mortality: A meta-analysis. Psychology and Aging, 28(2), 564–577.", note: "14 studies: 24% lower mortality among older volunteers after adjustment; strongest for regular volunteering.", link: doi("10.1037/a0031519"), kind: "doi" },
+      { cite: "Balaj, M., Henson, C. A., Aronsson, A., et al. (2024). Effects of education on adult mortality: A global systematic review and meta-analysis. The Lancet Public Health, 9(3), e155–e165.", note: "603 studies, 59 countries: each year of education associated with 1.9% lower mortality; 18 years versus none, 34% lower.", link: doi("10.1016/S2468-2667(23)00306-7"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7058 · air pollution & heat ────────────────────────────────────────────
+  {
+    id: "lv-air-pollution-heat",
+    section: "7058",
+    title: "Air and Temperature — The Environmental Exposures With the Largest Death Tolls",
+    subtitle: "Fine particulates below the legal limit, and the cold and heat you live in",
+    evidenceTag: "Strong",
+    description:
+      "In 60,925,443 Medicare beneficiaries — essentially every American over 65 from 2000 to 2012 — each 10 µg/m³ of fine particulate air pollution was associated with 7.3% higher mortality, and the relationship held below the national standard with no safe threshold; the largest risks were in low-income, Black and Medicaid-eligible populations. Temperature kills too, and mostly through cold: across 384 locations in 13 countries and 74 million deaths, 7.7% of mortality was attributable to non-optimal temperature, of which cold accounted for 7.3% and heat 0.4%, with moderate rather than extreme temperatures carrying most of the burden. Where you live and what you breathe are longevity choices, and a HEPA filter and a warm house are cheap ones.",
+    feeds: ["a hidden, modifiable exposure", "housing and location as health decisions"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "low" },
+    sources: [
+      { cite: "Di, Q., Wang, Y., Zanobetti, A., et al. (2017). Air pollution and mortality in the Medicare population. New England Journal of Medicine, 376(26), 2513–2522.", note: "60.9 million Medicare beneficiaries: 7.3% higher mortality per 10 µg/m³ PM2.5, persisting below the national standard.", link: doi("10.1056/NEJMoa1702747"), kind: "doi" },
+      { cite: "Gasparrini, A., Guo, Y., Hashizume, M., et al. (2015). Mortality risk attributable to high and low ambient temperature: A multicountry observational study. The Lancet, 386(9991), 369–375.", note: "384 locations, 74 million deaths: 7.7% of deaths attributable to non-optimal temperature, cold 7.3% and heat 0.4%; moderate temperatures carry most of the burden.", link: doi("10.1016/S0140-6736(14)62114-0"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7059 · calcium score & polygenic risk ──────────────────────────────────
+  {
+    id: "lv-calcium-score-polygenic-risk",
+    section: "7059",
+    title: "Coronary Calcium Scoring and Polygenic Risk — Knowing Your Odds Early",
+    subtitle: "A CT scan that reclassifies risk, and a genome score that finds hidden high-risk people",
+    evidenceTag: "Strong",
+    description:
+      "A coronary artery calcium score is a single low-dose CT that counts the calcified plaque already in the arteries. In 6,722 adults of four racial groups with no cardiovascular disease, a score of 101–300 carried 7.7 times, and above 300 9.7 times, the risk of a coronary event of a zero score, adding predictive power beyond every standard risk factor; a score of zero is among the strongest reassurances in cardiology. Polygenic scores work from the other end: a genome-wide score for coronary artery disease identified 8% of the population with more than three times the average risk — 20 times the number who carry a rare familial-hypercholesterolaemia mutation of the same severity. Neither changes the treatment; both change how early and how hard sections 7005–7009 are applied.",
+    feeds: ["knowing which risk band you are in", "deciding when to start prevention"],
+    impact: { magnitude: 3, latency: "days", durability: "lasting", effort: "low" },
+    sources: [
+      { cite: "Detrano, R., Guerci, A. D., Carr, J. J., et al. (2008). Coronary calcium as a predictor of coronary events in four racial or ethnic groups. New England Journal of Medicine, 358(13), 1336–1345.", note: "MESA, 6,722 adults: calcium score 101–300 carried 7.7-fold and >300 9.7-fold coronary-event risk versus zero, in every racial group.", link: doi("10.1056/NEJMoa072100"), kind: "doi" },
+      { cite: "Khera, A. V., Chaffin, M., Aragam, K. G., et al. (2018). Genome-wide polygenic scores for common diseases identify individuals with risk equivalent to monogenic mutations. Nature Genetics, 50(9), 1219–1224.", note: "A polygenic score flagged 8.0% of the population at >3-fold coronary risk — 20 times the prevalence of comparable monogenic mutations.", link: doi("10.1038/s41588-018-0183-z"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7060 · DO-HEALTH ───────────────────────────────────────────────────────
+  {
+    id: "lv-do-health-clocks",
+    section: "7060",
+    title: "DO-HEALTH — Omega-3, Vitamin D and Exercise on the Aging Clocks",
+    subtitle: "The largest randomized test of everyday supplements against biological age",
+    evidenceTag: "Moderate",
+    description:
+      "Among 777 Swiss adults aged 70 and over in the DO-HEALTH trial, three years of omega-3 (1 g/day) slowed three of four next-generation methylation clocks — PhenoAge, GrimAge2 and DunedinPACE — by the equivalent of roughly three to four months of aging, and the combination of omega-3, vitamin D (2,000 IU/day) and a home exercise programme had an additive effect on PhenoAge. The effects are small, the analysis was post hoc, and the clocks are biomarkers rather than outcomes; but it is randomized, it is the same fish-oil dose VITAL found neutral for events (section 7008), and it is the first trial-grade signal that ordinary supplements touch the clocks at all.",
+    feeds: ["biomarker evidence for the cheapest bundle", "calibration on clock-based claims"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "low" },
+    sources: [
+      { cite: "Bischoff-Ferrari, H. A., Gängler, S., Wieczorek, M., et al. (2025). Individual and additive effects of vitamin D, omega-3 and exercise on DNA methylation clocks of biological aging in older adults from the DO-HEALTH trial. Nature Aging, 5(3), 376–385.", note: "777 adults ≥70, three years: omega-3 slowed PhenoAge, GrimAge2 and DunedinPACE (2.9–3.8 months); additive effect of all three treatments on PhenoAge.", link: doi("10.1038/s43587-024-00793-y"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7061 · hearing aids & mortality ────────────────────────────────────────
+  {
+    id: "lv-hearing-aids-mortality",
+    section: "7061",
+    title: "Hearing Aids and Mortality — Regular Users Lived Longer",
+    subtitle: "NHANES follow-up of 1,863 adults with hearing loss",
+    evidenceTag: "Moderate",
+    description:
+      "Hearing loss itself was an independent risk factor for death (40% higher) among 9,885 US adults with audiometry in NHANES. Among the 1,863 with hearing loss, regular hearing-aid users had 24% lower mortality than never-users over a median 10.4 years, after adjusting for age, degree of hearing loss and medical history; occasional users gained nothing. It pairs with the ACHIEVE trial in section 7029 — the cognitive benefit was randomized, the survival benefit is observational — and it turns an audiogram into a longevity test.",
+    feeds: ["survival and cognition through hearing", "a device most people who need it do not wear"],
+    impact: { magnitude: 3, latency: "months", durability: "lasting", effort: "low" },
+    sources: [
+      { cite: "Choi, J. S., Adams, M. E., Crimmins, E. M., Lin, F. R., & Ailshire, J. A. (2024). Association between hearing aid use and mortality in adults with hearing loss in the USA: A mortality follow-up study of a cross-sectional cohort. The Lancet Healthy Longevity, 5(1), e66–e75.", note: "1,863 adults with hearing loss: regular hearing-aid use associated with 24% lower mortality versus never use; non-regular use, no difference.", link: doi("10.1016/S2666-7568(23)00232-5"), kind: "doi" },
+    ],
+  },
+
+  // ─── 7062 · the 2024–2026 corrections ───────────────────────────────────────
+  {
+    id: "lv-recent-corrections-2024-2026",
+    section: "7062",
+    title: "What Changed in 2024–2026 — Taurine Retracted as a Biomarker, Metformin in Monkeys, and the First Healthspan RCT Review",
+    subtitle: "The shelf's newest entries, so the older ones can be read in context",
+    evidenceTag: "Emerging",
+    description:
+      "Three results that reframe earlier entries. Taurine: the 2023 Science paper (section 7016) proposed falling taurine as a driver of aging; in 2025 the same journal published NIA data from three human cohorts, monkeys and mice showing circulating taurine rises or stays flat with age when measured longitudinally, and that it is not a universal aging biomarker — the supplement claim built on the first paper lost its footing. Metformin: a 40-month study in adult male cynomolgus monkeys reported slowed multi-tissue aging clocks and about a six-year regression in brain aging with preserved cognition, the first primate evidence for the drug of section 7011; it is 12 treated animals, not a human trial. Healthspan: the first systematic review of randomized trials using person-centred healthspan outcomes (intrinsic capacity, quality of life) found 15 eligible trials in 4,656 people, and the only interventions with consistent evidence were exercise and exercise-containing multidomain programmes — which is the conclusion this whole shelf reaches from the other direction.",
+    feeds: ["keeping the shelf current", "the honest state of geroscience in people"],
+    impact: { magnitude: 3, latency: "months", durability: "sustained", effort: "low" },
+    sources: [
+      { cite: "Fernandez, M. E., Bernier, M., Price, N. L., et al. (2025). Is taurine an aging biomarker? Science, 388(6751), eadl2116.", note: "Longitudinal and cross-sectional data in three human cohorts, monkeys and mice: circulating taurine increased or stayed unchanged with age; not a universal aging biomarker.", link: doi("10.1126/science.adl2116"), kind: "doi" },
+      { cite: "Yang, Y., Lu, X., Liu, N., et al. (2024). Metformin decelerates aging clock in male monkeys. Cell, 187(22), 6358–6378.e29.", note: "40-month study in adult male cynomolgus monkeys: slowed transcriptomic, methylation and proteomic aging clocks and ~6-year regression in brain aging; primate, not human.", link: doi("10.1016/j.cell.2024.08.021"), kind: "doi" },
+      { cite: "Zheng, H. T., Phyo, A. Z. Z., McCubbin, C., Wu, Z., Bischoff-Ferrari, H. A., & Ryan, J. (2026). Interventions that prolong multidimensional healthspan in humans: A systematic review of randomized controlled trials. Journals of Gerontology: Series A, 81(7).", note: "15 trials, 4,656 participants: exercise alone or within multidomain programmes improved intrinsic capacity and quality of life; no conclusion possible for supplements or caloric restriction.", link: doi("10.1093/gerona/glag133"), kind: "doi" },
     ],
   },
 ];

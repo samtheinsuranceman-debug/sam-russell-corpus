@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**6,285 clusters · 12,074 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**6,309 clusters · 12,120 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,359 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,383 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,607 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,258 |
 | Framework / uncategorized | 61 |
-| **Total** | **6,285** |
+| **Total** | **6,309** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,670 |
-| Strong | 1,723 |
-| Mixed | 1,065 |
-| Emerging | 827 |
+| Moderate | 2,678 |
+| Strong | 1,734 |
+| Mixed | 1,066 |
+| Emerging | 831 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,359)
+## PRACTICES — what strengthens the mind (impact lens)  (3,383)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3375,7 +3375,7 @@
 | 7025 | Sauna Bathing and Mortality — The Finnish Cohort | 3 | Moderate | 1 | Frequency of sauna use and fatal cardiovascular events over 20 years |
 | 7026 | Menopausal Hormone Therapy — From the 2002 Scare to the Timing Hypothesis | 3 | Strong | 3 | WHI's principal results, its 18-year mortality follow-up, and the 2022 position  |
 | 7027 | Testosterone, Growth Hormone and DHEA — The Honest Verdict on the Anti-Aging Hormones | 1 | Strong | 3 | TRAVERSE, the growth-hormone systematic review, and the DHEA trial |
-| 7028 | Epigenetic Clocks and Biological Age — What the Blood Test Can and Cannot Tell You | 2 | Moderate | 4 | Horvath's clock, PhenoAge, DunedinPACE, and the TRIIM pilot |
+| 7028 | Epigenetic Clocks and Biological Age — What the Blood Test Can and Cannot Tell You | 2 | Moderate | 5 | Horvath's clock, PhenoAge, DunedinPACE, and the TRIIM pilot |
 | 7029 | Hearing Aids, Vision and the Modifiable Share of Dementia | 3 | Strong | 2 | ACHIEVE and the Lancet Commission's fourteen risk factors |
 | 7030 | Vaccines as Longevity Medicine — Shingles and Dementia, Influenza and the Heart | 3 | Strong | 2 | A natural experiment in Wales and a meta-analysis of cardiovascular outcomes |
 | 7031 | Daily Low-Dose Aspirin in Healthy Older Adults — ASPREE Said No | 1 | Strong | 1 | 19,114 adults ≥70 without cardiovascular disease |
@@ -3386,6 +3386,30 @@
 | 7036 | Smoking and Alcohol — The Two Largest Subtractions, With the Years Counted | 5 | Strong | 2 | What smoking costs, what quitting recovers, and the alcohol curve without a safe |
 | 7037 | Frailty — The Five-Sign Phenotype That Predicts What Comes Next | 4 | Strong | 2 | Weight loss, exhaustion, weakness, slow walking, low activity |
 | 7038 | Oral Collagen for Skin Aging — A Cosmetic Result, Not a Longevity One | 2 | Moderate | 1 | Hydration, elasticity and roughness in a placebo-controlled trial |
+| 7039 | Magnesium — A Dose-Response Signal From Cohorts, Not a Trial | 2 | Moderate | 1 | Dietary magnesium and cardiovascular disease, diabetes and mortality |
+| 7040 | Berberine — Moves Glucose and Lipids in Short Trials; No Outcome Data | 2 | Moderate | 1 | The plant alkaloid sold as 'natural metformin' |
+| 7041 | Vitamin K2 (Menaquinone) — The Rotterdam Signal on Calcified Arteries | 2 | Emerging | 1 | Dietary menaquinone, coronary calcification and coronary death |
+| 7042 | Alpha-Ketoglutarate — An Uncontrolled Clock Result and a Trial Now Recruiting | 2 | Emerging | 2 | Rejuvant and the ABLE randomized trial |
+| 7043 | Melatonin — Modest, Real Effects on Sleep; Nothing on Aging | 2 | Moderate | 1 | Meta-analysis of 19 randomized trials |
+| 7044 | Curcumin, Green Tea and Trace Lithium — Three Popular Claims, Three Different Verdicts | 2 | Mixed | 3 | A chemistry critique, a large Japanese cohort, and a municipal-water study |
+| 7045 | SGLT2 Inhibitors in People — Fewer Deaths in Diabetes and Heart Failure | 4 | Strong | 2 | EMPA-REG OUTCOME and DAPA-HF; the human side of the canagliflozin mouse result |
+| 7046 | Statins After 75 — What the Trials Show, and the Trial That Will Answer the Rest | 4 | Strong | 2 | The CTT individual-patient meta-analysis and PREVENTABLE |
+| 7047 | Zoledronic Acid After Hip Fracture — Fewer Fractures and Fewer Deaths | 4 | Strong | 1 | HORIZON Recurrent Fracture Trial |
+| 7048 | Cold Exposure — Brown Fat and Thermoregulation in Winter Swimmers | 2 | Emerging | 1 | What the physiology shows; what the longevity claims do not |
+| 7049 | High-Intensity Interval Training After 70 — The Five-Year Randomized Trial | 4 | Strong | 2 | Generation 100, and the mitochondrial biology that explains it |
+| 7050 | Tai Ji Quan for Falls — Better Than Standard Exercise in a Head-to-Head Trial | 4 | Strong | 1 | Falls are the injury that ends independence; this is the practice that prevents  |
+| 7051 | Sleep Apnea and CPAP — Treat It for Sleep and Blood Pressure; The Heart Trial Was Null | 3 | Strong | 1 | SAVE: 2,717 patients with cardiovascular disease |
+| 7052 | Cataract Surgery and Dementia — A Third Lower Risk in a Well-Controlled Cohort | 3 | Moderate | 1 | Vision as the second sense that keeps the brain fed |
+| 7053 | Remnant Cholesterol Is Causal; Raising HDL Is Not — Three Drug Trials That Proved It | 3 | Strong | 4 | Why ApoB, not HDL, is the number to move |
+| 7054 | Nuts, Whole Grains, Fiber, a Salt Substitute, and Less Ultra-Processed Food | 4 | Strong | 6 | The food-level evidence with the largest and best-tested effects |
+| 7055 | FINGER — The Multidomain Trial That Slowed Cognitive Decline | 4 | Strong | 1 | Diet, exercise, cognitive training and vascular monitoring together |
+| 7056 | Purpose, Optimism and Meditation — The Psychological Levers With Survival Data | 3 | Moderate | 3 | Two cohorts, one telomerase trial |
+| 7057 | Volunteering and Education — Two Social Levers Measured in Years | 3 | Moderate | 2 | A meta-analysis of older volunteers and a global review of schooling |
+| 7058 | Air and Temperature — The Environmental Exposures With the Largest Death Tolls | 3 | Strong | 2 | Fine particulates below the legal limit, and the cold and heat you live in |
+| 7059 | Coronary Calcium Scoring and Polygenic Risk — Knowing Your Odds Early | 3 | Strong | 2 | A CT scan that reclassifies risk, and a genome score that finds hidden high-risk |
+| 7060 | DO-HEALTH — Omega-3, Vitamin D and Exercise on the Aging Clocks | 3 | Moderate | 1 | The largest randomized test of everyday supplements against biological age |
+| 7061 | Hearing Aids and Mortality — Regular Users Lived Longer | 3 | Moderate | 1 | NHANES follow-up of 1,863 adults with hearing loss |
+| 7062 | What Changed in 2024–2026 — Taurine Retracted as a Biomarker, Metformin in Monkeys, and the First Healthspan RCT Review | 3 | Emerging | 3 | The shelf's newest entries, so the older ones can be read in context |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,607)
 
