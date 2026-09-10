@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One command from source to every shippable artifact:
-#   typecheck → single-file homepage (docs/index.html) → database schema SQL
+#   typecheck → single-file homepage (docs/mirror/index.html) → database schema SQL
 #   → tests (incl. parity + schema file) → production build → deploy bundle zip
 #   → plain-Markdown code book.
 # Any failing step aborts; nothing is regenerated from a broken build.
@@ -24,8 +24,8 @@ step "6/7 deploy bundle";       bash scripts/build_deploy_bundle.sh
 step "7/7 code book";           python3 scripts/build_code_book.py | tail -1
 
 printf '\n\033[1;32m✔ release artifacts are current:\033[0m\n'
-echo "  docs/index.html            — public homepage (GitHub Pages / any static host)"
+echo "  docs/mirror/index.html     — static mirror of the homepage (any static host)"
 echo "  database/rcs-schema.sql    — complete DB schema (phpMyAdmin import / pnpm db:build)"
 echo "  rcs-deploy-<date>.zip      — full app bundle for cPanel / Node host"
 echo "  rcs-code-book/             — plain-Markdown source for AI review"
-echo "Commit and push; master serves docs/ once GitHub Pages is switched on."
+echo "Commit and push; the app serves www.russellcapitalsystems.com from Railway and GitHub Pages forwards the bare domain to it."

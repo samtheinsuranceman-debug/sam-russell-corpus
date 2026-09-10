@@ -2,10 +2,10 @@
 """Build the single-file public homepage from its template.
 
 Injects the six WebP images from ../client/public as data URIs plus the
-booking link and advisor email, and writes the result to <repo>/docs/index.html
+booking link and advisor email, and writes the result to <repo>/docs/mirror/index.html
 (served by GitHub Pages) so there is exactly one built copy in the repo.
 
-    python3 live/build_live_homepage.py            # writes ../../docs/index.html
+    python3 live/build_live_homepage.py            # writes ../../docs/mirror/index.html
     python3 live/build_live_homepage.py out.html   # writes somewhere else
 """
 import base64, pathlib, sys
@@ -14,7 +14,7 @@ HERE = pathlib.Path(__file__).resolve().parent          # russell-capital-system
 APP = HERE.parent                                        # russell-capital-systems
 REPO = APP.parent                                        # repo root
 PUB = APP / "client" / "public"
-DEFAULT_OUT = REPO / "docs" / "index.html"
+DEFAULT_OUT = REPO / "docs" / "mirror" / "index.html"  # docs/index.html itself forwards the bare domain to www
 
 IMAGES = {
     "__IMG_NEON_A__": "rcs-neon-a.webp",
@@ -57,7 +57,7 @@ CONSTS = {
     "__CALENDLY__": "https://calendly.com/sam-russellcapitalsystems/30min",
     "__ADVISOR_EMAIL__": "samtheinsuranceman@gmail.com",
     # The app host serves the founder's message in the owner's cloned voice; the static page embeds the player.
-    "__APP_ORIGIN__": "https://web-production-4b215.up.railway.app",
+    "__APP_ORIGIN__": "https://www.russellcapitalsystems.com",
 }
 MANIFESTO = APP / "shared" / "homeManifesto.json"
 
