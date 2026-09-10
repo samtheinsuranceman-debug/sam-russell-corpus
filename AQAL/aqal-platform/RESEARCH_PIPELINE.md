@@ -125,3 +125,17 @@ To extend the shelf: verify the DOI first (fetch the publisher page or the
 PubMed record), add the cluster under a new `70NN` section in all three maps
 (`LONGEVITY_SECTIONS`, `LONGEVITY_SECTION_SHORT`, and the order is derived),
 give it an `impact` rating, run the test, then `python3 scripts/gen_catalog.py`.
+
+### How the shelf is extended: the multi-AI sweep
+
+Wave 2 (sections 7039–7062) was built by fanning one gap question out to
+several engines at once — Perplexity (research and ask), a second model
+through OpenRouter, the Amass biomedical index, Exa and PubMed — and treating
+every answer as a *candidate list*, never as a source. Each candidate DOI was
+then resolved against the publisher page or the PubMed record before it was
+written down; candidates whose DOI did not resolve, or resolved to a different
+paper than claimed (the second model produced several of these), were dropped
+rather than corrected from memory. The engines are good at recall — they
+surfaced DO-HEALTH, the 2025 taurine correction, the metformin-in-monkeys study,
+the 2026 healthspan RCT review and the ABLE trial — and unreliable at
+citation, which is why the verification gate stays mandatory.

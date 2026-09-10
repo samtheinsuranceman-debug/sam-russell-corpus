@@ -11,9 +11,9 @@ import { GOAL_KEYWORDS } from "../../../shared/seo";
 // section, hype is rated at the floor, and the goal path reaches the shelf.
 describe("healthy aging & longevity shelf", () => {
   it("carries a substantial, DOI-only source ledger", () => {
-    expect(LONGEVITY_EVIDENCE.length).toBeGreaterThanOrEqual(36);
+    expect(LONGEVITY_EVIDENCE.length).toBeGreaterThanOrEqual(60);
     const sources = LONGEVITY_EVIDENCE.flatMap((c) => c.sources);
-    expect(sources.length).toBeGreaterThanOrEqual(90);
+    expect(sources.length).toBeGreaterThanOrEqual(140);
     for (const s of sources) {
       expect(s.kind).toBe("doi");
       expect(s.link).toMatch(/^https:\/\/doi\.org\/10\.\d{4,9}\/\S+$/);
