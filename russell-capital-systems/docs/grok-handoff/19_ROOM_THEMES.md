@@ -21,7 +21,7 @@ HEYGEN_SHOT_LISTS_12_ROOMS.md.
 
 Nothing per page. `RoomSync` sits beside `SeoSync` in `App.tsx`; on every route change it
 reads `routeToTheme()` and writes the attributes. The stylesheet keys everything on
-`html[data-room="…"]`, so all 257 routes are dressed by the same rules:
+`html[data-room="…"]`, so all 258 routes are dressed by the same rules:
 
 - **AppShell** (`.rc-portal-theme`) remaps the shell's own variables (`--card-bg`,
   `--muted-text`, `--primary`, sidebar, topbar, bottom tabs) to the room tokens. The

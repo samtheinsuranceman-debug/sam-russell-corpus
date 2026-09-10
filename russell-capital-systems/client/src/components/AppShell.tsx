@@ -33,6 +33,7 @@ import { JourneyProgressBar } from "@/components/JourneyProgressBar";
 import { FactFinderBadge } from "@/contexts/ClientDataContext";
 import { CastBadge, useRoom } from "@/components/rooms/RoomTheme";
 import { EngineWhyFooter, QuestionWhy } from "@/components/rooms/Reveal";
+import { RoomVideoTile } from "@/components/rooms/RoomVideoTile";
 
 /* ═══════════════════════════════════════════════════════════════════
    COLOR-CODED NAVIGATION — Intuitive categories with visual coding
@@ -172,6 +173,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/plan-ledger", label: "Plan Ledger", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/controls", label: "Controls", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/erosion", label: "Purchasing Power", icon: BookOpenCheck, color: "purple" },
+      { path: "/portal/outside-forces", label: "Outside Forces", icon: Waves, color: "purple" },
       { path: "/portal/forgiveness", label: "Loan Forgiveness", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/tax-schedule", label: "Tax Schedule", icon: BookOpenCheck, color: "purple" },
       { path: "/portal/sphere", label: "The Sphere", icon: BookOpenCheck, color: "purple" },
@@ -1317,6 +1319,8 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
         <main id="main-content" className="rc-fade-in page-enter rc-breathe-ambient">
           <JourneyProgressBar />
           <AssessmentPrefillNotice />
+          {/* The room's HeyGen tile, only once the host has a URL for it */}
+          <RoomVideoTile />
           {/* The question whisper: one sentence at the head of every engine, in the needle's voice */}
           {room.theme === "theme9" && (
             <div className="rc-engine-whisper">
