@@ -1,11 +1,11 @@
 # Russell Capital Systems — page inventory for theming
 
-257 declared routes (client/src/App.tsx) in 8 functional roles, and the 12 sections a visitor moves through. Counts first, every path after.
+258 declared routes (client/src/App.tsx) in 8 functional roles, and the 12 sections a visitor moves through. Counts first, every path after.
 
 ## The 8 roles
 - **1. Public front door — marketing, pricing, legal, sign-in** — 14 pages
 - **2. Tax pages — strategy, schedule, combinations, filings** — 17 pages
-- **3. Prediction & outside forces — taxes, inflation, markets, power, forgiveness, appreciation** — 18 pages
+- **3. Prediction & outside forces — taxes, inflation, markets, power, forgiveness, appreciation** — 19 pages
 - **4. Calculators & engines — numbers the client runs** — 60 pages
 - **5. Client profile & intake — facts about one person, their journey** — 44 pages
 - **6. Dashboard & advisor operations — the cockpit, CRM, automations, admin** — 88 pages
@@ -37,7 +37,7 @@ Legal (/privacy, /terms), sign-in and reset, settings, billing, compliance, vaul
 `/portal/charitable-giving`, `/portal/estate-tax`, `/portal/hidden-material`, `/portal/physicians-edge`, `/portal/secret-secrets`, `/portal/secret-secrets/:id`, `/portal/str-strategy`, `/portal/tax-advantaged-growth`, `/portal/tax-brackets`, `/portal/tax-combos`, `/portal/tax-combos/:id`, `/portal/tax-loss-harvesting`, `/portal/tax-opportunities`, `/portal/tax-return-upload`, `/portal/tax-schedule`, `/portal/tax-waterfall`, `/portal/toilet`
 
 ### 3. Prediction & outside forces — taxes, inflation, markets, power, forgiveness, appreciation (18)
-`/portal/crypto-corner`, `/portal/ecological-drivers`, `/portal/erosion`, `/portal/forgiveness`, `/portal/ibbotson-charts`, `/portal/index-strategies`, `/portal/inflation`, `/portal/market-data`, `/portal/market-stress-test`, `/portal/portfolio-drift`, `/portal/predictive-analytics`, `/portal/sphere`, `/portal/time-lapse`, `/portal/time-machine`, `/portal/time-machine-ag49`, `/portal/time-machine-calculator`, `/portal/time-machine-method`, `/portal/zip-engine`
+`/portal/crypto-corner`, `/portal/ecological-drivers`, `/portal/erosion`, `/portal/forgiveness`, `/portal/ibbotson-charts`, `/portal/index-strategies`, `/portal/inflation`, `/portal/market-data`, `/portal/market-stress-test`, `/portal/outside-forces`, `/portal/portfolio-drift`, `/portal/predictive-analytics`, `/portal/sphere`, `/portal/time-lapse`, `/portal/time-machine`, `/portal/time-machine-ag49`, `/portal/time-machine-calculator`, `/portal/time-machine-method`, `/portal/zip-engine`
 
 ### 4. Calculators & engines — numbers the client runs (65)
 `/calculators`, `/portal/advisor-income-calculator`, `/portal/annuity-accumulation-db`, `/portal/annuity-memory`, `/portal/athene-guaranteed-income`, `/portal/athene-pe-plus15`, `/portal/axonic-sp500`, `/portal/batch-illustration`, `/portal/beneficiary-optimization`, `/portal/carrier-comparison`, `/portal/carrier-rates`, `/portal/carrier-ratings`, `/portal/carrier-settings`, `/portal/client-comparison`, `/portal/commission-calculator`, `/portal/comparison`, `/portal/divorce-calculator`, `/portal/endgame`, `/portal/estate-flow`, `/portal/existing-annuities`, `/portal/fia-top10`, `/portal/financial-vitals`, `/portal/growth-annuities`, `/portal/hot-income`, `/portal/house-recycling`, `/portal/illustration-compare`, `/portal/income-annuity-top10`, `/portal/income-gap`, `/portal/income-timeline`, `/portal/index-backtester`, `/portal/iul-historical`, `/portal/iul-vs-roth`, `/portal/lifetime-income`, `/portal/medicare-irmaa`, `/portal/mortgage-killer`, `/portal/mortgage-killer-v3`, `/portal/multi-gen-wealth`, `/portal/myga-fixed-rate`, `/portal/policy-loans`, `/portal/premium-financing`, `/portal/quick-quote`, `/portal/quotes`, `/portal/real-estate-mogul`, `/portal/rebalance`, `/portal/retirement-guardrails`, `/portal/retirement-projection`, `/portal/reverse-heloc`, `/portal/roth-conversion`, `/portal/russell-number`, `/portal/saved-scenarios`, `/portal/scenario-play`, `/portal/scenario-side-by-side`, `/portal/scenarios`, `/portal/short-term-rentals`, `/portal/rental-enterprise`, `/portal/inheritance`, `/portal/iul-engine`, `/portal/long-term-care`, `/portal/income-for-life`, `/portal/smart-rebalancing`, `/portal/social-security`, `/portal/strategy-compare`, `/portal/the-brotherhood`, `/portal/withdrawal-sequencing`, `/ultra-calculator`

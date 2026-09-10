@@ -15,6 +15,7 @@ import { ledgerRouter } from "./ledgerRouter";
 import { integrationsRouter } from "./integrationsRouter";
 import { controlsRouter } from "./controlsRouter";
 import { erosionRouter } from "./erosionRouter";
+import { outsideForcesRouter } from "./outsideForcesRouter";
 import { zipRouter } from "./zipRouter";
 import { careerRouter } from "./careerRouter";
 import { enterpriseRouter } from "./enterpriseRouter";
@@ -332,6 +333,7 @@ export const appRouter = router({
   integrations: integrationsRouter,
   controls: controlsRouter,
   erosion: erosionRouter,
+  outsideForces: outsideForcesRouter,
   zip: zipRouter,
   career: careerRouter,
   rental: enterpriseRouter,
