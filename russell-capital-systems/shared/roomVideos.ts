@@ -58,4 +58,11 @@ export function roomVideoFor(room: Room, path: string): RoomVideoKey | null {
   return null;
 }
 
-export const ROOM_VIDEO_KEYS = ROOM_VIDEOS.map((v) => v.key);
+/** Page-specific slots that are not rooms: the HELOC before-and-after pair on the Mortgage Killer and Reverse HELOC pages. */
+export const SITE_VIDEO_SLOTS = [
+  { key: "heloc-before", label: "Before: the mortgage as it stands", placement: "Mortgage Killer projection tab and the Reverse HELOC page, left" },
+  { key: "heloc-after", label: "After: the house retires the house", placement: "Mortgage Killer projection tab and the Reverse HELOC page, right" },
+] as const;
+export type SiteVideoSlot = (typeof SITE_VIDEO_SLOTS)[number]["key"];
+
+export const ROOM_VIDEO_KEYS: string[] = [...ROOM_VIDEOS.map((v) => v.key), ...SITE_VIDEO_SLOTS.map((s) => s.key)];
