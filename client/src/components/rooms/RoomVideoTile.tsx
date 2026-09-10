@@ -7,7 +7,7 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { ROOM_VIDEOS, roomVideoFor } from "@shared/roomVideos";
+import { ROOM_VIDEOS, SITE_VIDEO_SLOTS, roomVideoFor, type SiteVideoSlot } from "@shared/roomVideos";
 import { useRoom } from "./RoomTheme";
 
 type Payload = { urls: Record<string, string>; posters: Record<string, string> };
@@ -37,5 +37,33 @@ export function RoomVideoTile() {
       )}
       <p className="rc-room-video-caption">{meta.title}</p>
     </aside>
+  );
+}
+
+/** A page-specific slot (the HELOC before-and-after pair). Renders only once the host has the URL. */
+export function SiteVideo({ slot }: { slot: SiteVideoSlot }) {
+  const [payload, setPayload] = useState<Payload | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => { load().then(setPayload); }, []);
+  if (!payload?.urls[slot]) return null;
+  const meta = SITE_VIDEO_SLOTS.find((s) => s.key === slot)!;
+  const listen = () => { const v = ref.current; if (!v) return; v.muted = false; v.play().then(() => setPlaying(true)).catch(() => undefined); };
+  return (
+    <aside className="rc-room-video rc-site-video" aria-label={meta.label}>
+      <video ref={ref} src={payload.urls[slot]} poster={payload.posters[slot]} muted playsInline preload="metadata" controls={playing} onEnded={() => setPlaying(false)} />
+      {!playing && <button type="button" className="rc-room-video-listen" onClick={listen}>Play</button>}
+      <p className="rc-room-video-caption">{meta.label}</p>
+    </aside>
+  );
+}
+
+/** The before-and-after pair, side by side when both exist. */
+export function HelocBeforeAfter() {
+  return (
+    <div className="rc-site-video-pair">
+      <SiteVideo slot="heloc-before" />
+      <SiteVideo slot="heloc-after" />
+    </div>
   );
 }

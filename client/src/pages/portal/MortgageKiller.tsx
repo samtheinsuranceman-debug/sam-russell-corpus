@@ -50,6 +50,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { HelocBeforeAfter } from "@/components/rooms/RoomVideoTile";
 
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
@@ -1613,6 +1614,8 @@ export default function MortgageKiller() {
           <TabsContent value="projection" className="space-y-6 mt-6">
             {result && result.cascadingProjection && (
               <>
+                {/* Before-and-after videos, once the host has them */}
+                <HelocBeforeAfter />
                 {/* Before vs After Graph */}
                 <Card>
                   <CardHeader>
