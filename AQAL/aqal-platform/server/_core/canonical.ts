@@ -22,6 +22,8 @@ export function canonicalRedirectLocation({
   canonicalHost = "www.joinaqal.com",
 }: CanonicalRedirectInput): string | null {
   if (method !== "GET") return null;
+  // The hosting platform probes /health over plain HTTP inside the network; it must never be redirected.
+  if (originalUrl === "/health" || originalUrl.startsWith("/health?")) return null;
 
   const hostname = host.split(":")[0].trim().toLowerCase();
   if (!hostname || LOCAL_HOSTS.has(hostname)) return null;
