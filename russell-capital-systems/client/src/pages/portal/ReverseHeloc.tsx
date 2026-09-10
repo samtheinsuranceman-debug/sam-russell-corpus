@@ -31,6 +31,7 @@ import { useClientData } from "@/contexts/ClientDataContext";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { HelocBeforeAfter } from "@/components/rooms/RoomVideoTile";
 
 const fmt = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 
@@ -220,6 +221,7 @@ export default function ReverseHeloc() {
             <p className="text-muted-foreground">HELOC → IUL → MYGA → O&G — Four-Layer Compounding Wealth Engine</p>
           </div>
         </div>
+        <HelocBeforeAfter />
         <div className="flex items-center gap-2">
           <ExportToSlides
             toolName="Reverse-Engineered HELOC Strategy"

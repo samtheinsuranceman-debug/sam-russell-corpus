@@ -62,3 +62,10 @@ taps "Listen". The cover tile on the homepage waits for the copy re-paste.
 
 Production order from the brief: engines first (it ships on the most pages), then cover
 and relief, then tax, then journey. File name `rcs-heygen-{room}-{duration}-v1.mp4`.
+
+## The HELOC before-and-after pair
+
+Two page slots that are not rooms: `heloc-before` and `heloc-after`. Set them in the same
+`ROOM_VIDEO_URLS` map. They appear side by side on the Mortgage Killer projection tab
+(above the before-vs-after balance chart) and under the Reverse HELOC page title, and
+nowhere until the URLs exist.

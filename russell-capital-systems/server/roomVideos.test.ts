@@ -31,6 +31,8 @@ describe("the twelve HeyGen rooms", () => {
     expect(parseRoomVideoMap(undefined)).toEqual({});
     expect(parseRoomVideoMap("not json")).toEqual({});
     expect(parseRoomVideoMap(JSON.stringify({ engines: "https://cdn.example/rcs-heygen-engines-3m-v1.mp4", bogus: "https://x", tax: "http://insecure", cover: 5 }))).toEqual({ engines: "https://cdn.example/rcs-heygen-engines-3m-v1.mp4" });
+    // the HELOC before-and-after pair are slots, not rooms, and ride the same setting
+    expect(parseRoomVideoMap(JSON.stringify({ "heloc-before": "https://a/before.mp4", "heloc-after": "https://a/after.mp4" }))).toEqual({ "heloc-before": "https://a/before.mp4", "heloc-after": "https://a/after.mp4" });
     expect(roomVideosPayload({ ROOM_VIDEO_URLS: '{"tax":"https://a/b.mp4"}' } as NodeJS.ProcessEnv)).toEqual({ urls: { tax: "https://a/b.mp4" }, posters: {} });
   });
 });

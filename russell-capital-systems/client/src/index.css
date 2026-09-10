@@ -1887,3 +1887,7 @@ html[data-quiet] .rc-integral { display: none; }
 .rc-room-video-listen:hover { background: var(--room-calculate-hover, #D4682E); }
 .rc-room-video-caption { margin: 0; padding: 8px 12px; font-family: var(--font-ui); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--room-muted, #7F8797); }
 @media (max-width: 640px) { .rc-room-video { margin: 16px 12px 0; } }
+.rc-site-video-pair { display: grid; gap: 16px; margin: 0 0 16px; }
+.rc-site-video-pair:empty { display: none; }
+@media (min-width: 900px) { .rc-site-video-pair { grid-template-columns: 1fr 1fr; } }
+.rc-site-video-pair .rc-room-video { margin: 0; max-width: none; }
