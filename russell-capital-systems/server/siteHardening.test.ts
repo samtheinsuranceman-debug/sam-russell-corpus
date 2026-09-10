@@ -130,7 +130,7 @@ describe("HTML rendering", () => {
     expect(card.readUInt16BE(sof + 7)).toBe(1200);
     // the static mirror carries the same card
     const mirror = readFileSync(resolve("live/rcs-live-homepage.template.html"), "utf8");
-    expect(mirror).toContain('<meta property="og:image" content="https://russellcapitalsystems.com/og-card.jpg">');
+    expect(mirror).toContain('<meta property="og:image" content="https://www.russellcapitalsystems.com/og-card.jpg">');
   });
   it("marks sign-in and portal pages noindex and answers 404 for unknown routes", () => {
     expect(renderHtml({ template, path: "/login", origin: "https://x" }).html).toContain('name="robots" content="noindex,nofollow"');

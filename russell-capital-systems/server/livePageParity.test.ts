@@ -1,9 +1,9 @@
 // ============================================================
 // LIVE PAGE ↔ REACT HOMEPAGE PARITY
-// The published single-file homepage (live/ template → docs/index.html) and the
+// The published single-file homepage (live/ template → docs/mirror/index.html) and the
 // React homepage are two renderings of the same content. Both read their words
 // from shared/homeManifesto.json; this test fails the moment they drift — and
-// it fails if docs/index.html is stale relative to the template.
+// it fails if docs/mirror/index.html is stale relative to the template.
 // ============================================================
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
@@ -75,16 +75,16 @@ describe("live page ↔ React homepage parity", () => {
     expect(landing).not.toMatch(/blur-\[/);
   });
 
-  it("docs/index.html is the built form of the current template", () => {
-    const built = path.join(REPO, "docs/index.html");
-    expect(existsSync(built), "docs/index.html exists — run `pnpm live:build`").toBe(true);
+  it("docs/mirror/index.html is the built form of the current template", () => {
+    const built = path.join(REPO, "docs/mirror/index.html");
+    expect(existsSync(built), "docs/mirror/index.html exists — run `pnpm live:build`").toBe(true);
     const normalize = (s: string) =>
       s.replace(/data:image\/webp;base64,[A-Za-z0-9+/=]+/g, "__IMG__").replace(/__IMG_[A-Z_]+__/g, "__IMG__")
         .replace(/<script id="manifesto-json" type="application\/json">[\s\S]*?<\/script>/, "__MANIFESTO__");
     const expected = normalize(template)
       .replace(/__CALENDLY__/g, "https://calendly.com/sam-russellcapitalsystems/30min")
       .replace(/__ADVISOR_EMAIL__/g, "samtheinsuranceman@gmail.com")
-      .replace(/__APP_ORIGIN__/g, "https://web-production-4b215.up.railway.app");
+      .replace(/__APP_ORIGIN__/g, "https://www.russellcapitalsystems.com");
     expect(normalize(read(built))).toBe(expected);
     // and the embedded manifesto is the current one
     expect(read(built)).toContain(manifesto.claims[manifesto.claims.length - 1].name);

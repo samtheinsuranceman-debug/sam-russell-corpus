@@ -16,31 +16,29 @@ site; it needs a running Node process and a database.
 
 ---
 
-## ⚡ Fastest path: the homepage live today, no server
+## ⚡ Where the public site lives
 
-The public homepage also exists as a **single self-contained HTML file** with no
-server, database, or keys: `docs/index.html` at the repo root (built from
-`russell-capital-systems/live/rcs-live-homepage.template.html`). It has the full
-page — every image, the AI concierge (falls back to email), the lead fact-finder
-(pre-filled email to the advisor), and Calendly booking.
+**https://www.russellcapitalsystems.com** is the application on Railway
+(project `RCS`, service `web`). The `www` host is a CNAME to Railway
+(`dd56isi9.up.railway.app`), written through the Make DNS scenario in
+`docs/grok-handoff/09_DNS_AND_MAIL_RECORDS.md`. `CANONICAL_HOST` and
+`PUBLIC_BASE_URL` on the service name `www`, so plain http 301s to https,
+canonical links and the sitemap carry the www origin, and the Railway
+`*.up.railway.app` address keeps working as a fallback.
 
-**One click makes it public on GitHub Pages** (a workflow does the rest):
+**The bare domain** (`russellcapitalsystems.com`, no www) stays on GitHub
+Pages, because the Railway plan allows one custom domain per service. The
+Pages folder `docs/` at the repo root holds `CNAME`, a one-line forwarding
+page (`docs/index.html` sends the visitor to the same path on www), `robots.txt`
+and `sitemap.xml` pointing at www, and `og-card.jpg`. When the plan allows a
+second domain, attach the apex to the same service, change the apex A
+records to Railway's, and the forwarding page is no longer needed.
 
-1. Open https://github.com/samtheinsuranceman-debug/sam-russell-corpus/settings/pages
-2. Under **Build and deployment → Source** choose **GitHub Actions**. That's it —
-   there is nothing to save separately.
-3. Open https://github.com/samtheinsuranceman-debug/sam-russell-corpus/actions/workflows/pages.yml
-   and click **Run workflow** (or just wait for the next merge to `master`).
-   Within a minute or two the homepage is live at
-   **https://samtheinsuranceman-debug.github.io/sam-russell-corpus/**
-4. (Optional) Add a custom domain on the Pages settings page and point its DNS
-   `CNAME` at `samtheinsuranceman-debug.github.io`.
+**A static mirror** of the homepage, with no server, database or keys, is
+still built from `russell-capital-systems/live/rcs-live-homepage.template.html`
+to `docs/mirror/index.html` (`pnpm live:build`, also part of `pnpm release`).
+It is a fallback for any static host; it is not what the public sees.
 
-The workflow (`.github/workflows/pages.yml`) republishes `docs/` on every push to
-`master`. It cannot switch Pages on by itself — GitHub only lets a repository
-admin do that, which is step 2.
-
-Every later `pnpm release` + merge to `master` updates the live page automatically.
 The full app (portal, lead inbox, nine-AI panel, database) still deploys per the
 sections below.
 
@@ -70,7 +68,7 @@ From `russell-capital-systems/`:
 pnpm release
 ```
 
-runs typecheck → builds `docs/index.html` → public-surface tests (including the
+runs typecheck → builds `docs/mirror/index.html` → public-surface tests (including the
 live-page ↔ React parity test) → production build → `rcs-deploy-<date>.zip` →
 `rcs-code-book/`. Any failing step aborts, so stale artifacts are never produced
 from a broken build. Then commit and push.
