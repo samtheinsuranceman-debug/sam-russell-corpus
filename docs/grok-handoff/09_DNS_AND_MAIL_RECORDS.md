@@ -18,8 +18,8 @@ relaxed April 2026).
 
 | Host | Type | Value | Purpose |
 |---|---|---|---|
-| `@` | A ×4 | 185.199.108–111.153 | GitHub Pages (apex) |
-| `www` | **CNAME** | `samtheinsuranceman-debug.github.io` | GitHub Pages (was 4 A records; replaced 2026-09-06) |
+| `@` | A ×4 | 185.199.108–111.153 | GitHub Pages (apex): `docs/index.html` forwards every path to `www` |
+| `www` | **CNAME** | `dd56isi9.up.railway.app` | **Railway** — the application (was GitHub Pages until 2026-09-10; before that 4 A records) |
 | `@` | MX ×5 | Google (`aspmx.l.google.com` …) | inbound mail |
 | `@` | TXT | `v=spf1 include:dc-aa8e722993._spfm.russellcapitalsystems.com ~all` | SPF (Google, via GoDaddy's flattening host) |
 | `dc-aa8e722993._spfm` | TXT | `v=spf1 include:_spf.google.com ~all` | SPF include target |
@@ -42,8 +42,21 @@ us-east-1) was added and verification triggered once the records resolved.
 When it shows *verified*, set `RESEND_API_KEY` and `MAIL_FROM` (an address on
 this domain) on the host and marketing + transactional mail goes out signed.
 
-## GitHub Pages
+## Where each host goes (2026-09-10)
 
-`www` now points at GitHub by CNAME, which is what Pages asks for; the
-`InvalidARecordError` warning on the custom-domain panel clears on its next
-DNS check.
+- `www.russellcapitalsystems.com` → Railway service `web` (custom domain
+  attached; Railway asked for CNAME `www` → `dd56isi9.up.railway.app`, which the
+  apply scenario wrote). `CANONICAL_HOST=www.russellcapitalsystems.com` and
+  `PUBLIC_BASE_URL=https://www.russellcapitalsystems.com` are set on the service.
+- `russellcapitalsystems.com` (apex) → still GitHub Pages. The Railway plan
+  allows one custom domain per service, so the apex could not be attached
+  (`You have reached the limit for custom domains per service on your plan`).
+  `docs/index.html` is now a forwarding page to the same path on www; `docs/CNAME`
+  stays so Pages keeps answering for the apex over https.
+- To finish the move later: raise the plan (or free the slot), attach the apex
+  in Railway, replace the four apex A records with what Railway asks for, and
+  delete the forwarding page.
+
+The apply scenario now holds only the `www` CNAME PUT (the DKIM/MX/SPF PATCH and
+the A-record DELETE from 2026-09-06 were already applied and were removed from
+the blueprint so re-running it cannot touch mail).
