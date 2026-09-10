@@ -371,7 +371,7 @@ const CALCULUS = set(
   "/portal/crypto-corner", "/portal/ecological-drivers", "/portal/erosion", "/portal/forgiveness", "/portal/ibbotson-charts",
   "/portal/index-strategies", "/portal/inflation", "/portal/market-data", "/portal/market-stress-test", "/portal/portfolio-drift",
   "/portal/predictive-analytics", "/portal/sphere", "/portal/time-lapse", "/portal/time-machine", "/portal/time-machine-ag49",
-  "/portal/time-machine-calculator", "/portal/time-machine-method", "/portal/zip-engine",
+  "/portal/time-machine-calculator", "/portal/time-machine-method", "/portal/zip-engine", "/portal/outside-forces",
 );
 const ESTATE = set(
   "/portal/trusts", "/portal/will-writer", "/portal/succession-planning", "/portal/estate-document-gen", "/portal/ai-policy-review",

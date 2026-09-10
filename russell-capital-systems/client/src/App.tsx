@@ -266,6 +266,7 @@ const PlanLedger = lazy(() => import("./pages/portal/PlanLedger"));
 const Connections = lazy(() => import("./pages/portal/Connections"));
 const Controls = lazy(() => import("./pages/portal/Controls"));
 const Erosion = lazy(() => import("./pages/portal/Erosion"));
+const OutsideForces = lazy(() => import("./pages/portal/OutsideForces"));
 const ZipEngine = lazy(() => import("./pages/portal/ZipEngine"));
 const ShortTermRentals = lazy(() => import("./pages/portal/ShortTermRentals"));
 const RentalEnterprise = lazy(() => import("./pages/portal/RentalEnterprise"));
@@ -600,6 +601,7 @@ function Router() {
       <Route path="/portal/connections" component={gated(Connections, "/portal/connections")} />
       <Route path="/portal/controls" component={gated(Controls, "/portal/controls")} />
       <Route path="/portal/erosion" component={gated(Erosion, "/portal/erosion")} />
+      <Route path="/portal/outside-forces" component={gated(OutsideForces, "/portal/outside-forces")} />
       <Route path="/portal/zip-engine" component={gated(ZipEngine, "/portal/zip-engine")} />
       <Route path="/portal/short-term-rentals" component={gated(ShortTermRentals, "/portal/short-term-rentals")} />
       <Route path="/portal/rental-enterprise" component={gated(RentalEnterprise, "/portal/rental-enterprise")} />
