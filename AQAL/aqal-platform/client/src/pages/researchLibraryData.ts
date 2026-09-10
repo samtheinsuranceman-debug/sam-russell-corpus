@@ -3,12 +3,13 @@
 // verified source corrections are applied immutably here so they remain small,
 // reviewable, and testable even when the generated file exceeds editor limits.
 import { PRACTICE_EVIDENCE as RAW_PRACTICE_EVIDENCE } from "./researchLibraryDataRaw";
+import { LONGEVITY_EVIDENCE } from "./researchLibraryLongevity";
 
 const MARSH_HAU_CLUSTER_ID = "big-fish-little-pond-rank-effect";
 const OLD_SAMPLE_SIZE = "103,558 students";
 const CORRECT_SAMPLE_SIZE = "106,579 students";
 
-export const PRACTICE_EVIDENCE = RAW_PRACTICE_EVIDENCE.map((cluster) => {
+const CORRECTED_RAW_EVIDENCE = RAW_PRACTICE_EVIDENCE.map((cluster) => {
   if (cluster.id !== MARSH_HAU_CLUSTER_ID) return cluster;
   return {
     ...cluster,
@@ -19,3 +20,8 @@ export const PRACTICE_EVIDENCE = RAW_PRACTICE_EVIDENCE.map((cluster) => {
     })),
   };
 });
+
+// The healthy-aging & longevity shelf (sections 7000+) is authored in its own
+// file with its own verification ledger and merged here, so it lands in the
+// same page, filters, counts and catalog as the frozen corpus.
+export const PRACTICE_EVIDENCE = [...CORRECTED_RAW_EVIDENCE, ...LONGEVITY_EVIDENCE];

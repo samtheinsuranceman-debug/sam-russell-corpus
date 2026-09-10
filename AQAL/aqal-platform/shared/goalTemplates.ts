@@ -129,6 +129,18 @@ export const GOAL_TEMPLATES: GoalTemplate[] = [
     ],
   },
   {
+    key: "longevity", label: "Live longer, healthier",
+    keywords: ["longevity", "live longer", "live to", "healthspan", "lifespan", "anti-aging", "antiaging", "aging", "ageing", "biological age", "100"],
+    baselineMonths: 24, minMonthlyHours: 25,
+    stages: [
+      "Numbers on the table: ApoB or LDL, blood pressure, VO₂max estimate, grip strength, sleep hours",
+      "The four movers running weekly: aerobic base, two strength sessions, 7–9h sleep, no tobacco",
+      "Lipids and blood pressure at target with a clinician (or a plan to get there)",
+      "One evidence-backed addition kept 90 days (the Research Library longevity shelf says which have human trials)",
+      "Twelve months of logged effort and a re-measure of every number",
+    ],
+  },
+  {
     key: "travel", label: "Travel goal",
     keywords: ["travel", "trip", "country", "world", "visit", "abroad"],
     baselineMonths: 12, minMonthlyHours: 5,

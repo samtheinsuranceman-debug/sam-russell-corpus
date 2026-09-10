@@ -488,6 +488,49 @@ export const KEYSTONE_PRACTICES: KeystonePractice[] = [
     researchBasis: "Kashdan & Rottenberg (2010): psychological flexibility predicts wellbeing. Hayes et al. (2006): ACT reliably increases cognitive flexibility. Diamond (2013): executive function training transfers.",
     goalKeywords: ["flexible", "adapt", "change", "resilience", "pivot", "uncertainty", "stuck", "rigid", "open"],
   },
+  // ─── Healthy aging & longevity (Research Library sections 7000+) ─────────────
+  // Only practices with human outcome data sit here; the library shelf carries
+  // the animal-only and debunked items with their honest verdicts.
+  {
+    id: "longevity-fitness", name: "Cardiorespiratory fitness (VO₂max)", section: "7001", librarySection: "Longevity — Cardiorespiratory Fitness & Mortality",
+    evidence: "Strong", lifts: ["kinesthetic", "resilient", "volitional", "cognition", "mood"],
+    prescription: "Build an aerobic base (most weeks 150–300 min moderate, or 75–150 vigorous, plus one harder interval session) and re-test fitness every few months. Fitness is the single strongest measured predictor of how long people live.",
+    horizon: "8–12 weeks to move VO₂max; a lifetime to keep it",
+    researchBasis: "In 122,007 treadmill-tested adults, each step up in fitness lowered all-cause mortality, with no upper limit of benefit (Mandsager 2018); the pattern held across age, race and sex in 750,302 veterans (Kokkinos 2022).",
+    goalKeywords: ["longevity", "live longer", "healthspan", "lifespan", "anti-aging", "aging", "health", "fitness", "energy"],
+  },
+  {
+    id: "longevity-strength", name: "Strength & muscle preservation", section: "7002", librarySection: "Longevity — Strength, Grip & Muscle",
+    evidence: "Strong", lifts: ["kinesthetic", "resilient", "volitional"],
+    prescription: "Two full-body strength sessions a week, progressive load, 1.0–1.2 g/kg/day protein spread across meals; track grip strength as a vital sign.",
+    horizon: "12 weeks for measurable strength; ongoing",
+    researchBasis: "Grip strength predicted all-cause and cardiovascular death better than systolic blood pressure across 139,691 adults in 17 countries (Leong 2015); muscle-strengthening activity was associated with 10–17% lower mortality in a meta-analysis of cohorts (Momma 2022).",
+    goalKeywords: ["longevity", "live longer", "healthspan", "lifespan", "anti-aging", "aging", "strength", "muscle", "fitness"],
+  },
+  {
+    id: "longevity-lipids", name: "Know and lower ApoB / LDL", section: "7005", librarySection: "Longevity — ApoB, LDL & the Causal Lipid",
+    evidence: "Strong", lifts: ["financial-self-management", "resilient"],
+    prescription: "Get ApoB (or LDL-C) and Lp(a) measured once, then keep ApoB low for as many years as possible with diet and, where a clinician agrees, medication; the benefit compounds with time exposed.",
+    horizon: "Weeks to change the number; decades of exposure is what pays",
+    researchBasis: "Genetic, epidemiologic and 26-trial randomized evidence converge: LDL causes atherosclerosis and each 1 mmol/L reduction cuts major vascular events by about a fifth (EAS consensus 2017; CTT 2010).",
+    goalKeywords: ["longevity", "live longer", "healthspan", "lifespan", "anti-aging", "aging", "heart", "cholesterol", "health"],
+  },
+  {
+    id: "longevity-pressure", name: "Blood pressure to target", section: "7009", librarySection: "Longevity — Blood Pressure Targets",
+    evidence: "Strong", lifts: ["resilient"],
+    prescription: "Measure at home; if you are above target, work with a clinician toward the intensive target that the trials tested, using the lifestyle levers first.",
+    horizon: "Weeks to months",
+    researchBasis: "Intensive control (systolic target <120) cut cardiovascular events and all-cause death in SPRINT (9,361 adults) and in older Chinese adults in STEP (8,511 adults, target 110–130).",
+    goalKeywords: ["longevity", "live longer", "healthspan", "lifespan", "aging", "heart", "blood pressure", "health"],
+  },
+  {
+    id: "longevity-sleep-steps", name: "Steps, sleep hours, and no tobacco", section: "7003", librarySection: "Longevity — Daily Movement & Steps",
+    evidence: "Strong", lifts: ["kinesthetic", "volitional", "resilient"],
+    prescription: "Get daily steps up toward 7,000–9,000, hold sleep at 7–9 hours, and if you smoke, quitting is the single largest lever on the shelf.",
+    horizon: "Days to feel; the mortality curves are about years",
+    researchBasis: "Across 47,471 adults in 15 cohorts, mortality fell steeply up to ~6,000–8,000 steps/day in older adults (Paluch 2022); short and long sleep both associated with higher mortality (Cappuccio 2010); quitting before 40 recovers ~9 of the 10 years smoking costs (Jha 2013).",
+    goalKeywords: ["longevity", "live longer", "healthspan", "lifespan", "anti-aging", "aging", "sleep", "walk", "quit smoking", "health"],
+  },
 ];
 
 // Evidence tier → the confidence band of an outcome PROJECTION. Honest mapping:

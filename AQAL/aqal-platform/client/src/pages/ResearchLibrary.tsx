@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { PRACTICE_EVIDENCE } from "./researchLibraryData";
+import { LONGEVITY_GROUP, LONGEVITY_SECTIONS, LONGEVITY_SECTION_ORDER, LONGEVITY_SECTION_SHORT } from "./researchLibraryLongevity";
 
 // ============================================================
 // AQAL — Research Library (standalone page)
@@ -557,6 +558,7 @@ export type PracticeCluster = {
 };
 
 const PRACTICE_SECTIONS: Record<string, string> = {
+  ...LONGEVITY_SECTIONS,
   "0": "Cluster Interaction & Systems Science",
   "1": "1 · Physical Training",
   "2": "2 · Strength Training — Cognitive & Psychological Transfer",
@@ -6781,6 +6783,7 @@ const PRACTICE_SECTIONS: Record<string, string> = {
 
 // Short labels for the section jump-nav chips.
 const PRACTICE_SECTION_SHORT: Record<string, string> = {
+  ...LONGEVITY_SECTION_SHORT,
   "0": "Systems Science",
   "1": "Physical",
   "2": "Cognitive Transfer",
@@ -12859,7 +12862,7 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
 // keystone practices (what to actually DO), then domain practices, then risks.
 // This controls display order without renumbering the underlying data.
-const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "17", "18",
+const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "17", "18", ...LONGEVITY_SECTION_ORDER,
   // Practices by domain — physical & metabolic
   "1", "2", "42", "43", "44", "45", "60", "61", "46", "47", "48", "49", "22", "23", "25", "26", "56", "57",
   // Protect the hardware — senses & body
@@ -13149,6 +13152,7 @@ const sectionRank = (s: string) => {
 
 // Group super-headers so a consumer can scan straight to what they want.
 const PRACTICE_GROUP: Record<string, string> = {
+  ...Object.fromEntries(LONGEVITY_SECTION_ORDER.map((k) => [k, LONGEVITY_GROUP])),
   "0": "How it works",
   "21": "Keystone practices — start here",
   "14": "Keystone practices — start here", "13": "Keystone practices — start here",

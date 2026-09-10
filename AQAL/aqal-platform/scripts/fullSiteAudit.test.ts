@@ -2,7 +2,7 @@
 // FULL-SITE AUDIT — renders EVERY sitemap route server-side and
 // validates the complete internal link graph.
 //   pnpm exec vitest run --config vitest.audit.config.ts scripts/fullSiteAudit.test.ts
-// For each of the 11,659 sitemap paths: resolve the App route
+// For each of the 11,711 sitemap paths: resolve the App route
 // pattern, render the page component, assert it produces real
 // content with no nested anchors, and collect every <a href>.
 // Then: every internal link must land on a known route.

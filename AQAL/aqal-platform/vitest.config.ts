@@ -25,6 +25,7 @@ export default defineConfig({
       "client/src/components/PageErrorBoundary.test.tsx",
       "client/src/pages/archetypesData.test.ts",
       "client/src/pages/researchLibraryData.corrections.test.ts",
+      "client/src/pages/researchLibraryLongevity.test.ts",
       "client/src/lib/deepPageExpansion.test.ts",
       "client/src/lib/deepPageNavigationContracts.test.ts",
       "client/src/lib/expansion203Contracts.test.ts",

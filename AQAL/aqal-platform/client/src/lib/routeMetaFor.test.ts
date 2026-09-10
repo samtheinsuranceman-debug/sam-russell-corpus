@@ -1,7 +1,7 @@
 // ============================================================
 // TITLE/DESCRIPTION HARD RULES, ENFORCED — search results lop
 // titles at ~60 characters and descriptions at ~160, so every
-// one of the 11,659 sitemap URLs must fit. This fails the build
+// one of the 11,711 sitemap URLs must fit. This fails the build
 // if any page family's formula (or any new page's static meta)
 // runs long, which is what makes the guarantee automatic.
 // ============================================================
@@ -10,8 +10,8 @@ import { SITEMAP_PATHS, PAGE_META } from "@shared/seo";
 import { routeMetaFor } from "./routeMetaFor";
 
 describe("route meta", () => {
-  it("contains exactly 11,659 unique sitemap paths", () => {
-    expect(SITEMAP_PATHS).toHaveLength(11659);
+  it("contains exactly 11,711 unique sitemap paths", () => {
+    expect(SITEMAP_PATHS).toHaveLength(11711);
     expect(new Set(SITEMAP_PATHS).size).toBe(SITEMAP_PATHS.length);
   });
 
