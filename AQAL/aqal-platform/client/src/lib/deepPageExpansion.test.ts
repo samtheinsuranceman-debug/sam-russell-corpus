@@ -47,8 +47,8 @@ const REPRESENTATIVE_DEEP_ROUTES = [
 ];
 
 describe("203 deep-page and hypnosis expansion", () => {
-  it("contains exactly 11,659 unique canonical sitemap paths", () => {
-    expect(SITEMAP_PATHS).toHaveLength(11659);
+  it("contains exactly 11,711 unique canonical sitemap paths", () => {
+    expect(SITEMAP_PATHS).toHaveLength(11711);
     expect(new Set(SITEMAP_PATHS).size).toBe(SITEMAP_PATHS.length);
   });
 

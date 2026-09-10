@@ -62,7 +62,7 @@ couples-relationship-education,20,,Relationship Education — The Skills That Pr
 parenting-intelligence,20,,Parenting Intelligence — What Actually Works,Moderate,,,3,"Bolsters clusters: intrapersonal, empathic, interpersonal (parental)"
 couples-social-learning,20,,How We Learn by Watching — Social Learning,Moderate,,,3,Bolsters clusters: the mechanism under all of the above
 knowing-doing-gap,21,practice,The Knowing–Doing Gap Is the Real Enemy,Strong,4,impact magnitude /5,6,"Bolsters clusters: volitional, self-regulation, follow-through"
-fasting-tre,22,practice,Intermittent Fasting & Time-Restricted Eating,Moderate,3,impact magnitude /5,5,"Bolsters clusters: interoceptive, volitional, systemic (metabolic)"
+fasting-tre,22,practice,Intermittent Fasting & Time-Restricted Eating,Moderate,3,impact magnitude /5,6,"Bolsters clusters: interoceptive, volitional, systemic (metabolic)"
 light-circadian,23,practice,Light & Circadian Rhythm,Moderate,3,impact magnitude /5,5,"Bolsters clusters: interoceptive, emotional, intrapersonal"
 vo2max-fitness,24,practice,Cardiorespiratory Fitness — VO₂max,Strong,5,impact magnitude /5,5,"Bolsters clusters: interoceptive, volitional, systemic, most cognitive lines"
 gut-brain-axis,25,practice,The Gut–Brain Axis,Emerging,2,impact magnitude /5,5,"Bolsters clusters: emotional, interoceptive, intrapersonal"
@@ -98,7 +98,7 @@ blue-space,54,practice,Blue Space — Water & Wellbeing,Emerging,2,impact magnit
 pets,55,practice,Pets & Companion Animals,Mixed,3,impact magnitude /5,4,"Bolsters clusters: interpersonal, emotional, systemic"
 caffeine,56,practice,Caffeine,Moderate,3,impact magnitude /5,4,"Bolsters clusters: alertness, adversarial/strategic (under fatigue) — traded vs sleep"
 alcohol,57,practice,Alcohol Reduction,Strong,4,impact magnitude /5,4,"Bolsters clusters: most cognitive lines, systemic, emotional"
-dance,58,practice,Dance,Moderate,3,impact magnitude /5,4,"Bolsters clusters: bodily-kinesthetic, spatial, memory, interpersonal"
+dance,58,practice,Dance,Strong,3,impact magnitude /5,5,"Bolsters clusters: bodily-kinesthetic, spatial, memory, interpersonal"
 tai-chi,59,practice,Tai Chi & Qigong,Strong,4,impact magnitude /5,4,"Bolsters clusters: bodily-kinesthetic, interoceptive, executive function"
 walking-steps,60,practice,Walking & Daily Steps,Strong,4,impact magnitude /5,4,"Bolsters clusters: interoceptive, systemic, emotional"
 sit-less,61,practice,Breaking Up Sitting,Moderate,3,impact magnitude /5,4,"Bolsters clusters: systemic, interoceptive (metabolic)"
@@ -108,9 +108,9 @@ flow,64,practice,Flow States,Moderate,3,impact magnitude /5,4,"Bolsters clusters
 massage,65,practice,Massage & Bodywork,Mixed,3,impact magnitude /5,4,"Bolsters clusters: interoceptive, emotional (state anxiety)"
 mindfulness,66,practice,Mindfulness & MBSR,Moderate,3,impact magnitude /5,4,"Bolsters clusters: meta-cognitive, emotional, interoceptive"
 loving-kindness,67,practice,Loving-Kindness Meditation,Moderate,3,impact magnitude /5,4,"Bolsters clusters: emotional, interpersonal, existential"
-self-compassion,68,practice,Self-Compassion,Moderate,4,impact magnitude /5,4,"Bolsters clusters: intrapersonal, emotional, volitional (resilience)"
+self-compassion,68,practice,Self-Compassion,Strong,4,impact magnitude /5,5,"Bolsters clusters: intrapersonal, emotional, volitional (resilience)"
 reappraisal,69,practice,Reappraisal vs. Suppression,Strong,4,impact magnitude /5,4,"Bolsters clusters: emotional, interpersonal, intrapersonal"
-forgiveness,70,practice,Forgiveness,Moderate,3,impact magnitude /5,4,"Bolsters clusters: emotional, interpersonal, moral, intrapersonal"
+forgiveness,70,practice,Forgiveness,Strong,3,impact magnitude /5,5,"Bolsters clusters: emotional, interpersonal, moral, intrapersonal"
 optimism,71,practice,Optimism & Explanatory Style,Moderate,3,impact magnitude /5,4,"Bolsters clusters: intrapersonal, volitional, existential"
 savoring,72,practice,Savoring,Emerging,3,impact magnitude /5,3,"Bolsters clusters: emotional, intrapersonal, aesthetic"
 nature-dose,73,practice,Nature Dose — 120 min/week,Moderate,3,impact magnitude /5,4,"Bolsters clusters: emotional, meta-cognitive (attention restoration)"
@@ -123,14 +123,14 @@ sleep-regularity,79,practice,Sleep Regularity,Strong,4,impact magnitude /5,4,"Bo
 laughter,80,practice,Laughter & Humor,Emerging,2,impact magnitude /5,4,"Bolsters clusters: humor, emotional, interpersonal"
 learning-by-teaching,81,practice,Learning by Teaching,Strong,3,impact magnitude /5,4,"Bolsters clusters: linguistic, meta-cognitive, most skill lines"
 emdr,82,practice,EMDR,Strong,4,impact magnitude /5,4,"Bolsters clusters: emotional regulation, trauma recovery"
-hypnosis,83,practice,Clinical & Ericksonian Hypnosis,Moderate,3,impact magnitude /5,4,"Bolsters clusters: pain modulation, interoceptive, emotional"
+hypnosis,83,practice,Clinical & Ericksonian Hypnosis,Strong,3,impact magnitude /5,5,"Bolsters clusters: pain modulation, interoceptive, emotional"
 cbt,84,practice,Cognitive Behavioral Therapy (CBT),Strong,5,impact magnitude /5,4,"Bolsters clusters: emotional, meta-cognitive, most mental-health lines"
 behavioral-activation,85,practice,Behavioral Activation,Strong,4,impact magnitude /5,3,"Bolsters clusters: volitional, emotional (depression)"
 act,86,practice,Acceptance & Commitment Therapy (ACT),Moderate,3,impact magnitude /5,3,"Bolsters clusters: emotional, intrapersonal, existential"
 exposure,87,practice,Exposure Therapy,Strong,5,impact magnitude /5,3,"Bolsters clusters: emotional, volitional (anxiety/fear)"
 dbt,88,practice,Dialectical Behavior Therapy (DBT) Skills,Strong,4,impact magnitude /5,3,"Bolsters clusters: emotional regulation, volitional, interpersonal"
 motivational-interviewing,89,practice,Motivational Interviewing,Moderate,3,impact magnitude /5,3,"Bolsters clusters: volitional, interpersonal, emotional"
-psychodynamic-ipt,90,practice,Psychodynamic & Interpersonal Therapy,Moderate,4,impact magnitude /5,4,"Bolsters clusters: intrapersonal, interpersonal, emotional"
+psychodynamic-ipt,90,practice,Psychodynamic & Interpersonal Therapy,Strong,4,impact magnitude /5,5,"Bolsters clusters: intrapersonal, interpersonal, emotional"
 group-therapy,91,practice,Support Groups & Group Therapy,Moderate,3,impact magnitude /5,3,"Bolsters clusters: interpersonal, emotional, existential"
 nlp-verdict,92,practice,NLP — The Honest Verdict,Mixed,1,impact magnitude /5,3,The branded model is not empirically supported
 nlp-metaprograms,93,practice,NLP Meta-Programs & Modality Matching,Mixed,1,impact magnitude /5,3,The 'match their VAK style' hypothesis fails controlled tests
@@ -259,7 +259,7 @@ sport-shooting,215,practice,Target / Sport Shooting,Emerging,2,impact magnitude 
 board-games,216,practice,Board / Tabletop Games With Friends,Moderate,2,impact magnitude /5,2,"Bolsters clusters: executive function, memory, cognitive reserve, social connectedness"
 social-dance,217,practice,Adult Social Dance Classes,Moderate,3,impact magnitude /5,2,"Bolsters clusters: balance, sensorimotor & reaction time, executive function, mood"
 golf-range,218,practice,Golf Driving Range / Precision Practice,Emerging,2,impact magnitude /5,2,"Bolsters clusters: motor learning, focused attention/flow, light activity"
-bouldering,219,practice,Bouldering / Rock Climbing for Depression,Moderate,4,impact magnitude /5,2,"Bolsters clusters: self-efficacy, anxiety reduction, behavioral activation"
+bouldering,219,practice,Bouldering / Rock Climbing for Depression,Moderate,4,impact magnitude /5,3,"Bolsters clusters: self-efficacy, anxiety reduction, behavioral activation"
 surf-therapy,220,practice,Surf Therapy / Ocean Therapy,Emerging,3,impact magnitude /5,2,"Bolsters clusters: positive affect, PTSD/depression relief, resilience"
 equine-therapy,221,practice,Horseback Riding / Equine-Assisted Therapy,Mixed,2,impact magnitude /5,2,Claimed benefits not robustly established — the weakest entry
 running-therapy,222,practice,Trail / Distance Running & Depression,Moderate,4,impact magnitude /5,2,"Bolsters clusters: depression/anxiety remission, cardiometabolic health, community"
@@ -492,9 +492,9 @@ situation-selection-modification,448,practice,Situation Selection & Modification
 cognitive-defusion,449,practice,Cognitive Defusion (Unhooking From Thoughts),Moderate,3,impact magnitude /5,2,"Bolsters clusters: psychological flexibility, self-criticism management, emotional self-regulation"
 affect-labeling,450,practice,Affect Labeling ('Name It to Tame It'),Moderate,2,impact magnitude /5,2,"Bolsters clusters: emotional self-regulation, self-awareness, distress tolerance"
 distraction-attentional-deployment,451,practice,Distraction / Attentional Deployment,Moderate,2,impact magnitude /5,1,"Bolsters clusters: acute emotional self-regulation, impulse control, rumination interruption"
-self-distancing-third-person,452,practice,Self-Distancing / Third-Person Self-Talk,Moderate,2,impact magnitude /5,2,"Bolsters clusters: emotional self-regulation, rumination control, wise reasoning"
+self-distancing-third-person,452,practice,Self-Distancing / Third-Person Self-Talk,Strong,2,impact magnitude /5,3,"Bolsters clusters: emotional self-regulation, rumination control, wise reasoning"
 cold-water-dive-reflex-tipp,453,practice,Cold-Water Face Immersion (Dive Reflex / DBT 'TIPP'),Emerging,2,impact magnitude /5,2,"Bolsters clusters: acute distress tolerance, panic/arousal down-regulation, crisis self-regulation"
-cyclic-sighing-physiological-sigh,454,practice,Cyclic Sighing / Physiological Sigh,Emerging,2,impact magnitude /5,1,"Bolsters clusters: acute arousal down-regulation, anxiety management, interoceptive calm"
+cyclic-sighing-physiological-sigh,454,practice,Cyclic Sighing / Physiological Sigh,Emerging,2,impact magnitude /5,2,"Bolsters clusters: acute arousal down-regulation, anxiety management, interoceptive calm"
 temporal-distancing,455,practice,Temporal Distancing ('This Too Shall Pass'),Emerging,2,impact magnitude /5,1,"Bolsters clusters: emotional self-regulation, resilience, perspective-taking"
 worry-postponement,456,practice,Worry Postponement ('Worry Time'),Mixed,2,impact magnitude /5,1,"Bolsters clusters: worry/rumination control, anxiety management, attentional control"
 acceptance-emotion-regulation,457,practice,Acceptance as an Emotion-Regulation Strategy,Mixed,2,impact magnitude /5,2,"Bolsters clusters: distress tolerance, psychological flexibility, pain coping"
@@ -507,7 +507,7 @@ control-autonomy-off-job,463,practice,Autonomy / Control Over Off-Job Time,Moder
 microbreaks-work,464,practice,Microbreaks During Work,Moderate,2,impact magnitude /5,1,"Bolsters clusters: Job Burnout / Workaholism, Breaking Up Sitting, Slow Processing Speed / Fatigue"
 aromatherapy-lavender,465,practice,Aromatherapy (Lavender) for Stress,Mixed,2,impact magnitude /5,2,"Bolsters clusters: Chronic Anxiety, Chronic Stress / Allostatic Load"
 relaxing-music-listening,466,practice,Listening to Relaxing Music,Mixed,2,impact magnitude /5,2,"Bolsters clusters: Chronic Stress / Allostatic Load, Chronic Anxiety, Sleep Quality"
-yoga-nidra-nsdr,467,practice,Yoga Nidra / Non-Sleep Deep Rest (NSDR),Emerging,2,impact magnitude /5,2,"Bolsters clusters: Chronic Stress / Allostatic Load, Sleep Quality, Sleep Deprivation, Chronic Anxiety"
+yoga-nidra-nsdr,467,practice,Yoga Nidra / Non-Sleep Deep Rest (NSDR),Moderate,2,impact magnitude /5,3,"Bolsters clusters: Chronic Stress / Allostatic Load, Sleep Quality, Sleep Deprivation, Chronic Anxiety"
 vacation-time-off,468,practice,Taking Vacations / Time Off,Mixed,3,impact magnitude /5,3,"Bolsters clusters: Job Burnout / Workaholism, Chronic Stress / Allostatic Load, Time Affluence"
 leisure-crafting,469,practice,Leisure Crafting (Proactively Designing Off-Time),Emerging,2,impact magnitude /5,2,"Bolsters clusters: Mastery Experiences in Off-Job Time, Job Burnout / Workaholism, Purpose & Meaning in Life"
 cbt-insomnia,470,practice,CBT-I — The Gold Standard for Insomnia,Strong,5,impact magnitude /5,2,"Bolsters clusters: sleep-restriction-therapy, stimulus-control-therapy, constructive-worry-journaling"
@@ -1388,7 +1388,7 @@ seasonal-affective-disorder-sad,1344,cost,Seasonal Affective Disorder — The Wi
 specific-phobia,1345,cost,"Specific Phobia — Common, Chronic, and Undertreated",Strong,2,harm severity /5,2,"Degrades: Volitional, Interpersonal, Financial, Bodily, Existential"
 group-cbt,1346,practice,Group CBT — Distinct from Individual & from Support Groups,Strong,4,impact magnitude /5,2,"practice: 'Bolsters clusters: Emotional, Intrapersonal, Interpersonal, Meta-Cognitive'"
 bibliotherapy,1347,practice,Bibliotherapy — Distinct from Recreational Reading,Moderate,3,impact magnitude /5,2,"practice: 'Bolsters clusters: Intrapersonal, Meta-Cognitive, Emotional, Linguistic'"
-clinical-music-therapy-active,1348,practice,Clinical (Active) Music Therapy — Distinct from Music Listening,Moderate,3,impact magnitude /5,2,"practice: 'Bolsters clusters: Musical, Emotional, Interoceptive, Aesthetic'"
+clinical-music-therapy-active,1348,practice,Clinical (Active) Music Therapy — Distinct from Music Listening,Strong,3,impact magnitude /5,3,"practice: 'Bolsters clusters: Musical, Emotional, Interoceptive, Aesthetic'"
 solution-focused-brief-therapy,1349,practice,Solution-Focused Brief Therapy (SFBT),Moderate,3,impact magnitude /5,3,"practice: 'Bolsters clusters: Volitional goal-pursuit, Intrapersonal, Strategic, Existential hope'"
 existential-therapy,1350,practice,Existential Therapy,Moderate,3,impact magnitude /5,1,"practice: 'Bolsters clusters: Existential, Intrapersonal, Emotional, meaning-in-life'"
 logotherapy,1351,practice,Logotherapy (Frankl) — Distinct from Meaning-Centered Psychotherapy,Moderate,3,impact magnitude /5,2,"practice: 'Bolsters clusters: Existential, Intrapersonal, Emotional, meaning-in-life'"
@@ -5393,7 +5393,7 @@ phyllanthus-niruri-hepatitis-b,5349,practice,Phyllanthus niruri (Meniran / Dukon
 kratom-self-medication-dependence,5350,weakness,Kratom (Mitragyna speciosa) Self-Medication Trap,Mixed,5,threat /10,2,"weakness: 'Degrades: Volitional, Interoceptive, Adversarial'"
 goal-setting-specific-difficult,5351,practice,Specific & Difficult Goals (Goal-Setting Theory),Strong,4,impact magnitude /5,2,"practice: 'Bolsters clusters: performance, motivation, persistence'"
 self-talk-sport-performance,5352,practice,Instructional & Motivational Self-Talk (Sport),Moderate,3,impact magnitude /5,1,"practice: 'Bolsters clusters: skill acquisition, attentional control, performance under load'"
-bibliotherapy-guided-self-help-depression,5353,practice,Guided Self-Help / Bibliotherapy for Depression,Moderate,3,impact magnitude /5,2,"practice: 'Bolsters clusters: depression, access to care, mild-moderate mood problems'"
+bibliotherapy-guided-self-help-depression,5353,practice,Guided Self-Help / Bibliotherapy for Depression,Strong,3,impact magnitude /5,3,"practice: 'Bolsters clusters: depression, access to care, mild-moderate mood problems'"
 approach-bias-modification-alcohol,5354,practice,Approach-Bias Modification for Alcohol Use,Mixed,2,impact magnitude /5,2,"practice: 'Bolsters clusters: relapse prevention, craving regulation, addiction recovery'"
 sms-text-message-behavior-change,5355,practice,SMS / Text-Message Health Nudges,Moderate,2,impact magnitude /5,2,"practice: 'Bolsters clusters: physical activity, smoking cessation, medication adherence'"
 functional-imagery-training,5356,practice,Functional Imagery Training (FIT),Emerging,3,impact magnitude /5,2,"practice: 'Bolsters clusters: motivation, goal follow-through, weight management'"
@@ -6245,3 +6245,42 @@ preop-alcohol-cessation-surgery,6201,practice,Preoperative Alcohol Cessation (Ha
 routine-preop-testing-low-risk-surgery,6202,cost,Routine Preoperative Testing Before Low-Risk Surgery,Strong,1,harm severity /5,2,"cost/weakness: 'Degrades: Financial, Bodily, Systemic efficiency'"
 preop-carbohydrate-loading,6203,practice,Preoperative Carbohydrate Loading Drinks,Mixed,1,impact magnitude /5,1,"practice: 'Bolsters clusters: Bodily, Interoceptive, comfort, mild recovery'"
 surgical-placebo-effect-sham-trials,6204,weakness,The Surgical Placebo Effect,Strong,5,threat /10,1,"cost/weakness: 'Degrades: Meta-Cognitive, Logical, Adversarial judgment'"
+lv-read-me-first,7000,practice,"How to Read the Longevity Shelf — Hallmarks, Levers, and the Size of the Prize",Strong,5,impact magnitude /5,3,"What aging is, what the big levers are worth, and how this shelf grades evidence"
+lv-vo2max-mortality,7001,practice,Cardiorespiratory Fitness — The Strongest Measured Predictor of Survival,Strong,5,impact magnitude /5,3,"VO₂max, treadmill fitness and all-cause mortality"
+lv-strength-grip-mortality,7002,practice,"Strength, Grip and Muscle-Strengthening Activity — A Vital Sign You Can Train",Strong,4,impact magnitude /5,2,Grip strength as a predictor; resistance training and mortality
+lv-steps-movement-mortality,7003,practice,Daily Steps and Everyday Vigorous Bursts — The Dose That Moves Mortality,Strong,4,impact magnitude /5,4,"Step counts, accelerometer-measured activity and short vigorous bursts"
+lv-protein-creatine-aging-muscle,7004,practice,Protein and Creatine for Aging Muscle,Moderate,3,impact magnitude /5,3,Dietary protein targets after 65; creatine with resistance training
+lv-apob-ldl-causal,7005,practice,"ApoB and LDL — The Causal Lipid, and Why Years of Exposure Matter",Strong,5,impact magnitude /5,3,"Genetics, epidemiology and 26 randomized trials point the same way"
+lv-beyond-statins,7006,practice,"Beyond Statins — Ezetimibe, PCSK9 Inhibitors and Bempedoic Acid",Strong,4,impact magnitude /5,4,Every non-statin route to lower LDL that has an outcomes trial
+lv-lipoprotein-a,7007,practice,Lipoprotein(a) — The Inherited Risk Worth Measuring Once,Strong,3,impact magnitude /5,2,"A genetically set lipid, a causal risk factor, and the drugs in trials"
+lv-omega3-fish-oil,7008,practice,"Triglycerides, Fish Oil and Omega-3 — What the Big Trials Actually Showed",Mixed,2,impact magnitude /5,5,"REDUCE-IT vs STRENGTH vs VITAL, the atrial-fibrillation signal, and blood omega-3 levels"
+lv-blood-pressure-targets,7009,practice,Blood Pressure — The Intensive Target That Lowered Deaths,Strong,5,impact magnitude /5,2,SPRINT and STEP: systolic below 120–130 in adults at risk and in older adults
+lv-weight-glp1,7010,practice,Body Weight and the GLP-1 Drugs,Strong,4,impact magnitude /5,2,"What excess weight costs in years, and the first weight-loss drug with an outcomes trial"
+lv-metformin,7011,practice,"Metformin — Promising Signals, an Unfinished Trial, and a Catch for Exercisers",Emerging,2,impact magnitude /5,4,"Observational hints, the TAME proposal, and what it does to training gains"
+lv-rapamycin-mtor,7012,practice,"Rapamycin and mTOR — The Best Mouse Result, and the First Human Trials",Emerging,2,impact magnitude /5,5,Late-life lifespan extension in mice; immune and one-year safety data in people
+lv-itp-geroprotectors-mice,7013,practice,"Acarbose, 17α-Estradiol and Canagliflozin — Lifespan Extension in Mice, Mostly Male",Emerging,2,impact magnitude /5,2,What the NIA Interventions Testing Program has found beyond rapamycin
+lv-senolytics,7014,practice,"Senolytics — Clearing Senescent Cells: Strong in Mice, Pilot-Stage in People",Emerging,2,impact magnitude /5,3,Dasatinib + quercetin and fisetin
+lv-nad-precursors,7015,practice,"NAD⁺ Precursors (NR, NMN) — They Raise the Molecule; Outcomes Are Thin",Moderate,2,impact magnitude /5,3,Nicotinamide riboside and nicotinamide mononucleotide in randomized trials
+lv-emerging-supplements,7016,practice,"Spermidine, Urolithin A, Taurine and GlyNAC — The Emerging Supplements, Trial by Trial",Emerging,2,impact magnitude /5,5,What each one has shown in people and in animals
+lv-coq10-selenium,7017,practice,Coenzyme Q10 and Selenium — Two Randomized Trials With Mortality Endpoints,Moderate,3,impact magnitude /5,2,Q-SYMBIO in heart failure; KiSel-10 in older Swedes
+lv-vitamin-d-trials,7018,practice,"Vitamin D — Two Large Trials, No Effect on Death, Cancer or Heart Disease in the Replete",Strong,1,impact magnitude /5,2,VITAL and D-Health
+lv-cosmos-multivitamin-cocoa,7019,practice,A Daily Multivitamin and Cocoa Flavanols — COSMOS,Moderate,2,impact magnitude /5,2,"21,442 older adults, 3.6 years: cardiovascular events and cognition"
+lv-antioxidant-megadose-resveratrol,7020,practice,"Antioxidant Megadoses and Resveratrol — The Verdict Is In, and It Is Not Good",Strong,1,impact magnitude /5,3,"Beta-carotene, vitamin E and vitamin A raise mortality; resveratrol does nothing measurable in people"
+lv-caloric-restriction-calerie,7021,practice,"Caloric Restriction in Humans — CALERIE, the Only Long Randomized Trial",Moderate,3,impact magnitude /5,3,"Two years of ~12% restriction in healthy, non-obese adults"
+lv-time-restricted-fasting-mimicking,7022,practice,Time-Restricted Eating and the Fasting-Mimicking Diet — Calories Still Count,Mixed,2,impact magnitude /5,3,"TREAT, the NEJM trial of 8-hour eating with calorie restriction, and periodic fasting-mimicking"
+lv-mediterranean-coffee,7023,practice,The Mediterranean Diet and Coffee,Strong,4,impact magnitude /5,2,PREDIMED's randomized result and the largest coffee cohort
+lv-sleep-duration-mortality,7024,practice,Sleep Duration and Mortality — The U-Shaped Curve,Strong,4,impact magnitude /5,1,Short and long sleep both track with earlier death
+lv-sauna-mortality,7025,practice,Sauna Bathing and Mortality — The Finnish Cohort,Moderate,3,impact magnitude /5,1,Frequency of sauna use and fatal cardiovascular events over 20 years
+lv-menopausal-hormone-therapy,7026,practice,Menopausal Hormone Therapy — From the 2002 Scare to the Timing Hypothesis,Strong,3,impact magnitude /5,3,"WHI's principal results, its 18-year mortality follow-up, and the 2022 position statement"
+lv-testosterone-gh-dhea,7027,practice,"Testosterone, Growth Hormone and DHEA — The Honest Verdict on the Anti-Aging Hormones",Strong,1,impact magnitude /5,3,"TRAVERSE, the growth-hormone systematic review, and the DHEA trial"
+lv-epigenetic-clocks,7028,practice,Epigenetic Clocks and Biological Age — What the Blood Test Can and Cannot Tell You,Moderate,2,impact magnitude /5,4,"Horvath's clock, PhenoAge, DunedinPACE, and the TRIIM pilot"
+lv-hearing-vision-dementia,7029,practice,"Hearing Aids, Vision and the Modifiable Share of Dementia",Strong,3,impact magnitude /5,2,ACHIEVE and the Lancet Commission's fourteen risk factors
+lv-vaccines-shingles-flu,7030,practice,"Vaccines as Longevity Medicine — Shingles and Dementia, Influenza and the Heart",Strong,3,impact magnitude /5,2,A natural experiment in Wales and a meta-analysis of cardiovascular outcomes
+lv-aspirin-aspree,7031,practice,Daily Low-Dose Aspirin in Healthy Older Adults — ASPREE Said No,Strong,1,impact magnitude /5,1,"19,114 adults ≥70 without cardiovascular disease"
+lv-screening-colonoscopy,7032,practice,Screening Colonoscopy — What the First Randomized Trial Showed,Strong,3,impact magnitude /5,1,"NORDICC: invitation versus usual care in 84,585 adults"
+lv-young-blood-plasma-hbot-stemcell-clinics,7033,practice,"Young Blood, Plasma Exchange, Hyperbaric Oxygen and Stem-Cell Clinics — Where the Evidence Stops",Emerging,1,impact magnitude /5,5,"Parabiosis in mice, the first human plasma trial, a telomere study, and the direct-to-consumer stem-cell industry"
+lv-partial-reprogramming-animal,7034,practice,"Partial Epigenetic Reprogramming — The Most Exciting Result on the Shelf, and It Is All in Mice",Emerging,2,impact magnitude /5,2,Cyclic Yamanaka-factor expression in progeroid and aged mice; vision restored in the eye
+lv-social-connection-mortality,7035,practice,Social Connection and Loneliness — A Mortality Effect the Size of Smoking,Strong,5,impact magnitude /5,2,"Two meta-analyses of relationships, isolation and death"
+lv-smoking-alcohol-years,7036,practice,"Smoking and Alcohol — The Two Largest Subtractions, With the Years Counted",Strong,5,impact magnitude /5,2,"What smoking costs, what quitting recovers, and the alcohol curve without a safe floor"
+lv-frailty-phenotype,7037,practice,Frailty — The Five-Sign Phenotype That Predicts What Comes Next,Strong,4,impact magnitude /5,2,"Weight loss, exhaustion, weakness, slow walking, low activity"
+lv-collagen-skin,7038,practice,"Oral Collagen for Skin Aging — A Cosmetic Result, Not a Longevity One",Moderate,2,impact magnitude /5,1,"Hydration, elasticity and roughness in a placebo-controlled trial"

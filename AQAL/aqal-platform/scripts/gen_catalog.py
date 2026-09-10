@@ -2,12 +2,18 @@
 """Generate human-readable catalogs of the research library from researchLibraryData.ts."""
 import re, csv, sys, json
 
-DATA = "/home/user/sam-russell-corpus/AQAL/aqal-platform/client/src/pages/researchLibraryData.ts"
+# The corpus lives in two authored files: the frozen generated corpus and the
+# healthy-aging & longevity shelf (sections 7000+). researchLibraryData.ts is
+# only the adapter that merges them, so the catalog reads the sources directly.
+PAGES = "/home/user/sam-russell-corpus/AQAL/aqal-platform/client/src/pages"
+DATA_FILES = [f"{PAGES}/researchLibraryDataRaw.ts", f"{PAGES}/researchLibraryLongevity.ts"]
 OUTDIR = "/home/user/sam-russell-corpus/AQAL/aqal-platform/docs"
 import os
 os.makedirs(OUTDIR, exist_ok=True)
 
-lines = open(DATA, encoding="utf-8", errors="replace").read().split("\n")
+lines = []
+for _f in DATA_FILES:
+    lines += open(_f, encoding="utf-8", errors="replace").read().split("\n")
 
 def field(block, name):
     m = re.search(rf'\b{name}:\s*"((?:[^"\\]|\\.)*)"', block)

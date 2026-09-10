@@ -92,3 +92,36 @@ coverage gaps are visible instead of silently papered over.
 3. Verification-gate module (resolve + support check).
 4. Ingestion run, claim-by-claim, populating `ResearchLibrary` with tier tags.
 5. Evidence-verification endpoint (uploaded-claim → Perplexity → verified/unverified).
+
+## The healthy-aging & longevity shelf (sections 7000+)
+
+`client/src/pages/researchLibraryLongevity.ts` is a second authored corpus file,
+merged into `PRACTICE_EVIDENCE` by `researchLibraryData.ts`. It exists because
+members name "live longer" as a goal, and the platform owes them the verified
+menu — treatments, supplements, therapies, lipids, exercise — with the honest
+verdict on each. Its contract is stricter than the frozen corpus:
+
+- **Every source is a DOI resolved against the publisher or the PubMed record**
+  (title, journal, year, first author read back) on the date in the file header.
+  No Scholar fallbacks are allowed; `researchLibraryLongevity.test.ts` fails on
+  any `kind` other than `"doi"` or any link that is not `https://doi.org/10.…`.
+- **Animal-only findings are labelled in the title and rated Emerging.** A mouse
+  lifespan result is never presented as a human one.
+- **Unsupported or harmful claims are rated at the floor** (impact magnitude 1,
+  with a `callout`) so the library counts them as debunked: antioxidant
+  megadoses and resveratrol, growth hormone and DHEA, daily aspirin in healthy
+  older adults, vitamin D for mortality in the replete, and purchasable young-
+  plasma / hyperbaric / stem-cell-clinic treatments.
+- **Nothing on the shelf is medical advice.** Drugs and hormones are described
+  with the trial that tested them; the decision belongs to a clinician.
+
+The goal path reaches the shelf: `shared/goalTemplates.ts` has a `longevity`
+template (keywords: longevity, live longer, healthspan, anti-aging, …) and
+`shared/keystonePractices.ts` carries five `longevity-*` practices whose
+`section` points at the shelf, so `/goal/longevity`, `/goal/live-longer`, the
+coach's prescriptions and the outcome projections all draw from it.
+
+To extend the shelf: verify the DOI first (fetch the publisher page or the
+PubMed record), add the cluster under a new `70NN` section in all three maps
+(`LONGEVITY_SECTIONS`, `LONGEVITY_SECTION_SHORT`, and the order is derived),
+give it an `impact` rating, run the test, then `python3 scripts/gen_catalog.py`.

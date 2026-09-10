@@ -1,35 +1,35 @@
 # AQAL Intelligence — Research Library Catalog
 
-**6,246 clusters · 11,958 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**6,285 clusters · 12,074 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,320 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,359 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,607 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,258 |
 | Framework / uncategorized | 61 |
-| **Total** | **6,246** |
+| **Total** | **6,285** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,669 |
-| Strong | 1,693 |
-| Mixed | 1,063 |
-| Emerging | 821 |
+| Moderate | 2,670 |
+| Strong | 1,723 |
+| Mixed | 1,065 |
+| Emerging | 827 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,320)
+## PRACTICES — what strengthens the mind (impact lens)  (3,359)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
 | 14 | Sleep — The System That Gates Every Other Line | 5 | Strong | 7 | Bolsters clusters: memory, emotion, decision-making, immunity, everything |
 | 21 | The Knowing–Doing Gap Is the Real Enemy | 4 | Strong | 6 | Bolsters clusters: volitional, self-regulation, follow-through |
-| 22 | Intermittent Fasting & Time-Restricted Eating | 3 | Moderate | 5 | Bolsters clusters: interoceptive, volitional, systemic (metabolic) |
+| 22 | Intermittent Fasting & Time-Restricted Eating | 3 | Moderate | 6 | Bolsters clusters: interoceptive, volitional, systemic (metabolic) |
 | 23 | Light & Circadian Rhythm | 3 | Moderate | 5 | Bolsters clusters: interoceptive, emotional, intrapersonal |
 | 24 | Cardiorespiratory Fitness — VO₂max | 5 | Strong | 5 | Bolsters clusters: interoceptive, volitional, systemic, most cognitive lines |
 | 25 | The Gut–Brain Axis | 2 | Emerging | 5 | Bolsters clusters: emotional, interoceptive, intrapersonal |
@@ -65,7 +65,7 @@
 | 55 | Pets & Companion Animals | 3 | Mixed | 4 | Bolsters clusters: interpersonal, emotional, systemic |
 | 56 | Caffeine | 3 | Moderate | 4 | Bolsters clusters: alertness, adversarial/strategic (under fatigue) — traded vs  |
 | 57 | Alcohol Reduction | 4 | Strong | 4 | Bolsters clusters: most cognitive lines, systemic, emotional |
-| 58 | Dance | 3 | Moderate | 4 | Bolsters clusters: bodily-kinesthetic, spatial, memory, interpersonal |
+| 58 | Dance | 3 | Strong | 5 | Bolsters clusters: bodily-kinesthetic, spatial, memory, interpersonal |
 | 59 | Tai Chi & Qigong | 4 | Strong | 4 | Bolsters clusters: bodily-kinesthetic, interoceptive, executive function |
 | 60 | Walking & Daily Steps | 4 | Strong | 4 | Bolsters clusters: interoceptive, systemic, emotional |
 | 61 | Breaking Up Sitting | 3 | Moderate | 4 | Bolsters clusters: systemic, interoceptive (metabolic) |
@@ -75,9 +75,9 @@
 | 65 | Massage & Bodywork | 3 | Mixed | 4 | Bolsters clusters: interoceptive, emotional (state anxiety) |
 | 66 | Mindfulness & MBSR | 3 | Moderate | 4 | Bolsters clusters: meta-cognitive, emotional, interoceptive |
 | 67 | Loving-Kindness Meditation | 3 | Moderate | 4 | Bolsters clusters: emotional, interpersonal, existential |
-| 68 | Self-Compassion | 4 | Moderate | 4 | Bolsters clusters: intrapersonal, emotional, volitional (resilience) |
+| 68 | Self-Compassion | 4 | Strong | 5 | Bolsters clusters: intrapersonal, emotional, volitional (resilience) |
 | 69 | Reappraisal vs. Suppression | 4 | Strong | 4 | Bolsters clusters: emotional, interpersonal, intrapersonal |
-| 70 | Forgiveness | 3 | Moderate | 4 | Bolsters clusters: emotional, interpersonal, moral, intrapersonal |
+| 70 | Forgiveness | 3 | Strong | 5 | Bolsters clusters: emotional, interpersonal, moral, intrapersonal |
 | 71 | Optimism & Explanatory Style | 3 | Moderate | 4 | Bolsters clusters: intrapersonal, volitional, existential |
 | 72 | Savoring | 3 | Emerging | 3 | Bolsters clusters: emotional, intrapersonal, aesthetic |
 | 73 | Nature Dose — 120 min/week | 3 | Moderate | 4 | Bolsters clusters: emotional, meta-cognitive (attention restoration) |
@@ -90,14 +90,14 @@
 | 80 | Laughter & Humor | 2 | Emerging | 4 | Bolsters clusters: humor, emotional, interpersonal |
 | 81 | Learning by Teaching | 3 | Strong | 4 | Bolsters clusters: linguistic, meta-cognitive, most skill lines |
 | 82 | EMDR | 4 | Strong | 4 | Bolsters clusters: emotional regulation, trauma recovery |
-| 83 | Clinical & Ericksonian Hypnosis | 3 | Moderate | 4 | Bolsters clusters: pain modulation, interoceptive, emotional |
+| 83 | Clinical & Ericksonian Hypnosis | 3 | Strong | 5 | Bolsters clusters: pain modulation, interoceptive, emotional |
 | 84 | Cognitive Behavioral Therapy (CBT) | 5 | Strong | 4 | Bolsters clusters: emotional, meta-cognitive, most mental-health lines |
 | 85 | Behavioral Activation | 4 | Strong | 3 | Bolsters clusters: volitional, emotional (depression) |
 | 86 | Acceptance & Commitment Therapy (ACT) | 3 | Moderate | 3 | Bolsters clusters: emotional, intrapersonal, existential |
 | 87 | Exposure Therapy | 5 | Strong | 3 | Bolsters clusters: emotional, volitional (anxiety/fear) |
 | 88 | Dialectical Behavior Therapy (DBT) Skills | 4 | Strong | 3 | Bolsters clusters: emotional regulation, volitional, interpersonal |
 | 89 | Motivational Interviewing | 3 | Moderate | 3 | Bolsters clusters: volitional, interpersonal, emotional |
-| 90 | Psychodynamic & Interpersonal Therapy | 4 | Moderate | 4 | Bolsters clusters: intrapersonal, interpersonal, emotional |
+| 90 | Psychodynamic & Interpersonal Therapy | 4 | Strong | 5 | Bolsters clusters: intrapersonal, interpersonal, emotional |
 | 91 | Support Groups & Group Therapy | 3 | Moderate | 3 | Bolsters clusters: interpersonal, emotional, existential |
 | 92 | NLP — The Honest Verdict | 1 | Mixed | 3 | The branded model is not empirically supported |
 | 93 | NLP Meta-Programs & Modality Matching | 1 | Mixed | 3 | The 'match their VAK style' hypothesis fails controlled tests |
@@ -176,7 +176,7 @@
 | 216 | Board / Tabletop Games With Friends | 2 | Moderate | 2 | Bolsters clusters: executive function, memory, cognitive reserve, social connect |
 | 217 | Adult Social Dance Classes | 3 | Moderate | 2 | Bolsters clusters: balance, sensorimotor & reaction time, executive function, mo |
 | 218 | Golf Driving Range / Precision Practice | 2 | Emerging | 2 | Bolsters clusters: motor learning, focused attention/flow, light activity |
-| 219 | Bouldering / Rock Climbing for Depression | 4 | Moderate | 2 | Bolsters clusters: self-efficacy, anxiety reduction, behavioral activation |
+| 219 | Bouldering / Rock Climbing for Depression | 4 | Moderate | 3 | Bolsters clusters: self-efficacy, anxiety reduction, behavioral activation |
 | 220 | Surf Therapy / Ocean Therapy | 3 | Emerging | 2 | Bolsters clusters: positive affect, PTSD/depression relief, resilience |
 | 221 | Horseback Riding / Equine-Assisted Therapy | 2 | Mixed | 2 | Claimed benefits not robustly established — the weakest entry |
 | 222 | Trail / Distance Running & Depression | 4 | Moderate | 2 | Bolsters clusters: depression/anxiety remission, cardiometabolic health, communi |
@@ -299,9 +299,9 @@
 | 449 | Cognitive Defusion (Unhooking From Thoughts) | 3 | Moderate | 2 | Bolsters clusters: psychological flexibility, self-criticism management, emotion |
 | 450 | Affect Labeling ('Name It to Tame It') | 2 | Moderate | 2 | Bolsters clusters: emotional self-regulation, self-awareness, distress tolerance |
 | 451 | Distraction / Attentional Deployment | 2 | Moderate | 1 | Bolsters clusters: acute emotional self-regulation, impulse control, rumination  |
-| 452 | Self-Distancing / Third-Person Self-Talk | 2 | Moderate | 2 | Bolsters clusters: emotional self-regulation, rumination control, wise reasoning |
+| 452 | Self-Distancing / Third-Person Self-Talk | 2 | Strong | 3 | Bolsters clusters: emotional self-regulation, rumination control, wise reasoning |
 | 453 | Cold-Water Face Immersion (Dive Reflex / DBT 'TIPP') | 2 | Emerging | 2 | Bolsters clusters: acute distress tolerance, panic/arousal down-regulation, cris |
-| 454 | Cyclic Sighing / Physiological Sigh | 2 | Emerging | 1 | Bolsters clusters: acute arousal down-regulation, anxiety management, interocept |
+| 454 | Cyclic Sighing / Physiological Sigh | 2 | Emerging | 2 | Bolsters clusters: acute arousal down-regulation, anxiety management, interocept |
 | 455 | Temporal Distancing ('This Too Shall Pass') | 2 | Emerging | 1 | Bolsters clusters: emotional self-regulation, resilience, perspective-taking |
 | 456 | Worry Postponement ('Worry Time') | 2 | Mixed | 1 | Bolsters clusters: worry/rumination control, anxiety management, attentional con |
 | 457 | Acceptance as an Emotion-Regulation Strategy | 2 | Mixed | 2 | Bolsters clusters: distress tolerance, psychological flexibility, pain coping |
@@ -314,7 +314,7 @@
 | 464 | Microbreaks During Work | 2 | Moderate | 1 | Bolsters clusters: Job Burnout / Workaholism, Breaking Up Sitting, Slow Processi |
 | 465 | Aromatherapy (Lavender) for Stress | 2 | Mixed | 2 | Bolsters clusters: Chronic Anxiety, Chronic Stress / Allostatic Load |
 | 466 | Listening to Relaxing Music | 2 | Mixed | 2 | Bolsters clusters: Chronic Stress / Allostatic Load, Chronic Anxiety, Sleep Qual |
-| 467 | Yoga Nidra / Non-Sleep Deep Rest (NSDR) | 2 | Emerging | 2 | Bolsters clusters: Chronic Stress / Allostatic Load, Sleep Quality, Sleep Depriv |
+| 467 | Yoga Nidra / Non-Sleep Deep Rest (NSDR) | 2 | Moderate | 3 | Bolsters clusters: Chronic Stress / Allostatic Load, Sleep Quality, Sleep Depriv |
 | 468 | Taking Vacations / Time Off | 3 | Mixed | 3 | Bolsters clusters: Job Burnout / Workaholism, Chronic Stress / Allostatic Load,  |
 | 469 | Leisure Crafting (Proactively Designing Off-Time) | 2 | Emerging | 2 | Bolsters clusters: Mastery Experiences in Off-Job Time, Job Burnout / Workaholis |
 | 470 | CBT-I — The Gold Standard for Insomnia | 5 | Strong | 2 | Bolsters clusters: sleep-restriction-therapy, stimulus-control-therapy, construc |
@@ -673,7 +673,7 @@
 | 1314 | Selenium — Cancer Prevention Null (Deficiency Nuance) | 1 | Mixed | 2 | practice: 'Bolsters clusters: Bodily' |
 | 1346 | Group CBT — Distinct from Individual & from Support Groups | 4 | Strong | 2 | practice: 'Bolsters clusters: Emotional, Intrapersonal, Interpersonal, Meta-Cogn |
 | 1347 | Bibliotherapy — Distinct from Recreational Reading | 3 | Moderate | 2 | practice: 'Bolsters clusters: Intrapersonal, Meta-Cognitive, Emotional, Linguist |
-| 1348 | Clinical (Active) Music Therapy — Distinct from Music Listening | 3 | Moderate | 2 | practice: 'Bolsters clusters: Musical, Emotional, Interoceptive, Aesthetic' |
+| 1348 | Clinical (Active) Music Therapy — Distinct from Music Listening | 3 | Strong | 3 | practice: 'Bolsters clusters: Musical, Emotional, Interoceptive, Aesthetic' |
 | 1349 | Solution-Focused Brief Therapy (SFBT) | 3 | Moderate | 3 | practice: 'Bolsters clusters: Volitional goal-pursuit, Intrapersonal, Strategic, |
 | 1350 | Existential Therapy | 3 | Moderate | 1 | practice: 'Bolsters clusters: Existential, Intrapersonal, Emotional, meaning-in- |
 | 1351 | Logotherapy (Frankl) — Distinct from Meaning-Centered Psychotherapy | 3 | Moderate | 2 | practice: 'Bolsters clusters: Existential, Intrapersonal, Emotional, meaning-in- |
@@ -2798,7 +2798,7 @@
 | 5349 | Phyllanthus niruri (Meniran / Dukong Anak) for Hepatitis B | 2 | Mixed | 2 | practice: 'Bolsters clusters: liver-support beliefs, chronic-illness self-care' |
 | 5351 | Specific & Difficult Goals (Goal-Setting Theory) | 4 | Strong | 2 | practice: 'Bolsters clusters: performance, motivation, persistence' |
 | 5352 | Instructional & Motivational Self-Talk (Sport) | 3 | Moderate | 1 | practice: 'Bolsters clusters: skill acquisition, attentional control, performanc |
-| 5353 | Guided Self-Help / Bibliotherapy for Depression | 3 | Moderate | 2 | practice: 'Bolsters clusters: depression, access to care, mild-moderate mood pro |
+| 5353 | Guided Self-Help / Bibliotherapy for Depression | 3 | Strong | 3 | practice: 'Bolsters clusters: depression, access to care, mild-moderate mood pro |
 | 5354 | Approach-Bias Modification for Alcohol Use | 2 | Mixed | 2 | practice: 'Bolsters clusters: relapse prevention, craving regulation, addiction  |
 | 5355 | SMS / Text-Message Health Nudges | 2 | Moderate | 2 | practice: 'Bolsters clusters: physical activity, smoking cessation, medication a |
 | 5356 | Functional Imagery Training (FIT) | 3 | Emerging | 2 | practice: 'Bolsters clusters: motivation, goal follow-through, weight management |
@@ -3347,6 +3347,45 @@
 | 6198 | Perioperative Normothermia (Active Warming) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, wound healing, infection prevention' |
 | 6201 | Preoperative Alcohol Cessation (Hazardous Drinkers) | 2 | Moderate | 1 | practice: 'Bolsters clusters: Bodily, Volitional, immune function, recovery' |
 | 6203 | Preoperative Carbohydrate Loading Drinks | 1 | Mixed | 1 | practice: 'Bolsters clusters: Bodily, Interoceptive, comfort, mild recovery' |
+| 7000 | How to Read the Longevity Shelf — Hallmarks, Levers, and the Size of the Prize | 5 | Strong | 3 | What aging is, what the big levers are worth, and how this shelf grades evidence |
+| 7001 | Cardiorespiratory Fitness — The Strongest Measured Predictor of Survival | 5 | Strong | 3 | VO₂max, treadmill fitness and all-cause mortality |
+| 7002 | Strength, Grip and Muscle-Strengthening Activity — A Vital Sign You Can Train | 4 | Strong | 2 | Grip strength as a predictor; resistance training and mortality |
+| 7003 | Daily Steps and Everyday Vigorous Bursts — The Dose That Moves Mortality | 4 | Strong | 4 | Step counts, accelerometer-measured activity and short vigorous bursts |
+| 7004 | Protein and Creatine for Aging Muscle | 3 | Moderate | 3 | Dietary protein targets after 65; creatine with resistance training |
+| 7005 | ApoB and LDL — The Causal Lipid, and Why Years of Exposure Matter | 5 | Strong | 3 | Genetics, epidemiology and 26 randomized trials point the same way |
+| 7006 | Beyond Statins — Ezetimibe, PCSK9 Inhibitors and Bempedoic Acid | 4 | Strong | 4 | Every non-statin route to lower LDL that has an outcomes trial |
+| 7007 | Lipoprotein(a) — The Inherited Risk Worth Measuring Once | 3 | Strong | 2 | A genetically set lipid, a causal risk factor, and the drugs in trials |
+| 7008 | Triglycerides, Fish Oil and Omega-3 — What the Big Trials Actually Showed | 2 | Mixed | 5 | REDUCE-IT vs STRENGTH vs VITAL, the atrial-fibrillation signal, and blood omega- |
+| 7009 | Blood Pressure — The Intensive Target That Lowered Deaths | 5 | Strong | 2 | SPRINT and STEP: systolic below 120–130 in adults at risk and in older adults |
+| 7010 | Body Weight and the GLP-1 Drugs | 4 | Strong | 2 | What excess weight costs in years, and the first weight-loss drug with an outcom |
+| 7011 | Metformin — Promising Signals, an Unfinished Trial, and a Catch for Exercisers | 2 | Emerging | 4 | Observational hints, the TAME proposal, and what it does to training gains |
+| 7012 | Rapamycin and mTOR — The Best Mouse Result, and the First Human Trials | 2 | Emerging | 5 | Late-life lifespan extension in mice; immune and one-year safety data in people |
+| 7013 | Acarbose, 17α-Estradiol and Canagliflozin — Lifespan Extension in Mice, Mostly Male | 2 | Emerging | 2 | What the NIA Interventions Testing Program has found beyond rapamycin |
+| 7014 | Senolytics — Clearing Senescent Cells: Strong in Mice, Pilot-Stage in People | 2 | Emerging | 3 | Dasatinib + quercetin and fisetin |
+| 7015 | NAD⁺ Precursors (NR, NMN) — They Raise the Molecule; Outcomes Are Thin | 2 | Moderate | 3 | Nicotinamide riboside and nicotinamide mononucleotide in randomized trials |
+| 7016 | Spermidine, Urolithin A, Taurine and GlyNAC — The Emerging Supplements, Trial by Trial | 2 | Emerging | 5 | What each one has shown in people and in animals |
+| 7017 | Coenzyme Q10 and Selenium — Two Randomized Trials With Mortality Endpoints | 3 | Moderate | 2 | Q-SYMBIO in heart failure; KiSel-10 in older Swedes |
+| 7018 | Vitamin D — Two Large Trials, No Effect on Death, Cancer or Heart Disease in the Replete | 1 | Strong | 2 | VITAL and D-Health |
+| 7019 | A Daily Multivitamin and Cocoa Flavanols — COSMOS | 2 | Moderate | 2 | 21,442 older adults, 3.6 years: cardiovascular events and cognition |
+| 7020 | Antioxidant Megadoses and Resveratrol — The Verdict Is In, and It Is Not Good | 1 | Strong | 3 | Beta-carotene, vitamin E and vitamin A raise mortality; resveratrol does nothing |
+| 7021 | Caloric Restriction in Humans — CALERIE, the Only Long Randomized Trial | 3 | Moderate | 3 | Two years of ~12% restriction in healthy, non-obese adults |
+| 7022 | Time-Restricted Eating and the Fasting-Mimicking Diet — Calories Still Count | 2 | Mixed | 3 | TREAT, the NEJM trial of 8-hour eating with calorie restriction, and periodic fa |
+| 7023 | The Mediterranean Diet and Coffee | 4 | Strong | 2 | PREDIMED's randomized result and the largest coffee cohort |
+| 7024 | Sleep Duration and Mortality — The U-Shaped Curve | 4 | Strong | 1 | Short and long sleep both track with earlier death |
+| 7025 | Sauna Bathing and Mortality — The Finnish Cohort | 3 | Moderate | 1 | Frequency of sauna use and fatal cardiovascular events over 20 years |
+| 7026 | Menopausal Hormone Therapy — From the 2002 Scare to the Timing Hypothesis | 3 | Strong | 3 | WHI's principal results, its 18-year mortality follow-up, and the 2022 position  |
+| 7027 | Testosterone, Growth Hormone and DHEA — The Honest Verdict on the Anti-Aging Hormones | 1 | Strong | 3 | TRAVERSE, the growth-hormone systematic review, and the DHEA trial |
+| 7028 | Epigenetic Clocks and Biological Age — What the Blood Test Can and Cannot Tell You | 2 | Moderate | 4 | Horvath's clock, PhenoAge, DunedinPACE, and the TRIIM pilot |
+| 7029 | Hearing Aids, Vision and the Modifiable Share of Dementia | 3 | Strong | 2 | ACHIEVE and the Lancet Commission's fourteen risk factors |
+| 7030 | Vaccines as Longevity Medicine — Shingles and Dementia, Influenza and the Heart | 3 | Strong | 2 | A natural experiment in Wales and a meta-analysis of cardiovascular outcomes |
+| 7031 | Daily Low-Dose Aspirin in Healthy Older Adults — ASPREE Said No | 1 | Strong | 1 | 19,114 adults ≥70 without cardiovascular disease |
+| 7032 | Screening Colonoscopy — What the First Randomized Trial Showed | 3 | Strong | 1 | NORDICC: invitation versus usual care in 84,585 adults |
+| 7033 | Young Blood, Plasma Exchange, Hyperbaric Oxygen and Stem-Cell Clinics — Where the Evidence Stops | 1 | Emerging | 5 | Parabiosis in mice, the first human plasma trial, a telomere study, and the dire |
+| 7034 | Partial Epigenetic Reprogramming — The Most Exciting Result on the Shelf, and It Is All in Mice | 2 | Emerging | 2 | Cyclic Yamanaka-factor expression in progeroid and aged mice; vision restored in |
+| 7035 | Social Connection and Loneliness — A Mortality Effect the Size of Smoking | 5 | Strong | 2 | Two meta-analyses of relationships, isolation and death |
+| 7036 | Smoking and Alcohol — The Two Largest Subtractions, With the Years Counted | 5 | Strong | 2 | What smoking costs, what quitting recovers, and the alcohol curve without a safe |
+| 7037 | Frailty — The Five-Sign Phenotype That Predicts What Comes Next | 4 | Strong | 2 | Weight loss, exhaustion, weakness, slow walking, low activity |
+| 7038 | Oral Collagen for Skin Aging — A Cosmetic Result, Not a Longevity One | 2 | Moderate | 1 | Hydration, elasticity and roughness in a placebo-controlled trial |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,607)
 
