@@ -1,0 +1,24 @@
+{
+  "name": "patent360-mcp-hub",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo 'Tests run in CI only'"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.0.0",
+    "@modelcontextprotocol/node": "^2.0.0",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "tsx": "4.23.13",
+    "@types/node": "24.12.0"
+  }
+}
