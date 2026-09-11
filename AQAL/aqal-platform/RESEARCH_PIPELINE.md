@@ -216,5 +216,5 @@ title, journal and year back off the record before writing the cite. Add the
 cluster under a new section in the shelf's file, give it a tier, an action and
 an impact rating, run `npx vitest run shared/goalShelves.test.ts`, then
 `python3 scripts/gen_catalog.py`. The target is breadth as well as depth: the
-shelves are meant to grow from the first wave's ~1,500 verified sources toward
+shelves are meant to grow from the first night's 3,586 verified sources (632 protocols across 30 files) toward
 the founder's 25,000–35,000, one verified source at a time.
