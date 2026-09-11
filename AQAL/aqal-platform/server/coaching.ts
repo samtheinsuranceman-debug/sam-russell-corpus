@@ -15,6 +15,7 @@ import { invokeLLM, llmConfigured } from "./platform/llm";
 import { ALL_AXES, axisFeedsRarity } from "@shared/axisModes";
 import { bottleneckRole, MECHANISM_META } from "@shared/bottleneckRoles";
 import { practicesForGoals, corePractices, buildProjections, type KeystonePractice, type OutcomeProjection } from "@shared/keystonePractices";
+import { goalMenuForText, goalMenuLines, type GoalMenu } from "@shared/goalProtocols";
 
 export type ScoreRow = { axisName: string; score: number; confidence?: number | null };
 
@@ -42,6 +43,10 @@ export type OutcomeReport = {
   projections: OutcomeProjection[];  // deterministic, research-grounded, confidence-tiered
   theGap: string;                    // the knowing-doing gap + the commitment move
   obstacles: string[];               // the sabotage risks the person named in their pre-mortem
+  // The month's tiered protocol menu for the goal shelf that matches the stated
+  // goals (fundamental → elite, from shared/goalShelves). Deterministic, never
+  // LLM-invented; undefined when no shelf matches.
+  goalMenu?: GoalMenu;
   disclaimer: string;
 };
 
@@ -108,6 +113,7 @@ function mockReport(scores: ScoreRow[], goals: string): OutcomeReport {
     projections: buildProjections(goals),
     theGap: gapText(),
     obstacles: [],
+    goalMenu: goalMenuForText(goals),
     disclaimer: DISCLAIMER,
   };
 }
@@ -164,6 +170,12 @@ export async function generateOutcomeReport(scores: ScoreRow[], goals: string): 
   const practiceMenu = menu
     .map((p) => `- ${p.name} [${p.evidence}] — lifts: ${p.lifts.join(", ")}. ${p.prescription} (Library: "${p.librarySection}")`)
     .join("\n");
+  // The goal shelf's tiered menu for this month (fundamental → elite), so the
+  // coach can name the concrete protocol for the goal itself, not only the lines.
+  const goalMenu = goalMenuForText(goals);
+  const goalMenuText = goalMenu
+    ? `\nThis month's protocol menu for their goal "${goalMenu.label}" (from the goal shelf; tiers fundamental → elite):\n${goalMenuLines(goalMenu)}\n`
+    : "";
 
   const prompt = `You are an outcome-engineering coach grounded in network psychometrics (centrality),
 weakest-link/bottleneck theory, keystone/mutualism effects, and leverage-point theory.
@@ -176,7 +188,7 @@ Their stated goals (verbatim): ${goals || "(not provided — reason from the pro
 Research-backed practices you may prescribe (evidence tier in brackets; prefer these over generic advice,
 and match them to the goals — e.g. marriage/parenting goals should draw on the relational practices):
 ${practiceMenu || "- (use the general mechanisms below)"}
-
+${goalMenuText}
 Use each line's mechanism above when you explain WHY it threatens the goals: a Liebig stave caps sustained
 output (raise it), an O-Ring multiplies failure across outputs (its quality gates everything downstream), a
 throughput constraint strands capacity behind the slowest step (widen it). Stay consistent with these mechanisms.
@@ -227,6 +239,7 @@ is a hypothetical projection, never a guarantee.`;
       vision: parsed.vision?.trim() || visionText(goals, projections),
       theGap: parsed.theGap?.trim() || gapText(),
       obstacles: Array.isArray(parsed.obstacles) ? parsed.obstacles.filter((o) => typeof o === "string" && o.trim()) : [],
+      goalMenu,
       disclaimer: DISCLAIMER,
     };
   } catch {

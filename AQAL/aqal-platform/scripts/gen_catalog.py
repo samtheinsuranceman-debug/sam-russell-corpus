@@ -6,7 +6,10 @@ import re, csv, sys, json
 # healthy-aging & longevity shelf (sections 7000+). researchLibraryData.ts is
 # only the adapter that merges them, so the catalog reads the sources directly.
 PAGES = "/home/user/sam-russell-corpus/AQAL/aqal-platform/client/src/pages"
-DATA_FILES = [f"{PAGES}/researchLibraryDataRaw.ts", f"{PAGES}/researchLibraryLongevity.ts"]
+import glob as _glob
+SHELVES = "/home/user/sam-russell-corpus/AQAL/aqal-platform/shared/goalShelves"
+DATA_FILES = [f"{PAGES}/researchLibraryDataRaw.ts", f"{PAGES}/researchLibraryLongevity.ts"] + sorted(
+    f for f in _glob.glob(f"{SHELVES}/*.ts") + _glob.glob(f"{SHELVES}/wave2/*.ts") if not f.endswith(("index.ts", "types.ts")))
 OUTDIR = "/home/user/sam-russell-corpus/AQAL/aqal-platform/docs"
 import os
 os.makedirs(OUTDIR, exist_ok=True)

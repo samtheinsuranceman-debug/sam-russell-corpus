@@ -59,7 +59,8 @@ describe("templateForGoal", () => {
     expect(templateForGoal("get married and have five kids").key).toBe("family-kids");
   });
   it("falls back to the generic scaffold", () => {
-    expect(templateForGoal("learn to blow glass").key).toBe("custom");
+    expect(templateForGoal("learn to blow glass").key).toBe("hobby");
+    expect(templateForGoal("become an astronaut").key).toBe("custom");
   });
 });
 

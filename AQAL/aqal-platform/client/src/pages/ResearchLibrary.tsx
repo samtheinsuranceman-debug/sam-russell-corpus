@@ -1,11 +1,13 @@
 import React, { useState, useMemo, useEffect } from "react";
 import {
   Search, ChevronDown, ExternalLink, FileText, ShieldCheck,
-  Sparkles, LayoutGrid, ArrowLeft, Brain, TrendingUp, Shield, X,
+  Sparkles, LayoutGrid, ArrowLeft, Brain, TrendingUp, Shield, X, Target,
 } from "lucide-react";
 import { Link } from "wouter";
 import { PRACTICE_EVIDENCE } from "./researchLibraryData";
 import { LONGEVITY_GROUP, LONGEVITY_SECTIONS, LONGEVITY_SECTION_ORDER, LONGEVITY_SECTION_SHORT } from "./researchLibraryLongevity";
+import { GOAL_GROUP, GOAL_SECTIONS, GOAL_SECTION_ORDER, GOAL_SECTION_SHORT } from "@shared/goalShelves/index";
+import { TIER_LABEL, type GoalTier, type Reinforcement } from "@shared/goalShelves/types";
 
 // ============================================================
 // AQAL — Research Library (standalone page)
@@ -555,10 +557,17 @@ export type PracticeCluster = {
   weakness?: WeaknessProfile;// the threat gauge (weakness-line → failure clusters)
   degrades?: string[];       // plain-language capacities/systems a harm/weakness cluster erodes
   sources: PracticeSource[];
+  // Goal-shelf fields (sections 8000+): the protocol tier, the concrete step,
+  // the goal it serves and optional reinforcement (books, videos, courses).
+  goal?: string;
+  tier?: GoalTier;
+  action?: string;
+  reinforcement?: Reinforcement[];
 };
 
 const PRACTICE_SECTIONS: Record<string, string> = {
   ...LONGEVITY_SECTIONS,
+  ...GOAL_SECTIONS,
   "0": "Cluster Interaction & Systems Science",
   "1": "1 · Physical Training",
   "2": "2 · Strength Training — Cognitive & Psychological Transfer",
@@ -6784,6 +6793,7 @@ const PRACTICE_SECTIONS: Record<string, string> = {
 // Short labels for the section jump-nav chips.
 const PRACTICE_SECTION_SHORT: Record<string, string> = {
   ...LONGEVITY_SECTION_SHORT,
+  ...GOAL_SECTION_SHORT,
   "0": "Systems Science",
   "1": "Physical",
   "2": "Cognitive Transfer",
@@ -12862,7 +12872,7 @@ const PRACTICE_SECTION_SHORT: Record<string, string> = {
 // Consumer-intuitive display order: how-it-works first, then the high-leverage
 // keystone practices (what to actually DO), then domain practices, then risks.
 // This controls display order without renumbering the underlying data.
-const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "17", "18", ...LONGEVITY_SECTION_ORDER,
+const PRACTICE_SECTION_ORDER = ["0", "21", "14", "13", "24", "12", "15", "16", "17", "18", ...LONGEVITY_SECTION_ORDER, ...GOAL_SECTION_ORDER,
   // Practices by domain — physical & metabolic
   "1", "2", "42", "43", "44", "45", "60", "61", "46", "47", "48", "49", "22", "23", "25", "26", "56", "57",
   // Protect the hardware — senses & body
@@ -13153,6 +13163,7 @@ const sectionRank = (s: string) => {
 // Group super-headers so a consumer can scan straight to what they want.
 const PRACTICE_GROUP: Record<string, string> = {
   ...Object.fromEntries(LONGEVITY_SECTION_ORDER.map((k) => [k, LONGEVITY_GROUP])),
+  ...Object.fromEntries(GOAL_SECTION_ORDER.map((k) => [k, GOAL_GROUP])),
   "0": "How it works",
   "21": "Keystone practices — start here",
   "14": "Keystone practices — start here", "13": "Keystone practices — start here",
@@ -19779,6 +19790,11 @@ export default function ResearchLibrary() {
         .rl-practice-callout .rl-callout-label{display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace;
           font-size:9.5px; letter-spacing:0.14em; text-transform:uppercase; color:#D98A6E; margin-bottom:8px;}
         .rl-practice-callout p{font-size:12.5px; line-height:1.6; color:${CREAM2}; margin:0;}
+        .rl-practice-action{background:rgba(120,160,110,0.07); border:1px solid rgba(120,160,110,0.35); border-radius:10px; padding:10px 12px; margin:10px 0;}
+        .rl-practice-action .rl-callout-label{display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px;}
+        .rl-practice-action p{font-size:12.5px; line-height:1.6; color:${CREAM2}; margin:0;}
+        .rl-practice-action .rl-reinforcement{margin-top:6px; font-size:12px; opacity:0.9;}
+        .rl-practice-action a{color:inherit; text-decoration:underline;}
 
         @media (max-width:640px){
           .rl-nav-in{gap:16px; padding:0 16px;}
@@ -20334,6 +20350,17 @@ export default function ResearchLibrary() {
                   )}
                   {showHead && (
                     <div className="rl-practice-section-head">{PRACTICE_SECTIONS[cluster.section]}</div>
+                  )}
+                  {cluster.tier && cluster.action && (
+                    <div className="rl-practice-action">
+                      <div className="rl-callout-label"><Target size={12} /> {cluster.tier} protocol — {TIER_LABEL[cluster.tier].split(" — ")[1]}</div>
+                      <p><strong>Do this:</strong> {cluster.action}</p>
+                      {cluster.reinforcement && cluster.reinforcement.length > 0 && (
+                        <p className="rl-reinforcement">Reinforce with: {cluster.reinforcement.map((r, i) => (
+                          <span key={i}>{i > 0 ? " · " : ""}{r.link ? <a href={r.link} target="_blank" rel="noopener noreferrer">{r.title}</a> : r.title}{r.by ? ` (${r.by})` : ""}</span>
+                        ))}</p>
+                      )}
+                    </div>
                   )}
                   {cluster.callout && (
                     <div className="rl-practice-callout">
