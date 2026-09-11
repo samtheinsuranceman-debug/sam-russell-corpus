@@ -56,6 +56,7 @@ const StrategyLab = lazy(() => import("./pages/portal/StrategyLab"));
 const AiAssist = lazy(() => import("./pages/portal/AiAssist"));
 const Team = lazy(() => import("./pages/portal/Team"));
 const Billing = lazy(() => import("./pages/portal/Billing"));
+const Interior = lazy(() => import("./pages/portal/Interior"));
 const Knowledge = lazy(() => import("./pages/portal/Knowledge"));
 const Leaderboard = lazy(() => import("./pages/portal/Leaderboard"));
 const EnterpriseAdmin = lazy(() => import("./pages/portal/EnterpriseAdmin"));
@@ -378,6 +379,7 @@ function Router() {
 
       <Route path="/portal/team" component={gated(Team, "/portal/team")} />
       <Route path="/portal/billing" component={gated(Billing, "/portal/billing")} />
+      <Route path="/portal/interior" component={gated(Interior, "/portal/interior")} />
       <Route path="/portal/knowledge" component={gated(Knowledge, "/portal/knowledge")} />
       <Route path="/portal/leaderboard" component={gated(Leaderboard, "/portal/leaderboard")} />
       <Route path="/portal/scenarios" component={gated(ScenarioAdjustments, "/portal/scenarios")} />
