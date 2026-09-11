@@ -1,6 +1,16 @@
-FROM python:3.12-slim
+FROM node:20-slim
+
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY app ./app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+COPY tsconfig.json ./
+COPY src ./src
+RUN npm run build
+
+USER node
+
+EXPOSE 3000
+
+CMD ["npm", "start"]

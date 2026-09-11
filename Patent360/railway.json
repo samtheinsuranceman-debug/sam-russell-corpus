@@ -1,0 +1,11 @@
+{
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "npm run build"
+  },
+  "deploy": {
+    "startCommand": "npm run start",
+    "healthcheckPath": "/api/health",
+    "healthcheckTimeout": 10
+  }
+}
