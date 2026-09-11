@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**6,309 clusters · 12,120 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**6,688 clusters · 14,193 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 3,383 |
+| PRACTICES — what strengthens the mind (impact lens) | 3,762 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,607 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,258 |
 | Framework / uncategorized | 61 |
-| **Total** | **6,309** |
+| **Total** | **6,688** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,678 |
-| Strong | 1,734 |
-| Mixed | 1,066 |
-| Emerging | 831 |
+| Moderate | 2,809 |
+| Strong | 1,931 |
+| Mixed | 1,101 |
+| Emerging | 847 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (3,383)
+## PRACTICES — what strengthens the mind (impact lens)  (3,762)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -3410,6 +3410,385 @@
 | 7060 | DO-HEALTH — Omega-3, Vitamin D and Exercise on the Aging Clocks | 3 | Moderate | 1 | The largest randomized test of everyday supplements against biological age |
 | 7061 | Hearing Aids and Mortality — Regular Users Lived Longer | 3 | Moderate | 1 | NHANES follow-up of 1,863 adults with hearing loss |
 | 7062 | What Changed in 2024–2026 — Taurine Retracted as a Biomarker, Metformin in Monkeys, and the First Healthspan RCT Review | 3 | Emerging | 3 | The shelf's newest entries, so the older ones can be read in context |
+| 8000 | How to Read the Marriage Shelf | 3 | Strong | 1 | Protocols, not diagnoses — pick one per tier each month |
+| 8001 | Make the Load Feel Fair, Not Just Equal | 3 | Moderate | 6 | A weekly ten-minute renegotiation of who does what |
+| 8002 | Daily Rituals of Connection | 3 | Moderate | 6 | A dinner-table check-in, a real conversation, and one shared activity a week |
+| 8003 | Capitalisation — Respond to Good News with Real Enthusiasm | 3 | Strong | 8 | Active-constructive responding when your partner shares something good |
+| 8003 | Express Gratitude Out Loud, Daily | 3 | Strong | 7 | Thank your partner for one specific thing every day |
+| 8004 | Treat the Marriage as a Health Behaviour | 3 | Strong | 8 | Why relationship quality belongs next to diet and exercise |
+| 8005 | Break the Demand–Withdraw Loop | 4 | Strong | 8 | Soft start-up for the demander, staying in the room for the withdrawer |
+| 8006 | Repair Fast, Forgive Deliberately | 3 | Moderate | 6 | A 48-hour repair rule after every real argument |
+| 8007 | Sexual Communication and Communal Desire | 4 | Strong | 8 | Talk about sex, prioritise affection, aim for satisfaction over frequency |
+| 8008 | A Monthly Money Meeting | 3 | Moderate | 7 | Money fights are the most recurrent and least resolved — schedule them |
+| 8009 | Premarital and Early-Marriage Education | 3 | Moderate | 8 | A skills program before or in the first years of marriage |
+| 8010 | Brief Online and Group Programs | 4 | Strong | 7 | OurRelationship, ePREP and Hold Me Tight — six to eight weeks, at home |
+| 8011 | The Gottman Findings and Gottman-Based Programs | 3 | Mixed | 8 | Strong observational science; more modest program trials |
+| 8012 | The Annual Relationship Checkup | 3 | Strong | 5 | Two therapist-guided sessions a year, like a dental check |
+| 8013 | Emotionally Focused Couple Therapy | 4 | Strong | 8 | Attachment-based therapy, typically 8–20 sessions |
+| 8014 | Behavioral and Integrative Behavioral Couple Therapy | 4 | Strong | 7 | Around 20–26 sessions over six to eight months for distressed couples |
+| 8015 | Protect the Marriage Across the Transition to Parenthood | 4 | Strong | 8 | A multi-session couple program around the first birth |
+| 8016 | Treat the Relationship to Treat the Depression | 4 | Moderate | 6 | Conjoint therapy when one partner is depressed and the marriage is strained |
+| 8017 | Recovering From an Affair | 5 | Moderate | 8 | Disclosure, then structured couple therapy — the couples who do this can catch u |
+| 8018 | Pornography — Know the Pattern, Talk About It | 2 | Mixed | 8 | Secret solitary use is the configuration linked to harm; shared, known use is no |
+| 8019 | Myth: 'More Sex Is Always Better' | 1 | Strong | 4 | The well-being curve flattens at about once a week |
+| 8019 | Myth: 'Speak Their Love Language' | 1 | Mixed | 7 | The five-languages typology fails its own core predictions |
+| 8050 | Take a Couple-Focused Transition-to-Parenthood Program Before the Baby Arrives | 4 | Strong | 8 | The satisfaction dip is real and measurable; structured programs (Family Foundat |
+| 8051 | Set In-Law Boundaries Explicitly and, if You Are a Stepcouple, Take Stepfamily-Specific Relationship Education | 3 | Moderate | 8 | In-law strain predicts later marital trouble; generic marriage classes help step |
+| 8052 | Plan Retirement as a Couple, Not as Two Individuals | 3 | Moderate | 6 | Marital quality dips when one spouse retires while the other keeps working; sync |
+| 8053 | When Apart, Keep Daily Contact Rituals and Plan the Reunion Explicitly | 3 | Moderate | 8 | Distance itself does not doom a relationship; idealization, communication qualit |
+| 8054 | Face a Chronic Illness as 'Ours': Dyadic Coping Now, a Couple-Oriented Intervention When the Load Grows | 4 | Strong | 8 | Couple-based programs beat patient-only programs for both partners; strained spo |
+| 8055 | Quit, Move or Lose Weight Together — Not One at a Time | 4 | Strong | 8 | A partner who changes at the same time multiplies your odds; weight and smoking  |
+| 8056 | Never Have the Hard Conversation After a Short Night | 3 | Strong | 8 | Poor sleep predicts more conflict, worse conflict, and bigger inflammatory respo |
+| 8057 | If Drinking Is Hurting the Marriage, Choose Behavioral Couples Therapy Over Individual Treatment Alone | 4 | Strong | 7 | Discrepant drinking erodes satisfaction; BCT outperforms individual treatment on |
+| 8058 | Work a Structured Forgiveness Protocol After a Real Hurt | 3 | Strong | 7 | Forgiveness interventions have meta-analytic support; forgiveness predicts later |
+| 8059 | Laugh Together and Do Something New Together Every Week | 3 | Strong | 7 | Shared (not solo) humor and novel, exciting joint activities predict satisfactio |
+| 8060 | Say 'We' — Especially About the Hard Things | 2 | Strong | 6 | First-person-plural pronoun use predicts better relationship functioning, calmer |
+| 8061 | Pool Your Money and Ban Financial Secrets | 3 | Moderate | 7 | A randomized study of newlyweds found joint accounts protected relationship qual |
+| 8062 | Fight Constructively Where the Kids Can See — and Let Them See the Resolution | 4 | Strong | 8 | Children are harmed by hostile, unresolved parental conflict, not by disagreemen |
+| 8063 | If You Are Religious, Practice It Together — Especially Praying for Your Partner | 2 | Moderate | 5 | Shared in-home religious activity predicts relationship quality; partner-focused |
+| 8064 | Know the Warning Signs of Partner Violence and Where to Turn — Screening Alone Is Not Help | 3 | Strong | 8 | Screening identifies abuse, but randomized trials show no benefit unless it is p |
+| 8065 | Treat Desire Discrepancy as a Couple Pattern, Not One Partner's Defect | 3 | Moderate | 8 | Communal sexual motivation, open sexual communication and mindfulness-based ther |
+| 8066 | Do an Evidence-Based Intensive: Hold Me Tight, PREP-Style Skills Training, or the OurRelationship Online Program | 3 | Moderate | 8 | Multi-session programs with follow-up beat one-off events; online versions reach |
+| 8066 | The One-Weekend Cure for a Distressed Marriage | 1 | Mixed | 5 | Enrichment weekends produce modest, communication-focused gains in non-distresse |
+| 8067 | Protect the Quality of the Marriage — Being Married Only Helps Your Health When It Is Good | 3 | Strong | 8 | Marital status predicts survival, but marital strain predicts inflammation, slow |
+| 8068 | Make Meals and the First Ten Minutes Home Phone-Free | 2 | Moderate | 8 | Partner phubbing predicts conflict over phone use, lower satisfaction and more d |
+| 8069 | Audit the Gray-Divorce Risk Factors Before They Compound | 3 | Strong | 8 | Divorce after 50 doubled between 1990 and 2010; its antecedents are visible year |
+| 8100 | How to Read the Parenting Shelf | 3 | Strong | 1 | Protocols, not verdicts on you — pick one per tier each month |
+| 8101 | Authoritative Parenting: High Warmth, High Expectations | 4 | Strong | 6 | The one style finding that has held up for sixty years |
+| 8102 | Read Aloud Every Day, Dialogically | 4 | Strong | 6 | Ten minutes of shared books — ask, expand, let the child talk |
+| 8102 | Serve-and-Return: Count Conversational Turns, Not Words | 4 | Moderate | 6 | Responsive back-and-forth in the 18–24-month window predicts IQ a decade later |
+| 8103 | Praise the Process, Skip the 'You're So Smart' | 2 | Mixed | 4 | A real but small effect — and the mindset claims built on it did not replicate |
+| 8104 | Give Real Chores, Grow Self-Control | 3 | Moderate | 4 | Contribution in kindergarten, self-regulation for life |
+| 8105 | Protect Sleep With a Consistent Bedtime Routine | 4 | Strong | 5 | The same four steps, the same order, every night |
+| 8106 | Write a Family Media Plan — Without the Panic | 2 | Mixed | 8 | The screen effect is small and mostly about what it displaces |
+| 8107 | An Hour of Movement a Day — It Helps the Grades Too | 3 | Strong | 5 | Physical activity improves executive control and does not cost achievement |
+| 8108 | Become the Family Historian: Rituals and the Stories Children Carry | 4 | Moderate | 7 | Fifty years of ritual research plus the 'Do You Know?' scale |
+| 8108 | Five Family Meals a Week | 3 | Moderate | 6 | A protected table, phones away, everyone talks |
+| 8109 | Autonomy Support: Choices, Reasons, Their Point of View | 3 | Strong | 4 | Structure without control — the self-determination playbook |
+| 8110 | Spanking: Rated at the Floor | 1 | Strong | 4 | Two meta-analyses and 69 prospective studies point the same way |
+| 8111 | Enrol in a Group Parent-Training Program (Incredible Years) | 4 | Strong | 8 | Twelve to fourteen weekly sessions with a trained leader |
+| 8111 | Triple P — Strong Program, Contested Evidence Base | 3 | Mixed | 8 | Works for mothers who report on it; read the critiques before you pay |
+| 8112 | An Eight-Week Mindful Parenting Course for Your Own Stress | 3 | Emerging | 4 | Lower over-reactive discipline, lower parental anxiety — child effects follow |
+| 8113 | Father Involvement That Shows Up Decades Later | 3 | Moderate | 4 | Engaged fathers, independently of mothers, predict education and adjustment |
+| 8114 | Teen Monitoring: Knowledge Comes From Disclosure, Not Surveillance | 3 | Strong | 5 | Build the relationship that makes them tell you |
+| 8115 | Helicopter Parenting: Rated at the Floor | 1 | Moderate | 4 | Hovering predicts worse well-being and less competence in young adults |
+| 8116 | Music Lessons for Music's Sake — Not for IQ | 2 | Mixed | 4 | The 2004 effect did not survive randomized trials or meta-analysis |
+| 8117 | Warmth Is a Decades-Long Investment in Their Body | 5 | Moderate | 6 | Childhood family climate shows up in midlife inflammation and 80-year-old happin |
+| 8118 | Run the Responsive-Parenting System for Years | 5 | Strong | 5 | Coaching that starts in infancy and continues into toddlerhood is where the big  |
+| 8150 | Behavioral Infant Sleep Training (Graduated Extinction, Bedtime Fading) | 3 | Strong | 5 | Works within weeks in trials; five-year follow-up found no measurable harm |
+| 8151 | Breastfeeding — What a Randomized Trial and Sibling Comparisons Show | 2 | Mixed | 5 | Real but modest benefits; most long-term claims shrink once family background is |
+| 8152 | High-Quality Early Childhood Education — Perry, Abecedarian and the Modern Programs | 4 | Strong | 8 | Intensive, well-run programs had lifelong effects; ordinary scaled pre-K has not |
+| 8153 | Math Talk and Number Games at Home | 3 | Strong | 6 | Counting, labeling quantities and board games move early number knowledge |
+| 8154 | Raising Bilingual Children — Input, Not Magic | 3 | Mixed | 6 | Two languages are a real gift; the executive-function bonus is smaller than adve |
+| 8155 | Allowance and Everyday Money Socialization | 2 | Moderate | 4 | What parents model and discuss shapes saving more than the allowance itself |
+| 8156 | Youth Sports — Sample Widely, Specialize Late | 3 | Moderate | 8 | Participation carries psychosocial benefits; early single-sport specialization r |
+| 8157 | Homework by Age, and Tutoring That Moves Achievement | 3 | Strong | 7 | Homework pays off mainly in secondary school; structured tutoring has large, con |
+| 8158 | Adolescent Sleep and Later School Start Times | 3 | Strong | 7 | Teens' clocks shift later; when schools start later, they sleep more and do bett |
+| 8159 | Parental Phone Use Around Children ("Technoference") | 3 | Moderate | 4 | Parents absorbed in devices respond less, and children act out more |
+| 8160 | Sibling Conflict — Teach Skills, Coach the Fight, Don't Referee | 3 | Moderate | 6 | Sibling aggression is common and not harmless; social-skills and coaching progra |
+| 8161 | Whole-School Bullying Prevention — KiVa, Olweus and What the Meta-Analyses Say | 3 | Strong | 6 | School-wide programs cut bullying by a modest but real margin; a parent's levera |
+| 8162 | Family-Based Substance-Use Prevention — Strengthening Families Program 10–14 | 3 | Strong | 3 | Seven family sessions in early adolescence, with effects on use years later |
+| 8163 | Teen Driving — Graduated Licensing Plus a Parent-Teen Driving Agreement | 4 | Strong | 7 | Licensing stages cut fatal crashes; parent-imposed limits add protection in the  |
+| 8164 | Self-Regulation Curricula — Tools of the Mind, Honestly Rated | 2 | Mixed | 4 | Some trials show gains in executive function; others show none — it depends on i |
+| 8165 | Shared and Dialogic Reading | 3 | Strong | 5 | Reading together builds language; asking questions while you read builds it fast |
+| 8166 | Nature Time for Children | 2 | Moderate | 5 | Green settings improve attention in the short term and track with mental health  |
+| 8167 | Child Anxiety — Cool Kids and Parent-Led CBT | 4 | Strong | 6 | CBT works for childhood anxiety, and parents can deliver much of it with guidanc |
+| 8168 | Positive Memories — Family Rituals, Meals and Vacations | 3 | Moderate | 7 | Predictable routines and shared leisure are associated with cohesion and adolesc |
+| 8169 | Spanking and Corporal Punishment — What the Meta-Analyses Show | 1 | Strong | 6 | No evidence of benefit; consistent links to worse behavior and mental health |
+| 8200 | How to Read the Debt Shelf | 3 | Strong | 2 | Protocols, not lectures — pick one per tier each month |
+| 8201 | Choose a Payoff Order and Concentrate on One Account | 3 | Moderate | 5 | Smallest-balance-first keeps you going; highest-rate-first costs less — the evid |
+| 8202 | Run a Written Budget with Named Accounts | 3 | Moderate | 5 | Mental accounting is already happening — make it explicit so it works for you |
+| 8203 | See Every Dollar — Daily Expense Tracking and Cash-Flow Visibility | 3 | Moderate | 5 | The exceptional expenses you don't plan for are where the budget breaks |
+| 8204 | Pay With Cash or Debit for Discretionary Spending | 2 | Moderate | 6 | Cards mute the pain of paying; that is the whole point, and the whole problem |
+| 8205 | Myth: The Statement Minimum Is a Sensible Amount to Pay | 1 | Strong | 5 | The minimum is an anchor that pulls repayment down — set your own number instead |
+| 8206 | Pre-Commit Every Windfall Before It Arrives | 3 | Moderate | 6 | Refunds, bonuses and rebates are spent differently from earned money unless you  |
+| 8207 | Automate a Fixed Above-Minimum Payment and Add Reminders | 4 | Strong | 6 | Present bias is why the plan slips; automation is how it doesn't |
+| 8208 | Learn Rules of Thumb Just Before the Decision | 2 | Moderate | 5 | Simple heuristics taught at the moment of use outperform comprehensive courses |
+| 8208 | Myth: A Financial-Literacy Class Will Get You Out of Debt | 1 | Strong | 4 | Generic, one-time education has tiny, decaying effects on behavior |
+| 8209 | Protect Your Bandwidth — Make Money Decisions When You Are Not Depleted | 2 | Mixed | 6 | Scarcity may tax attention; the effect is real in some settings and contested in |
+| 8209 | Treat Debt as a Health and Relationship Risk — Screen and Talk | 3 | Strong | 8 | Unsecured debt tracks depression, blood pressure and divorce; the payoff plan ne |
+| 8210 | Nonprofit Credit Counseling and a Debt-Management Plan | 3 | Moderate | 4 | Counseled borrowers improve on several credit measures; DMPs work for those who  |
+| 8211 | Work With a Financial Coach for Six Months | 3 | Moderate | 3 | Randomized trials show coaching moves savings, debt and credit scores — where pe |
+| 8212 | Financial Therapy — Treat the Money Beliefs and the Mood Together | 2 | Emerging | 6 | An emerging field: small pilots and one randomized trial, promising but thin |
+| 8213 | Myth: A Payday Loan Is a Harmless Bridge to Next Paycheck | 1 | Mixed | 8 | Access to payday credit worsens bill payment, job performance and bankruptcy ris |
+| 8214 | Handle Medical Bills as a Separate Process — Verify, Ask for Assistance, Then Arrange | 3 | Strong | 6 | Medical debt is the most common collection item in the US and behaves unlike oth |
+| 8215 | Review Your Student-Loan Repayment Plan Every Year | 3 | Moderate | 4 | Income-driven plans cut delinquency and improve credit; the default option and c |
+| 8216 | Know When the Fresh Start Is the Right Move | 4 | Strong | 7 | Consumer bankruptcy protection raises earnings, reduces mortality and restores c |
+| 8217 | Raise the Income Side — Negotiate Pay and Add a Second Stream | 4 | Moderate | 6 | Asking works when it is expected; unrequested asks can backfire; extra work is f |
+| 8218 | Build a Pay-More-Tomorrow System — Escalate Payments With Every Raise | 4 | Strong | 5 | Commit now to a bigger payment later, lock it to income growth, and add a peer o |
+| 8250 | Pay Discretionary Spending in Cash from Labeled Envelopes | 3 | Strong | 7 | Make the pain of paying visible again — the credit-card effect works against you |
+| 8251 | Automate the Transfer — Defaults, Round-Ups and Goal Apps | 4 | Strong | 5 | Inertia is the strongest force in household finance; point it at saving |
+| 8251 | Pay Yourself First with a Locked Account and a Written Commitment | 3 | Strong | 5 | Tie yourself to the mast: restricted-access saving beats willpower |
+| 8252 | Smooth a Lumpy Income — Budget on the Low Month, Bank the High One | 3 | Strong | 5 | Month-to-month swings, not just low income, are what push households into debt |
+| 8253 | Build a Small Emergency Fund Before Attacking the Last Debts | 4 | Strong | 6 | Even a few hundred dollars of liquid savings predicts far less hardship |
+| 8254 | Payday Loans, Earned Wage Access and Buy-Now-Pay-Later as a Budget Tool | 1 | Mixed | 7 | Honest verdict: short-term liquidity products mostly move the shortfall, and oft |
+| 8255 | Shop the Rate, Ask for a Lower APR, and Pay More Than the Minimum on the Costliest Card | 3 | Strong | 7 | Card borrowers routinely leave money on the table through inattention and bad al |
+| 8256 | Nonprofit Credit Counseling and a Multi-Year Debt Management Plan | 4 | Moderate | 6 | Consolidate through a counselor, not a new loan, when balances outrun cash flow |
+| 8257 | A Weekly 20-Minute Money Conversation with Your Partner | 3 | Strong | 6 | Financial secrecy and money arguments predict divorce more than the balances the |
+| 8258 | Break the Shame Spiral — Disclose the Debt to One Person and One Professional | 3 | Moderate | 5 | Shame drives avoidance, and avoidance compounds the debt |
+| 8259 | Clear the Bandwidth Tax — Handle the Worst Money Worry Before Work | 3 | Strong | 6 | Financial worry measurably degrades attention and output; schedule the fix, do n |
+| 8260 | If Gambling Touches the Budget: Bank Blocks, Self-Exclusion and a Credit Freeze | 4 | Strong | 5 | Gambling spend predicts missed payments and payday borrowing in bank data |
+| 8261 | The Quarterly Subscription and Membership Audit | 2 | Strong | 5 | People overpay for gyms and subscriptions they do not use; inattention is the bu |
+| 8262 | Buy the Car by Total Cost, Not Monthly Payment — and Avoid Negative Equity | 3 | Strong | 4 | Monthly-payment targeting stretches terms and leaves owners underwater |
+| 8263 | Split the Tax Refund Before It Arrives | 3 | Strong | 5 | Refund to Savings: the one moment each year most households hold a lump sum |
+| 8264 | 401(k) Loans and Hardship Withdrawals — Use the Loan Rarely, the Withdrawal Almost Never | 2 | Moderate | 5 | Plan loans are cheap until you leave the job; withdrawals are permanent leakage |
+| 8265 | Co-Signing a Loan to Help Family | 1 | Emerging | 3 | Honest verdict: co-signing transfers the risk to you and can push the borrower t |
+| 8266 | Never Pay a Hospital Bill at Face Value — Ask for Charity Care, an Itemized Bill and a Plan | 3 | Strong | 7 | Medical debt is the largest collections category, and hospitals hold unused fina |
+| 8267 | Claim Every Benefit You Qualify For — EITC, SNAP and the Annual Eligibility Check | 4 | Strong | 4 | Billions go unclaimed because of confusion and hassle, not ineligibility |
+| 8268 | Join or Form a Savings Group with a Named Monitor | 4 | Strong | 5 | Peer accountability roughly doubles deposits in field experiments |
+| 8300 | How to Read the Happiness Shelf | 3 | Strong | 1 | Effects are smaller than the books say — stack several, expect adaptation |
+| 8301 | Positive Psychology Exercises: Small, Real, and Partly Placebo | 2 | Mixed | 8 | What survives the replications and the 2019 re-analysis |
+| 8302 | Gratitude: Three Things, Most Nights | 2 | Moderate | 4 | Beats doing nothing; barely beats any other active exercise |
+| 8303 | Savoring: Stretch the Good Moments | 2 | Emerging | 4 | Daily-diary and older-adult trials show a modest lift in positive affect |
+| 8304 | Acts of Kindness and Prosocial Spending | 3 | Strong | 5 | A small-to-medium effect that replicates across cultures |
+| 8305 | Build the Relationship Portfolio — the Harvard Study's One Finding | 5 | Strong | 7 | Close relationships predict health and happiness into the ninth decade |
+| 8306 | Exercise as an Antidepressant | 4 | Strong | 4 | Walking, jogging, yoga and strength training all work; intensity helps |
+| 8307 | Fix Sleep Before Anything Else | 4 | Strong | 3 | Improving sleep causally improves mental health — a dose–response effect |
+| 8308 | Two Hours a Week in Nature | 3 | Moderate | 4 | A threshold effect in 20,000 people, plus experiments on rumination |
+| 8309 | Meaning and Purpose: Name It, Serve It | 4 | Strong | 7 | Purpose predicts mortality; volunteering and generativity are the training |
+| 8310 | Expect Adaptation — Plan Around It | 3 | Strong | 5 | The set point is real but not fixed; events fade unevenly |
+| 8311 | Money and Happiness: the Adversarial Collaboration's Answer | 3 | Strong | 6 | Rises with income for most people; flattens only for the least happy |
+| 8312 | Redesign for Time: Cut the Commute, Buy Back Hours | 4 | Moderate | 5 | The commuting paradox and the case for working near home |
+| 8313 | A Social-Media Diet: Limit, Don't Panic | 2 | Mixed | 8 | Correlations are tiny; the deactivation experiments show a real but modest gain |
+| 8314 | An Eight-Week Mindfulness Program | 3 | Strong | 5 | Moderate effects on anxiety, depression and stress in the best trials |
+| 8315 | Behavioural Activation or Guided CBT Self-Help | 4 | Strong | 6 | If low mood is the problem, this is the evidence-based treatment tier |
+| 8316 | Belong to a Community of Meaning | 3 | Moderate | 4 | Religious attendance predicts lower mortality and suicide; belonging is the acti |
+| 8317 | Schedule Flow: Challenge Matched to Skill | 3 | Moderate | 4 | The best moments are more often at work than at leisure — engineer them |
+| 8318 | Volunteer 100 Hours a Year, for Someone Else's Sake | 3 | Moderate | 5 | Observational benefits are consistent; motive and dose matter |
+| 8319 | Journal the Hard Things, Twenty Minutes at a Time | 2 | Strong | 4 | A small, reliable effect on health and mood from 146 randomized studies |
+| 8320 | 'Happiness Is 40% Choice': Rated at the Floor | 1 | Mixed | 5 | The happiness pie was never measured — and choice-only advice ignores adaptation |
+| 8320 | 'The Upgrade Will Fix It': Rated at the Floor | 1 | Strong | 5 | Purchases and status changes adapt away; people and time do not |
+| 8321 | The Combined Program: Exercise Plus a Psychological Protocol | 5 | Moderate | 6 | The largest effect in the 2026 network meta-analysis — and the hardest to sustai |
+| 8400 | How to Read the Retirement Shelf | 3 | Strong | 2 | Two halves — money that lasts, and a life worth funding |
+| 8401 | Enroll Automatically and Commit to Escalate With Every Raise | 5 | Strong | 6 | Defaults decide participation; pre-committed increases decide the rate |
+| 8402 | Never Leave the Match or the Credit on the Table | 4 | Strong | 4 | Unclaimed employer matches and savings credits are the highest-return money most |
+| 8403 | Hold Low-Cost, Broadly Diversified Index Funds | 4 | Strong | 7 | After fees, the average active fund trails; persistence in winners is mostly mom |
+| 8404 | Set an Age-Based Allocation and Stop Owning Your Employer's Stock | 4 | Strong | 7 | A glide path, real diversification and no concentration in the company that pays |
+| 8405 | Myth: Picking Stocks and Trading Actively Will Grow the Nest Egg Faster | 1 | Strong | 7 | Individual investors who trade most earn least; the median stock underperforms T |
+| 8406 | Myth: A Newsletter or Timing Service Can Tell You When to Get In and Out | 1 | Strong | 5 | Newsletter timing recommendations and fund-flow timing have no documented value |
+| 8407 | Run Your Own Adequacy Check Once a Year | 3 | Moderate | 4 | Most households are closer to on-track than the headlines say; the ones who are  |
+| 8408 | Choose a Withdrawal Rule and Stress-Test It for Sequence Risk | 4 | Moderate | 4 | The '4 percent' rule is a historical US result, not a law; low yields and early  |
+| 8409 | Build a Guaranteed Income Floor and Correct Your Longevity Estimate | 4 | Moderate | 8 | Theory says annuitize more than people do; framing, pricing and survival pessimi |
+| 8410 | Decide Your Social Security Claiming Age Deliberately | 4 | Strong | 4 | Delaying claiming buys inflation-protected lifetime income; the framing of 'full |
+| 8411 | Split Contributions Between Roth and Traditional Accounts | 3 | Moderate | 3 | Front-loaded taxation did not reduce what people contributed; tax uncertainty ar |
+| 8412 | Buy Advice by the Plan, Not by the Product | 3 | Moderate | 6 | Commission-driven advisors underperform; planning-quality advice adds value thro |
+| 8413 | Keep the Mind at Work — Schedule Cognitive Demand After You Stop | 3 | Moderate | 5 | Retirement is followed by faster cognitive decline in several large datasets; th |
+| 8413 | Plan the Health Side of Retirement — the Effect Depends on Why and How You Leave | 3 | Mixed | 7 | Voluntary, planned retirement tends to improve health; forced early retirement f |
+| 8414 | Write Down a Purpose and Act on It Weekly | 3 | Strong | 5 | Purpose in life predicts lower mortality and more preventive care in large cohor |
+| 8415 | Take a Regular Volunteer Role and Protect Your Social Ties | 3 | Moderate | 5 | Volunteering by older adults is associated with lower mortality and less disabil |
+| 8416 | Design the First Year — Daily Movement, Weekly Structure, Honest Adjustment | 3 | Moderate | 6 | Retirement adjustment follows several distinct paths; physical activity often ri |
+| 8417 | Work Longer on Your Terms — Bridge Jobs and Phased Retirement | 5 | Strong | 6 | A few extra working years beat decades of extra saving; bridge employment is lin |
+| 8418 | Plan Housing Equity and Late-Life Health Costs as One Reserve | 4 | Moderate | 6 | The elderly keep saving because medical costs are skewed and persistent; home eq |
+| 8450 | Re-Shop Your Medicare Drug and Advantage Plan Every Open Enrollment | 4 | Strong | 5 | Most beneficiaries leave money on the table by staying in last year's plan |
+| 8451 | Solve the Pre-65 Health Insurance Gap Before Choosing a Retirement Date | 4 | Strong | 4 | Insurance access is one of the strongest determinants of when people actually re |
+| 8452 | Use a Health Savings Account as a Long-Horizon Account, Not a Checking Account | 3 | Mixed | 4 | The tax treatment is unique, but the evidence on high-deductible plans is mixed  |
+| 8453 | Decide on Relocation and Downsizing as a Staged Plan, Not a Single Move | 3 | Moderate | 4 | Most retirees do not tap housing equity until a health or widowhood shock forces |
+| 8454 | Take a Bridge Job — Part-Time, Chosen, and Ideally in Your Field | 3 | Strong | 6 | Voluntary bridge employment predicts better health and life satisfaction; forced |
+| 8455 | Regular but Bounded Grandchild Care | 3 | Moderate | 5 | Occasional grandparenting is linked to better health and cognition; custodial ca |
+| 8456 | Replace Work Contact Deliberately — Three Standing Social Commitments a Week | 4 | Strong | 5 | Loneliness after retirement is a mortality-level risk factor, and it is preventa |
+| 8457 | Plan Retirement Timing as a Couple and Renegotiate the Household | 3 | Moderate | 4 | The years right after one spouse retires are the hardest on marital quality |
+| 8458 | High-Commitment Volunteering — the Experience Corps Model | 4 | Strong | 8 | Fifteen hours a week tutoring children improved older adults' physical activity, |
+| 8459 | Learn Something Genuinely Hard — a Sustained Skill Course, Not a Lecture Series | 3 | Moderate | 5 | Cognitive benefits come from demanding, sustained engagement; passive classes mo |
+| 8460 | Frame the Lump-Sum-vs-Annuity Decision as Consumption, Not Investment | 3 | Strong | 4 | How the choice is described changes what people pick more than the numbers do |
+| 8461 | Let a Low-Cost Target-Date Fund Be the Default — Then Check Its Glide Path Once | 3 | Strong | 4 | Target-date defaults improved portfolios for most participants; funds differ mor |
+| 8462 | Robo-Advisors — Good for Diversification and Discipline, Weak on Everything Else | 2 | Emerging | 3 | Honest evidence: algorithmic advice helped under-diversified investors most and  |
+| 8463 | Tax-Loss Harvesting in Taxable Accounts — Real but Modest, and Only Outside Retirement Accounts | 2 | Moderate | 4 | The value comes from deferral and rate differences; it is not free money |
+| 8464 | Sequence Withdrawals Across Taxable, Tax-Deferred and Roth Accounts — and Plan for RMDs | 3 | Moderate | 7 | The order you draw from accounts can add years to a portfolio; required distribu |
+| 8465 | Set Up Fraud Defenses Now — a Trusted Contact, Alerts and a 24-Hour Rule | 4 | Strong | 5 | Financial exploitation of older adults is common and predicted by loneliness and |
+| 8466 | Simplify and Automate the Finances Before Capacity Declines | 4 | Strong | 5 | Financial skill peaks in middle age; missed payments can precede a dementia diag |
+| 8467 | Complete an Advance Directive and Durable Powers of Attorney, and Tell Your Family | 4 | Strong | 4 | Advance care planning improves end-of-life care and reduces family distress; two |
+| 8468 | Write the Purpose Before the Date — a Weekly Structure for the First Year | 4 | Strong | 6 | Adjustment to retirement is a process; purpose in life predicts survival and fun |
+| 8469 | Retire Early for Your Health (FIRE) | 1 | Mixed | 6 | Honest verdict: early retirement does not reliably improve health or longevity,  |
+| 8500 | How to Read the Business Shelf | 3 | Strong | 1 | Protocols with base rates attached — pick one per tier each month |
+| 8501 | Learn the Base Rates Before You Bet | 4 | Strong | 4 | Survival is predicted by starting size, capital, owner experience and founding c |
+| 8502 | Keep the Day Job While You Start | 4 | Strong | 4 | Hybrid entrepreneurs who test the water before quitting survive longer — and the |
+| 8503 | Run Your Idea Like an Experiment | 5 | Strong | 4 | Founders trained to state hypotheses and test them rigorously earned more and pi |
+| 8504 | Talk to Lead Users Before You Pick a Market | 4 | Moderate | 4 | Founders who consider several markets and learn from advanced users find better  |
+| 8505 | Write a Short Plan, Then Act With What You Have | 3 | Mixed | 5 | Planning helps new ventures on average, but the written document matters less th |
+| 8506 | Buy Training That Changes Practices, Not Lectures | 4 | Strong | 7 | Randomized trials show classroom business training has modest effects; personal- |
+| 8507 | Take a Course for Skills, Not for Motivation | 2 | Mixed | 5 | Entrepreneurship education raises knowledge and skills; its effect on intentions |
+| 8508 | Get Into an Accelerator or Angel Network — for the Learning, Not the Badge | 4 | Moderate | 3 | Accelerators help mainly through intensive learning and entrepreneurship schooli |
+| 8509 | Build a Founding Team With Proven Operators | 4 | Moderate | 5 | Most new ventures are team efforts; team functioning and prior success predict o |
+| 8510 | Build Bridging Ties on Purpose | 3 | Strong | 4 | Social capital predicts small-firm performance, most for new firms and for ties  |
+| 8511 | Price by Experiment, Not by Gut | 4 | Strong | 5 | Field experiments show price endings, anchors and participative pricing move dem |
+| 8512 | Learn Adaptive Selling — It Is the Sales Skill That Predicts Results | 4 | Strong | 4 | Meta-analyses of salespeople show adapting to the customer beats scripted pitche |
+| 8513 | Run a Weekly Cash Review | 4 | Moderate | 4 | Small firms die young from thin capital, debt structure and external shocks — pr |
+| 8514 | Bootstrap First, Borrow Deliberately | 4 | Moderate | 5 | Most new firms are funded by owner money and bank debt; bootstrapping techniques |
+| 8515 | Buying a Franchise — Check the Survival Evidence First | 2 | Mixed | 3 | Franchise outlets do not reliably outlive independent start-ups; young franchiso |
+| 8516 | Measure Ad Returns With a Holdout, Not a Dashboard | 3 | Strong | 5 | Large experiments show paid search often has near-zero incremental return for kn |
+| 8517 | Protect the Founder — Sleep, Recovery and a Stress Budget | 3 | Moderate | 5 | Entrepreneurs report high autonomy and wellbeing alongside elevated stress and m |
+| 8518 | Practice Perseverance on One Venture, Not Grit as a Trait | 2 | Mixed | 4 | Grit predicts venture outcomes modestly and mostly through its perseverance comp |
+| 8519 | Myth: 'Follow Your Passion' and 'Believe in Yourself' Are Enough | 1 | Mixed | 8 | Passion and optimism help you start; overconfidence and dispositional optimism a |
+| 8520 | Myth: 10,000 Hours of Practice Makes the Founder | 1 | Strong | 4 | Deliberate practice explains a minority of performance variance even in music an |
+| 8550 | Test the Price — Endings, Anchors and a Real Split Test | 4 | Strong | 7 | Price is the most under-tested lever a small business owns |
+| 8551 | The Monthly Retention Review | 4 | Strong | 6 | Satisfaction, repurchase and the real economics of keeping a customer |
+| 8552 | Buying or Faking Reviews | 1 | Strong | 3 | Rated at the floor: platforms filter it, and it signals weakness |
+| 8552 | Run the Reviews Channel Like a Sales Channel | 4 | Strong | 6 | Ratings move revenue; management responses move ratings |
+| 8553 | Build a Referral Program, Then Measure Referred-Customer Value | 4 | Strong | 7 | Referred customers are worth more, and word of mouth outlasts paid media |
+| 8554 | The Daily Outreach Block, Sold Adaptively | 3 | Moderate | 4 | What the sales-performance meta-analyses actually support |
+| 8555 | The Scientific Founder — Hypotheses, Tests and Deliberate Pivots | 4 | Strong | 5 | The randomized trial behind 'talk to customers, then decide' |
+| 8556 | The First Hire and the Delegation Threshold | 4 | Moderate | 5 | What predicts a solo founder becoming an employer, and why owners fail to delega |
+| 8557 | The Founder Agreement — Negotiate Equity Before the First Dollar | 4 | Moderate | 4 | Splits, perceived fairness and the conflict they seed |
+| 8558 | The Base-Rate Check | 3 | Strong | 6 | Entrepreneurs overestimate their odds; write the real ones down |
+| 8559 | Buy Expert Help — What the Consulting and Training Trials Found | 4 | Strong | 5 | Subsidized consulting raised sales and employment; generic training is weaker |
+| 8560 | Personal-Initiative Training | 5 | Strong | 4 | The psychology-based program that beat standard business training in a Science t |
+| 8561 | A Monthly Founder Peer Group | 4 | Strong | 4 | Randomized meetings between owners raised sales and spread good practices |
+| 8562 | The Ten-Year Succession Plan | 5 | Strong | 7 | Family successors underperform on average; choose competence and plan early |
+| 8563 | Use Targeted Programs, and Know the Capital Gap Going In | 3 | Moderate | 7 | What evaluations of women's and minority entrepreneurship programs show |
+| 8564 | Build the Bank Relationship Before You Need the Loan | 4 | Strong | 6 | Relationship lending and SBA-guaranteed loans, with the evidence on growth |
+| 8565 | A Crowdfunding Campaign Done the Way Successful Ones Are Done | 3 | Moderate | 5 | Preparedness, network and geography decide most campaigns |
+| 8566 | The Autonomy Audit — Why the Self-Employed Are Happier, and What It Costs | 3 | Strong | 7 | Higher job and life satisfaction, lower median earnings, real mental-health risk |
+| 8567 | Gig Work as a Bridge, With Eyes Open | 2 | Mixed | 4 | Flexibility is real and valued; so is algorithmic control and thin earnings |
+| 8568 | Design the Exit From the Start | 4 | Moderate | 5 | Closure is not failure, and exit routes are chosen years before they happen |
+| 8600 | How to Read the Hobby & Skill Shelf | 3 | Strong | 2 | Protocols for choosing, starting and sticking with a hobby — pick one per tier e |
+| 8601 | Pick a Hobby You Can Get Serious About | 3 | Strong | 5 | Leisure engagement relates to wellbeing through leisure satisfaction; 'serious l |
+| 8602 | Set the Difficulty So You Can Reach Flow | 3 | Moderate | 4 | Flow — high challenge met by high skill — predicts the quality of experience mor |
+| 8603 | Practice in Short Spaced Sessions, Test Yourself, Get Feedback | 4 | Strong | 8 | Spacing, retrieval and informative feedback beat massed cramming for long-term s |
+| 8604 | Use Deliberate Practice — Without Believing the 10,000-Hour Story | 3 | Mixed | 5 | Structured, goal-directed practice matters for music and games; it explains far  |
+| 8605 | Take Up an Instrument With Weekly Lessons | 3 | Moderate | 3 | Piano training in older adults improved executive function, mood and quality of  |
+| 8606 | Learn a Language — Adults Can, and It Trains Attention | 3 | Moderate | 5 | Grammar-learning ability stays high into the late teens then declines gradually; |
+| 8607 | Make or See Art Every Few Months at Least | 3 | Moderate | 7 | Arts engagement is associated with lower mortality, depression and dementia inci |
+| 8608 | Garden, or Get Two Hours a Week Outdoors | 3 | Strong | 5 | Gardening shows positive effects on health in a meta-analysis; 120 minutes a wee |
+| 8609 | Start Noticing Birds | 2 | Emerging | 4 | Everyday encounters with birds are followed by lasting improvements in momentary |
+| 8610 | Read Books, Not Just Feeds | 3 | Moderate | 6 | Book readers lived longer in a national cohort and read less-frequent readers de |
+| 8611 | Play Chess or Games for the Game, Not for Your IQ | 2 | Mixed | 3 | Chess instruction and video-game training show small effects that shrink with be |
+| 8612 | Join a Dance Class | 3 | Moderate | 5 | Dance combines aerobic, sensorimotor, cognitive and social demands; trials in ol |
+| 8613 | Cook Dinner at Home Most Nights | 3 | Moderate | 4 | Frequent home cooking is associated with a healthier diet; cooking classes impro |
+| 8614 | Volunteer a Few Hours a Month | 3 | Moderate | 5 | Volunteers show lower mortality, less depression and slower disability progressi |
+| 8615 | Choose a Hobby That Comes With People | 4 | Strong | 4 | Loneliness and isolation raise mortality risk on par with established risk facto |
+| 8616 | Keep a Mentally Demanding Hobby for Decades | 4 | Strong | 7 | Cognitively stimulating and social leisure across later life is associated with  |
+| 8617 | Spend Three Months Learning Something Genuinely Hard | 4 | Moderate | 5 | Sustained, demanding new-skill learning — quilting, digital photography, acting, |
+| 8618 | Use a Creative Hobby as Your Recovery From Work | 3 | Moderate | 3 | Creative activity outside work relates to recovery experiences and better job pe |
+| 8619 | Myth: Brain-Training Apps Make You Smarter | 1 | Strong | 4 | Practice improves the trained tasks; there is little evidence of transfer to unt |
+| 8620 | Join a Choir or Ensemble for a Year | 4 | Moderate | 3 | Community singing improved mental-health-related quality of life in a randomized |
+| 8800 | How to Read the Finding-a-Partner Shelf | 3 | Strong | 2 | Protocols, not prophecies — pick one per tier each month |
+| 8801 | Screen for How They Treat You, Not Their Résumé | 4 | Strong | 7 | The relationship variables beat the trait variables |
+| 8802 | Use Online Dating for Access, Not for Matching | 3 | Strong | 7 | Short profiles-to-meeting cycles; ignore compatibility scores |
+| 8803 | Dating Apps and Your Wellbeing | 2 | Mixed | 7 | Users report more distress; the arrow's direction is unclear |
+| 8804 | Similarity Matters — but Mostly the Perceived Kind | 3 | Strong | 6 | Attitudes and attachment similarity help; personality matching barely does |
+| 8805 | Know Your Attachment Style — and Watch Theirs Under Stress | 4 | Strong | 7 | A six-week self-study of anxiety and avoidance patterns |
+| 8806 | First Meetings — What the Spark Actually Is | 3 | Strong | 8 | Short live meetings, selective interest, real eye contact |
+| 8807 | The Slow Burn — Let Familiarity Do Its Work | 4 | Strong | 7 | Give people more than one meeting; friends-first is common and sound |
+| 8808 | Stated Preferences Versus Real Choices | 2 | Moderate | 8 | Know the population patterns; do not use them to judge an individual |
+| 8809 | Shared Values and Faith — a Modest, Real Effect | 2 | Moderate | 6 | Talk about meaning early; homogamy helps a little |
+| 8810 | How Long to Date, How Old to Marry | 3 | Moderate | 6 | Aim for enough time to see conflict, and marry when ready rather than early |
+| 8811 | Move In by Deciding, Not Sliding | 3 | Moderate | 6 | Make cohabitation an explicit, mutual commitment step |
+| 8812 | Red Flags — Risk Markers for Partner Violence | 5 | Strong | 8 | Controlling behaviour, jealousy, prior violence and threats are not quirks |
+| 8813 | Treat Loneliness Directly While You Search | 4 | Strong | 7 | Cognitive-behavioural work on social cognition, not just more events |
+| 8814 | If Dating Terrifies You, Treat the Anxiety First | 4 | Strong | 6 | Individual CBT for social anxiety has the strongest evidence |
+| 8815 | Self-Expansion — Become the Partner You Want to Meet | 3 | Moderate | 5 | A three-month program of new skills, places and people |
+| 8816 | Relationship Education Before You Commit | 4 | Moderate | 7 | A structured program while still free to walk away |
+| 8817 | Decide to Stay or Leave on Purpose | 4 | Moderate | 7 | A structured review of reasons, ambivalence and growth beliefs |
+| 8818 | A Year-Long System for Meeting People | 4 | Moderate | 7 | Two recurring in-person communities plus one online channel, reviewed quarterly |
+| 8819 | Myth: 'Know Exactly What You Want and Filter for It' | 1 | Strong | 6 | Stated ideals do not predict whom you will actually want |
+| 8819 | Myth: 'There Is One Soulmate' and 'Opposites Attract' | 1 | Strong | 6 | Destiny beliefs shorten relationships; complementarity has no support |
+| 9000 | How to Read the Travel Shelf | 3 | Strong | 2 | Protocols, not postcards — pick one per tier each month |
+| 9001 | Take the Short Break — Four Nights Is Enough to Move the Needle | 3 | Strong | 4 | Short vacations and staycations improve well-being; detachment matters more than |
+| 9001 | The Active or Meditative Vacation — A Retreat That Outlasts the Ordinary Holiday | 3 | Moderate | 4 | Daily exercise or meditation practice built into the trip extends the benefit to |
+| 9001 | The Return-to-Work Protocol — Slow the Fade | 3 | Strong | 5 | Vacation gains vanish within 2–4 weeks unless job demands and leisure relaxation |
+| 9002 | Bank the Anticipation — Plan the Trip Early and Savor the Wait | 3 | Strong | 6 | Vacationers are happier before the trip than non-vacationers; the post-trip boos |
+| 9003 | Move Discretionary Money From Things to Trips | 3 | Strong | 4 | Experiential purchases deliver more lasting satisfaction than material ones — es |
+| 9004 | A Lifetime Vacation System — Never Skip the Annual Break | 3 | Moderate | 7 | Men who skipped annual vacations had higher cardiovascular and all-cause mortali |
+| 9005 | Live Abroad, Don't Just Visit — Immersion Builds Creativity | 3 | Moderate | 3 | Time spent living in another culture, not touring it, predicts creative performa |
+| 9006 | Seek Awe and Two Hours a Week in Nature | 3 | Strong | 6 | Awe shrinks the self and increases generosity; 120 minutes of weekly nature cont |
+| 9007 | Engineer Novelty and Record It — Why Trips Feel Longer in Memory | 2 | Moderate | 4 | Novel and surprising events are encoded more richly; recording the trip is part  |
+| 9008 | Fund the Trip With an Earmarked, Automatic, Reminded Account | 4 | Strong | 7 | Mental accounting, partitioned earmarks, automatic escalation and goal reminders |
+| 9009 | Shift the Clock on Purpose — Timed Light, Timed Melatonin, Pre-Shifted Sleep | 3 | Strong | 8 | Melatonin near destination bedtime and correctly timed bright light are the inte |
+| 9010 | Long Flights — Knee-Length Stockings, an Aisle Seat and Moving | 3 | Strong | 8 | Below-knee graduated compression stockings cut symptomless DVT in air travelers  |
+| 9011 | Travel as a Couple's Self-Expansion — Do the Exciting Thing, Not the Pleasant Thing | 3 | Strong | 4 | Shared novel and arousing activities raise relationship quality; merely pleasant |
+| 9012 | Solo Travel — Solitude by Design, Loneliness by Plan | 2 | Emerging | 5 | Qualitative studies find freedom, self-discovery and connection; loneliness is e |
+| 9013 | Keep Traveling After 60 — Cognition, Mood and Longevity Track With It | 3 | Moderate | 5 | Older adults who travel show lower incident cognitive impairment, depression and |
+| 9014 | The Sabbatical — A Months-Long Respite That Restores Resources | 4 | Moderate | 3 | Sabbatical-takers gained resources and well-being versus matched controls, with  |
+| 9014 | The Workation — Useful for Place and Autonomy, Not a Substitute for a Vacation | 2 | Emerging | 4 | Workcation research measures satisfaction and revisit intent; the recovery liter |
+| 9015 | Treat the Fear of Flying — Exposure Works, Virtual or Real, in About Eight Sessions | 4 | Strong | 8 | Randomized trials: 76–93% of treated patients fly after treatment, gains hold at |
+| 9016 | Travel Where You Are Wanted — The Overtourism Note | 2 | Moderate | 7 | Excess visitor pressure lowers residents' quality of life, happiness and sense o |
+| 9017 | Myth: 'A Big Trip Will Fix My Depression' | 1 | Strong | 4 | Trips lift mood, not life evaluation, and the lift fades in weeks; travel is a s |
+| 9017 | Myth: 'The Longer and More Expensive the Trip, the Happier You'll Be' | 1 | Strong | 5 | Trip length does not predict post-trip happiness, spending has diminishing retur |
+| 9050 | Walk a Multi-Week Pilgrimage (the Camino de Santiago) | 4 | Emerging | 7 | Pilgrims report restoration, reflection and stronger bonds; a 758 km walk improv |
+| 9051 | Slow Travel: One Base, Two Weeks, Overland Where You Can | 3 | Emerging | 4 | Slower modes and longer stays reshape the experience and cut emissions; the well |
+| 9052 | The Annual Family Trip as a Cohesion Ritual | 3 | Moderate | 5 | Shared vacation activities are linked to family cohesion and communication; chil |
+| 9053 | A Semester or Year Abroad as a Personality and Career Investment | 4 | Strong | 5 | Sojourners show gains in openness and agreeableness and drops in neuroticism; lo |
+| 9054 | Live in the Language: Immersion Abroad for Fluency | 4 | Strong | 4 | Study abroad and intensive domestic immersion beat the regular classroom for flu |
+| 9055 | Forest Bathing: Two Slow Hours Under Trees, Weekly | 3 | Moderate | 7 | Shinrin-yoku lowers cortisol and blood pressure in trials; the immune claims res |
+| 9056 | Surgery Abroad: The Complication and Cost Record | 1 | Moderate | 6 | Cosmetic and bariatric tourism carries documented infection, revision and follow |
+| 9057 | A Jet-Lag Protocol Built on Light Timing, Not Gadgets | 3 | Moderate | 5 | Melatonin probably reduces symptoms; scheduled light and darkness are the mechan |
+| 9057 | Long-Haul Flight Protocol: Move, Hydrate, Know Your Clot Risk | 3 | Strong | 7 | Travel roughly doubles venous thromboembolism risk, rising with each 2 hours alo |
+| 9058 | A Disconnected Trip: Three Days With the Phone Off | 3 | Emerging | 6 | Digital-free travellers report anxiety, then liberation; smartphone-restriction  |
+| 9059 | Choose the Travel Format That Matches Your Appetite for Uncertainty | 2 | Moderate | 4 | Package tours buy predictability and service; independent travel buys flexibilit |
+| 9060 | Keep Travelling After 65: Trips as Cognitive Reserve | 3 | Moderate | 5 | Travel as a hobby predicted lower dementia incidence in a large Japanese cohort; |
+| 9061 | A Weekend of Camping to Reset Your Body Clock | 3 | Moderate | 4 | Natural light and no screens pull the biological night earlier within days; the  |
+| 9062 | Plan for the Dip: Culture Shock and the Harder Return Home | 3 | Moderate | 5 | The neat U-curve of adjustment was not supported longitudinally; re-entry is oft |
+| 9063 | Photograph With Intention, Then Put the Camera Away | 2 | Moderate | 6 | Volitional photos can sharpen visual memory and enjoyment; shooting to share, an |
+| 9064 | Book Early and Savour the Wait: The Anticipation Dividend | 3 | Strong | 7 | Vacationers are happier before a trip than non-vacationers; the post-trip lift m |
+| 9065 | Take the Overseas Assignment, but Engineer the Adjustment | 4 | Strong | 6 | Expatriate adjustment is predictable from role clarity, spousal adjustment and s |
+| 9066 | Retiring Abroad: Lifestyle Gains Now, Care Gaps Later | 3 | Moderate | 5 | International retirement migrants report climate, cost and lifestyle benefits; f |
+| 9067 | Fly Less, Stay Longer: The Honest Version of Sustainable Travel | 2 | Strong | 7 | Flights dominate a trip's footprint and most travellers do not act on green atti |
+| 9068 | Volunteer Tourism: Why Short 'Voluntourism' Trips Are Rated at the Floor | 1 | Moderate | 5 | Reviews document unskilled labour displacing local workers, dependency, orphanag |
+| 9069 | Solo Female Travel: Manage the Geography of Fear, Keep the Freedom | 3 | Moderate | 4 | Women travelling alone report specific constraints and harassment risks alongsid |
+| 9200 | How to Read the Legacy Shelf | 3 | Strong | 1 | A legacy is built in generative acts, not in a single document |
+| 9201 | One Generative Act a Week | 3 | Moderate | 5 | Generative concern and action track with life satisfaction and health |
+| 9202 | A Structured Life Review Over Six to Eight Sessions | 4 | Strong | 8 | Meta-analyses find medium effects on depression and life satisfaction in older a |
+| 9203 | Ask the Dignity-Therapy Questions Early, as a Family | 3 | Emerging | 5 | The protocol adapts to early illness, neurological disease and family-led conver |
+| 9203 | Dignity Therapy: Record, Edit and Bequeath the Generativity Document | 4 | Moderate | 8 | A therapist-led interview becomes a document your family keeps |
+| 9204 | Write the Legacy Letter: Preparation, Life Completion, Forgiveness | 3 | Mixed | 8 | Three structured conversations — with an honest null result attached |
+| 9205 | Write Your Story, Twenty Minutes at a Time | 3 | Strong | 4 | Expressive writing has a small, reliable effect on health and mood |
+| 9206 | Tell the Family Stories — Especially the Hard Ones | 3 | Moderate | 6 | Children who know their family history are more resilient |
+| 9207 | Record an Oral History or Digital Story | 3 | Emerging | 5 | Reminiscence with a microphone — validation for elders, an heirloom for the fami |
+| 9208 | Build a Life Story Book With a Facilitator | 3 | Moderate | 5 | Twelve life-review sessions, or a 'gift' book made by relatives — both help |
+| 9209 | Name Your Values, Keep Your Purpose | 3 | Strong | 5 | Purpose in life predicts mortality; values affirmation changes behaviour |
+| 9210 | 'The Will Handles It': Rated at the Floor | 1 | Strong | 4 | Documents without conversations do not protect your family or your wishes |
+| 9210 | Advance Care Planning: Have the Facilitated Conversation | 4 | Strong | 5 | A trained facilitator plus family beats a form in a drawer |
+| 9211 | Give While You Live: Money, Time, Motive | 3 | Strong | 7 | Prosocial spending raises happiness; other-oriented volunteering predicts surviv |
+| 9212 | Mentor in a School for Two Years — the Experience Corps Model | 5 | Moderate | 7 | High-intensity intergenerational service raises generativity and may protect the |
+| 9213 | Continuing Bonds: Keep the Dead in the Family — the Right Way | 3 | Moderate | 4 | Oscillate between loss and rebuilding; internalize, don't cling |
+| 9214 | 'Digital Immortality' Products: Rated at the Floor | 1 | Emerging | 4 | No outcome evidence, real ethical hazards — leave your story, not a chatbot |
+| 9214 | Plan Your Digital Legacy Before Someone Else Has To | 3 | Emerging | 7 | Accounts, photos, passwords, and who is allowed to decide |
+| 9215 | Use Mortality Awareness Deliberately | 2 | Moderate | 4 | Death reminders push people to worldview defence — or to legacy — depending on t |
+| 9216 | The Legacy Project: Make Something Together, Over Years | 4 | Moderate | 6 | A scrapbook, a cookbook, recorded stories — built by the family, not for it |
+| 9300 | How to Read the Health, Energy & Beauty Shelf | 3 | Strong | 2 | Daily vitality and appearance protocols — the longevity shelf (7000+) holds the  |
+| 9301 | Treat Low Energy With Regular Exercise — Low Intensity Works | 4 | Strong | 6 | Seventy trials say chronic exercise raises energy and lowers fatigue; in persist |
+| 9302 | Fix the Wake Time, Not Just the Hours — and Nap Ten Minutes | 3 | Strong | 4 | Sleep regularity predicts mortality more strongly than sleep duration; a 10-minu |
+| 9303 | Get Ferritin Checked — Non-Anemic Iron Deficiency Is a Treatable Fatigue Cause | 4 | Strong | 4 | Randomized trials in fatigued, non-anemic women with low ferritin show iron repl |
+| 9304 | Hydration — Mild Dehydration Dents Mood; 'Eight Glasses' Is Not the Evidence | 2 | Moderate | 3 | About 1–1.5% body-water loss worsens mood, fatigue and concentration in controll |
+| 9305 | Caffeine — Cut It Off Eight Hours Before Bed | 3 | Strong | 3 | 400 mg taken six hours before bedtime still cut sleep by an hour; the meta-analy |
+| 9306 | Get Bright Light Within an Hour of Waking | 3 | Strong | 3 | Bright light treats seasonal and non-seasonal depression with effect sizes compa |
+| 9307 | Daily Sunscreen — The One Anti-Aging Cream With a Randomized Trial | 4 | Strong | 4 | Daily broad-spectrum SPF cut measured skin aging by 24% over 4.5 years and lower |
+| 9308 | Topical Retinoids — Prescription Tretinoin and Over-the-Counter Retinol Both Have Trials | 3 | Strong | 5 | Two-year placebo-controlled tretinoin trial improved fine and coarse wrinkling;  |
+| 9309 | Collagen Powder, Vitamin C Serum and 'Anti-Aging' Creams — Small Effects, Industry Trials | 2 | Mixed | 4 | Meta-analyses find hydrolyzed collagen modestly improves hydration and elasticit |
+| 9310 | Eat for Your Skin — Vegetables, Olive Oil, Fish; Less Red Meat and Snacks | 2 | Moderate | 5 | Across cohorts, higher vitamin C and linoleic acid intake, olive oil and a fruit |
+| 9311 | Quit Smoking and Cut Evening Alcohol — Identical Twins Show the Face Cost | 4 | Strong | 3 | In 79 twin pairs the smoking twin had worse eyelid bags, jowls and lip wrinkles; |
+| 9312 | Beauty Sleep Is Measurable — Rested Faces Are Rated Healthier, More Attractive and More Approachable | 3 | Strong | 3 | Untrained raters scored the same people as less healthy and less attractive afte |
+| 9313 | Hair Loss — What the Trials Tested (Described, Not Advised) | 3 | Strong | 3 | Finasteride 1 mg and 5% topical minoxidil have two-year and 48-week randomized t |
+| 9314 | Teeth Are Read as Character — Keep Them Clean, White and Straight Enough | 3 | Moderate | 5 | Raters judge people with visible decay as less socially competent and less intel |
+| 9315 | Sit and Stand Upright — It Changes How You Feel and How You Are Read; 'Power Posing' Hormones Do Not Replicate | 2 | Moderate | 4 | Randomized posture trials show upright sitting improves mood, self-esteem and fa |
+| 9316 | Lift Twice a Week Per Muscle, 10+ Hard Sets, Any Load — For Shape and for Body Image | 4 | Strong | 8 | Meta-analyses: training a muscle twice weekly beats once, more than 10 weekly se |
+| 9317 | Keep Weight Off the Way the Registry Does — Daily Activity, Breakfast, Weekly Weighing, Same Diet on Weekends | 4 | Strong | 4 | NWCR members maintained 23 kg of a 31 kg loss at 10 years; regain tracked drops  |
+| 9318 | GLP-1 Medications — What the Trials Showed, Including What Happens When You Stop | 5 | Strong | 5 | Semaglutide −14.9% and tirzepatide up to −20.9% body weight over 68–72 weeks; tw |
+| 9319 | Train the Two Numbers That Predict Your Future — Grip and Chair-Rise | 3 | Strong | 4 | Each 5 kg less grip strength meant 16% higher mortality across 17 countries; slo |
+| 9320 | Protect Hearing and Eyes — Hearing Aids Slowed Cognitive Decline 48% in At-Risk Adults; Outdoor Time Protects Children's Eyes; Blue-Light Glasses Don't | 4 | Strong | 6 | Untreated hearing loss accelerates cognitive decline; the ACHIEVE trial's hearin |
+| 9321 | Cosmetic Surgery — Satisfaction Is High, Self-Esteem Gains Are Small, and Pre-Existing Distress Predicts Regret | 2 | Moderate | 4 | Prospective studies show satisfaction with the treated feature but little change |
+| 9322 | Myth: 'Detox' Cleanses and Miracle Anti-Aging Creams | 1 | Strong | 3 | No compelling evidence that commercial detox diets remove toxins or produce dura |
+| 9322 | Myth: NMN and NR 'Youth' Pills Make You Look and Feel Younger | 1 | Mixed | 5 | Human trials raise blood NAD+ and are well tolerated; none shows younger skin, m |
+| 9350 | The 20-Minute Afternoon Nap (and the Coffee-Nap Trick) | 3 | Strong | 7 | Short daytime naps improve alertness and cognitive performance; naps over 30 min |
+| 9351 | Break Up Sitting Every 30 Minutes to Lift Energy | 3 | Strong | 6 | Prolonged uninterrupted sitting increases fatigue; frequent short walking breaks |
+| 9352 | Cold Showers: A 30-Day Trial, With Modest Expectations | 2 | Emerging | 6 | One randomised trial found fewer self-reported sick days; mood, immunity and fat |
+| 9353 | Adult Acne and Rosacea: Use the Guideline Ladder, Not the Influencer Shelf | 4 | Strong | 8 | Network meta-analyses rank topical combinations and oral isotretinoin; rosacea r |
+| 9354 | Professional Whitening and Adult Orthodontics: Where the Evidence Supports the Spend | 3 | Moderate | 7 | Bleaching works and a 'white diet' is unnecessary; adult orthodontics improves o |
+| 9355 | A Structured Body-Image Program (Dissonance, Writing or Yoga) | 3 | Strong | 7 | Stand-alone body-image interventions produce small-to-moderate improvements; dis |
+| 9356 | Cosmetic Surgery and Botulinum Toxin: The Psychological Ledger | 2 | Mixed | 8 | Most patients report satisfaction; body dysmorphic disorder predicts poor outcom |
+| 9357 | Resistance Training for Women: Two to Three Sessions a Week | 4 | Strong | 6 | Meta-analyses show gains in lean mass and strength across ages; fat-mass changes |
+| 9358 | A Two-Active Skin Routine: Niacinamide and Vitamin C, With Sunscreen | 2 | Moderate | 4 | Controlled trials show niacinamide reduces wrinkles, blotchiness and pigment spo |
+| 9359 | Microneedling and Fractional Laser Resurfacing: A Supervised Multi-Session Course | 3 | Moderate | 7 | Systematic reviews support microneedling for scars and rejuvenation; ablative fr |
+| 9360 | Hair Loss: Test for Deficiencies First; PRP Is Mixed and Expensive | 2 | Mixed | 7 | Iron deficiency is linked to non-scarring hair loss in women; PRP meta-analyses  |
+| 9361 | Protect Seven Hours: Sleep Is Visible on the Face | 3 | Moderate | 6 | Sleep-deprived faces are rated less healthy and attractive; poor sleep quality i |
+| 9362 | Cut Sugar and Alcohol for Your Skin: The Glycation Case | 2 | Moderate | 6 | Dietary AGEs correlate with skin AGE accumulation; alcohol intake is linked to r |
+| 9363 | Screens and Earbuds: Blink Training, the 20-20-20 Habit and the 60/60 Volume Rule | 3 | Strong | 7 | Digital eye strain and dry eye rise with screen hours; unsafe listening on perso |
+| 9364 | The 'Eight Glasses a Day' Rule Has No Evidence Behind It | 1 | Strong | 6 | Drink to thirst; extra water helped women with recurrent urinary infections but  |
+| 9365 | Energy Drinks: Rated at the Floor for Energy | 1 | Strong | 7 | Meta-analyses find acute rises in blood pressure and QT changes; the caffeine-su |
+| 9366 | Chase Unexplained Tiredness: Iron, B12, Magnesium and a Sleep-Apnoea Screen | 4 | Strong | 8 | Iron repletion improves fatigue in non-anaemic iron-deficient women; B12 helps o |
+| 9367 | Aerobic Exercise for Erectile Function | 3 | Strong | 5 | Meta-analyses of randomised trials show aerobic training improves erectile funct |
+| 9368 | Menopause Hormone Therapy: Read WHI With Its Reanalyses | 3 | Mixed | 8 | For symptomatic women under 60 or within 10 years of menopause, benefits general |
+| 9369 | Testosterone for 'Low Energy' in Men Without Hypogonadism: Rated at the Floor | 1 | Strong | 7 | Guidelines restrict therapy to confirmed hypogonadism; TRAVERSE found no excess  |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,607)
 
