@@ -11,6 +11,7 @@ import { StrategyProvider } from "./contexts/StrategyContext";
 import { DisclaimerProvider } from "./contexts/DisclaimerContext";
 import { startLogin } from "./const";
 import "./index.css";
+import "./styles/interior.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
