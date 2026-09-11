@@ -3,3 +3,7 @@ vector_db/svd_model.pkl
 vector_db/embeddings.npy
 vector_db/vectorizer.pkl
 vector_db/index.json
+
+# Python bytecode
+__pycache__/
+*.pyc
