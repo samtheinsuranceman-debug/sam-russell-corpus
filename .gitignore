@@ -3,3 +3,13 @@ vector_db/svd_model.pkl
 vector_db/embeddings.npy
 vector_db/vectorizer.pkl
 vector_db/index.json
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Patent360 — build outputs. The image builds these; they are never committed.
+Patent360/web/
+Patent360/client/node_modules/
+Patent360/client/dist/
+Patent360/client/tsconfig.tsbuildinfo

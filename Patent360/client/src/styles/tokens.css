@@ -1,0 +1,149 @@
+/* ─── Patent360 design tokens ──────────────────────────────────────────────
+   Blue leads; the Russell Capital green survives as the signal colour.
+   Switch the whole product to green-primary with data-accent="green" on <html>.
+   ------------------------------------------------------------------------ */
+:root {
+  --ink-950: #030a16;
+  --ink-900: #05101f;
+  --ink-800: #0a1a2e;
+  --ink-700: #0f2440;
+  --ink-600: #143054;
+  --ink-500: #1b3d6b;
+  --scrim-rgb: 3, 10, 22;   /* every plate scrim tints with the ink, not against it */
+
+  --accent-300: #7dd3fc;
+  --accent-400: #38bdf8;
+  --accent-500: #0ea5e9;
+  --accent-600: #0284c7;
+  --accent-rgb: 14, 165, 233;
+
+  --signal: #22c55e;
+  --seal: #f0c040;
+  --warn: #f59e0b;
+  --alert: #ef4444;
+
+  --text-head: #eaf2fb;
+  --text-body: #c3d6ee;
+  --text-muted: #7d97ba;
+
+  --line-soft: rgba(255, 255, 255, 0.07);
+  --line-mid: rgba(255, 255, 255, 0.12);
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-ui: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius: 14px;
+  --radius-sm: 9px;
+  --sidebar-w: 264px;
+  --page-max: 1240px;
+
+  /* Overlays and chrome. On dark they are white; skins flip them to ink. */
+  --tint-2: rgba(255,255,255,0.02);
+  --tint-3: rgba(255,255,255,0.03);
+  --tint-4: rgba(255,255,255,0.04);
+  --tint-5: rgba(255,255,255,0.05);
+  --tint-8: rgba(255,255,255,0.08);
+  --tint-12: rgba(255,255,255,0.12);
+  --tint-13: rgba(255,255,255,0.13);
+  --tint-18: rgba(255,255,255,0.18);
+  --tint-35: rgba(255,255,255,0.035);
+  --tint-45: rgba(255,255,255,0.045);
+  --chrome-side: rgba(4, 12, 24, 0.86);
+  --chrome-top: rgba(3, 10, 22, 0.60);
+}
+
+/* The green-primary variant — and the one the product ships in.
+   The home page is a green-black city, so the interior is a green-black
+   room. The ink ramp moves with the accent: a navy interior under an
+   emerald home page is what made the two read as different products. */
+:root[data-accent='green'] {
+  --accent-300: #86efac;
+  --accent-400: #4ade80;
+  --accent-500: #22c55e;
+  --accent-600: #16a34a;
+  --accent-rgb: 34, 197, 94;
+
+  /* Green-black, sampled off the home page plate — not navy. */
+  --ink-950: #030b09;
+  --ink-900: #061310;
+  --ink-800: #0a1e19;
+  --ink-700: #102c24;
+  --ink-600: #16392e;
+  --ink-500: #1d4b3c;
+  --scrim-rgb: 3, 11, 9;
+  --chrome-side: rgba(4, 18, 14, 0.88);
+  --chrome-top: rgba(3, 13, 10, 0.62);
+
+  /* Type takes the same cast so nothing floats blue on a green ground. */
+  --text-head: #eaf5ef;
+  --text-body: #bed6cb;
+  --text-muted: #7ba192;
+
+  /* Signals stay inside the home page's two families: emerald, and the
+     warm window-light of the city. No cyan — that was the blue theme
+     leaking through, and it fought everything around it. */
+  --signal: #7fb8a2;
+  --seal:   #e8c268;
+  --warn:   #e8a33f;
+  --alert:  #f2666e;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; background: var(--ink-950); }
+
+body {
+  font-family: var(--font-ui);
+  color: var(--text-body);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 { color: var(--text-head); margin: 0; font-weight: 600; letter-spacing: -0.02em; }
+p { margin: 0; }
+a { color: var(--accent-300); text-decoration: none; }
+a:hover { color: var(--accent-400); }
+
+:focus-visible {
+  outline: 2px solid rgba(var(--accent-rgb), 0.75);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.display { font-family: var(--font-display); font-weight: 600; }
+
+.label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.card {
+  background: var(--ink-800);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  position: relative;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+.card.hoverable:hover {
+  background: var(--ink-700);
+  border-color: var(--line-mid);
+  transform: translateY(-2px);
+}
+.card.hoverable:hover::before {
+  content: '';
+  position: absolute; inset: -1px auto auto -1px; right: -1px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.55), transparent);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

@@ -1,0 +1,118 @@
+/* The four-layer backdrop. Fixed behind everything, never interactive. */
+.p360-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.p360-sky {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, var(--ink-950) 0%, var(--ink-900) 52%, var(--ink-800) 78%, var(--ink-950) 100%);
+}
+
+.p360-bloom {
+  position: absolute;
+  border-radius: 50%;
+  will-change: opacity, transform;
+}
+.p360-bloom-a {
+  top: -12%; left: 50%; width: 1100px; height: 700px; transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.16) 0%, rgba(var(--accent-rgb), 0.05) 42%, transparent 70%);
+  filter: blur(80px);
+  animation: p360-breathe-a 19s ease-in-out infinite;
+}
+.p360-bloom-b {
+  bottom: 4%; right: -14%; width: 820px; height: 560px;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.10) 0%, rgba(34, 197, 94, 0.03) 42%, transparent 70%);
+  filter: blur(90px);
+  animation: p360-breathe-b 23s ease-in-out infinite;
+}
+@keyframes p360-breathe-a {
+  0%, 100% { opacity: 0.72; transform: translateX(-50%) scale(0.97); }
+  47%      { opacity: 1;    transform: translateX(-50%) scale(1.04); }
+}
+@keyframes p360-breathe-b {
+  0%, 100% { opacity: 1;    transform: scale(1.03); }
+  47%      { opacity: 0.6;  transform: scale(0.96); }
+}
+
+.p360-imprint { position: absolute; inset: 0; }
+.p360-backdrop[data-dense='true'] .p360-imprint { opacity: 0.55; }
+
+.p360-city { position: absolute; inset: 0; }
+.p360-city::after {
+  /* Haze at the horizon so the towers sit in air, not on a line. */
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: 0; height: 42%;
+  background: linear-gradient(180deg, transparent, rgba(var(--scrim-rgb), 0.55) 62%, rgba(var(--scrim-rgb), 0.92));
+}
+.p360-backdrop[data-dense='true'] .p360-city { opacity: 0.5; }
+
+.p360-grain {
+  position: absolute; inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ─── Photographic city plates ─────────────────────────────────────────── */
+.plate { position: relative; overflow: hidden; isolation: isolate; }
+.plate-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 0;
+}
+/* A 40-second drift so the city is never quite still. */
+.plate-zoom { animation: plate-drift 44s ease-in-out infinite alternate; will-change: transform; }
+@keyframes plate-drift {
+  from { transform: scale(1.06) translate3d(-0.8%, 0.6%, 0); }
+  to   { transform: scale(1.13) translate3d(0.9%, -0.7%, 0); }
+}
+
+.plate-scrim { position: absolute; inset: 0; z-index: 1; }
+.plate-scrim-bottom {
+  background:
+    linear-gradient(180deg, rgba(var(--scrim-rgb),0.86) 0%, rgba(var(--scrim-rgb),0.30) 26%, rgba(var(--scrim-rgb),0.10) 46%, rgba(var(--scrim-rgb),0.78) 82%, var(--ink-950) 100%);
+}
+.plate-scrim-full {
+  background:
+    linear-gradient(180deg, rgba(var(--scrim-rgb),0.92) 0%, rgba(var(--scrim-rgb),0.62) 40%, rgba(var(--scrim-rgb),0.80) 78%, var(--ink-950) 100%);
+}
+.plate-scrim-left {
+  background:
+    linear-gradient(90deg, var(--ink-950) 0%, rgba(var(--scrim-rgb),0.92) 34%, rgba(var(--scrim-rgb),0.45) 60%, rgba(var(--scrim-rgb),0.18) 100%),
+    linear-gradient(180deg, rgba(var(--scrim-rgb),0.6) 0%, transparent 30%, rgba(var(--scrim-rgb),0.85) 100%);
+}
+.plate-scrim-band {
+  background:
+    linear-gradient(180deg, rgba(var(--scrim-rgb),0.72) 0%, rgba(var(--scrim-rgb),0.12) 22%, rgba(var(--scrim-rgb),0.90) 44%, rgba(var(--scrim-rgb),0.90) 70%, rgba(var(--scrim-rgb),0.25) 86%, var(--ink-950) 100%);
+}
+.plate-scrim-none { background: linear-gradient(180deg, rgba(var(--scrim-rgb),0.45) 0%, transparent 40%, rgba(var(--scrim-rgb),0.7) 100%); }
+
+.plate-imprint { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.plate-content { position: relative; z-index: 3; height: 100%; }
+
+/* Activity beacons: the city is working, not photographed. */
+.plate-pulses { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.pulse {
+  position: absolute; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%; background: var(--accent-300);
+  box-shadow: 0 0 10px 2px rgba(var(--accent-rgb), 0.8);
+  animation: pulse-beat 6.5s ease-in-out infinite;
+}
+.pulse::after {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  border: 1px solid rgba(var(--accent-rgb), 0.6);
+  animation: pulse-ring 6.5s ease-out infinite;
+  animation-delay: inherit;
+}
+@keyframes pulse-beat {
+  0%, 72%, 100% { opacity: 0.25; transform: scale(0.8); }
+  10%           { opacity: 1;    transform: scale(1.15); }
+  30%           { opacity: 0.5;  transform: scale(0.95); }
+}
+@keyframes pulse-ring {
+  0%      { opacity: 0.9; transform: scale(0.6); }
+  35%,100%{ opacity: 0;   transform: scale(4.2); }
+}
