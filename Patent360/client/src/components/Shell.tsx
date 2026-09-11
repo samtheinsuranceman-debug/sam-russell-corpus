@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Route, Switch, useLocation } from 'wouter';
 import { Icon, Logo } from './ui';
 import { NAV, ROLE_LABEL, ROLE_ORDER, roleAtLeast, type Role } from '../lib/nav';
@@ -22,6 +22,9 @@ import { Team } from '../pages/Team';
 import { Placeholder } from '../pages/Placeholder';
 import { Drafting } from '../pages/Drafting';
 
+/** Vellum & Navy. The other six live in styles/skins.css. */
+const SKIN = '1';
+
 const DEMO: NonNullable<Session> = {
   name: 'Alex Reyes',
   email: 'a.reyes@brandtlockwood.com',
@@ -36,6 +39,24 @@ export function Shell({
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
   const initials = who.name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
+
+  /**
+   * The light skin belongs to the interior and nowhere else.
+   *
+   * It was set on <html> in index.html, which lightened the marketing pages
+   * too and — because the skin hides every plate so dark photography cannot
+   * bleed through a pale page — left the homepage rendering five invisible
+   * skylines on vellum. The skin is a property of this shell, so this shell
+   * owns it: applied while the interior is mounted, removed on the way out.
+   */
+  useEffect(() => {
+    const root = document.documentElement;
+    const previous = root.getAttribute('data-skin');
+    root.setAttribute('data-skin', previous ?? SKIN);
+    return () => {
+      if (previous === null) root.removeAttribute('data-skin');
+    };
+  }, []);
 
   return (
     <div className="shell">

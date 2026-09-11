@@ -14,7 +14,7 @@ import type { ReactNode } from 'react';
 
 export type PlateName =
   | 'p360-pinnacle' | 'p360-pinnacle-b' | 'p360-aerial' | 'p360-aerial-b'
-  | 'p360-canyon' | 'p360-harbor' | 'p360-interchange';
+  | 'p360-canyon' | 'p360-harbor' | 'p360-interchange' | 'p360-skyline';
 
 /** Where the activity beacons sit, in percent of the frame. */
 const PULSES: Record<string, Array<[number, number, number]>> = {
@@ -24,7 +24,10 @@ const PULSES: Record<string, Array<[number, number, number]>> = {
   'p360-aerial-b':    [[40, 44, 0], [62, 52, 1.6], [30, 66, 3.1], [74, 40, 4.4]],
   'p360-canyon':      [[38, 34, 0], [59, 46, 1.5], [47, 62, 3.0]],
   'p360-harbor':      [[44, 42, 0], [61, 47, 1.8], [33, 51, 3.4], [72, 44, 4.9]],
-  'p360-interchange': [[36, 48, 0], [57, 41, 1.3], [68, 60, 2.9], [27, 62, 4.3]]
+  'p360-interchange': [[36, 48, 0], [57, 41, 1.3], [68, 60, 2.9], [27, 62, 4.3]],
+  // Beacons sit on lit crowns: the twin-mast tower, the spire beside it, then
+  // three roofs stepping down into the haze.
+  'p360-skyline':     [[65, 27, 0], [84, 22, 1.5], [38, 57, 3.0], [53, 67, 4.4], [11, 66, 5.7]]
 };
 
 export function Plate({

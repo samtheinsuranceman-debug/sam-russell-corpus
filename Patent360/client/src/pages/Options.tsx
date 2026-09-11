@@ -266,12 +266,29 @@ export const OPTIONS: Opt[] = [
         <Plate name="p360-aerial" accent={a} scrim="none" focus="center 50%" />
       </div>
     )
+  },
+  {
+    id: 11, name: 'Skyline, twin masts', plate: 'p360-skyline',
+    note: 'Two lit masts against a bruised green sky, the city stepping down into haze beneath them. The whole upper left is empty, so the headline sits in the sky rather than on top of the buildings — the only plate in the set where type and subject never overlap.',
+    render: a => (
+      <Plate name="p360-skyline" accent={a} scrim="left" focus="center 38%">
+        <div className="opt-shell">
+          <Nav />
+          <div className="opt-low-left">
+            <span className="hero-eyebrow"><Icon name="lock" size={13} /> Patent prosecution, end to end</span>
+            <h1 className="opt-h1 opt-h1-left">{HEAD_A}<br />{HEAD_B} <em>{TURN}</em></h1>
+            <p className="opt-sub opt-sub-left">{SUB}</p>
+            <Cta />
+          </div>
+        </div>
+      </Plate>
+    )
   }
 ];
 
 export function Options() {
   const params = new URLSearchParams(window.location.search);
-  const v = Math.min(10, Math.max(1, Number(params.get('v') ?? 1)));
+  const v = Math.min(OPTIONS.length, Math.max(1, Number(params.get('v') ?? 1)));
   const accent = params.get('accent') === 'green' ? 'green' : 'blue';
   const opt = OPTIONS[v - 1]!;
   if (accent === 'green') document.documentElement.setAttribute('data-accent', 'green');
