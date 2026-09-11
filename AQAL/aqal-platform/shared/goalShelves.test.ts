@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GOAL_EVIDENCE, GOAL_SECTIONS, GOAL_SECTION_ORDER, GOAL_SECTION_SHORT, GOAL_SECTION_GOAL, GOAL_SHELF_META, GOAL_SHELF_MODULES, shelfClusters } from "./goalShelves/index";
-import { GOAL_TIERS } from "./goalShelves/types";
+import { GOAL_TIERS, sectionInShelf } from "./goalShelves/types";
 import { goalMenuForMonth, goalMenuForText, goalMenuLines, shelfForGoal } from "./goalProtocols";
 import { templateForGoal } from "./goalTemplates";
 import { KEYSTONE_PRACTICES, practicesForGoals } from "./keystonePractices";
@@ -16,6 +16,9 @@ describe("goal shelves (sections 8000+)", () => {
     expect(new Set(bases).size).toBe(bases.length);
     for (const m of GOAL_SHELF_META) expect(m.base % 100).toBe(0);
     for (const m of GOAL_SHELF_META) expect(m.base).toBeGreaterThanOrEqual(8000);
+    // Extra blocks never overlap another shelf's blocks.
+    const blocks = GOAL_SHELF_META.flatMap((m) => [m.base, ...m.extraBases]);
+    expect(new Set(blocks).size).toBe(blocks.length);
   });
 
   it("carries a DOI-only ledger with unique, prefixed ids", () => {
@@ -41,9 +44,7 @@ describe("goal shelves (sections 8000+)", () => {
     for (const m of GOAL_SHELF_META) {
       const mod = GOAL_SHELF_MODULES[m.key];
       for (const key of Object.keys(mod.SECTIONS)) {
-        const n = Number(key);
-        expect(n, key).toBeGreaterThanOrEqual(m.base);
-        expect(n, key).toBeLessThan(m.base + 100);
+        expect(sectionInShelf(m, key), `${m.key}: ${key}`).toBe(true);
         expect(GOAL_SECTIONS[key]).toMatch(new RegExp(`^${key} · ${m.short.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} — `));
         expect(GOAL_SECTION_SHORT[key]).toMatch(new RegExp(`^${m.short.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}: `));
         expect(GOAL_SECTION_ORDER).toContain(key);
