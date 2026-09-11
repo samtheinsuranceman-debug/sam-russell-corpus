@@ -1,0 +1,30 @@
+{
+  "name": "patent360-mcp-hub",
+  "version": "1.0.0",
+  "description": "Patent360 MCP Hub - Node.js/TypeScript MCP Server v2.0.0 for secure, Railway-native AI integration",
+  "private": true,
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "test:smoke": "node scripts/mcp-smoke.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.0.0",
+    "@modelcontextprotocol/node": "2.0.0",
+    "express": "^4.19.2",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.0.0",
+    "typescript": "latest",
+    "ts-node": "^10.9.2",
+    "@types/node": "latest",
+    "@types/express": "latest"
+  }
+}
