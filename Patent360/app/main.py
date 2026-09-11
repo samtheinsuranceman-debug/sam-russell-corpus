@@ -1,9 +1,11 @@
 import hashlib
 import json
 import os
+from pathlib import Path
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Patent360", version="2.0.0")
 
@@ -20,6 +22,13 @@ CONNECTOR_ENV_VARS = {
 }
 
 ELIGIBLE_RATE_TYPES = {"fixed_rate", "fixed_segment"}
+
+# The built single-page application, vendored at Patent360/web by the client
+# build. If it is absent the service still starts and still serves the API and
+# the MCP endpoint — a missing front end must never take the connector down.
+WEB_ROOT = Path(__file__).resolve().parent.parent / "web"
+WEB_INDEX = WEB_ROOT / "index.html"
+WEB_PRESENT = WEB_INDEX.is_file()
 
 
 def _connector_availability() -> dict:
@@ -76,6 +85,12 @@ def _fingerprint(payload) -> dict:
 
 @app.get("/", response_class=HTMLResponse)
 def dashboard():
+    # The application itself, when the client build is vendored in. The
+    # operator dashboard below stays as the fallback so a service with no
+    # front end still says something useful rather than 404ing.
+    if WEB_PRESENT:
+        return FileResponse(WEB_INDEX, media_type="text/html")
+
     try:
         connectors = _connector_inventory()
 
@@ -294,3 +309,31 @@ app.include_router(
         }
     )
 )
+
+
+# ── The application ───────────────────────────────────────────────────────
+# Static assets first, then a catch-all so the client router owns every path
+# it does not. Registered last on purpose: /health, /api/* and /mcp are
+# already bound above and keep winning, because FastAPI matches in order.
+if WEB_PRESENT:
+    for _sub in ("assets", "plates", "fonts", "images"):
+        _dir = WEB_ROOT / _sub
+        if _dir.is_dir():
+            app.mount(f"/{_sub}", StaticFiles(directory=_dir), name=f"web-{_sub}")
+
+    _RESERVED = ("api", "health", "mcp", "docs", "openapi.json", "redoc")
+
+    @app.get("/{path:path}", include_in_schema=False)
+    def spa(path: str):
+        """Serve a real file if there is one, otherwise hand the path to the
+        client router. Reserved prefixes 404 as JSON rather than silently
+        returning an HTML page to something expecting an API."""
+        if path.split("/", 1)[0] in _RESERVED:
+            return JSONResponse(content={"error": "Not found"}, status_code=404)
+
+        candidate = (WEB_ROOT / path).resolve()
+        # Never serve anything outside the build directory.
+        if candidate.is_file() and str(candidate).startswith(str(WEB_ROOT.resolve())):
+            return FileResponse(candidate)
+
+        return FileResponse(WEB_INDEX, media_type="text/html")
