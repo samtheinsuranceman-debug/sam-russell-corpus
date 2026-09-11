@@ -1,29 +1,29 @@
 # AQAL Intelligence — Research Library Catalog
 
-**6,941 clusters · 15,706 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
+**6,981 clusters · 15,963 verified sources.** Auto-generated from `client/src/pages/researchLibraryData.ts`. Each cluster is a research-backed node; every source was WebSearch-verified (no fabricated citations). Effect sizes are reported honestly, including nulls and debunked claims (rated magnitude 1 with a blunt callout).
 
 ## Totals by lens
 
 | Lens | Clusters |
 |---|---|
-| PRACTICES — what strengthens the mind (impact lens) | 4,015 |
+| PRACTICES — what strengthens the mind (impact lens) | 4,055 |
 | WEAKNESS LINES — what collapses a goal (threat lens) | 1,607 |
 | COST OF FAILURE — what's at stake (harm lens) | 1,258 |
 | Framework / uncategorized | 61 |
-| **Total** | **6,941** |
+| **Total** | **6,981** |
 
 ## Evidence-tag distribution
 
 | Tag | Count |
 |---|---|
-| Moderate | 2,890 |
-| Strong | 2,062 |
-| Mixed | 1,127 |
-| Emerging | 862 |
+| Moderate | 2,906 |
+| Strong | 2,081 |
+| Mixed | 1,128 |
+| Emerging | 866 |
 
 ---
 
-## PRACTICES — what strengthens the mind (impact lens)  (4,015)
+## PRACTICES — what strengthens the mind (impact lens)  (4,055)
 
 | # | Title | Score | Evidence | Sources | Bolsters / Degrades |
 |---|---|---|---|---|---|
@@ -4042,6 +4042,46 @@
 | 9467 | Use Blood-Flow-Restriction Training With Proper Cuffs When You Cannot Lift Heavy — Injury Rehab, Deloads, or Travel | 3 | Strong | 8 | Low-load training with restriction builds strength and size comparably to high l |
 | 9468 | Electrical Muscle Stimulation: Not Worth the Money for a Trained Athlete Who Can Already Train | 1 | Mixed | 8 | Superimposed whole-body EMS added nothing to jump training in a randomized trial |
 | 9469 | Use Only Third-Party-Tested Supplements, Keep Batch Records, and Assume Any Untested Product Could Be Contaminated | 3 | Strong | 8 | Surveys find 40–70% of athletes use supplements and 10–15% of products may conta |
+| 10000 | Name Money Stress as Money Stress — Before It Becomes a Fight About Each Other | 3 | Strong | 7 | Economic pressure predicts later satisfaction at every income; commitment, maint |
+| 10001 | Know Which Insecurity You Bring — and Give Your Spouse the Antidote to Theirs | 3 | Strong | 6 | Anxious partners need assurance; avoidant partners need autonomy without withdra |
+| 10002 | Expect the Drift and Measure It — A Monthly Two-Number Check | 3 | Strong | 6 | Satisfaction declines on average, instability itself predicts depression, and th |
+| 10003 | Myth: 'Stay Positive and the Marriage Will Improve' | 1 | Mixed | 4 | Optimistic forecasts, benevolent interpretations and reflexive forgiveness help  |
+| 10004 | If You Fight About the Kids, Treat the Coparenting Alliance — Not Just the Marriage | 4 | Strong | 6 | Marital satisfaction and coparenting quality correlate at r = .41 and pull each  |
+| 10005 | Run a Quarterly Career-Sacrifice Ledger and Protect Each Other's Recovery Time | 3 | Strong | 6 | Work stress crosses over between spouses; positive spillover crosses over too, a |
+| 10006 | Do the Five Maintenance Behaviors on Purpose — Especially Assurances and Shared Tasks | 3 | Strong | 6 | Positivity, assurances, openness, shared tasks and social networks predict commi |
+| 10007 | Respond So They Feel Understood, Validated and Cared For — Every Disclosure, Every Day | 4 | Strong | 7 | Perceived partner responsiveness predicts intimacy, affectionate touch, better a |
+| 10008 | Hold Hands Before the Hard Conversation — and Touch Daily | 3 | Strong | 7 | Brief affectionate touch buffers stress during conflict, promotes shared positiv |
+| 10009 | Go to Bed Within 30 Minutes of Each Other | 2 | Moderate | 7 | Sleep timing concordance tracks marital satisfaction and next-day interactions;  |
+| 10010 | Practice Marital Generosity — Small Kindnesses, Affection, Respect and Forgiving Faults | 3 | Moderate | 6 | In 1,365 US couples generosity tracked satisfaction and lower divorce likelihood |
+| 10011 | Build Dedication, Not Just Constraint — and Sacrifice Willingly or Not at All | 3 | Strong | 7 | Attitudes about sacrifice predicted which of 38 couples became distressed; willi |
+| 10012 | Do an Eight-Hour Online Program Together — With Automated or Light Coaching if a Coach Is Unavailable | 3 | Strong | 7 | OurRelationship and ePREP improve satisfaction (d ≈ 0.4–0.6) for low-income, per |
+| 10013 | From the Empty Nest Onward, Invest in the Marriage as a Health Behavior | 3 | Strong | 7 | Satisfaction rises after the nest empties because time together is enjoyed more, |
+| 10014 | If One of You Lives With Chronic Pain, Enter a Couple-Based Pain Program | 3 | Moderate | 7 | Solicitous and invalidating spouse responses both predict worse pain outcomes; c |
+| 10015 | Myth: 'Nag Them Into Exercising' | 1 | Moderate | 6 | Negative partner control predicts less activity; what works is planning together |
+| 10016 | In a Remarriage, Treat Commitment as the Structural Weak Point and Build the Stepfamily Over Years | 4 | Moderate | 5 | Remarried couples report equal marital quality but more positive attitudes towar |
+| 10017 | Aim for Decades-Long Intense Love — It Exists, and It Tracks Inclusion of the Other in the Self and Sexual Frequency | 3 | Emerging | 5 | fMRI of couples married ~21 years who report intense love shows early-stage rewa |
+| 10018 | Build a Shared-Goal System for the Decade — With Autonomy Support, Not Direction | 4 | Strong | 7 | Transactive goal dynamics: couples pool, divide and coordinate goals; autonomy-s |
+| 10019 | If You Start Couple Therapy, Plan to Finish It — Half of Couples Quit, and Practice Effects Are Half of Trial Effects | 4 | Strong | 7 | Naturalistic studies find d ≈ 0.36–0.50, ~50% dropout and under 40% clinically i |
+| 11001 | Plan the Trip With the Teenagers, Not for Them — and Keep One Reunion Trip on the Calendar | 3 | Moderate | 8 | Shared decision-making, unstructured time together and the multigenerational reu |
+| 11002 | Do the Adventure Activity — With an Operator Whose Safety Record You Checked | 3 | Moderate | 5 | Injury surveillance says the risk is real, concentrated in a few activities, and |
+| 11003 | Cruise Without Catching the Ship's Bug — Hand Hygiene, the Flu Shot and Knowing the Base Rates | 3 | Moderate | 7 | Norovirus and respiratory outbreaks are the two documented risks of a closed shi |
+| 11004 | Learn the Six Scam Scripts and Keep Your Fear Proportionate to the Data | 3 | Moderate | 6 | Tourists are targeted by predictable scams; fear of crime on holiday outruns act |
+| 11005 | Travel With a Disability or Dementia — Plan the Access, Not Just the Destination | 3 | Moderate | 6 | Access information, attitudinal barriers and dementia-friendly destinations |
+| 11006 | After Retirement, Join a Structured Travel Program — Educational, Social or Group | 3 | Moderate | 6 | Holiday-taking tracks self-assessed health in older adults; programs remove the  |
+| 11007 | Frequent-Flyer Points: Take Them, Never Chase Them | 1 | Strong | 6 | Loyalty programmes are built on effort justification, illusory progress and stat |
+| 11008 | Travel in the Shoulder Season — Crowding Is the Variable You Control | 3 | Moderate | 5 | Perceived crowding lowers destination attractiveness; seasonality is measurable  |
+| 11009 | The Long Overland Journey — Weeks by Train, Road or RV | 3 | Emerging | 5 | Drive tourism, RV neo-tribes and rail: the format for a rare, long-horizon trip |
+| 11010 | Swap Homes or Couchsurf — Trust Mechanisms Make Peer-to-Peer Stays Work | 3 | Moderate | 7 | Reputation, photos and reciprocity are the documented levers; expect longer, mor |
+| 11011 | Make Local Food the Itinerary — One Market, One Home Kitchen, One Regional Dish a Day | 3 | Moderate | 6 | Local food consumption is a modelled, memorable part of the trip |
+| 11012 | A Week-Long Wellness Retreat — Real Short-Term Gains, Uncertain Durability | 3 | Emerging | 6 | Observational and quasi-randomised studies show mood and health markers improve; |
+| 11013 | A Ten-Day Silent Retreat — The Intensive Practice Block With Measured Effects | 4 | Emerging | 7 | Vipassana and month-long insight retreats: migraine, telomerase and inflammatory |
+| 11014 | Go to the Festival — With Earplugs In and a Plan for the Medical Tent | 3 | Strong | 7 | Festival attendance lifts social wellbeing; hearing loss and drug harms are the  |
+| 11015 | Write Ten Minutes a Night on the Road — Then Reread It Six Months Later | 3 | Moderate | 5 | Rediscovery of ordinary documented moments is undervalued; writing about positiv |
+| 11016 | Motion Sickness — Habituate With Controlled Breathing; Scopolamine Is the Best-Evidenced Drug | 3 | Strong | 7 | Desensitisation training works; ginger is weakly supported |
+| 11017 | The High-Altitude Trek — Ascend Slowly, Know the Acetazolamide Evidence, Do Not Trust Your History | 4 | Strong | 8 | Kilimanjaro and Whitney cohorts on ascent rate; meta-analyses on prophylaxis (de |
+| 11018 | The Daily Field Routine — Food and Water Rules, Shade Hours, Sunscreen Reapplied | 3 | Strong | 8 | Traveler's diarrhea prevention and heat/sun protection in tourist settings |
+| 11019 | See a Travel-Medicine Clinic Six Weeks Out — Vaccines and Malaria Prophylaxis, Described | 4 | Strong | 8 | Illness in returned travellers is predictable by destination; adherence to proph |
+| 11020 | Travelling With a Chronic Condition or in Pregnancy — Build the Plan With Your Specialist | 4 | Moderate | 8 | Insulin across time zones, HIV and other chronic illness, and the air-travel-in- |
 
 ## WEAKNESS LINES — what collapses a goal (threat lens)  (1,607)
 
