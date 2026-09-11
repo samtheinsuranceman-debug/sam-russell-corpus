@@ -139,3 +139,82 @@ rather than corrected from memory. The engines are good at recall — they
 surfaced DO-HEALTH, the 2025 taurine correction, the metformin-in-monkeys study,
 the 2026 healthspan RCT review and the ABLE trial — and unreliable at
 citation, which is why the verification gate stays mandatory.
+
+## The goal shelves (sections 8000+) — protocols for the goals people actually name
+
+The founder's observation: about a dozen goals cover most of what a member will
+ever type into the goal box. The library owes each one a shelf of *protocols* —
+things to do, tiered by how much they ask of a person — not a diagnosis of the
+member's weaknesses. The shelves live in `shared/goalShelves/` (one file per
+goal, merged by `index.ts`) so the server-side coach can read them without the
+client bundle, and they are merged into `PRACTICE_EVIDENCE` by
+`client/src/pages/researchLibraryData.ts` so they appear in the same page,
+filters, counts and catalog as everything else.
+
+| Goal key | Shelf | Sections |
+|---|---|---|
+| `marriage` | Be a better husband, wife or partner | 8000–8099 |
+| `parenting` | Be a better parent — children who thrive, and the best memories | 8100–8199 |
+| `debt` | Get out of debt | 8200–8299 |
+| `happiness` | Be happy — wellbeing that lasts | 8300–8399 |
+| `retirement` | Extra money for a meaningful, active retirement | 8400–8499 |
+| `business` | Start and grow a business | 8500–8599 |
+| `hobby` | Pick up a new hobby or skill | 8600–8699 |
+| `education-career` | Graduate college and find the right career | 8700–8799 |
+| `partner` | Find the right partner and settle down | 8800–8899 |
+| `home` | Buy a house | 8900–8999 |
+| `travel` | Go traveling | 9000–9099 |
+| `family-time` | More time with family, kids and parents | 9100–9199 |
+| `legacy` | Memorialize a life in meaningful ways | 9200–9299 |
+| `health-energy-beauty` | Great health, energy and beauty for as long as possible | 9300–9399 |
+| `athlete` | Become a better athlete | 9400–9499 |
+
+Every cluster on a shelf carries three fields the rest of the library does not:
+
+- **`tier`** — `fundamental` (free, daily, the floor everything else stands on),
+  `moderate` (a structured program over weeks), `advanced` (expert-guided or a
+  real investment of money and months), `elite` (the rare highest-leverage move
+  with a long horizon).
+- **`action`** — the concrete step in the second person: what to do this month,
+  how often, for how long. A cluster without an action is not a protocol.
+- **`reinforcement`** (optional) — books, videos, courses or tools, with a link
+  only when that page was opened during verification.
+
+Each shelf opens with a `<base>` "How to Read This Shelf" section and a
+`gs-<goal>-read-me-first` cluster, then one section per topic ordered from
+fundamental to elite. Popular advice the evidence does not support sits on the
+shelf at the floor (impact magnitude 1 with a callout) so the library counts it
+as debunked rather than quietly omitting it.
+
+**The verification contract is the longevity shelf's**: every source is a DOI
+resolved against the Crossref record, the publisher page or the PubMed record
+on the date in the file header; `kind` is always `"doi"`; nothing is typed from
+memory; a source that would not verify is dropped. `shared/goalShelves.test.ts`
+enforces the link shape, the tiers, the actions, the section ranges and the
+floor-rating callouts. Each shelf's ledger (DOI, title, journal, year, how it
+was verified) is kept with the build notes for the wave that produced it.
+
+### The monthly menu (`shared/goalProtocols.ts`)
+
+Alongside the recommendations for a member's intelligences, the coach hands
+them a menu for the one goal they picked: one or two picks from each tier —
+fundamental, moderate, advanced, elite — chosen from the matching shelf and
+rotated by calendar month so a member who keeps the same goal sees the shelf's
+breadth over a year. Floor-rated clusters and the read-me cluster are never
+handed out. `shelfForGoal()` matches free text to a shelf by keyword hits;
+`goalMenuForMonth()` builds the menu; `server/coaching.ts` attaches it to the
+outcome report as `goalMenu` and feeds it to the coach prompt; the results page
+renders it under "This month's protocols".
+
+### How a shelf is extended
+
+Fan the gap question out to several engines at once (Perplexity, Exa, the
+Amass biomedical index, PubMed) and treat every answer as a candidate list.
+Verify each DOI — Crossref (`https://api.crossref.org/works/<doi>`) for anything
+outside biomedicine, PubMed or Amass for anything inside it — and read the
+title, journal and year back off the record before writing the cite. Add the
+cluster under a new section in the shelf's file, give it a tier, an action and
+an impact rating, run `npx vitest run shared/goalShelves.test.ts`, then
+`python3 scripts/gen_catalog.py`. The target is breadth as well as depth: the
+shelves are meant to grow from the first wave's ~1,500 verified sources toward
+the founder's 25,000–35,000, one verified source at a time.

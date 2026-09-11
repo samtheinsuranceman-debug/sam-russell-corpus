@@ -1057,6 +1057,37 @@ function OutcomeEngineering({ fullAccess }: { fullAccess: boolean }) {
             </div>
           )}
 
+          {/* THIS MONTH'S GOAL PROTOCOLS — the tiered menu from the goal shelf. */}
+          {(() => { const gm = report.goalMenu; return gm && gm.picks && gm.picks.length > 0 && (
+            <div className="glass-card rounded-2xl p-6">
+              <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                <p className="text-[0.65rem] uppercase tracking-[0.18em] text-accent/70" style={{ fontFamily: "'JetBrains Mono', monospace" }}>This month's protocols for: {gm.label}</p>
+                <span className="text-[0.65rem] text-muted-foreground/50">{gm.monthKey}</span>
+              </div>
+              <p className="text-xs text-muted-foreground/60 mb-4 leading-relaxed">One or two from each tier — fundamental, moderate, advanced, elite — from the Research Library's goal shelf. Start at the lowest tier you are not already doing; the tiers above it compound on that floor.</p>
+              <div className="space-y-3">
+                {gm.picks.map((p: any) => (
+                  <div key={p.id} className="rounded-xl border border-white/[0.07] bg-background/30 px-4 py-3.5">
+                    <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                      <span className="text-sm font-semibold text-foreground">{p.title}</span>
+                      <span className="text-[0.6rem] uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0 text-accent/80 border border-accent/30">{p.tier}</span>
+                    </div>
+                    <p className="text-sm text-foreground/85 leading-relaxed"><span className="text-accent/70">Do this:</span> {p.action}</p>
+                    {p.reinforcement?.length > 0 && (
+                      <p className="text-xs text-muted-foreground/60 mt-1.5">Reinforce with: {p.reinforcement.map((r: any, j: number) => (
+                        <span key={j}>{j > 0 ? " · " : ""}{r.link ? <a href={r.link} target="_blank" rel="noopener noreferrer" className="underline">{r.title}</a> : r.title}{r.by ? ` (${r.by})` : ""}</span>
+                      ))}</p>
+                    )}
+                    <div className="flex items-center justify-between gap-2 mt-2 text-[0.7rem]">
+                      <span className="text-muted-foreground/50">{p.evidenceTag} evidence · leverage {p.magnitude}/5</span>
+                      <Link href={`/research-library`}><span className="text-primary/70 hover:text-primary underline cursor-pointer">Library §{p.section}</span></Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ); })()}
+
           {report.threats.map((t: any, i: number) => (
             <div key={i} className="glass-card rounded-2xl p-6">
               <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">

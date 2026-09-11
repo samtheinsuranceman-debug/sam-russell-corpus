@@ -5,6 +5,7 @@ import { LONGEVITY_EVIDENCE, LONGEVITY_SECTIONS, LONGEVITY_SECTION_ORDER, LONGEV
 import { KEYSTONE_PRACTICES, practicesForGoals } from "../../../shared/keystonePractices";
 import { templateForGoal } from "../../../shared/goalTemplates";
 import { GOAL_KEYWORDS } from "../../../shared/seo";
+import { GOAL_EVIDENCE } from "../../../shared/goalShelves/index";
 
 // The longevity shelf's verification contract, enforced: every source is a
 // resolvable DOI (no Scholar fallbacks), every cluster sits in a registered
@@ -40,9 +41,10 @@ describe("healthy aging & longevity shelf", () => {
     for (const key of LONGEVITY_SECTION_ORDER) expect(LONGEVITY_SECTIONS[key]).toMatch(new RegExp(`^${key} · Longevity`));
   });
 
-  it("is merged into the library corpus after the frozen entries", () => {
-    expect(PRACTICE_EVIDENCE.length).toBe(RAW.length + LONGEVITY_EVIDENCE.length);
-    expect(PRACTICE_EVIDENCE.slice(RAW.length).map((c) => c.id)).toEqual(LONGEVITY_EVIDENCE.map((c) => c.id));
+  it("is merged into the library corpus after the frozen entries, before the goal shelves", () => {
+    expect(PRACTICE_EVIDENCE.length).toBe(RAW.length + LONGEVITY_EVIDENCE.length + GOAL_EVIDENCE.length);
+    expect(PRACTICE_EVIDENCE.slice(RAW.length, RAW.length + LONGEVITY_EVIDENCE.length).map((c) => c.id)).toEqual(LONGEVITY_EVIDENCE.map((c) => c.id));
+    expect(PRACTICE_EVIDENCE.slice(RAW.length + LONGEVITY_EVIDENCE.length).map((c) => c.id)).toEqual(GOAL_EVIDENCE.map((c) => c.id));
   });
 
   it("rates every cluster and puts the unsupported claims at the floor with a callout", () => {
