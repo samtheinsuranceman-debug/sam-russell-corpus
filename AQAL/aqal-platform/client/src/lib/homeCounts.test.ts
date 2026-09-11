@@ -10,8 +10,8 @@ const homeSrc = readFileSync(join(__dirname, "..", "pages", "Home.tsx"), "utf-8"
 
 describe("homepage what's-inside numbers", () => {
   it("page count in the strip equals the real sitemap size", () => {
-    expect(SITEMAP_PATHS.length).toBe(11711);
-    expect(homeSrc).toContain('"11,711"');
+    expect(SITEMAP_PATHS.length).toBe(11956);
+    expect(homeSrc).toContain('"11,956"');
   });
   it("protocol count matches the ranked library", () => {
     expect(THERAPY_SCORES.length).toBe(156);

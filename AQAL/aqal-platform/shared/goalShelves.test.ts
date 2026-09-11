@@ -3,6 +3,8 @@ import { GOAL_EVIDENCE, GOAL_SECTIONS, GOAL_SECTION_ORDER, GOAL_SECTION_SHORT, G
 import { GOAL_TIERS } from "./goalShelves/types";
 import { goalMenuForMonth, goalMenuForText, goalMenuLines, shelfForGoal } from "./goalProtocols";
 import { templateForGoal } from "./goalTemplates";
+import { KEYSTONE_PRACTICES, practicesForGoals } from "./keystonePractices";
+import { GOAL_KEYWORDS } from "./seo";
 
 // The goal shelves' contract, enforced: DOI-only sources, every cluster tiered
 // with an action, sections registered under the shelf's base, floor-rated
@@ -71,6 +73,21 @@ describe("goal shelves (sections 8000+)", () => {
     expect(shelfForGoal("")).toBeUndefined();
     expect(templateForGoal("get out of credit card debt").key).toBe("debt");
     expect(templateForGoal("I want to be happy").key).toBe("happiness");
+  });
+
+  it("anchors every shelf in the keystone menu so the coach and /goal pages reach it", () => {
+    const anchors = KEYSTONE_PRACTICES.filter((p) => p.id.startsWith("goal-"));
+    expect(anchors.length).toBeGreaterThanOrEqual(22);
+    for (const p of anchors) {
+      expect(GOAL_SECTIONS[p.section], p.id).toBeDefined();
+      expect(GOAL_SECTIONS[p.section], p.id).toContain(p.librarySection);
+      expect(GOAL_EVIDENCE.some((c) => c.section === p.section), p.id).toBe(true);
+    }
+    expect(practicesForGoals("be a better husband").map((p) => p.id)).toContain("goal-marriage-rituals");
+    expect(practicesForGoals("get out of debt").map((p) => p.id)).toContain("goal-debt-autopay");
+    for (const k of ["marriage", "debt", "retirement", "business", "hobby", "travel", "legacy", "happiness", "dating", "parenting", "energy"]) {
+      expect(GOAL_KEYWORDS, k).toContain(k);
+    }
   });
 
   it("builds a deterministic monthly menu with at most two picks per tier and never a floor-rated pick", () => {

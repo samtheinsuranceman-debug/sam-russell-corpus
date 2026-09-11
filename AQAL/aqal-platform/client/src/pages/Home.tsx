@@ -1725,11 +1725,11 @@ function CompanionSection() {
 // The founder film — renders ONLY when HOME_VIDEO in lib/lineVideos.ts has a
 // URL. Until then the homepage stays exactly as designed, no empty frame.
 // ── WHAT'S INSIDE ── the size of the place, stated plainly near the top.
-// The 11,711 figure is build-enforced: homeCounts.test.ts fails the suite if
+// The 11,956 figure is build-enforced: homeCounts.test.ts fails the suite if
 // it ever drifts from the real sitemap count.
 function WhatsInsideStrip() {
   const items = [
-    { n: "11,711", label: "pages inside", href: "/lines" },
+    { n: "11,956", label: "pages inside", href: "/lines" },
     { n: "32", label: "intelligence lines", href: "/lines" },
     { n: "156", label: "ranked protocols", href: "/rankings" },
     { n: "246", label: "archetype dossiers", href: "/archetypes" },
@@ -1804,9 +1804,9 @@ export default function Home() {
       <PublicHeader />
       <div className="relative z-10">
         {/* ── TOP BANNER ── the size of the library, unmissable before anything else.
-            The 11,711 figure is build-enforced by homeCounts.test.ts. */}
-        <Link href="/lines" aria-label="11,711 researched pages inside — explore" style={{ textDecoration: "none", display: "block", background: "linear-gradient(90deg, rgba(224,198,140,0.16), rgba(224,198,140,0.06), rgba(224,198,140,0.16))", borderBottom: `1px solid ${CHAMPAGNE}44`, padding: "10px 16px", textAlign: "center" }}>
-          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: "clamp(20px,3.2vw,30px)", color: CHAMPAGNE, letterSpacing: "0.01em" }}>11,711</span>
+            The 11,956 figure is build-enforced by homeCounts.test.ts. */}
+        <Link href="/lines" aria-label="11,956 researched pages inside — explore" style={{ textDecoration: "none", display: "block", background: "linear-gradient(90deg, rgba(224,198,140,0.16), rgba(224,198,140,0.06), rgba(224,198,140,0.16))", borderBottom: `1px solid ${CHAMPAGNE}44`, padding: "10px 16px", textAlign: "center" }}>
+          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: "clamp(20px,3.2vw,30px)", color: CHAMPAGNE, letterSpacing: "0.01em" }}>11,956</span>
           <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "clamp(10px,1.4vw,12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "#F1EADB", marginLeft: "12px" }}>
             researched pages inside — every claim cited →
           </span>
