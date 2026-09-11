@@ -144,6 +144,12 @@
 
 /* ─── App shell ────────────────────────────────────────────────────────── */
 .shell { display: grid; grid-template-columns: var(--sidebar-w) 1fr; min-height: 100vh; position: relative; z-index: 1; }
+/* A grid item defaults to min-width:auto, so the content column grew to its
+   widest child and pushed the page sideways — which also silently disabled
+   every .table-wrap, because a scroll container cannot scroll when its parent
+   has already expanded to fit. Letting the column shrink is the whole fix. */
+.shell > * { min-width: 0; }
+.app-body > * { max-width: 100%; }
 .side {
   background: var(--chrome-side); backdrop-filter: blur(14px);
   border-right: 1px solid var(--line-soft); padding: 18px 12px 24px;
@@ -202,6 +208,18 @@
   .side.open { left: 0; }
   .app-body { padding: 20px 16px 76px; }
   .app-top { padding: 12px 16px; }
+  /* The search field carries a 280px floor for the desktop layout. On a phone
+     that floor is wider than the room left beside the user block, and the whole
+     shell was being pushed 40px past the viewport. Let it shrink instead. */
+  .app-search { min-width: 0; flex: 1 1 auto; }
+  .app-top > * { min-width: 0; }
+}
+
+@media (max-width: 560px) {
+  /* Below this the search placeholder is unreadable anyway; the role line and
+     the sign-out label go first so the name and the avatar keep their room. */
+  .app-search { display: none; }
+  .app-top { justify-content: flex-end; }
 }
 
 /* ─── Login ────────────────────────────────────────────────────────────── */
