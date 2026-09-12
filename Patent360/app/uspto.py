@@ -7,9 +7,14 @@ real prosecution documents, pulled from the office of record.
 
 ## Which USPTO service
 
-The USPTO Open Data Portal at `api.uspto.gov` is the current one. It replaced
-the Patent Examination Data System (PEDS), which was retired. The portal needs
-an API key, free from the USPTO developer site, sent as `X-API-KEY`. Nothing
+The USPTO Open Data Portal is the current one: the API lives at
+`api.uspto.gov/api/v1` and the portal at `data.uspto.gov`. It replaced the
+Patent Examination Data System (PEDS), and the legacy Developer Hub at
+developer.uspto.gov was decommissioned on 5 June 2026 — any guide pointing
+there is out of date.
+
+A key is free but not instant: it needs a USPTO.gov account with MFA and a
+verified ID.me identity linked to it. The key is sent as `X-API-KEY`. Nothing
 here ships a key, and nothing here ever logs or returns one.
 
 ## Why the base URL is configurable
@@ -94,11 +99,20 @@ def normalise_application_number(raw: str) -> str:
     return re.sub(r"[^0-9]", "", raw or "")
 
 
+#: The legacy Developer Hub at developer.uspto.gov was decommissioned on
+#: 5 June 2026. The Open Data Portal at data.uspto.gov replaced it, and a key
+#: now needs a USPTO.gov account with multi-factor authentication plus a
+#: verified ID.me identity linked to it. That is a real errand, not a form —
+#: so the message says so rather than implying it takes a minute.
+KEY_PAGE = "https://data.uspto.gov/apikey"
+ACCOUNT_PAGE = "https://account.uspto.gov"
+
 NOT_CONFIGURED = (
-    f"No {API_KEY_ENV} is set on this service. The USPTO Open Data Portal "
-    "requires a key; get one free at https://developer.uspto.gov/ and set it "
-    "as an environment variable. Until then no live patent data is available "
-    "and nothing here is invented to fill the gap."
+    f"No {API_KEY_ENV} is set on this service. Get a free key at {KEY_PAGE} — "
+    f"it needs a USPTO.gov account ({ACCOUNT_PAGE}) with MFA enabled, and a "
+    "verified ID.me identity linked to it. One key per person; it is deleted "
+    "after 90 days unused. Until a key is set, no live patent data is "
+    "available and nothing here is invented to fill the gap."
 )
 
 
@@ -206,6 +220,7 @@ class UsptoClient:
             "configured": api_key() is not None,
             "base_url": base_url(),
             "key_env": API_KEY_ENV,
+            "key_page": KEY_PAGE,
             "detail": (
                 "A key is set; live calls will be attempted."
                 if api_key()

@@ -31,9 +31,13 @@ export function PriorArt() {
                 `/api/uspto/search?q=${encodeURIComponent(s.query)}&limit=25`,
                 'Searching the USPTO',
                 data => {
-                  const n = Array.isArray(data?.results) ? data.results.length
+                  // ODP answers with a count plus a bag whose name has moved
+                  // between releases, so read whichever is present.
+                  const n = typeof data?.count === 'number' ? data.count
+                    : typeof data?.totalNumFound === 'number' ? data.totalNumFound
+                    : Array.isArray(data?.patentBag) ? data.patentBag.length
                     : Array.isArray(data?.patentFileWrapperDataBag) ? data.patentFileWrapperDataBag.length
-                    : typeof data?.count === 'number' ? data.count : null;
+                    : Array.isArray(data?.results) ? data.results.length : null;
                   return {
                     title: n === null ? 'The USPTO answered' : `${n} results from the USPTO`,
                     detail: 'Live from the Open Data Portal, not from the demonstration set below.'

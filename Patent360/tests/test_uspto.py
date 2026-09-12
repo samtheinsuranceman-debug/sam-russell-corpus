@@ -82,12 +82,17 @@ r = c.application("18/412,907")
 ok("it does not call the office without a key", called["n"] == 0)
 ok("it reports not-ok", r.ok is False)
 ok("the reason names the environment variable", uspto.API_KEY_ENV in r.reason, r.reason)
-ok("the reason says where to get a key", "developer.uspto.gov" in r.reason, r.reason)
+ok("the reason points at the current portal", "data.uspto.gov/apikey" in r.reason, r.reason)
+ok("the reason does not point at the retired Developer Hub",
+   "developer.uspto.gov" not in r.reason, r.reason)
+ok("the reason warns that ID.me verification is needed", "ID.me" in r.reason, r.reason)
 ok("no data is invented", r.data is None)
 
 st = c.status()
 ok("status reports unconfigured", st["configured"] is False)
 ok("status still reports the base url", st["base_url"].startswith("http"), st["base_url"])
+ok("status carries the key page so a UI can link it",
+   st["key_page"] == "https://data.uspto.gov/apikey", st.get("key_page"))
 
 
 # ── With a key ────────────────────────────────────────────────────────────
