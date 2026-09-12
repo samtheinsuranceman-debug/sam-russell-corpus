@@ -1099,3 +1099,19 @@
 
 /* The compare-versions control in Drafting was a bare styled button. */
 .draft-diff { cursor: pointer; }
+
+/* Sign-in: the notice strip, and the roster check beside the form. */
+.auth-note {
+  display: flex; gap: 9px; align-items: flex-start;
+  margin: 12px 0 2px; padding: 10px 12px; border-radius: 9px;
+  font-size: 12.5px; line-height: 1.5;
+}
+.auth-note-ok    { background: rgba(var(--accent-rgb), .1); border: 1px solid rgba(var(--accent-rgb), .32); color: var(--text-body); }
+.auth-note-warn  { background: rgba(232, 163, 63, .1); border: 1px solid rgba(232, 163, 63, .3); color: var(--text-body); }
+.auth-note-error { background: rgba(242, 102, 110, .1); border: 1px solid rgba(242, 102, 110, .34); color: var(--text-body); }
+.auth-note b { color: var(--text-head); }
+.auth-side { margin-top: 16px; }
+@media (min-width: 1080px) {
+  .auth-wrap { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 360px); gap: 18px; align-items: start; }
+  .auth-side { margin-top: 0; }
+}

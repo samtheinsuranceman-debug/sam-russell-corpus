@@ -282,6 +282,100 @@ async def evidence_fingerprint(request: Request):
         )
 
 
+# ── Sign-in ───────────────────────────────────────────────────────────────
+# Real authentication: hashed passwords, signed sessions, server-held roles.
+from fastapi import Response  # noqa: E402
+
+from app import auth as _auth  # noqa: E402
+from app import roster as _roster  # noqa: E402
+
+
+@app.get("/api/auth/status")
+def auth_status():
+    """What an operator needs to know before anyone tries to sign in."""
+    return JSONResponse(
+        content={
+            "accounts_configured": _auth.users_configured(),
+            "session_secret_configured": _auth.session_secret_configured(),
+            "detail": (
+                "Ready."
+                if _auth.users_configured() and _auth.session_secret_configured()
+                else "Set PATENT360_USERS (accounts) and SESSION_SECRET (signing key) on "
+                     "the service. Without a SESSION_SECRET, sessions are signed with a "
+                     "per-process key and end at every restart."
+            ),
+        },
+        status_code=200,
+    )
+
+
+@app.post("/api/auth/login")
+async def auth_login(request: Request, response: Response):
+    try:
+        body = await request.json()
+    except Exception:
+        return JSONResponse(content={"error": "Send JSON."}, status_code=400)
+
+    out = _auth.authenticate(str(body.get("email", "")), str(body.get("password", "")))
+    if not out.ok:
+        payload = {"ok": False, "reason": out.reason}
+        if out.retry_after:
+            payload["retry_after_seconds"] = out.retry_after
+        return JSONResponse(content=payload, status_code=429 if out.retry_after else 401)
+
+    u = out.user
+    token = _auth.issue_session(u.email, u.role)
+    r = JSONResponse(
+        content={
+            "ok": True,
+            "user": {"email": u.email, "role": u.role, "name": u.name, "firm": u.firm,
+                     "registration_number": u.registration_number},
+        },
+        status_code=200,
+    )
+    # HttpOnly so script cannot read it; SameSite=Lax so it does not ride
+    # along on a cross-site request; Secure because this is served over TLS.
+    r.set_cookie(_auth.SESSION_COOKIE, token, httponly=True, samesite="lax",
+                 secure=True, max_age=_auth.SESSION_TTL_SECONDS, path="/")
+    return r
+
+
+@app.post("/api/auth/logout")
+def auth_logout():
+    r = JSONResponse(content={"ok": True}, status_code=200)
+    r.delete_cookie(_auth.SESSION_COOKIE, path="/")
+    return r
+
+
+@app.get("/api/auth/me")
+def auth_me(request: Request):
+    """The session as the server understands it — never as the browser claims."""
+    payload = _auth.read_session(request.cookies.get(_auth.SESSION_COOKIE))
+    if not payload:
+        return JSONResponse(content={"authenticated": False}, status_code=401)
+    return JSONResponse(
+        content={"authenticated": True, "email": payload["sub"], "role": payload["role"],
+                 "expires_at": payload["exp"]},
+        status_code=200,
+    )
+
+
+# ── Practitioner roster ───────────────────────────────────────────────────
+# A registration number is a public identifier, so it is checked, never
+# trusted as a secret. The roster says who may practise today.
+
+@app.get("/api/practitioner/status")
+def practitioner_status():
+    return JSONResponse(content=_roster.status(), status_code=200)
+
+
+@app.get("/api/practitioner/{registration_number}")
+def practitioner_verify(registration_number: str):
+    out = _roster.verify(registration_number)
+    code = 200 if out["result"] == "verified" else 404 if out["result"] == "not_found" else 503
+    return JSONResponse(content=out, status_code=code)
+
+
 # ── USPTO ─────────────────────────────────────────────────────────────────
 # The office of record. Without these the rest of this product is a mock.
 from app.uspto import UsptoClient  # noqa: E402
