@@ -3,7 +3,7 @@
  *
  * Same slogan and the same three stages in every one, so the comparison is
  * about composition and feel rather than copy. Reachable at /options?v=1..10
- * and ?accent=green to see any of them in the Russell Capital green.
+ * and ?accent=green to see any of them in green.
  */
 import type { ReactElement } from 'react';
 import { Plate, type PlateName } from '../components/Plate';

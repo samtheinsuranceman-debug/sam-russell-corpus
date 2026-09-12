@@ -50,7 +50,7 @@ function Skyline({ seed, count, minH, maxH, opacity, blur, lit }: Band) {
     for (let c = 0; c < cols; c++) {
       for (let r = 0; r < rows; r++) {
         if (rand() > lit) continue;
-        const green = rand() > 0.89; // roughly one in nine stays Russell Capital green
+        const green = rand() > 0.89; // roughly one in nine stays green
         towers.push(
           <rect
             key={`w${i}-${c}-${r}`}
