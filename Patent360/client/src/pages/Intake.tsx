@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Bar, Button, Icon, PageHead, Stat, Tabs } from '../components/ui';
+import { needsBackend } from '../lib/actions';
 
 /** Demonstration intake queue. Invented names only. */
 const QUEUE = [
@@ -88,7 +89,18 @@ export function Intake() {
       <PageHead
         title="Intake"
         sub="One guided path from invention disclosure to signed engagement. Demonstration data."
-        action={<Button icon="inbox">New disclosure</Button>}
+        action={
+          <Button
+            icon="inbox"
+            onClick={() => needsBackend(
+              'Starting a new disclosure',
+              'A disclosure opens a record the inventor can write into and the attorney can review. ' +
+              'It needs a database this build does not have.'
+            )}
+          >
+            New disclosure
+          </Button>
+        }
       />
 
       <div className="grid-4" style={{ marginBottom: 18 }}>

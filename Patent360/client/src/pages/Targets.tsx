@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'wouter';
 import { Bar, Button, Icon, PageHead, Table, Tabs } from '../components/ui';
 import { COMPANIES, MONEY, MORE_TARGETS, pipeline } from '../lib/bd';
+import { downloadCsv, runTask } from '../lib/actions';
 
 const TABS = ['All', 'No incumbent', 'Incumbent vulnerable', 'Warm path'];
 
@@ -34,8 +35,36 @@ export function Targets() {
         sub="Every company the firm could be prosecuting for, ranked by what it is worth and how reachable it is. Open one to see who actually decides."
         action={
           <div className="row">
-            <Button variant="ghost" icon="database">Export list</Button>
-            <Button icon="arrow">Rescore now</Button>
+            <Button
+              variant="ghost"
+              icon="database"
+              onClick={() => downloadCsv(
+                `patent360-targets-${new Date().toISOString().slice(0, 10)}.csv`,
+                ['Rank', 'Company', 'Sector', 'Headquarters', 'Fit', 'Modelled annual revenue (USD)',
+                 'Pending applications', 'Incumbent counsel', 'Strongest signal', 'Next step'],
+                rows.map(r => [r.rank, r.name, r.sector, r.hq, r.fit, r.rev, r.pending,
+                               r.incumbent ?? 'None of record', r.signal, r.next])
+              )}
+            >
+              Export list
+            </Button>
+            <Button
+              icon="arrow"
+              onClick={() => runTask('Rescoring the pipeline', async () => {
+                // The scores are computed from the signals already loaded, so
+                // this genuinely recomputes rather than pretending to.
+                await new Promise(r => setTimeout(r, 550));
+                const p2 = pipeline();
+                const top = [...rows].sort((a, z) => z.fit - a.fit)[0];
+                return {
+                  title: `${rows.length} targets rescored`,
+                  detail: `Pipeline ${MONEY(p2.low)}–${MONEY(p2.high)}, base ${MONEY(p2.base)}. ` +
+                          `Top fit: ${top?.name} at ${top?.fit}.`
+                };
+              })}
+            >
+              Rescore now
+            </Button>
           </div>
         }
       />

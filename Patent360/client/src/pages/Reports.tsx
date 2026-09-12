@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Bar, Button, PageHead, Stat, Tabs } from '../components/ui';
+import { downloadCsv } from '../lib/actions';
 
 const TABS = ['Throughput', 'Attorney time', 'Predictability', 'Revenue'];
 
@@ -10,7 +11,26 @@ export function Reports() {
       <PageHead
         title="Reports"
         sub="Measured from what happened in the system, not from timesheets typed at the end of the week."
-        action={<Button variant="ghost" icon="database">Export CSV</Button>}
+        action={
+          <Button
+            variant="ghost"
+            icon="database"
+            onClick={() => downloadCsv(
+              `patent360-report-${tab.toLowerCase().replace(/ /g, '-')}.csv`,
+              ['Measure', 'Value', 'Unit', 'Change', 'Basis'],
+              [
+                ['Filings this quarter', 18, 'filings', '+4 on last quarter', 'Demonstration data'],
+                ['Median intake to filing', 34, 'days', '-6 days', 'Non-provisional'],
+                ['Attorney hours per filing', 9.4, 'hours', '-2.1 h', 'System-measured'],
+                ['Dates missed', 0, 'dates', '12 quarters clear', 'Statutory'],
+                ['Claim strategy and review', 46, '% of attorney hour', '', 'Where the hour goes'],
+                ['Client conversation', 22, '% of attorney hour', '', 'Where the hour goes']
+              ]
+            )}
+          >
+            Export CSV
+          </Button>
+        }
       />
       <Tabs tabs={TABS} active={tab} onChange={setTab} />
       <div style={{ height: 18 }} />

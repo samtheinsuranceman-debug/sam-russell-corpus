@@ -1,5 +1,6 @@
 import { Button, Icon, PageHead, Table } from '../components/ui';
 import { AUDIT, TEAM } from '../lib/demo';
+import { needsBackend } from '../lib/actions';
 
 const PERMS = [
   { p: 'View assigned matters', c: true, pa: true, a: true, ad: true },
@@ -25,7 +26,18 @@ export function Team() {
       <PageHead
         title="Team and access"
         sub="Least privilege by default. A permission is granted to a role, never to a person."
-        action={<Button icon="users">Invite</Button>}
+        action={
+          <Button
+            icon="users"
+            onClick={() => needsBackend(
+              'Inviting a colleague',
+              'An invitation sends mail and creates an account with a role. Both need a server; ' +
+              'this build runs entirely in the browser.'
+            )}
+          >
+            Invite
+          </Button>
+        }
       />
 
       <Table head={['Name', 'Email', 'Role', 'Seat', 'Two-factor', 'Matters', 'Last active']}>

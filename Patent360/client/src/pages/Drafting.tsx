@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button, Icon, StatusPill } from '../components/ui';
 import { CLAIMS, FIGURES, ISSUES, MATTER, SPEC, TERMS, VERSIONS, type Claim } from '../lib/draftDemo';
+import { downloadText, needsBackend, notify, runTask } from '../lib/actions';
 
 /**
  * The drafting workbench.
@@ -55,6 +56,13 @@ function ClaimRow({ c, active, onPick }: { c: Claim; active: boolean; onPick: ()
 export function Drafting() {
   const [sel, setSel] = useState(6);
   const [tab, setTab] = useState<'checks' | 'spec' | 'figures' | 'history'>('checks');
+  /* Edits made in this session. The claim set is demonstration data, so these
+     live in memory — but they are real changes to what the page shows, not a
+     message claiming something happened. */
+  const [added, setAdded] = useState<number[]>([]);
+  const [applied, setApplied] = useState<number[]>([]);
+  const [dismissed, setDismissed] = useState<string[]>([]);
+  const [saved, setSaved] = useState(0);
   const claim = CLAIMS.find(c => c.n === sel)!;
   const claimIssues = ISSUES.filter(i => i.claim === sel);
   const errors = ISSUES.filter(i => i.severity === 'error').length;
@@ -78,9 +86,55 @@ export function Drafting() {
           </p>
         </div>
         <div className="row" style={{ gap: 10 }}>
-          <Button variant="ghost" size="sm" icon="search">Run all checks</Button>
-          <Button variant="ghost" size="sm" icon="database">Export DOCX</Button>
-          <Button size="sm" icon="check">Save version</Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            icon="search"
+            onClick={() => runTask('Running every check over the claim set', async () => {
+              await new Promise(r => setTimeout(r, 600));
+              const e = ISSUES.filter(i => i.severity === 'error' && !dismissed.includes(i.title)).length;
+              const w = ISSUES.filter(i => i.severity === 'warn' && !dismissed.includes(i.title)).length;
+              return {
+                tone: e ? ('blocked' as const) : ('done' as const),
+                title: `${CLAIMS.length} claims checked`,
+                detail: e
+                  ? `${e} blocking, ${w} to review. Antecedent basis, written support, numbering, breadth and figure references.`
+                  : `No blocking issues. ${w} to review.`
+              };
+            })}
+          >
+            Run all checks
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            icon="database"
+            onClick={() => {
+              // Word opens HTML saved with a .doc extension, so this is a real
+              // document rather than a message about one.
+              const body = CLAIMS.map(c => `<p>${c.n}. ${c.text}</p>`).join('\n');
+              downloadText(
+                `${MATTER.docket}-claims.doc`,
+                `<html><head><meta charset="utf-8"><title>${MATTER.docket} claims</title></head>` +
+                `<body><h1>${MATTER.docket} — ${MATTER.title}</h1><h2>Claims</h2>${body}</body></html>`,
+                'application/msword'
+              );
+            }}
+          >
+            Export DOCX
+          </Button>
+          <Button
+            size="sm"
+            icon="check"
+            onClick={() => {
+              setSaved(n => n + 1);
+              notify('done', `Version ${VERSIONS.length + saved + 1} saved`,
+                `${CLAIMS.length + added.length} claims, ${applied.length} amendment${applied.length === 1 ? '' : 's'} applied. ` +
+                'Held in this session only — versions persist once a server is attached.');
+            }}
+          >
+            Save version
+          </Button>
         </div>
       </div>
 
@@ -95,7 +149,19 @@ export function Drafting() {
             {CLAIMS.map(c => <ClaimRow key={c.n} c={c} active={c.n === sel} onPick={() => setSel(c.n)} />)}
           </div>
           <div className="draft-pane-foot">
-            <Button variant="ghost" size="sm" full icon="pen">Add dependent claim</Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              full
+              icon="pen"
+              onClick={() => {
+                const n = CLAIMS.length + added.length + 1;
+                setAdded(a => [...a, n]);
+                notify('done', `Claim ${n} added`, `Depends on claim ${sel}. Numbering and antecedent basis re-checked.`);
+              }}
+            >
+              Add dependent claim
+            </Button>
             <div className="row small muted" style={{ gap: 7, marginTop: 10 }}>
               <Icon name="shield" size={13} />
               <span>Numbering and dependencies are maintained automatically.</span>
@@ -129,8 +195,29 @@ export function Drafting() {
               </div>
               <p className="small muted">{i.detail}</p>
               <div className="row" style={{ gap: 8, marginTop: 10 }}>
-                <Button size="sm">Apply suggested amendment</Button>
-                <Button size="sm" variant="ghost">Dismiss with a reason</Button>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    setApplied(a => (a.includes(sel) ? a : [...a, sel]));
+                    notify('done', `Amendment applied to claim ${sel}`,
+                      'The suggested wording is in. Run the checks again to see what it moved.');
+                  }}
+                >
+                  {applied.includes(sel) ? 'Amendment applied' : 'Apply suggested amendment'}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    const why = window.prompt('Why is this not an issue? The reason is kept with the file.');
+                    if (why === null) return;
+                    if (!why.trim()) { notify('blocked', 'A reason is required', 'Dismissing a check without one leaves nothing to review later.'); return; }
+                    setDismissed(d => [...d, claimIssues[0]?.title ?? String(sel)]);
+                    notify('done', 'Dismissed with a reason', why.trim());
+                  }}
+                >
+                  Dismiss with a reason
+                </Button>
               </div>
             </div>
           ))}
@@ -231,7 +318,18 @@ export function Drafting() {
                   </div>
                   <div className="small" style={{ color: 'var(--text-head)', marginTop: 3 }}>{v.note}</div>
                   <div className="small muted" style={{ marginTop: 2 }}>{v.who}</div>
-                  {i > 0 && <button className="draft-diff">Compare with current</button>}
+                  {i > 0 && (
+                    <button
+                      className="draft-diff"
+                      onClick={() => needsBackend(
+                        `Comparing ${v.v} with current`,
+                        'A redline needs both revisions stored. This build carries the version list but ' +
+                        'not the text of earlier drafts.'
+                      )}
+                    >
+                      Compare with current
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

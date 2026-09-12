@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Bar, Button, Icon, PageHead, Tabs } from '../components/ui';
+import { downloadCsv, needsBackend } from '../lib/actions';
 import {
   CORPUS_LABEL, IDS_STATUS_LABEL, READ_LABEL, SEARCH,
   coverage, gaps, idsStatus, undisclosed, type Read
@@ -23,8 +24,34 @@ export function PriorArt() {
         sub={`${s.matter} · ${s.title}`}
         action={
           <div className="row">
-            <Button variant="ghost" icon="search">Re-run the search</Button>
-            <Button icon="send">Build the IDS</Button>
+            <Button
+              variant="ghost"
+              icon="search"
+              onClick={() => needsBackend(
+                'Re-running the search',
+                'A fresh search queries the USPTO full-text index and the EPO OPS service. This build ' +
+                'carries the result of one search, not a connection to run another.'
+              )}
+            >
+              Re-run the search
+            </Button>
+            <Button
+              icon="send"
+              onClick={() => downloadCsv(
+                'ids-worksheet.csv',
+                ['Reference', 'Title', 'Assignee', 'Published', 'CPC', 'Relevance',
+                 'Cited by examiner', 'On a filed IDS', 'Cited in counterpart', 'Disclosure status', 'Why it matters'],
+                SEARCH.refs.map(r => [
+                  r.id, r.title, r.assignee, r.published, r.cpc, r.relevance.toFixed(2),
+                  r.citedByExaminer ? 'Yes' : 'No',
+                  r.disclosure.onIds ? 'Yes' : 'No',
+                  r.disclosure.citedInCounterpart ? 'Yes' : 'No',
+                  idsStatus(r).status, r.note
+                ])
+              )}
+            >
+              Build the IDS
+            </Button>
           </div>
         }
       />

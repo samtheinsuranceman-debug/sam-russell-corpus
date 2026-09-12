@@ -78,7 +78,7 @@ function Bar() {
         <a className="hide-sm" href="#">How it works</a>
         <a className="hide-sm" href="#">The system</a>
         <a className="hide-sm" href="#">Security</a>
-        <Button variant="ghost" size="sm">Sign in</Button>
+        <Button variant="ghost" size="sm" onClick={() => (window.location.href = '/login')}>Sign in</Button>
       </nav>
     </header>
   );
@@ -87,8 +87,8 @@ function Bar() {
 function Cta() {
   return (
     <div className="row v-cta" style={{ gap: 12, flexWrap: 'wrap' }}>
-      <Button size="lg" icon="arrow">Open the workbench</Button>
-      <Button size="lg" variant="ghost">See how it works</Button>
+      <Button size="lg" icon="arrow" onClick={() => (window.location.href = '/login')}>Open the workbench</Button>
+      <Button size="lg" variant="ghost" onClick={() => (window.location.href = '/how')}>See how it works</Button>
     </div>
   );
 }

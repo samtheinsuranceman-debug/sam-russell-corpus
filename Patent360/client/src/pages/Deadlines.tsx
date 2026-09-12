@@ -1,5 +1,6 @@
 import { Button, Icon, PageHead, Table } from '../components/ui';
 import { DEADLINES } from '../lib/demo';
+import { downloadIcs } from '../lib/actions';
 
 export function Deadlines() {
   return (
@@ -7,7 +8,23 @@ export function Deadlines() {
       <PageHead
         title="Deadlines"
         sub="Computed from the filing receipt, not typed in by hand."
-        action={<Button variant="ghost" icon="clock">Subscribe to calendar</Button>}
+        action={
+          <Button
+            variant="ghost"
+            icon="clock"
+            onClick={() => downloadIcs('patent360-docket.ics', 'Patent360 docket',
+              DEADLINES.map(d => ({
+                date: d.date,
+                uid: `deadline-${d.docket}-${d.date}`,
+                title: `${d.docket} — ${d.what}${d.statutory ? ' (statutory)' : ''}`,
+                description: `Owner: ${d.who}. ${d.statutory
+                  ? 'Statutory date: it cannot be extended.'
+                  : 'Internal date, set to leave room before the statutory one.'}`
+              })))}
+          >
+            Subscribe to calendar
+          </Button>
+        }
       />
 
       <div className="grid-4" style={{ marginBottom: 18 }}>

@@ -28,7 +28,7 @@ function Nav({ light = false }: { light?: boolean }) {
         <a className="hide-sm" href="#">How it works</a>
         <a className="hide-sm" href="#">The system</a>
         <a className="hide-sm" href="#">Security</a>
-        <Button variant="ghost" size="sm">Sign in</Button>
+        <Button variant="ghost" size="sm" onClick={() => (window.location.href = '/login')}>Sign in</Button>
       </nav>
     </header>
   );
@@ -37,8 +37,8 @@ function Nav({ light = false }: { light?: boolean }) {
 function Cta({ size = 'lg' as 'md' | 'lg' }) {
   return (
     <div className="row" style={{ gap: 12, flexWrap: 'wrap' }}>
-      <Button size={size} icon="arrow">Open the workbench</Button>
-      <Button size={size} variant="ghost">See how it works</Button>
+      <Button size={size} icon="arrow" onClick={() => (window.location.href = '/login')}>Open the workbench</Button>
+      <Button size={size} variant="ghost" onClick={() => (window.location.href = '/how')}>See how it works</Button>
     </div>
   );
 }

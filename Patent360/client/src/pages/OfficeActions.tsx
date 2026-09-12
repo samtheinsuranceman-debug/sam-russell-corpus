@@ -1,6 +1,7 @@
 import { Link } from 'wouter';
 import { Button, Icon, PageHead, Table } from '../components/ui';
-import { BASIS_LABEL, MONEY, OFFICE_ACTIONS, addMonths, daysLeft, recommended, urgency } from '../lib/oa';
+import { BASIS_LABEL, MONEY, OFFICE_ACTIONS, addMonths, daysLeft, deadlines, recommended, urgency } from '../lib/oa';
+import { downloadIcs } from '../lib/actions';
 
 const URGENCY_COLOR = {
   past: 'var(--alert)', critical: 'var(--alert)', soon: 'var(--warn)', ok: 'var(--signal)'
@@ -16,7 +17,23 @@ export function OfficeActions() {
       <PageHead
         title="Office actions"
         sub="Every outstanding rejection, what it would take to move it, and what the examiner's own record says the odds are."
-        action={<Button variant="ghost" icon="clock">Subscribe to calendar</Button>}
+        action={
+          <Button
+            variant="ghost"
+            icon="clock"
+            onClick={() => downloadIcs('patent360-office-actions.ics', 'Patent360 office actions',
+              OFFICE_ACTIONS.flatMap(oa =>
+                deadlines(oa.mailed).map((r, i) => ({
+                  date: r.date,
+                  uid: `oa-${oa.id}-${i}`,
+                  title: `${oa.docket} — ${r.label}`,
+                  description: `${oa.title}. Examiner ${oa.examiner.name}, art unit ${oa.examiner.artUnit}. ` +
+                    `Action mailed ${oa.mailed}.${r.fee ? ` Extension fee at this rung: $${r.fee}.` : ''}`
+                }))))}
+          >
+            Subscribe to calendar
+          </Button>
+        }
       />
 
       <div className="grid-4" style={{ marginBottom: 18 }}>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Bar, Button, Icon, PageHead } from '../components/ui';
+import { needsBackend, notify, printDocument } from '../lib/actions';
 import {
   CLIENTS, MONEY, MONEY_EXACT, bookTotals, healthBand, type Client
 } from '../lib/clients';
@@ -159,6 +160,9 @@ function BookView({ c }: { c: Client }) {
 /* ── The client's view ──────────────────────────────────────────────────── */
 
 function ClientView({ c }: { c: Client }) {
+  /* A client's decisions, as made in this session. Real state: the button
+     changes to say the choice is recorded rather than staying pressable. */
+  const [chosen, setChosen] = useState<string[]>([]);
   const spend = c.holdings.reduce((s, h) => s + h.spend, 0);
   const committed = c.holdings.reduce((s, h) => s + h.committed, 0);
 
@@ -172,7 +176,7 @@ function ClientView({ c }: { c: Client }) {
             than for the file.
           </p>
         </div>
-        <Button variant="ghost" icon="database">Download as PDF</Button>
+        <Button variant="ghost" icon="database" onClick={() => printDocument('your portfolio')}>Download as PDF</Button>
       </div>
 
       <div className="cl-figs">
@@ -199,8 +203,27 @@ function ClientView({ c }: { c: Client }) {
                 <span className="cl-dec-cost"><span className="label">If it waits</span> {d.costOfDelay}</span>
               </div>
               <div className="row" style={{ marginTop: 12, gap: 8 }}>
-                <Button size="sm">Choose</Button>
-                <Button size="sm" variant="ghost">Ask a question</Button>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    setChosen(c => (c.includes(d.matter) ? c : [...c, d.matter]));
+                    notify('done', `${d.matter}: your choice is recorded`,
+                      'Your attorney sees it on their next screen. Nothing is filed until they confirm.');
+                  }}
+                >
+                  {chosen.includes(d.matter) ? 'Choice recorded' : 'Choose'}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => needsBackend(
+                    'Asking a question',
+                    'A question goes to the attorney on the matter and is kept with the file. That needs ' +
+                    'a message store and mail, neither of which this build has.'
+                  )}
+                >
+                  Ask a question
+                </Button>
               </div>
             </div>
           ))}

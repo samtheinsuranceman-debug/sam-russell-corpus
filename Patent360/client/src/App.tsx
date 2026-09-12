@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Route, Switch, useLocation } from 'wouter';
 import { Backdrop } from './components/Backdrop';
+import { Notices } from './components/Notices';
 import { Home } from './pages/Home';
 import { How } from './pages/How';
 import { Login } from './pages/Login';
@@ -18,6 +19,8 @@ export function App() {
   return (
     <>
       <Backdrop dense={typeof window !== 'undefined' && window.location.pathname.startsWith('/app')} />
+      {/* Mounted once for the whole app: every action reports here. */}
+      <Notices />
       <Switch>
         <Route path="/options"><Options /></Route>
         <Route path="/v"><Variants /></Route>

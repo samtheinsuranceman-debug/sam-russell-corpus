@@ -1,5 +1,6 @@
 import { Bar, Button, Icon, PageHead, Table } from '../components/ui';
 import { COMPANIES, MONEY, pipeline } from '../lib/bd';
+import { needsBackend, printDocument } from '../lib/actions';
 
 /**
  * The report the client receives, generated rather than written.
@@ -37,8 +38,17 @@ export function ClientReport() {
         sub="Generated from the file. Nothing on this page was retyped by an attorney."
         action={
           <div className="row">
-            <Button variant="ghost" icon="database">Export PDF</Button>
-            <Button icon="send">Send to client</Button>
+            <Button variant="ghost" icon="database" onClick={() => printDocument('the client report')}>Export PDF</Button>
+            <Button
+              icon="send"
+              onClick={() => needsBackend(
+                'Sending the report',
+                'Delivery needs a mail service and the client contact record. Export it and attach it ' +
+                'to your own mail in the meantime — the printed copy is the same document.'
+              )}
+            >
+              Send to client
+            </Button>
           </div>
         }
       />

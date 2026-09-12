@@ -1,5 +1,6 @@
-import { Link, useRoute } from 'wouter';
+import { Link, useLocation, useRoute } from 'wouter';
 import { Bar, Button, Icon, PageHead } from '../components/ui';
+import { needsBackend } from '../lib/actions';
 import {
   APPEAL_WEEKS, BASIS_DIFFICULTY, BASIS_LABEL, MAX_ROUNDS, MONEY, OFFICE_ACTIONS,
   MONEY_ABOUT, PATH_BUDGET, TODAY, cheapestRoute, daysBetween, daysLeft, deadlines, outlook,
@@ -35,6 +36,7 @@ function pathRead(name: string, odds: number, out: Outlook): string {
 
 export function OfficeActionDetail() {
   const [, params] = useRoute('/app/office-actions/:id');
+  const [, setLocation] = useLocation();
   const oa = OFFICE_ACTIONS.find(o => o.id === params?.id);
 
   if (!oa) {
@@ -69,8 +71,18 @@ export function OfficeActionDetail() {
         sub={`${oa.docket} · ${oa.appNo} · ${oa.client} · ${oa.attorney} · mailed ${oa.mailed}`}
         action={
           <div className="row">
-            <Button variant="ghost" icon="database">Open the file wrapper</Button>
-            <Button icon="pen">Draft the response</Button>
+            <Button
+              variant="ghost"
+              icon="database"
+              onClick={() => needsBackend(
+                'Opening the file wrapper',
+                `The wrapper for ${oa.appNo} lives in USPTO Patent Center. Reading it needs the ` +
+                'Patent Examination Data API and a credential this build does not carry.'
+              )}
+            >
+              Open the file wrapper
+            </Button>
+            <Button icon="pen" onClick={() => setLocation('/app/drafting')}>Draft the response</Button>
           </div>
         }
       />

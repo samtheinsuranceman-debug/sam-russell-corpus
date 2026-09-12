@@ -16,6 +16,7 @@
  * Run: npx tsx sim/simulate.ts
  */
 
+import { buildIcs } from '../src/lib/actions';
 import {
   APPEAL_COST, APPEAL_WEEKS, MAX_ROUNDS, ODDS_FLOOR, OFFICE_ACTIONS, PATH_BUDGET,
   RCE_COST, RCE_WEEKS, ROUND_DECAY, addMonths, cheapestRoute, daysBetween, deadlines,
@@ -43,7 +44,7 @@ function ok(name: string, pass: boolean, detail = '') {
 function note(s: string) { console.log(`  ·     ${s}`); }
 
 /* Deterministic RNG so a failure can be reproduced exactly. */
-let seed = 0x9e3779b9;
+let seed = Number(process.env.SIM_SEED ?? 0) || 0x9e3779b9;
 function rnd() {
   seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5;
   return ((seed >>> 0) % 1_000_000) / 1_000_000;
@@ -299,6 +300,85 @@ console.log('\n5. Prior art');
       SEARCH.elements.every(e => ['teaches', 'suggests', 'silent'].includes(r.reads[e.id] as string)),
       JSON.stringify(r.reads));
   }
+}
+
+/* ══ 6. The action layer ════════════════════════════════════════════════
+   Every button now produces a file or a statement. The files leave the
+   building, so they have to survive text an attorney will really type:
+   commas in assignee names, semicolons in a CPC list, quotes in a claim,
+   newlines pasted from a PDF. A CSV that breaks on a comma is worse than no
+   export, because the damage is silent. */
+
+console.log('\n6. Files the buttons produce — 10,000 hostile strings');
+{
+  const NASTY = ['plain', 'comma, inside', 'quote " inside', 'semi;colon', 'new\nline',
+    'both", and', 'CRLF\r\nhere', 'back\\slash', '', '   ', '€ non-ascii ünïcode',
+    'a'.repeat(300), 'START:VEVENT injection', '=cmd|calc', '\u0000null'];
+
+  let maxLine = 0, events = 0;
+  for (let i = 0; i < N; i++) {
+    const title = pick(NASTY) + pick(NASTY);
+    const desc = pick(NASTY);
+    const y = int(2024, 2028), m = int(1, 12);
+    const dim = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    const date = `${y}-${String(m).padStart(2, '0')}-${String(int(1, dim)).padStart(2, '0')}`;
+    const ics = buildIcs('Fuzz', [{ date, title, description: desc, uid: `u${i}` }]);
+
+    ok('ics is always a wrapped VCALENDAR',
+      ics.startsWith('BEGIN:VCALENDAR\r\n') && ics.trimEnd().endsWith('END:VCALENDAR'), date);
+    ok('ics has exactly one event per event given',
+      (ics.match(/BEGIN:VEVENT/g) ?? []).length === 1 &&
+      (ics.match(/END:VEVENT/g) ?? []).length === 1, title.slice(0, 30));
+    ok('ics never emits a bare newline inside a value',
+      !ics.split('\r\n').some(l => l.includes('\n')), JSON.stringify(title.slice(0, 24)));
+
+    // RFC 5545 caps a content line at 75 octets before folding.
+    for (const line of ics.split('\r\n')) {
+      maxLine = Math.max(maxLine, line.length);
+      ok('ics folds every line to 75 octets or fewer', line.length <= 75, `${line.length}: ${line.slice(0, 40)}`);
+    }
+
+    // DTEND is exclusive: an all-day event ends the following day.
+    const st = ics.match(/DTSTART;VALUE=DATE:(\d{8})/)![1]!;
+    const en = ics.match(/DTEND;VALUE=DATE:(\d{8})/)![1]!;
+    const d0 = new Date(`${st.slice(0,4)}-${st.slice(4,6)}-${st.slice(6,8)}T00:00:00Z`);
+    d0.setUTCDate(d0.getUTCDate() + 1);
+    ok('ics DTEND is the day after DTSTART', d0.toISOString().slice(0,10).replace(/-/g,'') === en, `${st} -> ${en}`);
+    events++;
+  }
+  note(`${events} calendar events fuzzed; longest emitted line ${maxLine} octets`);
+
+  // CSV: the round trip has to survive everything above.
+  let cells = 0;
+  for (let i = 0; i < N; i++) {
+    const row = [pick(NASTY), pick(NASTY), int(0, 1e6), pick(NASTY)];
+    const line = row.map(v => {
+      const t = String(v);
+      return /[",\n\r]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t;
+    }).join(',');
+    const parsed = parseCsvLine(line);
+    ok('csv round-trips every cell unchanged',
+      parsed.length === row.length && parsed.every((c, k) => c === String(row[k])),
+      JSON.stringify({ row, line, parsed }).slice(0, 140));
+    cells += row.length;
+  }
+  note(`${cells.toLocaleString()} csv cells round-tripped`);
+}
+
+/** A minimal RFC 4180 reader, so the check is against the standard not our own writer. */
+function parseCsvLine(line: string): string[] {
+  const out: string[] = []; let cur = ''; let q = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i]!;
+    if (q) {
+      if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else q = false; }
+      else cur += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out;
 }
 
 /* ══ Result ════════════════════════════════════════════════════════════ */

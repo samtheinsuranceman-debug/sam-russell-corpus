@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button, Icon, PageHead, Tabs } from '../components/ui';
+import { downloadCsv, needsBackend, notify, printDocument } from '../lib/actions';
 import {
   ENTITY_LABEL, FEE_SCHEDULE, FILINGS, MONEY,
   blockers, computeFees, passing, warnings, type Filing
@@ -22,7 +23,27 @@ export function Filings() {
       <PageHead
         title="Filings"
         sub="Everything queued for the patent office, checked against the rules that get submissions bounced — before anyone signs."
-        action={<Button variant="ghost" icon="database">Fee schedule</Button>}
+        action={
+          <Button
+            variant="ghost"
+            icon="database"
+            onClick={() => downloadCsv(
+              `uspto-fee-schedule-${FEE_SCHEDULE.effective}.csv`,
+              ['Fee', 'Large entity (USD)', 'Small entity (USD)', 'Micro entity (USD)', 'Rule'],
+              [
+                ['Basic filing', FEE_SCHEDULE.basicFiling, FEE_SCHEDULE.basicFiling * .5, FEE_SCHEDULE.basicFiling * .25, '37 CFR 1.16(a)'],
+                ['Search', FEE_SCHEDULE.search, FEE_SCHEDULE.search * .5, FEE_SCHEDULE.search * .25, '37 CFR 1.16(k)'],
+                ['Examination', FEE_SCHEDULE.examination, FEE_SCHEDULE.examination * .5, FEE_SCHEDULE.examination * .25, '37 CFR 1.16(o)'],
+                ['Each claim over 20', FEE_SCHEDULE.excessClaim, FEE_SCHEDULE.excessClaim * .5, FEE_SCHEDULE.excessClaim * .25, '37 CFR 1.16(i)'],
+                ['Each independent over 3', FEE_SCHEDULE.excessIndependent, FEE_SCHEDULE.excessIndependent * .5, FEE_SCHEDULE.excessIndependent * .25, '37 CFR 1.16(h)'],
+                ['Multiple dependent claim', FEE_SCHEDULE.multipleDependent, FEE_SCHEDULE.multipleDependent * .5, FEE_SCHEDULE.multipleDependent * .25, '37 CFR 1.16(j)'],
+                ['Each 50 sheets over 100', FEE_SCHEDULE.sheetsOver100, FEE_SCHEDULE.sheetsOver100 * .5, FEE_SCHEDULE.sheetsOver100 * .25, '37 CFR 1.16(s)']
+              ]
+            )}
+          >
+            Fee schedule
+          </Button>
+        }
       />
 
       <div className="grid-4" style={{ marginBottom: 18 }}>
@@ -174,12 +195,43 @@ function FilingCard({ f, open, onToggle }: { f: Filing; open: boolean; onToggle:
                 <span className="fl-locked">
                   <Icon name="lock" size={14} /> Filing is held until {stop.length === 1 ? 'this blocker is' : 'these blockers are'} cleared
                 </span>
-                <Button variant="ghost">Override with a reason</Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    const why = window.prompt(
+                      `Override ${stop.length} blocking check${stop.length === 1 ? '' : 's'} on ${f.docket}?\n\n` +
+                      'The reason is written to the audit log against your name.'
+                    );
+                    if (why === null) return;
+                    if (why.trim().length < 12) {
+                      notify('blocked', 'That reason is too short',
+                        'An override on a blocking check has to say enough that someone reading the log later understands it.');
+                      return;
+                    }
+                    notify('done', `${f.docket}: override recorded`,
+                      `${why.trim()} — logged against Alex Reyes. The checks stay red; the lock is lifted.`);
+                  }}
+                >
+                  Override with a reason
+                </Button>
               </>
             ) : (
               <>
-                <Button variant="ghost">Preview the submission</Button>
-                <Button icon="send">File to Patent Center</Button>
+                <Button variant="ghost" onClick={() => printDocument(`the ${f.docket} submission`)}>
+                  Preview the submission
+                </Button>
+                <Button
+                  icon="send"
+                  onClick={() => needsBackend(
+                    `Filing ${f.docket} to Patent Center`,
+                    `This would submit ${f.docs.filter(d => d.present).length} documents and authorise ` +
+                    `${MONEY(fees.total)} in fees against a USPTO deposit account. It needs an EFS-Web or ` +
+                    'Patent Center credential and a signed authorisation, neither of which this build holds. ' +
+                    'Nothing was sent.'
+                  )}
+                >
+                  File to Patent Center
+                </Button>
               </>
             )}
           </div>

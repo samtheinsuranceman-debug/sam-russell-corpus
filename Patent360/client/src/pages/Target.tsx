@@ -1,6 +1,7 @@
-import { Link, useRoute } from 'wouter';
+import { Link, useLocation, useRoute } from 'wouter';
 import { Bar, Button, Icon, PageHead } from '../components/ui';
 import { COMPANIES, MONEY, PROVENANCE_LABEL, type Evidence } from '../lib/bd';
+import { needsBackend } from '../lib/actions';
 
 function Cite({ e }: { e: Evidence }) {
   return (
@@ -16,6 +17,7 @@ function Cite({ e }: { e: Evidence }) {
 
 export function Target() {
   const [, params] = useRoute('/app/targets/:id');
+  const [, setLocation] = useLocation();
   const c = COMPANIES.find(x => x.id === params?.id);
 
   if (!c) {
@@ -42,8 +44,23 @@ export function Target() {
         sub={`${c.sector} · ${c.hq} · ${c.employees.toLocaleString()} employees · ${c.public ? `Public (${c.ticker})` : 'Private'}`}
         action={
           <div className="row">
-            <Button variant="ghost" icon="database">Add to client report</Button>
-            <Button icon="send">Start the approach</Button>
+            <Button
+              variant="ghost"
+              icon="database"
+              onClick={() => { setLocation('/app/client-report'); }}
+            >
+              Add to client report
+            </Button>
+            <Button
+              icon="send"
+              onClick={() => needsBackend(
+                'Starting the approach',
+                'This would open the first message to the contact the approach names and put the ' +
+                'sequence on the calendar. Both need mail and a CRM this build is not wired to.'
+              )}
+            >
+              Start the approach
+            </Button>
           </div>
         }
       />

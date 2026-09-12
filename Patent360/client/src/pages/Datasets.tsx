@@ -1,5 +1,6 @@
 import { Button, Icon, PageHead, Table } from '../components/ui';
 import { DATASETS } from '../lib/demo';
+import { runTask } from '../lib/actions';
 
 export function Datasets() {
   return (
@@ -7,7 +8,23 @@ export function Datasets() {
       <PageHead
         title="Datasets"
         sub="The public sources the workbench reads. Each one is refreshed on its own schedule and stamped with the date it was pulled."
-        action={<Button variant="ghost" icon="database">Refresh all</Button>}
+        action={
+          <Button
+            variant="ghost"
+            icon="database"
+            onClick={() => runTask('Checking every dataset', async () => {
+              await new Promise(r => setTimeout(r, 700));
+              return {
+                title: `${DATASETS.length} datasets checked`,
+                tone: 'blocked' as const,
+                detail: 'Every one is a fixed snapshot in this build. A real refresh pulls from the ' +
+                        'USPTO bulk endpoints on the schedule each row names, which needs a server.'
+              };
+            })}
+          >
+            Refresh all
+          </Button>
+        }
       />
       <Table head={['Source', 'Code', 'Records', 'Refreshed', 'What it is used for', 'State']}>
         {DATASETS.map(d => (
