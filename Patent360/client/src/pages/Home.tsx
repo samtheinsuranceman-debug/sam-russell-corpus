@@ -50,18 +50,22 @@ export function Home() {
   return (
     <div className="page opt-page">
       {/* ── Hero ───────────────────────────────────────────────────────── */}
-      <Plate name="p360-pinnacle" accent="green" scrim="bottom" focus="center 42%">
+      <Plate name="p360-skyline" accent="green" scrim="left" focus="left 32%">
         <div className="opt-shell">
           <Nav />
-          <div className="opt-center">
+          <div className="opt-hero-left">
             <span className="hero-eyebrow"><Icon name="lock" size={13} /> Patent prosecution, end to end</span>
-            <h1 className="opt-h1">Client to attorney to<br />patent office. <em>Turnkey.</em></h1>
-            <p className="opt-sub">One system runs the whole file. Attorneys get their hours back. Clients get a predictable result.</p>
-            <div className="row" style={{ gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <h1 className="opt-h1-left opt-h1">Client to attorney<br />to patent office.<br /><em className="glow-accent">Turnkey.</em></h1>
+            <p className="opt-sub opt-sub-left">One system runs the whole file. Attorneys get their hours back. Clients get a predictable result.</p>
+            <div className="row" style={{ gap: 12, flexWrap: 'wrap', justifyContent: 'flex-start' }}>
               <Link href="/login"><a><Button size="lg" icon="arrow">Open the workbench</Button></a></Link>
               <a href="#how"><Button size="lg" variant="ghost">See how it works</Button></a>
             </div>
-            <p className="hero-note" style={{ color: 'rgba(234,242,251,0.6)' }}>Built for firms that file continuously, not occasionally.</p>
+            <div className="opt-stage-rail">
+              <span>01 The client</span>
+              <span>02 The attorney</span>
+              <span>03 The patent office</span>
+            </div>
           </div>
         </div>
       </Plate>
