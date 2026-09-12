@@ -171,6 +171,29 @@ def _tool_fingerprint(args: dict, impl) -> dict:
     return impl["evidence_fingerprint"](args["payload"])
 
 
+def _tool_uspto_status(_: dict, impl) -> dict:
+    return impl["uspto_status"]()
+
+
+def _tool_uspto_application(args: dict, impl) -> dict:
+    n = args.get("application_number")
+    if not isinstance(n, str) or not n.strip():
+        raise ValueError("application_number is required, e.g. '18/412,907'")
+    include = args.get("include") or "bibliographic"
+    if include not in ("bibliographic", "transactions", "continuity", "documents"):
+        raise ValueError(
+            "include must be one of: bibliographic, transactions, continuity, documents"
+        )
+    return impl["uspto_application"](n, include)
+
+
+def _tool_uspto_search(args: dict, impl) -> dict:
+    q = args.get("query")
+    if not isinstance(q, str) or not q.strip():
+        raise ValueError("query is required")
+    return impl["uspto_search"](q, int(args.get("limit") or 20))
+
+
 TOOLS: list[dict[str, Any]] = [
     {
         "name": "health_check",
@@ -222,6 +245,95 @@ TOOLS: list[dict[str, Any]] = [
         },
         "annotations": {"readOnlyHint": True, "openWorldHint": False},
         "_call": _tool_connectors,
+    },
+    {
+        "name": "uspto_status",
+        "title": "USPTO connection status",
+        "description": (
+            "Report whether this deployment is wired to the United States Patent "
+            "and Trademark Office: whether an API key is configured and which base "
+            "URL it would call. Makes no outbound request, so it is safe to poll "
+            "and cannot consume a rate limit."
+        ),
+        "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False},
+        "outputSchema": {
+            "type": "object",
+            "properties": {
+                "configured": {"type": "boolean"},
+                "base_url": {"type": "string"},
+                "detail": {"type": "string"},
+            },
+            "required": ["configured", "base_url"],
+            "additionalProperties": True,
+        },
+        "annotations": {"readOnlyHint": True, "openWorldHint": False},
+        "_call": _tool_uspto_status,
+    },
+    {
+        "name": "uspto_application",
+        "title": "Look up a patent application at the USPTO",
+        "description": (
+            "Fetch the official record for one United States patent application "
+            "from the USPTO Open Data Portal: bibliographic data, the prosecution "
+            "transaction history, continuity (parents and children), or the file "
+            "wrapper document list. Read-only. If no key is configured, or the "
+            "office refuses or does not answer, it says exactly that and returns "
+            "no data rather than guessing."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "application_number": {
+                    "type": "string",
+                    "description": "US application number, e.g. '18/412,907' or '18412907'.",
+                },
+                "include": {
+                    "type": "string",
+                    "enum": ["bibliographic", "transactions", "continuity", "documents"],
+                    "description": "Which part of the record. Defaults to bibliographic.",
+                },
+            },
+            "required": ["application_number"],
+            "additionalProperties": False,
+        },
+        "outputSchema": {
+            "type": "object",
+            "properties": {
+                "ok": {"type": "boolean"},
+                "reason": {"type": "string"},
+                "data": {},
+            },
+            "required": ["ok"],
+            "additionalProperties": True,
+        },
+        "annotations": {"readOnlyHint": True, "openWorldHint": True},
+        "_call": _tool_uspto_application,
+    },
+    {
+        "name": "uspto_search",
+        "title": "Search USPTO applications",
+        "description": (
+            "Search United States patent applications at the USPTO Open Data "
+            "Portal. Read-only, and it never writes or files anything. Returns the "
+            "office's own response, or a plain statement of why it could not."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "Search terms."},
+                "limit": {"type": "integer", "minimum": 1, "maximum": 100},
+            },
+            "required": ["query"],
+            "additionalProperties": False,
+        },
+        "outputSchema": {
+            "type": "object",
+            "properties": {"ok": {"type": "boolean"}, "data": {}},
+            "required": ["ok"],
+            "additionalProperties": True,
+        },
+        "annotations": {"readOnlyHint": True, "openWorldHint": True},
+        "_call": _tool_uspto_search,
     },
     {
         "name": "funding_eligibility",

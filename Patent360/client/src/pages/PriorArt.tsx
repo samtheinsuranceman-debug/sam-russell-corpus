@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Bar, Button, Icon, PageHead, Tabs } from '../components/ui';
-import { downloadCsv, needsBackend } from '../lib/actions';
+import { downloadCsv, usptoCall } from '../lib/actions';
 import {
   CORPUS_LABEL, IDS_STATUS_LABEL, READ_LABEL, SEARCH,
   coverage, gaps, idsStatus, undisclosed, type Read
@@ -27,10 +27,18 @@ export function PriorArt() {
             <Button
               variant="ghost"
               icon="search"
-              onClick={() => needsBackend(
-                'Re-running the search',
-                'A fresh search queries the USPTO full-text index and the EPO OPS service. This build ' +
-                'carries the result of one search, not a connection to run another.'
+              onClick={() => usptoCall(
+                `/api/uspto/search?q=${encodeURIComponent(s.query)}&limit=25`,
+                'Searching the USPTO',
+                data => {
+                  const n = Array.isArray(data?.results) ? data.results.length
+                    : Array.isArray(data?.patentFileWrapperDataBag) ? data.patentFileWrapperDataBag.length
+                    : typeof data?.count === 'number' ? data.count : null;
+                  return {
+                    title: n === null ? 'The USPTO answered' : `${n} results from the USPTO`,
+                    detail: 'Live from the Open Data Portal, not from the demonstration set below.'
+                  };
+                }
               )}
             >
               Re-run the search

@@ -282,6 +282,51 @@ async def evidence_fingerprint(request: Request):
         )
 
 
+# ── USPTO ─────────────────────────────────────────────────────────────────
+# The office of record. Without these the rest of this product is a mock.
+from app.uspto import UsptoClient  # noqa: E402
+
+_uspto = UsptoClient()
+
+
+@app.get("/api/uspto/status")
+def uspto_status():
+    """Is this deployment wired to the patent office? Makes no outbound call."""
+    return JSONResponse(content=_uspto.status(), status_code=200)
+
+
+@app.get("/api/uspto/application/{application_number}")
+def uspto_application(application_number: str):
+    r = _uspto.application(application_number)
+    return JSONResponse(content=r.as_dict(), status_code=200 if r.ok else 502)
+
+
+@app.get("/api/uspto/application/{application_number}/transactions")
+def uspto_transactions(application_number: str):
+    """Prosecution history. A deadline computed from this is a fact."""
+    r = _uspto.transactions(application_number)
+    return JSONResponse(content=r.as_dict(), status_code=200 if r.ok else 502)
+
+
+@app.get("/api/uspto/application/{application_number}/continuity")
+def uspto_continuity(application_number: str):
+    r = _uspto.continuity(application_number)
+    return JSONResponse(content=r.as_dict(), status_code=200 if r.ok else 502)
+
+
+@app.get("/api/uspto/application/{application_number}/documents")
+def uspto_documents(application_number: str):
+    """The file wrapper."""
+    r = _uspto.documents(application_number)
+    return JSONResponse(content=r.as_dict(), status_code=200 if r.ok else 502)
+
+
+@app.get("/api/uspto/search")
+def uspto_search(q: str = "", limit: int = 20, offset: int = 0):
+    r = _uspto.search(q, limit=limit, offset=offset)
+    return JSONResponse(content=r.as_dict(), status_code=200 if r.ok else 502)
+
+
 @app.get("/api/connectors")
 def connectors():
     try:
@@ -306,6 +351,16 @@ app.include_router(
             "connector_inventory": _connector_inventory,
             "funding_eligibility": _evaluate_funding,
             "evidence_fingerprint": _fingerprint,
+            "uspto_status": _uspto.status,
+            "uspto_application": lambda n, include: (
+                {
+                    "bibliographic": _uspto.application,
+                    "transactions": _uspto.transactions,
+                    "continuity": _uspto.continuity,
+                    "documents": _uspto.documents,
+                }[include](n)
+            ).as_dict(),
+            "uspto_search": lambda q, limit: _uspto.search(q, limit=limit).as_dict(),
         }
     )
 )

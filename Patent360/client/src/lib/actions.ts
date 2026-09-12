@@ -15,12 +15,17 @@
  *
  *   2. Navigation. Go somewhere that exists.
  *
- *   3. Work that needs a server this build does not have — filing to Patent
- *      Center, sending mail, re-running a live prior-art search. These say so,
- *      precisely, naming what they would do and what they would need. They do
- *      not fake a success they did not achieve, and they do not sit silent.
+ *   3. A call to the United States Patent and Trademark Office, through our
+ *      own service so the key never reaches the browser. The prior-art search
+ *      and the file wrapper are real requests to the office of record. When it
+ *      is not configured, or refuses, or does not answer, the notice says which
+ *      of those happened — it never substitutes a plausible number.
  *
- * The third category is the one that matters. A demo that pretends to file a
+ *   4. Work that still needs something this build does not have — filing to
+ *      Patent Center, sending mail, creating records. These say so precisely,
+ *      naming what they would do and what they would need.
+ *
+ * The last category is the one that matters. A demo that pretends to file a
  * patent application is worse than one that says plainly it cannot yet.
  */
 
@@ -202,4 +207,46 @@ export function printDocument(what: string) {
 
 export function needsBackend(action: string, requires: string) {
   notify('blocked', `${action} is not connected in this build`, requires);
+}
+
+/* ── The patent office ─────────────────────────────────────────────────────
+ * Calls go to our own service, which holds the USPTO key server-side. The key
+ * never reaches the browser, which is the whole reason this is not a direct
+ * call from the page.
+ *
+ * The result is reported exactly as the service reports it. When the office is
+ * not connected, the notice says so and names the variable that would connect
+ * it; when the office answers, the count is the office's own.
+ */
+export async function usptoCall(
+  path: string,
+  pendingTitle: string,
+  describe: (data: any) => { title: string; detail?: string }
+) {
+  const id = notify('pending', pendingTitle);
+  try {
+    const res = await fetch(path, { headers: { Accept: 'application/json' } });
+    const body = await res.json().catch(() => null);
+    if (body?.ok) {
+      const d = describe(body.data);
+      resolveNotice(id, 'done', d.title, d.detail);
+    } else {
+      resolveNotice(id, 'blocked',
+        'The patent office did not answer that',
+        body?.reason ?? `The service returned ${res.status}.`);
+    }
+  } catch (err) {
+    resolveNotice(id, 'blocked', 'Could not reach the Patent360 service',
+      'The request never left the browser, so the office was not asked. ' + String(err));
+  }
+}
+
+/** Is this deployment wired to the USPTO at all? */
+export async function usptoStatus(): Promise<{ configured: boolean; detail: string } | null> {
+  try {
+    const r = await fetch('/api/uspto/status', { headers: { Accept: 'application/json' } });
+    return await r.json();
+  } catch {
+    return null;
+  }
 }

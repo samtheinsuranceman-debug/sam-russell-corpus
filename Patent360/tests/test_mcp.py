@@ -91,11 +91,19 @@ check("initialized notification returns 202 with no body",
 print("\nDiscovery")
 r = rpc("tools/list", {}, req_id=3, session=session)
 tools = r.json()["result"]["tools"]
-check("lists four tools", len(tools) == 4, f"got {len(tools)}")
+check("lists seven tools", len(tools) == 7, f"got {len(tools)}")
 names = {t["name"] for t in tools}
 check("names are the expected ones",
-      names == {"health_check", "connector_inventory", "funding_eligibility", "evidence_fingerprint"},
+      names == {"health_check", "connector_inventory", "funding_eligibility",
+                "evidence_fingerprint", "uspto_status", "uspto_application", "uspto_search"},
       str(sorted(names)))
+check("the three USPTO tools are declared open-world",
+      all(t["annotations"]["openWorldHint"] for t in tools
+          if t["name"] in {"uspto_application", "uspto_search"}),
+      "a tool that calls out to the patent office must say so")
+check("every USPTO tool is read-only",
+      all(t["annotations"]["readOnlyHint"] for t in tools if t["name"].startswith("uspto")),
+      "nothing here may write to the patent office")
 check("every tool carries an input schema",
       all(t.get("inputSchema", {}).get("type") == "object" for t in tools), "missing inputSchema")
 check("every tool carries a description",
@@ -171,6 +179,27 @@ r = client.delete("/mcp", headers={**AUTH, "Mcp-Session-Id": session})
 check("DELETE ends the session", r.status_code == 204, f"got {r.status_code}")
 r = rpc("ping", {}, req_id=14, session=session)
 check("the ended session no longer works", r.status_code == 404, f"got {r.status_code}")
+
+print("\nThe USPTO tools refuse honestly when no key is configured")
+os.environ.pop("USPTO_API_KEY", None)
+# The transport section above ended its session on purpose, so take a fresh one.
+_r = rpc("initialize", {"protocolVersion": "2025-06-18", "capabilities": {},
+                        "clientInfo": {"name": "suite", "version": "1"}}, req_id=59)
+session = _r.headers.get("mcp-session-id")
+rpc("notifications/initialized", session=session)
+r = rpc("tools/call", {"name": "uspto_status", "arguments": {}}, req_id=60, session=session)
+sc = r.json()["result"]["structuredContent"]
+check("uspto_status reports unconfigured", sc["configured"] is False, str(sc))
+check("it names the environment variable", "USPTO_API_KEY" in sc["detail"], sc["detail"])
+r = rpc("tools/call", {"name": "uspto_application",
+                       "arguments": {"application_number": "18/412,907"}}, req_id=61, session=session)
+sc = r.json()["result"]["structuredContent"]
+check("uspto_application refuses rather than inventing a record", sc["ok"] is False, str(sc)[:120])
+check("it returns no data at all", "data" not in sc, str(sc)[:120])
+r = rpc("tools/call", {"name": "uspto_application",
+                       "arguments": {"application_number": "18412907", "include": "nonsense"}},
+        req_id=62, session=session)
+check("an unknown include is rejected", r.json()["result"].get("isError") is True, str(r.json())[:140])
 
 print("\nThe REST surface still works")
 check("/health", client.get("/health").status_code == 200)

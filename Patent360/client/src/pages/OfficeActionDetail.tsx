@@ -1,6 +1,6 @@
 import { Link, useLocation, useRoute } from 'wouter';
 import { Bar, Button, Icon, PageHead } from '../components/ui';
-import { needsBackend } from '../lib/actions';
+import { usptoCall } from '../lib/actions';
 import {
   APPEAL_WEEKS, BASIS_DIFFICULTY, BASIS_LABEL, MAX_ROUNDS, MONEY, OFFICE_ACTIONS,
   MONEY_ABOUT, PATH_BUDGET, TODAY, cheapestRoute, daysBetween, daysLeft, deadlines, outlook,
@@ -74,10 +74,17 @@ export function OfficeActionDetail() {
             <Button
               variant="ghost"
               icon="database"
-              onClick={() => needsBackend(
-                'Opening the file wrapper',
-                `The wrapper for ${oa.appNo} lives in USPTO Patent Center. Reading it needs the ` +
-                'Patent Examination Data API and a credential this build does not carry.'
+              onClick={() => usptoCall(
+                `/api/uspto/application/${oa.appNo.replace(/\D/g, '')}/documents`,
+                `Fetching the file wrapper for ${oa.appNo}`,
+                data => {
+                  const docs = data?.documentBag ?? data?.documents ?? data;
+                  const n = Array.isArray(docs) ? docs.length : null;
+                  return {
+                    title: n === null ? `The USPTO answered on ${oa.appNo}` : `${n} documents on the wrapper`,
+                    detail: 'From the USPTO Open Data Portal — the office of record, not this build.'
+                  };
+                }
               )}
             >
               Open the file wrapper
