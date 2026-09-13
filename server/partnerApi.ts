@@ -28,7 +28,8 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { generateDualIllustration } from "@shared/timeMachineEngine";
 import { ALL_INDEX_OPTIONS, RAW_INDEX_RETURNS } from "@shared/indexCreditingData";
-import { builtClaims, claimCounts } from "@shared/patentCatalog";
+import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
+import { registerPartnerConcierge } from "./partnerConcierge";
 
 /** Bearer key. Absent means the whole surface is off, not open. */
 const KEY = () => (process.env.PARTNER_API_KEY ?? "").trim();
@@ -111,6 +112,9 @@ function indexAgeYears(indexKey: string): number {
 export function registerPartnerApi(app: Express): void {
   app.use("/api/partner", cors);
 
+  // The public microphone. Same bearer gate, same read-only invariant.
+  registerPartnerConcierge(app, requireKey);
+
   /** Whether the surface is wired. Deliberately unauthenticated and cheap: a
    *  partner needs to be able to tell "misconfigured" from "my key is wrong"
    *  without holding a valid key to find out. Reveals no data. */
@@ -137,11 +141,23 @@ export function registerPartnerApi(app: Express): void {
    * Internal file paths are not exposed. A partner needs to know a tool exists
    * and what it is called, not where it lives in this repo.
    */
-  app.get("/api/partner/catalog", requireKey, (_req, res) => {
-    res.json({
+  app.get("/api/partner/catalog", requireKey, (req, res) => {
+    const body: Record<string, unknown> = {
       counts: claimCounts(),
       offered: builtClaims().map((c) => ({ ref: c.ref, title: c.title })),
-    });
+    };
+    // ?include=roadmap adds the engines under development, clearly separated
+    // and clearly labelled. A partner may want to show what is coming; what
+    // they must not be able to do is present it as working, which is why it
+    // arrives under its own key rather than mixed into `offered`.
+    if (String(req.query.include ?? "") === "roadmap") {
+      body.roadmap = CLAIMS.filter((c) => c.status === "partial").map((c) => ({
+        ref: c.ref,
+        title: c.title,
+        status: "in development",
+      }));
+    }
+    res.json(body);
   });
 
   /**
