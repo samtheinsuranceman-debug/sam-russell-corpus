@@ -18,13 +18,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 import { PageInsights } from "@/components/PageInsights";
+import { CLAIMS, claimCounts } from "@shared/patentCatalog";
+import {
+  APPLICATIONS,
+  DRAFTED_COUNT,
+  ENGINE_COUNT,
+  statusBadge,
+  statusSentence,
+} from "@shared/patentStatus";
 
+/**
+ * Editorial detail for the claims that have it. Identity, build state and
+ * legal status are NOT here — those come from shared/patentCatalog.ts and
+ * shared/patentStatus.ts, because this file previously carried its own copy
+ * and every copy was wrong: eight cards asserted a live filing, with a filing
+ * date of 2024, for applications that were drafted in April 2026 and have
+ * never been filed.
+ */
 interface Patent {
   id: string;
   title: string;
-  filingDate: string;
-  claimCount: number;
-  status: string;
   icon: typeof Shield;
   color: string;
   summary: string;
@@ -36,9 +49,6 @@ const PATENTS: Patent[] = [
   {
     id: "PAT-001",
     title: "Cascading Multi-Calculator Financial Planning Engine",
-    filingDate: "2024",
-    claimCount: 8,
-    status: "Patent Pending",
     icon: Layers,
     color: "#22c55e",
     summary: "A system and method for cascading multiple financial calculators in a unified engine where the output of one calculator automatically feeds as input to the next, creating a holistic financial plan. The engine processes IUL projections, Roth conversions, HELOC optimization, divorce asset protection, and tax-free income strategies in a single computational pipeline.",
@@ -53,9 +63,6 @@ const PATENTS: Patent[] = [
   {
     id: "PAT-002",
     title: "HELOC-to-IUL Arbitrage Optimization Engine",
-    filingDate: "2024",
-    claimCount: 6,
-    status: "Patent Pending",
     icon: Zap,
     color: "#3b82f6",
     summary: "A method for optimizing the conversion of home equity line of credit (HELOC) funds into Indexed Universal Life (IUL) premium payments, calculating optimal timing, amounts, and repayment schedules to maximize the arbitrage spread between HELOC interest rates and IUL crediting rates over 20-50 year horizons.",
@@ -70,9 +77,6 @@ const PATENTS: Patent[] = [
   {
     id: "PAT-003",
     title: "AI Whisper Coaching System for Financial Advisors",
-    filingDate: "2024",
-    claimCount: 7,
-    status: "Patent Pending",
     icon: MessageCircle,
     color: "#10b981",
     summary: "An artificial intelligence system that provides real-time conversational coaching to financial advisors during client meetings. The system analyzes client responses, financial data, and conversation context to suggest optimal talking points, objection handlers, and next-best-action recommendations through a private advisor-only interface.",
@@ -88,9 +92,6 @@ const PATENTS: Patent[] = [
   {
     id: "PAT-004",
     title: "Wealth Genome Scoring & Classification System",
-    filingDate: "2024",
-    claimCount: 5,
-    status: "Patent Pending",
     icon: Fingerprint,
     color: "#ec4899",
     summary: "A system for generating a unique 'Wealth Genome' score and classification for each client based on multi-dimensional analysis of their financial DNA — including income patterns, tax exposure, risk tolerance, asset allocation, debt structure, insurance coverage, and behavioral tendencies. The Wealth Genome drives personalized strategy recommendations.",
@@ -105,9 +106,6 @@ const PATENTS: Patent[] = [
   {
     id: "PAT-005",
     title: "Tax-Free Retirement Income Waterfall Engine",
-    filingDate: "2024",
-    claimCount: 6,
-    status: "Patent Pending",
     icon: BarChart3,
     color: "#f97316",
     summary: "A computational engine that models and optimizes the waterfall sequence of tax-free retirement income sources — including IUL policy loans, Roth distributions, municipal bond income, and Health Savings Account withdrawals — to minimize lifetime tax liability while maximizing income durability across 30-50 year retirement horizons.",
@@ -122,9 +120,6 @@ const PATENTS: Patent[] = [
   {
     id: "PAT-006",
     title: "Divorce Asset Protection Calculator with IUL Shielding",
-    filingDate: "2024",
-    claimCount: 5,
-    status: "Patent Pending",
     icon: Shield,
     color: "#06b6d4",
     summary: "A specialized calculator that models the asset protection benefits of Indexed Universal Life insurance in divorce scenarios, projecting the differential outcomes between protected (IUL/ILIT) and unprotected asset structures across equitable distribution, community property, and hybrid state frameworks.",
@@ -139,9 +134,6 @@ const PATENTS: Patent[] = [
   {
     id: "PAT-007",
     title: "Ecological Drivers Retirement Risk Assessment Framework",
-    filingDate: "2024",
-    claimCount: 5,
-    status: "Patent Pending",
     icon: Target,
     color: "#ef4444",
     summary: "A comprehensive retirement risk assessment framework that identifies, quantifies, and visualizes the 10 primary 'ecological drivers' that determine retirement success or failure. The system generates personalized risk scores across each driver and maps IUL protection capabilities against each identified threat.",
@@ -156,9 +148,6 @@ const PATENTS: Patent[] = [
   {
     id: "PAT-008",
     title: "Behavioral Lock-In Prevention System for Retirement Portfolios",
-    filingDate: "2024",
-    claimCount: 5,
-    status: "Patent Pending",
     icon: Lock,
     color: "#14b8a6",
     summary: "A system that detects and prevents behavioral lock-in errors in retirement portfolio management — including panic selling, performance chasing, and premature withdrawal — by providing real-time behavioral analytics, automated guardrails, and AI-driven intervention prompts when destructive patterns are detected.",
@@ -172,7 +161,12 @@ const PATENTS: Patent[] = [
   },
 ];
 
-const totalClaims = PATENTS.reduce((sum, p) => sum + p.claimCount, 0);
+/** Editorial detail, looked up by ref. Absent for most claims, and that is fine. */
+const DETAIL = new Map(PATENTS.map((p) => [p.id, p]));
+
+const counts = claimCounts();
+/** Applications on file. Zero, and the card says zero rather than omitting it. */
+const filedCount = APPLICATIONS.length;
 
 export default function PatentShowcase() {
   const { user } = useAuth();
@@ -189,8 +183,7 @@ export default function PatentShowcase() {
           Patent Applications & Proprietary Technology
         </h1>
         <p className="text-[#7a95b8] max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
-          Russell Capital Systems has {PATENTS.length} patent applications in preparation for the United States Patent and Trademark Office (USPTO),
-          covering {totalClaims} unique claims across our proprietary financial planning technology stack. None has been filed yet.
+          {statusSentence()}
         </p>
       </div>
 
@@ -198,23 +191,23 @@ export default function PatentShowcase() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-gradient-to-br from-[#22c55e]/10 to-[#22c55e]/5 border-[#22c55e]/20">
           <CardContent className="pt-5 text-center">
-            <div className="text-3xl font-bold text-[#22c55e]">{PATENTS.length}</div>
-            <div className="text-xs text-[#7a95b8] mt-1">Patent Applications in Preparation</div>
-            <div className="text-[10px] text-[#22c55e]/70 mt-2">Patent pending, not yet filed</div>
+            <div className="text-3xl font-bold text-[#22c55e]">{ENGINE_COUNT}</div>
+            <div className="text-xs text-[#7a95b8] mt-1">Claims in the portfolio</div>
+            <div className="text-[10px] text-[#22c55e]/70 mt-2">{counts.built} built, {counts.partial} partial</div>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20">
           <CardContent className="pt-5 text-center">
-            <div className="text-3xl font-bold text-blue-400">{totalClaims}</div>
-            <div className="text-xs text-[#7a95b8] mt-1">Total Patent Claims</div>
-            <div className="text-[10px] text-blue-400/70 mt-2">Unique intellectual property claims</div>
+            <div className="text-3xl font-bold text-blue-400">{DRAFTED_COUNT}</div>
+            <div className="text-xs text-[#7a95b8] mt-1">Applications drafted</div>
+            <div className="text-[10px] text-blue-400/70 mt-2">Specifications written, April 2026</div>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border-emerald-500/20">
+        <Card className="bg-gradient-to-br from-amber-500/10 to-amber-500/5 border-amber-500/20">
           <CardContent className="pt-5 text-center">
-            <div className="text-3xl font-bold text-emerald-400">100%</div>
-            <div className="text-xs text-[#7a95b8] mt-1">Proprietary Technology</div>
-            <div className="text-[10px] text-emerald-400/70 mt-2">All technology developed in-house</div>
+            <div className="text-3xl font-bold text-amber-400">{filedCount}</div>
+            <div className="text-xs text-[#7a95b8] mt-1">Applications on file</div>
+            <div className="text-[10px] text-amber-400/70 mt-2">{statusBadge()}</div>
           </CardContent>
         </Card>
       </div>
@@ -223,68 +216,96 @@ export default function PatentShowcase() {
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-white flex items-center gap-2">
           <FileText size={18} className="text-[#22c55e]" />
-          Patent Applications in Preparation
+          The {ENGINE_COUNT} claims
         </h2>
 
-        {PATENTS.map((patent, idx) => {
-          const Icon = patent.icon;
-          const isExpanded = expandedPatent === patent.id;
+        {CLAIMS.map((claim) => {
+          const detail = DETAIL.get(claim.ref);
+          const Icon = detail?.icon ?? FileText;
+          const colour = detail?.color ?? "#7a95b8";
+          const isExpanded = expandedPatent === claim.ref;
+          const canExpand = Boolean(detail || claim.note);
 
           return (
-            <Card key={patent.id} className={`bg-[#0a1628] border-[#12233e] overflow-hidden transition-all duration-300 ${isExpanded ? "ring-1 ring-[#22c55e]/30" : ""}`}>
+            <Card key={claim.ref} className={`bg-[#0a1628] border-[#12233e] overflow-hidden transition-all duration-300 ${isExpanded ? "ring-1 ring-[#22c55e]/30" : ""}`}>
               <button
-                onClick={() => setExpandedPatent(isExpanded ? null : patent.id)}
-                className="w-full text-left p-4 md:p-5 flex items-center gap-4 hover:bg-[#12233e]/30 transition-colors"
+                onClick={() => canExpand && setExpandedPatent(isExpanded ? null : claim.ref)}
+                className={`w-full text-left p-4 md:p-5 flex items-center gap-4 transition-colors ${canExpand ? "hover:bg-[#12233e]/30" : "cursor-default"}`}
               >
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: patent.color + "15", border: `1px solid ${patent.color}30` }}>
-                  <Icon size={20} style={{ color: patent.color }} />
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: colour + "15", border: `1px solid ${colour}30` }}>
+                  <Icon size={20} style={{ color: colour }} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#12233e] text-[#7a95b8]">
-                      {patent.id}
+                      {claim.ref}
                     </span>
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#22c55e]/10 text-[#22c55e]">
-                      {patent.status}
+                    {/* The legal status is the same for every claim and comes
+                        from one function. A per-card status string is how this
+                        page came to assert a filing on eight cards, dated 2024,
+                        for a portfolio with nothing on file. */}
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400">
+                      {statusBadge()}
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400">
-                      {patent.claimCount} Claims
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+                      claim.status === "built" ? "bg-[#22c55e]/10 text-[#22c55e]"
+                      : claim.status === "partial" ? "bg-blue-500/10 text-blue-400"
+                      : "bg-[#12233e] text-[#7a95b8]"
+                    }`}>
+                      {claim.status === "built" ? "Built" : claim.status === "partial" ? "Partial" : "Not built"}
                     </span>
                   </div>
-                  <h3 className="text-sm md:text-base font-bold text-white mt-1">{patent.title}</h3>
-                  <p className="text-xs text-[#7a95b8]">Drafted {patent.filingDate} | Not yet filed with the USPTO</p>
+                  <h3 className="text-sm md:text-base font-bold text-white mt-1">{claim.title}</h3>
+                  <p className="text-xs text-[#7a95b8]">
+                    Application drafted April 2026 — not filed
+                  </p>
                 </div>
-                <div className="flex-shrink-0">
-                  {isExpanded ? <ChevronUp size={18} className="text-[#7a95b8]" /> : <ChevronDown size={18} className="text-[#7a95b8]" />}
-                </div>
+                {canExpand && (
+                  <div className="flex-shrink-0">
+                    {isExpanded ? <ChevronUp size={18} className="text-[#7a95b8]" /> : <ChevronDown size={18} className="text-[#7a95b8]" />}
+                  </div>
+                )}
               </button>
 
               {isExpanded && (
                 <div className="px-4 md:px-5 pb-5 space-y-4 border-t border-[#12233e]">
-                  <div className="pt-4">
-                    <h4 className="text-xs font-bold text-white mb-2">Summary</h4>
-                    <p className="text-sm text-[#c8d6e5] leading-relaxed">{patent.summary}</p>
-                  </div>
-
-                  <div>
-                    <h4 className="text-xs font-bold text-white mb-2 flex items-center gap-2">
-                      <Shield size={14} className="text-[#22c55e]" />
-                      Key Claims
-                    </h4>
-                    <div className="space-y-2">
-                      {patent.keyClaims.map((claim, i) => (
-                        <div key={i} className="flex items-start gap-2 text-xs text-[#c8d6e5]">
-                          <span className="text-[#22c55e] font-mono font-bold flex-shrink-0">Claim {i + 1}:</span>
-                          <span>{claim}</span>
-                        </div>
-                      ))}
+                  {detail && (
+                    <div className="pt-4">
+                      <h4 className="text-xs font-bold text-white mb-2">Summary</h4>
+                      <p className="text-sm text-[#c8d6e5] leading-relaxed">{detail.summary}</p>
                     </div>
-                  </div>
+                  )}
 
-                  <div className="bg-gradient-to-r from-[#22c55e]/10 to-[#0a1628] border border-[#22c55e]/20 rounded-lg p-4">
-                    <h4 className="text-xs font-bold text-[#22c55e] mb-1">Competitive Advantage</h4>
-                    <p className="text-xs text-[#c8d6e5] leading-relaxed">{patent.competitiveAdvantage}</p>
-                  </div>
+                  {claim.note && (
+                    <div className="pt-4">
+                      <h4 className="text-xs font-bold text-white mb-2">What is and is not built</h4>
+                      <p className="text-sm text-[#c8d6e5] leading-relaxed">{claim.note}</p>
+                    </div>
+                  )}
+
+                  {detail && (
+                    <div>
+                      <h4 className="text-xs font-bold text-white mb-2 flex items-center gap-2">
+                        <Shield size={14} className="text-[#22c55e]" />
+                        Key Claims
+                      </h4>
+                      <div className="space-y-2">
+                        {detail.keyClaims.map((c, i) => (
+                          <div key={i} className="flex items-start gap-2 text-xs text-[#c8d6e5]">
+                            <span className="text-[#22c55e] font-mono font-bold flex-shrink-0">Claim {i + 1}:</span>
+                            <span>{c}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {detail && (
+                    <div className="bg-gradient-to-r from-[#22c55e]/10 to-[#0a1628] border border-[#22c55e]/20 rounded-lg p-4">
+                      <h4 className="text-xs font-bold text-[#22c55e] mb-1">Competitive Advantage</h4>
+                      <p className="text-xs text-[#c8d6e5] leading-relaxed">{detail.competitiveAdvantage}</p>
+                    </div>
+                  )}
                 </div>
               )}
             </Card>
@@ -295,12 +316,13 @@ export default function PatentShowcase() {
       {/* Legal Notice */}
       <div className="bg-[#0a1628] border border-[#12233e] rounded-xl p-5 text-center space-y-2">
         <p className="text-xs text-[#7a95b8]">
-          These patent applications are in preparation and have not yet been filed with the United States Patent and Trademark Office (USPTO).
-          "Patent Pending" here means the invention is documented and awaiting filing by counsel; it does not mean an application has been submitted or reviewed.
-          The intellectual property described herein is owned by Russell Holdings Management LLC.
+          {statusSentence()} A drafted specification is a document written by counsel or
+          for counsel; it is not an application until the USPTO receives it and issues a
+          number. This page will say so on the day that happens, and not before.
         </p>
         <p className="text-[10px] text-[#4a6a8e]">
-          Unauthorized use, reproduction, or implementation of patented or patent-pending technology is prohibited.
+          The intellectual property described here is owned by Russell Holdings Management LLC.
+          The application documents themselves are attorney-client work product and are not published.
         </p>
       </div>
 

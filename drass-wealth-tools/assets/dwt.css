@@ -73,3 +73,13 @@
   color:#fff;text-decoration:none;font-weight:600}
 .dwt-cta:hover{opacity:.92;color:#fff}
 @media (prefers-reduced-motion:reduce){ .dwt-mic.is-listening .dwt-mic-dot{animation:none} }
+
+/* The IP status line. Printed verbatim from the platform; see catalog.php. */
+.dwt .dwt-cat-ip {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, .08);
+  font-size: .8125rem;
+  line-height: 1.6;
+  opacity: .75;
+}

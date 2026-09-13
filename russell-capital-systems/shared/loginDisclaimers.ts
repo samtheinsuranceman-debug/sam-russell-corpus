@@ -25,9 +25,9 @@ export const LOGIN_DISCLAIMERS: readonly LoginDisclaimer[] = [
     text: "I will consult my own licensed tax, legal, insurance and financial professionals before acting on anything I see here. Any life insurance decision must rest on a carrier-issued illustration and the policy documents, not on this tool.",
   },
   {
-    id: "patent-pending",
-    title: "Patent-pending, confidential",
-    text: "The technologies described on this site are patent-pending and not yet granted. I will not copy, reverse-engineer, scrape or redistribute the site's methods, screens or output.",
+    id: "proprietary-confidential",
+    title: "Proprietary and confidential",
+    text: "The technologies described on this site are proprietary and unpublished. No patent has been granted and no application has been filed. I will not copy, reverse-engineer, scrape or redistribute the site's methods, screens or output.",
   },
   {
     id: "terms-privacy",

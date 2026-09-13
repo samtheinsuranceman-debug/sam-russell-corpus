@@ -29,6 +29,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { generateDualIllustration } from "@shared/timeMachineEngine";
 import { ALL_INDEX_OPTIONS, RAW_INDEX_RETURNS } from "@shared/indexCreditingData";
 import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
+import { APPLICATIONS, DRAFTED_COUNT, ENGINE_COUNT, statusBadge, statusSentence } from "@shared/patentStatus";
 import { registerPartnerConcierge } from "./partnerConcierge";
 
 /** Bearer key. Absent means the whole surface is off, not open. */
@@ -138,12 +139,27 @@ export function registerPartnerApi(app: Express): void {
    * returned so the caller can see the difference is deliberate rather than a
    * truncated response.
    *
-   * Internal file paths are not exposed. A partner needs to know a tool exists
-   * and what it is called, not where it lives in this repo.
+   * Internal file paths are not exposed, and neither are the catalogue's
+   * `note` fields: those now carry the pre-filing review's findings about
+   * which drafted claims recite hardware the system does not have, which is
+   * attorney work product and nobody's business on a partner marketing page.
+   * A partner needs to know a tool exists and what it is called.
    */
   app.get("/api/partner/catalog", requireKey, (req, res) => {
     const body: Record<string, unknown> = {
       counts: claimCounts(),
+      // The one true sentence, sent over the wire so a partner front end
+      // cannot compose its own. A partner writing "patent pending" on their
+      // own page is the same exposure under 35 U.S.C. § 292 as writing it on
+      // ours, and they have no way of knowing when that becomes true. So they
+      // get the sentence and the badge, not the ingredients.
+      ip: {
+        statusSentence: statusSentence(),
+        badge: statusBadge(),
+        claims: ENGINE_COUNT,
+        applicationsDrafted: DRAFTED_COUNT,
+        applicationsFiled: APPLICATIONS.length,
+      },
       offered: builtClaims().map((c) => ({ ref: c.ref, title: c.title })),
     };
     // ?include=roadmap adds the engines under development, clearly separated

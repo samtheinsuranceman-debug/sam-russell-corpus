@@ -43,7 +43,7 @@ const InteropEnginePage: React.FC = () => {
           <span className="text-4xl mr-4">⚡</span>
           <div>
             <h1 className="text-4xl font-bold">Interop Engine</h1>
-            <p className="text-[#22c55e] text-sm font-mono">PATENT PENDING — Cascading Multi-Calculator Financial Interoperability Engine</p>
+            <p className="text-[#22c55e] text-sm font-mono">PROPRIETARY — Cascading Multi-Calculator Financial Interoperability Engine</p>
           </div>
         </div>
 

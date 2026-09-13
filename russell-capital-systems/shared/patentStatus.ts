@@ -38,6 +38,8 @@
  * sentence being true.
  */
 
+import { CLAIMS } from './patentCatalog';
+
 export type PatentStage =
   /** Claims drafted. Nothing on file. No application number exists. */
   | 'drafted'
@@ -77,8 +79,23 @@ export const STAGE: PatentStage = 'drafted';
  */
 export const APPLICATIONS: readonly PatentApplication[] = [];
 
-/** Count of engines described in the portfolio, filed or not. */
-export const ENGINE_COUNT = 15;
+/**
+ * Count of claims described in the portfolio, filed or not. Derived, because
+ * the number was wrong the moment the portfolio grew past fifteen and a
+ * hand-typed constant has no way of noticing.
+ */
+export const ENGINE_COUNT = CLAIMS.length;
+
+/**
+ * Claims with a drafted application document in the repository.
+ *
+ * This is a different fact from ENGINE_COUNT and a very different fact from
+ * APPLICATIONS.length. A drafted specification is a document we wrote. An
+ * application is a document the USPTO has received and numbered. Surfaces may
+ * describe the first freely; only the second licenses the words "patent
+ * pending".
+ */
+export const DRAFTED_COUNT = CLAIMS.filter((c) => Boolean(c.applicationDraft)).length;
 
 /**
  * May any surface use the words "patent pending"?
@@ -109,7 +126,11 @@ export function statusSentence(): string {
     const n = APPLICATIONS.length;
     return `Patent pending — ${n} application${n === 1 ? '' : 's'} on file with the United States Patent and Trademark Office.`;
   }
-  return `${ENGINE_COUNT} engines documented with claims drafted. No application has been filed with the United States Patent and Trademark Office yet, so nothing here is patented or patent pending.`;
+  const drafts =
+    DRAFTED_COUNT === ENGINE_COUNT
+      ? `all ${ENGINE_COUNT}`
+      : `${DRAFTED_COUNT} of ${ENGINE_COUNT}`;
+  return `${ENGINE_COUNT} engines documented, with a full application drafted for ${drafts}. No application has been filed with the United States Patent and Trademark Office yet, so nothing here is patented or patent pending.`;
 }
 
 /**
@@ -123,8 +144,13 @@ export function statusBadge(): string {
 }
 
 /**
- * Guard for build-time checking. A test asserts that no surface hardcodes
- * "patent pending" while mayClaimPatentPending() is false.
+ * Phrases no client surface may contain while mayClaimPatentPending() is
+ * false. Enforced by server/patentClaimGuard.test.ts, which reads the source
+ * of every page and component rather than trusting that this list is honoured.
+ *
+ * It was exported and unenforced for some time, and PatentShowcase.tsx carried
+ * eight "Patent Pending" badges through a green suite. A guard nothing runs is
+ * a comment.
  */
 export const FORBIDDEN_WHEN_UNFILED = [
   'patent pending',

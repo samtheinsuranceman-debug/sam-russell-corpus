@@ -64,9 +64,23 @@ function dwt_render_catalog( $atts = [] ): string {
 	}
 	$out .= '</ul>';
 
-	// Deliberately no patent language here. What this site may say about the
-	// legal status of these engines is decided in one place on the platform
-	// (shared/patentStatus.ts) and is not restated by a marketing list.
+	// The intellectual-property line. This is printed VERBATIM from the
+	// platform and is never composed here.
+	//
+	// Saying "patent pending" about an invention with no application on file
+	// is false marking under 35 U.S.C. § 292, and since the AIA a competitor
+	// injured by it can sue. This site has no way of knowing when that status
+	// changes, so it does not get the ingredients to compose the sentence —
+	// it gets the sentence. On the day a provisional is filed, the platform
+	// changes and this page changes with it, with nothing edited here.
+	//
+	// Whoever maintains this site: do not replace this with your own wording,
+	// and do not add "patent pending" to any page, banner or meta description.
+	$ip = isset( $res['ip'] ) && is_array( $res['ip'] ) ? $res['ip'] : [];
+	if ( ! empty( $ip['statusSentence'] ) ) {
+		$out .= '<p class="dwt-cat-ip">' . esc_html( (string) $ip['statusSentence'] ) . '</p>';
+	}
+
 	$out .= '</div>';
 
 	return $out;

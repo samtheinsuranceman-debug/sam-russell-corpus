@@ -82,3 +82,28 @@ firm's, not ours.
 ## Support
 
 Questions on the plugin or the API go to Russell Holdings Management LLC.
+
+## Intellectual property: what this site may and may not say
+
+The `[dwt_catalog]` shortcode prints one sentence about the legal status of
+the planning engines. That sentence arrives from the platform with every
+response and is printed verbatim. It is not composed here and must not be
+edited here.
+
+**Do not write "patent pending" anywhere on this site** — not in page copy, a
+banner, an image, a meta description, or a sales deck built from these pages.
+
+Describing an invention as patented or patent-applied-for when no application
+is on file is false marking under 35 U.S.C. § 292. Since the America Invents
+Act, a competitor who suffers a competitive injury from it can sue for
+damages. The status of this portfolio is not something this site can observe,
+which is exactly why the sentence is delivered rather than described: on the
+day an application is actually filed, the platform's answer changes and every
+page using the shortcode changes with it, with nothing edited in WordPress.
+
+If a page needs to describe the technology, "proprietary" is accurate today
+and carries no exposure.
+
+The patent application documents themselves are attorney-client work product.
+They are not in this plugin, are not served by the API, and must not be
+published, attached to a proposal, or forwarded outside the firm.
