@@ -55,17 +55,13 @@ export interface ClaimEntry {
 export const CLAIMS: readonly ClaimEntry[] = [
   // ── The fifteen ────────────────────────────────────────────────────────
   { ref: 'PAT-001', applicationDraft: 'docs/patents/applications/PAT-001_Cascading_Multi_Calculator_Financial_Planning_Engine.pdf', title: 'Cascading Multi-Calculator Financial Planning Engine', status: 'built',
-    engine: 'shared/journeyEngine.ts', page: 'client/src/pages/portal/MultiScenarioPlayZone.tsx',
-    note: 'The drafted claims recite an FPGA co-processor and a sub-2-second cascade; journeyEngine.ts is software and makes no timing guarantee.' },
+    engine: 'shared/journeyEngine.ts', page: 'client/src/pages/portal/MultiScenarioPlayZone.tsx', },
   { ref: 'PAT-002', applicationDraft: 'docs/patents/applications/PAT-002_HELOC_to_IUL_Arbitrage_Optimization_Engine.pdf', title: 'HELOC-to-IUL Arbitrage Optimization Engine', status: 'built',
-    engine: 'shared/reverseHeloc.ts', page: 'client/src/pages/portal/ReverseHeloc.tsx',
-    note: 'The drafted claims recite real-time multi-lender rate aggregation; reverseHeloc.ts holds no lender feed and takes the rate as an input.' },
+    engine: 'shared/reverseHeloc.ts', page: 'client/src/pages/portal/ReverseHeloc.tsx', },
   { ref: 'PAT-003', applicationDraft: 'docs/patents/applications/PAT-003_AI_Whisper_Coaching_System_for_Financial_Advisors.pdf', title: 'AI Whisper Coaching System for Financial Advisors', status: 'built',
-    engine: 'server/ultraAI.ts', page: 'client/src/pages/portal/LiveCoPilot.tsx',
-    note: 'The drafted claims recite voice-tone analysis hardware and biometric authentication; ultraAI.ts does neither.' },
+    engine: 'server/ultraAI.ts', page: 'client/src/pages/portal/LiveCoPilot.tsx', },
   { ref: 'PAT-004', applicationDraft: 'docs/patents/applications/PAT-004_Wealth_Genome_Scoring_and_Classification_System.pdf', title: 'Wealth Genome Scoring & Classification System', status: 'built',
-    engine: 'shared/wealthGenome.ts', page: 'client/src/pages/portal/RiskToleranceScoring.tsx',
-    note: 'The drafted claims recite genetic-algorithm weight evolution; wealthGenome.ts scores against fixed weights.' },
+    engine: 'shared/wealthGenome.ts', page: 'client/src/pages/portal/RiskToleranceScoring.tsx', },
   { ref: 'PAT-005', applicationDraft: 'docs/patents/applications/PAT-005_Tax_Free_Retirement_Income_Waterfall_Engine.pdf', title: 'Tax-Free Retirement Income Waterfall Engine', status: 'built',
     engine: 'shared/incomeForLife.ts', page: 'client/src/pages/portal/TaxWaterfall.tsx' },
   { ref: 'PAT-006', applicationDraft: 'docs/patents/applications/PAT-006_Divorce_Asset_Protection_Calculator_with_IUL_Shielding.pdf', title: 'Divorce Asset Protection Calculator with IUL Shielding', status: 'built',
@@ -205,22 +201,14 @@ export function claimByRef(ref: string): ClaimEntry | undefined {
 }
 
 /**
- * Defects that appear in EVERY drafted application, measured across all 57
- * rather than inferred from a sample. Kept here because the catalogue is what
- * the rest of the app reads, and a reader who sees 57 drafts should see this
- * in the same breath. The evidence and the reasoning are in
- * docs/patents/APPLICATION_REVIEW.md.
+ * The pre-filing review's findings are NOT here. They are in
+ * server/patentReview.ts, because this module is compiled into the browser
+ * bundle by PatentShowcase.tsx and a role check in a component does not stop
+ * data from shipping.
+ *
+ * Build status belongs here and stays visible. Our own assessment of the
+ * drafted applications does not.
  */
-export const PORTFOLIO_DEFECTS: readonly string[] = [
-  'All 57 recite a Field-Programmable Gate Array co-processor. Nothing in this repo runs on one.',
-  'All 57 embed the same five diagrams, differing only in one acronym in one box — 285 figures, 5 drawings.',
-  'All 57 carry a drafting-score table ("Enhanced Score 9.95 / 10 (capped)") inside the Summary of the Invention.',
-  'All 57 render claim element (c) as the copyright symbol.',
-  'All 57 state the portfolio has been "filed by" Russell Holdings Management. Nothing has been filed.',
-];
-
-/** Where the full pre-filing review lives. */
-export const APPLICATION_REVIEW_DOC = 'docs/patents/APPLICATION_REVIEW.md';
 
 /** Claims with a drafted application document in this repo. */
 export function withApplicationDraft(): readonly ClaimEntry[] {

@@ -11,9 +11,7 @@ import { describe, it, expect } from 'vitest';
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 import {
-  APPLICATION_REVIEW_DOC,
   CLAIMS,
-  PORTFOLIO_DEFECTS,
   builtClaims,
   claimByRef,
   claimCounts,
@@ -22,6 +20,12 @@ import {
   withApplicationDraft,
 } from '../shared/patentCatalog';
 import { mayClaimPatentPending } from '../shared/patentStatus';
+import {
+  APPLICATION_REVIEW_DOC,
+  HARDWARE_DISCREPANCIES,
+  PORTFOLIO_DEFECTS,
+  refsWithDiscrepancy,
+} from './patentReview';
 
 const root = resolve(__dirname, '..');
 
@@ -146,8 +150,34 @@ describe('the 57 claims', () => {
     for (const marker of ['Field-Programmable Gate Array', 'five diagrams', 'Enhanced Score', 'copyright symbol', 'filed by']) {
       expect(all).toContain(marker);
     }
-    // Every one of them is a statement about all 57, so each must say so.
+    // Every one is a statement about all 57, so each must say so.
     for (const d of PORTFOLIO_DEFECTS) expect(d).toContain('All 57');
+  });
+
+  it('keeps the review off the client, where a role check would not hold it', () => {
+    // shared/patentCatalog.ts is bundled into the browser by PatentShowcase.
+    // If a finding ever lands back in it, it ships to every signed-in visitor
+    // including guests, and hiding it in the component changes nothing.
+    const shared = readFileSync(resolve(root, 'shared/patentCatalog.ts'), 'utf-8');
+    for (const marker of ['FPGA', 'Field-Programmable', 'Enhanced Score', 'biometric']) {
+      expect(shared, marker).not.toContain(marker);
+    }
+    for (const c of CLAIMS) {
+      expect(c.note ?? '', c.ref).not.toMatch(/FPGA|Field-Programmable/i);
+    }
+  });
+
+  it('names the four claims whose drafts recite mechanisms that do not exist', () => {
+    expect(refsWithDiscrepancy()).toEqual(['PAT-001', 'PAT-002', 'PAT-003', 'PAT-004']);
+    for (const ref of refsWithDiscrepancy()) {
+      // Each must point at the real module, so the discrepancy is checkable
+      // rather than an assertion about a system nobody can find.
+      const claim = claimByRef(ref)!;
+      const text = HARDWARE_DISCREPANCIES[ref]!;
+      expect(text.length).toBeGreaterThan(60);
+      const engineFile = claim.engine!.split('/').pop()!;
+      expect(text, ref).toContain(engineFile);
+    }
   });
 
   it('the pre-filing review exists and names the defects it found', () => {
@@ -156,18 +186,6 @@ describe('the 57 claims', () => {
     const text = readFileSync(path, 'utf-8');
     for (const marker of ['FPGA', '1.83', 'Enhanced Score', 'filed by', '1.56', '35 U.S.C.']) {
       expect(text).toContain(marker);
-    }
-  });
-
-  it('the four claims whose drafts name absent hardware say which hardware', () => {
-    const specifics: Record<string, string> = {
-      'PAT-001': 'FPGA',
-      'PAT-002': 'lender feed',
-      'PAT-003': 'biometric',
-      'PAT-004': 'fixed weights',
-    };
-    for (const [ref, marker] of Object.entries(specifics)) {
-      expect(claimByRef(ref)!.note ?? '').toContain(marker);
     }
   });
 
