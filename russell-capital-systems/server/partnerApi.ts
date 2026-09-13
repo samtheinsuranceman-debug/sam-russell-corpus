@@ -28,7 +28,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { generateDualIllustration } from "@shared/timeMachineEngine";
-import { ALL_INDEX_OPTIONS, RAW_INDEX_RETURNS } from "@shared/indexCreditingData";
+import { ALL_INDEX_OPTIONS, MAX_YEAR, MIN_YEAR, RAW_INDEX_RETURNS, getCreditingHistory } from "@shared/indexCreditingData";
 import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
 import { APPLICATIONS, DRAFTED_COUNT, ENGINE_COUNT, statusBadge, statusSentence } from "@shared/patentStatus";
 import { registerPartnerConcierge } from "./partnerConcierge";
@@ -246,6 +246,48 @@ function dualPanel(crediting: Crediting, windowId: string) {
   };
 }
 
+
+/**
+ * Strategies whose reconstruction cannot be trusted on a public page.
+ *
+ * The credited history for a single-index strategy is defensible: real index
+ * change, the policy's own declared participation, spread, floor and cap,
+ * arithmetic anyone can check. Two families in the held data are not.
+ *
+ * 1. The "Monthly Avg" strategies are modelled on ANNUAL point-to-point index
+ *    returns. A monthly-average or monthly-sum design credits materially less
+ *    than annual point-to-point in a trending market — that is precisely why
+ *    carriers can offer a 25% cap on one. Applying that cap to an annual
+ *    return overstates the credit, and the product name says so.
+ *
+ * 2. The multi-index and hindsight strategies sort the component indices by
+ *    the return each actually delivered that year, then weight the best one
+ *    highest. That is a decision made with knowledge of the outcome. Unless
+ *    the contract genuinely allocates in arrears — and for these the terms are
+ *    not recorded here — it is hindsight bias, and it inflates every year.
+ *
+ * Both push in the same direction. Together they produce 12.93% compound over
+ * 1996-2025 on one strategy, which is far above anything a carrier could
+ * illustrate under AG 49-A and would not match any illustration the carrier
+ * actually issues.
+ *
+ * So they are listed — a reader should see the terms — and refused for the
+ * exhibit, with the reason. When the real contract mechanics are recorded,
+ * including whether the averaging is monthly and how the allocation is
+ * actually chosen, they can be modelled properly and this list shrinks.
+ */
+function reconstructionCaveat(o: (typeof ALL_INDEX_OPTIONS)[number]): string | null {
+  if (/monthly/i.test(o.name)) {
+    return "Modelled on annual point-to-point index returns, while the product name describes a monthly average. " +
+      "A monthly design credits materially less in a trending market, so this reconstruction overstates it.";
+  }
+  if (o.indexType === "multiIndex" || o.indexType === "hindsight") {
+    return "Weights the component indices by what each actually returned that year, highest first — a choice made " +
+      "with knowledge of the outcome. Unless the contract allocates in arrears, this inflates every year.";
+  }
+  return null;
+}
+
 /**
  * Bearer gate. Closed by default: with no PARTNER_API_KEY set the surface
  * answers 503 and explains, rather than serving openly. An API that silently
@@ -419,17 +461,38 @@ export function registerPartnerApi(app: Express): void {
       return;
     }
 
-    // Pick an index option carrying this underlying. The engine works from
-    // carrier option definitions, not bare index keys, because the cap, floor
-    // and participation live on the option.
+    // The specific strategy, named. This used to take the first option
+    // carrying the underlying index, which meant a caller asking about the
+    // S&P 500 got whichever capped strategy happened to be listed first — and
+    // an uncapped or high-participation design on the same index produced a
+    // completely different credited history that was unreachable.
+    //
+    // Now `option=<id>` picks the actual policy strategy, and the response
+    // lists every strategy held so a front end can offer the choice.
     const option =
-      ALL_INDEX_OPTIONS.find((o) => o.index === indexKey) ?? ALL_INDEX_OPTIONS[0];
+      ALL_INDEX_OPTIONS.find((o) => o.id === String(req.query.option ?? "")) ??
+      ALL_INDEX_OPTIONS.find((o) => o.index === indexKey) ??
+      ALL_INDEX_OPTIONS[0];
     if (!option) {
       res.status(500).json({ error: "no_index_options_configured" });
       return;
     }
 
+    const caveat = reconstructionCaveat(option);
+    if (caveat) {
+      res.status(422).json({
+        error: "strategy_not_modelled_faithfully",
+        strategy: { id: option.id, name: option.name },
+        detail: caveat,
+        remedy: "Choose a single-index strategy, whose credited history is the index change run through the policy's own declared terms.",
+      });
+      return;
+    }
+
     const projectionYears = clampInt(req.query.years, MIN_HISTORY_YEARS, 40, 30);
+    // The window the credited history is read from. MIN_YEAR is 1994, so the
+    // default gives the full thirty-two years held; a caller may start later.
+    const historicalStartYear = clampInt(req.query.startYear, MIN_YEAR, MAX_YEAR - 5, MIN_YEAR);
     const ag49Rate = clampNum(req.query.ag49Rate, 0, 6.5, 6);
 
     let result;
@@ -443,7 +506,7 @@ export function registerPartnerApi(app: Express): void {
         projectionYears,
         boringRate: ag49Rate / 100,
         selectedIndexOptions: [option.id],
-        historicalStartYear: clampInt(req.query.startYear, 1994, 2015, 1994),
+        historicalStartYear,
         statedLoanRate: 0.05,
         actualArbitrageSpread: 0.005,
       });
@@ -462,7 +525,61 @@ export function registerPartnerApi(app: Express): void {
     res.json({
       indexAgeYears: age,
       ag49Rate,
-      index: { id: option.id, name: option.name, carrier: option.carrier, underlying: option.index },
+      // The policy's own declared terms, stated rather than implied. A reader
+      // comparing two strategies needs to see WHY one credited more, and the
+      // answer is always in these five numbers.
+      index: {
+        id: option.id,
+        name: option.name,
+        carrier: option.carrier,
+        underlying: option.index,
+        capPct: option.cap,
+        floorPct: option.floor,
+        participationPct: option.participation,
+        spreadPct: option.spread,
+        strategyChargePct: option.strategyCharge,
+        bonusPct: option.bonus,
+      },
+
+      /**
+       * The year-by-year credit this policy's strategy produced.
+       *
+       * What this is: the real index change for each year, run through this
+       * policy's own declared participation rate, spread, floor, cap and
+       * strategy charge. What it is NOT: a figure transcribed from anyone's
+       * annual statement. This system holds index history and policy terms; it
+       * does not hold a copy of a real policyholder's account. Nothing here
+       * should be described as "what this policy actually paid" — it is what
+       * these terms produce on the record, which is the same method AG 49 uses
+       * and a different claim from a statement.
+       */
+      creditHistory: getCreditingHistory(option, historicalStartYear, MAX_YEAR).map((h) => ({
+        year: h.year,
+        indexChangePct: h.rawReturn,
+        creditedRatePct: h.creditedRate,
+        floorHeld: h.rawReturn < 0 && h.creditedRate >= option.floor,
+        capLimited: option.cap !== null && h.creditedRate >= option.cap - 0.01,
+      })),
+
+      /**
+       * Every strategy held, so a front end can offer the choice — including
+       * the ones this boundary will not run, with the reason attached. Hiding
+       * them would leave a reader wondering why a product they were shown is
+       * missing; showing them with the caveat is the honest answer.
+       */
+      strategies: ALL_INDEX_OPTIONS.map((o) => ({
+        id: o.id,
+        name: o.name,
+        carrier: o.carrier,
+        underlying: o.index,
+        capPct: o.cap,
+        participationPct: o.participation,
+        spreadPct: o.spread,
+        availableFrom: o.availableFrom,
+        description: o.description,
+        modelCaveat: reconstructionCaveat(o),
+        selectable: reconstructionCaveat(o) === null,
+      })),
       boring: result.boring.map((r) => ({
         year: r.year,
         age: r.age,

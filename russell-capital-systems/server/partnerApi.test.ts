@@ -512,6 +512,120 @@ describe('the calculators', () => {
   });
 });
 
+describe('the policy history exhibit', () => {
+  const TM = 'premium=100000&fundingYears=5&age=45&years=30';
+
+  it('lists every strategy held, with the terms that explain the difference', async () => {
+    const b = await fetch(`${base}/time-machine?${TM}`, auth).then((x) => x.json());
+    expect(b.strategies.length).toBeGreaterThan(5);
+    for (const st of b.strategies) {
+      expect(typeof st.id).toBe('string');
+      expect(typeof st.participationPct).toBe('number');
+      // cap is null for an uncapped strategy, which is a real design.
+      expect(st.capPct === null || typeof st.capPct === 'number').toBe(true);
+    }
+    expect(b.strategies.some((s: { capPct: number | null }) => s.capPct === null)).toBe(true);
+  });
+
+  it('refuses the strategies whose reconstruction would overstate the credit', async () => {
+    // Two families in the held data cannot be modelled faithfully: the
+    // "Monthly Avg" designs run on annual point-to-point returns, and the
+    // multi-index ones weight each component by what it actually returned that
+    // year. Both inflate, and together they produce 12.93% compound — above
+    // anything a carrier could illustrate under AG 49-A.
+    const all = await fetch(`${base}/time-machine?${TM}`, auth).then((x) => x.json());
+    const flagged = all.strategies.filter((s: { selectable: boolean }) => !s.selectable);
+    expect(flagged.length).toBeGreaterThan(0);
+
+    for (const st of flagged) {
+      expect(st.modelCaveat.length).toBeGreaterThan(60);
+      const r = await fetch(`${base}/time-machine?${TM}&option=${st.id}`, auth);
+      expect(r.status, st.id).toBe(422);
+      const b = await r.json();
+      expect(b.error).toBe('strategy_not_modelled_faithfully');
+      expect(b.remedy).toContain('single-index');
+    }
+
+    // They are still listed. A reader seeing a product they were shown
+    // elsewhere deserves the reason it is absent, not silence.
+    expect(all.strategies.length).toBeGreaterThan(flagged.length);
+  });
+
+  it('credits a named strategy on its own terms, not the first one on the list', async () => {
+    // Asking for the S&P 500 used to return whichever strategy was listed
+    // first. Two designs on the same index must now give different histories.
+    const all = await fetch(`${base}/time-machine?${TM}`, auth).then((x) => x.json());
+    const sel = all.strategies.filter((s: { selectable: boolean }) => s.selectable);
+    const capped = sel.find((s: { capPct: number | null }) => s.capPct !== null);
+    const uncapped = sel.find((s: { capPct: number | null }) => s.capPct === null);
+
+    const [a, b] = await Promise.all([
+      fetch(`${base}/time-machine?${TM}&option=${capped.id}`, auth).then((x) => x.json()),
+      fetch(`${base}/time-machine?${TM}&option=${uncapped.id}`, auth).then((x) => x.json()),
+    ]);
+    expect(a.index.id).toBe(capped.id);
+    expect(b.index.id).toBe(uncapped.id);
+    expect(b.index.capPct).toBeNull();
+    expect(JSON.stringify(a.creditHistory)).not.toBe(JSON.stringify(b.creditHistory));
+  });
+
+  it('shows the credit year by year against the index change that produced it', async () => {
+    const b = await fetch(`${base}/time-machine?${TM}`, auth).then((x) => x.json());
+    expect(b.creditHistory.length).toBeGreaterThan(25);
+
+    // 2008 fell hard. The floor must have held it, and the credit must not be
+    // negative in any year — that is what the floor is.
+    const y2008 = b.creditHistory.find((y: { year: number }) => y.year === 2008);
+    expect(y2008.indexChangePct).toBeLessThan(0);
+    expect(y2008.floorHeld).toBe(true);
+    for (const y of b.creditHistory) expect(y.creditedRatePct, String(y.year)).toBeGreaterThanOrEqual(0);
+  });
+
+  it('never credits more than the strategy allows in a strong year', async () => {
+    const all = await fetch(`${base}/time-machine?${TM}`, auth).then((x) => x.json());
+    const capped = all.strategies
+      .filter((s: { selectable: boolean }) => s.selectable)
+      .find((s: { capPct: number | null }) => s.capPct !== null);
+    const b = await fetch(`${base}/time-machine?${TM}&option=${capped.id}`, auth).then((x) => x.json());
+    for (const y of b.creditHistory) {
+      expect(y.creditedRatePct, String(y.year)).toBeLessThanOrEqual(b.index.capPct + 0.01);
+    }
+    // And the cap actually bit in at least one year, or the exhibit is not
+    // showing what a cap does.
+    expect(b.creditHistory.some((y: { capLimited: boolean }) => y.capLimited)).toBe(true);
+  });
+
+  it('a bigger policy scales, and the crediting does not change with it', async () => {
+    // Cash value is the premium's job. The credited rate is the strategy's,
+    // and must not move because somebody funded more.
+    const [small, large] = await Promise.all([
+      fetch(`${base}/time-machine?premium=25000&fundingYears=5&age=45&years=30`, auth).then((x) => x.json()),
+      fetch(`${base}/time-machine?premium=250000&fundingYears=5&age=45&years=30`, auth).then((x) => x.json()),
+    ]);
+    expect(JSON.stringify(small.creditHistory)).toBe(JSON.stringify(large.creditHistory));
+    const lastSmall = small.historical[small.historical.length - 1];
+    const lastLarge = large.historical[large.historical.length - 1];
+    expect(lastLarge.accountValue).toBeGreaterThan(lastSmall.accountValue * 5);
+  });
+
+  it('reads the history from a later start year when asked', async () => {
+    const b = await fetch(`${base}/time-machine?${TM}&startYear=2010`, auth).then((x) => x.json());
+    expect(b.creditHistory[0].year).toBe(2010);
+  });
+
+  it('keeps both panels, and still withholds the averages', async () => {
+    const r = await fetch(`${base}/time-machine?${TM}`, auth);
+    const raw = await r.text();
+    const b = JSON.parse(raw);
+    expect(b.boring.length).toBeGreaterThan(0);
+    expect(b.historical.length).toBeGreaterThan(0);
+    // AG 49-A: no aggregate credited rate crosses this boundary.
+    expect(raw).not.toContain('histAvgRate');
+    expect(raw).not.toContain('boringAvgRate');
+    expect(b.notice).toContain('not indicative of future returns');
+  });
+});
+
 describe('closed by default', () => {
   it('answers 503 and explains when no key is configured', async () => {
     const saved = process.env.PARTNER_API_KEY;
