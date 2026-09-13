@@ -10,7 +10,16 @@
 import { describe, it, expect } from 'vitest';
 import { existsSync } from 'fs';
 import { resolve } from 'path';
-import { CLAIMS, builtClaims, claimByRef, claimCounts } from '../shared/patentCatalog';
+import {
+  CLAIMS,
+  builtClaims,
+  claimByRef,
+  claimCounts,
+  draftedButUnbuilt,
+  missingApplicationDraft,
+  withApplicationDraft,
+} from '../shared/patentCatalog';
+import { mayClaimPatentPending } from '../shared/patentStatus';
 
 const root = resolve(__dirname, '..');
 
@@ -99,6 +108,36 @@ describe('the 57 claims', () => {
     const c = claimByRef('SI-023')!;
     expect(c.status).toBe('partial');
     expect(c.note).toContain('Blocked on data');
+  });
+
+  it('every application draft named actually exists on disk', () => {
+    const missing = withApplicationDraft()
+      .filter((c) => !existsSync(resolve(root, c.applicationDraft!)))
+      .map((c) => `${c.ref} -> ${c.applicationDraft}`);
+    expect(missing).toEqual([]);
+  });
+
+  it('five applications are drafted, and they are SI-038 to SI-042', () => {
+    const refs = withApplicationDraft().map((c) => c.ref).sort();
+    expect(refs).toEqual(['SI-038', 'SI-039', 'SI-040', 'SI-041', 'SI-042']);
+  });
+
+  it('52 of the 57 still have no drafted application', () => {
+    expect(missingApplicationDraft().length).toBe(52);
+    expect(withApplicationDraft().length + missingApplicationDraft().length).toBe(57);
+  });
+
+  it('names the two claims that have a spec but no code', () => {
+    const refs = draftedButUnbuilt().map((c) => c.ref).sort();
+    expect(refs).toEqual(['SI-038', 'SI-040']);
+  });
+
+  it('a drafted application is not evidence of a filing', () => {
+    // patentStatus.ts is the only thing that decides what is on file, and it
+    // reads receipts. This keeps the two facts from being conflated by a
+    // future reader who sees five PDFs and assumes five filings.
+    expect(withApplicationDraft().length).toBeGreaterThan(0);
+    expect(mayClaimPatentPending()).toBe(false);
   });
 
   it('every revived claim records why it changed shape', () => {

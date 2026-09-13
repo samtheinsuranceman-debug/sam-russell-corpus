@@ -41,6 +41,15 @@ export interface ClaimEntry {
   readonly page?: string;
   /** Why it is dropped or unbuilt. Required when status is dropped/none. */
   readonly note?: string;
+  /**
+   * A drafted application document in this repo, repo-relative.
+   *
+   * Drafted is not filed. These are attorney-client work product with no
+   * USPTO application number attached; whether anything is on file is decided
+   * only by shared/patentStatus.ts, which reads receipts. A drafted spec and a
+   * filing are different facts and this field is not evidence of the second.
+   */
+  readonly applicationDraft?: string;
 }
 
 export const CLAIMS: readonly ClaimEntry[] = [
@@ -163,16 +172,21 @@ export const CLAIMS: readonly ClaimEntry[] = [
   { ref: 'SI-037', title: 'Tax Loss Harvesting Coordination Engine with IUL Premium Timing', status: 'built',
     page: 'client/src/pages/portal/TaxLossHarvestingScanner.tsx' },
   { ref: 'SI-038', title: 'Advisor-Client Communication Sentiment Analysis', status: 'none',
-    note: 'On the sheet; no implementation located.' },
+    applicationDraft: 'docs/patents/applications/SI-038_Sentiment_Analysis_Compliance_Monitor.pdf',
+    note: 'Application drafted 29 April 2026 (emotional tone classification, pressure-tactic detection, suitability-aligned scoring). No implementation in this repo — this is one of two claims with a spec and no code.' },
   { ref: 'SI-039', title: 'Dynamic Beneficiary Optimization Engine', status: 'built',
-    page: 'client/src/pages/portal/BeneficiaryOptimization.tsx' },
+    page: 'client/src/pages/portal/BeneficiaryOptimization.tsx',
+    applicationDraft: 'docs/patents/applications/SI-039_Dynamic_Beneficiary_Optimization_Engine.pdf' },
   { ref: 'SI-040', title: 'Concentrated Stock Position Diversification Planner with IUL', status: 'none',
-    note: 'On the sheet; no implementation located.' },
+    applicationDraft: 'docs/patents/applications/SI-040_Concentrated_Stock_Position_Diversification.pdf',
+    note: 'Application drafted 29 April 2026 (exchange-fund modelling, prepaid variable forward optimisation, tax-managed liquidation scheduling). No implementation in this repo — the second of two claims with a spec and no code.' },
   { ref: 'SI-041', title: 'Medicare Optimization & IRMAA Avoidance Planning Engine', status: 'built',
-    page: 'client/src/pages/portal/MedicareIRMAA.tsx' },
+    page: 'client/src/pages/portal/MedicareIRMAA.tsx',
+    applicationDraft: 'docs/patents/applications/SI-041_Medicare_IRMAA_Avoidance_Optimizer.pdf' },
   { ref: 'SI-042', title: 'Integrated Estate Freeze & IUL Wealth Replacement System', status: 'partial',
     engine: 'shared/estateTaxEngine.ts', page: 'client/src/pages/portal/EstateTax.tsx',
-    note: 'Estate tax engine and trust pages exist; the freeze-technique selector does not.' },
+    applicationDraft: 'docs/patents/applications/SI-042_Estate_Freeze_IUL_Wealth_Replacement.pdf',
+    note: 'Estate tax engine and trust pages exist; the freeze-technique selector does not. Application drafted 29 April 2026 covering GRAT/IDGT optimisation and IRC §7520 rate monitoring, which is the missing selector — the spec describes more than the code does.' },
 ];
 
 /** Only these are offered to partner sites. */
@@ -189,4 +203,30 @@ export function claimCounts(): Record<ClaimStatus, number> {
 
 export function claimByRef(ref: string): ClaimEntry | undefined {
   return CLAIMS.find((c) => c.ref.toLowerCase() === ref.toLowerCase());
+}
+
+/** Claims with a drafted application document in this repo. */
+export function withApplicationDraft(): readonly ClaimEntry[] {
+  return CLAIMS.filter((c) => Boolean(c.applicationDraft));
+}
+
+/**
+ * Claims with no drafted application. This is the queue, and it is the number
+ * that matters if the portfolio is being financed: a claim with code and no
+ * spec is an asset nobody can file, and a claim with neither is an idea.
+ */
+export function missingApplicationDraft(): readonly ClaimEntry[] {
+  return CLAIMS.filter((c) => !c.applicationDraft);
+}
+
+/**
+ * The awkward quadrant: a spec exists but nothing implements it. Not fatal —
+ * a US application needs an enabling disclosure, not a working prototype —
+ * but worth seeing, because these are the ones where the specification is the
+ * only description of the invention that exists anywhere.
+ */
+export function draftedButUnbuilt(): readonly ClaimEntry[] {
+  return CLAIMS.filter(
+    (c) => Boolean(c.applicationDraft) && (c.status === 'none' || c.status === 'dropped')
+  );
 }
