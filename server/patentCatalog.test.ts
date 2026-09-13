@@ -11,7 +11,9 @@ import { describe, it, expect } from 'vitest';
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 import {
+  APPLICATION_REVIEW_DOC,
   CLAIMS,
+  PORTFOLIO_DEFECTS,
   builtClaims,
   claimByRef,
   claimCounts,
@@ -117,57 +119,56 @@ describe('the 57 claims', () => {
     expect(missing).toEqual([]);
   });
 
-  it('nine applications are drafted: PAT-001 to PAT-004 and SI-038 to SI-042', () => {
-    const refs = withApplicationDraft().map((c) => c.ref).sort();
-    expect(refs).toEqual([
-      'PAT-001', 'PAT-002', 'PAT-003', 'PAT-004',
-      'SI-038', 'SI-039', 'SI-040', 'SI-041', 'SI-042',
-    ].sort());
+  it('all 57 now have a drafted application, and none is left behind', () => {
+    expect(withApplicationDraft().length).toBe(57);
+    expect(missingApplicationDraft()).toEqual([]);
   });
 
-  it('48 of the 57 still have no drafted application', () => {
-    expect(missingApplicationDraft().length).toBe(48);
-    expect(withApplicationDraft().length + missingApplicationDraft().length).toBe(57);
-  });
-
-  it('eleven of the fifteen PAT claims still have no application', () => {
-    const bare = missingApplicationDraft().filter((c) => c.ref.startsWith('PAT-'));
-    expect(bare.length).toBe(11);
-    // PAT-010 is the time machine — the most valuable one still unspecified.
-    expect(bare.map((c) => c.ref)).toContain('PAT-010');
-  });
-
-  it('every draft whose claims recite hardware this repo lacks says so', () => {
-    // The applications recite an FPGA co-processor. Nothing here runs on one.
-    // The note is the only thing standing between that fact and a signature,
-    // so it is pinned rather than left to a reader's memory.
-    for (const ref of ['PAT-001', 'PAT-002', 'PAT-003', 'PAT-004']) {
-      const note = claimByRef(ref)!.note ?? '';
-      expect(note).toContain('APPLICATION_REVIEW.md');
-      expect(note.length).toBeGreaterThan(60);
+  it('each draft is filed under its own ref, so no two claims share a document', () => {
+    for (const c of CLAIMS) {
+      expect(c.applicationDraft!).toContain(`/${c.ref}_`);
     }
+    expect(new Set(CLAIMS.map((c) => c.applicationDraft)).size).toBe(57);
+  });
+
+  it('a complete set of drafts is still not a single filing', () => {
+    // The whole portfolio now has specifications. That changes nothing about
+    // what may be said publicly: patentStatus.ts reads receipts, and there are
+    // none. This is the assertion that stops "57 applications" from becoming
+    // "57 patents pending" somewhere downstream.
+    expect(withApplicationDraft().length).toBe(CLAIMS.length);
+    expect(mayClaimPatentPending()).toBe(false);
+  });
+
+  it('the portfolio-wide defects are recorded, not left to memory', () => {
+    expect(PORTFOLIO_DEFECTS.length).toBeGreaterThanOrEqual(5);
+    const all = PORTFOLIO_DEFECTS.join(' ');
+    for (const marker of ['Field-Programmable Gate Array', 'five diagrams', 'Enhanced Score', 'copyright symbol', 'filed by']) {
+      expect(all).toContain(marker);
+    }
+    // Every one of them is a statement about all 57, so each must say so.
+    for (const d of PORTFOLIO_DEFECTS) expect(d).toContain('All 57');
   });
 
   it('the pre-filing review exists and names the defects it found', () => {
-    const path = resolve(root, 'docs/patents/APPLICATION_REVIEW.md');
+    const path = resolve(root, APPLICATION_REVIEW_DOC);
     expect(existsSync(path)).toBe(true);
     const text = readFileSync(path, 'utf-8');
-    for (const marker of ['FPGA', '1.83', 'Enhanced Score', 'filed by', '1.56']) {
+    for (const marker of ['FPGA', '1.83', 'Enhanced Score', 'filed by', '1.56', '35 U.S.C.']) {
       expect(text).toContain(marker);
     }
   });
 
-  it('names the two claims that have a spec but no code', () => {
-    const refs = draftedButUnbuilt().map((c) => c.ref).sort();
-    expect(refs).toEqual(['SI-038', 'SI-040']);
-  });
-
-  it('a drafted application is not evidence of a filing', () => {
-    // patentStatus.ts is the only thing that decides what is on file, and it
-    // reads receipts. This keeps the two facts from being conflated by a
-    // future reader who sees five PDFs and assumes five filings.
-    expect(withApplicationDraft().length).toBeGreaterThan(0);
-    expect(mayClaimPatentPending()).toBe(false);
+  it('the four claims whose drafts name absent hardware say which hardware', () => {
+    const specifics: Record<string, string> = {
+      'PAT-001': 'FPGA',
+      'PAT-002': 'lender feed',
+      'PAT-003': 'biometric',
+      'PAT-004': 'fixed weights',
+    };
+    for (const [ref, marker] of Object.entries(specifics)) {
+      expect(claimByRef(ref)!.note ?? '').toContain(marker);
+    }
   });
 
   it('every revived claim records why it changed shape', () => {
