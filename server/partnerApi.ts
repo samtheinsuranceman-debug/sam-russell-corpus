@@ -27,7 +27,8 @@
 
 import type { Express, Request, Response, NextFunction } from "express";
 import { generateDualIllustration } from "@shared/timeMachineEngine";
-import { ALL_INDEX_OPTIONS, RAW_INDEX_RETURNS, getCreditingHistory } from "@shared/indexCreditingData";
+import { ALL_INDEX_OPTIONS, RAW_INDEX_RETURNS } from "@shared/indexCreditingData";
+import { builtClaims, claimCounts } from "@shared/patentCatalog";
 
 /** Bearer key. Absent means the whole surface is off, not open. */
 const KEY = () => (process.env.PARTNER_API_KEY ?? "").trim();
@@ -120,6 +121,26 @@ export function registerPartnerApi(app: Express): void {
       configured: Boolean(KEY()),
       indices: Object.keys(RAW_INDEX_RETURNS),
       originsConfigured: ORIGINS().length,
+    });
+  });
+
+  /**
+   * The catalogue of engines a partner site may present.
+   * GET /api/partner/catalog
+   *
+   * Returns only what is built. The partial, dropped and unbuilt entries stay
+   * on this side of the wire: a partner marketing page listing 57 tools where
+   * 18 do nothing is worse than one listing 39 that work, and the counts are
+   * returned so the caller can see the difference is deliberate rather than a
+   * truncated response.
+   *
+   * Internal file paths are not exposed. A partner needs to know a tool exists
+   * and what it is called, not where it lives in this repo.
+   */
+  app.get("/api/partner/catalog", requireKey, (_req, res) => {
+    res.json({
+      counts: claimCounts(),
+      offered: builtClaims().map((c) => ({ ref: c.ref, title: c.title })),
     });
   });
 
