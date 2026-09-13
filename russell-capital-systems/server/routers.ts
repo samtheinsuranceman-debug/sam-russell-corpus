@@ -5414,7 +5414,10 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
       premiumYears: z.number().min(1).max(10).default(5),
       loanInterestRate: z.number().min(0.01).max(0.15).default(0.065),
       collateralRequirement: z.number().min(0).max(1).default(0.20),
-      illustratedRate: z.number().min(0.01).max(0.20).default(0.12),
+      // 6% matches the platform's own default illustrated rate (see the
+      // partner API's ag49Rate). 12% was above anything AG 49 lets a carrier
+      // illustrate, and a default is a statement about what is normal.
+      illustratedRate: z.number().min(0.01).max(0.20).default(0.06),
       issueAge: z.number().min(20).max(80).default(50),
       loanTermYears: z.number().min(5).max(30).default(10),
       projectionYears: z.number().min(10).max(40).default(30),
@@ -5430,7 +5433,11 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
       currentCashValue: z.number().min(0),
       currentAge: z.number().min(20).max(80),
       retirementAge: z.number().min(50).max(85),
-      illustratedRate: z.number().min(0.01).max(0.20).default(0.12),
+      // 6% matches the platform's own default illustrated rate (see the
+      // partner API's ag49Rate). 12% was above anything AG 49 lets a carrier
+      // illustrate, and a default is a statement about what is normal.
+      illustratedRate: z.number().min(0.01).max(0.20).default(0.06),
+      maximumIllustratedRate: z.number().min(1).max(12).optional(),
       loanRate: z.number().min(0.01).max(0.10).default(0.05),
       loanType: z.enum(['fixed', 'variable', 'wash']).default('wash'),
       annualIncomeNeeded: z.number().min(0).default(100000),
@@ -5447,7 +5454,11 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
       currentCashValue: z.number().min(0),
       currentAge: z.number().min(20).max(80),
       retirementAge: z.number().min(50).max(85),
-      illustratedRate: z.number().min(0.01).max(0.20).default(0.12),
+      // 6% matches the platform's own default illustrated rate (see the
+      // partner API's ag49Rate). 12% was above anything AG 49 lets a carrier
+      // illustrate, and a default is a statement about what is normal.
+      illustratedRate: z.number().min(0.01).max(0.20).default(0.06),
+      maximumIllustratedRate: z.number().min(1).max(12).optional(),
       loanRate: z.number().min(0.01).max(0.10).default(0.05),
       annualIncomeNeeded: z.number().min(0).default(100000),
       maxLoanToValue: z.number().min(0.5).max(0.95).default(0.90),
