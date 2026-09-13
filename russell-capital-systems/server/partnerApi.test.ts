@@ -287,12 +287,66 @@ describe('the calculators', () => {
     }
   });
 
-  it('does not expose the IUL arbitrage or lifetime-income engines', async () => {
-    // Both need a full fact finder rather than a web form, and both display
-    // indexed crediting and policy-loan arithmetic that AG 49-A governs. If
-    // either is ever added, it should be a deliberate decision with compliance
-    // review, not a route that appeared because it was easy.
-    for (const path of ['mortgage-killer', 'lifetime-income', 'reverse-heloc', 'roth-conversion']) {
+  const MORTGAGE = 'balance=650000&rate=6.75&termMonths=360&payment=4216&homeValue=900000&income=450000&age=45';
+
+  it('runs the mortgage analysis from seven values', async () => {
+    const r = await fetch(`${base}/mortgage?${MORTGAGE}`, auth);
+    expect(r.status).toBe(200);
+    const b = await r.json();
+    expect(b.current.totalInterest).toBeGreaterThan(0);
+    expect(b.accelerated.payoffMonths).toBeLessThan(b.current.payoffMonths);
+    expect(b.saved.interest).toBeGreaterThan(0);
+    expect(b.byYear.length).toBeGreaterThan(0);
+  });
+
+  it('asks for the two values it cannot default, and names the rest', async () => {
+    const r = await fetch(`${base}/mortgage?rate=6.75`, auth);
+    expect(r.status).toBe(400);
+    const b = await r.json();
+    expect(b.error).toBe('missing_inputs');
+    expect(b.required).toContain('balance');
+    expect(b.required).toContain('homeValue');
+  });
+
+  it('caps the illustrated crediting rate at 6.5% however high the caller asks', async () => {
+    // AG 49-A limits the illustrated rate. The ceiling belongs to this
+    // boundary, not to whoever writes the partner's front end — so asking for
+    // 12% must produce exactly the same answer as asking for 6.5%.
+    const [asked, ceiling] = await Promise.all([
+      fetch(`${base}/mortgage?${MORTGAGE}&creditRate=12`, auth).then((x) => x.json()),
+      fetch(`${base}/mortgage?${MORTGAGE}&creditRate=6.5`, auth).then((x) => x.json()),
+    ]);
+    expect(asked.policy.finalCashValue).toBe(ceiling.policy.finalCashValue);
+  });
+
+  it('carries the AG 49 language with every mortgage answer', async () => {
+    const b = await fetch(`${base}/mortgage?${MORTGAGE}`, auth).then((x) => x.json());
+    for (const phrase of ['not guaranteed', 'not indicative of future returns', 'reduces its cash value', 'taxable event']) {
+      expect(b.basis, phrase).toContain(phrase);
+    }
+  });
+
+  it('accepts the optional inputs a visitor chooses to answer', async () => {
+    // The point of the short form is that more detail is allowed, not required.
+    const [bare, detailed] = await Promise.all([
+      fetch(`${base}/mortgage?${MORTGAGE}`, auth).then((x) => x.json()),
+      fetch(`${base}/mortgage?${MORTGAGE}&allocationPct=30&helocRate=7&ira=500000`, auth).then((x) => x.json()),
+    ]);
+    expect(detailed.policy.annualPremium).toBeGreaterThan(bare.policy.annualPremium);
+  });
+
+  it('returns the yearly table, never the 360-row monthly schedules', async () => {
+    const b = await fetch(`${base}/mortgage?${MORTGAGE}`, auth).then((x) => x.json());
+    expect(b.byYear.length).toBeLessThanOrEqual(40);
+    expect(b.current.schedule).toBeUndefined();
+    expect(b.accelerated.schedule).toBeUndefined();
+  });
+
+  it('still does not expose the lifetime-income engine', async () => {
+    // Its defaults name a specific carrier product and assume 22-28% extra
+    // growth. A public page projecting that is a performance claim, not a
+    // calculation, and the assumptions need rebuilding before it goes out.
+    for (const path of ['lifetime-income', 'roth-conversion']) {
       const r = await fetch(`${base}/${path}`, auth);
       expect(r.status, path).toBe(404);
     }

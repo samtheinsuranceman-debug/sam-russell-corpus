@@ -115,3 +115,9 @@
   .dwt .dwt-plan-line { flex-direction: column; gap: .1rem; }
   .dwt .dwt-plan-line b { align-self: flex-start; }
 }
+
+/* The optional-detail disclosure on the longer forms. */
+.dwt .dwt-plan-more { margin: .25rem 0 .5rem; }
+.dwt .dwt-plan-more > summary { cursor: pointer; font-size: .875rem; opacity: .85; padding: .35rem 0; }
+.dwt .dwt-plan-more[open] > summary { margin-bottom: .5rem; }
+.dwt .dwt-plan-hint { margin: 0 0 .75rem; font-size: .8125rem; opacity: .7; }

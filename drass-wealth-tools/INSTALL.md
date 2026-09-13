@@ -121,6 +121,7 @@ publish when you are ready. Reactivating the plugin does not duplicate them.
 | `[dwt_monte_carlo]` | Will Your Money Last? | The chance a portfolio survives a retirement, across a thousand modelled runs |
 | `[dwt_tax]` | What Will You Actually Pay? | Federal and state income tax, with the bracket breakdown |
 | `[dwt_estate_tax]` | What Reaches Your Heirs? | Federal estate tax and what is left for the heirs |
+| `[dwt_mortgage]` | What Is The Mortgage Really Costing You? | What the mortgage costs as it stands against an accelerated plan |
 
 All three take a heading attribute, e.g. `[dwt_tax heading="Your tax, honestly"]`.
 
@@ -142,13 +143,37 @@ rendered under the result automatically. **Do not remove it.** It is the
 difference between an estimate and a promise, and the promise is one no firm
 should be making from a web form.
 
+### Answer as much as you like
+
+The mortgage tool asks seven questions and gives a complete answer from those
+alone. Under them is an **Add more detail** section holding another seven —
+premium allocation, line-of-credit rate, the balances someone already holds.
+Every one of them already has a sensible default, so a visitor can answer all
+of them, none of them, or anything in between. Nothing is required beyond the
+seven at the top, and a visitor who stops there gets the same quality of
+answer with the platform's own assumptions in place of theirs.
+
+### The indexed crediting rate is not yours to raise
+
+The mortgage illustration assumes an indexed crediting rate, and that rate is
+**capped at 6.5% by the platform** however it is asked for. Actuarial
+Guideline 49-A limits the rate an indexed universal life policy may be
+illustrated at, and the ceiling lives on the platform rather than in this
+plugin on purpose: nobody editing this site — including a future developer
+writing their own front end against the API — can raise it.
+
+The sentence under each mortgage result says the crediting is not guaranteed,
+that historical index changes do not indicate future returns, that borrowing
+against a policy reduces its cash value and death benefit, and that a policy
+lapsing with a loan outstanding can create a taxable event. **Do not remove
+it, and do not summarise it.**
+
 ### What is deliberately not here
 
-The HELOC-to-IUL arbitrage engine and the lifetime-income engine are not
-exposed, and their absence is a decision rather than an oversight. Both need a
-full fact finder rather than a web form — one of them takes twenty-seven
-inputs — and both display indexed crediting and policy-loan arithmetic, which
-is the material Actuarial Guideline 49-A governs. Those belong in an advisor
-conversation, not on a public page. If you want them, that is a conversation
-to have with Russell Capital Systems and your compliance officer, not a
-setting to switch on.
+The lifetime-income engine is not exposed, and its absence is a decision
+rather than an oversight. Its defaults name a specific carrier's product and
+assume twenty-two to twenty-eight per cent of additional growth. A public page
+projecting that is a performance claim rather than a calculation, and the
+assumptions need rebuilding before it goes anywhere near a visitor. If you
+want it, that is a conversation to have with Russell Capital Systems and your
+compliance officer, not a setting to switch on.

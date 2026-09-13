@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Without that, this endpoint would be an open proxy to any path on the
  * platform for anyone who can load a page.
  */
-const DWT_PLAN_TOOLS = [ 'monte-carlo', 'tax', 'estate-tax' ];
+const DWT_PLAN_TOOLS = [ 'monte-carlo', 'tax', 'estate-tax', 'mortgage' ];
 
 function dwt_ajax_plan(): void {
 	check_ajax_referer( 'dwt_plan', 'nonce' );
@@ -49,6 +49,9 @@ function dwt_ajax_plan(): void {
 		'initial', 'contribution', 'years', 'return', 'volatility', 'inflation',
 		'income', 'filing', 'state',
 		'estate', 'debts', 'charity', 'age', 'beneficiaries',
+		'balance', 'termMonths', 'payment', 'homeValue',
+		'allocationPct', 'creditRate', 'helocRate',
+		'ira', 'cash', 'investments', 'annuities', 'other', 'crypto',
 	];
 	$args = [];
 	foreach ( $allowed as $key ) {
@@ -155,4 +158,38 @@ function dwt_render_estate_tax( $atts = [] ): string {
 		'single'  => 'Single',
 	], 'married' );
 	return dwt_planning_shell( 'estate-tax', $a['heading'], $f, 'Work out the estate tax' );
+}
+
+// ── Mortgage elimination ───────────────────────────────────────────────────
+/**
+ * Seven values get an answer. Everything else is optional and sits behind a
+ * disclosure, because a form with twenty-five boxes is a form nobody finishes
+ * — and the engine has a sensible default for every one of them.
+ */
+function dwt_render_mortgage( $atts = [] ): string {
+	$a = shortcode_atts( [ 'heading' => 'What is the mortgage really costing you?' ], $atts, 'dwt_mortgage' );
+	if ( ! DWT_API::configured() ) {
+		return DWT_Shortcodes::render_refusal( 'This tool is not configured yet.' );
+	}
+
+	$f  = dwt_plan_number( 'balance', 'Mortgage balance', 650000, '1000' );
+	$f .= dwt_plan_number( 'rate', 'Interest rate, %', 6.75, '0.01' );
+	$f .= dwt_plan_number( 'termMonths', 'Months remaining', 360, '1' );
+	$f .= dwt_plan_number( 'payment', 'Monthly payment', 4216, '10' );
+	$f .= dwt_plan_number( 'homeValue', 'What the home is worth', 900000, '1000' );
+	$f .= dwt_plan_number( 'income', 'Annual household income', 450000, '1000' );
+	$f .= dwt_plan_number( 'age', 'Your age', 45, '1' );
+
+	$f .= '<details class="dwt-plan-more"><summary>Add more detail (optional)</summary>';
+	$f .= '<p class="dwt-plan-hint">Every field below already has a sensible default. Answer as many or as few as you like.</p>';
+	$f .= dwt_plan_number( 'allocationPct', 'Share of income to allocate, %', 20, '1' );
+	$f .= dwt_plan_number( 'helocRate', 'Line-of-credit rate, %', 8.5, '0.01' );
+	$f .= dwt_plan_number( 'ira', 'IRA and 401(k) balances', 0, '1000' );
+	$f .= dwt_plan_number( 'cash', 'Cash and savings', 0, '1000' );
+	$f .= dwt_plan_number( 'investments', 'Taxable investments', 0, '1000' );
+	$f .= dwt_plan_number( 'annuities', 'Annuities', 0, '1000' );
+	$f .= dwt_plan_number( 'other', 'Other investments', 0, '1000' );
+	$f .= '</details>';
+
+	return dwt_planning_shell( 'mortgage', $a['heading'], $f, 'Run the analysis' );
 }

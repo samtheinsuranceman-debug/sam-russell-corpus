@@ -52,6 +52,12 @@ class DWT_Shortcodes {
 				'fn'    => 'dwt_render_estate_tax',
 				'page'  => 'What Reaches Your Heirs?',
 			],
+			'dwt_mortgage' => [
+				'label' => 'Mortgage elimination — seven values, with more detail optional',
+				'file'  => 'planning.php',
+				'fn'    => 'dwt_render_mortgage',
+				'page'  => 'What Is The Mortgage Really Costing You?',
+			],
 		];
 	}
 

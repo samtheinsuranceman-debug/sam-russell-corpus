@@ -41,6 +41,17 @@
         + row('Effective rate', pct(d.effectiveRate))
         + row('Marginal rate', pct(d.marginalRate));
     },
+    mortgage: function (d) {
+      var yrs = Math.floor(d.saved.months / 12), mos = d.saved.months % 12;
+      return row('Interest as things stand', money.format(d.current.totalInterest))
+        + row('Interest on the accelerated plan', money.format(d.accelerated.totalInterest))
+        + row('Interest saved', money.format(d.saved.interest))
+        + row('Paid off', d.accelerated.payoffDate + ' instead of ' + d.current.payoffDate)
+        + row('Time saved', yrs + ' years ' + mos + ' months')
+        + row('Annual premium', money.format(d.policy.annualPremium))
+        + row('Policy surrender value at the end', money.format(
+            d.byYear.length ? d.byYear[d.byYear.length - 1].policySurrenderValue : 0));
+    },
     'estate-tax': function (d) {
       return row('Gross estate', money.format(d.grossEstate))
         + row('Exemption', money.format(d.exemption))
