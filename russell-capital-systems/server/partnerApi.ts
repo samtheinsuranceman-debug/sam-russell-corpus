@@ -28,7 +28,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { generateDualIllustration } from "@shared/timeMachineEngine";
-import { ALL_INDEX_OPTIONS, MAX_YEAR, MIN_YEAR, RAW_INDEX_RETURNS, getCreditingHistory } from "@shared/indexCreditingData";
+import { ALL_INDEX_OPTIONS, MAX_YEAR, MIN_YEAR, RAW_INDEX_RETURNS, getCreditingHistory, runBacktest } from "@shared/indexCreditingData";
 import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
 import { APPLICATIONS, DRAFTED_COUNT, ENGINE_COUNT, statusBadge, statusSentence } from "@shared/patentStatus";
 import { registerPartnerConcierge } from "./partnerConcierge";
@@ -898,6 +898,126 @@ export function registerPartnerApi(app: Express): void {
       notice:
         "Historical index changes shown are not indicative of future returns, and this is not an illustration of any " +
         "specific policy. Caps and participation rates are declared by the carrier and can change.",
+    });
+  });
+
+  /**
+   * Accumulation across an allocation of strategies.
+   * GET /api/partner/accumulation?premium=50000&years=30&startYear=1996
+   *     &allocate=am-sp500-ptp:60,am-sp500-uncapped:40
+   *
+   * The policyholder chooses the strategies and the share of premium in each,
+   * and gets account value and surrender value year by year, with a per-
+   * strategy breakdown of what each contributed.
+   *
+   * Surrender value needs the contract's surrender charge schedule, which
+   * differs by product, issue age and class. Pass it as `surrender=10,9,8,...`
+   * or the response returns surrender value equal to account value and says
+   * plainly that it is not. In the first several years that difference is
+   * large and it runs in the flattering direction, so it is not glossed.
+   */
+  app.get("/api/partner/accumulation", requireKey, (req, res) => {
+    const raw = String(req.query.allocate ?? "").trim();
+    const parsed = raw
+      ? raw.split(",").map((pair) => {
+          const [optionId, pct] = pair.split(":");
+          return { optionId: String(optionId ?? "").trim(), percentage: Number(pct) };
+        })
+      : [{ optionId: "am-sp500-ptp", percentage: 100 }];
+
+    // Refusals first, each naming what is wrong. An allocation that silently
+    // normalises to 100% is an allocation the caller did not make.
+    const unknown = parsed.filter((a) => !ALL_INDEX_OPTIONS.some((o) => o.id === a.optionId));
+    if (unknown.length) {
+      res.status(400).json({
+        error: "unknown_strategy",
+        detail: `No strategy is held with id: ${unknown.map((u) => u.optionId).join(", ")}.`,
+        available: ALL_INDEX_OPTIONS.filter((o) => reconstructionCaveat(o) === null).map((o) => o.id),
+      });
+      return;
+    }
+    const refused = parsed
+      .map((a) => ALL_INDEX_OPTIONS.find((o) => o.id === a.optionId)!)
+      .filter((o) => reconstructionCaveat(o) !== null);
+    if (refused.length) {
+      res.status(422).json({
+        error: "strategy_not_modelled_faithfully",
+        strategies: refused.map((o) => ({ id: o.id, name: o.name, detail: reconstructionCaveat(o) })),
+      });
+      return;
+    }
+    const total = parsed.reduce((t, a) => t + (Number.isFinite(a.percentage) ? a.percentage : 0), 0);
+    if (Math.abs(total - 100) > 0.01) {
+      res.status(400).json({
+        error: "allocation_must_total_100",
+        detail: `The allocation totals ${total}%. It is not normalised here, because an allocation nobody chose is not an answer.`,
+      });
+      return;
+    }
+
+    const startYear = clampInt(req.query.startYear, MIN_YEAR, MAX_YEAR - 4, 1996);
+    const years = clampInt(req.query.years, 5, MAX_YEAR - startYear + 1, Math.min(30, MAX_YEAR - startYear + 1));
+    // Split before parsing, and drop empty entries first: "".split(",") is
+    // [""], Number("") is 0, and 0 passes every range check — so an absent
+    // schedule parsed as a valid one-year schedule of 0%, and the response
+    // claimed a schedule had been supplied when none had.
+    const surrenderSchedule = String(req.query.surrender ?? "")
+      .split(",")
+      .map((piece) => piece.trim())
+      .filter((piece) => piece !== "")
+      .map(Number)
+      .filter((n) => Number.isFinite(n) && n >= 0 && n <= 100);
+
+    let result;
+    try {
+      result = runBacktest(parsed, clampNum(req.query.premium, 0, 1e7, 50_000), years, startYear);
+    } catch (e) {
+      res.status(400).json({ error: "backtest_failed", detail: e instanceof Error ? e.message : "unknown" });
+      return;
+    }
+
+    const sv = (accountValue: number, policyYear: number) =>
+      surrenderSchedule.length
+        ? Math.max(0, Math.round(accountValue * (1 - (surrenderSchedule[policyYear - 1] ?? 0) / 100)))
+        : Math.round(accountValue);
+
+    res.json({
+      allocation: parsed,
+      startYear,
+      years: result.years.map((y, i) => ({
+        calendarYear: y.year,
+        policyYear: i + 1,
+        creditedRatePct: Number(y.weightedCreditRate.toFixed(2)),
+        accountValue: Math.round(y.endingValue),
+        surrenderValue: sv(y.endingValue, i + 1),
+        byStrategy: y.optionBreakdown.map((b) => ({
+          id: b.optionId,
+          name: b.optionName,
+          allocationPct: b.allocation,
+          indexReturnPct: Number(b.rawReturn.toFixed(2)),
+          creditedRatePct: Number(b.creditedRate.toFixed(2)),
+        })),
+      })),
+      summary: {
+        finalAccountValue: Math.round(result.finalValue),
+        finalSurrenderValue: sv(result.finalValue, result.years.length),
+        annualizedReturnPct: Number(result.annualizedReturn.toFixed(2)),
+        floorProtectedYears: result.floorProtectedYears,
+        capLimitedYears: result.capLimitedYears,
+        surrenderScheduleSupplied: surrenderSchedule.length > 0,
+      },
+      strategies: ALL_INDEX_OPTIONS.filter((o) => reconstructionCaveat(o) === null).map((o) => ({
+        id: o.id, name: o.name, capPct: o.cap, floorPct: o.floor,
+        participationPct: o.participation, spreadPct: o.spread, strategyChargePct: o.strategyCharge,
+      })),
+      basis:
+        surrenderSchedule.length
+          ? "Surrender value is account value less the surrender charge schedule supplied."
+          : "No surrender charge schedule was supplied, so surrender value is shown equal to account value. " +
+            "A real policy carries a surrender charge for the first several years and the true figure is lower.",
+      notice:
+        "Historical index changes are not indicative of future returns. Caps, participation rates and spreads are " +
+        "declared by the carrier and can change.",
     });
   });
 }
