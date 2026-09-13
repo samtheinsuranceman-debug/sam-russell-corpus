@@ -37,9 +37,30 @@ describe("organized portal navigation", () => {
     }
   });
 
+  /**
+   * Routes deliberately absent from both navigations, each with its reason.
+   *
+   * An exemption list is a liability if it is allowed to grow quietly, so it
+   * is asserted below: every entry must still be a real route, or it is a
+   * stale excuse for a page that no longer exists.
+   */
+  const NOT_IN_NAVIGATION: Record<string, string> = {
+    "/portal/interior":
+      "The design-system reference. It shows the shared primitives against sample content for whoever is building screens, and has nothing on it a client would want. Reachable by anyone who types the URL; not advertised.",
+  };
+
   it("makes every static portal route discoverable through primary or secondary navigation", () => {
-    const undiscoverable = [...routes].filter(path => !navSet.has(path) && !secondarySet.has(path));
+    const undiscoverable = [...routes]
+      .filter((path) => !navSet.has(path) && !secondarySet.has(path))
+      .filter((path) => !(path in NOT_IN_NAVIGATION));
     expect(undiscoverable).toEqual([]);
+  });
+
+  it("keeps the navigation exemptions honest: each is a real route with a real reason", () => {
+    for (const [path, reason] of Object.entries(NOT_IN_NAVIGATION)) {
+      expect(routes.has(path), path).toBe(true);
+      expect(reason.length, path).toBeGreaterThan(60);
+    }
   });
 
   it("provides search, category filtering, counts, and preserved-route guidance", () => {

@@ -5,6 +5,7 @@
  * 3. Strategy Save-to-Client — strategy.save procedure
  */
 import { describe, expect, it, vi } from "vitest";
+import { hasDatabase } from './testDb';
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
@@ -40,13 +41,13 @@ const caller = appRouter.createCaller;
 
 // ─── 1. Client Last-Contacted Indicator ─────────────────────────────────────
 describe("clients.list returns lastContactedAt", () => {
-  it("should return an array (may be empty if no workspace)", async () => {
+  it.skipIf(!hasDatabase)("should return an array (may be empty if no workspace)", async () => {
     const ctx = makeCtx();
     const result = await caller(ctx).clients.list();
     expect(Array.isArray(result)).toBe(true);
   });
 
-  it("each client should have lastContactedAt field (null or Date)", async () => {
+  it.skipIf(!hasDatabase)("each client should have lastContactedAt field (null or Date)", async () => {
     const ctx = makeCtx();
     const result = await caller(ctx).clients.list();
     for (const c of result) {
@@ -54,7 +55,7 @@ describe("clients.list returns lastContactedAt", () => {
     }
   });
 
-  it("each client should have opportunityScore field", async () => {
+  it.skipIf(!hasDatabase)("each client should have opportunityScore field", async () => {
     const ctx = makeCtx();
     const result = await caller(ctx).clients.list();
     for (const c of result) {
@@ -71,13 +72,13 @@ describe("clients.list returns lastContactedAt", () => {
 
 // ─── 2. Knowledge Doc Full-Text Viewer (knowledge.list returns content) ─────
 describe("knowledge.list includes content field", () => {
-  it("should return an array", async () => {
+  it.skipIf(!hasDatabase)("should return an array", async () => {
     const ctx = makeCtx();
     const result = await caller(ctx).knowledge.list();
     expect(Array.isArray(result)).toBe(true);
   });
 
-  it("each doc should have content field (string or null)", async () => {
+  it.skipIf(!hasDatabase)("each doc should have content field (string or null)", async () => {
     const ctx = makeCtx();
     const result = await caller(ctx).knowledge.list();
     for (const doc of result) {
@@ -86,7 +87,7 @@ describe("knowledge.list includes content field", () => {
     }
   });
 
-  it("each doc should have fileUrl field for uploaded docs", async () => {
+  it.skipIf(!hasDatabase)("each doc should have fileUrl field for uploaded docs", async () => {
     const ctx = makeCtx();
     const result = await caller(ctx).knowledge.list();
     for (const doc of result) {
@@ -156,7 +157,7 @@ describe("strategy.save procedure", () => {
 
 // ─── 4. Strategy listByClient ───────────────────────────────────────────────
 describe("strategy.listByClient procedure", () => {
-  it("should reject access to clientId not in user's workspace (data isolation)", async () => {
+  it.skipIf(!hasDatabase)("should reject access to clientId not in user's workspace (data isolation)", async () => {
     const ctx = makeCtx();
     // clientId 999 doesn't belong to the test user's workspace — security gate must block
     await expect(

@@ -1,10 +1,11 @@
 import { and, eq } from "drizzle-orm";
+import { hasDatabase } from './testDb';
 import { describe, expect, it } from "vitest";
 import { clients, workspaces } from "../drizzle/schema";
 import { getDb } from "./db";
 
 describe("client workflow persistence", () => {
-  it("creates, reads, and updates a client inside a rolled-back transaction", async () => {
+  it.skipIf(!hasDatabase)("creates, reads, and updates a client inside a rolled-back transaction", async () => {
     const db = await getDb();
     expect(db).toBeTruthy();
     const sentinel = `rollback-${Date.now()}`;

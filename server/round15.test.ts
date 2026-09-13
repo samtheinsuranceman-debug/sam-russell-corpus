@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { hasDatabase } from './testDb';
 import { appRouter } from "./routers";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────
@@ -58,7 +59,7 @@ describe("workspaceSwitcher.create", () => {
     await expect(anonCaller.workspaceSwitcher.create({ name: "New WS" })).rejects.toThrow();
   });
 
-  it("creates a new workspace", async () => {
+  it.skipIf(!hasDatabase)("creates a new workspace", async () => {
     const result = await caller.workspaceSwitcher.create({ name: `Test WS ${Date.now()}` });
     expect(result).toHaveProperty("id");
     expect(result).toHaveProperty("name");
@@ -87,7 +88,7 @@ describe("meetings.create", () => {
     })).rejects.toThrow();
   });
 
-  it("creates a meeting with required fields", async () => {
+  it.skipIf(!hasDatabase)("creates a meeting with required fields", async () => {
     // First create a client to link the meeting to
     let clientId: number;
     try {
@@ -110,7 +111,7 @@ describe("meetings.create", () => {
     expect(typeof result.id).toBe("number");
   });
 
-  it("creates a meeting with optional notes and meetingType", async () => {
+  it.skipIf(!hasDatabase)("creates a meeting with optional notes and meetingType", async () => {
     let clientId: number;
     try {
       const client = await caller.clients.create({
@@ -151,7 +152,7 @@ describe("meetings.listUpcoming", () => {
     await expect(anonCaller.meetings.listUpcoming()).rejects.toThrow();
   });
 
-  it("returns an array of upcoming meetings", async () => {
+  it.skipIf(!hasDatabase)("returns an array of upcoming meetings", async () => {
     const result = await caller.meetings.listUpcoming();
     expect(Array.isArray(result)).toBe(true);
   });
@@ -162,12 +163,12 @@ describe("meetings.listAll", () => {
     await expect(anonCaller.meetings.listAll()).rejects.toThrow();
   });
 
-  it("returns an array of meetings", async () => {
+  it.skipIf(!hasDatabase)("returns an array of meetings", async () => {
     const result = await caller.meetings.listAll();
     expect(Array.isArray(result)).toBe(true);
   });
 
-  it("returns meetings with expected fields", async () => {
+  it.skipIf(!hasDatabase)("returns meetings with expected fields", async () => {
     const result = await caller.meetings.listAll();
     if (result.length > 0) {
       const m = result[0];
@@ -183,7 +184,7 @@ describe("meetings.update", () => {
     await expect(anonCaller.meetings.update({ id: 1, title: "Updated" })).rejects.toThrow();
   });
 
-  it("updates meeting title", async () => {
+  it.skipIf(!hasDatabase)("updates meeting title", async () => {
     let clientId: number;
     try {
       const client = await caller.clients.create({
@@ -208,7 +209,7 @@ describe("meetings.update", () => {
     expect(result).toHaveProperty("success", true);
   });
 
-  it("updates meeting notes", async () => {
+  it.skipIf(!hasDatabase)("updates meeting notes", async () => {
     let clientId: number;
     try {
       const client = await caller.clients.create({
@@ -239,7 +240,7 @@ describe("meetings.delete", () => {
     await expect(anonCaller.meetings.delete({ id: 1 })).rejects.toThrow();
   });
 
-  it("deletes a meeting", async () => {
+  it.skipIf(!hasDatabase)("deletes a meeting", async () => {
     let clientId: number;
     try {
       const client = await caller.clients.create({
@@ -271,7 +272,7 @@ describe("dashboardConfig.get", () => {
     await expect(anonCaller.dashboardConfig.get()).rejects.toThrow();
   });
 
-  it("returns an array (empty for new users)", async () => {
+  it.skipIf(!hasDatabase)("returns an array (empty for new users)", async () => {
     const result = await caller.dashboardConfig.get();
     expect(Array.isArray(result)).toBe(true);
   });
@@ -284,7 +285,7 @@ describe("dashboardConfig.save", () => {
     ])).rejects.toThrow();
   });
 
-  it("saves widget configuration", async () => {
+  it.skipIf(!hasDatabase)("saves widget configuration", async () => {
     const config = [
       { widgetId: "stat_cards", position: 0, visible: true, size: "FULL" as const },
       { widgetId: "client_table", position: 1, visible: true, size: "FULL" as const },
@@ -295,7 +296,7 @@ describe("dashboardConfig.save", () => {
     expect(result).toHaveProperty("success", true);
   });
 
-  it("persists and retrieves saved configuration", async () => {
+  it.skipIf(!hasDatabase)("persists and retrieves saved configuration", async () => {
     const config = [
       { widgetId: "stat_cards", position: 0, visible: true, size: "FULL" as const },
       { widgetId: "quick_actions", position: 1, visible: false, size: "SMALL" as const },
@@ -320,7 +321,7 @@ describe("dashboardConfig.save", () => {
     }
   });
 
-  it("handles reordering by updating positions", async () => {
+  it.skipIf(!hasDatabase)("handles reordering by updating positions", async () => {
     const config = [
       { widgetId: "quick_actions", position: 0, visible: true, size: "FULL" as const },
       { widgetId: "stat_cards", position: 1, visible: true, size: "FULL" as const },
@@ -336,7 +337,7 @@ describe("dashboardConfig.save", () => {
     }
   });
 
-  it("handles toggling visibility", async () => {
+  it.skipIf(!hasDatabase)("handles toggling visibility", async () => {
     const config = [
       { widgetId: "net_worth_trajectory", position: 0, visible: false, size: "FULL" as const },
     ];

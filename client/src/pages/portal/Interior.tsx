@@ -13,12 +13,31 @@ import { Download, FileText, Lock, Plus, RefreshCw, Trash2 } from "lucide-react"
    Every control on this page is the shared primitive — nothing here is a
    one-off. Change it here and all 232 portal screens change with it. */
 
+/*
+ * Sample rows for the table primitive. The carriers are deliberately not real.
+ *
+ * This page previously listed Mass Mutual, New York Life, Penn Mutual,
+ * Guardian and Northwestern Mutual with specific caps, floors, guaranteed
+ * rates and ILLUSTRATED rates — none sourced, none dated, none verified. That
+ * is the exact thing shared/mutualIulCarriers.ts exists to prevent: every fact
+ * there is a Verified<T> carrying its source and as-of date, and an unverified
+ * one shows on screen as unverified.
+ *
+ * This route sits behind ManagedAuthGuard, which any signed-in visitor clears
+ * — including a guest with the entrance passcode. A screenshot of this page
+ * was a rate sheet with five real carriers on it, and illustrated rates are
+ * the material AG 49-A governs. A design system needs rows in a table; it does
+ * not need them to name anyone.
+ *
+ * If this page should ever show real carriers, it must read them from
+ * mutualIulCarriers.ts so the verification travels with them.
+ */
 const CARRIERS = [
-  { name: "Mass Mutual",        rating: "A++", cap: "11.00%", floor: "0.00%", guar: "2.00%", illus: "6.21%", state: "act"  },
-  { name: "New York Life",      rating: "A++", cap: "10.25%", floor: "0.00%", guar: "2.00%", illus: "5.94%", state: "act"  },
-  { name: "Penn Mutual",        rating: "A+",  cap: "12.50%", floor: "0.00%", guar: "1.00%", illus: "6.48%", state: "act"  },
-  { name: "Guardian Life",      rating: "A++", cap: "9.75%",  floor: "0.00%", guar: "2.00%", illus: "5.71%", state: "warn" },
-  { name: "Northwestern Mutual",rating: "A++", cap: "10.00%", floor: "0.00%", guar: "2.00%", illus: "5.83%", state: "act"  },
+  { name: "Sample Carrier A", rating: "A++", cap: "11.00%", floor: "0.00%", guar: "2.00%", illus: "6.21%", state: "act"  },
+  { name: "Sample Carrier B", rating: "A++", cap: "10.25%", floor: "0.00%", guar: "2.00%", illus: "5.94%", state: "act"  },
+  { name: "Sample Carrier C", rating: "A+",  cap: "12.50%", floor: "0.00%", guar: "1.00%", illus: "6.48%", state: "act"  },
+  { name: "Sample Carrier D", rating: "A++", cap: "9.75%",  floor: "0.00%", guar: "2.00%", illus: "5.71%", state: "warn" },
+  { name: "Sample Carrier E", rating: "A++", cap: "10.00%", floor: "0.00%", guar: "2.00%", illus: "5.83%", state: "act"  },
 ];
 
 export default function Interior() {

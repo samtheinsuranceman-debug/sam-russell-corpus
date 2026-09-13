@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { hasDatabase } from './testDb';
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
@@ -38,14 +39,14 @@ function createAuthContext(): { ctx: TrpcContext } {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("riskScoring", () => {
-  it("riskScoring.scores returns an array", async () => {
+  it.skipIf(!hasDatabase)("riskScoring.scores returns an array", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const scores = await caller.riskScoring.scores();
     expect(Array.isArray(scores)).toBe(true);
   });
 
-  it("each score entry has required fields", async () => {
+  it.skipIf(!hasDatabase)("each score entry has required fields", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const scores = await caller.riskScoring.scores();
@@ -68,7 +69,7 @@ describe("riskScoring", () => {
     }
   });
 
-  it("scoreForClient returns null for non-existent client", async () => {
+  it.skipIf(!hasDatabase)("scoreForClient returns null for non-existent client", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const result = await caller.riskScoring.scoreForClient({ clientId: 999999 });
@@ -81,14 +82,14 @@ describe("riskScoring", () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("leaderboard", () => {
-  it("leaderboard.list returns an array", async () => {
+  it.skipIf(!hasDatabase)("leaderboard.list returns an array", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const entries = await caller.leaderboard.list();
     expect(Array.isArray(entries)).toBe(true);
   });
 
-  it("each entry has enhanced performance fields", async () => {
+  it.skipIf(!hasDatabase)("each entry has enhanced performance fields", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const entries = await caller.leaderboard.list();
@@ -111,7 +112,7 @@ describe("leaderboard", () => {
     }
   });
 
-  it("entries are sorted by score descending", async () => {
+  it.skipIf(!hasDatabase)("entries are sorted by score descending", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const entries = await caller.leaderboard.list();
@@ -120,7 +121,7 @@ describe("leaderboard", () => {
     }
   });
 
-  it("ranks are sequential starting from 1", async () => {
+  it.skipIf(!hasDatabase)("ranks are sequential starting from 1", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const entries = await caller.leaderboard.list();

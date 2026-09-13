@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { hasDatabase } from './testDb';
 import { appRouter } from "./routers";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────
@@ -51,7 +52,7 @@ describe("rebalance.bulkUploadCsv", () => {
     }
   });
 
-  it("handles CSV with missing columns gracefully", async () => {
+  it.skipIf(!hasDatabase)("handles CSV with missing columns gracefully", async () => {
     try {
       await caller.rebalance.bulkUploadCsv({
         csvText: "client_name\nTest Client",

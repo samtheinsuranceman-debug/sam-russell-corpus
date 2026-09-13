@@ -5,6 +5,7 @@
  * 3. Email — sendInvitationEmail graceful fallback when no API key
  */
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { hasDatabase } from './testDb';
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
@@ -173,7 +174,7 @@ describe("enterprise.auditLogs procedure", () => {
     await expect(caller.enterprise.auditLogs({ page: 1, pageSize: 20 })).rejects.toThrow();
   });
 
-  it("returns paginated structure with correct fields when workspace not found", async () => {
+  it.skipIf(!hasDatabase)("returns paginated structure with correct fields when workspace not found", async () => {
     const ctx = makeCtx();
     const caller = appRouter.createCaller(ctx);
     const result = await caller.enterprise.auditLogs({ page: 1, pageSize: 20 });

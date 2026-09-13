@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { hasDatabase } from './testDb';
 import { sql } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import { getDb } from "./db";
@@ -37,7 +38,7 @@ describe("core portal table bootstrap", () => {
     expect(created).toEqual([...EXPECTED_CORE_TABLES].sort());
   });
 
-  it("queries every bootstrapped table without inserting data", async () => {
+  it.skipIf(!hasDatabase)("queries every bootstrapped table without inserting data", async () => {
     const db = await getDb();
     expect(db).toBeTruthy();
 
