@@ -35,6 +35,7 @@ import { registerPartnerConcierge } from "./partnerConcierge";
 import { runMonteCarlo } from "@shared/monteCarloEngine";
 import { calculateTax, getStateCodes } from "@shared/taxBracketEngine";
 import { calculateComprehensiveEstateTax } from "@shared/estateTaxEngine";
+import { runMortgageKillerAnalysis } from "@shared/mortgageKiller";
 
 /** Bearer key. Absent means the whole surface is off, not open. */
 const KEY = () => (process.env.PARTNER_API_KEY ?? "").trim();
@@ -335,12 +336,23 @@ export function registerPartnerApi(app: Express): void {
   // simulation count is a denial-of-service knob, and an unclamped horizon
   // produces a table nobody asked for and a response nobody can render.
   //
-  // Deliberately NOT exposed: the HELOC-to-IUL arbitrage engine and the
-  // lifetime-income engine. Both need a full fact finder rather than a web
-  // form — mortgageKiller alone takes 27 fields — and both display indexed
-  // crediting and policy-loan arithmetic, which is exactly the material
-  // AG 49-A governs. Those belong in an advisor session on a surface whose
-  // compliance we control, not in a public page on a host we do not.
+  // The mortgage engine is exposed too, on terms. Its 27 fields looked like a
+  // reason to withhold it; they are not, because the engine already defaults
+  // twenty of them. Six values plus an age produce a complete analysis, and a
+  // visitor who wants to supply their IUL crediting assumption or their HELOC
+  // rate may. Answer as much or as little as you like.
+  //
+  // What does not move: the illustrated crediting rate is capped at 6.5% here
+  // however high the caller asks, the same ceiling the time-machine route
+  // applies, and the AG 49-A notice rides with every response. A partner
+  // writing their own front end cannot raise the rate, because they are not
+  // given the knob.
+  //
+  // Still NOT exposed: the lifetime-income engine. Its defaults name a
+  // specific carrier product and assume 22-28% additional growth, and a
+  // public page projecting that is a performance claim rather than a
+  // calculation. That one needs its assumptions rebuilt before it can go
+  // anywhere near a visitor.
 
   /**
    * Monte Carlo projection.
@@ -439,6 +451,101 @@ export function registerPartnerApi(app: Express): void {
       basis:
         "Federal estate tax only. State estate and inheritance taxes are not included and apply in several states. " +
         "An estimate, not legal or tax advice.",
+    });
+  });
+
+  /**
+   * Mortgage elimination: what the mortgage costs as it stands, and what an
+   * accelerated plan does to it.
+   * GET /api/partner/mortgage?balance=650000&rate=6.75&termMonths=360&payment=4216&homeValue=900000&income=450000&age=45
+   *
+   * Six values and an age are enough. Everything else — assets held, premium
+   * allocation, HELOC rate, policy-loan drag, reinvestment assumptions — has a
+   * default in the engine and is accepted here if the caller wants to supply
+   * it.
+   */
+  app.get("/api/partner/mortgage", requireKey, (req, res) => {
+    const q = req.query;
+    const balance = clampNum(q.balance, 0, 1e8, 0);
+    const homeValue = clampNum(q.homeValue, 0, 1e9, 0);
+    if (balance <= 0 || homeValue <= 0) {
+      res.status(400).json({
+        error: "missing_inputs",
+        detail: "A mortgage balance and a home value are required. The rest have defaults.",
+        required: ["balance", "rate", "termMonths", "payment", "homeValue", "income", "age"],
+      });
+      return;
+    }
+
+    const r = runMortgageKillerAnalysis({
+      mortgageBalance: balance,
+      mortgageRate: clampNum(q.rate, 0.01, 25, 6.75) / 100,
+      mortgageTermMonths: clampInt(q.termMonths, 12, 480, 360),
+      monthlyMortgagePayment: clampNum(q.payment, 1, 1e6, 0),
+      homeMarketValue: homeValue,
+      annualIncome: clampNum(q.income, 0, 1e8, 0),
+      clientAge: clampInt(q.age, 18, 90, 45),
+
+      // Required by the type, unused by the analysis. Passed explicitly rather
+      // than cast away, so a future engine that starts reading them fails the
+      // typecheck here instead of silently reading zero.
+      monthlyInterestOnlyPayment: 0,
+      totalInterestPayments: 0,
+      homeEquityValue: Math.max(0, homeValue - balance),
+
+      // Optional, and genuinely optional: each is the engine's own default
+      // when the caller says nothing.
+      iraValue: clampNum(q.ira, 0, 1e9, 0),
+      cashValue: clampNum(q.cash, 0, 1e9, 0),
+      investments: clampNum(q.investments, 0, 1e9, 0),
+      annuities: clampNum(q.annuities, 0, 1e9, 0),
+      otherInvestments: clampNum(q.other, 0, 1e9, 0),
+      cryptocurrency: clampNum(q.crypto, 0, 1e9, 0),
+      incomeAllocationPct: clampNum(q.allocationPct, 1, 50, 20) / 100,
+      // AG 49-A: the ceiling is ours, not the caller's.
+      iulCreditRate: clampNum(q.creditRate, 0, 6.5, 6) / 100,
+      helocRate: clampNum(q.helocRate, 0, 25, 8.5) / 100,
+    });
+
+    res.json({
+      current: {
+        totalInterest: Math.round(r.currentPlan.totalInterest),
+        payoffMonths: r.currentPlan.payoffMonths,
+        payoffDate: r.summary.originalPayoffDate,
+      },
+      accelerated: {
+        totalInterest: Math.round(r.recommendedPlan.totalInterest),
+        payoffMonths: r.recommendedPlan.payoffMonths,
+        payoffDate: r.summary.mortgageFreeDate,
+      },
+      saved: {
+        interest: Math.round(r.summary.totalInterestSaved),
+        years: r.summary.yearsSaved,
+        months: r.summary.monthsSaved,
+      },
+      policy: {
+        annualPremium: Math.round(r.summary.annualIulPremium),
+        totalPremiums: Math.round(r.summary.totalIulPremiums),
+        totalPolicyLoans: Math.round(r.summary.totalPolicyLoans),
+        finalCashValue: Math.round(r.summary.finalPolicyCashValue),
+      },
+      // The year-by-year table, not the 360-row monthly schedules. A partner
+      // page cannot render 720 rows and no reader wants them.
+      byYear: r.cascadingProjection.map((y) => ({
+        year: y.year,
+        mortgageBalance: Math.round(y.mortgageBalance),
+        // The surrender value, not the account value: it is what the
+        // policyholder could actually take, and the two differ by the
+        // surrender charge for a decade or more.
+        policySurrenderValue: Math.round(y.iulSurrenderValue),
+        helocBalance: Math.round(y.helocBalance),
+        netWorth: Math.round(y.netWorth),
+      })),
+      basis:
+        "An illustration, not a promise. Indexed crediting is capped at 6.5% here and is not guaranteed; " +
+        "actual credited rates vary with the index and the carrier's declared cap, and may be zero in a year the index falls. " +
+        "Historical index changes are not indicative of future returns. Borrowing against a policy reduces its cash value " +
+        "and death benefit, and a policy that lapses with a loan outstanding can create a taxable event.",
     });
   });
 }
