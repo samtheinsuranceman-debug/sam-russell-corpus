@@ -50,6 +50,36 @@ describe('the bearer gate', () => {
     expect(r.status).toBe(401);
   });
 
+  it('refuses a key that is a prefix of the real one, and one that extends it', async () => {
+    // The compare hashes both sides before timingSafeEqual, so length no
+    // longer participates in the decision. Both of these would pass a careless
+    // `startsWith` and both must fail a correct compare.
+    for (const wrong of [KEY.slice(0, KEY.length - 1), KEY + 'x', KEY.toUpperCase()]) {
+      const r = await fetch(`${base}/catalog`, { headers: { Authorization: `Bearer ${wrong}` } });
+      expect(r.status, JSON.stringify(wrong)).toBe(401);
+    }
+  });
+
+  it('tolerates whitespace around the key, on purpose', async () => {
+    // Both sides are trimmed: the header token by the gate, the expected value
+    // when it is read from the environment. That is deliberate — a key pasted
+    // into a Railway variable or a WordPress settings field routinely picks up
+    // a trailing space, and failing that request produces a 401 nobody can
+    // debug from the outside. The first version of the test above expected
+    // these to be rejected; the code was right and the expectation was wrong,
+    // so the behaviour is pinned here rather than quietly changed.
+    for (const padded of [' ' + KEY, KEY + ' ', '  ' + KEY + '  ']) {
+      const r = await fetch(`${base}/catalog`, { headers: { Authorization: `Bearer ${padded}` } });
+      expect(r.status, JSON.stringify(padded)).toBe(200);
+    }
+  });
+
+  it('accepts the exact key, so the gate is not simply refusing everything', async () => {
+    // Without this, every assertion above would pass on a broken compare.
+    const r = await fetch(`${base}/catalog`, auth);
+    expect(r.status).toBe(200);
+  });
+
   it('lets health through unauthenticated, so misconfigured can be told from unauthorised', async () => {
     const r = await fetch(`${base}/health`);
     expect(r.status).toBe(200);

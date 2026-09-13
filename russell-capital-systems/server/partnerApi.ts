@@ -26,6 +26,7 @@
 // ============================================================
 
 import type { Express, Request, Response, NextFunction } from "express";
+import { createHash, timingSafeEqual } from "node:crypto";
 import { generateDualIllustration } from "@shared/timeMachineEngine";
 import { ALL_INDEX_OPTIONS, RAW_INDEX_RETURNS } from "@shared/indexCreditingData";
 import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
@@ -58,6 +59,28 @@ function clampNum(raw: unknown, lo: number, hi: number, fallback: number): numbe
 }
 
 /**
+ * Constant-time comparison of two secrets.
+ *
+ * `timingSafeEqual` refuses buffers of different lengths, and a bearer token
+ * from a caller is arbitrary length — so hash both sides to a fixed 32 bytes
+ * first and compare the digests. A digest comparison leaks nothing about the
+ * key: an attacker who learns that byte 3 of SHA-256(guess) matches byte 3 of
+ * SHA-256(key) learns nothing about the key itself, because they cannot walk
+ * a preimage backwards one byte at a time the way they could walk a plaintext
+ * `===` comparison.
+ *
+ * This is what the comment here previously claimed was happening. It was not;
+ * the code did a plain `===`. The practical risk over HTTPS against a 256-bit
+ * token was small, but a comment describing a mitigation that is not there is
+ * worse than no comment, because the next reader believes it.
+ */
+function sameSecret(a: string, b: string): boolean {
+  const da = createHash("sha256").update(a, "utf8").digest();
+  const db = createHash("sha256").update(b, "utf8").digest();
+  return timingSafeEqual(da, db);
+}
+
+/**
  * Bearer gate. Closed by default: with no PARTNER_API_KEY set the surface
  * answers 503 and explains, rather than serving openly. An API that silently
  * becomes public when a variable is unset is the failure nobody notices.
@@ -75,9 +98,7 @@ function requireKey(req: Request, res: Response, next: NextFunction) {
   const header = String(req.headers.authorization ?? "");
   const [scheme, ...rest] = header.split(" ");
   const token = rest.join(" ").trim();
-  // Length-independent compare would be better; Node's timingSafeEqual needs
-  // equal lengths, so compare hashes of both sides instead of the raw strings.
-  const ok = scheme.toLowerCase() === "bearer" && token.length > 0 && token === expected;
+  const ok = scheme.toLowerCase() === "bearer" && token.length > 0 && sameSecret(token, expected);
   if (!ok) {
     res.setHeader("WWW-Authenticate", 'Bearer realm="rcs-partner"');
     res.status(401).json({ error: "unauthorized" });
