@@ -88,11 +88,22 @@ describe('the 57 claims', () => {
     expect(si1.note).toContain('validator');
   });
 
-  it('the four revived claims each say what remains, rather than being quietly promoted', () => {
-    for (const ref of ['SI-021', 'SI-023', 'SI-026']) {
-      const c = claimByRef(ref)!;
-      expect(c.status).toBe('partial');
-      expect((c.note ?? '').length).toBeGreaterThan(60);
+  it('SI-021 and SI-026 are built on their own engines, not borrowed ones', () => {
+    expect(claimByRef('SI-021')!.status).toBe('built');
+    expect(claimByRef('SI-021')!.engine).toBe('shared/historicalShocks.ts');
+    expect(claimByRef('SI-026')!.status).toBe('built');
+    expect(claimByRef('SI-026')!.engine).toBe('shared/regulatorySandbox.ts');
+  });
+
+  it('SI-023 stays unbuilt, and says it is blocked on data rather than code', () => {
+    const c = claimByRef('SI-023')!;
+    expect(c.status).toBe('partial');
+    expect(c.note).toContain('Blocked on data');
+  });
+
+  it('every revived claim records why it changed shape', () => {
+    for (const ref of ['SI-001', 'SI-021', 'SI-023', 'SI-026']) {
+      expect((claimByRef(ref)!.note ?? '').length).toBeGreaterThan(60);
     }
   });
 });
