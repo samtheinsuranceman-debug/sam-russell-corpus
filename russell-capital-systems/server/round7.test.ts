@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { hasDatabase } from './testDb';
 import { appRouter } from "./routers";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────
@@ -96,12 +97,12 @@ describe("clients.list (used by Scenario Adjustments)", () => {
     await expect(anonCaller.clients.list()).rejects.toThrow();
   });
 
-  it("returns an array (may be empty if no workspace)", async () => {
+  it.skipIf(!hasDatabase)("returns an array (may be empty if no workspace)", async () => {
     const result = await caller.clients.list();
     expect(Array.isArray(result)).toBe(true);
   });
 
-  it("returns client objects with financial fields needed for scenario modeling", async () => {
+  it.skipIf(!hasDatabase)("returns client objects with financial fields needed for scenario modeling", async () => {
     const result = await caller.clients.list();
     if (result.length > 0) {
       const c = result[0];
@@ -115,7 +116,7 @@ describe("clients.list (used by Scenario Adjustments)", () => {
 
 // ─── Dashboard redesign data ─────────────────────────────────────────────
 describe("Dashboard redesign data", () => {
-  it("clients.list returns lastContactedAt field", async () => {
+  it.skipIf(!hasDatabase)("clients.list returns lastContactedAt field", async () => {
     const result = await caller.clients.list();
     if (result.length > 0) {
       expect("lastContactedAt" in result[0]).toBe(true);

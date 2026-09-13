@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { hasDatabase } from './testDb';
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
@@ -51,7 +52,7 @@ describe("complianceTracking", () => {
   });
 
   describe("sign", () => {
-    it("creates a compliance signature and session", async () => {
+    it.skipIf(!hasDatabase)("creates a compliance signature and session", async () => {
       const ctx = createUserContext({ id: 8888, name: "Sign Test User", email: "signtest@example.com" });
       const caller = appRouter.createCaller(ctx);
       const result = await caller.complianceTracking.sign({
@@ -66,7 +67,7 @@ describe("complianceTracking", () => {
   });
 
   describe("logPageVisit", () => {
-    it("logs a page visit for an active session", async () => {
+    it.skipIf(!hasDatabase)("logs a page visit for an active session", async () => {
       const ctx = createUserContext({ id: 7777, name: "Page Visit User", email: "pagevisit@example.com" });
       const caller = appRouter.createCaller(ctx);
       // First sign to create a session
@@ -87,7 +88,7 @@ describe("complianceTracking", () => {
   });
 
   describe("endSession", () => {
-    it("ends an active session", async () => {
+    it.skipIf(!hasDatabase)("ends an active session", async () => {
       const ctx = createUserContext({ id: 6666, name: "End Session User", email: "endsession@example.com" });
       const caller = appRouter.createCaller(ctx);
       // First sign to create a session

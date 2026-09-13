@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { hasDatabase } from './testDb';
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
@@ -38,7 +39,7 @@ function createAuthContext(): { ctx: TrpcContext } {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("riskScoring with recommendations", () => {
-  it("scoreForClient returns recommendations array when client exists", async () => {
+  it.skipIf(!hasDatabase)("scoreForClient returns recommendations array when client exists", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const scores = await caller.riskScoring.scores();
@@ -50,7 +51,7 @@ describe("riskScoring with recommendations", () => {
     expect(Array.isArray(result!.recommendations)).toBe(true);
   });
 
-  it("each recommendation has factor, label, score, maxScore, recommendation", async () => {
+  it.skipIf(!hasDatabase)("each recommendation has factor, label, score, maxScore, recommendation", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const scores = await caller.riskScoring.scores();
@@ -73,7 +74,7 @@ describe("riskScoring with recommendations", () => {
     }
   });
 
-  it("scoreForClient returns null for non-existent client", async () => {
+  it.skipIf(!hasDatabase)("scoreForClient returns null for non-existent client", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const result = await caller.riskScoring.scoreForClient({ clientId: 999999 });
@@ -118,42 +119,42 @@ describe("riskScoring with recommendations", () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("leaderboard with period filtering", () => {
-  it("leaderboard.list accepts period=all", async () => {
+  it.skipIf(!hasDatabase)("leaderboard.list accepts period=all", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const entries = await caller.leaderboard.list({ period: "all" });
     expect(Array.isArray(entries)).toBe(true);
   });
 
-  it("leaderboard.list accepts period=month", async () => {
+  it.skipIf(!hasDatabase)("leaderboard.list accepts period=month", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const entries = await caller.leaderboard.list({ period: "month" });
     expect(Array.isArray(entries)).toBe(true);
   });
 
-  it("leaderboard.list accepts period=quarter", async () => {
+  it.skipIf(!hasDatabase)("leaderboard.list accepts period=quarter", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const entries = await caller.leaderboard.list({ period: "quarter" });
     expect(Array.isArray(entries)).toBe(true);
   });
 
-  it("leaderboard.list accepts period=year", async () => {
+  it.skipIf(!hasDatabase)("leaderboard.list accepts period=year", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const entries = await caller.leaderboard.list({ period: "year" });
     expect(Array.isArray(entries)).toBe(true);
   });
 
-  it("leaderboard.list defaults to all when no input", async () => {
+  it.skipIf(!hasDatabase)("leaderboard.list defaults to all when no input", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const entries = await caller.leaderboard.list();
     expect(Array.isArray(entries)).toBe(true);
   });
 
-  it("all period results have correct structure", async () => {
+  it.skipIf(!hasDatabase)("all period results have correct structure", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     for (const period of ["all", "month", "quarter", "year"] as const) {
@@ -183,14 +184,14 @@ describe("leaderboard with period filtering", () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("reminderPrefs", () => {
-  it("reminderPrefs.get returns an array", async () => {
+  it.skipIf(!hasDatabase)("reminderPrefs.get returns an array", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const prefs = await caller.reminderPrefs.get();
     expect(Array.isArray(prefs)).toBe(true);
   });
 
-  it("reminderPrefs.get returns 4 entries (one per meeting type)", async () => {
+  it.skipIf(!hasDatabase)("reminderPrefs.get returns 4 entries (one per meeting type)", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const prefs = await caller.reminderPrefs.get();
@@ -202,7 +203,7 @@ describe("reminderPrefs", () => {
     expect(types).toContain("OTHER");
   });
 
-  it("each pref entry has meetingType, enabled, leadTimeMinutes", async () => {
+  it.skipIf(!hasDatabase)("each pref entry has meetingType, enabled, leadTimeMinutes", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const prefs = await caller.reminderPrefs.get();
@@ -215,7 +216,7 @@ describe("reminderPrefs", () => {
     }
   });
 
-  it("reminderPrefs.update saves preferences", async () => {
+  it.skipIf(!hasDatabase)("reminderPrefs.update saves preferences", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
     const result = await caller.reminderPrefs.update({

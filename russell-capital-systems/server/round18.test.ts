@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { hasDatabase } from './testDb';
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
@@ -44,14 +45,14 @@ describe("riskScoring.history", () => {
     expect(typeof caller.riskScoring.history).toBe("function");
   });
 
-  it("should accept clientId and optional weeks parameter", async () => {
+  it.skipIf(!hasDatabase)("should accept clientId and optional weeks parameter", async () => {
     const caller = appRouter.createCaller(createAuthContext().ctx);
     // Should not throw for valid input
     const result = await caller.riskScoring.history({ clientId: 999, weeks: 8 });
     expect(Array.isArray(result)).toBe(true);
   });
 
-  it("should return empty array for non-existent client", async () => {
+  it.skipIf(!hasDatabase)("should return empty array for non-existent client", async () => {
     const caller = appRouter.createCaller(createAuthContext().ctx);
     const result = await caller.riskScoring.history({ clientId: 99999 });
     expect(result).toEqual([]);
@@ -65,14 +66,14 @@ describe("riskScoring.historyBulk", () => {
     expect(typeof caller.riskScoring.historyBulk).toBe("function");
   });
 
-  it("should return an object (clientId -> entries map)", async () => {
+  it.skipIf(!hasDatabase)("should return an object (clientId -> entries map)", async () => {
     const caller = appRouter.createCaller(createAuthContext().ctx);
     const result = await caller.riskScoring.historyBulk({ weeks: 4 });
     expect(typeof result).toBe("object");
     expect(result).not.toBeNull();
   });
 
-  it("should accept optional input", async () => {
+  it.skipIf(!hasDatabase)("should accept optional input", async () => {
     const caller = appRouter.createCaller(createAuthContext().ctx);
     // Should work with no input
     const result = await caller.riskScoring.historyBulk();
@@ -135,14 +136,14 @@ describe("leaderboard.exportCsv", () => {
     expect(typeof caller.leaderboard.exportCsv).toBe("function");
   });
 
-  it("should return an object with csv string", async () => {
+  it.skipIf(!hasDatabase)("should return an object with csv string", async () => {
     const caller = appRouter.createCaller(createAuthContext().ctx);
     const result = await caller.leaderboard.exportCsv({ period: "all" });
     expect(result).toHaveProperty("csv");
     expect(typeof result.csv).toBe("string");
   });
 
-  it("should include CSV header row", async () => {
+  it.skipIf(!hasDatabase)("should include CSV header row", async () => {
     const caller = appRouter.createCaller(createAuthContext().ctx);
     const result = await caller.leaderboard.exportCsv({ period: "all" });
     if (result.csv) {
@@ -153,7 +154,7 @@ describe("leaderboard.exportCsv", () => {
     }
   });
 
-  it("should accept period parameter", async () => {
+  it.skipIf(!hasDatabase)("should accept period parameter", async () => {
     const caller = appRouter.createCaller(createAuthContext().ctx);
     const result = await caller.leaderboard.exportCsv({ period: "month" });
     expect(result).toHaveProperty("csv");
