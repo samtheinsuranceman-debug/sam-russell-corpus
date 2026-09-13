@@ -79,9 +79,20 @@ describe('the 57 claims', () => {
     expect(claimByRef('PAT-999')).toBeUndefined();
   });
 
-  it('keeps SI-001 dropped, with the reason recorded', () => {
+  it('SI-001 is built as a validator, not as the version that was dropped', () => {
     const si1 = claimByRef('SI-001')!;
-    expect(si1.status).toBe('dropped');
-    expect(si1.note).toContain('AG 49');
+    expect(si1.status).toBe('built');
+    expect(si1.engine).toBe('shared/ag49Validator.ts');
+    // The record must say why it changed shape, so nobody reinstates the old aim.
+    expect(si1.note).toContain('maximize persuasive impact');
+    expect(si1.note).toContain('validator');
+  });
+
+  it('the four revived claims each say what remains, rather than being quietly promoted', () => {
+    for (const ref of ['SI-021', 'SI-023', 'SI-026']) {
+      const c = claimByRef(ref)!;
+      expect(c.status).toBe('partial');
+      expect((c.note ?? '').length).toBeGreaterThan(60);
+    }
   });
 });

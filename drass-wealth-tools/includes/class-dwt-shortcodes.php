@@ -19,6 +19,11 @@ class DWT_Shortcodes {
 				'file'  => 'backtester.php',
 				'fn'    => 'dwt_render_backtester',
 			],
+			'dwt_concierge' => [
+				'label' => 'Concierge — ask by voice or text; speech stays in the visitor\'s browser',
+				'file'  => 'concierge.php',
+				'fn'    => 'dwt_render_concierge',
+			],
 			'dwt_catalog' => [
 				'label' => 'Engine catalogue — the planning engines this site can present, pulled live',
 				'file'  => 'catalog.php',
