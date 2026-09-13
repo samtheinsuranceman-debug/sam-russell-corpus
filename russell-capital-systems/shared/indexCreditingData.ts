@@ -89,10 +89,11 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
     cap: null,
     floor: 0,
     participation: 100,
-    spread: 5.75,
+    // Spread corrected 5.75 -> 6.00 from FLM-1491AO.10 (02/25).
+    spread: 6.0,
     strategyCharge: 0,
     bonus: 0,
-    description: 'Uncapped S&P 500 with 5.75% spread. Unlimited upside minus spread, 0% floor.',
+    description: 'Uncapped S&P 500 with 6.00% spread. Unlimited upside minus spread, 0% floor.',
     availableFrom: 1994,
   },
   {
@@ -101,7 +102,8 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
     carrier: 'a-mutual',
     index: 'SP500',
     indexType: 'single',
-    cap: 13.25,
+    // Cap corrected 13.25 -> 13.00 from FLM-1491AO.10 (02/25).
+    cap: 13,
     floor: 0,
     participation: 100,
     spread: 0,
@@ -121,13 +123,19 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
       { index: 'NASDAQ100', weight: 0.30 },
       { index: 'RUSSELL2000', weight: 0.20 },
     ],
-    cap: 14,
+    cap: 13,
     floor: 0,
     participation: 100,
     spread: 0,
     strategyCharge: 0,
     bonus: 0,
-    description: 'Blended 50/30/20 of best-performing indices (S&P, Nasdaq, Russell). 14% cap, 0% floor.',
+    // Cap corrected 14 -> 13.00 from the Nationwide IUL Accumulator II 2020
+    // rate guide, FLM-1491AO.10 (02/25), rates as of 15 March 2025.
+    // The third component should be the Dow Jones Industrial Average, not the
+    // Russell 2000 — the contract names S&P 500, Nasdaq-100 and DJIA. We hold
+    // no DJIA series, so it stays wrong here and the partner API refuses to
+    // run this strategy. See docs/carriers/nationwide-iul-accumulator-ii-2020.md
+    description: 'Blended 50/30/20 of best-performing indices. 13% cap, 0% floor. Third component is wrong until a DJIA series is sourced.',
     availableFrom: 1994,
   },
   {

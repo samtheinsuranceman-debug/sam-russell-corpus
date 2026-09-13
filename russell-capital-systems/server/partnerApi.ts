@@ -260,16 +260,20 @@ function dualPanel(crediting: Crediting, windowId: string) {
  *    carriers can offer a 25% cap on one. Applying that cap to an annual
  *    return overstates the credit, and the product name says so.
  *
- * 2. The multi-index and hindsight strategies sort the component indices by
- *    the return each actually delivered that year, then weight the best one
- *    highest. That is a decision made with knowledge of the outcome. Unless
- *    the contract genuinely allocates in arrears — and for these the terms are
- *    not recorded here — it is hindsight bias, and it inflates every year.
+ * 2. The multi-index strategies blend the components 50/30/20 by that year's
+ *    best, second and third performer. I called that hindsight bias. It is
+ *    not: the Nationwide rate guide (FLM-1491AO.10, 02/25) defines the
+ *    strategy exactly that way, so the weighting is the contract and the
+ *    original claim was wrong.
  *
- * Both push in the same direction. Together they produce 12.93% compound over
- * 1996-2025 on one strategy, which is far above anything a carrier could
- * illustrate under AG 49-A and would not match any illustration the carrier
- * actually issues.
+ *    What is wrong is the components. The contract names the S&P 500,
+ *    Nasdaq-100 and Dow Jones Industrial Average; we hold no DJIA series and
+ *    substitute the Russell 2000.
+ *
+ * Together they produce 12.93% compound over 1996-2025 on one strategy, where
+ * Nationwide publishes a 9.32% thirty-year look-back for the same strategy —
+ * and theirs is an arithmetic average of annual rates, which runs HIGHER than
+ * a compound one, so the real gap is wider than the 3.6 points it looks.
  *
  * So they are listed — a reader should see the terms — and refused for the
  * exhibit, with the reason. When the real contract mechanics are recorded,
@@ -282,8 +286,9 @@ function reconstructionCaveat(o: (typeof ALL_INDEX_OPTIONS)[number]): string | n
       "A monthly design credits materially less in a trending market, so this reconstruction overstates it.";
   }
   if (o.indexType === "multiIndex" || o.indexType === "hindsight") {
-    return "Weights the component indices by what each actually returned that year, highest first — a choice made " +
-      "with knowledge of the outcome. Unless the contract allocates in arrears, this inflates every year.";
+    return "Blends the components 50/30/20 by that year's best performer, which is the contract — but one component " +
+      "is substituted: the strategy names the Dow Jones Industrial Average and we hold no DJIA series, so the " +
+      "Russell 2000 stands in for it.";
   }
   return null;
 }
