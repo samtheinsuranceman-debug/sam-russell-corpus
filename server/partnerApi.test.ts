@@ -12,6 +12,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import express from 'express';
 import type { Server } from 'http';
 import { registerPartnerApi } from './partnerApi';
+import { DRAFTED_COUNT, statusBadge, statusSentence } from '../shared/patentStatus';
 
 const KEY = 'test-partner-key-not-real';
 let server: Server;
@@ -150,6 +151,43 @@ describe('the time machine returns both panels, and withholds the average', () =
     const b = await r.json();
     expect(typeof b.floorProtectedYears).toBe('number');
     expect(b.floorProtectedYears).toBeGreaterThan(0);
+  });
+});
+
+describe('the catalogue tells a partner the legal status, and nothing privileged', () => {
+  it('carries the IP sentence so a partner never composes its own', async () => {
+    const r = await fetch(`${base}/catalog`, auth);
+    const b = await r.json();
+    expect(b.ip.statusSentence).toBe(statusSentence());
+    expect(b.ip.badge).toBe(statusBadge());
+    expect(b.ip.applicationsFiled).toBe(0);
+    expect(b.ip.applicationsDrafted).toBe(DRAFTED_COUNT);
+    // The sentence must deny the claim, not make it.
+    expect(b.ip.badge).not.toBe('Patent Pending');
+  });
+
+  it('never sends the catalogue notes or the application file paths', async () => {
+    // The notes now carry the pre-filing review's findings — which drafted
+    // claims recite hardware that does not exist. That is work product and it
+    // does not belong on a partner's marketing page. The paths point at
+    // confidential PDFs. Neither is projected, and this is the assertion that
+    // keeps a future `...c` spread from quietly including both.
+    const r = await fetch(`${base}/catalog?include=roadmap`, auth);
+    const raw = await r.text();
+    expect(raw).not.toContain('applicationDraft');
+    expect(raw).not.toContain('docs/patents');
+    expect(raw).not.toContain('.pdf');
+    expect(raw).not.toContain('FPGA');
+    for (const item of JSON.parse(raw).offered) {
+      expect(Object.keys(item).sort()).toEqual(['ref', 'title']);
+    }
+  });
+
+  it('offers only what is built, and says how many it held back', async () => {
+    const r = await fetch(`${base}/catalog`, auth);
+    const b = await r.json();
+    expect(b.offered.length).toBe(b.counts.built);
+    expect(b.offered.length).toBeLessThan(b.ip.claims);
   });
 });
 

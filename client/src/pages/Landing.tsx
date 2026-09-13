@@ -158,7 +158,7 @@ export default function Landing() {
 
       {/* ── 2 to 5 · THE FIFTEEN, starting on the very next screen. Four city plates, one after another, each
           carrying a run of the plaques; no picture is left empty and nothing sits between the sign and the patents. ── */}
-      <div id="claims" aria-label="Patent-pending technologies">
+      <div id="claims" aria-label="Proprietary technologies">
         {PLATES.map((plate, i) => {
           const last = i === PLATES.length - 1;
           return (
@@ -171,7 +171,7 @@ export default function Landing() {
                 <div className="rc-plate-shade" />
               </div>
               <div className="rc-plate-body container max-w-5xl">
-                {i === 0 && <p className="mb-8 text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Patent-pending technologies</p>}
+                {i === 0 && <p className="mb-8 text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Proprietary technologies</p>}
                 <ol className="grid gap-8">
                   {manifesto.claims.slice(plate.from, plate.to).map(({ ref, name, lead, detail }) => (
                     <li key={ref} id={`claim-${ref}`} className="rc-plaque">

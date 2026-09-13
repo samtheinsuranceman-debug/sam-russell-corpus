@@ -1,18 +1,22 @@
 // ============================================================
-// THE ENGINES — 14 patent-pending planning technologies, in the order
+// THE ENGINES — 14 proprietary planning technologies, in the order
 // they build on one another, each explained in five to six sentences.
 // Drawn from the core patent workbook (PAT-001…015; the AI advisor-
 // coaching engine is intentionally omitted from display).
 //
-// STATUS: 15 core patent applications are in process (patent-pending),
-// plus 45 more in process — per the owner. Do NOT claim a patent has been
-// GRANTED until an issue number exists.
+// STATUS: 57 claims documented, each with a drafted application. NONE IS
+// FILED. Do not write a status string here — import statusBadge() and
+// statusSentence() from shared/patentStatus, which return the words "patent
+// pending" only once a real USPTO number exists, which is not today.
 // ============================================================
 import {
   Layers, Dna, Waves, Boxes, Repeat2, Home, Landmark, ShieldCheck, Radar, Dice5, History, Brain, Award, Network,
 } from "lucide-react";
+import { ENGINE_COUNT, statusBadge, statusSentence } from "@shared/patentStatus";
 
-const TECH_STATUS_LABEL = "Patent-pending · 15 patents in process";
+// Never a hand-typed status string. statusBadge() returns the words that
+// require a filing only when a real USPTO number exists — and today none does.
+const TECH_STATUS_LABEL = `${statusBadge()} · ${ENGINE_COUNT} claims`;
 
 export type Technology = {
   ref: string;
@@ -70,7 +74,7 @@ export const TECHNOLOGIES: Technology[] = [
 
 export default function ProprietaryTech() {
   return (
-    <section id="technology" aria-label="Patent-pending technology behind Russell Capital Systems" className="relative overflow-hidden bg-[#03090a] py-28">
+    <section id="technology" aria-label="Proprietary technology behind Russell Capital Systems" className="relative overflow-hidden bg-[#03090a] py-28">
       {/* Crisp Emerald Dawn skyline behind the engines — no blur, just darkened for legibility */}
       <img src="/rcs-city-emerald.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-center brightness-[.62] saturate-[1.15]" loading="lazy" decoding="async" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,#03090a_0%,rgba(3,9,10,.55)_12%,rgba(3,9,10,.55)_88%,#03090a_100%)]" />
@@ -108,12 +112,12 @@ export default function ProprietaryTech() {
         <div className="mx-auto mt-12 max-w-3xl rounded-[20px] border border-emerald-300/35 bg-[#020c0a]/70 p-7 text-center backdrop-blur-md">
           <p className="text-[clamp(1.3rem,3vw,2rem)] font-black text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>And we're just getting started.</p>
           <p className="mx-auto mt-2 max-w-2xl text-[1.02rem] text-white/82">
-            Beyond these fourteen, <span className="font-semibold text-emerald-300">45 more unique patent-pending technologies</span> are in process — built to keep giving you and your family an edge no one else can offer. <span className="font-semibold text-emerald-300">Stay tuned.</span>
+            Beyond these fourteen, <span className="font-semibold text-emerald-300">{ENGINE_COUNT - 14} more proprietary technologies</span> are documented — built to keep giving you and your family an edge no one else can offer. <span className="font-semibold text-emerald-300">Stay tuned.</span>
           </p>
         </div>
 
         <p className="mx-auto mt-8 max-w-3xl text-center text-[11px] leading-relaxed text-white/50">
-          Patent-pending methods developed by Russell Capital Systems — 15 patent applications in process, with 45 more underway — described here at a high level. Not tax, legal, or investment advice; results are not guaranteed and are reviewed by our tax professional team for suitability and IRS compliance before implementation.
+          Proprietary methods developed by Russell Capital Systems, described here at a high level. {statusSentence()} Not tax, legal, or investment advice; results are not guaranteed and are reviewed by our tax professional team for suitability and IRS compliance before implementation.
         </p>
       </div>
     </section>

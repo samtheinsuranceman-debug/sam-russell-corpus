@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { ENGINE_COUNT, FORBIDDEN_WHEN_UNFILED } from '../shared/patentStatus';
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import manifesto from "../shared/homeManifesto.json";
@@ -81,10 +82,17 @@ describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the 
     expect(landing).toContain('id="claims"');
     expect(landing).toContain("manifesto.claims.slice(plate.from, plate.to).map");
     expect(landing).toContain("Only at RCS");
-    // Patent honesty: pending, never granted.
-    expect(manifesto.status).toMatch(/Patent-pending/);
-    expect(manifesto.status).toMatch(/15 core applications/);
+    // Patent honesty. This previously REQUIRED the words "Patent-pending" in
+    // the status line, as a guard against claiming a grant. But "pending" is
+    // a claim about a filing, and there is no filing — so the guard mandated
+    // one false statement while preventing another. What the status line must
+    // now do is name the real count and say plainly that nothing is filed.
+    expect(manifesto.status).toMatch(new RegExp(`\\b${ENGINE_COUNT}\\b`));
+    expect(manifesto.status).toMatch(/None filed/i);
     expect(JSON.stringify(manifesto)).not.toMatch(/patent(ed| granted)/i);
+    for (const phrase of FORBIDDEN_WHEN_UNFILED) {
+      expect(JSON.stringify(manifesto).toLowerCase(), phrase).not.toContain(phrase);
+    }
     expect(manifesto.disclaimer).toContain("Not tax, legal or investment advice");
   });
 
