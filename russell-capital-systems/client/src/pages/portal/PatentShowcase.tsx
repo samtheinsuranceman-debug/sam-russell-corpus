@@ -172,6 +172,18 @@ export default function PatentShowcase() {
   const { user } = useAuth();
   const [expandedPatent, setExpandedPatent] = useState<string | null>(null);
 
+  /**
+   * The catalogue's notes say what is and is not built, and they are shown to
+   * everyone who can reach this page. That is the point: a prospect reading
+   * "the estate tax engine exists, the freeze-technique selector does not"
+   * thinks better of us, not worse.
+   *
+   * What is NOT here is our pre-filing assessment of the drafted applications.
+   * That lives in server/patentReview.ts and never enters this bundle — this
+   * module is compiled into the browser, and a role check in a component does
+   * not stop data from shipping to the people it is meant to be hidden from.
+   */
+
   return (
     <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-8">
       {/* Header */}
