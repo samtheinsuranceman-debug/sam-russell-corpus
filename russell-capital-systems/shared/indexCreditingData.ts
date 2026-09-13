@@ -675,10 +675,20 @@ export const CARRIERS = [
   { id: 'a-minus-mutual', name: 'A- Mutual Life', color: '#7c3aed' },
 ] as const;
 
-/** Legacy aliases for backward compatibility */
-export const NATIONWIDE_INDEX_OPTIONS = A_MUTUAL_INDEX_OPTIONS;
-export const SECURIAN_INDEX_OPTIONS = A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS;
-export const SYMETRA_INDEX_OPTIONS = A_MINUS_MUTUAL_INDEX_OPTIONS;
+/*
+ * Three aliases were here — NATIONWIDE_INDEX_OPTIONS, SECURIAN_INDEX_OPTIONS
+ * and SYMETRA_INDEX_OPTIONS — each pointing at one of the anonymised option
+ * sets above. They were unused, and they asserted that these caps,
+ * participation rates and spreads are those three companies' actual products.
+ *
+ * None of the terms in this file carries a source or an as-of date, so that
+ * identification could not be checked, and a cap named as a real carrier's is
+ * a factual claim about a real company. Removed rather than left as dead code
+ * somebody later trusts.
+ *
+ * Real carrier terms belong in docs/carriers/, sourced per field, and are
+ * being collected — see docs/carriers/INTAKE.md.
+ */
 
 export const AVAILABLE_YEARS = Object.keys(RAW_INDEX_RETURNS.SP500).map(Number).sort((a, b) => a - b);
 export const MIN_YEAR = AVAILABLE_YEARS[0]; // 1994
