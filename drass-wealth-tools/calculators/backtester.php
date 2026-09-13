@@ -43,7 +43,7 @@ function dwt_render_backtester( $atts = [] ): string {
 	// Index history comes from the RCS platform, which is the single source of
 	// truth for it. Duplicating a return series into this plugin would create a
 	// second copy to correct every time the first one is corrected.
-	$series = DWT_API::get( 'api/index-history', [
+	$series = DWT_API::get( 'index-history', [
 		'index' => sanitize_text_field( $a['index'] ),
 		'years' => (string) absint( $a['years'] ),
 	] );

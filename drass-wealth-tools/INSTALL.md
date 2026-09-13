@@ -14,7 +14,23 @@ leaves the site exactly as it was.
 1. WordPress admin → **Plugins → Add New → Upload Plugin**
 2. Choose `drass-wealth-tools.zip` → **Install Now** → **Activate**
 3. Go to **Settings → Drass Wealth Tools**
-4. Paste the **API base URL** supplied with this package → **Save**
+4. Paste the **API base URL** and **API key** supplied with this package → **Save**
+
+The base URL ends in `/api/partner` — for example:
+
+    https://<the-platform-host>/api/partner
+
+You can confirm the service is reachable before doing anything else. This
+endpoint needs no key and returns no client data:
+
+    https://<the-platform-host>/api/partner/health
+
+A healthy response looks like:
+
+    {"ok":true,"service":"rcs-partner-api","configured":true, ...}
+
+If `configured` is `false`, the platform side has not had its key set yet and
+no calculator will work regardless of what you enter here.
 
 Until step 4 is done, every tool renders a short "not yet connected" note
 rather than a broken calculator. That is intentional.

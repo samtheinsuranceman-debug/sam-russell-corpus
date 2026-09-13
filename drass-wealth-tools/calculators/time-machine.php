@@ -43,7 +43,7 @@ function dwt_render_time_machine( $atts = [] ): string {
 
 	wp_enqueue_style( 'dwt' );
 
-	$res = DWT_API::get( 'api/time-machine', [
+	$res = DWT_API::get( 'time-machine', [
 		'premium'       => (string) absint( $a['premium'] ),
 		'fundingYears'  => (string) absint( $a['funding_years'] ),
 		'age'           => (string) absint( $a['age'] ),
