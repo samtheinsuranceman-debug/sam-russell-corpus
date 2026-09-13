@@ -34,6 +34,24 @@ class DWT_Shortcodes {
 				'file'  => 'time-machine.php',
 				'fn'    => 'dwt_render_time_machine',
 			],
+			'dwt_monte_carlo' => [
+				'label' => 'Will the money last? — ten thousand modelled retirements',
+				'file'  => 'planning.php',
+				'fn'    => 'dwt_render_monte_carlo',
+				'page'  => 'Will Your Money Last?',
+			],
+			'dwt_tax' => [
+				'label' => 'Income tax — federal and state, with the bracket breakdown',
+				'file'  => 'planning.php',
+				'fn'    => 'dwt_render_tax',
+				'page'  => 'What Will You Actually Pay?',
+			],
+			'dwt_estate_tax' => [
+				'label' => 'Estate tax — what the estate owes and what reaches the heirs',
+				'file'  => 'planning.php',
+				'fn'    => 'dwt_render_estate_tax',
+				'page'  => 'What Reaches Your Heirs?',
+			],
 		];
 	}
 
@@ -47,6 +65,48 @@ class DWT_Shortcodes {
 				add_shortcode( $tag, $info['fn'] );
 			}
 		}
+	}
+
+	/**
+	 * Create one draft page per tool, each holding its shortcode.
+	 *
+	 * Runs on activation. Pages are created as DRAFTS, never published: this
+	 * plugin is installed on a site it does not own, and publishing pages
+	 * nobody has read onto a live firm's website is not a decision a plugin
+	 * gets to make. The administrator reviews each one, adds their own copy
+	 * around the shortcode, and publishes when ready.
+	 *
+	 * A tool already having a page is the normal case on reactivation, so an
+	 * existing page with the same shortcode is left alone rather than
+	 * duplicated. Deactivating the plugin does not delete anything.
+	 */
+	public static function create_pages(): array {
+		$made = [];
+		foreach ( self::catalog() as $tag => $info ) {
+			if ( empty( $info['page'] ) ) {
+				continue;
+			}
+			$existing = get_posts( [
+				'post_type'      => 'page',
+				'post_status'    => [ 'publish', 'draft', 'pending', 'private' ],
+				's'              => '[' . $tag . ']',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+			] );
+			if ( $existing ) {
+				continue;
+			}
+			$id = wp_insert_post( [
+				'post_title'   => $info['page'],
+				'post_content' => '<!-- wp:shortcode -->[' . $tag . ']<!-- /wp:shortcode -->',
+				'post_status'  => 'draft',
+				'post_type'    => 'page',
+			] );
+			if ( $id && ! is_wp_error( $id ) ) {
+				$made[ $tag ] = (int) $id;
+			}
+		}
+		return $made;
 	}
 
 	/**

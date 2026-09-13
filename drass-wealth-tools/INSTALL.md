@@ -107,3 +107,48 @@ and carries no exposure.
 The patent application documents themselves are attorney-client work product.
 They are not in this plugin, are not served by the API, and must not be
 published, attached to a proposal, or forwarded outside the firm.
+
+
+## The calculators
+
+Version 1.1 adds three planning tools. On activation the plugin creates one
+**draft** page for each, already holding its shortcode. Nothing is published —
+find them under **Pages**, write your own copy around the shortcode, and
+publish when you are ready. Reactivating the plugin does not duplicate them.
+
+| Shortcode | Page it creates | What it answers |
+|---|---|---|
+| `[dwt_monte_carlo]` | Will Your Money Last? | The chance a portfolio survives a retirement, across a thousand modelled runs |
+| `[dwt_tax]` | What Will You Actually Pay? | Federal and state income tax, with the bracket breakdown |
+| `[dwt_estate_tax]` | What Reaches Your Heirs? | Federal estate tax and what is left for the heirs |
+
+All three take a heading attribute, e.g. `[dwt_tax heading="Your tax, honestly"]`.
+
+### What these tools do not keep
+
+Nothing a visitor types is stored. There is no lead record, no cookie holding
+the figures, and no log line containing them. The browser posts to WordPress,
+WordPress asks the platform, the answer comes back, and that is the end of it.
+Please do not add analytics that captures the field values — what somebody
+types into an estate calculator is their business, and the tools were built so
+that there is nothing to leak.
+
+### The sentence under each result
+
+Every answer arrives with a short sentence explaining what the number is and
+is not — that a Monte Carlo is a distribution rather than a forecast, that the
+estate figure is federal only and several states levy their own. It is
+rendered under the result automatically. **Do not remove it.** It is the
+difference between an estimate and a promise, and the promise is one no firm
+should be making from a web form.
+
+### What is deliberately not here
+
+The HELOC-to-IUL arbitrage engine and the lifetime-income engine are not
+exposed, and their absence is a decision rather than an oversight. Both need a
+full fact finder rather than a web form — one of them takes twenty-seven
+inputs — and both display indexed crediting and policy-loan arithmetic, which
+is the material Actuarial Guideline 49-A governs. Those belong in an advisor
+conversation, not on a public page. If you want them, that is a conversation
+to have with Russell Capital Systems and your compliance officer, not a
+setting to switch on.

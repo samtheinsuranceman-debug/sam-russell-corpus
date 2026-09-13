@@ -1,0 +1,158 @@
+<?php
+/**
+ * The three planning calculators: Monte Carlo, income tax, estate tax.
+ *
+ * Each one is a form and a result panel. The visitor types numbers, the
+ * browser asks WordPress, WordPress asks the platform, and the answer comes
+ * back. Nothing is stored at any step — no lead record, no cookie, no log
+ * line with the figures in it. That is deliberate: a public calculator that
+ * quietly banks what people type is a data-protection problem nobody signed
+ * up for, and none of these need the visitor's identity to work.
+ *
+ * The platform returns a `basis` sentence with every answer explaining what
+ * the number is and is not. It is printed with the result and must not be
+ * removed — it is the difference between an estimate and a promise.
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Server-side proxy, one handler for all three tools.
+ *
+ * The browser never talks to the platform and never sees the bearer token.
+ * It posts to admin-ajax with a nonce, WordPress makes the outbound call, and
+ * only the answer comes back. This is the same shape as the concierge handler
+ * and for the same reason: an API key in page script is a key you have given
+ * away.
+ *
+ * The tool name is checked against a fixed list rather than passed through.
+ * Without that, this endpoint would be an open proxy to any path on the
+ * platform for anyone who can load a page.
+ */
+const DWT_PLAN_TOOLS = [ 'monte-carlo', 'tax', 'estate-tax' ];
+
+function dwt_ajax_plan(): void {
+	check_ajax_referer( 'dwt_plan', 'nonce' );
+
+	$tool = isset( $_POST['tool'] ) ? sanitize_key( wp_unslash( $_POST['tool'] ) ) : '';
+	if ( ! in_array( $tool, DWT_PLAN_TOOLS, true ) ) {
+		wp_send_json_error( [ 'detail' => 'Unknown tool.' ], 400 );
+	}
+
+	// Only these keys are forwarded, and each is cast to the shape the
+	// platform expects. The platform clamps every number again on its side —
+	// two checks rather than one, because this one runs on a host we do not
+	// control.
+	$allowed = [
+		'initial', 'contribution', 'years', 'return', 'volatility', 'inflation',
+		'income', 'filing', 'state',
+		'estate', 'debts', 'charity', 'age', 'beneficiaries',
+	];
+	$args = [];
+	foreach ( $allowed as $key ) {
+		if ( ! isset( $_POST[ $key ] ) ) {
+			continue;
+		}
+		$raw = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+		if ( '' === $raw ) {
+			continue;
+		}
+		$args[ $key ] = in_array( $key, [ 'filing', 'state' ], true ) ? $raw : (float) $raw;
+	}
+
+	$res = DWT_API::get( $tool, $args );
+	if ( is_wp_error( $res ) ) {
+		wp_send_json_error( [ 'detail' => $res->get_error_message() ], 503 );
+	}
+	wp_send_json_success( $res );
+}
+add_action( 'wp_ajax_dwt_plan', 'dwt_ajax_plan' );
+add_action( 'wp_ajax_nopriv_dwt_plan', 'dwt_ajax_plan' );
+
+/** Shared shell so the three tools look like one family. */
+function dwt_planning_shell( string $slug, string $heading, string $fields, string $cta ): string {
+	wp_enqueue_style( 'dwt' );
+	wp_enqueue_script( 'dwt-planning', DWT_URL . 'assets/dwt-planning.js', [], DWT_VERSION, true );
+	wp_localize_script( 'dwt-planning', 'DWT_PLAN', [
+		'ajax'  => admin_url( 'admin-ajax.php' ),
+		'nonce' => wp_create_nonce( 'dwt_plan' ),
+	] );
+
+	$out  = '<div class="dwt dwt-plan" data-dwt-plan="' . esc_attr( $slug ) . '">';
+	if ( '' !== trim( $heading ) ) {
+		$out .= '<h2 class="dwt-cat-h">' . esc_html( $heading ) . '</h2>';
+	}
+	$out .= '<form class="dwt-plan-form" novalidate>' . $fields;
+	$out .= '<button type="submit" class="dwt-plan-go">' . esc_html( $cta ) . '</button>';
+	$out .= '</form>';
+	$out .= '<div class="dwt-plan-out" role="status" aria-live="polite"></div>';
+	$out .= '</div>';
+	return $out;
+}
+
+function dwt_plan_number( string $name, string $label, $value, $step = '1000' ): string {
+	$id = 'dwt-' . $name . '-' . wp_rand( 1000, 9999 );
+	return '<p class="dwt-plan-row"><label for="' . esc_attr( $id ) . '">' . esc_html( $label ) . '</label>'
+		. '<input id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" type="number" inputmode="decimal"'
+		. ' step="' . esc_attr( $step ) . '" value="' . esc_attr( (string) $value ) . '" /></p>';
+}
+
+function dwt_plan_select( string $name, string $label, array $options, string $selected ): string {
+	$id = 'dwt-' . $name . '-' . wp_rand( 1000, 9999 );
+	$out = '<p class="dwt-plan-row"><label for="' . esc_attr( $id ) . '">' . esc_html( $label ) . '</label>'
+		. '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '">';
+	foreach ( $options as $val => $text ) {
+		$out .= '<option value="' . esc_attr( (string) $val ) . '"' . selected( $selected, (string) $val, false ) . '>'
+			. esc_html( (string) $text ) . '</option>';
+	}
+	return $out . '</select></p>';
+}
+
+// ── Monte Carlo ────────────────────────────────────────────────────────────
+function dwt_render_monte_carlo( $atts = [] ): string {
+	$a = shortcode_atts( [ 'heading' => 'Will the money last?' ], $atts, 'dwt_monte_carlo' );
+	if ( ! DWT_API::configured() ) {
+		return DWT_Shortcodes::render_refusal( 'This tool is not configured yet.' );
+	}
+	$f  = dwt_plan_number( 'initial', 'Starting balance', 500000 );
+	$f .= dwt_plan_number( 'contribution', 'Added each year (use a negative number to withdraw)', 0 );
+	$f .= dwt_plan_number( 'years', 'Years to project', 30, '1' );
+	$f .= dwt_plan_number( 'return', 'Expected return, % a year', 7, '0.1' );
+	$f .= dwt_plan_number( 'volatility', 'Volatility, % a year', 15, '0.1' );
+	return dwt_planning_shell( 'monte-carlo', $a['heading'], $f, 'Run the projection' );
+}
+
+// ── Income tax ─────────────────────────────────────────────────────────────
+function dwt_render_tax( $atts = [] ): string {
+	$a = shortcode_atts( [ 'heading' => 'What will you actually pay?', 'state' => 'TX' ], $atts, 'dwt_tax' );
+	if ( ! DWT_API::configured() ) {
+		return DWT_Shortcodes::render_refusal( 'This tool is not configured yet.' );
+	}
+	$f  = dwt_plan_number( 'income', 'Gross household income', 400000 );
+	$f .= dwt_plan_select( 'filing', 'Filing status', [
+		'single' => 'Single',
+		'joint'  => 'Married filing jointly',
+		'hoh'    => 'Head of household',
+	], 'joint' );
+	$f .= '<p class="dwt-plan-row"><label>State</label><input name="state" type="text" maxlength="2"'
+		. ' value="' . esc_attr( strtoupper( substr( (string) $a['state'], 0, 2 ) ) ) . '" /></p>';
+	return dwt_planning_shell( 'tax', $a['heading'], $f, 'Work out the tax' );
+}
+
+// ── Estate tax ─────────────────────────────────────────────────────────────
+function dwt_render_estate_tax( $atts = [] ): string {
+	$a = shortcode_atts( [ 'heading' => 'What reaches your heirs?' ], $atts, 'dwt_estate_tax' );
+	if ( ! DWT_API::configured() ) {
+		return DWT_Shortcodes::render_refusal( 'This tool is not configured yet.' );
+	}
+	$f  = dwt_plan_number( 'estate', 'Total estate today', 30000000, '100000' );
+	$f .= dwt_plan_number( 'debts', 'Debts and mortgages', 0, '100000' );
+	$f .= dwt_plan_number( 'charity', 'Charitable bequests', 0, '100000' );
+	$f .= dwt_plan_select( 'filing', 'Filing status', [
+		'married' => 'Married',
+		'single'  => 'Single',
+	], 'married' );
+	return dwt_planning_shell( 'estate-tax', $a['heading'], $f, 'Work out the estate tax' );
+}
