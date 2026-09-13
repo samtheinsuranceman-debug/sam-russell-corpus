@@ -22,6 +22,7 @@ import { serveStatic, setupVite } from "./vite";
 import { registerSiteHardening, registerSiteRoutes } from "./siteHardening";
 import { registerVitalsRoutes } from "../vitals";
 import { registerFounderVoice } from "../founderVoice";
+import { registerPartnerApi } from "../partnerApi";
 import { startBackupSchedule } from "../backups";
 import { pingDatabase } from "../db";
 
@@ -69,6 +70,10 @@ async function startServer() {
   // Core Web Vitals beacons from real visitors (LCP, CLS, INP, FCP, TTFB)
   registerVitalsRoutes(app);
   registerFounderVoice(app);
+  // Read-only REST for partner front ends (the Drass WordPress plugin and any
+  // that follow). Bearer-gated, closed by default, and it strips aggregate
+  // crediting rates at the boundary — see server/partnerApi.ts.
+  registerPartnerApi(app);
   // tRPC API
   app.use(
     "/api/trpc",
