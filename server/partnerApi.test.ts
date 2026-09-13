@@ -221,6 +221,84 @@ describe('the catalogue tells a partner the legal status, and nothing privileged
   });
 });
 
+describe('the calculators', () => {
+  it('runs a Monte Carlo and returns bands, not raw paths', async () => {
+    const r = await fetch(`${base}/monte-carlo?initial=500000&years=30&return=7&volatility=15`, auth);
+    const b = await r.json();
+    expect(r.status).toBe(200);
+    expect(b.summary.probabilityOfSuccess).toBeGreaterThanOrEqual(0);
+    expect(b.summary.probabilityOfSuccess).toBeLessThanOrEqual(100);
+    expect(b.bands.length).toBeGreaterThan(0);
+    // Twenty full paths is a payload a chart does not need.
+    expect(b.samplePaths).toBeUndefined();
+    expect(b.basis).toContain('not a forecast');
+  });
+
+  it('clamps the simulation count, so it cannot be used as a load generator', async () => {
+    const r = await fetch(`${base}/monte-carlo?simulations=5000000&years=500`, auth);
+    expect(r.status).toBe(200);
+    const b = await r.json();
+    // years clamps to 50, and the bands follow the clamped horizon.
+    expect(b.bands.length).toBeLessThanOrEqual(51);
+  });
+
+  it('taxes a joint household as joint, however the partner spells it', async () => {
+    const [joint, married] = await Promise.all([
+      fetch(`${base}/tax?income=400000&filing=joint&state=TX`, auth).then((x) => x.json()),
+      fetch(`${base}/tax?income=400000&filing=married&state=TX`, auth).then((x) => x.json()),
+    ]);
+    expect(married.federalTax).toBe(joint.federalTax);
+    // And a single filer on the same income pays more, so the mapping is not
+    // quietly collapsing everything to one status.
+    const single = await fetch(`${base}/tax?income=400000&filing=single&state=TX`, auth).then((x) => x.json());
+    expect(single.federalTax).toBeGreaterThan(joint.federalTax);
+  });
+
+  it('refuses a state it holds no rate for, and names the ones it has', async () => {
+    const r = await fetch(`${base}/tax?income=100000&state=ZZ`, auth);
+    expect(r.status).toBe(400);
+    const b = await r.json();
+    expect(b.error).toBe('unknown_state');
+    expect(b.available).toContain('TX');
+  });
+
+  it('computes an estate tax that rises with the estate', async () => {
+    const small = await fetch(`${base}/estate-tax?estate=5000000&filing=married`, auth).then((x) => x.json());
+    const large = await fetch(`${base}/estate-tax?estate=60000000&filing=married`, auth).then((x) => x.json());
+    expect(large.federalEstateTax).toBeGreaterThan(small.federalEstateTax);
+    expect(large.netToHeirs).toBeLessThan(large.grossEstate);
+    // State estate tax is a real bill in several states and this does not
+    // model it. Saying so is the difference between an estimate and a claim.
+    expect(large.basis).toContain('State estate');
+  });
+
+  it('every calculator states the basis of its own answer', async () => {
+    for (const path of ['monte-carlo', 'tax?income=100000', 'estate-tax?estate=1000000']) {
+      const b = await fetch(`${base}/${path}`, auth).then((x) => x.json());
+      expect(typeof b.basis, path).toBe('string');
+      expect(b.basis.length, path).toBeGreaterThan(40);
+    }
+  });
+
+  it('keeps the calculators behind the same bearer gate as everything else', async () => {
+    for (const path of ['monte-carlo', 'tax', 'estate-tax']) {
+      const r = await fetch(`${base}/${path}`);
+      expect(r.status, path).toBe(401);
+    }
+  });
+
+  it('does not expose the IUL arbitrage or lifetime-income engines', async () => {
+    // Both need a full fact finder rather than a web form, and both display
+    // indexed crediting and policy-loan arithmetic that AG 49-A governs. If
+    // either is ever added, it should be a deliberate decision with compliance
+    // review, not a route that appeared because it was easy.
+    for (const path of ['mortgage-killer', 'lifetime-income', 'reverse-heloc', 'roth-conversion']) {
+      const r = await fetch(`${base}/${path}`, auth);
+      expect(r.status, path).toBe(404);
+    }
+  });
+});
+
 describe('closed by default', () => {
   it('answers 503 and explains when no key is configured', async () => {
     const saved = process.env.PARTNER_API_KEY;

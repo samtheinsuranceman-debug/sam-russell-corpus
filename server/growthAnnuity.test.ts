@@ -93,6 +93,51 @@ describe("Growth Annuity Engine", () => {
     expect(roth.netGainOverOriginal).toBe(286875 - 270000);
   });
 
+  it("charges the conversion tax a pre-tax account actually owes", () => {
+    // This is the assertion that was missing. rothConversionTax was hardcoded
+    // to 0 with a comment about "proper tax planning", and because no test
+    // touched the field, a calculator telling retirees their conversion was
+    // free would have passed the suite.
+    const roth = calculateRothConversion({ ...baseInput, accountType: "ira", currentTaxBracket: 24 });
+    expect(roth.convertible).toBe(true);
+    // 24% of the 229,500 that moves into the Roth.
+    expect(roth.rothConversionTax).toBe(Math.round(229_500 * 0.24));
+    expect(roth.rothConversionTax).toBeGreaterThan(0);
+    expect(roth.netAfterTax).toBe(229_500 - roth.rothConversionTax);
+    expect(roth.taxFreeAdvantage).toContain("due for the year of the conversion");
+  });
+
+  it("scales the tax with the bracket rather than ignoring it", () => {
+    const low = calculateRothConversion({ ...baseInput, accountType: "401k", currentTaxBracket: 12 });
+    const high = calculateRothConversion({ ...baseInput, accountType: "401k", currentTaxBracket: 37 });
+    expect(high.rothConversionTax).toBeGreaterThan(low.rothConversionTax);
+  });
+
+  it("refuses a non-qualified annuity instead of pricing it at zero tax", () => {
+    // A non-qualified annuity is not an eligible retirement plan. "No tax" and
+    // "no conversion is possible" are different answers and must not be
+    // conflated, which is exactly what returning 0 did.
+    const r = calculateRothConversion({ ...baseInput, accountType: "nonqualified", currentTaxBracket: 24 });
+    expect(r.convertible).toBe(false);
+    expect(r.rothConversionTax).toBe(0);
+    expect(r.taxFreeAdvantage).toContain("cannot be converted");
+  });
+
+  it("says money already in a Roth has nothing to convert", () => {
+    const r = calculateRothConversion({ ...baseInput, accountType: "roth", currentTaxBracket: 24 });
+    expect(r.convertible).toBe(false);
+    expect(r.rothConversionTax).toBe(0);
+    expect(r.taxFreeAdvantage).toContain("already in a Roth");
+  });
+
+  it("never claims every dollar earned is tax-free", () => {
+    for (const accountType of ["ira", "401k", "403b", "tsp", "roth", "nonqualified"] as const) {
+      const r = calculateRothConversion({ ...baseInput, accountType, currentTaxBracket: 24 });
+      expect(r.taxFreeAdvantage, accountType).not.toContain("100% tax-free");
+      expect(r.taxFreeAdvantage, accountType).not.toContain("stays in your pocket");
+    }
+  });
+
   it("should run full analysis", () => {
     const result = runGrowthAnnuityAnalysis(baseInput);
     expect(result.projections.length).toBe(20);

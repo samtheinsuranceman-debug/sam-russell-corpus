@@ -32,6 +32,9 @@ import { ALL_INDEX_OPTIONS, RAW_INDEX_RETURNS } from "@shared/indexCreditingData
 import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
 import { APPLICATIONS, DRAFTED_COUNT, ENGINE_COUNT, statusBadge, statusSentence } from "@shared/patentStatus";
 import { registerPartnerConcierge } from "./partnerConcierge";
+import { runMonteCarlo } from "@shared/monteCarloEngine";
+import { calculateTax, getStateCodes } from "@shared/taxBracketEngine";
+import { calculateComprehensiveEstateTax } from "@shared/estateTaxEngine";
 
 /** Bearer key. Absent means the whole surface is off, not open. */
 const KEY = () => (process.env.PARTNER_API_KEY ?? "").trim();
@@ -317,6 +320,125 @@ export function registerPartnerApi(app: Express): void {
       capLimitedYears: result.summary.historicalCapLimitedYears,
       notice:
         "Historical index changes shown in this illustration are not indicative of future returns.",
+    });
+  });
+
+  // ── The calculators ───────────────────────────────────────────────────
+  //
+  // Three engines the partner site can run for a visitor. Each is a pure
+  // function of its inputs: nothing is stored, no client record is created,
+  // and no personally identifying field is accepted at all. A partner asking
+  // "what tax does $400,000 of joint income pay in Texas" sends three values
+  // and gets an answer; there is nothing here to breach.
+  //
+  // Every numeric input is clamped rather than trusted. An unclamped
+  // simulation count is a denial-of-service knob, and an unclamped horizon
+  // produces a table nobody asked for and a response nobody can render.
+  //
+  // Deliberately NOT exposed: the HELOC-to-IUL arbitrage engine and the
+  // lifetime-income engine. Both need a full fact finder rather than a web
+  // form — mortgageKiller alone takes 27 fields — and both display indexed
+  // crediting and policy-loan arithmetic, which is exactly the material
+  // AG 49-A governs. Those belong in an advisor session on a surface whose
+  // compliance we control, not in a public page on a host we do not.
+
+  /**
+   * Monte Carlo projection.
+   * GET /api/partner/monte-carlo?initial=500000&years=30&return=7&volatility=15
+   */
+  app.get("/api/partner/monte-carlo", requireKey, (req, res) => {
+    const q = req.query;
+    const result = runMonteCarlo({
+      simulations: clampInt(q.simulations, 200, 5000, 1000),
+      years: clampInt(q.years, 1, 50, 30),
+      initialValue: clampNum(q.initial, 0, 1e9, 500_000),
+      expectedReturn: clampNum(q.return, -20, 30, 7) / 100,
+      volatility: clampNum(q.volatility, 0, 60, 15) / 100,
+      annualContribution: clampNum(q.contribution, -1e7, 1e7, 0),
+      inflationRate: clampNum(q.inflation, 0, 20, 3) / 100,
+    });
+    res.json({
+      summary: result.summary,
+      // Bands, not the raw paths: twenty full simulation paths is a large
+      // payload a chart does not need, and the percentile bands are what a
+      // reader can actually interpret.
+      bands: result.bands,
+      basis:
+        "A Monte Carlo projection is a distribution of modelled outcomes, not a forecast. " +
+        "It assumes returns are normally distributed around the rate you entered, which real markets are not.",
+    });
+  });
+
+  /**
+   * Federal and state income tax for a household.
+   * GET /api/partner/tax?income=400000&filing=married&state=TX
+   */
+  app.get("/api/partner/tax", requireKey, (req, res) => {
+    // The engine's own vocabulary is single | joint | hoh. A partner form is
+    // more likely to say "married", so both spellings are accepted and mapped
+    // rather than silently falling back to single, which would understate the
+    // standard deduction and overstate the tax for every married household.
+    const filingRaw = String(req.query.filing ?? "single").toLowerCase();
+    const filing =
+      filingRaw === "joint" || filingRaw === "married" ? "joint"
+      : filingRaw === "hoh" || filingRaw === "headofhousehold" ? "hoh"
+      : "single";
+    const state = String(req.query.state ?? "TX").toUpperCase().slice(0, 2);
+    if (!getStateCodes().includes(state)) {
+      res.status(400).json({
+        error: "unknown_state",
+        detail: `No rate is held for "${state}".`,
+        available: getStateCodes(),
+      });
+      return;
+    }
+    res.json({
+      ...calculateTax(clampNum(req.query.income, 0, 1e9, 0), filing, state),
+      basis: "2026 federal brackets and the state's top marginal rate. An estimate, not tax advice.",
+    });
+  });
+
+  /**
+   * Federal estate tax and what reaches the heirs.
+   * GET /api/partner/estate-tax?estate=30000000&filing=married&deathBenefit=5000000&ilit=true
+   */
+  app.get("/api/partner/estate-tax", requireKey, (req, res) => {
+    const estate = clampNum(req.query.estate, 0, 1e11, 0);
+    const r = calculateComprehensiveEstateTax({
+      // The engine itemises by asset class; a public form asks for one number,
+      // so the whole estate arrives as one line rather than inventing a split.
+      assets: {
+        realEstate: 0, investments: estate, retirementAccounts: 0, businessInterests: 0,
+        lifeInsurance: 0, cashAndSavings: 0, personalProperty: 0, otherAssets: 0,
+      },
+      deductions: {
+        maritalDeduction: 0,
+        charitableDeduction: clampNum(req.query.charity, 0, 1e11, 0),
+        debtsAndMortgages: clampNum(req.query.debts, 0, 1e11, 0),
+        funeralExpenses: 0, adminExpenses: 0, stateDeathTaxDeduction: 0,
+      },
+      iulDeathBenefit: clampNum(req.query.deathBenefit, 0, 1e10, 0),
+      useILIT: String(req.query.ilit ?? "") === "true",
+      gifting: { annualGiftsPerRecipient: 0, numberOfRecipients: 0, yearsOfGifting: 0, lifetimeGiftsUsed: 0 },
+      filingStatus: String(req.query.filing ?? "married") === "single" ? "single" : "married",
+      spouseEstateValue: 0,
+      year: clampInt(req.query.year, 2024, 2035, new Date().getFullYear()),
+      currentAge: clampInt(req.query.age, 18, 110, 65),
+      growthRate: clampNum(req.query.growth, 0, 20, 6) / 100,
+      spouseAge: clampInt(req.query.spouseAge, 18, 110, 65),
+      numberOfBeneficiaries: clampInt(req.query.beneficiaries, 1, 50, 2),
+    });
+    res.json({
+      grossEstate: r.grossEstate,
+      exemption: r.exemption,
+      taxableEstate: r.taxableEstate,
+      federalEstateTax: r.federalEstateTax,
+      effectiveRate: r.effectiveRate,
+      netToHeirs: r.netToHeirs,
+      estateShrinkagePercent: r.estateShrinkagePercent,
+      basis:
+        "Federal estate tax only. State estate and inheritance taxes are not included and apply in several states. " +
+        "An estimate, not legal or tax advice.",
     });
   });
 }

@@ -276,7 +276,23 @@ export interface RothConversionResult {
   originalValue: number;
   surrenderPenalty: number;
   afterPenaltyValue: number;
-  rothConversionTax: number; // 0% with proper planning
+  /**
+   * Ordinary income tax due in the year of conversion.
+   *
+   * This was hardcoded to 0 with a comment reading "Roth conversion at 0% tax
+   * liability through proper tax planning". That is not how a conversion
+   * works. Moving pre-tax money from a traditional IRA, 401(k), 403(b) or TSP
+   * into a Roth adds the converted amount to ordinary income for that year
+   * under IRC section 408A(d)(3). Planning can reduce the bill — convert in a
+   * low-income year, spread it across years, offset it with deductions — but
+   * nothing makes it zero by default, and a calculator that says zero tells a
+   * retiree their conversion is free when it is not.
+   */
+  rothConversionTax: number;
+  /** Whether this account type can be converted to a Roth IRA at all. */
+  convertible: boolean;
+  /** The amount that lands in the Roth after tax is paid from other funds. */
+  netAfterTax: number;
   premiumBonus: number;
   premiumBonusPct: number;
   enhancedValue: number;
@@ -328,31 +344,52 @@ export function calculateGrowthProjection(
   return results;
 }
 
+/** Account types holding pre-tax dollars: converting them is a taxable event. */
+const PRE_TAX_ACCOUNTS = new Set(["ira", "401k", "403b", "tsp"]);
+
 export function calculateRothConversion(input: GrowthAnnuityInput): RothConversionResult {
   const surrenderPenalty = input.currentSurrenderValue * (input.surrenderPenaltyPct / 100);
   const afterPenaltyValue = input.currentSurrenderValue - surrenderPenalty;
 
-  // Roth conversion at 0% tax liability through proper tax planning
-  const rothConversionTax = 0;
+  // A non-qualified annuity is not an eligible retirement plan, so it cannot be
+  // converted to a Roth IRA at all. Money already in a Roth has nothing to
+  // convert. Both are reported rather than quietly priced at zero tax, because
+  // "no tax" and "no conversion" are different answers.
+  const convertible = PRE_TAX_ACCOUNTS.has(input.accountType);
+  const alreadyRoth = input.accountType === "roth";
 
-  // Premium bonus applied tax-free (20-30%)
+  // The taxable amount is what actually moves into the Roth. The premium bonus
+  // is credited by the receiving carrier after the conversion, inside the Roth,
+  // so it is not part of the conversion income.
+  const rothConversionTax = convertible
+    ? Math.round(afterPenaltyValue * (input.currentTaxBracket / 100))
+    : 0;
+
   const premiumBonus = afterPenaltyValue * (input.premiumBonusPct / 100);
   const enhancedValue = afterPenaltyValue + premiumBonus;
 
   const netGainOverOriginal = enhancedValue - input.currentSurrenderValue;
   const netGainPct = ((enhancedValue / input.currentSurrenderValue) - 1) * 100;
 
+  const taxFreeAdvantage = alreadyRoth
+    ? "This money is already in a Roth, so there is nothing to convert and no conversion tax. Qualified withdrawals remain tax-free."
+    : !convertible
+      ? "A non-qualified annuity is not an eligible retirement plan and cannot be converted to a Roth IRA. Its gains are taxable as ordinary income when withdrawn."
+      : "After the conversion is taxed, qualified Roth withdrawals are tax-free. The tax above is due for the year of the conversion and is lower if the conversion is spread across years or made in a low-income year. This is an estimate at a single marginal rate, not tax advice.";
+
   return {
     originalValue: input.currentSurrenderValue,
     surrenderPenalty: Math.round(surrenderPenalty),
     afterPenaltyValue: Math.round(afterPenaltyValue),
     rothConversionTax,
+    convertible,
+    netAfterTax: Math.round(afterPenaltyValue - rothConversionTax),
     premiumBonus: Math.round(premiumBonus),
     premiumBonusPct: input.premiumBonusPct,
     enhancedValue: Math.round(enhancedValue),
     netGainOverOriginal: Math.round(netGainOverOriginal),
     netGainPct: Math.round(netGainPct * 10) / 10,
-    taxFreeAdvantage: "All future gains are 100% tax-free — not tax-deferred like traditional annuities. Every dollar earned stays in your pocket.",
+    taxFreeAdvantage,
   };
 }
 
