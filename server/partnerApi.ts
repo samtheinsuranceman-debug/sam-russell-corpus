@@ -42,6 +42,7 @@ import {
   getIbbotsonCAGR,
   runIbbotsonModel,
 } from "@shared/ibbotsonModel";
+import { CREDITING_WINDOWS, fullWindow, windowById } from "@shared/creditingWindows";
 
 /** Bearer key. Absent means the whole surface is off, not open. */
 const KEY = () => (process.env.PARTNER_API_KEY ?? "").trim();
@@ -149,8 +150,17 @@ function creditingFrom(q: Request["query"]): Crediting {
   const floorPct = clampNum(q.floor, -10, 10, 0);
   const participationPct = clampNum(q.participation, 1, 300, 100);
 
-  const startYear = clampInt(q.indexStartYear, IBBOTSON_START_YEAR, IBBOTSON_END_YEAR - 9, IBBOTSON_START_YEAR);
-  const endYear = clampInt(q.indexEndYear, startYear + 9, IBBOTSON_END_YEAR, IBBOTSON_END_YEAR);
+  // A named window (window=covid) sets the period; explicit years override it.
+  // Covid is the shortest offered at six years, so the ten-year floor that
+  // applies elsewhere cannot apply here — the window is the point. It is
+  // reported beside the full history instead, which is the actual protection.
+  const named = windowById(String(q.window ?? ""));
+  const startYear = q.indexStartYear !== undefined
+    ? clampInt(q.indexStartYear, IBBOTSON_START_YEAR, IBBOTSON_END_YEAR - 9, IBBOTSON_START_YEAR)
+    : (named?.fromYear ?? IBBOTSON_START_YEAR);
+  const endYear = q.indexEndYear !== undefined
+    ? clampInt(q.indexEndYear, startYear + 1, IBBOTSON_END_YEAR, IBBOTSON_END_YEAR)
+    : (named?.toYear ?? IBBOTSON_END_YEAR);
 
   const ratePct =
     getIbbotsonCAGR({
@@ -181,7 +191,10 @@ function creditingFrom(q: Request["query"]): Crediting {
     );
   }
   if (endYear - startYear + 1 < 10) {
-    warnings.push("Fewer than ten years of index history stands behind this figure.");
+    warnings.push(
+      `Only ${endYear - startYear + 1} years of index history stands behind this figure. AG 49-A asks for at least ten. ` +
+      "Read it beside the full history, not instead of it."
+    );
   }
 
   return {
@@ -194,6 +207,42 @@ function creditingFrom(q: Request["query"]): Crediting {
     years: endYear - startYear + 1,
     uncapped,
     warnings,
+  };
+}
+
+
+/**
+ * The second panel, computed once for both routes that need it.
+ *
+ * The Time Machine's rule is that a chosen window never stands alone. It is
+ * computed here rather than left to the caller because a partner front end
+ * that forgets it produces exactly the exhibit this exists to prevent — a true
+ * number about a flattering period, presented as the answer.
+ */
+function dualPanel(crediting: Crediting, windowId: string) {
+  const full = fullWindow();
+  const ratePct = Number(
+    (getIbbotsonCAGR({
+      capRate: crediting.uncapped ? Number.POSITIVE_INFINITY : crediting.capPct! / 100,
+      floorRate: crediting.floorPct / 100,
+      participationRate: crediting.participationPct / 100,
+      startYear: full.fromYear,
+      endYear: full.toYear,
+    }) * 100).toFixed(2)
+  );
+  return {
+    selected: {
+      label: windowById(windowId)?.label ?? `${crediting.startYear}\u2013${crediting.endYear}`,
+      ratePct: crediting.ratePct,
+      years: crediting.years,
+    },
+    againstFullHistory: {
+      label: full.label,
+      ratePct,
+      years: full.toYear - full.fromYear + 1,
+      /** Positive means the chosen window flatters the strategy. */
+      differencePct: Number((crediting.ratePct - ratePct).toFixed(2)),
+    },
   };
 }
 
@@ -657,6 +706,7 @@ export function registerPartnerApi(app: Express): void {
         netWorth: Math.round(y.netWorth),
       })),
       crediting,
+      ...dualPanel(crediting, String(q.window ?? "")),
       basis:
         `An illustration, not a promise. The ${crediting.ratePct}% crediting assumption is not chosen — it is what this ` +
         `policy's own index strategy (${crediting.uncapped ? "uncapped" : crediting.capPct + "% cap"}, ` +
@@ -695,8 +745,20 @@ export function registerPartnerApi(app: Express): void {
       ? 0
       : rows.filter((r) => r.sp500Return * (crediting.participationPct / 100) > crediting.capPct! / 100).length;
 
+    const panels = dualPanel(crediting, String(req.query.window ?? ""));
+
     res.json({
       crediting,
+      // Always both. The selected window, and the whole record beside it.
+      ...panels,
+      windows: CREDITING_WINDOWS.map((w) => ({
+        id: w.id,
+        label: w.label,
+        description: w.description,
+        fromYear: w.fromYear,
+        toYear: w.toYear,
+        startsAtPeak: Boolean(w.startsAtPeak),
+      })),
       years: rows.map((r) => ({
         year: r.year,
         indexReturnPct: Number((r.sp500Return * 100).toFixed(2)),

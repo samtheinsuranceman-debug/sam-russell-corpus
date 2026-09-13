@@ -375,6 +375,52 @@ describe('the calculators', () => {
     expect(b.crediting.warnings).toEqual([]);
   });
 
+  it('offers the named windows, including two that begin at a market top', async () => {
+    const b = await fetch(`${base}/crediting`, auth).then((x) => x.json());
+    const ids = b.windows.map((w: { id: string }) => w.id);
+    for (const id of ['full', 'ag49', 'thirty', 'dotcom', 'crisis', 'covid']) {
+      expect(ids, id).toContain(id);
+    }
+    // A menu of only rising windows is a sales tool. Two must start at a peak.
+    expect(b.windows.filter((w: { startsAtPeak: boolean }) => w.startsAtPeak).length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('never shows a chosen window without the whole record beside it', async () => {
+    // This is the Time Machine rule applied to the index strategy. Since Covid
+    // is six years off the bottom of a crash: a true figure and a misleading
+    // answer on its own. It must arrive with the long number attached.
+    const b = await fetch(`${base}/crediting?window=covid&cap=9.5`, auth).then((x) => x.json());
+    expect(b.selected.years).toBe(2025 - 2020 + 1);
+    expect(b.againstFullHistory.years).toBeGreaterThan(90);
+    expect(b.againstFullHistory.ratePct).toBeGreaterThan(0);
+    // And the gap is stated rather than left for the reader to subtract.
+    expect(b.againstFullHistory.differencePct).toBe(
+      Number((b.selected.ratePct - b.againstFullHistory.ratePct).toFixed(2))
+    );
+    expect(b.selected.ratePct).toBeGreaterThan(b.againstFullHistory.ratePct);
+  });
+
+  it('warns that the shortest window is short, rather than quietly refusing it', async () => {
+    const b = await fetch(`${base}/crediting?window=covid`, auth).then((x) => x.json());
+    expect(b.crediting.warnings.join(' ')).toContain('AG 49-A asks for at least ten');
+    expect(b.crediting.warnings.join(' ')).toContain('beside the full history');
+  });
+
+  it('a window starting at a peak credits less than one starting after it', async () => {
+    const [peak, recent] = await Promise.all([
+      fetch(`${base}/crediting?window=dotcom&cap=9.5`, auth).then((x) => x.json()),
+      fetch(`${base}/crediting?window=covid&cap=9.5`, auth).then((x) => x.json()),
+    ]);
+    expect(peak.selected.ratePct).toBeLessThan(recent.selected.ratePct);
+    // Both report the same long number, because the strategy is the same.
+    expect(peak.againstFullHistory.ratePct).toBe(recent.againstFullHistory.ratePct);
+  });
+
+  it('an explicit start year still overrides a named window', async () => {
+    const b = await fetch(`${base}/crediting?window=covid&indexStartYear=1995`, auth).then((x) => x.json());
+    expect(b.crediting.startYear).toBe(1995);
+  });
+
   it('says where the series comes from and where it actually starts', async () => {
     // "Ibbotson" invites the reader to assume 1926. The held table begins in
     // 1929, and the response says so rather than letting the name imply it.
@@ -385,13 +431,22 @@ describe('the calculators', () => {
     expect(b.notice).toContain('not indicative of future returns');
   });
 
-  it('lets a caller pick another window, and refuses one too short to mean anything', async () => {
+  it('honours a short window and warns about it, rather than clamping it', async () => {
     const chosen = await fetch(`${base}/crediting?indexStartYear=1995`, auth).then((x) => x.json());
     expect(chosen.crediting.startYear).toBe(1995);
-    // AG 49-A wants at least ten years of index history behind a table. An end
-    // year inside that window is clamped rather than honoured.
-    const tooShort = await fetch(`${base}/crediting?indexStartYear=2000&indexEndYear=2003`, auth).then((x) => x.json());
-    expect(tooShort.crediting.years).toBeGreaterThanOrEqual(10);
+
+    // An earlier version of this test asserted a hard ten-year floor, silently
+    // widening any shorter request. That was wrong for this exhibit: the whole
+    // purpose is letting a reader shift the period, and a window that quietly
+    // becomes a different window is worse than a short one. AG 49-A's ten-year
+    // expectation is now carried as a warning beside the figure, and the full
+    // history is returned alongside, which is the real protection.
+    const short = await fetch(`${base}/crediting?indexStartYear=2000&indexEndYear=2003`, auth).then((x) => x.json());
+    expect(short.crediting.startYear).toBe(2000);
+    expect(short.crediting.endYear).toBe(2003);
+    expect(short.crediting.years).toBe(4);
+    expect(short.crediting.warnings.join(' ')).toContain('AG 49-A asks for at least ten');
+    expect(short.againstFullHistory.years).toBeGreaterThan(90);
   });
 
   it('carries the AG 49 language with every mortgage answer', async () => {
@@ -415,6 +470,35 @@ describe('the calculators', () => {
     expect(b.byYear.length).toBeLessThanOrEqual(40);
     expect(b.current.schedule).toBeUndefined();
     expect(b.accelerated.schedule).toBeUndefined();
+  });
+
+  it('the mortgage illustration carries both panels too, not just the crediting route', async () => {
+    // A partner rendering only the mortgage tool must still see the chosen
+    // window beside the whole record, or the toggle becomes a way to pick a
+    // flattering number without the context that makes it honest.
+    const b = await fetch(`${base}/mortgage?${MORTGAGE}&window=covid`, auth).then((x) => x.json());
+    expect(b.selected.years).toBe(6);
+    expect(b.againstFullHistory.years).toBeGreaterThan(90);
+    expect(b.crediting.startYear).toBe(2020);
+  });
+
+  it('shifting the window barely moves the rate, because the cap is doing the work', async () => {
+    // Worth pinning, because it is the opposite of what a toggle implies. A
+    // 7.5% cap truncates every good year, so a window full of strong years
+    // cannot run away — it just hits the cap more often. Across 97 years down
+    // to 6, the spread is a third of a point. If the number needs to be
+    // higher, the cap is the lever, not the period.
+    const rates = await Promise.all(
+      ['full', 'thirty', 'dotcom', 'crisis', 'covid'].map((w) =>
+        fetch(`${base}/crediting?window=${w}&cap=7.5`, auth).then((x) => x.json()).then((b) => b.selected.ratePct)
+      )
+    );
+    const spread = Math.max(...rates) - Math.min(...rates);
+    expect(spread).toBeLessThan(1);
+
+    // Raising the cap moves it far more than any window choice does.
+    const higherCap = await fetch(`${base}/crediting?window=full&cap=12`, auth).then((x) => x.json());
+    expect(higherCap.selected.ratePct - Math.max(...rates)).toBeGreaterThan(spread);
   });
 
   it('still does not expose the lifetime-income engine', async () => {
