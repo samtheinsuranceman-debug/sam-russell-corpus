@@ -26,3 +26,10 @@
   font:15px/1.5 system-ui,sans-serif;color:#12181f}
 .dwt-refusal p{margin:0}
 @media (max-width:600px){ .dwt{font-size:15px} .dwt-table th,.dwt-table td{padding:8px 10px} }
+
+/* Time Machine dual view */
+.dwt-panels{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.dwt-panel{min-width:0}
+.dwt-panel-h{font-size:15px;text-transform:uppercase;letter-spacing:.05em;color:var(--dwt-accent);margin:0 0 6px}
+.dwt-panel-sub{font-size:14px;color:var(--dwt-muted);margin:0 0 12px;min-height:42px}
+@media (max-width:860px){ .dwt-panels{grid-template-columns:1fr} .dwt-panel-sub{min-height:0} }

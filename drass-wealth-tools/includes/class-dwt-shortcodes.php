@@ -19,6 +19,11 @@ class DWT_Shortcodes {
 				'file'  => 'backtester.php',
 				'fn'    => 'dwt_render_backtester',
 			],
+			'dwt_time_machine' => [
+				'label' => 'Time Machine — the AG 49 illustration beside its required historical disclosure',
+				'file'  => 'time-machine.php',
+				'fn'    => 'dwt_render_time_machine',
+			],
 		];
 	}
 
