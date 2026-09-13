@@ -28,7 +28,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { generateDualIllustration } from "@shared/timeMachineEngine";
-import { ALL_INDEX_OPTIONS, MAX_YEAR, MIN_YEAR, RAW_INDEX_RETURNS, getCreditingHistory, runBacktest } from "@shared/indexCreditingData";
+import { ALL_INDEX_OPTIONS, MAX_YEAR, MIN_YEAR, RAW_INDEX_RETURNS, getCreditingHistory, hasIndexSeries, publishedLookback, runBacktest } from "@shared/indexCreditingData";
 import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
 import { APPLICATIONS, DRAFTED_COUNT, ENGINE_COUNT, statusBadge, statusSentence } from "@shared/patentStatus";
 import { registerPartnerConcierge } from "./partnerConcierge";
@@ -281,6 +281,18 @@ function dualPanel(crediting: Crediting, windowId: string) {
  * actually chosen, they can be modelled properly and this list shrinks.
  */
 function reconstructionCaveat(o: (typeof ALL_INDEX_OPTIONS)[number]): string | null {
+  if (!hasIndexSeries(o)) {
+    // Without a series every year credits the floor, which would render as a
+    // strategy that never pays — the opposite of the truth for a 315%
+    // participation design. Refuse it and point at the carrier's own figure.
+    const pub = publishedLookback(o.id);
+    return (
+      `No index series is held for ${o.index}, so a year-by-year credit cannot be computed. ` +
+      (pub?.y20 != null
+        ? `The carrier publishes a ${pub.y20}% twenty-year look-back for this strategy; its index was established in 2022, so everything before that is back-tested.`
+        : "The carrier publishes no long look-back for this strategy either.")
+    );
+  }
   if (/monthly/i.test(o.name)) {
     return "Modelled on annual point-to-point index returns, while the product name describes a monthly average. " +
       "A monthly design credits materially less in a trending market, so this reconstruction overstates it.";

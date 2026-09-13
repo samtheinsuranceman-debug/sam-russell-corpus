@@ -19,7 +19,13 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { ALL_INDEX_OPTIONS, getCreditingHistory } from '../shared/indexCreditingData';
+import {
+  ALL_INDEX_OPTIONS,
+  NATIONWIDE_PUBLISHED_LOOKBACKS,
+  getCreditingHistory,
+  hasIndexSeries,
+  publishedLookback,
+} from '../shared/indexCreditingData';
 
 /** Published by Nationwide, 30-year column, as of 15 January 2025. */
 const NATIONWIDE_30YR: Record<string, number> = {
@@ -70,8 +76,39 @@ describe('our crediting model against the carrier rate guide', () => {
     expect(Math.abs(ours - 7.52)).toBeGreaterThan(1.0);
   });
 
+  it('carries every strategy the rate guide lists, including the ones it cannot run', () => {
+    // A policyholder choosing an allocation should see the whole contract,
+    // not only the part this system can model.
+    for (const id of ['ma-jpm-mercury-plus', 'ma-bnpp-hfactor-select', 'ma-jpm-mercury-highpar']) {
+      const o = ALL_INDEX_OPTIONS.find((x) => x.id === id);
+      expect(o, id).toBeDefined();
+      expect(o!.cap).toBeNull();
+      expect(o!.participation).toBeGreaterThan(150);
+    }
+    expect(ALL_INDEX_OPTIONS.find((o) => o.id === 'ma-bnpp-hfactor-select')!.participation).toBe(315);
+  });
+
+  it('knows which strategies it holds no index series for', () => {
+    const missing = ALL_INDEX_OPTIONS.filter((o) => !hasIndexSeries(o));
+    expect(missing.length).toBe(6);
+    for (const o of missing) {
+      expect(['JPM_MERCURY', 'BNPP_HFACTOR'], o.id).toContain(o.index);
+      // And the carrier's own figure is available in place of one we cannot
+      // compute, so the strategy is not simply blank.
+      expect(publishedLookback(o.id)?.y20, o.id).toBeGreaterThan(0);
+      // Both indices were established in 2022, so no long look-back exists.
+      expect(publishedLookback(o.id)?.y30, o.id).toBeNull();
+    }
+  });
+
+  it('every published look-back names a strategy that exists', () => {
+    for (const l of NATIONWIDE_PUBLISHED_LOOKBACKS) {
+      expect(ALL_INDEX_OPTIONS.some((o) => o.id === l.optionId), l.optionId).toBe(true);
+    }
+  });
+
   it('no strategy credits below its floor or above its cap in any year', () => {
-    for (const o of ALL_INDEX_OPTIONS) {
+    for (const o of ALL_INDEX_OPTIONS.filter(hasIndexSeries)) {
       for (const y of getCreditingHistory(o, 1996, 2025)) {
         expect(y.creditedRate, `${o.id} ${y.year}`).toBeGreaterThanOrEqual(o.floor - o.strategyCharge - 0.001);
         if (o.cap !== null) {
