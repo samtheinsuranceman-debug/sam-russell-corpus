@@ -308,20 +308,95 @@ describe('the calculators', () => {
     expect(b.required).toContain('homeValue');
   });
 
-  it('caps the illustrated crediting rate at 6.5% however high the caller asks', async () => {
-    // AG 49-A limits the illustrated rate. The ceiling belongs to this
-    // boundary, not to whoever writes the partner's front end — so asking for
-    // 12% must produce exactly the same answer as asking for 6.5%.
-    const [asked, ceiling] = await Promise.all([
-      fetch(`${base}/mortgage?${MORTGAGE}&creditRate=12`, auth).then((x) => x.json()),
-      fetch(`${base}/mortgage?${MORTGAGE}&creditRate=6.5`, auth).then((x) => x.json()),
+  it('derives the crediting rate from the strategy, and will not take one', async () => {
+    // The rate is no longer a number anyone supplies. Asking for an absurd one
+    // must change nothing, because the parameter is not read at all.
+    const [plain, asked] = await Promise.all([
+      fetch(`${base}/mortgage?${MORTGAGE}`, auth).then((x) => x.json()),
+      fetch(`${base}/mortgage?${MORTGAGE}&creditRate=25`, auth).then((x) => x.json()),
     ]);
-    expect(asked.policy.finalCashValue).toBe(ceiling.policy.finalCashValue);
+    expect(asked.policy.finalCashValue).toBe(plain.policy.finalCashValue);
+    expect(plain.crediting.ratePct).toBeGreaterThan(0);
+    expect(plain.crediting.startYear).toBe(1929);
+    expect(plain.crediting.endYear).toBe(2025);
+  });
+
+  it('a richer index strategy credits more, and the illustration follows', async () => {
+    const [capped, uncapped] = await Promise.all([
+      fetch(`${base}/mortgage?${MORTGAGE}&cap=7.5`, auth).then((x) => x.json()),
+      fetch(`${base}/mortgage?${MORTGAGE}&cap=none`, auth).then((x) => x.json()),
+    ]);
+    expect(uncapped.crediting.uncapped).toBe(true);
+    expect(uncapped.crediting.capPct).toBeNull();
+    expect(uncapped.crediting.ratePct).toBeGreaterThan(capped.crediting.ratePct);
+    expect(uncapped.policy.finalCashValue).toBeGreaterThan(capped.policy.finalCashValue);
+  });
+
+  it('states the compound rate, never the average of annual credits', async () => {
+    // The arithmetic mean of credits overstates what the account reaches: 0%
+    // then 10% averages 5% but compounds to 4.88%. With a cap truncating the
+    // good years and a floor holding the bad ones, the gap is always in the
+    // flattering direction, so the compound figure must be the lower one.
+    const b = await fetch(`${base}/crediting?cap=7.5&floor=0&participation=100`, auth).then((x) => x.json());
+    const arithmetic =
+      b.years.reduce((t: number, y: { creditedRatePct: number }) => t + y.creditedRatePct, 0) / b.years.length;
+    expect(b.crediting.ratePct).toBeLessThan(arithmetic);
+  });
+
+  it('shows the strategy year by year, with the floor and cap years counted', async () => {
+    const b = await fetch(`${base}/crediting?cap=7.5&indexStartYear=1995`, auth).then((x) => x.json());
+    expect(b.years[0].year).toBe(1995);
+    expect(b.years.length).toBe(b.crediting.years);
+    // 2008 fell hard; the floor must have held it at 0, not passed the loss on.
+    const y2008 = b.years.find((y: { year: number }) => y.year === 2008);
+    expect(y2008.indexReturnPct).toBeLessThan(0);
+    expect(y2008.creditedRatePct).toBe(0);
+    expect(b.floorHeldYears).toBeGreaterThan(0);
+    expect(b.capLimitedYears).toBeGreaterThan(0);
+  });
+
+  it('flags an uncapped strategy at full participation as describing no real policy', async () => {
+    // 1929-2025 uncapped at 100% participation compounds to 14.39%. Carriers
+    // that drop the cap pay for it with participation well under 100%, so the
+    // combination is arithmetic about a product nobody sells.
+    const b = await fetch(`${base}/crediting?cap=none&participation=100`, auth).then((x) => x.json());
+    expect(b.crediting.warnings.length).toBeGreaterThan(0);
+    expect(b.crediting.warnings.join(' ')).toContain('no policy that can be');
+    expect(b.crediting.warnings.join(' ')).toContain('AG 49-A');
+
+    // A real uncapped design — cap off, participation reduced — is not flagged.
+    const real = await fetch(`${base}/crediting?cap=none&participation=60`, auth).then((x) => x.json());
+    expect(real.crediting.warnings).toEqual([]);
+    expect(real.crediting.ratePct).toBeLessThan(b.crediting.ratePct);
+  });
+
+  it('a normal capped strategy carries no warnings', async () => {
+    const b = await fetch(`${base}/crediting?cap=9.5&participation=100`, auth).then((x) => x.json());
+    expect(b.crediting.warnings).toEqual([]);
+  });
+
+  it('says where the series comes from and where it actually starts', async () => {
+    // "Ibbotson" invites the reader to assume 1926. The held table begins in
+    // 1929, and the response says so rather than letting the name imply it.
+    const b = await fetch(`${base}/crediting`, auth).then((x) => x.json());
+    expect(b.source).toContain('Ibbotson');
+    expect(b.source).toContain('1926');
+    expect(b.source).toContain('1929');
+    expect(b.notice).toContain('not indicative of future returns');
+  });
+
+  it('lets a caller pick another window, and refuses one too short to mean anything', async () => {
+    const chosen = await fetch(`${base}/crediting?indexStartYear=1995`, auth).then((x) => x.json());
+    expect(chosen.crediting.startYear).toBe(1995);
+    // AG 49-A wants at least ten years of index history behind a table. An end
+    // year inside that window is clamped rather than honoured.
+    const tooShort = await fetch(`${base}/crediting?indexStartYear=2000&indexEndYear=2003`, auth).then((x) => x.json());
+    expect(tooShort.crediting.years).toBeGreaterThanOrEqual(10);
   });
 
   it('carries the AG 49 language with every mortgage answer', async () => {
     const b = await fetch(`${base}/mortgage?${MORTGAGE}`, auth).then((x) => x.json());
-    for (const phrase of ['not guaranteed', 'not indicative of future returns', 'reduces its cash value', 'taxable event']) {
+    for (const phrase of ['Nothing about it is guaranteed', 'not indicative of future returns', 'reduces its cash value', 'taxable event', 'AG 49-A maximum', 'Ibbotson']) {
       expect(b.basis, phrase).toContain(phrase);
     }
   });
