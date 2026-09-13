@@ -36,6 +36,12 @@ import { runMonteCarlo } from "@shared/monteCarloEngine";
 import { calculateTax, getStateCodes } from "@shared/taxBracketEngine";
 import { calculateComprehensiveEstateTax } from "@shared/estateTaxEngine";
 import { runMortgageKillerAnalysis } from "@shared/mortgageKiller";
+import {
+  IBBOTSON_END_YEAR,
+  IBBOTSON_START_YEAR,
+  getIbbotsonCAGR,
+  runIbbotsonModel,
+} from "@shared/ibbotsonModel";
 
 /** Bearer key. Absent means the whole surface is off, not open. */
 const KEY = () => (process.env.PARTNER_API_KEY ?? "").trim();
@@ -82,6 +88,113 @@ function sameSecret(a: string, b: string): boolean {
   const da = createHash("sha256").update(a, "utf8").digest();
   const db = createHash("sha256").update(b, "utf8").digest();
   return timingSafeEqual(da, db);
+}
+
+
+/**
+ * The crediting assumption, derived rather than declared.
+ *
+ * This route used to illustrate at a flat 6.5%, clamped. A flat number is a
+ * guess wearing a ceiling: it says nothing about the policy in front of the
+ * client, and two policies with genuinely different index strategies got the
+ * same answer.
+ *
+ * So the rate now comes from the strategy. Take the policy's own cap, floor
+ * and participation rate, run them across the S&P 500 series in
+ * ibbotsonModel.ts, and report what that strategy would actually have
+ * credited. That is the shape of the AG 49 calculation itself — the maximum
+ * illustrated rate is derived from the actual index parameters over a long
+ * lookback, not chosen.
+ *
+ * ## Geometric, not arithmetic
+ *
+ * getIbbotsonCAGR, not getAverageAnnualCreditedRate. The arithmetic mean of
+ * annual credits overstates what an account actually compounds to: credit 0%
+ * then 10% and the arithmetic mean says 5%, but a dollar became $1.10 over two
+ * years, which is 4.88% compounded. On a thirty-year illustration that gap is
+ * real money, and it errs in the direction that flatters the product.
+ *
+ * ## The window
+ *
+ * Default start is IBBOTSON_START_YEAR. Note that this is 1929, while
+ * Ibbotson and Sinquefield's SBBI series itself begins in 1926 — the three
+ * earliest years are not in the table this repo holds, which is sourced to
+ * NYU Stern / Damodaran. Adding 1926-1928 needs a sourced addition to
+ * ibbotsonModel.ts, not three numbers typed from memory. Until then the
+ * response reports the window it actually used, so nobody reads "Ibbotson"
+ * and assumes 1926.
+ *
+ * A caller may select any other start year.
+ */
+interface Crediting {
+  readonly ratePct: number;
+  readonly capPct: number | null;
+  readonly floorPct: number;
+  readonly participationPct: number;
+  readonly startYear: number;
+  readonly endYear: number;
+  readonly years: number;
+  readonly uncapped: boolean;
+  /** Problems with the strategy as described. Reported, never silently fixed. */
+  readonly warnings: readonly string[];
+}
+
+function creditingFrom(q: Request["query"]): Crediting {
+  // "cap=none" (or "uncapped", or 0) means an uncapped participation strategy.
+  // Infinity through the engine's Math.min leaves the participated return
+  // untouched, which is exactly what uncapped means.
+  const capRaw = String(q.cap ?? "").trim().toLowerCase();
+  const uncapped = capRaw === "none" || capRaw === "uncapped" || capRaw === "0";
+  const capPct = uncapped ? null : clampNum(q.cap, 0.5, 30, 7.5);
+  const floorPct = clampNum(q.floor, -10, 10, 0);
+  const participationPct = clampNum(q.participation, 1, 300, 100);
+
+  const startYear = clampInt(q.indexStartYear, IBBOTSON_START_YEAR, IBBOTSON_END_YEAR - 9, IBBOTSON_START_YEAR);
+  const endYear = clampInt(q.indexEndYear, startYear + 9, IBBOTSON_END_YEAR, IBBOTSON_END_YEAR);
+
+  const ratePct =
+    getIbbotsonCAGR({
+      capRate: uncapped ? Number.POSITIVE_INFINITY : capPct! / 100,
+      floorRate: floorPct / 100,
+      participationRate: participationPct / 100,
+      startYear,
+      endYear,
+    }) * 100;
+
+  // An uncapped strategy at full participation is not a product. Carriers
+  // that remove the cap pay for it with a participation rate well under 100%,
+  // or a spread, or both — that is the trade the design makes. Asked for
+  // together, the two produce 14.39% across this window, which describes no
+  // policy anyone can buy and exceeds any AG 49-A maximum illustrated rate by
+  // a wide margin.
+  //
+  // It is still computed, because the caller asked and the arithmetic is the
+  // arithmetic. It is flagged, because a number that describes nothing real
+  // should not travel without saying so.
+  const warnings: string[] = [];
+  if (uncapped && participationPct >= 100) {
+    warnings.push(
+      "An uncapped strategy at 100% or more participation is not a product any carrier offers: removing the cap is " +
+      "paid for with a lower participation rate, a spread, or both. This figure describes no policy that can be " +
+      "bought, and is far above any AG 49-A maximum illustrated rate. Set the participation rate this policy " +
+      "actually carries."
+    );
+  }
+  if (endYear - startYear + 1 < 10) {
+    warnings.push("Fewer than ten years of index history stands behind this figure.");
+  }
+
+  return {
+    ratePct: Number(ratePct.toFixed(2)),
+    capPct,
+    floorPct,
+    participationPct,
+    startYear,
+    endYear,
+    years: endYear - startYear + 1,
+    uncapped,
+    warnings,
+  };
 }
 
 /**
@@ -466,6 +579,7 @@ export function registerPartnerApi(app: Express): void {
    */
   app.get("/api/partner/mortgage", requireKey, (req, res) => {
     const q = req.query;
+    const crediting = creditingFrom(q);
     const balance = clampNum(q.balance, 0, 1e8, 0);
     const homeValue = clampNum(q.homeValue, 0, 1e9, 0);
     if (balance <= 0 || homeValue <= 0) {
@@ -502,8 +616,9 @@ export function registerPartnerApi(app: Express): void {
       otherInvestments: clampNum(q.other, 0, 1e9, 0),
       cryptocurrency: clampNum(q.crypto, 0, 1e9, 0),
       incomeAllocationPct: clampNum(q.allocationPct, 1, 50, 20) / 100,
-      // AG 49-A: the ceiling is ours, not the caller's.
-      iulCreditRate: clampNum(q.creditRate, 0, 6.5, 6) / 100,
+      // Derived from the policy's own index strategy across the Ibbotson
+      // series, not a number anyone chose. See creditingFrom().
+      iulCreditRate: crediting.ratePct / 100,
       helocRate: clampNum(q.helocRate, 0, 25, 8.5) / 100,
     });
 
@@ -541,11 +656,64 @@ export function registerPartnerApi(app: Express): void {
         helocBalance: Math.round(y.helocBalance),
         netWorth: Math.round(y.netWorth),
       })),
+      crediting,
       basis:
-        "An illustration, not a promise. Indexed crediting is capped at 6.5% here and is not guaranteed; " +
-        "actual credited rates vary with the index and the carrier's declared cap, and may be zero in a year the index falls. " +
-        "Historical index changes are not indicative of future returns. Borrowing against a policy reduces its cash value " +
-        "and death benefit, and a policy that lapses with a loan outstanding can create a taxable event.",
+        `An illustration, not a promise. The ${crediting.ratePct}% crediting assumption is not chosen — it is what this ` +
+        `policy's own index strategy (${crediting.uncapped ? "uncapped" : crediting.capPct + "% cap"}, ` +
+        `${crediting.floorPct}% floor, ${crediting.participationPct}% participation) would have compounded to across ` +
+        `${crediting.years} years of S&P 500 history, ${crediting.startYear} to ${crediting.endYear}, from Roger Ibbotson's ` +
+        "SBBI series. It is a compound rate, not an average of annual credits, because an average of credits overstates " +
+        "what an account reaches. Nothing about it is guaranteed: credited rates vary with the index and with the carrier's " +
+        "declared cap and participation rate, which the carrier may change, and may be zero in a year the index falls. " +
+        "Historical index changes are not indicative of future returns. Where the carrier's own AG 49-A maximum " +
+        "illustrated rate is lower than this figure, the carrier's illustration governs. Borrowing against a policy reduces " +
+        "its cash value and death benefit, and a policy that lapses with a loan outstanding can create a taxable event.",
+    });
+  });
+
+  /**
+   * The index strategy's own history.
+   * GET /api/partner/crediting?cap=7.5&floor=0&participation=100&indexStartYear=1995
+   *
+   * What a policy's cap, floor and participation rate would have credited,
+   * year by year, against the S&P 500. `cap=none` for an uncapped
+   * participation strategy. This is the exhibit behind the number the mortgage
+   * illustration uses, so a reader can check the assumption rather than take it.
+   */
+  app.get("/api/partner/crediting", requireKey, (req, res) => {
+    const crediting = creditingFrom(req.query);
+    const rows = runIbbotsonModel({
+      capRate: crediting.uncapped ? Number.POSITIVE_INFINITY : crediting.capPct! / 100,
+      floorRate: crediting.floorPct / 100,
+      participationRate: crediting.participationPct / 100,
+      startYear: crediting.startYear,
+      endYear: crediting.endYear,
+    });
+
+    const down = rows.filter((r) => r.sp500Return < 0);
+    const capped = crediting.uncapped
+      ? 0
+      : rows.filter((r) => r.sp500Return * (crediting.participationPct / 100) > crediting.capPct! / 100).length;
+
+    res.json({
+      crediting,
+      years: rows.map((r) => ({
+        year: r.year,
+        indexReturnPct: Number((r.sp500Return * 100).toFixed(2)),
+        creditedRatePct: Number((r.creditedRate * 100).toFixed(2)),
+      })),
+      // The two numbers the exhibit exists to show: how often the floor did
+      // the work, and how often the cap took something away.
+      floorHeldYears: down.length,
+      capLimitedYears: capped,
+      source:
+        "S&P 500 annual returns from Roger Ibbotson and Rex Sinquefield's Stocks, Bonds, Bills and Inflation series, " +
+        "as held in this repository from NYU Stern / Damodaran. The held table begins in " +
+        `${IBBOTSON_START_YEAR}; the published SBBI series itself begins in 1926, and those three earliest years are ` +
+        "not included here.",
+      notice:
+        "Historical index changes shown are not indicative of future returns, and this is not an illustration of any " +
+        "specific policy. Caps and participation rates are declared by the carrier and can change.",
     });
   });
 }
