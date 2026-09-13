@@ -19,6 +19,11 @@ class DWT_Shortcodes {
 				'file'  => 'backtester.php',
 				'fn'    => 'dwt_render_backtester',
 			],
+			'dwt_catalog' => [
+				'label' => 'Engine catalogue — the planning engines this site can present, pulled live',
+				'file'  => 'catalog.php',
+				'fn'    => 'dwt_render_catalog',
+			],
 			'dwt_time_machine' => [
 				'label' => 'Time Machine — the AG 49 illustration beside its required historical disclosure',
 				'file'  => 'time-machine.php',

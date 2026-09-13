@@ -33,3 +33,15 @@
 .dwt-panel-h{font-size:15px;text-transform:uppercase;letter-spacing:.05em;color:var(--dwt-accent);margin:0 0 6px}
 .dwt-panel-sub{font-size:14px;color:var(--dwt-muted);margin:0 0 12px;min-height:42px}
 @media (max-width:860px){ .dwt-panels{grid-template-columns:1fr} .dwt-panel-sub{min-height:0} }
+
+/* Engine catalogue */
+.dwt-cat-h{font-size:22px;margin:0 0 6px;color:var(--dwt-ink)}
+.dwt-cat-grid{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.dwt-cat-grid--1{grid-template-columns:1fr}
+.dwt-cat-grid--2{grid-template-columns:1fr 1fr}
+.dwt-cat-grid--3{grid-template-columns:repeat(3,1fr)}
+.dwt-cat-item{border:1px solid var(--dwt-line);border-radius:6px;padding:12px 14px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px;min-width:0}
+.dwt-cat-title{font-weight:600;min-width:0}
+.dwt-cat-ref{font-size:11px;letter-spacing:.04em;color:var(--dwt-muted);white-space:nowrap}
+@media (max-width:760px){ .dwt-cat-grid--2,.dwt-cat-grid--3{grid-template-columns:1fr} }
