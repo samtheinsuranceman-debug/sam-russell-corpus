@@ -50,7 +50,8 @@ function dwt_ajax_plan(): void {
 		'income', 'filing', 'state',
 		'estate', 'debts', 'charity', 'age', 'beneficiaries',
 		'balance', 'termMonths', 'payment', 'homeValue',
-		'allocationPct', 'creditRate', 'helocRate',
+		'allocationPct', 'helocRate', 'cap', 'floor', 'participation',
+		'window', 'indexStartYear', 'indexEndYear',
 		'ira', 'cash', 'investments', 'annuities', 'other', 'crypto',
 	];
 	$args = [];
@@ -180,8 +181,24 @@ function dwt_render_mortgage( $atts = [] ): string {
 	$f .= dwt_plan_number( 'income', 'Annual household income', 450000, '1000' );
 	$f .= dwt_plan_number( 'age', 'Your age', 45, '1' );
 
+	// The index strategy and the period it is measured over. Both shift the
+	// crediting assumption, and neither is a number anyone types — the platform
+	// derives the rate from whichever strategy and window are chosen, and
+	// returns the full history beside it whatever is picked.
+	$f .= dwt_plan_select( 'window', 'Measure the crediting over', [
+		'full'   => 'Everything on record (1929 to today)',
+		'ag49'   => 'The AG 49-A lookback (25 years)',
+		'thirty' => 'The last thirty years',
+		'dotcom' => 'Since the dot-com peak (2000)',
+		'crisis' => 'Since the financial crisis peak (2007)',
+		'covid'  => 'Since Covid (2020)',
+	], 'full' );
+
 	$f .= '<details class="dwt-plan-more"><summary>Add more detail (optional)</summary>';
 	$f .= '<p class="dwt-plan-hint">Every field below already has a sensible default. Answer as many or as few as you like.</p>';
+	$f .= dwt_plan_number( 'cap', 'Policy cap, % (blank for uncapped)', 7.5, '0.25' );
+	$f .= dwt_plan_number( 'participation', 'Participation rate, %', 100, '1' );
+	$f .= dwt_plan_number( 'floor', 'Policy floor, %', 0, '0.25' );
 	$f .= dwt_plan_number( 'allocationPct', 'Share of income to allocate, %', 20, '1' );
 	$f .= dwt_plan_number( 'helocRate', 'Line-of-credit rate, %', 8.5, '0.01' );
 	$f .= dwt_plan_number( 'ira', 'IRA and 401(k) balances', 0, '1000' );

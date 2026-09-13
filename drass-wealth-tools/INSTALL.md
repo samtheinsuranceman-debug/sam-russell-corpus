@@ -153,14 +153,31 @@ of them, none of them, or anything in between. Nothing is required beyond the
 seven at the top, and a visitor who stops there gets the same quality of
 answer with the platform's own assumptions in place of theirs.
 
-### The indexed crediting rate is not yours to raise
+### The crediting rate is derived, not typed
 
-The mortgage illustration assumes an indexed crediting rate, and that rate is
-**capped at 6.5% by the platform** however it is asked for. Actuarial
-Guideline 49-A limits the rate an indexed universal life policy may be
-illustrated at, and the ceiling lives on the platform rather than in this
-plugin on purpose: nobody editing this site — including a future developer
-writing their own front end against the API — can raise it.
+The mortgage illustration assumes an indexed crediting rate, and **nobody
+chooses it**. The platform takes the policy's own cap, floor and participation
+rate, runs them across the S&P 500 series from Roger Ibbotson's SBBI research,
+and reports what that strategy would actually have compounded to. Sending a
+rate to the API does nothing — the parameter is not read.
+
+The visitor can shift the period the strategy is measured over: everything on
+record, the 25-year AG 49-A lookback, the last thirty years, since the
+dot-com peak, since the financial crisis, or since Covid.
+
+**Whatever period is chosen, the whole record is shown beside it.** That is not
+optional and it is not a setting. A short window picked for its starting point
+is persuasive on its own and informative next to the long one, and the platform
+returns both together so a front end cannot show one without the other.
+
+Two of the six windows deliberately begin at a market top. A menu with only
+rising periods on it is a sales tool.
+
+One thing worth knowing before anyone gets excited about the toggle: **shifting
+the window barely moves the number.** At a 7.5% cap the spread across every
+window, from 97 years down to 6, is about a third of a percentage point,
+because the cap truncates every good year. The cap is the lever, not the
+period.
 
 The sentence under each mortgage result says the crediting is not guaranteed,
 that historical index changes do not indicate future returns, that borrowing

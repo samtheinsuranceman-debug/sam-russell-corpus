@@ -43,7 +43,11 @@
     },
     mortgage: function (d) {
       var yrs = Math.floor(d.saved.months / 12), mos = d.saved.months % 12;
-      return row('Interest as things stand', money.format(d.current.totalInterest))
+      var c = d.crediting || {};
+      return row('Crediting assumption',
+            pct(c.ratePct) + ' — ' + (c.uncapped ? 'uncapped' : c.capPct + '% cap')
+            + ', ' + c.participationPct + '% participation, ' + c.startYear + '–' + c.endYear)
+        + row('Interest as things stand', money.format(d.current.totalInterest))
         + row('Interest on the accelerated plan', money.format(d.accelerated.totalInterest))
         + row('Interest saved', money.format(d.saved.interest))
         + row('Paid off', d.accelerated.payoffDate + ' instead of ' + d.current.payoffDate)
@@ -90,6 +94,19 @@
           }
           var d = j.data;
           var html = '<div class="dwt-plan-result">' + RENDER[tool](d) + '</div>';
+          // The Time Machine rule: a chosen window never stands alone.
+          if (d.againstFullHistory && d.selected) {
+            html += '<div class="dwt-plan-dual"><div class="dwt-plan-line"><span>'
+              + esc(d.selected.label) + ' (' + d.selected.years + ' years)</span><b>'
+              + pct(d.selected.ratePct) + '</b></div><div class="dwt-plan-line"><span>'
+              + esc(d.againstFullHistory.label) + ' (' + d.againstFullHistory.years + ' years)</span><b>'
+              + pct(d.againstFullHistory.ratePct) + '</b></div></div>';
+          }
+          // Anything the platform flagged about the strategy is shown, never dropped.
+          var warn = (d.crediting && d.crediting.warnings) || [];
+          for (var w = 0; w < warn.length; w++) {
+            html += '<div class="dwt-refusal" role="note"><p>' + esc(warn[w]) + '</p></div>';
+          }
           // The basis sentence always travels with the number it qualifies.
           if (d.basis) html += '<p class="dwt-plan-basis">' + esc(d.basis) + '</p>';
           out.innerHTML = html;

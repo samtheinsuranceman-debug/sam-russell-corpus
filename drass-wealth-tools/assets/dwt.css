@@ -121,3 +121,7 @@
 .dwt .dwt-plan-more > summary { cursor: pointer; font-size: .875rem; opacity: .85; padding: .35rem 0; }
 .dwt .dwt-plan-more[open] > summary { margin-bottom: .5rem; }
 .dwt .dwt-plan-hint { margin: 0 0 .75rem; font-size: .8125rem; opacity: .7; }
+
+/* The two panels: the window chosen, and the whole record beside it. */
+.dwt .dwt-plan-dual { margin-top: 1rem; padding: .75rem 1rem; border: 1px solid rgba(0,0,0,.1); border-radius: .4rem; max-width: 34rem; }
+.dwt .dwt-plan-dual .dwt-plan-line:last-child { border-bottom: 0; }
